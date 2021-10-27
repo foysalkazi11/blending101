@@ -1,0 +1,23 @@
+.button{
+    padding: 15px  20px;
+    border-radius: 30px;
+    box-sizing: border-box;
+    outline: none;
+    border: none;
+    background-color: #fff;
+    color: #FE5D1F;
+    width: 250px;
+    cursor: pointer;
+    font-size: 18px;
+    font-family: 'Poppins', sans-serif;
+    border: 1px solid #f2f2f8;
+}
+.primary{
+    background-color: #FE5D1F;
+    color: #fff;
+    border: none;
+}
+.transparent{
+    color: #FE5D1F;
+    background-color: transparent !important;
+}

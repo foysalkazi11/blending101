@@ -1,0 +1,24 @@
+.theme__child{
+    padding: 20px;
+    margin: 20px;
+    padding-bottom: 30px;
+    background-color: aliceblue;
+    box-shadow: rgba(23, 24, 24, 0.05) 0px 0px 5px 0px, rgba(0, 0, 0, 0.15) 0px 1px 2px 0px;
+}
+.theme__box h3{
+    color: gray;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+.toggler{
+    background-color: #FE5D1F;
+    padding: 20px;
+    border-radius: 5px;
+}
+.cards{
+    display: flex;
+    justify-content: space-between;
+}
+.cards .card{
+    width: calc(25% - 15px);
+}
