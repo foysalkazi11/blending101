@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from './input.module.css';
+import styles from './input.module.scss';
 
 export default function InputComponent({type, style, value, setValue, placeholder, textarea, fullWidth, width}) {  
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './card.module.css';
+import styles from './card.module.scss';
 
 export default function SpecialcardComponent({img, title, style, imageHeight, color, type, rx}) {
 

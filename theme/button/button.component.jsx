@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from './button.module.css';
+import styles from './button.module.scss';
 
 export default function ButtonComponent({type, style, value, fullWidth, width}) {  
     // STEP 1: INITIALIZE PROPS TO AVOID UI FALL

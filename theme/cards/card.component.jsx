@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react';
-import styles from './card.module.css';
+import styles from './card.module.scss';
 
 export default function CardComponent({img, icon, rating, noOfRating, price, discountPrice, type, title, rx, style}) {
 
@@ -42,8 +42,6 @@ export default function CardComponent({img, icon, rating, noOfRating, price, dis
         console.log('Argument No of ratings expects number as value')
         rx = null
     }
-    
-
 
     // STEP 2: HANDLE VARIABLES FALLBACK VALUE TO AVOID UI FAILURE
     style = style || {};
@@ -55,7 +53,6 @@ export default function CardComponent({img, icon, rating, noOfRating, price, dis
     noOfRating = noOfRating || 71;
     title = title || 'Default Title';
     icon = icon || '/icons/star.svg';
-
     
 
     if(type === 'second') return(

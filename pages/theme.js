@@ -1,5 +1,5 @@
 import InputComponent from '../theme/input/input.component';
-import styles from '../styles/Theme.module.css';
+import styles from '../styles/Theme.module.scss';
 import ButtonComponent from '../theme/button/button.component';
 import TogglerComponent from '../theme/toggler/toggler.component';
 import { useState } from 'react';

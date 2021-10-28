@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import styles from './menubar.module.css';
+import styles from './menubar.module.scss';
 
 export default function MenubarComponent({childs, setValue}) {
 
-    childs = childs || ['All', 'Wholefood', 'Smoothie', 'Refreshing', 'Teas & Tonics', 'Soup', 'Frozen Treat']
+    childs = childs || ['All', 'Wholefood', 'Smoothie', 'Refreshing', 'Teas & Tonics', ]
 
 
     const lineRef = useRef();
