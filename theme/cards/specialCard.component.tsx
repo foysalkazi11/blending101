@@ -1,7 +1,17 @@
 import React from 'react';
 import styles from './card.module.scss';
 
-export default function SpecialcardComponent({img, title, style, imageHeight, color, type, rx}) {
+interface specialCardInterface {
+    img: string,
+    title: string,
+    style: object,
+    imageHeight: string,
+    color: string,
+    type: string,
+    rx: number,
+}
+
+export default function SpecialcardComponent({img, title, style, imageHeight, color, type, rx}: specialCardInterface) {
 
     // STEP 1: CHECK VALUE TYPES
     if(style && typeof style !== 'object'){

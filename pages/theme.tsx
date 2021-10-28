@@ -16,9 +16,9 @@ export default function Home() {
 			{/* BUTTON THEME COMPONENTS HERE */}
 			<div className={styles.theme__box}>
 				<h3>BUTTONS</h3>
-				<ButtonComponent value="Primary" type="primary" /> &nbsp; &nbsp;
-				<ButtonComponent value="Transparent" type="transparent" /> &nbsp; &nbsp;
-				<ButtonComponent value="Default" type="primaryy" />
+				<ButtonComponent value="Primary" type="primary" style={undefined} fullWidth={undefined} width={undefined} /> &nbsp; &nbsp;
+				<ButtonComponent value="Transparent" type="transparent" style={undefined} fullWidth={undefined} width={undefined} /> &nbsp; &nbsp;
+				<ButtonComponent value="Default" type="primaryy" style={undefined} fullWidth={undefined} width={undefined} />
 			</div>
 
 			<br />
@@ -39,8 +39,7 @@ export default function Home() {
 							'/icons/tab4.svg',
 						]}
 						value={toggler}
-						setValue={setToggler}
-					/>
+						setValue={setToggler} style={undefined} lineCss={undefined}					/>
 				</div>
 			</div>
 
@@ -48,7 +47,7 @@ export default function Home() {
 
       <div className={styles.theme__box}>
       <h3>MENUBAR</h3>
-        <MenubarComponent />
+        <MenubarComponent childs={undefined} setValue={undefined} value={undefined} />
       </div>
 
 			<br />
@@ -58,20 +57,19 @@ export default function Home() {
 				<h3>CARDS</h3>
 				<div className={styles.cards}>
 					<div className={styles.card}>
-						<CardComponent title="Primary Card" />
+						<CardComponent title="Primary Card" img={undefined} icon={undefined} rating={undefined} noOfRating={undefined} price={undefined} discountPrice={undefined} type={undefined} rx={undefined} style={undefined} />
 					</div>
 					<div className={styles.card}>
-						<CardComponent type="second" title="Secondary Card" />
+						<CardComponent type="second" title="Secondary Card" img={undefined} icon={undefined} rating={undefined} noOfRating={undefined} price={undefined} discountPrice={undefined} rx={undefined} style={undefined} />
 					</div>
 					<div className={styles.card}>
-						<SpecialcardComponent title="This is an example of card named Special Card." />
+						<SpecialcardComponent title="This is an example of card named Special Card." img={undefined} style={undefined} imageHeight={undefined} color={undefined} type={undefined} rx={45} />
 					</div>
 					<div className={styles.card}>
 						<SpecialcardComponent
 							type="secondary"
 							img="/cards/milk.png"
-							title="Another Special Card With Secondary Attribute."
-						/>
+							title="Another Special Card With Secondary Attribute." style={undefined} imageHeight={undefined} color={undefined} rx={23}						/>
 					</div>
 				</div>
 			</div>
@@ -85,9 +83,8 @@ export default function Home() {
 					<TitleComponent
 						type="icon"
 						icon="/icons/clock.svg"
-						text="Heading With Icon"
-					/> &nbsp; &nbsp; &nbsp; &nbsp;
-					<TitleComponent text="Heading No Icon" />
+						text="Heading With Icon" style={undefined} textStyle={undefined}					/> &nbsp; &nbsp; &nbsp; &nbsp;
+					<TitleComponent text="Heading No Icon" type={undefined} style={undefined} textStyle={undefined} icon={undefined} />
 				</div>
 			</div>
 
@@ -98,8 +95,7 @@ export default function Home() {
 				<h3>INPUTS</h3>
 				<InputComponent
 					width={'300px'}
-					style={{ padding: '15px 20px', borderRadius: '7px' }}
-				/>
+					style={{ padding: '15px 20px', borderRadius: '7px' }} type={undefined} value={undefined} setValue={undefined} placeholder={undefined} textarea={undefined} fullWidth={undefined}				/>
 			</div>
 
 		</div>

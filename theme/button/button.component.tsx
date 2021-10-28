@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
 import styles from './button.module.scss';
 
-export default function ButtonComponent({type, style, value, fullWidth, width}) {  
+interface buttonInterface {
+    type: string,
+    value: string,
+    fullWidth: number,
+    width: number,
+    style: object
+}
+
+export default function ButtonComponent({type, style, value, fullWidth, width}: buttonInterface) {  
     // STEP 1: INITIALIZE PROPS TO AVOID UI FALL
     type = type || 'text';
     style = style || {};
     if(fullWidth) style = {...style, width: '100%'};
     if(width) style={...style, width: width}
-    value = value || text;
+    value = value || type;
 
 
     // CASE PRIMARY: IF TYPE IS PRIMARY RETURN PRIMARY BUTTON

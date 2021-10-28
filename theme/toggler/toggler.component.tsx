@@ -2,6 +2,18 @@
 import React from 'react';
 import styles from './toggler.module.scss';
 
+interface togglerInterface {
+	childs: Array<string>,
+	value: any,
+	setValue: Function,
+	style: object,
+	lineCss: object,
+	childColor: string,
+	icons: Array<string>,
+	tags: Array<string>,
+	tagColor: string
+}
+
 export default function TogglerComponent({
 	childs,
 	value,
@@ -10,8 +22,9 @@ export default function TogglerComponent({
 	lineCss,
 	childColor,
 	icons,
-    tags
-}) {
+    tags,
+	tagColor
+}: togglerInterface) {
 	if (!childs) return null;
 
 	style = style || {};
@@ -24,7 +37,7 @@ export default function TogglerComponent({
 	if (lineCss) style = { ...style, borderRight: lineCss };
 	if (childColor) style = { ...style, color: childColor };
 
-	const handleSelect = (VALUE) => {
+	const handleSelect = (VALUE: any) => {
 		setValue && setValue(VALUE);
 	};
 
