@@ -7,6 +7,7 @@ import CardComponent from '../theme/cards/card.component';
 import SpecialcardComponent from '../theme/cards/specialCard.component';
 import TitleComponent from '../theme/titles/title.component';
 import MenubarComponent from '../theme/menuBar/menuBar.component';
+import DatacardComponent from '../theme/cards/dataCard/dataCard.component';
 
 export default function Home() {
 	const [toggler, setToggler] = useState('The How');
@@ -96,6 +97,22 @@ export default function Home() {
 				<InputComponent
 					width={'300px'}
 					style={{ padding: '15px 20px', borderRadius: '7px' }} type={undefined} value={undefined} setValue={undefined} placeholder={undefined} textarea={undefined} fullWidth={undefined}				/>
+			</div>
+
+						<br />
+			<div className={styles.theme__box}>
+				<h3>DATA CARD</h3>
+				<div className={styles.data__cards}>
+					<div className={styles.data__card}>
+						<DatacardComponent title={'Chocolate Avocado Smoothie'} ingredients={''} category={''} ratings={4.2} noOfRatings={0} carbs={0} score={0} calorie={0} noOfComments={0} brandLogo={'/cards/avocado.png'} />
+					</div>
+					<div className={styles.data__card}>
+						<DatacardComponent title={''} ingredients={''} category={''} ratings={3.8} noOfRatings={0} carbs={0} score={0} calorie={0} noOfComments={0} brandLogo={'/cards/juice.png'} />
+					</div>
+					<div className={styles.data__card}>
+						<DatacardComponent title={'Choco Oreo Shake'} ingredients={''} category={''} ratings={4.9} noOfRatings={0} carbs={0} score={0} calorie={0} noOfComments={0} brandLogo={'/cards/oreoshake.png'} />
+					</div>
+				</div>
 			</div>
 
 		</div>

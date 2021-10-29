@@ -22,3 +22,10 @@
 .cards .card{
     width: calc(25% - 15px);
 }
+.data__cards{
+    display: flex;
+    justify-content: space-between;
+}
+.data__card{
+    width: 32%;
+}
