@@ -13,24 +13,6 @@ interface specialCardInterface {
 
 export default function SpecialcardComponent({img, title, style, imageHeight, color, type, rx}: specialCardInterface) {
 
-    // STEP 1: CHECK VALUE TYPES
-    if(style && typeof style !== 'object'){
-        console.log('Argument style expects object as value')
-        style = null
-    }
-    if(img && typeof img !== 'string'){
-        console.log('Argument image expects string as value')
-        img = null
-    }
-    if(rx && typeof rx !== 'number'){
-        console.log('Argument rx expects number as value')
-        rx = null
-    }
-    if(title && typeof title !== 'string'){
-        console.log('Argument title expects string as value')
-        style = null
-    }
-
     // STEP 2: HANDLE VARIABLES FALLBACK VALUE TO AVOID UI FAILURE
     rx = rx || 500
     img = img || '/cards/grains.png'

@@ -36,6 +36,20 @@ export default function ButtonComponent({type, style, value, fullWidth, width}: 
         </button>
     )
 
+    if(type === 'transparentHover') return(
+        <button className={styles.button + ' ' + styles.transparent__hover}
+        style={style}
+        >
+            {value}
+        </button>
+    )
+
+    if(type === 'border') return(
+        <button className={styles.border__button} style={style}>
+            {value}
+        </button>
+    )
+
     // CASE DEFAULT: RETURN WHITE BUTTON
     return (
         <button className={styles.button}

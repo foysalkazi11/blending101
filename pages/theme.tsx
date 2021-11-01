@@ -8,18 +8,56 @@ import SpecialcardComponent from '../theme/cards/specialCard.component';
 import TitleComponent from '../theme/titles/title.component';
 import MenubarComponent from '../theme/menuBar/menuBar.component';
 import DatacardComponent from '../theme/cards/dataCard/dataCard.component';
+import MembershipCardComponent from '../theme/cards/membership/membershipCard.component';
+import HomebannerComponent from '../theme/banners/homebanner.component';
 
 export default function Home() {
 	const [toggler, setToggler] = useState('The How');
 	return (
 		<div className={styles.theme__child}>
-
 			{/* BUTTON THEME COMPONENTS HERE */}
 			<div className={styles.theme__box}>
 				<h3>BUTTONS</h3>
-				<ButtonComponent value="Primary" type="primary" style={undefined} fullWidth={undefined} width={undefined} /> &nbsp; &nbsp;
-				<ButtonComponent value="Transparent" type="transparent" style={undefined} fullWidth={undefined} width={undefined} /> &nbsp; &nbsp;
-				<ButtonComponent value="Default" type="primaryy" style={undefined} fullWidth={undefined} width={undefined} />
+				<div style={{ display: 'flex', flexWrap: 'wrap' }}>
+					<ButtonComponent
+						value="Primary"
+						type="primary"
+						style={{ height: '45px' }}
+						fullWidth={undefined}
+						width={undefined}
+					/>{' '}
+					&nbsp; &nbsp;
+					<ButtonComponent
+						value="Transparent"
+						type="transparent"
+						style={{ height: '45px' }}
+						fullWidth={undefined}
+						width={undefined}
+					/>{' '}
+					&nbsp; &nbsp;
+					<ButtonComponent
+						value="Default"
+						type="primaryy"
+						style={{ height: '45px' }}
+						fullWidth={undefined}
+						width={undefined}
+					/>{' '}
+					&nbsp; &nbsp;
+					<ButtonComponent
+						value="Hover Button"
+						type="transparentHover"
+						style={{ height: '45px' }}
+						fullWidth={undefined}
+						width={undefined}
+					/>
+					<ButtonComponent
+						value="order"
+						type="border"
+						style={{ height: '45px' }}
+						fullWidth={undefined}
+						width={undefined}
+					/>
+				</div>
 			</div>
 
 			<br />
@@ -40,16 +78,23 @@ export default function Home() {
 							'/icons/tab4.svg',
 						]}
 						value={toggler}
-						setValue={setToggler} style={undefined} lineCss={undefined}					/>
+						setValue={setToggler}
+						style={undefined}
+						lineCss={undefined}
+					/>
 				</div>
 			</div>
 
-      <br />
+			<br />
 
-      <div className={styles.theme__box}>
-      <h3>MENUBAR</h3>
-        <MenubarComponent childs={undefined} setValue={undefined} value={undefined} />
-      </div>
+			<div className={styles.theme__box}>
+				<h3>MENUBAR</h3>
+				<MenubarComponent
+					childs={undefined}
+					setValue={undefined}
+					value={undefined}
+				/>
+			</div>
 
 			<br />
 
@@ -58,19 +103,54 @@ export default function Home() {
 				<h3>CARDS</h3>
 				<div className={styles.cards}>
 					<div className={styles.card}>
-						<CardComponent title="Primary Card" img={undefined} icon={undefined} rating={undefined} noOfRating={undefined} price={undefined} discountPrice={undefined} type={undefined} rx={undefined} style={undefined} />
+						<CardComponent
+							title="Primary Card"
+							img={undefined}
+							icon={undefined}
+							rating={undefined}
+							noOfRating={undefined}
+							price={undefined}
+							discountPrice={undefined}
+							type={undefined}
+							rx={undefined}
+							style={undefined}
+						/>
 					</div>
 					<div className={styles.card}>
-						<CardComponent type="second" title="Secondary Card" img={undefined} icon={undefined} rating={undefined} noOfRating={undefined} price={undefined} discountPrice={undefined} rx={undefined} style={undefined} />
+						<CardComponent
+							type="second"
+							title="Secondary Card"
+							img={undefined}
+							icon={undefined}
+							rating={undefined}
+							noOfRating={undefined}
+							price={undefined}
+							discountPrice={undefined}
+							rx={undefined}
+							style={undefined}
+						/>
 					</div>
 					<div className={styles.card}>
-						<SpecialcardComponent title="This is an example of card named Special Card." img={undefined} style={undefined} imageHeight={undefined} color={undefined} type={undefined} rx={45} />
+						<SpecialcardComponent
+							title="This is an example of card named Special Card."
+							img={undefined}
+							style={undefined}
+							imageHeight={undefined}
+							color={undefined}
+							type={undefined}
+							rx={45}
+						/>
 					</div>
 					<div className={styles.card}>
 						<SpecialcardComponent
 							type="secondary"
 							img="/cards/milk.png"
-							title="Another Special Card With Secondary Attribute." style={undefined} imageHeight={undefined} color={undefined} rx={23}						/>
+							title="Another Special Card With Secondary Attribute."
+							style={undefined}
+							imageHeight={undefined}
+							color={undefined}
+							rx={23}
+						/>
 					</div>
 				</div>
 			</div>
@@ -84,37 +164,147 @@ export default function Home() {
 					<TitleComponent
 						type="icon"
 						icon="/icons/clock.svg"
-						text="Heading With Icon" style={undefined} textStyle={undefined}					/> &nbsp; &nbsp; &nbsp; &nbsp;
-					<TitleComponent text="Heading No Icon" type={undefined} style={undefined} textStyle={undefined} icon={undefined} />
+						text="Heading With Icon"
+						style={undefined}
+						textStyle={undefined}
+					/>{' '}
+					&nbsp; &nbsp; &nbsp; &nbsp;
+					<TitleComponent
+						text="Heading No Icon"
+						type={undefined}
+						style={undefined}
+						textStyle={undefined}
+						icon={undefined}
+					/>
 				</div>
 			</div>
 
-      <br />
+			<br />
 
-      {/* INPUT THEME COMPONENTS HERE */}
+			{/* INPUT THEME COMPONENTS HERE */}
 			<div className={styles.theme__box}>
 				<h3>INPUTS</h3>
 				<InputComponent
 					width={'300px'}
-					style={{ padding: '15px 20px', borderRadius: '7px' }} type={undefined} value={undefined} setValue={undefined} placeholder={undefined} textarea={undefined} fullWidth={undefined}				/>
+					style={{ padding: '15px 20px', borderRadius: '7px' }}
+					type={undefined}
+					value={undefined}
+					setValue={undefined}
+					placeholder={undefined}
+					textarea={undefined}
+					fullWidth={undefined}
+				/>
 			</div>
 
-						<br />
+			<br />
 			<div className={styles.theme__box}>
 				<h3>DATA CARD</h3>
 				<div className={styles.data__cards}>
 					<div className={styles.data__card}>
-						<DatacardComponent title={'Chocolate Avocado Smoothie'} ingredients={''} category={''} ratings={4.2} noOfRatings={0} carbs={0} score={0} calorie={0} noOfComments={0} brandLogo={'/cards/avocado.png'} />
+						<DatacardComponent
+							title={'Chocolate Avocado Smoothie'}
+							ingredients={''}
+							category={''}
+							ratings={4.2}
+							noOfRatings={0}
+							carbs={0}
+							score={0}
+							calorie={0}
+							noOfComments={0}
+							brandLogo={'/cards/avocado.png'}
+						/>
 					</div>
 					<div className={styles.data__card}>
-						<DatacardComponent title={''} ingredients={''} category={''} ratings={3.8} noOfRatings={0} carbs={0} score={0} calorie={0} noOfComments={0} brandLogo={'/cards/juice.png'} />
+						<DatacardComponent
+							title={''}
+							ingredients={''}
+							category={''}
+							ratings={3.8}
+							noOfRatings={0}
+							carbs={0}
+							score={0}
+							calorie={0}
+							noOfComments={0}
+							brandLogo={'/cards/juice.png'}
+						/>
 					</div>
 					<div className={styles.data__card}>
-						<DatacardComponent title={'Choco Oreo Shake'} ingredients={''} category={''} ratings={4.9} noOfRatings={0} carbs={0} score={0} calorie={0} noOfComments={0} brandLogo={'/cards/oreoshake.png'} />
+						<DatacardComponent
+							title={'Choco Oreo Shake'}
+							ingredients={''}
+							category={''}
+							ratings={4.9}
+							noOfRatings={0}
+							carbs={0}
+							score={0}
+							calorie={0}
+							noOfComments={0}
+							brandLogo={'/cards/oreoshake.png'}
+						/>
 					</div>
 				</div>
 			</div>
 
+			<br />
+
+			<div className={styles.theme__box}>
+				<h3>MEMBERSHIP CARD</h3>
+				<div className={styles.cards}>
+					<div className={styles.data__card}>
+						<MembershipCardComponent
+							title="Free"
+							detailList={[
+								'User can also sign up free without using any credit card',
+								'Basic Support',
+								'Configurable premium features',
+								'5% store discount',
+								'Pricing, percentage discount and features can be manage from admin',
+							]}
+							price={0}
+							period="mon"
+							click={() => {}}
+						/>
+					</div>
+					<div className={styles.data__card}>
+						<MembershipCardComponent
+							title="Apex"
+							detailList={[
+								'User can also sign up free without using any credit card',
+								'Basic Support',
+								'Configurable premium features',
+								'5% store discount',
+								'Pricing, percentage discount and features can be manage from admin',
+							]}
+							price={19}
+							period="mon"
+							click={() => {}}
+						/>
+					</div>
+					<div className={styles.data__card}>
+						<MembershipCardComponent
+							title="Standard"
+							detailList={[
+								'User can also sign up free without using any credit card',
+								'Basic Support',
+								'Configurable premium features',
+								'5% store discount',
+								'Pricing, percentage discount and features can be manage from admin',
+							]}
+							price={5}
+							period="mon"
+							click={() => {}}
+						/>
+					</div>
+				</div>
+			</div>
+
+			<br />
+			<div className={styles.theme__box}>
+				<h3>BANNERS</h3>
+				<div className={styles.banners}>
+					<HomebannerComponent />
+				</div>
+			</div>
 		</div>
 	);
 }
