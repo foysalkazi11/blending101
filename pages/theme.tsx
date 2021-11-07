@@ -10,6 +10,9 @@ import MenubarComponent from '../theme/menuBar/menuBar.component';
 import DatacardComponent from '../theme/cards/dataCard/dataCard.component';
 import MembershipCardComponent from '../theme/cards/membership/membershipCard.component';
 import HomebannerComponent from '../theme/banners/homebanner.component';
+import SectionTitleWithIcon from '../theme/recipe/sectionTitleWithIcon/SectionTitleWithIcon.component';
+import RecipeItem from '../theme/recipe/recipeItem/RecipeItem.component';
+
 
 export default function Home() {
 	const [toggler, setToggler] = useState('The How');
@@ -160,7 +163,7 @@ export default function Home() {
 			{/* TITLE COMPONENT STARTS HERE */}
 			<div className={styles.theme__box}>
 				<h3>TYPOGRAPHY</h3>
-				<div style={{ display: 'flex' }}>
+				<div style={{ display: 'flex',alignItems:"center" }}>
 					<TitleComponent
 						type="icon"
 						icon="/icons/clock.svg"
@@ -176,6 +179,10 @@ export default function Home() {
 						textStyle={undefined}
 						icon={undefined}
 					/>
+					&nbsp; &nbsp; &nbsp; &nbsp;
+					<SectionTitleWithIcon title="Ingredients" icon="/icons/chart-bar-light-green.svg" />
+					&nbsp; &nbsp; &nbsp; &nbsp;
+					<RecipeItem item= {{id:1,label:"1 Frozen Banana"}} />
 				</div>
 			</div>
 
