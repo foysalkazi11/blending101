@@ -51,7 +51,7 @@ export default function Home() {
 						width={undefined}
 					/>
 					<ButtonComponent
-						value="order"
+						value="border"
 						type="border"
 						style={{ height: '45px' }}
 						fullWidth={undefined}
