@@ -37,6 +37,10 @@ const RecipeItem = (props: RecipeItemProps) => {
       {/* @ts-ignore */}
       {items?.label}
 
+      {/* <span className={styles.listContainer__tooltiptext}>
+        Drag to the left
+      </span> */}
+
       {dragIcon ? (
         <button className={styles.listContainer__draggableBtn}>
           <DragIndicatorIcon />
