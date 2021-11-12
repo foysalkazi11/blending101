@@ -7,6 +7,7 @@
     transition: all;
     transition-duration: .4s;
     box-shadow: 0px 2px 6px #ececec;
+    z-index: 999;
 }
 .tray .image{
     position: absolute;
