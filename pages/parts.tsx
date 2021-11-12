@@ -7,7 +7,11 @@ export default function Parts(props) {
 
     return (
         <div>
-            <AContainer />
+            <AContainer >
+                <div>
+                    <h2>hello</h2>
+                </div>
+            </AContainer>
         </div>
     )
 }

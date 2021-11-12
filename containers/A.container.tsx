@@ -7,7 +7,6 @@ import SidetrayrightComponent from '../components/sidetray/sidetrayRight/Sidetra
 import styles from './container.module.scss';
 
 export default function AContainer(props : any) {
-
     const {user} = useAuth()
     
 
@@ -20,6 +19,7 @@ export default function AContainer(props : any) {
                 <HeaderComponent logo="true" />
                 <SidetrayleftComponent />
                 <SidetrayrightComponent />
+                {props.children}
             </div>
         </div>
     )

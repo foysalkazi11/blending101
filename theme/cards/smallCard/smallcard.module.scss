@@ -1,0 +1,123 @@
+.smallCard {
+    width: 100%;
+    background-color: #fff;
+    border-radius: 6px;
+    position: relative;
+
+    &__top {
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+        transition: all;
+        transition-duration: .3s;
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+        position: relative;
+
+        &:hover img {
+            transform: scale(1.1);
+            transition: all;
+            transition-duration: .5s;
+        }
+    }
+
+    img {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    &__bottom {
+        border: 1px solid #DCDBDB;
+        border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 6px;
+        background: #fff;
+        box-shadow: inset 0px -1px 1px #dcdbdb69;
+    }
+
+    &__bottom p {
+        display: block;
+        font-size: 13px;
+        font-weight: 400;
+        text-align: center;
+        padding: 10px 8px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        margin: 0;
+        color: #000;
+        align-self: center;
+        font-weight: 600;
+        line-height: 1.3;
+    }
+}
+
+.compar {
+    position: absolute;
+    background: #fafbf9db;
+    border: 1px solid #e9ecef;
+    width: 65%;
+    right: 0;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99;
+    color: #f95d2b;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    top: 40%;
+    transform: translateY(-50%);
+    font-size: 15px;
+    cursor: pointer;
+    display: none;
+}
+
+.smallCard:hover .compar{
+    display: flex !important;
+}
+
+.drag {
+    display: none;
+    position: absolute;
+    left: 0px;
+    transform: translateX(-100%);
+    z-index: 8;
+    color: #bdbdbd;
+    cursor: pointer;
+}
+
+.smallCard:hover .drag{
+    display: block;
+}
+
+.tick {
+    display: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    text-align: center;
+    border: 1px solid #e9ecef;
+    position: absolute;
+    right: 0px;
+    z-index: 99;
+    background-color: #d6d6d6;
+    border-color: #d6d6d6;
+    color: #fff;
+    font-size: 13px;
+    top: 0;
+    transform: translateY(-50%);
+    cursor: pointer;
+
+    &:hover{
+        background: #f95d2b;
+        border: none;
+    }
+}
+.tickimg{
+    width: 16px;
+    font-weight: 700;
+}
+.smallCard:hover .tick{
+    display: block;
+}
