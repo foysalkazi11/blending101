@@ -84,6 +84,8 @@ export default function SidetrayleftComponent(props) {
 					</div>
 				)}
 			</div>
-		</div>
+		
+        
+        </div>
 	);
 }
