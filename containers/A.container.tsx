@@ -17,8 +17,12 @@ export default function AContainer(props : any) {
             </div>
             <div className={styles.mainA}>
                 <HeaderComponent logo="true" />
-                <SidetrayleftComponent />
-                <SidetrayrightComponent />
+                <div className={styles.fixed__main__left}>
+                    <SidetrayleftComponent />
+                </div>
+                <div className={styles.fixed__main__right}>
+                 <SidetrayrightComponent />
+                </div>
                 {props.children}
             </div>
         </div>

@@ -1,9 +1,16 @@
+.wrapper{
+    height: 55px;
+    width: 100%;
+}
 .header {
     height: 55px;
     max-height: 55px;
     box-shadow: 3px 3px 6px #ececec;
-    position: relative;
+    position: fixed;
     z-index: 500;
+    top: 0;
+    width: calc(100% - 61px);
+    background-color: #fff;
 }
 
 .header__inner {
@@ -12,7 +19,8 @@
     height: 100%;
     align-items: center;
     padding: 0 30px;
-
+    width: 100%;
+    position: relative;
 }
 
 .left {

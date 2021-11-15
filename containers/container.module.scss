@@ -6,6 +6,7 @@
     padding: 0 10px;
     box-shadow: 3px 1px 3px #ececec;
     z-index: 9999999999;
+    background-color: #fff;
 }
 .mainA{
     width: calc(100% - 61px);
@@ -15,4 +16,15 @@
 
 @media screen and(max-width) {
     
+}
+.fixed__main__left{
+    position: fixed;
+    z-index: 999999;
+    top: 55px;
+}
+.fixed__main__right{
+    position: fixed;
+    z-index: 999999;
+    right: 0;
+    top: 55px;
 }
