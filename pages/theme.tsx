@@ -214,7 +214,7 @@ export default function Home() {
 								title={'Chocolate Avocado Smoothie'}
 								ingredients={''}
 								category={''}
-								ratings={4.2}
+								ratings={3.2}
 								noOfRatings={0}
 								carbs={0}
 								score={0}
