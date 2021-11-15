@@ -1,0 +1,76 @@
+.listContainer {
+  font-size: 14px;
+  color: #ababab;
+  position: relative;
+  padding-left: 15px;
+  padding-right: 30px;
+  list-style: none;
+  display: inline-block;
+
+  &:hover &__tooltiptext {
+    visibility: visible;
+  }
+  &__tooltiptext::before {
+    content: "";
+    position: absolute;
+    width: 0px;
+    height: 0px;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 8px solid #7cbc39;
+    right: -7px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+  }
+
+  &__tooltiptext {
+    visibility: hidden;
+    background-color: #7cbc39;
+    color: #fff;
+    text-align: center;
+    padding: 0 0;
+    position: absolute;
+    z-index: 1;
+    min-width: 24px;
+    border-radius: 2px;
+    top: 4px;
+    left: -31px;
+  }
+  &:hover &__tooltiptext {
+    display: block;
+  }
+  &__draggableBtn {
+    position: absolute;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    left: -10px;
+    top: -2px;
+    color: #ababab;
+    display: none;
+    img {
+      max-width: 13px;
+    }
+  }
+  &:hover &__draggableBtn {
+    display: block;
+  }
+
+  &__addBtn {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    margin: 0;
+    line-height: 1;
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: #f9532b;
+    display: none;
+    cursor: pointer;
+  }
+  &:hover &__addBtn {
+    display: block;
+  }
+}
