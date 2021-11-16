@@ -1,0 +1,245 @@
+.right {
+    background-color:transparent;
+    // padding-left: 5%;
+    // margin-left: 20px;
+    width: 26%;
+    min-width: 300px;
+    margin-right: 5%;
+    transition: all 500ms ease;
+}
+
+.recipeHeadingTopSec {
+    // background-color: yellow;
+    margin-bottom: 18px;
+    // margin-top: 4px;
+    // padding-left: 7px;
+    // height: auto;
+
+    & h3 {
+        display: flex;
+        font-weight: 400;
+        font-size: 20px;
+    }
+}
+
+.chartbarIconDiv {
+    // background-color: red;
+    max-width: 22px;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 8px;
+    width: 20%;
+    // vertical-align: middle;
+    margin-right: 7px;
+}
+
+.rightCard {
+    background-color: white;
+    border-radius: 14px;
+    margin-top: 15px;
+    padding-bottom:20px;
+}
+
+.rightCardNutrition {
+    background-color: white;
+    border-radius: 14px;
+    margin-top: 40px;
+    padding-bottom:20px;
+}
+
+
+.rightCardHeading {
+    font-size: 20px;
+    color: #000;
+    font-weight: 400;
+    margin-bottom: 0.5rem;
+    // padding-left: 20px;
+    font-family: inherit;
+    // background-color: yellow;
+    padding: 15px 15px 0;
+
+}
+
+
+
+
+.formGroup {
+    // background-color: green;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 100%;
+
+    & select {
+        // background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+        -moz-appearance: none;
+        // /* Firefox */
+        -webkit-appearance: none;
+        // /* Safari and Chrome */
+        appearance: none;
+        background-repeat: no-repeat;
+        background-position-x:94% ;
+        background-position-y:15px ;
+
+
+    }
+}
+
+.customSelectbx {
+    background-color: #fafbf9;
+    width: 100%;
+    height: 45px;
+    border-radius: 5px;
+    border-color: transparent;
+    color: #C4C4C4;
+    font-size: 14px;
+    padding-left: 20px;
+    border-right: 20px solid #fafbf9;
+    border-color: transparent;
+    border: 0px;
+    outline: 0px;
+    box-shadow: none;
+    // border: none;
+    // box-shadow: 2px;
+    // margin-right: 20px;
+    // space
+}
+
+.calciumMg {
+    // background-color: #78f000;
+    border-radius: 5px;
+    align-items: center;
+    height: 45px;
+    margin-top: 16px;
+    color: grey;
+    // margin-bottom: 35px;
+    margin-left: 10px;
+    margin-right: 10px;
+    // padding-left:20px ;
+    // padding-right:20px;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.calciumText {
+    position: relative;
+    color:#242424;
+    background-color: #fafbf9;
+    margin-top: auto;
+    margin-bottom: auto;
+    font-size: 14px;
+    padding: 4px;
+    padding-left: 20px;
+    width: 90%;
+    height: 100%;
+    border-radius: 5px;
+    // display: table-cell;
+    // text-align: center;
+    vertical-align: middle;
+    // line-height: 100%;
+    // vertical-align: middle;
+
+    & div {
+        // height: 100%;
+        // width: 100%;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        // background-color: #78f000;
+
+    }
+}
+
+
+.calciumIcon {
+    background-color:#fafbf9;
+    margin-left:10px;
+    padding-left:8px;
+    height: 100%;
+    width: 50px;
+    border-radius: 5px;
+    overflow: hidden;
+    color:#a6a6a6;
+    cursor:pointer;
+
+    position: relative;
+
+    & div {
+        margin-top: 10px;
+        margin-left:8px ;
+        font-size: 20px;
+        font-weight: 200;
+        height: fit-content;
+
+        width: fit-content;
+        // background-color: aqua;
+        // position: absolute;
+        // top: 50%;
+        // left: 50%;
+        // transform: translate(-50%, -50%);
+    }
+}
+
+
+
+
+
+// breakpoints
+@media screen and (max-width:980px) {
+    .right {
+        width: 100%;
+        // margin-right:4px;
+        margin-left: 0px;
+        margin-right:0px
+    }
+
+
+    .chartbarIconDiv {
+        // background-color: rgb(85, 85, 25);
+        margin-left: 0px;
+    }
+
+    .rightCard {
+        // background-color: chocolate;
+        width: 100%;
+    }
+}
+
+@media only screen and (min-width: 980px) and (max-width:1290px){
+
+    .right {
+        // background-color:blue;
+        // padding-left: 5%;
+        // margin-left: 20px;
+        width: 24%;
+        min-width: 300px;
+        margin-right: 10px;
+        transition: all 500ms ease;
+        margin-left:20px;
+    }
+
+}
+
+@media screen and (min-width:1290px) and (max-width:1799px){
+    .right {
+        background-color:transparent;
+        // padding-left: 10px;
+        // margin-left: 20px;
+        width: 24%;
+        min-width: 300px;
+        margin-right: 5%;
+        transition: all 500ms ease;
+    }
+}
+
+@media screen and (min-width:1800px) {
+    .right {
+        background-color:transparent;
+        // padding-left: 5%;
+        // margin-left: 20px;
+        width: 24%;
+        min-width: 300px;
+        margin-right: auto;
+        transition: all 500ms ease;
+    }
+}
