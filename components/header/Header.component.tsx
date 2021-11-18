@@ -5,7 +5,7 @@ import SocialComponent from "./social/Social.component";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
 
 interface headerInterface {
-  logo: boolean;
+  logo: Boolean;
   headerTitle: string;
 }
 
