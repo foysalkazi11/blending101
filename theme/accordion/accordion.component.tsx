@@ -11,7 +11,7 @@ type CustomAccordionProps = {
 };
 
 const CustomAccordion = ({ title, children }: CustomAccordionProps) => {
-  const [expanded, setExpanded] = useState<boolean>(false);
+  const [expanded, setExpanded] = useState<boolean>(true);
   return (
     <Accordion
       expanded={expanded === true}
@@ -31,7 +31,10 @@ const CustomAccordion = ({ title, children }: CustomAccordionProps) => {
           transform: "rotate(0deg)",
         },
         "& .MuiAccordionDetails-root": {
-          padding: "8px 16px 0px",
+          padding: " 0px",
+        },
+        "& .MuiAccordionSummary-root": {
+          padding: "0px !important",
         },
       }}
     >

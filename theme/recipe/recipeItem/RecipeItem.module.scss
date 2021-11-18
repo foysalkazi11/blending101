@@ -1,9 +1,11 @@
 .listContainer {
+  width: 100%;
   font-size: 14px;
   color: #ababab;
   position: relative;
   padding-left: 15px;
   padding-right: 30px;
+  margin-bottom: 10px;
   list-style: none;
   display: inline-block;
 
@@ -45,8 +47,8 @@
     background: transparent;
     border: 0;
     padding: 0;
-    left: -10px;
-    top: -2px;
+    left: 0;
+    top: 2px;
     color: #ababab;
     display: none;
     img {
@@ -62,10 +64,10 @@
     border: 0;
     background: transparent;
     margin: 0;
-    line-height: 1;
+
     position: absolute;
     right: 0;
-    top: 0;
+    top: -3px;
     color: #f9532b;
     display: none;
     cursor: pointer;

@@ -1,0 +1,134 @@
+import React, { useState, useEffect } from "react";
+import DatacardComponent from "../../../theme/cards/dataCard/dataCard.component";
+import SectionTitleWithIcon from "../../../theme/recipe/sectionTitleWithIcon/SectionTitleWithIcon.component";
+import RecipeItem from "../../../theme/recipe/recipeItem/RecipeItem.component";
+import styles from "./RecipeDetails.module.scss";
+import { Droppable, Draggable } from "react-beautiful-dnd";
+import Accordion from "../../../theme/accordion/accordion.component";
+import CancelIcon from "@mui/icons-material/Cancel";
+
+function Copyable(props) {
+  const { items, addItem, droppableId } = props;
+
+  return (
+    <Droppable droppableId={droppableId} isDropDisabled={true}>
+      {(provided, snapshot) => (
+        <div ref={provided.innerRef} {...provided.droppableProps}>
+          {items.map((item, index) => {
+            return (
+              <Draggable draggableId={`${item.id}`} index={index} key={item.id}>
+                {(provided, snapshot) => (
+                  <>
+                    <div
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      ref={provided.innerRef}
+                    >
+                      <RecipeItem item={item} handleClick={addItem} />
+                    </div>
+                    {snapshot.isDragging && (
+                      <RecipeItem item={item} handleClick={addItem} />
+                    )}
+                  </>
+                )}
+              </Draggable>
+            );
+          })}
+          {provided.placeholder}
+        </div>
+      )}
+    </Droppable>
+  );
+}
+
+const RecipeDetails = ({ recipe, id, addItem, removeCompareRecipe }: any) => {
+  const [winReady, setwinReady] = useState(false);
+  const { name, image, ingredients, nutrition } = recipe;
+
+  useEffect(() => {
+    setwinReady(true);
+  }, []);
+
+  return (
+    <div className={styles.recipeDetailsContainer}>
+      <div
+        className={styles.cancleIcon}
+        onClick={() => removeCompareRecipe(recipe)}
+      >
+        <CancelIcon />
+      </div>
+      <DatacardComponent
+        title={name}
+        ingredients={""}
+        category={""}
+        ratings={4.9}
+        noOfRatings={0}
+        carbs={0}
+        score={0}
+        calorie={0}
+        noOfComments={0}
+        image={image}
+      />
+      <div className={styles.dividerBox}>
+        <SectionTitleWithIcon
+          title="Ingredients"
+          icon="/images/right-blender.svg"
+        />
+
+        {winReady ? (
+          <Copyable
+            items={ingredients}
+            addItem={addItem}
+            droppableId={`${id}`}
+          />
+        ) : null}
+      </div>
+
+      <div className={styles.dividerBox}>
+        <SectionTitleWithIcon
+          title="Nutrition"
+          icon="/icons/chart-bar-light-green.svg"
+        />
+        <div className={styles.nutritionHeader}>
+          <p>Amount Per Serving Calories</p>
+          <table>
+            <tr>
+              <th>Calories</th>
+              <th>93</th>
+              <th></th>
+            </tr>
+            <tr>
+              <td></td>
+              <td> Value </td>
+              <td> Daily% </td>
+            </tr>
+          </table>
+        </div>
+
+        <div className={styles.ingredientsDetails}>
+          {nutrition?.map((item, index) => {
+            const { section, amount } = item;
+            return (
+              <Accordion key={index} title={section}>
+                <table>
+                  {amount?.map((items, index) => {
+                    const { label, value, daily } = items;
+                    return (
+                      <tr key={index}>
+                        <td>{label}</td>
+                        <td> {value} </td>
+                        <td> {daily} </td>
+                      </tr>
+                    );
+                  })}
+                </table>
+              </Accordion>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default RecipeDetails;
