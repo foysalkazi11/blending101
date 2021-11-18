@@ -19,7 +19,7 @@ export default function SmallcardComponent({
   text = text || "Chocolate Avocado Smoothie";
   img = img || "/cards/coriander.png";
 
-  const findRecipe = findCompareRecipe(recipe?.id);
+  const findRecipe = findCompareRecipe && findCompareRecipe(recipe?.id);
 
   const handleClick = () => {
     fnc && fnc(recipe);
