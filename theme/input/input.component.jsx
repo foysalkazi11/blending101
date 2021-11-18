@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './input.module.scss';
 
-export default function InputComponent({type, style, value, setValue, placeholder, textarea, fullWidth, width}) {  
+export default function InputComponent({type, style, value, setValue, placeholder, textarea, fullWidth, width}) {
 
     const [text, setText] = useState('');
     // STEP 1: INITIALIZE PROPS TO AVOID UI FALL
@@ -24,17 +24,17 @@ export default function InputComponent({type, style, value, setValue, placeholde
 
     // CASE 1: IF TEXTAREA RETURN TEXTAREA COMPONENT
     if(textarea) return (
-        <textarea 
+        <textarea
             className={styles.textarea}
         />
     )
 
     // CASE: DEFAULT RETURN INPUT COMPONENT
     return (
-        <input 
+        <input
         className={styles.input}
-        type={type} 
-        style={style} 
+        type={type}
+        style={style}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
