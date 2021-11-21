@@ -33,6 +33,17 @@ export default function Home() {
                 width={undefined}
               />
             </div>
+            <div
+              className={styles.button__container}
+              style={{ padding: "0 15px" }}
+            >
+              <ButtonComponent
+                type="buttonWithIcon"
+                value="Icon Button"
+                icon="/images/formulate.svg"
+                style={{ height: "50px", width: "234px", borderRadius: "14px" }}
+              />
+            </div>
             <div className={styles.button__container}>
               <ButtonComponent
                 value="Transparent"
