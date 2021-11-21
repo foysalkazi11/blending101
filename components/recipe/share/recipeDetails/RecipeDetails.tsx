@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import DatacardComponent from "../../../theme/cards/dataCard/dataCard.component";
-import SectionTitleWithIcon from "../../../theme/recipe/sectionTitleWithIcon/SectionTitleWithIcon.component";
-import RecipeItem from "../../../theme/recipe/recipeItem/RecipeItem.component";
+import DatacardComponent from "../../../../theme/cards/dataCard/dataCard.component";
+import SectionTitleWithIcon from "../../../../theme/recipe/sectionTitleWithIcon/SectionTitleWithIcon.component";
+import RecipeItem from "../../../../theme/recipe/recipeItem/RecipeItem.component";
 import styles from "./RecipeDetails.module.scss";
 import { Droppable, Draggable } from "react-beautiful-dnd";
-import Accordion from "../../../theme/accordion/accordion.component";
+import Accordion from "../../../../theme/accordion/accordion.component";
 import CancelIcon from "@mui/icons-material/Cancel";
+import uniqueId from "../../../reUseable/uniqueId/uniqueId";
 
 function Copyable(props) {
   const { items, addItem, droppableId } = props;
@@ -41,7 +42,13 @@ function Copyable(props) {
   );
 }
 
-const RecipeDetails = ({ recipe, id, addItem, removeCompareRecipe }: any) => {
+const RecipeDetails = ({
+  recipe = {},
+  id = uniqueId(),
+  addItem = () => {},
+  removeCompareRecipe = () => {},
+  dragAndDrop = false,
+}: any) => {
   const [winReady, setwinReady] = useState(false);
   const { name, image, ingredients, nutrition } = recipe;
 
@@ -75,13 +82,30 @@ const RecipeDetails = ({ recipe, id, addItem, removeCompareRecipe }: any) => {
           icon="/images/right-blender.svg"
         />
 
-        {winReady ? (
-          <Copyable
-            items={ingredients}
-            addItem={addItem}
-            droppableId={`${id}`}
-          />
-        ) : null}
+        {dragAndDrop ? (
+          winReady ? (
+            <Copyable
+              items={ingredients}
+              addItem={addItem}
+              droppableId={`${id}`}
+            />
+          ) : null
+        ) : (
+          ingredients?.map((item, index) => {
+            return (
+              <p
+                key={index}
+                style={{
+                  fontSize: "14px",
+                  color: "#ababab",
+                  marginBottom: "15px",
+                }}
+              >
+                {item?.label}
+              </p>
+            );
+          })
+        )}
       </div>
 
       <div className={styles.dividerBox}>

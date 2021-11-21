@@ -2,17 +2,15 @@ import React, { useState, useRef, useEffect } from "react";
 import Acontainer from "../../../containers/A.container";
 import { Container, Grid } from "@mui/material";
 import styles from "./formulateRecipe.module.scss";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import list from "../fackData/racipeList";
 import Carousel from "../../../theme/carousel/carousel.component";
 import SmallcardComponent from "../../../theme/cards/smallCard/SmallCard.component";
-import RecipeDetails from "../share/RecipeDetails";
+import RecipeDetails from "../share/recipeDetails/RecipeDetails";
 import { DragDropContext } from "react-beautiful-dnd";
 import CreateNewRecipe from "./CreateNewRecipe";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Slider from "react-slick";
+import SubNav from "../share/subNav/SubNav";
+import SliderArrows from "../share/sliderArrows/SliderArrows";
 
 const responsiveSetting = {
   slidesToShow: 7,
@@ -85,7 +83,6 @@ const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
-
   return result;
 };
 
@@ -127,10 +124,6 @@ const FormulateRecipe = () => {
     ],
   });
 
-  useEffect(() => {
-    console.log(sliderRef.current);
-  }, []);
-
   const findCompareRecipe = (id) => {
     /* @ts-ignore */
     const item = compareRecipeList?.find((item) => item?.id === id);
@@ -161,13 +154,8 @@ const FormulateRecipe = () => {
       ...state.filter((item) => item?.id !== recipe?.id),
     ]);
   };
-
-  const copy = (source, destination, droppableSource, droppableDestination) => {
-    const sourceClone = Array.from(source);
-    const destClone = Array.from(destination);
-    const item = sourceClone[droppableSource.index];
-    destClone.splice(droppableDestination.index, 0, item);
-    return destClone;
+  const removeAllCompareRecipe = () => {
+    setcompareRecipeList([]);
   };
 
   const findItem = (id) => {
@@ -196,8 +184,6 @@ const FormulateRecipe = () => {
   };
 
   const deleteItem = (id: number) => {
-    console.log(id);
-
     setNewRecipe((state) => ({
       ...state,
       ingredients: [
@@ -205,6 +191,14 @@ const FormulateRecipe = () => {
         ...state?.ingredients?.filter((item) => item?.id !== Number(id)),
       ],
     }));
+  };
+
+  const copy = (source, destination, droppableSource, droppableDestination) => {
+    const sourceClone = Array.from(source);
+    const destClone = Array.from(destination);
+    const item = sourceClone[droppableSource.index];
+    destClone.splice(droppableDestination.index, 0, item);
+    return destClone;
   };
 
   const onDragEnd = (result) => {
@@ -261,21 +255,14 @@ const FormulateRecipe = () => {
       <Container maxWidth="xl">
         {/* sub-nav */}
         <div className={styles.formulateContainer}>
-          <div className={styles.formulateContainer__subNav}>
-            <div className={styles.formulateContainer__subNav__discover}>
-              <ArrowBackIcon
-                className={styles.formulateContainer__subNav__discover__icon}
-              />
-              <p>Recipe Discovery</p>
-            </div>
-
-            <div className={styles.formulateContainer__subNav__compare}>
-              <p> 6 compare</p>
-              <HighlightOffIcon
-                className={styles.formulateContainer__subNav__compare__icon}
-              />
-            </div>
-          </div>
+          <SubNav
+            backAddress="/recipe/compare"
+            backIconText="Recipe Compare"
+            buttonText="Formulate"
+            showButton={false}
+            compareAmout={compareRecipeList.length}
+            closeCompare={removeAllCompareRecipe}
+          />
 
           <Carousel moreSetting={responsiveSetting}>
             {recipeList?.map((recipe, index) => {
@@ -293,26 +280,12 @@ const FormulateRecipe = () => {
               );
             })}
           </Carousel>
+          <SliderArrows
+            compareRecipeLength={compareRecipeList.length}
+            prevFunc={() => sliderRef.current?.slickPrev()}
+            nextFunc={() => sliderRef.current?.slickNext()}
+          />
           <Grid container spacing={2}>
-            <div className={styles.customeArrowContainer}>
-              <div></div>
-
-              <div className={styles.customeArrowContainer__arrows}>
-                <div
-                  className={styles.customeArrowContainer__arrows__prev}
-                  onClick={() => sliderRef.current.slickPrev()}
-                >
-                  <ChevronLeftIcon />
-                </div>
-
-                <div
-                  className={styles.customeArrowContainer__arrows__prev}
-                  onClick={() => sliderRef.current.slickNext()}
-                >
-                  <ChevronRightIcon />
-                </div>
-              </div>
-            </div>
             <DragDropContext onDragEnd={onDragEnd}>
               <Grid item xs={12} sm={6} md={4} xl={3}>
                 <CreateNewRecipe
@@ -332,6 +305,7 @@ const FormulateRecipe = () => {
                         id={index}
                         addItem={addItem}
                         removeCompareRecipe={removeCompareRecipe}
+                        dragAndDrop={true}
                       />
                     );
                   })}
