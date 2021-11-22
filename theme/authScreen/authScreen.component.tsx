@@ -4,6 +4,7 @@ import Image from "next/image";
 import InputField from "../input/inputField.component";
 import Link from "next/link";
 import ButtonComponent from "../buttonA/button.component";
+import SocialTray from "./social tray/socialTray.component";
 
 interface authScreen {
   type: "login" | "signup" | "password_reset" | "";
@@ -12,16 +13,13 @@ interface authScreen {
 const AuthScreen = ({ type }: authScreen) => {
   type = type || "";
 
-
   // login screen
   if (type === "login") {
     return (
       <div className={styles.mainScreen}>
         <div className={styles.mainDiv}>
-          <div
-            className={styles.inputMainDiv}
-            style={{ backgroundImage: `url("/images/login-bg.png")` }}
-          >
+          {/* backgroundImage: `url("/images/login-bg.png")` */}
+          <div className={styles.inputMainDiv} style={{}}>
             <div className={styles.inputContentDiv}>
               <div className={styles.logo}>
                 <div>
@@ -38,6 +36,11 @@ const AuthScreen = ({ type }: authScreen) => {
                 </div>
               </div>
               <h2>Login</h2>
+              <div className={styles.quickLogin}>
+                <span>Quick and easy social login</span>
+                <SocialTray />
+                <div className={styles.seperatorLogin} />
+              </div>
               <p>
                 Aliquam vestibulum nunc quis blandit rutrum. Curabitur vel
                 scelerisque leo.
@@ -45,7 +48,7 @@ const AuthScreen = ({ type }: authScreen) => {
               <form>
                 <InputField
                   type="email"
-                  style={{ marginBottom: "20px"}}
+                  style={{ marginBottom: "20px" }}
                   value={undefined}
                   placeholder={undefined}
                   fullWidth={true}
@@ -58,6 +61,10 @@ const AuthScreen = ({ type }: authScreen) => {
                   fullWidth={true}
                 />
                 <div className={styles.forgetPassword}>
+                  <div>
+                    <input type="checkbox" />
+                    <label>Keep me looged</label>
+                  </div>
                   <Link href="/forget_password">
                     <a>Forget Password?</a>
                   </Link>
@@ -71,57 +78,10 @@ const AuthScreen = ({ type }: authScreen) => {
                   />
                 </div>
               </form>
-              <div className={styles.seperatorLogin} />
-              <ul className={styles.socialWrap}>
-                <li className={styles.listElem}>
-                  <Link href="">
-                    <a>
-                      <Image
-                        src={"/images/google.png"}
-                        alt="Icons will soon Load"
-                        layout="fill"
-                        objectFit="contain"
-                      />
-                    </a>
-                  </Link>
-                </li>
-                <li className={styles.listElem}>
-                  <Link href="">
-                    <a>
-                      <Image
-                        src={"/images/fb.png"}
-                        alt="Icons will soon Load"
-                        layout="fill"
-                        objectFit="contain"
-                      />
-                    </a>
-                  </Link>
-                </li>
-                <li className={styles.listElem}>
-                  <Link href="/login">
-                    <a style={{}}>
-                      <Image
-                        src={"/images/twitter.png"}
-                        alt="Icons will soon Load"
-                        layout="fill"
-                        objectFit="contain"
-                      />
-                    </a>
-                  </Link>
-                </li>
-                <li className={styles.listElem}>
-                  <Link href="">
-                    <a>
-                      <Image
-                        src={"/images/apple.png"}
-                        alt="Icons will soon Load"
-                        layout="fill"
-                        objectFit="contain"
-                      />
-                    </a>
-                  </Link>
-                </li>
-              </ul>
+              <div className={styles.lineSocialDiv}>
+                <div className={styles.seperatorLogin} />
+                <SocialTray />
+              </div>
             </div>
           </div>
           <div
@@ -132,7 +92,8 @@ const AuthScreen = ({ type }: authScreen) => {
               <div className={styles.contentCard}>
                 <h2>New User</h2>
                 <p>
-                  afjhsfjkalkfjsf;kjfh;fhfsdhjfafgasf;afigasdkfgasdfag;fsfkjasfjahsjfhgjhagjhjafhjh
+                Aliquam vestibulum nunc quis blandit rutrum.
+Curabitur vel scelerisque leo.
                 </p>
                 <div className={styles.buttonRightDiv}>
                   <Link href="/signup">
@@ -157,9 +118,7 @@ const AuthScreen = ({ type }: authScreen) => {
     );
   }
 
-
   // signup screen
-
   else if (type === "signup") {
     return (
       <div className={styles.mainScreen}>
@@ -168,7 +127,11 @@ const AuthScreen = ({ type }: authScreen) => {
             className={styles.imgMainDiv}
             style={{ backgroundImage: `url("/images/signup.png")` }}
           >
-            <div className={styles.imgContentDiv +" "+styles.signupImgContentDiv}>
+            <div
+              className={
+                styles.imgContentDiv + " " + styles.signupImgContentDiv
+              }
+            >
               <div className={styles.logo}>
                 <div>
                   <Image
@@ -183,7 +146,9 @@ const AuthScreen = ({ type }: authScreen) => {
                   />
                 </div>
               </div>
-              <div className={styles.contentCard +" "+styles.signupContentCard}>
+              <div
+                className={styles.contentCard + " " + styles.signupContentCard}
+              >
                 <h2>Already have an Account</h2>
                 <p>
                   afjhsfjkalkfjsf;kjfh;fhfsdhjfafgasf;afigasdkfgasdfag;fsfkjasfjahsjfhgjhagjhjafhjh
@@ -258,56 +223,7 @@ const AuthScreen = ({ type }: authScreen) => {
                 </div>
               </form>
               <div className={styles.seperatorLogin} />
-              <ul className={styles.socialWrap}>
-                <li className={styles.listElem}>
-                  <Link href="">
-                    <a>
-                      <Image
-                        src={"/images/google.png"}
-                        alt="Icons will soon Load"
-                        layout="fill"
-                        objectFit="contain"
-                      />
-                    </a>
-                  </Link>
-                </li>
-                <li className={styles.listElem}>
-                  <Link href="">
-                    <a>
-                      <Image
-                        src={"/images/fb.png"}
-                        alt="Icons will soon Load"
-                        layout="fill"
-                        objectFit="contain"
-                      />
-                    </a>
-                  </Link>
-                </li>
-                <li className={styles.listElem}>
-                  <Link href="/login">
-                    <a style={{}}>
-                      <Image
-                        src={"/images/twitter.png"}
-                        alt="Icons will soon Load"
-                        layout="fill"
-                        objectFit="contain"
-                      />
-                    </a>
-                  </Link>
-                </li>
-                <li className={styles.listElem}>
-                  <Link href="">
-                    <a>
-                      <Image
-                        src={"/images/apple.png"}
-                        alt="Icons will soon Load"
-                        layout="fill"
-                        objectFit="contain"
-                      />
-                    </a>
-                  </Link>
-                </li>
-              </ul>
+              <SocialTray />
             </div>
           </div>
         </div>
@@ -319,7 +235,6 @@ const AuthScreen = ({ type }: authScreen) => {
   }
 
   // password reset Screen
-
   else if (type === "password_reset") {
     return (
       <div className={styles.mainScreen}>
