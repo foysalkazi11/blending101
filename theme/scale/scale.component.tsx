@@ -7,15 +7,6 @@ interface scaleCompInterface {
 }
 export function ScaleComponent({value, setValue}: scaleCompInterface) {
 
-    useEffect(() => {
-        function createLines(){
-
-        }
-
-    }, [])
-
-    console.log(value)
-
     const YLine = ({value}) => {
         let longline = false;
         const style = {left: `calc(${value}%)`, height: `20px`}
