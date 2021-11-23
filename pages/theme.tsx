@@ -14,9 +14,11 @@ import SectionTitleWithIcon from "../theme/recipe/sectionTitleWithIcon/SectionTi
 import RecipeItem from "../theme/recipe/recipeItem/RecipeItem.component";
 import SmallcardComponent from "../theme/cards/smallCard/SmallCard.component";
 import AContainer from "../containers/A.container";
+import { ScaleComponent } from "../theme/scale/scale.component";
 
 export default function Home() {
   const [toggler, setToggler] = useState("The How");
+  const [scale, setScale] = useState('50')
   return (
     <AContainer>
       <div className={styles.theme__child}>
@@ -338,6 +340,14 @@ export default function Home() {
 
         <br />
         <div className={styles.theme__box}>
+          <h3>RANGE</h3>
+          <div className={styles.banners}>
+            <ScaleComponent value={scale} setValue={setScale} />
+          </div>
+        </div>
+
+        <br />
+        <div className={styles.theme__box}>
           <h3>OTHER CARD</h3>
           <div className={styles.cardsfive}>
             <div className={styles.card__five}>
@@ -345,8 +355,7 @@ export default function Home() {
                 imgHeight={undefined}
                 text={undefined}
                 fnc={undefined}
-                img={undefined}
-              />
+                img={undefined} recipe={undefined} findCompareRecipe={undefined} fucUnCheck={undefined}              />
             </div>
           </div>
         </div>

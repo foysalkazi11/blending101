@@ -32,8 +32,24 @@ const RecipeItem = (props: RecipeItemProps) => {
     }
   }, []);
 
+  const handleClickk = (e) => {
+    if(e.detail === 2){
+      console.log('doubke click')
+    }
+  }
+
+
+  const handleDefault = (e: any) => {
+    console.log('dragging')
+    e.preventDefault();
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
+  }
+
   return (
-    <div className={styles.listContainer}>
+    <div className={styles.listContainer} 
+    onClick={handleClickk}
+    >
       {/* @ts-ignore */}
       <p>{items?.label}</p>
 
