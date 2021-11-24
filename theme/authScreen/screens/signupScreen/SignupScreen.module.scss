@@ -1,3 +1,6 @@
+@use "../../breakpoints.module.scss"as bp;
+
+
 .mainScreen {
     // position: relative;
     display: block;
@@ -102,7 +105,7 @@
         }
     }
 
-    .forgotPassPara{
+    .forgotPassPara {
         width: 50%;
         font-size: 14px;
         margin: 0 auto;
@@ -401,7 +404,7 @@
 
         //sign up page
 
-        .signupContentCard{
+        .signupContentCard {
             width: 100%;
         }
     }
@@ -517,3 +520,13 @@
         display: block;
     }
 }
+
+
+
+
+
+
+
+
+
+

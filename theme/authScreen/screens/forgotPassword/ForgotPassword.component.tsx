@@ -2,7 +2,7 @@ import Link from "next/link";
 import React from "react";
 import ButtonComponent from "../../../buttonA/button.component";
 import InputField from "../../../input/inputField.component";
-import styles from "./forgot.module.scss";
+import styles from "./ForgotPassword.module.scss";
 import Image from "next/image";
 
 const ForgotPassword = () => {
@@ -12,11 +12,10 @@ const ForgotPassword = () => {
         className={styles.inputMainDiv}
         style={{
           backgroundImage: `url("/images/login-bg.png")`,
-          height: "50vh",
         }}
       >
         <div className={styles.inputContentDiv}>
-          <div className={styles.logo} style={{ marginTop: "10px" }}>
+          <div className={styles.logo} >
             <div>
               <Image
                 src="/images/logo.png"
@@ -31,14 +30,13 @@ const ForgotPassword = () => {
             </div>
           </div>
           <h2>Forgot Password</h2>
-          <p className={styles.forgotPassPara}>
-            Aliquam vestibulum nunc quis blandit rutrum. Curabitur vel
-            scelerisque leo.
+          <p>
+            Aliquam vestibulum nunc quis blandit rutrum. Curabitur v
           </p>
           <form>
             <InputField
               type="email"
-              style={{ marginBottom: "20px", marginTop: "0px" }}
+              style={{ margin:"4px auto 15px auto" }}
               value={undefined}
               placeholder={undefined}
               fullWidth={true}
@@ -53,6 +51,7 @@ const ForgotPassword = () => {
             </div>
           </form>
         </div>
+        <br />
       </div>
       <div
         className={styles.imgMainDiv}
@@ -62,7 +61,7 @@ const ForgotPassword = () => {
           <div className={styles.contentCard}>
             <h2>Remember Password</h2>
             <p>
-              afjhsfjkalkfjsf;kjfh;fhfsdhjfafgasf;afigasdkfgasdfag;fsfkjasfjahsjfhgjhagjhjafhjh
+              afasf;afigasdkfgasdfag;fsfkjasfjahsjfhgjhagjhjafhjhsdafaffafdasf
             </p>
             <div className={styles.buttonRightDiv}>
               <Link href="/login">
