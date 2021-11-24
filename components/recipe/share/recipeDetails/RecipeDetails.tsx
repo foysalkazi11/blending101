@@ -6,7 +6,7 @@ import styles from "./RecipeDetails.module.scss";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import Accordion from "../../../../theme/accordion/accordion.component";
 import CancelIcon from "@mui/icons-material/Cancel";
-import uniqueId from "../../../reUseable/uniqueId/uniqueId";
+import uniqueId from "../../../utility/uniqueId";
 
 function Copyable(props) {
   const { items, addItem, droppableId } = props;

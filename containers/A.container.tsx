@@ -25,7 +25,7 @@ export default function AContainer(props: AContainerProps) {
     showLeftTray = true,
     showRighTray = true,
     logo = true,
-    headerTitle = "Home",
+    headerTitle = "",
   } = props;
 
   return (

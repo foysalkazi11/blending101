@@ -18,7 +18,11 @@ import { ScaleComponent } from "../theme/scale/scale.component";
 
 export default function Home() {
   const [toggler, setToggler] = useState("The How");
-  const [scale, setScale] = useState('50')
+  const [state, setState] = useState({ age: "50" });
+
+  const update = (name: string, value: any) => {
+    setState((pre) => ({ ...pre, [name]: value }));
+  };
   return (
     <AContainer>
       <div className={styles.theme__child}>
@@ -217,7 +221,7 @@ export default function Home() {
         <div className={styles.theme__box}>
           <h3>INPUTS</h3>
           <InputComponent
-            width={"300px"}
+            maxWidth={"300px"}
             style={{ padding: "15px 20px", borderRadius: "7px" }}
             type={undefined}
             value={undefined}
@@ -225,6 +229,7 @@ export default function Home() {
             placeholder={undefined}
             textarea={undefined}
             fullWidth={undefined}
+            fieldName="input"
           />
         </div>
 
@@ -342,7 +347,15 @@ export default function Home() {
         <div className={styles.theme__box}>
           <h3>RANGE</h3>
           <div className={styles.banners}>
-            <ScaleComponent value={scale} setValue={setScale} />
+            <ScaleComponent
+              value={state.age}
+              setValue={update}
+              fieldName="age"
+              lingLinedivider={10}
+              shortLineDivider={2}
+              max={"100"}
+              min={"0"}
+            />
           </div>
         </div>
 
@@ -355,7 +368,11 @@ export default function Home() {
                 imgHeight={undefined}
                 text={undefined}
                 fnc={undefined}
-                img={undefined} recipe={undefined} findCompareRecipe={undefined} fucUnCheck={undefined}              />
+                img={undefined}
+                recipe={undefined}
+                findCompareRecipe={undefined}
+                fucUnCheck={undefined}
+              />
             </div>
           </div>
         </div>
