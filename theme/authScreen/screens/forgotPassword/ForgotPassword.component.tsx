@@ -4,6 +4,7 @@ import ButtonComponent from "../../../buttonA/button.component";
 import InputField from "../../../input/inputField.component";
 import styles from "./ForgotPassword.module.scss";
 import Image from "next/image";
+import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
 
 const ForgotPassword = () => {
   return (
@@ -15,7 +16,7 @@ const ForgotPassword = () => {
         }}
       >
         <div className={styles.inputContentDiv}>
-          <div className={styles.logo} >
+          <div className={styles.logo}>
             <div>
               <Image
                 src="/images/logo.png"
@@ -28,15 +29,16 @@ const ForgotPassword = () => {
                 quality={100}
               />
             </div>
+            <div className={styles.cross}>
+              <HighlightOffOutlinedIcon />
+            </div>
           </div>
           <h2>Forgot Password</h2>
-          <p>
-            Aliquam vestibulum nunc quis blandit rutrum. Curabitur v
-          </p>
+          <p>Aliquam vestibulum nunc quis blandit rutrum. Curabitur v</p>
           <form>
             <InputField
               type="email"
-              style={{ margin:"4px auto 15px auto" }}
+              style={{ margin: "4px auto 15px auto" }}
               value={undefined}
               placeholder={undefined}
               fullWidth={true}
@@ -61,7 +63,8 @@ const ForgotPassword = () => {
           <div className={styles.contentCard}>
             <h2>Remember Password</h2>
             <p>
-              afasf afiga sdkfgasdfa g;fsfkjas fjahsjfh gjhagj hjafhjhsdafaffafdasf
+              afasf afiga sdkfgasdfa g;fsfkjas fjahsjfh gjhagj
+              hjafhjhsdafaffafdasf
             </p>
             <div className={styles.buttonRightDiv}>
               <Link href="/login">

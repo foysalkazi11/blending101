@@ -5,7 +5,7 @@ import Image from "next/image";
 import styles from "./SignupScreen.module.scss";
 import ButtonComponent from "../../../buttonA/button.component";
 import SocialTray from "../../authComponents/socialTray/socialTray.component";
-
+import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
 const SignupScreen = () => {
   return (
     <>
@@ -73,6 +73,9 @@ const SignupScreen = () => {
                 quality={100}
               />
             </div>
+            <div className={styles.cross}>
+              <HighlightOffOutlinedIcon />
+            </div>
           </div>
           <h2>Sign Up</h2>
           <p className={styles.hookline}>Quick and easy social login</p>
@@ -80,7 +83,7 @@ const SignupScreen = () => {
             Aliquam vestibulum nunc quis blandit rutrum. Curabitur vel
             scelerisque leo.
           </p>
-          <div className={styles.lineTrayA }>
+          <div className={styles.lineTrayA}>
             <SocialTray />
             <div className={styles.seperatorLogin} />
           </div>

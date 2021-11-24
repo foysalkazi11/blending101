@@ -5,6 +5,7 @@ import InputField from "../../../input/inputField.component";
 import SocialTray from "../../authComponents/socialTray/socialTray.component";
 import styles from "./Login.module.scss";
 import Image from "next/image";
+import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
 
 const LoginScreen = () => {
   return (
@@ -22,6 +23,9 @@ const LoginScreen = () => {
                 objectFit={"contain"}
                 quality={100}
               />
+            </div>
+            <div className={styles.cross}>
+              <HighlightOffOutlinedIcon />
             </div>
           </div>
           <h2>Login</h2>
