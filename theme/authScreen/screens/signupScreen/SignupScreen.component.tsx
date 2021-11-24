@@ -14,7 +14,7 @@ const SignupScreen = () => {
         style={{ backgroundImage: `url("/images/signup.png")` }}
       >
         <div className={styles.imgContentDiv}>
-          <div className={styles.logo} style={{ margin: "0" }}>
+          <div className={styles.logo}>
             <div>
               <Image
                 src="/images/logo.png"
@@ -28,10 +28,7 @@ const SignupScreen = () => {
               />
             </div>
           </div>
-          <div
-            className={styles.contentCard}
-            style={{ backgroundColor: "green", marginTop: "-20px" }}
-          >
+          <div className={styles.contentCard}>
             <h2>Already have an Account</h2>
             <p>
               afjhsfjkalkfjsf;kjfh;fhfsdhjfafgasf;afigasdkfgasdfag;fsfkjasfjahsjfhgjhagjhjafhjh
@@ -57,28 +54,47 @@ const SignupScreen = () => {
 
       <div
         className={styles.inputMainDiv}
-        style={{
-          backgroundImage: `url("/images/login-bg.png")`,
-          backgroundColor: "#FAFBF9",
-        }}
+        // style={{
+        //   backgroundImage: `url("/images/login-bg.png")`,
+        //   backgroundColor: "#FAFBF9",
+        // }}
       >
-        <div className={styles.inputContentDiv + " " + styles.signupContentDiv}>
+        <div className={styles.inputContentDiv}>
+          <div className={styles.logo}>
+            <div>
+              <Image
+                src="/images/logo.png"
+                alt="logo will soon load"
+                layout={"fill"}
+                // height={400}
+                // width={400}
+                objectFit={"contain"}
+                className={styles.logoImage}
+                quality={100}
+              />
+            </div>
+          </div>
           <h2>Sign Up</h2>
-          <p>
+          <p className={styles.hookline}>Quick and easy social login</p>
+          <p className={styles.inputPara}>
             Aliquam vestibulum nunc quis blandit rutrum. Curabitur vel
             scelerisque leo.
           </p>
+          <div className={styles.lineTrayA }>
+            <SocialTray />
+            <div className={styles.seperatorLogin} />
+          </div>
           <form>
             <InputField
               type="email"
-              style={{ marginBottom: "20px" }}
+              style={{ marginBottom: "10px" }}
               value={undefined}
               placeholder={undefined}
               fullWidth={true}
             />
             <InputField
               type="password"
-              style={{}}
+              style={{ margin: "10px 0px" }}
               value={undefined}
               placeholder={undefined}
               fullWidth={true}
@@ -91,7 +107,7 @@ const SignupScreen = () => {
               fullWidth={true}
             />
             <div className={styles.signUpButtonDiv}>
-              <Link href="/login">
+              <Link href="/signup">
                 <a>
                   <ButtonComponent
                     type="primary"
@@ -103,8 +119,10 @@ const SignupScreen = () => {
               </Link>
             </div>
           </form>
-          <div className={styles.seperatorLogin} />
-          <SocialTray />
+          <div className={styles.lineTrayB}>
+            <div className={styles.seperatorLogin} />
+            <SocialTray />
+          </div>
         </div>
       </div>
     </>

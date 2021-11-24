@@ -17,21 +17,25 @@ const AuthScreen = ({ type }: authScreen) => {
     return (
       <div className={styles.mainScreen}>
         <div className={styles.mainDiv}>
-          <LoginScreen/>
+          <LoginScreen />
         </div>
-        <Footer/>
+        <Footer />
       </div>
     );
   }
 
   // signup screen
   else if (type === "signup") {
+
     return (
       <div className={styles.mainScreen}>
-        <div className={styles.mainDiv}>
-          <SignupScreen/>
+        <div
+          className={styles.mainDiv +" "+styles.mainDivSignup}
+          style={{  }}
+        >
+          <SignupScreen />
         </div>
-        <Footer/>
+        <Footer />
       </div>
     );
   }
@@ -41,9 +45,9 @@ const AuthScreen = ({ type }: authScreen) => {
     return (
       <div className={styles.mainScreen}>
         <div className={styles.mainDiv}>
-          <ForgotPassword/>
+          <ForgotPassword />
         </div>
-        <Footer/>
+        <Footer />
       </div>
     );
   } else {

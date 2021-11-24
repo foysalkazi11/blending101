@@ -61,7 +61,7 @@ const ForgotPassword = () => {
           <div className={styles.contentCard}>
             <h2>Remember Password</h2>
             <p>
-              afasf;afigasdkfgasdfag;fsfkjasfjahsjfhgjhagjhjafhjhsdafaffafdasf
+              afasf afiga sdkfgasdfa g;fsfkjas fjahsjfh gjhagj hjafhjhsdafaffafdasf
             </p>
             <div className={styles.buttonRightDiv}>
               <Link href="/login">
