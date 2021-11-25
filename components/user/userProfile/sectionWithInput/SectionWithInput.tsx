@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import Container from "@mui/material/Container";
 import styles from "./SectionWithInput.module.scss";
 import InputComponent from "../../../../theme/input/input.component";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 type SectionWithInputProps = {
   title: string;
-  value: string;
-  setValue: Function;
+  value: any;
+  setValue: (name: string, value: any) => void;
   fieldName: string;
   maxWidth: string;
   style?: object;
@@ -14,6 +15,7 @@ type SectionWithInputProps = {
   placeholder?: string;
   textarea?: boolean;
   fullWidth?: boolean;
+  removeInput: (name: string, value: any) => void;
 };
 
 const SectionWithInput = ({
@@ -27,35 +29,61 @@ const SectionWithInput = ({
   placeholder = "Add you text here",
   textarea = false,
   fullWidth = false,
+  removeInput,
 }: SectionWithInputProps) => {
   const [inputValue, setInputValue] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setValue(fieldName, inputValue);
+    setInputValue("");
   };
   return (
-    <Container>
-      <div className={styles.sectionWithInputContainer}>
-        <h2>{title}</h2>
+    <div className={styles.sectionWithInputContainer}>
+      <h2>{title}</h2>
 
-        <div className={styles.inputContainer}>
-          <form onSubmit={handleSubmit}>
-            <InputComponent
-              maxWidth={maxWidth}
-              style={style}
-              type={type}
-              value={inputValue}
-              setValue={setInputValue}
-              placeholder={placeholder}
-              textarea={textarea}
-              fullWidth={fullWidth}
-              fieldName={fieldName}
-            />
-          </form>
+      <div className={styles.inputContainer}>
+        <form onSubmit={handleSubmit}>
+          <InputComponent
+            maxWidth={maxWidth}
+            style={style}
+            type={type}
+            value={inputValue}
+            setValue={setInputValue}
+            placeholder={placeholder}
+            textarea={textarea}
+            fullWidth={fullWidth}
+            fieldName={fieldName}
+          />
+        </form>
+        <div className={styles.inputContainer__inputValueContainer}>
+          {value?.map((item, index) => {
+            return (
+              <div
+                key={index}
+                className={
+                  styles.inputContainer__inputValueContainer__inputValue
+                }
+              >
+                <span
+                  className={
+                    styles.inputContainer__inputValueContainer__inputValue__label
+                  }
+                >
+                  {item?.label}
+                </span>
+                <CancelIcon
+                  className={
+                    styles.inputContainer__inputValueContainer__inputValue__closeIcon
+                  }
+                  onClick={() => removeInput(fieldName, item)}
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
-    </Container>
+    </div>
   );
 };
 

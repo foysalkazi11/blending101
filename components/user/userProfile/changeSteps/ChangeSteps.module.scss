@@ -2,9 +2,12 @@
   width: 100%;
   padding: 40px 0;
   background-color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  &__innerContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
 }
 
 .backButton {

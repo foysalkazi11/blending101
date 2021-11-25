@@ -3,10 +3,15 @@ import SectionWithInput from "../../sectionWithInput/SectionWithInput";
 
 type StepThreeProps = {
   userProfile: any;
-  updateUserProfile: Function;
+  updateUserProfile: (name: string, value: any) => void;
+  removeInput: (name: string, value: any) => void;
 };
 
-const StepThree = ({ userProfile, updateUserProfile }: StepThreeProps) => {
+const StepThree = ({
+  userProfile,
+  updateUserProfile,
+  removeInput,
+}: StepThreeProps) => {
   return (
     <>
       <SectionWithInput
@@ -16,6 +21,7 @@ const StepThree = ({ userProfile, updateUserProfile }: StepThreeProps) => {
         value={userProfile?.medicalCondition}
         setValue={updateUserProfile}
         placeholder="Enter Conditions..."
+        removeInput={removeInput}
       />
       <SectionWithInput
         title="What medications are you currently taking?"
@@ -24,6 +30,7 @@ const StepThree = ({ userProfile, updateUserProfile }: StepThreeProps) => {
         value={userProfile?.medicationCurrentlyTaking}
         setValue={updateUserProfile}
         placeholder="Enter Medications..."
+        removeInput={removeInput}
       />
     </>
   );
