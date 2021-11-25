@@ -55,7 +55,7 @@ const StepOne = ({ userProfile, updateUserProfile }: StepOneProps) => {
         min={"0"}
         max={"100"}
         shortLineDivider={2}
-        lingLinedivider={10}
+        longLineDivider={10}
       />
 
       <Scale
@@ -66,7 +66,7 @@ const StepOne = ({ userProfile, updateUserProfile }: StepOneProps) => {
         value={userProfile?.weight}
         min={"145"}
         max={"200"}
-        lingLinedivider={5}
+        longLineDivider={5}
       />
       <SectionWithIcon
         title="Your Activity"

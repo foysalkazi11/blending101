@@ -10,7 +10,7 @@ type ScaleProps = {
   fieldName: string;
   min: string;
   max: string;
-  lingLinedivider?: number;
+  longLineDivider?: number;
   shortLineDivider?: number;
 };
 
@@ -23,7 +23,7 @@ const Scale = (props: ScaleProps) => {
     fieldName,
     min,
     max,
-    lingLinedivider,
+    longLineDivider,
     shortLineDivider,
   } = props;
 
@@ -37,7 +37,7 @@ const Scale = (props: ScaleProps) => {
           fieldName={fieldName}
           min={min}
           max={max}
-          lingLinedivider={lingLinedivider}
+          longLineDivider={longLineDivider}
           shortLineDivider={shortLineDivider}
         />
       </div>

@@ -4,7 +4,7 @@ import styles from "./scale.module.scss";
 interface scaleCompInterface {
   value: string;
   setValue: Function;
-  lingLinedivider?: number;
+  longLineDivider?: number;
   shortLineDivider?: number;
   fieldName: string;
   min: string;
@@ -14,7 +14,7 @@ export function ScaleComponent(props: scaleCompInterface) {
   const {
     value,
     setValue,
-    lingLinedivider = 10,
+    longLineDivider = 10,
     shortLineDivider = 0,
     fieldName,
     min = 0,
@@ -38,7 +38,7 @@ export function ScaleComponent(props: scaleCompInterface) {
       left: `calc(${index * (100 / (Number(max) - Number(min)))}%)`,
       height: `20px`,
     };
-    const number = value % lingLinedivider;
+    const number = value % longLineDivider;
     if (number === 0) {
       style.height = "40px";
       if (value === Number(min) || value === Number(max)) {

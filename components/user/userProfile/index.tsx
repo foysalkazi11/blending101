@@ -8,6 +8,7 @@ import StepTwo from "./steps/stepTwo/StepTwo";
 import ChangeSteps from "./changeSteps/ChangeSteps";
 import StepThree from "./steps/stepThree/StepThree";
 import StepFour from "./steps/stepFour/StepFour";
+import uniqueId from "../../utility/uniqueId";
 
 const UserProfile = () => {
   const [userProfile, setUserProfile] = useState<any>({
@@ -19,16 +20,52 @@ const UserProfile = () => {
     allergies: "moderate",
     medicalCondition: [],
     medicationCurrentlyTaking: [],
+    goals: [],
   });
   const [steps, setSteps] = useState(1);
+
+  const checkGoals = (id) => {
+    const goal = userProfile?.goals?.find((item) => item?.id === id);
+    if (goal) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   const updateUserProfile = (name: string, value: any) => {
     if (name === "medicalCondition" || name === "medicationCurrentlyTaking") {
       if (value) {
-        setUserProfile((pre) => ({ ...pre, [name]: [...pre[name], value] }));
+        setUserProfile((pre) => ({
+          ...pre,
+          [name]: [...pre[name], { id: uniqueId(), label: value }],
+        }));
+      }
+    } else if (name === "goals") {
+      if (checkGoals(value?.id)) {
+        setUserProfile((pre) => ({
+          ...pre,
+          [name]: [...pre[name].filter((item) => item?.id !== value?.id)],
+        }));
+      } else {
+        setUserProfile((pre) => ({
+          ...pre,
+          [name]: [...pre[name], value],
+        }));
       }
     } else {
       setUserProfile((pre) => ({ ...pre, [name]: value }));
+    }
+  };
+
+  const removeInput = (name: string, value: any) => {
+    if (name === "medicalCondition" || name === "medicationCurrentlyTaking") {
+      if (value) {
+        setUserProfile((pre) => ({
+          ...pre,
+          [name]: [...pre[name].filter((item) => item?.id !== value?.id)],
+        }));
+      }
     }
   };
 
@@ -72,13 +109,14 @@ const UserProfile = () => {
           <StepThree
             userProfile={userProfile}
             updateUserProfile={updateUserProfile}
+            removeInput={removeInput}
           />
         );
       case 4:
         return (
           <StepFour
-          // userProfile={userProfile}
-          // updateUserProfile={updateUserProfile}
+            updateUserProfile={updateUserProfile}
+            checkGoals={checkGoals}
           />
         );
 
