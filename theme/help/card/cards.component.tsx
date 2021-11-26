@@ -10,6 +10,7 @@ const Cards = () => {
     setIsReadMore(index);
   };
 
+
   const CardData = [
     {
       Title: "Title 1",
@@ -17,12 +18,14 @@ const Cards = () => {
         "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex voluptate velit esse cillum dolore eu fugiat nulla pariatur. ",
     },
     {
-      Title: "Title 1",
-      Content: "asjklfja askdfja;skf asfak ashgag aksfj ",
+      Title: "Title hjlljclg",
+      Content:
+        "Ut enim ad minim veniam, quis nostrud exercitation laboris nisi ut aliquip ex voluptate velit esse cillum dolore eu fugiat nulla pariatur. ",
     },
     {
       Title: "Title 1",
-      Content: "asjklfja askdfja;skf asfak ashgag aksfj ",
+      Content:
+        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex voluptate velit esse cillum dolore eu fugiat nulla pariatur. ",
     },
     {
       Title: "Title 1",
