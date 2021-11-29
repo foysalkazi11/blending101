@@ -21,7 +21,6 @@ function WikiRightComponent() {
   const SortingOrder = () => {
     curSortState(!sortState);
     return sortState;
-    // return console.log(sortState);
   };
   const Ingredients = [
     { name: "Ginger", percent: 109 },
