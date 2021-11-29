@@ -12,6 +12,7 @@ export default function SmallcardComponent({
   recipe,
   findCompareRecipe,
   fucUnCheck,
+  conpareLength,
 }) {
   const style = {};
   if (imgHeight) style.height = imgHeight;
@@ -33,13 +34,19 @@ export default function SmallcardComponent({
     <div className={styles.smallCard}>
       <div className={styles.smallCard__innerContainer}>
         {findRecipe ? null : (
-          <div className={styles.compar} onClick={handleClick}>
+          <button
+            disabled={conpareLength === 4 ? true : false}
+            className={`${styles.compar} ${
+              conpareLength === 4 ? styles.disable : ""
+            }`}
+            onClick={handleClick}
+          >
             compare
-          </div>
+          </button>
         )}
-        <div className={styles.drag}>
+        {/* <div className={styles.drag}>
           <DragIndicatorIcon />
-        </div>
+        </div> */}
         {findRecipe ? (
           <div className={`${styles.tick}`} onClick={handleUnCheck}>
             <CheckIcon className={styles.tickimg} />

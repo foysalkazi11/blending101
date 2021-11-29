@@ -276,6 +276,7 @@ const FormulateRecipe = () => {
                   recipe={recipe}
                   findCompareRecipe={findCompareRecipe}
                   fucUnCheck={removeCompareRecipe}
+                  conpareLength={compareRecipeList?.length}
                 />
               );
             })}
