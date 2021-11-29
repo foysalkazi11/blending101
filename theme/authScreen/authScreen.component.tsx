@@ -4,9 +4,10 @@ import LoginScreen from "./screens/loginScreen/Login.component";
 import SignupScreen from "./screens/signupScreen/SignupScreen.component";
 import ForgotPassword from "./screens/forgotPassword/ForgotPassword.component";
 import Footer from "./authComponents/socialTray/footer/footer.component";
+import Reset_password from "./screens/resetPassword/resetPassword.component";
 
 interface authScreen {
-  type: "login" | "signup" | "password_reset" | "";
+  type: "login" | "signup" | "password_reset" | "forget_password"|"";
 }
 
 const AuthScreen = ({ type }: authScreen) => {
@@ -40,8 +41,8 @@ const AuthScreen = ({ type }: authScreen) => {
     );
   }
 
-  // password reset Screen
-  else if (type === "password_reset") {
+  // forgot password Screen
+  else if (type === "forget_password") {
     return (
       <div className={styles.mainScreen}>
         <div className={styles.mainDiv}>
@@ -50,7 +51,21 @@ const AuthScreen = ({ type }: authScreen) => {
         <Footer />
       </div>
     );
-  } else {
+  }
+
+
+  else if (type === "password_reset") {
+    return (
+      <div className={styles.mainScreen}>
+        <div className={styles.mainDiv}>
+          <Reset_password />
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  else {
     console.log("Enter Valid Auth Screen");
     return <div>{type}</div>;
   }
