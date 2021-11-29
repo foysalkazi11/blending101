@@ -40,10 +40,10 @@ export function ScaleComponent(props: scaleCompInterface) {
     };
     const number = value % longLineDivider;
     if (number === 0) {
-      style.height = "40px";
       if (value === Number(min) || value === Number(max)) {
-        longline = false;
+        style.height = "0px";
       } else {
+        style.height = "40px";
         longline = value;
       }
     } else {
