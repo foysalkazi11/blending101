@@ -4,6 +4,10 @@
   height: 100%;
   margin: 0 5px;
   position: relative;
+  &:hover .cancleIcon {
+    color: #ababab;
+    display: block;
+  }
 }
 
 .cancleIcon {
@@ -12,8 +16,10 @@
   top: 0;
   color: #ababab;
   cursor: pointer;
+  display: none;
   :hover {
     color: #fe5d1f;
+    display: block;
   }
 }
 

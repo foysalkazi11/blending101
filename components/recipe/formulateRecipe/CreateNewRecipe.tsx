@@ -25,6 +25,7 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
         ],
       }));
     }
+    setInputValue("");
   };
 
   useEffect(() => {
@@ -35,16 +36,23 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
     <div className={styles.createNewRecipeContainer}>
       <div className={styles.firstContainer}>
         <div className={styles.firstContainer__firstSection}>
-          <Grid container spacing={2}>
-            <Grid item xs={4}>
+          <Grid container spacing="10px">
+            <Grid item xs={12} className={styles.addRecipeTitle}>
+              <input type="text" placeholder="Add Recipe Title" />
+            </Grid>
+            <Grid item xs={4} sm={6} lg={5}>
               <div className={styles.fileUpload}>
                 <input type="file" accept="image/*" />
 
                 <img src="/images/black-add.svg" alt="addIcon" />
               </div>
             </Grid>
-            <Grid item xs={8} className={styles.addRecipeTitle}>
-              <input type="text" placeholder="Add Recipe Title" />
+            <Grid item xs={8} sm={6} lg={7} className={styles.dropDown}>
+              <select id="cars" name="categories">
+                <option value="smoothie">Smoothie</option>
+                <option value="avocado">Avocado</option>
+                <option value="creamy">Creamy</option>
+              </select>
             </Grid>
           </Grid>
         </div>
