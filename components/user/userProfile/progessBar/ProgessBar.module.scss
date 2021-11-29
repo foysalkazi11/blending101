@@ -5,6 +5,9 @@
     margin: 0;
     text-align: center;
     font-weight: 600;
+    @media screen and (max-width: 900px) {
+      font-size: 22px;
+    }
   }
 
   p {
