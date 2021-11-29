@@ -5,6 +5,9 @@
     font-weight: 600;
     margin: 0;
     text-align: center;
+    @media screen and (max-width: 900px) {
+      font-size: 22px;
+    }
   }
 }
 .imageContainer {
@@ -26,6 +29,11 @@
     img {
       filter: grayscale(100%);
       -webkit-filter: grayscale(100%);
+    }
+    @media screen and (max-width: 900px) {
+      width: 121px;
+      height: 121px;
+      margin: 30px auto 30px;
     }
   }
 
