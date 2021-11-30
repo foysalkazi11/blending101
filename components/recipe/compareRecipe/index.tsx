@@ -155,6 +155,7 @@ const CompareRecipe = () => {
                   recipe={recipe}
                   findCompareRecipe={findCompareRecipe}
                   fucUnCheck={removeCompareRecipe}
+                  conpareLength={compareRecipeList.length}
                 />
               );
             })}
