@@ -4,6 +4,7 @@ import Card from "./Card/Card.component";
 // import { color, fontSize } from "@mui/system";
 import Image from "next/image";
 import { FaSortAmountDownAlt, FaSortAmountDown } from "react-icons/fa";
+import DropDown from "./DropDown/DropDown.component";
 
 // import {BsCaretDown} from 'react-icons/bs';
 // import dropDownIcon from '/icons/dropdown.svg';
@@ -44,6 +45,7 @@ function WikiRightComponent() {
     { name: "Quercetiin", percent: 20 },
   ];
 
+
   let dropdownItem = [
     "All",
     "Leafy Green",
@@ -81,22 +83,7 @@ function WikiRightComponent() {
       </div>
       <div className={styles.rightCard}>
         <div className={styles.rightCardHeading}>Ingredients</div>
-        <div className={styles.formGroup}>
-          <select
-            name="dropdown"
-            id="dropdown"
-            className={styles.customSelectbx}
-            style={{ backgroundImage: `url(/icons/dropdown.svg)` }}
-          >
-            {dropdownItem.map((item, index) => {
-              return (
-                <option value={item.toLowerCase()} key={index}>
-                  {item}
-                </option>
-              );
-            })}
-          </select>
-        </div>
+        <DropDown listElem={dropdownItem} />
         <div className={styles.calciumMg}>
           <div className={styles.calciumText}>
             <div>Calcium (mg)</div>
