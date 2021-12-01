@@ -2,9 +2,10 @@ import React from "react";
 import { useAuth } from "../auth/auth.component";
 import HeaderComponent from "../components/header/Header.component";
 import SidebarComponent from "../components/sidebar/Sidebar.component";
-import SidetrayleftComponent from "../components/sidetray/sidetrayLeft/SidetrayLeft.component";
 import SidetrayrightComponent from "../components/sidetray/sidetrayRight/SidetrayRight.component";
 import styles from "./container.module.scss";
+import WikiTray from "../components/sidetray/wiki/wikiTray.component";
+import CollectionTray from "../components/sidetray/collection/collectionTray.component";
 
 type AContainerProps = {
   showHeader?: boolean;
@@ -41,7 +42,7 @@ export default function AContainer(props: AContainerProps) {
         ) : null}
         {showLeftTray ? (
           <div className={styles.fixed__main__left}>
-            <SidetrayleftComponent />
+            <CollectionTray />
           </div>
         ) : null}
         {showRighTray ? (
@@ -49,6 +50,9 @@ export default function AContainer(props: AContainerProps) {
             <SidetrayrightComponent />
           </div>
         ) : null}
+        <div className={styles.fixed__main__left}>
+          <WikiTray />
+        </div>
         {props.children}
       </div>
     </div>

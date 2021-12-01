@@ -1,29 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useRef, useState } from 'react';
+import LeftTrayWrapper from '../leftTray.wrapper';
 import CollectionComponent from './content/collection.component';
 import ThemeComponent from './content/theme.component';
 import styles from './trayleft.module.scss';
 
-export default function SidetrayleftComponent(props) {
-	const [open, setOpen] = useState(false);
+export default function CollectionTray(props) {
 	const [toggle, setToggle] = useState(1);
 
-	const ref = useRef<any>();
 	const reff = useRef<any>();
-
-	useEffect(() => {
-		const elem = ref.current;
-		if (!elem) return;
-		if (open) {
-			elem.style.left = '0';
-		} else {
-			elem.style.left = '-293px';
-		}
-	}, [open]);
-
-	const handleClick = () => {
-		setOpen(() => !open);
-	};
 
 	const handleToggle = (no: number) => {
 		if (no === 1) {
@@ -34,19 +19,7 @@ export default function SidetrayleftComponent(props) {
 		setToggle(no);
 	};
 	return (
-		<div className={styles.tray} ref={ref}>
-			{open ? (
-				<div className={styles.image} onClick={handleClick}>
-					<img src="/icons/left__drawer__orange.svg" alt="drawer__orange" />
-				</div>
-			) : (
-				<div
-					className={styles.image + ' ' + styles.image__white}
-					onClick={handleClick}
-				>
-					<img src="/icons/left__drawer.svg" alt="drawer" />
-				</div>
-			)}
+		<LeftTrayWrapper>
 			<div className={styles.main}>
 				<div className={styles.main__top}>
 					<div className={styles.main__top__menu}>
@@ -84,8 +57,6 @@ export default function SidetrayleftComponent(props) {
 					</div>
 				)}
 			</div>
-		
-        
-        </div>
+		</LeftTrayWrapper>
 	);
 }

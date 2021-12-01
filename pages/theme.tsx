@@ -24,12 +24,12 @@ export default function Home() {
     setState((pre) => ({ ...pre, [name]: value }));
   };
   return (
-    <AContainer>
+    <AContainer showLeftTray={false} showRighTray={false}>
       <div className={styles.theme__child}>
         {/* BUTTON THEME COMPONENTS HERE */}
         <div className={styles.theme__box}>
           <h3>BUTTONS</h3>
-          <div style={{ display: "flex", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: 'space-around' }}>
             <div className={styles.button__container}>
               <ButtonComponent
                 value="Primary"
@@ -47,7 +47,7 @@ export default function Home() {
                 type="buttonWithIcon"
                 value="Icon Button"
                 icon="/images/formulate.svg"
-                style={{ height: "50px", width: "234px", borderRadius: "14px" }}
+                style={{ height: "50px", width: "234px", borderRadius: "54px" }}
               />
             </div>
             <div className={styles.button__container}>
@@ -190,28 +190,33 @@ export default function Home() {
         <div className={styles.theme__box}>
           <h3>TYPOGRAPHY</h3>
           <div style={{ display: "flex", alignItems: "center" }}>
-            <TitleComponent
-              type="icon"
-              icon="/icons/clock.svg"
-              text="Heading With Icon"
-              style={undefined}
-              textStyle={undefined}
-            />{" "}
-            &nbsp; &nbsp; &nbsp; &nbsp;
-            <TitleComponent
-              text="Heading No Icon"
-              type={undefined}
-              style={undefined}
-              textStyle={undefined}
-              icon={undefined}
+            <div className={styles.container}>
+              <TitleComponent
+                type="icon"
+                icon="/icons/clock.svg"
+                text="Heading With Icon"
+                style={undefined}
+                textStyle={undefined}
+              />
+            </div>
+            <div className={styles.container}>
+              <TitleComponent
+                text="Heading No Icon"
+                type={undefined}
+                style={undefined}
+                textStyle={undefined}
+                icon={undefined}
             />
-            &nbsp; &nbsp; &nbsp; &nbsp;
-            <SectionTitleWithIcon
-              title="Ingredients"
-              icon="/icons/chart-bar-light-green.svg"
-            />
-            &nbsp; &nbsp; &nbsp; &nbsp;
-            <RecipeItem item={{ id: 1, label: "1 Frozen Banana" }} />
+            </div>
+            <div className={styles.container}>
+              <SectionTitleWithIcon
+                title="Ingredients"
+                icon="/icons/chart-bar-light-green.svg"
+              />
+            </div>
+            <div className={styles.container}>
+              <RecipeItem item={{ id: 1, label: "1 Frozen Banana" }} />
+            </div>
           </div>
         </div>
 
@@ -351,7 +356,7 @@ export default function Home() {
               value={state.age}
               setValue={update}
               fieldName="age"
-              lingLinedivider={10}
+              longLineDivider={10}
               shortLineDivider={2}
               max={"100"}
               min={"0"}
@@ -372,6 +377,7 @@ export default function Home() {
                 recipe={undefined}
                 findCompareRecipe={undefined}
                 fucUnCheck={undefined}
+                conpareLength={undefined}
               />
             </div>
           </div>

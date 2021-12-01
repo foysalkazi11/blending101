@@ -72,56 +72,47 @@ const index = () => {
             imgHeight={undefined}
             text={undefined}
             fnc={undefined}
-            img={undefined}
-          />
+            img={undefined} recipe={undefined} findCompareRecipe={undefined} fucUnCheck={undefined} conpareLength={undefined}          />
           <SmallcardComponent
             imgHeight={undefined}
             text={undefined}
             fnc={undefined}
-            img={undefined}
-          />
+            img={undefined} recipe={undefined} findCompareRecipe={undefined} fucUnCheck={undefined} conpareLength={undefined}          />
           <SmallcardComponent
             imgHeight={undefined}
             text={undefined}
             fnc={undefined}
-            img={undefined}
-          />
+            img={undefined} recipe={undefined} findCompareRecipe={undefined} fucUnCheck={undefined} conpareLength={undefined}          />
           <SmallcardComponent
             imgHeight={undefined}
             text={undefined}
             fnc={undefined}
-            img={undefined}
-          />
+            img={undefined} recipe={undefined} findCompareRecipe={undefined} fucUnCheck={undefined} conpareLength={undefined}          />
           <SmallcardComponent
             imgHeight={undefined}
             text={undefined}
             fnc={undefined}
-            img={undefined}
-          />
+            img={undefined} recipe={undefined} findCompareRecipe={undefined} fucUnCheck={undefined} conpareLength={undefined}          />
           <SmallcardComponent
             imgHeight={undefined}
             text={undefined}
             fnc={undefined}
-            img={undefined}
-          />
+            img={undefined} recipe={undefined} findCompareRecipe={undefined} fucUnCheck={undefined} conpareLength={undefined}          />
           <SmallcardComponent
             imgHeight={undefined}
             text={undefined}
             fnc={undefined}
-            img={undefined}
-          />
+            img={undefined} recipe={undefined} findCompareRecipe={undefined} fucUnCheck={undefined} conpareLength={undefined}          />
           <SmallcardComponent
             imgHeight={undefined}
             text={undefined}
             fnc={undefined}
-            img={undefined}
-          />
+            img={undefined} recipe={undefined} findCompareRecipe={undefined} fucUnCheck={undefined} conpareLength={undefined}          />
           <SmallcardComponent
             imgHeight={undefined}
             text={undefined}
             fnc={undefined}
-            img={undefined}
-          />
+            img={undefined} recipe={undefined} findCompareRecipe={undefined} fucUnCheck={undefined} conpareLength={undefined}          />
         </Carousel>
       </div>
 
