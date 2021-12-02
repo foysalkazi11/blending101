@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import LeftTrayWrapper from '../leftTray.wrapper';
 import styles from './nutritiontray.module.scss';
 
-export default function WikiTray(props) {
+export default function WikiTray({title, children}) {
 	return (
 		<LeftTrayWrapper>
 			<div className={styles.nutrition}>
@@ -31,9 +31,9 @@ export default function WikiTray(props) {
                     </div>
                 </div>
 				<div className={styles.nutrition__top} style={{marginTop:'20px'}}>
-                    <h3>Nutrition List</h3>
+                    <h3>{title}</h3>
                     {
-                        props.children
+                        children
                     }
                 </div>
 			</div>

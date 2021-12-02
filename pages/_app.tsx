@@ -5,6 +5,7 @@ import AuthProvider from '../auth/auth.component';
 import { AppProps } from 'next/app';
 import '../styles/variables.module.scss';
 import  '../styles/globalStyle.scss';
+import 'react-dropdown/style.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
 	return (

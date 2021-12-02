@@ -25,7 +25,8 @@ export default function LeftTrayWrapper(props) {
 
     return (
         <div className={styles.tray} ref={ref}>
-            {open ? (
+           <div className={styles.tray__inner}> 
+		   {open ? (
 				<div className={styles.image} onClick={handleClick}>
 					<img src="/icons/left__drawer__orange.svg" alt="drawer__orange" />
 				</div>
@@ -38,6 +39,7 @@ export default function LeftTrayWrapper(props) {
 				</div>
 			)}
             {props.children}
+		   </div>
         </div>
     )
 }
