@@ -24,7 +24,6 @@ const ChangeSteps = ({ nextStep, prevStep, steps }: ChangeStepsProps) => {
             value={steps === 4 ? "Finish" : "Next"}
             onClick={nextStep}
             style={{
-              fontSize: "18px",
               borderRadius: "40px",
               margin: "0 30px",
               height: "62px",
