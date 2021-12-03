@@ -1,0 +1,82 @@
+.inputContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  label {
+    opacity: 1;
+    margin-bottom: 0.25rem;
+    font-size: 12px;
+    line-height: 24px;
+    color: #484848;
+    letter-spacing: 0;
+    font-weight: 400;
+    line-height: 1.125rem;
+  }
+
+  input {
+    padding: 10px;
+    margin: 0;
+    border: 1px solid #fbfbfb;
+    opacity: 1;
+    font-weight: 600;
+    font-size: 15px;
+    width: 100%;
+    outline: none;
+    border-radius: 5px;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: #fbfbfb;
+    @media screen and (max-width: 1200px) {
+      font-size: 13px;
+    }
+  }
+
+  .searchInput {
+    display: flex;
+    align-items: center;
+    background: #fbfbfb;
+    border-radius: 5px;
+    .searchIcon {
+      color: #dcdbdb;
+      margin-right: 15px;
+      font-size: 25px;
+    }
+  }
+
+  .selectBox {
+    display: flex;
+    background: #fbfbfb;
+    border-radius: 5px;
+    align-items: center;
+
+    img {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+    }
+    select {
+      padding: 10px;
+      margin: 0;
+      border: 1px solid #fbfbfb;
+      opacity: 1;
+      font-weight: 600;
+      font-size: 15px;
+      width: 100%;
+      outline: none;
+      border-radius: 5px;
+      -webkit-appearance: none;
+      appearance: none;
+      background-color: #fbfbfb;
+      background-image: url("/icons/dwn-angle-bold.svg");
+      background-repeat: no-repeat;
+      background-position: 93%;
+      background-size: 16px;
+      box-shadow: none;
+      text-indent: 1px;
+      text-overflow: "";
+      @media screen and (max-width: 1200px) {
+        font-size: 13px;
+      }
+    }
+  }
+}
