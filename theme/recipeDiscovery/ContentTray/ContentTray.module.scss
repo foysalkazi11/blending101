@@ -1,0 +1,30 @@
+$orange_color:#fe5d1f;
+
+.main__slider {
+
+    margin-bottom: 40px;
+
+    h3 {
+        font-weight: 500;
+        font-size: 22px;
+        display: flex;
+        line-height: 1.2;
+        color: $orange_color; //variable defined above and represents orange color used in orange banner
+        min-height: 25px;
+
+
+
+        span {
+            position: relative;
+            width: 30px;
+            margin-right: 10px;
+            margin-left: 60px;
+            color: inherit;
+        }
+    }
+
+    .sliderMainDiv {
+        display: block;
+        padding: 20px;
+    }
+}

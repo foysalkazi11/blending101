@@ -2,7 +2,6 @@
 // import { Carousel } from 'react-responsive-carousel';
 import React, { useState } from "react";
 import styles from "./Carousel.module.scss";
-import { Carousel } from "react-responsive-carousel";
 import Image from "next/image";
 import { FaArrowAltCircleRight, FaArrowAltCircleLeft } from "react-icons/fa";
 import NavigateNextOutlinedIcon from "@mui/icons-material/NavigateNextOutlined";

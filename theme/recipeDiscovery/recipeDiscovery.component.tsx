@@ -3,55 +3,331 @@ import AContainer from "../../containers/A.container";
 import styles from "./recipeDiscovery.module.scss";
 import Image from "next/image";
 import Link from "next/link";
+import AppdownLoadCard from "./AppdownLoadCard/AppdownLoadCard.component";
+import ContentTray from "./ContentTray/ContentTray.component";
 
+import DatacardComponent from "../cards/dataCard/dataCard.component";
 const RecipeDetails = () => {
+  const recommendedList = [
+    {
+      title: "1",
+      ingredients: "",
+      category: "",
+      ratings: 0,
+      noOfRatings: 0,
+      carbs: 0,
+      score: 0,
+      calorie: 0,
+      noOfComments: 0,
+      image: "",
+    },
+    {
+      title: "2",
+      ingredients: "",
+      category: "",
+      ratings: 0,
+      noOfRatings: 0,
+      carbs: 0,
+      score: 0,
+      calorie: 0,
+      noOfComments: 0,
+      image: "",
+    },
+    {
+      title: "3",
+      ingredients: "",
+      category: "",
+      ratings: 0,
+      noOfRatings: 0,
+      carbs: 0,
+      score: 0,
+      calorie: 0,
+      noOfComments: 0,
+      image: "",
+    },
+    {
+      title: "4",
+      ingredients: "",
+      category: "",
+      ratings: 0,
+      noOfRatings: 0,
+      carbs: 0,
+      score: 0,
+      calorie: 0,
+      noOfComments: 0,
+      image: "",
+    },
+    {
+      title: "5",
+      ingredients: "",
+      category: "",
+      ratings: 0,
+      noOfRatings: 0,
+      carbs: 0,
+      score: 0,
+      calorie: 0,
+      noOfComments: 0,
+      image: "",
+    },
+    {
+      title: "6",
+      ingredients: "",
+      category: "",
+      ratings: 0,
+      noOfRatings: 0,
+      carbs: 0,
+      score: 0,
+      calorie: 0,
+      noOfComments: 0,
+      image: "",
+    },
+    {
+      title: "7",
+      ingredients: "",
+      category: "",
+      ratings: 0,
+      noOfRatings: 0,
+      carbs: 0,
+      score: 0,
+      calorie: 0,
+      noOfComments: 0,
+      image: "",
+    },
+    {
+      title: "8",
+      ingredients: "",
+      category: "",
+      ratings: 0,
+      noOfRatings: 0,
+      carbs: 0,
+      score: 0,
+      calorie: 0,
+      noOfComments: 0,
+      image: "",
+    },
+    {
+      title: "9",
+      ingredients: "",
+      category: "",
+      ratings: 0,
+      noOfRatings: 0,
+      carbs: 0,
+      score: 0,
+      calorie: 0,
+      noOfComments: 0,
+      image: "",
+    },
+    {
+      title: "10",
+      ingredients: "",
+      category: "",
+      ratings: 0,
+      noOfRatings: 0,
+      carbs: 0,
+      score: 0,
+      calorie: 0,
+      noOfComments: 0,
+      image: "",
+    },
+  ];
+
+  const recentList = [
+    {
+      title: "1",
+      ingredients: "",
+      category: "",
+      ratings: 0,
+      noOfRatings: 0,
+      carbs: 0,
+      score: 0,
+      calorie: 0,
+      noOfComments: 0,
+      image: "",
+    },
+    {
+      title: "2",
+      ingredients: "",
+      category: "",
+      ratings: 0,
+      noOfRatings: 0,
+      carbs: 0,
+      score: 0,
+      calorie: 0,
+      noOfComments: 0,
+      image: "",
+    },
+    {
+      title: "3",
+      ingredients: "",
+      category: "",
+      ratings: 0,
+      noOfRatings: 0,
+      carbs: 0,
+      score: 0,
+      calorie: 0,
+      noOfComments: 0,
+      image: "",
+    },
+  ];
+
+  const popularList = [
+    {
+      title: "1",
+      ingredients: "",
+      category: "",
+      ratings: 0,
+      noOfRatings: 0,
+      carbs: 0,
+      score: 0,
+      calorie: 0,
+      noOfComments: 0,
+      image: "",
+    },
+    {
+      title: "2",
+      ingredients: "",
+      category: "",
+      ratings: 0,
+      noOfRatings: 0,
+      carbs: 0,
+      score: 0,
+      calorie: 0,
+      noOfComments: 0,
+      image: "",
+    },
+    {
+      title: "3",
+      ingredients: "",
+      category: "",
+      ratings: 0,
+      noOfRatings: 0,
+      carbs: 0,
+      score: 0,
+      calorie: 0,
+      noOfComments: 0,
+      image: "",
+    },
+    {
+      title: "1",
+      ingredients: "",
+      category: "",
+      ratings: 0,
+      noOfRatings: 0,
+      carbs: 0,
+      score: 0,
+      calorie: 0,
+      noOfComments: 0,
+      image: "",
+    },
+    {
+      title: "2",
+      ingredients: "",
+      category: "",
+      ratings: 0,
+      noOfRatings: 0,
+      carbs: 0,
+      score: 0,
+      calorie: 0,
+      noOfComments: 0,
+      image: "",
+    },
+    {
+      title: "3",
+      ingredients: "",
+      category: "",
+      ratings: 0,
+      noOfRatings: 0,
+      carbs: 0,
+      score: 0,
+      calorie: 0,
+      noOfComments: 0,
+      image: "",
+    },
+  ];
+
   return (
     <AContainer>
       <div className={styles.main__div}>
-        <div className={styles.orange__card}>
-          <div className={styles.orange__card__left}>
-            <h2>DOWNLOAD THE APP NOW !</h2>
-            <p>
-              EXPLORE INGREDIENTS, NUTRITION AND HEALTH CATEGORIES WITH THE
-              ALL-NEW BLENDING APP.
-            </p>
-            <div className={styles.orange__card__left__Buttons}>
-              <div className={styles.btn}>
-                <Link href={"#"}>
-                  <a>
-                    <Image
-                      src={"/images/app-store@2x.png"}
-                      alt="banner Icon"
-                      layout={"fill"}
-                      objectFit={"contain"}
-                    ></Image>
-                  </a>
-                </Link>
-              </div>
-              <div className={styles.btn}>
-                <Link href={"#"}>
-                  <a>
-                    <Image
-                      src={"/images/google-play@2x.png"}
-                      alt="banner Icon"
-                      layout={"fill"}
-                      objectFit={"contain"}
-                    ></Image>
-                  </a>
-                </Link>
-              </div>
-            </div>
-          </div>
-          <div className={styles.orange__card__right}>
-            <div className={styles.orange__card__right__icon}>
-              <Image
-                src={"/images/banner-right-item.png"}
-                alt="banner Icon"
-                layout={"fill"}
-                objectFit={"contain"}
-              />
-            </div>
-          </div>
+        <AppdownLoadCard />
+        <div className={styles.main__tray}>
+          {/* pass list of card to create carousel slider */}
+
+          {/* its for recommended */}
+          <ContentTray heading={"Recommended"} image={"/images/thumbs-up.svg"}>
+            {recommendedList.map((cardData, index) => {
+              {
+                return (
+                  <div className={styles.slider__card}>
+                    <DatacardComponent
+                      key={index}
+                      title={cardData.title}
+                      ingredients={cardData.ingredients}
+                      category={cardData.category}
+                      ratings={cardData.ratings}
+                      noOfRatings={cardData.noOfRatings}
+                      carbs={cardData.carbs}
+                      score={cardData.score}
+                      calorie={cardData.calorie}
+                      noOfComments={cardData.noOfComments}
+                      image={cardData.image}
+                    />
+                  </div>
+                );
+              }
+            })}
+          </ContentTray>
+
+          {/* its for Recent*/}
+
+          <ContentTray heading={"Recent"} image={"/images/clock-light.svg"}>
+            {recentList.map((cardData, index) => {
+              {
+                return (
+                  <div className={styles.slider__card}>
+                    <DatacardComponent
+                      key={index}
+                      title={cardData.title}
+                      ingredients={cardData.ingredients}
+                      category={cardData.category}
+                      ratings={cardData.ratings}
+                      noOfRatings={cardData.noOfRatings}
+                      carbs={cardData.carbs}
+                      score={cardData.score}
+                      calorie={cardData.calorie}
+                      noOfComments={cardData.noOfComments}
+                      image={cardData.image}
+                    />
+                  </div>
+                );
+              }
+            })}
+          </ContentTray>
+
+          {/* its for Popular */}
+
+          <ContentTray heading={"Popular"} image={"/images/fire-alt-light.svg"}>
+            {popularList.map((cardData, index) => {
+              {
+                return (
+                  <div className={styles.slider__card}>
+                    <DatacardComponent
+                      key={index}
+                      title={cardData.title}
+                      ingredients={cardData.ingredients}
+                      category={cardData.category}
+                      ratings={cardData.ratings}
+                      noOfRatings={cardData.noOfRatings}
+                      carbs={cardData.carbs}
+                      score={cardData.score}
+                      calorie={cardData.calorie}
+                      noOfComments={cardData.noOfComments}
+                      image={cardData.image}
+                    />
+                  </div>
+                );
+              }
+            })}
+          </ContentTray>
         </div>
       </div>
     </AContainer>
