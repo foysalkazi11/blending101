@@ -39,6 +39,16 @@ const ContentTray = (props) => {
       </div>
     );
   };
+
+  const noofCards = () => {
+    let width = window.screen.width;
+    console.log(width);
+    if (width < 900) {
+      return 2;
+    } else if (width < 1200) {
+      return 3;
+    }
+  };
   return (
     <div className={styles.main__slider}>
       <h3>
@@ -58,7 +68,7 @@ const ContentTray = (props) => {
           initialSlide={0}
           infinite={false}
           speed={500}
-          slidesToShow={2.8}
+          slidesToShow={3}
           slidesToScroll={1}
           nextArrow={<NextButton />}
           prevArrow={<PreviousButton />}
