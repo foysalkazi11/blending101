@@ -2,13 +2,32 @@ import React from "react";
 import ButtonComponent from "../../button/button.component";
 import styles from "./UserPlan.module.scss";
 
-const UserPlan = () => {
+type UserPlanProps = {
+  label: string;
+  value: string;
+  amount: number;
+  plan: string;
+  handleChange: (name: string, value: string) => void;
+};
+
+const UserPlan = ({
+  label,
+  value,
+  plan,
+  amount,
+  handleChange,
+}: UserPlanProps) => {
   return (
-    <div className={styles.userPlanContainer}>
-      <p className={styles.planTitle}>Free</p>
+    <div
+      className={`${styles.userPlanContainer} ${
+        value === plan ? styles.active : ""
+      }`}
+      onClick={() => handleChange("plan", value)}
+    >
+      <p className={styles.planTitle}>{label}</p>
       <p className={styles.planSubtitle}>Ullamco laboris nisi ut</p>
       <strong>
-        $0 <small>/mo</small>
+        ${amount} <small>/mo</small>
       </strong>
       <div className={styles.btnContainer}>
         <ButtonComponent

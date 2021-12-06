@@ -18,6 +18,9 @@ const User = () => {
       email: "example@gmail.com",
       location: "all",
     },
+    membership: {
+      plan: "supporter",
+    },
   });
 
   return (

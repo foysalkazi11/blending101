@@ -20,7 +20,7 @@ const Main = ({ userData, setUserData }: MainProps) => {
       case 0:
         return <About userData={userData} setUserData={setUserData} />;
       case 1:
-        return <Membership />;
+        return <Membership userData={userData} setUserData={setUserData} />;
       case 2:
         return <Notification />;
       case 3:
