@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import ButtonComponent from "../../../buttonA/button.component";
+import ButtonComponent from "../../../button/buttonA/button.component";
 import InputField from "../../../input/inputField.component";
 import SocialTray from "../../authComponents/socialTray/socialTray.component";
 import styles from "./Login.module.scss";

@@ -1,5 +1,5 @@
 import React from "react";
-import ButtonComponent from "../../buttonA/button.component";
+import ButtonComponent from "../../button/buttonA/button.component";
 import styles from "./helpBox.module.scss";
 
 const HelpBox = () => {

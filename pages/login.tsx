@@ -5,39 +5,6 @@ import AuthScreen from "../theme/authScreen/authScreen.component";
 
 export default function Login(props) {
   return (
-    // <div>
-    //   <InputComponent
-    //     type=""
-    //     style={{}}
-    //     value=""
-    //     setValue={undefined}
-    //     placeholder={undefined}
-    //     textarea={undefined}
-    //     fullWidth={undefined}
-    //     width={"100%"}
-    //   />
-    //   <InputField
-    //     type="password"
-    //     style={{}}
-    //     value={undefined}
-    //     placeholder={undefined}
-    //     fullWidth={true}
-    //   />
-    //   <InputField
-    //     type="text"
-    //     style={{}}
-    //     value={undefined}
-    //     placeholder={undefined}
-    //     fullWidth={true}
-    //   />
-    //   <InputField
-    //     type="email"
-    //     style={{}}
-    //     value={undefined}
-    //     placeholder={undefined}
-    //     fullWidth={true}
-    //   />
-    // </div>
     <div>
         <AuthScreen type={"login"}/>
     </div>

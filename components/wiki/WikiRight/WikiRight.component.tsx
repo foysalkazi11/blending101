@@ -1,49 +1,32 @@
 import React, { useState } from "react";
 import styles from "./WikiRight.module.scss";
-import Card from "./Card/Card.component";
+import LinearComponent from "../../../theme/linearProgress/LinearProgress.component";
 // import { color, fontSize } from "@mui/system";
 import Image from "next/image";
 import { FaSortAmountDownAlt, FaSortAmountDown } from "react-icons/fa";
-import DropDown from "./DropDown/DropDown.component";
+import DropDown from "../../../theme/dropDown/DropDown.component";
 
 // import {BsCaretDown} from 'react-icons/bs';
 // import dropDownIcon from '/icons/dropdown.svg';
 
-// just to ensure correct type of values are being passed
+// ensure correct type of values are being passed
 interface PassingProps {
   name: string;
   percent: number;
 }
 
+interface PassingData{
+  ingredient?:{name:string,percent:number}[];
+  nutrition?:{name:string,percent:number}[];
+}
 //state for sorting icon
 
-function WikiRightComponent() {
+function WikiRightComponent({ingredient,nutrition}:PassingData) {
   const [sortState, curSortState] = useState(true);
   const SortingOrder = () => {
     curSortState(!sortState);
     return sortState;
   };
-  const Ingredients = [
-    { name: "Ginger", percent: 109 },
-    { name: "Turmeric", percent: 95 },
-    { name: "Chia Seeds", percent: 90 },
-    { name: "Broth", percent: 80 },
-    { name: "Sweet Potatoes", percent: 75 },
-    { name: "Winter Squash", percent: 60 },
-    { name: "Mint", percent: 55 },
-    { name: "Pineapple", percent: 40 },
-    { name: "Coconut Oil", percent: 35 },
-  ];
-
-  const Nutrition = [
-    { name: "Vitamin A", percent: 100 },
-    { name: "Vitexin", percent: 90 },
-    { name: "Vitamin D", percent: 87 },
-    { name: "Iron", percent: 69 },
-    { name: "Betaxanthins", percent: 50 },
-    { name: "Calcium", percent: 35 },
-    { name: "Quercetiin", percent: 20 },
-  ];
 
 
   let dropdownItem = [
@@ -102,14 +85,14 @@ function WikiRightComponent() {
             </div>
           </div>
         </div>
-        {Ingredients.map(({ name, percent }: PassingProps, index) => {
-          return <Card name={name} percent={percent} key={index} />;
+        {ingredient.map(({ name, percent }: PassingProps, index) => {
+          return <LinearComponent name={name} percent={percent} key={index} />;
         })}
       </div>
       <div className={styles.rightCardNutrition}>
         <div className={styles.rightCardHeading}>Nutrition</div>
-        {Nutrition.map(({ name, percent }: PassingProps, index) => {
-          return <Card name={name} percent={percent} key={index} />;
+        {nutrition.map(({ name, percent }: PassingProps, index) => {
+          return <LinearComponent name={name} percent={percent} key={index} />;
         })}
       </div>
 

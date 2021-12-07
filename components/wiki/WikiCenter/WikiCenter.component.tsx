@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styles from "./wikiCenter.module.scss";
 import CarouselComponent from "./Carousel/Carousel.component";
+import SlickSlider from "../../../theme/carousel/carousel.component";
 import Image from "next/image";
 import { style } from "@mui/system";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -52,7 +53,11 @@ function WikiCenterComponent() {
       <p className={styles.text}>
         {isReadMore ? text.slice(0, 300) : text},
         <span onClick={toggleReadMore} className={styles.read_or_hide}>
-          {isReadMore ? <span>&nbsp; {"Read More"}</span> : <span>&nbsp; {"Read Less"}</span>}
+          {isReadMore ? (
+            <span>&nbsp; {"Read More"}</span>
+          ) : (
+            <span>&nbsp; {"Read Less"}</span>
+          )}
         </span>
       </p>
     );
@@ -136,7 +141,6 @@ function WikiCenterComponent() {
           </div>
         </div>
         <CarouselComponent />
-
         <div className={styles.healthRiskRankScore}>240</div>
         <div className={styles.healthRiskRankTitle}>Health Risk Rank</div>
         <ReadMore>
