@@ -3,7 +3,7 @@ import React from "react";
 import InputField from "../../../input/inputField.component";
 import Image from "next/image";
 import styles from "./SignupScreen.module.scss";
-import ButtonComponent from "../../../buttonA/button.component";
+import ButtonComponent from "../../../button/buttonA/button.component";
 import SocialTray from "../../authComponents/socialTray/socialTray.component";
 import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
 const SignupScreen = () => {

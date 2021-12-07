@@ -1,7 +1,6 @@
-import { style } from "@mui/system";
 import React from "react";
-import styles from "./Card.module.scss";
-import LinearIndicatorcomponent from "./RightLinearContentIndicator/LinearIndicator.component";
+import styles from "./linearProgress.module.scss";
+import LinearIndicatorcomponent from "./progress/progress.component";
 
 
 interface Props{
@@ -9,7 +8,7 @@ interface Props{
     percent:number;
 }
 
-const Cardcomponent=({name,percent}:Props)=> {
+const Linearcomponent=({name,percent}:Props)=> {
   return (
     <div className={styles.mainDiv}>
       <div className={styles.cardHeadComponent}>
@@ -21,4 +20,4 @@ const Cardcomponent=({name,percent}:Props)=> {
   );
 }
 
-export default Cardcomponent;
+export default Linearcomponent;

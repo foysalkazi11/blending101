@@ -4,7 +4,7 @@ import Image from "next/image";
 import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
 import Link from "next/link";
 import InputField from "../../../input/inputField.component";
-import ButtonComponent from "../../../buttonA/button.component";
+import ButtonComponent from "../../../button/buttonA/button.component";
 
 const ResetPassword = () => {
   return (
