@@ -31,7 +31,7 @@ const SignupScreen = () => {
           <div className={styles.contentCard}>
             <h2>Already have an Account</h2>
             <p>
-              afjhsfjkalkfjsf;kjfh;fhfsdhjfafgasf;afigasdkfgasdfag;fsfkjasfjahsjfhgjhagjhjafhjh
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, sit a voluptas eligendi adribus placeat minus maiores amet earum.
             </p>
             <div className={styles.buttonRightDiv}>
               <Link href="/login">
