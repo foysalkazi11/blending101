@@ -35,13 +35,11 @@ $orange_card_font:#ffffff;
             // background-color: chartreuse;
         }
 
-        @media only screen and (min-width: 980px) and (max-width: 1290px) {
-
-        }
+        @media only screen and (min-width: 980px) and (max-width: 1290px) {}
 
         h2 {
             color: $orange_card_font;
-            margin-left: auto;
+            // margin-left: auto;
             text-align: left;
             font-size: 46px;
             text-transform: uppercase;
@@ -51,10 +49,13 @@ $orange_card_font:#ffffff;
             margin-top: 26px; // to be removed when font-family='Mohave' starts working
             margin-bottom: 0px;
             width: 550px;
+            // background-color: green;
+            margin-right: auto;
 
             @media only screen and (max-width: 980px) {
                 margin-top: 0px;
             }
+
             // @media only screen and (min-width: 980px) and (max-width: 1290px) {
             //     margin-top: 0px;
             // }
@@ -93,6 +94,7 @@ $orange_card_font:#ffffff;
                 // background-color: brown;
                 position: relative;
                 margin: 0px -8px;
+
                 @media only screen and (max-width: 980px) {
                     min-width: 120px;
                     height: 50px;
@@ -117,6 +119,7 @@ $orange_card_font:#ffffff;
         // background-color: green;
         // it contains nextjs image with fill property so it needs to be of position relative
         border-radius: 20px;
+
         &__icon {
             // background-color: aquamarine;
             margin-left: auto;
@@ -129,7 +132,7 @@ $orange_card_font:#ffffff;
             right: -5px;
 
             @media only screen and (max-width: 980px) {
-                width:300px;
+                width: 300px;
                 line-height: 1.4;
                 margin-bottom: 10px;
                 right: -14px;
