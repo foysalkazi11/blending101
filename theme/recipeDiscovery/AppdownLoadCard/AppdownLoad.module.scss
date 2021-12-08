@@ -13,11 +13,18 @@ $orange_card_font:#ffffff;
     transition: all 0.5s;
     // height: auto;
 
-    @media only screen and (max-width: 700px) {
+    @media only screen and (max-width:500px) {
+        min-width: 220px;
+        // background-color: rgb(223, 75, 75);
+        min-height: fit-content;
+
+    }
+
+    @media only screen and (min-width:500px) and (max-width: 700px) {
         height: auto;
         // min-height: 20vh;
         min-height: 200px;
-        background-color: #fe5d1f;
+        // background-color: #fe5d1f;
     }
 
     @media only screen and (min-width:700px) and(max-width: 980px) {
@@ -39,7 +46,8 @@ $orange_card_font:#ffffff;
         width: 50%;
 
         @media only screen and (max-width: 700px) {
-            height: auto;
+            // background-color: pink;
+            min-height: auto;
             padding: 20px;
         }
 
@@ -113,17 +121,29 @@ $orange_card_font:#ffffff;
             min-height: 66px;
             position: relative;
             display: flex;
+            // background-color: yellow;
             // justify-content: space-around;
 
+            @media only screen and (max-width:500px) {
+                // display: block;
+                // min-height: 120px;
+                height: auto;
+                flex-wrap: wrap;
+            }
 
             .btn {
                 min-width: 200px;
                 display: block;
-                // background-color: brown;
                 position: relative;
                 margin: 0px -8px;
 
-                @media only screen and (max-width: 980px) {
+                @media only screen and (min-width:280px) and (max-width:500px) {
+                    width: fit-content;
+                    // background-color: green;
+                    height: 60px;
+                }
+
+                @media only screen and (min-width:700px) and (max-width: 980px) {
                     min-width: 120px;
                     height: 50px;
                     margin: 0px;
