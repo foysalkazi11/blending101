@@ -23,9 +23,8 @@ const RecipeDetails = () => {
             {recommendedList.map((cardData, index) => {
               {
                 return (
-                  <div className={styles.slider__card}>
+                  <div className={styles.slider__card} key={index}>
                     <DatacardComponent
-                      key={index}
                       title={cardData.title}
                       ingredients={cardData.ingredients}
                       category={cardData.category}
@@ -49,9 +48,8 @@ const RecipeDetails = () => {
             {recentList.map((cardData, index) => {
               {
                 return (
-                  <div className={styles.slider__card}>
+                  <div className={styles.slider__card} key={index}>
                     <DatacardComponent
-                      key={index}
                       title={cardData.title}
                       ingredients={cardData.ingredients}
                       category={cardData.category}
@@ -75,9 +73,8 @@ const RecipeDetails = () => {
             {popularList.map((cardData, index) => {
               {
                 return (
-                  <div className={styles.slider__card}>
+                  <div className={styles.slider__card} key={index}>
                     <DatacardComponent
-                      key={index}
                       title={cardData.title}
                       ingredients={cardData.ingredients}
                       category={cardData.category}
