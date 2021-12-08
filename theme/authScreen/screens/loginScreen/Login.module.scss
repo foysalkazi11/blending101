@@ -1,10 +1,10 @@
 @use "../../breakpoints.module.scss"as bp;
 
 .inputMainDiv {
-    // position: relative;
+    position: relative;
     width: 50%;
     height: 100%;
-    min-height: 100vh;
+    min-height: 95vh;
     // background-color: #ce5757;
     background-position-x: center;
     background-position-y: bottom;
@@ -27,8 +27,9 @@
 
 .inputContentDiv {
     display: block;
-    // background-color: #d4d5f1;
-    height: 100%;
+    // background-color: #2a2e99;
+    height: auto;
+    max-height: fit-content;
     width: 100%;
 
     .logo {
@@ -306,7 +307,7 @@
     background-position-y: center;
     background-size: cover;
     width: 50%;
-    min-height: 100vh;
+    min-height: 95vh;
     height: auto;
     background-color: #f5f5f5;
 

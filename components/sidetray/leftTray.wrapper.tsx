@@ -8,7 +8,7 @@ export default function LeftTrayWrapper(props) {
 
     const ref = useRef<any>();
 	const reff = useRef<any>();
-    
+
     useEffect(() => {
 		const elem = ref.current;
 		if (!elem) return;
@@ -25,7 +25,7 @@ export default function LeftTrayWrapper(props) {
 
     return (
         <div className={styles.tray} ref={ref}>
-           <div className={styles.tray__inner}> 
+           <div className={styles.tray__inner}>
 		   {open ? (
 				<div className={styles.image} onClick={handleClick}>
 					<img src="/icons/left__drawer__orange.svg" alt="drawer__orange" />

@@ -1,7 +1,5 @@
 import React from "react";
-import LinearProgress from "@mui/material/LinearProgress";
-import styles from "./LinearIndicator.module.scss";
-import { color } from "@mui/system";
+import styles from "./progress.module.scss";
 
 interface Percent {
   percent: number;
@@ -9,7 +7,6 @@ interface Percent {
 
 const LinearIndicatorcomponent = ({ percent }: Percent) => {
   let width: string = percent.toString() + "%";
-  let backgroundColor = "green";
 
   console.log(width);
 

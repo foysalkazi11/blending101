@@ -1,36 +1,21 @@
 .mainwiki {
     background-color: #fafbf9;
-    // background-color:green;
-    // margin-top:10px ;
-    // margin: 10px;
-    // width: 85%;
-    // margin-left: 200px;
     height: 100%;
     width: 100%;
-    // margin-left: 70px;
-    // padding-left:20px;
     padding-left: 20px;
     padding-right: 20px;
-    // margin-right: auto;
-    // min-height:100vh;
     max-height: auto;
     padding-bottom: 20px;
-    // margin-left: 12%;
     padding-top: 40px;
-    // padding-left: 10px;
     display: flex;
     margin: 0px;
     transition: all 500ms ease;
-    // margin-bottom: 20px;
 }
 
 
 @media only screen and (max-width: 980px) {
     .mainwiki {
         display: block;
-        // padding-left:20px;
-        // background-color:green;
-        // transition: cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 }
 

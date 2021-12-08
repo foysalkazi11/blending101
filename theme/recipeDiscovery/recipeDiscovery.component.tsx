@@ -6,244 +6,10 @@ import Link from "next/link";
 import AppdownLoadCard from "./AppdownLoadCard/AppdownLoadCard.component";
 import ContentTray from "./ContentTray/ContentTray.component";
 
+import { recommendedList,recentList,popularList } from "./data";
+
 import DatacardComponent from "../cards/dataCard/dataCard.component";
 const RecipeDetails = () => {
-  const recommendedList = [
-    {
-      title: "1",
-      ingredients: "",
-      category: "",
-      ratings: 0,
-      noOfRatings: 0,
-      carbs: 0,
-      score: 0,
-      calorie: 0,
-      noOfComments: 0,
-      image: "",
-    },
-    {
-      title: "2",
-      ingredients: "",
-      category: "",
-      ratings: 0,
-      noOfRatings: 0,
-      carbs: 0,
-      score: 0,
-      calorie: 0,
-      noOfComments: 0,
-      image: "",
-    },
-    {
-      title: "3",
-      ingredients: "",
-      category: "",
-      ratings: 0,
-      noOfRatings: 0,
-      carbs: 0,
-      score: 0,
-      calorie: 0,
-      noOfComments: 0,
-      image: "",
-    },
-    {
-      title: "4",
-      ingredients: "",
-      category: "",
-      ratings: 0,
-      noOfRatings: 0,
-      carbs: 0,
-      score: 0,
-      calorie: 0,
-      noOfComments: 0,
-      image: "",
-    },
-    {
-      title: "5",
-      ingredients: "",
-      category: "",
-      ratings: 0,
-      noOfRatings: 0,
-      carbs: 0,
-      score: 0,
-      calorie: 0,
-      noOfComments: 0,
-      image: "",
-    },
-    {
-      title: "6",
-      ingredients: "",
-      category: "",
-      ratings: 0,
-      noOfRatings: 0,
-      carbs: 0,
-      score: 0,
-      calorie: 0,
-      noOfComments: 0,
-      image: "",
-    },
-    {
-      title: "7",
-      ingredients: "",
-      category: "",
-      ratings: 0,
-      noOfRatings: 0,
-      carbs: 0,
-      score: 0,
-      calorie: 0,
-      noOfComments: 0,
-      image: "",
-    },
-    {
-      title: "8",
-      ingredients: "",
-      category: "",
-      ratings: 0,
-      noOfRatings: 0,
-      carbs: 0,
-      score: 0,
-      calorie: 0,
-      noOfComments: 0,
-      image: "",
-    },
-    {
-      title: "9",
-      ingredients: "",
-      category: "",
-      ratings: 0,
-      noOfRatings: 0,
-      carbs: 0,
-      score: 0,
-      calorie: 0,
-      noOfComments: 0,
-      image: "",
-    },
-    {
-      title: "10",
-      ingredients: "",
-      category: "",
-      ratings: 0,
-      noOfRatings: 0,
-      carbs: 0,
-      score: 0,
-      calorie: 0,
-      noOfComments: 0,
-      image: "",
-    },
-  ];
-
-  const recentList = [
-    {
-      title: "1",
-      ingredients: "",
-      category: "",
-      ratings: 0,
-      noOfRatings: 0,
-      carbs: 0,
-      score: 0,
-      calorie: 0,
-      noOfComments: 0,
-      image: "",
-    },
-    {
-      title: "2",
-      ingredients: "",
-      category: "",
-      ratings: 0,
-      noOfRatings: 0,
-      carbs: 0,
-      score: 0,
-      calorie: 0,
-      noOfComments: 0,
-      image: "",
-    },
-    {
-      title: "3",
-      ingredients: "",
-      category: "",
-      ratings: 0,
-      noOfRatings: 0,
-      carbs: 0,
-      score: 0,
-      calorie: 0,
-      noOfComments: 0,
-      image: "",
-    },
-  ];
-
-  const popularList = [
-    {
-      title: "1",
-      ingredients: "",
-      category: "",
-      ratings: 0,
-      noOfRatings: 0,
-      carbs: 0,
-      score: 0,
-      calorie: 0,
-      noOfComments: 0,
-      image: "",
-    },
-    {
-      title: "2",
-      ingredients: "",
-      category: "",
-      ratings: 0,
-      noOfRatings: 0,
-      carbs: 0,
-      score: 0,
-      calorie: 0,
-      noOfComments: 0,
-      image: "",
-    },
-    {
-      title: "3",
-      ingredients: "",
-      category: "",
-      ratings: 0,
-      noOfRatings: 0,
-      carbs: 0,
-      score: 0,
-      calorie: 0,
-      noOfComments: 0,
-      image: "",
-    },
-    {
-      title: "1",
-      ingredients: "",
-      category: "",
-      ratings: 0,
-      noOfRatings: 0,
-      carbs: 0,
-      score: 0,
-      calorie: 0,
-      noOfComments: 0,
-      image: "",
-    },
-    {
-      title: "2",
-      ingredients: "",
-      category: "",
-      ratings: 0,
-      noOfRatings: 0,
-      carbs: 0,
-      score: 0,
-      calorie: 0,
-      noOfComments: 0,
-      image: "",
-    },
-    {
-      title: "3",
-      ingredients: "",
-      category: "",
-      ratings: 0,
-      noOfRatings: 0,
-      carbs: 0,
-      score: 0,
-      calorie: 0,
-      noOfComments: 0,
-      image: "",
-    },
-  ];
 
   return (
     <AContainer>
@@ -257,9 +23,8 @@ const RecipeDetails = () => {
             {recommendedList.map((cardData, index) => {
               {
                 return (
-                  <div className={styles.slider__card}>
+                  <div className={styles.slider__card} key={index}>
                     <DatacardComponent
-                      key={index}
                       title={cardData.title}
                       ingredients={cardData.ingredients}
                       category={cardData.category}
@@ -283,9 +48,8 @@ const RecipeDetails = () => {
             {recentList.map((cardData, index) => {
               {
                 return (
-                  <div className={styles.slider__card}>
+                  <div className={styles.slider__card} key={index}>
                     <DatacardComponent
-                      key={index}
                       title={cardData.title}
                       ingredients={cardData.ingredients}
                       category={cardData.category}
@@ -309,9 +73,8 @@ const RecipeDetails = () => {
             {popularList.map((cardData, index) => {
               {
                 return (
-                  <div className={styles.slider__card}>
+                  <div className={styles.slider__card} key={index}>
                     <DatacardComponent
-                      key={index}
                       title={cardData.title}
                       ingredients={cardData.ingredients}
                       category={cardData.category}
