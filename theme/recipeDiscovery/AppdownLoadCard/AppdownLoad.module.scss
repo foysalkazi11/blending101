@@ -10,8 +10,17 @@ $orange_card_font:#ffffff;
     border-radius: 20px;
     background-color: #fe5d1f;
     margin-top: 80px;
+    transition: all 0.5s;
+    // height: auto;
 
-    @media only screen and (max-width: 980px) {
+    @media only screen and (max-width: 700px) {
+        height: auto;
+        // min-height: 20vh;
+        min-height: 200px;
+        background-color: #fe5d1f;
+    }
+
+    @media only screen and (min-width:700px) and(max-width: 980px) {
         min-height: 200px;
     }
 
@@ -21,6 +30,7 @@ $orange_card_font:#ffffff;
 
 
     &__left {
+        display: block;
         padding: 20px 20px 20px 40px;
         // background-color: rgb(139, 179, 106);
         flex-grow: 1;
@@ -28,8 +38,12 @@ $orange_card_font:#ffffff;
         min-height: 250px;
         width: 50%;
 
+        @media only screen and (max-width: 700px) {
+            height: auto;
+            padding: 20px;
+        }
 
-        @media only screen and (max-width: 980px) {
+        @media only screen and (min-width:700px) and (max-width: 980px) {
             min-height: 200px;
             padding: 20px;
             // background-color: chartreuse;
@@ -52,8 +66,15 @@ $orange_card_font:#ffffff;
             // background-color: green;
             margin-right: auto;
 
-            @media only screen and (max-width: 980px) {
+            @media only screen and (max-width: 700px) {
+                width: 100%;
+                font-size: 36px;
                 margin-top: 0px;
+            }
+
+            @media only screen and (min-width:700px) and (max-width: 980px) {
+                margin-top: 0px;
+                min-width: 100%;
             }
 
             // @media only screen and (min-width: 980px) and (max-width: 1290px) {
@@ -70,10 +91,17 @@ $orange_card_font:#ffffff;
             font-size: 16px;
             line-height: 1.2;
             margin-bottom: 20px;
-            width: 550px;
+            max-width: 550px;
 
-            @media only screen and (max-width: 980px) {
-                width: 450px;
+            @media only screen and (max-width: 700px) {
+                width: 100%;
+                font-size: 14px;
+
+            }
+
+            @media only screen and (min-width:700px) and (max-width: 980px) {
+                max-width: 600px;
+                width: 400px;
                 line-height: 1.4;
                 margin-bottom: 10px;
                 font-size: 16px;
@@ -111,6 +139,7 @@ $orange_card_font:#ffffff;
     }
 
     &__right {
+        display: block;
         z-index: 3;
         // flex-grow: 1;
         width: 20%;
@@ -119,6 +148,10 @@ $orange_card_font:#ffffff;
         // background-color: green;
         // it contains nextjs image with fill property so it needs to be of position relative
         border-radius: 20px;
+
+        @media only screen and (max-width: 700px) {
+            display: none;
+        }
 
         &__icon {
             // background-color: aquamarine;
@@ -131,7 +164,9 @@ $orange_card_font:#ffffff;
             top: -68px;
             right: -5px;
 
-            @media only screen and (max-width: 980px) {
+
+
+            @media only screen and (min-width:700px)and(max-width: 980px) {
                 width: 300px;
                 line-height: 1.4;
                 margin-bottom: 10px;
