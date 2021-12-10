@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AContainer from "../../../containers/A.container";
 import styles from "./User.module.scss";
 import { Container, Grid } from "@mui/material";
@@ -18,7 +18,35 @@ const User = () => {
       email: "example@gmail.com",
       location: "all",
     },
+    membership: {
+      plan: "supporter",
+    },
+    notification: {
+      platform: {
+        newsAndEvents: [],
+        blending101Offers: [],
+      },
+      topicDigest: {
+        recommendations: [],
+        sharedwithYou: [],
+      },
+    },
+    personalization: {
+      gender: "female",
+      activity: "moderate",
+      age: "50",
+      weight: "170",
+      dietary: "ketogenic",
+      allergies: "moderate",
+      medicalCondition: [],
+      medicationCurrentlyTaking: [],
+      goals: [],
+    },
   });
+
+  useEffect(() => {
+    console.log(userData);
+  }, [userData]);
 
   return (
     <AContainer
@@ -44,18 +72,6 @@ const User = () => {
           <Grid item xs={12} md={8}>
             <div className={styles.main}>
               <Main userData={userData} setUserData={setUserData} />
-
-              <div className={styles.updateButton}>
-                <ButtonComponent
-                  type="primary"
-                  value="Update Profile"
-                  style={{
-                    borderRadius: "30px",
-                    height: "48px",
-                    width: "180px",
-                  }}
-                />
-              </div>
             </div>
           </Grid>
         </Grid>

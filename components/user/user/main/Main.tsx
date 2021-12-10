@@ -20,11 +20,13 @@ const Main = ({ userData, setUserData }: MainProps) => {
       case 0:
         return <About userData={userData} setUserData={setUserData} />;
       case 1:
-        return <Membership />;
+        return <Membership userData={userData} setUserData={setUserData} />;
       case 2:
-        return <Notification />;
+        return <Notification userData={userData} setUserData={setUserData} />;
       case 3:
-        return <Personalization />;
+        return (
+          <Personalization userData={userData} setUserData={setUserData} />
+        );
 
       default:
         return <About userData={userData} setUserData={setUserData} />;

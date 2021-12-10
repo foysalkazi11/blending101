@@ -1,0 +1,49 @@
+/* eslint-disable @next/next/no-img-element */
+import React, { useState } from "react";
+import styles from "./DietarSection.module.scss";
+import { Grid } from "@mui/material";
+import capitalizeFirstLetter from "../../../../../utility/capitalizeFirstLetter";
+
+type SectionWithIconProps = {
+  title: string;
+  body: { icon: string; label: string }[];
+  fieldName: string;
+  updateUserProfile: Function;
+  userProfile: any;
+};
+
+const DietarySection = ({
+  title = "",
+  body = [],
+  fieldName,
+  updateUserProfile,
+  userProfile,
+}: SectionWithIconProps) => {
+  return (
+    <div className={styles.sectionWithIconContainer}>
+      <p>{title}</p>
+      <div className={styles.imageContainer}>
+        {body.length
+          ? body?.map((item, index) => {
+              return (
+                <div
+                  key={index}
+                  className={`${styles.singleImage} ${
+                    item?.label === userProfile[fieldName] ? styles.active : ""
+                  }`}
+                  onClick={() => updateUserProfile(fieldName, item?.label)}
+                >
+                  <div className={styles.imageBox}>
+                    <img src={item?.icon} alt="icon" />
+                    <p> {capitalizeFirstLetter(item?.label)}</p>
+                  </div>
+                </div>
+              );
+            })
+          : null}
+      </div>
+    </div>
+  );
+};
+
+export default DietarySection;
