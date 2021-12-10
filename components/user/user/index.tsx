@@ -20,7 +20,7 @@ const User = () => {
       location: "all",
     },
     membership: {
-      plan: "supporter",
+      plan: "free",
     },
     notification: {
       platform: {
@@ -33,12 +33,12 @@ const User = () => {
       },
     },
     personalization: {
-      gender: "female",
-      activity: "moderate",
-      age: "50",
-      weight: "170",
-      dietary: "ketogenic",
-      allergies: "moderate",
+      gender: "",
+      activity: "",
+      age: "",
+      weight: "",
+      dietary: "",
+      allergies: "",
     },
   });
 
