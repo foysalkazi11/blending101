@@ -1,19 +1,57 @@
+import { Container, Grid } from "@mui/material";
 import React from "react";
 import ButtonComponent from "../../button/button.component";
 import styles from "./UserPlan.module.scss";
 
-const UserPlan = () => {
+const userPlan = [
+  {
+    label: "Free",
+    value: "free",
+    amount: 0,
+  },
+  {
+    label: "Supporter",
+    value: "supporter",
+    amount: 5,
+  },
+  {
+    label: "Founder",
+    value: "founder",
+    amount: 14,
+  },
+];
+
+type UserPlanProps = {
+  label: string;
+  value: string;
+  amount: number;
+  plan: string;
+  handleChange: (name: string, value: string) => void;
+};
+
+const UserPlan = ({
+  plan,
+  handleChange,
+  label,
+  value,
+  amount,
+}: UserPlanProps) => {
   return (
-    <div className={styles.userPlanContainer}>
-      <p className={styles.planTitle}>Free</p>
+    <div
+      className={`${styles.userPlanContainer} ${
+        value === plan ? styles.active : ""
+      }`}
+      onClick={() => handleChange("plan", value)}
+    >
+      <p className={styles.planTitle}>{label}</p>
       <p className={styles.planSubtitle}>Ullamco laboris nisi ut</p>
       <strong>
-        $0 <small>/mo</small>
+        ${amount} <small>/mo</small>
       </strong>
       <div className={styles.btnContainer}>
         <ButtonComponent
-          type="primary"
-          value="Update Profile"
+          type={value === plan ? "primary" : "transpraent"}
+          value="Current Plan"
           style={{
             borderRadius: "20px",
             height: "40px",

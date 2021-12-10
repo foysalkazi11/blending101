@@ -1,59 +1,53 @@
-import { Grid } from "@mui/material";
-import React, { useRef, useState } from "react";
-import UserPlan from "../../../../theme/membership/plan/UserPlan";
+import React, { useState } from "react";
+import ToggleMenu from "../../../../theme/toggleMenu/ToggleMenu";
 import styles from "./Membership.module.scss";
+import Plan from "./plan/Plan";
+import Transactions from "./transactions/Transactions";
 
-const Membership = () => {
-  const [toggle, setToggle] = useState(1);
+type MembershipProps = {
+  userData: any;
+  setUserData: any;
+};
 
-  const menuRef = useRef<HTMLDivElement | null>(null);
+const Membership = ({ userData, setUserData }: MembershipProps) => {
+  const [toggle, setToggle] = useState(0);
+  const { plan } = userData?.membership;
 
-  const handleToggle = (no: number) => {
-    if (no === 1) {
-      menuRef.current.style.left = "0";
-    } else {
-      menuRef.current.style.left = "50%";
+  const handleChange = (name, value) => {
+    setUserData((pre) => {
+      return {
+        ...pre,
+        membership: {
+          ...pre.membership,
+          [name]: value,
+        },
+      };
+    });
+  };
+
+  const renderUI = () => {
+    switch (toggle) {
+      case 0:
+        return <Plan plan={plan} handleChange={handleChange} />;
+      case 1:
+        return <Transactions />;
+
+      default:
+        return <Plan plan={plan} handleChange={handleChange} />;
     }
-    setToggle(no);
   };
 
   return (
-    <div>
-      <div className={styles.topMenuContainer}>
-        <div className={styles.topMenu}>
-          <div className={styles.active} ref={menuRef}></div>
-          <div
-            className={`${styles.menu} ${
-              toggle === 1 ? styles.activeMenu : ""
-            }`}
-            onClick={() => handleToggle(1)}
-          >
-            Plan
-          </div>
-          <div
-            className={`${styles.menu} ${
-              toggle === 2 ? styles.activeMenu : ""
-            }`}
-            onClick={() => handleToggle(2)}
-          >
-            Transactions
-          </div>
-        </div>
-      </div>
-      <div className={styles.userPlan}>
-        <Grid container spacing={2}>
-          <Grid item xl={4}>
-            <UserPlan />
-          </Grid>
-          <Grid item xl={4}>
-            <UserPlan />
-          </Grid>
-          <Grid item xl={4}>
-            <UserPlan />
-          </Grid>
-        </Grid>
-      </div>
-    </div>
+    <>
+      <ToggleMenu
+        setToggle={setToggle}
+        toggle={toggle}
+        toggleMenuList={["Plan", "Transactions"]}
+        maxWidth={{ maxWidth: "320px" }}
+      />
+
+      <div className={styles.userPlan}>{renderUI()}</div>
+    </>
   );
 };
 
