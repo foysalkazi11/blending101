@@ -12,7 +12,16 @@ type SideBarProps = {
 const SideBar = ({ userData, setUserData }: SideBarProps) => {
   const [disableTextarea, setDisableTextarea] = useState(true);
 
-  const { aboutMe, image } = userData?.about;
+  const {
+    aboutMe,
+    image,
+    firstName,
+    lastName,
+    displayName,
+    yourBlender,
+    email,
+    location,
+  } = userData?.about;
 
   const handleChange = (e) => {
     const { name, value } = e?.target;
@@ -56,9 +65,11 @@ const SideBar = ({ userData, setUserData }: SideBarProps) => {
           <input type="file" accept="image/*" />
         </div>
       </div>
-      <h2 className={styles.name}>Gabriel Braun</h2>
-      <p className={styles.email}>@Gabriel_Braun</p>
-      <p className={styles.text}>Blendtec</p>
+      <h2 className={styles.name}>
+        {firstName} {lastName}
+      </h2>
+      <p className={styles.email}>{email}</p>
+      <p className={styles.text}>{yourBlender}</p>
       <div className={styles.aboutMe}>
         <div></div>
         <h4>About me</h4>
