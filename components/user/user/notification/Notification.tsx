@@ -8,20 +8,25 @@ type NofificationProps = {
 };
 
 const Nofification = ({ userData, setUserData }: NofificationProps) => {
-  const [platformOptions, setPlatformOptions] = useState({
-    newsAndEvents: [],
-    blending101Offers: [],
-  });
-  const [topicDigestOptions, setTopicDigestOptions] = useState({
-    recommendations: [],
-    sharedwithYou: [],
-  });
+  const { platform, topicDigest } = userData?.notification;
+  const [platformOptions, setPlatformOptions] = useState(platform);
+  const [topicDigestOptions, setTopicDigestOptions] = useState(topicDigest);
+  const handleCheck = (pre: any, val: any) => {
+    if (pre) {
+      return [...pre, val];
+    } else {
+      return [val];
+    }
+  };
 
   const handlePlatformOptions = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, checked } = e?.target;
 
     if (checked) {
-      setPlatformOptions((pre) => ({ ...pre, [name]: [...pre[name], value] }));
+      setPlatformOptions((pre) => ({
+        ...pre,
+        [name]: handleCheck(pre[name], value),
+      }));
     } else {
       setPlatformOptions((pre) => ({
         ...pre,
@@ -34,7 +39,7 @@ const Nofification = ({ userData, setUserData }: NofificationProps) => {
     if (checked) {
       setTopicDigestOptions((pre) => ({
         ...pre,
-        [name]: [...pre[name], value],
+        [name]: handleCheck(pre[name], value),
       }));
     } else {
       setTopicDigestOptions((pre) => ({
@@ -48,6 +53,7 @@ const Nofification = ({ userData, setUserData }: NofificationProps) => {
     setUserData((pre) => ({
       ...pre,
       notification: {
+        ...pre?.notification,
         platform: platformOptions,
         topicDigest: topicDigestOptions,
       },
@@ -64,6 +70,9 @@ const Nofification = ({ userData, setUserData }: NofificationProps) => {
             value="phone"
             name="newsAndEvents"
             onChange={(e) => handlePlatformOptions(e)}
+            // checked={
+            //   platformOptions?.newsAndEvents?.includes("phone") ? true : false
+            // }
           />{" "}
           <span className={styles.checkmark}></span>
         </label>
@@ -75,6 +84,9 @@ const Nofification = ({ userData, setUserData }: NofificationProps) => {
             value="email"
             name="newsAndEvents"
             onChange={(e) => handlePlatformOptions(e)}
+            // checked={
+            //   platformOptions?.newsAndEvents?.includes("email") ? true : false
+            // }
           />{" "}
           <span className={styles.checkmark}></span>
         </label>
