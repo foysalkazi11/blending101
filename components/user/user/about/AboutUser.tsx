@@ -4,6 +4,7 @@ import { Grid } from "@mui/material";
 import styles from "./AboutUser.module.scss";
 import { BiSearch } from "react-icons/bi";
 import { BsCaretDown } from "react-icons/bs";
+import ButtonComponent from "../../../../theme/button/button.component";
 
 type AboutProps = {
   userData: any;
@@ -106,6 +107,25 @@ const About = ({ userData, setUserData }: AboutProps) => {
           </div>
         </Grid>
       </Grid>
+
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "40px",
+        }}
+      >
+        <ButtonComponent
+          type="primary"
+          value="Update Profile"
+          style={{
+            borderRadius: "30px",
+            height: "48px",
+            width: "180px",
+          }}
+        />
+      </div>
     </div>
   );
 };

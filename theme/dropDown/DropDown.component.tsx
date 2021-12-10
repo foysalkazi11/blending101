@@ -3,17 +3,28 @@ import styles from "./DropDown.module.scss";
 
 interface dropDown {
   listElem: string[];
+  value?: string;
+  handleChange?: (name: any, value: any) => void;
+  name?: string;
+  style?: object;
 }
-const DropDown = ({ listElem }: dropDown) => {
+const DropDown = ({
+  listElem,
+  style = {},
+  value = "",
+  handleChange = () => {},
+  name = "dropdown",
+}: dropDown) => {
   return (
     <div className={styles.formGroup}>
       <select
-        name="dropdown"
+        name={name}
         id="dropdown"
         className={styles.customSelectbx}
-        style={{ backgroundImage: `url(/icons/dropdown.svg)` }}
+        style={{ backgroundImage: `url(/icons/dropdown.svg)`, ...style }}
+        onChange={(e) => handleChange(e?.target?.name, e?.target?.value)}
       >
-        {listElem.map((item, index) => {
+        {listElem?.map((item, index) => {
           return (
             <option value={item.toLowerCase()} key={index}>
               <span>{item}</span>
