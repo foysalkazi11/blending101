@@ -33,7 +33,7 @@ const Plan = ({ plan, handleChange }: UserPlanProps) => {
         {userPlan?.map((item, index) => {
           const { label, value, amount } = item;
           return (
-            <Grid key={index} item xs={12} md={6} xl={4}>
+            <Grid key={index} item xs={12} sm={6} xl={4}>
               <UserPlan
                 plan={plan}
                 handleChange={handleChange}

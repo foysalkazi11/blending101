@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { Grid } from "@mui/material";
 import styles from "./AboutUser.module.scss";
 import { BiSearch } from "react-icons/bi";
-import { BsCaretDown } from "react-icons/bs";
+// import { BsCaretDown } from "react-icons/bs";
 import ButtonComponent from "../../../../theme/button/button.component";
 
 type AboutProps = {

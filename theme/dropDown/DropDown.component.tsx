@@ -22,12 +22,11 @@ const DropDown = ({
         id="dropdown"
         className={styles.customSelectbx}
         style={{ backgroundImage: `url(/icons/dropdown.svg)`, ...style }}
-        onChange={(e) => handleChange(e?.target?.name, e?.target?.value)}
       >
         {listElem?.map((item, index) => {
           return (
             <option value={item.toLowerCase()} key={index}>
-              <span>{item}</span>
+              {item}
             </option>
           );
         })}
