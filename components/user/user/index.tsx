@@ -11,6 +11,7 @@ const User = () => {
     about: {
       aboutMe:
         "Quisque libero metus, condimentum nec, tempor a, commodo mollis, magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida.",
+      image: "",
       firstName: "Jhon",
       lastName: "Doe",
       displayName: "Jhon",
@@ -38,9 +39,6 @@ const User = () => {
       weight: "170",
       dietary: "ketogenic",
       allergies: "moderate",
-      medicalCondition: [],
-      medicationCurrentlyTaking: [],
-      goals: [],
     },
   });
 

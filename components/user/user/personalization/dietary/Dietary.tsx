@@ -29,7 +29,7 @@ const dietary = [
   },
   {
     icon: "/images/milk.png",
-    label: "vegetarian   dairy",
+    label: "vegetarian dairy",
   },
   {
     icon: "/images/vegetarian.png",

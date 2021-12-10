@@ -12,7 +12,7 @@ type SideBarProps = {
 const SideBar = ({ userData, setUserData }: SideBarProps) => {
   const [disableTextarea, setDisableTextarea] = useState(true);
 
-  const { aboutMe } = userData?.about;
+  const { aboutMe, image } = userData?.about;
 
   const handleChange = (e) => {
     const { name, value } = e?.target;
@@ -50,7 +50,7 @@ const SideBar = ({ userData, setUserData }: SideBarProps) => {
   return (
     <div className={styles.sideBarContainer}>
       <div className={styles.imageBox}>
-        <img src="/images/user-placeholder.png" alt="userImag" />
+        <img src={image || "/images/user-placeholder.png"} alt="userImag" />
         <div className={styles.cameraIconBox}>
           <AiOutlineCamera className={styles.cameraIcon} />
           <input type="file" accept="image/*" />

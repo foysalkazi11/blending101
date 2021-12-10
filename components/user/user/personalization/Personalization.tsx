@@ -11,18 +11,14 @@ type PersonalizationProps = {
 };
 
 const Personalization = ({ userData, setUserData }: PersonalizationProps) => {
+  const { personalization } = userData;
   const [toggle, setToggle] = useState(0);
-  const [userProfile, setUserProfile] = useState<any>({
-    gender: "female",
-    activity: "moderate",
-    age: "50",
-    weight: "170",
-    dietary: "ketogenic",
-    allergies: "moderate",
-  });
 
   const updateUserProfile = (name: string, value: any) => {
-    setUserProfile((pre) => ({ ...pre, [name]: value }));
+    setUserData((data) => ({
+      ...data,
+      personalization: { ...data?.personalization, [name]: value },
+    }));
   };
 
   const renderUI = () => {
@@ -30,14 +26,14 @@ const Personalization = ({ userData, setUserData }: PersonalizationProps) => {
       case 0:
         return (
           <Physical
-            userProfile={userProfile}
+            userProfile={personalization}
             updateUserProfile={updateUserProfile}
           />
         );
       case 1:
         return (
           <Dietary
-            userProfile={userProfile}
+            userProfile={personalization}
             updateUserProfile={updateUserProfile}
           />
         );
@@ -45,7 +41,7 @@ const Personalization = ({ userData, setUserData }: PersonalizationProps) => {
       default:
         return (
           <Physical
-            userProfile={userProfile}
+            userProfile={personalization}
             updateUserProfile={updateUserProfile}
           />
         );
