@@ -78,46 +78,59 @@ function Transactions() {
     useTable({ columns, data }, useSortBy);
 
   return (
-    <div className={styles.tableWraper}>
-      <table {...getTableProps()} className={styles.tableContainer}>
-        <thead>
-          {headerGroups.map((headerGroup, index) => (
-            <tr key={index} {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column, index) => (
-                <th
-                  key={index}
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
-                >
-                  {column.render("Header")}
-                  <span className={styles.arrowIcon}>
-                    {column.isSortedDesc ? <BiDownArrow /> : <BiUpArrow />}
-                  </span>
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map((row, index) => {
-            prepareRow(row);
-            return (
-              <tr
-                key={index}
-                {...row.getRowProps()}
-                className={styles.tableBody}
-              >
-                {row.cells.map((cell, index) => {
-                  return (
-                    <td key={index} {...cell.getCellProps()}>
-                      {cell.render("Cell")}
-                    </td>
-                  );
-                })}
+    <div className={styles.transactionContainer}>
+      <div className={styles.transactionHeader}>
+        <div>
+          <p className={styles.firstLabel}>Membership Plan</p>
+          <p className={styles.secondLabel}>Free</p>
+        </div>
+        <div>
+          <p className={styles.firstLabel}>Membership Renewal</p>
+          <p className={styles.secondLabel}>June 15,2021</p>
+        </div>
+        <div></div>
+      </div>
+      <div className={styles.tableWraper}>
+        <table {...getTableProps()} className={styles.tableContainer}>
+          <thead>
+            {headerGroups.map((headerGroup, index) => (
+              <tr key={index} {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column, index) => (
+                  <th
+                    key={index}
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
+                  >
+                    {column.render("Header")}
+                    <span className={styles.arrowIcon}>
+                      {column.isSortedDesc ? <BiDownArrow /> : <BiUpArrow />}
+                    </span>
+                  </th>
+                ))}
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map((row, index) => {
+              prepareRow(row);
+              return (
+                <tr
+                  key={index}
+                  {...row.getRowProps()}
+                  className={styles.tableBody}
+                >
+                  {row.cells.map((cell, index) => {
+                    return (
+                      <td key={index} {...cell.getCellProps()}>
+                        {cell.render("Cell")}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
