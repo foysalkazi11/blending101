@@ -76,5 +76,4 @@ export default function AContainer(props: AContainerProps) {
       </div>
     </div>
   );
->>>>>>> 74c227c5846e53e76888958b3a68571c1f5a2bfe
 }
