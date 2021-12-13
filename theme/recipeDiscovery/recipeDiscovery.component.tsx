@@ -12,7 +12,7 @@ import DatacardComponent from "../cards/dataCard/dataCard.component";
 const RecipeDetails = () => {
 
   return (
-    <AContainer>
+    <AContainer filterTray={true}>
       <div className={styles.main__div}>
         <AppdownLoadCard />
         <div className={styles.main__tray}>
