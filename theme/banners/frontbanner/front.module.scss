@@ -89,6 +89,7 @@
     div {
         width: 215px;
         height: 58px;
+        margin-bottom: 40px;
 
         @media only screen and (min-width: 0px) and (max-width:980px) {
             @include buttonSmall();

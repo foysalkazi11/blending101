@@ -14,7 +14,6 @@ const ToggleScreens = () => {
     for (let index = 0; index < childrenList.length; index++) {
       if (toggler === childrenList[index]) {
         let content = listData[index];
-        console.log(content);
         return content;
       }
     }
