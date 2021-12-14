@@ -6,6 +6,8 @@ import { BsMic, BsSoundwave, BsSearch } from "react-icons/bs";
 import { AiOutlineClose } from "react-icons/ai";
 import RecipeDiscoverButton from "../../button/recipeDiscoverButton/RecipeDiscoverButton";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { setOpenFilterTray } from "../../../redux/slices/sideTraySlice";
 
 const SearchBar = () => {
   const [isInputFocus, setIsInputFocus] = useState(false);
@@ -13,6 +15,9 @@ const SearchBar = () => {
   const [input, setInput] = useState("");
   const [isMicOn, setIsMicOn] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const { openFilterTray } = useAppSelector((state) => state?.sideTray);
+  const dispatch = useAppDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -32,7 +37,12 @@ const SearchBar = () => {
     <div className={styles.searchBarContainer}>
       <div className={styles.inputContainer}>
         <div className={styles.filterIconContainer}>
-          <FiFilter className={styles.filterIcon} />
+          <FiFilter
+            className={`${styles.filterIcon}${
+              openFilterTray ? styles.active : ""
+            }`}
+            onClick={() => dispatch(setOpenFilterTray(!openFilterTray))}
+          />
         </div>
         <div className={styles.inputBox}>
           {isInputFocus ? null : isMicOn ? (
