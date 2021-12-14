@@ -1,0 +1,79 @@
+.searchBarContainer {
+  display: flex;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.inputContainer {
+  display: flex;
+
+  //   border-bottom: 2px solid #ececec;
+
+  height: 35px;
+}
+
+.filterIconContainer {
+  border-right: 2px solid #ececec;
+  height: 35px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  .filterIcon {
+    margin-right: 20px;
+    font-size: 20px;
+    color: #495057;
+    cursor: pointer;
+  }
+  .filterIcon.activeColor {
+    color: #fe5d1f;
+  }
+}
+
+.inputBox {
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+  border-bottom: 2px solid #ececec;
+  padding-bottom: 10px;
+  .seachIcon {
+    margin-right: 10px;
+    font-size: 20px;
+    color: #495057;
+  }
+  input {
+    width: 100%;
+    min-width: 500px;
+    border: none;
+    outline: none;
+    background: transparent;
+    min-height: 40px;
+    padding: 0 10px;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+  }
+  .mic {
+    margin-left: 10px;
+    font-size: 22px;
+    color: #495057;
+    cursor: pointer;
+  }
+  .mic.active {
+    color: #fe5d1f;
+  }
+  .seachIconActive {
+    margin-left: 10px;
+    font-size: 20px;
+    color: #fe5d1f;
+    cursor: pointer;
+  }
+  .waveIcon {
+    margin-right: 10px;
+    font-size: 20px;
+    color: #495057;
+  }
+}
+
+.activeColor {
+  color: #fe5d1f;
+}
