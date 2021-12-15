@@ -37,8 +37,8 @@ export default function AContainer(props: AContainerProps) {
 		headerTitle = '',
 		nutritionTray = false,
 		healthTray = false,
-		ingredientTray = false,
-		filterTray = false,
+		ingredientTray = true,
+		filterTray = true,
 	} = props;
 
 	return (
