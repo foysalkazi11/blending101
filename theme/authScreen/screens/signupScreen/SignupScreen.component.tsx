@@ -18,7 +18,6 @@ const SignupScreen = () => {
 
   const password = watch("password");
   const onSubmit = (data) => console.log(data);
-  console.log(errors);
 
   return (
     <>
