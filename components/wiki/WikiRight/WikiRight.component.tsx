@@ -5,6 +5,7 @@ import LinearComponent from "../../../theme/linearProgress/LinearProgress.compon
 import Image from "next/image";
 import { FaSortAmountDownAlt, FaSortAmountDown } from "react-icons/fa";
 import DropDown from "../../../theme/dropDown/DropDown.component";
+import CalciumSearchElem from "../../../theme/calcium/calcium.component";
 
 // import {BsCaretDown} from 'react-icons/bs';
 // import dropDownIcon from '/icons/dropdown.svg';
@@ -15,19 +16,18 @@ interface PassingProps {
   percent: number;
 }
 
-interface PassingData{
-  ingredient?:{name:string,percent:number}[];
-  nutrition?:{name:string,percent:number}[];
+interface PassingData {
+  ingredient?: { name: string; percent: number }[];
+  nutrition?: { name: string; percent: number }[];
 }
 //state for sorting icon
 
-function WikiRightComponent({ingredient,nutrition}:PassingData) {
+function WikiRightComponent({ ingredient, nutrition }: PassingData) {
   const [sortState, curSortState] = useState(true);
   const SortingOrder = () => {
     curSortState(!sortState);
     return sortState;
   };
-
 
   let dropdownItem = [
     "All",
@@ -67,35 +67,25 @@ function WikiRightComponent({ingredient,nutrition}:PassingData) {
       <div className={styles.rightCard}>
         <div className={styles.rightCardHeading}>Ingredients</div>
         <DropDown listElem={dropdownItem} />
-        <div className={styles.calciumMg}>
-          <div className={styles.calciumText}>
-            <div>Calcium (mg)</div>
-          </div>
-          <div className={styles.calciumIcon}>
-            <div>
-              {sortState ? (
-                <span>
-                  <FaSortAmountDown onClick={SortingOrder} />
-                </span>
-              ) : (
-                <span>
-                  <FaSortAmountDownAlt onClick={SortingOrder} />
-                </span>
-              )}
-            </div>
-          </div>
+        <CalciumSearchElem />
+        <div className={styles.progressIndicator}>
+          {ingredient.map(({ name, percent }: PassingProps, index) => {
+            return (
+              <LinearComponent name={name} percent={percent} key={index} />
+            );
+          })}
         </div>
-        {ingredient.map(({ name, percent }: PassingProps, index) => {
-          return <LinearComponent name={name} percent={percent} key={index} />;
-        })}
       </div>
       <div className={styles.rightCardNutrition}>
         <div className={styles.rightCardHeading}>Nutrition</div>
-        {nutrition.map(({ name, percent }: PassingProps, index) => {
-          return <LinearComponent name={name} percent={percent} key={index} />;
-        })}
+        <div className={styles.progressIndicator}>
+          {nutrition.map(({ name, percent }: PassingProps, index) => {
+            return (
+              <LinearComponent name={name} percent={percent} key={index} />
+            );
+          })}
+        </div>
       </div>
-
       {/* Right element is being  updated */}
       {/* remove this div below as it was just to test 1st card is useless */}
     </div>

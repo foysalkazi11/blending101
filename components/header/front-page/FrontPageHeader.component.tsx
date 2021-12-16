@@ -37,12 +37,16 @@ const FrontPageHeader = () => {
             </li>
             <li>
               <div className={styles.login}>
-                <ButtonComponent
-                  type={"primary"}
-                  style={{height:"100%"}}
-                  fullWidth
-                  value={"Login"}
-                />
+                <Link href="/login">
+                  <a>
+                    <ButtonComponent
+                      type={"primary"}
+                      style={{ height: "100%" }}
+                      fullWidth
+                      value={"Login"}
+                    />
+                  </a>
+                </Link>
               </div>
             </li>
             <li>

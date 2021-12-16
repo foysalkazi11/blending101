@@ -7,6 +7,8 @@ interface Props {
   checkbox?: boolean;
 }
 
+
+
 const Linearcomponent = ({ name, percent, checkbox }: Props) => {
   return (
     <div className={styles.mainDiv}>

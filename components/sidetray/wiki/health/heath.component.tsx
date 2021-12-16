@@ -24,7 +24,7 @@ export default function HealthTrayComponent({title}) {
     const onChange = () => {
 
     }
-    
+
 
     return (
         <WikiTray title={title}>

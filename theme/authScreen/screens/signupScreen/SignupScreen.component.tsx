@@ -49,12 +49,16 @@ const SignupScreen = () => {
             <div className={styles.buttonRightDiv}>
               <Link href="/login">
                 <a>
-                  <ButtonComponent
-                    type="text"
-                    style={{ height: "100%" }}
-                    value="Login"
-                    fullWidth={true}
-                  />
+                  <Link href="/user/profile/">
+                    <a>
+                      <ButtonComponent
+                        type="text"
+                        style={{ height: "100%" }}
+                        value="Login"
+                        fullWidth={true}
+                      />
+                    </a>
+                  </Link>
                 </a>
               </Link>
             </div>
