@@ -51,13 +51,14 @@ const ToggleScreens = () => {
                 // width={400}
                 objectFit={"contain"}
                 quality={100}
+                objectPosition={"top center"}
               />
             </div>
             <div className={styles.TextCard}>
               <div className={styles.container}>
                 <h2>{contentRendering().HeadingTop}</h2>
                 <p>{contentRendering().TopHeadingContent}</p>
-                <ul className={styles.list__with__ticks}>
+                <ul className={styles.list__with__ticks__top}>
                   {contentRendering().TopElementList.map((listElem, index) => {
                     return <li key={index}>{listElem}</li>;
                   })}
@@ -78,7 +79,7 @@ const ToggleScreens = () => {
               <div className={styles.container}>
                 <h2>{contentRendering().HeadingBottom}</h2>
                 <p>{contentRendering().BottomHeadingContent}</p>
-                <ul className={styles.list__with__ticks}>
+                <ul className={styles.list__with__ticks__below}>
                   {contentRendering().BottomElementList.map(
                     (listElem, index) => {
                       return <li key={index}>{listElem}</li>;

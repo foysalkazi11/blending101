@@ -31,17 +31,22 @@ const SignupScreen = () => {
           <div className={styles.contentCard}>
             <h2>Already have an Account</h2>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, sit a voluptas eligendi adribus placeat minus maiores amet earum.
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat,
+              sit a voluptas eligendi adribus placeat minus maiores amet earum.
             </p>
             <div className={styles.buttonRightDiv}>
               <Link href="/login">
                 <a>
-                  <ButtonComponent
-                    type="text"
-                    style={{ height: "100%" }}
-                    value="Login"
-                    fullWidth={true}
-                  />
+                  <Link href="/user/profile/">
+                    <a>
+                      <ButtonComponent
+                        type="text"
+                        style={{ height: "100%" }}
+                        value="Login"
+                        fullWidth={true}
+                      />
+                    </a>
+                  </Link>
                 </a>
               </Link>
             </div>
