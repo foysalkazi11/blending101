@@ -35,7 +35,7 @@ export default function Filtertray({ filter }) {
 	const checkActive = (blend) => {
 		let present = false;
 		blends.forEach((blen) => {
-			if (blen === blend) {
+			if (blen.title === blend) {
 				present = true;
 			}
 		});
@@ -53,7 +53,7 @@ export default function Filtertray({ filter }) {
 								<div
 									key={blend.title + i}
 									className={styles.filter__menu__item}
-									onClick={() => handleBlendClick(blend.title)}
+									onClick={() => handleBlendClick(blend)}
 								>
 									<div className={styles.filter__menu__item__image}>
 										<img src={blend.img} alt={blend.title} />
