@@ -135,6 +135,7 @@ const UserProfile = () => {
       showLeftTray={false}
       showRighTray={false}
       showSidebar={false}
+      headerFullWidth={true}
     >
       <div className={styles.userProfileContainer}>
         <ProgessBar steps={steps} />

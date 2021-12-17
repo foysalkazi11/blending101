@@ -7,15 +7,20 @@ import LocalMallIcon from "@mui/icons-material/LocalMall";
 interface headerInterface {
   logo: Boolean;
   headerTitle: string;
+  fullWidth?: Boolean
 }
 
 export default function HeaderComponent({
   logo = true,
   headerTitle = "Home",
+  fullWidth
 }: headerInterface) {
+
+  const style = fullWidth ? {width: '100%'} : {}
+
   return (
     <div className={styles.wrapper}>
-      <div className={styles.header}>
+      <div className={styles.header} style={style}>
         <div className={styles.header__inner}>
           <div className={styles.left + " " + styles.logo}>
             {logo && <img src="/logo.png" alt="logo" />}

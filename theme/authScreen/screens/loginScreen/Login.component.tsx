@@ -5,9 +5,16 @@ import InputField from "../../../input/inputField.component";
 import SocialTray from "../../authComponents/socialTray/socialTray.component";
 import styles from "./Login.module.scss";
 import Image from "next/image";
-import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
+import { HighlightAltOutlined } from "@mui/icons-material";
+import { useRouter } from "next/router";
+
 
 const LoginScreen = () => {
+  const router = useRouter();
+
+  const handleLogin = () => {
+    router.push('/user/profile/')
+  }
   return (
     <>
       <div className={styles.inputMainDiv} style={{}}>
@@ -25,7 +32,7 @@ const LoginScreen = () => {
               />
             </div>
             <div className={styles.cross}>
-              <HighlightOffOutlinedIcon />
+              <HighlightAltOutlined />
             </div>
           </div>
           <h2>Login</h2>
@@ -64,7 +71,7 @@ const LoginScreen = () => {
             </div>
             <div className={styles.buttonDiv}>
               <Link href="/user/profile/">
-                <a>
+                <a onClick={handleLogin}>
                   <ButtonComponent
                     type="primary"
                     style={{ height: "100%" }}

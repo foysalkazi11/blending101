@@ -2,6 +2,7 @@ import React from "react";
 import ButtonComponent from "../../../../theme/button/button.component";
 import styles from "./ChangeSteps.module.scss";
 import Container from "@mui/material/Container";
+import router from "next/router";
 
 type ChangeStepsProps = {
   nextStep: () => void;
@@ -19,6 +20,7 @@ const ChangeSteps = ({ nextStep, prevStep, steps }: ChangeStepsProps) => {
               Back
             </button>
           )}
+          <span onClick={() => steps === 4 ? router.push('/recipe_discovery') : null }>
           <ButtonComponent
             type="primary"
             value={steps === 4 ? "Finish" : "Next"}
@@ -30,6 +32,7 @@ const ChangeSteps = ({ nextStep, prevStep, steps }: ChangeStepsProps) => {
               width: "135px",
             }}
           />
+          </span>
         </div>
       </Container>
     </div>

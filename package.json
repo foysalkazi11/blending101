@@ -37,8 +37,6 @@
     "react-slick": "^0.28.1",
     "react-table": "^7.7.0",
     "react-window": "^1.8.6",
-    "redux-promise": "^0.6.0",
-    "redux-thunk": "^2.4.0",
     "sass": "^1.43.4",
     "slick-carousel": "^1.8.1",
     "styled-components": "^5.3.3"

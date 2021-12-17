@@ -24,6 +24,7 @@ type AContainerProps = {
   healthTray?: Boolean;
   ingredientTray?: Boolean;
   filterTray?: Boolean;
+  headerFullWidth? : Boolean
 };
 
 export default function AContainer(props: AContainerProps) {
@@ -37,8 +38,9 @@ export default function AContainer(props: AContainerProps) {
     headerTitle = "",
     nutritionTray = false,
     healthTray = false,
-    ingredientTray = true,
-    filterTray = true,
+    ingredientTray = false,
+    filterTray = false,
+    headerFullWidth = false
   } = props;
 
   return (
@@ -50,7 +52,7 @@ export default function AContainer(props: AContainerProps) {
       ) : null}
       <div className={styles.mainA}>
         {showHeader ? (
-          <HeaderComponent logo={logo} headerTitle={headerTitle} />
+          <HeaderComponent logo={logo} headerTitle={headerTitle} fullWidth={headerFullWidth} />
         ) : null}
         {showLeftTray ? (
           <div className={styles.fixed__main__left}>
