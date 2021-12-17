@@ -9,8 +9,16 @@ import { filterRankingList } from "./filterRankingList";
 
 export default function FilterbottomComponent(props) {
   const [toggle, setToggle] = useState(1);
-  const [dpd, setDpd] = useState(null);
+  const [dpd, setDpd] = useState({title: 'All', val: 'all'});
   const ingredients = filterRankingList;
+
+  const categories = [
+    {title: 'All', val: 'all'},
+    {title: 'Leafy', val: 'leafy'},
+    {title: 'Fruity', val: 'Fruity'},
+    {title: 'Nutty', val: 'nutty'},
+    {title: 'Frozed', val: 'frozed'},
+  ]
 
   return (
     <div className={styles.filter__bottom}>
@@ -21,7 +29,7 @@ export default function FilterbottomComponent(props) {
         titleTwo="Rankings"
       />
       <div className={styles.dropdown}>
-        <DropdownTwoComponent value={dpd} setValue={setDpd} />
+        <DropdownTwoComponent value={dpd} list={categories} setValue={setDpd} />
       </div>
       {toggle === 1 && (
         <div className={styles.pictures}>

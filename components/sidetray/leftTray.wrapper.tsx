@@ -13,8 +13,6 @@ interface leftTrayInterface {
 export default function LeftTrayWrapper({children, filter, id}: leftTrayInterface) {
   const [openFilterTray, setOpenFilterTrat] = useState(false)
 
-  console.log(filter, id)
-
   const ref = useRef<any>();
 
   useEffect(() => {
