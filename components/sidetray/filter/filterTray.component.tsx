@@ -1,11 +1,12 @@
 import React from "react";
+import FilterTrayWrapper from "../filter.wrapper";
 import LeftTrayWrapper from "../leftTray.wrapper";
 import styles from "./filter.module.scss";
 import FilterbottomComponent from "./filterBottom.component";
 
-export default function Filtertray(props) {
+export default function Filtertray({filter}) {
   return (
-    <LeftTrayWrapper>
+    <FilterTrayWrapper filter={filter} id={'filter123'}>
       <div className={styles.filter}>
         <div className={styles.filter__top}>
           <h3>Blend Type</h3>
@@ -53,6 +54,6 @@ export default function Filtertray(props) {
           <FilterbottomComponent />
         </div>
       </div>
-    </LeftTrayWrapper>
+    </FilterTrayWrapper>
   );
 }

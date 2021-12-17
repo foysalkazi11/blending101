@@ -10,9 +10,10 @@ import { recommendedList, recentList, popularList } from "./data";
 
 import DatacardComponent from "../cards/dataCard/dataCard.component";
 import SearchBar from "./searchBar/SearchBar.component";
+import FooterComponent from "../../components/footer/footer.component";
 const RecipeDetails = () => {
   return (
-    <AContainer filterTray={true}>
+    <AContainer showLeftTray={true} filterTray={true}>
       <div className={styles.main__div}>
         <SearchBar />
         <AppdownLoadCard />

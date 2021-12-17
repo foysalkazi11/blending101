@@ -19,7 +19,7 @@ export default function CollectionTray(props) {
 		setToggle(no);
 	};
 	return (
-		<LeftTrayWrapper>
+		<LeftTrayWrapper id="collection123">
 			<div className={styles.main}>
 				<div className={styles.main__top}>
 					<div className={styles.main__top__menu}>

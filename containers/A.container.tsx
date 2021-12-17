@@ -10,6 +10,7 @@ import NutritionTrayComponent from '../components/sidetray/wiki/nutrition/nutrit
 import HealthTrayComponent from '../components/sidetray/wiki/health/heath.component';
 import IngredientTrayComponent from '../components/sidetray/wiki/ingredient/ingredient.component';
 import Filtertray from '../components/sidetray/filter/filterTray.component';
+import FooterComponent from '../components/footer/footer.component';
 
 type AContainerProps = {
 	showHeader?: boolean;
@@ -37,8 +38,8 @@ export default function AContainer(props: AContainerProps) {
 		headerTitle = '',
 		nutritionTray = false,
 		healthTray = false,
-		ingredientTray = true,
-		filterTray = true,
+		ingredientTray = false,
+		filterTray = false,
 	} = props;
 
 	return (
@@ -79,10 +80,11 @@ export default function AContainer(props: AContainerProps) {
 				)}
 				{filterTray && (
 					<div className={styles.fixed__main__left}>
-						<Filtertray />
+						<Filtertray filter="filter" />
 					</div>
 				)}
 				{props.children}
+				<FooterComponent />
 			</div>
 		</div>
 	);
