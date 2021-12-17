@@ -63,12 +63,16 @@ const LoginScreen = () => {
               </Link>
             </div>
             <div className={styles.buttonDiv}>
-              <ButtonComponent
-                type="primary"
-                style={{ height: "100%" }}
-                value="Login"
-                fullWidth={true}
-              />
+              <Link href="/user/profile/">
+                <a>
+                  <ButtonComponent
+                    type="primary"
+                    style={{ height: "100%" }}
+                    value="Login"
+                    fullWidth={true}
+                  />
+                </a>
+              </Link>
             </div>
           </form>
           <div className={styles.lineSocialDiv}>

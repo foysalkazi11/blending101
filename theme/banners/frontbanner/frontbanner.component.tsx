@@ -1,6 +1,7 @@
+import Link from "next/link";
 import React from "react";
 import ButtonComponent from "../../button/buttonA/button.component";
-import styles from "./front.module.scss";
+import styles from "./frontbanner.module.scss";
 
 function Frontbanner() {
   return (
@@ -13,12 +14,16 @@ function Frontbanner() {
           exceptional culinary and health outcomes.
         </p>
         <div>
-          <ButtonComponent
-            type={"primary"}
-            value={"Get Started"}
-            style={{ height: "100%" }}
-            fullWidth
-          />
+          <Link href="/login">
+            <a>
+              <ButtonComponent
+                type={"primary"}
+                value={"Get Started"}
+                style={{ height: "100%" }}
+                fullWidth
+              />
+            </a>
+          </Link>
         </div>
       </div>
     </div>

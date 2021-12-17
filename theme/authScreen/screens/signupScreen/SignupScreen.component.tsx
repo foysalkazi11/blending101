@@ -1,12 +1,24 @@
 import Link from "next/link";
 import React from "react";
-import InputField from "../../../input/inputField.component";
+import InputField from "../../../input/registerInput/RegisterInput";
 import Image from "next/image";
 import styles from "./SignupScreen.module.scss";
 import ButtonComponent from "../../../button/buttonA/button.component";
 import SocialTray from "../../authComponents/socialTray/socialTray.component";
 import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
+import { useForm } from "react-hook-form";
+
 const SignupScreen = () => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+
+  const password = watch("password");
+  const onSubmit = (data) => console.log(data);
+
   return (
     <>
       <div
@@ -31,17 +43,22 @@ const SignupScreen = () => {
           <div className={styles.contentCard}>
             <h2>Already have an Account</h2>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, sit a voluptas eligendi adribus placeat minus maiores amet earum.
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat,
+              sit a voluptas eligendi adribus placeat minus maiores amet earum.
             </p>
             <div className={styles.buttonRightDiv}>
               <Link href="/login">
                 <a>
-                  <ButtonComponent
-                    type="text"
-                    style={{ height: "100%" }}
-                    value="Login"
-                    fullWidth={true}
-                  />
+                  <Link href="/user/profile/">
+                    <a>
+                      <ButtonComponent
+                        type="text"
+                        style={{ height: "100%" }}
+                        value="Login"
+                        fullWidth={true}
+                      />
+                    </a>
+                  </Link>
                 </a>
               </Link>
             </div>
@@ -87,39 +104,76 @@ const SignupScreen = () => {
             <SocialTray />
             <div className={styles.seperatorLogin} />
           </div>
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <InputField
               type="email"
               style={{ marginBottom: "10px" }}
-              value={undefined}
-              placeholder={undefined}
+              placeholder="Email"
               fullWidth={true}
+              register={register}
+              name="email"
+              required={{
+                required: "Email requried",
+                pattern: {
+                  value:
+                    /^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/,
+                  message: "Enter valid email",
+                },
+              }}
             />
+            {errors?.email ? (
+              <p style={{ color: "#ed4337", fontSize: "14px" }}>
+                {errors?.email?.message}
+              </p>
+            ) : null}
             <InputField
               type="password"
               style={{ margin: "10px 0px" }}
-              value={undefined}
-              placeholder={undefined}
+              placeholder="Password"
               fullWidth={true}
+              register={register}
+              name="password"
+              required={{
+                required: "password requried",
+                pattern: {
+                  value:
+                    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/,
+                  message:
+                    "Minimum 6 characters, at least one uppercase letter, one lowercase letter, one number and one special character (#?!@$%^&*-)",
+                },
+              }}
             />
+            {errors?.password ? (
+              <p style={{ color: "#ed4337", fontSize: "14px" }}>
+                {errors?.password?.message}
+              </p>
+            ) : null}
             <InputField
               type="password"
               style={{ margin: "10px 0px" }}
-              value={undefined}
               placeholder={"Confirm Password"}
               fullWidth={true}
+              register={register}
+              name="comfirmPassword"
+              required={{
+                required: "Comfirm password requried",
+                validate: (value) =>
+                  value === password || "Password doesn't match",
+              }}
             />
+            {errors?.comfirmPassword ? (
+              <p style={{ color: "#ed4337", fontSize: "14px" }}>
+                {errors?.comfirmPassword?.message}
+              </p>
+            ) : null}
             <div className={styles.signUpButtonDiv}>
-              <Link href="/signup">
-                <a>
-                  <ButtonComponent
-                    type="primary"
-                    style={{ height: "100%" }}
-                    value="Sign Up"
-                    fullWidth={true}
-                  />
-                </a>
-              </Link>
+              <ButtonComponent
+                type="primary"
+                style={{ height: "100%" }}
+                value="Sign Up"
+                fullWidth={true}
+                submit={true}
+              />
             </div>
           </form>
           <div className={styles.lineTrayB}>
