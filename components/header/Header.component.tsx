@@ -12,11 +12,13 @@ import { setUser, setNonConfirmedUser } from "../../redux/slices/userSlice";
 interface headerInterface {
   logo: Boolean;
   headerTitle: string;
+  fullWidth?: Boolean;
 }
 
 export default function HeaderComponent({
   logo = true,
   headerTitle = "Home",
+  fullWidth,
 }: headerInterface) {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state?.user);
@@ -35,9 +37,12 @@ export default function HeaderComponent({
       notification("error", error?.message);
     }
   };
+
+  const style = fullWidth ? { width: "100%" } : {};
+
   return (
     <div className={styles.wrapper}>
-      <div className={styles.header}>
+      <div className={styles.header} style={style}>
         <div className={styles.header__inner}>
           <div className={styles.left + " " + styles.logo}>
             {logo && <img src="/logo.png" alt="logo" />}

@@ -10,8 +10,11 @@ interface leftTrayInterface {
   id: string
 }
 
-export default function LeftTrayWrapper({children, filter, id}: leftTrayInterface) {
-  const [openFilterTray, setOpenFilterTrat] = useState(false)
+export default function FilterTrayWrapper({children, filter, id}: leftTrayInterface) {
+  const { openFilterTray } = useAppSelector((state) => state?.sideTray);
+  const dispatch = useAppDispatch();
+
+  console.log(filter, id)
 
   const ref = useRef<any>();
 
@@ -26,24 +29,17 @@ export default function LeftTrayWrapper({children, filter, id}: leftTrayInterfac
   }, [openFilterTray]);
 
   const handleClick = () => {
-    setOpenFilterTrat(() => !openFilterTray)
+    dispatch(setOpenFilterTray(!openFilterTray));
   };
 
   return (
-    <div className={styles.tray} ref={ref} id={id}>
+    <div className={styles.tray} ref={ref}>
       <div className={styles.tray__inner}>
         {openFilterTray ? (
           <div className={styles.image} onClick={handleClick}>
-            <img src="/icons/left__drawer__orange.svg" alt="drawer__orange" />
+            <img src="/icons/filter-icon.svg" alt="drawer__orange" />
           </div>
-        ) : filter ? null : (
-          <div
-            className={styles.image + " " + styles.image__white}
-            onClick={handleClick}
-          >
-            <img src="/icons/left__drawer.svg" alt="drawer" />
-          </div>
-        )}
+        ): null}
         {children}
       </div>
     </div>

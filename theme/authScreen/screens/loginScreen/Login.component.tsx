@@ -142,9 +142,3 @@ const LoginScreen = () => {
 };
 
 export default LoginScreen;
-
-// const {
-//   signInUserSession: {
-//     idToken: { payload },
-//   },
-// } = await Auth.signIn(loginMail, loginPassword);

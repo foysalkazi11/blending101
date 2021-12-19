@@ -45,6 +45,7 @@
         width: 65 px;
         margin-bottom: 10px;
         cursor: pointer;
+        position: relative;
 
         &__image {
             border: 1px solid #E5E5E5;
@@ -78,8 +79,16 @@
     margin-top: 10px;
 }
 
-// .rankings {
-//     &:hover{
-//         background-color: orange;
-//     }
-// }
+.tick{
+    position: absolute;
+    border-radius: 50%;
+    right: 5px;
+    overflow: hidden;
+    top: 0px;
+}
+.ticked{
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    color: #f95d2b;
+}
