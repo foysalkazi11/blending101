@@ -7,6 +7,12 @@ import ButtonComponent from "../../../button/buttonA/button.component";
 import SocialTray from "../../authComponents/socialTray/socialTray.component";
 import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
 import { useForm } from "react-hook-form";
+import { Auth } from "aws-amplify";
+import { useRouter } from "next/router";
+import { setNonConfirmedUser } from "../../../../redux/slices/userSlice";
+import { setLoading } from "../../../../redux/slices/utilitySlice";
+import { useAppDispatch } from "../../../../redux/hooks";
+import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
 
 const SignupScreen = () => {
   const {
@@ -16,8 +22,31 @@ const SignupScreen = () => {
     formState: { errors },
   } = useForm();
 
+  const history = useRouter();
+  const dispatch = useAppDispatch();
+
   const password = watch("password");
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    dispatch(setLoading(true));
+    const { email, password } = data;
+    try {
+      const { user } = await Auth?.signUp({
+        username: email,
+        password: password,
+        attributes: {
+          email,
+        },
+      });
+      dispatch(setLoading(false));
+
+      //@ts-ignore
+      dispatch(setNonConfirmedUser(user?.username));
+      history?.push("/varify_email");
+    } catch (error) {
+      dispatch(setLoading(false));
+      reactToastifyNotification("error", error?.message);
+    }
+  };
 
   return (
     <>
@@ -47,20 +76,13 @@ const SignupScreen = () => {
               sit a voluptas eligendi adribus placeat minus maiores amet earum.
             </p>
             <div className={styles.buttonRightDiv}>
-              <Link href="/login">
-                <a>
-                  <Link href="/user/profile/">
-                    <a>
-                      <ButtonComponent
-                        type="text"
-                        style={{ height: "100%" }}
-                        value="Login"
-                        fullWidth={true}
-                      />
-                    </a>
-                  </Link>
-                </a>
-              </Link>
+              <ButtonComponent
+                type="text"
+                style={{ height: "100%" }}
+                value="Login"
+                fullWidth={true}
+                handleClick={() => history?.push("/login")}
+              />
             </div>
           </div>
         </div>

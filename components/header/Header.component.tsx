@@ -3,6 +3,11 @@ import React from "react";
 import styles from "./header.module.scss";
 import SocialComponent from "./social/Social.component";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
+import notification from "../utility/reactToastifyNotification";
+import { Auth } from "aws-amplify";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { setLoading } from "../../redux/slices/utilitySlice";
+import { setUser, setNonConfirmedUser } from "../../redux/slices/userSlice";
 
 interface headerInterface {
   logo: Boolean;
@@ -13,6 +18,23 @@ export default function HeaderComponent({
   logo = true,
   headerTitle = "Home",
 }: headerInterface) {
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state?.user);
+  console.log(user);
+
+  const userSingOut = async () => {
+    dispatch(setLoading(true));
+    try {
+      await Auth.signOut();
+      dispatch(setLoading(false));
+      notification("info", "Logout successfully");
+      dispatch(setUser(""));
+      dispatch(setNonConfirmedUser(""));
+    } catch (error) {
+      dispatch(setLoading(false));
+      notification("error", error?.message);
+    }
+  };
   return (
     <div className={styles.wrapper}>
       <div className={styles.header}>
@@ -33,6 +55,19 @@ export default function HeaderComponent({
             <div className={styles.profile}>
               <img src="/user-profile.png" alt="prfile.png" />
             </div>
+
+            <button
+              style={{
+                marginLeft: "10px",
+                border: "none",
+                outline: "none",
+                cursor: "pointer",
+                backgroundColor: "transparent",
+              }}
+              onClick={userSingOut}
+            >
+              Log out
+            </button>
           </div>
         </div>
       </div>
