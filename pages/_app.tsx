@@ -7,17 +7,23 @@ import "../styles/variables.module.scss";
 import "../styles/globalStyle.scss";
 import "react-dropdown/style.css";
 import Amplify from "aws-amplify";
-import { awsconfig } from "../configs/aws";
-
+import awsconfig from "../configs/aws";
+import Loader from "../theme/loader/Loader";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 Amplify.configure(awsconfig);
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <Provider store={store}>
-      <AuthProvider>
-        <Component {...pageProps} />
-      </AuthProvider>
-    </Provider>
+    <>
+      <Provider store={store}>
+        <AuthProvider>
+          <Loader />
+          <ToastContainer />
+          <Component {...pageProps} />
+        </AuthProvider>
+      </Provider>
+    </>
   );
 }
 
