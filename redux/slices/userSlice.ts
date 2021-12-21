@@ -10,7 +10,7 @@ type SideTrayState = {
 const initialState: SideTrayState = {
   nonConfirmedUser: "",
   user: "",
-  dbUser: "",
+  dbUser: {},
 };
 
 export const userSlice = createSlice({

@@ -52,7 +52,7 @@ const StepTwo = ({ userProfile, updateUserProfile }: StepTwoProps) => {
       <SectionWithIcon
         title="Which dietary lifestyle applies to you?"
         body={dietary}
-        fieldName="dietary"
+        fieldName="dieteryLifeStyle"
         updateUserProfile={updateUserProfile}
         userProfile={userProfile}
       />

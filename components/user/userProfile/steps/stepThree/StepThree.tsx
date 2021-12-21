@@ -16,18 +16,18 @@ const StepThree = ({
     <>
       <SectionWithInput
         title="What are your pre-existing medical conditions?"
-        fieldName="medicalCondition"
+        fieldName="preExistingMedicalConditions"
         maxWidth={"600px"}
-        value={userProfile?.medicalCondition}
+        value={userProfile?.preExistingMedicalConditions}
         setValue={updateUserProfile}
         placeholder="Enter Conditions..."
         removeInput={removeInput}
       />
       <SectionWithInput
         title="What medications are you currently taking?"
-        fieldName="medicationCurrentlyTaking"
+        fieldName="meditcation"
         maxWidth={"600px"}
-        value={userProfile?.medicationCurrentlyTaking}
+        value={userProfile?.meditcation}
         setValue={updateUserProfile}
         placeholder="Enter Medications..."
         removeInput={removeInput}

@@ -25,7 +25,7 @@ const StepFour = ({ updateUserProfile, checkGoals }: StepFourProps) => {
     <Goals
       list={goals}
       title="Select all the goals you with like to achieve with Blending 101"
-      fieldName="goals"
+      fieldName="whyBlending"
       updateUserProfile={updateUserProfile}
       alredyExistGoals={checkGoals}
     />

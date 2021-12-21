@@ -40,6 +40,7 @@ const ForgotPassword = () => {
         reactToastifyNotification("info", "Sign up successfully");
         dispatch(setUser(nonConfirmedUser));
         dispatch(setDbUser(data?.createNewUser));
+        history.push("/user/profile");
       } catch (error) {
         dispatch(setLoading(false));
         reactToastifyNotification("error", error?.message);
