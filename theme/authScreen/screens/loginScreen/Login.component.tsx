@@ -10,14 +10,17 @@ import { Auth } from "aws-amplify";
 import { setLoading } from "../../../../redux/slices/utilitySlice";
 import { useAppDispatch } from "../../../../redux/hooks";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
-import { setUser } from "../../../../redux/slices/userSlice";
+import { setDbUser, setUser } from "../../../../redux/slices/userSlice";
 import { useRouter } from "next/router";
+import { useMutation } from "@apollo/client";
+import CREATE_NEW_USER from "../../../../gqlLib/user/mutations/createNewUser";
 
 const LoginScreen = () => {
   const [loginMail, setLoginMail] = useState<string>("");
   const [loginPassword, setLoginPassword] = useState<string>("");
   const dispatch = useAppDispatch();
   const histroy = useRouter();
+  const [createNewUser] = useMutation(CREATE_NEW_USER);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,15 +29,28 @@ const LoginScreen = () => {
       const {
         attributes: { email },
       } = await Auth.signIn(loginMail, loginPassword);
+      const { data } = await createNewUser({
+        variables: {
+          data: { email: email, provider: "email" },
+        },
+      });
+      console.log(data);
+
       dispatch(setLoading(false));
       reactToastifyNotification("info", "Login successfully");
       dispatch(setUser(email));
-      // setTimeout(() => {
-      //   histroy?.back();
-      // }, 3000);
+      dispatch(setDbUser(data?.createNewUser));
     } catch (error) {
       dispatch(setLoading(false));
       reactToastifyNotification("error", error?.message);
+    }
+  };
+
+  const logOut = async () => {
+    try {
+      await Auth?.signOut();
+    } catch (error) {
+      console.log(error?.message);
     }
   };
 
@@ -59,6 +75,7 @@ const LoginScreen = () => {
             </div>
           </div>
           <h2>Login</h2>
+          {/* <button onClick={logOut}>Log out</button> */}
           <div className={styles.quickLogin}>
             <span>Quick and easy social login</span>
             <SocialTray />

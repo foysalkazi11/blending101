@@ -13,20 +13,18 @@ export default function Home() {
 
   const isCurrentUser = async () => {
     try {
-      const {
-        attributes: { email },
-      } = await Auth.currentAuthenticatedUser();
+      const user = await Auth.currentAuthenticatedUser();
+      console.log(user);
 
-      dispatch(setUser(email));
+      // dispatch(setUser());
     } catch (error) {
       console.log(error?.message);
     }
   };
 
   useEffect(() => {
-    if (!user) {
-      isCurrentUser();
-    }
+    isCurrentUser();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

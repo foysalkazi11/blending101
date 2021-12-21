@@ -8,11 +8,13 @@ import Image from "next/image";
 import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
 import { Container } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import { setUser } from "../../../../redux/slices/userSlice";
+import { setUser, setDbUser } from "../../../../redux/slices/userSlice";
 import { setLoading } from "../../../../redux/slices/utilitySlice";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
 import { useRouter } from "next/router";
 import { Auth } from "aws-amplify";
+import CREATE_NEW_USER from "./../../../../gqlLib/user/mutations/createNewUser";
+import { useMutation } from "@apollo/client";
 
 const ForgotPassword = () => {
   const [code, setCode] = useState("");
@@ -20,6 +22,7 @@ const ForgotPassword = () => {
   const { nonConfirmedUser } = useAppSelector((state) => state?.user);
   const dispatch = useAppDispatch();
   const history = useRouter();
+  const [createNewUser] = useMutation(CREATE_NEW_USER);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,14 +30,16 @@ const ForgotPassword = () => {
       dispatch(setLoading(true));
 
       try {
-        const userStatus = await Auth.confirmSignUp(nonConfirmedUser, code);
-        console.log(userStatus);
+        await Auth.confirmSignUp(nonConfirmedUser, code);
+        const { data } = await createNewUser({
+          variables: {
+            data: { email: nonConfirmedUser, provider: "email" },
+          },
+        });
         dispatch(setLoading(false));
-        if (userStatus === "SUCCESS") {
-          reactToastifyNotification("info", "Sign up successfully");
-          dispatch(setUser(nonConfirmedUser));
-          history?.push("/login/profile");
-        }
+        reactToastifyNotification("info", "Sign up successfully");
+        dispatch(setUser(nonConfirmedUser));
+        dispatch(setDbUser(data?.createNewUser));
       } catch (error) {
         dispatch(setLoading(false));
         reactToastifyNotification("error", error?.message);
