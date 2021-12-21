@@ -21,28 +21,28 @@ const SocialTray = () => {
     }
   };
 
-  const hub = () => {
-    Hub.listen("auth", ({ payload: { event, data } }) => {
-      switch (event) {
-        case "signIn":
-        case "cognitoHostedUI":
-          getUser().then((userData) => console.log(userData));
-          break;
-        case "signOut":
-          setUser(null);
-          break;
-        case "signIn_failure":
-        case "cognitoHostedUI_failure":
-          console.log("Sign in failure", data);
-          break;
-      }
-    });
-  };
-  function getUser() {
-    return Auth.currentAuthenticatedUser()
-      .then((userData) => userData)
-      .catch(() => console.log("Not signed in"));
-  }
+  // const hub = () => {
+  //   Hub.listen("auth", ({ payload: { event, data } }) => {
+  //     switch (event) {
+  //       case "signIn":
+  //       case "cognitoHostedUI":
+  //         getUser().then((userData) => console.log(userData));
+  //         break;
+  //       case "signOut":
+  //         setUser(null);
+  //         break;
+  //       case "signIn_failure":
+  //       case "cognitoHostedUI_failure":
+  //         console.log("Sign in failure", data);
+  //         break;
+  //     }
+  //   });
+  // };
+  // function getUser() {
+  //   return Auth.currentAuthenticatedUser()
+  //     .then((userData) => userData)
+  //     .catch(() => console.log("Not signed in"));
+  // }
 
   return (
     <>
@@ -53,7 +53,7 @@ const SocialTray = () => {
             src={"/images/google.png"}
             alt="Icons will soon Load"
             //@ts-ignore
-            onClick={() => Auth.federatedSignIn({ provider: "Google" })}
+            onClick={() => handleSocialSignup("Google")}
           />
         </li>
         <li className={styles.listElem}>

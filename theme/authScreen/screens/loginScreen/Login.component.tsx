@@ -34,23 +34,16 @@ const LoginScreen = () => {
           data: { email: email, provider: "email" },
         },
       });
-      console.log(data);
 
       dispatch(setLoading(false));
       reactToastifyNotification("info", "Login successfully");
       dispatch(setUser(email));
       dispatch(setDbUser(data?.createNewUser));
+
+      histroy.back();
     } catch (error) {
       dispatch(setLoading(false));
       reactToastifyNotification("error", error?.message);
-    }
-  };
-
-  const logOut = async () => {
-    try {
-      await Auth?.signOut();
-    } catch (error) {
-      console.log(error?.message);
     }
   };
 

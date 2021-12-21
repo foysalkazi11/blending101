@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
+import React, { useState } from "react";
 import styles from "./header.module.scss";
 import SocialComponent from "./social/Social.component";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
@@ -7,7 +7,20 @@ import notification from "../utility/reactToastifyNotification";
 import { Auth } from "aws-amplify";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setLoading } from "../../redux/slices/utilitySlice";
-import { setUser, setNonConfirmedUser } from "../../redux/slices/userSlice";
+import {
+  setUser,
+  setNonConfirmedUser,
+  setDbUser,
+} from "../../redux/slices/userSlice";
+import { BsCaretDown, BsCaretUp } from "react-icons/bs";
+import { HiOutlineUserCircle } from "react-icons/hi";
+import {
+  MdOutlineAdminPanelSettings,
+  MdHelpOutline,
+  MdOutlineLogout,
+  MdOutlineLogin,
+} from "react-icons/md";
+import Link from "next/link";
 
 interface headerInterface {
   logo: Boolean;
@@ -20,6 +33,7 @@ export default function HeaderComponent({
   headerTitle = "Home",
   fullWidth,
 }: headerInterface) {
+  const [openPopup, setOpenPopup] = useState(false);
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state?.user);
   console.log(user);
@@ -32,6 +46,7 @@ export default function HeaderComponent({
       notification("info", "Logout successfully");
       dispatch(setUser(""));
       dispatch(setNonConfirmedUser(""));
+      dispatch(setDbUser({}));
     } catch (error) {
       dispatch(setLoading(false));
       notification("error", error?.message);
@@ -61,18 +76,53 @@ export default function HeaderComponent({
               <img src="/user-profile.png" alt="prfile.png" />
             </div>
 
-            <button
-              style={{
-                marginLeft: "10px",
-                border: "none",
-                outline: "none",
-                cursor: "pointer",
-                backgroundColor: "transparent",
-              }}
-              onClick={userSingOut}
-            >
-              Log out
-            </button>
+            <div className={styles.userPopupMenu}>
+              {openPopup ? (
+                <BsCaretUp
+                  className={styles.downArrow}
+                  onClick={() => setOpenPopup((pre) => !pre)}
+                />
+              ) : (
+                <BsCaretDown
+                  className={styles.downArrow}
+                  onClick={() => setOpenPopup((pre) => !pre)}
+                />
+              )}
+
+              {openPopup ? (
+                <div className={`${styles.popup}`}>
+                  {user ? (
+                    <Link href="/user" passHref>
+                      <div className={styles.menu}>
+                        <p>My Profile</p>
+                        <HiOutlineUserCircle className={styles.icon} />
+                      </div>
+                    </Link>
+                  ) : null}
+                  <div className={styles.menu}>
+                    <p>Admin</p>
+                    <MdOutlineAdminPanelSettings className={styles.icon} />
+                  </div>
+                  <div className={styles.menu}>
+                    <p>Help</p>
+                    <MdHelpOutline className={styles.icon} />
+                  </div>
+                  {user ? (
+                    <div className={styles.menu} onClick={userSingOut}>
+                      <p>Logout</p>
+                      <MdOutlineLogout className={styles.icon} />
+                    </div>
+                  ) : (
+                    <Link href="/login" passHref>
+                      <div className={styles.menu}>
+                        <p>Login</p>
+                        <MdOutlineLogin className={styles.icon} />
+                      </div>
+                    </Link>
+                  )}
+                </div>
+              ) : null}
+            </div>
           </div>
         </div>
       </div>
