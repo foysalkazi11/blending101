@@ -52,7 +52,8 @@ const LoginScreen = () => {
       <div className={styles.inputMainDiv} style={{}}>
         <div className={styles.inputContentDiv}>
           <div className={styles.logo}>
-            <Link href="/" passHref>
+            <Link href="/">
+              <a href="">
               <Image
                 src="/images/logo.png"
                 alt="logo will soon load"
@@ -62,6 +63,7 @@ const LoginScreen = () => {
                 objectFit={"contain"}
                 quality={100}
               />
+              </a>
             </Link>
             <div className={styles.cross}>
               <HighlightOffOutlinedIcon />

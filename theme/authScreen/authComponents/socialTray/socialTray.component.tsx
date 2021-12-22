@@ -11,11 +11,19 @@ import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth/lib/types";
 const SocialTray = () => {
   const [user, setUser] = useState("");
 
+  useEffect(() => {
+    Auth.currentAuthenticatedUser({
+      bypassCache: true
+    }).then(res=> {
+      console.log('res', res)
+    }).catch(err => {
+      console.log(err)
+    })
+  })
+
   const handleSocialSignup = async (provider) => {
     try {
       await Auth.federatedSignIn({ provider: provider });
-      const user = await Auth.currentAuthenticatedUser();
-      console.log(user);
     } catch (error) {
       console.log(error?.message);
     }
