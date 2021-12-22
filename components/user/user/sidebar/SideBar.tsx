@@ -13,7 +13,7 @@ const SideBar = ({ userData, setUserData }: SideBarProps) => {
   const [disableTextarea, setDisableTextarea] = useState(true);
 
   const {
-    aboutMe,
+    bio,
     image,
     firstName,
     lastName,
@@ -25,11 +25,12 @@ const SideBar = ({ userData, setUserData }: SideBarProps) => {
 
   const handleChange = (e) => {
     const { name, value } = e?.target;
+
     setUserData((pre) => {
       return {
         ...pre,
         about: {
-          ...pre.about,
+          ...pre?.about,
           [name]: value,
         },
       };
@@ -82,11 +83,11 @@ const SideBar = ({ userData, setUserData }: SideBarProps) => {
           <textarea
             ref={textareaRef}
             className={styles.textArea}
-            name="aboutMe"
+            name="bio"
             id=""
             cols={50}
             rows={5}
-            value={aboutMe}
+            value={bio}
             onChange={handleChange}
             disabled={disableTextarea}
             onKeyPress={handleSubmit}

@@ -70,7 +70,7 @@ const SectionWithInput = ({
                     styles.inputContainer__inputValueContainer__inputValue__label
                   }
                 >
-                  {item?.label}
+                  {item}
                 </span>
                 <CancelIcon
                   className={

@@ -82,7 +82,7 @@ const Dietary = ({ updateUserProfile, userProfile }: DietaryProps) => {
       <div>
         <DietarySection
           body={dietary}
-          fieldName="dietary"
+          fieldName="dieteryLifeStyle"
           title="Which dietary lifestyle applies to you ?"
           updateUserProfile={updateUserProfile}
           userProfile={userProfile}

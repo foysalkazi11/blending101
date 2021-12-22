@@ -5,19 +5,19 @@ import { Container, Grid } from "@mui/material";
 import SideBar from "./sidebar/SideBar";
 import Main from "./main/Main";
 import ButtonComponent from "../../../theme/button/button.component";
+import { useAppSelector } from "../../../redux/hooks";
 
 const User = () => {
   const [userData, setUserData] = useState({
     about: {
-      aboutMe:
-        "Quisque libero metus, condimentum nec, tempor a, commodo mollis, magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida.",
+      bio: "",
       image: "",
-      firstName: "Jhon",
-      lastName: "Doe",
-      displayName: "Jhon",
-      yourBlender: "Doe",
-      email: "example@gmail.com",
-      location: "all",
+      firstName: "",
+      lastName: "",
+      displayName: "",
+      yourBlender: "",
+      email: "",
+      location: "",
     },
     membership: {
       plan: "free",
@@ -37,14 +37,68 @@ const User = () => {
       activity: "",
       age: "",
       weight: "",
-      dietary: "",
+      dieteryLifeStyle: "",
       allergies: "",
+      height: "",
     },
   });
 
+  const { dbUser } = useAppSelector((state) => state?.user);
+
   useEffect(() => {
-    console.log(userData);
-  }, [userData]);
+    if (dbUser) {
+      const {
+        bio,
+        displayName,
+        email,
+        firstName,
+        // gender,
+        image,
+        lastName,
+        // mobileNumber,
+        configuration,
+      } = dbUser;
+      const {
+        activity,
+        age,
+        allergies,
+        dieteryLifeStyle,
+        gender,
+        height,
+        weight,
+        // meditcation,
+        // preExistingMedicalConditions,
+        // whyBlending,
+      } = configuration;
+
+      setUserData((pre) => ({
+        ...pre,
+        about: {
+          ...pre?.about,
+          bio,
+          image,
+          firstName,
+          lastName,
+          displayName,
+          // yourBlender: "",
+          email,
+          // location: ""
+        },
+        personalization: {
+          ...pre?.personalization,
+          gender,
+          activity,
+          age,
+          weight,
+          dieteryLifeStyle,
+          allergies,
+          height,
+        },
+      }));
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <AContainer

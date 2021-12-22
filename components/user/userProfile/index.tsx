@@ -13,6 +13,9 @@ import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
 import { useMutation } from "@apollo/client";
 import EDIT_CONFIGRATION_BY_ID from "../../../gqlLib/user/mutations/editCofigrationById";
 import { setDbUser } from "../../../redux/slices/userSlice";
+import { setLoading } from "../../../redux/slices/utilitySlice";
+import reactToastifyNotification from "../../../components/utility/reactToastifyNotification";
+import { useRouter } from "next/router";
 
 const UserProfile = () => {
   const [userProfile, setUserProfile] = useState<any>({
@@ -32,6 +35,7 @@ const UserProfile = () => {
   const { configuration } = dbUser;
   const [editUserData] = useMutation(EDIT_CONFIGRATION_BY_ID);
   const dispatch = useAppDispatch();
+  const history = useRouter();
 
   useEffect(() => {
     if (configuration) {
@@ -65,8 +69,8 @@ const UserProfile = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const checkGoals = (id) => {
-    const goal = userProfile?.whyBlending?.find((item) => item?.id === id);
+  const checkGoals = (value) => {
+    const goal = userProfile?.whyBlending?.find((item) => item === value);
     if (goal) {
       return true;
     } else {
@@ -79,14 +83,15 @@ const UserProfile = () => {
       if (value) {
         setUserProfile((pre) => ({
           ...pre,
-          [name]: [...pre[name], { id: uniqueId(), label: value }],
+          [name]: [...pre[name], value],
+          // [name]: [...pre[name], { id: uniqueId(), label: value }],
         }));
       }
     } else if (name === "whyBlending") {
-      if (checkGoals(value?.id)) {
+      if (checkGoals(value)) {
         setUserProfile((pre) => ({
           ...pre,
-          [name]: [...pre[name].filter((item) => item?.id !== value?.id)],
+          [name]: [...pre[name].filter((item) => item !== value)],
         }));
       } else {
         setUserProfile((pre) => ({
@@ -104,28 +109,69 @@ const UserProfile = () => {
       if (value) {
         setUserProfile((pre) => ({
           ...pre,
-          [name]: [...pre[name].filter((item) => item?.id !== value?.id)],
+          [name]: [...pre[name].filter((item) => item !== value)],
         }));
       }
     }
   };
 
   const updateUserData = async () => {
-    try {
-      const { data } = await editUserData({
-        variables: {
-          data: { editId: configuration?._id, editableObject: userProfile },
-        },
-      });
-      console.log(data);
-      dispatch(setDbUser({ ...dbUser, configuration: userProfile }));
-    } catch (error) {
-      console.log(error?.message);
+    const arrangData = {
+      ...userProfile,
+      age: Number(userProfile?.age),
+      weight: Number(userProfile?.weight),
+      height: Number(userProfile?.height),
+    };
+    if (steps === 4) {
+      dispatch(setLoading(true));
+      try {
+        await editUserData({
+          variables: {
+            data: { editId: configuration?._id, editableObject: arrangData },
+          },
+        });
+
+        dispatch(
+          setDbUser({
+            ...dbUser,
+            configuration: { ...dbUser?.configuration, ...arrangData },
+          })
+        );
+        dispatch(setLoading(false));
+        reactToastifyNotification(
+          "info",
+          "Congratulation! you updated profile successfully"
+        );
+        history.push("/recipe_discovery");
+      } catch (error) {
+        dispatch(setLoading(false));
+        reactToastifyNotification("error", error?.message);
+      }
+    } else {
+      try {
+        await editUserData({
+          variables: {
+            data: { editId: configuration?._id, editableObject: arrangData },
+          },
+        });
+
+        dispatch(
+          setDbUser({
+            ...dbUser,
+            configuration: { ...dbUser?.configuration, ...arrangData },
+          })
+        );
+      } catch (error) {
+        console.log(error?.message);
+      }
     }
   };
 
   const nextStep = async () => {
     if (steps >= 4) {
+      if (steps === 4) {
+        updateUserData();
+      }
       return;
     } else {
       setSteps((pre) => pre + 1);
