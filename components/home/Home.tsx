@@ -8,21 +8,39 @@ import { setDbUser, setUser } from "../../redux/slices/userSlice";
 
 const Home = () => {
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector((state) => state?.user);
+  const { user, provider } = useAppSelector((state) => state?.user);
   const [createNewUser] = useMutation(CREATE_NEW_USER);
 
   const isCurrentUser = async () => {
     try {
-      const {
-        attributes: { email },
-      } = await Auth.currentAuthenticatedUser();
+      let userEmail = "";
+      let provider = "";
+      const user = await Auth.currentAuthenticatedUser();
+      if (user?.attributes) {
+        const {
+          attributes: { email },
+        } = await Auth.currentAuthenticatedUser();
+        userEmail = email;
+        provider = "email";
+      } else {
+        const {
+          signInUserSession: {
+            idToken: {
+              payload: { email, given_name, identities },
+            },
+          },
+        } = user;
+        userEmail = email;
+        provider = identities?.[0]?.providerName;
+      }
+
       const { data } = await createNewUser({
         variables: {
-          data: { email: email, provider: "email" },
+          data: { email: userEmail, provider },
         },
       });
 
-      dispatch(setUser(email));
+      dispatch(setUser(userEmail));
       dispatch(setDbUser(data?.createNewUser));
     } catch (error) {
       console.log(error?.message);

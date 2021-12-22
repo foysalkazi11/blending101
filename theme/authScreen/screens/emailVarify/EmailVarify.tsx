@@ -8,7 +8,11 @@ import Image from "next/image";
 import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
 import { Container } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import { setUser, setDbUser } from "../../../../redux/slices/userSlice";
+import {
+  setUser,
+  setDbUser,
+  setProvider,
+} from "../../../../redux/slices/userSlice";
 import { setLoading } from "../../../../redux/slices/utilitySlice";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
 import { useRouter } from "next/router";
@@ -40,6 +44,7 @@ const ForgotPassword = () => {
         reactToastifyNotification("info", "Sign up successfully");
         dispatch(setUser(nonConfirmedUser));
         dispatch(setDbUser(data?.createNewUser));
+        dispatch(setProvider("email"));
         history.push("/user/profile");
       } catch (error) {
         dispatch(setLoading(false));
