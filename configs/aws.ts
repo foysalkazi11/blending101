@@ -19,7 +19,7 @@ const awsConfig = {
     scope: ["phone", "email", "openid", "profile"],
     redirectSignIn: "http://localhost:3000/login", // ENTER YOUR SITE (enter http://localhost:8000 if testing frontend locally)
     redirectSignOut: "http://localhost:3000/login", // ENTER YOUR SITE (enter http://localhost:8000 if testing frontend locally)
-    responseType: "code",
+    responseType: "token",
   },
   federationTarget: "COGNITO_USER_POOLS",
 };
