@@ -10,7 +10,11 @@ import { Auth } from "aws-amplify";
 import { setLoading } from "../../../../redux/slices/utilitySlice";
 import { useAppDispatch } from "../../../../redux/hooks";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
-import { setDbUser, setUser } from "../../../../redux/slices/userSlice";
+import {
+  setDbUser,
+  setProvider,
+  setUser,
+} from "../../../../redux/slices/userSlice";
 import { useRouter } from "next/router";
 import { useMutation } from "@apollo/client";
 import CREATE_NEW_USER from "../../../../gqlLib/user/mutations/createNewUser";
@@ -39,7 +43,7 @@ const LoginScreen = () => {
       reactToastifyNotification("info", "Login successfully");
       dispatch(setUser(email));
       dispatch(setDbUser(data?.createNewUser));
-
+      dispatch(setProvider("email"));
       histroy.back();
     } catch (error) {
       dispatch(setLoading(false));
@@ -54,15 +58,15 @@ const LoginScreen = () => {
           <div className={styles.logo}>
             <Link href="/">
               <a href="">
-              <Image
-                src="/images/logo.png"
-                alt="logo will soon load"
-                layout={"fill"}
-                // height={400}
-                // width={400}
-                objectFit={"contain"}
-                quality={100}
-              />
+                <Image
+                  src="/images/logo.png"
+                  alt="logo will soon load"
+                  layout={"fill"}
+                  // height={400}
+                  // width={400}
+                  objectFit={"contain"}
+                  quality={100}
+                />
               </a>
             </Link>
             <div className={styles.cross}>

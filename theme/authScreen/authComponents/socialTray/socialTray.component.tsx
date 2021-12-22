@@ -3,23 +3,62 @@ import React, { useState, useEffect } from "react";
 import styles from "./socialTray.module.scss";
 import Image from "next/image";
 import Link from "next/link";
-
-import { Auth, Hub } from "aws-amplify";
-import { imageListClasses } from "@mui/material";
-import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth/lib/types";
+import { Auth } from "aws-amplify";
+import { useMutation } from "@apollo/client";
+import CREATE_NEW_USER from "../../../../gqlLib/user/mutations/createNewUser";
+import { useAppDispatch } from "../../../../redux/hooks";
+import {
+  setDbUser,
+  setProvider,
+  setUser,
+} from "../../../../redux/slices/userSlice";
+import { useRouter } from "next/router";
+import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
 
 const SocialTray = () => {
-  const [user, setUser] = useState("");
+  const [createNewUser] = useMutation(CREATE_NEW_USER);
+  const dispatch = useAppDispatch();
+  const history = useRouter();
+
+  const updateUser = async (email, provider) => {
+    try {
+      const { data } = await createNewUser({
+        variables: {
+          data: { email, provider },
+        },
+      });
+      // reactToastifyNotification("info", "Sign up successfully");
+      dispatch(setUser(email));
+      dispatch(setDbUser(data?.createNewUser));
+      dispatch(setProvider(provider));
+      history.push("/");
+    } catch (error) {
+      console.log(error?.message);
+    }
+  };
 
   useEffect(() => {
     Auth.currentAuthenticatedUser({
-      bypassCache: true
-    }).then(res=> {
-      console.log('res', res)
-    }).catch(err => {
-      console.log(err)
+      bypassCache: true,
     })
-  })
+      .then((res) => {
+        const {
+          signInUserSession: {
+            idToken: {
+              payload: { email, given_name, identities },
+            },
+          },
+        } = res;
+        // console.log(email, given_name, identities?.[0].providerName);
+
+        updateUser(email, identities?.[0]?.providerName);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSocialSignup = async (provider) => {
     try {
@@ -28,29 +67,6 @@ const SocialTray = () => {
       console.log(error?.message);
     }
   };
-
-  // const hub = () => {
-  //   Hub.listen("auth", ({ payload: { event, data } }) => {
-  //     switch (event) {
-  //       case "signIn":
-  //       case "cognitoHostedUI":
-  //         getUser().then((userData) => console.log(userData));
-  //         break;
-  //       case "signOut":
-  //         setUser(null);
-  //         break;
-  //       case "signIn_failure":
-  //       case "cognitoHostedUI_failure":
-  //         console.log("Sign in failure", data);
-  //         break;
-  //     }
-  //   });
-  // };
-  // function getUser() {
-  //   return Auth.currentAuthenticatedUser()
-  //     .then((userData) => userData)
-  //     .catch(() => console.log("Not signed in"));
-  // }
 
   return (
     <>

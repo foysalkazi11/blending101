@@ -36,7 +36,6 @@ export default function HeaderComponent({
   const [openPopup, setOpenPopup] = useState(false);
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state?.user);
-  console.log(user);
 
   const userSingOut = async () => {
     dispatch(setLoading(true));
@@ -59,9 +58,11 @@ export default function HeaderComponent({
     <div className={styles.wrapper}>
       <div className={styles.header} style={style}>
         <div className={styles.header__inner}>
-          <div className={styles.left + " " + styles.logo}>
-            {logo && <img src="/logo.png" alt="logo" />}
-          </div>
+          <Link href="/" passHref>
+            <div className={styles.left + " " + styles.logo}>
+              {logo && <img src="/logo.png" alt="logo" />}
+            </div>
+          </Link>
           <div className={styles.center + " " + styles.info}>
             <h3>{headerTitle}</h3>
           </div>

@@ -3,10 +3,10 @@ import styles from "./Goals.module.scss";
 
 type GoalsProps = {
   title: string;
-  list: { id: number; label: string }[];
+  list: string[];
   updateUserProfile: Function;
   fieldName: string;
-  alredyExistGoals: (id: number) => boolean;
+  alredyExistGoals: (value: string) => boolean;
 };
 
 const Goals = ({
@@ -21,7 +21,7 @@ const Goals = ({
       <h2>{title}</h2>
       <div className={styles.container__goalsContainer}>
         {list?.map((item, index) => {
-          const ckeckGoals = alredyExistGoals(item?.id);
+          const ckeckGoals = alredyExistGoals(item);
           return (
             <span
               key={index}
@@ -30,7 +30,7 @@ const Goals = ({
               }`}
               onClick={() => updateUserProfile(fieldName, item)}
             >
-              {item?.label}
+              {item}
             </span>
           );
         })}
