@@ -25,13 +25,13 @@ const UserProfile = () => {
     weight: "",
     height: "",
     dieteryLifeStyle: "",
-    allergies: "",
+    allergies: [],
     preExistingMedicalConditions: [],
     meditcation: [],
     whyBlending: [],
   });
   const [steps, setSteps] = useState(1);
-  const { dbUser, user } = useAppSelector((state) => state?.user);
+  const { dbUser, user, provider } = useAppSelector((state) => state?.user);
   const { configuration } = dbUser;
   const [editUserData] = useMutation(EDIT_CONFIGRATION_BY_ID);
   const dispatch = useAppDispatch();
@@ -46,9 +46,9 @@ const UserProfile = () => {
         dieteryLifeStyle,
         gender,
         height,
+        weight,
         meditcation,
         preExistingMedicalConditions,
-        weight,
         whyBlending,
       } = configuration;
 
@@ -59,18 +59,18 @@ const UserProfile = () => {
         age,
         weight,
         dieteryLifeStyle,
-        allergies,
-        preExistingMedicalConditions,
-        meditcation,
-        whyBlending,
+        allergies: allergies || [],
+        preExistingMedicalConditions: preExistingMedicalConditions || [],
+        meditcation: meditcation || [],
+        whyBlending: whyBlending || [],
         height,
       }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const checkGoals = (value) => {
-    const goal = userProfile?.whyBlending?.find((item) => item === value);
+  const checkGoals = (value, fieldName) => {
+    const goal = userProfile?.[fieldName]?.find((item) => item === value);
     if (goal) {
       return true;
     } else {
@@ -87,8 +87,8 @@ const UserProfile = () => {
           // [name]: [...pre[name], { id: uniqueId(), label: value }],
         }));
       }
-    } else if (name === "whyBlending") {
-      if (checkGoals(value)) {
+    } else if (name === "whyBlending" || name === "allergies") {
+      if (checkGoals(value, name)) {
         setUserProfile((pre) => ({
           ...pre,
           [name]: [...pre[name].filter((item) => item !== value)],
@@ -149,7 +149,7 @@ const UserProfile = () => {
       }
     } else {
       try {
-        await editUserData({
+        const status = await editUserData({
           variables: {
             data: { editId: configuration?._id, editableObject: arrangData },
           },
@@ -202,6 +202,7 @@ const UserProfile = () => {
           <StepTwo
             userProfile={userProfile}
             updateUserProfile={updateUserProfile}
+            alredyExist={checkGoals}
           />
         );
       case 3:
