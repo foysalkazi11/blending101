@@ -1,14 +1,9 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { useEffect, useState } from 'react';
-import styles from '../styles/Theme.module.scss';
+import { useState } from "react";
+
+import HomeComponent from "../components/home/Home";
 
 export default function Home() {
-  const [state, setState] = useState('desktop');
+  const [state, setState] = useState("desktop");
 
-  return (
-    <div>
-      hello
-    </div>
-  )
+  return <HomeComponent />;
 }

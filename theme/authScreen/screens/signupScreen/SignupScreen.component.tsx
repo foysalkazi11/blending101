@@ -1,12 +1,56 @@
 import Link from "next/link";
 import React from "react";
-import InputField from "../../../input/inputField.component";
+import InputField from "../../../input/registerInput/RegisterInput";
 import Image from "next/image";
 import styles from "./SignupScreen.module.scss";
 import ButtonComponent from "../../../button/buttonA/button.component";
 import SocialTray from "../../authComponents/socialTray/socialTray.component";
 import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
+import { useForm } from "react-hook-form";
+import { Auth } from "aws-amplify";
+import { useRouter } from "next/router";
+import { setNonConfirmedUser } from "../../../../redux/slices/userSlice";
+import { setLoading } from "../../../../redux/slices/utilitySlice";
+import { useAppDispatch } from "../../../../redux/hooks";
+import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
+
 const SignupScreen = () => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+
+  const history = useRouter();
+  const dispatch = useAppDispatch();
+
+  const password = watch("password");
+  const onSubmit = async (data) => {
+    dispatch(setLoading(true));
+    const { email, password } = data;
+    try {
+      const { user } = await Auth?.signUp({
+        username: email,
+        password: password,
+        attributes: {
+          email,
+        },
+      });
+      dispatch(setLoading(false));
+      reactToastifyNotification(
+        "info",
+        "A varification code has been sent to your eamil"
+      );
+      //@ts-ignore
+      dispatch(setNonConfirmedUser(user?.username));
+      history?.push("/varify_email");
+    } catch (error) {
+      dispatch(setLoading(false));
+      reactToastifyNotification("error", error?.message);
+    }
+  };
+
   return (
     <>
       <div
@@ -35,20 +79,13 @@ const SignupScreen = () => {
               sit a voluptas eligendi adribus placeat minus maiores amet earum.
             </p>
             <div className={styles.buttonRightDiv}>
-              <Link href="/login">
-                <a>
-                  <Link href="/user/profile/">
-                    <a>
-                      <ButtonComponent
-                        type="text"
-                        style={{ height: "100%" }}
-                        value="Login"
-                        fullWidth={true}
-                      />
-                    </a>
-                  </Link>
-                </a>
-              </Link>
+              <ButtonComponent
+                type="text"
+                style={{ height: "100%" }}
+                value="Login"
+                fullWidth={true}
+                handleClick={() => history?.push("/login")}
+              />
             </div>
           </div>
         </div>
@@ -92,39 +129,76 @@ const SignupScreen = () => {
             <SocialTray />
             <div className={styles.seperatorLogin} />
           </div>
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <InputField
               type="email"
               style={{ marginBottom: "10px" }}
-              value={undefined}
-              placeholder={undefined}
+              placeholder="Email"
               fullWidth={true}
+              register={register}
+              name="email"
+              required={{
+                required: "Email requried",
+                pattern: {
+                  value:
+                    /^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/,
+                  message: "Enter valid email",
+                },
+              }}
             />
+            {errors?.email ? (
+              <p style={{ color: "#ed4337", fontSize: "14px" }}>
+                {errors?.email?.message}
+              </p>
+            ) : null}
             <InputField
               type="password"
               style={{ margin: "10px 0px" }}
-              value={undefined}
-              placeholder={undefined}
+              placeholder="Password"
               fullWidth={true}
+              register={register}
+              name="password"
+              required={{
+                required: "password requried",
+                pattern: {
+                  value:
+                    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/,
+                  message:
+                    "Minimum 6 characters, at least one uppercase letter, one lowercase letter, one number and one special character (#?!@$%^&*-)",
+                },
+              }}
             />
+            {errors?.password ? (
+              <p style={{ color: "#ed4337", fontSize: "14px" }}>
+                {errors?.password?.message}
+              </p>
+            ) : null}
             <InputField
               type="password"
               style={{ margin: "10px 0px" }}
-              value={undefined}
               placeholder={"Confirm Password"}
               fullWidth={true}
+              register={register}
+              name="comfirmPassword"
+              required={{
+                required: "Comfirm password requried",
+                validate: (value) =>
+                  value === password || "Password doesn't match",
+              }}
             />
+            {errors?.comfirmPassword ? (
+              <p style={{ color: "#ed4337", fontSize: "14px" }}>
+                {errors?.comfirmPassword?.message}
+              </p>
+            ) : null}
             <div className={styles.signUpButtonDiv}>
-              <Link href="/signup">
-                <a>
-                  <ButtonComponent
-                    type="primary"
-                    style={{ height: "100%" }}
-                    value="Sign Up"
-                    fullWidth={true}
-                  />
-                </a>
-              </Link>
+              <ButtonComponent
+                type="primary"
+                style={{ height: "100%" }}
+                value="Sign Up"
+                fullWidth={true}
+                submit={true}
+              />
             </div>
           </form>
           <div className={styles.lineTrayB}>

@@ -162,12 +162,19 @@
 
     &__label {
       display: inline-block;
-      border: 1px solid #e4e4e4;
-      border-radius: 8px;
+      border: 1px solid #dddddd;
+      border-radius: 6px;
       color: #c4c4c4 !important;
-      font-size: 14px;
+      font-size: 13px;
       padding: 4px 15px;
       font-weight: 500;
+    }
+  }
+  &__bottom{
+    p{
+      font-size: 13px;
+      color: #abababf3;
+      line-height: 1.4;
     }
   }
 }

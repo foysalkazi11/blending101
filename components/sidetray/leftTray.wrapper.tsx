@@ -4,12 +4,16 @@ import styles from "./tray.module.scss";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { setOpenFilterTray } from "../../redux/slices/sideTraySlice";
 
-export default function LeftTrayWrapper(props) {
-  const { openFilterTray } = useAppSelector((state) => state?.sideTray);
-  const dispatch = useAppDispatch();
+interface leftTrayInterface {
+  filter? : false,
+  children : any,
+  id: string
+}
+
+export default function LeftTrayWrapper({children, filter, id}: leftTrayInterface) {
+  const [openFilterTray, setOpenFilterTrat] = useState(false)
 
   const ref = useRef<any>();
-  const reff = useRef<any>();
 
   useEffect(() => {
     const elem = ref.current;
@@ -22,17 +26,17 @@ export default function LeftTrayWrapper(props) {
   }, [openFilterTray]);
 
   const handleClick = () => {
-    dispatch(setOpenFilterTray(!openFilterTray));
+    setOpenFilterTrat(() => !openFilterTray)
   };
 
   return (
-    <div className={styles.tray} ref={ref}>
+    <div className={styles.tray} ref={ref} id={id}>
       <div className={styles.tray__inner}>
         {openFilterTray ? (
           <div className={styles.image} onClick={handleClick}>
             <img src="/icons/left__drawer__orange.svg" alt="drawer__orange" />
           </div>
-        ) : (
+        ) : filter ? null : (
           <div
             className={styles.image + " " + styles.image__white}
             onClick={handleClick}
@@ -40,7 +44,7 @@ export default function LeftTrayWrapper(props) {
             <img src="/icons/left__drawer.svg" alt="drawer" />
           </div>
         )}
-        {props.children}
+        {children}
       </div>
     </div>
   );

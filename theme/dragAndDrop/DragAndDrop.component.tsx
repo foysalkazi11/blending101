@@ -149,7 +149,7 @@ const DragAndDrop = () => {
 	};
 
 	const onDragEnd = (result) => {
-    console.log('dragging')
+		console.log('dragging');
 		const { source, destination } = result;
 
 		// dropped outside the list
@@ -190,16 +190,19 @@ const DragAndDrop = () => {
 		}
 	};
 
-  const onDragStart = (result) => {
-    const { source, destination } = result;
-    console.log(source)
-    console.log('dragging starts')
-
-  }
+	const onDragStart = (result) => {
+		const { source, destination } = result;
+		console.log(source);
+		console.log('dragging starts');
+	};
 
 	return (
 		<>
-			<DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart} onBeforeDragStart={onDragStart}>
+			<DragDropContext
+				onDragEnd={onDragEnd}
+				onDragStart={onDragStart}
+				onBeforeDragStart={onDragStart}
+			>
 				<div className="compare-down-sec">
 					<div className="addrecipe-fixed-container">
 						<div className="brdr-wrp-compareitems">
@@ -230,8 +233,7 @@ const DragAndDrop = () => {
 													// isDraggingOver={snapshot.isDraggingOver}
 												>
 													{newIngredientsList?.map((item: any, index) => (
-														<div key={item?.id} 
-                            >
+														<div key={item?.id}>
 															<Draggable
 																key={item?.id}
 																draggableId={`${item?.id}`}

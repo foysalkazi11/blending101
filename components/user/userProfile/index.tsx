@@ -9,23 +9,68 @@ import ChangeSteps from "./changeSteps/ChangeSteps";
 import StepThree from "./steps/stepThree/StepThree";
 import StepFour from "./steps/stepFour/StepFour";
 import uniqueId from "../../utility/uniqueId";
+import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
+import { useMutation } from "@apollo/client";
+import EDIT_CONFIGRATION_BY_ID from "../../../gqlLib/user/mutations/editCofigrationById";
+import { setDbUser } from "../../../redux/slices/userSlice";
+import { setLoading } from "../../../redux/slices/utilitySlice";
+import reactToastifyNotification from "../../../components/utility/reactToastifyNotification";
+import { useRouter } from "next/router";
 
 const UserProfile = () => {
   const [userProfile, setUserProfile] = useState<any>({
-    gender: "female",
-    activity: "moderate",
-    age: "50",
-    weight: "170",
-    dietary: "ketogenic",
-    allergies: "moderate",
-    medicalCondition: [],
-    medicationCurrentlyTaking: [],
-    goals: [],
+    gender: "",
+    activity: "",
+    age: "",
+    weight: "",
+    height: "",
+    dieteryLifeStyle: "",
+    allergies: "",
+    preExistingMedicalConditions: [],
+    meditcation: [],
+    whyBlending: [],
   });
   const [steps, setSteps] = useState(1);
+  const { dbUser, user } = useAppSelector((state) => state?.user);
+  const { configuration } = dbUser;
+  const [editUserData] = useMutation(EDIT_CONFIGRATION_BY_ID);
+  const dispatch = useAppDispatch();
+  const history = useRouter();
 
-  const checkGoals = (id) => {
-    const goal = userProfile?.goals?.find((item) => item?.id === id);
+  useEffect(() => {
+    if (configuration) {
+      const {
+        activity,
+        age,
+        allergies,
+        dieteryLifeStyle,
+        gender,
+        height,
+        meditcation,
+        preExistingMedicalConditions,
+        weight,
+        whyBlending,
+      } = configuration;
+
+      setUserProfile((pre) => ({
+        ...pre,
+        gender,
+        activity,
+        age,
+        weight,
+        dieteryLifeStyle,
+        allergies,
+        preExistingMedicalConditions,
+        meditcation,
+        whyBlending,
+        height,
+      }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const checkGoals = (value) => {
+    const goal = userProfile?.whyBlending?.find((item) => item === value);
     if (goal) {
       return true;
     } else {
@@ -34,18 +79,19 @@ const UserProfile = () => {
   };
 
   const updateUserProfile = (name: string, value: any) => {
-    if (name === "medicalCondition" || name === "medicationCurrentlyTaking") {
+    if (name === "preExistingMedicalConditions" || name === "meditcation") {
       if (value) {
         setUserProfile((pre) => ({
           ...pre,
-          [name]: [...pre[name], { id: uniqueId(), label: value }],
+          [name]: [...pre[name], value],
+          // [name]: [...pre[name], { id: uniqueId(), label: value }],
         }));
       }
-    } else if (name === "goals") {
-      if (checkGoals(value?.id)) {
+    } else if (name === "whyBlending") {
+      if (checkGoals(value)) {
         setUserProfile((pre) => ({
           ...pre,
-          [name]: [...pre[name].filter((item) => item?.id !== value?.id)],
+          [name]: [...pre[name].filter((item) => item !== value)],
         }));
       } else {
         setUserProfile((pre) => ({
@@ -59,25 +105,79 @@ const UserProfile = () => {
   };
 
   const removeInput = (name: string, value: any) => {
-    if (name === "medicalCondition" || name === "medicationCurrentlyTaking") {
+    if (name === "preExistingMedicalConditions" || name === "meditcation") {
       if (value) {
         setUserProfile((pre) => ({
           ...pre,
-          [name]: [...pre[name].filter((item) => item?.id !== value?.id)],
+          [name]: [...pre[name].filter((item) => item !== value)],
         }));
       }
     }
   };
 
-  useEffect(() => {
-    console.log(userProfile);
-  }, [userProfile]);
+  const updateUserData = async () => {
+    const arrangData = {
+      ...userProfile,
+      age: Number(userProfile?.age),
+      weight: Number(userProfile?.weight),
+      height: Number(userProfile?.height),
+    };
+    if (steps === 4) {
+      dispatch(setLoading(true));
+      try {
+        await editUserData({
+          variables: {
+            data: { editId: configuration?._id, editableObject: arrangData },
+          },
+        });
 
-  const nextStep = () => {
+        dispatch(
+          setDbUser({
+            ...dbUser,
+            configuration: { ...dbUser?.configuration, ...arrangData },
+          })
+        );
+        dispatch(setLoading(false));
+        reactToastifyNotification(
+          "info",
+          "Congratulation! you updated profile successfully"
+        );
+        history.push("/recipe_discovery");
+      } catch (error) {
+        dispatch(setLoading(false));
+        reactToastifyNotification("error", error?.message);
+      }
+    } else {
+      try {
+        await editUserData({
+          variables: {
+            data: { editId: configuration?._id, editableObject: arrangData },
+          },
+        });
+
+        dispatch(
+          setDbUser({
+            ...dbUser,
+            configuration: { ...dbUser?.configuration, ...arrangData },
+          })
+        );
+      } catch (error) {
+        console.log(error?.message);
+      }
+    }
+  };
+
+  const nextStep = async () => {
     if (steps >= 4) {
+      if (steps === 4) {
+        updateUserData();
+      }
       return;
     } else {
       setSteps((pre) => pre + 1);
+      if (user) {
+        updateUserData();
+      }
     }
   };
   const prevStep = () => {
@@ -135,6 +235,7 @@ const UserProfile = () => {
       showLeftTray={false}
       showRighTray={false}
       showSidebar={false}
+      headerFullWidth={true}
     >
       <div className={styles.userProfileContainer}>
         <ProgessBar steps={steps} />

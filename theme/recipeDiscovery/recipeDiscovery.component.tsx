@@ -10,11 +10,14 @@ import { recommendedList, recentList, popularList } from "./data";
 
 import DatacardComponent from "../cards/dataCard/dataCard.component";
 import SearchBar from "./searchBar/SearchBar.component";
+import FooterComponent from "../../components/footer/footer.component";
+import SearchtagsComponent from "../../components/searchtags/searchtags.component";
 const RecipeDetails = () => {
   return (
-    <AContainer filterTray={true}>
+    <AContainer showLeftTray={true} filterTray={true}>
       <div className={styles.main__div}>
         <SearchBar />
+        <SearchtagsComponent />
         <AppdownLoadCard />
         <div className={styles.main__tray}>
           {/* pass list of card to create carousel slider */}
