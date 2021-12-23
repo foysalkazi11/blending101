@@ -3,14 +3,14 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type SideTrayState = {
   nonConfirmedUser: string;
-  user: string;
+  user: string | null;
   dbUser: any;
   provider: string;
 };
 
 const initialState: SideTrayState = {
   nonConfirmedUser: "",
-  user: "",
+  user: null,
   dbUser: {},
   provider: "email",
 };
@@ -29,7 +29,7 @@ export const userSlice = createSlice({
       state.dbUser = action?.payload;
     },
     setProvider: (state, action: PayloadAction<string>) => {
-      state.dbUser = action?.payload;
+      state.provider = action?.payload;
     },
   },
 });

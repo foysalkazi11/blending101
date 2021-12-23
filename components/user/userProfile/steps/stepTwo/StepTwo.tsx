@@ -45,8 +45,13 @@ const allergies = [
 type StepTwoProps = {
   userProfile: any;
   updateUserProfile: Function;
+  alredyExist?: (value: string, fieldName: string) => boolean;
 };
-const StepTwo = ({ userProfile, updateUserProfile }: StepTwoProps) => {
+const StepTwo = ({
+  userProfile,
+  updateUserProfile,
+  alredyExist,
+}: StepTwoProps) => {
   return (
     <>
       <SectionWithIcon
@@ -62,6 +67,7 @@ const StepTwo = ({ userProfile, updateUserProfile }: StepTwoProps) => {
         fieldName="allergies"
         updateUserProfile={updateUserProfile}
         userProfile={userProfile}
+        alredyExist={alredyExist}
       />
     </>
   );

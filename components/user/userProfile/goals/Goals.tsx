@@ -6,7 +6,7 @@ type GoalsProps = {
   list: string[];
   updateUserProfile: Function;
   fieldName: string;
-  alredyExistGoals: (value: string) => boolean;
+  alredyExistGoals: (value: string, fieldName: string) => boolean;
 };
 
 const Goals = ({
@@ -21,7 +21,7 @@ const Goals = ({
       <h2>{title}</h2>
       <div className={styles.container__goalsContainer}>
         {list?.map((item, index) => {
-          const ckeckGoals = alredyExistGoals(item);
+          const ckeckGoals = alredyExistGoals(item, "whyBlending");
           return (
             <span
               key={index}
