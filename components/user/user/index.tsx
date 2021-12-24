@@ -55,10 +55,10 @@ const User = () => {
         displayName,
         email,
         firstName,
-        // gender,
+        location,
+        yourBlender,
         image,
         lastName,
-        // mobileNumber,
         configuration,
       } = dbUser;
       const {
@@ -78,14 +78,14 @@ const User = () => {
         ...pre,
         about: {
           ...pre?.about,
-          bio,
+          bio: bio || "",
           image,
           firstName,
           lastName,
           displayName,
-          // yourBlender: "",
           email,
-          // location: ""
+          location,
+          yourBlender,
         },
         personalization: {
           ...pre?.personalization,

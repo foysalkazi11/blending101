@@ -88,7 +88,7 @@ const SideBar = ({ userData, setUserData }: SideBarProps) => {
             cols={50}
             rows={5}
             value={bio}
-            onChange={handleChange}
+            onChange={(e) => handleChange(e)}
             disabled={disableTextarea}
             onKeyPress={handleSubmit}
           />
