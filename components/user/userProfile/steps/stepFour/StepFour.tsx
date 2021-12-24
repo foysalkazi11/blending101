@@ -17,7 +17,7 @@ const goals = [
 
 type StepFourProps = {
   updateUserProfile: (name: string, value: any) => void;
-  checkGoals: (value: string) => boolean;
+  checkGoals: (value: string, fieldName: string) => boolean;
 };
 
 const StepFour = ({ updateUserProfile, checkGoals }: StepFourProps) => {

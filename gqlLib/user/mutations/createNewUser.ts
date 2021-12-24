@@ -5,24 +5,14 @@ const CREATE_NEW_USER = gql`
     createNewUser(data: $data) {
       _id
       bio
+      yourBlender
       provider
-      socialAccounts {
-        name
-        link
-      }
       displayName
       firstName
       orderHistoty
       lastName
-      gender
       email
-      mobileNumber
-      address {
-        streetAddress
-        apartmentNo
-        city
-        state
-      }
+      location
       myCart
       recentViewedProducts
       image

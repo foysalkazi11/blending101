@@ -1,12 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState, useEffect } from "react";
 import styles from "./socialTray.module.scss";
-import Image from "next/image";
-import Link from "next/link";
 import { Auth } from "aws-amplify";
 import { useMutation } from "@apollo/client";
 import CREATE_NEW_USER from "../../../../gqlLib/user/mutations/createNewUser";
-import { useAppDispatch } from "../../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import {
   setDbUser,
   setProvider,
@@ -19,44 +17,40 @@ const SocialTray = () => {
   const [createNewUser] = useMutation(CREATE_NEW_USER);
   const dispatch = useAppDispatch();
   const history = useRouter();
+  const { user } = useAppSelector((state) => state?.user);
 
-  const updateUser = async (email, provider) => {
+  const updateUser = async () => {
     try {
+      const res = await Auth.currentAuthenticatedUser({
+        bypassCache: true,
+      });
+      const {
+        signInUserSession: {
+          idToken: {
+            payload: { email, given_name, identities },
+          },
+        },
+      } = res;
       const { data } = await createNewUser({
         variables: {
-          data: { email, provider },
+          data: { email: email, provider: identities?.[0]?.providerName },
         },
       });
+
       // reactToastifyNotification("info", "Sign up successfully");
       dispatch(setUser(email));
       dispatch(setDbUser(data?.createNewUser));
-      dispatch(setProvider(provider));
-      history.push("/");
+      dispatch(setProvider(identities?.[0]?.providerName));
+      history.push("/recipe_discovery");
     } catch (error) {
-      console.log(error?.message);
+      console.log(error);
     }
   };
 
   useEffect(() => {
-    Auth.currentAuthenticatedUser({
-      bypassCache: true,
-    })
-      .then((res) => {
-        const {
-          signInUserSession: {
-            idToken: {
-              payload: { email, given_name, identities },
-            },
-          },
-        } = res;
-        // console.log(email, given_name, identities?.[0].providerName);
-
-        updateUser(email, identities?.[0]?.providerName);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
+    if (!user) {
+      updateUser();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

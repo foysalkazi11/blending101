@@ -37,9 +37,12 @@ const User = () => {
       activity: "",
       age: "",
       weight: "",
-      dieteryLifeStyle: "",
-      allergies: "",
       height: "",
+      dieteryLifeStyle: "",
+      allergies: [],
+      preExistingMedicalConditions: [],
+      meditcation: [],
+      whyBlending: [],
     },
   });
 
@@ -66,9 +69,9 @@ const User = () => {
         gender,
         height,
         weight,
-        // meditcation,
-        // preExistingMedicalConditions,
-        // whyBlending,
+        meditcation,
+        preExistingMedicalConditions,
+        whyBlending,
       } = configuration;
 
       setUserData((pre) => ({
@@ -91,7 +94,10 @@ const User = () => {
           age,
           weight,
           dieteryLifeStyle,
-          allergies,
+          allergies: allergies || [],
+          preExistingMedicalConditions: preExistingMedicalConditions || [],
+          meditcation: meditcation || [],
+          whyBlending: whyBlending || [],
           height,
         },
       }));
