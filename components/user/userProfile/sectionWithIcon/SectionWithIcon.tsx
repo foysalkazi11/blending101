@@ -35,39 +35,23 @@ const SectionWithIcon = ({
             ? body?.map((item, index) => {
                 return (
                   <Grid item xs={3} key={index}>
-                    {fieldName === "allergies" ? (
-                      <div
-                        className={`${styles.singleImage} ${
-                          alredyExist(item?.label, "allergies")
+                    <div
+                      className={`${styles.singleImage} ${
+                        alredyExist
+                          ? alredyExist(item?.label, "allergies")
                             ? styles.active
                             : ""
-                        }`}
-                        onClick={() =>
-                          updateUserProfile(fieldName, item?.label)
-                        }
-                      >
-                        <div className={styles.imageBox}>
-                          <img src={item?.icon} alt="icon" />
-                        </div>
-                        <h2> {capitalizeFirstLetter(item?.label)}</h2>
+                          : item?.label === userProfile[fieldName]
+                          ? styles.active
+                          : ""
+                      }`}
+                      onClick={() => updateUserProfile(fieldName, item?.label)}
+                    >
+                      <div className={styles.imageBox}>
+                        <img src={item?.icon} alt="icon" />
                       </div>
-                    ) : (
-                      <div
-                        className={`${styles.singleImage} ${
-                          item?.label === userProfile[fieldName]
-                            ? styles.active
-                            : ""
-                        }`}
-                        onClick={() =>
-                          updateUserProfile(fieldName, item?.label)
-                        }
-                      >
-                        <div className={styles.imageBox}>
-                          <img src={item?.icon} alt="icon" />
-                        </div>
-                        <h2> {capitalizeFirstLetter(item?.label)}</h2>
-                      </div>
-                    )}
+                      <h2> {capitalizeFirstLetter(item?.label)}</h2>
+                    </div>
                   </Grid>
                 );
               })

@@ -134,7 +134,7 @@ const CompareRecipe = () => {
       <Container maxWidth="xl">
         <div className={styles.CompareContainer}>
           <SubNav
-            backAddress="/recipe"
+            backAddress="/recipe_discovery"
             backIconText="Recipe Discovery"
             buttonText="Formulate"
             showButton={true}
