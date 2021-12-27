@@ -59,9 +59,16 @@ function AuthProvider({ children, activeUser }) {
 
       dispatch(setUser(userEmail));
       dispatch(setDbUser(data?.createNewUser));
+      setActive(true);
     } catch (error) {
       console.log(error?.message);
-      if (!user && process.browser && page !== "/login" && page !== "/signup")
+      if (
+        !user &&
+        process.browser &&
+        page !== "/login" &&
+        page !== "/signup" &&
+        page !== "/varify_email"
+      )
         router.push("/login");
     }
   };
@@ -77,7 +84,7 @@ function AuthProvider({ children, activeUser }) {
   }, [user]);
 
   useEffect(() => {
-    if (page === "/login" || page === "/signup") {
+    if (page === "/login" || page === "/signup" || page === "/varify_email") {
       setActive(true);
     }
   }, [page]);

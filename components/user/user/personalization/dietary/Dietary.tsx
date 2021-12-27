@@ -3,20 +3,7 @@ import DropDown from "../../../../../theme/dropDown/DropDown.component";
 import styles from "./Dietary.module.scss";
 import DietarySection from "./dietarySection/DietarySection";
 
-let dropdownItem = [
-  "Warning",
-  "Leafy",
-  "Berry",
-  "Herbal",
-  "Fruity",
-  "Balancer",
-  "Fatty",
-  "Seasoning",
-  "Flavor",
-  "Rooty",
-  "Flowering",
-  "Liquid",
-];
+let dropdownItem = ["Warning", "Leafy"];
 
 const dietary = [
   {
@@ -62,9 +49,14 @@ const allergies = [
 type DietaryProps = {
   userProfile: any;
   updateUserProfile: Function;
+  alredyExist?: (value: string, fieldName: string) => boolean;
 };
 
-const Dietary = ({ updateUserProfile, userProfile }: DietaryProps) => {
+const Dietary = ({
+  updateUserProfile,
+  userProfile,
+  alredyExist,
+}: DietaryProps) => {
   return (
     <div className={styles.dietaryContainer}>
       <p className={styles.infoText}>
@@ -95,6 +87,7 @@ const Dietary = ({ updateUserProfile, userProfile }: DietaryProps) => {
           title="Which allergies do you have ?"
           updateUserProfile={updateUserProfile}
           userProfile={userProfile}
+          alredyExist={alredyExist}
         />
       </div>
     </div>

@@ -20,14 +20,18 @@ const ToggleMenu = ({
     if (no === 0) {
       menuRef.current.style.left = "0";
     } else {
-      menuRef.current.style.left = `${100 / toggleMenuList?.length}%`;
+      menuRef.current.style.left = `${(100 / toggleMenuList.length) * no}%`;
     }
     setToggle(no);
   };
   return (
     <div className={styles.topMenuContainer}>
       <div className={styles.topMenu} style={maxWidth}>
-        <div className={styles.active} ref={menuRef}></div>
+        <div
+          className={styles.active}
+          ref={menuRef}
+          style={{ width: `${100 / toggleMenuList.length}%` }}
+        ></div>
         {toggleMenuList?.map((menu, index) => {
           return (
             <div
@@ -36,6 +40,7 @@ const ToggleMenu = ({
                 toggle === index ? styles.activeMenu : ""
               }`}
               onClick={() => handleToggle(index)}
+              style={{ width: `${100 / toggleMenuList.length}%` }}
             >
               {menu}
             </div>

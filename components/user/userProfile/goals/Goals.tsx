@@ -7,6 +7,7 @@ type GoalsProps = {
   updateUserProfile: Function;
   fieldName: string;
   alredyExistGoals: (value: string, fieldName: string) => boolean;
+  headingStyle?: object;
 };
 
 const Goals = ({
@@ -15,10 +16,11 @@ const Goals = ({
   fieldName,
   updateUserProfile,
   alredyExistGoals,
+  headingStyle = {},
 }: GoalsProps) => {
   return (
     <div className={styles.container}>
-      <h2>{title}</h2>
+      <h2 style={headingStyle}>{title}</h2>
       <div className={styles.container__goalsContainer}>
         {list?.map((item, index) => {
           const ckeckGoals = alredyExistGoals(item, "whyBlending");
