@@ -23,7 +23,6 @@ const About = ({ userData, setUserData }: AboutProps) => {
   const dispatch = useAppDispatch();
   const { dbUser } = useAppSelector((state) => state?.user);
   const [editUserById] = useMutation(EDIT_USER_BY_ID);
-  console.log(dbUser);
 
   const submitData = async () => {
     dispatch(setLoading(true));
@@ -133,7 +132,11 @@ const About = ({ userData, setUserData }: AboutProps) => {
             <label>Location</label>
             <div className={styles.selectBox}>
               <img src="/images/us.png" alt="flag" />
-              <select value={location} name="location" onChange={handleChange}>
+              <select
+                value={location || "all"}
+                name="location"
+                onChange={handleChange}
+              >
                 <option value="all">
                   (GMT-8:00) Pacific Time (US & Canada)
                 </option>

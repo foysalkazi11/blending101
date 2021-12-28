@@ -21,6 +21,7 @@ import {
   MdOutlineLogin,
 } from "react-icons/md";
 import Link from "next/link";
+import { FaRegUser } from "react-icons/fa";
 
 interface headerInterface {
   logo: Boolean;
@@ -35,7 +36,7 @@ export default function HeaderComponent({
 }: headerInterface) {
   const [openPopup, setOpenPopup] = useState(false);
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector((state) => state?.user);
+  const { user, dbUser } = useAppSelector((state) => state?.user);
 
   const userSingOut = async () => {
     dispatch(setLoading(true));
@@ -74,24 +75,54 @@ export default function HeaderComponent({
               <LocalMallIcon className={styles.cart__icon} />
             </div>
             <div className={styles.profile}>
-              <img src="/user-profile.png" alt="prfile.png" />
+              {dbUser?.image ? (
+                <img
+                  src={dbUser?.image}
+                  alt="prfile.png"
+                  style={{
+                    objectFit: "contain",
+                  }}
+                />
+              ) : (
+                <FaRegUser
+                  style={{ fontSize: "24px", justifySelf: "flex-end" }}
+                />
+              )}
             </div>
 
             <div className={styles.userPopupMenu}>
-              {openPopup ? (
-                <BsCaretUp
-                  className={styles.downArrow}
-                  onClick={() => setOpenPopup((pre) => !pre)}
-                />
-              ) : (
-                <BsCaretDown
-                  className={styles.downArrow}
-                  onClick={() => setOpenPopup((pre) => !pre)}
-                />
-              )}
+              {user ? <p className={styles.welcomeText}>Welcome</p> : null}
+
+              <div className={styles.arrowWithText}>
+                {user ? (
+                  <strong className={styles.userName}>
+                    {dbUser?.displayName ||
+                      dbUser?.lastName ||
+                      dbUser?.firstName ||
+                      dbUser?.email}
+                  </strong>
+                ) : null}
+                {openPopup ? (
+                  <BsCaretUp
+                    className={styles.downArrow}
+                    onClick={() => setOpenPopup((pre) => !pre)}
+                  />
+                ) : (
+                  <BsCaretDown
+                    className={styles.downArrow}
+                    onClick={() => setOpenPopup((pre) => !pre)}
+                  />
+                )}
+              </div>
 
               {openPopup ? (
-                <div className={`${styles.popup}`}>
+                <div
+                  className={`${styles.popup}`}
+                  style={{
+                    top: user ? "50px" : "inherits",
+                    marginLeft: user ? "-100px" : "inherits",
+                  }}
+                >
                   {user ? (
                     <Link href="/user" passHref>
                       <div className={styles.menu}>

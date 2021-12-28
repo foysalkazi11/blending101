@@ -1,9 +1,10 @@
-import { useState } from "react";
+import React from "react";
+import RecipeScreen from "../theme/recipeDiscovery/recipeDiscovery.component";
 
-import HomeComponent from "../components/home/Home";
-
-export default function Home() {
-  const [state, setState] = useState("desktop");
-
-  return <HomeComponent />;
+export default function recipe_details() {
+  return (
+    <div>
+      <RecipeScreen />
+    </div>
+  );
 }
