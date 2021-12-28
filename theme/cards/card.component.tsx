@@ -27,7 +27,7 @@ export default function CardComponent({img, icon, rating, noOfRating, price, dis
     noOfRating = noOfRating || 71;
     title = title || 'Default Title';
     icon = icon || '/icons/star.svg';
-    
+
 
     if(type === 'second') return(
         <div className={styles.card} style={style}>

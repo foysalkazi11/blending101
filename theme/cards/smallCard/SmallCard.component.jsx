@@ -2,31 +2,57 @@
 import React from "react";
 import styles from "./smallcard.module.scss";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
-import CheckIcon from "@mui/icons-material/Check";
+import { BsCheck } from "react-icons/bs";
 
-export default function SmallcardComponent({ img, imgHeight, text, fnc }) {
+export default function SmallcardComponent({
+  img,
+  imgHeight,
+  text,
+  fnc,
+  recipe,
+  findCompareRecipe,
+  fucUnCheck,
+  conpareLength,
+}) {
   const style = {};
   if (imgHeight) style.height = imgHeight;
 
   text = text || "Chocolate Avocado Smoothie";
   img = img || "/cards/coriander.png";
 
+  const findRecipe = findCompareRecipe && findCompareRecipe(recipe?.id);
+
   const handleClick = () => {
-    fnc && fnc();
+    fnc && fnc(recipe);
+  };
+
+  const handleUnCheck = () => {
+    fucUnCheck && fucUnCheck(recipe);
   };
 
   return (
     <div className={styles.smallCard}>
       <div className={styles.smallCard__innerContainer}>
-        <div className={styles.compar} onClick={handleClick}>
-          compare
-        </div>
-        <div className={styles.drag}>
+        {findRecipe ? null : (
+          <button
+            disabled={conpareLength === 4 ? true : false}
+            className={`${styles.compar} ${
+              conpareLength === 4 ? styles.disable : ""
+            }`}
+            onClick={handleClick}
+          >
+            compare
+          </button>
+        )}
+        {/* <div className={styles.drag}>
           <DragIndicatorIcon />
-        </div>
-        <div className={styles.tick}>
-          <CheckIcon className={styles.tickimg} />
-        </div>
+        </div> */}
+
+        {findRecipe ? (
+          <div className={`${styles.tick}`} onClick={handleUnCheck}>
+            <BsCheck className={styles.tickimg} />
+          </div>
+        ) : null}
 
         <div className={styles.smallCard__top} style={style}>
           <img src={img} alt="coriander" />

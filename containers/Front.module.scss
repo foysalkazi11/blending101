@@ -1,0 +1,29 @@
+@mixin widthControl {
+    position: relative;
+    min-height: 100vh;
+    min-width: 100vw;
+    display: flex;
+    flex-direction: column;
+
+    @media only screen and (min-width: 1100px) {
+        min-width: auto;
+        max-width: 1480px;
+        margin: auto;
+    }
+}
+
+
+.mainContainer {
+
+    background-image: url('/images/banner1.png');
+    background-position-x: center;
+    background-position-y: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    @include widthControl();
+
+}
+
+.contentDiv {
+    @include widthControl();
+}

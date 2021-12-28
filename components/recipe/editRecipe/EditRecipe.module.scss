@@ -1,0 +1,70 @@
+$width:300px;
+
+// mixin for headings
+@mixin headings {
+    background-color: rgb(42, 95, 165);
+    position: relative;
+    display: flex;
+
+    span {
+        // display: flex;
+        background-color: red;
+    }
+
+    h3 {
+        color: black;
+        background-color: aqua;
+        font-size: 22px;
+        font-weight: 400;
+    }
+
+}
+
+.main {
+    display: flex;
+    background-color: green;
+    min-height: 100%;
+    width: calc(100% - 60px);
+    margin: auto;
+    margin-top: 43px;
+    justify-content: space-between;
+}
+
+.left {
+    background-color: rgb(170, 17, 17);
+    min-width: $width;
+
+    &__title {
+        @include headings();
+        height: 30px;
+    }
+}
+
+.center {
+    background-color: rgb(9, 9, 24);
+    min-width: $width;
+    width: calc(100% - 2*$width);
+
+    &__title {
+        @include headings();
+        height: 30px;
+
+        &__left {
+            display: flex;
+        }
+
+        &__right {
+            margin-left: auto;
+        }
+    }
+}
+
+.right {
+    background-color: rgb(155, 170, 17);
+    min-width: $width;
+
+    &__title {
+        @include headings();
+        height: 30px;
+    }
+}

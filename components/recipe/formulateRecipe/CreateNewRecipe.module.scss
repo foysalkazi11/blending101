@@ -1,0 +1,184 @@
+.createNewRecipeContainer {
+  background-color: #ffffff;
+  padding: 10px;
+  height: 100%;
+  position: relative;
+}
+
+.firstContainer {
+  border: 1px solid #f6f6f6;
+  border-radius: 6px;
+  width: 100%;
+  height: 246px;
+  &__firstSection {
+    width: 100%;
+    padding: 10px 10px 0px 10px;
+  }
+}
+
+.fileUpload {
+  text-align: center;
+  position: relative;
+  margin-right: 10px;
+  height: 107px;
+  width: 107px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+  background: #f4f4f4;
+  input {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    outline: none;
+    opacity: 0;
+    cursor: pointer;
+    left: 0;
+    top: 0;
+  }
+}
+
+.addRecipeTitle {
+  input {
+    width: 100%;
+    min-height: 82px;
+    border: 1px solid #ececec;
+    border-radius: 10px;
+    min-height: 36px;
+    padding: 0 15px;
+    font-size: 10px;
+    color: #bcbcbc;
+    line-height: 36px;
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+  input::placeholder {
+    font-size: 12px;
+    color: #bcbcbc;
+  }
+  input:focus,
+  input:hover {
+    color: #495057;
+    background-color: #fff;
+    border-color: #7cbc39;
+    outline: 0;
+    box-shadow: none;
+  }
+}
+.dropDown {
+  select {
+    width: 100%;
+    max-width: 110px;
+    min-height: 82px;
+    border: 1px solid #ececec;
+    border-radius: 10px;
+    min-height: 36px;
+    padding: 0 15px;
+    font-size: 10px;
+    color: #bcbcbc;
+    line-height: 36px;
+    font-size: 12px;
+    outline-style: none;
+  }
+  select:focus,
+  select:hover {
+    color: #495057;
+    background-color: #fff;
+    border-color: #7cbc39;
+    outline: 0;
+    box-shadow: none;
+  }
+}
+
+.datacard__body__belt {
+  display: flex;
+  background: #f6f6f6 0% 0% no-repeat padding-box;
+  padding: 5px 15px;
+  justify-content: space-between;
+  margin-top: 13px;
+
+  &__child {
+    font-size: 13px;
+    font-weight: 500;
+
+    span {
+      color: #fe5d1f;
+      font-size: 13px;
+      padding-left: 3px;
+      font-weight: 600;
+    }
+  }
+}
+
+.dividerBox {
+  border: 1px solid #f6f6f6;
+  padding: 10px;
+  margin-top: 15px;
+  border-radius: 6px;
+  min-height: 250px;
+}
+
+.addRecipeIngredients {
+  input {
+    width: 100%;
+    min-height: 82px;
+    border: 1px solid #ececec;
+    border-radius: 10px;
+    min-height: 36px;
+    padding: 0 15px;
+    font-size: 10px;
+    color: #bcbcbc;
+    line-height: 36px;
+    font-size: 12px;
+  }
+  input::placeholder {
+    font-size: 12px;
+    color: #bcbcbc;
+  }
+  input:focus,
+  input:hover {
+    color: #495057;
+    background-color: #fff;
+    border-color: #7cbc39;
+    outline: 0;
+    box-shadow: none;
+  }
+  &__dargAndDrop {
+    margin-top: 10px;
+  }
+}
+
+.nutritionHeader {
+  p {
+    color: #ababab;
+    font-size: 14px;
+  }
+  table {
+    width: 100%;
+    tr th {
+      font-size: 18px;
+      font-weight: 600;
+      text-align: left;
+      border-bottom: 1px solid #ececec;
+      padding: 5px;
+    }
+    tr td {
+      color: #000;
+      font-size: 14px;
+      text-align: right;
+      padding: 10px 5px;
+    }
+  }
+}
+
+.saveButton {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  margin: 0 121px;
+}

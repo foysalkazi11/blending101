@@ -1,0 +1,138 @@
+.carouselSection {
+    // background-color: blue;
+    margin-top: 16px;
+    display: flex;
+    position: relative;
+    width: 100%;
+    transition: all 500ms ease;
+}
+
+.carousel {
+    aspect-ratio: auto 3/1;
+    justify-content: center;
+    display: inline-block;
+    width: 100%;
+    // height: calc();
+    border-radius: 18px;
+    overflow: hidden;
+    // background-color: red;
+}
+
+// .carouselActive{
+
+// }
+
+
+.LeftArrowHidden {
+    display: none;
+}
+
+.RightArrowHidden {
+    display: none;
+}
+
+// .leftArrow {
+//     color: rgb(255, 255, 255);
+
+// }
+
+.image {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    transition: all 500ms ease;
+}
+
+.RightArrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: -17px;
+    font-size: 2.2rem;
+    color: #F4F4F4;
+    background-color: rgb(196, 196, 196);
+    border-radius: 100%;
+    z-index: 10;
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+        color: #fff;
+        background-color: #FE5D1F !important;
+    }
+}
+
+.LeftArrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: -18px;
+    font-size: 2.2rem;
+    color: #F4F4F4;
+    z-index: 10;
+    cursor: pointer;
+    user-select: none;
+    background-color: rgb(196, 196, 196) !important;
+    border-radius: 100%;
+    // color: white;
+
+    &:hover {
+        color: #fff;
+        background-color: #FE5D1F !important;
+    }
+}
+
+
+
+// Media Queries
+// @media screen and (max-width:680px){
+//     .carouselSection{
+//         // background-color: #FE5D1F;
+//         width: 100%;
+//         height: 11rem;
+//         // transition: all 500ms ease;
+//     }
+
+//     .RightArrow{
+//         position: absolute;
+//         right: -16px;
+//         padding: 3px;
+//         // background-color: #FE5D1F;
+//         font-size: 30px;
+//     }
+
+//     .LeftArrow{
+//         position: absolute;
+//         left: -16px;
+//         padding: 3px;
+//         background-color: #FE5D1F;
+//         font-size: 30px;
+//     }
+// }
+
+// @media  screen and (max-width:820px) {
+
+
+//     .carouselSection{
+//         // background-color: #FE5D1F;
+//         width: 100%;
+//         height: 11rem;
+//         // transition: all 500ms ease;
+//     }
+
+//     .RightArrow{
+//         position: absolute;
+//         right: -16px;
+//         padding: 3px;
+//         // background-color: #FE5D1F;
+//         font-size: 30px;
+//     }
+
+//     .LeftArrow{
+//         position: absolute;
+//         left: -16px;
+//         padding: 3px;
+//         background-color: #FE5D1F;
+//         font-size: 30px;
+//     }
+// }

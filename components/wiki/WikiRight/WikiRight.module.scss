@@ -1,0 +1,123 @@
+.right {
+    background-color: transparent;
+    // padding-left: 5%;
+    // margin-left: 20px;
+    width: 26%;
+    min-width: 300px;
+    margin-right: 5%;
+    transition: all 500ms ease;
+}
+
+.recipeHeadingTopSec {
+    margin-bottom: 18px;
+
+    & h3 {
+        display: flex;
+        font-weight: 400;
+        font-size: 20px;
+    }
+}
+
+.chartbarIconDiv {
+    max-width: 22px;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 8px;
+    width: 20%;
+    margin-right: 7px;
+}
+
+.rightCard {
+    background-color: white;
+    border-radius: 14px;
+    margin-top: 15px;
+    padding-bottom: 20px;
+}
+
+.rightCardNutrition {
+    background-color: white;
+    border-radius: 14px;
+    margin-top: 40px;
+    padding-bottom: 20px;
+}
+
+
+.rightCardHeading {
+    font-size: 20px;
+    color: #000;
+    font-weight: 400;
+    margin-bottom: 0.5rem;
+    // padding-left: 20px;
+    font-family: inherit;
+    // background-color: yellow;
+    padding: 15px 15px 0;
+
+}
+
+.progressIndicator {
+    padding: 0px 18px;
+}
+
+
+
+
+
+// breakpoints
+@media screen and (max-width:980px) {
+    .right {
+        width: 100%;
+        // margin-right:4px;
+        margin-left: 0px;
+        margin-right: 0px
+    }
+
+
+    .chartbarIconDiv {
+        // background-color: rgb(85, 85, 25);
+        margin-left: 0px;
+    }
+
+    .rightCard {
+        // background-color: chocolate;
+        width: 100%;
+    }
+}
+
+@media only screen and (min-width: 980px) and (max-width:1290px) {
+
+    .right {
+        // background-color:blue;
+        // padding-left: 5%;
+        // margin-left: 20px;
+        width: 24%;
+        min-width: 300px;
+        margin-right: 10px;
+        transition: all 500ms ease;
+        margin-left: 20px;
+    }
+
+}
+
+@media screen and (min-width:1290px) and (max-width:1799px) {
+    .right {
+        background-color: transparent;
+        // padding-left: 10px;
+        // margin-left: 20px;
+        width: 24%;
+        min-width: 300px;
+        margin-right: 5%;
+        transition: all 500ms ease;
+    }
+}
+
+@media screen and (min-width:1800px) {
+    .right {
+        background-color: transparent;
+        // padding-left: 5%;
+        // margin-left: 20px;
+        width: 24%;
+        min-width: 300px;
+        margin-right: auto;
+        transition: all 500ms ease;
+    }
+}
