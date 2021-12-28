@@ -5,13 +5,17 @@ import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { setOpenFilterTray } from "../../redux/slices/sideTraySlice";
 
 interface leftTrayInterface {
-  filter? : false,
-  children : any,
-  id: string
+  filter?: false;
+  children: any;
+  id?: string;
 }
 
-export default function LeftTrayWrapper({children, filter, id}: leftTrayInterface) {
-  const [openFilterTray, setOpenFilterTrat] = useState(false)
+export default function LeftTrayWrapper({
+  children,
+  filter,
+  id,
+}: leftTrayInterface) {
+  const [openFilterTray, setOpenFilterTrat] = useState(false);
 
   const ref = useRef<any>();
 
@@ -26,7 +30,7 @@ export default function LeftTrayWrapper({children, filter, id}: leftTrayInterfac
   }, [openFilterTray]);
 
   const handleClick = () => {
-    setOpenFilterTrat(() => !openFilterTray)
+    setOpenFilterTrat(() => !openFilterTray);
   };
 
   return (

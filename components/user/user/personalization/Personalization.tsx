@@ -100,12 +100,18 @@ const Personalization = ({ userData, setUserData }: PersonalizationProps) => {
 
   const submitData = async () => {
     dispatch(setLoading(true));
+    const arrangData = {
+      ...userData?.personalization,
+      age: Number(userData?.personalization?.age),
+      weight: Number(userData?.personalization?.weight),
+      height: Number(userData?.personalization?.height),
+    };
     try {
       await editUserData({
         variables: {
           data: {
             editId: configuration?._id,
-            editableObject: userData?.personalization,
+            editableObject: arrangData,
           },
         },
       });
@@ -113,10 +119,7 @@ const Personalization = ({ userData, setUserData }: PersonalizationProps) => {
       dispatch(
         setDbUser({
           ...dbUser,
-          configuration: {
-            ...dbUser?.configuration,
-            ...userData?.personalization,
-          },
+          configuration: { ...dbUser?.configuration, ...arrangData },
         })
       );
       dispatch(setLoading(false));
