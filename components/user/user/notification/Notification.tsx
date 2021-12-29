@@ -58,6 +58,7 @@ const Nofification = ({ userData, setUserData }: NofificationProps) => {
         topicDigest: topicDigestOptions,
       },
     }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [platformOptions, topicDigestOptions]);
 
   const sectionOneData = [
