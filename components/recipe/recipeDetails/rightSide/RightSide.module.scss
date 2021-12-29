@@ -1,0 +1,82 @@
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  h3 {
+    font-size: 20px;
+    color: #000000;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    font-weight: 400;
+    margin-left: 10px;
+  }
+}
+
+.content {
+  padding: 10px;
+  background-color: #ffffff;
+  border-radius: 15px;
+  margin-bottom: 20px;
+
+  h3 {
+    font-size: 20px;
+    color: #000;
+    font-weight: 400;
+  }
+}
+
+.nutritionHeader {
+  p {
+    color: #ababab;
+    font-size: 14px;
+  }
+  table {
+    width: 100%;
+    tr th {
+      font-size: 18px;
+      font-weight: 600;
+      text-align: center;
+      border-bottom: 1px solid #ececec;
+      padding: 5px;
+    }
+    tr td {
+      color: #000;
+      font-size: 14px;
+      text-align: right;
+      padding: 10px 5px;
+    }
+  }
+}
+
+.ingredientsDetails {
+  table {
+    width: 100%;
+
+    tr td {
+      color: #000;
+      font-size: 14px;
+      padding: 10px 10px 10px 0px;
+      border-bottom: 1px solid #ececec !important;
+    }
+
+    tr:last-child td {
+      border: 0 !important;
+    }
+  }
+}
+
+.linerProgessContainer {
+  padding: 10px;
+  background-color: #ffffff;
+  border-radius: 15px;
+  h3 {
+    font-size: 20px;
+    color: #000;
+    font-weight: 400;
+  }
+  p {
+    color: #ababab;
+    font-size: 14px;
+  }
+}
