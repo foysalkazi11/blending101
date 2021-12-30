@@ -46,7 +46,7 @@ const SocialTray = () => {
       dispatch(setProvider(identities?.[0]?.providerName?.toLowerCase()));
       history.push("/recipe_discovery");
     } catch (error) {
-      console.log(error, "error");
+      console.log(error);
     }
   };
 
