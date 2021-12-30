@@ -1,10 +1,3 @@
-export const filterRankingList = [
-  { name: "Mustard Greens", percent: 103 },
-  { name: "Swish Chards", percent: 95 },
-  { name: "Arugula", percent: 90 },
-  { name: "Beet Greens", percent: 80 },
-  { name: "Kale", percent: 75 },
-];
 
 export const blendTypes  = [
   {title: 'Smoothies', img: '/food/wholefood.png'},
@@ -15,6 +8,13 @@ export const blendTypes  = [
   {title: 'Teas', img: '/other/heart.svg'},
 ]
 
+export const filterRankingList = [
+  { name: "Mustard Greens", percent: 103 },
+  { name: "Swish Chards", percent: 95 },
+  { name: "Arugula", percent: 90 },
+  { name: "Beet Greens", percent: 80 },
+  { name: "Kale", percent: 75 },
+];
 export const ingredientLeafy = [
   {title: 'Kale', img: '/food/chard.png'},
   {title: 'Collard', img: '/food/dandelion.png'},

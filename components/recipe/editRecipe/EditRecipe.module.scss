@@ -8,13 +8,12 @@ $width:300px;
 
 // mixin for headings
 @mixin headings {
-    background-color: rgb(21, 53, 95);
     position: relative;
     display: flex;
+    line-height: 1.2;
 
     h3 {
         color: black;
-        background-color: aqua;
         font-size: 22px;
         font-weight: 400;
     }
@@ -51,12 +50,25 @@ $width:300px;
 }
 
 .left {
-    background-color: rgb(170, 17, 17);
-    min-width: $width;
+    width: $width;
+    padding-right: 17px;
 
     &__title {
         @include headings();
         height: 30px;
+        font-size: 20px;
+
+        &__bagicon{
+            position: relative;
+            height: 100%;
+            width: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-left: 4px;
+            margin-right: 10px;
+
+        }
     }
 
     @include responsive(0px, 1200px) {
@@ -65,7 +77,6 @@ $width:300px;
 }
 
 .center {
-    // background-color: rgb(204, 135, 32);
     min-width: $width;
     width: calc(100% - 2*$width);
     height: auto;
@@ -81,18 +92,11 @@ $width:300px;
     }
 }
 
-.right {
-    background-color: rgb(155, 170, 17);
+.right__main {
     min-width: $width;
-
-    &__title {
-        @include headings();
-        height: 30px;
-    }
+    height: 100%;
 
     @include responsive(0px, 991px) {
-
         margin-right: -$width - 30px;
-
     }
 }

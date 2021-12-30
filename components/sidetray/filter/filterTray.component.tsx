@@ -33,8 +33,9 @@ export default function Filtertray({ filter }) {
 	};
 
 	const checkActive = (blend) => {
+
 		let present = false;
-		blends.forEach((blen) => {
+		blends.forEach((blen:any) => {
 			if (blen.title === blend) {
 				present = true;
 			}

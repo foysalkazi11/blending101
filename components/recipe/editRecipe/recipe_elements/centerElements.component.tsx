@@ -4,8 +4,44 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import AddRecipeCard from "./addFiles/addRecipeCards.component";
 import ScoreTray from "./scoreTray/scoreTray.component";
 import Image from "next/image";
+import { setQuantity } from "../../../../redux/edit_recipe/quantity";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import DropDown from "../../../../theme/dropDown/DropDown.component";
 
 const Center_Elements = () => {
+  const dispatch = useAppDispatch();
+
+  //quantity number sets number for top card bottom right counter in edit recipe
+  const quantity_number = useAppSelector(
+    (state) => state.quantityAdjuster.quantityNum
+  );
+  // variables for ingredients card of eidt recipe
+  const servings_number = useAppSelector(
+    (state) => state.quantityAdjuster.servingsNum
+  );
+
+  const adjusterFunc = (task, type) => {
+    if (type === "quantity_number") {
+      if (quantity_number <= 0 && task === "-") {
+        dispatch(setQuantity(0));
+      } else {
+        task === "+"
+          ? dispatch(setQuantity(quantity_number + 1))
+          : dispatch(setQuantity(quantity_number - 1));
+      }
+    }
+  };
+  //lists for each dropdown
+  let WholefoodItem = ["Wholefood", "Wholefood"];
+  let BlendtecItem = ["Blendtec", "Blendtec"];
+  let OzItem = ["64 oz", "64 oz"];
+
+  //custom styling for drop down element specific to edit recipe page
+  let dropDownStyle = {
+    paddingRight: "0px",
+    width: "111%",
+  };
+
   return (
     <div className={styles.main}>
       <div className={styles.topSection}>
@@ -30,51 +66,30 @@ const Center_Elements = () => {
             <ul>
               <li>
                 <div className={styles.left__options}>
-                  <span className={styles.text}>Wholefood</span>
-                  <div className={styles.arrow}>
-                    <Image
-                      src={"/icons/dropdown.svg"}
-                      alt="icon"
-                      width={"17px"}
-                      height={"15px"}
-                    />
-                  </div>
+                  <DropDown listElem={WholefoodItem} style={dropDownStyle} />
                 </div>
               </li>
               <li>
                 <div className={styles.left__options}>
-                  <span className={styles.text}>Blendtec</span>
-                  <div className={styles.arrow}>
-                    <Image
-                      src={"/icons/dropdown.svg"}
-                      alt="icon"
-                      width={"17px"}
-                      height={"15px"}
-                    />
-                  </div>
+                  <DropDown listElem={BlendtecItem} style={dropDownStyle} />
                 </div>
               </li>
               <li>
                 <div className={styles.left__options}>
-                  <span className={styles.text}>64 oz</span>
-                  <div className={styles.arrow}>
-                    <Image
-                      src={"/icons/dropdown.svg"}
-                      alt="icon"
-                      width={"17px"}
-                      height={"15px"}
-                    />
-                  </div>
+                  <DropDown listElem={OzItem} style={dropDownStyle} />
                 </div>
               </li>
             </ul>
           </div>
           <div className={styles.blendingOptions__right}>
             <div className={styles.blendingOptions__right__options}>
-              <span className={styles.text}>4</span>
+              <span className={styles.text}>{quantity_number}</span>
               <div className={styles.arrow}>
                 <div className={styles.arrow_div}>
                   <Image
+                    onClick={() => {
+                      adjusterFunc("+", "quantity_number");
+                    }}
                     src={"/icons/dropdown.svg"}
                     alt="icon"
                     width={"17px"}
@@ -82,6 +97,9 @@ const Center_Elements = () => {
                     className={styles.reverse_arrow}
                   />
                   <Image
+                    onClick={() => {
+                      adjusterFunc("-", "quantity_number");
+                    }}
                     src={"/icons/dropdown.svg"}
                     alt="icon"
                     width={"17px"}
