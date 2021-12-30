@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AContainer from "../../containers/A.container";
 import styles from "./recipeDiscovery.module.scss";
 import Image from "next/image";
@@ -10,9 +10,42 @@ import { recommendedList, recentList, popularList } from "./data";
 
 import DatacardComponent from "../cards/dataCard/dataCard.component";
 import SearchBar from "./searchBar/SearchBar.component";
-import FooterComponent from "../../components/footer/footer.component";
 import SearchtagsComponent from "../../components/searchtags/searchtags.component";
+import { FETCH_RECOMMENDED_RECIPES, FETCH_POPULAR_RECIPES, FETCH_LATEST_RECIPES } from "../../gqlLib/recipes/queries/fetchRecipes";
+import axios from "axios";
+
 const RecipeDetails = () => {
+  const [recommended, setRecommended] = useState([]);
+  const [popular, setPopular] = useState([])
+  const [latest, setLatest] = useState([])
+
+  useEffect(() => {
+    axios.post('https://blendingrecipe.herokuapp.com/graphql', {
+      query: FETCH_RECOMMENDED_RECIPES
+    }).then((result) => {
+      const res = result.data?.data?.getAllrecomendedRecipes || [];
+      setRecommended(res)
+    }).catch(err => {
+      console.log(err, 'err')
+    })
+    axios.post('https://blendingrecipe.herokuapp.com/graphql', {
+      query: FETCH_POPULAR_RECIPES
+    }).then((result) => {
+      const res = result.data?.data?.getAllpopularRecipes || [];
+      setPopular(res)
+    }).catch(err => {
+      console.log(err, 'err')
+    })
+    axios.post('https://blendingrecipe.herokuapp.com/graphql', {
+      query: FETCH_LATEST_RECIPES
+    }).then((result) => {
+      const res = result.data?.data?.getAllLatestRecipes || [];
+      setLatest(res)
+    }).catch(err => {
+      console.log(err, 'err')
+    })
+  }, [])
+
   return (
     <AContainer showLeftTray={true} filterTray={true}>
       <div className={styles.main__div}>
@@ -24,21 +57,25 @@ const RecipeDetails = () => {
 
           {/* its for recommended */}
           <ContentTray heading={"Recommended"} image={"/images/thumbs-up.svg"}>
-            {recommendedList.map((cardData, index) => {
+            {recommended?.map((item, index) => {
+              let ingredients = [];
+              item.testIngredient.forEach(ing => {
+                ingredients.push(ing.name)
+              });
               {
                 return (
                   <div className={styles.slider__card} key={index}>
                     <DatacardComponent
-                      title={cardData.title}
-                      ingredients={cardData.ingredients}
-                      category={cardData.category}
-                      ratings={cardData.ratings}
-                      noOfRatings={cardData.noOfRatings}
-                      carbs={cardData.carbs}
-                      score={cardData.score}
-                      calorie={cardData.calorie}
-                      noOfComments={cardData.noOfComments}
-                      image={cardData.image}
+                      title={item.name}
+                      ingredients={ingredients}
+                      category={item.recipeBlendCategory}
+                      ratings={item.ratings}
+                      noOfRatings={item.noOfRatings}
+                      carbs={item.carbs}
+                      score={item.score}
+                      calorie={item.calorie}
+                      noOfComments={item.noOfComments}
+                      image={item.image[0]?.image}
                     />
                   </div>
                 );
@@ -49,21 +86,25 @@ const RecipeDetails = () => {
           {/* its for Recent*/}
 
           <ContentTray heading={"Recent"} image={"/images/clock-light.svg"}>
-            {recentList.map((cardData, index) => {
+          {latest?.map((item, index) => {
+              let ingredients = [];
+              item.testIngredient.forEach(ing => {
+                ingredients.push(ing.name)
+              });
               {
                 return (
                   <div className={styles.slider__card} key={index}>
                     <DatacardComponent
-                      title={cardData.title}
-                      ingredients={cardData.ingredients}
-                      category={cardData.category}
-                      ratings={cardData.ratings}
-                      noOfRatings={cardData.noOfRatings}
-                      carbs={cardData.carbs}
-                      score={cardData.score}
-                      calorie={cardData.calorie}
-                      noOfComments={cardData.noOfComments}
-                      image={cardData.image}
+                      title={item.name}
+                      ingredients={ingredients}
+                      category={item.recipeBlendCategory}
+                      ratings={item.ratings}
+                      noOfRatings={item.noOfRatings}
+                      carbs={item.carbs}
+                      score={item.score}
+                      calorie={item.calorie}
+                      noOfComments={item.noOfComments}
+                      image={item.image[0]?.image}
                     />
                   </div>
                 );
@@ -74,21 +115,25 @@ const RecipeDetails = () => {
           {/* its for Popular */}
 
           <ContentTray heading={"Popular"} image={"/images/fire-alt-light.svg"}>
-            {popularList.map((cardData, index) => {
+          {popular?.map((item, index) => {
+              let ingredients = [];
+              item.testIngredient.forEach(ing => {
+                ingredients.push(ing.name)
+              });
               {
                 return (
                   <div className={styles.slider__card} key={index}>
                     <DatacardComponent
-                      title={cardData.title}
-                      ingredients={cardData.ingredients}
-                      category={cardData.category}
-                      ratings={cardData.ratings}
-                      noOfRatings={cardData.noOfRatings}
-                      carbs={cardData.carbs}
-                      score={cardData.score}
-                      calorie={cardData.calorie}
-                      noOfComments={cardData.noOfComments}
-                      image={cardData.image}
+                      title={item.name}
+                      ingredients={ingredients}
+                      category={item.recipeBlendCategory}
+                      ratings={item.ratings}
+                      noOfRatings={item.noOfRatings}
+                      carbs={item.carbs}
+                      score={item.score}
+                      calorie={item.calorie}
+                      noOfComments={item.noOfComments}
+                      image={item.image[0]?.image}
                     />
                   </div>
                 );

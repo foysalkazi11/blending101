@@ -11,7 +11,6 @@ import {
   setUser,
 } from "../../../../redux/slices/userSlice";
 import { useRouter } from "next/router";
-import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
 
 const SocialTray = () => {
   const [createNewUser] = useMutation(CREATE_NEW_USER);
@@ -71,14 +70,14 @@ const SocialTray = () => {
             src={"/images/google.png"}
             alt="Icons will soon Load"
             //@ts-ignore
-            onClick={() => handleSocialSignup("Google")}
+            onClick={() => handleSocialSignup("google")}
           />
         </li>
         <li className={styles.listElem}>
           <img
             src={"/images/fb.png"}
             alt="Icons will soon Load"
-            onClick={() => handleSocialSignup("Facebook")}
+            onClick={() => handleSocialSignup("facebook")}
           />
         </li>
         <li className={styles.listElem}>
