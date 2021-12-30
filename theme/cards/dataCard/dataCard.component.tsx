@@ -2,6 +2,7 @@
 import React, { useRef } from "react";
 import styles from "./dataCard.module.scss";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import {slicedString} from '../../../services/string.service';
 
 interface dataCardInterface {
   title: string;
@@ -29,9 +30,7 @@ export default function DatacardComponent({
   image,
 }: dataCardInterface) {
   title = title || "Triple Berry Smoothie";
-  ingredients =
-    ingredients ||
-    "Cocoa powder, almond milk, avocado, mango, banana, honey, vanilla extract";
+  ingredients = ingredients
   category = category || "Smoothie";
   noOfRatings = noOfRatings || 71;
   carbs = carbs || 23;
@@ -70,7 +69,7 @@ export default function DatacardComponent({
         </div>
       </div>
       <div className={styles.databody__bottom}>
-        <p>{ingredients}</p>
+        <p>{slicedString(ingredients, 0, 6)}</p>
       </div>
     </div>
   );

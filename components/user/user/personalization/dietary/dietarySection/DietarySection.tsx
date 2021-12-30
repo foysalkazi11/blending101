@@ -10,6 +10,7 @@ type SectionWithIconProps = {
   fieldName: string;
   updateUserProfile: Function;
   userProfile: any;
+  alredyExist?: (value: string, fieldName: string) => boolean;
 };
 
 const DietarySection = ({
@@ -18,6 +19,7 @@ const DietarySection = ({
   fieldName,
   updateUserProfile,
   userProfile,
+  alredyExist,
 }: SectionWithIconProps) => {
   return (
     <div className={styles.sectionWithIconContainer}>
@@ -29,7 +31,13 @@ const DietarySection = ({
                 <div
                   key={index}
                   className={`${styles.singleImage} ${
-                    item?.label === userProfile[fieldName] ? styles.active : ""
+                    alredyExist
+                      ? alredyExist(item?.label, "allergies")
+                        ? styles.active
+                        : ""
+                      : item?.label === userProfile[fieldName]
+                      ? styles.active
+                      : ""
                   }`}
                   onClick={() => updateUserProfile(fieldName, item?.label)}
                 >

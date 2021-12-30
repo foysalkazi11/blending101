@@ -23,7 +23,7 @@
     &__inputValue {
       position: relative;
       &:hover &__closeIcon {
-        display: block;
+        display: block !important;
       }
       &__label {
         border: 1px solid #7dbd3b;
@@ -43,10 +43,11 @@
         position: absolute;
         top: -10px;
         right: 20px;
-        display: none;
+        display: none !important;
         cursor: pointer;
         color: #fe5d1f;
         z-index: 1;
+        background-color: #ffffff;
       }
     }
   }

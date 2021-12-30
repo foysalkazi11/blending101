@@ -16,6 +16,7 @@ type SectionWithInputProps = {
   textarea?: boolean;
   fullWidth?: boolean;
   removeInput: (name: string, value: any) => void;
+  headingStyle?: object;
 };
 
 const SectionWithInput = ({
@@ -30,6 +31,7 @@ const SectionWithInput = ({
   textarea = false,
   fullWidth = false,
   removeInput,
+  headingStyle = {},
 }: SectionWithInputProps) => {
   const [inputValue, setInputValue] = useState("");
 
@@ -40,7 +42,7 @@ const SectionWithInput = ({
   };
   return (
     <div className={styles.sectionWithInputContainer}>
-      <h2>{title}</h2>
+      <h2 style={headingStyle}>{title}</h2>
 
       <div className={styles.inputContainer}>
         <form onSubmit={handleSubmit}>

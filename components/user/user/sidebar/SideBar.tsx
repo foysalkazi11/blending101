@@ -23,8 +23,11 @@ const SideBar = ({ userData, setUserData }: SideBarProps) => {
     location,
   } = userData?.about;
 
+  console.log(bio);
+
   const handleChange = (e) => {
     const { name, value } = e?.target;
+    console.log(name, value);
 
     setUserData((pre) => {
       return {
@@ -88,9 +91,9 @@ const SideBar = ({ userData, setUserData }: SideBarProps) => {
             cols={50}
             rows={5}
             value={bio}
-            onChange={handleChange}
+            onChange={(e) => handleChange(e)}
             disabled={disableTextarea}
-            onKeyPress={handleSubmit}
+            // onKeyPress={handleSubmit}
           />
         </form>
       </div>

@@ -5,6 +5,12 @@ import styles from "./AboutUser.module.scss";
 import { BiSearch } from "react-icons/bi";
 // import { BsCaretDown } from "react-icons/bs";
 import ButtonComponent from "../../../../theme/button/button.component";
+import { useMutation } from "@apollo/client";
+import EDIT_USER_BY_ID from "../../../../gqlLib/user/mutations/editUserById";
+import { setDbUser } from "../../../../redux/slices/userSlice";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import { setLoading } from "../../../../redux/slices/utilitySlice";
+import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
 
 type AboutProps = {
   userData: any;
@@ -14,6 +20,36 @@ type AboutProps = {
 const About = ({ userData, setUserData }: AboutProps) => {
   const { firstName, lastName, displayName, yourBlender, email, location } =
     userData?.about;
+  const dispatch = useAppDispatch();
+  const { dbUser } = useAppSelector((state) => state?.user);
+  const [editUserById] = useMutation(EDIT_USER_BY_ID);
+
+  const submitData = async () => {
+    dispatch(setLoading(true));
+    try {
+      const status = await editUserById({
+        variables: {
+          data: {
+            editId: dbUser._id,
+            editableObject: userData?.about,
+          },
+        },
+      });
+      console.log(status);
+
+      dispatch(
+        setDbUser({
+          ...dbUser,
+          ...userData?.about,
+        })
+      );
+      dispatch(setLoading(false));
+      reactToastifyNotification("info", "your profile updated successfully");
+    } catch (error) {
+      dispatch(setLoading(false));
+      reactToastifyNotification("error", error?.message);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e?.target;
@@ -96,7 +132,11 @@ const About = ({ userData, setUserData }: AboutProps) => {
             <label>Location</label>
             <div className={styles.selectBox}>
               <img src="/images/us.png" alt="flag" />
-              <select value={location} name="location" onChange={handleChange}>
+              <select
+                value={location || "all"}
+                name="location"
+                onChange={handleChange}
+              >
                 <option value="all">
                   (GMT-8:00) Pacific Time (US & Canada)
                 </option>
@@ -124,6 +164,7 @@ const About = ({ userData, setUserData }: AboutProps) => {
             height: "48px",
             width: "180px",
           }}
+          onClick={submitData}
         />
       </div>
     </div>

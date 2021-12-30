@@ -2,7 +2,7 @@
 import React from "react";
 import styles from "./smallcard.module.scss";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
-import CheckIcon from "@mui/icons-material/Check";
+import { BsCheck } from "react-icons/bs";
 
 export default function SmallcardComponent({
   img,
@@ -47,9 +47,10 @@ export default function SmallcardComponent({
         {/* <div className={styles.drag}>
           <DragIndicatorIcon />
         </div> */}
+
         {findRecipe ? (
           <div className={`${styles.tick}`} onClick={handleUnCheck}>
-            <CheckIcon className={styles.tickimg} />
+            <BsCheck className={styles.tickimg} />
           </div>
         ) : null}
 
