@@ -2,10 +2,11 @@
 import React, { useRef } from "react";
 import styles from "./dataCard.module.scss";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import {slicedString} from '../../../services/string.service';
 
 interface dataCardInterface {
   title: string;
-  ingredients: Array<String>;
+  ingredients: string;
   category: string;
   ratings: number;
   noOfRatings: number;
@@ -68,7 +69,7 @@ export default function DatacardComponent({
         </div>
       </div>
       <div className={styles.databody__bottom}>
-        <p>{ingredients}</p>
+        <p>{slicedString(ingredients, 0, 6)}</p>
       </div>
     </div>
   );
