@@ -5,7 +5,7 @@ import { setActiveUser } from "../redux/users/user.action";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import Loader from "../theme/loader/Loader";
 import { Auth } from "aws-amplify";
-import { setDbUser, setUser } from "../redux/slices/userSlice";
+import { setDbUser, setProvider, setUser } from "../redux/slices/userSlice";
 import { useMutation } from "@apollo/client";
 import CREATE_NEW_USER from "../gqlLib/user/mutations/createNewUser";
 
@@ -48,7 +48,7 @@ function AuthProvider({ children, activeUser }) {
           },
         } = user;
         userEmail = email;
-        provider = identities?.[0]?.providerName;
+        provider = identities?.[0]?.providerName?.toLowerCase();
       }
 
       const { data } = await createNewUser({
@@ -59,6 +59,7 @@ function AuthProvider({ children, activeUser }) {
 
       dispatch(setUser(userEmail));
       dispatch(setDbUser(data?.createNewUser));
+      dispatch(setProvider(provider));
       setActive(true);
     } catch (error) {
       console.log(error?.message);

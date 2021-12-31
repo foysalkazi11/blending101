@@ -27,7 +27,7 @@ const About = ({ userData, setUserData }: AboutProps) => {
   const submitData = async () => {
     dispatch(setLoading(true));
     try {
-      const status = await editUserById({
+      await editUserById({
         variables: {
           data: {
             editId: dbUser._id,
@@ -35,7 +35,6 @@ const About = ({ userData, setUserData }: AboutProps) => {
           },
         },
       });
-      console.log(status);
 
       dispatch(
         setDbUser({
