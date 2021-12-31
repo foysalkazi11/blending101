@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import AContainer from "../../../containers/A.container";
-import styles from "./recipeFilter.module.scss";
+import styles from "./recipe.module.scss";
 import Image from "next/image";
 import SearchBar from "../../../theme/recipeDiscovery/searchBar/SearchBar.component";
 import SearchtagsComponent from "../../searchtags/searchtags.component";
-import AppdownLoadCard from "../../../theme/recipeDiscovery/AppdownLoadCard/AppdownLoadCard.component";
 import DatacardComponent from "../../../theme/cards/dataCard/dataCard.component";
 import { FETCH_RECOMMENDED_RECIPES } from "../../../gqlLib/recipes/queries/fetchRecipes";
 import axios from "axios";

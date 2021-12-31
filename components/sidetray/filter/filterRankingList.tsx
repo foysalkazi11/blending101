@@ -1,11 +1,11 @@
 
 export const blendTypes  = [
   {title: 'Smoothies', img: '/food/wholefood.png'},
-  {title: 'Wholefood', img: '/food/soup.svg'},
-  {title: 'Frozen', img: '/food/frozen.png'},
-  {title: 'Drinks', img: '/food/fresh.png'},
+  {title: 'WholeFood', img: '/food/soup.svg'},
+  {title: 'Frozen Treat', img: '/food/frozen.png'},
+  {title: 'Refreshing', img: '/food/fresh.png'},
   {title: 'Dessert', img: '/other/nutritio.svg'},
-  {title: 'Teas', img: '/other/heart.svg'},
+  {title: 'Herbal Tea', img: '/other/heart.svg'},
 ]
 
 export const filterRankingList = [

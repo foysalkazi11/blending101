@@ -60,7 +60,7 @@ query {
     getAllLatestRecipes{
      datePublished
      name,
-       recipeIngredients
+    recipeIngredients
      recipeBlendCategory
      testIngredient{
        quantity,
@@ -83,10 +83,10 @@ query {
 }
 `;
 
-export const FETCH_RECIPES_BY_BLEND = (TYPE: string) => (
+export const FETCH_RECIPES_BY_BLEND = (TYPE: any) => (
     `
     query {
-        getAllRecipesByBlendCategory(blendType: ${TYPE}){
+        getAllRecipesByBlendCategory(blendTypes: ${JSON.stringify(TYPE)}){
           name,
           image{
             image,
@@ -96,6 +96,11 @@ export const FETCH_RECIPES_BY_BLEND = (TYPE: string) => (
           prepTime,
           recipeInstructions,
           recipeIngredients,
+          testIngredient{
+            quantity,
+            unit,
+            name
+          }
           url,
           favicon
           

@@ -3,14 +3,14 @@
         @content
     }
 }
-
 .mainDiv {
     // background-color: red;
-    width: 87%;
+    width: 100%;
     margin: 0 auto;
     min-height: 83vh;
     display: flex;
     flex-direction: column;
+    margin-top: 30px;
 
     &__header {
         // background-color: rgb(128, 87, 0);
