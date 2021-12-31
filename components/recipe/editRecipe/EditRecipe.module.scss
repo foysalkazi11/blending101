@@ -1,28 +1,47 @@
 $width:300px;
 
+@mixin responsive($min_width, $max_width) {
+    @media only screen and (min-width: $min_width) and (max-width: $max_width) {
+        @content;
+    }
+}
+
 // mixin for headings
 @mixin headings {
-    background-color: rgb(42, 95, 165);
     position: relative;
     display: flex;
-
-    span {
-        // display: flex;
-        background-color: red;
-    }
+    line-height: 1.2;
 
     h3 {
         color: black;
-        background-color: aqua;
         font-size: 22px;
         font-weight: 400;
     }
 
 }
 
+@mixin center_right_Icons {
+
+    position: relative;
+    border-radius: 50%;
+    height: 25px;
+    width: 25px;
+    margin: auto 0px;
+    margin-right: 10px;
+
+
+    svg {
+        position: absolute;
+        font-size: 16px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
 .main {
     display: flex;
-    background-color: green;
+    // background-color: green;
     min-height: 100%;
     width: calc(100% - 60px);
     margin: auto;
@@ -31,40 +50,53 @@ $width:300px;
 }
 
 .left {
-    background-color: rgb(170, 17, 17);
-    min-width: $width;
+    width: $width;
+    padding-right: 17px;
 
     &__title {
         @include headings();
         height: 30px;
+        font-size: 20px;
+
+        &__bagicon{
+            position: relative;
+            height: 100%;
+            width: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-left: 4px;
+            margin-right: 10px;
+
+        }
+    }
+
+    @include responsive(0px, 1200px) {
+        margin-left: -$width - 30px;
     }
 }
 
 .center {
-    background-color: rgb(9, 9, 24);
     min-width: $width;
     width: calc(100% - 2*$width);
+    height: auto;
+    padding-right: 20px;
 
-    &__title {
-        @include headings();
-        height: 30px;
+    @include responsive(0px, 1200px) {
+        width: calc(100% - $width);
+        margin-left: 24px;
+    }
 
-        &__left {
-            display: flex;
-        }
-
-        &__right {
-            margin-left: auto;
-        }
+    @include responsive(0px, 991px) {
+        width: calc(100% + 22px);
     }
 }
 
-.right {
-    background-color: rgb(155, 170, 17);
+.right__main {
     min-width: $width;
+    height: 100%;
 
-    &__title {
-        @include headings();
-        height: 30px;
+    @include responsive(0px, 991px) {
+        margin-right: -$width - 30px;
     }
 }
