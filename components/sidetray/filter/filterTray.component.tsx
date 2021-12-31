@@ -32,18 +32,6 @@ export default function Filtertray({ filter }) {
     dispatch(setBlendTye(blendz));
   };
 
-<<<<<<< HEAD
-	const checkActive = (blend) => {
-
-		let present = false;
-		blends.forEach((blen:any) => {
-			if (blen.title === blend) {
-				present = true;
-			}
-		});
-		return present;
-	};
-=======
   const checkActive = (blend) => {
     let present = false;
     blends.forEach((blen) => {
@@ -54,7 +42,6 @@ export default function Filtertray({ filter }) {
     });
     return present;
   };
->>>>>>> 0f69a489f66a48a53ced8e93b0b60683dfda7077
 
   return (
     <FilterTrayWrapper filter={filter} id={"filter123"}>

@@ -76,11 +76,6 @@ function AuthProvider({ children, activeUser }) {
   useEffect(() => {
     if (user) {
       setActive(true);
-<<<<<<< HEAD
-=======
-    } else {
-      isCurrentUser();
->>>>>>> 0f69a489f66a48a53ced8e93b0b60683dfda7077
     }
     // else {
     //   if (!user && process.browser && page !== "/login" && page !== "/signup")
