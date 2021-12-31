@@ -77,6 +77,8 @@ function AuthProvider({ children, activeUser }) {
   useEffect(() => {
     if (user) {
       setActive(true);
+    } else {
+      isCurrentUser();
     }
     // else {
     //   if (!user && process.browser && page !== "/login" && page !== "/signup")
@@ -94,7 +96,7 @@ function AuthProvider({ children, activeUser }) {
 
   // IF NO USER REDIRECT TO LOGIN PAGE
 
-  // if (!active) return <Loader active={true} />;
+  if (!active) return <Loader active={true} />;
 
   return (
     <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
