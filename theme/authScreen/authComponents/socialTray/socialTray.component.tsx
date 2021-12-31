@@ -32,14 +32,17 @@ const SocialTray = () => {
       } = res;
       const { data } = await createNewUser({
         variables: {
-          data: { email: email, provider: identities?.[0]?.providerName },
+          data: {
+            email: email,
+            provider: identities?.[0]?.providerName?.toLowerCase(),
+          },
         },
       });
 
       // reactToastifyNotification("info", "Sign up successfully");
       dispatch(setUser(email));
       dispatch(setDbUser(data?.createNewUser));
-      dispatch(setProvider(identities?.[0]?.providerName));
+      dispatch(setProvider(identities?.[0]?.providerName?.toLowerCase()));
       history.push("/recipe_discovery");
     } catch (error) {
       console.log(error);
