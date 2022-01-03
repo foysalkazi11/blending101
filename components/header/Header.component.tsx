@@ -76,13 +76,7 @@ export default function HeaderComponent({
             </div>
             <div className={styles.profile}>
               {dbUser?.image ? (
-                <img
-                  src={dbUser?.image}
-                  alt="prfile.png"
-                  style={{
-                    objectFit: "contain",
-                  }}
-                />
+                <img src={dbUser?.image} alt="prfile.png" />
               ) : (
                 <FaRegUser
                   style={{ fontSize: "24px", justifySelf: "flex-end" }}

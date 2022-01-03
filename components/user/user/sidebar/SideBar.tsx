@@ -3,6 +3,8 @@ import React, { useRef, useState, useEffect } from "react";
 import styles from "./SideBar.module.scss";
 import { AiOutlineCamera } from "react-icons/ai";
 import { FiEdit2 } from "react-icons/fi";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import { setIsNewUseImage } from "../../../../redux/slices/userSlice";
 
 type SideBarProps = {
   userData: any;
@@ -11,7 +13,7 @@ type SideBarProps = {
 
 const SideBar = ({ userData, setUserData }: SideBarProps) => {
   const [disableTextarea, setDisableTextarea] = useState(true);
-
+  const { isNewUseImage } = useAppSelector((state) => state?.user);
   const {
     bio,
     image,
@@ -22,12 +24,14 @@ const SideBar = ({ userData, setUserData }: SideBarProps) => {
     email,
     location,
   } = userData?.about;
+  const dispatch = useAppDispatch();
 
-  console.log(bio);
+  const handleFile = (e: any) => {
+    dispatch(setIsNewUseImage(e?.target?.files[0]));
+  };
 
   const handleChange = (e) => {
     const { name, value } = e?.target;
-    console.log(name, value);
 
     setUserData((pre) => {
       return {
@@ -46,7 +50,6 @@ const SideBar = ({ userData, setUserData }: SideBarProps) => {
     e.preventDefault();
     if (e.key === "Enter") {
       setDisableTextarea((pre) => !pre);
-      console.log(userData);
     }
   };
 
@@ -63,10 +66,17 @@ const SideBar = ({ userData, setUserData }: SideBarProps) => {
   return (
     <div className={styles.sideBarContainer}>
       <div className={styles.imageBox}>
-        <img src={image || "/images/user-placeholder.png"} alt="userImag" />
+        <img
+          src={
+            isNewUseImage
+              ? URL.createObjectURL(isNewUseImage)
+              : image || "/images/user-placeholder.png"
+          }
+          alt="userImag"
+        />
         <div className={styles.cameraIconBox}>
           <AiOutlineCamera className={styles.cameraIcon} />
-          <input type="file" accept="image/*" />
+          <input type="file" accept="image/*" onChange={(e) => handleFile(e)} />
         </div>
       </div>
       <h2 className={styles.name}>
