@@ -1,18 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./ContentTray.module.scss";
 import Image from "next/image";
-import SlickSlider from "../../carousel/carousel.component";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import useMediaQuery from "./ContentTray";
+import {
+  useWindowSize,
+  useWindowWidth,
+  useWindowHeight,
+} from "@react-hook/window-size";
 
 // interface carouselTray {
 //   heading: string;
 // }
+
 const ContentTray = (props) => {
   //uses react slick caorousel so previous buttin and next button are custom buttons made for slider
 
   const PreviousButton = (prop) => {
     const { className, onClick } = prop;
+    // console.log("===========>" + onClick);
     return (
       <div
         className={className + " " + styles.customArrowLeft}
@@ -24,7 +34,7 @@ const ContentTray = (props) => {
   };
   const NextButton = (prop) => {
     const { className, onClick } = prop;
-    // console.log("+++++++++++++++" + className);
+
     return (
       <div
         className={className + " " + styles.customArrowRight}
@@ -34,43 +44,26 @@ const ContentTray = (props) => {
       </div>
     );
   };
-  const responsiveSetting = {
-    slidesToShow: 5,
-    slidesToScroll: 1,
-    nextArrow: <NextButton />,
-    prevArrow: <PreviousButton />,
 
-    responsive: [
-      {
-        breakpoint: 1450,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 1250,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 980,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-  };
+  const [slickSetting, setSlickSetting] = useState(3);
+
+  const onlyWidth = useWindowWidth();
+
+  useEffect(() => {
+    if (onlyWidth <= 680) {
+      setSlickSetting(1);
+    } else if (onlyWidth <= 780 && onlyWidth > 680) {
+      setSlickSetting(2);
+    } else if (onlyWidth <= 1250 && onlyWidth > 780) {
+      setSlickSetting(3);
+    } else if (onlyWidth <= 1450 && onlyWidth > 1250) {
+      setSlickSetting(3);
+    } else if (onlyWidth <= 1850 && onlyWidth > 1450) {
+      setSlickSetting(4);
+    } else {
+      setSlickSetting(5);
+    }
+  }, [onlyWidth]);
 
   return (
     <div className={styles.main__slider}>
@@ -88,11 +81,50 @@ const ContentTray = (props) => {
         <div className={styles.viewAll}>View All</div>
       </h3>
       <div className={styles.sliderMainDiv}>
-        <SlickSlider moreSetting={responsiveSetting}>
+        <Slider
+          {...{
+            nextArrow: <NextButton />,
+            prevArrow: <PreviousButton />,
+            infinite: false,
+            speed: 500,
+            slidesToShow: slickSetting,
+            slidesToScroll: 1,
+            initialSlide: 0,
+          }}
+        >
           {props.children}
-        </SlickSlider>
+        </Slider>
       </div>
     </div>
   );
 };
 export default ContentTray;
+
+// responsive: [
+//   {
+//     breakpoint: 1450,
+//     settings: useEffect
+//   },
+//   {
+//     breakpoint: 1250,
+//     settings: {
+//       nextArrow: <NextButton />,
+//       prevArrow: <PreviousButton />,
+//       infinite: false,
+//       speed: 500,
+//       slidesToShow: 3,
+//       slidesToScroll: 1,
+//     },
+//   },
+//   {
+//     breakpoint: 600,
+//     settings: {
+//       nextArrow: <NextButton />,
+//       prevArrow: <PreviousButton />,
+//       infinite: false,
+//       speed: 500,
+//       slidesToShow: 1,
+//       slidesToScroll: 1,
+//     },
+//   },
+// ],

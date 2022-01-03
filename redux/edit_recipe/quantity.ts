@@ -2,9 +2,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { howTo } from "../../components/recipe/editRecipe/recipe_elements/ingredientList/ingredientList";
 
 interface ingredientCard {
-  sentence?: string;
-  imageUrl?: string;
-  checked?: boolean;
+  title?:string,
+  img?:string,
+  servings?:number,
+  measuring_scale?:string,
+  extra_sentence?:string,
+  checked?:boolean
 }
 
 interface howToCard {

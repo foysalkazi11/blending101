@@ -7,9 +7,9 @@ import ButtonComponent from "../../../../../theme/button/buttonA/button.componen
 import {
   setServings,
   setIngredientsToList,
-  setIngredientsSentence,
   setHowToSteps,
 } from "../../../../../redux/edit_recipe/quantity";
+import { setIngredients } from "../../../../../redux/slices/sideTraySlice";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
 import { List_of_ingredients } from "./ingredientList";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
@@ -29,9 +29,7 @@ const IngredientList = () => {
     (state) => state.quantityAdjuster.ingredientsList
   );
 
-  const ingredientsSentence = useAppSelector(
-    (state) => state.quantityAdjuster.ingredientSentence
-  );
+  // const ingredientsList = useAppSelector((state) => state.sideTray.ingredients);
 
   const howToState = useAppSelector(
     (state) => state.quantityAdjuster.howtoState
@@ -57,20 +55,26 @@ const IngredientList = () => {
   // ingredients list related code below
 
   const IngredientSubmitHandler = (event) => {
-    let ingredientTempList = [...List_of_ingredients];
+    let ingredientTempList = [...ingredients_list];
     if (event.key === "Enter") {
-      console.log(ingredientTempList);
-      ingredientTempList = [
-        ...ingredientTempList,
-        {
-          sentence: event.target.value.sentence,
-          imageUrl: event.target.value.imageUrl,
-          checked: event.target.checked,
-        },
-      ];
+      const tempIngredient = { title: event.target.value };
+      ingredientTempList = [...ingredientTempList, tempIngredient];
+      for (let index = 0; index < ingredientTempList.length; index++) {
+        const element = ingredientTempList[index].title;
+        console.log(element,index);
+        console.log(ingredientTempList[index].title);
+        console.log("_________");
+
+        if (ingredientTempList[index].title===event.target.value) {
+          console.log("is already in list");
+        }
+        else{
+          console.log("new element added =>"+ingredientTempList[index].title);
+        }
+
+      }
 
       dispatch(setIngredientsToList(ingredientTempList));
-      console.log(ingredients_list);
     }
   };
   // ingredients list related code ending
@@ -161,10 +165,10 @@ const IngredientList = () => {
                   <div className={styles.ingredients__drag}>
                     <DragIndicatorIcon className={styles.ingredients__drag} />
                   </div>
-                  {elem.imageUrl ? (
+                  {elem.img ? (
                     <div className={styles.ingredients__icons}>
                       <Image
-                        src={elem.imageUrl}
+                        src={elem.img}
                         alt="Picture will load soon"
                         objectFit="contain"
                         layout="fill"
@@ -176,13 +180,19 @@ const IngredientList = () => {
                   {/* to create ingredients lists  */}
                   {elem.checked == false ? (
                     <div className={styles.ingredients__text}>
-                      <span>{elem.sentence}</span>
+                      <span>{elem.servings} &nbsp;</span>
+                      <span>{elem.measuring_scale} &nbsp;</span>
+                      <span>{elem.title} &nbsp;</span>
+                      <span>{elem.extra_sentence} &nbsp;</span>
                     </div>
                   ) : (
                     <div className={styles.ingredients__text}>
+                      <span>{elem.servings} &nbsp;</span>
+                      <span>{elem.measuring_scale} &nbsp;</span>
                       <span className={styles.ingredients__text__highlighted}>
-                        {elem.sentence}
+                        {elem.title} &nbsp;
                       </span>
+                      <span>{elem.extra_sentence} &nbsp;</span>
                     </div>
                   )}
                   <div className={styles.ingredients__bin}>

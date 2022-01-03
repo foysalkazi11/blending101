@@ -2,6 +2,11 @@ import { CheckCircle } from "@mui/icons-material";
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { setIngredients } from "../../../../redux/slices/sideTraySlice";
+import {
+  setServings,
+  setIngredientsToList,
+  setHowToSteps,
+} from "../../../../redux/edit_recipe/quantity";
 import CalciumSearchElem from "../../../../theme/calcium/calcium.component";
 import DropdownTwoComponent from "../../../../theme/dropDown/dropdownTwo.component";
 import Linearcomponent from "../../../../theme/linearProgress/LinearProgress.component";
@@ -22,26 +27,30 @@ const Left_tray_recipe_edit = () => {
   const ingredients = filterRankingList;
 
   const dispatch = useAppDispatch();
-  const ingredientsList = useAppSelector(
+  const ingredientsList = useAppSelector((state) => state.sideTray.ingredients);
+
+
+  const ingredients_list = useAppSelector(
     (state) => state.quantityAdjuster.ingredientsList
   );
+  console.log("Ingredients", ingredients_list);
 
   const handleIngredientClick = (ingredient) => {
     let blendz = [];
     let present = false;
-    ingredientsList.forEach((blen) => {
+    ingredients_list.forEach((blen) => {
       if (blen === ingredient) {
         present = true;
       }
     });
     if (!present) {
-      blendz = [...ingredientsList, ingredient];
+      blendz = [...ingredients_list, ingredient];
     } else {
-      blendz = ingredientsList.filter((blen) => {
+      blendz = ingredients_list.filter((blen) => {
         return blen !== ingredient;
       });
     }
-    dispatch(setIngredients(blendz));
+    dispatch(setIngredientsToList(blendz));
   };
 
   const categories = [
@@ -54,16 +63,14 @@ const Left_tray_recipe_edit = () => {
 
   const checkActive = (ingredient: string) => {
     let present = false;
-    ingredientsList.forEach((blen) => {
+    ingredients_list.forEach((blen) => {
+      //@ts-ignore
       if (blen.title === ingredient) {
         present = true;
       }
     });
     return present;
   };
-
-  console.log("Ingredients" + ingredientsList);
-
   return (
     <div className={styles.left_main_container}>
       <div className={styles.filter}>

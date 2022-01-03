@@ -70,7 +70,9 @@ function AuthProvider({ children, activeUser }) {
         page !== "/signup" &&
         page !== "/varify_email"
       )
-        router.push("/login");
+        // to be uncommented for auth to work correctly and remove clg at line 75
+        // router.push("/login");
+        console.log("login");
     }
   };
 
@@ -95,8 +97,8 @@ function AuthProvider({ children, activeUser }) {
   }, [page]);
 
   // IF NO USER REDIRECT TO LOGIN PAGE
-
-  if (!active) return <Loader active={true} />;
+  // to be uncommented when want to ensure user should not leave login page if not authorised
+  // if (!active) return <Loader active={true} />;
 
   return (
     <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
