@@ -290,6 +290,12 @@ const Center = () => {
           </div>
         </div>
       </div>
+      <div className={styles.ingredentContainer}>
+        <div className={styles.ingredentHeader}>
+          <img src="/images/chef.svg" alt="basket" />
+          <h3>How to</h3>
+        </div>
+      </div>
     </div>
   );
 };

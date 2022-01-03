@@ -6,6 +6,7 @@ type SideTrayState = {
   user: string | null;
   dbUser: any;
   provider: string;
+  isNewUseImage: any;
 };
 
 const initialState: SideTrayState = {
@@ -13,6 +14,7 @@ const initialState: SideTrayState = {
   user: null,
   dbUser: {},
   provider: "email",
+  isNewUseImage: null,
 };
 
 export const userSlice = createSlice({
@@ -31,10 +33,18 @@ export const userSlice = createSlice({
     setProvider: (state, action: PayloadAction<string>) => {
       state.provider = action?.payload;
     },
+    setIsNewUseImage: (state, action: PayloadAction<any>) => {
+      state.isNewUseImage = action?.payload;
+    },
   },
 });
 
-export const { setNonConfirmedUser, setUser, setDbUser, setProvider } =
-  userSlice?.actions;
+export const {
+  setNonConfirmedUser,
+  setUser,
+  setDbUser,
+  setProvider,
+  setIsNewUseImage,
+} = userSlice?.actions;
 
 export default userSlice?.reducer;

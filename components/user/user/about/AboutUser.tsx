@@ -7,10 +7,14 @@ import { BiSearch } from "react-icons/bi";
 import ButtonComponent from "../../../../theme/button/button.component";
 import { useMutation } from "@apollo/client";
 import EDIT_USER_BY_ID from "../../../../gqlLib/user/mutations/editUserById";
-import { setDbUser } from "../../../../redux/slices/userSlice";
+import {
+  setDbUser,
+  setIsNewUseImage,
+} from "../../../../redux/slices/userSlice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { setLoading } from "../../../../redux/slices/utilitySlice";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
+import S3_CONFIG from "../../../../configs/s3";
 
 type AboutProps = {
   userData: any;
@@ -23,27 +27,98 @@ const About = ({ userData, setUserData }: AboutProps) => {
   const dispatch = useAppDispatch();
   const { dbUser } = useAppSelector((state) => state?.user);
   const [editUserById] = useMutation(EDIT_USER_BY_ID);
+  const { isNewUseImage } = useAppSelector((state) => state?.user);
+
+  const saveToDb = async () => {
+    await editUserById({
+      variables: {
+        data: {
+          editId: dbUser._id,
+          editableObject: { ...userData?.about },
+        },
+      },
+    });
+
+    dispatch(
+      setDbUser({
+        ...dbUser,
+        ...userData?.about,
+      })
+    );
+    dispatch(setLoading(false));
+    if (isNewUseImage) {
+      dispatch(setIsNewUseImage(null));
+    }
+    reactToastifyNotification("info", "your profile updated successfully");
+  };
+
+  const uploadImage = async () => {
+    fetch(S3_CONFIG.objectURL)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Response Failed");
+        }
+      })
+      .then((data) => {
+        const { Key, uploadURL } = data;
+        fetch(uploadURL, {
+          method: "PUT",
+          body: isNewUseImage,
+        }).then(async (response) => {
+          if (response.ok) {
+            const imageURL = `${S3_CONFIG.baseURL}/${Key}`;
+
+            setUserData((pre) => {
+              return {
+                ...pre,
+                about: {
+                  ...pre.about,
+                  image: imageURL,
+                },
+              };
+            });
+            await editUserById({
+              variables: {
+                data: {
+                  editId: dbUser._id,
+                  editableObject: { ...userData?.about, image: imageURL },
+                },
+              },
+            });
+
+            dispatch(
+              setDbUser({
+                ...dbUser,
+                ...userData?.about,
+                image: imageURL,
+              })
+            );
+            dispatch(setLoading(false));
+
+            dispatch(setIsNewUseImage(null));
+
+            reactToastifyNotification(
+              "info",
+              "your profile updated successfully"
+            );
+          }
+        });
+      })
+      .catch((error) => {
+        reactToastifyNotification("error", error?.message);
+      });
+  };
 
   const submitData = async () => {
     dispatch(setLoading(true));
     try {
-      await editUserById({
-        variables: {
-          data: {
-            editId: dbUser._id,
-            editableObject: userData?.about,
-          },
-        },
-      });
-
-      dispatch(
-        setDbUser({
-          ...dbUser,
-          ...userData?.about,
-        })
-      );
-      dispatch(setLoading(false));
-      reactToastifyNotification("info", "your profile updated successfully");
+      if (isNewUseImage) {
+        uploadImage();
+      } else {
+        saveToDb();
+      }
     } catch (error) {
       dispatch(setLoading(false));
       reactToastifyNotification("error", error?.message);
@@ -122,6 +197,7 @@ const About = ({ userData, setUserData }: AboutProps) => {
               name="email"
               value={email}
               onChange={handleChange}
+              disabled
             />
           </div>
         </Grid>
