@@ -83,7 +83,13 @@ $arrow_distance:-45px;
     padding: 0px;
     margin: auto 5px;
     width: 100%;
-    // background-color: rgb(32, 206, 168);
+
+    div{
+
+        div{
+            margin-left: 0px;
+        }
+    }
 
     @media only screen and (max-width: 980px) {
         // margin-right: 20px;

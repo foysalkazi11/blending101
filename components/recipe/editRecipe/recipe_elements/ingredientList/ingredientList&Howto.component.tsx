@@ -55,26 +55,24 @@ const IngredientList = () => {
   // ingredients list related code below
 
   const IngredientSubmitHandler = (event) => {
-    let ingredientTempList = [...ingredients_list];
+    let ingredientTempList = [];
     if (event.key === "Enter") {
-      const tempIngredient = { title: event.target.value };
-      ingredientTempList = [...ingredientTempList, tempIngredient];
-      for (let index = 0; index < ingredientTempList.length; index++) {
-        const element = ingredientTempList[index].title;
-        console.log(element,index);
-        console.log(ingredientTempList[index].title);
-        console.log("_________");
+      const tempIngredient = { title: event.target.value, checked: true };
+      ingredientTempList = [...ingredients_list, tempIngredient];
 
-        if (ingredientTempList[index].title===event.target.value) {
-          console.log("is already in list");
+      ingredientTempList.forEach(element => {
+        console.log(element);
+
+        if (element.title.includes(event.target.value)) {
+          console.log("already present");
         }
         else{
-          console.log("new element added =>"+ingredientTempList[index].title);
+          console.log("new element");
+          console.log(element)
         }
-
-      }
-
+      });
       dispatch(setIngredientsToList(ingredientTempList));
+      event.target.value = "";
     }
   };
   // ingredients list related code ending
@@ -85,7 +83,7 @@ const IngredientList = () => {
     if (event.key === "Enter") {
       howList = [...howToState, { step: event.target.value }];
       dispatch(setHowToSteps(howList));
-      console.log(howList);
+      // console.log(howList);
       // if want instruction to vanish after pressing enter just uncomment below line
       event.target.value = "";
     }
@@ -95,6 +93,12 @@ const IngredientList = () => {
     let updated_list = [...howToState];
     updated_list.splice(index_value, 1);
     dispatch(setHowToSteps(updated_list));
+  };
+
+  const removeIngredient = (index_value: number) => {
+    let updated_list = [...ingredients_list];
+    updated_list.splice(index_value, 1);
+    dispatch(setIngredientsToList(updated_list));
   };
 
   // howTo list related code end
@@ -180,14 +184,14 @@ const IngredientList = () => {
                   {/* to create ingredients lists  */}
                   {elem.checked == false ? (
                     <div className={styles.ingredients__text}>
-                      <span>{elem.servings} &nbsp;</span>
+                      <span>{elem.servings * servings_number} &nbsp;</span>
                       <span>{elem.measuring_scale} &nbsp;</span>
                       <span>{elem.title} &nbsp;</span>
                       <span>{elem.extra_sentence} &nbsp;</span>
                     </div>
                   ) : (
                     <div className={styles.ingredients__text}>
-                      <span>{elem.servings} &nbsp;</span>
+                      <span>{elem.servings * servings_number} &nbsp;</span>
                       <span>{elem.measuring_scale} &nbsp;</span>
                       <span className={styles.ingredients__text__highlighted}>
                         {elem.title} &nbsp;
@@ -195,7 +199,10 @@ const IngredientList = () => {
                       <span>{elem.extra_sentence} &nbsp;</span>
                     </div>
                   )}
-                  <div className={styles.ingredients__bin}>
+                  <div
+                    className={styles.ingredients__bin}
+                    onClick={() => removeIngredient(index)}
+                  >
                     <Image
                       src={"/icons/noun_Delete_1447966.svg"}
                       alt=""
