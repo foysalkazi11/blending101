@@ -7,12 +7,13 @@ import ButtonComponent from "../../../../../theme/button/buttonA/button.componen
 import {
   setServings,
   setIngredientsToList,
+  setIngredientSearchBarItem,
   setHowToSteps,
 } from "../../../../../redux/edit_recipe/quantity";
-import { setIngredients } from "../../../../../redux/slices/sideTraySlice";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
-import { List_of_ingredients } from "./ingredientList";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
+import { ingredientLeafy } from "../../leftTray/left_tray_recipe_edit_list";
 
 const IngredientList = () => {
   const dispatch = useAppDispatch();
@@ -35,6 +36,10 @@ const IngredientList = () => {
     (state) => state.quantityAdjuster.howtoState
   );
 
+  const IngredientSearchBarItem = useAppSelector(
+    (state) => state.quantityAdjuster.IngredientSearchBarItem
+  );
+
   // variables for all states ==>ending
   // =========================================================================
   // sets value of top card in recipe editd page equal to ingredients page
@@ -53,56 +58,123 @@ const IngredientList = () => {
   };
   // =========================================================================
   // ingredients list related code below
-
+  const [inputValueIngredient, setInputValueIngredient] = useState("");
+  const inputTagValueHandlerIngredient = (e) => {
+    let tempValue = e.target.value;
+    setInputValueIngredient(tempValue);
+  };
+  let ingredientTempList = [...ingredients_list];
   const IngredientSubmitHandler = (event) => {
-    let ingredientTempList = [];
+    let itemChecked;
     if (event.key === "Enter") {
-      const tempIngredient = { title: event.target.value, checked: true };
-      ingredientTempList = [...ingredients_list, tempIngredient];
+      if (!event.target.value || /^\s*$/.test(event.target.value)) {
+        return;
+      }
 
-      ingredientTempList.forEach(element => {
-        console.log(element);
-
-        if (element.title.includes(event.target.value)) {
-          console.log("already present");
-        }
-        else{
-          console.log("new element");
-          console.log(element)
-        }
+      let SearchOutput = ingredientLeafy.find((elem) => {
+        return elem.title === inputValueIngredient;
       });
+
+      let SearchOutputIngredientList=ingredients_list.find((elem)=>{
+        return elem.title === inputValueIngredient
+      })
+
+      if(SearchOutput && !SearchOutputIngredientList){
+        ingredientTempList=[...ingredientTempList,SearchOutput]
+      }
+
+      console.log(SearchOutput,"Searching Output")
+
+      console.log(ingredientTempList, "temp list for active elements");
       dispatch(setIngredientsToList(ingredientTempList));
-      event.target.value = "";
+      setInputValueIngredient("");
     }
   };
+
+  const editIngredient = (id) => {
+    let newEditStep = ingredients_list.find((elem) => {
+      return elem.id === id;
+    });
+    setEditMode(true);
+    setInputValue(newEditStep.title);
+    setSelectedElementId(id);
+  };
+
+  const removeIngredient = (id) => {
+    let updated_list = ingredients_list.filter((elem) => {
+      return id !== elem.id;
+    });
+    dispatch(setIngredientsToList(updated_list));
+  };
+
   // ingredients list related code ending
   // =========================================================================
   // [how to] list related code begin
+
   const HowToSubmitHandler = (event) => {
     let howList = [];
     if (event.key === "Enter") {
-      howList = [...howToState, { step: event.target.value }];
-      dispatch(setHowToSteps(howList));
-      // console.log(howList);
-      // if want instruction to vanish after pressing enter just uncomment below line
-      event.target.value = "";
+      if (!event.target.value || /^\s*$/.test(event.target.value)) {
+        return;
+      }
+
+      if (editMode === true) {
+        dispatch(
+          setHowToSteps(
+            howToState.map((elem) => {
+              if (elem.id === selectedElementId) {
+                return { ...elem, step: inputValue };
+              }
+              return elem;
+            })
+          )
+        );
+
+        setEditMode(false);
+        setInputValue("");
+        setSelectedElementId(null);
+      } else {
+        howList = [
+          ...howToState,
+          { id: new Date().getTime().toString(), step: inputValue },
+        ];
+        dispatch(setHowToSteps(howList));
+        // if want instruction to vanish after pressing enter just uncomment below line
+        setInputValue("");
+      }
     }
   };
 
-  const removeStep = (index_value: number) => {
-    let updated_list = [...howToState];
-    updated_list.splice(index_value, 1);
+  const removeStep = (id) => {
+    let updated_list = howToState.filter((elem) => {
+      return id !== elem.id;
+    });
+    // updated_list.splice(index_value, 1);
     dispatch(setHowToSteps(updated_list));
   };
 
-  const removeIngredient = (index_value: number) => {
-    let updated_list = [...ingredients_list];
-    updated_list.splice(index_value, 1);
-    dispatch(setIngredientsToList(updated_list));
+  // const [editState, seteditState] = useState(null);
+  const [editMode, setEditMode] = useState(false);
+  const [selectedElementId, setSelectedElementId] = useState(null);
+
+  const editStep = (id) => {
+    let newEditStep = howToState.find((elem) => {
+      return elem.id === id;
+    });
+    setEditMode(true);
+    setInputValue(newEditStep.step);
+    setSelectedElementId(id);
   };
 
   // howTo list related code end
 
+  //how to input state below
+
+  const [inputValue, setInputValue] = useState("");
+  const inputTagValueHandler = (e) => {
+    let tempValue = e.target.value;
+    setInputValue(tempValue);
+  };
   return (
     <div className={styles.mainCard}>
       <div className={styles.ingredients__main__card}>
@@ -163,9 +235,9 @@ const IngredientList = () => {
         </div>
         <div className={styles.ingredients}>
           <ul>
-            {ingredients_list.map((elem, index) => {
+            {ingredients_list.map((elem) => {
               return (
-                <li key={index} className={styles.ingredients__li}>
+                <li key={elem.id} className={styles.ingredients__li}>
                   <div className={styles.ingredients__drag}>
                     <DragIndicatorIcon className={styles.ingredients__drag} />
                   </div>
@@ -182,26 +254,23 @@ const IngredientList = () => {
                     <div className={styles.ingredients__icons}></div>
                   )}
                   {/* to create ingredients lists  */}
-                  {elem.checked == false ? (
-                    <div className={styles.ingredients__text}>
-                      <span>{elem.servings * servings_number} &nbsp;</span>
-                      <span>{elem.measuring_scale} &nbsp;</span>
-                      <span>{elem.title} &nbsp;</span>
-                      <span>{elem.extra_sentence} &nbsp;</span>
-                    </div>
-                  ) : (
-                    <div className={styles.ingredients__text}>
-                      <span>{elem.servings * servings_number} &nbsp;</span>
-                      <span>{elem.measuring_scale} &nbsp;</span>
-                      <span className={styles.ingredients__text__highlighted}>
-                        {elem.title} &nbsp;
-                      </span>
-                      <span>{elem.extra_sentence} &nbsp;</span>
-                    </div>
-                  )}
+                  <div className={styles.ingredients__text}>
+                    <span>{elem.servings * servings_number} &nbsp;</span>
+                    <span>{elem.measuring_scale} &nbsp;</span>
+                    <span className={styles.ingredients__text__highlighted}>
+                      {elem.title} &nbsp;
+                    </span>
+                    <span>{elem.extra_sentence} &nbsp;</span>
+                  </div>
+                  <span
+                    className={styles.ingredients__edit}
+                    onClick={() => editIngredient(elem.id)}
+                  >
+                    {/* <ModeEditOutlineOutlinedIcon /> */}
+                  </span>
                   <div
                     className={styles.ingredients__bin}
-                    onClick={() => removeIngredient(index)}
+                    onClick={() => removeIngredient(elem.id)}
                   >
                     <Image
                       src={"/icons/noun_Delete_1447966.svg"}
@@ -219,6 +288,10 @@ const IngredientList = () => {
               <input
                 onKeyDown={(e) => {
                   IngredientSubmitHandler(e);
+                }}
+                value={inputValueIngredient}
+                onChange={(e) => {
+                  inputTagValueHandlerIngredient(e);
                 }}
                 type="text"
                 name="recipe elements"
@@ -244,30 +317,43 @@ const IngredientList = () => {
         </h4>
         <div className={styles.how__to__steps}>
           <ol>
-            {howToState.map((elem, index) => {
+            {howToState.map((elem) => {
               return (
-                <li className={styles.how__to__steps__li} key={index}>
+                <li className={styles.how__to__steps__li} key={elem.id}>
                   {elem.step}
                   <span
-                    className={styles.bin}
-                    onClick={() => removeStep(index)}
+                    className={styles.how__to__steps__li__edit}
+                    onClick={() => editStep(elem.id)}
                   >
-                    <Image
-                      src={"/icons/noun_Delete_1447966.svg"}
-                      alt=""
-                      layout="fill"
-                      objectFit="contain"
-                    />
+                    <ModeEditOutlineOutlinedIcon />
+                  </span>
+                  <span
+                    className={styles.how__to__steps__li__bin}
+                    onClick={() => removeStep(elem.id)}
+                  >
+                    <div className={styles.how__to__steps__li__bin__imgDiv}>
+                      <Image
+                        src={"/icons/noun_Delete_1447966.svg"}
+                        alt=""
+                        layout="fill"
+                        objectFit="contain"
+                      />
+                    </div>
                   </span>
                 </li>
               );
             })}
           </ol>
+
           <div className={styles.how__to__searchBar}>
             <span>
               <input
                 onKeyDown={(e) => {
                   HowToSubmitHandler(e);
+                }}
+                value={inputValue}
+                onChange={(e) => {
+                  inputTagValueHandler(e);
                 }}
                 type="text"
                 name="recipe elements"

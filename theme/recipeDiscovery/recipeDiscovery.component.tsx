@@ -14,7 +14,7 @@ import {
 } from "../../gqlLib/recipes/queries/fetchRecipes";
 import axios from "axios";
 import { useAppSelector } from "../../redux/hooks";
-import FilterPageBottom from '../../components/recipe/recipeFilter/filterBottom.component';
+import FilterPageBottom from "../../components/recipe/recipeFilter/filterBottom.component";
 
 const RecipeDetails = () => {
   const [recommended, setRecommended] = useState([]);
@@ -22,7 +22,7 @@ const RecipeDetails = () => {
   const [latest, setLatest] = useState([]);
   const blends = useAppSelector((state) => state.sideTray.blends);
 
-  console.log('blends', blends)
+  console.log("blends", blends);
 
   useEffect(() => {
     axios
@@ -66,7 +66,9 @@ const RecipeDetails = () => {
       <div className={styles.main__div}>
         <SearchBar />
         <SearchtagsComponent />
-        {blends.length ? <FilterPageBottom blends={blends} /> : (
+        {blends.length ? (
+          <FilterPageBottom blends={blends} />
+        ) : (
           <div className={styles.bottom}>
             <AppdownLoadCard />
             <div className={styles.main__tray}>

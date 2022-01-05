@@ -5,6 +5,7 @@ import { setIngredients } from "../../../../redux/slices/sideTraySlice";
 import {
   setServings,
   setIngredientsToList,
+  setIngredientSearchBarItem,
   setHowToSteps,
 } from "../../../../redux/edit_recipe/quantity";
 import CalciumSearchElem from "../../../../theme/calcium/calcium.component";
@@ -33,6 +34,9 @@ const Left_tray_recipe_edit = () => {
   const ingredients_list = useAppSelector(
     (state) => state.quantityAdjuster.ingredientsList
   );
+
+  const IngredientSearchBarItem=useAppSelector((state)=>state.quantityAdjuster.IngredientSearchBarItem)
+
   console.log("Ingredients", ingredients_list);
 
   const handleIngredientClick = (ingredient) => {

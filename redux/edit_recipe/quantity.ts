@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { howTo } from "../../components/recipe/editRecipe/recipe_elements/ingredientList/ingredientList";
 
 interface ingredientCard {
+  id?:string,
   title?:string,
   img?:string,
   servings?:number,
@@ -11,7 +12,13 @@ interface ingredientCard {
 }
 
 interface howToCard {
+  id?:string;
   step?: string;
+};
+
+interface ingredientSearchCard{
+  id?:string;
+  searchItem?:string;
 }
 
 type quantityState = {
@@ -23,6 +30,7 @@ type quantityState = {
   howtoState: howToCard[];
   uploadImageList: string[];
   leftbarShowState:boolean;
+  IngredientSearchBarItem:ingredientSearchCard[];
 };
 
 const initialState: quantityState = {
@@ -34,6 +42,8 @@ const initialState: quantityState = {
   howtoState: [],
   uploadImageList: [],
   leftbarShowState:true,
+  IngredientSearchBarItem:[],
+
 };
 
 //quantity num is for top card in edit recipe page
@@ -64,7 +74,10 @@ export const quantityStateSlice = createSlice({
     },
     setLeftbarShowState:(state,action:PayloadAction<boolean>)=>{
       state.leftbarShowState=action?.payload
-    }
+    },
+    setIngredientSearchBarItem:(state,action:PayloadAction<ingredientSearchCard[]>)=>{
+      state.IngredientSearchBarItem=action?.payload
+    },
   },
 });
 
@@ -75,5 +88,6 @@ export const {
   setIngredientsSentence,
   setHowToSteps,
   setUploadImageList,
+  setIngredientSearchBarItem
 } = quantityStateSlice.actions;
 export default quantityStateSlice?.reducer;
