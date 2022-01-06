@@ -21,7 +21,6 @@ const ScoreTray = () => {
           </div>
           </h3>
           <h5>Rx Score</h5>
-
         </div>
       </div>
     </div>
