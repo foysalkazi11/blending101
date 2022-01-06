@@ -14,9 +14,23 @@ const EditRecipePage = () => {
   return (
     <AContainer>
       <div className={styles.main}>
-        <div className={styles.left}>
+        <div
+          className={styles.left}
+          style={leftTrayVisibleState ? { marginLeft: "0px" } : {}}
+        >
           <div
             className={styles.left__Drag__lightGreen}
+            style={
+              leftTrayVisibleState
+                ? {
+                    backgroundImage: `url("/icons/ingr-green.svg")`,
+                    backgroundSize: "contain",
+                  }
+                : {
+                    backgroundImage: `url("/icons/ingr-white.svg")`,
+                    backgroundSize: "contain",
+                  }
+            }
             onClick={() => setLeftTrayVisibleState(!leftTrayVisibleState)}
           >
             <div>
