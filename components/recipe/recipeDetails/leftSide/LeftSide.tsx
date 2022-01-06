@@ -7,19 +7,10 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import styles from "./LeftSide.module.scss";
 import SlickSlider from "../../../../theme/carousel/carousel.component";
+import useWindowSize from "../../../utility/useWindowSize";
 
 const LeftSide = () => {
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const handleResize = () => {
-    setWindowWidth(window.innerWidth);
-  };
-
-  useEffect(() => {
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+  const windowSize = useWindowSize();
 
   const PreviousButton = (prop) => {
     const { className, onClick } = prop;
@@ -82,7 +73,7 @@ const LeftSide = () => {
         <img src="/images/telescope.svg" alt="bar icon" />
         <h3>Related</h3>
       </div>
-      {windowWidth >= 1200 ? (
+      {windowSize?.width >= 1200 ? (
         recommendedList.map((cardData, index) => {
           return (
             <div key={index} style={{ paddingBottom: "10px" }}>

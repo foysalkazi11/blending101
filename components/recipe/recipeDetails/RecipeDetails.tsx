@@ -13,6 +13,7 @@ const RecipeDetails = () => {
         logo={true}
         headerTitle="Blend Recipe"
         showRighTray={true}
+        commentsTray={true}
       >
         <Container maxWidth="xl">
           <Grid container spacing={1}>
