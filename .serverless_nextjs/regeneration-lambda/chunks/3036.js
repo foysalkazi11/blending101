@@ -72,7 +72,7 @@ function AuthProvider({
         userEmail = email;
         provider = "email";
       } else {
-        var _identities$;
+        var _identities$, _identities$$provider;
 
         const {
           signInUserSession: {
@@ -86,7 +86,7 @@ function AuthProvider({
           }
         } = user;
         userEmail = email;
-        provider = identities === null || identities === void 0 ? void 0 : (_identities$ = identities[0]) === null || _identities$ === void 0 ? void 0 : _identities$.providerName;
+        provider = identities === null || identities === void 0 ? void 0 : (_identities$ = identities[0]) === null || _identities$ === void 0 ? void 0 : (_identities$$provider = _identities$.providerName) === null || _identities$$provider === void 0 ? void 0 : _identities$$provider.toLowerCase();
       }
 
       const {
@@ -101,6 +101,7 @@ function AuthProvider({
       });
       dispatch((0,_redux_slices_userSlice__WEBPACK_IMPORTED_MODULE_5__/* .setUser */ .av)(userEmail));
       dispatch((0,_redux_slices_userSlice__WEBPACK_IMPORTED_MODULE_5__/* .setDbUser */ .LL)(data === null || data === void 0 ? void 0 : data.createNewUser));
+      dispatch((0,_redux_slices_userSlice__WEBPACK_IMPORTED_MODULE_5__/* .setProvider */ .fc)(provider));
       setActive(true);
     } catch (error) {
       console.log(error === null || error === void 0 ? void 0 : error.message);
@@ -1741,54 +1742,6 @@ const {
   setCategoryTye
 } = sideTraySlice === null || sideTraySlice === void 0 ? void 0 : sideTraySlice.actions;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (sideTraySlice === null || sideTraySlice === void 0 ? void 0 : sideTraySlice.reducer);
-
-/***/ }),
-
-/***/ 436958:
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "GH": () => (/* binding */ setNonConfirmedUser),
-/* harmony export */   "av": () => (/* binding */ setUser),
-/* harmony export */   "LL": () => (/* binding */ setDbUser),
-/* harmony export */   "ZP": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* unused harmony exports userSlice, setProvider */
-/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(947389);
-/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__);
-
-const initialState = {
-  nonConfirmedUser: "",
-  user: null,
-  dbUser: {},
-  provider: "email"
-};
-const userSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createSlice)({
-  name: "user",
-  initialState,
-  reducers: {
-    setUser: (state, action) => {
-      state.user = action === null || action === void 0 ? void 0 : action.payload;
-    },
-    setNonConfirmedUser: (state, action) => {
-      state.nonConfirmedUser = action === null || action === void 0 ? void 0 : action.payload;
-    },
-    setDbUser: (state, action) => {
-      state.dbUser = action === null || action === void 0 ? void 0 : action.payload;
-    },
-    setProvider: (state, action) => {
-      state.provider = action === null || action === void 0 ? void 0 : action.payload;
-    }
-  }
-});
-const {
-  setNonConfirmedUser,
-  setUser,
-  setDbUser,
-  setProvider
-} = userSlice === null || userSlice === void 0 ? void 0 : userSlice.actions;
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (userSlice === null || userSlice === void 0 ? void 0 : userSlice.reducer);
 
 /***/ }),
 

@@ -2,55 +2,6 @@ exports.id = 8738;
 exports.ids = [8738];
 exports.modules = {
 
-/***/ 436958:
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "GH": () => (/* binding */ setNonConfirmedUser),
-/* harmony export */   "av": () => (/* binding */ setUser),
-/* harmony export */   "LL": () => (/* binding */ setDbUser),
-/* harmony export */   "fc": () => (/* binding */ setProvider),
-/* harmony export */   "ZP": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* unused harmony export userSlice */
-/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(947389);
-/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__);
-
-const initialState = {
-  nonConfirmedUser: "",
-  user: null,
-  dbUser: {},
-  provider: "email"
-};
-const userSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createSlice)({
-  name: "user",
-  initialState,
-  reducers: {
-    setUser: (state, action) => {
-      state.user = action === null || action === void 0 ? void 0 : action.payload;
-    },
-    setNonConfirmedUser: (state, action) => {
-      state.nonConfirmedUser = action === null || action === void 0 ? void 0 : action.payload;
-    },
-    setDbUser: (state, action) => {
-      state.dbUser = action === null || action === void 0 ? void 0 : action.payload;
-    },
-    setProvider: (state, action) => {
-      state.provider = action === null || action === void 0 ? void 0 : action.payload;
-    }
-  }
-});
-const {
-  setNonConfirmedUser,
-  setUser,
-  setDbUser,
-  setProvider
-} = userSlice === null || userSlice === void 0 ? void 0 : userSlice.actions;
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (userSlice === null || userSlice === void 0 ? void 0 : userSlice.reducer);
-
-/***/ }),
-
 /***/ 188738:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -113,7 +64,7 @@ const SocialTray = () => {
 
   const updateUser = async () => {
     try {
-      var _identities$, _identities$2;
+      var _identities$, _identities$$provider, _identities$2, _identities$2$provide;
 
       const res = await lib.Auth.currentAuthenticatedUser({
         bypassCache: true
@@ -135,14 +86,14 @@ const SocialTray = () => {
         variables: {
           data: {
             email: email,
-            provider: identities === null || identities === void 0 ? void 0 : (_identities$ = identities[0]) === null || _identities$ === void 0 ? void 0 : _identities$.providerName
+            provider: identities === null || identities === void 0 ? void 0 : (_identities$ = identities[0]) === null || _identities$ === void 0 ? void 0 : (_identities$$provider = _identities$.providerName) === null || _identities$$provider === void 0 ? void 0 : _identities$$provider.toLowerCase()
           }
         }
       }); // reactToastifyNotification("info", "Sign up successfully");
 
       dispatch((0,userSlice/* setUser */.av)(email));
       dispatch((0,userSlice/* setDbUser */.LL)(data === null || data === void 0 ? void 0 : data.createNewUser));
-      dispatch((0,userSlice/* setProvider */.fc)(identities === null || identities === void 0 ? void 0 : (_identities$2 = identities[0]) === null || _identities$2 === void 0 ? void 0 : _identities$2.providerName));
+      dispatch((0,userSlice/* setProvider */.fc)(identities === null || identities === void 0 ? void 0 : (_identities$2 = identities[0]) === null || _identities$2 === void 0 ? void 0 : (_identities$2$provide = _identities$2.providerName) === null || _identities$2$provide === void 0 ? void 0 : _identities$2$provide.toLowerCase()));
       history.push("/recipe_discovery");
     } catch (error) {
       console.log(error);

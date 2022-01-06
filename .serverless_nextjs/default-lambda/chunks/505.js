@@ -72,7 +72,7 @@ function AuthProvider({
         userEmail = email;
         provider = "email";
       } else {
-        var _identities$;
+        var _identities$, _identities$$provider;
 
         const {
           signInUserSession: {
@@ -86,7 +86,7 @@ function AuthProvider({
           }
         } = user;
         userEmail = email;
-        provider = identities === null || identities === void 0 ? void 0 : (_identities$ = identities[0]) === null || _identities$ === void 0 ? void 0 : _identities$.providerName;
+        provider = identities === null || identities === void 0 ? void 0 : (_identities$ = identities[0]) === null || _identities$ === void 0 ? void 0 : (_identities$$provider = _identities$.providerName) === null || _identities$$provider === void 0 ? void 0 : _identities$$provider.toLowerCase();
       }
 
       const {
@@ -101,6 +101,7 @@ function AuthProvider({
       });
       dispatch((0,_redux_slices_userSlice__WEBPACK_IMPORTED_MODULE_5__/* .setUser */ .av)(userEmail));
       dispatch((0,_redux_slices_userSlice__WEBPACK_IMPORTED_MODULE_5__/* .setDbUser */ .LL)(data === null || data === void 0 ? void 0 : data.createNewUser));
+      dispatch((0,_redux_slices_userSlice__WEBPACK_IMPORTED_MODULE_5__/* .setProvider */ .fc)(provider));
       setActive(true);
     } catch (error) {
       console.log(error === null || error === void 0 ? void 0 : error.message);

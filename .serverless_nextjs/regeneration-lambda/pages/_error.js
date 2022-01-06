@@ -2,7 +2,36 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 747792:
+/***/ 487425:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "ZP": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* unused harmony exports utilitySlice, setLoading */
+/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(947389);
+/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__);
+
+const initialState = {
+  loading: false
+};
+const utilitySlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createSlice)({
+  name: "utility",
+  initialState,
+  reducers: {
+    setLoading: (state, action) => {
+      state.loading = action === null || action === void 0 ? void 0 : action.payload;
+    }
+  }
+});
+const {
+  setLoading
+} = utilitySlice === null || utilitySlice === void 0 ? void 0 : utilitySlice.actions;
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (utilitySlice === null || utilitySlice === void 0 ? void 0 : utilitySlice.reducer);
+
+/***/ }),
+
+/***/ 788459:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -34,7 +63,7 @@ __webpack_require__.r(__webpack_exports__);
 
       
       const { processEnv } = __webpack_require__(972333)
-      processEnv([{"path":".env.local","contents":"NEXT_PUBLIC_AWS_REGION = us-east-1\nNEXT_PUBLIC_AWS_COGNITO_REGION = us-east-1\nNEXT_PUBLIC_AWS_COGNITO_POOL_ID = us-east-1_4715wq6ef\nNEXT_PUBLIC_AWS_APP_CLIENT_ID = 1qef45v3tsmqlt0v7kmarj9dii\nNEXT_PUBLIC_OAUTH_DOMAIN = blending-test-pool.auth.us-east-1.amazoncognito.com\nNEXT_PUBLIC_REDIRECT_SIGN = https://duacpw47bhqi1.cloudfront.net/login"}])
+      processEnv([{"path":".env.local","contents":"NEXT_PUBLIC_AWS_REGION = us-east-1\nNEXT_PUBLIC_AWS_COGNITO_REGION = us-east-1\nNEXT_PUBLIC_AWS_COGNITO_POOL_ID = us-east-1_4715wq6ef\nNEXT_PUBLIC_AWS_APP_CLIENT_ID = 1qef45v3tsmqlt0v7kmarj9dii\nNEXT_PUBLIC_OAUTH_DOMAIN = blending-test-pool.auth.us-east-1.amazoncognito.com\nNEXT_PUBLIC_REDIRECT_SIGN = https://duacpw47bhqi1.cloudfront.net/login\n"}])
     
       
       const runtimeConfig = {}
@@ -96,11 +125,11 @@ __webpack_require__.r(__webpack_exports__);
         rewrites: combinedRewrites,
         i18n: undefined,
         page: "/_error",
-        buildId: "Gr1wvAhCxxVIWGyL5ZEn8",
-        escapedBuildId: "Gr1wvAhCxxVIWGyL5ZEn8",
+        buildId: "-jRWNwLuTucOQDbWu215E",
+        escapedBuildId: "\-jRWNwLuTucOQDbWu215E",
         basePath: "",
         pageIsDynamic: false,
-        encodedPreviewProps: {previewModeId:"74bfddcc490d6b9c812fc0feba270c4d",previewModeSigningKey:"ac58879bcb3ab0d062f632e96f48cca4796bb5105dd2c361343aafbeb267675f",previewModeEncryptionKey:"c20e3a3c60fa2774e071375d8a448031ddef0ba4afc7afaf5912a899c7181742"}
+        encodedPreviewProps: {previewModeId:"10d63c6504020648d58bc980cc42f27a",previewModeSigningKey:"6a30fde1ed7bc762799ed54502a3c2e86f250ccb265975ce19c9b7ffd30f2534",previewModeEncryptionKey:"76bac7838866bed1e8a0764a30b6f921bb0627ac55a1acbb652e906d4763a842"}
       })
       
     
@@ -310,7 +339,7 @@ module.exports = require("zlib");
 /******/ 	__webpack_require__.x = () => {
 /******/ 		// Load entry module and return exports
 /******/ 		// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 		var __webpack_exports__ = __webpack_require__.O(undefined, [4090,3966,5893,6335,505,2392], () => (__webpack_require__(747792)))
+/******/ 		var __webpack_exports__ = __webpack_require__.O(undefined, [4090,3966,5893,6335,505,6958], () => (__webpack_require__(788459)))
 /******/ 		__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 		return __webpack_exports__;
 /******/ 	};
@@ -477,7 +506,7 @@ module.exports = require("zlib");
 /******/ 			__webpack_require__.e(5893);
 /******/ 			__webpack_require__.e(6335);
 /******/ 			__webpack_require__.e(505);
-/******/ 			__webpack_require__.e(2392);
+/******/ 			__webpack_require__.e(6958);
 /******/ 			return next();
 /******/ 		};
 /******/ 	})();
