@@ -10,6 +10,8 @@ import { MdOutlineInfo, MdAdd, MdRemove } from "react-icons/md";
 import DropDown from "../../../../theme/dropDown/DropDown.component";
 import { BiBarChart } from "react-icons/bi";
 import { BsCartPlus } from "react-icons/bs";
+import { useAppDispatch } from "../../../../redux/hooks";
+import { setOpenCommentsTray } from "../../../../redux/slices/sideTraySlice";
 
 const recipeSliderImage = [
   "/images/recipe-slider-img1.png",
@@ -22,6 +24,11 @@ let ozItem = ["64 oz", "64 oz"];
 
 const Center = () => {
   const [counter, setCounter] = useState(1);
+  const dispatch = useAppDispatch();
+
+  const openCommentsTray = () => {
+    dispatch(setOpenCommentsTray(true));
+  };
   const PreviousButton = (prop) => {
     const { className, onClick } = prop;
     return (
@@ -111,7 +118,7 @@ const Center = () => {
               <img src="/images/share-alt-light-grey.svg" alt="share" />
               <p>Share</p>
             </div>
-            <div className={styles.iconWithText}>
+            <div className={styles.iconWithText} onClick={openCommentsTray}>
               <img src="/icons/comment.svg" alt="comment" />
               <p style={{ color: "#7cbc39" }}>21</p>
             </div>
@@ -294,6 +301,20 @@ const Center = () => {
         <div className={styles.ingredentHeader}>
           <img src="/images/chef.svg" alt="basket" />
           <h3>How to</h3>
+        </div>
+        <div className={styles.steps}>
+          <span>Step 1</span>
+          <p>
+            Add ingredients to a blender (in the order listed above) and blend
+            to combine.
+          </p>
+        </div>
+        <div className={styles.steps}>
+          <span>Step 1</span>
+          <p>
+            Add ingredients to a blender (in the order listed above) and blend
+            to combine.
+          </p>
         </div>
       </div>
     </div>
