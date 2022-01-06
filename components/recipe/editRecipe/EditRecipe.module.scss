@@ -70,6 +70,11 @@ $leftTrayDragIconWidth:50px;
         }
     }
 
+    @include responsive(1230px, 3800px) {
+    }
+
+
+
     &__Drag__lightGreen {
         position: absolute;
         top: -15px;
@@ -116,18 +121,25 @@ $leftTrayDragIconWidth:50px;
     }
 
     &__stacked {
-        min-height: 90vh;
-        position: fixed;
-        left: 90px;
-        margin-left: -15px;
-        margin-right: 30px;
-        cursor: pointer;
-        transition: all 0.3s ease 0s;
-        width: $width;
-        padding-right: 17px;
-        z-index: 10;
-        user-select: none;
-        background-color: white;
+        // min-height: 90vh;
+        // position: fixed;
+        // left: 90px;
+        // margin-left: -15px;
+        // margin-right: 30px;
+        // cursor: pointer;
+        // transition: all 0.3s ease 0s;
+        // width: $width;
+        // padding-right: 17px;
+        // z-index: 10;
+        // user-select: none;
+        // background-color: white;
+
+        @include responsive(1230px, 3800px) {
+            display: none;
+            width: $width;
+            padding-right: 17px;
+            position: relative;
+        }
 
     }
 

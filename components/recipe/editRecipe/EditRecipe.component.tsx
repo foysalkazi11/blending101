@@ -14,9 +14,7 @@ const EditRecipePage = () => {
   return (
     <AContainer>
       <div className={styles.main}>
-        <div
-          className={leftTrayVisibleState ? styles.left : styles.left__stacked}
-        >
+        <div className={styles.left}>
           <div
             className={styles.left__Drag__lightGreen}
             onClick={() => setLeftTrayVisibleState(!leftTrayVisibleState)}
