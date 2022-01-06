@@ -88,6 +88,11 @@ $leftTrayDragIconWidth:50px;
         width: $leftTrayDragIconWidth;
         height: $leftTrayDragIconWidth;
 
+        @include responsive(1230px, 3800px) {
+            display: none;
+            background-image: none !important;
+        }
+
         div {
             position: relative;
             top: 0;
@@ -103,6 +108,7 @@ $leftTrayDragIconWidth:50px;
 
             @include responsive(1230px, 3800px) {
                 display: none;
+                background-image: none !important;
             }
         }
     }
