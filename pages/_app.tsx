@@ -4,7 +4,6 @@ import { Provider } from "react-redux";
 import AuthProvider from "../auth/auth.component";
 import { AppProps } from "next/app";
 import "../styles/variables.module.scss";
-// import "../styles/globalStyle.scss";
 import "react-dropdown/style.css";
 import Amplify from "aws-amplify";
 import awsconfig from "../configs/aws";
