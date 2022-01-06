@@ -25,6 +25,7 @@
         justify-content: space-between;
         width: 100%;
         margin: 0px auto;
+        background-color: green;
 
         &__heading {
             font-size: 20px;
@@ -41,8 +42,7 @@
             svg {
                 position: absolute;
                 top: 50%;
-                transform: translateY(-50%);
-                font-size: 20px;
+                transform: translateY(-50%) scale(0.55);
             }
 
             @include responsive(0px, 1300px) {

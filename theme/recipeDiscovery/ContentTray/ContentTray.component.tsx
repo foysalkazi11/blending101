@@ -99,32 +99,3 @@ const ContentTray = (props) => {
   );
 };
 export default ContentTray;
-
-// responsive: [
-//   {
-//     breakpoint: 1450,
-//     settings: useEffect
-//   },
-//   {
-//     breakpoint: 1250,
-//     settings: {
-//       nextArrow: <NextButton />,
-//       prevArrow: <PreviousButton />,
-//       infinite: false,
-//       speed: 500,
-//       slidesToShow: 3,
-//       slidesToScroll: 1,
-//     },
-//   },
-//   {
-//     breakpoint: 600,
-//     settings: {
-//       nextArrow: <NextButton />,
-//       prevArrow: <PreviousButton />,
-//       infinite: false,
-//       speed: 500,
-//       slidesToShow: 1,
-//       slidesToScroll: 1,
-//     },
-//   },
-// ],
