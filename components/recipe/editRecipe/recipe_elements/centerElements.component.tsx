@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./centerElements.module.scss";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+import MoreVertIcon from "../../../../public/icons/more_vert_black_36dp.svg";
 import AddRecipeCard from "./addFiles/addRecipeCards.component";
 import ScoreTray from "./scoreTray/scoreTray.component";
 import Image from "next/image";

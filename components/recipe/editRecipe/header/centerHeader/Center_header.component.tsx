@@ -1,13 +1,11 @@
-import React from 'react';
-import styles from './Center_header.module.scss';
+import React from "react";
+import styles from "./Center_header.module.scss";
 import Image from "next/image";
-import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
-import ClearIcon from "@material-ui/icons/Clear";
-
-
+import VisibilityOutlinedIcon from "../../../../../public/icons/visibility_black_36dp.svg";
+import ClearIcon from "../../../../../public/icons/clear_black_36dp.svg";
 const Center_header = () => {
-    return (
-      <div className={styles.center__title}>
+  return (
+    <div className={styles.center__title}>
       <div className={styles.center__title__left}>
         <span>
           <Image
@@ -17,6 +15,7 @@ const Center_header = () => {
             height={24}
           />
         </span>
+
         <h3>Recipe</h3>
       </div>
       <div className={styles.center__title__right}>
@@ -28,7 +27,7 @@ const Center_header = () => {
         </div>
       </div>
     </div>
-    )
-}
+  );
+};
 
-export default Center_header
+export default Center_header;
