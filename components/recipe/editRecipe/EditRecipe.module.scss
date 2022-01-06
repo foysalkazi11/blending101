@@ -90,7 +90,6 @@ $leftTrayDragIconWidth:50px;
 
         @include responsive(1230px, 3800px) {
             display: none;
-            background-image: none !important;
         }
 
         div {
