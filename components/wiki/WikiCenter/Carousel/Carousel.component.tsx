@@ -1,11 +1,8 @@
-// import React from 'react';
-// import { Carousel } from 'react-responsive-carousel';
 import React, { useState } from "react";
 import styles from "./Carousel.module.scss";
 import Image from "next/image";
-import { FaArrowAltCircleRight, FaArrowAltCircleLeft } from "react-icons/fa";
-import NavigateNextOutlinedIcon from "@mui/icons-material/NavigateNextOutlined";
-import NavigateBeforeOutlinedIcon from "@mui/icons-material/NavigateBeforeOutlined";
+import NavigateNextOutlinedIcon from "../../../../public/icons/navigate_next_black_36dp.svg";
+import NavigateBeforeOutlinedIcon from "../../../../public/icons/navigate_before_black_36dp.svg";
 
 function CarouselComponent() {
   const images = [

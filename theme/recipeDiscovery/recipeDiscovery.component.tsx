@@ -36,6 +36,7 @@ const RecipeDetails = () => {
       .catch((err) => {
         console.log(err, "err");
       });
+
     axios
       .post("https://blendingrecipe.herokuapp.com/graphql", {
         query: FETCH_POPULAR_RECIPES,

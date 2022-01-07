@@ -6,13 +6,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import useMediaQuery from "./ContentTray";
-import {
-  useWindowSize,
-  useWindowWidth,
-  useWindowHeight,
-} from "@react-hook/window-size";
-
+import {useWindowWidth} from "@react-hook/window-size";
 // interface carouselTray {
 //   heading: string;
 // }
@@ -45,7 +39,7 @@ const ContentTray = (props) => {
     );
   };
 
-  const [slickSetting, setSlickSetting] = useState(3);
+  const [slickSetting, setSlickSetting] = useState(2);
 
   const onlyWidth = useWindowWidth();
 

@@ -1,6 +1,7 @@
 import React from 'react'
 import WikiTray from '../wikiTray.component';
 import Dropdown from 'react-dropdown';
+
 import styles from './health.module.scss';
 
 export default function HealthTrayComponent({title}) {

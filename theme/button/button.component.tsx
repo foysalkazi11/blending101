@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import { icon } from "@fortawesome/fontawesome-svg-core";
 import React, { useState } from "react";
 import styles from "./button.module.scss";
 

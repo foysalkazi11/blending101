@@ -4,8 +4,6 @@ import React, { useState } from "react";
 import ButtonComponent from "../../../button/buttonA/button.component";
 import InputField from "../../../input/inputField.component";
 import styles from "./EmailVarify.module.scss";
-import Image from "next/image";
-import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
 import { Container } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import {
