@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import LeftTrayWrapper from '../leftTray.wrapper';
 import styles from './nutritiontray.module.scss';
 

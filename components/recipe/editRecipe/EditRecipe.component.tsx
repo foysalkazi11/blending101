@@ -7,7 +7,6 @@ import Left_tray_recipe_edit from "./leftTray/left_tray_recipe_edit.component";
 import Center_Elements from "./recipe_elements/centerElements.component";
 import IngredientList from "./recipe_elements/ingredientList/ingredientList&Howto.component";
 import Image from "next/image";
-import { useWindowWidth } from "@react-hook/window-size";
 
 const EditRecipePage = () => {
   const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);

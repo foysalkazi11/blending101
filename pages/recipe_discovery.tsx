@@ -1,5 +1,8 @@
 import React from 'react';
-import RecipeScreen from "../theme/recipeDiscovery/recipeDiscovery.component"
+import dynamic from "next/dynamic";
+const RecipeScreen = dynamic(() => import("../theme/recipeDiscovery/recipeDiscovery.component"), {
+  ssr: false,
+});
 
 export default function recipe_details() {
     return (
@@ -7,4 +10,4 @@ export default function recipe_details() {
             <RecipeScreen/>
         </div>
     )
-}
+};

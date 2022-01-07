@@ -6,7 +6,9 @@ query {
      datePublished
      name,
        recipeIngredients
-     recipeBlendCategory
+      recipeBlendCategory{
+        name
+      }
      testIngredient{
        quantity,
        unit,
@@ -33,7 +35,9 @@ query {
      datePublished
      name,
        recipeIngredients
-     recipeBlendCategory
+     recipeBlendCategory{
+      name
+    }
      testIngredient{
        quantity,
        unit,
@@ -61,7 +65,9 @@ query {
      datePublished
      name,
     recipeIngredients
-     recipeBlendCategory
+     recipeBlendCategory{
+      name
+    }
      testIngredient{
        quantity,
        unit,

@@ -94,7 +94,7 @@ const RecipeDetails = () => {
                         <DatacardComponent
                           title={item.name}
                           ingredients={ing}
-                          category={item.recipeBlendCategory}
+                          category={item.recipeBlendCategory?.name}
                           ratings={item.ratings}
                           noOfRatings={item.noOfRatings}
                           carbs={item.carbs}
@@ -131,7 +131,7 @@ const RecipeDetails = () => {
                           <DatacardComponent
                             title={item.name}
                             ingredients={ing}
-                            category={item.recipeBlendCategory}
+                            category={item.recipeBlendCategory?.name}
                             ratings={item.ratings}
                             noOfRatings={item.noOfRatings}
                             carbs={item.carbs}
@@ -168,7 +168,7 @@ const RecipeDetails = () => {
                           <DatacardComponent
                             title={item.name}
                             ingredients={ing}
-                            category={item.recipeBlendCategory}
+                            category={item.recipeBlendCategory?.name}
                             ratings={item.ratings}
                             noOfRatings={item.noOfRatings}
                             carbs={item.carbs}
