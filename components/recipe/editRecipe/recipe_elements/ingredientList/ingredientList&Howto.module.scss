@@ -366,17 +366,15 @@
             position: relative;
             margin-bottom: 10px;
             font-size: 16px;
-            background-color: #7DBD3B;
+            // background-color: #7DBD3B;
 
             &__edit {
                 @include edit_bin_icon();
                 right: 40px;
                 color: #dad8d8;
-                background-color: red;
 
                 svg {
                     transform: scale(0.70) translateY(-8px);
-
                 }
             }
 
