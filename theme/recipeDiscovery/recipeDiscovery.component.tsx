@@ -15,7 +15,6 @@ import {
 import axios from "axios";
 import { useAppSelector } from "../../redux/hooks";
 import FilterPageBottom from "../../components/recipe/recipeFilter/filterBottom.component";
-import FooterComponent from "../../components/footer/footer.component";
 import FooterRecipeFilter from "../../components/footer/footerRecipeFilter.component";
 
 const RecipeDetails = () => {
