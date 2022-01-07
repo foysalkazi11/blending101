@@ -6,7 +6,6 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import {useWindowWidth} from "@react-hook/window-size";
 // interface carouselTray {
 //   heading: string;
 // }
@@ -41,9 +40,9 @@ const ContentTray = (props) => {
 
   const [slickSetting, setSlickSetting] = useState(2);
 
-  const onlyWidth = useWindowWidth();
 
   useEffect(() => {
+    const onlyWidth = window.innerWidth
     if (onlyWidth <= 680) {
       setSlickSetting(1);
     } else if (onlyWidth <= 780 && onlyWidth > 680) {
@@ -57,7 +56,7 @@ const ContentTray = (props) => {
     } else {
       setSlickSetting(5);
     }
-  }, [onlyWidth]);
+  }, []);
 
   return (
     <div className={styles.main__slider}>

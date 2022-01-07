@@ -1,12 +1,11 @@
 .main__div {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: auto;
     width: auto;
     margin: 0px 86px;
     position: relative;
     transition: all 1s;
-    // background-color: rgb(82, 75, 14);
 
     @media only screen and (max-width: 980px) {
         margin: 0px 20px;
@@ -47,8 +46,12 @@
 
             padding-right:7.5px;
         }
-
-
-
     }
+}
+
+.footerMainDiv{
+    margin-top: auto;
+    width: 100%;
+    min-width: 100px;
+    background-color: aquamarine;
 }

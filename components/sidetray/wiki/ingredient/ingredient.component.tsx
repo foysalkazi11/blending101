@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState } from 'react';
+import DropdownTwoComponent from '../../../../theme/dropDown/dropdownTwo.component';
 import WikiTray from '../wikiTray.component';
-import Dropdown from 'react-dropdown';
 import styles from './ingredient.module.scss';
 
 export default function IngredientTrayComponent({ title }) {
@@ -16,13 +16,7 @@ export default function IngredientTrayComponent({ title }) {
 
 	const UiOne = () => (
 		<div className={styles.uiOne}>
-			<Dropdown
-				options={options}
-				onChange={onChange}
-				value={defaultOption}
-				placeholder="Select an option"
-				controlClassName={styles.dropdown}
-			/>
+			<DropdownTwoComponent list={[]} />
 			<div className={styles.nutrition__menu}>
 				<div className={styles.nutrition__menu__item}>
 					<div className={styles.nutrition__menu__item__image}>
@@ -66,13 +60,7 @@ export default function IngredientTrayComponent({ title }) {
 
 	const UiTwo = () => (
 		<div className={styles.uiOne}>
-			<Dropdown
-				options={options}
-				onChange={onChange}
-				value={defOption}
-				placeholder="Select an option"
-				controlClassName={styles.dropdown}
-			/>
+			<DropdownTwoComponent list={[]} />
 		</div>
 	);
 

@@ -15,6 +15,8 @@ import {
 import axios from "axios";
 import { useAppSelector } from "../../redux/hooks";
 import FilterPageBottom from "../../components/recipe/recipeFilter/filterBottom.component";
+import FooterComponent from "../../components/footer/footer.component";
+import FooterRecipeFilter from "../../components/footer/footerRecipeFilter.component";
 
 const RecipeDetails = () => {
   const [recommended, setRecommended] = useState([]);
@@ -95,7 +97,7 @@ const RecipeDetails = () => {
                         <DatacardComponent
                           title={item.name}
                           ingredients={ing}
-                          category={item.recipeBlendCategory}
+                          category={item.recipeBlendCategory?.name}
                           ratings={item.ratings}
                           noOfRatings={item.noOfRatings}
                           carbs={item.carbs}
@@ -132,7 +134,7 @@ const RecipeDetails = () => {
                           <DatacardComponent
                             title={item.name}
                             ingredients={ing}
-                            category={item.recipeBlendCategory}
+                            category={item.recipeBlendCategory?.name}
                             ratings={item.ratings}
                             noOfRatings={item.noOfRatings}
                             carbs={item.carbs}
@@ -169,7 +171,7 @@ const RecipeDetails = () => {
                           <DatacardComponent
                             title={item.name}
                             ingredients={ing}
-                            category={item.recipeBlendCategory}
+                            category={item.recipeBlendCategory?.name}
                             ratings={item.ratings}
                             noOfRatings={item.noOfRatings}
                             carbs={item.carbs}
@@ -187,6 +189,9 @@ const RecipeDetails = () => {
             </div>
           </div>
         )}
+      </div>
+      <div className={styles.footerMainDiv}>
+        <FooterRecipeFilter />
       </div>
     </AContainer>
   );
