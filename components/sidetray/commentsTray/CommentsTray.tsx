@@ -5,6 +5,7 @@ import { setOpenCommentsTray } from "../../../redux/slices/sideTraySlice";
 import styles from "./CommentsTray.module.scss";
 import { MdPersonOutline } from "react-icons/md";
 import CommentSection from "./CommentSection/CommentSection";
+import NoteSection from "./noteSection/NoteSection";
 
 export default function CommentsTray(props) {
   const [toggle, setToggle] = useState(1);
@@ -41,7 +42,7 @@ export default function CommentsTray(props) {
   return (
     <div className={`${styles.tray} y-scroll`} ref={ref}>
       {openCommentsTray ? (
-        <div className={styles.image} onClick={handleClick}>
+        <div className={styles.imageTag} onClick={handleClick}>
           <img src="/images/cmnt-white.svg" alt="message-icon" />
         </div>
       ) : null}
@@ -72,7 +73,11 @@ export default function CommentsTray(props) {
           </div>
         </div>
       </div>
-      <CommentSection />
+      <div className={styles.recipeName}>
+        <img src="/cards/juice.png" alt="recipe_img" />
+        <h3>Triple Berry Smoothie</h3>
+      </div>
+      {toggle === 1 ? <CommentSection /> : <NoteSection />}
     </div>
   );
 }

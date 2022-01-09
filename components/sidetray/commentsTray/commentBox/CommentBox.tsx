@@ -1,4 +1,6 @@
 import React from "react";
+import CancleBtn from "../buttons/CancleBtn";
+import SubmitBtn from "../buttons/SubmitBtn";
 import styles from "./CommentBox.module.scss";
 
 type CommentBoxProps = {
@@ -10,10 +12,11 @@ const CommentBox = ({ toggleCommentBox }: CommentBoxProps) => {
     <div className={styles.commentBoxContainer}>
       <textarea />
       <div className={styles.buttonGroup}>
-        <button className={styles.commentSubmitBtn}>Comment</button>
-        <button className={styles.commentCancleBtn} onClick={toggleCommentBox}>
-          Cancle
-        </button>
+        <SubmitBtn
+          text="Comment"
+          style={{ background: "#fe5d1f", boxShadow: "5px 5px 15px #fe5d1f38" }}
+        />
+        <CancleBtn text="Cancle" handleClick={toggleCommentBox} />
       </div>
     </div>
   );
