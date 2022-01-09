@@ -5,7 +5,7 @@ import Image from "next/image";
 import styles from "./SignupScreen.module.scss";
 import ButtonComponent from "../../../button/buttonA/button.component";
 import SocialTray from "../../authComponents/socialTray/socialTray.component";
-import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
+import HighlightOffOutlinedIcon from "../../../../public/icons/highlight_off_black_36dp.svg";
 import { useForm } from "react-hook-form";
 import { Auth } from "aws-amplify";
 import { useRouter } from "next/router";

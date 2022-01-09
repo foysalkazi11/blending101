@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./scoreTray.component.module.scss";
+import InfoIcon from "../../../../../public/icons/info_black_36dp.svg";
 
 const ScoreTray = () => {
   return (
@@ -14,7 +15,11 @@ const ScoreTray = () => {
           <h5>Glycemic Load</h5>
         </div>
         <div className={styles.scoreCards__right}>
-          <h3>805</h3>
+          <h3>805
+          <div className={styles.scoreCards__right__infoIcon}>
+            <InfoIcon />
+          </div>
+          </h3>
           <h5>Rx Score</h5>
         </div>
       </div>

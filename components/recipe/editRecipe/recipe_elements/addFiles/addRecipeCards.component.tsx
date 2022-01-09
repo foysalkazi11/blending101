@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styles from "./addRecipeCards.module.scss";
-import AddIcon from "@mui/icons-material/Add";
+import AddIcon from "../../../../../public/icons/add_black_36dp.svg";
 import Image from "next/image";
-import CancelIcon from "@mui/icons-material/Cancel";
+import CancelIcon from "../../../../../public/icons/cancel_black_36dp.svg";
 import { setUploadImageList } from "../../../../../redux/edit_recipe/quantity";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
 

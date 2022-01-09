@@ -13,6 +13,8 @@ $card_width:25%;
         color: #FE5D1F;
         font-size: 24px;
         font-weight: 400;
+        position: relative;
+        display: flex;
     }
 
     h5 {
@@ -77,11 +79,19 @@ $card_width:25%;
         min-width: $card_width;
         @include headings();
 
-
         @include responsive(0px, 1300px) {
             margin-right: 10px;
         }
 
-
+        &__infoIcon {
+            position: absolute;
+            top:-25px;
+            right:-25px;
+            transform: scale(0.45);
+            cursor: pointer;
+            svg {
+                color: #c7c7c7;
+            }
+        }
     }
 }

@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
 import styles from "./ingredientList&Howto.module.scss";
 import Image from "next/image";
-import AddSharpIcon from "@material-ui/icons/AddSharp";
-import RemoveSharpIcon from "@material-ui/icons/RemoveSharp";
+import AddSharpIcon from "../../../../../public/icons/add_black_36dp.svg";
+import RemoveSharpIcon from "../../../../../public/icons/remove_black_36dp.svg";
 import ButtonComponent from "../../../../../theme/button/buttonA/button.component";
 import {
   setServings,
   setIngredientsToList,
-  setIngredientSearchBarItem,
   setHowToSteps,
 } from "../../../../../redux/edit_recipe/quantity";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
-import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
-import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
+import DragIndicatorIcon from "../../../../../public/icons/drag_indicator_black_36dp.svg";
+import ModeEditOutlineOutlinedIcon from "../../../../../public/icons/mode_edit_black_36dp.svg";
 import { ingredientLeafy } from "../../leftTray/left_tray_recipe_edit_list";
 
 const IngredientList = () => {
@@ -34,10 +33,6 @@ const IngredientList = () => {
 
   const howToState = useAppSelector(
     (state) => state.quantityAdjuster.howtoState
-  );
-
-  const IngredientSearchBarItem = useAppSelector(
-    (state) => state.quantityAdjuster.IngredientSearchBarItem
   );
 
   // variables for all states ==>ending
@@ -65,25 +60,24 @@ const IngredientList = () => {
   };
   let ingredientTempList = [...ingredients_list];
   const IngredientSubmitHandler = (event) => {
-    let itemChecked;
     if (event.key === "Enter") {
       if (!event.target.value || /^\s*$/.test(event.target.value)) {
         return;
       }
-
+      // search output fetches all elements present in left tray
       let SearchOutput = ingredientLeafy.find((elem) => {
         return elem.title === inputValueIngredient;
       });
-
-      let SearchOutputIngredientList=ingredients_list.find((elem)=>{
-        return elem.title === inputValueIngredient
-      })
-
-      if(SearchOutput && !SearchOutputIngredientList){
-        ingredientTempList=[...ingredientTempList,SearchOutput]
+      // search input fetches all elements that will be pushed inside ingredients list + all elements that will be
+      let SearchOutputIngredientList = ingredients_list.find((elem) => {
+        return elem.title === inputValueIngredient;
+      });
+      // to check if searched input already exists in ingredient list
+      if (SearchOutput && !SearchOutputIngredientList) {
+        ingredientTempList = [...ingredientTempList, SearchOutput];
       }
 
-      console.log(SearchOutput,"Searching Output")
+      console.log(SearchOutput, "Searching Output");
 
       console.log(ingredientTempList, "temp list for active elements");
       dispatch(setIngredientsToList(ingredientTempList));

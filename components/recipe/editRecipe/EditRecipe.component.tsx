@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import AContainer from "../../../containers/A.container";
 import styles from "./EditRecipe.module.scss";
 import Center_header from "./header/centerHeader/Center_header.component";
@@ -7,11 +7,36 @@ import Left_tray_recipe_edit from "./leftTray/left_tray_recipe_edit.component";
 import Center_Elements from "./recipe_elements/centerElements.component";
 import IngredientList from "./recipe_elements/ingredientList/ingredientList&Howto.component";
 import Image from "next/image";
+import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
+
 const EditRecipePage = () => {
+  const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
   return (
     <AContainer>
       <div className={styles.main}>
-        <div className={styles.left}>
+        <div
+          className={styles.left}
+          style={leftTrayVisibleState ? { marginLeft: "0px" } : {}}
+        >
+          <div
+            className={styles.left__Drag__lightGreen}
+            style={
+              leftTrayVisibleState
+                ? {
+                    backgroundImage: `url("/icons/ingr-green.svg")`,
+                    backgroundSize: "contain",
+                  }
+                : {
+                    backgroundImage: `url("/icons/ingr-white.svg")`,
+                    backgroundSize: "contain",
+                  }
+            }
+            onClick={() => setLeftTrayVisibleState(!leftTrayVisibleState)}
+          >
+            <div>
+              {/* left basket drag button, images are used as backgound images for this div in scss files */}
+            </div>
+          </div>
           <div className={styles.left__title}>
             <div className={styles.left__title__bagicon}>
               <Image
@@ -38,6 +63,9 @@ const EditRecipePage = () => {
         <div className={styles.right__main}>
           <RightTray />
         </div>
+      </div>
+      <div className={styles.footerMainDiv}>
+        <FooterRecipeFilter />
       </div>
     </AContainer>
   );

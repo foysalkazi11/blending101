@@ -1,5 +1,6 @@
 .filter__top {
     border: 2px dashed #DEDEDE;
+    background-color: #fff;
     border-radius: 18px;
     padding: 10px 10px 0 10px;
     padding-bottom: 10px;
@@ -142,4 +143,5 @@
     width: 16px;
     height: 16px;
     color: #f95d2b;
+    transform: scale(0.85);
 }

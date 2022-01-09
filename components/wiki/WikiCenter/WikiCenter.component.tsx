@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import styles from "./wikiCenter.module.scss";
 import CarouselComponent from "./Carousel/Carousel.component";
-import SlickSlider from "../../../theme/carousel/carousel.component";
 import Image from "next/image";
-import { style } from "@mui/system";
-import CancelIcon from "@mui/icons-material/Cancel";
-import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
+import CancelIcon from "../../../public/icons/cancel_black_36dp.svg";
+import FiberManualRecordIcon from "../../../public/icons/fiber_manual_record_black_36dp.svg";
 // import IngredientIconSvg from "./Assets/cardiogram.svg"
 
 function WikiCenterComponent() {

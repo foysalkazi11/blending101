@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import styles from "./WikiRight.module.scss";
 import LinearComponent from "../../../theme/linearProgress/LinearProgress.component";
-// import { color, fontSize } from "@mui/system";
 import Image from "next/image";
-import { FaSortAmountDownAlt, FaSortAmountDown } from "react-icons/fa";
 import DropDown from "../../../theme/dropDown/DropDown.component";
 import CalciumSearchElem from "../../../theme/calcium/calcium.component";
 

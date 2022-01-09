@@ -5,7 +5,7 @@ import InputField from "../../../input/inputField.component";
 import SocialTray from "../../authComponents/socialTray/socialTray.component";
 import styles from "./Login.module.scss";
 import Image from "next/image";
-import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
+import HighlightOffOutlinedIcon from "../../../../public/icons/highlight_off_black_36dp.svg";
 import { Auth } from "aws-amplify";
 import { setLoading } from "../../../../redux/slices/utilitySlice";
 import { useAppDispatch } from "../../../../redux/hooks";

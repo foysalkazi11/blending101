@@ -4,7 +4,7 @@ import ButtonComponent from "../../../button/buttonA/button.component";
 import InputField from "../../../input/inputField.component";
 import styles from "./ForgotPassword.module.scss";
 import Image from "next/image";
-import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
+import HighlightOffOutlinedIcon from "../../../../public/icons/highlight_off_black_36dp.svg";
 
 const ForgotPassword = () => {
   return (
