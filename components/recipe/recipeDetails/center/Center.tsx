@@ -11,7 +11,13 @@ import DropDown from "../../../../theme/dropDown/DropDown.component";
 import { BiBarChart } from "react-icons/bi";
 import { BsCartPlus } from "react-icons/bs";
 import { useAppDispatch } from "../../../../redux/hooks";
-import { setOpenCommentsTray } from "../../../../redux/slices/sideTraySlice";
+import {
+  setOpenCommentsTray,
+  setToggleModal,
+} from "../../../../redux/slices/sideTraySlice";
+import Modal from "../../../../theme/modal/Modal";
+import ShareRecipeModal from "../shareRecipeModal/ShareRecipeModal";
+import SaveRecipe from "../saveRecipe/SaveRecipe";
 
 const recipeSliderImage = [
   "/images/recipe-slider-img1.png",
@@ -25,6 +31,7 @@ let ozItem = ["64 oz", "64 oz"];
 const Center = () => {
   const [counter, setCounter] = useState(1);
   const dispatch = useAppDispatch();
+  const [showRecipeModal, setShowRecipeModal] = useState(true);
 
   const openCommentsTray = () => {
     dispatch(setOpenCommentsTray(true));
@@ -110,11 +117,23 @@ const Center = () => {
               <p>Planner</p>
             </div>
 
-            <div className={styles.iconWithText}>
+            <div
+              className={styles.iconWithText}
+              onClick={() => {
+                setShowRecipeModal(false);
+                dispatch(setToggleModal(true));
+              }}
+            >
               <img src="/images/BookmarksStar-orange.svg" alt="saved" />
               <p>Saved</p>
             </div>
-            <div className={styles.iconWithText}>
+            <div
+              className={styles.iconWithText}
+              onClick={() => {
+                setShowRecipeModal(true);
+                dispatch(setToggleModal(true));
+              }}
+            >
               <img src="/images/share-alt-light-grey.svg" alt="share" />
               <p>Share</p>
             </div>
@@ -317,6 +336,9 @@ const Center = () => {
           </p>
         </div>
       </div>
+      <Modal contentStyle={{ borderRadius: "29px" }}>
+        {showRecipeModal ? <ShareRecipeModal /> : <SaveRecipe />}
+      </Modal>
     </div>
   );
 };

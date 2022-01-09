@@ -10,11 +10,11 @@
   z-index: 9999;
   padding: 20px;
 }
-.tray .image {
+.tray .imageTag {
   position: absolute;
-  left: -0.5px;
+  left: -40px;
   top: 22px;
-  transform: translateX(-100%);
+  // transform: translateX(-100%);
   cursor: pointer;
   transition: all;
   transition-duration: 0.2s;
@@ -96,4 +96,24 @@
   color: #7dbd3b !important;
   transition: all;
   transition-duration: 0.4s;
+}
+
+.recipeName {
+  display: flex;
+  align-items: center;
+  padding: 20px 0px;
+  border-bottom: 1px solid #ececec;
+  img {
+    width: 45px;
+    height: 45px;
+    border-radius: 8px;
+    overflow: hidden;
+    object-fit: cover;
+  }
+  h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #000;
+    margin-left: 16px;
+  }
 }
