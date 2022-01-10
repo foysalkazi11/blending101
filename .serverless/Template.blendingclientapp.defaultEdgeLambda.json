@@ -1,6 +1,6 @@
 {
   "name": "ljd264a-xaotttc",
-  "hash": "EBudnwfBGdtn7ynpQHF4GE9Us2eck7GEUvia5wg+E44=",
+  "hash": "j+Yd8yl3ZDw7s+efj3Xu1AmtAj4YHW/tZEDBKaGLpVw=",
   "description": "Default Lambda@Edge for Next CloudFront distribution",
   "memory": 512,
   "timeout": 10,

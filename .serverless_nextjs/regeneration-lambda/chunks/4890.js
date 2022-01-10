@@ -13,7 +13,7 @@ exports.modules = {
 /* harmony export */   "fc": () => (/* binding */ setProvider),
 /* harmony export */   "ZP": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* unused harmony export userSlice */
+/* unused harmony exports userSlice, setIsNewUseImage */
 /* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(947389);
 /* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -21,7 +21,8 @@ const initialState = {
   nonConfirmedUser: "",
   user: null,
   dbUser: {},
-  provider: "email"
+  provider: "email",
+  isNewUseImage: null
 };
 const userSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createSlice)({
   name: "user",
@@ -38,6 +39,9 @@ const userSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createSlice)(
     },
     setProvider: (state, action) => {
       state.provider = action === null || action === void 0 ? void 0 : action.payload;
+    },
+    setIsNewUseImage: (state, action) => {
+      state.isNewUseImage = action === null || action === void 0 ? void 0 : action.payload;
     }
   }
 });
@@ -45,7 +49,8 @@ const {
   setNonConfirmedUser,
   setUser,
   setDbUser,
-  setProvider
+  setProvider,
+  setIsNewUseImage
 } = userSlice === null || userSlice === void 0 ? void 0 : userSlice.actions;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (userSlice === null || userSlice === void 0 ? void 0 : userSlice.reducer);
 

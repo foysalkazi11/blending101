@@ -105,7 +105,9 @@ function AuthProvider({
       setActive(true);
     } catch (error) {
       console.log(error === null || error === void 0 ? void 0 : error.message);
-      if (!user && false && page !== "/login" && page !== "/signup" && page !== "/varify_email") router.push("/login");
+      if (!user && false && page !== "/login" && page !== "/signup" && page !== "/varify_email") // to be uncommented for auth to work correctly and remove clg at line 75
+        // router.push("/login");
+        console.log("login");
     }
   };
 
@@ -114,7 +116,11 @@ function AuthProvider({
       setActive(true);
     } else {
       isCurrentUser();
-    } // eslint-disable-next-line react-hooks/exhaustive-deps
+    } // else {
+    //   if (!user && process.browser && page !== "/login" && page !== "/signup")
+    //     router.push("/login");
+    // }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
 
   }, [user]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
@@ -122,10 +128,9 @@ function AuthProvider({
       setActive(true);
     }
   }, [page]); // IF NO USER REDIRECT TO LOGIN PAGE
+  // to be uncommented when want to ensure user should not leave login page if not authorised
+  // if (!active) return <Loader active={true} />;
 
-  if (!active) return /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx(_theme_loader_Loader__WEBPACK_IMPORTED_MODULE_4__/* .default */ .Z, {
-    active: true
-  });
   return /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx(AuthContext.Provider, {
     value: {
       user
@@ -152,7 +157,7 @@ const mapStateToProps = state => ({
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "ZP": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* unused harmony exports sideTraySlice, setOpenFilterTray, setBlendTye, setIngredients, setCategoryTye */
+/* unused harmony exports sideTraySlice, setOpenFilterTray, setBlendTye, setIngredients, setCategoryTye, setOpenCommentsTray */
 /* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(947389);
 /* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -160,7 +165,8 @@ const initialState = {
   openFilterTray: false,
   blends: [],
   category: null,
-  ingredients: []
+  ingredients: [],
+  openCommentsTray: false
 };
 const sideTraySlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createSlice)({
   name: "sideTray",
@@ -177,6 +183,9 @@ const sideTraySlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createSli
     },
     setIngredients: (state, action) => {
       state.ingredients = action === null || action === void 0 ? void 0 : action.payload;
+    },
+    setOpenCommentsTray: (state, action) => {
+      state.openCommentsTray = action === null || action === void 0 ? void 0 : action.payload;
     }
   }
 });
@@ -184,7 +193,8 @@ const {
   setOpenFilterTray,
   setBlendTye,
   setIngredients,
-  setCategoryTye
+  setCategoryTye,
+  setOpenCommentsTray
 } = sideTraySlice === null || sideTraySlice === void 0 ? void 0 : sideTraySlice.actions;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (sideTraySlice === null || sideTraySlice === void 0 ? void 0 : sideTraySlice.reducer);
 

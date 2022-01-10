@@ -61490,7 +61490,7 @@ var _BorderBottomSharp = _interopRequireDefault(__webpack_require__(955474));
 
 var _BorderBottomTwoTone = _interopRequireDefault(__webpack_require__(24286));
 
-var _BorderClear = _interopRequireDefault(__webpack_require__(474509));
+var _BorderClear = _interopRequireDefault(__webpack_require__(383585));
 
 var _BorderClearOutlined = _interopRequireDefault(__webpack_require__(924617));
 
@@ -77114,7 +77114,7 @@ var _ThumbDownAltSharp = _interopRequireDefault(__webpack_require__(864696));
 
 var _ThumbDownAltTwoTone = _interopRequireDefault(__webpack_require__(253181));
 
-var _ThumbDownOffAlt = _interopRequireDefault(__webpack_require__(750669));
+var _ThumbDownOffAlt = _interopRequireDefault(__webpack_require__(142786));
 
 var _ThumbDownOffAltOutlined = _interopRequireDefault(__webpack_require__(986032));
 
