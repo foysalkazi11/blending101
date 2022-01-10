@@ -1,23 +1,3 @@
-.recipeName {
-  display: flex;
-  align-items: center;
-  padding: 20px 0px;
-  border-bottom: 1px solid #ececec;
-  img {
-    width: 45px;
-    height: 45px;
-    border-radius: 8px;
-    overflow: hidden;
-    object-fit: cover;
-  }
-  h3 {
-    font-size: 16px;
-    font-weight: 600;
-    color: #000;
-    margin-left: 16px;
-  }
-}
-
 .userImage {
   display: flex;
   align-items: center;
@@ -128,6 +108,11 @@
     border-bottom: 1px solid #ececec;
     padding-bottom: 15px;
     margin-bottom: 20px;
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 0px;
+      margin-bottom: 0px;
+    }
     .header {
       margin-bottom: 15px;
       display: flex;

@@ -47,7 +47,7 @@ const RecipeItem = (props: RecipeItemProps) => {
   }
 
   return (
-    <div className={styles.listContainer} 
+    <div className={styles.listContainer}
     onClick={handleClickk}
     >
       {/* @ts-ignore */}

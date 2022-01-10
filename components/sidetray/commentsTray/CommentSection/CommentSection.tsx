@@ -71,10 +71,6 @@ const CommentSection = () => {
   };
   return (
     <div>
-      <div className={styles.recipeName}>
-        <img src="/cards/juice.png" alt="recipe_img" />
-        <h3>Triple Berry Smoothie</h3>
-      </div>
       <div className={styles.userImage}>
         <div style={{ display: "flex", alignItems: "center" }}>
           <div className={styles.imageBox}>

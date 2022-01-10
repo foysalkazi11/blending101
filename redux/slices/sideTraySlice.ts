@@ -6,6 +6,7 @@ type SideTrayState = {
   ingredients: Array<string>;
   category: string;
   openCommentsTray: boolean;
+  openModal: boolean;
 };
 
 const initialState: SideTrayState = {
@@ -14,6 +15,7 @@ const initialState: SideTrayState = {
   category: null,
   ingredients: [],
   openCommentsTray: false,
+  openModal: false,
 };
 
 export const sideTraySlice = createSlice({
@@ -35,6 +37,9 @@ export const sideTraySlice = createSlice({
     setOpenCommentsTray: (state, action: PayloadAction<boolean>) => {
       state.openCommentsTray = action?.payload;
     },
+    setToggleModal: (state, action: PayloadAction<boolean>) => {
+      state.openModal = action?.payload;
+    },
   },
 });
 
@@ -44,6 +49,7 @@ export const {
   setIngredients,
   setCategoryTye,
   setOpenCommentsTray,
+  setToggleModal,
 } = sideTraySlice?.actions;
 
 export default sideTraySlice?.reducer;

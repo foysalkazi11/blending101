@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./toStoryCard.module.scss";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import ArrowRightIcon from "../../../public/icons/arrow_right_black_36dp.svg";
 
 const ToStoryCard = () => {
   return (
@@ -14,7 +14,7 @@ const ToStoryCard = () => {
         <li>
           <span>
             <ArrowRightIcon />
-          </span>{" "}
+          </span>
           Watch our Story
         </li>
       </div>

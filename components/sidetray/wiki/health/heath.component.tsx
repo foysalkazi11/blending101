@@ -1,6 +1,6 @@
 import React from 'react'
+import DropdownTwoComponent from '../../../../theme/dropDown/dropdownTwo.component';
 import WikiTray from '../wikiTray.component';
-import Dropdown from 'react-dropdown';
 import styles from './health.module.scss';
 
 export default function HealthTrayComponent({title}) {
@@ -29,7 +29,7 @@ export default function HealthTrayComponent({title}) {
     return (
         <WikiTray title={title}>
             <div className={styles.nutrition}>
-                <Dropdown options={options} onChange={onChange} value={defaultOption} placeholder="Select an option" controlClassName={styles.dropdown} />
+                <DropdownTwoComponent list={[]} />
                 <div>
                     <ul>
                         {

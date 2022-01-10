@@ -9,6 +9,8 @@
     &__icon {
       margin-right: 5px;
       cursor: pointer;
+      width: 27px;
+      color: #000;
     }
     p {
       color: #000 !important;
@@ -20,8 +22,10 @@
     display: flex;
     align-items: center;
     &__icon {
-      margin: 0 6px;
+      margin: 0 10px 0px 6px;
+      width: 30px;
       cursor: pointer;
+      color: #000;
     }
     p {
       color: #000 !important;

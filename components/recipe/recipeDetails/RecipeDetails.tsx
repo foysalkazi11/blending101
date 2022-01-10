@@ -4,6 +4,7 @@ import AContainer from "../../../containers/A.container";
 import LeftSide from "./leftSide/LeftSide";
 import RightSide from "./rightSide/RightSide";
 import Center from "./center/Center";
+import styles from "./RecipeDetails.module.scss";
 
 const RecipeDetails = () => {
   return (
@@ -15,7 +16,7 @@ const RecipeDetails = () => {
         showRighTray={true}
         commentsTray={true}
       >
-        <Container maxWidth="xl">
+        <div className={styles.recipeDetailsContainer}>
           <Grid container spacing={1}>
             <Grid item xs={12} lg={3}>
               <LeftSide />
@@ -29,7 +30,7 @@ const RecipeDetails = () => {
               </Grid>
             </Grid>
           </Grid>
-        </Container>
+        </div>
       </AContainer>
     </div>
   );

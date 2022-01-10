@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import styles from "./header.module.scss";
 import SocialComponent from "./social/Social.component";
-import LocalMallIcon from "@mui/icons-material/LocalMall";
+import LocalMallIcon from "../../public/icons/local_mall_black_36dp.svg";
 import notification from "../utility/reactToastifyNotification";
 import { Auth } from "aws-amplify";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";

@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
-import { CheckBoxRounded, CheckCircle } from "@mui/icons-material";
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setBlendTye } from "../../../redux/slices/sideTraySlice";
+import CheckCircle  from "../../../public/icons/check_circle_black_24dp.svg";
 import FilterTrayWrapper from "../filter.wrapper";
 import styles from "./filter.module.scss";
 import FilterbottomComponent from "./filterBottom.component";
