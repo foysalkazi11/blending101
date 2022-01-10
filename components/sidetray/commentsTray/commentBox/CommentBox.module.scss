@@ -1,0 +1,27 @@
+.commentBoxContainer {
+  background-color: #f8f8f8;
+  border-radius: 15px;
+  padding: 15px 15px 30px 15px;
+  margin-top: 20px;
+  textarea {
+    min-height: 82px;
+    border: 1px solid #ececec;
+    border-radius: 10px;
+    padding: 0 15px;
+    color: #bcbcbc;
+    line-height: 36px;
+    font-size: 12px;
+    resize: none;
+    width: 100%;
+    outline: none;
+    &:focus {
+      border: 1px solid #7cbc39;
+    }
+  }
+  .buttonGroup {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}

@@ -1,0 +1,520 @@
+.centerMain {
+    display: block;
+    background-color: transparent;
+    margin-right: 10px;
+    // height: 100vh;
+    width: 74%;
+    // padding-left: 2px;
+    margin-left: 5%;
+    transition: all 500ms ease;
+}
+
+
+// .blendingRecipeHeading {
+//     background-color: red;
+// }
+
+.recipeHeadingTopSection {
+    // background-color: #7cbc39;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+
+    & h3 {
+        // background-color: blanchedalmond;
+        width: 100%;
+        // height: 60px;
+        display: flex;
+        font-size: 20px;
+        color: #000000;
+        margin: 0;
+        align-items: center;
+        font-weight: 400;
+    }
+}
+
+
+.iconPdInner {
+    align-items: center;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding-right: 10px;
+    margin-left: 10px;
+    // background-color: aquamarine;
+    // display: flex;
+
+    & div {
+        // background-color: green;
+        height: auto;
+        width: 22px;
+    }
+}
+
+.cancleBtn {
+    // background-color: grey;
+    color: #7cbc39;
+    font-size: 35px;
+    margin-right: 10px;
+    cursor: pointer;
+    transform: scale(1.37);
+    // padding:2px
+
+}
+
+// .secondMainContainer{
+//     background-color: yellow;
+//     // padding: 30px;
+//     padding-left:20px ;
+
+// }
+
+.card{
+    background-color: white;
+    padding: 20px;
+    border-radius: 14px;
+    margin-right: 10px;
+    // margin-left: 10px;
+}
+
+.blendingRecipeHeading h3 {
+    font-size: 28px;
+    color: #000;
+    font-weight: bold;
+
+}
+
+
+.blendingRecipeTopOptions {
+    margin-top: 21px;
+    margin-bottom: 21px;
+    // background-color: aqua;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.blendingTopLeft {
+    // background-color: greenyellow;
+    display: flex;
+    align-items: center;
+}
+
+
+.tagItemBx {
+    display: block;
+    box-sizing: border-box;
+    // background-color: red;
+    // border-radius: 50px;
+}
+
+.recipeTag {
+    font-size: 12px;
+    min-height: 31px;
+    min-width: 92px;
+    text-align: center;
+    padding: 5px 10px;
+    display: inline-block;
+    border: 1px solid #e4e4e4;
+    border-radius: 10px;
+    color: #C4C4C4;
+    font-weight: 500;
+}
+
+
+.authorBx {
+    height: 100%;
+    margin-top: auto;
+    margin-bottom: auto;
+    // background-color: green;
+    margin-left: 1.2rem;
+    // text-align: center;
+    padding: 0px;
+    display: flex;
+    vertical-align: middle;
+}
+
+.dotDiv {
+    height: fit-content;
+    margin-top: auto;
+    margin-bottom: auto;
+
+
+    & .dot{
+        color: #DCDBDB;
+        transform: scale(0.58);
+        font-size: 20px;
+        margin: 3px!important;
+        vertical-align: middle;
+
+    }
+}
+
+.authName {
+    margin-top: auto;
+    margin-bottom: auto;
+    color: #000;
+    font-size: 14px;
+
+
+}
+
+.blendingTopRight {
+    // background-color: aquamarine;
+    align-items: center;
+    width: auto;
+    // height: 60px;
+}
+
+.recipeOptionsBtm {
+    display: flex;
+    list-style-type: none;
+    // background-color: blue;
+
+    &li {
+        display: flex;
+        align-items: center;
+
+    }
+
+}
+
+.bookmarkBtn {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    padding: 6px;
+    margin-right: 4px;
+}
+
+.shareIcon {
+    display: block;
+    margin: 0;
+    padding: 1px;
+    height: 100%;
+    width: 17px;
+    // font-size: 20px;
+}
+
+
+.blshare {
+    font-size: 14px;
+    color: #000000;
+    padding-left: 8px;
+    cursor: pointer;
+}
+
+.commentBtn {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    border-color: transparent;
+    background-color: transparent;
+
+}
+
+.commentIcon {
+    width: 17px;
+    margin-right: 10px;
+    // height: 100%;
+}
+
+.countComment {
+    font-size: 15px;
+    font-weight: 400;
+    color: #7cbc39;
+}
+
+.content {
+    margin-top: 30px;
+    // background-color: white;
+    width: 100%;
+    height: auto;
+}
+
+.carouselDiv{
+    height: 100vh;
+}
+
+.healthRiskRankScore {
+    margin-top: 40px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 6px;
+    font-weight: 400;
+    font-size: 28px;
+    color: rgb(253, 114, 0);
+
+    // background-color: green;
+    width: fit-content;
+}
+
+.healthRiskRankTitle {
+    margin: 6px;
+    margin-right: auto;
+    margin-left: auto;
+    font-weight: 300;
+    font-size: medium;
+    // background-color: green;
+    color: rgb(99, 99, 99);
+    width: fit-content;
+}
+
+.text {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: #ABABAB;
+    font-size: 14px;
+    line-height: 1.7;
+    font-weight: 400;
+}
+
+.read_or_hide {
+    font-weight: 600;
+    font-size: medium;
+    cursor: pointer;
+    color: black;
+}
+
+.textContentDiv {
+    width: auto;
+    height: auto;
+    // background-color: yellow;
+}
+
+.contentSection{
+    background-color: white;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 15px;
+    margin-right: 10px;
+    margin-left:10px;
+}
+
+// .sliderDiv{
+//     padding: 10px;
+// }
+
+
+
+.contentTitle {
+    width: fit-content;
+
+    font-size: 20px;
+    font-weight: 400;
+    color: #000000;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    align-items: center;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: flex;
+}
+
+.imgdiv {
+    height: 100%;
+    width: 30px;
+    margin-right: 10px;
+    max-width: 22px;
+}
+
+
+
+
+@media screen and (max-width:980px) {
+
+    .centerMain{
+        // margin-top: 0px;
+        // background-color: grey;
+        width: 100%;
+        margin-right: 0px;
+        margin-left: 0px;
+    }
+
+    .recipeHeadingTopSection {
+        // background-color:red;
+        margin-top: -10px;
+        margin-bottom: 10px;
+        // margin-bottom: 0px;
+        display: flex;
+        justify-content: space-between;
+
+        & h3 {
+            // background-color: blanchedalmond;
+            width: 100%;
+            // height: 60px;
+            display: flex;
+            font-size: 18px;
+            color: #000000;
+            margin: 0;
+            align-items: center;
+            font-weight: 400;
+        }
+    }
+
+    .cancleBtn {
+        margin-right: 0px;
+        cursor: pointer;
+        transform: scale(1.2);
+
+        svg{
+            width: 100%;
+            height: 100%;
+        }
+
+    }
+    .card{
+        padding: 14px;
+        border-radius: 14px;
+        margin-right: 0px;
+        margin-left: 0px;
+    }
+
+    .healthRiskRankScore{
+        font-size: 24px;
+    }
+
+    .contentSection{
+        // background-color: coral;
+        margin-right: 0px;
+        margin-left: 0px;
+        margin-bottom: 16px;
+        padding: 0px 12px 2px 12px;
+    }
+
+
+
+    .contentTitle{
+        // margin-top: 20px;
+        padding-top:10px;
+        // background-color: aquamarine;
+    }
+
+    .carouselDiv{
+        // height: 19.7vw;
+        // height: 5%;
+        width: 100%;
+        background-color: #7cbc39;
+    }
+
+}
+
+@media only screen and (min-width: 980px) and (max-width:1290px){
+
+    .centerMain {
+        display: block;
+        // background-color: transparent;
+        // background-color:green;
+        margin-right: 0px;
+        // height: 100vh;
+        width: 100%;
+        // padding-left: 2px;
+        margin-left: 0px;
+        transition: all 500ms ease;
+    }
+
+    .card{
+        // background-color: white;
+        padding: 12px;
+        border-radius: 14px;
+        // margin-right: 0px;
+        margin-left: 10px;
+    }
+
+    .cancleBtn {
+        // background-color: white;
+        // color: #7cbc39;
+        transform: scale(1.2);
+        font-size: 35px;
+        margin-right: 0px;
+        cursor: pointer;
+
+    }
+
+    .recipeHeadingTopSection {
+        // background-color: #7cbc39;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+
+        & h3 {
+            // background-color: blanchedalmond;
+            width: 100%;
+            // height: 60px;
+            display: flex;
+            font-size: 18px;
+            color: #000000;
+            margin: 0;
+            align-items: center;
+            font-weight: 400;
+        }
+    }
+
+
+
+}
+
+
+@media screen and (min-width:1290px) and (max-width:1799px) {
+    .centerMain {
+        display: block;
+        // background-color: transparent;
+        margin-right: 15px;
+        // height: 100vh;
+        width:100%;
+        margin-left:5%;
+        // padding-left: 2px;
+        transition: all 500ms ease;
+    }
+
+    .card{
+        // background-color: white;
+        padding: 18px;
+        border-radius: 14px;
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
+    .cancleBtn {
+        // background-color: white;
+        // color: #7cbc39;
+        transform: scale(1.2);
+        font-size: 45px;
+        margin-right: 15px;
+        cursor: pointer;
+
+    }
+}
+
+
+@media screen and (min-width:1800px){
+    .centerMain {
+        display: block;
+        // background-color: red;
+        margin-right: 20px;
+        // height: 100vh;
+        width: 58%;
+        margin-left:auto;
+        // padding-left: 2px;
+        transition: all 500ms ease;
+    }
+
+    .card{
+        // background-color: white;
+        padding: 18px;
+        border-radius: 14px;
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
+    .cancleBtn {
+        // background-color: white;
+        // color: #7cbc39;
+        transform: scale(1.37);
+        font-size: 45px;
+        margin-right: 15px;
+        cursor: pointer;
+
+    }
+}

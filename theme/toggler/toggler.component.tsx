@@ -31,7 +31,7 @@ export default function TogglerComponent({
 	const length = childs.length;
 	const width = `${100 / length}%`;
 
-    
+
 	style = { ...style, width: width };
 
 	if (lineCss) style = { ...style, borderRight: lineCss };

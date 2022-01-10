@@ -1,10 +1,31 @@
-.input{
-    box-shadow: 0px 3px 6px #4848481c;
+.input {
+  // box-shadow: 0px 3px 6px #4848481c;
+  // outline: none;
+  // border: none;
+  // font-family: 'Poppins', sans-serif;
+  // border-radius: 5px;
+  // caret-color: rgb(73, 80, 87);
+  // padding: 15px 20px;
+  // border: 1px solid #f2f2f8;
+
+  width: 100%;
+  border: 1px solid #dddddd;
+  border-radius: 13px;
+  height: 54px;
+  font-size: 12px;
+  color: #c8c8c8;
+  letter-spacing: 0.5px;
+  line-height: 16px;
+  display: flex;
+  align-items: center;
+  font-weight: 300;
+  padding: 6px 12px;
+  margin-bottom: 30px;
+  &:focus {
+    border: 1px solid #dddddd;
     outline: none;
-    border: none;
-    font-family: 'Poppins', sans-serif;
-    border-radius: 5px;
-    caret-color: rgb(73, 80, 87);
-    padding: 15px 20px;
-    border: 1px solid #f2f2f8;
+  }
+  &::placeholder {
+    color: #c8c8c8;
+  }
 }

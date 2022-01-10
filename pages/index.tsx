@@ -1,14 +1,10 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { useEffect, useState } from 'react';
-import styles from '../styles/Theme.module.scss';
+import React from "react";
+import RecipeScreen from "../theme/recipeDiscovery/recipeDiscovery.component";
 
-export default function Home() {
-  const [state, setState] = useState('desktop');
-
+export default function recipe_details() {
   return (
     <div>
-      hello
+      <RecipeScreen />
     </div>
-  )
+  );
 }

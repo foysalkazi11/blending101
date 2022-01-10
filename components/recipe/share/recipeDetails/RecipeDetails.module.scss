@@ -1,0 +1,76 @@
+.recipeDetailsContainer {
+  background-color: #ffffff;
+  padding: 10px;
+  height: 100%;
+  margin: 0 5px;
+  position: relative;
+  &:hover .cancleIcon {
+    color: #ababab;
+    display: block;
+  }
+}
+
+.cancleIcon {
+  position: absolute;
+  right: 0;
+  top: 0;
+  color: #ababab;
+  cursor: pointer;
+  display: none;
+  :hover {
+    color: #fe5d1f;
+    display: block;
+  }
+}
+
+.dividerBox {
+  border: 1px solid #f6f6f6;
+  padding: 10px;
+  margin-top: 15px;
+  border-radius: 6px;
+  min-height: 250px;
+}
+
+.nutritionHeader {
+  p {
+    color: #ababab;
+    font-size: 14px;
+  }
+  table {
+    width: 100%;
+    tr th {
+      font-size: 18px;
+      font-weight: 600;
+      text-align: center;
+      border-bottom: 1px solid #ececec;
+      padding: 5px;
+    }
+    tr td {
+      color: #000;
+      font-size: 14px;
+      text-align: right;
+      padding: 10px 5px;
+    }
+  }
+}
+
+.ingredientsDetails {
+  table {
+    width: 100%;
+
+    tr td {
+      color: #000;
+      font-size: 14px;
+      padding: 10px 10px 10px 0px;
+      border-bottom: 1px solid #ececec !important;
+    }
+
+    tr:last-child td {
+      border: 0 !important;
+    }
+  }
+}
+
+// .table tr th:first-child {
+//   text-align: left;
+// }

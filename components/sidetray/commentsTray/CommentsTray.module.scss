@@ -1,0 +1,119 @@
+.tray {
+  width: 312px;
+  background-color: #fff;
+  position: absolute;
+  height: calc(100vh - 55px);
+  right: 0px;
+  transition: all;
+  transition-duration: 0.4s;
+  box-shadow: 0px 2px 6px #ececec;
+  z-index: 9999;
+  padding: 20px;
+}
+.tray .imageTag {
+  position: absolute;
+  left: -40px;
+  top: 22px;
+  // transform: translateX(-100%);
+  cursor: pointer;
+  transition: all;
+  transition-duration: 0.2s;
+  background-color: #fe5d1f;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0px 3px 6px #00000029;
+  border: 1px solid #fd5109;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+// .tray .image img {
+//   width: 35px;
+// }
+
+.image__white:hover {
+  left: -15px;
+}
+.main__top__menu {
+  display: flex;
+  flex-flow: nowrap;
+  margin-top: 20px;
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border: 1px solid #dfdfdf !important;
+  border-radius: 18px;
+  height: 37px;
+  position: relative;
+}
+
+.main__top__menu__child {
+  width: 50%;
+  border: 1px solid #929292;
+  border-radius: 18px;
+  height: 35px;
+  font-size: 14px;
+  color: #929292;
+  padding: 0;
+  text-align: center;
+  display: block;
+  border: 0 !important;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  img {
+    margin: 0 4px;
+    max-width: 16px !important;
+    height: 16px;
+  }
+}
+
+.inActiveImg {
+  filter: grayscale(100%);
+  -webkit-filter: grayscale(100%);
+}
+// .main__top__menu__child img {
+//   margin: 0 4px;
+// }
+.active {
+  border: 2px solid #7dbd3b !important;
+  width: 50%;
+  height: 36px;
+  position: absolute;
+  top: -1.1%;
+  bottom: 0;
+  content: "";
+  left: 0px;
+  border-radius: 18px;
+  z-index: 99999;
+  transition: all;
+  transition-duration: 0.4s;
+}
+.active__menu {
+  color: #7dbd3b !important;
+  transition: all;
+  transition-duration: 0.4s;
+}
+
+.recipeName {
+  display: flex;
+  align-items: center;
+  padding: 20px 0px;
+  border-bottom: 1px solid #ececec;
+  img {
+    width: 45px;
+    height: 45px;
+    border-radius: 8px;
+    overflow: hidden;
+    object-fit: cover;
+  }
+  h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #000;
+    margin-left: 16px;
+  }
+}

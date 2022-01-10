@@ -1,0 +1,27 @@
+.mainwiki {
+    background-color: #fafbf9;
+    height: 100%;
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+    max-height: auto;
+    padding-bottom: 20px;
+    padding-top: 40px;
+    display: flex;
+    margin: 0px;
+    transition: all 500ms ease;
+}
+
+
+@media only screen and (max-width: 980px) {
+    .mainwiki {
+        display: block;
+    }
+}
+
+@media only screen and (min-width: 980px) {
+    .mainwiki {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}

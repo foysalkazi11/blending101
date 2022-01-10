@@ -20,8 +20,8 @@ const RecipeItem = (props: RecipeItemProps) => {
     plusIcon = true,
     dragIcon = true,
     deleteIcon = false,
-    handleClick,
-    handleDelete,
+    handleClick = () => {},
+    handleDelete = () => {},
   } = props;
   const [items, setItems] = useState({});
 
@@ -32,10 +32,26 @@ const RecipeItem = (props: RecipeItemProps) => {
     }
   }, []);
 
+  const handleClickk = (e) => {
+    if(e.detail === 2){
+      console.log('doubke click')
+    }
+  }
+
+
+  const handleDefault = (e: any) => {
+    console.log('dragging')
+    e.preventDefault();
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
+  }
+
   return (
-    <li className={styles.listContainer}>
+    <div className={styles.listContainer}
+    onClick={handleClickk}
+    >
       {/* @ts-ignore */}
-      {items?.label}
+      <p>{items?.label}</p>
 
       {/* <span className={styles.listContainer__tooltiptext}>
         Drag to the left
@@ -43,8 +59,8 @@ const RecipeItem = (props: RecipeItemProps) => {
 
       {dragIcon ? (
         <button className={styles.listContainer__draggableBtn}>
-          <DragIndicatorIcon />
-          {/* <img src="icons/noun_drag_3124730.svg" alt="" />  */}
+          {/* <DragIndicatorIcon /> */}
+          <img src="/icons/noun_drag_3124730.svg" alt="dragIcon" />
         </button>
       ) : null}
 
@@ -66,7 +82,7 @@ const RecipeItem = (props: RecipeItemProps) => {
           <HighlightOffIcon />
         </button>
       ) : null}
-    </li>
+    </div>
   );
 };
 
