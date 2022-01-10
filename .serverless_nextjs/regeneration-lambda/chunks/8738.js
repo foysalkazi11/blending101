@@ -158,8 +158,8 @@ var Login_module = __webpack_require__(344736);
 var Login_module_default = /*#__PURE__*/__webpack_require__.n(Login_module);
 // EXTERNAL MODULE: ./node_modules/next/image.js
 var next_image = __webpack_require__(425675);
-// EXTERNAL MODULE: ./node_modules/@mui/icons-material/HighlightOffOutlined.js
-var HighlightOffOutlined = __webpack_require__(460057);
+// EXTERNAL MODULE: ./public/icons/highlight_off_black_36dp.svg
+var highlight_off_black_36dp = __webpack_require__(438861);
 // EXTERNAL MODULE: ./redux/slices/utilitySlice.ts
 var utilitySlice = __webpack_require__(487425);
 // EXTERNAL MODULE: ./components/utility/reactToastifyNotification.js
@@ -254,7 +254,7 @@ const LoginScreen = () => {
             })
           }), /*#__PURE__*/jsx_runtime.jsx("div", {
             className: (Login_module_default()).cross,
-            children: /*#__PURE__*/jsx_runtime.jsx(HighlightOffOutlined.default, {})
+            children: /*#__PURE__*/jsx_runtime.jsx(highlight_off_black_36dp/* default */.Z, {})
           })]
         }), /*#__PURE__*/jsx_runtime.jsx("h2", {
           children: "Login"
@@ -573,7 +573,7 @@ const SignupScreen = () => {
             })
           }), /*#__PURE__*/jsx_runtime.jsx("div", {
             className: (SignupScreen_module_default()).cross,
-            children: /*#__PURE__*/jsx_runtime.jsx(HighlightOffOutlined.default, {})
+            children: /*#__PURE__*/jsx_runtime.jsx(highlight_off_black_36dp/* default */.Z, {})
           })]
         }), /*#__PURE__*/jsx_runtime.jsx("h2", {
           children: "Sign Up"
@@ -716,7 +716,7 @@ const ForgotPassword = () => {
             })
           }), /*#__PURE__*/jsx_runtime.jsx("div", {
             className: (ForgotPassword_module_default()).cross,
-            children: /*#__PURE__*/jsx_runtime.jsx(HighlightOffOutlined.default, {})
+            children: /*#__PURE__*/jsx_runtime.jsx(highlight_off_black_36dp/* default */.Z, {})
           })]
         }), /*#__PURE__*/jsx_runtime.jsx("h2", {
           children: "Forgot Password"
@@ -837,7 +837,7 @@ const ResetPassword = () => {
             })
           }), /*#__PURE__*/jsx_runtime.jsx("div", {
             className: (resetPassword_module_default()).cross,
-            children: /*#__PURE__*/jsx_runtime.jsx(HighlightOffOutlined.default, {})
+            children: /*#__PURE__*/jsx_runtime.jsx(highlight_off_black_36dp/* default */.Z, {})
           })]
         }), /*#__PURE__*/jsx_runtime.jsx("h2", {
           children: "Reset Password"

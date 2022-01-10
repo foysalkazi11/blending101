@@ -1,6 +1,6 @@
 "use strict";
 exports.id = 505;
-exports.ids = [505];
+exports.ids = [505,1024];
 exports.modules = {
 
 /***/ 844768:
@@ -157,7 +157,7 @@ const mapStateToProps = state => ({
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "ZP": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* unused harmony exports sideTraySlice, setOpenFilterTray, setBlendTye, setIngredients, setCategoryTye, setOpenCommentsTray */
+/* unused harmony exports sideTraySlice, setOpenFilterTray, setBlendTye, setIngredients, setCategoryTye, setOpenCommentsTray, setToggleModal */
 /* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(947389);
 /* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -166,7 +166,8 @@ const initialState = {
   blends: [],
   category: null,
   ingredients: [],
-  openCommentsTray: false
+  openCommentsTray: false,
+  openModal: false
 };
 const sideTraySlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createSlice)({
   name: "sideTray",
@@ -186,6 +187,9 @@ const sideTraySlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createSli
     },
     setOpenCommentsTray: (state, action) => {
       state.openCommentsTray = action === null || action === void 0 ? void 0 : action.payload;
+    },
+    setToggleModal: (state, action) => {
+      state.openModal = action === null || action === void 0 ? void 0 : action.payload;
     }
   }
 });
@@ -194,7 +198,8 @@ const {
   setBlendTye,
   setIngredients,
   setCategoryTye,
-  setOpenCommentsTray
+  setOpenCommentsTray,
+  setToggleModal
 } = sideTraySlice === null || sideTraySlice === void 0 ? void 0 : sideTraySlice.actions;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (sideTraySlice === null || sideTraySlice === void 0 ? void 0 : sideTraySlice.reducer);
 

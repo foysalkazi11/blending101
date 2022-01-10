@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { howTo } from "../../components/recipe/editRecipe/recipe_elements/ingredientList/ingredientList";
 
 interface ingredientCard {
   id?:string,
