@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-import { Cancel } from "@mui/icons-material";
 import React from "react";
+import Cancel from "../../public/icons/cancel_black_24dp.svg";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setBlendTye, setIngredients } from "../../redux/slices/sideTraySlice";
 import styles from "./searchtag.module.scss";

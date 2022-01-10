@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./SubNav.module.scss";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import ArrowBackIcon from "../../../../public/icons/arrow_back_black_36dp.svg";
+import HighlightOffIcon from "../../../../public/icons/highlight_off_black_36dp.svg";
 import ButtonComponent from "../../../../theme/button/button.component";
 import Link from "next/link";
 

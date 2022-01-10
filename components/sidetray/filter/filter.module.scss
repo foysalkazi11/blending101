@@ -79,16 +79,18 @@
     margin-top: 10px;
 }
 
-.tick{
+.tick {
     position: absolute;
-    border-radius: 50%;
-    right: 5px;
+    right: 2px;
     overflow: hidden;
     top: 0px;
+    width: fit-content;
 }
-.ticked{
+
+.ticked {
     border-radius: 50%;
-    width: 16px;
-    height: 16px;
+    width: 100%;
+    transform: scale(0.7);
+    aspect-ratio: 1;
     color: #f95d2b;
 }

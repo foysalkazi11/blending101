@@ -1,4 +1,4 @@
-.searchtab{
+.searchtab {
     max-width: 100%;
     overflow: auto;
     background-color: #e0e0e05a;
@@ -9,7 +9,7 @@
     align-items: center;
     padding: 0 10px;
 
-    .item{
+    .item {
         height: calc(100% - 20px);
         background-color: #fff;
         display: flex;
@@ -22,7 +22,7 @@
         cursor: pointer;
         margin-right: 10px;
 
-        .image{
+        .image {
             width: 35px;
             height: 35px;
             border-radius: 50%;
@@ -31,39 +31,45 @@
             align-items: center;
             justify-content: center;
 
-            img{
+            img {
                 max-width: 90%;
                 max-height: 75%;
             }
         }
-        p{
+
+        p {
             margin-left: 10px;
             padding-right: 10px;
         }
     }
 }
-.container{
+
+.container {
     display: flex;
 }
-.cross{
+
+.cross {
     position: absolute;
     right: 0px;
-    top: 5px;
+    top: 4px;
     transform: translateY(-50%);
     cursor: pointer;
     display: none;
+    width: 18px;
+    height: 18px;
 
-    .cancel{
-        width: 18px;
-        height: 18px;
+    .cancel {
         color: rgba(128, 128, 128, 0.53);
+        transform: scale(0.8);
+        // height: 100%;
+        // width: 100%;
 
-        &:hover{
+        &:hover {
             color: #FE5D1F;
         }
     }
 }
 
-.item:hover .cross{
-    display: block  ;
+.item:hover .cross {
+    display: block;
 }
