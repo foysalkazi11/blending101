@@ -2,16 +2,18 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type SideTrayState = {
   openFilterTray: boolean;
-  blends: Array<string>,
-  ingredients: Array<string>,
-  category: string
+  blends: Array<string>;
+  ingredients: Array<string>;
+  category: string;
+  openCommentsTray: boolean;
 };
 
 const initialState: SideTrayState = {
   openFilterTray: false,
   blends: [],
   category: null,
-  ingredients: []
+  ingredients: [],
+  openCommentsTray: false,
 };
 
 export const sideTraySlice = createSlice({
@@ -30,9 +32,18 @@ export const sideTraySlice = createSlice({
     setIngredients: (state, action) => {
       state.ingredients = action?.payload;
     },
+    setOpenCommentsTray: (state, action: PayloadAction<boolean>) => {
+      state.openCommentsTray = action?.payload;
+    },
   },
 });
 
-export const { setOpenFilterTray, setBlendTye, setIngredients, setCategoryTye } = sideTraySlice?.actions;
+export const {
+  setOpenFilterTray,
+  setBlendTye,
+  setIngredients,
+  setCategoryTye,
+  setOpenCommentsTray,
+} = sideTraySlice?.actions;
 
 export default sideTraySlice?.reducer;

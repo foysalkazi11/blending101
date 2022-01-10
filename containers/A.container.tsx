@@ -10,6 +10,7 @@ import NutritionTrayComponent from "../components/sidetray/wiki/nutrition/nutrit
 import HealthTrayComponent from "../components/sidetray/wiki/health/heath.component";
 import IngredientTrayComponent from "../components/sidetray/wiki/ingredient/ingredient.component";
 import Filtertray from "../components/sidetray/filter/filterTray.component";
+import CommentsTray from "../components/sidetray/commentsTray/CommentsTray";
 
 type AContainerProps = {
   showHeader?: boolean;
@@ -24,7 +25,8 @@ type AContainerProps = {
   healthTray?: Boolean;
   ingredientTray?: Boolean;
   filterTray?: Boolean;
-  headerFullWidth? : Boolean
+  headerFullWidth?: Boolean;
+  commentsTray?: boolean;
 };
 
 export default function AContainer(props: AContainerProps) {
@@ -40,7 +42,8 @@ export default function AContainer(props: AContainerProps) {
     healthTray = false,
     ingredientTray = false,
     filterTray = false,
-    headerFullWidth = false
+    headerFullWidth = false,
+    commentsTray = false,
   } = props;
 
   return (
@@ -52,7 +55,11 @@ export default function AContainer(props: AContainerProps) {
       ) : null}
       <div className={styles.mainA}>
         {showHeader ? (
-          <HeaderComponent logo={logo} headerTitle={headerTitle} fullWidth={headerFullWidth} />
+          <HeaderComponent
+            logo={logo}
+            headerTitle={headerTitle}
+            fullWidth={headerFullWidth}
+          />
         ) : null}
         {showLeftTray ? (
           <div className={styles.fixed__main__left}>
@@ -82,6 +89,11 @@ export default function AContainer(props: AContainerProps) {
         {filterTray && (
           <div className={styles.fixed__main__left}>
             <Filtertray filter="true" />
+          </div>
+        )}
+        {commentsTray && (
+          <div className={styles.fixed__main__right}>
+            <CommentsTray />
           </div>
         )}
         {props.children}

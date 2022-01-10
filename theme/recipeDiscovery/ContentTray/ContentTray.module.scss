@@ -4,7 +4,6 @@ $arrow_distance:-45px;
 .main__slider {
 
     margin-bottom: 40px;
-    // background-color: rgb(57, 238, 20);
 
     @media only screen and (max-width: 980px) {
         margin-bottom: 20px;
@@ -18,7 +17,7 @@ $arrow_distance:-45px;
         color: $orange_color; //variable defined above and represents orange color used in orange banner
         min-height: 25px;
         margin-bottom: 20px;
-        // background-color: rgba(0, 128, 0, 0.466);
+
 
         @media only screen and (max-width: 500px) {
             font-size: 18px;
@@ -35,7 +34,7 @@ $arrow_distance:-45px;
             color: #7cbc39;
             cursor: pointer;
             padding: 4px;
-            transition:all .3s ease 0s;
+            transition: all .3s ease 0s;
 
 
             background-clip: text;
@@ -48,10 +47,7 @@ $arrow_distance:-45px;
                 border-bottom: 1px solid $orange_color;
 
             }
-
         }
-
-
 
         span {
             position: relative;
@@ -63,12 +59,13 @@ $arrow_distance:-45px;
             @media only screen and (max-width: 500px) {
                 display: none;
             }
+
             @media only screen and (min-width:500px) and(max-width: 980px) {
                 margin-left: 30px;
             }
 
             @media only screen and (min-width: 980px) and (max-width: 1290px) {
-                // margin: 0px 23px 0px 24px;
+
                 margin-left: 29px;
             }
         }
@@ -77,10 +74,18 @@ $arrow_distance:-45px;
 }
 
 .sliderMainDiv {
-    display: block;
+    display: flex;
+    flex-direction: column;
     padding: 0px;
     margin: auto 5px;
-    // background-color: rgb(32, 206, 168);
+    width: 100%;
+
+    div {
+
+        div {
+            margin-left: 0px;
+        }
+    }
 
     @media only screen and (max-width: 980px) {
         // margin-right: 20px;

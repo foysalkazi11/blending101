@@ -1,60 +1,67 @@
-import React from "react";
+import React, { useState } from "react";
 import AContainer from "../../../containers/A.container";
 import styles from "./EditRecipe.module.scss";
+import Center_header from "./header/centerHeader/Center_header.component";
+import RightTray from "./rightTray/rightTray.component";
+import Left_tray_recipe_edit from "./leftTray/left_tray_recipe_edit.component";
+import Center_Elements from "./recipe_elements/centerElements.component";
+import IngredientList from "./recipe_elements/ingredientList/ingredientList&Howto.component";
 import Image from "next/image";
+import { useWindowWidth } from "@react-hook/window-size";
 
 const EditRecipePage = () => {
-  //   const Acontainer = {
-  //     showHeader: true,
-  //     showSidebar: true,
-  //     showLeftTray: false,
-  //     showRighTray: true,
-  //     nutritionTray: false,
-  //     healthTray: false,
-  //     ingredientTray: false,
-  //     filterTray: false,
-  //   };
+  const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
   return (
     <AContainer>
       <div className={styles.main}>
-        <div className={styles.left}>
-          <div className={styles.left__title}>Ingredient List</div>
-        </div>
-        <div className={styles.center}>
-          <div className={styles.center__title}>
-            <div className={styles.center__title__left}>
-              <span>
-                <Image
-                  src={"/icons/recipe-icon.svg"}
-                  alt={"icon"}
-                  width={24}
-                  height={24}
-                />
-              </span>
-              <h3>Recipe</h3>
-            </div>
-            <div className={styles.center__title__right}>
-              <span>
-                <Image
-                  src={"/icons/recipe-icon.svg"}
-                  alt={"icon"}
-                  width={24}
-                  height={24}
-                />
-              </span>
-              <span>
-                <Image
-                  src={"/icons/recipe-icon.svg"}
-                  alt={"icon"}
-                  width={24}
-                  height={24}
-                />
-              </span>
+        <div
+          className={styles.left}
+          style={leftTrayVisibleState ? { marginLeft: "0px" } : {}}
+        >
+          <div
+            className={styles.left__Drag__lightGreen}
+            style={
+              leftTrayVisibleState
+                ? {
+                    backgroundImage: `url("/icons/ingr-green.svg")`,
+                    backgroundSize: "contain",
+                  }
+                : {
+                    backgroundImage: `url("/icons/ingr-white.svg")`,
+                    backgroundSize: "contain",
+                  }
+            }
+            onClick={() => setLeftTrayVisibleState(!leftTrayVisibleState)}
+          >
+            <div>
+              {/* left basket drag button, images are used as backgound images for this div in scss files */}
             </div>
           </div>
+          <div className={styles.left__title}>
+            <div className={styles.left__title__bagicon}>
+              <Image
+                src={"/icons/basket.svg"}
+                alt="Picture will load soon"
+                height={"100%"}
+                width={"100%"}
+                // sizes={width !== undefined ? `${Math.round(width)}px` : "100vw"}
+                layout="responsive"
+                objectFit="contain"
+              />
+            </div>
+            Ingredient List
+          </div>
+          <div className={styles.left__ingredientlistTray}>
+            <Left_tray_recipe_edit />
+          </div>
         </div>
-        <div className={styles.right}>
-          <div className={styles.right__title}>Nutrition </div>
+        <div className={styles.center}>
+          <Center_header />
+          <Center_Elements />
+          <IngredientList />
+        </div>
+        <div className={styles.right__main}>
+          <RightTray />
         </div>
       </div>
     </AContainer>
