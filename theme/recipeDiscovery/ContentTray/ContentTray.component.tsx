@@ -4,8 +4,8 @@ import Image from "next/image";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "../../../public/icons/chevron_right_black_36dp.svg";
+import ChevronLeftIcon from "../../../public/icons/chevron_left_black_36dp.svg";
 // interface carouselTray {
 //   heading: string;
 // }
@@ -40,9 +40,8 @@ const ContentTray = (props) => {
 
   const [slickSetting, setSlickSetting] = useState(2);
 
-
   useEffect(() => {
-    const onlyWidth = window.innerWidth
+    const onlyWidth = window.innerWidth;
     if (onlyWidth <= 680) {
       setSlickSetting(1);
     } else if (onlyWidth <= 780 && onlyWidth > 680) {
@@ -89,48 +88,47 @@ const ContentTray = (props) => {
                 settings: {
                   slidesToShow: 5,
                   slidesToScroll: 1,
-                }
+                },
               },
               {
                 breakpoint: 1850,
                 settings: {
                   slidesToShow: 4,
                   slidesToScroll: 1,
-                }
+                },
               },
               {
                 breakpoint: 1450,
                 settings: {
                   slidesToShow: 3,
                   slidesToScroll: 1,
-                }
+                },
               },
               {
                 breakpoint: 1250,
                 settings: {
                   slidesToShow: 3,
                   slidesToScroll: 1,
-                }
+                },
               },
               {
                 breakpoint: 780,
                 settings: {
                   slidesToShow: 2,
-                  slidesToScroll: 1
-                }
+                  slidesToScroll: 1,
+                },
               },
               {
                 breakpoint: 680,
                 settings: {
                   slidesToShow: 1,
-                  slidesToScroll: 1
-                }
-              }
+                  slidesToScroll: 1,
+                },
+              },
               // You can unslick at a given breakpoint now by adding:
               // settings: "unslick"
               // instead of a settings object
-            ]
-
+            ],
           }}
         >
           {props.children}
