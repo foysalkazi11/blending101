@@ -30,6 +30,19 @@ const CREATE_NEW_USER = gql`
         meditcation
         whyBlending
       }
+      collections {
+        _id
+        name
+        image
+        recipes {
+          _id
+          name
+          image {
+            default
+            image
+          }
+        }
+      }
     }
   }
 `;

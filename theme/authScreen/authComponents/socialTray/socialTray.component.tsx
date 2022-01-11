@@ -73,14 +73,14 @@ const SocialTray = () => {
             src={"/images/google.png"}
             alt="Icons will soon Load"
             //@ts-ignore
-            onClick={() => handleSocialSignup("google")}
+            onClick={() => handleSocialSignup("Google")}
           />
         </li>
         <li className={styles.listElem}>
           <img
             src={"/images/fb.png"}
             alt="Icons will soon Load"
-            onClick={() => handleSocialSignup("facebook")}
+            onClick={() => handleSocialSignup("Facebook")}
           />
         </li>
         <li className={styles.listElem}>
