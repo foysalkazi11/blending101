@@ -48,7 +48,10 @@ $leftTrayDragIconWidth:50px;
     margin: auto;
     margin-top: 43px;
     justify-content: space-between;
-    // background-color: green;
+
+    @include responsive(0px, 991px) {
+        flex-direction: column;
+    }
 }
 
 .left {
@@ -141,24 +144,26 @@ $leftTrayDragIconWidth:50px;
     min-width: $width;
     width: calc(100% - 2*$width);
     height: auto;
-    padding-right: 20px;
-    // background-color: aquamarine;
+    padding-right: 16px;
 
-    @include responsive(0px, 1230px) {
-        width: calc(100% - $width);
-        margin-left: 24px;
+
+    @include responsive(0px, 990px) {
+        width: calc(100%);
+        padding-right: 0px;
     }
 
-    @include responsive(0px, 991px) {
-        width: calc(100% + 22px);
+    @include responsive(990px, 1230px) {
+        width: calc(100% - $width);
     }
 }
 
 .right__main {
     min-width: $width;
     height: 100%;
+    padding-bottom: 20px;
 
     @include responsive(0px, 991px) {
-        margin-right: -$width - 30px;
+        margin-top: 18px;
+        // margin-right: -$width - 30px;
     }
 }
