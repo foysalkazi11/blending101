@@ -1,4 +1,5 @@
-import  CheckCircle  from "../../../../public/icons/check_circle_black_36dp.svg";
+/* eslint-disable @next/next/no-img-element */
+import CheckCircle from "../../../../public/icons/check_circle_black_36dp.svg";
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { setIngredientsToList } from "../../../../redux/edit_recipe/quantity";
@@ -23,8 +24,6 @@ const Left_tray_recipe_edit = () => {
   const ingredients_list = useAppSelector(
     (state) => state.quantityAdjuster.ingredientsList
   );
-
-  console.log("Ingredients", ingredients_list);
 
   const handleIngredientClick = (ingredient) => {
     let blendz = [];
