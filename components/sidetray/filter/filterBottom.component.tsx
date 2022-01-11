@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import CheckCircle from "../../../public/icons/check_circle_black_36dp.svg";
+import CheckCircle from "../../../public/icons/check_circle_black_24dp.svg";
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setIngredients } from "../../../redux/slices/sideTraySlice";
