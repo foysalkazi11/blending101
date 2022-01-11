@@ -48,12 +48,14 @@ $leftTrayDragIconWidth:50px;
     margin: auto;
     margin-top: 43px;
     justify-content: space-between;
+    background-color: green;
 }
 
 .left {
     width: $width;
     padding-right: 17px;
     position: relative;
+    background-color: yellow;
 
     @include responsive(0px, 1230px) {
         z-index: 10;
@@ -141,6 +143,7 @@ $leftTrayDragIconWidth:50px;
     width: calc(100% - 2*$width);
     height: auto;
     padding-right: 20px;
+    background-color: aquamarine;
 
     @include responsive(0px, 1230px) {
         width: calc(100% - $width);

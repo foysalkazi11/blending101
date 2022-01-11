@@ -1,8 +1,7 @@
-import { display } from "@mui/system";
 import React, { useState } from "react";
 import styles from "./cards.module.scss";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import AddCircleOutlineIcon from "../../../public/icons/add_circle_outline_black_36dp.svg";
+import RemoveCircleOutlineIcon from "../../../public/icons/remove_circle_outline_black_36dp.svg";
 
 const Cards = () => {
   const [isReadMore, setIsReadMore] = useState(0);
