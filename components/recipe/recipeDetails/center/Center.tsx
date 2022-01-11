@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState } from "react";
 import { FiEdit2 } from "react-icons/fi";
-import { MdInfo, MdOutlineClose } from "react-icons/md";
+import {MdOutlineClose } from "react-icons/md";
 import SlickSlider from "../../../../theme/carousel/carousel.component";
 import styles from "./Center.module.scss";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
