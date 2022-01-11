@@ -1,9 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState, useEffect } from "react";
 import styles from "./RecipeItem.module.scss";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import AddCircleOutlineIcon from "../../../public/icons/add_circle_outline_black_36dp.svg";
+import HighlightOffIcon from "../../../public/icons/highlight_off_black_24dp.svg";
 
 interface RecipeItemProps {
   item: object;

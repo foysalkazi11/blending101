@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import styles from "./CreateNewRecipe.module.scss";
 import { Droppable, Draggable } from "react-beautiful-dnd";
-import { Grid } from "@mui/material";
 import SectionTitleWithIcon from "../../../theme/recipe/sectionTitleWithIcon/SectionTitleWithIcon.component";
 import RecipeItem from "../../../theme/recipe/recipeItem/RecipeItem.component";
 import Accordion from "../../../theme/accordion/accordion.component";

@@ -5,7 +5,7 @@ import { FiFilter } from "react-icons/fi";
 import { BsMic, BsSoundwave, BsSearch } from "react-icons/bs";
 import { AiOutlineClose } from "react-icons/ai";
 import RecipeDiscoverButton from "../../button/recipeDiscoverButton/RecipeDiscoverButton";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import AddCircleOutlineIcon from "../../../public/icons/add_circle_outline_black_36dp.svg";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setOpenFilterTray } from "../../../redux/slices/sideTraySlice";
 

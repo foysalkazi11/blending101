@@ -12,6 +12,7 @@
   &:hover &__tooltiptext {
     visibility: visible;
   }
+
   &__tooltiptext::before {
     content: "";
     position: absolute;
@@ -39,9 +40,11 @@
     top: 4px;
     left: -31px;
   }
+
   &:hover &__tooltiptext {
     display: block;
   }
+
   &__draggableBtn {
     position: absolute;
     background: transparent;
@@ -51,10 +54,12 @@
     top: 2px;
     color: #ababab;
     display: none;
+
     img {
       max-width: 13px;
     }
   }
+
   &:hover &__draggableBtn {
     display: block;
   }
@@ -66,13 +71,20 @@
     margin: 0;
 
     position: absolute;
-    right: 0;
-    top: -3px;
+    right: -4.5px;
+    top: -8px;
     color: #f9532b;
     display: none;
     cursor: pointer;
+
+    // svg{
+    //   color: #f9532b;
+    // }
+
   }
+
   &:hover &__addBtn {
     display: block;
+    transform: scale(0.72);
   }
 }

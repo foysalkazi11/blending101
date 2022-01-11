@@ -105,17 +105,26 @@ $arrow_distance:-45px;
             margin-left: calc(#{$arrow_distance} + 25px);
             width: 30px;
             height: 30px;
+
+            svg {
+                transform: scale(0.75);
+            }
         }
 
         @media only screen and (min-width: 980px) and(max-width: 1290px) {
 
             margin-left: calc(#{$arrow_distance} + 20px);
+            margin-left: calc(#{$arrow_distance} + 25px);
             width: 30px;
             height: 30px;
+
+            svg {
+                transform: scale(0.75);
+            }
         }
 
         @media only screen and (min-width: 1290px) {
-            margin-left: calc(#{$arrow_distance} + 10px);
+            margin-left: calc(#{$arrow_distance} - 5px);
         }
     }
 
@@ -125,17 +134,26 @@ $arrow_distance:-45px;
 
         // @media only screen and (max-width: 980px) {}
         @media only screen and (max-width: 980px) {
-            margin-right: calc(#{$arrow_distance} + 25px);
+            margin-right: calc(#{$arrow_distance} + 35px);
             width: 30px;
             height: 30px;
+
+            svg {
+                transform: scale(0.75);
+            }
         }
 
         @media only screen and (min-width: 980px) and (max-width: 1290px) {
 
-            margin-right: calc(#{$arrow_distance} + 35px);
+            margin-right: calc(#{$arrow_distance} + 40px);
             width: 30px;
             height: 30px;
-            // font-size: 14px !important;
+
+            svg {
+                transform: scale(0.75);
+            }
+
+            // font-size: 14px !important;1
         }
     }
 
