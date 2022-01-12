@@ -1,24 +1,27 @@
-.dropdown{
+.dropdown {
     position: relative;
     color: rgb(182, 182, 182);
     font-size: 14px;
     overflow: hidden;
 }
-.dropdown__top{
+
+.dropdown__top {
     position: relative;
     display: flex;
     align-items: center;
     padding: 0 10px;
     cursor: pointer;
 
-    &__icon{
+    &__icon {
         position: absolute;
         right: 10px;
         top: calc(50% + 0px);
-        transform: translateY(-50%);
+        transform: translateY(-50%) scale(0.75);
+        color: #b6b6b6;
     }
 }
-.dropdown__bottom{
+
+.dropdown__bottom {
     position: absolute;
     width: 100%;
     top: 100%;
@@ -26,11 +29,11 @@
     z-index: 999;
     border: .5px solid rgb(221, 216, 216);
 
-    &__list{
+    &__list {
         cursor: pointer;
         padding: 3px 10px;
 
-        &:hover{
+        &:hover {
             background-color: rgba(113, 214, 113, 0.723);
             color: #fff;
         }
