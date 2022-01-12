@@ -1,11 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState } from "react";
 import { FiEdit2 } from "react-icons/fi";
-import {MdOutlineClose } from "react-icons/md";
+import { MdOutlineClose } from "react-icons/md";
 import SlickSlider from "../../../../theme/carousel/carousel.component";
 import styles from "./Center.module.scss";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "../../../../public/icons/chevron_right_black_36dp.svg";
+import ChevronLeftIcon from "../../../../public/icons/chevron_left_black_36dp.svg";
 import { MdOutlineInfo, MdAdd, MdRemove } from "react-icons/md";
 import DropDown from "../../../../theme/dropDown/DropDown.component";
 import { BiBarChart } from "react-icons/bi";

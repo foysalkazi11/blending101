@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useRef } from "react";
 import styles from "./dataCard.module.scss";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import {slicedString} from '../../../services/string.service';
+import MoreVertIcon from "../../../public/icons/more_vert_black_36dp.svg";
+import { slicedString } from "../../../services/string.service";
 
 interface dataCardInterface {
   title: string;
@@ -30,7 +30,7 @@ export default function DatacardComponent({
   image,
 }: dataCardInterface) {
   title = title || "Triple Berry Smoothie";
-  ingredients = ingredients
+  ingredients = ingredients;
   category = category || "Smoothie";
   noOfRatings = noOfRatings || 71;
   carbs = carbs || 23;

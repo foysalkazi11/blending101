@@ -160,7 +160,7 @@ $leftTrayDragIconWidth:50px;
 .right__main {
     min-width: $width;
     height: 100%;
-    padding-bottom: 20px;
+    padding-bottom: 35px;
 
     @include responsive(0px, 991px) {
         margin-top: 18px;

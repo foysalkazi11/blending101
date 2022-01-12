@@ -5,7 +5,7 @@ import RecipeItem from "../../../../theme/recipe/recipeItem/RecipeItem.component
 import styles from "./RecipeDetails.module.scss";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import Accordion from "../../../../theme/accordion/accordion.component";
-import CancelIcon from "@mui/icons-material/Cancel";
+import CancelIcon from "../../../../public/icons/cancel_black_36dp.svg";
 import uniqueId from "../../../utility/uniqueId";
 
 function Copyable(props) {

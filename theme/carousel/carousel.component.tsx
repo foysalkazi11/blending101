@@ -2,8 +2,8 @@ import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ChevronLeftIcon from "../../public/icons/chevron_left_black_36dp.svg";
+import ChevronRightIcon from "../../public/icons/chevron_right_black_36dp.svg";
 
 type SlickSliderProps = {
   moreSetting?: object;
@@ -11,6 +11,8 @@ type SlickSliderProps = {
 };
 
 const SlickSlider = ({ moreSetting = {}, children }: SlickSliderProps) => {
+
+
   const SmiplePrevArrow = (props) => {
     const { className, onClick } = props;
 

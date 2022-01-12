@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
 import styles from "./smallcard.module.scss";
-import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import { BsCheck } from "react-icons/bs";
 
 export default function SmallcardComponent({
