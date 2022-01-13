@@ -73,13 +73,13 @@ export default function SidetrayrightComponent(props) {
 						</div>
 					</div>
 				</div>
-			
+
                 <div className={styles.grocery}>
                             <GroceryComponent />
                 </div>
             </div>
-		
-        
+
+
 		</div>
 	);
 }

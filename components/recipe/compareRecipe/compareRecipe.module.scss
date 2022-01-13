@@ -1,3 +1,15 @@
+@mixin responsive($min_width, $max_width) {
+  @media only screen and (min-width: $min_width) and (max-width: $max_width) {
+    @content;
+  }
+}
+
 .CompareContainer {
   padding: 40px 0;
+}
+
+.mainContentDiv {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0px 15px;
 }

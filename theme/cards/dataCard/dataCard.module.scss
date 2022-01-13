@@ -16,6 +16,13 @@
     &__menu {
       cursor: pointer;
       position: relative;
+      display: flex;
+      top: -4px;
+      right:-4px;
+
+      svg {
+        transform: scale(0.75);
+      }
     }
   }
 
@@ -170,8 +177,9 @@
       font-weight: 500;
     }
   }
-  &__bottom{
-    p{
+
+  &__bottom {
+    p {
       font-size: 13px;
       color: #abababf3;
       line-height: 1.4;

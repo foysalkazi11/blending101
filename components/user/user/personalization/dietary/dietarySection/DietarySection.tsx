@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState } from "react";
 import styles from "./DietarSection.module.scss";
-import { Grid } from "@mui/material";
 import capitalizeFirstLetter from "../../../../../utility/capitalizeFirstLetter";
 
 type SectionWithIconProps = {
