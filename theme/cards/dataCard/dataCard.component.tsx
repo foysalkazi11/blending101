@@ -3,6 +3,9 @@ import React, { useRef } from "react";
 import styles from "./dataCard.module.scss";
 import MoreVertIcon from "../../../public/icons/more_vert_black_36dp.svg";
 import { slicedString } from "../../../services/string.service";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
+import { setChangeRecipeWithinCollection } from "../../../redux/slices/collections";
 
 interface dataCardInterface {
   title: string;
@@ -15,6 +18,8 @@ interface dataCardInterface {
   calorie: number;
   noOfComments: number;
   image: string;
+  checkWithinCollection?: boolean;
+  recipeId?: string;
 }
 
 export default function DatacardComponent({
@@ -28,6 +33,8 @@ export default function DatacardComponent({
   calorie,
   noOfComments,
   image,
+  checkWithinCollection = false,
+  recipeId = "",
 }: dataCardInterface) {
   title = title || "Triple Berry Smoothie";
   ingredients = ingredients;
@@ -38,15 +45,18 @@ export default function DatacardComponent({
   score = score || 701;
   noOfComments = noOfComments || 21;
   image = image || "/cards/juice.png";
-
   const menu = useRef<any>();
+
+  const dispatch = useAppDispatch();
+  const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
 
   const handleEclipse = () => {
     // HANDLE ECLIPSE CLICK HERE
   };
 
   const handleCompare = () => {
-    // HANDLE COMPARE CLICK HERE
+    dispatch(setOpenCollectionsTary(!openCollectionsTary));
+    dispatch(setChangeRecipeWithinCollection(true));
   };
 
   const handleComment = () => {
@@ -146,12 +156,15 @@ export default function DatacardComponent({
                   />{" "}
                 </li>
                 <li>
-                  {" "}
-                  <img
-                    src="/icons/compare.svg"
-                    alt="compare"
-                    onClick={handleCompare}
-                  />{" "}
+                  {checkWithinCollection ? (
+                    <img
+                      src="/icons/compare.svg"
+                      alt="compare"
+                      onClick={handleCompare}
+                    />
+                  ) : (
+                    <img src="/images/BookmarksStar.svg" alt="compare" />
+                  )}
                 </li>
                 <li>
                   {" "}

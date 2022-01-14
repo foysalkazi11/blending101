@@ -12,6 +12,12 @@ import { setToggleModal } from "../../../redux/slices/sideTraySlice";
 
 export default function CollectionTray(props) {
   const [toggle, setToggle] = useState(1);
+  const [input, setInput] = useState<any>({
+    image: null,
+    name: "",
+  });
+  const [isEditCollection, setIsEditCollection] = useState(false);
+  const [collectionId, setCollectionId] = useState("");
   const {
     dbUser: { collections },
   } = useAppSelector((state) => state?.user);
@@ -58,7 +64,11 @@ export default function CollectionTray(props) {
         <div className={styles.addCollectioContainer}>
           <MdOutlineAddCircleOutline
             className={styles.addIcon}
-            onClick={() => dispatch(setToggleModal(true))}
+            onClick={() => {
+              setIsEditCollection(false);
+              setInput((pre) => ({ ...pre, name: "" }));
+              dispatch(setToggleModal(true));
+            }}
           />
         </div>
 
@@ -69,11 +79,21 @@ export default function CollectionTray(props) {
         )}
         {toggle === 1 && (
           <div>
-            <CollectionComponent collections={collections} />
+            <CollectionComponent
+              collections={collections}
+              setInput={setInput}
+              setIsEditCollection={setIsEditCollection}
+              setCollectionId={setCollectionId}
+            />
           </div>
         )}
         <CustomModal contentStyle={{ borderRadius: "29px" }}>
-          <AddCollectionModal />
+          <AddCollectionModal
+            input={input}
+            setInput={setInput}
+            isEditCollection={isEditCollection}
+            collectionId={collectionId}
+          />
         </CustomModal>
       </div>
     </LeftTrayWrapper>
