@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react';
 import styles from './grocery.module.scss';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowBackIcon from '../../../../public/icons/arrow_back_black_36dp.svg';
 
 export default function GroceryComponent(props: any) {
 	return (
@@ -32,7 +32,7 @@ export default function GroceryComponent(props: any) {
 				<div className={styles.item}>
 					<div className={styles.image}>
 						<img src="/other/cabbage.png" alt="" />
-					</div>  
+					</div>
                     <p>Dandelion</p>
 				</div>
                 <div className={styles.item}>

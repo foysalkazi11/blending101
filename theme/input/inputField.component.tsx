@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import styles from "./inputField.module.scss";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import Image from "next/image";
+import VisibilityOffIcon from "../../public/icons/visibility_off_black_36dp.svg";
+import VisibilityIcon from "../../public/icons/visibility_black_36dp.svg";
 
 interface Inputproperties {
-  type: "text" | "password" | "email"|"";
+  type: "text" | "password" | "email" | "";
   value: string;
   setValue?: any;
   placeholder: string;

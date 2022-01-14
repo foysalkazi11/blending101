@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import React from "react";
+import ChevronLeftIcon from "../../../../public/icons/chevron_left_black_36dp.svg";
+import ChevronRightIcon from "../../../../public/icons/chevron_right_black_36dp.svg";
 import styles from "./SliderArrows.module.scss";
 
 type SliderArrowsProps = {

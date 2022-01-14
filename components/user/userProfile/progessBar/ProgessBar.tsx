@@ -1,13 +1,12 @@
 import React from "react";
 import styles from "./ProgessBar.module.scss";
-import { Container } from "@mui/material";
 
 type ProgessBarProps = {
   steps: number;
 };
 const ProgessBar = ({ steps = 1 }: ProgessBarProps) => {
   return (
-    <Container maxWidth="md">
+    <div className={styles.sectionContainer}>
       <div className={styles.progessBarContainer}>
         <h2>Complete Your Profile</h2>
         <p>
@@ -45,7 +44,7 @@ const ProgessBar = ({ steps = 1 }: ProgessBarProps) => {
           </div>
         </div>
       </div>
-    </Container>
+    </div>
   );
 };
 

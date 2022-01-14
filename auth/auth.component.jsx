@@ -72,6 +72,7 @@ function AuthProvider({ children, activeUser }) {
       )
         // to be uncommented for auth to work correctly and remove clg at line 75
         router.push("/login");
+      console.log("uncomment code in auth folder");
     }
   };
 

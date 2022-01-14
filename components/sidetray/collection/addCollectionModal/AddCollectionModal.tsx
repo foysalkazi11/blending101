@@ -10,16 +10,26 @@ import reactToastifyNotification from "../../../../components/utility/reactToast
 import CREATE_NEW_COLLECTION from "../../../../gqlLib/collection/mutation/createNewCollection";
 import { useMutation } from "@apollo/client";
 import { setToggleModal } from "../../../../redux/slices/sideTraySlice";
+import EDIT_COLLECTION from "../../../../gqlLib/collection/mutation/editCollection";
 
-const AddCollectionModal = () => {
-  const [input, setInput] = useState<any>({
-    image: null,
-    name: "",
-  });
+type AddCollectionModalProps = {
+  input: any;
+  setInput: any;
+  isEditCollection: boolean;
+  collectionId: string;
+};
+
+const AddCollectionModal = ({
+  input,
+  setInput,
+  isEditCollection,
+  collectionId,
+}: AddCollectionModalProps) => {
   const [createNewCollection] = useMutation(CREATE_NEW_COLLECTION);
+  const [editCollection] = useMutation(EDIT_COLLECTION);
   const dispatch = useAppDispatch();
   const { dbUser } = useAppSelector((state) => state?.user);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoadings] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e?.target;
@@ -32,28 +42,57 @@ const AddCollectionModal = () => {
 
   const saveToDb = async () => {
     if (input?.name) {
-      const res = await createNewCollection({
-        variables: {
-          data: {
-            UserEmail: dbUser?.email,
-            collection: { image: null, name: input?.name, recipes: [] },
+      if (isEditCollection) {
+        const res = await editCollection({
+          variables: {
+            data: {
+              userEmail: dbUser?.email,
+              collectionId: collectionId,
+              newName: input?.name,
+            },
           },
-        },
-      });
+        });
 
-      dispatch(
-        setDbUser({
-          ...dbUser,
-          collections: [...dbUser?.collections, res?.data?.createNewCollection],
-        })
-      );
-      setLoading(false);
+        dispatch(
+          setDbUser({
+            ...dbUser,
+            collections: [
+              ...dbUser?.collections?.map((col) =>
+                col?._id === collectionId ? { ...col, name: input?.name } : col
+              ),
+            ],
+          })
+        );
+      } else {
+        const res = await createNewCollection({
+          variables: {
+            data: {
+              UserEmail: dbUser?.email,
+              collection: { image: null, name: input?.name, recipes: [] },
+            },
+          },
+        });
+        dispatch(
+          setDbUser({
+            ...dbUser,
+            collections: [
+              ...dbUser?.collections,
+              res?.data?.createNewCollection,
+            ],
+          })
+        );
+      }
+
+      setLoadings(false);
       dispatch(setToggleModal(false));
       setInput({ image: null, name: "" });
-
-      reactToastifyNotification("info", "Collection add successfully");
+      if (isEditCollection) {
+        reactToastifyNotification("info", "Collection edit successfully");
+      } else {
+        reactToastifyNotification("info", "Collection add successfully");
+      }
     } else {
-      setLoading(false);
+      setLoadings(false);
       reactToastifyNotification("info", "Please write collection name");
     }
   };
@@ -98,7 +137,7 @@ const AddCollectionModal = () => {
                 ],
               })
             );
-            setLoading(false);
+            setLoadings(false);
             dispatch(setToggleModal(false));
             setInput({ image: null, name: "" });
 
@@ -107,13 +146,13 @@ const AddCollectionModal = () => {
         });
       })
       .catch((error) => {
-        setLoading(false);
+        setLoadings(false);
         reactToastifyNotification("error", error?.message);
       });
   };
 
   const submitData = async () => {
-    setLoading(true);
+    setLoadings(true);
     try {
       if (input?.image) {
         if (input?.name) {
@@ -125,14 +164,14 @@ const AddCollectionModal = () => {
         saveToDb();
       }
     } catch (error) {
-      setLoading(false);
+      setLoadings(false);
       reactToastifyNotification("error", error?.message);
     }
   };
 
   return (
     <div className={styles.addCollectionContainer}>
-      <div className={styles.fileUpload}>
+      {/* <div className={styles.fileUpload}>
         <input type="file" accept="image/*" onChange={handleChange} />
         <img
           src={
@@ -147,7 +186,7 @@ const AddCollectionModal = () => {
             height: input?.image ? "100px" : "36px",
           }}
         />
-      </div>
+      </div> */}
       <div className={styles.rightSide}>
         <input
           placeholder="Collection Name"

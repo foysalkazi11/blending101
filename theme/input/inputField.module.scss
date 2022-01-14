@@ -70,5 +70,9 @@
         -moz-transform: scaleX(-1) translateY(-50%);
         -webkit-transform: scaleX(-1) translateY(-50%);
         -ms-transform: scaleX(-1) translateY(-50%);
+
+        svg{
+            transform: scale(0.75);
+        }
     }
 }

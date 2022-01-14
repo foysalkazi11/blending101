@@ -9,7 +9,6 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 
 //responsive crousel Setting
@@ -59,7 +58,7 @@ const responsiveSetting = {
 
 const index = () => {
   return (
-    <Container maxWidth="xl" className={styles.component__container}>
+    <div className={styles.component__container}>
       <div className={styles.compoent__box}>
         <h3>DRAG AND DROPS</h3>
         <DragAndDrop />
@@ -212,7 +211,7 @@ const index = () => {
           </TableContainer>
         </Accordion>
       </div>
-    </Container>
+    </div>
   );
 };
 

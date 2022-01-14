@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import AContainer from "../../../containers/A.container";
-import { Container } from "@mui/material";
 import ProgessBar from "./progessBar/ProgessBar";
 import styles from "./UserProfile.module.scss";
 import StepOne from "./steps/stepOne/StepOne";
@@ -241,7 +240,9 @@ const UserProfile = () => {
       <div className={styles.userProfileContainer}>
         <ProgessBar steps={steps} />
         <div className={styles.sectionContainer}>
-          <Container maxWidth="md">{renderUI()}</Container>
+          <div className={styles.sectionContainer__renderedElem}>
+            {renderUI()}
+          </div>
         </div>
         <ChangeSteps nextStep={nextStep} prevStep={prevStep} steps={steps} />
       </div>

@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import ButtonComponent from "../../../button/buttonA/button.component";
 import InputField from "../../../input/inputField.component";
 import styles from "./EmailVarify.module.scss";
-import { Container } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import {
   setUser,
@@ -68,38 +67,40 @@ const ForgotPassword = () => {
     }
   };
   return (
-    <Container maxWidth="md" className={styles.varifyEmailContainer}>
-      <img src="/images/logo.png" alt="logo will soon load" />
+    <div className={styles.mainDiv}>
+      <div className={styles.varifyEmailContainer}>
+        <img src="/images/logo.png" alt="logo will soon load" />
 
-      <h2>Varify Email</h2>
-      <p>A Varification code is sent to your mail. Please paste it below.</p>
-      <form onSubmit={handleSubmit}>
-        <InputField
-          type="text"
-          style={{ margin: "4px auto 15px auto" }}
-          value={code}
-          placeholder="Varify your account"
-          fullWidth={true}
-          setValue={setCode}
-        />
-
-        <div className={styles.buttonContainer}>
-          <ButtonComponent
-            type="primary"
-            style={{ height: "60px", fontSize: "18px" }}
-            value="Varify"
-            fullWidth={false}
-            submit={true}
+        <h2>Varify Email</h2>
+        <p>A Varification code is sent to your mail. Please paste it below.</p>
+        <form onSubmit={handleSubmit}>
+          <InputField
+            type="text"
+            style={{ margin: "4px auto 15px auto" }}
+            value={code}
+            placeholder="Varify your account"
+            fullWidth={true}
+            setValue={setCode}
           />
-        </div>
-        <div className={styles.link}>
-          <p onClick={resendSignUp}>Resend code</p>
-          <Link href="/signup" passHref>
-            Sign up
-          </Link>
-        </div>
-      </form>
-    </Container>
+
+          <div className={styles.buttonContainer}>
+            <ButtonComponent
+              type="primary"
+              style={{ height: "60px", fontSize: "18px" }}
+              value="Varify"
+              fullWidth={false}
+              submit={true}
+            />
+          </div>
+          <div className={styles.link}>
+            <p onClick={resendSignUp}>Resend code</p>
+            <Link href="/signup" passHref>
+              Sign up
+            </Link>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };
 

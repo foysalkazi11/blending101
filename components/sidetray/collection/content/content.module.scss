@@ -1,76 +1,141 @@
 .theme {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
 }
 
 .theme__child {
-    margin-bottom: 20px;
-    width: 92px;
+  margin-bottom: 20px;
+  width: 92px;
 }
 
 .theme__cover {
-    height: 92px;
-    border-radius: 7px;
-    position: relative;
-    overflow: hidden;
+  height: 92px;
+  border-radius: 7px;
+  position: relative;
+  overflow: hidden;
 }
-.theme__cover__abs{
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-repeat: no-repeat;
-    background-size: cover;
-    z-index: 999;
-    cursor: pointer;
-    transition: all;
-    transition-duration: .3s;
+.theme__cover__abs {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: 999;
+  cursor: pointer;
+  transition: all;
+  transition-duration: 0.3s;
 }
-.theme__cover__abs:hover{
-    transform: scale(1.1);
+.theme__cover__abs:hover {
+  transform: scale(1.1);
 }
 .theme__child p {
-    color: #000000;
-    font-size: 12px;
-    font-weight: 500;
-    display: block;
-    margin-top: 10px;
-    text-align: center;
+  color: #000000;
+  font-size: 12px;
+  font-weight: 500;
+  display: block;
+  margin-top: 10px;
+  text-align: center;
 }
-.collection p{
-    font-size: 12px;
-    margin: 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    color: #000;
-    line-height: 1.5;
-    font-weight: 400;
+.collection p {
+  font-size: 12px;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: #000;
+  line-height: 1.5;
+  font-weight: 400;
 }
-.collection__child{
+.collection__child {
+  display: flex;
+  margin-bottom: 20px;
+  justify-content: space-between;
+  align-items: center;
+  &:hover .rightSide {
+    visibility: visible;
+  }
+  &:hover .leftSide .abs {
+    transform: scale(1.1);
+  }
+  &:hover .leftSide p {
+    color: #fe5d1f;
+  }
+
+  .leftSide {
     display: flex;
-    margin-bottom: 20px;
+    align-items: center;
+    .img {
+      position: relative;
+      width: 47px;
+      height: 47px;
+      border-radius: 5px;
+      overflow: hidden;
 
-    &__img{
-        position: relative;
-        width: 47px;
-        height: 47px;
-        border-radius: 5px;
-        overflow: hidden;
-
-        &__abs{
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-repeat: no-repeat;
-        }
-    }
-    p{
+      .abs {
+        position: absolute;
+        width: 100%;
         height: 100%;
-        padding-left: 10px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        transition: all;
+        transition-duration: 0.3s;
+      }
+    }
+    p {
+      padding-left: 10px;
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .rightSide {
+    cursor: pointer;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    background: transparent;
+    visibility: hidden;
+    position: relative;
+    &:hover {
+      background: #f0f0f0;
+    }
+    .moreIcon {
+      font-size: 20px;
+    }
+    .actionMenu {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-width: 113px;
+      padding: 4px 15px;
+      max-height: 30px;
+      border: 1px solid #eeeeee;
+      border-radius: 8px;
+      background: #eeeeeef2;
+      top: 30px;
+      right: 0;
+      visibility: hidden;
+      .menu {
+        width: 100%;
         display: flex;
         align-items: center;
+        justify-content: space-between;
+        .icon {
+          color: #929292;
+          &:hover {
+            color: #fe5d1f;
+          }
+        }
+      }
     }
+    .showMenu {
+      visibility: visible !important;
+    }
+  }
 }

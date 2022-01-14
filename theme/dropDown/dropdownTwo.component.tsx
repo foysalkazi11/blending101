@@ -1,4 +1,5 @@
-import { ArrowDownward, ArrowDropDown, ArrowDropUp } from '@mui/icons-material';
+import ArrowDropUp from '../../public/icons/arrow_drop_up_black_36dp.svg';
+import ArrowDropDown from '../../public/icons/arrow_drop_down_black_36dp.svg';
 import React, { useRef, useState } from 'react';
 import styles from './dpd.module.scss';
 

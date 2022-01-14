@@ -11,6 +11,12 @@
   transition: all ease 0.5s;
   margin-right: 16px;
   cursor: pointer;
+
+  svg {
+    transform: scale(0.75);
+  }
+
+
   &:hover {
     background-color: #fe5d1f !important;
   }
@@ -28,6 +34,11 @@
   color: #f4f4f4 !important;
   transition: all ease 0.5s;
   cursor: pointer;
+
+  svg {
+    transform: scale(0.75);
+  }
+
   &:hover {
     background-color: #fe5d1f !important;
   }
@@ -37,6 +48,7 @@
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+
   h3 {
     font-size: 20px;
     color: #000000;

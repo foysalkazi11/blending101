@@ -1,4 +1,3 @@
-import { Container } from "@mui/material";
 import React, { useState, useRef, useEffect } from "react";
 import AContainer from "../../../containers/A.container";
 import SubNav from "../share/subNav/SubNav";
@@ -107,6 +106,7 @@ const CompareRecipe = () => {
       return false;
     }
   };
+
   const handleCompare = (recipe) => {
     if (compareRecipeList?.length >= 4) {
       const findRecipe = findCompareRecipe(recipe?.id);
@@ -131,7 +131,7 @@ const CompareRecipe = () => {
 
   return (
     <AContainer showLeftTray={false} logo={false} headerTitle="Compare Recipe">
-      <Container maxWidth="xl">
+      <div className={styles.mainContentDiv}>
         <div className={styles.CompareContainer}>
           <SubNav
             backAddress="/recipe_discovery"
@@ -178,7 +178,7 @@ const CompareRecipe = () => {
             })}
           </Slider>
         </div>
-      </Container>
+      </div>
     </AContainer>
   );
 };

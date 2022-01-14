@@ -1,10 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-import { Box } from "@mui/system";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import DatacardComponent from "../../../../theme/cards/dataCard/dataCard.component";
 import { recommendedList } from "../../fackData/recipeDetails";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "../../../../public/icons/chevron_right_black_36dp.svg";
+import ChevronLeftIcon from "../../../../public/icons/chevron_left_black_36dp.svg";
 import styles from "./LeftSide.module.scss";
 import SlickSlider from "../../../../theme/carousel/carousel.component";
 import useWindowSize from "../../../utility/useWindowSize";
@@ -22,7 +21,6 @@ const LeftSide = () => {
   };
   const NextButton = (prop) => {
     const { className, onClick } = prop;
-    // console.log("+++++++++++++++" + className);
     return (
       <div className={className + " " + styles.nextBtn} onClick={onClick}>
         <ChevronRightIcon />
@@ -73,7 +71,7 @@ const LeftSide = () => {
         <img src="/images/telescope.svg" alt="bar icon" />
         <h3>Related</h3>
       </div>
-      {windowSize?.width >= 1200 ? (
+      {windowSize?.width >= 1290 ? (
         recommendedList.map((cardData, index) => {
           return (
             <div key={index} style={{ paddingBottom: "10px" }}>
