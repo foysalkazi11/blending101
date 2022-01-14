@@ -3,7 +3,6 @@ import AContainer from "../../containers/A.container";
 import styles from "./recipeDiscovery.module.scss";
 import AppdownLoadCard from "./AppdownLoadCard/AppdownLoadCard.component";
 import ContentTray from "./ContentTray/ContentTray.component";
-
 import DatacardComponent from "../cards/dataCard/dataCard.component";
 import SearchBar from "./searchBar/SearchBar.component";
 import SearchtagsComponent from "../../components/searchtags/searchtags.component";
@@ -13,17 +12,36 @@ import {
   FETCH_LATEST_RECIPES,
 } from "../../gqlLib/recipes/queries/fetchRecipes";
 import axios from "axios";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import FilterPageBottom from "../../components/recipe/recipeFilter/filterBottom.component";
 import FooterRecipeFilter from "../../components/footer/footerRecipeFilter.component";
+import { setAllRecipeWithinCollectionsId } from "../../redux/slices/collections";
 
 const RecipeDetails = () => {
   const [recommended, setRecommended] = useState([]);
   const [popular, setPopular] = useState([]);
   const [latest, setLatest] = useState([]);
   const blends = useAppSelector((state) => state.sideTray.blends);
+  const { dbUser } = useAppSelector((state) => state?.user);
+  const [allRecipeWithinCollectionId, setAllRecipeWithinCollectionId] =
+    useState([]);
+  const dispatch = useAppDispatch();
 
-  console.log("blends", blends);
+  const checkExistingRecipe = (recipeId: string) => {
+    return allRecipeWithinCollectionId?.includes(recipeId);
+  };
+
+  useEffect(() => {
+    let recipesId = [];
+    dbUser?.collections?.forEach((col) => {
+      const recipes = col?.recipes;
+      recipes?.forEach((recipe) => {
+        recipesId?.push(recipe?._id);
+      });
+    });
+    setAllRecipeWithinCollectionId(recipesId);
+    dispatch(setAllRecipeWithinCollectionsId(recipesId));
+  }, []);
 
   useEffect(() => {
     axios
@@ -32,6 +50,8 @@ const RecipeDetails = () => {
       })
       .then((result) => {
         const res = result.data?.data?.getAllrecomendedRecipes || [];
+        console.log(res);
+
         setRecommended([...res]);
       })
       .catch((err) => {
@@ -62,7 +82,6 @@ const RecipeDetails = () => {
       });
   }, []);
 
-  console.log(recommended, popular, latest);
   return (
     <AContainer showLeftTray={true} filterTray={true}>
       <div className={styles.main__div}>
@@ -104,6 +123,8 @@ const RecipeDetails = () => {
                           calorie={item.calorie}
                           noOfComments={item.noOfComments}
                           image={item.image[0]?.image}
+                          checkWithinCollection={checkExistingRecipe(item?._id)}
+                          recipeId={item?._id}
                         />
                       </div>
                     );
@@ -141,6 +162,10 @@ const RecipeDetails = () => {
                             calorie={item.calorie}
                             noOfComments={item.noOfComments}
                             image={item.image[0]?.image}
+                            checkWithinCollection={checkExistingRecipe(
+                              item?._id
+                            )}
+                            recipeId={item?._id}
                           />
                         </div>
                       );
@@ -178,6 +203,10 @@ const RecipeDetails = () => {
                             calorie={item.calorie}
                             noOfComments={item.noOfComments}
                             image={item.image[0]?.image}
+                            checkWithinCollection={checkExistingRecipe(
+                              item?._id
+                            )}
+                            recipeId={item?._id}
                           />
                         </div>
                       );

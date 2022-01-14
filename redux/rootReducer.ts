@@ -4,12 +4,14 @@ import sideTrayReducer from "./slices/sideTraySlice";
 import userReducer from "./slices/userSlice";
 import utilityReducer from "./slices/utilitySlice";
 import editRecipeReducer from "./edit_recipe/quantity";
+import collectionsReducer from "./slices/collections";
 
 const rootReducer = combineReducers({
   user: userReducer,
   sideTray: sideTrayReducer,
   utility: utilityReducer,
-  quantityAdjuster:editRecipeReducer,
+  quantityAdjuster: editRecipeReducer,
+  collections: collectionsReducer,
 });
 
 // export type RootState = ReturnType<typeof rootReducer>;

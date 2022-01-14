@@ -61,8 +61,7 @@ function AuthProvider({ children, activeUser }) {
       dispatch(setDbUser(data?.createNewUser));
       dispatch(setProvider(provider));
       setActive(true);
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error?.message);
       if (
         !user &&
@@ -72,8 +71,8 @@ function AuthProvider({ children, activeUser }) {
         page !== "/varify_email"
       )
         // to be uncommented for auth to work correctly and remove clg at line 75
-        // router.push("/login");
-        console.log("uncomment code in auth folder")
+        router.push("/login");
+      console.log("uncomment code in auth folder");
     }
   };
 
