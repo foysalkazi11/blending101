@@ -1,5 +1,26 @@
+@mixin responsive ($minWidth, $maxWidth) {
+  @media only screen and (min-width: $minWidth) and (max-width: $maxWidth) {
+    @content;
+  }
+
+}
+
+.mainDiv {
+  display: flex;
+  justify-content: center;
+  min-width: 100vw;
+  min-height: 100vh;
+}
+
 .varifyEmailContainer {
-  padding: 50px inherit;
+  padding: 50px 20px;
+  min-width: 900px;
+
+  @include responsive(0px, 900px) {
+    min-width: 100%;
+  }
+
+
 
   img {
     width: 190px;
@@ -28,9 +49,11 @@
     box-sizing: border-box;
     padding: 20px 0px;
   }
+
   .buttonContainer {
     padding-top: 20px;
   }
+
   .link {
     padding-top: 10px;
     font-size: 12px;
@@ -38,9 +61,11 @@
     font-weight: 600;
     display: flex;
     align-items: center;
+
     a {
       margin-right: 20px;
     }
+
     p {
       margin-right: 20px;
       font-size: 12px;

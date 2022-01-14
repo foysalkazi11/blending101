@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import Container from "@mui/material/Container";
 import styles from "./SectionWithInput.module.scss";
 import InputComponent from "../../../../theme/input/input.component";
-import CancelIcon from "@mui/icons-material/Cancel";
+import CancelIcon from "../../../../public/icons/cancel_black_36dp.svg";
 
 type SectionWithInputProps = {
   title: string;

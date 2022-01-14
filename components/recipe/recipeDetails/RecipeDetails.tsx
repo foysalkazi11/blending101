@@ -1,5 +1,4 @@
 import React from "react";
-import { Container, Grid } from "@mui/material";
 import AContainer from "../../../containers/A.container";
 import LeftSide from "./leftSide/LeftSide";
 import RightSide from "./rightSide/RightSide";
@@ -17,19 +16,31 @@ const RecipeDetails = () => {
         commentsTray={true}
       >
         <div className={styles.recipeDetailsContainer}>
-          <Grid container spacing={1}>
-            <Grid item xs={12} lg={3}>
+          <div className={styles.recipeDetailsContainer__contentDiv}>
+            <div className={styles.recipeDetailsContainer__contentDiv__left}>
               <LeftSide />
-            </Grid>
-            <Grid container item xs={12} lg={9} spacing={1}>
-              <Grid item xs={9}>
+            </div>
+            <div
+              className={
+                styles.recipeDetailsContainer__contentDiv__centerRightDiv
+              }
+            >
+              <div
+                className={
+                  styles.recipeDetailsContainer__contentDiv__centerRightDiv__center
+                }
+              >
                 <Center />
-              </Grid>
-              <Grid item xs={3}>
+              </div>
+              <div
+                className={
+                  styles.recipeDetailsContainer__contentDiv__centerRightDiv__right
+                }
+              >
                 <RightSide />
-              </Grid>
-            </Grid>
-          </Grid>
+              </div>
+            </div>
+          </div>
         </div>
       </AContainer>
     </div>

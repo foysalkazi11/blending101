@@ -10,5 +10,9 @@
 
 .sectionContainer {
   width: 100%;
-  background-color: #fff;
+  max-width: 900px;
+
+  &__renderedElem {
+    padding-left: 20px;
+  }
 }

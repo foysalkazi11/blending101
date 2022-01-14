@@ -9,9 +9,14 @@
     border-bottom: 2px dashed #DEDEDE;
     position: relative;
     padding: 15px 15px 15px 0;
-    margin: 0 15px 20px;
+    margin: 0 17px 20px;
     display: flex;
     align-items: center;
+
+    svg{
+        transform: scale(0.75);
+    }
+
 }
 
 .grocery__head p {

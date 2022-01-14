@@ -35,12 +35,47 @@ const CREATE_NEW_USER = gql`
         name
         image
         recipes {
-          _id
-          name
           image {
             default
             image
           }
+          name
+          _id
+          description
+          prepTime
+          cookTime
+          totalTime
+          recipeYield
+          recipeIngredients
+          recipeInstructions
+          recipeCuisines
+          ingredients {
+            _id
+            ingredientId
+            ingredientName
+            category
+            blendStatus
+            classType
+            nutrients {
+              sourceId
+              value
+            }
+            portions {
+              measurement
+              measurement2
+              meausermentWeight
+              sourceId
+            }
+            source
+            description
+            sourceId
+            sourceCategory
+            featuredImage
+            images
+          }
+          url
+          discovery
+          favicon
         }
       }
     }
