@@ -14,7 +14,7 @@
 }
 
 
-.accordion{
+.accordion {
   width: 100%;
   padding: 0px;
   display: flex;
@@ -22,23 +22,30 @@
   box-shadow: none;
   border: none;
 
-  &::before{
+  &::before {
     box-shadow: none;
     height: 0px;
   }
 }
 
-.accordionSummary{
+.accordionSummary {
   padding: 10px;
   display: flex;
   border: none;
 }
 
-.accordianDetails{
-  padding: 10px 0px 10px 10px;
-  transition-duration:all 2s;
+.accordianDetails {
+  transition: all 0.6s;
+  padding: 0px 0px 10px 10px;
   width: 100%;
   transform: rotate(0deg);
-}
+  overflow: hidden;
+  max-height: 0px;
 
-// onChange={() => setExpanded(!expanded)}
+  &__active {
+    height: auto;
+    max-height: 300px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Accordion from "@mui/material/Accordion";
 import { FiPlusSquare, FiMinusSquare } from "react-icons/fi";
 import styles from "./accordion.module.scss";
 
@@ -11,11 +10,7 @@ type CustomAccordionProps = {
 const CustomAccordion = ({ title, children }: CustomAccordionProps) => {
   const [expanded, setExpanded] = useState<boolean>(true);
   return (
-    <Accordion
-      expanded={expanded === true}
-      onChange={() => setExpanded(!expanded)}
-      className={styles.accordion}
-    >
+    <div className={styles.accordion}>
       <div className={styles.accordionSummary}>
         {expanded ? (
           <FiMinusSquare
@@ -35,8 +30,16 @@ const CustomAccordion = ({ title, children }: CustomAccordionProps) => {
 
         <h5 className={styles.title}>{title}</h5>
       </div>
-      <div className={styles.accordianDetails}>{children}</div>
-    </Accordion>
+      <div
+        className={
+          expanded
+            ? styles.accordianDetails + " " + styles.accordianDetails__active
+            : styles.accordianDetails
+        }
+      >
+        {children}
+      </div>
+    </div>
   );
 };
 
