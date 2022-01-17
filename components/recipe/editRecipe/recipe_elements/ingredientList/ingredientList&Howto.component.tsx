@@ -153,6 +153,8 @@ const IngredientList = () => {
 
   const editStep = (id) => {
     let newEditStep = howToState.find((elem) => {
+      document.getElementById("myTextField").focus();
+
       return elem.id === id;
     });
     setEditMode(true);
@@ -351,7 +353,7 @@ const IngredientList = () => {
                 }}
                 type="text"
                 name="recipe elements"
-                id=""
+                id="myTextField"
                 placeholder="Type Your Instructions here..."
               />
             </span>

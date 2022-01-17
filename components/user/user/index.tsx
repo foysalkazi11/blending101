@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import AContainer from "../../../containers/A.container";
 import styles from "./User.module.scss";
-import { Container, Grid } from "@mui/material";
 import SideBar from "./sidebar/SideBar";
 import Main from "./main/Main";
-import ButtonComponent from "../../../theme/button/button.component";
 import { useAppSelector } from "../../../redux/hooks";
 
 const User = () => {
@@ -33,20 +31,23 @@ const User = () => {
       },
     },
     personalization: {
-      gender: "",
       activity: "",
       age: "",
-      weight: "",
-      height: "",
-      dieteryLifeStyle: "",
       allergies: [],
-      preExistingMedicalConditions: [],
+      dieteryLifeStyle: "",
+      gender: "",
+      height: "",
+      weight: "",
       meditcation: [],
+      preExistingMedicalConditions: [],
       whyBlending: [],
     },
   });
 
   const { dbUser } = useAppSelector((state) => state?.user);
+  console.log(" temperorty configuration testing");
+      console.log(dbUser);
+      console.log(" temperorty configuration testing");
 
   useEffect(() => {
     if (dbUser) {
@@ -61,6 +62,8 @@ const User = () => {
         lastName,
         configuration,
       } = dbUser;
+
+
       const {
         activity,
         age,
@@ -89,16 +92,16 @@ const User = () => {
         },
         personalization: {
           ...pre?.personalization,
-          gender,
           activity,
           age,
-          weight,
-          dieteryLifeStyle,
           allergies: allergies || [],
-          preExistingMedicalConditions: preExistingMedicalConditions || [],
-          meditcation: meditcation || [],
-          whyBlending: whyBlending || [],
+          dieteryLifeStyle,
+          gender,
           height,
+          weight,
+          meditcation: meditcation || [],
+          preExistingMedicalConditions: preExistingMedicalConditions || [],
+          whyBlending: whyBlending || [],
         },
       }));
     }
@@ -106,6 +109,7 @@ const User = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  console.log("temp");
   return (
     <AContainer
       headerTitle="My Profile"
@@ -119,21 +123,20 @@ const User = () => {
           <p>Where you learn to blend life into a life style</p>
         </div>
       </header>
-
-      <Container maxWidth="xl" className={styles.container}>
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={4}>
+      <div className={styles.container}>
+        <div className={styles.container__div}>
+          <div className={styles.container__div__left}>
             <div className={styles.sideBar}>
               <SideBar userData={userData} setUserData={setUserData} />
             </div>
-          </Grid>
-          <Grid item xs={12} md={8}>
+          </div>
+          <div className={styles.container__div__right}>
             <div className={styles.main}>
               <Main userData={userData} setUserData={setUserData} />
             </div>
-          </Grid>
-        </Grid>
-      </Container>
+          </div>
+        </div>
+      </div>
     </AContainer>
   );
 };

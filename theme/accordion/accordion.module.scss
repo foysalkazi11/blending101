@@ -2,6 +2,8 @@
   font-size: 25px;
   color: #7dbd3b;
   margin-right: 10px;
+  margin-left: -10px;
+  cursor: pointer;
 }
 
 .title {
@@ -10,3 +12,33 @@
   font-weight: 600;
   margin: 0;
 }
+
+
+.accordion{
+  width: 100%;
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: none;
+  border: none;
+
+  &::before{
+    box-shadow: none;
+    height: 0px;
+  }
+}
+
+.accordionSummary{
+  padding: 10px;
+  display: flex;
+  border: none;
+}
+
+.accordianDetails{
+  padding: 10px 0px 10px 10px;
+  transition-duration:all 2s;
+  width: 100%;
+  transform: rotate(0deg);
+}
+
+// onChange={() => setExpanded(!expanded)}

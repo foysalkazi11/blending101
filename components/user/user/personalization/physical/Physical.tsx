@@ -1,4 +1,3 @@
-import { Grid } from "@mui/material";
 import React from "react";
 import { ScaleComponent } from "../../../../../theme/scale/scale.component";
 import styles from "./Physical.module.scss";
@@ -46,22 +45,22 @@ const Physical = ({ userProfile, updateUserProfile }: PhysicalProps) => {
         targets
       </p>
       <div className={styles.contentContainer}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} lg={2} my={{ xs: 0, lg: 3 }}>
+        <div className={styles.contentContainer__elementDiv}>
+          <div className={styles.contentContainer__elementDiv__heading}>
             <p className={styles?.label}>Your Gender</p>
-          </Grid>
-          <Grid item xs={12} lg={10} my={{ xs: 0, lg: 3 }}>
+          </div>
+          <div className={styles.contentContainer__elementDiv__objects}>
             <SectionGenderAndActivity
               body={gender}
               fieldName="gender"
               updateUserProfile={updateUserProfile}
               userProfile={userProfile}
             />
-          </Grid>
-          <Grid item xs={12} lg={2} my={{ xs: 0, lg: 3 }}>
+          </div>
+          <div className={styles.contentContainer__elementDiv__heading}>
             <p className={styles?.label}>Your age</p>
-          </Grid>
-          <Grid item xs={12} lg={10} my={{ xs: 0, lg: 3 }}>
+          </div>
+          <div className={styles.contentContainer__elementDiv__objects}>
             <ScaleComponent
               fieldName="age"
               setValue={updateUserProfile}
@@ -73,12 +72,12 @@ const Physical = ({ userProfile, updateUserProfile }: PhysicalProps) => {
             />
 
             <p className={styles.showValue}>{userProfile?.age} years old</p>
-          </Grid>
+          </div>
 
-          <Grid item xs={12} lg={2} my={{ xs: 0, lg: 3 }}>
+          <div className={styles.contentContainer__elementDiv__heading}>
             <p className={styles?.label}>Your weight ?</p>
-          </Grid>
-          <Grid item xs={12} lg={10} my={{ xs: 0, lg: 3 }}>
+          </div>
+          <div className={styles.contentContainer__elementDiv__objects}>
             <ScaleComponent
               fieldName="weight"
               setValue={updateUserProfile}
@@ -89,20 +88,20 @@ const Physical = ({ userProfile, updateUserProfile }: PhysicalProps) => {
             />
 
             <p className={styles.showValue}>{userProfile?.weight} pounds</p>
-          </Grid>
+          </div>
 
-          <Grid item xs={12} lg={2} my={{ xs: 0, lg: 3 }}>
+          <div className={styles.contentContainer__elementDiv__heading}>
             <p className={styles?.label}>Your Activity</p>
-          </Grid>
-          <Grid item xs={12} lg={10} my={{ xs: 0, lg: 3 }}>
+          </div>
+          <div className={styles.contentContainer__elementDiv__objects}>
             <SectionGenderAndActivity
               body={activity}
               fieldName="activity"
               updateUserProfile={updateUserProfile}
               userProfile={userProfile}
             />
-          </Grid>
-        </Grid>
+          </div>
+        </div>
       </div>
     </div>
   );

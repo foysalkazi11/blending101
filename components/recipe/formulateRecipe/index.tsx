@@ -1,6 +1,5 @@
-import React, { useState, useRef} from "react";
+import React, { useState, useRef } from "react";
 import Acontainer from "../../../containers/A.container";
-import { Container, Grid } from "@mui/material";
 import styles from "./formulateRecipe.module.scss";
 import list from "../fackData/racipeList";
 import Carousel from "../../../theme/carousel/carousel.component";
@@ -70,7 +69,7 @@ const compareRecipeResponsiveSetting = {
       },
     },
     {
-      breakpoint: 1100,
+      breakpoint: 1000,
       settings: {
         slidesToShow: 1,
         slidesToScroll: 1,
@@ -252,7 +251,7 @@ const FormulateRecipe = () => {
 
   return (
     <Acontainer showLeftTray={false} logo={false} headerTitle="Formulate">
-      <Container maxWidth="xl">
+      <div className={styles.formulate}>
         {/* sub-nav */}
         <div className={styles.formulateContainer}>
           <SubNav
@@ -286,36 +285,37 @@ const FormulateRecipe = () => {
             prevFunc={() => sliderRef.current?.slickPrev()}
             nextFunc={() => sliderRef.current?.slickNext()}
           />
-          <Grid container spacing={2}>
-            <DragDropContext onDragEnd={onDragEnd}>
-              <Grid item xs={12} sm={6} md={4} xl={3}>
-                <CreateNewRecipe
-                  newRecipe={newRecipe}
-                  setNewRecipe={setNewRecipe}
-                  deleteItem={deleteItem}
-                />
-              </Grid>
-
-              <Grid item xs={12} sm={6} md={8} xl={9}>
-                <Slider {...compareRecipeResponsiveSetting} ref={sliderRef}>
-                  {compareRecipeList?.map((recipe, index) => {
-                    return (
-                      <RecipeDetails
-                        key={index}
-                        recipe={recipe}
-                        id={index}
-                        addItem={addItem}
-                        removeCompareRecipe={removeCompareRecipe}
-                        dragAndDrop={true}
-                      />
-                    );
-                  })}
-                </Slider>
-              </Grid>
-            </DragDropContext>
-          </Grid>
+          <div className={styles.formulateDiv}>
+            <div className={styles.formulateDiv__Div}>
+              <DragDropContext onDragEnd={onDragEnd}>
+                <div className={styles.formulateDiv__Div__newRecipeDiv}>
+                  <CreateNewRecipe
+                    newRecipe={newRecipe}
+                    setNewRecipe={setNewRecipe}
+                    deleteItem={deleteItem}
+                  />
+                </div>
+                <div className={styles.formulateDiv__Div__compareRecipeList}>
+                  <Slider {...compareRecipeResponsiveSetting} ref={sliderRef}>
+                    {compareRecipeList?.map((recipe, index) => {
+                      return (
+                        <RecipeDetails
+                          key={index}
+                          recipe={recipe}
+                          id={index}
+                          addItem={addItem}
+                          removeCompareRecipe={removeCompareRecipe}
+                          dragAndDrop={true}
+                        />
+                      );
+                    })}
+                  </Slider>
+                </div>
+              </DragDropContext>
+            </div>
+          </div>
         </div>
-      </Container>
+      </div>
     </Acontainer>
   );
 };

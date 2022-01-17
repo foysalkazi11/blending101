@@ -1,3 +1,10 @@
+@mixin responsive($min_width, $max_width) {
+  @media only screen and (min-width: $min_width) and (max-width: $max_width) {
+    @content;
+  }
+}
+
+
 .formulateContainer {
   padding: 40px 0px;
 
@@ -6,28 +13,97 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 20px;
+
     &__discover {
       display: flex;
       align-items: center;
+
       &__icon {
         margin-right: 5px;
       }
+
       p {
         color: #000 !important;
         font-weight: 500;
         font-size: 18px;
       }
     }
+
     &__compare {
       display: flex;
       align-items: center;
+
       &__icon {
         margin: 0 6px;
         cursor: pointer;
       }
+
       p {
         color: #000 !important;
         font-weight: 500;
+      }
+    }
+  }
+}
+
+
+.formulate {
+  max-width: 1500px;
+  padding: 0 10px;
+  margin: 0 auto;
+}
+
+.formulateDiv {
+
+  &__Div {
+    display: flex;
+    gap: 2px;
+    width: 100%;
+
+    @include responsive(0px, 600px) {
+      flex-direction: column;
+      gap: 0px;
+    }
+
+    &__newRecipeDiv {
+      // background-color: green;
+      margin: 0 auto;
+      width: 100%;
+      // padding: 20px;
+
+      @include responsive(0px, 600px) {
+        width: 100%;
+      }
+
+      @include responsive(600px, 900px) {
+        width: 50%;
+      }
+
+      @include responsive(900px, 1200px) {
+        width: 33.33%;
+      }
+    }
+
+    &__compareRecipeList {
+      // background-color: skyblue;
+      // margin: 0 auto;
+      width: 100%;
+      max-width: 1150px;
+
+      @include responsive(0px, 600px) {
+        width: 100%;
+      }
+
+      @include responsive(600px, 900px) {
+        width: 50%;
+      }
+
+      @include responsive(900px, 1200px) {
+        width: 66.66%;
+      }
+
+      @include responsive(1200px, 1550px) {
+        width: 80%;
       }
     }
   }

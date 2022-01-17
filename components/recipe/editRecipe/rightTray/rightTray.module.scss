@@ -106,3 +106,37 @@
     }
 
 }
+
+.compoent__box {
+
+    // background-color: rgb(180, 5, 5);
+    // padding: 4px;
+    table {
+        border-collapse: collapse;
+
+        @include responsive(0px, 990px) {
+            width: 100%;
+        }
+
+    }
+
+    .table__row {
+        // background-color: blue;
+        border-collapse: separate;
+        border: 0;
+
+        &__cell {
+            padding: 10px 10px 10px 0px;
+            font-family: sans-serif;
+            font-weight: 400;
+            font-size: 0.875rem;
+        }
+    }
+
+    &:last-child td,
+    &:last-child th {
+        border: 0;
+    }
+
+
+}

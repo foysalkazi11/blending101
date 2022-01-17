@@ -1,21 +1,15 @@
 import React from "react";
 import RightHeader from "../header/right_header/right_header.component";
 import styles from "./rightTray.module.scss";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableRow from "@mui/material/TableRow";
 import Accordion from "../../../../theme/accordion/accordion.component";
 import Image from "next/image";
-import {healthList} from './rightTray'
+import { healthList } from "./rightTray";
 import LinearComponent from "../../../../theme/linearProgress/LinearProgress.component";
 
-
 interface PassingProps {
-    name: string;
-    percent: number;
-  }
+  name: string;
+  percent: number;
+}
 const rightTray = () => {
   return (
     <div>
@@ -44,96 +38,62 @@ const rightTray = () => {
         </div>
         <div className={styles.compoent__box} style={{}}>
           <Accordion title="Energy">
-            <TableContainer>
-              <Table>
-                <TableBody
-                  sx={{
-                    "& .MuiTableCell-root": { padding: "10px 10px 10px 0px" },
-                  }}
-                >
-                  <TableRow
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell>Total Carbohydrates</TableCell>
-                    <TableCell>39.2 g</TableCell>
-                    <TableCell>12%</TableCell>
-                  </TableRow>
+            <table>
+              <tr className={styles.table__row}>
+                <td className={styles.table__row__cell}>Total Carbohydrates</td>
+                <td className={styles.table__row__cell}>39.2 g</td>
+                <td className={styles.table__row__cell}>12%</td>
+              </tr>
+              <tr className={styles.table__row}>
+                <td className={styles.table__row__cell}>Dietary Fiber</td>
+                <td className={styles.table__row__cell}>15.6 g</td>
+                <td className={styles.table__row__cell}>12%</td>
+              </tr>
 
-                  <TableRow
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell>Dietary Fiber</TableCell>
-                    <TableCell>15.6 g</TableCell>
-                    <TableCell>12%</TableCell>
-                  </TableRow>
-
-                  <TableRow
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell>Sugars Protein</TableCell>
-                    <TableCell>6.4 g</TableCell>
-                    <TableCell> 8%</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
+              <tr className={styles.table__row}>
+                <td className={styles.table__row__cell}>Sugars Protein</td>
+                <td className={styles.table__row__cell}>6.4 g</td>
+                <td className={styles.table__row__cell}> 8%</td>
+              </tr>
+            </table>
           </Accordion>
 
           <Accordion title="Vitamins">
-            <TableContainer>
-              <Table>
-                <TableBody
-                  sx={{
-                    "& .MuiTableCell-root": { padding: "10px 10px 10px 0px" },
-                  }}
-                >
-                  <TableRow
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell> Vitamin A </TableCell>
-                    <TableCell> 30.202 iu </TableCell>
-                    <TableCell> 597% </TableCell>
-                  </TableRow>
+            <table>
+              <tr>
+                <td className={styles.table__row__cell}> Vitamin A </td>
+                <td className={styles.table__row__cell}> 30.202 iu </td>
+                <td className={styles.table__row__cell}> 597% </td>
+              </tr>
 
-                  <TableRow>
-                    <TableCell> Vitamin B </TableCell>
-                    <TableCell> 480 mg </TableCell>
-                    <TableCell> 356% </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
+              <tr>
+                <td className={styles.table__row__cell}> Vitamin B </td>
+                <td className={styles.table__row__cell}> 480 mg </td>
+                <td className={styles.table__row__cell}> 356% </td>
+              </tr>
+            </table>
           </Accordion>
 
           <Accordion title="Minerals">
-            <TableContainer>
-              <Table>
-                <TableBody
-                  sx={{
-                    "& .MuiTableCell-root": { padding: "10px 10px 10px 0px" },
-                  }}
-                >
-                  <TableRow
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell> Potassium </TableCell>
-                    <TableCell> 296 mg </TableCell>
-                    <TableCell> 32% </TableCell>
-                  </TableRow>
+            <table>
+              {/* sx={{ "&:last-child td, &:last-child th": { border: 0 } }} */}
+              <tr className={styles.table__row}>
+                <td className={styles.table__row__cell}> Potassium </td>
+                <td className={styles.table__row__cell}> 296 mg </td>
+                <td className={styles.table__row__cell}> 32% </td>
+              </tr>
 
-                  <TableRow>
-                    <TableCell> Iron </TableCell>
-                    <TableCell> 9 mg </TableCell>
-                    <TableCell> 39% </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell> Calcium </TableCell>
-                    <TableCell> 600 mg </TableCell>
-                    <TableCell> 232% </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
+              <tr className={styles.table__row}>
+                <td className={styles.table__row__cell}> Iron </td>
+                <td className={styles.table__row__cell}> 9 mg </td>
+                <td className={styles.table__row__cell}> 39% </td>
+              </tr>
+              <tr className={styles.table__row}>
+                <td className={styles.table__row__cell}> Calcium </td>
+                <td className={styles.table__row__cell}> 600 mg </td>
+                <td className={styles.table__row__cell}> 232% </td>
+              </tr>
+            </table>
           </Accordion>
         </div>
       </div>
@@ -143,7 +103,7 @@ const rightTray = () => {
           Disease, Condition and Systems
         </div>
         <div className={styles.compoent__box} style={{}}>
-        {healthList.map(({ name, percent }: PassingProps, index) => {
+          {healthList.map(({ name, percent }: PassingProps, index) => {
             return (
               <LinearComponent name={name} percent={percent} key={index} />
             );
