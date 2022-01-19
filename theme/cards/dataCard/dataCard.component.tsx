@@ -4,8 +4,22 @@ import styles from "./dataCard.module.scss";
 import MoreVertIcon from "../../../public/icons/more_vert_black_36dp.svg";
 import { slicedString } from "../../../services/string.service";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
-import { setChangeRecipeWithinCollection } from "../../../redux/slices/collections";
+import {
+  setOpenCollectionsTary,
+  setToggleSaveRecipeModal,
+} from "../../../redux/slices/sideTraySlice";
+import {
+  setActiveRecipeId,
+  setAllRecipeWithinCollectionsId,
+  setChangeRecipeWithinCollection,
+  setLastModifiedCollection,
+} from "../../../redux/slices/collectionSlice";
+import { setLoading } from "../../../redux/slices/utilitySlice";
+import ADD_NEW_RECIPE_TO_COLLECTION from "../../../gqlLib/collection/mutation/addNewRecipeToCollection";
+import { useMutation, useLazyQuery } from "@apollo/client";
+import { setDbUser } from "../../../redux/slices/userSlice";
+import reactToastifyNotification from "../../../components/utility/reactToastifyNotification";
+import GET_LAST_MODIFIED_COLLECTION from "../../../gqlLib/collection/query/getLastModifiedCollection";
 
 interface dataCardInterface {
   title: string;
@@ -49,14 +63,77 @@ export default function DatacardComponent({
 
   const dispatch = useAppDispatch();
   const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
+  const { allRecipeWithinCollectionsId } = useAppSelector(
+    (state) => state?.collections
+  );
+  const [addNewRecipeToCollection] = useMutation(ADD_NEW_RECIPE_TO_COLLECTION);
+  const [getLastModifiedCollection] = useLazyQuery(
+    GET_LAST_MODIFIED_COLLECTION
+  );
+  const { dbUser } = useAppSelector((state) => state?.user);
 
   const handleEclipse = () => {
     // HANDLE ECLIPSE CLICK HERE
   };
 
-  const handleCompare = () => {
-    dispatch(setOpenCollectionsTary(!openCollectionsTary));
+  const addToCollection = async (recipeId) => {
+    dispatch(setLoading(true));
+    dispatch(setActiveRecipeId(recipeId));
+    dispatch(setOpenCollectionsTary(false));
+    try {
+      const { data } = await addNewRecipeToCollection({
+        variables: {
+          data: {
+            recipe: recipeId,
+            userEmail: dbUser?.email,
+          },
+        },
+      });
+
+      const { data: lastModified } = await getLastModifiedCollection({
+        variables: {
+          userEmail: dbUser?.email,
+        },
+      });
+      dispatch(
+        setDbUser({
+          ...dbUser,
+          collections: [...data?.addTolastModifiedCollection],
+        })
+      );
+
+      dispatch(
+        setLastModifiedCollection(
+          lastModified?.getLastModifieldCollection?.name
+        )
+      );
+
+      let recipesId = [];
+      data?.addTolastModifiedCollection?.forEach((col) => {
+        const recipes = col?.recipes;
+        recipes?.forEach((recipe) => {
+          recipesId?.push(recipe?._id);
+        });
+      });
+      dispatch(setAllRecipeWithinCollectionsId(recipesId));
+      dispatch(setLoading(false));
+      dispatch(setToggleSaveRecipeModal(true));
+      setTimeout(() => {
+        dispatch(setToggleSaveRecipeModal(false));
+      }, 5000);
+      // reactToastifyNotification("info", `Successfully added to new collection`);
+    } catch (error) {
+      dispatch(setLoading(false));
+      console.log(error);
+
+      // reactToastifyNotification("eror", error?.message);
+    }
+  };
+
+  const handleCompare = (id: string) => {
+    dispatch(setOpenCollectionsTary(true));
     dispatch(setChangeRecipeWithinCollection(true));
+    dispatch(setActiveRecipeId(id));
   };
 
   const handleComment = () => {
@@ -107,79 +184,85 @@ export default function DatacardComponent({
   );
 
   return (
-    <div className={styles.datacard}>
-      <div className={styles.datacard__inner}>
-        <div className={styles.datacard__body}>
-          <div className={styles.datacard__body__top}>
-            <div className={styles.datacard__body__top__heading}>
-              <h2 className={styles.title}>{title}</h2>
+    <>
+      <div className={styles.datacard}>
+        <div className={styles.datacard__inner}>
+          <div className={styles.datacard__body}>
+            <div className={styles.datacard__body__top}>
+              <div className={styles.datacard__body__top__heading}>
+                <h2 className={styles.title}>{title}</h2>
+              </div>
+              <div className={styles.datacard__body__top__menu}>
+                <MoreVertIcon onClick={handleClick} />
+                <FloatingMenu />
+              </div>
             </div>
-            <div className={styles.datacard__body__top__menu}>
-              <MoreVertIcon onClick={handleClick} />
-              <FloatingMenu />
+            <div className={styles.datacard__body__middle}>
+              <div className={styles.datacard__body__middle__left}>
+                <div
+                  className={styles.image}
+                  style={{ backgroundImage: `url(${image})` }}
+                ></div>
+              </div>
+              <div className={styles.datacard__body__middle__right}>
+                <DataBody />
+              </div>
             </div>
-          </div>
-          <div className={styles.datacard__body__middle}>
-            <div className={styles.datacard__body__middle__left}>
-              <div
-                className={styles.image}
-                style={{ backgroundImage: `url(${image})` }}
-              ></div>
+            <div className={styles.datacard__body__belt}>
+              <div className={styles.datacard__body__belt__child}>
+                Net Carbs <span>{carbs}</span>
+              </div>
+              <div className={styles.datacard__body__belt__child}>
+                Rx Score <span>{score}</span>
+              </div>
+              <div className={styles.datacard__body__belt__child}>
+                Calorie <span>{calorie}</span>
+              </div>
             </div>
-            <div className={styles.datacard__body__middle__right}>
-              <DataBody />
-            </div>
-          </div>
-          <div className={styles.datacard__body__belt}>
-            <div className={styles.datacard__body__belt__child}>
-              Net Carbs <span>{carbs}</span>
-            </div>
-            <div className={styles.datacard__body__belt__child}>
-              Rx Score <span>{score}</span>
-            </div>
-            <div className={styles.datacard__body__belt__child}>
-              Calorie <span>{calorie}</span>
-            </div>
-          </div>
-          <div className={styles.datacard__body__bottom}>
-            <div className={styles.datacard__body__bottom__left}>
-              <img src="/icons/delish.png" alt="brand" />
-            </div>
-            <div className={styles.datacard__body__bottom__right}>
-              <ul>
-                <li>
-                  {" "}
-                  <img
-                    src="/icons/eclipse.svg"
-                    alt="eclipse"
-                    onClick={handleEclipse}
-                  />{" "}
-                </li>
-                <li>
-                  {checkWithinCollection ? (
+            <div className={styles.datacard__body__bottom}>
+              <div className={styles.datacard__body__bottom__left}>
+                <img src="/icons/delish.png" alt="brand" />
+              </div>
+              <div className={styles.datacard__body__bottom__right}>
+                <ul>
+                  <li>
+                    {" "}
                     <img
-                      src="/icons/compare.svg"
-                      alt="compare"
-                      onClick={handleCompare}
-                    />
-                  ) : (
-                    <img src="/images/BookmarksStar.svg" alt="compare" />
-                  )}
-                </li>
-                <li>
-                  {" "}
-                  <img
-                    src="/icons/message.svg"
-                    alt="message"
-                    onClick={handleComment}
-                  />{" "}
-                  <span>{noOfComments}</span>{" "}
-                </li>
-              </ul>
+                      src="/icons/eclipse.svg"
+                      alt="eclipse"
+                      onClick={handleEclipse}
+                    />{" "}
+                  </li>
+                  <li>
+                    {allRecipeWithinCollectionsId?.includes(recipeId) ? (
+                      <img
+                        src="/icons/compare.svg"
+                        alt="compare"
+                        onClick={() => handleCompare(recipeId)}
+                      />
+                    ) : (
+                      <img
+                        src="/images/BookmarksStar.svg"
+                        alt="compare"
+                        onClick={() => addToCollection(recipeId)}
+                      />
+                    )}
+                  </li>
+                  <li>
+                    {" "}
+                    <img
+                      src="/icons/message.svg"
+                      alt="message"
+                      onClick={handleComment}
+                    />{" "}
+                    <span>{noOfComments}</span>{" "}
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
