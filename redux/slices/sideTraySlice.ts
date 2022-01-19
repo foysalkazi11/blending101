@@ -8,6 +8,7 @@ type SideTrayState = {
   openCommentsTray: boolean;
   openModal: boolean;
   openCollectionsTary: boolean;
+  openSaveRecipeModal: boolean;
 };
 
 const initialState: SideTrayState = {
@@ -18,6 +19,7 @@ const initialState: SideTrayState = {
   openCommentsTray: false,
   openModal: false,
   openCollectionsTary: false,
+  openSaveRecipeModal: false,
 };
 
 export const sideTraySlice = createSlice({
@@ -42,6 +44,9 @@ export const sideTraySlice = createSlice({
     setToggleModal: (state, action: PayloadAction<boolean>) => {
       state.openModal = action?.payload;
     },
+    setToggleSaveRecipeModal: (state, action: PayloadAction<boolean>) => {
+      state.openSaveRecipeModal = action?.payload;
+    },
     setOpenCollectionsTary: (state, action: PayloadAction<boolean>) => {
       state.openCollectionsTary = action?.payload;
     },
@@ -56,6 +61,7 @@ export const {
   setOpenCommentsTray,
   setToggleModal,
   setOpenCollectionsTary,
+  setToggleSaveRecipeModal,
 } = sideTraySlice?.actions;
 
 export default sideTraySlice?.reducer;

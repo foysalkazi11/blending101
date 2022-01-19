@@ -15,33 +15,36 @@ import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import FilterPageBottom from "../../components/recipe/recipeFilter/filterBottom.component";
 import FooterRecipeFilter from "../../components/footer/footerRecipeFilter.component";
-import { setAllRecipeWithinCollectionsId } from "../../redux/slices/collections";
-
+import {
+  setAllRecipeWithinCollectionsId,
+  setChangeRecipeWithinCollection,
+} from "../../redux/slices/collectionSlice";
+import {
+  setOpenCollectionsTary,
+  setToggleSaveRecipeModal,
+} from "../../redux/slices/sideTraySlice";
+import SaveRecipeModal from "../saveRecipeModal/SaveRecipeModal";
 const RecipeDetails = () => {
   const [recommended, setRecommended] = useState([]);
   const [popular, setPopular] = useState([]);
   const [latest, setLatest] = useState([]);
   const blends = useAppSelector((state) => state.sideTray.blends);
   const { dbUser } = useAppSelector((state) => state?.user);
-  const [allRecipeWithinCollectionId, setAllRecipeWithinCollectionId] =
-    useState([]);
-  const dispatch = useAppDispatch();
-
-  const checkExistingRecipe = (recipeId: string) => {
-    return allRecipeWithinCollectionId?.includes(recipeId);
-  };
+  const { lastModifiedCollection } = useAppSelector(
+    (state) => state?.collections
+  );
 
   useEffect(() => {
-    let recipesId = [];
-    dbUser?.collections?.forEach((col) => {
-      const recipes = col?.recipes;
-      recipes?.forEach((recipe) => {
-        recipesId?.push(recipe?._id);
-      });
-    });
-    setAllRecipeWithinCollectionId(recipesId);
-    dispatch(setAllRecipeWithinCollectionsId(recipesId));
-  }, []);
+    console.log(dbUser);
+  }, [dbUser]);
+
+  const dispatch = useAppDispatch();
+
+  const handleCompareRecipe = () => {
+    dispatch(setOpenCollectionsTary(true));
+    dispatch(setChangeRecipeWithinCollection(true));
+    dispatch(setToggleSaveRecipeModal(false));
+  };
 
   useEffect(() => {
     axios
@@ -83,73 +86,35 @@ const RecipeDetails = () => {
   }, []);
 
   return (
-    <AContainer showLeftTray={true} filterTray={true}>
-      <div className={styles.main__div}>
-        <SearchBar />
-        <SearchtagsComponent />
-        {blends.length ? (
-          <FilterPageBottom blends={blends} />
-        ) : (
-          <div className={styles.bottom}>
-            <AppdownLoadCard />
-            <div className={styles.main__tray}>
-              {/* pass list of card to create carousel slider */}
+    <>
+      <AContainer showLeftTray={true} filterTray={true}>
+        <div className={styles.main__div}>
+          <SearchBar />
+          <SearchtagsComponent />
+          {blends.length ? (
+            <FilterPageBottom blends={blends} />
+          ) : (
+            <div className={styles.bottom}>
+              <AppdownLoadCard />
+              <div className={styles.main__tray}>
+                {/* pass list of card to create carousel slider */}
 
-              {/* its for recommended */}
-              {recommended && (
-                <ContentTray
-                  heading={"Recommended"}
-                  image={"/images/thumbs-up.svg"}
-                >
-                  {recommended?.map((item, index) => {
-                    let ingredients = [];
-                    item.testIngredient.forEach((ing) => {
-                      ingredients.push(ing.name);
-                    });
-                    const ing = ingredients.toString();
-                    return (
-                      <div
-                        className={styles.slider__card}
-                        key={"recommended" + index}
-                      >
-                        <DatacardComponent
-                          title={item.name}
-                          ingredients={ing}
-                          category={item.recipeBlendCategory?.name}
-                          ratings={item.ratings}
-                          noOfRatings={item.noOfRatings}
-                          carbs={item.carbs}
-                          score={item.score}
-                          calorie={item.calorie}
-                          noOfComments={item.noOfComments}
-                          image={item.image[0]?.image}
-                          checkWithinCollection={checkExistingRecipe(item?._id)}
-                          recipeId={item?._id}
-                        />
-                      </div>
-                    );
-                  })}
-                </ContentTray>
-              )}
-
-              {/* its for Recent*/}
-
-              {latest && (
-                <ContentTray
-                  heading={"Recent"}
-                  image={"/images/clock-light.svg"}
-                >
-                  {latest?.map((item, index) => {
-                    let ingredients = [];
-                    item.testIngredient.forEach((ing) => {
-                      ingredients.push(ing.name);
-                    });
-                    const ing = ingredients.toString();
-                    {
+                {/* its for recommended */}
+                {recommended && (
+                  <ContentTray
+                    heading={"Recommended"}
+                    image={"/images/thumbs-up.svg"}
+                  >
+                    {recommended?.map((item, index) => {
+                      let ingredients = [];
+                      item.testIngredient.forEach((ing) => {
+                        ingredients.push(ing.name);
+                      });
+                      const ing = ingredients.toString();
                       return (
                         <div
                           className={styles.slider__card}
-                          key={"latest" + index}
+                          key={"recommended" + index}
                         >
                           <DatacardComponent
                             title={item.name}
@@ -162,66 +127,104 @@ const RecipeDetails = () => {
                             calorie={item.calorie}
                             noOfComments={item.noOfComments}
                             image={item.image[0]?.image}
-                            checkWithinCollection={checkExistingRecipe(
-                              item?._id
-                            )}
                             recipeId={item?._id}
                           />
                         </div>
                       );
-                    }
-                  })}
-                </ContentTray>
-              )}
-              {/* its for Popular */}
+                    })}
+                  </ContentTray>
+                )}
 
-              {popular && (
-                <ContentTray
-                  heading={"Popular"}
-                  image={"/images/fire-alt-light.svg"}
-                >
-                  {popular?.map((item, index) => {
-                    let ingredients = [];
-                    item.testIngredient.forEach((ing) => {
-                      ingredients.push(ing.name);
-                    });
-                    const ing = ingredients.toString();
-                    {
-                      return (
-                        <div
-                          className={styles.slider__card}
-                          key={"popular" + index}
-                        >
-                          <DatacardComponent
-                            title={item.name}
-                            ingredients={ing}
-                            category={item.recipeBlendCategory?.name}
-                            ratings={item.ratings}
-                            noOfRatings={item.noOfRatings}
-                            carbs={item.carbs}
-                            score={item.score}
-                            calorie={item.calorie}
-                            noOfComments={item.noOfComments}
-                            image={item.image[0]?.image}
-                            checkWithinCollection={checkExistingRecipe(
-                              item?._id
-                            )}
-                            recipeId={item?._id}
-                          />
-                        </div>
-                      );
-                    }
-                  })}
-                </ContentTray>
-              )}
+                {/* its for Recent*/}
+
+                {latest && (
+                  <ContentTray
+                    heading={"Recent"}
+                    image={"/images/clock-light.svg"}
+                  >
+                    {latest?.map((item, index) => {
+                      let ingredients = [];
+                      item.testIngredient.forEach((ing) => {
+                        ingredients.push(ing.name);
+                      });
+                      const ing = ingredients.toString();
+                      {
+                        return (
+                          <div
+                            className={styles.slider__card}
+                            key={"latest" + index}
+                          >
+                            <DatacardComponent
+                              title={item.name}
+                              ingredients={ing}
+                              category={item.recipeBlendCategory?.name}
+                              ratings={item.ratings}
+                              noOfRatings={item.noOfRatings}
+                              carbs={item.carbs}
+                              score={item.score}
+                              calorie={item.calorie}
+                              noOfComments={item.noOfComments}
+                              image={item.image[0]?.image}
+                              recipeId={item?._id}
+                            />
+                          </div>
+                        );
+                      }
+                    })}
+                  </ContentTray>
+                )}
+                {/* its for Popular */}
+
+                {popular && (
+                  <ContentTray
+                    heading={"Popular"}
+                    image={"/images/fire-alt-light.svg"}
+                  >
+                    {popular?.map((item, index) => {
+                      let ingredients = [];
+                      item.testIngredient.forEach((ing) => {
+                        ingredients.push(ing.name);
+                      });
+                      const ing = ingredients.toString();
+                      {
+                        return (
+                          <div
+                            className={styles.slider__card}
+                            key={"popular" + index}
+                          >
+                            <DatacardComponent
+                              title={item.name}
+                              ingredients={ing}
+                              category={item.recipeBlendCategory?.name}
+                              ratings={item.ratings}
+                              noOfRatings={item.noOfRatings}
+                              carbs={item.carbs}
+                              score={item.score}
+                              calorie={item.calorie}
+                              noOfComments={item.noOfComments}
+                              image={item.image[0]?.image}
+                              recipeId={item?._id}
+                            />
+                          </div>
+                        );
+                      }
+                    })}
+                  </ContentTray>
+                )}
+              </div>
             </div>
-          </div>
-        )}
-      </div>
-      <div className={styles.footerMainDiv}>
-        <FooterRecipeFilter />
-      </div>
-    </AContainer>
+          )}
+        </div>
+        <div className={styles.footerMainDiv}>
+          <FooterRecipeFilter />
+        </div>
+      </AContainer>
+      <SaveRecipeModal
+        title={lastModifiedCollection}
+        handleChange={handleCompareRecipe}
+        modalContentStyle={{ borderRadius: "29px" }}
+      />
+    </>
   );
 };
 
