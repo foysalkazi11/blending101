@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
-const DELETE_COLLECTION = gql`
-  mutation Mutation($data: RemoveACollectionInput!) {
-    deleteCollection(data: $data) {
+const REMOVE_EXISTING_RECIPE_TO_ANOTHER_COLLECTION = gql`
+  mutation Mutation($data: AddCRecipeTOAUserCollectionInput!) {
+    removeRecipeFromAColection(data: $data) {
       _id
       name
       image
@@ -53,4 +53,4 @@ const DELETE_COLLECTION = gql`
   }
 `;
 
-export default DELETE_COLLECTION;
+export default REMOVE_EXISTING_RECIPE_TO_ANOTHER_COLLECTION;

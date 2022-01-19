@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import LeftTrayWrapper from "../leftTray.wrapper";
 import CollectionComponent from "./content/collection.component";
 import ThemeComponent from "./content/theme.component";
@@ -18,9 +18,8 @@ export default function CollectionTray(props) {
   });
   const [isEditCollection, setIsEditCollection] = useState(false);
   const [collectionId, setCollectionId] = useState("");
-  const {
-    dbUser: { collections },
-  } = useAppSelector((state) => state?.user);
+  const { dbUser } = useAppSelector((state) => state?.user);
+
   const dispatch = useAppDispatch();
 
   const reff = useRef<any>();
@@ -80,7 +79,7 @@ export default function CollectionTray(props) {
         {toggle === 1 && (
           <div>
             <CollectionComponent
-              collections={collections}
+              collections={dbUser?.collections}
               setInput={setInput}
               setIsEditCollection={setIsEditCollection}
               setCollectionId={setCollectionId}

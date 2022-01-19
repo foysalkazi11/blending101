@@ -1,8 +1,10 @@
 import { gql } from "@apollo/client";
 
-const DELETE_COLLECTION = gql`
-  mutation Mutation($data: RemoveACollectionInput!) {
-    deleteCollection(data: $data) {
+const ADD_NEW_RECIPE_TO_COLLECTION = gql`
+  mutation AddTolastModifiedCollection(
+    $data: AddToLastModifiedCollectionInput!
+  ) {
+    addTolastModifiedCollection(data: $data) {
       _id
       name
       image
@@ -52,5 +54,4 @@ const DELETE_COLLECTION = gql`
     }
   }
 `;
-
-export default DELETE_COLLECTION;
+export default ADD_NEW_RECIPE_TO_COLLECTION;
