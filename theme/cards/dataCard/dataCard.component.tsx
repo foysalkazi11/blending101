@@ -80,13 +80,15 @@ export default function DatacardComponent({
     dispatch(setLoading(true));
     dispatch(setActiveRecipeId(recipeId));
     dispatch(setOpenCollectionsTary(false));
+    const variablesData = {
+      recipe: recipeId,
+      userEmail: dbUser?.email,
+    };
+
     try {
       const { data } = await addNewRecipeToCollection({
         variables: {
-          data: {
-            recipe: recipeId,
-            userEmail: dbUser?.email,
-          },
+          data: variablesData,
         },
       });
 
@@ -95,6 +97,7 @@ export default function DatacardComponent({
           userEmail: dbUser?.email,
         },
       });
+
       dispatch(
         setDbUser({
           ...dbUser,

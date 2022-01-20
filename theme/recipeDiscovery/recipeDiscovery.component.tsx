@@ -24,19 +24,16 @@ import {
   setToggleSaveRecipeModal,
 } from "../../redux/slices/sideTraySlice";
 import SaveRecipeModal from "../saveRecipeModal/SaveRecipeModal";
+import ShowCollectionRecipes from "../showCollectionRecipes/ShowCollectionRecipes";
 const RecipeDetails = () => {
   const [recommended, setRecommended] = useState([]);
   const [popular, setPopular] = useState([]);
   const [latest, setLatest] = useState([]);
   const blends = useAppSelector((state) => state.sideTray.blends);
-  const { dbUser } = useAppSelector((state) => state?.user);
-  const { lastModifiedCollection } = useAppSelector(
+  const { dbUser, user } = useAppSelector((state) => state?.user);
+  const { lastModifiedCollection, collectionDetailsId } = useAppSelector(
     (state) => state?.collections
   );
-
-  useEffect(() => {
-    console.log(dbUser);
-  }, [dbUser]);
 
   const dispatch = useAppDispatch();
 
@@ -47,43 +44,46 @@ const RecipeDetails = () => {
   };
 
   useEffect(() => {
-    axios
-      .post("https://blendingrecipe.herokuapp.com/graphql", {
-        query: FETCH_RECOMMENDED_RECIPES,
-      })
-      .then((result) => {
-        const res = result.data?.data?.getAllrecomendedRecipes || [];
-        console.log(res);
+    if (user) {
+      axios
+        .post("https://blendingrecipe.herokuapp.com/graphql", {
+          query: FETCH_RECOMMENDED_RECIPES,
+        })
+        .then((result) => {
+          const res = result.data?.data?.getAllrecomendedRecipes || [];
+          console.log(res);
 
-        setRecommended([...res]);
-      })
-      .catch((err) => {
-        console.log(err, "err");
-      });
+          setRecommended([...res]);
+        })
+        .catch((err) => {
+          console.log(err, "err");
+        });
 
-    axios
-      .post("https://blendingrecipe.herokuapp.com/graphql", {
-        query: FETCH_POPULAR_RECIPES,
-      })
-      .then((result) => {
-        const res = result.data?.data?.getAllpopularRecipes || [];
-        setPopular([...res]);
-      })
-      .catch((err) => {
-        console.log(err, "err");
-      });
-    axios
-      .post("https://blendingrecipe.herokuapp.com/graphql", {
-        query: FETCH_LATEST_RECIPES,
-      })
-      .then((result) => {
-        const res = result.data?.data?.getAllLatestRecipes || [];
-        setLatest([...res]);
-      })
-      .catch((err) => {
-        console.log(err, "err");
-      });
-  }, []);
+      axios
+        .post("https://blendingrecipe.herokuapp.com/graphql", {
+          query: FETCH_POPULAR_RECIPES,
+        })
+        .then((result) => {
+          const res = result.data?.data?.getAllpopularRecipes || [];
+          setPopular([...res]);
+        })
+        .catch((err) => {
+          console.log(err, "err");
+        });
+      axios
+        .post("https://blendingrecipe.herokuapp.com/graphql", {
+          query: FETCH_LATEST_RECIPES,
+        })
+        .then((result) => {
+          const res = result.data?.data?.getAllLatestRecipes || [];
+          setLatest([...res]);
+        })
+        .catch((err) => {
+          console.log(err, "err");
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   return (
     <>
@@ -91,15 +91,16 @@ const RecipeDetails = () => {
         <div className={styles.main__div}>
           <SearchBar />
           <SearchtagsComponent />
-          {blends.length ? (
+          {collectionDetailsId ? (
+            <ShowCollectionRecipes />
+          ) : blends.length ? (
             <FilterPageBottom blends={blends} />
           ) : (
             <div className={styles.bottom}>
               <AppdownLoadCard />
               <div className={styles.main__tray}>
-                {/* pass list of card to create carousel slider */}
-
                 {/* its for recommended */}
+
                 {recommended && (
                   <ContentTray
                     heading={"Recommended"}
