@@ -5,6 +5,8 @@ type collectionsSliceState = {
   changeRecipeWithinCollection: boolean;
   activeRecipeId: string;
   lastModifiedCollection: string;
+  collectionDetailsId: string;
+  showAllRecipes: boolean;
 };
 
 const initialState: collectionsSliceState = {
@@ -12,6 +14,8 @@ const initialState: collectionsSliceState = {
   changeRecipeWithinCollection: false,
   activeRecipeId: "",
   lastModifiedCollection: "Default",
+  collectionDetailsId: "",
+  showAllRecipes: false,
 };
 
 export const collectionsSlice = createSlice({
@@ -36,6 +40,12 @@ export const collectionsSlice = createSlice({
     setLastModifiedCollection: (state, action: PayloadAction<string>) => {
       state.lastModifiedCollection = action?.payload;
     },
+    setCollectionDetailsId: (state, action: PayloadAction<string>) => {
+      state.collectionDetailsId = action?.payload;
+    },
+    setShowAllRecipes: (state, action: PayloadAction<boolean>) => {
+      state.showAllRecipes = action?.payload;
+    },
   },
 });
 
@@ -44,6 +54,8 @@ export const {
   setChangeRecipeWithinCollection,
   setActiveRecipeId,
   setLastModifiedCollection,
+  setCollectionDetailsId,
+  setShowAllRecipes,
 } = collectionsSlice?.actions;
 
 export default collectionsSlice?.reducer;
