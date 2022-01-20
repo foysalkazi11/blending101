@@ -19,25 +19,35 @@ export default function CollectionTray(props) {
   const [isEditCollection, setIsEditCollection] = useState(false);
   const [collectionId, setCollectionId] = useState("");
   const { dbUser } = useAppSelector((state) => state?.user);
+  const { changeRecipeWithinCollection } = useAppSelector(
+    (state) => state?.collections
+  );
 
   const dispatch = useAppDispatch();
 
   const reff = useRef<any>();
 
   const handleToggle = (no: number) => {
-    if (no === 1) {
-      reff.current.style.left = "0";
-    } else {
-      reff.current.style.left = "50%";
+    if (!changeRecipeWithinCollection) {
+      if (no === 1) {
+        reff.current.style.left = "0";
+      } else {
+        reff.current.style.left = "50%";
+      }
+      setToggle(no);
     }
-    setToggle(no);
   };
   return (
     <LeftTrayWrapper id="collection123">
       <div className={styles.main}>
         <div className={styles.main__top}>
           <div className={styles.main__top__menu}>
-            <div className={styles.active} ref={reff}></div>
+            <div
+              className={styles.active}
+              ref={reff}
+              style={{ width: changeRecipeWithinCollection ? "100%" : null }}
+            ></div>
+
             <div
               className={
                 toggle === 2
@@ -45,19 +55,22 @@ export default function CollectionTray(props) {
                   : styles.main__top__menu__child + " " + styles.active__menu
               }
               onClick={() => handleToggle(1)}
+              style={{ width: changeRecipeWithinCollection ? "100%" : null }}
             >
               <span></span> Collection
             </div>
-            <div
-              className={
-                toggle === 1
-                  ? styles.main__top__menu__child
-                  : styles.main__top__menu__child + " " + styles.active__menu
-              }
-              onClick={() => handleToggle(2)}
-            >
-              <span></span> Themes
-            </div>
+            {changeRecipeWithinCollection ? null : (
+              <div
+                className={
+                  toggle === 1
+                    ? styles.main__top__menu__child
+                    : styles.main__top__menu__child + " " + styles.active__menu
+                }
+                onClick={() => handleToggle(2)}
+              >
+                <span></span> Themes
+              </div>
+            )}
           </div>
         </div>
         <div className={styles.addCollectioContainer}>

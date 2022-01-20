@@ -1,11 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import { useAppDispatch } from "../../redux/hooks";
+import { setCollectionDetailsId } from "../../redux/slices/collectionSlice";
 import styles from "./sidebar.module.scss";
 
 export default function SidebarComponent(props) {
   const [active, setActive] = useState(0);
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const pages = [
     { logo: "/icons/home.svg", link: "/" },
@@ -19,6 +22,9 @@ export default function SidebarComponent(props) {
 
   const handleClick = (link: string, i: number) => {
     setActive(i);
+    if (i === 1) {
+      dispatch(setCollectionDetailsId(""));
+    }
   };
 
   return (
