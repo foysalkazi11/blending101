@@ -24,6 +24,7 @@ const CustomModal = ({
       className={styles.content}
       overlayClassName={styles.overlay}
       shouldCloseOnOverlayClick={true}
+      ariaHideApp={false}
       style={{
         overlay: {
           ...overlayStyle,

@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./content.module.scss";
 import { MdMoreVert, MdDeleteOutline } from "react-icons/md";
 import { HiOutlineShare } from "react-icons/hi";
 import { BiEditAlt } from "react-icons/bi";
-import { setToggleModal } from "../../../../redux/slices/sideTraySlice";
+import {
+  setOpenCollectionsTary,
+  setToggleModal,
+} from "../../../../redux/slices/sideTraySlice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { setLoading } from "../../../../redux/slices/utilitySlice";
 import { useLazyQuery, useMutation } from "@apollo/client";
@@ -13,7 +16,11 @@ import reactToastifyNotification from "../../../../components/utility/reactToast
 import CustomCheckbox from "../../../../theme/checkbox/CustomCheckbox";
 import ADD_EXISTING_RECIPE_TO_ANOTHER_COLLECTION from "../../../../gqlLib/collection/mutation/addExistingRecipeToAnotherCollection";
 import REMOVE_EXISTING_RECIPE_TO_ANOTHER_COLLECTION from "../../../../gqlLib/collection/mutation/removeReicpeFromExistingCollection";
-import { setAllRecipeWithinCollectionsId } from "../../../../redux/slices/collectionSlice";
+import {
+  setAllRecipeWithinCollectionsId,
+  setCollectionDetailsId,
+  setShowAllRecipes,
+} from "../../../../redux/slices/collectionSlice";
 import GET_LAST_MODIFIED_COLLECTION from "../../../../gqlLib/collection/query/getLastModifiedCollection";
 
 type CollectionComponentProps = {
@@ -67,12 +74,6 @@ export default function CollectionComponent({
             collections: [...data?.addRecipeToAUserCollection],
           })
         );
-
-        const { data: lastModified } = await getLastModifiedCollection({
-          variables: {
-            userEmail: dbUser?.email,
-          },
-        });
 
         let recipesId = [];
         data?.addRecipeToAUserCollection?.forEach((col) => {
@@ -184,6 +185,32 @@ export default function CollectionComponent({
     <div className={styles.collection}>
       <div className={styles.collection__add}></div>
       <div className={styles.collection__collections}>
+        {changeRecipeWithinCollection ? null : (
+          <div className={styles.collection__child}>
+            <div
+              className={styles.leftSide}
+              onClick={() => {
+                dispatch(setShowAllRecipes(true));
+                dispatch(setOpenCollectionsTary(false));
+              }}
+            >
+              <div className={styles.img}>
+                <div
+                  className={styles.abs}
+                  style={{
+                    backgroundImage: `url(${
+                      //@ts-ignore
+                      "/cards/food.png"
+                    })`,
+                  }}
+                ></div>
+              </div>
+
+              {/* @ts-ignore */}
+              <p>All Recipies</p>
+            </div>
+          </div>
+        )}
         {collections?.length &&
           collections?.map((item, i) => (
             <div
@@ -191,7 +218,15 @@ export default function CollectionComponent({
               key={"collections__child" + i}
               onClick={() => setShowMenu(null)}
             >
-              <div className={styles.leftSide}>
+              <div
+                className={styles.leftSide}
+                onClick={() => {
+                  dispatch(setShowAllRecipes(false));
+                  /* @ts-ignore */
+                  dispatch(setCollectionDetailsId(item?._id));
+                  dispatch(setOpenCollectionsTary(false));
+                }}
+              >
                 <div className={styles.img}>
                   <div
                     className={styles.abs}
@@ -211,19 +246,17 @@ export default function CollectionComponent({
                 <div className={styles.checkBox}>
                   <CustomCheckbox
                     /* @ts-ignore */
-                    disable={item?.name === "Default" ? true : false}
+                    // disable={item?.name === "Default" ? true : false}
                     checked={
                       /* @ts-ignore */
-                      item?.name === "Default"
-                        ? true
-                        : /* @ts-ignore */
-                          checkExistingRecipe(item?.recipes)
+                      checkExistingRecipe(item?.recipes)
                     }
                     /* @ts-ignore */
                     handleChange={(e) => handleChange(e, item?._id)}
                   />
                 </div>
-              ) : (
+              ) : /* @ts-ignore */
+              item?.name === "My Favourite" ? null : (
                 <div className={styles.rightSide}>
                   <MdMoreVert
                     className={styles.moreIcon}

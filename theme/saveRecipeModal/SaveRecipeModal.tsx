@@ -26,6 +26,7 @@ const SaveRecipe = ({
       className={styles.content}
       overlayClassName={styles.overlay}
       shouldCloseOnOverlayClick={true}
+      ariaHideApp={false}
       style={{
         overlay: {
           ...modalOverlayStyle,
