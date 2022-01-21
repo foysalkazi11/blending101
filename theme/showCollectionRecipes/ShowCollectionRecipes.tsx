@@ -32,7 +32,7 @@ const ShowCollectionRecipes = () => {
   const addToCollection = async () => {
     try {
       if (showAllRecipes) {
-        // dispatch(setLoading(true));
+        dispatch(setLoading(true));
         const { data } = await getAllRecipesWithinCollections({
           variables: {
             userEmail: dbUser?.email,
@@ -40,7 +40,7 @@ const ShowCollectionRecipes = () => {
         });
         setAllRecipes(data?.getAllRecipesFromCollection);
         setCollectionName("All Recipes");
-        // dispatch(setLoading(false));
+        dispatch(setLoading(false));
       } else {
         const findCollectionRecipes = dbUser?.collections?.find(
           (col) => col?._id === collectionDetailsId
@@ -80,6 +80,7 @@ const ShowCollectionRecipes = () => {
             src="/icons/close.svg"
             alt="closeIcon"
             onClick={() => dispatch(setShowAllRecipes(true))}
+            style={{ cursor: "pointer" }}
           />
         )}
       </div>
@@ -93,10 +94,7 @@ const ShowCollectionRecipes = () => {
                 });
                 const ing = ingredients.toString();
                 return (
-                  <div
-                    className={styles.slider__card}
-                    key={"recommended" + index}
-                  >
+                  <div className={styles.slider__card} key={index}>
                     <DatacardComponent
                       title={item.name}
                       ingredients={ing}
@@ -122,10 +120,7 @@ const ShowCollectionRecipes = () => {
               });
               const ing = ingredients.toString();
               return (
-                <div
-                  className={styles.slider__card}
-                  key={"recommended" + index}
-                >
+                <div className={styles.slider__card} key={index}>
                   <DatacardComponent
                     title={item.name}
                     ingredients={ing}
