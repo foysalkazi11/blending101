@@ -212,88 +212,96 @@ export default function CollectionComponent({
           </div>
         )}
         {collections?.length &&
-          collections?.map((item, i) => (
-            <div
-              className={styles.collection__child}
-              key={"collections__child" + i}
-              onClick={() => setShowMenu(null)}
-            >
-              <div
-                className={styles.leftSide}
-                onClick={() => {
-                  dispatch(setShowAllRecipes(false));
-                  /* @ts-ignore */
-                  dispatch(setCollectionDetailsId(item?._id));
-                  dispatch(setOpenCollectionsTary(false));
-                }}
-              >
-                <div className={styles.img}>
-                  <div
-                    className={styles.abs}
-                    style={{
-                      backgroundImage: `url(${
-                        //@ts-ignore
-                        item?.image || "/cards/food.png"
-                      })`,
-                    }}
-                  ></div>
-                </div>
+          collections?.map((item, i) => {
+            //@ts-ignore
+            const defaultImage = item?.recipes[
+              //@ts-ignore
+              item?.recipes?.length - 1
+            ]?.image?.find((img) => img?.default === true)?.image;
 
-                {/* @ts-ignore */}
-                <p>{item?.name}</p>
-              </div>
-              {changeRecipeWithinCollection ? (
-                <div className={styles.checkBox}>
-                  <CustomCheckbox
+            return (
+              <div
+                className={styles.collection__child}
+                key={"collections__child" + i}
+                onClick={() => setShowMenu(null)}
+              >
+                <div
+                  className={styles.leftSide}
+                  onClick={() => {
+                    dispatch(setShowAllRecipes(false));
                     /* @ts-ignore */
-                    // disable={item?.name === "Default" ? true : false}
-                    checked={
-                      /* @ts-ignore */
-                      checkExistingRecipe(item?.recipes)
-                    }
-                    /* @ts-ignore */
-                    handleChange={(e) => handleChange(e, item?._id)}
-                  />
+                    dispatch(setCollectionDetailsId(item?._id));
+                    dispatch(setOpenCollectionsTary(false));
+                  }}
+                >
+                  <div className={styles.img}>
+                    <div
+                      className={styles.abs}
+                      style={{
+                        backgroundImage: `url(${
+                          //@ts-ignore
+                          defaultImage || "/cards/food.png"
+                        })`,
+                      }}
+                    ></div>
+                  </div>
+
+                  {/* @ts-ignore */}
+                  <p>{item?.name}</p>
                 </div>
-              ) : /* @ts-ignore */
-              item?.name === "My Favourite" ? null : (
-                <div className={styles.rightSide}>
-                  <MdMoreVert
-                    className={styles.moreIcon}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setShowMenu(i);
-                    }}
-                  />
-                  <div
-                    className={`${styles.actionMenu} ${
-                      showMenu === i ? styles.showMenu : ""
-                    }`}
-                  >
-                    <div className={`${styles.menu}`}>
-                      <BiEditAlt
-                        className={styles.icon}
-                        onClick={() => {
-                          /* @ts-ignore */
-                          setInput((pre) => ({ ...pre, name: item?.name }));
-                          setIsEditCollection(true);
-                          /* @ts-ignore */
-                          setCollectionId(item?._id);
-                          dispatch(setToggleModal(true));
-                        }}
-                      />
-                      <MdDeleteOutline
-                        className={styles.icon}
-                        /* @ts-ignore  */
-                        onClick={() => handleDeleteCollection(item?._id)}
-                      />
-                      <HiOutlineShare className={styles.icon} />
+                {changeRecipeWithinCollection ? (
+                  <div className={styles.checkBox}>
+                    <CustomCheckbox
+                      /* @ts-ignore */
+                      // disable={item?.name === "Default" ? true : false}
+                      checked={
+                        /* @ts-ignore */
+                        checkExistingRecipe(item?.recipes)
+                      }
+                      /* @ts-ignore */
+                      handleChange={(e) => handleChange(e, item?._id)}
+                    />
+                  </div>
+                ) : /* @ts-ignore */
+                item?.name === "My Favourite" ? null : (
+                  <div className={styles.rightSide}>
+                    <MdMoreVert
+                      className={styles.moreIcon}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowMenu(i);
+                      }}
+                    />
+                    <div
+                      className={`${styles.actionMenu} ${
+                        showMenu === i ? styles.showMenu : ""
+                      }`}
+                    >
+                      <div className={`${styles.menu}`}>
+                        <BiEditAlt
+                          className={styles.icon}
+                          onClick={() => {
+                            /* @ts-ignore */
+                            setInput((pre) => ({ ...pre, name: item?.name }));
+                            setIsEditCollection(true);
+                            /* @ts-ignore */
+                            setCollectionId(item?._id);
+                            dispatch(setToggleModal(true));
+                          }}
+                        />
+                        <MdDeleteOutline
+                          className={styles.icon}
+                          /* @ts-ignore  */
+                          onClick={() => handleDeleteCollection(item?._id)}
+                        />
+                        <HiOutlineShare className={styles.icon} />
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
-            </div>
-          ))}
+                )}
+              </div>
+            );
+          })}
       </div>
     </div>
   );
