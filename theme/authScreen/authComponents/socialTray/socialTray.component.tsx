@@ -41,9 +41,7 @@ const SocialTray = () => {
       });
 
       // reactToastifyNotification("info", "Sign up successfully");
-      dispatch(setUser(email));
-      dispatch(setDbUser(data?.createNewUser));
-      dispatch(setProvider(identities?.[0]?.providerName?.toLowerCase()));
+
       let recipesId = [];
 
       data?.createNewUser?.collections?.forEach((col) => {
@@ -53,6 +51,9 @@ const SocialTray = () => {
         });
       });
       dispatch(setAllRecipeWithinCollectionsId(recipesId));
+      dispatch(setUser(email));
+      dispatch(setDbUser(data?.createNewUser));
+      dispatch(setProvider(identities?.[0]?.providerName?.toLowerCase()));
       history.push("/recipe_discovery");
     } catch (error) {
       console.log(error);

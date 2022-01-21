@@ -5,16 +5,18 @@ import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { setOpenFilterTray } from "../../redux/slices/sideTraySlice";
 
 interface leftTrayInterface {
-  filter? : false,
-  children : any,
-  id: string
+  filter?: false;
+  children: any;
+  id: string;
 }
 
-export default function FilterTrayWrapper({children, filter, id}: leftTrayInterface) {
+export default function FilterTrayWrapper({
+  children,
+  filter,
+  id,
+}: leftTrayInterface) {
   const { openFilterTray } = useAppSelector((state) => state?.sideTray);
   const dispatch = useAppDispatch();
-
-  console.log(filter, id)
 
   const ref = useRef<any>();
 
@@ -39,7 +41,7 @@ export default function FilterTrayWrapper({children, filter, id}: leftTrayInterf
           <div className={styles.image} onClick={handleClick}>
             <img src="/icons/filter-icon.svg" alt="drawer__orange" />
           </div>
-        ): null}
+        ) : null}
         {children}
       </div>
     </div>

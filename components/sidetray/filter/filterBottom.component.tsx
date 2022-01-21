@@ -14,11 +14,8 @@ export default function FilterbottomComponent(props) {
   const [toggle, setToggle] = useState(1);
   const [dpd, setDpd] = useState({ title: "All", val: "all" });
   const ingredients = filterRankingList;
-
   const dispatch = useAppDispatch();
   const ingredientsList = useAppSelector((state) => state.sideTray.ingredients);
-
-  console.log("Ingredients", ingredientsList);
 
   const handleIngredientClick = (ingredient) => {
     let blendz = [];
