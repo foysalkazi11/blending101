@@ -24,13 +24,24 @@
 }
 
 .showRecipes {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 16px;
+  @media only screen and (max-width: 1536px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  @media only screen and (max-width: 1280px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media only screen and (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media only screen and (max-width: 640px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }
 
-.slider__card {
-  margin-right: 16px;
-  margin-bottom: 16px;
-}
+// .slider__card {
+//   margin-right: 16px;
+//   margin-bottom: 16px;
+// }

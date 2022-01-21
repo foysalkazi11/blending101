@@ -2,7 +2,11 @@
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useAppDispatch } from "../../redux/hooks";
-import { setCollectionDetailsId } from "../../redux/slices/collectionSlice";
+import {
+  setCollectionDetailsId,
+  setShowAllRecipes,
+} from "../../redux/slices/collectionSlice";
+import { setOpenCollectionsTary } from "../../redux/slices/sideTraySlice";
 import styles from "./sidebar.module.scss";
 
 export default function SidebarComponent(props) {
@@ -24,6 +28,8 @@ export default function SidebarComponent(props) {
     setActive(i);
     if (i === 1) {
       dispatch(setCollectionDetailsId(""));
+      dispatch(setOpenCollectionsTary(false));
+      dispatch(setShowAllRecipes(false));
     }
   };
 
