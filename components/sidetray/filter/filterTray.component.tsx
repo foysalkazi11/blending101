@@ -2,7 +2,7 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setBlendTye } from "../../../redux/slices/sideTraySlice";
-import CheckCircle  from "../../../public/icons/check_circle_black_24dp.svg";
+import CheckCircle from "../../../public/icons/check_circle_black_24dp.svg";
 import FilterTrayWrapper from "../filter.wrapper";
 import styles from "./filter.module.scss";
 import FilterbottomComponent from "./filterBottom.component";
@@ -11,9 +11,6 @@ import { blendTypes } from "./filterRankingList";
 export default function Filtertray({ filter }) {
   const dispatch = useAppDispatch();
   const blends = useAppSelector((state) => state.sideTray.blends);
-
-  console.log("blends", blends);
-
   const handleBlendClick = (blend) => {
     let blendz = [];
     let present = false;

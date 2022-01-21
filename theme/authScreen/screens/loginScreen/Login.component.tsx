@@ -42,9 +42,6 @@ const LoginScreen = () => {
 
       dispatch(setLoading(false));
       reactToastifyNotification("info", "Login successfully");
-      dispatch(setUser(email));
-      dispatch(setDbUser(data?.createNewUser));
-      dispatch(setProvider("email"));
       let recipesId = [];
       data?.createNewUser?.collections?.forEach((col) => {
         const recipes = col?.recipes;
@@ -53,6 +50,9 @@ const LoginScreen = () => {
         });
       });
       dispatch(setAllRecipeWithinCollectionsId(recipesId));
+      dispatch(setUser(email));
+      dispatch(setDbUser(data?.createNewUser));
+      dispatch(setProvider("email"));
       histroy.back();
     } catch (error) {
       dispatch(setLoading(false));
