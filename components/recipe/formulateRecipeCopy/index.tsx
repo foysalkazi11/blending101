@@ -11,6 +11,7 @@ import CreateNewRecipe from "./CreateNewRecipe";
 
 import SubNav from "../share/subNav/SubNav";
 import SliderArrows from "../share/sliderArrows/SliderArrows";
+import { current } from "@reduxjs/toolkit";
 
 const responsiveSetting = {
   slidesToShow: 7,
@@ -251,95 +252,24 @@ const FormulateRecipe = () => {
     }
   };
 
-  const sliderRelativeDiv = useRef();
-  const sliderAbsoluteDiv = useRef();
-  const recipeDivRef = useRef();
+  const sliderRelativeDiv = useRef<any>();
+  const sliderAbsoluteDiv = useRef<any>();
+  const recipeDivRef = useRef<any>();
 
-  let outer;
-  let inner;
-  let cardWidth;
 
-  const [sliderClickWidth, setSlidercClickWidth] = useState(0);
   const handleClick = (sign) => {
-    outer = sliderRelativeDiv.current.getBoundingClientRect();
-    inner = sliderAbsoluteDiv.current.getBoundingClientRect();
-    cardWidth = recipeDivRef.current.getBoundingClientRect();
-
-    const checkBoundry = () => {
-      console.log(outer.width);
-      console.log("|||||||||||||||||||||");
-      console.log(inner);
-      console.log("////////////////");
-      console.log(cardWidth.width);
-    };
+    const absElement = sliderAbsoluteDiv.current;
+    const card = recipeDivRef.current;
+    const cardWid = parseFloat(card.offsetWidth) || 0;
+    const left = parseFloat(absElement.style.left) || 0;
+    const value = sign === '<' ? left + cardWid : left - cardWid;
 
     if (sign === "<") {
-      checkBoundry();
-
-      let currentValue = sliderClickWidth;
-
-      console.log(currentValue);
-      console.log("first");
-
-      if (currentValue >= 0) {
-        sliderAbsoluteDiv.current.style.left = "0px";
-        console.log(currentValue);
-        setSlidercClickWidth(currentValue);
-      } else {
-        currentValue = currentValue;
-
-        sliderAbsoluteDiv.current.left = `${currentValue}px`;
-        setSlidercClickWidth(currentValue);
-      }
-    } else if (sign === ">") {
-      checkBoundry();
-      let currentValue = sliderClickWidth;
-
-      if (inner.right <= outer.right) {
-        currentValue = currentValue - cardWidth.width;
-        sliderAbsoluteDiv.current.style.left = `${currentValue}px`;
-        setSlidercClickWidth(inner.width - outer.width);
-      }
-    } else {
-      console.log("else");
+      if(left === 0) return
+      absElement.style.left = value + 'px'
+    } else{
+      absElement.style.left = value + 'px'
     }
-
-    // if (sign === "<") {
-    //   // console.log("<<<<");
-    //   let currentValue = sliderClickWidth;
-    //   if (currentValue >= 0) {
-    //     currentValue = 0;
-    //     sliderAbsoluteDiv.current.style.left = `0px`;
-    //     console.log(currentValue+"=======================");
-    //     setSlidercClickWidth(currentValue);
-    //   } else {
-    //     currentValue += 312;
-    //     sliderAbsoluteDiv.current.style.left = `${currentValue}px`;
-    //     console.log(currentValue+"=======================++++++++++++++");
-    //     setSlidercClickWidth(currentValue);
-    //   }
-
-    //   console.log(currentValue);
-    //   console.log(currentValue);
-
-    // } else if (sign === ">") {
-    //   // console.log(">>>>");
-    //   let currentValue = sliderClickWidth;
-
-    //   if (inner.right <= outer.right) {
-    //     console.log(currentValue+"=======================++++++++++++++------------------");
-    //     currentValue -= 312;
-    //     setSlidercClickWidth(inner.width - outer.width);
-    //     sliderAbsoluteDiv.current.style.left = `${currentValue}px`;
-    //   } else {
-    //     currentValue -= 312;
-    //     sliderAbsoluteDiv.current.style.left = `${currentValue}px`;
-    //     console.log(currentValue+"=======================++::::::::::------------------");
-    //     setSlidercClickWidth(currentValue);
-    //   }
-    // } else {
-    //   setSlidercClickWidth(0);
-    // }
   };
 
   return (
