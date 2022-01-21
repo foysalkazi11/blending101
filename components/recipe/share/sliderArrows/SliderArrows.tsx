@@ -4,7 +4,7 @@ import ChevronRightIcon from "../../../../public/icons/chevron_right_black_36dp.
 import styles from "./SliderArrows.module.scss";
 
 type SliderArrowsProps = {
-  compareRecipeLength: number;
+  compareRecipeLength?: number;
   prevFunc: () => void;
   nextFunc: () => void;
 };

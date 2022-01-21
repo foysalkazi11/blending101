@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import Acontainer from "../../../containers/A.container";
 import styles from "./formulateRecipe.module.scss";
 import list from "../fackData/racipeList";
@@ -8,7 +7,7 @@ import SmallcardComponent from "../../../theme/cards/smallCard/SmallCard.compone
 import RecipeDetails from "../share/recipeDetails/RecipeDetails";
 import { DragDropContext } from "react-beautiful-dnd";
 import CreateNewRecipe from "./CreateNewRecipe";
-
+import Slider from "react-slick";
 import SubNav from "../share/subNav/SubNav";
 import SliderArrows from "../share/sliderArrows/SliderArrows";
 
@@ -88,8 +87,7 @@ const reorder = (list, startIndex, endIndex) => {
 
 const FormulateRecipe = () => {
   const [recipeList, setRecipeList] = useState(list);
-  const [compareRecipeList, setcompareRecipeList] = useState(list);
-  // const [compareRecipeList, setcompareRecipeList] = useState(list.slice(0, 4));
+  const [compareRecipeList, setcompareRecipeList] = useState(list.slice(0, 4));
   const sliderRef = useRef(null);
   const [newRecipe, setNewRecipe] = useState<{}>({
     id: 456,
@@ -251,169 +249,67 @@ const FormulateRecipe = () => {
     }
   };
 
-  const sliderRelativeDiv = useRef();
-  const sliderAbsoluteDiv = useRef();
-  const recipeDivRef = useRef();
-
-  let outer;
-  let inner;
-  let cardWidth;
-
-  const [sliderClickWidth, setSlidercClickWidth] = useState(0);
-  const handleClick = (sign) => {
-    outer = sliderRelativeDiv.current.getBoundingClientRect();
-    inner = sliderAbsoluteDiv.current.getBoundingClientRect();
-    cardWidth = recipeDivRef.current.getBoundingClientRect();
-
-    const checkBoundry = () => {
-      console.log(outer.width);
-      console.log("|||||||||||||||||||||");
-      console.log(inner);
-      console.log("////////////////");
-      console.log(cardWidth.width);
-    };
-
-    if (sign === "<") {
-      checkBoundry();
-
-      let currentValue = sliderClickWidth;
-
-      console.log(currentValue);
-      console.log("first");
-
-      if (currentValue >= 0) {
-        sliderAbsoluteDiv.current.style.left = "0px";
-        console.log(currentValue);
-        setSlidercClickWidth(currentValue);
-      } else {
-        currentValue = currentValue;
-
-        sliderAbsoluteDiv.current.left = `${currentValue}px`;
-        setSlidercClickWidth(currentValue);
-      }
-    } else if (sign === ">") {
-      checkBoundry();
-      let currentValue = sliderClickWidth;
-
-      if (inner.right <= outer.right) {
-        currentValue = currentValue - cardWidth.width;
-        sliderAbsoluteDiv.current.style.left = `${currentValue}px`;
-        setSlidercClickWidth(inner.width - outer.width);
-      }
-    } else {
-      console.log("else");
-    }
-
-    // if (sign === "<") {
-    //   // console.log("<<<<");
-    //   let currentValue = sliderClickWidth;
-    //   if (currentValue >= 0) {
-    //     currentValue = 0;
-    //     sliderAbsoluteDiv.current.style.left = `0px`;
-    //     console.log(currentValue+"=======================");
-    //     setSlidercClickWidth(currentValue);
-    //   } else {
-    //     currentValue += 312;
-    //     sliderAbsoluteDiv.current.style.left = `${currentValue}px`;
-    //     console.log(currentValue+"=======================++++++++++++++");
-    //     setSlidercClickWidth(currentValue);
-    //   }
-
-    //   console.log(currentValue);
-    //   console.log(currentValue);
-
-    // } else if (sign === ">") {
-    //   // console.log(">>>>");
-    //   let currentValue = sliderClickWidth;
-
-    //   if (inner.right <= outer.right) {
-    //     console.log(currentValue+"=======================++++++++++++++------------------");
-    //     currentValue -= 312;
-    //     setSlidercClickWidth(inner.width - outer.width);
-    //     sliderAbsoluteDiv.current.style.left = `${currentValue}px`;
-    //   } else {
-    //     currentValue -= 312;
-    //     sliderAbsoluteDiv.current.style.left = `${currentValue}px`;
-    //     console.log(currentValue+"=======================++::::::::::------------------");
-    //     setSlidercClickWidth(currentValue);
-    //   }
-    // } else {
-    //   setSlidercClickWidth(0);
-    // }
-  };
-
   return (
     <Acontainer showLeftTray={false} logo={false} headerTitle="Formulate">
       <div className={styles.formulate}>
+        {/* sub-nav */}
         <div className={styles.formulateContainer}>
-          <div className={styles.formulateContainer__subNavDiv}>
-            <SubNav
-              backAddress="/recipe/compare"
-              backIconText="Recipe Compare"
-              buttonText="Formulate"
-              showButton={false}
-              compareAmout={compareRecipeList.length}
-              closeCompare={removeAllCompareRecipe}
-            />
-            <Carousel moreSetting={responsiveSetting}>
-              {recipeList?.map((recipe, index) => {
-                return (
-                  <SmallcardComponent
-                    key={index}
-                    imgHeight={undefined}
-                    text={recipe?.name}
-                    img={recipe?.image}
-                    fnc={handleCompare}
-                    recipe={recipe}
-                    findCompareRecipe={findCompareRecipe}
-                    fucUnCheck={removeCompareRecipe}
-                    conpareLength={compareRecipeList?.length}
-                  />
-                );
-              })}
-            </Carousel>
-            <SliderArrows
-              compareRecipeLength={compareRecipeList.length}
-              prevFunc={() => handleClick("<")}
-              nextFunc={() => handleClick(">")}
-            />
-          </div>
-          <div className={styles.formulateContainer__formulateDiv}>
-            <div className={styles.dragContainer}>
+          <SubNav
+            backAddress="/recipe/compare"
+            backIconText="Recipe Compare"
+            buttonText="Formulate"
+            showButton={false}
+            compareAmout={compareRecipeList.length}
+            closeCompare={removeAllCompareRecipe}
+          />
+
+          <Carousel moreSetting={responsiveSetting}>
+            {recipeList?.map((recipe, index) => {
+              return (
+                <SmallcardComponent
+                  key={index}
+                  imgHeight={undefined}
+                  text={recipe?.name}
+                  img={recipe?.image}
+                  fnc={handleCompare}
+                  recipe={recipe}
+                  findCompareRecipe={findCompareRecipe}
+                  fucUnCheck={removeCompareRecipe}
+                  conpareLength={compareRecipeList?.length}
+                />
+              );
+            })}
+          </Carousel>
+          <SliderArrows
+            compareRecipeLength={compareRecipeList.length}
+            prevFunc={() => sliderRef.current?.slickPrev()}
+            nextFunc={() => sliderRef.current?.slickNext()}
+          />
+          <div className={styles.formulateDiv}>
+            <div className={styles.formulateDiv__Div}>
               <DragDropContext onDragEnd={onDragEnd}>
-                <div className={styles.dragContainer__area}>
+                <div className={styles.formulateDiv__Div__newRecipeDiv}>
                   <CreateNewRecipe
                     newRecipe={newRecipe}
                     setNewRecipe={setNewRecipe}
                     deleteItem={deleteItem}
                   />
                 </div>
-                <div
-                  className={styles.dragContainer__sliderDiv}
-                  ref={sliderRelativeDiv}
-                >
-                  <div
-                    className={styles.dragContainer__sliderDiv__cardDiv}
-                    ref={sliderAbsoluteDiv}
-                  >
+                <div className={styles.formulateDiv__Div__compareRecipeList}>
+                  <Slider {...compareRecipeResponsiveSetting} ref={sliderRef}>
                     {compareRecipeList?.map((recipe, index) => {
                       return (
-                        <div
-                          ref={recipeDivRef}
-                          className={styles.recipeDiv}
-                          key={index + "FormulateRecipeCard"}
-                        >
-                          <RecipeDetails
-                            recipe={recipe}
-                            id={index}
-                            addItem={addItem}
-                            removeCompareRecipe={removeCompareRecipe}
-                            dragAndDrop={true}
-                          />
-                        </div>
+                        <RecipeDetails
+                          key={index}
+                          recipe={recipe}
+                          id={index}
+                          addItem={addItem}
+                          removeCompareRecipe={removeCompareRecipe}
+                          dragAndDrop={true}
+                        />
                       );
                     })}
-                  </div>
+                  </Slider>
                 </div>
               </DragDropContext>
             </div>

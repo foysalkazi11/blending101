@@ -77,9 +77,8 @@ const IngredientList = () => {
         ingredientTempList = [...ingredientTempList, SearchOutput];
       }
 
-      console.log(SearchOutput, "Searching Output");
 
-      console.log(ingredientTempList, "temp list for active elements");
+
       dispatch(setIngredientsToList(ingredientTempList));
       setInputValueIngredient("");
     }

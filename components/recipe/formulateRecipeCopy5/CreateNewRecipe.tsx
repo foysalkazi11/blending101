@@ -104,7 +104,6 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
                       >
                         {(provided, snapshot) => (
                           <div
-                          style={{left:"0px",top:"0px"}}
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}

@@ -8,8 +8,6 @@ interface Percent {
 const LinearIndicatorcomponent = ({ percent }: Percent) => {
   let width: string = percent.toString() + "%";
 
-  console.log(width);
-
   let style: object = { width };
 
   // console.log(style);

@@ -249,6 +249,70 @@ const FormulateRecipe = () => {
     }
   };
 
+
+  const sliderRelativeDiv = useRef();
+  const sliderAbsoluteDiv = useRef();
+
+  let outer;
+  let inner;
+
+  const [sliderClickWidth, setSlidercClickWidth] = useState(0);
+  const handleClick = (sign) => {
+    outer = sliderRelativeDiv.current.getBoundingClientRect();
+    inner = sliderAbsoluteDiv.current.getBoundingClientRect();
+
+    // console.log(outer);
+    // console.log("=====================");
+
+    if (sliderAbsoluteDiv.current.style.left > 0) {
+      let currentValue = 0;
+      sliderAbsoluteDiv.current.style.left = "0px";
+      setSlidercClickWidth(0);
+
+      // console.log(currentValue);
+    } else if (inner.right < outer.right) {
+      setSlidercClickWidth(inner.width - outer.width);
+      sliderAbsoluteDiv.current.style.left = `-${sliderClickWidth}px`;
+
+    }
+    if (sign === "<") {
+      // console.log("<<<<");
+      let currentValue = sliderClickWidth;
+      if (currentValue >= 0){
+        currentValue = 0;
+        sliderAbsoluteDiv.current.style.left = `0px`;
+        setSlidercClickWidth(currentValue);
+
+      }else{
+        currentValue += 312;
+        sliderAbsoluteDiv.current.style.left = `${currentValue}px`;
+        setSlidercClickWidth(currentValue);
+
+      }
+
+      console.log(currentValue);
+
+    } else if (sign === ">") {
+      // console.log(">>>>");
+      let currentValue = sliderClickWidth;
+
+      if(inner.right <= outer.right){
+        currentValue -= 312;
+        setSlidercClickWidth(inner.width - outer.width);
+        sliderAbsoluteDiv.current.style.left = `${currentValue}px`;
+      }
+      else{
+        currentValue -= 312;
+        sliderAbsoluteDiv.current.style.left = `${currentValue}px`;
+        setSlidercClickWidth(currentValue);
+
+      }
+
+    } else {
+      setSlidercClickWidth(0);
+    }
+  };
+
   return (
     <Acontainer showLeftTray={false} logo={false} headerTitle="Formulate">
       <div className={styles.formulate}>
@@ -282,8 +346,8 @@ const FormulateRecipe = () => {
           </Carousel>
           <SliderArrows
             compareRecipeLength={compareRecipeList.length}
-            prevFunc={() => sliderRef.current?.slickPrev()}
-            nextFunc={() => sliderRef.current?.slickNext()}
+            prevFunc={() => handleClick("<")}
+            nextFunc={() => handleClick("<")}
           />
           <div className={styles.formulateDiv}>
             <div className={styles.formulateDiv__Div}>
@@ -295,21 +359,31 @@ const FormulateRecipe = () => {
                     deleteItem={deleteItem}
                   />
                 </div>
-                <div className={styles.formulateDiv__Div__compareRecipeList}>
-                  <Slider {...compareRecipeResponsiveSetting} ref={sliderRef}>
+                <div
+                  className={styles.dragContainer__sliderDiv}
+                  ref={sliderRelativeDiv}
+                >
+                  <div
+                    className={styles.dragContainer__sliderDiv__cardDiv}
+                    ref={sliderAbsoluteDiv}
+                  >
                     {compareRecipeList?.map((recipe, index) => {
                       return (
-                        <RecipeDetails
-                          key={index}
-                          recipe={recipe}
-                          id={index}
-                          addItem={addItem}
-                          removeCompareRecipe={removeCompareRecipe}
-                          dragAndDrop={true}
-                        />
+                        <div
+                          className={styles.recipeDiv}
+                          key={index + "FormulateRecipeCard"}
+                        >
+                          <RecipeDetails
+                            recipe={recipe}
+                            id={index}
+                            addItem={addItem}
+                            removeCompareRecipe={removeCompareRecipe}
+                            dragAndDrop={true}
+                          />
+                        </div>
                       );
                     })}
-                  </Slider>
+                  </div>
                 </div>
               </DragDropContext>
             </div>
