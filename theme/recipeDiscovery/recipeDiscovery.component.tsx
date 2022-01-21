@@ -25,15 +25,22 @@ import {
 } from "../../redux/slices/sideTraySlice";
 import SaveRecipeModal from "../saveRecipeModal/SaveRecipeModal";
 import ShowCollectionRecipes from "../showCollectionRecipes/ShowCollectionRecipes";
+import { setLoading } from "../../redux/slices/utilitySlice";
+import { useLazyQuery } from "@apollo/client";
+import GET_ALL_RECOMMENDED_RECIPES from "../../gqlLib/recipes/queries/getRecommendedRecipes";
+import GET_ALL_POPULAR_RECIPES from "../../gqlLib/recipes/queries/getAllPopularRecipes";
+import GET_ALL_LATEST_RECIPES from "../../gqlLib/recipes/queries/getAllLatestRecipes";
 const RecipeDetails = () => {
   const [recommended, setRecommended] = useState([]);
   const [popular, setPopular] = useState([]);
   const [latest, setLatest] = useState([]);
   const blends = useAppSelector((state) => state.sideTray.blends);
   const { dbUser, user } = useAppSelector((state) => state?.user);
-  const { lastModifiedCollection, collectionDetailsId } = useAppSelector(
-    (state) => state?.collections
-  );
+  const { lastModifiedCollection, collectionDetailsId, showAllRecipes } =
+    useAppSelector((state) => state?.collections);
+  const [getAllRecommendedRecipes] = useLazyQuery(GET_ALL_RECOMMENDED_RECIPES);
+  const [getAllPopularRecipes] = useLazyQuery(GET_ALL_POPULAR_RECIPES);
+  const [getAllLatestRecipes] = useLazyQuery(GET_ALL_LATEST_RECIPES);
 
   const dispatch = useAppDispatch();
 
@@ -43,47 +50,29 @@ const RecipeDetails = () => {
     dispatch(setToggleSaveRecipeModal(false));
   };
 
+  const getAllRecipes = async () => {
+    dispatch(setLoading(true));
+    try {
+      const recommendedRecipes = await getAllRecommendedRecipes();
+      setRecommended(recommendedRecipes?.data?.getAllrecomendedRecipes || []);
+      const popularRecipes = await getAllPopularRecipes();
+      setPopular(popularRecipes?.data?.getAllpopularRecipes || []);
+      const latestRecipes = await getAllLatestRecipes();
+      setLatest(latestRecipes?.data?.getAllLatestRecipes || []);
+      dispatch(setLoading(false));
+    } catch (error) {
+      dispatch(setLoading(false));
+      console.log(error?.messae);
+    }
+  };
+
   useEffect(() => {
     if (user) {
-      axios
-        .post("https://blendingrecipe.herokuapp.com/graphql", {
-          query: FETCH_RECOMMENDED_RECIPES,
-        })
-        .then((result) => {
-          const res = result.data?.data?.getAllrecomendedRecipes || [];
-          console.log(res);
-
-          setRecommended([...res]);
-        })
-        .catch((err) => {
-          console.log(err, "err");
-        });
-
-      axios
-        .post("https://blendingrecipe.herokuapp.com/graphql", {
-          query: FETCH_POPULAR_RECIPES,
-        })
-        .then((result) => {
-          const res = result.data?.data?.getAllpopularRecipes || [];
-          setPopular([...res]);
-        })
-        .catch((err) => {
-          console.log(err, "err");
-        });
-      axios
-        .post("https://blendingrecipe.herokuapp.com/graphql", {
-          query: FETCH_LATEST_RECIPES,
-        })
-        .then((result) => {
-          const res = result.data?.data?.getAllLatestRecipes || [];
-          setLatest([...res]);
-        })
-        .catch((err) => {
-          console.log(err, "err");
-        });
+      getAllRecipes();
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, []);
 
   return (
     <>
@@ -91,7 +80,7 @@ const RecipeDetails = () => {
         <div className={styles.main__div}>
           <SearchBar />
           <SearchtagsComponent />
-          {collectionDetailsId ? (
+          {collectionDetailsId || showAllRecipes ? (
             <ShowCollectionRecipes />
           ) : blends.length ? (
             <FilterPageBottom blends={blends} />
