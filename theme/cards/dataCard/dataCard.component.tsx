@@ -98,6 +98,8 @@ export default function DatacardComponent({
         },
       });
 
+      console.log(lastModified?.getLastModifieldCollection);
+
       dispatch(
         setDbUser({
           ...dbUser,

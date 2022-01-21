@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import styles from "./content.module.scss";
 import { MdMoreVert, MdDeleteOutline } from "react-icons/md";
 import { HiOutlineShare } from "react-icons/hi";
@@ -36,7 +36,6 @@ export default function CollectionComponent({
   setIsEditCollection,
   setCollectionId,
 }: CollectionComponentProps) {
-  const [showMenu, setShowMenu] = useState<null | number>(null);
   const dispatch = useAppDispatch();
   const [deleteCollection] = useMutation(DELETE_COLLECTION);
   const [addExistingRecipeToAnotherCollection] = useMutation(
@@ -54,6 +53,7 @@ export default function CollectionComponent({
     allRecipeWithinCollectionsId,
     activeRecipeId,
   } = useAppSelector((state) => state?.collections);
+  const menu = useRef<any>();
 
   const handleChange = async (e, collectionId) => {
     dispatch(setLoading(true));
@@ -163,15 +163,8 @@ export default function CollectionComponent({
         });
       });
       dispatch(setAllRecipeWithinCollectionsId(recipesId));
-
-      // dispatch(
-      //   setDbUser({
-      //     ...dbUser,
-      //     collections: [
-      //       ...dbUser?.collections?.filter((col) => col?._id !== collectionId),
-      //     ],
-      //   })
-      // );
+      dispatch(setCollectionDetailsId(""));
+      dispatch(setShowAllRecipes(false));
 
       dispatch(setLoading(false));
       reactToastifyNotification("info", "Collection delete successfully");
@@ -179,6 +172,11 @@ export default function CollectionComponent({
       dispatch(setLoading(false));
       reactToastifyNotification("eror", error?.message);
     }
+  };
+
+  const handleClick = () => {
+    const elem = menu.current;
+    elem.classList.toggle(styles.showMenu);
   };
 
   return (
@@ -223,7 +221,6 @@ export default function CollectionComponent({
               <div
                 className={styles.collection__child}
                 key={"collections__child" + i}
-                onClick={() => setShowMenu(null)}
               >
                 <div
                   className={styles.leftSide}
@@ -269,33 +266,28 @@ export default function CollectionComponent({
                       className={styles.moreIcon}
                       onClick={(e) => {
                         e.stopPropagation();
-                        setShowMenu(i);
+                        handleClick();
                       }}
                     />
-                    <div
-                      className={`${styles.actionMenu} ${
-                        showMenu === i ? styles.showMenu : ""
-                      }`}
-                    >
-                      <div className={`${styles.menu}`}>
-                        <BiEditAlt
-                          className={styles.icon}
-                          onClick={() => {
-                            /* @ts-ignore */
-                            setInput((pre) => ({ ...pre, name: item?.name }));
-                            setIsEditCollection(true);
-                            /* @ts-ignore */
-                            setCollectionId(item?._id);
-                            dispatch(setToggleModal(true));
-                          }}
-                        />
-                        <MdDeleteOutline
-                          className={styles.icon}
-                          /* @ts-ignore  */
-                          onClick={() => handleDeleteCollection(item?._id)}
-                        />
-                        <HiOutlineShare className={styles.icon} />
-                      </div>
+
+                    <div className={`${styles.menu}`} ref={menu}>
+                      <BiEditAlt
+                        className={styles.icon}
+                        onClick={() => {
+                          /* @ts-ignore */
+                          setInput((pre) => ({ ...pre, name: item?.name }));
+                          setIsEditCollection(true);
+                          /* @ts-ignore */
+                          setCollectionId(item?._id);
+                          dispatch(setToggleModal(true));
+                        }}
+                      />
+                      <MdDeleteOutline
+                        className={styles.icon}
+                        /* @ts-ignore  */
+                        onClick={() => handleDeleteCollection(item?._id)}
+                      />
+                      <HiOutlineShare className={styles.icon} />
                     </div>
                   </div>
                 )}
