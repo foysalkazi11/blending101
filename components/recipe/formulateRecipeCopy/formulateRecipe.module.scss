@@ -77,7 +77,6 @@
       // min-width:  max-content;
       width: 100%;
       display: flex;
-      // background-color: orangered;
       position: absolute;
       left: 0px;
       transition: all 1s ease-out;
@@ -91,13 +90,12 @@
 
     .recipeDiv {
       min-width:50% ;
-      // background-color: grey;
       // margin-left: 23px;
 
-      @include responsive(600px,1000px ){
+      @include responsive(600px,1100px ){
         min-width: 100%;
       }
-      @include responsive(1000px,1400px ){
+      @include responsive(1100px,1400px ){
         min-width: 50%;
       }
     }

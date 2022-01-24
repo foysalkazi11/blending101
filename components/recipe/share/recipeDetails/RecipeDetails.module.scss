@@ -60,6 +60,12 @@
   }
 }
 
+.table_row_calorie {
+  display: grid;
+  grid-template-columns: 1fr 86% 45%;
+  width: 100%;
+}
+
 .ingredientsDetails {
   table {
     width: 100%;
