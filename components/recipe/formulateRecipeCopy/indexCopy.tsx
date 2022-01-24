@@ -265,13 +265,14 @@ const FormulateRecipe = () => {
     const left = parseFloat(absElement.style.left) || 0;
     const value = sign === "<" ? left + cardWid : left - cardWid;
 
+
     if (sign === "<") {
-      if (left === 0) return;
+      if (left <= 0) return;
       absElement.style.left = value + "px";
-      setClickState(clickState - 1);
+      setClickState(clickState-1)
     } else {
       absElement.style.left = value + "px";
-      setClickState(clickState + 1);
+      setClickState(clickState+1)
     }
   };
 
