@@ -260,7 +260,7 @@ const FormulateRecipe = () => {
   const handleClick = (sign) => {
     const absElement = sliderAbsoluteDiv.current;
     const card = recipeDivRef.current;
-    const cardWid = parseFloat(card.offsetWidth) || 0;
+    const cardWid = parseFloat(card?.offsetWidth) || 0;
     const left = parseFloat(absElement.style.left) || 0;
     const value = sign === "<" ? left + cardWid : left - cardWid;
 
@@ -309,6 +309,7 @@ const FormulateRecipe = () => {
               compareRecipeLength={compareRecipeList.length}
               prevFunc={() => handleClick("<")}
               nextFunc={() => handleClick(">")}
+              clickCount={clickState}
             />
           </div>
           <div className={styles.formulateContainer__formulateDiv}>

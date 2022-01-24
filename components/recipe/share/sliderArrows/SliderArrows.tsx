@@ -7,12 +7,14 @@ type SliderArrowsProps = {
   compareRecipeLength?: number;
   prevFunc: () => void;
   nextFunc: () => void;
+  clickCount?: number;
 };
 
 const SliderArrows = ({
   compareRecipeLength,
   prevFunc,
   nextFunc,
+  clickCount,
 }: SliderArrowsProps) => {
   return (
     <>
@@ -24,6 +26,9 @@ const SliderArrows = ({
             <div
               className={styles.customeArrowContainer__arrows__prev}
               onClick={prevFunc}
+              style={
+                clickCount <= 0 ? { display: "none" } : { marginRight: "auto" }
+              }
             >
               <ChevronLeftIcon />
             </div>
@@ -31,6 +36,11 @@ const SliderArrows = ({
             <div
               className={styles.customeArrowContainer__arrows__prev}
               onClick={nextFunc}
+              style={
+                clickCount >= compareRecipeLength - 1
+                  ? { display: "none" }
+                  : { marginLeft: "auto" }
+              }
             >
               <ChevronRightIcon />
             </div>
