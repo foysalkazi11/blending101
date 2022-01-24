@@ -258,20 +258,18 @@ const FormulateRecipe = () => {
   const [clickState, setClickState] = useState(0);
 
   const handleClick = (sign) => {
+    let card = document.querySelector<HTMLElement>(".recipe__drag__card");
+    if (!card) return;
     const absElement = sliderAbsoluteDiv.current;
-    const card = recipeDivRef.current;
-    const cardWid = parseFloat(card?.offsetWidth) || 0;
+    const cardWid = card?.offsetWidth || 0;
     const left = parseFloat(absElement.style.left) || 0;
     const value = sign === "<" ? left + cardWid : left - cardWid;
 
     if (sign === "<") {
-      if (clickState <= 0) return;
+      if (left === 0) return;
       absElement.style.left = value + "px";
-      setClickState(() => clickState - 1);
     } else {
-      if (compareRecipeList.length <= clickState) return;
       absElement.style.left = value + "px";
-      setClickState(() => clickState + 1);
     }
   };
 
@@ -334,7 +332,9 @@ const FormulateRecipe = () => {
                       return (
                         <div
                           ref={recipeDivRef}
-                          className={styles.recipeDiv}
+                          className={
+                            styles.recipeDiv + " " + "recipe__drag__card"
+                          }
                           key={index + "FormulateRecipeCard"}
                         >
                           <RecipeDetails
