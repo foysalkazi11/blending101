@@ -18,6 +18,7 @@ import {
 import { useRouter } from "next/router";
 import { useMutation } from "@apollo/client";
 import CREATE_NEW_USER from "../../../../gqlLib/user/mutations/createNewUser";
+import { setAllRecipeWithinCollectionsId } from "../../../../redux/slices/collectionSlice";
 
 const LoginScreen = () => {
   const [loginMail, setLoginMail] = useState<string>("");
@@ -41,6 +42,14 @@ const LoginScreen = () => {
 
       dispatch(setLoading(false));
       reactToastifyNotification("info", "Login successfully");
+      let recipesId = [];
+      data?.createNewUser?.collections?.forEach((col) => {
+        const recipes = col?.recipes;
+        recipes?.forEach((recipe) => {
+          recipesId?.push(recipe?._id);
+        });
+      });
+      dispatch(setAllRecipeWithinCollectionsId(recipesId));
       dispatch(setUser(email));
       dispatch(setDbUser(data?.createNewUser));
       dispatch(setProvider("email"));

@@ -8,6 +8,7 @@ import { Auth } from "aws-amplify";
 import { setDbUser, setProvider, setUser } from "../redux/slices/userSlice";
 import { useMutation } from "@apollo/client";
 import CREATE_NEW_USER from "../gqlLib/user/mutations/createNewUser";
+import { setAllRecipeWithinCollectionsId } from "../redux/slices/collectionSlice";
 
 // INITIALIZE 1: CREATE AUTH CONTEXT
 const AuthContext = createContext();
@@ -56,7 +57,15 @@ function AuthProvider({ children, activeUser }) {
           data: { email: userEmail, provider },
         },
       });
+      let recipesId = [];
 
+      data?.createNewUser?.collections?.forEach((col) => {
+        const recipes = col?.recipes;
+        recipes?.forEach((recipe) => {
+          recipesId?.push(recipe?._id);
+        });
+      });
+      dispatch(setAllRecipeWithinCollectionsId(recipesId));
       dispatch(setUser(userEmail));
       dispatch(setDbUser(data?.createNewUser));
       dispatch(setProvider(provider));

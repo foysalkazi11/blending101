@@ -66,6 +66,7 @@
   .leftSide {
     display: flex;
     align-items: center;
+    cursor: pointer;
     .img {
       position: relative;
       width: 47px;
@@ -90,6 +91,10 @@
     }
   }
 
+  .checkBox {
+    padding-right: 20px;
+  }
+
   .rightSide {
     cursor: pointer;
     width: 25px;
@@ -107,7 +112,12 @@
     .moreIcon {
       font-size: 20px;
     }
-    .actionMenu {
+
+    .menu {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       position: absolute;
       display: flex;
       align-items: center;
@@ -121,19 +131,14 @@
       top: 30px;
       right: 0;
       visibility: hidden;
-      .menu {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        .icon {
-          color: #929292;
-          &:hover {
-            color: #fe5d1f;
-          }
+      .icon {
+        color: #929292;
+        &:hover {
+          color: #fe5d1f;
         }
       }
     }
+
     .showMenu {
       visibility: visible !important;
     }
