@@ -96,16 +96,7 @@ const FormulateRecipe = () => {
     id: 456,
     name: "",
     image: "",
-    ingredients: [
-      {
-        id: 1,
-        label: "1 Frozen Banana",
-      },
-      {
-        id: 2,
-        label: "1/2 half ripe Avocado (or 1/4 large)",
-      },
-    ],
+    ingredients: [],
     nutrition: [
       {
         section: "Energy",

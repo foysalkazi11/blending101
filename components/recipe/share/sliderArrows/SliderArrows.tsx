@@ -37,7 +37,7 @@ const SliderArrows = ({
               className={styles.customeArrowContainer__arrows__prev}
               onClick={nextFunc}
               style={
-                clickCount >= compareRecipeLength - 1
+                clickCount >= compareRecipeLength - 2
                   ? { display: "none" }
                   : { marginLeft: "auto" }
               }

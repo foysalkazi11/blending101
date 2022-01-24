@@ -14,6 +14,7 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (inputVlaue) {
       setNewRecipe((state) => ({
         ...state,
@@ -98,19 +99,20 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
                   >
                     {ingredients?.map((item: any, index) => (
                       <Draggable
-                        key={item?.id}
-                        draggableId={`${item?.id}`}
+                        key={item?.id + "draggedElemDraggableId" + Date.now()}
+                        draggableId={`${
+                          item?.id + "draggedElemDraggableId" + Date.now()
+                        }`}
                         index={index}
                       >
                         {(provided, snapshot) => (
                           <div
-                          style={{left:"0px",top:"0px"}}
+                            style={{ left: "0px", top: "0px" }}
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                           >
                             {/* @ts-ignore */}
-
                             <RecipeItem
                               item={item}
                               plusIcon={false}
