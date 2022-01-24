@@ -68,7 +68,8 @@ export default function DatacardComponent({
   );
   const [addNewRecipeToCollection] = useMutation(ADD_NEW_RECIPE_TO_COLLECTION);
   const [getLastModifiedCollection] = useLazyQuery(
-    GET_LAST_MODIFIED_COLLECTION
+    GET_LAST_MODIFIED_COLLECTION,
+    { fetchPolicy: "no-cache" }
   );
   const { dbUser } = useAppSelector((state) => state?.user);
 
@@ -97,8 +98,6 @@ export default function DatacardComponent({
           userEmail: dbUser?.email,
         },
       });
-
-      console.log(lastModified?.getLastModifieldCollection);
 
       dispatch(
         setDbUser({
