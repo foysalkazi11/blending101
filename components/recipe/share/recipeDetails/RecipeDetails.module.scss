@@ -57,6 +57,12 @@
       text-align: right;
       padding: 10px 5px;
     }
+
+    // tr {
+    //   display: grid;
+    //   grid-template-columns: 50% 35% 14%;
+    //   background-color: green;
+    // }
   }
 }
 
@@ -64,7 +70,14 @@
   table {
     width: 100%;
 
+    tr {
+
+      display: grid;
+      grid-template-columns: 1fr 35% 14%;
+    }
+
     tr td {
+      // background-color: red;
       color: #000;
       font-size: 14px;
       padding: 10px 10px 10px 0px;

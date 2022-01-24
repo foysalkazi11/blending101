@@ -116,12 +116,12 @@ const RecipeDetails = ({
         <div className={styles.nutritionHeader}>
           <p>Amount Per Serving Calories</p>
           <table>
-            <tr>
+            <tr className={styles.table_row}>
               <th>Calories</th>
               <th>93</th>
               <th></th>
             </tr>
-            <tr>
+            <tr className={styles.table_row_calorie}>
               <td></td>
               <td> Value </td>
               <td> Daily% </td>
