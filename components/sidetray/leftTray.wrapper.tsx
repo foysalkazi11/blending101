@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./tray.module.scss";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { setOpenCollectionsTary } from "../../redux/slices/sideTraySlice";
+import { setChangeRecipeWithinCollection } from "../../redux/slices/collectionSlice";
 
 interface leftTrayInterface {
   filter?: false;
@@ -31,6 +32,7 @@ export default function LeftTrayWrapper({
 
   const handleClick = () => {
     dispatch(setOpenCollectionsTary(!openCollectionsTary));
+    dispatch(setChangeRecipeWithinCollection(false));
   };
 
   return (

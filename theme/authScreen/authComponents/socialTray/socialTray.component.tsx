@@ -11,6 +11,7 @@ import {
   setUser,
 } from "../../../../redux/slices/userSlice";
 import { useRouter } from "next/router";
+import { setAllRecipeWithinCollectionsId } from "../../../../redux/slices/collectionSlice";
 
 const SocialTray = () => {
   const [createNewUser] = useMutation(CREATE_NEW_USER);
@@ -40,6 +41,16 @@ const SocialTray = () => {
       });
 
       // reactToastifyNotification("info", "Sign up successfully");
+
+      let recipesId = [];
+
+      data?.createNewUser?.collections?.forEach((col) => {
+        const recipes = col?.recipes;
+        recipes?.forEach((recipe) => {
+          recipesId?.push(recipe?._id);
+        });
+      });
+      dispatch(setAllRecipeWithinCollectionsId(recipesId));
       dispatch(setUser(email));
       dispatch(setDbUser(data?.createNewUser));
       dispatch(setProvider(identities?.[0]?.providerName?.toLowerCase()));

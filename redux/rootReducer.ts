@@ -4,7 +4,7 @@ import userReducer from "./slices/userSlice";
 import sideTrayReducer from "./slices/sideTraySlice";
 import utilityReducer from "./slices/utilitySlice";
 import editRecipeReducer from "./edit_recipe/quantity";
-import collectionsReducer from "./slices/collections";
+import collectionsReducer from "./slices/collectionSlice";
 
 const rootReducer = combineReducers({
   user: userReducer,
