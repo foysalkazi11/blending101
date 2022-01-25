@@ -177,11 +177,40 @@ const FormulateRecipe = () => {
   };
 
   const deleteItem = (id: number) => {
-    setNewRecipe((state) => ({
+    // console.log(newRecipe.ingredients);
+
+    // let newList = Array.from(
+    //   new Set(
+    //     newRecipe.ingredients.map((elem, index) => {
+    //       return elem.label;
+    //     })
+    //   )
+    // );
+
+    // let processedList = [];
+    // items.map((item, index) => {
+    //   if (newList.includes(item.label)) {
+    //     let itemIndex = newList.indexOf(item.label);
+    //     newList.splice(itemIndex, 1);
+    //     processedList = [...processedList, item];
+    //   }
+    // });
+
+    // console.log(newList);
+
+    // setNewRecipe((state) => ({
+    //   ...state,
+    //   ingredients: [
+    //     /* @ts-ignore */
+    //     ...processedList?.filter((item) => item?.id !== Number(id)),
+    //   ],
+    // }));
+
+      setNewRecipe((state) => ({
       ...state,
       ingredients: [
         /* @ts-ignore */
-        ...state?.ingredients?.filter((item) => item?.id !== Number(id)),
+        ...newRecipe.ingredients?.filter((item) => item?.id !== Number(id)),
       ],
     }));
   };

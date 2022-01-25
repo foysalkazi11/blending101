@@ -11,23 +11,8 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
   const { id, name, image, ingredients, nutrition } = newRecipe;
   const [winReady, setWinReady] = useState(false);
   const [inputVlaue, setInputValue] = useState("");
-
-  let newList = Array.from(
-    new Set(
-      ingredients.map((items, index) => {
-        return items.label;
-      })
-    )
-  );
-
   let processedList = [];
-  ingredients.map((item, index) => {
-    if (newList.includes(item.label)) {
-      let itemIndex = newList.indexOf(item.label);
-      newList.splice(itemIndex, 1);
-      processedList = [...processedList, item];
-    }
-  });
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -43,6 +28,23 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
     }
     setInputValue("");
   };
+
+  let newList = Array.from(
+    new Set(
+      ingredients.map((items, index) => {
+        return items.label;
+      })
+    )
+  );
+
+  ingredients.map((item, index) => {
+    if (newList.includes(item.label)) {
+      let itemIndex = newList.indexOf(item.label);
+      newList.splice(itemIndex, 1);
+      processedList = [...processedList, item];
+    }
+  });
+
 
   useEffect(() => {
     setWinReady(true);
