@@ -13,6 +13,7 @@ const SliderArrows = ({
   compareRecipeLength,
   prevFunc,
   nextFunc,
+
 }: SliderArrowsProps) => {
   return (
     <>
