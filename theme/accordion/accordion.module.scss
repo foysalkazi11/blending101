@@ -2,6 +2,8 @@
   font-size: 25px;
   color: #7dbd3b;
   margin-right: 10px;
+  margin-left: -10px;
+  cursor: pointer;
 }
 
 .title {
@@ -9,4 +11,41 @@
   font-size: 16px;
   font-weight: 600;
   margin: 0;
+}
+
+
+.accordion {
+  width: 100%;
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: none;
+  border: none;
+
+  &::before {
+    box-shadow: none;
+    height: 0px;
+  }
+}
+
+.accordionSummary {
+  padding: 10px;
+  display: flex;
+  border: none;
+}
+
+.accordianDetails {
+  transition: all 0.6s;
+  // padding: 0px 0px 10px 10px;
+  width: 100%;
+  transform: rotate(0deg);
+  overflow: hidden;
+  max-height: 0px;
+
+  &__active {
+    height: auto;
+    max-height: 300px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
 }

@@ -18,7 +18,7 @@
       position: relative;
       display: flex;
       top: -4px;
-      right:-4px;
+      right: -4px;
 
       svg {
         transform: scale(0.75);
@@ -73,7 +73,8 @@
 
 .floating__menu {
   position: absolute;
-  right: 0;
+  top: 35px;
+  right: 10px;
   z-index: 6;
   border: 1px solid #eeeeee;
   border-radius: 2px;
@@ -114,7 +115,7 @@
     border-radius: 10px;
 
     .image {
-      background-color: steelblue;
+      // background-color: steelblue;
       position: relative;
       background-size: contain;
       width: 100%;

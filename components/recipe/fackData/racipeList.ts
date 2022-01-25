@@ -140,15 +140,15 @@ const recipeList = [
     ingredients: [
       {
         id: 9,
-        label: "1 Frozen Banana",
+        label: "1 Frozen apple",
       },
       {
         id: 10,
-        label: "1/2 half ripe Avocado (or 1/4 large)",
+        label: "1/3 half ripe Avocado (or 1/4 large)",
       },
       {
         id: 11,
-        label: "1 Frozen Banana",
+        label: "1 Frozen mango",
       },
       {
         id: 12,
@@ -290,7 +290,7 @@ const recipeList = [
       },
       {
         id: 27,
-        label: "1/2 half ripe Avocado (or 1/4 large)",
+        label: "cucumber",
       },
     ],
     nutrition: [
@@ -408,15 +408,15 @@ const recipeList = [
     ingredients: [
       {
         id: 33,
-        label: "1 Frozen Banana",
+        label: "1 Frozen Watermelon",
       },
       {
         id: 34,
-        label: "1/2 half ripe Avocado (or 1/4 large)",
+        label: "1/5 half ripe Avocado (or 1/4 large)",
       },
       {
         id: 35,
-        label: "1 Frozen Banana",
+        label: "1 strawberry",
       },
       {
         id: 36,
@@ -542,7 +542,7 @@ const recipeList = [
     ingredients: [
       {
         id: 53,
-        label: "1 Frozen Banana",
+        label: "1 Frozen Mango",
       },
       {
         id: 54,
@@ -550,7 +550,7 @@ const recipeList = [
       },
       {
         id: 55,
-        label: "1 Frozen Banana",
+        label: "2 Frozen Banana",
       },
       {
         id: 56,
@@ -670,17 +670,17 @@ const recipeList = [
     ],
   },
   {
-    id: 66,
+    id: 6,
     name: "Avocado Blueberry Smoothie",
     image: "/images/imgbig2.png",
     ingredients: [
       {
         id: 69,
-        label: "1 Frozen Banana",
+        label: "12 Frozen Peach",
       },
       {
         id: 610,
-        label: "1/2 half ripe Avocado (or 1/4 large)",
+        label: "24 half ripe Avocado (or 1/4 large)",
       },
       {
         id: 611,
@@ -814,7 +814,7 @@ const recipeList = [
       },
       {
         id: 724,
-        label: "1/2 half ripe Avocado (or 1/4 large)",
+        label: "12 half ripe Avocado (or 1/4 large)",
       },
       {
         id: 725,
@@ -948,7 +948,7 @@ const recipeList = [
       },
       {
         id: 834,
-        label: "1/2 half ripe Avocado (or 1/4 large)",
+        label: "12 half ripe Avocado",
       },
       {
         id: 835,
@@ -956,7 +956,7 @@ const recipeList = [
       },
       {
         id: 836,
-        label: "1/2 half ripe Avocado (or 1/4 large)",
+        label: "2 half ripe Avocado (or 1/4 large)",
       },
       {
         id: 837,
@@ -1078,7 +1078,7 @@ const recipeList = [
     ingredients: [
       {
         id: 93,
-        label: "1 Frozen Banana",
+        label: "1 Frozen pineapple",
       },
       {
         id: 94,

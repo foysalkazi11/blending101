@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
-import { Grid } from "@mui/material";
 import styles from "./AboutUser.module.scss";
 import { BiSearch } from "react-icons/bi";
 // import { BsCaretDown } from "react-icons/bs";
@@ -140,8 +139,8 @@ const About = ({ userData, setUserData }: AboutProps) => {
 
   return (
     <div>
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={6}>
+      <div className={styles.Container}>
+        <div className={styles.Container__item}>
           <div className={styles.inputContainer}>
             <label>First name</label>
             <input
@@ -151,8 +150,8 @@ const About = ({ userData, setUserData }: AboutProps) => {
               onChange={handleChange}
             />
           </div>
-        </Grid>
-        <Grid item xs={12} sm={6}>
+        </div>
+        <div className={styles.Container__item}>
           <div className={styles.inputContainer}>
             <label>Last name</label>
             <input
@@ -162,8 +161,8 @@ const About = ({ userData, setUserData }: AboutProps) => {
               onChange={handleChange}
             />
           </div>
-        </Grid>
-        <Grid item xs={12} sm={6}>
+        </div>
+        <div className={styles.Container__item}>
           <div className={styles.inputContainer}>
             <label>Display name</label>
             <input
@@ -173,8 +172,8 @@ const About = ({ userData, setUserData }: AboutProps) => {
               onChange={handleChange}
             />
           </div>
-        </Grid>
-        <Grid item xs={12} sm={6}>
+        </div>
+        <div className={styles.Container__item}>
           <div className={styles.inputContainer}>
             <label>Your Blender</label>
             <div className={styles.searchInput}>
@@ -187,9 +186,9 @@ const About = ({ userData, setUserData }: AboutProps) => {
               <BiSearch className={styles.searchIcon} />
             </div>
           </div>
-        </Grid>
+        </div>
 
-        <Grid item xs={12} sm={6}>
+        <div className={styles.Container__item}>
           <div className={styles.inputContainer}>
             <label>Email*</label>
             <input
@@ -200,9 +199,9 @@ const About = ({ userData, setUserData }: AboutProps) => {
               disabled
             />
           </div>
-        </Grid>
+        </div>
 
-        <Grid item xs={12} sm={6}>
+        <div className={styles.Container__item}>
           <div className={styles.inputContainer}>
             <label>Location</label>
             <div className={styles.selectBox}>
@@ -220,8 +219,8 @@ const About = ({ userData, setUserData }: AboutProps) => {
               </select>
             </div>
           </div>
-        </Grid>
-      </Grid>
+        </div>
+      </div>
 
       <div
         style={{

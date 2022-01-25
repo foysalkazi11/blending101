@@ -1,4 +1,22 @@
+@mixin responsive($min_width, $max_width) {
+  @media only screen and (min-width:$min_width) and (max-width:$max_width) {
+    @content;
+  }
+}
+
 .imageContainer {
+
+  &__innerDiv{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    gap: 10px;
+
+    &__elem{
+      width: 33.33%;
+    }
+  }
 }
 
 .singleImage {

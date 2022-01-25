@@ -1,4 +1,4 @@
-import type { RootState } from "../store";
+// import type { RootState } from "../store";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type SideTrayState = {
@@ -28,6 +28,8 @@ export const userSlice = createSlice({
       state.nonConfirmedUser = action?.payload;
     },
     setDbUser: (state, action: PayloadAction<any>) => {
+      console.log(action?.payload);
+
       state.dbUser = action?.payload;
     },
     setProvider: (state, action: PayloadAction<string>) => {

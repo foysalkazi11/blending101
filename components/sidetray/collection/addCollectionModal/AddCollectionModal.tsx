@@ -67,7 +67,7 @@ const AddCollectionModal = ({
         const res = await createNewCollection({
           variables: {
             data: {
-              UserEmail: dbUser?.email,
+              userEmail: dbUser?.email,
               collection: { image: null, name: input?.name, recipes: [] },
             },
           },

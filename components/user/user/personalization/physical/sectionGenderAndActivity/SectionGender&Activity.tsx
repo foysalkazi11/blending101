@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
 import styles from "./SectionGenderAndActivity.module.scss";
-import { Grid } from "@mui/material";
 import capitalizeFirstLetter from "../../../../../utility/capitalizeFirstLetter";
 
 type SectionGenderAndActivityProps = {
@@ -19,17 +18,14 @@ const SectionGenderAndActivity = ({
 }: SectionGenderAndActivityProps) => {
   return (
     <div className={styles.imageContainer}>
-      <Grid
-        item
-        container
-        alignItems="center"
-        // justifyContent={body.length <= 3 ? "center" : "flex-start"}
-        spacing={3}
-      >
+      <div className={styles.imageContainer__innerDiv}>
         {body.length
           ? body?.map((item, index) => {
               return (
-                <Grid item xs={4} key={index}>
+                <div
+                  className={styles.imageContainer__innerDiv__elem}
+                  key={index}
+                >
                   <div
                     className={`${styles.singleImage} ${
                       item?.label === userProfile[fieldName]
@@ -43,11 +39,11 @@ const SectionGenderAndActivity = ({
                       <p> {capitalizeFirstLetter(item?.label)}</p>
                     </div>
                   </div>
-                </Grid>
+                </div>
               );
             })
           : null}
-      </Grid>
+      </div>
     </div>
   );
 };

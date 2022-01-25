@@ -7,11 +7,11 @@ import Carousel from "../../../theme/carousel/carousel.component";
 import SmallcardComponent from "../../../theme/cards/smallCard/SmallCard.component";
 import RecipeDetails from "../share/recipeDetails/RecipeDetails";
 import { DragDropContext } from "react-beautiful-dnd";
+import CreateNewRecipe from "./CreateNewRecipe";
 
 import SubNav from "../share/subNav/SubNav";
 import SliderArrows from "../share/sliderArrows/SliderArrows";
 import { current } from "@reduxjs/toolkit";
-import CreateNewRecipe from "../formulateRecipe/CreateNewRecipe";
 
 const responsiveSetting = {
   slidesToShow: 7,
@@ -96,16 +96,7 @@ const FormulateRecipe = () => {
     id: 456,
     name: "",
     image: "",
-    ingredients: [
-      {
-        id: 1,
-        label: "1 Frozen Banana",
-      },
-      {
-        id: 2,
-        label: "1/2 half ripe Avocado (or 1/4 large)",
-      },
-    ],
+    ingredients: [],
     nutrition: [
       {
         section: "Energy",
@@ -186,11 +177,40 @@ const FormulateRecipe = () => {
   };
 
   const deleteItem = (id: number) => {
-    setNewRecipe((state) => ({
+    // console.log(newRecipe.ingredients);
+
+    // let newList = Array.from(
+    //   new Set(
+    //     newRecipe.ingredients.map((elem, index) => {
+    //       return elem.label;
+    //     })
+    //   )
+    // );
+
+    // let processedList = [];
+    // items.map((item, index) => {
+    //   if (newList.includes(item.label)) {
+    //     let itemIndex = newList.indexOf(item.label);
+    //     newList.splice(itemIndex, 1);
+    //     processedList = [...processedList, item];
+    //   }
+    // });
+
+    // console.log(newList);
+
+    // setNewRecipe((state) => ({
+    //   ...state,
+    //   ingredients: [
+    //     /* @ts-ignore */
+    //     ...processedList?.filter((item) => item?.id !== Number(id)),
+    //   ],
+    // }));
+
+      setNewRecipe((state) => ({
       ...state,
       ingredients: [
         /* @ts-ignore */
-        ...state?.ingredients?.filter((item) => item?.id !== Number(id)),
+        ...newRecipe.ingredients?.filter((item) => item?.id !== Number(id)),
       ],
     }));
   };
@@ -309,6 +329,7 @@ const FormulateRecipe = () => {
               compareRecipeLength={compareRecipeList.length}
               prevFunc={() => handleClick("<")}
               nextFunc={() => handleClick(">")}
+              clickCount={clickState}
             />
           </div>
           <div className={styles.formulateContainer__formulateDiv}>
