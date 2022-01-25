@@ -115,9 +115,9 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
                   >
                     {processedList?.map((item: any, index) => (
                       <Draggable
-                        key={item?.id + "draggedElemDraggableId" + Date.now()}
+                        key={item?.id + "draggedElemDraggableId"}
                         draggableId={`${
-                          item?.id + "draggedElemDraggableId" + Date.now()
+                          item?.id + "draggedElemDraggableId"
                         }`}
                         index={index}
                       >
