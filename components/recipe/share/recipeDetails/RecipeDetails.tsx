@@ -29,9 +29,6 @@ function Copyable(props) {
   });
   // logic for removing elements having duplicate label values =>end
 
-
-
-
   return (
     <Droppable droppableId={droppableId} isDropDisabled={true}>
       {(provided, snapshot) => (
@@ -136,18 +133,12 @@ const RecipeDetails = ({
         />
         <div className={styles.nutritionHeader}>
           <p>Amount Per Serving Calories</p>
-          <table>
-            <tr className={styles.table_row}>
-              <th>Calories</th>
-              <th>93</th>
-              <th></th>
-            </tr>
-            <tr className={styles.table_row_calorie}>
-              <td></td>
-              <td> Value </td>
-              <td> Daily% </td>
-            </tr>
-          </table>
+
+          <div className={styles.table_row}>
+            <div>Calories</div>
+            <div>93</div>
+          </div>
+          <table></table>
         </div>
 
         <div className={styles.ingredientsDetails}>
@@ -156,6 +147,11 @@ const RecipeDetails = ({
             return (
               <Accordion key={index} title={section}>
                 <table>
+                  <tr className={styles.table_row_calorie}>
+                    <td></td>
+                    <td> VALUE </td>
+                    <td> DAILY% </td>
+                  </tr>
                   {amount?.map((items, index) => {
                     const { label, value, daily } = items;
                     return (

@@ -80,7 +80,7 @@ function AuthProvider({ children, activeUser }) {
         page !== "/varify_email"
       )
         // to be uncommented for auth to work correctly and remove clg at line 75
-        // router.push("/login");
+        router.push("/login");
       console.log("uncomment code in auth folder");
     }
   };
@@ -107,7 +107,7 @@ function AuthProvider({ children, activeUser }) {
 
   // IF NO USER REDIRECT TO LOGIN PAGE
   // to be uncommented when want to ensure user should not leave login page if not authorised
-  // if (!active) return <Loader active={true} />;
+  if (!active) return <Loader active={true} />;
 
   return (
     <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>

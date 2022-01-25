@@ -45,7 +45,6 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
     }
   });
 
-
   useEffect(() => {
     setWinReady(true);
   }, []);
@@ -118,9 +117,7 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
                     {processedList?.map((item: any, index) => (
                       <Draggable
                         key={item?.id + "draggedElemDraggableId"}
-                        draggableId={`${
-                          item?.id + "draggedElemDraggableId"
-                        }`}
+                        draggableId={`${item?.id + "draggedElemDraggableId"}`}
                         index={index}
                       >
                         {(provided, snapshot) => (
@@ -157,18 +154,10 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
         />
         <div className={styles.nutritionHeader}>
           <p>Amount Per Serving Calories</p>
-          <table>
-            <tr>
-              <th>Calories</th>
-              <th>00</th>
-              <th></th>
-            </tr>
-            <tr>
-              <td></td>
-              <td> Value </td>
-              <td> Daily% </td>
-            </tr>
-          </table>
+          <div className={styles.calories__heading}>
+            <div>Calories</div>
+            <div>00</div>
+          </div>
         </div>
 
         <div className={styles.ingredientsDetails}>
@@ -177,6 +166,11 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
             return (
               <Accordion key={index} title={section}>
                 <table>
+                  <tr className={styles.table_row_calorie}>
+                    <td></td>
+                    <td> VALUE </td>
+                    <td> DAILY% </td>
+                  </tr>
                   {amount?.map((items, index) => {
                     const { label, value, daily } = items;
                     return (
@@ -193,13 +187,13 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
           })}
         </div>
       </div>
-      <div className={styles.saveButton}>
+      {/* <div className={styles.saveButton}>
         <ButtonComponent
           type="primary"
           value="Save"
           style={{ height: "37px", width: "160px", fontSize: "12px" }}
         />
-      </div>
+      </div> */}
     </div>
   );
 };

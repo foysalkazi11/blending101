@@ -4,6 +4,8 @@
   height: 100%;
   margin: 0 5px;
   position: relative;
+  border: 2px solid #f2f2f8;
+  border-radius: 7px;
 
   &:hover .cancleIcon {
     color: #ababab;
@@ -31,6 +33,7 @@
   padding: 10px;
   margin-top: 15px;
   border-radius: 6px;
+
   min-height: 250px;
 }
 
@@ -38,6 +41,7 @@
   p {
     color: #ababab;
     font-size: 14px;
+    padding-top: 2px;
   }
 
   table {
@@ -60,10 +64,19 @@
   }
 }
 
-.table_row_calorie {
+.table_row {
   display: grid;
-  grid-template-columns: 1fr 86% 45%;
-  width: 100%;
+  grid-template-columns: 1fr 16%;
+  font-weight: 600;
+  border-bottom: 1px solid #dfdddd !important;
+  padding-bottom: 16px;
+  padding-top: 5px;
+  margin-bottom: 14px;
+}
+
+.table_row_calorie {
+  font-weight: 500;
+  background-color: #f1f1f1;
 }
 
 .ingredientsDetails {
@@ -71,7 +84,6 @@
     width: 100%;
 
     tr {
-
       display: grid;
       grid-template-columns: 1fr 35% 14%;
     }
@@ -81,7 +93,7 @@
       color: #000;
       font-size: 14px;
       padding: 10px 10px 10px 0px;
-      border-bottom: 1px solid #ececec !important;
+      border-bottom: 1px solid #dfdddd !important;
     }
 
     tr:last-child td {
