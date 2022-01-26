@@ -76,7 +76,7 @@ const RecipeDetails = () => {
 
   return (
     <>
-      <AContainer showLeftTray={true} filterTray={true}>
+      <AContainer showLeftTray={true} filterTray={true} commentsTray={true}>
         <div className={styles.main__div}>
           <SearchBar />
           <SearchtagsComponent />
