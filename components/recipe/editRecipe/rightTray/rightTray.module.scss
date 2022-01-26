@@ -4,7 +4,6 @@
     }
 }
 
-
 @mixin headings {
     position: relative;
     display: table;
@@ -86,11 +85,19 @@
     }
 
     &__subheader {
-        display: flex;
         width: 40%;
         margin-left: auto;
         font-size: 14px;
         color: #000;
+        display: grid;
+        grid-template-columns: auto 1fr 50%;
+
+        @include responsive(992px, 1400px) {
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 15px;
+            width: 100%;
+        }
 
 
         &__value {
@@ -104,5 +111,50 @@
             text-align: right;
         }
     }
+
+}
+
+.compoent__box {
+
+    table {
+        border-collapse: collapse;
+
+        @include responsive(0px, 992px) {
+            width: 100%;
+        }
+
+        @include responsive(992px, 1800px) {
+            grid-template-columns: 50% auto auto;
+            width: 100%;
+        }
+
+
+    }
+
+    .table__row {
+        display: grid;
+        grid-template-columns: 60% auto auto;
+        border-collapse: separate;
+        border: 0;
+
+        @include responsive(992px, 1800px) {
+            grid-template-columns: 52% auto auto;
+            width: 100%;
+        }
+
+        &__cell {
+            padding: 10px 10px 10px 0px;
+            font-family: sans-serif;
+            font-weight: 400;
+            font-size: 0.875rem;
+            // background-color: red;
+        }
+    }
+
+    &:last-child td,
+    &:last-child th {
+        border: 0;
+    }
+
 
 }

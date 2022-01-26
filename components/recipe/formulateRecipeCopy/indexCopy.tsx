@@ -1,6 +1,6 @@
-import React, { useState, useRef} from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useRef, useEffect } from "react";
 import Acontainer from "../../../containers/A.container";
-import { Container, Grid } from "@mui/material";
 import styles from "./formulateRecipe.module.scss";
 import list from "../fackData/racipeList";
 import Carousel from "../../../theme/carousel/carousel.component";
@@ -8,9 +8,10 @@ import SmallcardComponent from "../../../theme/cards/smallCard/SmallCard.compone
 import RecipeDetails from "../share/recipeDetails/RecipeDetails";
 import { DragDropContext } from "react-beautiful-dnd";
 import CreateNewRecipe from "./CreateNewRecipe";
-import Slider from "react-slick";
+
 import SubNav from "../share/subNav/SubNav";
 import SliderArrows from "../share/sliderArrows/SliderArrows";
+import { current } from "@reduxjs/toolkit";
 
 const responsiveSetting = {
   slidesToShow: 7,
@@ -70,7 +71,7 @@ const compareRecipeResponsiveSetting = {
       },
     },
     {
-      breakpoint: 1100,
+      breakpoint: 1000,
       settings: {
         slidesToShow: 1,
         slidesToScroll: 1,
@@ -88,7 +89,8 @@ const reorder = (list, startIndex, endIndex) => {
 
 const FormulateRecipe = () => {
   const [recipeList, setRecipeList] = useState(list);
-  const [compareRecipeList, setcompareRecipeList] = useState(list.slice(0, 4));
+  const [compareRecipeList, setcompareRecipeList] = useState(list);
+  // const [compareRecipeList, setcompareRecipeList] = useState(list.slice(0, 4));
   const sliderRef = useRef(null);
   const [newRecipe, setNewRecipe] = useState<{}>({
     id: 456,
@@ -250,72 +252,111 @@ const FormulateRecipe = () => {
     }
   };
 
+  const sliderRelativeDiv = useRef<any>();
+  const sliderAbsoluteDiv = useRef<any>();
+  const recipeDivRef = useRef<any>();
+  const [clickState, setClickState] = useState(0);
+
+  const handleClick = (sign) => {
+    let card = document.querySelector<HTMLElement>(".recipe__drag__card");
+    if (!card) return;
+    const absElement = sliderAbsoluteDiv.current;
+    const cardWid = card?.offsetWidth || 0;
+    const left = parseFloat(absElement.style.left) || 0;
+    const value = sign === "<" ? left + cardWid : left - cardWid;
+
+
+    if (sign === "<") {
+      if (left <= 0) return;
+      absElement.style.left = value + "px";
+      setClickState(clickState-1)
+    } else {
+      absElement.style.left = value + "px";
+      setClickState(clickState+1)
+    }
+  };
+
   return (
     <Acontainer showLeftTray={false} logo={false} headerTitle="Formulate">
-      <Container maxWidth="xl">
-        {/* sub-nav */}
+      <div className={styles.formulate}>
         <div className={styles.formulateContainer}>
-          <SubNav
-            backAddress="/recipe/compare"
-            backIconText="Recipe Compare"
-            buttonText="Formulate"
-            showButton={false}
-            compareAmout={compareRecipeList.length}
-            closeCompare={removeAllCompareRecipe}
-          />
-
-          <Carousel moreSetting={responsiveSetting}>
-            {recipeList?.map((recipe, index) => {
-              return (
-                <SmallcardComponent
-                  key={index}
-                  imgHeight={undefined}
-                  text={recipe?.name}
-                  img={recipe?.image}
-                  fnc={handleCompare}
-                  recipe={recipe}
-                  findCompareRecipe={findCompareRecipe}
-                  fucUnCheck={removeCompareRecipe}
-                  conpareLength={compareRecipeList?.length}
-                />
-              );
-            })}
-          </Carousel>
-          <SliderArrows
-            compareRecipeLength={compareRecipeList.length}
-            prevFunc={() => sliderRef.current?.slickPrev()}
-            nextFunc={() => sliderRef.current?.slickNext()}
-          />
-          <Grid container spacing={2}>
-            <DragDropContext onDragEnd={onDragEnd}>
-              <Grid item xs={12} sm={6} md={4} xl={3}>
-                <CreateNewRecipe
-                  newRecipe={newRecipe}
-                  setNewRecipe={setNewRecipe}
-                  deleteItem={deleteItem}
-                />
-              </Grid>
-
-              <Grid item xs={12} sm={6} md={8} xl={9}>
-                <Slider {...compareRecipeResponsiveSetting} ref={sliderRef}>
-                  {compareRecipeList?.map((recipe, index) => {
-                    return (
-                      <RecipeDetails
-                        key={index}
-                        recipe={recipe}
-                        id={index}
-                        addItem={addItem}
-                        removeCompareRecipe={removeCompareRecipe}
-                        dragAndDrop={true}
-                      />
-                    );
-                  })}
-                </Slider>
-              </Grid>
-            </DragDropContext>
-          </Grid>
+          <div className={styles.formulateContainer__subNavDiv}>
+            <SubNav
+              backAddress="/recipe/compare"
+              backIconText="Recipe Compare"
+              buttonText="Formulate"
+              showButton={false}
+              compareAmout={compareRecipeList.length}
+              closeCompare={removeAllCompareRecipe}
+            />
+            <Carousel moreSetting={responsiveSetting}>
+              {recipeList?.map((recipe, index) => {
+                return (
+                  <SmallcardComponent
+                    key={index}
+                    imgHeight={undefined}
+                    text={recipe?.name}
+                    img={recipe?.image}
+                    fnc={handleCompare}
+                    recipe={recipe}
+                    findCompareRecipe={findCompareRecipe}
+                    fucUnCheck={removeCompareRecipe}
+                    conpareLength={compareRecipeList?.length}
+                  />
+                );
+              })}
+            </Carousel>
+            <SliderArrows
+              compareRecipeLength={compareRecipeList.length}
+              prevFunc={() => handleClick("<")}
+              nextFunc={() => handleClick(">")}
+              clickCount={clickState}
+            />
+          </div>
+          <div className={styles.formulateContainer__formulateDiv}>
+            <div className={styles.dragContainer}>
+              <DragDropContext onDragEnd={onDragEnd}>
+                <div className={styles.dragContainer__area}>
+                  <CreateNewRecipe
+                    newRecipe={newRecipe}
+                    setNewRecipe={setNewRecipe}
+                    deleteItem={deleteItem}
+                  />
+                </div>
+                <div
+                  className={styles.dragContainer__sliderDiv}
+                  ref={sliderRelativeDiv}
+                >
+                  <div
+                    className={styles.dragContainer__sliderDiv__cardDiv}
+                    ref={sliderAbsoluteDiv}
+                  >
+                    {compareRecipeList?.map((recipe, index) => {
+                      return (
+                        <div
+                          ref={recipeDivRef}
+                          className={
+                            styles.recipeDiv + " " + "recipe__drag__card"
+                          }
+                          key={index + "FormulateRecipeCard"}
+                        >
+                          <RecipeDetails
+                            recipe={recipe}
+                            id={index}
+                            addItem={addItem}
+                            removeCompareRecipe={removeCompareRecipe}
+                            dragAndDrop={true}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </DragDropContext>
+            </div>
+          </div>
         </div>
-      </Container>
+      </div>
     </Acontainer>
   );
 };

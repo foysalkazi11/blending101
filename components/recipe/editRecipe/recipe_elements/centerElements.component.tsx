@@ -15,7 +15,7 @@ const Center_Elements = () => {
   const quantity_number = useAppSelector(
     (state) => state.quantityAdjuster.quantityNum
   );
-  // variables for ingredients card of eidt recipe
+  // variables for ingredients card of edit recipe
   const servings_number = useAppSelector(
     (state) => state.quantityAdjuster.servingsNum
   );

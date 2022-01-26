@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./Center_header.module.scss";
 import Image from "next/image";
-import VisibilityOutlinedIcon from "../../../../../public/icons/visibility_black_36dp.svg";
+import VisibilityOutlinedIcon from "../../../../../public/icons/visibility_black_outlined.svg";
 import ClearIcon from "../../../../../public/icons/clear_black_36dp.svg";
 const Center_header = () => {
   return (
@@ -31,3 +31,4 @@ const Center_header = () => {
 };
 
 export default Center_header;
+

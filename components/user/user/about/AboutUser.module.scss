@@ -1,7 +1,27 @@
+@mixin responsive($min_width, $max_width) {
+  @media only screen and (min-width:$min_width) and (max-width:$max_width) {
+    @content;
+  }
+}
+
+.Container {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+  padding: 5px;
+
+  @include responsive(0px, 700px) {
+    padding: 10px;
+    grid-template-columns: 1fr;
+  }
+}
+
 .inputContainer {
   width: 100%;
   display: flex;
   flex-direction: column;
+
   label {
     opacity: 1;
     margin-bottom: 0.25rem;
@@ -26,6 +46,7 @@
     -webkit-appearance: none;
     appearance: none;
     background-color: #fbfbfb;
+
     @media screen and (max-width: 1200px) {
       font-size: 13px;
     }
@@ -36,6 +57,7 @@
     align-items: center;
     background: #fbfbfb;
     border-radius: 5px;
+
     .searchIcon {
       color: #dcdbdb;
       margin-right: 15px;
@@ -54,6 +76,7 @@
       height: 20px;
       object-fit: contain;
     }
+
     select {
       padding: 10px;
       margin: 0;
@@ -74,6 +97,7 @@
       box-shadow: none;
       text-indent: 1px;
       text-overflow: "";
+
       @media screen and (max-width: 1200px) {
         font-size: 13px;
       }
