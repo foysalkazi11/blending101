@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
 import styles from "./SectionWithIcon.module.scss";
-import { Grid } from "@mui/material";
 import capitalizeFirstLetter from "../../../utility/capitalizeFirstLetter";
 
 type SectionWithIconProps = {
@@ -25,16 +24,21 @@ const SectionWithIcon = ({
     <div className={styles.sectionWithIconContainer}>
       <h2>{title}</h2>
       <div className={styles.imageContainer}>
-        <Grid
-          container
-          alignItems="center"
-          justifyContent={body.length <= 3 ? "center" : "flex-start"}
-          spacing={3}
+        <div
+          className={styles.imageContainer__div}
+          style={
+            body.length <= 3
+              ? { justifyContent: "center" }
+              : { justifyContent: "flex-start" }
+          }
         >
           {body.length
             ? body?.map((item, index) => {
                 return (
-                  <Grid item xs={3} key={index}>
+                  <div
+                    className={styles.imageContainer__div__element}
+                    key={index}
+                  >
                     <div
                       className={`${styles.singleImage} ${
                         alredyExist
@@ -52,11 +56,11 @@ const SectionWithIcon = ({
                       </div>
                       <h2> {capitalizeFirstLetter(item?.label)}</h2>
                     </div>
-                  </Grid>
+                  </div>
                 );
               })
             : null}
-        </Grid>
+        </div>
       </div>
     </div>
   );

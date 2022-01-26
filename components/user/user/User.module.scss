@@ -1,3 +1,9 @@
+@mixin responsive($min_width, $max_width) {
+  @media only screen and (min-width:$min_width) and (max-width:$max_width) {
+    @content;
+  }
+}
+
 .header {
   background-image: url("/images/about-banner.png");
   height: 270px;
@@ -19,6 +25,7 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
+
     h2 {
       color: white;
       text-align: center;
@@ -28,16 +35,19 @@
       margin: 0;
       padding: 10px 0;
       font-weight: 500;
+
       @media screen and (max-width: 900px) {
         font-size: 30px;
       }
     }
+
     p {
       color: white;
       text-align: center;
       opacity: 90%;
       font-size: 29px;
       margin: 0;
+
       @media screen and (max-width: 900px) {
         font-size: 25px;
       }
@@ -46,7 +56,40 @@
 }
 
 .container {
+  padding: 20px 15px;
+  max-width: 1536px;
+  margin: 0 auto;
   margin-top: -70px;
+
+  &__div {
+    display: flex;
+
+    @include responsive(0px, 900px) {
+      flex-direction: column;
+    }
+
+    // item xs={12} md={4}
+    &__left {
+      width: 34%;
+      margin-right: 30px;
+      margin-left: auto;
+
+      @include responsive(0px, 900px) {
+        width: 100%;
+        margin-bottom: 20px;
+      }
+    }
+
+    // item xs={12} md={8}
+    &__right {
+      width: 66%;
+      margin-right: auto;
+
+      @include responsive(0px, 900px) {
+        width: 100%;
+      }
+    }
+  }
 
   .sideBar {
     height: 100%;
@@ -55,6 +98,7 @@
     border-radius: 20px;
     padding: 20px;
   }
+
   .main {
     height: 100%;
     min-height: 550px;

@@ -53,7 +53,7 @@ const Personalization = ({ userData, setUserData }: PersonalizationProps) => {
             ...pre?.personalization,
             [name]: [
               ...pre?.personalization[name]?.filter((item) => item !== value),
-            ],
+            ]||"tempName",
           },
         }));
       } else {

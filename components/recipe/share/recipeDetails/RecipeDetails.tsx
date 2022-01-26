@@ -11,11 +11,29 @@ import uniqueId from "../../../utility/uniqueId";
 function Copyable(props) {
   const { items, addItem, droppableId } = props;
 
+  // logic for removing elements having duplicate label values =>start
+  let newList = Array.from(
+    new Set(
+      items.map((elem, index) => {
+        return elem.label;
+      })
+    )
+  );
+  let processedList = [];
+  items.map((item, index) => {
+    if (newList.includes(item.label)) {
+      let itemIndex = newList.indexOf(item.label);
+      newList.splice(itemIndex, 1);
+      processedList = [...processedList, item];
+    }
+  });
+  // logic for removing elements having duplicate label values =>end
+
   return (
     <Droppable droppableId={droppableId} isDropDisabled={true}>
       {(provided, snapshot) => (
         <div ref={provided.innerRef} {...provided.droppableProps}>
-          {items.map((item, index) => {
+          {processedList.map((item, index) => {
             return (
               <Draggable draggableId={`${item.id}`} index={index} key={item.id}>
                 {(provided, snapshot) => (
@@ -115,18 +133,12 @@ const RecipeDetails = ({
         />
         <div className={styles.nutritionHeader}>
           <p>Amount Per Serving Calories</p>
-          <table>
-            <tr>
-              <th>Calories</th>
-              <th>93</th>
-              <th></th>
-            </tr>
-            <tr>
-              <td></td>
-              <td> Value </td>
-              <td> Daily% </td>
-            </tr>
-          </table>
+
+          <div className={styles.table_row}>
+            <div>Calories</div>
+            <div>93</div>
+          </div>
+          <table></table>
         </div>
 
         <div className={styles.ingredientsDetails}>
@@ -135,6 +147,11 @@ const RecipeDetails = ({
             return (
               <Accordion key={index} title={section}>
                 <table>
+                  <tr className={styles.table_row_calorie}>
+                    <td></td>
+                    <td> VALUE </td>
+                    <td> DAILY% </td>
+                  </tr>
                   {amount?.map((items, index) => {
                     const { label, value, daily } = items;
                     return (

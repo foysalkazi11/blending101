@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import styles from "./plan.module.scss";
 import React from "react";
 import ButtonComponent from "../../../../../theme/button/button.component";
 import UserPlan from "../../../../../theme/membership/plan/UserPlan";
@@ -29,11 +29,11 @@ type UserPlanProps = {
 const Plan = ({ plan, handleChange }: UserPlanProps) => {
   return (
     <div>
-      <Grid container spacing={2}>
+      <div className={styles.mainContainer}>
         {userPlan?.map((item, index) => {
           const { label, value, amount } = item;
           return (
-            <Grid key={index} item xs={12} sm={6} xl={4}>
+            <div className={styles.mainContainer__div} key={index}>
               <UserPlan
                 plan={plan}
                 handleChange={handleChange}
@@ -41,10 +41,10 @@ const Plan = ({ plan, handleChange }: UserPlanProps) => {
                 value={value}
                 amount={amount}
               />
-            </Grid>
+            </div>
           );
         })}
-      </Grid>
+      </div>
       <div
         style={{
           width: "100%",

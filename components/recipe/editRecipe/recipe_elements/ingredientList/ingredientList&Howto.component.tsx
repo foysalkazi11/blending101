@@ -77,9 +77,8 @@ const IngredientList = () => {
         ingredientTempList = [...ingredientTempList, SearchOutput];
       }
 
-      console.log(SearchOutput, "Searching Output");
 
-      console.log(ingredientTempList, "temp list for active elements");
+
       dispatch(setIngredientsToList(ingredientTempList));
       setInputValueIngredient("");
     }
@@ -153,6 +152,8 @@ const IngredientList = () => {
 
   const editStep = (id) => {
     let newEditStep = howToState.find((elem) => {
+      document.getElementById("myTextField").focus();
+
       return elem.id === id;
     });
     setEditMode(true);
@@ -351,7 +352,7 @@ const IngredientList = () => {
                 }}
                 type="text"
                 name="recipe elements"
-                id=""
+                id="myTextField"
                 placeholder="Type Your Instructions here..."
               />
             </span>
