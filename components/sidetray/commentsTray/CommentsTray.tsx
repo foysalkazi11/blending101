@@ -6,15 +6,59 @@ import styles from "./CommentsTray.module.scss";
 import { MdPersonOutline } from "react-icons/md";
 import CommentSection from "./CommentSection/CommentSection";
 import NoteSection from "./noteSection/NoteSection";
+import { setLoading } from "../../../redux/slices/utilitySlice";
+import { useLazyQuery } from "@apollo/client";
+import GET_ALL_NOTES_FOR_A_RECIPE from "../../../gqlLib/notes/quries/getAllNotesForARecipe";
+import reactToastifyNotification from "../../utility/reactToastifyNotification";
 
 export default function CommentsTray(props) {
+  const [allNotes, setAllNotes] = useState([]);
+  const [allComments, setComments] = useState([]);
   const [toggle, setToggle] = useState(1);
   const { openCommentsTray } = useAppSelector((state) => state?.sideTray);
   const dispatch = useAppDispatch();
-  const { user, dbUser } = useAppSelector((state) => state?.user);
+  const { dbUser } = useAppSelector((state) => state?.user);
+  const { activeRecipeId } = useAppSelector((state) => state?.collections);
+  const [getAllNotesForARecipe, { data: noteData, loading: noteLoading }] =
+    useLazyQuery(GET_ALL_NOTES_FOR_A_RECIPE, {
+      fetchPolicy: "network-only",
+    });
 
   const ref = useRef<any>();
   const reff = useRef<any>();
+
+  const fetchCommentsAndNotes = async () => {
+    try {
+      getAllNotesForARecipe({
+        variables: { data: { recipeId: activeRecipeId, userId: dbUser?._id } },
+      });
+    } catch (error) {
+      reactToastifyNotification(error?.message);
+    }
+  };
+
+  useEffect(() => {
+    if (noteLoading) {
+      dispatch(setLoading(true));
+    } else {
+      dispatch(setLoading(false));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [noteLoading]);
+
+  useEffect(() => {
+    if (!noteLoading) {
+      setAllNotes(noteData?.getMyNotesForARecipe);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [noteData]);
+
+  useEffect(() => {
+    if (openCommentsTray && activeRecipeId) {
+      fetchCommentsAndNotes();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openCommentsTray, activeRecipeId]);
 
   useEffect(() => {
     const elem = ref.current;
@@ -77,7 +121,11 @@ export default function CommentsTray(props) {
         <img src="/cards/juice.png" alt="recipe_img" />
         <h3>Triple Berry Smoothie</h3>
       </div>
-      {toggle === 1 ? <CommentSection /> : <NoteSection />}
+      {toggle === 1 ? (
+        <CommentSection />
+      ) : (
+        <NoteSection allNotes={allNotes} setAllNotes={setAllNotes} />
+      )}
     </div>
   );
 }
