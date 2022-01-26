@@ -6,6 +6,7 @@ import { slicedString } from "../../../services/string.service";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
   setOpenCollectionsTary,
+  setOpenCommentsTray,
   setToggleSaveRecipeModal,
 } from "../../../redux/slices/sideTraySlice";
 import {
@@ -140,8 +141,11 @@ export default function DatacardComponent({
     dispatch(setActiveRecipeId(id));
   };
 
-  const handleComment = () => {
+  const handleComment = (id: string) => {
     // HANDLE COMMENTS CLICK HERE
+    dispatch(setActiveRecipeId(id));
+    dispatch(setOpenCommentsTray(true));
+    dispatch(setOpenCollectionsTary(false));
   };
 
   const handleClick = () => {
@@ -257,7 +261,7 @@ export default function DatacardComponent({
                     <img
                       src="/icons/message.svg"
                       alt="message"
-                      onClick={handleComment}
+                      onClick={() => handleComment(recipeId)}
                     />{" "}
                     <span>{noOfComments}</span>{" "}
                   </li>
