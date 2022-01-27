@@ -10,10 +10,12 @@ import { setLoading } from "../../../redux/slices/utilitySlice";
 import { useLazyQuery } from "@apollo/client";
 import GET_ALL_NOTES_FOR_A_RECIPE from "../../../gqlLib/notes/quries/getAllNotesForARecipe";
 import reactToastifyNotification from "../../utility/reactToastifyNotification";
+import GET_ALL_COMMENTS_FOR_A_RECIPE from "../../../gqlLib/comments/query/getAllCommentsForARecipe";
 
 export default function CommentsTray(props) {
   const [allNotes, setAllNotes] = useState([]);
   const [allComments, setComments] = useState([]);
+  const [userComments, setUserComments] = useState({});
   const [toggle, setToggle] = useState(1);
   const { openCommentsTray } = useAppSelector((state) => state?.sideTray);
   const dispatch = useAppDispatch();
@@ -23,12 +25,26 @@ export default function CommentsTray(props) {
     useLazyQuery(GET_ALL_NOTES_FOR_A_RECIPE, {
       fetchPolicy: "network-only",
     });
+  const [
+    getAllCommentsForARecipe,
+    { data: commentData, loading: commentLoading },
+  ] = useLazyQuery(GET_ALL_COMMENTS_FOR_A_RECIPE, {
+    fetchPolicy: "network-only",
+  });
 
   const ref = useRef<any>();
   const reff = useRef<any>();
 
   const fetchCommentsAndNotes = async () => {
     try {
+      getAllCommentsForARecipe({
+        variables: {
+          getAllCommentsForARecipeData2: {
+            recipeId: activeRecipeId,
+            userId: dbUser?._id,
+          },
+        },
+      });
       getAllNotesForARecipe({
         variables: { data: { recipeId: activeRecipeId, userId: dbUser?._id } },
       });
@@ -38,13 +54,13 @@ export default function CommentsTray(props) {
   };
 
   useEffect(() => {
-    if (noteLoading) {
+    if (noteLoading || commentLoading) {
       dispatch(setLoading(true));
     } else {
       dispatch(setLoading(false));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [noteLoading]);
+  }, [noteLoading, commentLoading]);
 
   useEffect(() => {
     if (!noteLoading) {
@@ -52,6 +68,15 @@ export default function CommentsTray(props) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [noteData]);
+
+  useEffect(() => {
+    if (!commentLoading) {
+      // const { comments, userComment } = commentData?.getAllCommentsForARecipe;
+      setComments(commentData?.getAllCommentsForARecipe?.comments || {});
+      setUserComments(commentData?.getAllCommentsForARecipe?.userComment || []);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [commentData]);
 
   useEffect(() => {
     if (openCommentsTray && activeRecipeId) {
@@ -122,7 +147,12 @@ export default function CommentsTray(props) {
         <h3>Triple Berry Smoothie</h3>
       </div>
       {toggle === 1 ? (
-        <CommentSection />
+        <CommentSection
+          allComments={allComments}
+          setComments={setComments}
+          userComments={userComments}
+          setUserComments={setUserComments}
+        />
       ) : (
         <NoteSection allNotes={allNotes} setAllNotes={setAllNotes} />
       )}
