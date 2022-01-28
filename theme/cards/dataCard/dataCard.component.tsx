@@ -21,6 +21,7 @@ import { useMutation, useLazyQuery } from "@apollo/client";
 import { setDbUser } from "../../../redux/slices/userSlice";
 import reactToastifyNotification from "../../../components/utility/reactToastifyNotification";
 import GET_LAST_MODIFIED_COLLECTION from "../../../gqlLib/collection/query/getLastModifiedCollection";
+import { setCurrentRecipeInfo } from "../../../redux/slices/recipeSlice";
 
 interface dataCardInterface {
   title: string;
@@ -141,10 +142,11 @@ export default function DatacardComponent({
     dispatch(setActiveRecipeId(id));
   };
 
-  const handleComment = (id: string) => {
+  const handleComment = (id: string, title: string, image: string) => {
     // HANDLE COMMENTS CLICK HERE
     dispatch(setActiveRecipeId(id));
     dispatch(setOpenCommentsTray(true));
+    dispatch(setCurrentRecipeInfo({ name: title, image }));
     dispatch(setOpenCollectionsTary(false));
   };
 
@@ -261,7 +263,7 @@ export default function DatacardComponent({
                     <img
                       src="/icons/message.svg"
                       alt="message"
-                      onClick={() => handleComment(recipeId)}
+                      onClick={() => handleComment(recipeId, title, image)}
                     />{" "}
                     <span>{noOfComments}</span>{" "}
                   </li>

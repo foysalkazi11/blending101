@@ -15,12 +15,13 @@ import GET_ALL_COMMENTS_FOR_A_RECIPE from "../../../gqlLib/comments/query/getAll
 export default function CommentsTray(props) {
   const [allNotes, setAllNotes] = useState([]);
   const [allComments, setComments] = useState([]);
-  const [userComments, setUserComments] = useState({});
+  const [userComments, setUserComments] = useState<any>({});
   const [toggle, setToggle] = useState(1);
   const { openCommentsTray } = useAppSelector((state) => state?.sideTray);
   const dispatch = useAppDispatch();
   const { dbUser } = useAppSelector((state) => state?.user);
   const { activeRecipeId } = useAppSelector((state) => state?.collections);
+  const { currentRecipeInfo } = useAppSelector((state) => state?.recipe);
   const [getAllNotesForARecipe, { data: noteData, loading: noteLoading }] =
     useLazyQuery(GET_ALL_NOTES_FOR_A_RECIPE, {
       fetchPolicy: "network-only",
@@ -109,12 +110,11 @@ export default function CommentsTray(props) {
   };
 
   return (
-    <div className={`${styles.tray} y-scroll`} ref={ref}>
-      {openCommentsTray ? (
-        <div className={styles.imageTag} onClick={handleClick}>
-          <img src="/images/cmnt-white.svg" alt="message-icon" />
-        </div>
-      ) : null}
+    <div className={`${styles.commentTray} y-scroll`} ref={ref}>
+      <div className={styles.imageTag} onClick={handleClick}>
+        <img src="/images/cmnt-white.svg" alt="message-icon" />
+      </div>
+
       <div className={styles.main}>
         <div className={styles.main__top}>
           <div className={styles.main__top__menu}>
@@ -143,8 +143,8 @@ export default function CommentsTray(props) {
         </div>
       </div>
       <div className={styles.recipeName}>
-        <img src="/cards/juice.png" alt="recipe_img" />
-        <h3>Triple Berry Smoothie</h3>
+        <img src={currentRecipeInfo?.image} alt="recipe_img" />
+        <h3>{currentRecipeInfo?.name}</h3>
       </div>
       {toggle === 1 ? (
         <CommentSection

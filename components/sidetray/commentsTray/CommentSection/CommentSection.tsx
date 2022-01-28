@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useMutation } from "@apollo/client";
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { MdPersonOutline } from "react-icons/md";
+import { MdDeleteOutline, MdPersonOutline } from "react-icons/md";
 import CREATE_NET_COMMENT from "../../../../gqlLib/comments/mutation/createNewComment";
 import DELETE_COMMENT from "../../../../gqlLib/comments/mutation/deleteComment";
 import EDIT_COMMENT from "../../../../gqlLib/comments/mutation/edtiComment";
@@ -12,6 +12,7 @@ import styles from "./CommentSection.module.scss";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
 import StarRating from "../../../../theme/starRating/StarRating";
 import { format, parseISO } from "date-fns";
+import { FiEdit2 } from "react-icons/fi";
 
 type CommentSectionProps = {
   allComments: any[];
@@ -33,73 +34,76 @@ const CommentSection = ({
   const [updateCommentId, setUpdateCommentId] = useState("");
   const [comment, setComment] = useState("");
   const [createComment] = useMutation(CREATE_NET_COMMENT);
-  // const [editComment] = useMutation(EDIT_COMMENT);
-  // const [deleteComment] = useMutation(DELETE_COMMENT);
+  const [editComment] = useMutation(EDIT_COMMENT);
+  const [deleteComment] = useMutation(DELETE_COMMENT);
   const { activeRecipeId } = useAppSelector((state) => state?.collections);
   const dispatch = useAppDispatch();
-  console.log(allComments);
+  console.log(userComments);
 
-  // const removeNote = async (id: string) => {
-  //   dispatch(setLoading(true));
-  //   try {
-  //     const { data } = await deleteNote({
-  //       variables: {
-  //         data: {
-  //           recipeId: activeRecipeId,
-  //           userId: dbUser?._id,
-  //           noteId: id,
-  //         },
-  //       },
-  //     });
-  //     setAllNotes(data?.removeMyNote);
-  //     dispatch(setLoading(false));
-  //     reactToastifyNotification("info", "Delete successfully");
-  //   } catch (error) {
-  //     dispatch(setLoading(false));
-  //     reactToastifyNotification("error", error?.message);
-  //   }
-  // };
+  const removeComment = async (id: string) => {
+    dispatch(setLoading(true));
+    try {
+      const { data } = await deleteComment({
+        variables: {
+          data: {
+            recipeId: activeRecipeId,
+            userId: dbUser?._id,
+            commentId: id,
+          },
+        },
+      });
+
+      setUserComments(data?.removeComment?.userComment || {});
+      dispatch(setLoading(false));
+      setUpdateComment(false);
+      reactToastifyNotification("info", "Delete comment successfully");
+    } catch (error) {
+      dispatch(setLoading(false));
+      reactToastifyNotification("error", error?.message);
+    }
+  };
 
   const createOrUpdateComment = async () => {
     dispatch(setLoading(true));
     try {
-      const { data } = await createComment({
-        variables: {
-          data: {
-            comment: comment,
-            rating: rating || 1,
-            recipeId: activeRecipeId,
-            userId: dbUser?._id,
+      if (!updateComment) {
+        const { data } = await createComment({
+          variables: {
+            data: {
+              comment: comment,
+              rating: rating || 1,
+              recipeId: activeRecipeId,
+              userId: dbUser?._id,
+            },
           },
-        },
+        });
+        setComments(data?.createComment?.comments || []);
+        setUserComments(data?.createComment?.userComment || {});
+      } else {
+        const { data: editData } = await editComment({
+          variables: {
+            editCommentData2: {
+              editId: updateCommentId,
+              recipeId: activeRecipeId,
+              userId: dbUser?._id,
+              editableObject: {
+                rating: rating,
+                comment: comment,
+              },
+            },
+          },
+        });
+        console.log(editData);
 
-        // {
-        //   editMyNoteData2: {
-        //     editableObject: { body: noteForm?.body, title: noteForm?.title },
-        //     noteId: updateNoteId,
-        //     userId: dbUser?._id,
-        //     recipeId: activeRecipeId,
-        //   },
-        // },
-      });
-
-      setComments(data?.createComment?.comments || []);
-      setUserComments(data?.createComment?.userComment || {});
-
-      // const { data } = await createNote({
-      //   variables: {
-      //     data: {
-      //       body: noteForm?.body,
-      //       title: noteForm?.title,
-      //       recipeId: activeRecipeId,
-      //       userId: dbUser?._id,
-      //     },
-      //   },
-      // });
-      // setAllNotes(data?.createNewNote);
+        setUserComments(editData?.editComment?.userComment || {});
+        setUpdateComment(false);
+      }
 
       dispatch(setLoading(false));
-      reactToastifyNotification("info", "Comment create successfully");
+      reactToastifyNotification(
+        "info",
+        `Comment ${updateComment ? "update" : "create"} successfully`
+      );
       toggleCommentBox();
     } catch (error) {
       dispatch(setLoading(false));
@@ -107,20 +111,40 @@ const CommentSection = ({
     }
   };
 
-  // const updateNoteValue = (id: string, title: string, body: string) => {
-  //   setUpdateNote(true);
-  //   setNoteForm((pre) => ({ ...pre, title, body }));
-  //   setUpdateNoteId(id);
-  //   toggleNoteForm();
-  // };
+  const updateCommentValue = (id: string, body: string, rating: number) => {
+    setUpdateComment(true);
+    setComment(body);
+    setUpdateCommentId(id);
+    setRating(rating);
+    setShowCommentBox(true);
+  };
 
   const toggleCommentBox = () => {
     setShowCommentBox((pre) => !pre);
   };
   return (
     <div>
-      {/* @ts-ignore */}
-      {userComments?.comment ? (
+      {updateComment ? (
+        <div className={styles.userImage}>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <div className={styles.imageBox}>
+              {dbUser?.image ? (
+                <img src={dbUser?.image} alt="user_img" />
+              ) : (
+                <MdPersonOutline />
+              )}
+            </div>
+            <h6>
+              {dbUser?.displayName ||
+                dbUser?.lastName ||
+                dbUser?.firstName ||
+                dbUser?.email}
+            </h6>
+          </div>
+          <StarRating rating={rating} setRating={setRating} />
+        </div>
+      ) : /* @ts-ignore */
+      userComments?.comment ? (
         <div style={{ padding: "10px" }}>
           <div className={styles.singleComment}>
             <div className={styles.header}>
@@ -160,19 +184,48 @@ const CommentSection = ({
             </div>
             {/* @ts-ignore */}
             <p>{userComments?.comment}</p>
-            <span>
-              {/* @ts-ignore */}
-              {userComments?.updatedAt ? (
-                <>
-                  {/* @ts-ignore */}
-                  {format(parseISO(userComments?.updatedAt), "dd/mm/yyyy")}{" "}
-                  (edited)
-                </>
-              ) : (
-                /* @ts-ignore */
-                format(parseISO(userComments?.createdAt), "dd/mm/yyyy")
-              )}
-            </span>
+            <div className={styles.buttomSection} style={{ margin: "0px" }}>
+              <span>
+                {/* @ts-ignore */}
+                {userComments?.updatedAt ? (
+                  <>
+                    {format(
+                      /* @ts-ignore */
+                      new Date(userComments?.updatedAt),
+                      "dd/MM/yyyy"
+                    )}{" "}
+                    (edited)
+                  </>
+                ) : (
+                  /* @ts-ignore */
+                  format(new Date(userComments?.createdAt), "dd/MM/yyyy")
+                )}
+              </span>
+              <div className={styles.rightSide}>
+                <div
+                  className={styles.editIconBox}
+                  onClick={() =>
+                    updateCommentValue(
+                      /* @ts-ignore */
+                      userComments?._id,
+                      /* @ts-ignore */
+                      userComments?.comment,
+                      /* @ts-ignore */
+                      userComments?.rating
+                    )
+                  }
+                >
+                  <FiEdit2 className={styles.icon} />
+                </div>
+                <div
+                  className={styles.editIconBox}
+                  /* @ts-ignore */
+                  onClick={() => removeComment(userComments?._id)}
+                >
+                  <MdDeleteOutline className={styles.icon} />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       ) : (
@@ -185,7 +238,6 @@ const CommentSection = ({
                 <MdPersonOutline />
               )}
             </div>
-
             <h6>
               {dbUser?.displayName ||
                 dbUser?.lastName ||
@@ -194,81 +246,114 @@ const CommentSection = ({
             </h6>
           </div>
           <StarRating rating={rating} setRating={setRating} />
-          {/* <img src="/images/star.png" alt="star-imag" /> */}
         </div>
       )}
-      {/* @ts-ignore */}
-      {userComments?.comment ? null : showCommentBox ? (
+
+      {showCommentBox ? (
         <CommentBox
           toggleCommentBox={toggleCommentBox}
           comment={comment}
           setComment={setComment}
           createOrUpdateComment={createOrUpdateComment}
+          setUpdateComment={setUpdateComment}
+          updateComment={updateComment}
+        />
+      ) : /* @ts-ignore */
+      userComments?.comment ? null : showCommentBox ? (
+        <CommentBox
+          toggleCommentBox={toggleCommentBox}
+          comment={comment}
+          setComment={setComment}
+          createOrUpdateComment={createOrUpdateComment}
+          setUpdateComment={setUpdateComment}
+          updateComment={updateComment}
         />
       ) : null}
 
       <div className={styles.commentsIconBox}>
-        <span>{allComments?.length || 0} comments</span>
+        <span>
+          {`${
+            /* @ts-ignore */
+            (allComments?.length || 0) + (userComments?.comment ? 1 : 0)
+          } comments`}
+        </span>
         {/* @ts-ignore */}
         {userComments?.comment ? null : showCommentBox ? null : (
-          <button onClick={toggleCommentBox}>
+          <button
+            onClick={() => {
+              toggleCommentBox();
+              setUpdateComment(false);
+            }}
+          >
             <img src="/images/plus-white-icon.svg" alt="add-icon" />
             <span>Add</span>
           </button>
         )}
       </div>
       <div className={`${styles.commentsShowContainer} y-scroll`}>
-        {allComments?.map((comment, index) => {
-          return (
-            <div className={styles.singleComment} key={index}>
-              <div className={styles.header}>
-                <div className={styles.leftSide}>
-                  <div className={styles.userIcon}>
-                    {comment?.userId?.image ? (
-                      <img src={comment?.userId?.image} alt="user" />
-                    ) : (
-                      <MdPersonOutline />
-                    )}
+        {allComments.length ? (
+          allComments?.map((comment, index) => {
+            return (
+              <div className={styles.singleComment} key={index}>
+                <div className={styles.header}>
+                  <div className={styles.leftSide}>
+                    <div className={styles.userIcon}>
+                      {comment?.userId?.image ? (
+                        <img src={comment?.userId?.image} alt="user" />
+                      ) : (
+                        <MdPersonOutline />
+                      )}
+                    </div>
+                    <h6>
+                      {" "}
+                      {comment?.userId?.displayName ||
+                        comment?.userId?.lastName ||
+                        comment?.userId?.firstName ||
+                        comment?.userId?.email}
+                    </h6>
                   </div>
-                  <h6>
-                    {" "}
-                    {comment?.userId?.displayName ||
-                      comment?.userId?.lastName ||
-                      comment?.userId?.firstName ||
-                      comment?.userId?.email}
-                  </h6>
+                  <div>
+                    {[...Array(5)].map((star, index) => {
+                      return (
+                        <span
+                          key={index}
+                          className={`${styles.star} ${
+                            //@ts-ignore
+                            index <= comment?.rating - 1
+                              ? styles.on
+                              : styles.off
+                          }`}
+                        >
+                          &#9733;
+                        </span>
+                      );
+                    })}
+                  </div>
                 </div>
-                <div>
-                  {[...Array(5)].map((star, index) => {
-                    return (
-                      <span
-                        key={index}
-                        className={`${styles.star} ${
-                          //@ts-ignore
-                          index <= comment?.rating - 1 ? styles.on : styles.off
-                        }`}
-                      >
-                        &#9733;
-                      </span>
-                    );
-                  })}
+                <p>{comment?.comment}</p>
+                <div className={styles.buttomSection}>
+                  <span>
+                    {/* @ts-ignore */}
+                    {comment?.updatedAt ? (
+                      <>
+                        {format(new Date(comment?.updatedAt), "dd/MM/yyyy")}{" "}
+                        (edited)
+                      </>
+                    ) : (
+                      format(new Date(comment?.createdAt), "dd/MM/yyyy")
+                    )}
+                  </span>
+                  <div></div>
                 </div>
               </div>
-              <p>{comment?.comment}</p>
-              <span>
-                {/* @ts-ignore */}
-                {comment?.updatedAt ? (
-                  <>
-                    {format(parseISO(comment?.updatedAt), "dd/mm/yyyy")}{" "}
-                    (edited)
-                  </>
-                ) : (
-                  format(parseISO(comment?.createdAt), "dd/mm/yyyy")
-                )}
-              </span>
-            </div>
-          );
-        })}
+            );
+          })
+        ) : (
+          <p className={styles.noComments}>
+            {/* @ts-ignore */}
+            {userComments?.comment ? "No other comments " : "No comments"}
+          </p>
+        )}
       </div>
     </div>
   );

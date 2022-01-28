@@ -8,6 +8,8 @@ type CommentBoxProps = {
   comment: string;
   setComment: Dispatch<SetStateAction<string>>;
   createOrUpdateComment: () => void;
+  setUpdateComment: Dispatch<SetStateAction<boolean>>;
+  updateComment: boolean;
 };
 
 const CommentBox = ({
@@ -15,6 +17,8 @@ const CommentBox = ({
   setComment,
   comment,
   createOrUpdateComment,
+  setUpdateComment,
+  updateComment,
 }: CommentBoxProps) => {
   return (
     <div className={styles.commentBoxContainer}>
@@ -24,11 +28,17 @@ const CommentBox = ({
       />
       <div className={styles.buttonGroup}>
         <SubmitBtn
-          text="Comment"
+          text={updateComment ? "Update" : "Comment"}
           style={{ background: "#fe5d1f", boxShadow: "5px 5px 15px #fe5d1f38" }}
           handleClick={createOrUpdateComment}
         />
-        <CancleBtn text="Cancle" handleClick={toggleCommentBox} />
+        <CancleBtn
+          text="Cancle"
+          handleClick={() => {
+            toggleCommentBox();
+            setUpdateComment(false);
+          }}
+        />
       </div>
     </div>
   );
