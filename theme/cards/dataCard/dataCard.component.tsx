@@ -55,11 +55,11 @@ export default function DatacardComponent({
   title = title || "Triple Berry Smoothie";
   ingredients = ingredients;
   category = category || "Smoothie";
-  noOfRatings = noOfRatings || 71;
+  noOfRatings = noOfRatings || 0;
   carbs = carbs || 23;
   calorie = calorie || 270;
   score = score || 701;
-  noOfComments = noOfComments || 21;
+  noOfComments = noOfComments || 0;
   image = image || "/cards/juice.png";
   const menu = useRef<any>();
 
@@ -160,9 +160,13 @@ export default function DatacardComponent({
       <div className={styles.databody__top}>
         <div className={styles.databody__top__label}>{category}</div>
         <div className={styles.databody__top__info}>
-          <img src="/icons/star.svg" alt="star" />
-          <span>{ratings}</span>&nbsp;
-          <span>({noOfRatings})</span>
+          {noOfRatings ? (
+            <>
+              <img src="/icons/star.svg" alt="star" />
+              <span>{ratings}</span>&nbsp;
+              <span>({noOfRatings})</span>
+            </>
+          ) : null}
         </div>
       </div>
       <div className={styles.databody__bottom}>
@@ -264,8 +268,9 @@ export default function DatacardComponent({
                       src="/icons/message.svg"
                       alt="message"
                       onClick={() => handleComment(recipeId, title, image)}
+                      className={`${noOfComments ? "" : styles.inActiveImg}`}
                     />{" "}
-                    <span>{noOfComments}</span>{" "}
+                    {noOfComments ? <span>{noOfComments}</span> : null}
                   </li>
                 </ul>
               </div>
