@@ -25,6 +25,8 @@ const GET_ALL_POPULAR_RECIPES = gql`
       _id
       url
       favicon
+      averageRating
+      numberOfRating
     }
   }
 `;

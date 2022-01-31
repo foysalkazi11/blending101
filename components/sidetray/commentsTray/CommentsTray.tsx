@@ -3,7 +3,6 @@ import React, { useRef, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setOpenCommentsTray } from "../../../redux/slices/sideTraySlice";
 import styles from "./CommentsTray.module.scss";
-import { MdPersonOutline } from "react-icons/md";
 import CommentSection from "./CommentSection/CommentSection";
 import NoteSection from "./noteSection/NoteSection";
 import { setLoading } from "../../../redux/slices/utilitySlice";

@@ -11,8 +11,13 @@ import CommentBox from "../commentBox/CommentBox";
 import styles from "./CommentSection.module.scss";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
 import StarRating from "../../../../theme/starRating/StarRating";
-import { format, parseISO } from "date-fns";
+import { format } from "date-fns";
 import { FiEdit2 } from "react-icons/fi";
+import {
+  setLatest,
+  setPopular,
+  setRecommended,
+} from "../../../../redux/slices/recipeSlice";
 
 type CommentSectionProps = {
   allComments: any[];
@@ -37,8 +42,44 @@ const CommentSection = ({
   const [editComment] = useMutation(EDIT_COMMENT);
   const [deleteComment] = useMutation(DELETE_COMMENT);
   const { activeRecipeId } = useAppSelector((state) => state?.collections);
+  const { latest, popular, recommended } = useAppSelector(
+    (state) => state?.recipe
+  );
   const dispatch = useAppDispatch();
-  console.log(userComments);
+
+  const updateRecipeRating = (
+    id: string,
+    averageRating: number,
+    numberOfRating: number
+  ) => {
+    dispatch(
+      setRecommended(
+        recommended?.map((recipe) =>
+          recipe?._id === id
+            ? { ...recipe, averageRating, numberOfRating }
+            : recipe
+        )
+      )
+    );
+    dispatch(
+      setLatest(
+        latest?.map((recipe) =>
+          recipe?._id === id
+            ? { ...recipe, averageRating, numberOfRating }
+            : recipe
+        )
+      )
+    );
+    dispatch(
+      setPopular(
+        popular?.map((recipe) =>
+          recipe?._id === id
+            ? { ...recipe, averageRating, numberOfRating }
+            : recipe
+        )
+      )
+    );
+  };
 
   const removeComment = async (id: string) => {
     dispatch(setLoading(true));
@@ -54,6 +95,9 @@ const CommentSection = ({
       });
 
       setUserComments(data?.removeComment?.userComment || {});
+      const { averageRating, numberOfRating, _id } =
+        data?.removeComment?.recipe;
+      updateRecipeRating(_id, averageRating, numberOfRating);
       dispatch(setLoading(false));
       setUpdateComment(false);
       reactToastifyNotification("info", "Delete comment successfully");
@@ -79,6 +123,9 @@ const CommentSection = ({
         });
         setComments(data?.createComment?.comments || []);
         setUserComments(data?.createComment?.userComment || {});
+        const { averageRating, numberOfRating, _id } =
+          data?.createComment?.recipe;
+        updateRecipeRating(_id, averageRating, numberOfRating);
       } else {
         const { data: editData } = await editComment({
           variables: {
@@ -93,9 +140,10 @@ const CommentSection = ({
             },
           },
         });
-        console.log(editData);
-
         setUserComments(editData?.editComment?.userComment || {});
+        const { averageRating, numberOfRating, _id } =
+          editData?.editComment?.recipe;
+        updateRecipeRating(_id, averageRating, numberOfRating);
         setUpdateComment(false);
       }
 
@@ -283,6 +331,8 @@ const CommentSection = ({
             onClick={() => {
               toggleCommentBox();
               setUpdateComment(false);
+              setComment("");
+              setRating(0);
             }}
           >
             <img src="/images/plus-white-icon.svg" alt="add-icon" />
