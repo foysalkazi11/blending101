@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Scale from "../../scale/Scale";
+import ScaleHeight from "../../scale/ScaleHeight.";
 import SectionWithIcon from "../../sectionWithIcon/SectionWithIcon";
 
 const gender = [
@@ -67,6 +68,17 @@ const StepOne = ({ userProfile, updateUserProfile }: StepOneProps) => {
         min={"145"}
         max={"200"}
         longLineDivider={5}
+      />
+      <ScaleHeight
+        title="What's your current height?"
+        resultWithText="inches"
+        fieldName="height"
+        setValue={updateUserProfile}
+        value={userProfile?.height}
+        min={"108"}
+        max={"216"}
+        longLineDivider={18}
+        shortLineDivider={3}
       />
       <SectionWithIcon
         title="Your Activity"

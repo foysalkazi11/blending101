@@ -11,7 +11,7 @@ interface scaleCompInterface {
   min: string;
   max: string;
 }
-export function ScaleComponent(props: scaleCompInterface) {
+export function ScaleComponentCopy(props: scaleCompInterface) {
   const {
     value,
     setValue,
@@ -33,13 +33,16 @@ export function ScaleComponent(props: scaleCompInterface) {
     setLine(array);
   }, []);
 
+  let scaleValue = "0";
   const YLine = ({ value, index }) => {
     let longline = false;
     const style = {
       left: `calc(${index * (100 / (Number(max) - Number(min)))}%)`,
       height: `20px`,
     };
+
     const number = value % longLineDivider;
+
     if (number === 0) {
       if (value === Number(min) || value === Number(max)) {
         style.height = "0px";
@@ -55,9 +58,17 @@ export function ScaleComponent(props: scaleCompInterface) {
       }
     }
 
+    const feetConverter = (value) => {
+      let tempValue = (value * 0.3937) / 12;
+      let tempfeet = Math.floor(tempValue);
+      let tempInch = Math.round((tempValue - tempfeet) * 12);
+      scaleValue = `${tempfeet}'${tempInch}''`;
+    };
+    feetConverter(value);
+
     return (
       <div className={styles.yLine} style={style}>
-        {longline && <div className={styles.longline}>{longline}</div>}
+        {longline && <div className={styles.longline}>{scaleValue}</div>}
       </div>
     );
   };
