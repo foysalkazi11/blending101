@@ -25,6 +25,8 @@ const GET_ALL_RECOMMENDED_RECIPES = gql`
       _id
       url
       favicon
+      averageRating
+      numberOfRating
     }
   }
 `;

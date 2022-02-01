@@ -218,3 +218,8 @@
   padding-right: 33px;
   margin-bottom: 10px;
 }
+
+.inActiveImg {
+  filter: grayscale(100%);
+  -webkit-filter: grayscale(100%);
+}

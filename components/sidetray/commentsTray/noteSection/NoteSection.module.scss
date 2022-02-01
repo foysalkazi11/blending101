@@ -72,29 +72,38 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      &:hover .rightSide {
+        visibility: visible;
+      }
       h3 {
         font-size: 14px;
         font-weight: 600;
 
         color: #000000;
       }
-      .editIconBox {
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        padding: 0;
-        border: 0;
-        background: #fbfbfb;
+      .rightSide {
         display: flex;
         align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        &:hover {
-          box-shadow: 0 10px 10px -10px rgb(0 0 0 / 50%);
-          background: #e0e0e047;
-        }
-        .icon {
-          font-size: 16px;
+        visibility: hidden;
+        .editIconBox {
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          padding: 0;
+          border: 0;
+          background: #fbfbfb;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          &:hover {
+            box-shadow: 0 10px 10px -10px rgb(0 0 0 / 50%);
+            background: #e0e0e047;
+          }
+          .icon {
+            font-size: 16px;
+            color: #646464;
+          }
         }
       }
     }
@@ -113,4 +122,10 @@
       }
     }
   }
+}
+
+.noNotes {
+  text-align: center;
+  color: #c1c1c1;
+  font-size: 16px;
 }

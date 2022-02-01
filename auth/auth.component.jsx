@@ -9,6 +9,7 @@ import { setDbUser, setProvider, setUser } from "../redux/slices/userSlice";
 import { useMutation } from "@apollo/client";
 import CREATE_NEW_USER from "../gqlLib/user/mutations/createNewUser";
 import { setAllRecipeWithinCollectionsId } from "../redux/slices/collectionSlice";
+import { setLoading } from "../redux/slices/utilitySlice";
 
 // INITIALIZE 1: CREATE AUTH CONTEXT
 const AuthContext = createContext();
@@ -30,6 +31,7 @@ function AuthProvider({ children, activeUser }) {
   const page = router.pathname;
 
   const isCurrentUser = async () => {
+    dispatch(setLoading(true));
     try {
       let userEmail = "";
       let provider = "";
@@ -65,6 +67,7 @@ function AuthProvider({ children, activeUser }) {
           recipesId?.push(recipe?._id);
         });
       });
+      dispatch(setLoading(false));
       dispatch(setAllRecipeWithinCollectionsId(recipesId));
       dispatch(setUser(userEmail));
       dispatch(setDbUser(data?.createNewUser));
@@ -72,6 +75,7 @@ function AuthProvider({ children, activeUser }) {
       setActive(true);
     } catch (error) {
       console.log(error?.message);
+      dispatch(setLoading(false));
       if (
         !user &&
         process.browser &&
@@ -79,7 +83,6 @@ function AuthProvider({ children, activeUser }) {
         page !== "/signup" &&
         page !== "/varify_email"
       )
-        // to be uncommented for auth to work correctly and remove clg at line 75
         router.push("/login");
       console.log("uncomment code in auth folder");
     }

@@ -30,18 +30,26 @@ import { useLazyQuery } from "@apollo/client";
 import GET_ALL_RECOMMENDED_RECIPES from "../../gqlLib/recipes/queries/getRecommendedRecipes";
 import GET_ALL_POPULAR_RECIPES from "../../gqlLib/recipes/queries/getAllPopularRecipes";
 import GET_ALL_LATEST_RECIPES from "../../gqlLib/recipes/queries/getAllLatestRecipes";
+import {
+  setLatest,
+  setPopular,
+  setRecommended,
+} from "../../redux/slices/recipeSlice";
+
 const RecipeDetails = () => {
-  const [recommended, setRecommended] = useState([]);
-  const [popular, setPopular] = useState([]);
-  const [latest, setLatest] = useState([]);
+  // const [recommended, setRecommended] = useState([]);
+  // const [popular, setPopular] = useState([]);
+  // const [latest, setLatest] = useState([]);
   const blends = useAppSelector((state) => state.sideTray.blends);
   const { dbUser, user } = useAppSelector((state) => state?.user);
   const { lastModifiedCollection, collectionDetailsId, showAllRecipes } =
     useAppSelector((state) => state?.collections);
+  const { latest, popular, recommended } = useAppSelector(
+    (state) => state?.recipe
+  );
   const [getAllRecommendedRecipes] = useLazyQuery(GET_ALL_RECOMMENDED_RECIPES);
   const [getAllPopularRecipes] = useLazyQuery(GET_ALL_POPULAR_RECIPES);
   const [getAllLatestRecipes] = useLazyQuery(GET_ALL_LATEST_RECIPES);
-
   const dispatch = useAppDispatch();
 
   const handleCompareRecipe = () => {
@@ -54,11 +62,13 @@ const RecipeDetails = () => {
     dispatch(setLoading(true));
     try {
       const recommendedRecipes = await getAllRecommendedRecipes();
-      setRecommended(recommendedRecipes?.data?.getAllrecomendedRecipes || []);
+      dispatch(
+        setRecommended(recommendedRecipes?.data?.getAllrecomendedRecipes || [])
+      );
       const popularRecipes = await getAllPopularRecipes();
-      setPopular(popularRecipes?.data?.getAllpopularRecipes || []);
+      dispatch(setPopular(popularRecipes?.data?.getAllpopularRecipes || []));
       const latestRecipes = await getAllLatestRecipes();
-      setLatest(latestRecipes?.data?.getAllLatestRecipes || []);
+      dispatch(setLatest(latestRecipes?.data?.getAllLatestRecipes || []));
       dispatch(setLoading(false));
     } catch (error) {
       dispatch(setLoading(false));
@@ -76,7 +86,7 @@ const RecipeDetails = () => {
 
   return (
     <>
-      <AContainer showLeftTray={true} filterTray={true}>
+      <AContainer showLeftTray={true} filterTray={true} commentsTray={true}>
         <div className={styles.main__div}>
           <SearchBar />
           <SearchtagsComponent />
@@ -110,12 +120,12 @@ const RecipeDetails = () => {
                             title={item.name}
                             ingredients={ing}
                             category={item.recipeBlendCategory?.name}
-                            ratings={item.ratings}
-                            noOfRatings={item.noOfRatings}
+                            ratings={item?.averageRating}
+                            noOfRatings={item?.numberOfRating}
                             carbs={item.carbs}
                             score={item.score}
                             calorie={item.calorie}
-                            noOfComments={item.noOfComments}
+                            noOfComments={item?.numberOfRating}
                             image={item.image[0]?.image}
                             recipeId={item?._id}
                           />
@@ -148,12 +158,12 @@ const RecipeDetails = () => {
                               title={item.name}
                               ingredients={ing}
                               category={item.recipeBlendCategory?.name}
-                              ratings={item.ratings}
-                              noOfRatings={item.noOfRatings}
+                              ratings={item?.averageRating}
+                              noOfRatings={item?.numberOfRating}
                               carbs={item.carbs}
                               score={item.score}
                               calorie={item.calorie}
-                              noOfComments={item.noOfComments}
+                              noOfComments={item?.numberOfRating}
                               image={item.image[0]?.image}
                               recipeId={item?._id}
                             />
@@ -186,12 +196,12 @@ const RecipeDetails = () => {
                               title={item.name}
                               ingredients={ing}
                               category={item.recipeBlendCategory?.name}
-                              ratings={item.ratings}
-                              noOfRatings={item.noOfRatings}
+                              ratings={item?.averageRating}
+                              noOfRatings={item?.numberOfRating}
                               carbs={item.carbs}
                               score={item.score}
                               calorie={item.calorie}
-                              noOfComments={item.noOfComments}
+                              noOfComments={item?.numberOfRating}
                               image={item.image[0]?.image}
                               recipeId={item?._id}
                             />
