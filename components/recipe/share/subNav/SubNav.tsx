@@ -4,6 +4,7 @@ import ArrowBackIcon from "../../../../public/icons/arrow_back_black_36dp.svg";
 import HighlightOffIcon from "../../../../public/icons/highlight_off_black_36dp.svg";
 import ButtonComponent from "../../../../theme/button/button.component";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 type SubNavProps = {
   showButton?: boolean;
@@ -16,6 +17,7 @@ type SubNavProps = {
 };
 
 const SubNav = (props: SubNavProps) => {
+  const router = useRouter();
   const {
     showButton = false,
     buttonText = "Button",
@@ -44,7 +46,7 @@ const SubNav = (props: SubNavProps) => {
         />
       ) : null}
 
-      <div className={styles.subNav__compare}>
+      <div className={styles.subNav__compare} onClick={() => router.push('/recipe/formulate')}>
         <p>{compareAmout} compare</p>
         <HighlightOffIcon
           className={styles.subNav__compare__icon}

@@ -1,4 +1,4 @@
-.tray {
+.commentTray {
   width: 312px;
   background-color: #fff;
   position: absolute;
@@ -7,12 +7,12 @@
   transition: all;
   transition-duration: 0.4s;
   box-shadow: 0px 2px 6px #ececec;
-  z-index: 9999;
+  z-index: 9999 !important;
   padding: 20px;
 }
-.tray .imageTag {
+.imageTag {
   position: absolute;
-  left: -40px;
+  left: -20px;
   top: 22px;
   // transform: translateX(-100%);
   cursor: pointer;
@@ -25,12 +25,12 @@
   justify-content: center;
   align-items: center;
   box-shadow: 0px 3px 6px #00000029;
-  border: 1px solid #fd5109;
+  border: 1px solid #fe5d1f;
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
 }
-// .tray .image img {
-//   width: 35px;
+// .commentTray .imageTag img {
+//   width: 40px;
 // }
 
 .image__white:hover {
@@ -88,7 +88,7 @@
   content: "";
   left: 0px;
   border-radius: 18px;
-  z-index: 99999;
+  z-index: 999;
   transition: all;
   transition-duration: 0.4s;
 }
