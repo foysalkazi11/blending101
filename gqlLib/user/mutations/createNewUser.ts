@@ -76,6 +76,8 @@ const CREATE_NEW_USER = gql`
           url
           discovery
           favicon
+          averageRating
+          numberOfRating
         }
       }
     }
