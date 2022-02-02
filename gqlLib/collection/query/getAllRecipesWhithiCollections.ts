@@ -44,6 +44,8 @@ const GET_ALL_RECIPES_WITHIN_COLLECTIONS = gql`
       url
       discovery
       favicon
+      averageRating
+      numberOfRating
     }
   }
 `;
