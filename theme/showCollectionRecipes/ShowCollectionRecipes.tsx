@@ -99,12 +99,12 @@ const ShowCollectionRecipes = () => {
                       title={item.name}
                       ingredients={ing}
                       category={item.recipeBlendCategory?.name}
-                      ratings={item.ratings}
-                      noOfRatings={item.noOfRatings}
+                      ratings={item?.averageRating}
+                      noOfRatings={item?.numberOfRating}
                       carbs={item.carbs}
                       score={item.score}
                       calorie={item.calorie}
-                      noOfComments={item.noOfComments}
+                      noOfComments={item?.numberOfRating}
                       image={item.image[0]?.image}
                       recipeId={item?._id}
                     />
@@ -125,12 +125,12 @@ const ShowCollectionRecipes = () => {
                     title={item.name}
                     ingredients={ing}
                     category={item.recipeBlendCategory?.name}
-                    ratings={item.ratings}
-                    noOfRatings={item.noOfRatings}
+                    ratings={item?.averageRating}
+                    noOfRatings={item?.numberOfRating}
                     carbs={item.carbs}
                     score={item.score}
                     calorie={item.calorie}
-                    noOfComments={item.noOfComments}
+                    noOfComments={item?.numberOfRating}
                     image={item.image[0]?.image}
                     recipeId={item?._id}
                   />
