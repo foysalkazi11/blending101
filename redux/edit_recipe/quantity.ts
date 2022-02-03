@@ -1,23 +1,24 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface ingredientCard {
-  id?:string,
-  title?:string,
-  img?:string,
-  servings?:number,
-  measuring_scale?:string,
-  extra_sentence?:string,
-  checked?:boolean
+  [x: string]: any;
+  id?: string;
+  title?: string;
+  img?: string;
+  servings?: number;
+  measuring_scale?: string;
+  extra_sentence?: string;
+  checked?: boolean;
 }
 
 interface howToCard {
-  id?:string;
+  id?: string;
   step?: string;
-};
+}
 
-interface ingredientSearchCard{
-  id?:string;
-  searchItem?:string;
+interface ingredientSearchCard {
+  id?: string;
+  searchItem?: string;
 }
 
 type quantityState = {
@@ -25,11 +26,11 @@ type quantityState = {
   servingsNum: number;
   ingredientName: string;
   ingredientsList: ingredientCard[];
-  ingredientSentence:string[];
+  ingredientSentence: string[];
   howtoState: howToCard[];
   uploadImageList: string[];
-  leftbarShowState:boolean;
-  IngredientSearchBarItem:ingredientSearchCard[];
+  leftbarShowState: boolean;
+  IngredientSearchBarItem: ingredientSearchCard[];
 };
 
 const initialState: quantityState = {
@@ -37,12 +38,11 @@ const initialState: quantityState = {
   servingsNum: 1,
   ingredientName: "",
   ingredientsList: [],
-  ingredientSentence:[],
+  ingredientSentence: [],
   howtoState: [],
   uploadImageList: [],
-  leftbarShowState:true,
-  IngredientSearchBarItem:[],
-
+  leftbarShowState: true,
+  IngredientSearchBarItem: [],
 };
 
 //quantity num is for top card in edit recipe page
@@ -59,8 +59,8 @@ export const quantityStateSlice = createSlice({
     setIngredient: (state, action: PayloadAction<string>) => {
       state.ingredientName = action?.payload;
     },
-    setIngredientsSentence:(state,action:PayloadAction<string[]>)=>{
-      state.ingredientSentence=action?.payload
+    setIngredientsSentence: (state, action: PayloadAction<string[]>) => {
+      state.ingredientSentence = action?.payload;
     },
     setIngredientsToList: (state, action) => {
       state.ingredientsList = action?.payload;
@@ -71,11 +71,14 @@ export const quantityStateSlice = createSlice({
     setUploadImageList: (state, action: PayloadAction<string[]>) => {
       state.uploadImageList = action?.payload;
     },
-    setLeftbarShowState:(state,action:PayloadAction<boolean>)=>{
-      state.leftbarShowState=action?.payload
+    setLeftbarShowState: (state, action: PayloadAction<boolean>) => {
+      state.leftbarShowState = action?.payload;
     },
-    setIngredientSearchBarItem:(state,action:PayloadAction<ingredientSearchCard[]>)=>{
-      state.IngredientSearchBarItem=action?.payload
+    setIngredientSearchBarItem: (
+      state,
+      action: PayloadAction<ingredientSearchCard[]>
+    ) => {
+      state.IngredientSearchBarItem = action?.payload;
     },
   },
 });
@@ -87,6 +90,6 @@ export const {
   setIngredientsSentence,
   setHowToSteps,
   setUploadImageList,
-  setIngredientSearchBarItem
+  setIngredientSearchBarItem,
 } = quantityStateSlice.actions;
 export default quantityStateSlice?.reducer;

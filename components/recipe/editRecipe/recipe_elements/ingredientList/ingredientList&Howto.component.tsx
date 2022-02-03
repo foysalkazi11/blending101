@@ -77,8 +77,6 @@ const IngredientList = () => {
         ingredientTempList = [...ingredientTempList, SearchOutput];
       }
 
-
-
       dispatch(setIngredientsToList(ingredientTempList));
       setInputValueIngredient("");
     }
@@ -95,7 +93,7 @@ const IngredientList = () => {
 
   const removeIngredient = (id) => {
     let updated_list = ingredients_list.filter((elem) => {
-      return id !== elem.id;
+      return id !== elem._id;
     });
     dispatch(setIngredientsToList(updated_list));
   };
@@ -170,6 +168,8 @@ const IngredientList = () => {
     let tempValue = e.target.value;
     setInputValue(tempValue);
   };
+
+  console.log(ingredients_list);
   return (
     <div className={styles.mainCard}>
       <div className={styles.ingredients__main__card}>
@@ -231,15 +231,19 @@ const IngredientList = () => {
         <div className={styles.ingredients}>
           <ul>
             {ingredients_list.map((elem) => {
+              // console.log(elem.portions);
               return (
-                <li key={elem.id} className={styles.ingredients__li}>
+                <li
+                  key={elem.ingredientName + elem._id}
+                  className={styles.ingredients__li}
+                >
                   <div className={styles.ingredients__drag}>
                     <DragIndicatorIcon className={styles.ingredients__drag} />
                   </div>
-                  {elem.img ? (
+                  {elem.featuredImage !== null ? (
                     <div className={styles.ingredients__icons}>
                       <Image
-                        src={elem.img}
+                        src={elem.featuredImage}
                         alt="Picture will load soon"
                         objectFit="contain"
                         layout="fill"
@@ -250,10 +254,10 @@ const IngredientList = () => {
                   )}
                   {/* to create ingredients lists  */}
                   <div className={styles.ingredients__text}>
-                    <span>{elem.servings * servings_number} &nbsp;</span>
+                    <span>{(elem.portions[0].meausermentWeight==='Quantity not specified')?1:(100/elem.portions[0].meausermentWeight) * servings_number} &nbsp;</span>
                     <span>{elem.measuring_scale} &nbsp;</span>
                     <span className={styles.ingredients__text__highlighted}>
-                      {elem.title} &nbsp;
+                      {elem.ingredientName} &nbsp;
                     </span>
                     <span>{elem.extra_sentence} &nbsp;</span>
                   </div>
@@ -265,7 +269,7 @@ const IngredientList = () => {
                   </span>
                   <div
                     className={styles.ingredients__bin}
-                    onClick={() => removeIngredient(elem.id)}
+                    onClick={() => removeIngredient(elem._id)}
                   >
                     <Image
                       src={"/icons/noun_Delete_1447966.svg"}

@@ -39,7 +39,7 @@ export default function DropdownTwoComponent({
 	return (
 		<div className={styles.dpd}>
 			<div className={styles.dropdown} ref={ref} style={style}>
-				<div className={styles.dropdown__top} style={style} onClick={handleToggle}>
+				<div className={styles.dropdown__top} style={style} onClick={()=>handleToggle(value)}>
 					{value.title}
 					<div>
 						{

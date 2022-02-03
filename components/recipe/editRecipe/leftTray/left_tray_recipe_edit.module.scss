@@ -36,16 +36,16 @@
     }
 }
 
-.searchBar{
+.searchBar {
     background-color: green;
     display: flex;
     position: relative;
-    min-height:45px ;
+    min-height: 45px;
     border-radius: 5px;
     overflow: hidden;
     margin-top: 20px;
 
-    &__input_field__icon{
+    &__input_field__icon {
         background-color: transparent;
         position: absolute;
         min-height: inherit;
@@ -54,7 +54,7 @@
         align-items: center;
         right: 7px;
 
-        div{
+        div {
             position: relative;
             height: 100%;
             width: 17px;
@@ -62,7 +62,7 @@
         }
     }
 
-    &__input_field{
+    &__input_field {
         min-height: inherit;
         min-width: 100%;
         box-shadow: none;
@@ -72,15 +72,15 @@
         background-color: #fbfbfb;
         border: none;
 
-        &::placeholder{
+        &::placeholder {
             color: #C4C4C4;
         }
 
-        &:focus{
+        &:focus {
             outline: none;
         }
 
-        &:active{
+        &:active {
             outline: none;
         }
     }
@@ -94,7 +94,7 @@
     max-width: 100%;
 
     &__item {
-        width: 65 px;
+        width: 65px;
         margin-bottom: 10px;
         cursor: pointer;
         position: relative;
@@ -131,14 +131,15 @@
     background-color: #fbfbfb;
 }
 
-.tick{
+.tick {
     position: absolute;
     border-radius: 50%;
     right: 5px;
     overflow: hidden;
     top: 0px;
 }
-.ticked{
+
+.ticked {
     border-radius: 50%;
     width: 16px;
     height: 16px;
