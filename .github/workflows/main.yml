@@ -32,4 +32,4 @@ jobs:
           aws-region: us-east-1
           
       - name: Deploy Blending-Client app
-        run: npx serverless
+        run: npx serverless@2.72.2
