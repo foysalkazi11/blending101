@@ -254,8 +254,22 @@ const IngredientList = () => {
                   )}
                   {/* to create ingredients lists  */}
                   <div className={styles.ingredients__text}>
-                    <span>{(elem.portions[0].meausermentWeight==='Quantity not specified')?1:(100/elem.portions[0].meausermentWeight) * servings_number} &nbsp;</span>
-                    <span>{elem.measuring_scale} &nbsp;</span>
+                    <span>
+                      {elem.portions[0].meausermentWeight ===
+                      "Quantity not specified"
+                        ? 1
+                        : Math.round(
+                            (100 / elem.portions[0].meausermentWeight) *
+                              servings_number
+                          )}{" "}
+                      &nbsp;
+                    </span>
+                    <span>
+                      {elem.portions[0].measurement === "Quantity not specified"
+                        ? ""
+                        : elem.portions[0].measurement}{" "}
+                      &nbsp;
+                    </span>
                     <span className={styles.ingredients__text__highlighted}>
                       {elem.ingredientName} &nbsp;
                     </span>
