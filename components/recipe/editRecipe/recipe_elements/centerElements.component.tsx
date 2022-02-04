@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import styles from "./centerElements.module.scss";
 import MoreVertIcon from "../../../../public/icons/more_vert_black_36dp.svg";
 import AddRecipeCard from "./addFiles/addRecipeCards.component";
@@ -8,7 +8,11 @@ import { setQuantity } from "../../../../redux/edit_recipe/quantity";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import DropDown from "../../../../theme/dropDown/DropDown.component";
 
-const Center_Elements = () => {
+type CenterElementsProps = {
+  setImages?: Dispatch<SetStateAction<any[]>>;
+};
+
+const Center_Elements = ({ setImages }: CenterElementsProps) => {
   const dispatch = useAppDispatch();
 
   //quantity number sets number for top card bottom right counter in edit recipe
@@ -51,7 +55,7 @@ const Center_Elements = () => {
         </div>
       </div>
       <div className={styles.addImagediv}>
-        <AddRecipeCard />
+        <AddRecipeCard setImages={setImages} />
       </div>
       <div className={styles.scoreTraydiv}>
         <ScoreTray />
