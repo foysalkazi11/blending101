@@ -106,6 +106,7 @@ const About = ({ userData, setUserData }: AboutProps) => {
         });
       })
       .catch((error) => {
+        dispatch(setLoading(false));
         reactToastifyNotification("error", error?.message);
       });
   };
