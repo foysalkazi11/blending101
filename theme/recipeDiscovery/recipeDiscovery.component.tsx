@@ -40,7 +40,7 @@ const RecipeDetails = () => {
   // const [recommended, setRecommended] = useState([]);
   // const [popular, setPopular] = useState([]);
   // const [latest, setLatest] = useState([]);
-  const blends = useAppSelector((state) => state.sideTray.blends);
+  const { blends, ingredients } = useAppSelector((state) => state.sideTray);
   const { dbUser, user } = useAppSelector((state) => state?.user);
   const { lastModifiedCollection, collectionDetailsId, showAllRecipes } =
     useAppSelector((state) => state?.collections);
@@ -92,8 +92,8 @@ const RecipeDetails = () => {
           <SearchtagsComponent />
           {collectionDetailsId || showAllRecipes ? (
             <ShowCollectionRecipes />
-          ) : blends.length ? (
-            <FilterPageBottom blends={blends} />
+          ) : blends.length || ingredients.length ? (
+            <FilterPageBottom blends={blends} ingredients={ingredients} />
           ) : (
             <div className={styles.bottom}>
               <AppdownLoadCard />

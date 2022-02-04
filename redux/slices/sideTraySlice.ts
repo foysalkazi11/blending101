@@ -2,8 +2,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type SideTrayState = {
   openFilterTray: boolean;
-  blends: Array<string>;
-  ingredients: Array<string>;
+  blends: any[];
+  ingredients: any[];
   category: string;
   openCommentsTray: boolean;
   openModal: boolean;
