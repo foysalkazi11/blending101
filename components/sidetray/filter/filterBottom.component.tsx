@@ -34,31 +34,17 @@ export default function FilterbottomComponent(props) {
   const [dpd, setDpd] = useState({ title: "All", val: "All" });
   const ingredients = filterRankingList;
   const dispatch = useAppDispatch();
-  const ingredientsList = useAppSelector((state) => state.sideTray.ingredients);
+  const { ingredients: ingredientsList } = useAppSelector(
+    (state) => state.sideTray
+  );
   const [
     filterIngredientByCategroyAndClass,
     { data: ingredientFilterData, loading: ingredientFilterLoading },
   ] = useLazyQuery(FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS, {
     fetchPolicy: "network-only",
   });
-  const [ingredientData, setIngredientData] = useState<
-    | {
-        id: string;
-        ingredientName: string;
-        featuredImage: null | string;
-        images: string[];
-      }[]
-    | []
-  >([]);
-  const [searchIngredientData, setSearchIngredientData] = useState<
-    | {
-        id: string;
-        ingredientName: string;
-        featuredImage: null | string;
-        images: string[];
-      }[]
-    | []
-  >([]);
+  const [ingredientData, setIngredientData] = useState<any[]>([]);
+  const [searchIngredientData, setSearchIngredientData] = useState<any[]>([]);
   const [searchInput, setSearchInput] = useState("");
   const isMounted = useRef(false);
 
@@ -66,7 +52,7 @@ export default function FilterbottomComponent(props) {
     let blendz = [];
     let present = false;
     ingredientsList.forEach((blen) => {
-      if (blen === ingredient) {
+      if (blen?.id === ingredient?.id) {
         present = true;
       }
     });
@@ -74,7 +60,7 @@ export default function FilterbottomComponent(props) {
       blendz = [...ingredientsList, ingredient];
     } else {
       blendz = ingredientsList.filter((blen) => {
-        return blen !== ingredient;
+        return blen?.id !== ingredient?.id;
       });
     }
     dispatch(setIngredients(blendz));
@@ -208,6 +194,7 @@ export default function FilterbottomComponent(props) {
                     handleIngredientClick({
                       title: item?.ingredientName,
                       img: item?.featuredImage || "/food/chard.png",
+                      id: item?._id,
                     })
                   }
                 >
