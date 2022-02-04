@@ -2,34 +2,64 @@ import React, { useEffect, useState } from "react";
 import styles from "./recipe.module.scss";
 import Image from "next/image";
 import DatacardComponent from "../../../theme/cards/dataCard/dataCard.component";
-import axios from "axios";
-import { FETCH_RECIPES_BY_BLEND } from "../../../gqlLib/recipes/queries/fetchRecipes";
+import { useLazyQuery } from "@apollo/client";
+import GET_RECIPES_BY_BLEND_AND_INGREDIENTS from "../../../gqlLib/recipes/queries/getRecipesByBlaendAndIngredients";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { setLoading } from "../../../redux/slices/utilitySlice";
 
-function FilterPageBottom({blends}) {
+function FilterPageBottom({ blends, ingredients }) {
   const [recommended, setRecommended] = useState([]);
+  const [getRecipesByBlendAndIngredients, { data, loading }] = useLazyQuery(
+    GET_RECIPES_BY_BLEND_AND_INGREDIENTS,
+    { fetchPolicy: "network-only" }
+  );
+  const { dbUser } = useAppSelector((state) => state?.user);
+  const dispatch = useAppDispatch();
+
+  const fetchGetRecipesByBlendAndIngredients = () => {
+    let arr = [];
+    blends?.forEach((blend) => {
+      arr?.push(`${blend.title.toString()}`);
+    });
+    let ingredientIds: string[] = [];
+    ingredients?.forEach((blend) => {
+      ingredientIds?.push(blend?.id);
+    });
+    try {
+      getRecipesByBlendAndIngredients({
+        variables: {
+          data: {
+            userId: dbUser?._id,
+            blendTypes: arr,
+            includeIngredientIds: ingredientIds?.length ? ingredientIds : [],
+          },
+        },
+      });
+    } catch (error) {
+      console.log(error?.message);
+    }
+  };
 
   useEffect(() => {
-    let arr = [];
-    blends.forEach(blend => {
-      arr.push(`${blend.title.toString()}`)
-    })
-    const value = FETCH_RECIPES_BY_BLEND(arr);
-    axios
-      .post("https://blendingrecipe.herokuapp.com/graphql", {
-        query: value,
-      })
-      .then((result) => {
-        const res = result.data?.data?.getAllRecipesByBlendCategory || [];
-        setRecommended([...res]);
-      })
-      .catch((err) => {
-        console.log(err, "err");
-    });
-    return () => {
-      setRecommended([])
+    if (loading) {
+      dispatch(setLoading(true));
+    } else {
+      dispatch(setLoading(false));
     }
-  }, [blends])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
 
+  useEffect(() => {
+    fetchGetRecipesByBlendAndIngredients();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [blends, ingredients]);
+
+  useEffect(() => {
+    if (!loading) {
+      setRecommended(data?.getAllRecipesByBlendCategory || []);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
   return (
     <div className={styles.mainDiv}>
@@ -64,34 +94,37 @@ function FilterPageBottom({blends}) {
         </div>
         <div className={styles.mainDiv__results__body}>
           <ul className={styles.mainDiv__results__body__ul}>
-            {recommended?.map((item, index) => {
-              let ingredients = [];
-              item.testIngredient.forEach((ing) => {
-                ingredients.push(ing.name);
-              });
-              const ing = ingredients.toString();
-              return (
-                <li
-                  className={styles.mainDiv__results__body__ul__li}
-                  key={"recommended" + index}
-                >
-                  <div className={styles.slider__card}>
-                    <DatacardComponent
-                      title={item.name}
-                      ingredients={ing}
-                      category={item.recipeBlendCategory}
-                      ratings={item.ratings}
-                      noOfRatings={item.noOfRatings}
-                      carbs={item.carbs}
-                      score={item.score}
-                      calorie={item.calorie}
-                      noOfComments={item.noOfComments}
-                      image={item.image[0]?.image}
-                    />
-                  </div>
-                </li>
-              );
-            })}
+            {recommended?.length
+              ? recommended?.map((item, index) => {
+                  let ingredients = [];
+                  item?.testIngredient?.forEach((ing) => {
+                    ingredients.push(ing.name);
+                  });
+                  const ing = ingredients.toString();
+                  return (
+                    <li
+                      className={styles.mainDiv__results__body__ul__li}
+                      key={"recommended" + index}
+                    >
+                      <div className={styles.slider__card}>
+                        <DatacardComponent
+                          title={item.name}
+                          ingredients={ing}
+                          category={item.recipeBlendCategory?.name}
+                          ratings={item?.averageRating}
+                          noOfRatings={item?.numberOfRating}
+                          carbs={item.carbs}
+                          score={item.score}
+                          calorie={item.calorie}
+                          noOfComments={item?.numberOfRating}
+                          image={item.image[0]?.image}
+                          recipeId={item?._id}
+                        />
+                      </div>
+                    </li>
+                  );
+                })
+              : null}
           </ul>
         </div>
       </div>
