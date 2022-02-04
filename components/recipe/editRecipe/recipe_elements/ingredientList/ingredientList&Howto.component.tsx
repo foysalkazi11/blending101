@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import styles from "./ingredientList&Howto.module.scss";
 import Image from "next/image";
@@ -8,6 +9,7 @@ import {
   setServings,
   setIngredientsToList,
   setHowToSteps,
+  setNutritionState,
 } from "../../../../../redux/edit_recipe/quantity";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
 import DragIndicatorIcon from "../../../../../public/icons/drag_indicator_black_36dp.svg";
@@ -33,6 +35,10 @@ const IngredientList = () => {
 
   const howToState = useAppSelector(
     (state) => state.quantityAdjuster.howtoState
+  );
+
+  const nutritionState = useAppSelector(
+    (state) => state.quantityAdjuster.nutritionState
   );
 
   // variables for all states ==>ending
@@ -169,7 +175,17 @@ const IngredientList = () => {
     setInputValue(tempValue);
   };
 
-  console.log(ingredients_list);
+  let nutritionArray = [];
+  const nutritionStateanupulator = (id: any, value: any, elem: Object) => {
+    let elemWithValue;
+    elemWithValue = { ...(elem as Object), value: value, elemId: id };
+    nutritionArray = [...nutritionArray, elemWithValue];
+  };
+  useEffect(() => {
+    dispatch(setNutritionState(nutritionArray));
+    console.log(nutritionState);
+  }, [ingredients_list]);
+
   return (
     <div className={styles.mainCard}>
       <div className={styles.ingredients__main__card}>
@@ -231,7 +247,23 @@ const IngredientList = () => {
         <div className={styles.ingredients}>
           <ul>
             {ingredients_list.map((elem) => {
-              // console.log(elem.portions);
+              {
+                let valueArg =
+                  elem.portions[0].meausermentWeight ===
+                  "Quantity not specified"
+                    ? 1
+                    : Math.round(
+                        (100 / elem.portions[0].meausermentWeight) *
+                          servings_number
+                      );
+
+                nutritionStateanupulator(
+                  elem.ingredientName + elem._id,
+                  valueArg,
+                  elem
+                );
+              }
+
               return (
                 <li
                   key={elem.ingredientName + elem._id}
@@ -390,5 +422,4 @@ const IngredientList = () => {
     </div>
   );
 };
-
 export default IngredientList;

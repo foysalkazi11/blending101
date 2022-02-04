@@ -20,19 +20,17 @@ export const SEARCH_RESULTS_EDIT_RECIPE = gql`
   }
 `;
 
-export const NUTRITION_BASED_RECIPE = gql`
-  query {
+export const NUTRITION_BASED_RECIPE = (array: string) => gql`
+  query  {
     getNutritionBasedOnRecipe(
-      ingredientsInfo: [
-        { ingredientId: "61c6e4453a320071dc96ab1a", value: 12 }
-        { ingredientId: "61c6e4453a320071dc96ab3e", value: 40 }
-        { ingredientId: "61c6e4463a320071dc96ab87", value: 76 }
-      ]
+      ingredientsInfo: ${array}
     ) {
       value
       uniqueNutrientRefference {
+        _id
         nutrient
         unitName
+        category
       }
     }
   }

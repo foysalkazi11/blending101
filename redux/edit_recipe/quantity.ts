@@ -31,6 +31,7 @@ type quantityState = {
   uploadImageList: string[];
   leftbarShowState: boolean;
   IngredientSearchBarItem: ingredientSearchCard[];
+  nutritionState: [];
 };
 
 const initialState: quantityState = {
@@ -43,6 +44,7 @@ const initialState: quantityState = {
   uploadImageList: [],
   leftbarShowState: true,
   IngredientSearchBarItem: [],
+  nutritionState: [],
 };
 
 //quantity num is for top card in edit recipe page
@@ -80,6 +82,10 @@ export const quantityStateSlice = createSlice({
     ) => {
       state.IngredientSearchBarItem = action?.payload;
     },
+
+    setNutritionState: (state, action: any) => {
+      state.nutritionState = action?.payload;
+    },
   },
 });
 
@@ -91,5 +97,6 @@ export const {
   setHowToSteps,
   setUploadImageList,
   setIngredientSearchBarItem,
+  setNutritionState,
 } = quantityStateSlice.actions;
 export default quantityStateSlice?.reducer;
