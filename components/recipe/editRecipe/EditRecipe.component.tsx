@@ -8,9 +8,38 @@ import Center_Elements from "./recipe_elements/centerElements.component";
 import IngredientList from "./recipe_elements/ingredientList/ingredientList&Howto.component";
 import Image from "next/image";
 import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
+import { useAppDispatch } from "../../../redux/hooks";
+import { setLoading } from "../../../redux/slices/utilitySlice";
+import S3_CONFIG from "../../../configs/s3";
+import axios from "axios";
 
 const EditRecipePage = () => {
   const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
+  const [images, setImages] = useState<any[]>([]);
+  const dispatch = useAppDispatch();
+
+  const handleSubmitData = async () => {
+    dispatch(setLoading(true));
+    try {
+      if (images?.length) {
+        images?.forEach(async (file) => {
+          const { Key, uploadURL } = await (
+            await axios.get(S3_CONFIG.objectURL)
+          ).data;
+          await fetch(uploadURL, {
+            method: "PUT",
+            body: file,
+          });
+          const imageUrl = `${S3_CONFIG.baseURL}/${Key}`;
+          console.log(imageUrl);
+        });
+      }
+      dispatch(setLoading(false));
+    } catch (error) {
+      console.log(error);
+      dispatch(setLoading(false));
+    }
+  };
   return (
     <AContainer>
       <div className={styles.main}>
@@ -57,8 +86,8 @@ const EditRecipePage = () => {
         </div>
         <div className={styles.center}>
           <Center_header />
-          <Center_Elements />
-          <IngredientList />
+          <Center_Elements setImages={setImages} />
+          <IngredientList handleSubmitData={handleSubmitData} />
         </div>
         <div className={styles.right__main}>
           <RightTray />
