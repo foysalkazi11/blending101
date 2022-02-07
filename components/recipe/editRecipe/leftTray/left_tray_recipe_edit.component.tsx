@@ -19,7 +19,7 @@ import {
   INGREDIENTS_BY_CATEGORY_AND_CLASS,
   NUTRITION_BASED_RECIPE,
   SEARCH_RESULTS_EDIT_RECIPE,
-} from "../../../../gqlLib/recipes/queries/getSearchIngredients";
+} from "../../../../gqlLib/recipes/queries/getEditRecipe";
 
 const Left_tray_recipe_edit = () => {
   const [toggle, setToggle] = useState(1);

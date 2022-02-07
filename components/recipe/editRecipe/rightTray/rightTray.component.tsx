@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useEffect, useState } from "react";
 import RightHeader from "../header/right_header/right_header.component";
@@ -8,7 +9,7 @@ import { healthList } from "./rightTray";
 import LinearComponent from "../../../../theme/linearProgress/LinearProgress.component";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { useLazyQuery } from "@apollo/client";
-import { NUTRITION_BASED_RECIPE } from "../../../../gqlLib/recipes/queries/getSearchIngredients";
+import { NUTRITION_BASED_RECIPE } from "../../../../gqlLib/recipes/queries/getEditRecipe";
 
 interface PassingProps {
   name: string;
@@ -32,7 +33,7 @@ const RightTray = () => {
     { loading: searchInProcess, data: searchElement },
   ] = useLazyQuery(
     NUTRITION_BASED_RECIPE(`[
-  { ingredientId: "61c6e4453a320071dc96ab1a", value: 12 }
+  ${NutritionStateTemp}
   ]`),
     {
       fetchPolicy: "network-only",
@@ -47,8 +48,6 @@ const RightTray = () => {
     let Calories = "";
 
     searchElement?.getNutritionBasedOnRecipe.map((elem) => {
-      // console.log(elem.value);
-
       let nutritionArgument = {
         ingredientId: elem.uniqueNutrientRefference._id,
         value: elem.value,
@@ -79,7 +78,6 @@ const RightTray = () => {
         <div className={styles.right__sub_heading}>
           Amount Per Servings Calories
         </div>
-        <p>{NutritionStateTemp}</p>
         <div className={styles.right__calories}>
           <h4>Calories</h4>
           <h3>93</h3>
