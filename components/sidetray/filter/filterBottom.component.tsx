@@ -2,7 +2,10 @@
 import CheckCircle from "../../../public/icons/check_circle_black_24dp.svg";
 import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setIngredients } from "../../../redux/slices/sideTraySlice";
+import {
+  setAllIngredients,
+  setIngredients,
+} from "../../../redux/slices/sideTraySlice";
 import CalciumSearchElem from "../../../theme/calcium/calcium.component";
 import DropdownTwoComponent from "../../../theme/dropDown/dropdownTwo.component";
 import Linearcomponent from "../../../theme/linearProgress/LinearProgress.component";
@@ -43,7 +46,8 @@ export default function FilterbottomComponent(props) {
   ] = useLazyQuery(FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS, {
     fetchPolicy: "network-only",
   });
-  const [ingredientData, setIngredientData] = useState<any[]>([]);
+  // const [ingredientData, setIngredientData] = useState<any[]>([]);
+  const { allIngredients } = useAppSelector((state) => state?.sideTray);
   const [searchIngredientData, setSearchIngredientData] = useState<any[]>([]);
   const [searchInput, setSearchInput] = useState("");
   const isMounted = useRef(false);
@@ -93,7 +97,11 @@ export default function FilterbottomComponent(props) {
   };
 
   useEffect(() => {
-    fetchFilterIngredientByCategroyAndClass();
+    if (!allIngredients?.length) {
+      fetchFilterIngredientByCategroyAndClass();
+    } else {
+      setSearchIngredientData(allIngredients);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -101,12 +109,11 @@ export default function FilterbottomComponent(props) {
     if (isMounted.current) {
       if (dpd?.val !== "All") {
         setSearchIngredientData(
-          //@ts-ignore
-          ingredientData?.filter((item) => item?.category === dpd?.val)
+          allIngredients?.filter((item) => item?.category === dpd?.val)
         );
       } else {
-        if (ingredientData?.length) {
-          setSearchIngredientData(ingredientData);
+        if (allIngredients?.length) {
+          setSearchIngredientData(allIngredients);
         } else {
           fetchFilterIngredientByCategroyAndClass();
         }
@@ -126,13 +133,18 @@ export default function FilterbottomComponent(props) {
   }, [ingredientFilterLoading]);
 
   useEffect(() => {
-    if (!ingredientFilterLoading) {
-      setIngredientData(
-        ingredientFilterData?.filterIngredientByCategoryAndClass
-      );
-      setSearchIngredientData(
-        ingredientFilterData?.filterIngredientByCategoryAndClass
-      );
+    if (isMounted.current) {
+      if (!ingredientFilterLoading) {
+        dispatch(
+          setAllIngredients(
+            ingredientFilterData?.filterIngredientByCategoryAndClass
+          )
+        );
+
+        setSearchIngredientData(
+          ingredientFilterData?.filterIngredientByCategoryAndClass
+        );
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ingredientFilterData]);
@@ -140,9 +152,9 @@ export default function FilterbottomComponent(props) {
   useEffect(() => {
     if (isMounted.current) {
       if (searchInput === "") {
-        setSearchIngredientData(ingredientData);
+        setSearchIngredientData(allIngredients);
       } else {
-        const filter = ingredientData?.filter((item) =>
+        const filter = allIngredients?.filter((item) =>
           //@ts-ignore
           item?.ingredientName
             ?.toLowerCase()
