@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import CheckCircle from "../../../public/icons/check_circle_black_24dp.svg";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setIngredients } from "../../../redux/slices/sideTraySlice";
 import CalciumSearchElem from "../../../theme/calcium/calcium.component";
@@ -9,19 +9,50 @@ import Linearcomponent from "../../../theme/linearProgress/LinearProgress.compon
 import SwitchTwoComponent from "../../../theme/switch/switchTwo.component";
 import styles from "./filter.module.scss";
 import { filterRankingList, ingredientLeafy } from "./filterRankingList";
+import { useLazyQuery } from "@apollo/client";
+import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
+import { setLoading } from "../../../redux/slices/utilitySlice";
+
+const categories = [
+  { title: "All", val: "All" },
+  { title: "Leafy", val: "Leafy" },
+  { title: "Berry", val: "Berry" },
+  { title: "Herbal", val: "Herbal" },
+  { title: "Fruity", val: "Fruity" },
+  { title: "Balancer", val: "Balancer" },
+  { title: "Fatty", val: "Fatty" },
+  { title: "Seasoning", val: "Seasoning" },
+  { title: "Flavor", val: "Flavor" },
+  { title: "Rooty", val: "Rooty" },
+  { title: "Flowering", val: "Flowering" },
+  { title: "Liquid", val: "Liquid" },
+  { title: "Tube-Squash", val: "Tube-Squash" },
+];
 
 export default function FilterbottomComponent(props) {
   const [toggle, setToggle] = useState(1);
-  const [dpd, setDpd] = useState({ title: "All", val: "all" });
+  const [dpd, setDpd] = useState({ title: "All", val: "All" });
   const ingredients = filterRankingList;
   const dispatch = useAppDispatch();
-  const ingredientsList = useAppSelector((state) => state.sideTray.ingredients);
+  const { ingredients: ingredientsList } = useAppSelector(
+    (state) => state.sideTray
+  );
+  const [
+    filterIngredientByCategroyAndClass,
+    { data: ingredientFilterData, loading: ingredientFilterLoading },
+  ] = useLazyQuery(FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS, {
+    fetchPolicy: "network-only",
+  });
+  const [ingredientData, setIngredientData] = useState<any[]>([]);
+  const [searchIngredientData, setSearchIngredientData] = useState<any[]>([]);
+  const [searchInput, setSearchInput] = useState("");
+  const isMounted = useRef(false);
 
   const handleIngredientClick = (ingredient) => {
     let blendz = [];
     let present = false;
     ingredientsList.forEach((blen) => {
-      if (blen === ingredient) {
+      if (blen?.id === ingredient?.id) {
         present = true;
       }
     });
@@ -29,19 +60,11 @@ export default function FilterbottomComponent(props) {
       blendz = [...ingredientsList, ingredient];
     } else {
       blendz = ingredientsList.filter((blen) => {
-        return blen !== ingredient;
+        return blen?.id !== ingredient?.id;
       });
     }
     dispatch(setIngredients(blendz));
   };
-
-  const categories = [
-    { title: "All", val: "all" },
-    { title: "Leafy", val: "leafy" },
-    { title: "Fruity", val: "Fruity" },
-    { title: "Nutty", val: "nutty" },
-    { title: "Frozed", val: "frozed" },
-  ];
 
   const checkActive = (ingredient: string) => {
     let present = false;
@@ -53,6 +76,92 @@ export default function FilterbottomComponent(props) {
     });
     return present;
   };
+
+  const fetchFilterIngredientByCategroyAndClass = () => {
+    try {
+      filterIngredientByCategroyAndClass({
+        variables: {
+          data: {
+            ingredientCategory: dpd?.val,
+            IngredientClass: 1,
+          },
+        },
+      });
+    } catch (error) {
+      console.log(error?.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchFilterIngredientByCategroyAndClass();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (isMounted.current) {
+      if (dpd?.val !== "All") {
+        setSearchIngredientData(
+          //@ts-ignore
+          ingredientData?.filter((item) => item?.category === dpd?.val)
+        );
+      } else {
+        if (ingredientData?.length) {
+          setSearchIngredientData(ingredientData);
+        } else {
+          fetchFilterIngredientByCategroyAndClass();
+        }
+      }
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dpd]);
+
+  useEffect(() => {
+    if (ingredientFilterLoading) {
+      dispatch(setLoading(true));
+    } else {
+      dispatch(setLoading(false));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ingredientFilterLoading]);
+
+  useEffect(() => {
+    if (!ingredientFilterLoading) {
+      setIngredientData(
+        ingredientFilterData?.filterIngredientByCategoryAndClass
+      );
+      setSearchIngredientData(
+        ingredientFilterData?.filterIngredientByCategoryAndClass
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ingredientFilterData]);
+
+  useEffect(() => {
+    if (isMounted.current) {
+      if (searchInput === "") {
+        setSearchIngredientData(ingredientData);
+      } else {
+        const filter = ingredientData?.filter((item) =>
+          //@ts-ignore
+          item?.ingredientName
+            ?.toLowerCase()
+            ?.includes(searchInput?.toLowerCase())
+        );
+        setSearchIngredientData(filter);
+      }
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchInput]);
+
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   return (
     <div className={styles.filter__bottom}>
@@ -66,27 +175,49 @@ export default function FilterbottomComponent(props) {
         <DropdownTwoComponent value={dpd} list={categories} setValue={setDpd} />
       </div>
       {toggle === 1 && (
-        <div className={styles.pictures}>
-          <div className={styles.filter__menu}>
-            {ingredientLeafy &&
-              ingredientLeafy.map((item, i) => (
+        <div className={styles.filter__menu}>
+          {dpd?.val === "All" ? (
+            <input
+              placeholder="Search ingredient"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e?.target?.value)}
+            />
+          ) : null}
+
+          {searchIngredientData?.length ? (
+            <>
+              {searchIngredientData.map((item, i) => (
                 <div
-                  key={item.title + i}
+                  key={i}
                   className={styles.filter__menu__item}
-                  onClick={() => handleIngredientClick(item)}
+                  onClick={() =>
+                    handleIngredientClick({
+                      title: item?.ingredientName,
+                      img: item?.featuredImage || "/food/chard.png",
+                      id: item?._id,
+                    })
+                  }
                 >
                   <div className={styles.filter__menu__item__image}>
-                    <img src={item.img} alt={item.title} />
-                    {checkActive(item.title) && (
+                    <img
+                      src={item?.featuredImage || "/food/chard.png"}
+                      alt={item?.ingredientName}
+                    />
+                    {checkActive(item?.ingredientName) && (
                       <div className={styles.tick}>
                         <CheckCircle className={styles.ticked} />
                       </div>
                     )}
                   </div>
-                  <p>{item.title}</p>
+                  <p>{item?.ingredientName}</p>
                 </div>
               ))}
-          </div>
+            </>
+          ) : (
+            <div className={styles.noResult}>
+              <p>No result</p>
+            </div>
+          )}
         </div>
       )}
       {toggle === 2 && (

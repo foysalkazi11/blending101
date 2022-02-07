@@ -16,7 +16,11 @@ import DragIndicatorIcon from "../../../../../public/icons/drag_indicator_black_
 import ModeEditOutlineOutlinedIcon from "../../../../../public/icons/mode_edit_black_36dp.svg";
 import { ingredientLeafy } from "../../leftTray/left_tray_recipe_edit_list";
 
-const IngredientList = () => {
+type IngredientListPorps = {
+  handleSubmitData?: () => void;
+};
+
+const IngredientList = ({ handleSubmitData }: IngredientListPorps) => {
   const dispatch = useAppDispatch();
 
   //variables for all states ==>start
@@ -416,6 +420,7 @@ const IngredientList = () => {
             style={{}}
             fullWidth={true}
             value="Save Recipe"
+            handleClick={handleSubmitData}
           />
         </div>
       </div>
