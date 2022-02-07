@@ -1,27 +1,27 @@
 import S3_CONFIG from "../../configs/s3";
 import axios from "axios";
 
-const imageUploadS3 = async (files: any[]) => {
+const imageUploadS3 = (files: any[]) => {
   let images = [];
 
-  try {
-    files?.forEach(async (file) => {
-      const { Key, uploadURL } = await (
-        await axios.get(S3_CONFIG.objectURL)
-      ).data;
-      await fetch(uploadURL, {
-        method: "PUT",
-        body: file,
-      });
-      const objectUrl = `${S3_CONFIG.baseURL}/${Key}`;
-      console.log(objectUrl);
-
-      images?.push(objectUrl);
-    });
-    return images;
-  } catch (error) {
-    console.log(error);
-  }
+  return new Promise(async (res, rej) => {
+    try {
+      for (let i = 0; files?.length > i; i++) {
+        const { Key, uploadURL } = await (
+          await axios.get(S3_CONFIG.objectURL)
+        ).data;
+        await fetch(uploadURL, {
+          method: "PUT",
+          body: files[i],
+        });
+        const objectUrl = `${S3_CONFIG.baseURL}/${Key}`;
+        images?.push(objectUrl);
+      }
+      res(images);
+    } catch (error) {
+      rej(error);
+    }
+  });
 };
 
 export default imageUploadS3;
