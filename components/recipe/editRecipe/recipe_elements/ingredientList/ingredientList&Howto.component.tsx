@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import styles from "./ingredientList&Howto.module.scss";
@@ -15,12 +16,66 @@ import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
 import DragIndicatorIcon from "../../../../../public/icons/drag_indicator_black_36dp.svg";
 import ModeEditOutlineOutlinedIcon from "../../../../../public/icons/mode_edit_black_36dp.svg";
 import { ingredientLeafy } from "../../leftTray/left_tray_recipe_edit_list";
+import { CREATE_NEW_RECIPE_FROM_USER } from "../../../../../gqlLib/recipes/mutations/addRecipeFromUser";
+import { useMutation } from "@apollo/client";
 
 type IngredientListPorps = {
   handleSubmitData?: () => void;
 };
 
 const IngredientList = ({ handleSubmitData }: IngredientListPorps) => {
+  // (mutation):"graphql api mutation - save recipe"
+  const [recipeApi, setRecipeApi] = useState([]);
+  const [addRecipeRecipeFromUser] = useMutation(
+    CREATE_NEW_RECIPE_FROM_USER({
+      userId: "619359150dc1bfd62b314757",
+      UserName: "hello 1",
+      ingredients: recipeApi,
+    })
+  );
+  const RecipeApiMutation = () => {
+    let recipeList = [];
+    const createRecipeApiFinalString = () => {
+      let recipe = {};
+      ingredients_list.map((elem) => {
+        recipe = { ingredientId: elem._id };
+        if (elem.customWeightInGram) {
+          recipe = { ...recipe, customWeightInGram: elem.customWeightInGram };
+        }
+        if (elem.description) {
+          recipe = { ...recipe, description: elem.description };
+        }
+        if (elem.portions) {
+          let measurement = {};
+          let customObj = {};
+          elem.portions.map((elemtemp) => {
+            if (elemtemp.default === true) {
+              customObj = {
+                ...customObj,
+                measurement: elemtemp.measurement,
+                meausermentWeight: elemtemp.meausermentWeight,
+              };
+              measurement = { ...measurement, ...customObj };
+            }
+          });
+          recipe = { ...recipe, portion: measurement };
+        }
+        recipeList = [...recipeList, recipe];
+      });
+      setRecipeApi(recipeList);
+    };
+    createRecipeApiFinalString();
+    const addrecipeFunc = async () => {
+      try {
+        const { data } = await addRecipeRecipeFromUser();
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    addrecipeFunc();
+  };
+
   const dispatch = useAppDispatch();
 
   //variables for all states ==>start
@@ -187,7 +242,6 @@ const IngredientList = ({ handleSubmitData }: IngredientListPorps) => {
   };
   useEffect(() => {
     dispatch(setNutritionState(nutritionArray));
-    console.log(nutritionState);
   }, [ingredients_list]);
 
   return (
@@ -252,15 +306,11 @@ const IngredientList = ({ handleSubmitData }: IngredientListPorps) => {
           <ul>
             {ingredients_list.map((elem) => {
               {
-                let valueArg =
-                  elem.portions[0].meausermentWeight ===
-                  "Quantity not specified"
-                    ? 1
-                    : Math.round(
-                        (100 / elem.portions[0].meausermentWeight) *
-                          servings_number
-                      );
-
+                let valueArg = elem.portions.map((measure) => {
+                  if (measure.default === true) {
+                    return (100 / measure.meausermentWeight) * servings_number;
+                  } else servings_number;
+                });
                 nutritionStateanupulator(
                   elem.ingredientName + elem._id,
                   valueArg,
@@ -414,13 +464,15 @@ const IngredientList = ({ handleSubmitData }: IngredientListPorps) => {
         </div>
       </div>
       <div className={styles.save__Recipe}>
-        <div className={styles.save__Recipe__button}>
+        <div
+          className={styles.save__Recipe__button}
+          onClick={RecipeApiMutation}
+        >
           <ButtonComponent
             type={"primary"}
             style={{}}
             fullWidth={true}
             value="Save Recipe"
-            handleClick={handleSubmitData}
           />
         </div>
       </div>
