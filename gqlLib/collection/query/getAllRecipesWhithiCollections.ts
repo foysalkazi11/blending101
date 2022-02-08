@@ -18,28 +18,11 @@ const GET_ALL_RECIPES_WITHIN_COLLECTIONS = gql`
       recipeInstructions
       recipeCuisines
       ingredients {
-        _id
         ingredientId
-        ingredientName
-        category
-        blendStatus
-        classType
-        nutrients {
-          sourceId
-          value
-        }
-        portions {
+        portion {
           measurement
-          measurement2
           meausermentWeight
-          sourceId
         }
-        source
-        description
-        sourceId
-        sourceCategory
-        featuredImage
-        images
       }
       url
       discovery
