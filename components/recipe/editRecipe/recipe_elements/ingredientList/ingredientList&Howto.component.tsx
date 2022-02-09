@@ -29,7 +29,7 @@ const IngredientList = ({ handleSubmitData }: IngredientListPorps) => {
   const [addRecipeRecipeFromUser] = useMutation(
     CREATE_NEW_RECIPE_FROM_USER({
       userId: "619359150dc1bfd62b314757",
-      UserName: "hello 1",
+      UserName: "Aniket",
       ingredients: recipeApi,
     })
   );
@@ -39,12 +39,6 @@ const IngredientList = ({ handleSubmitData }: IngredientListPorps) => {
       let recipe = {};
       ingredients_list.map((elem) => {
         recipe = { ingredientId: elem._id };
-        if (elem.customWeightInGram) {
-          recipe = { ...recipe, customWeightInGram: elem.customWeightInGram };
-        }
-        if (elem.description) {
-          recipe = { ...recipe, description: elem.description };
-        }
         if (elem.portions) {
           let measurement = {};
           let customObj = {};
@@ -52,19 +46,20 @@ const IngredientList = ({ handleSubmitData }: IngredientListPorps) => {
             if (elemtemp.default === true) {
               customObj = {
                 ...customObj,
-                measurement: elemtemp.measurement,
-                meausermentWeight: elemtemp.meausermentWeight,
+                weightInGram: elemtemp.meausermentWeight,
+                selectedPortionName: elemtemp.measurement,
               };
               measurement = { ...measurement, ...customObj };
             }
           });
-          recipe = { ...recipe, portion: measurement };
+          recipe = { ...recipe, ...measurement };
         }
         recipeList = [...recipeList, recipe];
       });
       setRecipeApi(recipeList);
     };
     createRecipeApiFinalString();
+
     const addrecipeFunc = async () => {
       try {
         const { data } = await addRecipeRecipeFromUser();

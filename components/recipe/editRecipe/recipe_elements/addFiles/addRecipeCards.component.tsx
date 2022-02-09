@@ -37,6 +37,7 @@ const AddRecipeCard = ({ setImages }: AddRecipeCardProps) => {
     console.log(selectedImages);
   };
 
+
   const renderPhotos = (source) => {
     return source.map((photo, index) => {
       return (
