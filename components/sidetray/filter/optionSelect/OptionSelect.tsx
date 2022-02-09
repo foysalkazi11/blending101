@@ -1,6 +1,6 @@
 import React from "react";
 import { useAppSelector } from "../../../../redux/hooks";
-import { blendTypes } from "../filterRankingList";
+// import { blendTypes } from "../filterRankingList";
 import { INGREDIENTS_FILTER } from "../static/recipe";
 const { INGREDIENTS_BY_CATEGORY, TYPE, ALLERGIES, DIET, EQUIPMENT, DRUGS } =
   INGREDIENTS_FILTER;
