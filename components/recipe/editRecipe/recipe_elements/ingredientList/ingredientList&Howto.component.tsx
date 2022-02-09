@@ -468,6 +468,7 @@ const IngredientList = ({ handleSubmitData }: IngredientListPorps) => {
             style={{}}
             fullWidth={true}
             value="Save Recipe"
+            handleClick={handleSubmitData}
           />
         </div>
       </div>
