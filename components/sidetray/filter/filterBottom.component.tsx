@@ -2,10 +2,7 @@
 import CheckCircle from "../../../public/icons/check_circle_black_24dp.svg";
 import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import {
-  setAllIngredients,
-  setIngredients,
-} from "../../../redux/slices/sideTraySlice";
+import { setIngredients } from "../../../redux/slices/sideTraySlice";
 import CalciumSearchElem from "../../../theme/calcium/calcium.component";
 import DropdownTwoComponent from "../../../theme/dropDown/dropdownTwo.component";
 import Linearcomponent from "../../../theme/linearProgress/LinearProgress.component";
@@ -15,24 +12,15 @@ import { filterRankingList, ingredientLeafy } from "./filterRankingList";
 import { useLazyQuery } from "@apollo/client";
 import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
 import { setLoading } from "../../../redux/slices/utilitySlice";
+import { setAllIngredients } from "../../../redux/slices/ingredientsSlice";
 
-const categories = [
-  { title: "All", val: "All" },
-  { title: "Leafy", val: "Leafy" },
-  { title: "Berry", val: "Berry" },
-  { title: "Herbal", val: "Herbal" },
-  { title: "Fruity", val: "Fruity" },
-  { title: "Balancer", val: "Balancer" },
-  { title: "Fatty", val: "Fatty" },
-  { title: "Seasoning", val: "Seasoning" },
-  { title: "Flavor", val: "Flavor" },
-  { title: "Rooty", val: "Rooty" },
-  { title: "Flowering", val: "Flowering" },
-  { title: "Liquid", val: "Liquid" },
-  { title: "Tube-Squash", val: "Tube-Squash" },
-];
+type FilterbottomComponentProps = {
+  categories?: { title: string; val: string }[];
+};
 
-export default function FilterbottomComponent(props) {
+export default function FilterbottomComponent({
+  categories,
+}: FilterbottomComponentProps) {
   const [toggle, setToggle] = useState(1);
   const [dpd, setDpd] = useState({ title: "All", val: "All" });
   const ingredients = filterRankingList;
@@ -47,7 +35,7 @@ export default function FilterbottomComponent(props) {
     fetchPolicy: "network-only",
   });
   // const [ingredientData, setIngredientData] = useState<any[]>([]);
-  const { allIngredients } = useAppSelector((state) => state?.sideTray);
+  const { allIngredients } = useAppSelector((state) => state?.ingredients);
   const [searchIngredientData, setSearchIngredientData] = useState<any[]>([]);
   const [searchInput, setSearchInput] = useState("");
   const isMounted = useRef(false);

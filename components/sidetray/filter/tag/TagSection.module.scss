@@ -1,0 +1,29 @@
+.tagSectionContainer {
+  width: 100%;
+
+  .singleItem {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #dbdbdb;
+    padding: 16px 0;
+    cursor: pointer;
+    h5 {
+      color: #000000;
+      font-size: 16px;
+      font-weight: 600;
+    }
+  }
+  .singleItemInside {
+    display: flex;
+    align-items: center;
+    // border-bottom: 1px solid #dbdbdb;
+    padding: 10px 0;
+    padding-left: 10px;
+    cursor: pointer;
+    h5 {
+      color: #000000;
+      font-size: 16px;
+      font-weight: 500;
+    }
+  }
+}

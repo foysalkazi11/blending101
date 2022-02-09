@@ -21,30 +21,7 @@ const DELETE_COLLECTION = gql`
         recipeIngredients
         recipeInstructions
         recipeCuisines
-        ingredients {
-          _id
-          ingredientId
-          ingredientName
-          category
-          blendStatus
-          classType
-          nutrients {
-            sourceId
-            value
-          }
-          portions {
-            measurement
-            measurement2
-            meausermentWeight
-            sourceId
-          }
-          source
-          description
-          sourceId
-          sourceCategory
-          featuredImage
-          images
-        }
+
         url
         discovery
         favicon
