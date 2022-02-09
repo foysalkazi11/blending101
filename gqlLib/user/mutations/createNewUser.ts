@@ -49,13 +49,7 @@ const CREATE_NEW_USER = gql`
           recipeIngredients
           recipeInstructions
           recipeCuisines
-          ingredients {
-            ingredientId
-            portion {
-              measurement
-              meausermentWeight
-            }
-          }
+
           url
           discovery
           favicon

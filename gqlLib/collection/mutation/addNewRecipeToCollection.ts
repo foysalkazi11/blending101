@@ -23,13 +23,7 @@ const ADD_NEW_RECIPE_TO_COLLECTION = gql`
         recipeIngredients
         recipeInstructions
         recipeCuisines
-        ingredients {
-          ingredientId
-          portion {
-            measurement
-            meausermentWeight
-          }
-        }
+
         url
         discovery
         favicon

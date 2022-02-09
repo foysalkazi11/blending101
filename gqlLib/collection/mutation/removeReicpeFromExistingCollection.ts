@@ -21,13 +21,7 @@ const REMOVE_EXISTING_RECIPE_TO_ANOTHER_COLLECTION = gql`
         recipeIngredients
         recipeInstructions
         recipeCuisines
-        ingredients {
-          ingredientId
-          portion {
-            measurement
-            meausermentWeight
-          }
-        }
+
         url
         discovery
         favicon
