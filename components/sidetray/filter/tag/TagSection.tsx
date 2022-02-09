@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import CustomAccordion from "../../../../theme/accordion/accordion.component";
 import styles from "./TagSection.module.scss";
 import { blendTypes } from "../filterRankingList";
@@ -29,19 +29,22 @@ type TagSectionProps = {
 };
 
 const TagSection = ({ categories }: TagSectionProps) => {
+  const [childIngredient, setChailIngredient] = useState("");
   const dispatch = useAppDispatch();
   const { recipeFilterByIngredientCategory } = useAppSelector(
     (state) => state?.ingredients
   );
-  const recipeFilterByCategroy = (categroy: string) => {
+  const recipeFilterByCategroy = (categroy: string, child?: string) => {
+    child = child || "";
     dispatch(setRecipeFilterByIngredientCategory(categroy));
+    setChailIngredient(child);
   };
   return (
     <div className={styles.tagSectionContainer}>
       {recipeFilterByIngredientCategory ? (
         <>
           <OptionSelectHeader />
-          <OptionSelect />
+          <OptionSelect childIngredient={childIngredient} />
         </>
       ) : (
         <>
@@ -57,7 +60,13 @@ const TagSection = ({ categories }: TagSectionProps) => {
             {categories?.length
               ? categories?.map((item, index) => {
                   return (
-                    <div className={styles.singleItemInside} key={index}>
+                    <div
+                      className={styles.singleItemInside}
+                      key={index}
+                      onClick={() =>
+                        recipeFilterByCategroy("Ingredient", item?.title)
+                      }
+                    >
                       <h5>{item?.title}</h5>
                     </div>
                   );
