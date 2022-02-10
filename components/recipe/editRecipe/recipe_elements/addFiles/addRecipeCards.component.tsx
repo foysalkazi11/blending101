@@ -11,7 +11,6 @@ import S3_CONFIG from "../../../../../configs/s3";
 import axios from "axios";
 import imageUploadS3 from "../../../../utility/imageUploadS3";
 
-
 type AddRecipeCardProps = {
   setImages?: Dispatch<SetStateAction<any[]>>;
 };
@@ -26,7 +25,7 @@ const AddRecipeCard = ({ setImages }: AddRecipeCardProps) => {
   const selectedImages = useAppSelector(
     (state) => state.quantityAdjuster.uploadImageList
   );
-  const [imageListRaw,setImageListRaw]=useState([]);
+  const [imageListRaw, setImageListRaw] = useState([]);
 
   let imageArray: string[] = [];
   const imageRenderingHandler = (event) => {
@@ -36,38 +35,36 @@ const AddRecipeCard = ({ setImages }: AddRecipeCardProps) => {
       let BlobList = Array.from(event.target.files).map((file: any) =>
         URL.createObjectURL(file)
       );
-      let imageListRawArray=[];
+      let imageListRawArray = [];
       imageArray = [...selectedImages, ...BlobList];
-      imageListRawArray=[...imageListRaw,...event.target.files];
+      imageListRawArray = [...imageListRaw, ...event.target.files];
       setImages((pre) => [...pre, ...event.target.files]);
       setImageListRaw(imageListRawArray);
     }
     dispatch(setUploadImageList(imageArray));
     console.log(imageListRaw);
   };
-  const imageAws= async()=>{
-    let imageAws=await imageUploadS3(imageListRaw);
+  const imageAws = async () => {
+    let imageAws = await imageUploadS3(imageListRaw);
     console.log(imageAws);
-  }
-
-
+  };
 
   const renderPhotos = (source) => {
     return source.map((photo, index) => {
       return (
         <>
-        <div className={styles.image__div} key={photo}>
-          <span
-            onClick={() => {
-              removeImage(index);
-            }}
+          <div className={styles.image__div} key={photo}>
+            <span
+              onClick={() => {
+                removeImage(index);
+              }}
             >
-            <CancelIcon />
-          </span>
-          <Image src={photo} alt="" layout="fill" objectFit="fill" />
-        </div>
-        <button onClick={imageAws}>click</button>
-            </>
+              <CancelIcon />
+            </span>
+            <Image src={photo} alt="" layout="fill" objectFit="fill" />
+          </div>
+          <button onClick={imageAws}>click</button>
+        </>
       );
     });
   };
