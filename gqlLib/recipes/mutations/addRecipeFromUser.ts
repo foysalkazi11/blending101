@@ -6,7 +6,7 @@ interface createNewRecipeFromUserInterface {
   ingredients?: any;
   image?: any;
   recipeInstructions: any;
-  recipeName:string
+  recipeName: string;
 }
 
 export const CREATE_NEW_RECIPE_FROM_USER = ({
@@ -14,9 +14,8 @@ export const CREATE_NEW_RECIPE_FROM_USER = ({
   ingredients,
   image,
   recipeInstructions,
-  recipeName
+  recipeName,
 }: createNewRecipeFromUserInterface) => {
-  
   const convertArrToString = (arr) => {
     arr = arr.map((itm) => {
       return `
@@ -58,7 +57,7 @@ export const CREATE_NEW_RECIPE_FROM_USER = ({
     let instructionArr = [];
     arr &&
       arr.map((elem, index) => {
-        console.log(elem)
+        console.log(elem);
         instructionArr.push(`"${elem.step}"`);
       });
 
@@ -66,39 +65,40 @@ export const CREATE_NEW_RECIPE_FROM_USER = ({
   };
 
   return gql`
-  mutation {
-    addRecipeRecipeFromUser(data: {
-      userId: ${JSON.stringify(userId)}
-      name: ${JSON.stringify(recipeName)},
-      description: "none",
-      recipeIngredients: [""]
-      ingredients:${convertArrToString(ingredients)}
-      image:${convertImageArrayToString(image)}
-      recipeInstructions:${converInstructionToString(recipeInstructions)}
+ mutation {
+   addRecipeRecipeFromUser(data: {
+     userId: ${JSON.stringify(userId)}
+     name: ${JSON.stringify(recipeName)},
+     description: "none",
+     recipeIngredients: [""]
+     ingredients:${convertArrToString(ingredients)}
+     image:${convertImageArrayToString(image)}
+     recipeInstructions:${converInstructionToString(recipeInstructions)}
 
-    }){
-      foodCategories
-      recipeInstructions
-    image{
-      image,
-      default
-    }
-      ingredients{
-        weightInGram
-        ingredientId,
-        portions{
-          name,
-          quantity,
-          default,
-          gram
-        }
-        selectedPortion{
-          name,
-          quantity,
-          gram
-        }
-      }
-    }
-  }
-  `;
+   }){
+     foodCategories
+     recipeInstructions
+     name
+   image{
+     image,
+     default
+   }
+     ingredients{
+       weightInGram
+       ingredientId,
+       portions{
+         name,
+         quantity,
+         default,
+         gram
+       }
+       selectedPortion{
+         name,
+         quantity,
+         gram
+       }
+     }
+   }
+ }
+ `;
 };

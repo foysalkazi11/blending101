@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import AContainer from "../../../containers/A.container";
 import styles from "./EditRecipe.module.scss";
 import Center_header from "./header/centerHeader/Center_header.component";
@@ -18,6 +18,7 @@ const EditRecipePage = () => {
   const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
   const [images, setImages] = useState<any[]>([]);
   const [uploadUrl, setUploadUrl] = useState([]);
+  const editRecipeHeading = useRef();
   const dispatch = useAppDispatch();
 
   const handleSubmitData = async () => {
@@ -84,8 +85,15 @@ const EditRecipePage = () => {
         </div>
         <div className={styles.center}>
           <Center_header />
-          <Center_Elements setImages={setImages} />
-          <IngredientList handleSubmitData={handleSubmitData} uploadedImagesUrl={uploadUrl} />
+          <Center_Elements
+            setImages={setImages}
+            editRecipeHeading={editRecipeHeading}
+          />
+          <IngredientList
+            handleSubmitData={handleSubmitData}
+            uploadedImagesUrl={uploadUrl}
+            editRecipeHeading={editRecipeHeading}
+          />
         </div>
         <div className={styles.right__main}>
           <RightTray />

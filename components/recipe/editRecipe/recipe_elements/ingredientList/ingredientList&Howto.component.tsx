@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState ,useRef} from "react";
 import styles from "./ingredientList&Howto.module.scss";
 import Image from "next/image";
 import AddSharpIcon from "../../../../../public/icons/add_black_36dp.svg";
@@ -22,14 +22,17 @@ import { useMutation } from "@apollo/client";
 type IngredientListPorps = {
   handleSubmitData?: () => void;
   uploadedImagesUrl?: any;
+  editRecipeHeading?:any;
 };
 
 const IngredientList = ({
   handleSubmitData,
   uploadedImagesUrl,
+  editRecipeHeading
 }: IngredientListPorps) => {
   const dispatch = useAppDispatch();
 
+  const headingRef = useRef()
   //variables for all states ==>start
   const quantity_number = useAppSelector(
     (state) => state.quantityAdjuster.quantityNum
@@ -58,13 +61,12 @@ const IngredientList = ({
   const [recipeApi, setRecipeApi] = useState([]);
 
   const editText = () => {
-    let value = document
-      ? document?.getElementById("recipeTitle")?.textContent
-      : "food one";
+    let value = editRecipeHeading?.current?.textContent;
+    console.log(value)
     return value;
   };
- 
-  const [recipeState,setRecipeState]=useState(null);
+  // editText()
+
   const [addRecipeRecipeFromUser] = useMutation(
     CREATE_NEW_RECIPE_FROM_USER({
       userId: "619359150dc1bfd62b314757",
@@ -74,7 +76,6 @@ const IngredientList = ({
       recipeName: editText(),
     })
   );
-
 
   const RecipeApiMutation = () => {
     let recipeList = [];
@@ -485,6 +486,7 @@ const IngredientList = ({
       </div>
       <div className={styles.save__Recipe}>
         <div
+
           className={styles.save__Recipe__button}
           onClick={RecipeApiMutation}
         >

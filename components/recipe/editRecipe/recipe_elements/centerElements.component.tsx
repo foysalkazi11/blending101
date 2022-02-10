@@ -10,9 +10,10 @@ import DropDown from "../../../../theme/dropDown/DropDown.component";
 
 type CenterElementsProps = {
   setImages?: Dispatch<SetStateAction<any[]>>;
+  editRecipeHeading?:any;
 };
 
-const Center_Elements = ({ setImages }: CenterElementsProps) => {
+const Center_Elements = ({ setImages,editRecipeHeading }: CenterElementsProps) => {
   const dispatch = useAppDispatch();
   const [recipeName, setrecipeName] = useState("Enter Recipe Name");
   //quantity number sets number for top card bottom right counter in edit recipe
@@ -59,6 +60,7 @@ const Center_Elements = ({ setImages }: CenterElementsProps) => {
           className={styles.topSection__heading}
           contentEditable={true}
           id="recipeTitle"
+          ref={editRecipeHeading}
         />
 
         <div className={styles.topSection__RightIcon}>
