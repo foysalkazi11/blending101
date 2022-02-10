@@ -52,19 +52,16 @@ const AddRecipeCard = ({ setImages }: AddRecipeCardProps) => {
   const renderPhotos = (source) => {
     return source.map((photo, index) => {
       return (
-        <>
-          <div className={styles.image__div} key={photo}>
-            <span
-              onClick={() => {
-                removeImage(index);
-              }}
-            >
-              <CancelIcon />
-            </span>
-            <Image src={photo} alt="" layout="fill" objectFit="fill" />
-          </div>
-          <button onClick={imageAws}>click</button>
-        </>
+        <div className={styles.image__div} key={photo}>
+          <span
+            onClick={() => {
+              removeImage(index);
+            }}
+          >
+            <CancelIcon />
+          </span>
+          <Image src={photo} alt="" layout="fill" objectFit="fill" />
+        </div>
       );
     });
   };
