@@ -21,12 +21,13 @@ import { useMutation } from "@apollo/client";
 
 type IngredientListPorps = {
   handleSubmitData?: () => void;
-  uploadedImagesUrl?:any;
+  uploadedImagesUrl?: any;
 };
 
-const IngredientList = ({ handleSubmitData,uploadedImagesUrl }: IngredientListPorps) => {
-
-
+const IngredientList = ({
+  handleSubmitData,
+  uploadedImagesUrl,
+}: IngredientListPorps) => {
   const dispatch = useAppDispatch();
 
   //variables for all states ==>start
@@ -53,20 +54,28 @@ const IngredientList = ({ handleSubmitData,uploadedImagesUrl }: IngredientListPo
 
   // variables for all states ==>ending
 
-
-
-
   // (mutation):"graphql api mutation - save recipe"
   const [recipeApi, setRecipeApi] = useState([]);
+
+  const editText = () => {
+    let value = document
+      ? document?.getElementById("recipeTitle")?.textContent
+      : "food one";
+    return value;
+  };
+ 
+  const [recipeState,setRecipeState]=useState(null);
   const [addRecipeRecipeFromUser] = useMutation(
     CREATE_NEW_RECIPE_FROM_USER({
       userId: "619359150dc1bfd62b314757",
-      UserName: "Aniket",
       ingredients: recipeApi,
-      image:uploadedImagesUrl,
-      recipeInstructions:howToState
+      image: uploadedImagesUrl,
+      recipeInstructions: howToState,
+      recipeName: editText(),
     })
   );
+
+
   const RecipeApiMutation = () => {
     let recipeList = [];
     const createRecipeApiFinalString = () => {
@@ -104,7 +113,6 @@ const IngredientList = ({ handleSubmitData,uploadedImagesUrl }: IngredientListPo
     };
     addrecipeFunc();
   };
-
 
   // =========================================================================
   // sets value of top card in recipe editd page equal to ingredients page

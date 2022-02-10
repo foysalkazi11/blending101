@@ -2,21 +2,21 @@ import { gql } from "@apollo/client";
 
 interface createNewRecipeFromUserInterface {
   userId: string;
-  UserName: string;
   description?: string;
   ingredients?: any;
   image?: any;
   recipeInstructions: any;
+  recipeName:string
 }
 
 export const CREATE_NEW_RECIPE_FROM_USER = ({
   userId,
-  UserName,
   ingredients,
   image,
   recipeInstructions,
+  recipeName
 }: createNewRecipeFromUserInterface) => {
-  console.log({ imageGQL: image });
+  
   const convertArrToString = (arr) => {
     arr = arr.map((itm) => {
       return `
@@ -69,12 +69,13 @@ export const CREATE_NEW_RECIPE_FROM_USER = ({
   mutation {
     addRecipeRecipeFromUser(data: {
       userId: ${JSON.stringify(userId)}
-      name: ${JSON.stringify(UserName)},
+      name: ${JSON.stringify(recipeName)},
       description: "none",
       recipeIngredients: [""]
       ingredients:${convertArrToString(ingredients)}
       image:${convertImageArrayToString(image)}
       recipeInstructions:${converInstructionToString(recipeInstructions)}
+
     }){
       foodCategories
       recipeInstructions

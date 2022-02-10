@@ -3,6 +3,7 @@
         @content;
     }
 }
+
 .main {
     padding: 25px 20px;
     padding-bottom: 25px;
@@ -32,6 +33,16 @@
             font-weight: 600;
             position: relative;
             left: 2%;
+
+            &:active {
+                border: none !important;
+                outline: none !important;
+            }
+
+            &:focus {
+                border: none !important;
+                outline: none !important;
+            }
         }
 
         &__RightIcon {

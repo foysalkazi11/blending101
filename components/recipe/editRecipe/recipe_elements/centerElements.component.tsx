@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styles from "./centerElements.module.scss";
 import MoreVertIcon from "../../../../public/icons/more_vert_black_36dp.svg";
 import AddRecipeCard from "./addFiles/addRecipeCards.component";
@@ -14,7 +14,7 @@ type CenterElementsProps = {
 
 const Center_Elements = ({ setImages }: CenterElementsProps) => {
   const dispatch = useAppDispatch();
-
+  const [recipeName, setrecipeName] = useState("Enter Recipe Name");
   //quantity number sets number for top card bottom right counter in edit recipe
   const quantity_number = useAppSelector(
     (state) => state.quantityAdjuster.quantityNum
@@ -45,11 +45,22 @@ const Center_Elements = ({ setImages }: CenterElementsProps) => {
     paddingRight: "0px",
     width: "111%",
   };
+  useEffect(() => {
+    const element = document.getElementById("recipeTitle");
+    element.innerHTML = "Recipe Title";
+  }, []);
+
+
 
   return (
     <div className={styles.main}>
       <div className={styles.topSection}>
-        <h3 className={styles.topSection__heading}>Red Hots Smoothie</h3>
+        <h3
+          className={styles.topSection__heading}
+          contentEditable={true}
+          id="recipeTitle"
+        />
+
         <div className={styles.topSection__RightIcon}>
           <MoreVertIcon />
         </div>
