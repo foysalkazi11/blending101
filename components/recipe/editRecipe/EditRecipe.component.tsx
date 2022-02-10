@@ -17,14 +17,20 @@ import imageUploadS3 from "../../utility/imageUploadS3";
 const EditRecipePage = () => {
   const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
   const [images, setImages] = useState<any[]>([]);
+  const [uploadUrl, setUploadUrl] = useState([]);
   const dispatch = useAppDispatch();
 
   const handleSubmitData = async () => {
     dispatch(setLoading(true));
     try {
       if (images?.length) {
-        const res = await imageUploadS3(images);
-        console.log(res);
+        // let pngFreeArray = images;
+        // console.log(images);
+        // pngFreeArray = images.filter((item) => item.name.includes(".png")===false);
+        // setImages(pngFreeArray);
+        // console.log(pngFreeArray);
+        const res: any = await imageUploadS3(images);
+        setUploadUrl(res);
       }
       dispatch(setLoading(false));
     } catch (error) {
@@ -79,7 +85,7 @@ const EditRecipePage = () => {
         <div className={styles.center}>
           <Center_header />
           <Center_Elements setImages={setImages} />
-          <IngredientList handleSubmitData={handleSubmitData} />
+          <IngredientList handleSubmitData={handleSubmitData} uploadedImagesUrl={uploadUrl} />
         </div>
         <div className={styles.right__main}>
           <RightTray />

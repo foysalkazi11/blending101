@@ -9,7 +9,6 @@ import index from "../../../../../pages/component";
 import { setLoading } from "../../../../../redux/slices/utilitySlice";
 import S3_CONFIG from "../../../../../configs/s3";
 import axios from "axios";
-import imageUploadS3 from "../../../../utility/imageUploadS3";
 
 type AddRecipeCardProps = {
   setImages?: Dispatch<SetStateAction<any[]>>;
@@ -42,11 +41,31 @@ const AddRecipeCard = ({ setImages }: AddRecipeCardProps) => {
       setImageListRaw(imageListRawArray);
     }
     dispatch(setUploadImageList(imageArray));
-    console.log(imageListRaw);
-  };
-  const imageAws = async () => {
-    let imageAws = await imageUploadS3(imageListRaw);
-    console.log(imageAws);
+    // console.log(selectedImages);
+
+    const handleSubmitData = async () => {
+      dispatch(setLoading(true));
+      try {
+        if (imageListRaw?.length) {
+          imageListRaw?.forEach(async (file) => {
+            const { Key, uploadURL } = await (
+              await axios.get(S3_CONFIG.objectURL)
+            ).data;
+            await fetch(uploadURL, {
+              method: "PUT",
+              body: file,
+            });
+            const imageUrl = `${S3_CONFIG.baseURL}/${Key}`;
+            console.log(imageUrl);
+          });
+        }
+        dispatch(setLoading(false));
+      } catch (error) {
+        console.log(error);
+        dispatch(setLoading(false));
+      }
+    };
+    handleSubmitData();
   };
 
   const renderPhotos = (source) => {
@@ -87,7 +106,7 @@ const AddRecipeCard = ({ setImages }: AddRecipeCardProps) => {
         name="files[]"
         id="file__picker"
         multiple
-        // accept="image/jpeg, image/png, image/gif"
+        accept="image/jpeg, image/jpg"
       />
       {renderPhotos(selectedImages)}
       <div className={styles.addImage__secondDiv} onClick={handleClick}>

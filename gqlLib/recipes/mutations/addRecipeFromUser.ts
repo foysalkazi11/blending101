@@ -5,13 +5,16 @@ interface createNewRecipeFromUserInterface {
   UserName: string;
   description?: string;
   ingredients?: any;
+  image?: any;
 }
 
 export const CREATE_NEW_RECIPE_FROM_USER = ({
   userId,
   UserName,
   ingredients,
+  image,
 }: createNewRecipeFromUserInterface) => {
+  console.log({ imageGQL: image });
   const convertArrToString = (arr) => {
     arr = arr.map((itm) => {
       return `
@@ -25,6 +28,29 @@ export const CREATE_NEW_RECIPE_FROM_USER = ({
     arr = `[${arr.toString()}]`;
     return arr;
   };
+
+  const convertImageArrayToString = (arr) => {
+    let imageArr=[];
+    arr && arr.map((elem, index) => {
+      if(index===0){
+        imageArr.push(`
+        {
+          image : "${elem}",
+          default : true
+        }
+        `)
+      }
+      else {
+        imageArr.push(`
+        {
+          image : "${elem}",
+          default : false
+        }
+        `)
+      }
+    });
+  return(`[${imageArr}]`)
+  };
   return gql`
   mutation {
     addRecipeRecipeFromUser(data: {
@@ -33,6 +59,7 @@ export const CREATE_NEW_RECIPE_FROM_USER = ({
       description: "none",
       recipeIngredients: [""]
       ingredients:${convertArrToString(ingredients)}
+      image:${convertImageArrayToString(image)}
     }){
       foodCategories
       ingredients{

@@ -21,9 +21,10 @@ import { useMutation } from "@apollo/client";
 
 type IngredientListPorps = {
   handleSubmitData?: () => void;
+  uploadedImagesUrl?:any;
 };
 
-const IngredientList = ({ handleSubmitData }: IngredientListPorps) => {
+const IngredientList = ({ handleSubmitData,uploadedImagesUrl }: IngredientListPorps) => {
   // (mutation):"graphql api mutation - save recipe"
   const [recipeApi, setRecipeApi] = useState([]);
   const [addRecipeRecipeFromUser] = useMutation(
@@ -31,6 +32,7 @@ const IngredientList = ({ handleSubmitData }: IngredientListPorps) => {
       userId: "619359150dc1bfd62b314757",
       UserName: "Aniket",
       ingredients: recipeApi,
+      image:uploadedImagesUrl
     })
   );
   const RecipeApiMutation = () => {
@@ -331,7 +333,14 @@ const IngredientList = ({ handleSubmitData }: IngredientListPorps) => {
                       />
                     </div>
                   ) : (
-                    <div className={styles.ingredients__icons}></div>
+                    <div className={styles.ingredients__icons}>
+                      <Image
+                        src={"/food/Dandelion.png"}
+                        alt="Picture will load soon"
+                        objectFit="contain"
+                        layout="fill"
+                      />
+                    </div>
                   )}
                   {/* to create ingredients lists  */}
                   <div className={styles.ingredients__text}>

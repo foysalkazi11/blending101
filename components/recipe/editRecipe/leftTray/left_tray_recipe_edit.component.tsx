@@ -9,17 +9,10 @@ import DropdownTwoComponent from "../../../../theme/dropDown/dropdownTwo.compone
 import Linearcomponent from "../../../../theme/linearProgress/LinearProgress.component";
 import SwitchTwoComponent from "../../../../theme/switch/switchTwo.component";
 import styles from "./left_tray_recipe_edit.module.scss";
-import {
-  filterRankingList,
-  ingredientLeafy,
-} from "./left_tray_recipe_edit_list";
+import { filterRankingList } from "./left_tray_recipe_edit_list";
 import Image from "next/image";
 import { useLazyQuery, useQuery } from "@apollo/client";
-import {
-  INGREDIENTS_BY_CATEGORY_AND_CLASS,
-  NUTRITION_BASED_RECIPE,
-  SEARCH_RESULTS_EDIT_RECIPE,
-} from "../../../../gqlLib/recipes/queries/getEditRecipe";
+import { INGREDIENTS_BY_CATEGORY_AND_CLASS } from "../../../../gqlLib/recipes/queries/getEditRecipe";
 
 const Left_tray_recipe_edit = () => {
   const [toggle, setToggle] = useState(1);
@@ -48,7 +41,6 @@ const Left_tray_recipe_edit = () => {
         return blen !== ingredient;
       });
     }
-
 
     dispatch(setIngredientsToList(blendz));
   };
@@ -171,10 +163,10 @@ const Left_tray_recipe_edit = () => {
                           onClick={() => handleIngredientClick(item)}
                         >
                           <div className={styles.filter__menu__item__image}>
-                            {item.featuredImage !== [] ? (
+                            {item.featuredImage !== null ? (
                               <img src={item.featuredImage} alt={""} />
                             ) : (
-                              ""
+                              <img src="/food/Dandelion.png" alt={""} />
                             )}
                             {checkActive(item.ingredientName) && (
                               <div className={styles.tick}>
