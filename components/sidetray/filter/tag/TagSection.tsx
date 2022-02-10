@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import CustomAccordion from "../../../../theme/accordion/accordion.component";
 import styles from "./TagSection.module.scss";
 import { blendTypes } from "../filterRankingList";
@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { setRecipeFilterByIngredientCategory } from "../../../../redux/slices/ingredientsSlice";
 import OptionSelect from "../optionSelect/OptionSelect";
 import OptionSelectHeader from "../optionSelect/OptionSelectHeader";
+import NumericFilter from "../numericFilter/NumericFilter";
 const { INGREDIENTS_BY_CATEGORY, TYPE, ALLERGIES, DIET, EQUIPMENT, DRUGS } =
   INGREDIENTS_FILTER;
 
@@ -29,46 +30,70 @@ type TagSectionProps = {
 };
 
 const TagSection = ({ categories }: TagSectionProps) => {
+  const [childIngredient, setChailIngredient] = useState("");
   const dispatch = useAppDispatch();
   const { recipeFilterByIngredientCategory } = useAppSelector(
     (state) => state?.ingredients
   );
-  const recipeFilterByCategroy = (categroy: string) => {
+  const recipeFilterByCategroy = (categroy: string, child?: string) => {
+    child = child || "";
     dispatch(setRecipeFilterByIngredientCategory(categroy));
+    setChailIngredient(child);
   };
   return (
     <div className={styles.tagSectionContainer}>
       {recipeFilterByIngredientCategory ? (
         <>
           <OptionSelectHeader />
-          <OptionSelect />
+          {recipeFilterByIngredientCategory === "Type" ||
+          "Ingredient" ||
+          "Diet" ||
+          "Allergies" ||
+          "Equipment" ||
+          "Drugs" ? (
+            <OptionSelect childIngredient={childIngredient} />
+          ) : null}
+
+          {recipeFilterByIngredientCategory === "Nutrition" ? (
+            <NumericFilter childIngredient={childIngredient} />
+          ) : null}
         </>
       ) : (
         <>
-          <input placeholder="Search" />
-          <div
+          <input className={styles.tagSectionInput} placeholder="Search" />
+          {/* <div
             className={styles.singleItem}
             onClick={() => recipeFilterByCategroy("Type")}
           >
             <h5>Type</h5>
-          </div>
-
+          </div> */}
+          {/* 
           <CustomAccordion title="Ingredient" iconRight={true}>
             {categories?.length
               ? categories?.map((item, index) => {
                   return (
-                    <div className={styles.singleItemInside} key={index}>
+                    <div
+                      className={styles.singleItemInside}
+                      key={index}
+                      onClick={() =>
+                        recipeFilterByCategroy("Ingredient", item?.title)
+                      }
+                    >
                       <h5>{item?.title}</h5>
                     </div>
                   );
                 })
               : null}
-          </CustomAccordion>
+          </CustomAccordion> */}
           <CustomAccordion title="Nutrition" iconRight={true}>
             {nutritionList?.length
               ? nutritionList?.map((item, index) => {
                   return (
-                    <div className={styles.singleItemInside} key={index}>
+                    <div
+                      className={styles.singleItemInside}
+                      key={index}
+                      onClick={() => recipeFilterByCategroy("Nutrition", item)}
+                    >
                       <h5>{item}</h5>
                     </div>
                   );
@@ -116,24 +141,24 @@ const TagSection = ({ categories }: TagSectionProps) => {
                 })
               : null}
           </CustomAccordion>
-          <div
+          {/* <div
             className={styles.singleItem}
             onClick={() => recipeFilterByCategroy("Collection")}
           >
             <h5>Collection</h5>
-          </div>
+          </div> */}
           <div
             className={styles.singleItem}
             onClick={() => recipeFilterByCategroy("Teste")}
           >
             <h5>Teste</h5>
           </div>
-          <div
+          {/* <div
             className={styles.singleItem}
             onClick={() => recipeFilterByCategroy("Dynamic")}
           >
             <h5>Dynamic</h5>
-          </div>
+          </div> */}
           <div
             className={styles.singleItem}
             onClick={() => recipeFilterByCategroy("Drugs")}

@@ -11,16 +11,19 @@ const OptionSelectHeader = () => {
   );
   return (
     <div className={styles.optionSelectHeaderContainer}>
-      <div className={styles.leftSide}>
-        <div
-          className={styles.icon}
-          onClick={() => dispatch(setRecipeFilterByIngredientCategory(""))}
-        >
-          <BsChevronLeft />
+      <div className={styles.header}>
+        <div className={styles.leftSide}>
+          <div
+            className={styles.icon}
+            onClick={() => dispatch(setRecipeFilterByIngredientCategory(""))}
+          >
+            <BsChevronLeft />
+          </div>
+          <h3>{recipeFilterByIngredientCategory}</h3>
         </div>
-        <h3>{recipeFilterByIngredientCategory}</h3>
+        <BsArrowRepeat />
       </div>
-      <BsArrowRepeat />
+      <input className={styles.optionSelectInput} placeholder="Search" />
     </div>
   );
 };
