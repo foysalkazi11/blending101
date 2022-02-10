@@ -12,6 +12,7 @@ import { useAppDispatch } from "../../../redux/hooks";
 import { setLoading } from "../../../redux/slices/utilitySlice";
 import S3_CONFIG from "../../../configs/s3";
 import axios from "axios";
+import imageUploadS3 from "../../utility/imageUploadS3";
 
 const EditRecipePage = () => {
   const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
@@ -22,17 +23,8 @@ const EditRecipePage = () => {
     dispatch(setLoading(true));
     try {
       if (images?.length) {
-        images?.forEach(async (file) => {
-          const { Key, uploadURL } = await (
-            await axios.get(S3_CONFIG.objectURL)
-          ).data;
-          await fetch(uploadURL, {
-            method: "PUT",
-            body: file,
-          });
-          const imageUrl = `${S3_CONFIG.baseURL}/${Key}`;
-          console.log(imageUrl);
-        });
+        const res = await imageUploadS3(images);
+        console.log(res);
       }
       dispatch(setLoading(false));
     } catch (error) {
