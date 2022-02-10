@@ -1,25 +1,6 @@
 .optionSelectContainer {
   width: 100%;
 
-  input {
-    border: 1px solid #ececec;
-    border-radius: 10px;
-    padding: 0 15px;
-    font-size: 10px;
-    color: #bcbcbc;
-    line-height: 36px;
-    font-size: 12px;
-    min-height: 30px;
-    margin-bottom: 16px;
-    width: 100%;
-    outline: none;
-    &:focus {
-      border: 1px solid #7dbd3b;
-    }
-    &::placeholder {
-      color: #bcbcbc;
-    }
-  }
   .options {
     display: flex;
     align-items: center;
@@ -45,6 +26,25 @@
 
 .optionSelectHeaderContainer {
   width: 100%;
+  .optionSelectInput {
+    border: 1px solid #ececec;
+    border-radius: 10px;
+    padding: 0 15px;
+    font-size: 10px;
+    color: #bcbcbc;
+    line-height: 36px;
+    font-size: 12px;
+    min-height: 30px;
+    margin-bottom: 16px;
+    width: 100%;
+    outline: none;
+    &:focus {
+      border: 1px solid #7dbd3b;
+    }
+    &::placeholder {
+      color: #bcbcbc;
+    }
+  }
 
   .header {
     display: flex;

@@ -45,19 +45,29 @@ const TagSection = ({ categories }: TagSectionProps) => {
       {recipeFilterByIngredientCategory ? (
         <>
           <OptionSelectHeader />
-          <NumericFilter />
-          <OptionSelect childIngredient={childIngredient} />
+          {recipeFilterByIngredientCategory === "Type" ||
+          "Ingredient" ||
+          "Diet" ||
+          "Allergies" ||
+          "Equipment" ||
+          "Drugs" ? (
+            <OptionSelect childIngredient={childIngredient} />
+          ) : null}
+
+          {recipeFilterByIngredientCategory === "Nutrition" ? (
+            <NumericFilter childIngredient={childIngredient} />
+          ) : null}
         </>
       ) : (
         <>
-          <input placeholder="Search" />
-          <div
+          <input className={styles.tagSectionInput} placeholder="Search" />
+          {/* <div
             className={styles.singleItem}
             onClick={() => recipeFilterByCategroy("Type")}
           >
             <h5>Type</h5>
-          </div>
-
+          </div> */}
+          {/* 
           <CustomAccordion title="Ingredient" iconRight={true}>
             {categories?.length
               ? categories?.map((item, index) => {
@@ -74,12 +84,16 @@ const TagSection = ({ categories }: TagSectionProps) => {
                   );
                 })
               : null}
-          </CustomAccordion>
+          </CustomAccordion> */}
           <CustomAccordion title="Nutrition" iconRight={true}>
             {nutritionList?.length
               ? nutritionList?.map((item, index) => {
                   return (
-                    <div className={styles.singleItemInside} key={index}>
+                    <div
+                      className={styles.singleItemInside}
+                      key={index}
+                      onClick={() => recipeFilterByCategroy("Nutrition", item)}
+                    >
                       <h5>{item}</h5>
                     </div>
                   );
@@ -127,24 +141,24 @@ const TagSection = ({ categories }: TagSectionProps) => {
                 })
               : null}
           </CustomAccordion>
-          <div
+          {/* <div
             className={styles.singleItem}
             onClick={() => recipeFilterByCategroy("Collection")}
           >
             <h5>Collection</h5>
-          </div>
+          </div> */}
           <div
             className={styles.singleItem}
             onClick={() => recipeFilterByCategroy("Teste")}
           >
             <h5>Teste</h5>
           </div>
-          <div
+          {/* <div
             className={styles.singleItem}
             onClick={() => recipeFilterByCategroy("Dynamic")}
           >
             <h5>Dynamic</h5>
-          </div>
+          </div> */}
           <div
             className={styles.singleItem}
             onClick={() => recipeFilterByCategroy("Drugs")}

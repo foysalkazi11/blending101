@@ -23,6 +23,7 @@ const OptionSelectHeader = () => {
         </div>
         <BsArrowRepeat />
       </div>
+      <input className={styles.optionSelectInput} placeholder="Search" />
     </div>
   );
 };

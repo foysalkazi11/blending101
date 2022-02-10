@@ -32,7 +32,6 @@ const OptionSelect = ({ childIngredient = "" }: OptionSelectProps) => {
 
   return (
     <div className={styles.optionSelectContainer}>
-      <input placeholder="Search" />
       <div className={styles.options}>
         {options[recipeFilterByIngredientCategory]?.length
           ? options[recipeFilterByIngredientCategory]?.map((item, index) => {
