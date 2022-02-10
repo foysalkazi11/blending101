@@ -6,6 +6,7 @@ interface createNewRecipeFromUserInterface {
   description?: string;
   ingredients?: any;
   image?: any;
+  recipeInstructions: any;
 }
 
 export const CREATE_NEW_RECIPE_FROM_USER = ({
@@ -13,6 +14,7 @@ export const CREATE_NEW_RECIPE_FROM_USER = ({
   UserName,
   ingredients,
   image,
+  recipeInstructions,
 }: createNewRecipeFromUserInterface) => {
   console.log({ imageGQL: image });
   const convertArrToString = (arr) => {
@@ -30,27 +32,39 @@ export const CREATE_NEW_RECIPE_FROM_USER = ({
   };
 
   const convertImageArrayToString = (arr) => {
-    let imageArr=[];
-    arr && arr.map((elem, index) => {
-      if(index===0){
-        imageArr.push(`
+    let imageArr = [];
+    arr &&
+      arr.map((elem, index) => {
+        if (index === 0) {
+          imageArr.push(`
         {
           image : "${elem}",
           default : true
         }
-        `)
-      }
-      else {
-        imageArr.push(`
+        `);
+        } else {
+          imageArr.push(`
         {
           image : "${elem}",
           default : false
         }
-        `)
-      }
-    });
-  return(`[${imageArr}]`)
+        `);
+        }
+      });
+    return `[${imageArr}]`;
   };
+
+  const converInstructionToString = (arr) => {
+    let instructionArr = [];
+    arr &&
+      arr.map((elem, index) => {
+        console.log(elem)
+        instructionArr.push(`"${elem.step}"`);
+      });
+
+    return `[${instructionArr}]`;
+  };
+
   return gql`
   mutation {
     addRecipeRecipeFromUser(data: {
@@ -60,8 +74,14 @@ export const CREATE_NEW_RECIPE_FROM_USER = ({
       recipeIngredients: [""]
       ingredients:${convertArrToString(ingredients)}
       image:${convertImageArrayToString(image)}
+      recipeInstructions:${converInstructionToString(recipeInstructions)}
     }){
       foodCategories
+      recipeInstructions
+    image{
+      image,
+      default
+    }
       ingredients{
         weightInGram
         ingredientId,

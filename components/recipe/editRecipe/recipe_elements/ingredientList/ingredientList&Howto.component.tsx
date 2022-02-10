@@ -25,6 +25,37 @@ type IngredientListPorps = {
 };
 
 const IngredientList = ({ handleSubmitData,uploadedImagesUrl }: IngredientListPorps) => {
+
+
+  const dispatch = useAppDispatch();
+
+  //variables for all states ==>start
+  const quantity_number = useAppSelector(
+    (state) => state.quantityAdjuster.quantityNum
+  );
+  const servings_number = useAppSelector(
+    (state) => state.quantityAdjuster.servingsNum
+  );
+
+  const ingredients_list = useAppSelector(
+    (state) => state.quantityAdjuster.ingredientsList
+  );
+
+  // const ingredientsList = useAppSelector((state) => state.sideTray.ingredients);
+
+  const howToState = useAppSelector(
+    (state) => state.quantityAdjuster.howtoState
+  );
+
+  const nutritionState = useAppSelector(
+    (state) => state.quantityAdjuster.nutritionState
+  );
+
+  // variables for all states ==>ending
+
+
+
+
   // (mutation):"graphql api mutation - save recipe"
   const [recipeApi, setRecipeApi] = useState([]);
   const [addRecipeRecipeFromUser] = useMutation(
@@ -32,7 +63,8 @@ const IngredientList = ({ handleSubmitData,uploadedImagesUrl }: IngredientListPo
       userId: "619359150dc1bfd62b314757",
       UserName: "Aniket",
       ingredients: recipeApi,
-      image:uploadedImagesUrl
+      image:uploadedImagesUrl,
+      recipeInstructions:howToState
     })
   );
   const RecipeApiMutation = () => {
@@ -73,31 +105,7 @@ const IngredientList = ({ handleSubmitData,uploadedImagesUrl }: IngredientListPo
     addrecipeFunc();
   };
 
-  const dispatch = useAppDispatch();
 
-  //variables for all states ==>start
-  const quantity_number = useAppSelector(
-    (state) => state.quantityAdjuster.quantityNum
-  );
-  const servings_number = useAppSelector(
-    (state) => state.quantityAdjuster.servingsNum
-  );
-
-  const ingredients_list = useAppSelector(
-    (state) => state.quantityAdjuster.ingredientsList
-  );
-
-  // const ingredientsList = useAppSelector((state) => state.sideTray.ingredients);
-
-  const howToState = useAppSelector(
-    (state) => state.quantityAdjuster.howtoState
-  );
-
-  const nutritionState = useAppSelector(
-    (state) => state.quantityAdjuster.nutritionState
-  );
-
-  // variables for all states ==>ending
   // =========================================================================
   // sets value of top card in recipe editd page equal to ingredients page
   useEffect(() => {
