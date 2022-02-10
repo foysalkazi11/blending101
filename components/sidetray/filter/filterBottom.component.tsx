@@ -12,24 +12,15 @@ import { filterRankingList, ingredientLeafy } from "./filterRankingList";
 import { useLazyQuery } from "@apollo/client";
 import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
 import { setLoading } from "../../../redux/slices/utilitySlice";
+import { setAllIngredients } from "../../../redux/slices/ingredientsSlice";
 
-const categories = [
-  { title: "All", val: "All" },
-  { title: "Leafy", val: "Leafy" },
-  { title: "Berry", val: "Berry" },
-  { title: "Herbal", val: "Herbal" },
-  { title: "Fruity", val: "Fruity" },
-  { title: "Balancer", val: "Balancer" },
-  { title: "Fatty", val: "Fatty" },
-  { title: "Seasoning", val: "Seasoning" },
-  { title: "Flavor", val: "Flavor" },
-  { title: "Rooty", val: "Rooty" },
-  { title: "Flowering", val: "Flowering" },
-  { title: "Liquid", val: "Liquid" },
-  { title: "Tube-Squash", val: "Tube-Squash" },
-];
+type FilterbottomComponentProps = {
+  categories?: { title: string; val: string }[];
+};
 
-export default function FilterbottomComponent(props) {
+export default function FilterbottomComponent({
+  categories,
+}: FilterbottomComponentProps) {
   const [toggle, setToggle] = useState(1);
   const [dpd, setDpd] = useState({ title: "All", val: "All" });
   const ingredients = filterRankingList;
@@ -43,7 +34,8 @@ export default function FilterbottomComponent(props) {
   ] = useLazyQuery(FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS, {
     fetchPolicy: "network-only",
   });
-  const [ingredientData, setIngredientData] = useState<any[]>([]);
+  // const [ingredientData, setIngredientData] = useState<any[]>([]);
+  const { allIngredients } = useAppSelector((state) => state?.ingredients);
   const [searchIngredientData, setSearchIngredientData] = useState<any[]>([]);
   const [searchInput, setSearchInput] = useState("");
   const isMounted = useRef(false);
@@ -93,7 +85,11 @@ export default function FilterbottomComponent(props) {
   };
 
   useEffect(() => {
-    fetchFilterIngredientByCategroyAndClass();
+    if (!allIngredients?.length) {
+      fetchFilterIngredientByCategroyAndClass();
+    } else {
+      setSearchIngredientData(allIngredients);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -101,12 +97,11 @@ export default function FilterbottomComponent(props) {
     if (isMounted.current) {
       if (dpd?.val !== "All") {
         setSearchIngredientData(
-          //@ts-ignore
-          ingredientData?.filter((item) => item?.category === dpd?.val)
+          allIngredients?.filter((item) => item?.category === dpd?.val)
         );
       } else {
-        if (ingredientData?.length) {
-          setSearchIngredientData(ingredientData);
+        if (allIngredients?.length) {
+          setSearchIngredientData(allIngredients);
         } else {
           fetchFilterIngredientByCategroyAndClass();
         }
@@ -126,13 +121,18 @@ export default function FilterbottomComponent(props) {
   }, [ingredientFilterLoading]);
 
   useEffect(() => {
-    if (!ingredientFilterLoading) {
-      setIngredientData(
-        ingredientFilterData?.filterIngredientByCategoryAndClass
-      );
-      setSearchIngredientData(
-        ingredientFilterData?.filterIngredientByCategoryAndClass
-      );
+    if (isMounted.current) {
+      if (!ingredientFilterLoading) {
+        dispatch(
+          setAllIngredients(
+            ingredientFilterData?.filterIngredientByCategoryAndClass
+          )
+        );
+
+        setSearchIngredientData(
+          ingredientFilterData?.filterIngredientByCategoryAndClass
+        );
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ingredientFilterData]);
@@ -140,9 +140,9 @@ export default function FilterbottomComponent(props) {
   useEffect(() => {
     if (isMounted.current) {
       if (searchInput === "") {
-        setSearchIngredientData(ingredientData);
+        setSearchIngredientData(allIngredients);
       } else {
-        const filter = ingredientData?.filter((item) =>
+        const filter = allIngredients?.filter((item) =>
           //@ts-ignore
           item?.ingredientName
             ?.toLowerCase()
