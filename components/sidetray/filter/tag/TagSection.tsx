@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { setRecipeFilterByIngredientCategory } from "../../../../redux/slices/ingredientsSlice";
 import OptionSelect from "../optionSelect/OptionSelect";
 import OptionSelectHeader from "../optionSelect/OptionSelectHeader";
+import NumericFilter from "../numericFilter/NumericFilter";
 const { INGREDIENTS_BY_CATEGORY, TYPE, ALLERGIES, DIET, EQUIPMENT, DRUGS } =
   INGREDIENTS_FILTER;
 
@@ -44,6 +45,7 @@ const TagSection = ({ categories }: TagSectionProps) => {
       {recipeFilterByIngredientCategory ? (
         <>
           <OptionSelectHeader />
+          <NumericFilter />
           <OptionSelect childIngredient={childIngredient} />
         </>
       ) : (

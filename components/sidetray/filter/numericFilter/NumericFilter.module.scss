@@ -1,0 +1,51 @@
+.numericFilterContainer {
+  width: 100%;
+}
+
+.tabContainer {
+  background-color: white;
+  box-shadow: 1px 2px 4px #ececec;
+  border: 1px solid #f6f6f6;
+  padding: 5px;
+  display: flex;
+  border-radius: 35rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .firstChild {
+    border-top-left-radius: 3.5rem;
+    border-bottom-left-radius: 3.5rem;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    padding: 5px;
+    font-size: 12px;
+    text-align: center;
+    &:hover {
+      opacity: 1;
+      background-color: rgba(17, 36, 51, 0.1);
+    }
+  }
+  .middleChild {
+    padding: 5px;
+    font-size: 12px;
+    text-align: center;
+    border-radius: 5px;
+    &:hover {
+      opacity: 1;
+      background-color: rgba(17, 36, 51, 0.1);
+    }
+  }
+  .lastChild {
+    border-top-right-radius: 3.5rem;
+    border-bottom-right-radius: 3.5rem;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    padding: 5px;
+    font-size: 12px;
+    text-align: center;
+    &:hover {
+      opacity: 1;
+      background-color: rgba(17, 36, 51, 0.1);
+    }
+  }
+}
