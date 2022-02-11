@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styles from "./centerElements.module.scss";
 import MoreVertIcon from "../../../../public/icons/more_vert_black_36dp.svg";
 import AddRecipeCard from "./addFiles/addRecipeCards.component";
@@ -7,13 +7,24 @@ import Image from "next/image";
 import { setQuantity } from "../../../../redux/edit_recipe/quantity";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import DropDown from "../../../../theme/dropDown/DropDown.component";
+import { useLazyQuery } from "@apollo/client";
+import { BLEND_CATEGORY } from "../../../../gqlLib/recipes/queries/getEditRecipe";
 
 type CenterElementsProps = {
   setImages?: Dispatch<SetStateAction<any[]>>;
+  editRecipeHeading?: any;
+  setDropDownState?:any;
+  blendCategoryList:any;
 };
 
-const Center_Elements = ({ setImages }: CenterElementsProps) => {
+const Center_Elements = ({
+  setImages,
+  editRecipeHeading,
+  setDropDownState,
+  blendCategoryList
+}: CenterElementsProps) => {
   const dispatch = useAppDispatch();
+
 
   //quantity number sets number for top card bottom right counter in edit recipe
   const quantity_number = useAppSelector(
@@ -35,8 +46,16 @@ const Center_Elements = ({ setImages }: CenterElementsProps) => {
       }
     }
   };
+
   //lists for each dropdown
-  let WholefoodItem = ["Wholefood", "Wholefood"];
+  let WholefoodItem = [];
+  let dropDownDataAllFeildsArray=[];
+  if (blendCategoryList) {
+    blendCategoryList.map((v, i) => {
+      WholefoodItem.push(v.name);
+      dropDownDataAllFeildsArray.push(v);
+    });
+  }
   let BlendtecItem = ["Blendtec", "Blendtec"];
   let OzItem = ["64 oz", "64 oz"];
 
@@ -45,11 +64,24 @@ const Center_Elements = ({ setImages }: CenterElementsProps) => {
     paddingRight: "0px",
     width: "111%",
   };
+  useEffect(() => {
+    const element = document.getElementById("recipeTitle");
+    element.innerHTML = "Recipe Title";
+  }, []);
+
+
+  // console.log({ blendCategories: blendCategory });
 
   return (
     <div className={styles.main}>
       <div className={styles.topSection}>
-        <h3 className={styles.topSection__heading}>Red Hots Smoothie</h3>
+        <h3
+          className={styles.topSection__heading}
+          contentEditable={true}
+          id="recipeTitle"
+          ref={editRecipeHeading}
+        />
+
         <div className={styles.topSection__RightIcon}>
           <MoreVertIcon />
         </div>
@@ -69,17 +101,30 @@ const Center_Elements = ({ setImages }: CenterElementsProps) => {
           <div className={styles.blendingOptions__left}>
             <ul>
               <li>
-                <div className={styles.left__options}>
-                  <DropDown listElem={WholefoodItem} style={dropDownStyle} />
+                <div
+                  className={styles.left__options}
+                  style={{ minWidth: "125px" }}
+                >
+                  <DropDown
+                    listElem={WholefoodItem}
+                    style={dropDownStyle}
+                    valueState={setDropDownState}
+                  />
                 </div>
               </li>
               <li>
-                <div className={styles.left__options}>
+                <div
+                  className={styles.left__options}
+                  style={{ minWidth: "115px" }}
+                >
                   <DropDown listElem={BlendtecItem} style={dropDownStyle} />
                 </div>
               </li>
               <li>
-                <div className={styles.left__options}>
+                <div
+                  className={styles.left__options}
+                  style={{ minWidth: "35px" }}
+                >
                   <DropDown listElem={OzItem} style={dropDownStyle} />
                 </div>
               </li>

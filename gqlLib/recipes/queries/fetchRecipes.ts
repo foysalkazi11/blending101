@@ -25,7 +25,7 @@ query {
      _id,
      url,
      favicon,
-     
+
    }
 }`;
 
@@ -54,7 +54,7 @@ query {
      _id,
      url,
      favicon,
-     
+
    }
 }
 `;
@@ -84,7 +84,7 @@ query {
      _id,
      url,
      favicon,
-     
+
    }
 }
 `;
@@ -109,7 +109,7 @@ export const FETCH_RECIPES_BY_BLEND = (TYPE: any) => (
           }
           url,
           favicon
-          
+
         }
     }`
 )

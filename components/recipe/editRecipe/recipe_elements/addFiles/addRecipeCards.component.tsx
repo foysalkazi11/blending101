@@ -6,6 +6,9 @@ import CancelIcon from "../../../../../public/icons/cancel_black_36dp.svg";
 import { setUploadImageList } from "../../../../../redux/edit_recipe/quantity";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
 import index from "../../../../../pages/component";
+import { setLoading } from "../../../../../redux/slices/utilitySlice";
+import S3_CONFIG from "../../../../../configs/s3";
+import axios from "axios";
 
 type AddRecipeCardProps = {
   setImages?: Dispatch<SetStateAction<any[]>>;
@@ -21,6 +24,7 @@ const AddRecipeCard = ({ setImages }: AddRecipeCardProps) => {
   const selectedImages = useAppSelector(
     (state) => state.quantityAdjuster.uploadImageList
   );
+  const [imageListRaw, setImageListRaw] = useState([]);
 
   let imageArray: string[] = [];
   const imageRenderingHandler = (event) => {
@@ -30,11 +34,38 @@ const AddRecipeCard = ({ setImages }: AddRecipeCardProps) => {
       let BlobList = Array.from(event.target.files).map((file: any) =>
         URL.createObjectURL(file)
       );
+      let imageListRawArray = [];
       imageArray = [...selectedImages, ...BlobList];
+      imageListRawArray = [...imageListRaw, ...event.target.files];
       setImages((pre) => [...pre, ...event.target.files]);
+      setImageListRaw(imageListRawArray);
     }
     dispatch(setUploadImageList(imageArray));
-    console.log(selectedImages);
+    // console.log(selectedImages);
+
+    const handleSubmitData = async () => {
+      dispatch(setLoading(true));
+      try {
+        if (imageListRaw?.length) {
+          imageListRaw?.forEach(async (file) => {
+            const { Key, uploadURL } = await (
+              await axios.get(S3_CONFIG.objectURL)
+            ).data;
+            await fetch(uploadURL, {
+              method: "PUT",
+              body: file,
+            });
+            const imageUrl = `${S3_CONFIG.baseURL}/${Key}`;
+            console.log(imageUrl);
+          });
+        }
+        dispatch(setLoading(false));
+      } catch (error) {
+        console.log(error);
+        dispatch(setLoading(false));
+      }
+    };
+    handleSubmitData();
   };
 
   const renderPhotos = (source) => {
@@ -75,7 +106,7 @@ const AddRecipeCard = ({ setImages }: AddRecipeCardProps) => {
         name="files[]"
         id="file__picker"
         multiple
-        // accept="image/jpeg, image/png, image/gif"
+        accept="image/jpeg, image/jpg"
       />
       {renderPhotos(selectedImages)}
       <div className={styles.addImage__secondDiv} onClick={handleClick}>
