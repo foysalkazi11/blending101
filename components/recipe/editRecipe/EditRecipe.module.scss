@@ -42,7 +42,7 @@ $leftTrayDragIconWidth:50px;
 
 .main {
     display: flex;
-    min-height: 90%;
+    min-height: 80%;
     height: auto;
     width: calc(100% - 60px);
     margin: auto;
@@ -135,7 +135,6 @@ $leftTrayDragIconWidth:50px;
             justify-content: center;
             margin-left: 4px;
             margin-right: 10px;
-
         }
     }
 }
@@ -164,6 +163,5 @@ $leftTrayDragIconWidth:50px;
 
     @include responsive(0px, 991px) {
         margin-top: 18px;
-        // margin-right: -$width - 30px;
     }
 }
