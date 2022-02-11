@@ -11,7 +11,6 @@ import CreateNewRecipe from "./CreateNewRecipe";
 
 import SubNav from "../share/subNav/SubNav";
 import SliderArrows from "../share/sliderArrows/SliderArrows";
-import { current } from "@reduxjs/toolkit";
 
 const responsiveSetting = {
   slidesToShow: 7,

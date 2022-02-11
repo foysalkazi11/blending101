@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState, useRef } from "react";
 import styles from "./ingredientList&Howto.module.scss";
 import Image from "next/image";
 import AddSharpIcon from "../../../../../public/icons/add_black_36dp.svg";
@@ -8,18 +10,41 @@ import {
   setServings,
   setIngredientsToList,
   setHowToSteps,
+  setNutritionState,
 } from "../../../../../redux/edit_recipe/quantity";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
 import DragIndicatorIcon from "../../../../../public/icons/drag_indicator_black_36dp.svg";
 import ModeEditOutlineOutlinedIcon from "../../../../../public/icons/mode_edit_black_36dp.svg";
 import { ingredientLeafy } from "../../leftTray/left_tray_recipe_edit_list";
+import { CREATE_NEW_RECIPE_FROM_USER } from "../../../../../gqlLib/recipes/mutations/addRecipeFromUser";
+import { useMutation } from "@apollo/client";
 
 type IngredientListPorps = {
   handleSubmitData?: () => void;
+  uploadedImagesUrl?: any;
+  editRecipeHeading?: any;
+  selectedBlendValueState?: any;
+  blendCategory?: any;
 };
 
-const IngredientList = ({ handleSubmitData }: IngredientListPorps) => {
+const IngredientList = ({
+  handleSubmitData,
+  uploadedImagesUrl,
+  editRecipeHeading,
+  blendCategory,
+  selectedBlendValueState,
+}: IngredientListPorps) => {
   const dispatch = useAppDispatch();
+
+  let SelecteApiParameter;
+  if (selectedBlendValueState) {
+    console.log(blendCategory);
+    console.log(selectedBlendValueState);
+    SelecteApiParameter = blendCategory.filter((v, i) =>
+      v.name.toLowerCase().includes(selectedBlendValueState)
+    );
+  }
+
 
   //variables for all states ==>start
   const quantity_number = useAppSelector(
@@ -40,6 +65,67 @@ const IngredientList = ({ handleSubmitData }: IngredientListPorps) => {
   );
 
   // variables for all states ==>ending
+
+  // (mutation):"graphql api mutation - save recipe"
+  const [recipeApi, setRecipeApi] = useState([]);
+
+  const editText = () => {
+    let value = editRecipeHeading?.current?.textContent;
+    // console.log(value)
+    return value;
+  };
+  // editText()
+
+  const [addRecipeRecipeFromUser] = useMutation(
+    CREATE_NEW_RECIPE_FROM_USER({
+      userId: "619359150dc1bfd62b314757",
+      ingredients: recipeApi,
+      image: uploadedImagesUrl,
+      recipeInstructions: howToState,
+      recipeName: editText(),
+      SelecteApiParameter: SelecteApiParameter ? SelecteApiParameter._id : "",
+    })
+  );
+
+  const RecipeApiMutation = () => {
+
+    let recipeList = [];
+    const createRecipeApiFinalString = () => {
+      let recipe = {};
+      ingredients_list.map((elem) => {
+        recipe = { ingredientId: elem._id };
+        if (elem.portions) {
+          let measurement = {};
+          let customObj = {};
+          elem.portions.map((elemtemp) => {
+            if (elemtemp.default === true) {
+              customObj = {
+                ...customObj,
+                weightInGram: elemtemp.meausermentWeight,
+                selectedPortionName: elemtemp.measurement,
+              };
+              measurement = { ...measurement, ...customObj };
+            }
+          });
+          recipe = { ...recipe, ...measurement };
+        }
+        recipeList = [...recipeList, recipe];
+      });
+      setRecipeApi(recipeList);
+    };
+    createRecipeApiFinalString();
+
+    const addrecipeFunc = async () => {
+      try {
+        const { data } = await addRecipeRecipeFromUser();
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    addrecipeFunc();
+  };
+
   // =========================================================================
   // sets value of top card in recipe editd page equal to ingredients page
   useEffect(() => {
@@ -97,7 +183,7 @@ const IngredientList = ({ handleSubmitData }: IngredientListPorps) => {
 
   const removeIngredient = (id) => {
     let updated_list = ingredients_list.filter((elem) => {
-      return id !== elem.id;
+      return id !== elem._id;
     });
     dispatch(setIngredientsToList(updated_list));
   };
@@ -172,6 +258,17 @@ const IngredientList = ({ handleSubmitData }: IngredientListPorps) => {
     let tempValue = e.target.value;
     setInputValue(tempValue);
   };
+
+  let nutritionArray = [];
+  const nutritionStateanupulator = (id: any, value: any, elem: Object) => {
+    let elemWithValue;
+    elemWithValue = { ...(elem as Object), value: value, elemId: id };
+    nutritionArray = [...nutritionArray, elemWithValue];
+  };
+  useEffect(() => {
+    dispatch(setNutritionState(nutritionArray));
+  }, [ingredients_list]);
+
   return (
     <div className={styles.mainCard}>
       <div className={styles.ingredients__main__card}>
@@ -233,29 +330,66 @@ const IngredientList = ({ handleSubmitData }: IngredientListPorps) => {
         <div className={styles.ingredients}>
           <ul>
             {ingredients_list.map((elem) => {
+              {
+                let valueArg = elem.portions.map((measure) => {
+                  if (measure.default === true) {
+                    return (100 / measure.meausermentWeight) * servings_number;
+                  } else servings_number;
+                });
+                nutritionStateanupulator(
+                  elem.ingredientName + elem._id,
+                  valueArg,
+                  elem
+                );
+              }
+
               return (
-                <li key={elem.id} className={styles.ingredients__li}>
+                <li
+                  key={elem.ingredientName + elem._id}
+                  className={styles.ingredients__li}
+                >
                   <div className={styles.ingredients__drag}>
                     <DragIndicatorIcon className={styles.ingredients__drag} />
                   </div>
-                  {elem.img ? (
+                  {elem.featuredImage !== null ? (
                     <div className={styles.ingredients__icons}>
                       <Image
-                        src={elem.img}
+                        src={elem.featuredImage}
                         alt="Picture will load soon"
                         objectFit="contain"
                         layout="fill"
                       />
                     </div>
                   ) : (
-                    <div className={styles.ingredients__icons}></div>
+                    <div className={styles.ingredients__icons}>
+                      <Image
+                        src={"/food/Dandelion.png"}
+                        alt="Picture will load soon"
+                        objectFit="contain"
+                        layout="fill"
+                      />
+                    </div>
                   )}
                   {/* to create ingredients lists  */}
                   <div className={styles.ingredients__text}>
-                    <span>{elem.servings * servings_number} &nbsp;</span>
-                    <span>{elem.measuring_scale} &nbsp;</span>
+                    <span>
+                      {elem.portions[0].meausermentWeight ===
+                      "Quantity not specified"
+                        ? 1
+                        : Math.round(
+                            (100 / elem.portions[0].meausermentWeight) *
+                              servings_number
+                          )}{" "}
+                      &nbsp;
+                    </span>
+                    <span>
+                      {elem.portions[0].measurement === "Quantity not specified"
+                        ? ""
+                        : elem.portions[0].measurement}{" "}
+                      &nbsp;
+                    </span>
                     <span className={styles.ingredients__text__highlighted}>
-                      {elem.title} &nbsp;
+                      {elem.ingredientName} &nbsp;
                     </span>
                     <span>{elem.extra_sentence} &nbsp;</span>
                   </div>
@@ -267,7 +401,7 @@ const IngredientList = ({ handleSubmitData }: IngredientListPorps) => {
                   </span>
                   <div
                     className={styles.ingredients__bin}
-                    onClick={() => removeIngredient(elem.id)}
+                    onClick={() => removeIngredient(elem._id)}
                   >
                     <Image
                       src={"/icons/noun_Delete_1447966.svg"}
@@ -362,7 +496,10 @@ const IngredientList = ({ handleSubmitData }: IngredientListPorps) => {
         </div>
       </div>
       <div className={styles.save__Recipe}>
-        <div className={styles.save__Recipe__button}>
+        <div
+          className={styles.save__Recipe__button}
+          onClick={RecipeApiMutation}
+        >
           <ButtonComponent
             type={"primary"}
             style={{}}
@@ -375,5 +512,4 @@ const IngredientList = ({ handleSubmitData }: IngredientListPorps) => {
     </div>
   );
 };
-
 export default IngredientList;

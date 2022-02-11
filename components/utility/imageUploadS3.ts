@@ -20,6 +20,7 @@ const imageUploadS3 = (files: any[]) => {
       res(images);
     } catch (error) {
       rej(error);
+      console.log(error.message)
     }
   });
 };
