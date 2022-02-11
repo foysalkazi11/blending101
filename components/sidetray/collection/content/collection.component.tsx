@@ -249,8 +249,6 @@ export default function CollectionComponent({
                 {changeRecipeWithinCollection ? (
                   <div className={styles.checkBox}>
                     <CustomCheckbox
-                      /* @ts-ignore */
-                      // disable={item?.name === "Default" ? true : false}
                       checked={
                         /* @ts-ignore */
                         checkExistingRecipe(item?.recipes)

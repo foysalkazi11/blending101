@@ -8,6 +8,7 @@ import { setRecipeFilterByIngredientCategory } from "../../../../redux/slices/in
 import OptionSelect from "../optionSelect/OptionSelect";
 import OptionSelectHeader from "../optionSelect/OptionSelectHeader";
 import NumericFilter from "../numericFilter/NumericFilter";
+import CheckboxOptions from "../checkboxOptions/CheckboxOptions";
 const { INGREDIENTS_BY_CATEGORY, TYPE, ALLERGIES, DIET, EQUIPMENT, DRUGS } =
   INGREDIENTS_FILTER;
 
@@ -57,34 +58,38 @@ const TagSection = ({ categories }: TagSectionProps) => {
           {recipeFilterByIngredientCategory === "Nutrition" ? (
             <NumericFilter childIngredient={childIngredient} />
           ) : null}
+          {recipeFilterByIngredientCategory === "Collection" || "Dynamic" ? (
+            <CheckboxOptions />
+          ) : null}
         </>
       ) : (
         <>
           <input className={styles.tagSectionInput} placeholder="Search" />
-          {/* <div
+          <div
             className={styles.singleItem}
             onClick={() => recipeFilterByCategroy("Type")}
           >
             <h5>Type</h5>
-          </div> */}
-          {/* 
-          <CustomAccordion title="Ingredient" iconRight={true}>
-            {categories?.length
-              ? categories?.map((item, index) => {
-                  return (
-                    <div
-                      className={styles.singleItemInside}
-                      key={index}
-                      onClick={() =>
-                        recipeFilterByCategroy("Ingredient", item?.title)
-                      }
-                    >
-                      <h5>{item?.title}</h5>
-                    </div>
-                  );
-                })
-              : null}
-          </CustomAccordion> */}
+          </div>
+          {
+            <CustomAccordion title="Ingredient" iconRight={true}>
+              {categories?.length
+                ? categories?.map((item, index) => {
+                    return (
+                      <div
+                        className={styles.singleItemInside}
+                        key={index}
+                        onClick={() =>
+                          recipeFilterByCategroy("Ingredient", item?.title)
+                        }
+                      >
+                        <h5>{item?.title}</h5>
+                      </div>
+                    );
+                  })
+                : null}
+            </CustomAccordion>
+          }
           <CustomAccordion title="Nutrition" iconRight={true}>
             {nutritionList?.length
               ? nutritionList?.map((item, index) => {
@@ -141,24 +146,24 @@ const TagSection = ({ categories }: TagSectionProps) => {
                 })
               : null}
           </CustomAccordion>
-          {/* <div
+          <div
             className={styles.singleItem}
             onClick={() => recipeFilterByCategroy("Collection")}
           >
             <h5>Collection</h5>
-          </div> */}
+          </div>
           <div
             className={styles.singleItem}
             onClick={() => recipeFilterByCategroy("Teste")}
           >
             <h5>Teste</h5>
           </div>
-          {/* <div
+          <div
             className={styles.singleItem}
             onClick={() => recipeFilterByCategroy("Dynamic")}
           >
             <h5>Dynamic</h5>
-          </div> */}
+          </div>
           <div
             className={styles.singleItem}
             onClick={() => recipeFilterByCategroy("Drugs")}
