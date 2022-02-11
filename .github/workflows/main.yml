@@ -16,7 +16,7 @@ jobs:
 
       - name: Installing the dependencies
         run:
-          npm i
+          yarn
 
           # creating .env.production
       - name: Creating .env.production
