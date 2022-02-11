@@ -7,15 +7,25 @@ import Image from "next/image";
 import { setQuantity } from "../../../../redux/edit_recipe/quantity";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import DropDown from "../../../../theme/dropDown/DropDown.component";
+import { useLazyQuery } from "@apollo/client";
+import { BLEND_CATEGORY } from "../../../../gqlLib/recipes/queries/getEditRecipe";
 
 type CenterElementsProps = {
   setImages?: Dispatch<SetStateAction<any[]>>;
-  editRecipeHeading?:any;
+  editRecipeHeading?: any;
+  setDropDownState?:any;
+  blendCategoryList:any;
 };
 
-const Center_Elements = ({ setImages,editRecipeHeading }: CenterElementsProps) => {
+const Center_Elements = ({
+  setImages,
+  editRecipeHeading,
+  setDropDownState,
+  blendCategoryList
+}: CenterElementsProps) => {
   const dispatch = useAppDispatch();
-  const [recipeName, setrecipeName] = useState("Enter Recipe Name");
+
+
   //quantity number sets number for top card bottom right counter in edit recipe
   const quantity_number = useAppSelector(
     (state) => state.quantityAdjuster.quantityNum
@@ -36,8 +46,16 @@ const Center_Elements = ({ setImages,editRecipeHeading }: CenterElementsProps) =
       }
     }
   };
+
   //lists for each dropdown
-  let WholefoodItem = ["Wholefood", "Wholefood"];
+  let WholefoodItem = [];
+  let dropDownDataAllFeildsArray=[];
+  if (blendCategoryList) {
+    blendCategoryList.map((v, i) => {
+      WholefoodItem.push(v.name);
+      dropDownDataAllFeildsArray.push(v);
+    });
+  }
   let BlendtecItem = ["Blendtec", "Blendtec"];
   let OzItem = ["64 oz", "64 oz"];
 
@@ -52,6 +70,7 @@ const Center_Elements = ({ setImages,editRecipeHeading }: CenterElementsProps) =
   }, []);
 
 
+  // console.log({ blendCategories: blendCategory });
 
   return (
     <div className={styles.main}>
@@ -82,17 +101,30 @@ const Center_Elements = ({ setImages,editRecipeHeading }: CenterElementsProps) =
           <div className={styles.blendingOptions__left}>
             <ul>
               <li>
-                <div className={styles.left__options}>
-                  <DropDown listElem={WholefoodItem} style={dropDownStyle} />
+                <div
+                  className={styles.left__options}
+                  style={{ minWidth: "125px" }}
+                >
+                  <DropDown
+                    listElem={WholefoodItem}
+                    style={dropDownStyle}
+                    valueState={setDropDownState}
+                  />
                 </div>
               </li>
               <li>
-                <div className={styles.left__options}>
+                <div
+                  className={styles.left__options}
+                  style={{ minWidth: "115px" }}
+                >
                   <DropDown listElem={BlendtecItem} style={dropDownStyle} />
                 </div>
               </li>
               <li>
-                <div className={styles.left__options}>
+                <div
+                  className={styles.left__options}
+                  style={{ minWidth: "35px" }}
+                >
                   <DropDown listElem={OzItem} style={dropDownStyle} />
                 </div>
               </li>

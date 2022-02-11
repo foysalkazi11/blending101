@@ -56,3 +56,12 @@ export const INGREDIENTS_BY_CATEGORY_AND_CLASS = gql`
     }
   }
 `;
+
+export const BLEND_CATEGORY = gql`
+  query {
+    getAllCategories {
+      _id
+      name
+    }
+  }
+`;

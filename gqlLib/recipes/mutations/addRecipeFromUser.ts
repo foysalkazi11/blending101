@@ -1,12 +1,13 @@
 import { gql } from "@apollo/client";
 
 interface createNewRecipeFromUserInterface {
-  userId: string;
+  userId?: string;
   description?: string;
   ingredients?: any;
   image?: any;
-  recipeInstructions: any;
-  recipeName: string;
+  recipeInstructions?: any;
+  recipeName?: string;
+  SelecteApiParameter?: any;
 }
 
 export const CREATE_NEW_RECIPE_FROM_USER = ({
@@ -15,6 +16,7 @@ export const CREATE_NEW_RECIPE_FROM_USER = ({
   image,
   recipeInstructions,
   recipeName,
+  SelecteApiParameter,
 }: createNewRecipeFromUserInterface) => {
   const convertArrToString = (arr) => {
     arr = arr.map((itm) => {
@@ -57,7 +59,7 @@ export const CREATE_NEW_RECIPE_FROM_USER = ({
     let instructionArr = [];
     arr &&
       arr.map((elem, index) => {
-        console.log(elem);
+        // console.log(elem);
         instructionArr.push(`"${elem.step}"`);
       });
 
@@ -74,7 +76,7 @@ export const CREATE_NEW_RECIPE_FROM_USER = ({
      ingredients:${convertArrToString(ingredients)}
      image:${convertImageArrayToString(image)}
      recipeInstructions:${converInstructionToString(recipeInstructions)}
-
+     recipeBlendCategory:${JSON.stringify(SelecteApiParameter)}
    }){
      foodCategories
      recipeInstructions

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState ,useRef} from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styles from "./ingredientList&Howto.module.scss";
 import Image from "next/image";
 import AddSharpIcon from "../../../../../public/icons/add_black_36dp.svg";
@@ -22,17 +22,30 @@ import { useMutation } from "@apollo/client";
 type IngredientListPorps = {
   handleSubmitData?: () => void;
   uploadedImagesUrl?: any;
-  editRecipeHeading?:any;
+  editRecipeHeading?: any;
+  selectedBlendValueState?: any;
+  blendCategory?: any;
 };
 
 const IngredientList = ({
   handleSubmitData,
   uploadedImagesUrl,
-  editRecipeHeading
+  editRecipeHeading,
+  blendCategory,
+  selectedBlendValueState,
 }: IngredientListPorps) => {
   const dispatch = useAppDispatch();
 
-  const headingRef = useRef()
+  let SelecteApiParameter;
+  if (selectedBlendValueState) {
+    console.log(blendCategory);
+    console.log(selectedBlendValueState);
+    SelecteApiParameter = blendCategory.filter((v, i) =>
+      v.name.toLowerCase().includes(selectedBlendValueState)
+    );
+  }
+
+
   //variables for all states ==>start
   const quantity_number = useAppSelector(
     (state) => state.quantityAdjuster.quantityNum
@@ -51,10 +64,6 @@ const IngredientList = ({
     (state) => state.quantityAdjuster.howtoState
   );
 
-  const nutritionState = useAppSelector(
-    (state) => state.quantityAdjuster.nutritionState
-  );
-
   // variables for all states ==>ending
 
   // (mutation):"graphql api mutation - save recipe"
@@ -62,7 +71,7 @@ const IngredientList = ({
 
   const editText = () => {
     let value = editRecipeHeading?.current?.textContent;
-    console.log(value)
+    // console.log(value)
     return value;
   };
   // editText()
@@ -74,10 +83,12 @@ const IngredientList = ({
       image: uploadedImagesUrl,
       recipeInstructions: howToState,
       recipeName: editText(),
+      SelecteApiParameter: SelecteApiParameter ? SelecteApiParameter._id : "",
     })
   );
 
   const RecipeApiMutation = () => {
+
     let recipeList = [];
     const createRecipeApiFinalString = () => {
       let recipe = {};
@@ -486,7 +497,6 @@ const IngredientList = ({
       </div>
       <div className={styles.save__Recipe}>
         <div
-
           className={styles.save__Recipe__button}
           onClick={RecipeApiMutation}
         >
