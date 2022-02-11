@@ -48,7 +48,7 @@ const EditRecipePage = () => {
   const fetchAllBlendCategories = async () => {
     await getAllCategories();
     setblendCategory(blendCategoriesData?.getAllCategories);
-    setSelectedBlendValueState(blendCategoriesData?.getAllCategories[0]?.name)
+    setSelectedBlendValueState(blendCategoriesData?.getAllCategories[0]?.name);
   };
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const EditRecipePage = () => {
     }
   }, [blendCategoriesInProgress]);
 
-  console.log(selectedBlendValueState)
+  console.log(selectedBlendValueState);
 
   return (
     <AContainer>
