@@ -76,7 +76,6 @@ export const CREATE_NEW_RECIPE_FROM_USER = ({
      ingredients:${convertArrToString(ingredients)}
      image:${convertImageArrayToString(image)}
      recipeInstructions:${converInstructionToString(recipeInstructions)}
-     recipeBlendCategory:${JSON.stringify(SelecteApiParameter)}
    }){
      foodCategories
      recipeInstructions
