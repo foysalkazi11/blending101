@@ -35,7 +35,7 @@ type quantityState = {
 };
 
 const initialState: quantityState = {
-  quantityNum: 4,
+  quantityNum: 1,
   servingsNum: 1,
   ingredientName: "",
   ingredientsList: [],
