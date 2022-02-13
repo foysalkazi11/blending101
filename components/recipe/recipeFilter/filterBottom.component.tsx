@@ -7,7 +7,7 @@ import GET_RECIPES_BY_BLEND_AND_INGREDIENTS from "../../../gqlLib/recipes/querie
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setLoading } from "../../../redux/slices/utilitySlice";
 
-function FilterPageBottom({ blends, ingredients }) {
+function FilterPageBottom({ blends, ingredients, filters }) {
   const [recommended, setRecommended] = useState([]);
   const [getRecipesByBlendAndIngredients, { data, loading }] = useLazyQuery(
     GET_RECIPES_BY_BLEND_AND_INGREDIENTS,
