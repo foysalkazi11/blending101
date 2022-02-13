@@ -9,6 +9,10 @@ import OptionSelect from "../optionSelect/OptionSelect";
 import OptionSelectHeader from "../optionSelect/OptionSelectHeader";
 import NumericFilter from "../numericFilter/NumericFilter";
 import CheckboxOptions from "../checkboxOptions/CheckboxOptions";
+import {
+  activeFilter,
+  modifyFilter,
+} from "../../../../redux/slices/filterRecipeSlice";
 const { INGREDIENTS_BY_CATEGORY, TYPE, ALLERGIES, DIET, EQUIPMENT, DRUGS } =
   INGREDIENTS_FILTER;
 
@@ -36,30 +40,72 @@ const TagSection = ({ categories }: TagSectionProps) => {
   const { recipeFilterByIngredientCategory } = useAppSelector(
     (state) => state?.ingredients
   );
+
+  const { pageTitle, expandedMenu, activeTab, values } = useAppSelector(
+    (state) => state?.filterRecipe?.activeState
+  );
+
   const recipeFilterByCategroy = (categroy: string, child?: string) => {
     child = child || "";
-    dispatch(setRecipeFilterByIngredientCategory(categroy));
-    setChailIngredient(child);
+    categroy = categroy || "";
+    if (child === "Ingredient" || child === "Nutrition") {
+      dispatch(setRecipeFilterByIngredientCategory(child));
+      setChailIngredient(categroy);
+    } else {
+      dispatch(setRecipeFilterByIngredientCategory(categroy));
+      setChailIngredient(child);
+    }
+
+    dispatch(
+      activeFilter({
+        pageTitle: categroy,
+        expandedMenu: child,
+      })
+    );
   };
+
+  const optionSelectorHandler = (chip: string) => {
+    let data = [];
+    if (values.includes(chip)) {
+      data = values.filter((value) => value !== chip);
+    } else {
+      data = [...values, chip];
+    }
+    dispatch(
+      modifyFilter({
+        pageTitle: pageTitle,
+        expandedMenu,
+        activeTab,
+        values: data,
+        isMultiprops: true,
+        prefix: pageTitle,
+      })
+    );
+  };
+
   return (
     <div className={styles.tagSectionContainer}>
       {recipeFilterByIngredientCategory ? (
         <>
-          <OptionSelectHeader />
+          <OptionSelectHeader pageTitle={pageTitle} />
           {recipeFilterByIngredientCategory === "Type" ||
           "Ingredient" ||
           "Diet" ||
           "Allergies" ||
           "Equipment" ||
           "Drugs" ? (
-            <OptionSelect childIngredient={childIngredient} />
+            <OptionSelect
+              childIngredient={childIngredient}
+              values={values}
+              onSelect={optionSelectorHandler}
+            />
           ) : null}
 
           {recipeFilterByIngredientCategory === "Nutrition" ? (
             <NumericFilter childIngredient={childIngredient} />
           ) : null}
           {recipeFilterByIngredientCategory === "Collection" || "Dynamic" ? (
-            <CheckboxOptions />
+            <CheckboxOptions values={values} onSelect={optionSelectorHandler} />
           ) : null}
         </>
       ) : (
@@ -80,7 +126,7 @@ const TagSection = ({ categories }: TagSectionProps) => {
                         className={styles.singleItemInside}
                         key={index}
                         onClick={() =>
-                          recipeFilterByCategroy("Ingredient", item?.title)
+                          recipeFilterByCategroy(item?.title, "Ingredient")
                         }
                       >
                         <h5>{item?.title}</h5>
@@ -97,7 +143,7 @@ const TagSection = ({ categories }: TagSectionProps) => {
                     <div
                       className={styles.singleItemInside}
                       key={index}
-                      onClick={() => recipeFilterByCategroy("Nutrition", item)}
+                      onClick={() => recipeFilterByCategroy(item, "Nutrition")}
                     >
                       <h5>{item}</h5>
                     </div>

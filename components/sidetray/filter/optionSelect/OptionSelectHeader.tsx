@@ -1,10 +1,15 @@
 import React from "react";
 import { BsArrowRepeat, BsChevronLeft } from "react-icons/bs";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import { resetFilterValue } from "../../../../redux/slices/filterRecipeSlice";
 import { setRecipeFilterByIngredientCategory } from "../../../../redux/slices/ingredientsSlice";
 import styles from "./OptionSelect.module.scss";
 
-const OptionSelectHeader = () => {
+type OptionSelectHeaderProps = {
+  pageTitle?: string;
+};
+
+const OptionSelectHeader = ({ pageTitle }: OptionSelectHeaderProps) => {
   const dispatch = useAppDispatch();
   const { recipeFilterByIngredientCategory } = useAppSelector(
     (state) => state.ingredients
@@ -19,9 +24,14 @@ const OptionSelectHeader = () => {
           >
             <BsChevronLeft />
           </div>
-          <h3>{recipeFilterByIngredientCategory}</h3>
+          <h3>{pageTitle}</h3>
         </div>
-        <BsArrowRepeat />
+        <div
+          className={styles.rightSide}
+          onClick={() => dispatch(resetFilterValue({ pageTitle }))}
+        >
+          <BsArrowRepeat />
+        </div>
       </div>
       <input className={styles.optionSelectInput} placeholder="Search" />
     </div>

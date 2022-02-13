@@ -47,6 +47,7 @@ const RecipeDetails = () => {
   const { latest, popular, recommended } = useAppSelector(
     (state) => state?.recipe
   );
+  const { filters } = useAppSelector((state) => state?.filterRecipe);
   const [getAllRecommendedRecipes] = useLazyQuery(GET_ALL_RECOMMENDED_RECIPES);
   const [getAllPopularRecipes] = useLazyQuery(GET_ALL_POPULAR_RECIPES);
   const [getAllLatestRecipes] = useLazyQuery(GET_ALL_LATEST_RECIPES);
@@ -92,8 +93,12 @@ const RecipeDetails = () => {
           <SearchtagsComponent />
           {collectionDetailsId || showAllRecipes ? (
             <ShowCollectionRecipes />
-          ) : blends.length || ingredients.length ? (
-            <FilterPageBottom blends={blends} ingredients={ingredients} />
+          ) : blends.length || ingredients.length || filters?.length ? (
+            <FilterPageBottom
+              blends={blends}
+              ingredients={ingredients}
+              filters={filters}
+            />
           ) : (
             <div className={styles.bottom}>
               <AppdownLoadCard />
