@@ -6,19 +6,10 @@ import ContentTray from "./ContentTray/ContentTray.component";
 import DatacardComponent from "../cards/dataCard/dataCard.component";
 import SearchBar from "./searchBar/SearchBar.component";
 import SearchtagsComponent from "../../components/searchtags/searchtags.component";
-import {
-  FETCH_RECOMMENDED_RECIPES,
-  FETCH_POPULAR_RECIPES,
-  FETCH_LATEST_RECIPES,
-} from "../../gqlLib/recipes/queries/fetchRecipes";
-import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import FilterPageBottom from "../../components/recipe/recipeFilter/filterBottom.component";
 import FooterRecipeFilter from "../../components/footer/footerRecipeFilter.component";
-import {
-  setAllRecipeWithinCollectionsId,
-  setChangeRecipeWithinCollection,
-} from "../../redux/slices/collectionSlice";
+import { setChangeRecipeWithinCollection } from "../../redux/slices/collectionSlice";
 import {
   setOpenCollectionsTary,
   setToggleSaveRecipeModal,
@@ -37,9 +28,6 @@ import {
 } from "../../redux/slices/recipeSlice";
 
 const RecipeDetails = () => {
-  // const [recommended, setRecommended] = useState([]);
-  // const [popular, setPopular] = useState([]);
-  // const [latest, setLatest] = useState([]);
   const { blends, ingredients } = useAppSelector((state) => state.sideTray);
   const { dbUser, user } = useAppSelector((state) => state?.user);
   const { lastModifiedCollection, collectionDetailsId, showAllRecipes } =
@@ -80,7 +68,6 @@ const RecipeDetails = () => {
     if (user) {
       getAllRecipes();
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
