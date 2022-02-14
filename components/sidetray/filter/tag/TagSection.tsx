@@ -13,6 +13,7 @@ import {
   activeFilter,
   modifyFilter,
 } from "../../../../redux/slices/filterRecipeSlice";
+import Multiselect from "../multiSelect/MultiSelect";
 const { INGREDIENTS_BY_CATEGORY, TYPE, ALLERGIES, DIET, EQUIPMENT, DRUGS } =
   INGREDIENTS_FILTER;
 
@@ -89,11 +90,10 @@ const TagSection = ({ categories }: TagSectionProps) => {
         <>
           <OptionSelectHeader pageTitle={pageTitle} />
           {recipeFilterByIngredientCategory === "Type" ||
-          "Ingredient" ||
-          "Diet" ||
-          "Allergies" ||
-          "Equipment" ||
-          "Drugs" ? (
+          recipeFilterByIngredientCategory === "Ingredient" ||
+          recipeFilterByIngredientCategory === "Diet" ||
+          recipeFilterByIngredientCategory === "Allergies" ||
+          recipeFilterByIngredientCategory === "Equipment" ? (
             <OptionSelect
               childIngredient={childIngredient}
               values={values}
@@ -101,11 +101,22 @@ const TagSection = ({ categories }: TagSectionProps) => {
             />
           ) : null}
 
-          {recipeFilterByIngredientCategory === "Nutrition" ? (
+          {recipeFilterByIngredientCategory === "Nutrition" ||
+          recipeFilterByIngredientCategory === "Price" ? (
             <NumericFilter childIngredient={childIngredient} />
           ) : null}
-          {recipeFilterByIngredientCategory === "Collection" || "Dynamic" ? (
+          {recipeFilterByIngredientCategory === "Collection" ||
+          recipeFilterByIngredientCategory === "Dynamic" ? (
             <CheckboxOptions values={values} onSelect={optionSelectorHandler} />
+          ) : null}
+          {recipeFilterByIngredientCategory === "Drugs" ? (
+            <Multiselect
+              placeholder="Select Drugs"
+              options={DRUGS}
+              values={values}
+              onSelect={optionSelectorHandler}
+              onDelete={optionSelectorHandler}
+            />
           ) : null}
         </>
       ) : (
