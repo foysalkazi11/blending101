@@ -117,6 +117,12 @@ export const filterRecipeSlice = createSlice({
           filterIndex
         ].values.filter((value) => value !== action.payload.value);
 
+        const filterProps = state.filters.find(
+          (filter) => filter.pageTitle === action.payload.pageTitle
+        );
+
+        state.activeState.values = filterProps ? filterProps.values : [];
+
         // If the filters value is null then removing the whole filter value.
         if (state.filters[filterIndex].values.length === 0)
           state.filters.splice(filterIndex, 1);
