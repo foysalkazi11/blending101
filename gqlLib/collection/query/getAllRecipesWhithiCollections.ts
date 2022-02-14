@@ -17,13 +17,6 @@ const GET_ALL_RECIPES_WITHIN_COLLECTIONS = gql`
       recipeIngredients
       recipeInstructions
       recipeCuisines
-      ingredients {
-        ingredientId
-        portion {
-          measurement
-          meausermentWeight
-        }
-      }
       url
       discovery
       favicon
