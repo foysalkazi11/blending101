@@ -28,7 +28,7 @@ const recipeSliderImage = [
 let BlendtecItem = ["Blendtec", "Blendtec"];
 let ozItem = ["64 oz", "64 oz"];
 
-const Center = () => {
+const Center = ({ recipeData }) => {
   const [counter, setCounter] = useState(1);
   const dispatch = useAppDispatch();
   const [showRecipeModal, setShowRecipeModal] = useState(true);
@@ -54,29 +54,35 @@ const Center = () => {
   };
 
   const ReadMore = ({ children }) => {
-    const text = children.toString();
+    const text = children;
     const [isReadMore, setIsReadMore] = useState(true);
     const toggleReadMore = () => {
       setIsReadMore(!isReadMore);
     };
-    return (
-      <p className={styles.text}>
-        {isReadMore ? text.slice(0, 300) : text},
-        <span onClick={toggleReadMore} className={styles.read_or_hide}>
-          {isReadMore ? (
-            <span>&nbsp; {"Read More"}</span>
-          ) : (
-            <span>&nbsp; {"Read Less"}</span>
-          )}
-        </span>
-      </p>
-    );
+    if (text?.length > 300) {
+      return (
+        <p className={styles.text}>
+          {isReadMore ? text.slice(0, 300) : text},
+          <span onClick={toggleReadMore} className={styles.read_or_hide}>
+            {isReadMore ? (
+              <span>&nbsp; {"Read More"}</span>
+            ) : (
+              <span>&nbsp; {"Read Less"}</span>
+            )}
+          </span>
+        </p>
+      );
+    } else {
+      return <p className={styles.text}>{text}</p>;
+    }
   };
 
   const responsiveSetting = {
     nextArrow: <NextButton />,
     prevArrow: <PreviousButton />,
   };
+
+  console.log(recipeData?.getARecipe);
   return (
     <div>
       <div className={styles.header}>
@@ -96,7 +102,7 @@ const Center = () => {
 
       <div className={styles.contentBox}>
         <div className={styles.heading}>
-          <h3>Red Hots Smoothie</h3>
+          <h3>{recipeData?.getARecipe?.name}</h3>
           <span className={styles.ratingBox}>
             <img src="/images/rating.svg" alt="" />
             4.9 (71)
@@ -146,10 +152,10 @@ const Center = () => {
 
         <div className={styles.sliderBox}>
           <SlickSlider moreSetting={responsiveSetting}>
-            {recipeSliderImage?.map((img, index) => {
+            {recipeData?.getARecipe?.image.map((img, index) => {
               return (
                 <div key={index} className={styles.imageBox}>
-                  <img src={img} alt="recipe_image" />
+                  <img src={img.image} alt="recipe_image" />
                 </div>
               );
             })}
@@ -174,16 +180,7 @@ const Center = () => {
 
         <div>
           <ReadMore>
-            Contrary to popular belief, Lorem Ipsum is not simply random text.
-            It has roots in a piece of classical Latin literature from 45 BC,
-            making it over 2000 years old. Richard McClintock, a Latin professor
-            at Hampden-Sydney College in Virginia, looked up one of the more
-            obscure Latin words, consectetur, from a Lorem Ipsum passage, and
-            going through the cites of the word in classical literature,
-            discovered the undoubtable source. Lorem Ipsum comes from sections
-            by Cicero are also reproduced in their exact original form,
-            accompanied by English versions from the 1914 translation by H.
-            Rackham. asfhajffuu faakl
+            {}
           </ReadMore>
         </div>
 
@@ -203,7 +200,7 @@ const Center = () => {
           <div style={{ flex: 1 }} className={styles.timeBox}>
             <img src="/images/time-icon.svg" alt="time-icon" />
             <p>
-              Prep: <span>5 Min</span>{" "}
+              Prep: <span>{recipeData?.getARecipe?.prepTime}</span>
             </p>
           </div>
         </div>
