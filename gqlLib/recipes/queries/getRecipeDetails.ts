@@ -1,9 +1,23 @@
 import { gql } from "@apollo/client";
 
 export const GET_RECIPE = gql`
-  query GetARecipe($ingredientId:String!){
-    getARecipe(recipeId: "620654ab4b75758e00c4e90c") {
+  query GetARecipe($recipeId: String!) {
+    getARecipe(recipeId: $recipeId) {
       name
+      prepTime
+      description
+      recipeIngredients
+      recipeInstructions
+      recipeBlendCategory {
+        name
+      }
+      ingredients {
+        selectedPortion {
+          name
+          quantity
+          gram
+        }
+      }
       image {
         image
         default
