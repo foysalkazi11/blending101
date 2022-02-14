@@ -11,8 +11,6 @@ import Image from "next/image";
 import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
 import { useAppDispatch } from "../../../redux/hooks";
 import { setLoading } from "../../../redux/slices/utilitySlice";
-import S3_CONFIG from "../../../configs/s3";
-import axios from "axios";
 import imageUploadS3 from "../../utility/imageUploadS3";
 import { BLEND_CATEGORY } from "../../../gqlLib/recipes/queries/getEditRecipe";
 import { useLazyQuery } from "@apollo/client";

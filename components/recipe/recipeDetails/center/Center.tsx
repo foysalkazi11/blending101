@@ -28,7 +28,7 @@ const recipeSliderImage = [
 let BlendtecItem = ["Blendtec", "Blendtec"];
 let ozItem = ["64 oz", "64 oz"];
 
-const Center = () => {
+const Center = ({ recipeData }) => {
   const [counter, setCounter] = useState(1);
   const dispatch = useAppDispatch();
   const [showRecipeModal, setShowRecipeModal] = useState(true);
@@ -54,29 +54,35 @@ const Center = () => {
   };
 
   const ReadMore = ({ children }) => {
-    const text = children.toString();
+    const text = children;
     const [isReadMore, setIsReadMore] = useState(true);
     const toggleReadMore = () => {
       setIsReadMore(!isReadMore);
     };
-    return (
-      <p className={styles.text}>
-        {isReadMore ? text.slice(0, 300) : text},
-        <span onClick={toggleReadMore} className={styles.read_or_hide}>
-          {isReadMore ? (
-            <span>&nbsp; {"Read More"}</span>
-          ) : (
-            <span>&nbsp; {"Read Less"}</span>
-          )}
-        </span>
-      </p>
-    );
+    if (text?.length > 300) {
+      return (
+        <p className={styles.text}>
+          {isReadMore ? text.slice(0, 300) : text},
+          <span onClick={toggleReadMore} className={styles.read_or_hide}>
+            {isReadMore ? (
+              <span>&nbsp; {"Read More"}</span>
+            ) : (
+              <span>&nbsp; {"Read Less"}</span>
+            )}
+          </span>
+        </p>
+      );
+    } else {
+      return <p className={styles.text}>{text}</p>;
+    }
   };
 
   const responsiveSetting = {
     nextArrow: <NextButton />,
     prevArrow: <PreviousButton />,
   };
+
+  console.log(recipeData?.getARecipe);
   return (
     <div>
       <div className={styles.header}>
@@ -96,7 +102,7 @@ const Center = () => {
 
       <div className={styles.contentBox}>
         <div className={styles.heading}>
-          <h3>Red Hots Smoothie</h3>
+          <h3>{recipeData?.getARecipe?.name}</h3>
           <span className={styles.ratingBox}>
             <img src="/images/rating.svg" alt="" />
             4.9 (71)
@@ -145,15 +151,17 @@ const Center = () => {
         </div>
 
         <div className={styles.sliderBox}>
-          <SlickSlider moreSetting={responsiveSetting}>
-            {recipeSliderImage?.map((img, index) => {
-              return (
-                <div key={index} className={styles.imageBox}>
-                  <img src={img} alt="recipe_image" />
-                </div>
-              );
-            })}
-          </SlickSlider>
+          {recipeData?.getARecipe?.image && (
+            <SlickSlider moreSetting={responsiveSetting}>
+              {recipeData?.getARecipe?.image.map((img, index) => {
+                return (
+                  <div key={index} className={styles.imageBox}>
+                    <img src={img.image} alt="recipe_image" />
+                  </div>
+                );
+              })}
+            </SlickSlider>
+          )}
         </div>
 
         <div className={styles.infoContainer}>
@@ -173,18 +181,7 @@ const Center = () => {
         </div>
 
         <div>
-          <ReadMore>
-            Contrary to popular belief, Lorem Ipsum is not simply random text.
-            It has roots in a piece of classical Latin literature from 45 BC,
-            making it over 2000 years old. Richard McClintock, a Latin professor
-            at Hampden-Sydney College in Virginia, looked up one of the more
-            obscure Latin words, consectetur, from a Lorem Ipsum passage, and
-            going through the cites of the word in classical literature,
-            discovered the undoubtable source. Lorem Ipsum comes from sections
-            by Cicero are also reproduced in their exact original form,
-            accompanied by English versions from the 1914 translation by H.
-            Rackham. asfhajffuu faakl
-          </ReadMore>
+          <ReadMore>{recipeData?.getARecipe?.description}</ReadMore>
         </div>
 
         <div className={styles.dropDownContainer}>
@@ -203,7 +200,7 @@ const Center = () => {
           <div style={{ flex: 1 }} className={styles.timeBox}>
             <img src="/images/time-icon.svg" alt="time-icon" />
             <p>
-              Prep: <span>5 Min</span>{" "}
+              Prep: <span>{recipeData?.getARecipe?.prepTime}</span>
             </p>
           </div>
         </div>
@@ -248,72 +245,25 @@ const Center = () => {
           </div>
         </div>
         <div className={styles.ingredentDisContainer}>
-          <div className={styles.singleIngredent}>
-            <div className={styles.leftSide}>
-              <img src="/images/5-2-avocado-png-hd.png" alt="icon" />
-              <p>1 medium Avocado</p>
-            </div>
-            <div className={styles.iconGroup}>
-              <MdOutlineInfo className={styles.icon} />
-              <BiBarChart className={styles.icon} />
-              <BsCartPlus className={styles.icon} />
-            </div>
-          </div>
-          <div className={styles.singleIngredent}>
-            <div className={styles.leftSide}>
-              <img src="/images/Swiss-Chard-PNG-Photo.png" alt="icon" />
-              <p>2 cups Swiss Chard, cut up</p>
-            </div>
-            <div className={styles.iconGroup}>
-              <MdOutlineInfo className={styles.icon} />
-              <BiBarChart className={styles.icon} />
-              <BsCartPlus className={styles.icon} />
-            </div>
-          </div>
-          <div className={styles.singleIngredent}>
-            <div className={styles.leftSide}>
-              <img src="/images/apple_PNG12405.png" alt="icon" />
-              <p>1 whole Apple</p>
-            </div>
-            <div className={styles.iconGroup}>
-              <MdOutlineInfo className={styles.icon} />
-              <BiBarChart className={styles.icon} />
-              <BsCartPlus className={styles.icon} />
-            </div>
-          </div>
-          <div className={styles.singleIngredent}>
-            <div className={styles.leftSide}>
-              <img src="/images/5-2-avocado-png-hd.png" alt="icon" />
-              <p>1 medium Avocado</p>
-            </div>
-            <div className={styles.iconGroup}>
-              <MdOutlineInfo className={styles.icon} />
-              <BiBarChart className={styles.icon} />
-              <BsCartPlus className={styles.icon} />
-            </div>
-          </div>
-          <div className={styles.singleIngredent}>
-            <div className={styles.leftSide}>
-              <img src="/images/Swiss-Chard-PNG-Photo.png" alt="icon" />
-              <p>2 cups Swiss Chard, cut up</p>
-            </div>
-            <div className={styles.iconGroup}>
-              <MdOutlineInfo className={styles.icon} />
-              <BiBarChart className={styles.icon} />
-              <BsCartPlus className={styles.icon} />
-            </div>
-          </div>
-          <div className={styles.singleIngredent}>
-            <div className={styles.leftSide}>
-              <img src="/images/apple_PNG12405.png" alt="icon" />
-              <p>1 whole Apple</p>
-            </div>
-            <div className={styles.iconGroup}>
-              <MdOutlineInfo className={styles.icon} />
-              <BiBarChart className={styles.icon} />
-              <BsCartPlus className={styles.icon} />
-            </div>
-          </div>
+          {recipeData?.getARecipe?.ingredients &&
+            recipeData?.getARecipe?.ingredients?.map((ingredient, index) => {
+              return (
+                <div
+                  className={styles.singleIngredent}
+                  key={index + "ingredients_recipeDetails"}
+                >
+                  <div className={styles.leftSide}>
+                    <img src="/images/5-2-avocado-png-hd.png" alt="icon" />
+                    <p>{`${ingredient.selectedPortion.quantity} ${ingredient.selectedPortion.name}`}</p>
+                  </div>
+                  <div className={styles.iconGroup}>
+                    <MdOutlineInfo className={styles.icon} />
+                    <BiBarChart className={styles.icon} />
+                    <BsCartPlus className={styles.icon} />
+                  </div>
+                </div>
+              );
+            })}
         </div>
       </div>
       <div className={styles.ingredentContainer}>
@@ -321,20 +271,18 @@ const Center = () => {
           <img src="/images/chef.svg" alt="basket" />
           <h3>How to</h3>
         </div>
-        <div className={styles.steps}>
-          <span>Step 1</span>
-          <p>
-            Add ingredients to a blender (in the order listed above) and blend
-            to combine.
-          </p>
-        </div>
-        <div className={styles.steps}>
-          <span>Step 1</span>
-          <p>
-            Add ingredients to a blender (in the order listed above) and blend
-            to combine.
-          </p>
-        </div>
+        {recipeData?.getARecipe?.recipeInstructions &&
+          recipeData?.getARecipe?.recipeInstructions?.map((step, index) => {
+            return (
+              <div
+                className={styles.steps}
+                key={index + "recipeInstruction__recipeDetails"}
+              >
+                <span>Step {index + 1}</span>
+                <p>{step}</p>
+              </div>
+            );
+          })}
       </div>
       <Modal contentStyle={{ borderRadius: "29px" }}>
         {showRecipeModal ? <ShareRecipeModal /> : <SaveRecipe />}
