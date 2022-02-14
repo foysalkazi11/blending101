@@ -28,7 +28,7 @@ const OptionSelect = ({
     Diet: DIET,
     Allergies: ALLERGIES,
     Equipment: EQUIPMENT,
-    Drugs: DRUGS,
+
     Ingredient:
       childIngredient === "All"
         ? allIngredients?.map((item) => item?.ingredientName)

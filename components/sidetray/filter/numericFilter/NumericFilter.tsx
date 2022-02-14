@@ -25,8 +25,6 @@ const NumericFilter = ({
   const [endCounter, setEndCounter] = useState(0);
   const [tabValue, setTabValue] = useState(activeTab || "less than");
 
-  // const [activeTab, setActiveTab] = useState<string | number>("less than");
-  const [inputValue, setInputValue] = useState(0);
   const [lessThanInput, setLessThanInput] = useState(0);
   const [greaterThanInput, setGreaterThanInput] = useState(0);
   const [startFormInput, setStartFormInput] = useState(0);
@@ -65,7 +63,6 @@ const NumericFilter = ({
     value: number,
     title: "Less Than" | "Start" | "End" | "Greater Than"
   ) => {
-    console.log(value, title);
     const titleType = pageTitle;
     let values = "";
     let tabMenu = "";
@@ -89,7 +86,7 @@ const NumericFilter = ({
       setEndFormInput(0)
     } 
     else if (title === 'Start') {
-      values = `${value} < ${titleType} > ${endCounter}`;
+      values = `${value} < ${titleType} < ${endCounter}`;
       tabMenu = 'between';
       range = [value, endCounter]
       setStartCounter(value);
@@ -99,7 +96,7 @@ const NumericFilter = ({
       
     }
     else if (title === 'End') {
-      values = `${startCounter} < ${titleType} > ${value}`;
+      values = `${startCounter} < ${titleType} < ${value}`;
       tabMenu = 'between';
       range = [startCounter, value]
       setEndCounter(value);
@@ -180,13 +177,7 @@ const NumericFilter = ({
         </div>
       ) : null}
       {tabValue === "between" ? (
-        <div
-          style={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
+        <div className={styles.counterBetween}>
           <div className={styles.counterContainer}>
             <div
               className={styles.counterButton}
