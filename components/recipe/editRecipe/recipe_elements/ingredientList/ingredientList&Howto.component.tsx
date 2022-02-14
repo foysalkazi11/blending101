@@ -38,8 +38,6 @@ const IngredientList = ({
 
   let SelecteApiParameter;
   if (selectedBlendValueState) {
-    console.log(blendCategory);
-    console.log(selectedBlendValueState);
     SelecteApiParameter = blendCategory.filter((v, i) =>
       v.name.toLowerCase().includes(selectedBlendValueState)
     );
@@ -89,6 +87,7 @@ const IngredientList = ({
 
   const RecipeApiMutation = () => {
 
+    handleSubmitData();
     let recipeList = [];
     const createRecipeApiFinalString = () => {
       let recipe = {};
@@ -113,11 +112,11 @@ const IngredientList = ({
       });
       setRecipeApi(recipeList);
     };
-    createRecipeApiFinalString();
 
     const addrecipeFunc = async () => {
       try {
         const { data } = await addRecipeRecipeFromUser();
+        createRecipeApiFinalString();
         console.log(data);
       } catch (error) {
         console.log(error);
@@ -505,7 +504,6 @@ const IngredientList = ({
             style={{}}
             fullWidth={true}
             value="Save Recipe"
-            handleClick={handleSubmitData}
           />
         </div>
       </div>
