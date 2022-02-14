@@ -151,15 +151,17 @@ const Center = ({ recipeData }) => {
         </div>
 
         <div className={styles.sliderBox}>
-          <SlickSlider moreSetting={responsiveSetting}>
-            {recipeData?.getARecipe?.image.map((img, index) => {
-              return (
-                <div key={index} className={styles.imageBox}>
-                  <img src={img.image} alt="recipe_image" />
-                </div>
-              );
-            })}
-          </SlickSlider>
+          {recipeData?.getARecipe?.image && (
+            <SlickSlider moreSetting={responsiveSetting}>
+              {recipeData?.getARecipe?.image.map((img, index) => {
+                return (
+                  <div key={index} className={styles.imageBox}>
+                    <img src={img.image} alt="recipe_image" />
+                  </div>
+                );
+              })}
+            </SlickSlider>
+          )}
         </div>
 
         <div className={styles.infoContainer}>
@@ -179,9 +181,7 @@ const Center = ({ recipeData }) => {
         </div>
 
         <div>
-          <ReadMore>
-            {}
-          </ReadMore>
+          <ReadMore>{recipeData?.getARecipe?.description}</ReadMore>
         </div>
 
         <div className={styles.dropDownContainer}>
@@ -245,72 +245,25 @@ const Center = ({ recipeData }) => {
           </div>
         </div>
         <div className={styles.ingredentDisContainer}>
-          <div className={styles.singleIngredent}>
-            <div className={styles.leftSide}>
-              <img src="/images/5-2-avocado-png-hd.png" alt="icon" />
-              <p>1 medium Avocado</p>
-            </div>
-            <div className={styles.iconGroup}>
-              <MdOutlineInfo className={styles.icon} />
-              <BiBarChart className={styles.icon} />
-              <BsCartPlus className={styles.icon} />
-            </div>
-          </div>
-          <div className={styles.singleIngredent}>
-            <div className={styles.leftSide}>
-              <img src="/images/Swiss-Chard-PNG-Photo.png" alt="icon" />
-              <p>2 cups Swiss Chard, cut up</p>
-            </div>
-            <div className={styles.iconGroup}>
-              <MdOutlineInfo className={styles.icon} />
-              <BiBarChart className={styles.icon} />
-              <BsCartPlus className={styles.icon} />
-            </div>
-          </div>
-          <div className={styles.singleIngredent}>
-            <div className={styles.leftSide}>
-              <img src="/images/apple_PNG12405.png" alt="icon" />
-              <p>1 whole Apple</p>
-            </div>
-            <div className={styles.iconGroup}>
-              <MdOutlineInfo className={styles.icon} />
-              <BiBarChart className={styles.icon} />
-              <BsCartPlus className={styles.icon} />
-            </div>
-          </div>
-          <div className={styles.singleIngredent}>
-            <div className={styles.leftSide}>
-              <img src="/images/5-2-avocado-png-hd.png" alt="icon" />
-              <p>1 medium Avocado</p>
-            </div>
-            <div className={styles.iconGroup}>
-              <MdOutlineInfo className={styles.icon} />
-              <BiBarChart className={styles.icon} />
-              <BsCartPlus className={styles.icon} />
-            </div>
-          </div>
-          <div className={styles.singleIngredent}>
-            <div className={styles.leftSide}>
-              <img src="/images/Swiss-Chard-PNG-Photo.png" alt="icon" />
-              <p>2 cups Swiss Chard, cut up</p>
-            </div>
-            <div className={styles.iconGroup}>
-              <MdOutlineInfo className={styles.icon} />
-              <BiBarChart className={styles.icon} />
-              <BsCartPlus className={styles.icon} />
-            </div>
-          </div>
-          <div className={styles.singleIngredent}>
-            <div className={styles.leftSide}>
-              <img src="/images/apple_PNG12405.png" alt="icon" />
-              <p>1 whole Apple</p>
-            </div>
-            <div className={styles.iconGroup}>
-              <MdOutlineInfo className={styles.icon} />
-              <BiBarChart className={styles.icon} />
-              <BsCartPlus className={styles.icon} />
-            </div>
-          </div>
+          {recipeData?.getARecipe?.ingredients &&
+            recipeData?.getARecipe?.ingredients?.map((ingredient, index) => {
+              return (
+                <div
+                  className={styles.singleIngredent}
+                  key={index + "ingredients_recipeDetails"}
+                >
+                  <div className={styles.leftSide}>
+                    <img src="/images/5-2-avocado-png-hd.png" alt="icon" />
+                    <p>{`${ingredient.selectedPortion.quantity} ${ingredient.selectedPortion.name}`}</p>
+                  </div>
+                  <div className={styles.iconGroup}>
+                    <MdOutlineInfo className={styles.icon} />
+                    <BiBarChart className={styles.icon} />
+                    <BsCartPlus className={styles.icon} />
+                  </div>
+                </div>
+              );
+            })}
         </div>
       </div>
       <div className={styles.ingredentContainer}>
@@ -318,20 +271,18 @@ const Center = ({ recipeData }) => {
           <img src="/images/chef.svg" alt="basket" />
           <h3>How to</h3>
         </div>
-        <div className={styles.steps}>
-          <span>Step 1</span>
-          <p>
-            Add ingredients to a blender (in the order listed above) and blend
-            to combine.
-          </p>
-        </div>
-        <div className={styles.steps}>
-          <span>Step 1</span>
-          <p>
-            Add ingredients to a blender (in the order listed above) and blend
-            to combine.
-          </p>
-        </div>
+        {recipeData?.getARecipe?.recipeInstructions &&
+          recipeData?.getARecipe?.recipeInstructions?.map((step, index) => {
+            return (
+              <div
+                className={styles.steps}
+                key={index + "recipeInstruction__recipeDetails"}
+              >
+                <span>Step {index + 1}</span>
+                <p>{step}</p>
+              </div>
+            );
+          })}
       </div>
       <Modal contentStyle={{ borderRadius: "29px" }}>
         {showRecipeModal ? <ShareRecipeModal /> : <SaveRecipe />}

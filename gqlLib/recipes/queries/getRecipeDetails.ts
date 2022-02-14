@@ -6,6 +6,18 @@ export const GET_RECIPE = gql`
       name
       prepTime
       description
+      recipeIngredients
+      recipeInstructions
+      recipeBlendCategory {
+        name
+      }
+      ingredients {
+        selectedPortion {
+          name
+          quantity
+          gram
+        }
+      }
       image {
         image
         default

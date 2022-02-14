@@ -13,13 +13,11 @@ const Index = () => {
   const fetchRecipe = () => {
     getARecipe();
     if (!recipeData) return;
-
   };
   useEffect(() => {
     fetchRecipe();
   }, []);
-  return <RecipeDetails recipeData={recipeData}/>;
+  return <RecipeDetails recipeData={recipeData} />;
 };
-
 
 export default Index;
