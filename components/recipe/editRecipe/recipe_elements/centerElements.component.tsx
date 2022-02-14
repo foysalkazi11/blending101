@@ -7,9 +7,6 @@ import Image from "next/image";
 import { setQuantity } from "../../../../redux/edit_recipe/quantity";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import DropDown from "../../../../theme/dropDown/DropDown.component";
-import { useLazyQuery } from "@apollo/client";
-import { BLEND_CATEGORY } from "../../../../gqlLib/recipes/queries/getEditRecipe";
-
 type CenterElementsProps = {
   setImages?: Dispatch<SetStateAction<any[]>>;
   editRecipeHeading?: any;

@@ -1,31 +1,27 @@
 import React from "react";
 import styles from "../header.module.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faFacebookF,
-  faInstagram,
-  faPinterestP,
-  faYoutube,
-  faTwitter,
-} from "@fortawesome/free-brands-svg-icons";
+import {SiInstagram} from 'react-icons/si';
+import {FaPinterestP,FaTwitter,FaFacebookF,FaYoutube} from 'react-icons/fa';
+
+
 
 export default function SocialComponent(props) {
   return (
     <div className={styles.social}>
       <div className={styles.social__child}>
-        <FontAwesomeIcon icon={faFacebookF} />
+        <FaFacebookF/>
       </div>
       <div className={styles.social__child}>
-        <FontAwesomeIcon icon={faInstagram} />
+        <SiInstagram/>
       </div>
       <div className={styles.social__child}>
-        <FontAwesomeIcon icon={faPinterestP} />
+        <FaPinterestP/>
       </div>
       <div className={styles.social__child}>
-        <FontAwesomeIcon icon={faYoutube} />
+        <FaYoutube/>
       </div>
       <div className={styles.social__child}>
-        <FontAwesomeIcon icon={faTwitter} />
+        <FaTwitter/>
       </div>
     </div>
   );
