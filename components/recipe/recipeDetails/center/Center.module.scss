@@ -140,9 +140,12 @@
 
   .imageBox {
     width: 100%;
-    max-height: 285px;
+    min-height: 220px;
+    position: relative;
+    max-height: 185px;
     border-radius: 15px;
     overflow: hidden;
+
     img {
       width: 100%;
       height: 100%;
@@ -151,7 +154,7 @@
       overflow: hidden;
     }
 
-    &:focus{
+    &:focus {
       outline: none;
     }
   }
@@ -366,7 +369,11 @@
       margin: 0;
       color: #c4c4c4;
       font-size: 15px;
-      margin-right: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-width: 75px;
+      margin-right: 12px;
     }
 
     .count {
@@ -396,10 +403,11 @@
       input {
         border: none;
         outline: none;
-        width: 35px;
-        padding: 0px 5px;
-        font-size: 20px;
+        width: 30px;
+        font-size: 18px;
         font-weight: bold;
+        text-align: center;
+        margin: 0px 5px;
       }
 
       input[type="number"]::-webkit-inner-spin-button,
@@ -413,6 +421,7 @@
     display: flex;
     align-items: center;
     flex: 1;
+    margin-left: 15px;
 
     p {
       margin: 0;
@@ -422,7 +431,7 @@
     }
 
     span {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: bold;
     }
   }
@@ -431,13 +440,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    flex: 1;
+    margin-left:10px;
 
     p {
       margin: 0;
       color: #c4c4c4;
       font-size: 15px;
-      margin-right: 15px;
     }
 
     span {
