@@ -71,7 +71,7 @@ const LeftSide = () => {
         <img src="/images/telescope.svg" alt="bar icon" />
         <h3>Related</h3>
       </div>
-      {windowSize?.width >= 1290 ? (
+      {windowSize?.width >= 1400 ? (
         recommendedList.map((cardData, index) => {
           return (
             <div key={index} style={{ paddingBottom: "10px" }}>
