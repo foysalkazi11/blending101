@@ -44,7 +44,7 @@ export default function LeftTrayWrapper({
           </div>
         ) : filter ? null : (
           <div
-            className={styles.image + " " + styles.image__white}
+            className={styles.imageContained + " " + styles.image__white}
             onClick={handleClick}
           >
             <img src="/icons/left__drawer.svg" alt="drawer" />

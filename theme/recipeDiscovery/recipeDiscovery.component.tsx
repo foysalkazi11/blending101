@@ -77,7 +77,10 @@ const RecipeDetails = () => {
       <AContainer showLeftTray={true} filterTray={true} commentsTray={true}>
         <div className={styles.main__div}>
           <SearchBar />
-          <SearchtagsComponent />
+          {blends.length || ingredients.length || filters?.length ? (
+            <SearchtagsComponent />
+          ) : null}
+
           {collectionDetailsId || showAllRecipes ? (
             <ShowCollectionRecipes />
           ) : blends.length || ingredients.length || filters?.length ? (
