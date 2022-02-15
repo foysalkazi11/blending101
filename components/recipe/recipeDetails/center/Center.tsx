@@ -18,13 +18,8 @@ import {
 import Modal from "../../../../theme/modal/Modal";
 import ShareRecipeModal from "../shareRecipeModal/ShareRecipeModal";
 import SaveRecipe from "../saveRecipe/SaveRecipe";
+import Image from "next/image";
 
-const recipeSliderImage = [
-  "/images/recipe-slider-img1.png",
-  "/images/recipe-slider-img2.png",
-  "/images/recipe-slider-img3.png",
-  "/images/recipe-slider-img4.png",
-];
 let BlendtecItem = ["Blendtec", "Blendtec"];
 let ozItem = ["64 oz", "64 oz"];
 
@@ -32,6 +27,7 @@ const Center = ({ recipeData }) => {
   const [counter, setCounter] = useState(1);
   const dispatch = useAppDispatch();
   const [showRecipeModal, setShowRecipeModal] = useState(true);
+  const recipeDetails = recipeData?.getARecipe;
 
   const openCommentsTray = () => {
     dispatch(setOpenCommentsTray(true));
@@ -82,7 +78,7 @@ const Center = ({ recipeData }) => {
     prevArrow: <PreviousButton />,
   };
 
-  console.log(recipeData?.getARecipe);
+  console.log(recipeDetails);
   return (
     <div>
       <div className={styles.header}>
@@ -102,15 +98,17 @@ const Center = ({ recipeData }) => {
 
       <div className={styles.contentBox}>
         <div className={styles.heading}>
-          <h3>{recipeData?.getARecipe?.name}</h3>
+          <h3>{recipeDetails?.name}</h3>
           <span className={styles.ratingBox}>
             <img src="/images/rating.svg" alt="" />
-            4.9 (71)
+            {recipeDetails?.averageRating} ({recipeDetails?.numberOfRating})
           </span>
         </div>
         <div className={styles.subMenu}>
           <div className={styles.alignItems}>
-            <div className={styles.recipeType}>Smoothie</div>
+            <div className={styles.recipeType}>
+              {recipeDetails?.recipeBlendCategory}
+            </div>
             <img
               src="/images/yummly-logo.png"
               alt="recipe_logo"
@@ -151,12 +149,17 @@ const Center = ({ recipeData }) => {
         </div>
 
         <div className={styles.sliderBox}>
-          {recipeData?.getARecipe?.image && (
+          {recipeDetails?.image && (
             <SlickSlider moreSetting={responsiveSetting}>
-              {recipeData?.getARecipe?.image.map((img, index) => {
+              {recipeDetails?.image.map((img, index) => {
                 return (
                   <div key={index} className={styles.imageBox}>
-                    <img src={img.image} alt="recipe_image" />
+                    <Image
+                      src={img.image}
+                      alt="recipe_image"
+                      layout="fill"
+                      objectFit="cover"
+                    />
                   </div>
                 );
               })}
@@ -181,7 +184,7 @@ const Center = ({ recipeData }) => {
         </div>
 
         <div>
-          <ReadMore>{recipeData?.getARecipe?.description}</ReadMore>
+          <ReadMore>{recipeDetails?.description}</ReadMore>
         </div>
 
         <div className={styles.dropDownContainer}>
@@ -200,7 +203,7 @@ const Center = ({ recipeData }) => {
           <div style={{ flex: 1 }} className={styles.timeBox}>
             <img src="/images/time-icon.svg" alt="time-icon" />
             <p>
-              Prep: <span>{recipeData?.getARecipe?.prepTime}</span>
+              Prep: <span>{recipeDetails?.prepTime}</span>
             </p>
           </div>
         </div>
@@ -214,16 +217,6 @@ const Center = ({ recipeData }) => {
           <div className={styles.counter}>
             <p>Servings : </p>
             <div className={styles.count}>
-              <button onClick={() => setCounter((pre) => Number(pre) + 1)}>
-                <MdAdd className={styles.icon} />
-              </button>
-              <input
-                type="number"
-                value={counter}
-                //@ts-ignore
-                onChange={(e) => setCounter(e?.target?.value)}
-                min={1}
-              />
               <button
                 onClick={() =>
                   setCounter((pre) =>
@@ -232,6 +225,17 @@ const Center = ({ recipeData }) => {
                 }
               >
                 <MdRemove className={styles.icon} />
+              </button>
+              <input
+                className={styles.servings}
+                type="number"
+                value={counter}
+                //@ts-ignore
+                onChange={(e) => setCounter(e?.target?.value)}
+                min={1}
+              />
+              <button onClick={() => setCounter((pre) => Number(pre) + 1)}>
+                <MdAdd className={styles.icon} />
               </button>
             </div>
           </div>
@@ -245,8 +249,8 @@ const Center = ({ recipeData }) => {
           </div>
         </div>
         <div className={styles.ingredentDisContainer}>
-          {recipeData?.getARecipe?.ingredients &&
-            recipeData?.getARecipe?.ingredients?.map((ingredient, index) => {
+          {recipeDetails?.ingredients &&
+            recipeDetails?.ingredients?.map((ingredient, index) => {
               return (
                 <div
                   className={styles.singleIngredent}
@@ -271,8 +275,8 @@ const Center = ({ recipeData }) => {
           <img src="/images/chef.svg" alt="basket" />
           <h3>How to</h3>
         </div>
-        {recipeData?.getARecipe?.recipeInstructions &&
-          recipeData?.getARecipe?.recipeInstructions?.map((step, index) => {
+        {recipeDetails?.recipeInstructions &&
+          recipeDetails?.recipeInstructions?.map((step, index) => {
             return (
               <div
                 className={styles.steps}
