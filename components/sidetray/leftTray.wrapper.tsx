@@ -4,6 +4,7 @@ import styles from "./tray.module.scss";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { setOpenCollectionsTary } from "../../redux/slices/sideTraySlice";
 import { setChangeRecipeWithinCollection } from "../../redux/slices/collectionSlice";
+import useHover from "../utility/useHover";
 
 interface leftTrayInterface {
   filter?: false;
@@ -19,6 +20,7 @@ export default function LeftTrayWrapper({
   const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
   const dispatch = useAppDispatch();
   const ref = useRef<any>();
+  const [hoverRef, isHovered] = useHover();
 
   useEffect(() => {
     const elem = ref.current;
@@ -39,7 +41,10 @@ export default function LeftTrayWrapper({
     <div className={styles.tray} ref={ref} id={id}>
       <div className={styles.tray__inner}>
         {openCollectionsTary ? (
-          <div className={styles.image} onClick={handleClick}>
+          <div
+            className={styles.image + " " + styles.image__white}
+            onClick={handleClick}
+          >
             <img src="/icons/left__drawer__orange.svg" alt="drawer__orange" />
           </div>
         ) : filter ? null : (
