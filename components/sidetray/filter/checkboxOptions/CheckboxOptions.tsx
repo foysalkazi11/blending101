@@ -3,7 +3,15 @@ import { useAppSelector } from "../../../../redux/hooks";
 import CustomCheckbox from "../../../../theme/checkbox/CustomCheckbox";
 import styles from "./CheckboxOptions.module.scss";
 
-const CheckboxOptions = () => {
+type CheckboxOptionsProps = {
+  values: string[];
+  onSelect?: (chip: string) => any;
+};
+
+const CheckboxOptions = ({
+  values = [],
+  onSelect = () => {},
+}: CheckboxOptionsProps) => {
   const { dbUser } = useAppSelector((state) => state?.user);
   const { recipeFilterByIngredientCategory } = useAppSelector(
     (state) => state?.ingredients
@@ -17,7 +25,10 @@ const CheckboxOptions = () => {
       {options[recipeFilterByIngredientCategory]?.map((item, index) => {
         return (
           <div key={index} className={styles.singleCheckbox}>
-            <CustomCheckbox />
+            <CustomCheckbox
+              checked={values.includes(item)}
+              handleChange={() => onSelect(item)}
+            />
             <p>{item}</p>
           </div>
         );

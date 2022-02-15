@@ -16,6 +16,7 @@ const Index = () => {
   };
   useEffect(() => {
     fetchRecipe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return <RecipeDetails recipeData={recipeData} />;
 };

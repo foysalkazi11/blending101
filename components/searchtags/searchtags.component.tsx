@@ -5,12 +5,13 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setBlendTye, setIngredients } from "../../redux/slices/sideTraySlice";
 import styles from "./searchtag.module.scss";
 import { handleFilterClick } from "../../services/trayClick.service";
+import { deleteFilterValue } from "../../redux/slices/filterRecipeSlice";
 
 export default function SearchtagsComponent(props) {
   const ingredients = useAppSelector((state) => state.sideTray.ingredients);
   const blends = useAppSelector((state) => state.sideTray.blends);
   const category = useAppSelector((state) => state.sideTray.category);
-
+  const filters = useAppSelector((state) => state.filterRecipe.filters);
   const dispatch = useAppDispatch();
 
   const handleIngredientClick = (item) => {
@@ -22,14 +23,14 @@ export default function SearchtagsComponent(props) {
     dispatch(setBlendTye(blendz));
   };
 
-  if (ingredients?.length < 1 && blends?.length < 1 && category === null)
-    return null;
+  const removeHandler = (pageTitle: string, value: string) => {
+    dispatch(deleteFilterValue({ pageTitle, value }));
+  };
 
   return (
     <div className={styles.searchtab}>
-      <div className={styles.container}>
-        {blends &&
-          blends.map((blend, i) => (
+      {blends?.length
+        ? blends.map((blend, i) => (
             <div key={"searchtags" + i} className={styles.item}>
               <div
                 className={styles.cross}
@@ -44,9 +45,10 @@ export default function SearchtagsComponent(props) {
               {/* @ts-ignore */}
               <p>{blend?.title}</p>
             </div>
-          ))}
-        {ingredients &&
-          ingredients.map((blend, i) => (
+          ))
+        : null}
+      {ingredients?.length
+        ? ingredients?.map((blend, i) => (
             <div key={"searchtags" + i} className={styles.item}>
               <div
                 className={styles.cross}
@@ -61,8 +63,35 @@ export default function SearchtagsComponent(props) {
               {/* @ts-ignore */}
               <p>{blend?.title}</p>
             </div>
-          ))}
-      </div>
+          ))
+        : null}
+      {filters?.length
+        ? filters?.map((filter, i) => {
+            return filter.values.map((value) => {
+              return (
+                <div
+                  key={value + i}
+                  className={styles.item}
+                  style={{ minHeight: "35px" }}
+                >
+                  <div
+                    className={styles.cross}
+                    onClick={() => removeHandler(filter.pageTitle, value)}
+                  >
+                    <Cancel className={styles.cancel} />
+                  </div>
+                  {/* <div className={styles.image}>
+                <img src={blend?.img} alt="img" />
+              </div> */}
+
+                  <p>
+                    {filter.prefix} | {value}
+                  </p>
+                </div>
+              );
+            });
+          })
+        : null}
     </div>
   );
 }
