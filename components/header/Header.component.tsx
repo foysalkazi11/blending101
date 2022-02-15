@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styles from "./header.module.scss";
 import SocialComponent from "./social/Social.component";
 import LocalMallIcon from "../../public/icons/local_mall_black_36dp.svg";
@@ -22,6 +22,7 @@ import {
 } from "react-icons/md";
 import Link from "next/link";
 import { FaRegUser } from "react-icons/fa";
+import useOnClickOutside from "../utility/useOnClickOutside";
 
 interface headerInterface {
   logo: Boolean;
@@ -37,6 +38,8 @@ export default function HeaderComponent({
   const [openPopup, setOpenPopup] = useState(false);
   const dispatch = useAppDispatch();
   const { user, dbUser } = useAppSelector((state) => state?.user);
+  const userMenu = useRef(null);
+  useOnClickOutside(userMenu, () => setOpenPopup(false));
 
   const userSingOut = async () => {
     dispatch(setLoading(true));
@@ -112,10 +115,11 @@ export default function HeaderComponent({
               {openPopup ? (
                 <div
                   className={`${styles.popup}`}
-                  style={{
-                    top: user ? "50px" : "inherits",
-                    marginLeft: user ? "-100px" : "inherits",
-                  }}
+                  ref={userMenu}
+                  // style={{
+                  //   top: user ? "50px" : "inherits",
+                  //   marginLeft: user ? "-100px" : "inherits",
+                  // }}
                 >
                   {user ? (
                     <Link href="/user" passHref>

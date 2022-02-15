@@ -39,19 +39,35 @@
   }
 }
 
-.tray .image {
+.image {
   position: absolute;
-  right: 3.5px;
+  right: 5px !important;
+  top: 100px;
+  transform: translateX(100%);
+  cursor: pointer;
+  transition: all;
+  transition-duration: 0.2s;
+  z-index: -99 !important;
+
+  img {
+    width: 50px;
+  }
+}
+.imageContained {
+  position: absolute;
+  right: 10px;
   top: 100px;
   transform: translateX(100%);
   cursor: pointer;
   transition: all;
   transition-duration: 0.2s;
   z-index: 999999999999999999999999999;
-}
-
-.tray .image img {
-  width: 50px;
+  &:hover {
+    right: -10px;
+  }
+  img {
+    width: 50px;
+  }
 }
 
 .active {
