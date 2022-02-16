@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import DropDown from "../../../../../theme/dropDown/DropDown.component";
 import styles from "./Dietary.module.scss";
 import DietarySection from "./dietarySection/DietarySection";
 
-let dropdownItem = ["Warning", "Leafy"];
+let dropdownItem = ["Warning", "Hiding"];
 
 const dietary = [
   {
@@ -57,6 +57,7 @@ const Dietary = ({
   userProfile,
   alredyExist,
 }: DietaryProps) => {
+  const [dropDownValue, setDropDownValue] = useState("warning");
   return (
     <div className={styles.dietaryContainer}>
       <p className={styles.infoText}>
@@ -68,7 +69,12 @@ const Dietary = ({
           How should dietary or allergy conflicts be handled?
         </p>
         <div style={{ flex: "auto" }}>
-          <DropDown listElem={dropdownItem} style={{ maxWidth: "200px" }} />
+          <DropDown
+            listElem={dropdownItem}
+            style={{ maxWidth: "200px" }}
+            value={dropDownValue}
+            valueState={setDropDownValue}
+          />
         </div>
       </div>
       <div>
