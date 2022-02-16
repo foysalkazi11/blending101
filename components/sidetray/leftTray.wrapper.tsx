@@ -20,7 +20,7 @@ export default function LeftTrayWrapper({
   const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
   const dispatch = useAppDispatch();
   const ref = useRef<any>();
-  const [hoverRef, isHovered] = useHover();
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const elem = ref.current;
@@ -43,7 +43,9 @@ export default function LeftTrayWrapper({
         {openCollectionsTary ? (
           <div
             className={styles.image + " " + styles.image__white}
-            onClick={handleClick}
+            onClick={() => {
+              handleClick();
+            }}
           >
             <img src="/icons/left__drawer__orange.svg" alt="drawer__orange" />
           </div>
@@ -51,8 +53,15 @@ export default function LeftTrayWrapper({
           <div
             className={styles.imageContained + " " + styles.image__white}
             onClick={handleClick}
+            //@ts-ignore
+            onMouseOver={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
           >
-            <img src="/icons/left__drawer.svg" alt="drawer" />
+            {isHovered ? (
+              <img src="/icons/left__drawer__orange.svg" alt="drawer__orange" />
+            ) : (
+              <img src="/icons/left__drawer.svg" alt="drawer" />
+            )}
           </div>
         )}
         {children}
