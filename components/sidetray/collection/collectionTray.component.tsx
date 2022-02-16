@@ -74,6 +74,7 @@ export default function CollectionTray(props) {
           </div>
         </div>
         <div className={styles.addCollectioContainer}>
+          <p>Add to</p>
           <MdOutlineAddCircleOutline
             className={styles.addIcon}
             onClick={() => {

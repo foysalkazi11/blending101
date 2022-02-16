@@ -45,9 +45,6 @@ const User = () => {
   });
 
   const { dbUser } = useAppSelector((state) => state?.user);
-  console.log(" temperorty configuration testing");
-      console.log(dbUser);
-      console.log(" temperorty configuration testing");
 
   useEffect(() => {
     if (dbUser) {
@@ -62,7 +59,6 @@ const User = () => {
         lastName,
         configuration,
       } = dbUser;
-
 
       const {
         activity,
@@ -109,7 +105,6 @@ const User = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log("temp");
   return (
     <AContainer
       headerTitle="My Profile"

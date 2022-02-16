@@ -54,6 +54,8 @@ export default function CollectionComponent({
     activeRecipeId,
   } = useAppSelector((state) => state?.collections);
   const menu = useRef<any>();
+  const [showMenu, setShowMenu] = useState(false);
+  const [menuIndex, setMenuIndex] = useState(0);
 
   const handleChange = async (e, collectionId) => {
     dispatch(setLoading(true));
@@ -174,9 +176,17 @@ export default function CollectionComponent({
     }
   };
 
-  const handleClick = () => {
-    const elem = menu.current;
-    elem.classList.toggle(styles.showMenu);
+  const handleClick = (index: number) => {
+    if (menuIndex === index) {
+      setMenuIndex(index);
+      setShowMenu((pre) => !pre);
+    } else {
+      setMenuIndex(index);
+      setShowMenu(true);
+    }
+
+    // const elem = menu.current;
+    // elem.classList.toggle(styles.showMenu);
   };
 
   return (
@@ -264,11 +274,15 @@ export default function CollectionComponent({
                       className={styles.moreIcon}
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleClick();
+                        handleClick(i);
                       }}
                     />
 
-                    <div className={`${styles.menu}`} ref={menu}>
+                    <div
+                      className={`${styles.menu} ${
+                        menuIndex === i && showMenu ? styles.showMenu : ""
+                      }`}
+                    >
                       <BiEditAlt
                         className={styles.icon}
                         onClick={() => {
