@@ -19,10 +19,8 @@ export default function LeftTrayWrapper({
 }: leftTrayInterface) {
   const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
   const dispatch = useAppDispatch();
-  // const ref = useRef<any>();
+  const ref = useRef<any>();
   const [isHovered, setIsHovered] = useState(false);
-  const [ref, hovered] = useHover();
-  console.log(hovered);
 
   useEffect(() => {
     const elem = ref.current;
