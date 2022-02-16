@@ -18,17 +18,15 @@ const Main = ({ userData, setUserData }: MainProps) => {
   const renderUI = () => {
     switch (activeTab) {
       case 0:
-        console.log(userData);
         return <About userData={userData} setUserData={setUserData} />;
       case 1:
-        console.log(userData);
         return <Membership userData={userData} setUserData={setUserData} />;
       case 2:
-        console.log(userData);
         return <Notification userData={userData} setUserData={setUserData} />;
       case 3:
-        console.log(userData);
-        return <Personalization userData={userData} setUserData={setUserData} />;
+        return (
+          <Personalization userData={userData} setUserData={setUserData} />
+        );
 
       default:
         return <About userData={userData} setUserData={setUserData} />;

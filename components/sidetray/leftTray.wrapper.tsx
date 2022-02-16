@@ -7,20 +7,22 @@ import { setChangeRecipeWithinCollection } from "../../redux/slices/collectionSl
 import useHover from "../utility/useHover";
 
 interface leftTrayInterface {
-  filter?: false;
+  filter?: boolean;
   children: any;
   id?: string;
 }
 
 export default function LeftTrayWrapper({
   children,
-  filter,
+  filter = false,
   id,
 }: leftTrayInterface) {
   const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
   const dispatch = useAppDispatch();
-  const ref = useRef<any>();
+  // const ref = useRef<any>();
   const [isHovered, setIsHovered] = useState(false);
+  const [ref, hovered] = useHover();
+  console.log(hovered);
 
   useEffect(() => {
     const elem = ref.current;

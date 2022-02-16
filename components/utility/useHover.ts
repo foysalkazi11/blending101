@@ -8,7 +8,7 @@ import {
 } from "react";
 
 function useHover<T>(): [
-  MutableRefObject<T>,
+  MutableRefObject<T> | any,
   boolean,
   Dispatch<SetStateAction<boolean>>
 ] {

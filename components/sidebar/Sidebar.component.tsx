@@ -31,6 +31,7 @@ export default function SidebarComponent(props) {
       dispatch(setOpenCollectionsTary(false));
       dispatch(setShowAllRecipes(false));
     }
+    router?.push(link);
   };
 
   return (

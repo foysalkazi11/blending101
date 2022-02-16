@@ -7,7 +7,7 @@ interface dropDown {
   handleChange?: (name: any, value: any) => void;
   name?: string;
   style?: object;
-  valueState?:any;
+  valueState?: any;
 }
 const DropDown = ({
   listElem,
@@ -15,7 +15,7 @@ const DropDown = ({
   value = "",
   handleChange = () => {},
   name = "dropdown",
-  valueState
+  valueState = () => {},
 }: dropDown) => {
   return (
     <div className={styles.formGroup}>
@@ -24,7 +24,9 @@ const DropDown = ({
         id="dropdown"
         className={styles.customSelectbx}
         style={{ backgroundImage: `url(/icons/dropdown.svg)`, ...style }}
-        onChange={(e)=>{valueState(e.target.value)}}
+        onChange={(e) => {
+          valueState(e.target.value);
+        }}
       >
         {listElem?.map((item, index) => {
           return (
