@@ -53,9 +53,7 @@
   margin-bottom: 20px;
   justify-content: space-between;
   align-items: center;
-  &:hover .rightSide {
-    visibility: visible;
-  }
+
   &:hover .leftSide .abs {
     transform: scale(1.1);
   }
@@ -104,7 +102,6 @@
     justify-content: center !important;
     align-items: center !important;
     background: transparent;
-    visibility: hidden;
     position: relative;
     &:hover {
       background: #f0f0f0;
