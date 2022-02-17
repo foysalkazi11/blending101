@@ -38,6 +38,11 @@ const EditRecipePage = () => {
     }
   };
 
+  useEffect(() => {
+    handleSubmitData();
+  }, [images])
+
+
   const [
     getAllCategories,
     { loading: blendCategoriesInProgress, data: blendCategoriesData },
@@ -54,8 +59,6 @@ const EditRecipePage = () => {
       fetchAllBlendCategories();
     }
   }, [blendCategoriesInProgress]);
-
-  console.log(selectedBlendValueState);
 
   return (
     <AContainer>
