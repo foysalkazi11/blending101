@@ -1,5 +1,5 @@
 $element_space:5px;
-$file_upload_width_height:65px;
+$file_upload_width_height:100px;
 
 @mixin imageAdd {
     cursor: pointer;
@@ -7,11 +7,10 @@ $file_upload_width_height:65px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px dashed #ECECEC;
+    border: 2px dashed #e2dfdfe7;
     border-radius: 12px;
     width: $file_upload_width_height;
     height: $file_upload_width_height;
-
 }
 
 .addImage {
@@ -27,7 +26,8 @@ $file_upload_width_height:65px;
         & svg {
             cursor: pointer;
             font-size: 35px;
-            color: #ececec;
+            color: #e2dfdfe7;
+            transform: scale(1.20);
         }
     }
 }
@@ -41,11 +41,11 @@ $file_upload_width_height:65px;
         position: absolute;
         right: -5px;
         top: -5px;
-        transform: scale(0.60);
+        transform: scale(2);
 
         svg{
             cursor: pointer;
-            color:#ff0000 ;
+            // color:#ff0000 ;
         }
     }
 }

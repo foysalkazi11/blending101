@@ -1,5 +1,5 @@
 import React from "react";
-import CustomAccordion from "../theme/accordion/accordion.component";
+import CustomAccordion from "../theme/accordion/accordionCopy.component";
 
 const AccordianTest = () => {
   let nestedAccordian = {
@@ -94,28 +94,41 @@ const AccordianTest = () => {
         children: {},
       },
     },
-    Minerals: "sdf",
+    Minerals: {
+      Calcium: { value: "Calcium, Ca", Unit: "kcal", children: {} },
+    },
   };
-  const populateAccordian = (data) => {};
+  const populateAccordian = (data, title) => {
+    console.log(data);
+
+    Object.entries(data).map((entries, index) => {
+      console.log(entries);
+    });
+    return (
+      <div style={{ marginLeft: "20px" }}>
+        <CustomAccordion title={title}>
+          <div>
+            <div>dfsaf</div>
+            <div>dfsaf</div>
+            <div>dfsaf</div>
+            <div>dfsaf</div>
+            <div>dfsaf</div>
+            <div>dfsaf</div>
+            <div>dfsaf</div>
+            <div>dfsaf</div>
+            <div>dfsaf</div>
+          </div>
+        </CustomAccordion>
+      </div>
+    );
+  };
   return (
     <div>
-      {Object.entries(nestedAccordian).map((entries) => {
+      {Object.entries(nestedAccordian).map((entries, index) => {
         console.log(entries);
         return (
           <CustomAccordion key={`${entries}`} title={entries[0]}>
-            <CustomAccordion key={`${entries}`} title={entries[0]}>
-              <div style={{ marginLeft: "20px" }}>
-                <div>dfsaf</div>
-                <div>dfsaf</div>
-                <div>dfsaf</div>
-                <div>dfsaf</div>
-                <div>dfsaf</div>
-                <div>dfsaf</div>
-                <div>dfsaf</div>
-                <div>dfsaf</div>
-                <div>dfsaf</div>
-              </div>
-            </CustomAccordion>
+            {}
           </CustomAccordion>
         );
       })}

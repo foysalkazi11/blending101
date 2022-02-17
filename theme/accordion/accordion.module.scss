@@ -32,11 +32,13 @@
   display: flex;
   border: none;
 }
+
 .accordionSummaryForRightIcon {
   padding: 16px 0;
   display: flex;
   border-bottom: 1px solid #dbdbdb;
 }
+
 .iconRight {
   width: 100%;
 
@@ -45,9 +47,11 @@
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+
   .arrowIcon {
     transition: all 0.6s;
   }
+
   &.active {
     .arrowIcon {
       transform: rotate(90deg);
@@ -56,7 +60,6 @@
 }
 
 .accordianDetails {
-
   overflow: hidden;
   transition: max-height 0.6s ease;
 
