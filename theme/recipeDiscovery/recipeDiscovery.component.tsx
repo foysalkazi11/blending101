@@ -29,7 +29,7 @@ import {
 
 const RecipeDetails = () => {
   const { blends, ingredients } = useAppSelector((state) => state.sideTray);
-  const { dbUser, user } = useAppSelector((state) => state?.user);
+  const { user } = useAppSelector((state) => state?.user);
   const { lastModifiedCollection, collectionDetailsId, showAllRecipes } =
     useAppSelector((state) => state?.collections);
   const { latest, popular, recommended } = useAppSelector(
@@ -77,7 +77,10 @@ const RecipeDetails = () => {
       <AContainer showLeftTray={true} filterTray={true} commentsTray={true}>
         <div className={styles.main__div}>
           <SearchBar />
-          <SearchtagsComponent />
+          {blends.length || ingredients.length || filters?.length ? (
+            <SearchtagsComponent />
+          ) : null}
+
           {collectionDetailsId || showAllRecipes ? (
             <ShowCollectionRecipes />
           ) : blends.length || ingredients.length || filters?.length ? (

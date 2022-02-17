@@ -81,7 +81,14 @@
 .addCollectioContainer {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   margin-bottom: 35px;
+  p {
+    color: #929292;
+    font-size: 16px;
+    font-weight: 500;
+    margin-right: 16px;
+  }
   .addIcon {
     font-size: 28px;
     color: #929292;

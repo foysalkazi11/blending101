@@ -16,6 +16,7 @@
     overflow-y: auto;
     padding: 0 16px;
     min-height: 100%;
+    background-color: #fff;
 
     &::-webkit-scrollbar-track {
       border-radius: 8px;
@@ -39,19 +40,42 @@
   }
 }
 
-.tray .image {
+.image {
   position: absolute;
-  right: 3.5px;
+  right: 15px;
   top: 100px;
   transform: translateX(100%);
   cursor: pointer;
   transition: all;
   transition-duration: 0.2s;
-  z-index: 999999999999999999999999999;
-}
+  z-index: -99 !important;
+  .hovered {
+    right: 5px;
+  }
+  &:hover {
+    right: 5px;
+  }
 
-.tray .image img {
-  width: 50px;
+  img {
+    width: 50px;
+  }
+}
+.imageContained {
+  position: absolute;
+  right: 5px;
+  top: 100px;
+  transform: translateX(100%);
+  cursor: pointer;
+  transition: all;
+  transition-duration: 0.2s;
+  z-index: -1;
+  z-index: 999999999999999999999999999;
+  &:hover {
+    right: -10px;
+  }
+  img {
+    width: 50px;
+  }
 }
 
 .active {

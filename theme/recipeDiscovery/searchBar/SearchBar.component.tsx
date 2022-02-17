@@ -8,6 +8,7 @@ import RecipeDiscoverButton from "../../button/recipeDiscoverButton/RecipeDiscov
 import AddCircleOutlineIcon from "../../../public/icons/add_circle_outline_black_36dp.svg";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setOpenFilterTray } from "../../../redux/slices/sideTraySlice";
+import useOnClickOutside from "../../../components/utility/useOnClickOutside";
 
 const SearchBar = () => {
   const [isInputFocus, setIsInputFocus] = useState(false);
@@ -32,10 +33,10 @@ const SearchBar = () => {
     setIsInputFocus(false);
     // inputRef?.current?.focus();
   };
-
+  useOnClickOutside(inputRef, handleClean);
   return (
     <div className={styles.searchBarContainer}>
-      <div className={styles.inputContainer}>
+      <div className={styles.inputContainer} ref={inputRef}>
         <div className={styles.filterIconContainer}>
           <FiFilter
             className={`${styles.filterIcon}${
@@ -53,7 +54,6 @@ const SearchBar = () => {
           <form onSubmit={handleSubmit}>
             <input
               disabled={isMicOn}
-              ref={inputRef}
               placeholder={isMicOn ? "Speak" : "Search"}
               value={input}
               onChange={(e) => setInput(e?.target?.value)}

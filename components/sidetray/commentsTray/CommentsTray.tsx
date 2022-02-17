@@ -109,10 +109,12 @@ export default function CommentsTray(props) {
   };
 
   return (
-    <div className={`${styles.commentTray} y-scroll`} ref={ref}>
-      <div className={styles.imageTag} onClick={handleClick}>
-        <img src="/images/cmnt-white.svg" alt="message-icon" />
-      </div>
+    <div className={`${styles.commentTray}`} ref={ref}>
+      {openCommentsTray ? (
+        <div className={styles.imageTag} onClick={handleClick}>
+          <img src="/images/cmnt-white.svg" alt="message-icon" />
+        </div>
+      ) : null}
 
       <div className={styles.main}>
         <div className={styles.main__top}>

@@ -12,9 +12,9 @@
 }
 .imageTag {
   position: absolute;
-  left: -20px;
+  left: 0px;
   top: 22px;
-  // transform: translateX(-100%);
+  transform: translateX(-100%);
   cursor: pointer;
   transition: all;
   transition-duration: 0.2s;

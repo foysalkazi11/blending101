@@ -9,13 +9,6 @@ import { setLoading } from "../../redux/slices/utilitySlice";
 import DatacardComponent from "../cards/dataCard/dataCard.component";
 import styles from "./ShowCollectionRecipes.module.scss";
 
-// type ShowCollectionRecipesProps = {
-//   showCoseIcon?: boolean;
-//   handleColse?: () => void;
-//   title?: string;
-//   recipes?: {}[];
-// };
-
 const ShowCollectionRecipes = () => {
   const [allRecipes, setAllRecipes] = useState([]);
   const [selectedCollectionRecipe, setSelectedCollectionRecipe] = useState([]);
@@ -62,6 +55,13 @@ const ShowCollectionRecipes = () => {
     addToCollection();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collectionDetailsId, showAllRecipes]);
+
+  useEffect(() => {
+    if (collectionDetailsId || showAllRecipes) {
+      addToCollection();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dbUser?.collections]);
 
   return (
     <div className={styles.showRecipeCollectionsContainer}>

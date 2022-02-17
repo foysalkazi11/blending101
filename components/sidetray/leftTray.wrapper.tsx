@@ -6,19 +6,20 @@ import { setOpenCollectionsTary } from "../../redux/slices/sideTraySlice";
 import { setChangeRecipeWithinCollection } from "../../redux/slices/collectionSlice";
 
 interface leftTrayInterface {
-  filter?: false;
+  filter?: boolean;
   children: any;
   id?: string;
 }
 
 export default function LeftTrayWrapper({
   children,
-  filter,
+  filter = false,
   id,
 }: leftTrayInterface) {
   const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
   const dispatch = useAppDispatch();
   const ref = useRef<any>();
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const elem = ref.current;
@@ -39,15 +40,29 @@ export default function LeftTrayWrapper({
     <div className={styles.tray} ref={ref} id={id}>
       <div className={styles.tray__inner}>
         {openCollectionsTary ? (
-          <div className={styles.image} onClick={handleClick}>
+          <div
+            className={styles.image + " " + styles.image__white}
+            onClick={() => {
+              handleClick();
+            }}
+          >
             <img src="/icons/left__drawer__orange.svg" alt="drawer__orange" />
           </div>
         ) : filter ? null : (
           <div
-            className={styles.image + " " + styles.image__white}
+            className={styles.imageContained + " " + styles.image__white}
             onClick={handleClick}
+            onMouseOver={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
           >
-            <img src="/icons/left__drawer.svg" alt="drawer" />
+            <img
+              src={
+                isHovered
+                  ? "/icons/left__drawer__orange.svg"
+                  : "/icons/left__drawer.svg"
+              }
+              alt="drawer"
+            />
           </div>
         )}
         {children}
