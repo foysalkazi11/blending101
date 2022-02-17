@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
 import styles from "./centerElements.module.scss";
 import MoreVertIcon from "../../../../public/icons/more_vert_black_36dp.svg";
 import AddRecipeCard from "./addFiles/addRecipeCards.component";
@@ -10,27 +10,23 @@ import DropDown from "../../../../theme/dropDown/DropDown.component";
 type CenterElementsProps = {
   setImages?: Dispatch<SetStateAction<any[]>>;
   editRecipeHeading?: any;
-  setDropDownState?:any;
-  blendCategoryList:any;
+  setDropDownState?: any;
+  blendCategoryList: any;
 };
 
 const Center_Elements = ({
   setImages,
   editRecipeHeading,
   setDropDownState,
-  blendCategoryList
+  blendCategoryList,
 }: CenterElementsProps) => {
   const dispatch = useAppDispatch();
-
 
   //quantity number sets number for top card bottom right counter in edit recipe
   const quantity_number = useAppSelector(
     (state) => state.quantityAdjuster.quantityNum
   );
   // variables for ingredients card of edit recipe
-  const servings_number = useAppSelector(
-    (state) => state.quantityAdjuster.servingsNum
-  );
 
   const adjusterFunc = (task, type) => {
     if (type === "quantity_number") {
@@ -46,7 +42,7 @@ const Center_Elements = ({
 
   //lists for each dropdown
   let WholefoodItem = [];
-  let dropDownDataAllFeildsArray=[];
+  let dropDownDataAllFeildsArray = [];
   if (blendCategoryList) {
     blendCategoryList.map((v, i) => {
       WholefoodItem.push(v.name);
@@ -55,8 +51,6 @@ const Center_Elements = ({
   }
   let BlendtecItem = ["Blendtec", "Blendtec"];
   let OzItem = ["64 oz", "64 oz"];
-
-  //custom styling for drop down element specific to edit recipe page
   let dropDownStyle = {
     paddingRight: "0px",
     width: "111%",
@@ -65,9 +59,6 @@ const Center_Elements = ({
     const element = document.getElementById("recipeTitle");
     element.innerHTML = "Recipe Title";
   }, []);
-
-
-  // console.log({ blendCategories: blendCategory });
 
   return (
     <div className={styles.main}>

@@ -7,7 +7,7 @@ const Index = () => {
   const [getARecipe, { loading: gettingRecipe, data: recipeData }] =
     useLazyQuery(GET_RECIPE, {
       fetchPolicy: "network-only",
-      variables: { recipeId: "620654ab4b75758e00c4e90c" },
+      variables: { recipeId: "620b900ecfac42ae66855eb3" },
     });
 
   const fetchRecipe = () => {

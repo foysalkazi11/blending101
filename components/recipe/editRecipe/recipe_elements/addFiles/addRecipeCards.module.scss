@@ -15,7 +15,6 @@ $file_upload_width_height:65px;
 }
 
 .addImage {
-
     min-height: 66px;
     display: flex;
     flex-wrap: wrap;
@@ -37,7 +36,6 @@ $file_upload_width_height:65px;
     position: relative;
     overflow: hidden;
     @include imageAdd();
-
     span{
         z-index: 1;
         position: absolute;

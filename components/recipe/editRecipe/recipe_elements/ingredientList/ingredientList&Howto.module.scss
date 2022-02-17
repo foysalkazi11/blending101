@@ -1,5 +1,4 @@
 @mixin servings__name {
-    // background-color: rgb(34, 165, 226);
     font-size: 15px;
     color: #C4C4C4;
     margin-right: 8px;
@@ -63,7 +62,6 @@
     margin: 0px auto;
     margin-top: 15px;
     display: flex;
-    // background-color: #8b2e2e;
     padding-top: 10px;
 
     .basket__icon {
@@ -156,7 +154,6 @@
 
             @include resoponsive(0px, 1300px) {
                 min-width: 34px;
-                // background-color: paleturquoise;
                 font-size: 13px;
             }
         }
@@ -193,7 +190,6 @@
         text-transform: uppercase;
 
         @include resoponsive(0px, 1300px) {
-            // background-color: rgb(235, 76, 48);
             margin-right: 7.5%;
         }
 
@@ -299,7 +295,6 @@
         width: 17px;
         height: 100%;
         position: relative;
-        // margin-left: auto;
         margin-right: 24px;
         cursor: pointer;
         display: none;
@@ -329,7 +324,6 @@
 
 .how__to {
     border-radius: 10px;
-    // min-height: 280px;
     margin-top: 15px;
     padding: 20px;
     background-color: rgb(255, 255, 255);
@@ -368,7 +362,6 @@
             position: relative;
             margin-bottom: 10px;
             font-size: 16px;
-            // background-color: #7DBD3B;
 
             &__edit {
                 @include edit_bin_icon();

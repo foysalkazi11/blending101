@@ -5,7 +5,6 @@ import Image from "next/image";
 import CancelIcon from "../../../../../public/icons/cancel_black_36dp.svg";
 import { setUploadImageList } from "../../../../../redux/edit_recipe/quantity";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
-import index from "../../../../../pages/component";
 import { setLoading } from "../../../../../redux/slices/utilitySlice";
 import S3_CONFIG from "../../../../../configs/s3";
 import axios from "axios";
@@ -41,7 +40,6 @@ const AddRecipeCard = ({ setImages }: AddRecipeCardProps) => {
       setImageListRaw(imageListRawArray);
     }
     dispatch(setUploadImageList(imageArray));
-    // console.log(selectedImages);
 
     const handleSubmitData = async () => {
       dispatch(setLoading(true));
@@ -61,7 +59,6 @@ const AddRecipeCard = ({ setImages }: AddRecipeCardProps) => {
         }
         dispatch(setLoading(false));
       } catch (error) {
-        console.log(error);
         dispatch(setLoading(false));
       }
     };
@@ -84,8 +81,6 @@ const AddRecipeCard = ({ setImages }: AddRecipeCardProps) => {
       );
     });
   };
-
-  // remove image on cross
 
   const removeImage = (index_value: number) => {
     let updated_list = [...selectedImages];
