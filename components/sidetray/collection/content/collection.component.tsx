@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./content.module.scss";
 import { MdMoreVert, MdDeleteOutline } from "react-icons/md";
 import { HiOutlineShare } from "react-icons/hi";
@@ -22,6 +22,7 @@ import {
   setShowAllRecipes,
 } from "../../../../redux/slices/collectionSlice";
 import GET_LAST_MODIFIED_COLLECTION from "../../../../gqlLib/collection/query/getLastModifiedCollection";
+import ADD_OR_REMOVE_RECIPE_FORM_COLLECTION from "../../../../gqlLib/collection/mutation/addOrRemoveRecipeFromCollection";
 
 type CollectionComponentProps = {
   collections: {}[];
@@ -44,8 +45,8 @@ export default function CollectionComponent({
   const [removeRecipeFromExistingCollection] = useMutation(
     REMOVE_EXISTING_RECIPE_TO_ANOTHER_COLLECTION
   );
-  const [getLastModifiedCollection] = useLazyQuery(
-    GET_LAST_MODIFIED_COLLECTION
+  const [addOrRemoveRecipeFromCollection] = useMutation(
+    ADD_OR_REMOVE_RECIPE_FORM_COLLECTION
   );
   const { dbUser } = useAppSelector((state) => state?.user);
   const {
@@ -56,87 +57,73 @@ export default function CollectionComponent({
   const menu = useRef<any>();
   const [showMenu, setShowMenu] = useState(false);
   const [menuIndex, setMenuIndex] = useState(0);
+  const [hoverIndex, setHoverIndex] = useState(0);
+  const [collectionHasRecipe, setCollectionHasRecipe] = useState<string[]>([]);
+  const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
+  const [isCollectionUpdate, setIsCollectionUpdate] = useState(false);
+  const isMounted = useRef(null);
 
-  const handleChange = async (e, collectionId) => {
+  console.log(collections);
+
+  const handleAddorRemoveRecipeFormCollection = async () => {
     dispatch(setLoading(true));
     try {
-      if (e?.target?.checked) {
-        const { data } = await addExistingRecipeToAnotherCollection({
-          variables: {
-            data: {
-              collectionId: collectionId,
-              recipe: activeRecipeId,
-              userEmail: dbUser?.email,
-            },
+      const { data } = await addOrRemoveRecipeFromCollection({
+        variables: {
+          data: {
+            userEmail: dbUser?.email,
+            addToTheseCollections: collectionHasRecipe,
+            recipe: activeRecipeId,
           },
-        });
-        dispatch(
-          setDbUser({
-            ...dbUser,
-            collections: [...data?.addRecipeToAUserCollection],
-          })
-        );
+        },
+      });
+      dispatch(
+        setDbUser({
+          ...dbUser,
+          collections: [...data?.addOrRemoveRecipeFromCollection],
+        })
+      );
 
-        let recipesId = [];
-        data?.addRecipeToAUserCollection?.forEach((col) => {
-          const recipes = col?.recipes;
-          recipes?.forEach((recipe) => {
-            recipesId?.push(recipe?._id);
-          });
+      let recipesId = [];
+      data?.addOrRemoveRecipeFromCollection?.forEach((col) => {
+        const recipes = col?.recipes;
+        recipes?.forEach((recipe) => {
+          recipesId?.push(recipe?._id);
         });
-        dispatch(setAllRecipeWithinCollectionsId(recipesId));
-      } else {
-        const { data } = await removeRecipeFromExistingCollection({
-          variables: {
-            data: {
-              collectionId: collectionId,
-              recipe: activeRecipeId,
-              userEmail: dbUser?.email,
-            },
-          },
-        });
-        dispatch(
-          setDbUser({
-            ...dbUser,
-            collections: [...data?.removeRecipeFromAColection],
-          })
-        );
-
-        let recipesId = [];
-        data?.removeRecipeFromAColection?.forEach((col) => {
-          const recipes = col?.recipes;
-          recipes?.forEach((recipe) => {
-            recipesId?.push(recipe?._id);
-          });
-        });
-        dispatch(setAllRecipeWithinCollectionsId(recipesId));
-      }
+      });
+      dispatch(setAllRecipeWithinCollectionsId(recipesId));
 
       dispatch(setLoading(false));
-      reactToastifyNotification(
-        "info",
-        `Successfully ${
-          e?.target?.checked
-            ? "added to new collection"
-            : "remove form collection"
-        }`
-      );
+      reactToastifyNotification("info", `Collection update successfully`);
+      setIsCollectionUpdate(false);
     } catch (error) {
       dispatch(setLoading(false));
       reactToastifyNotification("eror", error?.message);
+      setIsCollectionUpdate(false);
     }
   };
 
-  const checkExistingRecipe = (recipes: []) => {
-    let result: boolean = false;
-    recipes?.forEach((recipe) => {
-      //@ts-ignore
-      if (recipe._id === activeRecipeId) {
-        result = true;
-      }
-    });
-    return result;
+  const handleChange = async (e, collectionId) => {
+    setIsCollectionUpdate(true);
+    if (e?.target?.checked) {
+      setCollectionHasRecipe((pre) => [...pre, collectionId]);
+    } else {
+      setCollectionHasRecipe((pre) => [
+        ...pre?.filter((id) => id !== collectionId),
+      ]);
+    }
   };
+
+  // const checkExistingRecipe = (item) => {
+  //   let result: boolean = false;
+  //   item?.recipes?.forEach((recipe) => {
+  //     if (recipe._id === activeRecipeId) {
+  //       result = true;
+  //       return;
+  //     }
+  //   });
+  //   return result;
+  // };
 
   const handleDeleteCollection = async (collectionId: string) => {
     dispatch(setLoading(true));
@@ -189,6 +176,42 @@ export default function CollectionComponent({
     // elem.classList.toggle(styles.showMenu);
   };
 
+  useEffect(() => {
+    let collectionIds: string[] = [];
+    collections?.forEach((col) => {
+      //@ts-ignore
+      const recipes = col?.recipes;
+      //@ts-ignore
+      const id = col?._id;
+      recipes?.forEach((recipe) => {
+        if (recipe._id === activeRecipeId) {
+          collectionIds?.push(id);
+        }
+      });
+    });
+    setCollectionHasRecipe(collectionIds);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeRecipeId]);
+
+  useEffect(() => {
+    if (isMounted.current) {
+      if (!openCollectionsTary) {
+        if (isCollectionUpdate) {
+          handleAddorRemoveRecipeFormCollection();
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openCollectionsTary]);
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
   return (
     <div className={styles.collection}>
       <div className={styles.collection__add}></div>
@@ -231,6 +254,8 @@ export default function CollectionComponent({
               <div
                 className={styles.collection__child}
                 key={"collections__child" + i}
+                onMouseOver={() => setHoverIndex(i + 1)}
+                onMouseLeave={() => setHoverIndex(0)}
               >
                 <div
                   className={styles.leftSide}
@@ -261,47 +286,52 @@ export default function CollectionComponent({
                     <CustomCheckbox
                       checked={
                         /* @ts-ignore */
-                        checkExistingRecipe(item?.recipes)
+                        collectionHasRecipe?.includes(item?._id)
                       }
                       /* @ts-ignore */
                       handleChange={(e) => handleChange(e, item?._id)}
                     />
                   </div>
-                ) : /* @ts-ignore */
-                item?.name === "My Favourite" ? null : (
-                  <div className={styles.rightSide}>
-                    <MdMoreVert
-                      className={styles.moreIcon}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleClick(i);
-                      }}
-                    />
-
-                    <div
-                      className={`${styles.menu} ${
-                        menuIndex === i && showMenu ? styles.showMenu : ""
-                      }`}
-                    >
-                      <BiEditAlt
-                        className={styles.icon}
-                        onClick={() => {
-                          /* @ts-ignore */
-                          setInput((pre) => ({ ...pre, name: item?.name }));
-                          setIsEditCollection(true);
-                          /* @ts-ignore */
-                          setCollectionId(item?._id);
-                          dispatch(setToggleModal(true));
+                ) : hoverIndex === i + 1 ? (
+                  /* @ts-ignore */
+                  item?.name === "My Favourite" ? null : (
+                    <div className={styles.rightSide}>
+                      <MdMoreVert
+                        className={styles.moreIcon}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleClick(i);
                         }}
                       />
-                      <MdDeleteOutline
-                        className={styles.icon}
-                        /* @ts-ignore  */
-                        onClick={() => handleDeleteCollection(item?._id)}
-                      />
-                      <HiOutlineShare className={styles.icon} />
+
+                      <div
+                        className={`${styles.menu} ${
+                          menuIndex === i && showMenu ? styles.showMenu : ""
+                        }`}
+                      >
+                        <BiEditAlt
+                          className={styles.icon}
+                          onClick={() => {
+                            /* @ts-ignore */
+                            setInput((pre) => ({ ...pre, name: item?.name }));
+                            setIsEditCollection(true);
+                            /* @ts-ignore */
+                            setCollectionId(item?._id);
+                            dispatch(setToggleModal(true));
+                          }}
+                        />
+                        <MdDeleteOutline
+                          className={styles.icon}
+                          /* @ts-ignore  */
+                          onClick={() => handleDeleteCollection(item?._id)}
+                        />
+                        <HiOutlineShare className={styles.icon} />
+                      </div>
                     </div>
-                  </div>
+                  )
+                ) : (
+                  // @ts-ignore
+                  <p style={{ marginRight: "10px" }}>{item?.recipes?.length}</p>
                 )}
               </div>
             );
