@@ -18,6 +18,7 @@ import ModeEditOutlineOutlinedIcon from "../../../../../public/icons/mode_edit_b
 import { ingredientLeafy } from "../../leftTray/left_tray_recipe_edit_list";
 import { CREATE_NEW_RECIPE_FROM_USER } from "../../../../../gqlLib/recipes/mutations/addRecipeFromUser";
 import { useMutation } from "@apollo/client";
+import reactToastifyNotification from "../../../../utility/reactToastifyNotification";
 
 type IngredientListPorps = {
   handleSubmitData?: () => void;
@@ -238,11 +239,14 @@ const IngredientList = ({
     };
     createRecipeApiFinalString();
   }, [ingredients_list]);
-
+  const [isFetching, setIsFetching] = useState(null);
   const RecipeApiMutation = () => {
+    setIsFetching(true);
     const addrecipeFunc = async () => {
       const { data } = await addRecipeRecipeFromUser();
+      reactToastifyNotification("info", "Recipe Created");
       console.log(data);
+      setIsFetching(false);
     };
     addrecipeFunc();
   };
@@ -482,18 +486,30 @@ const IngredientList = ({
           </div>
         </div>
       </div>
+      {/* isFetching */}
       <div className={styles.save__Recipe}>
-        <div
-          className={styles.save__Recipe__button}
-          onClick={() => RecipeApiMutation()}
-        >
-          <ButtonComponent
-            type={"primary"}
-            style={{}}
-            fullWidth={true}
-            value="Save Recipe"
-          />
-        </div>
+        {isFetching ? (
+          <div className={styles.save__Recipe__button}>
+            <ButtonComponent
+              type={"primary"}
+              style={{}}
+              fullWidth={true}
+              value="Saving... ."
+            />
+          </div>
+        ) : (
+          <div
+            className={styles.save__Recipe__button}
+            onClick={() => RecipeApiMutation()}
+          >
+            <ButtonComponent
+              type={"primary"}
+              style={{}}
+              fullWidth={true}
+              value="Save Recipe"
+            />
+          </div>
+        )}
       </div>
     </div>
   );
