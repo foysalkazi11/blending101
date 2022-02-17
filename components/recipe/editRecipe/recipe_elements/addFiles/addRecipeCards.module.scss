@@ -41,11 +41,11 @@ $file_upload_width_height:100px;
         position: absolute;
         right: -5px;
         top: -5px;
-        transform: scale(2);
+        transform: scale(0.8);
 
         svg{
             cursor: pointer;
-            // color:#ff0000 ;
+            color:red ;
         }
     }
 }
