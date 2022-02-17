@@ -4,7 +4,6 @@ import styles from "./tray.module.scss";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { setOpenCollectionsTary } from "../../redux/slices/sideTraySlice";
 import { setChangeRecipeWithinCollection } from "../../redux/slices/collectionSlice";
-import useHover from "../utility/useHover";
 
 interface leftTrayInterface {
   filter?: boolean;
@@ -53,15 +52,17 @@ export default function LeftTrayWrapper({
           <div
             className={styles.imageContained + " " + styles.image__white}
             onClick={handleClick}
-            //@ts-ignore
             onMouseOver={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
-            {isHovered ? (
-              <img src="/icons/left__drawer__orange.svg" alt="drawer__orange" />
-            ) : (
-              <img src="/icons/left__drawer.svg" alt="drawer" />
-            )}
+            <img
+              src={
+                isHovered
+                  ? "/icons/left__drawer__orange.svg"
+                  : "/icons/left__drawer.svg"
+              }
+              alt="drawer"
+            />
           </div>
         )}
         {children}

@@ -29,7 +29,7 @@ import {
 
 const RecipeDetails = () => {
   const { blends, ingredients } = useAppSelector((state) => state.sideTray);
-  const { dbUser, user } = useAppSelector((state) => state?.user);
+  const { user } = useAppSelector((state) => state?.user);
   const { lastModifiedCollection, collectionDetailsId, showAllRecipes } =
     useAppSelector((state) => state?.collections);
   const { latest, popular, recommended } = useAppSelector(
