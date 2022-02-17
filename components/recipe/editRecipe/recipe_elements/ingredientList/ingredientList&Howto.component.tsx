@@ -28,7 +28,6 @@ type IngredientListPorps = {
 };
 
 const IngredientList = ({
-  handleSubmitData,
   uploadedImagesUrl,
   editRecipeHeading,
   blendCategory,
@@ -42,7 +41,6 @@ const IngredientList = ({
       v.name.toLowerCase().includes(selectedBlendValueState)
     );
   }
-
 
   //variables for all states ==>start
   const quantity_number = useAppSelector(
@@ -69,61 +67,9 @@ const IngredientList = ({
 
   const editText = () => {
     let value = editRecipeHeading?.current?.textContent;
-    // console.log(value)
     return value;
   };
-  // editText()
-
-  const [addRecipeRecipeFromUser] = useMutation(
-    CREATE_NEW_RECIPE_FROM_USER({
-      userId: "619359150dc1bfd62b314757",
-      ingredients: recipeApi,
-      image: uploadedImagesUrl,
-      recipeInstructions: howToState,
-      recipeName: editText(),
-      SelecteApiParameter: SelecteApiParameter ? SelecteApiParameter._id : "",
-    })
-  );
-
-  const RecipeApiMutation = () => {
-
-    handleSubmitData();
-    let recipeList = [];
-    const createRecipeApiFinalString = () => {
-      let recipe = {};
-      ingredients_list.map((elem) => {
-        recipe = { ingredientId: elem._id };
-        if (elem.portions) {
-          let measurement = {};
-          let customObj = {};
-          elem.portions.map((elemtemp) => {
-            if (elemtemp.default === true) {
-              customObj = {
-                ...customObj,
-                weightInGram: elemtemp.meausermentWeight,
-                selectedPortionName: elemtemp.measurement,
-              };
-              measurement = { ...measurement, ...customObj };
-            }
-          });
-          recipe = { ...recipe, ...measurement };
-        }
-        recipeList = [...recipeList, recipe];
-      });
-      setRecipeApi(recipeList);
-    };
-
-    const addrecipeFunc = async () => {
-      try {
-        const { data } = await addRecipeRecipeFromUser();
-        createRecipeApiFinalString();
-        console.log(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    addrecipeFunc();
-  };
+  // editText();
 
   // =========================================================================
   // sets value of top card in recipe editd page equal to ingredients page
@@ -266,8 +212,51 @@ const IngredientList = ({
   };
   useEffect(() => {
     dispatch(setNutritionState(nutritionArray));
+    let recipeList = [];
+    const createRecipeApiFinalString = () => {
+      let recipe = {};
+      ingredients_list.map((elem) => {
+        recipe = { ingredientId: elem._id };
+        if (elem.portions) {
+          let measurement = {};
+          let customObj = {};
+          elem.portions.map((elemtemp) => {
+            if (elemtemp.default === true) {
+              customObj = {
+                ...customObj,
+                weightInGram: elemtemp.meausermentWeight,
+                selectedPortionName: elemtemp.measurement,
+              };
+              measurement = { ...measurement, ...customObj };
+            }
+          });
+          recipe = { ...recipe, ...measurement };
+        }
+        recipeList = [...recipeList, recipe];
+        setRecipeApi(recipeList);
+      });
+    };
+    createRecipeApiFinalString();
   }, [ingredients_list]);
 
+  const RecipeApiMutation = () => {
+    const addrecipeFunc = async () => {
+      const { data } = await addRecipeRecipeFromUser();
+      console.log(data);
+    };
+    addrecipeFunc();
+  };
+
+  const [addRecipeRecipeFromUser] = useMutation(
+    CREATE_NEW_RECIPE_FROM_USER({
+      userId: "619359150dc1bfd62b314757",
+      ingredients: recipeApi,
+      image: uploadedImagesUrl,
+      recipeInstructions: howToState,
+      recipeName: editText(),
+      SelecteApiParameter: SelecteApiParameter,
+    })
+  );
   return (
     <div className={styles.mainCard}>
       <div className={styles.ingredients__main__card}>
@@ -432,7 +421,6 @@ const IngredientList = ({
           </div>
         </div>
       </div>
-
       <div className={styles.how__to}>
         <h4 className={styles.how__to__heading}>
           <div className={styles.how__to__icon}>
@@ -497,7 +485,7 @@ const IngredientList = ({
       <div className={styles.save__Recipe}>
         <div
           className={styles.save__Recipe__button}
-          onClick={RecipeApiMutation}
+          onClick={() => RecipeApiMutation()}
         >
           <ButtonComponent
             type={"primary"}

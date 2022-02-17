@@ -15,9 +15,7 @@
     }
 
     @include responsive(0px, 991px) {
-        // padding-top:10px;
         padding-left: 10px;
-        // padding-right: 4px;
     }
 
 
@@ -26,7 +24,6 @@
         justify-content: space-between;
         width: 100%;
         margin: 0px auto;
-        // background-color: green;
 
         &__heading {
             font-size: 20px;
@@ -123,22 +120,18 @@
                             .text {
                                 font-size: 13px;
                                 margin-left: 10px;
-
                             }
 
                             .arrow {
-
                                 z-index: 10;
                                 min-width: 15px;
                                 margin: 0px 10px 0px auto;
                             }
-
                         }
                     }
                 }
             }
 
-            // riht
             &__right {
                 margin-left: 16px;
                 display: flex;
@@ -171,9 +164,7 @@
                     }
                 }
 
-
                 .arrow {
-
                     min-width: 26px;
                     position: relative;
                     margin: 0px 2px 0px auto;
@@ -221,7 +212,6 @@
                         }
                     }
                 }
-
             }
         }
     }
