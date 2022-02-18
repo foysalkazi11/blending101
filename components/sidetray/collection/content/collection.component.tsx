@@ -63,8 +63,6 @@ export default function CollectionComponent({
   const [isCollectionUpdate, setIsCollectionUpdate] = useState(false);
   const isMounted = useRef(null);
 
-  console.log(collections);
-
   const handleAddorRemoveRecipeFormCollection = async () => {
     dispatch(setLoading(true));
     try {
