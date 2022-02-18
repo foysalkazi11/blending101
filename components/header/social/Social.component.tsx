@@ -1,27 +1,30 @@
 import React from "react";
 import styles from "../header.module.scss";
-import {SiInstagram} from 'react-icons/si';
-import {FaPinterestP,FaTwitter,FaFacebookF,FaYoutube} from 'react-icons/fa';
-
-
+import { SiInstagram } from "react-icons/si";
+import {
+  FaPinterestP,
+  FaTwitter,
+  FaFacebookF,
+  FaYoutube,
+} from "react-icons/fa";
 
 export default function SocialComponent(props) {
   return (
     <div className={styles.social}>
       <div className={styles.social__child}>
-        <FaFacebookF/>
+        <FaFacebookF />
       </div>
       <div className={styles.social__child}>
-        <SiInstagram/>
+        <SiInstagram />
       </div>
       <div className={styles.social__child}>
-        <FaPinterestP/>
+        <FaPinterestP />
       </div>
       <div className={styles.social__child}>
-        <FaYoutube/>
+        <FaYoutube />
       </div>
       <div className={styles.social__child}>
-        <FaTwitter/>
+        <FaTwitter />
       </div>
     </div>
   );
