@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import AContainer from "../../containers/A.container";
 import styles from "./recipeDiscovery.module.scss";
 import AppdownLoadCard from "./AppdownLoadCard/AppdownLoadCard.component";
@@ -40,6 +40,7 @@ const RecipeDetails = () => {
   const [getAllPopularRecipes] = useLazyQuery(GET_ALL_POPULAR_RECIPES);
   const [getAllLatestRecipes] = useLazyQuery(GET_ALL_LATEST_RECIPES);
   const dispatch = useAppDispatch();
+  const isMounted = useRef(false);
 
   const handleCompareRecipe = () => {
     dispatch(setOpenCollectionsTary(true));
@@ -69,8 +70,17 @@ const RecipeDetails = () => {
     if (user) {
       getAllRecipes();
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
+
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   return (
     <>
