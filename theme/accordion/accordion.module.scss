@@ -8,8 +8,8 @@
 
 .title {
   color: #000000;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
   margin: 0;
 }
 
@@ -27,11 +27,6 @@
   }
 }
 
-.accordionSummary {
-  padding: 10px;
-  display: flex;
-  border: none;
-}
 
 .accordionSummaryForRightIcon {
   padding: 16px 0;
@@ -60,8 +55,15 @@
 }
 
 .accordianDetails {
+  // transition: all 0.6s;
+  //  padding: 0px 0px 10px 10px;
+  // width: 100%;
+  // transform: rotate(0deg);
+  // overflow: hidden;
+  // height: 0px;
+
   overflow: hidden;
-  transition: max-height 0.6s ease;
+  transition: max-height 0.5s ease-out;
 
   &__active {
     height: auto;
@@ -69,4 +71,48 @@
     padding-top: 10px;
     padding-bottom: 10px;
   }
+}
+
+
+.accordionSummary {
+  padding: 5px 10px;
+  display: flex;
+  border: none;
+  background-color: #f5f5f5f1;
+}
+
+.accordionSummaryForNested {
+  // transition: max-height 0.6s ease;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  border: none;
+  background-color: #f1efefe8;
+}
+
+.accordianContent {
+  // transition: max-height 0.6s ease;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 115px 110px 70px;
+  gap: 10px;
+  border: none;
+}
+
+.valueUnit {
+  color: #000000;
+  font-size: 14px;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  word-break: break-word;
+}
+
+
+.alignLeft{
+  justify-content: left;
+}
+.alignRight{
+  justify-content: right;
 }

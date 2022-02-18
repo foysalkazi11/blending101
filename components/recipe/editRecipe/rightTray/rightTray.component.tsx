@@ -10,6 +10,7 @@ import LinearComponent from "../../../../theme/linearProgress/LinearProgress.com
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { useLazyQuery } from "@apollo/client";
 import { NUTRITION_BASED_RECIPE } from "../../../../gqlLib/recipes/queries/getEditRecipe";
+import RecursiveAccordian from "../../../customRecursiveAccordian/recursiveAccordian.component";
 
 interface PassingProps {
   name: string;
@@ -70,6 +71,150 @@ const RightTray = () => {
     console.log(NutritionStateTemp);
   }, [nutritionState]);
 
+  let nestedAccordian = {
+    Energy: {
+      Protein: {
+        value: "energy 1",
+        Unit: "kcal",
+        children: {
+          Protein2: {
+            value: "energy 12",
+            Unit: "kcal2",
+            children: {},
+          },
+        },
+      },
+      Fats: {
+        value: "Fats",
+        Unit: "fat",
+        children: {},
+      },
+      Carbohydrates: {
+        value: "Carbohydrates",
+        Unit: "kcal",
+        children: {
+          "Dietary Fiber": {
+            value: "Carbohydrates",
+            Unit: "kcal",
+            children: {},
+          },
+          Sugars: {
+            value: "Carbohydrates",
+            Unit: "kcal",
+            children: {
+              Sucrose: {
+                value: "Sucrose",
+                Unit: "kcal",
+                children: {},
+              },
+              Glucose: {
+                value: "Glucose",
+                Unit: "kcal",
+                children: {},
+              },
+              Fructose: {
+                value: "Fructose",
+                Unit: "kcal",
+                children: {},
+              },
+              Lactose: {
+                value: "Lactose",
+                Unit: "kcal",
+                children: {},
+              },
+              Maltose: {
+                value: "Maltose",
+                Unit: "kcal",
+                children: {},
+              },
+              Galactose: {
+                value: "Galactose",
+                Unit: "kcal",
+                children: {},
+              },
+            },
+          },
+          Starch: {
+            value: "Starch",
+            Unit: "kcal",
+            children: {},
+          },
+        },
+      },
+    },
+    Vitamins: {
+      "Vitamin C": {
+        value: "Vitamin C",
+        Unit: "kcal",
+        children: {},
+      },
+      Thiamin: {
+        value: "Thiamin",
+        Unit: "kcal",
+        children: {},
+      },
+      Riboflavin: {
+        value: "Riboflavin",
+        Unit: "kcal",
+        children: {},
+      },
+      Niacin: {
+        value: "Niacin",
+        Unit: "kcal",
+        children: {},
+      },
+      "Pantothenic acid": {
+        value: "",
+        Unit: "kcal",
+        children: {},
+      },
+      "Vitamin B-6": {
+        value: "Vitamin B-6",
+        Unit: "kcal",
+        children: {},
+      },
+      Biotin: {
+        value: "Biotin",
+        Unit: "kcal",
+        children: {},
+      },
+      Folate: {
+        value: "Folate",
+        Unit: "kcal",
+        children: {},
+      },
+      Choline: {
+        value: "Choline",
+        Unit: "kcal",
+        children: {},
+      },
+      Betaine: {
+        value: "Betaine",
+        Unit: "kcal",
+        children: {},
+      },
+      "Vitamin B-12": {
+        value: "Vitamin B-12",
+        Unit: "kcal",
+        children: {},
+      },
+      "Vitamin A": {
+        value: "Vitamin A",
+        Unit: "kcal",
+        children: {},
+      },
+      "Vitamin K": {
+        value:
+          "Vitamin K (phylloquinone), Vitamin K (Dihydrophylloquinone), Vitamin K (Menaquinone-4)",
+        Unit: "kcal",
+        children: {},
+      },
+    },
+    Minerals: {
+      Calcium: { value: "Calcium, Ca", Unit: "kcal", children: {} },
+    },
+  };
+
   return (
     <div>
       <RightHeader />
@@ -97,83 +242,7 @@ const RightTray = () => {
           <div className={styles.right__subheader__daily}>Daily %</div>
         </div>
         <div className={styles.compoent__box} style={{}}>
-          <Accordion title="Energy">
-            <table>
-              <tbody>
-                {nutritionState.map((elem, index) => {
-                  return (
-                    <tr className={styles.table__row} key={"table_row" + index}>
-                      <td className={styles.table__row__cell}>
-                        Total Carbohydrates
-                      </td>
-                      <td className={styles.table__row__cell}>39.2 g</td>
-                      <td className={styles.table__row__cell}>12%</td>
-                    </tr>
-                  );
-                })}
-                {/* <tr className={styles.table__row}>
-                  <td className={styles.table__row__cell}>
-                    Total Carbohydrates
-                  </td>
-                  <td className={styles.table__row__cell}>39.2 g</td>
-                  <td className={styles.table__row__cell}>12%</td>
-                </tr>
-                <tr className={styles.table__row}>
-                  <td className={styles.table__row__cell}>Dietary Fiber</td>
-                  <td className={styles.table__row__cell}>15.6 g</td>
-                  <td className={styles.table__row__cell}>12%</td>
-                </tr>
-
-                <tr className={styles.table__row}>
-                  <td className={styles.table__row__cell}>Sugars Protein</td>
-                  <td className={styles.table__row__cell}>6.4 g</td>
-                  <td className={styles.table__row__cell}> 8%</td>
-                </tr> */}
-              </tbody>
-            </table>
-          </Accordion>
-
-          <Accordion title="Vitamins">
-            <table>
-              <tbody>
-                <tr className={styles.table__row}>
-                  <td className={styles.table__row__cell}> Vitamin A </td>
-                  <td className={styles.table__row__cell}> 30.202 iu </td>
-                  <td className={styles.table__row__cell}> 597% </td>
-                </tr>
-
-                <tr className={styles.table__row}>
-                  <td className={styles.table__row__cell}> Vitamin B </td>
-                  <td className={styles.table__row__cell}> 480 mg </td>
-                  <td className={styles.table__row__cell}> 356% </td>
-                </tr>
-              </tbody>
-            </table>
-          </Accordion>
-
-          <Accordion title="Minerals">
-            <table>
-              {/* sx={{ "&:last-child td, &:last-child th": { border: 0 } }} */}
-              <tbody>
-                <tr className={styles.table__row}>
-                  <td className={styles.table__row__cell}> Potassium </td>
-                  <td className={styles.table__row__cell}> 296 mg </td>
-                  <td className={styles.table__row__cell}> 32% </td>
-                </tr>
-
-                <tr className={styles.table__row}>
-                  <td className={styles.table__row__cell}> Iron </td>
-                  <td className={styles.table__row__cell}> 9 mg </td>
-                  <td className={styles.table__row__cell}> 39% </td>
-                </tr>
-                <tr className={styles.table__row}>
-                  <td className={styles.table__row__cell}> Calcium </td>
-                  <td className={styles.table__row__cell}> 600 mg </td>
-                  <td className={styles.table__row__cell}> 232% </td>
-                </tr>
-              </tbody>
-            </table>
-          </Accordion>
+          <RecursiveAccordian dataObject={nestedAccordian} />
         </div>
       </div>
       <div className={styles.right}>
