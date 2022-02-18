@@ -1,3 +1,9 @@
+@mixin responsive($min_width, $max_width) {
+  @media only screen and (min-width: $min_width) and (max-width: $max_width) {
+    @content;
+  }
+}
+
 .icon {
   font-size: 25px;
   color: #7dbd3b;
@@ -94,7 +100,12 @@
   grid-template-columns: 115px 110px 70px;
   gap: 10px;
   border: none;
+
+  @include responsive(0px, 950px) {
+    grid-template-columns: 55% 25% 25%;
+  }
 }
+
 
 .valueUnit {
   color: #000000;
