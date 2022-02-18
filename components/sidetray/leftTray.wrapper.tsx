@@ -4,6 +4,7 @@ import styles from "./tray.module.scss";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { setOpenCollectionsTary } from "../../redux/slices/sideTraySlice";
 import { setChangeRecipeWithinCollection } from "../../redux/slices/collectionSlice";
+import useHover from "../utility/useHover";
 
 interface leftTrayInterface {
   filter?: boolean;
@@ -20,28 +21,37 @@ export default function LeftTrayWrapper({
   const dispatch = useAppDispatch();
   const ref = useRef<any>();
   const [isHovered, setIsHovered] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [hoevrRef, hover] = useHover();
 
-  useEffect(() => {
-    const elem = ref.current;
-    if (!elem) return;
-    if (openCollectionsTary) {
-      elem.style.left = "0";
-    } else {
-      elem.style.left = "-293px";
-    }
-  }, [openCollectionsTary]);
+  // useEffect(() => {
+  //   const elem = ref.current;
+  //   if (!elem) return;
+  //   if (openCollectionsTary) {
+  //     elem.style.left = "0";
+  //   } else {
+  //     elem.style.left = "-293px";
+  //   }
+  // }, [openCollectionsTary]);
 
   const handleClick = () => {
+    setOpen((pre) => !pre);
     dispatch(setOpenCollectionsTary(!openCollectionsTary));
     dispatch(setChangeRecipeWithinCollection(false));
   };
 
   return (
-    <div className={styles.tray} ref={ref} id={id}>
+    <div
+      className={`${styles.tray} ${open ? styles.open : ""}`}
+      id={id}
+      ref={hoevrRef}
+    >
       <div className={styles.tray__inner}>
         {openCollectionsTary ? (
           <div
-            className={styles.image + " " + styles.image__white}
+            className={`${styles.image} ${styles.image__white} ${
+              hover ? styles.hovered : ""
+            }`}
             onClick={() => {
               handleClick();
             }}
@@ -51,7 +61,9 @@ export default function LeftTrayWrapper({
         ) : filter ? null : (
           <div
             className={styles.imageContained + " " + styles.image__white}
-            onClick={handleClick}
+            onClick={() => {
+              handleClick();
+            }}
             onMouseOver={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
