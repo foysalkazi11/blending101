@@ -40,8 +40,7 @@ const EditRecipePage = () => {
 
   useEffect(() => {
     handleSubmitData();
-  }, [images])
-
+  }, [images]);
 
   const [
     getAllCategories,

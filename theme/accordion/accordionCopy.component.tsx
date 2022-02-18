@@ -49,7 +49,7 @@ const CustomAccordion = ({
           <div className={styles.accordionSummaryForNested}>
             {expanded ? (
               <FiMinusSquare
-                className={styles.icon}
+                className={styles.icon + " " + styles.iconCopy}
                 style={!plusMinusIcon && { visibility: "hidden" }}
                 onClick={() => {
                   setExpanded(!expanded);
@@ -57,7 +57,7 @@ const CustomAccordion = ({
               />
             ) : (
               <FiPlusSquare
-                className={styles.icon}
+                className={styles.icon + " " + styles.iconCopy}
                 style={!plusMinusIcon && { visibility: "hidden" }}
                 onClick={() => {
                   setExpanded(!expanded);
@@ -65,7 +65,7 @@ const CustomAccordion = ({
               />
             )}
             <div className={styles.accordianContent}>
-              <h5 className={styles.title}>{title}</h5>
+              <h5 className={styles.titleCopy}>{title}</h5>
               <p className={styles.valueUnit + " " + styles.alignLeft}>
                 {dataObject && dataObject[1].value}
               </p>

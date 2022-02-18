@@ -1,6 +1,5 @@
 import React from "react";
 import CustomAccordion from "../../theme/accordion/accordionCopy.component";
-import styles from "./recursiveAccordian.module.scss";
 
 interface recursiveAccordianInterface {
   dataObject: object;
@@ -11,7 +10,6 @@ const RecursiveAccordian = ({ dataObject }: recursiveAccordianInterface) => {
 
   const populateAccordian = (data) => {
     return Object.entries(data).map((entries, index) => {
-      console.log(entries);
       return (
         <div key={`${entries}`}>
           {/* @ts-ignore */}

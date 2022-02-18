@@ -22,12 +22,6 @@ const RightTray = () => {
     (state) => state.quantityAdjuster.nutritionState
   );
 
-  // const nutritionLevel=
-
-  // `[{ ingredientId: "61c6e4453a320071dc96ab1a", value: 12 }
-  // { ingredientId: "61c6e4453a320071dc96ab3e", value: 40 }
-  // { ingredientId: "61c6e4463a320071dc96ab87", value: 76 }]`
-
   const [NutritionStateTemp, SetNutritionStateTemp] = useState("");
   const [
     filterIngredientByCategoryAndClass,
@@ -76,13 +70,7 @@ const RightTray = () => {
       Protein: {
         value: "energy 1",
         Unit: "kcal",
-        children: {
-          Protein2: {
-            value: "energy 12",
-            Unit: "kcal2",
-            children: {},
-          },
-        },
+        children: {},
       },
       Fats: {
         value: "Fats",

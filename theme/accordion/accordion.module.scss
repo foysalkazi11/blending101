@@ -55,12 +55,6 @@
 }
 
 .accordianDetails {
-  // transition: all 0.6s;
-  //  padding: 0px 0px 10px 10px;
-  // width: 100%;
-  // transform: rotate(0deg);
-  // overflow: hidden;
-  // height: 0px;
 
   overflow: hidden;
   transition: max-height 0.5s ease-out;
@@ -75,10 +69,11 @@
 
 
 .accordionSummary {
-  padding: 5px 10px;
+  padding: 5px 10px 5px 8px;
   display: flex;
   border: none;
   background-color: #f5f5f5f1;
+  border-radius: 4px;
 }
 
 .accordionSummaryForNested {
@@ -88,6 +83,8 @@
   grid-template-columns: 24px 1fr;
   border: none;
   background-color: #f1efefe8;
+  padding: 5px 5px;
+  border-radius: 4px;
 }
 
 .accordianContent {
@@ -110,9 +107,24 @@
 }
 
 
-.alignLeft{
+.alignLeft {
   justify-content: left;
 }
-.alignRight{
+
+.alignRight {
   justify-content: right;
+}
+
+.iconCopy {
+  margin-left: 0px;
+  margin-right: 40px;
+}
+
+.titleCopy {
+  color: #000000;
+  font-size: 14px;
+  font-weight: 500;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
 }
