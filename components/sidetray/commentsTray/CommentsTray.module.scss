@@ -7,12 +7,12 @@
   transition: all;
   transition-duration: 0.4s;
   box-shadow: 0px 2px 6px #ececec;
-  z-index: 9999;
+
   padding: 20px;
 }
 .imageTag {
   position: absolute;
-  left: 0px;
+  left: 10px;
   top: 22px;
   transform: translateX(-100%);
   cursor: pointer;
@@ -28,6 +28,13 @@
   border: 1px solid #fe5d1f;
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
+  z-index: -1;
+  &:hover {
+    left: 0px;
+  }
+}
+.hovered {
+  left: 0px;
 }
 // .commentTray .imageTag img {
 //   width: 40px;
