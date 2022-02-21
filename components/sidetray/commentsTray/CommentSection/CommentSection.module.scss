@@ -36,6 +36,13 @@
   }
 }
 
+.userName {
+  white-space: nowrap;
+  width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .commentsIconBox {
   display: flex;
   justify-content: space-between;

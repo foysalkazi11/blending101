@@ -6,7 +6,7 @@ import CREATE_NET_COMMENT from "../../../../gqlLib/comments/mutation/createNewCo
 import DELETE_COMMENT from "../../../../gqlLib/comments/mutation/deleteComment";
 import EDIT_COMMENT from "../../../../gqlLib/comments/mutation/edtiComment";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import { setLoading } from "../../../../redux/slices/utilitySlice";
+// import { setLoading } from "../../../../redux/slices/utilitySlice";
 import CommentBox from "../commentBox/CommentBox";
 import styles from "./CommentSection.module.scss";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
@@ -18,6 +18,7 @@ import {
   setPopular,
   setRecommended,
 } from "../../../../redux/slices/recipeSlice";
+import SkeletonComment from "../../../../theme/skeletons/skeletonComment/SkeletonComment";
 
 type CommentSectionProps = {
   allComments: any[];
@@ -45,6 +46,7 @@ const CommentSection = ({
   const { latest, popular, recommended } = useAppSelector(
     (state) => state?.recipe
   );
+  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
 
   const updateRecipeRating = (
@@ -82,7 +84,7 @@ const CommentSection = ({
   };
 
   const removeComment = async (id: string) => {
-    dispatch(setLoading(true));
+    setLoading(true);
     try {
       const { data } = await deleteComment({
         variables: {
@@ -98,17 +100,17 @@ const CommentSection = ({
       const { averageRating, numberOfRating, _id } =
         data?.removeComment?.recipe;
       updateRecipeRating(_id, averageRating, numberOfRating);
-      dispatch(setLoading(false));
+      setLoading(false);
       setUpdateComment(false);
       reactToastifyNotification("info", "Delete comment successfully");
     } catch (error) {
-      dispatch(setLoading(false));
+      setLoading(false);
       reactToastifyNotification("error", error?.message);
     }
   };
 
   const createOrUpdateComment = async () => {
-    dispatch(setLoading(true));
+    setLoading(true);
     try {
       if (!updateComment) {
         const { data } = await createComment({
@@ -147,14 +149,14 @@ const CommentSection = ({
         setUpdateComment(false);
       }
 
-      dispatch(setLoading(false));
+      setLoading(false);
       reactToastifyNotification(
         "info",
         `Comment ${updateComment ? "update" : "create"} successfully`
       );
       toggleCommentBox();
     } catch (error) {
-      dispatch(setLoading(false));
+      setLoading(false);
       reactToastifyNotification("error", error?.message);
     }
   };
@@ -170,6 +172,15 @@ const CommentSection = ({
   const toggleCommentBox = () => {
     setShowCommentBox((pre) => !pre);
   };
+
+  if (loading) {
+    return (
+      <>
+        <SkeletonComment />
+        <SkeletonComment />
+      </>
+    );
+  }
   return (
     <div>
       {updateComment ? (
@@ -182,7 +193,7 @@ const CommentSection = ({
                 <MdPersonOutline />
               )}
             </div>
-            <h6>
+            <h6 className={styles.userName}>
               {dbUser?.displayName ||
                 dbUser?.lastName ||
                 dbUser?.firstName ||
@@ -204,7 +215,7 @@ const CommentSection = ({
                     <MdPersonOutline />
                   )}
                 </div>
-                <h6>
+                <h6 className={styles.userName}>
                   {" "}
                   {dbUser?.displayName ||
                     dbUser?.lastName ||
