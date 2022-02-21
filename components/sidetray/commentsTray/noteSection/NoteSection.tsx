@@ -91,7 +91,10 @@ const NoteSection = ({ allNotes, setAllNotes }: NoteSectionProps) => {
       }
 
       dispatch(setLoading(false));
-      reactToastifyNotification("info", "Note create successfully");
+      reactToastifyNotification(
+        "info",
+        `Note ${updateNote ? "updated" : "created"} successfully`
+      );
       toggleNoteForm();
     } catch (error) {
       dispatch(setLoading(false));

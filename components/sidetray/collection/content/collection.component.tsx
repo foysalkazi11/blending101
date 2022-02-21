@@ -292,7 +292,12 @@ export default function CollectionComponent({
                   </div>
                 ) : hoverIndex === i + 1 ? (
                   /* @ts-ignore */
-                  item?.name === "My Favourite" ? null : (
+                  item?.name === "My Favourite" ? (
+                    <p style={{ marginRight: "10px" }}>
+                      {/* @ts-ignore */}
+                      {item?.recipes?.length}
+                    </p>
+                  ) : (
                     <div className={styles.rightSide}>
                       <MdMoreVert
                         className={styles.moreIcon}
