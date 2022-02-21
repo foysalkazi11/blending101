@@ -2,12 +2,17 @@ import React from "react";
 import styles from "./Loader.module.scss";
 import { useAppSelector } from "../../redux/hooks";
 
-const Loader = (props) => {
+type LoaderProps = {
+  active?: boolean;
+  style?: React.CSSProperties;
+};
+
+const Loader = ({ active = false, style = {} }: LoaderProps) => {
   const { loading } = useAppSelector((state) => state?.utility);
 
   return (
     <>
-      {loading || props?.active ? (
+      {loading || active ? (
         <div className={styles.preloader}>
           <svg
             width="200"
