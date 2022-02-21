@@ -12,7 +12,7 @@ import reactToastifyNotification from "../../utility/reactToastifyNotification";
 import GET_ALL_COMMENTS_FOR_A_RECIPE from "../../../gqlLib/comments/query/getAllCommentsForARecipe";
 import useHover from "../../utility/useHover";
 
-export default function CommentsTray(props) {
+export default function CommentsTray() {
   const [allNotes, setAllNotes] = useState([]);
   const [allComments, setAllComments] = useState([]);
   const [userComments, setUserComments] = useState<any>({});
