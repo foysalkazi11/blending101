@@ -24,15 +24,21 @@ export default function LeftTrayWrapper({
   const [open, setOpen] = useState(false);
   const [hoevrRef, hover] = useHover();
 
-  // useEffect(() => {
-  //   const elem = ref.current;
-  //   if (!elem) return;
-  //   if (openCollectionsTary) {
-  //     elem.style.left = "0";
-  //   } else {
-  //     elem.style.left = "-293px";
-  //   }
-  // }, [openCollectionsTary]);
+  useEffect(() => {
+    // const elem = ref.current;
+    // if (!elem) return;
+    // if (openCollectionsTary) {
+    //   elem.style.left = "0";
+    // } else {
+    //   elem.style.left = "-293px";
+    // }
+
+    if (openCollectionsTary) {
+      setOpen(true);
+    } else {
+      setOpen(false);
+    }
+  }, [openCollectionsTary]);
 
   const handleClick = () => {
     setOpen((pre) => !pre);
