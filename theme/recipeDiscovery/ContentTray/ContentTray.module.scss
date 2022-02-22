@@ -51,10 +51,11 @@ $arrow_distance:-45px;
 
         span {
             position: relative;
-            width: 30px;
+            width: 26px;
             margin-right: 10px;
             margin-left: 60px;
             color: inherit;
+            height: 26px;
 
             @media only screen and (max-width: 500px) {
                 display: none;

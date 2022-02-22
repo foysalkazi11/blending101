@@ -171,7 +171,7 @@ export default function DatacardComponent({
         </div>
       </div>
       <div className={styles.databody__bottom}>
-        <p>{slicedString(ingredients, 0, 6)}</p>
+        <p>{slicedString(ingredients, 0, 8)}</p>
       </div>
     </div>
   );
