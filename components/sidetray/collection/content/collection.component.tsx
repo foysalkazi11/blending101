@@ -63,8 +63,6 @@ export default function CollectionComponent({
   const [isCollectionUpdate, setIsCollectionUpdate] = useState(false);
   const isMounted = useRef(null);
 
-  console.log(collections);
-
   const handleAddorRemoveRecipeFormCollection = async () => {
     dispatch(setLoading(true));
     try {
@@ -294,7 +292,12 @@ export default function CollectionComponent({
                   </div>
                 ) : hoverIndex === i + 1 ? (
                   /* @ts-ignore */
-                  item?.name === "My Favourite" ? null : (
+                  item?.name === "My Favourite" ? (
+                    <p style={{ marginRight: "10px" }}>
+                      {/* @ts-ignore */}
+                      {item?.recipes?.length}
+                    </p>
+                  ) : (
                     <div className={styles.rightSide}>
                       <MdMoreVert
                         className={styles.moreIcon}

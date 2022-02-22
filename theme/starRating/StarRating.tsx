@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styles from "./StarRating.module.scss";
 
 type StarRatingProps = {
@@ -8,6 +8,10 @@ type StarRatingProps = {
 
 const StarRating = ({ rating = 0, setRating = () => {} }: StarRatingProps) => {
   const [hover, setHover] = useState(0);
+
+  useEffect(() => {
+    setHover(rating);
+  }, [rating]);
   return (
     <div className="star-rating">
       {[...Array(5)].map((star, index) => {

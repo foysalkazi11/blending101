@@ -10,10 +10,11 @@ import { useLazyQuery } from "@apollo/client";
 import GET_ALL_NOTES_FOR_A_RECIPE from "../../../gqlLib/notes/quries/getAllNotesForARecipe";
 import reactToastifyNotification from "../../utility/reactToastifyNotification";
 import GET_ALL_COMMENTS_FOR_A_RECIPE from "../../../gqlLib/comments/query/getAllCommentsForARecipe";
+import useHover from "../../utility/useHover";
 
-export default function CommentsTray(props) {
+export default function CommentsTray() {
   const [allNotes, setAllNotes] = useState([]);
-  const [allComments, setComments] = useState([]);
+  const [allComments, setAllComments] = useState([]);
   const [userComments, setUserComments] = useState<any>({});
   const [toggle, setToggle] = useState(1);
   const { openCommentsTray } = useAppSelector((state) => state?.sideTray);
@@ -31,8 +32,8 @@ export default function CommentsTray(props) {
   ] = useLazyQuery(GET_ALL_COMMENTS_FOR_A_RECIPE, {
     fetchPolicy: "network-only",
   });
-
-  const ref = useRef<any>();
+  const [ref, hovered] = useHover();
+  // const ref = useRef<any>();
   const reff = useRef<any>();
 
   const fetchCommentsAndNotes = async () => {
@@ -72,7 +73,7 @@ export default function CommentsTray(props) {
   useEffect(() => {
     if (!commentLoading) {
       // const { comments, userComment } = commentData?.getAllCommentsForARecipe;
-      setComments(commentData?.getAllCommentsForARecipe?.comments || {});
+      setAllComments(commentData?.getAllCommentsForARecipe?.comments || {});
       setUserComments(commentData?.getAllCommentsForARecipe?.userComment || []);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -93,6 +94,7 @@ export default function CommentsTray(props) {
     } else {
       elem.style.right = "-335px";
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openCommentsTray]);
 
   const handleClick = () => {
@@ -111,7 +113,10 @@ export default function CommentsTray(props) {
   return (
     <div className={`${styles.commentTray}`} ref={ref}>
       {openCommentsTray ? (
-        <div className={styles.imageTag} onClick={handleClick}>
+        <div
+          className={`${styles.imageTag} ${hovered ? styles.hovered : ""}`}
+          onClick={handleClick}
+        >
           <img src="/images/cmnt-white.svg" alt="message-icon" />
         </div>
       ) : null}
@@ -150,7 +155,7 @@ export default function CommentsTray(props) {
       {toggle === 1 ? (
         <CommentSection
           allComments={allComments}
-          setComments={setComments}
+          setComments={setAllComments}
           userComments={userComments}
           setUserComments={setUserComments}
         />

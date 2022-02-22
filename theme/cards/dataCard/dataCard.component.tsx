@@ -61,6 +61,7 @@ export default function DatacardComponent({
   score = score || 701;
   noOfComments = noOfComments || 0;
   image = image || "/cards/juice.png";
+  ratings = Math.ceil(ratings);
   const menu = useRef<any>();
 
   const dispatch = useAppDispatch();

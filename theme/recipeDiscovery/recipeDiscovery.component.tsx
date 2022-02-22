@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import AContainer from "../../containers/A.container";
 import styles from "./recipeDiscovery.module.scss";
 import AppdownLoadCard from "./AppdownLoadCard/AppdownLoadCard.component";
@@ -40,6 +40,7 @@ const RecipeDetails = () => {
   const [getAllPopularRecipes] = useLazyQuery(GET_ALL_POPULAR_RECIPES);
   const [getAllLatestRecipes] = useLazyQuery(GET_ALL_LATEST_RECIPES);
   const dispatch = useAppDispatch();
+  const isMounted = useRef(false);
 
   const handleCompareRecipe = () => {
     dispatch(setOpenCollectionsTary(true));
@@ -50,14 +51,25 @@ const RecipeDetails = () => {
   const getAllRecipes = async () => {
     dispatch(setLoading(true));
     try {
-      const recommendedRecipes = await getAllRecommendedRecipes();
-      dispatch(
-        setRecommended(recommendedRecipes?.data?.getAllrecomendedRecipes || [])
-      );
-      const popularRecipes = await getAllPopularRecipes();
-      dispatch(setPopular(popularRecipes?.data?.getAllpopularRecipes || []));
-      const latestRecipes = await getAllLatestRecipes();
-      dispatch(setLatest(latestRecipes?.data?.getAllLatestRecipes || []));
+      if (!recommended?.length) {
+        const recommendedRecipes = await getAllRecommendedRecipes();
+        dispatch(
+          setRecommended(
+            recommendedRecipes?.data?.getAllrecomendedRecipes || []
+          )
+        );
+      }
+
+      if (!popular?.length) {
+        const popularRecipes = await getAllPopularRecipes();
+        dispatch(setPopular(popularRecipes?.data?.getAllpopularRecipes || []));
+      }
+
+      if (!latest?.length) {
+        const latestRecipes = await getAllLatestRecipes();
+        dispatch(setLatest(latestRecipes?.data?.getAllLatestRecipes || []));
+      }
+
       dispatch(setLoading(false));
     } catch (error) {
       dispatch(setLoading(false));
@@ -67,10 +79,21 @@ const RecipeDetails = () => {
 
   useEffect(() => {
     if (user) {
-      getAllRecipes();
+      if (!latest?.length || !popular?.length || !recommended?.length) {
+        getAllRecipes();
+      }
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
+
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   return (
     <>
