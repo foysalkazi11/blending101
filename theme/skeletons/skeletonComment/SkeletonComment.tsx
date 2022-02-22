@@ -5,19 +5,47 @@ import styles from "./SkeletonComment.module.scss";
 
 const SkeletonComment = () => {
   return (
-    <div className={styles.skeletonComment_wraper}>
-      <div className={styles.title_wraper}>
-        <SkeletonElement
-          type="avatar"
-          style={{ width: "40px", height: "40px" }}
-        />
-        <SkeletonElement type="title" style={{ marginLeft: "16px" }} />
+    <>
+      <div className={styles.skeletonComment_wraper}>
+        <div className={styles.title_wraper}>
+          <SkeletonElement
+            type="avatar"
+            style={{ width: "40px", height: "40px" }}
+          />
+          <SkeletonElement type="title" style={{ marginLeft: "16px" }} />
+        </div>
+        <div className={styles.text_wraper}>
+          <SkeletonElement type="text" />
+          <SkeletonElement type="text" />
+        </div>
       </div>
-      <div className={styles.text_wraper}>
-        <SkeletonElement type="text" />
-        <SkeletonElement type="text" />
+      <div className={styles.skeletonComment_wraper}>
+        <div className={styles.title_wraper}>
+          <SkeletonElement
+            type="avatar"
+            style={{ width: "40px", height: "40px" }}
+          />
+          <SkeletonElement type="title" style={{ marginLeft: "16px" }} />
+        </div>
+        <div className={styles.text_wraper}>
+          <SkeletonElement type="text" />
+          <SkeletonElement type="text" />
+        </div>
       </div>
-    </div>
+      <div className={styles.skeletonComment_wraper}>
+        <div className={styles.title_wraper}>
+          <SkeletonElement
+            type="avatar"
+            style={{ width: "40px", height: "40px" }}
+          />
+          <SkeletonElement type="title" style={{ marginLeft: "16px" }} />
+        </div>
+        <div className={styles.text_wraper}>
+          <SkeletonElement type="text" />
+          <SkeletonElement type="text" />
+        </div>
+      </div>
+    </>
   );
 };
 
