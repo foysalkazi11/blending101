@@ -22,6 +22,12 @@ const GET_ALL_RECIPES_WITHIN_COLLECTIONS = gql`
       favicon
       averageRating
       numberOfRating
+      ingredients {
+        ingredientId {
+          _id
+          ingredientName
+        }
+      }
     }
   }
 `;

@@ -11,6 +11,7 @@ import GET_ALL_NOTES_FOR_A_RECIPE from "../../../gqlLib/notes/quries/getAllNotes
 import reactToastifyNotification from "../../utility/reactToastifyNotification";
 import GET_ALL_COMMENTS_FOR_A_RECIPE from "../../../gqlLib/comments/query/getAllCommentsForARecipe";
 import useHover from "../../utility/useHover";
+import SkeletonComment from "../../../theme/skeletons/skeletonComment/SkeletonComment";
 
 export default function CommentsTray() {
   const [allNotes, setAllNotes] = useState([]);
@@ -53,15 +54,6 @@ export default function CommentsTray() {
       reactToastifyNotification(error?.message);
     }
   };
-
-  useEffect(() => {
-    if (noteLoading || commentLoading) {
-      dispatch(setLoading(true));
-    } else {
-      dispatch(setLoading(false));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [noteLoading, commentLoading]);
 
   useEffect(() => {
     if (!noteLoading) {
@@ -152,7 +144,10 @@ export default function CommentsTray() {
         <img src={currentRecipeInfo?.image} alt="recipe_img" />
         <h3>{currentRecipeInfo?.name}</h3>
       </div>
-      {toggle === 1 ? (
+
+      {noteLoading || commentLoading ? (
+        <SkeletonComment />
+      ) : toggle === 1 ? (
         <CommentSection
           allComments={allComments}
           setComments={setAllComments}
