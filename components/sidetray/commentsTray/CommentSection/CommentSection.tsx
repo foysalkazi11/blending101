@@ -174,12 +174,7 @@ const CommentSection = ({
   };
 
   if (loading) {
-    return (
-      <>
-        <SkeletonComment />
-        <SkeletonComment />
-      </>
-    );
+    return <SkeletonComment />;
   }
   return (
     <div>

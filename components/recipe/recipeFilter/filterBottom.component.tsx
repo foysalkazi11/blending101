@@ -19,7 +19,7 @@ function FilterPageBottom({ blends, ingredients, filters }) {
   const fetchGetRecipesByBlendAndIngredients = () => {
     let arr = [];
     blends?.forEach((blend) => {
-      arr?.push(`${blend.title.toString()}`);
+      arr?.push(`${blend?.id}`);
     });
     let ingredientIds: string[] = [];
     ingredients?.forEach((blend) => {
@@ -97,8 +97,9 @@ function FilterPageBottom({ blends, ingredients, filters }) {
             {recommended?.length
               ? recommended?.map((item, index) => {
                   let ingredients = [];
-                  item?.testIngredient?.forEach((ing) => {
-                    ingredients.push(ing.name);
+                  item?.ingredients?.forEach((ing) => {
+                    const ingredient = ing?.ingredientId?.ingredientName;
+                    ingredients.push(ingredient);
                   });
                   const ing = ingredients.toString();
                   return (

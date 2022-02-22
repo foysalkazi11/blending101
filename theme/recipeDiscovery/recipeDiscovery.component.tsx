@@ -125,8 +125,9 @@ const RecipeDetails = () => {
                   >
                     {recommended?.map((item, index) => {
                       let ingredients = [];
-                      item.testIngredient.forEach((ing) => {
-                        ingredients.push(ing.name);
+                      item?.ingredients?.forEach((ing) => {
+                        const ingredient = ing?.ingredientId?.ingredientName;
+                        ingredients.push(ingredient);
                       });
                       const ing = ingredients.toString();
                       return (
@@ -162,8 +163,9 @@ const RecipeDetails = () => {
                   >
                     {latest?.map((item, index) => {
                       let ingredients = [];
-                      item.testIngredient.forEach((ing) => {
-                        ingredients.push(ing.name);
+                      item?.ingredients?.forEach((ing) => {
+                        const ingredient = ing?.ingredientId?.ingredientName;
+                        ingredients.push(ingredient);
                       });
                       const ing = ingredients.toString();
                       {
@@ -200,8 +202,9 @@ const RecipeDetails = () => {
                   >
                     {popular?.map((item, index) => {
                       let ingredients = [];
-                      item.testIngredient.forEach((ing) => {
-                        ingredients.push(ing.name);
+                      item?.ingredients?.forEach((ing) => {
+                        const ingredient = ing?.ingredientId?.ingredientName;
+                        ingredients.push(ingredient);
                       });
                       const ing = ingredients.toString();
                       {

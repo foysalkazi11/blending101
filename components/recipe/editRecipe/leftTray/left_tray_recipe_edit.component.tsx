@@ -30,6 +30,7 @@ const Left_tray_recipe_edit = () => {
     let blendz = [];
     let present = false;
     ingredients_list.forEach((blen) => {
+      console.log(blen)
       if (blen === ingredient) {
         present = true;
       }
@@ -42,6 +43,7 @@ const Left_tray_recipe_edit = () => {
       });
     }
 
+    console.log(blendz)
     dispatch(setIngredientsToList(blendz));
   };
 
@@ -103,6 +105,7 @@ const Left_tray_recipe_edit = () => {
   useEffect(() => {
     if (!searchInProcess) {
       fetchSearchResults();
+      console.log(searchElement)
     }
   }, [searchInProcess]);
 

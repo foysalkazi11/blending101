@@ -36,13 +36,18 @@ const IngredientList = ({
 }: IngredientListPorps) => {
   const dispatch = useAppDispatch();
 
-  let SelecteApiParameter;
-  if (selectedBlendValueState) {
-    SelecteApiParameter = blendCategory.filter((v, i) =>
-      v.name.toLowerCase().includes(selectedBlendValueState)
-    );
-  }
-
+  const [selectedBlendType, setSelectedBlendType] = useState(null);
+  useEffect(() => {
+    let selectedApiParameter = blendCategory?.filter((elem) => {
+      console.log(elem)
+      let tempElemName=elem.name.toLowerCase();
+      let blendElem=selectedBlendValueState.toLowerCase();
+      console.log(tempElemName);
+      console.log(blendElem);
+      return(blendElem === tempElemName);
+    });
+    setSelectedBlendType(selectedApiParameter);
+  }, [selectedBlendValueState]);
   //variables for all states ==>start
   const quantity_number = useAppSelector(
     (state) => state.quantityAdjuster.quantityNum
@@ -222,11 +227,12 @@ const IngredientList = ({
           let measurement = {};
           let customObj = {};
           elem.portions.map((elemtemp) => {
+            console.log(elemtemp);
             if (elemtemp.default === true) {
               customObj = {
                 ...customObj,
-                weightInGram: elemtemp.meausermentWeight,
-                selectedPortionName: elemtemp.measurement,
+                weightInGram: elemtemp?.meausermentWeight,
+                selectedPortionName: elemtemp?.measurement,
               };
               measurement = { ...measurement, ...customObj };
             }
@@ -258,7 +264,7 @@ const IngredientList = ({
       image: uploadedImagesUrl,
       recipeInstructions: howToState,
       recipeName: editText(),
-      SelecteApiParameter: SelecteApiParameter,
+      SelectedblendCategory: selectedBlendType,
     })
   );
   return (
