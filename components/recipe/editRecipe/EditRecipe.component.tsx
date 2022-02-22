@@ -50,15 +50,18 @@ const EditRecipePage = () => {
   const fetchAllBlendCategories = async () => {
     await getAllCategories();
     setblendCategory(blendCategoriesData?.getAllCategories);
-    setSelectedBlendValueState(blendCategoriesData?.getAllCategories[0]?.name);
+    blendCategory &&
+      setSelectedBlendValueState(blendCategoriesData?.getAllCategories[0].name);
   };
 
+  console.log(selectedBlendValueState);
   useEffect(() => {
     if (!blendCategoriesInProgress) {
       fetchAllBlendCategories();
     }
   }, [blendCategoriesInProgress]);
 
+  console.log(blendCategory);
   return (
     <AContainer>
       <div className={styles.main}>
