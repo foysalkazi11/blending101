@@ -190,7 +190,7 @@
 
 .datacard__body__belt {
   display: flex;
-  background: #f6f6f6 0% 0% no-repeat padding-box;
+  background: #f1efef 0% 0% no-repeat padding-box;
   padding: 5px 15px;
   justify-content: space-between;
   margin-top: 13px;
@@ -198,6 +198,8 @@
   &__child {
     font-size: 13px;
     font-weight: 500;
+    display: flex;
+    align-items: center;
 
     span {
       color: #fe5d1f;
