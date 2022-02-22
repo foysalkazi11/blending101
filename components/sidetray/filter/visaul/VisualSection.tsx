@@ -1,11 +1,21 @@
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { setBlendTye } from "../../../../redux/slices/sideTraySlice";
 import styles from "../filter.module.scss";
 import { blendTypes } from "../filterRankingList";
 import CheckCircle from "../../../../public/icons/check_circle_black_24dp.svg";
 import FilterbottomComponent from "../filterBottom.component";
+import { useLazyQuery } from "@apollo/client";
+import { FETCH_BLEND_CATEGORIES } from "../../../../gqlLib/category/queries/fetchCategories";
+
+const blendCategoryImage = {
+  Smoothies: "/food/wholefood.png",
+  WholeFood: "/food/soup.svg",
+  "Frozen Treat": "/food/frozen.png",
+  Refreshing: "/food/fresh.png",
+  "Herbal Tea": "/other/heart.svg",
+};
 
 type VisualSectionProps = {
   categories?: { title: string; val: string }[];
@@ -13,6 +23,11 @@ type VisualSectionProps = {
 
 const VisualSection = ({ categories }: VisualSectionProps) => {
   const blends = useAppSelector((state) => state.sideTray.blends);
+  const [getAllBlendCategory, { loading: blendLoading, data: blendData }] =
+    useLazyQuery(FETCH_BLEND_CATEGORIES);
+  const [blendCategroy, setBlendCategroy] = useState<
+    { _id: string; name: string; imgae: string }[]
+  >([]);
   const dispatch = useAppDispatch();
 
   const handleBlendClick = (blend) => {
@@ -33,38 +48,63 @@ const VisualSection = ({ categories }: VisualSectionProps) => {
     dispatch(setBlendTye(blendz));
   };
 
-  const checkActive = (blend) => {
+  const checkActive = (id) => {
     let present = false;
     blends.forEach((blen) => {
-      //@ts-ignore
-      if (blen.title === blend) {
+      if (blen?.id === id) {
         present = true;
       }
     });
     return present;
   };
 
+  const fetchAllBlendCategroy = async () => {
+    try {
+      const { data } = await getAllBlendCategory();
+      setBlendCategroy(data?.getAllCategories);
+    } catch (error) {
+      console.log(error?.message);
+    }
+  };
+
+  useEffect(() => {
+    if (!blendCategroy?.length) {
+      fetchAllBlendCategroy();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className={styles.filter}>
       <div className={styles.filter__top}>
         <h3>Blend Type</h3>
         <div className={styles.filter__menu}>
-          {blendTypes &&
-            blendTypes.map((blend, i) => (
+          {blendCategroy?.length &&
+            blendCategroy.map((blend, i) => (
               <div
-                key={blend.title + i}
+                key={blend?.name + i}
                 className={styles.filter__menu__item}
-                onClick={() => handleBlendClick(blend)}
+                onClick={() =>
+                  handleBlendClick({
+                    title: blend?.name,
+                    img: blendCategoryImage[blend?.name],
+                    id: blend?._id,
+                  })
+                }
               >
                 <div className={styles.filter__menu__item__image}>
-                  <img src={blend.img} alt={blend.title} />
-                  {checkActive(blend.title) && (
+                  <img
+                    src={blendCategoryImage[blend?.name]}
+                    alt={blend?.name}
+                  />
+                  {checkActive(blend._id) && (
                     <div className={styles.tick}>
                       <CheckCircle className={styles.ticked} />
                     </div>
                   )}
                 </div>
-                <p>{blend.title}</p>
+                <p>{blend.name}</p>
               </div>
             ))}
         </div>

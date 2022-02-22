@@ -37,9 +37,9 @@
 .filter__menu {
   display: flex;
   margin-top: 20px;
-  justify-content: space-between;
   flex-wrap: wrap;
   max-width: 100%;
+  gap: 10px;
 
   input {
     border: 1px solid #ececec;

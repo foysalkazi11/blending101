@@ -247,7 +247,7 @@ const IngredientList = ({
     const addrecipeFunc = async () => {
       const { data } = await addRecipeRecipeFromUser();
       reactToastifyNotification("info", "Recipe Created");
-      console.log({data:data});
+      console.log({ data: data });
       setIsFetching(false);
     };
     addrecipeFunc();

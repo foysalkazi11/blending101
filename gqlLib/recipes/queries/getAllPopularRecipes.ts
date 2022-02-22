@@ -27,6 +27,12 @@ const GET_ALL_POPULAR_RECIPES = gql`
       favicon
       averageRating
       numberOfRating
+      ingredients {
+        ingredientId {
+          _id
+          ingredientName
+        }
+      }
     }
   }
 `;

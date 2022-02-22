@@ -1,13 +1,16 @@
 import { useLazyQuery } from "@apollo/client";
 import React, { useEffect } from "react";
-import RecipeDetails from "../../components/recipe/recipeDetails/RecipeDetails";
-import { GET_RECIPE } from "../../gqlLib/recipes/queries/getRecipeDetails";
+import RecipeDetails from "../../../components/recipe/recipeDetails/RecipeDetails";
+import { GET_RECIPE } from "../../../gqlLib/recipes/queries/getRecipeDetails";
+import { useRouter } from "next/router";
 
 const Index = () => {
+  const router = useRouter();
+  const {recipe__Id}=router.query;
   const [getARecipe, { loading: gettingRecipe, data: recipeData }] =
   useLazyQuery(GET_RECIPE, {
     fetchPolicy: "network-only",
-    variables: { recipeId: "6214df945523d9802418cc48" },
+    variables: { recipeId: recipe__Id },
   });
 
   const fetchRecipe = () => {

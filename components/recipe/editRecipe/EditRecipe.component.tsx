@@ -54,7 +54,6 @@ const EditRecipePage = () => {
       setSelectedBlendValueState(blendCategoriesData?.getAllCategories[0].name);
   };
 
-  console.log(selectedBlendValueState);
   useEffect(() => {
     if (!blendCategoriesInProgress) {
       fetchAllBlendCategories();
