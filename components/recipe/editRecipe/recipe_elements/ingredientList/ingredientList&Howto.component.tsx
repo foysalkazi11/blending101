@@ -39,12 +39,9 @@ const IngredientList = ({
   const [selectedBlendType, setSelectedBlendType] = useState(null);
   useEffect(() => {
     let selectedApiParameter = blendCategory?.filter((elem) => {
-      console.log(elem)
-      let tempElemName=elem.name.toLowerCase();
-      let blendElem=selectedBlendValueState.toLowerCase();
-      console.log(tempElemName);
-      console.log(blendElem);
-      return(blendElem === tempElemName);
+      let tempElemName = elem.name.toLowerCase();
+      let blendElem = selectedBlendValueState.toLowerCase();
+      return blendElem === tempElemName;
     });
     setSelectedBlendType(selectedApiParameter);
   }, [selectedBlendValueState]);
@@ -227,7 +224,6 @@ const IngredientList = ({
           let measurement = {};
           let customObj = {};
           elem.portions.map((elemtemp) => {
-            console.log(elemtemp);
             if (elemtemp.default === true) {
               customObj = {
                 ...customObj,
@@ -251,7 +247,7 @@ const IngredientList = ({
     const addrecipeFunc = async () => {
       const { data } = await addRecipeRecipeFromUser();
       reactToastifyNotification("info", "Recipe Created");
-      console.log(data);
+      console.log({data:data});
       setIsFetching(false);
     };
     addrecipeFunc();

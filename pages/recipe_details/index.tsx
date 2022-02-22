@@ -5,10 +5,10 @@ import { GET_RECIPE } from "../../gqlLib/recipes/queries/getRecipeDetails";
 
 const Index = () => {
   const [getARecipe, { loading: gettingRecipe, data: recipeData }] =
-    useLazyQuery(GET_RECIPE, {
-      fetchPolicy: "network-only",
-      variables: { recipeId: "620b900ecfac42ae66855eb3" },
-    });
+  useLazyQuery(GET_RECIPE, {
+    fetchPolicy: "network-only",
+    variables: { recipeId: "6214df945523d9802418cc48" },
+  });
 
   const fetchRecipe = () => {
     getARecipe();
@@ -18,7 +18,7 @@ const Index = () => {
     fetchRecipe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  return <RecipeDetails recipeData={recipeData} />;
+  return <RecipeDetails recipeData={recipeData && recipeData?.getARecipe} />;
 };
 
 export default Index;

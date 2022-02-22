@@ -61,7 +61,6 @@ const EditRecipePage = () => {
     }
   }, [blendCategoriesInProgress]);
 
-  console.log(blendCategory);
   return (
     <AContainer>
       <div className={styles.main}>
