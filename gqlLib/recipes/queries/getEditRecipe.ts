@@ -41,17 +41,19 @@ export const INGREDIENTS_BY_CATEGORY_AND_CLASS = gql`
     filterIngredientByCategoryAndClass(
       data: { ingredientCategory: $classType, IngredientClass: 1 }
     ) {
-      _id
-      ingredientId
-      ingredientName
+      _id,
+      ingredientName,
       category
+      blendStatus,
+      classType,
+      description,
+      images
       featuredImage
-      classType
-      portions {
+      portions{
         measurement
         measurement2
-        default
         meausermentWeight
+        default
       }
     }
   }

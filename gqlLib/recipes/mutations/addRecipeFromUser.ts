@@ -7,7 +7,7 @@ interface createNewRecipeFromUserInterface {
   image?: any;
   recipeInstructions?: any;
   recipeName?: string;
-  SelecteApiParameter?: any;
+  SelectedblendCategory?: any;
 }
 
 export const CREATE_NEW_RECIPE_FROM_USER = ({
@@ -16,15 +16,20 @@ export const CREATE_NEW_RECIPE_FROM_USER = ({
   image,
   recipeInstructions,
   recipeName,
-  SelecteApiParameter,
+  SelectedblendCategory,
 }: createNewRecipeFromUserInterface) => {
+  let SelectedblendCategory_id =
+    SelectedblendCategory && SelectedblendCategory[0]?._id;
   const convertArrToString = (arr) => {
     arr = arr.map((itm) => {
       return `
             {
               ingredientId: "${itm.ingredientId}",
               weightInGram: ${itm.weightInGram},
-              selectedPortionName: "${itm.selectedPortionName}"
+              selectedPortionName: "${itm.selectedPortionName?.replace(
+                /"/g,
+                '\\"'
+              )}"
             }
           `;
     });
@@ -65,18 +70,19 @@ export const CREATE_NEW_RECIPE_FROM_USER = ({
 
     return `[${instructionArr}]`;
   };
-
   return gql`
  mutation {
-   addRecipeRecipeFromUser(data: {
+   addRecipeFromUser(data: {
      userId: ${JSON.stringify(userId)}
-     name: ${JSON.stringify(recipeName)},
-     description: "none",
+     name: ${JSON.stringify(recipeName)}
+     description: "none"
      recipeIngredients: [""]
      ingredients:${convertArrToString(ingredients)}
+     recipeBlendCategory: "${SelectedblendCategory_id}"
      image:${convertImageArrayToString(image)}
      recipeInstructions:${converInstructionToString(recipeInstructions)}
    }){
+     _id
      foodCategories
      recipeInstructions
      name
@@ -86,7 +92,6 @@ export const CREATE_NEW_RECIPE_FROM_USER = ({
    }
      ingredients{
        weightInGram
-       ingredientId,
        portions{
          name,
          quantity,

@@ -5,14 +5,18 @@ import styles from "./accordion.module.scss";
 
 type CustomAccordionProps = {
   title: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   iconRight?: boolean;
+  plusMinusIcon?: boolean;
+  dataObject?: object;
 };
 
 const CustomAccordion = ({
   title,
   children,
   iconRight = false,
+  plusMinusIcon = true,
+  dataObject,
 }: CustomAccordionProps) => {
   const [expanded, setExpanded] = useState<boolean>(false);
 
@@ -21,7 +25,7 @@ const CustomAccordion = ({
   useEffect(() => {
     if (contentRef.current) {
       expanded
-        ? (contentRef.current.style.maxHeight = `fit-content`)
+        ? (contentRef.current.style.maxHeight = `1000px`)
         : (contentRef.current.style.maxHeight = "0px");
     }
   }, [expanded, contentRef]);
@@ -37,28 +41,39 @@ const CustomAccordion = ({
             }}
           >
             <h5 className={styles.title}>{title}</h5>
-
             <IoIosArrowForward className={styles.arrowIcon} />
           </div>
         </div>
       ) : (
         <div className={`${styles.accordionSummary}`}>
-          {expanded ? (
-            <FiMinusSquare
-              className={styles.icon}
-              onClick={() => {
-                setExpanded(!expanded);
-              }}
-            />
-          ) : (
-            <FiPlusSquare
-              className={styles.icon}
-              onClick={() => {
-                setExpanded(!expanded);
-              }}
-            />
-          )}
-          <h5 className={styles.title}>{title}</h5>
+          <div className={styles.accordionSummaryForNested}>
+            {expanded ? (
+              <FiMinusSquare
+                className={styles.icon + " " + styles.iconCopy}
+                style={!plusMinusIcon && { visibility: "hidden" }}
+                onClick={() => {
+                  setExpanded(!expanded);
+                }}
+              />
+            ) : (
+              <FiPlusSquare
+                className={styles.icon + " " + styles.iconCopy}
+                style={!plusMinusIcon && { visibility: "hidden" }}
+                onClick={() => {
+                  setExpanded(!expanded);
+                }}
+              />
+            )}
+            <div className={styles.accordianContent}>
+              <h5 className={styles.titleCopy}>{title}</h5>
+              <p className={styles.valueUnit + " " + styles.alignLeft}>
+                {dataObject && dataObject[1].value}
+              </p>
+              <p className={styles.valueUnit + " " + styles.alignLeft}>
+                {dataObject && dataObject[1].Unit}
+              </p>
+            </div>
+          </div>
         </div>
       )}
       <div
