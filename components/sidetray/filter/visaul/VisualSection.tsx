@@ -8,6 +8,8 @@ import CheckCircle from "../../../../public/icons/check_circle_black_24dp.svg";
 import FilterbottomComponent from "../filterBottom.component";
 import { useLazyQuery } from "@apollo/client";
 import { FETCH_BLEND_CATEGORIES } from "../../../../gqlLib/category/queries/fetchCategories";
+import { setAllCategories } from "../../../../redux/slices/categroySlice";
+import SkeletonBlendType from "../../../../theme/skeletons/skeletonBlendType/SkeletonBlendType";
 
 const blendCategoryImage = {
   Smoothies: "/food/wholefood.png",
@@ -23,18 +25,17 @@ type VisualSectionProps = {
 
 const VisualSection = ({ categories }: VisualSectionProps) => {
   const blends = useAppSelector((state) => state.sideTray.blends);
-  const [getAllBlendCategory, { loading: blendLoading, data: blendData }] =
-    useLazyQuery(FETCH_BLEND_CATEGORIES);
-  const [blendCategroy, setBlendCategroy] = useState<
-    { _id: string; name: string; imgae: string }[]
-  >([]);
+  const [getAllBlendCategory, { loading: blendCategroyLoading }] = useLazyQuery(
+    FETCH_BLEND_CATEGORIES
+  );
+  const { allCategories } = useAppSelector((state) => state?.categroy);
   const dispatch = useAppDispatch();
 
   const handleBlendClick = (blend) => {
     let blendz = [];
     let present = false;
     blends.forEach((blen) => {
-      if (blen === blend) {
+      if (blen?.id === blend?.id) {
         present = true;
       }
     });
@@ -42,7 +43,7 @@ const VisualSection = ({ categories }: VisualSectionProps) => {
       blendz = [...blends, blend];
     } else {
       blendz = blends.filter((blen) => {
-        return blen !== blend;
+        return blen?.id !== blend?.id;
       });
     }
     dispatch(setBlendTye(blendz));
@@ -61,14 +62,14 @@ const VisualSection = ({ categories }: VisualSectionProps) => {
   const fetchAllBlendCategroy = async () => {
     try {
       const { data } = await getAllBlendCategory();
-      setBlendCategroy(data?.getAllCategories);
+      dispatch(setAllCategories(data?.getAllCategories));
     } catch (error) {
       console.log(error?.message);
     }
   };
 
   useEffect(() => {
-    if (!blendCategroy?.length) {
+    if (!allCategories?.length) {
       fetchAllBlendCategroy();
     }
 
@@ -77,38 +78,42 @@ const VisualSection = ({ categories }: VisualSectionProps) => {
 
   return (
     <div className={styles.filter}>
-      <div className={styles.filter__top}>
-        <h3>Blend Type</h3>
-        <div className={styles.filter__menu}>
-          {blendCategroy?.length &&
-            blendCategroy.map((blend, i) => (
-              <div
-                key={blend?.name + i}
-                className={styles.filter__menu__item}
-                onClick={() =>
-                  handleBlendClick({
-                    title: blend?.name,
-                    img: blendCategoryImage[blend?.name],
-                    id: blend?._id,
-                  })
-                }
-              >
-                <div className={styles.filter__menu__item__image}>
-                  <img
-                    src={blendCategoryImage[blend?.name]}
-                    alt={blend?.name}
-                  />
-                  {checkActive(blend._id) && (
-                    <div className={styles.tick}>
-                      <CheckCircle className={styles.ticked} />
-                    </div>
-                  )}
+      {blendCategroyLoading ? (
+        <SkeletonBlendType />
+      ) : (
+        <div className={styles.filter__top}>
+          <h3>Blend Type</h3>
+          <div className={styles.filter__menu}>
+            {allCategories?.length &&
+              allCategories.map((blend, i) => (
+                <div
+                  key={blend?.name + i}
+                  className={styles.filter__menu__item}
+                  onClick={() =>
+                    handleBlendClick({
+                      title: blend?.name,
+                      img: blendCategoryImage[blend?.name],
+                      id: blend?._id,
+                    })
+                  }
+                >
+                  <div className={styles.filter__menu__item__image}>
+                    <img
+                      src={blendCategoryImage[blend?.name]}
+                      alt={blend?.name}
+                    />
+                    {checkActive(blend._id) && (
+                      <div className={styles.tick}>
+                        <CheckCircle className={styles.ticked} />
+                      </div>
+                    )}
+                  </div>
+                  <p>{blend.name}</p>
                 </div>
-                <p>{blend.name}</p>
-              </div>
-            ))}
+              ))}
+          </div>
         </div>
-      </div>
+      )}
       <div className={styles.filter__top} style={{ marginTop: "15px" }}>
         <h3>Ingredients</h3>
         <FilterbottomComponent categories={categories} />
