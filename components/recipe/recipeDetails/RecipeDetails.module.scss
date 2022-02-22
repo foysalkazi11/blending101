@@ -40,21 +40,25 @@ $centerWidth: 50%;
         width: 100%;
         padding: 0px 20px;
         margin-top: 20px;
+        order: 2;
       }
 
       @include responsive(1200px, 1400px) {
         width: 100%;
         margin-top: 20px;
+        order: 2;
       }
 
       @include responsive(1400px, 1600px) {
         width: 30%;
         margin-top: 20px;
+
       }
 
       @include responsive(1600px, 2400px) {
         width: 20%;
         margin-top: 20px;
+
       }
     }
 

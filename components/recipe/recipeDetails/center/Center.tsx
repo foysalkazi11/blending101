@@ -187,7 +187,7 @@ const Center = ( recipeData ) => {
           <ReadMore>{recipeDetails?.recipeData?.description}</ReadMore>
         </div>
 
-        <div className={styles.dropDownContainer}>
+        {/* <div className={styles.dropDownContainer}>
           <div style={{ flex: 1 }}>
             <DropDown
               listElem={BlendtecItem}
@@ -206,7 +206,7 @@ const Center = ( recipeData ) => {
               Prep: <span>{recipeDetails?.recipeData?.prepTime}</span>
             </p>
           </div>
-        </div>
+        </div> */}
       </div>
       <div className={styles.ingredentContainer}>
         <div className={styles.ingredentHeader}>
