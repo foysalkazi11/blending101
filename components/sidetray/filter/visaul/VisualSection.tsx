@@ -15,7 +15,6 @@ const blendCategoryImage = {
   "Frozen Treat": "/food/frozen.png",
   Refreshing: "/food/fresh.png",
   "Herbal Tea": "/other/heart.svg",
-  //  {title: 'Dessert', img: '/other/nutritio.svg'},
 };
 
 type VisualSectionProps = {
