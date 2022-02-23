@@ -12,6 +12,7 @@ import reactToastifyNotification from "../../utility/reactToastifyNotification";
 import GET_ALL_COMMENTS_FOR_A_RECIPE from "../../../gqlLib/comments/query/getAllCommentsForARecipe";
 import useHover from "../../utility/useHover";
 import SkeletonComment from "../../../theme/skeletons/skeletonComment/SkeletonComment";
+import SkeletonNote from "../../../theme/skeletons/skeletonNote/SkeletonNote";
 
 export default function CommentsTray() {
   const [allNotes, setAllNotes] = useState([]);
@@ -146,7 +147,11 @@ export default function CommentsTray() {
       </div>
 
       {noteLoading || commentLoading ? (
-        <SkeletonComment />
+        toggle === 1 ? (
+          <SkeletonComment />
+        ) : (
+          <SkeletonNote />
+        )
       ) : toggle === 1 ? (
         <CommentSection
           allComments={allComments}

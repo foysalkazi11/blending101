@@ -12,6 +12,7 @@ import reactToastifyNotification from "../../../../components/utility/reactToast
 import EDIT_MY_NOTE from "../../../../gqlLib/notes/mutation/editMyNote";
 import { MdDeleteOutline } from "react-icons/md";
 import DELETE_MY_NOTE from "../../../../gqlLib/notes/mutation/deleteMyNote";
+import SkeletonNote from "../../../../theme/skeletons/skeletonNote/SkeletonNote";
 type NoteSectionProps = {
   allNotes: any[];
   setAllNotes: Dispatch<SetStateAction<any[]>>;
@@ -27,6 +28,7 @@ const NoteSection = ({ allNotes, setAllNotes }: NoteSectionProps) => {
   const [deleteNote] = useMutation(DELETE_MY_NOTE);
   const { dbUser } = useAppSelector((state) => state?.user);
   const { activeRecipeId } = useAppSelector((state) => state?.collections);
+  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
 
   const updateNoteForm = (
@@ -40,7 +42,7 @@ const NoteSection = ({ allNotes, setAllNotes }: NoteSectionProps) => {
   };
 
   const removeNote = async (id: string) => {
-    dispatch(setLoading(true));
+    setLoading(true);
     try {
       const { data } = await deleteNote({
         variables: {
@@ -52,16 +54,17 @@ const NoteSection = ({ allNotes, setAllNotes }: NoteSectionProps) => {
         },
       });
       setAllNotes(data?.removeMyNote);
-      dispatch(setLoading(false));
+      setLoading(false);
       reactToastifyNotification("info", "Delete successfully");
     } catch (error) {
-      dispatch(setLoading(false));
+      setLoading(false);
       reactToastifyNotification("error", error?.message);
     }
   };
 
   const createOrUpdateNote = async () => {
-    dispatch(setLoading(true));
+    toggleNoteForm();
+    setLoading(true);
     try {
       if (updateNote) {
         const { data } = await editNote({
@@ -90,14 +93,13 @@ const NoteSection = ({ allNotes, setAllNotes }: NoteSectionProps) => {
         setAllNotes(data?.createNewNote);
       }
 
-      dispatch(setLoading(false));
+      setLoading(false);
       reactToastifyNotification(
         "info",
         `Note ${updateNote ? "updated" : "created"} successfully`
       );
-      toggleNoteForm();
     } catch (error) {
-      dispatch(setLoading(false));
+      setLoading(false);
       reactToastifyNotification("error", error?.message);
     }
   };
@@ -135,51 +137,55 @@ const NoteSection = ({ allNotes, setAllNotes }: NoteSectionProps) => {
         </div>
       )}
 
-      <div className={`${styles.noteEditBox} y-scroll`}>
-        {allNotes?.length ? (
-          allNotes?.map((note, index) => {
-            return (
-              <div className={styles.singleNoteEdit} key={index}>
-                <div className={styles.header}>
-                  <h3>{note?.title}</h3>
-                  <div className={styles.rightSide}>
-                    <div
-                      className={styles.editIconBox}
-                      onClick={() =>
-                        updateNoteValue(note?._id, note?.title, note?.body)
-                      }
-                    >
-                      <FiEdit2 className={styles.icon} />
-                    </div>
-                    <div
-                      className={styles.editIconBox}
-                      onClick={() => removeNote(note?._id)}
-                    >
-                      <MdDeleteOutline className={styles.icon} />
+      {loading ? (
+        <SkeletonNote />
+      ) : (
+        <div className={`${styles.noteEditBox} y-scroll`}>
+          {allNotes?.length ? (
+            allNotes?.map((note, index) => {
+              return (
+                <div className={styles.singleNoteEdit} key={index}>
+                  <div className={styles.header}>
+                    <h3>{note?.title}</h3>
+                    <div className={styles.rightSide}>
+                      <div
+                        className={styles.editIconBox}
+                        onClick={() =>
+                          updateNoteValue(note?._id, note?.title, note?.body)
+                        }
+                      >
+                        <FiEdit2 className={styles.icon} />
+                      </div>
+                      <div
+                        className={styles.editIconBox}
+                        onClick={() => removeNote(note?._id)}
+                      >
+                        <MdDeleteOutline className={styles.icon} />
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className={styles.noteDis}>
-                  <p>{note?.body}</p>
-                  <span>
-                    {note?.updatedAt ? (
-                      <>
-                        {format(parseISO(note?.updatedAt), "dd/mm/yyyy")}{" "}
-                        (edited)
-                      </>
-                    ) : (
-                      format(parseISO(note?.createdAt), "dd/mm/yyyy")
-                    )}
-                  </span>
+                  <div className={styles.noteDis}>
+                    <p>{note?.body}</p>
+                    <span>
+                      {note?.updatedAt ? (
+                        <>
+                          {format(parseISO(note?.updatedAt), "dd/mm/yyyy")}{" "}
+                          (edited)
+                        </>
+                      ) : (
+                        format(parseISO(note?.createdAt), "dd/mm/yyyy")
+                      )}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            );
-          })
-        ) : (
-          <p className={styles.noNotes}>No notes</p>
-        )}
-      </div>
+              );
+            })
+          ) : (
+            <p className={styles.noNotes}>No notes</p>
+          )}
+        </div>
+      )}
     </>
   );
 };
