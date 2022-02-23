@@ -21,11 +21,11 @@ $centerWidth: 50%;
     display: flex;
     box-sizing: border-box;
 
-    @include responsive(0px, 1400px) {
+    @include responsive(0px, 1399px) {
       flex-direction: column;
     }
 
-    @include responsive(1400px, 2400px) {
+    @include responsive(1399px, 3000px) {
       flex-direction: row;
     }
 
@@ -41,21 +41,22 @@ $centerWidth: 50%;
         padding: 0px 20px;
         margin-top: 20px;
         order: 2;
+        flex-direction: column;
       }
 
-      @include responsive(1200px, 1400px) {
+      @include responsive(1200px, 1399px) {
         width: 100%;
         margin-top: 20px;
+        flex-direction: column;
         order: 2;
       }
 
-      @include responsive(1400px, 1600px) {
-        width: 30%;
+      @include responsive(1399px, 1600px) {
+        min-width: 350px;
         margin-top: 20px;
-
       }
 
-      @include responsive(1600px, 2400px) {
+      @include responsive(1600px, 3000px) {
         width: 20%;
         margin-top: 20px;
 
@@ -73,22 +74,17 @@ $centerWidth: 50%;
         margin-top: 20px;
       }
 
-      @include responsive(1200px, 1400px) {
+      @include responsive(1200px, 1399px) {
         width: 70%;
         margin-top: 20px;
       }
 
-      @include responsive(1400px, 2400px) {
-        width: 70%;
+      @include responsive(1399px, 1600px) {
+        width: calc(100% - 350px);
         margin-top: 20px;
       }
 
-      @include responsive(1400px, 1600px) {
-        width: 70%;
-        margin-top: 20px;
-      }
-
-      @include responsive(1600px, 2400px) {
+      @include responsive(1600px, 3000px) {
         width: 75%;
         margin-top: 20px;
       }
@@ -105,17 +101,17 @@ $centerWidth: 50%;
         margin-top: 20px;
       }
 
-      @include responsive(1200px, 1400px) {
+      @include responsive(1200px, 1399px) {
         width: 30%;
         margin-top: 20px;
       }
 
-      @include responsive(1400px, 1600px) {
-        width: 30%;
+      @include responsive(1399px, 1600px) {
+        min-width: 350px;
         margin-top: 20px;
       }
 
-      @include responsive(1600px, 2400px) {
+      @include responsive(1600px, 3000px) {
         width: 25%;
         margin-top: 20px;
       }
@@ -124,21 +120,21 @@ $centerWidth: 50%;
 }
 
 .recipeDetailsContainer_right {
-  @include responsive(1200px, 1400px) {
+  @include responsive(1200px, 1399px) {
     width: 100%;
     display: flex;
     padding-bottom: 20px;
     box-sizing: border-box;
   }
 
-  @include responsive(1400px, 1600px) {
-    width: 70%;
+  @include responsive(1399px, 1600px) {
+    min-width: calc(100% - 550px);
     display: flex;
     padding-bottom: 20px;
     box-sizing: border-box;
   }
 
-  @include responsive(1600px, 2400px) {
+  @include responsive(1600px, 3000px) {
     width: 80%;
     display: flex;
     padding-bottom: 20px;

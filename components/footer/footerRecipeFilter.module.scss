@@ -55,3 +55,13 @@
     }
   }
 }
+
+.greenButton {
+  height: 100%;
+
+  &::before {
+    content: "\2022";
+    color: #7DBD3B;
+    font-size: 40px;
+  }
+}

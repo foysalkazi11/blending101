@@ -6,7 +6,6 @@ import Center from "./center/Center";
 import styles from "./RecipeDetails.module.scss";
 
 const RecipeDetails = ({ recipeData }) => {
-  console.log(recipeData);
   return (
     <div style={{ margin: "40px auto" }}>
       <AContainer
