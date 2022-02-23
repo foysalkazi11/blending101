@@ -176,21 +176,23 @@ export default function CollectionComponent({
 
   useEffect(() => {
     let collectionIds: string[] = [];
-    collections?.forEach((col) => {
-      //@ts-ignore
-      const recipes = col?.recipes;
-      //@ts-ignore
-      const id = col?._id;
-      recipes?.forEach((recipe) => {
-        if (recipe._id === activeRecipeId) {
-          collectionIds?.push(id);
-        }
+    if (changeRecipeWithinCollection) {
+      collections?.forEach((col) => {
+        //@ts-ignore
+        const recipes = col?.recipes;
+        //@ts-ignore
+        const id = col?._id;
+        recipes?.forEach((recipe) => {
+          if (recipe._id === activeRecipeId) {
+            collectionIds?.push(id);
+          }
+        });
       });
-    });
-    setCollectionHasRecipe(collectionIds);
+      setCollectionHasRecipe(collectionIds);
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeRecipeId]);
+  }, [activeRecipeId, changeRecipeWithinCollection]);
 
   useEffect(() => {
     if (isMounted.current) {

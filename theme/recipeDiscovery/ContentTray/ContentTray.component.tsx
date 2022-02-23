@@ -44,16 +44,16 @@ const ContentTray = (props) => {
     const onlyWidth = window.innerWidth;
     if (onlyWidth <= 680) {
       setSlickSetting(1);
-    } else if (onlyWidth <= 780 && onlyWidth > 680) {
+    } else if (onlyWidth >= 780 && onlyWidth < 1250) {
       setSlickSetting(2);
-    } else if (onlyWidth <= 1250 && onlyWidth > 780) {
+    } else if (onlyWidth >= 1250 && onlyWidth < 780) {
       setSlickSetting(3);
-    } else if (onlyWidth <= 1450 && onlyWidth > 1250) {
+    } else if (onlyWidth >= 1450 && onlyWidth > 1250) {
       setSlickSetting(3);
-    } else if (onlyWidth <= 1850 && onlyWidth > 1450) {
+    } else if (onlyWidth >= 1850 && onlyWidth > 1450) {
       setSlickSetting(4);
     } else {
-      setSlickSetting(5);
+      setSlickSetting(4);
     }
   }, []);
 
@@ -98,21 +98,14 @@ const ContentTray = (props) => {
                 },
               },
               {
-                breakpoint: 1450,
+                breakpoint: 1700,
                 settings: {
                   slidesToShow: 3,
                   slidesToScroll: 1,
                 },
               },
               {
-                breakpoint: 1250,
-                settings: {
-                  slidesToShow: 3,
-                  slidesToScroll: 1,
-                },
-              },
-              {
-                breakpoint: 780,
+                breakpoint: 1150,
                 settings: {
                   slidesToShow: 2,
                   slidesToScroll: 1,

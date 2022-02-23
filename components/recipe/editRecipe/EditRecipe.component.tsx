@@ -54,14 +54,12 @@ const EditRecipePage = () => {
       setSelectedBlendValueState(blendCategoriesData?.getAllCategories[0].name);
   };
 
-  console.log(selectedBlendValueState);
   useEffect(() => {
     if (!blendCategoriesInProgress) {
       fetchAllBlendCategories();
     }
   }, [blendCategoriesInProgress]);
 
-  console.log(blendCategory);
   return (
     <AContainer>
       <div className={styles.main}>

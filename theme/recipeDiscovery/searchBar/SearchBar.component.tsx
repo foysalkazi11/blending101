@@ -9,8 +9,10 @@ import AddCircleOutlineIcon from "../../../public/icons/add_circle_outline_black
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setOpenFilterTray } from "../../../redux/slices/sideTraySlice";
 import useOnClickOutside from "../../../components/utility/useOnClickOutside";
+import { useRouter } from "next/router";
 
 const SearchBar = () => {
+  const router=useRouter();
   const [isInputFocus, setIsInputFocus] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
   const [input, setInput] = useState("");
@@ -85,13 +87,13 @@ const SearchBar = () => {
           )}
         </div>
       </div>
-      <div style={{ marginLeft: "40px" }}>
+      <div onClick={()=>router.push(`/recipe/compare`)} style={{ marginLeft: "40px" }} >
         <RecipeDiscoverButton
           image="/images/compare-fill-icon.svg"
           text="Compare(6)"
         />
       </div>
-      <div style={{ marginLeft: "30px" }}>
+      <div onClick={()=>router.push(`/add_recipe`)} style={{ marginLeft: "30px" }}>
         <RecipeDiscoverButton Icon={AddCircleOutlineIcon} text="Recipe" />
       </div>
     </div>

@@ -1,7 +1,14 @@
+@mixin responsive($min_width, $max_width) {
+  @media only screen and (min-width: $min_width) and (max-width: $max_width) {
+    @content;
+  }
+}
+
 .header {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+
   h3 {
     font-size: 20px;
     color: #000000;
@@ -14,10 +21,11 @@
 }
 
 .content {
-  padding: 10px;
+  padding: 20px;
   background-color: #ffffff;
   border-radius: 15px;
   margin-bottom: 20px;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
 
   h3 {
     font-size: 20px;
@@ -31,50 +39,67 @@
     color: #ababab;
     font-size: 14px;
   }
-  table {
-    width: 100%;
-    tr th {
-      font-size: 18px;
-      font-weight: 600;
-      text-align: center;
-      border-bottom: 1px solid #ececec;
-      padding: 5px;
-    }
-    tr td {
-      color: #000;
-      font-size: 14px;
-      text-align: right;
-      padding: 10px 5px;
-    }
-  }
 }
 
-.ingredientsDetails {
-  table {
-    width: 100%;
 
-    tr td {
-      color: #000;
-      font-size: 14px;
-      padding: 10px 10px 10px 0px;
-      border-bottom: 1px solid #ececec !important;
+.recursiveAccordianHeading {
+  &__heading {
+    display: flex;
+    font-weight: 600;
+    font-size: 18px;
+    border-bottom: 1px solid #ececec;
+    padding: 5px;
+
+    &__1 {
+      width: 45%;
+      display: flex;
+      align-items: center;
+
+      @include responsive(0px, 1000px) {
+        padding: 5px;
+      }
     }
 
-    tr:last-child td {
-      border: 0 !important;
+    &__2{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+  }
+
+  &__subheading {
+    display: flex;
+    text-align: right;
+    font-weight: 300;
+    color: #000;
+    font-size: 14px;
+    padding: 10px 10px 10px 0px;
+    border-bottom: 1px solid #ececec;
+
+    &__3 {
+      margin-left: auto;
+    }
+
+    &__4 {
+      width: 30%;
+      margin-right: 10%;
     }
   }
 }
 
 .linerProgessContainer {
-  padding: 10px;
+  padding: 20px;
   background-color: #ffffff;
   border-radius: 15px;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
+
   h3 {
     font-size: 20px;
     color: #000;
     font-weight: 400;
   }
+
   p {
     color: #ababab;
     font-size: 14px;

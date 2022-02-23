@@ -170,18 +170,24 @@ const RightSide = () => {
         <h3>Nutrition</h3>
         <div className={styles.nutritionHeader}>
           <p>Amount Per Serving Calories</p>
-          <table>
-            <tr>
-              <th>Calories</th>
-              <th>93</th>
-              <th></th>
-            </tr>
-            <tr>
-              <td></td>
-              <td> Value </td>
-              <td> Daily% </td>
-            </tr>
-          </table>
+          <div className={styles.recursiveAccordianHeading}>
+            <div className={styles.recursiveAccordianHeading__heading}>
+              <div className={styles.recursiveAccordianHeading__heading__1}>
+                Calories
+              </div>
+              <div className={styles.recursiveAccordianHeading__heading__2}>
+                93
+              </div>
+            </div>
+            <div className={styles.recursiveAccordianHeading__subheading}>
+              <div className={styles.recursiveAccordianHeading__subheading__3}>
+                Value
+              </div>
+              <div className={styles.recursiveAccordianHeading__subheading__4}>
+                Daily%
+              </div>
+            </div>
+          </div>
         </div>
         <div className={styles.ingredientsDetails}>
           <RecursiveAccordian dataObject={nestedAccordian} />

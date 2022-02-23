@@ -23,11 +23,11 @@ import Image from "next/image";
 let BlendtecItem = ["Blendtec", "Blendtec"];
 let ozItem = ["64 oz", "64 oz"];
 
-const Center = ({ recipeData }) => {
+const Center = ( recipeData ) => {
   const [counter, setCounter] = useState(1);
   const dispatch = useAppDispatch();
   const [showRecipeModal, setShowRecipeModal] = useState(true);
-  const recipeDetails = recipeData?.getARecipe;
+  const recipeDetails =recipeData && recipeData;
 
   const openCommentsTray = () => {
     dispatch(setOpenCommentsTray(true));
@@ -78,7 +78,7 @@ const Center = ({ recipeData }) => {
     prevArrow: <PreviousButton />,
   };
 
-  console.log(recipeDetails);
+  console.log(recipeDetails?.recipeData);
   return (
     <div>
       <div className={styles.header}>
@@ -98,16 +98,16 @@ const Center = ({ recipeData }) => {
 
       <div className={styles.contentBox}>
         <div className={styles.heading}>
-          <h3>{recipeDetails?.name}</h3>
+          <h3>{recipeDetails?.recipeData?.name}</h3>
           <span className={styles.ratingBox}>
             <img src="/images/rating.svg" alt="" />
-            {recipeDetails?.averageRating} ({recipeDetails?.numberOfRating})
+            {recipeDetails?.recipeData?.averageRating} ({recipeDetails?.recipeData?.numberOfRating})
           </span>
         </div>
         <div className={styles.subMenu}>
           <div className={styles.alignItems}>
             <div className={styles.recipeType}>
-              {recipeDetails?.recipeBlendCategory}
+              {recipeDetails?.recipeData?.recipeBlendCategory?.name}
             </div>
             <img
               src="/images/yummly-logo.png"
@@ -149,9 +149,9 @@ const Center = ({ recipeData }) => {
         </div>
 
         <div className={styles.sliderBox}>
-          {recipeDetails?.image && (
+          {recipeDetails?.recipeData?.image && (
             <SlickSlider moreSetting={responsiveSetting}>
-              {recipeDetails?.image.map((img, index) => {
+              {recipeDetails?.recipeData?.image.map((img, index) => {
                 return (
                   <div key={index} className={styles.imageBox}>
                     <Image
@@ -184,10 +184,10 @@ const Center = ({ recipeData }) => {
         </div>
 
         <div>
-          <ReadMore>{recipeDetails?.description}</ReadMore>
+          <ReadMore>{recipeDetails?.recipeData?.description}</ReadMore>
         </div>
 
-        <div className={styles.dropDownContainer}>
+        {/* <div className={styles.dropDownContainer}>
           <div style={{ flex: 1 }}>
             <DropDown
               listElem={BlendtecItem}
@@ -203,10 +203,10 @@ const Center = ({ recipeData }) => {
           <div style={{ flex: 1 }} className={styles.timeBox}>
             <img src="/images/time-icon.svg" alt="time-icon" />
             <p>
-              Prep: <span>{recipeDetails?.prepTime}</span>
+              Prep: <span>{recipeDetails?.recipeData?.prepTime}</span>
             </p>
           </div>
-        </div>
+        </div> */}
       </div>
       <div className={styles.ingredentContainer}>
         <div className={styles.ingredentHeader}>
@@ -249,8 +249,8 @@ const Center = ({ recipeData }) => {
           </div>
         </div>
         <div className={styles.ingredentDisContainer}>
-          {recipeDetails?.ingredients &&
-            recipeDetails?.ingredients?.map((ingredient, index) => {
+          {recipeDetails?.recipeData?.ingredients &&
+            recipeDetails?.recipeData?.ingredients?.map((ingredient, index) => {
               return (
                 <div
                   className={styles.singleIngredent}
@@ -275,8 +275,8 @@ const Center = ({ recipeData }) => {
           <img src="/images/chef.svg" alt="basket" />
           <h3>How to</h3>
         </div>
-        {recipeDetails?.recipeInstructions &&
-          recipeDetails?.recipeInstructions?.map((step, index) => {
+        {recipeDetails?.recipeData?.recipeInstructions &&
+          recipeDetails?.recipeData?.recipeInstructions?.map((step, index) => {
             return (
               <div
                 className={styles.steps}
