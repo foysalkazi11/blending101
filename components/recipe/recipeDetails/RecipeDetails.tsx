@@ -5,7 +5,8 @@ import RightSide from "./rightSide/RightSide";
 import Center from "./center/Center";
 import styles from "./RecipeDetails.module.scss";
 
-const RecipeDetails = ({recipeData}) => {
+const RecipeDetails = ({ recipeData }) => {
+  console.log(recipeData);
   return (
     <div style={{ margin: "40px auto" }}>
       <AContainer
@@ -20,23 +21,13 @@ const RecipeDetails = ({recipeData}) => {
             <div className={styles.recipeDetailsContainer__contentDiv__left}>
               <LeftSide />
             </div>
-            <div
-              className={
-                styles.recipeDetailsContainer__contentDiv__centerRightDiv
-              }
-            >
+            <div className={styles.recipeDetailsContainer_right}>
               <div
-                className={
-                  styles.recipeDetailsContainer__contentDiv__centerRightDiv__center
-                }
+                className={styles.recipeDetailsContainer__contentDiv__center}
               >
-                <Center recipeData={recipeData}/>
+                <Center recipeData={recipeData} />
               </div>
-              <div
-                className={
-                  styles.recipeDetailsContainer__contentDiv__centerRightDiv__right
-                }
-              >
+              <div className={styles.recipeDetailsContainer__contentDiv__right}>
                 <RightSide />
               </div>
             </div>

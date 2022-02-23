@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FiPlusSquare, FiMinusSquare } from "react-icons/fi";
 import { IoIosArrowForward } from "react-icons/io";
-import styles from "./accordion.module.scss";
+import styles from "./accordionCopy.module.scss";
 
 type CustomAccordionProps = {
   title: string;

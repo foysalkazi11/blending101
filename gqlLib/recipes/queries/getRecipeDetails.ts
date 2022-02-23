@@ -17,7 +17,6 @@ export const GET_RECIPE = gql`
       name
     }
     ingredients {
-      ingredientId
       selectedPortion {
         name
         quantity

@@ -43,7 +43,7 @@
 
 
 @mixin edit_bin_icon {
-    display: none;
+
     margin-left: auto;
     position: absolute;
     width: 18px;
@@ -370,6 +370,8 @@
             margin-bottom: 10px;
             font-size: 16px;
             cursor: pointer;
+            word-wrap: break-word;
+            padding-right: 70px;
 
             &:hover {
                 span {
@@ -379,19 +381,22 @@
             }
 
             &__edit {
-                @include edit_bin_icon();
                 right: 40px;
                 color: #dad8d8;
-
+                background-color: rebeccapurple;
+                display: none;
 
                 svg {
-                    transform: scale(0.70) translateY(-8px);
+                    @include edit_bin_icon();
+                    transform: scale(1.4);
+                    right: 40px
                 }
             }
 
             &__bin {
                 @include edit_bin_icon();
                 right: 5px;
+                display: none;
 
                 &__imgDiv {
                     position: relative;
