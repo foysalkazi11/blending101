@@ -58,7 +58,6 @@ $leftTrayDragIconWidth:50px;
     width: $width;
     padding-right: 17px;
     position: relative;
-    // background-color: yellow;
 
     @include responsive(0px, 1450px) {
         z-index: 10;
@@ -83,7 +82,10 @@ $leftTrayDragIconWidth:50px;
         }
     }
 
-    @include responsive(1450px, 3800px) {}
+    @include responsive(1450px, 4400px) {
+        width: 20%;
+    }
+
 
 
     &__Drag__lightGreen {
@@ -93,7 +95,7 @@ $leftTrayDragIconWidth:50px;
         width: $leftTrayDragIconWidth;
         height: $leftTrayDragIconWidth;
 
-        @include responsive(1450px, 3800px) {
+        @include responsive(1450px, 4400px) {
             display: none;
         }
 
@@ -110,7 +112,7 @@ $leftTrayDragIconWidth:50px;
                 background-image: url("/icons/ingr-green.svg");
             }
 
-            @include responsive(1450px, 3800px) {
+            @include responsive(1450px, 4400px) {
                 display: none;
                 background-image: none !important;
             }
@@ -137,6 +139,12 @@ $leftTrayDragIconWidth:50px;
             margin-right: 10px;
         }
     }
+
+    &__ingredientlistTray {
+        @include responsive(1450px, 4400px) {
+            width: 100%;
+        }
+    }
 }
 
 .center {
@@ -152,8 +160,9 @@ $leftTrayDragIconWidth:50px;
     }
 
     @include responsive(990px, 1450px) {
-        width: calc(100% - $width);
+        width: calc(100% - 350px);
     }
+
 }
 
 .right__main {
@@ -163,5 +172,13 @@ $leftTrayDragIconWidth:50px;
 
     @include responsive(0px, 991px) {
         margin-top: 18px;
+    }
+
+    @include responsive(990px, 1450px) {
+        width: 350px;
+    }
+
+    @include responsive(1450px, 4400px) {
+        width: 20%;
     }
 }

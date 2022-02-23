@@ -22,6 +22,7 @@ import { setDbUser } from "../../../redux/slices/userSlice";
 import reactToastifyNotification from "../../../components/utility/reactToastifyNotification";
 import GET_LAST_MODIFIED_COLLECTION from "../../../gqlLib/collection/query/getLastModifiedCollection";
 import { setCurrentRecipeInfo } from "../../../redux/slices/recipeSlice";
+import { useRouter } from "next/router";
 
 interface dataCardInterface {
   title: string;
@@ -63,7 +64,7 @@ export default function DatacardComponent({
   image = image || "/cards/juice.png";
   ratings = Math.ceil(ratings);
   const menu = useRef<any>();
-
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
   const { allRecipeWithinCollectionsId } = useAppSelector(
@@ -212,7 +213,10 @@ export default function DatacardComponent({
         <div className={styles.datacard__inner}>
           <div className={styles.datacard__body}>
             <div className={styles.datacard__body__top}>
-              <div className={styles.datacard__body__top__heading}>
+              <div
+                className={styles.datacard__body__top__heading}
+                onClick={() => router.push(`/recipe_details/${recipeId}`)}
+              >
                 <h2 className={styles.title}>{title}</h2>
               </div>
               <div className={styles.datacard__body__top__menu}>
