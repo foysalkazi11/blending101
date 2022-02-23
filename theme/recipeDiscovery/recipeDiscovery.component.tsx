@@ -14,7 +14,7 @@ import {
   setOpenCollectionsTary,
   setToggleSaveRecipeModal,
 } from "../../redux/slices/sideTraySlice";
-import SaveRecipeModal from "../saveRecipeModal/SaveRecipeModal";
+import SaveRecipe from "../saveRecipeModal/SaveRecipeModal";
 import ShowCollectionRecipes from "../showCollectionRecipes/ShowCollectionRecipes";
 import { setLoading } from "../../redux/slices/utilitySlice";
 import { useLazyQuery } from "@apollo/client";
@@ -26,7 +26,9 @@ import {
   setPopular,
   setRecommended,
 } from "../../redux/slices/recipeSlice";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
+import CustomModal from "../modal/customModal/CustomModal";
+import SaveToCollectionModal from "../modal/saveToCollectionModal/SaveToCollectionModal";
 
 const RecipeDetails = () => {
   const router = useRouter();
@@ -106,8 +108,7 @@ const RecipeDetails = () => {
             <SearchtagsComponent />
           ) : null}
 
-          {
-          collectionDetailsId || showAllRecipes ? (
+          {collectionDetailsId || showAllRecipes ? (
             <ShowCollectionRecipes />
           ) : blends.length || ingredients.length || filters?.length ? (
             <FilterPageBottom
@@ -137,7 +138,9 @@ const RecipeDetails = () => {
                         <div
                           className={styles.slider__card}
                           key={"recommended" + index}
-                          onClick={()=>router.push(`/recipe_details/${item?._id}`)}
+                          onClick={() =>
+                            router.push(`/recipe_details/${item?._id}`)
+                          }
                         >
                           <DatacardComponent
                             title={item.name}
@@ -177,7 +180,9 @@ const RecipeDetails = () => {
                           <div
                             className={styles.slider__card}
                             key={"latest" + index}
-                            onClick={()=>router.push(`/recipe_details/${item?._id}`)}
+                            onClick={() =>
+                              router.push(`/recipe_details/${item?._id}`)
+                            }
                           >
                             <DatacardComponent
                               title={item.name}
@@ -217,7 +222,9 @@ const RecipeDetails = () => {
                           <div
                             className={styles.slider__card}
                             key={"popular" + index}
-                            onClick={()=>router.push(`/recipe_details/${item?._id}`)}
+                            onClick={() =>
+                              router.push(`/recipe_details/${item?._id}`)
+                            }
                           >
                             <DatacardComponent
                               title={item.name}
@@ -246,11 +253,12 @@ const RecipeDetails = () => {
           <FooterRecipeFilter />
         </div>
       </AContainer>
-      <SaveRecipeModal
-        title={lastModifiedCollection}
-        handleChange={handleCompareRecipe}
-        modalContentStyle={{ borderRadius: "29px" }}
-      />
+      <SaveToCollectionModal>
+        <SaveRecipe
+          title={lastModifiedCollection}
+          handleChange={handleCompareRecipe}
+        />
+      </SaveToCollectionModal>
     </>
   );
 };

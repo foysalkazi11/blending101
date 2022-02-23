@@ -6,7 +6,7 @@ import ThemeComponent from "./content/theme.component";
 import styles from "./trayleft.module.scss";
 import { MdOutlineAddCircleOutline } from "react-icons/md";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import CustomModal from "../../../theme/modal/Modal";
+import CustomModal from "../../../theme/modal/customModal/CustomModal";
 import AddCollectionModal from "./addCollectionModal/AddCollectionModal";
 import { setToggleModal } from "../../../redux/slices/sideTraySlice";
 
@@ -22,6 +22,7 @@ export default function CollectionTray(props) {
   const { changeRecipeWithinCollection } = useAppSelector(
     (state) => state?.collections
   );
+  const { openSaveRecipeModal } = useAppSelector((state) => state?.sideTray);
 
   const dispatch = useAppDispatch();
 
@@ -100,14 +101,16 @@ export default function CollectionTray(props) {
             />
           </div>
         )}
-        <CustomModal contentStyle={{ borderRadius: "29px" }}>
-          <AddCollectionModal
-            input={input}
-            setInput={setInput}
-            isEditCollection={isEditCollection}
-            collectionId={collectionId}
-          />
-        </CustomModal>
+        {openSaveRecipeModal ? null : (
+          <CustomModal>
+            <AddCollectionModal
+              input={input}
+              setInput={setInput}
+              isEditCollection={isEditCollection}
+              collectionId={collectionId}
+            />
+          </CustomModal>
+        )}
       </div>
     </LeftTrayWrapper>
   );
