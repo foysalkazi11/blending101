@@ -80,7 +80,8 @@ export default function DatacardComponent({
     // HANDLE ECLIPSE CLICK HERE
   };
 
-  const addToCollection = async (recipeId) => {
+  const addToCollection = async (recipeId: string, e: React.SyntheticEvent) => {
+    e.stopPropagation();
     dispatch(setLoading(true));
     dispatch(setActiveRecipeId(recipeId));
     dispatch(setOpenCollectionsTary(false));
@@ -137,14 +138,21 @@ export default function DatacardComponent({
     }
   };
 
-  const handleCompare = (id: string) => {
+  const handleCompare = (id: string, e: React.SyntheticEvent) => {
+    e?.stopPropagation();
     dispatch(setOpenCollectionsTary(true));
     dispatch(setChangeRecipeWithinCollection(true));
     dispatch(setActiveRecipeId(id));
   };
 
-  const handleComment = (id: string, title: string, image: string) => {
+  const handleComment = (
+    id: string,
+    title: string,
+    image: string,
+    e: React.SyntheticEvent
+  ) => {
     // HANDLE COMMENTS CLICK HERE
+    e?.stopPropagation();
     dispatch(setActiveRecipeId(id));
     dispatch(setOpenCommentsTray(true));
     dispatch(setCurrentRecipeInfo({ name: title, image }));
@@ -253,13 +261,13 @@ export default function DatacardComponent({
                       <img
                         src="/icons/compare.svg"
                         alt="compare"
-                        onClick={() => handleCompare(recipeId)}
+                        onClick={(e) => handleCompare(recipeId, e)}
                       />
                     ) : (
                       <img
                         src="/images/BookmarksStar.svg"
                         alt="compare"
-                        onClick={() => addToCollection(recipeId)}
+                        onClick={(e) => addToCollection(recipeId, e)}
                       />
                     )}
                   </li>
@@ -268,7 +276,7 @@ export default function DatacardComponent({
                     <img
                       src="/icons/message.svg"
                       alt="message"
-                      onClick={() => handleComment(recipeId, title, image)}
+                      onClick={(e) => handleComment(recipeId, title, image, e)}
                       className={`${noOfComments ? "" : styles.inActiveImg}`}
                     />{" "}
                     {noOfComments ? <span>{noOfComments}</span> : null}
