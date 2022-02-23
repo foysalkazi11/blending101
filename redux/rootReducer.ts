@@ -8,6 +8,7 @@ import collectionsReducer from "./slices/collectionSlice";
 import recipeReducer from "./slices/recipeSlice";
 import ingredientsReducer from "./slices/ingredientsSlice";
 import filterRecipeSliceReducer from "./slices/filterRecipeSlice";
+import categroyReducer from "./slices/categroySlice";
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   recipe: recipeReducer,
   ingredients: ingredientsReducer,
   filterRecipe: filterRecipeSliceReducer,
+  categroy: categroyReducer,
 });
 
 // export type RootState = ReturnType<typeof rootReducer>;
