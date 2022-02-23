@@ -10,26 +10,29 @@ const RecursiveAccordian = ({ dataObject }: recursiveAccordianInterface) => {
 
   const populateAccordian = (data) => {
     return Object.entries(data).map((entries, index) => {
+      // console.log(entries);
       return (
         <div key={`${entries}`}>
           {/* @ts-ignore */}
-          {Object.keys(entries[1].children).length !== 0 ? (
-            <CustomAccordion title={entries[0]} dataObject={entries}>
-              {/* @ts-ignore */}
-              {[populateAccordian(entries[1]?.children)]}
-            </CustomAccordion>
-          ) : (
-            <CustomAccordion
-              title={entries[0]}
-              iconRight={false}
-              plusMinusIcon={false}
-              dataObject={entries}
-            />
-          )}
+
         </div>
       );
     });
+    // return Object.entries(data).map((entries, index) => {
+    //   console.log(entries);
+    //   return;
+    // });
+    //
+    // console.log(data);
+    return <div></div>;
   };
+
+  // dataObject = {
+  //   energy: dataObject.energy,
+  //   minerals: dataObject.minerals,
+  //   vitamins: dataObject.vitamins,
+  // };
+
   return (
     <div>
       {Object.entries(dataObject).map((entries, index) => {
