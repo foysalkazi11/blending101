@@ -29,6 +29,7 @@ import {
 import { useRouter } from "next/router";
 import CustomModal from "../modal/customModal/CustomModal";
 import SaveToCollectionModal from "../modal/saveToCollectionModal/SaveToCollectionModal";
+import SkeletonRecipeDiscovery from "../skeletons/skeletonRecipeDiscovery/SkeletonRecipeDiscovery";
 
 const RecipeDetails = () => {
   const router = useRouter();
@@ -45,6 +46,7 @@ const RecipeDetails = () => {
   const [getAllLatestRecipes] = useLazyQuery(GET_ALL_LATEST_RECIPES);
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
+  const [loading, setLoading] = useState(true);
 
   const handleCompareRecipe = () => {
     dispatch(setOpenCollectionsTary(true));
@@ -53,7 +55,7 @@ const RecipeDetails = () => {
   };
 
   const getAllRecipes = async () => {
-    dispatch(setLoading(true));
+    setLoading(true);
     try {
       if (!recommended?.length) {
         const recommendedRecipes = await getAllRecommendedRecipes();
@@ -74,9 +76,9 @@ const RecipeDetails = () => {
         dispatch(setLatest(latestRecipes?.data?.getAllLatestRecipes || []));
       }
 
-      dispatch(setLoading(false));
+      setLoading(false);
     } catch (error) {
-      dispatch(setLoading(false));
+      setLoading(false);
       console.log(error?.messae);
     }
   };
@@ -122,7 +124,7 @@ const RecipeDetails = () => {
               <div className={styles.main__tray}>
                 {/* its for recommended */}
 
-                {recommended && (
+                {recommended?.length ? (
                   <ContentTray
                     heading={"Recommended"}
                     image={"/images/thumbs-up.svg"}
@@ -159,11 +161,13 @@ const RecipeDetails = () => {
                       );
                     })}
                   </ContentTray>
+                ) : (
+                  <SkeletonRecipeDiscovery />
                 )}
 
                 {/* its for Recent*/}
 
-                {latest && (
+                {latest.length ? (
                   <ContentTray
                     heading={"Recent"}
                     image={"/images/clock-light.svg"}
@@ -202,10 +206,12 @@ const RecipeDetails = () => {
                       }
                     })}
                   </ContentTray>
+                ) : (
+                  <SkeletonRecipeDiscovery />
                 )}
                 {/* its for Popular */}
 
-                {popular && (
+                {popular.length ? (
                   <ContentTray
                     heading={"Popular"}
                     image={"/images/fire-alt-light.svg"}
@@ -244,6 +250,8 @@ const RecipeDetails = () => {
                       }
                     })}
                   </ContentTray>
+                ) : (
+                  <SkeletonRecipeDiscovery />
                 )}
               </div>
             </div>
