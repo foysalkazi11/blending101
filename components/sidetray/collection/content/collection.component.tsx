@@ -23,6 +23,7 @@ import {
 } from "../../../../redux/slices/collectionSlice";
 import GET_LAST_MODIFIED_COLLECTION from "../../../../gqlLib/collection/query/getLastModifiedCollection";
 import ADD_OR_REMOVE_RECIPE_FORM_COLLECTION from "../../../../gqlLib/collection/mutation/addOrRemoveRecipeFromCollection";
+import SkeletonCollection from "../../../../theme/skeletons/skeletonCollection/SkeletonCollection";
 
 type CollectionComponentProps = {
   collections: {}[];
@@ -62,9 +63,10 @@ export default function CollectionComponent({
   const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
   const [isCollectionUpdate, setIsCollectionUpdate] = useState(false);
   const isMounted = useRef(null);
+  const [loading, setLoading] = useState(false);
 
   const handleAddorRemoveRecipeFormCollection = async () => {
-    dispatch(setLoading(true));
+    setLoading(true);
     try {
       const { data } = await addOrRemoveRecipeFromCollection({
         variables: {
@@ -91,11 +93,11 @@ export default function CollectionComponent({
       });
       dispatch(setAllRecipeWithinCollectionsId(recipesId));
 
-      dispatch(setLoading(false));
+      setLoading(false);
       reactToastifyNotification("info", `Collection update successfully`);
       setIsCollectionUpdate(false);
     } catch (error) {
-      dispatch(setLoading(false));
+      setLoading(false);
       reactToastifyNotification("eror", error?.message);
       setIsCollectionUpdate(false);
     }
@@ -124,7 +126,7 @@ export default function CollectionComponent({
   // };
 
   const handleDeleteCollection = async (collectionId: string) => {
-    dispatch(setLoading(true));
+    setLoading(true);
     try {
       const { data } = await deleteCollection({
         variables: {
@@ -153,10 +155,10 @@ export default function CollectionComponent({
       dispatch(setCollectionDetailsId(""));
       dispatch(setShowAllRecipes(false));
 
-      dispatch(setLoading(false));
+      setLoading(false);
       reactToastifyNotification("info", "Collection delete successfully");
     } catch (error) {
-      dispatch(setLoading(false));
+      setLoading(false);
       reactToastifyNotification("eror", error?.message);
     }
   };
@@ -211,6 +213,10 @@ export default function CollectionComponent({
       isMounted.current = false;
     };
   }, []);
+
+  if (loading) {
+    return <SkeletonCollection />;
+  }
 
   return (
     <div className={styles.collection}>

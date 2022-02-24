@@ -34,6 +34,7 @@ const CustomModal = ({
       <div
         className={`${styles.content} ${openModal ? styles.activeContent : ""}`}
         style={contentStyle}
+        onClick={(e) => e?.stopPropagation()}
       >
         {children}
       </div>
