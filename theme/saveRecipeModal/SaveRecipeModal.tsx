@@ -14,7 +14,7 @@ const SaveRecipe = ({
     <div className={styles.saveRecipeModalContainer}>
       <div className={styles.modalBody}>
         <h3>
-          Added to My <span> {title}</span>
+          Added to <span> {title}</span> collection
         </h3>
         <a onClick={() => handleChange()}>Change</a>
       </div>
