@@ -59,7 +59,7 @@ const ForgotPassword = () => {
       dispatch(setLoading(false));
       reactToastifyNotification(
         "info",
-        "A new varification code has been send to you email."
+        "A new verification code has been send to you email."
       );
     } catch (error) {
       dispatch(setLoading(false));
@@ -71,14 +71,14 @@ const ForgotPassword = () => {
       <div className={styles.varifyEmailContainer}>
         <img src="/images/logo.png" alt="logo will soon load" />
 
-        <h2>Varify Email</h2>
-        <p>A Varification code is sent to your mail. Please paste it below.</p>
+        <h2>Verify Email</h2>
+        <p>A Verification code is sent to your mail. Please paste it below.</p>
         <form onSubmit={handleSubmit}>
           <InputField
             type="text"
             style={{ margin: "4px auto 15px auto" }}
             value={code}
-            placeholder="Varify your account"
+            placeholder="Verify your account"
             fullWidth={true}
             setValue={setCode}
           />
@@ -87,7 +87,7 @@ const ForgotPassword = () => {
             <ButtonComponent
               type="primary"
               style={{ height: "60px", fontSize: "18px" }}
-              value="Varify"
+              value="Verify"
               fullWidth={false}
               submit={true}
             />
