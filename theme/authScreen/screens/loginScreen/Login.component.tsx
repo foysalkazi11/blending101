@@ -53,7 +53,7 @@ const LoginScreen = () => {
       dispatch(setUser(email));
       dispatch(setDbUser(data?.createNewUser));
       dispatch(setProvider("email"));
-      histroy.back();
+      histroy.push("/");
     } catch (error) {
       dispatch(setLoading(false));
       reactToastifyNotification("error", error?.message);
@@ -89,10 +89,7 @@ const LoginScreen = () => {
             <SocialTray />
             <div className={styles.seperator} />
           </div>
-          <p className={styles.loginPara}>
-            Aliquam vestibulum nunc quis blandit rutrum. Curabitur vel
-            scelerisque leo.
-          </p>
+          <p className={styles.loginPara}>Enter email and password</p>
 
           <form onSubmit={handleSubmit}>
             <InputField
@@ -116,6 +113,9 @@ const LoginScreen = () => {
                 <input type="checkbox" />
                 <label>Keep me looged</label>
               </div>
+              {/* <Link href="/reset_password">
+                <a style={{ marginRight: "16px" }}>Change Password?</a>
+              </Link> */}
               <Link href="/forget_password">
                 <a>Forget Password?</a>
               </Link>

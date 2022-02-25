@@ -14,6 +14,9 @@ import { setLoading } from "../../../../redux/slices/utilitySlice";
 import { useAppDispatch } from "../../../../redux/hooks";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
 
+// const emailRegex2 = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+// const emailRegex3 = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+
 const SignupScreen = () => {
   const {
     register,
