@@ -18,7 +18,6 @@ const CustomAccordion = ({
   children,
   iconRight = false,
   plusMinusIcon = true,
-  dataObject,
   value,
   unit
 }: CustomAccordionProps) => {

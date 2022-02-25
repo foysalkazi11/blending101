@@ -12,10 +12,6 @@ const EditRecipe = () => {
     getBlendNutritionBasedOnRecipe,
     { loading: gettingNutritionData, data: nutritionData },
   ] = useLazyQuery(GET_EDIT_RECIPE_NUTRITION(ingredients_list));
-  // const [
-  //   getBlendNutritionBasedOnRecipe,
-  //   { loading: gettingNutritionData, data: nutritionData },
-  // ] = useLazyQuery(GET_NUTRITION(ingredients_list));
 
   const fetchRecipe = () => {
     getBlendNutritionBasedOnRecipe();

@@ -96,12 +96,12 @@
   // transition: max-height 0.6s ease;
   width: 100%;
   display: grid;
-  grid-template-columns: 35% 35% 30%;
+  grid-template-columns: 55% 22% 15%;
   gap: 10px;
   border: none;
 
-  @include responsive(0px, 1400px) {
-    grid-template-columns: 1fr 32% 15%;
+  @include responsive(0px, 990px) {
+    grid-template-columns: 1fr 23% 22%;
   }
 }
 
