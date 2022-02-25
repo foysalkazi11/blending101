@@ -14,7 +14,7 @@ import {
   setOpenCollectionsTary,
   setToggleSaveRecipeModal,
 } from "../../redux/slices/sideTraySlice";
-import SaveRecipeModal from "../saveRecipeModal/SaveRecipeModal";
+import SaveRecipe from "../saveRecipeModal/SaveRecipeModal";
 import ShowCollectionRecipes from "../showCollectionRecipes/ShowCollectionRecipes";
 import { setLoading } from "../../redux/slices/utilitySlice";
 import { useLazyQuery } from "@apollo/client";
@@ -27,6 +27,8 @@ import {
   setRecommended,
 } from "../../redux/slices/recipeSlice";
 import { useRouter } from "next/router";
+import SaveToCollectionModal from "../modal/saveToCollectionModal/SaveToCollectionModal";
+import SkeletonRecipeDiscovery from "../skeletons/skeletonRecipeDiscovery/SkeletonRecipeDiscovery";
 
 const RecipeDetails = () => {
   const router = useRouter();
@@ -43,6 +45,7 @@ const RecipeDetails = () => {
   const [getAllLatestRecipes] = useLazyQuery(GET_ALL_LATEST_RECIPES);
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
+  const [loading, setLoading] = useState(true);
 
   const handleCompareRecipe = () => {
     dispatch(setOpenCollectionsTary(true));
@@ -51,7 +54,7 @@ const RecipeDetails = () => {
   };
 
   const getAllRecipes = async () => {
-    dispatch(setLoading(true));
+    setLoading(true);
     try {
       if (!recommended?.length) {
         const recommendedRecipes = await getAllRecommendedRecipes();
@@ -72,9 +75,9 @@ const RecipeDetails = () => {
         dispatch(setLatest(latestRecipes?.data?.getAllLatestRecipes || []));
       }
 
-      dispatch(setLoading(false));
+      setLoading(false);
     } catch (error) {
-      dispatch(setLoading(false));
+      setLoading(false);
       console.log(error?.messae);
     }
   };
@@ -120,7 +123,7 @@ const RecipeDetails = () => {
               <div className={styles.main__tray}>
                 {/* its for recommended */}
 
-                {recommended && (
+                {recommended?.length ? (
                   <ContentTray
                     heading={"Recommended"}
                     image={"/images/thumbs-up.svg"}
@@ -136,6 +139,9 @@ const RecipeDetails = () => {
                         <div
                           className={styles.slider__card}
                           key={"recommended" + index}
+                          onClick={() =>
+                            router.push(`/recipe_details/${item?._id}`)
+                          }
                         >
                           <DatacardComponent
                             title={item.name}
@@ -154,11 +160,13 @@ const RecipeDetails = () => {
                       );
                     })}
                   </ContentTray>
+                ) : (
+                  <SkeletonRecipeDiscovery />
                 )}
 
                 {/* its for Recent*/}
 
-                {latest && (
+                {latest.length ? (
                   <ContentTray
                     heading={"Recent"}
                     image={"/images/clock-light.svg"}
@@ -197,10 +205,12 @@ const RecipeDetails = () => {
                       }
                     })}
                   </ContentTray>
+                ) : (
+                  <SkeletonRecipeDiscovery />
                 )}
                 {/* its for Popular */}
 
-                {popular && (
+                {popular.length ? (
                   <ContentTray
                     heading={"Popular"}
                     image={"/images/fire-alt-light.svg"}
@@ -239,6 +249,8 @@ const RecipeDetails = () => {
                       }
                     })}
                   </ContentTray>
+                ) : (
+                  <SkeletonRecipeDiscovery />
                 )}
               </div>
             </div>
@@ -248,11 +260,12 @@ const RecipeDetails = () => {
           <FooterRecipeFilter />
         </div>
       </AContainer>
-      <SaveRecipeModal
-        title={lastModifiedCollection}
-        handleChange={handleCompareRecipe}
-        modalContentStyle={{ borderRadius: "29px" }}
-      />
+      <SaveToCollectionModal>
+        <SaveRecipe
+          title={lastModifiedCollection}
+          handleChange={handleCompareRecipe}
+        />
+      </SaveToCollectionModal>
     </>
   );
 };

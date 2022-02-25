@@ -15,16 +15,23 @@ import {
   setOpenCommentsTray,
   setToggleModal,
 } from "../../../../redux/slices/sideTraySlice";
-import Modal from "../../../../theme/modal/Modal";
+import Modal from "../../../../theme/modal/customModal/CustomModal";
 import ShareRecipeModal from "../shareRecipeModal/ShareRecipeModal";
 import SaveRecipe from "../saveRecipe/SaveRecipe";
 import Image from "next/image";
 
+<<<<<<< HEAD
 const Center = ( recipeData ) => {
+=======
+let BlendtecItem = ["Blendtec", "Blendtec"];
+let ozItem = ["64 oz", "64 oz"];
+
+const Center = (recipeData) => {
+>>>>>>> 3db43444305f6149b0d79cce0dee4c4d230f98fc
   const [counter, setCounter] = useState(1);
   const dispatch = useAppDispatch();
   const [showRecipeModal, setShowRecipeModal] = useState(true);
-  const recipeDetails =recipeData && recipeData;
+  const recipeDetails = recipeData && recipeData;
 
   const openCommentsTray = () => {
     dispatch(setOpenCommentsTray(true));
@@ -98,7 +105,8 @@ const Center = ( recipeData ) => {
           <h3>{recipeDetails?.recipeData?.name}</h3>
           <span className={styles.ratingBox}>
             <img src="/images/rating.svg" alt="" />
-            {recipeDetails?.recipeData?.averageRating} ({recipeDetails?.recipeData?.numberOfRating})
+            {recipeDetails?.recipeData?.averageRating} (
+            {recipeDetails?.recipeData?.numberOfRating})
           </span>
         </div>
         <div className={styles.subMenu}>
@@ -285,9 +293,7 @@ const Center = ( recipeData ) => {
             );
           })}
       </div>
-      <Modal contentStyle={{ borderRadius: "29px" }}>
-        {showRecipeModal ? <ShareRecipeModal /> : <SaveRecipe />}
-      </Modal>
+      <Modal>{showRecipeModal ? <ShareRecipeModal /> : <SaveRecipe />}</Modal>
     </div>
   );
 };
