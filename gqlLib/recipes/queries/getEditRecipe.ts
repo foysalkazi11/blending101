@@ -41,15 +41,15 @@ export const INGREDIENTS_BY_CATEGORY_AND_CLASS = gql`
     filterIngredientByCategoryAndClass(
       data: { ingredientCategory: $classType, IngredientClass: 1 }
     ) {
-      _id,
-      ingredientName,
+      _id
+      ingredientName
       category
-      blendStatus,
-      classType,
-      description,
+      blendStatus
+      classType
+      description
       images
       featuredImage
-      portions{
+      portions {
         measurement
         measurement2
         meausermentWeight
@@ -67,3 +67,30 @@ export const BLEND_CATEGORY = gql`
     }
   }
 `;
+
+// ${itm.selectedPortion.gram}
+
+export const GET_EDIT_RECIPE_NUTRITION = (ingredients) => {
+  console.log(ingredients)
+  const convertArrToString = (arr) => {
+    arr = arr?.map((itm) => {
+      let value=itm.portions.filter((item)=>item.default===true);
+      value=value[0].meausermentWeight;
+      return `
+            {
+              ingredientId: "${itm?._id}",
+              value: ${value}
+            }
+          `;
+    });
+    arr = `[${arr?.toString()}]`;
+    return arr;
+  };
+  return gql`
+  query {
+    getBlendNutritionBasedOnRecipe(ingredientsInfo: ${convertArrToString(
+      ingredients
+    )})
+  }
+  `;
+};

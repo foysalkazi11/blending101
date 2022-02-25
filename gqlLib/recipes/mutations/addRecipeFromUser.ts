@@ -70,6 +70,9 @@ export const CREATE_NEW_RECIPE_FROM_USER = ({
 
     return `[${instructionArr}]`;
   };
+
+  // console.log(ingredients)
+  console.log(recipeName)
   return gql`
  mutation {
    addRecipeFromUser(data: {

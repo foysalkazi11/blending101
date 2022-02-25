@@ -20,9 +20,6 @@ import ShareRecipeModal from "../shareRecipeModal/ShareRecipeModal";
 import SaveRecipe from "../saveRecipe/SaveRecipe";
 import Image from "next/image";
 
-let BlendtecItem = ["Blendtec", "Blendtec"];
-let ozItem = ["64 oz", "64 oz"];
-
 const Center = ( recipeData ) => {
   const [counter, setCounter] = useState(1);
   const dispatch = useAppDispatch();
@@ -78,7 +75,7 @@ const Center = ( recipeData ) => {
     prevArrow: <PreviousButton />,
   };
 
-  console.log(recipeDetails?.recipeData);
+
   return (
     <div>
       <div className={styles.header}>

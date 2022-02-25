@@ -9,6 +9,8 @@ type CustomAccordionProps = {
   iconRight?: boolean;
   plusMinusIcon?: boolean;
   dataObject?: object;
+  value?:string;
+  unit?:string;
 };
 
 const CustomAccordion = ({
@@ -17,6 +19,8 @@ const CustomAccordion = ({
   iconRight = false,
   plusMinusIcon = true,
   dataObject,
+  value,
+  unit
 }: CustomAccordionProps) => {
   const [expanded, setExpanded] = useState<boolean>(false);
 
@@ -67,10 +71,10 @@ const CustomAccordion = ({
             <div className={styles.accordianContent}>
               <h5 className={styles.titleCopy}>{title}</h5>
               <p className={styles.valueUnit + " " + styles.alignLeft}>
-                {dataObject && dataObject[1].value}
+                {value && parseFloat(value).toFixed(3)}
               </p>
               <p className={styles.valueUnit + " " + styles.alignLeft}>
-                {dataObject && dataObject[1].Unit}
+                {unit && unit}
               </p>
             </div>
           </div>

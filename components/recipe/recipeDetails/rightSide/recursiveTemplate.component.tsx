@@ -1,22 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
-import React from "react";
-import styles from "./RightSide.module.scss";
-import LinearComponent from "../../../../theme/linearProgress/LinearProgress.component";
-import RecursiveAccordian from "../../../customRecursiveAccordian/recursiveAccordian.component";
-
-const health = [
-  { name: "Vitamin A", percent: 100 },
-  { name: "Vitexin", percent: 90 },
-  { name: "Vitamin D", percent: 87 },
-  { name: "Iron", percent: 69 },
-  { name: "Betaxanthins", percent: 50 },
-  { name: "Calcium", percent: 35 },
-  { name: "Quercetiin", percent: 20 },
-];
-
-const recursiveData = (data) => {
-  if (!data) return;
-  let { energy, vitamins, minerals } = data;
+export const recursiveData = ({ energy, vitamins, minerals }) => {
   return {
     Energy: {
       Protein: {
@@ -266,58 +248,3 @@ const recursiveData = (data) => {
     },
   };
 };
-
-interface PassingProps {
-  name: string;
-  percent: number;
-}
-
-const RightSide = ({ nutritionData }) => {
-  let nestedAccordianSkeleton = recursiveData(nutritionData);
-  return (
-    <div>
-      <div className={styles.header}>
-        <img src="/icons/chart-bar-light-green.svg" alt="bar icon" />
-        <h3>Rx Facts</h3>
-      </div>
-      <div className={styles.content}>
-        <h3>Nutrition</h3>
-        <div className={styles.nutritionHeader}>
-          <p>Amount Per Serving Calories</p>
-          <div className={styles.recursiveAccordianHeading}>
-            <div className={styles.recursiveAccordianHeading__heading}>
-              <div className={styles.recursiveAccordianHeading__heading__1}>
-                Calories
-              </div>
-              <div className={styles.recursiveAccordianHeading__heading__2}>
-                93
-              </div>
-            </div>
-            <div className={styles.recursiveAccordianHeading__subheading}>
-              <div className={styles.recursiveAccordianHeading__subheading__3}>
-                Value
-              </div>
-              <div className={styles.recursiveAccordianHeading__subheading__4}>
-                Daily%
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className={styles.ingredientsDetails}>
-          {nutritionData && (
-            <RecursiveAccordian dataObject={nestedAccordianSkeleton} />
-          )}
-        </div>
-      </div>
-      <div className={styles.linerProgessContainer}>
-        <h3>Health</h3>
-        <p>Disease, Conditions and Systems</p>
-        {health.map(({ name, percent }: PassingProps, index) => {
-          return <LinearComponent name={name} percent={percent} key={index} />;
-        })}
-      </div>
-    </div>
-  );
-};
-
-export default RightSide;

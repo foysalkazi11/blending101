@@ -26,7 +26,7 @@ import {
   setPopular,
   setRecommended,
 } from "../../redux/slices/recipeSlice";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 
 const RecipeDetails = () => {
   const router = useRouter();
@@ -106,8 +106,7 @@ const RecipeDetails = () => {
             <SearchtagsComponent />
           ) : null}
 
-          {
-          collectionDetailsId || showAllRecipes ? (
+          {collectionDetailsId || showAllRecipes ? (
             <ShowCollectionRecipes />
           ) : blends.length || ingredients.length || filters?.length ? (
             <FilterPageBottom
@@ -176,7 +175,9 @@ const RecipeDetails = () => {
                           <div
                             className={styles.slider__card}
                             key={"latest" + index}
-                            onClick={()=>router.push(`/recipe_details/${item?._id}`)}
+                            onClick={() =>
+                              router.push(`/recipe_details/${item?._id}`)
+                            }
                           >
                             <DatacardComponent
                               title={item.name}
@@ -216,7 +217,9 @@ const RecipeDetails = () => {
                           <div
                             className={styles.slider__card}
                             key={"popular" + index}
-                            onClick={()=>router.push(`/recipe_details/${item?._id}`)}
+                            onClick={() =>
+                              router.push(`/recipe_details/${item?._id}`)
+                            }
                           >
                             <DatacardComponent
                               title={item.name}
