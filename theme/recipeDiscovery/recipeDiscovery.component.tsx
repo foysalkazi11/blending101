@@ -134,7 +134,7 @@ const RecipeDetails = () => {
                         const ingredient = ing?.ingredientId?.ingredientName;
                         ingredients.push(ingredient);
                       });
-                      const ing = ingredients.toString();
+                      const ing = ingredients.join(' ');
                       return (
                         <div
                           className={styles.slider__card}
