@@ -184,27 +184,6 @@ const Center = (recipeData) => {
         <div>
           <ReadMore>{recipeDetails?.recipeData?.description}</ReadMore>
         </div>
-
-        {/* <div className={styles.dropDownContainer}>
-          <div style={{ flex: 1 }}>
-            <DropDown
-              listElem={BlendtecItem}
-              style={{ backgroundColor: "#fafbf9" }}
-            />
-          </div>
-          <div style={{ flex: 1 }}>
-            <DropDown
-              listElem={ozItem}
-              style={{ backgroundColor: "#fafbf9" }}
-            />
-          </div>
-          <div style={{ flex: 1 }} className={styles.timeBox}>
-            <img src="/images/time-icon.svg" alt="time-icon" />
-            <p>
-              Prep: <span>{recipeDetails?.recipeData?.prepTime}</span>
-            </p>
-          </div>
-        </div> */}
       </div>
       <div className={styles.ingredentContainer}>
         <div className={styles.ingredentHeader}>
@@ -256,7 +235,7 @@ const Center = (recipeData) => {
                 >
                   <div className={styles.leftSide}>
                     <img src="/images/5-2-avocado-png-hd.png" alt="icon" />
-                    <p>{`${ingredient.selectedPortion.quantity} ${ingredient.selectedPortion.name}`}</p>
+                    <p>{`${ingredient.selectedPortion.quantity} ${ingredient?.ingredientId?.ingredientName}`}</p>
                   </div>
                   <div className={styles.iconGroup}>
                     <MdOutlineInfo className={styles.icon} />
