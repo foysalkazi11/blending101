@@ -19,6 +19,7 @@ import {
   MdHelpOutline,
   MdOutlineLogout,
   MdOutlineLogin,
+  MdPublishedWithChanges,
 } from "react-icons/md";
 import Link from "next/link";
 import { FaRegUser } from "react-icons/fa";
@@ -138,10 +139,18 @@ export default function HeaderComponent({
                     <MdHelpOutline className={styles.icon} />
                   </div>
                   {user ? (
-                    <div className={styles.menu} onClick={userSingOut}>
-                      <p>Logout</p>
-                      <MdOutlineLogout className={styles.icon} />
-                    </div>
+                    <>
+                      <Link href="/reset_password" passHref>
+                        <div className={styles.menu}>
+                          <p>Change Pass.</p>
+                          <MdPublishedWithChanges className={styles.icon} />
+                        </div>
+                      </Link>
+                      <div className={styles.menu} onClick={userSingOut}>
+                        <p>Logout</p>
+                        <MdOutlineLogout className={styles.icon} />
+                      </div>
+                    </>
                   ) : (
                     <Link href="/login" passHref>
                       <div className={styles.menu}>

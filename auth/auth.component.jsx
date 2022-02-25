@@ -83,7 +83,7 @@ function AuthProvider({ children, activeUser }) {
         page !== "/signup" &&
         page !== "/varify_email"
       )
-        // router.push("/login");
+        router.push("/login");
       console.log("uncomment code in auth folder");
     }
   };

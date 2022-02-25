@@ -6,10 +6,10 @@ import VisibilityIcon from "../../../public/icons/visibility_black_36dp.svg";
 interface Inputproperties {
   type?: "text" | "password" | "email" | "";
   placeholder?: string;
-  style?: Object;
+  style?: React.CSSProperties;
   fullWidth?: boolean;
   width?: any;
-  name?: string | number;
+  name?: string;
   register?: any;
   required?: any;
 }
