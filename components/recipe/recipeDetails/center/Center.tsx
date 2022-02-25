@@ -7,7 +7,6 @@ import styles from "./Center.module.scss";
 import ChevronRightIcon from "../../../../public/icons/chevron_right_black_36dp.svg";
 import ChevronLeftIcon from "../../../../public/icons/chevron_left_black_36dp.svg";
 import { MdOutlineInfo, MdAdd, MdRemove } from "react-icons/md";
-import DropDown from "../../../../theme/dropDown/DropDown.component";
 import { BiBarChart } from "react-icons/bi";
 import { BsCartPlus } from "react-icons/bs";
 import { useAppDispatch } from "../../../../redux/hooks";
@@ -20,8 +19,6 @@ import ShareRecipeModal from "../shareRecipeModal/ShareRecipeModal";
 import SaveRecipe from "../saveRecipe/SaveRecipe";
 import Image from "next/image";
 
-let BlendtecItem = ["Blendtec", "Blendtec"];
-let ozItem = ["64 oz", "64 oz"];
 
 const Center = (recipeData) => {
   const [counter, setCounter] = useState(1);
@@ -78,7 +75,7 @@ const Center = (recipeData) => {
     prevArrow: <PreviousButton />,
   };
 
-  console.log(recipeDetails?.recipeData);
+
   return (
     <div>
       <div className={styles.header}>

@@ -27,7 +27,6 @@ import {
   setRecommended,
 } from "../../redux/slices/recipeSlice";
 import { useRouter } from "next/router";
-import CustomModal from "../modal/customModal/CustomModal";
 import SaveToCollectionModal from "../modal/saveToCollectionModal/SaveToCollectionModal";
 import SkeletonRecipeDiscovery from "../skeletons/skeletonRecipeDiscovery/SkeletonRecipeDiscovery";
 
@@ -135,7 +134,7 @@ const RecipeDetails = () => {
                         const ingredient = ing?.ingredientId?.ingredientName;
                         ingredients.push(ingredient);
                       });
-                      const ing = ingredients.toString();
+                      const ing = ingredients.join(' ');
                       return (
                         <div
                           className={styles.slider__card}

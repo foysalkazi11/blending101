@@ -71,7 +71,7 @@
   &__subheading {
     display: flex;
     text-align: right;
-    font-weight: 300;
+    font-weight: 400;
     color: #000;
     font-size: 14px;
     padding: 10px 10px 10px 0px;
@@ -82,8 +82,24 @@
     }
 
     &__4 {
-      width: 30%;
-      margin-right: 10%;
+      width: 22%;
+      margin-right: 3.5%;
+      @include responsive(0px,550px ){
+        margin-right: 10%;
+        width: 22%;
+      }
+      @include responsive(550px,650px ){
+        margin-right: 14%;
+        width: 22%;
+      }
+      @include responsive(650px,770px ){
+        margin-right: 16%;
+        width: 22%;
+      }
+      @include responsive(770px,1200px ){
+        margin-right: 17%;
+        width: 22%;
+      }
     }
   }
 }

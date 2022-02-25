@@ -15,7 +15,8 @@ import imageUploadS3 from "../../utility/imageUploadS3";
 import { BLEND_CATEGORY } from "../../../gqlLib/recipes/queries/getEditRecipe";
 import { useLazyQuery } from "@apollo/client";
 
-const EditRecipePage = () => {
+const EditRecipePage = ({nutritionData}) => {
+  nutritionData
   const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
   const [images, setImages] = useState<any[]>([]);
   const [uploadUrl, setUploadUrl] = useState([]);
@@ -33,7 +34,6 @@ const EditRecipePage = () => {
       }
       dispatch(setLoading(false));
     } catch (error) {
-      console.log(error);
       dispatch(setLoading(false));
     }
   };
@@ -121,7 +121,7 @@ const EditRecipePage = () => {
           />
         </div>
         <div className={styles.right__main}>
-          <RightTray />
+          <RightTray nutritionData={nutritionData}/>
         </div>
       </div>
       <div className={styles.footerMainDiv}>
