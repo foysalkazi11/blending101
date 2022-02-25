@@ -12,7 +12,7 @@ import useOnClickOutside from "../../../components/utility/useOnClickOutside";
 import { useRouter } from "next/router";
 
 const SearchBar = () => {
-  const router=useRouter();
+  const router = useRouter();
   const [isInputFocus, setIsInputFocus] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
   const [input, setInput] = useState("");
@@ -87,13 +87,21 @@ const SearchBar = () => {
           )}
         </div>
       </div>
-      <div onClick={()=>router.push(`/recipe/compare`)} style={{ marginLeft: "40px" }} >
+      <div
+        onClick={() => router.push(`/recipe/compare`)}
+        style={{ marginLeft: "40px" }}
+        className={styles.buttonContainer}
+      >
         <RecipeDiscoverButton
           image="/images/compare-fill-icon.svg"
           text="Compare(6)"
         />
       </div>
-      <div onClick={()=>router.push(`/add_recipe`)} style={{ marginLeft: "30px" }}>
+      <div
+        onClick={() => router.push(`/add_recipe`)}
+        style={{ marginLeft: "30px" }}
+        className={styles.buttonContainer}
+      >
         <RecipeDiscoverButton Icon={AddCircleOutlineIcon} text="Recipe" />
       </div>
     </div>
