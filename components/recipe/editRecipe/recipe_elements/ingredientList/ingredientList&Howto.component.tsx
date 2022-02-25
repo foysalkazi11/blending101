@@ -67,12 +67,11 @@ const IngredientList = ({
 
   // (mutation):"graphql api mutation - save recipe"
   const [recipeApi, setRecipeApi] = useState([]);
+  // const [recipeTitle, setRecipeTitle] = useState("Recipe Title");
 
-  const editText = () => {
-    let value = editRecipeHeading?.current?.textContent;
-    return value;
-  };
-  // editText();
+  // useEffect(() => {
+  //   setRecipeTitle(editRecipeHeading?.current?.textContent);
+  // }, [editRecipeHeading]);
 
   // =========================================================================
   // sets value of top card in recipe editd page equal to ingredients page
@@ -247,8 +246,8 @@ const IngredientList = ({
     const addrecipeFunc = async () => {
       const { data } = await addRecipeRecipeFromUser();
       reactToastifyNotification("info", "Recipe Created");
-      console.log({ data: data });
       setIsFetching(false);
+      console.log({ data });
     };
     addrecipeFunc();
   };
@@ -259,7 +258,7 @@ const IngredientList = ({
       ingredients: recipeApi,
       image: uploadedImagesUrl,
       recipeInstructions: howToState,
-      recipeName: editText(),
+      recipeName: editRecipeHeading?.current?.textContent,
       SelectedblendCategory: selectedBlendType,
     })
   );
