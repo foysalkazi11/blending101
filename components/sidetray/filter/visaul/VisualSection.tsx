@@ -19,6 +19,9 @@ const blendCategoryImage = {
   "Herbal Tea": "/other/heart.svg",
 };
 
+const defaultBlendImg =
+  "https://blending.s3.us-east-1.amazonaws.com/3383678.jpg";
+
 type VisualSectionProps = {
   categories?: { title: string; val: string }[];
 };
@@ -30,6 +33,7 @@ const VisualSection = ({ categories }: VisualSectionProps) => {
   );
   const { allCategories } = useAppSelector((state) => state?.categroy);
   const dispatch = useAppDispatch();
+  console.log(allCategories);
 
   const handleBlendClick = (blend) => {
     let blendz = [];
@@ -92,14 +96,14 @@ const VisualSection = ({ categories }: VisualSectionProps) => {
                   onClick={() =>
                     handleBlendClick({
                       title: blend?.name,
-                      img: blendCategoryImage[blend?.name],
+                      img: blend?.image || defaultBlendImg,
                       id: blend?._id,
                     })
                   }
                 >
                   <div className={styles.filter__menu__item__image}>
                     <img
-                      src={blendCategoryImage[blend?.name]}
+                      src={blend?.image || defaultBlendImg}
                       alt={blend?.name}
                     />
                     {checkActive(blend._id) && (

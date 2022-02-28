@@ -6,6 +6,7 @@ export const FETCH_BLEND_CATEGORIES = gql`
       _id
       name
       image
+      icon
     }
   }
 `;

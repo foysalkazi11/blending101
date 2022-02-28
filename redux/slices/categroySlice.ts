@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 type dataObj = {
   _id: string;
   name: string;
-  imgae: string;
+  image: string;
 };
 
 type categroySliceProps = {
