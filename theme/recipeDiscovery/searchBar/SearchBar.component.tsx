@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setOpenFilterTray } from "../../../redux/slices/sideTraySlice";
 import useOnClickOutside from "../../../components/utility/useOnClickOutside";
 import { useRouter } from "next/router";
+import Tooltip from "../../toolTip/CustomToolTip";
 
 const SearchBar = () => {
   const router = useRouter();
@@ -40,12 +41,14 @@ const SearchBar = () => {
     <div className={styles.searchBarContainer}>
       <div className={styles.inputContainer} ref={inputRef}>
         <div className={styles.filterIconContainer}>
-          <FiFilter
-            className={`${styles.filterIcon}${
-              openFilterTray ? styles.active : ""
-            }`}
-            onClick={() => dispatch(setOpenFilterTray(!openFilterTray))}
-          />
+          <Tooltip content="Filter" direction="bottom">
+            <FiFilter
+              className={`${styles.filterIcon}${
+                openFilterTray ? styles.active : ""
+              }`}
+              onClick={() => dispatch(setOpenFilterTray(!openFilterTray))}
+            />
+          </Tooltip>
         </div>
         <div className={styles.inputBox}>
           {isInputFocus ? null : isMicOn ? (
@@ -80,10 +83,12 @@ const SearchBar = () => {
               }}
             />
           ) : (
-            <BsMic
-              className={`${styles.mic} ${isMicOn ? styles.active : ""}`}
-              onClick={() => setIsMicOn(!isMicOn)}
-            />
+            <Tooltip direction="bottom" content="Voice search">
+              <BsMic
+                className={`${styles.mic} ${isMicOn ? styles.active : ""}`}
+                onClick={() => setIsMicOn(!isMicOn)}
+              />
+            </Tooltip>
           )}
         </div>
       </div>
@@ -92,17 +97,21 @@ const SearchBar = () => {
         style={{ marginLeft: "40px" }}
         className={styles.buttonContainer}
       >
-        <RecipeDiscoverButton
-          image="/images/compare-fill-icon.svg"
-          text="Compare(6)"
-        />
+        <Tooltip content="Compare recipe" direction="bottom">
+          <RecipeDiscoverButton
+            image="/images/compare-fill-icon.svg"
+            text="Compare(6)"
+          />
+        </Tooltip>
       </div>
       <div
         onClick={() => router.push(`/add_recipe`)}
         style={{ marginLeft: "30px" }}
         className={styles.buttonContainer}
       >
-        <RecipeDiscoverButton Icon={AddCircleOutlineIcon} text="Recipe" />
+        <Tooltip content="Add recipe" direction="bottom">
+          <RecipeDiscoverButton Icon={AddCircleOutlineIcon} text="Recipe" />
+        </Tooltip>
       </div>
     </div>
   );
