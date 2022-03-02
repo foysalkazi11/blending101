@@ -21,7 +21,7 @@ const CustomAccordion = ({
   value,
   unit
 }: CustomAccordionProps) => {
-  const [expanded, setExpanded] = useState<boolean>(false);
+  const [expanded, setExpanded] = useState<boolean>(true);
 
   const contentRef = useRef<HTMLDivElement>(null);
 
