@@ -55,6 +55,12 @@ const CREATE_NEW_USER = gql`
           favicon
           averageRating
           numberOfRating
+          ingredients {
+            ingredientId {
+              _id
+              ingredientName
+            }
+          }
         }
       }
     }
