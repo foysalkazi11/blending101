@@ -46,10 +46,6 @@ export default function HeaderComponent({ logo = true, headerTitle = "Home", ful
 
   const style = fullWidth ? { width: "100%" } : {};
 
-  useEffect(() => {
-    console.log(openPopup);
-  }, [openPopup]);
-
   return (
     <div className={styles.wrapper}>
       <div className={styles.header} style={style}>
