@@ -20,9 +20,7 @@ const AddRecipeCard = ({ setImages }: AddRecipeCardProps) => {
   };
 
   const dispatch = useAppDispatch();
-  const selectedImages = useAppSelector(
-    (state) => state.quantityAdjuster.uploadImageList
-  );
+  const selectedImages = useAppSelector((state) => state.quantityAdjuster.uploadImageList);
   const [imageListRaw, setImageListRaw] = useState([]);
 
   let imageArray: string[] = [];
@@ -30,9 +28,7 @@ const AddRecipeCard = ({ setImages }: AddRecipeCardProps) => {
     imageArray = [...selectedImages, ...imageArray];
 
     if (event.target.files) {
-      let BlobList = Array.from(event.target.files).map((file: any) =>
-        URL.createObjectURL(file)
-      );
+      let BlobList = Array.from(event.target.files).map((file: any) => URL.createObjectURL(file));
       let imageListRawArray = [];
       imageArray = [...selectedImages, ...BlobList];
       imageListRawArray = [...imageListRaw, ...event.target.files];
@@ -41,28 +37,6 @@ const AddRecipeCard = ({ setImages }: AddRecipeCardProps) => {
     }
     dispatch(setUploadImageList(imageArray));
 
-    const handleSubmitData = async () => {
-      dispatch(setLoading(true));
-      try {
-        if (imageListRaw?.length) {
-          imageListRaw?.forEach(async (file) => {
-            const { Key, uploadURL } = await (
-              await axios.get(S3_CONFIG.objectURL)
-            ).data;
-            await fetch(uploadURL, {
-              method: "PUT",
-              body: file,
-            });
-            const imageUrl = `${S3_CONFIG.baseURL}/${Key}`;
-            console.log(imageUrl);
-          });
-        }
-        dispatch(setLoading(false));
-      } catch (error) {
-        dispatch(setLoading(false));
-      }
-    };
-    handleSubmitData();
   };
 
   const renderPhotos = (source) => {
@@ -86,9 +60,7 @@ const AddRecipeCard = ({ setImages }: AddRecipeCardProps) => {
     let updated_list = [...selectedImages];
     updated_list.splice(index_value, 1);
     dispatch(setUploadImageList(updated_list));
-    setImages((pre) => [
-      ...pre?.filter((value, index) => index !== index_value),
-    ]);
+    setImages((pre) => [...pre?.filter((value, index) => index !== index_value)]);
   };
 
   return (

@@ -1,4 +1,5 @@
-import React, { Dispatch, SetStateAction, useEffect } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import styles from "./centerElements.module.scss";
 import MoreVertIcon from "../../../../public/icons/more_vert_black_36dp.svg";
 import AddRecipeCard from "./addFiles/addRecipeCards.component";
@@ -9,33 +10,31 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import DropDown from "../../../../theme/dropDown/DropDown.component";
 type CenterElementsProps = {
   setImages?: Dispatch<SetStateAction<any[]>>;
-  editRecipeHeading?: any;
+  setEditRecipeHeading?: any;
   setDropDownState?: any;
   blendCategoryList: any;
 };
 
-const Center_Elements = ({
-  setImages,
-  editRecipeHeading,
-  setDropDownState,
-  blendCategoryList,
-}: CenterElementsProps) => {
+const Center_Elements = ({ setImages, setEditRecipeHeading, setDropDownState, blendCategoryList }: CenterElementsProps) => {
+  useEffect(() => {
+    if (editRecipeHeading.current) {
+      // @ts-ignore
+      setEditRecipeHeading(editRecipeHeading?.current?.textContent);
+    }
+  }, []);
+
   const dispatch = useAppDispatch();
 
   //quantity number sets number for top card bottom right counter in edit recipe
-  const quantity_number = useAppSelector(
-    (state) => state.quantityAdjuster.quantityNum
-  );
+  const quantity_number = useAppSelector((state) => state.quantityAdjuster.quantityNum);
   // variables for ingredients card of edit recipe
-
+  const editRecipeHeading = useRef();
   const adjusterFunc = (task, type) => {
     if (type === "quantity_number") {
       if (quantity_number <= 0 && task === "-") {
         dispatch(setQuantity(0));
       } else {
-        task === "+"
-          ? dispatch(setQuantity(quantity_number + 1))
-          : dispatch(setQuantity(quantity_number - 1));
+        task === "+" ? dispatch(setQuantity(quantity_number + 1)) : dispatch(setQuantity(quantity_number - 1));
       }
     }
   };
@@ -55,10 +54,6 @@ const Center_Elements = ({
     paddingRight: "0px",
     width: "111%",
   };
-  useEffect(() => {
-    const element = document.getElementById("recipeTitle");
-    element.innerHTML = "Recipe Title";
-  }, []);
 
   return (
     <div className={styles.main}>
@@ -68,7 +63,12 @@ const Center_Elements = ({
           contentEditable={true}
           id="recipeTitle"
           ref={editRecipeHeading}
-        />
+          onInput={(e) => {
+            setEditRecipeHeading(e.currentTarget.textContent);
+          }}
+        >
+          Recipe Title
+        </h3>
 
         <div className={styles.topSection__RightIcon}>
           <MoreVertIcon />
@@ -80,39 +80,24 @@ const Center_Elements = ({
       <div className={styles.scoreTraydiv}>
         <ScoreTray />
         <p>
-          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-          nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur.
+          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+          in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
         </p>
         <div className={styles.blendingOptions}>
           <div className={styles.blendingOptions__left}>
             <ul>
               <li>
-                <div
-                  className={styles.left__options}
-                  style={{ minWidth: "125px" }}
-                >
-                  <DropDown
-                    listElem={WholefoodItem}
-                    style={dropDownStyle}
-                    valueState={setDropDownState}
-                  />
+                <div className={styles.left__options} style={{ minWidth: "125px" }}>
+                  <DropDown listElem={WholefoodItem} style={dropDownStyle} valueState={setDropDownState} />
                 </div>
               </li>
               <li>
-                <div
-                  className={styles.left__options}
-                  style={{ minWidth: "115px" }}
-                >
+                <div className={styles.left__options} style={{ minWidth: "115px" }}>
                   <DropDown listElem={BlendtecItem} style={dropDownStyle} />
                 </div>
               </li>
               <li>
-                <div
-                  className={styles.left__options}
-                  style={{ minWidth: "35px" }}
-                >
+                <div className={styles.left__options} style={{ minWidth: "35px" }}>
                   <DropDown listElem={OzItem} style={dropDownStyle} />
                 </div>
               </li>
@@ -147,12 +132,7 @@ const Center_Elements = ({
               </div>
             </div>
             <span className={styles.timer_icon}>
-              <Image
-                src={"/icons/time-icon.svg"}
-                alt="Picture will load soon"
-                height={"20px"}
-                width={"20px"}
-              />
+              <Image src={"/icons/time-icon.svg"} alt="Picture will load soon" height={"20px"} width={"20px"} />
             </span>
           </div>
         </div>

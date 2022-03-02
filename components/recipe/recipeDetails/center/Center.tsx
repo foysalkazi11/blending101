@@ -7,20 +7,19 @@ import styles from "./Center.module.scss";
 import ChevronRightIcon from "../../../../public/icons/chevron_right_black_36dp.svg";
 import ChevronLeftIcon from "../../../../public/icons/chevron_left_black_36dp.svg";
 import { MdOutlineInfo, MdAdd, MdRemove } from "react-icons/md";
+import { BiLoaderAlt } from "react-icons/bi";
+
 import { BiBarChart } from "react-icons/bi";
 import { BsCartPlus } from "react-icons/bs";
 import { useAppDispatch } from "../../../../redux/hooks";
-import {
-  setOpenCommentsTray,
-  setToggleModal,
-} from "../../../../redux/slices/sideTraySlice";
+import { setOpenCommentsTray, setToggleModal } from "../../../../redux/slices/sideTraySlice";
 import Modal from "../../../../theme/modal/customModal/CustomModal";
 import ShareRecipeModal from "../shareRecipeModal/ShareRecipeModal";
 import SaveRecipe from "../saveRecipe/SaveRecipe";
 import Image from "next/image";
 
-
 const Center = (recipeData) => {
+  console.log(recipeData);
   const [counter, setCounter] = useState(1);
   const dispatch = useAppDispatch();
   const [showRecipeModal, setShowRecipeModal] = useState(true);
@@ -57,11 +56,7 @@ const Center = (recipeData) => {
         <p className={styles.text}>
           {isReadMore ? text.slice(0, 300) : text},
           <span onClick={toggleReadMore} className={styles.read_or_hide}>
-            {isReadMore ? (
-              <span>&nbsp; {"Read More"}</span>
-            ) : (
-              <span>&nbsp; {"Read Less"}</span>
-            )}
+            {isReadMore ? <span>&nbsp; {"Read More"}</span> : <span>&nbsp; {"Read Less"}</span>}
           </span>
         </p>
       );
@@ -74,7 +69,6 @@ const Center = (recipeData) => {
     nextArrow: <NextButton />,
     prevArrow: <PreviousButton />,
   };
-
 
   return (
     <div>
@@ -98,20 +92,13 @@ const Center = (recipeData) => {
           <h3>{recipeDetails?.recipeData?.name}</h3>
           <span className={styles.ratingBox}>
             <img src="/images/rating.svg" alt="" />
-            {recipeDetails?.recipeData?.averageRating} (
-            {recipeDetails?.recipeData?.numberOfRating})
+            {recipeDetails?.recipeData?.averageRating} ({recipeDetails?.recipeData?.numberOfRating})
           </span>
         </div>
         <div className={styles.subMenu}>
           <div className={styles.alignItems}>
-            <div className={styles.recipeType}>
-              {recipeDetails?.recipeData?.recipeBlendCategory?.name}
-            </div>
-            <img
-              src="/images/yummly-logo.png"
-              alt="recipe_logo"
-              className={styles.recipeLogo}
-            />
+            <div className={styles.recipeType}>{recipeDetails?.recipeData?.recipeBlendCategory?.name}</div>
+            <img src="/images/yummly-logo.png" alt="recipe_logo" className={styles.recipeLogo} />
           </div>
           <div className={styles.alignItems}>
             <div className={styles.iconWithText}>
@@ -152,12 +139,7 @@ const Center = (recipeData) => {
               {recipeDetails?.recipeData?.image.map((img, index) => {
                 return (
                   <div key={index} className={styles.imageBox}>
-                    <Image
-                      src={img.image}
-                      alt="recipe_image"
-                      layout="fill"
-                      objectFit="cover"
-                    />
+                    {img.image ? <Image src={img.image} alt="recipe_image" layout="fill" objectFit="cover" /> : <BiLoaderAlt />}
                   </div>
                 );
               })}
@@ -194,13 +176,7 @@ const Center = (recipeData) => {
           <div className={styles.counter}>
             <p>Servings : </p>
             <div className={styles.count}>
-              <button
-                onClick={() =>
-                  setCounter((pre) =>
-                    Number(pre) <= 1 ? Number(pre) : Number(pre) - 1
-                  )
-                }
-              >
+              <button onClick={() => setCounter((pre) => (Number(pre) <= 1 ? Number(pre) : Number(pre) - 1))}>
                 <MdRemove className={styles.icon} />
               </button>
               <input
@@ -229,13 +205,12 @@ const Center = (recipeData) => {
           {recipeDetails?.recipeData?.ingredients &&
             recipeDetails?.recipeData?.ingredients?.map((ingredient, index) => {
               return (
-                <div
-                  className={styles.singleIngredent}
-                  key={index + "ingredients_recipeDetails"}
-                >
+                <div className={styles.singleIngredent} key={index + "ingredients_recipeDetails"}>
                   <div className={styles.leftSide}>
                     <img src="/images/5-2-avocado-png-hd.png" alt="icon" />
-                    <p>{`${ingredient.selectedPortion.quantity} ${ingredient?.ingredientId?.ingredientName}`}</p>
+                    <p>{`${ingredient?.selectedPortion?.quantity * counter} ${ingredient.selectedPortion.name} ${
+                      ingredient?.ingredientId?.ingredientName
+                    }`}</p>
                   </div>
                   <div className={styles.iconGroup}>
                     <MdOutlineInfo className={styles.icon} />
@@ -255,10 +230,7 @@ const Center = (recipeData) => {
         {recipeDetails?.recipeData?.recipeInstructions &&
           recipeDetails?.recipeData?.recipeInstructions?.map((step, index) => {
             return (
-              <div
-                className={styles.steps}
-                key={index + "recipeInstruction__recipeDetails"}
-              >
+              <div className={styles.steps} key={index + "recipeInstruction__recipeDetails"}>
                 <span>Step {index + 1}</span>
                 <p>{step}</p>
               </div>

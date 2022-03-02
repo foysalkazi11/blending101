@@ -30,7 +30,7 @@ const Left_tray_recipe_edit = () => {
     let blendz = [];
     let present = false;
     ingredients_list.forEach((blen) => {
-      console.log(blen)
+      console.log(blen);
       if (blen === ingredient) {
         present = true;
       }
@@ -43,7 +43,7 @@ const Left_tray_recipe_edit = () => {
       });
     }
 
-    console.log(blendz)
+    console.log(blendz);
     dispatch(setIngredientsToList(blendz));
   };
 
@@ -105,7 +105,6 @@ const Left_tray_recipe_edit = () => {
   useEffect(() => {
     if (!searchInProcess) {
       fetchSearchResults();
-      console.log(searchElement)
     }
   }, [searchInProcess]);
 
@@ -159,27 +158,29 @@ const Left_tray_recipe_edit = () => {
                 <div className={styles.pictures}>
                   <div className={styles.filter__menu}>
                     {searchElemListFilter &&
-                      searchElemListFilter.map((item, i) => (
-                        <div
-                          key={item.ingredientId + item.ingredientName}
-                          className={styles.filter__menu__item}
-                          onClick={() => handleIngredientClick(item)}
-                        >
-                          <div className={styles.filter__menu__item__image}>
-                            {item.featuredImage !== null ? (
-                              <img src={item.featuredImage} alt={""} />
-                            ) : (
-                              <img src="/food/Dandelion.png" alt={""} />
-                            )}
-                            {checkActive(item.ingredientName) && (
-                              <div className={styles.tick}>
-                                <CheckCircle className={styles.ticked} />
-                              </div>
-                            )}
+                      searchElemListFilter.map((item, i) => {
+                        return (
+                          <div
+                            key={item.ingredientId + item.ingredientName}
+                            className={styles.filter__menu__item}
+                            onClick={() => handleIngredientClick(item)}
+                          >
+                            <div className={styles.filter__menu__item__image}>
+                              {item.featuredImage !== null ? (
+                                <img src={item.featuredImage} alt={""} />
+                              ) : (
+                                <img src="/food/Dandelion.png" alt={""} />
+                              )}
+                              {checkActive(item.ingredientName) && (
+                                <div className={styles.tick}>
+                                  <CheckCircle className={styles.ticked} />
+                                </div>
+                              )}
+                            </div>
+                            <p>{item.ingredientName}</p>
                           </div>
-                          <p>{item.ingredientName}</p>
-                        </div>
-                      ))}
+                        );
+                      })}
                   </div>
                 </div>
               </>

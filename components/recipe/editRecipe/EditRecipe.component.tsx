@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import AContainer from "../../../containers/A.container";
 import styles from "./EditRecipe.module.scss";
 import Center_header from "./header/centerHeader/Center_header.component";
@@ -15,43 +15,40 @@ import imageUploadS3 from "../../utility/imageUploadS3";
 import { BLEND_CATEGORY } from "../../../gqlLib/recipes/queries/getEditRecipe";
 import { useLazyQuery } from "@apollo/client";
 
-const EditRecipePage = ({nutritionData}) => {
-  nutritionData
+const EditRecipePage = ({ nutritionData }) => {
   const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
   const [images, setImages] = useState<any[]>([]);
   const [uploadUrl, setUploadUrl] = useState([]);
   const [blendCategory, setblendCategory] = useState([]);
   const [selectedBlendValueState, setSelectedBlendValueState] = useState(null);
-  const editRecipeHeading = useRef();
+  const [editRecipeHeading, setEditRecipeHeading] = useState("");
   const dispatch = useAppDispatch();
 
   const handleSubmitData = async () => {
     dispatch(setLoading(true));
+    let res: any;
     try {
       if (images?.length) {
-        const res: any = await imageUploadS3(images);
+        res = await imageUploadS3(images);
         setUploadUrl(res);
       }
       dispatch(setLoading(false));
     } catch (error) {
       dispatch(setLoading(false));
     }
+    if (res) {
+      return res;
+    } else console.log({ res: "something went wrong in image uploading" });
   };
 
-  useEffect(() => {
-    handleSubmitData();
-  }, [images]);
-
-  const [
-    getAllCategories,
-    { loading: blendCategoriesInProgress, data: blendCategoriesData },
-  ] = useLazyQuery(BLEND_CATEGORY, { fetchPolicy: "network-only" });
+  const [getAllCategories, { loading: blendCategoriesInProgress, data: blendCategoriesData }] = useLazyQuery(BLEND_CATEGORY, {
+    fetchPolicy: "network-only",
+  });
 
   const fetchAllBlendCategories = async () => {
     await getAllCategories();
     setblendCategory(blendCategoriesData?.getAllCategories);
-    blendCategory &&
-      setSelectedBlendValueState(blendCategoriesData?.getAllCategories[0].name);
+    blendCategory && setSelectedBlendValueState(blendCategoriesData?.getAllCategories[0].name);
   };
 
   useEffect(() => {
@@ -63,10 +60,7 @@ const EditRecipePage = ({nutritionData}) => {
   return (
     <AContainer>
       <div className={styles.main}>
-        <div
-          className={styles.left}
-          style={leftTrayVisibleState ? { marginLeft: "0px" } : {}}
-        >
+        <div className={styles.left} style={leftTrayVisibleState ? { marginLeft: "0px" } : {}}>
           <div
             className={styles.left__Drag__lightGreen}
             style={
@@ -82,9 +76,7 @@ const EditRecipePage = ({nutritionData}) => {
             }
             onClick={() => setLeftTrayVisibleState(!leftTrayVisibleState)}
           >
-            <div>
-              {/* left basket drag button, images are used as backgound images for this div in scss files */}
-            </div>
+            <div>{/* left basket drag button, images are used as backgound images for this div in scss files */}</div>
           </div>
           <div className={styles.left__title}>
             <div className={styles.left__title__bagicon}>
@@ -93,7 +85,6 @@ const EditRecipePage = ({nutritionData}) => {
                 alt="Picture will load soon"
                 height={"100%"}
                 width={"100%"}
-                // sizes={width !== undefined ? `${Math.round(width)}px` : "100vw"}
                 layout="responsive"
                 objectFit="contain"
               />
@@ -110,7 +101,7 @@ const EditRecipePage = ({nutritionData}) => {
             blendCategoryList={blendCategory}
             setDropDownState={setSelectedBlendValueState}
             setImages={setImages}
-            editRecipeHeading={editRecipeHeading}
+            setEditRecipeHeading={setEditRecipeHeading}
           />
           <IngredientList
             blendCategory={blendCategory}
@@ -121,7 +112,7 @@ const EditRecipePage = ({nutritionData}) => {
           />
         </div>
         <div className={styles.right__main}>
-          <RightTray nutritionData={nutritionData}/>
+          <RightTray nutritionData={nutritionData} />
         </div>
       </div>
       <div className={styles.footerMainDiv}>

@@ -139,9 +139,6 @@ const RecipeDetails = () => {
                         <div
                           className={styles.slider__card}
                           key={"recommended" + index}
-                          onClick={() =>
-                            router.push(`/recipe_details/${item?._id}`)
-                          }
                         >
                           <DatacardComponent
                             title={item.name}

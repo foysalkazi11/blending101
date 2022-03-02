@@ -5,13 +5,10 @@ import { GET_EDIT_RECIPE_NUTRITION } from "../gqlLib/recipes/queries/getEditReci
 import { useAppSelector } from "../redux/hooks";
 
 const EditRecipe = () => {
-  const ingredients_list = useAppSelector(
-    (state) => state.quantityAdjuster.ingredientsList
+  const ingredients_list = useAppSelector((state) => state.quantityAdjuster.ingredientsList);
+  const [getBlendNutritionBasedOnRecipe, { loading: gettingNutritionData, data: nutritionData }] = useLazyQuery(
+    GET_EDIT_RECIPE_NUTRITION(ingredients_list)
   );
-  const [
-    getBlendNutritionBasedOnRecipe,
-    { loading: gettingNutritionData, data: nutritionData },
-  ] = useLazyQuery(GET_EDIT_RECIPE_NUTRITION(ingredients_list));
 
   const fetchRecipe = () => {
     getBlendNutritionBasedOnRecipe();
@@ -22,12 +19,13 @@ const EditRecipe = () => {
   }, []);
   return (
     <div>
-      <EditRecipePage
+      edit recip
+      {/* <EditRecipePage
         nutritionData={
           nutritionData &&
           JSON.parse(nutritionData?.getBlendNutritionBasedOnRecipe)
         }
-      />
+      /> */}
     </div>
   );
 };
