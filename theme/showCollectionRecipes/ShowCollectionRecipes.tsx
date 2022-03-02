@@ -4,10 +4,15 @@ import React, { useEffect, useState } from "react";
 import { MdFavoriteBorder, MdOutlineStarOutline } from "react-icons/md";
 import GET_ALL_RECIPES_WITHIN_COLLECTIONS from "../../gqlLib/collection/query/getAllRecipesWhithiCollections";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setShowAllRecipes } from "../../redux/slices/collectionSlice";
+import {
+  setAllRecipeWithinCollections,
+  setShowAllRecipes,
+} from "../../redux/slices/collectionSlice";
 import { setLoading } from "../../redux/slices/utilitySlice";
 import DatacardComponent from "../cards/dataCard/dataCard.component";
+import SkeletonRecipeDiscovery from "../skeletons/skeletonRecipeDiscovery/SkeletonRecipeDiscovery";
 import styles from "./ShowCollectionRecipes.module.scss";
+import reactToastifyNotification from "../../components/utility/reactToastifyNotification";
 
 const ShowCollectionRecipes = () => {
   const [allRecipes, setAllRecipes] = useState([]);
@@ -17,51 +22,78 @@ const ShowCollectionRecipes = () => {
     GET_ALL_RECIPES_WITHIN_COLLECTIONS
   );
   const { dbUser } = useAppSelector((state) => state?.user);
-  const { collectionDetailsId, showAllRecipes } = useAppSelector(
-    (state) => state?.collections
-  );
+  const { collectionDetailsId, showAllRecipes, allRecipeWithinCollections } =
+    useAppSelector((state) => state?.collections);
+  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
 
-  const addToCollection = async () => {
+  const handleCollctionRecipe = (allRecipeWithinCollections) => {
+    if (showAllRecipes) {
+      setAllRecipes(allRecipeWithinCollections);
+      setCollectionName("All Recipes");
+    } else {
+      const findCollectionRecipes = dbUser?.collections?.find(
+        (col) => col?._id === collectionDetailsId
+      );
+      setCollectionName(findCollectionRecipes?.name);
+      const recipeId = [];
+      const recipes = [];
+      findCollectionRecipes?.recipes?.forEach((recipe) => {
+        recipeId?.push(recipe?._id);
+      });
+      allRecipeWithinCollections?.forEach((recipe) => {
+        //@ts-ignore
+        if (recipeId?.includes(recipe?._id)) {
+          recipes?.push(recipe);
+        }
+      });
+      setSelectedCollectionRecipe(recipes);
+    }
+  };
+
+  const fectchCollectionRecipes = async () => {
     try {
-      if (showAllRecipes) {
-        dispatch(setLoading(true));
-        const { data } = await getAllRecipesWithinCollections({
-          variables: {
-            userEmail: dbUser?.email,
-          },
-        });
-        setAllRecipes(data?.getAllRecipesFromCollection);
-        setCollectionName("All Recipes");
-        dispatch(setLoading(false));
-      } else {
-        const findCollectionRecipes = dbUser?.collections?.find(
-          (col) => col?._id === collectionDetailsId
-        );
-
-        setCollectionName(findCollectionRecipes?.name);
-        setSelectedCollectionRecipe(findCollectionRecipes?.recipes);
-      }
-
-      // reactToastifyNotification("info", `Successfully added to new collection`);
+      setLoading(true);
+      const { data } = await getAllRecipesWithinCollections({
+        variables: {
+          userEmail: dbUser?.email,
+        },
+      });
+      dispatch(
+        setAllRecipeWithinCollections(data?.getAllRecipesFromCollection)
+      );
+      handleCollctionRecipe(data?.getAllRecipesFromCollection);
+      setLoading(false);
     } catch (error) {
-      dispatch(setLoading(false));
+      setLoading(false);
       console.log(error);
-      // reactToastifyNotification("eror", error?.message);
+      reactToastifyNotification("error", error?.message);
     }
   };
 
   useEffect(() => {
-    addToCollection();
+    if (allRecipeWithinCollections?.length) {
+      handleCollctionRecipe(allRecipeWithinCollections);
+    } else {
+      fectchCollectionRecipes();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collectionDetailsId, showAllRecipes]);
 
   useEffect(() => {
     if (collectionDetailsId || showAllRecipes) {
-      addToCollection();
+      fectchCollectionRecipes();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dbUser?.collections]);
+
+  if (loading) {
+    return (
+      <div className={styles.showRecipeCollectionsContainer}>
+        <SkeletonRecipeDiscovery />
+      </div>
+    );
+  }
 
   return (
     <div className={styles.showRecipeCollectionsContainer}>
@@ -116,8 +148,9 @@ const ShowCollectionRecipes = () => {
           : selectedCollectionRecipe?.length
           ? selectedCollectionRecipe?.map((item, index) => {
               let ingredients = [];
-              item?.testIngredient?.forEach((ing) => {
-                ingredients.push(ing.name);
+              item?.ingredients?.forEach((ing) => {
+                const ingredient = ing?.ingredientId?.ingredientName;
+                ingredients.push(ingredient);
               });
               const ing = ingredients.toString();
               return (

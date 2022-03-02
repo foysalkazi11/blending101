@@ -33,7 +33,6 @@ const VisualSection = ({ categories }: VisualSectionProps) => {
   );
   const { allCategories } = useAppSelector((state) => state?.categroy);
   const dispatch = useAppDispatch();
-  console.log(allCategories);
 
   const handleBlendClick = (blend) => {
     let blendz = [];
