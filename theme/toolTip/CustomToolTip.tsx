@@ -12,7 +12,7 @@ type ToolTipProps = {
 const Tooltip = ({
   children,
   content,
-  delay = 200,
+  delay = 300,
   direction = "",
 }: ToolTipProps) => {
   let timeout;
@@ -35,9 +35,9 @@ const Tooltip = ({
   //   }
   // }, [info]);
 
-  const pastShow = (hoverRect) => {
+  const pastShow = (hoverRect, currentTarget) => {
     // position the tooltip after showing it
-    let ttNode = hoverRect?.currentTarget;
+    let ttNode = currentTarget;
 
     if (ttNode != null) {
       let x = 0,
@@ -112,11 +112,14 @@ const Tooltip = ({
   };
 
   const showTip = (e) => {
-    timeout = setTimeout(() => {}, delay);
-    if (!direction) {
-      pastShow(e);
-    }
-    setActive(true);
+    const event = e;
+    const cTarget = e?.currentTarget;
+    timeout = setTimeout(() => {
+      if (!direction) {
+        pastShow(event, cTarget);
+      }
+      setActive(true);
+    }, delay);
   };
 
   const hideTip = () => {
