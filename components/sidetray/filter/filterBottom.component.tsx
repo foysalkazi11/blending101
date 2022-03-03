@@ -13,6 +13,7 @@ import { useLazyQuery } from "@apollo/client";
 import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
 import { setLoading } from "../../../redux/slices/utilitySlice";
 import { setAllIngredients } from "../../../redux/slices/ingredientsSlice";
+import SkeletonIngredients from "../../../theme/skeletons/skeletonIngredients/SkeletonIngredients";
 
 type FilterbottomComponentProps = {
   categories?: { title: string; val: string }[];
@@ -25,20 +26,18 @@ export default function FilterbottomComponent({
   const [dpd, setDpd] = useState({ title: "All", val: "All" });
   const ingredients = filterRankingList;
   const dispatch = useAppDispatch();
-  const { ingredients: ingredientsList } = useAppSelector(
+  const { ingredients: ingredientsList, openFilterTray } = useAppSelector(
     (state) => state.sideTray
   );
-  const [
-    filterIngredientByCategroyAndClass,
-    { data: ingredientFilterData, loading: ingredientFilterLoading },
-  ] = useLazyQuery(FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS, {
-    fetchPolicy: "network-only",
-  });
+  const [filterIngredientByCategroyAndClass] = useLazyQuery(
+    FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS
+  );
   // const [ingredientData, setIngredientData] = useState<any[]>([]);
   const { allIngredients } = useAppSelector((state) => state?.ingredients);
   const [searchIngredientData, setSearchIngredientData] = useState<any[]>([]);
   const [searchInput, setSearchInput] = useState("");
   const isMounted = useRef(false);
+  const [loading, setLoading] = useState(false);
 
   const handleIngredientClick = (ingredient) => {
     let blendz = [];
@@ -69,9 +68,10 @@ export default function FilterbottomComponent({
     return present;
   };
 
-  const fetchFilterIngredientByCategroyAndClass = () => {
+  const fetchFilterIngredientByCategroyAndClass = async () => {
+    setLoading(true);
     try {
-      filterIngredientByCategroyAndClass({
+      const { data } = await filterIngredientByCategroyAndClass({
         variables: {
           data: {
             ingredientCategory: dpd?.val,
@@ -79,19 +79,28 @@ export default function FilterbottomComponent({
           },
         },
       });
+
+      dispatch(setAllIngredients(data?.filterIngredientByCategoryAndClass));
+
+      setSearchIngredientData(data?.filterIngredientByCategoryAndClass);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.log(error?.message);
     }
   };
 
   useEffect(() => {
-    if (!allIngredients?.length) {
-      fetchFilterIngredientByCategroyAndClass();
-    } else {
-      setSearchIngredientData(allIngredients);
+    if (isMounted.current) {
+      if (!allIngredients?.length) {
+        fetchFilterIngredientByCategroyAndClass();
+      } else {
+        setSearchIngredientData(allIngredients);
+      }
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [openFilterTray]);
 
   useEffect(() => {
     if (isMounted.current) {
@@ -110,32 +119,6 @@ export default function FilterbottomComponent({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dpd]);
-
-  useEffect(() => {
-    if (ingredientFilterLoading) {
-      dispatch(setLoading(true));
-    } else {
-      dispatch(setLoading(false));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ingredientFilterLoading]);
-
-  useEffect(() => {
-    if (isMounted.current) {
-      if (!ingredientFilterLoading) {
-        dispatch(
-          setAllIngredients(
-            ingredientFilterData?.filterIngredientByCategoryAndClass
-          )
-        );
-
-        setSearchIngredientData(
-          ingredientFilterData?.filterIngredientByCategoryAndClass
-        );
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ingredientFilterData]);
 
   useEffect(() => {
     if (isMounted.current) {
@@ -184,7 +167,9 @@ export default function FilterbottomComponent({
             />
           ) : null}
 
-          {searchIngredientData?.length ? (
+          {loading ? (
+            <SkeletonIngredients />
+          ) : searchIngredientData?.length ? (
             <>
               {searchIngredientData.map((item, i) => (
                 <div
