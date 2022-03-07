@@ -1,4 +1,5 @@
-import React, { Dispatch, SetStateAction, useEffect } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import styles from "./centerElements.module.scss";
 import MoreVertIcon from "../../../../public/icons/more_vert_black_36dp.svg";
 import AddRecipeCard from "./addFiles/addRecipeCards.component";
@@ -9,25 +10,31 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import DropDown from "../../../../theme/dropDown/DropDown.component";
 type CenterElementsProps = {
   setImages?: Dispatch<SetStateAction<any[]>>;
-  editRecipeHeading?: any;
+  setEditRecipeHeading?: any;
   setDropDownState?: any;
   blendCategoryList: any;
+  recipeTitle: string;
+  mode?: "edit" | "add";
+  selectedBlendValueState: any;
+  recipeBlendCategoryEditMode: any;
 };
 
 const Center_Elements = ({
   setImages,
-  editRecipeHeading,
+  recipeTitle,
+  setEditRecipeHeading,
   setDropDownState,
   blendCategoryList,
+  mode,
+  selectedBlendValueState,
+  recipeBlendCategoryEditMode,
 }: CenterElementsProps) => {
   const dispatch = useAppDispatch();
+  const editRecipeHeading = useRef();
 
   //quantity number sets number for top card bottom right counter in edit recipe
-  const quantity_number = useAppSelector(
-    (state) => state.quantityAdjuster.quantityNum
-  );
+  const quantity_number = useAppSelector((state) => state.quantityAdjuster.quantityNum);
   // variables for ingredients card of edit recipe
-
   const adjusterFunc = (task, type) => {
     if (type === "quantity_number") {
       if (quantity_number <= 0 && task === "-") {
@@ -55,11 +62,11 @@ const Center_Elements = ({
     paddingRight: "0px",
     width: "111%",
   };
-  useEffect(() => {
-    const element = document.getElementById("recipeTitle");
-    element.innerHTML = "Recipe Title";
-  }, []);
 
+  useEffect(() => {
+    // @ts-ignore
+    setEditRecipeHeading(editRecipeHeading?.current?.textContent);
+  }, [editRecipeHeading?.current]);
   return (
     <div className={styles.main}>
       <div className={styles.topSection}>
@@ -68,7 +75,12 @@ const Center_Elements = ({
           contentEditable={true}
           id="recipeTitle"
           ref={editRecipeHeading}
-        />
+          onInput={(e) => {
+            setEditRecipeHeading(e.currentTarget.textContent);
+          }}
+        >
+          {mode === "edit" && recipeTitle ? recipeTitle : "Recipe Title"}
+        </h3>
 
         <div className={styles.topSection__RightIcon}>
           <MoreVertIcon />
@@ -80,20 +92,17 @@ const Center_Elements = ({
       <div className={styles.scoreTraydiv}>
         <ScoreTray />
         <p>
-          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-          nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur.
+          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+          voluptate velit esse cillum dolore eu fugiat nulla pariatur.
         </p>
         <div className={styles.blendingOptions}>
           <div className={styles.blendingOptions__left}>
             <ul>
               <li>
-                <div
-                  className={styles.left__options}
-                  style={{ minWidth: "125px" }}
-                >
+                <div className={styles.left__options} style={{ minWidth: "125px" }}>
                   <DropDown
+                    selectedBlendValueState={selectedBlendValueState}
                     listElem={WholefoodItem}
                     style={dropDownStyle}
                     valueState={setDropDownState}
@@ -101,18 +110,12 @@ const Center_Elements = ({
                 </div>
               </li>
               <li>
-                <div
-                  className={styles.left__options}
-                  style={{ minWidth: "115px" }}
-                >
+                <div className={styles.left__options} style={{ minWidth: "115px" }}>
                   <DropDown listElem={BlendtecItem} style={dropDownStyle} />
                 </div>
               </li>
               <li>
-                <div
-                  className={styles.left__options}
-                  style={{ minWidth: "35px" }}
-                >
+                <div className={styles.left__options} style={{ minWidth: "35px" }}>
                   <DropDown listElem={OzItem} style={dropDownStyle} />
                 </div>
               </li>

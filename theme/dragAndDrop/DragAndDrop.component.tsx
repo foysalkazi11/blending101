@@ -183,8 +183,6 @@ const DragAndDrop = () => {
 
   const onDragStart = (result) => {
     const { source, destination } = result;
-    console.log(source);
-    console.log("dragging starts");
   };
 
   return (

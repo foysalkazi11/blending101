@@ -15,7 +15,6 @@ const CustomAccordion = ({
   iconRight = false,
 }: CustomAccordionProps) => {
   const [expanded, setExpanded] = useState<boolean>(false);
-
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

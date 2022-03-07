@@ -37,7 +37,6 @@ export default function InputField({
     style = { ...style, width: "100%" };
   } else {
     if (width) style = { ...style, width: width.toString() };
-    console.log(width);
   }
 
   // Change value and return it

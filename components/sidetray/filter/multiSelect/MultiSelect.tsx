@@ -131,8 +131,6 @@ const Multiselect = (props: MultiselectProps) => {
               {values?.length
                 ? values?.map((item, index) => {
                     const isSelected = values.includes(item);
-                    console.log(isSelected);
-
                     return (
                       <div
                         className={`${styles.signleItem} ${

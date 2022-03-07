@@ -10,8 +10,6 @@ const RecursiveAccordian = ({ dataObject }: recursiveAccordianInterface) => {
 
   const populateAccordian = (data) => {
     return Object.entries(data).map((entries, index) => {
-      //@ts-ignore
-
       return (
         <div key={`${entries}`}>
           {/* @ts-ignore */}
@@ -51,9 +49,9 @@ const RecursiveAccordian = ({ dataObject }: recursiveAccordianInterface) => {
         })
       ) : (
         <div>
-          <CustomAccordion title={"Energy"}/>
-          <CustomAccordion title={"Vitamins"}/>
-          <CustomAccordion title={"Minerals"}/>
+          <CustomAccordion title={"Energy"} />
+          <CustomAccordion title={"Vitamins"} />
+          <CustomAccordion title={"Minerals"} />
         </div>
       )}
     </div>

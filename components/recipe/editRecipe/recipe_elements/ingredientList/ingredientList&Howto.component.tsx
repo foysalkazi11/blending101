@@ -21,11 +21,14 @@ import { useMutation } from "@apollo/client";
 import reactToastifyNotification from "../../../../utility/reactToastifyNotification";
 
 type IngredientListPorps = {
-  handleSubmitData?: () => void;
+  handleSubmitData?: () => any;
   uploadedImagesUrl?: any;
   editRecipeHeading?: any;
   selectedBlendValueState?: any;
   blendCategory?: any;
+  mode?: any;
+  howToStepsEditMode: any;
+  ingredientListEditMode: any;
 };
 
 const IngredientList = ({
@@ -33,51 +36,101 @@ const IngredientList = ({
   editRecipeHeading,
   blendCategory,
   selectedBlendValueState,
+  howToStepsEditMode,
+  mode,
+  ingredientListEditMode,
+  handleSubmitData,
 }: IngredientListPorps) => {
   const dispatch = useAppDispatch();
 
-  const [selectedBlendType, setSelectedBlendType] = useState(null);
-  useEffect(() => {
-    let selectedApiParameter = blendCategory?.filter((elem) => {
-      let tempElemName = elem.name.toLowerCase();
-      let blendElem = selectedBlendValueState.toLowerCase();
-      return blendElem === tempElemName;
-    });
-    setSelectedBlendType(selectedApiParameter);
-  }, [selectedBlendValueState]);
   //variables for all states ==>start
-  const quantity_number = useAppSelector(
-    (state) => state.quantityAdjuster.quantityNum
-  );
-  const servings_number = useAppSelector(
-    (state) => state.quantityAdjuster.servingsNum
-  );
-
+  const [recipeApi, setRecipeApi] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(null);
+  const [inputValueIngredient, setInputValueIngredient] = useState("");
+  const [editMode, setEditMode] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+  const [selectedElementId, setSelectedElementId] = useState(null);
+  const quantity_number = useAppSelector((state) => state.quantityAdjuster.quantityNum);
+  const servings_number = useAppSelector((state) => state.quantityAdjuster.servingsNum);
   const ingredients_list = useAppSelector(
     (state) => state.quantityAdjuster.ingredientsList
   );
+  const howToState = useAppSelector((state) => state.quantityAdjuster.howtoState);
 
-  // const ingredientsList = useAppSelector((state) => state.sideTray.ingredients);
-
-  const howToState = useAppSelector(
-    (state) => state.quantityAdjuster.howtoState
-  );
-
-  // variables for all states ==>ending
-
-  // (mutation):"graphql api mutation - save recipe"
-  const [recipeApi, setRecipeApi] = useState([]);
-  // const [recipeTitle, setRecipeTitle] = useState("Recipe Title");
-
-  // useEffect(() => {
-  //   setRecipeTitle(editRecipeHeading?.current?.textContent);
-  // }, [editRecipeHeading]);
-
-  // =========================================================================
-  // sets value of top card in recipe editd page equal to ingredients page
+  console.log({ingredients_list})
   useEffect(() => {
     dispatch(setServings(quantity_number));
-  }, [dispatch, quantity_number]);
+  }, [quantity_number]);
+
+  useEffect(() => {
+    let editableEditRecipe = [];
+    if (mode === "edit") {
+      howToStepsEditMode?.map((element) => {
+        editableEditRecipe = [
+          ...editableEditRecipe,
+          { id: new Date().getTime().toString(), step: element },
+        ];
+      });
+      dispatch(setHowToSteps(editableEditRecipe));
+    }
+  }, [howToStepsEditMode, mode]);
+
+  useEffect(() => {
+    dispatch(setNutritionState(nutritionArray));
+    let recipeList = [];
+    const createRecipeApiFinalString = () => {
+      let recipe = {};
+      ingredients_list.map((elem) => {
+        recipe = { ingredientId: elem._id };
+        if (elem.portions) {
+          let measurement = {};
+          let customObj = {};
+          elem?.portions.map((elemtemp) => {
+            if (elemtemp.default === true) {
+              customObj = {
+                ...customObj,
+                weightInGram: elemtemp?.meausermentWeight,
+                selectedPortionName: elemtemp?.measurement,
+              };
+              measurement = { ...measurement, ...customObj };
+            }
+          });
+          recipe = { ...recipe, ...measurement };
+        }
+        recipeList = [...recipeList, recipe];
+        setRecipeApi(recipeList);
+      });
+    };
+    createRecipeApiFinalString();
+  }, [ingredients_list]);
+
+  useEffect(() => {
+    if (!ingredientListEditMode) return;
+    if (mode === "edit") {
+      let recipeList = [];
+      const createRecipeApiFinalString = () => {
+        let recipe = {};
+        ingredientListEditMode?.map((elem) => {
+          recipe = { ingredientId: elem.ingredientId._id };
+          if (elem.selectedPortion) {
+            let measurement = {};
+            let customObj = {};
+            customObj = {
+              weightInGram: elem?.selectedPortion?.gram,
+              selectedPortionName: elem?.selectedPortion?.name,
+            };
+            measurement = { ...measurement, ...customObj };
+            recipe = { ...recipe, ...measurement };
+          }
+          recipeList = [...recipeList, recipe];
+          console.log(recipeList)
+          setRecipeApi(recipeList);
+        });
+      };
+      createRecipeApiFinalString();
+    }
+  }, [ingredientListEditMode]);
 
   const adjusterFunc = (task) => {
     if (servings_number <= 0 && task == "-") {
@@ -88,13 +141,14 @@ const IngredientList = ({
         : dispatch(setServings(servings_number - 1));
     }
   };
-  // =========================================================================
+  // =======================================================================================
   // ingredients list related code below
-  const [inputValueIngredient, setInputValueIngredient] = useState("");
+
   const inputTagValueHandlerIngredient = (e) => {
     let tempValue = e.target.value;
     setInputValueIngredient(tempValue);
   };
+
   let ingredientTempList = [...ingredients_list];
   const IngredientSubmitHandler = (event) => {
     if (event.key === "Enter") {
@@ -129,7 +183,7 @@ const IngredientList = ({
   };
 
   const removeIngredient = (id) => {
-    let updated_list = ingredients_list.filter((elem) => {
+    let updated_list = ingredients_list?.filter((elem) => {
       return id !== elem._id;
     });
     dispatch(setIngredientsToList(updated_list));
@@ -174,7 +228,7 @@ const IngredientList = ({
   };
 
   const removeStep = (id) => {
-    let updated_list = howToState.filter((elem) => {
+    let updated_list = howToState?.filter((elem) => {
       return id !== elem.id;
     });
     // updated_list.splice(index_value, 1);
@@ -182,8 +236,6 @@ const IngredientList = ({
   };
 
   // const [editState, seteditState] = useState(null);
-  const [editMode, setEditMode] = useState(false);
-  const [selectedElementId, setSelectedElementId] = useState(null);
 
   const editStep = (id) => {
     let newEditStep = howToState.find((elem) => {
@@ -200,7 +252,6 @@ const IngredientList = ({
 
   //how to input state below
 
-  const [inputValue, setInputValue] = useState("");
   const inputTagValueHandler = (e) => {
     let tempValue = e.target.value;
     setInputValue(tempValue);
@@ -212,42 +263,20 @@ const IngredientList = ({
     elemWithValue = { ...(elem as Object), value: value, elemId: id };
     nutritionArray = [...nutritionArray, elemWithValue];
   };
-  useEffect(() => {
-    dispatch(setNutritionState(nutritionArray));
-    let recipeList = [];
-    const createRecipeApiFinalString = () => {
-      let recipe = {};
-      ingredients_list.map((elem) => {
-        recipe = { ingredientId: elem._id };
-        if (elem.portions) {
-          let measurement = {};
-          let customObj = {};
-          elem.portions.map((elemtemp) => {
-            if (elemtemp.default === true) {
-              customObj = {
-                ...customObj,
-                weightInGram: elemtemp?.meausermentWeight,
-                selectedPortionName: elemtemp?.measurement,
-              };
-              measurement = { ...measurement, ...customObj };
-            }
-          });
-          recipe = { ...recipe, ...measurement };
-        }
-        recipeList = [...recipeList, recipe];
-        setRecipeApi(recipeList);
-      });
-    };
-    createRecipeApiFinalString();
-  }, [ingredients_list]);
-  const [isFetching, setIsFetching] = useState(null);
+
   const RecipeApiMutation = () => {
     setIsFetching(true);
+
     const addrecipeFunc = async () => {
-      const { data } = await addRecipeRecipeFromUser();
-      reactToastifyNotification("info", "Recipe Created");
-      setIsFetching(false);
-      console.log({ data });
+      setIsLoading(true);
+      const res = await handleSubmitData();
+
+      if (res) setIsLoading(false);
+      if (isLoading === false) {
+        const { data } = await addRecipeRecipeFromUser();
+        reactToastifyNotification("info", "Recipe Created");
+        setIsFetching(false);
+      }
     };
     addrecipeFunc();
   };
@@ -258,8 +287,8 @@ const IngredientList = ({
       ingredients: recipeApi,
       image: uploadedImagesUrl,
       recipeInstructions: howToState,
-      recipeName: editRecipeHeading?.current?.textContent,
-      SelectedblendCategory: selectedBlendType,
+      recipeName: editRecipeHeading,
+      SelectedblendCategory: selectedBlendValueState,
     })
   );
   return (
@@ -281,9 +310,7 @@ const IngredientList = ({
         <div className={styles.blending__ingredients}>
           <div className={styles.servings}>
             <div className={styles.servings__adjuster}>
-              <span className={styles.servings__adjuster__name}>
-                Servings :
-              </span>
+              <span className={styles.servings__adjuster__name}>Servings :</span>
               <div
                 className={styles.servings__adjuster__icondiv}
                 onClick={() => {
@@ -292,9 +319,7 @@ const IngredientList = ({
               >
                 <RemoveSharpIcon />
               </div>
-              <span className={styles.servings__adjuster__score}>
-                {servings_number}
-              </span>
+              <span className={styles.servings__adjuster__score}>{servings_number}</span>
               <div
                 className={styles.servings__adjuster__icondiv}
                 onClick={() => {
@@ -305,9 +330,7 @@ const IngredientList = ({
               </div>
             </div>
             <div className={styles.servings__size}>
-              <span className={styles.servings__adjuster__name}>
-                Servings Size :
-              </span>
+              <span className={styles.servings__adjuster__name}>Servings Size :</span>
               <span className={styles.servings__size__score}>
                 {servings_number * 16}&nbsp;oz
               </span>
@@ -322,19 +345,13 @@ const IngredientList = ({
         </div>
         <div className={styles.ingredients}>
           <ul>
-            {ingredients_list.map((elem) => {
-              {
-                let valueArg = elem.portions.map((measure) => {
-                  if (measure.default === true) {
-                    return (100 / measure.meausermentWeight) * servings_number;
-                  } else servings_number;
-                });
-                nutritionStateanupulator(
-                  elem.ingredientName + elem._id,
-                  valueArg,
-                  elem
-                );
-              }
+            {ingredients_list?.map((elem) => {
+              let valueArg = elem?.portions?.map((measure) => {
+                if (measure.default === true) {
+                  return (100 / measure.meausermentWeight) * servings_number;
+                } else servings_number;
+              });
+              nutritionStateanupulator(elem.ingredientName + elem._id, valueArg, elem);
 
               return (
                 <li
@@ -366,13 +383,17 @@ const IngredientList = ({
                   {/* to create ingredients lists  */}
                   <div className={styles.ingredients__text}>
                     <span>
-                      {elem.portions[0].meausermentWeight ===
-                      "Quantity not specified"
+                      {elem.portions[0].meausermentWeight === "Quantity not specified"
                         ? 1
-                        : Math.round(
-                            (100 / elem.portions[0].meausermentWeight) *
-                              servings_number
-                          )}{" "}
+                        : // @ts-ignore
+                          Math.ceil(
+                            // @ts-ignore
+                            parseFloat(
+                              // @ts-ignore
+                              (100 / elem?.portions[0].meausermentWeight) *
+                                servings_number
+                            ).toFixed(2)
+                          )}
                       &nbsp;
                     </span>
                     <span>
@@ -440,7 +461,7 @@ const IngredientList = ({
         </h4>
         <div className={styles.how__to__steps}>
           <ol>
-            {howToState.map((elem) => {
+            {howToState?.map((elem) => {
               return (
                 <li className={styles.how__to__steps__li} key={elem.id}>
                   {elem.step}

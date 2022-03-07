@@ -32,14 +32,15 @@
             font-weight: 600;
             position: relative;
             left: 1%;
+            min-width: 100px;
+            padding: 5px 0px;
+            border-bottom: 2px dashed #e2dfdf;
 
             &:active {
-                border: none !important;
                 outline: none !important;
             }
 
             &:focus {
-                border: none !important;
                 outline: none !important;
             }
         }
