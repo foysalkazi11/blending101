@@ -7,8 +7,9 @@
 .icon {
   font-size: 25px;
   color: #7dbd3b;
+  margin: auto;
   margin-right: 10px;
-  margin-left: -10px;
+  margin-left: -80px;
   cursor: pointer;
 }
 
@@ -21,11 +22,12 @@
 
 .accordion {
   width: 100%;
-  padding: 0px;
+  // padding: 0px;
   display: flex;
   flex-direction: column;
   box-shadow: none;
   border: none;
+  // background-color: rgb(219, 217, 217);
 
   &::before {
     box-shadow: none;
@@ -35,7 +37,8 @@
 
 
 .accordionSummaryForRightIcon {
-  padding: 16px 0;
+  // padding: 16px 0;
+  // background-color: rebeccapurple;
   display: flex;
   border-bottom: 1px solid #dbdbdb;
 }
@@ -63,6 +66,7 @@
 
   overflow: hidden;
   transition: max-height 0.5s ease-out;
+  background-color: #ffffff;
 
   &__active {
     height: auto;
@@ -73,42 +77,64 @@
 }
 
 
+
 .accordionSummary {
-  padding: 5px 10px 5px 8px;
   display: flex;
   border: none;
-  // background-color: #f5f5f5f1;
   border-radius: 4px;
 }
 
 .accordionSummaryForNested {
-  // transition: max-height 0.6s ease;
   width: 100%;
   display: grid;
   grid-template-columns: 24px 1fr;
   border: none;
-  // background-color: #f1efefe8;
-  padding: 5px 5px;
-  border-radius: 4px;
+}
+
+.accordianMainHeading {
+  background-color: #f1f1f1;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 24px 1fr;
+}
+
+.titleAccordianMainHeading {
+  color: #000000;
+  font-size: 16px;
+  font-weight: 600;
+  margin-left: 15px;
+  display: flex;
+  align-items: center;
+  padding: 6px 0px;
 }
 
 .accordianContent {
   // transition: max-height 0.6s ease;
   width: 100%;
   display: grid;
-  grid-template-columns: 55% 22% 15%;
+  grid-template-columns: 1fr 80px;
   gap: 10px;
   border: none;
+  border-bottom: 1px solid #dbdbdb;
 
   @include responsive(0px, 990px) {
-    grid-template-columns: 1fr 23% 22%;
+    grid-template-columns: 1fr 80px;
+  }
+
+  &__whiteCard {
+    display: grid;
+    grid-template-columns: auto 75px;
+
+    &_conditionalSubheading {
+      width: 100%;
+    }
   }
 }
 
 
 .valueUnit {
   color: #000000;
-  font-size: 14px;
+  font-size: 13px;
   margin: 0;
   display: flex;
   justify-content: center;
@@ -116,6 +142,9 @@
   word-break: break-word;
 }
 
+.percentage {
+  background-color: #f1f1f1;
+}
 
 .alignLeft {
   justify-content: left;
@@ -125,16 +154,20 @@
   justify-content: right;
 }
 
+.alignCenter {
+  justify-content: center;
+}
+
 .iconCopy {
-  margin-left: 0px;
-  margin-right: 40px;
+  margin-left: 5px;
 }
 
 .titleCopy {
   color: #000000;
   font-size: 14px;
   font-weight: 500;
-  margin-left: 10px;
+  margin-left: 15px;
   display: flex;
   align-items: center;
+  padding: 6px 0px;
 }

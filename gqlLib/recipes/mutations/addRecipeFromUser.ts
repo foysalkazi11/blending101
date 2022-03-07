@@ -66,6 +66,12 @@ export const CREATE_NEW_RECIPE_FROM_USER = ({
 
     return `[${instructionArr}]`;
   };
+
+  console.log({recipeInstructions})
+  console.log({SelectedblendCategory_id})
+  console.log({recipeName})
+  console.log({ingredients})
+
   return gql`
  mutation {
    addRecipeFromUser(data: {

@@ -74,7 +74,7 @@ export const GET_EDIT_RECIPE_NUTRITION = (ingredients) => {
   console.log(ingredients)
   const convertArrToString = (arr) => {
     arr = arr?.map((itm) => {
-      let value=itm.portions.filter((item)=>item.default===true);
+      let value=itm.portions?.filter((item)=>item.default===true);
       value=value[0].meausermentWeight;
       return `
             {

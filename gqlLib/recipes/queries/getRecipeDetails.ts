@@ -3,6 +3,7 @@ import { gql } from "@apollo/client";
 export const GET_RECIPE = gql`
   query GetARecipe($recipeId: String!) {
     getARecipe(recipeId: $recipeId) {
+      _id
       name
       prepTime
       description

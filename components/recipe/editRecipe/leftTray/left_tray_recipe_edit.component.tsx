@@ -26,11 +26,11 @@ const Left_tray_recipe_edit = () => {
     (state) => state.quantityAdjuster.ingredientsList
   );
 
+  console.log(ingredients_list)
   const handleIngredientClick = (ingredient) => {
     let blendz = [];
     let present = false;
-    ingredients_list.forEach((blen) => {
-      console.log(blen);
+    ingredients_list?.forEach((blen) => {
       if (blen === ingredient) {
         present = true;
       }
@@ -38,7 +38,7 @@ const Left_tray_recipe_edit = () => {
     if (!present) {
       blendz = [...ingredients_list, ingredient];
     } else {
-      blendz = ingredients_list.filter((blen) => {
+      blendz = ingredients_list?.filter((blen) => {
         return blen !== ingredient;
       });
     }
@@ -57,7 +57,7 @@ const Left_tray_recipe_edit = () => {
 
   const checkActive = (ingredient: string) => {
     let present = false;
-    ingredients_list.forEach((blen) => {
+    ingredients_list?.forEach((blen) => {
       //@ts-ignore
       if (blen.ingredientName === ingredient) {
         present = true;
@@ -71,7 +71,7 @@ const Left_tray_recipe_edit = () => {
 
   const SearchResults = (value) => {
     setinput(value);
-    const elements = searchElemList.filter((item) => {
+    const elements = searchElemList?.filter((item) => {
       return item.ingredientName.includes(value);
     });
     setSearchElemListFilter(elements);
@@ -79,7 +79,7 @@ const Left_tray_recipe_edit = () => {
 
   const DropDown = (dpd) => {
     if (dpd.title !== "All") {
-      const classElements = searchElemList.filter((item) => {
+      const classElements = searchElemList?.filter((item) => {
         return item.category === dpd.title;
       });
       setSearchElemListFilter(classElements);
@@ -158,7 +158,7 @@ const Left_tray_recipe_edit = () => {
                 <div className={styles.pictures}>
                   <div className={styles.filter__menu}>
                     {searchElemListFilter &&
-                      searchElemListFilter.map((item, i) => {
+                      searchElemListFilter?.map((item, i) => {
                         return (
                           <div
                             key={item.ingredientId + item.ingredientName}
@@ -166,18 +166,18 @@ const Left_tray_recipe_edit = () => {
                             onClick={() => handleIngredientClick(item)}
                           >
                             <div className={styles.filter__menu__item__image}>
-                              {item.featuredImage !== null ? (
+                              {item?.featuredImage !== null ? (
                                 <img src={item.featuredImage} alt={""} />
                               ) : (
                                 <img src="/food/Dandelion.png" alt={""} />
                               )}
-                              {checkActive(item.ingredientName) && (
+                              {checkActive(item?.ingredientName) && (
                                 <div className={styles.tick}>
                                   <CheckCircle className={styles.ticked} />
                                 </div>
                               )}
                             </div>
-                            <p>{item.ingredientName}</p>
+                            <p>{item?.ingredientName}</p>
                           </div>
                         );
                       })}
@@ -188,7 +188,7 @@ const Left_tray_recipe_edit = () => {
             {toggle === 2 && (
               <div className={styles.rankings}>
                 <CalciumSearchElem />
-                {ingredients.map(({ name, percent }, index) => {
+                {ingredients?.map(({ name, percent }, index) => {
                   return (
                     <Linearcomponent
                       name={name}

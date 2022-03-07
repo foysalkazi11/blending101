@@ -1,4 +1,5 @@
-import React from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from "react";
 import styles from "./DropDown.module.scss";
 
 interface dropDown {
@@ -8,6 +9,8 @@ interface dropDown {
   name?: string;
   style?: object;
   valueState?: any;
+  selectedBlendValueState?: any;
+  mode?: string;
 }
 const DropDown = ({
   listElem,
@@ -16,7 +19,12 @@ const DropDown = ({
   handleChange = () => {},
   name = "dropdown",
   valueState = () => {},
+  selectedBlendValueState,
 }: dropDown) => {
+
+
+
+
   return (
     <div className={styles.formGroup}>
       <select
@@ -27,6 +35,7 @@ const DropDown = ({
         onChange={(e) => {
           valueState(e.target.value);
         }}
+        value={selectedBlendValueState?.toLowerCase()}
       >
         {listElem?.map((item, index) => {
           return (

@@ -3,6 +3,7 @@ import React from "react";
 import styles from "./RightSide.module.scss";
 import LinearComponent from "../../../../theme/linearProgress/LinearProgress.component";
 import RecursiveAccordian from "../../../customRecursiveAccordian/recursiveAccordian.component";
+import UpdatedRecursiveAccordian from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
 
 const health = [
   { name: "Vitamin A", percent: 100 },
@@ -35,65 +36,48 @@ const recursiveData = (data) => {
         children: {
           "Dietary Fiber": {
             value: energy?.childs?.carbohydrates?.dietryFibre?.value,
-            Unit: energy?.childs?.carbohydrates?.dietryFibre
-              .blendNutrientRefference?.units,
+            Unit: energy?.childs?.carbohydrates?.dietryFibre.blendNutrientRefference?.units,
             children: {},
           },
           Sugars: {
             value: energy?.childs?.carbohydrates?.sugars?.value,
-            Unit: energy?.childs?.carbohydrates?.sugars?.blendNutrientRefference
-              ?.units,
+            Unit: energy?.childs?.carbohydrates?.sugars?.blendNutrientRefference?.units,
             children: {
               Sucrose: {
-                value:
-                  energy?.childs?.carbohydrates?.sugars?.childs?.sucrose?.value,
-                Unit: energy?.childs?.carbohydrates?.sugars?.childs?.sucrose
-                  ?.blendNutrientRefference?.units,
+                value: energy?.childs?.carbohydrates?.sugars?.childs?.sucrose?.value,
+                Unit: energy?.childs?.carbohydrates?.sugars?.childs?.sucrose?.blendNutrientRefference?.units,
                 children: {},
               },
               Glucose: {
-                value:
-                  energy?.childs?.carbohydrates?.sugars?.childs?.glucose?.value,
-                Unit: energy?.childs?.carbohydrates?.sugars?.childs?.glucose
-                  ?.blendNutrientRefference?.units,
+                value: energy?.childs?.carbohydrates?.sugars?.childs?.glucose?.value,
+                Unit: energy?.childs?.carbohydrates?.sugars?.childs?.glucose?.blendNutrientRefference?.units,
                 children: {},
               },
               Fructose: {
-                value:
-                  energy?.childs?.carbohydrates?.sugars?.childs?.fructose
-                    ?.value,
-                Unit: energy?.childs?.carbohydrates?.sugars?.childs?.fructose
-                  ?.blendNutrientRefference?.units,
+                value: energy?.childs?.carbohydrates?.sugars?.childs?.fructose?.value,
+                Unit: energy?.childs?.carbohydrates?.sugars?.childs?.fructose?.blendNutrientRefference?.units,
                 children: {},
               },
               Lactose: {
-                value:
-                  energy?.childs?.carbohydrates?.sugars?.childs?.lactose?.value,
-                Unit: energy?.childs?.carbohydrates?.sugars?.childs?.lactose
-                  ?.blendNutrientRefference?.units,
+                value: energy?.childs?.carbohydrates?.sugars?.childs?.lactose?.value,
+                Unit: energy?.childs?.carbohydrates?.sugars?.childs?.lactose?.blendNutrientRefference?.units,
                 children: {},
               },
               Maltose: {
-                value:
-                  energy?.childs?.carbohydrates?.sugars?.childs?.maltose?.value,
-                Unit: energy?.childs?.carbohydrates?.sugars?.childs?.maltose
-                  ?.blendNutrientRefference?.units,
+                value: energy?.childs?.carbohydrates?.sugars?.childs?.maltose?.value,
+                Unit: energy?.childs?.carbohydrates?.sugars?.childs?.maltose?.blendNutrientRefference?.units,
                 children: {},
               },
               Galactose: {
-                value:
-                  energy?.childs?.carbohydrates?.sugars?.childs?.galactose
-                    ?.value,
-                Unit: energy?.childs?.carbohydrates?.sugars?.childs?.galactose
-                  ?.blendNutrientRefference?.units,
+                value: energy?.childs?.carbohydrates?.sugars?.childs?.galactose?.value,
+                Unit: energy?.childs?.carbohydrates?.sugars?.childs?.galactose?.blendNutrientRefference?.units,
                 children: {},
               },
             },
           },
           Starch: {
             value: energy?.childs?.carbohydrates?.starch?.value,
-            Unit: energy?.childs?.carbohydrates?.starch?.blendNutrientRefference
-              ?.units,
+            Unit: energy?.childs?.carbohydrates?.starch?.blendNutrientRefference?.units,
             children: {},
           },
         },
@@ -122,8 +106,7 @@ const recursiveData = (data) => {
       },
       "Pantothenic acid": {
         value: vitamins?.childs?.pantothenicAcid?.value,
-        Unit: vitamins?.childs?.pantothenicAcid?.blendNutrientRefference
-          ?.units,
+        Unit: vitamins?.childs?.pantothenicAcid?.blendNutrientRefference?.units,
         children: {},
       },
       "Vitamin B-6": {
@@ -281,31 +264,13 @@ const RightSide = ({ nutritionData }) => {
         <h3>Rx Facts</h3>
       </div>
       <div className={styles.content}>
-        <h3>Nutrition</h3>
-        <div className={styles.nutritionHeader}>
+        <div className={styles.content__heading}>
+          <h3>Nutrition</h3>
           <p>Amount Per Serving Calories</p>
-          <div className={styles.recursiveAccordianHeading}>
-            <div className={styles.recursiveAccordianHeading__heading}>
-              <div className={styles.recursiveAccordianHeading__heading__1}>
-                Calories
-              </div>
-              <div className={styles.recursiveAccordianHeading__heading__2}>
-                93
-              </div>
-            </div>
-            <div className={styles.recursiveAccordianHeading__subheading}>
-              <div className={styles.recursiveAccordianHeading__subheading__3}>
-                Value
-              </div>
-              <div className={styles.recursiveAccordianHeading__subheading__4}>
-                Daily%
-              </div>
-            </div>
-          </div>
         </div>
         <div className={styles.ingredientsDetails}>
           {nutritionData && (
-            <RecursiveAccordian dataObject={nestedAccordianSkeleton} />
+            <UpdatedRecursiveAccordian dataObject={nestedAccordianSkeleton} />
           )}
         </div>
       </div>

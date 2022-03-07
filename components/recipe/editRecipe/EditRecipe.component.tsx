@@ -15,7 +15,24 @@ import imageUploadS3 from "../../utility/imageUploadS3";
 import { BLEND_CATEGORY } from "../../../gqlLib/recipes/queries/getEditRecipe";
 import { useLazyQuery } from "@apollo/client";
 
-const EditRecipePage = ({ nutritionData }) => {
+interface editRecipe {
+  nutritionData: any;
+  recipeData?: any;
+  mode?: "edit" | "add";
+}
+
+const EditRecipePage = ({ nutritionData, recipeData, mode }: editRecipe) => {
+  mode;
+  useEffect(() => {
+    setEditRecipeHeading(recipeData?.name);
+  }, [recipeData]);
+
+  useEffect(() => {
+    mode === "edit"
+      ? setSelectedBlendValueState(recipeData?.recipeBlendCategory?.name?.toLowerCase())
+      : setSelectedBlendValueState(blendCategory[0]?.name?.toLowerCase());
+  }, [recipeData]);
+
   const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
   const [images, setImages] = useState<any[]>([]);
   const [uploadUrl, setUploadUrl] = useState([]);
@@ -41,15 +58,22 @@ const EditRecipePage = ({ nutritionData }) => {
     } else console.log({ res: "something went wrong in image uploading" });
   };
 
-  const [getAllCategories, { loading: blendCategoriesInProgress, data: blendCategoriesData }] = useLazyQuery(BLEND_CATEGORY, {
+  const [
+    getAllCategories,
+    { loading: blendCategoriesInProgress, data: blendCategoriesData },
+  ] = useLazyQuery(BLEND_CATEGORY, {
     fetchPolicy: "network-only",
   });
 
   const fetchAllBlendCategories = async () => {
     await getAllCategories();
     setblendCategory(blendCategoriesData?.getAllCategories);
-    blendCategory && setSelectedBlendValueState(blendCategoriesData?.getAllCategories[0].name);
+
+    // item.toLowerCase()
   };
+useEffect(() => {
+ setEditRecipeHeading(recipeData?.name)
+}, [recipeData])
 
   useEffect(() => {
     if (!blendCategoriesInProgress) {
@@ -57,10 +81,14 @@ const EditRecipePage = ({ nutritionData }) => {
     }
   }, [blendCategoriesInProgress]);
 
+  
   return (
     <AContainer>
       <div className={styles.main}>
-        <div className={styles.left} style={leftTrayVisibleState ? { marginLeft: "0px" } : {}}>
+        <div
+          className={styles.left}
+          style={leftTrayVisibleState ? { marginLeft: "0px" } : {}}
+        >
           <div
             className={styles.left__Drag__lightGreen}
             style={
@@ -76,7 +104,9 @@ const EditRecipePage = ({ nutritionData }) => {
             }
             onClick={() => setLeftTrayVisibleState(!leftTrayVisibleState)}
           >
-            <div>{/* left basket drag button, images are used as backgound images for this div in scss files */}</div>
+            <div>
+              {/* left basket drag button, images are used as backgound images for this div in scss files */}
+            </div>
           </div>
           <div className={styles.left__title}>
             <div className={styles.left__title__bagicon}>
@@ -98,12 +128,20 @@ const EditRecipePage = ({ nutritionData }) => {
         <div className={styles.center}>
           <Center_header />
           <Center_Elements
+            mode={mode}
             blendCategoryList={blendCategory}
             setDropDownState={setSelectedBlendValueState}
+            selectedBlendValueState={selectedBlendValueState}
             setImages={setImages}
             setEditRecipeHeading={setEditRecipeHeading}
+            recipeTitle={recipeData?.name}
+            recipeBlendCategoryEditMode={recipeData?.recipeBlendCategory?.name}
           />
+
           <IngredientList
+            mode={mode}
+            howToStepsEditMode={recipeData?.recipeInstructions}
+            ingredientListEditMode={recipeData?.ingredients}
             blendCategory={blendCategory}
             selectedBlendValueState={selectedBlendValueState}
             handleSubmitData={handleSubmitData}

@@ -17,8 +17,10 @@ import Modal from "../../../../theme/modal/customModal/CustomModal";
 import ShareRecipeModal from "../shareRecipeModal/ShareRecipeModal";
 import SaveRecipe from "../saveRecipe/SaveRecipe";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 const Center = (recipeData) => {
+  const router = useRouter();
   console.log(recipeData);
   const [counter, setCounter] = useState(1);
   const dispatch = useAppDispatch();
@@ -78,7 +80,7 @@ const Center = (recipeData) => {
           <h3>Recipe</h3>
         </div>
         <div className={styles.alignItems}>
-          <div className={styles.editBox}>
+          <div className={styles.editBox} onClick={()=>router.push(`/edit_recipe/${recipeDetails?.recipeData?._id}`)}>
             <FiEdit2 className={styles.editIcon} />
           </div>
           <div className={styles.closeBox}>

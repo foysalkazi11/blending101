@@ -13,28 +13,36 @@ type CenterElementsProps = {
   setEditRecipeHeading?: any;
   setDropDownState?: any;
   blendCategoryList: any;
+  recipeTitle: string;
+  mode?: "edit" | "add";
+  selectedBlendValueState: any;
+  recipeBlendCategoryEditMode: any;
 };
 
-const Center_Elements = ({ setImages, setEditRecipeHeading, setDropDownState, blendCategoryList }: CenterElementsProps) => {
-  useEffect(() => {
-    if (editRecipeHeading.current) {
-      // @ts-ignore
-      setEditRecipeHeading(editRecipeHeading?.current?.textContent);
-    }
-  }, []);
-
+const Center_Elements = ({
+  setImages,
+  recipeTitle,
+  setEditRecipeHeading,
+  setDropDownState,
+  blendCategoryList,
+  mode,
+  selectedBlendValueState,
+  recipeBlendCategoryEditMode,
+}: CenterElementsProps) => {
   const dispatch = useAppDispatch();
+  const editRecipeHeading = useRef();
 
   //quantity number sets number for top card bottom right counter in edit recipe
   const quantity_number = useAppSelector((state) => state.quantityAdjuster.quantityNum);
   // variables for ingredients card of edit recipe
-  const editRecipeHeading = useRef();
   const adjusterFunc = (task, type) => {
     if (type === "quantity_number") {
       if (quantity_number <= 0 && task === "-") {
         dispatch(setQuantity(0));
       } else {
-        task === "+" ? dispatch(setQuantity(quantity_number + 1)) : dispatch(setQuantity(quantity_number - 1));
+        task === "+"
+          ? dispatch(setQuantity(quantity_number + 1))
+          : dispatch(setQuantity(quantity_number - 1));
       }
     }
   };
@@ -55,6 +63,10 @@ const Center_Elements = ({ setImages, setEditRecipeHeading, setDropDownState, bl
     width: "111%",
   };
 
+  useEffect(() => {
+    // @ts-ignore
+    setEditRecipeHeading(editRecipeHeading?.current?.textContent);
+  }, [editRecipeHeading?.current]);
   return (
     <div className={styles.main}>
       <div className={styles.topSection}>
@@ -67,7 +79,7 @@ const Center_Elements = ({ setImages, setEditRecipeHeading, setDropDownState, bl
             setEditRecipeHeading(e.currentTarget.textContent);
           }}
         >
-          Recipe Title
+          {mode === "edit" && recipeTitle ? recipeTitle : "Recipe Title"}
         </h3>
 
         <div className={styles.topSection__RightIcon}>
@@ -80,15 +92,21 @@ const Center_Elements = ({ setImages, setEditRecipeHeading, setDropDownState, bl
       <div className={styles.scoreTraydiv}>
         <ScoreTray />
         <p>
-          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-          in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+          voluptate velit esse cillum dolore eu fugiat nulla pariatur.
         </p>
         <div className={styles.blendingOptions}>
           <div className={styles.blendingOptions__left}>
             <ul>
               <li>
                 <div className={styles.left__options} style={{ minWidth: "125px" }}>
-                  <DropDown listElem={WholefoodItem} style={dropDownStyle} valueState={setDropDownState} />
+                  <DropDown
+                    selectedBlendValueState={selectedBlendValueState}
+                    listElem={WholefoodItem}
+                    style={dropDownStyle}
+                    valueState={setDropDownState}
+                  />
                 </div>
               </li>
               <li>
@@ -132,7 +150,12 @@ const Center_Elements = ({ setImages, setEditRecipeHeading, setDropDownState, bl
               </div>
             </div>
             <span className={styles.timer_icon}>
-              <Image src={"/icons/time-icon.svg"} alt="Picture will load soon" height={"20px"} width={"20px"} />
+              <Image
+                src={"/icons/time-icon.svg"}
+                alt="Picture will load soon"
+                height={"20px"}
+                width={"20px"}
+              />
             </span>
           </div>
         </div>
