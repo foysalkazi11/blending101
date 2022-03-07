@@ -55,7 +55,7 @@
 
 .contentBox {
   background-color: #ffffff;
-  padding:20px;
+  padding: 20px;
   border-radius: 15px;
   margin-bottom: 20px;
   box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
@@ -135,7 +135,9 @@
     }
   }
 }
-
+@keyframes mymove {
+  100% {transform: rotate(360deg);}
+}
 .sliderBox {
   margin-top: 20px;
 
@@ -146,6 +148,14 @@
     aspect-ratio: 2.5;
     border-radius: 15px;
     overflow: hidden;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    svg{
+      font-size: 34px;
+      animation: mymove 1s infinite;
+      color: #5f9c1e;
+    }
 
     img {
       width: 100%;
@@ -441,7 +451,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left:10px;
+    margin-left: 10px;
 
     p {
       margin: 0;

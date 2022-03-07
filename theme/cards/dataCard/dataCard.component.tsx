@@ -4,11 +4,7 @@ import styles from "./dataCard.module.scss";
 import MoreVertIcon from "../../../public/icons/more_vert_black_36dp.svg";
 import { slicedString } from "../../../services/string.service";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import {
-  setOpenCollectionsTary,
-  setOpenCommentsTray,
-  setToggleSaveRecipeModal,
-} from "../../../redux/slices/sideTraySlice";
+import { setOpenCollectionsTary, setOpenCommentsTray, setToggleSaveRecipeModal } from "../../../redux/slices/sideTraySlice";
 import {
   setActiveRecipeId,
   setAllRecipeWithinCollectionsId,
@@ -67,14 +63,9 @@ export default function DatacardComponent({
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
-  const { allRecipeWithinCollectionsId } = useAppSelector(
-    (state) => state?.collections
-  );
+  const { allRecipeWithinCollectionsId } = useAppSelector((state) => state?.collections);
   const [addNewRecipeToCollection] = useMutation(ADD_NEW_RECIPE_TO_COLLECTION);
-  const [getLastModifiedCollection] = useLazyQuery(
-    GET_LAST_MODIFIED_COLLECTION,
-    { fetchPolicy: "no-cache" }
-  );
+  const [getLastModifiedCollection] = useLazyQuery(GET_LAST_MODIFIED_COLLECTION, { fetchPolicy: "no-cache" });
   const { dbUser } = useAppSelector((state) => state?.user);
 
   const handleEclipse = () => {
@@ -111,11 +102,7 @@ export default function DatacardComponent({
         })
       );
 
-      dispatch(
-        setLastModifiedCollection(
-          lastModified?.getLastModifieldCollection?.name
-        )
-      );
+      dispatch(setLastModifiedCollection(lastModified?.getLastModifieldCollection?.name));
 
       let recipesId = [];
       data?.addTolastModifiedCollection?.forEach((col) => {
@@ -140,18 +127,12 @@ export default function DatacardComponent({
   };
 
   const handleCompare = (id: string, e: React.SyntheticEvent) => {
-    e?.stopPropagation();
     dispatch(setOpenCollectionsTary(true));
     dispatch(setChangeRecipeWithinCollection(true));
     dispatch(setActiveRecipeId(id));
   };
 
-  const handleComment = (
-    id: string,
-    title: string,
-    image: string,
-    e: React.SyntheticEvent
-  ) => {
+  const handleComment = (id: string, title: string, image: string, e: React.SyntheticEvent) => {
     // HANDLE COMMENTS CLICK HERE
     e?.stopPropagation();
     dispatch(setActiveRecipeId(id));
@@ -213,11 +194,10 @@ export default function DatacardComponent({
         <div className={styles.datacard__inner}>
           <div className={styles.datacard__body}>
             <div className={styles.datacard__body__top}>
-              <div
-                className={styles.datacard__body__top__heading}
-                onClick={() => router.push(`/recipe_details/${recipeId}`)}
-              >
-                <h2 className={styles.title}>{title}</h2>
+              <div className={styles.datacard__body__top__heading}>
+                <h2 className={styles.title} onClick={() => router.push(`/recipe_details/${recipeId}`)}>
+                  {title}
+                </h2>
               </div>
               <div className={styles.datacard__body__top__menu}>
                 <MoreVertIcon onClick={handleClick} />
@@ -226,10 +206,7 @@ export default function DatacardComponent({
             </div>
             <div className={styles.datacard__body__middle}>
               <div className={styles.datacard__body__middle__left}>
-                <div
-                  className={styles.image}
-                  style={{ backgroundImage: `url(${image})` }}
-                ></div>
+                <div className={styles.image} style={{ backgroundImage: `url(${image})` }}></div>
               </div>
               <div className={styles.datacard__body__middle__right}>
                 <DataBody />
@@ -254,25 +231,13 @@ export default function DatacardComponent({
                 <ul>
                   <li>
                     {" "}
-                    <img
-                      src="/icons/eclipse.svg"
-                      alt="eclipse"
-                      onClick={handleEclipse}
-                    />{" "}
+                    <img src="/icons/eclipse.svg" alt="eclipse" onClick={handleEclipse} />{" "}
                   </li>
                   <li>
                     {allRecipeWithinCollectionsId?.includes(recipeId) ? (
-                      <img
-                        src="/icons/compare.svg"
-                        alt="compare"
-                        onClick={(e) => handleCompare(recipeId, e)}
-                      />
+                      <img src="/icons/compare.svg" alt="compare" onClick={(e) => handleCompare(recipeId, e)} />
                     ) : (
-                      <img
-                        src="/images/BookmarksStar.svg"
-                        alt="compare"
-                        onClick={(e) => addToCollection(recipeId, e)}
-                      />
+                      <img src="/images/BookmarksStar.svg" alt="compare" onClick={(e) => addToCollection(recipeId, e)} />
                     )}
                   </li>
                   <li>

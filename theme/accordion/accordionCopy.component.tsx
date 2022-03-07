@@ -9,27 +9,18 @@ type CustomAccordionProps = {
   iconRight?: boolean;
   plusMinusIcon?: boolean;
   dataObject?: object;
-  value?:string;
-  unit?:string;
+  value?: string;
+  unit?: string;
 };
 
-const CustomAccordion = ({
-  title,
-  children,
-  iconRight = false,
-  plusMinusIcon = true,
-  value,
-  unit
-}: CustomAccordionProps) => {
-  const [expanded, setExpanded] = useState<boolean>(false);
+const CustomAccordion = ({ title, children, iconRight = false, plusMinusIcon = true, value, unit }: CustomAccordionProps) => {
+  const [expanded, setExpanded] = useState<boolean>(true);
 
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (contentRef.current) {
-      expanded
-        ? (contentRef.current.style.maxHeight = `1000px`)
-        : (contentRef.current.style.maxHeight = "0px");
+      expanded ? (contentRef.current.style.maxHeight = `1000px`) : (contentRef.current.style.maxHeight = "0px");
     }
   }, [expanded, contentRef]);
 
@@ -69,20 +60,13 @@ const CustomAccordion = ({
             )}
             <div className={styles.accordianContent}>
               <h5 className={styles.titleCopy}>{title}</h5>
-              <p className={styles.valueUnit + " " + styles.alignLeft}>
-                {value && parseFloat(value).toFixed(3)}
-              </p>
-              <p className={styles.valueUnit + " " + styles.alignLeft}>
-                {unit && unit}
-              </p>
+              <p className={styles.valueUnit + " " + styles.alignLeft}>{value && parseFloat(value).toFixed(3)}</p>
+              <p className={styles.valueUnit + " " + styles.alignLeft}>{unit && unit}</p>
             </div>
           </div>
         </div>
       )}
-      <div
-        className={styles.accordianDetails}
-        ref={contentRef as React.RefObject<HTMLDivElement>}
-      >
+      <div className={styles.accordianDetails} ref={contentRef as React.RefObject<HTMLDivElement>}>
         {children}
       </div>
     </div>

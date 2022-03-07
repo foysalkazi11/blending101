@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styles from "./header.module.scss";
 import SocialComponent from "./social/Social.component";
 import LocalMallIcon from "../../public/icons/local_mall_black_36dp.svg";
@@ -7,22 +7,12 @@ import notification from "../utility/reactToastifyNotification";
 import { Auth } from "aws-amplify";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setLoading } from "../../redux/slices/utilitySlice";
-import {
-  setUser,
-  setNonConfirmedUser,
-  setDbUser,
-} from "../../redux/slices/userSlice";
-import { BsCaretDown, BsCaretUp } from "react-icons/bs";
+import { setUser, setNonConfirmedUser, setDbUser } from "../../redux/slices/userSlice";
 import { HiOutlineUserCircle } from "react-icons/hi";
-import {
-  MdOutlineAdminPanelSettings,
-  MdHelpOutline,
-  MdOutlineLogout,
-  MdOutlineLogin,
-  MdPublishedWithChanges,
-} from "react-icons/md";
+import { MdOutlineAdminPanelSettings, MdHelpOutline, MdOutlineLogout, MdOutlineLogin, MdPublishedWithChanges } from "react-icons/md";
 import Link from "next/link";
 import { FaRegUser } from "react-icons/fa";
+import Image from "next/image";
 import useOnClickOutside from "../utility/useOnClickOutside";
 
 interface headerInterface {
@@ -31,15 +21,12 @@ interface headerInterface {
   fullWidth?: Boolean;
 }
 
-export default function HeaderComponent({
-  logo = true,
-  headerTitle = "Home",
-  fullWidth,
-}: headerInterface) {
+export default function HeaderComponent({ logo = true, headerTitle = "Home", fullWidth }: headerInterface) {
   const [openPopup, setOpenPopup] = useState(false);
   const dispatch = useAppDispatch();
   const { user, dbUser } = useAppSelector((state) => state?.user);
   const userMenu = useRef(null);
+  const userIcon = useRef(null);
   useOnClickOutside(userMenu, () => setOpenPopup(false));
 
   const userSingOut = async () => {
@@ -64,9 +51,7 @@ export default function HeaderComponent({
       <div className={styles.header} style={style}>
         <div className={styles.header__inner}>
           <Link href="/" passHref>
-            <div className={styles.left + " " + styles.logo}>
-              {logo && <img src="/logo.png" alt="logo" />}
-            </div>
+            <div className={styles.left + " " + styles.logo}>{logo && <img src="/logo.png" alt="logo" />}</div>
           </Link>
           <div className={styles.center + " " + styles.info}>
             <h3>{headerTitle}</h3>
@@ -78,58 +63,33 @@ export default function HeaderComponent({
             <div>
               <LocalMallIcon className={styles.cart__icon} />
             </div>
-            <div className={styles.profile}>
-              {dbUser?.image ? (
-                <img src={dbUser?.image} alt="prfile.png" />
-              ) : (
-                <FaRegUser
-                  style={{ fontSize: "24px", justifySelf: "flex-end" }}
-                />
-              )}
-            </div>
-
-            <div className={styles.userPopupMenu}>
-              {user ? <p className={styles.welcomeText}>Welcome</p> : null}
-
-              <div className={styles.arrowWithText}>
+            <div className={styles.userPopupMenu} ref={userMenu}>
+              <div className={styles.arrowWithText} ref={userIcon}>
                 {user ? (
-                  <strong className={styles.userName}>
-                    {dbUser?.displayName ||
-                      dbUser?.lastName ||
-                      dbUser?.firstName ||
-                      dbUser?.email}
-                  </strong>
+                  <div className={styles.userName}>
+                    {dbUser?.image ? (
+                      <Image
+                        src={dbUser?.image}
+                        alt="prfile.png"
+                        objectFit="contain"
+                        layout="fill"
+                        onClick={() => setOpenPopup((pre) => !pre)}
+                      />
+                    ) : (
+                      <FaRegUser className={styles.userName__image} onClick={() => setOpenPopup((pre) => !pre)} />
+                    )}
+                  </div>
                 ) : null}
-                {openPopup ? (
-                  <BsCaretUp
-                    className={styles.downArrow}
-                    onClick={() => setOpenPopup((pre) => !pre)}
-                  />
-                ) : (
-                  <BsCaretDown
-                    className={styles.downArrow}
-                    onClick={() => setOpenPopup((pre) => !pre)}
-                  />
-                )}
               </div>
 
               {openPopup ? (
-                <div
-                  className={`${styles.popup}`}
-                  ref={userMenu}
-                  // style={{
-                  //   top: user ? "50px" : "inherits",
-                  //   marginLeft: user ? "-100px" : "inherits",
-                  // }}
-                >
-                  {user ? (
-                    <Link href="/user" passHref>
-                      <div className={styles.menu}>
-                        <p>My Profile</p>
-                        <HiOutlineUserCircle className={styles.icon} />
-                      </div>
-                    </Link>
-                  ) : null}
+                <div className={`${styles.popup}`}>
+                  <Link href="/user" passHref>
+                    <div className={styles.menu}>
+                      <p>My Profile</p>
+                      <HiOutlineUserCircle className={styles.icon} />
+                    </div>
+                  </Link>
                   <div className={styles.menu}>
                     <p>Admin</p>
                     <MdOutlineAdminPanelSettings className={styles.icon} />

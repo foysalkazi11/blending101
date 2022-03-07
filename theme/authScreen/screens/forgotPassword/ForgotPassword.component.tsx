@@ -29,7 +29,6 @@ const ForgotPassword = () => {
     try {
       if (sendcode) {
         const data = await Auth.forgotPasswordSubmit(email, code, newPassword);
-        console.log(data);
 
         dispatch(setLoading(false));
         if (data === "SUCCESS") {

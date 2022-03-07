@@ -21,16 +21,27 @@
 }
 
 .content {
-  padding: 20px;
+  padding: 20px 0px;
   background-color: #ffffff;
   border-radius: 15px;
   margin-bottom: 20px;
   box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
 
-  h3 {
-    font-size: 20px;
-    color: #000;
-    font-weight: 400;
+  &__heading {
+    margin: 0px 20px;
+
+    h3 {
+      font-size: 20px;
+      color: #000;
+      font-weight: 400;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 14px;
+      font-weight: 500;
+      color: #ababab;
+    }
   }
 }
 
@@ -60,7 +71,7 @@
       }
     }
 
-    &__2{
+    &__2 {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -84,19 +95,23 @@
     &__4 {
       width: 22%;
       margin-right: 3.5%;
-      @include responsive(0px,550px ){
+
+      @include responsive(0px, 550px) {
         margin-right: 10%;
         width: 22%;
       }
-      @include responsive(550px,650px ){
+
+      @include responsive(550px, 650px) {
         margin-right: 14%;
         width: 22%;
       }
-      @include responsive(650px,770px ){
+
+      @include responsive(650px, 770px) {
         margin-right: 16%;
         width: 22%;
       }
-      @include responsive(770px,1200px ){
+
+      @include responsive(770px, 1200px) {
         margin-right: 17%;
         width: 22%;
       }

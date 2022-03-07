@@ -18,18 +18,14 @@ export const CREATE_NEW_RECIPE_FROM_USER = ({
   recipeName,
   SelectedblendCategory,
 }: createNewRecipeFromUserInterface) => {
-  let SelectedblendCategory_id =
-    SelectedblendCategory && SelectedblendCategory[0]?._id;
+  let SelectedblendCategory_id = SelectedblendCategory && SelectedblendCategory[0]?._id;
   const convertArrToString = (arr) => {
-    arr = arr.map((itm) => {
+    arr = arr?.map((itm) => {
       return `
             {
               ingredientId: "${itm.ingredientId}",
               weightInGram: ${itm.weightInGram},
-              selectedPortionName: "${itm.selectedPortionName?.replace(
-                /"/g,
-                '\\"'
-              )}"
+              selectedPortionName: "${itm.selectedPortionName?.replace(/"/g, '\\"')}"
             }
           `;
     });
@@ -40,7 +36,7 @@ export const CREATE_NEW_RECIPE_FROM_USER = ({
   const convertImageArrayToString = (arr) => {
     let imageArr = [];
     arr &&
-      arr.map((elem, index) => {
+      arr?.map((elem, index) => {
         if (index === 0) {
           imageArr.push(`
         {
@@ -63,7 +59,7 @@ export const CREATE_NEW_RECIPE_FROM_USER = ({
   const converInstructionToString = (arr) => {
     let instructionArr = [];
     arr &&
-      arr.map((elem, index) => {
+      arr?.map((elem, index) => {
         // console.log(elem);
         instructionArr.push(`"${elem.step}"`);
       });
@@ -71,8 +67,11 @@ export const CREATE_NEW_RECIPE_FROM_USER = ({
     return `[${instructionArr}]`;
   };
 
-  // console.log(ingredients)
-  console.log(recipeName)
+  // console.log({recipeInstructions})
+  // console.log({SelectedblendCategory_id})
+  // console.log({recipeName})
+  // console.log({ingredients})
+
   return gql`
  mutation {
    addRecipeFromUser(data: {

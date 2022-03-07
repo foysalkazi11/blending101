@@ -16,11 +16,9 @@ function CarouselComponent() {
 
   const goLeft = () => {
     nextState(currentState === 0 ? 0 : currentState - 1);
-    console.log(currentState);
   };
   const goRight = () => {
     nextState(currentState === length - 1 ? currentState : currentState + 1);
-    console.log(currentState);
   };
 
   if (!Array.isArray(images || images.length <= 0)) {

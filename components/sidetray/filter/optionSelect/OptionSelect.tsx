@@ -43,8 +43,6 @@ const OptionSelect = ({
         {options[recipeFilterByIngredientCategory]?.length
           ? options[recipeFilterByIngredientCategory]?.map((item, index) => {
               const isSelected = values.includes(item);
-              console.log(isSelected);
-
               return (
                 <div
                   className={`${styles.signleItem} ${

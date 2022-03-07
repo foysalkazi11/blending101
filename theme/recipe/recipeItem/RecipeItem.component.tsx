@@ -39,7 +39,6 @@ const RecipeItem = (props: RecipeItemProps) => {
 
 
   const handleDefault = (e: any) => {
-    console.log('dragging')
     e.preventDefault();
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
