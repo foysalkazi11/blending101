@@ -81,7 +81,8 @@ function AuthProvider({ children, activeUser }) {
         process.browser &&
         page !== "/login" &&
         page !== "/signup" &&
-        page !== "/varify_email"
+        page !== "/varify_email" &&
+        page !== "/forget_password"
       )
         router.push("/login");
       // console.log("uncomment code in auth folder");
@@ -103,7 +104,12 @@ function AuthProvider({ children, activeUser }) {
   }, [user]);
 
   useEffect(() => {
-    if (page === "/login" || page === "/signup" || page === "/varify_email") {
+    if (
+      page === "/login" ||
+      page === "/signup" ||
+      page === "/varify_email" ||
+      page === "/forget_password"
+    ) {
       setActive(true);
     }
   }, [page]);

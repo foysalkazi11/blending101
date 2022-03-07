@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { setBlendTye } from "../../../../redux/slices/sideTraySlice";
 import styles from "../filter.module.scss";
@@ -32,7 +32,9 @@ const VisualSection = ({ categories }: VisualSectionProps) => {
     FETCH_BLEND_CATEGORIES
   );
   const { allCategories } = useAppSelector((state) => state?.categroy);
+  const { openFilterTray } = useAppSelector((state) => state?.sideTray);
   const dispatch = useAppDispatch();
+  const isMounted = useRef(false);
 
   const handleBlendClick = (blend) => {
     let blendz = [];
@@ -72,11 +74,21 @@ const VisualSection = ({ categories }: VisualSectionProps) => {
   };
 
   useEffect(() => {
-    if (!allCategories?.length) {
-      fetchAllBlendCategroy();
+    if (isMounted.current) {
+      if (!allCategories?.length) {
+        fetchAllBlendCategroy();
+      }
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openFilterTray]);
+
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    };
   }, []);
 
   return (
@@ -87,33 +99,34 @@ const VisualSection = ({ categories }: VisualSectionProps) => {
         <div className={styles.filter__top}>
           <h3>Blend Type</h3>
           <div className={styles.filter__menu}>
-            {allCategories?.length &&
-              allCategories.map((blend, i) => (
-                <div
-                  key={blend?.name + i}
-                  className={styles.filter__menu__item}
-                  onClick={() =>
-                    handleBlendClick({
-                      title: blend?.name,
-                      img: blend?.image || defaultBlendImg,
-                      id: blend?._id,
-                    })
-                  }
-                >
-                  <div className={styles.filter__menu__item__image}>
-                    <img
-                      src={blend?.image || defaultBlendImg}
-                      alt={blend?.name}
-                    />
-                    {checkActive(blend._id) && (
-                      <div className={styles.tick}>
-                        <CheckCircle className={styles.ticked} />
-                      </div>
-                    )}
+            {allCategories?.length
+              ? allCategories.map((blend, i) => (
+                  <div
+                    key={blend?.name + i}
+                    className={styles.filter__menu__item}
+                    onClick={() =>
+                      handleBlendClick({
+                        title: blend?.name,
+                        img: blend?.image || defaultBlendImg,
+                        id: blend?._id,
+                      })
+                    }
+                  >
+                    <div className={styles.filter__menu__item__image}>
+                      <img
+                        src={blend?.image || defaultBlendImg}
+                        alt={blend?.name}
+                      />
+                      {checkActive(blend._id) && (
+                        <div className={styles.tick}>
+                          <CheckCircle className={styles.ticked} />
+                        </div>
+                      )}
+                    </div>
+                    <p>{blend.name}</p>
                   </div>
-                  <p>{blend.name}</p>
-                </div>
-              ))}
+                ))
+              : null}
           </div>
         </div>
       )}
