@@ -121,10 +121,10 @@ const IngredientList = ({
               selectedPortionName: elem?.selectedPortion?.name,
             };
             measurement = { ...measurement, ...customObj };
-
             recipe = { ...recipe, ...measurement };
           }
           recipeList = [...recipeList, recipe];
+          console.log(recipeList)
           setRecipeApi(recipeList);
         });
       };

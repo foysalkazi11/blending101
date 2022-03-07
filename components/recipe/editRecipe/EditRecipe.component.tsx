@@ -68,8 +68,6 @@ const EditRecipePage = ({ nutritionData, recipeData, mode }: editRecipe) => {
   const fetchAllBlendCategories = async () => {
     await getAllCategories();
     setblendCategory(blendCategoriesData?.getAllCategories);
-
-    // item.toLowerCase()
   };
   useEffect(() => {
     setEditRecipeHeading(recipeData?.name);

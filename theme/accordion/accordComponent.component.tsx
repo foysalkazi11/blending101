@@ -11,7 +11,6 @@ type CustomAccordionProps = {
   children?: React.ReactNode;
   iconRight?: boolean;
   plusMinusIcon?: boolean;
-  subPlusMinusIcon?: boolean;
   dataObject?: object;
   value?: string;
   percentage?: string;
@@ -25,7 +24,6 @@ const AccordComponent = ({
   children,
   iconRight = false,
   plusMinusIcon = true,
-  subPlusMinusIcon = false,
   value,
   percentage,
   unit,
