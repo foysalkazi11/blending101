@@ -58,6 +58,7 @@ const IngredientList = ({
   );
   const howToState = useAppSelector((state) => state.quantityAdjuster.howtoState);
 
+  console.log({ingredients_list})
   useEffect(() => {
     dispatch(setServings(quantity_number));
   }, [quantity_number]);
@@ -77,12 +78,10 @@ const IngredientList = ({
 
   useEffect(() => {
     dispatch(setNutritionState(nutritionArray));
-    console.log(nutritionArray);
     let recipeList = [];
     const createRecipeApiFinalString = () => {
       let recipe = {};
       ingredients_list.map((elem) => {
-        console.log({ elemYes: elem });
         recipe = { ingredientId: elem._id };
         if (elem.portions) {
           let measurement = {};
@@ -113,10 +112,8 @@ const IngredientList = ({
       const createRecipeApiFinalString = () => {
         let recipe = {};
         ingredientListEditMode?.map((elem) => {
-          console.log(elem);
           recipe = { ingredientId: elem.ingredientId._id };
           if (elem.selectedPortion) {
-            console.log(elem.selectedPortion);
             let measurement = {};
             let customObj = {};
             customObj = {

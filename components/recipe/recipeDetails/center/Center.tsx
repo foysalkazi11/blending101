@@ -21,7 +21,6 @@ import { useRouter } from "next/router";
 
 const Center = (recipeData) => {
   const router = useRouter();
-  console.log(recipeData);
   const [counter, setCounter] = useState(1);
   const dispatch = useAppDispatch();
   const [showRecipeModal, setShowRecipeModal] = useState(true);

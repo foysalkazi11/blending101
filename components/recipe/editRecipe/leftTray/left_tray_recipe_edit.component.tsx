@@ -26,7 +26,7 @@ const Left_tray_recipe_edit = () => {
     (state) => state.quantityAdjuster.ingredientsList
   );
 
-  console.log(ingredients_list)
+
   const handleIngredientClick = (ingredient) => {
     let blendz = [];
     let present = false;
@@ -43,7 +43,6 @@ const Left_tray_recipe_edit = () => {
       });
     }
 
-    console.log(blendz);
     dispatch(setIngredientsToList(blendz));
   };
 
@@ -111,6 +110,8 @@ const Left_tray_recipe_edit = () => {
   useEffect(() => {
     DropDown(dpd);
   }, [dpd]);
+
+// console.log({searchElemListFilter});
 
   return (
     <div className={styles.left_main_container}>

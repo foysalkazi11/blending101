@@ -71,9 +71,9 @@ const EditRecipePage = ({ nutritionData, recipeData, mode }: editRecipe) => {
 
     // item.toLowerCase()
   };
-useEffect(() => {
- setEditRecipeHeading(recipeData?.name)
-}, [recipeData])
+  useEffect(() => {
+    setEditRecipeHeading(recipeData?.name);
+  }, [recipeData]);
 
   useEffect(() => {
     if (!blendCategoriesInProgress) {
@@ -81,7 +81,6 @@ useEffect(() => {
     }
   }, [blendCategoriesInProgress]);
 
-  
   return (
     <AContainer>
       <div className={styles.main}>

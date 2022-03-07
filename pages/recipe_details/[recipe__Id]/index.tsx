@@ -32,7 +32,6 @@ const Index = () => {
   const fetchRecipe = () => {
     getBlendNutritionBasedOnRecipe();
   };
-  console.log(recipeData);
   return (
     <RecipeDetails
       recipeData={recipeData && recipeData?.getARecipe}

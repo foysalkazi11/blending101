@@ -15,7 +15,6 @@ const ContentTray = (props) => {
 
   const PreviousButton = (prop) => {
     const { className, onClick } = prop;
-    // console.log("===========>" + onClick);
     return (
       <div
         className={className + " " + styles.customArrowLeft}

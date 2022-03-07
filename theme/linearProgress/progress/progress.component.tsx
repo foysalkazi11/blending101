@@ -10,7 +10,6 @@ const LinearIndicatorcomponent = ({ percent }: Percent) => {
 
   let style: object = { width };
 
-  // console.log(style);
   return (
     <div className={styles.LinearIndicatorDiv}>
       {/* <LinearProgress variant="determinate" value={20} sx={color="green"} /> */}

@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
 import AccordComponent from "./accordComponent.component";
-
 
 type CustomAccordionProps = {
   title: string;
@@ -9,22 +8,35 @@ type CustomAccordionProps = {
 };
 
 const UpdatedCustomAccordion = ({ title, content, type }: CustomAccordionProps) => {
-  const populateAccordian = (childrenFeild) => {
+  const populateAccordian = (childrenFeild, firstChild) => {
     return Object.entries(childrenFeild).map((itm) => {
       //@ts-ignore
       if (Object.keys(itm[1].children).length > 0) {
-        //@ts-ignore
-        return (
-          <div style={{ marginLeft: "8px" }}>
-            {/* @ts-ignore */}
-            <AccordComponent title={itm[0]}>
-              {
-                //@ts-ignore
-                populateAccordian(itm[1].children)
-              }
-            </AccordComponent>
-          </div>
-        );
+        if (firstChild === true) {
+          return (
+            <div>
+              {/* @ts-ignore */}
+              <AccordComponent title={itm[0]}>
+                {
+                  //@ts-ignore
+                  populateAccordian(itm[1].children, false)
+                }
+              </AccordComponent>
+            </div>
+          );
+        } else {
+          return (
+            <div style={{ marginLeft: "28px" }}>
+              {/* @ts-ignore */}
+              <AccordComponent title={itm[0]}>
+                {
+                  //@ts-ignore
+                  populateAccordian(itm[1].children, false)
+                }
+              </AccordComponent>
+            </div>
+          );
+        }
       } else {
         //@ts-ignore
         if (itm[1].Unit && itm[1].value) {
@@ -49,7 +61,7 @@ const UpdatedCustomAccordion = ({ title, content, type }: CustomAccordionProps) 
   return (
     content && (
       <AccordComponent title={title} type={type}>
-        {populateAccordian(content)}
+        {populateAccordian(content, true)}
       </AccordComponent>
     )
   );

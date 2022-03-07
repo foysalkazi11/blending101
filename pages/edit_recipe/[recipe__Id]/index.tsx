@@ -35,7 +35,6 @@ const EditRecipe = () => {
   }, [recipeData]);
 
   recipeData && console.log(recipeData);
-  nutritionData && console.log(nutritionData);
   return (
     <div>
       <EditRecipePage

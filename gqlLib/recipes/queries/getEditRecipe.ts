@@ -71,7 +71,6 @@ export const BLEND_CATEGORY = gql`
 // ${itm.selectedPortion.gram}
 
 export const GET_EDIT_RECIPE_NUTRITION = (ingredients) => {
-  console.log(ingredients)
   const convertArrToString = (arr) => {
     arr = arr?.map((itm) => {
       let value=itm.portions?.filter((item)=>item.default===true);

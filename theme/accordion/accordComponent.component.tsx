@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FiMinusSquare, FiPlusSquare } from "react-icons/fi";
+import { BsPlus } from "react-icons/bs";
+import { BiMinus } from "react-icons/bi";
 import styles from "./updatedAccordion.module.scss";
 
 type CustomAccordionProps = {
@@ -9,6 +11,7 @@ type CustomAccordionProps = {
   children?: React.ReactNode;
   iconRight?: boolean;
   plusMinusIcon?: boolean;
+  subPlusMinusIcon?: boolean;
   dataObject?: object;
   value?: string;
   percentage?: string;
@@ -22,6 +25,7 @@ const AccordComponent = ({
   children,
   iconRight = false,
   plusMinusIcon = true,
+  subPlusMinusIcon = false,
   value,
   percentage,
   unit,
@@ -43,7 +47,7 @@ const AccordComponent = ({
         <div className={`${styles.accordionSummary}`}>
           <div className={styles.accordionSummaryForNested}>
             {expanded ? (
-              <FiMinusSquare
+              <BsPlus
                 className={styles.icon + " " + styles.iconCopy}
                 style={!plusMinusIcon && { visibility: "hidden" }}
                 onClick={() => {
@@ -51,7 +55,7 @@ const AccordComponent = ({
                 }}
               />
             ) : (
-              <FiPlusSquare
+              <BiMinus
                 className={styles.icon + " " + styles.iconCopy}
                 style={!plusMinusIcon && { visibility: "hidden" }}
                 onClick={() => {
