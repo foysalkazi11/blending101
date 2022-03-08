@@ -43,7 +43,7 @@ const AccordComponent = ({
     <div className={styles.accordion}>
       {!type ? (
         <div className={`${styles.accordionSummary}`}>
-          {Number(value) > 0 && <div className={styles.accordionSummaryForNested}>
+          <div className={styles.accordionSummaryForNested}>
             {expanded ? (
               <BsPlus
                 className={styles.icon + " " + styles.iconCopy}
@@ -81,7 +81,7 @@ const AccordComponent = ({
                 {percentage || ""}
               </p>
             </div>
-          </div>}
+          </div>
         </div>
       ) : (
         <div className={`${styles.accordionSummary}`}>

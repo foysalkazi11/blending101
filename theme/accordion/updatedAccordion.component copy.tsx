@@ -39,7 +39,7 @@ const UpdatedCustomAccordion = ({ title, content, type }: CustomAccordionProps) 
         }
       } else {
         //@ts-ignore
-        if (itm[1].Unit && itm[1].value) {
+        if (itm[1].Unit && itm[1].value && Number(itm[1].value) > 0) {
           //@ts-ignore
           return (
             //@ts-ignore
