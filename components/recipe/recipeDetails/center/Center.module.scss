@@ -135,9 +135,13 @@
     }
   }
 }
+
 @keyframes mymove {
-  100% {transform: rotate(360deg);}
+  100% {
+    transform: rotate(360deg);
+  }
 }
+
 .sliderBox {
   margin-top: 20px;
 
@@ -150,10 +154,11 @@
     overflow: hidden;
     display: flex !important;
     justify-content: center;
-    border-right: 9.5px solid #ececec;
-    border-left: 9.5px solid #ececec;
+    border-right: 10px solid #f2f2f2;
+    border-left: 10px solid #f2f2f2;
     align-items: center;
-    svg{
+
+    svg {
       font-size: 34px;
       animation: mymove 1s infinite;
       color: #5f9c1e;

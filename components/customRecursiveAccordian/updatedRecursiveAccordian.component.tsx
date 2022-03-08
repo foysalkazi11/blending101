@@ -44,7 +44,6 @@ const UpdatedRecursiveAccordian = ({ dataObject }: recursiveAccordianInterface) 
           </div>
         </div>
       </div>
-
       <div className={styles.recursiveAccordianHeading__subheading}>
         <div className={styles.recursiveAccordianHeading__subheading__3}>Value</div>
         <div className={styles.recursiveAccordianHeading__subheading__4}>Daily%</div>
