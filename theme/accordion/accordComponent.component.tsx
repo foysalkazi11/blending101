@@ -43,7 +43,7 @@ const AccordComponent = ({
     <div className={styles.accordion}>
       {!type ? (
         <div className={`${styles.accordionSummary}`}>
-          <div className={styles.accordionSummaryForNested}>
+          {Number(value) > 0 && <div className={styles.accordionSummaryForNested}>
             {expanded ? (
               <BsPlus
                 className={styles.icon + " " + styles.iconCopy}
@@ -72,7 +72,7 @@ const AccordComponent = ({
                 <h5 className={styles.titleCopy}>{title}</h5>
                 {value && unit && (
                   <p className={styles.valueUnit + " " + styles.alignCenter}>
-                    {parseFloat(value).toFixed(2)} {unit}
+                    {parseFloat(value).toFixed(1)} {unit}
                   </p>
                 )}
               </div>
@@ -81,7 +81,7 @@ const AccordComponent = ({
                 {percentage || ""}
               </p>
             </div>
-          </div>
+          </div>}
         </div>
       ) : (
         <div className={`${styles.accordionSummary}`}>

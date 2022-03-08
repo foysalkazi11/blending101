@@ -86,7 +86,7 @@ const IngredientList = ({
         if (elem.portions) {
           let measurement = {};
           let customObj = {};
-          elem?.portions?.map((elemtemp) => {
+          elem?.portions.map((elemtemp) => {
             if (elemtemp.default === true) {
               customObj = {
                 ...customObj,
@@ -104,6 +104,33 @@ const IngredientList = ({
     };
     createRecipeApiFinalString();
   }, [ingredients_list]);
+
+  // useEffect(() => {
+  //   if (!ingredientListEditMode) return;
+  //   if (mode === "edit") {
+  //     let recipeList = [];
+  //     const createRecipeApiFinalString = () => {
+  //       let recipe = {};
+  //       ingredientListEditMode?.map((elem) => {
+  //         recipe = { ingredientId: elem.ingredientId._id };
+  //         if (elem.selectedPortion) {
+  //           let measurement = {};
+  //           let customObj = {};
+  //           customObj = {
+  //             weightInGram: elem?.selectedPortion?.gram,
+  //             selectedPortionName: elem?.selectedPortion?.name,
+  //           };
+  //           measurement = { ...measurement, ...customObj };
+  //           recipe = { ...recipe, ...measurement };
+  //         }
+  //         recipeList = [...recipeList, recipe];
+  //         console.log(recipeList)
+  //         setRecipeApi(recipeList);
+  //       });
+  //     };
+  //     createRecipeApiFinalString();
+  //   }
+  // }, [ingredientListEditMode]);
 
   const adjusterFunc = (task) => {
     if (servings_number <= 0 && task == "-") {
@@ -176,7 +203,7 @@ const IngredientList = ({
       if (editMode === true) {
         dispatch(
           setHowToSteps(
-            howToState?.map((elem) => {
+            howToState.map((elem) => {
               if (elem.id === selectedElementId) {
                 return { ...elem, step: inputValue };
               }

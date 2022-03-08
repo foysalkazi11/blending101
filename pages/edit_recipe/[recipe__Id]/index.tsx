@@ -9,14 +9,11 @@ import { useAppSelector } from "../../../redux/hooks";
 
 const EditRecipe = () => {
   const router = useRouter();
-  const { recipe__Id } = router.query;
-  const ingredients_list = useAppSelector(
-    (state) => state?.quantityAdjuster?.ingredientsList
-  );
-  const [
-    getBlendNutritionBasedOnRecipe,
-    { loading: gettingNutritionData, data: nutritionData },
-  ] = useLazyQuery(GET_EDIT_RECIPE_NUTRITION(ingredients_list));
+  const { recipe__Id } = router?.query;
+  useEffect(() => {
+    getARecipe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recipe__Id]);
 
   const [getARecipe, { loading: gettingRecipe, data: recipeData }] = useLazyQuery(
     GET_RECIPE,
@@ -25,24 +22,21 @@ const EditRecipe = () => {
       variables: { recipeId: recipe__Id },
     }
   );
+
   useEffect(() => {
-    getBlendNutritionBasedOnRecipe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nutritionData]);
-  useEffect(() => {
-    getARecipe();
+    if (!recipeData) return;
+    // console.log(recipeData);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recipeData]);
 
-  recipeData && console.log(recipeData);
   return (
     <div>
       <EditRecipePage
-        mode={"edit"}
-        recipeData={recipeData && recipeData?.getARecipe}
-        nutritionData={
-          nutritionData && JSON.parse(nutritionData?.getBlendNutritionBasedOnRecipe)
-        }
+        // mode={"edit"}
+        recipeName={recipeData && recipeData?.getARecipe?.name}
+        // nutritionData={
+        //   nutritionData && JSON.parse(nutritionData?.getBlendNutritionBasedOnRecipe)
+        // }
       />
     </div>
   );

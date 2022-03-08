@@ -150,12 +150,15 @@
     overflow: hidden;
     display: flex !important;
     justify-content: center;
+    border-right: 9.5px solid #ececec;
+    border-left: 9.5px solid #ececec;
     align-items: center;
     svg{
       font-size: 34px;
       animation: mymove 1s infinite;
       color: #5f9c1e;
     }
+
 
     img {
       width: 100%;

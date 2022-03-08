@@ -260,50 +260,7 @@ const recursiveData = (data) => {
 };
 
 const RightTray = ({ nutritionData }) => {
-  // let nestedAccordianSkeleton = recursiveData(nutritionData);
-  // const nutritionState = useAppSelector((state) => state.quantityAdjuster.nutritionState);
-  // const [NutritionStateTemp, SetNutritionStateTemp] = useState("");
-
-  // const [
-  //   filterIngredientByCategoryAndClass,
-  //   { loading: searchInProcess, data: searchElement },
-  // ] = useLazyQuery(
-  //   NUTRITION_BASED_RECIPE(`[
-  // ${NutritionStateTemp}
-  // ]`),
-  //   {
-  //     fetchPolicy: "network-only",
-  //     //   variables: { classType: "All"
-  //     // },
-  //   }
-  // );
-
-  // const fetchSearchResults = async () => {
-  //   await filterIngredientByCategoryAndClass();
-
-  //   let Calories = "";
-
-  //   searchElement?.getNutritionBasedOnRecipe.map((elem) => {
-  //     let nutritionArgument = {
-  //       ingredientId: elem.uniqueNutrientRefference._id,
-  //       value: elem.value,
-  //     };
-
-  //     let nutritionArguentString =
-  //       `{` +
-  //       `ingredientId:${nutritionArgument.ingredientId}` +
-  //       `,` +
-  //       `value:${nutritionArgument.value}` +
-  //       `}`;
-
-  //     Calories = Calories + JSON.stringify(nutritionArguentString);
-  //   });
-  //   SetNutritionStateTemp(Calories);
-  // };
-
-  // useEffect(() => {
-  //   fetchSearchResults();
-  // }, [nutritionState]);
+  let nestedAccordianSkeleton = recursiveData(nutritionData);
 
   return (
     <div>
@@ -311,20 +268,20 @@ const RightTray = ({ nutritionData }) => {
       <div className={styles.right}>
         <div className={styles.right__title}>Nutrition</div>
         <div className={styles.right__sub_heading}>Amount Per Servings Calories</div>
-        {/* <div className={styles.compoent__box__nutrition}>
+        <div className={styles.compoent__box__nutrition}>
           {nutritionData && (
             <UpdatedRecursiveAccordian dataObject={nestedAccordianSkeleton} />
           )}
-        </div> */}
+        </div>
       </div>
       <div className={styles.right}>
         <div className={styles.right__title}>Health</div>
         <div className={styles.right__sub_heading}>Disease, Condition and Systems</div>
-        {/* <div className={styles.compoent__box} style={{}}>
+        <div className={styles.compoent__box} style={{}}>
           {healthList.map(({ name, percent }: PassingProps, index) => {
             return <LinearComponent name={name} percent={percent} key={index} />;
           })}
-        </div> */}
+        </div>
       </div>
     </div>
   );
