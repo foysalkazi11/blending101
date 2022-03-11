@@ -119,13 +119,12 @@ const AddRecipePage = ({ nutritionData, recipeData, mode }: editRecipe) => {
             Ingredient List
           </div>
           <div className={styles.left__ingredientlistTray}>
-            <Left_tray_recipe_edit recipeData={recipeData} mode={mode} />
+            <Left_tray_recipe_edit recipeData={recipeData} />
           </div>
         </div>
         <div className={styles.center}>
           <Center_header />
           <Center_Elements
-            mode={mode}
             blendCategoryList={blendCategory}
             setDropDownState={setSelectedBlendValueState}
             selectedBlendValueState={selectedBlendValueState}
@@ -135,7 +134,6 @@ const AddRecipePage = ({ nutritionData, recipeData, mode }: editRecipe) => {
             recipeBlendCategoryEditMode={recipeData?.recipeBlendCategory?.name}
           />
           <IngredientList
-            mode={mode}
             howToStepsEditMode={recipeData?.recipeInstructions}
             ingredientListEditMode={recipeData?.ingredients}
             blendCategory={blendCategory}
