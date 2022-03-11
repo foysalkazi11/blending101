@@ -119,7 +119,7 @@ const AddRecipePage = ({ nutritionData, recipeData, mode }: editRecipe) => {
             Ingredient List
           </div>
           <div className={styles.left__ingredientlistTray}>
-            <Left_tray_recipe_edit recipeData={recipeData} mode={mode}/>
+            <Left_tray_recipe_edit recipeData={recipeData} mode={mode} />
           </div>
         </div>
         <div className={styles.center}>
@@ -134,7 +134,6 @@ const AddRecipePage = ({ nutritionData, recipeData, mode }: editRecipe) => {
             recipeTitle={recipeData?.name}
             recipeBlendCategoryEditMode={recipeData?.recipeBlendCategory?.name}
           />
-
           <IngredientList
             mode={mode}
             howToStepsEditMode={recipeData?.recipeInstructions}

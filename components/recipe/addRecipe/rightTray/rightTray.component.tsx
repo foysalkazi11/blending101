@@ -32,17 +32,16 @@ const recursiveData = (data) => {
         Unit: energy?.childs?.fats?.blendNutrientRefference?.units,
         children: {},
       },
-      Carbohydrates: {
+      "Carbohydrates": {
         value: energy?.childs?.carbohydrates?.value,
         Unit: energy?.childs?.carbohydrates?.blendNutrientRefference?.units,
         children: {
           "Dietary Fiber": {
             value: energy?.childs?.carbohydrates?.dietryFibre?.value,
-            Unit: energy?.childs?.carbohydrates?.dietryFibre.blendNutrientRefference
-              ?.units,
+            Unit: energy?.childs?.carbohydrates?.dietryFibre.blendNutrientRefference?.units,
             children: {},
           },
-          Sugars: {
+          "Sugars": {
             value: energy?.childs?.carbohydrates?.sugars?.value,
             Unit: energy?.childs?.carbohydrates?.sugars?.blendNutrientRefference?.units,
             children: {
@@ -269,9 +268,7 @@ const RightTray = ({ nutritionData }) => {
         <div className={styles.right__title}>Nutrition</div>
         <div className={styles.right__sub_heading}>Amount Per Servings Calories</div>
         <div className={styles.compoent__box__nutrition}>
-          {nutritionData && (
-            <UpdatedRecursiveAccordian dataObject={nestedAccordianSkeleton} />
-          )}
+          {nutritionData && <UpdatedRecursiveAccordian dataObject={nestedAccordianSkeleton} />}
         </div>
       </div>
       <div className={styles.right}>

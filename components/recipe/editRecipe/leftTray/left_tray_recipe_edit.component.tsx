@@ -13,42 +13,22 @@ import { filterRankingList } from "./left_tray_recipe_edit_list";
 import Image from "next/image";
 import { useLazyQuery } from "@apollo/client";
 import { INGREDIENTS_BY_CATEGORY_AND_CLASS } from "../../../../gqlLib/recipes/queries/getEditRecipe";
+import { setSelectedIngredientsList } from "../../../../redux/edit_recipe/editRecipeStates";
 
 interface recipeData {
-  recipeData?: any;
-  mode?: string;
+  leftAllIngredientsList?: object[];
+  recipeIngredients?: object[];
 }
-const Left_tray_recipe_edit = ({ recipeData, mode }: recipeData) => {
+const Left_tray_recipe_edit = ({
+  leftAllIngredientsList,
+  recipeIngredients,
+}: recipeData) => {
   const [toggle, setToggle] = useState(1);
   const [dpd, setDpd] = useState({ title: "All", val: "all" });
   const [input, setinput] = useState("");
+  const [searchElemList, setSearchElemList] = useState([]);
+  const [searchElemListFilter, setSearchElemListFilter] = useState([]);
   const ingredients = filterRankingList;
-
-  const dispatch = useAppDispatch();
-
-  const ingredients_list = useAppSelector(
-    (state) => state.quantityAdjuster.ingredientsList
-  );
-
-  const handleIngredientClick = (ingredient) => {
-    let blendz = [];
-    let present = false;
-    ingredients_list?.forEach((blen) => {
-      if (blen === ingredient) {
-        present = true;
-      }
-    });
-    if (!present) {
-      blendz = [...ingredients_list, ingredient];
-    } else {
-      blendz = ingredients_list?.filter((blen) => {
-        return blen !== ingredient;
-      });
-    }
-
-    dispatch(setIngredientsToList(blendz));
-  };
-
   const categories = [
     { title: "All", val: "all" },
     { title: "Leafy", val: "leafy" },
@@ -57,9 +37,33 @@ const Left_tray_recipe_edit = ({ recipeData, mode }: recipeData) => {
     { title: "Frozed", val: "frozed" },
   ];
 
+  const dispatch = useAppDispatch();
+  const selectedIngredientsList = useAppSelector(
+    (state) => state.editRecipeReducer.selectedIngredientsList
+  );
+
+  // const handleIngredientClick = (ingredient) => {
+  //   let blendz = [];
+  //   let present = false;
+  //   selectedIngredientsList?.forEach((blen) => {
+  //     if (blen === ingredient) {
+  //       present = true;
+  //     }
+  //   });
+  //   if (!present) {
+  //     blendz = [...selectedIngredientsList, ingredient];
+  //   } else {
+  //     blendz = selectedIngredientsList?.filter((blen) => {
+  //       return blen !== ingredient;
+  //     });
+  //   }
+
+  //   dispatch(setSelectedIngredientsList(blendz));
+  // };
+
   const checkActive = (ingredient: string) => {
     let present = false;
-    ingredients_list?.forEach((blen) => {
+    selectedIngredientsList?.forEach((blen) => {
       //@ts-ignore
       if (blen.ingredientName === ingredient) {
         present = true;
@@ -67,9 +71,6 @@ const Left_tray_recipe_edit = ({ recipeData, mode }: recipeData) => {
     });
     return present;
   };
-
-  const [searchElemList, setSearchElemList] = useState([]);
-  const [searchElemListFilter, setSearchElemListFilter] = useState([]);
 
   const SearchResults = (value) => {
     setinput(value);
@@ -90,66 +91,56 @@ const Left_tray_recipe_edit = ({ recipeData, mode }: recipeData) => {
     }
   };
 
-  const [
-    filterIngredientByCategoryAndClass,
-    { loading: searchInProcess, data: searchElement },
-  ] = useLazyQuery(INGREDIENTS_BY_CATEGORY_AND_CLASS, {
-    fetchPolicy: "network-only",
-    variables: { classType: "All" },
-  });
-
-  const fetchSearchResults = async () => {
-    await filterIngredientByCategoryAndClass();
-    setSearchElemList(searchElement?.filterIngredientByCategoryAndClass);
-    setSearchElemListFilter(searchElement?.filterIngredientByCategoryAndClass);
-  };
-
   useEffect(() => {
-    if (!searchInProcess) {
-      fetchSearchResults();
-    }
-  }, [searchInProcess]);
+    if (!leftAllIngredientsList) return;
+    setSearchElemList(leftAllIngredientsList);
+    setSearchElemListFilter(leftAllIngredientsList);
+  }, [leftAllIngredientsList]);
 
-  useEffect(() => {
-    DropDown(dpd);
-  }, [dpd]);
+  // useEffect(() => {
+  //   DropDown(dpd);
+  // }, [dpd]);
 
-  useEffect(() => {
-    if (!recipeData) return;
+  // console.log(recipeIngredients);
 
-    let mode = "edit";
-    if (mode === "edit") {
-      console.log(recipeData);
-      let modifiedPortions = [];
+  // console.log(selectedIngredientsList);
 
-      recipeData.ingredients.map((item) => {
-        let selectedPortion = item.portions.filter((elem) => elem.default === true);
-        selectedPortion = selectedPortion[0];
-        console.log({ selectedPortion });
-        console.log(item);
-        modifiedPortions = [
-          ...modifiedPortions,
-          {
-            ...selectedPortion,
-            measurement: selectedPortion.name,
-            meausermentWeight: selectedPortion.gram,
-            default:selectedPortion.defa
-          },
-        ];
-      });
+  // useEffect(() => {
+  //   if (!recipeData) return;
 
-      const editingRecipe = {
-        category: recipeData?.recipeBlendCategory?.name,
-        description: recipeData?.description,
-        ingredientName: recipeData?.name,
-        images: recipeData?.image,
-        featuredImage: null,
-      };
-      console.log(editingRecipe);
-    }
+  //   let mode = "edit";
+  //   if (mode === "edit") {
+  //     console.log(recipeData);
+  //     let modifiedPortions = [];
 
-    console.log("object");
-  }, [recipeData]);
+  //     recipeData.ingredients.map((item) => {
+  //       let selectedPortion = item.portions.filter((elem) => elem.default === true);
+  //       selectedPortion = selectedPortion[0];
+  //       console.log({ selectedPortion });
+  //       console.log(item);
+  //       modifiedPortions = [
+  //         ...modifiedPortions,
+  //         {
+  //           ...selectedPortion,
+  //           measurement: selectedPortion.name,
+  //           meausermentWeight: selectedPortion.gram,
+  //           default:selectedPortion.defa
+  //         },
+  //       ];
+  //     });
+
+  //     const editingRecipe = {
+  //       category: recipeData?.recipeBlendCategory?.name,
+  //       description: recipeData?.description,
+  //       ingredientName: recipeData?.name,
+  //       images: recipeData?.image,
+  //       featuredImage: null,
+  //     };
+  //     console.log(editingRecipe);
+  //   }
+
+  //   console.log("object");
+  // }, [recipeData]);
 
   return (
     <div className={styles.left_main_container}>
@@ -196,9 +187,9 @@ const Left_tray_recipe_edit = ({ recipeData, mode }: recipeData) => {
                       searchElemListFilter?.map((item, i) => {
                         return (
                           <div
-                            key={item.ingredientId + item.ingredientName}
+                            key={item._id + item.ingredientName}
                             className={styles.filter__menu__item}
-                            onClick={() => handleIngredientClick(item)}
+                            // onClick={() => handleIngredientClick(item)}
                           >
                             <div className={styles.filter__menu__item__image}>
                               {item?.featuredImage !== null ? (

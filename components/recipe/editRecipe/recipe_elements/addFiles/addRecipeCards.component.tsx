@@ -36,7 +36,6 @@ const AddRecipeCard = ({ setImages }: AddRecipeCardProps) => {
       setImageListRaw(imageListRawArray);
     }
     dispatch(setUploadImageList(imageArray));
-
   };
 
   const renderPhotos = (source) => {

@@ -6,7 +6,7 @@ import styles from "./updatedAccordion.module.scss";
 
 type CustomAccordionProps = {
   title: string;
-  type: string;
+  type?: string;
   content?: any;
   children?: React.ReactNode;
   iconRight?: boolean;

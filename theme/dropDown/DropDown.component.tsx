@@ -3,7 +3,8 @@ import React, { useEffect } from "react";
 import styles from "./DropDown.module.scss";
 
 interface dropDown {
-  listElem: string[];
+  listElem?: string[];
+  ElemList?: object[];
   value?: string;
   handleChange?: (name: any, value: any) => void;
   name?: string;
@@ -16,16 +17,38 @@ const DropDown = ({
   listElem,
   style = {},
   value = "",
+  ElemList,
   handleChange = () => {},
   name = "dropdown",
   valueState = () => {},
   selectedBlendValueState,
 }: dropDown) => {
-
-
-
-
-  return (
+  return ElemList ? (
+    <div className={styles.formGroup}>
+      <select
+        name={name}
+        id="dropdown"
+        className={styles.customSelectbx}
+        style={{ backgroundImage: `url(/icons/dropdown.svg)`, ...style }}
+        onChange={(e) => {
+          valueState(e.target.value);
+        }}
+        value={selectedBlendValueState?.toLowerCase()}
+      >
+        {ElemList?.map((item, index) => {
+          return (
+            //@ts-ignore
+            <option value={item?.name} key={index}>
+              {
+                //@ts-ignore
+                item?.name
+              }
+            </option>
+          );
+        })}
+      </select>
+    </div>
+  ) : (
     <div className={styles.formGroup}>
       <select
         name={name}

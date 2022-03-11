@@ -1,17 +1,18 @@
 import { useLazyQuery } from "@apollo/client";
 import React, { useEffect } from "react";
 import AddRecipePage from "../components/recipe/addRecipe/AddRecipe.component";
-import { GET_EDIT_RECIPE_NUTRITION } from "../gqlLib/recipes/queries/getEditRecipe";
+import { GET_RECIPE_NUTRITION } from "../gqlLib/recipes/queries/getEditRecipe";
 import { useAppSelector } from "../redux/hooks";
 
 const EditRecipe = () => {
   const ingredients_list = useAppSelector(
     (state) => state.quantityAdjuster.ingredientsList
   );
+
   const [
     getBlendNutritionBasedOnRecipe,
     { loading: gettingNutritionData, data: nutritionData },
-  ] = useLazyQuery(GET_EDIT_RECIPE_NUTRITION(ingredients_list));
+  ] = useLazyQuery(GET_RECIPE_NUTRITION(ingredients_list));
 
   const fetchRecipe = () => {
     getBlendNutritionBasedOnRecipe();

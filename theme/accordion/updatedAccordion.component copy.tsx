@@ -16,7 +16,7 @@ const UpdatedCustomAccordion = ({ title, content, type }: CustomAccordionProps) 
           return (
             <div>
               {/* @ts-ignore */}
-              <AccordComponent title={itm[0]}>
+              <AccordComponent title={itm[0]} value="3" unit="Mg" percentage="20%">
                 {
                   //@ts-ignore
                   populateAccordian(itm[1].children, false)
@@ -26,9 +26,9 @@ const UpdatedCustomAccordion = ({ title, content, type }: CustomAccordionProps) 
           );
         } else {
           return (
-            <div style={{ marginLeft: "28px" }}>
+            <div style={{ marginLeft: "18px" }}>
               {/* @ts-ignore */}
-              <AccordComponent title={itm[0]}>
+              <AccordComponent title={itm[0]} value={itm[1].value} unit={itm[1].Unit} percentage={20 + "%"}>
                 {
                   //@ts-ignore
                   populateAccordian(itm[1].children, false)
@@ -41,18 +41,35 @@ const UpdatedCustomAccordion = ({ title, content, type }: CustomAccordionProps) 
         //@ts-ignore
         if (itm[1].Unit && itm[1].value && Number(itm[1].value) > 0) {
           //@ts-ignore
-          return (
-            //@ts-ignore
-            <AccordComponent
-              title={itm[0]}
-              plusMinusIcon={false}
+
+          if (firstChild === true) {
+            return (
               //@ts-ignore
-              value={itm[1].value}
-              //@ts-ignore
-              unit={itm[1].Unit}
-              percentage={20 + "%"}
-            />
-          );
+              <AccordComponent
+                title={itm[0]}
+                plusMinusIcon={false}
+                //@ts-ignore
+                value={itm[1].value}
+                //@ts-ignore
+                unit={itm[1].Unit}
+                percentage={20 + "%"}
+              />
+            );
+          }else{
+            return(
+              <div style={{marginLeft:"18px"}}>
+              <AccordComponent
+                title={itm[0]}
+                plusMinusIcon={false}
+                //@ts-ignore
+                value={itm[1].value}
+                //@ts-ignore
+                unit={itm[1].Unit}
+                percentage={20 + "%"}
+              />
+            </div>
+            )
+          }
         }
       }
     });

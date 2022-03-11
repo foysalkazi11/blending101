@@ -17,9 +17,23 @@ import { useLazyQuery } from "@apollo/client";
 
 interface editRecipe {
   recipeName: string;
+  allBlendCategories: object[];
+  leftAllIngredientsList: object[];
+  recipeIngredients:object[]
+  recipeInstructions:[];
+  nutritionTrayData:object;
+  recipeImages:[];
 }
 
-const EditRecipePage = ({ recipeName }: editRecipe) => {
+const EditRecipePage = ({
+  recipeName,
+  allBlendCategories,
+  leftAllIngredientsList,
+  recipeIngredients,
+  recipeInstructions,
+  nutritionTrayData,
+  recipeImages
+}: editRecipe) => {
   const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
   const [images, setImages] = useState<any[]>([]);
   const [uploadUrl, setUploadUrl] = useState([]);
@@ -27,10 +41,6 @@ const EditRecipePage = ({ recipeName }: editRecipe) => {
   const [selectedBlendValueState, setSelectedBlendValueState] = useState(null);
   const [editRecipeHeading, setEditRecipeHeading] = useState("");
   const dispatch = useAppDispatch();
-
-  recipeName && console.log(recipeName)
-
-
   // const handleSubmitData = async () => {
   //   dispatch(setLoading(true));
   //   let res: any;
@@ -65,7 +75,6 @@ const EditRecipePage = ({ recipeName }: editRecipe) => {
   //     fetchAllBlendCategories();
   //   }
   // }, [blendCategoriesInProgress]);
-
   return (
     <AContainer>
       <div className={styles.main}>
@@ -106,35 +115,40 @@ const EditRecipePage = ({ recipeName }: editRecipe) => {
             Ingredient List
           </div>
           <div className={styles.left__ingredientlistTray}>
-            {/* <Left_tray_recipe_edit recipeData={recipeData} mode={mode}/> */}
+            <Left_tray_recipe_edit recipeIngredients={recipeIngredients} leftAllIngredientsList={leftAllIngredientsList}/>
           </div>
         </div>
         <div className={styles.center}>
           <Center_header />
-          {/* <Center_Elements
-            mode={mode}
-            blendCategoryList={blendCategory}
-            setDropDownState={setSelectedBlendValueState}
-            selectedBlendValueState={selectedBlendValueState}
-            setImages={setImages}
-            setEditRecipeHeading={setEditRecipeHeading}
-            recipeTitle={recipeData?.name}
-            recipeBlendCategoryEditMode={recipeData?.recipeBlendCategory?.name}
-          /> */}
+          <Center_Elements
+            recipeName={recipeName}
+            allBlendCategories={allBlendCategories}
+            recipeImages={recipeImages}
+            // mode={mode}
+            // blendCategoryList={blendCategory}
+            // setDropDownState={setSelectedBlendValueState}
+            // selectedBlendValueState={selectedBlendValueState}
+            // setImages={setImages}
+            // setEditRecipeHeading={setEditRecipeHeading}
+            // recipeTitle={recipeData?.name}
+            // recipeBlendCategoryEditMode={recipeData?.recipeBlendCategory?.name}
+          />
 
-          {/* <IngredientList
-            mode={mode}
-            howToStepsEditMode={recipeData?.recipeInstructions}
-            ingredientListEditMode={recipeData?.ingredients}
-            blendCategory={blendCategory}
-            selectedBlendValueState={selectedBlendValueState}
-            handleSubmitData={handleSubmitData}
-            uploadedImagesUrl={uploadUrl}
-            editRecipeHeading={editRecipeHeading}
-          /> */}
+          <IngredientList
+          recipeIngredients={recipeIngredients}
+          recipeInstructions={recipeInstructions}
+            // mode={mode}
+            // howToStepsEditMode={recipeData?.recipeInstructions}
+            // ingredientListEditMode={recipeData?.ingredients}
+            // blendCategory={blendCategory}
+            // selectedBlendValueState={selectedBlendValueState}
+            // handleSubmitData={handleSubmitData}
+            // uploadedImagesUrl={uploadUrl}
+            // editRecipeHeading={editRecipeHeading}
+          />
         </div>
         <div className={styles.right__main}>
-          {/* <RightTray nutritionData={nutritionData} /> */}
+          <RightTray nutritionData={nutritionTrayData} />
         </div>
       </div>
       <div className={styles.footerMainDiv}>

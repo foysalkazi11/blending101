@@ -70,11 +70,12 @@ export const BLEND_CATEGORY = gql`
 
 // ${itm.selectedPortion.gram}
 
-export const GET_EDIT_RECIPE_NUTRITION = (ingredients) => {
+export const GET_RECIPE_NUTRITION = (ingredients) => {
+  console.log(ingredients);
   const convertArrToString = (arr) => {
     arr = arr?.map((itm) => {
-      let value=itm.portions?.filter((item)=>item.default===true);
-      value=value[0].meausermentWeight;
+      let value = itm?.portions?.filter((item) => item.default === true);
+      value = value[0].meausermentWeight;
       return `
             {
               ingredientId: "${itm?._id}",
@@ -87,9 +88,28 @@ export const GET_EDIT_RECIPE_NUTRITION = (ingredients) => {
   };
   return gql`
   query {
-    getBlendNutritionBasedOnRecipe(ingredientsInfo: ${convertArrToString(
-      ingredients
-    )})
+    getBlendNutritionBasedOnRecipe(ingredientsInfo: ${convertArrToString(ingredients)})
+  }
+  `;
+};
+export const GET_RECIPE_NUTRITION_EDITRECIPE = (ingredients) => {
+  const convertArrToString = (arr) => {
+    arr = arr?.map((itm) => {
+      let value = itm?.portions?.filter((item) => item.default === true);
+      value = value[0].meausermentWeight;
+      return `
+             {
+               ingredientId: "${itm?._id}",
+               value: ${value}
+             }
+           `;
+    });
+    arr = `[${arr?.toString()}]`;
+    return arr;
+  };
+  return gql`
+  query {
+    getBlendNutritionBasedOnRecipe(ingredientsInfo: ${convertArrToString(ingredients)})
   }
   `;
 };
