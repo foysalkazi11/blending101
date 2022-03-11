@@ -5,15 +5,11 @@ import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { setOpenFilterTray } from "../../redux/slices/sideTraySlice";
 
 interface leftTrayInterface {
-  filter?: false;
   children: any;
-  id: string;
 }
 
 export default function FilterTrayWrapper({
   children,
-  filter,
-  id,
 }: leftTrayInterface) {
   const { openFilterTray } = useAppSelector((state) => state?.sideTray);
   const dispatch = useAppDispatch();

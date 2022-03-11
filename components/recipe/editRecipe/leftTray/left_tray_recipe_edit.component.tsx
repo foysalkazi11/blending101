@@ -11,10 +11,6 @@ import SwitchTwoComponent from "../../../../theme/switch/switchTwo.component";
 import styles from "./left_tray_recipe_edit.module.scss";
 import { filterRankingList } from "./left_tray_recipe_edit_list";
 import Image from "next/image";
-import { useLazyQuery } from "@apollo/client";
-import { INGREDIENTS_BY_CATEGORY_AND_CLASS } from "../../../../gqlLib/recipes/queries/getEditRecipe";
-import { setSelectedIngredientsList } from "../../../../redux/edit_recipe/editRecipeStates";
-
 interface recipeData {
   leftAllIngredientsList?: object[];
   recipeIngredients?: object[];
