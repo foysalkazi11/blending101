@@ -251,9 +251,6 @@ const Center = ({
         <div className={styles.ingredentDisContainer}>
           {recipeDetails?.ingredients &&
             recipeDetails?.ingredients?.map((ingredient, index) => {
-              console.log(ingredient);
-              // console.log(nutritionState && nutritionState[0]);
-              console.log(singleElement);
               return (
                 <div
                   className={styles.singleIngredent}
@@ -281,17 +278,44 @@ const Center = ({
                       )}
                     </div>
                   </div>
-                  <div className={styles.iconGroup}>
-                    <MdOutlineInfo className={styles.icon} />
-                    <BiBarChart
-                      className={styles.icon}
-                      onClick={() => {
-                        setsingleElement(true);
-                        setNutritionState([ingredient]);
-                      }}
-                    />
-                    <BsCartPlus className={styles.icon} />
-                  </div>
+                  {ingredient?.ingredientId?._id ===
+                    nutritionState[0].ingredientId?._id &&
+                  singleElement === true ? (
+                    <div
+                      className={styles.iconGroup}
+                      style={{ display: "flex" }}
+                    >
+                      <MdOutlineInfo className={styles.icon} />
+
+                      <BiBarChart
+                        style={{ color: "#fe5d1f" }}
+                        className={styles.icon}
+                        onClick={() => {
+                          setsingleElement(true);
+                          setNutritionState([ingredient]);
+                        }}
+                      />
+
+                      <BsCartPlus className={styles.icon} />
+                    </div>
+                  ) : (
+                    <div
+                      className={styles.iconGroup}
+                      style={{ display: "none" }}
+                    >
+                      <MdOutlineInfo className={styles.icon} />
+
+                      <BiBarChart
+                        className={styles.icon}
+                        onClick={() => {
+                          setsingleElement(true);
+                          setNutritionState([ingredient]);
+                        }}
+                      />
+
+                      <BsCartPlus className={styles.icon} />
+                    </div>
+                  )}
                 </div>
               );
             })}
