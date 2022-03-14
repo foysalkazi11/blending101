@@ -1,0 +1,16 @@
+.bar{
+    width: 100%;
+}
+.bar ul{
+    list-style: none;
+    li{
+        padding: 10px;
+        border-bottom: 1px solid gray;
+        font-size: 13px;
+
+        &:hover{
+            color: teal;
+            cursor: pointer;
+        }
+    }
+}
