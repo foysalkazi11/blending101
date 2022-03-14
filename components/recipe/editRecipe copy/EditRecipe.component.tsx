@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import AContainer from "../../../containers/A.container";
-import styles from "./AddRecipe.module.scss";
+import styles from "./EditRecipe.module.scss";
 import Center_header from "./header/centerHeader/Center_header.component";
 import RightTray from "./rightTray/rightTray.component";
 import Left_tray_recipe_edit from "./leftTray/left_tray_recipe_edit.component";
@@ -16,12 +16,24 @@ import { BLEND_CATEGORY } from "../../../gqlLib/recipes/queries/getEditRecipe";
 import { useLazyQuery } from "@apollo/client";
 
 interface editRecipe {
-  nutritionData: any;
-  recipeData?: any;
-  mode?: "edit" | "add";
+  recipeName: string;
+  allBlendCategories: object[];
+  leftAllIngredientsList: object[];
+  recipeIngredients:object[]
+  recipeInstructions:[];
+  nutritionTrayData:object;
+  recipeImages:[];
 }
 
-const AddRecipePage = ({ nutritionData, recipeData, mode }: editRecipe) => {
+const EditRecipePage = ({
+  recipeName,
+  allBlendCategories,
+  leftAllIngredientsList,
+  recipeIngredients,
+  recipeInstructions,
+  nutritionTrayData,
+  recipeImages
+}: editRecipe) => {
   const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
   const [images, setImages] = useState<any[]>([]);
   const [uploadUrl, setUploadUrl] = useState([]);
@@ -29,55 +41,47 @@ const AddRecipePage = ({ nutritionData, recipeData, mode }: editRecipe) => {
   const [selectedBlendValueState, setSelectedBlendValueState] = useState(null);
   const [editRecipeHeading, setEditRecipeHeading] = useState("");
   const dispatch = useAppDispatch();
+  // const handleSubmitData = async () => {
+  //   dispatch(setLoading(true));
+  //   let res: any;
+  //   try {
+  //     if (images?.length) {
+  //       res = await imageUploadS3(images);
+  //       setUploadUrl(res);
+  //     }
+  //     dispatch(setLoading(false));
+  //   } catch (error) {
+  //     dispatch(setLoading(false));
+  //   }
+  //   if (res) {
+  //     return res;
+  //   } else console.log({ res: "something went wrong in image uploading" });
+  // };
 
-  const handleSubmitData = async () => {
-    dispatch(setLoading(true));
-    let res: any;
-    try {
-      if (images?.length) {
-        res = await imageUploadS3(images);
-        setUploadUrl(res);
-      }
-      dispatch(setLoading(false));
-    } catch (error) {
-      dispatch(setLoading(false));
-    }
-    if (res) {
-      return res;
-    } else console.log({ res: "something went wrong in image uploading" });
-  };
+  // const [
+  //   getAllCategories,
+  //   { loading: blendCategoriesInProgress, data: blendCategoriesData },
+  // ] = useLazyQuery(BLEND_CATEGORY, {
+  //   fetchPolicy: "network-only",
+  // });
 
-  const [getAllCategories, { loading: blendCategoriesInProgress, data: blendCategoriesData }] =
-    useLazyQuery(BLEND_CATEGORY, {
-      fetchPolicy: "network-only",
-    });
+  // const fetchAllBlendCategories = async () => {
+  //   await getAllCategories();
+  //   setblendCategory(blendCategoriesData?.getAllCategories);
+  // };
 
-  const fetchAllBlendCategories = async () => {
-    await getAllCategories();
-    setblendCategory(blendCategoriesData?.getAllCategories);
-  };
-
-  useEffect(() => {
-    setSelectedBlendValueState(blendCategory[0]?.name?.toLowerCase());
-  }, [blendCategoriesData]);
-  useEffect(() => {
-    setEditRecipeHeading(recipeData?.name);
-  }, [recipeData]);
-
-  useEffect(() => {
-    if (!blendCategoriesInProgress) {
-      fetchAllBlendCategories();
-    }
-  }, [blendCategoriesInProgress]);
-
-  useEffect(() => {
-    console.log(selectedBlendValueState);
-  }, [selectedBlendValueState]);
-
+  // useEffect(() => {
+  //   if (!blendCategoriesInProgress) {
+  //     fetchAllBlendCategories();
+  //   }
+  // }, [blendCategoriesInProgress]);
   return (
     <AContainer>
       <div className={styles.main}>
-        <div className={styles.left} style={leftTrayVisibleState ? { marginLeft: "0px" } : {}}>
+        <div
+          className={styles.left}
+          style={leftTrayVisibleState ? { marginLeft: "0px" } : {}}
+        >
           <div
             className={styles.left__Drag__lightGreen}
             style={
@@ -111,32 +115,40 @@ const AddRecipePage = ({ nutritionData, recipeData, mode }: editRecipe) => {
             Ingredient List
           </div>
           <div className={styles.left__ingredientlistTray}>
-            <Left_tray_recipe_edit recipeData={recipeData} />
+            <Left_tray_recipe_edit recipeIngredients={recipeIngredients} leftAllIngredientsList={leftAllIngredientsList}/>
           </div>
         </div>
         <div className={styles.center}>
           <Center_header />
           <Center_Elements
-            blendCategoryList={blendCategory}
-            setDropDownState={setSelectedBlendValueState}
-            selectedBlendValueState={selectedBlendValueState}
-            setImages={setImages}
-            setEditRecipeHeading={setEditRecipeHeading}
-            recipeTitle={recipeData?.name}
-            recipeBlendCategoryEditMode={recipeData?.recipeBlendCategory?.name}
+            recipeName={recipeName}
+            allBlendCategories={allBlendCategories}
+            recipeImages={recipeImages}
+            // mode={mode}
+            // blendCategoryList={blendCategory}
+            // setDropDownState={setSelectedBlendValueState}
+            // selectedBlendValueState={selectedBlendValueState}
+            // setImages={setImages}
+            // setEditRecipeHeading={setEditRecipeHeading}
+            // recipeTitle={recipeData?.name}
+            // recipeBlendCategoryEditMode={recipeData?.recipeBlendCategory?.name}
           />
+
           <IngredientList
-            howToStepsEditMode={recipeData?.recipeInstructions}
-            ingredientListEditMode={recipeData?.ingredients}
-            blendCategory={blendCategory}
-            selectedBlendValueState={selectedBlendValueState}
-            handleSubmitData={handleSubmitData}
-            uploadedImagesUrl={uploadUrl}
-            editRecipeHeading={editRecipeHeading}
+          recipeIngredients={recipeIngredients}
+          recipeInstructions={recipeInstructions}
+            // mode={mode}
+            // howToStepsEditMode={recipeData?.recipeInstructions}
+            // ingredientListEditMode={recipeData?.ingredients}
+            // blendCategory={blendCategory}
+            // selectedBlendValueState={selectedBlendValueState}
+            // handleSubmitData={handleSubmitData}
+            // uploadedImagesUrl={uploadUrl}
+            // editRecipeHeading={editRecipeHeading}
           />
         </div>
         <div className={styles.right__main}>
-          <RightTray nutritionData={nutritionData} />
+          <RightTray nutritionData={nutritionTrayData} />
         </div>
       </div>
       <div className={styles.footerMainDiv}>
@@ -145,4 +157,4 @@ const AddRecipePage = ({ nutritionData, recipeData, mode }: editRecipe) => {
     </AContainer>
   );
 };
-export default AddRecipePage;
+export default EditRecipePage;

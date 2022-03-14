@@ -1,0 +1,51 @@
+$element_space:5px;
+$file_upload_width_height:100px;
+
+@mixin imageAdd {
+    cursor: pointer;
+    margin: $element_space;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px dashed #e2dfdfe7;
+    border-radius: 12px;
+    width: $file_upload_width_height;
+    height: $file_upload_width_height;
+}
+
+.addImage {
+    min-height: 66px;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 32px;
+    padding: $element_space;
+
+    &__secondDiv {
+        @include imageAdd();
+
+        & svg {
+            cursor: pointer;
+            font-size: 35px;
+            color: #e2dfdfe7;
+            transform: scale(1.20);
+        }
+    }
+}
+
+.image__div {
+    position: relative;
+    overflow: hidden;
+    @include imageAdd();
+    span{
+        z-index: 1;
+        position: absolute;
+        right: -5px;
+        top: -5px;
+        transform: scale(0.8);
+
+        svg{
+            cursor: pointer;
+            color:red ;
+        }
+    }
+}
