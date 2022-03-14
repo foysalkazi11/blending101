@@ -44,7 +44,6 @@ const Index = () => {
     getBlendNutritionBasedOnRecipe();
   };
 
-  console.log(recipeData?.getARecipe?.ingredients);
   return (
     <RecipeDetails
       recipeData={recipeData && recipeData?.getARecipe}
