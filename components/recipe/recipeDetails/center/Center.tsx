@@ -278,7 +278,7 @@ const Center = ({
                       )}
                     </div>
                   </div>
-                  {ingredient?.ingredientId?._id ===
+                  {nutritionState && ingredient?.ingredientId?._id ===
                     nutritionState[0].ingredientId?._id &&
                   singleElement === true ? (
                     <div
