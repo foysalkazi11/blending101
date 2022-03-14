@@ -299,10 +299,7 @@ const Center = ({
                       <BsCartPlus className={styles.icon} />
                     </div>
                   ) : (
-                    <div
-                      className={styles.iconGroup}
-                      style={{ display: "none" }}
-                    >
+                    <div className={styles.iconGroup}>
                       <MdOutlineInfo className={styles.icon} />
 
                       <BiBarChart
