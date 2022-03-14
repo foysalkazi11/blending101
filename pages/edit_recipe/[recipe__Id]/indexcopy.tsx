@@ -1,20 +1,20 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useLazyQuery } from "@apollo/client";
-import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
-import EditRecipePage from "../../../components/recipe/editRecipe/EditRecipe.component";
-import {
-  BLEND_CATEGORY,
-  GET_RECIPE_NUTRITION_EDITRECIPE,
-  INGREDIENTS_BY_CATEGORY_AND_CLASS,
-} from "../../../gqlLib/recipes/queries/getEditRecipe";
-import { GET_RECIPE } from "../../../gqlLib/recipes/queries/getRecipeDetails";
-import {
-  setAllIngredientListBasedOnClass,
-  setEditRecipeName,
-  setSelectedIngredientsList,
-} from "../../../redux/edit_recipe/editRecipeStates";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+// /* eslint-disable react-hooks/exhaustive-deps */
+// import { useLazyQuery } from "@apollo/client";
+// import { useRouter } from "next/router";
+// import React, { useEffect, useState } from "react";
+// import EditRecipePage from "../../../components/recipe/editRecipe/EditRecipe.component";
+// import {
+//   BLEND_CATEGORY,
+//   GET_RECIPE_NUTRITION_EDITRECIPE,
+//   INGREDIENTS_BY_CATEGORY_AND_CLASS,
+// } from "../../../gqlLib/recipes/queries/getEditRecipe";
+// import { GET_RECIPE } from "../../../gqlLib/recipes/queries/getRecipeDetails";
+// import {
+//   setAllIngredientListBasedOnClass,
+//   setEditRecipeName,
+//   setSelectedIngredientsList,
+// } from "../../../redux/edit_recipe/editRecipeStates";
+// import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 
 const EditRecipe = () => {
   // const [recipeData, setRecipeData] = useState(null);
@@ -52,10 +52,10 @@ const EditRecipe = () => {
   //   variables: { classType: "All" },
   // });
 
-  const [
-    getBlendNutritionBasedOnRecipe,
-    { loading: gettingNutritionData, data: nutritionData },
-  ] = useLazyQuery(GET_RECIPE_NUTRITION_EDITRECIPE(ingredientsPortionArrayForNutrition));
+  // const [
+  //   getBlendNutritionBasedOnRecipe,
+  //   { loading: gettingNutritionData, data: nutritionData },
+  // ] = useLazyQuery(GET_RECIPE_NUTRITION_EDITRECIPE(ingredientsPortionArrayForNutrition));
 
   // useEffect(() => {
   //   getARecipe();

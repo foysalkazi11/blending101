@@ -13,7 +13,7 @@ import { filterRankingList } from "./left_tray_recipe_edit_list";
 import Image from "next/image";
 import { useLazyQuery } from "@apollo/client";
 import { INGREDIENTS_BY_CATEGORY_AND_CLASS } from "../../../../gqlLib/recipes/queries/getEditRecipe";
-import { setSelectedIngredientsList } from "../../../../redux/edit_recipe/editRecipeStates";
+// import { setSelectedIngredientsList } from "../../../../redux/edit_recipe/editRecipeStates";
 
 interface recipeData {
   leftAllIngredientsList?: object[];
@@ -38,9 +38,9 @@ const Left_tray_recipe_edit = ({
   ];
 
   const dispatch = useAppDispatch();
-  const selectedIngredientsList = useAppSelector(
-    (state) => state.editRecipeReducer.selectedIngredientsList
-  );
+  // const selectedIngredientsList = useAppSelector(
+  //   (state) => state.editRecipeReducer.selectedIngredientsList
+  // );
 
   // const handleIngredientClick = (ingredient) => {
   //   let blendz = [];
@@ -61,16 +61,16 @@ const Left_tray_recipe_edit = ({
   //   dispatch(setSelectedIngredientsList(blendz));
   // };
 
-  const checkActive = (ingredient: string) => {
-    let present = false;
-    selectedIngredientsList?.forEach((blen) => {
-      //@ts-ignore
-      if (blen.ingredientName === ingredient) {
-        present = true;
-      }
-    });
-    return present;
-  };
+  // const checkActive = (ingredient: string) => {
+  //   let present = false;
+  //   selectedIngredientsList?.forEach((blen) => {
+  //     //@ts-ignore
+  //     if (blen.ingredientName === ingredient) {
+  //       present = true;
+  //     }
+  //   });
+  //   return present;
+  // };
 
   const SearchResults = (value) => {
     setinput(value);
@@ -197,11 +197,11 @@ const Left_tray_recipe_edit = ({
                               ) : (
                                 <img src="/food/Dandelion.png" alt={""} />
                               )}
-                              {checkActive(item?.ingredientName) && (
+                              {/* {checkActive(item?.ingredientName) && (
                                 <div className={styles.tick}>
                                   <CheckCircle className={styles.ticked} />
                                 </div>
-                              )}
+                              )} */}
                             </div>
                             <p>{item?.ingredientName}</p>
                           </div>

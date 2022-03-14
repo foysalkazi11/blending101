@@ -13,7 +13,7 @@ import { filterRankingList } from "./left_tray_recipe_edit_list";
 import Image from "next/image";
 import { useLazyQuery } from "@apollo/client";
 import { INGREDIENTS_BY_CATEGORY_AND_CLASS } from "../../../../gqlLib/recipes/queries/getEditRecipe";
-import { setSelectedIngredientsList } from "../../../../redux/edit_recipe/editRecipeStates";
+// import { setSelectedIngredientsList } from "../../../../redux/edit_recipe/editRecipeStates";
 
 interface recipeData {
   leftAllIngredientsList?: object[];
@@ -38,9 +38,9 @@ const Left_tray_recipe_edit = ({
   ];
 
   const dispatch = useAppDispatch();
-  const selectedIngredientsList = useAppSelector(
-    (state) => state.editRecipeReducer.selectedIngredientsList
-  );
+  // const selectedIngredientsList = useAppSelector(
+  //   (state) => state.editRecipeReducer.selectedIngredientsList
+  // );
 
   // const handleIngredientClick = (ingredient) => {
   //   let blendz = [];
@@ -63,12 +63,12 @@ const Left_tray_recipe_edit = ({
 
   const checkActive = (ingredient: string) => {
     let present = false;
-    selectedIngredientsList?.forEach((blen) => {
-      //@ts-ignore
-      if (blen.ingredientName === ingredient) {
-        present = true;
-      }
-    });
+    // selectedIngredientsList?.forEach((blen) => {
+    //   //@ts-ignore
+    //   if (blen.ingredientName === ingredient) {
+    //     present = true;
+    //   }
+    // });
     return present;
   };
 

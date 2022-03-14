@@ -499,14 +499,26 @@
       display: flex;
       align-self: center;
       padding: 16px;
+      max-width: 85%;
+
 
       img {
-        margin-right: 20px;
+        margin-right: 18px;
+        height: 25px;
+        aspect-ratio: 1;
       }
 
-      p {
+      div {
         color: #000;
         font-size: 16px;
+      }
+
+      &__highlighted {
+        &:hover {
+          color:#fe5d1f;
+          text-decoration: underline;
+          cursor: pointer;
+        }
       }
     }
 
@@ -515,6 +527,7 @@
       justify-items: center;
       display: none;
       transition: 0.5s;
+      min-width: max-content;
 
       .icon {
         color: #c4c4c4;

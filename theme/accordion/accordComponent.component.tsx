@@ -15,6 +15,7 @@ type CustomAccordionProps = {
   value?: string;
   percentage?: string;
   unit?: string;
+  counter?: number;
 };
 
 const AccordComponent = ({
@@ -27,6 +28,7 @@ const AccordComponent = ({
   value,
   percentage,
   unit,
+  counter,
 }: CustomAccordionProps) => {
   const [expanded, setExpanded] = useState<boolean>(true);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -38,7 +40,6 @@ const AccordComponent = ({
         : (contentRef.current.style.maxHeight = "0px");
     }
   }, [expanded, contentRef]);
-
   return (
     <div className={styles.accordion}>
       {!type ? (
@@ -72,7 +73,11 @@ const AccordComponent = ({
                 <h5 className={styles.titleCopy}>{title}</h5>
                 {value && unit && (
                   <p className={styles.valueUnit + " " + styles.alignCenter}>
-                    {parseFloat(value).toFixed(1)} {unit}
+                    {
+                      //@ts-ignore
+                      parseFloat(value * parseInt(counter)).toFixed(1)
+                    }
+                    {unit.toLowerCase()}
                   </p>
                 )}
               </div>
