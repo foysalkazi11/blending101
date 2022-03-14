@@ -8,30 +8,20 @@ import Image from "next/image";
 import { setQuantity } from "../../../../redux/edit_recipe/quantity";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import DropDown from "../../../../theme/dropDown/DropDown.component";
+import { setEditRecipeName } from "../../../../redux/edit_recipe/editRecipeStates";
 type CenterElementsProps = {
-  setImages?: Dispatch<SetStateAction<any[]>>;
-  setEditRecipeHeading?: any;
-  setDropDownState?: any;
-  blendCategoryList: any;
-  recipeTitle: string;
-  mode?: "edit" | "add";
-  selectedBlendValueState: any;
-  recipeBlendCategoryEditMode: any;
+  recipeName: string;
+  allBlendCategories: object[];
+  recipeImages: [];
 };
 
 const Center_Elements = ({
-  setImages,
-  recipeTitle,
-  setEditRecipeHeading,
-  setDropDownState,
-  blendCategoryList,
-  mode,
-  selectedBlendValueState,
-  recipeBlendCategoryEditMode,
+  recipeName,
+  allBlendCategories,
+  recipeImages,
 }: CenterElementsProps) => {
   const dispatch = useAppDispatch();
   const editRecipeHeading = useRef();
-
   //quantity number sets number for top card bottom right counter in edit recipe
   const quantity_number = useAppSelector((state) => state.quantityAdjuster.quantityNum);
   // variables for ingredients card of edit recipe
@@ -50,12 +40,12 @@ const Center_Elements = ({
   //lists for each dropdown
   let WholefoodItem = [];
   let dropDownDataAllFeildsArray = [];
-  if (blendCategoryList) {
-    blendCategoryList.map((v, i) => {
-      WholefoodItem.push(v.name);
-      dropDownDataAllFeildsArray.push(v);
-    });
-  }
+  // if (blendCategoryList) {
+  //   blendCategoryList.map((v, i) => {
+  //     WholefoodItem.push(v.name);
+  //     dropDownDataAllFeildsArray.push(v);
+  //   });
+  // }
   let BlendtecItem = ["Blendtec", "Blendtec"];
   let OzItem = ["64 oz", "64 oz"];
   let dropDownStyle = {
@@ -63,23 +53,31 @@ const Center_Elements = ({
     width: "111%",
   };
 
-  useEffect(() => {
-    // @ts-ignore
-    setEditRecipeHeading(editRecipeHeading?.current?.textContent);
-  }, [editRecipeHeading?.current]);
+  const handleHeadingchange = (text) => {
+    // let setpos=document.createRange();
+
+    // //@ts-ignore
+    // dispatch(setEditRecipeName(text));
+
+    //@ts-ignore
+    // console.log(editRecipeHeading.current.textContent);
+  };
+
+  // console.log(recipeImages);
   return (
     <div className={styles.main}>
       <div className={styles.topSection}>
         <h3
           className={styles.topSection__heading}
           contentEditable={true}
+          suppressContentEditableWarning={true}
           id="recipeTitle"
           ref={editRecipeHeading}
           onInput={(e) => {
-            setEditRecipeHeading(e.currentTarget.textContent);
+            handleHeadingchange(e.currentTarget.textContent);
           }}
         >
-          {mode === "edit" && recipeTitle ? recipeTitle : "Recipe Title"}
+          {recipeName}
         </h3>
 
         <div className={styles.topSection__RightIcon}>
@@ -87,36 +85,36 @@ const Center_Elements = ({
         </div>
       </div>
       <div className={styles.addImagediv}>
-        <AddRecipeCard setImages={setImages} />
+        {/* <AddRecipeCard setImages={setImages} /> */}
       </div>
       <div className={styles.scoreTraydiv}>
         <ScoreTray />
         <p>
-          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-          commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-          dolore eu fugiat nulla pariatur.
+          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+          voluptate velit esse cillum dolore eu fugiat nulla pariatur.
         </p>
         <div className={styles.blendingOptions}>
           <div className={styles.blendingOptions__left}>
             <ul>
               <li>
                 <div className={styles.left__options} style={{ minWidth: "125px" }}>
-                  <DropDown
+                  {/* <DropDown
                     selectedBlendValueState={selectedBlendValueState}
-                    listElem={WholefoodItem}
+                    ElemList={allBlendCategories}
                     style={dropDownStyle}
                     valueState={setDropDownState}
-                  />
+                  /> */}
                 </div>
               </li>
               <li>
                 <div className={styles.left__options} style={{ minWidth: "115px" }}>
-                  <DropDown listElem={BlendtecItem} style={dropDownStyle} />
+                  {/* <DropDown listElem={BlendtecItem} style={dropDownStyle} /> */}
                 </div>
               </li>
               <li>
                 <div className={styles.left__options} style={{ minWidth: "35px" }}>
-                  <DropDown listElem={OzItem} style={dropDownStyle} />
+                  {/* <DropDown listElem={OzItem} style={dropDownStyle} /> */}
                 </div>
               </li>
             </ul>

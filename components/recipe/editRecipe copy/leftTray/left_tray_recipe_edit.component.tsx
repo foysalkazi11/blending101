@@ -61,16 +61,16 @@ const Left_tray_recipe_edit = ({
   //   dispatch(setSelectedIngredientsList(blendz));
   // };
 
-  // const checkActive = (ingredient: string) => {
-  //   let present = false;
-  //   selectedIngredientsList?.forEach((blen) => {
-  //     //@ts-ignore
-  //     if (blen.ingredientName === ingredient) {
-  //       present = true;
-  //     }
-  //   });
-  //   return present;
-  // };
+  const checkActive = (ingredient: string) => {
+    let present = false;
+    // selectedIngredientsList?.forEach((blen) => {
+    //   //@ts-ignore
+    //   if (blen.ingredientName === ingredient) {
+    //     present = true;
+    //   }
+    // });
+    return present;
+  };
 
   const SearchResults = (value) => {
     setinput(value);
@@ -156,11 +156,7 @@ const Left_tray_recipe_edit = ({
               titleTwo="Rankings"
             />
             <div className={styles.dropdown}>
-              <DropdownTwoComponent
-                value={dpd}
-                list={categories}
-                setValue={setDpd}
-              />
+              <DropdownTwoComponent value={dpd} list={categories} setValue={setDpd} />
             </div>
             {toggle === 1 && (
               <>
@@ -201,11 +197,11 @@ const Left_tray_recipe_edit = ({
                               ) : (
                                 <img src="/food/Dandelion.png" alt={""} />
                               )}
-                              {/* {checkActive(item?.ingredientName) && (
+                              {checkActive(item?.ingredientName) && (
                                 <div className={styles.tick}>
                                   <CheckCircle className={styles.ticked} />
                                 </div>
-                              )} */}
+                              )}
                             </div>
                             <p>{item?.ingredientName}</p>
                           </div>
@@ -220,12 +216,7 @@ const Left_tray_recipe_edit = ({
                 <CalciumSearchElem />
                 {ingredients?.map(({ name, percent }, index) => {
                   return (
-                    <Linearcomponent
-                      name={name}
-                      percent={percent}
-                      checkbox
-                      key={index}
-                    />
+                    <Linearcomponent name={name} percent={percent} checkbox key={index} />
                   );
                 })}
               </div>

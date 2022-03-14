@@ -15,6 +15,7 @@ type CustomAccordionProps = {
   value?: string;
   percentage?: string;
   unit?: string;
+  counter?: number;
 };
 
 const AccordComponent = ({
@@ -27,6 +28,7 @@ const AccordComponent = ({
   value,
   percentage,
   unit,
+  counter,
 }: CustomAccordionProps) => {
   const [expanded, setExpanded] = useState<boolean>(true);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -38,85 +40,55 @@ const AccordComponent = ({
         : (contentRef.current.style.maxHeight = "0px");
     }
   }, [expanded, contentRef]);
-
   return (
     <div className={styles.accordion}>
-      {!type ? (
-        <div className={`${styles.accordionSummary}`}>
-          <div className={styles.accordionSummaryForNested}>
-            {expanded ? (
-              <BsPlus
-                className={styles.icon + " " + styles.iconCopy}
-                style={!plusMinusIcon && { visibility: "hidden" }}
-                onClick={() => {
-                  setExpanded(!expanded);
-                }}
-              />
-            ) : (
-              <BiMinus
-                className={styles.icon + " " + styles.iconCopy}
-                style={!plusMinusIcon && { visibility: "hidden" }}
-                onClick={() => {
-                  setExpanded(!expanded);
-                }}
-              />
-            )}
-            <div className={styles.accordianContent}>
-              <div
-                className={
-                  value && unit
-                    ? styles.accordianContent__whiteCard
-                    : styles.accordianContent__whiteCard_conditionalSubheading
-                }
-              >
-                <h5 className={styles.titleCopy}>{title}</h5>
-                {value && unit && (
-                  <p className={styles.valueUnit + " " + styles.alignCenter}>
-                    {parseFloat(value).toFixed(1)} {unit}
-                  </p>
-                )}
-              </div>
-
-              <p className={styles.valueUnit + " " + styles.percentage}>
-                {percentage || ""}
-              </p>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className={`${styles.accordionSummary}`}>
-          <div className={styles.accordianMainHeading}>
-            {expanded ? (
-              <FiMinusSquare
-                className={styles.icon + " " + styles.iconCopy}
-                style={!plusMinusIcon && { visibility: "hidden" }}
-                onClick={() => {
-                  setExpanded(!expanded);
-                }}
-              />
-            ) : (
-              <FiPlusSquare
-                className={styles.icon + " " + styles.iconCopy}
-                style={!plusMinusIcon && { visibility: "hidden" }}
-                onClick={() => {
-                  setExpanded(!expanded);
-                }}
-              />
-            )}
-            <div className={styles.accordianContent}>
-              <h5 className={styles.titleAccordianMainHeading}>{title}</h5>
+      <div className={`${styles.accordionSummary}`}>
+        <div className={styles.accordionSummaryForNested}>
+          {expanded ? (
+            <BsPlus
+              className={styles.icon + " " + styles.iconCopy}
+              style={!plusMinusIcon && { visibility: "hidden" }}
+              onClick={() => {
+                setExpanded(!expanded);
+              }}
+            />
+          ) : (
+            <BiMinus
+              className={styles.icon + " " + styles.iconCopy}
+              style={!plusMinusIcon && { visibility: "hidden" }}
+              onClick={() => {
+                setExpanded(!expanded);
+              }}
+            />
+          )}
+          <div className={styles.accordianContent}>
+            <div
+              className={
+                value && unit
+                  ? styles.accordianContent__whiteCard
+                  : styles.accordianContent__whiteCard_conditionalSubheading
+              }
+            >
+              <h5 className={styles.titleCopy}>{title}</h5>
               {value && unit && (
-                <p className={styles.valueUnit + " " + styles.alignLeft}>
-                  {parseFloat(value).toFixed(2)} {unit}
+                <p className={styles.valueUnit + " " + styles.alignCenter}>
+                  {
+                    //@ts-ignore
+                    parseFloat(value * parseInt(counter)).toFixed(1)
+                  }
+                  &nbsp;
+                  {unit.toLowerCase()}
                 </p>
               )}
-              <p className={styles.valueUnit + " " + styles.percentage}>
-                {percentage || ""}
-              </p>
             </div>
+
+            <p className={styles.valueUnit + " " + styles.percentage}>
+              {percentage || ""}
+            </p>
           </div>
         </div>
-      )}
+      </div>
+
       <div
         className={styles.accordianDetails}
         ref={contentRef as React.RefObject<HTMLDivElement>}

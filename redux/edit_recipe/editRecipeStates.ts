@@ -3,8 +3,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 const initialState = {
   recipeName:"",
   recipeImagesArray:[],
-  selectedIngredientsList:[],
-  allIngredientListBasedOnClass:[]
+  allIngredientListBasedOnClass:[],
+  allBlendCategories:[]
 };
 
 export const editRecipeStateSlice = createSlice({
@@ -17,11 +17,11 @@ export const editRecipeStateSlice = createSlice({
     setRecipeImagesArray:(state,action)=>{
       state.recipeImagesArray=action?.payload
     },
-    setSelectedIngredientsList:(state,action)=>{
-      state.selectedIngredientsList=action?.payload
-    },
     setAllIngredientListBasedOnClass:(state,action)=>{
       state.allIngredientListBasedOnClass=action?.payload
+    },
+    setAllBlendCategories:(state,action)=>{
+      state.allBlendCategories=action?.payload
     },
   },
 });
@@ -30,8 +30,8 @@ export const editRecipeStateSlice = createSlice({
 export const{
   setEditRecipeName,
   setRecipeImagesArray,
-  setSelectedIngredientsList,
-  setAllIngredientListBasedOnClass
+  setAllIngredientListBasedOnClass,
+  setAllBlendCategories
 }=editRecipeStateSlice.actions;
 
 export default editRecipeStateSlice?.reducer;

@@ -5,9 +5,15 @@ type CustomAccordionProps = {
   title: string;
   content?: any;
   type?: string;
+  counter?: number;
 };
 
-const UpdatedCustomAccordion = ({ title, content, type }: CustomAccordionProps) => {
+const UpdatedCustomAccordion = ({
+  title,
+  content,
+  type,
+  counter,
+}: CustomAccordionProps) => {
   const populateAccordian = (childrenFeild, firstChild) => {
     return Object.entries(childrenFeild).map((itm) => {
       //@ts-ignore
@@ -16,7 +22,13 @@ const UpdatedCustomAccordion = ({ title, content, type }: CustomAccordionProps) 
           return (
             <div>
               {/* @ts-ignore */}
-              <AccordComponent title={itm[0]} value="3" unit="Mg" percentage="20%">
+              <AccordComponent
+                title={itm[0]}
+                value="3"
+                unit="Mg"
+                percentage="20%"
+                counter={counter}
+              >
                 {
                   //@ts-ignore
                   populateAccordian(itm[1].children, false)
@@ -28,7 +40,15 @@ const UpdatedCustomAccordion = ({ title, content, type }: CustomAccordionProps) 
           return (
             <div style={{ marginLeft: "18px" }}>
               {/* @ts-ignore */}
-              <AccordComponent title={itm[0]} value={itm[1].value} unit={itm[1].Unit} percentage={20 + "%"}>
+              <AccordComponent
+                title={itm[0]}
+                /* @ts-ignore */
+                value={itm[1].value}
+                /* @ts-ignore */
+                unit={itm[1].Unit}
+                percentage={20 + "%"}
+                counter={counter}
+              >
                 {
                   //@ts-ignore
                   populateAccordian(itm[1].children, false)
@@ -53,22 +73,24 @@ const UpdatedCustomAccordion = ({ title, content, type }: CustomAccordionProps) 
                 //@ts-ignore
                 unit={itm[1].Unit}
                 percentage={20 + "%"}
+                counter={counter}
               />
             );
-          }else{
-            return(
-              <div style={{marginLeft:"18px"}}>
-              <AccordComponent
-                title={itm[0]}
-                plusMinusIcon={false}
-                //@ts-ignore
-                value={itm[1].value}
-                //@ts-ignore
-                unit={itm[1].Unit}
-                percentage={20 + "%"}
-              />
-            </div>
-            )
+          } else {
+            return (
+              <div style={{ marginLeft: "18px" }}>
+                <AccordComponent
+                  title={itm[0]}
+                  plusMinusIcon={false}
+                  //@ts-ignore
+                  value={itm[1].value}
+                  //@ts-ignore
+                  unit={itm[1].Unit}
+                  percentage={20 + "%"}
+                  counter={counter}
+                />
+              </div>
+            );
           }
         }
       }
@@ -77,7 +99,7 @@ const UpdatedCustomAccordion = ({ title, content, type }: CustomAccordionProps) 
 
   return (
     content && (
-      <AccordComponent title={title} type={type}>
+      <AccordComponent title={title} type={type} counter={counter}>
         {populateAccordian(content, true)}
       </AccordComponent>
     )

@@ -23,32 +23,7 @@ const DropDown = ({
   valueState = () => {},
   selectedBlendValueState,
 }: dropDown) => {
-  return ElemList ? (
-    <div className={styles.formGroup}>
-      <select
-        name={name}
-        id="dropdown"
-        className={styles.customSelectbx}
-        style={{ backgroundImage: `url(/icons/dropdown.svg)`, ...style }}
-        onChange={(e) => {
-          valueState(e.target.value);
-        }}
-        value={selectedBlendValueState?.toLowerCase()}
-      >
-        {ElemList?.map((item, index) => {
-          return (
-            //@ts-ignore
-            <option value={item?.name} key={index}>
-              {
-                //@ts-ignore
-                item?.name
-              }
-            </option>
-          );
-        })}
-      </select>
-    </div>
-  ) : (
+  return (
     <div className={styles.formGroup}>
       <select
         name={name}

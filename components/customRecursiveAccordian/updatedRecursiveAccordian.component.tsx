@@ -7,9 +7,13 @@ import { FaRegUser } from "react-icons/fa";
 
 interface recursiveAccordianInterface {
   dataObject: object;
+  counter?: number;
 }
 
-const UpdatedRecursiveAccordian = ({ dataObject }: recursiveAccordianInterface) => {
+const UpdatedRecursiveAccordian = ({
+  dataObject,
+  counter,
+}: recursiveAccordianInterface) => {
   //@ts-ignore
   const { Energy, Vitamins, Minerals } = dataObject;
   const { user, dbUser } = useAppSelector((state) => state?.user);
@@ -18,7 +22,9 @@ const UpdatedRecursiveAccordian = ({ dataObject }: recursiveAccordianInterface) 
     <div>
       <div className={styles.nutritionHeader}>
         <div className={styles.recursiveAccordianHeading__heading}>
-          <div className={styles.recursiveAccordianHeading__heading__1}>Calories</div>
+          <div className={styles.recursiveAccordianHeading__heading__1}>
+            Calories
+          </div>
           <div className={styles.recursiveAccordianHeading__heading__2}>93</div>
           <div className={styles.recursiveAccordianHeading__heading__3}>
             <div>
@@ -45,20 +51,31 @@ const UpdatedRecursiveAccordian = ({ dataObject }: recursiveAccordianInterface) 
         </div>
       </div>
       <div className={styles.recursiveAccordianHeading__subheading}>
-        <div className={styles.recursiveAccordianHeading__subheading__3}>Value</div>
-        <div className={styles.recursiveAccordianHeading__subheading__4}>Daily%</div>
+        <div className={styles.recursiveAccordianHeading__subheading__3}>
+          Value
+        </div>
+        <div className={styles.recursiveAccordianHeading__subheading__4}>
+          Daily%
+        </div>
       </div>
 
-      <UpdatedCustomAccordion title={"Energy"} content={Energy} type={"mainHeading"} />
+      <UpdatedCustomAccordion
+        title={"Energy"}
+        content={Energy}
+        type={"mainHeading"}
+        counter={counter}
+      />
       <UpdatedCustomAccordion
         title={"Vitamins"}
         content={Vitamins}
         type={"mainHeading"}
+        counter={counter}
       />
       <UpdatedCustomAccordion
         title={"Minerals"}
         content={Minerals}
         type={"mainHeading"}
+        counter={counter}
       />
     </div>
   );
