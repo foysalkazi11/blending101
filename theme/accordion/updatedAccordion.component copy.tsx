@@ -24,8 +24,10 @@ const UpdatedCustomAccordion = ({
               {/* @ts-ignore */}
               <AccordComponent
                 title={itm[0]}
-                value="3"
-                unit="Mg"
+                /* @ts-ignore */
+                value={itm[1].value || "1"}
+                /* @ts-ignore */
+                unit={itm[1].Unit || "N/A"}
                 percentage="20%"
                 counter={counter}
               >

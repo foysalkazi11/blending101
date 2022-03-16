@@ -10,16 +10,11 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import DropDown from "../../../../theme/dropDown/DropDown.component";
 import { setEditRecipeName } from "../../../../redux/edit_recipe/editRecipeStates";
 type CenterElementsProps = {
-  recipeName: string;
-  allBlendCategories: object[];
-  recipeImages: [];
+  recipeName?: string;
+  allBlendCategories?: object[];
 };
 
-const Center_Elements = ({
-  recipeName,
-  allBlendCategories,
-  recipeImages,
-}: CenterElementsProps) => {
+const Center_Elements = ({ recipeName, allBlendCategories }: CenterElementsProps) => {
   const dispatch = useAppDispatch();
   const editRecipeHeading = useRef();
   //quantity number sets number for top card bottom right counter in edit recipe
@@ -55,10 +50,8 @@ const Center_Elements = ({
 
   const handleHeadingchange = (text) => {
     // let setpos=document.createRange();
-
     // //@ts-ignore
     // dispatch(setEditRecipeName(text));
-
     //@ts-ignore
     // console.log(editRecipeHeading.current.textContent);
   };
@@ -85,14 +78,14 @@ const Center_Elements = ({
         </div>
       </div>
       <div className={styles.addImagediv}>
-        {/* <AddRecipeCard setImages={setImages} /> */}
+        <AddRecipeCard />
       </div>
       <div className={styles.scoreTraydiv}>
         <ScoreTray />
         <p>
-          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-          voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+          commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+          dolore eu fugiat nulla pariatur.
         </p>
         <div className={styles.blendingOptions}>
           <div className={styles.blendingOptions__left}>

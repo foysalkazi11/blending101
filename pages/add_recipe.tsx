@@ -9,12 +9,14 @@ const EditRecipe = () => {
     (state) => state.quantityAdjuster.ingredientsList
   );
 
-  
+
 
   const [
     getBlendNutritionBasedOnRecipe,
     { loading: gettingNutritionData, data: nutritionData },
   ] = useLazyQuery(GET_RECIPE_NUTRITION(ingredients_list));
+
+  console.log(ingredients_list)
 
   const fetchRecipe = () => {
     getBlendNutritionBasedOnRecipe();

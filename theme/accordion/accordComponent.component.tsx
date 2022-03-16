@@ -113,7 +113,7 @@ const AccordComponent = ({
               <h5 className={styles.titleAccordianMainHeading}>{title}</h5>
               {value && unit && (
                 <p className={styles.valueUnit + " " + styles.alignLeft}>
-                  {parseFloat(value).toFixed(2)} &nbsp; {unit}
+                  {parseFloat(value).toFixed(1)} &nbsp; {unit}
                 </p>
               )}
               <p className={styles.valueUnit + " " + styles.percentage}>

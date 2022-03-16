@@ -13,21 +13,19 @@ import { filterRankingList } from "./left_tray_recipe_edit_list";
 import Image from "next/image";
 import { useLazyQuery } from "@apollo/client";
 import { INGREDIENTS_BY_CATEGORY_AND_CLASS } from "../../../../gqlLib/recipes/queries/getEditRecipe";
+import { setSelectedIngredientsList } from "../../../../redux/edit_recipe/editRecipeStates";
 // import { setSelectedIngredientsList } from "../../../../redux/edit_recipe/editRecipeStates";
 
 interface recipeData {
-  leftAllIngredientsList?: object[];
+  allIngredients?: any;
   recipeIngredients?: object[];
 }
 const Left_tray_recipe_edit = ({
-  leftAllIngredientsList,
+  allIngredients,
   recipeIngredients,
 }: recipeData) => {
-  const [toggle, setToggle] = useState(1);
-  const [dpd, setDpd] = useState({ title: "All", val: "all" });
-  const [input, setinput] = useState("");
-  const [searchElemList, setSearchElemList] = useState([]);
-  const [searchElemListFilter, setSearchElemListFilter] = useState([]);
+  // Variables - START ===========================================>
+
   const ingredients = filterRankingList;
   const categories = [
     { title: "All", val: "all" },
@@ -37,65 +35,97 @@ const Left_tray_recipe_edit = ({
     { title: "Frozed", val: "frozed" },
   ];
 
+  // Variables - END +++++++++++++++++++++++++++++++++++++++++++++<
+
+  // LocalStates - START =========================================>
+
+  const [toggle, setToggle] = useState(1);
+  const [dpd, setDpd] = useState({ title: "All", val: "all" });
+  const [input, setinput] = useState("");
+
+  const [ingredientList, setIngredientList] = useState([]);
+
+  // LocalStates - END +++++++++++++++++++++++++++++++++++++++++++<
+
+  // ReduxStates -START ==========================================>
+
   const dispatch = useAppDispatch();
-  // const selectedIngredientsList = useAppSelector(
-  //   (state) => state.editRecipeReducer.selectedIngredientsList
-  // );
+  const selectedIngredientsList = useAppSelector(
+    (state) => state.editRecipeReducer.selectedIngredientsList
+  );
 
-  // const handleIngredientClick = (ingredient) => {
-  //   let blendz = [];
-  //   let present = false;
-  //   selectedIngredientsList?.forEach((blen) => {
-  //     if (blen === ingredient) {
-  //       present = true;
-  //     }
-  //   });
-  //   if (!present) {
-  //     blendz = [...selectedIngredientsList, ingredient];
-  //   } else {
-  //     blendz = selectedIngredientsList?.filter((blen) => {
-  //       return blen !== ingredient;
-  //     });
-  //   }
+  // ReduxStates - End +++++++++++++++++++++++++++++++++++++++++++<
 
-  //   dispatch(setSelectedIngredientsList(blendz));
-  // };
+  // useEffect START =============================================>
+  useEffect(() => {
+    setIngredientList(allIngredients);
+  }, [allIngredients]);
 
-  // const checkActive = (ingredient: string) => {
-  //   let present = false;
-  //   selectedIngredientsList?.forEach((blen) => {
-  //     //@ts-ignore
-  //     if (blen.ingredientName === ingredient) {
-  //       present = true;
-  //     }
-  //   });
-  //   return present;
-  // };
+  useEffect(() => {
+    DropDown(dpd);
+  }, [dpd]);
+
+  // console.log(ingredientList);
+  // console.log(selectedIngredientsList);
+  // console.log(dpd);
+  // useEffect END +++++++++++++++++++++++++++++++++++++++++++++++<
+
+  // Controllers - START =========================================>
+
+  const handleIngredientClick = (ingredient) => {
+    let blendz = [];
+    let present = false;
+    selectedIngredientsList?.forEach((blen) => {
+      if (blen === ingredient) {
+        present = true;
+      }
+    });
+    if (!present) {
+      blendz = [...selectedIngredientsList, ingredient];
+    } else {
+      blendz = selectedIngredientsList?.filter((blen) => {
+        return blen !== ingredient;
+      });
+    }
+
+    dispatch(setSelectedIngredientsList(blendz));
+  };
+
+  const checkActive = (ingredient: string) => {
+    let present = false;
+    selectedIngredientsList?.forEach((blen) => {
+      if (blen.ingredientName === ingredient) {
+        present = true;
+      }
+    });
+    return present;
+  };
 
   const SearchResults = (value) => {
     setinput(value);
-    const elements = searchElemList?.filter((item) => {
+    const elements = allIngredients?.filter((item) => {
       return item.ingredientName.includes(value);
     });
-    setSearchElemListFilter(elements);
+    setIngredientList(elements);
   };
 
   const DropDown = (dpd) => {
     if (dpd.title !== "All") {
-      const classElements = searchElemList?.filter((item) => {
+      const classElements = allIngredients?.filter((item) => {
         return item.category === dpd.title;
       });
-      setSearchElemListFilter(classElements);
+      setIngredientList(classElements);
     } else {
-      setSearchElemListFilter(searchElemList);
+      setIngredientList(allIngredients);
     }
   };
+  // Controllers - END +++++++++++++++++++++++++++++++++++++++++++<
 
-  useEffect(() => {
-    if (!leftAllIngredientsList) return;
-    setSearchElemList(leftAllIngredientsList);
-    setSearchElemListFilter(leftAllIngredientsList);
-  }, [leftAllIngredientsList]);
+  // useEffect(() => {
+  //   if (!leftAllIngredientsList) return;
+  //   setSearchElemList(leftAllIngredientsList);
+  //   setSearchElemListFilter(leftAllIngredientsList);
+  // }, [leftAllIngredientsList]);
 
   // useEffect(() => {
   //   DropDown(dpd);
@@ -187,13 +217,13 @@ const Left_tray_recipe_edit = ({
                 </div>
                 <div className={styles.pictures}>
                   <div className={styles.filter__menu}>
-                    {searchElemListFilter &&
-                      searchElemListFilter?.map((item, i) => {
+                    {ingredientList &&
+                      ingredientList?.map((item, i) => {
                         return (
                           <div
                             key={item._id + item.ingredientName}
                             className={styles.filter__menu__item}
-                            // onClick={() => handleIngredientClick(item)}
+                            onClick={() => handleIngredientClick(item)}
                           >
                             <div className={styles.filter__menu__item__image}>
                               {item?.featuredImage !== null ? (
@@ -201,11 +231,11 @@ const Left_tray_recipe_edit = ({
                               ) : (
                                 <img src="/food/Dandelion.png" alt={""} />
                               )}
-                              {/* {checkActive(item?.ingredientName) && (
+                              {checkActive(item?.ingredientName) && (
                                 <div className={styles.tick}>
                                   <CheckCircle className={styles.ticked} />
                                 </div>
-                              )} */}
+                              )}
                             </div>
                             <p>{item?.ingredientName}</p>
                           </div>

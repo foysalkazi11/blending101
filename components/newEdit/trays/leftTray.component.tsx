@@ -19,7 +19,7 @@ const TrayEdit = ({ ingredients }) => {
 
   let allIngredients = data?.filterIngredientByCategoryAndClass;
 
-  console.log(ingredients)
+  console.log(ingredients);
 
   useEffect(() => {
     if (!ingredients || !allIngredients) return;
@@ -29,7 +29,7 @@ const TrayEdit = ({ ingredients }) => {
       });
       if (itemMatch.length) return itemMatch[0];
     });
-    console.log(presentIngredients)
+    console.log(presentIngredients);
   }, [ingredients, allIngredients]);
 
   if (!data) return null;

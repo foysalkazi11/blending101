@@ -32,51 +32,61 @@ const recursiveData = (data) => {
         Unit: energy?.childs?.fats?.blendNutrientRefference?.units,
         children: {},
       },
-      "Carbohydrates": {
+      Carbohydrates: {
         value: energy?.childs?.carbohydrates?.value,
         Unit: energy?.childs?.carbohydrates?.blendNutrientRefference?.units,
         children: {
           "Dietary Fiber": {
             value: energy?.childs?.carbohydrates?.dietryFibre?.value,
-            Unit: energy?.childs?.carbohydrates?.dietryFibre.blendNutrientRefference?.units,
+            Unit: energy?.childs?.carbohydrates?.dietryFibre
+              .blendNutrientRefference?.units,
             children: {},
           },
-          "Sugars": {
+          Sugars: {
             value: energy?.childs?.carbohydrates?.sugars?.value,
-            Unit: energy?.childs?.carbohydrates?.sugars?.blendNutrientRefference?.units,
+            Unit: energy?.childs?.carbohydrates?.sugars?.blendNutrientRefference
+              ?.units,
             children: {
               Sucrose: {
-                value: energy?.childs?.carbohydrates?.sugars?.childs?.sucrose?.value,
+                value:
+                  energy?.childs?.carbohydrates?.sugars?.childs?.sucrose?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.sucrose
                   ?.blendNutrientRefference?.units,
                 children: {},
               },
               Glucose: {
-                value: energy?.childs?.carbohydrates?.sugars?.childs?.glucose?.value,
+                value:
+                  energy?.childs?.carbohydrates?.sugars?.childs?.glucose?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.glucose
                   ?.blendNutrientRefference?.units,
                 children: {},
               },
               Fructose: {
-                value: energy?.childs?.carbohydrates?.sugars?.childs?.fructose?.value,
+                value:
+                  energy?.childs?.carbohydrates?.sugars?.childs?.fructose
+                    ?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.fructose
                   ?.blendNutrientRefference?.units,
                 children: {},
               },
               Lactose: {
-                value: energy?.childs?.carbohydrates?.sugars?.childs?.lactose?.value,
+                value:
+                  energy?.childs?.carbohydrates?.sugars?.childs?.lactose?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.lactose
                   ?.blendNutrientRefference?.units,
                 children: {},
               },
               Maltose: {
-                value: energy?.childs?.carbohydrates?.sugars?.childs?.maltose?.value,
+                value:
+                  energy?.childs?.carbohydrates?.sugars?.childs?.maltose?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.maltose
                   ?.blendNutrientRefference?.units,
                 children: {},
               },
               Galactose: {
-                value: energy?.childs?.carbohydrates?.sugars?.childs?.galactose?.value,
+                value:
+                  energy?.childs?.carbohydrates?.sugars?.childs?.galactose
+                    ?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.galactose
                   ?.blendNutrientRefference?.units,
                 children: {},
@@ -85,7 +95,8 @@ const recursiveData = (data) => {
           },
           Starch: {
             value: energy?.childs?.carbohydrates?.starch?.value,
-            Unit: energy?.childs?.carbohydrates?.starch?.blendNutrientRefference?.units,
+            Unit: energy?.childs?.carbohydrates?.starch?.blendNutrientRefference
+              ?.units,
             children: {},
           },
         },
@@ -266,17 +277,25 @@ const RightTray = ({ nutritionData }) => {
       <RightHeader />
       <div className={styles.right}>
         <div className={styles.right__title}>Nutrition</div>
-        <div className={styles.right__sub_heading}>Amount Per Servings Calories</div>
+        <div className={styles.right__sub_heading}>
+          Amount Per Servings Calories
+        </div>
         <div className={styles.compoent__box__nutrition}>
-          {nutritionData && <UpdatedRecursiveAccordian dataObject={nestedAccordianSkeleton} />}
+          {nutritionData && (
+            <UpdatedRecursiveAccordian dataObject={nestedAccordianSkeleton} />
+          )}
         </div>
       </div>
       <div className={styles.right}>
         <div className={styles.right__title}>Health</div>
-        <div className={styles.right__sub_heading}>Disease, Condition and Systems</div>
+        <div className={styles.right__sub_heading}>
+          Disease, Condition and Systems
+        </div>
         <div className={styles.compoent__box} style={{}}>
           {healthList.map(({ name, percent }: PassingProps, index) => {
-            return <LinearComponent name={name} percent={percent} key={index} />;
+            return (
+              <LinearComponent name={name} percent={percent} key={index} />
+            );
           })}
         </div>
       </div>
