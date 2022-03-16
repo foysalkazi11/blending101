@@ -6,6 +6,8 @@ import { setOpenFilterTray } from "../../redux/slices/sideTraySlice";
 
 interface leftTrayInterface {
   children: any;
+  filter:any;
+  id:any
 }
 
 export default function FilterTrayWrapper({

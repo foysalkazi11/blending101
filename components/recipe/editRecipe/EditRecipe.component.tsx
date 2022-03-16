@@ -30,7 +30,6 @@ const EditRecipePage = ({
   recipeInstructions,
 }: editRecipe) => {
   const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
-
   const [images, setImages] = useState<any[]>([]);
   const [uploadUrl, setUploadUrl] = useState([]);
   const [blendCategory, setblendCategory] = useState([]);

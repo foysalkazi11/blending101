@@ -35,7 +35,9 @@ const IngredientList = ({ recipeInstructions }: IngredientListPorps) => {
     dispatch(setSelectedIngredientsList(updated_list));
   };
   const howToState = useAppSelector((state) => state.editRecipeReducer.recipeInstruction);
-  const servingCounter = useAppSelector((state) => state.editRecipeReducer.servingCounter);
+  const servingCounter = useAppSelector(
+    (state) => state.editRecipeReducer.servingCounter
+  );
 
   const adjusterFunc = (task) => {
     task === "+" && dispatch(setServingCounter(servingCounter + 1));
@@ -136,7 +138,9 @@ const IngredientList = ({ recipeInstructions }: IngredientListPorps) => {
             </div>
             <div className={styles.servings__size}>
               <span className={styles.servings__adjuster__name}>Servings Size :</span>
-              <span className={styles.servings__size__score}>{servingCounter * 16}&nbsp;oz</span>
+              <span className={styles.servings__size__score}>
+                {servingCounter * 16}&nbsp;oz
+              </span>
             </div>
             <div className={styles.servings__units}>
               <div className={styles.servings__units__active}>
@@ -150,7 +154,10 @@ const IngredientList = ({ recipeInstructions }: IngredientListPorps) => {
           <ul>
             {selectedIngredientsList?.map((elem) => {
               return (
-                <li key={elem.ingredientName + elem._id} className={styles.ingredients__li}>
+                <li
+                  key={elem.ingredientName + elem._id}
+                  className={styles.ingredients__li}
+                >
                   <div className={styles.ingredients__drag}>
                     <DragIndicatorIcon className={styles.ingredients__drag} />
                   </div>
@@ -301,14 +308,24 @@ const IngredientList = ({ recipeInstructions }: IngredientListPorps) => {
       <div className={styles.save__Recipe}>
         {isFetching ? (
           <div className={styles.save__Recipe__button}>
-            <ButtonComponent type={"primary"} style={{}} fullWidth={true} value="Saving... ." />
+            <ButtonComponent
+              type={"primary"}
+              style={{}}
+              fullWidth={true}
+              value="Saving... ."
+            />
           </div>
         ) : (
           <div
             className={styles.save__Recipe__button}
             // onClick={() => RecipeApiMutation()}
           >
-            <ButtonComponent type={"primary"} style={{}} fullWidth={true} value="Save Recipe" />
+            <ButtonComponent
+              type={"primary"}
+              style={{}}
+              fullWidth={true}
+              value="Save Recipe"
+            />
           </div>
         )}
       </div>
