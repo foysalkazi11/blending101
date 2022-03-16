@@ -13,39 +13,20 @@ import { filterRankingList } from "./left_tray_recipe_edit_list";
 import Image from "next/image";
 import { useLazyQuery } from "@apollo/client";
 import { INGREDIENTS_BY_CATEGORY_AND_CLASS } from "../../../../gqlLib/recipes/queries/getEditRecipe";
+import { setSelectedIngredientsList } from "../../../../redux/edit_recipe/editRecipeStates";
+// import { setSelectedIngredientsList } from "../../../../redux/edit_recipe/editRecipeStates";
 
-const Left_tray_recipe_edit = () => {
-  const [toggle, setToggle] = useState(1);
-  const [dpd, setDpd] = useState({ title: "All", val: "all" });
-  const [input, setinput] = useState("");
+interface recipeData {
+  allIngredients?: any;
+  recipeIngredients?: object[];
+}
+const Left_tray_recipe_edit = ({
+  allIngredients,
+  recipeIngredients,
+}: recipeData) => {
+  // Variables - START ===========================================>
+
   const ingredients = filterRankingList;
-
-  const dispatch = useAppDispatch();
-
-  const ingredients_list = useAppSelector(
-    (state) => state.quantityAdjuster.ingredientsList
-  );
-
-
-  const handleIngredientClick = (ingredient) => {
-    let blendz = [];
-    let present = false;
-    ingredients_list?.forEach((blen) => {
-      if (blen === ingredient) {
-        present = true;
-      }
-    });
-    if (!present) {
-      blendz = [...ingredients_list, ingredient];
-    } else {
-      blendz = ingredients_list?.filter((blen) => {
-        return blen !== ingredient;
-      });
-    }
-
-    dispatch(setIngredientsToList(blendz));
-  };
-
   const categories = [
     { title: "All", val: "all" },
     { title: "Leafy", val: "leafy" },
@@ -54,10 +35,65 @@ const Left_tray_recipe_edit = () => {
     { title: "Frozed", val: "frozed" },
   ];
 
+  // Variables - END +++++++++++++++++++++++++++++++++++++++++++++<
+
+  // LocalStates - START =========================================>
+
+  const [toggle, setToggle] = useState(1);
+  const [dpd, setDpd] = useState({ title: "All", val: "all" });
+  const [input, setinput] = useState("");
+
+  const [ingredientList, setIngredientList] = useState([]);
+
+  // LocalStates - END +++++++++++++++++++++++++++++++++++++++++++<
+
+  // ReduxStates -START ==========================================>
+
+  const dispatch = useAppDispatch();
+  const selectedIngredientsList = useAppSelector(
+    (state) => state.editRecipeReducer.selectedIngredientsList
+  );
+
+  // ReduxStates - End +++++++++++++++++++++++++++++++++++++++++++<
+
+  // useEffect START =============================================>
+  useEffect(() => {
+    setIngredientList(allIngredients);
+  }, [allIngredients]);
+
+  useEffect(() => {
+    DropDown(dpd);
+  }, [dpd]);
+
+  // console.log(ingredientList);
+  // console.log(selectedIngredientsList);
+  // console.log(dpd);
+  // useEffect END +++++++++++++++++++++++++++++++++++++++++++++++<
+
+  // Controllers - START =========================================>
+
+  const handleIngredientClick = (ingredient) => {
+    let blendz = [];
+    let present = false;
+    selectedIngredientsList?.forEach((blen) => {
+      if (blen === ingredient) {
+        present = true;
+      }
+    });
+    if (!present) {
+      blendz = [...selectedIngredientsList, ingredient];
+    } else {
+      blendz = selectedIngredientsList?.filter((blen) => {
+        return blen !== ingredient;
+      });
+    }
+
+    dispatch(setSelectedIngredientsList(blendz));
+  };
+
   const checkActive = (ingredient: string) => {
     let present = false;
-    ingredients_list?.forEach((blen) => {
-      //@ts-ignore
+    selectedIngredientsList?.forEach((blen) => {
       if (blen.ingredientName === ingredient) {
         present = true;
       }
@@ -65,53 +101,76 @@ const Left_tray_recipe_edit = () => {
     return present;
   };
 
-  const [searchElemList, setSearchElemList] = useState([]);
-  const [searchElemListFilter, setSearchElemListFilter] = useState([]);
-
   const SearchResults = (value) => {
     setinput(value);
-    const elements = searchElemList?.filter((item) => {
+    const elements = allIngredients?.filter((item) => {
       return item.ingredientName.includes(value);
     });
-    setSearchElemListFilter(elements);
+    setIngredientList(elements);
   };
 
   const DropDown = (dpd) => {
     if (dpd.title !== "All") {
-      const classElements = searchElemList?.filter((item) => {
+      const classElements = allIngredients?.filter((item) => {
         return item.category === dpd.title;
       });
-      setSearchElemListFilter(classElements);
+      setIngredientList(classElements);
     } else {
-      setSearchElemListFilter(searchElemList);
+      setIngredientList(allIngredients);
     }
   };
+  // Controllers - END +++++++++++++++++++++++++++++++++++++++++++<
 
-  const [
-    filterIngredientByCategoryAndClass,
-    { loading: searchInProcess, data: searchElement },
-  ] = useLazyQuery(INGREDIENTS_BY_CATEGORY_AND_CLASS, {
-    fetchPolicy: "network-only",
-    variables: { classType: "All" },
-  });
+  // useEffect(() => {
+  //   if (!leftAllIngredientsList) return;
+  //   setSearchElemList(leftAllIngredientsList);
+  //   setSearchElemListFilter(leftAllIngredientsList);
+  // }, [leftAllIngredientsList]);
 
-  const fetchSearchResults = async () => {
-    await filterIngredientByCategoryAndClass();
-    setSearchElemList(searchElement?.filterIngredientByCategoryAndClass);
-    setSearchElemListFilter(searchElement?.filterIngredientByCategoryAndClass);
-  };
+  // useEffect(() => {
+  //   DropDown(dpd);
+  // }, [dpd]);
 
-  useEffect(() => {
-    if (!searchInProcess) {
-      fetchSearchResults();
-    }
-  }, [searchInProcess]);
+  // console.log(recipeIngredients);
 
-  useEffect(() => {
-    DropDown(dpd);
-  }, [dpd]);
+  // console.log(selectedIngredientsList);
 
-// console.log({searchElemListFilter});
+  // useEffect(() => {
+  //   if (!recipeData) return;
+
+  //   let mode = "edit";
+  //   if (mode === "edit") {
+  //     console.log(recipeData);
+  //     let modifiedPortions = [];
+
+  //     recipeData.ingredients.map((item) => {
+  //       let selectedPortion = item.portions.filter((elem) => elem.default === true);
+  //       selectedPortion = selectedPortion[0];
+  //       console.log({ selectedPortion });
+  //       console.log(item);
+  //       modifiedPortions = [
+  //         ...modifiedPortions,
+  //         {
+  //           ...selectedPortion,
+  //           measurement: selectedPortion.name,
+  //           meausermentWeight: selectedPortion.gram,
+  //           default:selectedPortion.defa
+  //         },
+  //       ];
+  //     });
+
+  //     const editingRecipe = {
+  //       category: recipeData?.recipeBlendCategory?.name,
+  //       description: recipeData?.description,
+  //       ingredientName: recipeData?.name,
+  //       images: recipeData?.image,
+  //       featuredImage: null,
+  //     };
+  //     console.log(editingRecipe);
+  //   }
+
+  //   console.log("object");
+  // }, [recipeData]);
 
   return (
     <div className={styles.left_main_container}>
@@ -158,11 +217,11 @@ const Left_tray_recipe_edit = () => {
                 </div>
                 <div className={styles.pictures}>
                   <div className={styles.filter__menu}>
-                    {searchElemListFilter &&
-                      searchElemListFilter?.map((item, i) => {
+                    {ingredientList &&
+                      ingredientList?.map((item, i) => {
                         return (
                           <div
-                            key={item.ingredientId + item.ingredientName}
+                            key={item._id + item.ingredientName}
                             className={styles.filter__menu__item}
                             onClick={() => handleIngredientClick(item)}
                           >

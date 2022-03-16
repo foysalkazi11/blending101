@@ -27,8 +27,35 @@
   margin-bottom: 20px;
   box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
 
+  &__name {
+    font-weight: 600;
+    font: 26px !important;
+  }
+
+  &__closeBox {
+    background-color: #7cbc39;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1;
+    width: 34px;
+    border-radius: 50%;
+    position: absolute;
+    right: 30px;
+    cursor: pointer;
+
+    &__closeIcon {
+      color: white;
+    }
+  }
+
   &__heading {
     margin: 0px 20px;
+
+    &__nutrition {
+      display: flex;
+      justify-content: space-between;
+    }
 
     h3 {
       font-size: 20px;
@@ -43,6 +70,7 @@
       color: #ababab;
     }
   }
+
 }
 
 .nutritionHeader {

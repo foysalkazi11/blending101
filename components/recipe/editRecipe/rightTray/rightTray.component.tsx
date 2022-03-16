@@ -12,11 +12,6 @@ import { NUTRITION_BASED_RECIPE } from "../../../../gqlLib/recipes/queries/getEd
 import RecursiveAccordian from "../../../customRecursiveAccordian/recursiveAccordian.component";
 import UpdatedRecursiveAccordian from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
 
-interface PassingProps {
-  name: string;
-  percent: number;
-}
-
 const recursiveData = (data) => {
   if (!data) return;
   let { energy, vitamins, minerals } = data;
@@ -38,46 +33,55 @@ const recursiveData = (data) => {
         children: {
           "Dietary Fiber": {
             value: energy?.childs?.carbohydrates?.dietryFibre?.value,
-            Unit: energy?.childs?.carbohydrates?.dietryFibre.blendNutrientRefference
-              ?.units,
+            Unit: energy?.childs?.carbohydrates?.dietryFibre
+              .blendNutrientRefference?.units,
             children: {},
           },
           Sugars: {
             value: energy?.childs?.carbohydrates?.sugars?.value,
-            Unit: energy?.childs?.carbohydrates?.sugars?.blendNutrientRefference?.units,
+            Unit: energy?.childs?.carbohydrates?.sugars?.blendNutrientRefference
+              ?.units,
             children: {
               Sucrose: {
-                value: energy?.childs?.carbohydrates?.sugars?.childs?.sucrose?.value,
+                value:
+                  energy?.childs?.carbohydrates?.sugars?.childs?.sucrose?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.sucrose
                   ?.blendNutrientRefference?.units,
                 children: {},
               },
               Glucose: {
-                value: energy?.childs?.carbohydrates?.sugars?.childs?.glucose?.value,
+                value:
+                  energy?.childs?.carbohydrates?.sugars?.childs?.glucose?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.glucose
                   ?.blendNutrientRefference?.units,
                 children: {},
               },
               Fructose: {
-                value: energy?.childs?.carbohydrates?.sugars?.childs?.fructose?.value,
+                value:
+                  energy?.childs?.carbohydrates?.sugars?.childs?.fructose
+                    ?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.fructose
                   ?.blendNutrientRefference?.units,
                 children: {},
               },
               Lactose: {
-                value: energy?.childs?.carbohydrates?.sugars?.childs?.lactose?.value,
+                value:
+                  energy?.childs?.carbohydrates?.sugars?.childs?.lactose?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.lactose
                   ?.blendNutrientRefference?.units,
                 children: {},
               },
               Maltose: {
-                value: energy?.childs?.carbohydrates?.sugars?.childs?.maltose?.value,
+                value:
+                  energy?.childs?.carbohydrates?.sugars?.childs?.maltose?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.maltose
                   ?.blendNutrientRefference?.units,
                 children: {},
               },
               Galactose: {
-                value: energy?.childs?.carbohydrates?.sugars?.childs?.galactose?.value,
+                value:
+                  energy?.childs?.carbohydrates?.sugars?.childs?.galactose
+                    ?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.galactose
                   ?.blendNutrientRefference?.units,
                 children: {},
@@ -86,7 +90,8 @@ const recursiveData = (data) => {
           },
           Starch: {
             value: energy?.childs?.carbohydrates?.starch?.value,
-            Unit: energy?.childs?.carbohydrates?.starch?.blendNutrientRefference?.units,
+            Unit: energy?.childs?.carbohydrates?.starch?.blendNutrientRefference
+              ?.units,
             children: {},
           },
         },
@@ -259,70 +264,48 @@ const recursiveData = (data) => {
   };
 };
 
-const RightTray = ({ nutritionData }) => {
-  let nestedAccordianSkeleton = recursiveData(nutritionData);
-  const nutritionState = useAppSelector((state) => state.quantityAdjuster.nutritionState);
-  const [NutritionStateTemp, SetNutritionStateTemp] = useState("");
+interface PassingProps {
+  name: string;
+  percent: number;
+}
 
-  const [
-    filterIngredientByCategoryAndClass,
-    { loading: searchInProcess, data: searchElement },
-  ] = useLazyQuery(
-    NUTRITION_BASED_RECIPE(`[
-  ${NutritionStateTemp}
-  ]`),
-    {
-      fetchPolicy: "network-only",
-      //   variables: { classType: "All"
-      // },
-    }
+const RightTray = ({ nutritionTrayData }) => {
+  let nestedAccordianSkeleton = recursiveData(nutritionTrayData);
+  const [NutritionStateTemp, setNutritionStateTemp] = useState(null);
+  const nutritionState = useAppSelector(
+    (state) => state?.quantityAdjuster?.nutritionState
   );
 
-  const fetchSearchResults = async () => {
-    await filterIngredientByCategoryAndClass();
-
-    let Calories = "";
-
-    searchElement?.getNutritionBasedOnRecipe.map((elem) => {
-      let nutritionArgument = {
-        ingredientId: elem.uniqueNutrientRefference._id,
-        value: elem.value,
-      };
-
-      let nutritionArguentString =
-        `{` +
-        `ingredientId:${nutritionArgument.ingredientId}` +
-        `,` +
-        `value:${nutritionArgument.value}` +
-        `}`;
-
-      Calories = Calories + JSON.stringify(nutritionArguentString);
-    });
-    SetNutritionStateTemp(Calories);
-  };
-
-  useEffect(() => {
-    fetchSearchResults();
-  }, [nutritionState]);
-
+  const servingCounter = useAppSelector(
+    (state) => state.editRecipeReducer.servingCounter
+  );
   return (
     <div>
       <RightHeader />
       <div className={styles.right}>
         <div className={styles.right__title}>Nutrition</div>
-        <div className={styles.right__sub_heading}>Amount Per Servings Calories</div>
+        <div className={styles.right__sub_heading}>
+          Amount Per Servings Calories
+        </div>
         <div className={styles.compoent__box__nutrition}>
-          {nutritionData && (
-            <UpdatedRecursiveAccordian dataObject={nestedAccordianSkeleton} />
+          {nutritionTrayData && (
+            <UpdatedRecursiveAccordian
+              dataObject={nestedAccordianSkeleton}
+              counter={servingCounter}
+            />
           )}
         </div>
       </div>
       <div className={styles.right}>
         <div className={styles.right__title}>Health</div>
-        <div className={styles.right__sub_heading}>Disease, Condition and Systems</div>
+        <div className={styles.right__sub_heading}>
+          Disease, Condition and Systems
+        </div>
         <div className={styles.compoent__box} style={{}}>
-          {healthList.map(({ name, percent }: PassingProps, index) => {
-            return <LinearComponent name={name} percent={percent} key={index} />;
+          {healthList?.map(({ name, percent }: PassingProps, index) => {
+            return (
+              <LinearComponent name={name} percent={percent} key={index} />
+            );
           })}
         </div>
       </div>
