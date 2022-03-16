@@ -3,7 +3,8 @@ import React, { useEffect } from "react";
 import styles from "./DropDown.module.scss";
 
 interface dropDown {
-  listElem: string[];
+  listElem?: string[];
+  ElemList?: object[];
   value?: string;
   handleChange?: (name: any, value: any) => void;
   name?: string;
@@ -16,15 +17,12 @@ const DropDown = ({
   listElem,
   style = {},
   value = "",
+  ElemList,
   handleChange = () => {},
   name = "dropdown",
   valueState = () => {},
   selectedBlendValueState,
 }: dropDown) => {
-
-
-
-
   return (
     <div className={styles.formGroup}>
       <select

@@ -67,10 +67,11 @@ export const CREATE_NEW_RECIPE_FROM_USER = ({
     return `[${instructionArr}]`;
   };
 
-  // console.log({recipeInstructions})
-  // console.log({SelectedblendCategory_id})
-  // console.log({recipeName})
-  // console.log({ingredients})
+  console.log({ recipeName });
+  console.log({ ingredients });
+  console.log({ image });
+  console.log({ recipeInstructions });
+  console.log({ SelectedblendCategory_id });
 
   return gql`
  mutation {

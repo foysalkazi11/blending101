@@ -48,7 +48,6 @@ export const GET_NUTRITION = (ingredients) => {
             {
               ingredientId: "${itm.ingredientId._id}",
               value: ${itm.selectedPortion.gram}
-
             }
           `;
     });

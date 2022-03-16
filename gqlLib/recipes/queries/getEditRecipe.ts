@@ -70,11 +70,11 @@ export const BLEND_CATEGORY = gql`
 
 // ${itm.selectedPortion.gram}
 
-export const GET_EDIT_RECIPE_NUTRITION = (ingredients) => {
+export const GET_RECIPE_NUTRITION = (ingredients) => {
   const convertArrToString = (arr) => {
     arr = arr?.map((itm) => {
-      let value=itm.portions?.filter((item)=>item.default===true);
-      value=value[0].meausermentWeight;
+      let value = itm?.portions?.filter((item) => item.default === true);
+      value = value[0]?.meausermentWeight;
       return `
             {
               ingredientId: "${itm?._id}",

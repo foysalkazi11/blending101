@@ -12,19 +12,31 @@ import { BiLoaderAlt } from "react-icons/bi";
 import { BiBarChart } from "react-icons/bi";
 import { BsCartPlus } from "react-icons/bs";
 import { useAppDispatch } from "../../../../redux/hooks";
-import { setOpenCommentsTray, setToggleModal } from "../../../../redux/slices/sideTraySlice";
+import {
+  setOpenCommentsTray,
+  setToggleModal,
+} from "../../../../redux/slices/sideTraySlice";
 import Modal from "../../../../theme/modal/customModal/CustomModal";
 import ShareRecipeModal from "../shareRecipeModal/ShareRecipeModal";
 import SaveRecipe from "../saveRecipe/SaveRecipe";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
-const Center = (recipeData) => {
+const Center = ({
+  recipeData,
+  counter,
+  setCounter,
+  nutritionState,
+  setNutritionState,
+  singleElement,
+  setsingleElement,
+}) => {
   const router = useRouter();
-  const [counter, setCounter] = useState(1);
   const dispatch = useAppDispatch();
   const [showRecipeModal, setShowRecipeModal] = useState(true);
-  const recipeDetails = recipeData && recipeData;
+  const recipeDetails = recipeData;
+
+  console.log(recipeData);
 
   const openCommentsTray = () => {
     dispatch(setOpenCommentsTray(true));
@@ -57,7 +69,11 @@ const Center = (recipeData) => {
         <p className={styles.text}>
           {isReadMore ? text.slice(0, 300) : text},
           <span onClick={toggleReadMore} className={styles.read_or_hide}>
-            {isReadMore ? <span>&nbsp; {"Read More"}</span> : <span>&nbsp; {"Read Less"}</span>}
+            {isReadMore ? (
+              <span>&nbsp; {"Read More"}</span>
+            ) : (
+              <span>&nbsp; {"Read Less"}</span>
+            )}
           </span>
         </p>
       );
@@ -79,10 +95,13 @@ const Center = (recipeData) => {
           <h3>Recipe</h3>
         </div>
         <div className={styles.alignItems}>
-          <div className={styles.editBox} onClick={()=>router.push(`/edit_recipe/${recipeDetails?.recipeData?._id}`)}>
+          <div
+            className={styles.editBox}
+            onClick={() => router.push(`/edit_recipe/${recipeDetails?._id}`)}
+          >
             <FiEdit2 className={styles.editIcon} />
           </div>
-          <div className={styles.closeBox}>
+          <div className={styles.closeBox} onClick={() => router.push(`/`)}>
             <MdOutlineClose className={styles.closeIcon} />
           </div>
         </div>
@@ -90,16 +109,22 @@ const Center = (recipeData) => {
 
       <div className={styles.contentBox}>
         <div className={styles.heading}>
-          <h3>{recipeDetails?.recipeData?.name}</h3>
+          <h3>{recipeDetails?.name}</h3>
           <span className={styles.ratingBox}>
             <img src="/images/rating.svg" alt="" />
-            {recipeDetails?.recipeData?.averageRating} ({recipeDetails?.recipeData?.numberOfRating})
+            {recipeDetails?.averageRating} ({recipeDetails?.numberOfRating})
           </span>
         </div>
         <div className={styles.subMenu}>
           <div className={styles.alignItems}>
-            <div className={styles.recipeType}>{recipeDetails?.recipeData?.recipeBlendCategory?.name}</div>
-            <img src="/images/yummly-logo.png" alt="recipe_logo" className={styles.recipeLogo} />
+            <div className={styles.recipeType}>
+              {recipeDetails?.recipeBlendCategory?.name}
+            </div>
+            <img
+              src="/images/yummly-logo.png"
+              alt="recipe_logo"
+              className={styles.recipeLogo}
+            />
           </div>
           <div className={styles.alignItems}>
             <div className={styles.iconWithText}>
@@ -135,12 +160,27 @@ const Center = (recipeData) => {
         </div>
 
         <div className={styles.sliderBox}>
-          {recipeDetails?.recipeData?.image && (
+          {recipeDetails?.image && (
             <SlickSlider moreSetting={responsiveSetting}>
-              {recipeDetails?.recipeData?.image.map((img, index) => {
+              {recipeDetails?.image.map((img, index) => {
                 return (
                   <div key={index} className={styles.imageBox}>
-                    {img.image ? <Image src={img.image} alt="recipe_image" layout="fill" objectFit="cover" /> : <BiLoaderAlt />}
+                    <div
+                      className={styles.imageBlurBox}
+                      style={{
+                        backgroundImage: `url(${img.image})`,
+                      }}
+                    />
+                    {img.image ? (
+                      <Image
+                        src={img.image}
+                        alt="recipe_image"
+                        layout="fill"
+                        objectFit="contain"
+                      />
+                    ) : (
+                      <BiLoaderAlt />
+                    )}
                   </div>
                 );
               })}
@@ -165,7 +205,7 @@ const Center = (recipeData) => {
         </div>
 
         <div>
-          <ReadMore>{recipeDetails?.recipeData?.description}</ReadMore>
+          <ReadMore>{recipeDetails?.description}</ReadMore>
         </div>
       </div>
       <div className={styles.ingredentContainer}>
@@ -177,7 +217,13 @@ const Center = (recipeData) => {
           <div className={styles.counter}>
             <p>Servings : </p>
             <div className={styles.count}>
-              <button onClick={() => setCounter((pre) => (Number(pre) <= 1 ? Number(pre) : Number(pre) - 1))}>
+              <button
+                onClick={() =>
+                  setCounter((pre) =>
+                    Number(pre) <= 1 ? Number(pre) : Number(pre) - 1
+                  )
+                }
+              >
                 <MdRemove className={styles.icon} />
               </button>
               <input
@@ -203,21 +249,70 @@ const Center = (recipeData) => {
           </div>
         </div>
         <div className={styles.ingredentDisContainer}>
-          {recipeDetails?.recipeData?.ingredients &&
-            recipeDetails?.recipeData?.ingredients?.map((ingredient, index) => {
+          {recipeDetails?.ingredients &&
+            recipeDetails?.ingredients?.map((ingredient, index) => {
               return (
-                <div className={styles.singleIngredent} key={index + "ingredients_recipeDetails"}>
+                <div
+                  className={styles.singleIngredent}
+                  key={index + "ingredients_recipeDetails"}
+                >
                   <div className={styles.leftSide}>
                     <img src="/images/5-2-avocado-png-hd.png" alt="icon" />
-                    <p>{`${ingredient?.selectedPortion?.quantity * counter} ${ingredient.selectedPortion.name} ${
-                      ingredient?.ingredientId?.ingredientName
-                    }`}</p>
+                    <div>
+                      {`${ingredient?.selectedPortion?.quantity * counter}
+                      ${ingredient.selectedPortion.name} `}
+                      {nutritionState &&
+                      ingredient?.ingredientId?._id ===
+                        nutritionState[0].ingredientId?._id &&
+                      singleElement === true ? (
+                        <span
+                          className={styles.leftSide__highlighted}
+                          style={{ color: "#fe5d1f" }}
+                        >
+                          {ingredient?.ingredientId?.ingredientName}
+                        </span>
+                      ) : (
+                        <span className={styles.leftSide__highlighted}>
+                          {ingredient?.ingredientId?.ingredientName}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  <div className={styles.iconGroup}>
-                    <MdOutlineInfo className={styles.icon} />
-                    <BiBarChart className={styles.icon} />
-                    <BsCartPlus className={styles.icon} />
-                  </div>
+                  {nutritionState && ingredient?.ingredientId?._id ===
+                    nutritionState[0].ingredientId?._id &&
+                  singleElement === true ? (
+                    <div
+                      className={styles.iconGroup}
+                      style={{ display: "flex" }}
+                    >
+                      <MdOutlineInfo className={styles.icon} />
+
+                      <BiBarChart
+                        style={{ color: "#fe5d1f" }}
+                        className={styles.icon}
+                        onClick={() => {
+                          setsingleElement(true);
+                          setNutritionState([ingredient]);
+                        }}
+                      />
+
+                      <BsCartPlus className={styles.icon} />
+                    </div>
+                  ) : (
+                    <div className={styles.iconGroup}>
+                      <MdOutlineInfo className={styles.icon} />
+
+                      <BiBarChart
+                        className={styles.icon}
+                        onClick={() => {
+                          setsingleElement(true);
+                          setNutritionState([ingredient]);
+                        }}
+                      />
+
+                      <BsCartPlus className={styles.icon} />
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -228,10 +323,13 @@ const Center = (recipeData) => {
           <img src="/images/chef.svg" alt="basket" />
           <h3>How to</h3>
         </div>
-        {recipeDetails?.recipeData?.recipeInstructions &&
-          recipeDetails?.recipeData?.recipeInstructions?.map((step, index) => {
+        {recipeDetails?.recipeInstructions &&
+          recipeDetails?.recipeInstructions?.map((step, index) => {
             return (
-              <div className={styles.steps} key={index + "recipeInstruction__recipeDetails"}>
+              <div
+                className={styles.steps}
+                key={index + "recipeInstruction__recipeDetails"}
+              >
                 <span>Step {index + 1}</span>
                 <p>{step}</p>
               </div>
