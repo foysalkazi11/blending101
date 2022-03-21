@@ -344,6 +344,7 @@ const IngredientList = ({ recipeInstructions }: IngredientListPorps) => {
                       </Draggable>
                     );
                   })}
+                  {provided.placeholder}
                 </ol>
               )}
             </Droppable>
