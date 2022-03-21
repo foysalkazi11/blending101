@@ -364,6 +364,24 @@
         background-color: #FBFBFB;
         border-radius: 10px;
 
+        &__drag {
+            color: #C4C4C4;
+            font-size: 20px;
+            position: absolute;
+            // display: none;
+            top: 50%;
+
+
+
+            svg {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%) scale(0.55);
+                left: -40px;
+                // cursor: pointer;
+            }
+        }
+
 
         &__li {
             position: relative;
@@ -377,7 +395,10 @@
                 span {
                     display: block;
                 }
+            }
 
+            &:hover .how__to__steps__drag{
+                display: block;
             }
 
             &__edit {

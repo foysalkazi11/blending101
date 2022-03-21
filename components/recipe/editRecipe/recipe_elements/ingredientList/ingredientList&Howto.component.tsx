@@ -101,12 +101,21 @@ const IngredientList = ({ recipeInstructions }: IngredientListPorps) => {
     setInputValue(tempValue);
   };
 
-  const handleOnDragEnd = (result) => {
+  const handleOnDragEnd = (result, type) => {
     if (!result) return;
-    const items = [...selectedIngredientsList];
-    const [reOrderedItem] = items?.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reOrderedItem);
-    dispatch(setSelectedIngredientsList(items));
+
+    if (type === "ingredients") {
+      const items = [...selectedIngredientsList];
+      const [reOrderedItem] = items?.splice(result.source.index, 1);
+      items.splice(result.destination.index, 0, reOrderedItem);
+      dispatch(setSelectedIngredientsList(items));
+    }
+    if (type === "steps") {
+      const items = [...howToState];
+      const [reOrderedItem] = items?.splice(result.source.index, 1);
+      items.splice(result.destination.index, 0, reOrderedItem);
+      dispatch(setRecipeInstruction(items));
+    }
   };
   return (
     <div className={styles.mainCard}>
@@ -160,7 +169,7 @@ const IngredientList = ({ recipeInstructions }: IngredientListPorps) => {
           </div>
         </div>
         <div className={styles.ingredients}>
-          <DragDropContext onDragEnd={(result) => handleOnDragEnd(result)}>
+          <DragDropContext onDragEnd={(result) => handleOnDragEnd(result, "ingredients")}>
             <Droppable droppableId="draggableIngredientList">
               {(provided) => (
                 <ul {...provided.droppableProps} ref={provided.innerRef}>
@@ -286,34 +295,59 @@ const IngredientList = ({ recipeInstructions }: IngredientListPorps) => {
           <span className={styles.how__to__headingText}>How to</span>
         </h4>
         <div className={styles.how__to__steps}>
-          <ol>
-            {howToState?.map((elem) => {
-              return (
-                <li className={styles.how__to__steps__li} key={elem.id}>
-                  {elem.step}
-                  <span
-                    className={styles.how__to__steps__li__edit}
-                    onClick={() => editStep(elem.id)}
-                  >
-                    <ModeEditOutlineOutlinedIcon />
-                  </span>
-                  <span
-                    className={styles.how__to__steps__li__bin}
-                    onClick={() => removeStep(elem.id)}
-                  >
-                    <div className={styles.how__to__steps__li__bin__imgDiv}>
-                      <Image
-                        src={"/icons/noun_Delete_1447966.svg"}
-                        alt=""
-                        layout="fill"
-                        objectFit="contain"
-                      />
-                    </div>
-                  </span>
-                </li>
-              );
-            })}
-          </ol>
+          <DragDropContext
+            onDragEnd={(result) => {
+              handleOnDragEnd(result, "steps");
+            }}
+          >
+            <Droppable droppableId="draggableIngredientList">
+              {(provided) => (
+                <ol {...provided.droppableProps} ref={provided.innerRef}>
+                  {howToState?.map((elem, index) => {
+                    return (
+                      <Draggable key={elem.step} draggableId={elem.step} index={index}>
+                        {(provided) => (
+                          <li
+                            className={styles.how__to__steps__li}
+                            key={elem.id}
+                            {...provided.draggableProps}
+                            ref={provided.innerRef}
+                            {...provided.dragHandleProps}
+                          >
+                            <div className={styles.how__to__steps__drag}>
+                              <DragIndicatorIcon
+                                className={styles.how__to__steps__drag}
+                              />
+                            </div>
+                            {elem.step}
+                            <span
+                              className={styles.how__to__steps__li__edit}
+                              onClick={() => editStep(elem.id)}
+                            >
+                              <ModeEditOutlineOutlinedIcon />
+                            </span>
+                            <span
+                              className={styles.how__to__steps__li__bin}
+                              onClick={() => removeStep(elem.id)}
+                            >
+                              <div className={styles.how__to__steps__li__bin__imgDiv}>
+                                <Image
+                                  src={"/icons/noun_Delete_1447966.svg"}
+                                  alt=""
+                                  layout="fill"
+                                  objectFit="contain"
+                                />
+                              </div>
+                            </span>
+                          </li>
+                        )}
+                      </Draggable>
+                    );
+                  })}
+                </ol>
+              )}
+            </Droppable>
+          </DragDropContext>
 
           <div className={styles.how__to__searchBar}>
             <span>
