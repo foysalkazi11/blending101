@@ -68,6 +68,8 @@ const EditRecipeComponent = () => {
       allIngredients={classBasedData}
       nutritionTrayData={recipeBasedNutrition && JSON.parse(recipeBasedNutrition)}
       recipeInstructions={recipeBasedData?.recipeInstructions}
+      allBlendCategories={allBlendBasedCategory}
+      selectedBLendCategory={recipeBasedData?.recipeBlendCategory?.name}
     />
   );
 };

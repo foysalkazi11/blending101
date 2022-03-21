@@ -14,6 +14,7 @@ import {
   setSelectedIngredientsList,
   setServingCounter,
 } from "../../../../../redux/edit_recipe/editRecipeStates";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 type IngredientListPorps = {
   recipeInstructions?: string[];
@@ -99,6 +100,14 @@ const IngredientList = ({ recipeInstructions }: IngredientListPorps) => {
     let tempValue = e.target.value;
     setInputValue(tempValue);
   };
+
+  const handleOnDragEnd = (result) => {
+    if (!result) return;
+    const items = [...selectedIngredientsList];
+    const [reOrderedItem] = items?.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reOrderedItem);
+    dispatch(setSelectedIngredientsList(items));
+  };
   return (
     <div className={styles.mainCard}>
       <div className={styles.ingredients__main__card}>
@@ -151,79 +160,100 @@ const IngredientList = ({ recipeInstructions }: IngredientListPorps) => {
           </div>
         </div>
         <div className={styles.ingredients}>
-          <ul>
-            {selectedIngredientsList?.map((elem) => {
-              return (
-                <li
-                  key={elem.ingredientName + elem._id}
-                  className={styles.ingredients__li}
-                >
-                  <div className={styles.ingredients__drag}>
-                    <DragIndicatorIcon className={styles.ingredients__drag} />
-                  </div>
-                  {elem.featuredImage !== null ? (
-                    <div className={styles.ingredients__icons}>
-                      <Image
-                        src={elem.featuredImage}
-                        alt="Picture will load soon"
-                        objectFit="contain"
-                        layout="fill"
-                      />
-                    </div>
-                  ) : (
-                    <div className={styles.ingredients__icons}>
-                      <Image
-                        src={"/food/Dandelion.png"}
-                        alt="Picture will load soon"
-                        objectFit="contain"
-                        layout="fill"
-                      />
-                    </div>
-                  )}
-                  {/* to create ingredients lists  */}
-                  <div className={styles.ingredients__text}>
-                    <span>
-                      {elem.portions[0].meausermentWeight === "Quantity not specified"
-                        ? 1
-                        : // @ts-ignore
-                          Math.ceil(
-                            // @ts-ignore
-                            parseFloat(
-                              // @ts-ignore
-                              (100 / elem?.portions[0].meausermentWeight) * servingCounter
-                            ).toFixed(1)
-                          )}
-                      &nbsp;
-                    </span>
-                    <span>
-                      {elem.portions[0].measurement === "Quantity not specified"
-                        ? ""
-                        : elem.portions[0].measurement}
-                      &nbsp;
-                    </span>
-                    <span className={styles.ingredients__text__highlighted}>
-                      {elem.ingredientName}
-                    </span>
-                  </div>
-                  <span
-                    className={styles.ingredients__edit}
-                    // onClick={() => editIngredient(elem.id)}
-                  ></span>
-                  <div
-                    className={styles.ingredients__bin}
-                    onClick={() => removeIngredient(elem._id)}
-                  >
-                    <Image
-                      src={"/icons/noun_Delete_1447966.svg"}
-                      alt=""
-                      layout="fill"
-                      objectFit="contain"
-                    />
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+          <DragDropContext onDragEnd={(result) => handleOnDragEnd(result)}>
+            <Droppable droppableId="draggableIngredientList">
+              {(provided) => (
+                <ul {...provided.droppableProps} ref={provided.innerRef}>
+                  {selectedIngredientsList?.map((elem, index) => {
+                    return (
+                      <Draggable
+                        key={elem.ingredientName + elem._id}
+                        draggableId={elem.ingredientName + elem._id}
+                        index={index}
+                      >
+                        {(provided) => (
+                          <li
+                            className={styles.ingredients__li}
+                            {...provided.draggableProps}
+                            ref={provided.innerRef}
+                          >
+                            <div
+                              className={styles.ingredients__drag}
+                              {...provided.dragHandleProps}
+                            >
+                              <DragIndicatorIcon className={styles.ingredients__drag} />
+                            </div>
+                            {elem.featuredImage !== null ? (
+                              <div className={styles.ingredients__icons}>
+                                <Image
+                                  src={elem.featuredImage}
+                                  alt="Picture will load soon"
+                                  objectFit="contain"
+                                  layout="fill"
+                                />
+                              </div>
+                            ) : (
+                              <div className={styles.ingredients__icons}>
+                                <Image
+                                  src={"/food/Dandelion.png"}
+                                  alt="Picture will load soon"
+                                  objectFit="contain"
+                                  layout="fill"
+                                />
+                              </div>
+                            )}
+                            {/* to create ingredients lists  */}
+                            <div className={styles.ingredients__text}>
+                              <span>
+                                {elem.portions[0].meausermentWeight ===
+                                "Quantity not specified"
+                                  ? 1
+                                  : // @ts-ignore
+                                    Math.ceil(
+                                      // @ts-ignore
+                                      parseFloat(
+                                        // @ts-ignore
+                                        (100 / elem?.portions[0].meausermentWeight) *
+                                          servingCounter
+                                      ).toFixed(1)
+                                    )}
+                                &nbsp;
+                              </span>
+                              <span>
+                                {elem.portions[0].measurement === "Quantity not specified"
+                                  ? ""
+                                  : elem.portions[0].measurement}
+                                &nbsp;
+                              </span>
+                              <span className={styles.ingredients__text__highlighted}>
+                                {elem.ingredientName}
+                              </span>
+                            </div>
+                            <span
+                              className={styles.ingredients__edit}
+                              // onClick={() => editIngredient(elem.id)}
+                            ></span>
+                            <div
+                              className={styles.ingredients__bin}
+                              onClick={() => removeIngredient(elem._id)}
+                            >
+                              <Image
+                                src={"/icons/noun_Delete_1447966.svg"}
+                                alt=""
+                                layout="fill"
+                                objectFit="contain"
+                              />
+                            </div>
+                          </li>
+                        )}
+                      </Draggable>
+                    );
+                  })}
+                  {provided.placeholder}
+                </ul>
+              )}
+            </Droppable>
+          </DragDropContext>
           <div className={styles.ingredients__searchBar}>
             <span>
               <input

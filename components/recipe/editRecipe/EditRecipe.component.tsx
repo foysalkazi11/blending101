@@ -21,6 +21,8 @@ interface editRecipe {
   allIngredients: [];
   nutritionTrayData: any;
   recipeInstructions: string[];
+  allBlendCategories: [];
+  selectedBLendCategory: string;
 }
 
 const EditRecipePage = ({
@@ -28,6 +30,8 @@ const EditRecipePage = ({
   allIngredients,
   nutritionTrayData,
   recipeInstructions,
+  allBlendCategories,
+  selectedBLendCategory,
 }: editRecipe) => {
   const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
   const [images, setImages] = useState<any[]>([]);
@@ -118,8 +122,8 @@ const EditRecipePage = ({
           <Center_header />
           <Center_Elements
             recipeName={recipeName}
-
-            // allBlendCategories={allBlendCategories}
+            allBlendCategories={allBlendCategories}
+            selectedBLendCategory={selectedBLendCategory}
             // recipeImages={recipeImages}
             // mode={mode}
             // blendCategoryList={blendCategory}
