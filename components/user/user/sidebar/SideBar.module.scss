@@ -75,10 +75,13 @@
       background-color: #fbfbfb;
       font-weight: 400;
       font-size: 13px;
-      color: #c4c4c4;
+      color: #929292;
 
       line-height: 1.125rem;
       text-align: center;
+      &:focus {
+        border: 1px solid #fe5d1f;
+      }
     }
 
     .textArea::-webkit-scrollbar-track {

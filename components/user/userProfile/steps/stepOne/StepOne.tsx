@@ -47,17 +47,17 @@ const StepOne = ({ userProfile, updateUserProfile }: StepOneProps) => {
         updateUserProfile={updateUserProfile}
         userProfile={userProfile}
       />
-      <Scale
+      {/* <Scale
         title="How old are you?"
         resultWithText="years old"
         fieldName="age"
         setValue={updateUserProfile}
-        value={userProfile?.age}
+        value={userProfile?.age?.quantity}
         min={"0"}
         max={"100"}
         shortLineDivider={2}
         longLineDivider={10}
-      />
+      /> */}
 
       <Scale
         title="What's your current weight?"
@@ -69,7 +69,7 @@ const StepOne = ({ userProfile, updateUserProfile }: StepOneProps) => {
         max={"200"}
         longLineDivider={5}
       />
-      <ScaleHeight
+      {/* <ScaleHeight
         title="What's your current height?"
         resultWithText="inches"
         fieldName="height"
@@ -79,7 +79,7 @@ const StepOne = ({ userProfile, updateUserProfile }: StepOneProps) => {
         max={"216"}
         longLineDivider={18}
         shortLineDivider={3}
-      />
+      /> */}
       <SectionWithIcon
         title="Your Activity"
         body={activity}
