@@ -63,13 +63,13 @@ const IngredientList = ({ recipeInstructions, allIngredients }: IngredientListPo
     }
   };
 
-  const selectIngredientOnClick=(elem)=>{
-    let modifiedArray=[];
-    modifiedArray=Array.from(new Set([...selectedIngredientsList, elem]));
+  const selectIngredientOnClick = (elem) => {
+    let modifiedArray = [];
+    modifiedArray = Array.from(new Set([...selectedIngredientsList, elem]));
     dispatch(setSelectedIngredientsList([...modifiedArray]));
     setInputIngredientValue("");
     setSuggestedIngredients([]);
-  }
+  };
 
   const howToState = useAppSelector((state) => state?.editRecipeReducer?.recipeInstruction);
 
@@ -325,7 +325,7 @@ const IngredientList = ({ recipeInstructions, allIngredients }: IngredientListPo
                     style={{ listStyle: "none" }}
                     className={styles.suggested__li}
                     onClick={() => {
-                selectIngredientOnClick(elem)
+                      selectIngredientOnClick(elem);
                     }}
                   >
                     <div className={styles.suggested__div}>
