@@ -64,14 +64,16 @@ const Physical = ({ userProfile, updateUserProfile }: PhysicalProps) => {
             <ScaleComponent
               fieldName="age"
               setValue={updateUserProfile}
-              value={userProfile?.age}
+              value={userProfile?.age?.quantity}
               min={"0"}
               max={"100"}
               shortLineDivider={2}
               longLineDivider={10}
             />
 
-            <p className={styles.showValue}>{userProfile?.age} years old</p>
+            <p className={styles.showValue}>
+              {userProfile?.age?.quantity} years old
+            </p>
           </div>
 
           <div className={styles.contentContainer__elementDiv__heading}>
