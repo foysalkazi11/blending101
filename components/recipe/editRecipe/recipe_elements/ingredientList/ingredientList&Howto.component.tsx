@@ -5,7 +5,6 @@ import styles from "./ingredientList&Howto.module.scss";
 import Image from "next/image";
 import AddSharpIcon from "../../../../../public/icons/add_black_36dp.svg";
 import RemoveSharpIcon from "../../../../../public/icons/remove_black_36dp.svg";
-import ButtonComponent from "../../../../../theme/button/buttonA/button.component";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
 import DragIndicatorIcon from "../../../../../public/icons/drag_indicator_black_36dp.svg";
 import ModeEditOutlineOutlinedIcon from "../../../../../public/icons/mode_edit_black_36dp.svg";
@@ -18,16 +17,19 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 type IngredientListPorps = {
   recipeInstructions?: string[];
+  allIngredients?: any[];
 };
 
-const IngredientList = ({ recipeInstructions }: IngredientListPorps) => {
+const IngredientList = ({ recipeInstructions, allIngredients }: IngredientListPorps) => {
   const [selectedElementId, setSelectedElementId] = useState(null);
   const [inputValue, setInputValue] = useState("");
+  const [inputIngredientValue, setInputIngredientValue] = useState("");
   const [isFetching, setIsFetching] = useState(null);
 
   const dispatch = useAppDispatch();
+
   const selectedIngredientsList = useAppSelector(
-    (state) => state.editRecipeReducer.selectedIngredientsList
+    (state) => state?.editRecipeReducer?.selectedIngredientsList
   );
   const removeIngredient = (id) => {
     let updated_list = selectedIngredientsList?.filter((elem) => {
@@ -35,7 +37,40 @@ const IngredientList = ({ recipeInstructions }: IngredientListPorps) => {
     });
     dispatch(setSelectedIngredientsList(updated_list));
   };
-  const howToState = useAppSelector((state) => state.editRecipeReducer.recipeInstruction);
+
+  const recipeIngredientsOnInput = (e) => {
+    setInputIngredientValue(e.target.value);
+  };
+  const recipeIngredientsOnKeyDown = (e) => {
+    let modifiedArray = [];
+
+    if (e.key === "Enter") {
+      const foundIngredient = allIngredients?.filter((elem) => {
+        return elem?.ingredientName
+          ?.toLowerCase()
+          ?.includes(inputIngredientValue?.toLowerCase());
+      });
+
+      // selectedIngredientsList?.forEach((elem) => {
+      //   foundIngredient?.forEach((itm) => {
+      //     if (itm._id !== elem._id) {
+      //       modifiedArray = [...selectedIngredientsList, itm];
+      //     }
+      //   });
+      // });
+      console.log(foundIngredient);
+      console.log(e.key);
+      console.log(modifiedArray);
+
+      dispatch(setSelectedIngredientsList(modifiedArray));
+      setInputIngredientValue("");
+    }
+  };
+
+  const howToState = useAppSelector(
+    (state) => state?.editRecipeReducer?.recipeInstruction
+  );
+
   const servingCounter = useAppSelector(
     (state) => state.editRecipeReducer.servingCounter
   );
@@ -48,7 +83,6 @@ const IngredientList = ({ recipeInstructions }: IngredientListPorps) => {
   useEffect(() => {
     let howList = [];
     recipeInstructions?.forEach((elem, index) => {
-      console.log(elem);
       howList = [...howList, { id: Date.now() + index + elem, step: elem }];
     });
     dispatch(setRecipeInstruction(howList));
@@ -117,6 +151,7 @@ const IngredientList = ({ recipeInstructions }: IngredientListPorps) => {
       dispatch(setRecipeInstruction(items));
     }
   };
+
   return (
     <div className={styles.mainCard}>
       <div className={styles.ingredients__main__card}>
@@ -267,17 +302,22 @@ const IngredientList = ({ recipeInstructions }: IngredientListPorps) => {
             <span>
               <input
                 onKeyDown={(e) => {
-                  // IngredientSubmitHandler(e);
+                  recipeIngredientsOnKeyDown(e);
                 }}
-                value={""}
+                value={inputIngredientValue}
                 onChange={(e) => {
-                  // inputTagValueHandlerIngredient(e);
+                  recipeIngredientsOnInput(e);
                 }}
                 type="text"
                 name="recipe elements"
                 id=""
                 placeholder="Enter a single ingredient or paste several ingredients"
               />
+            </span>
+          </div>
+          <div className={styles.ingredients__searchBar} style={{ marginTop: "20px" }}>
+            <span>
+
             </span>
           </div>
         </div>
@@ -370,7 +410,7 @@ const IngredientList = ({ recipeInstructions }: IngredientListPorps) => {
         </div>
       </div>
       {/* isFetching */}
-      <div className={styles.save__Recipe}>
+      {/* <div className={styles.save__Recipe}>
         {isFetching ? (
           <div className={styles.save__Recipe__button}>
             <ButtonComponent
@@ -383,7 +423,7 @@ const IngredientList = ({ recipeInstructions }: IngredientListPorps) => {
         ) : (
           <div
             className={styles.save__Recipe__button}
-            // onClick={() => RecipeApiMutation()}
+            onClick={() => editARecipeFunction()}
           >
             <ButtonComponent
               type={"primary"}
@@ -393,7 +433,7 @@ const IngredientList = ({ recipeInstructions }: IngredientListPorps) => {
             />
           </div>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

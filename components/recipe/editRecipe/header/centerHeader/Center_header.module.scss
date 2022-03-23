@@ -40,6 +40,16 @@ $width:300px;
     }
 }
 
+.save__Recipe__button {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+    min-height: 20px;
+
+}
+
 
 .center__title {
     @include headings();
@@ -54,6 +64,7 @@ $width:300px;
             margin-top: 5px;
             margin-right: 5px;
             margin-left: -5px;
+
             @include responsive(0px, 1201px) {
                 margin-right: 5px;
             }

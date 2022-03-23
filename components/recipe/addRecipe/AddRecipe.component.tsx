@@ -70,9 +70,9 @@ const AddRecipePage = ({ nutritionData, recipeData, mode }: editRecipe) => {
     }
   }, [blendCategoriesInProgress]);
 
-  useEffect(() => {
-    console.log(selectedBlendValueState);
-  }, [selectedBlendValueState]);
+  // useEffect(() => {
+  //   console.log(selectedBlendValueState);
+  // }, [selectedBlendValueState]);
 
   return (
     <AContainer>

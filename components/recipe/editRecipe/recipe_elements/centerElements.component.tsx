@@ -62,14 +62,16 @@ const Center_Elements = ({
   };
 
   const handleHeadingchange = (text) => {
-    // let setpos=document.createRange();
-    // //@ts-ignore
-    // dispatch(setEditRecipeName(text));
     //@ts-ignore
-    // console.log(editRecipeHeading.current.textContent);
+    editRecipeHeading.current.textContent = text;
+    dispatch(setEditRecipeName(text));
   };
 
-  // console.log(recipeImages);
+  useEffect(() => {
+    if (!recipeName) return;
+    handleHeadingchange(recipeName);
+  }, [recipeName]);
+
   return (
     <div className={styles.main}>
       <div className={styles.topSection}>
@@ -82,9 +84,7 @@ const Center_Elements = ({
           onInput={(e) => {
             handleHeadingchange(e.currentTarget.textContent);
           }}
-        >
-          {recipeName}
-        </h3>
+        />
 
         <div className={styles.topSection__RightIcon}>
           <MoreVertIcon />
