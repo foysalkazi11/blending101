@@ -8,7 +8,7 @@ import {
   GET_RECIPE_NUTRITION,
   INGREDIENTS_BY_CATEGORY_AND_CLASS,
 } from "../../../gqlLib/recipes/queries/getEditRecipe";
-import { GET_A_RECIPE_FOR_EDIT_RECIPE, GET_RECIPE } from "../../../gqlLib/recipes/queries/getRecipeDetails";
+import { GET_A_RECIPE_FOR_EDIT_RECIPE } from "../../../gqlLib/recipes/queries/getRecipeDetails";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
   setEditRecipeName,
@@ -21,16 +21,15 @@ const EditRecipeComponent = () => {
   const router = useRouter();
   const { recipeId } = router.query;
   const dispatch = useAppDispatch();
+
   const recipeName = useAppSelector((state) => state?.editRecipeReducer?.recipeName);
   const selectedIngredientsList = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedIngredientsList
   );
-  const recipeInstruction = useAppSelector(
-    (state) => state?.editRecipeReducer?.recipeInstruction
-  );
+  const recipeInstruction = useAppSelector((state) => state?.editRecipeReducer?.recipeInstruction);
 
   const { data: classData } = useQuery(INGREDIENTS_BY_CATEGORY_AND_CLASS, {
-    variables: { classType: "All"},
+    variables: { classType: "All" },
   });
 
   const { data: recipeData } = useQuery(GET_A_RECIPE_FOR_EDIT_RECIPE, {
@@ -47,8 +46,7 @@ const EditRecipeComponent = () => {
   ];
 
   useEffect(() => {
-    if (!recipeId || !classBasedData || !recipeBasedData || !allBlendBasedCategory)
-      return;
+    if (!recipeId || !classBasedData || !recipeBasedData || !allBlendBasedCategory) return;
     console.log({ recipeId });
     console.log({ classBasedData });
     console.log({ recipeBasedData });
@@ -78,15 +76,14 @@ const EditRecipeComponent = () => {
     EDIT_A_RECIPE({
       recipeId: recipeId,
       recipeName: recipeName,
-      recipeIngredients:selectedIngredientsList,
+      recipeIngredients: selectedIngredientsList,
       recipeInstruction: recipeInstruction,
     })
   );
 
   useEffect(() => {
-  console.log(selectedIngredientsList)
-  }, [selectedIngredientsList])
-
+    console.log(selectedIngredientsList);
+  }, [selectedIngredientsList]);
 
   return (
     <EditRecipePage

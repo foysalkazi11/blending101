@@ -24,7 +24,7 @@ const IngredientList = ({ recipeInstructions, allIngredients }: IngredientListPo
   const [selectedElementId, setSelectedElementId] = useState(null);
   const [inputValue, setInputValue] = useState("");
   const [inputIngredientValue, setInputIngredientValue] = useState("");
-  const [isFetching, setIsFetching] = useState(null);
+  const [suggestedIngredients, setSuggestedIngredients] = useState([]);
 
   const dispatch = useAppDispatch();
 
@@ -40,40 +40,32 @@ const IngredientList = ({ recipeInstructions, allIngredients }: IngredientListPo
 
   const recipeIngredientsOnInput = (e) => {
     setInputIngredientValue(e.target.value);
+    const foundIngredient = allIngredients?.filter((elem) => {
+      return elem?.ingredientName?.toLowerCase()?.includes(inputIngredientValue?.toLowerCase());
+    });
+    setSuggestedIngredients(foundIngredient);
+    if (e.target.value.length === 0) {
+      setSuggestedIngredients([]);
+    }
   };
   const recipeIngredientsOnKeyDown = (e) => {
     let modifiedArray = [];
 
     if (e.key === "Enter") {
-      const foundIngredient = allIngredients?.filter((elem) => {
-        return elem?.ingredientName
-          ?.toLowerCase()
-          ?.includes(inputIngredientValue?.toLowerCase());
-      });
-
-      // selectedIngredientsList?.forEach((elem) => {
-      //   foundIngredient?.forEach((itm) => {
-      //     if (itm._id !== elem._id) {
-      //       modifiedArray = [...selectedIngredientsList, itm];
-      //     }
-      //   });
-      // });
-      console.log(foundIngredient);
-      console.log(e.key);
-      console.log(modifiedArray);
-
+      if (selectedIngredientsList.length === 0) {
+        modifiedArray = [...suggestedIngredients];
+      } else {
+        modifiedArray = Array.from(new Set([...selectedIngredientsList, ...suggestedIngredients]));
+      }
       dispatch(setSelectedIngredientsList(modifiedArray));
       setInputIngredientValue("");
+      setSuggestedIngredients([]);
     }
   };
 
-  const howToState = useAppSelector(
-    (state) => state?.editRecipeReducer?.recipeInstruction
-  );
+  const howToState = useAppSelector((state) => state?.editRecipeReducer?.recipeInstruction);
 
-  const servingCounter = useAppSelector(
-    (state) => state.editRecipeReducer.servingCounter
-  );
+  const servingCounter = useAppSelector((state) => state.editRecipeReducer.servingCounter);
 
   const adjusterFunc = (task) => {
     task === "+" && dispatch(setServingCounter(servingCounter + 1));
@@ -144,6 +136,7 @@ const IngredientList = ({ recipeInstructions, allIngredients }: IngredientListPo
       items.splice(result.destination.index, 0, reOrderedItem);
       dispatch(setSelectedIngredientsList(items));
     }
+
     if (type === "steps") {
       const items = [...howToState];
       const [reOrderedItem] = items?.splice(result.source.index, 1);
@@ -191,9 +184,7 @@ const IngredientList = ({ recipeInstructions, allIngredients }: IngredientListPo
             </div>
             <div className={styles.servings__size}>
               <span className={styles.servings__adjuster__name}>Servings Size :</span>
-              <span className={styles.servings__size__score}>
-                {servingCounter * 16}&nbsp;oz
-              </span>
+              <span className={styles.servings__size__score}>{servingCounter * 16}&nbsp;oz</span>
             </div>
             <div className={styles.servings__units}>
               <div className={styles.servings__units__active}>
@@ -221,10 +212,7 @@ const IngredientList = ({ recipeInstructions, allIngredients }: IngredientListPo
                             {...provided.draggableProps}
                             ref={provided.innerRef}
                           >
-                            <div
-                              className={styles.ingredients__drag}
-                              {...provided.dragHandleProps}
-                            >
+                            <div className={styles.ingredients__drag} {...provided.dragHandleProps}>
                               <DragIndicatorIcon className={styles.ingredients__drag} />
                             </div>
                             {elem.featuredImage !== null ? (
@@ -249,16 +237,14 @@ const IngredientList = ({ recipeInstructions, allIngredients }: IngredientListPo
                             {/* to create ingredients lists  */}
                             <div className={styles.ingredients__text}>
                               <span>
-                                {elem.portions[0].meausermentWeight ===
-                                "Quantity not specified"
+                                {elem.portions[0].meausermentWeight === "Quantity not specified"
                                   ? 1
                                   : // @ts-ignore
                                     Math.ceil(
                                       // @ts-ignore
                                       parseFloat(
                                         // @ts-ignore
-                                        (100 / elem?.portions[0].meausermentWeight) *
-                                          servingCounter
+                                        (100 / elem?.portions[0].meausermentWeight) * servingCounter
                                       ).toFixed(1)
                                     )}
                                 &nbsp;
@@ -315,9 +301,48 @@ const IngredientList = ({ recipeInstructions, allIngredients }: IngredientListPo
               />
             </span>
           </div>
-          <div className={styles.ingredients__searchBar} style={{ marginTop: "20px" }}>
-            <span>
-
+          <div
+            className={styles.ingredients__searchBar}
+            style={
+              suggestedIngredients.length === 0
+                ? { display: "none", marginTop: "20px" }
+                : { display: "block", marginTop: "20px" }
+            }
+          >
+            <span style={{ justifyContent: "left", flexDirection: "column" }}>
+              {suggestedIngredients?.map((elem) => {
+                return (
+                  <li
+                    key={elem._id}
+                    style={{ listStyle: "none" }}
+                    className={styles.ingredients__li}
+                    onClick={() => {
+                      dispatch(setSelectedIngredientsList([...selectedIngredientsList, elem]));
+                    }}
+                  >
+                    {elem.featuredImage !== null ? (
+                      <div className={styles.ingredients__icons}>
+                        <Image
+                          src={elem.featuredImage}
+                          alt="Picture will load soon"
+                          objectFit="contain"
+                          layout="fill"
+                        />
+                      </div>
+                    ) : (
+                      <div className={styles.ingredients__icons}>
+                        <Image
+                          src={"/food/Dandelion.png"}
+                          alt="Picture will load soon"
+                          objectFit="contain"
+                          layout="fill"
+                        />
+                      </div>
+                    )}
+                    {elem.ingredientName}
+                  </li>
+                );
+              })}
             </span>
           </div>
         </div>
@@ -355,9 +380,7 @@ const IngredientList = ({ recipeInstructions, allIngredients }: IngredientListPo
                             {...provided.dragHandleProps}
                           >
                             <div className={styles.how__to__steps__drag}>
-                              <DragIndicatorIcon
-                                className={styles.how__to__steps__drag}
-                              />
+                              <DragIndicatorIcon className={styles.how__to__steps__drag} />
                             </div>
                             {elem.step}
                             <span
