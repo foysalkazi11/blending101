@@ -63,6 +63,14 @@ const IngredientList = ({ recipeInstructions, allIngredients }: IngredientListPo
     }
   };
 
+  const selectIngredientOnClick=(elem)=>{
+    let modifiedArray=[];
+    modifiedArray=Array.from(new Set([...selectedIngredientsList, elem]));
+    dispatch(setSelectedIngredientsList([...modifiedArray]));
+    setInputIngredientValue("");
+    setSuggestedIngredients([]);
+  }
+
   const howToState = useAppSelector((state) => state?.editRecipeReducer?.recipeInstruction);
 
   const servingCounter = useAppSelector((state) => state.editRecipeReducer.servingCounter);
@@ -302,7 +310,7 @@ const IngredientList = ({ recipeInstructions, allIngredients }: IngredientListPo
             </span>
           </div>
           <div
-            className={styles.ingredients__searchBar}
+            className={styles.suggested__searchBar}
             style={
               suggestedIngredients.length === 0
                 ? { display: "none", marginTop: "20px" }
@@ -315,30 +323,32 @@ const IngredientList = ({ recipeInstructions, allIngredients }: IngredientListPo
                   <li
                     key={elem._id}
                     style={{ listStyle: "none" }}
-                    className={styles.ingredients__li}
+                    className={styles.suggested__li}
                     onClick={() => {
-                      dispatch(setSelectedIngredientsList([...selectedIngredientsList, elem]));
+                selectIngredientOnClick(elem)
                     }}
                   >
-                    {elem.featuredImage !== null ? (
-                      <div className={styles.ingredients__icons}>
-                        <Image
-                          src={elem.featuredImage}
-                          alt="Picture will load soon"
-                          objectFit="contain"
-                          layout="fill"
-                        />
-                      </div>
-                    ) : (
-                      <div className={styles.ingredients__icons}>
-                        <Image
-                          src={"/food/Dandelion.png"}
-                          alt="Picture will load soon"
-                          objectFit="contain"
-                          layout="fill"
-                        />
-                      </div>
-                    )}
+                    <div className={styles.suggested__div}>
+                      {elem.featuredImage !== null ? (
+                        <div className={styles.ingredients__icons}>
+                          <Image
+                            src={elem.featuredImage}
+                            alt="Picture will load soon"
+                            objectFit="contain"
+                            layout="fill"
+                          />
+                        </div>
+                      ) : (
+                        <div className={styles.ingredients__icons}>
+                          <Image
+                            src={"/food/Dandelion.png"}
+                            alt="Picture will load soon"
+                            objectFit="contain"
+                            layout="fill"
+                          />
+                        </div>
+                      )}
+                    </div>
                     {elem.ingredientName}
                   </li>
                 );

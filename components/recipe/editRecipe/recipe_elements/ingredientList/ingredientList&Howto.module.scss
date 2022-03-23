@@ -456,3 +456,28 @@
         }
     }
 }
+
+.suggested {
+
+    &__searchBar {
+        background-color: #FBFBFB;
+        border: 2px solid #f2f2f8;
+        border-radius: 7px;
+    }
+
+    &__li {
+        display: flex;
+        padding: 20px;
+
+        &:hover {
+            background-color: #dad8d893;
+        }
+
+        cursor: pointer;
+
+    }
+
+    &__div {
+        margin-right: 20px;
+    }
+}
