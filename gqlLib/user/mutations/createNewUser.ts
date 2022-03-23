@@ -21,8 +21,15 @@ const CREATE_NEW_USER = gql`
         _id
         gender
         weight
-        age
-        height
+        age {
+          quantity
+          years
+          months
+        }
+        height {
+          feet
+          inches
+        }
         activity
         dieteryLifeStyle
         allergies
