@@ -32,11 +32,11 @@ const User = () => {
     },
     personalization: {
       activity: "",
-      age: "",
+      // age: "",
       allergies: [],
       dieteryLifeStyle: "",
       gender: "",
-      height: "",
+      // height: "",
       weight: "",
       meditcation: [],
       preExistingMedicalConditions: [],
@@ -47,7 +47,7 @@ const User = () => {
   const { dbUser } = useAppSelector((state) => state?.user);
 
   useEffect(() => {
-    if (dbUser) {
+    if (dbUser?.configuration) {
       const {
         bio,
         displayName,
@@ -62,11 +62,11 @@ const User = () => {
 
       const {
         activity,
-        age,
+        // age,
         allergies,
         dieteryLifeStyle,
         gender,
-        height,
+        // height,
         weight,
         meditcation,
         preExistingMedicalConditions,
@@ -89,11 +89,11 @@ const User = () => {
         personalization: {
           ...pre?.personalization,
           activity,
-          age,
+          // age,
           allergies: allergies || [],
           dieteryLifeStyle,
           gender,
-          height,
+          // height,
           weight,
           meditcation: meditcation || [],
           preExistingMedicalConditions: preExistingMedicalConditions || [],
