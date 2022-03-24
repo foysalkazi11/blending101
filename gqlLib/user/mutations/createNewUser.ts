@@ -20,16 +20,13 @@ const CREATE_NEW_USER = gql`
       configuration {
         _id
         gender
-        weight
         age {
           quantity
           years
           months
         }
-        height {
-          feet
-          inches
-        }
+        weightInKilograms
+        heightInCentimeters
         activity
         dieteryLifeStyle
         allergies
