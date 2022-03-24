@@ -70,10 +70,6 @@ const AddRecipePage = ({ nutritionData, recipeData, mode }: editRecipe) => {
     }
   }, [blendCategoriesInProgress]);
 
-  // useEffect(() => {
-  //   console.log(selectedBlendValueState);
-  // }, [selectedBlendValueState]);
-
   return (
     <AContainer>
       <div className={styles.main}>

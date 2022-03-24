@@ -79,7 +79,6 @@ const EditRecipePage = ({
             allBlendCategories={allBlendCategories}
             selectedBLendCategory={selectedBLendCategory}
           />
-
           <IngredientList recipeInstructions={recipeInstructions} allIngredients={allIngredients} />
         </div>
         <div className={styles.right__main}>

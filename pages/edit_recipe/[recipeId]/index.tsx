@@ -81,9 +81,9 @@ const EditRecipeComponent = () => {
     })
   );
 
-  useEffect(() => {
-    console.log(selectedIngredientsList);
-  }, [selectedIngredientsList]);
+  const editARecipeFunction=()=>{
+    editARecipe();
+  }
 
   return (
     <EditRecipePage
@@ -93,7 +93,7 @@ const EditRecipeComponent = () => {
       recipeInstructions={recipeBasedData?.recipeInstructions}
       allBlendCategories={allBlendBasedCategory}
       selectedBLendCategory={recipeBasedData?.recipeBlendCategory?.name}
-      editARecipeFunction={editARecipe}
+      editARecipeFunction={editARecipeFunction}
     />
   );
 };

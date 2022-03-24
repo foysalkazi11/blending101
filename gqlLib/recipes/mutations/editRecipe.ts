@@ -13,44 +13,29 @@ export const EDIT_A_RECIPE = ({
   recipeIngredients,
   recipeInstruction,
 }: editARecipeInterface) => {
-  console.log(recipeInstruction);
-
   const recipeIngredientsString = (array) => {
-    let recipeIngredientsModified;
-
-    array?.forEach((itm) => {
-      console.log(itm);
-
-      recipeIngredientsModified = [
-        ...itm?.portions?.map((elem) => {
-          console.log(elem);
-          if (elem.default === true) {
-            return `
-          {
-            ingredientId: "${itm?._id}",
-            weightInGram: ${elem?.meausermentWeight},
-            selectedPortionName: "${elem?.measurement}"}
-          `;
-          }
-        }),
-      ];
+    let recipeIngredientsModified = [];
+    array?.map((elem) => {
+      elem?.portions?.forEach((itm) => {
+        if (itm.default === true) {
+          recipeIngredientsModified = [
+            ...recipeIngredientsModified,
+            `{ingredientId: "${elem?._id}",weightInGram: ${itm?.meausermentWeight},selectedPortionName: "${itm?.measurement}"}`,
+          ];
+        }
+      });
     });
-
-    // return(recipeIngredientsModified);
-    recipeIngredientsModified = `[${recipeIngredientsModified?.toString()}]`;
-    console.log(recipeIngredientsModified);
+    return `[${recipeIngredientsModified}]`;
   };
 
   const recipeInstructionString = (array) => {
     let recipeInstructionModified = [];
     array?.forEach((itm) => {
-      console.log(itm);
+      recipeInstructionModified = [...recipeInstructionModified, `"${itm.step}"`];
     });
+
+    return(`[${recipeInstructionModified}]`)
   };
-
-  recipeIngredientsString(recipeIngredients);
-
-  recipeInstructionString(recipeInstruction);
 
   return gql`
     mutation {
@@ -59,13 +44,8 @@ export const EDIT_A_RECIPE = ({
           editId: "${recipeId}"
           editableObject: {
             name: "${recipeName}"
-            ingredients: [
-              {
-                ingredientId: "620b6bd640d3f19b558f0c1e"
-                weightInGram: 100
-                selectedPortionName: "cup"
-              }
-            ]
+            ingredients: ${recipeIngredientsString(recipeIngredients)}
+            recipeInstructions: ${recipeInstructionString(recipeInstruction)}
           }
         }
       )

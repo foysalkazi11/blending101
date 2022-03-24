@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   recipeName: "",
+  descriptionRecipe:"",
   recipeImagesArray:[],
   recipeBlobImagesArray: [],
   recipeImagesArrayRaw: [],
@@ -18,6 +19,9 @@ export const editRecipeStateSlice = createSlice({
   reducers: {
     setEditRecipeName: (state, action) => {
       state.recipeName = action?.payload;
+    },
+    setDescriptionRecipe: (state, action) => {
+      state.descriptionRecipe = action?.payload;
     },
     setRecipeImagesArray: (state, action) => {
       state.recipeImagesArray = action?.payload;
@@ -48,6 +52,7 @@ export const editRecipeStateSlice = createSlice({
 
 export const {
   setEditRecipeName,
+  setDescriptionRecipe,
   setRecipeImagesArray,
   setRecipeBlobImagesArray,
   setRecipeImagesArrayRaw,

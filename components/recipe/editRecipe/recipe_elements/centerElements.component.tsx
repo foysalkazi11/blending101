@@ -8,7 +8,10 @@ import Image from "next/image";
 import { setQuantity } from "../../../../redux/edit_recipe/quantity";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import DropDown from "../../../../theme/dropDown/DropDown.component";
-import { setEditRecipeName } from "../../../../redux/edit_recipe/editRecipeStates";
+import {
+  setDescriptionRecipe,
+  setEditRecipeName,
+} from "../../../../redux/edit_recipe/editRecipeStates";
 import RecipeDropDown from "../../../../theme/dropDown/recipeDropDown.component";
 
 type CenterElementsProps = {
@@ -29,9 +32,10 @@ const Center_Elements = ({
   const dispatch = useAppDispatch();
   const editRecipeHeading = useRef();
   const [blendCategoryState, setBlendCategoryState] = useState(null);
-  console.log(blendCategoryState);
   //quantity number sets number for top card bottom right counter in edit recipe
   const quantity_number = useAppSelector((state) => state?.quantityAdjuster?.quantityNum);
+  const recipeDescription=useAppSelector((state)=>state?.editRecipeReducer?.descriptionRecipe);
+
   // variables for ingredients card of edit recipe
   const adjusterFunc = (task, type) => {
     if (type === "quantity_number") {
@@ -44,21 +48,18 @@ const Center_Elements = ({
       }
     }
   };
-
-  console.log(allBlendCategories);
   //lists for each dropdown
   let BlendtecItem = [{ name: `Blentec` }, { name: `Blentec` }];
   let OzItem = [{ name: "64oz" }, { name: "64oz" }];
-  // if (blendCategoryList) {
-  //   blendCategoryList.map((v, i) => {
-  //     WholefoodItem.push(v.name);
-  //     dropDownDataAllFeildsArray.push(v);
-  //   });
-  // }
 
   let dropDownStyle = {
     paddingRight: "0px",
     width: "111%",
+  };
+
+
+  const handleDescriptionChange = (text) => {
+    dispatch(setDescriptionRecipe(text));
   };
 
   const handleHeadingchange = (text) => {
@@ -77,8 +78,8 @@ const Center_Elements = ({
       <div className={styles.topSection}>
         <h3
           className={styles.topSection__heading}
-          contentEditable={true}
-          suppressContentEditableWarning={true}
+          contentEditable
+          suppressContentEditableWarning
           id="recipeTitle"
           ref={editRecipeHeading}
           onInput={(e) => {
@@ -95,11 +96,13 @@ const Center_Elements = ({
       </div>
       <div className={styles.scoreTraydiv}>
         <ScoreTray />
-        <p>
-          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-          voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-        </p>
+        <textarea
+          value={recipeDescription}
+          onChange={(e) => {
+            handleDescriptionChange(e.target.value);
+          }}
+        />
+
         <div className={styles.blendingOptions}>
           <div className={styles.blendingOptions__left}>
             <ul>
