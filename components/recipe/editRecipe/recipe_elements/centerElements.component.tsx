@@ -62,6 +62,7 @@ const Center_Elements = ({
     dispatch(setDescriptionRecipe(text));
   };
 
+
   const handleHeadingchange = (text) => {
     //@ts-ignore
     editRecipeHeading.current.textContent = text;

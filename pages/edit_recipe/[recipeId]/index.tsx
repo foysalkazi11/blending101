@@ -11,6 +11,7 @@ import {
 import { GET_A_RECIPE_FOR_EDIT_RECIPE } from "../../../gqlLib/recipes/queries/getRecipeDetails";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
+  setDescriptionRecipe,
   setEditRecipeName,
   setRecipeImagesArray,
   setSelectedIngredientsList,
@@ -27,6 +28,8 @@ const EditRecipeComponent = () => {
     (state) => state?.editRecipeReducer?.selectedIngredientsList
   );
   const recipeInstruction = useAppSelector((state) => state?.editRecipeReducer?.recipeInstruction);
+  const recipeDescription = useAppSelector((state) => state.editRecipeReducer.descriptionRecipe);
+
 
   const { data: classData } = useQuery(INGREDIENTS_BY_CATEGORY_AND_CLASS, {
     variables: { classType: "All" },
@@ -65,9 +68,9 @@ const EditRecipeComponent = () => {
     });
     dispatch(setSelectedIngredientsList(presentIngredient));
     dispatch(setEditRecipeName(recipeBasedData?.name));
+    dispatch(setDescriptionRecipe(recipeBasedData?.description));
     dispatch(setRecipeImagesArray(recipeBasedData?.image));
   }, [classBasedData, recipeBasedData]);
-
   useEffect(() => {
     console.log(recipeData);
   }, [recipeId, recipeData]);
@@ -76,14 +79,15 @@ const EditRecipeComponent = () => {
     EDIT_A_RECIPE({
       recipeId: recipeId,
       recipeName: recipeName,
+      description: recipeDescription,
       recipeIngredients: selectedIngredientsList,
       recipeInstruction: recipeInstruction,
     })
   );
 
-  const editARecipeFunction=()=>{
+  const editARecipeFunction = () => {
     editARecipe();
-  }
+  };
 
   return (
     <EditRecipePage

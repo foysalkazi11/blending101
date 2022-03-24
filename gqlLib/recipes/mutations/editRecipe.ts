@@ -3,6 +3,7 @@ import { gql } from "@apollo/client";
 interface editARecipeInterface {
   recipeId: any;
   recipeName: string;
+  description:string;
   recipeIngredients: object[];
   recipeInstruction: object[];
 }
@@ -10,6 +11,7 @@ interface editARecipeInterface {
 export const EDIT_A_RECIPE = ({
   recipeId,
   recipeName,
+  description,
   recipeIngredients,
   recipeInstruction,
 }: editARecipeInterface) => {
@@ -46,6 +48,7 @@ export const EDIT_A_RECIPE = ({
             name: "${recipeName}"
             ingredients: ${recipeIngredientsString(recipeIngredients)}
             recipeInstructions: ${recipeInstructionString(recipeInstruction)}
+            description:"${description}"
           }
         }
       )
