@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import InputComponent from "../../../../../theme/input/input.component";
+import RadioButton from "../../../../../theme/radioButton/RadioButton.component";
 import { ScaleComponent } from "../../../../../theme/scale/scale.component";
 import styles from "./Physical.module.scss";
 import SectionGenderAndActivity from "./sectionGenderAndActivity/SectionGender&Activity";
@@ -38,8 +40,29 @@ type PhysicalProps = {
 };
 
 const Physical = ({ userProfile, updateUserProfile }: PhysicalProps) => {
+  const [measurementType, setMeasurementType] = useState("US");
+
+  const handleChange = (e) => {
+    console.log(e?.target?.value);
+
+    setMeasurementType(e?.target?.value);
+  };
   return (
     <div className={styles.physicalContainer}>
+      {/* <RadioButton
+        value="US"
+        handleChange={handleChange}
+        htmlFor={measurementType}
+        label="US"
+        name="measurementType"
+      />
+      <RadioButton
+        value="Metric"
+        handleChange={handleChange}
+        htmlFor={measurementType}
+        label="Metric"
+        name="measurementType"
+      /> */}
       <p className={styles.infoText}>
         This information is used to customize daily recommended nutrition
         targets
@@ -61,35 +84,41 @@ const Physical = ({ userProfile, updateUserProfile }: PhysicalProps) => {
             <p className={styles?.label}>Your age</p>
           </div>
           <div className={styles.contentContainer__elementDiv__objects}>
-            <ScaleComponent
-              fieldName="age"
-              setValue={updateUserProfile}
-              value={userProfile?.age?.quantity}
-              min={"0"}
-              max={"100"}
-              shortLineDivider={2}
-              longLineDivider={10}
+            <InputComponent
+              style={{ width: "25%" }}
+              placeholder="Your age"
+              type="number"
             />
-
-            <p className={styles.showValue}>
-              {userProfile?.age?.quantity} years old
-            </p>
           </div>
 
           <div className={styles.contentContainer__elementDiv__heading}>
             <p className={styles?.label}>Your weight ?</p>
           </div>
           <div className={styles.contentContainer__elementDiv__objects}>
-            <ScaleComponent
-              fieldName="weight"
-              setValue={updateUserProfile}
-              value={userProfile?.weight}
-              min={"145"}
-              max={"200"}
-              longLineDivider={5}
+            <InputComponent
+              style={{ width: "25%", marginRight: "16px" }}
+              placeholder="Your weight"
+              type="number"
             />
+          </div>
 
-            <p className={styles.showValue}>{userProfile?.weight} pounds</p>
+          <div className={styles.contentContainer__elementDiv__heading}>
+            <p className={styles?.label}>Your Height</p>
+          </div>
+          <div
+            className={`${styles.contentContainer__elementDiv__objects}`}
+            style={{ display: "flex" }}
+          >
+            <InputComponent
+              style={{ width: "25%", marginRight: "16px" }}
+              placeholder="feet"
+              type="number"
+            />
+            <InputComponent
+              style={{ width: "25%" }}
+              placeholder="Inches"
+              type="number"
+            />
           </div>
 
           <div className={styles.contentContainer__elementDiv__heading}>
