@@ -4,6 +4,14 @@
     }
 }
 
+%counterTray {
+    display: flex;
+    min-width: 60px;
+    box-sizing: border-box;
+    padding: 5px;
+    align-items: center;
+}
+
 @mixin headings {
     position: relative;
     display: table;
@@ -37,17 +45,47 @@
     }
 
     @include responsive(0px, 991px) {
-
         margin-right: calc(100% - 30px);
-
     }
 
-    &__sub_heading {
-        @include headings();
-        color: #ABABAB;
-        font-size: 14px;
-        padding-bottom: 10px;
+    &__counterTray {
+        display: flex;
+        margin: 16px 0px;
+
+        &__counter {
+            @extend %counterTray;
+            border-radius: 2px;
+            border: 1px solid #ECECEC;
+
+            &__icons {
+                margin-left: auto;
+                font-size: 14px;
+                font-weight: 800;
+                cursor: pointer;
+                color: #8b8a8a;
+                display: flex;
+                flex-direction: column;
+            }
+        }
+
+        &__serving {
+            @extend %counterTray;
+            margin-right: 10px;
+            font-size: 14px;
+
+            &__num {
+                font-size: 17px;
+                font-weight: 600;
+                margin-left: 10px;
+            }
+        }
+
+        &__servingsize{
+            @extend %counterTray;
+            font-size: 14px;
+        }
     }
+
 
     &__calories {
 
