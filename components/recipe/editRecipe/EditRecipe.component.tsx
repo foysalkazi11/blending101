@@ -9,7 +9,8 @@ import Center_Elements from "./recipe_elements/centerElements.component";
 import IngredientList from "./recipe_elements/ingredientList/ingredientList&Howto.component";
 import Image from "next/image";
 import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
-import { useAppDispatch } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { setServingCounter } from "../../../redux/edit_recipe/editRecipeStates";
 
 interface editRecipe {
   recipeName: string;
@@ -19,6 +20,7 @@ interface editRecipe {
   allBlendCategories: [];
   selectedBLendCategory: string;
   editARecipeFunction: any;
+  isFetching:boolean;
 }
 
 const EditRecipePage = ({
@@ -29,9 +31,17 @@ const EditRecipePage = ({
   allBlendCategories,
   selectedBLendCategory,
   editARecipeFunction,
+  isFetching,
 }: editRecipe) => {
   const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
   const dispatch = useAppDispatch();
+  const servingCounter = useAppSelector((state) => state.editRecipeReducer.servingCounter);
+
+  const adjusterFunc = (task) => {
+    task === "+" && dispatch(setServingCounter(servingCounter + 1));
+    task === "-" && servingCounter > 1 && dispatch(setServingCounter(servingCounter - 1));
+  };
+
   return (
     <AContainer>
       <div className={styles.main}>
@@ -73,13 +83,13 @@ const EditRecipePage = ({
           </div>
         </div>
         <div className={styles.center}>
-          <Center_header editARecipeFunction={editARecipeFunction} />
+          <Center_header editARecipeFunction={editARecipeFunction} isFetching={isFetching}/>
           <Center_Elements
             recipeName={recipeName}
             allBlendCategories={allBlendCategories}
             selectedBLendCategory={selectedBLendCategory}
           />
-          <IngredientList recipeInstructions={recipeInstructions} allIngredients={allIngredients} />
+          <IngredientList adjusterFunc={adjusterFunc}recipeInstructions={recipeInstructions} allIngredients={allIngredients} />
         </div>
         <div className={styles.right__main}>
           <RightTray nutritionTrayData={nutritionTrayData} />

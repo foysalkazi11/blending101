@@ -4,9 +4,7 @@ import Image from "next/image";
 import ClearIcon from "../../../../../public/icons/clear_black_36dp.svg";
 import ButtonComponent from "../../../../../theme/button/buttonA/button.component";
 import { useRouter } from "next/router";
-const Center_header = ({editARecipeFunction}) => {
-
-  console.log(editARecipeFunction)
+const Center_header = ({ editARecipeFunction, isFetching }) => {
   const router = useRouter();
   return (
     <div className={styles.center__title}>
@@ -17,19 +15,32 @@ const Center_header = ({editARecipeFunction}) => {
         <h3>Recipe</h3>
       </div>
       <div className={styles.center__title__right}>
-        <div
-          className={styles.save__Recipe__button}
-          onClick={editARecipeFunction}
-        >
-          <ButtonComponent
-            type={"primary"}
-            style={{minHeight:"100%"}}
-            fullWidth={true}
-            value="Save Recipe"
-          />
-        </div>
+        {isFetching ? (
+          <div className={styles.save__Recipe__button}>
+            <ButtonComponent
+              type={"primary"}
+              style={{ minHeight: "100%" }}
+              fullWidth={true}
+              value="Saving ...."
+            />
+          </div>
+        ) : (
+          <div className={styles.save__Recipe__button} onClick={editARecipeFunction}>
+            <ButtonComponent
+              type={"primary"}
+              style={{ minHeight: "100%" }}
+              fullWidth={true}
+              value="Save Recipe"
+            />
+          </div>
+        )}
 
-        <div className={styles.center__title__right__cross} onClick={()=>{router.push('/')}}>
+        <div
+          className={styles.center__title__right__cross}
+          onClick={() => {
+            router.push("/");
+          }}
+        >
           <ClearIcon />
         </div>
       </div>

@@ -2,15 +2,19 @@ import { gql } from "@apollo/client";
 
 interface editARecipeInterface {
   recipeId: any;
+  recipeBlendCategory: string;
   recipeName: string;
-  description:string;
+  imagesArray: any;
+  description: string;
   recipeIngredients: object[];
   recipeInstruction: object[];
 }
 
 export const EDIT_A_RECIPE = ({
   recipeId,
+  recipeBlendCategory,
   recipeName,
+  imagesArray,
   description,
   recipeIngredients,
   recipeInstruction,
@@ -36,7 +40,15 @@ export const EDIT_A_RECIPE = ({
       recipeInstructionModified = [...recipeInstructionModified, `"${itm.step}"`];
     });
 
-    return(`[${recipeInstructionModified}]`)
+    return `[${recipeInstructionModified}]`;
+  };
+
+  const imagesArrayString = (images) => {
+    let updatedImageArray = [];
+    images?.forEach((elem) => {
+      updatedImageArray = [...updatedImageArray, `${`{image:"${elem.image}", default:false}`}`];
+    });
+    return `[${updatedImageArray}]`;
   };
 
   return gql`
@@ -49,6 +61,7 @@ export const EDIT_A_RECIPE = ({
             ingredients: ${recipeIngredientsString(recipeIngredients)}
             recipeInstructions: ${recipeInstructionString(recipeInstruction)}
             description:"${description}"
+            recipeBlendCategory:"${recipeBlendCategory}"
           }
         }
       )

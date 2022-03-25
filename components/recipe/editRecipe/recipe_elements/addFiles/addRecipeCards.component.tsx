@@ -1,21 +1,10 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./addRecipeCards.module.scss";
 import AddIcon from "../../../../../public/icons/add_black_36dp.svg";
 import Image from "next/image";
 import CancelIcon from "../../../../../public/icons/cancel_black_36dp.svg";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
-import { setLoading } from "../../../../../redux/slices/utilitySlice";
-import S3_CONFIG from "../../../../../configs/s3";
-import axios from "axios";
-import {
-  setRecipeBlobImagesArray,
-  setRecipeImagesArray,
-  setRecipeImagesArrayRaw,
-} from "../../../../../redux/edit_recipe/editRecipeStates";
-
-type AddRecipeCardProps = {
-  // setImages?: Dispatch<SetStateAction<any[]>>;
-};
+import { setRecipeImagesArray } from "../../../../../redux/edit_recipe/editRecipeStates";
 
 const AddRecipeCard = () => {
   const handleClick = () => {
@@ -25,18 +14,8 @@ const AddRecipeCard = () => {
 
   const dispatch = useAppDispatch();
 
-  const recipeBlobImagesArray = useAppSelector((state) => {
-    state.editRecipeReducer.recipeBlobImagesArray;
-  });
-
-  const recipeImagesArray = useAppSelector(
-    (state) => state.editRecipeReducer.recipeImagesArray
-  );
-  const [imageApiInitialUrl, setImageApiInitialUrl] = useState([]);
-  const [imageBlobList, setImageBlobList] = useState([]);
+  const recipeImagesArray = useAppSelector((state) => state.editRecipeReducer.recipeImagesArray);
   const [imageFileArray, setImageFileArray] = useState([]);
-
-  // let imageArray: string[] = [];
 
   const imageRenderingHandler = (event) => {
     // imageArray = [...selectedImages, ...imageArray];
@@ -49,11 +28,12 @@ const AddRecipeCard = () => {
       BlobList?.map((elem) => {
         imageArraytemp = [...imageArraytemp, { __typename: `blobType`, image: elem }];
       });
-
       setImageFileArray(imageArraytemp);
     }
-    // dispatch(setRecipeBlobImagesArray(imageArray));
+    dispatch(setRecipeImagesArray(imageArraytemp));
   };
+
+  console.log(imageFileArray);
 
   useEffect(() => {
     setImageFileArray(recipeImagesArray);

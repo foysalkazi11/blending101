@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./centerElements.module.scss";
 import MoreVertIcon from "../../../../public/icons/more_vert_black_36dp.svg";
 import AddRecipeCard from "./addFiles/addRecipeCards.component";
@@ -7,10 +7,10 @@ import ScoreTray from "./scoreTray/scoreTray.component";
 import Image from "next/image";
 import { setQuantity } from "../../../../redux/edit_recipe/quantity";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import DropDown from "../../../../theme/dropDown/DropDown.component";
 import {
   setDescriptionRecipe,
   setEditRecipeName,
+  setSelectedBlendCategory,
 } from "../../../../redux/edit_recipe/editRecipeStates";
 import RecipeDropDown from "../../../../theme/dropDown/recipeDropDown.component";
 
@@ -32,9 +32,19 @@ const Center_Elements = ({
   const dispatch = useAppDispatch();
   const editRecipeHeading = useRef();
   const [blendCategoryState, setBlendCategoryState] = useState(null);
+  useEffect(() => {
+    let blendCategoryId = allBlendCategories?.filter((elem) => {
+      //@ts-ignore
+      return elem.name === blendCategoryState;
+    });
+    // @ts-ignore
+
+    blendCategoryId && dispatch(setSelectedBlendCategory(blendCategoryId[0]?._id));
+  }, [blendCategoryState]);
+
   //quantity number sets number for top card bottom right counter in edit recipe
   const quantity_number = useAppSelector((state) => state?.quantityAdjuster?.quantityNum);
-  const recipeDescription=useAppSelector((state)=>state?.editRecipeReducer?.descriptionRecipe);
+  const recipeDescription = useAppSelector((state) => state?.editRecipeReducer?.descriptionRecipe);
 
   // variables for ingredients card of edit recipe
   const adjusterFunc = (task, type) => {
@@ -48,6 +58,7 @@ const Center_Elements = ({
       }
     }
   };
+
   //lists for each dropdown
   let BlendtecItem = [{ name: `Blentec` }, { name: `Blentec` }];
   let OzItem = [{ name: "64oz" }, { name: "64oz" }];
@@ -57,11 +68,9 @@ const Center_Elements = ({
     width: "111%",
   };
 
-
   const handleDescriptionChange = (text) => {
     dispatch(setDescriptionRecipe(text));
   };
-
 
   const handleHeadingchange = (text) => {
     //@ts-ignore
@@ -103,7 +112,6 @@ const Center_Elements = ({
             handleDescriptionChange(e.target.value);
           }}
         />
-
         <div className={styles.blendingOptions}>
           <div className={styles.blendingOptions__left}>
             <ul>

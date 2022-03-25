@@ -18,9 +18,10 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 type IngredientListPorps = {
   recipeInstructions?: string[];
   allIngredients?: any[];
+  adjusterFunc: any;
 };
 
-const IngredientList = ({ recipeInstructions, allIngredients }: IngredientListPorps) => {
+const IngredientList = ({ recipeInstructions, allIngredients,adjusterFunc }: IngredientListPorps) => {
   const [selectedElementId, setSelectedElementId] = useState(null);
   const [inputValue, setInputValue] = useState("");
   const [inputIngredientValue, setInputIngredientValue] = useState("");
@@ -33,7 +34,7 @@ const IngredientList = ({ recipeInstructions, allIngredients }: IngredientListPo
   );
   const removeIngredient = (id) => {
     let updated_list = selectedIngredientsList?.filter((elem) => {
-      return id !== elem._id;
+      return id !== elem?._id;
     });
     dispatch(setSelectedIngredientsList(updated_list));
   };
@@ -74,11 +75,6 @@ const IngredientList = ({ recipeInstructions, allIngredients }: IngredientListPo
   const howToState = useAppSelector((state) => state?.editRecipeReducer?.recipeInstruction);
 
   const servingCounter = useAppSelector((state) => state.editRecipeReducer.servingCounter);
-
-  const adjusterFunc = (task) => {
-    task === "+" && dispatch(setServingCounter(servingCounter + 1));
-    task === "-" && servingCounter > 1 && dispatch(setServingCounter(servingCounter - 1));
-  };
 
   useEffect(() => {
     let howList = [];
@@ -210,8 +206,8 @@ const IngredientList = ({ recipeInstructions, allIngredients }: IngredientListPo
                   {selectedIngredientsList?.map((elem, index) => {
                     return (
                       <Draggable
-                        key={elem.ingredientName + elem._id}
-                        draggableId={elem.ingredientName + elem._id}
+                        key={elem.ingredientName + elem?._id}
+                        draggableId={elem.ingredientName + elem?._id}
                         index={index}
                       >
                         {(provided) => (
@@ -273,7 +269,7 @@ const IngredientList = ({ recipeInstructions, allIngredients }: IngredientListPo
                             ></span>
                             <div
                               className={styles.ingredients__bin}
-                              onClick={() => removeIngredient(elem._id)}
+                              onClick={() => removeIngredient(elem?._id)}
                             >
                               <Image
                                 src={"/icons/noun_Delete_1447966.svg"}
@@ -321,7 +317,7 @@ const IngredientList = ({ recipeInstructions, allIngredients }: IngredientListPo
               {suggestedIngredients?.map((elem) => {
                 return (
                   <li
-                    key={elem._id}
+                    key={elem?._id}
                     style={{ listStyle: "none" }}
                     className={styles.suggested__li}
                     onClick={() => {

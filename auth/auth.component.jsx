@@ -84,8 +84,8 @@ function AuthProvider({ children, activeUser }) {
         page !== "/varify_email" &&
         page !== "/forget_password"
       )
-        // router.push("/login");
-      console.log("uncomment code in auth folder");
+        router.push("/login");
+      // console.log("uncomment code in auth folder");
     }
   };
 
