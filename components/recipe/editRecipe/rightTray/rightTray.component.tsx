@@ -255,7 +255,7 @@ interface PassingProps {
   percent: number;
 }
 
-const RightTray = ({ nutritionTrayData }) => {
+const RightTray = ({ nutritionTrayData,adjusterFunc }) => {
   let nestedAccordianSkeleton = recursiveData(nutritionTrayData);
   const servingCounter = useAppSelector((state) => state.editRecipeReducer.servingCounter);
   return (
@@ -265,15 +265,15 @@ const RightTray = ({ nutritionTrayData }) => {
         <div className={styles.right__title}>Nutrition</div>
         <div className={styles.right__counterTray}>
           <div className={styles.right__counterTray__counter}>
-            <div>2</div>
+            <div>{servingCounter}</div>
             <div className={styles.right__counterTray__counter__icons}>
-              <AiOutlineUp />
-              <AiOutlineDown />
+              <AiOutlineUp onClick={()=>{adjusterFunc("+")}}/>
+              <AiOutlineDown onClick={()=>{adjusterFunc("-")}} />
             </div>
           </div>
           <div className={styles.right__counterTray__serving}>
             <div>servings</div>
-            <div className={styles.right__counterTray__serving__num}>8 oz</div>
+            <div className={styles.right__counterTray__serving__num}>{servingCounter * 16} oz</div>
           </div>
           <div className={styles.right__counterTray__servingsize}>serving size</div>
         </div>

@@ -118,6 +118,15 @@ const EditRecipeComponent = () => {
     let updatedImageUrl = imagesArray?.filter((itm) => itm?.__typename === "ImageType");
     updatedImageUrl = [...updatedImageUrl, ...imageUrlListObjectArray];
     dispatch(setRecipeImagesArray(updatedImageUrl));
+    if (
+      !recipeId ||
+      !recipeName ||
+      !recipeDescription ||
+      !selectedIngredientsList ||
+      !recipeInstruction ||
+      !imagesArray
+    )
+      return;
     await editARecipe();
     reactToastifyNotification("info", "Recipe Updated");
     setIsFetching(false);

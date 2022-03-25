@@ -105,13 +105,13 @@ const Center_Elements = ({
         <AddRecipeCard />
       </div>
       <div className={styles.scoreTraydiv}>
-        <ScoreTray />
         <textarea
           value={recipeDescription}
           onChange={(e) => {
             handleDescriptionChange(e.target.value);
           }}
         />
+        <ScoreTray />
         <div className={styles.blendingOptions}>
           <div className={styles.blendingOptions__left}>
             <ul>

@@ -20,7 +20,7 @@ interface editRecipe {
   allBlendCategories: [];
   selectedBLendCategory: string;
   editARecipeFunction: any;
-  isFetching:boolean;
+  isFetching: boolean;
 }
 
 const EditRecipePage = ({
@@ -83,16 +83,20 @@ const EditRecipePage = ({
           </div>
         </div>
         <div className={styles.center}>
-          <Center_header editARecipeFunction={editARecipeFunction} isFetching={isFetching}/>
+          <Center_header editARecipeFunction={editARecipeFunction} isFetching={isFetching} />
           <Center_Elements
             recipeName={recipeName}
             allBlendCategories={allBlendCategories}
             selectedBLendCategory={selectedBLendCategory}
           />
-          <IngredientList adjusterFunc={adjusterFunc}recipeInstructions={recipeInstructions} allIngredients={allIngredients} />
+          <IngredientList
+            adjusterFunc={adjusterFunc}
+            recipeInstructions={recipeInstructions}
+            allIngredients={allIngredients}
+          />
         </div>
         <div className={styles.right__main}>
-          <RightTray nutritionTrayData={nutritionTrayData} />
+          <RightTray nutritionTrayData={nutritionTrayData} adjusterFunc={adjusterFunc} />
         </div>
       </div>
       <div className={styles.footerMainDiv}>
