@@ -10,11 +10,7 @@ import { Auth } from "aws-amplify";
 import { setLoading } from "../../../../redux/slices/utilitySlice";
 import { useAppDispatch } from "../../../../redux/hooks";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
-import {
-  setDbUser,
-  setProvider,
-  setUser,
-} from "../../../../redux/slices/userSlice";
+import { setDbUser, setProvider, setUser } from "../../../../redux/slices/userSlice";
 import { useRouter } from "next/router";
 import { useMutation } from "@apollo/client";
 import CREATE_NEW_USER from "../../../../gqlLib/user/mutations/createNewUser";
@@ -71,8 +67,6 @@ const LoginScreen = () => {
                   src="/images/logo.png"
                   alt="logo will soon load"
                   layout={"fill"}
-                  // height={400}
-                  // width={400}
                   objectFit={"contain"}
                   quality={100}
                 />
@@ -144,8 +138,7 @@ const LoginScreen = () => {
           <div className={styles.contentCard}>
             <h2>New User</h2>
             <p>
-              Aliquam vestibulum nunc quis blandit rutrum. Curabitur vel
-              scelerisque leo.
+              Aliquam vestibulum nunc quis blandit rutrum. Curabitur vel scelerisque leo.
             </p>
             <div className={styles.buttonRightDiv}>
               <Link href="/signup">

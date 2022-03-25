@@ -1,16 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import RightHeader from "../header/right_header/right_header.component";
 import styles from "./rightTray.module.scss";
-import Image from "next/image";
 import { healthList } from "./rightTray";
 import LinearComponent from "../../../../theme/linearProgress/LinearProgress.component";
 import { useAppSelector } from "../../../../redux/hooks";
-import { useLazyQuery } from "@apollo/client";
-import { NUTRITION_BASED_RECIPE } from "../../../../gqlLib/recipes/queries/getEditRecipe";
-import RecursiveAccordian from "../../../customRecursiveAccordian/recursiveAccordian.component";
 import UpdatedRecursiveAccordian from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
+import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 
 const recursiveData = (data) => {
   if (!data) return;
@@ -33,55 +30,45 @@ const recursiveData = (data) => {
         children: {
           "Dietary Fiber": {
             value: energy?.childs?.carbohydrates?.dietryFibre?.value,
-            Unit: energy?.childs?.carbohydrates?.dietryFibre
-              .blendNutrientRefference?.units,
+            Unit: energy?.childs?.carbohydrates?.dietryFibre.blendNutrientRefference?.units,
             children: {},
           },
           Sugars: {
             value: energy?.childs?.carbohydrates?.sugars?.value,
-            Unit: energy?.childs?.carbohydrates?.sugars?.blendNutrientRefference
-              ?.units,
+            Unit: energy?.childs?.carbohydrates?.sugars?.blendNutrientRefference?.units,
             children: {
               Sucrose: {
-                value:
-                  energy?.childs?.carbohydrates?.sugars?.childs?.sucrose?.value,
+                value: energy?.childs?.carbohydrates?.sugars?.childs?.sucrose?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.sucrose
                   ?.blendNutrientRefference?.units,
                 children: {},
               },
               Glucose: {
-                value:
-                  energy?.childs?.carbohydrates?.sugars?.childs?.glucose?.value,
+                value: energy?.childs?.carbohydrates?.sugars?.childs?.glucose?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.glucose
                   ?.blendNutrientRefference?.units,
                 children: {},
               },
               Fructose: {
-                value:
-                  energy?.childs?.carbohydrates?.sugars?.childs?.fructose
-                    ?.value,
+                value: energy?.childs?.carbohydrates?.sugars?.childs?.fructose?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.fructose
                   ?.blendNutrientRefference?.units,
                 children: {},
               },
               Lactose: {
-                value:
-                  energy?.childs?.carbohydrates?.sugars?.childs?.lactose?.value,
+                value: energy?.childs?.carbohydrates?.sugars?.childs?.lactose?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.lactose
                   ?.blendNutrientRefference?.units,
                 children: {},
               },
               Maltose: {
-                value:
-                  energy?.childs?.carbohydrates?.sugars?.childs?.maltose?.value,
+                value: energy?.childs?.carbohydrates?.sugars?.childs?.maltose?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.maltose
                   ?.blendNutrientRefference?.units,
                 children: {},
               },
               Galactose: {
-                value:
-                  energy?.childs?.carbohydrates?.sugars?.childs?.galactose
-                    ?.value,
+                value: energy?.childs?.carbohydrates?.sugars?.childs?.galactose?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.galactose
                   ?.blendNutrientRefference?.units,
                 children: {},
@@ -90,8 +77,7 @@ const recursiveData = (data) => {
           },
           Starch: {
             value: energy?.childs?.carbohydrates?.starch?.value,
-            Unit: energy?.childs?.carbohydrates?.starch?.blendNutrientRefference
-              ?.units,
+            Unit: energy?.childs?.carbohydrates?.starch?.blendNutrientRefference?.units,
             children: {},
           },
         },
@@ -269,23 +255,27 @@ interface PassingProps {
   percent: number;
 }
 
-const RightTray = ({ nutritionTrayData }) => {
+const RightTray = ({ nutritionTrayData,adjusterFunc }) => {
   let nestedAccordianSkeleton = recursiveData(nutritionTrayData);
-  const [NutritionStateTemp, setNutritionStateTemp] = useState(null);
-  const nutritionState = useAppSelector(
-    (state) => state?.quantityAdjuster?.nutritionState
-  );
-
-  const servingCounter = useAppSelector(
-    (state) => state.editRecipeReducer.servingCounter
-  );
+  const servingCounter = useAppSelector((state) => state.editRecipeReducer.servingCounter);
   return (
     <div>
       <RightHeader />
       <div className={styles.right}>
         <div className={styles.right__title}>Nutrition</div>
-        <div className={styles.right__sub_heading}>
-          Amount Per Servings Calories
+        <div className={styles.right__counterTray}>
+          <div className={styles.right__counterTray__counter}>
+            <div>{servingCounter}</div>
+            <div className={styles.right__counterTray__counter__icons}>
+              <AiOutlineUp onClick={()=>{adjusterFunc("+")}}/>
+              <AiOutlineDown onClick={()=>{adjusterFunc("-")}} />
+            </div>
+          </div>
+          <div className={styles.right__counterTray__serving}>
+            <div>servings</div>
+            <div className={styles.right__counterTray__serving__num}>{servingCounter * 16} oz</div>
+          </div>
+          <div className={styles.right__counterTray__servingsize}>serving size</div>
         </div>
         <div className={styles.compoent__box__nutrition}>
           {nutritionTrayData && (
@@ -298,14 +288,10 @@ const RightTray = ({ nutritionTrayData }) => {
       </div>
       <div className={styles.right}>
         <div className={styles.right__title}>Health</div>
-        <div className={styles.right__sub_heading}>
-          Disease, Condition and Systems
-        </div>
+        <div className={styles.right__sub_heading}>Disease, Condition and Systems</div>
         <div className={styles.compoent__box} style={{}}>
           {healthList?.map(({ name, percent }: PassingProps, index) => {
-            return (
-              <LinearComponent name={name} percent={percent} key={index} />
-            );
+            return <LinearComponent name={name} percent={percent} key={index} />;
           })}
         </div>
       </div>
