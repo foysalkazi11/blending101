@@ -26,6 +26,7 @@ const Center_Elements = ({
   selectedBLendCategory,
 }: CenterElementsProps) => {
   useEffect(() => {
+    if (!selectedBLendCategory) return;
     setBlendCategoryState(selectedBLendCategory);
   }, [selectedBLendCategory]);
 
@@ -35,7 +36,7 @@ const Center_Elements = ({
   useEffect(() => {
     let blendCategoryId = allBlendCategories?.filter((elem) => {
       //@ts-ignore
-      return elem.name === blendCategoryState;
+      return elem?.name === blendCategoryState;
     });
     // @ts-ignore
 
@@ -105,12 +106,14 @@ const Center_Elements = ({
         <AddRecipeCard />
       </div>
       <div className={styles.scoreTraydiv}>
-        <textarea
-          value={recipeDescription}
-          onChange={(e) => {
-            handleDescriptionChange(e.target.value);
-          }}
-        />
+        <div className={styles.scoreTraydiv__description}>
+          <textarea
+            value={recipeDescription}
+            onChange={(e) => {
+              handleDescriptionChange(e.target.value);
+            }}
+          />
+        </div>
         <ScoreTray />
         <div className={styles.blendingOptions}>
           <div className={styles.blendingOptions__left}>

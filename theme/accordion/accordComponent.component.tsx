@@ -18,6 +18,33 @@ type CustomAccordionProps = {
   counter?: number;
 };
 
+const valueUnitConvertor = (title, value, unit) => {
+  let val = parseInt(value);
+  let unitVal = unit;
+
+  if (val?.toString()?.length > 2) {
+    // console.log({ title: title, value: val, unit: unitVal });
+    if (unitVal === `UG`) {
+      val = val / 1000;
+      unitVal = `MG`;
+      valueUnitConvertor(title, val, unitVal);
+    } else if (unitVal === `MG`) {
+      val = val / 1000;
+      unitVal = `MG`;
+      valueUnitConvertor(title, val, unitVal);
+    } else if (unitVal === `G`) {
+      val = val / 1000;
+      unitVal = `MG`;
+      valueUnitConvertor(title, val, unitVal);
+    } else {
+      null;
+    }
+  } else {
+    null;
+  }
+  return { value: val, unit: unitVal };
+};
+
 const AccordComponent = ({
   title,
   type,
@@ -33,6 +60,7 @@ const AccordComponent = ({
   const [expanded, setExpanded] = useState<boolean>(true);
   const contentRef = useRef<HTMLDivElement>(null);
 
+  let valueAndUnit = valueUnitConvertor(title, value, unit);
   useEffect(() => {
     if (contentRef.current) {
       expanded
@@ -71,21 +99,19 @@ const AccordComponent = ({
                 }
               >
                 <h5 className={styles.titleCopy}>{title}</h5>
-                {value && unit && (
+                {
                   <p className={styles.valueUnit + " " + styles.alignCenter}>
                     {
                       //@ts-ignore
-                      parseFloat(value * parseInt(counter)).toFixed(1)
+                      parseFloat(valueAndUnit?.value * counter).toFixed(1)
                     }
                     &nbsp;
-                    {unit.toLowerCase()}
+                    {valueAndUnit?.unit?.toLowerCase()}
                   </p>
-                )}
+                }
               </div>
 
-              <p className={styles.valueUnit + " " + styles.percentage}>
-                {percentage || ""}
-              </p>
+              <p className={styles.valueUnit + " " + styles.percentage}>{percentage || ""}</p>
             </div>
           </div>
         </div>
@@ -113,20 +139,15 @@ const AccordComponent = ({
               <h5 className={styles.titleAccordianMainHeading}>{title}</h5>
               {value && unit && (
                 <p className={styles.valueUnit + " " + styles.alignLeft}>
-                  {parseFloat(value).toFixed(1)} &nbsp; {unit}
+                  {/* {parseFloat(value).toFixed(1)} &nbsp; {unit} */}
                 </p>
               )}
-              <p className={styles.valueUnit + " " + styles.percentage}>
-                {percentage || ""}
-              </p>
+              <p className={styles.valueUnit + " " + styles.percentage}>{percentage || ""}</p>
             </div>
           </div>
         </div>
       )}
-      <div
-        className={styles.accordianDetails}
-        ref={contentRef as React.RefObject<HTMLDivElement>}
-      >
+      <div className={styles.accordianDetails} ref={contentRef as React.RefObject<HTMLDivElement>}>
         {children}
       </div>
     </div>

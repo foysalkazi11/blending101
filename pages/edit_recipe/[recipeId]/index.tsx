@@ -132,6 +132,15 @@ const EditRecipeComponent = () => {
     setIsFetching(false);
   };
   console.log({ imagesArray });
+
+  console.log(recipeBasedData?.recipeBlendCategory?.name)
+  console.log(selectedBLendCategory)
+
+  useEffect(() => {
+    if(!selectedBLendCategory) return;
+   console.log({selectedBLendCategory})
+  }, [selectedBLendCategory])
+
   return (
     <EditRecipePage
       recipeName={recipeName}
