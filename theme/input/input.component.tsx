@@ -4,7 +4,7 @@ import styles from "./input.module.scss";
 interface InputComponentProps {
   type?: string;
   style?: React.CSSProperties;
-  value?: string;
+  value?: string | number;
   setValue?: Function;
   placeholder?: string;
   textarea?: any;
@@ -61,6 +61,7 @@ export default function InputComponent({
       value={value}
       onChange={onChange}
       placeholder={placeholder}
+      min={0}
     />
   );
 }

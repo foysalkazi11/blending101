@@ -27,6 +27,7 @@ const CREATE_NEW_USER = gql`
         }
         weightInKilograms
         heightInCentimeters
+        pregnantOrLactating
         activity
         dieteryLifeStyle
         allergies

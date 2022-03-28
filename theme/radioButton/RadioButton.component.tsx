@@ -3,7 +3,7 @@ import styles from "./RadioButton.module.scss";
 
 interface RadioButtonProps {
   name: string;
-  htmlFor: string;
+  id: string;
   label: string;
   value: string;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -11,27 +11,24 @@ interface RadioButtonProps {
 
 const RadioButton = ({
   handleChange,
-  htmlFor,
+  id,
   label,
   name,
   value,
 }: RadioButtonProps) => {
   return (
-    <div className={styles.radioButton_wraper}>
-      <label className={styles.custom_radio} htmlFor={htmlFor}>
-        <input
-          type="radio"
-          id={htmlFor}
-          name={name}
-          value={value}
-          onChange={handleChange}
-          checked={value === htmlFor}
-        />
-        <div className={styles.custom_radio_content}>
-          <h5>{label}</h5>
-        </div>
-      </label>
-    </div>
+    <label className={styles.radioContainer}>
+      {label}
+      <input
+        type="radio"
+        id={id}
+        name={name}
+        value={value}
+        checked={value === id}
+        onChange={handleChange}
+      />
+      <span className={styles.checkmark}></span>
+    </label>
   );
 };
 
