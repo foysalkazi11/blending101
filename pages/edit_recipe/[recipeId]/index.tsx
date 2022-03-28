@@ -131,15 +131,6 @@ const EditRecipeComponent = () => {
     reactToastifyNotification("info", "Recipe Updated");
     setIsFetching(false);
   };
-  console.log({ imagesArray });
-
-  console.log(recipeBasedData?.recipeBlendCategory?.name)
-  console.log(selectedBLendCategory)
-
-  useEffect(() => {
-    if(!selectedBLendCategory) return;
-   console.log({selectedBLendCategory})
-  }, [selectedBLendCategory])
 
   return (
     <EditRecipePage

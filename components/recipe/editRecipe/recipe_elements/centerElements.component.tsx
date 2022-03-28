@@ -33,6 +33,7 @@ const Center_Elements = ({
   const dispatch = useAppDispatch();
   const editRecipeHeading = useRef();
   const [blendCategoryState, setBlendCategoryState] = useState(null);
+
   useEffect(() => {
     let blendCategoryId = allBlendCategories?.filter((elem) => {
       //@ts-ignore
@@ -42,6 +43,7 @@ const Center_Elements = ({
 
     blendCategoryId && dispatch(setSelectedBlendCategory(blendCategoryId[0]?._id));
   }, [blendCategoryState]);
+
 
   //quantity number sets number for top card bottom right counter in edit recipe
   const quantity_number = useAppSelector((state) => state?.quantityAdjuster?.quantityNum);

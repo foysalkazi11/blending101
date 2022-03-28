@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { IoIosSave } from "react-icons/io";
 const Center_header = ({ editARecipeFunction, isFetching }) => {
   const router = useRouter();
+  const { recipeId } = router.query;
   return (
     <div className={styles.center__title}>
       <div className={styles.center__title__left}>
@@ -21,7 +22,7 @@ const Center_header = ({ editARecipeFunction, isFetching }) => {
         <div
           className={styles.center__title__right__cross}
           onClick={() => {
-            router.push("/");
+            router.push(`/recipe_details/${recipeId}`);
           }}
         >
           <ClearIcon />
