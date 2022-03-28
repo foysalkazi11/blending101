@@ -72,48 +72,53 @@ const AccordComponent = ({
     <div className={styles.accordion}>
       {!type ? (
         <div className={`${styles.accordionSummary}`}>
-          <div className={styles.accordionSummaryForNested}>
-            {expanded ? (
-              <BsPlus
-                className={styles.icon + " " + styles.iconCopy}
-                style={!plusMinusIcon && { visibility: "hidden" }}
-                onClick={() => {
-                  setExpanded(!expanded);
-                }}
-              />
-            ) : (
-              <BiMinus
-                className={styles.icon + " " + styles.iconCopy}
-                style={!plusMinusIcon && { visibility: "hidden" }}
-                onClick={() => {
-                  setExpanded(!expanded);
-                }}
-              />
-            )}
-            <div className={styles.accordianContent}>
-              <div
-                className={
-                  value && unit
-                    ? styles.accordianContent__whiteCard
-                    : styles.accordianContent__whiteCard_conditionalSubheading
-                }
-              >
-                <h5 className={styles.titleCopy}>{title}</h5>
-                {
-                  <p className={styles.valueUnit + " " + styles.alignCenter}>
-                    {
-                      //@ts-ignore
-                      parseFloat(valueAndUnit?.value * counter).toFixed(1)
+          {
+            //@ts-ignore
+            parseFloat(valueAndUnit?.value * counter).toFixed(1) > 0 && (
+              <div className={styles.accordionSummaryForNested}>
+                {expanded ? (
+                  <BsPlus
+                    className={styles.icon + " " + styles.iconCopy}
+                    style={!plusMinusIcon && { visibility: "hidden" }}
+                    onClick={() => {
+                      setExpanded(!expanded);
+                    }}
+                  />
+                ) : (
+                  <BiMinus
+                    className={styles.icon + " " + styles.iconCopy}
+                    style={!plusMinusIcon && { visibility: "hidden" }}
+                    onClick={() => {
+                      setExpanded(!expanded);
+                    }}
+                  />
+                )}
+                <div className={styles.accordianContent}>
+                  <div
+                    className={
+                      value && unit
+                        ? styles.accordianContent__whiteCard
+                        : styles.accordianContent__whiteCard_conditionalSubheading
                     }
-                    &nbsp;
-                    {valueAndUnit?.unit?.toLowerCase()}
-                  </p>
-                }
-              </div>
+                  >
+                    <h5 className={styles.titleCopy}>{title}</h5>
+                    {
+                      <p className={styles.valueUnit + " " + styles.alignCenter}>
+                        {
+                          //@ts-ignore
+                          parseFloat(valueAndUnit?.value * counter).toFixed(1)
+                        }
+                        &nbsp;
+                        {valueAndUnit?.unit?.toLowerCase()}
+                      </p>
+                    }
+                  </div>
 
-              <p className={styles.valueUnit + " " + styles.percentage}>{percentage || ""}</p>
-            </div>
-          </div>
+                  <p className={styles.valueUnit + " " + styles.percentage}>{percentage || ""}</p>
+                </div>
+              </div>
+            )
+          }
         </div>
       ) : (
         <div className={`${styles.accordionSummary}`}>
