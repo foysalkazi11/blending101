@@ -1,13 +1,14 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   recipeName: "",
+  descriptionRecipe:"",
   recipeImagesArray:[],
-  recipeBlobImagesArray: [],
-  recipeImagesArrayRaw: [],
+  resImageArrayTemp:[],
+  selectedBlendCategory:null,
+  allBlendCategories: [],
   allIngredientListBasedOnClass: [],
   selectedIngredientsList: [],
-  allBlendCategories: [],
   servingCounter: 1,
   recipeInstruction: [],
 };
@@ -19,14 +20,17 @@ export const editRecipeStateSlice = createSlice({
     setEditRecipeName: (state, action) => {
       state.recipeName = action?.payload;
     },
+    setDescriptionRecipe: (state, action) => {
+      state.descriptionRecipe = action?.payload;
+    },
     setRecipeImagesArray: (state, action) => {
       state.recipeImagesArray = action?.payload;
     },
-    setRecipeBlobImagesArray: (state, action) => {
-      state.recipeBlobImagesArray = action?.payload;
+    setResImageArrayTemp: (state, action) => {
+      state.resImageArrayTemp = action?.payload;
     },
-    setRecipeImagesArrayRaw: (state, action) => {
-      state.recipeImagesArrayRaw = action?.payload;
+    setSelectedBlendCategory: (state, action) => {
+      state.selectedBlendCategory = action?.payload;
     },
     setAllIngredientListBasedOnClass: (state, action) => {
       state.allIngredientListBasedOnClass = action?.payload;
@@ -48,9 +52,10 @@ export const editRecipeStateSlice = createSlice({
 
 export const {
   setEditRecipeName,
+  setDescriptionRecipe,
   setRecipeImagesArray,
-  setRecipeBlobImagesArray,
-  setRecipeImagesArrayRaw,
+  setResImageArrayTemp,
+  setSelectedBlendCategory,
   setAllIngredientListBasedOnClass,
   setSelectedIngredientsList,
   setAllBlendCategories,

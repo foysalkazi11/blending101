@@ -41,6 +41,43 @@ export const GET_RECIPE = gql`
   }
 `;
 
+export const GET_A_RECIPE_FOR_EDIT_RECIPE = gql`
+  query GetARecipe($recipeId: String!) {
+    getARecipe(recipeId: $recipeId) {
+      _id
+      name
+      prepTime
+      description
+      recipeIngredients
+      recipeInstructions
+      totalRating
+      numberOfRating
+      averageRating
+      numberOfRating
+      totalViews
+      recipeBlendCategory {
+        name
+      }
+      ingredients {
+        ingredientId {
+          ingredientName
+          _id
+        }
+       
+        portions {
+          name
+          gram
+          default
+        }
+      }
+      image {
+        image
+        default
+      }
+    }
+  }
+`;
+
 export const GET_NUTRITION = (ingredients) => {
   const convertArrToString = (arr) => {
     arr = arr?.map((itm) => {
