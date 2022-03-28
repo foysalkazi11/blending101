@@ -18,6 +18,33 @@ type CustomAccordionProps = {
   counter?: number;
 };
 
+const valueUnitConvertor = (title, value, unit) => {
+  let val = parseInt(value);
+  let unitVal = unit;
+
+  if (val?.toString()?.length > 2) {
+    // console.log({ title: title, value: val, unit: unitVal });
+    if (unitVal === `UG`) {
+      val = val / 1000;
+      unitVal = `MG`;
+      valueUnitConvertor(title, val, unitVal);
+    } else if (unitVal === `MG`) {
+      val = val / 1000;
+      unitVal = `MG`;
+      valueUnitConvertor(title, val, unitVal);
+    } else if (unitVal === `G`) {
+      val = val / 1000;
+      unitVal = `MG`;
+      valueUnitConvertor(title, val, unitVal);
+    } else {
+      null;
+    }
+  } else {
+    null;
+  }
+  return { value: val, unit: unitVal };
+};
+
 const AccordComponent = ({
   title,
   type,
@@ -33,6 +60,7 @@ const AccordComponent = ({
   const [expanded, setExpanded] = useState<boolean>(true);
   const contentRef = useRef<HTMLDivElement>(null);
 
+  let valueAndUnit = valueUnitConvertor(title, value, unit);
   useEffect(() => {
     if (contentRef.current) {
       expanded
@@ -44,50 +72,53 @@ const AccordComponent = ({
     <div className={styles.accordion}>
       {!type ? (
         <div className={`${styles.accordionSummary}`}>
-          <div className={styles.accordionSummaryForNested}>
-            {expanded ? (
-              <BsPlus
-                className={styles.icon + " " + styles.iconCopy}
-                style={!plusMinusIcon && { visibility: "hidden" }}
-                onClick={() => {
-                  setExpanded(!expanded);
-                }}
-              />
-            ) : (
-              <BiMinus
-                className={styles.icon + " " + styles.iconCopy}
-                style={!plusMinusIcon && { visibility: "hidden" }}
-                onClick={() => {
-                  setExpanded(!expanded);
-                }}
-              />
-            )}
-            <div className={styles.accordianContent}>
-              <div
-                className={
-                  value && unit
-                    ? styles.accordianContent__whiteCard
-                    : styles.accordianContent__whiteCard_conditionalSubheading
-                }
-              >
-                <h5 className={styles.titleCopy}>{title}</h5>
-                {value && unit && (
-                  <p className={styles.valueUnit + " " + styles.alignCenter}>
-                    {
-                      //@ts-ignore
-                      parseFloat(value * parseInt(counter)).toFixed(1)
-                    }
-                    &nbsp;
-                    {unit.toLowerCase()}
-                  </p>
+          {
+            //@ts-ignore
+            parseFloat(valueAndUnit?.value * counter).toFixed(1) > 0 && (
+              <div className={styles.accordionSummaryForNested}>
+                {expanded ? (
+                  <BsPlus
+                    className={styles.icon + " " + styles.iconCopy}
+                    style={!plusMinusIcon && { visibility: "hidden" }}
+                    onClick={() => {
+                      setExpanded(!expanded);
+                    }}
+                  />
+                ) : (
+                  <BiMinus
+                    className={styles.icon + " " + styles.iconCopy}
+                    style={!plusMinusIcon && { visibility: "hidden" }}
+                    onClick={() => {
+                      setExpanded(!expanded);
+                    }}
+                  />
                 )}
-              </div>
+                <div className={styles.accordianContent}>
+                  <div
+                    className={
+                      value && unit
+                        ? styles.accordianContent__whiteCard
+                        : styles.accordianContent__whiteCard_conditionalSubheading
+                    }
+                  >
+                    <h5 className={styles.titleCopy}>{title}</h5>
+                    {
+                      <p className={styles.valueUnit + " " + styles.alignCenter}>
+                        {
+                          //@ts-ignore
+                          parseFloat(valueAndUnit?.value * counter).toFixed(1)
+                        }
+                        &nbsp;
+                        {valueAndUnit?.unit?.toLowerCase()}
+                      </p>
+                    }
+                  </div>
 
-              <p className={styles.valueUnit + " " + styles.percentage}>
-                {percentage || ""}
-              </p>
-            </div>
-          </div>
+                  <p className={styles.valueUnit + " " + styles.percentage}>{percentage || ""}</p>
+                </div>
+              </div>
+            )
+          }
         </div>
       ) : (
         <div className={`${styles.accordionSummary}`}>
@@ -113,20 +144,15 @@ const AccordComponent = ({
               <h5 className={styles.titleAccordianMainHeading}>{title}</h5>
               {value && unit && (
                 <p className={styles.valueUnit + " " + styles.alignLeft}>
-                  {parseFloat(value).toFixed(1)} &nbsp; {unit}
+                  {/* {parseFloat(value).toFixed(1)} &nbsp; {unit} */}
                 </p>
               )}
-              <p className={styles.valueUnit + " " + styles.percentage}>
-                {percentage || ""}
-              </p>
+              <p className={styles.valueUnit + " " + styles.percentage}>{percentage || ""}</p>
             </div>
           </div>
         </div>
       )}
-      <div
-        className={styles.accordianDetails}
-        ref={contentRef as React.RefObject<HTMLDivElement>}
-      >
+      <div className={styles.accordianDetails} ref={contentRef as React.RefObject<HTMLDivElement>}>
         {children}
       </div>
     </div>

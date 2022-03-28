@@ -37,55 +37,45 @@ const recursiveData = (data) => {
         children: {
           "Dietary Fiber": {
             value: energy?.childs?.carbohydrates?.dietryFibre?.value,
-            Unit: energy?.childs?.carbohydrates?.dietryFibre
-              .blendNutrientRefference?.units,
+            Unit: energy?.childs?.carbohydrates?.dietryFibre.blendNutrientRefference?.units,
             children: {},
           },
           Sugars: {
             value: energy?.childs?.carbohydrates?.sugars?.value,
-            Unit: energy?.childs?.carbohydrates?.sugars?.blendNutrientRefference
-              ?.units,
+            Unit: energy?.childs?.carbohydrates?.sugars?.blendNutrientRefference?.units,
             children: {
               Sucrose: {
-                value:
-                  energy?.childs?.carbohydrates?.sugars?.childs?.sucrose?.value,
+                value: energy?.childs?.carbohydrates?.sugars?.childs?.sucrose?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.sucrose
                   ?.blendNutrientRefference?.units,
                 children: {},
               },
               Glucose: {
-                value:
-                  energy?.childs?.carbohydrates?.sugars?.childs?.glucose?.value,
+                value: energy?.childs?.carbohydrates?.sugars?.childs?.glucose?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.glucose
                   ?.blendNutrientRefference?.units,
                 children: {},
               },
               Fructose: {
-                value:
-                  energy?.childs?.carbohydrates?.sugars?.childs?.fructose
-                    ?.value,
+                value: energy?.childs?.carbohydrates?.sugars?.childs?.fructose?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.fructose
                   ?.blendNutrientRefference?.units,
                 children: {},
               },
               Lactose: {
-                value:
-                  energy?.childs?.carbohydrates?.sugars?.childs?.lactose?.value,
+                value: energy?.childs?.carbohydrates?.sugars?.childs?.lactose?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.lactose
                   ?.blendNutrientRefference?.units,
                 children: {},
               },
               Maltose: {
-                value:
-                  energy?.childs?.carbohydrates?.sugars?.childs?.maltose?.value,
+                value: energy?.childs?.carbohydrates?.sugars?.childs?.maltose?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.maltose
                   ?.blendNutrientRefference?.units,
                 children: {},
               },
               Galactose: {
-                value:
-                  energy?.childs?.carbohydrates?.sugars?.childs?.galactose
-                    ?.value,
+                value: energy?.childs?.carbohydrates?.sugars?.childs?.galactose?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.galactose
                   ?.blendNutrientRefference?.units,
                 children: {},
@@ -94,8 +84,7 @@ const recursiveData = (data) => {
           },
           Starch: {
             value: energy?.childs?.carbohydrates?.starch?.value,
-            Unit: energy?.childs?.carbohydrates?.starch?.blendNutrientRefference
-              ?.units,
+            Unit: energy?.childs?.carbohydrates?.starch?.blendNutrientRefference?.units,
             children: {},
           },
         },
@@ -273,13 +262,7 @@ interface PassingProps {
   percent: number;
 }
 
-const RightSide = ({
-  nutritionData,
-  counter,
-  nutritionState,
-  setsingleElement,
-  singleElement,
-}) => {
+const RightSide = ({ nutritionData, counter, nutritionState, setsingleElement, singleElement }) => {
   let nestedAccordianSkeleton = recursiveData(nutritionData);
   return (
     <div>
@@ -298,17 +281,14 @@ const RightSide = ({
                   setsingleElement(false);
                 }}
               >
-                <MdOutlineClose
-                  className={styles.content__closeBox__closeIcon}
-                />
+                <MdOutlineClose className={styles.content__closeBox__closeIcon} />
               </div>
             ) : null}
           </div>
           {singleElement === true ? (
             <div>
               <h3 className={styles.content__name}>
-                {nutritionState &&
-                  nutritionState[0]?.ingredientId?.ingredientName}
+                {nutritionState && nutritionState[0]?.ingredientId?.ingredientName}
               </h3>
             </div>
           ) : null}
@@ -316,10 +296,7 @@ const RightSide = ({
         </div>
         <div className={styles.ingredientsDetails}>
           {nutritionData && (
-            <UpdatedRecursiveAccordian
-              dataObject={nestedAccordianSkeleton}
-              counter={counter}
-            />
+            <UpdatedRecursiveAccordian dataObject={nestedAccordianSkeleton} counter={counter} />
           )}
         </div>
       </div>
