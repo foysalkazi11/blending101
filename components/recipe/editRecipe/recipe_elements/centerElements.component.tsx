@@ -26,21 +26,24 @@ const Center_Elements = ({
   selectedBLendCategory,
 }: CenterElementsProps) => {
   useEffect(() => {
+    if (!selectedBLendCategory) return;
     setBlendCategoryState(selectedBLendCategory);
   }, [selectedBLendCategory]);
 
   const dispatch = useAppDispatch();
   const editRecipeHeading = useRef();
   const [blendCategoryState, setBlendCategoryState] = useState(null);
+
   useEffect(() => {
     let blendCategoryId = allBlendCategories?.filter((elem) => {
       //@ts-ignore
-      return elem.name === blendCategoryState;
+      return elem?.name === blendCategoryState;
     });
     // @ts-ignore
 
     blendCategoryId && dispatch(setSelectedBlendCategory(blendCategoryId[0]?._id));
   }, [blendCategoryState]);
+
 
   //quantity number sets number for top card bottom right counter in edit recipe
   const quantity_number = useAppSelector((state) => state?.quantityAdjuster?.quantityNum);
@@ -105,12 +108,14 @@ const Center_Elements = ({
         <AddRecipeCard />
       </div>
       <div className={styles.scoreTraydiv}>
-        <textarea
-          value={recipeDescription}
-          onChange={(e) => {
-            handleDescriptionChange(e.target.value);
-          }}
-        />
+        <div className={styles.scoreTraydiv__description}>
+          <textarea
+            value={recipeDescription}
+            onChange={(e) => {
+              handleDescriptionChange(e.target.value);
+            }}
+          />
+        </div>
         <ScoreTray />
         <div className={styles.blendingOptions}>
           <div className={styles.blendingOptions__left}>

@@ -131,7 +131,7 @@ const EditRecipeComponent = () => {
     reactToastifyNotification("info", "Recipe Updated");
     setIsFetching(false);
   };
-  console.log({ imagesArray });
+
   return (
     <EditRecipePage
       recipeName={recipeName}

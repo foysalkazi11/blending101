@@ -9,13 +9,13 @@ type SectionWithInputProps = {
   setValue: (name: string, value: any) => void;
   fieldName: string;
   maxWidth: string;
-  style?: object;
+  style?: React.CSSProperties;
   type?: string;
   placeholder?: string;
   textarea?: boolean;
   fullWidth?: boolean;
   removeInput: (name: string, value: any) => void;
-  headingStyle?: object;
+  headingStyle?: React.CSSProperties;
 };
 
 const SectionWithInput = ({
@@ -39,6 +39,11 @@ const SectionWithInput = ({
     setValue(fieldName, inputValue);
     setInputValue("");
   };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e?.target;
+    setInputValue(value);
+  };
   return (
     <div className={styles.sectionWithInputContainer}>
       <h2 style={headingStyle}>{title}</h2>
@@ -50,11 +55,11 @@ const SectionWithInput = ({
             style={style}
             type={type}
             value={inputValue}
-            setValue={setInputValue}
             placeholder={placeholder}
             textarea={textarea}
             fullWidth={fullWidth}
             fieldName={fieldName}
+            handleChange={handleChange}
           />
         </form>
         <div className={styles.inputContainer__inputValueContainer}>

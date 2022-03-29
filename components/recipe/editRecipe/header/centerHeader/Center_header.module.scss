@@ -48,6 +48,17 @@ $width:300px;
     align-items: center;
     margin-right: 10px;
     min-height: 20px;
+    background-color: #7cbc39;
+    aspect-ratio: 1;
+    border-radius: 50%;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &__icon {
+        color: white
+    }
 
 }
 

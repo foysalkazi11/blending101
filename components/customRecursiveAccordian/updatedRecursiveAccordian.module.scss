@@ -80,12 +80,14 @@
 
   &__3 {
     @extend %headingAccordian;
+
     div {
       @extend %headingAccordian;
       aspect-ratio: 1;
       width: 45px;
       border-radius: 50%;
       background-color: #f1f1f1;
+      position: relative;
     }
   }
 }

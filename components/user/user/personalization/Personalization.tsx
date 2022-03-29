@@ -51,9 +51,10 @@ const Personalization = ({ userData, setUserData }: PersonalizationProps) => {
 
           personalization: {
             ...pre?.personalization,
-            [name]: [
-              ...pre?.personalization[name]?.filter((item) => item !== value),
-            ]||"tempName",
+            [name]:
+              [
+                ...pre?.personalization[name]?.filter((item) => item !== value),
+              ] || "tempName",
           },
         }));
       } else {
@@ -165,9 +166,6 @@ const Personalization = ({ userData, setUserData }: PersonalizationProps) => {
     dispatch(setLoading(true));
     const arrangData = {
       ...userData?.personalization,
-      age: Number(userData?.personalization?.age),
-      weight: Number(userData?.personalization?.weight),
-      height: Number(userData?.personalization?.height),
     };
     try {
       if (isNewUseImage) {
