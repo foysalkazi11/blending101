@@ -3,7 +3,7 @@ import styles from "./RadioButton.module.scss";
 
 interface RadioButtonProps {
   name: string;
-  id: string;
+  checked?: boolean;
   label: string;
   value: string;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -11,20 +11,19 @@ interface RadioButtonProps {
 
 const RadioButton = ({
   handleChange,
-  id,
   label,
   name,
   value,
+  checked = false,
 }: RadioButtonProps) => {
   return (
     <label className={styles.radioContainer}>
       {label}
       <input
         type="radio"
-        id={id}
         name={name}
         value={value}
-        checked={value === id}
+        checked={checked}
         onChange={handleChange}
       />
       <span className={styles.checkmark}></span>

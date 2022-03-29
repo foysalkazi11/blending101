@@ -40,8 +40,8 @@ const User = () => {
       allergies: [],
       dieteryLifeStyle: "",
       gender: "",
-      height: "",
-      weight: "",
+      heightInCentimeters: "",
+      weightInKilograms: "",
       meditcation: [],
       preExistingMedicalConditions: [],
       whyBlending: [],
@@ -50,7 +50,6 @@ const User = () => {
   });
 
   const { dbUser } = useAppSelector((state) => state?.user);
-  console.log(userData);
 
   useEffect(() => {
     if (dbUser?.configuration) {
@@ -100,8 +99,8 @@ const User = () => {
           allergies: allergies || [],
           dieteryLifeStyle,
           gender,
-          height: heightInCentimeters,
-          weight: weightInKilograms,
+          heightInCentimeters,
+          weightInKilograms,
           meditcation: meditcation || [],
           preExistingMedicalConditions: preExistingMedicalConditions || [],
           whyBlending: whyBlending || [],
