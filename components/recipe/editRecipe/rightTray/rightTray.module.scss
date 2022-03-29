@@ -26,12 +26,56 @@
     }
 }
 
+
+.content {
+    background-color: #ffffff;
+
+    &__name {
+        font-weight: 400;
+        font: 26px !important;
+    }
+
+    &__closeBox {
+        background-color: #7cbc39;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        aspect-ratio: 1;
+        width: 34px;
+        border-radius: 50%;
+        position: absolute;
+        right: 50px;
+        cursor: pointer;
+
+        &__closeIcon {
+            color: white;
+        }
+    }
+
+    &__heading {
+        margin: 0px 20px;
+
+        &__nutrition {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        h3 {
+            font-size: 20px;
+            color: #000;
+            font-weight: 400;
+        }
+
+    }
+
+}
+
 .right {
     min-width: 100%;
     height: 100%;
     min-height: 300px;
     border-radius: 14px;
-    padding: 12px 18px;
+
     padding-bottom: 20px;
     overflow: hidden;
     transition: all 0.2s;
@@ -42,10 +86,16 @@
     &__title {
         @include headings();
         height: 30px;
+        margin-bottom: 20px;
     }
 
     @include responsive(0px, 991px) {
         margin-right: calc(100% - 30px);
+    }
+
+
+    &__headerDiv {
+        padding: 12px 18px;
     }
 
     &__counterTray {

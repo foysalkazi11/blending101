@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import {
   setDescriptionRecipe,
   setEditRecipeName,
+  setRecipeImagesArray,
   setSelectedBlendCategory,
 } from "../../../../redux/edit_recipe/editRecipeStates";
 import RecipeDropDown from "../../../../theme/dropDown/recipeDropDown.component";
@@ -25,31 +26,19 @@ const Center_Elements = ({
   allBlendCategories,
   selectedBLendCategory,
 }: CenterElementsProps) => {
-  useEffect(() => {
-    if (!selectedBLendCategory) return;
-    setBlendCategoryState(selectedBLendCategory);
-  }, [selectedBLendCategory]);
-
   const dispatch = useAppDispatch();
   const editRecipeHeading = useRef();
   const [blendCategoryState, setBlendCategoryState] = useState(null);
-
-  useEffect(() => {
-    let blendCategoryId = allBlendCategories?.filter((elem) => {
-      //@ts-ignore
-      return elem?.name === blendCategoryState;
-    });
-    // @ts-ignore
-
-    blendCategoryId && dispatch(setSelectedBlendCategory(blendCategoryId[0]?._id));
-  }, [blendCategoryState]);
-
-
-  //quantity number sets number for top card bottom right counter in edit recipe
+  const recipeImagesArray = useAppSelector((state) => state.editRecipeReducer.recipeImagesArray);
   const quantity_number = useAppSelector((state) => state?.quantityAdjuster?.quantityNum);
   const recipeDescription = useAppSelector((state) => state?.editRecipeReducer?.descriptionRecipe);
+  let BlendtecItem = [{ name: `Blentec` }, { name: `Blentec` }];
+  let OzItem = [{ name: "64oz" }, { name: "64oz" }];
+  let dropDownStyle = {
+    paddingRight: "0px",
+    width: "111%",
+  };
 
-  // variables for ingredients card of edit recipe
   const adjusterFunc = (task, type) => {
     if (type === "quantity_number") {
       if (quantity_number <= 0 && task === "-") {
@@ -62,15 +51,6 @@ const Center_Elements = ({
     }
   };
 
-  //lists for each dropdown
-  let BlendtecItem = [{ name: `Blentec` }, { name: `Blentec` }];
-  let OzItem = [{ name: "64oz" }, { name: "64oz" }];
-
-  let dropDownStyle = {
-    paddingRight: "0px",
-    width: "111%",
-  };
-
   const handleDescriptionChange = (text) => {
     dispatch(setDescriptionRecipe(text));
   };
@@ -81,11 +61,48 @@ const Center_Elements = ({
     dispatch(setEditRecipeName(text));
   };
 
+  const imageRenderingHandler = (event) => {
+    let imageArraytemp = [...recipeImagesArray];
+    if (event.target.files) {
+      let BlobList = Array?.from(event.target.files)?.map((file: any) =>
+        URL?.createObjectURL(file)
+      );
+
+      BlobList?.map((elem) => {
+        imageArraytemp = [
+          ...imageArraytemp,
+          { __typename: `blobType`, image: elem, default: false },
+        ];
+      });
+    }
+    dispatch(setRecipeImagesArray(imageArraytemp));
+  };
+
+  const removeImage = (index_value: number) => {
+    let updated_list = [...recipeImagesArray];
+    updated_list?.splice(index_value, 1);
+    dispatch(setRecipeImagesArray(updated_list));
+  };
+
+  useEffect(() => {
+    if (!selectedBLendCategory) return;
+    setBlendCategoryState(selectedBLendCategory);
+  }, [selectedBLendCategory]);
+
   useEffect(() => {
     if (!recipeName) return;
     handleHeadingchange(recipeName);
   }, [recipeName]);
 
+  useEffect(() => {
+    let blendCategoryId = allBlendCategories?.filter((elem) => {
+      //@ts-ignore
+      return elem?.name === blendCategoryState;
+    });
+    // @ts-ignore
+
+    blendCategoryId && dispatch(setSelectedBlendCategory(blendCategoryId[0]?._id));
+  }, [blendCategoryState]);
   return (
     <div className={styles.main}>
       <div className={styles.topSection}>
@@ -105,7 +122,11 @@ const Center_Elements = ({
         </div>
       </div>
       <div className={styles.addImagediv}>
-        <AddRecipeCard />
+        <AddRecipeCard
+          imageState={recipeImagesArray}
+          imageRenderingHandler={imageRenderingHandler}
+          removeImage={removeImage}
+        />
       </div>
       <div className={styles.scoreTraydiv}>
         <div className={styles.scoreTraydiv__description}>

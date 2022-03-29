@@ -36,12 +36,13 @@ const EditRecipePage = ({
   const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
   const dispatch = useAppDispatch();
   const servingCounter = useAppSelector((state) => state.editRecipeReducer.servingCounter);
+  const [nutritionState, setNutritionState] = useState(null);
+  const [singleElement, setSingleElement] = useState(false);
 
   const adjusterFunc = (task) => {
     task === "+" && dispatch(setServingCounter(servingCounter + 1));
     task === "-" && servingCounter > 1 && dispatch(setServingCounter(servingCounter - 1));
   };
-
 
   return (
     <AContainer>
@@ -92,13 +93,23 @@ const EditRecipePage = ({
           />
           <IngredientList
             adjusterFunc={adjusterFunc}
-            recipeInstructions={recipeInstructions}
             allIngredients={allIngredients}
+            setNutritionState={setNutritionState}
+            recipeInstructions={recipeInstructions}
+            setSingleElement={setSingleElement}
+            singleElement={singleElement}
           />
         </div>
         <div className={styles.right__main}>
-          <RightTray nutritionTrayData={nutritionTrayData} adjusterFunc={adjusterFunc} />
+          <RightTray
+            nutritionTrayData={nutritionTrayData}
+            adjusterFunc={adjusterFunc}
+            nutritionState={nutritionState}
+            singleElement={singleElement}
+            setSingleElement={setSingleElement}
+          />
         </div>
+        {console.log(nutritionTrayData)}
       </div>
       <div className={styles.footerMainDiv}>
         <FooterRecipeFilter />

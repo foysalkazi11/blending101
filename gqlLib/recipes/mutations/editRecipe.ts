@@ -46,7 +46,7 @@ export const EDIT_A_RECIPE = ({
   const imagesArrayString = (images) => {
     let updatedImageArray = [];
     images?.forEach((elem) => {
-      updatedImageArray = [...updatedImageArray, `${`{image:"${elem.image}", default:false}`}`];
+      updatedImageArray = [...updatedImageArray, `${`{image:"${elem.image}", default:true}`}`];
     });
     return `[${updatedImageArray}]`;
   };
@@ -62,6 +62,7 @@ export const EDIT_A_RECIPE = ({
             recipeInstructions: ${recipeInstructionString(recipeInstruction)}
             description:"${description}"
             recipeBlendCategory:"${recipeBlendCategory}"
+            image:${imagesArrayString(imagesArray)}
           }
         }
       )

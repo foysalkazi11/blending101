@@ -19,16 +19,25 @@ type IngredientListPorps = {
   recipeInstructions?: string[];
   allIngredients?: any[];
   adjusterFunc: any;
+  setNutritionState: any;
+  singleElement: boolean;
+  setSingleElement: any;
 };
 
-const IngredientList = ({ recipeInstructions, allIngredients,adjusterFunc }: IngredientListPorps) => {
+const IngredientList = ({
+  recipeInstructions,
+  allIngredients,
+  adjusterFunc,
+  setNutritionState,
+  singleElement,
+  setSingleElement,
+}: IngredientListPorps) => {
+  const dispatch = useAppDispatch();
+
   const [selectedElementId, setSelectedElementId] = useState(null);
   const [inputValue, setInputValue] = useState("");
   const [inputIngredientValue, setInputIngredientValue] = useState("");
   const [suggestedIngredients, setSuggestedIngredients] = useState([]);
-
-  const dispatch = useAppDispatch();
-
   const selectedIngredientsList = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedIngredientsList
   );
@@ -259,7 +268,13 @@ const IngredientList = ({ recipeInstructions, allIngredients,adjusterFunc }: Ing
                                   : elem.portions[0].measurement}
                                 &nbsp;
                               </span>
-                              <span className={styles.ingredients__text__highlighted}>
+                              <span
+                                className={styles.ingredients__text__highlighted}
+                                onClick={() => {
+                                  setNutritionState(elem);
+                                  setSingleElement(!singleElement);
+                                }}
+                              >
                                 {elem.ingredientName}
                               </span>
                             </div>

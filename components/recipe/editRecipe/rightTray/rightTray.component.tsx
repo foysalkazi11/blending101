@@ -9,6 +9,8 @@ import { useAppSelector, useAppDispatch } from "../../../../redux/hooks";
 import UpdatedRecursiveAccordian from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 import { setServingCounter } from "../../../../redux/edit_recipe/editRecipeStates";
+import { MdOutlineClose } from "react-icons/md";
+import { setIngredientsToList } from "../../../../redux/edit_recipe/quantity";
 
 const recursiveData = (data) => {
   if (!data) return;
@@ -256,44 +258,85 @@ interface PassingProps {
   percent: number;
 }
 
-const RightTray = ({ nutritionTrayData, adjusterFunc }) => {
-  let nestedAccordianSkeleton = recursiveData(nutritionTrayData);
+const RightTray = ({
+  nutritionTrayData,
+  adjusterFunc,
+  nutritionState,
+  singleElement,
+  setSingleElement,
+}) => {
+  // nutritionTrayData
+  let nestedAccordianSkeleton =
+    singleElement && nutritionState
+      ? recursiveData(nutritionTrayData?.filter((elem) => elem === nutritionState))
+      : recursiveData(nutritionTrayData);
   const servingCounter = useAppSelector((state) => state.editRecipeReducer.servingCounter);
   const dispatch = useAppDispatch();
+  console.log("first");
+  console.log(nutritionState);
+  console.log(nutritionTrayData);
+
   return (
     <div>
       <RightHeader />
       <div className={styles.right}>
-        <div className={styles.right__title}>Nutrition</div>
-        <div className={styles.right__counterTray}>
-          <div className={styles.right__counterTray__counter}>
-            <input
-              className={styles.right__counterTray__counter__input}
-              type="number"
-              value={servingCounter}
-              onChange={(e) => {
-                dispatch(setServingCounter(e.target.value));
-              }}
-            />
-            <div className={styles.right__counterTray__counter__icons}>
-              <AiOutlineUp
-                onClick={() => {
-                  adjusterFunc("+");
+        <div className={styles.right__headerDiv}>
+          <div className={styles.right__title}>Nutrition</div>
+          <div className={styles.right__counterTray}>
+            <div className={styles.right__counterTray__counter}>
+              <input
+                className={styles.right__counterTray__counter__input}
+                type="number"
+                value={servingCounter}
+                onChange={(e) => {
+                  dispatch(setServingCounter(e.target.value));
                 }}
               />
-              <AiOutlineDown
-                onClick={() => {
-                  adjusterFunc("-");
-                }}
-              />
+              <div className={styles.right__counterTray__counter__icons}>
+                <AiOutlineUp
+                  onClick={() => {
+                    adjusterFunc("+");
+                  }}
+                />
+                <AiOutlineDown
+                  onClick={() => {
+                    adjusterFunc("-");
+                  }}
+                />
+              </div>
+            </div>
+
+            <div className={styles.right__counterTray__serving}>
+              <div>servings</div>
+              <div className={styles.right__counterTray__serving__num}>
+                {servingCounter * 16} oz
+              </div>
+            </div>
+            <div className={styles.right__counterTray__servingsize}>serving size</div>
+          </div>
+          <div className={styles.content}>
+            <div className={styles.content__heading__nutrition}>
+              {singleElement === true ? (
+                <>
+                  <div
+                    className={styles.content__closeBox}
+                    onClick={() => {
+                      setSingleElement(false);
+                    }}
+                  >
+                    <MdOutlineClose className={styles.content__closeBox__closeIcon} />
+                  </div>
+                  <div>
+                    <h3 className={styles.content__name}>
+                      {nutritionState && nutritionState.ingredientName}
+                    </h3>
+                  </div>
+                </>
+              ) : null}
             </div>
           </div>
-          <div className={styles.right__counterTray__serving}>
-            <div>servings</div>
-            <div className={styles.right__counterTray__serving__num}>{servingCounter * 16} oz</div>
-          </div>
-          <div className={styles.right__counterTray__servingsize}>serving size</div>
         </div>
+
         <div className={styles.compoent__box__nutrition}>
           {nutritionTrayData && (
             <UpdatedRecursiveAccordian
