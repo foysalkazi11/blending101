@@ -4,29 +4,31 @@ import styles from "./input.module.scss";
 interface InputComponentProps {
   type?: string;
   style?: React.CSSProperties;
-  value?: string;
-  setValue?: Function;
+  value?: string | number;
   placeholder?: string;
   textarea?: any;
   fullWidth?: boolean;
   maxWidth?: string;
   fieldName?: string;
-  handleChange?: Function;
+  handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   name?: string;
+  min?: number;
+  max?: number;
 }
 
 export default function InputComponent({
   type,
-  style,
+  style = {},
   value,
-  setValue,
   placeholder,
   textarea,
   fullWidth,
   maxWidth,
   fieldName,
-  handleChange,
+  handleChange = () => {},
   name,
+  min = 0,
+  max,
 }: InputComponentProps) {
   const [text, setText] = useState("");
   // STEP 1: INITIALIZE PROPS TO AVOID UI FALL
@@ -34,19 +36,8 @@ export default function InputComponent({
   style = style || {};
   if (fullWidth) style = { ...style, width: "100%" };
   if (maxWidth) style = { ...style, maxWidth: maxWidth };
-  value = value || text;
+  value = value || "";
   placeholder = placeholder || "Add your text here";
-
-  // STEP 2: CHANGE VALUES AND RETURN IT
-  const onChange = (e) => {
-    handleChange && handleChange(e);
-    const val = e.target.value;
-    if (setValue) {
-      setValue(val);
-    } else {
-      setText(val);
-    }
-  };
 
   // CASE 1: IF TEXTAREA RETURN TEXTAREA COMPONENT
   if (textarea) return <textarea className={styles.textarea} />;
@@ -59,8 +50,10 @@ export default function InputComponent({
       type={type}
       style={style}
       value={value}
-      onChange={onChange}
+      onChange={handleChange}
       placeholder={placeholder}
+      min={min}
+      max={max}
     />
   );
 }

@@ -32,15 +32,20 @@ const User = () => {
     },
     personalization: {
       activity: "",
-      // age: "",
+      age: {
+        months: null,
+        quantity: null,
+        years: null,
+      },
       allergies: [],
       dieteryLifeStyle: "",
       gender: "",
-      // height: "",
-      weight: "",
+      heightInCentimeters: "",
+      weightInKilograms: "",
       meditcation: [],
       preExistingMedicalConditions: [],
       whyBlending: [],
+      pregnantOrLactating: null,
     },
   });
 
@@ -62,15 +67,16 @@ const User = () => {
 
       const {
         activity,
-        // age,
+        age,
         allergies,
         dieteryLifeStyle,
         gender,
-        // height,
-        weight,
+        heightInCentimeters,
+        weightInKilograms,
         meditcation,
         preExistingMedicalConditions,
         whyBlending,
+        pregnantOrLactating,
       } = configuration;
 
       setUserData((pre) => ({
@@ -89,15 +95,16 @@ const User = () => {
         personalization: {
           ...pre?.personalization,
           activity,
-          // age,
+          age,
           allergies: allergies || [],
           dieteryLifeStyle,
           gender,
-          // height,
-          weight,
+          heightInCentimeters,
+          weightInKilograms,
           meditcation: meditcation || [],
           preExistingMedicalConditions: preExistingMedicalConditions || [],
           whyBlending: whyBlending || [],
+          pregnantOrLactating,
         },
       }));
     }

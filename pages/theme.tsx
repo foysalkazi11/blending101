@@ -29,7 +29,13 @@ export default function Home() {
         {/* BUTTON THEME COMPONENTS HERE */}
         <div className={styles.theme__box}>
           <h3>BUTTONS</h3>
-          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: 'space-around' }}>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "space-around",
+            }}
+          >
             <div className={styles.button__container}>
               <ButtonComponent
                 value="Primary"
@@ -206,7 +212,7 @@ export default function Home() {
                 style={undefined}
                 textStyle={undefined}
                 icon={undefined}
-            />
+              />
             </div>
             <div className={styles.container}>
               <SectionTitleWithIcon
@@ -230,7 +236,6 @@ export default function Home() {
             style={{ padding: "15px 20px", borderRadius: "7px" }}
             type={undefined}
             value={undefined}
-            setValue={undefined}
             placeholder={undefined}
             textarea={undefined}
             fullWidth={undefined}
