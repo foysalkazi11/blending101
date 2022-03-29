@@ -67,23 +67,31 @@
     }
 
     .scoreTraydiv {
-        textarea {
-            margin-top: 28px;
-            font-size: 14px;
-            line-height: 1.7;
-            color: #ABABAB;
-            font-weight: 400;
-            width: 100%;
-            outline: none;
-            padding: 10px;
-            border: none;
-            box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
 
-            &:focus {
-                outline: none;
-                border: none;
+        &__description {
+            margin-top: 28px;
+            padding: 20px;
+            border-radius: 7px;
+            background-color: #FBFBFB;
+            border: 2px solid #f2f2f8;
+
+            textarea {
+                display: flex;
+                border: 1px solid #e2dcdcd3;
+                border-radius: 7px;
+                min-height: 76px;
+                padding: 0 15px;
+                line-height: 30px;
+                color: #BCBCBC;
+                font-size: 14px;
+                width: 100%;
+
+                &:focus {
+                    outline: none;
+                }
             }
         }
+
 
         .blendingOptions {
             margin-top: 42px;

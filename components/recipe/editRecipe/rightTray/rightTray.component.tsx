@@ -5,9 +5,10 @@ import RightHeader from "../header/right_header/right_header.component";
 import styles from "./rightTray.module.scss";
 import { healthList } from "./rightTray";
 import LinearComponent from "../../../../theme/linearProgress/LinearProgress.component";
-import { useAppSelector } from "../../../../redux/hooks";
+import { useAppSelector, useAppDispatch } from "../../../../redux/hooks";
 import UpdatedRecursiveAccordian from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
+import { setServingCounter } from "../../../../redux/edit_recipe/editRecipeStates";
 
 const recursiveData = (data) => {
   if (!data) return;
@@ -255,9 +256,10 @@ interface PassingProps {
   percent: number;
 }
 
-const RightTray = ({ nutritionTrayData,adjusterFunc }) => {
+const RightTray = ({ nutritionTrayData, adjusterFunc }) => {
   let nestedAccordianSkeleton = recursiveData(nutritionTrayData);
   const servingCounter = useAppSelector((state) => state.editRecipeReducer.servingCounter);
+  const dispatch = useAppDispatch();
   return (
     <div>
       <RightHeader />
@@ -265,10 +267,25 @@ const RightTray = ({ nutritionTrayData,adjusterFunc }) => {
         <div className={styles.right__title}>Nutrition</div>
         <div className={styles.right__counterTray}>
           <div className={styles.right__counterTray__counter}>
-            <div>{servingCounter}</div>
+            <input
+              className={styles.right__counterTray__counter__input}
+              type="number"
+              value={servingCounter}
+              onChange={(e) => {
+                dispatch(setServingCounter(e.target.value));
+              }}
+            />
             <div className={styles.right__counterTray__counter__icons}>
-              <AiOutlineUp onClick={()=>{adjusterFunc("+")}}/>
-              <AiOutlineDown onClick={()=>{adjusterFunc("-")}} />
+              <AiOutlineUp
+                onClick={() => {
+                  adjusterFunc("+");
+                }}
+              />
+              <AiOutlineDown
+                onClick={() => {
+                  adjusterFunc("-");
+                }}
+              />
             </div>
           </div>
           <div className={styles.right__counterTray__serving}>

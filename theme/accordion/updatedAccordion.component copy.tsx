@@ -8,12 +8,14 @@ type CustomAccordionProps = {
   counter?: number;
 };
 
+
 const UpdatedCustomAccordion = ({
   title,
   content,
   type,
   counter,
 }: CustomAccordionProps) => {
+
   const populateAccordian = (childrenFeild, firstChild) => {
     return Object.entries(childrenFeild).map((itm) => {
       //@ts-ignore
@@ -25,9 +27,9 @@ const UpdatedCustomAccordion = ({
               <AccordComponent
                 title={itm[0]}
                 /* @ts-ignore */
-                value={itm[1].value || "1"}
+                value={itm[1]?.value || "-"}
                 /* @ts-ignore */
-                unit={itm[1].Unit || "N/A"}
+                unit={itm[1]?.Unit || " "}
                 percentage="20%"
                 counter={counter}
               >
@@ -45,9 +47,9 @@ const UpdatedCustomAccordion = ({
               <AccordComponent
                 title={itm[0]}
                 /* @ts-ignore */
-                value={itm[1].value}
+                value={itm[1]?.value}
                 /* @ts-ignore */
-                unit={itm[1].Unit}
+                unit={itm[1]?.Unit}
                 percentage={20 + "%"}
                 counter={counter}
               >
@@ -61,7 +63,7 @@ const UpdatedCustomAccordion = ({
         }
       } else {
         //@ts-ignore
-        if (itm[1].Unit && itm[1].value && Number(itm[1].value) > 0) {
+        if (itm[1]?.Unit && itm[1]?.value && Number(itm[1].value) > 0) {
           //@ts-ignore
 
           if (firstChild === true) {
@@ -71,9 +73,9 @@ const UpdatedCustomAccordion = ({
                 title={itm[0]}
                 plusMinusIcon={false}
                 //@ts-ignore
-                value={itm[1].value}
+                value={itm[1]?.value}
                 //@ts-ignore
-                unit={itm[1].Unit}
+                unit={itm[1]?.Unit}
                 percentage={20 + "%"}
                 counter={counter}
               />
@@ -85,9 +87,9 @@ const UpdatedCustomAccordion = ({
                   title={itm[0]}
                   plusMinusIcon={false}
                   //@ts-ignore
-                  value={itm[1].value}
+                  value={itm[1]?.value}
                   //@ts-ignore
-                  unit={itm[1].Unit}
+                  unit={itm[1]?.Unit}
                   percentage={20 + "%"}
                   counter={counter}
                 />
