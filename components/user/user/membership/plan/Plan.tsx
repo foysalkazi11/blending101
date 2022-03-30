@@ -45,24 +45,6 @@ const Plan = ({ plan, handleChange }: UserPlanProps) => {
           );
         })}
       </div>
-      <div
-        style={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          marginTop: "40px",
-        }}
-      >
-        <ButtonComponent
-          type="primary"
-          value="Update Profile"
-          style={{
-            borderRadius: "30px",
-            height: "48px",
-            width: "180px",
-          }}
-        />
-      </div>
     </div>
   );
 };
