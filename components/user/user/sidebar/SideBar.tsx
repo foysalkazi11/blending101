@@ -27,7 +27,7 @@ const SideBar = ({ userData, setUserData }: SideBarProps) => {
   const dispatch = useAppDispatch();
 
   const handleFile = (e: any) => {
-    dispatch(setIsNewUseImage(e?.target?.files[0]));
+    dispatch(setIsNewUseImage([e?.target?.files[0]]));
   };
 
   const handleChange = (e) => {
@@ -68,8 +68,8 @@ const SideBar = ({ userData, setUserData }: SideBarProps) => {
       <div className={styles.imageBox}>
         <img
           src={
-            isNewUseImage
-              ? URL.createObjectURL(isNewUseImage)
+            isNewUseImage?.length
+              ? URL.createObjectURL(isNewUseImage[0])
               : image || "/images/user-placeholder.png"
           }
           alt="userImag"

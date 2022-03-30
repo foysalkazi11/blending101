@@ -6,7 +6,7 @@ type SideTrayState = {
   user: string | null;
   dbUser: any;
   provider: string;
-  isNewUseImage: any;
+  isNewUseImage: any[];
 };
 
 const initialState: SideTrayState = {
@@ -14,7 +14,7 @@ const initialState: SideTrayState = {
   user: null,
   dbUser: {},
   provider: "email",
-  isNewUseImage: null,
+  isNewUseImage: [],
 };
 
 export const userSlice = createSlice({
