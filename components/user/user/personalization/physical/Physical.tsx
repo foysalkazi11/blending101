@@ -80,7 +80,10 @@ const Physical = ({ userProfile, updateUserProfile }: PhysicalProps) => {
     years: null | number;
     months: null | number;
   }>({ years: null, months: null });
+  const [pregnant, setPregnant] = useState("");
   const isMounted = useRef(null);
+
+  console.log(userProfile);
 
   useEffect(() => {
     if (userProfile?.weightInKilograms) {
@@ -121,11 +124,23 @@ const Physical = ({ userProfile, updateUserProfile }: PhysicalProps) => {
       }));
     }
 
+    if (userProfile?.pregnantOrLactating) {
+      setPregnant(userProfile?.pregnantOrLactating);
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handlePregnantOrLactating = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const { value } = e?.target;
+    setPregnant(value);
+    updateUserProfile("pregnantOrLactating", value);
+  };
+
   const handleAgeType = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, checked } = e?.target;
+    const { value } = e?.target;
     let obj = {
       quantity: Number(userProfile?.age?.quantity),
       months: ageType === "months" ? true : false,
@@ -449,6 +464,8 @@ const Physical = ({ userProfile, updateUserProfile }: PhysicalProps) => {
                       options={pregnantOrLactating}
                       placeholder="Select"
                       style={{ width: "100%" }}
+                      value={pregnant}
+                      handleChange={handlePregnantOrLactating}
                     />
                   </div>
                 </>
