@@ -15,7 +15,7 @@ import { setLoading } from "../../../../redux/slices/utilitySlice";
 import Medical from "./medical/Medical";
 import AchiveGoals from "./achiveGoals/AchiveGoals";
 import EDIT_USER_BY_ID from "../../../../gqlLib/user/mutations/editUserById";
-import S3_CONFIG from "../../../../configs/s3";
+import imageUploadS3 from "../../../utility/imageUploadS3";
 
 type PersonalizationProps = {
   userData: any;
@@ -106,70 +106,56 @@ const Personalization = ({ userData, setUserData }: PersonalizationProps) => {
     }
   };
 
-  const uploadImage = async () => {
-    fetch(S3_CONFIG.objectURL)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error("Response Failed");
-        }
-      })
-      .then((data) => {
-        const { Key, uploadURL } = data;
-        fetch(uploadURL, {
-          method: "PUT",
-          body: isNewUseImage,
-        }).then(async (response) => {
-          if (response.ok) {
-            const imageURL = `${S3_CONFIG.baseURL}/${Key}`;
-
-            setUserData((pre) => {
-              return {
-                ...pre,
-                about: {
-                  ...pre.about,
-                  image: imageURL,
-                },
-              };
-            });
-            await editUserById({
-              variables: {
-                data: {
-                  editId: dbUser._id,
-                  editableObject: { ...userData?.about, image: imageURL },
-                },
-              },
-            });
-
-            dispatch(
-              setDbUser({
-                ...dbUser,
-                ...userData?.about,
-                image: imageURL,
-              })
-            );
-            dispatch(setLoading(false));
-
-            dispatch(setIsNewUseImage(null));
-
-            notification("info", "your profile updated successfully");
-          }
-        });
-      })
-      .catch((error) => {
-        notification("error", error?.message);
-      });
-  };
-
   const submitData = async () => {
     dispatch(setLoading(true));
-    const arrangData = {
-      ...userData?.personalization,
-    };
+
     try {
-      if (isNewUseImage) {
-        uploadImage();
+      if (isNewUseImage?.length) {
+        const res = await imageUploadS3(isNewUseImage);
+        const imageURL = res?.[0];
+        setUserData((pre) => {
+          return {
+            ...pre,
+            about: {
+              ...pre.about,
+              image: imageURL,
+            },
+          };
+        });
+        await editUserById({
+          variables: {
+            data: {
+              editId: dbUser._id,
+              editableObject: { ...userData?.about, image: imageURL },
+            },
+          },
+        });
+
+        await editUserData({
+          variables: {
+            data: {
+              editId: configuration?._id,
+              editableObject: userData?.personalization,
+            },
+          },
+        });
+
+        dispatch(
+          setDbUser({
+            ...dbUser,
+            ...userData?.about,
+            image: imageURL,
+            configuration: {
+              ...dbUser?.configuration,
+              ...userData?.personalization,
+            },
+          })
+        );
+        dispatch(setLoading(false));
+
+        dispatch(setIsNewUseImage(null));
+
+        notification("info", "your profile updated successfully");
       } else {
         await editUserById({
           variables: {
@@ -184,7 +170,7 @@ const Personalization = ({ userData, setUserData }: PersonalizationProps) => {
           variables: {
             data: {
               editId: configuration?._id,
-              editableObject: arrangData,
+              editableObject: userData?.personalization,
             },
           },
         });
@@ -193,7 +179,10 @@ const Personalization = ({ userData, setUserData }: PersonalizationProps) => {
           setDbUser({
             ...dbUser,
             ...userData?.about,
-            configuration: { ...dbUser?.configuration, ...arrangData },
+            configuration: {
+              ...dbUser?.configuration,
+              ...userData?.personalization,
+            },
           })
         );
         dispatch(setLoading(false));

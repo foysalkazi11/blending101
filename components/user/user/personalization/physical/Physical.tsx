@@ -124,19 +124,6 @@ const Physical = ({ userProfile, updateUserProfile }: PhysicalProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // useEffect(() => {
-  //   if (isMounted.current) {
-  //     if (measurementType === "US") {
-  //       setWeightInKilograms(0);
-  //       setHeightInCentimeters(0);
-  //     }
-  //     if (measurementType === "Metric") {
-  //       setWeightInPound(0);
-  //       setHeightInFeetAndInches((pre) => ({ ...pre, feet: 0, inches: 0 }));
-  //     }
-  //   }
-  // }, [measurementType]);
-
   const handleAgeType = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, checked } = e?.target;
     let obj = {
