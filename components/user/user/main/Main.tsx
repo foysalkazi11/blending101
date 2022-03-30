@@ -26,9 +26,7 @@ type MainProps = {
 
 const Main = ({ userData, setUserData }: MainProps) => {
   const [activeTab, setActiveTab] = useState(0);
-
   const { dbUser } = useAppSelector((state) => state?.user);
-  const { personalization } = userData;
   const dispatch = useAppDispatch();
   const [editUserData] = useMutation(EDIT_CONFIGRATION_BY_ID);
   const [editUserById] = useMutation(EDIT_USER_BY_ID);

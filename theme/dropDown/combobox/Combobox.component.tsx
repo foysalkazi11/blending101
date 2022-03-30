@@ -26,7 +26,7 @@ interface ComboboxProps
   required?: boolean;
   className?: string;
   options: Option[] | string[];
-  onChange?: (e: any) => any;
+  handleChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 const Combobox = (props: ComboboxProps) => {
@@ -40,6 +40,7 @@ const Combobox = (props: ComboboxProps) => {
     options,
     style,
     className,
+    handleChange = () => {},
     ...selectProps
   } = props;
 
@@ -81,6 +82,7 @@ const Combobox = (props: ComboboxProps) => {
         disabled={disabled}
         className={`${className} ${styles["custom-input"]}`}
         style={style}
+        onChange={handleChange}
         {...selectProps}
         {...register(name, {
           required: {
