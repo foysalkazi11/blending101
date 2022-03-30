@@ -20,13 +20,11 @@ import { EDIT_A_RECIPE } from "../../../gqlLib/recipes/mutations/editRecipe";
 import { setLoading } from "../../../redux/slices/utilitySlice";
 import imageUploadS3 from "../../../components/utility/imageUploadS3";
 import reactToastifyNotification from "../../../components/utility/reactToastifyNotification";
-import { isDraftable } from "immer";
 
 const EditRecipeComponent = () => {
   const router = useRouter();
   const { recipeId } = router.query;
   const dispatch = useAppDispatch();
-  const [localImageStateForApi, setLocalImageStateForApi] = useState(null);
   const [isFetching, setIsFetching] = useState(null);
 
   const handleSubmitData = async (images) => {

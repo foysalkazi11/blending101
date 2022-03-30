@@ -12,7 +12,6 @@ import { setServingCounter } from "../../../../redux/edit_recipe/editRecipeState
 import { MdOutlineClose } from "react-icons/md";
 import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
 
-
 const recursiveData = (data) => {
   if (!data) return;
   let { energy, vitamins, minerals } = data;
@@ -339,7 +338,7 @@ const RightTray = ({
             />
           ) : (
             <div>
-              <CircularRotatingLoader/>
+              <CircularRotatingLoader />
             </div>
           )}
         </div>
