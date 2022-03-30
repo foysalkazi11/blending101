@@ -2,10 +2,10 @@
 import React from "react";
 import styles from "./RightSide.module.scss";
 import LinearComponent from "../../../../theme/linearProgress/LinearProgress.component";
-import RecursiveAccordian from "../../../customRecursiveAccordian/recursiveAccordian.component";
 import UpdatedRecursiveAccordian from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
 import { MdOutlineClose } from "react-icons/md";
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
+import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
 
 const health = [
   { name: "Vitamin A", percent: 100 },
@@ -333,18 +333,22 @@ const RightSide = ({
           <p>Amount Per Serving Calories</p>
         </div>
         <div className={styles.ingredientsDetails}>
-          {nutritionData && (
+          {nutritionData ? (
             <UpdatedRecursiveAccordian dataObject={nestedAccordianSkeleton} counter={counter} />
+          ) : (
+            <div style={{ marginTop: "30px" }}>
+              <CircularRotatingLoader />
+            </div>
           )}
         </div>
       </div>
-      <div className={styles.linerProgessContainer}>
+      {/* <div className={styles.linerProgessContainer}>
         <h3>Health</h3>
         <p>Disease, Conditions and Systems</p>
         {health.map(({ name, percent }: PassingProps, index) => {
           return <LinearComponent name={name} percent={percent} key={index} />;
         })}
-      </div>
+      </div> */}
     </div>
   );
 };

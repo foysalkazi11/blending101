@@ -109,7 +109,6 @@ const EditRecipePage = ({
             setSingleElement={setSingleElement}
           />
         </div>
-        {console.log(nutritionTrayData)}
       </div>
       <div className={styles.footerMainDiv}>
         <FooterRecipeFilter />

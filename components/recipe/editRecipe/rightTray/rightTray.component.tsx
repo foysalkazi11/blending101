@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useState } from "react";
+import React from "react";
 import RightHeader from "../header/right_header/right_header.component";
 import styles from "./rightTray.module.scss";
 import { healthList } from "./rightTray";
@@ -10,7 +10,8 @@ import UpdatedRecursiveAccordian from "../../../customRecursiveAccordian/updated
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 import { setServingCounter } from "../../../../redux/edit_recipe/editRecipeStates";
 import { MdOutlineClose } from "react-icons/md";
-import { setIngredientsToList } from "../../../../redux/edit_recipe/quantity";
+import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
+
 
 const recursiveData = (data) => {
   if (!data) return;
@@ -265,16 +266,9 @@ const RightTray = ({
   singleElement,
   setSingleElement,
 }) => {
-  // nutritionTrayData
-  let nestedAccordianSkeleton =
-    singleElement && nutritionState
-      ? recursiveData(nutritionTrayData?.filter((elem) => elem === nutritionState))
-      : recursiveData(nutritionTrayData);
-  const servingCounter = useAppSelector((state) => state.editRecipeReducer.servingCounter);
+  const nestedAccordianSkeleton = recursiveData(nutritionTrayData);
+  const servingCounter = useAppSelector((state) => state?.editRecipeReducer?.servingCounter);
   const dispatch = useAppDispatch();
-  console.log("first");
-  console.log(nutritionState);
-  console.log(nutritionTrayData);
 
   return (
     <div>
@@ -338,23 +332,27 @@ const RightTray = ({
         </div>
 
         <div className={styles.compoent__box__nutrition}>
-          {nutritionTrayData && (
+          {nutritionTrayData ? (
             <UpdatedRecursiveAccordian
               dataObject={nestedAccordianSkeleton}
               counter={servingCounter}
             />
+          ) : (
+            <div>
+              <CircularRotatingLoader/>
+            </div>
           )}
         </div>
       </div>
-      <div className={styles.right}>
+      {/* <div className={styles.right} style={{ padding: "20px" }}>
         <div className={styles.right__title}>Health</div>
         <div className={styles.right__sub_heading}>Disease, Condition and Systems</div>
-        <div className={styles.compoent__box} style={{}}>
+        <div className={styles.compoent__box}>
           {healthList?.map(({ name, percent }: PassingProps, index) => {
             return <LinearComponent name={name} percent={percent} key={index} />;
           })}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

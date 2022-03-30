@@ -13,7 +13,7 @@ const Loader = ({ active = false, style = {} }: LoaderProps) => {
   return (
     <>
       {loading || active ? (
-        <div className={styles.preloader}>
+        <div className={styles.preloader} style={style}>
           <svg
             width="200"
             height="200"

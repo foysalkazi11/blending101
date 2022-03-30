@@ -286,7 +286,7 @@ const RightTray = ({ nutritionData }) => {
           )}
         </div>
       </div>
-      <div className={styles.right}>
+      {/* <div className={styles.right}>
         <div className={styles.right__title}>Health</div>
         <div className={styles.right__sub_heading}>
           Disease, Condition and Systems
@@ -298,7 +298,7 @@ const RightTray = ({ nutritionData }) => {
             );
           })}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

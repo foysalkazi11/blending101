@@ -3,6 +3,7 @@ import styles from "./addRecipeCards.module.scss";
 import AddIcon from "../../../../../public/icons/add_black_36dp.svg";
 import Image from "next/image";
 import CancelIcon from "../../../../../public/icons/cancel_black_36dp.svg";
+import CircularRotatingLoader from "../../../../../theme/loader/circularRotatingLoader.component";
 
 interface AddRecipeCardInterface {
   imageState?: object[];
@@ -22,7 +23,7 @@ const AddRecipeCard = ({
 
   const renderPhotos = (source) => {
     return source?.map((photo, index) => {
-      return (
+      return(photo ? (
         <div className={styles.image__div} key={photo.image}>
           <span
             onClick={() => {
@@ -33,7 +34,11 @@ const AddRecipeCard = ({
           </span>
           <Image src={photo.image} alt="" layout="fill" objectFit="fill" />
         </div>
-      );
+      ) : (
+        <div style={{ margin: "30px 0px" }}>
+          <CircularRotatingLoader />
+        </div>
+      ))
     });
   };
 
