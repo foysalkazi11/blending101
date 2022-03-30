@@ -1,20 +1,19 @@
 @mixin responsive($min_width, $max_width) {
-  @media only screen and (min-width:$min_width) and (max-width:$max_width) {
+  @media only screen and (min-width: $min_width) and (max-width: $max_width) {
     @content;
   }
 }
 
 .imageContainer {
-
-  &__innerDiv{
+  &__innerDiv {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     width: 100%;
     gap: 10px;
 
-    &__elem{
-      width: 33.33%;
+    &__elem {
+      flex: 1;
     }
   }
 }
@@ -36,7 +35,10 @@
       filter: grayscale(100%);
       -webkit-filter: grayscale(100%);
       width: 30px;
+      height: 30px;
+      object-fit: contain;
     }
+
     // @media screen and (max-width: 900px) {
     //   width: 121px;
     //   height: 121px;

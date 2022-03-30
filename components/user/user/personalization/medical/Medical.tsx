@@ -37,6 +37,7 @@ const Medical = ({
         placeholder="Enter Conditions..."
         removeInput={removeInput}
         headingStyle={{ fontSize: "22px" }}
+        style={{ marginBottom: "20px" }}
       />
       <SectionWithInput
         title="What medications are you currently taking?"
@@ -47,6 +48,7 @@ const Medical = ({
         placeholder="Enter Medications..."
         removeInput={removeInput}
         headingStyle={{ fontSize: "22px" }}
+        style={{ marginBottom: "20px" }}
       />
     </>
   );

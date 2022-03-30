@@ -45,10 +45,13 @@
         right: 18px;
         display: none !important;
         cursor: pointer;
-        color: #fe5d1f;
+        color: #c4c4c4;
         transform: scale(0.75);
         z-index: 1;
         background-color: #ffffff;
+        &:hover {
+          color: #fe5d1f;
+        }
       }
     }
   }
