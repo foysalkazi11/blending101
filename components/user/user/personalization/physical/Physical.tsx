@@ -119,8 +119,10 @@ const Physical = ({ userProfile, updateUserProfile }: PhysicalProps) => {
       setHeightInCentimeters(userProfile?.heightInCentimeters);
       setHeightInFeetAndInches((pre) => ({
         ...pre,
-        feet: Number(Math?.trunc(userProfile?.heightInCentimeters / 12)),
-        inches: Number(userProfile?.heightInCentimeters % 12),
+        feet: Number(Math?.trunc(userProfile?.heightInCentimeters / 30.48)),
+        inches: Number(
+          ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0)
+        ),
       }));
     }
 
@@ -220,7 +222,7 @@ const Physical = ({ userProfile, updateUserProfile }: PhysicalProps) => {
   const handleheightInCentimeters = (e) => {
     const { value } = e?.target;
     const valueAsNumber = +value;
-    if (valueAsNumber >= 0 && valueAsNumber <= 243) {
+    if (valueAsNumber >= 0 && valueAsNumber <= 272) {
       setHeightInCentimeters(valueAsNumber);
       updateUserProfile("heightInCentimeters", +valueAsNumber);
       if (
@@ -235,16 +237,15 @@ const Physical = ({ userProfile, updateUserProfile }: PhysicalProps) => {
   const handleHeightInFeetAndInches = (e) => {
     const { name, value } = e?.target;
     const valueAsNumber = +value;
-
-    let feet = heightInFeetAndInches?.feet * 12;
-    let inches = heightInFeetAndInches?.inches;
+    let feet = heightInFeetAndInches?.feet * 30.48;
+    let inches = heightInFeetAndInches?.inches * 2.54;
 
     if (name === "feet") {
       if (valueAsNumber >= 0 && valueAsNumber <= 8) {
         setHeightInFeetAndInches((pre) => ({ ...pre, [name]: valueAsNumber }));
-        feet = valueAsNumber * 12;
-        let HeightInCentimeters = feet + inches;
-        updateUserProfile("heightInCentimeters", HeightInCentimeters);
+        feet = valueAsNumber * 30.48;
+        let HeightInCentimeters = (feet + inches)?.toFixed(0);
+        updateUserProfile("heightInCentimeters", Number(HeightInCentimeters));
         if (heightInCentimeters !== 0) setHeightInCentimeters(0);
       }
     }
@@ -252,9 +253,9 @@ const Physical = ({ userProfile, updateUserProfile }: PhysicalProps) => {
     if (name === "inches") {
       if (valueAsNumber >= 0 && valueAsNumber <= 11) {
         setHeightInFeetAndInches((pre) => ({ ...pre, [name]: valueAsNumber }));
-        inches = valueAsNumber;
-        let HeightInCentimeters = feet + inches;
-        updateUserProfile("heightInCentimeters", HeightInCentimeters);
+        inches = valueAsNumber * 2.54;
+        let HeightInCentimeters = (feet + inches)?.toFixed(0);
+        updateUserProfile("heightInCentimeters", Number(HeightInCentimeters));
         if (heightInCentimeters !== 0) setHeightInCentimeters(0);
       }
     }
@@ -436,7 +437,7 @@ const Physical = ({ userProfile, updateUserProfile }: PhysicalProps) => {
                       type="number"
                       value={heightInCentimeters}
                       handleChange={handleheightInCentimeters}
-                      max={243}
+                      max={272}
                     />
                   </>
                 )}

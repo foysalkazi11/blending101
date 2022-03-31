@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { InputHTMLAttributes, useState } from "react";
 import styles from "./input.module.scss";
 
-interface InputComponentProps {
+interface InputComponentProps extends InputHTMLAttributes<HTMLInputElement> {
   type?: string;
   style?: React.CSSProperties;
   value?: string | number;
@@ -29,6 +29,7 @@ export default function InputComponent({
   name,
   min = 0,
   max,
+  ...InputProps
 }: InputComponentProps) {
   const [text, setText] = useState("");
   // STEP 1: INITIALIZE PROPS TO AVOID UI FALL
@@ -54,6 +55,7 @@ export default function InputComponent({
       placeholder={placeholder}
       min={min}
       max={max}
+      {...InputProps}
     />
   );
 }
