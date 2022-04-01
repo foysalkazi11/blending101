@@ -13,6 +13,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
   setDescriptionRecipe,
   setEditRecipeName,
+  setIngredientArrayForNutrition,
   setRecipeImagesArray,
   setSelectedIngredientsList,
 } from "../../../redux/edit_recipe/editRecipeStates";
@@ -47,6 +48,9 @@ const EditRecipeComponent = () => {
   const selectedIngredientsList = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedIngredientsList
   );
+  const ingredientArrayForNutrition = useAppSelector(
+    (state) => state?.editRecipeReducer?.ingredientArrayForNutrition
+  );
   const recipeInstruction = useAppSelector((state) => state?.editRecipeReducer?.recipeInstruction);
   const recipeDescription = useAppSelector((state) => state?.editRecipeReducer?.descriptionRecipe);
   const selectedBLendCategory = useAppSelector(
@@ -61,12 +65,12 @@ const EditRecipeComponent = () => {
     variables: { recipeId: recipeId },
   });
   const { data: allBlendCategory } = useQuery(BLEND_CATEGORY);
-  const { data: nutritionData } = useQuery(GET_RECIPE_NUTRITION(selectedIngredientsList));
+  const { data: nutritionData } = useQuery(GET_RECIPE_NUTRITION(ingredientArrayForNutrition));
   const [classBasedData, recipeBasedData, allBlendBasedCategory, recipeBasedNutrition] = [
     classData?.filterIngredientByCategoryAndClass,
     recipeData?.getARecipe,
     allBlendCategory?.getAllCategories,
-    nutritionData?.getBlendNutritionBasedOnRecipe,
+    nutritionData?.getBlendNutritionBasedOnRecipexxx,
   ];
 
   useEffect(() => {
@@ -79,6 +83,7 @@ const EditRecipeComponent = () => {
       if (itemMatch?.length) return itemMatch[0];
     });
     dispatch(setSelectedIngredientsList(presentIngredient));
+    dispatch(setIngredientArrayForNutrition(presentIngredient));
     dispatch(setEditRecipeName(recipeBasedData?.name));
     dispatch(setDescriptionRecipe(recipeBasedData?.description));
     dispatch(setRecipeImagesArray(recipeBasedData?.image));
@@ -121,6 +126,11 @@ const EditRecipeComponent = () => {
     reactToastifyNotification("info", "Recipe Updated");
     setIsFetching(false);
   };
+
+  useEffect(() => {
+    dispatch(setIngredientArrayForNutrition(selectedIngredientsList));
+
+  }, [selectedIngredientsList]);
 
   return (
     <EditRecipePage

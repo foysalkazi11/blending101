@@ -34,6 +34,7 @@ export const EDIT_A_RECIPE = ({
     return `[${recipeIngredientsModified}]`;
   };
 
+  console.log({recipeBlendCategory})
   const recipeInstructionString = (array) => {
     let recipeInstructionModified = [];
     array?.forEach((itm) => {

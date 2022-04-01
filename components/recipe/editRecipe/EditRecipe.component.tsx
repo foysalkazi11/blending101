@@ -94,6 +94,7 @@ const EditRecipePage = ({
           <IngredientList
             adjusterFunc={adjusterFunc}
             allIngredients={allIngredients}
+            nutritionState={nutritionState}
             setNutritionState={setNutritionState}
             recipeInstructions={recipeInstructions}
             setSingleElement={setSingleElement}

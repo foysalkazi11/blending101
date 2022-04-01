@@ -10,6 +10,7 @@ import DragIndicatorIcon from "../../../../../public/icons/drag_indicator_black_
 import ModeEditOutlineOutlinedIcon from "../../../../../public/icons/mode_edit_black_36dp.svg";
 import {
   setArrayOfSingleSelectedIngredientForNutrition,
+  setIngredientArrayForNutrition,
   setRecipeInstruction,
   setSelectedIngredientsList,
 } from "../../../../../redux/edit_recipe/editRecipeStates";
@@ -20,6 +21,7 @@ type IngredientListPorps = {
   recipeInstructions?: string[];
   allIngredients?: any[];
   adjusterFunc: any;
+  nutritionState: object;
   setNutritionState: any;
   singleElement: boolean;
   setSingleElement: any;
@@ -29,6 +31,7 @@ const IngredientList = ({
   recipeInstructions,
   allIngredients,
   adjusterFunc,
+  nutritionState,
   setNutritionState,
   singleElement,
   setSingleElement,
@@ -159,6 +162,15 @@ const IngredientList = ({
     }
   };
 
+  const handleSingleIngredient = (elem) => {
+    setNutritionState(elem);
+    setSingleElement(!singleElement);
+
+    !singleElement
+      ? dispatch(setIngredientArrayForNutrition([elem]))
+      : dispatch(setIngredientArrayForNutrition(selectedIngredientsList));
+  };
+
   return (
     <div className={styles.mainCard}>
       <div className={styles.ingredients__main__card}>
@@ -277,11 +289,7 @@ const IngredientList = ({
                                 <span
                                   className={styles.ingredients__text__highlighted}
                                   onClick={() => {
-                                    setNutritionState(elem);
-                                    // setSingleElement(!singleElement);
-                                    dispatch(
-                                      setArrayOfSingleSelectedIngredientForNutrition([elem])
-                                    );
+                                    handleSingleIngredient(elem);
                                   }}
                                 >
                                   {elem.ingredientName}

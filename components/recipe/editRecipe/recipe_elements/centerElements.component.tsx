@@ -103,6 +103,7 @@ const Center_Elements = ({
 
     blendCategoryId && dispatch(setSelectedBlendCategory(blendCategoryId[0]?._id));
   }, [blendCategoryState]);
+
   return (
     <div className={styles.main}>
       <div className={styles.topSection}>

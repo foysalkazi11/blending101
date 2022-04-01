@@ -1,17 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import RightHeader from "../header/right_header/right_header.component";
 import styles from "./rightTray.module.scss";
-import { useAppSelector, useAppDispatch } from "../../../../redux/hooks";
+import Image from "next/image";
+import { healthList } from "./rightTray";
+import LinearComponent from "../../../../theme/linearProgress/LinearProgress.component";
+import { useAppSelector } from "../../../../redux/hooks";
+import { useLazyQuery } from "@apollo/client";
+import { NUTRITION_BASED_RECIPE } from "../../../../gqlLib/recipes/queries/getEditRecipe";
+import RecursiveAccordian from "../../../customRecursiveAccordian/recursiveAccordian.component";
 import UpdatedRecursiveAccordian from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
-import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
-import {
-  setIngredientArrayForNutrition,
-  setServingCounter,
-} from "../../../../redux/edit_recipe/editRecipeStates";
-import { MdOutlineClose } from "react-icons/md";
-import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
+
+interface PassingProps {
+  name: string;
+  percent: number;
+}
 
 const recursiveData = (data) => {
   if (!data) return;
@@ -34,8 +38,8 @@ const recursiveData = (data) => {
         children: {
           "Dietary Fiber": {
             value: energy?.childs?.carbohydrates?.dietryFibre?.value,
-            Unit: energy?.childs?.carbohydrates?.dietryFibre.blendNutrientRefference
-              ?.units,
+            Unit: energy?.childs?.carbohydrates?.dietryFibre
+              .blendNutrientRefference?.units,
             children: {},
           },
           Sugars: {
@@ -44,39 +48,45 @@ const recursiveData = (data) => {
               ?.units,
             children: {
               Sucrose: {
-                value: energy?.childs?.carbohydrates?.sugars?.childs?.sucrose?.value,
+                value:
+                  energy?.childs?.carbohydrates?.sugars?.childs?.sucrose?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.sucrose
                   ?.blendNutrientRefference?.units,
                 children: {},
               },
               Glucose: {
-                value: energy?.childs?.carbohydrates?.sugars?.childs?.glucose?.value,
+                value:
+                  energy?.childs?.carbohydrates?.sugars?.childs?.glucose?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.glucose
                   ?.blendNutrientRefference?.units,
                 children: {},
               },
               Fructose: {
                 value:
-                  energy?.childs?.carbohydrates?.sugars?.childs?.fructose?.value,
+                  energy?.childs?.carbohydrates?.sugars?.childs?.fructose
+                    ?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.fructose
                   ?.blendNutrientRefference?.units,
                 children: {},
               },
               Lactose: {
-                value: energy?.childs?.carbohydrates?.sugars?.childs?.lactose?.value,
+                value:
+                  energy?.childs?.carbohydrates?.sugars?.childs?.lactose?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.lactose
                   ?.blendNutrientRefference?.units,
                 children: {},
               },
               Maltose: {
-                value: energy?.childs?.carbohydrates?.sugars?.childs?.maltose?.value,
+                value:
+                  energy?.childs?.carbohydrates?.sugars?.childs?.maltose?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.maltose
                   ?.blendNutrientRefference?.units,
                 children: {},
               },
               Galactose: {
                 value:
-                  energy?.childs?.carbohydrates?.sugars?.childs?.galactose?.value,
+                  energy?.childs?.carbohydrates?.sugars?.childs?.galactose
+                    ?.value,
                 Unit: energy?.childs?.carbohydrates?.sugars?.childs?.galactose
                   ?.blendNutrientRefference?.units,
                 children: {},
@@ -259,107 +269,36 @@ const recursiveData = (data) => {
   };
 };
 
-interface PassingProps {
-  name: string;
-  percent: number;
-}
-
-const RightTray = ({
-  nutritionTrayData,
-  adjusterFunc,
-  nutritionState,
-  singleElement,
-  setSingleElement,
-}) => {
-  const servingCounter = useAppSelector(
-    (state) => state?.editRecipeReducer?.servingCounter
-  );
-  const selectedIngredientsList = useAppSelector(
-    (state) => state?.editRecipeReducer?.selectedIngredientsList
-  );
-  const dispatch = useAppDispatch();
+const RightTray = ({ nutritionData }) => {
+  let nestedAccordianSkeleton = recursiveData(nutritionData);
 
   return (
     <div>
       <RightHeader />
       <div className={styles.right}>
-        <div className={styles.right__headerDiv}>
-          <div className={styles.right__title}>Nutrition</div>
-          <div className={styles.right__counterTray}>
-            <div className={styles.right__counterTray__counter}>
-              <input
-                className={styles.right__counterTray__counter__input}
-                type="number"
-                value={servingCounter}
-                onChange={(e) => {
-                  dispatch(setServingCounter(Number(e.target.value)));
-                }}
-              />
-              <div className={styles.right__counterTray__counter__icons}>
-                <AiOutlineUp
-                  onClick={() => {
-                    adjusterFunc("+");
-                  }}
-                />
-                <AiOutlineDown
-                  onClick={() => {
-                    adjusterFunc("-");
-                  }}
-                />
-              </div>
-            </div>
-
-            <div className={styles.right__counterTray__serving}>
-              <div>servings</div>
-              <div className={styles.right__counterTray__serving__num}>
-                {servingCounter * 16} oz
-              </div>
-            </div>
-            <div className={styles.right__counterTray__servingsize}>
-              serving size
-            </div>
-          </div>
-          <div className={styles.content}>
-            <div className={styles.content__heading__nutrition}>
-              {singleElement === true ? (
-                <>
-                  <div
-                    className={styles.content__closeBox}
-                    onClick={() => {
-                      setSingleElement(false);
-                      dispatch(
-                        setIngredientArrayForNutrition(selectedIngredientsList)
-                      );
-                    }}
-                  >
-                    <MdOutlineClose
-                      className={styles.content__closeBox__closeIcon}
-                    />
-                  </div>
-                  <div>
-                    <h3 className={styles.content__name}>
-                      {nutritionState && nutritionState.ingredientName}
-                    </h3>
-                  </div>
-                </>
-              ) : null}
-            </div>
-          </div>
+        <div className={styles.right__title}>Nutrition</div>
+        <div className={styles.right__sub_heading}>
+          Amount Per Servings Calories
         </div>
-
         <div className={styles.compoent__box__nutrition}>
-          {nutritionTrayData ? (
-            <UpdatedRecursiveAccordian
-              dataObject={nutritionTrayData}
-              counter={servingCounter}
-            />
-          ) : (
-            <div>
-              <CircularRotatingLoader />
-            </div>
+          {nutritionData && (
+            <UpdatedRecursiveAccordian dataObject={nestedAccordianSkeleton} />
           )}
         </div>
       </div>
+      {/* <div className={styles.right}>
+        <div className={styles.right__title}>Health</div>
+        <div className={styles.right__sub_heading}>
+          Disease, Condition and Systems
+        </div>
+        <div className={styles.compoent__box} style={{}}>
+          {healthList.map(({ name, percent }: PassingProps, index) => {
+            return (
+              <LinearComponent name={name} percent={percent} key={index} />
+            );
+          })}
+        </div>
+      </div> */}
     </div>
   );
 };

@@ -33,9 +33,7 @@ const Center_Elements = ({
   const editRecipeHeading = useRef();
 
   //quantity number sets number for top card bottom right counter in edit recipe
-  const quantity_number = useAppSelector(
-    (state) => state.quantityAdjuster.quantityNum
-  );
+  const quantity_number = useAppSelector((state) => state.quantityAdjuster.quantityNum);
   // variables for ingredients card of edit recipe
   const adjusterFunc = (task, type) => {
     if (type === "quantity_number") {
@@ -94,9 +92,9 @@ const Center_Elements = ({
       <div className={styles.scoreTraydiv}>
         <ScoreTray />
         <p>
-          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-          voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+          commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+          dolore eu fugiat nulla pariatur.
         </p>
         <div className={styles.blendingOptions}>
           <div className={styles.blendingOptions__left}>

@@ -12,7 +12,7 @@ const initialState = {
   recipeInstruction: [],
   ingredientArrayForNutrition: [],
   arrayOfSingleSelectedIngredientForNutrition: [],
-  selectedIngredientBool:false
+  selectedIngredientBool: false,
 };
 
 export const editRecipeStateSlice = createSlice({
@@ -71,7 +71,7 @@ export const {
   setRecipeInstruction,
   setIngredientArrayForNutrition,
   setArrayOfSingleSelectedIngredientForNutrition,
-  setSelectedIngredientBool
+  setSelectedIngredientBool,
 } = editRecipeStateSlice.actions;
 
 export default editRecipeStateSlice?.reducer;
