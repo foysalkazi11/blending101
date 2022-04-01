@@ -44,7 +44,6 @@ const Index = () => {
     getBlendNutritionBasedOnRecipe();
   };
   const recipeBasedNutrition = nutritionData?.getBlendNutritionBasedOnRecipexxx;
-  console.log(recipeBasedNutrition)
 
   return (
     <RecipeDetails

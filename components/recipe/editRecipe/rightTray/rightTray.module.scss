@@ -6,10 +6,11 @@
 
 %counterTray {
     display: flex;
-    min-width: 60px;
+    min-width: 50px;
     box-sizing: border-box;
     padding: 5px;
     align-items: center;
+    margin-right: 10px;
 }
 
 @mixin headings {
@@ -70,7 +71,7 @@
 
 }
 
-.compoent__box__nutrition{
+.compoent__box__nutrition {
     display: flex;
     flex-direction: column;
 }

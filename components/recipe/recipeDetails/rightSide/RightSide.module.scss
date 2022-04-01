@@ -182,10 +182,11 @@
     margin: 16px 0px;
 
     &__counter {
-        @extend %counterTray;
-        border-radius: 2px;
-        border: 1px solid #ECECEC;
-        width: 20%;
+      @extend %counterTray;
+      border-radius: 2px;
+      border: 1px solid #ECECEC;
+      width: 20%;
+      margin-right: 10px;
 
         &__icons {
             margin-left: auto;
@@ -229,6 +230,7 @@
     &__servingsize {
         @extend %counterTray;
         font-size: 14px;
+
     }
 }
 }

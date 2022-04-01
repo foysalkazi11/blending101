@@ -35,19 +35,26 @@ const EditRecipePage = ({
 }: editRecipe) => {
   const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
   const dispatch = useAppDispatch();
-  const servingCounter = useAppSelector((state) => state.editRecipeReducer.servingCounter);
+  const servingCounter = useAppSelector(
+    (state) => state.editRecipeReducer.servingCounter
+  );
   const [nutritionState, setNutritionState] = useState(null);
   const [singleElement, setSingleElement] = useState(false);
 
   const adjusterFunc = (task) => {
     task === "+" && dispatch(setServingCounter(servingCounter + 1));
-    task === "-" && servingCounter > 1 && dispatch(setServingCounter(servingCounter - 1));
+    task === "-" &&
+      servingCounter > 1 &&
+      dispatch(setServingCounter(servingCounter - 1));
   };
 
   return (
     <AContainer>
       <div className={styles.main}>
-        <div className={styles.left} style={leftTrayVisibleState ? { marginLeft: "0px" } : {}}>
+        <div
+          className={styles.left}
+          style={leftTrayVisibleState ? { marginLeft: "0px" } : {}}
+        >
           <div
             className={styles.left__Drag__lightGreen}
             style={
@@ -85,7 +92,10 @@ const EditRecipePage = ({
           </div>
         </div>
         <div className={styles.center}>
-          <Center_header editARecipeFunction={editARecipeFunction} isFetching={isFetching} />
+          <Center_header
+            editARecipeFunction={editARecipeFunction}
+            isFetching={isFetching}
+          />
           <Center_Elements
             recipeName={recipeName}
             allBlendCategories={allBlendCategories}
