@@ -1,0 +1,104 @@
+$width:300px;
+
+
+
+// mixin for headings
+@mixin headings {
+    // background-color: rgb(42, 95, 165);
+    position: relative;
+    display: flex;
+
+    h3 {
+        color: black;
+        font-size: 22px;
+        font-weight: 400;
+    }
+}
+
+@mixin center_right_Icons {
+
+    position: relative;
+    border-radius: 50%;
+    height: 28px;
+    width: 28px;
+    margin: auto 0px;
+    margin-right: 10px;
+
+
+    svg {
+        position: absolute;
+        font-size: 16px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
+@mixin responsive($min_width, $max_width) {
+    @media only screen and (min-width:$min_width) and (max-width:$max_width) {
+        @content
+    }
+}
+
+
+.center__title {
+    @include headings();
+    height: 30px;
+    margin-bottom: 20px;
+    display: flex;
+
+    &__left {
+        display: flex;
+
+        span {
+            margin-top: 5px;
+            margin-right: 5px;
+            margin-left: -5px;
+            @include responsive(0px, 1201px) {
+                margin-right: 5px;
+            }
+        }
+
+        h3 {
+            font-size: 20px;
+            align-self: center;
+            font-weight: 400;
+
+            @include responsive(0px, 1201px) {
+                font-size: 18px;
+            }
+        }
+    }
+
+    &__right {
+        margin-left: auto;
+        display: flex;
+
+        &__eye {
+            @include center_right_Icons();
+            background-color: white;
+            margin-right: 16px;
+
+            svg {
+                color: rgb(0, 0, 0);
+                height: 100%;
+                width: 100%;
+                transform: translate(-50%, -50%) scale(0.60);
+            }
+
+        }
+
+        &__cross {
+            @include center_right_Icons();
+            background-color: #7cbc39;
+
+            // color: white;
+            svg {
+                color: white;
+                height: 100%;
+                width: 100%;
+                transform: translate(-50%, -50%) scale(0.75);
+            }
+        }
+    }
+}

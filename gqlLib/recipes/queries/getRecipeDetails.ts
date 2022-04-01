@@ -63,7 +63,7 @@ export const GET_A_RECIPE_FOR_EDIT_RECIPE = gql`
           ingredientName
           _id
         }
-       
+
         portions {
           name
           gram
@@ -93,7 +93,7 @@ export const GET_NUTRITION = (ingredients) => {
   };
   return gql`
     query {
-      getBlendNutritionBasedOnRecipe(
+      getBlendNutritionBasedOnRecipexxx(
         ingredientsInfo: ${convertArrToString(ingredients)}
       )
     }

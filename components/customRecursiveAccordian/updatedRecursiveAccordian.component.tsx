@@ -15,9 +15,9 @@ const UpdatedRecursiveAccordian = ({
   counter,
 }: recursiveAccordianInterface) => {
   //@ts-ignore
-  const { Energy, Vitamins, Minerals } = dataObject;
   const { user, dbUser } = useAppSelector((state) => state?.user);
   const [openPopup, setOpenPopup] = useState(false);
+
   return (
     <div>
       <div className={styles.nutritionHeader}>
@@ -51,14 +51,21 @@ const UpdatedRecursiveAccordian = ({
         </div>
       </div>
       <div className={styles.recursiveAccordianHeading__subheading}>
-        <div className={styles.recursiveAccordianHeading__subheading__3}>
-          Value
-        </div>
-        <div className={styles.recursiveAccordianHeading__subheading__4}>
-          Daily%
-        </div>
+        <div className={styles.recursiveAccordianHeading__subheading__3}>Value</div>
+        <div className={styles.recursiveAccordianHeading__subheading__4}>Daily%</div>
       </div>
-
+      {Object?.entries(dataObject)?.map((elem) => {
+        return (
+          <UpdatedCustomAccordion
+            key={elem[0] + Date.now()}
+            title={elem[0]}
+            content={elem[1]}
+            type={"mainHeading"}
+            counter={counter}
+          />
+        );
+      })}
+      {/*
       <UpdatedCustomAccordion
         title={"Energy"}
         content={Energy}
@@ -76,7 +83,7 @@ const UpdatedRecursiveAccordian = ({
         content={Minerals}
         type={"mainHeading"}
         counter={counter}
-      />
+      /> */}
     </div>
   );
 };

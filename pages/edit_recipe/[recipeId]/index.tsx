@@ -13,6 +13,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
   setDescriptionRecipe,
   setEditRecipeName,
+  setIngredientArrayForNutrition,
   setRecipeImagesArray,
   setSelectedIngredientsList,
 } from "../../../redux/edit_recipe/editRecipeStates";
@@ -25,7 +26,6 @@ const EditRecipeComponent = () => {
   const router = useRouter();
   const { recipeId } = router.query;
   const dispatch = useAppDispatch();
-  const [bloblist, setBlobList] = useState([]);
   const [isFetching, setIsFetching] = useState(null);
 
   const handleSubmitData = async (images) => {
@@ -34,7 +34,6 @@ const EditRecipeComponent = () => {
     try {
       if (images?.length) {
         res = await imageUploadS3(images);
-        return res;
       }
       dispatch(setLoading(false));
     } catch (error) {
@@ -49,18 +48,15 @@ const EditRecipeComponent = () => {
   const selectedIngredientsList = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedIngredientsList
   );
+  const ingredientArrayForNutrition = useAppSelector(
+    (state) => state?.editRecipeReducer?.ingredientArrayForNutrition
+  );
   const recipeInstruction = useAppSelector((state) => state?.editRecipeReducer?.recipeInstruction);
   const recipeDescription = useAppSelector((state) => state?.editRecipeReducer?.descriptionRecipe);
   const selectedBLendCategory = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedBlendCategory
   );
   const imagesArray = useAppSelector((state) => state.editRecipeReducer.recipeImagesArray);
-  useEffect(() => {
-    console.log(imagesArray);
-    let bloblist = imagesArray.filter((elem) => elem.__typename === "blobType");
-    setBlobList(bloblist);
-  }, [imagesArray]);
-
   const { data: classData } = useQuery(INGREDIENTS_BY_CATEGORY_AND_CLASS, {
     variables: { classType: "All" },
   });
@@ -69,13 +65,12 @@ const EditRecipeComponent = () => {
     variables: { recipeId: recipeId },
   });
   const { data: allBlendCategory } = useQuery(BLEND_CATEGORY);
-  const { data: nutritionData } = useQuery(GET_RECIPE_NUTRITION(selectedIngredientsList));
-
+  const { data: nutritionData } = useQuery(GET_RECIPE_NUTRITION(ingredientArrayForNutrition));
   const [classBasedData, recipeBasedData, allBlendBasedCategory, recipeBasedNutrition] = [
     classData?.filterIngredientByCategoryAndClass,
     recipeData?.getARecipe,
     allBlendCategory?.getAllCategories,
-    nutritionData?.getBlendNutritionBasedOnRecipe,
+    nutritionData?.getBlendNutritionBasedOnRecipexxx,
   ];
 
   useEffect(() => {
@@ -88,6 +83,7 @@ const EditRecipeComponent = () => {
       if (itemMatch?.length) return itemMatch[0];
     });
     dispatch(setSelectedIngredientsList(presentIngredient));
+    dispatch(setIngredientArrayForNutrition(presentIngredient));
     dispatch(setEditRecipeName(recipeBasedData?.name));
     dispatch(setDescriptionRecipe(recipeBasedData?.description));
     dispatch(setRecipeImagesArray(recipeBasedData?.image));
@@ -107,30 +103,34 @@ const EditRecipeComponent = () => {
 
   const editARecipeFunction = async () => {
     setIsFetching(true);
-    let imageUrlListObjectArray = [];
-    const imageUrlList = await handleSubmitData(bloblist);
-    imageUrlList?.map((elem) => {
-      imageUrlListObjectArray = [
-        ...imageUrlListObjectArray,
-        { __typename: "ImageType", image: elem },
-      ];
-    });
-    let updatedImageUrl = imagesArray?.filter((itm) => itm?.__typename === "ImageType");
-    updatedImageUrl = [...updatedImageUrl, ...imageUrlListObjectArray];
-    dispatch(setRecipeImagesArray(updatedImageUrl));
-    if (
-      !recipeId ||
-      !recipeName ||
-      !recipeDescription ||
-      !selectedIngredientsList ||
-      !recipeInstruction ||
-      !imagesArray
-    )
-      return;
+    let blobImageArray = imagesArray?.filter((elem) => elem.__typename == "blobType");
+    let urlImageArray = imagesArray?.filter((elem) => elem.__typename == "ImageType");
+    let updatedImageArray = [];
+
+    if (blobImageArray.length > 0) {
+      let imageUrlArray = await handleSubmitData(blobImageArray);
+
+      imageUrlArray?.forEach((elem) => {
+        updatedImageArray = [
+          ...updatedImageArray,
+          {
+            __typename: `ImageType`,
+            image: elem,
+            default: false,
+          },
+        ];
+      });
+    }
+    dispatch(setRecipeImagesArray([...urlImageArray, ...updatedImageArray]));
     await editARecipe();
     reactToastifyNotification("info", "Recipe Updated");
     setIsFetching(false);
   };
+
+  useEffect(() => {
+    dispatch(setIngredientArrayForNutrition(selectedIngredientsList));
+
+  }, [selectedIngredientsList]);
 
   return (
     <EditRecipePage

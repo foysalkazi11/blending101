@@ -8,22 +8,19 @@ type CustomAccordionProps = {
   counter?: number;
 };
 
-
 const UpdatedCustomAccordion = ({
   title,
   content,
   type,
   counter,
 }: CustomAccordionProps) => {
-
   const populateAccordian = (childrenFeild, firstChild) => {
-    return Object.entries(childrenFeild).map((itm) => {
+    return Object?.entries(childrenFeild)?.map((itm) => {
       //@ts-ignore
-      if (Object.keys(itm[1].children).length > 0) {
+      if (itm[1]?.childs) {
         if (firstChild === true) {
           return (
             <div>
-              {/* @ts-ignore */}
               <AccordComponent
                 title={itm[0]}
                 /* @ts-ignore */
@@ -35,7 +32,7 @@ const UpdatedCustomAccordion = ({
               >
                 {
                   //@ts-ignore
-                  populateAccordian(itm[1].children, false)
+                  populateAccordian(itm[1].childs, false)
                 }
               </AccordComponent>
             </div>
@@ -49,54 +46,33 @@ const UpdatedCustomAccordion = ({
                 /* @ts-ignore */
                 value={itm[1]?.value}
                 /* @ts-ignore */
-                unit={itm[1]?.Unit}
+                unit={itm[1]?.blendNutrientRefference?.units}
                 percentage={20 + "%"}
                 counter={counter}
               >
                 {
                   //@ts-ignore
-                  populateAccordian(itm[1].children, false)
+                  populateAccordian(itm[1].childs, false)
                 }
               </AccordComponent>
             </div>
           );
         }
       } else {
-        //@ts-ignore
-        if (itm[1]?.Unit && itm[1]?.value && Number(itm[1].value) > 0) {
-          //@ts-ignore
-
-          if (firstChild === true) {
-            return (
+        return (
+          <div style={{ marginLeft: "18px" }}>
+            <AccordComponent
+              title={itm[0]}
+              plusMinusIcon={false}
               //@ts-ignore
-              <AccordComponent
-                title={itm[0]}
-                plusMinusIcon={false}
-                //@ts-ignore
-                value={itm[1]?.value}
-                //@ts-ignore
-                unit={itm[1]?.Unit}
-                percentage={20 + "%"}
-                counter={counter}
-              />
-            );
-          } else {
-            return (
-              <div style={{ marginLeft: "18px" }}>
-                <AccordComponent
-                  title={itm[0]}
-                  plusMinusIcon={false}
-                  //@ts-ignore
-                  value={itm[1]?.value}
-                  //@ts-ignore
-                  unit={itm[1]?.Unit}
-                  percentage={20 + "%"}
-                  counter={counter}
-                />
-              </div>
-            );
-          }
-        }
+              value={itm[1]?.value}
+              //@ts-ignore
+              unit={itm[1]?.blendNutrientRefference.units}
+              percentage={20 + "%"}
+              counter={counter}
+            />
+          </div>
+        );
       }
     });
   };

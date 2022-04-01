@@ -14,6 +14,13 @@ const RecipeDetails = ({
   setsingleElement,
 }) => {
   const [counter, setCounter] = useState(1);
+  const counterHandler = (value) => {
+    setCounter(Number(value));
+  };
+  const adjusterFunc = (task) => {
+    task === "+" && setCounter(Number(counter) + 1);
+    task === "-" && counter > 1 && setCounter(Number(counter) - 1);
+  };
   return (
     <div style={{ margin: "40px auto" }}>
       <AContainer
@@ -29,9 +36,7 @@ const RecipeDetails = ({
               <LeftSide />
             </div>
             <div className={styles.recipeDetailsContainer_right}>
-              <div
-                className={styles.recipeDetailsContainer__contentDiv__center}
-              >
+              <div className={styles.recipeDetailsContainer__contentDiv__center}>
                 <Center
                   recipeData={recipeData}
                   counter={counter}
@@ -46,9 +51,11 @@ const RecipeDetails = ({
                 <RightSide
                   nutritionData={nutritionData}
                   counter={counter}
+                  counterHandler={counterHandler}
                   nutritionState={nutritionState}
                   setsingleElement={setsingleElement}
                   singleElement={singleElement}
+                  adjusterFunc={adjusterFunc}
                 />
               </div>
             </div>

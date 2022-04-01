@@ -18,6 +18,7 @@ import { useLazyQuery } from "@apollo/client";
 interface editRecipe {
   nutritionData: any;
   recipeData?: any;
+  mode?: "edit" | "add";
 }
 
 const AddRecipePage = ({ nutritionData, recipeData }: editRecipe) => {
@@ -46,12 +47,10 @@ const AddRecipePage = ({ nutritionData, recipeData }: editRecipe) => {
     } else console.log({ res: "something went wrong in image uploading" });
   };
 
-  const [
-    getAllCategories,
-    { loading: blendCategoriesInProgress, data: blendCategoriesData },
-  ] = useLazyQuery(BLEND_CATEGORY, {
-    fetchPolicy: "network-only",
-  });
+  const [getAllCategories, { loading: blendCategoriesInProgress, data: blendCategoriesData }] =
+    useLazyQuery(BLEND_CATEGORY, {
+      fetchPolicy: "network-only",
+    });
 
   const fetchAllBlendCategories = async () => {
     await getAllCategories();
@@ -74,10 +73,7 @@ const AddRecipePage = ({ nutritionData, recipeData }: editRecipe) => {
   return (
     <AContainer>
       <div className={styles.main}>
-        <div
-          className={styles.left}
-          style={leftTrayVisibleState ? { marginLeft: "0px" } : {}}
-        >
+        <div className={styles.left} style={leftTrayVisibleState ? { marginLeft: "0px" } : {}}>
           <div
             className={styles.left__Drag__lightGreen}
             style={
@@ -92,7 +88,11 @@ const AddRecipePage = ({ nutritionData, recipeData }: editRecipe) => {
                   }
             }
             onClick={() => setLeftTrayVisibleState(!leftTrayVisibleState)}
-          />
+          >
+            <div>
+              {/* left basket drag button, images are used as backgound images for this div in scss files */}
+            </div>
+          </div>
           <div className={styles.left__title}>
             <div className={styles.left__title__bagicon}>
               <Image

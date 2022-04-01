@@ -9,26 +9,39 @@ import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
 import DragIndicatorIcon from "../../../../../public/icons/drag_indicator_black_36dp.svg";
 import ModeEditOutlineOutlinedIcon from "../../../../../public/icons/mode_edit_black_36dp.svg";
 import {
+  setArrayOfSingleSelectedIngredientForNutrition,
+  setIngredientArrayForNutrition,
   setRecipeInstruction,
   setSelectedIngredientsList,
-  setServingCounter,
 } from "../../../../../redux/edit_recipe/editRecipeStates";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import CircularRotatingLoader from "../../../../../theme/loader/circularRotatingLoader.component";
 
 type IngredientListPorps = {
   recipeInstructions?: string[];
   allIngredients?: any[];
   adjusterFunc: any;
+  nutritionState: object;
+  setNutritionState: any;
+  singleElement: boolean;
+  setSingleElement: any;
 };
 
-const IngredientList = ({ recipeInstructions, allIngredients,adjusterFunc }: IngredientListPorps) => {
+const IngredientList = ({
+  recipeInstructions,
+  allIngredients,
+  adjusterFunc,
+  nutritionState,
+  setNutritionState,
+  singleElement,
+  setSingleElement,
+}: IngredientListPorps) => {
+  const dispatch = useAppDispatch();
+
   const [selectedElementId, setSelectedElementId] = useState(null);
   const [inputValue, setInputValue] = useState("");
   const [inputIngredientValue, setInputIngredientValue] = useState("");
   const [suggestedIngredients, setSuggestedIngredients] = useState([]);
-
-  const dispatch = useAppDispatch();
-
   const selectedIngredientsList = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedIngredientsList
   );
@@ -149,6 +162,15 @@ const IngredientList = ({ recipeInstructions, allIngredients,adjusterFunc }: Ing
     }
   };
 
+  const handleSingleIngredient = (elem) => {
+    setNutritionState(elem);
+    setSingleElement(!singleElement);
+
+    !singleElement
+      ? dispatch(setIngredientArrayForNutrition([elem]))
+      : dispatch(setIngredientArrayForNutrition(selectedIngredientsList));
+  };
+
   return (
     <div className={styles.mainCard}>
       <div className={styles.ingredients__main__card}>
@@ -203,86 +225,101 @@ const IngredientList = ({ recipeInstructions, allIngredients,adjusterFunc }: Ing
             <Droppable droppableId="draggableIngredientList">
               {(provided) => (
                 <ul {...provided.droppableProps} ref={provided.innerRef}>
-                  {selectedIngredientsList?.map((elem, index) => {
-                    return (
-                      <Draggable
-                        key={elem.ingredientName + elem?._id}
-                        draggableId={elem.ingredientName + elem?._id}
-                        index={index}
-                      >
-                        {(provided) => (
-                          <li
-                            className={styles.ingredients__li}
-                            {...provided.draggableProps}
-                            ref={provided.innerRef}
-                          >
-                            <div className={styles.ingredients__drag} {...provided.dragHandleProps}>
-                              <DragIndicatorIcon className={styles.ingredients__drag} />
-                            </div>
-                            {elem.featuredImage !== null ? (
-                              <div className={styles.ingredients__icons}>
-                                <Image
-                                  src={elem.featuredImage}
-                                  alt="Picture will load soon"
-                                  objectFit="contain"
-                                  layout="fill"
-                                />
-                              </div>
-                            ) : (
-                              <div className={styles.ingredients__icons}>
-                                <Image
-                                  src={"/food/Dandelion.png"}
-                                  alt="Picture will load soon"
-                                  objectFit="contain"
-                                  layout="fill"
-                                />
-                              </div>
-                            )}
-                            {/* to create ingredients lists  */}
-                            <div className={styles.ingredients__text}>
-                              <span>
-                                {elem.portions[0].meausermentWeight === "Quantity not specified"
-                                  ? 1
-                                  : // @ts-ignore
-                                    Math.ceil(
-                                      // @ts-ignore
-                                      parseFloat(
-                                        // @ts-ignore
-                                        (100 / elem?.portions[0].meausermentWeight) * servingCounter
-                                      ).toFixed(1)
-                                    )}
-                                &nbsp;
-                              </span>
-                              <span>
-                                {elem.portions[0].measurement === "Quantity not specified"
-                                  ? ""
-                                  : elem.portions[0].measurement}
-                                &nbsp;
-                              </span>
-                              <span className={styles.ingredients__text__highlighted}>
-                                {elem.ingredientName}
-                              </span>
-                            </div>
-                            <span
-                              className={styles.ingredients__edit}
-                              // onClick={() => editIngredient(elem.id)}
-                            ></span>
-                            <div
-                              className={styles.ingredients__bin}
-                              onClick={() => removeIngredient(elem?._id)}
+                  {selectedIngredientsList ? (
+                    selectedIngredientsList?.map((elem, index) => {
+                      return (
+                        <Draggable
+                          key={elem.ingredientName + elem?._id}
+                          draggableId={elem.ingredientName + elem?._id}
+                          index={index}
+                        >
+                          {(provided) => (
+                            <li
+                              className={styles.ingredients__li}
+                              {...provided.draggableProps}
+                              ref={provided.innerRef}
                             >
-                              <Image
-                                src={"/icons/noun_Delete_1447966.svg"}
-                                alt=""
-                                layout="fill"
-                                objectFit="contain"
-                              />
-                            </div>
-                          </li>
-                        )}
-                      </Draggable>
-                    );
-                  })}
+                              <div
+                                className={styles.ingredients__drag}
+                                {...provided.dragHandleProps}
+                              >
+                                <DragIndicatorIcon className={styles.ingredients__drag} />
+                              </div>
+                              {elem.featuredImage !== null ? (
+                                <div className={styles.ingredients__icons}>
+                                  <Image
+                                    src={elem.featuredImage}
+                                    alt="Picture will load soon"
+                                    objectFit="contain"
+                                    layout="fill"
+                                  />
+                                </div>
+                              ) : (
+                                <div className={styles.ingredients__icons}>
+                                  <Image
+                                    src={"/food/Dandelion.png"}
+                                    alt="Picture will load soon"
+                                    objectFit="contain"
+                                    layout="fill"
+                                  />
+                                </div>
+                              )}
+                              {/* to create ingredients lists  */}
+                              <div className={styles.ingredients__text}>
+                                <span>
+                                  {elem.portions[0].meausermentWeight === "Quantity not specified"
+                                    ? 1
+                                    : // @ts-ignore
+                                      Math.ceil(
+                                        // @ts-ignore
+                                        parseFloat(
+                                          // @ts-ignore
+                                          (100 / elem?.portions[0].meausermentWeight) *
+                                            servingCounter
+                                        ).toFixed(1)
+                                      )}
+                                  &nbsp;
+                                </span>
+                                <span>
+                                  {elem.portions[0].measurement === "Quantity not specified"
+                                    ? ""
+                                    : elem.portions[0].measurement}
+                                  &nbsp;
+                                </span>
+                                <span
+                                  className={styles.ingredients__text__highlighted}
+                                  onClick={() => {
+                                    handleSingleIngredient(elem);
+                                  }}
+                                >
+                                  {elem.ingredientName}
+                                </span>
+                              </div>
+                              <span
+                                className={styles.ingredients__edit}
+                                // onClick={() => editIngredient(elem.id)}
+                              ></span>
+                              <div
+                                className={styles.ingredients__bin}
+                                onClick={() => removeIngredient(elem?._id)}
+                              >
+                                <Image
+                                  src={"/icons/noun_Delete_1447966.svg"}
+                                  alt=""
+                                  layout="fill"
+                                  objectFit="contain"
+                                />
+                              </div>
+                            </li>
+                          )}
+                        </Draggable>
+                      );
+                    })
+                  ) : (
+                    <div style={{ margin: "30px 0px" }}>
+                      <CircularRotatingLoader />
+                    </div>
+                  )}
                   {provided.placeholder}
                 </ul>
               )}
@@ -374,45 +411,51 @@ const IngredientList = ({ recipeInstructions, allIngredients,adjusterFunc }: Ing
             <Droppable droppableId="draggableIngredientList">
               {(provided) => (
                 <ol {...provided.droppableProps} ref={provided.innerRef}>
-                  {howToState?.map((elem, index) => {
-                    return (
-                      <Draggable key={elem.step} draggableId={elem.step} index={index}>
-                        {(provided) => (
-                          <li
-                            className={styles.how__to__steps__li}
-                            key={elem.id}
-                            {...provided.draggableProps}
-                            ref={provided.innerRef}
-                            {...provided.dragHandleProps}
-                          >
-                            <div className={styles.how__to__steps__drag}>
-                              <DragIndicatorIcon className={styles.how__to__steps__drag} />
-                            </div>
-                            {elem.step}
-                            <span
-                              className={styles.how__to__steps__li__edit}
-                              onClick={() => editStep(elem.id)}
+                  {howToState ? (
+                    howToState?.map((elem, index) => {
+                      return (
+                        <Draggable key={elem.step} draggableId={elem.step} index={index}>
+                          {(provided) => (
+                            <li
+                              className={styles.how__to__steps__li}
+                              key={elem.id}
+                              {...provided.draggableProps}
+                              ref={provided.innerRef}
+                              {...provided.dragHandleProps}
                             >
-                              <ModeEditOutlineOutlinedIcon />
-                            </span>
-                            <span
-                              className={styles.how__to__steps__li__bin}
-                              onClick={() => removeStep(elem.id)}
-                            >
-                              <div className={styles.how__to__steps__li__bin__imgDiv}>
-                                <Image
-                                  src={"/icons/noun_Delete_1447966.svg"}
-                                  alt=""
-                                  layout="fill"
-                                  objectFit="contain"
-                                />
+                              <div className={styles.how__to__steps__drag}>
+                                <DragIndicatorIcon className={styles.how__to__steps__drag} />
                               </div>
-                            </span>
-                          </li>
-                        )}
-                      </Draggable>
-                    );
-                  })}
+                              {elem.step}
+                              <span
+                                className={styles.how__to__steps__li__edit}
+                                onClick={() => editStep(elem.id)}
+                              >
+                                <ModeEditOutlineOutlinedIcon />
+                              </span>
+                              <span
+                                className={styles.how__to__steps__li__bin}
+                                onClick={() => removeStep(elem.id)}
+                              >
+                                <div className={styles.how__to__steps__li__bin__imgDiv}>
+                                  <Image
+                                    src={"/icons/noun_Delete_1447966.svg"}
+                                    alt=""
+                                    layout="fill"
+                                    objectFit="contain"
+                                  />
+                                </div>
+                              </span>
+                            </li>
+                          )}
+                        </Draggable>
+                      );
+                    })
+                  ) : (
+                    <div style={{ margin: "30px 0px" }}>
+                      <CircularRotatingLoader />
+                    </div>
+                  )}
                   {provided.placeholder}
                 </ol>
               )}

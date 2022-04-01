@@ -51,18 +51,14 @@ const IngredientList = ({
   const [editMode, setEditMode] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [selectedElementId, setSelectedElementId] = useState(null);
-  const quantity_number = useAppSelector(
-    (state) => state.quantityAdjuster.quantityNum
-  );
-  const servings_number = useAppSelector(
-    (state) => state.quantityAdjuster.servingsNum
-  );
+  const quantity_number = useAppSelector((state) => state.quantityAdjuster.quantityNum);
+  const servings_number = useAppSelector((state) => state.quantityAdjuster.servingsNum);
   const ingredients_list = useAppSelector(
     (state) => state.quantityAdjuster.ingredientsList
   );
   const howToState = useAppSelector((state) => state.quantityAdjuster.howtoState);
 
-  console.log({ ingredients_list });
+  console.log({ingredients_list})
   useEffect(() => {
     dispatch(setServings(quantity_number));
   }, [quantity_number]);
@@ -296,9 +292,7 @@ const IngredientList = ({
               >
                 <RemoveSharpIcon />
               </div>
-              <span className={styles.servings__adjuster__score}>
-                {servings_number}
-              </span>
+              <span className={styles.servings__adjuster__score}>{servings_number}</span>
               <div
                 className={styles.servings__adjuster__icondiv}
                 onClick={() => {
@@ -309,9 +303,7 @@ const IngredientList = ({
               </div>
             </div>
             <div className={styles.servings__size}>
-              <span className={styles.servings__adjuster__name}>
-                Servings Size :
-              </span>
+              <span className={styles.servings__adjuster__name}>Servings Size :</span>
               <span className={styles.servings__size__score}>
                 {servings_number * 16}&nbsp;oz
               </span>
@@ -332,11 +324,7 @@ const IngredientList = ({
                   return (100 / measure.meausermentWeight) * servings_number;
                 } else servings_number;
               });
-              nutritionStateanupulator(
-                elem.ingredientName + elem._id,
-                valueArg,
-                elem
-              );
+              nutritionStateanupulator(elem.ingredientName + elem._id, valueArg, elem);
 
               return (
                 <li
@@ -368,8 +356,7 @@ const IngredientList = ({
                   {/* to create ingredients lists  */}
                   <div className={styles.ingredients__text}>
                     <span>
-                      {elem.portions[0].meausermentWeight ===
-                      "Quantity not specified"
+                      {elem.portions[0].meausermentWeight === "Quantity not specified"
                         ? 1
                         : // @ts-ignore
                           Math.ceil(
