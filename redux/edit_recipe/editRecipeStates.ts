@@ -2,15 +2,17 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   recipeName: "",
-  descriptionRecipe:"",
-  recipeImagesArray:[],
-  resImageArrayTemp:[],
-  selectedBlendCategory:null,
+  descriptionRecipe: "",
+  recipeImagesArray: [],
+  selectedBlendCategory: null,
   allBlendCategories: [],
   allIngredientListBasedOnClass: [],
   selectedIngredientsList: [],
   servingCounter: 1,
   recipeInstruction: [],
+  ingredientArrayForNutrition: [],
+  arrayOfSingleSelectedIngredientForNutrition: [],
+  selectedIngredientBool: false,
 };
 
 export const editRecipeStateSlice = createSlice({
@@ -26,9 +28,7 @@ export const editRecipeStateSlice = createSlice({
     setRecipeImagesArray: (state, action) => {
       state.recipeImagesArray = action?.payload;
     },
-    setResImageArrayTemp: (state, action) => {
-      state.resImageArrayTemp = action?.payload;
-    },
+
     setSelectedBlendCategory: (state, action) => {
       state.selectedBlendCategory = action?.payload;
     },
@@ -47,6 +47,15 @@ export const editRecipeStateSlice = createSlice({
     setRecipeInstruction: (state, action) => {
       state.recipeInstruction = action?.payload;
     },
+    setIngredientArrayForNutrition: (state, action) => {
+      state.ingredientArrayForNutrition = action?.payload;
+    },
+    setArrayOfSingleSelectedIngredientForNutrition: (state, action) => {
+      state.arrayOfSingleSelectedIngredientForNutrition = action?.payload;
+    },
+    setSelectedIngredientBool: (state, action) => {
+      state.selectedIngredientBool = action?.payload;
+    },
   },
 });
 
@@ -54,13 +63,15 @@ export const {
   setEditRecipeName,
   setDescriptionRecipe,
   setRecipeImagesArray,
-  setResImageArrayTemp,
   setSelectedBlendCategory,
   setAllIngredientListBasedOnClass,
   setSelectedIngredientsList,
   setAllBlendCategories,
   setServingCounter,
   setRecipeInstruction,
+  setIngredientArrayForNutrition,
+  setArrayOfSingleSelectedIngredientForNutrition,
+  setSelectedIngredientBool,
 } = editRecipeStateSlice.actions;
 
 export default editRecipeStateSlice?.reducer;

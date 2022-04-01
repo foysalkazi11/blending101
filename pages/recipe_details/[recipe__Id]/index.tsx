@@ -12,11 +12,13 @@ const Index = () => {
   const { recipe__Id } = router.query;
   const [nutritionState, setNutritionState] = useState(null);
   const [singleElement, setsingleElement] = useState(false);
-  const [getARecipe, { loading: gettingRecipe, data: recipeData }] =
-    useLazyQuery(GET_RECIPE, {
+  const [getARecipe, { loading: gettingRecipe, data: recipeData }] = useLazyQuery(
+    GET_RECIPE,
+    {
       fetchPolicy: "network-only",
       variables: { recipeId: recipe__Id },
-    });
+    }
+  );
   useEffect(() => {
     getARecipe();
     if (recipeData) {
@@ -26,14 +28,12 @@ const Index = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recipeData]);
 
-
-
   useEffect(() => {
-    if (recipeData && singleElement===false) {
+    if (recipeData && singleElement === false) {
       setNutritionState(recipeData?.getARecipe?.ingredients);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nutritionState,singleElement]);
+  }, [nutritionState, singleElement]);
 
   const [
     getBlendNutritionBasedOnRecipe,
@@ -43,14 +43,12 @@ const Index = () => {
   const fetchRecipe = () => {
     getBlendNutritionBasedOnRecipe();
   };
+  const recipeBasedNutrition = nutritionData?.getBlendNutritionBasedOnRecipexxx;
 
   return (
     <RecipeDetails
       recipeData={recipeData && recipeData?.getARecipe}
-      nutritionData={
-        nutritionData &&
-        JSON.parse(nutritionData?.getBlendNutritionBasedOnRecipe)
-      }
+      nutritionData={recipeBasedNutrition && JSON.parse(recipeBasedNutrition)}
       nutritionState={nutritionState}
       setNutritionState={setNutritionState}
       singleElement={singleElement}

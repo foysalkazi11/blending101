@@ -87,7 +87,7 @@ export const GET_RECIPE_NUTRITION = (ingredients) => {
   };
   return gql`
   query {
-    getBlendNutritionBasedOnRecipe(ingredientsInfo: ${convertArrToString(
+    getBlendNutritionBasedOnRecipexxx(ingredientsInfo: ${convertArrToString(
       ingredients
     )})
   }

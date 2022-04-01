@@ -26,9 +26,7 @@ const Left_tray_recipe_edit = ({ recipeData, mode }: recipeData) => {
 
   const dispatch = useAppDispatch();
 
-  const ingredients_list = useAppSelector(
-    (state) => state.quantityAdjuster.ingredientsList
-  );
+  const ingredients_list = useAppSelector((state) => state.quantityAdjuster.ingredientsList);
 
   const handleIngredientClick = (ingredient) => {
     let blendz = [];
@@ -90,13 +88,11 @@ const Left_tray_recipe_edit = ({ recipeData, mode }: recipeData) => {
     }
   };
 
-  const [
-    filterIngredientByCategoryAndClass,
-    { loading: searchInProcess, data: searchElement },
-  ] = useLazyQuery(INGREDIENTS_BY_CATEGORY_AND_CLASS, {
-    fetchPolicy: "network-only",
-    variables: { classType: "All" },
-  });
+  const [filterIngredientByCategoryAndClass, { loading: searchInProcess, data: searchElement }] =
+    useLazyQuery(INGREDIENTS_BY_CATEGORY_AND_CLASS, {
+      fetchPolicy: "network-only",
+      variables: { classType: "All" },
+    });
 
   const fetchSearchResults = async () => {
     await filterIngredientByCategoryAndClass();
@@ -113,6 +109,43 @@ const Left_tray_recipe_edit = ({ recipeData, mode }: recipeData) => {
   useEffect(() => {
     DropDown(dpd);
   }, [dpd]);
+
+  useEffect(() => {
+    if (!recipeData) return;
+
+    let mode = "edit";
+    if (mode === "edit") {
+      console.log(recipeData);
+      let modifiedPortions = [];
+
+      recipeData.ingredients.map((item) => {
+        let selectedPortion = item.portions.filter((elem) => elem.default === true);
+        selectedPortion = selectedPortion[0];
+        console.log({ selectedPortion });
+        console.log(item);
+        modifiedPortions = [
+          ...modifiedPortions,
+          {
+            ...selectedPortion,
+            measurement: selectedPortion.name,
+            meausermentWeight: selectedPortion.gram,
+            default: selectedPortion.defa,
+          },
+        ];
+      });
+
+      const editingRecipe = {
+        category: recipeData?.recipeBlendCategory?.name,
+        description: recipeData?.description,
+        ingredientName: recipeData?.name,
+        images: recipeData?.image,
+        featuredImage: null,
+      };
+      console.log(editingRecipe);
+    }
+
+    console.log("object");
+  }, [recipeData]);
 
   return (
     <div className={styles.left_main_container}>
@@ -187,9 +220,7 @@ const Left_tray_recipe_edit = ({ recipeData, mode }: recipeData) => {
               <div className={styles.rankings}>
                 <CalciumSearchElem />
                 {ingredients?.map(({ name, percent }, index) => {
-                  return (
-                    <Linearcomponent name={name} percent={percent} checkbox key={index} />
-                  );
+                  return <Linearcomponent name={name} percent={percent} checkbox key={index} />;
                 })}
               </div>
             )}
