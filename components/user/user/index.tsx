@@ -95,7 +95,11 @@ const User = () => {
         personalization: {
           ...pre?.personalization,
           activity,
-          age,
+          age: {
+            quantity: age?.quantity,
+            months: age?.months,
+            years: age?.years,
+          },
           allergies: allergies || [],
           dieteryLifeStyle,
           gender,
