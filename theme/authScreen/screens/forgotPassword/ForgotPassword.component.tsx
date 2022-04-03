@@ -51,10 +51,6 @@ const ForgotPassword = () => {
     }
   };
 
-  const showError = (message: string) => {
-    return <p style={{ color: "#ed4337", fontSize: "14px" }}>{message}</p>;
-  };
-
   return (
     <>
       <div
@@ -87,7 +83,6 @@ const ForgotPassword = () => {
             <InputField
               type="email"
               style={{ margin: "10px auto" }}
-              fullWidth={true}
               placeholder="Enter eamil"
               name="email"
               register={register}
@@ -99,26 +94,31 @@ const ForgotPassword = () => {
                   message: "Enter valid email",
                 },
               }}
+              error={{
+                isError: errors?.email ? true : false,
+                message: errors?.email?.message,
+              }}
             />
 
-            {errors?.email ? showError(errors?.email?.message) : null}
             {sendcode ? (
               <>
                 <InputField
                   type="text"
                   style={{ margin: "10px auto" }}
                   placeholder="confirmation code"
-                  fullWidth={true}
                   name="code"
                   register={register}
                   required={{ required: "Enter confirmation code" }}
+                  error={{
+                    isError: errors?.code ? true : false,
+                    message: errors?.code?.message,
+                  }}
                 />
-                {errors?.code ? showError(errors?.code?.message) : null}
+
                 <InputField
                   type="text"
                   style={{ margin: "10px auto" }}
                   placeholder="New password"
-                  fullWidth={true}
                   register={register}
                   name="newPassword"
                   required={{
@@ -130,10 +130,11 @@ const ForgotPassword = () => {
                         "Minimum 6 characters, at least one uppercase letter, one lowercase letter, one number and one special character (#?!@$%^&*-)",
                     },
                   }}
+                  error={{
+                    isError: errors?.newPassword ? true : false,
+                    message: errors?.newPassword?.message,
+                  }}
                 />
-                {errors?.newPassword
-                  ? showError(errors?.newPassword?.message)
-                  : null}
               </>
             ) : null}
             <div className={styles.buttonDiv}>
