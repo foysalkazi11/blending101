@@ -31,3 +31,14 @@
     color: #c8c8c8;
   }
 }
+
+.para {
+  font-size: 12px;
+  padding: 3px;
+  color: red;
+  display: none;
+}
+
+.input:invalid ~ .para {
+  display: block;
+}

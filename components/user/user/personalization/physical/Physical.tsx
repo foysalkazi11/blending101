@@ -1,8 +1,20 @@
+import { useMutation } from "@apollo/client";
 import React, { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import EDIT_CONFIGRATION_BY_ID from "../../../../../gqlLib/user/mutations/editCofigrationById";
+import EDIT_USER_BY_ID from "../../../../../gqlLib/user/mutations/editUserById";
+import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
+import {
+  setDbUser,
+  setIsNewUseImage,
+} from "../../../../../redux/slices/userSlice";
+import { setLoading } from "../../../../../redux/slices/utilitySlice";
+import ButtonComponent from "../../../../../theme/button/button.component";
 import Combobox from "../../../../../theme/dropDown/combobox/Combobox.component";
-import InputComponent from "../../../../../theme/input/input.component";
+import InputComponent from "../../../../../theme/input/registerInput/RegisterInput";
 import RadioButton from "../../../../../theme/radioButton/RadioButton.component";
-import { ScaleComponent } from "../../../../../theme/scale/scale.component";
+import imageUploadS3 from "../../../../utility/imageUploadS3";
+import notification from "../../../../utility/reactToastifyNotification";
 import styles from "./Physical.module.scss";
 import SectionGenderAndActivity from "./sectionGenderAndActivity/SectionGender&Activity";
 
@@ -58,72 +70,91 @@ const pregnantOrLactating = [
 type PhysicalProps = {
   userProfile: any;
   updateUserProfile: Function;
+  setUserData: Function;
+  userData: any;
 };
 
-const Physical = ({ userProfile, updateUserProfile }: PhysicalProps) => {
+const Physical = ({
+  userProfile,
+  updateUserProfile,
+  setUserData,
+  userData,
+}: PhysicalProps) => {
+  const { dbUser } = useAppSelector((state) => state?.user);
+  const dispatch = useAppDispatch();
+  const [editConfigration] = useMutation(EDIT_CONFIGRATION_BY_ID);
+  const [editUserById] = useMutation(EDIT_USER_BY_ID);
+  const { configuration } = dbUser;
+  const { isNewUseImage } = useAppSelector((state) => state?.user);
   const [measurementType, setMeasurementType] = useState("US");
   const [ageType, setAgeType] = useState("years");
-  const [weightInPound, setWeightInPound] = useState<null | number>(null);
-  const [weightInKilograms, setWeightInKilograms] = useState<null | number>(
-    null
-  );
   const [profileActiveTab, setProfileActiveTab] = useState(0);
-  const [heightInFeetAndInches, setHeightInFeetAndInches] = useState<{
-    feet: null | number;
-    inches: null | number;
-  }>({ feet: null, inches: null });
-  const [heightInCentimeters, setHeightInCentimeters] = useState<null | number>(
-    null
-  );
-
-  const [ageInMounthsAndYears, setAgeInMounthsAndYears] = useState<{
-    years: null | number;
-    months: null | number;
-  }>({ years: null, months: null });
   const [pregnant, setPregnant] = useState("");
   const isMounted = useRef(null);
 
-  console.log(userProfile);
-
-  useEffect(() => {
-    if (userProfile?.weightInKilograms) {
-      setWeightInKilograms(Number(userProfile?.weightInKilograms));
-      setWeightInPound(
-        Number((userProfile?.weightInKilograms * 2.205)?.toFixed(0))
-      );
-    }
+  const handleYearsAndMonths = (userProfile) => {
+    let value = {
+      years: 0,
+      months: 0,
+    };
     if (userProfile?.age?.years) {
-      setAgeInMounthsAndYears((pre) => ({
-        ...pre,
+      value = {
         years: userProfile?.age?.quantity || 0,
         months: userProfile?.age?.quantity
           ? Number(userProfile?.age?.quantity) * 12
           : 0,
-        yearsInRadio: true,
-      }));
-      setAgeType("years");
+      };
     }
+
     if (userProfile?.age?.months) {
-      setAgeInMounthsAndYears((pre) => ({
-        ...pre,
+      value = {
         years: userProfile?.age?.quantity
           ? Number(Math?.trunc(userProfile?.age?.quantity / 12))
           : 0,
         months: userProfile?.age?.quantity || 0,
-        monthsInRadio: true,
-      }));
-      setAgeType("months");
+      };
     }
+    return value;
+  };
 
-    if (userProfile?.heightInCentimeters) {
-      setHeightInCentimeters(userProfile?.heightInCentimeters);
-      setHeightInFeetAndInches((pre) => ({
-        ...pre,
-        feet: Number(Math?.trunc(userProfile?.heightInCentimeters / 30.48)),
-        inches: Number(
-          ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0)
-        ),
-      }));
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      centimeters: userProfile?.heightInCentimeters
+        ? Number(userProfile?.heightInCentimeters)
+        : "",
+      feets: userProfile?.heightInCentimeters
+        ? Number(Math?.trunc(userProfile?.heightInCentimeters / 30.48))
+        : "",
+      inches: userProfile?.heightInCentimeters
+        ? Number(
+            ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0)
+          )
+        : "",
+      kilograms: userProfile?.weightInKilograms
+        ? Number(userProfile?.weightInKilograms)
+        : "",
+      months: handleYearsAndMonths(userProfile)?.months || "",
+      pounds: userProfile?.weightInKilograms
+        ? Number((userProfile?.weightInKilograms * 2.205)?.toFixed(0))
+        : "",
+      years: handleYearsAndMonths(userProfile)?.years || "",
+    },
+  });
+
+  const watchValue = watch();
+
+  useEffect(() => {
+    if (userProfile?.age?.years) {
+      setAgeType("years");
+    }
+    if (userProfile?.age?.months) {
+      setAgeType("months");
     }
 
     if (userProfile?.pregnantOrLactating) {
@@ -143,121 +174,187 @@ const Physical = ({ userProfile, updateUserProfile }: PhysicalProps) => {
 
   const handleAgeType = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e?.target;
-    let obj = {
-      quantity: Number(userProfile?.age?.quantity),
-      months: ageType === "months" ? true : false,
-      years: ageType === "years" ? true : false,
-    };
-
     if (value === "years") {
       setAgeType("years");
-      obj = { ...obj, years: true, months: false };
     }
     if (value === "months") {
       setAgeType("months");
-      obj = { ...obj, years: false, months: true };
     }
-    updateUserProfile("age", obj);
   };
 
-  const handleUpdateAge = (e) => {
-    const { name, value, checked } = e?.target;
+  const changeInputValue = (e) => {
+    const { name } = e?.target;
 
-    let obj = {
-      quantity: Number(userProfile?.age?.quantity),
+    if (name === "years") {
+      if (watchValue?.months) {
+        setValue("months", "");
+      }
+    }
+    if (name === "months") {
+      if (watchValue?.years) {
+        setValue("years", "");
+      }
+    }
+    if (name === "pounds") {
+      if (watchValue?.kilograms) {
+        setValue("kilograms", "");
+      }
+    }
+    if (name === "kilograms") {
+      if (watchValue?.pounds) {
+        setValue("pounds", "");
+      }
+    }
+    if (name === "centimeters") {
+      if (watchValue?.feets || watchValue?.inches) {
+        setValue("feets", "");
+        setValue("inches", "");
+      }
+    }
+    if (name === "feets" || name === "inches") {
+      if (watchValue?.centimeters) {
+        setValue("centimeters", "");
+      }
+    }
+  };
+
+  const submitData = async (data) => {
+    let arrageAge = {
+      quantity:
+        ageType === "years" ? Number(data?.years) : Number(data?.months),
       months: ageType === "months" ? true : false,
       years: ageType === "years" ? true : false,
     };
 
-    if (name === "years") {
-      const valueAsNumber: number = +value;
-      if (valueAsNumber >= 0 && valueAsNumber <= 120) {
-        setAgeInMounthsAndYears((pre) => ({
-          ...pre,
-          years: valueAsNumber,
-          months: 0,
-        }));
-        obj = { ...obj, quantity: valueAsNumber };
+    let arrangWeight =
+      measurementType === "US"
+        ? Number((data?.pounds / 2.205).toFixed(0))
+        : Number(data?.kilograms);
+    let feet = +data?.feets * 30.48;
+    let inches = +data?.inches ? +data?.inches * 2.54 : 0;
+    let arrangHight =
+      measurementType === "US"
+        ? Number((feet + inches)?.toFixed(0))
+        : Number(data?.centimeters);
+
+    dispatch(setLoading(true));
+
+    try {
+      if (isNewUseImage?.length) {
+        const res = await imageUploadS3(isNewUseImage);
+        const imageURL = res?.[0];
+
+        await editUserById({
+          variables: {
+            data: {
+              editId: dbUser._id,
+              editableObject: { ...userData?.about, image: imageURL },
+            },
+          },
+        });
+
+        await editConfigration({
+          variables: {
+            data: {
+              editId: configuration?._id,
+              editableObject: {
+                ...userData?.personalization,
+                weightInKilograms: arrangWeight,
+                heightInCentimeters: arrangHight,
+                age: arrageAge,
+              },
+            },
+          },
+        });
+
+        setUserData((pre) => {
+          return {
+            ...pre,
+            about: {
+              ...pre.about,
+              image: imageURL,
+            },
+            personalization: {
+              ...pre?.personalization,
+              weightInKilograms: arrangWeight,
+              heightInCentimeters: arrangHight,
+              age: arrageAge,
+            },
+          };
+        });
+
+        dispatch(
+          setDbUser({
+            ...dbUser,
+            ...userData?.about,
+            image: imageURL,
+            configuration: {
+              ...dbUser?.configuration,
+              ...userData?.personalization,
+              weightInKilograms: arrangWeight,
+              heightInCentimeters: arrangHight,
+              age: arrageAge,
+            },
+          })
+        );
+        dispatch(setLoading(false));
+        dispatch(setIsNewUseImage(null));
+        notification("info", "your profile updated successfully");
+      } else {
+        await editUserById({
+          variables: {
+            data: {
+              editId: dbUser._id,
+              editableObject: { ...userData?.about },
+            },
+          },
+        });
+
+        await editConfigration({
+          variables: {
+            data: {
+              editId: configuration?._id,
+              editableObject: {
+                ...userData?.personalization,
+                weightInKilograms: arrangWeight,
+                heightInCentimeters: arrangHight,
+                age: arrageAge,
+              },
+            },
+          },
+        });
+
+        setUserData((pre) => {
+          return {
+            ...pre,
+            personalization: {
+              ...pre?.personalization,
+              weightInKilograms: arrangWeight,
+              heightInCentimeters: arrangHight,
+              age: arrageAge,
+            },
+          };
+        });
+
+        dispatch(
+          setDbUser({
+            ...dbUser,
+            ...userData?.about,
+            configuration: {
+              ...dbUser?.configuration,
+              ...userData?.personalization,
+              weightInKilograms: arrangWeight,
+              heightInCentimeters: arrangHight,
+              age: arrageAge,
+            },
+          })
+        );
+        dispatch(setLoading(false));
+        notification("info", "Updated successfully");
       }
-    }
-
-    if (name === "months") {
-      const valueAsNumber: number = +value;
-      if (valueAsNumber >= 0 && valueAsNumber <= 1440) {
-        setAgeInMounthsAndYears((pre) => ({
-          ...pre,
-          years: 0,
-          months: valueAsNumber,
-        }));
-        obj = { ...obj, quantity: valueAsNumber };
-      }
-    }
-
-    updateUserProfile("age", obj);
-  };
-
-  const handleUpdateWeightInPound = (e) => {
-    const { value } = e?.target;
-    const valueAsNumber = +value;
-    if (valueAsNumber >= 0 && valueAsNumber <= 400) {
-      setWeightInPound(valueAsNumber);
-      updateUserProfile(
-        "weightInKilograms",
-        Number((valueAsNumber / 2.205).toFixed(0))
-      );
-      if (weightInKilograms !== 0) setWeightInKilograms(0);
-    }
-  };
-  const handleUpdateweightInKilograms = (e) => {
-    const { value } = e?.target;
-    const valueAsNumber = +value;
-    if (valueAsNumber >= 0 && valueAsNumber <= 880) {
-      setWeightInKilograms(valueAsNumber);
-
-      updateUserProfile("weightInKilograms", valueAsNumber);
-      if (weightInPound !== 0) setWeightInPound(0);
-    }
-  };
-
-  const handleheightInCentimeters = (e) => {
-    const { value } = e?.target;
-    const valueAsNumber = +value;
-    if (valueAsNumber >= 0 && valueAsNumber <= 272) {
-      setHeightInCentimeters(valueAsNumber);
-      updateUserProfile("heightInCentimeters", +valueAsNumber);
-      if (
-        heightInFeetAndInches?.feet !== 0 ||
-        heightInFeetAndInches?.inches !== 0
-      ) {
-        setHeightInFeetAndInches((pre) => ({ ...pre, feet: 0, inches: 0 }));
-      }
-    }
-  };
-
-  const handleHeightInFeetAndInches = (e) => {
-    const { name, value } = e?.target;
-    const valueAsNumber = +value;
-    let feet = heightInFeetAndInches?.feet * 30.48;
-    let inches = heightInFeetAndInches?.inches * 2.54;
-
-    if (name === "feet") {
-      if (valueAsNumber >= 0 && valueAsNumber <= 8) {
-        setHeightInFeetAndInches((pre) => ({ ...pre, [name]: valueAsNumber }));
-        feet = valueAsNumber * 30.48;
-        let HeightInCentimeters = (feet + inches)?.toFixed(0);
-        updateUserProfile("heightInCentimeters", Number(HeightInCentimeters));
-        if (heightInCentimeters !== 0) setHeightInCentimeters(0);
-      }
-    }
-
-    if (name === "inches") {
-      if (valueAsNumber >= 0 && valueAsNumber <= 11) {
-        setHeightInFeetAndInches((pre) => ({ ...pre, [name]: valueAsNumber }));
-        inches = valueAsNumber * 2.54;
-        let HeightInCentimeters = (feet + inches)?.toFixed(0);
-        updateUserProfile("heightInCentimeters", Number(HeightInCentimeters));
-        if (heightInCentimeters !== 0) setHeightInCentimeters(0);
-      }
+    } catch (error) {
+      dispatch(setLoading(false));
+      notification("error", error?.message);
     }
   };
 
@@ -270,212 +367,361 @@ const Physical = ({ userProfile, updateUserProfile }: PhysicalProps) => {
   }, []);
 
   return (
-    <div className={styles.physicalContainer}>
-      <div className={styles.profile_tab_wraper}>
-        <div className={styles.profile_tab}>
-          <p
-            className={`${profileActiveTab === 0 ? styles.active_border : ""}`}
-            onClick={() => setProfileActiveTab(0)}
-          >
-            Profile
-          </p>
-          <p
-            className={`${profileActiveTab === 1 ? styles.active_border : ""}`}
-            onClick={() => setProfileActiveTab(1)}
-          >
-            Daily Intake
-          </p>
-        </div>
-      </div>
-      {profileActiveTab === 0 ? (
-        <>
-          <div className={styles.header}>
-            <div className={styles.radioButton_wraper}>
-              <RadioButton
-                value="US"
-                handleChange={(e) => setMeasurementType(e?.target?.value)}
-                checked={measurementType === "US"}
-                label="US"
-                name="measurementType"
-              />
-              <RadioButton
-                value="Metric"
-                handleChange={(e) => setMeasurementType(e?.target?.value)}
-                checked={measurementType === "Metric"}
-                label="Metric"
-                name="measurementType"
-              />
-            </div>
-            <p className={styles.infoText}>
-              This information is used to customize daily recommended nutrition
-              targets
+    <>
+      <div className={styles.physicalContainer}>
+        <div className={styles.profile_tab_wraper}>
+          <div className={styles.profile_tab}>
+            <p
+              className={`${
+                profileActiveTab === 0 ? styles.active_border : ""
+              }`}
+              onClick={() => setProfileActiveTab(0)}
+            >
+              Profile
+            </p>
+            <p
+              className={`${
+                profileActiveTab === 1 ? styles.active_border : ""
+              }`}
+              onClick={() => setProfileActiveTab(1)}
+            >
+              Daily Intake
             </p>
           </div>
-
-          <div className={styles.contentContainer}>
-            <div className={styles.contentContainer__elementDiv}>
-              <div className={styles.contentContainer__elementDiv__heading}>
-                <p className={styles?.label}>Your Gender</p>
-              </div>
-              <div className={styles.contentContainer__elementDiv__objects}>
-                <SectionGenderAndActivity
-                  body={gender}
-                  fieldName="gender"
-                  updateUserProfile={updateUserProfile}
-                  userProfile={userProfile}
+        </div>
+        {profileActiveTab === 0 ? (
+          <>
+            <div className={styles.header}>
+              <div className={styles.radioButton_wraper}>
+                <RadioButton
+                  value="US"
+                  handleChange={(e) => setMeasurementType(e?.target?.value)}
+                  checked={measurementType === "US"}
+                  label="US"
+                  name="measurementType"
+                />
+                <RadioButton
+                  value="Metric"
+                  handleChange={(e) => setMeasurementType(e?.target?.value)}
+                  checked={measurementType === "Metric"}
+                  label="Metric"
+                  name="measurementType"
                 />
               </div>
-              <div className={styles.contentContainer__elementDiv__heading}>
-                <p className={styles?.label}>Your age</p>
-              </div>
-              <div className={styles.contentContainer__elementDiv__objects}>
-                <div
-                  style={{
-                    display: "flex",
-                    width: "100%",
-                    alignItems: "center",
-                  }}
-                >
-                  {ageType === "years" ? (
-                    <InputComponent
-                      style={{ flexBasis: "25%", marginRight: "1rem" }}
-                      placeholder="Your age"
-                      type="number"
-                      value={ageInMounthsAndYears?.years}
-                      handleChange={handleUpdateAge}
-                      name="years"
-                      max={120}
-                    />
-                  ) : (
-                    <InputComponent
-                      style={{ flexBasis: "25%", marginRight: "1rem" }}
-                      placeholder="Your age"
-                      type="number"
-                      value={ageInMounthsAndYears?.months}
-                      handleChange={handleUpdateAge}
-                      name="months"
-                      max={1440}
-                    />
-                  )}
+              <p className={styles.infoText}>
+                This information is used to customize daily recommended
+                nutrition targets
+              </p>
+            </div>
 
-                  <RadioButton
-                    value="years"
-                    handleChange={handleAgeType}
-                    checked={ageType === "years"}
-                    label="Years"
-                    name="ageInYearsOrMonths"
-                  />
-                  <RadioButton
-                    value="months"
-                    handleChange={handleAgeType}
-                    checked={ageType === "months"}
-                    label="Months"
-                    name="ageInYearsOrMonths"
+            <div className={styles.contentContainer}>
+              <div className={styles.contentContainer__elementDiv}>
+                <div className={styles.contentContainer__elementDiv__heading}>
+                  <p className={styles?.label}>Your Gender</p>
+                </div>
+                <div className={styles.contentContainer__elementDiv__objects}>
+                  <SectionGenderAndActivity
+                    body={gender}
+                    fieldName="gender"
+                    updateUserProfile={updateUserProfile}
+                    userProfile={userProfile}
                   />
                 </div>
-              </div>
+                <div className={styles.contentContainer__elementDiv__heading}>
+                  <p className={styles?.label}>Your age</p>
+                </div>
+                <div className={styles.contentContainer__elementDiv__objects}>
+                  <div
+                    style={{
+                      display: "flex",
+                      width: "100%",
+                    }}
+                  >
+                    {ageType === "years" ? (
+                      <InputComponent
+                        width="25%"
+                        style={{ marginRight: "1rem" }}
+                        placeholder="Age in years"
+                        type="number"
+                        name="years"
+                        min={0}
+                        max={120}
+                        handleChange={changeInputValue}
+                        register={register}
+                        required={{
+                          required: "Please enter years",
+                          min: {
+                            value: 0,
+                            message: "Please enter valid years",
+                          },
+                          max: {
+                            value: 120,
+                            message: "Max 120 years",
+                          },
+                        }}
+                        error={{
+                          isError: errors?.years ? true : false,
+                          message: errors?.years?.message,
+                        }}
+                      />
+                    ) : null}
+                    {ageType === "months" ? (
+                      <InputComponent
+                        width="25%%"
+                        style={{ marginRight: "1rem" }}
+                        placeholder="Age in months"
+                        type="number"
+                        name="months"
+                        max={1440}
+                        handleChange={changeInputValue}
+                        register={register}
+                        required={{
+                          required: "Please enter age in months",
+                          min: {
+                            value: 0,
+                            message: "Please enter valid months",
+                          },
+                          max: {
+                            value: 1440,
+                            message: "Max 1440 months",
+                          },
+                        }}
+                        error={{
+                          isError: errors?.months ? true : false,
+                          message: errors?.months?.message,
+                        }}
+                      />
+                    ) : null}
 
-              <div className={styles.contentContainer__elementDiv__heading}>
-                <p className={styles?.label}>Your weight ?</p>
-              </div>
-              <div className={styles.contentContainer__elementDiv__objects}>
-                {measurementType === "US" ? (
-                  <InputComponent
-                    style={{ width: "25%" }}
-                    value={weightInPound}
-                    handleChange={handleUpdateWeightInPound}
-                    placeholder={"Pounds"}
-                    type="number"
-                    name="Pounds"
-                    max={400}
-                  />
-                ) : (
-                  <InputComponent
-                    style={{ width: "25%" }}
-                    value={weightInKilograms}
-                    handleChange={handleUpdateweightInKilograms}
-                    placeholder={"Kilograms"}
-                    type="number"
-                    max={880}
-                  />
-                )}
-              </div>
+                    <div style={{ paddingTop: "14px", display: "flex" }}>
+                      <RadioButton
+                        value="years"
+                        handleChange={handleAgeType}
+                        checked={ageType === "years"}
+                        label="Years"
+                        name="ageInYearsOrMonths"
+                      />
+                      <RadioButton
+                        value="months"
+                        handleChange={handleAgeType}
+                        checked={ageType === "months"}
+                        label="Months"
+                        name="ageInYearsOrMonths"
+                      />
+                    </div>
+                  </div>
+                </div>
 
-              <div className={styles.contentContainer__elementDiv__heading}>
-                <p className={styles?.label}>Your Height</p>
-              </div>
-              <div
-                className={`${styles.contentContainer__elementDiv__objects}`}
-                style={{ display: "flex" }}
-              >
-                {measurementType === "US" ? (
-                  <>
+                <div className={styles.contentContainer__elementDiv__heading}>
+                  <p className={styles?.label}>Your weight ?</p>
+                </div>
+                <div className={styles.contentContainer__elementDiv__objects}>
+                  {measurementType === "US" ? (
                     <InputComponent
-                      style={{ width: "25%", marginRight: "16px" }}
-                      placeholder="feet"
+                      width="25%"
+                      placeholder={"Pounds"}
                       type="number"
-                      name="feet"
-                      value={heightInFeetAndInches?.feet}
-                      handleChange={handleHeightInFeetAndInches}
-                      max={8}
+                      name="pounds"
+                      min={0}
+                      max={400}
+                      handleChange={changeInputValue}
+                      register={register}
+                      required={{
+                        required: "Please enter weight in pounds",
+                        min: {
+                          value: 0,
+                          message: "Please valid weight",
+                        },
+                        max: {
+                          value: 400,
+                          message: "Max 400 pounds",
+                        },
+                      }}
+                      error={{
+                        isError: errors?.pounds ? true : false,
+                        message: errors?.pounds?.message,
+                      }}
                     />
+                  ) : null}
+
+                  {measurementType === "Metric" ? (
                     <InputComponent
-                      style={{ width: "25%" }}
-                      placeholder="Inches"
+                      width="25%"
+                      placeholder="Kilograms"
                       type="number"
-                      name="inches"
-                      value={heightInFeetAndInches?.inches}
-                      handleChange={handleHeightInFeetAndInches}
-                      max={11}
+                      name="kilograms"
+                      min={0}
+                      max={880}
+                      handleChange={changeInputValue}
+                      register={register}
+                      required={{
+                        required: "Please enter weight in kilograms",
+                        min: {
+                          value: 0,
+                          message: "Please valid weight",
+                        },
+                        max: {
+                          value: 880,
+                          message: "Max 880 kilograms",
+                        },
+                      }}
+                      error={{
+                        isError: errors?.kilograms ? true : false,
+                        message: errors?.kilograms?.message,
+                      }}
                     />
-                  </>
-                ) : (
-                  <>
+                  ) : null}
+                </div>
+
+                <div className={styles.contentContainer__elementDiv__heading}>
+                  <p className={styles?.label}>Your Height</p>
+                </div>
+                <div
+                  className={`${styles.contentContainer__elementDiv__objects}`}
+                  style={{ display: "flex" }}
+                >
+                  {measurementType === "US" ? (
+                    <>
+                      <InputComponent
+                        width="25%"
+                        style={{ marginRight: "16px" }}
+                        placeholder="feet"
+                        type="number"
+                        name="feets"
+                        min={0}
+                        max={8}
+                        handleChange={changeInputValue}
+                        register={register}
+                        required={{
+                          required: "Please enter height in feets",
+                          min: {
+                            value: 0,
+                            message: "Please enter valid height",
+                          },
+                          max: {
+                            value: 8,
+                            message: "Max 8 feets",
+                          },
+                        }}
+                        error={{
+                          isError: errors?.feets ? true : false,
+                          message: errors?.feets?.message,
+                        }}
+                      />
+                      <InputComponent
+                        width="25%"
+                        placeholder="Inches"
+                        type="number"
+                        name="inches"
+                        min={0}
+                        max={11}
+                        handleChange={changeInputValue}
+                        register={register}
+                        required={{
+                          required: "Please enter height in inches",
+                          min: {
+                            value: 0,
+                            message: "Please enter valid inches",
+                          },
+                          max: {
+                            value: 11,
+                            message: "Max 11 inches",
+                          },
+                        }}
+                        error={{
+                          isError: errors?.inches ? true : false,
+                          message: errors?.inches?.message,
+                        }}
+                      />
+                    </>
+                  ) : null}
+
+                  {measurementType === "Metric" ? (
                     <InputComponent
-                      style={{ width: "25%" }}
+                      width="25%"
                       placeholder="Centimeters"
                       type="number"
-                      value={heightInCentimeters}
-                      handleChange={handleheightInCentimeters}
+                      min={0}
                       max={272}
+                      handleChange={changeInputValue}
+                      register={register}
+                      name="centimeters"
+                      required={{
+                        required: "Please enter height in centimeters",
+                        min: {
+                          value: 0,
+                          message: "Please enter valid centimeters",
+                        },
+                        max: {
+                          value: 172,
+                          message: "Max 272 centimeters",
+                        },
+                      }}
+                      error={{
+                        isError: errors?.centimeters ? true : false,
+                        message: errors?.centimeters?.message,
+                      }}
                     />
+                  ) : null}
+                </div>
+
+                <div className={styles.contentContainer__elementDiv__heading}>
+                  <p className={styles?.label}>Your Activity</p>
+                </div>
+                <div className={styles.contentContainer__elementDiv__objects}>
+                  <SectionGenderAndActivity
+                    body={activity}
+                    fieldName="activity"
+                    updateUserProfile={updateUserProfile}
+                    userProfile={userProfile}
+                  />
+                </div>
+
+                {userProfile?.gender === "female" ? (
+                  <>
+                    <div
+                      className={styles.contentContainer__elementDiv__heading}
+                    >
+                      <p className={styles?.label}>Pregnant or Lactating?</p>
+                    </div>
+                    <div
+                      className={styles.contentContainer__elementDiv__objects}
+                    >
+                      <Combobox
+                        options={pregnantOrLactating}
+                        placeholder="Select"
+                        style={{ width: "100%" }}
+                        value={pregnant}
+                        handleChange={handlePregnantOrLactating}
+                      />
+                    </div>
                   </>
-                )}
+                ) : null}
               </div>
-
-              <div className={styles.contentContainer__elementDiv__heading}>
-                <p className={styles?.label}>Your Activity</p>
-              </div>
-              <div className={styles.contentContainer__elementDiv__objects}>
-                <SectionGenderAndActivity
-                  body={activity}
-                  fieldName="activity"
-                  updateUserProfile={updateUserProfile}
-                  userProfile={userProfile}
-                />
-              </div>
-
-              {userProfile?.gender === "female" ? (
-                <>
-                  <div className={styles.contentContainer__elementDiv__heading}>
-                    <p className={styles?.label}>Pregnant or Lactating?</p>
-                  </div>
-                  <div className={styles.contentContainer__elementDiv__objects}>
-                    <Combobox
-                      options={pregnantOrLactating}
-                      placeholder="Select"
-                      style={{ width: "100%" }}
-                      value={pregnant}
-                      handleChange={handlePregnantOrLactating}
-                    />
-                  </div>
-                </>
-              ) : null}
             </div>
-          </div>
-        </>
-      ) : null}
-    </div>
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "40px",
+              }}
+            >
+              <ButtonComponent
+                type="primary"
+                value="Update Profile"
+                style={{
+                  borderRadius: "30px",
+                  height: "48px",
+                  width: "180px",
+                }}
+                onClick={handleSubmit(submitData)}
+              />
+            </div>
+          </>
+        ) : null}
+      </div>
+    </>
   );
 };
 
