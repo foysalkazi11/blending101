@@ -32,6 +32,7 @@ const Main = ({ userData, setUserData }: MainProps) => {
   const [editUserById] = useMutation(EDIT_USER_BY_ID);
   const { configuration } = dbUser;
   const { isNewUseImage } = useAppSelector((state) => state?.user);
+  const [toggle, setToggle] = useState(0);
 
   const submitData = async () => {
     dispatch(setLoading(true));
@@ -131,7 +132,12 @@ const Main = ({ userData, setUserData }: MainProps) => {
         return <Notification userData={userData} setUserData={setUserData} />;
       case 3:
         return (
-          <Personalization userData={userData} setUserData={setUserData} />
+          <Personalization
+            userData={userData}
+            setUserData={setUserData}
+            toggle={toggle}
+            setToggle={setToggle}
+          />
         );
 
       default:
@@ -157,25 +163,27 @@ const Main = ({ userData, setUserData }: MainProps) => {
         })}
       </header>
       {renderUI()}
-      <div
-        style={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          marginTop: "40px",
-        }}
-      >
-        <ButtonComponent
-          type="primary"
-          value="Update Profile"
+      {activeTab === 3 && toggle === 0 ? null : (
+        <div
           style={{
-            borderRadius: "30px",
-            height: "48px",
-            width: "180px",
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "40px",
           }}
-          onClick={submitData}
-        />
-      </div>
+        >
+          <ButtonComponent
+            type="primary"
+            value="Update Profile"
+            style={{
+              borderRadius: "30px",
+              height: "48px",
+              width: "180px",
+            }}
+            onClick={submitData}
+          />
+        </div>
+      )}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { useAppSelector } from "../../../../redux/hooks";
 import ToggleMenu from "../../../../theme/toggleMenu/ToggleMenu";
 import Dietary from "./dietary/Dietary";
@@ -10,11 +10,18 @@ import AchiveGoals from "./achiveGoals/AchiveGoals";
 type PersonalizationProps = {
   userData: any;
   setUserData: any;
+  toggle?: number;
+  setToggle?: Dispatch<SetStateAction<number>>;
 };
 
-const Personalization = ({ userData, setUserData }: PersonalizationProps) => {
+const Personalization = ({
+  userData,
+  setUserData,
+  toggle = 0,
+  setToggle = () => {},
+}: PersonalizationProps) => {
   const { personalization } = userData;
-  const [toggle, setToggle] = useState(0);
+  // const [toggle, setToggle] = useState(0);
 
   const checkGoals = (value, fieldName) => {
     const goal = userData?.personalization?.[fieldName]?.find(
@@ -97,6 +104,8 @@ const Personalization = ({ userData, setUserData }: PersonalizationProps) => {
           <Physical
             userProfile={personalization}
             updateUserProfile={updateUserProfile}
+            setUserData={setUserData}
+            userData={userData}
           />
         );
       case 1:
@@ -128,6 +137,8 @@ const Personalization = ({ userData, setUserData }: PersonalizationProps) => {
           <Physical
             userProfile={personalization}
             updateUserProfile={updateUserProfile}
+            setUserData={setUserData}
+            userData={userData}
           />
         );
     }

@@ -31,7 +31,7 @@ export default function InputComponent({
   max,
   ...InputProps
 }: InputComponentProps) {
-  const [text, setText] = useState("");
+  const [focused, setFocused] = useState(false);
   // STEP 1: INITIALIZE PROPS TO AVOID UI FALL
   type = type || "text";
   style = style || {};
@@ -44,18 +44,28 @@ export default function InputComponent({
   if (textarea) return <textarea className={styles.textarea} />;
 
   // CASE: DEFAULT RETURN INPUT COMPONENT
+
+  const handleFocus = () => {
+    setFocused(true);
+    console.log("hello");
+  };
   return (
-    <input
-      name={name}
-      className={styles.input}
-      type={type}
-      style={style}
-      value={value}
-      onChange={handleChange}
-      placeholder={placeholder}
-      min={min}
-      max={max}
-      {...InputProps}
-    />
+    <>
+      <input
+        name={name}
+        className={styles.input}
+        type={type}
+        style={style}
+        value={value}
+        onChange={handleChange}
+        placeholder={placeholder}
+        min={min}
+        max={max}
+        onBlur={handleFocus}
+        // focused={focused?.toString()}
+        {...InputProps}
+      />
+      <p className={styles.para}>Error</p>
+    </>
   );
 }
