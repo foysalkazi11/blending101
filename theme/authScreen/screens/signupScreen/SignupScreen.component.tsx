@@ -25,6 +25,8 @@ const SignupScreen = () => {
     formState: { errors },
   } = useForm();
 
+  console.log(errors);
+
   const history = useRouter();
   const dispatch = useAppDispatch();
 
@@ -137,7 +139,7 @@ const SignupScreen = () => {
               type="email"
               style={{ marginBottom: "10px" }}
               placeholder="Email"
-              fullWidth={true}
+              width="100%"
               register={register}
               name="email"
               required={{
@@ -148,17 +150,17 @@ const SignupScreen = () => {
                   message: "Enter valid email",
                 },
               }}
+              error={{
+                isError: errors?.email ? true : false,
+                message: errors?.email?.message,
+              }}
             />
-            {errors?.email ? (
-              <p style={{ color: "#ed4337", fontSize: "14px" }}>
-                {errors?.email?.message}
-              </p>
-            ) : null}
+
             <InputField
               type="password"
               style={{ margin: "10px 0px" }}
               placeholder="Password"
-              fullWidth={true}
+              width="100%"
               register={register}
               name="password"
               required={{
@@ -170,17 +172,17 @@ const SignupScreen = () => {
                     "Minimum 6 characters, at least one uppercase letter, one lowercase letter, one number and one special character (#?!@$%^&*-)",
                 },
               }}
+              error={{
+                isError: errors?.password ? true : false,
+                message: errors?.password?.message,
+              }}
             />
-            {errors?.password ? (
-              <p style={{ color: "#ed4337", fontSize: "14px" }}>
-                {errors?.password?.message}
-              </p>
-            ) : null}
+
             <InputField
               type="password"
               style={{ margin: "10px 0px" }}
               placeholder={"Confirm Password"}
-              fullWidth={true}
+              width="100%"
               register={register}
               name="comfirmPassword"
               required={{
@@ -188,12 +190,12 @@ const SignupScreen = () => {
                 validate: (value) =>
                   value === password || "Password doesn't match",
               }}
+              error={{
+                isError: errors?.comfirmPassword ? true : false,
+                message: errors?.comfirmPassword?.message,
+              }}
             />
-            {errors?.comfirmPassword ? (
-              <p style={{ color: "#ed4337", fontSize: "14px" }}>
-                {errors?.comfirmPassword?.message}
-              </p>
-            ) : null}
+
             <div className={styles.signUpButtonDiv}>
               <ButtonComponent
                 type="primary"

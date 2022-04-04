@@ -38,10 +38,6 @@ const ResetPassword = () => {
     }
   };
 
-  const showError = (message: string) => {
-    return <p style={{ color: "#ed4337", fontSize: "14px" }}>{message}</p>;
-  };
-
   return (
     <>
       <div
@@ -74,19 +70,19 @@ const ResetPassword = () => {
               type="text"
               style={{ margin: "10px auto" }}
               placeholder="Previous password"
-              fullWidth={true}
               name="oldPassword"
               register={register}
               required={{ required: "Enter Previous password" }}
+              error={{
+                isError: errors?.oldPassword ? true : false,
+                message: errors?.oldPassword?.message,
+              }}
             />
-            {errors?.oldPassword
-              ? showError(errors?.oldPassword?.message)
-              : null}
+
             <InputField
               type="text"
               style={{ margin: "10px auto" }}
               placeholder="New password"
-              fullWidth={true}
               register={register}
               name="newPassword"
               required={{
@@ -98,10 +94,11 @@ const ResetPassword = () => {
                     "Minimum 6 characters, at least one uppercase letter, one lowercase letter, one number and one special character (#?!@$%^&*-)",
                 },
               }}
+              error={{
+                isError: errors?.newPassword ? true : false,
+                message: errors?.newPassword?.message,
+              }}
             />
-            {errors?.newPassword
-              ? showError(errors?.newPassword?.message)
-              : null}
 
             <div className={styles.buttonDiv}>
               <ButtonComponent
