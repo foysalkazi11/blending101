@@ -21,33 +21,33 @@ import SectionGenderAndActivity from "./sectionGenderAndActivity/SectionGender&A
 const gender = [
   {
     icon: "/images/mars-1.png",
-    label: "male",
+    label: "Male",
   },
   {
     icon: "/images/femenine.png",
-    label: "female",
+    label: "Female",
   },
   {
     icon: "/images/mars-2.png",
-    label: "others",
+    label: "Others",
   },
 ];
 const activity = [
   {
     icon: "/icons/activity-low.svg",
-    label: "low",
+    label: "Low",
   },
   {
     icon: "/icons/activity-moderate.svg",
-    label: "moderate",
+    label: "Moderate",
   },
   {
     icon: "/icons/activity-high.svg",
-    label: "high",
+    label: "High",
   },
   {
     icon: "/icons/activity-extreme.svg",
-    label: "extreme",
+    label: "Extreme",
   },
 ];
 
@@ -134,10 +134,14 @@ const Physical = ({
       inches: userProfile?.heightInCentimeters
         ? Number(
             ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0)
-          )
+          ) === 12
+          ? ""
+          : Number(
+              ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0)
+            )
         : "",
       kilograms: userProfile?.weightInKilograms
-        ? Number(userProfile?.weightInKilograms)
+        ? Number(userProfile?.weightInKilograms?.toFixed(2))
         : "",
       months: handleYearsAndMonths(userProfile)?.months || "",
       pounds: userProfile?.weightInKilograms
@@ -228,13 +232,13 @@ const Physical = ({
 
     let arrangWeight =
       measurementType === "US"
-        ? Number((data?.pounds / 2.205).toFixed(0))
+        ? Number(data?.pounds / 2.205)
         : Number(data?.kilograms);
     let feet = +data?.feets * 30.48;
     let inches = +data?.inches ? +data?.inches * 2.54 : 0;
     let arrangHight =
       measurementType === "US"
-        ? Number((feet + inches)?.toFixed(0))
+        ? Number(feet + inches)
         : Number(data?.centimeters);
 
     dispatch(setLoading(true));
@@ -618,7 +622,6 @@ const Physical = ({
                         handleChange={changeInputValue}
                         register={register}
                         required={{
-                          required: "Please enter height in inches",
                           min: {
                             value: 0,
                             message: "Please enter valid inches",
@@ -653,7 +656,7 @@ const Physical = ({
                           message: "Please enter valid centimeters",
                         },
                         max: {
-                          value: 172,
+                          value: 272,
                           message: "Max 272 centimeters",
                         },
                       }}
