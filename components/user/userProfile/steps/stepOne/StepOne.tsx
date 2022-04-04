@@ -285,7 +285,7 @@ const StepOne = ({
           userProfile={userProfile}
         />
         <div className={styles.singleSection}>
-          <h2>What&apos;s your current age?</h2>
+          <h2>Your age?</h2>
           <div className={styles.contentContainer}>
             <div style={{ paddingBottom: "1rem", display: "flex" }}>
               <RadioButton
@@ -358,7 +358,7 @@ const StepOne = ({
           </div>
         </div>
         <div className={styles.singleSection}>
-          <h2>What&apos;s your current weight?</h2>
+          <h2>Your weight?</h2>
           <div className={styles.contentContainer}>
             {measurementType === "US" ? (
               <InputComponent
@@ -416,7 +416,7 @@ const StepOne = ({
           </div>
         </div>
         <div className={styles.singleSection}>
-          <h2>What&apos;s your current hight?</h2>
+          <h2>Your hight?</h2>
           <div className={styles.contentContainer}>
             {measurementType === "US" ? (
               <div style={{ display: "flex" }}>
