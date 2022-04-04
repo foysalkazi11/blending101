@@ -51,12 +51,18 @@ const EditRecipeComponent = () => {
   const ingredientArrayForNutrition = useAppSelector(
     (state) => state?.editRecipeReducer?.ingredientArrayForNutrition
   );
-  const recipeInstruction = useAppSelector((state) => state?.editRecipeReducer?.recipeInstruction);
-  const recipeDescription = useAppSelector((state) => state?.editRecipeReducer?.descriptionRecipe);
+  const recipeInstruction = useAppSelector(
+    (state) => state?.editRecipeReducer?.recipeInstruction
+  );
+  const recipeDescription = useAppSelector(
+    (state) => state?.editRecipeReducer?.descriptionRecipe
+  );
   const selectedBLendCategory = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedBlendCategory
   );
-  const imagesArray = useAppSelector((state) => state.editRecipeReducer.recipeImagesArray);
+  const imagesArray = useAppSelector(
+    (state) => state.editRecipeReducer.recipeImagesArray
+  );
   const { data: classData } = useQuery(INGREDIENTS_BY_CATEGORY_AND_CLASS, {
     variables: { classType: "All" },
   });
@@ -65,8 +71,15 @@ const EditRecipeComponent = () => {
     variables: { recipeId: recipeId },
   });
   const { data: allBlendCategory } = useQuery(BLEND_CATEGORY);
-  const { data: nutritionData } = useQuery(GET_RECIPE_NUTRITION(ingredientArrayForNutrition));
-  const [classBasedData, recipeBasedData, allBlendBasedCategory, recipeBasedNutrition] = [
+  const { data: nutritionData } = useQuery(
+    GET_RECIPE_NUTRITION(ingredientArrayForNutrition)
+  );
+  const [
+    classBasedData,
+    recipeBasedData,
+    allBlendBasedCategory,
+    recipeBasedNutrition,
+  ] = [
     classData?.filterIngredientByCategoryAndClass,
     recipeData?.getARecipe,
     allBlendCategory?.getAllCategories,
@@ -103,8 +116,12 @@ const EditRecipeComponent = () => {
 
   const editARecipeFunction = async () => {
     setIsFetching(true);
-    let blobImageArray = imagesArray?.filter((elem) => elem.__typename == "blobType");
-    let urlImageArray = imagesArray?.filter((elem) => elem.__typename == "ImageType");
+    let blobImageArray = imagesArray?.filter(
+      (elem) => elem.__typename == "blobType"
+    );
+    let urlImageArray = imagesArray?.filter(
+      (elem) => elem.__typename == "ImageType"
+    );
     let updatedImageArray = [];
 
     if (blobImageArray.length > 0) {
@@ -129,7 +146,6 @@ const EditRecipeComponent = () => {
 
   useEffect(() => {
     dispatch(setIngredientArrayForNutrition(selectedIngredientsList));
-
   }, [selectedIngredientsList]);
 
   return (

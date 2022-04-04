@@ -15,7 +15,7 @@ const UpdatedCustomAccordion = ({
   counter,
 }: CustomAccordionProps) => {
   const populateAccordian = (childrenFeild, firstChild) => {
-    return Object?.entries(childrenFeild)?.map((itm) => {
+    return Object?.entries(childrenFeild)?.map((itm, index) => {
       //@ts-ignore
       if (itm[1]?.childs) {
         if (firstChild === true) {
@@ -59,20 +59,41 @@ const UpdatedCustomAccordion = ({
           );
         }
       } else {
-        return (
-          <div style={{ marginLeft: "18px" }}>
-            <AccordComponent
-              title={itm[0]}
-              plusMinusIcon={false}
-              //@ts-ignore
-              value={itm[1]?.value}
-              //@ts-ignore
-              unit={itm[1]?.blendNutrientRefference.units}
-              percentage={20 + "%"}
-              counter={counter}
-            />
-          </div>
-        );
+        console.log(Object.keys(childrenFeild).length);
+        console.log(index);
+        if (Object.keys(childrenFeild).length - 1 === index) {
+          return (
+            <div style={{ marginLeft: "18px" }}>
+              <AccordComponent
+                title={itm[0]}
+                plusMinusIcon={false}
+                //@ts-ignore
+                value={itm[1]?.value}
+                //@ts-ignore
+                unit={itm[1]?.blendNutrientRefference.units}
+                percentage={20 + "%"}
+                counter={counter}
+                lastElement={true}
+              />
+            </div>
+          );
+        }else{
+          return (
+            <div style={{ marginLeft: "18px" }}>
+              <AccordComponent
+                title={itm[0]}
+                plusMinusIcon={false}
+                //@ts-ignore
+                value={itm[1]?.value}
+                //@ts-ignore
+                unit={itm[1]?.blendNutrientRefference.units}
+                percentage={20 + "%"}
+                counter={counter}
+              />
+            </div>
+          );
+        }
+
       }
     });
   };

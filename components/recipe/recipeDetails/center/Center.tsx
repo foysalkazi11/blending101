@@ -180,9 +180,7 @@ const Center = ({
               })}
             </SlickSlider>
           ) : (
-            <div
-              className={styles.imageBox__loader}
-            >
+            <div className={styles.imageBox__loader}>
               <CircularRotatingLoader />
             </div>
           )}
@@ -292,16 +290,15 @@ const Center = ({
                           setNutritionState([ingredient]);
                         }}
                       />
-
                       <BsCartPlus className={styles.icon} />
                     </div>
                   ) : (
                     <div className={styles.iconGroup}>
                       <MdOutlineInfo className={styles.icon} />
-
                       <BiBarChart
                         className={styles.icon}
                         onClick={() => {
+                          window.scrollTo(0, 0);
                           setsingleElement(true);
                           setNutritionState([ingredient]);
                         }}

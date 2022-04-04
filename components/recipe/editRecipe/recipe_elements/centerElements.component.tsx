@@ -29,9 +29,15 @@ const Center_Elements = ({
   const dispatch = useAppDispatch();
   const editRecipeHeading = useRef();
   const [blendCategoryState, setBlendCategoryState] = useState(null);
-  const recipeImagesArray = useAppSelector((state) => state.editRecipeReducer.recipeImagesArray);
-  const quantity_number = useAppSelector((state) => state?.quantityAdjuster?.quantityNum);
-  const recipeDescription = useAppSelector((state) => state?.editRecipeReducer?.descriptionRecipe);
+  const recipeImagesArray = useAppSelector(
+    (state) => state.editRecipeReducer.recipeImagesArray
+  );
+  const quantity_number = useAppSelector(
+    (state) => state?.quantityAdjuster?.quantityNum
+  );
+  const recipeDescription = useAppSelector(
+    (state) => state?.editRecipeReducer?.descriptionRecipe
+  );
   let BlendtecItem = [{ name: `Blentec` }, { name: `Blentec` }];
   let OzItem = [{ name: "64oz" }, { name: "64oz" }];
   let dropDownStyle = {
