@@ -514,7 +514,7 @@ const IngredientList = ({
                       <CircularRotatingLoader />
                     </div>
                   )}
-                  {provided.placeholder}
+                  <div style={{ listStyle: "none" }}>{provided.placeholder}</div>
                 </ol>
               )}
             </Droppable>

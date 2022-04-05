@@ -59,8 +59,6 @@ const UpdatedCustomAccordion = ({
           );
         }
       } else {
-        console.log(Object.keys(childrenFeild).length);
-        console.log(index);
         if (Object.keys(childrenFeild).length - 1 === index) {
           return (
             <div style={{ marginLeft: "18px" }}>

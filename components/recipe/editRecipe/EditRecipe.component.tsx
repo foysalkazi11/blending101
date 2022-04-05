@@ -109,7 +109,7 @@ const EditRecipePage = ({
             singleElement={singleElement}
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}
-            />
+          />
         </div>
         <div className={styles.right__main}>
           <RightTray
@@ -119,7 +119,6 @@ const EditRecipePage = ({
             setSingleElement={setSingleElement}
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}
-
           />
         </div>
       </div>

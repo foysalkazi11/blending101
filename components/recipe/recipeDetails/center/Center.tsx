@@ -238,7 +238,7 @@ const Center = ({
           </div>
           <div className={styles.size}>
             <p>serving Size : </p>
-            <span>16 0z</span>
+            <span>{Math.round(16 / counter)} 0z</span>
           </div>
           <div className={styles.usMatric}>
             <span>US</span>
