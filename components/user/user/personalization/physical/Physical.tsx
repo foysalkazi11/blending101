@@ -15,6 +15,7 @@ import InputComponent from "../../../../../theme/input/registerInput/RegisterInp
 import RadioButton from "../../../../../theme/radioButton/RadioButton.component";
 import imageUploadS3 from "../../../../utility/imageUploadS3";
 import notification from "../../../../utility/reactToastifyNotification";
+import DailyIntake from "./dailyIntake/DailyIntake";
 import styles from "./Physical.module.scss";
 import SectionGenderAndActivity from "./sectionGenderAndActivity/SectionGender&Activity";
 
@@ -681,7 +682,7 @@ const Physical = ({
                   />
                 </div>
 
-                {userProfile?.gender === "female" ? (
+                {userProfile?.gender === "Female" ? (
                   <>
                     <div
                       className={styles.contentContainer__elementDiv__heading}
@@ -723,7 +724,9 @@ const Physical = ({
               />
             </div>
           </>
-        ) : null}
+        ) : (
+          <DailyIntake />
+        )}
       </div>
     </>
   );
