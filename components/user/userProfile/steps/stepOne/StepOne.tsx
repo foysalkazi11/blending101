@@ -502,7 +502,7 @@ const StepOne = ({
             ) : null}
           </div>
         </div>
-        {userProfile?.gender === "female" ? (
+        {userProfile?.gender === "Female" ? (
           <div className={styles.singleSection}>
             <h2>Pregnant or Lactating?</h2>
             <div className={styles.contentContainer}>
