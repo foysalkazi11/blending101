@@ -448,14 +448,14 @@ const Physical = ({
                         placeholder="Age in years"
                         type="number"
                         name="years"
-                        min={0}
+                        min={1}
                         max={120}
                         handleChange={changeInputValue}
                         register={register}
                         required={{
                           required: "Please enter years",
                           min: {
-                            value: 0,
+                            value: 1,
                             message: "Please enter valid years",
                           },
                           max: {
@@ -477,12 +477,13 @@ const Physical = ({
                         type="number"
                         name="months"
                         max={1440}
+                        min={1}
                         handleChange={changeInputValue}
                         register={register}
                         required={{
                           required: "Please enter age in months",
                           min: {
-                            value: 0,
+                            value: 1,
                             message: "Please enter valid months",
                           },
                           max: {
@@ -526,14 +527,14 @@ const Physical = ({
                       placeholder={"Pounds"}
                       type="number"
                       name="pounds"
-                      min={0}
+                      min={1}
                       max={400}
                       handleChange={changeInputValue}
                       register={register}
                       required={{
                         required: "Please enter weight in pounds",
                         min: {
-                          value: 0,
+                          value: 1,
                           message: "Please valid weight",
                         },
                         max: {
@@ -554,14 +555,14 @@ const Physical = ({
                       placeholder="Kilograms"
                       type="number"
                       name="kilograms"
-                      min={0}
+                      min={1}
                       max={880}
                       handleChange={changeInputValue}
                       register={register}
                       required={{
                         required: "Please enter weight in kilograms",
                         min: {
-                          value: 0,
+                          value: 1,
                           message: "Please valid weight",
                         },
                         max: {
@@ -592,14 +593,14 @@ const Physical = ({
                         placeholder="feet"
                         type="number"
                         name="feets"
-                        min={0}
+                        min={1}
                         max={8}
                         handleChange={changeInputValue}
                         register={register}
                         required={{
                           required: "Please enter height in feets",
                           min: {
-                            value: 0,
+                            value: 1,
                             message: "Please enter valid height",
                           },
                           max: {
@@ -644,7 +645,7 @@ const Physical = ({
                       width="25%"
                       placeholder="Centimeters"
                       type="number"
-                      min={0}
+                      min={1}
                       max={272}
                       handleChange={changeInputValue}
                       register={register}
@@ -652,7 +653,7 @@ const Physical = ({
                       required={{
                         required: "Please enter height in centimeters",
                         min: {
-                          value: 0,
+                          value: 1,
                           message: "Please enter valid centimeters",
                         },
                         max: {

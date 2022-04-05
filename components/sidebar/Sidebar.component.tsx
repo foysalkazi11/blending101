@@ -18,12 +18,12 @@ export default function SidebarComponent(props) {
 
   const pages = [
     { logo: "/icons/home.svg", link: "/", content: "Home" },
-    { logo: "/icons/juicer.svg", link: "/", content: "Discover recipe" },
-    { logo: "/icons/books.svg", link: "/", content: "Wikipedia" },
+    { logo: "/icons/juicer.svg", link: "/", content: "Discovery" },
+    { logo: "/icons/books.svg", link: "/", content: "Wiki" },
     { logo: "/icons/calender__sidebar.svg", link: "/", content: "Planner" },
-    { logo: "/icons/book_light.svg", link: "/", content: "Book" },
-    { logo: "/icons/whistle.svg", link: "/", content: "Whistle" },
-    { logo: "/icons/store.svg", link: "/", content: "Store" },
+    { logo: "/icons/book_light.svg", link: "/", content: "News" },
+    { logo: "/icons/whistle.svg", link: "/", content: "Coach" },
+    { logo: "/icons/store.svg", link: "/", content: "Shop" },
   ];
 
   const handleClick = (link: string, i: number) => {
