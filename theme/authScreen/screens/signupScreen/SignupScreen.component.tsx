@@ -25,8 +25,6 @@ const SignupScreen = () => {
     formState: { errors },
   } = useForm();
 
-  console.log(errors);
-
   const history = useRouter();
   const dispatch = useAppDispatch();
 

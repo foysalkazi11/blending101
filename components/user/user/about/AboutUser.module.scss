@@ -1,5 +1,5 @@
 @mixin responsive($min_width, $max_width) {
-  @media only screen and (min-width:$min_width) and (max-width:$max_width) {
+  @media only screen and (min-width: $min_width) and (max-width: $max_width) {
     @content;
   }
 }
@@ -33,10 +33,10 @@
     line-height: 1.125rem;
   }
 
-  input {
+  .input {
     padding: 10px;
     margin: 0;
-    border: 1px solid #fbfbfb;
+    border: 1px solid #dbdbdb;
     opacity: 1;
     font-weight: 600;
     font-size: 15px;
@@ -56,7 +56,31 @@
     display: flex;
     align-items: center;
     background: #fbfbfb;
-    border-radius: 5px;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+
+    .input {
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      height: 50px;
+      font-size: 14px;
+      color: #929292;
+      letter-spacing: 0.5px;
+      line-height: 16px;
+      display: flex;
+      align-items: center;
+      font-weight: 300;
+      padding: 6px 12px;
+      // margin-bottom: 16px;
+      &:focus {
+        // border: 1px solid #929292;
+        outline: none;
+      }
+      &::placeholder {
+        color: #c8c8c8;
+      }
+    }
 
     .searchIcon {
       color: #dcdbdb;

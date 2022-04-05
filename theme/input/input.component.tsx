@@ -47,25 +47,20 @@ export default function InputComponent({
 
   const handleFocus = () => {
     setFocused(true);
-    console.log("hello");
   };
   return (
-    <>
-      <input
-        name={name}
-        className={styles.input}
-        type={type}
-        style={style}
-        value={value}
-        onChange={handleChange}
-        placeholder={placeholder}
-        min={min}
-        max={max}
-        onBlur={handleFocus}
-        // focused={focused?.toString()}
-        {...InputProps}
-      />
-      <p className={styles.para}>Error</p>
-    </>
+    <input
+      name={name}
+      className={styles.input}
+      type={type}
+      style={style}
+      value={value}
+      onChange={handleChange}
+      placeholder={placeholder}
+      min={min}
+      max={max}
+      onBlur={handleFocus}
+      {...InputProps}
+    />
   );
 }
