@@ -308,14 +308,14 @@ const StepOne = ({
                 placeholder="Age in years"
                 type="number"
                 name="years"
-                min={0}
+                min={1}
                 max={120}
                 register={register}
                 handleChange={changeInputValue}
                 required={{
-                  required: "Please enter years",
+                  required: "Please enter age in years",
                   min: {
-                    value: 0,
+                    value: 1,
                     message: "Please enter valid years",
                   },
                   max: {
@@ -336,12 +336,13 @@ const StepOne = ({
                 type="number"
                 name="months"
                 max={1440}
+                min={1}
                 register={register}
                 handleChange={changeInputValue}
                 required={{
                   required: "Please enter age in months",
                   min: {
-                    value: 0,
+                    value: 1,
                     message: "Please enter valid months",
                   },
                   max: {
@@ -365,14 +366,14 @@ const StepOne = ({
                 placeholder={"Pounds"}
                 type="number"
                 name="pounds"
-                min={0}
+                min={1}
                 max={400}
                 register={register}
                 handleChange={changeInputValue}
                 required={{
                   required: "Please enter weight in pounds",
                   min: {
-                    value: 0,
+                    value: 1,
                     message: "Please valid weight",
                   },
                   max: {
@@ -392,14 +393,14 @@ const StepOne = ({
                 placeholder="Kilograms"
                 type="number"
                 name="kilograms"
-                min={0}
+                min={1}
                 max={880}
                 register={register}
                 handleChange={changeInputValue}
                 required={{
                   required: "Please enter weight in kilograms",
                   min: {
-                    value: 0,
+                    value: 1,
                     message: "Please valid weight",
                   },
                   max: {
@@ -426,14 +427,14 @@ const StepOne = ({
                   placeholder="feet"
                   type="number"
                   name="feets"
-                  min={0}
+                  min={1}
                   max={8}
                   register={register}
                   handleChange={changeInputValue}
                   required={{
                     required: "Please enter height in feets",
                     min: {
-                      value: 0,
+                      value: 1,
                       message: "Please enter valid height",
                     },
                     max: {
@@ -477,7 +478,7 @@ const StepOne = ({
               <InputComponent
                 placeholder="Centimeters"
                 type="number"
-                min={0}
+                min={1}
                 max={272}
                 register={register}
                 handleChange={changeInputValue}
@@ -485,7 +486,7 @@ const StepOne = ({
                 required={{
                   required: "Please enter height in centimeters",
                   min: {
-                    value: 0,
+                    value: 1,
                     message: "Please enter valid centimeters",
                   },
                   max: {
