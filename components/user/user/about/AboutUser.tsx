@@ -124,20 +124,6 @@ const About = ({ userData, setUserData }: AboutProps) => {
               value={location}
               handleChange={handleChange}
             />
-            {/* <div className={styles.selectBox}>
-              <img src="/images/us.png" alt="flag" />
-              <select
-              name="location"
-              value={location || "all"}
-                onChange={handleChange}
-              >
-                <option value="all">
-                  (GMT-8:00) Pacific Time (US & Canada)
-                </option>
-                <option value="leafy">(GMT-09:00) Alaska</option>
-                <option value="berry"> (GMT-06:00) Central America</option>
-              </select>
-            </div> */}
           </div>
         </div>
       </div>
