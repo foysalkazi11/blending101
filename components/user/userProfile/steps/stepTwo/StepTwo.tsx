@@ -4,19 +4,19 @@ import SectionWithIcon from "../../sectionWithIcon/SectionWithIcon";
 const dietary = [
   {
     icon: "/images/healthy-food.png",
-    label: "low fodmap",
+    label: "Low fodmap",
   },
   {
     icon: "/images/avocado-1.png",
-    label: "ketogenic",
+    label: "Ketogenic",
   },
   {
     icon: "/images/milk.png",
-    label: "vegetarian dairy",
+    label: "Vegetarian dairy",
   },
   {
     icon: "/images/vegetarian.png",
-    label: "vegetarian no dairy",
+    label: "Vegetarian no dairy",
   },
   // {
   //   icon: "/images/milk.png",
@@ -30,15 +30,15 @@ const dietary = [
 const allergies = [
   {
     icon: "/images/milk-bottle.png",
-    label: "low",
+    label: "Low",
   },
   {
     icon: "/images/peanut.png",
-    label: "moderate",
+    label: "Moderate",
   },
   {
     icon: "/images/almond.png",
-    label: "high",
+    label: "High",
   },
 ];
 

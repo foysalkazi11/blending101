@@ -1,0 +1,19 @@
+.dailyIntakeContainer {
+  border: 1px solid #dfdfdf;
+  min-height: 500px;
+
+  .header {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background-color: #ececec;
+  }
+}
+
+.infoText {
+  color: #929292;
+  font-size: 12px;
+  align-items: center;
+  line-height: 1.125rem;
+  font-weight: 400;
+}

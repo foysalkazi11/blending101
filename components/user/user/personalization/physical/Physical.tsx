@@ -15,39 +15,40 @@ import InputComponent from "../../../../../theme/input/registerInput/RegisterInp
 import RadioButton from "../../../../../theme/radioButton/RadioButton.component";
 import imageUploadS3 from "../../../../utility/imageUploadS3";
 import notification from "../../../../utility/reactToastifyNotification";
+import DailyIntake from "./dailyIntake/DailyIntake";
 import styles from "./Physical.module.scss";
 import SectionGenderAndActivity from "./sectionGenderAndActivity/SectionGender&Activity";
 
 const gender = [
   {
     icon: "/images/mars-1.png",
-    label: "male",
+    label: "Male",
   },
   {
     icon: "/images/femenine.png",
-    label: "female",
+    label: "Female",
   },
   {
     icon: "/images/mars-2.png",
-    label: "others",
+    label: "Others",
   },
 ];
 const activity = [
   {
     icon: "/icons/activity-low.svg",
-    label: "low",
+    label: "Low",
   },
   {
     icon: "/icons/activity-moderate.svg",
-    label: "moderate",
+    label: "Moderate",
   },
   {
     icon: "/icons/activity-high.svg",
-    label: "high",
+    label: "High",
   },
   {
     icon: "/icons/activity-extreme.svg",
-    label: "extreme",
+    label: "Extreme",
   },
 ];
 
@@ -134,10 +135,14 @@ const Physical = ({
       inches: userProfile?.heightInCentimeters
         ? Number(
             ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0)
-          )
+          ) === 12
+          ? ""
+          : Number(
+              ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0)
+            )
         : "",
       kilograms: userProfile?.weightInKilograms
-        ? Number(userProfile?.weightInKilograms)
+        ? Number(userProfile?.weightInKilograms?.toFixed(2))
         : "",
       months: handleYearsAndMonths(userProfile)?.months || "",
       pounds: userProfile?.weightInKilograms
@@ -228,13 +233,13 @@ const Physical = ({
 
     let arrangWeight =
       measurementType === "US"
-        ? Number((data?.pounds / 2.205).toFixed(0))
+        ? Number(data?.pounds / 2.205)
         : Number(data?.kilograms);
     let feet = +data?.feets * 30.48;
     let inches = +data?.inches ? +data?.inches * 2.54 : 0;
     let arrangHight =
       measurementType === "US"
-        ? Number((feet + inches)?.toFixed(0))
+        ? Number(feet + inches)
         : Number(data?.centimeters);
 
     dispatch(setLoading(true));
@@ -444,14 +449,14 @@ const Physical = ({
                         placeholder="Age in years"
                         type="number"
                         name="years"
-                        min={0}
+                        min={1}
                         max={120}
                         handleChange={changeInputValue}
                         register={register}
                         required={{
                           required: "Please enter years",
                           min: {
-                            value: 0,
+                            value: 1,
                             message: "Please enter valid years",
                           },
                           max: {
@@ -473,12 +478,13 @@ const Physical = ({
                         type="number"
                         name="months"
                         max={1440}
+                        min={1}
                         handleChange={changeInputValue}
                         register={register}
                         required={{
                           required: "Please enter age in months",
                           min: {
-                            value: 0,
+                            value: 1,
                             message: "Please enter valid months",
                           },
                           max: {
@@ -522,14 +528,14 @@ const Physical = ({
                       placeholder={"Pounds"}
                       type="number"
                       name="pounds"
-                      min={0}
+                      min={1}
                       max={400}
                       handleChange={changeInputValue}
                       register={register}
                       required={{
                         required: "Please enter weight in pounds",
                         min: {
-                          value: 0,
+                          value: 1,
                           message: "Please valid weight",
                         },
                         max: {
@@ -550,14 +556,14 @@ const Physical = ({
                       placeholder="Kilograms"
                       type="number"
                       name="kilograms"
-                      min={0}
+                      min={1}
                       max={880}
                       handleChange={changeInputValue}
                       register={register}
                       required={{
                         required: "Please enter weight in kilograms",
                         min: {
-                          value: 0,
+                          value: 1,
                           message: "Please valid weight",
                         },
                         max: {
@@ -588,14 +594,14 @@ const Physical = ({
                         placeholder="feet"
                         type="number"
                         name="feets"
-                        min={0}
+                        min={1}
                         max={8}
                         handleChange={changeInputValue}
                         register={register}
                         required={{
                           required: "Please enter height in feets",
                           min: {
-                            value: 0,
+                            value: 1,
                             message: "Please enter valid height",
                           },
                           max: {
@@ -618,7 +624,6 @@ const Physical = ({
                         handleChange={changeInputValue}
                         register={register}
                         required={{
-                          required: "Please enter height in inches",
                           min: {
                             value: 0,
                             message: "Please enter valid inches",
@@ -641,7 +646,7 @@ const Physical = ({
                       width="25%"
                       placeholder="Centimeters"
                       type="number"
-                      min={0}
+                      min={1}
                       max={272}
                       handleChange={changeInputValue}
                       register={register}
@@ -649,11 +654,11 @@ const Physical = ({
                       required={{
                         required: "Please enter height in centimeters",
                         min: {
-                          value: 0,
+                          value: 1,
                           message: "Please enter valid centimeters",
                         },
                         max: {
-                          value: 172,
+                          value: 272,
                           message: "Max 272 centimeters",
                         },
                       }}
@@ -677,7 +682,7 @@ const Physical = ({
                   />
                 </div>
 
-                {userProfile?.gender === "female" ? (
+                {userProfile?.gender === "Female" ? (
                   <>
                     <div
                       className={styles.contentContainer__elementDiv__heading}
@@ -719,7 +724,9 @@ const Physical = ({
               />
             </div>
           </>
-        ) : null}
+        ) : (
+          <DailyIntake />
+        )}
       </div>
     </>
   );

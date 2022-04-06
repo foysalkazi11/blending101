@@ -22,6 +22,7 @@ const StepThree = ({
         setValue={updateUserProfile}
         placeholder="Enter Conditions..."
         removeInput={removeInput}
+        style={{ marginBottom: "20px" }}
       />
       <SectionWithInput
         title="What medications are you currently taking?"
@@ -31,6 +32,7 @@ const StepThree = ({
         setValue={updateUserProfile}
         placeholder="Enter Medications..."
         removeInput={removeInput}
+        style={{ marginBottom: "20px" }}
       />
     </>
   );

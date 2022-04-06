@@ -7,7 +7,7 @@
 .physicalContainer {
   display: flex;
   flex-direction: column;
-  min-height: 500px;
+  height: auto;
 
   .profile_tab_wraper {
     width: 100%;

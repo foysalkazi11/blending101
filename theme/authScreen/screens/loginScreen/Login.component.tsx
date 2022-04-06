@@ -1,7 +1,7 @@
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
 import ButtonComponent from "../../../button/buttonA/button.component";
-import InputField from "../../../input/inputField.component";
+import InputField from "../../../input/registerInput/RegisterInput";
 import SocialTray from "../../authComponents/socialTray/socialTray.component";
 import styles from "./Login.module.scss";
 import Image from "next/image";
@@ -10,26 +10,35 @@ import { Auth } from "aws-amplify";
 import { setLoading } from "../../../../redux/slices/utilitySlice";
 import { useAppDispatch } from "../../../../redux/hooks";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
-import { setDbUser, setProvider, setUser } from "../../../../redux/slices/userSlice";
+import {
+  setDbUser,
+  setProvider,
+  setUser,
+} from "../../../../redux/slices/userSlice";
 import { useRouter } from "next/router";
 import { useMutation } from "@apollo/client";
 import CREATE_NEW_USER from "../../../../gqlLib/user/mutations/createNewUser";
 import { setAllRecipeWithinCollectionsId } from "../../../../redux/slices/collectionSlice";
+import { useForm } from "react-hook-form";
 
 const LoginScreen = () => {
-  const [loginMail, setLoginMail] = useState<string>("");
-  const [loginPassword, setLoginPassword] = useState<string>("");
   const dispatch = useAppDispatch();
   const histroy = useRouter();
   const [createNewUser] = useMutation(CREATE_NEW_USER);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = async (input) => {
     dispatch(setLoading(true));
     try {
       const {
         attributes: { email },
-      } = await Auth.signIn(loginMail, loginPassword);
+      } = await Auth.signIn(input?.email, input?.password);
       const { data } = await createNewUser({
         variables: {
           data: { email: email, provider: "email" },
@@ -85,22 +94,39 @@ const LoginScreen = () => {
           </div>
           <p className={styles.loginPara}>Enter email and password</p>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <InputField
               type="email"
               style={{ marginBottom: "20px" }}
-              value={loginMail}
-              placeholder="email"
-              fullWidth={true}
-              setValue={setLoginMail}
+              placeholder="Email"
+              register={register}
+              name="email"
+              required={{
+                required: "Email requried",
+                pattern: {
+                  value:
+                    /^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/,
+                  message: "Enter valid email",
+                },
+              }}
+              error={{
+                isError: errors?.email ? true : false,
+                message: errors?.email?.message,
+              }}
             />
+
             <InputField
               type="password"
-              style={{}}
-              value={loginPassword}
-              placeholder="password"
-              fullWidth={true}
-              setValue={setLoginPassword}
+              placeholder="Password"
+              register={register}
+              name="password"
+              required={{
+                required: "password requried",
+              }}
+              error={{
+                isError: errors?.password ? true : false,
+                message: errors?.password?.message,
+              }}
             />
             <div className={styles.forgetPassword}>
               <div>
@@ -138,7 +164,8 @@ const LoginScreen = () => {
           <div className={styles.contentCard}>
             <h2>New User</h2>
             <p>
-              Aliquam vestibulum nunc quis blandit rutrum. Curabitur vel scelerisque leo.
+              Aliquam vestibulum nunc quis blandit rutrum. Curabitur vel
+              scelerisque leo.
             </p>
             <div className={styles.buttonRightDiv}>
               <Link href="/signup">

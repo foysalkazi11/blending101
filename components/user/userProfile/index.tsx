@@ -20,14 +20,19 @@ const UserProfile = () => {
   const [userProfile, setUserProfile] = useState<any>({
     gender: "",
     activity: "",
-    age: "",
-    weight: "",
-    height: "",
+    age: {
+      months: false,
+      quantity: "",
+      years: true,
+    },
+    weightInKilograms: "",
+    heightInCentimeters: "",
     dieteryLifeStyle: "",
     allergies: [],
     preExistingMedicalConditions: [],
     meditcation: [],
     whyBlending: [],
+    pregnantOrLactating: "",
   });
   const [steps, setSteps] = useState(1);
   const { dbUser, user, provider } = useAppSelector((state) => state?.user);
@@ -44,11 +49,12 @@ const UserProfile = () => {
         allergies,
         dieteryLifeStyle,
         gender,
-        height,
-        weight,
+        heightInCentimeters,
+        weightInKilograms,
         meditcation,
         preExistingMedicalConditions,
         whyBlending,
+        pregnantOrLactating,
       } = configuration;
 
       setUserProfile((pre) => ({
@@ -56,13 +62,14 @@ const UserProfile = () => {
         gender,
         activity,
         age,
-        weight,
+        heightInCentimeters,
+        weightInKilograms,
         dieteryLifeStyle,
         allergies: allergies || [],
         preExistingMedicalConditions: preExistingMedicalConditions || [],
         meditcation: meditcation || [],
         whyBlending: whyBlending || [],
-        height,
+        pregnantOrLactating,
       }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -117,10 +124,8 @@ const UserProfile = () => {
   const updateUserData = async () => {
     const arrangData = {
       ...userProfile,
-      age: Number(userProfile?.age),
-      weight: Number(userProfile?.weight),
-      height: Number(userProfile?.height),
     };
+
     if (steps === 4) {
       dispatch(setLoading(true));
       try {
@@ -147,8 +152,9 @@ const UserProfile = () => {
         reactToastifyNotification("error", error?.message);
       }
     } else {
+      dispatch(setLoading(true));
       try {
-        const status = await editUserData({
+        await editUserData({
           variables: {
             data: { editId: configuration?._id, editableObject: arrangData },
           },
@@ -160,8 +166,12 @@ const UserProfile = () => {
             configuration: { ...dbUser?.configuration, ...arrangData },
           })
         );
+        dispatch(setLoading(false));
+        reactToastifyNotification("info", "Updated successfully");
+        setSteps((pre) => pre + 1);
       } catch (error) {
-        console.log(error?.message);
+        dispatch(setLoading(false));
+        reactToastifyNotification("error", error?.message);
       }
     }
   };
@@ -173,7 +183,6 @@ const UserProfile = () => {
       }
       return;
     } else {
-      setSteps((pre) => pre + 1);
       if (user) {
         updateUserData();
       }
@@ -194,6 +203,8 @@ const UserProfile = () => {
           <StepOne
             userProfile={userProfile}
             updateUserProfile={updateUserProfile}
+            setUserProfile={setUserProfile}
+            setSteps={setSteps}
           />
         );
       case 2:
@@ -225,6 +236,8 @@ const UserProfile = () => {
           <StepOne
             userProfile={userProfile}
             updateUserProfile={updateUserProfile}
+            setUserProfile={setUserProfile}
+            setSteps={setSteps}
           />
         );
     }
@@ -239,12 +252,12 @@ const UserProfile = () => {
     >
       <div className={styles.userProfileContainer}>
         <ProgessBar steps={steps} />
-        <div className={styles.sectionContainer}>
-          <div className={styles.sectionContainer__renderedElem}>
-            {renderUI()}
-          </div>
-        </div>
-        <ChangeSteps nextStep={nextStep} prevStep={prevStep} steps={steps} />
+
+        {renderUI()}
+
+        {steps === 1 ? null : (
+          <ChangeSteps nextStep={nextStep} prevStep={prevStep} steps={steps} />
+        )}
       </div>
     </AContainer>
   );

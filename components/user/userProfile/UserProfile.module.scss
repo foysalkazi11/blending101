@@ -1,18 +1,7 @@
 .userProfileContainer {
-  padding: 40px 0px;
-  width: 100%;
-  height: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.sectionContainer {
+  padding: 40px 1rem;
   width: 100%;
   max-width: 900px;
-
-  &__renderedElem {
-    padding-left: 20px;
-  }
+  margin: 0 auto;
+  height: auto;
 }
