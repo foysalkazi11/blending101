@@ -9,7 +9,6 @@ import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
 import DragIndicatorIcon from "../../../../../public/icons/drag_indicator_black_36dp.svg";
 import ModeEditOutlineOutlinedIcon from "../../../../../public/icons/mode_edit_black_36dp.svg";
 import {
-  setArrayOfSingleSelectedIngredientForNutrition,
   setIngredientArrayForNutrition,
   setRecipeInstruction,
   setSelectedIngredientsList,

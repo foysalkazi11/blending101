@@ -1,8 +1,19 @@
-import React from "react";
+import { useQuery } from "@apollo/client";
+import React, { useEffect } from "react";
+import { GET_DAILY_BY_USER_ID } from "../../../../../../gqlLib/recipeDiscovery/query/recipeDiscovery";
 import ButtonComponent from "../../../../../../theme/button/button.component";
 import styles from "./DailyIntake.module.scss";
+import HeadingBox from "./headingBox/headingBox.component";
+import InputGoal from "./inputGoal/inputGoal.component";
 
 const DailyIntake = () => {
+  const { data: dailyData } = useQuery(GET_DAILY_BY_USER_ID("asdf"));
+  const dailyChartData = dailyData?.getDailyByUserId;
+
+  useEffect(() => {
+    console.log(dailyData);
+  }, [dailyData]);
+
   return (
     <>
       <div className={styles.dailyIntakeContainer}>
@@ -11,6 +22,39 @@ const DailyIntake = () => {
             Your daily recommended intake based on your profile settings
           </p>
         </header>
+        <div className={styles.mainContentDiv}>
+          <div className={styles.centerElement}>
+            <HeadingBox>Source</HeadingBox>
+          </div>
+          <div className={styles.centerElement}>
+            <HeadingBox>DRI</HeadingBox>
+          </div>
+          <div className={styles.centerElement}>
+            <HeadingBox>Goal</HeadingBox>
+          </div>
+          <h3 className={styles.centerElement}>BMI</h3>
+          <h3 className={styles.centerElement}>
+            {Math.round(dailyChartData?.bmi?.value)}
+          </h3>
+          <div className={styles.centerElement}>
+            <InputGoal />
+          </div>
+          <h3 className={styles.centerElement}>Calories</h3>
+          <h3 className={styles.centerElement}>
+            {Math.round(dailyChartData?.calories?.value)}
+          </h3>
+          <div className={styles.centerElement}>
+            <InputGoal />
+          </div>
+        </div>
+        <div className={styles.mainContentDiv__accordian}>
+          {dailyChartData &&
+            Object.entries(dailyChartData?.nutrients).map((itm) => {
+              if (itm[0] !== "__typename") {
+                console.log(itm)
+              };
+            })}
+        </div>
       </div>
       <div
         style={{
