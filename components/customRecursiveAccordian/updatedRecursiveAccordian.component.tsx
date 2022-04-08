@@ -4,6 +4,7 @@ import UpdatedCustomAccordion from "../../theme/accordion/updatedAccordion.compo
 import styles from "./updatedRecursiveAccordian.module.scss";
 import Image from "next/image";
 import { FaRegUser } from "react-icons/fa";
+import { useRouter } from "next/router";
 
 interface recursiveAccordianInterface {
   dataObject: object;
@@ -16,8 +17,7 @@ const UpdatedRecursiveAccordian = ({
 }: recursiveAccordianInterface) => {
   //@ts-ignore
   const { user, dbUser } = useAppSelector((state) => state?.user);
-  const [openPopup, setOpenPopup] = useState(false);
-
+  const router = useRouter();
   return (
     <div>
       <div className={styles.nutritionHeader}>
@@ -36,12 +36,12 @@ const UpdatedRecursiveAccordian = ({
                       alt="prfile.png"
                       objectFit="contain"
                       layout="fill"
-                      onClick={() => setOpenPopup((pre) => !pre)}
+                      onClick={() => router?.push("/user")}
                     />
                   ) : (
                     <FaRegUser
                       className={styles.userName__image}
-                      onClick={() => setOpenPopup((pre) => !pre)}
+                      onClick={() => router?.push("/user")}
                     />
                   )}
                 </div>
@@ -51,8 +51,12 @@ const UpdatedRecursiveAccordian = ({
         </div>
       </div>
       <div className={styles.recursiveAccordianHeading__subheading}>
-        <div className={styles.recursiveAccordianHeading__subheading__3}>Value</div>
-        <div className={styles.recursiveAccordianHeading__subheading__4}>Daily%</div>
+        <div className={styles.recursiveAccordianHeading__subheading__3}>
+          Value
+        </div>
+        <div className={styles.recursiveAccordianHeading__subheading__4}>
+          Daily%
+        </div>
       </div>
       {Object?.entries(dataObject)?.map((elem) => {
         return (

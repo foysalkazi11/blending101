@@ -90,7 +90,6 @@ function WikiComponent() {
   };
   //@ts-ignore
   const data = dataObj[type];
-  console.log(data?.nutrients && JSON.parse(data?.nutrients));
 
   return (
     <AContainer>
@@ -116,24 +115,24 @@ function WikiComponent() {
         ) : (
           <WikiRightComponent
             ingredient={[
-              { name: "Ginger", percent: 109 },
-              { name: "Turmeric", percent: 95 },
-              { name: "Chia Seeds", percent: 90 },
-              { name: "Broth", percent: 80 },
-              { name: "Sweet Potatoes", percent: 75 },
-              { name: "Winter Squash", percent: 60 },
-              { name: "Mint", percent: 55 },
-              { name: "Pineapple", percent: 40 },
-              { name: "Coconut Oil", percent: 35 },
+              { name: "Ginger", percent: 109, units: "kj" },
+              { name: "Turmeric", percent: 95, units: "kj" },
+              { name: "Chia Seeds", percent: 90, units: "kj" },
+              { name: "Broth", percent: 80, units: "kj" },
+              { name: "Sweet Potatoes", percent: 75, units: "kj" },
+              { name: "Winter Squash", percent: 60, units: "kj" },
+              { name: "Mint", percent: 55, units: "kj" },
+              { name: "Pineapple", percent: 40, units: "kj" },
+              { name: "Coconut Oil", percent: 35, units: "kj" },
             ]}
             nutrition={[
-              { name: "Vitamin A", percent: 100 },
-              { name: "Vitexin", percent: 90 },
-              { name: "Vitamin D", percent: 87 },
-              { name: "Iron", percent: 69 },
-              { name: "Betaxanthins", percent: 50 },
-              { name: "Calcium", percent: 35 },
-              { name: "Quercetiin", percent: 20 },
+              { name: "Vitamin A", percent: 100, units: "kj" },
+              { name: "Vitexin", percent: 90, units: "kj" },
+              { name: "Vitamin D", percent: 87, units: "kj" },
+              { name: "Iron", percent: 69, units: "kj" },
+              { name: "Betaxanthins", percent: 50, units: "kj" },
+              { name: "Calcium", percent: 35, units: "kj" },
+              { name: "Quercetiin", percent: 20, units: "kj" },
             ]}
           />
         )}

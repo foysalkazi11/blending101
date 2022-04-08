@@ -3,19 +3,22 @@ import styles from "./progress.module.scss";
 
 interface Percent {
   percent: number;
+  highestValue: number;
 }
 
-const LinearIndicatorcomponent = ({ percent }: Percent) => {
-  let width: string = percent.toString() + "%";
+const LinearIndicatorcomponent = ({ percent, highestValue }: Percent) => {
+  let width: number = (100 / highestValue) * percent;
 
-  let style: object = { width };
+  let style: object = { width: width };
 
   return (
     <div className={styles.LinearIndicatorDiv}>
       {/* <LinearProgress variant="determinate" value={20} sx={color="green"} /> */}
-      <div className={styles.progressBar} style={style} role="progressbar">
-        .
-      </div>
+      <div
+        className={styles.progressBar}
+        style={{ width: `${width}%` }}
+        role="progressbar"
+      ></div>
     </div>
   );
 };
