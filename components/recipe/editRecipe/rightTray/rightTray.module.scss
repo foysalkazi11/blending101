@@ -17,8 +17,8 @@
     position: relative;
     display: table;
     width: 100%;
-    line-height: 1.2;
-    padding: 15px 0px 0;
+    line-height: 1;
+    padding: 15px 0px;
 
     h3 {
         color: black;
@@ -33,7 +33,7 @@
 
     &__name {
         font-weight: 400;
-        font: 26px !important;
+        font-size: 18px !important;
     }
 
     &__closeBox {
@@ -42,23 +42,28 @@
         justify-content: center;
         align-items: center;
         aspect-ratio: 1;
-        width: 34px;
+        height: 25px;
         border-radius: 50%;
-        position: absolute;
-        right: 50px;
+        position: relative;
+        margin: auto 0px;
+        margin-right: 10px;
         cursor: pointer;
+
 
         &__closeIcon {
             color: white;
+            font-weight: 500;
         }
     }
 
     &__heading {
-        margin: 0px 20px;
 
         &__nutrition {
             display: flex;
             justify-content: space-between;
+            padding: 8px 18px;
+            background-color: #f1f1f1;
+            margin-bottom: 14px;
         }
 
         h3 {
@@ -81,8 +86,6 @@
     height: 100%;
     min-height: 300px;
     border-radius: 14px;
-
-    padding-bottom: 20px;
     overflow: hidden;
     transition: all 0.2s;
     background-color: white;
@@ -91,8 +94,8 @@
 
     &__title {
         @include headings();
-        height: 30px;
-        margin-bottom: 20px;
+        padding: 22px 18px;
+        font-size: 22px;
     }
 
     @include responsive(0px, 991px) {
@@ -100,13 +103,9 @@
     }
 
 
-    &__headerDiv {
-        padding: 12px 18px;
-    }
-
     &__counterTray {
         display: flex;
-        margin: 16px 0px;
+        padding: 0px 18px;
 
         &__counter {
             @extend %counterTray;
@@ -116,12 +115,22 @@
 
             &__icons {
                 margin-left: auto;
-                font-size: 14px;
-                font-weight: 800;
+                font-size: 12px;
+                font-weight: 900;
                 cursor: pointer;
                 color: #8b8a8a;
                 display: flex;
                 flex-direction: column;
+
+                &__arrow {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    &:hover {
+                        box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+                    }
+                }
             }
 
             &__input {

@@ -104,20 +104,21 @@ const EditRecipePage = ({
           <IngredientList
             adjusterFunc={adjusterFunc}
             allIngredients={allIngredients}
-            nutritionState={nutritionState}
-            setNutritionState={setNutritionState}
             recipeInstructions={recipeInstructions}
             setSingleElement={setSingleElement}
             singleElement={singleElement}
+            nutritionState={nutritionState}
+            setNutritionState={setNutritionState}
           />
         </div>
         <div className={styles.right__main}>
           <RightTray
             nutritionTrayData={nutritionTrayData}
             adjusterFunc={adjusterFunc}
-            nutritionState={nutritionState}
             singleElement={singleElement}
             setSingleElement={setSingleElement}
+            nutritionState={nutritionState}
+            setNutritionState={setNutritionState}
           />
         </div>
       </div>

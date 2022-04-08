@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import {
   setDescriptionRecipe,
   setEditRecipeName,
+  setRecipeFileImagesArray,
   setRecipeImagesArray,
   setSelectedBlendCategory,
 } from "../../../../redux/edit_recipe/editRecipeStates";
@@ -29,9 +30,18 @@ const Center_Elements = ({
   const dispatch = useAppDispatch();
   const editRecipeHeading = useRef();
   const [blendCategoryState, setBlendCategoryState] = useState(null);
-  const recipeImagesArray = useAppSelector((state) => state.editRecipeReducer.recipeImagesArray);
-  const quantity_number = useAppSelector((state) => state?.quantityAdjuster?.quantityNum);
-  const recipeDescription = useAppSelector((state) => state?.editRecipeReducer?.descriptionRecipe);
+  const recipeImagesArray = useAppSelector(
+    (state) => state.editRecipeReducer.recipeImagesArray
+  );
+  const quantity_number = useAppSelector(
+    (state) => state?.quantityAdjuster?.quantityNum
+  );
+  const recipeDescription = useAppSelector(
+    (state) => state?.editRecipeReducer?.descriptionRecipe
+  );
+  const recipeFileImagesArray = useAppSelector(
+    (state) => state.editRecipeReducer.recipeFileImagesArray
+  );
   let BlendtecItem = [{ name: `Blentec` }, { name: `Blentec` }];
   let OzItem = [{ name: "64oz" }, { name: "64oz" }];
   let dropDownStyle = {
@@ -63,10 +73,13 @@ const Center_Elements = ({
 
   const imageRenderingHandler = (event) => {
     let imageArraytemp = [...recipeImagesArray];
+
     if (event.target.files) {
       let BlobList = Array?.from(event.target.files)?.map((file: any) =>
         URL?.createObjectURL(file)
       );
+
+      let FileArrayForAws = Array?.from(event.target.files);
 
       BlobList?.map((elem) => {
         imageArraytemp = [
@@ -74,6 +87,8 @@ const Center_Elements = ({
           { __typename: `blobType`, image: elem, default: false },
         ];
       });
+
+      dispatch(setRecipeFileImagesArray(FileArrayForAws));
     }
     dispatch(setRecipeImagesArray(imageArraytemp));
   };
@@ -81,6 +96,9 @@ const Center_Elements = ({
   const removeImage = (index_value: number) => {
     let updated_list = [...recipeImagesArray];
     updated_list?.splice(index_value, 1);
+    let updated__Array__forAWS = [...recipeFileImagesArray];
+    updated__Array__forAWS?.splice(index_value, 1);
+    dispatch(setRecipeFileImagesArray(updated__Array__forAWS));
     dispatch(setRecipeImagesArray(updated_list));
   };
 
