@@ -11,16 +11,7 @@ import { FETCH_BLEND_CATEGORIES } from "../../../../gqlLib/category/queries/fetc
 import { setAllCategories } from "../../../../redux/slices/categroySlice";
 import SkeletonBlendType from "../../../../theme/skeletons/skeletonBlendType/SkeletonBlendType";
 
-const blendCategoryImage = {
-  Smoothies: "/food/wholefood.png",
-  WholeFood: "/food/soup.svg",
-  "Frozen Treat": "/food/frozen.png",
-  Refreshing: "/food/fresh.png",
-  "Herbal Tea": "/other/heart.svg",
-};
-
-const defaultBlendImg =
-  "https://blending.s3.us-east-1.amazonaws.com/3383678.jpg";
+const defaultBlendImg = "https://blending.s3.us-east-1.amazonaws.com/3383678.jpg";
 
 type VisualSectionProps = {
   categories?: { title: string; val: string }[];
@@ -113,10 +104,7 @@ const VisualSection = ({ categories }: VisualSectionProps) => {
                     }
                   >
                     <div className={styles.filter__menu__item__image}>
-                      <img
-                        src={blend?.image || defaultBlendImg}
-                        alt={blend?.name}
-                      />
+                      <img src={blend?.image || defaultBlendImg} alt={blend?.name} />
                       {checkActive(blend._id) && (
                         <div className={styles.tick}>
                           <CheckCircle className={styles.ticked} />

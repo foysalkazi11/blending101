@@ -27,12 +27,6 @@ export default function DropdownTwoComponent({
 
   const handleToggle = () => {
     setActive(() => !active);
-    // const style = ref.current.style.overflow;
-    // if (style === "visible") {
-    //   ref.current.style.overflow = "hidden";
-    // } else {
-    //   ref.current.style.overflow = "visible";
-    // }
   };
 
   const handleToggleVlaue = (item) => {
@@ -43,12 +37,8 @@ export default function DropdownTwoComponent({
   return (
     <div className={styles.dpd}>
       <div className={styles.dropdown} ref={ref} style={style}>
-        <div
-          className={styles.dropdown__top}
-          style={style}
-          onClick={handleToggle}
-        >
-          {value.title}
+        <div className={styles.dropdown__top} style={style} onClick={handleToggle}>
+          {value && value.title}
           <div>
             {!active ? (
               <ArrowDropDown className={styles.dropdown__top__icon} />

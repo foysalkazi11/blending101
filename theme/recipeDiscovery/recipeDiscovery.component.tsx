@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
 import AContainer from "../../containers/A.container";
 import styles from "./recipeDiscovery.module.scss";
@@ -89,7 +90,7 @@ const RecipeDetails = () => {
       }
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [user]);
 
   useEffect(() => {

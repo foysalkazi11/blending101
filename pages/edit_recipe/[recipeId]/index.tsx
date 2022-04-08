@@ -151,7 +151,7 @@ const EditRecipeComponent = () => {
   useEffect(() => {
     dispatch(setIngredientArrayForNutrition(selectedIngredientsList));
   }, [selectedIngredientsList]);
-
+  recipeBasedNutrition && console.log(JSON.parse(recipeBasedNutrition))
   return (
     <EditRecipePage
       recipeName={recipeName}
