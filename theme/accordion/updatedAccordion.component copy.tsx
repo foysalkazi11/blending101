@@ -68,14 +68,14 @@ const UpdatedCustomAccordion = ({
                 //@ts-ignore
                 value={itm[1]?.value}
                 //@ts-ignore
-                unit={itm[1]?.blendNutrientRefference.units}
+                unit={itm[1]?.blendNutrientRefference?.units}
                 percentage={20 + "%"}
                 counter={counter}
                 lastElement={true}
               />
             </div>
           );
-        }else{
+        } else {
           return (
             <div style={{ marginLeft: "18px" }} key={itm[0] + Date.now()}>
               <AccordComponent
@@ -84,21 +84,25 @@ const UpdatedCustomAccordion = ({
                 //@ts-ignore
                 value={itm[1]?.value}
                 //@ts-ignore
-                unit={itm[1]?.blendNutrientRefference.units}
+                unit={itm[1]?.blendNutrientRefference?.units}
                 percentage={20 + "%"}
                 counter={counter}
               />
             </div>
           );
         }
-
       }
     });
   };
 
   return (
     content && (
-      <AccordComponent title={title} type={type} counter={counter} key={title + Date.now()}>
+      <AccordComponent
+        title={title}
+        type={type}
+        counter={counter}
+        key={title + Date.now()}
+      >
         {populateAccordian(content, true)}
       </AccordComponent>
     )

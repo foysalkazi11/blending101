@@ -128,7 +128,11 @@ const Left_tray_recipe_edit = ({ recipeData, mode }: recipeData) => {
               titleTwo="Rankings"
             />
             <div className={styles.dropdown}>
-              <DropdownTwoComponent value={dpd} list={categories} setValue={setDpd} />
+              <DropdownTwoComponent
+                value={dpd}
+                list={categories}
+                setValue={setDpd}
+              />
             </div>
             {toggle === 1 && (
               <>
@@ -186,9 +190,16 @@ const Left_tray_recipe_edit = ({ recipeData, mode }: recipeData) => {
             {toggle === 2 && (
               <div className={styles.rankings}>
                 {/* <CalciumSearchElem /> */}
-                {ingredients?.map(({ name, percent }, index) => {
+                {ingredients?.map(({ name, percent, units }, index) => {
                   return (
-                    <Linearcomponent name={name} percent={percent} checkbox key={index} />
+                    <Linearcomponent
+                      name={name}
+                      percent={percent}
+                      checkbox
+                      key={index}
+                      highestValue={percent}
+                      units={units}
+                    />
                   );
                 })}
               </div>
