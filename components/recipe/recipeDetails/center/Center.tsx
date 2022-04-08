@@ -10,13 +10,19 @@ import { MdOutlineInfo, MdAdd, MdRemove } from "react-icons/md";
 import { BiBarChart } from "react-icons/bi";
 import { BsCartPlus } from "react-icons/bs";
 import { useAppDispatch } from "../../../../redux/hooks";
-import { setOpenCommentsTray, setToggleModal } from "../../../../redux/slices/sideTraySlice";
+import {
+  setOpenCommentsTray,
+  setToggleModal,
+} from "../../../../redux/slices/sideTraySlice";
 import Modal from "../../../../theme/modal/customModal/CustomModal";
 import ShareRecipeModal from "../shareRecipeModal/ShareRecipeModal";
 import SaveRecipe from "../saveRecipe/SaveRecipe";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
+import { useLazyQuery } from "@apollo/client";
+import GET_DEFAULT_PORTION from "../../../../gqlLib/wiki/query/getDefaultPortion";
+import { setLoading } from "../../../../redux/slices/utilitySlice";
 
 const Center = ({
   recipeData,
@@ -31,6 +37,25 @@ const Center = ({
   const dispatch = useAppDispatch();
   const [showRecipeModal, setShowRecipeModal] = useState(true);
   const recipeDetails = recipeData;
+  const [getDefaultPortion, { loading, error }] = useLazyQuery(
+    GET_DEFAULT_PORTION,
+    {
+      fetchPolicy: "network-only",
+    }
+  );
+
+  const handleIngredientWiki = async (id: string) => {
+    dispatch(setLoading(true));
+    const { data } = await getDefaultPortion({
+      variables: { ingredientId: id },
+    });
+    if (!loading && !error) {
+      dispatch(setLoading(false));
+      const meausermentWeight = data?.getDefaultPortion;
+      router?.push(`/wiki/Ingredient/${id}/${meausermentWeight}`);
+    }
+  };
+
   const openCommentsTray = () => {
     dispatch(setOpenCommentsTray(true));
   };
@@ -62,7 +87,11 @@ const Center = ({
         <p className={styles.text}>
           {isReadMore ? text.slice(0, 300) : text},
           <span onClick={toggleReadMore} className={styles.read_or_hide}>
-            {isReadMore ? <span>&nbsp; {"Read More"}</span> : <span>&nbsp; {"Read Less"}</span>}
+            {isReadMore ? (
+              <span>&nbsp; {"Read More"}</span>
+            ) : (
+              <span>&nbsp; {"Read Less"}</span>
+            )}
           </span>
         </p>
       );
@@ -106,8 +135,14 @@ const Center = ({
         </div>
         <div className={styles.subMenu}>
           <div className={styles.alignItems}>
-            <div className={styles.recipeType}>{recipeDetails?.recipeBlendCategory?.name}</div>
-            <img src="/images/yummly-logo.png" alt="recipe_logo" className={styles.recipeLogo} />
+            <div className={styles.recipeType}>
+              {recipeDetails?.recipeBlendCategory?.name}
+            </div>
+            <img
+              src="/images/yummly-logo.png"
+              alt="recipe_logo"
+              className={styles.recipeLogo}
+            />
           </div>
           <div className={styles.alignItems}>
             <div className={styles.iconWithText}>
@@ -155,7 +190,12 @@ const Center = ({
                       }}
                     />
                     {img.image && (
-                      <Image src={img.image} alt="recipe_image" layout="fill" objectFit="contain" />
+                      <Image
+                        src={img.image}
+                        alt="recipe_image"
+                        layout="fill"
+                        objectFit="contain"
+                      />
                     )}
                   </div>
                 );
@@ -199,7 +239,9 @@ const Center = ({
             <div className={styles.count}>
               <button
                 onClick={() =>
-                  setCounter((pre) => (Number(pre) <= 1 ? Number(pre) : Number(pre) - 1))
+                  setCounter((pre) =>
+                    Number(pre) <= 1 ? Number(pre) : Number(pre) - 1
+                  )
                 }
               >
                 <MdRemove className={styles.icon} />
@@ -229,16 +271,23 @@ const Center = ({
           {recipeDetails?.ingredients ? (
             recipeDetails?.ingredients?.map((ingredient, index) => {
               return (
-                <div className={styles.singleIngredent} key={index + "ingredients_recipeDetails"}>
+                <div
+                  className={styles.singleIngredent}
+                  key={index + "ingredients_recipeDetails"}
+                >
                   <div className={styles.leftSide}>
                     <img src="/images/5-2-avocado-png-hd.png" alt="icon" />
                     <div>
                       {`${ingredient?.selectedPortion?.quantity * counter}
                       ${ingredient.selectedPortion.name} `}
                       {nutritionState &&
-                      ingredient?.ingredientId?._id === nutritionState[0].ingredientId?._id &&
+                      ingredient?.ingredientId?._id ===
+                        nutritionState[0].ingredientId?._id &&
                       singleElement === true ? (
-                        <span className={styles.leftSide__highlighted} style={{ color: "#fe5d1f" }}>
+                        <span
+                          className={styles.leftSide__highlighted}
+                          style={{ color: "#fe5d1f" }}
+                        >
                           {ingredient?.ingredientId?.ingredientName}
                         </span>
                       ) : (
@@ -249,10 +298,19 @@ const Center = ({
                     </div>
                   </div>
                   {nutritionState &&
-                  ingredient?.ingredientId?._id === nutritionState[0].ingredientId?._id &&
+                  ingredient?.ingredientId?._id ===
+                    nutritionState[0].ingredientId?._id &&
                   singleElement === true ? (
-                    <div className={styles.iconGroup} style={{ display: "flex" }}>
-                      <MdOutlineInfo className={styles.icon} />
+                    <div
+                      className={styles.iconGroup}
+                      style={{ display: "flex" }}
+                    >
+                      <MdOutlineInfo
+                        className={styles.icon}
+                        onClick={() =>
+                          handleIngredientWiki(ingredient?.ingredientId?._id)
+                        }
+                      />
 
                       <BiBarChart
                         style={{ color: "#fe5d1f" }}
@@ -267,7 +325,12 @@ const Center = ({
                     </div>
                   ) : (
                     <div className={styles.iconGroup}>
-                      <MdOutlineInfo className={styles.icon} />
+                      <MdOutlineInfo
+                        className={styles.icon}
+                        onClick={() =>
+                          handleIngredientWiki(ingredient?.ingredientId?._id)
+                        }
+                      />
 
                       <BiBarChart
                         className={styles.icon}
@@ -298,7 +361,10 @@ const Center = ({
         {recipeDetails?.recipeInstructions ? (
           recipeDetails?.recipeInstructions?.map((step, index) => {
             return (
-              <div className={styles.steps} key={index + "recipeInstruction__recipeDetails"}>
+              <div
+                className={styles.steps}
+                key={index + "recipeInstruction__recipeDetails"}
+              >
                 <span>Step {index + 1}</span>
                 <p>{step}</p>
               </div>

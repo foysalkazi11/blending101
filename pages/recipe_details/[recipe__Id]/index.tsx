@@ -12,13 +12,11 @@ const Index = () => {
   const { recipe__Id } = router.query;
   const [nutritionState, setNutritionState] = useState(null);
   const [singleElement, setsingleElement] = useState(false);
-  const [getARecipe, { loading: gettingRecipe, data: recipeData }] = useLazyQuery(
-    GET_RECIPE,
-    {
+  const [getARecipe, { loading: gettingRecipe, data: recipeData }] =
+    useLazyQuery(GET_RECIPE, {
       fetchPolicy: "network-only",
       variables: { recipeId: recipe__Id },
-    }
-  );
+    });
   useEffect(() => {
     getARecipe();
     if (recipeData) {
@@ -44,6 +42,7 @@ const Index = () => {
     getBlendNutritionBasedOnRecipe();
   };
   const recipeBasedNutrition = nutritionData?.getBlendNutritionBasedOnRecipexxx;
+  console.log(recipeBasedNutrition);
 
   return (
     <RecipeDetails

@@ -67,7 +67,7 @@ const UpdatedCustomAccordion = ({
               //@ts-ignore
               value={itm[1]?.value}
               //@ts-ignore
-              unit={itm[1]?.blendNutrientRefference.units}
+              unit={itm[1]?.blendNutrientRefference?.units}
               percentage={20 + "%"}
               counter={counter}
             />
