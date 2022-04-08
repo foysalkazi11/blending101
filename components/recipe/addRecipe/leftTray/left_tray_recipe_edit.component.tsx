@@ -185,7 +185,7 @@ const Left_tray_recipe_edit = ({ recipeData, mode }: recipeData) => {
             )}
             {toggle === 2 && (
               <div className={styles.rankings}>
-                <CalciumSearchElem />
+                {/* <CalciumSearchElem /> */}
                 {ingredients?.map(({ name, percent }, index) => {
                   return (
                     <Linearcomponent name={name} percent={percent} checkbox key={index} />

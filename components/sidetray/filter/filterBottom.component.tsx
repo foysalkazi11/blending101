@@ -8,12 +8,12 @@ import DropdownTwoComponent from "../../../theme/dropDown/dropdownTwo.component"
 import Linearcomponent from "../../../theme/linearProgress/LinearProgress.component";
 import SwitchTwoComponent from "../../../theme/switch/switchTwo.component";
 import styles from "./filter.module.scss";
-import { filterRankingList, ingredientLeafy } from "./filterRankingList";
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
-import { setLoading } from "../../../redux/slices/utilitySlice";
+import { GET_ALL_INGREDIENTS_DATA_BASED_ON_NUTRITION } from "../../../gqlLib/recipeDiscovery/query/recipeDiscovery";
 import { setAllIngredients } from "../../../redux/slices/ingredientsSlice";
 import SkeletonIngredients from "../../../theme/skeletons/skeletonIngredients/SkeletonIngredients";
+import CircularRotatingLoader from "../../../theme/loader/circularRotatingLoader.component";
 
 type FilterbottomComponentProps = {
   categories?: { title: string; val: string }[];
@@ -24,20 +24,28 @@ export default function FilterbottomComponent({
 }: FilterbottomComponentProps) {
   const [toggle, setToggle] = useState(1);
   const [dpd, setDpd] = useState({ title: "All", val: "All" });
-  const ingredients = filterRankingList;
+
   const dispatch = useAppDispatch();
   const { ingredients: ingredientsList, openFilterTray } = useAppSelector(
     (state) => state.sideTray
   );
-  const [filterIngredientByCategroyAndClass] = useLazyQuery(
-    FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS
-  );
-  // const [ingredientData, setIngredientData] = useState<any[]>([]);
   const { allIngredients } = useAppSelector((state) => state?.ingredients);
   const [searchIngredientData, setSearchIngredientData] = useState<any[]>([]);
   const [searchInput, setSearchInput] = useState("");
   const isMounted = useRef(false);
   const [loading, setLoading] = useState(false);
+  const [arrayOrderState, setArrayOrderState] = useState(null);
+  const [ascendingDescending, setascendingDescending] = useState(true);
+  const [list, setList] = useState([]);
+  const [rankingDropDownState, setRankingDropDownState] = useState(null);
+
+  const [filterIngredientByCategroyAndClass] = useLazyQuery(
+    FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS
+  );
+
+  const { data: IngredientData } = useQuery(
+    GET_ALL_INGREDIENTS_DATA_BASED_ON_NUTRITION(rankingDropDownState?.id, dpd?.val)
+  );
 
   const handleIngredientClick = (ingredient) => {
     let blendz = [];
@@ -127,9 +135,7 @@ export default function FilterbottomComponent({
       } else {
         const filter = allIngredients?.filter((item) =>
           //@ts-ignore
-          item?.ingredientName
-            ?.toLowerCase()
-            ?.includes(searchInput?.toLowerCase())
+          item?.ingredientName?.toLowerCase()?.includes(searchInput?.toLowerCase())
         );
         setSearchIngredientData(filter);
       }
@@ -146,6 +152,14 @@ export default function FilterbottomComponent({
     };
   }, []);
 
+  useEffect(() => {
+    if (!IngredientData) return;
+    let tempArray = ascendingDescending
+      ? [...IngredientData?.getAllIngredientsDataBasedOnNutrition]
+      : [...IngredientData?.getAllIngredientsDataBasedOnNutrition].reverse();
+    setArrayOrderState(tempArray);
+  }, [ascendingDescending, IngredientData]);
+
   return (
     <div className={styles.filter__bottom}>
       <SwitchTwoComponent
@@ -155,6 +169,7 @@ export default function FilterbottomComponent({
         titleTwo="Rankings"
       />
       <div className={styles.dropdown}>
+        {console.log({ dpd })}
         <DropdownTwoComponent value={dpd} list={categories} setValue={setDpd} />
       </div>
       {toggle === 1 && (
@@ -207,17 +222,36 @@ export default function FilterbottomComponent({
       )}
       {toggle === 2 && (
         <div className={styles.rankings}>
-          <CalciumSearchElem />
-          {ingredients.map(({ name, percent }, index) => {
-            return (
-              <Linearcomponent
-                name={name}
-                percent={percent}
-                checkbox
-                key={index}
-              />
-            );
-          })}
+          <CalciumSearchElem
+            ascendingDescending={ascendingDescending}
+            setascendingDescending={setascendingDescending}
+            list={list}
+            setList={setList}
+            dropDownState={rankingDropDownState}
+            setDropDownState={setRankingDropDownState}
+          />
+          {IngredientData ? (
+            arrayOrderState &&
+            arrayOrderState?.map(({ name, value, ingredientId }, index) => {
+              let maxVal =
+                IngredientData?.getAllIngredientsDataBasedOnNutrition[0]?.value;
+              const percent = Math.round((value / maxVal) * 100);
+              return (
+                percent !== 0 && (
+                  <Linearcomponent
+                    name={name}
+                    percent={percent}
+                    checkbox
+                    key={index}
+                  />
+                )
+              );
+            })
+          ) : (
+            <div>
+              <CircularRotatingLoader />
+            </div>
+          )}
         </div>
       )}
     </div>

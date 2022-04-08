@@ -1,17 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
 import React from "react";
-import RightHeader from "../header/right_header/right_header.component";
 import styles from "./rightTray.module.scss";
-import { useAppSelector, useAppDispatch } from "../../../../redux/hooks";
-import UpdatedRecursiveAccordian from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
+import { useAppSelector, useAppDispatch } from "../../redux/hooks";
+import UpdatedRecursiveAccordian from "../customRecursiveAccordian/updatedRecursiveAccordian.component";
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 import {
   setIngredientArrayForNutrition,
   setServingCounter,
-} from "../../../../redux/edit_recipe/editRecipeStates";
+} from "../../redux/edit_recipe/editRecipeStates";
 import { MdOutlineClose } from "react-icons/md";
-import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
+import CircularRotatingLoader from "../../theme/loader/circularRotatingLoader.component";
 
 interface PassingProps {
   name: string;
@@ -36,7 +35,6 @@ const RightTray = ({
 
   return (
     <div>
-      <RightHeader />
       <div className={styles.right}>
         <div className={styles.right__headerDiv}>
           <div className={styles.right__title}>Nutrition</div>
@@ -116,7 +114,7 @@ const RightTray = ({
               counter={servingCounter}
             />
           ) : (
-            <div>
+            <div style={{ marginTop: "10px" }}>
               <CircularRotatingLoader />
             </div>
           )}
