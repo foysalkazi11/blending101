@@ -18,9 +18,6 @@
   }
 }
 
-
-
-
 .header {
   display: flex;
   align-items: center;
@@ -58,7 +55,6 @@
   }
 }
 
-
 .recursiveAccordianHeading__heading {
   display: grid;
   grid-template-columns: 1fr 80px 80px;
@@ -84,10 +80,11 @@
     div {
       @extend %headingAccordian;
       aspect-ratio: 1;
-      width: 45px;
+      width: 32px;
       border-radius: 50%;
       background-color: #f1f1f1;
       position: relative;
+      cursor: pointer;
     }
   }
 }
@@ -139,6 +136,5 @@
     background-color: #bd643b;
     height: 100%;
     margin-left: auto;
-
   }
 }

@@ -15,8 +15,8 @@ interface PassingProps {
 }
 
 interface PassingData {
-  ingredient?: { name: string; percent: number }[];
-  nutrition?: { name: string; percent: number }[];
+  ingredient?: { name: string; percent: number; units: string }[];
+  nutrition?: { name: string; percent: number; units: string }[];
 }
 //state for sorting icon
 
@@ -67,16 +67,34 @@ function WikiRightComponent({ ingredient, nutrition }: PassingData) {
         <DropDown listElem={dropdownItem} />
         {/* <CalciumSearchElem /> */}
         <div className={styles.progressIndicator}>
-          {ingredient.map(({ name, percent }: PassingProps, index) => {
-            return <LinearComponent name={name} percent={percent} key={index} />;
+          {ingredient?.map(({ name, percent, units }, index) => {
+            return (
+              <LinearComponent
+                name={name}
+                percent={percent}
+                checkbox
+                key={index}
+                highestValue={percent}
+                units={units}
+              />
+            );
           })}
         </div>
       </div>
       <div className={styles.rightCardNutrition}>
         <div className={styles.rightCardHeading}>Nutrition</div>
         <div className={styles.progressIndicator}>
-          {nutrition.map(({ name, percent }: PassingProps, index) => {
-            return <LinearComponent name={name} percent={percent} key={index} />;
+          {ingredient?.map(({ name, percent, units }, index) => {
+            return (
+              <LinearComponent
+                name={name}
+                percent={percent}
+                checkbox
+                key={index}
+                highestValue={percent}
+                units={units}
+              />
+            );
           })}
         </div>
       </div>

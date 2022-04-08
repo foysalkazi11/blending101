@@ -10,9 +10,7 @@ type SlickSliderProps = {
   children: React.ReactNode;
 };
 
-const SlickSlider = ({ moreSetting = {}, children }: SlickSliderProps) => {
-
-
+const CustomSlider = ({ moreSetting = {}, children }: SlickSliderProps) => {
   const SmiplePrevArrow = (props) => {
     const { className, onClick } = props;
 
@@ -74,4 +72,4 @@ const SlickSlider = ({ moreSetting = {}, children }: SlickSliderProps) => {
   return <Slider {...finalSetting}>{children}</Slider>;
 };
 
-export default SlickSlider;
+export default CustomSlider;

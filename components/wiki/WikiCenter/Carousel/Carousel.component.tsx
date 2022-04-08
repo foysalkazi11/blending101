@@ -4,12 +4,13 @@ import Image from "next/image";
 import NavigateNextOutlinedIcon from "../../../../public/icons/navigate_next_black_36dp.svg";
 import NavigateBeforeOutlinedIcon from "../../../../public/icons/navigate_before_black_36dp.svg";
 
-function CarouselComponent() {
-  const images = [
-    { Image: "https://source.unsplash.com/1600x900/?salad" },
-    { Image: "https://source.unsplash.com/1600x900/?salad" },
-    { Image: "https://source.unsplash.com/1600x900/?salad" },
-  ];
+interface CarouselComponentProps {
+  coverImages?: string[];
+}
+function CarouselComponent({ coverImages }: CarouselComponentProps) {
+  const images = coverImages?.length
+    ? coverImages
+    : ["https://source.unsplash.com/1600x900/?salad"];
 
   const [currentState, nextState] = useState(0);
   const length = images.length;
@@ -50,7 +51,7 @@ function CarouselComponent() {
               key={index}
             >
               <Image
-                src={imageurl.Image}
+                src={imageurl}
                 alt="Picture will load soon"
                 height={"100%"}
                 width={"100%"}
