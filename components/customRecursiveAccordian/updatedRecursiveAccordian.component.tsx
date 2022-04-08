@@ -65,25 +65,6 @@ const UpdatedRecursiveAccordian = ({
           />
         );
       })}
-      {/*
-      <UpdatedCustomAccordion
-        title={"Energy"}
-        content={Energy}
-        type={"mainHeading"}
-        counter={counter}
-      />
-      <UpdatedCustomAccordion
-        title={"Vitamins"}
-        content={Vitamins}
-        type={"mainHeading"}
-        counter={counter}
-      />
-      <UpdatedCustomAccordion
-        title={"Minerals"}
-        content={Minerals}
-        type={"mainHeading"}
-        counter={counter}
-      /> */}
     </div>
   );
 };

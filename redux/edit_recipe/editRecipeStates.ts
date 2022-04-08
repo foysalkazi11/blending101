@@ -4,6 +4,7 @@ const initialState = {
   recipeName: "",
   descriptionRecipe: "",
   recipeImagesArray: [],
+  recipeFileImagesArray:[],
   selectedBlendCategory: null,
   allBlendCategories: [],
   allIngredientListBasedOnClass: [],
@@ -27,6 +28,9 @@ export const editRecipeStateSlice = createSlice({
     },
     setRecipeImagesArray: (state, action) => {
       state.recipeImagesArray = action?.payload;
+    },
+    setRecipeFileImagesArray: (state, action) => {
+      state.recipeFileImagesArray = action?.payload;
     },
 
     setSelectedBlendCategory: (state, action) => {
@@ -63,6 +67,7 @@ export const {
   setEditRecipeName,
   setDescriptionRecipe,
   setRecipeImagesArray,
+  setRecipeFileImagesArray,
   setSelectedBlendCategory,
   setAllIngredientListBasedOnClass,
   setSelectedIngredientsList,

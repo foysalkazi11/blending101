@@ -12,7 +12,7 @@ const Index = () => {
   const { recipe__Id } = router.query;
   const [nutritionState, setNutritionState] = useState(null);
   const [singleElement, setsingleElement] = useState(false);
-  const [getARecipe, { loading: gettingRecipe, data: recipeData }] = useLazyQuery(
+  const [getARecipe, { data: recipeData }] = useLazyQuery(
     GET_RECIPE,
     {
       fetchPolicy: "network-only",

@@ -21,20 +21,20 @@ type IngredientListPorps = {
   recipeInstructions?: string[];
   allIngredients?: any[];
   adjusterFunc: any;
-  nutritionState: object;
-  setNutritionState: any;
   singleElement: boolean;
   setSingleElement: any;
+  nutritionState: object;
+  setNutritionState: any;
 };
 
 const IngredientList = ({
   recipeInstructions,
   allIngredients,
   adjusterFunc,
-  nutritionState,
-  setNutritionState,
   singleElement,
   setSingleElement,
+  nutritionState,
+  setNutritionState,
 }: IngredientListPorps) => {
   const dispatch = useAppDispatch();
 
@@ -42,6 +42,7 @@ const IngredientList = ({
   const [inputValue, setInputValue] = useState("");
   const [inputIngredientValue, setInputIngredientValue] = useState("");
   const [suggestedIngredients, setSuggestedIngredients] = useState([]);
+
   const selectedIngredientsList = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedIngredientsList
   );
@@ -55,7 +56,9 @@ const IngredientList = ({
   const recipeIngredientsOnInput = (e) => {
     setInputIngredientValue(e.target.value);
     const foundIngredient = allIngredients?.filter((elem) => {
-      return elem?.ingredientName?.toLowerCase()?.includes(inputIngredientValue?.toLowerCase());
+      return elem?.ingredientName
+        ?.toLowerCase()
+        ?.includes(inputIngredientValue?.toLowerCase());
     });
     setSuggestedIngredients(foundIngredient);
     if (e.target.value.length === 0) {
@@ -69,7 +72,9 @@ const IngredientList = ({
       if (selectedIngredientsList.length === 0) {
         modifiedArray = [...suggestedIngredients];
       } else {
-        modifiedArray = Array.from(new Set([...selectedIngredientsList, ...suggestedIngredients]));
+        modifiedArray = Array.from(
+          new Set([...selectedIngredientsList, ...suggestedIngredients])
+        );
       }
       dispatch(setSelectedIngredientsList(modifiedArray));
       setInputIngredientValue("");
@@ -85,9 +90,13 @@ const IngredientList = ({
     setSuggestedIngredients([]);
   };
 
-  const howToState = useAppSelector((state) => state?.editRecipeReducer?.recipeInstruction);
+  const howToState = useAppSelector(
+    (state) => state?.editRecipeReducer?.recipeInstruction
+  );
 
-  const servingCounter = useAppSelector((state) => state.editRecipeReducer.servingCounter);
+  const servingCounter = useAppSelector(
+    (state) => state.editRecipeReducer.servingCounter
+  );
 
   useEffect(() => {
     let howList = [];
@@ -105,7 +114,9 @@ const IngredientList = ({
       }
 
       if (selectedElementId) {
-        let elemIndex = howToState.findIndex((elem) => elem.id === selectedElementId);
+        let elemIndex = howToState.findIndex(
+          (elem) => elem.id === selectedElementId
+        );
         howList = [...howToState];
         howList[elemIndex] = { id: selectedElementId, step: inputValue };
       } else {
@@ -163,12 +174,17 @@ const IngredientList = ({
   };
 
   const handleSingleIngredient = (elem) => {
-    setNutritionState(elem);
-    setSingleElement(!singleElement);
-
-    !singleElement
-      ? dispatch(setIngredientArrayForNutrition([elem]))
-      : dispatch(setIngredientArrayForNutrition(selectedIngredientsList));
+    window.scrollTo(0, 0);
+    if (
+      //@ts-ignore
+      nutritionState?._id === elem?._id
+    ) {
+      setNutritionState(null);
+      dispatch(setIngredientArrayForNutrition(selectedIngredientsList));
+    } else {
+      setNutritionState(elem);
+      dispatch(setIngredientArrayForNutrition([elem]));
+    }
   };
 
   return (
@@ -198,7 +214,9 @@ const IngredientList = ({
               >
                 <RemoveSharpIcon />
               </div>
-              <span className={styles.servings__adjuster__score}>{servingCounter}</span>
+              <span className={styles.servings__adjuster__score}>
+                {servingCounter}
+              </span>
               <div
                 className={styles.servings__adjuster__icondiv}
                 onClick={() => {
@@ -209,8 +227,12 @@ const IngredientList = ({
               </div>
             </div>
             <div className={styles.servings__size}>
-              <span className={styles.servings__adjuster__name}>Servings Size :</span>
-              <span className={styles.servings__size__score}>{servingCounter * 16}&nbsp;oz</span>
+              <span className={styles.servings__adjuster__name}>
+                Servings Size :
+              </span>
+              <span className={styles.servings__size__score}>
+                {Math.round(16 / servingCounter)}&nbsp;oz
+              </span>
             </div>
             <div className={styles.servings__units}>
               <div className={styles.servings__units__active}>
@@ -221,7 +243,9 @@ const IngredientList = ({
           </div>
         </div>
         <div className={styles.ingredients}>
-          <DragDropContext onDragEnd={(result) => handleOnDragEnd(result, "ingredients")}>
+          <DragDropContext
+            onDragEnd={(result) => handleOnDragEnd(result, "ingredients")}
+          >
             <Droppable droppableId="draggableIngredientList">
               {(provided) => (
                 <ul {...provided.droppableProps} ref={provided.innerRef}>
@@ -243,7 +267,9 @@ const IngredientList = ({
                                 className={styles.ingredients__drag}
                                 {...provided.dragHandleProps}
                               >
-                                <DragIndicatorIcon className={styles.ingredients__drag} />
+                                <DragIndicatorIcon
+                                  className={styles.ingredients__drag}
+                                />
                               </div>
                               {elem.featuredImage !== null ? (
                                 <div className={styles.ingredients__icons}>
@@ -267,33 +293,57 @@ const IngredientList = ({
                               {/* to create ingredients lists  */}
                               <div className={styles.ingredients__text}>
                                 <span>
-                                  {elem.portions[0].meausermentWeight === "Quantity not specified"
+                                  {elem.portions[0].meausermentWeight ===
+                                  "Quantity not specified"
                                     ? 1
                                     : // @ts-ignore
                                       Math.ceil(
                                         // @ts-ignore
                                         parseFloat(
                                           // @ts-ignore
-                                          (100 / elem?.portions[0].meausermentWeight) *
+                                          (100 /
+                                            elem?.portions[0].meausermentWeight) *
                                             servingCounter
                                         ).toFixed(1)
                                       )}
                                   &nbsp;
                                 </span>
                                 <span>
-                                  {elem.portions[0].measurement === "Quantity not specified"
+                                  {elem.portions[0].measurement ===
+                                  "Quantity not specified"
                                     ? ""
                                     : elem.portions[0].measurement}
                                   &nbsp;
                                 </span>
-                                <span
-                                  className={styles.ingredients__text__highlighted}
-                                  onClick={() => {
-                                    handleSingleIngredient(elem);
-                                  }}
-                                >
-                                  {elem.ingredientName}
-                                </span>
+                                {
+                                  //@ts-ignore
+                                  elem._id === nutritionState?._id ? (
+                                    <span
+                                      className={
+                                        styles.ingredients__text__highlighted
+                                      }
+                                      onClick={() => {
+                                        setSingleElement(!singleElement);
+                                        handleSingleIngredient(elem);
+                                      }}
+                                      style={{ color: "#fe5d1f" }}
+                                    >
+                                      {elem.ingredientName}
+                                    </span>
+                                  ) : (
+                                    <span
+                                      className={
+                                        styles.ingredients__text__highlighted
+                                      }
+                                      onClick={() => {
+                                        handleSingleIngredient(elem);
+                                        setSingleElement(true);
+                                      }}
+                                    >
+                                      {elem.ingredientName}
+                                    </span>
+                                  )
+                                }
                               </div>
                               <span
                                 className={styles.ingredients__edit}
@@ -414,7 +464,11 @@ const IngredientList = ({
                   {howToState ? (
                     howToState?.map((elem, index) => {
                       return (
-                        <Draggable key={elem.step} draggableId={elem.step} index={index}>
+                        <Draggable
+                          key={elem.step}
+                          draggableId={elem.step}
+                          index={index}
+                        >
                           {(provided) => (
                             <li
                               className={styles.how__to__steps__li}
@@ -424,7 +478,9 @@ const IngredientList = ({
                               {...provided.dragHandleProps}
                             >
                               <div className={styles.how__to__steps__drag}>
-                                <DragIndicatorIcon className={styles.how__to__steps__drag} />
+                                <DragIndicatorIcon
+                                  className={styles.how__to__steps__drag}
+                                />
                               </div>
                               {elem.step}
                               <span
@@ -437,7 +493,9 @@ const IngredientList = ({
                                 className={styles.how__to__steps__li__bin}
                                 onClick={() => removeStep(elem.id)}
                               >
-                                <div className={styles.how__to__steps__li__bin__imgDiv}>
+                                <div
+                                  className={styles.how__to__steps__li__bin__imgDiv}
+                                >
                                   <Image
                                     src={"/icons/noun_Delete_1447966.svg"}
                                     alt=""
@@ -456,7 +514,7 @@ const IngredientList = ({
                       <CircularRotatingLoader />
                     </div>
                   )}
-                  {provided.placeholder}
+                  <div style={{ listStyle: "none" }}>{provided.placeholder}</div>
                 </ol>
               )}
             </Droppable>
