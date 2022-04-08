@@ -114,8 +114,9 @@
   display: grid;
   grid-template-columns: 1fr 80px;
   gap: 10px;
-  border: none;
   border-bottom: 1px solid #dbdbdb;
+
+
 
   @include responsive(0px, 990px) {
     grid-template-columns: 1fr 80px;

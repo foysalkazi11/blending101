@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import AContainer from "../../../containers/A.container";
 import styles from "./EditRecipe.module.scss";
 import Center_header from "./header/centerHeader/Center_header.component";
-import RightTray from "./rightTray/rightTray.component";
+import RightTray from "../../rightTray/rightTray.component";
 import Left_tray_recipe_edit from "./leftTray/left_tray_recipe_edit.component";
 import Center_Elements from "./recipe_elements/centerElements.component";
 import IngredientList from "./recipe_elements/ingredientList/ingredientList&Howto.component";
@@ -11,6 +11,8 @@ import Image from "next/image";
 import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setServingCounter } from "../../../redux/edit_recipe/editRecipeStates";
+import NutritionTrayComponent from "../../nutritionTrayComponent/nutritionTrayComponent.component";
+import RightHeader from "./header/right_header/right_header.component";
 
 interface editRecipe {
   recipeName: string;
@@ -104,21 +106,25 @@ const EditRecipePage = ({
           <IngredientList
             adjusterFunc={adjusterFunc}
             allIngredients={allIngredients}
-            nutritionState={nutritionState}
-            setNutritionState={setNutritionState}
             recipeInstructions={recipeInstructions}
             setSingleElement={setSingleElement}
             singleElement={singleElement}
+            nutritionState={nutritionState}
+            setNutritionState={setNutritionState}
           />
         </div>
         <div className={styles.right__main}>
+          <RightHeader />
           <RightTray
             nutritionTrayData={nutritionTrayData}
             adjusterFunc={adjusterFunc}
-            nutritionState={nutritionState}
             singleElement={singleElement}
             setSingleElement={setSingleElement}
+            nutritionState={nutritionState}
+            setNutritionState={setNutritionState}
           />
+
+          {/* <NutritionTrayComponent /> */}
         </div>
       </div>
       <div className={styles.footerMainDiv}>

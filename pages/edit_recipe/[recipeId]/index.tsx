@@ -14,6 +14,7 @@ import {
   setDescriptionRecipe,
   setEditRecipeName,
   setIngredientArrayForNutrition,
+  setRecipeFileImagesArray,
   setRecipeImagesArray,
   setSelectedIngredientsList,
 } from "../../../redux/edit_recipe/editRecipeStates";
@@ -29,11 +30,13 @@ const EditRecipeComponent = () => {
   const [isFetching, setIsFetching] = useState(null);
 
   const handleSubmitData = async (images) => {
+    console.log({ images });
     dispatch(setLoading(true));
     let res: any;
     try {
       if (images?.length) {
         res = await imageUploadS3(images);
+        console.log({ res });
       }
       dispatch(setLoading(false));
     } catch (error) {
@@ -51,12 +54,21 @@ const EditRecipeComponent = () => {
   const ingredientArrayForNutrition = useAppSelector(
     (state) => state?.editRecipeReducer?.ingredientArrayForNutrition
   );
-  const recipeInstruction = useAppSelector((state) => state?.editRecipeReducer?.recipeInstruction);
-  const recipeDescription = useAppSelector((state) => state?.editRecipeReducer?.descriptionRecipe);
+  const recipeInstruction = useAppSelector(
+    (state) => state?.editRecipeReducer?.recipeInstruction
+  );
+  const recipeDescription = useAppSelector(
+    (state) => state?.editRecipeReducer?.descriptionRecipe
+  );
   const selectedBLendCategory = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedBlendCategory
   );
-  const imagesArray = useAppSelector((state) => state.editRecipeReducer.recipeImagesArray);
+  const imagesArray = useAppSelector(
+    (state) => state.editRecipeReducer.recipeImagesArray
+  );
+  const recipeFileImagesArray = useAppSelector(
+    (state) => state.editRecipeReducer.recipeFileImagesArray
+  );
   const { data: classData } = useQuery(INGREDIENTS_BY_CATEGORY_AND_CLASS, {
     variables: { classType: "All" },
   });
@@ -65,8 +77,15 @@ const EditRecipeComponent = () => {
     variables: { recipeId: recipeId },
   });
   const { data: allBlendCategory } = useQuery(BLEND_CATEGORY);
-  const { data: nutritionData } = useQuery(GET_RECIPE_NUTRITION(ingredientArrayForNutrition));
-  const [classBasedData, recipeBasedData, allBlendBasedCategory, recipeBasedNutrition] = [
+  const { data: nutritionData } = useQuery(
+    GET_RECIPE_NUTRITION(ingredientArrayForNutrition)
+  );
+  const [
+    classBasedData,
+    recipeBasedData,
+    allBlendBasedCategory,
+    recipeBasedNutrition,
+  ] = [
     classData?.filterIngredientByCategoryAndClass,
     recipeData?.getARecipe,
     allBlendCategory?.getAllCategories,
@@ -103,12 +122,13 @@ const EditRecipeComponent = () => {
 
   const editARecipeFunction = async () => {
     setIsFetching(true);
-    let blobImageArray = imagesArray?.filter((elem) => elem.__typename == "blobType");
-    let urlImageArray = imagesArray?.filter((elem) => elem.__typename == "ImageType");
+    let urlImageArray = imagesArray?.filter(
+      (elem) => elem.__typename == "ImageType"
+    );
     let updatedImageArray = [];
 
-    if (blobImageArray.length > 0) {
-      let imageUrlArray = await handleSubmitData(blobImageArray);
+    if (recipeFileImagesArray.length > 0) {
+      let imageUrlArray = await handleSubmitData(recipeFileImagesArray);
 
       imageUrlArray?.forEach((elem) => {
         updatedImageArray = [
@@ -124,14 +144,14 @@ const EditRecipeComponent = () => {
     dispatch(setRecipeImagesArray([...urlImageArray, ...updatedImageArray]));
     await editARecipe();
     reactToastifyNotification("info", "Recipe Updated");
+    dispatch(setRecipeFileImagesArray([]));
     setIsFetching(false);
   };
 
   useEffect(() => {
     dispatch(setIngredientArrayForNutrition(selectedIngredientsList));
-
   }, [selectedIngredientsList]);
-
+  recipeBasedNutrition && console.log(JSON.parse(recipeBasedNutrition))
   return (
     <EditRecipePage
       recipeName={recipeName}

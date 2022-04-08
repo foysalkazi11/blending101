@@ -6,7 +6,6 @@ import { MdOutlineClose } from "react-icons/md";
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
 
-
 interface PassingProps {
   name: string;
   percent: number;
@@ -21,7 +20,6 @@ const RightSide = ({
   singleElement,
   adjusterFunc,
 }) => {
-
   return (
     <div>
       <div className={styles.header}>
@@ -56,9 +54,13 @@ const RightSide = ({
             </div>
             <div className={styles.right__counterTray__serving}>
               <div>servings</div>
-              <div className={styles.right__counterTray__serving__num}>{counter * 16} oz</div>
+              <div className={styles.right__counterTray__serving__num}>
+                {Math.round(16 / counter)} oz
+              </div>
             </div>
-            <div className={styles.right__counterTray__servingsize}>serving size</div>
+            <div className={styles.right__counterTray__servingsize}>
+              serving size
+            </div>
           </div>
           <div className={styles.content__heading__nutrition}>
             {singleElement === true ? (
@@ -83,7 +85,10 @@ const RightSide = ({
         </div>
         <div className={styles.ingredientsDetails}>
           {nutritionData ? (
-            <UpdatedRecursiveAccordian dataObject={nutritionData} counter={counter} />
+            <UpdatedRecursiveAccordian
+              dataObject={nutritionData}
+              counter={counter}
+            />
           ) : (
             <div style={{ marginTop: "30px" }}>
               <CircularRotatingLoader />

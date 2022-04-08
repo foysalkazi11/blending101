@@ -65,12 +65,10 @@ function WikiRightComponent({ ingredient, nutrition }: PassingData) {
       <div className={styles.rightCard}>
         <div className={styles.rightCardHeading}>Ingredients</div>
         <DropDown listElem={dropdownItem} />
-        <CalciumSearchElem />
+        {/* <CalciumSearchElem /> */}
         <div className={styles.progressIndicator}>
           {ingredient.map(({ name, percent }: PassingProps, index) => {
-            return (
-              <LinearComponent name={name} percent={percent} key={index} />
-            );
+            return <LinearComponent name={name} percent={percent} key={index} />;
           })}
         </div>
       </div>
@@ -78,9 +76,7 @@ function WikiRightComponent({ ingredient, nutrition }: PassingData) {
         <div className={styles.rightCardHeading}>Nutrition</div>
         <div className={styles.progressIndicator}>
           {nutrition.map(({ name, percent }: PassingProps, index) => {
-            return (
-              <LinearComponent name={name} percent={percent} key={index} />
-            );
+            return <LinearComponent name={name} percent={percent} key={index} />;
           })}
         </div>
       </div>

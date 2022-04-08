@@ -1,3 +1,5 @@
+$slider-height:220px;
+
 .header {
   display: flex;
   align-items: center;
@@ -147,7 +149,7 @@
 
   .imageBox {
     width: 100%;
-    min-height: 220px;
+    min-height: $slider-height;
     position: relative;
     aspect-ratio: 2.5;
     border-radius: 15px;
@@ -162,12 +164,20 @@
       color: #5f9c1e;
     }
 
+    &__loader {
+      min-height: $slider-height !important;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
     .imageBlurBox {
       height: 100%;
       width: 100%;
       background-size: cover;
       filter: blur(5px);
       // position: absolute;
+
     }
 
     img {
@@ -513,7 +523,7 @@
 
       &__highlighted {
         &:hover {
-          color:#fe5d1f;
+          color: #fe5d1f;
           text-decoration: underline;
           cursor: pointer;
         }

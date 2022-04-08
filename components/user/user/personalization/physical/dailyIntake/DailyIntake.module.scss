@@ -1,3 +1,18 @@
+%commonGrid__Accordian {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+
+  padding: 10px;
+}
+
+.centerElement {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .dailyIntakeContainer {
   border: 1px solid #dfdfdf;
   min-height: 500px;
@@ -16,4 +31,20 @@
   align-items: center;
   line-height: 1.125rem;
   font-weight: 400;
+}
+
+.mainContentDiv {
+  @extend %commonGrid__Accordian;
+  grid-template-rows: repeat(3, 30px);
+  gap: 14px;
+
+  &__accordian {
+    @extend %commonGrid__Accordian;
+    gap: 14px;
+    div{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
 }

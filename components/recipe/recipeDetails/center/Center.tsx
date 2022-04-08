@@ -202,7 +202,7 @@ const Center = ({
               })}
             </SlickSlider>
           ) : (
-            <div style={{ margin: "30px 0px" }}>
+            <div className={styles.imageBox__loader}>
               <CircularRotatingLoader />
             </div>
           )}
@@ -260,7 +260,7 @@ const Center = ({
           </div>
           <div className={styles.size}>
             <p>serving Size : </p>
-            <span>16 0z</span>
+            <span>{Math.round(16 / counter)} 0z</span>
           </div>
           <div className={styles.usMatric}>
             <span>US</span>
@@ -320,7 +320,6 @@ const Center = ({
                           setNutritionState([ingredient]);
                         }}
                       />
-
                       <BsCartPlus className={styles.icon} />
                     </div>
                   ) : (
@@ -335,6 +334,7 @@ const Center = ({
                       <BiBarChart
                         className={styles.icon}
                         onClick={() => {
+                          window.scrollTo(0, 0);
                           setsingleElement(true);
                           setNutritionState([ingredient]);
                         }}
