@@ -12,6 +12,8 @@ import { setLoading } from "../../redux/slices/utilitySlice";
 import notification from "../utility/reactToastifyNotification";
 import RightSide from "../recipe/recipeDetails/rightSide/RightSide";
 
+const placeHolderImage = ["/images/no-image-available.webp"];
+
 function WikiComponent() {
   const router = useRouter();
   const { params = [] } = router?.query;
@@ -90,6 +92,7 @@ function WikiComponent() {
   };
   //@ts-ignore
   const data = dataObj[type];
+  console.log(data);
 
   return (
     <AContainer>
@@ -98,44 +101,32 @@ function WikiComponent() {
           author={data?.publishedBy}
           body={data?.bodies[0]}
           categroy={data?.category}
-          coverImages={data?.wikiCoverImages}
+          coverImages={
+            data?.wikiCoverImages.length
+              ? data?.wikiCoverImages
+              : placeHolderImage
+          }
           heading={`About ${data?.type}`}
           name={data?.wikiTitle}
         />
-        {type === "Ingredient" ? (
-          <RightSide
-            nutritionData={data?.nutrients && JSON.parse(data?.nutrients)}
-            counter={counter}
-            counterHandler={counterHandler}
-            nutritionState={nutritionState}
-            setsingleElement={setsingleElement}
-            singleElement={singleElement}
-            adjusterFunc={adjusterFunc}
-          />
-        ) : (
-          <WikiRightComponent
-            ingredient={[
-              { name: "Ginger", percent: 109, units: "kj" },
-              { name: "Turmeric", percent: 95, units: "kj" },
-              { name: "Chia Seeds", percent: 90, units: "kj" },
-              { name: "Broth", percent: 80, units: "kj" },
-              { name: "Sweet Potatoes", percent: 75, units: "kj" },
-              { name: "Winter Squash", percent: 60, units: "kj" },
-              { name: "Mint", percent: 55, units: "kj" },
-              { name: "Pineapple", percent: 40, units: "kj" },
-              { name: "Coconut Oil", percent: 35, units: "kj" },
-            ]}
-            nutrition={[
-              { name: "Vitamin A", percent: 100, units: "kj" },
-              { name: "Vitexin", percent: 90, units: "kj" },
-              { name: "Vitamin D", percent: 87, units: "kj" },
-              { name: "Iron", percent: 69, units: "kj" },
-              { name: "Betaxanthins", percent: 50, units: "kj" },
-              { name: "Calcium", percent: 35, units: "kj" },
-              { name: "Quercetiin", percent: 20, units: "kj" },
-            ]}
-          />
-        )}
+        <div style={{ margin: "0 10px" }}>
+          {type === "Ingredient" ? (
+            <RightSide
+              nutritionData={data?.nutrients && JSON.parse(data?.nutrients)}
+              counter={counter}
+              counterHandler={counterHandler}
+              nutritionState={nutritionState}
+              setsingleElement={setsingleElement}
+              singleElement={singleElement}
+              adjusterFunc={adjusterFunc}
+            />
+          ) : (
+            <WikiRightComponent
+              ingredient={data?.ingredients}
+              wikiId={wikiId}
+            />
+          )}
+        </div>
       </div>
     </AContainer>
   );

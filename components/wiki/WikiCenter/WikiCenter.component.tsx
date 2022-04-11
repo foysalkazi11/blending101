@@ -9,37 +9,6 @@ import CustomSlider from "../../../theme/carousel/carousel.component";
 import perser from "html-react-parser";
 // import IngredientIconSvg from "./Assets/cardiogram.svg"
 
-const TitledContentData = [
-  {
-    Icon: "/icons/basket.svg",
-    Title: "Ingredients",
-    Content: `Contrary to popular belief, Lorem Ipsum is not simply random text.
-  It has roots in a piece of classical Latin literature from 45 BC,
-  making it over 2000 years old. Richard McClintock, a Latin professor
-  at Hampden-Sydney College in Virginia, looked up one of the more
-  obscure Latin words, consectetur, from a Lorem Ipsum passage, and
-  going through the cites of the word in classical literature,
-  discovered the undoubtable source. Lorem Ipsum comes from sections
-  by Cicero are also reproduced in their exact original form,
-  accompanied by English versions from the 1914 translation by H.
-  Rackham. asfhajffuu faakl`,
-  },
-  {
-    Icon: "/icons/cardiogram.svg",
-    Title: "Health",
-    Content: `Contrary to popular belief, Lorem Ipsum is not simply random text.
-  It has roots in a piece of classical Latin literature from 45 BC,
-  making it over 2000 years old. Richard McClintock, a Latin professor
-  at Hampden-Sydney College in Virginia, looked up one of the more
-  obscure Latin words, consectetur, from a Lorem Ipsum passage, and
-  going through the cites of the word in classical literature,
-  discovered the undoubtable source. Lorem Ipsum comes from sections
-  by Cicero are also reproduced in their exact original form,
-  accompanied by English versions from the 1914 translation by H.
-  Rackham. asfhajffuu faakl`,
-  },
-];
-
 //read more read less functionality
 const ReadMore = ({ children }) => {
   const text = children.toString();
@@ -78,8 +47,6 @@ function WikiCenterComponent({
   heading = "About Heading",
   name = "Name",
 }: WikiCenterComponentProps) {
-  // const { observe, width } = useDimensions<HTMLDivElement | null>();
-
   return (
     <div className={styles.centerMain}>
       <div className={styles.recipeHeadingTopSection}>
@@ -108,7 +75,7 @@ function WikiCenterComponent({
         <div className={styles.blendingRecipeTopOptions}>
           <div className={styles.blendingTopLeft}>
             <div className={styles.tagItemBx}>
-              <a className={styles.recipeTag} href="javascript:void(0)">
+              <a className={styles.recipeTag} href="#">
                 {categroy}
               </a>
             </div>
@@ -123,7 +90,7 @@ function WikiCenterComponent({
           <div className={styles.blendingTopRight}>
             <ul className={styles.recipeOptionsBtm}>
               <li>
-                <a className={styles.bookmarkBtn} href="javascript:void(0)">
+                <a className={styles.bookmarkBtn} href="#">
                   <div className={styles.shareIcon}>
                     <Image
                       src={"/icons/share-alt-light-grey.svg"}
@@ -168,52 +135,12 @@ function WikiCenterComponent({
               })
             : null}
         </CustomSlider>
+      </div>
+      {body ? (
         <div className={styles.bodyContainer}>
           {body && perser(JSON.parse(body))}
         </div>
-
-        {/* <CarouselComponent coverImages={coverImages} /> */}
-        {/* <div className={styles.healthRiskRankScore}>240</div>
-        <div className={styles.healthRiskRankTitle}>Health Risk Rank</div>
-        <ReadMore>
-          Contrary to popular belief, Lorem Ipsum is not simply random text. It
-          has roots in a piece of classical Latin literature from 45 BC, making
-          it over 2000 years old. Richard McClintock, a Latin professor at
-          Hampden-Sydney College in Virginia, looked up one of the more obscure
-          Latin words, consectetur, from a Lorem Ipsum passage, and going
-          through the cites of the word in classical literature, discovered the
-          undoubtable source. Lorem Ipsum comes from sections by Cicero are also
-          reproduced in their exact original form, accompanied by English
-          versions from the 1914 translation by H. Rackham. asfhajffuu faakl
-        </ReadMore> */}
-      </div>
-
-      {/* <div className={styles.content}>
-        <div className={styles.textContentDiv}>
-          {TitledContentData.map(({ Icon, Title, Content }, index) => {
-            return (
-              <section className={styles.contentSection} key={index}>
-                <div className={styles.contentTitle}>
-                  <div className={styles.imgdiv}>
-                    <Image
-                      src={Icon}
-                      alt="Picture will load soon"
-                      height={"100%"}
-                      width={"100%"}
-                      // sizes={width !== undefined ? `${Math.round(width)}px` : "100vw"}
-                      layout="responsive"
-                      objectFit="contain"
-                      className={styles.image}
-                    />
-                  </div>
-                  {Title}
-                </div>
-                <ReadMore>{Content}</ReadMore>
-              </section>
-            );
-          })}
-        </div>
-      </div> */}
+      ) : null}
     </div>
   );
 }
