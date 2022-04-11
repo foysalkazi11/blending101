@@ -29,6 +29,8 @@ const UpdatedCustomAccordion = ({
                 unit={itm[1]?.Unit || " "}
                 percentage="20%"
                 counter={counter}
+                /* @ts-ignore */
+                nutritionId={itm[1]?.blendNutrientRefference?._id}
               >
                 {
                   //@ts-ignore
@@ -49,6 +51,8 @@ const UpdatedCustomAccordion = ({
                 unit={itm[1]?.blendNutrientRefference?.units}
                 percentage={20 + "%"}
                 counter={counter}
+                /* @ts-ignore */
+                nutritionId={itm[1]?.blendNutrientRefference?._id}
               >
                 {
                   //@ts-ignore
@@ -72,6 +76,8 @@ const UpdatedCustomAccordion = ({
                 percentage={20 + "%"}
                 counter={counter}
                 lastElement={true}
+                /* @ts-ignore */
+                nutritionId={itm[1]?.blendNutrientRefference?._id}
               />
             </div>
           );
@@ -87,6 +93,8 @@ const UpdatedCustomAccordion = ({
                 unit={itm[1]?.blendNutrientRefference?.units}
                 percentage={20 + "%"}
                 counter={counter}
+                /* @ts-ignore */
+                nutritionId={itm[1]?.blendNutrientRefference?._id}
               />
             </div>
           );

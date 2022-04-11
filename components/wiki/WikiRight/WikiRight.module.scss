@@ -1,10 +1,6 @@
 .right {
   background-color: transparent;
-  // padding-left: 5%;
-  // margin-left: 20px;
-  // width: 26%;
-  // margin-right: 5%;
-  min-width: 300px;
+
   transition: all 500ms ease;
 }
 
@@ -31,7 +27,9 @@
   background-color: white;
   border-radius: 14px;
   margin-top: 15px;
-  padding-bottom: 20px;
+  padding: 20px 16px;
+  -webkit-box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;
+  box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;
 }
 
 .rightCardNutrition {
@@ -49,12 +47,12 @@
   // padding-left: 20px;
   font-family: inherit;
   // background-color: yellow;
-  padding: 15px 15px 0;
+  padding-top: 16px;
 }
 
-.progressIndicator {
-  padding: 0px 18px;
-}
+// .progressIndicator {
+//   padding: 0px 18px;
+// }
 
 // breakpoints
 @media screen and (max-width: 980px) {
