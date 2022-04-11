@@ -1,7 +1,9 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 const GET_BLEND_NUTRITION_BASED_IN_INGREDIENTS_WIKI = gql`
-  query Query($ingredientsInfo: [BlendIngredientInfo!]!) {
+  query GetBlendNutritionBasedIngredientsWiki(
+    $ingredientsInfo: [BlendIngredientInfo!]!
+  ) {
     getBlendNutritionBasedIngredientsWiki(ingredientsInfo: $ingredientsInfo) {
       wikiTitle
       wikiDescription

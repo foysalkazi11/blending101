@@ -1,7 +1,7 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 const GET_ALL_INGREDIENTS_BASED_ON_NURTITION = gql`
-  query Query($data: GetIngredientsFromNutrition!) {
+  query GetAllIngredientsBasedOnNutrition($data: GetIngredientsFromNutrition!) {
     getAllIngredientsBasedOnNutrition(data: $data) {
       wikiTitle
       wikiDescription
