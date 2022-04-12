@@ -1,13 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState } from "react";
 import styles from "./wikiCenter.module.scss";
-import CarouselComponent from "./Carousel/Carousel.component";
 import Image from "next/image";
 import CancelIcon from "../../../public/icons/cancel_black_36dp.svg";
 import FiberManualRecordIcon from "../../../public/icons/fiber_manual_record_black_36dp.svg";
 import CustomSlider from "../../../theme/carousel/carousel.component";
 import perser from "html-react-parser";
-// import IngredientIconSvg from "./Assets/cardiogram.svg"
 
 //read more read less functionality
 const ReadMore = ({ children }) => {
@@ -58,7 +56,6 @@ function WikiCenterComponent({
                 alt="icon"
                 height={"100%"}
                 width={"100%"}
-                // sizes={width !== undefined ? `${Math.round(width)}px` : "100vw"}
                 layout="responsive"
                 objectFit="cover"
               />
@@ -97,7 +94,6 @@ function WikiCenterComponent({
                       alt="Picture will load soon"
                       height={"10%"}
                       width={"10%"}
-                      // sizes={width !== undefined ? `${Math.round(width)}px` : "100vw"}
                       layout="responsive"
                       objectFit="contain"
                     />
@@ -113,7 +109,6 @@ function WikiCenterComponent({
                       alt="Picture will load soon"
                       height={"100%"}
                       width={"100%"}
-                      // sizes={width !== undefined ? `${Math.round(width)}px` : "100vw"}
                       layout="responsive"
                       objectFit="contain"
                     />
