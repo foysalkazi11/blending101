@@ -92,7 +92,6 @@ function WikiComponent() {
   };
   //@ts-ignore
   const data = dataObj[type];
-  console.log(data);
 
   return (
     <AContainer>

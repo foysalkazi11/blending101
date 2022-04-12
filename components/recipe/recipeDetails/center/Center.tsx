@@ -20,9 +20,7 @@ import SaveRecipe from "../saveRecipe/SaveRecipe";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
-import { useLazyQuery } from "@apollo/client";
-import GET_DEFAULT_PORTION from "../../../../gqlLib/wiki/query/getDefaultPortion";
-import { setLoading } from "../../../../redux/slices/utilitySlice";
+import useGetDefaultPortionOfnutration from "../../../../customHooks/useGetDefaultPortionOfNutration";
 
 const Center = ({
   recipeData,
@@ -37,23 +35,12 @@ const Center = ({
   const dispatch = useAppDispatch();
   const [showRecipeModal, setShowRecipeModal] = useState(true);
   const recipeDetails = recipeData;
-  const [getDefaultPortion, { loading, error }] = useLazyQuery(
-    GET_DEFAULT_PORTION,
-    {
-      fetchPolicy: "network-only",
-    }
-  );
+  const getDefaultPortion = useGetDefaultPortionOfnutration();
 
   const handleIngredientWiki = async (id: string) => {
-    dispatch(setLoading(true));
-    const { data } = await getDefaultPortion({
-      variables: { ingredientId: id },
-    });
-    if (!loading && !error) {
-      dispatch(setLoading(false));
-      const meausermentWeight = data?.getDefaultPortion;
-      router?.push(`/wiki/Ingredient/${id}/${meausermentWeight}`);
-    }
+    await (
+      await getDefaultPortion
+    )(id);
   };
 
   const openCommentsTray = () => {
