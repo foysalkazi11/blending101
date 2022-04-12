@@ -105,7 +105,6 @@ function WikiRightComponent({
               alt="Picture will load soon"
               height={"100%"}
               width={"100%"}
-              // sizes={width !== undefined ? `${Math.round(width)}px` : "100vw"}
               layout="responsive"
               objectFit="contain"
             />
@@ -126,7 +125,7 @@ function WikiRightComponent({
         <div className={styles.progressIndicator}>
           {loading ? (
             <IngredientPanelSkeleton />
-          ) : (
+          ) : ingredientData?.length ? (
             ingredientData?.map(
               (
                 { name, value, units, ingredientId }: ingredientState,
@@ -145,6 +144,8 @@ function WikiRightComponent({
                 );
               }
             )
+          ) : (
+            <p className={styles.noIngredient}>No ingredient found</p>
           )}
         </div>
       </div>
