@@ -2,8 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./WikiRight.module.scss";
 import LinearComponent from "../../../theme/linearProgress/LinearProgress.component";
 import Image from "next/image";
-import DropDown from "../../../theme/dropDown/DropDown.component";
-import CalciumSearchElem from "../../../theme/calcium/calcium.component";
 import { useLazyQuery } from "@apollo/client";
 import GET_ALL_INGREDIENTS_BASED_ON_NURTITION from "../../../gqlLib/wiki/query/getAllIngredientsBasedOnNutrition";
 import IngredientPanelSkeleton from "../../../theme/skeletons/ingredientPanelSleketon/IngredientPanelSkeleton";
@@ -24,15 +22,12 @@ const categories = [
   { label: "Liquid", value: "Liquid" },
   { label: "Tube-Squash", value: "Tube-Squash" },
 ];
-interface PassingProps {
-  name: string;
-  percent: number;
-}
 
 interface ingredientState {
   name: string;
   value: number;
   units: string;
+  ingredientId: string;
 }
 
 interface NutrientPanelProps {
@@ -40,21 +35,18 @@ interface NutrientPanelProps {
   wikiId?: string;
 }
 
-//state for sorting icon
-
 function WikiRightComponent({
   ingredient = [],
   wikiId = "",
 }: NutrientPanelProps) {
   const [dpd, setDpd] = useState("All");
-  const [ingredientData, setIngredientData] = useState([...ingredient]);
+  const [ingredientData, setIngredientData] = useState([]);
 
   const [getAllIngredientsBasedOnNutrition, { data, loading, error }] =
     useLazyQuery(GET_ALL_INGREDIENTS_BASED_ON_NURTITION, {
       fetchPolicy: "network-only",
     });
   const isMounted = useRef(false);
-  console.log(loading);
 
   const fetchData = async () => {
     try {
@@ -70,6 +62,12 @@ function WikiRightComponent({
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (ingredient?.length) {
+      setIngredientData([...ingredient]);
+    }
+  }, [ingredient]);
 
   useEffect(() => {
     if (isMounted?.current) {
@@ -124,13 +122,16 @@ function WikiRightComponent({
           style={{ marginTop: "16px", width: "100%" }}
           placeholder="Categories"
         />
-        {/* <CalciumSearchElem /> */}
+
         <div className={styles.progressIndicator}>
           {loading ? (
             <IngredientPanelSkeleton />
           ) : (
             ingredientData?.map(
-              ({ name, value, units }: ingredientState, index) => {
+              (
+                { name, value, units, ingredientId }: ingredientState,
+                index
+              ) => {
                 return (
                   <LinearComponent
                     name={name}
@@ -139,6 +140,7 @@ function WikiRightComponent({
                     units={units}
                     //@ts-ignore
                     highestValue={ingredientData[0]?.value}
+                    ingredientId={ingredientId}
                   />
                 );
               }
