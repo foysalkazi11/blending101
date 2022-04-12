@@ -70,15 +70,12 @@
 }
 
 .recipeHeadingTopSection {
-  // background-color: #7cbc39;
   margin-bottom: 15px;
   display: flex;
   justify-content: space-between;
 
   & h3 {
-    // background-color: blanchedalmond;
     width: 100%;
-    // height: 60px;
     display: flex;
     font-size: 20px;
     color: #000000;
@@ -103,10 +100,8 @@
 
 .cancleBtn {
   color: #7cbc39;
-  font-size: 35px;
   margin-right: 10px;
   cursor: pointer;
-  transform: scale(1.37);
 }
 
 .card {
@@ -189,7 +184,6 @@
 .blendingTopRight {
   align-items: center;
   width: auto;
-  // height: 60px;
 }
 
 .recipeOptionsBtm {
@@ -216,7 +210,6 @@
   padding: 1px;
   height: 100%;
   width: 17px;
-  // font-size: 20px;
 }
 
 .blshare {
@@ -331,34 +324,19 @@
 
 @media screen and (max-width: 980px) {
   .recipeHeadingTopSection {
-    // background-color:red;
     margin-top: -10px;
     margin-bottom: 10px;
-    // margin-bottom: 0px;
     display: flex;
     justify-content: space-between;
 
     & h3 {
-      // background-color: blanchedalmond;
       width: 100%;
-      // height: 60px;
       display: flex;
       font-size: 18px;
       color: #000000;
       margin: 0;
       align-items: center;
       font-weight: 400;
-    }
-  }
-
-  .cancleBtn {
-    margin-right: 0px;
-    cursor: pointer;
-    transform: scale(1.2);
-
-    svg {
-      width: 100%;
-      height: 100%;
     }
   }
 
@@ -367,7 +345,6 @@
   }
 
   .contentSection {
-    // background-color: coral;
     margin-right: 0px;
     margin-left: 0px;
     margin-bottom: 16px;
@@ -375,39 +352,23 @@
   }
 
   .contentTitle {
-    // margin-top: 20px;
     padding-top: 10px;
-    // background-color: aquamarine;
   }
 
   .carouselDiv {
-    // height: 19.7vw;
-    // height: 5%;
     width: 100%;
     background-color: #7cbc39;
   }
 }
 
 @media only screen and (min-width: 980px) and (max-width: 1290px) {
-  .cancleBtn {
-    // background-color: white;
-    // color: #7cbc39;
-    transform: scale(1.2);
-    font-size: 35px;
-    margin-right: 0px;
-    cursor: pointer;
-  }
-
   .recipeHeadingTopSection {
-    // background-color: #7cbc39;
     margin-bottom: 15px;
     display: flex;
     justify-content: space-between;
 
     & h3 {
-      // background-color: blanchedalmond;
       width: 100%;
-      // height: 60px;
       display: flex;
       font-size: 18px;
       color: #000000;
@@ -415,27 +376,5 @@
       align-items: center;
       font-weight: 400;
     }
-  }
-}
-
-@media screen and (min-width: 1290px) and (max-width: 1799px) {
-  .cancleBtn {
-    // background-color: white;
-    // color: #7cbc39;
-    transform: scale(1.2);
-    font-size: 45px;
-    margin-right: 15px;
-    cursor: pointer;
-  }
-}
-
-@media screen and (min-width: 1800px) {
-  .cancleBtn {
-    // background-color: white;
-    // color: #7cbc39;
-    transform: scale(1.37);
-    font-size: 45px;
-    margin-right: 15px;
-    cursor: pointer;
   }
 }
