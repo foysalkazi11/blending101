@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 const GET_ALL_POPULAR_RECIPES = gql`
-  query Query {
-    getAllpopularRecipes {
+  query GetAllpopularRecipes($userId: String!) {
+    getAllpopularRecipes(userId: $userId) {
       datePublished
       name
       recipeIngredients
@@ -33,6 +33,7 @@ const GET_ALL_POPULAR_RECIPES = gql`
           ingredientName
         }
       }
+      notes
     }
   }
 `;
