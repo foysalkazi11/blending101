@@ -34,7 +34,7 @@ import SkeletonRecipeDiscovery from "../skeletons/skeletonRecipeDiscovery/Skelet
 const RecipeDetails = () => {
   const router = useRouter();
   const { blends, ingredients } = useAppSelector((state) => state.sideTray);
-  const { user } = useAppSelector((state) => state?.user);
+  const { user, dbUser } = useAppSelector((state) => state?.user);
   const { lastModifiedCollection, collectionDetailsId, showAllRecipes } =
     useAppSelector((state) => state?.collections);
   const { latest, popular, recommended } = useAppSelector(
@@ -58,7 +58,9 @@ const RecipeDetails = () => {
     setLoading(true);
     try {
       if (!recommended?.length) {
-        const recommendedRecipes = await getAllRecommendedRecipes();
+        const recommendedRecipes = await getAllRecommendedRecipes({
+          variables: { userId: dbUser?._id },
+        });
         dispatch(
           setRecommended(
             recommendedRecipes?.data?.getAllrecomendedRecipes || []
@@ -67,12 +69,16 @@ const RecipeDetails = () => {
       }
 
       if (!popular?.length) {
-        const popularRecipes = await getAllPopularRecipes();
+        const popularRecipes = await getAllPopularRecipes({
+          variables: { userId: dbUser?._id },
+        });
         dispatch(setPopular(popularRecipes?.data?.getAllpopularRecipes || []));
       }
 
       if (!latest?.length) {
-        const latestRecipes = await getAllLatestRecipes();
+        const latestRecipes = await getAllLatestRecipes({
+          variables: { userId: dbUser?._id },
+        });
         dispatch(setLatest(latestRecipes?.data?.getAllLatestRecipes || []));
       }
 
@@ -84,14 +90,12 @@ const RecipeDetails = () => {
   };
 
   useEffect(() => {
-    if (user) {
+    if (dbUser?._id) {
       if (!latest?.length || !popular?.length || !recommended?.length) {
         getAllRecipes();
       }
     }
-
-
-  }, [user]);
+  }, [dbUser]);
 
   useEffect(() => {
     isMounted.current = true;
@@ -135,7 +139,7 @@ const RecipeDetails = () => {
                         const ingredient = ing?.ingredientId?.ingredientName;
                         ingredients.push(ingredient);
                       });
-                      const ing = ingredients.join(' ');
+                      const ing = ingredients.join(" ");
                       return (
                         <div
                           className={styles.slider__card}
@@ -147,12 +151,13 @@ const RecipeDetails = () => {
                             category={item.recipeBlendCategory?.name}
                             ratings={item?.averageRating}
                             noOfRatings={item?.numberOfRating}
-                            carbs={item.carbs}
-                            score={item.score}
-                            calorie={item.calorie}
+                            carbs={item?.carbs}
+                            score={item?.score}
+                            calorie={item?.calorie}
                             noOfComments={item?.numberOfRating}
                             image={item.image[0]?.image}
                             recipeId={item?._id}
+                            notes={item?.notes}
                           />
                         </div>
                       );
@@ -197,6 +202,7 @@ const RecipeDetails = () => {
                               noOfComments={item?.numberOfRating}
                               image={item.image[0]?.image}
                               recipeId={item?._id}
+                              notes={item?.notes}
                             />
                           </div>
                         );
@@ -241,6 +247,7 @@ const RecipeDetails = () => {
                               noOfComments={item?.numberOfRating}
                               image={item.image[0]?.image}
                               recipeId={item?._id}
+                              notes={item?.notes}
                             />
                           </div>
                         );

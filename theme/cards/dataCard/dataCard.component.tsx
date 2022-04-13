@@ -4,7 +4,11 @@ import styles from "./dataCard.module.scss";
 import MoreVertIcon from "../../../public/icons/more_vert_black_36dp.svg";
 import { slicedString } from "../../../services/string.service";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setOpenCollectionsTary, setOpenCommentsTray, setToggleSaveRecipeModal } from "../../../redux/slices/sideTraySlice";
+import {
+  setOpenCollectionsTary,
+  setOpenCommentsTray,
+  setToggleSaveRecipeModal,
+} from "../../../redux/slices/sideTraySlice";
 import {
   setActiveRecipeId,
   setAllRecipeWithinCollectionsId,
@@ -33,6 +37,7 @@ interface dataCardInterface {
   image: string;
   checkWithinCollection?: boolean;
   recipeId?: string;
+  notes?: number;
 }
 
 export default function DatacardComponent({
@@ -48,6 +53,7 @@ export default function DatacardComponent({
   image,
   checkWithinCollection = false,
   recipeId = "",
+  notes = 0,
 }: dataCardInterface) {
   title = title || "Triple Berry Smoothie";
   ingredients = ingredients;
@@ -63,9 +69,14 @@ export default function DatacardComponent({
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
-  const { allRecipeWithinCollectionsId } = useAppSelector((state) => state?.collections);
+  const { allRecipeWithinCollectionsId } = useAppSelector(
+    (state) => state?.collections
+  );
   const [addNewRecipeToCollection] = useMutation(ADD_NEW_RECIPE_TO_COLLECTION);
-  const [getLastModifiedCollection] = useLazyQuery(GET_LAST_MODIFIED_COLLECTION, { fetchPolicy: "no-cache" });
+  const [getLastModifiedCollection] = useLazyQuery(
+    GET_LAST_MODIFIED_COLLECTION,
+    { fetchPolicy: "no-cache" }
+  );
   const { dbUser } = useAppSelector((state) => state?.user);
 
   const handleEclipse = () => {
@@ -102,7 +113,11 @@ export default function DatacardComponent({
         })
       );
 
-      dispatch(setLastModifiedCollection(lastModified?.getLastModifieldCollection?.name));
+      dispatch(
+        setLastModifiedCollection(
+          lastModified?.getLastModifieldCollection?.name
+        )
+      );
 
       let recipesId = [];
       data?.addTolastModifiedCollection?.forEach((col) => {
@@ -132,7 +147,12 @@ export default function DatacardComponent({
     dispatch(setActiveRecipeId(id));
   };
 
-  const handleComment = (id: string, title: string, image: string, e: React.SyntheticEvent) => {
+  const handleComment = (
+    id: string,
+    title: string,
+    image: string,
+    e: React.SyntheticEvent
+  ) => {
     // HANDLE COMMENTS CLICK HERE
     e?.stopPropagation();
     dispatch(setActiveRecipeId(id));
@@ -188,6 +208,45 @@ export default function DatacardComponent({
     </div>
   );
 
+  const hangleShowCommentsAndNotesIcon = (comments: number, notes: number) => {
+    if (!comments && !notes) {
+      return (
+        <>
+          <img
+            src="/icons/no-comment.svg"
+            alt="message"
+            onClick={(e) => handleComment(recipeId, title, image, e)}
+          />{" "}
+          <span style={{ color: "#c4c4c4" }}>0</span>
+        </>
+      );
+    }
+    if (!comments) {
+      return (
+        <>
+          <img
+            src="/icons/message.svg"
+            alt="message"
+            onClick={(e) => handleComment(recipeId, title, image, e)}
+            className={`${noOfComments ? "" : styles.inActiveImg}`}
+          />{" "}
+          <span>{""}</span>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <img
+          src="/icons/message.svg"
+          alt="message"
+          onClick={(e) => handleComment(recipeId, title, image, e)}
+        />{" "}
+        {noOfComments ? <span>{noOfComments}</span> : null}
+      </>
+    );
+  };
+
   return (
     <>
       <div className={styles.datacard}>
@@ -195,7 +254,10 @@ export default function DatacardComponent({
           <div className={styles.datacard__body}>
             <div className={styles.datacard__body__top}>
               <div className={styles.datacard__body__top__heading}>
-                <h2 className={styles.title} onClick={() => router.push(`/recipe_details/${recipeId}`)}>
+                <h2
+                  className={styles.title}
+                  onClick={() => router.push(`/recipe_details/${recipeId}`)}
+                >
                   {title}
                 </h2>
               </div>
@@ -206,7 +268,10 @@ export default function DatacardComponent({
             </div>
             <div className={styles.datacard__body__middle}>
               <div className={styles.datacard__body__middle__left}>
-                <div className={styles.image} style={{ backgroundImage: `url(${image})` }}></div>
+                <div
+                  className={styles.image}
+                  style={{ backgroundImage: `url(${image})` }}
+                ></div>
               </div>
               <div className={styles.datacard__body__middle__right}>
                 <DataBody />
@@ -231,25 +296,28 @@ export default function DatacardComponent({
                 <ul>
                   <li>
                     {" "}
-                    <img src="/icons/eclipse.svg" alt="eclipse" onClick={handleEclipse} />{" "}
+                    <img
+                      src="/icons/eclipse.svg"
+                      alt="eclipse"
+                      onClick={handleEclipse}
+                    />{" "}
                   </li>
                   <li>
                     {allRecipeWithinCollectionsId?.includes(recipeId) ? (
-                      <img src="/icons/compare.svg" alt="compare" onClick={(e) => handleCompare(recipeId, e)} />
+                      <img
+                        src="/icons/compare.svg"
+                        alt="compare"
+                        onClick={(e) => handleCompare(recipeId, e)}
+                      />
                     ) : (
-                      <img src="/images/BookmarksStar.svg" alt="compare" onClick={(e) => addToCollection(recipeId, e)} />
+                      <img
+                        src="/images/BookmarksStar.svg"
+                        alt="compare"
+                        onClick={(e) => addToCollection(recipeId, e)}
+                      />
                     )}
                   </li>
-                  <li>
-                    {" "}
-                    <img
-                      src="/icons/message.svg"
-                      alt="message"
-                      onClick={(e) => handleComment(recipeId, title, image, e)}
-                      className={`${noOfComments ? "" : styles.inActiveImg}`}
-                    />{" "}
-                    {noOfComments ? <span>{noOfComments}</span> : null}
-                  </li>
+                  <li>{hangleShowCommentsAndNotesIcon(noOfComments, notes)}</li>
                 </ul>
               </div>
             </div>

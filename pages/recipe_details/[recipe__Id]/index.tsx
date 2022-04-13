@@ -6,15 +6,17 @@ import {
   GET_RECIPE,
 } from "../../../gqlLib/recipes/queries/getRecipeDetails";
 import { useRouter } from "next/router";
+import { useAppSelector } from "../../../redux/hooks";
 
 const Index = () => {
   const router = useRouter();
   const { recipe__Id } = router.query;
   const [nutritionState, setNutritionState] = useState(null);
   const [singleElement, setsingleElement] = useState(false);
+  const { dbUser } = useAppSelector((state) => state?.user);
   const [getARecipe, { data: recipeData }] = useLazyQuery(GET_RECIPE, {
     fetchPolicy: "network-only",
-    variables: { recipeId: recipe__Id },
+    variables: { recipeId: recipe__Id, userId: dbUser?._id },
   });
   useEffect(() => {
     getARecipe();

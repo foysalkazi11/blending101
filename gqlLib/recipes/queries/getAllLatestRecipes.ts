@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 const GET_ALL_LATEST_RECIPES = gql`
-  query Query {
-    getAllLatestRecipes {
+  query GetAllLatestRecipes($userId: String!) {
+    getAllLatestRecipes(userId: $userId) {
       datePublished
       name
       recipeIngredients
@@ -33,6 +33,7 @@ const GET_ALL_LATEST_RECIPES = gql`
           ingredientName
         }
       }
+      notes
     }
   }
 `;

@@ -57,6 +57,7 @@ const ShowCollectionRecipes = () => {
       const { data } = await getAllRecipesWithinCollections({
         variables: {
           userEmail: dbUser?.email,
+          userId: dbUser?._id,
         },
       });
       dispatch(
@@ -140,6 +141,7 @@ const ShowCollectionRecipes = () => {
                       noOfComments={item?.numberOfRating}
                       image={item.image[0]?.image}
                       recipeId={item?._id}
+                      notes={item?.notes}
                     />
                   </div>
                 );
@@ -167,6 +169,7 @@ const ShowCollectionRecipes = () => {
                     noOfComments={item?.numberOfRating}
                     image={item.image[0]?.image}
                     recipeId={item?._id}
+                    notes={item?.notes}
                   />
                 </div>
               );
