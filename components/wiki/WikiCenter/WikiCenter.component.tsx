@@ -8,25 +8,25 @@ import CustomSlider from "../../../theme/carousel/carousel.component";
 import perser from "html-react-parser";
 
 //read more read less functionality
-const ReadMore = ({ children }) => {
-  const text = children.toString();
-  const [isReadMore, setIsReadMore] = useState(true);
-  const toggleReadMore = () => {
-    setIsReadMore(!isReadMore);
-  };
-  return (
-    <p className={styles.text}>
-      {isReadMore ? text.slice(0, 300) : text},
-      <span onClick={toggleReadMore} className={styles.read_or_hide}>
-        {isReadMore ? (
-          <span>&nbsp; {"Read More"}</span>
-        ) : (
-          <span>&nbsp; {"Read Less"}</span>
-        )}
-      </span>
-    </p>
-  );
-};
+// const ReadMore = ({ children }) => {
+//   const text = children.toString();
+//   const [isReadMore, setIsReadMore] = useState(true);
+//   const toggleReadMore = () => {
+//     setIsReadMore(!isReadMore);
+//   };
+//   return (
+//     <p className={styles.text}>
+//       {isReadMore ? text.slice(0, 300) : text},
+//       <span onClick={toggleReadMore} className={styles.read_or_hide}>
+//         {isReadMore ? (
+//           <span>&nbsp; {"Read More"}</span>
+//         ) : (
+//           <span>&nbsp; {"Read Less"}</span>
+//         )}
+//       </span>
+//     </p>
+//   );
+// };
 
 interface WikiCenterComponentProps {
   heading?: string;
@@ -131,10 +131,8 @@ function WikiCenterComponent({
             : null}
         </CustomSlider>
       </div>
-      {body ? (
-        <div className={styles.bodyContainer}>
-          {body && perser(JSON.parse(body))}
-        </div>
+      {body && JSON.parse(body)?.length ? (
+        <div className={styles.bodyContainer}>{perser(JSON.parse(body))}</div>
       ) : null}
     </div>
   );

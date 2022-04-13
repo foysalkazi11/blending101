@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import useGetDefaultPortionOfnutration from "../../customHooks/useGetDefaultPortionOfNutration";
 import styles from "./linearProgress.module.scss";
 import LinearIndicatorcomponent from "./progress/progress.component";
@@ -19,13 +19,8 @@ const Linearcomponent = ({
   highestValue,
   ingredientId = "",
 }: Props) => {
-  const getDefaultPortion = useGetDefaultPortionOfnutration();
-
-  const handleIngredientWiki = async (id: string) => {
-    await (
-      await getDefaultPortion
-    )(id);
-  };
+  const [ingId, setIngId] = useState("");
+  useGetDefaultPortionOfnutration(ingId);
 
   return (
     <div className={styles.mainDiv}>
@@ -36,10 +31,7 @@ const Linearcomponent = ({
             <span className={styles.mark}></span>
           </span>
         ) : null}
-        <div
-          className={styles.title}
-          onClick={() => handleIngredientWiki(ingredientId)}
-        >
+        <div className={styles.title} onClick={() => setIngId(ingredientId)}>
           {name}
         </div>
         <div className={styles.score}>
