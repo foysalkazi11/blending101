@@ -19,6 +19,12 @@ type FilterbottomComponentProps = {
   categories?: { title: string; val: string }[];
 };
 
+interface ingredientState {
+  name: string;
+  value: number;
+  units: string;
+}
+
 export default function FilterbottomComponent({
   categories,
 }: FilterbottomComponentProps) {
@@ -44,7 +50,10 @@ export default function FilterbottomComponent({
   );
 
   const { data: IngredientData } = useQuery(
-    GET_ALL_INGREDIENTS_DATA_BASED_ON_NUTRITION(rankingDropDownState?.id, dpd?.val)
+    GET_ALL_INGREDIENTS_DATA_BASED_ON_NUTRITION(
+      rankingDropDownState?.id,
+      dpd?.val
+    )
   );
 
   const handleIngredientClick = (ingredient) => {
@@ -135,7 +144,9 @@ export default function FilterbottomComponent({
       } else {
         const filter = allIngredients?.filter((item) =>
           //@ts-ignore
-          item?.ingredientName?.toLowerCase()?.includes(searchInput?.toLowerCase())
+          item?.ingredientName
+            ?.toLowerCase()
+            ?.includes(searchInput?.toLowerCase())
         );
         setSearchIngredientData(filter);
       }
@@ -169,7 +180,6 @@ export default function FilterbottomComponent({
         titleTwo="Rankings"
       />
       <div className={styles.dropdown}>
-        {console.log({ dpd })}
         <DropdownTwoComponent value={dpd} list={categories} setValue={setDpd} />
       </div>
       {toggle === 1 && (
@@ -232,21 +242,24 @@ export default function FilterbottomComponent({
           />
           {IngredientData ? (
             arrayOrderState &&
-            arrayOrderState?.map(({ name, value, ingredientId }, index) => {
-              let maxVal =
-                IngredientData?.getAllIngredientsDataBasedOnNutrition[0]?.value;
-              const percent = Math.round((value / maxVal) * 100);
-              return (
-                percent !== 0 && (
+            arrayOrderState?.map(
+              ({ name, value, units }: ingredientState, index) => {
+                return (
                   <Linearcomponent
                     name={name}
-                    percent={percent}
-                    checkbox
+                    percent={Number(value?.toFixed(2))}
                     key={index}
+                    units={units}
+                    //@ts-ignore
+                    highestValue={
+                      ascendingDescending
+                        ? arrayOrderState[0]?.value
+                        : arrayOrderState[arrayOrderState?.length - 1]?.value
+                    }
                   />
-                )
-              );
-            })
+                );
+              }
+            )
           ) : (
             <div>
               <CircularRotatingLoader />

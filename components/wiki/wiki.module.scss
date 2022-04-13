@@ -1,27 +1,31 @@
 .mainwiki {
-    background-color: #fafbf9;
-    height: 100%;
-    width: 100%;
-    padding-left: 20px;
-    padding-right: 20px;
-    max-height: auto;
-    padding-bottom: 20px;
-    padding-top: 40px;
-    display: flex;
-    margin: 0px;
-    transition: all 500ms ease;
+  background-color: #fafbf9;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 1536px;
+  padding: 40px 0px;
+  margin: 0px auto;
+  transition: all 500ms ease;
+  display: grid;
+  grid-template-columns: 75% auto;
+  grid-auto-rows: auto;
 }
 
-
-@media only screen and (max-width: 980px) {
-    .mainwiki {
-        display: block;
-    }
+@media only screen and (max-width: 1280px) {
+  .mainwiki {
+    grid-template-columns: 70% auto;
+  }
 }
 
-@media only screen and (min-width: 980px) {
-    .mainwiki {
-        padding-left: 10px;
-        padding-right: 10px;
-    }
+@media only screen and (max-width: 1024px) {
+  .mainwiki {
+    grid-template-columns: 100%;
+  }
 }
+
+// @media only screen and (min-width: 980px) {
+//   .mainwiki {
+//     padding-left: 10px;
+//     padding-right: 10px;
+//   }
+// }

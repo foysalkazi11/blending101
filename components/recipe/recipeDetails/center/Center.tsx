@@ -20,6 +20,7 @@ import SaveRecipe from "../saveRecipe/SaveRecipe";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
+import useGetDefaultPortionOfnutration from "../../../../customHooks/useGetDefaultPortionOfNutration";
 
 const Center = ({
   recipeData,
@@ -33,7 +34,10 @@ const Center = ({
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [showRecipeModal, setShowRecipeModal] = useState(true);
+  const [ingredientId, setIngredientId] = useState("");
   const recipeDetails = recipeData;
+  useGetDefaultPortionOfnutration(ingredientId);
+
   const openCommentsTray = () => {
     dispatch(setOpenCommentsTray(true));
   };
@@ -279,8 +283,16 @@ const Center = ({
                   ingredient?.ingredientId?._id ===
                     nutritionState[0].ingredientId?._id &&
                   singleElement === true ? (
-                    <div className={styles.iconGroup} style={{ display: "flex" }}>
-                      <MdOutlineInfo className={styles.icon} />
+                    <div
+                      className={styles.iconGroup}
+                      style={{ display: "flex" }}
+                    >
+                      <MdOutlineInfo
+                        className={styles.icon}
+                        onClick={() =>
+                          setIngredientId(ingredient?.ingredientId?._id)
+                        }
+                      />
 
                       <BiBarChart
                         style={{ color: "#fe5d1f" }}
@@ -294,7 +306,13 @@ const Center = ({
                     </div>
                   ) : (
                     <div className={styles.iconGroup}>
-                      <MdOutlineInfo className={styles.icon} />
+                      <MdOutlineInfo
+                        className={styles.icon}
+                        onClick={() =>
+                          setIngredientId(ingredient?.ingredientId?._id)
+                        }
+                      />
+
                       <BiBarChart
                         className={styles.icon}
                         onClick={() => {

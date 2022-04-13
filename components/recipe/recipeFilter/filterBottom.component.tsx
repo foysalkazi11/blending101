@@ -120,6 +120,7 @@ function FilterPageBottom({ blends, ingredients, filters }) {
                           noOfComments={item?.numberOfRating}
                           image={item.image[0]?.image}
                           recipeId={item?._id}
+                          notes={item?.notes}
                         />
                       </div>
                     </li>

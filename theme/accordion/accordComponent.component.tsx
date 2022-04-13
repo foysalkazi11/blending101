@@ -3,6 +3,7 @@ import { FiMinusSquare, FiPlusSquare } from "react-icons/fi";
 import { BsPlus } from "react-icons/bs";
 import { BiMinus } from "react-icons/bi";
 import styles from "./updatedAccordion.module.scss";
+import { useRouter } from "next/router";
 
 type CustomAccordionProps = {
   title: string;
@@ -17,6 +18,7 @@ type CustomAccordionProps = {
   unit?: string;
   counter?: number;
   lastElement?: boolean;
+  nutritionId?: string;
 };
 
 const valueUnitConvertor = (title, value, unit) => {
@@ -58,11 +60,16 @@ const AccordComponent = ({
   unit,
   counter,
   lastElement,
+  nutritionId = "",
 }: CustomAccordionProps) => {
   const [expanded, setExpanded] = useState<boolean>(true);
   const contentRef = useRef<HTMLDivElement>(null);
-
+  const router = useRouter();
   let valueAndUnit = valueUnitConvertor(title, value, unit);
+
+  const handleClickNutration = (id: string) => {
+    router?.push(`/wiki/Nutrient/${id}`);
+  };
   useEffect(() => {
     if (contentRef.current) {
       expanded
@@ -107,9 +114,18 @@ const AccordComponent = ({
                           : styles.accordianContent__whiteCard_conditionalSubheading
                       }
                     >
-                      <h5 className={styles.titleCopy}>{title}</h5>
+                      <h5
+                        className={styles.titleCopy}
+                        onClick={() => handleClickNutration(nutritionId)}
+                      >
+                        {title}
+                      </h5>
                       {
-                        <p className={styles.valueUnit + " " + styles.alignCenter}>
+                        <p
+                          className={
+                            styles.valueUnit + " " + styles.alignCenter
+                          }
+                        >
                           {
                             //@ts-ignore
                             parseFloat(valueAndUnit?.value * counter).toFixed(1)
@@ -133,9 +149,18 @@ const AccordComponent = ({
                           : styles.accordianContent__whiteCard_conditionalSubheading
                       }
                     >
-                      <h5 className={styles.titleCopy}>{title}</h5>
+                      <h5
+                        className={styles.titleCopy}
+                        onClick={() => handleClickNutration(nutritionId)}
+                      >
+                        {title}
+                      </h5>
                       {
-                        <p className={styles.valueUnit + " " + styles.alignCenter}>
+                        <p
+                          className={
+                            styles.valueUnit + " " + styles.alignCenter
+                          }
+                        >
                           {
                             //@ts-ignore
                             parseFloat(valueAndUnit?.value * counter).toFixed(1)

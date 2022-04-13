@@ -248,13 +248,15 @@ const Left_tray_recipe_edit = ({
             {toggle === 2 && (
               <div className={styles.rankings}>
                 {/* <CalciumSearchElem /> */}
-                {ingredients?.map(({ name, percent }, index) => {
+                {ingredients?.map(({ name, percent, units }, index) => {
                   return (
                     <Linearcomponent
                       name={name}
                       percent={percent}
                       checkbox
                       key={index}
+                      highestValue={percent}
+                      units={units}
                     />
                   );
                 })}

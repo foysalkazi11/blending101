@@ -83,9 +83,9 @@ export let ingredientLeafy = [
 ];
 
 export const filterRankingList = [
-  { name: "Mustard Greens", percent: 103 },
-  { name: "Swish Chards", percent: 95 },
-  { name: "Arugula", percent: 90 },
-  { name: "Beet Greens", percent: 80 },
-  { name: "Kale", percent: 75 },
+  { name: "Mustard Greens", percent: 103, units: "kj" },
+  { name: "Swish Chards", percent: 95, units: "kj" },
+  { name: "Arugula", percent: 90, units: "kj" },
+  { name: "Beet Greens", percent: 80, units: "kj" },
+  { name: "Kale", percent: 75, units: "kj" },
 ];

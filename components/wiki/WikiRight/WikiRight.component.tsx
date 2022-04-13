@@ -1,48 +1,99 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./WikiRight.module.scss";
 import LinearComponent from "../../../theme/linearProgress/LinearProgress.component";
 import Image from "next/image";
-import DropDown from "../../../theme/dropDown/DropDown.component";
-import CalciumSearchElem from "../../../theme/calcium/calcium.component";
+import { useLazyQuery } from "@apollo/client";
+import GET_ALL_INGREDIENTS_BASED_ON_NURTITION from "../../../gqlLib/wiki/query/getAllIngredientsBasedOnNutrition";
+import IngredientPanelSkeleton from "../../../theme/skeletons/ingredientPanelSleketon/IngredientPanelSkeleton";
+import Combobox from "../../../theme/dropDown/combobox/Combobox.component";
 
-// import {BsCaretDown} from 'react-icons/bs';
-// import dropDownIcon from '/icons/dropdown.svg';
+const categories = [
+  { label: "All", value: "All" },
+  { label: "Leafy", value: "Leafy" },
+  { label: "Berry", value: "Berry" },
+  { label: "Herbal", value: "Herbal" },
+  { label: "Fruity", value: "Fruity" },
+  { label: "Balancer", value: "Balancer" },
+  { label: "Fatty", value: "Fatty" },
+  { label: "Seasoning", value: "Seasoning" },
+  { label: "Flavor", value: "Flavor" },
+  { label: "Rooty", value: "Rooty" },
+  { label: "Flowering", value: "Flowering" },
+  { label: "Liquid", value: "Liquid" },
+  { label: "Tube-Squash", value: "Tube-Squash" },
+];
 
-// ensure correct type of values are being passed
-interface PassingProps {
+interface ingredientState {
   name: string;
-  percent: number;
+  value: number;
+  units: string;
+  ingredientId: string;
 }
 
-interface PassingData {
-  ingredient?: { name: string; percent: number }[];
-  nutrition?: { name: string; percent: number }[];
+interface NutrientPanelProps {
+  ingredient?: any[];
+  wikiId?: string;
 }
-//state for sorting icon
 
-function WikiRightComponent({ ingredient, nutrition }: PassingData) {
-  const [sortState, curSortState] = useState(true);
-  const SortingOrder = () => {
-    curSortState(!sortState);
-    return sortState;
+function WikiRightComponent({
+  ingredient = [],
+  wikiId = "",
+}: NutrientPanelProps) {
+  const [dpd, setDpd] = useState("All");
+  const [ingredientData, setIngredientData] = useState([]);
+
+  const [getAllIngredientsBasedOnNutrition, { data, loading, error }] =
+    useLazyQuery(GET_ALL_INGREDIENTS_BASED_ON_NURTITION, {
+      fetchPolicy: "network-only",
+    });
+  const isMounted = useRef(false);
+
+  const fetchData = async () => {
+    try {
+      await getAllIngredientsBasedOnNutrition({
+        variables: {
+          data: {
+            nutritionID: wikiId,
+            category: dpd,
+          },
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  let dropdownItem = [
-    "All",
-    "Leafy Green",
-    "Berry",
-    "Herbal",
-    "Fruity",
-    "Balancer",
-    "Fatty",
-    "Seasoning",
-    "Flavor",
-    "Rooty",
-    "Flowering",
-    "Liquid",
-  ];
+  useEffect(() => {
+    if (ingredient?.length) {
+      setIngredientData([...ingredient]);
+    }
+  }, [ingredient]);
 
-  //   const Data = [{ Ingredients: Ingredients }, { Nutrition: Nutrition }];
+  useEffect(() => {
+    if (isMounted?.current) {
+      fetchData();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dpd]);
+
+  useEffect(() => {
+    if (isMounted?.current) {
+      setIngredientData(data?.getAllIngredientsBasedOnNutrition?.ingredients);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
+  if (error) {
+    return <div>Error</div>;
+  }
 
   return (
     <div className={styles.right}>
@@ -54,7 +105,6 @@ function WikiRightComponent({ ingredient, nutrition }: PassingData) {
               alt="Picture will load soon"
               height={"100%"}
               width={"100%"}
-              // sizes={width !== undefined ? `${Math.round(width)}px` : "100vw"}
               layout="responsive"
               objectFit="contain"
             />
@@ -64,24 +114,41 @@ function WikiRightComponent({ ingredient, nutrition }: PassingData) {
       </div>
       <div className={styles.rightCard}>
         <div className={styles.rightCardHeading}>Ingredients</div>
-        <DropDown listElem={dropdownItem} />
-        {/* <CalciumSearchElem /> */}
+        <Combobox
+          value={dpd}
+          options={categories}
+          onChange={(e) => setDpd(e?.target?.value)}
+          style={{ marginTop: "16px", width: "100%" }}
+          placeholder="Categories"
+        />
+
         <div className={styles.progressIndicator}>
-          {ingredient.map(({ name, percent }: PassingProps, index) => {
-            return <LinearComponent name={name} percent={percent} key={index} />;
-          })}
+          {loading ? (
+            <IngredientPanelSkeleton />
+          ) : ingredientData?.length ? (
+            ingredientData?.map(
+              (
+                { name, value, units, ingredientId }: ingredientState,
+                index
+              ) => {
+                return (
+                  <LinearComponent
+                    name={name}
+                    percent={Number(value?.toFixed(2))}
+                    key={index}
+                    units={units}
+                    //@ts-ignore
+                    highestValue={ingredientData[0]?.value}
+                    ingredientId={ingredientId}
+                  />
+                );
+              }
+            )
+          ) : (
+            <p className={styles.noIngredient}>No ingredient found</p>
+          )}
         </div>
       </div>
-      <div className={styles.rightCardNutrition}>
-        <div className={styles.rightCardHeading}>Nutrition</div>
-        <div className={styles.progressIndicator}>
-          {nutrition.map(({ name, percent }: PassingProps, index) => {
-            return <LinearComponent name={name} percent={percent} key={index} />;
-          })}
-        </div>
-      </div>
-      {/* Right element is being  updated */}
-      {/* remove this div below as it was just to test 1st card is useless */}
     </div>
   );
 }
