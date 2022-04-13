@@ -75,7 +75,7 @@ const UpdatedCustomAccordion = ({
               />
             </div>
           );
-        }else{
+        } else {
           return (
             <div style={{ marginLeft: "18px" }} key={itm[0] + Date.now()}>
               <AccordComponent
@@ -91,14 +91,18 @@ const UpdatedCustomAccordion = ({
             </div>
           );
         }
-
       }
     });
   };
 
   return (
     content && (
-      <AccordComponent title={title} type={type} counter={counter} key={title + Date.now()}>
+      <AccordComponent
+        title={title}
+        type={type}
+        counter={counter}
+        key={title + Date.now()}
+      >
         {populateAccordian(content, true)}
       </AccordComponent>
     )

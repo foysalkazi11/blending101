@@ -96,7 +96,10 @@ const AccordComponent = ({
                   />
                 )}
                 {lastElement ? (
-                  <div className={styles.accordianContent} style={{border:"none"}}>
+                  <div
+                    className={styles.accordianContent}
+                    style={{ border: "none" }}
+                  >
                     <div
                       className={
                         value && unit
