@@ -34,14 +34,9 @@ const Center = ({
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [showRecipeModal, setShowRecipeModal] = useState(true);
+  const [ingredientId, setIngredientId] = useState("");
   const recipeDetails = recipeData;
-  const getDefaultPortion = useGetDefaultPortionOfnutration();
-
-  const handleIngredientWiki = async (id: string) => {
-    await (
-      await getDefaultPortion
-    )(id);
-  };
+  useGetDefaultPortionOfnutration(ingredientId);
 
   const openCommentsTray = () => {
     dispatch(setOpenCommentsTray(true));
@@ -295,7 +290,7 @@ const Center = ({
                       <MdOutlineInfo
                         className={styles.icon}
                         onClick={() =>
-                          handleIngredientWiki(ingredient?.ingredientId?._id)
+                          setIngredientId(ingredient?.ingredientId?._id)
                         }
                       />
 
@@ -314,7 +309,7 @@ const Center = ({
                       <MdOutlineInfo
                         className={styles.icon}
                         onClick={() =>
-                          handleIngredientWiki(ingredient?.ingredientId?._id)
+                          setIngredientId(ingredient?.ingredientId?._id)
                         }
                       />
 
