@@ -103,6 +103,15 @@ const UpdatedCustomAccordion = ({
     });
   };
 
+  const populateAccordianData = (childrenFeild) => {
+    console.log(childrenFeild);
+
+    return Object.entries(childrenFeild).map((elem) => {
+      console.log(elem);
+      return <div key={`${elem}`}>{elem}</div>;
+    });
+  };
+
   return (
     content && (
       <AccordComponent
@@ -112,6 +121,7 @@ const UpdatedCustomAccordion = ({
         key={title + Date.now()}
       >
         {populateAccordian(content, true)}
+        {/* {populateAccordianData(content)} */}
       </AccordComponent>
     )
   );

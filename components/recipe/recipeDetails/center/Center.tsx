@@ -165,20 +165,20 @@ const Center = ({
               {recipeDetails?.image.map((img, index) => {
                 return (
                   <div key={index} className={styles.imageBox}>
-                    <div
-                      className={styles.imageBlurBox}
-                      style={{
-                        backgroundImage: `url(${img.image})`,
-                      }}
-                    />
-                    {img.image && (
-                      <Image
-                        src={img.image}
-                        alt="recipe_image"
-                        layout="fill"
-                        objectFit="contain"
+                    {img?.image && (
+                      <div
+                        className={styles.imageBlurBox}
+                        style={{
+                          backgroundImage: `url(${img.image})`,
+                        }}
                       />
                     )}
+                    <Image
+                      src={img.image}
+                      alt="recipe_image"
+                      layout="fill"
+                      objectFit="contain"
+                    />
                   </div>
                 );
               })}
@@ -283,10 +283,7 @@ const Center = ({
                   ingredient?.ingredientId?._id ===
                     nutritionState[0].ingredientId?._id &&
                   singleElement === true ? (
-                    <div
-                      className={styles.iconGroup}
-                      style={{ display: "flex" }}
-                    >
+                    <div className={styles.iconGroup} style={{ display: "flex" }}>
                       <MdOutlineInfo
                         className={styles.icon}
                         onClick={() =>

@@ -1,14 +1,18 @@
 import { useQuery } from "@apollo/client";
 import React, { useEffect } from "react";
 import { GET_DAILY_BY_USER_ID } from "../../../../../../gqlLib/recipeDiscovery/query/recipeDiscovery";
+import { useAppSelector } from "../../../../../../redux/hooks";
 import ButtonComponent from "../../../../../../theme/button/button.component";
+import CircularRotatingLoader from "../../../../../../theme/loader/circularRotatingLoader.component";
 import DailyIntakeAccordian from "../../../../../customRecursiveAccordian/dailyIntakeAccordian/dailyIntakeAccordian.component";
 import styles from "./DailyIntake.module.scss";
 import HeadingBox from "./headingBox/headingBox.component";
 import InputGoal from "./inputGoal/inputGoal.component";
 
 const DailyIntake = () => {
-  const { data: dailyData } = useQuery(GET_DAILY_BY_USER_ID("asdf"));
+  const { dbUser } = useAppSelector((state) => state?.user);
+  const { data: dailyData } = useQuery(GET_DAILY_BY_USER_ID(dbUser?._id));
+  console.log(dbUser?._id);
   const dailyChartData = dailyData?.getDailyByUserId;
 
   useEffect(() => {
@@ -39,7 +43,13 @@ const DailyIntake = () => {
             <div className={styles.centerDiv__headingTray}>
               <h3 className={styles.centerDiv__headingTray__left}>BMI</h3>
               <h3 className={styles.centerDiv__headingTray__center}>
-                {Math.round(dailyChartData?.bmi?.value)}
+                {dailyChartData?.bmi?.value ? (
+                  Math.round(dailyChartData?.bmi?.value)
+                ) : (
+                  <div style={{ marginTop: "10px" }}>
+                    <CircularRotatingLoader />
+                  </div>
+                )}
               </h3>
               <div className={styles.centerDiv__headingTray__right}>
                 <InputGoal />
@@ -48,7 +58,13 @@ const DailyIntake = () => {
             <div className={styles.centerDiv__headingTray}>
               <h3 className={styles.centerDiv__headingTray__left}>Calories</h3>
               <h3 className={styles.centerDiv__headingTray__center}>
-                {Math.round(dailyChartData?.calories?.value)}
+                {dailyChartData?.calories?.value ? (
+                  Math.round(dailyChartData?.calories?.value)
+                ) : (
+                  <div style={{ marginTop: "10px" }}>
+                    <CircularRotatingLoader />
+                  </div>
+                )}
               </h3>
               <div className={styles.centerDiv__headingTray__right}>
                 <InputGoal />
