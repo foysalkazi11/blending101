@@ -11,6 +11,7 @@ import { BiBarChart } from "react-icons/bi";
 import { BsCartPlus } from "react-icons/bs";
 import { useAppDispatch } from "../../../../redux/hooks";
 import {
+  setOpenCollectionsTary,
   setOpenCommentsTray,
   setToggleModal,
 } from "../../../../redux/slices/sideTraySlice";
@@ -21,6 +22,8 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
 import useGetDefaultPortionOfnutration from "../../../../customHooks/useGetDefaultPortionOfNutration";
+import { setActiveRecipeId } from "../../../../redux/slices/collectionSlice";
+import { setCurrentRecipeInfo } from "../../../../redux/slices/recipeSlice";
 
 const Center = ({
   recipeData,
@@ -37,10 +40,8 @@ const Center = ({
   const [ingredientId, setIngredientId] = useState("");
   const recipeDetails = recipeData;
   useGetDefaultPortionOfnutration(ingredientId);
+  console.log(recipeDetails);
 
-  const openCommentsTray = () => {
-    dispatch(setOpenCommentsTray(true));
-  };
   const PreviousButton = (prop) => {
     const { className, onClick } = prop;
     return (
@@ -85,6 +86,65 @@ const Center = ({
   const responsiveSetting = {
     nextArrow: <NextButton />,
     prevArrow: <PreviousButton />,
+  };
+
+  const handleComment = (
+    id: string,
+    title: string,
+    image: string,
+    e: React.SyntheticEvent
+  ) => {
+    // HANDLE COMMENTS CLICK HERE
+    e?.stopPropagation();
+    dispatch(setActiveRecipeId(id));
+    dispatch(setOpenCommentsTray(true));
+    dispatch(setCurrentRecipeInfo({ name: title, image }));
+    dispatch(setOpenCollectionsTary(false));
+  };
+
+  const hangleShowCommentsAndNotesIcon = () => {
+    const notes = recipeData?.notes;
+    const comments = recipeData?.numberOfRating;
+    const title = recipeData?.name;
+    const recipeId = recipeData?._id;
+    const defaultImage = recipeData?.image?.find((img) => img?.default)?.image;
+
+    if (!comments && !notes) {
+      return (
+        <>
+          <img
+            src="/icons/no-comment.svg"
+            alt="message"
+            onClick={(e) => handleComment(recipeId, title, defaultImage, e)}
+          />{" "}
+          <p style={{ color: "#c4c4c4" }}>0</p>
+        </>
+      );
+    }
+    if (!comments) {
+      return (
+        <>
+          <img
+            src="/icons/message.svg"
+            alt="message"
+            onClick={(e) => handleComment(recipeId, title, defaultImage, e)}
+            className={`${styles.inActiveImg}`}
+          />{" "}
+          <p>{""}</p>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <img
+          src="/icons/message.svg"
+          alt="message"
+          onClick={(e) => handleComment(recipeId, title, defaultImage, e)}
+        />{" "}
+        {comments ? <p style={{ color: "#7cbc39" }}>{comments}</p> : null}
+      </>
+    );
   };
 
   return (
@@ -152,9 +212,9 @@ const Center = ({
               <img src="/images/share-alt-light-grey.svg" alt="share" />
               <p>Share</p>
             </div>
-            <div className={styles.iconWithText} onClick={openCommentsTray}>
-              <img src="/icons/comment.svg" alt="comment" />
-              <p style={{ color: "#7cbc39" }}>21</p>
+
+            <div className={styles.iconWithText}>
+              {hangleShowCommentsAndNotesIcon()}
             </div>
           </div>
         </div>
