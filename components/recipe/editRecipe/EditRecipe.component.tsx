@@ -123,8 +123,6 @@ const EditRecipePage = ({
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}
           />
-
-          {/* <NutritionTrayComponent /> */}
         </div>
       </div>
       <div className={styles.footerMainDiv}>

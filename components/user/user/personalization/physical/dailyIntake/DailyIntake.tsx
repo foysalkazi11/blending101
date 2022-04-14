@@ -12,7 +12,6 @@ import InputGoal from "./inputGoal/inputGoal.component";
 const DailyIntake = () => {
   const { dbUser } = useAppSelector((state) => state?.user);
   const { data: dailyData } = useQuery(GET_DAILY_BY_USER_ID(dbUser?._id));
-  console.log(dbUser?._id);
   const dailyChartData = dailyData?.getDailyByUserId;
 
   useEffect(() => {
