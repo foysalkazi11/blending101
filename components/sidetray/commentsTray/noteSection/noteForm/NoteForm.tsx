@@ -29,7 +29,7 @@ const NoteForm = ({
           text="Save"
           handleClick={createOrUpdateNote}
         />
-        <CancleBtn text="Cancle" handleClick={toggleNoteForm} />
+        <CancleBtn text="Cancel" handleClick={toggleNoteForm} />
       </div>
     </div>
   );

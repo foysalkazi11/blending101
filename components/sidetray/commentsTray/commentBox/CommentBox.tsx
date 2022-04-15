@@ -33,7 +33,7 @@ const CommentBox = ({
           handleClick={createOrUpdateComment}
         />
         <CancleBtn
-          text="Cancle"
+          text="Cancel"
           handleClick={() => {
             toggleCommentBox();
             setUpdateComment(false);
