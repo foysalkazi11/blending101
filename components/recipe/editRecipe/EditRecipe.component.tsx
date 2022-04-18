@@ -11,7 +11,6 @@ import Image from "next/image";
 import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setServingCounter } from "../../../redux/edit_recipe/editRecipeStates";
-import NutritionTrayComponent from "../../nutritionTrayComponent/nutritionTrayComponent.component";
 import RightHeader from "./header/right_header/right_header.component";
 
 interface editRecipe {

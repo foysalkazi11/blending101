@@ -1,6 +1,9 @@
 import { useQuery } from "@apollo/client";
-import React, { useEffect } from "react";
-import { GET_DAILY_BY_USER_ID } from "../../../../../../gqlLib/recipeDiscovery/query/recipeDiscovery";
+import React, { useEffect, useState } from "react";
+import {
+  GET_ALL_BLEND_NUTRIENTS,
+  GET_DAILY_BY_USER_ID,
+} from "../../../../../../gqlLib/recipeDiscovery/query/recipeDiscovery";
 import { useAppSelector } from "../../../../../../redux/hooks";
 import ButtonComponent from "../../../../../../theme/button/button.component";
 import CircularRotatingLoader from "../../../../../../theme/loader/circularRotatingLoader.component";
@@ -10,13 +13,26 @@ import HeadingBox from "./headingBox/headingBox.component";
 import InputGoal from "./inputGoal/inputGoal.component";
 
 const DailyIntake = () => {
+  const [inputBMIValue, setInputBMIValue] = useState("");
+  const [inputCaloriesValue, setInputValCaloriesue] = useState("");
+
   const { dbUser } = useAppSelector((state) => state?.user);
   const { data: dailyData } = useQuery(GET_DAILY_BY_USER_ID(dbUser?._id));
+  const { data: allBlendingNutrientsList } = useQuery(GET_ALL_BLEND_NUTRIENTS);
   const dailyChartData = dailyData?.getDailyByUserId;
+  const allBlendingNutrients = allBlendingNutrientsList?.getAllBlendNutrients;
 
   useEffect(() => {
-    console.log(dailyData);
-  }, [dailyData]);
+    if (!allBlendingNutrients) return;
+    console.log(dailyData?.getDailyByUserId);
+    console.log(allBlendingNutrients);
+  }, [dailyData, allBlendingNutrients]);
+
+
+  useEffect(() => {
+    console.log(inputBMIValue);
+    console.log(inputCaloriesValue);
+  }, [inputBMIValue, inputCaloriesValue])
 
   return (
     <>
@@ -51,7 +67,10 @@ const DailyIntake = () => {
                 )}
               </h3>
               <div className={styles.centerDiv__headingTray__right}>
-                <InputGoal />
+                <InputGoal
+                  inputValue={inputBMIValue}
+                  setInputValue={setInputBMIValue}
+                />
               </div>
             </div>
             <div className={styles.centerDiv__headingTray}>
@@ -66,7 +85,10 @@ const DailyIntake = () => {
                 )}
               </h3>
               <div className={styles.centerDiv__headingTray__right}>
-                <InputGoal />
+                <InputGoal
+                  inputValue={inputCaloriesValue}
+                  setInputValue={setInputValCaloriesue}
+                />
               </div>
             </div>
           </div>

@@ -256,6 +256,10 @@ const Physical = ({
                 weightInKilograms: arrangWeight,
                 heightInCentimeters: arrangHight,
                 age: arrageAge,
+                pregnantOrLactating:
+                  userData?.personalization?.gender === "Female"
+                    ? userData?.personalization?.pregnantOrLactating
+                    : null,
               },
             },
           },
@@ -273,6 +277,10 @@ const Physical = ({
               weightInKilograms: arrangWeight,
               heightInCentimeters: arrangHight,
               age: arrageAge,
+              pregnantOrLactating:
+                userData?.personalization?.gender === "Female"
+                  ? userData?.personalization?.pregnantOrLactating
+                  : null,
             },
           };
         });
@@ -288,6 +296,10 @@ const Physical = ({
               weightInKilograms: arrangWeight,
               heightInCentimeters: arrangHight,
               age: arrageAge,
+              pregnantOrLactating:
+                userData?.personalization?.gender === "Female"
+                  ? userData?.personalization?.pregnantOrLactating
+                  : null,
             },
           })
         );
@@ -313,6 +325,10 @@ const Physical = ({
                 weightInKilograms: arrangWeight,
                 heightInCentimeters: arrangHight,
                 age: arrageAge,
+                pregnantOrLactating:
+                  userData?.personalization?.gender === "Female"
+                    ? userData?.personalization?.pregnantOrLactating
+                    : null,
               },
             },
           },
@@ -326,6 +342,10 @@ const Physical = ({
               weightInKilograms: arrangWeight,
               heightInCentimeters: arrangHight,
               age: arrageAge,
+              pregnantOrLactating:
+                userData?.personalization?.gender === "Female"
+                  ? userData?.personalization?.pregnantOrLactating
+                  : null,
             },
           };
         });
@@ -340,6 +360,10 @@ const Physical = ({
               weightInKilograms: arrangWeight,
               heightInCentimeters: arrangHight,
               age: arrageAge,
+              pregnantOrLactating:
+                userData?.personalization?.gender === "Female"
+                  ? userData?.personalization?.pregnantOrLactating
+                  : null,
             },
           })
         );
@@ -457,7 +481,7 @@ const Physical = ({
                     ) : null}
                     {ageType === "months" ? (
                       <InputComponent
-                        width="25%%"
+                        width="25%"
                         style={{ marginRight: "1rem" }}
                         placeholder="Age in months"
                         type="number"

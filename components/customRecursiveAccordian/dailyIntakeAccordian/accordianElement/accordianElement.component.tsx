@@ -1,16 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import InputGoal from "../../../user/user/personalization/physical/dailyIntake/inputGoal/inputGoal.component";
 import styles from "./accordianElement.module.scss";
-import { GrCircleInformation } from "react-icons/gr";
 import { FiInfo } from "react-icons/fi";
 import { GiGolfFlag } from "react-icons/gi";
 
-// interface AccordianElementInterface{
-//   re
-// }
-
-const AccordianElement = ({ title, data }) => {
+const AccordianElement = ({ title, data,keyvalue }) => {
   const [collapseAccordian, setCollapseAccordian] = useState(true);
+  const [inputValue,setInputValue]=useState("");
   const accordianRef = useRef();
   const handleAccordianClick = () => {
     setCollapseAccordian(!collapseAccordian);
@@ -28,7 +24,7 @@ const AccordianElement = ({ title, data }) => {
     }
   }, [collapseAccordian]);
   return (
-    <>
+    <div key={keyvalue}>
       <div className={styles.centerElement}>
         <div className={styles.centerElement__icon} onClick={handleAccordianClick}>
           {collapseAccordian ? "-" : "+"}
@@ -38,7 +34,7 @@ const AccordianElement = ({ title, data }) => {
       <div className={styles.accordianDiv} ref={accordianRef}>
         {data[1].map((elem) => {
           return (
-            <div key={elem} className={styles.accordianDiv__tray}>
+            <div key={`${elem}${Math.random()}${Date.now()}`} className={styles.accordianDiv__tray}>
               <div className={styles.accordianDiv__tray__left}>
                 {elem?.nutrientName}
               </div>
@@ -49,7 +45,7 @@ const AccordianElement = ({ title, data }) => {
                 <span className={styles.accordianDiv__tray__right__icon}>
                   <GiGolfFlag />
                 </span>
-                <InputGoal />
+                <InputGoal inputValue={inputValue} setInputValue={setInputValue}/>
                 <span className={styles.accordianDiv__tray__right__icon}>
                   <FiInfo />
                 </span>
@@ -58,7 +54,7 @@ const AccordianElement = ({ title, data }) => {
           );
         })}
       </div>
-    </>
+    </div>
   );
 };
 

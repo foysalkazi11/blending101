@@ -114,7 +114,7 @@ const User = () => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dbUser]);
 
   return (
     <AContainer

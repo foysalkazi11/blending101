@@ -14,7 +14,7 @@ const DailyIntakeAccordian = ({ recursiveObject }: dailyIntakeAccordian) => {
       {recursiveObject &&
         Object.entries(recursiveObject).map((elem) => {
           if (elem[0] !== "__typename") {
-            return <AccordianElement title={elem[0]} data={elem} />;
+            return <AccordianElement title={elem[0]} data={elem} keyvalue={`${elem}${Math.random()}${Date.now()}`}/>;
           }
         })}
     </>
