@@ -75,7 +75,7 @@ const EditRecipeComponent = () => {
   });
 
   const { data: recipeData } = useQuery(GET_A_RECIPE_FOR_EDIT_RECIPE, {
-    variables: { recipeId: recipeId ,userId:dbUser?._id},
+    variables: { recipeId: recipeId, userId: dbUser?._id },
   });
   const { data: allBlendCategory } = useQuery(BLEND_CATEGORY);
   const { data: nutritionData } = useQuery(
@@ -152,7 +152,7 @@ const EditRecipeComponent = () => {
   useEffect(() => {
     dispatch(setIngredientArrayForNutrition(selectedIngredientsList));
   }, [selectedIngredientsList]);
-  recipeBasedNutrition && console.log(JSON.parse(recipeBasedNutrition))
+  recipeBasedNutrition && console.log(JSON.parse(recipeBasedNutrition));
   return (
     <EditRecipePage
       recipeName={recipeName}

@@ -4,9 +4,9 @@ import styles from "./accordianElement.module.scss";
 import { FiInfo } from "react-icons/fi";
 import { GiGolfFlag } from "react-icons/gi";
 
-const AccordianElement = ({ title, data,keyvalue }) => {
+const AccordianElement = ({ title, data, inputValue, setInputValue }) => {
   const [collapseAccordian, setCollapseAccordian] = useState(true);
-  const [inputValue,setInputValue]=useState("");
+
   const accordianRef = useRef();
   const handleAccordianClick = () => {
     setCollapseAccordian(!collapseAccordian);
@@ -23,8 +23,33 @@ const AccordianElement = ({ title, data,keyvalue }) => {
         accordianRef.current.scrollHeight + "px";
     }
   }, [collapseAccordian]);
+
+  const handleInput = (
+    e: { target: { name: string; value: string } },
+    blendNutrientId: string
+  ) => {
+    let updatedObject = inputValue;
+    updatedObject = {
+      ...updatedObject,
+      goals: {
+        ...updatedObject.goals,
+        [e.target.name]: {
+          goal: parseInt(e.target.value),
+          blendNutrientId: blendNutrientId,
+        },
+      },
+    };
+    setInputValue(updatedObject);
+  };
+
+  useEffect(() => {
+    if (Object.keys(inputValue).length > 0) {
+      console.log(inputValue);
+    }
+  }, [inputValue]);
+
   return (
-    <div key={keyvalue}>
+    <div>
       <div className={styles.centerElement}>
         <div className={styles.centerElement__icon} onClick={handleAccordianClick}>
           {collapseAccordian ? "-" : "+"}
@@ -32,20 +57,27 @@ const AccordianElement = ({ title, data,keyvalue }) => {
         <h3 className={styles.centerElement__mainHeading}>{title}</h3>
       </div>
       <div className={styles.accordianDiv} ref={accordianRef}>
-        {data[1].map((elem) => {
+        {data[1]?.map((elem) => {
           return (
-            <div key={`${elem}${Math.random()}${Date.now()}`} className={styles.accordianDiv__tray}>
+            <div
+              key={`${elem.blendNutrientRef}`}
+              className={styles.accordianDiv__tray}
+            >
               <div className={styles.accordianDiv__tray__left}>
                 {elem?.nutrientName}
               </div>
               <div className={styles.accordianDiv__tray__center}>
-                {parseFloat(elem.data.value).toFixed(2) + " " + elem.data.units}
+                {parseFloat(elem?.data?.value).toFixed(2) + " " + elem?.data?.units}
               </div>
               <div className={styles.accordianDiv__tray__right}>
                 <span className={styles.accordianDiv__tray__right__icon}>
                   <GiGolfFlag />
                 </span>
-                <InputGoal inputValue={inputValue} setInputValue={setInputValue}/>
+                <InputGoal
+                  name={elem?.nutrientName}
+                  inputValue={inputValue?.goals?.[elem?.nutrientName]?.goal || ""}
+                  setInputValue={(e) => handleInput(e, elem.blendNutrientRef)}
+                />
                 <span className={styles.accordianDiv__tray__right__icon}>
                   <FiInfo />
                 </span>

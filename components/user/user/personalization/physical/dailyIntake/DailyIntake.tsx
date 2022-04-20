@@ -1,39 +1,73 @@
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
-import {
-  GET_ALL_BLEND_NUTRIENTS,
-  GET_DAILY_BY_USER_ID,
-} from "../../../../../../gqlLib/recipeDiscovery/query/recipeDiscovery";
+import { GET_ALL_BLEND_NUTRIENTS } from "../../../../../../gqlLib/recipeDiscovery/query/recipeDiscovery";
+import { UPDATE_DAILY_GOALS } from "../../../../../../gqlLib/user/mutations/mutation/updateDailyGoals";
+import { GET_DAILY_BY_USER_ID } from "../../../../../../gqlLib/user/mutations/query/getDaily";
 import { useAppSelector } from "../../../../../../redux/hooks";
 import ButtonComponent from "../../../../../../theme/button/button.component";
 import CircularRotatingLoader from "../../../../../../theme/loader/circularRotatingLoader.component";
 import DailyIntakeAccordian from "../../../../../customRecursiveAccordian/dailyIntakeAccordian/dailyIntakeAccordian.component";
+import reactToastifyNotification from "../../../../../utility/reactToastifyNotification";
 import styles from "./DailyIntake.module.scss";
 import HeadingBox from "./headingBox/headingBox.component";
 import InputGoal from "./inputGoal/inputGoal.component";
 
 const DailyIntake = () => {
-  const [inputBMIValue, setInputBMIValue] = useState("");
-  const [inputCaloriesValue, setInputValCaloriesue] = useState("");
-
+  const [loading, setLoading] = useState(false);
+  const [inputValue, setInputValue] = useState({
+    memberId: "",
+    calories: "",
+    bmi: "",
+    goals: {},
+  });
   const { dbUser } = useAppSelector((state) => state?.user);
   const { data: dailyData } = useQuery(GET_DAILY_BY_USER_ID(dbUser?._id));
-  const { data: allBlendingNutrientsList } = useQuery(GET_ALL_BLEND_NUTRIENTS);
+  const objectToArrayForGoals = (goalsObject) => {
+    let goalsArray = [];
+    if (Object?.keys(goalsObject)?.length > 0) {
+      Object?.entries(goalsObject)?.map((elem) => {
+        goalsArray = [...goalsArray, elem[1]];
+      });
+    }
+    return goalsArray;
+  };
+  const [updateDailyGoals] = useMutation(
+    UPDATE_DAILY_GOALS({
+      memberId: dbUser?._id,
+      calories: inputValue.calories || 0,
+      bmi: inputValue.bmi || 0,
+      goalsArray: objectToArrayForGoals(inputValue.goals) || [],
+    })
+  );
   const dailyChartData = dailyData?.getDailyByUserId;
-  const allBlendingNutrients = allBlendingNutrientsList?.getAllBlendNutrients;
+
+  const handleInput = (e: { target: { name: string; value: string } }) => {
+    let updatedObject = inputValue;
+
+    updatedObject = {
+      ...updatedObject,
+      [e.target.name]: parseInt(e.target.value),
+    };
+    setInputValue(updatedObject);
+  };
 
   useEffect(() => {
-    if (!allBlendingNutrients) return;
-    console.log(dailyData?.getDailyByUserId);
-    console.log(allBlendingNutrients);
-  }, [dailyData, allBlendingNutrients]);
+    if (!inputValue) return;
+    let updatedObject = inputValue;
+    updatedObject = {
+      ...updatedObject,
+      memberId: dbUser?._id,
+    };
+    setInputValue(updatedObject);
+  }, [dbUser?._id]);
 
-
-  useEffect(() => {
-    console.log(inputBMIValue);
-    console.log(inputCaloriesValue);
-  }, [inputBMIValue, inputCaloriesValue])
-
+  const updateGoals = async () => {
+    setLoading(true);
+    const { data } = await updateDailyGoals();
+    console.log(data);
+    setLoading(false);
+    reactToastifyNotification("info", "Profile Updated Successfully");
+  };
   return (
     <>
       <div className={styles.dailyIntakeContainer}>
@@ -68,8 +102,9 @@ const DailyIntake = () => {
               </h3>
               <div className={styles.centerDiv__headingTray__right}>
                 <InputGoal
-                  inputValue={inputBMIValue}
-                  setInputValue={setInputBMIValue}
+                  name={"bmi"}
+                  inputValue={inputValue.bmi}
+                  setInputValue={handleInput}
                 />
               </div>
             </div>
@@ -86,13 +121,18 @@ const DailyIntake = () => {
               </h3>
               <div className={styles.centerDiv__headingTray__right}>
                 <InputGoal
-                  inputValue={inputCaloriesValue}
-                  setInputValue={setInputValCaloriesue}
+                  name={"calories"}
+                  inputValue={inputValue.calories}
+                  setInputValue={handleInput}
                 />
               </div>
             </div>
           </div>
-          <DailyIntakeAccordian recursiveObject={dailyChartData?.nutrients} />
+          <DailyIntakeAccordian
+            recursiveObject={dailyChartData?.nutrients}
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+          />
         </div>
       </div>
       <div
@@ -103,16 +143,28 @@ const DailyIntake = () => {
           marginTop: "40px",
         }}
       >
-        <ButtonComponent
-          type="primary"
-          value="Update Profile"
-          style={{
-            borderRadius: "30px",
-            height: "48px",
-            width: "180px",
-          }}
-          // onClick={handleSubmit(submitData)}
-        />
+        {loading ? (
+          <ButtonComponent
+            type="primary"
+            value="Updating ..."
+            style={{
+              borderRadius: "30px",
+              height: "48px",
+              width: "180px",
+            }}
+          />
+        ) : (
+          <ButtonComponent
+            type="primary"
+            value="Update Profile"
+            style={{
+              borderRadius: "30px",
+              height: "48px",
+              width: "180px",
+            }}
+            onClick={updateGoals}
+          />
+        )}
       </div>
     </>
   );
