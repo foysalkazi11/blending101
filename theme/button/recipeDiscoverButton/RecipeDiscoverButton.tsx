@@ -7,6 +7,8 @@ type RecipeDiscoverButtonProps = {
   image?: string;
   handleClick?: () => void;
   Icon?: any;
+  disable?: boolean;
+  style?: React.CSSProperties;
 };
 
 const RecipeDiscoverButton = ({
@@ -14,10 +16,17 @@ const RecipeDiscoverButton = ({
   Icon,
   image = "",
   text = "Recipe",
+  disable = false,
+  style = {},
 }: RecipeDiscoverButtonProps) => {
   return (
-    <button className={styles.button} onClick={handleClick}>
-      {image ? <img src={image} alt="img" className={styles.img} /> : null}
+    <button
+      className={styles.button}
+      onClick={handleClick}
+      style={style}
+      disabled={disable ? true : false}
+    >
+      {image ? <img src={image} alt="icon" className={styles.img} /> : null}
       {Icon ? <Icon className={styles.icon} /> : null}
       {text}
     </button>

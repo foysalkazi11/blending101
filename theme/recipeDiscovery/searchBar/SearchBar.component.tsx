@@ -19,8 +19,8 @@ const SearchBar = () => {
   const [input, setInput] = useState("");
   const [isMicOn, setIsMicOn] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
-
   const { openFilterTray } = useAppSelector((state) => state?.sideTray);
+  const { dbUser } = useAppSelector((state) => state?.user);
   const dispatch = useAppDispatch();
 
   const handleSubmit = (e) => {
@@ -92,25 +92,33 @@ const SearchBar = () => {
           )}
         </div>
       </div>
-      <div
-        onClick={() => router.push(`/recipe/compare`)}
-        style={{ marginLeft: "40px" }}
-        className={styles.buttonContainer}
-      >
+      <div style={{ marginLeft: "40px" }} className={styles.buttonContainer}>
         <Tooltip content="Compare recipe" direction="bottom">
           <RecipeDiscoverButton
-            image="/images/compare-fill-icon.svg"
-            text="Compare(6)"
+            image={
+              dbUser?.compareLength
+                ? "/images/compare-fill-icon.svg"
+                : "/icons/eclipse.svg"
+            }
+            text={`Compare(${
+              dbUser?.compareLength ? dbUser?.compareLength : 0
+            })`}
+            disable={dbUser?.compareLength ? false : true}
+            style={{
+              backgroundColor: dbUser?.compareLength ? "inherit" : "#ececec",
+            }}
+            handleClick={() => router.push(`/recipe/compare`)}
           />
         </Tooltip>
       </div>
-      <div
-        onClick={() => router.push(`/add_recipe`)}
-        style={{ marginLeft: "30px" }}
-        className={styles.buttonContainer}
-      >
+
+      <div style={{ marginLeft: "30px" }} className={styles.buttonContainer}>
         <Tooltip content="Add recipe" direction="bottom">
-          <RecipeDiscoverButton Icon={AddCircleOutlineIcon} text="Recipe" />
+          <RecipeDiscoverButton
+            Icon={AddCircleOutlineIcon}
+            text="Recipe"
+            handleClick={() => router.push(`/add_recipe`)}
+          />
         </Tooltip>
       </div>
     </div>

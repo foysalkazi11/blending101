@@ -38,6 +38,7 @@ export const GET_RECIPE = gql`
         default
       }
       notes
+      addedToCompare
     }
   }
 `;
