@@ -9,6 +9,11 @@ import Carousel from "../../../theme/carousel/carousel.component";
 import Slider from "react-slick";
 import RecipeDetails from "../share/recipeDetails/RecipeDetails";
 import SliderArrows from "../share/sliderArrows/SliderArrows";
+import { useQuery } from "@apollo/client";
+import GET_COMPARE_LIST from "../../../gqlLib/compare/query/getCompareList";
+import { useAppSelector } from "../../../redux/hooks";
+import SkeletonComparePage from "../../../theme/skeletons/skeletonComparePage/SkeletonComparePage";
+import notification from "../../utility/reactToastifyNotification";
 
 const responsiveSetting = {
   slidesToShow: 7,
@@ -59,8 +64,8 @@ const compareRecipeResponsiveSetting = {
   swipeToSlide: false,
   arrows: false,
   infinite: false,
-  afterChange: (num) => console.log("afterChange", num),
-  beforeChange: (num1, num2) => console.log("befourChange", num1, num2),
+  // afterChange: (num) => console.log("afterChange", num),
+  // beforeChange: (num1, num2) => console.log("befourChange", num1, num2),
 
   responsive: [
     {
@@ -89,17 +94,26 @@ const compareRecipeResponsiveSetting = {
 
 const CompareRecipe = () => {
   const router = useRouter();
-  const [recipeList, setRecipeList] = useState(list);
-  const [compareRecipeList, setcompareRecipeList] = useState(list.slice(0, 4));
+  const [recipeList, setRecipeList] = useState([]);
+  const [compareRecipeList, setcompareRecipeList] = useState([]);
   const sliderRef = useRef(null);
+  const { dbUser } = useAppSelector((state) => state?.user);
+  const { data, loading, error } = useQuery(GET_COMPARE_LIST, {
+    variables: { userId: dbUser?._id },
+    fetchPolicy: "network-only",
+  });
+  console.log(recipeList);
 
   useEffect(() => {
-    console.log(sliderRef.current);
-  }, [sliderRef]);
+    if (!loading) {
+      setRecipeList([...data?.getCompareList]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
-  const findCompareRecipe = (id) => {
+  const findCompareRecipe = (id: string) => {
     /* @ts-ignore */
-    const item = compareRecipeList?.find((item) => item?.id === id);
+    const item = compareRecipeList?.find((item) => item?._id === id);
     if (item) {
       return true;
     } else {
@@ -109,14 +123,14 @@ const CompareRecipe = () => {
 
   const handleCompare = (recipe) => {
     if (compareRecipeList?.length >= 4) {
-      const findRecipe = findCompareRecipe(recipe?.id);
+      const findRecipe = findCompareRecipe(recipe?._id);
       if (!findRecipe) {
         let copyCompareRecipe = [...compareRecipeList];
         copyCompareRecipe.pop();
         copyCompareRecipe.unshift(recipe);
         setcompareRecipeList(copyCompareRecipe);
       } else {
-        console.log("alredy exist");
+        notification("info", "alredy exist");
       }
     } else {
       setcompareRecipeList((state) => [...state, recipe]);
@@ -125,7 +139,7 @@ const CompareRecipe = () => {
 
   const removeCompareRecipe = (recipe) => {
     setcompareRecipeList((state) => [
-      ...state.filter((item) => item?.id !== recipe?.id),
+      ...state.filter((item) => item?._id !== recipe?._id),
     ]);
   };
 
@@ -133,50 +147,56 @@ const CompareRecipe = () => {
     <AContainer showLeftTray={false} logo={false} headerTitle="Compare Recipe">
       <div className={styles.mainContentDiv}>
         <div className={styles.CompareContainer}>
-          <SubNav
-            backAddress="/recipe_discovery"
-            backIconText="Recipe Discovery"
-            buttonText="Formulate"
-            showButton={true}
-            buttonClick={() => router.push("/recipe/formulate")}
-            compareAmout={compareRecipeList.length}
-            closeCompare={() => setcompareRecipeList([])}
-          />
+          {loading ? (
+            <SkeletonComparePage />
+          ) : (
+            <>
+              <SubNav
+                backAddress="/recipe_discovery"
+                backIconText="Recipe Discovery"
+                buttonText="Formulate"
+                showButton={true}
+                buttonClick={() => router.push("/recipe/formulate")}
+                compareAmout={dbUser?.compareLength}
+                closeCompare={() => setcompareRecipeList([])}
+              />
+              <Carousel moreSetting={responsiveSetting}>
+                {recipeList?.map((recipe, index) => {
+                  return (
+                    <SmallcardComponent
+                      key={index}
+                      imgHeight={undefined}
+                      text={recipe?.name}
+                      //@ts-ignore
+                      img={recipe?.image[0]?.image}
+                      fnc={handleCompare}
+                      recipe={recipe}
+                      findCompareRecipe={findCompareRecipe}
+                      fucUnCheck={removeCompareRecipe}
+                      conpareLength={compareRecipeList.length}
+                    />
+                  );
+                })}
+              </Carousel>
+              <SliderArrows
+                compareRecipeLength={compareRecipeList.length}
+                prevFunc={() => sliderRef.current?.slickPrev()}
+                nextFunc={() => sliderRef.current?.slickNext()}
+              />
 
-          <Carousel moreSetting={responsiveSetting}>
-            {recipeList?.map((recipe, index) => {
-              return (
-                <SmallcardComponent
-                  key={index}
-                  imgHeight={undefined}
-                  text={recipe?.name}
-                  img={recipe?.image}
-                  fnc={handleCompare}
-                  recipe={recipe}
-                  findCompareRecipe={findCompareRecipe}
-                  fucUnCheck={removeCompareRecipe}
-                  conpareLength={compareRecipeList.length}
-                />
-              );
-            })}
-          </Carousel>
-          <SliderArrows
-            compareRecipeLength={compareRecipeList.length}
-            prevFunc={() => sliderRef.current?.slickPrev()}
-            nextFunc={() => sliderRef.current?.slickNext()}
-          />
-
-          <Slider {...compareRecipeResponsiveSetting} ref={sliderRef}>
-            {compareRecipeList?.map((recipe, index) => {
-              return (
-                <RecipeDetails
-                  key={index}
-                  recipe={recipe}
-                  removeCompareRecipe={removeCompareRecipe}
-                />
-              );
-            })}
-          </Slider>
+              <Slider {...compareRecipeResponsiveSetting} ref={sliderRef}>
+                {compareRecipeList?.map((recipe, index) => {
+                  return (
+                    <RecipeDetails
+                      key={index}
+                      recipe={recipe}
+                      removeCompareRecipe={removeCompareRecipe}
+                    />
+                  );
+                })}
+              </Slider>
+            </>
+          )}
         </div>
       </div>
     </AContainer>

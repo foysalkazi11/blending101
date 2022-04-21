@@ -12,28 +12,28 @@ function Copyable(props) {
   const { items, addItem, droppableId } = props;
 
   // logic for removing elements having duplicate label values =>start
-  let newList = Array.from(
-    new Set(
-      items.map((elem, index) => {
-        return elem.label;
-      })
-    )
-  );
-  let processedList = [];
-  items.map((item, index) => {
-    if (newList.includes(item.label)) {
-      let itemIndex = newList.indexOf(item.label);
-      newList.splice(itemIndex, 1);
-      processedList = [...processedList, item];
-    }
-  });
+  // let newList = Array.from(
+  //   new Set(
+  //     items.map((elem, index) => {
+  //       return elem.label;
+  //     })
+  //   )
+  // );
+  // let processedList = [];
+  // items.map((item, index) => {
+  //   if (newList.includes(item.label)) {
+  //     let itemIndex = newList.indexOf(item.label);
+  //     newList.splice(itemIndex, 1);
+  //     processedList = [...processedList, item];
+  //   }
+  // });
   // logic for removing elements having duplicate label values =>end
 
   return (
     <Droppable droppableId={droppableId} isDropDisabled={true}>
       {(provided, snapshot) => (
         <div ref={provided.innerRef} {...provided.droppableProps}>
-          {processedList.map((item, index) => {
+          {items?.map((item, index) => {
             return (
               <Draggable draggableId={`${item.id}`} index={index} key={item.id}>
                 {(provided, snapshot) => (
@@ -68,7 +68,15 @@ const RecipeDetails = ({
   dragAndDrop = false,
 }: any) => {
   const [winReady, setwinReady] = useState(false);
-  const { name, image, ingredients, nutrition } = recipe;
+
+  const makeIngredients = (ing) => {
+    let arr = [];
+    ing?.forEach((ing) => {
+      const ingredient = ing?.ingredientId?.ingredientName;
+      arr?.push(ingredient);
+    });
+    return arr?.join(" ");
+  };
 
   useEffect(() => {
     setwinReady(true);
@@ -83,16 +91,19 @@ const RecipeDetails = ({
         <CancelIcon />
       </div>
       <DatacardComponent
-        title={name}
-        ingredients={""}
-        category={""}
-        ratings={4.9}
-        noOfRatings={0}
-        carbs={0}
-        score={0}
-        calorie={0}
-        noOfComments={0}
-        image={image}
+        title={recipe?.name}
+        ingredients={makeIngredients(recipe?.ingredients)}
+        category={recipe?.recipeBlendCategory?.name}
+        ratings={recipe?.averageRating}
+        noOfRatings={recipe?.numberOfRating}
+        carbs={recipe?.carbs}
+        score={recipe?.score}
+        calorie={recipe?.calorie}
+        noOfComments={recipe?.numberOfRating}
+        image={recipe.image[0]?.image}
+        recipeId={recipe?._id}
+        notes={recipe?.notes}
+        addedToCompare={recipe?.addedToCompare}
       />
       <div className={styles.dividerBox}>
         <SectionTitleWithIcon
@@ -103,13 +114,14 @@ const RecipeDetails = ({
         {dragAndDrop ? (
           winReady ? (
             <Copyable
-              items={ingredients}
+              items={recipe?.ingredients}
               addItem={addItem}
               droppableId={`${id}`}
             />
           ) : null
         ) : (
-          ingredients?.map((item, index) => {
+          recipe?.ingredients?.map((item, index) => {
+            const ingredient = item?.ingredientId?.ingredientName;
             return (
               <p
                 key={index}
@@ -119,7 +131,7 @@ const RecipeDetails = ({
                   marginBottom: "15px",
                 }}
               >
-                {item?.label}
+                {ingredient}
               </p>
             );
           })
@@ -142,7 +154,7 @@ const RecipeDetails = ({
         </div>
 
         <div className={styles.ingredientsDetails}>
-          {nutrition?.map((item, index) => {
+          {/* {nutrition?.map((item, index) => {
             const { section, amount } = item;
             return (
               <Accordion key={index} title={section}>
@@ -165,7 +177,7 @@ const RecipeDetails = ({
                 </table>
               </Accordion>
             );
-          })}
+          })} */}
         </div>
       </div>
     </div>

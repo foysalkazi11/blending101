@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 const CREATE_NEW_USER = gql`
-  mutation Mutation($data: NewUserInput!) {
+  mutation CreateNewUser($data: NewUserInput!) {
     createNewUser(data: $data) {
       _id
       bio
@@ -68,6 +68,7 @@ const CREATE_NEW_USER = gql`
           }
         }
       }
+      compareLength
     }
   }
 `;

@@ -24,32 +24,29 @@ const RecipeItem = (props: RecipeItemProps) => {
   } = props;
   const [items, setItems] = useState({});
 
-  useEffect(() => {
-    /* @ts-ignore */
-    if (item?.label) {
-      setItems(item);
-    }
-  }, []);
+  // useEffect(() => {
+  //   /* @ts-ignore */
+  //   if (item?.label) {
+  //     setItems(item);
+  //   }
+  // }, []);
 
   const handleClickk = (e) => {
-    if(e.detail === 2){
-      console.log('doubke click')
+    if (e.detail === 2) {
+      console.log("doubke click");
     }
-  }
-
+  };
 
   const handleDefault = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
-  }
+  };
 
   return (
-    <div className={styles.listContainer}
-    onClick={handleClickk}
-    >
+    <div className={styles.listContainer} onClick={handleClickk}>
       {/* @ts-ignore */}
-      <p>{items?.label}</p>
+      <p>{item?.ingredientId?.ingredientName}</p>
 
       {/* <span className={styles.listContainer__tooltiptext}>
         Drag to the left
@@ -74,8 +71,10 @@ const RecipeItem = (props: RecipeItemProps) => {
       {deleteIcon ? (
         <button
           className={styles.listContainer__addBtn}
-          /* @ts-ignore */
-          onClick={() => (handleDelete ? handleDelete(items?.id) : null)}
+          onClick={() =>
+            /* @ts-ignore */
+            handleDelete ? handleDelete(item?.ingredientId?._id) : null
+          }
         >
           <HighlightOffIcon />
         </button>

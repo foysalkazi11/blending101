@@ -21,8 +21,15 @@ import { useMutation, useLazyQuery } from "@apollo/client";
 import { setDbUser } from "../../../redux/slices/userSlice";
 import reactToastifyNotification from "../../../components/utility/reactToastifyNotification";
 import GET_LAST_MODIFIED_COLLECTION from "../../../gqlLib/collection/query/getLastModifiedCollection";
-import { setCurrentRecipeInfo } from "../../../redux/slices/recipeSlice";
+import {
+  setCurrentRecipeInfo,
+  setLatest,
+  setPopular,
+  setRecommended,
+} from "../../../redux/slices/recipeSlice";
 import { useRouter } from "next/router";
+import CHANGE_COMPARE from "../../../gqlLib/compare/mutation/changeCompare";
+import notification from "../../../components/utility/reactToastifyNotification";
 
 interface dataCardInterface {
   title: string;
@@ -38,6 +45,7 @@ interface dataCardInterface {
   checkWithinCollection?: boolean;
   recipeId?: string;
   notes?: number;
+  addedToCompare?: boolean;
 }
 
 export default function DatacardComponent({
@@ -54,6 +62,7 @@ export default function DatacardComponent({
   checkWithinCollection = false,
   recipeId = "",
   notes = 0,
+  addedToCompare = false,
 }: dataCardInterface) {
   title = title || "Triple Berry Smoothie";
   ingredients = ingredients;
@@ -77,10 +86,68 @@ export default function DatacardComponent({
     GET_LAST_MODIFIED_COLLECTION,
     { fetchPolicy: "no-cache" }
   );
+  const [changeCompare] = useMutation(CHANGE_COMPARE, {
+    fetchPolicy: "network-only",
+  });
   const { dbUser } = useAppSelector((state) => state?.user);
+  const { latest, popular, recommended } = useAppSelector(
+    (state) => state?.recipe
+  );
 
-  const handleEclipse = () => {
-    // HANDLE ECLIPSE CLICK HERE
+  const updateRecipeCompare = (id: string, addedToCompare: boolean) => {
+    dispatch(
+      setDbUser({
+        ...dbUser,
+        compareLength: addedToCompare
+          ? dbUser?.compareLength + 1
+          : dbUser?.compareLength - 1,
+      })
+    );
+    dispatch(
+      setRecommended(
+        recommended?.map((recipe) =>
+          recipe?._id === id ? { ...recipe, addedToCompare } : recipe
+        )
+      )
+    );
+    dispatch(
+      setLatest(
+        latest?.map((recipe) =>
+          recipe?._id === id ? { ...recipe, addedToCompare } : recipe
+        )
+      )
+    );
+    dispatch(
+      setPopular(
+        popular?.map((recipe) =>
+          recipe?._id === id ? { ...recipe, addedToCompare } : recipe
+        )
+      )
+    );
+  };
+
+  const handleChangeCompare = async (id: string, alredyCompared: boolean) => {
+    try {
+      updateRecipeCompare(id, alredyCompared);
+      const { data } = await changeCompare({
+        variables: {
+          userId: dbUser?._id,
+          recipeId: id,
+        },
+      });
+
+      if (Number(data?.changeCompare) !== Number(dbUser?.compareLength)) {
+        dispatch(
+          setDbUser({
+            ...dbUser,
+            compareLength: Number(data?.changeCompare),
+          })
+        );
+      }
+    } catch (error) {
+      notification("error", "Unable to add compare list");
+      updateRecipeCompare(id, !alredyCompared);
+    }
   };
 
   const addToCollection = async (recipeId: string, e: React.SyntheticEvent) => {
@@ -295,12 +362,19 @@ export default function DatacardComponent({
               <div className={styles.datacard__body__bottom__right}>
                 <ul>
                   <li>
-                    {" "}
-                    <img
-                      src="/icons/eclipse.svg"
-                      alt="eclipse"
-                      onClick={handleEclipse}
-                    />{" "}
+                    {addedToCompare ? (
+                      <img
+                        src="/icons/compare-1.svg"
+                        alt="eclipse"
+                        onClick={() => handleChangeCompare(recipeId, false)}
+                      />
+                    ) : (
+                      <img
+                        src="/icons/eclipse.svg"
+                        alt="eclipse"
+                        onClick={() => handleChangeCompare(recipeId, true)}
+                      />
+                    )}
                   </li>
                   <li>
                     {allRecipeWithinCollectionsId?.includes(recipeId) ? (

@@ -1,14 +1,11 @@
 import { gql } from "@apollo/client";
 
-const GET_ALL_RECOMMENDED_RECIPES = gql`
-  query GetAllrecomendedRecipes($userId: String!) {
-    getAllrecomendedRecipes(userId: $userId) {
+const GET_COMPARE_LIST = gql`
+  query GetCompareList($userId: String!) {
+    getCompareList(userId: $userId) {
       datePublished
       name
       recipeIngredients
-      recipeBlendCategory {
-        name
-      }
       testIngredient {
         quantity
         unit
@@ -38,5 +35,4 @@ const GET_ALL_RECOMMENDED_RECIPES = gql`
     }
   }
 `;
-
-export default GET_ALL_RECOMMENDED_RECIPES;
+export default GET_COMPARE_LIST;
