@@ -26,7 +26,6 @@ const valueUnitConvertor = (title, value, unit) => {
   let unitVal = unit;
 
   if (val?.toString()?.length > 2) {
-    // console.log({ title: title, value: val, unit: unitVal });
     if (unitVal === `UG`) {
       val = val / 1000;
       unitVal = `MG`;
@@ -121,11 +120,7 @@ const AccordComponent = ({
                         {title}
                       </h5>
                       {
-                        <p
-                          className={
-                            styles.valueUnit + " " + styles.alignCenter
-                          }
-                        >
+                        <p className={styles.valueUnit + " " + styles.alignCenter}>
                           {
                             //@ts-ignore
                             parseFloat(valueAndUnit?.value * counter).toFixed(1)
@@ -156,11 +151,7 @@ const AccordComponent = ({
                         {title}
                       </h5>
                       {
-                        <p
-                          className={
-                            styles.valueUnit + " " + styles.alignCenter
-                          }
-                        >
+                        <p className={styles.valueUnit + " " + styles.alignCenter}>
                           {
                             //@ts-ignore
                             parseFloat(valueAndUnit?.value * counter).toFixed(1)

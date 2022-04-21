@@ -8,7 +8,8 @@ module.exports = {
       "source.unsplash.com",
       "./theme/wiki/WikiCenter/Assets/cardiogram.svg",
       "blending.s3.us-east-1.amazonaws.com",
-      "www.fivehearthome.com"
+      "www.fivehearthome.com",
+      "www.inspiredtaste.net"
     ],
   },
   webpack(config) {

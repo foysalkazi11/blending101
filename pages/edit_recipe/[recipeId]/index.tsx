@@ -26,6 +26,7 @@ import reactToastifyNotification from "../../../components/utility/reactToastify
 const EditRecipeComponent = () => {
   const router = useRouter();
   const { recipeId } = router.query;
+  const { dbUser } = useAppSelector((state) => state?.user);
   const dispatch = useAppDispatch();
   const [isFetching, setIsFetching] = useState(null);
 
@@ -74,7 +75,7 @@ const EditRecipeComponent = () => {
   });
 
   const { data: recipeData } = useQuery(GET_A_RECIPE_FOR_EDIT_RECIPE, {
-    variables: { recipeId: recipeId },
+    variables: { recipeId: recipeId, userId: dbUser?._id },
   });
   const { data: allBlendCategory } = useQuery(BLEND_CATEGORY);
   const { data: nutritionData } = useQuery(
@@ -151,7 +152,7 @@ const EditRecipeComponent = () => {
   useEffect(() => {
     dispatch(setIngredientArrayForNutrition(selectedIngredientsList));
   }, [selectedIngredientsList]);
-  recipeBasedNutrition && console.log(JSON.parse(recipeBasedNutrition))
+  recipeBasedNutrition && console.log(JSON.parse(recipeBasedNutrition));
   return (
     <EditRecipePage
       recipeName={recipeName}
