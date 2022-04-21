@@ -42,6 +42,8 @@ const SliderArrows = ({
                   : { marginLeft: "auto" }
               }
             >
+
+
               <ChevronRightIcon />
             </div>
           </div>
