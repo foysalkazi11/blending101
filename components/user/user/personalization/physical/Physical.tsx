@@ -4,10 +4,7 @@ import { useForm } from "react-hook-form";
 import EDIT_CONFIGRATION_BY_ID from "../../../../../gqlLib/user/mutations/editCofigrationById";
 import EDIT_USER_BY_ID from "../../../../../gqlLib/user/mutations/editUserById";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
-import {
-  setDbUser,
-  setIsNewUseImage,
-} from "../../../../../redux/slices/userSlice";
+import { setDbUser, setIsNewUseImage } from "../../../../../redux/slices/userSlice";
 import { setLoading } from "../../../../../redux/slices/utilitySlice";
 import ButtonComponent from "../../../../../theme/button/button.component";
 import Combobox from "../../../../../theme/dropDown/combobox/Combobox.component";
@@ -133,13 +130,10 @@ const Physical = ({
         ? Number(Math?.trunc(userProfile?.heightInCentimeters / 30.48))
         : "",
       inches: userProfile?.heightInCentimeters
-        ? Number(
-            ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0)
-          ) === 12
+        ? Number(((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0)) ===
+          12
           ? ""
-          : Number(
-              ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0)
-            )
+          : Number(((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0))
         : "",
       kilograms: userProfile?.weightInKilograms
         ? Number(userProfile?.weightInKilograms?.toFixed(2))
@@ -169,9 +163,7 @@ const Physical = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handlePregnantOrLactating = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handlePregnantOrLactating = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e?.target;
     setPregnant(value);
     updateUserProfile("pregnantOrLactating", value);
@@ -225,8 +217,7 @@ const Physical = ({
 
   const submitData = async (data) => {
     let arrageAge = {
-      quantity:
-        ageType === "years" ? Number(data?.years) : Number(data?.months),
+      quantity: ageType === "years" ? Number(data?.years) : Number(data?.months),
       months: ageType === "months" ? true : false,
       years: ageType === "years" ? true : false,
     };
@@ -238,9 +229,7 @@ const Physical = ({
     let feet = +data?.feets * 30.48;
     let inches = +data?.inches ? +data?.inches * 2.54 : 0;
     let arrangHight =
-      measurementType === "US"
-        ? Number(feet + inches)
-        : Number(data?.centimeters);
+      measurementType === "US" ? Number(feet + inches) : Number(data?.centimeters);
 
     dispatch(setLoading(true));
 
@@ -401,17 +390,13 @@ const Physical = ({
         <div className={styles.profile_tab_wraper}>
           <div className={styles.profile_tab}>
             <p
-              className={`${
-                profileActiveTab === 0 ? styles.active_border : ""
-              }`}
+              className={`${profileActiveTab === 0 ? styles.active_border : ""}`}
               onClick={() => setProfileActiveTab(0)}
             >
               Profile
             </p>
             <p
-              className={`${
-                profileActiveTab === 1 ? styles.active_border : ""
-              }`}
+              className={`${profileActiveTab === 1 ? styles.active_border : ""}`}
               onClick={() => setProfileActiveTab(1)}
             >
               Daily Intake
@@ -438,8 +423,8 @@ const Physical = ({
                 />
               </div>
               <p className={styles.infoText}>
-                This information is used to customize daily recommended
-                nutrition targets
+                This information is used to customize daily recommended nutrition
+                targets
               </p>
             </div>
 
@@ -708,14 +693,10 @@ const Physical = ({
 
                 {userProfile?.gender === "Female" ? (
                   <>
-                    <div
-                      className={styles.contentContainer__elementDiv__heading}
-                    >
+                    <div className={styles.contentContainer__elementDiv__heading}>
                       <p className={styles?.label}>Pregnant or Lactating?</p>
                     </div>
-                    <div
-                      className={styles.contentContainer__elementDiv__objects}
-                    >
+                    <div className={styles.contentContainer__elementDiv__objects}>
                       <Combobox
                         options={pregnantOrLactating}
                         placeholder="Select"

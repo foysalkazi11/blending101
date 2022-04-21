@@ -170,8 +170,7 @@ const NoteSection = ({ allNotes, setAllNotes }: NoteSectionProps) => {
                     <span>
                       {note?.updatedAt ? (
                         <>
-                          {format(parseISO(note?.updatedAt), "dd/mm/yyyy")}{" "}
-                          (edited)
+                          {format(parseISO(note?.updatedAt), "dd/mm/yyyy")} (edited)
                         </>
                       ) : (
                         format(parseISO(note?.createdAt), "dd/mm/yyyy")

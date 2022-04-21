@@ -16,44 +16,6 @@ export const GET_ALL_INGREDIENTS_DATA_BASED_ON_NUTRITION = (
   }
 `;
 
-export const GET_DAILY_BY_USER_ID = (userId) => gql`
-  query {
-    getDailyByUserId(userId: "61c1e18ab0b6d08ad8f7484f") {
-      bmi {
-        value
-        units
-      }
-      calories {
-        value
-        units
-      }
-      nutrients {
-        Energy {
-          nutrientName
-          data {
-            value
-            units
-          }
-        }
-        Minerals {
-          nutrientName
-          data {
-            value
-            units
-          }
-        }
-        Vitamins {
-          nutrientName
-          data {
-            value
-            units
-          }
-        }
-      }
-    }
-  }
-`;
-
 export const GET_ALL_BLEND_NUTRIENTS =  gql`
   query {
     getAllBlendNutrients {

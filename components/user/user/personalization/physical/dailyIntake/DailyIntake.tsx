@@ -1,19 +1,73 @@
-import { useQuery } from "@apollo/client";
-import React, { useEffect } from "react";
-import { GET_DAILY_BY_USER_ID } from "../../../../../../gqlLib/recipeDiscovery/query/recipeDiscovery";
+import { useMutation, useQuery } from "@apollo/client";
+import React, { useEffect, useState } from "react";
+import { GET_ALL_BLEND_NUTRIENTS } from "../../../../../../gqlLib/recipeDiscovery/query/recipeDiscovery";
+import { UPDATE_DAILY_GOALS } from "../../../../../../gqlLib/user/mutations/mutation/updateDailyGoals";
+import { GET_DAILY_BY_USER_ID } from "../../../../../../gqlLib/user/mutations/query/getDaily";
+import { useAppSelector } from "../../../../../../redux/hooks";
 import ButtonComponent from "../../../../../../theme/button/button.component";
+import CircularRotatingLoader from "../../../../../../theme/loader/circularRotatingLoader.component";
+import DailyIntakeAccordian from "../../../../../customRecursiveAccordian/dailyIntakeAccordian/dailyIntakeAccordian.component";
+import reactToastifyNotification from "../../../../../utility/reactToastifyNotification";
 import styles from "./DailyIntake.module.scss";
 import HeadingBox from "./headingBox/headingBox.component";
 import InputGoal from "./inputGoal/inputGoal.component";
 
 const DailyIntake = () => {
-  const { data: dailyData } = useQuery(GET_DAILY_BY_USER_ID("asdf"));
+  const [loading, setLoading] = useState(false);
+  const [inputValue, setInputValue] = useState({
+    memberId: "",
+    calories: "",
+    bmi: "",
+    goals: {},
+  });
+  const { dbUser } = useAppSelector((state) => state?.user);
+  const { data: dailyData } = useQuery(GET_DAILY_BY_USER_ID(dbUser?._id));
+  const objectToArrayForGoals = (goalsObject) => {
+    let goalsArray = [];
+    if (Object?.keys(goalsObject)?.length > 0) {
+      Object?.entries(goalsObject)?.map((elem) => {
+        goalsArray = [...goalsArray, elem[1]];
+      });
+    }
+    return goalsArray;
+  };
+  const [updateDailyGoals] = useMutation(
+    UPDATE_DAILY_GOALS({
+      memberId: dbUser?._id,
+      calories: inputValue.calories || 0,
+      bmi: inputValue.bmi || 0,
+      goalsArray: objectToArrayForGoals(inputValue.goals) || [],
+    })
+  );
   const dailyChartData = dailyData?.getDailyByUserId;
 
-  useEffect(() => {
-    console.log(dailyData);
-  }, [dailyData]);
+  const handleInput = (e: { target: { name: string; value: string } }) => {
+    let updatedObject = inputValue;
 
+    updatedObject = {
+      ...updatedObject,
+      [e.target.name]: parseInt(e.target.value),
+    };
+    setInputValue(updatedObject);
+  };
+
+  useEffect(() => {
+    if (!inputValue) return;
+    let updatedObject = inputValue;
+    updatedObject = {
+      ...updatedObject,
+      memberId: dbUser?._id,
+    };
+    setInputValue(updatedObject);
+  }, [dbUser?._id]);
+
+  const updateGoals = async () => {
+    setLoading(true);
+    const { data } = await updateDailyGoals();
+    console.log(data);
+    setLoading(false);
+    reactToastifyNotification("info", "Profile Updated Successfully");
+  };
   return (
     <>
       <div className={styles.dailyIntakeContainer}>
@@ -22,38 +76,63 @@ const DailyIntake = () => {
             Your daily recommended intake based on your profile settings
           </p>
         </header>
-        <div className={styles.mainContentDiv}>
-          <div className={styles.centerElement}>
-            <HeadingBox>Source</HeadingBox>
-          </div>
-          <div className={styles.centerElement}>
-            <HeadingBox>DRI</HeadingBox>
-          </div>
-          <div className={styles.centerElement}>
-            <HeadingBox>Goal</HeadingBox>
-          </div>
-          <h3 className={styles.centerElement}>BMI</h3>
-          <h3 className={styles.centerElement}>
-            {Math.round(dailyChartData?.bmi?.value)}
-          </h3>
-          <div className={styles.centerElement}>
-            <InputGoal />
-          </div>
-          <h3 className={styles.centerElement}>Calories</h3>
-          <h3 className={styles.centerElement}>
-            {Math.round(dailyChartData?.calories?.value)}
-          </h3>
-          <div className={styles.centerElement}>
-            <InputGoal />
-          </div>
-        </div>
         <div className={styles.mainContentDiv__accordian}>
-          {dailyChartData &&
-            Object.entries(dailyChartData?.nutrients).map((itm) => {
-              if (itm[0] !== "__typename") {
-                console.log(itm)
-              };
-            })}
+          <div className={styles.centerDiv}>
+            <div className={styles.centerDiv__headingTray}>
+              <div className={styles.centerDiv__headingTray__left}>
+                <HeadingBox>Source</HeadingBox>
+              </div>
+              <div className={styles.centerDiv__headingTray__center}>
+                <HeadingBox>DRI</HeadingBox>
+              </div>
+              <div className={styles.centerDiv__headingTray__right}>
+                <HeadingBox>Goal</HeadingBox>
+              </div>
+            </div>
+            <div className={styles.centerDiv__headingTray}>
+              <h3 className={styles.centerDiv__headingTray__left}>BMI</h3>
+              <h3 className={styles.centerDiv__headingTray__center}>
+                {dailyChartData?.bmi?.value ? (
+                  Math.round(dailyChartData?.bmi?.value)
+                ) : (
+                  <div style={{ marginTop: "10px" }}>
+                    <CircularRotatingLoader />
+                  </div>
+                )}
+              </h3>
+              <div className={styles.centerDiv__headingTray__right}>
+                <InputGoal
+                  name={"bmi"}
+                  inputValue={inputValue.bmi}
+                  setInputValue={handleInput}
+                />
+              </div>
+            </div>
+            <div className={styles.centerDiv__headingTray}>
+              <h3 className={styles.centerDiv__headingTray__left}>Calories</h3>
+              <h3 className={styles.centerDiv__headingTray__center}>
+                {dailyChartData?.calories?.value ? (
+                  Math.round(dailyChartData?.calories?.value)
+                ) : (
+                  <div style={{ marginTop: "10px" }}>
+                    <CircularRotatingLoader />
+                  </div>
+                )}
+              </h3>
+              <div className={styles.centerDiv__headingTray__right}>
+                <InputGoal
+                  name={"calories"}
+                  inputValue={inputValue.calories}
+                  setInputValue={handleInput}
+                />
+              </div>
+            </div>
+          </div>
+          <DailyIntakeAccordian
+            recursiveObject={dailyChartData?.nutrients}
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+          />
         </div>
       </div>
       <div
@@ -64,16 +143,28 @@ const DailyIntake = () => {
           marginTop: "40px",
         }}
       >
-        <ButtonComponent
-          type="primary"
-          value="Update Profile"
-          style={{
-            borderRadius: "30px",
-            height: "48px",
-            width: "180px",
-          }}
-          // onClick={handleSubmit(submitData)}
-        />
+        {loading ? (
+          <ButtonComponent
+            type="primary"
+            value="Updating ..."
+            style={{
+              borderRadius: "30px",
+              height: "48px",
+              width: "180px",
+            }}
+          />
+        ) : (
+          <ButtonComponent
+            type="primary"
+            value="Update Profile"
+            style={{
+              borderRadius: "30px",
+              height: "48px",
+              width: "180px",
+            }}
+            onClick={updateGoals}
+          />
+        )}
       </div>
     </>
   );

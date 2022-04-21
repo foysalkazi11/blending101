@@ -108,6 +108,7 @@ const RightTray = ({
         </div>
 
         <div className={styles.compoent__box__nutrition}>
+          {console.log(nutritionTrayData)}
           {nutritionTrayData ? (
             <UpdatedRecursiveAccordian
               dataObject={nutritionTrayData}

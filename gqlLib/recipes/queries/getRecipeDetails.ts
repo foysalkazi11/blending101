@@ -44,8 +44,8 @@ export const GET_RECIPE = gql`
 `;
 
 export const GET_A_RECIPE_FOR_EDIT_RECIPE = gql`
-  query GetARecipe($recipeId: String!) {
-    getARecipe(recipeId: $recipeId) {
+  query GetARecipe($recipeId: String!,$userId: String!) {
+    getARecipe(recipeId: $recipeId,userId:$userId) {
       _id
       name
       prepTime
