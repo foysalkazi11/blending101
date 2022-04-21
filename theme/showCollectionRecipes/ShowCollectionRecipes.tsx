@@ -142,6 +142,7 @@ const ShowCollectionRecipes = () => {
                       image={item.image[0]?.image}
                       recipeId={item?._id}
                       notes={item?.notes}
+                      addedToCompare={item?.addedToCompare}
                     />
                   </div>
                 );
@@ -170,6 +171,7 @@ const ShowCollectionRecipes = () => {
                     image={item.image[0]?.image}
                     recipeId={item?._id}
                     notes={item?.notes}
+                    addedToCompare={item?.addedToCompare}
                   />
                 </div>
               );

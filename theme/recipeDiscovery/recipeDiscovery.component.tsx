@@ -95,7 +95,7 @@ const RecipeDetails = () => {
         getAllRecipes();
       }
     }
-  }, [dbUser]);
+  }, [dbUser?._id]);
 
   useEffect(() => {
     isMounted.current = true;
@@ -158,6 +158,7 @@ const RecipeDetails = () => {
                             image={item.image[0]?.image}
                             recipeId={item?._id}
                             notes={item?.notes}
+                            addedToCompare={item?.addedToCompare}
                           />
                         </div>
                       );
@@ -203,6 +204,7 @@ const RecipeDetails = () => {
                               image={item.image[0]?.image}
                               recipeId={item?._id}
                               notes={item?.notes}
+                              addedToCompare={item?.addedToCompare}
                             />
                           </div>
                         );
@@ -248,6 +250,7 @@ const RecipeDetails = () => {
                               image={item.image[0]?.image}
                               recipeId={item?._id}
                               notes={item?.notes}
+                              addedToCompare={item?.addedToCompare}
                             />
                           </div>
                         );
