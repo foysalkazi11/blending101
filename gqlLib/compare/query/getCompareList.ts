@@ -26,8 +26,18 @@ const GET_COMPARE_LIST = gql`
       numberOfRating
       ingredients {
         ingredientId {
-          _id
           ingredientName
+          _id
+        }
+        selectedPortion {
+          name
+          quantity
+          gram
+        }
+        portions {
+          name
+          gram
+          default
         }
       }
       notes

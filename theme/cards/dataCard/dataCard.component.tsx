@@ -30,6 +30,7 @@ import {
 import { useRouter } from "next/router";
 import CHANGE_COMPARE from "../../../gqlLib/compare/mutation/changeCompare";
 import notification from "../../../components/utility/reactToastifyNotification";
+import useLocalStorage from "../../../customHooks/useLocalStorage";
 
 interface dataCardInterface {
   title: string;
@@ -93,6 +94,10 @@ export default function DatacardComponent({
   const { latest, popular, recommended } = useAppSelector(
     (state) => state?.recipe
   );
+  const [compareRecipeList, setcompareRecipeList] = useLocalStorage(
+    "compareList",
+    []
+  );
 
   const updateRecipeCompare = (id: string, addedToCompare: boolean) => {
     dispatch(
@@ -126,7 +131,12 @@ export default function DatacardComponent({
     );
   };
 
-  const handleChangeCompare = async (id: string, alredyCompared: boolean) => {
+  const handleChangeCompare = async (
+    e: React.SyntheticEvent,
+    id: string,
+    alredyCompared: boolean
+  ) => {
+    e.stopPropagation();
     try {
       updateRecipeCompare(id, alredyCompared);
       const { data } = await changeCompare({
@@ -366,13 +376,13 @@ export default function DatacardComponent({
                       <img
                         src="/icons/compare-1.svg"
                         alt="eclipse"
-                        onClick={() => handleChangeCompare(recipeId, false)}
+                        onClick={(e) => handleChangeCompare(e, recipeId, false)}
                       />
                     ) : (
                       <img
                         src="/icons/eclipse.svg"
                         alt="eclipse"
-                        onClick={() => handleChangeCompare(recipeId, true)}
+                        onClick={(e) => handleChangeCompare(e, recipeId, true)}
                       />
                     )}
                   </li>

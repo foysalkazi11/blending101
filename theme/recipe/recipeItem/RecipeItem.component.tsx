@@ -46,7 +46,7 @@ const RecipeItem = (props: RecipeItemProps) => {
   return (
     <div className={styles.listContainer} onClick={handleClickk}>
       {/* @ts-ignore */}
-      <p>{item?.ingredientId?.ingredientName}</p>
+      <p>{`${item?.selectedPortion?.quantity} ${item?.selectedPortion?.name} ${item?.ingredientId?.ingredientName}`}</p>
 
       {/* <span className={styles.listContainer__tooltiptext}>
         Drag to the left

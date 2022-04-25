@@ -14,6 +14,7 @@ import GET_COMPARE_LIST from "../../../gqlLib/compare/query/getCompareList";
 import { useAppSelector } from "../../../redux/hooks";
 import SkeletonComparePage from "../../../theme/skeletons/skeletonComparePage/SkeletonComparePage";
 import notification from "../../utility/reactToastifyNotification";
+import useLocalStorage from "../../../customHooks/useLocalStorage";
 
 const responsiveSetting = {
   slidesToShow: 7,
@@ -95,7 +96,10 @@ const compareRecipeResponsiveSetting = {
 const CompareRecipe = () => {
   const router = useRouter();
   const [recipeList, setRecipeList] = useState([]);
-  const [compareRecipeList, setcompareRecipeList] = useState([]);
+  const [compareRecipeList, setcompareRecipeList] = useLocalStorage(
+    "compareList",
+    []
+  );
   const sliderRef = useRef(null);
   const { dbUser } = useAppSelector((state) => state?.user);
   const { data, loading, error } = useQuery(GET_COMPARE_LIST, {
@@ -112,13 +116,8 @@ const CompareRecipe = () => {
   }, [data]);
 
   const findCompareRecipe = (id: string) => {
-    /* @ts-ignore */
     const item = compareRecipeList?.find((item) => item?._id === id);
-    if (item) {
-      return true;
-    } else {
-      return false;
-    }
+    return item ? true : false;
   };
 
   const handleCompare = (recipe) => {

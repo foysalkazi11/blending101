@@ -59,6 +59,7 @@ const DailyIntake = () => {
       memberId: dbUser?._id,
     };
     setInputValue(updatedObject);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dbUser?._id]);
 
   const updateGoals = async () => {
