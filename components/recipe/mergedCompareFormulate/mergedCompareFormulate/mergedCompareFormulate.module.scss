@@ -1,0 +1,15 @@
+@mixin responsive($min_width) {
+    @media only screen and (min-width:$min_width) {
+        @content;
+    }
+}
+
+.mainContentDiv {
+    @include responsive(0px) {
+
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
+        padding: 40px 50px;
+    }
+}
