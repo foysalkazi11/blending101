@@ -4,9 +4,12 @@ import SectionTitleWithIcon from "../../../../theme/recipe/sectionTitleWithIcon/
 import RecipeItem from "../../../../theme/recipe/recipeItem/RecipeItem.component";
 import styles from "./RecipeDetails.module.scss";
 import { Droppable, Draggable } from "react-beautiful-dnd";
-import Accordion from "../../../../theme/accordion/accordion.component";
 import CancelIcon from "../../../../public/icons/cancel_black_36dp.svg";
 import uniqueId from "../../../utility/uniqueId";
+import { useLazyQuery } from "@apollo/client";
+import GET_BLEND_NUTRITION_BASED_ON_RECIPE_DATA from "../../../../gqlLib/compare/query/getBlendNutritionBasedOnRecipeData";
+import NutrationPanelSkeleton from "../../../../theme/skeletons/nutrationPanelSkeleton/NutrationPanelSkeleton";
+import UpdatedRecursiveAccordian from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
 
 function Copyable(props) {
   const { items, addItem, droppableId } = props;
@@ -68,6 +71,11 @@ const RecipeDetails = ({
   dragAndDrop = false,
 }: any) => {
   const [winReady, setwinReady] = useState(false);
+  const [getBlendNutritionBasedonRecipeData, { loading, error, data }] =
+    useLazyQuery(GET_BLEND_NUTRITION_BASED_ON_RECIPE_DATA, {
+      fetchPolicy: "network-only",
+    });
+  console.log(data);
 
   const makeIngredients = (ing) => {
     let arr = [];
@@ -80,6 +88,15 @@ const RecipeDetails = ({
 
   useEffect(() => {
     setwinReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (recipe?._id) {
+      getBlendNutritionBasedonRecipeData({
+        variables: { recipeId: recipe?._id },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -121,17 +138,12 @@ const RecipeDetails = ({
           ) : null
         ) : (
           recipe?.ingredients?.map((item, index) => {
-            const ingredient = item?.ingredientId?.ingredientName;
+            const ingredientName = item?.ingredientId?.ingredientName;
+            const selectedPortionName = item?.selectedPortion?.name;
+            const selectedPortionQuantity = item?.selectedPortion?.quantity;
             return (
-              <p
-                key={index}
-                style={{
-                  fontSize: "14px",
-                  color: "#ababab",
-                  marginBottom: "15px",
-                }}
-              >
-                {ingredient}
+              <p key={index} className={styles.singleIngredient}>
+                {`${selectedPortionQuantity} ${selectedPortionName} ${ingredientName}`}
               </p>
             );
           })
@@ -146,38 +158,28 @@ const RecipeDetails = ({
         <div className={styles.nutritionHeader}>
           <p>Amount Per Serving Calories</p>
 
-          <div className={styles.table_row}>
+          {/* <div className={styles.table_row}>
             <div>Calories</div>
             <div>93</div>
           </div>
-          <table></table>
+          <table></table> */}
         </div>
 
         <div className={styles.ingredientsDetails}>
-          {/* {nutrition?.map((item, index) => {
-            const { section, amount } = item;
-            return (
-              <Accordion key={index} title={section}>
-                <table>
-                  <tr className={styles.table_row_calorie}>
-                    <td></td>
-                    <td> VALUE </td>
-                    <td> DAILY% </td>
-                  </tr>
-                  {amount?.map((items, index) => {
-                    const { label, value, daily } = items;
-                    return (
-                      <tr key={index}>
-                        <td>{label}</td>
-                        <td> {value} </td>
-                        <td> {daily} </td>
-                      </tr>
-                    );
-                  })}
-                </table>
-              </Accordion>
-            );
-          })} */}
+          {winReady ? (
+            loading ? (
+              <NutrationPanelSkeleton />
+            ) : (
+              <UpdatedRecursiveAccordian
+                dataObject={
+                  data?.getBlendNutritionBasedOnRecipeData &&
+                  JSON?.parse(data?.getBlendNutritionBasedOnRecipeData)
+                }
+                showUser={false}
+                counter={1}
+              />
+            )
+          ) : null}
         </div>
       </div>
     </div>

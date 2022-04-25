@@ -9,25 +9,27 @@ import { useRouter } from "next/router";
 interface recursiveAccordianInterface {
   dataObject: object;
   counter?: number;
+  showUser?: boolean;
 }
 
 const UpdatedRecursiveAccordian = ({
   dataObject,
   counter,
+  showUser = true,
 }: recursiveAccordianInterface) => {
   //@ts-ignore
   const { user, dbUser } = useAppSelector((state) => state?.user);
   const router = useRouter();
   return (
-    <div>
+    <>
       <div className={styles.nutritionHeader}>
         <div className={styles.recursiveAccordianHeading__heading}>
           <div className={styles.recursiveAccordianHeading__heading__1}>
             Calories
           </div>
           <div className={styles.recursiveAccordianHeading__heading__2}>93</div>
-          <div className={styles.recursiveAccordianHeading__heading__3}>
-            <div>
+          {showUser ? (
+            <div className={styles.recursiveAccordianHeading__heading__3}>
               {user ? (
                 <div className={styles.userName}>
                   {dbUser?.image ? (
@@ -47,7 +49,7 @@ const UpdatedRecursiveAccordian = ({
                 </div>
               ) : null}
             </div>
-          </div>
+          ) : null}
         </div>
       </div>
       <div className={styles.recursiveAccordianHeading__subheading}>
@@ -69,7 +71,7 @@ const UpdatedRecursiveAccordian = ({
           />
         );
       })}
-    </div>
+    </>
   );
 };
 export default UpdatedRecursiveAccordian;
