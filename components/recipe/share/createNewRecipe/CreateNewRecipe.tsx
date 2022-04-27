@@ -2,10 +2,10 @@
 import React, { useState, useEffect } from "react";
 import styles from "./CreateNewRecipe.module.scss";
 import { Droppable, Draggable } from "react-beautiful-dnd";
-import SectionTitleWithIcon from "../../../theme/recipe/sectionTitleWithIcon/SectionTitleWithIcon.component";
-import RecipeItem from "../../../theme/recipe/recipeItem/RecipeItem.component";
-import Accordion from "../../../theme/accordion/accordion.component";
-import ButtonComponent from "../../../theme/button/button.component";
+import SectionTitleWithIcon from "../../../../theme/recipe/sectionTitleWithIcon/SectionTitleWithIcon.component";
+import RecipeItem from "../../../../theme/recipe/recipeItem/RecipeItem.component";
+import Accordion from "../../../../theme/accordion/accordion.component";
+import ButtonComponent from "../../../../theme/button/button.component";
 
 const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
   const { id, name, image, ingredients, nutrition } = newRecipe;

@@ -15,85 +15,17 @@ import { useAppSelector } from "../../../redux/hooks";
 import SkeletonComparePage from "../../../theme/skeletons/skeletonComparePage/SkeletonComparePage";
 import notification from "../../utility/reactToastifyNotification";
 import useLocalStorage from "../../../customHooks/useLocalStorage";
-
-const responsiveSetting = {
-  slidesToShow: 7,
-  slidesToScroll: 1,
-
-  responsive: [
-    {
-      breakpoint: 1450,
-      settings: {
-        slidesToShow: 6,
-        slidesToScroll: 1,
-      },
-    },
-    {
-      breakpoint: 1250,
-      settings: {
-        slidesToShow: 5,
-        slidesToScroll: 1,
-      },
-    },
-    {
-      breakpoint: 1050,
-      settings: {
-        slidesToShow: 4,
-        slidesToScroll: 1,
-      },
-    },
-    {
-      breakpoint: 850,
-      settings: {
-        slidesToShow: 3,
-        slidesToScroll: 1,
-      },
-    },
-    {
-      breakpoint: 650,
-      settings: {
-        slidesToShow: 2,
-        slidesToScroll: 1,
-      },
-    },
-  ],
-};
-
-const compareRecipeResponsiveSetting = {
-  slidesToShow: 4,
-  slidesToScroll: 1,
-  swipeToSlide: false,
-  arrows: false,
-  infinite: false,
-  // afterChange: (num) => console.log("afterChange", num),
-  // beforeChange: (num1, num2) => console.log("befourChange", num1, num2),
-
-  responsive: [
-    {
-      breakpoint: 1500,
-      settings: {
-        slidesToShow: 3,
-        slidesToScroll: 1,
-      },
-    },
-    {
-      breakpoint: 1200,
-      settings: {
-        slidesToShow: 2,
-        slidesToScroll: 1,
-      },
-    },
-    {
-      breakpoint: 800,
-      settings: {
-        slidesToShow: 1,
-        slidesToScroll: 1,
-      },
-    },
-  ],
-};
+import { DragDropContext } from "react-beautiful-dnd";
+import CreateNewRecipe from "../share/createNewRecipe/CreateNewRecipe";
+import {
+  responsiveSetting,
+  compareRecipeResponsiveSetting,
+  formulateRecipeResponsiveSetting,
+} from "./utility";
+import useWindowSize from "../../utility/useWindowSize";
 
 const CompareRecipe = () => {
+  const [isFormulatePage, setIsFormulatePage] = useState(false);
   const router = useRouter();
   const [recipeList, setRecipeList] = useState([]);
   const [compareRecipeList, setcompareRecipeList] = useLocalStorage(
@@ -106,6 +38,32 @@ const CompareRecipe = () => {
     variables: { userId: dbUser?._id },
     fetchPolicy: "network-only",
   });
+  const windowSize = useWindowSize();
+  const [newRecipe, setNewRecipe] = useState<{}>({
+    id: 456,
+    name: "",
+    image: "",
+    ingredients: [],
+    nutrition: [
+      {
+        section: "Energy",
+        amount: [],
+      },
+      {
+        section: "Vitamins",
+        amount: [],
+      },
+      {
+        section: "Minerals",
+        amount: [],
+      },
+      {
+        section: "Phythonutrients",
+        amount: [],
+      },
+    ],
+  });
+
   console.log(recipeList);
 
   useEffect(() => {
@@ -142,6 +100,19 @@ const CompareRecipe = () => {
     ]);
   };
 
+  const responsiveGridTemplateColumn = () => {
+    const length = compareRecipeList?.length;
+    switch (length) {
+      case 1:
+        return "50% 50%";
+      case 2:
+        return "33.33% 66.66%";
+
+      default:
+        return "25% 75%";
+    }
+  };
+
   return (
     <AContainer showLeftTray={false} logo={false} headerTitle="Compare Recipe">
       <div className={styles.mainContentDiv}>
@@ -153,9 +124,9 @@ const CompareRecipe = () => {
               <SubNav
                 backAddress="/recipe_discovery"
                 backIconText="Recipe Discovery"
-                buttonText="Formulate"
+                buttonText={isFormulatePage ? "Compare" : "Formulate"}
                 showButton={true}
-                buttonClick={() => router.push("/recipe/formulate")}
+                buttonClick={() => setIsFormulatePage((pre) => !pre)}
                 compareAmout={dbUser?.compareLength}
                 closeCompare={() => setcompareRecipeList([])}
               />
@@ -177,23 +148,73 @@ const CompareRecipe = () => {
                   );
                 })}
               </Carousel>
-              <SliderArrows
-                compareRecipeLength={compareRecipeList.length}
-                prevFunc={() => sliderRef.current?.slickPrev()}
-                nextFunc={() => sliderRef.current?.slickNext()}
-              />
+              {windowSize?.width > 768 ? (
+                <SliderArrows
+                  compareRecipeLength={compareRecipeList.length}
+                  prevFunc={() => sliderRef.current?.slickPrev()}
+                  nextFunc={() => sliderRef.current?.slickNext()}
+                />
+              ) : null}
 
-              <Slider {...compareRecipeResponsiveSetting} ref={sliderRef}>
-                {compareRecipeList?.map((recipe, index) => {
-                  return (
-                    <RecipeDetails
-                      key={index}
-                      recipe={recipe}
-                      removeCompareRecipe={removeCompareRecipe}
-                    />
-                  );
-                })}
-              </Slider>
+              {isFormulatePage ? (
+                <DragDropContext onDragEnd={() => {}}>
+                  <div
+                    className={styles.comparePageContainer}
+                    // style={{
+                    //   gridTemplateColumns: responsiveGridTemplateColumn(),
+                    // }}
+                  >
+                    <div>
+                      <CreateNewRecipe
+                        newRecipe={newRecipe}
+                        setNewRecipe={setNewRecipe}
+                        deleteItem={() => {}}
+                      />
+                    </div>
+
+                    <div>
+                      {windowSize?.width <= 768 ? (
+                        <div style={{ marginTop: "16px" }}>
+                          <SliderArrows
+                            compareRecipeLength={compareRecipeList.length}
+                            prevFunc={() => sliderRef.current?.slickPrev()}
+                            nextFunc={() => sliderRef.current?.slickNext()}
+                          />
+                        </div>
+                      ) : null}
+                      <Slider
+                        {...formulateRecipeResponsiveSetting(
+                          compareRecipeList?.length
+                        )}
+                        ref={sliderRef}
+                      >
+                        {compareRecipeList?.map((recipe, index) => {
+                          return (
+                            <RecipeDetails
+                              key={index}
+                              recipe={recipe}
+                              removeCompareRecipe={removeCompareRecipe}
+                              dragAndDrop={true}
+                            />
+                          );
+                        })}
+                      </Slider>
+                    </div>
+                  </div>
+                </DragDropContext>
+              ) : (
+                <Slider {...compareRecipeResponsiveSetting} ref={sliderRef}>
+                  {compareRecipeList?.map((recipe, index) => {
+                    return (
+                      <RecipeDetails
+                        key={index}
+                        recipe={recipe}
+                        removeCompareRecipe={removeCompareRecipe}
+                      />
+                    );
+                  })}
+                </Slider>
+              )}
             </>
           )}
         </div>

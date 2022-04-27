@@ -10,6 +10,35 @@ import { useLazyQuery } from "@apollo/client";
 import GET_BLEND_NUTRITION_BASED_ON_RECIPE_DATA from "../../../../gqlLib/compare/query/getBlendNutritionBasedOnRecipeData";
 import NutrationPanelSkeleton from "../../../../theme/skeletons/nutrationPanelSkeleton/NutrationPanelSkeleton";
 import UpdatedRecursiveAccordian from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
+import DragIndicatorIcon from "../../../../../public/icons/drag_indicator_black_36dp.svg";
+import { MdDragIndicator } from "react-icons/md";
+import { FiPlusCircle } from "react-icons/fi";
+
+interface SingleIngredient {
+  item?: any;
+  dargProps?: any;
+  handleAdd?: (item: object) => void;
+}
+
+const SingleIngredient = ({
+  dargProps = {},
+  handleAdd = () => {},
+  item = {},
+}: SingleIngredient) => {
+  return (
+    <div className={styles.singleIngredientContainer}>
+      <div className={styles.leftSide}>
+        <MdDragIndicator className={styles.dargIcon} {...dargProps} />
+
+        <p
+          className={styles.text}
+        >{`${item?.selectedPortion?.quantity} ${item?.selectedPortion?.name} ${item?.ingredientId?.ingredientName}`}</p>
+      </div>
+
+      <FiPlusCircle className={styles.plusIcon} />
+    </div>
+  );
+};
 
 function Copyable(props) {
   const { items, addItem, droppableId } = props;
@@ -41,15 +70,19 @@ function Copyable(props) {
               <Draggable draggableId={`${item.id}`} index={index} key={item.id}>
                 {(provided, snapshot) => (
                   <>
-                    <div
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      ref={provided.innerRef}
-                    >
-                      <RecipeItem item={item} handleClick={addItem} />
+                    <div {...provided.draggableProps} ref={provided.innerRef}>
+                      <SingleIngredient
+                        item={item}
+                        handleAdd={addItem}
+                        dargProps={provided.dragHandleProps}
+                      />
                     </div>
                     {snapshot.isDragging && (
-                      <RecipeItem item={item} handleClick={addItem} />
+                      <SingleIngredient
+                        item={item}
+                        handleAdd={addItem}
+                        dargProps={provided.dragHandleProps}
+                      />
                     )}
                   </>
                 )}
@@ -100,86 +133,88 @@ const RecipeDetails = ({
   }, []);
 
   return (
-    <div className={styles.recipeDetailsContainer}>
-      <div
-        className={styles.cancleIcon}
-        onClick={() => removeCompareRecipe(recipe)}
-      >
-        <CancelIcon />
-      </div>
-      <DatacardComponent
-        title={recipe?.name}
-        ingredients={makeIngredients(recipe?.ingredients)}
-        category={recipe?.recipeBlendCategory?.name}
-        ratings={recipe?.averageRating}
-        noOfRatings={recipe?.numberOfRating}
-        carbs={recipe?.carbs}
-        score={recipe?.score}
-        calorie={recipe?.calorie}
-        noOfComments={recipe?.numberOfRating}
-        image={recipe.image[0]?.image}
-        recipeId={recipe?._id}
-        notes={recipe?.notes}
-        addedToCompare={recipe?.addedToCompare}
-      />
-      <div className={styles.dividerBox}>
-        <SectionTitleWithIcon
-          title="Ingredients"
-          icon="/images/right-blender.svg"
+    <div className={styles.recipeDetailsFirstContainer}>
+      <div className={styles.recipeDetailsContainer}>
+        <div
+          className={styles.cancleIcon}
+          onClick={() => removeCompareRecipe(recipe)}
+        >
+          <CancelIcon />
+        </div>
+        <DatacardComponent
+          title={recipe?.name}
+          ingredients={makeIngredients(recipe?.ingredients)}
+          category={recipe?.recipeBlendCategory?.name}
+          ratings={recipe?.averageRating}
+          noOfRatings={recipe?.numberOfRating}
+          carbs={recipe?.carbs}
+          score={recipe?.score}
+          calorie={recipe?.calorie}
+          noOfComments={recipe?.numberOfRating}
+          image={recipe.image[0]?.image}
+          recipeId={recipe?._id}
+          notes={recipe?.notes}
+          addedToCompare={recipe?.addedToCompare}
         />
+        <div className={styles.dividerBox}>
+          <SectionTitleWithIcon
+            title="Ingredients"
+            icon="/images/right-blender.svg"
+          />
 
-        {dragAndDrop ? (
-          winReady ? (
-            <Copyable
-              items={recipe?.ingredients}
-              addItem={addItem}
-              droppableId={`${id}`}
-            />
-          ) : null
-        ) : (
-          recipe?.ingredients?.map((item, index) => {
-            const ingredientName = item?.ingredientId?.ingredientName;
-            const selectedPortionName = item?.selectedPortion?.name;
-            const selectedPortionQuantity = item?.selectedPortion?.quantity;
-            return (
-              <p key={index} className={styles.singleIngredient}>
-                {`${selectedPortionQuantity} ${selectedPortionName} ${ingredientName}`}
-              </p>
-            );
-          })
-        )}
-      </div>
-
-      <div className={styles.dividerBox}>
-        <SectionTitleWithIcon
-          title="Nutrition"
-          icon="/icons/chart-bar-light-green.svg"
-        />
-        <div className={styles.nutritionHeader}>
-          <p>Amount Per Serving Calories</p>
-
-          {/* <div className={styles.table_row}>
-            <div>Calories</div>
-            <div>93</div>
-          </div>
-          <table></table> */}
+          {dragAndDrop ? (
+            winReady ? (
+              <Copyable
+                items={recipe?.ingredients}
+                addItem={addItem}
+                droppableId={`${id}`}
+              />
+            ) : null
+          ) : (
+            recipe?.ingredients?.map((item, index) => {
+              const ingredientName = item?.ingredientId?.ingredientName;
+              const selectedPortionName = item?.selectedPortion?.name;
+              const selectedPortionQuantity = item?.selectedPortion?.quantity;
+              return (
+                <p key={index} className={styles.singleIngredient}>
+                  {`${selectedPortionQuantity} ${selectedPortionName} ${ingredientName}`}
+                </p>
+              );
+            })
+          )}
         </div>
 
-        <div className={styles.ingredientsDetails}>
-          {winReady ? (
-            loading ? (
-              <NutrationPanelSkeleton />
-            ) : (
-              <UpdatedRecursiveAccordian
-                dataObject={
-                  data?.getBlendNutritionBasedOnRecipeData &&
-                  JSON?.parse(data?.getBlendNutritionBasedOnRecipeData)
-                }
-                showUser={false}
-                counter={1}
-              />
-            )
-          ) : null}
+        <div className={styles.dividerBox}>
+          <SectionTitleWithIcon
+            title="Nutrition"
+            icon="/icons/chart-bar-light-green.svg"
+          />
+          <div className={styles.nutritionHeader}>
+            <p>Amount Per Serving Calories</p>
+
+            {/* <div className={styles.table_row}>
+            <div>Calories</div>
+            <div>93</div>
+            </div>
+          <table></table> */}
+          </div>
+
+          <div className={styles.ingredientsDetails}>
+            {winReady ? (
+              loading ? (
+                <NutrationPanelSkeleton />
+              ) : (
+                <UpdatedRecursiveAccordian
+                  dataObject={
+                    data?.getBlendNutritionBasedOnRecipeData &&
+                    JSON?.parse(data?.getBlendNutritionBasedOnRecipeData)
+                  }
+                  showUser={false}
+                  counter={1}
+                />
+              )
+            ) : null}
+          </div>
         </div>
       </div>
     </div>

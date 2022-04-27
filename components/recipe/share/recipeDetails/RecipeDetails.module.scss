@@ -1,12 +1,14 @@
+.recipeDetailsFirstContainer {
+  padding: 0 5px;
+}
 .recipeDetailsContainer {
   background-color: #ffffff;
   padding: 10px;
   height: 100%;
-  margin: 0 5px;
   position: relative;
-  border: 2px solid #f2f2f8;
+  border: 1px solid #f2f2f8;
   border-radius: 7px;
-
+  width: 100%;
   &:hover .cancleIcon {
     color: #ababab;
     display: block;
@@ -110,4 +112,41 @@
   font-size: 14px;
   color: #ababab;
   margin-bottom: 15px;
+}
+
+.singleIngredientContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  transition: all 1000s linear;
+  &:hover {
+    .leftSide .dargIcon {
+      visibility: visible;
+    }
+    .plusIcon {
+      display: block;
+    }
+  }
+
+  .leftSide {
+    display: flex;
+    align-items: center;
+    .dargIcon {
+      color: #c4c4c4;
+      font-size: 20px;
+      outline: none;
+      visibility: hidden;
+    }
+    .text {
+      font-size: 14px;
+      color: #ababab;
+    }
+  }
+
+  .plusIcon {
+    color: #7cbc39;
+    font-size: 20px;
+    display: none;
+  }
 }
