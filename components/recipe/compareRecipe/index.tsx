@@ -94,19 +94,18 @@ const compareRecipeResponsiveSetting = {
 };
 
 const CompareRecipe = () => {
+  const sliderRef = useRef(null);
   const router = useRouter();
   const [recipeList, setRecipeList] = useState([]);
   const [compareRecipeList, setcompareRecipeList] = useLocalStorage(
     "compareList",
     []
   );
-  const sliderRef = useRef(null);
   const { dbUser } = useAppSelector((state) => state?.user);
   const { data, loading, error } = useQuery(GET_COMPARE_LIST, {
     variables: { userId: dbUser?._id },
     fetchPolicy: "network-only",
   });
-  console.log(recipeList);
 
   useEffect(() => {
     if (!loading) {

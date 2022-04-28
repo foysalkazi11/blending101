@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./authScreen.module.scss";
 import LoginScreen from "./screens/loginScreen/Login.component";
 import SignupScreen from "./screens/signupScreen/SignupScreen.component";

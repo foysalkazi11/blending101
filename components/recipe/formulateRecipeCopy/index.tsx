@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useRef} from "react";
+import React, { useState, useRef } from "react";
 import Acontainer from "../../../containers/A.container";
 import styles from "./formulateRecipe.module.scss";
 import list from "../fackData/racipeList";
@@ -175,36 +175,7 @@ const FormulateRecipe = () => {
   };
 
   const deleteItem = (id: number) => {
-    // console.log(newRecipe.ingredients);
-
-    // let newList = Array.from(
-    //   new Set(
-    //     newRecipe.ingredients.map((elem, index) => {
-    //       return elem.label;
-    //     })
-    //   )
-    // );
-
-    // let processedList = [];
-    // items.map((item, index) => {
-    //   if (newList.includes(item.label)) {
-    //     let itemIndex = newList.indexOf(item.label);
-    //     newList.splice(itemIndex, 1);
-    //     processedList = [...processedList, item];
-    //   }
-    // });
-
-    // console.log(newList);
-
-    // setNewRecipe((state) => ({
-    //   ...state,
-    //   ingredients: [
-    //     /* @ts-ignore */
-    //     ...processedList?.filter((item) => item?.id !== Number(id)),
-    //   ],
-    // }));
-
-      setNewRecipe((state) => ({
+    setNewRecipe((state) => ({
       ...state,
       ingredients: [
         /* @ts-ignore */
@@ -232,8 +203,7 @@ const FormulateRecipe = () => {
     if (source.droppableId !== "droppable") {
       if (destination.droppableId === "droppable") {
         const id =
-          recipeList[parseInt(source?.droppableId)]?.ingredients[source?.index]
-            ?.id;
+          recipeList[parseInt(source?.droppableId)]?.ingredients[source?.index]?.id;
         const item = findItem(id);
 
         if (!item) {
@@ -352,9 +322,7 @@ const FormulateRecipe = () => {
                       return (
                         <div
                           ref={recipeDivRef}
-                          className={
-                            styles.recipeDiv + " " + "recipe__drag__card"
-                          }
+                          className={styles.recipeDiv + " " + "recipe__drag__card"}
                           key={index + "FormulateRecipeCard"}
                         >
                           <RecipeDetails
