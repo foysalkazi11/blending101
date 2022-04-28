@@ -1,12 +1,14 @@
+.recipeDetailsFirstContainer {
+  padding: 0 5px;
+}
 .recipeDetailsContainer {
   background-color: #ffffff;
   padding: 10px;
   height: 100%;
-  margin: 0 5px;
   position: relative;
-  border: 2px solid #f2f2f8;
+  border: 1px solid #f2f2f8;
   border-radius: 7px;
-
+  width: 100%;
   &:hover .cancleIcon {
     color: #ababab;
     display: block;
@@ -109,5 +111,12 @@
 .singleIngredient {
   font-size: 14px;
   color: #ababab;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
+}
+
+.divStyle {
+  position: absolute;
+  pointer-events: none;
+  height: 100%;
+  width: 100%;
 }

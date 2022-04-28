@@ -40,3 +40,14 @@ export const GET_DAILY_BY_USER_ID = (userId) => gql`
     }
   }
 `;
+
+export const GET_DAILY_GOALS = (userId) => gql`
+  query {
+    getDailyGoals(memberId: "${userId}") {
+      memberId
+      calories
+      bmi
+      goals
+    }
+  }
+`;

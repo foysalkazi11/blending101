@@ -15,97 +15,54 @@ import { useAppSelector } from "../../../redux/hooks";
 import SkeletonComparePage from "../../../theme/skeletons/skeletonComparePage/SkeletonComparePage";
 import notification from "../../utility/reactToastifyNotification";
 import useLocalStorage from "../../../customHooks/useLocalStorage";
-
-const responsiveSetting = {
-  slidesToShow: 7,
-  slidesToScroll: 1,
-
-  responsive: [
-    {
-      breakpoint: 1450,
-      settings: {
-        slidesToShow: 6,
-        slidesToScroll: 1,
-      },
-    },
-    {
-      breakpoint: 1250,
-      settings: {
-        slidesToShow: 5,
-        slidesToScroll: 1,
-      },
-    },
-    {
-      breakpoint: 1050,
-      settings: {
-        slidesToShow: 4,
-        slidesToScroll: 1,
-      },
-    },
-    {
-      breakpoint: 850,
-      settings: {
-        slidesToShow: 3,
-        slidesToScroll: 1,
-      },
-    },
-    {
-      breakpoint: 650,
-      settings: {
-        slidesToShow: 2,
-        slidesToScroll: 1,
-      },
-    },
-  ],
-};
-
-const compareRecipeResponsiveSetting = {
-  slidesToShow: 4,
-  slidesToScroll: 1,
-  swipeToSlide: false,
-  arrows: false,
-  infinite: false,
-  // afterChange: (num) => console.log("afterChange", num),
-  // beforeChange: (num1, num2) => console.log("befourChange", num1, num2),
-
-  responsive: [
-    {
-      breakpoint: 1500,
-      settings: {
-        slidesToShow: 3,
-        slidesToScroll: 1,
-      },
-    },
-    {
-      breakpoint: 1200,
-      settings: {
-        slidesToShow: 2,
-        slidesToScroll: 1,
-      },
-    },
-    {
-      breakpoint: 800,
-      settings: {
-        slidesToShow: 1,
-        slidesToScroll: 1,
-      },
-    },
-  ],
-};
+import { DragDropContext } from "react-beautiful-dnd";
+import CreateNewRecipe from "../share/createNewRecipe/CreateNewRecipe";
+import {
+  responsiveSetting,
+  compareRecipeResponsiveSetting,
+  formulateRecipeResponsiveSetting,
+  reorder,
+} from "./utility";
+import useWindowSize from "../../utility/useWindowSize";
 
 const CompareRecipe = () => {
+  const [isFormulatePage, setIsFormulatePage] = useState(false);
   const router = useRouter();
   const [recipeList, setRecipeList] = useState([]);
   const [compareRecipeList, setcompareRecipeList] = useLocalStorage(
     "compareList",
     []
   );
+
+  console.log(compareRecipeList);
+
   const sliderRef = useRef(null);
   const { dbUser } = useAppSelector((state) => state?.user);
   const { data, loading, error } = useQuery(GET_COMPARE_LIST, {
     variables: { userId: dbUser?._id },
     fetchPolicy: "network-only",
   });
+  const windowSize = useWindowSize();
+  const [newRecipe, setNewRecipe] = useState({
+    name: null,
+    image: [
+      // {
+      //   image: null,
+      //   default: null,
+      // },
+    ],
+    userId: dbUser?._id,
+    description: null,
+    ingredients: [
+      // {
+      //   ingredientId: null,
+      //   selectedPortionName: null,
+      //   weightInGram: null,
+      // },
+    ],
+    recipeBlendCategory: null,
+  });
+
   console.log(recipeList);
 
   useEffect(() => {
@@ -116,8 +73,7 @@ const CompareRecipe = () => {
   }, [data]);
 
   const findCompareRecipe = (id: string) => {
-    const item = compareRecipeList?.find((item) => item?._id === id);
-    return item ? true : false;
+    return compareRecipeList?.find((item) => item?._id === id);
   };
 
   const handleCompare = (recipe) => {
@@ -142,6 +98,88 @@ const CompareRecipe = () => {
     ]);
   };
 
+  const responsiveGridTemplateColumn = () => {
+    const length = compareRecipeList?.length;
+    switch (length) {
+      case 1:
+        return "50% 50%";
+      case 2:
+        return "33.33% 66.66%";
+
+      default:
+        return "25% 75%";
+    }
+  };
+
+  const findItem = (id) => {
+    return newRecipe?.ingredients?.find((item) => item?.ingredientId === id);
+  };
+
+  const copy = (source, destination, droppableSource, droppableDestination) => {
+    const sourceClone = Array.from(source);
+    const destClone = Array.from(destination);
+    const item = sourceClone[droppableSource.index];
+    destClone.splice(droppableDestination.index, 0, item);
+    return destClone;
+  };
+
+  const addIngredient = (id: string, index: number) => {
+    const findRecipe = findCompareRecipe(id);
+    const findIngredient = findRecipe?.ingredients[index];
+    const ingredientId = findIngredient?.ingredientId?._id;
+    const selectedPortionName = findIngredient?.selectedPortion?.name;
+    const selectedPortionGram = findIngredient?.selectedPortion?.gram;
+    const ingredientName = findIngredient?.ingredientId?.ingredientName;
+    const selectedPortionQuantity = findIngredient?.selectedPortion?.quantity;
+
+    const item = findItem(ingredientId);
+
+    if (!item) {
+      setNewRecipe((state) => ({
+        ...state,
+        ingredients: [
+          ...state?.ingredients,
+          {
+            ingredientId: ingredientId,
+            selectedPortionName: selectedPortionName,
+            weightInGram: selectedPortionGram,
+            label: `${selectedPortionQuantity} ${selectedPortionName} ${ingredientName}`,
+          },
+        ],
+      }));
+    } else {
+      return;
+    }
+  };
+
+  const onDragEnd = (result) => {
+    const { source, destination } = result;
+
+    // dropped outside the list
+    if (!destination) {
+      return;
+    }
+
+    if (source.droppableId !== "droppable") {
+      if (destination.droppableId === "droppable") {
+        addIngredient(source?.droppableId, source?.index);
+      } else {
+        return;
+      }
+    } else {
+      if (source.droppableId === destination.droppableId) {
+        setNewRecipe((state) => ({
+          ...state,
+          ingredients: [
+            ...reorder(state?.ingredients, source.index, destination.index),
+          ],
+        }));
+      } else {
+        return;
+      }
+    }
+  };
+
   return (
     <AContainer showLeftTray={false} logo={false} headerTitle="Compare Recipe">
       <div className={styles.mainContentDiv}>
@@ -153,9 +191,9 @@ const CompareRecipe = () => {
               <SubNav
                 backAddress="/recipe_discovery"
                 backIconText="Recipe Discovery"
-                buttonText="Formulate"
+                buttonText={isFormulatePage ? "Compare" : "Formulate"}
                 showButton={true}
-                buttonClick={() => router.push("/recipe/formulate")}
+                buttonClick={() => setIsFormulatePage((pre) => !pre)}
                 compareAmout={dbUser?.compareLength}
                 closeCompare={() => setcompareRecipeList([])}
               />
@@ -177,23 +215,75 @@ const CompareRecipe = () => {
                   );
                 })}
               </Carousel>
-              <SliderArrows
-                compareRecipeLength={compareRecipeList.length}
-                prevFunc={() => sliderRef.current?.slickPrev()}
-                nextFunc={() => sliderRef.current?.slickNext()}
-              />
+              {windowSize?.width > 768 ? (
+                <SliderArrows
+                  compareRecipeLength={compareRecipeList.length}
+                  prevFunc={() => sliderRef.current?.slickPrev()}
+                  nextFunc={() => sliderRef.current?.slickNext()}
+                />
+              ) : null}
 
-              <Slider {...compareRecipeResponsiveSetting} ref={sliderRef}>
-                {compareRecipeList?.map((recipe, index) => {
-                  return (
-                    <RecipeDetails
-                      key={index}
-                      recipe={recipe}
-                      removeCompareRecipe={removeCompareRecipe}
-                    />
-                  );
-                })}
-              </Slider>
+              {isFormulatePage ? (
+                <DragDropContext onDragEnd={onDragEnd}>
+                  <div
+                    className={styles.comparePageContainer}
+                    // style={{
+                    //   gridTemplateColumns: responsiveGridTemplateColumn(),
+                    // }}
+                  >
+                    <div>
+                      <CreateNewRecipe
+                        newRecipe={newRecipe}
+                        setNewRecipe={setNewRecipe}
+                        deleteItem={() => {}}
+                      />
+                    </div>
+
+                    <div>
+                      {windowSize?.width <= 768 ? (
+                        <div style={{ marginTop: "16px" }}>
+                          <SliderArrows
+                            compareRecipeLength={compareRecipeList.length}
+                            prevFunc={() => sliderRef.current?.slickPrev()}
+                            nextFunc={() => sliderRef.current?.slickNext()}
+                          />
+                        </div>
+                      ) : null}
+                      <Slider
+                        {...formulateRecipeResponsiveSetting(
+                          compareRecipeList?.length
+                        )}
+                        ref={sliderRef}
+                      >
+                        {compareRecipeList?.map((recipe, index) => {
+                          return (
+                            <RecipeDetails
+                              key={index}
+                              recipe={recipe}
+                              removeCompareRecipe={removeCompareRecipe}
+                              dragAndDrop={true}
+                              id={recipe?._id}
+                              addItem={addIngredient}
+                            />
+                          );
+                        })}
+                      </Slider>
+                    </div>
+                  </div>
+                </DragDropContext>
+              ) : (
+                <Slider {...compareRecipeResponsiveSetting} ref={sliderRef}>
+                  {compareRecipeList?.map((recipe, index) => {
+                    return (
+                      <RecipeDetails
+                        key={index}
+                        recipe={recipe}
+                        removeCompareRecipe={removeCompareRecipe}
+                      />
+                    );
+                  })}
+                </Slider>
+              )}
             </>
           )}
         </div>
