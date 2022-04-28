@@ -137,6 +137,8 @@ export default function DatacardComponent({
     alredyCompared: boolean
   ) => {
     e.stopPropagation();
+    console.log(id);
+
     try {
       updateRecipeCompare(id, alredyCompared);
       const { data } = await changeCompare({
@@ -153,6 +155,17 @@ export default function DatacardComponent({
             compareLength: Number(data?.changeCompare),
           })
         );
+      }
+
+      if (!alredyCompared) {
+        console.log("first hit", id);
+        const item = compareRecipeList?.find((item) => item?._id === id);
+        if (item) {
+          console.log("second hit", id);
+          setcompareRecipeList([
+            ...compareRecipeList.filter((item) => item?._id !== id),
+          ]);
+        }
       }
     } catch (error) {
       notification("error", "Unable to add compare list");
