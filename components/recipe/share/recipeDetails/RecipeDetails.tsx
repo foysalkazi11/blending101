@@ -11,37 +11,13 @@ import GET_BLEND_NUTRITION_BASED_ON_RECIPE_DATA from "../../../../gqlLib/compare
 import NutrationPanelSkeleton from "../../../../theme/skeletons/nutrationPanelSkeleton/NutrationPanelSkeleton";
 import UpdatedRecursiveAccordian from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
 import DragIndicatorIcon from "../../../../../public/icons/drag_indicator_black_36dp.svg";
-import { MdDragIndicator } from "react-icons/md";
-import { FiPlusCircle } from "react-icons/fi";
-
-interface SingleIngredient {
-  item?: any;
-  dargProps?: any;
-  handleAdd?: (item: object) => void;
-}
-
-const SingleIngredient = ({
-  dargProps = {},
-  handleAdd = () => {},
-  item = {},
-}: SingleIngredient) => {
-  return (
-    <div className={styles.singleIngredientContainer}>
-      <div className={styles.leftSide}>
-        <MdDragIndicator className={styles.dargIcon} {...dargProps} />
-
-        <p
-          className={styles.text}
-        >{`${item?.selectedPortion?.quantity} ${item?.selectedPortion?.name} ${item?.ingredientId?.ingredientName}`}</p>
-      </div>
-
-      <FiPlusCircle className={styles.plusIcon} />
-    </div>
-  );
-};
+import useDraggableInPortal from "../../../../customHooks/useDraggableInPortal";
+import { createPortal } from "react-dom";
+import SingleIngredient from "../singleIngredient/SingleIngredient";
 
 function Copyable(props) {
   const { items, addItem, droppableId } = props;
+  const renderDraggable = useDraggableInPortal();
 
   // logic for removing elements having duplicate label values =>start
   // let newList = Array.from(
@@ -61,31 +37,49 @@ function Copyable(props) {
   // });
   // logic for removing elements having duplicate label values =>end
 
+  const div = <div className={styles.divStyle}></div>;
+
+  const optionalPortal = (styles, element) => {
+    if (styles?.position === "fixed") {
+      return createPortal(element, div);
+    }
+    return element;
+  };
+
   return (
     <Droppable droppableId={droppableId} isDropDisabled={true}>
       {(provided, snapshot) => (
         <div ref={provided.innerRef} {...provided.droppableProps}>
           {items?.map((item, index) => {
+            const ingredientName = item?.ingredientId?.ingredientName;
+            const selectedPortionName = item?.selectedPortion?.name;
+            const selectedPortionQuantity = item?.selectedPortion?.quantity;
+
             return (
-              <Draggable draggableId={`${item.id}`} index={index} key={item.id}>
-                {(provided, snapshot) => (
+              <Draggable
+                draggableId={`${item?.ingredientId?._id}_${droppableId}`}
+                index={index}
+                key={`${item?.ingredientId?._id}`}
+              >
+                {renderDraggable((provided, snapshot) => (
                   <>
                     <div {...provided.draggableProps} ref={provided.innerRef}>
                       <SingleIngredient
-                        item={item}
-                        handleAdd={addItem}
+                        label={`${selectedPortionQuantity} ${selectedPortionName} ${ingredientName}`}
+                        handleAdd={() => addItem(droppableId, index)}
                         dargProps={provided.dragHandleProps}
                       />
                     </div>
+
                     {snapshot.isDragging && (
                       <SingleIngredient
-                        item={item}
+                        label={`${selectedPortionQuantity} ${selectedPortionName} ${ingredientName}`}
                         handleAdd={addItem}
                         dargProps={provided.dragHandleProps}
                       />
                     )}
                   </>
-                )}
+                ))}
               </Draggable>
             );
           })}
@@ -108,7 +102,6 @@ const RecipeDetails = ({
     useLazyQuery(GET_BLEND_NUTRITION_BASED_ON_RECIPE_DATA, {
       fetchPolicy: "network-only",
     });
-  console.log(data);
 
   const makeIngredients = (ing) => {
     let arr = [];

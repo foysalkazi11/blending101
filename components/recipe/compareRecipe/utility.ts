@@ -1,3 +1,10 @@
+export const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+  return result;
+};
+
 export const formulateRecipeResponsiveSetting = (length: number) => {
   let slidesToShow = 3;
   switch (length) {
@@ -17,6 +24,7 @@ export const formulateRecipeResponsiveSetting = (length: number) => {
     swipeToSlide: false,
     arrows: false,
     infinite: false,
+    swipe: false,
     // afterChange: (num) => console.log("afterChange", num),
     // beforeChange: (num1, num2) => console.log("befourChange", num1, num2),
 

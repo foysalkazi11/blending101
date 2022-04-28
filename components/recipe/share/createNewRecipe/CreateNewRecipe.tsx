@@ -6,12 +6,28 @@ import SectionTitleWithIcon from "../../../../theme/recipe/sectionTitleWithIcon/
 import RecipeItem from "../../../../theme/recipe/recipeItem/RecipeItem.component";
 import Accordion from "../../../../theme/accordion/accordion.component";
 import ButtonComponent from "../../../../theme/button/button.component";
+import SingleIngredient from "../singleIngredient/SingleIngredient";
+import { useLazyQuery } from "@apollo/client";
+import GET_BLEND_NUTRITION_BASED_ON_RECIPE_XXX from "../../../../gqlLib/recipes/queries/getBlendNutritionBasedOnRecipeXxx";
+import NutrationPanelSkeleton from "../../../../theme/skeletons/nutrationPanelSkeleton/NutrationPanelSkeleton";
+import UpdatedRecursiveAccordian from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
 
 const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
-  const { id, name, image, ingredients, nutrition } = newRecipe;
   const [winReady, setWinReady] = useState(false);
   const [inputVlaue, setInputValue] = useState("");
-  let processedList = [];
+  const [getBlendNutritionBasedOnRecipeXxx, { data, loading, error }] =
+    useLazyQuery(GET_BLEND_NUTRITION_BASED_ON_RECIPE_XXX, {
+      fetchPolicy: "network-only",
+    });
+
+  const removeIngredient = (id) => {
+    setNewRecipe((state) => ({
+      ...state,
+      ingredients: [
+        ...state?.ingredients?.filter((item) => item?.ingredientId !== id),
+      ],
+    }));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -19,31 +35,25 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
     if (inputVlaue) {
       setNewRecipe((state) => ({
         ...state,
-        ingredients: [
-          /* @ts-ignore */
-          ...processedList,
-          { label: inputVlaue, id: Date.now() },
-        ],
+        ingredients: [...state?.ingredients],
       }));
     }
     setInputValue("");
   };
 
-  let newList = Array.from(
-    new Set(
-      ingredients.map((items, index) => {
-        return items.label;
-      })
-    )
-  );
-
-  ingredients.map((item, index) => {
-    if (newList.includes(item.label)) {
-      let itemIndex = newList.indexOf(item.label);
-      newList.splice(itemIndex, 1);
-      processedList = [...processedList, item];
-    }
-  });
+  useEffect(() => {
+    getBlendNutritionBasedOnRecipeXxx({
+      variables: {
+        ingredientsInfo: [
+          ...newRecipe?.ingredients?.map((item) => ({
+            ingredientId: item?.ingredientId,
+            value: item?.weightInGram,
+          })),
+        ],
+      },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newRecipe?.ingredients]);
 
   useEffect(() => {
     setWinReady(true);
@@ -112,12 +122,21 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
                   <div
                     ref={provided.innerRef}
                     {...provided.droppableProps}
+                    style={{
+                      backgroundColor: snapshot.isDraggingOver
+                        ? "#f6f6f6"
+                        : "#f6f6f6",
+                      minHeight: "200px",
+                      transition: "all .500s",
+                      borderRadius: "5px",
+                      padding: "10px 10px 10px 0",
+                    }}
                     // isDraggingOver={snapshot.isDraggingOver}
                   >
-                    {processedList?.map((item: any, index) => (
+                    {newRecipe?.ingredients?.map((item, index) => (
                       <Draggable
-                        key={item?.id + "draggedElemDraggableId"}
-                        draggableId={`${item?.id + "draggedElemDraggableId"}`}
+                        key={item?.ingredientId}
+                        draggableId={`${item?.ingredientId}`}
                         index={index}
                       >
                         {(provided, snapshot) => (
@@ -125,14 +144,15 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
                             style={{ left: "0px", top: "0px" }}
                             ref={provided.innerRef}
                             {...provided.draggableProps}
-                            {...provided.dragHandleProps}
                           >
-                            {/* @ts-ignore */}
-                            <RecipeItem
-                              item={item}
-                              plusIcon={false}
-                              deleteIcon={true}
-                              handleDelete={deleteItem}
+                            <SingleIngredient
+                              label={item?.label}
+                              showPlusIcon={false}
+                              dargProps={provided.dragHandleProps}
+                              showCloseIcon={true}
+                              handleClose={() =>
+                                removeIngredient(item?.ingredientId)
+                              }
                             />
                           </div>
                         )}
@@ -154,37 +174,25 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
         />
         <div className={styles.nutritionHeader}>
           <p>Amount Per Serving Calories</p>
-          <div className={styles.calories__heading}>
+          {/* <div className={styles.calories__heading}>
             <div>Calories</div>
             <div>00</div>
-          </div>
+          </div> */}
         </div>
 
         <div className={styles.ingredientsDetails}>
-          {nutrition?.map((item, index) => {
-            const { section, amount } = item;
-            return (
-              <Accordion key={index} title={section}>
-                <table>
-                  <tr className={styles.table_row_calorie}>
-                    <td></td>
-                    <td> VALUE </td>
-                    <td> DAILY% </td>
-                  </tr>
-                  {amount?.map((items, index) => {
-                    const { label, value, daily } = items;
-                    return (
-                      <tr key={index}>
-                        <td>{label}</td>
-                        <td> {value} </td>
-                        <td> {daily} </td>
-                      </tr>
-                    );
-                  })}
-                </table>
-              </Accordion>
-            );
-          })}
+          {loading ? (
+            <NutrationPanelSkeleton />
+          ) : (
+            <UpdatedRecursiveAccordian
+              dataObject={
+                data?.getBlendNutritionBasedOnRecipexxx &&
+                JSON?.parse(data?.getBlendNutritionBasedOnRecipexxx)
+              }
+              showUser={false}
+              counter={1}
+            />
+          )}
         </div>
       </div>
       {/* <div className={styles.saveButton}>

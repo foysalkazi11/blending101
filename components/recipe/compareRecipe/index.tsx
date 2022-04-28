@@ -21,6 +21,7 @@ import {
   responsiveSetting,
   compareRecipeResponsiveSetting,
   formulateRecipeResponsiveSetting,
+  reorder,
 } from "./utility";
 import useWindowSize from "../../utility/useWindowSize";
 
@@ -32,6 +33,9 @@ const CompareRecipe = () => {
     "compareList",
     []
   );
+
+  console.log(compareRecipeList);
+
   const sliderRef = useRef(null);
   const { dbUser } = useAppSelector((state) => state?.user);
   const { data, loading, error } = useQuery(GET_COMPARE_LIST, {
@@ -39,29 +43,24 @@ const CompareRecipe = () => {
     fetchPolicy: "network-only",
   });
   const windowSize = useWindowSize();
-  const [newRecipe, setNewRecipe] = useState<{}>({
-    id: 456,
-    name: "",
-    image: "",
-    ingredients: [],
-    nutrition: [
-      {
-        section: "Energy",
-        amount: [],
-      },
-      {
-        section: "Vitamins",
-        amount: [],
-      },
-      {
-        section: "Minerals",
-        amount: [],
-      },
-      {
-        section: "Phythonutrients",
-        amount: [],
-      },
+  const [newRecipe, setNewRecipe] = useState({
+    name: null,
+    image: [
+      // {
+      //   image: null,
+      //   default: null,
+      // },
     ],
+    userId: dbUser?._id,
+    description: null,
+    ingredients: [
+      // {
+      //   ingredientId: null,
+      //   selectedPortionName: null,
+      //   weightInGram: null,
+      // },
+    ],
+    recipeBlendCategory: null,
   });
 
   console.log(recipeList);
@@ -74,8 +73,7 @@ const CompareRecipe = () => {
   }, [data]);
 
   const findCompareRecipe = (id: string) => {
-    const item = compareRecipeList?.find((item) => item?._id === id);
-    return item ? true : false;
+    return compareRecipeList?.find((item) => item?._id === id);
   };
 
   const handleCompare = (recipe) => {
@@ -110,6 +108,75 @@ const CompareRecipe = () => {
 
       default:
         return "25% 75%";
+    }
+  };
+
+  const findItem = (id) => {
+    return newRecipe?.ingredients?.find((item) => item?.ingredientId === id);
+  };
+
+  const copy = (source, destination, droppableSource, droppableDestination) => {
+    const sourceClone = Array.from(source);
+    const destClone = Array.from(destination);
+    const item = sourceClone[droppableSource.index];
+    destClone.splice(droppableDestination.index, 0, item);
+    return destClone;
+  };
+
+  const addIngredient = (id: string, index: number) => {
+    const findRecipe = findCompareRecipe(id);
+    const findIngredient = findRecipe?.ingredients[index];
+    const ingredientId = findIngredient?.ingredientId?._id;
+    const selectedPortionName = findIngredient?.selectedPortion?.name;
+    const selectedPortionGram = findIngredient?.selectedPortion?.gram;
+    const ingredientName = findIngredient?.ingredientId?.ingredientName;
+    const selectedPortionQuantity = findIngredient?.selectedPortion?.quantity;
+
+    const item = findItem(ingredientId);
+
+    if (!item) {
+      setNewRecipe((state) => ({
+        ...state,
+        ingredients: [
+          ...state?.ingredients,
+          {
+            ingredientId: ingredientId,
+            selectedPortionName: selectedPortionName,
+            weightInGram: selectedPortionGram,
+            label: `${selectedPortionQuantity} ${selectedPortionName} ${ingredientName}`,
+          },
+        ],
+      }));
+    } else {
+      return;
+    }
+  };
+
+  const onDragEnd = (result) => {
+    const { source, destination } = result;
+
+    // dropped outside the list
+    if (!destination) {
+      return;
+    }
+
+    if (source.droppableId !== "droppable") {
+      if (destination.droppableId === "droppable") {
+        addIngredient(source?.droppableId, source?.index);
+      } else {
+        return;
+      }
+    } else {
+      if (source.droppableId === destination.droppableId) {
+        setNewRecipe((state) => ({
+          ...state,
+          ingredients: [
+            ...reorder(state?.ingredients, source.index, destination.index),
+          ],
+        }));
+      } else {
+        return;
+      }
     }
   };
 
@@ -157,7 +224,7 @@ const CompareRecipe = () => {
               ) : null}
 
               {isFormulatePage ? (
-                <DragDropContext onDragEnd={() => {}}>
+                <DragDropContext onDragEnd={onDragEnd}>
                   <div
                     className={styles.comparePageContainer}
                     // style={{
@@ -195,6 +262,8 @@ const CompareRecipe = () => {
                               recipe={recipe}
                               removeCompareRecipe={removeCompareRecipe}
                               dragAndDrop={true}
+                              id={recipe?._id}
+                              addItem={addIngredient}
                             />
                           );
                         })}
