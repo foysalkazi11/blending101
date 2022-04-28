@@ -7,7 +7,7 @@ interface Percent {
 }
 
 const LinearIndicatorcomponent = ({ percent, highestValue }: Percent) => {
-  let width: number = (100 / highestValue) * percent;
+  let width: number = (percent / highestValue) * 100;
 
   let style: object = { width: width };
 

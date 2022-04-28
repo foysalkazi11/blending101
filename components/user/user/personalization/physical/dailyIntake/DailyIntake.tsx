@@ -25,8 +25,12 @@ const DailyIntake = () => {
     goals: {},
   });
   const { dbUser } = useAppSelector((state) => state?.user);
-  const { data: dailyData } = useQuery(GET_DAILY_BY_USER_ID(dbUser?._id));
-  const { data: dailyGoalData } = useQuery(GET_DAILY_GOALS(dbUser?._id));
+  const { data: dailyData } = useQuery(GET_DAILY_BY_USER_ID(dbUser?._id), {
+    fetchPolicy: "network-only",
+  });
+  const { data: dailyGoalData } = useQuery(GET_DAILY_GOALS(dbUser?._id), {
+    fetchPolicy: "network-only",
+  });
   const objectToArrayForGoals = (goalsObject) => {
     let goalsArray = [];
     if (Object?.keys(goalsObject)?.length > 0) {
@@ -66,6 +70,7 @@ const DailyIntake = () => {
     setInputValue(updatedObject);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dbUser?._id]);
+
   useEffect(() => {
     if (!inputValue) return;
     let updatedObject = inputValue;
@@ -91,6 +96,7 @@ const DailyIntake = () => {
     : {};
   // parsedDailyGoalsData && console.log(parsedDailyGoalsData);
   dailyGoalData?.getDailyGoals && console.log(dailyGoalData?.getDailyGoals);
+  dailyChartData && console.log(dailyChartData?.nutrients);
   parsedDailyGoalsData && console.log(parsedDailyGoalsData);
   inputValue && console.log({ inputValue });
 
@@ -182,7 +188,7 @@ const DailyIntake = () => {
         ) : (
           <ButtonComponent
             type="primary"
-            value="Update Profile"
+            value="Update Goals"
             style={{
               borderRadius: "30px",
               height: "48px",

@@ -249,7 +249,9 @@ const Center = ({
             </div>
           )}
         </div>
-
+        <div>
+          <ReadMore>{recipeDetails?.description}</ReadMore>
+        </div>
         <div className={styles.infoContainer}>
           <div className={styles.infoBox}>
             <span>45</span>
@@ -264,10 +266,6 @@ const Center = ({
             <span>805</span>
             <p>Rx Score</p>
           </div>
-        </div>
-
-        <div>
-          <ReadMore>{recipeDetails?.description}</ReadMore>
         </div>
       </div>
       <div className={styles.ingredentContainer}>

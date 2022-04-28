@@ -11,6 +11,7 @@ import {
 } from "../../redux/edit_recipe/editRecipeStates";
 import { MdOutlineClose } from "react-icons/md";
 import CircularRotatingLoader from "../../theme/loader/circularRotatingLoader.component";
+import { presetNumber } from "../utility/numbersForServingNumber";
 
 interface PassingProps {
   name: string;
@@ -33,6 +34,16 @@ const RightTray = ({
   );
   const dispatch = useAppDispatch();
 
+  const inputTagValueHandler = (e) => {
+    if (Number(e.target.value) > presetNumber[presetNumber.length - 1]) {
+      dispatch(setServingCounter(presetNumber[presetNumber.length - 1]));
+    } else if (Number(e.target.value) <= presetNumber[0]) {
+      dispatch(setServingCounter(presetNumber[0]));
+    } else {
+      dispatch(setServingCounter(Number(e.target.value)));
+    }
+  };
+
   return (
     <div>
       <div className={styles.right}>
@@ -46,7 +57,7 @@ const RightTray = ({
                   type="number"
                   value={servingCounter}
                   onChange={(e) => {
-                    dispatch(setServingCounter(Number(e.target.value)));
+                    inputTagValueHandler(e);
                   }}
                 />
                 <div className={styles.right__counterTray__counter__icons}>
