@@ -183,7 +183,7 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
         <div className={styles.ingredientsDetails}>
           {loading ? (
             <NutrationPanelSkeleton />
-          ) : (
+          ) : data?.getBlendNutritionBasedOnRecipexxx ? (
             <UpdatedRecursiveAccordian
               dataObject={
                 data?.getBlendNutritionBasedOnRecipexxx &&
@@ -192,7 +192,7 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
               showUser={false}
               counter={1}
             />
-          )}
+          ) : null}
         </div>
       </div>
       {/* <div className={styles.saveButton}>

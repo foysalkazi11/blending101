@@ -5,6 +5,8 @@ import styles from "./updatedRecursiveAccordian.module.scss";
 import Image from "next/image";
 import { FaRegUser } from "react-icons/fa";
 import { useRouter } from "next/router";
+import { GET_DAILY_BY_USER_ID, GET_DAILY_GOALS } from "../../gqlLib/user/mutations/query/getDaily";
+import { useQuery } from "@apollo/client";
 
 interface recursiveAccordianInterface {
   dataObject: object;
@@ -20,6 +22,8 @@ const UpdatedRecursiveAccordian = ({
   //@ts-ignore
   const { user, dbUser } = useAppSelector((state) => state?.user);
   const router = useRouter();
+  const { data: dailyData } = useQuery(GET_DAILY_GOALS(dbUser?._id));
+
   return (
     <>
       <div className={styles.nutritionHeader}>
@@ -27,7 +31,13 @@ const UpdatedRecursiveAccordian = ({
           <div className={styles.recursiveAccordianHeading__heading__1}>
             Calories
           </div>
-          <div className={styles.recursiveAccordianHeading__heading__2}>93</div>
+          <div className={styles.recursiveAccordianHeading__heading__2}>
+            {
+              dataObject &&
+              //@ts-ignore
+                parseFloat(dataObject?.Calories?.calories?.value).toFixed(1)
+            }
+          </div>
           {showUser ? (
             <div className={styles.recursiveAccordianHeading__heading__3}>
               {user ? (
@@ -53,23 +63,22 @@ const UpdatedRecursiveAccordian = ({
         </div>
       </div>
       <div className={styles.recursiveAccordianHeading__subheading}>
-        <div className={styles.recursiveAccordianHeading__subheading__3}>
-          Value
-        </div>
-        <div className={styles.recursiveAccordianHeading__subheading__4}>
-          Daily%
-        </div>
+        <div className={styles.recursiveAccordianHeading__subheading__3}>Value</div>
+        <div className={styles.recursiveAccordianHeading__subheading__4}>Daily%</div>
       </div>
       {Object?.entries(dataObject)?.map((elem) => {
-        return (
-          <UpdatedCustomAccordion
-            key={elem[0] + Date.now()}
-            title={elem[0]}
-            content={elem[1]}
-            type={"mainHeading"}
-            counter={counter}
-          />
-        );
+        if (elem[0] !== "Calories") {
+          return (
+            <UpdatedCustomAccordion
+              key={elem[0] + Date.now()}
+              title={elem[0]}
+              content={elem[1]}
+              type={"mainHeading"}
+              counter={counter}
+              dailyGoalsData={dailyData?.getDailyGoals?.goals}
+            />
+          );
+        }
       })}
     </>
   );

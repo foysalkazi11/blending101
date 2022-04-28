@@ -1,8 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import { GET_ALL_BLEND_NUTRIENTS } from "../../../../../../gqlLib/recipeDiscovery/query/recipeDiscovery";
 import { UPDATE_DAILY_GOALS } from "../../../../../../gqlLib/user/mutations/mutation/updateDailyGoals";
-import { GET_DAILY_BY_USER_ID } from "../../../../../../gqlLib/user/mutations/query/getDaily";
+import {
+  GET_DAILY_BY_USER_ID,
+  GET_DAILY_GOALS,
+} from "../../../../../../gqlLib/user/mutations/query/getDaily";
 import { useAppSelector } from "../../../../../../redux/hooks";
 import ButtonComponent from "../../../../../../theme/button/button.component";
 import CircularRotatingLoader from "../../../../../../theme/loader/circularRotatingLoader.component";
@@ -22,6 +26,7 @@ const DailyIntake = () => {
   });
   const { dbUser } = useAppSelector((state) => state?.user);
   const { data: dailyData } = useQuery(GET_DAILY_BY_USER_ID(dbUser?._id));
+  const { data: dailyGoalData } = useQuery(GET_DAILY_GOALS(dbUser?._id));
   const objectToArrayForGoals = (goalsObject) => {
     let goalsArray = [];
     if (Object?.keys(goalsObject)?.length > 0) {
@@ -61,6 +66,17 @@ const DailyIntake = () => {
     setInputValue(updatedObject);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dbUser?._id]);
+  useEffect(() => {
+    if (!inputValue) return;
+    let updatedObject = inputValue;
+    updatedObject = {
+      ...updatedObject,
+      bmi: dailyGoalData?.getDailyGoals?.bmi,
+      calories: dailyGoalData?.getDailyGoals?.calories,
+    };
+
+    setInputValue(updatedObject);
+  }, [dailyGoalData?.getDailyGoals]);
 
   const updateGoals = async () => {
     setLoading(true);
@@ -69,6 +85,15 @@ const DailyIntake = () => {
     setLoading(false);
     reactToastifyNotification("info", "Profile Updated Successfully");
   };
+
+  const parsedDailyGoalsData = dailyGoalData
+    ? JSON?.parse(dailyGoalData?.getDailyGoals?.goals)
+    : {};
+  // parsedDailyGoalsData && console.log(parsedDailyGoalsData);
+  dailyGoalData?.getDailyGoals && console.log(dailyGoalData?.getDailyGoals);
+  parsedDailyGoalsData && console.log(parsedDailyGoalsData);
+  inputValue && console.log({ inputValue });
+
   return (
     <>
       <div className={styles.dailyIntakeContainer}>
@@ -104,7 +129,7 @@ const DailyIntake = () => {
               <div className={styles.centerDiv__headingTray__right}>
                 <InputGoal
                   name={"bmi"}
-                  inputValue={inputValue.bmi}
+                  inputValue={inputValue?.bmi}
                   setInputValue={handleInput}
                 />
               </div>
