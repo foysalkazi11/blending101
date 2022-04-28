@@ -84,7 +84,8 @@
                 line-height: 30px;
                 color: #BCBCBC;
                 font-size: 14px;
-                width: 100%;
+                min-width: 100%;
+                max-width: 100%;
 
                 &:focus {
                     outline: none;

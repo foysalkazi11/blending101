@@ -20,6 +20,8 @@ const RightSide = ({
   singleElement,
   adjusterFunc,
 }) => {
+
+  console.log(nutritionData,"dadas")
   return (
     <div>
       <div className={styles.header}>

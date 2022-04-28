@@ -13,11 +13,6 @@ import { MdOutlineClose } from "react-icons/md";
 import CircularRotatingLoader from "../../theme/loader/circularRotatingLoader.component";
 import { presetNumber } from "../utility/numbersForServingNumber";
 
-interface PassingProps {
-  name: string;
-  percent: number;
-}
-
 const RightTray = ({
   nutritionTrayData,
   adjusterFunc,
@@ -44,6 +39,7 @@ const RightTray = ({
     }
   };
 
+  console.log(nutritionState, "asdfahsdfhasdjkl");
   return (
     <div>
       <div className={styles.right}>
@@ -95,6 +91,13 @@ const RightTray = ({
                 <>
                   <div>
                     <h3 className={styles.content__name}>
+                      {servingCounter}&nbsp;
+                      {
+                        nutritionState?.portions.filter(
+                          (itm) => itm.default === true
+                        )[0].measurement
+                      }
+                      &nbsp;
                       {nutritionState?.ingredientName}
                     </h3>
                   </div>

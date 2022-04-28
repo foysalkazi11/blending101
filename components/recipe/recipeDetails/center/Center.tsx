@@ -25,7 +25,20 @@ import useGetDefaultPortionOfnutration from "../../../../customHooks/useGetDefau
 import { setActiveRecipeId } from "../../../../redux/slices/collectionSlice";
 import { setCurrentRecipeInfo } from "../../../../redux/slices/recipeSlice";
 
+interface center {
+  adjusterFunc: any;
+  recipeData: any;
+  counter: any;
+  setCounter: any;
+  nutritionState: any;
+  setNutritionState: any;
+  singleElement: any;
+  setsingleElement: any;
+  inputTagValueHandler:any;
+}
+
 const Center = ({
+  adjusterFunc,
   recipeData,
   counter,
   setCounter,
@@ -33,7 +46,8 @@ const Center = ({
   setNutritionState,
   singleElement,
   setsingleElement,
-}) => {
+  inputTagValueHandler
+}: center) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [showRecipeModal, setShowRecipeModal] = useState(true);
@@ -82,6 +96,7 @@ const Center = ({
       return <p className={styles.text}>{text}</p>;
     }
   };
+  
 
   const responsiveSetting = {
     nextArrow: <NextButton />,
@@ -277,23 +292,17 @@ const Center = ({
           <div className={styles.counter}>
             <p>Servings : </p>
             <div className={styles.count}>
-              <button
-                onClick={() =>
-                  setCounter((pre) =>
-                    Number(pre) <= 1 ? Number(pre) : Number(pre) - 1
-                  )
-                }
-              >
+              <button onClick={() => adjusterFunc("-")}>
                 <MdRemove className={styles.icon} />
               </button>
               <input
                 className={styles.servings}
                 type="number"
                 value={counter}
-                onChange={(e) => setCounter(e?.target?.value)}
+                onChange={(e) => inputTagValueHandler(e)}
                 min={1}
               />
-              <button onClick={() => setCounter((pre) => Number(pre) + 1)}>
+              <button onClick={() => adjusterFunc("+")}>
                 <MdAdd className={styles.icon} />
               </button>
             </div>
