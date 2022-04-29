@@ -7,7 +7,7 @@ import Carousel from "../../../theme/carousel/carousel.component";
 import SmallcardComponent from "../../../theme/cards/smallCard/SmallCard.component";
 import RecipeDetails from "../share/recipeDetails/RecipeDetails";
 import { DragDropContext } from "react-beautiful-dnd";
-import CreateNewRecipe from "./CreateNewRecipe";
+import CreateNewRecipe from "../share/createNewRecipe/CreateNewRecipe";
 
 import SubNav from "../share/subNav/SubNav";
 import SliderArrows from "../share/sliderArrows/SliderArrows";
@@ -265,14 +265,13 @@ const FormulateRecipe = () => {
     const left = parseFloat(absElement.style.left) || 0;
     const value = sign === "<" ? left + cardWid : left - cardWid;
 
-
     if (sign === "<") {
       if (left <= 0) return;
       absElement.style.left = value + "px";
-      setClickState(clickState-1)
+      setClickState(clickState - 1);
     } else {
       absElement.style.left = value + "px";
-      setClickState(clickState+1)
+      setClickState(clickState + 1);
     }
   };
 

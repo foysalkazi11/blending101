@@ -6,11 +6,10 @@
   position: relative;
   border: 2px solid #f2f2f8;
   border-radius: 7px;
+  width: 100%;
 }
 
-
 .ingredientsDetails {
-
   .table_row_calorie {
     font-weight: 500;
     background-color: #f1f1f1;
@@ -53,7 +52,6 @@
 }
 
 .calories__heading {
-
   display: grid;
   grid-template-columns: 1fr 16%;
   font-weight: 600;
