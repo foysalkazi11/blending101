@@ -40,6 +40,8 @@ const DailyIntake = () => {
     }
     return goalsArray;
   };
+
+  console.log(dailyData, "fkhgfgfklffjhfkj");
   const [updateDailyGoals] = useMutation(
     UPDATE_DAILY_GOALS({
       memberId: dbUser?._id,
@@ -48,7 +50,7 @@ const DailyIntake = () => {
       goalsArray: objectToArrayForGoals(inputValue.goals) || [],
     })
   );
-  const dailyChartData = dailyData?.getDailyByUserId;
+  const dailyChartData = dailyData?.getDailyByUserIdxxx;
 
   const handleInput = (e: { target: { name: string; value: string } }) => {
     let updatedObject = inputValue;
@@ -161,7 +163,9 @@ const DailyIntake = () => {
             </div>
           </div>
           <DailyIntakeAccordian
-            recursiveObject={dailyChartData?.nutrients}
+            recursiveObject={
+              dailyChartData?.nutrients && JSON?.parse(dailyChartData?.nutrients)
+            }
             inputValue={inputValue}
             setInputValue={setInputValue}
           />

@@ -96,7 +96,7 @@ const Center = ({
       return <p className={styles.text}>{text}</p>;
     }
   };
-  
+
 
   const responsiveSetting = {
     nextArrow: <NextButton />,

@@ -20,8 +20,7 @@ const RightSide = ({
   singleElement,
   adjusterFunc,
 }) => {
-
-  console.log(nutritionData,"dadas")
+  console.log(nutritionData, "dadas");
   return (
     <div>
       <div className={styles.header}>
@@ -31,39 +30,41 @@ const RightSide = ({
       <div className={styles.content}>
         <div className={styles.content__heading}>
           <h3>Nutrition</h3>
-          <div className={styles.right__counterTray}>
-            <div className={styles.right__counterTray__counter}>
-              <input
-                className={styles.right__counterTray__counter__input}
-                type="number"
-                value={counter}
-                onChange={(e) => {
-                  counterHandler(e.target.value);
-                }}
-              />
-              <div className={styles.right__counterTray__counter__icons}>
-                <AiOutlineUp
-                  onClick={() => {
-                    adjusterFunc("+");
+          {singleElement === false && (
+            <div className={styles.right__counterTray}>
+              <div className={styles.right__counterTray__counter}>
+                <input
+                  className={styles.right__counterTray__counter__input}
+                  type="number"
+                  value={counter}
+                  onChange={(e) => {
+                    counterHandler(e.target.value);
                   }}
                 />
-                <AiOutlineDown
-                  onClick={() => {
-                    adjusterFunc("-");
-                  }}
-                />
+                <div className={styles.right__counterTray__counter__icons}>
+                  <AiOutlineUp
+                    onClick={() => {
+                      adjusterFunc("+");
+                    }}
+                  />
+                  <AiOutlineDown
+                    onClick={() => {
+                      adjusterFunc("-");
+                    }}
+                  />
+                </div>
+              </div>
+              <div className={styles.right__counterTray__serving}>
+                <div>servings</div>
+                <div className={styles.right__counterTray__serving__num}>
+                  {Math.round(16 / counter)} oz
+                </div>
+              </div>
+              <div className={styles.right__counterTray__servingsize}>
+                serving size
               </div>
             </div>
-            <div className={styles.right__counterTray__serving}>
-              <div>servings</div>
-              <div className={styles.right__counterTray__serving__num}>
-                {Math.round(16 / counter)} oz
-              </div>
-            </div>
-            <div className={styles.right__counterTray__servingsize}>
-              serving size
-            </div>
-          </div>
+          )}
           <div className={styles.content__heading__nutrition}>
             {singleElement === true ? (
               <div

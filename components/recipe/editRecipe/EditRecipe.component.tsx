@@ -124,7 +124,11 @@ const EditRecipePage = ({
         </div>
         <div className={styles.right__main}>
           <RightHeader />
+          {console.log(nutritionTrayData,"adfasdfasdf")}
+          {console.log(nutritionState,"adfasdfasdf")}
+          {console.log(singleElement,"adfasdfasdf")}
           <RightTray
+            counter={servingCounter}
             nutritionTrayData={nutritionTrayData}
             adjusterFunc={adjusterFunc}
             singleElement={singleElement}

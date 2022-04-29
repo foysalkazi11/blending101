@@ -37,7 +37,7 @@ const UpdatedCustomAccordion = ({
           parseFloat(
             //@ts-ignore
             (100 * itm[1]?.value) / counter / dailyDosePercentage?.goal
-          ).toFixed(2);
+          ).toFixed(0);
 
         //@ts-ignore
         if (itm[1]?.childs && Object.keys(itm[1]?.childs)?.length > 0) {

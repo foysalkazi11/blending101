@@ -13,6 +13,17 @@ import { MdOutlineClose } from "react-icons/md";
 import CircularRotatingLoader from "../../theme/loader/circularRotatingLoader.component";
 import { presetNumber } from "../utility/numbersForServingNumber";
 
+interface RightTrayInterface {
+  nutritionTrayData?: any;
+  adjusterFunc?: any;
+  singleElement?: any;
+  setSingleElement?: any;
+  nutritionState?: any;
+  setNutritionState?: any;
+  counter?: any;
+  counterHandler?: any;
+}
+
 const RightTray = ({
   nutritionTrayData,
   adjusterFunc,
@@ -20,10 +31,9 @@ const RightTray = ({
   setSingleElement,
   nutritionState,
   setNutritionState,
-}) => {
-  const servingCounter = useAppSelector(
-    (state) => state?.editRecipeReducer?.servingCounter
-  );
+  counter,
+  counterHandler
+}: RightTrayInterface) => {
   const selectedIngredientsList = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedIngredientsList
   );
@@ -51,7 +61,7 @@ const RightTray = ({
                 <input
                   className={styles.right__counterTray__counter__input}
                   type="number"
-                  value={servingCounter}
+                  value={counter}
                   onChange={(e) => {
                     inputTagValueHandler(e);
                   }}
@@ -79,7 +89,7 @@ const RightTray = ({
               </div>
               <div className={styles.right__counterTray__servingsize}>
                 <div className={styles.right__counterTray__serving__num}>
-                  {Math.round(16 / servingCounter)} oz
+                  {Math.round(16 / counter)} oz
                 </div>
                 &nbsp; : &nbsp;serving size
               </div>
@@ -91,9 +101,9 @@ const RightTray = ({
                 <>
                   <div>
                     <h3 className={styles.content__name}>
-                      {servingCounter}&nbsp;
+                      {counter}&nbsp;
                       {
-                        nutritionState?.portions.filter(
+                        nutritionState?.portions?.filter(
                           (itm) => itm.default === true
                         )[0].measurement
                       }
@@ -126,7 +136,7 @@ const RightTray = ({
           {nutritionTrayData ? (
             <UpdatedRecursiveAccordian
               dataObject={nutritionTrayData}
-              counter={servingCounter}
+              counter={counter}
             />
           ) : (
             <div style={{ marginTop: "10px" }}>
