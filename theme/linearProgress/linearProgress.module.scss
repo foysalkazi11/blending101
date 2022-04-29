@@ -15,8 +15,8 @@
     height: 17px;
     background-clip: content-box;
     border: 1.5px solid #bbbbbb;
-    border-radius: 6px;
-    margin-right: 12px;
+    border-radius: 50%;
+    margin-right: 6px;
     position: relative;
 
     &:checked {
@@ -25,6 +25,7 @@
     }
 
     &:hover {
+      cursor: pointer;
       background-color: #e9ecef;
     }
 
@@ -38,7 +39,7 @@
   width: 100%;
   margin-left: auto;
   margin-top: 25px;
-  margin-bottom: -10px;
+  margin-bottom: 40px;
 }
 
 .cardHeadComponent {
@@ -54,13 +55,16 @@
 
 .title {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   color: #000;
   line-height: 1.3;
   transition: color 0.3s linear;
-  cursor: pointer;
+  width: fit-content;
+  max-width: 60%;
+  word-wrap: break-word;
   &:hover {
     color: #fe5d1f;
+    font-weight: 400;
   }
 }
 
@@ -69,4 +73,6 @@
   font-size: 14px;
   font-weight: 500;
   color: #000;
+  width: fit-content;
+  min-width: 35px;
 }

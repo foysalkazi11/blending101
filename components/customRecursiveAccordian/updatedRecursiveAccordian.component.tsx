@@ -39,7 +39,7 @@ const UpdatedRecursiveAccordian = ({
               //@ts-ignore
               dataObject?.Calories?.calories?.value &&
                 //@ts-ignore
-                parseFloat(dataObject?.Calories?.calories?.value).toFixed(1)
+                parseFloat(dataObject?.Calories?.calories?.value).toFixed(0)
             }
           </div>
           {showUser ? (

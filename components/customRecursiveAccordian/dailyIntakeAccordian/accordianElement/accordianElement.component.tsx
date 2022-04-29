@@ -91,7 +91,7 @@ const AccordianElement = ({
               </div>
               <div className={styles.accordianDiv__tray__right}>
                 <span className={styles.accordianDiv__tray__right__icon}>
-                  <GiGolfFlag />
+                  {/* <GiGolfFlag /> */}
                 </span>
                 <InputGoal
                   // @ts-ignore
