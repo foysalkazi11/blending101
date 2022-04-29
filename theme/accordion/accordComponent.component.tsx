@@ -65,7 +65,9 @@ const AccordComponent = ({
   const contentRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   let valueAndUnit = valueUnitConvertor(title, value, unit);
-
+  const finalNutritionValue =
+    //@ts-ignore
+    valueAndUnit && counter && parseFloat(valueAndUnit?.value / counter).toFixed(0);
   const handleClickNutration = (id: string) => {
     router?.push(`/wiki/Nutrient/${id}`);
   };
@@ -82,7 +84,7 @@ const AccordComponent = ({
         <div className={`${styles.accordionSummary}`}>
           {
             //@ts-ignore
-            parseFloat(valueAndUnit?.value * counter).toFixed(1) > 0 && (
+            finalNutritionValue > 0 && (
               <div className={styles.accordionSummaryForNested}>
                 {expanded ? (
                   <BsPlus
@@ -123,7 +125,7 @@ const AccordComponent = ({
                         <p className={styles.valueUnit + " " + styles.alignCenter}>
                           {
                             //@ts-ignore
-                            parseFloat(valueAndUnit?.value * counter).toFixed(1)
+                            finalNutritionValue
                           }
                           &nbsp;
                           {valueAndUnit?.unit?.toLowerCase()}
@@ -154,7 +156,7 @@ const AccordComponent = ({
                         <p className={styles.valueUnit + " " + styles.alignCenter}>
                           {
                             //@ts-ignore
-                            parseFloat(valueAndUnit?.value * counter).toFixed(1)
+                            finalNutritionValue
                           }
                           &nbsp;
                           {valueAndUnit?.unit?.toLowerCase()}

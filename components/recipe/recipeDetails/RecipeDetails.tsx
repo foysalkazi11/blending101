@@ -4,6 +4,8 @@ import LeftSide from "./leftSide/LeftSide";
 import RightSide from "./rightSide/RightSide";
 import Center from "./center/Center";
 import styles from "./RecipeDetails.module.scss";
+import { presetNumber } from "../../utility/numbersForServingNumber";
+import RightTray from "../../rightTray/rightTray.component";
 
 const RecipeDetails = ({
   recipeData,
@@ -18,8 +20,28 @@ const RecipeDetails = ({
     setCounter(Number(value));
   };
   const adjusterFunc = (task) => {
-    task === "+" && setCounter(Number(counter) + 1);
-    task === "-" && counter > 1 && setCounter(Number(counter) - 1);
+    let indexValue = presetNumber?.indexOf(counter);
+
+    if (task === "+") {
+      counter < presetNumber[presetNumber.length - 1] &&
+        setCounter(presetNumber[indexValue + 1]);
+      counter > presetNumber[presetNumber.length - 1] &&
+        setCounter(presetNumber[presetNumber.length - 1]);
+    }
+
+    if (task === "-") {
+      counter > 0.5 && setCounter(presetNumber[indexValue - 1]);
+    }
+  };
+
+  const inputTagValueHandler = (e) => {
+    if (Number(e.target.value) > presetNumber[presetNumber.length - 1]) {
+      setCounter(presetNumber[presetNumber.length - 1]);
+    } else if (Number(e.target.value) <= presetNumber[0]) {
+      setCounter(presetNumber[0]);
+    } else {
+      setCounter(Number(e.target.value));
+    }
   };
   return (
     <div style={{ margin: "40px auto" }}>
@@ -45,17 +67,30 @@ const RecipeDetails = ({
                   nutritionState={nutritionState}
                   singleElement={singleElement}
                   setsingleElement={setsingleElement}
+                  adjusterFunc={adjusterFunc}
+                  inputTagValueHandler={inputTagValueHandler}
                 />
               </div>
               <div className={styles.recipeDetailsContainer__contentDiv__right}>
+                {/* {console.log({setNutritionState})} */}
+                {/* <RightTray
+                  nutritionTrayData={nutritionData}
+                  counter={counter}
+                  adjusterFunc={adjusterFunc}
+                  singleElement={singleElement}
+                  setSingleElement={setsingleElement}
+                  nutritionState={nutritionState}
+                  setNutritionState={setNutritionState}
+                  // counterHandler={counterHandler}
+                /> */}
                 <RightSide
                   nutritionData={nutritionData}
                   counter={counter}
-                  counterHandler={counterHandler}
-                  nutritionState={nutritionState}
-                  setsingleElement={setsingleElement}
-                  singleElement={singleElement}
                   adjusterFunc={adjusterFunc}
+                  singleElement={singleElement}
+                  setsingleElement={setsingleElement}
+                  nutritionState={nutritionState}
+                  counterHandler={counterHandler}
                 />
               </div>
             </div>

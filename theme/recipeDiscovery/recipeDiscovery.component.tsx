@@ -17,7 +17,6 @@ import {
 } from "../../redux/slices/sideTraySlice";
 import SaveRecipe from "../saveRecipeModal/SaveRecipeModal";
 import ShowCollectionRecipes from "../showCollectionRecipes/ShowCollectionRecipes";
-import { setLoading } from "../../redux/slices/utilitySlice";
 import { useLazyQuery } from "@apollo/client";
 import GET_ALL_RECOMMENDED_RECIPES from "../../gqlLib/recipes/queries/getRecommendedRecipes";
 import GET_ALL_POPULAR_RECIPES from "../../gqlLib/recipes/queries/getAllPopularRecipes";
@@ -37,9 +36,7 @@ const RecipeDetails = () => {
   const { user, dbUser } = useAppSelector((state) => state?.user);
   const { lastModifiedCollection, collectionDetailsId, showAllRecipes } =
     useAppSelector((state) => state?.collections);
-  const { latest, popular, recommended } = useAppSelector(
-    (state) => state?.recipe
-  );
+  const { latest, popular, recommended } = useAppSelector((state) => state?.recipe);
   const { filters } = useAppSelector((state) => state?.filterRecipe);
   const [getAllRecommendedRecipes] = useLazyQuery(GET_ALL_RECOMMENDED_RECIPES);
   const [getAllPopularRecipes] = useLazyQuery(GET_ALL_POPULAR_RECIPES);
@@ -62,9 +59,7 @@ const RecipeDetails = () => {
           variables: { userId: dbUser?._id },
         });
         dispatch(
-          setRecommended(
-            recommendedRecipes?.data?.getAllrecomendedRecipes || []
-          )
+          setRecommended(recommendedRecipes?.data?.getAllrecomendedRecipes || [])
         );
       }
 
@@ -171,10 +166,7 @@ const RecipeDetails = () => {
                 {/* its for Recent*/}
 
                 {latest.length ? (
-                  <ContentTray
-                    heading={"Recent"}
-                    image={"/images/clock-light.svg"}
-                  >
+                  <ContentTray heading={"Recent"} image={"/images/clock-light.svg"}>
                     {latest?.map((item, index) => {
                       let ingredients = [];
                       item?.ingredients?.forEach((ing) => {
