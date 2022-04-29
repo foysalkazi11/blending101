@@ -173,6 +173,8 @@
 }
 
 .addRecipeIngredients {
+  position: relative;
+
   input {
     width: 100%;
     min-height: 82px;
@@ -200,9 +202,41 @@
     box-shadow: none;
   }
 
-  &__dargAndDrop {
-    margin-top: 10px;
+  .suggested {
+    position: absolute;
+    background-color: #ffffff;
+    border: 2px solid #f1f1f1;
+    border-radius: 7px;
+    width: 100%;
+    margin-top: 5px;
+    z-index: 1;
+    // box-shadow: 0 0 2px 2px #f2f2f8;
+    &__ul {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &__li {
+      display: flex;
+      padding: 10px;
+      color: #ababab;
+      font-size: 14px;
+      list-style: none;
+
+      &:hover {
+        background-color: #dad8d893;
+      }
+
+      cursor: pointer;
+    }
+
+    &__div {
+      margin-right: 20px;
+    }
   }
+}
+.dargAndDropArea {
+  margin-top: 10px;
 }
 
 .nutritionHeader {
