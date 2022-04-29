@@ -1,4 +1,5 @@
 $sharedWidth:33.33%;
+$sharedFontWeight:500;
 
 %commonGrid__Accordian {
   display: grid;
@@ -14,6 +15,7 @@ $sharedWidth:33.33%;
 .centerDiv {
   display: flex;
   flex-direction: column;
+  margin-bottom: 10px;
 
   &__headingTray {
     display: flex;
@@ -23,12 +25,14 @@ $sharedWidth:33.33%;
       width: $sharedWidth;
       @extend %sharedProperties;
       justify-content: left;
+      font-weight: $sharedFontWeight;
     }
 
     &__center {
       width: $sharedWidth;
       @extend %sharedProperties;
       justify-content: center;
+      font-weight: $sharedFontWeight;
     }
 
     &__right {

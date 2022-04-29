@@ -121,56 +121,21 @@ const Left_tray_recipe_edit = ({
   };
   // Controllers - END +++++++++++++++++++++++++++++++++++++++++++<
 
-  // useEffect(() => {
-  //   if (!leftAllIngredientsList) return;
-  //   setSearchElemList(leftAllIngredientsList);
-  //   setSearchElemListFilter(leftAllIngredientsList);
-  // }, [leftAllIngredientsList]);
+  // code for rankings
 
-  // useEffect(() => {
-  //   DropDown(dpd);
-  // }, [dpd]);
+  const recipeRankingsHighestValue = () => {
+    let highestValue = 1;
+    ingredientList?.forEach((elem) => {
+      let defaultMeasurement = elem?.portions?.filter((itm) => {
+        return itm.default === true;
+      });
+      if (Number(highestValue) < Number(defaultMeasurement[0]?.meausermentWeight)) {
+        highestValue = Number(defaultMeasurement[0]?.meausermentWeight);
+      }
+    });
 
-  // console.log(recipeIngredients);
-
-  // console.log(selectedIngredientsList);
-
-  // useEffect(() => {
-  //   if (!recipeData) return;
-
-  //   let mode = "edit";
-  //   if (mode === "edit") {
-  //     console.log(recipeData);
-  //     let modifiedPortions = [];
-
-  //     recipeData.ingredients.map((item) => {
-  //       let selectedPortion = item.portions.filter((elem) => elem.default === true);
-  //       selectedPortion = selectedPortion[0];
-  //       console.log({ selectedPortion });
-  //       console.log(item);
-  //       modifiedPortions = [
-  //         ...modifiedPortions,
-  //         {
-  //           ...selectedPortion,
-  //           measurement: selectedPortion.name,
-  //           meausermentWeight: selectedPortion.gram,
-  //           default:selectedPortion.defa
-  //         },
-  //       ];
-  //     });
-
-  //     const editingRecipe = {
-  //       category: recipeData?.recipeBlendCategory?.name,
-  //       description: recipeData?.description,
-  //       ingredientName: recipeData?.name,
-  //       images: recipeData?.image,
-  //       featuredImage: null,
-  //     };
-  //     console.log(editingRecipe);
-  //   }
-
-  //   console.log("object");
-  // }, [recipeData]);
+    return { highestValue };
+  };
 
   return (
     <div className={styles.left_main_container}>
@@ -247,17 +212,25 @@ const Left_tray_recipe_edit = ({
             )}
             {toggle === 2 && (
               <div className={styles.rankings}>
-                {/* <CalciumSearchElem /> */}
-                {ingredients?.map(({ name, percent, units }, index) => {
+                {ingredientList?.map((elem, index) => {
+                  const { highestValue } = recipeRankingsHighestValue();
+                  const defaultMeasurement = elem?.portions?.filter((itm) => {
+                    return itm.default === true;
+                  });
+
                   return (
-                    <Linearcomponent
-                      name={name}
-                      percent={percent}
-                      checkbox
-                      key={index}
-                      highestValue={percent}
-                      units={units}
-                    />
+                    highestValue && (
+                      <Linearcomponent
+                        element={elem}
+                        name={elem.ingredientName}
+                        percent={defaultMeasurement[0]?.meausermentWeight}
+                        checkbox
+                        checkedState={checkActive(elem?.ingredientName)}
+                        key={index}
+                        highestValue={Number(highestValue)}
+                        units={"%"}
+                      />
+                    )
                   );
                 })}
               </div>

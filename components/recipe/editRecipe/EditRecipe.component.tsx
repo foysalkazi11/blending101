@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AContainer from "../../../containers/A.container";
 import styles from "./EditRecipe.module.scss";
 import Center_header from "./header/centerHeader/Center_header.component";
@@ -12,6 +12,7 @@ import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setServingCounter } from "../../../redux/edit_recipe/editRecipeStates";
 import RightHeader from "./header/right_header/right_header.component";
+import { presetNumber } from "../../utility/numbersForServingNumber";
 
 interface editRecipe {
   recipeName: string;
@@ -43,10 +44,19 @@ const EditRecipePage = ({
   const [singleElement, setSingleElement] = useState(false);
 
   const adjusterFunc = (task) => {
-    task === "+" && dispatch(setServingCounter(servingCounter + 1));
-    task === "-" &&
-      servingCounter > 1 &&
-      dispatch(setServingCounter(servingCounter - 1));
+    let indexValue = presetNumber?.indexOf(servingCounter);
+
+    if (task === "+") {
+      servingCounter < presetNumber[presetNumber.length - 1] &&
+        dispatch(setServingCounter(presetNumber[indexValue + 1]));
+      servingCounter > presetNumber[presetNumber.length - 1] &&
+        dispatch(setServingCounter(presetNumber[presetNumber.length - 1]));
+    }
+
+    if (task === "-") {
+      servingCounter > 0.5 &&
+        dispatch(setServingCounter(presetNumber[indexValue - 1]));
+    }
   };
 
   return (
@@ -115,6 +125,7 @@ const EditRecipePage = ({
         <div className={styles.right__main}>
           <RightHeader />
           <RightTray
+            counter={servingCounter}
             nutritionTrayData={nutritionTrayData}
             adjusterFunc={adjusterFunc}
             singleElement={singleElement}
