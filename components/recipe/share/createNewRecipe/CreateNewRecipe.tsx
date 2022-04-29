@@ -15,24 +15,40 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
 import { setAllIngredients } from "../../../../redux/slices/ingredientsSlice";
 import Image from "next/image";
+import { FETCH_BLEND_CATEGORIES } from "../../../../gqlLib/category/queries/fetchCategories";
+import { setAllCategories } from "../../../../redux/slices/categroySlice";
 
 const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
   const [winReady, setWinReady] = useState(false);
   const [inputVlaue, setInputValue] = useState("");
   const { allIngredients } = useAppSelector((state) => state?.ingredients);
   const [searchIngredientData, setSearchIngredientData] = useState<any[]>([]);
-
   const [getBlendNutritionBasedOnRecipeXxx, { data, loading, error }] =
     useLazyQuery(GET_BLEND_NUTRITION_BASED_ON_RECIPE_XXX, {
       fetchPolicy: "network-only",
     });
-
   const [filterIngredientByCategroyAndClass] = useLazyQuery(
     FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS
   );
-
+  const [getAllBlendCategory, { loading: blendCategroyLoading }] = useLazyQuery(
+    FETCH_BLEND_CATEGORIES
+  );
+  const { allCategories } = useAppSelector((state) => state?.categroy);
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
+
+  const updataNewRecipe = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e?.target;
+    setNewRecipe((state) => ({ ...state, [name]: value }));
+  };
+
+  const handleFile = (e: any) => {
+    console.log(e?.target?.files[0]);
+
+    setNewRecipe((state) => ({ ...state, image: e?.target?.files[0] }));
+  };
 
   const findItem = (id) => {
     return newRecipe?.ingredients?.find((item) => item?.ingredientId === id);
@@ -63,6 +79,23 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
       ],
     }));
   };
+
+  const fetchAllBlendCategroy = async () => {
+    try {
+      const { data } = await getAllBlendCategory();
+      dispatch(setAllCategories(data?.getAllCategories));
+    } catch (error) {
+      console.log(error?.message);
+    }
+  };
+
+  useEffect(() => {
+    if (!allCategories?.length) {
+      fetchAllBlendCategroy();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const selectIngredientOnClick = (ele) => {
     const item = findItem(ele?._id);
@@ -121,14 +154,6 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
   }, []);
 
   useEffect(() => {
-    isMounted.current = true;
-
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
-
-  useEffect(() => {
     getBlendNutritionBasedOnRecipeXxx({
       variables: {
         ingredientsInfo: [
@@ -146,12 +171,26 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
     setWinReady(true);
   }, []);
 
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
   return (
     <div className={styles.createNewRecipeContainer}>
       <div className={styles.firstContainer}>
         <div className={styles.firstContainer__firstSection}>
           <div className={styles.addRecipeTitle}>
-            <input type="text" placeholder="Add Recipe Title" />
+            <input
+              type="text"
+              name="name"
+              placeholder="Add Recipe Title"
+              value={newRecipe?.name}
+              onChange={(e) => updataNewRecipe(e)}
+            />
           </div>
           <div
             style={{
@@ -159,16 +198,31 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
             }}
           >
             <div className={styles.fileUpload}>
-              <input type="file" accept="image/*" />
+              {/* newRecipe?.image ? (
+                URL.createObjectURL(newRecipe?.image) */}
 
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleFile(e)}
+              />
               <img src="/images/black-add.svg" alt="addIcon" />
             </div>
 
             <div className={styles.dropDown}>
-              <select id="cars" name="categories">
-                <option value="smoothie">Smoothie</option>
-                <option value="avocado">Avocado</option>
-                <option value="creamy">Creamy</option>
+              <select
+                id="cars"
+                name="recipeBlendCategory"
+                value={newRecipe?.recipeBlendCategory}
+                onChange={(e) => updataNewRecipe(e)}
+              >
+                {allCategories?.map((cat) => {
+                  return (
+                    <option key={cat?._id} value={cat?.name}>
+                      {cat?.name}
+                    </option>
+                  );
+                })}
               </select>
             </div>
           </div>
@@ -198,7 +252,7 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
               value={inputVlaue}
               onChange={(e) => setInputValue(e.target.value)}
               type="text"
-              placeholder="Enter, past, and or drag ingredients"
+              placeholder="Search ingredients"
             />
           </form>
           <div
@@ -219,27 +273,29 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
                       selectIngredientOnClick(elem);
                     }}
                   >
-                    {/* <div className={styles.suggested__div}>
-                      {elem.featuredImage !== null ? (
-                        <div className={styles.ingredients__icons}>
-                          <Image
-                            src={elem.featuredImage}
-                            alt="Picture will load soon"
-                            objectFit="contain"
-                            layout="fill"
-                          />
-                        </div>
-                      ) : (
-                        <div className={styles.ingredients__icons}>
-                          <Image
-                            src={"/food/Dandelion.png"}
-                            alt="Picture will load soon"
-                            objectFit="contain"
-                            layout="fill"
-                          />
-                        </div>
-                      )}
-                    </div> */}
+                    {elem.featuredImage !== null ? (
+                      <div className={styles.ingredientImg}>
+                        <Image
+                          src={elem.featuredImage}
+                          alt="Picture will load soon"
+                          objectFit="contain"
+                          width={20}
+                          height={20}
+                        />
+                      </div>
+                    ) : (
+                      <div className={styles.ingredientImg}>
+                        <Image
+                          src={"/food/Dandelion.png"}
+                          alt="Picture will load soon"
+                          objectFit="contain"
+                          width={20}
+                          height={20}
+                          className={styles.ingredientImg}
+                        />
+                      </div>
+                    )}
+
                     {elem.ingredientName}
                   </li>
                 );

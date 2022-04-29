@@ -45,12 +45,11 @@ const CompareRecipe = () => {
   const windowSize = useWindowSize();
   const [newRecipe, setNewRecipe] = useState({
     name: null,
-    image: [
-      // {
-      //   image: null,
-      //   default: null,
-      // },
-    ],
+    image: null,
+    // {
+    //   image: null,
+    //   default: null,
+    // },
     userId: dbUser?._id,
     description: null,
     ingredients: [
@@ -60,7 +59,7 @@ const CompareRecipe = () => {
       //   weightInGram: null,
       // },
     ],
-    recipeBlendCategory: null,
+    recipeBlendCategory: "WholeFood",
   });
 
   console.log(recipeList);
