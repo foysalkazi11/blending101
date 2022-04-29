@@ -121,7 +121,7 @@
 .dropDown {
   select {
     width: 100%;
-    max-width: 110px;
+    max-width: 130px;
     min-height: 82px;
     border: 1px solid #ececec;
     border-radius: 10px;
@@ -226,13 +226,16 @@
       &:hover {
         background-color: #dad8d893;
       }
+      .ingredientImg {
+        margin-right: 10px;
+      }
 
       cursor: pointer;
     }
 
-    &__div {
-      margin-right: 20px;
-    }
+    // &__div {
+    //   margin-right: 20px;
+    // }
   }
 }
 .dargAndDropArea {
