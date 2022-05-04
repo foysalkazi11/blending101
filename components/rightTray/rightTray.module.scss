@@ -10,7 +10,7 @@
     box-sizing: border-box;
     padding: 3px;
     align-items: center;
-    margin-right: 10px;
+    margin-right: 5px;
 }
 
 @mixin headings {
@@ -91,6 +91,7 @@
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
     margin-bottom: 20px;
+    padding-bottom: 20px;
 
     &__title {
         @include headings();
@@ -152,19 +153,22 @@
 
         &__serving {
             @extend %counterTray;
-            margin-right: 10px;
+            margin-right: 5px;
             font-size: 14px;
+
 
             &__num {
                 font-size: 17px;
                 font-weight: 600;
                 margin-left: 10px;
+                min-width: fit-content;
             }
         }
 
         &__servingsize {
             @extend %counterTray;
             font-size: 14px;
+            min-width: fit-content;
         }
     }
 

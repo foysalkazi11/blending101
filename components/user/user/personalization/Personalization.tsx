@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useAppSelector } from "../../../../redux/hooks";
 import ToggleMenu from "../../../../theme/toggleMenu/ToggleMenu";
 import Dietary from "./dietary/Dietary";
@@ -6,6 +6,7 @@ import Physical from "./physical/Physical";
 
 import Medical from "./medical/Medical";
 import AchiveGoals from "./achiveGoals/AchiveGoals";
+import { useRouter } from "next/router";
 
 type PersonalizationProps = {
   userData: any;
@@ -21,7 +22,6 @@ const Personalization = ({
   setToggle = () => {},
 }: PersonalizationProps) => {
   const { personalization } = userData;
-  // const [toggle, setToggle] = useState(0);
 
   const checkGoals = (value, fieldName) => {
     const goal = userData?.personalization?.[fieldName]?.find(
@@ -43,9 +43,8 @@ const Personalization = ({
           personalization: {
             ...pre?.personalization,
             [name]:
-              [
-                ...pre?.personalization[name]?.filter((item) => item !== value),
-              ] || "tempName",
+              [...pre?.personalization[name]?.filter((item) => item !== value)] ||
+              "tempName",
           },
         }));
       } else {
@@ -58,10 +57,7 @@ const Personalization = ({
           },
         }));
       }
-    } else if (
-      name === "preExistingMedicalConditions" ||
-      name === "meditcation"
-    ) {
+    } else if (name === "preExistingMedicalConditions" || name === "meditcation") {
       if (value) {
         setUserData((pre) => ({
           ...pre,

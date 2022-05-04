@@ -15,6 +15,9 @@ import {
 } from "../../../../../redux/edit_recipe/editRecipeStates";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import CircularRotatingLoader from "../../../../../theme/loader/circularRotatingLoader.component";
+import { MdOutlineInfo } from "react-icons/md";
+import { BiBarChart } from "react-icons/bi";
+import { BsCartPlus } from "react-icons/bs";
 
 type IngredientListPorps = {
   recipeInstructions?: string[];
@@ -344,20 +347,59 @@ const IngredientList = ({
                                   )
                                 }
                               </div>
-                              <span
+                              {/* <span
                                 className={styles.ingredients__edit}
                                 // onClick={() => editIngredient(elem.id)}
-                              ></span>
+                              ></span> */}
+
                               <div
-                                className={styles.ingredients__bin}
-                                onClick={() => removeIngredient(elem?._id)}
+                                className={styles.ingredients__iconTray}
+                                style={
+                                  // @ts-ignore
+                                  elem._id === nutritionState?._id
+                                    ? { display: "flex" }
+                                    : {}
+                                }
                               >
-                                <Image
-                                  src={"/icons/noun_Delete_1447966.svg"}
-                                  alt=""
-                                  layout="fill"
-                                  objectFit="contain"
+                                <MdOutlineInfo
+                                  className={styles.ingredients__iconTray__icons}
+                                  // onClick={() =>
+                                  //   setIngredientId(ingredient?.ingredientId?._id)
+                                  // }
                                 />
+
+                                {
+                                  //@ts-ignore
+                                  elem._id === nutritionState?._id ? (
+                                    <BiBarChart
+                                      style={{ color: "#fe5d1f" }}
+                                      className={styles.ingredients__iconTray__icons}
+                                      onClick={() => {
+                                        setSingleElement(!singleElement);
+                                        handleSingleIngredient(elem);
+                                      }}
+                                    />
+                                  ) : (
+                                    <BiBarChart
+                                      // style={{ color: "#fe5d1f" }}
+                                      className={styles.ingredients__iconTray__icons}
+                                      onClick={() => {
+                                        handleSingleIngredient(elem);
+                                        setSingleElement(true);
+                                      }}
+                                    />
+                                  )
+                                }
+
+                                <div className={styles.ingredients__bin}>
+                                  <Image
+                                    src={"/icons/noun_Delete_1447966.svg"}
+                                    alt=""
+                                    layout="fill"
+                                    objectFit="contain"
+                                    onClick={() => removeIngredient(elem?._id)}
+                                  />
+                                </div>
                               </div>
                             </li>
                           )}

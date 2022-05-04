@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from "react";
 import styles from "./Main.module.scss";
 import About from "../about/AboutUser";
 import Membership from "../membership/Membership";
@@ -10,12 +11,10 @@ import EDIT_CONFIGRATION_BY_ID from "../../../../gqlLib/user/mutations/editCofig
 import EDIT_USER_BY_ID from "../../../../gqlLib/user/mutations/editUserById";
 import { setLoading } from "../../../../redux/slices/utilitySlice";
 import imageUploadS3 from "../../../utility/imageUploadS3";
-import {
-  setDbUser,
-  setIsNewUseImage,
-} from "../../../../redux/slices/userSlice";
+import { setDbUser, setIsNewUseImage } from "../../../../redux/slices/userSlice";
 import notification from "../../../utility/reactToastifyNotification";
 import ButtonComponent from "../../../../theme/button/button.component";
+import { useRouter } from "next/router";
 
 const tab = ["About", "Membership", "Notification", "Personalization"];
 
@@ -25,7 +24,33 @@ type MainProps = {
 };
 
 const Main = ({ userData, setUserData }: MainProps) => {
-  const [activeTab, setActiveTab] = useState(0);
+  const router = useRouter();
+  console.log(router.query);
+  const { type,active } = router.query;
+  const [activeTab, setActiveTab] = useState(type);
+
+  useEffect(() => {
+
+    tab?.forEach((itm) => {
+      if (itm.toLowerCase() === type) {
+        setActiveTab(itm);
+      }
+    });
+  }, []);
+  console.log({ activeTab });
+  console.log({ type });
+  console.log({ active });
+
+  useEffect(() => {
+    if(!type) return;
+    setActiveTab(type);
+  }, [type]);
+
+  useEffect(() => {
+    if(!activeTab) return;
+    router.push(`user/?type=${activeTab}`);
+  }, [activeTab]);
+
   const { dbUser } = useAppSelector((state) => state?.user);
   const dispatch = useAppDispatch();
   const [editUserData] = useMutation(EDIT_CONFIGRATION_BY_ID);
@@ -50,6 +75,7 @@ const Main = ({ userData, setUserData }: MainProps) => {
             },
           };
         });
+
         await editUserById({
           variables: {
             data: {
@@ -124,13 +150,13 @@ const Main = ({ userData, setUserData }: MainProps) => {
 
   const renderUI = () => {
     switch (activeTab) {
-      case 0:
+      case "about":
         return <About userData={userData} setUserData={setUserData} />;
-      case 1:
+      case "membership":
         return <Membership userData={userData} setUserData={setUserData} />;
-      case 2:
+      case "notification":
         return <Notification userData={userData} setUserData={setUserData} />;
-      case 3:
+      case "personalization":
         return (
           <Personalization
             userData={userData}
@@ -152,9 +178,9 @@ const Main = ({ userData, setUserData }: MainProps) => {
           return (
             <p
               key={index}
-              onClick={() => setActiveTab(index)}
+              onClick={() => setActiveTab(item.toLowerCase())}
               className={`${styles.text} ${
-                activeTab === index ? styles.active : ""
+                activeTab === item.toLowerCase() ? styles.active : ""
               }`}
             >
               {item}
@@ -163,7 +189,7 @@ const Main = ({ userData, setUserData }: MainProps) => {
         })}
       </header>
       {renderUI()}
-      {activeTab === 3 && toggle === 0 ? null : (
+      {activeTab === "notification" && toggle === 0 ? null : (
         <div
           style={{
             width: "100%",

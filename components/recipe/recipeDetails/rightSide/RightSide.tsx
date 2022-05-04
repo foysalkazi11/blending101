@@ -6,10 +6,6 @@ import { MdOutlineClose } from "react-icons/md";
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
 
-interface PassingProps {
-  name: string;
-  percent: number;
-}
 
 const RightSide = ({
   nutritionData,

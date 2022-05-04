@@ -1,4 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useMutation } from "@apollo/client";
+import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import EDIT_CONFIGRATION_BY_ID from "../../../../../gqlLib/user/mutations/editCofigrationById";
@@ -79,6 +81,8 @@ const Physical = ({
   userData,
 }: PhysicalProps) => {
   const { dbUser } = useAppSelector((state) => state?.user);
+  const router = useRouter();
+  const { toggle } = router.query;
   const dispatch = useAppDispatch();
   const [editConfigration] = useMutation(EDIT_CONFIGRATION_BY_ID);
   const [editUserById] = useMutation(EDIT_USER_BY_ID);
@@ -89,7 +93,6 @@ const Physical = ({
   const [profileActiveTab, setProfileActiveTab] = useState(0);
   const [pregnant, setPregnant] = useState("");
   const isMounted = useRef(null);
-
   const handleYearsAndMonths = (userProfile) => {
     let value = {
       years: 0,
@@ -115,6 +118,7 @@ const Physical = ({
     return value;
   };
 
+  console.log(toggle);
   const {
     register,
     handleSubmit,
@@ -162,6 +166,18 @@ const Physical = ({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if(!profileActiveTab) return;
+    router?.push(`/user/?type=personalization&toggle=${profileActiveTab}`);
+  }, [profileActiveTab]);
+
+  useEffect(() => {
+    if(!toggle) return;
+    if (toggle) {
+      setProfileActiveTab(Number(toggle));
+    }
+  }, [toggle]);
 
   const handlePregnantOrLactating = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e?.target;
