@@ -9,8 +9,6 @@ interface Percent {
 const LinearIndicatorcomponent = ({ percent, highestValue }: Percent) => {
   let width: number = (percent / highestValue) * 100;
 
-  let style: object = { width: width };
-
   return (
     <div className={styles.LinearIndicatorDiv}>
       {/* <LinearProgress variant="determinate" value={20} sx={color="green"} /> */}

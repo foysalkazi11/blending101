@@ -57,7 +57,9 @@ const UpdatedRecursiveAccordian = ({
                   ) : (
                     <FaRegUser
                       className={styles.userName__image}
-                      onClick={() => router?.push("/user")}
+                      onClick={() =>
+                        router?.push("/user/?type=personalization&toggle=1")
+                      }
                     />
                   )}
                 </div>

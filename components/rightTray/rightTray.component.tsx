@@ -21,7 +21,9 @@ interface RightTrayInterface {
   nutritionState?: any;
   setNutritionState?: any;
   counter?: any;
-  counterHandler?: any;
+  counterHandler?: string;
+  nutrientName?: string;
+  measurement?: string;
 }
 
 const RightTray = ({
@@ -29,10 +31,10 @@ const RightTray = ({
   adjusterFunc,
   singleElement,
   setSingleElement,
-  nutritionState,
   setNutritionState,
   counter,
-  counterHandler
+  nutrientName,
+  measurement,
 }: RightTrayInterface) => {
   const selectedIngredientsList = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedIngredientsList
@@ -49,7 +51,6 @@ const RightTray = ({
     }
   };
 
-  console.log(nutritionState, "asdfahsdfhasdjkl");
   return (
     <div>
       <div className={styles.right}>
@@ -102,13 +103,9 @@ const RightTray = ({
                   <div>
                     <h3 className={styles.content__name}>
                       {counter}&nbsp;
-                      {
-                        nutritionState?.portions?.filter(
-                          (itm) => itm.default === true
-                        )[0].measurement
-                      }
+                      {measurement}
                       &nbsp;
-                      {nutritionState?.ingredientName}
+                      {nutrientName}
                     </h3>
                   </div>
                   <div
@@ -132,7 +129,6 @@ const RightTray = ({
         </div>
 
         <div className={styles.compoent__box__nutrition}>
-          {console.log(nutritionTrayData)}
           {nutritionTrayData ? (
             <UpdatedRecursiveAccordian
               dataObject={nutritionTrayData}
