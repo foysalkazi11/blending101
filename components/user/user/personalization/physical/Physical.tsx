@@ -166,18 +166,17 @@ const Physical = ({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   useEffect(() => {
-    if(!profileActiveTab) return;
-    router?.push(`/user/?type=personalization&toggle=${profileActiveTab}`);
-  }, [profileActiveTab]);
-
-  useEffect(() => {
-    if(!toggle) return;
+    if (!toggle) return;
     if (toggle) {
       setProfileActiveTab(Number(toggle));
     }
   }, [toggle]);
+
+  useEffect(() => {
+    if (!profileActiveTab) return;
+    router?.push(`/user/?type=personalization&toggle=${profileActiveTab}`);
+  }, [profileActiveTab]);
 
   const handlePregnantOrLactating = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e?.target;
@@ -407,13 +406,19 @@ const Physical = ({
           <div className={styles.profile_tab}>
             <p
               className={`${profileActiveTab === 0 ? styles.active_border : ""}`}
-              onClick={() => setProfileActiveTab(0)}
+              onClick={() => {
+                setProfileActiveTab(0);
+                router?.push(`/user/?type=personalization&toggle=0`);
+              }}
             >
               Profile
             </p>
             <p
               className={`${profileActiveTab === 1 ? styles.active_border : ""}`}
-              onClick={() => setProfileActiveTab(1)}
+              onClick={() => {
+                setProfileActiveTab(1);
+                router?.push(`/user/?type=personalization&toggle=1`);
+              }}
             >
               Daily Intake
             </p>
