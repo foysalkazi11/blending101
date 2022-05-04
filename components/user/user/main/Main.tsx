@@ -26,11 +26,10 @@ type MainProps = {
 const Main = ({ userData, setUserData }: MainProps) => {
   const router = useRouter();
   console.log(router.query);
-  const { type,active } = router.query;
+  const { type, active } = router.query;
   const [activeTab, setActiveTab] = useState(type);
 
   useEffect(() => {
-
     tab?.forEach((itm) => {
       if (itm.toLowerCase() === type) {
         setActiveTab(itm);
@@ -41,13 +40,14 @@ const Main = ({ userData, setUserData }: MainProps) => {
   console.log({ type });
   console.log({ active });
 
+
   useEffect(() => {
-    if(!type) return;
+    if (!type) return;
     setActiveTab(type);
   }, [type]);
 
   useEffect(() => {
-    if(!activeTab) return;
+    if (!activeTab) return;
     router.push(`user/?type=${activeTab}`);
   }, [activeTab]);
 

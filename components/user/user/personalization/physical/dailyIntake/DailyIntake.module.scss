@@ -1,5 +1,6 @@
 $sharedWidth:33.33%;
-$sharedFontWeight:500;
+$sharedFontWeight:400;
+$sharedFontSize:20px;
 
 %commonGrid__Accordian {
   display: grid;
@@ -26,6 +27,7 @@ $sharedFontWeight:500;
       @extend %sharedProperties;
       justify-content: left;
       font-weight: $sharedFontWeight;
+      font-size: $sharedFontSize;
     }
 
     &__center {
@@ -33,6 +35,7 @@ $sharedFontWeight:500;
       @extend %sharedProperties;
       justify-content: center;
       font-weight: $sharedFontWeight;
+      font-size: $sharedFontSize;
     }
 
     &__right {
