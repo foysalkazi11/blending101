@@ -132,6 +132,12 @@ const EditRecipePage = ({
             setSingleElement={setSingleElement}
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}
+            measurement={
+              nutritionState &&
+              nutritionState?.portions?.filter((itm) => itm.default === true)[0]
+                .measurement
+            }
+            nutrientName={nutritionState?.ingredientName}
           />
         </div>
       </div>

@@ -50,10 +50,7 @@ export default function FilterbottomComponent({
   );
 
   const { data: IngredientData } = useQuery(
-    GET_ALL_INGREDIENTS_DATA_BASED_ON_NUTRITION(
-      rankingDropDownState?.id,
-      dpd?.val
-    )
+    GET_ALL_INGREDIENTS_DATA_BASED_ON_NUTRITION(rankingDropDownState?.id, dpd?.val)
   );
 
   const handleIngredientClick = (ingredient) => {
@@ -144,9 +141,7 @@ export default function FilterbottomComponent({
       } else {
         const filter = allIngredients?.filter((item) =>
           //@ts-ignore
-          item?.ingredientName
-            ?.toLowerCase()
-            ?.includes(searchInput?.toLowerCase())
+          item?.ingredientName?.toLowerCase()?.includes(searchInput?.toLowerCase())
         );
         setSearchIngredientData(filter);
       }
@@ -157,7 +152,6 @@ export default function FilterbottomComponent({
 
   useEffect(() => {
     isMounted.current = true;
-
     return () => {
       isMounted.current = false;
     };
@@ -167,7 +161,7 @@ export default function FilterbottomComponent({
     if (!IngredientData) return;
     let tempArray = ascendingDescending
       ? [...IngredientData?.getAllIngredientsDataBasedOnNutrition]
-      : [...IngredientData?.getAllIngredientsDataBasedOnNutrition].reverse();
+      : [...IngredientData?.getAllIngredientsDataBasedOnNutrition]?.reverse();
     setArrayOrderState(tempArray);
   }, [ascendingDescending, IngredientData]);
 

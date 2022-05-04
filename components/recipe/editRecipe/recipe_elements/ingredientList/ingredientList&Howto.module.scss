@@ -1,3 +1,5 @@
+$sharedHeightForIcons:20px;
+
 @mixin servings__name {
     font-size: 15px;
     color: #C4C4C4;
@@ -228,7 +230,6 @@
 
         li {
             position: relative;
-            height: 100%;
             height: 42px;
             display: flex;
             align-items: center;
@@ -239,8 +240,8 @@
                 flex-direction: column;
             }
 
-            &:hover .ingredients__bin {
-                display: block;
+            &:hover .ingredients__iconTray {
+                display: flex;
             }
 
             &:hover .ingredients__drag {
@@ -295,12 +296,24 @@
     }
 
     &__bin {
-        width: 17px;
+        width: 20px;
         height: 100%;
         position: relative;
-        margin-right: 24px;
         cursor: pointer;
+        margin-left: 5px;
+    }
+
+    &__iconTray {
         display: none;
+        margin-left: auto;
+        height: $sharedHeightForIcons;
+
+        &__icons {
+            margin-left: 5px;
+            cursor: pointer;
+            color: #dddada;
+            font-size: $sharedHeightForIcons;
+        }
     }
 
     &__drag {
@@ -390,6 +403,7 @@
             word-wrap: break-word;
             padding-right: 70px;
 
+
             &:hover {
                 span {
                     display: block;
@@ -403,7 +417,6 @@
             &__edit {
                 right: 40px;
                 color: #dad8d8;
-                background-color: rebeccapurple;
                 display: none;
 
                 svg {
@@ -469,6 +482,7 @@
         display: flex;
         padding: 20px;
         font-size: 16px;
+
 
         &:hover {
             background-color: #dad8d893;

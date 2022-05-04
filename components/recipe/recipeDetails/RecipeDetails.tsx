@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import AContainer from "../../../containers/A.container";
 import LeftSide from "./leftSide/LeftSide";
-import RightSide from "./rightSide/RightSide";
 import Center from "./center/Center";
 import styles from "./RecipeDetails.module.scss";
 import { presetNumber } from "../../utility/numbersForServingNumber";
@@ -72,8 +71,7 @@ const RecipeDetails = ({
                 />
               </div>
               <div className={styles.recipeDetailsContainer__contentDiv__right}>
-                {/* {console.log({setNutritionState})} */}
-                {/* <RightTray
+                <RightTray
                   nutritionTrayData={nutritionData}
                   counter={counter}
                   adjusterFunc={adjusterFunc}
@@ -81,16 +79,12 @@ const RecipeDetails = ({
                   setSingleElement={setsingleElement}
                   nutritionState={nutritionState}
                   setNutritionState={setNutritionState}
-                  // counterHandler={counterHandler}
-                /> */}
-                <RightSide
-                  nutritionData={nutritionData}
-                  counter={counter}
-                  adjusterFunc={adjusterFunc}
-                  singleElement={singleElement}
-                  setsingleElement={setsingleElement}
-                  nutritionState={nutritionState}
-                  counterHandler={counterHandler}
+                  nutrientName={
+                    nutritionState && nutritionState[0]?.ingredientId?.ingredientName
+                  }
+                  measurement={
+                    nutritionState && nutritionState[0]?.selectedPortion?.name
+                  }
                 />
               </div>
             </div>
