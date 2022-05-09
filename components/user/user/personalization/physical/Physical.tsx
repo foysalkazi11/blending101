@@ -118,7 +118,7 @@ const Physical = ({
     return value;
   };
 
-  console.log(toggle);
+  // console.log(toggle);
   const {
     register,
     handleSubmit,

@@ -41,7 +41,6 @@ const DailyIntake = () => {
     return goalsArray;
   };
 
-  console.log(dailyData, "fkhgfgfklffjhfkj");
   const [updateDailyGoals] = useMutation(
     UPDATE_DAILY_GOALS({
       memberId: dbUser?._id,
@@ -87,20 +86,10 @@ const DailyIntake = () => {
 
   const updateGoals = async () => {
     setLoading(true);
-    const { data } = await updateDailyGoals();
-    console.log(data);
+    await updateDailyGoals();
     setLoading(false);
     reactToastifyNotification("info", "Profile Updated Successfully");
   };
-
-  const parsedDailyGoalsData = dailyGoalData
-    ? JSON?.parse(dailyGoalData?.getDailyGoals?.goals)
-    : {};
-  // parsedDailyGoalsData && console.log(parsedDailyGoalsData);
-  dailyGoalData?.getDailyGoals && console.log(dailyGoalData?.getDailyGoals);
-  dailyChartData && console.log(dailyChartData?.nutrients);
-  parsedDailyGoalsData && console.log(parsedDailyGoalsData);
-  inputValue && console.log({ inputValue });
 
   return (
     <>

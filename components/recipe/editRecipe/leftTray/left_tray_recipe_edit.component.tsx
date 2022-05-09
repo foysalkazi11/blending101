@@ -73,22 +73,26 @@ const Left_tray_recipe_edit = ({
   // Controllers - START =========================================>
 
   const handleIngredientClick = (ingredient) => {
-    let blendz = [];
-    let present = false;
-    selectedIngredientsList?.forEach((blen) => {
-      if (blen === ingredient) {
-        present = true;
-      }
-    });
-    if (!present) {
-      blendz = [...selectedIngredientsList, ingredient];
-    } else {
-      blendz = selectedIngredientsList?.filter((blen) => {
-        return blen !== ingredient;
+    try {
+      let blendz = [];
+      let present = false;
+      selectedIngredientsList?.forEach((blen) => {
+        if (blen === ingredient) {
+          present = true;
+        }
       });
-    }
+      if (!present) {
+        blendz = [...selectedIngredientsList, ingredient];
+      } else {
+        blendz = selectedIngredientsList?.filter((blen) => {
+          return blen !== ingredient;
+        });
+      }
 
-    dispatch(setSelectedIngredientsList(blendz));
+      dispatch(setSelectedIngredientsList(blendz));
+    } catch (error) {
+      console.log(ingredient, "not working");
+    }
   };
 
   const checkActive = (ingredient: string) => {
@@ -139,8 +143,6 @@ const Left_tray_recipe_edit = ({
 
   const orderAdjusterForList = (order) => {
     let tempArray = [...ingredientList];
-    let { highestValue } = recipeRankingsHighestValue();
-
     console.log({ tempArray });
     tempArray?.sort(
       (a, b) =>
@@ -160,13 +162,6 @@ const Left_tray_recipe_edit = ({
     else {
       return tempArray.reverse();
     }
-
-    // tempArray?.map((elem)=>{
-
-    // })
-
-    console.log({ tempArray });
-    console.log({ highestValue });
   };
 
   // useEffect(() => {
@@ -247,41 +242,44 @@ const Left_tray_recipe_edit = ({
                 </div>
               </>
             )}
-            {toggle === 2 && (
-              <div className={styles.rankings}>
-                <CalciumSearchElem
-                  ascendingDescending={ascendingDescending}
-                  setascendingDescending={setascendingDescending}
-                  list={list}
-                  setList={setList}
-                  dropDownState={rankingDropDownState}
-                  setDropDownState={setRankingDropDownState}
-                />
-                {orderAdjusterForList(ascendingDescending ? "asc" : "")?.map(
-                  (elem, index) => {
-                    const { highestValue } = recipeRankingsHighestValue();
-                    const defaultMeasurement = elem?.portions?.filter((itm) => {
-                      return itm.default === true;
-                    });
 
-                    return (
-                      highestValue && (
-                        <Linearcomponent
-                          element={elem}
-                          name={elem.ingredientName}
-                          percent={defaultMeasurement[0]?.meausermentWeight}
-                          checkbox
-                          checkedState={checkActive(elem?.ingredientName)}
-                          key={index}
-                          highestValue={Number(highestValue)}
-                          units={"%"}
-                        />
-                      )
-                    );
-                  }
-                )}
-              </div>
-            )}
+            <>
+              <CalciumSearchElem
+                ascendingDescending={ascendingDescending}
+                setascendingDescending={setascendingDescending}
+                list={list}
+                setList={setList}
+                dropDownState={rankingDropDownState}
+                setDropDownState={setRankingDropDownState}
+              />
+              {toggle === 2 && (
+                <div className={styles.rankings}>
+                  {orderAdjusterForList(ascendingDescending ? "asc" : "")?.map(
+                    (elem, index) => {
+                      const { highestValue } = recipeRankingsHighestValue();
+                      const defaultMeasurement = elem?.portions?.filter((itm) => {
+                        return itm.default === true;
+                      });
+
+                      return (
+                        highestValue && (
+                          <Linearcomponent
+                            element={elem}
+                            name={elem?.ingredientName}
+                            percent={defaultMeasurement[0]?.meausermentWeight}
+                            checkbox
+                            checkedState={checkActive(elem?.ingredientName)}
+                            key={index}
+                            highestValue={Number(highestValue)}
+                            units={"%"}
+                          />
+                        )
+                      );
+                    }
+                  )}
+                </div>
+              )}
+            </>
           </div>
         </div>
       </div>
