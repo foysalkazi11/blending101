@@ -143,7 +143,15 @@ const EditRecipeComponent = () => {
       });
     }
     dispatch(setRecipeImagesArray([...urlImageArray, ...updatedImageArray]));
-    await editARecipe();
+
+    try {
+      await editARecipe();
+    } catch (error) {
+      reactToastifyNotification("info", "Error while saving Recipe");
+      setIsFetching(false);
+      return;
+    }
+
     reactToastifyNotification("info", "Recipe Updated");
     dispatch(setRecipeFileImagesArray([]));
     setIsFetching(false);

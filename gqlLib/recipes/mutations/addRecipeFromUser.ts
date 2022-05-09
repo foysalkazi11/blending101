@@ -25,7 +25,7 @@ export const CREATE_NEW_RECIPE_FROM_USER = ({
       return `
             {
               ingredientId: "${itm.ingredientId}",
-              weightInGram: ${itm.weightInGram},
+              weightInGram: ${itm.weightInGram?.replace(/"/g, '\\"')},
               selectedPortionName: "${itm.selectedPortionName?.replace(/"/g, '\\"')}"
             }
           `;

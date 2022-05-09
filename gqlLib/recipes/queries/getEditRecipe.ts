@@ -39,7 +39,7 @@ export const NUTRITION_BASED_RECIPE = (array: string) => gql`
 export const INGREDIENTS_BY_CATEGORY_AND_CLASS = gql`
   query FilterIngredientByCategoryAndClass($classType: String!) {
     filterIngredientByCategoryAndClass(
-      data: { ingredientCategory: $classType, IngredientClass: 1 }
+      data: { ingredientCategory: $classType, IngredientClass: 0 }
     ) {
       _id
       ingredientName
