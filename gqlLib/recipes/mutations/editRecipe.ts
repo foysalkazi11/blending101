@@ -26,7 +26,12 @@ export const EDIT_A_RECIPE = ({
         if (itm.default === true) {
           recipeIngredientsModified = [
             ...recipeIngredientsModified,
-            `{ingredientId: "${elem?._id}",weightInGram: ${itm?.meausermentWeight},selectedPortionName: "${itm?.measurement}"}`,
+            `{ingredientId: "${
+              elem?._id
+            }",weightInGram: ${itm?.meausermentWeight?.replace(
+              /"/g,
+              '\\"'
+            )},selectedPortionName: "${itm?.measurement?.replace(/"/g, '\\"')}"}`,
           ];
         }
       });
@@ -34,7 +39,6 @@ export const EDIT_A_RECIPE = ({
     return `[${recipeIngredientsModified}]`;
   };
 
-  console.log({recipeBlendCategory})
   const recipeInstructionString = (array) => {
     let recipeInstructionModified = [];
     array?.forEach((itm) => {
@@ -47,7 +51,10 @@ export const EDIT_A_RECIPE = ({
   const imagesArrayString = (images) => {
     let updatedImageArray = [];
     images?.forEach((elem) => {
-      updatedImageArray = [...updatedImageArray, `${`{image:"${elem.image}", default:true}`}`];
+      updatedImageArray = [
+        ...updatedImageArray,
+        `${`{image:"${elem.image}", default:true}`}`,
+      ];
     });
     return `[${updatedImageArray}]`;
   };
