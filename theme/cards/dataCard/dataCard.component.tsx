@@ -137,7 +137,6 @@ export default function DatacardComponent({
     alredyCompared: boolean
   ) => {
     e.stopPropagation();
-    console.log(id);
 
     try {
       updateRecipeCompare(id, alredyCompared);
