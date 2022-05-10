@@ -3,6 +3,7 @@ import { MdDragIndicator } from "react-icons/md";
 import styles from "./SingleIngredient.module.scss";
 import DragIndicatorIcon from "../../../../public/icons/drag_indicator_black_36dp.svg";
 import { IoCloseCircleOutline } from "react-icons/io5";
+import Tooltip from "../../../../theme/toolTip/CustomToolTip";
 
 interface SingleIngredient {
   label?: string;
@@ -30,15 +31,17 @@ const SingleIngredient = ({
 
         <p className={styles.text}>{label}</p>
       </div>
-      {showPlusIcon ? (
-        <FiPlusCircle className={styles.plusIcon} onClick={handleAdd} />
-      ) : null}
-      {showCloseIcon ? (
-        <IoCloseCircleOutline
-          className={styles.closeIcon}
-          onClick={handleClose}
-        />
-      ) : null}
+      <div className={styles.rightSide}>
+        {showPlusIcon ? (
+          <FiPlusCircle className={styles.plusIcon} onClick={handleAdd} />
+        ) : null}
+        {showCloseIcon ? (
+          <IoCloseCircleOutline
+            className={styles.closeIcon}
+            onClick={handleClose}
+          />
+        ) : null}
+      </div>
     </div>
   );
 };

@@ -7,12 +7,16 @@ const imageUploadS3 = (files: any[]) => {
   return new Promise(async (res, rej) => {
     try {
       for (let i = 0; files?.length > i; i++) {
+        const file = files[i];
+        const fileName = file.name;
+        let extension = fileName.split(".").pop();
+
         const { Key, uploadURL } = await (
-          await axios.get(S3_CONFIG.objectURL)
+          await axios.get(`${S3_CONFIG.objectURL}?fileType=${extension}`)
         ).data;
         await fetch(uploadURL, {
           method: "PUT",
-          body: files[i],
+          body: file,
         });
         const objectUrl = `${S3_CONFIG.baseURL}/${Key}`;
         images?.push(objectUrl);
@@ -20,7 +24,7 @@ const imageUploadS3 = (files: any[]) => {
       res(images);
     } catch (error) {
       rej(error);
-      console.log(error.message)
+      console.log(error.message);
     }
   });
 };
