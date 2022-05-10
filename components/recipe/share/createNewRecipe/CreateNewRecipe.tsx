@@ -7,7 +7,7 @@ import RecipeItem from "../../../../theme/recipe/recipeItem/RecipeItem.component
 import Accordion from "../../../../theme/accordion/accordion.component";
 import ButtonComponent from "../../../../theme/button/button.component";
 import SingleIngredient from "../singleIngredient/SingleIngredient";
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import GET_BLEND_NUTRITION_BASED_ON_RECIPE_XXX from "../../../../gqlLib/recipes/queries/getBlendNutritionBasedOnRecipeXxx";
 import NutrationPanelSkeleton from "../../../../theme/skeletons/nutrationPanelSkeleton/NutrationPanelSkeleton";
 import UpdatedRecursiveAccordian from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
@@ -17,6 +17,16 @@ import { setAllIngredients } from "../../../../redux/slices/ingredientsSlice";
 import Image from "next/image";
 import { FETCH_BLEND_CATEGORIES } from "../../../../gqlLib/category/queries/fetchCategories";
 import { setAllCategories } from "../../../../redux/slices/categroySlice";
+import CancelIcon from "../../../../public/icons/cancel_black_36dp.svg";
+import { IoCloseCircle } from "react-icons/io5";
+import { MdMoreVert, MdOutlineEdit } from "react-icons/md";
+import { AiOutlineSave } from "react-icons/ai";
+import MoreVertIcon from "../../../../public/icons/more_vert_black_36dp.svg";
+import useOnClickOutside from "../../../utility/useOnClickOutside";
+import CREATE_A_RECIPE_BY_USER from "../../../../gqlLib/recipes/mutations/createARecipeByUser";
+import imageUploadS3 from "../../../utility/imageUploadS3";
+import notification from "../../../utility/reactToastifyNotification";
+import { useRouter } from "next/router";
 
 const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
   const [winReady, setWinReady] = useState(false);
@@ -33,9 +43,60 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
   const [getAllBlendCategory, { loading: blendCategroyLoading }] = useLazyQuery(
     FETCH_BLEND_CATEGORIES
   );
+  const [createNewRecipeByUser] = useMutation(CREATE_A_RECIPE_BY_USER);
   const { allCategories } = useAppSelector((state) => state?.categroy);
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
+  const [openFloatingMenu, setOpenFloatingMenu] = useState(false);
+  const folatingMenuRef = useRef(null);
+  useOnClickOutside(folatingMenuRef, () => setOpenFloatingMenu(false));
+  const router = useRouter();
+  const { dbUser } = useAppSelector((state) => state?.user);
+
+  const handleCreateNewRecipeByUser = async () => {
+    try {
+      let imgArr = [];
+      if (newRecipe?.image?.length) {
+        const url = await imageUploadS3(newRecipe?.image);
+        console.log(url);
+        imgArr?.push({
+          image: `${url}`,
+          default: true,
+        });
+      } else {
+        imgArr?.push({
+          image: null,
+          default: null,
+        });
+      }
+
+      const obj = {
+        userId: dbUser?._id,
+        name: newRecipe?.name,
+        image: imgArr,
+        description: newRecipe?.description,
+        recipeBlendCategory: newRecipe?.recipeBlendCategory,
+        ingredients: newRecipe?.ingredients?.map(
+          ({ ingredientId, selectedPortionName, weightInGram }) => ({
+            ingredientId,
+            selectedPortionName: selectedPortionName?.replace(/"/g, '\\"'),
+            weightInGram,
+          })
+        ),
+      };
+      const { data } = await createNewRecipeByUser({
+        variables: {
+          data: obj,
+        },
+      });
+
+      if (data?.addRecipeFromUser?._id) {
+        router?.push(`/recipe_details/${data?.addRecipeFromUser?._id}`);
+      }
+    } catch (error) {
+      notification("error", "Failed to create new recipe");
+    }
+  };
 
   const updataNewRecipe = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -45,9 +106,7 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
   };
 
   const handleFile = (e: any) => {
-    console.log(e?.target?.files[0]);
-
-    setNewRecipe((state) => ({ ...state, image: e?.target?.files[0] }));
+    setNewRecipe((state) => ({ ...state, image: e?.target?.files }));
   };
 
   const findItem = (id) => {
@@ -179,6 +238,21 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
     };
   }, []);
 
+  const FloatingMenu = () => {
+    return (
+      <div className={styles.floating__menu}>
+        <ul>
+          <li>
+            <MdOutlineEdit className={styles.icon} />
+          </li>
+          <li onClick={handleCreateNewRecipeByUser}>
+            <AiOutlineSave className={styles.icon} />
+          </li>
+        </ul>
+      </div>
+    );
+  };
+
   return (
     <div className={styles.createNewRecipeContainer}>
       <div className={styles.firstContainer}>
@@ -191,6 +265,16 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
               value={newRecipe?.name}
               onChange={(e) => updataNewRecipe(e)}
             />
+            {newRecipe?.name && newRecipe?.ingredients?.length ? (
+              <div>
+                <MdMoreVert
+                  className={styles.moreIcon}
+                  onClick={() => setOpenFloatingMenu((pre) => !pre)}
+                />
+              </div>
+            ) : null}
+
+            {openFloatingMenu ? <FloatingMenu /> : null}
           </div>
           <div
             style={{
@@ -198,15 +282,31 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
             }}
           >
             <div className={styles.fileUpload}>
-              {/* newRecipe?.image ? (
-                URL.createObjectURL(newRecipe?.image) */}
+              {newRecipe?.image ? null : (
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleFile(e)}
+                />
+              )}
 
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleFile(e)}
+              <img
+                className={newRecipe?.image ? styles.imageBox : null}
+                src={
+                  newRecipe?.image
+                    ? URL.createObjectURL(newRecipe?.image[0])
+                    : "/images/black-add.svg"
+                }
+                alt="addIcon"
               />
-              <img src="/images/black-add.svg" alt="addIcon" />
+              {newRecipe?.image ? (
+                <IoCloseCircle
+                  className={styles.cancleIcon}
+                  onClick={() =>
+                    setNewRecipe((state) => ({ ...state, image: null }))
+                  }
+                />
+              ) : null}
             </div>
 
             <div className={styles.dropDown}>
@@ -218,7 +318,7 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
               >
                 {allCategories?.map((cat) => {
                   return (
-                    <option key={cat?._id} value={cat?.name}>
+                    <option key={cat?._id} value={cat?._id}>
                       {cat?.name}
                     </option>
                   );
