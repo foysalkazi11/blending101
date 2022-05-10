@@ -34,8 +34,6 @@ const CompareRecipe = () => {
     []
   );
 
-  console.log(compareRecipeList);
-
   const sliderRef = useRef(null);
   const { dbUser } = useAppSelector((state) => state?.user);
   const { data, loading, error } = useQuery(GET_COMPARE_LIST, {
@@ -46,20 +44,10 @@ const CompareRecipe = () => {
   const [newRecipe, setNewRecipe] = useState({
     name: null,
     image: null,
-    // {
-    //   image: null,
-    //   default: null,
-    // },
     userId: dbUser?._id,
     description: null,
-    ingredients: [
-      // {
-      //   ingredientId: null,
-      //   selectedPortionName: null,
-      //   weightInGram: null,
-      // },
-    ],
-    recipeBlendCategory: "WholeFood",
+    ingredients: [],
+    recipeBlendCategory: "61cafc34e1f3e015e7936587",
   });
 
   console.log(recipeList);
