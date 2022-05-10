@@ -42,15 +42,9 @@ const CompareRecipe = () => {
   });
   const windowSize = useWindowSize();
   const [newRecipe, setNewRecipe] = useState({
-    name: null,
-    image: null,
     userId: dbUser?._id,
-    description: null,
     ingredients: [],
-    recipeBlendCategory: "61cafc34e1f3e015e7936587",
   });
-
-  console.log(recipeList);
 
   useEffect(() => {
     if (!loading) {
@@ -222,7 +216,6 @@ const CompareRecipe = () => {
                       <CreateNewRecipe
                         newRecipe={newRecipe}
                         setNewRecipe={setNewRecipe}
-                        deleteItem={() => {}}
                       />
                     </div>
 

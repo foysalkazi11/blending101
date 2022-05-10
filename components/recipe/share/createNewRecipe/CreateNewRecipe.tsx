@@ -27,8 +27,15 @@ import CREATE_A_RECIPE_BY_USER from "../../../../gqlLib/recipes/mutations/create
 import imageUploadS3 from "../../../utility/imageUploadS3";
 import notification from "../../../utility/reactToastifyNotification";
 import { useRouter } from "next/router";
+import { setLoading } from "../../../../redux/slices/utilitySlice";
 
-const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
+const CreateNewRecipe = ({ newRecipe, setNewRecipe }: any) => {
+  const [createNewRecipe, setCreateNewRecipe] = useState({
+    name: "",
+    image: [],
+    description: "",
+    recipeBlendCategory: "61cafc34e1f3e015e7936587",
+  });
   const [winReady, setWinReady] = useState(false);
   const [inputVlaue, setInputValue] = useState("");
   const { allIngredients } = useAppSelector((state) => state?.ingredients);
@@ -53,12 +60,13 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
   const router = useRouter();
   const { dbUser } = useAppSelector((state) => state?.user);
 
-  const handleCreateNewRecipeByUser = async () => {
+  const handleCreateNewRecipeByUser = async (e: React.SyntheticEvent) => {
+    e.stopPropagation();
+    dispatch(setLoading(true));
     try {
       let imgArr = [];
-      if (newRecipe?.image?.length) {
-        const url = await imageUploadS3(newRecipe?.image);
-        console.log(url);
+      if (createNewRecipe?.image?.length) {
+        const url = await imageUploadS3(createNewRecipe?.image);
         imgArr?.push({
           image: `${url}`,
           default: true,
@@ -72,10 +80,10 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
 
       const obj = {
         userId: dbUser?._id,
-        name: newRecipe?.name,
+        name: createNewRecipe?.name,
         image: imgArr,
-        description: newRecipe?.description,
-        recipeBlendCategory: newRecipe?.recipeBlendCategory,
+        description: createNewRecipe?.description,
+        recipeBlendCategory: createNewRecipe?.recipeBlendCategory,
         ingredients: newRecipe?.ingredients?.map(
           ({ ingredientId, selectedPortionName, weightInGram }) => ({
             ingredientId,
@@ -89,11 +97,12 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
           data: obj,
         },
       });
-
+      dispatch(setLoading(false));
       if (data?.addRecipeFromUser?._id) {
         router?.push(`/recipe_details/${data?.addRecipeFromUser?._id}`);
       }
     } catch (error) {
+      dispatch(setLoading(false));
       notification("error", "Failed to create new recipe");
     }
   };
@@ -102,11 +111,11 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e?.target;
-    setNewRecipe((state) => ({ ...state, [name]: value }));
+    setCreateNewRecipe((state) => ({ ...state, [name]: value }));
   };
 
   const handleFile = (e: any) => {
-    setNewRecipe((state) => ({ ...state, image: e?.target?.files }));
+    setCreateNewRecipe((state) => ({ ...state, image: e?.target?.files }));
   };
 
   const findItem = (id) => {
@@ -245,7 +254,7 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
           <li>
             <MdOutlineEdit className={styles.icon} />
           </li>
-          <li onClick={handleCreateNewRecipeByUser}>
+          <li onClick={(e) => handleCreateNewRecipeByUser(e)}>
             <AiOutlineSave className={styles.icon} />
           </li>
         </ul>
@@ -262,10 +271,10 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
               type="text"
               name="name"
               placeholder="Add Recipe Title"
-              value={newRecipe?.name}
+              value={createNewRecipe?.name}
               onChange={(e) => updataNewRecipe(e)}
             />
-            {newRecipe?.name && newRecipe?.ingredients?.length ? (
+            {createNewRecipe?.name && newRecipe?.ingredients?.length ? (
               <div>
                 <MdMoreVert
                   className={styles.moreIcon}
@@ -282,7 +291,7 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
             }}
           >
             <div className={styles.fileUpload}>
-              {newRecipe?.image ? null : (
+              {createNewRecipe?.image?.length ? null : (
                 <input
                   type="file"
                   accept="image/*"
@@ -291,19 +300,21 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
               )}
 
               <img
-                className={newRecipe?.image ? styles.imageBox : null}
+                className={
+                  createNewRecipe?.image?.length ? styles.imageBox : null
+                }
                 src={
-                  newRecipe?.image
-                    ? URL.createObjectURL(newRecipe?.image[0])
+                  createNewRecipe?.image?.length
+                    ? URL.createObjectURL(createNewRecipe?.image[0])
                     : "/images/black-add.svg"
                 }
                 alt="addIcon"
               />
-              {newRecipe?.image ? (
+              {createNewRecipe?.image?.length ? (
                 <IoCloseCircle
                   className={styles.cancleIcon}
                   onClick={() =>
-                    setNewRecipe((state) => ({ ...state, image: null }))
+                    setCreateNewRecipe((state) => ({ ...state, image: [] }))
                   }
                 />
               ) : null}
@@ -313,7 +324,7 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe, deleteItem }: any) => {
               <select
                 id="cars"
                 name="recipeBlendCategory"
-                value={newRecipe?.recipeBlendCategory}
+                value={createNewRecipe?.recipeBlendCategory}
                 onChange={(e) => updataNewRecipe(e)}
               >
                 {allCategories?.map((cat) => {
