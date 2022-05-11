@@ -69,23 +69,29 @@ const UpdatedRecursiveAccordian = ({
         </div>
       </div>
       <div className={styles.recursiveAccordianHeading__subheading}>
-        <div className={styles.recursiveAccordianHeading__subheading__3}>Value</div>
-        <div className={styles.recursiveAccordianHeading__subheading__4}>Daily%</div>
+        <div className={styles.recursiveAccordianHeading__subheading__3}>
+          Value
+        </div>
+        <div className={styles.recursiveAccordianHeading__subheading__4}>
+          Daily%
+        </div>
       </div>
-      {Object?.entries(dataObject)?.map((elem) => {
-        if (elem[0] !== "Calories") {
-          return (
-            <UpdatedCustomAccordion
-              key={elem[0] + Date.now()}
-              title={elem[0]}
-              content={elem[1]}
-              type={"mainHeading"}
-              counter={counter}
-              dailyGoalsData={dailyData?.getDailyGoals?.goals}
-            />
-          );
-        }
-      })}
+      <div className={`${styles.recursiveAccordianBody}`}>
+        {Object?.entries(dataObject)?.map((elem) => {
+          if (elem[0] !== "Calories") {
+            return (
+              <UpdatedCustomAccordion
+                key={elem[0] + Date.now()}
+                title={elem[0]}
+                content={elem[1]}
+                type={"mainHeading"}
+                counter={counter}
+                dailyGoalsData={dailyData?.getDailyGoals?.goals}
+              />
+            );
+          }
+        })}
+      </div>
     </>
   );
 };
