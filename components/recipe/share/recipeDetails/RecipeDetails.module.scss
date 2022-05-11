@@ -39,30 +39,15 @@
   min-height: 250px;
 }
 
+.ingredientBox {
+  height: 225px;
+}
+
 .nutritionHeader {
   p {
     color: #ababab;
     font-size: 14px;
     padding-top: 2px;
-  }
-
-  table {
-    width: 100%;
-
-    tr th {
-      font-size: 18px;
-      font-weight: 600;
-      text-align: center;
-      border-bottom: 1px solid #ececec;
-      padding: 5px;
-    }
-
-    tr td {
-      color: #000;
-      font-size: 14px;
-      text-align: right;
-      padding: 10px 5px;
-    }
   }
 }
 
@@ -82,16 +67,16 @@
 }
 
 .ingredientsDetails {
+  height: 100%;
+
   table {
     width: 100%;
-
     tr {
       display: grid;
       grid-template-columns: 1fr 35% 14%;
     }
 
     tr td {
-      // background-color: red;
       color: #000;
       font-size: 14px;
       padding: 10px 10px 10px 0px;
@@ -103,10 +88,6 @@
     }
   }
 }
-
-// .table tr th:first-child {
-//   text-align: left;
-// }
 
 .singleIngredient {
   font-size: 14px;

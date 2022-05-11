@@ -104,9 +104,30 @@
   }
 
   &__4 {
-    width: 80px;
+    width: 85px;
     padding: 10px 0px;
     background-color: #f1f1f1;
+  }
+}
+.recursiveAccordianBody {
+  max-height: 600px;
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+    background-color: #f1f1f1;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -ms-border-radius: 8px;
+    -o-border-radius: 8px;
+    background-color: #f1f1f1;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #ececec;
   }
 }
 
