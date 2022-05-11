@@ -43,7 +43,7 @@
   border: 1px solid #f6f6f6;
   border-radius: 6px;
   width: 100%;
-  min-height: 246px;
+  min-height: 260px;
 
   &__firstSection {
     width: 100%;
@@ -348,4 +348,13 @@
       margin-right: 10px;
     }
   }
+}
+
+.dropableArea {
+  height: 180px;
+  transition: all 0.5s;
+  border-radius: 5px;
+  padding: 10px 10px 10px 0;
+  background-color: "#f6f6f6";
+  overflow-x: hidden;
 }

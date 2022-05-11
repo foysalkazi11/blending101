@@ -19,33 +19,6 @@ function Copyable(props) {
   const { items, addItem, droppableId } = props;
   const renderDraggable = useDraggableInPortal();
 
-  // logic for removing elements having duplicate label values =>start
-  // let newList = Array.from(
-  //   new Set(
-  //     items.map((elem, index) => {
-  //       return elem.label;
-  //     })
-  //   )
-  // );
-  // let processedList = [];
-  // items.map((item, index) => {
-  //   if (newList.includes(item.label)) {
-  //     let itemIndex = newList.indexOf(item.label);
-  //     newList.splice(itemIndex, 1);
-  //     processedList = [...processedList, item];
-  //   }
-  // });
-  // logic for removing elements having duplicate label values =>end
-
-  const div = <div className={styles.divStyle}></div>;
-
-  const optionalPortal = (styles, element) => {
-    if (styles?.position === "fixed") {
-      return createPortal(element, div);
-    }
-    return element;
-  };
-
   return (
     <Droppable droppableId={droppableId} isDropDisabled={true}>
       {(provided, snapshot) => (
@@ -149,32 +122,33 @@ const RecipeDetails = ({
           notes={recipe?.notes}
           addedToCompare={recipe?.addedToCompare}
         />
-        <div className={styles.dividerBox}>
+        <div className={`${styles.dividerBox}`}>
           <SectionTitleWithIcon
             title="Ingredients"
             icon="/images/right-blender.svg"
           />
-
-          {dragAndDrop ? (
-            winReady ? (
-              <Copyable
-                items={recipe?.ingredients}
-                addItem={addItem}
-                droppableId={`${id}`}
-              />
-            ) : null
-          ) : (
-            recipe?.ingredients?.map((item, index) => {
-              const ingredientName = item?.ingredientId?.ingredientName;
-              const selectedPortionName = item?.selectedPortion?.name;
-              const selectedPortionQuantity = item?.selectedPortion?.quantity;
-              return (
-                <p key={index} className={styles.singleIngredient}>
-                  {`${selectedPortionQuantity} ${selectedPortionName} ${ingredientName}`}
-                </p>
-              );
-            })
-          )}
+          <div className={`${styles.ingredientBox} y-scroll`}>
+            {dragAndDrop ? (
+              winReady ? (
+                <Copyable
+                  items={recipe?.ingredients}
+                  addItem={addItem}
+                  droppableId={`${id}`}
+                />
+              ) : null
+            ) : (
+              recipe?.ingredients?.map((item, index) => {
+                const ingredientName = item?.ingredientId?.ingredientName;
+                const selectedPortionName = item?.selectedPortion?.name;
+                const selectedPortionQuantity = item?.selectedPortion?.quantity;
+                return (
+                  <p key={index} className={`${styles.singleIngredient}`}>
+                    {`${selectedPortionQuantity} ${selectedPortionName} ${ingredientName}`}
+                  </p>
+                );
+              })
+            )}
+          </div>
         </div>
 
         <div className={styles.dividerBox}>
@@ -184,15 +158,9 @@ const RecipeDetails = ({
           />
           <div className={styles.nutritionHeader}>
             <p>Amount Per Serving Calories</p>
-
-            {/* <div className={styles.table_row}>
-            <div>Calories</div>
-            <div>93</div>
-            </div>
-          <table></table> */}
           </div>
 
-          <div className={styles.ingredientsDetails}>
+          <div className={`${styles.ingredientsDetails} `}>
             {winReady ? (
               loading ? (
                 <NutrationPanelSkeleton />

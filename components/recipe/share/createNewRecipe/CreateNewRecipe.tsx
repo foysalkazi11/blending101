@@ -426,11 +426,8 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe }: any) => {
                     backgroundColor: snapshot.isDraggingOver
                       ? "#f6f6f6"
                       : "#f6f6f6",
-                    minHeight: "200px",
-                    transition: "all .500s",
-                    borderRadius: "5px",
-                    padding: "10px 10px 10px 0",
                   }}
+                  className={`${styles.dropableArea} y-scroll`}
                   // isDraggingOver={snapshot.isDraggingOver}
                 >
                   {newRecipe?.ingredients?.map((item, index) => (
