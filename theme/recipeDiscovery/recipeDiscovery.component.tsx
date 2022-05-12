@@ -29,6 +29,7 @@ import {
 import { useRouter } from "next/router";
 import SaveToCollectionModal from "../modal/saveToCollectionModal/SaveToCollectionModal";
 import SkeletonRecipeDiscovery from "../skeletons/skeletonRecipeDiscovery/SkeletonRecipeDiscovery";
+import useLocalStorage from "../../customHooks/useLocalStorage";
 
 const RecipeDetails = () => {
   const router = useRouter();
@@ -36,7 +37,9 @@ const RecipeDetails = () => {
   const { user, dbUser } = useAppSelector((state) => state?.user);
   const { lastModifiedCollection, collectionDetailsId, showAllRecipes } =
     useAppSelector((state) => state?.collections);
-  const { latest, popular, recommended } = useAppSelector((state) => state?.recipe);
+  const { latest, popular, recommended } = useAppSelector(
+    (state) => state?.recipe
+  );
   const { filters } = useAppSelector((state) => state?.filterRecipe);
   const [getAllRecommendedRecipes] = useLazyQuery(GET_ALL_RECOMMENDED_RECIPES);
   const [getAllPopularRecipes] = useLazyQuery(GET_ALL_POPULAR_RECIPES);
@@ -44,6 +47,10 @@ const RecipeDetails = () => {
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
   const [loading, setLoading] = useState(true);
+  const [compareRecipeList, setcompareRecipeList] = useLocalStorage(
+    "compareList",
+    []
+  );
 
   const handleCompareRecipe = () => {
     dispatch(setOpenCollectionsTary(true));
@@ -59,7 +66,9 @@ const RecipeDetails = () => {
           variables: { userId: dbUser?._id },
         });
         dispatch(
-          setRecommended(recommendedRecipes?.data?.getAllrecomendedRecipes || [])
+          setRecommended(
+            recommendedRecipes?.data?.getAllrecomendedRecipes || []
+          )
         );
       }
 
@@ -154,6 +163,8 @@ const RecipeDetails = () => {
                             recipeId={item?._id}
                             notes={item?.notes}
                             addedToCompare={item?.addedToCompare}
+                            compareRecipeList={compareRecipeList}
+                            setcompareRecipeList={setcompareRecipeList}
                           />
                         </div>
                       );
@@ -166,7 +177,10 @@ const RecipeDetails = () => {
                 {/* its for Recent*/}
 
                 {latest.length ? (
-                  <ContentTray heading={"Recent"} image={"/images/clock-light.svg"}>
+                  <ContentTray
+                    heading={"Recent"}
+                    image={"/images/clock-light.svg"}
+                  >
                     {latest?.map((item, index) => {
                       let ingredients = [];
                       item?.ingredients?.forEach((ing) => {
@@ -197,6 +211,8 @@ const RecipeDetails = () => {
                               recipeId={item?._id}
                               notes={item?.notes}
                               addedToCompare={item?.addedToCompare}
+                              compareRecipeList={compareRecipeList}
+                              setcompareRecipeList={setcompareRecipeList}
                             />
                           </div>
                         );
@@ -243,6 +259,8 @@ const RecipeDetails = () => {
                               recipeId={item?._id}
                               notes={item?.notes}
                               addedToCompare={item?.addedToCompare}
+                              compareRecipeList={compareRecipeList}
+                              setcompareRecipeList={setcompareRecipeList}
                             />
                           </div>
                         );
