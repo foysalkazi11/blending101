@@ -69,6 +69,8 @@ const RecipeDetails = ({
   addItem = () => {},
   removeCompareRecipe = () => {},
   dragAndDrop = false,
+  compareRecipeList = [],
+  setcompareRecipeList = () => {},
 }: any) => {
   const [winReady, setwinReady] = useState(false);
   const [getBlendNutritionBasedonRecipeData, { loading, error, data }] =
@@ -103,7 +105,7 @@ const RecipeDetails = ({
       <div className={styles.recipeDetailsContainer}>
         <div
           className={styles.cancleIcon}
-          onClick={() => removeCompareRecipe(recipe)}
+          onClick={(e) => removeCompareRecipe(recipe?._id, e)}
         >
           <CancelIcon />
         </div>
@@ -121,6 +123,8 @@ const RecipeDetails = ({
           recipeId={recipe?._id}
           notes={recipe?.notes}
           addedToCompare={recipe?.addedToCompare}
+          compareRecipeList={compareRecipeList}
+          setcompareRecipeList={setcompareRecipeList}
         />
         <div className={`${styles.dividerBox}`}>
           <SectionTitleWithIcon

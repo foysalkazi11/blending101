@@ -1,3 +1,22 @@
+%iconWraper {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 100;
+  background-color: #d6d6d6;
+  color: #ffffff;
+  transition: all 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    background: #f95d2b;
+  }
+}
+
 .smallCard {
   width: 100%;
   // background-color: #fff;
@@ -9,6 +28,9 @@
   flex-direction: column;
   z-index: 99;
   padding: 20px 0px;
+  transition: all 0.3s;
+  width: 175px;
+  height: auto;
 
   &__innerContainer {
     width: 175px;
@@ -16,7 +38,7 @@
   }
 
   &__top {
-    width: 175px;
+    width: 100%;
     height: 175px;
     overflow: hidden;
     transition: all;
@@ -24,6 +46,14 @@
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
     position: relative;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      overflow: hidden;
+      transition: all;
+      transition-duration: 0.3s;
+    }
 
     &:hover img {
       transform: scale(1.1);
@@ -32,18 +62,13 @@
     }
   }
 
-  img {
-    width: 175px;
-    object-fit: cover;
-  }
-
   &__bottom {
     border: 1px solid #dcdbdb;
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
     background: #fff;
     box-shadow: inset 0px -1px 1px #dcdbdb69;
-    width: 175px;
+    width: 100%;
     height: 45px;
     overflow: hidden;
   }
@@ -64,6 +89,10 @@
     align-self: center;
     font-weight: 600;
     line-height: 1.3;
+  }
+
+  &:hover .tick {
+    display: block;
   }
 }
 
@@ -121,35 +150,28 @@
 }
 
 .tick {
-  // display: none;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  text-align: center;
-  border: 1px solid #e9ecef;
+  @extend %iconWraper;
+  display: none;
   position: absolute;
   right: 0px;
-  z-index: 100;
-  background: #f95d2b;
-  // background-color: #d6d6d6;
-  border-color: #d6d6d6;
-  color: #fff;
-  font-size: 13px;
-  top: 0px;
-  transform: translateY(-50%);
+  top: -5px;
+  transition: all 0.3s;
   cursor: pointer;
-  border: none;
 
-  // &:hover {
-  //   background: #f95d2b;
-  //   border: none;
-  // }
+  .icon {
+    font-size: 16px;
+    color: #ffffff;
+  }
 }
-.tickimg {
-  font-size: 24px;
-  font-weight: 700;
-  z-index: 100;
-}
-.smallCard__innerContainer:hover .tick {
-  display: block;
+
+.closeIconWraper {
+  @extend %iconWraper;
+  margin-right: 10px;
+  background-color: #f95d2b;
+  width: 20px;
+  height: 20px;
+  .icon {
+    font-size: 16px;
+    color: #ffffff;
+  }
 }

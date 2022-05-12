@@ -5,6 +5,7 @@ type recipeSliceState = {
   popular: any[];
   latest: any[];
   currentRecipeInfo: { name: string; image: string };
+  compareList: any[];
 };
 
 const initialState: recipeSliceState = {
@@ -12,6 +13,7 @@ const initialState: recipeSliceState = {
   popular: [],
   recommended: [],
   currentRecipeInfo: { name: "", image: "" },
+  compareList: [],
 };
 
 export const recipeSlice = createSlice({
@@ -33,10 +35,18 @@ export const recipeSlice = createSlice({
     ) => {
       state.currentRecipeInfo = action?.payload;
     },
+    setCompareList: (state, action: PayloadAction<any[]>) => {
+      state.compareList = action?.payload;
+    },
   },
 });
 
-export const { setLatest, setPopular, setRecommended, setCurrentRecipeInfo } =
-  recipeSlice?.actions;
+export const {
+  setLatest,
+  setPopular,
+  setRecommended,
+  setCurrentRecipeInfo,
+  setCompareList,
+} = recipeSlice?.actions;
 
 export default recipeSlice?.reducer;
