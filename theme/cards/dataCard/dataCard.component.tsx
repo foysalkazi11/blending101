@@ -19,18 +19,10 @@ import { setLoading } from "../../../redux/slices/utilitySlice";
 import ADD_NEW_RECIPE_TO_COLLECTION from "../../../gqlLib/collection/mutation/addNewRecipeToCollection";
 import { useMutation, useLazyQuery } from "@apollo/client";
 import { setDbUser } from "../../../redux/slices/userSlice";
-import reactToastifyNotification from "../../../components/utility/reactToastifyNotification";
 import GET_LAST_MODIFIED_COLLECTION from "../../../gqlLib/collection/query/getLastModifiedCollection";
-import {
-  setCurrentRecipeInfo,
-  setLatest,
-  setPopular,
-  setRecommended,
-} from "../../../redux/slices/recipeSlice";
+import { setCurrentRecipeInfo } from "../../../redux/slices/recipeSlice";
 import { useRouter } from "next/router";
-import CHANGE_COMPARE from "../../../gqlLib/compare/mutation/changeCompare";
-import notification from "../../../components/utility/reactToastifyNotification";
-import useLocalStorage from "../../../customHooks/useLocalStorage";
+import useChangeCompare from "../../../customHooks/useChangeComaper";
 
 interface dataCardInterface {
   title: string;
@@ -47,6 +39,8 @@ interface dataCardInterface {
   recipeId?: string;
   notes?: number;
   addedToCompare?: boolean;
+  compareRecipeList?: any[];
+  setcompareRecipeList?: (state: any) => void;
 }
 
 export default function DatacardComponent({
@@ -64,6 +58,8 @@ export default function DatacardComponent({
   recipeId = "",
   notes = 0,
   addedToCompare = false,
+  compareRecipeList = [],
+  setcompareRecipeList = () => {},
 }: dataCardInterface) {
   title = title || "Triple Berry Smoothie";
   ingredients = ingredients;
@@ -87,90 +83,8 @@ export default function DatacardComponent({
     GET_LAST_MODIFIED_COLLECTION,
     { fetchPolicy: "no-cache" }
   );
-  const [changeCompare] = useMutation(CHANGE_COMPARE, {
-    fetchPolicy: "network-only",
-  });
   const { dbUser } = useAppSelector((state) => state?.user);
-  const { latest, popular, recommended } = useAppSelector(
-    (state) => state?.recipe
-  );
-  const [compareRecipeList, setcompareRecipeList] = useLocalStorage(
-    "compareList",
-    []
-  );
-
-  const updateRecipeCompare = (id: string, addedToCompare: boolean) => {
-    dispatch(
-      setDbUser({
-        ...dbUser,
-        compareLength: addedToCompare
-          ? dbUser?.compareLength + 1
-          : dbUser?.compareLength - 1,
-      })
-    );
-    dispatch(
-      setRecommended(
-        recommended?.map((recipe) =>
-          recipe?._id === id ? { ...recipe, addedToCompare } : recipe
-        )
-      )
-    );
-    dispatch(
-      setLatest(
-        latest?.map((recipe) =>
-          recipe?._id === id ? { ...recipe, addedToCompare } : recipe
-        )
-      )
-    );
-    dispatch(
-      setPopular(
-        popular?.map((recipe) =>
-          recipe?._id === id ? { ...recipe, addedToCompare } : recipe
-        )
-      )
-    );
-  };
-
-  const handleChangeCompare = async (
-    e: React.SyntheticEvent,
-    id: string,
-    alredyCompared: boolean
-  ) => {
-    e.stopPropagation();
-
-    try {
-      updateRecipeCompare(id, alredyCompared);
-      const { data } = await changeCompare({
-        variables: {
-          userId: dbUser?._id,
-          recipeId: id,
-        },
-      });
-
-      if (Number(data?.changeCompare) !== Number(dbUser?.compareLength)) {
-        dispatch(
-          setDbUser({
-            ...dbUser,
-            compareLength: Number(data?.changeCompare),
-          })
-        );
-      }
-
-      if (!alredyCompared) {
-        console.log("first hit", id);
-        const item = compareRecipeList?.find((item) => item?._id === id);
-        if (item) {
-          console.log("second hit", id);
-          setcompareRecipeList([
-            ...compareRecipeList.filter((item) => item?._id !== id),
-          ]);
-        }
-      }
-    } catch (error) {
-      notification("error", "Unable to add compare list");
-      updateRecipeCompare(id, !alredyCompared);
-    }
-  };
+  const handleChangeCompare = useChangeCompare();
 
   const addToCollection = async (recipeId: string, e: React.SyntheticEvent) => {
     e.stopPropagation();
@@ -388,13 +302,29 @@ export default function DatacardComponent({
                       <img
                         src="/icons/compare-1.svg"
                         alt="eclipse"
-                        onClick={(e) => handleChangeCompare(e, recipeId, false)}
+                        onClick={(e) =>
+                          handleChangeCompare(
+                            e,
+                            recipeId,
+                            false,
+                            compareRecipeList,
+                            setcompareRecipeList
+                          )
+                        }
                       />
                     ) : (
                       <img
                         src="/icons/eclipse.svg"
                         alt="eclipse"
-                        onClick={(e) => handleChangeCompare(e, recipeId, true)}
+                        onClick={(e) =>
+                          handleChangeCompare(
+                            e,
+                            recipeId,
+                            true,
+                            compareRecipeList,
+                            setcompareRecipeList
+                          )
+                        }
                       />
                     )}
                   </li>

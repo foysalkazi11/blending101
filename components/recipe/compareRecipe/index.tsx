@@ -3,7 +3,6 @@ import AContainer from "../../../containers/A.container";
 import SubNav from "../share/subNav/SubNav";
 import styles from "./compareRecipe.module.scss";
 import { useRouter } from "next/router";
-import list from "../fackData/racipeList";
 import SmallcardComponent from "../../../theme/cards/smallCard/SmallCard.component";
 import Carousel from "../../../theme/carousel/carousel.component";
 import Slider from "react-slick";
@@ -11,7 +10,7 @@ import RecipeDetails from "../share/recipeDetails/RecipeDetails";
 import SliderArrows from "../share/sliderArrows/SliderArrows";
 import { useQuery } from "@apollo/client";
 import GET_COMPARE_LIST from "../../../gqlLib/compare/query/getCompareList";
-import { useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import SkeletonComparePage from "../../../theme/skeletons/skeletonComparePage/SkeletonComparePage";
 import notification from "../../utility/reactToastifyNotification";
 import useLocalStorage from "../../../customHooks/useLocalStorage";
@@ -24,19 +23,20 @@ import {
   reorder,
 } from "./utility";
 import useWindowSize from "../../utility/useWindowSize";
+import { setCompareList } from "../../../redux/slices/recipeSlice";
 
 const CompareRecipe = () => {
   const [isFormulatePage, setIsFormulatePage] = useState(false);
   const router = useRouter();
-  const [recipeList, setRecipeList] = useState([]);
+  const { compareList } = useAppSelector((state) => state.recipe);
   const [compareRecipeList, setcompareRecipeList] = useLocalStorage(
     "compareList",
     []
   );
-
+  const dispatch = useAppDispatch();
   const sliderRef = useRef(null);
   const { dbUser } = useAppSelector((state) => state?.user);
-  const { data, loading, error } = useQuery(GET_COMPARE_LIST, {
+  const { data, loading, error, refetch } = useQuery(GET_COMPARE_LIST, {
     variables: { userId: dbUser?._id },
     fetchPolicy: "network-only",
   });
@@ -48,7 +48,7 @@ const CompareRecipe = () => {
 
   useEffect(() => {
     if (!loading) {
-      setRecipeList([...data?.getCompareList]);
+      dispatch(setCompareList([...data?.getCompareList]));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
@@ -59,23 +59,29 @@ const CompareRecipe = () => {
 
   const handleCompare = (recipe) => {
     if (compareRecipeList?.length >= 4) {
+      // const findRecipe = findCompareRecipe(recipe?._id);
+      // if (!findRecipe) {
+      //   let copyCompareRecipe = [...compareRecipeList];
+      //   copyCompareRecipe.pop();
+      //   copyCompareRecipe.unshift(recipe);
+      //   setcompareRecipeList(copyCompareRecipe);
+      // } else {
+      //   notification("info", "alredy exist");
+      // }
+    } else {
       const findRecipe = findCompareRecipe(recipe?._id);
       if (!findRecipe) {
-        let copyCompareRecipe = [...compareRecipeList];
-        copyCompareRecipe.pop();
-        copyCompareRecipe.unshift(recipe);
-        setcompareRecipeList(copyCompareRecipe);
+        setcompareRecipeList((state) => [...state, recipe]);
       } else {
         notification("info", "alredy exist");
       }
-    } else {
-      setcompareRecipeList((state) => [...state, recipe]);
     }
   };
 
-  const removeCompareRecipe = (recipe) => {
+  const removeCompareRecipe = (id, e) => {
+    e?.stopPropagation();
     setcompareRecipeList((state) => [
-      ...state.filter((item) => item?._id !== recipe?._id),
+      ...state.filter((item) => item?._id !== id),
     ]);
   };
 
@@ -179,7 +185,7 @@ const CompareRecipe = () => {
                 closeCompare={() => setcompareRecipeList([])}
               />
               <Carousel moreSetting={responsiveSetting}>
-                {recipeList?.map((recipe, index) => {
+                {compareList?.map((recipe, index) => {
                   return (
                     <SmallcardComponent
                       key={index}
@@ -192,6 +198,8 @@ const CompareRecipe = () => {
                       findCompareRecipe={findCompareRecipe}
                       fucUnCheck={removeCompareRecipe}
                       conpareLength={compareRecipeList.length}
+                      compareRecipeList={compareRecipeList}
+                      setcompareRecipeList={setcompareRecipeList}
                     />
                   );
                 })}
@@ -244,6 +252,8 @@ const CompareRecipe = () => {
                               dragAndDrop={true}
                               id={recipe?._id}
                               addItem={addIngredient}
+                              compareRecipeList={compareRecipeList}
+                              setcompareRecipeList={setcompareRecipeList}
                             />
                           );
                         })}
@@ -259,6 +269,8 @@ const CompareRecipe = () => {
                         key={index}
                         recipe={recipe}
                         removeCompareRecipe={removeCompareRecipe}
+                        compareRecipeList={compareRecipeList}
+                        setcompareRecipeList={setcompareRecipeList}
                       />
                     );
                   })}
