@@ -37,10 +37,16 @@ const SearchBar = () => {
     // inputRef?.current?.focus();
   };
   useOnClickOutside(inputRef, handleClean);
+
+
+
   return (
     <div className={styles.searchBarContainer}>
       <div className={styles.inputContainer} ref={inputRef}>
-        <div className={styles.filterIconContainer}>
+        <div
+          className={styles.filterIconContainer}
+          style={openFilterTray ? { marginRight: "10px", paddingRight: "20px" } : {}}
+        >
           <Tooltip content="Filter" direction="bottom">
             <FiFilter
               className={`${styles.filterIcon}${
@@ -58,12 +64,12 @@ const SearchBar = () => {
           )}
           <form onSubmit={handleSubmit}>
             <input
+              style={openFilterTray ? { width: "30vw" ,minWidth:"200px"} : {}}
               disabled={isMicOn}
               placeholder={isMicOn ? "Speak" : "Search"}
               value={input}
               onChange={(e) => setInput(e?.target?.value)}
               onFocus={() => setIsInputFocus(true)}
-              // onBlur={(e) => handleBlur(e)}
             />
           </form>
 
@@ -100,9 +106,7 @@ const SearchBar = () => {
                 ? "/images/compare-fill-icon.svg"
                 : "/icons/eclipse.svg"
             }
-            text={`Compare(${
-              dbUser?.compareLength ? dbUser?.compareLength : 0
-            })`}
+            text={`Compare(${dbUser?.compareLength ? dbUser?.compareLength : 0})`}
             disable={dbUser?.compareLength ? false : true}
             style={{
               backgroundColor: dbUser?.compareLength ? "inherit" : "#ececec",

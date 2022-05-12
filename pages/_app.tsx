@@ -21,6 +21,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <AuthProvider>
             <Loader />
             <ToastContainer />
+            {/* @ts-ignore */}
             <Component {...pageProps} />
           </AuthProvider>
         </Provider>
