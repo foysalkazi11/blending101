@@ -36,9 +36,6 @@ const Main = ({ userData, setUserData }: MainProps) => {
       }
     });
   }, []);
-  console.log({ activeTab });
-  console.log({ type });
-  console.log({ active });
 
 
   useEffect(() => {

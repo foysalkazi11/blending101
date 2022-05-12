@@ -31,35 +31,19 @@ const DailyIntake = () => {
   const { data: dailyGoalData } = useQuery(GET_DAILY_GOALS(dbUser?._id), {
     fetchPolicy: "network-only",
   });
-  const objectToArrayForGoals = (goalsObject) => {
-    let goalsArray = [];
-    if (Object?.keys(goalsObject)?.length > 0) {
-      Object?.entries(goalsObject)?.map((elem) => {
-        goalsArray = [...goalsArray, elem[1]];
-      });
-    }
-    return goalsArray;
-  };
 
-  const [updateDailyGoals] = useMutation(
-    UPDATE_DAILY_GOALS({
-      memberId: dbUser?._id,
-      calories: inputValue.calories || 0,
-      bmi: inputValue.bmi || 0,
-      goalsArray: objectToArrayForGoals(inputValue.goals) || [],
-    })
-  );
-  const dailyChartData = dailyData?.getDailyByUserIdxxx;
-
-  const handleInput = (e: { target: { name: string; value: string } }) => {
-    let updatedObject = inputValue;
-
-    updatedObject = {
-      ...updatedObject,
-      [e.target.name]: parseInt(e.target.value),
-    };
-    setInputValue(updatedObject);
-  };
+  // const dailyChartData = dailyGoalData?.getDailyGoals;
+  // const {}=dailyData;
+  const {
+    bmi: bmiAccordianValue,
+    calories: caloriesAccordianValue,
+    nutrients: nutrientsAccordianValue,
+  } = dailyData?.getDailyByUserId || {};
+  const {
+    bmi: bmiDailyValue,
+    calories: caloriesDailyValue,
+    goals: goalsDailyValue,
+  } = dailyGoalData?.getDailyGoals || {};
 
   useEffect(() => {
     if (!inputValue) return;
@@ -73,12 +57,13 @@ const DailyIntake = () => {
   }, [dbUser?._id]);
 
   useEffect(() => {
-    if (!inputValue) return;
+    if (!inputValue || !goalsDailyValue) return;
     let updatedObject = inputValue;
     updatedObject = {
       ...updatedObject,
-      bmi: dailyGoalData?.getDailyGoals?.bmi,
-      calories: dailyGoalData?.getDailyGoals?.calories,
+      bmi: bmiDailyValue,
+      calories: caloriesDailyValue,
+      goals: JSON?.parse(goalsDailyValue),
     };
 
     setInputValue(updatedObject);
@@ -86,10 +71,51 @@ const DailyIntake = () => {
 
   const updateGoals = async () => {
     setLoading(true);
-    await updateDailyGoals();
-    setLoading(false);
-    reactToastifyNotification("info", "Profile Updated Successfully");
+    try {
+      await updateDailyGoals();
+      setLoading(false);
+      reactToastifyNotification("info", "Profile Updated Successfully");
+    } catch (error) {
+      setLoading(false);
+      reactToastifyNotification("error", "Something Went Wrong");
+
+      console.log(error.message);
+    }
   };
+
+  const handleInput = (e: { target: { name: string; value: string } }) => {
+    let updatedObject = inputValue;
+
+    updatedObject = {
+      ...updatedObject,
+      [e.target.name]: parseInt(e.target.value),
+    };
+    setInputValue(updatedObject);
+  };
+
+  const objectToArrayForGoals = (goalsObject) => {
+    let goalsArray = [];
+    if (Object?.keys(goalsObject)?.length > 0) {
+      Object?.entries(goalsObject)?.map((elem) => {
+        // @ts-ignore
+        if (elem[1]?.goal) {
+          goalsArray = [...goalsArray, elem[1]];
+        }
+      });
+    }
+    return goalsArray;
+  };
+
+  const [updateDailyGoals] = useMutation(
+    UPDATE_DAILY_GOALS({
+      memberId: dbUser?._id,
+      calories: inputValue.calories || 0,
+      bmi: inputValue.bmi || 0,
+      goalsArray: objectToArrayForGoals(inputValue.goals) || [],
+    })
+  );
+
+
 
   return (
     <>
@@ -115,8 +141,8 @@ const DailyIntake = () => {
             <div className={styles.centerDiv__headingTray}>
               <h3 className={styles.centerDiv__headingTray__left}>BMI</h3>
               <h3 className={styles.centerDiv__headingTray__center}>
-                {dailyChartData?.bmi?.value ? (
-                  Math.round(dailyChartData?.bmi?.value)
+                {bmiAccordianValue?.value ? (
+                  Math.round(bmiAccordianValue?.value)
                 ) : (
                   <div style={{ marginTop: "10px" }}>
                     <CircularRotatingLoader />
@@ -134,8 +160,8 @@ const DailyIntake = () => {
             <div className={styles.centerDiv__headingTray}>
               <h3 className={styles.centerDiv__headingTray__left}>Calories</h3>
               <h3 className={styles.centerDiv__headingTray__center}>
-                {dailyChartData?.calories?.value ? (
-                  Math.round(dailyChartData?.calories?.value)
+                {caloriesAccordianValue?.value ? (
+                  Math.round(caloriesAccordianValue?.value)
                 ) : (
                   <div style={{ marginTop: "10px" }}>
                     <CircularRotatingLoader />
@@ -145,16 +171,14 @@ const DailyIntake = () => {
               <div className={styles.centerDiv__headingTray__right}>
                 <InputGoal
                   name={"calories"}
-                  inputValue={inputValue.calories}
+                  inputValue={inputValue?.calories}
                   setInputValue={handleInput}
                 />
               </div>
             </div>
           </div>
           <DailyIntakeAccordian
-            recursiveObject={
-              dailyChartData?.nutrients && JSON?.parse(dailyChartData?.nutrients)
-            }
+            recursiveObject={nutrientsAccordianValue}
             inputValue={inputValue}
             setInputValue={setInputValue}
           />

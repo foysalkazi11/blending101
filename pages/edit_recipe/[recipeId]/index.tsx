@@ -146,15 +146,14 @@ const EditRecipeComponent = () => {
 
     try {
       await editARecipe();
+      reactToastifyNotification("info", "Recipe Updated");
+      dispatch(setRecipeFileImagesArray([]));
+      setIsFetching(false);
     } catch (error) {
-      reactToastifyNotification("info", "Error while saving Recipe");
+      reactToastifyNotification("error", "Error while saving Recipe");
       setIsFetching(false);
       return;
     }
-
-    reactToastifyNotification("info", "Recipe Updated");
-    dispatch(setRecipeFileImagesArray([]));
-    setIsFetching(false);
   };
 
   useEffect(() => {
