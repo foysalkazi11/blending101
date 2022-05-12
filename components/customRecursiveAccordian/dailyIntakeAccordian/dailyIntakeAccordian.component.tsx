@@ -18,7 +18,7 @@ const DailyIntakeAccordian = ({
     <>
       {recursiveObject &&
         Object?.entries(recursiveObject)?.map((elem) => {
-          if (elem[0] !== "Calories") {
+          if (elem[0] !== "__typename") {
             return (
               <AccordianElement
                 key={`${elem}`}
