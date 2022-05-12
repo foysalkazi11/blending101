@@ -138,6 +138,7 @@ const DailyIntake = () => {
                 <HeadingBox>Goal</HeadingBox>
               </div>
             </div>
+
             <div className={styles.centerDiv__headingTray}>
               <h3 className={styles.centerDiv__headingTray__left}>BMI</h3>
               <h3 className={styles.centerDiv__headingTray__center}>
