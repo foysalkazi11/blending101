@@ -33,7 +33,9 @@ import useLocalStorage from "../../customHooks/useLocalStorage";
 
 const RecipeDetails = () => {
   const router = useRouter();
-  const { blends, ingredients } = useAppSelector((state) => state.sideTray);
+  const { blends, ingredients, openFilterTray } = useAppSelector(
+    (state) => state.sideTray
+  );
   const { user, dbUser } = useAppSelector((state) => state?.user);
   const { lastModifiedCollection, collectionDetailsId, showAllRecipes } =
     useAppSelector((state) => state?.collections);
@@ -113,10 +115,18 @@ const RecipeDetails = () => {
     <>
       <AContainer showLeftTray={true} filterTray={true} commentsTray={true}>
         <div className={styles.main__div}>
-          <SearchBar />
-          {blends.length || ingredients.length || filters?.length ? (
-            <SearchtagsComponent />
-          ) : null}
+          <div
+            style={
+              openFilterTray
+                ? { marginLeft: "233px", transition: "all 0.6s" }
+                : { transition: "all 0.6s" }
+            }
+          >
+            <SearchBar  />
+            {blends.length || ingredients.length || filters?.length ? (
+              <SearchtagsComponent />
+            ) : null}
+          </div>
 
           {collectionDetailsId || showAllRecipes ? (
             <ShowCollectionRecipes />

@@ -91,7 +91,7 @@ const Left_tray_recipe_edit = ({
 
       dispatch(setSelectedIngredientsList(blendz));
     } catch (error) {
-      console.log(ingredient, "not working");
+      console.log(error);
     }
   };
 
@@ -243,16 +243,16 @@ const Left_tray_recipe_edit = ({
               </>
             )}
 
-            <>
-              <CalciumSearchElem
-                ascendingDescending={ascendingDescending}
-                setascendingDescending={setascendingDescending}
-                list={list}
-                setList={setList}
-                dropDownState={rankingDropDownState}
-                setDropDownState={setRankingDropDownState}
-              />
-              {toggle === 2 && (
+            {toggle === 2 && (
+              <>
+                <CalciumSearchElem
+                  ascendingDescending={ascendingDescending}
+                  setascendingDescending={setascendingDescending}
+                  list={list}
+                  setList={setList}
+                  dropDownState={rankingDropDownState}
+                  setDropDownState={setRankingDropDownState}
+                />
                 <div className={styles.rankings}>
                   {orderAdjusterForList(ascendingDescending ? "asc" : "")?.map(
                     (elem, index) => {
@@ -278,8 +278,8 @@ const Left_tray_recipe_edit = ({
                     }
                   )}
                 </div>
-              )}
-            </>
+              </>
+            )}
           </div>
         </div>
       </div>
