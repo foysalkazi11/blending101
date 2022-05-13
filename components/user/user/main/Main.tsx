@@ -37,7 +37,6 @@ const Main = ({ userData, setUserData }: MainProps) => {
     });
   }, []);
 
-
   useEffect(() => {
     if (!type) return;
     setActiveTab(type);
@@ -55,6 +54,8 @@ const Main = ({ userData, setUserData }: MainProps) => {
   const { configuration } = dbUser;
   const { isNewUseImage } = useAppSelector((state) => state?.user);
   const [toggle, setToggle] = useState(0);
+  const [colorToggle, setColorToggle] = useState(false);
+  const [profileActiveTab, setProfileActiveTab] = useState(0);
 
   const submitData = async () => {
     dispatch(setLoading(true));
@@ -138,6 +139,7 @@ const Main = ({ userData, setUserData }: MainProps) => {
         );
         dispatch(setLoading(false));
         notification("info", "Updated successfully");
+        setColorToggle(true);
       }
     } catch (error) {
       dispatch(setLoading(false));
@@ -150,7 +152,14 @@ const Main = ({ userData, setUserData }: MainProps) => {
       case "about":
         return <About userData={userData} setUserData={setUserData} />;
       case "membership":
-        return <Membership userData={userData} setUserData={setUserData} />;
+        return (
+          <Membership
+            colorToggle={colorToggle}
+            setColorToggle={setColorToggle}
+            userData={userData}
+            setUserData={setUserData}
+          />
+        );
       case "notification":
         return <Notification userData={userData} setUserData={setUserData} />;
       case "personalization":
@@ -160,6 +169,8 @@ const Main = ({ userData, setUserData }: MainProps) => {
             setUserData={setUserData}
             toggle={toggle}
             setToggle={setToggle}
+            setProfileActiveTab={setProfileActiveTab}
+            profileActiveTab={profileActiveTab}
           />
         );
 
@@ -167,6 +178,10 @@ const Main = ({ userData, setUserData }: MainProps) => {
         return <About userData={userData} setUserData={setUserData} />;
     }
   };
+
+  useEffect(() => {
+    setColorToggle(false);
+  }, [activeTab, toggle, profileActiveTab]);
 
   return (
     <div className={styles.mainContainer}>
@@ -202,6 +217,7 @@ const Main = ({ userData, setUserData }: MainProps) => {
               borderRadius: "30px",
               height: "48px",
               width: "180px",
+              backgroundColor: colorToggle ? "" : "#d5d5d5",
             }}
             onClick={submitData}
           />

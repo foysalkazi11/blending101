@@ -3,16 +3,12 @@
 import CheckCircle from "../../../../public/icons/check_circle_black_36dp.svg";
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import { setIngredientsToList } from "../../../../redux/edit_recipe/quantity";
 import CalciumSearchElem from "../../../../theme/calcium/calcium.component";
 import DropdownTwoComponent from "../../../../theme/dropDown/dropdownTwo.component";
 import Linearcomponent from "../../../../theme/linearProgress/LinearProgress.component";
 import SwitchTwoComponent from "../../../../theme/switch/switchTwo.component";
 import styles from "./left_tray_recipe_edit.module.scss";
-import { filterRankingList } from "./left_tray_recipe_edit_list";
 import Image from "next/image";
-import { useLazyQuery } from "@apollo/client";
-import { INGREDIENTS_BY_CATEGORY_AND_CLASS } from "../../../../gqlLib/recipes/queries/getEditRecipe";
 import { setSelectedIngredientsList } from "../../../../redux/edit_recipe/editRecipeStates";
 
 interface recipeData {
@@ -25,7 +21,6 @@ const Left_tray_recipe_edit = ({
 }: recipeData) => {
   // Variables - START ===========================================>
 
-  const ingredients = filterRankingList;
   const categories = [
     { title: "All", val: "all" },
     { title: "Leafy", val: "leafy" },
@@ -163,11 +158,10 @@ const Left_tray_recipe_edit = ({
       return tempArray.reverse();
     }
   };
+useEffect(() => {
+  console.log(allIngredients)
+}, [])
 
-  // useEffect(() => {
-  //   if (!ingredientList) return;
-  //   orderAdjusterForList();
-  // }, [ingredientList]);
 
   return (
     <div className={styles.left_main_container}>

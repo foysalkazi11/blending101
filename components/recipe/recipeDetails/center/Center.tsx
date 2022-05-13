@@ -34,7 +34,7 @@ interface center {
   setNutritionState: any;
   singleElement: any;
   setsingleElement: any;
-  inputTagValueHandler:any;
+  inputTagValueHandler: any;
 }
 
 const Center = ({
@@ -46,7 +46,7 @@ const Center = ({
   setNutritionState,
   singleElement,
   setsingleElement,
-  inputTagValueHandler
+  inputTagValueHandler,
 }: center) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -96,7 +96,6 @@ const Center = ({
       return <p className={styles.text}>{text}</p>;
     }
   };
-
 
   const responsiveSetting = {
     nextArrow: <NextButton />,
@@ -313,7 +312,7 @@ const Center = ({
           </div>
           <div className={styles.usMatric}>
             <span>US</span>
-            <p>| Matric</p>
+            <p>| Metric</p>
           </div>
         </div>
         <div className={styles.ingredentDisContainer}>

@@ -84,7 +84,8 @@ const AccordianElement = ({
                   name={elem[1]?.nutrientName}
                   inputValue={
                     // @ts-ignore
-                    inputValue?.goals?.[elem[1]?.blendNutrientRef]?.goal || ""
+                    inputValue?.goals?.[elem[1]?.blendNutrientRef]?.goal ||
+                    parseFloat(elem[1]?.data?.value).toFixed(0)
                   }
                   // @ts-ignore
                   setInputValue={(e) => handleInput(e, elem[1].blendNutrientRef)}
