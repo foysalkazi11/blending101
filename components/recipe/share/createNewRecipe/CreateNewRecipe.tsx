@@ -39,7 +39,7 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe }: any) => {
   const [searchIngredientData, setSearchIngredientData] = useState<any[]>([]);
   const [getBlendNutritionBasedOnRecipeXxx, { data, loading, error }] =
     useLazyQuery(GET_BLEND_NUTRITION_BASED_ON_RECIPE_XXX, {
-      fetchPolicy: "network-only",
+      // fetchPolicy: "network-only",
     });
   const [filterIngredientByCategroyAndClass] = useLazyQuery(
     FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS

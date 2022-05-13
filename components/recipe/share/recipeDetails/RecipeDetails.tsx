@@ -75,7 +75,7 @@ const RecipeDetails = ({
   const [winReady, setwinReady] = useState(false);
   const [getBlendNutritionBasedonRecipeData, { loading, error, data }] =
     useLazyQuery(GET_BLEND_NUTRITION_BASED_ON_RECIPE_DATA, {
-      fetchPolicy: "network-only",
+      // fetchPolicy: "network-only",
     });
 
   const makeIngredients = (ing) => {
