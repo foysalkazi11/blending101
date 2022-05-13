@@ -3,9 +3,6 @@ import React, { useState, useEffect, useRef } from "react";
 import styles from "./CreateNewRecipe.module.scss";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import SectionTitleWithIcon from "../../../../theme/recipe/sectionTitleWithIcon/SectionTitleWithIcon.component";
-import RecipeItem from "../../../../theme/recipe/recipeItem/RecipeItem.component";
-import Accordion from "../../../../theme/accordion/accordion.component";
-import ButtonComponent from "../../../../theme/button/button.component";
 import SingleIngredient from "../singleIngredient/SingleIngredient";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import GET_BLEND_NUTRITION_BASED_ON_RECIPE_XXX from "../../../../gqlLib/recipes/queries/getBlendNutritionBasedOnRecipeXxx";
@@ -108,7 +105,9 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe }: any) => {
   };
 
   const updataNewRecipe = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     const { name, value } = e?.target;
     setCreateNewRecipe((state) => ({ ...state, [name]: value }));
@@ -285,11 +284,7 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe }: any) => {
 
             {openFloatingMenu ? <FloatingMenu /> : null}
           </div>
-          <div
-            style={{
-              display: "flex",
-            }}
-          >
+          <div className={styles.imageBoxContainer}>
             <div className={styles.fileUpload}>
               {createNewRecipe?.image?.length ? null : (
                 <input
@@ -321,20 +316,31 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe }: any) => {
             </div>
 
             <div className={styles.dropDown}>
-              <select
-                id="cars"
-                name="recipeBlendCategory"
-                value={createNewRecipe?.recipeBlendCategory}
+              <div style={{ display: "flex" }}>
+                <select
+                  id="cars"
+                  name="recipeBlendCategory"
+                  value={createNewRecipe?.recipeBlendCategory}
+                  onChange={(e) => updataNewRecipe(e)}
+                >
+                  {allCategories?.map((cat) => {
+                    return (
+                      <option key={cat?._id} value={cat?._id}>
+                        {cat?.name}
+                      </option>
+                    );
+                  })}
+                </select>
+                {/* <FloatingMenu /> */}
+              </div>
+
+              <textarea
+                className="y-scroll"
+                placeholder="Discripation"
+                value={createNewRecipe?.description}
+                name="description"
                 onChange={(e) => updataNewRecipe(e)}
-              >
-                {allCategories?.map((cat) => {
-                  return (
-                    <option key={cat?._id} value={cat?._id}>
-                      {cat?.name}
-                    </option>
-                  );
-                })}
-              </select>
+              />
             </div>
           </div>
         </div>
@@ -470,10 +476,6 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe }: any) => {
         />
         <div className={styles.nutritionHeader}>
           <p>Amount Per Serving Calories</p>
-          {/* <div className={styles.calories__heading}>
-            <div>Calories</div>
-            <div>00</div>
-          </div> */}
         </div>
 
         <div className={styles.ingredientsDetails}>
@@ -491,16 +493,7 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe }: any) => {
           ) : null}
         </div>
       </div>
-      {/* <div className={styles.saveButton}>
-        <ButtonComponent
-          type="primary"
-          value="Save"
-          style={{ height: "37px", width: "160px", fontSize: "12px" }}
-        />
-      </div> */}
     </div>
-
-    // testing
   );
 };
 

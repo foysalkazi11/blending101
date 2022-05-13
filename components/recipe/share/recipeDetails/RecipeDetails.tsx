@@ -84,7 +84,7 @@ const RecipeDetails = ({
       const ingredient = ing?.ingredientId?.ingredientName;
       arr?.push(ingredient);
     });
-    return arr?.join(" ");
+    return arr?.join(", ");
   };
 
   useEffect(() => {

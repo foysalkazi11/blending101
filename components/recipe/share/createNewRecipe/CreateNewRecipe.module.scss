@@ -1,3 +1,25 @@
+%input {
+  width: 100%;
+  border: 1px solid #ececec;
+  border-radius: 10px;
+  padding: 9px 15px;
+  font-size: 10px;
+  color: #bcbcbc;
+  font-size: 12px;
+  &::placeholder {
+    font-size: 12px;
+    color: #bcbcbc;
+  }
+  &:focus,
+  &:hover {
+    color: #495057;
+    background-color: #fff;
+    border-color: #7cbc39;
+    outline: 0;
+    box-shadow: none;
+  }
+}
+
 .createNewRecipeContainer {
   background-color: #ffffff;
   padding: 10px;
@@ -61,55 +83,94 @@
   border-bottom: 1px solid #dfdddd !important;
 }
 
-.fileUpload {
-  text-align: center;
-  position: relative;
-  margin-right: 10px;
-  height: 105px;
-  width: 105px;
-  // overflow: hidden;
+.imageBoxContainer {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 15px;
-  background: #f4f4f4;
-  &:hover .cancleIcon {
-    display: block;
-  }
 
-  input {
-    position: absolute;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    outline: none;
-    opacity: 0;
-    cursor: pointer;
-    left: 0;
-    top: 0;
-  }
-
-  .imageBox {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  .fileUpload {
+    text-align: center;
+    position: relative;
+    margin-right: 10px;
+    height: 105px;
+    width: 105px;
+    // overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border-radius: 15px;
-  }
-  .cancleIcon {
-    position: absolute;
-    right: 0px;
-    top: -5px;
-    color: #ababab;
-    cursor: pointer;
-    background-color: white;
-    border-radius: 100%;
-    font-size: 20px;
-    display: none;
-
-    :hover {
-      color: #fe5d1f;
+    background: #f4f4f4;
+    flex-shrink: 0;
+    &:hover .cancleIcon {
       display: block;
+    }
+
+    input {
+      position: absolute;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      outline: none;
+      opacity: 0;
+      cursor: pointer;
+      left: 0;
+      top: 0;
+    }
+
+    .imageBox {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 15px;
+    }
+    .cancleIcon {
+      position: absolute;
+      right: 0px;
+      top: -5px;
+      color: #ababab;
+      cursor: pointer;
+      background-color: white;
+      border-radius: 100%;
+      font-size: 20px;
+      display: none;
+
+      :hover {
+        color: #fe5d1f;
+        display: block;
+      }
+    }
+  }
+
+  .dropDown {
+    select {
+      width: 100%;
+      max-width: 130px;
+      min-height: 82px;
+      border: 1px solid #ececec;
+      border-radius: 10px;
+      min-height: 36px;
+      padding: 0 15px;
+      font-size: 10px;
+      color: #bcbcbc;
+      line-height: 36px;
+      font-size: 12px;
+      outline-style: none;
+      margin-bottom: 10px;
+      margin-right: 10px;
+    }
+
+    select:focus,
+    select:hover {
+      color: #495057;
+      background-color: #fff;
+      border-color: #7cbc39;
+      outline: 0;
+      box-shadow: none;
+    }
+
+    textarea {
+      @extend %input;
+      width: 100%;
+      resize: none;
     }
   }
 }
@@ -120,62 +181,12 @@
   margin-bottom: 10px;
   position: relative;
   input {
-    width: 100%;
-    min-height: 82px;
-    border: 1px solid #ececec;
-    border-radius: 10px;
-    min-height: 36px;
-    padding: 0 15px;
-    font-size: 10px;
-    color: #bcbcbc;
-    line-height: 36px;
-    font-size: 14px;
-    margin-right: 10px;
+    @extend %input;
     font-weight: bold;
-  }
-
-  input::placeholder {
-    font-size: 12px;
-    color: #bcbcbc;
-  }
-
-  input:focus,
-  input:hover {
-    color: #495057;
-    background-color: #fff;
-    border-color: #7cbc39;
-    outline: 0;
-    box-shadow: none;
   }
   .moreIcon {
     font-size: 24px;
     cursor: pointer;
-  }
-}
-
-.dropDown {
-  select {
-    width: 100%;
-    max-width: 130px;
-    min-height: 82px;
-    border: 1px solid #ececec;
-    border-radius: 10px;
-    min-height: 36px;
-    padding: 0 15px;
-    font-size: 10px;
-    color: #bcbcbc;
-    line-height: 36px;
-    font-size: 12px;
-    outline-style: none;
-  }
-
-  select:focus,
-  select:hover {
-    color: #495057;
-    background-color: #fff;
-    border-color: #7cbc39;
-    outline: 0;
-    box-shadow: none;
   }
 }
 
@@ -211,30 +222,7 @@
   position: relative;
 
   input {
-    width: 100%;
-    min-height: 82px;
-    border: 1px solid #ececec;
-    border-radius: 10px;
-    min-height: 36px;
-    padding: 0 15px;
-    font-size: 10px;
-    color: #bcbcbc;
-    line-height: 36px;
-    font-size: 12px;
-  }
-
-  input::placeholder {
-    font-size: 12px;
-    color: #bcbcbc;
-  }
-
-  input:focus,
-  input:hover {
-    color: #495057;
-    background-color: #fff;
-    border-color: #7cbc39;
-    outline: 0;
-    box-shadow: none;
+    @extend %input;
   }
 
   .suggested {
@@ -245,7 +233,6 @@
     width: 100%;
     margin-top: 5px;
     z-index: 1;
-    // box-shadow: 0 0 2px 2px #f2f2f8;
     &__ul {
       display: flex;
       flex-direction: column;
@@ -264,13 +251,8 @@
       .ingredientImg {
         margin-right: 10px;
       }
-
       cursor: pointer;
     }
-
-    // &__div {
-    //   margin-right: 20px;
-    // }
   }
 }
 .dargAndDropArea {
@@ -319,17 +301,15 @@
   top: 35px;
   right: 10px;
   z-index: 6;
-  border: 1px solid #eeeeee;
-  border-radius: 5px;
-  background: #eeeeeef2;
-  padding: 5px 10px;
 
   ul {
     display: flex;
     align-items: center;
     list-style: none;
-    margin: 0;
-    padding: 0;
+    padding: 8px 10px;
+    border: 1px solid #eeeeee;
+    background: #eeeeeef2;
+    border-radius: 5px;
 
     li {
       display: flex;

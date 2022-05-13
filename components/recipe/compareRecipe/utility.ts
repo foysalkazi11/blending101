@@ -122,3 +122,41 @@ export const responsiveSetting = {
     },
   ],
 };
+
+export const responsiveColumnScreen = (length) => {
+  switch (length) {
+    case 0:
+      return "0%";
+    case 1:
+      return "25%";
+    case 2:
+      return "50%";
+
+    default:
+      return "75%";
+  }
+};
+export const responsiveColumnDesktop = (length) => {
+  switch (length) {
+    case 0:
+      return "0%";
+    case 1:
+      return "33.33%";
+    case 2:
+      return "66.66%";
+
+    default:
+      return "66.66%";
+  }
+};
+export const responsiveColumnLaptop = (length) => {
+  switch (length) {
+    case 0:
+      return "0%";
+    case 1:
+      return "50%";
+
+    default:
+      return "50%";
+  }
+};

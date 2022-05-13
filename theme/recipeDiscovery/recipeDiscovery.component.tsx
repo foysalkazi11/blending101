@@ -122,7 +122,7 @@ const RecipeDetails = () => {
                 : { transition: "all 0.6s" }
             }
           >
-            <SearchBar  />
+            <SearchBar />
             {blends.length || ingredients.length || filters?.length ? (
               <SearchtagsComponent />
             ) : null}
@@ -153,7 +153,7 @@ const RecipeDetails = () => {
                         const ingredient = ing?.ingredientId?.ingredientName;
                         ingredients.push(ingredient);
                       });
-                      const ing = ingredients.join(" ");
+                      const ing = ingredients.join(", ");
                       return (
                         <div
                           className={styles.slider__card}
@@ -197,7 +197,7 @@ const RecipeDetails = () => {
                         const ingredient = ing?.ingredientId?.ingredientName;
                         ingredients.push(ingredient);
                       });
-                      const ing = ingredients.toString();
+                      const ing = ingredients.join(", ");
                       {
                         return (
                           <div
@@ -245,7 +245,7 @@ const RecipeDetails = () => {
                         const ingredient = ing?.ingredientId?.ingredientName;
                         ingredients.push(ingredient);
                       });
-                      const ing = ingredients.toString();
+                      const ing = ingredients.join(", ");
                       {
                         return (
                           <div

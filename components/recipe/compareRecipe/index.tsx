@@ -21,6 +21,9 @@ import {
   compareRecipeResponsiveSetting,
   formulateRecipeResponsiveSetting,
   reorder,
+  responsiveColumnDesktop,
+  responsiveColumnLaptop,
+  responsiveColumnScreen,
 } from "./utility";
 import useWindowSize from "../../utility/useWindowSize";
 import { setCompareList } from "../../../redux/slices/recipeSlice";
@@ -58,7 +61,7 @@ const CompareRecipe = () => {
   };
 
   const handleCompare = (recipe) => {
-    if (compareRecipeList?.length >= 4) {
+    if (compareRecipeList?.length >= 8) {
       // const findRecipe = findCompareRecipe(recipe?._id);
       // if (!findRecipe) {
       //   let copyCompareRecipe = [...compareRecipeList];
@@ -85,17 +88,22 @@ const CompareRecipe = () => {
     ]);
   };
 
-  const responsiveGridTemplateColumn = () => {
+  const responsiveColumn = () => {
+    let obj = {};
     const length = compareRecipeList?.length;
-    switch (length) {
-      case 1:
-        return "50% 50%";
-      case 2:
-        return "33.33% 66.66%";
+    obj["width"] = responsiveColumnScreen(length);
 
-      default:
-        return "25% 75%";
+    if (windowSize?.width <= 1280) {
+      obj["width"] = responsiveColumnDesktop(length);
     }
+    if (windowSize?.width <= 1024) {
+      obj["width"] = responsiveColumnLaptop(length);
+    }
+    if (windowSize?.width <= 768) {
+      obj["width"] = "100%";
+    }
+
+    return obj;
   };
 
   const findItem = (id) => {
@@ -214,20 +222,20 @@ const CompareRecipe = () => {
 
               {isFormulatePage ? (
                 <DragDropContext onDragEnd={onDragEnd}>
-                  <div
-                    className={styles.comparePageContainer}
-                    // style={{
-                    //   gridTemplateColumns: responsiveGridTemplateColumn(),
-                    // }}
-                  >
-                    <div>
+                  <div className={styles.comparePageContainer}>
+                    <div className={styles.firstColumn}>
                       <CreateNewRecipe
                         newRecipe={newRecipe}
                         setNewRecipe={setNewRecipe}
                       />
                     </div>
 
-                    <div>
+                    <div
+                      className={styles.secondColumn}
+                      style={{
+                        ...responsiveColumn(),
+                      }}
+                    >
                       {windowSize?.width <= 768 ? (
                         <div style={{ marginTop: "16px" }}>
                           <SliderArrows

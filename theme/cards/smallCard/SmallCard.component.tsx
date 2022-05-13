@@ -54,9 +54,9 @@ export default function SmallcardComponent({
           </button>
         ) : (
           <button
-            disabled={conpareLength === 4 ? true : false}
+            disabled={conpareLength === 8 ? true : false}
             className={`${styles.compar} 
-         ${conpareLength === 4 ? styles.disable : ""}
+         ${conpareLength === 8 ? styles.disable : ""}
          `}
             onClick={handleClick}
           >
@@ -82,8 +82,19 @@ export default function SmallcardComponent({
         <div className={styles.smallCard__top} style={style}>
           <img src={img} alt="coriander" />
         </div>
-        <div className={styles.smallCard__bottom}>
-          <p style={{ fontWeight: findRecipe ? "bold" : "500" }}>{text}</p>
+        <div
+          className={styles.smallCard__bottom}
+          style={{
+            backgroundColor: findRecipe ? "#FBEBE3" : "inherit",
+          }}
+        >
+          <p
+            style={{
+              fontWeight: findRecipe ? "bold" : "500",
+            }}
+          >
+            {text}
+          </p>
         </div>
       </div>
     </div>

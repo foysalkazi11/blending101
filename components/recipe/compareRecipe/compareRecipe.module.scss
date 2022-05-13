@@ -16,42 +16,43 @@
 
 .comparePageContainer {
   width: 100%;
-  display: grid;
-  grid-template-columns: 25% 75%;
   transition: all 0.3s linear;
+  display: flex;
+
+  justify-content: center;
   .firstColumn {
-    flex-basis: 25%;
+    width: 25%;
   }
   .secondColumn {
-    flex-basis: 75%;
+    width: 75%;
   }
 
   @media (max-width: 1280px) {
-    grid-template-columns: 33.33% 66.66%;
+    // grid-template-columns: 33.33% 66.66%;
     .firstColumn {
-      flex-basis: 33.33%;
+      width: 33.33%;
     }
     .secondColumn {
-      flex-basis: 66.66%;
+      width: 66.66%;
     }
   }
   @media (max-width: 1024px) {
-    grid-template-columns: 50% 50%;
+    // grid-template-columns: 50% 50%;
     .firstColumn {
-      flex-basis: 50%;
+      width: 50%;
     }
     .secondColumn {
-      flex-basis: 50%;
+      width: 50%;
     }
   }
   @media (max-width: 768px) {
-    grid-template-columns: 100%;
+    // grid-template-columns: 100%;
     flex-direction: column;
     .firstColumn {
-      flex-basis: 100%;
+      width: 100%;
     }
     .secondColumn {
-      flex-basis: 100%;
+      width: 100%;
     }
   }
 }
