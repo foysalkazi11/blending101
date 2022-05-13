@@ -16,7 +16,7 @@ import styles from "./DailyIntake.module.scss";
 import HeadingBox from "./headingBox/headingBox.component";
 import InputGoal from "./inputGoal/inputGoal.component";
 
-const DailyIntake = () => {
+const DailyIntake = ({ colorToggle, setColorToggle }) => {
   const [loading, setLoading] = useState(false);
   const [inputValue, setInputValue] = useState({
     memberId: "",
@@ -81,6 +81,7 @@ const DailyIntake = () => {
 
       console.log(error.message);
     }
+    setColorToggle(true);
   };
 
   const handleInput = (e: { target: { name: string; value: string } }) => {
@@ -114,8 +115,6 @@ const DailyIntake = () => {
       goalsArray: objectToArrayForGoals(inputValue.goals) || [],
     })
   );
-
-
 
   return (
     <>
@@ -211,6 +210,7 @@ const DailyIntake = () => {
               borderRadius: "30px",
               height: "48px",
               width: "180px",
+              backgroundColor: colorToggle ? "" : "#d5d5d5",
             }}
             onClick={updateGoals}
           />

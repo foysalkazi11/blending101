@@ -30,6 +30,7 @@ import { useRouter } from "next/router";
 import SaveToCollectionModal from "../modal/saveToCollectionModal/SaveToCollectionModal";
 import SkeletonRecipeDiscovery from "../skeletons/skeletonRecipeDiscovery/SkeletonRecipeDiscovery";
 import useLocalStorage from "../../customHooks/useLocalStorage";
+import useWindowSize from "../../components/utility/useWindowSize";
 
 const RecipeDetails = () => {
   const router = useRouter();
@@ -39,9 +40,7 @@ const RecipeDetails = () => {
   const { user, dbUser } = useAppSelector((state) => state?.user);
   const { lastModifiedCollection, collectionDetailsId, showAllRecipes } =
     useAppSelector((state) => state?.collections);
-  const { latest, popular, recommended } = useAppSelector(
-    (state) => state?.recipe
-  );
+  const { latest, popular, recommended } = useAppSelector((state) => state?.recipe);
   const { filters } = useAppSelector((state) => state?.filterRecipe);
   const [getAllRecommendedRecipes] = useLazyQuery(GET_ALL_RECOMMENDED_RECIPES);
   const [getAllPopularRecipes] = useLazyQuery(GET_ALL_POPULAR_RECIPES);
@@ -53,6 +52,7 @@ const RecipeDetails = () => {
     "compareList",
     []
   );
+  const windowSize = useWindowSize();
 
   const handleCompareRecipe = () => {
     dispatch(setOpenCollectionsTary(true));
@@ -68,9 +68,7 @@ const RecipeDetails = () => {
           variables: { userId: dbUser?._id },
         });
         dispatch(
-          setRecommended(
-            recommendedRecipes?.data?.getAllrecomendedRecipes || []
-          )
+          setRecommended(recommendedRecipes?.data?.getAllrecomendedRecipes || [])
         );
       }
 
@@ -118,11 +116,13 @@ const RecipeDetails = () => {
           <div
             style={
               openFilterTray
-                ? { marginLeft: "233px", transition: "all 0.6s" }
+                ? windowSize.width>1300
+                  ? { marginLeft: "233px", transition: "all 0.6s" }
+                  : { marginLeft: "283px", transition: "all 0.6s"}
                 : { transition: "all 0.6s" }
             }
           >
-            <SearchBar  />
+            <SearchBar />
             {blends.length || ingredients.length || filters?.length ? (
               <SearchtagsComponent />
             ) : null}
@@ -187,10 +187,7 @@ const RecipeDetails = () => {
                 {/* its for Recent*/}
 
                 {latest.length ? (
-                  <ContentTray
-                    heading={"Recent"}
-                    image={"/images/clock-light.svg"}
-                  >
+                  <ContentTray heading={"Recent"} image={"/images/clock-light.svg"}>
                     {latest?.map((item, index) => {
                       let ingredients = [];
                       item?.ingredients?.forEach((ing) => {
