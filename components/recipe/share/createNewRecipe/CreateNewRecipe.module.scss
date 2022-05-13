@@ -141,6 +141,7 @@
   }
 
   .dropDown {
+    flex-grow: 1;
     select {
       width: 100%;
       max-width: 130px;
