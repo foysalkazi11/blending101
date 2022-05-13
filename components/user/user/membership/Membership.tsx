@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from "react";
 import ToggleMenu from "../../../../theme/toggleMenu/ToggleMenu";
 import styles from "./Membership.module.scss";
 import Plan from "./plan/Plan";
@@ -7,9 +8,16 @@ import Transactions from "./transactions/Transactions";
 type MembershipProps = {
   userData: any;
   setUserData: any;
+  colorToggle: any;
+  setColorToggle: any;
 };
 
-const Membership = ({ userData, setUserData }: MembershipProps) => {
+const Membership = ({
+  userData,
+  setUserData,
+  colorToggle,
+  setColorToggle,
+}: MembershipProps) => {
   const [toggle, setToggle] = useState(0);
   const { plan } = userData?.membership;
 
@@ -23,7 +31,12 @@ const Membership = ({ userData, setUserData }: MembershipProps) => {
         },
       };
     });
+    setColorToggle(true);
   };
+
+  useEffect(() => {
+    setColorToggle(false);
+  }, [toggle]);
 
   const renderUI = () => {
     switch (toggle) {

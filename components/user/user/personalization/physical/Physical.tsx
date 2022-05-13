@@ -72,6 +72,8 @@ type PhysicalProps = {
   updateUserProfile: Function;
   setUserData: Function;
   userData: any;
+  setProfileActiveTab?:any
+  profileActiveTab?: any;
 };
 
 const Physical = ({
@@ -79,6 +81,8 @@ const Physical = ({
   updateUserProfile,
   setUserData,
   userData,
+  setProfileActiveTab,
+  profileActiveTab
 }: PhysicalProps) => {
   const { dbUser } = useAppSelector((state) => state?.user);
   const router = useRouter();
@@ -90,9 +94,10 @@ const Physical = ({
   const { isNewUseImage } = useAppSelector((state) => state?.user);
   const [measurementType, setMeasurementType] = useState("US");
   const [ageType, setAgeType] = useState("years");
-  const [profileActiveTab, setProfileActiveTab] = useState(0);
+
   const [pregnant, setPregnant] = useState("");
   const isMounted = useRef(null);
+  const [colorToggle, setColorToggle] = useState(false);
   const handleYearsAndMonths = (userProfile) => {
     let value = {
       years: 0,
@@ -396,6 +401,9 @@ const Physical = ({
       isMounted.current = false;
     };
   }, []);
+  useEffect(() => {
+    setColorToggle(false)
+  }, [profileActiveTab]);
 
   return (
     <>
@@ -736,20 +744,21 @@ const Physical = ({
                 marginTop: "40px",
               }}
             >
-              <ButtonComponent
+              {/* <ButtonComponent
                 type="primary"
                 value="Update Profile"
                 style={{
                   borderRadius: "30px",
                   height: "48px",
                   width: "180px",
+                  backgroundColor:"red"
                 }}
                 onClick={handleSubmit(submitData)}
-              />
+              /> */}
             </div>
           </>
         ) : (
-          <DailyIntake />
+          <DailyIntake colorToggle={colorToggle}  setColorToggle={setColorToggle}/>
         )}
       </div>
     </>

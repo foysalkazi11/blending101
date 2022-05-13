@@ -13,6 +13,8 @@ type PersonalizationProps = {
   setUserData: any;
   toggle?: number;
   setToggle?: Dispatch<SetStateAction<number>>;
+  setProfileActiveTab?:any
+  profileActiveTab?: any;
 };
 
 const Personalization = ({
@@ -20,6 +22,8 @@ const Personalization = ({
   setUserData,
   toggle = 0,
   setToggle = () => {},
+  setProfileActiveTab,
+  profileActiveTab
 }: PersonalizationProps) => {
   const { personalization } = userData;
 
@@ -102,6 +106,8 @@ const Personalization = ({
             updateUserProfile={updateUserProfile}
             setUserData={setUserData}
             userData={userData}
+            setProfileActiveTab={setProfileActiveTab}
+            profileActiveTab={profileActiveTab}
           />
         );
       case 1:
