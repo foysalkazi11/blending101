@@ -25,8 +25,14 @@ import imageUploadS3 from "../../../utility/imageUploadS3";
 import notification from "../../../utility/reactToastifyNotification";
 import { useRouter } from "next/router";
 import { setLoading } from "../../../../redux/slices/utilitySlice";
+import EDIT_A_RECIPE from "../../../../gqlLib/recipes/mutations/editARecipe";
 
-const CreateNewRecipe = ({ newRecipe, setNewRecipe }: any) => {
+const CreateNewRecipe = ({
+  newRecipe,
+  setNewRecipe,
+  setNewlyCreatedRecipe = () => {},
+  newlyCreatedRecipe = {},
+}: any) => {
   const [createNewRecipe, setCreateNewRecipe] = useState({
     name: "",
     image: [],
@@ -56,51 +62,118 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe }: any) => {
   useOnClickOutside(folatingMenuRef, () => setOpenFloatingMenu(false));
   const router = useRouter();
   const { dbUser } = useAppSelector((state) => state?.user);
+  const [editRecipe] = useMutation(EDIT_A_RECIPE);
+  const [uploadNewImage, setUploadNewImage] = useState(false);
 
   const handleCreateNewRecipeByUser = async (e: React.SyntheticEvent) => {
     e.stopPropagation();
-    dispatch(setLoading(true));
-    try {
-      let imgArr = [];
-      if (createNewRecipe?.image?.length) {
-        const url = await imageUploadS3(createNewRecipe?.image);
-        imgArr?.push({
-          image: `${url}`,
-          default: true,
-        });
-      } else {
-        imgArr?.push({
-          image: null,
-          default: null,
-        });
-      }
+    if (newlyCreatedRecipe?._id) {
+      if (createNewRecipe?.name && newRecipe?.ingredients?.length) {
+        dispatch(setLoading(true));
+        try {
+          let imgArr = [];
+          if (uploadNewImage && createNewRecipe?.image?.length) {
+            const url = await imageUploadS3(createNewRecipe?.image);
+            imgArr?.push({
+              image: `${url}`,
+              default: true,
+            });
+          } else {
+            imgArr?.push({
+              image: `${newlyCreatedRecipe?.image[0]?.image}`,
+              default: newlyCreatedRecipe?.image[0]?.default,
+            });
+          }
+          await editRecipe({
+            variables: {
+              data: {
+                editId: newlyCreatedRecipe?._id,
+                editableObject: {
+                  name: createNewRecipe?.name,
+                  image: imgArr,
+                  description: createNewRecipe?.description,
+                  ingredients: newRecipe?.ingredients?.map(
+                    ({ ingredientId, selectedPortionName, weightInGram }) => ({
+                      ingredientId,
+                      selectedPortionName: selectedPortionName?.replace(
+                        /"/g,
+                        '\\"'
+                      ),
+                      weightInGram,
+                    })
+                  ),
+                  recipeBlendCategory: createNewRecipe?.recipeBlendCategory,
+                },
+              },
+            },
+          });
 
-      const obj = {
-        userId: dbUser?._id,
-        name: createNewRecipe?.name,
-        image: imgArr,
-        description: createNewRecipe?.description,
-        recipeBlendCategory: createNewRecipe?.recipeBlendCategory,
-        ingredients: newRecipe?.ingredients?.map(
-          ({ ingredientId, selectedPortionName, weightInGram }) => ({
-            ingredientId,
-            selectedPortionName: selectedPortionName?.replace(/"/g, '\\"'),
-            weightInGram,
-          })
-        ),
-      };
-      const { data } = await createNewRecipeByUser({
-        variables: {
-          data: obj,
-        },
-      });
-      dispatch(setLoading(false));
-      if (data?.addRecipeFromUser?._id) {
-        router?.push(`/recipe_details/${data?.addRecipeFromUser?._id}`);
+          dispatch(setLoading(false));
+          notification("success", "Edited recipe successfully");
+        } catch (error) {
+          dispatch(setLoading(false));
+          notification("error", "Failed to edited recipe");
+        }
+      } else {
+        notification(
+          "warning",
+          "You can't save recipe without name and ingredients"
+        );
       }
-    } catch (error) {
-      dispatch(setLoading(false));
-      notification("error", "Failed to create new recipe");
+    } else {
+      if (createNewRecipe?.name && newRecipe?.ingredients?.length) {
+        dispatch(setLoading(true));
+        try {
+          let imgArr = [];
+          if (createNewRecipe?.image?.length) {
+            const url = await imageUploadS3(createNewRecipe?.image);
+            imgArr?.push({
+              image: `${url}`,
+              default: true,
+            });
+          } else {
+            imgArr?.push({
+              image: null,
+              default: null,
+            });
+          }
+
+          const obj = {
+            userId: dbUser?._id,
+            name: createNewRecipe?.name,
+            image: imgArr,
+            description: createNewRecipe?.description,
+            recipeBlendCategory: createNewRecipe?.recipeBlendCategory,
+            ingredients: newRecipe?.ingredients?.map(
+              ({ ingredientId, selectedPortionName, weightInGram }) => ({
+                ingredientId,
+                selectedPortionName: selectedPortionName?.replace(/"/g, '\\"'),
+                weightInGram,
+              })
+            ),
+          };
+          const { data } = await createNewRecipeByUser({
+            variables: {
+              data: obj,
+            },
+          });
+          dispatch(setLoading(false));
+          notification("success", "Saved recipe successfully");
+          if (data?.addRecipeFromUser?._id) {
+            setNewlyCreatedRecipe(data?.addRecipeFromUser);
+            setUploadNewImage(false);
+            // router?.push(`/recipe_details/${data?.addRecipeFromUser?._id}`);
+          }
+        } catch (error) {
+          dispatch(setLoading(false));
+          notification("error", "Failed to create new recipe");
+        }
+      } else {
+        notification(
+          "warning",
+          "You can't save recipe without name and ingredients"
+        );
+      }
     }
   };
 
@@ -115,6 +188,7 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe }: any) => {
 
   const handleFile = (e: any) => {
     setCreateNewRecipe((state) => ({ ...state, image: e?.target?.files }));
+    setUploadNewImage(true);
   };
 
   const findItem = (id) => {
@@ -156,14 +230,6 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe }: any) => {
     }
   };
 
-  useEffect(() => {
-    if (!allCategories?.length) {
-      fetchAllBlendCategroy();
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const selectIngredientOnClick = (ele) => {
     const item = findItem(ele?._id);
 
@@ -193,6 +259,14 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe }: any) => {
   const handleSubmit = (e) => {
     e.preventDefault();
   };
+
+  useEffect(() => {
+    if (!allCategories?.length) {
+      fetchAllBlendCategroy();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (isMounted.current) {
@@ -250,9 +324,17 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe }: any) => {
     return (
       <div className={styles.floating__menu}>
         <ul>
-          <li>
-            <MdOutlineEdit className={styles.icon} />
-          </li>
+          {newlyCreatedRecipe?._id ? (
+            <li>
+              <MdOutlineEdit
+                className={styles.icon}
+                onClick={() =>
+                  router?.push(`/edit_recipe/${newlyCreatedRecipe?._id}`)
+                }
+              />
+            </li>
+          ) : null}
+
           <li onClick={(e) => handleCreateNewRecipeByUser(e)}>
             <AiOutlineSave className={styles.icon} />
           </li>
@@ -273,7 +355,7 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe }: any) => {
               value={createNewRecipe?.name}
               onChange={(e) => updataNewRecipe(e)}
             />
-            {createNewRecipe?.name && newRecipe?.ingredients?.length ? (
+            {/* {createNewRecipe?.name && newRecipe?.ingredients?.length ? (
               <div>
                 <MdMoreVert
                   className={styles.moreIcon}
@@ -282,7 +364,7 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe }: any) => {
               </div>
             ) : null}
 
-            {openFloatingMenu ? <FloatingMenu /> : null}
+            {openFloatingMenu ? <FloatingMenu /> : null} */}
           </div>
           <div className={styles.imageBoxContainer}>
             <div className={styles.fileUpload}>
@@ -331,7 +413,7 @@ const CreateNewRecipe = ({ newRecipe, setNewRecipe }: any) => {
                     );
                   })}
                 </select>
-                {/* <FloatingMenu /> */}
+                <FloatingMenu />
               </div>
 
               <textarea

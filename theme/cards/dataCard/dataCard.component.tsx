@@ -23,6 +23,7 @@ import GET_LAST_MODIFIED_COLLECTION from "../../../gqlLib/collection/query/getLa
 import { setCurrentRecipeInfo } from "../../../redux/slices/recipeSlice";
 import { useRouter } from "next/router";
 import useChangeCompare from "../../../customHooks/useChangeComaper";
+import { MdOutlineEdit } from "react-icons/md";
 
 interface dataCardInterface {
   title: string;
@@ -41,6 +42,9 @@ interface dataCardInterface {
   addedToCompare?: boolean;
   compareRecipeList?: any[];
   setcompareRecipeList?: (state: any) => void;
+  showMoreMenu?: boolean;
+  showOptionalEditIcon?: boolean;
+  changeToFormulateRecipe?: () => void;
 }
 
 export default function DatacardComponent({
@@ -60,6 +64,9 @@ export default function DatacardComponent({
   addedToCompare = false,
   compareRecipeList = [],
   setcompareRecipeList = () => {},
+  showMoreMenu = true,
+  showOptionalEditIcon = false,
+  changeToFormulateRecipe = () => {},
 }: dataCardInterface) {
   title = title || "Triple Berry Smoothie";
   ingredients = ingredients;
@@ -169,10 +176,25 @@ export default function DatacardComponent({
     elem.classList.toggle("show__hidden");
   };
 
+  const FloatingMenu2 = () => {
+    return (
+      <div className={styles.floating__menu2}>
+        <ul>
+          <li onClick={changeToFormulateRecipe}>
+            <MdOutlineEdit className={styles.icon} />
+          </li>
+        </ul>
+      </div>
+    );
+  };
+
   const DataBody = () => (
     <div className={styles.databody}>
       <div className={styles.databody__top}>
-        <div className={styles.databody__top__label}>{category}</div>
+        <div className={styles.databody__top__label}>
+          <div className={styles.category}>{category}</div>
+          {showOptionalEditIcon ? <FloatingMenu2 /> : false}
+        </div>
         <div className={styles.databody__top__info}>
           {noOfRatings ? (
             <>
@@ -265,8 +287,12 @@ export default function DatacardComponent({
                 </h2>
               </div>
               <div className={styles.datacard__body__top__menu}>
-                <MoreVertIcon onClick={handleClick} />
-                <FloatingMenu />
+                {showMoreMenu ? (
+                  <>
+                    <MoreVertIcon onClick={handleClick} />
+                    <FloatingMenu />
+                  </>
+                ) : null}
               </div>
             </div>
             <div className={styles.datacard__body__middle}>

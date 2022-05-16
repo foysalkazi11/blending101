@@ -71,6 +71,8 @@ const RecipeDetails = ({
   dragAndDrop = false,
   compareRecipeList = [],
   setcompareRecipeList = () => {},
+  showMoreMenu = true,
+  showOptionalEditIcon = false,
 }: any) => {
   const [winReady, setwinReady] = useState(false);
   const [getBlendNutritionBasedonRecipeData, { loading, error, data }] =
@@ -125,6 +127,8 @@ const RecipeDetails = ({
           addedToCompare={recipe?.addedToCompare}
           compareRecipeList={compareRecipeList}
           setcompareRecipeList={setcompareRecipeList}
+          showMoreMenu={showMoreMenu}
+          showOptionalEditIcon={showOptionalEditIcon}
         />
         <div className={`${styles.dividerBox}`}>
           <SectionTitleWithIcon
