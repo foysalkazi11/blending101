@@ -23,6 +23,7 @@ interface ingredientState {
   name: string;
   value: number;
   units: string;
+  ingredientId: string;
 }
 
 export default function FilterbottomComponent({
@@ -50,7 +51,10 @@ export default function FilterbottomComponent({
   );
 
   const { data: IngredientData } = useQuery(
-    GET_ALL_INGREDIENTS_DATA_BASED_ON_NUTRITION(rankingDropDownState?.id, dpd?.val)
+    GET_ALL_INGREDIENTS_DATA_BASED_ON_NUTRITION(
+      rankingDropDownState?.id,
+      dpd?.val
+    )
   );
 
   const handleIngredientClick = (ingredient) => {
@@ -71,11 +75,11 @@ export default function FilterbottomComponent({
     dispatch(setIngredients(blendz));
   };
 
-  const checkActive = (ingredient: string) => {
+  const checkActive = (id: string) => {
     let present = false;
     ingredientsList.forEach((blen) => {
       //@ts-ignore
-      if (blen.title === ingredient) {
+      if (blen.id === id) {
         present = true;
       }
     });
@@ -141,7 +145,9 @@ export default function FilterbottomComponent({
       } else {
         const filter = allIngredients?.filter((item) =>
           //@ts-ignore
-          item?.ingredientName?.toLowerCase()?.includes(searchInput?.toLowerCase())
+          item?.ingredientName
+            ?.toLowerCase()
+            ?.includes(searchInput?.toLowerCase())
         );
         setSearchIngredientData(filter);
       }
@@ -207,7 +213,7 @@ export default function FilterbottomComponent({
                       src={item?.featuredImage || "/food/chard.png"}
                       alt={item?.ingredientName}
                     />
-                    {checkActive(item?.ingredientName) && (
+                    {checkActive(item?._id) && (
                       <div className={styles.tick}>
                         <CheckCircle className={styles.ticked} />
                       </div>
@@ -237,7 +243,10 @@ export default function FilterbottomComponent({
           {IngredientData ? (
             arrayOrderState &&
             arrayOrderState?.map(
-              ({ name, value, units }: ingredientState, index) => {
+              (
+                { name, value, units, ingredientId }: ingredientState,
+                index
+              ) => {
                 return (
                   <Linearcomponent
                     name={name}
@@ -249,6 +258,15 @@ export default function FilterbottomComponent({
                       ascendingDescending
                         ? arrayOrderState[0]?.value
                         : arrayOrderState[arrayOrderState?.length - 1]?.value
+                    }
+                    checkbox={true}
+                    checkedState={checkActive(ingredientId)}
+                    handleOnChange={() =>
+                      handleIngredientClick({
+                        title: name,
+                        img: "/food/chard.png",
+                        id: ingredientId,
+                      })
                     }
                   />
                 );
