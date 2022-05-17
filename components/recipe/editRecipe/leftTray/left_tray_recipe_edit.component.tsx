@@ -11,6 +11,22 @@ import styles from "./left_tray_recipe_edit.module.scss";
 import Image from "next/image";
 import { setSelectedIngredientsList } from "../../../../redux/edit_recipe/editRecipeStates";
 
+const categories = [
+  { title: "All", val: "All" },
+  { title: "Leafy", val: "Leafy" },
+  { title: "Berry", val: "Berry" },
+  { title: "Herbal", val: "Herbal" },
+  { title: "Fruity", val: "Fruity" },
+  { title: "Balancer", val: "Balancer" },
+  { title: "Fatty", val: "Fatty" },
+  { title: "Seasoning", val: "Seasoning" },
+  { title: "Flavor", val: "Flavor" },
+  { title: "Rooty", val: "Rooty" },
+  { title: "Flowering", val: "Flowering" },
+  { title: "Liquid", val: "Liquid" },
+  { title: "Tube-Squash", val: "Tube-Squash" },
+];
+
 interface recipeData {
   allIngredients?: any;
   recipeIngredients?: object[];
@@ -19,20 +35,6 @@ const Left_tray_recipe_edit = ({
   allIngredients,
   recipeIngredients,
 }: recipeData) => {
-  // Variables - START ===========================================>
-
-  const categories = [
-    { title: "All", val: "all" },
-    { title: "Leafy", val: "leafy" },
-    { title: "Fruity", val: "Fruity" },
-    { title: "Nutty", val: "nutty" },
-    { title: "Frozed", val: "frozed" },
-  ];
-
-  // Variables - END +++++++++++++++++++++++++++++++++++++++++++++<
-
-  // LocalStates - START =========================================>
-
   const [toggle, setToggle] = useState(1);
   const [dpd, setDpd] = useState({ title: "All", val: "all" });
   const [input, setinput] = useState("");
@@ -40,18 +42,12 @@ const Left_tray_recipe_edit = ({
   const [ascendingDescending, setascendingDescending] = useState(false);
   const [list, setList] = useState([]);
   const [rankingDropDownState, setRankingDropDownState] = useState(null);
-  // LocalStates - END +++++++++++++++++++++++++++++++++++++++++++<
-
-  // ReduxStates -START ==========================================>
 
   const dispatch = useAppDispatch();
   const selectedIngredientsList = useAppSelector(
     (state) => state.editRecipeReducer.selectedIngredientsList
   );
 
-  // ReduxStates - End +++++++++++++++++++++++++++++++++++++++++++<
-
-  // useEffect START =============================================>
   useEffect(() => {
     setIngredientList(allIngredients);
   }, [allIngredients]);
@@ -60,40 +56,29 @@ const Left_tray_recipe_edit = ({
     DropDown(dpd);
   }, [dpd]);
 
-  // console.log(ingredientList);
-  // console.log(selectedIngredientsList);
-  // console.log(dpd);
-  // useEffect END +++++++++++++++++++++++++++++++++++++++++++++++<
-
-  // Controllers - START =========================================>
-
   const handleIngredientClick = (ingredient) => {
-    try {
-      let blendz = [];
-      let present = false;
-      selectedIngredientsList?.forEach((blen) => {
-        if (blen === ingredient) {
-          present = true;
-        }
-      });
-      if (!present) {
-        blendz = [...selectedIngredientsList, ingredient];
-      } else {
-        blendz = selectedIngredientsList?.filter((blen) => {
-          return blen !== ingredient;
-        });
-      }
-
-      dispatch(setSelectedIngredientsList(blendz));
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const checkActive = (ingredient: string) => {
+    let blendz = [];
     let present = false;
     selectedIngredientsList?.forEach((blen) => {
-      if (blen.ingredientName === ingredient) {
+      if (blen?._id === ingredient?._id) {
+        present = true;
+      }
+    });
+    if (!present) {
+      blendz = [...selectedIngredientsList, ingredient];
+    } else {
+      blendz = selectedIngredientsList?.filter((blen) => {
+        return blen?._id !== ingredient?._id;
+      });
+    }
+
+    dispatch(setSelectedIngredientsList(blendz));
+  };
+
+  const checkActive = (id: number) => {
+    let present = false;
+    selectedIngredientsList?.forEach((blen) => {
+      if (blen?._id === id) {
         present = true;
       }
     });
@@ -128,7 +113,9 @@ const Left_tray_recipe_edit = ({
       let defaultMeasurement = elem?.portions?.filter((itm) => {
         return itm?.default === true;
       });
-      if (Number(highestValue) < Number(defaultMeasurement[0]?.meausermentWeight)) {
+      if (
+        Number(highestValue) < Number(defaultMeasurement[0]?.meausermentWeight)
+      ) {
         highestValue = Number(defaultMeasurement[0]?.meausermentWeight);
       }
     });
@@ -158,10 +145,9 @@ const Left_tray_recipe_edit = ({
       return tempArray.reverse();
     }
   };
-useEffect(() => {
-  console.log(allIngredients)
-}, [])
-
+  useEffect(() => {
+    console.log(allIngredients);
+  }, []);
 
   return (
     <div className={styles.left_main_container}>
@@ -222,7 +208,7 @@ useEffect(() => {
                               ) : (
                                 <img src="/food/Dandelion.png" alt={""} />
                               )}
-                              {checkActive(item?.ingredientName) && (
+                              {checkActive(item?._id) && (
                                 <div className={styles.tick}>
                                   <CheckCircle className={styles.ticked} />
                                 </div>
@@ -251,9 +237,11 @@ useEffect(() => {
                   {orderAdjusterForList(ascendingDescending ? "asc" : "")?.map(
                     (elem, index) => {
                       const { highestValue } = recipeRankingsHighestValue();
-                      const defaultMeasurement = elem?.portions?.filter((itm) => {
-                        return itm.default === true;
-                      });
+                      const defaultMeasurement = elem?.portions?.filter(
+                        (itm) => {
+                          return itm.default === true;
+                        }
+                      );
 
                       return (
                         highestValue && (
@@ -262,7 +250,7 @@ useEffect(() => {
                             name={elem?.ingredientName}
                             percent={defaultMeasurement[0]?.meausermentWeight}
                             checkbox
-                            checkedState={checkActive(elem?.ingredientName)}
+                            checkedState={checkActive(elem?._id)}
                             key={index}
                             highestValue={Number(highestValue)}
                             units={"%"}

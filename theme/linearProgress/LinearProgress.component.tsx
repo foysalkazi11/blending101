@@ -13,6 +13,7 @@ interface Props {
   checkedState?: boolean;
   units?: string;
   highestValue: number;
+  handleOnChange?: () => void;
 }
 
 const Linearcomponent = ({
@@ -24,9 +25,9 @@ const Linearcomponent = ({
   highestValue,
   ingredientId = "",
   checkedState,
+  handleOnChange = () => {},
 }: Props) => {
   const [ingId, setIngId] = useState("");
-  const valueForPercentNumerator = percent;
   useGetDefaultPortionOfnutration(ingId);
   const dispatch = useAppDispatch();
   const selectedIngredientsList = useAppSelector(
@@ -61,7 +62,8 @@ const Linearcomponent = ({
               className={styles.checkbox}
               type="checkbox"
               checked={checkedState}
-              onClick={() => handleIngredientClick(element)}
+              onChange={handleOnChange}
+              // onClick={() => handleIngredientClick(element)}
             />
             <span className={styles.mark}></span>
           </span>
@@ -70,17 +72,10 @@ const Linearcomponent = ({
           {name}
         </div>
         <div className={styles.score}>
-          {
-            //@ts-ignore
-            parseFloat((valueForPercentNumerator / highestValue) * 100).toFixed(0)
-          }{" "}
-          {units}
+          {percent} {units}
         </div>
       </div>
-      <LinearIndicatorcomponent
-        percent={valueForPercentNumerator}
-        highestValue={highestValue}
-      />
+      <LinearIndicatorcomponent percent={percent} highestValue={highestValue} />
     </div>
   );
 };

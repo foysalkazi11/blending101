@@ -82,10 +82,12 @@ const CreateNewRecipe = ({
               default: true,
             });
           } else {
-            imgArr?.push({
-              image: `${newlyCreatedRecipe?.image[0]?.image}`,
-              default: newlyCreatedRecipe?.image[0]?.default,
-            });
+            if (newlyCreatedRecipe?.image?.length) {
+              imgArr?.push({
+                image: `${newlyCreatedRecipe?.image[0]?.image}`,
+                default: newlyCreatedRecipe?.image[0]?.default,
+              });
+            }
           }
           await editRecipe({
             variables: {
@@ -98,10 +100,7 @@ const CreateNewRecipe = ({
                   ingredients: newRecipe?.ingredients?.map(
                     ({ ingredientId, selectedPortionName, weightInGram }) => ({
                       ingredientId,
-                      selectedPortionName: selectedPortionName?.replace(
-                        /"/g,
-                        '\\"'
-                      ),
+                      selectedPortionName,
                       weightInGram,
                     })
                   ),
@@ -134,11 +133,6 @@ const CreateNewRecipe = ({
               image: `${url}`,
               default: true,
             });
-          } else {
-            imgArr?.push({
-              image: null,
-              default: null,
-            });
           }
 
           const obj = {
@@ -150,7 +144,7 @@ const CreateNewRecipe = ({
             ingredients: newRecipe?.ingredients?.map(
               ({ ingredientId, selectedPortionName, weightInGram }) => ({
                 ingredientId,
-                selectedPortionName: selectedPortionName?.replace(/"/g, '\\"'),
+                selectedPortionName,
                 weightInGram,
               })
             ),
@@ -339,7 +333,7 @@ const CreateNewRecipe = ({
                   />
                 </li>
               </Tooltip>
-              <Tooltip content={"Details view"} direction="right">
+              {/* <Tooltip content={"Details view"} direction="right">
                 <li>
                   <BiDetail
                     className={styles.icon}
@@ -348,7 +342,7 @@ const CreateNewRecipe = ({
                     }
                   />
                 </li>
-              </Tooltip>
+              </Tooltip> */}
             </>
           ) : null}
 
