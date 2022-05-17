@@ -5,7 +5,7 @@ const NutrationPanelSkeleton = () => {
   return (
     <div style={{ margin: "20px 0" }}>
       <div style={{ marginBottom: "20px" }}>
-        <SkeletonElement type="title" />
+        <SkeletonElement type="title" style={{ width: "100%" }} />
         <SkeletonElement type="text" />
         <SkeletonElement type="text" />
       </div>

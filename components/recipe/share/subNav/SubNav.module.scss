@@ -6,6 +6,12 @@
   &__discover {
     display: flex;
     align-items: center;
+    transition: all 0.3s;
+    cursor: pointer;
+    &:hover &__icon,
+    &:hover p {
+      color: #fe5d1f !important;
+    }
     &__icon {
       margin-right: 5px;
       cursor: pointer;
@@ -21,6 +27,12 @@
   &__compare {
     display: flex;
     align-items: center;
+    transition: all 0.3s;
+    cursor: pointer;
+    &:hover &__icon,
+    &:hover p {
+      color: #fe5d1f !important;
+    }
     &__icon {
       margin: 0 10px 0px 6px;
       width: 30px;
@@ -28,7 +40,7 @@
       color: #000;
     }
     p {
-      color: #000 !important;
+      color: #000;
       font-weight: 500;
     }
   }
