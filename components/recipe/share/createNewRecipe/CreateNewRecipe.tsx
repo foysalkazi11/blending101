@@ -14,11 +14,10 @@ import { setAllIngredients } from "../../../../redux/slices/ingredientsSlice";
 import Image from "next/image";
 import { FETCH_BLEND_CATEGORIES } from "../../../../gqlLib/category/queries/fetchCategories";
 import { setAllCategories } from "../../../../redux/slices/categroySlice";
-import CancelIcon from "../../../../public/icons/cancel_black_36dp.svg";
 import { IoCloseCircle } from "react-icons/io5";
-import { MdMoreVert, MdOutlineEdit } from "react-icons/md";
+import { MdOutlineEdit } from "react-icons/md";
 import { AiOutlineSave } from "react-icons/ai";
-import MoreVertIcon from "../../../../public/icons/more_vert_black_36dp.svg";
+import { BiDetail } from "react-icons/bi";
 import useOnClickOutside from "../../../utility/useOnClickOutside";
 import CREATE_A_RECIPE_BY_USER from "../../../../gqlLib/recipes/mutations/createARecipeByUser";
 import imageUploadS3 from "../../../utility/imageUploadS3";
@@ -26,6 +25,8 @@ import notification from "../../../utility/reactToastifyNotification";
 import { useRouter } from "next/router";
 import { setLoading } from "../../../../redux/slices/utilitySlice";
 import EDIT_A_RECIPE from "../../../../gqlLib/recipes/mutations/editARecipe";
+import Tooltip from "../../../../theme/toolTip/CustomToolTip";
+import CreateRecipeSkeleton from "../../../../theme/skeletons/createRecipeSkeleton/CreateRecipeSkeleton";
 
 const CreateNewRecipe = ({
   newRecipe,
@@ -64,12 +65,14 @@ const CreateNewRecipe = ({
   const { dbUser } = useAppSelector((state) => state?.user);
   const [editRecipe] = useMutation(EDIT_A_RECIPE);
   const [uploadNewImage, setUploadNewImage] = useState(false);
+  const [createAndEditRecipeLoading, setCreateAndEditRecipeLoading] =
+    useState(false);
 
   const handleCreateNewRecipeByUser = async (e: React.SyntheticEvent) => {
     e.stopPropagation();
     if (newlyCreatedRecipe?._id) {
       if (createNewRecipe?.name && newRecipe?.ingredients?.length) {
-        dispatch(setLoading(true));
+        setCreateAndEditRecipeLoading(true);
         try {
           let imgArr = [];
           if (uploadNewImage && createNewRecipe?.image?.length) {
@@ -108,11 +111,11 @@ const CreateNewRecipe = ({
             },
           });
 
-          dispatch(setLoading(false));
-          notification("success", "Edited recipe successfully");
+          setCreateAndEditRecipeLoading(false);
+          notification("success", "Recipe updated successfully");
         } catch (error) {
-          dispatch(setLoading(false));
-          notification("error", "Failed to edited recipe");
+          setCreateAndEditRecipeLoading(false);
+          notification("error", "Failed to updated recipe");
         }
       } else {
         notification(
@@ -122,7 +125,7 @@ const CreateNewRecipe = ({
       }
     } else {
       if (createNewRecipe?.name && newRecipe?.ingredients?.length) {
-        dispatch(setLoading(true));
+        setCreateAndEditRecipeLoading(true);
         try {
           let imgArr = [];
           if (createNewRecipe?.image?.length) {
@@ -157,16 +160,16 @@ const CreateNewRecipe = ({
               data: obj,
             },
           });
-          dispatch(setLoading(false));
-          notification("success", "Saved recipe successfully");
+          setCreateAndEditRecipeLoading(false);
+          notification("success", "Recive saved successfully");
           if (data?.addRecipeFromUser?._id) {
             setNewlyCreatedRecipe(data?.addRecipeFromUser);
             setUploadNewImage(false);
             // router?.push(`/recipe_details/${data?.addRecipeFromUser?._id}`);
           }
         } catch (error) {
-          dispatch(setLoading(false));
-          notification("error", "Failed to create new recipe");
+          setCreateAndEditRecipeLoading(false);
+          notification("error", "Failed to saved new recipe");
         }
       } else {
         notification(
@@ -325,23 +328,46 @@ const CreateNewRecipe = ({
       <div className={styles.floating__menu}>
         <ul>
           {newlyCreatedRecipe?._id ? (
-            <li>
-              <MdOutlineEdit
-                className={styles.icon}
-                onClick={() =>
-                  router?.push(`/edit_recipe/${newlyCreatedRecipe?._id}`)
-                }
-              />
-            </li>
+            <>
+              <Tooltip content="Edit view" direction="right">
+                <li>
+                  <MdOutlineEdit
+                    className={styles.icon}
+                    onClick={() =>
+                      router?.push(`/edit_recipe/${newlyCreatedRecipe?._id}`)
+                    }
+                  />
+                </li>
+              </Tooltip>
+              <Tooltip content={"Details view"} direction="right">
+                <li>
+                  <BiDetail
+                    className={styles.icon}
+                    onClick={() =>
+                      router?.push(`/recipe_details/${newlyCreatedRecipe?._id}`)
+                    }
+                  />
+                </li>
+              </Tooltip>
+            </>
           ) : null}
 
-          <li onClick={(e) => handleCreateNewRecipeByUser(e)}>
-            <AiOutlineSave className={styles.icon} />
-          </li>
+          <Tooltip
+            content={newlyCreatedRecipe?._id ? "Update recipe" : "Save recipe"}
+            direction="right"
+          >
+            <li onClick={(e) => handleCreateNewRecipeByUser(e)}>
+              <AiOutlineSave className={styles.icon} />
+            </li>
+          </Tooltip>
         </ul>
       </div>
     );
   };
+
+  if (createAndEditRecipeLoading) {
+    return <CreateRecipeSkeleton />;
+  }
 
   return (
     <div className={styles.createNewRecipeContainer}>

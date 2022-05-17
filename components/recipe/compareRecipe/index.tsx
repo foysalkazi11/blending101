@@ -8,7 +8,7 @@ import Carousel from "../../../theme/carousel/carousel.component";
 import Slider from "react-slick";
 import RecipeDetails from "../share/recipeDetails/RecipeDetails";
 import SliderArrows from "../share/sliderArrows/SliderArrows";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import GET_COMPARE_LIST from "../../../gqlLib/compare/query/getCompareList";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import SkeletonComparePage from "../../../theme/skeletons/skeletonComparePage/SkeletonComparePage";
@@ -24,7 +24,15 @@ import {
   responsiveColumnScreen,
 } from "./utility";
 import useWindowSize from "../../utility/useWindowSize";
-import { setCompareList } from "../../../redux/slices/recipeSlice";
+import {
+  setCompareList,
+  setLatest,
+  setPopular,
+  setRecommended,
+} from "../../../redux/slices/recipeSlice";
+import EMPTY_COMPARE_LIST from "../../../gqlLib/compare/mutation/emptyCompareList";
+import { setDbUser } from "../../../redux/slices/userSlice";
+import { setLoading } from "../../../redux/slices/utilitySlice";
 
 const compareRecipeResponsiveSetting = {
   slidesToShow: 4,
@@ -128,12 +136,10 @@ const CompareRecipe = () => {
     ingredients: [],
   });
 
-  useEffect(() => {
-    if (!loading) {
-      dispatch(setCompareList([...data?.getCompareList]));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  const [emptyCompareList] = useMutation(EMPTY_COMPARE_LIST);
+  const { latest, popular, recommended } = useAppSelector(
+    (state) => state?.recipe
+  );
 
   const findCompareRecipe = (id: string) => {
     return compareRecipeList?.find((item) => item?._id === id);
@@ -269,6 +275,80 @@ const CompareRecipe = () => {
     }
   };
 
+  const handleEmptyCompareList = async () => {
+    dispatch(setLoading(true));
+    try {
+      await emptyCompareList({ variables: { userId: dbUser?._id } });
+      dispatch(
+        setDbUser({
+          ...dbUser,
+          compareLength: 0,
+        })
+      );
+      setcompareRecipeList([]);
+      dispatch(setCompareList([]));
+      dispatch(
+        setRecommended(
+          recommended?.map((recipe) =>
+            recipe?.addedToCompare
+              ? { ...recipe, addedToCompare: false }
+              : recipe
+          )
+        )
+      );
+      dispatch(
+        setLatest(
+          latest?.map((recipe) =>
+            recipe?.addedToCompare
+              ? { ...recipe, addedToCompare: false }
+              : recipe
+          )
+        )
+      );
+      dispatch(
+        setPopular(
+          popular?.map((recipe) =>
+            recipe?.addedToCompare
+              ? { ...recipe, addedToCompare: false }
+              : recipe
+          )
+        )
+      );
+      router?.push("/");
+      dispatch(setLoading(false));
+    } catch (error) {
+      dispatch(setLoading(false));
+      notification("error", "Failed to empty compare list");
+    }
+  };
+
+  const updateFormulateList = (compareList: any[]) => {
+    if (compareList?.length === 1) {
+      setcompareRecipeList([{ ...compareList[0] }]);
+    }
+    if (compareList?.length === 2) {
+      setcompareRecipeList([...compareList?.slice(0, 2)]);
+    }
+    if (compareList?.length >= 3) {
+      setcompareRecipeList([...compareList?.slice(0, 3)]);
+    }
+  };
+
+  useEffect(() => {
+    if (!loading) {
+      updateFormulateList(data?.getCompareList);
+      dispatch(setCompareList([...data?.getCompareList]));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
+  useEffect(() => {
+    if (!compareRecipeList?.length && compareList?.length) {
+      updateFormulateList(compareList);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <AContainer showLeftTray={false} logo={false} headerTitle="Compare Recipe">
       <div className={styles.mainContentDiv}>
@@ -284,7 +364,7 @@ const CompareRecipe = () => {
                 showButton={true}
                 buttonClick={handleCompareButtonClick}
                 compareAmout={dbUser?.compareLength}
-                closeCompare={() => setcompareRecipeList([])}
+                closeCompare={handleEmptyCompareList}
               />
               <Carousel moreSetting={responsiveSetting}>
                 {compareList?.map((recipe, index) => {
