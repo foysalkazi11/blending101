@@ -336,7 +336,9 @@ const CompareRecipe = () => {
 
   useEffect(() => {
     if (!loading) {
-      updateFormulateList(data?.getCompareList);
+      if (!compareRecipeList?.length) {
+        updateFormulateList(data?.getCompareList);
+      }
       dispatch(setCompareList([...data?.getCompareList]));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
