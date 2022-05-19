@@ -7,11 +7,18 @@ import styles from "./searchtag.module.scss";
 import { handleFilterClick } from "../../services/trayClick.service";
 import { deleteFilterValue } from "../../redux/slices/filterRecipeSlice";
 
-export default function SearchtagsComponent(props) {
-  const ingredients = useAppSelector((state) => state.sideTray.ingredients);
-  const blends = useAppSelector((state) => state.sideTray.blends);
+interface searchtagsComponentProps {
+  blends: any[];
+  ingredients: any[];
+  filters: any[];
+}
+
+export default function SearchtagsComponent({
+  blends,
+  filters,
+  ingredients,
+}: searchtagsComponentProps) {
   const category = useAppSelector((state) => state.sideTray.category);
-  const filters = useAppSelector((state) => state.filterRecipe.filters);
   const dispatch = useAppDispatch();
 
   const handleIngredientClick = (item) => {

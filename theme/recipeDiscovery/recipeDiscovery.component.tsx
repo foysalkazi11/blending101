@@ -40,7 +40,9 @@ const RecipeDetails = () => {
   const { user, dbUser } = useAppSelector((state) => state?.user);
   const { lastModifiedCollection, collectionDetailsId, showAllRecipes } =
     useAppSelector((state) => state?.collections);
-  const { latest, popular, recommended } = useAppSelector((state) => state?.recipe);
+  const { latest, popular, recommended } = useAppSelector(
+    (state) => state?.recipe
+  );
   const { filters } = useAppSelector((state) => state?.filterRecipe);
   const [getAllRecommendedRecipes] = useLazyQuery(GET_ALL_RECOMMENDED_RECIPES);
   const [getAllPopularRecipes] = useLazyQuery(GET_ALL_POPULAR_RECIPES);
@@ -68,7 +70,9 @@ const RecipeDetails = () => {
           variables: { userId: dbUser?._id },
         });
         dispatch(
-          setRecommended(recommendedRecipes?.data?.getAllrecomendedRecipes || [])
+          setRecommended(
+            recommendedRecipes?.data?.getAllrecomendedRecipes || []
+          )
         );
       }
 
@@ -116,15 +120,19 @@ const RecipeDetails = () => {
           <div
             style={
               openFilterTray
-                ? windowSize.width>1300
-                  ? { marginLeft: "233px", transition: "all 0.6s" }
-                  : { marginLeft: "283px", transition: "all 0.6s"}
-                : { transition: "all 0.6s" }
+                ? windowSize.width > 1300
+                  ? { marginLeft: "233px", transition: "all 0.5s" }
+                  : { marginLeft: "283px", transition: "all 0.5s" }
+                : { transition: "all 0.5s" }
             }
           >
-            <SearchBar />
+            <SearchBar blends={blends} ingredients={ingredients} />
             {blends.length || ingredients.length || filters?.length ? (
-              <SearchtagsComponent />
+              <SearchtagsComponent
+                blends={blends}
+                ingredients={ingredients}
+                filters={filters}
+              />
             ) : null}
           </div>
 
@@ -187,7 +195,10 @@ const RecipeDetails = () => {
                 {/* its for Recent*/}
 
                 {latest.length ? (
-                  <ContentTray heading={"Recent"} image={"/images/clock-light.svg"}>
+                  <ContentTray
+                    heading={"Recent"}
+                    image={"/images/clock-light.svg"}
+                  >
                     {latest?.map((item, index) => {
                       let ingredients = [];
                       item?.ingredients?.forEach((ing) => {
