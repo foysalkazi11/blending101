@@ -8,7 +8,9 @@ const useGetAllIngredientsDataBasedOnNutrition = (
   isRankingTab: boolean
 ) => {
   const [GetAllIngredientsDataBasedOnNutrition, { data, loading, error }] =
-    useLazyQuery(GET_ALL_INGREDIENTS_DATA_BASED_ON_NUTRITION);
+    useLazyQuery(GET_ALL_INGREDIENTS_DATA_BASED_ON_NUTRITION, {
+      // fetchPolicy: "network-only",
+    });
 
   useEffect(() => {
     if (isRankingTab && nutritionID && category) {
