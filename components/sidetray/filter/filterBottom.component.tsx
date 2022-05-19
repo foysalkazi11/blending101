@@ -14,6 +14,8 @@ import { GET_ALL_INGREDIENTS_DATA_BASED_ON_NUTRITION } from "../../../gqlLib/rec
 import { setAllIngredients } from "../../../redux/slices/ingredientsSlice";
 import SkeletonIngredients from "../../../theme/skeletons/skeletonIngredients/SkeletonIngredients";
 import CircularRotatingLoader from "../../../theme/loader/circularRotatingLoader.component";
+import useGetAllIngredientsDataBasedOnNutrition from "../../../customHooks/useGetAllIngredientsDataBasedOnNutrition";
+import IngredientPanelSkeleton from "../../../theme/skeletons/ingredientPanelSleketon/IngredientPanelSkeleton";
 
 type FilterbottomComponentProps = {
   categories?: { title: string; val: string }[];
@@ -41,7 +43,7 @@ export default function FilterbottomComponent({
   const [searchInput, setSearchInput] = useState("");
   const isMounted = useRef(false);
   const [loading, setLoading] = useState(false);
-  const [arrayOrderState, setArrayOrderState] = useState(null);
+  const [arrayOrderState, setArrayOrderState] = useState([]);
   const [ascendingDescending, setascendingDescending] = useState(true);
   const [list, setList] = useState([]);
   const [rankingDropDownState, setRankingDropDownState] = useState(null);
@@ -50,12 +52,12 @@ export default function FilterbottomComponent({
     FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS
   );
 
-  const { data: IngredientData } = useQuery(
-    GET_ALL_INGREDIENTS_DATA_BASED_ON_NUTRITION(
+  const { data: IngredientData, loading: nutritionLoading } =
+    useGetAllIngredientsDataBasedOnNutrition(
       rankingDropDownState?.id,
-      dpd?.val
-    )
-  );
+      dpd?.val,
+      toggle === 2 ? true : false
+    );
 
   const handleIngredientClick = (ingredient) => {
     let blendz = [];
@@ -164,7 +166,7 @@ export default function FilterbottomComponent({
   }, []);
 
   useEffect(() => {
-    if (!IngredientData) return;
+    if (!IngredientData?.getAllIngredientsDataBasedOnNutrition) return;
     let tempArray = ascendingDescending
       ? [...IngredientData?.getAllIngredientsDataBasedOnNutrition]
       : [...IngredientData?.getAllIngredientsDataBasedOnNutrition]?.reverse();
@@ -225,7 +227,7 @@ export default function FilterbottomComponent({
             </>
           ) : (
             <div className={styles.noResult}>
-              <p>No result</p>
+              <p>No Ingredients</p>
             </div>
           )}
         </div>
@@ -240,8 +242,9 @@ export default function FilterbottomComponent({
             dropDownState={rankingDropDownState}
             setDropDownState={setRankingDropDownState}
           />
-          {IngredientData ? (
-            arrayOrderState &&
+          {nutritionLoading ? (
+            <IngredientPanelSkeleton />
+          ) : arrayOrderState?.length ? (
             arrayOrderState?.map(
               (
                 { name, value, units, ingredientId }: ingredientState,
@@ -273,8 +276,8 @@ export default function FilterbottomComponent({
               }
             )
           ) : (
-            <div>
-              <CircularRotatingLoader />
+            <div className={styles.noResult}>
+              <p>No Ingredients</p>
             </div>
           )}
         </div>

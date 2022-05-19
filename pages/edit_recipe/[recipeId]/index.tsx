@@ -31,13 +31,11 @@ const EditRecipeComponent = () => {
   const [isFetching, setIsFetching] = useState(null);
 
   const handleSubmitData = async (images) => {
-    console.log({ images });
     dispatch(setLoading(true));
     let res: any;
     try {
       if (images?.length) {
         res = await imageUploadS3(images);
-        console.log({ res });
       }
       dispatch(setLoading(false));
     } catch (error) {
@@ -48,7 +46,9 @@ const EditRecipeComponent = () => {
     } else console.log({ res: "something went wrong in image uploading" });
   };
 
-  const recipeName = useAppSelector((state) => state?.editRecipeReducer?.recipeName);
+  const recipeName = useAppSelector(
+    (state) => state?.editRecipeReducer?.recipeName
+  );
   const selectedIngredientsList = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedIngredientsList
   );
@@ -163,7 +163,9 @@ const EditRecipeComponent = () => {
     <EditRecipePage
       recipeName={recipeName}
       allIngredients={classBasedData}
-      nutritionTrayData={recipeBasedNutrition && JSON.parse(recipeBasedNutrition)}
+      nutritionTrayData={
+        recipeBasedNutrition && JSON.parse(recipeBasedNutrition)
+      }
       recipeInstructions={recipeBasedData?.recipeInstructions}
       allBlendCategories={allBlendBasedCategory}
       selectedBLendCategory={recipeBasedData?.recipeBlendCategory?.name}

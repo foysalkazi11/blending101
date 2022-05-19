@@ -13,7 +13,7 @@ interface Props {
   checkedState?: boolean;
   units?: string;
   highestValue: number;
-  handleOnChange?: () => void;
+  handleOnChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const Linearcomponent = ({
@@ -62,7 +62,7 @@ const Linearcomponent = ({
               className={styles.checkbox}
               type="checkbox"
               checked={checkedState}
-              onChange={handleOnChange}
+              onChange={(e) => handleOnChange(e)}
               // onClick={() => handleIngredientClick(element)}
             />
             <span className={styles.mark}></span>
@@ -72,7 +72,7 @@ const Linearcomponent = ({
           {name}
         </div>
         <div className={styles.score}>
-          {percent} {units}
+          {`${percent}${units?.toLowerCase()}`}
         </div>
       </div>
       <LinearIndicatorcomponent percent={percent} highestValue={highestValue} />
