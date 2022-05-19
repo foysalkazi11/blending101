@@ -10,6 +10,10 @@ import SwitchTwoComponent from "../../../../theme/switch/switchTwo.component";
 import styles from "./left_tray_recipe_edit.module.scss";
 import Image from "next/image";
 import { setSelectedIngredientsList } from "../../../../redux/edit_recipe/editRecipeStates";
+import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
+import useGetAllIngredientsDataBasedOnNutrition from "../../../../customHooks/useGetAllIngredientsDataBasedOnNutrition";
+import SkeletonIngredients from "../../../../theme/skeletons/skeletonIngredients/SkeletonIngredients";
+import IngredientPanelSkeleton from "../../../../theme/skeletons/ingredientPanelSleketon/IngredientPanelSkeleton";
 
 const categories = [
   { title: "All", val: "All" },
@@ -27,6 +31,13 @@ const categories = [
   { title: "Tube-Squash", val: "Tube-Squash" },
 ];
 
+interface ingredientState {
+  name: string;
+  value: number;
+  units: string;
+  ingredientId: string;
+}
+
 interface recipeData {
   allIngredients?: any;
   recipeIngredients?: object[];
@@ -42,11 +53,17 @@ const Left_tray_recipe_edit = ({
   const [ascendingDescending, setascendingDescending] = useState(false);
   const [list, setList] = useState([]);
   const [rankingDropDownState, setRankingDropDownState] = useState(null);
-
+  const [arrayOrderState, setArrayOrderState] = useState([]);
   const dispatch = useAppDispatch();
   const selectedIngredientsList = useAppSelector(
     (state) => state.editRecipeReducer.selectedIngredientsList
   );
+  const { data: IngredientData, loading: nutritionLoading } =
+    useGetAllIngredientsDataBasedOnNutrition(
+      rankingDropDownState?.id,
+      dpd?.val,
+      toggle === 2 ? true : false
+    );
 
   useEffect(() => {
     setIngredientList(allIngredients);
@@ -56,7 +73,33 @@ const Left_tray_recipe_edit = ({
     DropDown(dpd);
   }, [dpd]);
 
+  const handleAddIngredient = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    id: string
+  ) => {
+    const checked = e?.target?.checked;
+    if (checked) {
+      const findIngredient = ingredientList?.find((item) => item?._id === id);
+      if (findIngredient) {
+        dispatch(
+          setSelectedIngredientsList([
+            ...selectedIngredientsList,
+            findIngredient,
+          ])
+        );
+      }
+    } else {
+      dispatch(
+        setSelectedIngredientsList([
+          ...selectedIngredientsList?.filter((ing) => ing?._id !== id),
+        ])
+      );
+    }
+  };
+
   const handleIngredientClick = (ingredient) => {
+    console.log(ingredient);
+
     let blendz = [];
     let present = false;
     selectedIngredientsList?.forEach((blen) => {
@@ -75,7 +118,7 @@ const Left_tray_recipe_edit = ({
     dispatch(setSelectedIngredientsList(blendz));
   };
 
-  const checkActive = (id: number) => {
+  const checkActive = (id: string) => {
     let present = false;
     selectedIngredientsList?.forEach((blen) => {
       if (blen?._id === id) {
@@ -103,9 +146,6 @@ const Left_tray_recipe_edit = ({
       setIngredientList(allIngredients);
     }
   };
-  // Controllers - END +++++++++++++++++++++++++++++++++++++++++++<
-
-  // code for rankings
 
   const recipeRankingsHighestValue = () => {
     let highestValue = 1;
@@ -146,8 +186,12 @@ const Left_tray_recipe_edit = ({
     }
   };
   useEffect(() => {
-    console.log(allIngredients);
-  }, []);
+    if (!IngredientData?.getAllIngredientsDataBasedOnNutrition) return;
+    let tempArray = ascendingDescending
+      ? [...IngredientData?.getAllIngredientsDataBasedOnNutrition]
+      : [...IngredientData?.getAllIngredientsDataBasedOnNutrition]?.reverse();
+    setArrayOrderState(tempArray);
+  }, [ascendingDescending, IngredientData]);
 
   return (
     <div className={styles.left_main_container}>
@@ -203,11 +247,13 @@ const Left_tray_recipe_edit = ({
                             onClick={() => handleIngredientClick(item)}
                           >
                             <div className={styles.filter__menu__item__image}>
-                              {item?.featuredImage !== null ? (
-                                <img src={item.featuredImage} alt={""} />
-                              ) : (
-                                <img src="/food/Dandelion.png" alt={""} />
-                              )}
+                              <img
+                                src={
+                                  item.featuredImage || "/food/Dandelion.png"
+                                }
+                                alt={""}
+                              />
+
                               {checkActive(item?._id) && (
                                 <div className={styles.tick}>
                                   <CheckCircle className={styles.ticked} />
@@ -224,7 +270,7 @@ const Left_tray_recipe_edit = ({
             )}
 
             {toggle === 2 && (
-              <>
+              <div className={styles.rankings}>
                 <CalciumSearchElem
                   ascendingDescending={ascendingDescending}
                   setascendingDescending={setascendingDescending}
@@ -233,34 +279,42 @@ const Left_tray_recipe_edit = ({
                   dropDownState={rankingDropDownState}
                   setDropDownState={setRankingDropDownState}
                 />
-                <div className={styles.rankings}>
-                  {orderAdjusterForList(ascendingDescending ? "asc" : "")?.map(
-                    (elem, index) => {
-                      const { highestValue } = recipeRankingsHighestValue();
-                      const defaultMeasurement = elem?.portions?.filter(
-                        (itm) => {
-                          return itm.default === true;
-                        }
-                      );
-
+                {nutritionLoading ? (
+                  <IngredientPanelSkeleton />
+                ) : arrayOrderState?.length ? (
+                  arrayOrderState?.map(
+                    (
+                      { name, value, units, ingredientId }: ingredientState,
+                      index
+                    ) => {
                       return (
-                        highestValue && (
-                          <Linearcomponent
-                            element={elem}
-                            name={elem?.ingredientName}
-                            percent={defaultMeasurement[0]?.meausermentWeight}
-                            checkbox
-                            checkedState={checkActive(elem?._id)}
-                            key={index}
-                            highestValue={Number(highestValue)}
-                            units={"%"}
-                          />
-                        )
+                        <Linearcomponent
+                          name={name}
+                          percent={Number(value?.toFixed(2))}
+                          key={index}
+                          units={units}
+                          //@ts-ignore
+                          highestValue={
+                            ascendingDescending
+                              ? arrayOrderState[0]?.value
+                              : arrayOrderState[arrayOrderState?.length - 1]
+                                  ?.value
+                          }
+                          checkbox={true}
+                          checkedState={checkActive(ingredientId)}
+                          handleOnChange={(e) =>
+                            handleAddIngredient(e, ingredientId)
+                          }
+                        />
                       );
                     }
-                  )}
-                </div>
-              </>
+                  )
+                ) : (
+                  <div className={styles.noResult}>
+                    <p>No Ingredients</p>
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </div>
