@@ -7,12 +7,21 @@ import { AiOutlineClose } from "react-icons/ai";
 import RecipeDiscoverButton from "../../button/recipeDiscoverButton/RecipeDiscoverButton";
 import AddCircleOutlineIcon from "../../../public/icons/add_circle_outline_black_36dp.svg";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setOpenFilterTray } from "../../../redux/slices/sideTraySlice";
+import {
+  setIngredients,
+  setOpenFilterTray,
+  setBlendTye,
+} from "../../../redux/slices/sideTraySlice";
 import useOnClickOutside from "../../../components/utility/useOnClickOutside";
 import { useRouter } from "next/router";
 import Tooltip from "../../toolTip/CustomToolTip";
 
-const SearchBar = () => {
+interface searchBarProps {
+  blends: any[];
+  ingredients: any[];
+}
+
+const SearchBar = ({ blends, ingredients }: searchBarProps) => {
   const router = useRouter();
   const [isInputFocus, setIsInputFocus] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
@@ -36,16 +45,36 @@ const SearchBar = () => {
     setIsInputFocus(false);
     // inputRef?.current?.focus();
   };
-  useOnClickOutside(inputRef, handleClean);
+  const handleSearchTagClean = () => {
+    dispatch(setIngredients([]));
+    dispatch(setBlendTye([]));
+    setIsSubmit(false);
+    setIsInputFocus(false);
+  };
+  useOnClickOutside(inputRef, () => {
+    setIsSubmit(false);
+    setIsInputFocus(false);
+  });
 
+  useEffect(() => {
+    let str: string = input;
 
+    str = [
+      ...blends?.map((item) => `${item?.title}`),
+      ...ingredients?.map((item) => `${item?.title}`),
+    ]?.join(", ");
+    setInput(str);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [blends, ingredients]);
 
   return (
     <div className={styles.searchBarContainer}>
       <div className={styles.inputContainer} ref={inputRef}>
         <div
           className={styles.filterIconContainer}
-          style={openFilterTray ? { marginRight: "10px", paddingRight: "20px" } : {}}
+          style={
+            openFilterTray ? { marginRight: "10px", paddingRight: "20px" } : {}
+          }
         >
           <Tooltip content="Filter" direction="bottom">
             <FiFilter
@@ -64,7 +93,7 @@ const SearchBar = () => {
           )}
           <form onSubmit={handleSubmit}>
             <input
-              style={openFilterTray ? { width: "30vw" ,minWidth:"200px"} : {}}
+              style={openFilterTray ? { width: "30vw", minWidth: "200px" } : {}}
               disabled={isMicOn}
               placeholder={isMicOn ? "Speak" : "Search"}
               value={input}
@@ -89,12 +118,21 @@ const SearchBar = () => {
               }}
             />
           ) : (
-            <Tooltip direction="bottom" content="Voice search">
-              <BsMic
-                className={`${styles.mic} ${isMicOn ? styles.active : ""}`}
-                onClick={() => setIsMicOn(!isMicOn)}
-              />
-            </Tooltip>
+            <>
+              {blends?.length || ingredients?.length ? (
+                <AiOutlineClose
+                  className={styles.seachIconActive}
+                  onClick={handleSearchTagClean}
+                />
+              ) : (
+                <Tooltip direction="bottom" content="Voice search">
+                  <BsMic
+                    className={`${styles.mic} ${isMicOn ? styles.active : ""}`}
+                    onClick={() => setIsMicOn(!isMicOn)}
+                  />
+                </Tooltip>
+              )}
+            </>
           )}
         </div>
       </div>
@@ -106,7 +144,9 @@ const SearchBar = () => {
                 ? "/images/compare-fill-icon.svg"
                 : "/icons/eclipse.svg"
             }
-            text={`Compare(${dbUser?.compareLength ? dbUser?.compareLength : 0})`}
+            text={`Compare(${
+              dbUser?.compareLength ? dbUser?.compareLength : 0
+            })`}
             disable={dbUser?.compareLength ? false : true}
             style={{
               backgroundColor: dbUser?.compareLength ? "inherit" : "#ececec",
