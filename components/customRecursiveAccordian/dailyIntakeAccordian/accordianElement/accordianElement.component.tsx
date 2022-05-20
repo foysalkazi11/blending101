@@ -39,7 +39,8 @@ const AccordianElement = ({
 
   const handleInput = (
     e: { target: { name: string; value: string } },
-    blendNutrientId: string
+    blendNutrientId: string,
+    dri: number
   ) => {
     let updatedObject = inputValue;
     updatedObject = {
@@ -49,7 +50,8 @@ const AccordianElement = ({
         ...updatedObject.goals,
         [blendNutrientId]: {
           goal: parseInt(e.target.value),
-          blendNutrientId: blendNutrientId,
+          blendNutrientId,
+          dri,
         },
       },
     };
@@ -72,9 +74,9 @@ const AccordianElement = ({
                 {elem[1]?.nutrientName}
               </div>
               <div className={styles.accordianDiv__tray__center}>
-                {parseFloat(elem[1]?.data?.value).toFixed(0) +
-                  " " +
-                  elem[1]?.data?.units}
+                {`${parseFloat(elem[1]?.data?.value).toFixed(
+                  0
+                )}${elem[1]?.data?.units?.toLowerCase()} `}
               </div>
               <div className={styles.accordianDiv__tray__right}>
                 <span className={styles.accordianDiv__tray__right__icon}>
@@ -84,11 +86,17 @@ const AccordianElement = ({
                   name={elem[1]?.nutrientName}
                   inputValue={
                     // @ts-ignore
-                    inputValue?.goals?.[elem[1]?.blendNutrientRef]?.goal ||
-                    parseFloat(elem[1]?.data?.value).toFixed(0)
+                    inputValue?.goals?.[elem[1]?.blendNutrientRef]?.goal
+                    // parseFloat(elem[1]?.data?.value).toFixed(0)
                   }
                   // @ts-ignore
-                  setInputValue={(e) => handleInput(e, elem[1].blendNutrientRef)}
+                  setInputValue={(e) =>
+                    handleInput(
+                      e,
+                      elem[1].blendNutrientRef,
+                      parseFloat(elem[1]?.data?.value)
+                    )
+                  }
                 />
                 <span className={styles.accordianDiv__tray__right__icon}>
                   {/* <FiInfo /> */}
@@ -104,7 +112,10 @@ const AccordianElement = ({
   return (
     <div>
       <div className={styles.centerElement}>
-        <div className={styles.centerElement__icon} onClick={handleAccordianClick}>
+        <div
+          className={styles.centerElement__icon}
+          onClick={handleAccordianClick}
+        >
           {collapseAccordian ? "-" : "+"}
         </div>
         <h3 className={styles.centerElement__mainHeading}>{title}</h3>

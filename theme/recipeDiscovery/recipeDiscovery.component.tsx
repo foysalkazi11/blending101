@@ -126,13 +126,9 @@ const RecipeDetails = () => {
                 : { transition: "all 0.5s" }
             }
           >
-            <SearchBar blends={blends} ingredients={ingredients} />
+            <SearchBar />
             {blends.length || ingredients.length || filters?.length ? (
-              <SearchtagsComponent
-                blends={blends}
-                ingredients={ingredients}
-                filters={filters}
-              />
+              <SearchtagsComponent />
             ) : null}
           </div>
 

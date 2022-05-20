@@ -13,7 +13,7 @@ type PersonalizationProps = {
   setUserData: any;
   toggle?: number;
   setToggle?: Dispatch<SetStateAction<number>>;
-  setProfileActiveTab?:any
+  setProfileActiveTab?: any;
   profileActiveTab?: any;
 };
 
@@ -23,7 +23,7 @@ const Personalization = ({
   toggle = 0,
   setToggle = () => {},
   setProfileActiveTab,
-  profileActiveTab
+  profileActiveTab,
 }: PersonalizationProps) => {
   const { personalization } = userData;
 
@@ -47,8 +47,9 @@ const Personalization = ({
           personalization: {
             ...pre?.personalization,
             [name]:
-              [...pre?.personalization[name]?.filter((item) => item !== value)] ||
-              "tempName",
+              [
+                ...pre?.personalization[name]?.filter((item) => item !== value),
+              ] || "tempName",
           },
         }));
       } else {
@@ -61,7 +62,10 @@ const Personalization = ({
           },
         }));
       }
-    } else if (name === "preExistingMedicalConditions" || name === "meditcation") {
+    } else if (
+      name === "preExistingMedicalConditions" ||
+      name === "meditcation"
+    ) {
       if (value) {
         setUserData((pre) => ({
           ...pre,
@@ -141,6 +145,8 @@ const Personalization = ({
             updateUserProfile={updateUserProfile}
             setUserData={setUserData}
             userData={userData}
+            setProfileActiveTab={setProfileActiveTab}
+            profileActiveTab={profileActiveTab}
           />
         );
     }
