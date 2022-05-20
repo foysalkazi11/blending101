@@ -11,7 +11,10 @@ import EDIT_CONFIGRATION_BY_ID from "../../../../gqlLib/user/mutations/editCofig
 import EDIT_USER_BY_ID from "../../../../gqlLib/user/mutations/editUserById";
 import { setLoading } from "../../../../redux/slices/utilitySlice";
 import imageUploadS3 from "../../../utility/imageUploadS3";
-import { setDbUser, setIsNewUseImage } from "../../../../redux/slices/userSlice";
+import {
+  setDbUser,
+  setIsNewUseImage,
+} from "../../../../redux/slices/userSlice";
 import notification from "../../../utility/reactToastifyNotification";
 import ButtonComponent from "../../../../theme/button/button.component";
 import { useRouter } from "next/router";
@@ -201,7 +204,7 @@ const Main = ({ userData, setUserData }: MainProps) => {
         })}
       </header>
       {renderUI()}
-      {activeTab === "notification" && toggle === 0 ? null : (
+      {activeTab === "personalization" && toggle === 0 ? null : (
         <div
           style={{
             width: "100%",
@@ -217,7 +220,6 @@ const Main = ({ userData, setUserData }: MainProps) => {
               borderRadius: "30px",
               height: "48px",
               width: "180px",
-              backgroundColor: colorToggle ? "" : "#d5d5d5",
             }}
             onClick={submitData}
           />
