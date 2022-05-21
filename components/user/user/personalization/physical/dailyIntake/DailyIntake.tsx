@@ -89,7 +89,8 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
         : {
             dri: parseFloat(dailyData?.getDailyByUserId?.calories?.value),
           },
-      bmi: inputValue?.bmi || dailyData?.getDailyByUserId?.bmi,
+      bmi:
+        inputValue?.bmi || parseFloat(dailyData?.getDailyByUserId?.bmi?.value),
     };
 
     try {
