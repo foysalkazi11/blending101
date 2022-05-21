@@ -82,7 +82,7 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
     });
 
     const obj = {
-      memberId: inputValue?.memberId,
+      memberId: inputValue?.memberId ? inputValue?.memberId : dbUser?._id,
       goals: [...nutrientsArr],
       calories: inputValue?.calories?.goal
         ? { ...inputValue?.calories }
@@ -99,7 +99,7 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
         },
       });
       setLoading(false);
-      reactToastifyNotification("info", "Profile Updated Successfully");
+      reactToastifyNotification("info", "Updated daily goals Successfully");
     } catch (error) {
       setLoading(false);
       reactToastifyNotification(
@@ -211,27 +211,26 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
           />
         </div>
       </div>
-      {toggle == 1 ? (
-        <div
+
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "40px",
+        }}
+      >
+        <ButtonComponent
+          type="primary"
+          value={loading ? "Updating ..." : "Update Goals"}
           style={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "40px",
+            borderRadius: "30px",
+            height: "48px",
+            width: "180px",
           }}
-        >
-          <ButtonComponent
-            type="primary"
-            value={loading ? "Updating ..." : "Update Goals"}
-            style={{
-              borderRadius: "30px",
-              height: "48px",
-              width: "180px",
-            }}
-            onClick={updateGoals}
-          />
-        </div>
-      ) : null}
+          onClick={updateGoals}
+        />
+      </div>
     </>
   );
 };
