@@ -84,8 +84,6 @@ const Physical = ({
   updateUserProfile,
   setUserData,
   userData,
-  setProfileActiveTab,
-  profileActiveTab,
 }: PhysicalProps) => {
   const { dbUser } = useAppSelector((state) => state?.user);
   const router = useRouter();
@@ -97,10 +95,11 @@ const Physical = ({
   const { isNewUseImage } = useAppSelector((state) => state?.user);
   const [measurementType, setMeasurementType] = useState("US");
   const [ageType, setAgeType] = useState("years");
-
   const [pregnant, setPregnant] = useState("");
   const isMounted = useRef(null);
   const [colorToggle, setColorToggle] = useState(false);
+  const [profileActiveTab, setProfileActiveTab] = useState(0);
+
   const handleYearsAndMonths = (userProfile) => {
     let value = {
       years: 0,
@@ -756,27 +755,26 @@ const Physical = ({
               </div>
             </div>
             {/* @ts-ignore */}
-            {toggle !== 1 && (
-              <div
+
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "40px",
+              }}
+            >
+              <ButtonComponent
+                type="primary"
+                value="Update Profile"
                 style={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                  marginTop: "40px",
+                  borderRadius: "30px",
+                  height: "48px",
+                  width: "180px",
                 }}
-              >
-                <ButtonComponent
-                  type="primary"
-                  value="Update Profile"
-                  style={{
-                    borderRadius: "30px",
-                    height: "48px",
-                    width: "180px",
-                  }}
-                  onClick={handleSubmit(submitData)}
-                />
-              </div>
-            )}
+                onClick={handleSubmit(submitData)}
+              />
+            </div>
           </>
         ) : (
           <DailyIntake
