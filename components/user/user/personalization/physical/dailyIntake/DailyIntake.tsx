@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import UPDATE_DAILY_GOALS from "../../../../../../gqlLib/dri/mutation/updateDailyGoals";
 import GET_DAILY_BY_USER_ID from "../../../../../../gqlLib/dri/query/getDailyByUserId";
 import GET_DAILY_GOALS from "../../../../../../gqlLib/dri/query/getDailyGoals";
-import { GET_ALL_BLEND_NUTRIENTS } from "../../../../../../gqlLib/recipeDiscovery/query/recipeDiscovery";
 import { useAppSelector } from "../../../../../../redux/hooks";
 import ButtonComponent from "../../../../../../theme/button/button.component";
 import CircularRotatingLoader from "../../../../../../theme/loader/circularRotatingLoader.component";
@@ -26,10 +25,13 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
     },
     goals: {},
   });
-  const { data: dailyData } = useQuery(GET_DAILY_BY_USER_ID, {
-    fetchPolicy: "network-only",
-    variables: { userId: dbUser?._id },
-  });
+  const { data: dailyData, loading: dailyDataLoading } = useQuery(
+    GET_DAILY_BY_USER_ID,
+    {
+      fetchPolicy: "network-only",
+      variables: { userId: dbUser?._id },
+    }
+  );
   const { data: dailyGoalData, loading: dailyGoalLoading } = useQuery(
     GET_DAILY_GOALS,
     {
@@ -46,11 +48,24 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
   } = dailyData?.getDailyByUserId || {};
 
   useEffect(() => {
+    if (!dailyDataLoading && dailyData?.getDailyByUserId) {
+      if (
+        parseFloat(dailyGoalData?.getDailyGoals?.bmi) !==
+        parseFloat(dailyData?.getDailyByUserId?.bmi?.value)
+      ) {
+        setInputValue((pre) => ({
+          ...pre,
+          bmi: Math?.round(dailyGoalData?.getDailyGoals?.bmi),
+        }));
+      }
+    }
+  }, [dailyData?.getDailyByUserId]);
+
+  useEffect(() => {
     if (!dailyGoalLoading && dailyGoalData?.getDailyGoals) {
       let updatedObject = inputValue;
       updatedObject = {
         ...updatedObject,
-        bmi: dailyGoalData?.getDailyGoals?.bmi || null,
         calories: {
           dri: dailyGoalData?.getDailyGoals?.calories?.dri || null,
           goal: dailyGoalData?.getDailyGoals?.calories?.goal || null,
@@ -129,19 +144,6 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
     } else {
       setInputValue((prv) => ({ ...prv, [name]: parseFloat(value) }));
     }
-  };
-
-  const objectToArrayForGoals = (goalsObject) => {
-    let goalsArray = [];
-    if (Object?.keys(goalsObject)?.length > 0) {
-      Object?.entries(goalsObject)?.map((elem) => {
-        // @ts-ignore
-        if (elem[1]?.goal) {
-          goalsArray = [...goalsArray, elem[1]];
-        }
-      });
-    }
-    return goalsArray;
   };
 
   return (
