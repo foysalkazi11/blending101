@@ -289,26 +289,38 @@ const Center = ({
         </div>
         <div className={styles.counterBox}>
           <div className={styles.counter}>
-            <p>Servings : </p>
+            <p>Scaling : </p>
             <div className={styles.count}>
-              <button onClick={() => adjusterFunc("-")}>
+              <button
+                onClick={() => adjusterFunc(counter < 0 ? 0 : counter - 1)}
+              >
                 <MdRemove className={styles.icon} />
               </button>
-              <input
+              {/* <button
+                onClick={() => adjusterFunc(counter < 0 ? 0 : counter - 1)}
+              >
+                <MdRemove className={styles.icon} />
+              </button> */}
+
+              <p>{counter}</p>
+
+              {/* <input
                 className={styles.servings}
                 type="number"
                 value={counter}
                 onChange={(e) => inputTagValueHandler(e)}
                 min={1}
-              />
-              <button onClick={() => adjusterFunc("+")}>
+              /> */}
+              <button
+                onClick={() => adjusterFunc(counter === 0.5 ? 1 : counter + 1)}
+              >
                 <MdAdd className={styles.icon} />
               </button>
             </div>
           </div>
           <div className={styles.size}>
             <p>serving Size : </p>
-            <span>{Math.round(16 / counter)} 0z</span>
+            <span>{Math.round(16 * counter)} 0z</span>
           </div>
           <div className={styles.usMatric}>
             <span>US</span>
@@ -349,7 +361,10 @@ const Center = ({
                   ingredient?.ingredientId?._id ===
                     nutritionState[0].ingredientId?._id &&
                   singleElement === true ? (
-                    <div className={styles.iconGroup} style={{ display: "flex" }}>
+                    <div
+                      className={styles.iconGroup}
+                      style={{ display: "flex" }}
+                    >
                       <MdOutlineInfo
                         className={styles.icon}
                         onClick={() =>
