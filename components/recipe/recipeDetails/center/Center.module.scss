@@ -1,4 +1,4 @@
-$slider-height:220px;
+$slider-height: 220px;
 
 .header {
   display: flex;
@@ -177,7 +177,6 @@ $slider-height:220px;
       background-size: cover;
       filter: blur(5px);
       // position: absolute;
-
     }
 
     img {
@@ -289,7 +288,6 @@ $slider-height:220px;
     transform: scale(0.75);
   }
 
-
   &:hover {
     background-color: #fe5d1f !important;
   }
@@ -400,14 +398,8 @@ $slider-height:220px;
     flex: 1;
 
     p {
-      margin: 0;
-      color: #c4c4c4;
-      font-size: 15px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-width: 75px;
-      margin-right: 12px;
+      color: #ababab;
+      margin: 0 16px;
     }
 
     .count {
@@ -508,7 +500,6 @@ $slider-height:220px;
       align-self: center;
       padding: 16px;
       max-width: 85%;
-
 
       img {
         margin-right: 18px;
