@@ -20,6 +20,12 @@ const UpdatedCustomAccordion = ({
     dailyGoalsData = JSON?.parse(dailyGoalsData) || {};
   }
 
+  const calculateDailyPercentage = (
+    recipeNutrientValue: number,
+    dailyGoals: number
+  ) => {
+    return Math?.round((100 / dailyGoals) * recipeNutrientValue * counter);
+  };
   const populateAccordianData = (childrenFeild, firstChild) => {
     return (
       childrenFeild &&
@@ -28,6 +34,13 @@ const UpdatedCustomAccordion = ({
         const dailyDosePercentage =
           //@ts-ignore
           dailyGoalsData?.[itm[1]?.blendNutrientRefference?._id];
+
+        //@ts-ignore
+        const dailyGoals = dailyDosePercentage?.goal
+          ? //@ts-ignore
+            parseFloat(dailyDosePercentage?.goal)
+          : //@ts-ignore
+            parseFloat(dailyDosePercentage?.dri);
 
         const percentageFinalValue = parseFloat(
           //@ts-ignore
@@ -51,7 +64,13 @@ const UpdatedCustomAccordion = ({
                   //@ts-ignore
                   unit={itm[1]?.blendNutrientRefference?.units}
                   percentage={
-                    dailyDosePercentage ? `${percentageFinalValue} %` : ""
+                    dailyDosePercentage
+                      ? `${calculateDailyPercentage(
+                          //@ts-ignore
+                          parseFloat(itm[1]?.value),
+                          dailyGoals
+                        )} %`
+                      : ""
                   }
                   counter={counter}
                   /* @ts-ignore */
@@ -74,8 +93,15 @@ const UpdatedCustomAccordion = ({
                   value={itm[1]?.value}
                   //@ts-ignore
                   unit={itm[1]?.blendNutrientRefference?.units}
+                  //@ts-ignore
                   percentage={
-                    dailyDosePercentage ? `${percentageFinalValue} %` : ""
+                    dailyDosePercentage
+                      ? `${calculateDailyPercentage(
+                          //@ts-ignore
+                          parseFloat(itm[1]?.value),
+                          dailyGoals
+                        )} %`
+                      : ""
                   }
                   counter={counter}
                   /* @ts-ignore */
@@ -100,8 +126,15 @@ const UpdatedCustomAccordion = ({
                   value={itm[1]?.value}
                   //@ts-ignore
                   unit={itm[1]?.blendNutrientRefference?.units}
+                  //@ts-ignore
                   percentage={
-                    dailyDosePercentage ? `${percentageFinalValue} %` : ""
+                    dailyDosePercentage
+                      ? `${calculateDailyPercentage(
+                          //@ts-ignore
+                          parseFloat(itm[1]?.value),
+                          dailyGoals
+                        )} %`
+                      : ""
                   }
                   counter={counter}
                   /* @ts-ignore */
@@ -119,8 +152,15 @@ const UpdatedCustomAccordion = ({
                   value={itm[1]?.value}
                   //@ts-ignore
                   unit={itm[1]?.blendNutrientRefference?.units}
+                  //@ts-ignore
                   percentage={
-                    dailyDosePercentage ? `${percentageFinalValue} %` : ""
+                    dailyDosePercentage
+                      ? `${calculateDailyPercentage(
+                          //@ts-ignore
+                          parseFloat(itm[1]?.value),
+                          dailyGoals
+                        )} %`
+                      : ""
                   }
                   counter={counter}
                   /* @ts-ignore */

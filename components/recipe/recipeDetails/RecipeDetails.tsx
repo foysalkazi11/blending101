@@ -14,22 +14,17 @@ const RecipeDetails = ({
   singleElement,
   setsingleElement,
 }) => {
-  const [counter, setCounter] = useState(1);
+  const [counter, setCounter] = useState(presetNumber[1]);
   const counterHandler = (value) => {
     setCounter(Number(value));
   };
-  const adjusterFunc = (task) => {
-    let indexValue = presetNumber?.indexOf(counter);
-
-    if (task === "+") {
-      counter < presetNumber[presetNumber.length - 1] &&
-        setCounter(presetNumber[indexValue + 1]);
-      counter > presetNumber[presetNumber.length - 1] &&
-        setCounter(presetNumber[presetNumber.length - 1]);
-    }
-
-    if (task === "-") {
-      counter > 0.5 && setCounter(presetNumber[indexValue - 1]);
+  const adjusterFunc = (value) => {
+    if (value >= presetNumber?.length - 1) {
+      setCounter(presetNumber[presetNumber?.length - 1]);
+    } else if (value <= 0) {
+      setCounter(presetNumber[0]);
+    } else {
+      setCounter(presetNumber[value]);
     }
   };
 
@@ -57,7 +52,9 @@ const RecipeDetails = ({
               <LeftSide />
             </div>
             <div className={styles.recipeDetailsContainer_right}>
-              <div className={styles.recipeDetailsContainer__contentDiv__center}>
+              <div
+                className={styles.recipeDetailsContainer__contentDiv__center}
+              >
                 <Center
                   recipeData={recipeData}
                   counter={counter}
@@ -80,7 +77,8 @@ const RecipeDetails = ({
                   nutritionState={nutritionState}
                   setNutritionState={setNutritionState}
                   nutrientName={
-                    nutritionState && nutritionState[0]?.ingredientId?.ingredientName
+                    nutritionState &&
+                    nutritionState[0]?.ingredientId?.ingredientName
                   }
                   measurement={
                     nutritionState && nutritionState[0]?.selectedPortion?.name

@@ -66,8 +66,10 @@ const AccordComponent = ({
   const router = useRouter();
   let valueAndUnit = valueUnitConvertor(title, value, unit);
   const finalNutritionValue =
+    valueAndUnit &&
+    counter &&
     //@ts-ignore
-    valueAndUnit && counter && parseFloat(valueAndUnit?.value / counter).toFixed(0);
+    parseFloat(valueAndUnit?.value * counter).toFixed(0);
   const handleClickNutration = (id: string) => {
     router?.push(`/wiki/Nutrient/${id}`);
   };
@@ -122,7 +124,11 @@ const AccordComponent = ({
                         {title}
                       </h5>
                       {
-                        <p className={styles.valueUnit + " " + styles.alignCenter}>
+                        <p
+                          className={
+                            styles.valueUnit + " " + styles.alignCenter
+                          }
+                        >
                           {
                             //@ts-ignore
                             finalNutritionValue
@@ -153,7 +159,11 @@ const AccordComponent = ({
                         {title}
                       </h5>
                       {
-                        <p className={styles.valueUnit + " " + styles.alignCenter}>
+                        <p
+                          className={
+                            styles.valueUnit + " " + styles.alignCenter
+                          }
+                        >
                           {
                             //@ts-ignore
                             finalNutritionValue
