@@ -13,12 +13,14 @@ interface recursiveAccordianInterface {
   dataObject: object;
   counter?: number;
   showUser?: boolean;
+  servingSize?: number;
 }
 
 const UpdatedRecursiveAccordian = ({
   dataObject,
-  counter,
+  counter = 1,
   showUser = true,
+  servingSize = 1,
 }: recursiveAccordianInterface) => {
   //@ts-ignore
   const { user, dbUser } = useAppSelector((state) => state?.user);
@@ -27,7 +29,7 @@ const UpdatedRecursiveAccordian = ({
     fetchPolicy: "network-only",
     variables: { memberId: dbUser?._id },
   });
-  console.log({ dailyData });
+
   return (
     <>
       <div className={styles.nutritionHeader}>
@@ -90,6 +92,7 @@ const UpdatedRecursiveAccordian = ({
                 type={"mainHeading"}
                 counter={counter}
                 dailyGoalsData={dailyData?.getDailyGoals?.goals}
+                servingSize={servingSize}
               />
             );
           }
