@@ -24,6 +24,13 @@ import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoa
 import useGetDefaultPortionOfnutration from "../../../../customHooks/useGetDefaultPortionOfNutration";
 import { setActiveRecipeId } from "../../../../redux/slices/collectionSlice";
 import { setCurrentRecipeInfo } from "../../../../redux/slices/recipeSlice";
+import ToggleMenu from "../../../../theme/toggleMenu/ToggleMenu";
+
+const scaleMenu = [
+  { label: ".5x", value: 0.5 },
+  { label: "1x", value: 1 },
+  { label: "2x", value: 2 },
+];
 
 interface center {
   adjusterFunc: any;
@@ -54,7 +61,6 @@ const Center = ({
   const [ingredientId, setIngredientId] = useState("");
   const recipeDetails = recipeData;
   useGetDefaultPortionOfnutration(ingredientId);
-  console.log(recipeDetails);
 
   const PreviousButton = (prop) => {
     const { className, onClick } = prop;
@@ -290,33 +296,48 @@ const Center = ({
         <div className={styles.counterBox}>
           <div className={styles.counter}>
             <p>Scaling : </p>
-            <div className={styles.count}>
-              <button
+
+            <div className={styles.tab}>
+              {scaleMenu?.map((item, index) => {
+                return (
+                  <div
+                    key={item?.value}
+                    className={`${styles.menu} ${
+                      counter === item?.value ? styles.active : null
+                    }`}
+                    onClick={() => setCounter(item?.value)}
+                  >
+                    {item?.label}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* <button
                 onClick={() => adjusterFunc(counter < 0 ? 0 : counter - 1)}
               >
                 <MdRemove className={styles.icon} />
-              </button>
-              {/* <button
+              </button> */}
+            {/* <button
                 onClick={() => adjusterFunc(counter < 0 ? 0 : counter - 1)}
               >
                 <MdRemove className={styles.icon} />
               </button> */}
 
-              <p>{counter}</p>
+            {/* <p>{counter}</p> */}
 
-              {/* <input
+            {/* <input
                 className={styles.servings}
                 type="number"
                 value={counter}
                 onChange={(e) => inputTagValueHandler(e)}
                 min={1}
               /> */}
-              <button
+            {/* <button
                 onClick={() => adjusterFunc(counter === 0.5 ? 1 : counter + 1)}
               >
                 <MdAdd className={styles.icon} />
-              </button>
-            </div>
+              </button> */}
           </div>
           <div className={styles.size}>
             <p>serving Size : </p>

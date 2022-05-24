@@ -19,6 +19,7 @@ type CustomAccordionProps = {
   counter?: number;
   lastElement?: boolean;
   nutritionId?: string;
+  servingSize?: number;
 };
 
 const valueUnitConvertor = (title, value, unit) => {
@@ -57,9 +58,10 @@ const AccordComponent = ({
   value,
   percentage,
   unit,
-  counter,
+  counter = 1,
   lastElement,
   nutritionId = "",
+  servingSize = 1,
 }: CustomAccordionProps) => {
   const [expanded, setExpanded] = useState<boolean>(true);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -69,7 +71,7 @@ const AccordComponent = ({
     valueAndUnit &&
     counter &&
     //@ts-ignore
-    parseFloat(valueAndUnit?.value * counter).toFixed(0);
+    parseFloat((valueAndUnit?.value * counter) / servingSize).toFixed(0);
   const handleClickNutration = (id: string) => {
     router?.push(`/wiki/Nutrient/${id}`);
   };
@@ -129,12 +131,7 @@ const AccordComponent = ({
                             styles.valueUnit + " " + styles.alignCenter
                           }
                         >
-                          {
-                            //@ts-ignore
-                            finalNutritionValue
-                          }
-                          &nbsp;
-                          {valueAndUnit?.unit?.toLowerCase()}
+                          {`${finalNutritionValue}${valueAndUnit?.unit?.toLowerCase()}`}
                         </p>
                       }
                     </div>
@@ -164,12 +161,7 @@ const AccordComponent = ({
                             styles.valueUnit + " " + styles.alignCenter
                           }
                         >
-                          {
-                            //@ts-ignore
-                            finalNutritionValue
-                          }
-                          &nbsp;
-                          {valueAndUnit?.unit?.toLowerCase()}
+                          {`${finalNutritionValue}${valueAndUnit?.unit?.toLowerCase()}`}
                         </p>
                       }
                     </div>

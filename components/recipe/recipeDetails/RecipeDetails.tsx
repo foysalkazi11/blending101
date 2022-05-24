@@ -14,7 +14,7 @@ const RecipeDetails = ({
   singleElement,
   setsingleElement,
 }) => {
-  const [counter, setCounter] = useState(presetNumber[1]);
+  const [counter, setCounter] = useState(1);
   const counterHandler = (value) => {
     setCounter(Number(value));
   };

@@ -7,14 +7,16 @@ type CustomAccordionProps = {
   type?: string;
   counter?: number;
   dailyGoalsData: string;
+  servingSize?: number;
 };
 
 const UpdatedCustomAccordion = ({
   title,
   content,
   type,
-  counter,
+  counter = 1,
   dailyGoalsData,
+  servingSize = 1,
 }: CustomAccordionProps) => {
   if (dailyGoalsData) {
     dailyGoalsData = JSON?.parse(dailyGoalsData) || {};
@@ -24,8 +26,11 @@ const UpdatedCustomAccordion = ({
     recipeNutrientValue: number,
     dailyGoals: number
   ) => {
-    return Math?.round((100 / dailyGoals) * recipeNutrientValue * counter);
+    return Math?.round(
+      ((100 / dailyGoals) * recipeNutrientValue * counter) / servingSize
+    );
   };
+
   const populateAccordianData = (childrenFeild, firstChild) => {
     return (
       childrenFeild &&
@@ -69,12 +74,13 @@ const UpdatedCustomAccordion = ({
                           //@ts-ignore
                           parseFloat(itm[1]?.value),
                           dailyGoals
-                        )} %`
+                        )}%`
                       : ""
                   }
                   counter={counter}
                   /* @ts-ignore */
                   nutritionId={itm[1]?.blendNutrientRefference?._id}
+                  servingSize={servingSize}
                 >
                   {
                     //@ts-ignore
@@ -100,12 +106,13 @@ const UpdatedCustomAccordion = ({
                           //@ts-ignore
                           parseFloat(itm[1]?.value),
                           dailyGoals
-                        )} %`
+                        )}%`
                       : ""
                   }
                   counter={counter}
                   /* @ts-ignore */
                   nutritionId={itm[1]?.blendNutrientRefference?._id}
+                  servingSize={servingSize}
                 >
                   {
                     //@ts-ignore
@@ -133,12 +140,13 @@ const UpdatedCustomAccordion = ({
                           //@ts-ignore
                           parseFloat(itm[1]?.value),
                           dailyGoals
-                        )} %`
+                        )}%`
                       : ""
                   }
                   counter={counter}
                   /* @ts-ignore */
                   nutritionId={itm[1]?.blendNutrientRefference?._id}
+                  servingSize={servingSize}
                 />
               </div>
             );
@@ -159,12 +167,13 @@ const UpdatedCustomAccordion = ({
                           //@ts-ignore
                           parseFloat(itm[1]?.value),
                           dailyGoals
-                        )} %`
+                        )}%`
                       : ""
                   }
                   counter={counter}
                   /* @ts-ignore */
                   nutritionId={itm[1]?.blendNutrientRefference?._id}
+                  servingSize={servingSize}
                 />
               </div>
             );
@@ -173,9 +182,7 @@ const UpdatedCustomAccordion = ({
       })
     );
   };
-  //@ts-ignore
-  console.log(dailyGoalsData, "asdfasfdj");
-  console.log({ content });
+
   return (
     content && (
       <AccordComponent
@@ -183,6 +190,7 @@ const UpdatedCustomAccordion = ({
         type={type}
         counter={counter}
         key={title + Date.now()}
+        servingSize={servingSize}
       >
         {populateAccordianData(content, true)}
       </AccordComponent>
