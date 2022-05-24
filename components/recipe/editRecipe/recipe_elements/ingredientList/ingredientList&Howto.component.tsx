@@ -207,11 +207,13 @@ const IngredientList = ({
         <div className={styles.blending__ingredients}>
           <div className={styles.servings}>
             <div className={styles.servings__adjuster}>
-              <span className={styles.servings__adjuster__name}>Servings :</span>
+              <span className={styles.servings__adjuster__name}>
+                Servings :
+              </span>
               <div
                 className={styles.servings__adjuster__icondiv}
                 onClick={() => {
-                  adjusterFunc("-");
+                  adjusterFunc(servingCounter - 1);
                 }}
               >
                 <RemoveSharpIcon />
@@ -222,7 +224,7 @@ const IngredientList = ({
               <div
                 className={styles.servings__adjuster__icondiv}
                 onClick={() => {
-                  adjusterFunc("+");
+                  adjusterFunc(servingCounter + 1);
                 }}
               >
                 <AddSharpIcon />
@@ -233,7 +235,7 @@ const IngredientList = ({
                 Servings Size :
               </span>
               <span className={styles.servings__size__score}>
-                {Math.round(16 / servingCounter)}&nbsp;oz
+                {Math.round(16 * servingCounter)}&nbsp;oz
               </span>
             </div>
             <div className={styles.servings__units}>
@@ -304,7 +306,8 @@ const IngredientList = ({
                                         parseFloat(
                                           // @ts-ignore
                                           (100 /
-                                            elem?.portions[0].meausermentWeight) *
+                                            elem?.portions[0]
+                                              .meausermentWeight) *
                                             servingCounter
                                         ).toFixed(1)
                                       )}
@@ -362,7 +365,9 @@ const IngredientList = ({
                                 }
                               >
                                 <MdOutlineInfo
-                                  className={styles.ingredients__iconTray__icons}
+                                  className={
+                                    styles.ingredients__iconTray__icons
+                                  }
                                   // onClick={() =>
                                   //   setIngredientId(ingredient?.ingredientId?._id)
                                   // }
@@ -373,7 +378,9 @@ const IngredientList = ({
                                   elem._id === nutritionState?._id ? (
                                     <BiBarChart
                                       style={{ color: "#fe5d1f" }}
-                                      className={styles.ingredients__iconTray__icons}
+                                      className={
+                                        styles.ingredients__iconTray__icons
+                                      }
                                       onClick={() => {
                                         setSingleElement(!singleElement);
                                         handleSingleIngredient(elem);
@@ -382,7 +389,9 @@ const IngredientList = ({
                                   ) : (
                                     <BiBarChart
                                       // style={{ color: "#fe5d1f" }}
-                                      className={styles.ingredients__iconTray__icons}
+                                      className={
+                                        styles.ingredients__iconTray__icons
+                                      }
                                       onClick={() => {
                                         handleSingleIngredient(elem);
                                         setSingleElement(true);
@@ -535,7 +544,9 @@ const IngredientList = ({
                                 onClick={() => removeStep(elem.id)}
                               >
                                 <div
-                                  className={styles.how__to__steps__li__bin__imgDiv}
+                                  className={
+                                    styles.how__to__steps__li__bin__imgDiv
+                                  }
                                 >
                                   <Image
                                     src={"/icons/noun_Delete_1447966.svg"}
@@ -555,7 +566,9 @@ const IngredientList = ({
                       <CircularRotatingLoader />
                     </div>
                   )}
-                  <div style={{ listStyle: "none" }}>{provided.placeholder}</div>
+                  <div style={{ listStyle: "none" }}>
+                    {provided.placeholder}
+                  </div>
                 </ol>
               )}
             </Droppable>

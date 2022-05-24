@@ -12,6 +12,7 @@ import {
 import { MdOutlineClose } from "react-icons/md";
 import CircularRotatingLoader from "../../theme/loader/circularRotatingLoader.component";
 import { presetNumber } from "../utility/numbersForServingNumber";
+import RightHeader from "../recipe/addRecipe/header/right_header/right_header.component";
 
 interface RightTrayInterface {
   nutritionTrayData?: any;
@@ -20,10 +21,11 @@ interface RightTrayInterface {
   setSingleElement?: any;
   nutritionState?: any;
   setNutritionState?: any;
-  counter?: any;
+  counter?: number;
   counterHandler?: string;
   nutrientName?: string;
   measurement?: string;
+  isComeFormRecipePage?: boolean;
 }
 
 const RightTray = ({
@@ -35,6 +37,7 @@ const RightTray = ({
   counter,
   nutrientName,
   measurement,
+  isComeFormRecipePage = false,
 }: RightTrayInterface) => {
   const selectedIngredientsList = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedIngredientsList
@@ -54,21 +57,35 @@ const RightTray = ({
 
   return (
     <div>
+      <RightHeader />
       <div className={styles.right}>
         <div className={styles.right__headerDiv}>
           <div className={styles.right__title}>Nutrition</div>
           {!singleElement && (
             <div className={styles.right__counterTray}>
               <div className={styles.right__counterTray__counter}>
-                <input
-                  className={styles.right__counterTray__counter__input}
-                  type="number"
-                  value={servingSize}
-                  min={1}
-                  onChange={(e) => {
-                    setServingSize(parseInt(e?.target?.value));
-                  }}
-                />
+                {isComeFormRecipePage ? (
+                  <input
+                    className={styles.right__counterTray__counter__input}
+                    type="number"
+                    value={counter}
+                    min={1}
+                    onChange={(e) => {
+                      adjusterFunc(parseInt(e?.target?.value));
+                    }}
+                  />
+                ) : (
+                  <input
+                    className={styles.right__counterTray__counter__input}
+                    type="number"
+                    value={servingSize}
+                    min={1}
+                    onChange={(e) => {
+                      setServingSize(parseInt(e?.target?.value));
+                    }}
+                  />
+                )}
+
                 {/* <div className={styles.right__counterTray__counter__icons}>
                   <div
                     className={styles.right__counterTray__counter__icons__arrow}
@@ -138,8 +155,8 @@ const RightTray = ({
           {nutritionTrayData ? (
             <UpdatedRecursiveAccordian
               dataObject={nutritionTrayData}
-              counter={counter}
-              servingSize={servingSize}
+              counter={isComeFormRecipePage ? 1 : counter}
+              servingSize={isComeFormRecipePage ? 1 : servingSize}
             />
           ) : (
             <div style={{ marginTop: "10px" }}>
