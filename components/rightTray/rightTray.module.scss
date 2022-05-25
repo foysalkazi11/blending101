@@ -101,10 +101,18 @@
   &__counterTray {
     display: flex;
     padding: 0px 18px;
+    display: flex;
+    align-items: center;
+
+    .servings {
+      font-size: 17px;
+      font-weight: 600;
+      margin-right: 10px;
+    }
 
     &__counter {
       @extend %counterTray;
-      border-radius: 2px;
+      border-radius: 2px !important;
       border: 1px solid #ececec;
       width: 16%;
 
