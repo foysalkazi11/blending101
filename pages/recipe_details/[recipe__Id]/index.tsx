@@ -1,4 +1,4 @@
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import RecipeDetails from "../../../components/recipe/recipeDetails/RecipeDetails";
 import {
@@ -14,15 +14,19 @@ const Index = () => {
   const [nutritionState, setNutritionState] = useState(null);
   const [singleElement, setsingleElement] = useState(false);
   const { dbUser } = useAppSelector((state) => state?.user);
-  const [getARecipe, { data: recipeData }] = useLazyQuery(GET_RECIPE, {
+  const { data: recipeData, loading: recipeLoading } = useQuery(GET_RECIPE, {
     fetchPolicy: "network-only",
     variables: { recipeId: recipe__Id, userId: dbUser?._id },
   });
+  const [
+    getBlendNutritionBasedOnRecipe,
+    { loading: gettingNutritionData, data: nutritionData },
+  ] = useLazyQuery(GET_NUTRITION(nutritionState));
+
   useEffect(() => {
-    getARecipe();
-    if (recipeData) {
+    if (!recipeLoading && recipeData?.getARecipe) {
       setNutritionState(recipeData?.getARecipe?.ingredients);
-      fetchRecipe();
+      getBlendNutritionBasedOnRecipe();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recipeData]);
@@ -34,14 +38,6 @@ const Index = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nutritionState, singleElement]);
 
-  const [
-    getBlendNutritionBasedOnRecipe,
-    { loading: gettingNutritionData, data: nutritionData },
-  ] = useLazyQuery(GET_NUTRITION(nutritionState));
-
-  const fetchRecipe = () => {
-    getBlendNutritionBasedOnRecipe();
-  };
   const recipeBasedNutrition = nutritionData?.getBlendNutritionBasedOnRecipexxx;
 
   return (

@@ -62,6 +62,8 @@ const Center = ({
   const recipeDetails = recipeData;
   useGetDefaultPortionOfnutration(ingredientId);
 
+  console.log(recipeDetails);
+
   const PreviousButton = (prop) => {
     const { className, onClick } = prop;
     return (
@@ -357,7 +359,19 @@ const Center = ({
                   key={index + "ingredients_recipeDetails"}
                 >
                   <div className={styles.leftSide}>
-                    <img src="/images/5-2-avocado-png-hd.png" alt="icon" />
+                    {ingredient?.ingredientId?.featuredImage ||
+                    ingredient?.ingredientId?.images?.length ? (
+                      <img
+                        src={
+                          ingredient?.ingredientId?.featuredImage ||
+                          ingredient?.ingredientId?.images[0]
+                        }
+                        alt="icon"
+                      />
+                    ) : (
+                      <img src="/images/5-2-avocado-png-hd.png" alt="icon" />
+                    )}
+
                     <div>
                       {`${ingredient?.selectedPortion?.quantity * counter}
                       ${ingredient.selectedPortion.name} `}

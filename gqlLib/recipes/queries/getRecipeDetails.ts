@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_RECIPE = gql`
-  query GetARecipe($userId: String!, $recipeId: String!) {
-    getARecipe(userId: $userId, recipeId: $recipeId) {
+  query GetARecipe($recipeId: String!, $userId: String) {
+    getARecipe(recipeId: $recipeId, userId: $userId) {
       _id
       name
       prepTime
@@ -21,31 +21,37 @@ export const GET_RECIPE = gql`
         ingredientId {
           ingredientName
           _id
+          images
+          featuredImage
         }
-        selectedPortion {
-          name
-          quantity
-          gram
-        }
+
         portions {
           name
           gram
           default
+          quantity
+        }
+        weightInGram
+        selectedPortion {
+          name
+          quantity
+          gram
         }
       }
       image {
         image
         default
       }
-      notes
+      servingSize
       addedToCompare
+      notes
     }
   }
 `;
 
 export const GET_A_RECIPE_FOR_EDIT_RECIPE = gql`
-  query GetARecipe($recipeId: String!,$userId: String!) {
-    getARecipe(recipeId: $recipeId,userId:$userId) {
+  query GetARecipe($recipeId: String!, $userId: String!) {
+    getARecipe(recipeId: $recipeId, userId: $userId) {
       _id
       name
       prepTime

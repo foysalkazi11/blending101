@@ -15,9 +15,9 @@ import {
 } from "../../../../../redux/edit_recipe/editRecipeStates";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import CircularRotatingLoader from "../../../../../theme/loader/circularRotatingLoader.component";
-import { MdOutlineInfo } from "react-icons/md";
+import { MdOutlineDelete, MdOutlineInfo } from "react-icons/md";
 import { BiBarChart } from "react-icons/bi";
-import { BsCartPlus } from "react-icons/bs";
+import useGetDefaultPortionOfnutration from "../../../../../customHooks/useGetDefaultPortionOfNutration";
 
 type IngredientListPorps = {
   recipeInstructions?: string[];
@@ -27,6 +27,7 @@ type IngredientListPorps = {
   setSingleElement: any;
   nutritionState: object;
   setNutritionState: any;
+  calculatedIngOz?: number;
 };
 
 const IngredientList = ({
@@ -37,6 +38,7 @@ const IngredientList = ({
   setSingleElement,
   nutritionState,
   setNutritionState,
+  calculatedIngOz = 0,
 }: IngredientListPorps) => {
   const dispatch = useAppDispatch();
 
@@ -44,10 +46,13 @@ const IngredientList = ({
   const [inputValue, setInputValue] = useState("");
   const [inputIngredientValue, setInputIngredientValue] = useState("");
   const [suggestedIngredients, setSuggestedIngredients] = useState([]);
+  const [ingredientId, setIngredientId] = useState("");
+  useGetDefaultPortionOfnutration(ingredientId);
 
   const selectedIngredientsList = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedIngredientsList
   );
+
   const removeIngredient = (id) => {
     let updated_list = selectedIngredientsList?.filter((elem) => {
       return id !== elem?._id;
@@ -235,7 +240,7 @@ const IngredientList = ({
                 Servings Size :
               </span>
               <span className={styles.servings__size__score}>
-                {Math.round(16 * servingCounter)}&nbsp;oz
+                {calculatedIngOz}&nbsp;oz
               </span>
             </div>
             <div className={styles.servings__units}>
@@ -275,29 +280,28 @@ const IngredientList = ({
                                   className={styles.ingredients__drag}
                                 />
                               </div>
-                              {elem.featuredImage !== null ? (
-                                <div className={styles.ingredients__icons}>
+                              <div className={styles.ingredients__icons}>
+                                {elem.featuredImage || elem.images?.length ? (
                                   <Image
-                                    src={elem.featuredImage}
+                                    src={elem.featuredImage || elem.images[0]}
                                     alt="Picture will load soon"
                                     objectFit="contain"
                                     layout="fill"
                                   />
-                                </div>
-                              ) : (
-                                <div className={styles.ingredients__icons}>
+                                ) : (
                                   <Image
                                     src={"/food/Dandelion.png"}
                                     alt="Picture will load soon"
                                     objectFit="contain"
                                     layout="fill"
                                   />
-                                </div>
-                              )}
+                                )}
+                              </div>
                               {/* to create ingredients lists  */}
                               <div className={styles.ingredients__text}>
                                 <span>
-                                  {elem.portions[0].meausermentWeight ===
+                                  1
+                                  {/* {elem.portions[0].meausermentWeight ===
                                   "Quantity not specified"
                                     ? 1
                                     : // @ts-ignore
@@ -305,12 +309,11 @@ const IngredientList = ({
                                         // @ts-ignore
                                         parseFloat(
                                           // @ts-ignore
-                                          (100 /
-                                            elem?.portions[0]
-                                              .meausermentWeight) *
-                                            servingCounter
+                                          100 /
+                                            elem?.portions[0].meausermentWeight
+                                          // servingCounter
                                         ).toFixed(1)
-                                      )}
+                                      )} */}
                                   &nbsp;
                                 </span>
                                 <span>
@@ -368,9 +371,7 @@ const IngredientList = ({
                                   className={
                                     styles.ingredients__iconTray__icons
                                   }
-                                  // onClick={() =>
-                                  //   setIngredientId(ingredient?.ingredientId?._id)
-                                  // }
+                                  onClick={() => setIngredientId(elem._id)}
                                 />
 
                                 {
@@ -388,7 +389,6 @@ const IngredientList = ({
                                     />
                                   ) : (
                                     <BiBarChart
-                                      // style={{ color: "#fe5d1f" }}
                                       className={
                                         styles.ingredients__iconTray__icons
                                       }
@@ -399,8 +399,14 @@ const IngredientList = ({
                                     />
                                   )
                                 }
+                                <MdOutlineDelete
+                                  className={
+                                    styles.ingredients__iconTray__icons
+                                  }
+                                  onClick={() => removeIngredient(elem?._id)}
+                                />
 
-                                <div className={styles.ingredients__bin}>
+                                {/* <div className={styles.ingredients__bin}>
                                   <Image
                                     src={"/icons/noun_Delete_1447966.svg"}
                                     alt=""
@@ -408,7 +414,7 @@ const IngredientList = ({
                                     objectFit="contain"
                                     onClick={() => removeIngredient(elem?._id)}
                                   />
-                                </div>
+                                </div> */}
                               </div>
                             </li>
                           )}
