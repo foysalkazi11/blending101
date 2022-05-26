@@ -1,20 +1,20 @@
-import React, { useRef, useState, useEffect } from "react";
-import styles from "./SearchBar.module.scss";
-import { BiSearch } from "react-icons/bi";
-import { FiFilter } from "react-icons/fi";
-import { BsMic, BsSoundwave, BsSearch } from "react-icons/bs";
-import { AiOutlineClose } from "react-icons/ai";
-import RecipeDiscoverButton from "../../button/recipeDiscoverButton/RecipeDiscoverButton";
-import AddCircleOutlineIcon from "../../../public/icons/add_circle_outline_black_36dp.svg";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import React, { useRef, useState, useEffect } from 'react';
+import styles from './SearchBar.module.scss';
+import { BiSearch } from 'react-icons/bi';
+import { FiFilter } from 'react-icons/fi';
+import { BsMic, BsSoundwave, BsSearch } from 'react-icons/bs';
+import { AiOutlineClose } from 'react-icons/ai';
+import RecipeDiscoverButton from '../../button/recipeDiscoverButton/RecipeDiscoverButton';
+import AddCircleOutlineIcon from '../../../public/icons/add_circle_outline_black_36dp.svg';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import {
   setIngredients,
   setOpenFilterTray,
   setBlendTye,
-} from "../../../redux/slices/sideTraySlice";
-import useOnClickOutside from "../../../components/utility/useOnClickOutside";
-import { useRouter } from "next/router";
-import Tooltip from "../../toolTip/CustomToolTip";
+} from '../../../redux/slices/sideTraySlice';
+import useOnClickOutside from '../../../components/utility/useOnClickOutside';
+import { useRouter } from 'next/router';
+import Tooltip from '../../toolTip/CustomToolTip';
 
 interface searchBarProps {
   blends: any[];
@@ -25,11 +25,11 @@ const SearchBar = () => {
   const router = useRouter();
   const [isInputFocus, setIsInputFocus] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState('');
   const [isMicOn, setIsMicOn] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { openFilterTray, blends, ingredients } = useAppSelector(
-    (state) => state?.sideTray
+    (state) => state?.sideTray,
   );
   const { dbUser } = useAppSelector((state) => state?.user);
   const dispatch = useAppDispatch();
@@ -42,7 +42,7 @@ const SearchBar = () => {
   };
 
   const handleClean = () => {
-    setInput("");
+    setInput('');
     setIsSubmit(false);
     setIsInputFocus(false);
     // inputRef?.current?.focus();
@@ -64,7 +64,7 @@ const SearchBar = () => {
     str = [
       ...blends?.map((item) => `${item?.title}`),
       ...ingredients?.map((item) => `${item?.title}`),
-    ]?.join(", ");
+    ]?.join(', ');
     setInput(str);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blends, ingredients]);
@@ -75,13 +75,13 @@ const SearchBar = () => {
         <div
           className={styles.filterIconContainer}
           style={
-            openFilterTray ? { marginRight: "10px", paddingRight: "20px" } : {}
+            openFilterTray ? { marginRight: '10px', paddingRight: '20px' } : {}
           }
         >
           <Tooltip content="Filter" direction="bottom">
             <FiFilter
               className={`${styles.filterIcon} ${
-                openFilterTray ? styles.active : ""
+                openFilterTray ? styles.active : ''
               }`}
               onClick={() => dispatch(setOpenFilterTray(!openFilterTray))}
             />
@@ -95,9 +95,9 @@ const SearchBar = () => {
           )}
           <form onSubmit={handleSubmit}>
             <input
-              style={openFilterTray ? { width: "30vw", minWidth: "200px" } : {}}
+              style={openFilterTray ? { width: '30vw', minWidth: '200px' } : {}}
               disabled={isMicOn}
-              placeholder={isMicOn ? "Speak" : "Search"}
+              placeholder={isMicOn ? 'Speak' : 'Search'}
               value={input}
               onChange={(e) => setInput(e?.target?.value)}
               onFocus={() => setIsInputFocus(true)}
@@ -129,7 +129,7 @@ const SearchBar = () => {
               ) : (
                 <Tooltip direction="bottom" content="Voice search">
                   <BsMic
-                    className={`${styles.mic} ${isMicOn ? styles.active : ""}`}
+                    className={`${styles.mic} ${isMicOn ? styles.active : ''}`}
                     onClick={() => setIsMicOn(!isMicOn)}
                   />
                 </Tooltip>
@@ -138,27 +138,27 @@ const SearchBar = () => {
           )}
         </div>
       </div>
-      <div style={{ marginLeft: "40px" }} className={styles.buttonContainer}>
+      <div style={{ marginLeft: '40px' }} className={styles.buttonContainer}>
         <Tooltip content="Compare recipe" direction="bottom">
           <RecipeDiscoverButton
             image={
               dbUser?.compareLength
-                ? "/images/compare-fill-icon.svg"
-                : "/icons/eclipse.svg"
+                ? '/images/compare-fill-icon.svg'
+                : '/icons/eclipse.svg'
             }
             text={`Compare(${
               dbUser?.compareLength ? dbUser?.compareLength : 0
             })`}
             disable={dbUser?.compareLength ? false : true}
             style={{
-              backgroundColor: dbUser?.compareLength ? "inherit" : "#ececec",
+              backgroundColor: dbUser?.compareLength ? 'inherit' : '#ececec',
             }}
             handleClick={() => router.push(`/recipe/compare`)}
           />
         </Tooltip>
       </div>
 
-      <div style={{ marginLeft: "30px" }} className={styles.buttonContainer}>
+      <div style={{ marginLeft: '30px' }} className={styles.buttonContainer}>
         <Tooltip content="Add recipe" direction="bottom">
           <RecipeDiscoverButton
             Icon={AddCircleOutlineIcon}

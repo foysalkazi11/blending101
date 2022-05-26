@@ -273,7 +273,6 @@ export default function DatacardComponent({
   };
 
   return (
-    <>
       <div className={styles.datacard}>
         <div className={styles.datacard__inner}>
           <div className={styles.datacard__body}>
@@ -376,6 +375,5 @@ export default function DatacardComponent({
           </div>
         </div>
       </div>
-    </>
   );
 }
