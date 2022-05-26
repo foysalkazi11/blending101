@@ -13,14 +13,13 @@ interface searchtagsComponentProps {
   filters: any[];
 }
 
-export default function SearchtagsComponent({
-  blends,
-  filters,
-  ingredients,
-}: any) {
+export default function SearchtagsComponent() {
   const category = useAppSelector((state) => state.sideTray.category);
   const dispatch = useAppDispatch();
-
+  const { blends, ingredients, openFilterTray } = useAppSelector(
+    (state) => state.sideTray,
+  );
+  const { filters } = useAppSelector((state) => state?.filterRecipe);
   const handleIngredientClick = (item) => {
     const blendz = handleFilterClick(ingredients, item);
     dispatch(setIngredients(blendz));

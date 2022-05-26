@@ -17,11 +17,11 @@ const DailyIntakeAccordian = ({
   return (
     <>
       {recursiveObject &&
-        Object?.entries(recursiveObject)?.map((elem) => {
+        Object?.entries(recursiveObject)?.map((elem, i) => {
           if (elem[0] !== "__typename") {
             return (
               <AccordianElement
-                key={`${elem}`}
+                key={`${elem[0]}` + i}
                 inputValue={inputValue}
                 setInputValue={setInputValue}
                 title={elem[0]}

@@ -23,6 +23,7 @@ interface editRecipe {
   selectedBLendCategory: string;
   editARecipeFunction: any;
   isFetching: boolean;
+  calculatedIngOz?: number;
 }
 
 const EditRecipePage = ({
@@ -34,6 +35,7 @@ const EditRecipePage = ({
   selectedBLendCategory,
   editARecipeFunction,
   isFetching,
+  calculatedIngOz = 0,
 }: editRecipe) => {
   const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
   const dispatch = useAppDispatch();
@@ -43,19 +45,11 @@ const EditRecipePage = ({
   const [nutritionState, setNutritionState] = useState(null);
   const [singleElement, setSingleElement] = useState(false);
 
-  const adjusterFunc = (task) => {
-    let indexValue = presetNumber?.indexOf(servingCounter);
-
-    if (task === "+") {
-      servingCounter < presetNumber[presetNumber.length - 1] &&
-        dispatch(setServingCounter(presetNumber[indexValue + 1]));
-      servingCounter > presetNumber[presetNumber.length - 1] &&
-        dispatch(setServingCounter(presetNumber[presetNumber.length - 1]));
-    }
-
-    if (task === "-") {
-      servingCounter > 0.5 &&
-        dispatch(setServingCounter(presetNumber[indexValue - 1]));
+  const adjusterFunc = (value) => {
+    if (value < 1) {
+      dispatch(setServingCounter(1));
+    } else {
+      dispatch(setServingCounter(value));
     }
   };
 
@@ -120,10 +114,10 @@ const EditRecipePage = ({
             singleElement={singleElement}
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}
+            calculatedIngOz={calculatedIngOz}
           />
         </div>
         <div className={styles.right__main}>
-          <RightHeader />
           <RightTray
             counter={servingCounter}
             nutritionTrayData={nutritionTrayData}
@@ -138,6 +132,8 @@ const EditRecipePage = ({
                 .measurement
             }
             nutrientName={nutritionState?.ingredientName}
+            isComeFormRecipePage={true}
+            calculatedIngOz={calculatedIngOz}
           />
         </div>
       </div>

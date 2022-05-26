@@ -5,28 +5,31 @@ import styles from "./updatedRecursiveAccordian.module.scss";
 import Image from "next/image";
 import { FaRegUser } from "react-icons/fa";
 import { useRouter } from "next/router";
-import {
-  GET_DAILY_BY_USER_ID,
-  GET_DAILY_GOALS,
-} from "../../gqlLib/user/mutations/query/getDaily";
+import { GET_DAILY_BY_USER_ID } from "../../gqlLib/user/mutations/query/getDaily";
 import { useQuery } from "@apollo/client";
+import GET_DAILY_GOALS from "../../gqlLib/dri/query/getDailyGoals";
 
 interface recursiveAccordianInterface {
   dataObject: object;
   counter?: number;
   showUser?: boolean;
+  servingSize?: number;
 }
 
 const UpdatedRecursiveAccordian = ({
   dataObject,
-  counter,
+  counter = 1,
   showUser = true,
+  servingSize = 1,
 }: recursiveAccordianInterface) => {
   //@ts-ignore
   const { user, dbUser } = useAppSelector((state) => state?.user);
   const router = useRouter();
-  const { data: dailyData } = useQuery(GET_DAILY_GOALS(dbUser?._id));
-  console.log({ dataObject });
+  const { data: dailyData } = useQuery(GET_DAILY_GOALS, {
+    fetchPolicy: "network-only",
+    variables: { memberId: dbUser?._id },
+  });
+
   return (
     <>
       <div className={styles.nutritionHeader}>
@@ -52,7 +55,9 @@ const UpdatedRecursiveAccordian = ({
                       alt="prfile.png"
                       objectFit="contain"
                       layout="fill"
-                      onClick={() => router?.push("/user")}
+                      onClick={() =>
+                        router?.push("/user/?type=personalization&toggle=1")
+                      }
                     />
                   ) : (
                     <FaRegUser
@@ -87,6 +92,7 @@ const UpdatedRecursiveAccordian = ({
                 type={"mainHeading"}
                 counter={counter}
                 dailyGoalsData={dailyData?.getDailyGoals?.goals}
+                servingSize={servingSize}
               />
             );
           }

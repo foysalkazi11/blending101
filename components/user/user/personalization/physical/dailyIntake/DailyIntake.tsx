@@ -1,12 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
-import { GET_ALL_BLEND_NUTRIENTS } from "../../../../../../gqlLib/recipeDiscovery/query/recipeDiscovery";
-import { UPDATE_DAILY_GOALS } from "../../../../../../gqlLib/user/mutations/mutation/updateDailyGoals";
-import {
-  GET_DAILY_BY_USER_ID,
-  GET_DAILY_GOALS,
-} from "../../../../../../gqlLib/user/mutations/query/getDaily";
+import UPDATE_DAILY_GOALS from "../../../../../../gqlLib/dri/mutation/updateDailyGoals";
+import GET_DAILY_BY_USER_ID from "../../../../../../gqlLib/dri/query/getDailyByUserId";
+import GET_DAILY_GOALS from "../../../../../../gqlLib/dri/query/getDailyGoals";
 import { useAppSelector } from "../../../../../../redux/hooks";
 import ButtonComponent from "../../../../../../theme/button/button.component";
 import CircularRotatingLoader from "../../../../../../theme/loader/circularRotatingLoader.component";
@@ -16,105 +13,138 @@ import styles from "./DailyIntake.module.scss";
 import HeadingBox from "./headingBox/headingBox.component";
 import InputGoal from "./inputGoal/inputGoal.component";
 
-const DailyIntake = ({ colorToggle, setColorToggle }) => {
+const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
+  const { dbUser } = useAppSelector((state) => state?.user);
   const [loading, setLoading] = useState(false);
   const [inputValue, setInputValue] = useState({
-    memberId: "",
-    calories: "",
-    bmi: "",
+    memberId: dbUser?._id,
+    bmi: null,
+    calories: {
+      goal: null,
+      dri: null,
+    },
     goals: {},
   });
-  const { dbUser } = useAppSelector((state) => state?.user);
-  const { data: dailyData } = useQuery(GET_DAILY_BY_USER_ID(dbUser?._id), {
-    fetchPolicy: "network-only",
-  });
-  const { data: dailyGoalData } = useQuery(GET_DAILY_GOALS(dbUser?._id), {
-    fetchPolicy: "network-only",
-  });
+  const { data: dailyData, loading: dailyDataLoading } = useQuery(
+    GET_DAILY_BY_USER_ID,
+    {
+      fetchPolicy: "network-only",
+      variables: { userId: dbUser?._id },
+    }
+  );
+  const { data: dailyGoalData, loading: dailyGoalLoading } = useQuery(
+    GET_DAILY_GOALS,
+    {
+      fetchPolicy: "network-only",
+      variables: { memberId: dbUser?._id },
+    }
+  );
+  const [updateDailyGoals] = useMutation(UPDATE_DAILY_GOALS);
 
-  // const dailyChartData = dailyGoalData?.getDailyGoals;
-  // const {}=dailyData;
   const {
     bmi: bmiAccordianValue,
     calories: caloriesAccordianValue,
     nutrients: nutrientsAccordianValue,
   } = dailyData?.getDailyByUserId || {};
-  const {
-    bmi: bmiDailyValue,
-    calories: caloriesDailyValue,
-    goals: goalsDailyValue,
-  } = dailyGoalData?.getDailyGoals || {};
 
   useEffect(() => {
-    if (!inputValue) return;
-    let updatedObject = inputValue;
-    updatedObject = {
-      ...updatedObject,
-      memberId: dbUser?._id,
-    };
-    setInputValue(updatedObject);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dbUser?._id]);
+    if (!dailyDataLoading && dailyData?.getDailyByUserId) {
+      if (
+        parseFloat(dailyGoalData?.getDailyGoals?.bmi) !==
+        parseFloat(dailyData?.getDailyByUserId?.bmi?.value)
+      ) {
+        setInputValue((pre) => ({
+          ...pre,
+          bmi: Math?.round(dailyGoalData?.getDailyGoals?.bmi),
+        }));
+      }
+    }
+  }, [dailyData?.getDailyByUserId]);
 
   useEffect(() => {
-    if (!inputValue || !goalsDailyValue) return;
-    let updatedObject = inputValue;
-    updatedObject = {
-      ...updatedObject,
-      bmi: bmiDailyValue,
-      calories: caloriesDailyValue,
-      goals: JSON?.parse(goalsDailyValue),
-    };
-
-    setInputValue(updatedObject);
+    if (!dailyGoalLoading && dailyGoalData?.getDailyGoals) {
+      let updatedObject = inputValue;
+      updatedObject = {
+        ...updatedObject,
+        calories: {
+          dri: dailyGoalData?.getDailyGoals?.calories?.dri || null,
+          goal: dailyGoalData?.getDailyGoals?.calories?.goal || null,
+        },
+        goals: JSON?.parse(dailyGoalData?.getDailyGoals?.goals),
+      };
+      setInputValue(updatedObject);
+    }
   }, [dailyGoalData?.getDailyGoals]);
 
   const updateGoals = async () => {
     setLoading(true);
+    const { Energy, Minerals, Vitamins } =
+      dailyData?.getDailyByUserId?.nutrients;
+    let nutrientsArr = [...Energy, ...Minerals, ...Vitamins];
+
+    nutrientsArr = nutrientsArr?.map((item) => {
+      const findNut = inputValue?.goals[item?.blendNutrientRef];
+
+      if (findNut) {
+        return findNut;
+      } else {
+        return {
+          blendNutrientId: item?.blendNutrientRef,
+          //@ts-ignore
+          dri: parseFloat(item?.data?.value),
+        };
+      }
+    });
+
+    const obj = {
+      memberId: inputValue?.memberId ? inputValue?.memberId : dbUser?._id,
+      goals: [...nutrientsArr],
+      calories: inputValue?.calories?.goal
+        ? { ...inputValue?.calories }
+        : {
+            dri: parseFloat(dailyData?.getDailyByUserId?.calories?.value),
+          },
+      bmi:
+        inputValue?.bmi || parseFloat(dailyData?.getDailyByUserId?.bmi?.value),
+    };
+
     try {
-      await updateDailyGoals();
+      await updateDailyGoals({
+        variables: {
+          data: { ...obj },
+        },
+      });
       setLoading(false);
-      reactToastifyNotification("info", "Profile Updated Successfully");
+      reactToastifyNotification("info", "Updated daily goals Successfully");
     } catch (error) {
       setLoading(false);
-      reactToastifyNotification("error", "Something Went Wrong");
+      reactToastifyNotification(
+        "error",
+        error?.message || "Something went wrong"
+      );
 
       console.log(error.message);
     }
     setColorToggle(true);
+    setLoading(false);
   };
 
-  const handleInput = (e: { target: { name: string; value: string } }) => {
-    let updatedObject = inputValue;
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e?.target;
 
-    updatedObject = {
-      ...updatedObject,
-      [e.target.name]: parseInt(e.target.value),
-    };
-    setInputValue(updatedObject);
-  };
-
-  const objectToArrayForGoals = (goalsObject) => {
-    let goalsArray = [];
-    if (Object?.keys(goalsObject)?.length > 0) {
-      Object?.entries(goalsObject)?.map((elem) => {
-        // @ts-ignore
-        if (elem[1]?.goal) {
-          goalsArray = [...goalsArray, elem[1]];
-        }
-      });
+    if (name === "calories") {
+      setInputValue((prv) => ({
+        ...prv,
+        calories: {
+          ...prv?.calories,
+          dri: parseFloat(dailyData?.getDailyByUserId?.calories?.value),
+          goal: parseFloat(value),
+        },
+      }));
+    } else {
+      setInputValue((prv) => ({ ...prv, [name]: parseFloat(value) }));
     }
-    return goalsArray;
   };
-
-  const [updateDailyGoals] = useMutation(
-    UPDATE_DAILY_GOALS({
-      memberId: dbUser?._id,
-      calories: inputValue.calories || 0,
-      bmi: inputValue.bmi || 0,
-      goalsArray: objectToArrayForGoals(inputValue.goals) || [],
-    })
-  );
 
   return (
     <>
@@ -151,7 +181,7 @@ const DailyIntake = ({ colorToggle, setColorToggle }) => {
               </h3>
               <div className={styles.centerDiv__headingTray__right}>
                 <InputGoal
-                  name={"bmi"}
+                  name="bmi"
                   inputValue={inputValue?.bmi}
                   setInputValue={handleInput}
                 />
@@ -170,8 +200,8 @@ const DailyIntake = ({ colorToggle, setColorToggle }) => {
               </h3>
               <div className={styles.centerDiv__headingTray__right}>
                 <InputGoal
-                  name={"calories"}
-                  inputValue={inputValue?.calories}
+                  name="calories"
+                  inputValue={inputValue?.calories?.goal}
                   setInputValue={handleInput}
                 />
               </div>
@@ -184,6 +214,7 @@ const DailyIntake = ({ colorToggle, setColorToggle }) => {
           />
         </div>
       </div>
+
       <div
         style={{
           width: "100%",
@@ -192,29 +223,16 @@ const DailyIntake = ({ colorToggle, setColorToggle }) => {
           marginTop: "40px",
         }}
       >
-        {loading ? (
-          <ButtonComponent
-            type="primary"
-            value="Updating ..."
-            style={{
-              borderRadius: "30px",
-              height: "48px",
-              width: "180px",
-            }}
-          />
-        ) : (
-          <ButtonComponent
-            type="primary"
-            value="Update Goals"
-            style={{
-              borderRadius: "30px",
-              height: "48px",
-              width: "180px",
-              backgroundColor: colorToggle ? "" : "#d5d5d5",
-            }}
-            onClick={updateGoals}
-          />
-        )}
+        <ButtonComponent
+          type="primary"
+          value={loading ? "Updating ..." : "Update Goals"}
+          style={{
+            borderRadius: "30px",
+            height: "48px",
+            width: "180px",
+          }}
+          onClick={updateGoals}
+        />
       </div>
     </>
   );

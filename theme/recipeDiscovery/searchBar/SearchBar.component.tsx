@@ -21,14 +21,16 @@ interface searchBarProps {
   ingredients: any[];
 }
 
-const SearchBar = ({ blends, ingredients }: any) => {
+const SearchBar = () => {
   const router = useRouter();
   const [isInputFocus, setIsInputFocus] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
   const [input, setInput] = useState('');
   const [isMicOn, setIsMicOn] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const { openFilterTray } = useAppSelector((state) => state?.sideTray);
+  const { openFilterTray, blends, ingredients } = useAppSelector(
+    (state) => state?.sideTray,
+  );
   const { dbUser } = useAppSelector((state) => state?.user);
   const dispatch = useAppDispatch();
 

@@ -1,4 +1,4 @@
-$slider-height:220px;
+$slider-height: 220px;
 
 .header {
   display: flex;
@@ -177,7 +177,6 @@ $slider-height:220px;
       background-size: cover;
       filter: blur(5px);
       // position: absolute;
-
     }
 
     img {
@@ -289,7 +288,6 @@ $slider-height:220px;
     transform: scale(0.75);
   }
 
-
   &:hover {
     background-color: #fe5d1f !important;
   }
@@ -398,18 +396,41 @@ $slider-height:220px;
     display: flex;
     align-items: center;
     flex: 1;
-
     p {
-      margin: 0;
-      color: #c4c4c4;
-      font-size: 15px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-width: 75px;
-      margin-right: 12px;
+      color: #ababab;
+      margin: 0 16px;
+      font-size: 16px;
     }
+    .tab {
+      position: relative;
+      width: 100%;
+      border: 1px solid #dfdfdf !important;
+      border-radius: 18px;
+      height: 37px;
+      width: 110px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
 
+      .menu {
+        color: #484848;
+        font-weight: 500;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 14px;
+        border-radius: 50% !important;
+        background-color: #f1f1f1;
+        transition: all 0.4s linear;
+        cursor: pointer;
+      }
+      .menu.active {
+        background-color: #fe5d1f;
+        color: #fff;
+      }
+    }
     .count {
       display: flex;
       align-items: center;
@@ -460,7 +481,7 @@ $slider-height:220px;
     p {
       margin: 0;
       color: #c4c4c4;
-      font-size: 15px;
+      font-size: 16px;
       margin-right: 15px;
     }
 
@@ -479,7 +500,7 @@ $slider-height:220px;
     p {
       margin: 0;
       color: #c4c4c4;
-      font-size: 15px;
+      font-size: 16px;
     }
 
     span {
@@ -509,11 +530,11 @@ $slider-height:220px;
       padding: 16px;
       max-width: 85%;
 
-
       img {
         margin-right: 18px;
         height: 25px;
         aspect-ratio: 1;
+        object-fit: contain;
       }
 
       div {

@@ -8,6 +8,7 @@ interface editARecipeInterface {
   description: string;
   recipeIngredients: object[];
   recipeInstruction: object[];
+  servingSize: number;
 }
 
 export const EDIT_A_RECIPE = ({
@@ -18,6 +19,7 @@ export const EDIT_A_RECIPE = ({
   description,
   recipeIngredients,
   recipeInstruction,
+  servingSize,
 }: editARecipeInterface) => {
   const recipeIngredientsString = (array) => {
     let recipeIngredientsModified = [];
@@ -31,7 +33,10 @@ export const EDIT_A_RECIPE = ({
             }",weightInGram: ${itm?.meausermentWeight?.replace(
               /"/g,
               '\\"'
-            )},selectedPortionName: "${itm?.measurement?.replace(/"/g, '\\"')}"}`,
+            )},selectedPortionName: "${itm?.measurement?.replace(
+              /"/g,
+              '\\"'
+            )}"}`,
           ];
         }
       });
@@ -42,7 +47,10 @@ export const EDIT_A_RECIPE = ({
   const recipeInstructionString = (array) => {
     let recipeInstructionModified = [];
     array?.forEach((itm) => {
-      recipeInstructionModified = [...recipeInstructionModified, `"${itm.step}"`];
+      recipeInstructionModified = [
+        ...recipeInstructionModified,
+        `"${itm.step}"`,
+      ];
     });
 
     return `[${recipeInstructionModified}]`;
@@ -71,6 +79,7 @@ export const EDIT_A_RECIPE = ({
             description:"${description}"
             recipeBlendCategory:"${recipeBlendCategory}"
             image:${imagesArrayString(imagesArray)}
+            servingSize:${servingSize}
           }
         }
       )

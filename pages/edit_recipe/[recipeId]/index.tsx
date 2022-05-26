@@ -8,7 +8,10 @@ import {
   GET_RECIPE_NUTRITION,
   INGREDIENTS_BY_CATEGORY_AND_CLASS,
 } from "../../../gqlLib/recipes/queries/getEditRecipe";
-import { GET_A_RECIPE_FOR_EDIT_RECIPE } from "../../../gqlLib/recipes/queries/getRecipeDetails";
+import {
+  GET_A_RECIPE_FOR_EDIT_RECIPE,
+  GET_RECIPE,
+} from "../../../gqlLib/recipes/queries/getRecipeDetails";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
   setDescriptionRecipe,
@@ -17,6 +20,7 @@ import {
   setRecipeFileImagesArray,
   setRecipeImagesArray,
   setSelectedIngredientsList,
+  setServingCounter,
 } from "../../../redux/edit_recipe/editRecipeStates";
 import { EDIT_A_RECIPE } from "../../../gqlLib/recipes/mutations/editRecipe";
 import { setLoading } from "../../../redux/slices/utilitySlice";
@@ -29,6 +33,7 @@ const EditRecipeComponent = () => {
   const { dbUser } = useAppSelector((state) => state?.user);
   const dispatch = useAppDispatch();
   const [isFetching, setIsFetching] = useState(null);
+  const [calculateIngOz, SetcalculateIngOz] = useState(null);
 
   const handleSubmitData = async (images) => {
     dispatch(setLoading(true));
@@ -46,6 +51,9 @@ const EditRecipeComponent = () => {
     } else console.log({ res: "something went wrong in image uploading" });
   };
 
+  const servingCounter = useAppSelector(
+    (state) => state.editRecipeReducer.servingCounter
+  );
   const recipeName = useAppSelector(
     (state) => state?.editRecipeReducer?.recipeName
   );
@@ -74,7 +82,7 @@ const EditRecipeComponent = () => {
     variables: { classType: "All" },
   });
 
-  const { data: recipeData } = useQuery(GET_A_RECIPE_FOR_EDIT_RECIPE, {
+  const { data: recipeData, loading: recipeLoading } = useQuery(GET_RECIPE, {
     variables: { recipeId: recipeId, userId: dbUser?._id },
   });
   const { data: allBlendCategory } = useQuery(BLEND_CATEGORY);
@@ -107,6 +115,7 @@ const EditRecipeComponent = () => {
     dispatch(setEditRecipeName(recipeBasedData?.name));
     dispatch(setDescriptionRecipe(recipeBasedData?.description));
     dispatch(setRecipeImagesArray(recipeBasedData?.image));
+    dispatch(setServingCounter(recipeBasedData?.servingSize));
   }, [classBasedData, recipeBasedData]);
 
   const [editARecipe] = useMutation(
@@ -118,6 +127,7 @@ const EditRecipeComponent = () => {
       recipeBlendCategory: selectedBLendCategory,
       recipeInstruction: recipeInstruction,
       imagesArray: imagesArray,
+      servingSize: servingCounter || 1,
     })
   );
 
@@ -158,7 +168,14 @@ const EditRecipeComponent = () => {
 
   useEffect(() => {
     dispatch(setIngredientArrayForNutrition(selectedIngredientsList));
+    let ozArr = 0;
+    selectedIngredientsList?.forEach((item) => {
+      const ing = item?.portions?.find((ing) => ing?.default);
+      ozArr = ozArr + parseInt(ing?.meausermentWeight);
+    });
+    SetcalculateIngOz(Math?.round(ozArr * 0.033814));
   }, [selectedIngredientsList]);
+
   return (
     <EditRecipePage
       recipeName={recipeName}
@@ -171,6 +188,7 @@ const EditRecipeComponent = () => {
       selectedBLendCategory={recipeBasedData?.recipeBlendCategory?.name}
       isFetching={isFetching}
       editARecipeFunction={editARecipeFunction}
+      calculatedIngOz={calculateIngOz}
     />
   );
 };
