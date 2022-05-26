@@ -84,7 +84,7 @@ export default function HeaderComponent({ logo = true, headerTitle = "Home", ful
 
               {openPopup ? (
                 <div className={`${styles.popup}`}>
-                  <Link href="/user" passHref>
+                  <Link href="/user/?type=about" passHref>
                     <div className={styles.menu}>
                       <p>My Profile</p>
                       <HiOutlineUserCircle className={styles.icon} />

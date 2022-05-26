@@ -13,6 +13,7 @@ import DatacardComponent from "../cards/dataCard/dataCard.component";
 import SkeletonRecipeDiscovery from "../skeletons/skeletonRecipeDiscovery/SkeletonRecipeDiscovery";
 import styles from "./ShowCollectionRecipes.module.scss";
 import reactToastifyNotification from "../../components/utility/reactToastifyNotification";
+import SkeletonCollectionRecipe from "../skeletons/skeletonCollectionRecipe/SkeletonCollectionRecipe";
 
 const ShowCollectionRecipes = () => {
   const [allRecipes, setAllRecipes] = useState([]);
@@ -91,7 +92,7 @@ const ShowCollectionRecipes = () => {
   if (loading) {
     return (
       <div className={styles.showRecipeCollectionsContainer}>
-        <SkeletonRecipeDiscovery />
+        <SkeletonCollectionRecipe />
       </div>
     );
   }
@@ -142,6 +143,7 @@ const ShowCollectionRecipes = () => {
                       image={item.image[0]?.image}
                       recipeId={item?._id}
                       notes={item?.notes}
+                      addedToCompare={item?.addedToCompare}
                     />
                   </div>
                 );
@@ -170,6 +172,7 @@ const ShowCollectionRecipes = () => {
                     image={item.image[0]?.image}
                     recipeId={item?._id}
                     notes={item?.notes}
+                    addedToCompare={item?.addedToCompare}
                   />
                 </div>
               );

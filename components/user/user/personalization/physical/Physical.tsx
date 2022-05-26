@@ -1,4 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useMutation } from "@apollo/client";
+import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import EDIT_CONFIGRATION_BY_ID from "../../../../../gqlLib/user/mutations/editCofigrationById";
@@ -73,6 +75,8 @@ type PhysicalProps = {
   updateUserProfile: Function;
   setUserData: Function;
   userData: any;
+  setProfileActiveTab?: any;
+  profileActiveTab?: any;
 };
 
 const Physical = ({
@@ -82,6 +86,8 @@ const Physical = ({
   userData,
 }: PhysicalProps) => {
   const { dbUser } = useAppSelector((state) => state?.user);
+  const router = useRouter();
+  const { toggle } = router.query;
   const dispatch = useAppDispatch();
   const [editConfigration] = useMutation(EDIT_CONFIGRATION_BY_ID);
   const [editUserById] = useMutation(EDIT_USER_BY_ID);
@@ -89,9 +95,10 @@ const Physical = ({
   const { isNewUseImage } = useAppSelector((state) => state?.user);
   const [measurementType, setMeasurementType] = useState("US");
   const [ageType, setAgeType] = useState("years");
-  const [profileActiveTab, setProfileActiveTab] = useState(0);
   const [pregnant, setPregnant] = useState("");
   const isMounted = useRef(null);
+  const [colorToggle, setColorToggle] = useState(false);
+  const [profileActiveTab, setProfileActiveTab] = useState(0);
 
   const handleYearsAndMonths = (userProfile) => {
     let value = {
@@ -117,7 +124,6 @@ const Physical = ({
     }
     return value;
   };
-
   const {
     register,
     handleSubmit,
@@ -168,6 +174,17 @@ const Physical = ({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    if (!toggle) return;
+    if (toggle) {
+      setProfileActiveTab(Number(toggle));
+    }
+  }, [toggle]);
+
+  useEffect(() => {
+    if (!profileActiveTab) return;
+    router?.push(`/user/?type=personalization&toggle=${profileActiveTab}`);
+  }, [profileActiveTab]);
 
   const handlePregnantOrLactating = (
     e: React.ChangeEvent<HTMLSelectElement>
@@ -394,6 +411,9 @@ const Physical = ({
       isMounted.current = false;
     };
   }, []);
+  useEffect(() => {
+    setColorToggle(false);
+  }, [profileActiveTab]);
 
   return (
     <>
@@ -404,7 +424,10 @@ const Physical = ({
               className={`${
                 profileActiveTab === 0 ? styles.active_border : ""
               }`}
-              onClick={() => setProfileActiveTab(0)}
+              onClick={() => {
+                setProfileActiveTab(0);
+                router?.push(`/user/?type=personalization&toggle=0`);
+              }}
             >
               Profile
             </p>
@@ -412,7 +435,10 @@ const Physical = ({
               className={`${
                 profileActiveTab === 1 ? styles.active_border : ""
               }`}
-              onClick={() => setProfileActiveTab(1)}
+              onClick={() => {
+                setProfileActiveTab(1);
+                router?.push(`/user/?type=personalization&toggle=1`);
+              }}
             >
               Daily Intake
             </p>
@@ -728,6 +754,8 @@ const Physical = ({
                 ) : null}
               </div>
             </div>
+            {/* @ts-ignore */}
+
             <div
               style={{
                 width: "100%",
@@ -749,7 +777,11 @@ const Physical = ({
             </div>
           </>
         ) : (
-          <DailyIntake />
+          <DailyIntake
+            colorToggle={colorToggle}
+            setColorToggle={setColorToggle}
+            toggle={toggle}
+          />
         )}
       </div>
     </>

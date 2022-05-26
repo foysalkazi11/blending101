@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AContainer from "../../../containers/A.container";
 import styles from "./EditRecipe.module.scss";
 import Center_header from "./header/centerHeader/Center_header.component";
@@ -11,8 +11,8 @@ import Image from "next/image";
 import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setServingCounter } from "../../../redux/edit_recipe/editRecipeStates";
-import NutritionTrayComponent from "../../nutritionTrayComponent/nutritionTrayComponent.component";
 import RightHeader from "./header/right_header/right_header.component";
+import { presetNumber } from "../../utility/numbersForServingNumber";
 
 interface editRecipe {
   recipeName: string;
@@ -23,6 +23,7 @@ interface editRecipe {
   selectedBLendCategory: string;
   editARecipeFunction: any;
   isFetching: boolean;
+  calculatedIngOz?: number;
 }
 
 const EditRecipePage = ({
@@ -34,6 +35,7 @@ const EditRecipePage = ({
   selectedBLendCategory,
   editARecipeFunction,
   isFetching,
+  calculatedIngOz = 0,
 }: editRecipe) => {
   const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
   const dispatch = useAppDispatch();
@@ -43,11 +45,12 @@ const EditRecipePage = ({
   const [nutritionState, setNutritionState] = useState(null);
   const [singleElement, setSingleElement] = useState(false);
 
-  const adjusterFunc = (task) => {
-    task === "+" && dispatch(setServingCounter(servingCounter + 1));
-    task === "-" &&
-      servingCounter > 1 &&
-      dispatch(setServingCounter(servingCounter - 1));
+  const adjusterFunc = (value) => {
+    if (value < 1) {
+      dispatch(setServingCounter(1));
+    } else {
+      dispatch(setServingCounter(value));
+    }
   };
 
   return (
@@ -111,20 +114,27 @@ const EditRecipePage = ({
             singleElement={singleElement}
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}
+            calculatedIngOz={calculatedIngOz}
           />
         </div>
         <div className={styles.right__main}>
-          <RightHeader />
           <RightTray
+            counter={servingCounter}
             nutritionTrayData={nutritionTrayData}
             adjusterFunc={adjusterFunc}
             singleElement={singleElement}
             setSingleElement={setSingleElement}
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}
+            measurement={
+              nutritionState &&
+              nutritionState?.portions?.filter((itm) => itm.default === true)[0]
+                .measurement
+            }
+            nutrientName={nutritionState?.ingredientName}
+            isComeFormRecipePage={true}
+            calculatedIngOz={calculatedIngOz}
           />
-
-          {/* <NutritionTrayComponent /> */}
         </div>
       </div>
       <div className={styles.footerMainDiv}>

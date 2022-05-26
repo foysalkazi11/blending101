@@ -14,17 +14,18 @@
   border: 1.5px solid #eeeaeaa8;
   cursor: pointer;
   transition: all;
-  transition-duration: .2s;
+  transition-duration: 0.2s;
 }
-.datacard *{
+.datacard * {
   transition: all;
-  transition-duration: .2s;
+  transition-duration: 0.2s;
 }
-.datacard:hover{
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+.datacard:hover {
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
   border-color: #fff;
   transition: all;
-  transition-duration: .2s;
+  transition-duration: 0.2s;
 }
 
 .datacard__body {
@@ -136,7 +137,7 @@
     .image {
       // background-color: steelblue;
       position: relative;
-      background-size: contain;
+      background-size: cover;
       width: 100%;
       height: 100%;
       background-repeat: no-repeat;
@@ -188,13 +189,18 @@
     }
 
     &__label {
-      display: inline-block;
-      border: 1.2px solid #dddddd;
-      border-radius: 4px;
-      color: #c4c4c4 !important;
-      font-size: 13px;
-      padding: 4px 15px;
-      font-weight: 500;
+      display: flex;
+      align-items: center;
+      .category {
+        display: inline-block;
+        border: 1.2px solid #dddddd;
+        border-radius: 4px;
+        color: #c4c4c4 !important;
+        font-size: 13px;
+        padding: 4px 15px;
+        font-weight: 500;
+        margin-right: 10px;
+      }
     }
   }
 
@@ -246,4 +252,39 @@
 .inActiveImg {
   filter: grayscale(100%);
   -webkit-filter: grayscale(100%);
+}
+
+.floating__menu2 {
+  // position: absolute;
+  // top: 35px;
+  // right: 10px;
+  // z-index: 6;
+
+  ul {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    padding: 8px 10px;
+    border: 1px solid #eeeeee;
+    background: #eeeeeef2;
+    border-radius: 5px;
+
+    li {
+      display: flex;
+      align-items: center;
+
+      &:hover .icon {
+        color: #fe5d1f;
+      }
+      .icon {
+        color: #737373;
+        cursor: pointer;
+        font-size: 16px;
+      }
+    }
+
+    li:not(:last-child) {
+      margin-right: 10px;
+    }
+  }
 }

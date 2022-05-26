@@ -34,6 +34,7 @@ const GET_ALL_RECOMMENDED_RECIPES = gql`
         }
       }
       notes
+      addedToCompare
     }
   }
 `;

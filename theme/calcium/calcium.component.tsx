@@ -10,13 +10,13 @@ interface calciumStyle {
   style: any;
 }
 
-interface CalciumSearchElemInterface{
-  ascendingDescending?:any
-  setascendingDescending?:any
-  list?:any
-  setList?:any
-  dropDownState?:any
-  setDropDownState?:any
+interface CalciumSearchElemInterface {
+  ascendingDescending?: any;
+  setascendingDescending?: any;
+  list?: any;
+  setList?: any;
+  dropDownState?: any;
+  setDropDownState?: any;
 }
 const CalciumSearchElem = ({
   ascendingDescending,
@@ -51,7 +51,6 @@ const CalciumSearchElem = ({
     setDropDownState(list[0]);
   }, [list]);
 
-  console.log(dropDownState);
   return (
     <div className={styles.calciumMg}>
       <div style={{ width: "100%" }}>

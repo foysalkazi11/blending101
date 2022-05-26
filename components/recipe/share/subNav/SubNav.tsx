@@ -29,7 +29,7 @@ const SubNav = (props: SubNavProps) => {
   } = props;
   return (
     <div className={styles.subNav}>
-      <div className={styles.subNav__discover}>
+      <div className={styles.subNav__discover} onClick={() => router.push("/")}>
         <Link href={backAddress} passHref>
           <ArrowBackIcon className={styles.subNav__discover__icon} />
         </Link>
@@ -46,7 +46,7 @@ const SubNav = (props: SubNavProps) => {
         />
       ) : null}
 
-      <div className={styles.subNav__compare} onClick={() => router.push('/recipe/formulate')}>
+      <div className={styles.subNav__compare} onClick={closeCompare}>
         <p>{compareAmout} compare</p>
         <HighlightOffIcon
           className={styles.subNav__compare__icon}

@@ -1,9 +1,49 @@
+$sharedWidth:33.33%;
+$sharedFontWeight:400;
+$sharedFontSize:20px;
+
 %commonGrid__Accordian {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-
-
   padding: 10px;
+}
+
+%sharedProperties {
+  display: flex;
+  align-items: center;
+}
+
+.centerDiv {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+
+  &__headingTray {
+    display: flex;
+    padding: 10px 0px;
+
+    &__left {
+      width: $sharedWidth;
+      @extend %sharedProperties;
+      justify-content: left;
+      font-weight: $sharedFontWeight;
+      font-size: $sharedFontSize;
+    }
+
+    &__center {
+      width: $sharedWidth;
+      @extend %sharedProperties;
+      justify-content: center;
+      font-weight: $sharedFontWeight;
+      font-size: $sharedFontSize;
+    }
+
+    &__right {
+      width: $sharedWidth;
+      @extend %sharedProperties;
+      justify-content: center;
+    }
+  }
 }
 
 .centerElement {
@@ -39,12 +79,8 @@
   gap: 14px;
 
   &__accordian {
-    @extend %commonGrid__Accordian;
-    gap: 14px;
-    div{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+    // @extend %commonGrid__Accordian;
+    width: 70%;
+    margin: 0px auto;
   }
 }

@@ -8,7 +8,10 @@ import {
   GET_RECIPE_NUTRITION,
   INGREDIENTS_BY_CATEGORY_AND_CLASS,
 } from "../../../gqlLib/recipes/queries/getEditRecipe";
-import { GET_A_RECIPE_FOR_EDIT_RECIPE } from "../../../gqlLib/recipes/queries/getRecipeDetails";
+import {
+  GET_A_RECIPE_FOR_EDIT_RECIPE,
+  GET_RECIPE,
+} from "../../../gqlLib/recipes/queries/getRecipeDetails";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
   setDescriptionRecipe,
@@ -17,6 +20,7 @@ import {
   setRecipeFileImagesArray,
   setRecipeImagesArray,
   setSelectedIngredientsList,
+  setServingCounter,
 } from "../../../redux/edit_recipe/editRecipeStates";
 import { EDIT_A_RECIPE } from "../../../gqlLib/recipes/mutations/editRecipe";
 import { setLoading } from "../../../redux/slices/utilitySlice";
@@ -26,17 +30,17 @@ import reactToastifyNotification from "../../../components/utility/reactToastify
 const EditRecipeComponent = () => {
   const router = useRouter();
   const { recipeId } = router.query;
+  const { dbUser } = useAppSelector((state) => state?.user);
   const dispatch = useAppDispatch();
   const [isFetching, setIsFetching] = useState(null);
+  const [calculateIngOz, SetcalculateIngOz] = useState(null);
 
   const handleSubmitData = async (images) => {
-    console.log({ images });
     dispatch(setLoading(true));
     let res: any;
     try {
       if (images?.length) {
         res = await imageUploadS3(images);
-        console.log({ res });
       }
       dispatch(setLoading(false));
     } catch (error) {
@@ -47,7 +51,12 @@ const EditRecipeComponent = () => {
     } else console.log({ res: "something went wrong in image uploading" });
   };
 
-  const recipeName = useAppSelector((state) => state?.editRecipeReducer?.recipeName);
+  const servingCounter = useAppSelector(
+    (state) => state.editRecipeReducer.servingCounter
+  );
+  const recipeName = useAppSelector(
+    (state) => state?.editRecipeReducer?.recipeName
+  );
   const selectedIngredientsList = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedIngredientsList
   );
@@ -73,8 +82,8 @@ const EditRecipeComponent = () => {
     variables: { classType: "All" },
   });
 
-  const { data: recipeData } = useQuery(GET_A_RECIPE_FOR_EDIT_RECIPE, {
-    variables: { recipeId: recipeId },
+  const { data: recipeData, loading: recipeLoading } = useQuery(GET_RECIPE, {
+    variables: { recipeId: recipeId, userId: dbUser?._id },
   });
   const { data: allBlendCategory } = useQuery(BLEND_CATEGORY);
   const { data: nutritionData } = useQuery(
@@ -106,6 +115,7 @@ const EditRecipeComponent = () => {
     dispatch(setEditRecipeName(recipeBasedData?.name));
     dispatch(setDescriptionRecipe(recipeBasedData?.description));
     dispatch(setRecipeImagesArray(recipeBasedData?.image));
+    dispatch(setServingCounter(recipeBasedData?.servingSize));
   }, [classBasedData, recipeBasedData]);
 
   const [editARecipe] = useMutation(
@@ -117,6 +127,7 @@ const EditRecipeComponent = () => {
       recipeBlendCategory: selectedBLendCategory,
       recipeInstruction: recipeInstruction,
       imagesArray: imagesArray,
+      servingSize: servingCounter || 1,
     })
   );
 
@@ -142,26 +153,42 @@ const EditRecipeComponent = () => {
       });
     }
     dispatch(setRecipeImagesArray([...urlImageArray, ...updatedImageArray]));
-    await editARecipe();
-    reactToastifyNotification("info", "Recipe Updated");
-    dispatch(setRecipeFileImagesArray([]));
-    setIsFetching(false);
+
+    try {
+      await editARecipe();
+      reactToastifyNotification("info", "Recipe Updated");
+      dispatch(setRecipeFileImagesArray([]));
+      setIsFetching(false);
+    } catch (error) {
+      reactToastifyNotification("error", "Error while saving Recipe");
+      setIsFetching(false);
+      return;
+    }
   };
 
   useEffect(() => {
     dispatch(setIngredientArrayForNutrition(selectedIngredientsList));
+    let ozArr = 0;
+    selectedIngredientsList?.forEach((item) => {
+      const ing = item?.portions?.find((ing) => ing?.default);
+      ozArr = ozArr + parseInt(ing?.meausermentWeight);
+    });
+    SetcalculateIngOz(Math?.round(ozArr * 0.033814));
   }, [selectedIngredientsList]);
-  recipeBasedNutrition && console.log(JSON.parse(recipeBasedNutrition))
+
   return (
     <EditRecipePage
       recipeName={recipeName}
       allIngredients={classBasedData}
-      nutritionTrayData={recipeBasedNutrition && JSON.parse(recipeBasedNutrition)}
+      nutritionTrayData={
+        recipeBasedNutrition && JSON.parse(recipeBasedNutrition)
+      }
       recipeInstructions={recipeBasedData?.recipeInstructions}
       allBlendCategories={allBlendBasedCategory}
       selectedBLendCategory={recipeBasedData?.recipeBlendCategory?.name}
       isFetching={isFetching}
       editARecipeFunction={editARecipeFunction}
+      calculatedIngOz={calculateIngOz}
     />
   );
 };

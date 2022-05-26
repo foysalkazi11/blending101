@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from "react";
 import styles from "./Main.module.scss";
 import About from "../about/AboutUser";
 import Membership from "../membership/Membership";
@@ -16,6 +17,7 @@ import {
 } from "../../../../redux/slices/userSlice";
 import notification from "../../../utility/reactToastifyNotification";
 import ButtonComponent from "../../../../theme/button/button.component";
+import { useRouter } from "next/router";
 
 const tab = ["About", "Membership", "Notification", "Personalization"];
 
@@ -25,7 +27,29 @@ type MainProps = {
 };
 
 const Main = ({ userData, setUserData }: MainProps) => {
-  const [activeTab, setActiveTab] = useState(0);
+  const router = useRouter();
+  console.log(router.query);
+  const { type, active } = router.query;
+  const [activeTab, setActiveTab] = useState(type);
+
+  useEffect(() => {
+    tab?.forEach((itm) => {
+      if (itm.toLowerCase() === type) {
+        setActiveTab(itm);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!type) return;
+    setActiveTab(type);
+  }, [type]);
+
+  useEffect(() => {
+    if (!activeTab) return;
+    router.push(`user/?type=${activeTab}`);
+  }, [activeTab]);
+
   const { dbUser } = useAppSelector((state) => state?.user);
   const dispatch = useAppDispatch();
   const [editUserData] = useMutation(EDIT_CONFIGRATION_BY_ID);
@@ -33,6 +57,8 @@ const Main = ({ userData, setUserData }: MainProps) => {
   const { configuration } = dbUser;
   const { isNewUseImage } = useAppSelector((state) => state?.user);
   const [toggle, setToggle] = useState(0);
+  const [colorToggle, setColorToggle] = useState(false);
+  const [profileActiveTab, setProfileActiveTab] = useState(0);
 
   const submitData = async () => {
     dispatch(setLoading(true));
@@ -50,6 +76,7 @@ const Main = ({ userData, setUserData }: MainProps) => {
             },
           };
         });
+
         await editUserById({
           variables: {
             data: {
@@ -115,6 +142,7 @@ const Main = ({ userData, setUserData }: MainProps) => {
         );
         dispatch(setLoading(false));
         notification("info", "Updated successfully");
+        setColorToggle(true);
       }
     } catch (error) {
       dispatch(setLoading(false));
@@ -124,19 +152,28 @@ const Main = ({ userData, setUserData }: MainProps) => {
 
   const renderUI = () => {
     switch (activeTab) {
-      case 0:
+      case "about":
         return <About userData={userData} setUserData={setUserData} />;
-      case 1:
-        return <Membership userData={userData} setUserData={setUserData} />;
-      case 2:
+      case "membership":
+        return (
+          <Membership
+            colorToggle={colorToggle}
+            setColorToggle={setColorToggle}
+            userData={userData}
+            setUserData={setUserData}
+          />
+        );
+      case "notification":
         return <Notification userData={userData} setUserData={setUserData} />;
-      case 3:
+      case "personalization":
         return (
           <Personalization
             userData={userData}
             setUserData={setUserData}
             toggle={toggle}
             setToggle={setToggle}
+            setProfileActiveTab={setProfileActiveTab}
+            profileActiveTab={profileActiveTab}
           />
         );
 
@@ -145,6 +182,10 @@ const Main = ({ userData, setUserData }: MainProps) => {
     }
   };
 
+  useEffect(() => {
+    setColorToggle(false);
+  }, [activeTab, toggle, profileActiveTab]);
+
   return (
     <div className={styles.mainContainer}>
       <header className={styles.header}>
@@ -152,9 +193,9 @@ const Main = ({ userData, setUserData }: MainProps) => {
           return (
             <p
               key={index}
-              onClick={() => setActiveTab(index)}
+              onClick={() => setActiveTab(item.toLowerCase())}
               className={`${styles.text} ${
-                activeTab === index ? styles.active : ""
+                activeTab === item.toLowerCase() ? styles.active : ""
               }`}
             >
               {item}
@@ -163,7 +204,7 @@ const Main = ({ userData, setUserData }: MainProps) => {
         })}
       </header>
       {renderUI()}
-      {activeTab === 3 && toggle === 0 ? null : (
+      {activeTab === "personalization" && toggle === 0 ? null : (
         <div
           style={{
             width: "100%",

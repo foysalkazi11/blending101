@@ -19,6 +19,7 @@ type CustomAccordionProps = {
   counter?: number;
   lastElement?: boolean;
   nutritionId?: string;
+  servingSize?: number;
 };
 
 const valueUnitConvertor = (title, value, unit) => {
@@ -26,7 +27,6 @@ const valueUnitConvertor = (title, value, unit) => {
   let unitVal = unit;
 
   if (val?.toString()?.length > 2) {
-    // console.log({ title: title, value: val, unit: unitVal });
     if (unitVal === `UG`) {
       val = val / 1000;
       unitVal = `MG`;
@@ -58,15 +58,20 @@ const AccordComponent = ({
   value,
   percentage,
   unit,
-  counter,
+  counter = 1,
   lastElement,
   nutritionId = "",
+  servingSize = 1,
 }: CustomAccordionProps) => {
   const [expanded, setExpanded] = useState<boolean>(true);
   const contentRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   let valueAndUnit = valueUnitConvertor(title, value, unit);
-
+  const finalNutritionValue =
+    valueAndUnit &&
+    counter &&
+    //@ts-ignore
+    parseFloat((valueAndUnit?.value * counter) / servingSize).toFixed(0);
   const handleClickNutration = (id: string) => {
     router?.push(`/wiki/Nutrient/${id}`);
   };
@@ -83,7 +88,7 @@ const AccordComponent = ({
         <div className={`${styles.accordionSummary}`}>
           {
             //@ts-ignore
-            parseFloat(valueAndUnit?.value * counter).toFixed(1) > 0 && (
+            finalNutritionValue > 0 && (
               <div className={styles.accordionSummaryForNested}>
                 {expanded ? (
                   <BsPlus
@@ -126,12 +131,7 @@ const AccordComponent = ({
                             styles.valueUnit + " " + styles.alignCenter
                           }
                         >
-                          {
-                            //@ts-ignore
-                            parseFloat(valueAndUnit?.value * counter).toFixed(1)
-                          }
-                          &nbsp;
-                          {valueAndUnit?.unit?.toLowerCase()}
+                          {`${finalNutritionValue}${valueAndUnit?.unit?.toLowerCase()}`}
                         </p>
                       }
                     </div>
@@ -161,12 +161,7 @@ const AccordComponent = ({
                             styles.valueUnit + " " + styles.alignCenter
                           }
                         >
-                          {
-                            //@ts-ignore
-                            parseFloat(valueAndUnit?.value * counter).toFixed(1)
-                          }
-                          &nbsp;
-                          {valueAndUnit?.unit?.toLowerCase()}
+                          {`${finalNutritionValue}${valueAndUnit?.unit?.toLowerCase()}`}
                         </p>
                       }
                     </div>

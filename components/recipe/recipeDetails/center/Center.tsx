@@ -24,8 +24,28 @@ import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoa
 import useGetDefaultPortionOfnutration from "../../../../customHooks/useGetDefaultPortionOfNutration";
 import { setActiveRecipeId } from "../../../../redux/slices/collectionSlice";
 import { setCurrentRecipeInfo } from "../../../../redux/slices/recipeSlice";
+import ToggleMenu from "../../../../theme/toggleMenu/ToggleMenu";
+
+const scaleMenu = [
+  { label: ".5x", value: 0.5 },
+  { label: "1x", value: 1 },
+  { label: "2x", value: 2 },
+];
+
+interface center {
+  adjusterFunc: any;
+  recipeData: any;
+  counter: any;
+  setCounter: any;
+  nutritionState: any;
+  setNutritionState: any;
+  singleElement: any;
+  setsingleElement: any;
+  inputTagValueHandler: any;
+}
 
 const Center = ({
+  adjusterFunc,
   recipeData,
   counter,
   setCounter,
@@ -33,13 +53,15 @@ const Center = ({
   setNutritionState,
   singleElement,
   setsingleElement,
-}) => {
+  inputTagValueHandler,
+}: center) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [showRecipeModal, setShowRecipeModal] = useState(true);
   const [ingredientId, setIngredientId] = useState("");
   const recipeDetails = recipeData;
   useGetDefaultPortionOfnutration(ingredientId);
+
   console.log(recipeDetails);
 
   const PreviousButton = (prop) => {
@@ -225,20 +247,20 @@ const Center = ({
               {recipeDetails?.image.map((img, index) => {
                 return (
                   <div key={index} className={styles.imageBox}>
-                    <div
-                      className={styles.imageBlurBox}
-                      style={{
-                        backgroundImage: `url(${img.image})`,
-                      }}
-                    />
-                    {img.image && (
-                      <Image
-                        src={img.image}
-                        alt="recipe_image"
-                        layout="fill"
-                        objectFit="contain"
+                    {img?.image && (
+                      <div
+                        className={styles.imageBlurBox}
+                        style={{
+                          backgroundImage: `url(${img.image})`,
+                        }}
                       />
                     )}
+                    <Image
+                      src={img.image}
+                      alt="recipe_image"
+                      layout="fill"
+                      objectFit="contain"
+                    />
                   </div>
                 );
               })}
@@ -249,7 +271,9 @@ const Center = ({
             </div>
           )}
         </div>
-
+        <div>
+          <ReadMore>{recipeDetails?.description}</ReadMore>
+        </div>
         <div className={styles.infoContainer}>
           <div className={styles.infoBox}>
             <span>45</span>
@@ -265,10 +289,6 @@ const Center = ({
             <p>Rx Score</p>
           </div>
         </div>
-
-        <div>
-          <ReadMore>{recipeDetails?.description}</ReadMore>
-        </div>
       </div>
       <div className={styles.ingredentContainer}>
         <div className={styles.ingredentHeader}>
@@ -277,36 +297,57 @@ const Center = ({
         </div>
         <div className={styles.counterBox}>
           <div className={styles.counter}>
-            <p>Servings : </p>
-            <div className={styles.count}>
-              <button
-                onClick={() =>
-                  setCounter((pre) =>
-                    Number(pre) <= 1 ? Number(pre) : Number(pre) - 1
-                  )
-                }
+            <p>Scaling : </p>
+
+            <div className={styles.tab}>
+              {scaleMenu?.map((item, index) => {
+                return (
+                  <div
+                    key={item?.value}
+                    className={`${styles.menu} ${
+                      counter === item?.value ? styles.active : null
+                    }`}
+                    onClick={() => setCounter(item?.value)}
+                  >
+                    {item?.label}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* <button
+                onClick={() => adjusterFunc(counter < 0 ? 0 : counter - 1)}
               >
                 <MdRemove className={styles.icon} />
-              </button>
-              <input
+              </button> */}
+            {/* <button
+                onClick={() => adjusterFunc(counter < 0 ? 0 : counter - 1)}
+              >
+                <MdRemove className={styles.icon} />
+              </button> */}
+
+            {/* <p>{counter}</p> */}
+
+            {/* <input
                 className={styles.servings}
                 type="number"
                 value={counter}
-                onChange={(e) => setCounter(e?.target?.value)}
+                onChange={(e) => inputTagValueHandler(e)}
                 min={1}
-              />
-              <button onClick={() => setCounter((pre) => Number(pre) + 1)}>
+              /> */}
+            {/* <button
+                onClick={() => adjusterFunc(counter === 0.5 ? 1 : counter + 1)}
+              >
                 <MdAdd className={styles.icon} />
-              </button>
-            </div>
+              </button> */}
           </div>
           <div className={styles.size}>
             <p>serving Size : </p>
-            <span>{Math.round(16 / counter)} 0z</span>
+            <span>{Math.round(16 * counter)} 0z</span>
           </div>
           <div className={styles.usMatric}>
             <span>US</span>
-            <p>| Matric</p>
+            <p>| Metric</p>
           </div>
         </div>
         <div className={styles.ingredentDisContainer}>
@@ -318,7 +359,19 @@ const Center = ({
                   key={index + "ingredients_recipeDetails"}
                 >
                   <div className={styles.leftSide}>
-                    <img src="/images/5-2-avocado-png-hd.png" alt="icon" />
+                    {ingredient?.ingredientId?.featuredImage ||
+                    ingredient?.ingredientId?.images?.length ? (
+                      <img
+                        src={
+                          ingredient?.ingredientId?.featuredImage ||
+                          ingredient?.ingredientId?.images[0]
+                        }
+                        alt="icon"
+                      />
+                    ) : (
+                      <img src="/images/5-2-avocado-png-hd.png" alt="icon" />
+                    )}
+
                     <div>
                       {`${ingredient?.selectedPortion?.quantity * counter}
                       ${ingredient.selectedPortion.name} `}

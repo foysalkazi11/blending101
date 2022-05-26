@@ -19,10 +19,11 @@ import { setLoading } from "../../../redux/slices/utilitySlice";
 import ADD_NEW_RECIPE_TO_COLLECTION from "../../../gqlLib/collection/mutation/addNewRecipeToCollection";
 import { useMutation, useLazyQuery } from "@apollo/client";
 import { setDbUser } from "../../../redux/slices/userSlice";
-import reactToastifyNotification from "../../../components/utility/reactToastifyNotification";
 import GET_LAST_MODIFIED_COLLECTION from "../../../gqlLib/collection/query/getLastModifiedCollection";
 import { setCurrentRecipeInfo } from "../../../redux/slices/recipeSlice";
 import { useRouter } from "next/router";
+import useChangeCompare from "../../../customHooks/useChangeComaper";
+import { MdOutlineEdit } from "react-icons/md";
 
 interface dataCardInterface {
   title: string;
@@ -38,6 +39,12 @@ interface dataCardInterface {
   checkWithinCollection?: boolean;
   recipeId?: string;
   notes?: number;
+  addedToCompare?: boolean;
+  compareRecipeList?: any[];
+  setcompareRecipeList?: (state: any) => void;
+  showMoreMenu?: boolean;
+  showOptionalEditIcon?: boolean;
+  changeToFormulateRecipe?: () => void;
 }
 
 export default function DatacardComponent({
@@ -54,6 +61,12 @@ export default function DatacardComponent({
   checkWithinCollection = false,
   recipeId = "",
   notes = 0,
+  addedToCompare = false,
+  compareRecipeList = [],
+  setcompareRecipeList = () => {},
+  showMoreMenu = true,
+  showOptionalEditIcon = false,
+  changeToFormulateRecipe = () => {},
 }: dataCardInterface) {
   title = title || "Triple Berry Smoothie";
   ingredients = ingredients;
@@ -78,10 +91,7 @@ export default function DatacardComponent({
     { fetchPolicy: "no-cache" }
   );
   const { dbUser } = useAppSelector((state) => state?.user);
-
-  const handleEclipse = () => {
-    // HANDLE ECLIPSE CLICK HERE
-  };
+  const handleChangeCompare = useChangeCompare();
 
   const addToCollection = async (recipeId: string, e: React.SyntheticEvent) => {
     e.stopPropagation();
@@ -166,10 +176,25 @@ export default function DatacardComponent({
     elem.classList.toggle("show__hidden");
   };
 
+  const FloatingMenu2 = () => {
+    return (
+      <div className={styles.floating__menu2}>
+        <ul>
+          <li onClick={changeToFormulateRecipe}>
+            <MdOutlineEdit className={styles.icon} />
+          </li>
+        </ul>
+      </div>
+    );
+  };
+
   const DataBody = () => (
     <div className={styles.databody}>
       <div className={styles.databody__top}>
-        <div className={styles.databody__top__label}>{category}</div>
+        <div className={styles.databody__top__label}>
+          <div className={styles.category}>{category}</div>
+          {showOptionalEditIcon ? <FloatingMenu2 /> : false}
+        </div>
         <div className={styles.databody__top__info}>
           {noOfRatings ? (
             <>
@@ -248,7 +273,6 @@ export default function DatacardComponent({
   };
 
   return (
-    <>
       <div className={styles.datacard}>
         <div className={styles.datacard__inner}>
           <div className={styles.datacard__body}>
@@ -262,8 +286,12 @@ export default function DatacardComponent({
                 </h2>
               </div>
               <div className={styles.datacard__body__top__menu}>
-                <MoreVertIcon onClick={handleClick} />
-                <FloatingMenu />
+                {showMoreMenu ? (
+                  <>
+                    <MoreVertIcon onClick={handleClick} />
+                    <FloatingMenu />
+                  </>
+                ) : null}
               </div>
             </div>
             <div className={styles.datacard__body__middle}>
@@ -295,12 +323,35 @@ export default function DatacardComponent({
               <div className={styles.datacard__body__bottom__right}>
                 <ul>
                   <li>
-                    {" "}
-                    <img
-                      src="/icons/eclipse.svg"
-                      alt="eclipse"
-                      onClick={handleEclipse}
-                    />{" "}
+                    {addedToCompare ? (
+                      <img
+                        src="/icons/compare-1.svg"
+                        alt="eclipse"
+                        onClick={(e) =>
+                          handleChangeCompare(
+                            e,
+                            recipeId,
+                            false,
+                            compareRecipeList,
+                            setcompareRecipeList
+                          )
+                        }
+                      />
+                    ) : (
+                      <img
+                        src="/icons/eclipse.svg"
+                        alt="eclipse"
+                        onClick={(e) =>
+                          handleChangeCompare(
+                            e,
+                            recipeId,
+                            true,
+                            compareRecipeList,
+                            setcompareRecipeList
+                          )
+                        }
+                      />
+                    )}
                   </li>
                   <li>
                     {allRecipeWithinCollectionsId?.includes(recipeId) ? (
@@ -324,6 +375,5 @@ export default function DatacardComponent({
           </div>
         </div>
       </div>
-    </>
   );
 }

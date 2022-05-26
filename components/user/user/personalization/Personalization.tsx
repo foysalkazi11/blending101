@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useAppSelector } from "../../../../redux/hooks";
 import ToggleMenu from "../../../../theme/toggleMenu/ToggleMenu";
 import Dietary from "./dietary/Dietary";
@@ -6,12 +6,15 @@ import Physical from "./physical/Physical";
 
 import Medical from "./medical/Medical";
 import AchiveGoals from "./achiveGoals/AchiveGoals";
+import { useRouter } from "next/router";
 
 type PersonalizationProps = {
   userData: any;
   setUserData: any;
   toggle?: number;
   setToggle?: Dispatch<SetStateAction<number>>;
+  setProfileActiveTab?: any;
+  profileActiveTab?: any;
 };
 
 const Personalization = ({
@@ -19,9 +22,10 @@ const Personalization = ({
   setUserData,
   toggle = 0,
   setToggle = () => {},
+  setProfileActiveTab,
+  profileActiveTab,
 }: PersonalizationProps) => {
   const { personalization } = userData;
-  // const [toggle, setToggle] = useState(0);
 
   const checkGoals = (value, fieldName) => {
     const goal = userData?.personalization?.[fieldName]?.find(
@@ -106,6 +110,8 @@ const Personalization = ({
             updateUserProfile={updateUserProfile}
             setUserData={setUserData}
             userData={userData}
+            setProfileActiveTab={setProfileActiveTab}
+            profileActiveTab={profileActiveTab}
           />
         );
       case 1:
@@ -139,6 +145,8 @@ const Personalization = ({
             updateUserProfile={updateUserProfile}
             setUserData={setUserData}
             userData={userData}
+            setProfileActiveTab={setProfileActiveTab}
+            profileActiveTab={profileActiveTab}
           />
         );
     }

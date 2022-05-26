@@ -19,8 +19,6 @@ const TrayEdit = ({ ingredients }) => {
 
   let allIngredients = data?.filterIngredientByCategoryAndClass;
 
-  console.log(ingredients);
-
   useEffect(() => {
     if (!ingredients || !allIngredients) return;
     const presentIngredients = allIngredients.filter((item) => {

@@ -14,6 +14,8 @@ import { GET_ALL_INGREDIENTS_DATA_BASED_ON_NUTRITION } from "../../../gqlLib/rec
 import { setAllIngredients } from "../../../redux/slices/ingredientsSlice";
 import SkeletonIngredients from "../../../theme/skeletons/skeletonIngredients/SkeletonIngredients";
 import CircularRotatingLoader from "../../../theme/loader/circularRotatingLoader.component";
+import useGetAllIngredientsDataBasedOnNutrition from "../../../customHooks/useGetAllIngredientsDataBasedOnNutrition";
+import IngredientPanelSkeleton from "../../../theme/skeletons/ingredientPanelSleketon/IngredientPanelSkeleton";
 
 type FilterbottomComponentProps = {
   categories?: { title: string; val: string }[];
@@ -23,6 +25,7 @@ interface ingredientState {
   name: string;
   value: number;
   units: string;
+  ingredientId: string;
 }
 
 export default function FilterbottomComponent({
@@ -40,7 +43,7 @@ export default function FilterbottomComponent({
   const [searchInput, setSearchInput] = useState("");
   const isMounted = useRef(false);
   const [loading, setLoading] = useState(false);
-  const [arrayOrderState, setArrayOrderState] = useState(null);
+  const [arrayOrderState, setArrayOrderState] = useState([]);
   const [ascendingDescending, setascendingDescending] = useState(true);
   const [list, setList] = useState([]);
   const [rankingDropDownState, setRankingDropDownState] = useState(null);
@@ -49,12 +52,12 @@ export default function FilterbottomComponent({
     FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS
   );
 
-  const { data: IngredientData } = useQuery(
-    GET_ALL_INGREDIENTS_DATA_BASED_ON_NUTRITION(
+  const { data: IngredientData, loading: nutritionLoading } =
+    useGetAllIngredientsDataBasedOnNutrition(
       rankingDropDownState?.id,
-      dpd?.val
-    )
-  );
+      dpd?.val,
+      toggle === 2 ? true : false
+    );
 
   const handleIngredientClick = (ingredient) => {
     let blendz = [];
@@ -74,11 +77,11 @@ export default function FilterbottomComponent({
     dispatch(setIngredients(blendz));
   };
 
-  const checkActive = (ingredient: string) => {
+  const checkActive = (id: string) => {
     let present = false;
     ingredientsList.forEach((blen) => {
       //@ts-ignore
-      if (blen.title === ingredient) {
+      if (blen.id === id) {
         present = true;
       }
     });
@@ -157,17 +160,16 @@ export default function FilterbottomComponent({
 
   useEffect(() => {
     isMounted.current = true;
-
     return () => {
       isMounted.current = false;
     };
   }, []);
 
   useEffect(() => {
-    if (!IngredientData) return;
+    if (!IngredientData?.getAllIngredientsDataBasedOnNutrition) return;
     let tempArray = ascendingDescending
       ? [...IngredientData?.getAllIngredientsDataBasedOnNutrition]
-      : [...IngredientData?.getAllIngredientsDataBasedOnNutrition].reverse();
+      : [...IngredientData?.getAllIngredientsDataBasedOnNutrition]?.reverse();
     setArrayOrderState(tempArray);
   }, [ascendingDescending, IngredientData]);
 
@@ -213,7 +215,7 @@ export default function FilterbottomComponent({
                       src={item?.featuredImage || "/food/chard.png"}
                       alt={item?.ingredientName}
                     />
-                    {checkActive(item?.ingredientName) && (
+                    {checkActive(item?._id) && (
                       <div className={styles.tick}>
                         <CheckCircle className={styles.ticked} />
                       </div>
@@ -225,7 +227,7 @@ export default function FilterbottomComponent({
             </>
           ) : (
             <div className={styles.noResult}>
-              <p>No result</p>
+              <p>No Ingredients</p>
             </div>
           )}
         </div>
@@ -240,10 +242,14 @@ export default function FilterbottomComponent({
             dropDownState={rankingDropDownState}
             setDropDownState={setRankingDropDownState}
           />
-          {IngredientData ? (
-            arrayOrderState &&
+          {nutritionLoading ? (
+            <IngredientPanelSkeleton />
+          ) : arrayOrderState?.length ? (
             arrayOrderState?.map(
-              ({ name, value, units }: ingredientState, index) => {
+              (
+                { name, value, units, ingredientId }: ingredientState,
+                index
+              ) => {
                 return (
                   <Linearcomponent
                     name={name}
@@ -256,13 +262,22 @@ export default function FilterbottomComponent({
                         ? arrayOrderState[0]?.value
                         : arrayOrderState[arrayOrderState?.length - 1]?.value
                     }
+                    checkbox={true}
+                    checkedState={checkActive(ingredientId)}
+                    handleOnChange={() =>
+                      handleIngredientClick({
+                        title: name,
+                        img: "/food/chard.png",
+                        id: ingredientId,
+                      })
+                    }
                   />
                 );
               }
             )
           ) : (
-            <div>
-              <CircularRotatingLoader />
+            <div className={styles.noResult}>
+              <p>No Ingredients</p>
             </div>
           )}
         </div>

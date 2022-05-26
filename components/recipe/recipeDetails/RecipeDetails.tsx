@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import AContainer from "../../../containers/A.container";
 import LeftSide from "./leftSide/LeftSide";
-import RightSide from "./rightSide/RightSide";
 import Center from "./center/Center";
 import styles from "./RecipeDetails.module.scss";
+import { presetNumber } from "../../utility/numbersForServingNumber";
+import RightTray from "../../rightTray/rightTray.component";
 
 const RecipeDetails = ({
   recipeData,
@@ -17,9 +18,24 @@ const RecipeDetails = ({
   const counterHandler = (value) => {
     setCounter(Number(value));
   };
-  const adjusterFunc = (task) => {
-    task === "+" && setCounter(Number(counter) + 1);
-    task === "-" && counter > 1 && setCounter(Number(counter) - 1);
+  const adjusterFunc = (value) => {
+    if (value >= presetNumber?.length - 1) {
+      setCounter(presetNumber[presetNumber?.length - 1]);
+    } else if (value <= 0) {
+      setCounter(presetNumber[0]);
+    } else {
+      setCounter(presetNumber[value]);
+    }
+  };
+
+  const inputTagValueHandler = (e) => {
+    if (Number(e.target.value) > presetNumber[presetNumber.length - 1]) {
+      setCounter(presetNumber[presetNumber.length - 1]);
+    } else if (Number(e.target.value) <= presetNumber[0]) {
+      setCounter(presetNumber[0]);
+    } else {
+      setCounter(Number(e.target.value));
+    }
   };
   return (
     <div style={{ margin: "40px auto" }}>
@@ -36,7 +52,9 @@ const RecipeDetails = ({
               <LeftSide />
             </div>
             <div className={styles.recipeDetailsContainer_right}>
-              <div className={styles.recipeDetailsContainer__contentDiv__center}>
+              <div
+                className={styles.recipeDetailsContainer__contentDiv__center}
+              >
                 <Center
                   recipeData={recipeData}
                   counter={counter}
@@ -45,17 +63,26 @@ const RecipeDetails = ({
                   nutritionState={nutritionState}
                   singleElement={singleElement}
                   setsingleElement={setsingleElement}
+                  adjusterFunc={adjusterFunc}
+                  inputTagValueHandler={inputTagValueHandler}
                 />
               </div>
               <div className={styles.recipeDetailsContainer__contentDiv__right}>
-                <RightSide
-                  nutritionData={nutritionData}
+                <RightTray
+                  nutritionTrayData={nutritionData}
                   counter={counter}
-                  counterHandler={counterHandler}
-                  nutritionState={nutritionState}
-                  setsingleElement={setsingleElement}
-                  singleElement={singleElement}
                   adjusterFunc={adjusterFunc}
+                  singleElement={singleElement}
+                  setSingleElement={setsingleElement}
+                  nutritionState={nutritionState}
+                  setNutritionState={setNutritionState}
+                  nutrientName={
+                    nutritionState &&
+                    nutritionState[0]?.ingredientId?.ingredientName
+                  }
+                  measurement={
+                    nutritionState && nutritionState[0]?.selectedPortion?.name
+                  }
                 />
               </div>
             </div>

@@ -4,52 +4,55 @@ import SectionTitleWithIcon from "../../../../theme/recipe/sectionTitleWithIcon/
 import RecipeItem from "../../../../theme/recipe/recipeItem/RecipeItem.component";
 import styles from "./RecipeDetails.module.scss";
 import { Droppable, Draggable } from "react-beautiful-dnd";
-import Accordion from "../../../../theme/accordion/accordion.component";
 import CancelIcon from "../../../../public/icons/cancel_black_36dp.svg";
 import uniqueId from "../../../utility/uniqueId";
+import { useLazyQuery } from "@apollo/client";
+import GET_BLEND_NUTRITION_BASED_ON_RECIPE_DATA from "../../../../gqlLib/compare/query/getBlendNutritionBasedOnRecipeData";
+import NutrationPanelSkeleton from "../../../../theme/skeletons/nutrationPanelSkeleton/NutrationPanelSkeleton";
+import UpdatedRecursiveAccordian from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
+import DragIndicatorIcon from "../../../../../public/icons/drag_indicator_black_36dp.svg";
+import useDraggableInPortal from "../../../../customHooks/useDraggableInPortal";
+import { createPortal } from "react-dom";
+import SingleIngredient from "../singleIngredient/SingleIngredient";
 
 function Copyable(props) {
   const { items, addItem, droppableId } = props;
-
-  // logic for removing elements having duplicate label values =>start
-  let newList = Array.from(
-    new Set(
-      items.map((elem, index) => {
-        return elem.label;
-      })
-    )
-  );
-  let processedList = [];
-  items.map((item, index) => {
-    if (newList.includes(item.label)) {
-      let itemIndex = newList.indexOf(item.label);
-      newList.splice(itemIndex, 1);
-      processedList = [...processedList, item];
-    }
-  });
-  // logic for removing elements having duplicate label values =>end
+  const renderDraggable = useDraggableInPortal();
 
   return (
     <Droppable droppableId={droppableId} isDropDisabled={true}>
       {(provided, snapshot) => (
         <div ref={provided.innerRef} {...provided.droppableProps}>
-          {processedList.map((item, index) => {
+          {items?.map((item, index) => {
+            const ingredientName = item?.ingredientId?.ingredientName;
+            const selectedPortionName = item?.selectedPortion?.name;
+            const selectedPortionQuantity = item?.selectedPortion?.quantity;
+
             return (
-              <Draggable draggableId={`${item.id}`} index={index} key={item.id}>
-                {(provided, snapshot) => (
+              <Draggable
+                draggableId={`${item?.ingredientId?._id}_${droppableId}`}
+                index={index}
+                key={`${item?.ingredientId?._id}`}
+              >
+                {renderDraggable((provided, snapshot) => (
                   <>
-                    <div
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      ref={provided.innerRef}
-                    >
-                      <RecipeItem item={item} handleClick={addItem} />
+                    <div {...provided.draggableProps} ref={provided.innerRef}>
+                      <SingleIngredient
+                        label={`${selectedPortionQuantity} ${selectedPortionName} ${ingredientName}`}
+                        handleAdd={() => addItem(droppableId, index)}
+                        dargProps={provided.dragHandleProps}
+                      />
                     </div>
+
                     {snapshot.isDragging && (
-                      <RecipeItem item={item} handleClick={addItem} />
+                      <SingleIngredient
+                        label={`${selectedPortionQuantity} ${selectedPortionName} ${ingredientName}`}
+                        handleAdd={addItem}
+                        dargProps={provided.dragHandleProps}
+                      />
                     )}
                   </>
-                )}
+                ))}
               </Draggable>
             );
           })}
@@ -66,106 +69,121 @@ const RecipeDetails = ({
   addItem = () => {},
   removeCompareRecipe = () => {},
   dragAndDrop = false,
+  compareRecipeList = [],
+  setcompareRecipeList = () => {},
+  showMoreMenu = true,
+  showOptionalEditIcon = false,
 }: any) => {
   const [winReady, setwinReady] = useState(false);
-  const { name, image, ingredients, nutrition } = recipe;
+  const [getBlendNutritionBasedonRecipeData, { loading, error, data }] =
+    useLazyQuery(GET_BLEND_NUTRITION_BASED_ON_RECIPE_DATA, {
+      // fetchPolicy: "network-only",
+    });
+
+  const makeIngredients = (ing) => {
+    let arr = [];
+    ing?.forEach((ing) => {
+      const ingredient = ing?.ingredientId?.ingredientName;
+      arr?.push(ingredient);
+    });
+    return arr?.join(", ");
+  };
 
   useEffect(() => {
     setwinReady(true);
   }, []);
 
+  useEffect(() => {
+    if (recipe?._id) {
+      getBlendNutritionBasedonRecipeData({
+        variables: { recipeId: recipe?._id },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
-    <div className={styles.recipeDetailsContainer}>
-      <div
-        className={styles.cancleIcon}
-        onClick={() => removeCompareRecipe(recipe)}
-      >
-        <CancelIcon />
-      </div>
-      <DatacardComponent
-        title={name}
-        ingredients={""}
-        category={""}
-        ratings={4.9}
-        noOfRatings={0}
-        carbs={0}
-        score={0}
-        calorie={0}
-        noOfComments={0}
-        image={image}
-      />
-      <div className={styles.dividerBox}>
-        <SectionTitleWithIcon
-          title="Ingredients"
-          icon="/images/right-blender.svg"
+    <div className={styles.recipeDetailsFirstContainer}>
+      <div className={styles.recipeDetailsContainer}>
+        <div
+          className={styles.cancleIcon}
+          onClick={(e) => removeCompareRecipe(recipe?._id, e)}
+        >
+          <CancelIcon />
+        </div>
+        <DatacardComponent
+          title={recipe?.name}
+          ingredients={makeIngredients(recipe?.ingredients)}
+          category={recipe?.recipeBlendCategory?.name}
+          ratings={recipe?.averageRating}
+          noOfRatings={recipe?.numberOfRating}
+          carbs={recipe?.carbs}
+          score={recipe?.score}
+          calorie={recipe?.calorie}
+          noOfComments={recipe?.numberOfRating}
+          image={recipe.image[0]?.image}
+          recipeId={recipe?._id}
+          notes={recipe?.notes}
+          addedToCompare={recipe?.addedToCompare}
+          compareRecipeList={compareRecipeList}
+          setcompareRecipeList={setcompareRecipeList}
+          showMoreMenu={showMoreMenu}
+          showOptionalEditIcon={showOptionalEditIcon}
         />
-
-        {dragAndDrop ? (
-          winReady ? (
-            <Copyable
-              items={ingredients}
-              addItem={addItem}
-              droppableId={`${id}`}
-            />
-          ) : null
-        ) : (
-          ingredients?.map((item, index) => {
-            return (
-              <p
-                key={index}
-                style={{
-                  fontSize: "14px",
-                  color: "#ababab",
-                  marginBottom: "15px",
-                }}
-              >
-                {item?.label}
-              </p>
-            );
-          })
-        )}
-      </div>
-
-      <div className={styles.dividerBox}>
-        <SectionTitleWithIcon
-          title="Nutrition"
-          icon="/icons/chart-bar-light-green.svg"
-        />
-        <div className={styles.nutritionHeader}>
-          <p>Amount Per Serving Calories</p>
-
-          <div className={styles.table_row}>
-            <div>Calories</div>
-            <div>93</div>
+        <div className={`${styles.dividerBox}`}>
+          <SectionTitleWithIcon
+            title="Ingredients"
+            icon="/images/right-blender.svg"
+          />
+          <div className={`${styles.ingredientBox} y-scroll`}>
+            {dragAndDrop ? (
+              winReady ? (
+                <Copyable
+                  items={recipe?.ingredients}
+                  addItem={addItem}
+                  droppableId={`${id}`}
+                />
+              ) : null
+            ) : (
+              recipe?.ingredients?.map((item, index) => {
+                const ingredientName = item?.ingredientId?.ingredientName;
+                const selectedPortionName = item?.selectedPortion?.name;
+                const selectedPortionQuantity = item?.selectedPortion?.quantity;
+                return (
+                  <p key={index} className={`${styles.singleIngredient}`}>
+                    {`${selectedPortionQuantity} ${selectedPortionName} ${ingredientName}`}
+                  </p>
+                );
+              })
+            )}
           </div>
-          <table></table>
         </div>
 
-        <div className={styles.ingredientsDetails}>
-          {nutrition?.map((item, index) => {
-            const { section, amount } = item;
-            return (
-              <Accordion key={index} title={section}>
-                <table>
-                  <tr className={styles.table_row_calorie}>
-                    <td></td>
-                    <td> VALUE </td>
-                    <td> DAILY% </td>
-                  </tr>
-                  {amount?.map((items, index) => {
-                    const { label, value, daily } = items;
-                    return (
-                      <tr key={index}>
-                        <td>{label}</td>
-                        <td> {value} </td>
-                        <td> {daily} </td>
-                      </tr>
-                    );
-                  })}
-                </table>
-              </Accordion>
-            );
-          })}
+        <div className={styles.dividerBox}>
+          <SectionTitleWithIcon
+            title="Nutrition"
+            icon="/icons/chart-bar-light-green.svg"
+          />
+          <div className={styles.nutritionHeader}>
+            <p>Amount Per Serving Calories</p>
+          </div>
+
+          <div className={`${styles.ingredientsDetails} `}>
+            {winReady ? (
+              loading ? (
+                <NutrationPanelSkeleton />
+              ) : (
+                <UpdatedRecursiveAccordian
+                  dataObject={
+                    data?.getBlendNutritionBasedOnRecipeData &&
+                    JSON?.parse(data?.getBlendNutritionBasedOnRecipeData)
+                  }
+                  showUser={false}
+                  counter={1}
+                />
+              )
+            ) : null}
+          </div>
         </div>
       </div>
     </div>

@@ -121,6 +121,7 @@ function FilterPageBottom({ blends, ingredients, filters }) {
                           image={item.image[0]?.image}
                           recipeId={item?._id}
                           notes={item?.notes}
+                          addedToCompare={item?.addedToCompare}
                         />
                       </div>
                     </li>

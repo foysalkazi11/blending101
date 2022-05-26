@@ -8,6 +8,7 @@ interface editARecipeInterface {
   description: string;
   recipeIngredients: object[];
   recipeInstruction: object[];
+  servingSize: number;
 }
 
 export const EDIT_A_RECIPE = ({
@@ -18,6 +19,7 @@ export const EDIT_A_RECIPE = ({
   description,
   recipeIngredients,
   recipeInstruction,
+  servingSize,
 }: editARecipeInterface) => {
   const recipeIngredientsString = (array) => {
     let recipeIngredientsModified = [];
@@ -26,7 +28,15 @@ export const EDIT_A_RECIPE = ({
         if (itm.default === true) {
           recipeIngredientsModified = [
             ...recipeIngredientsModified,
-            `{ingredientId: "${elem?._id}",weightInGram: ${itm?.meausermentWeight},selectedPortionName: "${itm?.measurement}"}`,
+            `{ingredientId: "${
+              elem?._id
+            }",weightInGram: ${itm?.meausermentWeight?.replace(
+              /"/g,
+              '\\"'
+            )},selectedPortionName: "${itm?.measurement?.replace(
+              /"/g,
+              '\\"'
+            )}"}`,
           ];
         }
       });
@@ -34,11 +44,13 @@ export const EDIT_A_RECIPE = ({
     return `[${recipeIngredientsModified}]`;
   };
 
-  console.log({recipeBlendCategory})
   const recipeInstructionString = (array) => {
     let recipeInstructionModified = [];
     array?.forEach((itm) => {
-      recipeInstructionModified = [...recipeInstructionModified, `"${itm.step}"`];
+      recipeInstructionModified = [
+        ...recipeInstructionModified,
+        `"${itm.step}"`,
+      ];
     });
 
     return `[${recipeInstructionModified}]`;
@@ -47,7 +59,10 @@ export const EDIT_A_RECIPE = ({
   const imagesArrayString = (images) => {
     let updatedImageArray = [];
     images?.forEach((elem) => {
-      updatedImageArray = [...updatedImageArray, `${`{image:"${elem.image}", default:true}`}`];
+      updatedImageArray = [
+        ...updatedImageArray,
+        `${`{image:"${elem.image}", default:true}`}`,
+      ];
     });
     return `[${updatedImageArray}]`;
   };
@@ -64,6 +79,7 @@ export const EDIT_A_RECIPE = ({
             description:"${description}"
             recipeBlendCategory:"${recipeBlendCategory}"
             image:${imagesArrayString(imagesArray)}
+            servingSize:${servingSize}
           }
         }
       )

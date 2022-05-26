@@ -34,6 +34,7 @@ const GET_ALL_POPULAR_RECIPES = gql`
         }
       }
       notes
+      addedToCompare
     }
   }
 `;

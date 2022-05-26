@@ -1,19 +1,25 @@
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
-import Cancel from "../../public/icons/cancel_black_24dp.svg";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setBlendTye, setIngredients } from "../../redux/slices/sideTraySlice";
-import styles from "./searchtag.module.scss";
-import { handleFilterClick } from "../../services/trayClick.service";
-import { deleteFilterValue } from "../../redux/slices/filterRecipeSlice";
+import React from 'react';
+import Cancel from '../../public/icons/cancel_black_24dp.svg';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { setBlendTye, setIngredients } from '../../redux/slices/sideTraySlice';
+import styles from './searchtag.module.scss';
+import { handleFilterClick } from '../../services/trayClick.service';
+import { deleteFilterValue } from '../../redux/slices/filterRecipeSlice';
 
-export default function SearchtagsComponent(props) {
-  const ingredients = useAppSelector((state) => state.sideTray.ingredients);
-  const blends = useAppSelector((state) => state.sideTray.blends);
+interface searchtagsComponentProps {
+  blends: any[];
+  ingredients: any[];
+  filters: any[];
+}
+
+export default function SearchtagsComponent() {
   const category = useAppSelector((state) => state.sideTray.category);
-  const filters = useAppSelector((state) => state.filterRecipe.filters);
   const dispatch = useAppDispatch();
-
+  const { blends, ingredients, openFilterTray } = useAppSelector(
+    (state) => state.sideTray,
+  );
+  const { filters } = useAppSelector((state) => state?.filterRecipe);
   const handleIngredientClick = (item) => {
     const blendz = handleFilterClick(ingredients, item);
     dispatch(setIngredients(blendz));
@@ -31,7 +37,7 @@ export default function SearchtagsComponent(props) {
     <div className={styles.searchtab}>
       {blends?.length
         ? blends.map((blend, i) => (
-            <div key={"searchtags" + i} className={styles.item}>
+            <div key={'searchtags' + i} className={styles.item}>
               <div
                 className={styles.cross}
                 onClick={() => handleBlendClick(blend)}
@@ -49,7 +55,7 @@ export default function SearchtagsComponent(props) {
         : null}
       {ingredients?.length
         ? ingredients?.map((blend, i) => (
-            <div key={"searchtags" + i} className={styles.item}>
+            <div key={'searchtags' + i} className={styles.item}>
               <div
                 className={styles.cross}
                 onClick={() => handleIngredientClick(blend)}
@@ -72,7 +78,7 @@ export default function SearchtagsComponent(props) {
                 <div
                   key={value + i}
                   className={styles.item}
-                  style={{ minHeight: "35px" }}
+                  style={{ minHeight: '35px' }}
                 >
                   <div
                     className={styles.cross}
