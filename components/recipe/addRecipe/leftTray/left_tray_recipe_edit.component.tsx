@@ -13,6 +13,23 @@ import { filterRankingList } from "./left_tray_recipe_edit_list";
 import Image from "next/image";
 import { useLazyQuery } from "@apollo/client";
 import { INGREDIENTS_BY_CATEGORY_AND_CLASS } from "../../../../gqlLib/recipes/queries/getEditRecipe";
+import FilterbottomComponent from "../../../sidetray/filter/filterBottom.component";
+
+const categories = [
+  { title: "All", val: "All" },
+  { title: "Leafy", val: "Leafy" },
+  { title: "Berry", val: "Berry" },
+  { title: "Herbal", val: "Herbal" },
+  { title: "Fruity", val: "Fruity" },
+  { title: "Balancer", val: "Balancer" },
+  { title: "Fatty", val: "Fatty" },
+  { title: "Seasoning", val: "Seasoning" },
+  { title: "Flavor", val: "Flavor" },
+  { title: "Rooty", val: "Rooty" },
+  { title: "Flowering", val: "Flowering" },
+  { title: "Liquid", val: "Liquid" },
+  { title: "Tube-Squash", val: "Tube-Squash" },
+];
 
 interface recipeData {
   recipeData?: any;
@@ -48,14 +65,6 @@ const Left_tray_recipe_edit = ({ recipeData, mode }: recipeData) => {
 
     dispatch(setIngredientsToList(blendz));
   };
-
-  const categories = [
-    { title: "All", val: "all" },
-    { title: "Leafy", val: "leafy" },
-    { title: "Fruity", val: "Fruity" },
-    { title: "Nutty", val: "nutty" },
-    { title: "Frozed", val: "frozed" },
-  ];
 
   const checkActive = (ingredient: string) => {
     let present = false;
@@ -120,91 +129,7 @@ const Left_tray_recipe_edit = ({ recipeData, mode }: recipeData) => {
         <div className={styles.filter__top} style={{ marginTop: "15px" }}>
           <h3>Ingredients</h3>
           {/* <FilterbottomComponent /> */}
-          <div className={styles.filter__bottom}>
-            <SwitchTwoComponent
-              value={toggle}
-              setValue={setToggle}
-              titleOne="Pictures"
-              titleTwo="Rankings"
-            />
-            <div className={styles.dropdown}>
-              <DropdownTwoComponent
-                value={dpd}
-                list={categories}
-                setValue={setDpd}
-              />
-            </div>
-            {toggle === 1 && (
-              <>
-                <div className={styles.searchBar}>
-                  <input
-                    type="text"
-                    className={styles.searchBar__input_field}
-                    placeholder="Search.."
-                    value={input}
-                    onChange={(e) => SearchResults(e.target.value)}
-                  />
-                  <div className={styles.searchBar__input_field__icon}>
-                    <div>
-                      <Image
-                        src={"/icons/search-icon.svg"}
-                        alt="Picture will load soon"
-                        height={"100%"}
-                        width={"100%"}
-                        layout="responsive"
-                        objectFit="fill"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className={styles.pictures}>
-                  <div className={styles.filter__menu}>
-                    {searchElemListFilter &&
-                      searchElemListFilter?.map((item, i) => {
-                        return (
-                          <div
-                            key={item.ingredientId + item.ingredientName}
-                            className={styles.filter__menu__item}
-                            onClick={() => handleIngredientClick(item)}
-                          >
-                            <div className={styles.filter__menu__item__image}>
-                              {item?.featuredImage !== null ? (
-                                <img src={item.featuredImage} alt={""} />
-                              ) : (
-                                <img src="/food/Dandelion.png" alt={""} />
-                              )}
-                              {checkActive(item?.ingredientName) && (
-                                <div className={styles.tick}>
-                                  <CheckCircle className={styles.ticked} />
-                                </div>
-                              )}
-                            </div>
-                            <p>{item?.ingredientName}</p>
-                          </div>
-                        );
-                      })}
-                  </div>
-                </div>
-              </>
-            )}
-            {toggle === 2 && (
-              <div className={styles.rankings}>
-                {/* <CalciumSearchElem /> */}
-                {ingredients?.map(({ name, percent, units }, index) => {
-                  return (
-                    <Linearcomponent
-                      name={name}
-                      percent={percent}
-                      checkbox
-                      key={index}
-                      highestValue={percent}
-                      units={units}
-                    />
-                  );
-                })}
-              </div>
-            )}
-          </div>
+          <FilterbottomComponent categories={categories} />
         </div>
       </div>
     </div>

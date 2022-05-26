@@ -237,10 +237,7 @@ const CreateNewRecipe = ({
           obj["ingredientId"] = ele?._id;
           obj["selectedPortionName"] = item?.measurement;
           obj["weightInGram"] = Number(item?.meausermentWeight);
-          obj["label"] = `${Math.ceil(
-            //@ts-ignore
-            parseFloat(100 / Number(item?.meausermentWeight)).toFixed(1)
-          )} ${item?.measurement} ${ele?.ingredientName}`;
+          obj["label"] = `${1} ${item?.measurement} ${ele?.ingredientName}`;
         }
       });
       setNewRecipe((state) => ({

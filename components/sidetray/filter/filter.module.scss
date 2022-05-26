@@ -35,12 +35,7 @@
 }
 
 .filter__menu {
-  display: flex;
   margin-top: 20px;
-  flex-wrap: wrap;
-  max-width: 100%;
-  gap: 10px;
-
   input {
     border: 1px solid #ececec;
     border-radius: 10px;
@@ -50,7 +45,6 @@
     line-height: 36px;
     font-size: 12px;
     min-height: 30px;
-    margin-bottom: 20px;
     width: 100%;
     outline: none;
     &:focus {
@@ -61,35 +55,43 @@
     }
   }
 
-  &__item {
-    width: 65px;
-    margin-bottom: 10px;
-    cursor: pointer;
-    position: relative;
+  .ingredientContainer {
+    max-width: 100%;
+    max-height: 350px;
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+    padding-right: 5px;
 
-    &__image {
-      border: 1px solid #e5e5e5;
-      width: 65px;
-      height: 65px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 6px;
-      margin-bottom: 4px;
+    .item {
+      cursor: pointer;
+      position: relative;
 
-      img {
-        max-width: 70%;
-        max-height: 60%;
+      .image {
+        width: 100%;
+        height: 65px;
+        border: 1px solid #e5e5e5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9px;
+
+        img {
+          max-width: 70%;
+          max-height: 60%;
+          object-fit: contain;
+        }
       }
-    }
 
-    p {
-      font-size: 10px;
-      text-align: center;
-      width: 65px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      p {
+        font-size: 10px;
+        text-align: center;
+        width: 65px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   }
 }
@@ -101,6 +103,7 @@
   display: flex;
   justify-content: center;
   width: 100%;
+  margin-top: 20px;
 }
 
 .filter__bottom {
@@ -108,7 +111,6 @@
 }
 
 .dropdown {
-  padding: 0 10px;
   margin-top: 10px;
 }
 
@@ -183,4 +185,10 @@
   transition: all;
   transition-duration: 0.4s;
   z-index: 9999;
+}
+
+.rankgingItemContainer {
+  max-height: 350px;
+  overflow-x: hidden;
+  padding-right: 5px;
 }
