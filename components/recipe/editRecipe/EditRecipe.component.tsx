@@ -1,18 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
-import AContainer from "../../../containers/A.container";
-import styles from "./EditRecipe.module.scss";
-import Center_header from "./header/centerHeader/Center_header.component";
-import RightTray from "../../rightTray/rightTray.component";
-import Left_tray_recipe_edit from "./leftTray/left_tray_recipe_edit.component";
-import Center_Elements from "./recipe_elements/centerElements.component";
-import IngredientList from "./recipe_elements/ingredientList/ingredientList&Howto.component";
-import Image from "next/image";
-import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setServingCounter } from "../../../redux/edit_recipe/editRecipeStates";
-import RightHeader from "./header/right_header/right_header.component";
-import { presetNumber } from "../../utility/numbersForServingNumber";
+import React, { useEffect, useState } from 'react';
+import AContainer from '../../../containers/A.container';
+import styles from './EditRecipe.module.scss';
+import Center_header from './header/centerHeader/Center_header.component';
+import RightTray from '../../rightTray/rightTray.component';
+import Left_tray_recipe_edit from './leftTray/left_tray_recipe_edit.component';
+import Center_Elements from './recipe_elements/centerElements.component';
+import IngredientList from './recipe_elements/ingredientList/ingredientList&Howto.component';
+import Image from 'next/image';
+import FooterRecipeFilter from '../../footer/footerRecipeFilter.component';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { setServingCounter } from '../../../redux/edit_recipe/editRecipeStates';
 
 interface editRecipe {
   recipeName: string;
@@ -40,7 +38,7 @@ const EditRecipePage = ({
   const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
   const dispatch = useAppDispatch();
   const servingCounter = useAppSelector(
-    (state) => state.editRecipeReducer.servingCounter
+    (state) => state.editRecipeReducer.servingCounter,
   );
   const [nutritionState, setNutritionState] = useState(null);
   const [singleElement, setSingleElement] = useState(false);
@@ -58,7 +56,7 @@ const EditRecipePage = ({
       <div className={styles.main}>
         <div
           className={styles.left}
-          style={leftTrayVisibleState ? { marginLeft: "0px" } : {}}
+          style={leftTrayVisibleState ? { marginLeft: '0px' } : {}}
         >
           <div
             className={styles.left__Drag__lightGreen}
@@ -66,11 +64,11 @@ const EditRecipePage = ({
               leftTrayVisibleState
                 ? {
                     backgroundImage: `url("/icons/ingr-green.svg")`,
-                    backgroundSize: "contain",
+                    backgroundSize: 'contain',
                   }
                 : {
                     backgroundImage: `url("/icons/ingr-white.svg")`,
-                    backgroundSize: "contain",
+                    backgroundSize: 'contain',
                   }
             }
             onClick={() => setLeftTrayVisibleState(!leftTrayVisibleState)}
@@ -82,10 +80,10 @@ const EditRecipePage = ({
           <div className={styles.left__title}>
             <div className={styles.left__title__bagicon}>
               <Image
-                src={"/icons/basket.svg"}
+                src={'/icons/basket.svg'}
                 alt="Picture will load soon"
-                height={"100%"}
-                width={"100%"}
+                height={'100%'}
+                width={'100%'}
                 layout="responsive"
                 objectFit="contain"
               />
@@ -121,14 +119,13 @@ const EditRecipePage = ({
           <RightTray
             counter={servingCounter}
             nutritionTrayData={nutritionTrayData}
-            adjusterFunc={adjusterFunc}
             singleElement={singleElement}
             setSingleElement={setSingleElement}
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}
             measurement={
               nutritionState &&
-              nutritionState?.portions?.filter((itm) => itm.default === true)[0]
+              nutritionState?.portions?.filter((itm) => itm.default)[0]
                 .measurement
             }
             nutrientName={nutritionState?.ingredientName}
