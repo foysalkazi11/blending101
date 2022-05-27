@@ -46,7 +46,7 @@ const RightTray = ({
   const [servingSize, setServingSize] = useState(1);
 
   return (
-    <div>
+    <div className={styles.rightTaryContainer}>
       <RightHeader />
       <div className={styles.right}>
         <div className={styles.right__headerDiv}>
