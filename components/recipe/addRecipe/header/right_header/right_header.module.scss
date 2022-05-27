@@ -1,18 +1,19 @@
 .recipeHeadingTopSec {
-    margin-bottom: 18px;
+  margin-bottom: 18px;
+  display: flex;
 
-    & h3 {
-        display: flex;
-        font-weight: 400;
-        font-size: 20px;
-    }
+  & h3 {
+    font-weight: 400;
+    font-size: 20px;
+    margin-left: 10px;
+  }
 }
 
-.chartbarIconDiv {
-    max-width: 22px;
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-left: 4px;
-    width: 20%;
-    margin-right: 7px;
-}
+// .chartbarIconDiv {
+//     max-width: 22px;
+//     margin-top: auto;
+//     margin-bottom: auto;
+//     margin-left: 4px;
+//     width: 20%;
+//     margin-right: 7px;
+// }

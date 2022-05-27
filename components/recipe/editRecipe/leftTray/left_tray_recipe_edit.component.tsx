@@ -56,6 +56,7 @@ const Left_tray_recipe_edit = ({
             categories={categories}
             checkActiveIngredient={checkActive}
             handleIngredientClick={handleIngredientClick}
+            scrollAreaMaxHeight={{ maxHeight: '520px' }}
           />
         </div>
       </div>
