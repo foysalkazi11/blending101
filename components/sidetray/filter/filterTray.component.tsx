@@ -1,27 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useRef, useState } from "react";
-import FilterTrayWrapper from "../filter.wrapper";
-import styles from "./filter.module.scss";
-import { FaEye } from "react-icons/fa";
-import { BsTagsFill } from "react-icons/bs";
-import TagSection from "./tag/TagSection";
-import VisualSection from "./visaul/VisualSection";
-
-const categories = [
-  { title: "All", val: "All" },
-  { title: "Leafy", val: "Leafy" },
-  { title: "Berry", val: "Berry" },
-  { title: "Herbal", val: "Herbal" },
-  { title: "Fruity", val: "Fruity" },
-  { title: "Balancer", val: "Balancer" },
-  { title: "Fatty", val: "Fatty" },
-  { title: "Seasoning", val: "Seasoning" },
-  { title: "Flavor", val: "Flavor" },
-  { title: "Rooty", val: "Rooty" },
-  { title: "Flowering", val: "Flowering" },
-  { title: "Liquid", val: "Liquid" },
-  { title: "Tube-Squash", val: "Tube-Squash" },
-];
+import React, { useRef, useState } from 'react';
+import FilterTrayWrapper from '../filter.wrapper';
+import styles from './filter.module.scss';
+import { FaEye } from 'react-icons/fa';
+import { BsTagsFill } from 'react-icons/bs';
+import TagSection from './tag/TagSection';
+import VisualSection from './visaul/VisualSection';
+import { categories } from '../../utility/staticData';
 
 export default function Filtertray({ filter }) {
   const [toggle, setToggle] = useState(1);
@@ -29,15 +14,15 @@ export default function Filtertray({ filter }) {
 
   const handleToggle = (no: number) => {
     if (no === 1) {
-      reff.current.style.left = "0";
+      reff.current.style.left = '0';
     } else {
-      reff.current.style.left = "50%";
+      reff.current.style.left = '50%';
     }
     setToggle(no);
   };
 
   return (
-    <FilterTrayWrapper filter={filter} id={"filter123"}>
+    <FilterTrayWrapper filter={filter} id={'filter123'}>
       <div className={styles.main}>
         <div className={styles.main__top}>
           <div className={styles.main__top__menu}>
@@ -46,7 +31,7 @@ export default function Filtertray({ filter }) {
               className={
                 toggle === 2
                   ? styles.main__top__menu__child
-                  : styles.main__top__menu__child + " " + styles.active__menu
+                  : styles.main__top__menu__child + ' ' + styles.active__menu
               }
               onClick={() => handleToggle(1)}
             >
@@ -56,7 +41,7 @@ export default function Filtertray({ filter }) {
               className={
                 toggle === 1
                   ? styles.main__top__menu__child
-                  : styles.main__top__menu__child + " " + styles.active__menu
+                  : styles.main__top__menu__child + ' ' + styles.active__menu
               }
               onClick={() => handleToggle(2)}
             >
