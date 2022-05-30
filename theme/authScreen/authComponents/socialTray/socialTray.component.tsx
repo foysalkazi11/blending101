@@ -73,6 +73,7 @@ const SocialTray = () => {
       const res = await Auth.currentAuthenticatedUser({
         bypassCache: true,
       });
+      console.log(res);
       const {
         signInUserSession: {
           idToken: {
