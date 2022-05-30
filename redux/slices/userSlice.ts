@@ -1,5 +1,5 @@
 // import type { RootState } from "../store";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type SideTrayState = {
   nonConfirmedUser: string;
@@ -10,15 +10,15 @@ type SideTrayState = {
 };
 
 const initialState: SideTrayState = {
-  nonConfirmedUser: "",
+  nonConfirmedUser: '',
   user: null,
   dbUser: {},
-  provider: "email",
+  provider: 'email',
   isNewUseImage: [],
 };
 
 export const userSlice = createSlice({
-  name: "user",
+  name: 'user',
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<string>) => {

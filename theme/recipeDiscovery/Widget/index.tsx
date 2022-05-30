@@ -1,9 +1,10 @@
 import router from 'next/router';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import DatacardComponent from '../../cards/dataCard/dataCard.component';
 import ContentTray from '../ContentTray/ContentTray.component';
 
 import styles from '../recipeDiscovery.module.scss';
+import HTML from './html';
 
 interface WidgetCollectionProps {
   collection: any;
@@ -56,23 +57,7 @@ const WidgetCollection = (props: WidgetCollectionProps) => {
                 key={'popular' + index}
                 onClick={() => router.push(`/recipe_details/${item?._id}`)}
               >
-                <DatacardComponent
-                  title={item.name}
-                  ingredients={ing}
-                  category={item.recipeBlendCategory?.name}
-                  ratings={item?.averageRating}
-                  noOfRatings={item?.numberOfRating}
-                  carbs={item.carbs}
-                  score={item.score}
-                  calorie={item.calorie}
-                  noOfComments={item?.numberOfRating}
-                  image={item.image[0]?.image}
-                  recipeId={item?._id}
-                  notes={item?.notes}
-                  addedToCompare={item?.addedToCompare}
-                  compareRecipeList={compareRecipeList}
-                  setcompareRecipeList={setcompareRecipeList}
-                />
+                <Card item={item} />
               </div>
             );
           }
@@ -80,6 +65,33 @@ const WidgetCollection = (props: WidgetCollectionProps) => {
       {}
     </ContentTray>
   );
+};
+
+const Card = (props) => {
+  const { item } = props;
+  const ref = useRef<HTMLDivElement>(null);
+  const collectionHandler = () => {
+    alert('I Worked');
+  };
+  useEffect(() => {
+    if (ref.current) {
+      const recipe = ref.current;
+      recipe.querySelector('#Name').innerHTML = item?.name;
+      (recipe.querySelector('#Image') as HTMLImageElement).src =
+        'https://blending.s3.us-east-1.amazonaws.com/8335749.jpeg';
+    }
+  }, [item]);
+
+  useEffect(() => {
+    if (ref.current) {
+      const recipe = ref.current;
+
+      (recipe.querySelector('#Name') as HTMLButtonElement).onclick =
+        collectionHandler;
+    }
+  });
+
+  return <div ref={ref} dangerouslySetInnerHTML={{ __html: HTML }} />;
 };
 
 export default WidgetCollection;
