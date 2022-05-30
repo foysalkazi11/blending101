@@ -76,12 +76,18 @@
   flex-direction: column;
 }
 
+.rightTaryContainer {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 60px;
+  transform: translateY(10px);
+}
+
 .right {
-  min-width: 100%;
+  width: 100%;
   height: 100%;
   min-height: 300px;
   border-radius: 14px;
-  overflow: hidden;
   transition: all 0.2s;
   background-color: white;
   box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
@@ -89,8 +95,8 @@
   padding-bottom: 20px;
 
   &__title {
-    @include headings();
-    padding: 22px 18px;
+    padding: 18px;
+    padding-top: 20px;
     font-size: 22px;
   }
 

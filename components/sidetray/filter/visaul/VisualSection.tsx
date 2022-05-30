@@ -1,7 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import { setBlendTye } from "../../../../redux/slices/sideTraySlice";
+import {
+  setBlendTye,
+  setIngredients,
+} from "../../../../redux/slices/sideTraySlice";
 import styles from "../filter.module.scss";
 import { blendTypes } from "../filterRankingList";
 import CheckCircle from "../../../../public/icons/check_circle_black_24dp.svg";
@@ -11,7 +14,8 @@ import { FETCH_BLEND_CATEGORIES } from "../../../../gqlLib/category/queries/fetc
 import { setAllCategories } from "../../../../redux/slices/categroySlice";
 import SkeletonBlendType from "../../../../theme/skeletons/skeletonBlendType/SkeletonBlendType";
 
-const defaultBlendImg = "https://blending.s3.us-east-1.amazonaws.com/3383678.jpg";
+const defaultBlendImg =
+  "https://blending.s3.us-east-1.amazonaws.com/3383678.jpg";
 
 type VisualSectionProps = {
   categories?: { title: string; val: string }[];
@@ -23,7 +27,9 @@ const VisualSection = ({ categories }: VisualSectionProps) => {
     FETCH_BLEND_CATEGORIES
   );
   const { allCategories } = useAppSelector((state) => state?.categroy);
-  const { openFilterTray } = useAppSelector((state) => state?.sideTray);
+  const { openFilterTray, ingredients: ingredientsList } = useAppSelector(
+    (state) => state?.sideTray
+  );
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
 
@@ -49,6 +55,37 @@ const VisualSection = ({ categories }: VisualSectionProps) => {
     let present = false;
     blends.forEach((blen) => {
       if (blen?.id === id) {
+        present = true;
+      }
+    });
+    return present;
+  };
+
+  const handleIngredientClick = (item: any, exist: boolean) => {
+    let blendz = [];
+
+    if (!exist) {
+      blendz = [
+        ...ingredientsList,
+        {
+          title: item?.ingredientName,
+          img: item?.featuredImage || "/food/chard.png",
+          id: item?._id,
+        },
+      ];
+    } else {
+      blendz = ingredientsList.filter((blen) => {
+        return blen?.id !== item?._id;
+      });
+    }
+    dispatch(setIngredients(blendz));
+  };
+
+  const checkActiveIngredient = (id: string) => {
+    let present = false;
+    ingredientsList.forEach((blen) => {
+      //@ts-ignore
+      if (blen.id === id) {
         present = true;
       }
     });
@@ -90,37 +127,46 @@ const VisualSection = ({ categories }: VisualSectionProps) => {
         <div className={styles.filter__top}>
           <h3>Blend Type</h3>
           <div className={styles.filter__menu}>
-            {allCategories?.length
-              ? allCategories.map((blend, i) => (
-                  <div
-                    key={blend?.name + i}
-                    className={styles.filter__menu__item}
-                    onClick={() =>
-                      handleBlendClick({
-                        title: blend?.name,
-                        img: blend?.image || defaultBlendImg,
-                        id: blend?._id,
-                      })
-                    }
-                  >
-                    <div className={styles.filter__menu__item__image}>
-                      <img src={blend?.image || defaultBlendImg} alt={blend?.name} />
-                      {checkActive(blend._id) && (
-                        <div className={styles.tick}>
-                          <CheckCircle className={styles.ticked} />
-                        </div>
-                      )}
+            <div className={`${styles.ingredientContainer} y-scroll`}>
+              {allCategories?.length
+                ? allCategories.map((blend, i) => (
+                    <div
+                      key={blend?.name + i}
+                      className={styles.item}
+                      onClick={() =>
+                        handleBlendClick({
+                          title: blend?.name,
+                          img: blend?.image || defaultBlendImg,
+                          id: blend?._id,
+                        })
+                      }
+                    >
+                      <div className={styles.image}>
+                        <img
+                          src={blend?.image || defaultBlendImg}
+                          alt={blend?.name}
+                        />
+                        {checkActive(blend._id) && (
+                          <div className={styles.tick}>
+                            <CheckCircle className={styles.ticked} />
+                          </div>
+                        )}
+                      </div>
+                      <p>{blend.name}</p>
                     </div>
-                    <p>{blend.name}</p>
-                  </div>
-                ))
-              : null}
+                  ))
+                : null}
+            </div>
           </div>
         </div>
       )}
       <div className={styles.filter__top} style={{ marginTop: "15px" }}>
         <h3>Ingredients</h3>
-        <FilterbottomComponent categories={categories} />
+        <FilterbottomComponent
+          categories={categories}
+          handleIngredientClick={handleIngredientClick}
+          checkActiveIngredient={checkActiveIngredient}
+        />
       </div>
     </div>
   );

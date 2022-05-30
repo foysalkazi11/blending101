@@ -24,7 +24,8 @@ const EditRecipe = () => {
   return (
     <AddRecipePage
       nutritionData={
-        nutritionData && JSON?.parse(nutritionData?.getBlendNutritionBasedOnRecipexxx)
+        nutritionData &&
+        JSON?.parse(nutritionData?.getBlendNutritionBasedOnRecipexxx)
       }
     />
   );
