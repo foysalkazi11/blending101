@@ -1,24 +1,27 @@
 /* eslint-disable @next/next/no-img-element */
-import CheckCircle from "../../../public/icons/check_circle_black_24dp.svg";
-import React, { useEffect, useRef, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setIngredients } from "../../../redux/slices/sideTraySlice";
-import CalciumSearchElem from "../../../theme/calcium/calcium.component";
-import DropdownTwoComponent from "../../../theme/dropDown/dropdownTwo.component";
-import Linearcomponent from "../../../theme/linearProgress/LinearProgress.component";
-import SwitchTwoComponent from "../../../theme/switch/switchTwo.component";
-import styles from "./filter.module.scss";
-import { useLazyQuery, useQuery } from "@apollo/client";
-import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
-import { GET_ALL_INGREDIENTS_DATA_BASED_ON_NUTRITION } from "../../../gqlLib/recipeDiscovery/query/recipeDiscovery";
-import { setAllIngredients } from "../../../redux/slices/ingredientsSlice";
-import SkeletonIngredients from "../../../theme/skeletons/skeletonIngredients/SkeletonIngredients";
-import CircularRotatingLoader from "../../../theme/loader/circularRotatingLoader.component";
-import useGetAllIngredientsDataBasedOnNutrition from "../../../customHooks/useGetAllIngredientsDataBasedOnNutrition";
-import IngredientPanelSkeleton from "../../../theme/skeletons/ingredientPanelSleketon/IngredientPanelSkeleton";
+import CheckCircle from '../../../public/icons/check_circle_black_24dp.svg';
+import React, { useEffect, useRef, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { setIngredients } from '../../../redux/slices/sideTraySlice';
+import CalciumSearchElem from '../../../theme/calcium/calcium.component';
+import DropdownTwoComponent from '../../../theme/dropDown/dropdownTwo.component';
+import Linearcomponent from '../../../theme/linearProgress/LinearProgress.component';
+import SwitchTwoComponent from '../../../theme/switch/switchTwo.component';
+import styles from './filter.module.scss';
+import { useLazyQuery, useQuery } from '@apollo/client';
+import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from '../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass';
+import { GET_ALL_INGREDIENTS_DATA_BASED_ON_NUTRITION } from '../../../gqlLib/recipeDiscovery/query/recipeDiscovery';
+import { setAllIngredients } from '../../../redux/slices/ingredientsSlice';
+import SkeletonIngredients from '../../../theme/skeletons/skeletonIngredients/SkeletonIngredients';
+import CircularRotatingLoader from '../../../theme/loader/circularRotatingLoader.component';
+import useGetAllIngredientsDataBasedOnNutrition from '../../../customHooks/useGetAllIngredientsDataBasedOnNutrition';
+import IngredientPanelSkeleton from '../../../theme/skeletons/ingredientPanelSleketon/IngredientPanelSkeleton';
 
 type FilterbottomComponentProps = {
   categories?: { title: string; val: string }[];
+  handleIngredientClick?: (item: any, exist: boolean) => void;
+  checkActiveIngredient?: (arg: any) => boolean;
+  scrollAreaMaxHeight?: React.CSSProperties;
 };
 
 interface ingredientState {
@@ -30,17 +33,20 @@ interface ingredientState {
 
 export default function FilterbottomComponent({
   categories,
+  handleIngredientClick = () => {},
+  checkActiveIngredient = () => false,
+  scrollAreaMaxHeight = { maxHeight: '350px' },
 }: FilterbottomComponentProps) {
   const [toggle, setToggle] = useState(1);
-  const [dpd, setDpd] = useState({ title: "All", val: "All" });
+  const [dpd, setDpd] = useState({ title: 'All', val: 'All' });
 
   const dispatch = useAppDispatch();
   const { ingredients: ingredientsList, openFilterTray } = useAppSelector(
-    (state) => state.sideTray
+    (state) => state.sideTray,
   );
   const { allIngredients } = useAppSelector((state) => state?.ingredients);
   const [searchIngredientData, setSearchIngredientData] = useState<any[]>([]);
-  const [searchInput, setSearchInput] = useState("");
+  const [searchInput, setSearchInput] = useState('');
   const isMounted = useRef(false);
   const [loading, setLoading] = useState(false);
   const [arrayOrderState, setArrayOrderState] = useState([]);
@@ -49,44 +55,15 @@ export default function FilterbottomComponent({
   const [rankingDropDownState, setRankingDropDownState] = useState(null);
 
   const [filterIngredientByCategroyAndClass] = useLazyQuery(
-    FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS
+    FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS,
   );
 
   const { data: IngredientData, loading: nutritionLoading } =
     useGetAllIngredientsDataBasedOnNutrition(
       rankingDropDownState?.id,
       dpd?.val,
-      toggle === 2 ? true : false
+      toggle === 2 ? true : false,
     );
-
-  const handleIngredientClick = (ingredient) => {
-    let blendz = [];
-    let present = false;
-    ingredientsList.forEach((blen) => {
-      if (blen?.id === ingredient?.id) {
-        present = true;
-      }
-    });
-    if (!present) {
-      blendz = [...ingredientsList, ingredient];
-    } else {
-      blendz = ingredientsList.filter((blen) => {
-        return blen?.id !== ingredient?.id;
-      });
-    }
-    dispatch(setIngredients(blendz));
-  };
-
-  const checkActive = (id: string) => {
-    let present = false;
-    ingredientsList.forEach((blen) => {
-      //@ts-ignore
-      if (blen.id === id) {
-        present = true;
-      }
-    });
-    return present;
-  };
 
   const fetchFilterIngredientByCategroyAndClass = async () => {
     setLoading(true);
@@ -111,22 +88,20 @@ export default function FilterbottomComponent({
   };
 
   useEffect(() => {
-    if (isMounted.current) {
-      if (!allIngredients?.length) {
-        fetchFilterIngredientByCategroyAndClass();
-      } else {
-        setSearchIngredientData(allIngredients);
-      }
+    if (!allIngredients?.length) {
+      fetchFilterIngredientByCategroyAndClass();
+    } else {
+      setSearchIngredientData(allIngredients);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openFilterTray]);
+  }, []);
 
   useEffect(() => {
     if (isMounted.current) {
-      if (dpd?.val !== "All") {
+      if (dpd?.val !== 'All') {
         setSearchIngredientData(
-          allIngredients?.filter((item) => item?.category === dpd?.val)
+          allIngredients?.filter((item) => item?.category === dpd?.val),
         );
       } else {
         if (allIngredients?.length) {
@@ -142,14 +117,14 @@ export default function FilterbottomComponent({
 
   useEffect(() => {
     if (isMounted.current) {
-      if (searchInput === "") {
+      if (searchInput === '') {
         setSearchIngredientData(allIngredients);
       } else {
         const filter = allIngredients?.filter((item) =>
           //@ts-ignore
           item?.ingredientName
             ?.toLowerCase()
-            ?.includes(searchInput?.toLowerCase())
+            ?.includes(searchInput?.toLowerCase()),
         );
         setSearchIngredientData(filter);
       }
@@ -186,7 +161,7 @@ export default function FilterbottomComponent({
       </div>
       {toggle === 1 && (
         <div className={styles.filter__menu}>
-          {dpd?.val === "All" ? (
+          {dpd?.val === 'All' ? (
             <input
               placeholder="Search ingredient"
               value={searchInput}
@@ -197,25 +172,27 @@ export default function FilterbottomComponent({
           {loading ? (
             <SkeletonIngredients />
           ) : searchIngredientData?.length ? (
-            <>
+            <div
+              className={`${styles.ingredientContainer} y-scroll`}
+              style={scrollAreaMaxHeight}
+            >
               {searchIngredientData.map((item, i) => (
                 <div
                   key={i}
-                  className={styles.filter__menu__item}
+                  className={styles.item}
                   onClick={() =>
-                    handleIngredientClick({
-                      title: item?.ingredientName,
-                      img: item?.featuredImage || "/food/chard.png",
-                      id: item?._id,
-                    })
+                    handleIngredientClick(
+                      item,
+                      checkActiveIngredient(item?._id),
+                    )
                   }
                 >
-                  <div className={styles.filter__menu__item__image}>
+                  <div className={styles.image}>
                     <img
-                      src={item?.featuredImage || "/food/chard.png"}
+                      src={item?.featuredImage || '/food/chard.png'}
                       alt={item?.ingredientName}
                     />
-                    {checkActive(item?._id) && (
+                    {checkActiveIngredient(item?._id) && (
                       <div className={styles.tick}>
                         <CheckCircle className={styles.ticked} />
                       </div>
@@ -224,7 +201,7 @@ export default function FilterbottomComponent({
                   <p>{item?.ingredientName}</p>
                 </div>
               ))}
-            </>
+            </div>
           ) : (
             <div className={styles.noResult}>
               <p>No Ingredients</p>
@@ -242,44 +219,50 @@ export default function FilterbottomComponent({
             dropDownState={rankingDropDownState}
             setDropDownState={setRankingDropDownState}
           />
-          {nutritionLoading ? (
-            <IngredientPanelSkeleton />
-          ) : arrayOrderState?.length ? (
-            arrayOrderState?.map(
-              (
-                { name, value, units, ingredientId }: ingredientState,
-                index
-              ) => {
-                return (
-                  <Linearcomponent
-                    name={name}
-                    percent={Number(value?.toFixed(2))}
-                    key={index}
-                    units={units}
-                    //@ts-ignore
-                    highestValue={
-                      ascendingDescending
-                        ? arrayOrderState[0]?.value
-                        : arrayOrderState[arrayOrderState?.length - 1]?.value
-                    }
-                    checkbox={true}
-                    checkedState={checkActive(ingredientId)}
-                    handleOnChange={() =>
-                      handleIngredientClick({
-                        title: name,
-                        img: "/food/chard.png",
-                        id: ingredientId,
-                      })
-                    }
-                  />
-                );
-              }
-            )
-          ) : (
-            <div className={styles.noResult}>
-              <p>No Ingredients</p>
-            </div>
-          )}
+          <div
+            className={`${styles.rankgingItemContainer} y-scroll`}
+            style={scrollAreaMaxHeight}
+          >
+            {nutritionLoading ? (
+              <IngredientPanelSkeleton />
+            ) : arrayOrderState?.length ? (
+              arrayOrderState?.map(
+                (
+                  { name, value, units, ingredientId }: ingredientState,
+                  index,
+                ) => {
+                  return (
+                    <Linearcomponent
+                      name={name}
+                      percent={Number(value?.toFixed(2))}
+                      key={index}
+                      units={units}
+                      //@ts-ignore
+                      highestValue={
+                        ascendingDescending
+                          ? arrayOrderState[0]?.value
+                          : arrayOrderState[arrayOrderState?.length - 1]?.value
+                      }
+                      checkbox={true}
+                      checkedState={checkActiveIngredient(ingredientId)}
+                      handleOnChange={() =>
+                        handleIngredientClick(
+                          allIngredients?.find(
+                            (item) => item?._id === ingredientId,
+                          ) || {},
+                          checkActiveIngredient(ingredientId),
+                        )
+                      }
+                    />
+                  );
+                },
+              )
+            ) : (
+              <div className={styles.noResult}>
+                <p>No Ingredients</p>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

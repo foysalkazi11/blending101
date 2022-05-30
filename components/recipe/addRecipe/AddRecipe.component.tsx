@@ -61,6 +61,7 @@ const AddRecipePage = ({ nutritionData, recipeData }: editRecipe) => {
   useEffect(() => {
     setSelectedBlendValueState(blendCategory[0]?.name?.toLowerCase());
   }, [blendCategoriesData]);
+
   useEffect(() => {
     setEditRecipeHeading(recipeData?.name);
   }, [recipeData]);

@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const GET_RECIPE = gql`
   query GetARecipe($recipeId: String!, $userId: String) {
@@ -16,6 +16,7 @@ export const GET_RECIPE = gql`
       totalViews
       recipeBlendCategory {
         name
+        _id
       }
       ingredients {
         ingredientId {
