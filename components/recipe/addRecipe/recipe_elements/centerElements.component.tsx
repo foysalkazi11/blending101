@@ -1,22 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { Dispatch, SetStateAction, useEffect, useRef } from "react";
-import styles from "./centerElements.module.scss";
-import MoreVertIcon from "../../../../public/icons/more_vert_black_36dp.svg";
-import AddRecipeCard from "./addFiles/addRecipeCards.component";
-import ScoreTray from "./scoreTray/scoreTray.component";
-import Image from "next/image";
-import { setQuantity } from "../../../../redux/edit_recipe/quantity";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import DropDown from "../../../../theme/dropDown/DropDown.component";
+import React, { Dispatch, SetStateAction, useEffect, useRef } from 'react';
+import styles from './centerElements.module.scss';
+import MoreVertIcon from '../../../../public/icons/more_vert_black_36dp.svg';
+import AddRecipeCard from './addFiles/addRecipeCards.component';
+import ScoreTray from './scoreTray/scoreTray.component';
+import Image from 'next/image';
+import { setQuantity } from '../../../../redux/edit_recipe/quantity';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
+import DropDown from '../../../../theme/dropDown/DropDown.component';
 type CenterElementsProps = {
   setImages?: Dispatch<SetStateAction<any[]>>;
   setEditRecipeHeading?: any;
   setDropDownState?: any;
   blendCategoryList: any;
-  recipeTitle: string;
-  mode?: "edit" | "add";
+  recipeTitle?: string;
+  mode?: 'edit' | 'add';
   selectedBlendValueState: any;
-  recipeBlendCategoryEditMode: any;
+  recipeBlendCategoryEditMode?: any;
 };
 
 const Center_Elements = ({
@@ -34,15 +34,15 @@ const Center_Elements = ({
 
   //quantity number sets number for top card bottom right counter in edit recipe
   const quantity_number = useAppSelector(
-    (state) => state.quantityAdjuster.quantityNum
+    (state) => state.quantityAdjuster.quantityNum,
   );
   // variables for ingredients card of edit recipe
   const adjusterFunc = (task, type) => {
-    if (type === "quantity_number") {
-      if (quantity_number <= 0 && task === "-") {
+    if (type === 'quantity_number') {
+      if (quantity_number <= 0 && task === '-') {
         dispatch(setQuantity(0));
       } else {
-        task === "+"
+        task === '+'
           ? dispatch(setQuantity(quantity_number + 1))
           : dispatch(setQuantity(quantity_number - 1));
       }
@@ -58,11 +58,11 @@ const Center_Elements = ({
       dropDownDataAllFeildsArray.push(v);
     });
   }
-  let BlendtecItem = ["Blendtec", "Blendtec"];
-  let OzItem = ["64 oz", "64 oz"];
+  let BlendtecItem = ['Blendtec', 'Blendtec'];
+  let OzItem = ['64 oz', '64 oz'];
   let dropDownStyle = {
-    paddingRight: "0px",
-    width: "111%",
+    paddingRight: '0px',
+    width: '111%',
   };
 
   useEffect(() => {
@@ -81,7 +81,7 @@ const Center_Elements = ({
             setEditRecipeHeading(e.currentTarget.textContent);
           }}
         >
-          {"Recipe Title"}
+          {'Recipe Title'}
         </h3>
 
         <div className={styles.topSection__RightIcon}>
@@ -94,15 +94,19 @@ const Center_Elements = ({
       <div className={styles.scoreTraydiv}>
         <ScoreTray />
         <p>
-          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-          voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+          nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+          pariatur.
         </p>
         <div className={styles.blendingOptions}>
           <div className={styles.blendingOptions__left}>
             <ul>
               <li>
-                <div className={styles.left__options} style={{ minWidth: "125px" }}>
+                <div
+                  className={styles.left__options}
+                  style={{ minWidth: '125px' }}
+                >
                   <DropDown
                     selectedBlendValueState={selectedBlendValueState}
                     listElem={WholefoodItem}
@@ -112,12 +116,18 @@ const Center_Elements = ({
                 </div>
               </li>
               <li>
-                <div className={styles.left__options} style={{ minWidth: "115px" }}>
+                <div
+                  className={styles.left__options}
+                  style={{ minWidth: '115px' }}
+                >
                   <DropDown listElem={BlendtecItem} style={dropDownStyle} />
                 </div>
               </li>
               <li>
-                <div className={styles.left__options} style={{ minWidth: "35px" }}>
+                <div
+                  className={styles.left__options}
+                  style={{ minWidth: '35px' }}
+                >
                   <DropDown listElem={OzItem} style={dropDownStyle} />
                 </div>
               </li>
@@ -130,22 +140,22 @@ const Center_Elements = ({
                 <div className={styles.arrow_div}>
                   <Image
                     onClick={() => {
-                      adjusterFunc("+", "quantity_number");
+                      adjusterFunc('+', 'quantity_number');
                     }}
-                    src={"/icons/dropdown.svg"}
+                    src={'/icons/dropdown.svg'}
                     alt="icon"
-                    width={"17px"}
-                    height={"15px"}
+                    width={'17px'}
+                    height={'15px'}
                     className={styles.reverse_arrow}
                   />
                   <Image
                     onClick={() => {
-                      adjusterFunc("-", "quantity_number");
+                      adjusterFunc('-', 'quantity_number');
                     }}
-                    src={"/icons/dropdown.svg"}
+                    src={'/icons/dropdown.svg'}
                     alt="icon"
-                    width={"17px"}
-                    height={"15px"}
+                    width={'17px'}
+                    height={'15px'}
                     className={styles.original_arrow}
                   />
                 </div>
@@ -153,10 +163,10 @@ const Center_Elements = ({
             </div>
             <span className={styles.timer_icon}>
               <Image
-                src={"/icons/time-icon.svg"}
+                src={'/icons/time-icon.svg'}
                 alt="Picture will load soon"
-                height={"20px"}
-                width={"20px"}
+                height={'20px'}
+                width={'20px'}
               />
             </span>
           </div>

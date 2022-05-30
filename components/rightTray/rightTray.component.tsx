@@ -28,19 +28,21 @@ interface RightTrayInterface {
 }
 
 const RightTray = ({
-  nutritionTrayData,
-  singleElement,
-  setSingleElement,
-  setNutritionState,
-  counter,
-  nutrientName,
-  measurement,
+  nutritionTrayData = {},
+  setNutritionState = () => {},
+  counter = 1,
   isComeFormRecipePage = false,
   calculatedIngOz = 0,
+  nutritionState = {},
 }: RightTrayInterface) => {
   const selectedIngredientsList = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedIngredientsList,
   );
+
+  const measurement = nutritionState?.portions?.find(
+    (itm) => itm?.default,
+  )?.measurement;
+  const nutrientName = nutritionState?.ingredientName;
 
   const dispatch = useAppDispatch();
   const [servingSize, setServingSize] = useState(1);
@@ -51,7 +53,7 @@ const RightTray = ({
       <div className={styles.right}>
         <div className={styles.right__headerDiv}>
           <div className={styles.right__title}>Nutrition</div>
-          {!singleElement && (
+          {!nutritionState?._id ? (
             <div className={styles.right__counterTray}>
               {isComeFormRecipePage ? (
                 <p className={styles.servings}>{counter}</p>
@@ -69,27 +71,6 @@ const RightTray = ({
                 </div>
               )}
 
-              {/* <div className={styles.right__counterTray__counter__icons}>
-                  <div
-                    className={styles.right__counterTray__counter__icons__arrow}
-                  >
-                    <AiOutlineUp
-                      onClick={() => {
-                        adjusterFunc("+");
-                      }}
-                    />
-                  </div>
-                  <div
-                    className={styles.right__counterTray__counter__icons__arrow}
-                  >
-                    <AiOutlineDown
-                      onClick={() => {
-                        adjusterFunc("-");
-                      }}
-                    />
-                  </div>
-                </div> */}
-
               <div className={styles.right__counterTray__serving}>
                 <div>servings</div>
               </div>
@@ -103,14 +84,13 @@ const RightTray = ({
                 &nbsp; : &nbsp;serving size
               </div>
             </div>
-          )}
-          {singleElement && (
+          ) : (
             <div className={styles.content}>
               <div className={styles.content__heading__nutrition}>
                 <>
                   <div>
                     <h3 className={styles.content__name}>
-                      {counter}&nbsp;
+                      {1}&nbsp;
                       {measurement}
                       &nbsp;
                       {nutrientName}
@@ -119,8 +99,7 @@ const RightTray = ({
                   <div
                     className={styles.content__closeBox}
                     onClick={() => {
-                      setNutritionState(null);
-                      setSingleElement(false);
+                      setNutritionState({});
                       dispatch(
                         setIngredientArrayForNutrition(selectedIngredientsList),
                       );
