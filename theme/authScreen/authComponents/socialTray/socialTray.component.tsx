@@ -104,7 +104,7 @@ const SocialTray = () => {
       dispatch(setUser(email));
       dispatch(setDbUser(data?.createNewUser));
       dispatch(setProvider(identities?.[0]?.providerName?.toLowerCase()));
-      history.push('/recipe_discovery');
+      // history.push('/recipe_discovery');
     } catch (error) {
       console.log(error?.message);
     }
