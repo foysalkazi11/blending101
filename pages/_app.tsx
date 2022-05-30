@@ -31,12 +31,12 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <ApolloProvider client={client}>
         <Provider store={store}>
-          <AuthLayoutProvider>
+          <AuthProvider>
             <Loader />
             <ToastContainer />
             {/* @ts-ignore */}
             <Component {...pageProps} />
-          </AuthLayoutProvider>
+          </AuthProvider>
         </Provider>
       </ApolloProvider>
     </>
