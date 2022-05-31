@@ -248,6 +248,7 @@ const AddRecipePage = () => {
             setNutritionState={setNutritionState}
             isComeFormRecipePage={true}
             calculatedIngOz={calculateIngOz}
+            nutritionDataLoading={nutritionDataLoading}
           />
         </div>
       </div>

@@ -25,6 +25,7 @@ interface RightTrayInterface {
   measurement?: string;
   isComeFormRecipePage?: boolean;
   calculatedIngOz?: number;
+  nutritionDataLoading: boolean;
 }
 
 const RightTray = ({
@@ -34,15 +35,20 @@ const RightTray = ({
   isComeFormRecipePage = false,
   calculatedIngOz = 0,
   nutritionState = {},
+  nutritionDataLoading,
 }: RightTrayInterface) => {
+  console.log(nutritionState);
+
   const selectedIngredientsList = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedIngredientsList,
   );
 
-  const measurement = nutritionState?.portions?.find(
-    (itm) => itm?.default,
-  )?.measurement;
-  const nutrientName = nutritionState?.ingredientName;
+  const measurement =
+    nutritionState?.portions?.find((itm) => itm?.default)?.measurement ||
+    nutritionState?.selectedPortion?.name;
+  const nutrientName =
+    nutritionState?.ingredientName ||
+    nutritionState?.ingredientId?.ingredientName;
 
   const dispatch = useAppDispatch();
   const [servingSize, setServingSize] = useState(1);
@@ -53,7 +59,35 @@ const RightTray = ({
       <div className={styles.right}>
         <div className={styles.right__headerDiv}>
           <div className={styles.right__title}>Nutrition</div>
-          {!nutritionState?._id ? (
+          {nutritionState?._id || nutritionState?.ingredientId?._id ? (
+            <div className={styles.content}>
+              <div className={styles.content__heading__nutrition}>
+                <>
+                  <div>
+                    <h3 className={styles.content__name}>
+                      {1}&nbsp;
+                      {measurement}
+                      &nbsp;
+                      {nutrientName}
+                    </h3>
+                  </div>
+                  <div
+                    className={styles.content__closeBox}
+                    onClick={() => {
+                      setNutritionState({});
+                      dispatch(
+                        setIngredientArrayForNutrition(selectedIngredientsList),
+                      );
+                    }}
+                  >
+                    <MdOutlineClose
+                      className={styles.content__closeBox__closeIcon}
+                    />
+                  </div>
+                </>
+              </div>
+            </div>
+          ) : (
             <div className={styles.right__counterTray}>
               {isComeFormRecipePage ? (
                 <p className={styles.servings}>{counter}</p>
@@ -84,48 +118,20 @@ const RightTray = ({
                 &nbsp; : &nbsp;serving size
               </div>
             </div>
-          ) : (
-            <div className={styles.content}>
-              <div className={styles.content__heading__nutrition}>
-                <>
-                  <div>
-                    <h3 className={styles.content__name}>
-                      {1}&nbsp;
-                      {measurement}
-                      &nbsp;
-                      {nutrientName}
-                    </h3>
-                  </div>
-                  <div
-                    className={styles.content__closeBox}
-                    onClick={() => {
-                      setNutritionState({});
-                      dispatch(
-                        setIngredientArrayForNutrition(selectedIngredientsList),
-                      );
-                    }}
-                  >
-                    <MdOutlineClose
-                      className={styles.content__closeBox__closeIcon}
-                    />
-                  </div>
-                </>
-              </div>
-            </div>
           )}
         </div>
 
         <div className={styles.compoent__box__nutrition}>
-          {nutritionTrayData ? (
+          {nutritionDataLoading ? (
+            <div style={{ padding: ' 0 10px' }}>
+              <NutrationPanelSkeleton />
+            </div>
+          ) : (
             <UpdatedRecursiveAccordian
               dataObject={nutritionTrayData}
               counter={isComeFormRecipePage ? 1 : counter}
               servingSize={isComeFormRecipePage ? 1 : servingSize}
             />
-          ) : (
-            <div style={{ padding: ' 0 10px' }}>
-              <NutrationPanelSkeleton />
-            </div>
           )}
         </div>
       </div>
