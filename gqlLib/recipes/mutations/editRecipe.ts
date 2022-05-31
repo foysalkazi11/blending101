@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 interface editARecipeInterface {
   recipeId: any;
@@ -8,7 +8,8 @@ interface editARecipeInterface {
   description: string;
   recipeIngredients: object[];
   recipeInstruction: object[];
-  servingSize: number;
+  servingSize?: number;
+  servings?: number;
 }
 
 export const EDIT_A_RECIPE = ({
@@ -19,7 +20,8 @@ export const EDIT_A_RECIPE = ({
   description,
   recipeIngredients,
   recipeInstruction,
-  servingSize,
+  servingSize = 0,
+  servings = 1,
 }: editARecipeInterface) => {
   const recipeIngredientsString = (array) => {
     let recipeIngredientsModified = [];
@@ -32,10 +34,10 @@ export const EDIT_A_RECIPE = ({
               elem?._id
             }",weightInGram: ${itm?.meausermentWeight?.replace(
               /"/g,
-              '\\"'
+              '\\"',
             )},selectedPortionName: "${itm?.measurement?.replace(
               /"/g,
-              '\\"'
+              '\\"',
             )}"}`,
           ];
         }
@@ -80,6 +82,7 @@ export const EDIT_A_RECIPE = ({
             recipeBlendCategory:"${recipeBlendCategory}"
             image:${imagesArrayString(imagesArray)}
             servingSize:${servingSize}
+            servings:${servings}
           }
         }
       )

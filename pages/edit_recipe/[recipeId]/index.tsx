@@ -127,7 +127,8 @@ const EditRecipeComponent = () => {
       recipeBlendCategory: selectedBLendCategory,
       recipeInstruction: recipeInstruction,
       imagesArray: imagesArray,
-      servingSize: servingCounter || 1,
+      servingSize: calculateIngOz,
+      servings: servingCounter,
     }),
   );
 

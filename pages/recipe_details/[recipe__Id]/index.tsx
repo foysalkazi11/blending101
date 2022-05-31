@@ -41,27 +41,6 @@ const Index = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recipeData]);
 
-  // useEffect(() => {
-  //   if (recipeData && singleElement === false) {
-  //     setNutritionState(recipeData?.getARecipe?.ingredients);
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [nutritionState, singleElement]);
-
-  // useEffect(() => {
-  //   getBlendNutritionBasedOnRecipe({
-  //     variables: {
-  //       ingredientsInfo: [
-  //         ...nutritionState?.map((item) => ({
-  //           ingredientId: item.ingredientId._id,
-  //           value: item?.selectedPortion?.gram,
-  //         })),
-  //       ],
-  //     },
-  //   });
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [nutritionState]);
-
   useEffect(() => {
     if (isMounted.current) {
       if (nutritionState?.ingredientId?._id) {

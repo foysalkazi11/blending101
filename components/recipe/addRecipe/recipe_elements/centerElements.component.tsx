@@ -15,8 +15,10 @@ type CenterElementsProps = {
   blendCategoryList: any;
   recipeTitle?: string;
   mode?: 'edit' | 'add';
-  selectedBlendValueState: any;
+  selectedBlendValueState: string;
   recipeBlendCategoryEditMode?: any;
+  recipeDescription?: string;
+  setRecipeDescription?: Dispatch<SetStateAction<string>>;
 };
 
 const Center_Elements = ({
@@ -28,6 +30,8 @@ const Center_Elements = ({
   mode,
   selectedBlendValueState,
   recipeBlendCategoryEditMode,
+  recipeDescription = '',
+  setRecipeDescription = () => {},
 }: CenterElementsProps) => {
   const dispatch = useAppDispatch();
   const editRecipeHeading = useRef();
@@ -49,17 +53,14 @@ const Center_Elements = ({
     }
   };
 
-  //lists for each dropdown
-  let WholefoodItem = [];
-  let dropDownDataAllFeildsArray = [];
-  if (blendCategoryList) {
-    blendCategoryList.map((v, i) => {
-      WholefoodItem.push(v.name);
-      dropDownDataAllFeildsArray.push(v);
-    });
-  }
-  let BlendtecItem = ['Blendtec', 'Blendtec'];
-  let OzItem = ['64 oz', '64 oz'];
+  let BlendtecItem = [
+    { name: 'Blendtec', value: "'Blendtec" },
+    { name: 'Blendtec', value: 'Blendtec' },
+  ];
+  let OzItem = [
+    { name: '64 oz', value: '64 oz' },
+    { name: '64 oz', value: '64 oz' },
+  ];
   let dropDownStyle = {
     paddingRight: '0px',
     width: '111%',
@@ -71,34 +72,30 @@ const Center_Elements = ({
   }, [editRecipeHeading?.current]);
   return (
     <div className={styles.main}>
-      <div className={styles.topSection}>
-        <h3
-          className={styles.topSection__heading}
-          contentEditable={true}
-          id="recipeTitle"
-          ref={editRecipeHeading}
-          onInput={(e) => {
-            setEditRecipeHeading(e.currentTarget.textContent);
-          }}
-        >
-          {'Recipe Title'}
-        </h3>
-
-        <div className={styles.topSection__RightIcon}>
-          <MoreVertIcon />
-        </div>
+      <div className={styles.recipeHeadig}>
+        <span>
+          <input
+            value={recipeTitle}
+            onChange={(e) => setEditRecipeHeading(e?.target?.value)}
+            type="text"
+            name="heading"
+            placeholder="Recipe Heading"
+          />
+        </span>
       </div>
       <div className={styles.addImagediv}>
         <AddRecipeCard setImages={setImages} />
       </div>
       <div className={styles.scoreTraydiv}>
+        <div className={styles.scoreTraydiv__description}>
+          <textarea
+            value={recipeDescription}
+            onChange={(e) => setRecipeDescription(e?.target?.value)}
+            placeholder="Recipe descripation"
+          />
+        </div>
         <ScoreTray />
-        <p>
-          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-          nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur.
-        </p>
+
         <div className={styles.blendingOptions}>
           <div className={styles.blendingOptions__left}>
             <ul>
@@ -108,10 +105,12 @@ const Center_Elements = ({
                   style={{ minWidth: '125px' }}
                 >
                   <DropDown
-                    selectedBlendValueState={selectedBlendValueState}
-                    listElem={WholefoodItem}
-                    style={dropDownStyle}
-                    valueState={setDropDownState}
+                    handleChange={(e) => setDropDownState(e?.target?.value)}
+                    listElem={blendCategoryList?.map((item) => ({
+                      name: item?.name,
+                      value: item?._id,
+                    }))}
+                    value={selectedBlendValueState}
                   />
                 </div>
               </li>
@@ -120,7 +119,11 @@ const Center_Elements = ({
                   className={styles.left__options}
                   style={{ minWidth: '115px' }}
                 >
-                  <DropDown listElem={BlendtecItem} style={dropDownStyle} />
+                  <DropDown
+                    listElem={BlendtecItem}
+                    value={BlendtecItem?.[0]?.value}
+                    style={dropDownStyle}
+                  />
                 </div>
               </li>
               <li>
@@ -128,7 +131,11 @@ const Center_Elements = ({
                   className={styles.left__options}
                   style={{ minWidth: '35px' }}
                 >
-                  <DropDown listElem={OzItem} style={dropDownStyle} />
+                  <DropDown
+                    listElem={OzItem}
+                    value={OzItem?.[0]?.value}
+                    style={dropDownStyle}
+                  />
                 </div>
               </li>
             </ul>
