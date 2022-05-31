@@ -369,10 +369,8 @@ const Center = ({
                     <div>
                       {`${ingredient?.selectedPortion?.quantity * counter}
                       ${ingredient.selectedPortion.name} `}
-                      {nutritionState &&
-                      ingredient?.ingredientId?._id ===
-                        nutritionState[0]?.ingredientId?._id &&
-                      singleElement === true ? (
+                      {ingredient?.ingredientId?._id ===
+                      nutritionState?.ingredientId?._id ? (
                         <span
                           className={styles.leftSide__highlighted}
                           style={{ color: '#fe5d1f' }}
@@ -386,10 +384,8 @@ const Center = ({
                       )}
                     </div>
                   </div>
-                  {nutritionState &&
-                  ingredient?.ingredientId?._id ===
-                    nutritionState[0]?.ingredientId?._id &&
-                  singleElement === true ? (
+                  {ingredient?.ingredientId?._id ===
+                  nutritionState?.ingredientId?._id ? (
                     <div
                       className={styles.iconGroup}
                       style={{ display: 'flex' }}
@@ -406,7 +402,7 @@ const Center = ({
                         className={styles.icon}
                         onClick={() => {
                           setsingleElement(!singleElement);
-                          setNutritionState([ingredient]);
+                          setNutritionState({});
                         }}
                       />
                       <BsCartPlus className={styles.icon} />
@@ -425,7 +421,7 @@ const Center = ({
                         onClick={() => {
                           window.scrollTo(0, 0);
                           setsingleElement(true);
-                          setNutritionState([ingredient]);
+                          setNutritionState(ingredient);
                         }}
                       />
 
