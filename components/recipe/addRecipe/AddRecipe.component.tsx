@@ -9,40 +9,44 @@ import Center_Elements from './recipe_elements/centerElements.component';
 import IngredientList from './recipe_elements/ingredientList/ingredientList&Howto.component';
 import Image from 'next/image';
 import FooterRecipeFilter from '../../footer/footerRecipeFilter.component';
-import { useAppDispatch } from '../../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { setLoading } from '../../../redux/slices/utilitySlice';
 import imageUploadS3 from '../../utility/imageUploadS3';
 import { BLEND_CATEGORY } from '../../../gqlLib/recipes/queries/getEditRecipe';
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import GET_BLEND_NUTRITION_BASED_ON_RECIPE_XXX from '../../../gqlLib/recipes/queries/getBlendNutritionBasedOnRecipeXxx';
 import RightTrayComponents from '../../rightTray/rightTray.component';
+import CREATE_A_RECIPE_BY_USER from '../../../gqlLib/recipes/mutations/createARecipeByUser';
+import notification from '../../utility/reactToastifyNotification';
+import { useRouter } from 'next/router';
 
 const AddRecipePage = () => {
   const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
   const [images, setImages] = useState<any[]>([]);
-  const [uploadUrl, setUploadUrl] = useState([]);
-  const [blendCategory, setblendCategory] = useState([]);
-  const [selectedBlendValueState, setSelectedBlendValueState] = useState(null);
+  const [selectedBlendValueState, setSelectedBlendValueState] = useState(
+    '61cafc34e1f3e015e7936587',
+  );
   const [editRecipeHeading, setEditRecipeHeading] = useState('');
   const [selectedIngredientsList, setSelectedIngredientsList] = useState([]);
   const [calculateIngOz, SetcalculateIngOz] = useState(null);
   const [nutritionState, setNutritionState] = useState(null);
   const [singleElement, setSingleElement] = useState(false);
   const [counter, setCounter] = useState(1);
+  const [howToState, setHowToSteps] = useState([]);
+  const [recipeDescription, setRecipeDescription] = useState('');
+  const [createNewRecipeByUser] = useMutation(CREATE_A_RECIPE_BY_USER);
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
+  const { dbUser } = useAppSelector((state) => state?.user);
+  const router = useRouter();
 
   const [
     getBlendNutritionBasedOnRecipe,
     { loading: nutritionDataLoading, data: nutritionData },
   ] = useLazyQuery(GET_BLEND_NUTRITION_BASED_ON_RECIPE_XXX);
 
-  const [
-    getAllCategories,
-    { loading: blendCategoriesInProgress, data: blendCategoriesData },
-  ] = useLazyQuery(BLEND_CATEGORY, {
-    fetchPolicy: 'network-only',
-  });
+  const { loading: blendCategoriesInProgress, data: blendCategoriesData } =
+    useQuery(BLEND_CATEGORY);
 
   // center
 
@@ -57,40 +61,78 @@ const AddRecipePage = () => {
   // sumbit data for add recipe
 
   const handleSubmitData = async () => {
-    dispatch(setLoading(true));
-    let res: any;
-    try {
-      if (images?.length) {
-        res = await imageUploadS3(images);
-        setUploadUrl(res);
+    if (editRecipeHeading && selectedIngredientsList?.length) {
+      dispatch(setLoading(true));
+      let ingArr = [];
+      selectedIngredientsList?.forEach((item) => {
+        let value = item?.portions?.find((item) => item.default);
+        if (value) {
+          ingArr?.push({
+            ingredientId: item?._id,
+            selectedPortionName: value?.measurement,
+            weightInGram: Number(value?.meausermentWeight),
+          });
+        }
+      });
+
+      let obj = {
+        userId: dbUser?._id,
+        name: editRecipeHeading,
+        description: recipeDescription,
+        recipeBlendCategory: selectedBlendValueState,
+        ingredients: ingArr,
+        servingSize: calculateIngOz,
+        servings: counter,
+        recipeInstructions: howToState?.map((item) => `${item?.step}`),
+      };
+
+      try {
+        if (images?.length) {
+          const imageArr = await imageUploadS3(images);
+
+          obj = {
+            ...obj,
+            //@ts-ignore
+            image: imageArr?.map((img, index) =>
+              index === 0
+                ? { image: img, default: true }
+                : { image: img, default: false },
+            ),
+          };
+
+          const { data } = await createNewRecipeByUser({
+            variables: {
+              data: obj,
+            },
+          });
+          dispatch(setLoading(false));
+          notification('success', 'recipe create successfully');
+          if (data?.addRecipeFromUser?._id) {
+            router?.push(`/recipe_details/${data?.addRecipeFromUser?._id}`);
+          }
+        } else {
+          const { data } = await createNewRecipeByUser({
+            variables: {
+              data: obj,
+            },
+          });
+          dispatch(setLoading(false));
+          notification('success', 'recipe create successfully');
+          if (data?.addRecipeFromUser?._id) {
+            router?.push(`/recipe_details/${data?.addRecipeFromUser?._id}`);
+          }
+        }
+      } catch (error) {
+        dispatch(setLoading(false));
+        notification('error', error?.message || 'Something went wrong');
       }
-      dispatch(setLoading(false));
-    } catch (error) {
-      dispatch(setLoading(false));
+    } else {
+      notification(
+        'warning',
+        "You can't save recipe without name and ingredients",
+      );
     }
-    if (res) {
-      return res;
-    } else console.log({ res: 'something went wrong in image uploading' });
   };
-
-  const fetchAllBlendCategories = async () => {
-    await getAllCategories();
-    setblendCategory(blendCategoriesData?.getAllCategories);
-  };
-
-  useEffect(() => {
-    setSelectedBlendValueState(blendCategory[0]?.name?.toLowerCase());
-  }, [blendCategoriesData]);
-
-  // useEffect(() => {
-  //   setEditRecipeHeading(recipeData?.name);
-  // }, [recipeData]);
-
-  useEffect(() => {
-    if (!blendCategoriesInProgress) {
-      fetchAllBlendCategories();
-    }
-  }, [blendCategoriesInProgress]);
 
   useEffect(() => {
     if (nutritionState?._id) {
@@ -210,20 +252,22 @@ const AddRecipePage = () => {
           </div>
         </div>
         <div className={styles.center}>
-          <Center_header />
+          <Center_header handleSaveRecipe={handleSubmitData} />
           <Center_Elements
-            blendCategoryList={blendCategory}
+            blendCategoryList={
+              blendCategoriesData?.getAllCategories
+                ? blendCategoriesData?.getAllCategories
+                : []
+            }
             setDropDownState={setSelectedBlendValueState}
             selectedBlendValueState={selectedBlendValueState}
             setImages={setImages}
             setEditRecipeHeading={setEditRecipeHeading}
+            recipeDescription={recipeDescription}
+            setRecipeDescription={setRecipeDescription}
+            recipeTitle={editRecipeHeading}
           />
           <IngredientList
-            blendCategory={blendCategory}
-            selectedBlendValueState={selectedBlendValueState}
-            handleSubmitData={handleSubmitData}
-            uploadedImagesUrl={uploadUrl}
-            editRecipeHeading={editRecipeHeading}
             adjusterFunc={adjusterFunc}
             counter={counter}
             calculatedIngOz={calculateIngOz}
@@ -235,6 +279,8 @@ const AddRecipePage = () => {
             setNutritionState={setNutritionState}
             handleIngredientClick={handleIngredientClick}
             checkActive={checkActive}
+            howToState={howToState}
+            setHowToSteps={setHowToSteps}
           />
         </div>
         <div className={styles.right__main}>

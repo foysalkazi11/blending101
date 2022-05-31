@@ -1,26 +1,29 @@
-import React, { useState } from "react";
-import DropDown from "../../../../../theme/dropDown/DropDown.component";
-import styles from "./Dietary.module.scss";
-import DietarySection from "./dietarySection/DietarySection";
+import React, { useState } from 'react';
+import DropDown from '../../../../../theme/dropDown/DropDown.component';
+import styles from './Dietary.module.scss';
+import DietarySection from './dietarySection/DietarySection';
 
-let dropdownItem = ["Warning", "Hiding"];
+let dropdownItem = [
+  { name: 'Warning', value: 'Warning' },
+  { name: 'Hiding', value: 'Hiding' },
+];
 
 const dietary = [
   {
-    icon: "/images/healthy-food.png",
-    label: "Low fodmap",
+    icon: '/images/healthy-food.png',
+    label: 'Low fodmap',
   },
   {
-    icon: "/images/avocado-1.png",
-    label: "Ketogenic",
+    icon: '/images/avocado-1.png',
+    label: 'Ketogenic',
   },
   {
-    icon: "/images/milk.png",
-    label: "Vegetarian dairy",
+    icon: '/images/milk.png',
+    label: 'Vegetarian dairy',
   },
   {
-    icon: "/images/vegetarian.png",
-    label: "Vegetarian no dairy",
+    icon: '/images/vegetarian.png',
+    label: 'Vegetarian no dairy',
   },
   // {
   //   icon: "/images/milk.png",
@@ -33,16 +36,16 @@ const dietary = [
 ];
 const allergies = [
   {
-    icon: "/images/milk-bottle.png",
-    label: "Low",
+    icon: '/images/milk-bottle.png',
+    label: 'Low',
   },
   {
-    icon: "/images/peanut.png",
-    label: "Moderate",
+    icon: '/images/peanut.png',
+    label: 'Moderate',
   },
   {
-    icon: "/images/almond.png",
-    label: "High",
+    icon: '/images/almond.png',
+    label: 'High',
   },
 ];
 
@@ -57,7 +60,7 @@ const Dietary = ({
   userProfile,
   alredyExist,
 }: DietaryProps) => {
-  const [dropDownValue, setDropDownValue] = useState("warning");
+  const [dropDownValue, setDropDownValue] = useState('Warning');
   return (
     <div className={styles.dietaryContainer}>
       <p className={styles.infoText}>
@@ -68,12 +71,12 @@ const Dietary = ({
         <p className={styles.text}>
           How should dietary or allergy conflicts be handled?
         </p>
-        <div style={{ flex: "auto" }}>
+        <div style={{ flex: 'auto' }}>
           <DropDown
             listElem={dropdownItem}
-            style={{ maxWidth: "200px" }}
+            style={{ maxWidth: '200px' }}
             value={dropDownValue}
-            valueState={setDropDownValue}
+            handleChange={(e) => setDropDownValue(e?.target?.value)}
           />
         </div>
       </div>
