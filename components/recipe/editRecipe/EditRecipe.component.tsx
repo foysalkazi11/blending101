@@ -22,6 +22,7 @@ interface editRecipe {
   editARecipeFunction: any;
   isFetching: boolean;
   calculatedIngOz?: number;
+  nutritionDataLoading: boolean;
 }
 
 const EditRecipePage = ({
@@ -34,6 +35,7 @@ const EditRecipePage = ({
   editARecipeFunction,
   isFetching,
   calculatedIngOz = 0,
+  nutritionDataLoading,
 }: editRecipe) => {
   const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
   const dispatch = useAppDispatch();
@@ -123,14 +125,9 @@ const EditRecipePage = ({
             setSingleElement={setSingleElement}
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}
-            measurement={
-              nutritionState &&
-              nutritionState?.portions?.filter((itm) => itm.default)[0]
-                .measurement
-            }
-            nutrientName={nutritionState?.ingredientName}
             isComeFormRecipePage={true}
             calculatedIngOz={calculatedIngOz}
+            nutritionDataLoading={nutritionDataLoading}
           />
         </div>
       </div>

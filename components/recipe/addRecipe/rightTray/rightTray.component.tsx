@@ -32,6 +32,7 @@ const RightTray = ({
       nutrientName={nutritionState?.ingredientName}
       isComeFormRecipePage={true}
       calculatedIngOz={calculateIngOz}
+      nutritionDataLoading={false}
     />
   );
 };

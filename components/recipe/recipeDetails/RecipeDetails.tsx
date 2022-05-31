@@ -52,13 +52,7 @@ const RecipeDetails = ({
                   setSingleElement={setsingleElement}
                   nutritionState={nutritionState}
                   setNutritionState={setNutritionState}
-                  nutrientName={
-                    nutritionState &&
-                    nutritionState[0]?.ingredientId?.ingredientName
-                  }
-                  measurement={
-                    nutritionState && nutritionState[0]?.selectedPortion?.name
-                  }
+                  nutritionDataLoading={nutritionDataLoading}
                 />
               </div>
             </div>
