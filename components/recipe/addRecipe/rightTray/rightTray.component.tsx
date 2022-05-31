@@ -1,27 +1,39 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
-import React from "react";
-import RightHeader from "../header/right_header/right_header.component";
-import styles from "./rightTray.module.scss";
-import UpdatedRecursiveAccordian from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
+import React, { useState } from 'react';
+import RightHeader from '../header/right_header/right_header.component';
+import styles from './rightTray.module.scss';
+import UpdatedRecursiveAccordian from '../../../customRecursiveAccordian/updatedRecursiveAccordian.component';
+import RightTrayComponents from '../../../rightTray/rightTray.component';
 
-const RightTray = ({ nutritionData }) => {
+interface RightTrayProps {
+  calculateIngOz?: number | null;
+  nutritionData?: object;
+}
+
+const RightTray = ({
+  nutritionData = {},
+  calculateIngOz = 0,
+}: RightTrayProps) => {
+  const [nutritionState, setNutritionState] = useState(null);
+  const [singleElement, setSingleElement] = useState(false);
   return (
-    <div>
-      <RightHeader />
-      <div className={styles.right}>
-        <div className={styles.right__title}>Nutrition</div>
-        <div className={styles.right__sub_heading}>Amount Per Servings Calories</div>
-        <div className={styles.compoent__box__nutrition}>
-          {nutritionData && (
-            <UpdatedRecursiveAccordian
-              dataObject={nutritionData}
-              counter={1}
-            />
-          )}
-        </div>
-      </div>
-    </div>
+    <RightTrayComponents
+      counter={1}
+      nutritionTrayData={nutritionData}
+      singleElement={singleElement}
+      setSingleElement={setSingleElement}
+      nutritionState={nutritionState}
+      setNutritionState={setNutritionState}
+      measurement={
+        nutritionState &&
+        nutritionState?.portions?.filter((itm) => itm.default)[0].measurement
+      }
+      nutrientName={nutritionState?.ingredientName}
+      isComeFormRecipePage={true}
+      calculatedIngOz={calculateIngOz}
+      nutritionDataLoading={false}
+    />
   );
 };
 

@@ -25,22 +25,30 @@ interface RightTrayInterface {
   measurement?: string;
   isComeFormRecipePage?: boolean;
   calculatedIngOz?: number;
+  nutritionDataLoading: boolean;
 }
 
 const RightTray = ({
-  nutritionTrayData,
-  singleElement,
-  setSingleElement,
-  setNutritionState,
-  counter,
-  nutrientName,
-  measurement,
+  nutritionTrayData = {},
+  setNutritionState = () => {},
+  counter = 1,
   isComeFormRecipePage = false,
   calculatedIngOz = 0,
+  nutritionState = {},
+  nutritionDataLoading,
 }: RightTrayInterface) => {
+  console.log(nutritionState);
+
   const selectedIngredientsList = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedIngredientsList,
   );
+
+  const measurement =
+    nutritionState?.portions?.find((itm) => itm?.default)?.measurement ||
+    nutritionState?.selectedPortion?.name;
+  const nutrientName =
+    nutritionState?.ingredientName ||
+    nutritionState?.ingredientId?.ingredientName;
 
   const dispatch = useAppDispatch();
   const [servingSize, setServingSize] = useState(1);
@@ -51,7 +59,35 @@ const RightTray = ({
       <div className={styles.right}>
         <div className={styles.right__headerDiv}>
           <div className={styles.right__title}>Nutrition</div>
-          {!singleElement && (
+          {nutritionState?._id || nutritionState?.ingredientId?._id ? (
+            <div className={styles.content}>
+              <div className={styles.content__heading__nutrition}>
+                <>
+                  <div>
+                    <h3 className={styles.content__name}>
+                      {1}&nbsp;
+                      {measurement}
+                      &nbsp;
+                      {nutrientName}
+                    </h3>
+                  </div>
+                  <div
+                    className={styles.content__closeBox}
+                    onClick={() => {
+                      setNutritionState({});
+                      dispatch(
+                        setIngredientArrayForNutrition(selectedIngredientsList),
+                      );
+                    }}
+                  >
+                    <MdOutlineClose
+                      className={styles.content__closeBox__closeIcon}
+                    />
+                  </div>
+                </>
+              </div>
+            </div>
+          ) : (
             <div className={styles.right__counterTray}>
               {isComeFormRecipePage ? (
                 <p className={styles.servings}>{counter}</p>
@@ -69,27 +105,6 @@ const RightTray = ({
                 </div>
               )}
 
-              {/* <div className={styles.right__counterTray__counter__icons}>
-                  <div
-                    className={styles.right__counterTray__counter__icons__arrow}
-                  >
-                    <AiOutlineUp
-                      onClick={() => {
-                        adjusterFunc("+");
-                      }}
-                    />
-                  </div>
-                  <div
-                    className={styles.right__counterTray__counter__icons__arrow}
-                  >
-                    <AiOutlineDown
-                      onClick={() => {
-                        adjusterFunc("-");
-                      }}
-                    />
-                  </div>
-                </div> */}
-
               <div className={styles.right__counterTray__serving}>
                 <div>servings</div>
               </div>
@@ -104,49 +119,19 @@ const RightTray = ({
               </div>
             </div>
           )}
-          {singleElement && (
-            <div className={styles.content}>
-              <div className={styles.content__heading__nutrition}>
-                <>
-                  <div>
-                    <h3 className={styles.content__name}>
-                      {counter}&nbsp;
-                      {measurement}
-                      &nbsp;
-                      {nutrientName}
-                    </h3>
-                  </div>
-                  <div
-                    className={styles.content__closeBox}
-                    onClick={() => {
-                      setNutritionState(null);
-                      setSingleElement(false);
-                      dispatch(
-                        setIngredientArrayForNutrition(selectedIngredientsList),
-                      );
-                    }}
-                  >
-                    <MdOutlineClose
-                      className={styles.content__closeBox__closeIcon}
-                    />
-                  </div>
-                </>
-              </div>
-            </div>
-          )}
         </div>
 
         <div className={styles.compoent__box__nutrition}>
-          {nutritionTrayData ? (
+          {nutritionDataLoading ? (
+            <div style={{ padding: ' 0 10px' }}>
+              <NutrationPanelSkeleton />
+            </div>
+          ) : (
             <UpdatedRecursiveAccordian
               dataObject={nutritionTrayData}
               counter={isComeFormRecipePage ? 1 : counter}
               servingSize={isComeFormRecipePage ? 1 : servingSize}
             />
-          ) : (
-            <div style={{ padding: ' 0 10px' }}>
-              <NutrationPanelSkeleton />
-            </div>
           )}
         </div>
       </div>
