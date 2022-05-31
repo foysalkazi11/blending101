@@ -19,53 +19,53 @@ const SocialTray = () => {
   const history = useRouter();
   const { user } = useAppSelector((state) => state?.user);
 
-  const updateUser = async () => {
-    try {
-      const res = await Auth.currentAuthenticatedUser({
-        bypassCache: true,
-      });
-      const {
-        signInUserSession: {
-          idToken: {
-            payload: { email, given_name, identities },
-          },
-        },
-      } = res;
-      const { data } = await createNewUser({
-        variables: {
-          data: {
-            email: email,
-            provider: identities?.[0]?.providerName?.toLowerCase(),
-          },
-        },
-      });
+  // const updateUser = async () => {
+  //   try {
+  //     const res = await Auth.currentAuthenticatedUser({
+  //       bypassCache: true,
+  //     });
+  //     const {
+  //       signInUserSession: {
+  //         idToken: {
+  //           payload: { email, given_name, identities },
+  //         },
+  //       },
+  //     } = res;
+  //     const { data } = await createNewUser({
+  //       variables: {
+  //         data: {
+  //           email: email,
+  //           provider: identities?.[0]?.providerName?.toLowerCase(),
+  //         },
+  //       },
+  //     });
 
-      // reactToastifyNotification("info", "Sign up successfully");
+  //     // reactToastifyNotification("info", "Sign up successfully");
 
-      let recipesId = [];
+  //     let recipesId = [];
 
-      data?.createNewUser?.collections?.forEach((col) => {
-        const recipes = col?.recipes;
-        recipes?.forEach((recipe) => {
-          recipesId?.push(recipe?._id);
-        });
-      });
-      dispatch(setAllRecipeWithinCollectionsId(recipesId));
-      dispatch(setUser(email));
-      dispatch(setDbUser(data?.createNewUser));
-      dispatch(setProvider(identities?.[0]?.providerName?.toLowerCase()));
-      history.push('/recipe_discovery');
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     data?.createNewUser?.collections?.forEach((col) => {
+  //       const recipes = col?.recipes;
+  //       recipes?.forEach((recipe) => {
+  //         recipesId?.push(recipe?._id);
+  //       });
+  //     });
+  //     dispatch(setAllRecipeWithinCollectionsId(recipesId));
+  //     dispatch(setUser(email));
+  //     dispatch(setDbUser(data?.createNewUser));
+  //     dispatch(setProvider(identities?.[0]?.providerName?.toLowerCase()));
+  //     history.push('/recipe_discovery');
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (!user) {
-      updateUser();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   if (!user) {
+  //     updateUser();
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const handleSocialSignup = async (provider) => {
     try {
