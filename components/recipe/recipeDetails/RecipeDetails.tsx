@@ -48,11 +48,10 @@ const RecipeDetails = ({
                 <RightTray
                   nutritionTrayData={nutritionData}
                   counter={counter}
-                  singleElement={singleElement}
-                  setSingleElement={setsingleElement}
                   nutritionState={nutritionState}
                   setNutritionState={setNutritionState}
                   nutritionDataLoading={nutritionDataLoading}
+                  servingSize={parseInt(recipeData?.servingSize)}
                 />
               </div>
             </div>

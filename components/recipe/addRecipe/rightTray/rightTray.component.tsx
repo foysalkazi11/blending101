@@ -16,20 +16,12 @@ const RightTray = ({
   calculateIngOz = 0,
 }: RightTrayProps) => {
   const [nutritionState, setNutritionState] = useState(null);
-  const [singleElement, setSingleElement] = useState(false);
   return (
     <RightTrayComponents
       counter={1}
       nutritionTrayData={nutritionData}
-      singleElement={singleElement}
-      setSingleElement={setSingleElement}
       nutritionState={nutritionState}
       setNutritionState={setNutritionState}
-      measurement={
-        nutritionState &&
-        nutritionState?.portions?.filter((itm) => itm.default)[0].measurement
-      }
-      nutrientName={nutritionState?.ingredientName}
       isComeFormRecipePage={true}
       calculatedIngOz={calculateIngOz}
       nutritionDataLoading={false}
