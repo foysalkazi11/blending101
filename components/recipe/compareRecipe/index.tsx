@@ -1,38 +1,37 @@
-import React, { useState, useRef, useEffect } from "react";
-import AContainer from "../../../containers/A.container";
-import SubNav from "../share/subNav/SubNav";
-import styles from "./compareRecipe.module.scss";
-import { useRouter } from "next/router";
-import SmallcardComponent from "../../../theme/cards/smallCard/SmallCard.component";
-import Carousel from "../../../theme/carousel/carousel.component";
-import Slider from "react-slick";
-import RecipeDetails from "../share/recipeDetails/RecipeDetails";
-import SliderArrows from "../share/sliderArrows/SliderArrows";
-import { useMutation, useQuery } from "@apollo/client";
-import GET_COMPARE_LIST from "../../../gqlLib/compare/query/getCompareList";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import SkeletonComparePage from "../../../theme/skeletons/skeletonComparePage/SkeletonComparePage";
-import notification from "../../utility/reactToastifyNotification";
-import useLocalStorage from "../../../customHooks/useLocalStorage";
-import { DragDropContext } from "react-beautiful-dnd";
-import CreateNewRecipe from "../share/createNewRecipe/CreateNewRecipe";
+import React, { useState, useRef, useEffect } from 'react';
+import AContainer from '../../../containers/A.container';
+import SubNav from '../share/subNav/SubNav';
+import styles from './compareRecipe.module.scss';
+import { useRouter } from 'next/router';
+import SmallcardComponent from '../../../theme/cards/smallCard/SmallCard.component';
+import Carousel from '../../../theme/carousel/carousel.component';
+import Slider from 'react-slick';
+import RecipeDetails from '../share/recipeDetails/RecipeDetails';
+import { useMutation, useQuery } from '@apollo/client';
+import GET_COMPARE_LIST from '../../../gqlLib/compare/query/getCompareList';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import SkeletonComparePage from '../../../theme/skeletons/skeletonComparePage/SkeletonComparePage';
+import notification from '../../utility/reactToastifyNotification';
+import useLocalStorage from '../../../customHooks/useLocalStorage';
+import { DragDropContext } from 'react-beautiful-dnd';
+import CreateNewRecipe from '../share/createNewRecipe/CreateNewRecipe';
 import {
   responsiveSetting,
   reorder,
   responsiveColumnDesktop,
   responsiveColumnLaptop,
   responsiveColumnScreen,
-} from "./utility";
-import useWindowSize from "../../utility/useWindowSize";
+} from './utility';
+import useWindowSize from '../../utility/useWindowSize';
 import {
   setCompareList,
   setLatest,
   setPopular,
   setRecommended,
-} from "../../../redux/slices/recipeSlice";
-import EMPTY_COMPARE_LIST from "../../../gqlLib/compare/mutation/emptyCompareList";
-import { setDbUser } from "../../../redux/slices/userSlice";
-import { setLoading } from "../../../redux/slices/utilitySlice";
+} from '../../../redux/slices/recipeSlice';
+import EMPTY_COMPARE_LIST from '../../../gqlLib/compare/mutation/emptyCompareList';
+import { setDbUser } from '../../../redux/slices/userSlice';
+import { setLoading } from '../../../redux/slices/utilitySlice';
 
 const compareRecipeResponsiveSetting = {
   slidesToShow: 4,
@@ -115,12 +114,12 @@ const CompareRecipe = () => {
   const router = useRouter();
   const { compareList } = useAppSelector((state) => state.recipe);
   const [compareRecipeList, setcompareRecipeList] = useLocalStorage(
-    "compareList",
-    []
+    'compareList',
+    [],
   );
   const [newlyCreatedRecipe, setNewlyCreatedRecipe] = useLocalStorage(
-    "newlyCreatedRecipe",
-    {}
+    'newlyCreatedRecipe',
+    {},
   );
 
   const dispatch = useAppDispatch();
@@ -128,7 +127,7 @@ const CompareRecipe = () => {
   const { dbUser } = useAppSelector((state) => state?.user);
   const { data, loading, error, refetch } = useQuery(GET_COMPARE_LIST, {
     variables: { userId: dbUser?._id },
-    fetchPolicy: "network-only",
+    fetchPolicy: 'network-only',
   });
   const windowSize = useWindowSize();
   const [newRecipe, setNewRecipe] = useState({
@@ -138,7 +137,7 @@ const CompareRecipe = () => {
 
   const [emptyCompareList] = useMutation(EMPTY_COMPARE_LIST);
   const { latest, popular, recommended } = useAppSelector(
-    (state) => state?.recipe
+    (state) => state?.recipe,
   );
 
   const findCompareRecipe = (id: string) => {
@@ -147,21 +146,13 @@ const CompareRecipe = () => {
 
   const handleCompare = (recipe) => {
     if (compareRecipeList?.length >= 8) {
-      // const findRecipe = findCompareRecipe(recipe?._id);
-      // if (!findRecipe) {
-      //   let copyCompareRecipe = [...compareRecipeList];
-      //   copyCompareRecipe.pop();
-      //   copyCompareRecipe.unshift(recipe);
-      //   setcompareRecipeList(copyCompareRecipe);
-      // } else {
-      //   notification("info", "alredy exist");
-      // }
+      notification('warning', "Can't add more than 8 formulate recipe");
     } else {
       const findRecipe = findCompareRecipe(recipe?._id);
       if (!findRecipe) {
         setcompareRecipeList((state) => [...state, recipe]);
       } else {
-        notification("info", "alredy exist");
+        notification('warning', 'alredy exist');
       }
     }
   };
@@ -176,16 +167,16 @@ const CompareRecipe = () => {
   const responsiveColumn = () => {
     let obj = {};
     const length = compareRecipeList?.length;
-    obj["width"] = responsiveColumnScreen(length);
+    obj['width'] = responsiveColumnScreen(length);
 
     if (windowSize?.width <= 1280) {
-      obj["width"] = responsiveColumnDesktop(length);
+      obj['width'] = responsiveColumnDesktop(length);
     }
     if (windowSize?.width <= 1024) {
-      obj["width"] = responsiveColumnLaptop(length);
+      obj['width'] = responsiveColumnLaptop(length);
     }
     if (windowSize?.width <= 768) {
-      obj["width"] = "100%";
+      obj['width'] = '100%';
     }
 
     return obj;
@@ -240,8 +231,8 @@ const CompareRecipe = () => {
       return;
     }
 
-    if (source.droppableId !== "droppable") {
-      if (destination.droppableId === "droppable") {
+    if (source.droppableId !== 'droppable') {
+      if (destination.droppableId === 'droppable') {
         addIngredient(source?.droppableId, source?.index);
       } else {
         return;
@@ -283,7 +274,7 @@ const CompareRecipe = () => {
         setDbUser({
           ...dbUser,
           compareLength: 0,
-        })
+        }),
       );
       setcompareRecipeList([]);
       dispatch(setCompareList([]));
@@ -292,33 +283,33 @@ const CompareRecipe = () => {
           recommended?.map((recipe) =>
             recipe?.addedToCompare
               ? { ...recipe, addedToCompare: false }
-              : recipe
-          )
-        )
+              : recipe,
+          ),
+        ),
       );
       dispatch(
         setLatest(
           latest?.map((recipe) =>
             recipe?.addedToCompare
               ? { ...recipe, addedToCompare: false }
-              : recipe
-          )
-        )
+              : recipe,
+          ),
+        ),
       );
       dispatch(
         setPopular(
           popular?.map((recipe) =>
             recipe?.addedToCompare
               ? { ...recipe, addedToCompare: false }
-              : recipe
-          )
-        )
+              : recipe,
+          ),
+        ),
       );
-      router?.push("/");
+      router?.push('/');
       dispatch(setLoading(false));
     } catch (error) {
       dispatch(setLoading(false));
-      notification("error", "Failed to empty compare list");
+      notification('error', 'Failed to empty compare list');
     }
   };
 
@@ -362,7 +353,7 @@ const CompareRecipe = () => {
               <SubNav
                 backAddress="/recipe_discovery"
                 backIconText="Recipe Discovery"
-                buttonText={isFormulatePage ? "Compare" : "Formulate"}
+                buttonText={isFormulatePage ? 'Compare' : 'Formulate'}
                 showButton={true}
                 buttonClick={handleCompareButtonClick}
                 compareAmout={dbUser?.compareLength}
@@ -388,13 +379,6 @@ const CompareRecipe = () => {
                   );
                 })}
               </Carousel>
-              {/* {windowSize?.width > 768 ? (
-                <SliderArrows
-                  compareRecipeLength={compareRecipeList.length}
-                  prevFunc={() => sliderRef.current?.slickPrev()}
-                  nextFunc={() => sliderRef.current?.slickNext()}
-                />
-              ) : null} */}
 
               <div className={styles.compareRecipeContainer}>
                 {isFormulatePage ? (
@@ -417,7 +401,7 @@ const CompareRecipe = () => {
                       >
                         <Slider
                           {...formulateRecipeResponsiveSetting(
-                            compareRecipeList?.length
+                            compareRecipeList?.length,
                           )}
                           ref={sliderRef}
                         >

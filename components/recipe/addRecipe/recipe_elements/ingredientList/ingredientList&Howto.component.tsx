@@ -14,7 +14,7 @@ import RemoveSharpIcon from '../../../../../public/icons/remove_black_36dp.svg';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import DragIndicatorIcon from '../../../../../public/icons/drag_indicator_black_36dp.svg';
 import ModeEditOutlineOutlinedIcon from '../../../../../public/icons/mode_edit_black_36dp.svg';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import CircularRotatingLoader from '../../../../../theme/loader/circularRotatingLoader.component';
 import { MdOutlineDelete, MdOutlineInfo } from 'react-icons/md';
@@ -24,22 +24,16 @@ import { setAllIngredients } from '../../../../../redux/slices/ingredientsSlice'
 import useOnClickOutside from '../../../../utility/useOnClickOutside';
 
 type IngredientListPorps = {
-  mode?: any;
-  howToStepsEditMode?: any;
-  ingredientListEditMode?: any;
   adjusterFunc?: (val: number) => void;
   counter?: number;
   calculatedIngOz?: number;
   selectedIngredientsList?: any[];
   setSelectedIngredientsList?: Dispatch<SetStateAction<any[]>>;
-  singleElement?: boolean;
-  setSingleElement?: Dispatch<SetStateAction<boolean>>;
   nutritionState?: object;
   setNutritionState?: Dispatch<SetStateAction<object>>;
-  handleIngredientClick: (ingredient: any, present: boolean) => void;
-  checkActive: (id: string) => boolean;
-  howToState: any[];
-  setHowToSteps: React.Dispatch<React.SetStateAction<any[]>>;
+  checkActive?: (id: string) => boolean;
+  howToState?: any[];
+  setHowToSteps?: React.Dispatch<React.SetStateAction<any[]>>;
 };
 
 const IngredientList = ({

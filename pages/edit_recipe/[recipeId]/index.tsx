@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import EditRecipePage from '../../../components/recipe/editRecipe/EditRecipe.component';
 import { useMutation, useQuery } from '@apollo/client';
@@ -34,6 +34,8 @@ const EditRecipeComponent = () => {
   const dispatch = useAppDispatch();
   const [isFetching, setIsFetching] = useState(null);
   const [calculateIngOz, SetcalculateIngOz] = useState(null);
+
+  const isMounted = useRef(false);
 
   const handleSubmitData = async (images) => {
     dispatch(setLoading(true));
@@ -115,7 +117,8 @@ const EditRecipeComponent = () => {
     dispatch(setEditRecipeName(recipeBasedData?.name));
     dispatch(setDescriptionRecipe(recipeBasedData?.description));
     dispatch(setRecipeImagesArray(recipeBasedData?.image));
-    dispatch(setServingCounter(recipeBasedData?.servingSize));
+    dispatch(setServingCounter(recipeBasedData?.servings));
+    SetcalculateIngOz(recipeBasedData?.servingSize);
   }, [classBasedData, recipeBasedData]);
 
   const [editARecipe] = useMutation(
@@ -168,14 +171,24 @@ const EditRecipeComponent = () => {
   };
 
   useEffect(() => {
-    dispatch(setIngredientArrayForNutrition(selectedIngredientsList));
-    let ozArr = 0;
-    selectedIngredientsList?.forEach((item) => {
-      const ing = item?.portions?.find((ing) => ing?.default);
-      ozArr = ozArr + parseInt(ing?.meausermentWeight);
-    });
-    SetcalculateIngOz(Math?.round(ozArr * 0.033814));
+    if (isMounted.current) {
+      dispatch(setIngredientArrayForNutrition(selectedIngredientsList));
+      let ozArr = 0;
+      selectedIngredientsList?.forEach((item) => {
+        const ing = item?.portions?.find((ing) => ing?.default);
+        ozArr = ozArr + parseInt(ing?.meausermentWeight);
+      });
+      SetcalculateIngOz(Math?.round(ozArr * 0.033814));
+    }
   }, [selectedIngredientsList]);
+
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   return (
     <EditRecipePage
