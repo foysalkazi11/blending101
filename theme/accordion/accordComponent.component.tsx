@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
-import { FiMinusSquare, FiPlusSquare } from "react-icons/fi";
-import { BsPlus } from "react-icons/bs";
-import { BiMinus } from "react-icons/bi";
-import styles from "./updatedAccordion.module.scss";
-import { useRouter } from "next/router";
+import React, { useEffect, useRef, useState } from 'react';
+import { FiMinusSquare, FiPlusSquare } from 'react-icons/fi';
+import { BsPlus } from 'react-icons/bs';
+import { BiMinus } from 'react-icons/bi';
+import styles from './updatedAccordion.module.scss';
+import { useRouter } from 'next/router';
 
 type CustomAccordionProps = {
   title: string;
@@ -13,39 +13,13 @@ type CustomAccordionProps = {
   iconRight?: boolean;
   plusMinusIcon?: boolean;
   dataObject?: object;
-  value?: string;
+  value?: number;
   percentage?: string;
   unit?: string;
   counter?: number;
   lastElement?: boolean;
   nutritionId?: string;
   servingSize?: number;
-};
-
-const valueUnitConvertor = (title, value, unit) => {
-  let val = parseInt(value);
-  let unitVal = unit;
-
-  if (val?.toString()?.length > 2) {
-    if (unitVal === `UG`) {
-      val = val / 1000;
-      unitVal = `MG`;
-      valueUnitConvertor(title, val, unitVal);
-    } else if (unitVal === `MG`) {
-      val = val / 1000;
-      unitVal = `MG`;
-      valueUnitConvertor(title, val, unitVal);
-    } else if (unitVal === `G`) {
-      val = val / 1000;
-      unitVal = `MG`;
-      valueUnitConvertor(title, val, unitVal);
-    } else {
-      null;
-    }
-  } else {
-    null;
-  }
-  return { value: val, unit: unitVal };
 };
 
 const AccordComponent = ({
@@ -60,26 +34,25 @@ const AccordComponent = ({
   unit,
   counter = 1,
   lastElement,
-  nutritionId = "",
+  nutritionId = '',
   servingSize = 1,
 }: CustomAccordionProps) => {
   const [expanded, setExpanded] = useState<boolean>(true);
   const contentRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  let valueAndUnit = valueUnitConvertor(title, value, unit);
-  const finalNutritionValue =
-    valueAndUnit &&
-    counter &&
-    //@ts-ignore
-    parseFloat((valueAndUnit?.value * counter) / servingSize).toFixed(0);
+
+  const finalNutritionValue = Math?.round(
+    (Math?.round(value) * counter) / servingSize,
+  );
   const handleClickNutration = (id: string) => {
     router?.push(`/wiki/Nutrient/${id}`);
   };
+
   useEffect(() => {
     if (contentRef.current) {
       expanded
         ? (contentRef.current.style.maxHeight = `1000px`)
-        : (contentRef.current.style.maxHeight = "0px");
+        : (contentRef.current.style.maxHeight = '0px');
     }
   }, [expanded, contentRef]);
   return (
@@ -91,17 +64,17 @@ const AccordComponent = ({
             finalNutritionValue > 0 && (
               <div className={styles.accordionSummaryForNested}>
                 {expanded ? (
-                  <BsPlus
-                    className={styles.icon + " " + styles.iconCopy}
-                    style={!plusMinusIcon && { visibility: "hidden" }}
+                  <BiMinus
+                    className={styles.icon + ' ' + styles.iconCopy}
+                    style={!plusMinusIcon && { visibility: 'hidden' }}
                     onClick={() => {
                       setExpanded(!expanded);
                     }}
                   />
                 ) : (
-                  <BiMinus
-                    className={styles.icon + " " + styles.iconCopy}
-                    style={!plusMinusIcon && { visibility: "hidden" }}
+                  <BsPlus
+                    className={styles.icon + ' ' + styles.iconCopy}
+                    style={!plusMinusIcon && { visibility: 'hidden' }}
                     onClick={() => {
                       setExpanded(!expanded);
                     }}
@@ -110,7 +83,7 @@ const AccordComponent = ({
                 {lastElement ? (
                   <div
                     className={styles.accordianContent}
-                    style={{ border: "none" }}
+                    style={{ border: 'none' }}
                   >
                     <div
                       className={
@@ -128,16 +101,16 @@ const AccordComponent = ({
                       {
                         <p
                           className={
-                            styles.valueUnit + " " + styles.alignCenter
+                            styles.valueUnit + ' ' + styles.alignCenter
                           }
                         >
-                          {`${finalNutritionValue}${valueAndUnit?.unit?.toLowerCase()}`}
+                          {`${finalNutritionValue}${unit?.toLowerCase()}`}
                         </p>
                       }
                     </div>
 
-                    <p className={styles.valueUnit + " " + styles.percentage}>
-                      {percentage || ""}
+                    <p className={styles.valueUnit + ' ' + styles.percentage}>
+                      {percentage || ''}
                     </p>
                   </div>
                 ) : (
@@ -158,16 +131,16 @@ const AccordComponent = ({
                       {
                         <p
                           className={
-                            styles.valueUnit + " " + styles.alignCenter
+                            styles.valueUnit + ' ' + styles.alignCenter
                           }
                         >
-                          {`${finalNutritionValue}${valueAndUnit?.unit?.toLowerCase()}`}
+                          {`${finalNutritionValue}${unit?.toLowerCase()}`}
                         </p>
                       }
                     </div>
 
-                    <p className={styles.valueUnit + " " + styles.percentage}>
-                      {percentage || ""}
+                    <p className={styles.valueUnit + ' ' + styles.percentage}>
+                      {percentage || ''}
                     </p>
                   </div>
                 )}
@@ -180,16 +153,16 @@ const AccordComponent = ({
           <div className={styles.accordianMainHeading}>
             {expanded ? (
               <FiMinusSquare
-                className={styles.icon + " " + styles.iconCopy}
-                style={!plusMinusIcon && { visibility: "hidden" }}
+                className={styles.icon + ' ' + styles.iconCopy}
+                style={!plusMinusIcon && { visibility: 'hidden' }}
                 onClick={() => {
                   setExpanded(!expanded);
                 }}
               />
             ) : (
               <FiPlusSquare
-                className={styles.icon + " " + styles.iconCopy}
-                style={!plusMinusIcon && { visibility: "hidden" }}
+                className={styles.icon + ' ' + styles.iconCopy}
+                style={!plusMinusIcon && { visibility: 'hidden' }}
                 onClick={() => {
                   setExpanded(!expanded);
                 }}
@@ -198,12 +171,12 @@ const AccordComponent = ({
             <div className={styles.accordianContent}>
               <h5 className={styles.titleAccordianMainHeading}>{title}</h5>
               {value && unit && (
-                <p className={styles.valueUnit + " " + styles.alignLeft}>
+                <p className={styles.valueUnit + ' ' + styles.alignLeft}>
                   {/* {parseFloat(value).toFixed(1)} &nbsp; {unit} */}
                 </p>
               )}
-              <p className={styles.valueUnit + " " + styles.percentage}>
-                {percentage || ""}
+              <p className={styles.valueUnit + ' ' + styles.percentage}>
+                {percentage || ''}
               </p>
             </div>
           </div>
