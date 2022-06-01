@@ -26,14 +26,14 @@ const AddRecipePage = () => {
   const [selectedBlendValueState, setSelectedBlendValueState] = useState(
     '61cafc34e1f3e015e7936587',
   );
-  const [editRecipeHeading, setEditRecipeHeading] = useState('');
+  const [recipeHeading, setRecipeHeading] = useState('');
   const [selectedIngredientsList, setSelectedIngredientsList] = useState([]);
   const [calculateIngOz, SetcalculateIngOz] = useState(null);
   const [nutritionState, setNutritionState] = useState(null);
-  const [singleElement, setSingleElement] = useState(false);
   const [counter, setCounter] = useState(1);
   const [howToState, setHowToSteps] = useState([]);
   const [recipeDescription, setRecipeDescription] = useState('');
+  const [recipePrepareTime, setRecipePrepareTime] = useState(1);
   const [createNewRecipeByUser] = useMutation(CREATE_A_RECIPE_BY_USER);
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
@@ -61,7 +61,7 @@ const AddRecipePage = () => {
   // sumbit data for add recipe
 
   const handleSubmitData = async () => {
-    if (editRecipeHeading && selectedIngredientsList?.length) {
+    if (recipeHeading && selectedIngredientsList?.length) {
       dispatch(setLoading(true));
       let ingArr = [];
       selectedIngredientsList?.forEach((item) => {
@@ -78,7 +78,7 @@ const AddRecipePage = () => {
 
       let obj = {
         userId: dbUser?._id,
-        name: editRecipeHeading,
+        name: recipeHeading,
         description: recipeDescription,
         recipeBlendCategory: selectedBlendValueState,
         ingredients: ingArr,
@@ -136,6 +136,8 @@ const AddRecipePage = () => {
     }
   };
 
+  //when change ingredients
+
   useEffect(() => {
     if (nutritionState?._id) {
       let value = nutritionState?.portions?.find(
@@ -181,6 +183,7 @@ const AddRecipePage = () => {
 
   //left panel
 
+  // add ingrediet
   const handleIngredientClick = (ingredient: any, present: boolean) => {
     if (!present) {
       setSelectedIngredientsList((pre) => [...pre, ingredient]);
@@ -191,6 +194,8 @@ const AddRecipePage = () => {
       ]);
     }
   };
+
+  // check ingredinet it's alredy exist
 
   const checkActive = (id: string) => {
     let present = false;
@@ -264,10 +269,13 @@ const AddRecipePage = () => {
             setDropDownState={setSelectedBlendValueState}
             selectedBlendValueState={selectedBlendValueState}
             setImages={setImages}
-            setEditRecipeHeading={setEditRecipeHeading}
+            images={images}
+            setRecipeHeading={setRecipeHeading}
             recipeDescription={recipeDescription}
             setRecipeDescription={setRecipeDescription}
-            recipeTitle={editRecipeHeading}
+            recipeTitle={recipeHeading}
+            recipePrepareTime={recipePrepareTime}
+            setRecipePrepareTime={setRecipePrepareTime}
           />
           <IngredientList
             adjusterFunc={adjusterFunc}

@@ -10,36 +10,25 @@ import S3_CONFIG from '../../../../../configs/s3';
 import axios from 'axios';
 
 type AddRecipeCardProps = {
+  existingImage?: { default: boolean; image: string }[];
   setImages?: Dispatch<SetStateAction<any[]>>;
+  images?: any[];
 };
 
-const AddRecipeCard = ({ setImages }: AddRecipeCardProps) => {
+const AddRecipeCard = ({
+  existingImage = [],
+  setImages = () => {},
+  images = [],
+}: AddRecipeCardProps) => {
   const handleClick = () => {
     const elem = document.getElementById('file__picker');
     elem.click();
   };
 
-  const dispatch = useAppDispatch();
-  const selectedImages = useAppSelector(
-    (state) => state.quantityAdjuster.uploadImageList,
-  );
-  const [imageListRaw, setImageListRaw] = useState([]);
-
-  let imageArray: string[] = [];
   const imageRenderingHandler = (event) => {
-    imageArray = [...selectedImages, ...imageArray];
-
     if (event.target.files) {
-      let BlobList = Array.from(event.target.files).map((file: any) =>
-        URL.createObjectURL(file),
-      );
-      let imageListRawArray = [];
-      imageArray = [...selectedImages, ...BlobList];
-      imageListRawArray = [...imageListRaw, ...event.target.files];
       setImages((pre) => [...pre, ...event.target.files]);
-      setImageListRaw(imageListRawArray);
     }
-    dispatch(setUploadImageList(imageArray));
   };
 
   const renderPhotos = (source) => {
@@ -53,36 +42,74 @@ const AddRecipeCard = ({ setImages }: AddRecipeCardProps) => {
           >
             <CancelIcon />
           </span>
-          <Image src={photo} alt="" layout="fill" objectFit="fill" />
+          <Image
+            src={URL.createObjectURL(photo)}
+            alt=""
+            layout="fill"
+            objectFit="fill"
+          />
         </div>
       );
     });
   };
 
   const removeImage = (index_value: number) => {
-    let updated_list = [...selectedImages];
-    updated_list.splice(index_value, 1);
-    dispatch(setUploadImageList(updated_list));
     setImages((pre) => [
       ...pre?.filter((value, index) => index !== index_value),
     ]);
   };
 
   return (
-    <div className={styles.addImage}>
-      <input
-        onChange={imageRenderingHandler}
-        hidden
-        className={styles.addImage__div}
-        type="file"
-        name="files[]"
-        id="file__picker"
-        multiple
-        accept="image/*"
-      />
-      {renderPhotos(selectedImages)}
-      <div className={styles.addImage__secondDiv} onClick={handleClick}>
-        <AddIcon />
+    <div style={{ display: 'flex', alignItems: 'center', marginTop: '20px' }}>
+      {existingImage?.map((photo, index) => {
+        return (
+          <div className={styles.image__div} key={photo?.image}>
+            <span
+            // onClick={() => {
+            //   removeImage(index);
+            // }}
+            >
+              <CancelIcon />
+            </span>
+            <Image src={photo?.image} alt="" layout="fill" objectFit="fill" />
+          </div>
+        );
+      })}
+      {images?.map((photo, index) => {
+        return (
+          <div className={styles.image__div} key={index}>
+            <span
+              onClick={() => {
+                removeImage(index);
+              }}
+            >
+              <CancelIcon />
+            </span>
+            <Image
+              src={URL.createObjectURL(photo)}
+              alt=""
+              layout="fill"
+              objectFit="cover"
+            />
+          </div>
+        );
+      })}
+
+      <div className={styles.addImage}>
+        <input
+          onChange={imageRenderingHandler}
+          hidden
+          className={styles.addImage__div}
+          type="file"
+          name="files[]"
+          id="file__picker"
+          multiple
+          accept="image/*"
+        />
+
+        <div className={styles.addImage__secondDiv} onClick={handleClick}>
+          <AddIcon />
+        </div>
       </div>
     </div>
   );
