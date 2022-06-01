@@ -51,7 +51,7 @@ const RecipeDetails = ({
                   nutritionState={nutritionState}
                   setNutritionState={setNutritionState}
                   nutritionDataLoading={nutritionDataLoading}
-                  servingSize={parseInt(recipeData?.servingSize)}
+                  servingSize={parseInt(recipeData?.servingSize || 0)}
                 />
               </div>
             </div>
