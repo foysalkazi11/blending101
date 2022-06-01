@@ -15,17 +15,13 @@ import NutrationPanelSkeleton from '../../theme/skeletons/nutrationPanelSkeleton
 
 interface RightTrayInterface {
   nutritionTrayData?: any;
-  singleElement?: any;
-  setSingleElement?: any;
   nutritionState?: any;
   setNutritionState?: any;
   counter?: number;
-  counterHandler?: string;
-  nutrientName?: string;
-  measurement?: string;
   isComeFormRecipePage?: boolean;
   calculatedIngOz?: number;
   nutritionDataLoading: boolean;
+  servingSize?: number;
 }
 
 const RightTray = ({
@@ -36,9 +32,8 @@ const RightTray = ({
   calculatedIngOz = 0,
   nutritionState = {},
   nutritionDataLoading,
+  servingSize = 0,
 }: RightTrayInterface) => {
-  console.log(nutritionState);
-
   const selectedIngredientsList = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedIngredientsList,
   );
@@ -51,7 +46,7 @@ const RightTray = ({
     nutritionState?.ingredientId?.ingredientName;
 
   const dispatch = useAppDispatch();
-  const [servingSize, setServingSize] = useState(1);
+  const [servingSizeCounter, setServingSizeCounter] = useState(1);
 
   return (
     <div className={styles.rightTaryContainer}>
@@ -96,10 +91,10 @@ const RightTray = ({
                   <input
                     className={styles.right__counterTray__counter__input}
                     type="number"
-                    value={servingSize}
+                    value={servingSizeCounter}
                     min={1}
                     onChange={(e) => {
-                      setServingSize(parseInt(e?.target?.value));
+                      setServingSizeCounter(parseInt(e?.target?.value));
                     }}
                   />
                 </div>
@@ -112,7 +107,9 @@ const RightTray = ({
                 <div className={styles.right__counterTray__serving__num}>
                   {isComeFormRecipePage
                     ? calculatedIngOz
-                    : Math.round((16 * counter) / servingSize)}{' '}
+                    : Math.round(
+                        (servingSize * counter) / servingSizeCounter,
+                      )}{' '}
                   oz
                 </div>
                 &nbsp; : &nbsp;serving size
@@ -130,7 +127,7 @@ const RightTray = ({
             <UpdatedRecursiveAccordian
               dataObject={nutritionTrayData}
               counter={isComeFormRecipePage ? 1 : counter}
-              servingSize={isComeFormRecipePage ? 1 : servingSize}
+              servingSize={isComeFormRecipePage ? 1 : servingSizeCounter}
             />
           )}
         </div>

@@ -46,6 +46,7 @@ export const GET_RECIPE = gql`
       servingSize
       addedToCompare
       notes
+      servings
     }
   }
 `;

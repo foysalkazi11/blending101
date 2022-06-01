@@ -74,6 +74,7 @@ const AddRecipePage = () => {
           });
         }
       });
+      const howToArr = howToState?.map((item) => `${item?.step}`);
 
       let obj = {
         userId: dbUser?._id,
@@ -83,22 +84,23 @@ const AddRecipePage = () => {
         ingredients: ingArr,
         servingSize: calculateIngOz,
         servings: counter,
-        recipeInstructions: howToState?.map((item) => `${item?.step}`),
+        recipeInstructions: howToArr,
       };
 
       try {
         if (images?.length) {
-          const imageArr = await imageUploadS3(images);
-
-          obj = {
-            ...obj,
-            //@ts-ignore
-            image: imageArr?.map((img, index) =>
-              index === 0
-                ? { image: img, default: true }
-                : { image: img, default: false },
-            ),
-          };
+          let imageArr = await imageUploadS3(images);
+          //@ts-ignore
+          (imageArr = imageArr?.map((img, index) =>
+            index === 0
+              ? { image: img, default: true }
+              : { image: img, default: false },
+          )),
+            (obj = {
+              ...obj,
+              //@ts-ignore
+              image: imageArr,
+            });
 
           const { data } = await createNewRecipeByUser({
             variables: {
@@ -273,11 +275,8 @@ const AddRecipePage = () => {
             calculatedIngOz={calculateIngOz}
             selectedIngredientsList={selectedIngredientsList}
             setSelectedIngredientsList={setSelectedIngredientsList}
-            setSingleElement={setSingleElement}
-            singleElement={singleElement}
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}
-            handleIngredientClick={handleIngredientClick}
             checkActive={checkActive}
             howToState={howToState}
             setHowToSteps={setHowToSteps}

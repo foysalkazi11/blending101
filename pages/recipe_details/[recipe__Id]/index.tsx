@@ -1,10 +1,7 @@
 import { useLazyQuery, useQuery } from '@apollo/client';
 import React, { useEffect, useRef, useState } from 'react';
 import RecipeDetails from '../../../components/recipe/recipeDetails/RecipeDetails';
-import {
-  GET_NUTRITION,
-  GET_RECIPE,
-} from '../../../gqlLib/recipes/queries/getRecipeDetails';
+import { GET_RECIPE } from '../../../gqlLib/recipes/queries/getRecipeDetails';
 import { useRouter } from 'next/router';
 import { useAppSelector } from '../../../redux/hooks';
 import GET_BLEND_NUTRITION_BASED_ON_RECIPE_XXX from '../../../gqlLib/recipes/queries/getBlendNutritionBasedOnRecipeXxx';
