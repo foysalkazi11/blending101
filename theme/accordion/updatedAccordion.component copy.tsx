@@ -1,5 +1,5 @@
-import React from "react";
-import AccordComponent from "./accordComponent.component";
+import React from 'react';
+import AccordComponent from './accordComponent.component';
 
 type CustomAccordionProps = {
   title: string;
@@ -18,16 +18,18 @@ const UpdatedCustomAccordion = ({
   dailyGoalsData,
   servingSize = 1,
 }: CustomAccordionProps) => {
+  console.log(Math.round(0.7));
+
   if (dailyGoalsData) {
     dailyGoalsData = JSON?.parse(dailyGoalsData) || {};
   }
 
   const calculateDailyPercentage = (
     recipeNutrientValue: number,
-    dailyGoals: number
+    dailyGoals: number,
   ) => {
     return Math?.round(
-      ((100 / dailyGoals) * recipeNutrientValue * counter) / servingSize
+      ((100 / dailyGoals) * recipeNutrientValue * counter) / servingSize,
     );
   };
 
@@ -47,15 +49,6 @@ const UpdatedCustomAccordion = ({
           : //@ts-ignore
             parseFloat(dailyDosePercentage?.dri);
 
-        const percentageFinalValue = parseFloat(
-          //@ts-ignore
-          (100 * itm[1]?.value) / counter / dailyDosePercentage?.goal
-            ? //@ts-ignore
-              dailyDosePercentage?.goal
-            : //@ts-ignore
-              dailyDosePercentage?.dri
-        ).toFixed(0);
-
         //@ts-ignore
         if (itm[1]?.childs && Object.keys(itm[1]?.childs)?.length > 0) {
           if (firstChild) {
@@ -73,9 +66,9 @@ const UpdatedCustomAccordion = ({
                       ? `${calculateDailyPercentage(
                           //@ts-ignore
                           parseFloat(itm[1]?.value),
-                          dailyGoals
+                          dailyGoals,
                         )}%`
-                      : ""
+                      : ''
                   }
                   counter={counter}
                   /* @ts-ignore */
@@ -91,7 +84,7 @@ const UpdatedCustomAccordion = ({
             );
           } else {
             return (
-              <div style={{ marginLeft: "18px" }} key={itm[0] + Date.now()}>
+              <div style={{ marginLeft: '18px' }} key={itm[0] + Date.now()}>
                 <AccordComponent
                   title={itm[0]}
                   plusMinusIcon={true}
@@ -105,9 +98,9 @@ const UpdatedCustomAccordion = ({
                       ? `${calculateDailyPercentage(
                           //@ts-ignore
                           parseFloat(itm[1]?.value),
-                          dailyGoals
+                          dailyGoals,
                         )}%`
-                      : ""
+                      : ''
                   }
                   counter={counter}
                   /* @ts-ignore */
@@ -139,9 +132,9 @@ const UpdatedCustomAccordion = ({
                       ? `${calculateDailyPercentage(
                           //@ts-ignore
                           parseFloat(itm[1]?.value),
-                          dailyGoals
+                          dailyGoals,
                         )}%`
-                      : ""
+                      : ''
                   }
                   counter={counter}
                   /* @ts-ignore */
@@ -152,7 +145,7 @@ const UpdatedCustomAccordion = ({
             );
           } else {
             return (
-              <div style={{ marginLeft: "18px" }} key={itm[0] + Date.now()}>
+              <div style={{ marginLeft: '18px' }} key={itm[0] + Date.now()}>
                 <AccordComponent
                   title={itm[0]}
                   plusMinusIcon={false}
@@ -166,9 +159,9 @@ const UpdatedCustomAccordion = ({
                       ? `${calculateDailyPercentage(
                           //@ts-ignore
                           parseFloat(itm[1]?.value),
-                          dailyGoals
+                          dailyGoals,
                         )}%`
-                      : ""
+                      : ''
                   }
                   counter={counter}
                   /* @ts-ignore */
