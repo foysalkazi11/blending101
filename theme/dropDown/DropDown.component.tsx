@@ -1,27 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from "react";
-import styles from "./DropDown.module.scss";
+import React from 'react';
+import styles from './DropDown.module.scss';
 
 interface dropDown {
-  listElem?: string[];
-  ElemList?: object[];
+  listElem?: { name: string; value: string }[];
   value?: string;
-  handleChange?: (name: any, value: any) => void;
-  name?: string;
+  handleChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   style?: object;
-  valueState?: any;
-  selectedBlendValueState?: any;
-  mode?: string;
+  name?: string;
 }
 const DropDown = ({
-  listElem,
+  listElem = [],
   style = {},
-  value = "",
-  ElemList,
+  value = '',
+  name = '',
   handleChange = () => {},
-  name = "dropdown",
-  valueState = () => {},
-  selectedBlendValueState,
 }: dropDown) => {
   return (
     <div className={styles.formGroup}>
@@ -30,15 +23,13 @@ const DropDown = ({
         id="dropdown"
         className={styles.customSelectbx}
         style={{ backgroundImage: `url(/icons/dropdown.svg)`, ...style }}
-        onChange={(e) => {
-          valueState(e.target.value);
-        }}
-        value={selectedBlendValueState?.toLowerCase()}
+        onChange={(e) => handleChange(e)}
+        value={value}
       >
         {listElem?.map((item, index) => {
           return (
-            <option value={item.toLowerCase()} key={index}>
-              {item}
+            <option value={item?.value} key={index}>
+              {item?.name}
             </option>
           );
         })}

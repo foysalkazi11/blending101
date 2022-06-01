@@ -308,36 +308,12 @@ const Center = ({
                 );
               })}
             </div>
-
-            {/* <button
-                onClick={() => adjusterFunc(counter < 0 ? 0 : counter - 1)}
-              >
-                <MdRemove className={styles.icon} />
-              </button> */}
-            {/* <button
-                onClick={() => adjusterFunc(counter < 0 ? 0 : counter - 1)}
-              >
-                <MdRemove className={styles.icon} />
-              </button> */}
-
-            {/* <p>{counter}</p> */}
-
-            {/* <input
-                className={styles.servings}
-                type="number"
-                value={counter}
-                onChange={(e) => inputTagValueHandler(e)}
-                min={1}
-              /> */}
-            {/* <button
-                onClick={() => adjusterFunc(counter === 0.5 ? 1 : counter + 1)}
-              >
-                <MdAdd className={styles.icon} />
-              </button> */}
           </div>
           <div className={styles.size}>
             <p>serving Size : </p>
-            <span>{Math.round(16 * counter)} 0z</span>
+            <span>
+              {Math.round(parseInt(recipeData?.servingSize) * counter)} 0z
+            </span>
           </div>
           <div className={styles.usMatric}>
             <span>US</span>

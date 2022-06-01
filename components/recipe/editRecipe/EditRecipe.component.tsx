@@ -121,8 +121,6 @@ const EditRecipePage = ({
           <RightTray
             counter={servingCounter}
             nutritionTrayData={nutritionTrayData}
-            singleElement={singleElement}
-            setSingleElement={setSingleElement}
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}
             isComeFormRecipePage={true}

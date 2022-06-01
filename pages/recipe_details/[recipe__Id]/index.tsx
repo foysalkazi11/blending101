@@ -1,10 +1,7 @@
 import { useLazyQuery, useQuery } from '@apollo/client';
 import React, { useEffect, useRef, useState } from 'react';
 import RecipeDetails from '../../../components/recipe/recipeDetails/RecipeDetails';
-import {
-  GET_NUTRITION,
-  GET_RECIPE,
-} from '../../../gqlLib/recipes/queries/getRecipeDetails';
+import { GET_RECIPE } from '../../../gqlLib/recipes/queries/getRecipeDetails';
 import { useRouter } from 'next/router';
 import { useAppSelector } from '../../../redux/hooks';
 import GET_BLEND_NUTRITION_BASED_ON_RECIPE_XXX from '../../../gqlLib/recipes/queries/getBlendNutritionBasedOnRecipeXxx';
@@ -40,27 +37,6 @@ const Index = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recipeData]);
-
-  // useEffect(() => {
-  //   if (recipeData && singleElement === false) {
-  //     setNutritionState(recipeData?.getARecipe?.ingredients);
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [nutritionState, singleElement]);
-
-  // useEffect(() => {
-  //   getBlendNutritionBasedOnRecipe({
-  //     variables: {
-  //       ingredientsInfo: [
-  //         ...nutritionState?.map((item) => ({
-  //           ingredientId: item.ingredientId._id,
-  //           value: item?.selectedPortion?.gram,
-  //         })),
-  //       ],
-  //     },
-  //   });
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [nutritionState]);
 
   useEffect(() => {
     if (isMounted.current) {
