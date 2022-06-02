@@ -1,60 +1,68 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useRef, useState } from "react";
-import styles from "./centerElements.module.scss";
-import MoreVertIcon from "../../../../public/icons/more_vert_black_36dp.svg";
-import AddRecipeCard from "./addFiles/addRecipeCards.component";
-import ScoreTray from "./scoreTray/scoreTray.component";
-import Image from "next/image";
-import { setQuantity } from "../../../../redux/edit_recipe/quantity";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import styles from './centerElements.module.scss';
+import MoreVertIcon from '../../../../public/icons/more_vert_black_36dp.svg';
+import ScoreTray from './scoreTray/scoreTray.component';
+import Image from 'next/image';
+import { setQuantity } from '../../../../redux/edit_recipe/quantity';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 import {
   setDescriptionRecipe,
   setEditRecipeName,
-  setRecipeFileImagesArray,
-  setRecipeImagesArray,
   setSelectedBlendCategory,
-} from "../../../../redux/edit_recipe/editRecipeStates";
-import RecipeDropDown from "../../../../theme/dropDown/recipeDropDown.component";
+} from '../../../../redux/edit_recipe/editRecipeStates';
+import RecipeDropDown from '../../../../theme/dropDown/recipeDropDown.component';
+import HandleImageShow from '../../share/handleImageShow/HandleImageShow';
 
 type CenterElementsProps = {
   recipeName?: string;
   allBlendCategories?: [];
   selectedBLendCategory?: string;
+  existingImage?: string[];
+  setExistingImage?: Dispatch<SetStateAction<string[]>>;
+  setImages?: Dispatch<SetStateAction<any[]>>;
+  images?: any[];
 };
 
 const Center_Elements = ({
   recipeName,
   allBlendCategories,
   selectedBLendCategory,
+  images = [],
+  setImages = () => {},
+  existingImage = [],
+  setExistingImage = () => {},
 }: CenterElementsProps) => {
   const dispatch = useAppDispatch();
   const editRecipeHeading = useRef();
   const [blendCategoryState, setBlendCategoryState] = useState(null);
-  const recipeImagesArray = useAppSelector(
-    (state) => state.editRecipeReducer.recipeImagesArray
-  );
+
   const quantity_number = useAppSelector(
-    (state) => state?.quantityAdjuster?.quantityNum
+    (state) => state?.quantityAdjuster?.quantityNum,
   );
   const recipeDescription = useAppSelector(
-    (state) => state?.editRecipeReducer?.descriptionRecipe
+    (state) => state?.editRecipeReducer?.descriptionRecipe,
   );
-  const recipeFileImagesArray = useAppSelector(
-    (state) => state.editRecipeReducer.recipeFileImagesArray
-  );
+
   let BlendtecItem = [{ name: `Blentec` }, { name: `Blentec` }];
-  let OzItem = [{ name: "64oz" }, { name: "64oz" }];
+  let OzItem = [{ name: '64oz' }, { name: '64oz' }];
   let dropDownStyle = {
-    paddingRight: "0px",
-    width: "111%",
+    paddingRight: '0px',
+    width: '111%',
   };
 
   const adjusterFunc = (task, type) => {
-    if (type === "quantity_number") {
-      if (quantity_number <= 0 && task === "-") {
+    if (type === 'quantity_number') {
+      if (quantity_number <= 0 && task === '-') {
         dispatch(setQuantity(0));
       } else {
-        task === "+"
+        task === '+'
           ? dispatch(setQuantity(quantity_number + 1))
           : dispatch(setQuantity(quantity_number - 1));
       }
@@ -69,37 +77,6 @@ const Center_Elements = ({
     //@ts-ignore
     editRecipeHeading.current.textContent = text;
     dispatch(setEditRecipeName(text));
-  };
-
-  const imageRenderingHandler = (event) => {
-    let imageArraytemp = [...recipeImagesArray];
-
-    if (event.target.files) {
-      let BlobList = Array?.from(event.target.files)?.map((file: any) =>
-        URL?.createObjectURL(file)
-      );
-
-      let FileArrayForAws = Array?.from(event.target.files);
-
-      BlobList?.map((elem) => {
-        imageArraytemp = [
-          ...imageArraytemp,
-          { __typename: `blobType`, image: elem, default: false },
-        ];
-      });
-
-      dispatch(setRecipeFileImagesArray(FileArrayForAws));
-    }
-    dispatch(setRecipeImagesArray(imageArraytemp));
-  };
-
-  const removeImage = (index_value: number) => {
-    let updated_list = [...recipeImagesArray];
-    updated_list?.splice(index_value, 1);
-    let updated__Array__forAWS = [...recipeFileImagesArray];
-    updated__Array__forAWS?.splice(index_value, 1);
-    dispatch(setRecipeFileImagesArray(updated__Array__forAWS));
-    dispatch(setRecipeImagesArray(updated_list));
   };
 
   useEffect(() => {
@@ -117,9 +94,10 @@ const Center_Elements = ({
       //@ts-ignore
       return elem?.name === blendCategoryState;
     });
-    // @ts-ignore
 
-    blendCategoryId && dispatch(setSelectedBlendCategory(blendCategoryId[0]?._id));
+    blendCategoryId &&
+      // @ts-ignore
+      dispatch(setSelectedBlendCategory(blendCategoryId[0]?._id));
   }, [blendCategoryState]);
 
   return (
@@ -141,11 +119,17 @@ const Center_Elements = ({
         </div>
       </div>
       <div className={styles.addImagediv}>
-        <AddRecipeCard
+        <HandleImageShow
+          existingImage={existingImage}
+          images={images}
+          setExistingImage={setExistingImage}
+          setImages={setImages}
+        />
+        {/* <AddRecipeCard
           imageState={recipeImagesArray}
           imageRenderingHandler={imageRenderingHandler}
           removeImage={removeImage}
-        />
+        /> */}
       </div>
       <div className={styles.scoreTraydiv}>
         <div className={styles.scoreTraydiv__description}>
@@ -161,7 +145,10 @@ const Center_Elements = ({
           <div className={styles.blendingOptions__left}>
             <ul>
               <li>
-                <div className={styles.left__options} style={{ minWidth: "125px" }}>
+                <div
+                  className={styles.left__options}
+                  style={{ minWidth: '125px' }}
+                >
                   <RecipeDropDown
                     ElemList={allBlendCategories}
                     style={dropDownStyle}
@@ -171,12 +158,21 @@ const Center_Elements = ({
                 </div>
               </li>
               <li>
-                <div className={styles.left__options} style={{ minWidth: "115px" }}>
-                  <RecipeDropDown ElemList={BlendtecItem} style={dropDownStyle} />
+                <div
+                  className={styles.left__options}
+                  style={{ minWidth: '115px' }}
+                >
+                  <RecipeDropDown
+                    ElemList={BlendtecItem}
+                    style={dropDownStyle}
+                  />
                 </div>
               </li>
               <li>
-                <div className={styles.left__options} style={{ minWidth: "35px" }}>
+                <div
+                  className={styles.left__options}
+                  style={{ minWidth: '35px' }}
+                >
                   <RecipeDropDown ElemList={OzItem} style={dropDownStyle} />
                 </div>
               </li>
@@ -189,22 +185,22 @@ const Center_Elements = ({
                 <div className={styles.arrow_div}>
                   <Image
                     onClick={() => {
-                      adjusterFunc("+", "quantity_number");
+                      adjusterFunc('+', 'quantity_number');
                     }}
-                    src={"/icons/dropdown.svg"}
+                    src={'/icons/dropdown.svg'}
                     alt="icon"
-                    width={"17px"}
-                    height={"15px"}
+                    width={'17px'}
+                    height={'15px'}
                     className={styles.reverse_arrow}
                   />
                   <Image
                     onClick={() => {
-                      adjusterFunc("-", "quantity_number");
+                      adjusterFunc('-', 'quantity_number');
                     }}
-                    src={"/icons/dropdown.svg"}
+                    src={'/icons/dropdown.svg'}
                     alt="icon"
-                    width={"17px"}
-                    height={"15px"}
+                    width={'17px'}
+                    height={'15px'}
                     className={styles.original_arrow}
                   />
                 </div>
@@ -212,10 +208,10 @@ const Center_Elements = ({
             </div>
             <span className={styles.timer_icon}>
               <Image
-                src={"/icons/time-icon.svg"}
+                src={'/icons/time-icon.svg'}
                 alt="Picture will load soon"
-                height={"20px"}
-                width={"20px"}
+                height={'20px'}
+                width={'20px'}
               />
             </span>
           </div>
