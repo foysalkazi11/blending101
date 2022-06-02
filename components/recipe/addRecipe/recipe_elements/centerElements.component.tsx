@@ -1,11 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { Dispatch, SetStateAction } from 'react';
 import styles from './centerElements.module.scss';
-import MoreVertIcon from '../../../../public/icons/more_vert_black_36dp.svg';
-import AddRecipeCard from './addFiles/addRecipeCards.component';
 import ScoreTray from './scoreTray/scoreTray.component';
 import Image from 'next/image';
 import DropDown from '../../../../theme/dropDown/DropDown.component';
+import HandleImageShow from '../../share/handleImageShow/HandleImageShow';
 type CenterElementsProps = {
   images?: any[];
   setImages?: Dispatch<SetStateAction<any[]>>;
@@ -68,7 +67,7 @@ const Center_Elements = ({
         </span>
       </div>
       <div className={styles.addImagediv}>
-        <AddRecipeCard setImages={setImages} images={images} />
+        <HandleImageShow setImages={setImages} images={images} />
       </div>
       <div className={styles.scoreTraydiv}>
         <div className={styles.scoreTraydiv__description}>
