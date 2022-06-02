@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import AContainer from '../../../containers/A.container';
 import styles from './EditRecipe.module.scss';
 import Center_header from './header/centerHeader/Center_header.component';
@@ -23,6 +23,10 @@ interface editRecipe {
   isFetching: boolean;
   calculatedIngOz?: number;
   nutritionDataLoading: boolean;
+  existingImage?: string[];
+  setExistingImage?: Dispatch<SetStateAction<string[]>>;
+  setImages?: Dispatch<SetStateAction<any[]>>;
+  images?: any[];
 }
 
 const EditRecipePage = ({
@@ -36,6 +40,10 @@ const EditRecipePage = ({
   isFetching,
   calculatedIngOz = 0,
   nutritionDataLoading,
+  images = [],
+  setImages = () => {},
+  existingImage = [],
+  setExistingImage = () => {},
 }: editRecipe) => {
   const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
   const dispatch = useAppDispatch();
@@ -105,6 +113,10 @@ const EditRecipePage = ({
             recipeName={recipeName}
             allBlendCategories={allBlendCategories}
             selectedBLendCategory={selectedBLendCategory}
+            images={images}
+            setImages={setImages}
+            existingImage={existingImage}
+            setExistingImage={setExistingImage}
           />
           <IngredientList
             adjusterFunc={adjusterFunc}

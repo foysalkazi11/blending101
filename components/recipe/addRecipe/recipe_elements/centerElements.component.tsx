@@ -1,55 +1,42 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { Dispatch, SetStateAction, useEffect, useRef } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import styles from './centerElements.module.scss';
-import MoreVertIcon from '../../../../public/icons/more_vert_black_36dp.svg';
-import AddRecipeCard from './addFiles/addRecipeCards.component';
 import ScoreTray from './scoreTray/scoreTray.component';
 import Image from 'next/image';
-import { setQuantity } from '../../../../redux/edit_recipe/quantity';
-import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 import DropDown from '../../../../theme/dropDown/DropDown.component';
+import HandleImageShow from '../../share/handleImageShow/HandleImageShow';
 type CenterElementsProps = {
+  images?: any[];
   setImages?: Dispatch<SetStateAction<any[]>>;
-  setEditRecipeHeading?: any;
+  setRecipeHeading?: Dispatch<SetStateAction<string>>;
   setDropDownState?: any;
   blendCategoryList: any;
   recipeTitle?: string;
-  mode?: 'edit' | 'add';
   selectedBlendValueState: string;
-  recipeBlendCategoryEditMode?: any;
   recipeDescription?: string;
   setRecipeDescription?: Dispatch<SetStateAction<string>>;
+  recipePrepareTime?: number;
+  setRecipePrepareTime?: Dispatch<SetStateAction<number>>;
 };
 
 const Center_Elements = ({
-  setImages,
-  recipeTitle,
-  setEditRecipeHeading,
+  images = [],
+  setImages = () => {},
+  recipeTitle = '',
+  setRecipeHeading = () => {},
   setDropDownState,
   blendCategoryList,
-  mode,
   selectedBlendValueState,
-  recipeBlendCategoryEditMode,
   recipeDescription = '',
   setRecipeDescription = () => {},
+  recipePrepareTime = 1,
+  setRecipePrepareTime = () => {},
 }: CenterElementsProps) => {
-  const dispatch = useAppDispatch();
-  const editRecipeHeading = useRef();
-
-  //quantity number sets number for top card bottom right counter in edit recipe
-  const quantity_number = useAppSelector(
-    (state) => state.quantityAdjuster.quantityNum,
-  );
-  // variables for ingredients card of edit recipe
-  const adjusterFunc = (task, type) => {
-    if (type === 'quantity_number') {
-      if (quantity_number <= 0 && task === '-') {
-        dispatch(setQuantity(0));
-      } else {
-        task === '+'
-          ? dispatch(setQuantity(quantity_number + 1))
-          : dispatch(setQuantity(quantity_number - 1));
-      }
+  const adjusterFunc = (value) => {
+    if (value < 1) {
+      setRecipePrepareTime(1);
+    } else {
+      setRecipePrepareTime(value);
     }
   };
 
@@ -66,17 +53,13 @@ const Center_Elements = ({
     width: '111%',
   };
 
-  useEffect(() => {
-    // @ts-ignore
-    setEditRecipeHeading(editRecipeHeading?.current?.textContent);
-  }, [editRecipeHeading?.current]);
   return (
     <div className={styles.main}>
       <div className={styles.recipeHeadig}>
         <span>
           <input
             value={recipeTitle}
-            onChange={(e) => setEditRecipeHeading(e?.target?.value)}
+            onChange={(e) => setRecipeHeading(e?.target?.value)}
             type="text"
             name="heading"
             placeholder="Recipe Heading"
@@ -84,7 +67,7 @@ const Center_Elements = ({
         </span>
       </div>
       <div className={styles.addImagediv}>
-        <AddRecipeCard setImages={setImages} />
+        <HandleImageShow setImages={setImages} images={images} />
       </div>
       <div className={styles.scoreTraydiv}>
         <div className={styles.scoreTraydiv__description}>
@@ -142,12 +125,12 @@ const Center_Elements = ({
           </div>
           <div className={styles.blendingOptions__right}>
             <div className={styles.blendingOptions__right__options}>
-              <span className={styles.text}>{quantity_number}</span>
+              <span className={styles.text}>{recipePrepareTime}</span>
               <div className={styles.arrow}>
                 <div className={styles.arrow_div}>
                   <Image
                     onClick={() => {
-                      adjusterFunc('+', 'quantity_number');
+                      adjusterFunc(recipePrepareTime + 1);
                     }}
                     src={'/icons/dropdown.svg'}
                     alt="icon"
@@ -157,7 +140,7 @@ const Center_Elements = ({
                   />
                   <Image
                     onClick={() => {
-                      adjusterFunc('-', 'quantity_number');
+                      adjusterFunc(recipePrepareTime - 1);
                     }}
                     src={'/icons/dropdown.svg'}
                     alt="icon"

@@ -18,8 +18,6 @@ const UpdatedCustomAccordion = ({
   dailyGoalsData,
   servingSize = 1,
 }: CustomAccordionProps) => {
-  console.log(Math.round(0.7));
-
   if (dailyGoalsData) {
     dailyGoalsData = JSON?.parse(dailyGoalsData) || {};
   }

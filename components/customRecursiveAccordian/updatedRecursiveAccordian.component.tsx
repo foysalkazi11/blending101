@@ -22,8 +22,6 @@ const UpdatedRecursiveAccordian = ({
   showUser = true,
   servingSize = 1,
 }: recursiveAccordianInterface) => {
-  console.log(dataObject);
-
   const { user, dbUser } = useAppSelector((state) => state?.user);
   const router = useRouter();
   const { data: dailyData } = useQuery(GET_DAILY_GOALS, {
