@@ -1,0 +1,16 @@
+.iconContainer {
+  z-index: 1;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #c9c9c9;
+  cursor: pointer;
+  transition: all 0.3s;
+
+  &:hover {
+    background-color: #fe5d1f;
+  }
+}
