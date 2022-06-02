@@ -6,10 +6,8 @@ import { MdClose } from 'react-icons/md';
 import IconWraper from '../../../../theme/iconWraper/IconWraper';
 
 interface AddRecipeCardProps {
-  existingImage?: { default: boolean; image: string }[];
-  setExistingImage?: Dispatch<
-    SetStateAction<{ default: boolean; image: string }[]>
-  >;
+  existingImage?: string[];
+  setExistingImage?: Dispatch<SetStateAction<string[]>>;
   setImages?: Dispatch<SetStateAction<any[]>>;
   images?: any[];
 }
@@ -40,7 +38,7 @@ const HandleImageShow = ({
   };
   const removeExistingImage = (image: string) => {
     setExistingImage((pre) => [
-      ...pre?.filter((item, index) => item?.image !== image),
+      ...pre?.filter((item, index) => item !== image),
     ]);
   };
 
@@ -48,7 +46,7 @@ const HandleImageShow = ({
     <div className={styles.imageShowContainer}>
       {existingImage?.map((photo, index) => {
         return (
-          <div className={styles.image__div} key={photo?.image}>
+          <div className={styles.image__div} key={photo}>
             <div className={styles.icon}>
               <IconWraper
                 style={{
@@ -56,13 +54,13 @@ const HandleImageShow = ({
                   top: '2px',
                   right: '1px',
                 }}
-                handleClick={() => removeExistingImage(photo?.image)}
+                handleClick={() => removeExistingImage(photo)}
               >
                 <MdClose color="#f4f4f4" />
               </IconWraper>
             </div>
 
-            <Image src={photo?.image} alt="" layout="fill" objectFit="fill" />
+            <Image src={photo} alt="" layout="fill" objectFit="fill" />
           </div>
         );
       })}
