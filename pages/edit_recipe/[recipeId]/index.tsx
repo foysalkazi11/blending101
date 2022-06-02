@@ -8,21 +8,17 @@ import {
   GET_RECIPE_NUTRITION,
   INGREDIENTS_BY_CATEGORY_AND_CLASS,
 } from '../../../gqlLib/recipes/queries/getEditRecipe';
-import {
-  GET_A_RECIPE_FOR_EDIT_RECIPE,
-  GET_RECIPE,
-} from '../../../gqlLib/recipes/queries/getRecipeDetails';
+import { GET_RECIPE } from '../../../gqlLib/recipes/queries/getRecipeDetails';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import {
   setDescriptionRecipe,
   setEditRecipeName,
   setIngredientArrayForNutrition,
-  setRecipeFileImagesArray,
   setRecipeImagesArray,
   setSelectedIngredientsList,
   setServingCounter,
 } from '../../../redux/edit_recipe/editRecipeStates';
-import { EDIT_A_RECIPE } from '../../../gqlLib/recipes/mutations/editRecipe';
+import EDIT_A_RECIPE from '../../../gqlLib/recipes/mutations/editARecipe';
 import { setLoading } from '../../../redux/slices/utilitySlice';
 import imageUploadS3 from '../../../components/utility/imageUploadS3';
 import reactToastifyNotification from '../../../components/utility/reactToastifyNotification';
@@ -34,24 +30,10 @@ const EditRecipeComponent = () => {
   const dispatch = useAppDispatch();
   const [isFetching, setIsFetching] = useState(null);
   const [calculateIngOz, SetcalculateIngOz] = useState(null);
+  const [images, setImages] = useState<any[]>([]);
+  const [existingimages, setExistingImages] = useState<string[]>([]);
 
   const isMounted = useRef(false);
-
-  const handleSubmitData = async (images) => {
-    dispatch(setLoading(true));
-    let res: any;
-    try {
-      if (images?.length) {
-        res = await imageUploadS3(images);
-      }
-      dispatch(setLoading(false));
-    } catch (error) {
-      dispatch(setLoading(false));
-    }
-    if (res) {
-      return res;
-    } else console.log({ res: 'something went wrong in image uploading' });
-  };
 
   const servingCounter = useAppSelector(
     (state) => state.editRecipeReducer.servingCounter,
@@ -74,23 +56,19 @@ const EditRecipeComponent = () => {
   const selectedBLendCategory = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedBlendCategory,
   );
-  const imagesArray = useAppSelector(
-    (state) => state.editRecipeReducer.recipeImagesArray,
-  );
-  const recipeFileImagesArray = useAppSelector(
-    (state) => state.editRecipeReducer.recipeFileImagesArray,
-  );
   const { data: classData } = useQuery(INGREDIENTS_BY_CATEGORY_AND_CLASS, {
     variables: { classType: 'All' },
   });
 
   const { data: recipeData, loading: recipeLoading } = useQuery(GET_RECIPE, {
     variables: { recipeId: recipeId, userId: dbUser?._id },
+    fetchPolicy: 'network-only',
   });
   const { data: allBlendCategory } = useQuery(BLEND_CATEGORY);
   const { data: nutritionData, loading: nutritionDataLoading } = useQuery(
     GET_RECIPE_NUTRITION(ingredientArrayForNutrition),
   );
+  const [editRecipe] = useMutation(EDIT_A_RECIPE);
   const [
     classBasedData,
     recipeBasedData,
@@ -119,54 +97,81 @@ const EditRecipeComponent = () => {
     dispatch(setRecipeImagesArray(recipeBasedData?.image));
     dispatch(setServingCounter(recipeBasedData?.servings));
     SetcalculateIngOz(recipeBasedData?.servingSize);
+    setExistingImages(recipeBasedData?.image?.map((item) => `${item?.image}`));
   }, [classBasedData, recipeBasedData]);
 
-  const [editARecipe] = useMutation(
-    EDIT_A_RECIPE({
-      recipeId: recipeId,
-      recipeName: recipeName,
-      description: recipeDescription,
-      recipeIngredients: selectedIngredientsList,
-      recipeBlendCategory: selectedBLendCategory,
-      recipeInstruction: recipeInstruction,
-      imagesArray: imagesArray,
-      servingSize: calculateIngOz,
-      servings: servingCounter,
-    }),
-  );
-
   const editARecipeFunction = async () => {
-    setIsFetching(true);
-    let urlImageArray = imagesArray?.filter(
-      (elem) => elem.__typename == 'ImageType',
+    dispatch(setLoading(true));
+
+    let ingArr = [];
+    selectedIngredientsList?.forEach((item) => {
+      let value = item?.portions?.find((item) => item.default);
+      if (value) {
+        ingArr?.push({
+          ingredientId: item?._id,
+          selectedPortionName: value?.measurement,
+          weightInGram: Number(value?.meausermentWeight),
+        });
+      }
+    });
+
+    const howToArr = recipeInstruction?.map((item) => `${item?.step}`);
+    const imgArr = existingimages?.map((img, index) =>
+      index === 0
+        ? { image: img, default: true }
+        : { image: img, default: false },
     );
-    let updatedImageArray = [];
 
-    if (recipeFileImagesArray.length > 0) {
-      let imageUrlArray = await handleSubmitData(recipeFileImagesArray);
-
-      imageUrlArray?.forEach((elem) => {
-        updatedImageArray = [
-          ...updatedImageArray,
-          {
-            __typename: `ImageType`,
-            image: elem,
-            default: false,
-          },
-        ];
-      });
-    }
-    dispatch(setRecipeImagesArray([...urlImageArray, ...updatedImageArray]));
+    let obj = {
+      editId: recipeId,
+      editableObject: {
+        name: recipeName,
+        description: recipeDescription,
+        image: imgArr,
+        ingredients: ingArr,
+        recipeBlendCategory: selectedBLendCategory,
+        servingSize: calculateIngOz,
+        servings: servingCounter,
+        recipeInstructions: howToArr,
+      },
+    };
 
     try {
-      await editARecipe();
-      reactToastifyNotification('info', 'Recipe Updated');
-      dispatch(setRecipeFileImagesArray([]));
-      setIsFetching(false);
+      if (images?.length) {
+        //@ts-ignore
+        let imageArr: string[] = await imageUploadS3(images);
+        imageArr = [...existingimages, ...imageArr];
+        const finalImaArr = imageArr?.map((img, index) =>
+          index === 0
+            ? { image: img, default: true }
+            : { image: img, default: false },
+        );
+
+        obj = {
+          ...obj,
+          editableObject: { ...obj?.editableObject, image: finalImaArr },
+        };
+        await editRecipe({
+          variables: {
+            data: obj,
+          },
+        });
+        dispatch(setLoading(false));
+        reactToastifyNotification('info', 'Recipe Updateded successfully');
+        setExistingImages(imageArr);
+        setImages([]);
+      } else {
+        await editRecipe({
+          variables: {
+            data: obj,
+          },
+        });
+        dispatch(setLoading(false));
+        reactToastifyNotification('info', 'Recipe Updateded successfully ');
+      }
     } catch (error) {
+      dispatch(setLoading(false));
       reactToastifyNotification('error', 'Error while saving Recipe');
-      setIsFetching(false);
-      return;
     }
   };
 
@@ -204,6 +209,10 @@ const EditRecipeComponent = () => {
       editARecipeFunction={editARecipeFunction}
       calculatedIngOz={calculateIngOz}
       nutritionDataLoading={nutritionDataLoading}
+      images={images}
+      setImages={setImages}
+      existingImage={existingimages}
+      setExistingImage={setExistingImages}
     />
   );
 };
