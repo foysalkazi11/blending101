@@ -60,16 +60,17 @@ const SocialTray = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (!user) {
-  //     updateUser();
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+  useEffect(() => {
+    if (!user) {
+      updateUser();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSocialSignup = async (provider) => {
     try {
       await Auth.federatedSignIn({ provider: provider });
+      // if (!user) await updateUser();
     } catch (error) {
       console.log(error?.message);
     }
