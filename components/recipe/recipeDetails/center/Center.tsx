@@ -1,35 +1,35 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useState } from 'react';
-import { FiEdit2 } from 'react-icons/fi';
-import { MdOutlineClose } from 'react-icons/md';
-import SlickSlider from '../../../../theme/carousel/carousel.component';
-import styles from './Center.module.scss';
-import ChevronRightIcon from '../../../../public/icons/chevron_right_black_36dp.svg';
-import ChevronLeftIcon from '../../../../public/icons/chevron_left_black_36dp.svg';
-import { MdOutlineInfo, MdAdd, MdRemove } from 'react-icons/md';
-import { BiBarChart } from 'react-icons/bi';
-import { BsCartPlus } from 'react-icons/bs';
-import { useAppDispatch } from '../../../../redux/hooks';
+import React, { useState } from "react";
+import { FiEdit2 } from "react-icons/fi";
+import { MdOutlineClose } from "react-icons/md";
+import SlickSlider from "../../../../theme/carousel/carousel.component";
+import styles from "./Center.module.scss";
+import ChevronRightIcon from "../../../../public/icons/chevron_right_black_36dp.svg";
+import ChevronLeftIcon from "../../../../public/icons/chevron_left_black_36dp.svg";
+import { MdOutlineInfo, MdAdd, MdRemove } from "react-icons/md";
+import { BiBarChart } from "react-icons/bi";
+import { BsCartPlus } from "react-icons/bs";
+import { useAppDispatch } from "../../../../redux/hooks";
 import {
   setOpenCollectionsTary,
   setOpenCommentsTray,
   setToggleModal,
-} from '../../../../redux/slices/sideTraySlice';
-import Modal from '../../../../theme/modal/customModal/CustomModal';
-import ShareRecipeModal from '../shareRecipeModal/ShareRecipeModal';
-import SaveRecipe from '../saveRecipe/SaveRecipe';
-import Image from 'next/image';
-import { useRouter } from 'next/router';
-import CircularRotatingLoader from '../../../../theme/loader/circularRotatingLoader.component';
-import useGetDefaultPortionOfnutration from '../../../../customHooks/useGetDefaultPortionOfNutration';
-import { setActiveRecipeId } from '../../../../redux/slices/collectionSlice';
-import { setCurrentRecipeInfo } from '../../../../redux/slices/recipeSlice';
-import ToggleMenu from '../../../../theme/toggleMenu/ToggleMenu';
+} from "../../../../redux/slices/sideTraySlice";
+import Modal from "../../../../theme/modal/customModal/CustomModal";
+import ShareRecipeModal from "../shareRecipeModal/ShareRecipeModal";
+import SaveRecipe from "../saveRecipe/SaveRecipe";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
+import useGetDefaultPortionOfnutration from "../../../../customHooks/useGetDefaultPortionOfNutration";
+import { setActiveRecipeId } from "../../../../redux/slices/collectionSlice";
+import { setCurrentRecipeInfo } from "../../../../redux/slices/recipeSlice";
+import ToggleMenu from "../../../../theme/toggleMenu/ToggleMenu";
 
 const scaleMenu = [
-  { label: '.5x', value: 0.5 },
-  { label: '1x', value: 1 },
-  { label: '2x', value: 2 },
+  { label: ".5x", value: 0.5 },
+  { label: "1x", value: 1 },
+  { label: "2x", value: 2 },
 ];
 
 interface center {
@@ -54,14 +54,14 @@ const Center = ({
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [showRecipeModal, setShowRecipeModal] = useState(true);
-  const [ingredientId, setIngredientId] = useState('');
+  const [ingredientId, setIngredientId] = useState("");
   const recipeDetails = recipeData;
   useGetDefaultPortionOfnutration(ingredientId);
 
   const PreviousButton = (prop) => {
     const { className, onClick } = prop;
     return (
-      <div className={className + ' ' + styles.prevBtn} onClick={onClick}>
+      <div className={className + " " + styles.prevBtn} onClick={onClick}>
         <ChevronLeftIcon />
       </div>
     );
@@ -69,7 +69,7 @@ const Center = ({
   const NextButton = (prop) => {
     const { className, onClick } = prop;
     return (
-      <div className={className + ' ' + styles.nextBtn} onClick={onClick}>
+      <div className={className + " " + styles.nextBtn} onClick={onClick}>
         <ChevronRightIcon />
       </div>
     );
@@ -87,9 +87,9 @@ const Center = ({
           {isReadMore ? text.slice(0, 300) : text},
           <span onClick={toggleReadMore} className={styles.read_or_hide}>
             {isReadMore ? (
-              <span>&nbsp; {'Read More'}</span>
+              <span>&nbsp; {"Read More"}</span>
             ) : (
-              <span>&nbsp; {'Read Less'}</span>
+              <span>&nbsp; {"Read Less"}</span>
             )}
           </span>
         </p>
@@ -132,8 +132,8 @@ const Center = ({
             src="/icons/no-comment.svg"
             alt="message"
             onClick={(e) => handleComment(recipeId, title, defaultImage, e)}
-          />{' '}
-          <p style={{ color: '#c4c4c4' }}>0</p>
+          />{" "}
+          <p style={{ color: "#c4c4c4" }}>0</p>
         </>
       );
     }
@@ -145,8 +145,8 @@ const Center = ({
             alt="message"
             onClick={(e) => handleComment(recipeId, title, defaultImage, e)}
             className={`${styles.inActiveImg}`}
-          />{' '}
-          <p>{''}</p>
+          />{" "}
+          <p>{""}</p>
         </>
       );
     }
@@ -157,8 +157,8 @@ const Center = ({
           src="/icons/message.svg"
           alt="message"
           onClick={(e) => handleComment(recipeId, title, defaultImage, e)}
-        />{' '}
-        {comments ? <p style={{ color: '#7cbc39' }}>{comments}</p> : null}
+        />{" "}
+        {comments ? <p style={{ color: "#7cbc39" }}>{comments}</p> : null}
       </>
     );
   };
@@ -175,7 +175,8 @@ const Center = ({
             className={styles.editBox}
             onClick={() => router.push(`/edit_recipe/${recipeDetails?._id}`)}
           >
-            <FiEdit2 className={styles.editIcon} />
+            <p className={styles.editIcon}>Edit</p>
+            {/* <FiEdit2 className={styles.editIcon} /> */}
           </div>
           <div className={styles.closeBox} onClick={() => router.push(`/`)}>
             <MdOutlineClose className={styles.closeIcon} />
@@ -326,7 +327,7 @@ const Center = ({
               return (
                 <div
                   className={styles.singleIngredent}
-                  key={index + 'ingredients_recipeDetails'}
+                  key={index + "ingredients_recipeDetails"}
                 >
                   <div className={styles.leftSide}>
                     {ingredient?.ingredientId?.featuredImage ||
@@ -349,7 +350,7 @@ const Center = ({
                       nutritionState?.ingredientId?._id ? (
                         <span
                           className={styles.leftSide__highlighted}
-                          style={{ color: '#fe5d1f' }}
+                          style={{ color: "#fe5d1f" }}
                         >
                           {ingredient?.ingredientId?.ingredientName}
                         </span>
@@ -364,7 +365,7 @@ const Center = ({
                   nutritionState?.ingredientId?._id ? (
                     <div
                       className={styles.iconGroup}
-                      style={{ display: 'flex' }}
+                      style={{ display: "flex" }}
                     >
                       <MdOutlineInfo
                         className={styles.icon}
@@ -374,7 +375,7 @@ const Center = ({
                       />
 
                       <BiBarChart
-                        style={{ color: '#fe5d1f' }}
+                        style={{ color: "#fe5d1f" }}
                         className={styles.icon}
                         onClick={() => {
                           setsingleElement(!singleElement);
@@ -408,7 +409,7 @@ const Center = ({
               );
             })
           ) : (
-            <div style={{ margin: '30px 0px' }}>
+            <div style={{ margin: "30px 0px" }}>
               <CircularRotatingLoader />
             </div>
           )}
@@ -424,7 +425,7 @@ const Center = ({
             return (
               <div
                 className={styles.steps}
-                key={index + 'recipeInstruction__recipeDetails'}
+                key={index + "recipeInstruction__recipeDetails"}
               >
                 <span>Step {index + 1}</span>
                 <p>{step}</p>
@@ -432,7 +433,7 @@ const Center = ({
             );
           })
         ) : (
-          <div style={{ margin: '30px 0px' }}>
+          <div style={{ margin: "30px 0px" }}>
             <CircularRotatingLoader />
           </div>
         )}

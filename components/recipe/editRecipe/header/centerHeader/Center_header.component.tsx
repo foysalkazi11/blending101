@@ -11,13 +11,22 @@ const Center_header = ({ editARecipeFunction, isFetching }) => {
     <div className={styles.center__title}>
       <div className={styles.center__title__left}>
         <span>
-          <Image src={"/icons/recipe-icon.svg"} alt={"icon"} width={24} height={24} />
+          <Image
+            src={"/icons/recipe-icon.svg"}
+            alt={"icon"}
+            width={24}
+            height={24}
+          />
         </span>
         <h3>Recipe</h3>
       </div>
       <div className={styles.center__title__right}>
-        <div className={styles.save__Recipe__button} onClick={editARecipeFunction}>
-          <IoIosSave className={styles.save__Recipe__button__icon}/>
+        <div
+          className={styles.save__Recipe__button}
+          onClick={editARecipeFunction}
+        >
+          <p className={styles.editIcon}>Save</p>
+          {/* <IoIosSave className={styles.save__Recipe__button__icon}/> */}
         </div>
         <div
           className={styles.center__title__right__cross}
