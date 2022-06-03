@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { useAppSelector } from '../../redux/hooks';
-import UpdatedCustomAccordion from '../../theme/accordion/updatedAccordion.component copy';
-import styles from './updatedRecursiveAccordian.module.scss';
-import Image from 'next/image';
-import { FaRegUser } from 'react-icons/fa';
-import { useRouter } from 'next/router';
-import { GET_DAILY_BY_USER_ID } from '../../gqlLib/user/mutations/query/getDaily';
-import { useQuery } from '@apollo/client';
-import GET_DAILY_GOALS from '../../gqlLib/dri/query/getDailyGoals';
+import React, { useState } from "react";
+import { useAppSelector } from "../../redux/hooks";
+import UpdatedCustomAccordion from "../../theme/accordion/updatedAccordion.component copy";
+import styles from "./updatedRecursiveAccordian.module.scss";
+import Image from "next/image";
+import { FaRegUser } from "react-icons/fa";
+import { useRouter } from "next/router";
+import { GET_DAILY_BY_USER_ID } from "../../gqlLib/user/mutations/query/getDaily";
+import { useQuery } from "@apollo/client";
+import GET_DAILY_GOALS from "../../gqlLib/dri/query/getDailyGoals";
 
 interface recursiveAccordianInterface {
   dataObject: object;
@@ -25,7 +25,7 @@ const UpdatedRecursiveAccordian = ({
   const { user, dbUser } = useAppSelector((state) => state?.user);
   const router = useRouter();
   const { data: dailyData } = useQuery(GET_DAILY_GOALS, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: "network-only",
     variables: { memberId: dbUser?._id },
   });
 
@@ -40,8 +40,11 @@ const UpdatedRecursiveAccordian = ({
             {
               //@ts-ignore
               dataObject?.Calories?.calories?.value &&
-                //@ts-ignore
-                parseFloat(dataObject?.Calories?.calories?.value).toFixed(0)
+                Math?.round(
+                  //@ts-ignore
+                  (dataObject?.Calories?.calories?.value * counter) /
+                    servingSize,
+                )
             }
           </div>
           {showUser ? (
@@ -55,14 +58,14 @@ const UpdatedRecursiveAccordian = ({
                       objectFit="contain"
                       layout="fill"
                       onClick={() =>
-                        router?.push('/user/?type=personalization&toggle=1')
+                        router?.push("/user/?type=personalization&toggle=1")
                       }
                     />
                   ) : (
                     <FaRegUser
                       className={styles.userName__image}
                       onClick={() =>
-                        router?.push('/user/?type=personalization&toggle=1')
+                        router?.push("/user/?type=personalization&toggle=1")
                       }
                     />
                   )}
@@ -82,13 +85,13 @@ const UpdatedRecursiveAccordian = ({
       </div>
       <div className={`${styles.recursiveAccordianBody}`}>
         {Object?.entries(dataObject)?.map((elem) => {
-          if (elem[0] !== 'Calories') {
+          if (elem[0] !== "Calories") {
             return (
               <UpdatedCustomAccordion
                 key={elem[0] + Date.now()}
                 title={elem[0]}
                 content={elem[1]}
-                type={'mainHeading'}
+                type={"mainHeading"}
                 counter={counter}
                 dailyGoalsData={dailyData?.getDailyGoals?.goals}
                 servingSize={servingSize}
