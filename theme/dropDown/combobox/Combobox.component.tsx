@@ -33,8 +33,8 @@ const Combobox = (props: ComboboxProps) => {
   const {
     name,
     label,
-    value,
-    placeholder,
+    value = "",
+    placeholder = "Select",
     required,
     disabled,
     options,
@@ -54,13 +54,15 @@ const Combobox = (props: ComboboxProps) => {
 
   const Options = (
     <>
-      {required ? (
+      {/* {required ? (
         <option disabled selected value="">
           {placeholder}
         </option>
       ) : (
         <option value="">{placeholder}</option>
-      )}
+      )} */}
+
+      {value === "" ? <option value="">{placeholder}</option> : null}
       {options &&
         options.map((option) => (
           <option
@@ -77,6 +79,7 @@ const Combobox = (props: ComboboxProps) => {
     <div className={styles.field}>
       {label && <label htmlFor={label}>{label}</label>}
       <select
+        name={name}
         id={label}
         value={value}
         disabled={disabled}

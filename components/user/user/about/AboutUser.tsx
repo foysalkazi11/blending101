@@ -18,6 +18,9 @@ const About = ({ userData, setUserData }: AboutProps) => {
 
   const handleChange = (e) => {
     const { name, value } = e?.target;
+
+    console.log(name, value);
+
     setUserData((pre) => {
       return {
         ...pre,
@@ -111,6 +114,7 @@ const About = ({ userData, setUserData }: AboutProps) => {
           <div className={styles.inputContainer}>
             <label>Location</label>
             <Combobox
+              name="location"
               options={[
                 {
                   label: "(GMT-8:00) Pacific Time (US & Canada)",
