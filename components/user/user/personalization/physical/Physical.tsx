@@ -95,7 +95,7 @@ const Physical = ({
   const { isNewUseImage } = useAppSelector((state) => state?.user);
   const [measurementType, setMeasurementType] = useState("US");
   const [ageType, setAgeType] = useState("years");
-  const [pregnant, setPregnant] = useState("");
+  const [pregnant, setPregnant] = useState("Not Pregnant or Lactation");
   const isMounted = useRef(null);
   const [colorToggle, setColorToggle] = useState(false);
   const [profileActiveTab, setProfileActiveTab] = useState(0);
@@ -133,18 +133,18 @@ const Physical = ({
   } = useForm({
     defaultValues: {
       centimeters: userProfile?.heightInCentimeters
-        ? Number(userProfile?.heightInCentimeters)
+        ? Number(userProfile?.heightInCentimeters)?.toFixed(2)
         : "",
       feets: userProfile?.heightInCentimeters
         ? Number(Math?.trunc(userProfile?.heightInCentimeters / 30.48))
         : "",
       inches: userProfile?.heightInCentimeters
         ? Number(
-            ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0)
+            ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0),
           ) === 12
           ? ""
           : Number(
-              ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0)
+              ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0),
             )
         : "",
       kilograms: userProfile?.weightInKilograms
@@ -187,7 +187,7 @@ const Physical = ({
   }, [profileActiveTab]);
 
   const handlePregnantOrLactating = (
-    e: React.ChangeEvent<HTMLSelectElement>
+    e: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     const { value } = e?.target;
     setPregnant(value);
@@ -286,7 +286,7 @@ const Physical = ({
                 age: arrageAge,
                 pregnantOrLactating:
                   userData?.personalization?.gender === "Female"
-                    ? userData?.personalization?.pregnantOrLactating
+                    ? pregnant
                     : null,
               },
             },
@@ -307,7 +307,7 @@ const Physical = ({
               age: arrageAge,
               pregnantOrLactating:
                 userData?.personalization?.gender === "Female"
-                  ? userData?.personalization?.pregnantOrLactating
+                  ? pregnant
                   : null,
             },
           };
@@ -326,10 +326,10 @@ const Physical = ({
               age: arrageAge,
               pregnantOrLactating:
                 userData?.personalization?.gender === "Female"
-                  ? userData?.personalization?.pregnantOrLactating
+                  ? pregnant
                   : null,
             },
-          })
+          }),
         );
         dispatch(setLoading(false));
         dispatch(setIsNewUseImage(null));
@@ -355,7 +355,7 @@ const Physical = ({
                 age: arrageAge,
                 pregnantOrLactating:
                   userData?.personalization?.gender === "Female"
-                    ? userData?.personalization?.pregnantOrLactating
+                    ? pregnant
                     : null,
               },
             },
@@ -372,7 +372,7 @@ const Physical = ({
               age: arrageAge,
               pregnantOrLactating:
                 userData?.personalization?.gender === "Female"
-                  ? userData?.personalization?.pregnantOrLactating
+                  ? pregnant
                   : null,
             },
           };
@@ -390,10 +390,10 @@ const Physical = ({
               age: arrageAge,
               pregnantOrLactating:
                 userData?.personalization?.gender === "Female"
-                  ? userData?.personalization?.pregnantOrLactating
+                  ? pregnant
                   : null,
             },
-          })
+          }),
         );
         dispatch(setLoading(false));
         notification("info", "Updated successfully");
@@ -748,6 +748,14 @@ const Physical = ({
                         style={{ width: "100%" }}
                         value={pregnant}
                         handleChange={handlePregnantOrLactating}
+                        disabled={
+                          //@ts-ignore
+                          parseFloat(watchValue?.years) >= 14 ||
+                          //@ts-ignore
+                          parseFloat(watchValue?.months) >= 168
+                            ? false
+                            : true
+                        }
                       />
                     </div>
                   </>
