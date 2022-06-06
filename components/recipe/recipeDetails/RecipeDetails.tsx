@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import AContainer from '../../../containers/A.container';
-import LeftSide from './leftSide/LeftSide';
-import Center from './center/Center';
-import styles from './RecipeDetails.module.scss';
-import RightTray from '../../rightTray/rightTray.component';
+import React, { useState } from "react";
+import AContainer from "../../../containers/A.container";
+import LeftSide from "./leftSide/LeftSide";
+import Center from "./center/Center";
+import styles from "./RecipeDetails.module.scss";
+import RightTray from "../../rightTray/rightTray.component";
 
 const RecipeDetails = ({
   recipeData,
@@ -17,7 +17,7 @@ const RecipeDetails = ({
   const [counter, setCounter] = useState(1);
 
   return (
-    <div style={{ margin: '40px auto' }}>
+    <div style={{ margin: "40px auto" }}>
       <AContainer
         showHeader={true}
         logo={true}
@@ -52,6 +52,7 @@ const RecipeDetails = ({
                   setNutritionState={setNutritionState}
                   nutritionDataLoading={nutritionDataLoading}
                   servingSize={parseInt(recipeData?.servingSize || 0)}
+                  servings={recipeData?.servings}
                 />
               </div>
             </div>
