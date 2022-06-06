@@ -1,38 +1,38 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useRef, useState } from 'react';
-import AContainer from '../../../containers/A.container';
-import styles from './AddRecipe.module.scss';
-import Center_header from './header/centerHeader/Center_header.component';
-import RightTray from './rightTray/rightTray.component';
-import Left_tray_recipe_edit from './leftTray/left_tray_recipe_edit.component';
-import Center_Elements from './recipe_elements/centerElements.component';
-import IngredientList from './recipe_elements/ingredientList/ingredientList&Howto.component';
-import Image from 'next/image';
-import FooterRecipeFilter from '../../footer/footerRecipeFilter.component';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { setLoading } from '../../../redux/slices/utilitySlice';
-import imageUploadS3 from '../../utility/imageUploadS3';
-import { BLEND_CATEGORY } from '../../../gqlLib/recipes/queries/getEditRecipe';
-import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
-import GET_BLEND_NUTRITION_BASED_ON_RECIPE_XXX from '../../../gqlLib/recipes/queries/getBlendNutritionBasedOnRecipeXxx';
-import RightTrayComponents from '../../rightTray/rightTray.component';
-import CREATE_A_RECIPE_BY_USER from '../../../gqlLib/recipes/mutations/createARecipeByUser';
-import notification from '../../utility/reactToastifyNotification';
-import { useRouter } from 'next/router';
+import React, { useEffect, useRef, useState } from "react";
+import AContainer from "../../../containers/A.container";
+import styles from "./AddRecipe.module.scss";
+import Center_header from "./header/centerHeader/Center_header.component";
+import RightTray from "./rightTray/rightTray.component";
+import Left_tray_recipe_edit from "./leftTray/left_tray_recipe_edit.component";
+import Center_Elements from "./recipe_elements/centerElements.component";
+import IngredientList from "./recipe_elements/ingredientList/ingredientList&Howto.component";
+import Image from "next/image";
+import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { setLoading } from "../../../redux/slices/utilitySlice";
+import imageUploadS3 from "../../utility/imageUploadS3";
+import { BLEND_CATEGORY } from "../../../gqlLib/recipes/queries/getEditRecipe";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import GET_BLEND_NUTRITION_BASED_ON_RECIPE_XXX from "../../../gqlLib/recipes/queries/getBlendNutritionBasedOnRecipeXxx";
+import RightTrayComponents from "../../rightTray/rightTray.component";
+import CREATE_A_RECIPE_BY_USER from "../../../gqlLib/recipes/mutations/createARecipeByUser";
+import notification from "../../utility/reactToastifyNotification";
+import { useRouter } from "next/router";
 
 const AddRecipePage = () => {
   const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
   const [images, setImages] = useState<any[]>([]);
   const [selectedBlendValueState, setSelectedBlendValueState] = useState(
-    '61cafc34e1f3e015e7936587',
+    "61cafc34e1f3e015e7936587",
   );
-  const [recipeHeading, setRecipeHeading] = useState('');
+  const [recipeHeading, setRecipeHeading] = useState("");
   const [selectedIngredientsList, setSelectedIngredientsList] = useState([]);
   const [calculateIngOz, SetcalculateIngOz] = useState(null);
   const [nutritionState, setNutritionState] = useState(null);
   const [counter, setCounter] = useState(1);
   const [howToState, setHowToSteps] = useState([]);
-  const [recipeDescription, setRecipeDescription] = useState('');
+  const [recipeDescription, setRecipeDescription] = useState("");
   const [recipePrepareTime, setRecipePrepareTime] = useState(1);
   const [createNewRecipeByUser] = useMutation(CREATE_A_RECIPE_BY_USER);
   const dispatch = useAppDispatch();
@@ -108,7 +108,7 @@ const AddRecipePage = () => {
             },
           });
           dispatch(setLoading(false));
-          notification('success', 'recipe create successfully');
+          notification("success", "recipe create successfully");
           if (data?.addRecipeFromUser?._id) {
             router?.push(`/recipe_details/${data?.addRecipeFromUser?._id}`);
           }
@@ -119,18 +119,18 @@ const AddRecipePage = () => {
             },
           });
           dispatch(setLoading(false));
-          notification('success', 'recipe create successfully');
+          notification("success", "recipe create successfully");
           if (data?.addRecipeFromUser?._id) {
             router?.push(`/recipe_details/${data?.addRecipeFromUser?._id}`);
           }
         }
       } catch (error) {
         dispatch(setLoading(false));
-        notification('error', error?.message || 'Something went wrong');
+        notification("error", error?.message || "Something went wrong");
       }
     } else {
       notification(
-        'warning',
+        "warning",
         "You can't save recipe without name and ingredients",
       );
     }
@@ -221,7 +221,7 @@ const AddRecipePage = () => {
       <div className={styles.main}>
         <div
           className={styles.left}
-          style={leftTrayVisibleState ? { marginLeft: '0px' } : {}}
+          style={leftTrayVisibleState ? { marginLeft: "0px" } : {}}
         >
           <div
             className={styles.left__Drag__lightGreen}
@@ -229,11 +229,11 @@ const AddRecipePage = () => {
               leftTrayVisibleState
                 ? {
                     backgroundImage: `url("/icons/ingr-green.svg")`,
-                    backgroundSize: 'contain',
+                    backgroundSize: "contain",
                   }
                 : {
                     backgroundImage: `url("/icons/ingr-white.svg")`,
-                    backgroundSize: 'contain',
+                    backgroundSize: "contain",
                   }
             }
             onClick={() => setLeftTrayVisibleState(!leftTrayVisibleState)}
@@ -241,10 +241,10 @@ const AddRecipePage = () => {
           <div className={styles.left__title}>
             <div className={styles.left__title__bagicon}>
               <Image
-                src={'/icons/basket.svg'}
+                src={"/icons/basket.svg"}
                 alt="Picture will load soon"
-                height={'100%'}
-                width={'100%'}
+                height={"100%"}
+                width={"100%"}
                 layout="responsive"
                 objectFit="contain"
               />
@@ -299,7 +299,7 @@ const AddRecipePage = () => {
             }
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}
-            isComeFormRecipePage={true}
+            isComeFormRecipeEditPage={true}
             calculatedIngOz={calculateIngOz}
             nutritionDataLoading={nutritionDataLoading}
           />

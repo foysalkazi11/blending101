@@ -1,38 +1,42 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useEffect, useRef, useState } from 'react';
-import styles from './rightTray.module.scss';
-import { useAppSelector, useAppDispatch } from '../../redux/hooks';
-import UpdatedRecursiveAccordian from '../customRecursiveAccordian/updatedRecursiveAccordian.component';
+import React, { useEffect, useRef, useState } from "react";
+import styles from "./rightTray.module.scss";
+import { useAppSelector, useAppDispatch } from "../../redux/hooks";
+import UpdatedRecursiveAccordian from "../customRecursiveAccordian/updatedRecursiveAccordian.component";
 import {
   setIngredientArrayForNutrition,
   setServingCounter,
-} from '../../redux/edit_recipe/editRecipeStates';
-import { MdOutlineClose } from 'react-icons/md';
-import CircularRotatingLoader from '../../theme/loader/circularRotatingLoader.component';
-import RightHeader from '../recipe/addRecipe/header/right_header/right_header.component';
-import NutrationPanelSkeleton from '../../theme/skeletons/nutrationPanelSkeleton/NutrationPanelSkeleton';
+} from "../../redux/edit_recipe/editRecipeStates";
+import { MdOutlineClose } from "react-icons/md";
+import CircularRotatingLoader from "../../theme/loader/circularRotatingLoader.component";
+import RightHeader from "../recipe/addRecipe/header/right_header/right_header.component";
+import NutrationPanelSkeleton from "../../theme/skeletons/nutrationPanelSkeleton/NutrationPanelSkeleton";
 
 interface RightTrayInterface {
   nutritionTrayData?: any;
   nutritionState?: any;
   setNutritionState?: any;
   counter?: number;
-  isComeFormRecipePage?: boolean;
+  isComeFormRecipeEditPage?: boolean;
   calculatedIngOz?: number;
   nutritionDataLoading: boolean;
   servingSize?: number;
+  servings?: number;
+  adjusterFunc?: (value: number) => void;
 }
 
 const RightTray = ({
   nutritionTrayData = {},
   setNutritionState = () => {},
   counter = 1,
-  isComeFormRecipePage = false,
+  isComeFormRecipeEditPage = false,
   calculatedIngOz = 0,
   nutritionState = {},
   nutritionDataLoading,
   servingSize = 0,
+  servings = 1,
+  adjusterFunc = () => {},
 }: RightTrayInterface) => {
   const selectedIngredientsList = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedIngredientsList,
@@ -46,7 +50,11 @@ const RightTray = ({
     nutritionState?.ingredientId?.ingredientName;
 
   const dispatch = useAppDispatch();
-  const [servingSizeCounter, setServingSizeCounter] = useState(1);
+  const [servingSizeCounter, setServingSizeCounter] = useState(servings);
+
+  useEffect(() => {
+    setServingSizeCounter(servings);
+  }, []);
 
   return (
     <div className={styles.rightTaryContainer}>
@@ -84,35 +92,35 @@ const RightTray = ({
             </div>
           ) : (
             <div className={styles.right__counterTray}>
-              {isComeFormRecipePage ? (
-                <p className={styles.servings}>{counter}</p>
-              ) : (
-                <div className={styles.right__counterTray__counter}>
-                  <input
-                    className={styles.right__counterTray__counter__input}
-                    type="number"
-                    value={servingSizeCounter}
-                    min={1}
-                    onChange={(e) => {
-                      setServingSizeCounter(parseInt(e?.target?.value));
-                    }}
-                  />
-                </div>
-              )}
+              {/* <p className={styles.servings}>{counter}</p> */}
+
+              <div className={styles.right__counterTray__counter}>
+                <input
+                  className={styles.right__counterTray__counter__input}
+                  type="number"
+                  value={
+                    isComeFormRecipeEditPage ? counter : servingSizeCounter
+                  }
+                  min={1}
+                  onChange={(e) => {
+                    isComeFormRecipeEditPage
+                      ? adjusterFunc(parseInt(e?.target?.value))
+                      : setServingSizeCounter(parseInt(e?.target?.value));
+                  }}
+                />
+              </div>
 
               <div className={styles.right__counterTray__serving}>
                 <div>servings</div>
               </div>
               <div className={styles.right__counterTray__servingsize}>
                 <div className={styles.right__counterTray__serving__num}>
-                  {isComeFormRecipePage
-                    ? calculatedIngOz
-                    : Math.round(
-                        (servingSize * counter) / servingSizeCounter,
-                      )}{' '}
+                  {isComeFormRecipeEditPage
+                    ? Math.round(calculatedIngOz / counter)
+                    : Math.round((servingSize * counter) / servingSizeCounter)}
                   oz
                 </div>
-                &nbsp; : &nbsp;serving size
+                &nbsp; : &nbsp; serving size
               </div>
             </div>
           )}
@@ -120,14 +128,16 @@ const RightTray = ({
 
         <div className={styles.compoent__box__nutrition}>
           {nutritionDataLoading ? (
-            <div style={{ padding: ' 0 10px' }}>
+            <div style={{ padding: " 0 10px" }}>
               <NutrationPanelSkeleton />
             </div>
           ) : (
             <UpdatedRecursiveAccordian
               dataObject={nutritionTrayData}
-              counter={isComeFormRecipePage ? 1 : counter}
-              servingSize={isComeFormRecipePage ? 1 : servingSizeCounter}
+              counter={isComeFormRecipeEditPage ? 1 : counter}
+              servingSize={
+                isComeFormRecipeEditPage ? counter : servingSizeCounter
+              }
             />
           )}
         </div>

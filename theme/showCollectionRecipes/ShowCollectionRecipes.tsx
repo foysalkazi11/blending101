@@ -14,19 +14,24 @@ import SkeletonRecipeDiscovery from "../skeletons/skeletonRecipeDiscovery/Skelet
 import styles from "./ShowCollectionRecipes.module.scss";
 import reactToastifyNotification from "../../components/utility/reactToastifyNotification";
 import SkeletonCollectionRecipe from "../skeletons/skeletonCollectionRecipe/SkeletonCollectionRecipe";
+import useLocalStorage from "../../customHooks/useLocalStorage";
 
 const ShowCollectionRecipes = () => {
   const [allRecipes, setAllRecipes] = useState([]);
   const [selectedCollectionRecipe, setSelectedCollectionRecipe] = useState([]);
   const [collectionName, setCollectionName] = useState("");
   const [getAllRecipesWithinCollections] = useLazyQuery(
-    GET_ALL_RECIPES_WITHIN_COLLECTIONS
+    GET_ALL_RECIPES_WITHIN_COLLECTIONS,
   );
   const { dbUser } = useAppSelector((state) => state?.user);
   const { collectionDetailsId, showAllRecipes, allRecipeWithinCollections } =
     useAppSelector((state) => state?.collections);
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
+  const [compareRecipeList, setcompareRecipeList] = useLocalStorage(
+    "compareList",
+    [],
+  );
 
   const handleCollctionRecipe = (allRecipeWithinCollections) => {
     if (showAllRecipes) {
@@ -34,7 +39,7 @@ const ShowCollectionRecipes = () => {
       setCollectionName("All Recipes");
     } else {
       const findCollectionRecipes = dbUser?.collections?.find(
-        (col) => col?._id === collectionDetailsId
+        (col) => col?._id === collectionDetailsId,
       );
       setCollectionName(findCollectionRecipes?.name);
       const recipeId = [];
@@ -62,7 +67,7 @@ const ShowCollectionRecipes = () => {
         },
       });
       dispatch(
-        setAllRecipeWithinCollections(data?.getAllRecipesFromCollection)
+        setAllRecipeWithinCollections(data?.getAllRecipesFromCollection),
       );
       handleCollctionRecipe(data?.getAllRecipesFromCollection);
       setLoading(false);
@@ -144,6 +149,8 @@ const ShowCollectionRecipes = () => {
                       recipeId={item?._id}
                       notes={item?.notes}
                       addedToCompare={item?.addedToCompare}
+                      compareRecipeList={compareRecipeList}
+                      setcompareRecipeList={setcompareRecipeList}
                     />
                   </div>
                 );
@@ -173,6 +180,8 @@ const ShowCollectionRecipes = () => {
                     recipeId={item?._id}
                     notes={item?.notes}
                     addedToCompare={item?.addedToCompare}
+                    compareRecipeList={compareRecipeList}
+                    setcompareRecipeList={setcompareRecipeList}
                   />
                 </div>
               );
