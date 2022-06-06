@@ -311,7 +311,7 @@ const Center = ({
             </div>
           </div>
           <div className={styles.size}>
-            <p>serving Size : </p>
+            <p>Volume : </p>
             <span>
               {Math.round(parseInt(recipeData?.servingSize) * counter)} 0z
             </span>

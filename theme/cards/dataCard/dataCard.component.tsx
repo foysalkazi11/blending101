@@ -83,12 +83,12 @@ export default function DatacardComponent({
   const dispatch = useAppDispatch();
   const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
   const { allRecipeWithinCollectionsId } = useAppSelector(
-    (state) => state?.collections
+    (state) => state?.collections,
   );
   const [addNewRecipeToCollection] = useMutation(ADD_NEW_RECIPE_TO_COLLECTION);
   const [getLastModifiedCollection] = useLazyQuery(
     GET_LAST_MODIFIED_COLLECTION,
-    { fetchPolicy: "no-cache" }
+    { fetchPolicy: "network-only" },
   );
   const { dbUser } = useAppSelector((state) => state?.user);
   const handleChangeCompare = useChangeCompare();
@@ -120,13 +120,13 @@ export default function DatacardComponent({
         setDbUser({
           ...dbUser,
           collections: [...data?.addTolastModifiedCollection],
-        })
+        }),
       );
 
       dispatch(
         setLastModifiedCollection(
-          lastModified?.getLastModifieldCollection?.name
-        )
+          lastModified?.getLastModifieldCollection?.name,
+        ),
       );
 
       let recipesId = [];
@@ -161,7 +161,7 @@ export default function DatacardComponent({
     id: string,
     title: string,
     image: string,
-    e: React.SyntheticEvent
+    e: React.SyntheticEvent,
   ) => {
     // HANDLE COMMENTS CLICK HERE
     e?.stopPropagation();
@@ -273,107 +273,107 @@ export default function DatacardComponent({
   };
 
   return (
-      <div className={styles.datacard}>
-        <div className={styles.datacard__inner}>
-          <div className={styles.datacard__body}>
-            <div className={styles.datacard__body__top}>
-              <div className={styles.datacard__body__top__heading}>
-                <h2
-                  className={styles.title}
-                  onClick={() => router.push(`/recipe_details/${recipeId}`)}
-                >
-                  {title}
-                </h2>
-              </div>
-              <div className={styles.datacard__body__top__menu}>
-                {showMoreMenu ? (
-                  <>
-                    <MoreVertIcon onClick={handleClick} />
-                    <FloatingMenu />
-                  </>
-                ) : null}
-              </div>
+    <div className={styles.datacard}>
+      <div className={styles.datacard__inner}>
+        <div className={styles.datacard__body}>
+          <div className={styles.datacard__body__top}>
+            <div className={styles.datacard__body__top__heading}>
+              <h2
+                className={styles.title}
+                onClick={() => router.push(`/recipe_details/${recipeId}`)}
+              >
+                {title}
+              </h2>
             </div>
-            <div className={styles.datacard__body__middle}>
-              <div className={styles.datacard__body__middle__left}>
-                <div
-                  className={styles.image}
-                  style={{ backgroundImage: `url(${image})` }}
-                ></div>
-              </div>
-              <div className={styles.datacard__body__middle__right}>
-                <DataBody />
-              </div>
+            <div className={styles.datacard__body__top__menu}>
+              {showMoreMenu ? (
+                <>
+                  <MoreVertIcon onClick={handleClick} />
+                  <FloatingMenu />
+                </>
+              ) : null}
             </div>
-            <div className={styles.datacard__body__belt}>
-              <div className={styles.datacard__body__belt__child}>
-                Net Carbs <span>{carbs}</span>
-              </div>
-              <div className={styles.datacard__body__belt__child}>
-                Rx Score <span>{score}</span>
-              </div>
-              <div className={styles.datacard__body__belt__child}>
-                Calorie <span>{calorie}</span>
-              </div>
+          </div>
+          <div className={styles.datacard__body__middle}>
+            <div className={styles.datacard__body__middle__left}>
+              <div
+                className={styles.image}
+                style={{ backgroundImage: `url(${image})` }}
+              ></div>
             </div>
-            <div className={styles.datacard__body__bottom}>
-              <div className={styles.datacard__body__bottom__left}>
-                <img src="/icons/delish.png" alt="brand" />
-              </div>
-              <div className={styles.datacard__body__bottom__right}>
-                <ul>
-                  <li>
-                    {addedToCompare ? (
-                      <img
-                        src="/icons/compare-1.svg"
-                        alt="eclipse"
-                        onClick={(e) =>
-                          handleChangeCompare(
-                            e,
-                            recipeId,
-                            false,
-                            compareRecipeList,
-                            setcompareRecipeList
-                          )
-                        }
-                      />
-                    ) : (
-                      <img
-                        src="/icons/eclipse.svg"
-                        alt="eclipse"
-                        onClick={(e) =>
-                          handleChangeCompare(
-                            e,
-                            recipeId,
-                            true,
-                            compareRecipeList,
-                            setcompareRecipeList
-                          )
-                        }
-                      />
-                    )}
-                  </li>
-                  <li>
-                    {allRecipeWithinCollectionsId?.includes(recipeId) ? (
-                      <img
-                        src="/icons/compare.svg"
-                        alt="compare"
-                        onClick={(e) => handleCompare(recipeId, e)}
-                      />
-                    ) : (
-                      <img
-                        src="/images/BookmarksStar.svg"
-                        alt="compare"
-                        onClick={(e) => addToCollection(recipeId, e)}
-                      />
-                    )}
-                  </li>
-                  <li>{hangleShowCommentsAndNotesIcon(noOfComments, notes)}</li>
-                </ul>
-              </div>
+            <div className={styles.datacard__body__middle__right}>
+              <DataBody />
+            </div>
+          </div>
+          <div className={styles.datacard__body__belt}>
+            <div className={styles.datacard__body__belt__child}>
+              Net Carbs <span>{carbs}</span>
+            </div>
+            <div className={styles.datacard__body__belt__child}>
+              Rx Score <span>{score}</span>
+            </div>
+            <div className={styles.datacard__body__belt__child}>
+              Calorie <span>{calorie}</span>
+            </div>
+          </div>
+          <div className={styles.datacard__body__bottom}>
+            <div className={styles.datacard__body__bottom__left}>
+              <img src="/icons/delish.png" alt="brand" />
+            </div>
+            <div className={styles.datacard__body__bottom__right}>
+              <ul>
+                <li>
+                  {addedToCompare ? (
+                    <img
+                      src="/icons/compare-1.svg"
+                      alt="eclipse"
+                      onClick={(e) =>
+                        handleChangeCompare(
+                          e,
+                          recipeId,
+                          false,
+                          compareRecipeList,
+                          setcompareRecipeList,
+                        )
+                      }
+                    />
+                  ) : (
+                    <img
+                      src="/icons/eclipse.svg"
+                      alt="eclipse"
+                      onClick={(e) =>
+                        handleChangeCompare(
+                          e,
+                          recipeId,
+                          true,
+                          compareRecipeList,
+                          setcompareRecipeList,
+                        )
+                      }
+                    />
+                  )}
+                </li>
+                <li>
+                  {allRecipeWithinCollectionsId?.includes(recipeId) ? (
+                    <img
+                      src="/icons/compare.svg"
+                      alt="compare"
+                      onClick={(e) => handleCompare(recipeId, e)}
+                    />
+                  ) : (
+                    <img
+                      src="/images/BookmarksStar.svg"
+                      alt="compare"
+                      onClick={(e) => addToCollection(recipeId, e)}
+                    />
+                  )}
+                </li>
+                <li>{hangleShowCommentsAndNotesIcon(noOfComments, notes)}</li>
+              </ul>
             </div>
           </div>
         </div>
       </div>
+    </div>
   );
 }
