@@ -50,11 +50,13 @@ const RightTray = ({
     nutritionState?.ingredientId?.ingredientName;
 
   const dispatch = useAppDispatch();
-  const [servingSizeCounter, setServingSizeCounter] = useState(servings);
+  const [servingSizeCounter, setServingSizeCounter] = useState(1);
 
   useEffect(() => {
-    setServingSizeCounter(servings);
-  }, []);
+    if (servings) {
+      setServingSizeCounter(servings);
+    }
+  }, [servings]);
 
   return (
     <div className={styles.rightTaryContainer}>
