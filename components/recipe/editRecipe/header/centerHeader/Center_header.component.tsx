@@ -4,7 +4,7 @@ import Image from "next/image";
 import ClearIcon from "../../../../../public/icons/clear_black_36dp.svg";
 import { useRouter } from "next/router";
 import { IoIosSave } from "react-icons/io";
-const Center_header = ({ editARecipeFunction, isFetching }) => {
+const Center_header = ({ editARecipeFunction }) => {
   const router = useRouter();
   const { recipeId } = router.query;
   return (

@@ -152,6 +152,7 @@ export default function DatacardComponent({
   };
 
   const handleCompare = (id: string, e: React.SyntheticEvent) => {
+    e?.stopPropagation();
     dispatch(setOpenCollectionsTary(true));
     dispatch(setChangeRecipeWithinCollection(true));
     dispatch(setActiveRecipeId(id));

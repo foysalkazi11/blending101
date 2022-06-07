@@ -8,6 +8,7 @@ type collectionsSliceState = {
   collectionDetailsId: string;
   showAllRecipes: boolean;
   allRecipeWithinCollections: {}[];
+  allCollections: {}[];
 };
 
 const initialState: collectionsSliceState = {
@@ -18,6 +19,7 @@ const initialState: collectionsSliceState = {
   collectionDetailsId: "",
   showAllRecipes: false,
   allRecipeWithinCollections: [],
+  allCollections: [],
 };
 
 export const collectionsSlice = createSlice({
@@ -26,13 +28,13 @@ export const collectionsSlice = createSlice({
   reducers: {
     setAllRecipeWithinCollectionsId: (
       state,
-      action: PayloadAction<string[]>
+      action: PayloadAction<string[]>,
     ) => {
       state.allRecipeWithinCollectionsId = action?.payload;
     },
     setChangeRecipeWithinCollection: (
       state,
-      action: PayloadAction<boolean>
+      action: PayloadAction<boolean>,
     ) => {
       state.changeRecipeWithinCollection = action?.payload;
     },
@@ -51,6 +53,9 @@ export const collectionsSlice = createSlice({
     setAllRecipeWithinCollections: (state, action: PayloadAction<{}[]>) => {
       state.allRecipeWithinCollections = action?.payload;
     },
+    setAllCollections: (state, action: PayloadAction<{}[]>) => {
+      state.allCollections = action?.payload;
+    },
   },
 });
 
@@ -62,6 +67,7 @@ export const {
   setCollectionDetailsId,
   setShowAllRecipes,
   setAllRecipeWithinCollections,
+  setAllCollections,
 } = collectionsSlice?.actions;
 
 export default collectionsSlice?.reducer;

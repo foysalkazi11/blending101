@@ -13,12 +13,12 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setLoading } from "../../../redux/slices/utilitySlice";
 import imageUploadS3 from "../../utility/imageUploadS3";
 import { BLEND_CATEGORY } from "../../../gqlLib/recipes/queries/getEditRecipe";
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import GET_BLEND_NUTRITION_BASED_ON_RECIPE_XXX from "../../../gqlLib/recipes/queries/getBlendNutritionBasedOnRecipeXxx";
+import { useMutation, useQuery } from "@apollo/client";
 import RightTrayComponents from "../../rightTray/rightTray.component";
 import CREATE_A_RECIPE_BY_USER from "../../../gqlLib/recipes/mutations/createARecipeByUser";
 import notification from "../../utility/reactToastifyNotification";
 import { useRouter } from "next/router";
+import useGetBlendNutritionBasedOnRecipexxx from "../../../customHooks/useGetBlendNutritionBasedOnRecipexxx";
 
 const AddRecipePage = () => {
   const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
@@ -40,10 +40,12 @@ const AddRecipePage = () => {
   const { dbUser } = useAppSelector((state) => state?.user);
   const router = useRouter();
 
-  const [
-    getBlendNutritionBasedOnRecipe,
-    { loading: nutritionDataLoading, data: nutritionData },
-  ] = useLazyQuery(GET_BLEND_NUTRITION_BASED_ON_RECIPE_XXX);
+  const { loading: nutritionDataLoading, data: nutritionData } =
+    useGetBlendNutritionBasedOnRecipexxx(
+      selectedIngredientsList,
+      nutritionState,
+      SetcalculateIngOz,
+    );
 
   const { loading: blendCategoriesInProgress, data: blendCategoriesData } =
     useQuery(BLEND_CATEGORY);
@@ -135,51 +137,6 @@ const AddRecipePage = () => {
       );
     }
   };
-
-  //when change ingredients
-
-  useEffect(() => {
-    if (nutritionState?._id) {
-      let value = nutritionState?.portions?.find(
-        (item) => item.default,
-      )?.meausermentWeight;
-      if (value) {
-        getBlendNutritionBasedOnRecipe({
-          variables: {
-            ingredientsInfo: [
-              {
-                ingredientId: nutritionState?._id,
-                value: parseFloat(value),
-              },
-            ],
-          },
-        });
-      }
-    } else {
-      let ingArr = [];
-      let ozArr = 0;
-      selectedIngredientsList?.forEach((item) => {
-        let value = item?.portions?.find(
-          (item) => item.default,
-        )?.meausermentWeight;
-        ozArr += value && parseInt(value);
-        if (value) {
-          ingArr?.push({
-            ingredientId: item?._id,
-            value: parseFloat(value),
-          });
-        }
-      });
-      SetcalculateIngOz(Math?.round(ozArr * 0.033814));
-      getBlendNutritionBasedOnRecipe({
-        variables: {
-          ingredientsInfo: ingArr,
-        },
-      });
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedIngredientsList, nutritionState]);
 
   //left panel
 
