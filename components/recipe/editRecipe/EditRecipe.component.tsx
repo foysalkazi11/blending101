@@ -20,13 +20,14 @@ interface editRecipe {
   allBlendCategories: [];
   selectedBLendCategory: string;
   editARecipeFunction: any;
-  isFetching: boolean;
   calculatedIngOz?: number;
   nutritionDataLoading: boolean;
   existingImage?: string[];
   setExistingImage?: Dispatch<SetStateAction<string[]>>;
   setImages?: Dispatch<SetStateAction<any[]>>;
   images?: any[];
+  nutritionState?: object;
+  setNutritionState?: Dispatch<SetStateAction<object>>;
 }
 
 const EditRecipePage = ({
@@ -37,21 +38,20 @@ const EditRecipePage = ({
   allBlendCategories,
   selectedBLendCategory,
   editARecipeFunction,
-  isFetching,
   calculatedIngOz = 0,
   nutritionDataLoading,
   images = [],
   setImages = () => {},
   existingImage = [],
   setExistingImage = () => {},
+  nutritionState = {},
+  setNutritionState = () => {},
 }: editRecipe) => {
   const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
   const dispatch = useAppDispatch();
   const servingCounter = useAppSelector(
     (state) => state.editRecipeReducer.servingCounter,
   );
-  const [nutritionState, setNutritionState] = useState(null);
-  const [singleElement, setSingleElement] = useState(false);
 
   const adjusterFunc = (value) => {
     if (value < 1) {
@@ -105,10 +105,7 @@ const EditRecipePage = ({
           </div>
         </div>
         <div className={styles.center}>
-          <Center_header
-            editARecipeFunction={editARecipeFunction}
-            isFetching={isFetching}
-          />
+          <Center_header editARecipeFunction={editARecipeFunction} />
           <Center_Elements
             recipeName={recipeName}
             allBlendCategories={allBlendCategories}
@@ -122,8 +119,6 @@ const EditRecipePage = ({
             adjusterFunc={adjusterFunc}
             allIngredients={allIngredients}
             recipeInstructions={recipeInstructions}
-            setSingleElement={setSingleElement}
-            singleElement={singleElement}
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}
             calculatedIngOz={calculatedIngOz}
