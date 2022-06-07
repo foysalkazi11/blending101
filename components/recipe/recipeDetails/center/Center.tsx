@@ -351,11 +351,21 @@ const Center = ({
                         <span
                           className={styles.leftSide__highlighted}
                           style={{ color: "#fe5d1f" }}
+                          onClick={() => {
+                            window.scrollBy(0, 0);
+                            setNutritionState({});
+                          }}
                         >
                           {ingredient?.ingredientId?.ingredientName}
                         </span>
                       ) : (
-                        <span className={styles.leftSide__highlighted}>
+                        <span
+                          className={styles.leftSide__highlighted}
+                          onClick={() => {
+                            window.scrollBy(0, 0);
+                            setNutritionState(ingredient);
+                          }}
+                        >
                           {ingredient?.ingredientId?.ingredientName}
                         </span>
                       )}
@@ -396,7 +406,7 @@ const Center = ({
                       <BiBarChart
                         className={styles.icon}
                         onClick={() => {
-                          window.scrollTo(0, 0);
+                          window.scrollBy(0, 0);
                           setsingleElement(true);
                           setNutritionState(ingredient);
                         }}

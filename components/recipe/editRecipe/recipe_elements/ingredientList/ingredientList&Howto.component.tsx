@@ -23,8 +23,6 @@ type IngredientListPorps = {
   recipeInstructions?: string[];
   allIngredients?: any[];
   adjusterFunc: any;
-  singleElement: boolean;
-  setSingleElement: any;
   nutritionState: object;
   setNutritionState: any;
   calculatedIngOz?: number;
@@ -34,8 +32,6 @@ const IngredientList = ({
   recipeInstructions,
   allIngredients,
   adjusterFunc,
-  singleElement,
-  setSingleElement,
   nutritionState,
   setNutritionState,
   calculatedIngOz = 0,
@@ -180,20 +176,6 @@ const IngredientList = ({
     }
   };
 
-  const handleSingleIngredient = (elem) => {
-    window.scrollTo(0, 0);
-    if (
-      //@ts-ignore
-      nutritionState?._id === elem?._id
-    ) {
-      setNutritionState(null);
-      dispatch(setIngredientArrayForNutrition(selectedIngredientsList));
-    } else {
-      setNutritionState(elem);
-      dispatch(setIngredientArrayForNutrition([elem]));
-    }
-  };
-
   return (
     <div className={styles.mainCard}>
       <div className={styles.ingredients__main__card}>
@@ -313,8 +295,8 @@ const IngredientList = ({
                                         styles.ingredients__text__highlighted
                                       }
                                       onClick={() => {
-                                        setSingleElement(!singleElement);
-                                        handleSingleIngredient(elem);
+                                        window.scrollBy(0, 0);
+                                        setNutritionState({});
                                       }}
                                       style={{ color: "#fe5d1f" }}
                                     >
@@ -326,8 +308,8 @@ const IngredientList = ({
                                         styles.ingredients__text__highlighted
                                       }
                                       onClick={() => {
-                                        handleSingleIngredient(elem);
-                                        setSingleElement(true);
+                                        window.scrollBy(0, 0);
+                                        setNutritionState(elem);
                                       }}
                                     >
                                       {elem.ingredientName}
@@ -361,8 +343,8 @@ const IngredientList = ({
                                         styles.ingredients__iconTray__icons
                                       }
                                       onClick={() => {
-                                        setSingleElement(!singleElement);
-                                        handleSingleIngredient(elem);
+                                        window.scrollBy(0, 0);
+                                        setNutritionState({});
                                       }}
                                     />
                                   ) : (
@@ -371,8 +353,8 @@ const IngredientList = ({
                                         styles.ingredients__iconTray__icons
                                       }
                                       onClick={() => {
-                                        handleSingleIngredient(elem);
-                                        setSingleElement(true);
+                                        window.scrollBy(0, 0);
+                                        setNutritionState(elem);
                                       }}
                                     />
                                   )
