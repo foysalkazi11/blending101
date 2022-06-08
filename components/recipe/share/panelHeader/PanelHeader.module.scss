@@ -1,0 +1,17 @@
+.headingContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 0 5px;
+}
+.recipeHeadingTopSec {
+  display: flex;
+  align-items: center;
+
+  & h3 {
+    font-weight: 400;
+    font-size: 20px;
+    margin-left: 10px;
+  }
+}
