@@ -20,6 +20,8 @@ interface NutritionPanelInterface {
   servingSize?: number;
   servings?: number;
   adjusterFunc?: (value: number) => void;
+  showServing?: boolean;
+  showUser?: boolean;
 }
 
 const NutritionPanel = ({
@@ -33,6 +35,8 @@ const NutritionPanel = ({
   servingSize = 0,
   servings = 1,
   adjusterFunc = () => {},
+  showServing = true,
+  showUser = true,
 }: NutritionPanelInterface) => {
   const selectedIngredientsList = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedIngredientsList,
@@ -60,68 +64,74 @@ const NutritionPanel = ({
       <div className={styles.right}>
         <div className={styles.right__headerDiv}>
           <div className={styles.right__title}>Nutrition</div>
-          {nutritionState?._id || nutritionState?.ingredientId?._id ? (
-            <div className={styles.content}>
-              <div className={styles.content__heading__nutrition}>
-                <>
-                  <div>
-                    <h3 className={styles.content__name}>
-                      {1}&nbsp;
-                      {measurement}
-                      &nbsp;
-                      {nutrientName}
-                    </h3>
-                  </div>
-                  <div
-                    className={styles.content__closeBox}
-                    onClick={() => {
-                      setNutritionState({});
-                      dispatch(
-                        setIngredientArrayForNutrition(selectedIngredientsList),
-                      );
-                    }}
-                  >
-                    <MdOutlineClose
-                      className={styles.content__closeBox__closeIcon}
-                    />
-                  </div>
-                </>
-              </div>
-            </div>
-          ) : (
-            <div className={styles.right__counterTray}>
-              {/* <p className={styles.servings}>{counter}</p> */}
-
-              <div className={styles.right__counterTray__counter}>
-                <input
-                  className={styles.right__counterTray__counter__input}
-                  type="number"
-                  value={
-                    isComeFormRecipeEditPage ? counter : servingSizeCounter
-                  }
-                  min={1}
-                  onChange={(e) => {
-                    isComeFormRecipeEditPage
-                      ? adjusterFunc(parseInt(e?.target?.value))
-                      : setServingSizeCounter(parseInt(e?.target?.value));
-                  }}
-                />
-              </div>
-
-              <div className={styles.right__counterTray__serving}>
-                <div>servings</div>
-              </div>
-              <div className={styles.right__counterTray__servingsize}>
-                <div className={styles.right__counterTray__serving__num}>
-                  {isComeFormRecipeEditPage
-                    ? Math.round(calculatedIngOz / counter)
-                    : Math.round((servingSize * counter) / servingSizeCounter)}
-                  oz
+          {showServing ? (
+            nutritionState?._id || nutritionState?.ingredientId?._id ? (
+              <div className={styles.content}>
+                <div className={styles.content__heading__nutrition}>
+                  <>
+                    <div>
+                      <h3 className={styles.content__name}>
+                        {1}&nbsp;
+                        {measurement}
+                        &nbsp;
+                        {nutrientName}
+                      </h3>
+                    </div>
+                    <div
+                      className={styles.content__closeBox}
+                      onClick={() => {
+                        setNutritionState({});
+                        dispatch(
+                          setIngredientArrayForNutrition(
+                            selectedIngredientsList,
+                          ),
+                        );
+                      }}
+                    >
+                      <MdOutlineClose
+                        className={styles.content__closeBox__closeIcon}
+                      />
+                    </div>
+                  </>
                 </div>
-                &nbsp; : &nbsp; serving size
               </div>
-            </div>
-          )}
+            ) : (
+              <div className={styles.right__counterTray}>
+                {/* <p className={styles.servings}>{counter}</p> */}
+
+                <div className={styles.right__counterTray__counter}>
+                  <input
+                    className={styles.right__counterTray__counter__input}
+                    type="number"
+                    value={
+                      isComeFormRecipeEditPage ? counter : servingSizeCounter
+                    }
+                    min={1}
+                    onChange={(e) => {
+                      isComeFormRecipeEditPage
+                        ? adjusterFunc(parseInt(e?.target?.value))
+                        : setServingSizeCounter(parseInt(e?.target?.value));
+                    }}
+                  />
+                </div>
+
+                <div className={styles.right__counterTray__serving}>
+                  <div>servings</div>
+                </div>
+                <div className={styles.right__counterTray__servingsize}>
+                  <div className={styles.right__counterTray__serving__num}>
+                    {isComeFormRecipeEditPage
+                      ? Math.round(calculatedIngOz / counter)
+                      : Math.round(
+                          (servingSize * counter) / servingSizeCounter,
+                        )}
+                    oz
+                  </div>
+                  &nbsp; : &nbsp; serving size
+                </div>
+              </div>
+            )
+          ) : null}
         </div>
 
         <div className={styles.compoent__box__nutrition}>
@@ -136,6 +146,7 @@ const NutritionPanel = ({
               servingSize={
                 isComeFormRecipeEditPage ? counter : servingSizeCounter
               }
+              showUser={showUser}
             />
           )}
         </div>

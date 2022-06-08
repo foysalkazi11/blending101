@@ -164,9 +164,6 @@ const RecipeDetails = ({
             title="Nutrition"
             icon="/icons/chart-bar-light-green.svg"
           />
-          <div className={styles.nutritionHeader}>
-            <p>Amount Per Serving Calories</p>
-          </div>
 
           <div className={`${styles.ingredientsDetails} `}>
             {winReady ? (

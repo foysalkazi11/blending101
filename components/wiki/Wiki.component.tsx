@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import styles from "./wiki.module.scss";
 import WikiRightComponent from "./WikiRight/WikiRight.component";
 import WikiCenterComponent from "./WikiCenter/WikiCenter.component";
@@ -10,7 +10,7 @@ import GET_ALL_INGREDIENTS_BASED_ON_NURTITION from "../../gqlLib/wiki/query/getA
 import { useAppDispatch } from "../../redux/hooks";
 import { setLoading } from "../../redux/slices/utilitySlice";
 import notification from "../utility/reactToastifyNotification";
-import RightSide from "../recipe/recipeDetails/rightSide/RightSide";
+import NutritionPanel from "../recipe/share/nutritionPanel/NutritionPanel";
 
 const placeHolderImage = ["/images/no-image-available.webp"];
 
@@ -22,24 +22,13 @@ function WikiComponent() {
   const meausermentWeight = params?.[2] || "";
   const dispatch = useAppDispatch();
 
-  const [counter, setCounter] = useState(1);
-  const [nutritionState, setNutritionState] = useState(null);
-  const [singleElement, setsingleElement] = useState(false);
-  const counterHandler = (value) => {
-    setCounter(Number(value));
-  };
-  const adjusterFunc = (task) => {
-    task === "+" && setCounter(Number(counter) + 1);
-    task === "-" && counter > 1 && setCounter(Number(counter) - 1);
-  };
-
   const [getAllIngredientsBasedOnNutrition, ingredientsData] = useLazyQuery(
     GET_ALL_INGREDIENTS_BASED_ON_NURTITION,
-    { fetchPolicy: "network-only" }
+    { fetchPolicy: "network-only" },
   );
   const [getBlendNutritionBasedIngredientsWiki, nutritionData] = useLazyQuery(
     GET_BLEND_NUTRITION_BASED_IN_INGREDIENTS_WIKI,
-    { fetchPolicy: "network-only" }
+    { fetchPolicy: "network-only" },
   );
 
   const fetchData = async () => {
@@ -110,14 +99,14 @@ function WikiComponent() {
         />
         <div style={{ margin: "0 10px" }}>
           {type === "Ingredient" ? (
-            <RightSide
-              nutritionData={data?.nutrients && JSON.parse(data?.nutrients)}
-              counter={counter}
-              counterHandler={counterHandler}
-              nutritionState={nutritionState}
-              setsingleElement={setsingleElement}
-              singleElement={singleElement}
-              adjusterFunc={adjusterFunc}
+            <NutritionPanel
+              nutritionTrayData={
+                data?.nutrients ? JSON?.parse(data?.nutrients) : {}
+              }
+              showUser={false}
+              counter={1}
+              nutritionDataLoading={data?.loading}
+              showServing={false}
             />
           ) : (
             <WikiRightComponent
