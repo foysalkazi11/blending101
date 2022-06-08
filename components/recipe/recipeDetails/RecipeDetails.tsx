@@ -3,7 +3,7 @@ import AContainer from "../../../containers/A.container";
 import LeftSide from "./leftSide/LeftSide";
 import Center from "./center/Center";
 import styles from "./RecipeDetails.module.scss";
-import RightTray from "../../rightTray/rightTray.component";
+import NutritionPanel from "../share/nutritionPanel/NutritionPanel";
 
 const RecipeDetails = ({
   recipeData,
@@ -45,7 +45,7 @@ const RecipeDetails = ({
                 />
               </div>
               <div className={styles.recipeDetailsContainer__contentDiv__right}>
-                <RightTray
+                <NutritionPanel
                   nutritionTrayData={nutritionData}
                   counter={counter}
                   nutritionState={nutritionState}

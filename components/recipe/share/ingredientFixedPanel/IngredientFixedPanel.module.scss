@@ -1,0 +1,38 @@
+.ingrdeintFixedPanelContainer {
+  position: fixed;
+  z-index: 999999;
+  top: 55px;
+}
+
+.ingrdeintFixedPanelInnerContainer {
+  -webkit-box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;
+  box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;
+  background-color: white;
+  padding-left: 16px;
+  padding-top: 16px;
+  position: absolute;
+  left: -300px;
+  width: 300px;
+  min-height: 100vh;
+  transition: all 0.3s;
+}
+
+.openTray {
+  left: 0px;
+}
+
+.tag {
+  position: absolute;
+  top: 30px;
+  right: -10px;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  z-index: -1;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.openTag {
+  right: -25px;
+}
