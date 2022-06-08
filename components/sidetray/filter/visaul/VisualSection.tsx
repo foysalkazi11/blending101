@@ -24,11 +24,11 @@ type VisualSectionProps = {
 const VisualSection = ({ categories }: VisualSectionProps) => {
   const blends = useAppSelector((state) => state.sideTray.blends);
   const [getAllBlendCategory, { loading: blendCategroyLoading }] = useLazyQuery(
-    FETCH_BLEND_CATEGORIES
+    FETCH_BLEND_CATEGORIES,
   );
   const { allCategories } = useAppSelector((state) => state?.categroy);
   const { openFilterTray, ingredients: ingredientsList } = useAppSelector(
-    (state) => state?.sideTray
+    (state) => state?.sideTray,
   );
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
@@ -160,14 +160,12 @@ const VisualSection = ({ categories }: VisualSectionProps) => {
           </div>
         </div>
       )}
-      <div className={styles.filter__top} style={{ marginTop: "15px" }}>
-        <h3>Ingredients</h3>
-        <FilterbottomComponent
-          categories={categories}
-          handleIngredientClick={handleIngredientClick}
-          checkActiveIngredient={checkActiveIngredient}
-        />
-      </div>
+
+      <FilterbottomComponent
+        categories={categories}
+        handleIngredientClick={handleIngredientClick}
+        checkActiveIngredient={checkActiveIngredient}
+      />
     </div>
   );
 };

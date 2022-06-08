@@ -1,20 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useEffect, useRef, useState } from "react";
-import styles from "./rightTray.module.scss";
-import { useAppSelector, useAppDispatch } from "../../redux/hooks";
-import UpdatedRecursiveAccordian from "../customRecursiveAccordian/updatedRecursiveAccordian.component";
-import {
-  setIngredientArrayForNutrition,
-  setServingCounter,
-} from "../../redux/edit_recipe/editRecipeStates";
+import React, { useEffect, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
-import CircularRotatingLoader from "../../theme/loader/circularRotatingLoader.component";
-import RightHeader from "../recipe/addRecipe/header/right_header/right_header.component";
-import NutrationPanelSkeleton from "../../theme/skeletons/nutrationPanelSkeleton/NutrationPanelSkeleton";
-import PanelHeader from "../recipe/share/panelHeader/PanelHeader";
+import { setIngredientArrayForNutrition } from "../../../../redux/edit_recipe/editRecipeStates";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import NutrationPanelSkeleton from "../../../../theme/skeletons/nutrationPanelSkeleton/NutrationPanelSkeleton";
+import UpdatedRecursiveAccordian from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
+import PanelHeader from "../panelHeader/PanelHeader";
+import styles from "./NutritionPanel.module.scss";
 
-interface RightTrayInterface {
+interface NutritionPanelInterface {
   nutritionTrayData?: any;
   nutritionState?: any;
   setNutritionState?: any;
@@ -27,7 +22,7 @@ interface RightTrayInterface {
   adjusterFunc?: (value: number) => void;
 }
 
-const RightTray = ({
+const NutritionPanel = ({
   nutritionTrayData = {},
   setNutritionState = () => {},
   counter = 1,
@@ -38,7 +33,7 @@ const RightTray = ({
   servingSize = 0,
   servings = 1,
   adjusterFunc = () => {},
-}: RightTrayInterface) => {
+}: NutritionPanelInterface) => {
   const selectedIngredientsList = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedIngredientsList,
   );
@@ -149,4 +144,4 @@ const RightTray = ({
   );
 };
 
-export default RightTray;
+export default NutritionPanel;

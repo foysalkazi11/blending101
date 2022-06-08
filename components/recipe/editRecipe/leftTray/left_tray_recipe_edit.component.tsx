@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react';
-import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
-import styles from './left_tray_recipe_edit.module.scss';
-import { setSelectedIngredientsList } from '../../../../redux/edit_recipe/editRecipeStates';
-import FilterbottomComponent from '../../../sidetray/filter/filterBottom.component';
-import { categories } from '../../../utility/staticData';
+import React from "react";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import styles from "./left_tray_recipe_edit.module.scss";
+import { setSelectedIngredientsList } from "../../../../redux/edit_recipe/editRecipeStates";
+import FilterbottomComponent from "../../../sidetray/filter/filterBottom.component";
+import { categories } from "../../../utility/staticData";
 interface ingredientState {
   name: string;
   value: number;
@@ -50,13 +50,12 @@ const Left_tray_recipe_edit = ({
   return (
     <div className={styles.left_main_container}>
       <div className={styles.filter}>
-        <div className={styles.filter__top} style={{ marginTop: '15px' }}>
-          <h3>Ingredients</h3>
+        <div className={styles.filter__top} style={{ marginTop: "15px" }}>
           <FilterbottomComponent
             categories={categories}
             checkActiveIngredient={checkActive}
             handleIngredientClick={handleIngredientClick}
-            scrollAreaMaxHeight={{ maxHeight: '520px' }}
+            scrollAreaMaxHeight={{ maxHeight: "520px" }}
           />
         </div>
       </div>

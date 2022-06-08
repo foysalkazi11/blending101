@@ -5,47 +5,12 @@
 }
 
 .filter__top {
-  // border: 2px dashed #DEDEDE;
   background-color: #fff;
   border-radius: 18px;
-  padding: 10px 0px 0 0px;
-  padding-bottom: 10px;
-  margin-top: 10px;
-
   @include responsive(1450px, 4400px) {
     width: 100%;
-    padding: 10px;
     -webkit-box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;
     box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;
-  }
-
-  h3 {
-    font-size: 16px;
-    padding-left: 20px;
-    position: relative;
-    font-weight: 500;
-    margin-bottom: 30px;
-
-    &::after {
-      content: "";
-      width: 6px;
-      height: 80%;
-      background: #fe5d1f;
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      left: 8px;
-      width: 4px;
-    }
-
-    &::before {
-      content: "";
-      width: 100%;
-      position: absolute;
-      border-bottom: 2px dashed #dedede;
-      left: 0;
-      bottom: -15px;
-    }
   }
 }
 
