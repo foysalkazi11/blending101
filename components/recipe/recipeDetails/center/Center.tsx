@@ -164,7 +164,7 @@ const Center = ({
   };
 
   return (
-    <div>
+    <div style={{ width: "100%" }}>
       <div className={styles.header}>
         <div className={styles.alignItems}>
           <img src="/images/recipe-icon.svg" alt="recipe icon" />

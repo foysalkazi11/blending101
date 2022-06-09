@@ -19,6 +19,23 @@ $media: (
   }
 }
 
+@mixin SliderbuttonShape {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  z-index: 1;
+  background-color: #d6d6d6;
+  color: #f4f4f4 !important;
+  transition: all ease 0.5s;
+  cursor: pointer;
+  &:hover {
+    background-color: $primaryColor !important;
+  }
+}
+
 // @mixin for-size($size) {
 //   @if $size == phone-only {
 //     @media (max-width: 599px) {
