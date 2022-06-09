@@ -3,28 +3,14 @@ import React from "react";
 import DatacardComponent from "../../../../theme/cards/dataCard/dataCard.component";
 import CustomSlider from "../../../../theme/carousel/carousel.component";
 import { recommendedList } from "../../fackData/recipeDetails";
-import ChevronRightIcon from "../../../../public/icons/chevron_right_black_36dp.svg";
-import ChevronLeftIcon from "../../../../public/icons/chevron_left_black_36dp.svg";
 import styles from "./LeftSide.module.scss";
 import PanelHeader from "../../share/panelHeader/PanelHeader";
+import {
+  NextButton,
+  PreviousButton,
+} from "../../share/sliderArrows/SliderArrows";
 
 const RelatedRecipeSlider = () => {
-  const PreviousButton = (prop) => {
-    const { className, onClick } = prop;
-    return (
-      <div className={className + " " + styles.prevBtn} onClick={onClick}>
-        <ChevronLeftIcon />
-      </div>
-    );
-  };
-  const NextButton = (prop) => {
-    const { className, onClick } = prop;
-    return (
-      <div className={className + " " + styles.nextBtn} onClick={onClick}>
-        <ChevronRightIcon />
-      </div>
-    );
-  };
   const responsiveSetting = {
     slidesToShow: 3,
     slidesToScroll: 1,
@@ -33,7 +19,7 @@ const RelatedRecipeSlider = () => {
 
     responsive: [
       {
-        breakpoint: 768,
+        breakpoint: 1024,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 1,
