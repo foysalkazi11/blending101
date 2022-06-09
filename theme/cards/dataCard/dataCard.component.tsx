@@ -253,9 +253,9 @@ export default function DatacardComponent({
     } else if (comments && !notes) {
       return showCommentsAndNotes("commentsOnly", comments);
     } else if (!comments && notes) {
-      return showCommentsAndNotes("notesOnly", notes);
+      return showCommentsAndNotes("notesOnly", "");
     } else {
-      return showCommentsAndNotes("comments&notes", `${comments},${notes}`);
+      return showCommentsAndNotes("comments&notes", comments);
     }
   };
 
