@@ -109,42 +109,31 @@ const Center = ({
     const recipeId = recipeData?._id;
     const defaultImage = recipeData?.image?.find((img) => img?.default)?.image;
 
-    if (!comments && !notes) {
+    const showCommentsAndNotes = (icon: string, num: number | string) => {
       return (
         <>
           <img
-            src="/icons/no-comment.svg"
-            alt="message"
+            src={`/icons/${icon}.svg`}
+            alt="icon"
             onClick={(e) => handleComment(recipeId, title, defaultImage, e)}
-          />{" "}
-          <p style={{ color: "#c4c4c4" }}>0</p>
+          />
+          <span style={{ color: num ? "#7cbc39" : "#c4c4c4" }}>
+            {" "}
+            {` ${num}`}
+          </span>
         </>
       );
-    }
-    if (!comments) {
-      return (
-        <>
-          <img
-            src="/icons/message.svg"
-            alt="message"
-            onClick={(e) => handleComment(recipeId, title, defaultImage, e)}
-            className={`${styles.inActiveImg}`}
-          />{" "}
-          <p>{""}</p>
-        </>
-      );
-    }
+    };
 
-    return (
-      <>
-        <img
-          src="/icons/message.svg"
-          alt="message"
-          onClick={(e) => handleComment(recipeId, title, defaultImage, e)}
-        />{" "}
-        {comments ? <p style={{ color: "#7cbc39" }}>{comments}</p> : null}
-      </>
-    );
+    if (!comments && !notes) {
+      return showCommentsAndNotes("noComments&NoNotes", 0);
+    } else if (comments && !notes) {
+      return showCommentsAndNotes("commentsOnly", comments);
+    } else if (!comments && notes) {
+      return showCommentsAndNotes("notesOnly", notes);
+    } else {
+      return showCommentsAndNotes("comments&notes", `${comments},${notes}`);
+    }
   };
 
   const headerRightSider = (

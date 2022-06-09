@@ -235,42 +235,28 @@ export default function DatacardComponent({
   );
 
   const hangleShowCommentsAndNotesIcon = (comments: number, notes: number) => {
-    if (!comments && !notes) {
+    const showCommentsAndNotes = (icon: string, num: number | string) => {
       return (
         <>
           <img
-            src="/icons/no-comment.svg"
-            alt="message"
+            src={`/icons/${icon}.svg`}
+            alt="icon"
             onClick={(e) => handleComment(recipeId, title, image, e)}
           />{" "}
-          <span style={{ color: "#c4c4c4" }}>0</span>
+          <span style={{ color: num ? "#7cbc39" : "#c4c4c4" }}>{num}</span>
         </>
       );
-    }
-    if (!comments) {
-      return (
-        <>
-          <img
-            src="/icons/message.svg"
-            alt="message"
-            onClick={(e) => handleComment(recipeId, title, image, e)}
-            className={`${noOfComments ? "" : styles.inActiveImg}`}
-          />{" "}
-          <span>{""}</span>
-        </>
-      );
-    }
+    };
 
-    return (
-      <>
-        <img
-          src="/icons/message.svg"
-          alt="message"
-          onClick={(e) => handleComment(recipeId, title, image, e)}
-        />{" "}
-        {noOfComments ? <span>{noOfComments}</span> : null}
-      </>
-    );
+    if (!comments && !notes) {
+      return showCommentsAndNotes("noComments&NoNotes", 0);
+    } else if (comments && !notes) {
+      return showCommentsAndNotes("commentsOnly", comments);
+    } else if (!comments && notes) {
+      return showCommentsAndNotes("notesOnly", notes);
+    } else {
+      return showCommentsAndNotes("comments&notes", `${comments},${notes}`);
+    }
   };
 
   return (
