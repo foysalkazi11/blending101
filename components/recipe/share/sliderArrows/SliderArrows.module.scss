@@ -12,13 +12,14 @@
     margin-right: 32px;
     min-width: 90px;
     position: relative;
-    &__prev {
-      @include SliderbuttonShape;
-      margin-right: 16px;
-    }
-
-    &__next {
-      @include SliderbuttonShape;
-    }
   }
+}
+
+.prev {
+  @include SliderbuttonShape;
+  margin-right: 16px;
+}
+
+.next {
+  @include SliderbuttonShape;
 }

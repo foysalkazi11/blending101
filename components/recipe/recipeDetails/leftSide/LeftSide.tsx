@@ -2,7 +2,6 @@
 import React from "react";
 import DatacardComponent from "../../../../theme/cards/dataCard/dataCard.component";
 import { recommendedList } from "../../fackData/recipeDetails";
-import styles from "./LeftSide.module.scss";
 import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
 import PanelHeader from "../../share/panelHeader/PanelHeader";
 

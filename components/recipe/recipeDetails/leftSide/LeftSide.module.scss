@@ -1,22 +1,3 @@
-@import "../../../../styles/partials/mixin";
-
-.prevBtn {
-  @include SliderbuttonShape;
-  margin-right: 16px;
-
-  svg {
-    transform: scale(0.75);
-  }
-}
-
-.nextBtn {
-  @include SliderbuttonShape;
-
-  svg {
-    transform: scale(0.75);
-  }
-}
-
 .relatedProductSliderContainer {
   margin: 16px 10px 20px 10px;
 }

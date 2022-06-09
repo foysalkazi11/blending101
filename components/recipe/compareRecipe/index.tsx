@@ -32,6 +32,7 @@ import {
 import EMPTY_COMPARE_LIST from "../../../gqlLib/compare/mutation/emptyCompareList";
 import { setDbUser } from "../../../redux/slices/userSlice";
 import { setLoading } from "../../../redux/slices/utilitySlice";
+import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
 
 const compareRecipeResponsiveSetting = {
   slidesToShow: 4,
@@ -435,6 +436,7 @@ const CompareRecipe = () => {
           )}
         </div>
       </div>
+      <FooterRecipeFilter />
     </AContainer>
   );
 };
