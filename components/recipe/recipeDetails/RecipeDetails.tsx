@@ -6,6 +6,7 @@ import NutritionPanel from "../share/nutritionPanel/NutritionPanel";
 import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
 import useWindowSize from "../../utility/useWindowSize";
 import RelatedRecipeSlider from "./leftSide/RelatedRecipeSlider";
+import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
 
 const RecipeDetails = ({
   recipeData,
@@ -55,7 +56,8 @@ const RecipeDetails = ({
           />
         </div>
       </div>
-      {width < 1280 ? <RelatedRecipeSlider /> : ""}
+      {width < 1280 ? <RelatedRecipeSlider /> : null}
+      <FooterRecipeFilter />
     </AContainer>
   );
 };

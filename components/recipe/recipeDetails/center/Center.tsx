@@ -1,12 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState } from "react";
-import { FiEdit2 } from "react-icons/fi";
 import { MdOutlineClose } from "react-icons/md";
 import SlickSlider from "../../../../theme/carousel/carousel.component";
 import styles from "./Center.module.scss";
-import ChevronRightIcon from "../../../../public/icons/chevron_right_black_36dp.svg";
-import ChevronLeftIcon from "../../../../public/icons/chevron_left_black_36dp.svg";
-import { MdOutlineInfo, MdAdd, MdRemove } from "react-icons/md";
+import { MdOutlineInfo } from "react-icons/md";
 import { BiBarChart } from "react-icons/bi";
 import { BsCartPlus } from "react-icons/bs";
 import { useAppDispatch } from "../../../../redux/hooks";
@@ -24,7 +21,11 @@ import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoa
 import useGetDefaultPortionOfnutration from "../../../../customHooks/useGetDefaultPortionOfNutration";
 import { setActiveRecipeId } from "../../../../redux/slices/collectionSlice";
 import { setCurrentRecipeInfo } from "../../../../redux/slices/recipeSlice";
-import ToggleMenu from "../../../../theme/toggleMenu/ToggleMenu";
+import PanelHeader from "../../share/panelHeader/PanelHeader";
+import {
+  NextButton,
+  PreviousButton,
+} from "../../share/sliderArrows/SliderArrows";
 
 const scaleMenu = [
   { label: ".5x", value: 0.5 },
@@ -57,23 +58,6 @@ const Center = ({
   const [ingredientId, setIngredientId] = useState("");
   const recipeDetails = recipeData;
   useGetDefaultPortionOfnutration(ingredientId);
-
-  const PreviousButton = (prop) => {
-    const { className, onClick } = prop;
-    return (
-      <div className={className + " " + styles.prevBtn} onClick={onClick}>
-        <ChevronLeftIcon />
-      </div>
-    );
-  };
-  const NextButton = (prop) => {
-    const { className, onClick } = prop;
-    return (
-      <div className={className + " " + styles.nextBtn} onClick={onClick}>
-        <ChevronRightIcon />
-      </div>
-    );
-  };
 
   const ReadMore = ({ children }) => {
     const text = children;
@@ -163,26 +147,28 @@ const Center = ({
     );
   };
 
+  const headerRightSider = (
+    <div className={styles.alignItems}>
+      <div
+        className={styles.editBox}
+        onClick={() => router.push(`/edit_recipe/${recipeDetails?._id}`)}
+      >
+        <p className={styles.editIcon}>Edit</p>
+        {/* <FiEdit2 className={styles.editIcon} /> */}
+      </div>
+      <div className={styles.closeBox} onClick={() => router.push(`/`)}>
+        <MdOutlineClose className={styles.closeIcon} />
+      </div>
+    </div>
+  );
+
   return (
     <div style={{ width: "100%" }}>
-      <div className={styles.header}>
-        <div className={styles.alignItems}>
-          <img src="/images/recipe-icon.svg" alt="recipe icon" />
-          <h3>Recipe</h3>
-        </div>
-        <div className={styles.alignItems}>
-          <div
-            className={styles.editBox}
-            onClick={() => router.push(`/edit_recipe/${recipeDetails?._id}`)}
-          >
-            <p className={styles.editIcon}>Edit</p>
-            {/* <FiEdit2 className={styles.editIcon} /> */}
-          </div>
-          <div className={styles.closeBox} onClick={() => router.push(`/`)}>
-            <MdOutlineClose className={styles.closeIcon} />
-          </div>
-        </div>
-      </div>
+      <PanelHeader
+        icon="/images/recipe-icon.svg"
+        title="Recipe"
+        rightSide={headerRightSider}
+      />
 
       <div className={styles.contentBox}>
         <div className={styles.heading}>

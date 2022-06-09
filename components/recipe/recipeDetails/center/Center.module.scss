@@ -1,25 +1,8 @@
 $slider-height: 220px;
 
-.header {
+.alignItems {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-
-  .alignItems {
-    display: flex;
-    align-items: center;
-  }
-
-  h3 {
-    font-size: 20px;
-    color: #000000;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    font-weight: 400;
-    margin-left: 10px;
-  }
 
   .editBox {
     box-shadow: 5px 5px 15px #ececec;
@@ -38,20 +21,6 @@ $slider-height: 220px;
       padding: 2px 5px;
       font-size: 16px;
     }
-
-    // box-shadow: 5px 5px 15px #ececec;
-    // width: 31px;
-    // height: 31px;
-    // display: flex;
-    // justify-content: center;
-    // align-items: center;
-    // border-radius: 50%;
-    // cursor: pointer;
-    // margin-right: 16px;
-
-    // .editIcon {
-    //   font-size: 16px;
-    // }
   }
 
   .closeBox {
@@ -163,7 +132,6 @@ $slider-height: 220px;
 
 .sliderBox {
   width: 100%;
-
   margin-top: 20px;
 
   .imageBox {
@@ -264,51 +232,6 @@ $slider-height: 220px;
       top: -10px;
       right: -15px;
     }
-  }
-}
-
-.prevBtn {
-  width: 30px;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  z-index: 1;
-  background-color: #d6d6d6;
-  color: #f4f4f4 !important;
-  transition: all ease 0.5s;
-  margin-right: 16px;
-  cursor: pointer;
-
-  svg {
-    transform: scale(0.75);
-  }
-
-  &:hover {
-    background-color: #fe5d1f !important;
-  }
-}
-
-.nextBtn {
-  width: 30px;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  z-index: 1;
-  background-color: #d6d6d6;
-  color: #f4f4f4 !important;
-  transition: all ease 0.5s;
-  cursor: pointer;
-
-  svg {
-    transform: scale(0.75);
-  }
-
-  &:hover {
-    background-color: #fe5d1f !important;
   }
 }
 

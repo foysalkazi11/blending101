@@ -24,7 +24,7 @@ const SliderArrows = ({
 
           <div className={styles.customeArrowContainer__arrows}>
             <div
-              className={styles.customeArrowContainer__arrows__prev}
+              className={styles.prev}
               onClick={prevFunc}
               style={
                 clickCount <= 0 ? { display: "none" } : { marginRight: "auto" }
@@ -34,7 +34,7 @@ const SliderArrows = ({
             </div>
 
             <div
-              className={styles.customeArrowContainer__arrows__prev}
+              className={styles.next}
               onClick={nextFunc}
               style={
                 clickCount >= compareRecipeLength - 2
@@ -42,14 +42,29 @@ const SliderArrows = ({
                   : { marginLeft: "auto" }
               }
             >
-
-
               <ChevronRightIcon />
             </div>
           </div>
         </div>
       ) : null}
     </>
+  );
+};
+
+export const PreviousButton = (prop) => {
+  const { className, onClick } = prop;
+  return (
+    <div className={className + " " + styles.prev} onClick={onClick}>
+      <ChevronLeftIcon />
+    </div>
+  );
+};
+export const NextButton = (prop) => {
+  const { className, onClick } = prop;
+  return (
+    <div className={className + " " + styles.next} onClick={onClick}>
+      <ChevronRightIcon />
+    </div>
   );
 };
 
