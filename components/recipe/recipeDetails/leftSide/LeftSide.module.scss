@@ -1,61 +1,22 @@
+@import "../../../../styles/partials/mixin";
+
 .prevBtn {
-  width: 30px;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  z-index: 1;
-  background-color: #d6d6d6;
-  color: #f4f4f4 !important;
-  transition: all ease 0.5s;
+  @include SliderbuttonShape;
   margin-right: 16px;
-  cursor: pointer;
 
   svg {
     transform: scale(0.75);
-  }
-
-
-  &:hover {
-    background-color: #fe5d1f !important;
   }
 }
 
 .nextBtn {
-  width: 30px;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  z-index: 1;
-  background-color: #d6d6d6;
-  color: #f4f4f4 !important;
-  transition: all ease 0.5s;
-  cursor: pointer;
+  @include SliderbuttonShape;
 
   svg {
     transform: scale(0.75);
   }
-
-  &:hover {
-    background-color: #fe5d1f !important;
-  }
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-
-  h3 {
-    font-size: 20px;
-    color: #000000;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    font-weight: 400;
-    margin-left: 10px;
-  }
+.relatedProductSliderContainer {
+  margin: 16px 10px 20px 10px;
 }
