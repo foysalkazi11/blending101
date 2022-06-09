@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import AContainer from "../../../containers/A.container";
 import LeftSide from "./leftSide/LeftSide";
 import Center from "./center/Center";
-import styles from "./RecipeDetails.module.scss";
 import NutritionPanel from "../share/nutritionPanel/NutritionPanel";
+import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
+import useWindowSize from "../../utility/useWindowSize";
+import RelatedRecipeSlider from "./leftSide/RelatedRecipeSlider";
 
 const RecipeDetails = ({
   recipeData,
@@ -15,51 +17,46 @@ const RecipeDetails = ({
   nutritionDataLoading = false,
 }) => {
   const [counter, setCounter] = useState(1);
+  const { width } = useWindowSize();
 
   return (
-    <div style={{ margin: "40px auto" }}>
-      <AContainer
-        showHeader={true}
-        logo={true}
-        headerTitle="Blend Recipe"
-        showRighTray={true}
-        commentsTray={true}
-      >
-        <div className={styles.recipeDetailsContainer}>
-          <div className={styles.recipeDetailsContainer__contentDiv}>
-            <div className={styles.recipeDetailsContainer__contentDiv__left}>
-              <LeftSide />
-            </div>
-            <div className={styles.recipeDetailsContainer_right}>
-              <div
-                className={styles.recipeDetailsContainer__contentDiv__center}
-              >
-                <Center
-                  recipeData={recipeData}
-                  counter={counter}
-                  setCounter={setCounter}
-                  setNutritionState={setNutritionState}
-                  nutritionState={nutritionState}
-                  singleElement={singleElement}
-                  setsingleElement={setsingleElement}
-                />
-              </div>
-              <div className={styles.recipeDetailsContainer__contentDiv__right}>
-                <NutritionPanel
-                  nutritionTrayData={nutritionData}
-                  counter={counter}
-                  nutritionState={nutritionState}
-                  setNutritionState={setNutritionState}
-                  nutritionDataLoading={nutritionDataLoading}
-                  servingSize={parseInt(recipeData?.servingSize || 0)}
-                  servings={recipeData?.servings}
-                />
-              </div>
-            </div>
-          </div>
+    <AContainer
+      showHeader={true}
+      logo={true}
+      headerTitle="Blend Recipe"
+      showRighTray={true}
+      commentsTray={true}
+    >
+      <div className={styles.main}>
+        <div className={styles.left}>
+          <LeftSide />
         </div>
-      </AContainer>
-    </div>
+
+        <div className={styles.center}>
+          <Center
+            recipeData={recipeData}
+            counter={counter}
+            setCounter={setCounter}
+            setNutritionState={setNutritionState}
+            nutritionState={nutritionState}
+            singleElement={singleElement}
+            setsingleElement={setsingleElement}
+          />
+        </div>
+        <div className={styles.right}>
+          <NutritionPanel
+            nutritionTrayData={nutritionData}
+            counter={counter}
+            nutritionState={nutritionState}
+            setNutritionState={setNutritionState}
+            nutritionDataLoading={nutritionDataLoading}
+            servingSize={parseInt(recipeData?.servingSize || 0)}
+            servings={recipeData?.servings}
+          />
+        </div>
+      </div>
+      {width < 1280 ? <RelatedRecipeSlider /> : ""}
+    </AContainer>
   );
 };
 
