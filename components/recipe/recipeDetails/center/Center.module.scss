@@ -1,46 +1,5 @@
 $slider-height: 220px;
 
-.alignItems {
-  display: flex;
-  align-items: center;
-
-  .editBox {
-    box-shadow: 5px 5px 15px #ececec;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    margin-right: 10px;
-
-    background-color: #7cbc39;
-    color: #ececec;
-    border-radius: 5px;
-
-    .editIcon {
-      padding: 2px 5px;
-      font-size: 16px;
-    }
-  }
-
-  .closeBox {
-    background: #7cbc39;
-
-    width: 31px;
-    height: 31px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    cursor: pointer;
-
-    .closeIcon {
-      font-size: 20px;
-      color: #ffffff !important;
-    }
-  }
-}
-
 .contentBox {
   background-color: #ffffff;
   padding: 20px;

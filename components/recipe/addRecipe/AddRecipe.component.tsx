@@ -2,7 +2,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import AContainer from "../../../containers/A.container";
 import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
-import Center_header from "./header/centerHeader/Center_header.component";
 import Center_Elements from "./recipe_elements/centerElements.component";
 import IngredientList from "./recipe_elements/ingredientList/ingredientList&Howto.component";
 import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
@@ -19,6 +18,7 @@ import IngredientPanel from "../share/ingredientPanel/IngredientPanel";
 import useWindowSize from "../../utility/useWindowSize";
 import IngredientFixedPanle from "../share/ingredientFixedPanel/IngredientFixedPanle";
 import NutritionPanel from "../share/nutritionPanel/NutritionPanel";
+import PanelHeaderCenter from "../share/panelHeader/PanelHeaderCenter";
 
 const AddRecipePage = () => {
   const [images, setImages] = useState<any[]>([]);
@@ -189,7 +189,11 @@ const AddRecipePage = () => {
           />
         </div>
         <div className={styles.center}>
-          <Center_header handleSaveRecipe={handleSubmitData} />
+          <PanelHeaderCenter
+            backLink="/"
+            editOrSavebtnFunc={handleSubmitData}
+            editOrSavebtnText="Save"
+          />
           <Center_Elements
             blendCategoryList={
               blendCategoriesData?.getAllCategories
