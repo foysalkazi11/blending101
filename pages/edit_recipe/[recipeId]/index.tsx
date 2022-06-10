@@ -203,6 +203,7 @@ const EditRecipeComponent = () => {
       setExistingImage={setExistingImages}
       nutritionState={nutritionState}
       setNutritionState={setNutritionState}
+      recipeId={recipeId}
     />
   );
 };

@@ -1,3 +1,4 @@
+@import "../../../../styles/partials/variables";
 .headingContainer {
   display: flex;
   justify-content: space-between;
@@ -14,4 +15,33 @@
     font-size: 20px;
     margin-left: 10px;
   }
+}
+
+.centerRightBtnWraper {
+  display: flex;
+  align-items: center;
+}
+
+.iconBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  height: 28px;
+  width: 28px;
+  background-color: $secondaryColor;
+  color: $slightGray;
+  cursor: pointer;
+}
+
+.headerTextBtn {
+  cursor: pointer;
+  margin-right: 10px;
+  background-color: $secondaryColor;
+  color: $slightGray;
+  border-radius: 5px;
+  padding: 1px 5px;
+  font-size: 16px;
+  outline: none;
+  border: none;
 }
