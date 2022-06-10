@@ -128,9 +128,7 @@ const RecipeDetails = () => {
           <div
             style={
               openFilterTray
-                ? windowSize.width > 1300
-                  ? { marginLeft: "233px", transition: "all 0.5s" }
-                  : { marginLeft: "283px", transition: "all 0.5s" }
+                ? { marginLeft: "280px", transition: "all 0.5s" }
                 : { transition: "all 0.5s" }
             }
           >

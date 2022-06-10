@@ -16,7 +16,7 @@ const CustomSlider = ({ moreSetting = {}, children }: SlickSliderProps) => {
 
     return (
       <div onClick={onClick} className={className}>
-        <ChevronLeftIcon fontSize="large" />
+        <ChevronLeftIcon />
       </div>
     );
   };
@@ -26,7 +26,7 @@ const CustomSlider = ({ moreSetting = {}, children }: SlickSliderProps) => {
 
     return (
       <div onClick={onClick} className={className}>
-        <ChevronRightIcon fontSize="large" />
+        <ChevronRightIcon />
       </div>
     );
   };
