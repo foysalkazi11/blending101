@@ -46,7 +46,10 @@ a {
   z-index: 1;
   background-color: #d6d6d6;
   color: #f4f4f4 !important;
-  transition: all ease 0.5s;
+  transition: all ease 0.3s;
+  &:hover {
+    background-color: #fe5d1f !important;
+  }
 }
 
 .slick-next {
@@ -59,11 +62,6 @@ a {
 .slick-next:before,
 .slick-prev:before {
   display: none !important;
-}
-
-.slick-next:hover,
-.slick-prev:hover {
-  background-color: #fe5d1f !important;
 }
 
 .slick-disabled {
