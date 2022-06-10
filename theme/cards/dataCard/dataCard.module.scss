@@ -7,28 +7,25 @@
 .datacard {
   display: block;
   background-color: #fff;
-  margin: 3px;
+  // margin: 3px;
+  // border: 1.5px solid #eeeaeaa8;
   padding: 14px;
   border-radius: 12px;
   overflow: hidden;
-  border: 1.5px solid #eeeaeaa8;
   cursor: pointer;
   transition: all;
-  transition-duration: 0.2s;
+  transition-duration: 0.3s;
   &:hover .title {
     color: #fe5d1f;
   }
 }
 .datacard * {
   transition: all;
-  transition-duration: 0.2s;
+  transition-duration: 0.3s;
 }
 .datacard:hover {
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
-    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  box-shadow: 0px 2px 3px #0000001a;
   border-color: #fff;
-  transition: all;
-  transition-duration: 0.2s;
 }
 
 .datacard__body {
