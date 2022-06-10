@@ -2,7 +2,6 @@
 import React, { Dispatch, SetStateAction } from "react";
 import AContainer from "../../../containers/A.container";
 import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
-import Center_header from "./header/centerHeader/Center_header.component";
 import Center_Elements from "./recipe_elements/centerElements.component";
 import IngredientList from "./recipe_elements/ingredientList/ingredientList&Howto.component";
 import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
@@ -15,6 +14,7 @@ import IngredientPanel from "../share/ingredientPanel/IngredientPanel";
 import IngredientFixedPanle from "../share/ingredientFixedPanel/IngredientFixedPanle";
 import useWindowSize from "../../utility/useWindowSize";
 import NutritionPanel from "../share/nutritionPanel/NutritionPanel";
+import PanelHeaderCenter from "../share/panelHeader/PanelHeaderCenter";
 
 interface editRecipe {
   recipeName: string;
@@ -32,6 +32,7 @@ interface editRecipe {
   images?: any[];
   nutritionState?: object;
   setNutritionState?: Dispatch<SetStateAction<object>>;
+  recipeId?: string | string[];
 }
 
 const EditRecipePage = ({
@@ -50,6 +51,7 @@ const EditRecipePage = ({
   setExistingImage = () => {},
   nutritionState = {},
   setNutritionState = () => {},
+  recipeId = "",
 }: editRecipe) => {
   const dispatch = useAppDispatch();
   const { width } = useWindowSize();
@@ -108,7 +110,11 @@ const EditRecipePage = ({
           />
         </div>
         <div className={styles.center}>
-          <Center_header editARecipeFunction={editARecipeFunction} />
+          <PanelHeaderCenter
+            backLink={`/recipe_details/${recipeId}`}
+            editOrSavebtnFunc={editARecipeFunction}
+            editOrSavebtnText="Save"
+          />
           <Center_Elements
             recipeName={recipeName}
             allBlendCategories={allBlendCategories}

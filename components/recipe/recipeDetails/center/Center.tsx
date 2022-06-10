@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState } from "react";
-import { MdOutlineClose } from "react-icons/md";
 import SlickSlider from "../../../../theme/carousel/carousel.component";
 import styles from "./Center.module.scss";
 import { MdOutlineInfo } from "react-icons/md";
@@ -21,11 +20,7 @@ import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoa
 import useGetDefaultPortionOfnutration from "../../../../customHooks/useGetDefaultPortionOfNutration";
 import { setActiveRecipeId } from "../../../../redux/slices/collectionSlice";
 import { setCurrentRecipeInfo } from "../../../../redux/slices/recipeSlice";
-import PanelHeader from "../../share/panelHeader/PanelHeader";
-import {
-  NextButton,
-  PreviousButton,
-} from "../../share/sliderArrows/SliderArrows";
+import PanelHeaderCenter from "../../share/panelHeader/PanelHeaderCenter";
 
 const scaleMenu = [
   { label: ".5x", value: 0.5 },
@@ -83,11 +78,6 @@ const Center = ({
     }
   };
 
-  const responsiveSetting = {
-    nextArrow: <NextButton />,
-    prevArrow: <PreviousButton />,
-  };
-
   const handleComment = (
     id: string,
     title: string,
@@ -136,27 +126,14 @@ const Center = ({
     }
   };
 
-  const headerRightSider = (
-    <div className={styles.alignItems}>
-      <div
-        className={styles.editBox}
-        onClick={() => router.push(`/edit_recipe/${recipeDetails?._id}`)}
-      >
-        <p className={styles.editIcon}>Edit</p>
-        {/* <FiEdit2 className={styles.editIcon} /> */}
-      </div>
-      <div className={styles.closeBox} onClick={() => router.push(`/`)}>
-        <MdOutlineClose className={styles.closeIcon} />
-      </div>
-    </div>
-  );
-
   return (
     <div style={{ width: "100%" }}>
-      <PanelHeader
-        icon="/images/recipe-icon.svg"
-        title="Recipe"
-        rightSide={headerRightSider}
+      <PanelHeaderCenter
+        backLink="/"
+        editOrSavebtnFunc={() =>
+          router.push(`/edit_recipe/${recipeDetails?._id}`)
+        }
+        editOrSavebtnText="Edit"
       />
 
       <div className={styles.contentBox}>
@@ -213,7 +190,7 @@ const Center = ({
 
         <div className={styles.sliderBox}>
           {recipeDetails?.image ? (
-            <SlickSlider moreSetting={responsiveSetting}>
+            <SlickSlider>
               {recipeDetails?.image.map((img, index) => {
                 return (
                   <div key={index} className={styles.imageBox}>
