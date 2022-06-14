@@ -24,8 +24,8 @@ export default function CollectionTray(props) {
   const { changeRecipeWithinCollection } = useAppSelector(
     (state) => state?.collections,
   );
-  const { openSaveRecipeModal } = useAppSelector((state) => state?.sideTray);
   const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
+  const [openModal, setOpenModal] = useState(false);
   const dispatch = useAppDispatch();
   const reff = useRef<any>();
 
@@ -36,9 +36,7 @@ export default function CollectionTray(props) {
       loading: collectionsLoading,
       error: collectionsError,
     },
-  ] = useLazyQuery(GET_COLLECTIONS_AND_THEMES, {
-    fetchPolicy: "network-only",
-  });
+  ] = useLazyQuery(GET_COLLECTIONS_AND_THEMES);
 
   useEffect(() => {
     if (openCollectionsTary) {
@@ -100,7 +98,7 @@ export default function CollectionTray(props) {
             onClick={() => {
               setIsEditCollection(false);
               setInput((pre) => ({ ...pre, name: "" }));
-              dispatch(setToggleModal(true));
+              setOpenModal(true);
             }}
           />
         </div>
@@ -121,19 +119,21 @@ export default function CollectionTray(props) {
               setIsEditCollection={setIsEditCollection}
               setCollectionId={setCollectionId}
               getCollectionsAndThemes={getCollectionsAndThemes}
+              setOpenModal={setOpenModal}
             />
           </div>
         )}
-        {openSaveRecipeModal ? null : (
-          <CustomModal>
-            <AddCollectionModal
-              input={input}
-              setInput={setInput}
-              isEditCollection={isEditCollection}
-              collectionId={collectionId}
-            />
-          </CustomModal>
-        )}
+
+        <CustomModal open={openModal} setOpen={setOpenModal}>
+          <AddCollectionModal
+            input={input}
+            setInput={setInput}
+            isEditCollection={isEditCollection}
+            collectionId={collectionId}
+            getCollectionsAndThemes={getCollectionsAndThemes}
+            setOpenModal={setOpenModal}
+          />
+        </CustomModal>
       </div>
     </LeftTrayWrapper>
   );

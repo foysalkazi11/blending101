@@ -6,28 +6,6 @@ const ADD_OR_REMOVE_RECIPE_FORM_COLLECTION = gql`
   ) {
     addOrRemoveRecipeFromCollection(data: $data) {
       _id
-      name
-      image
-      recipes {
-        image {
-          default
-          image
-        }
-        name
-        _id
-        description
-        prepTime
-        cookTime
-        totalTime
-        recipeYield
-        recipeIngredients
-        recipeInstructions
-        recipeCuisines
-
-        url
-        discovery
-        favicon
-      }
     }
   }
 `;

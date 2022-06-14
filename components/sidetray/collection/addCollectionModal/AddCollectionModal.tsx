@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import S3_CONFIG from "../../../../configs/s3";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { setDbUser } from "../../../../redux/slices/userSlice";
@@ -17,6 +17,8 @@ type AddCollectionModalProps = {
   setInput: any;
   isEditCollection: boolean;
   collectionId: string;
+  getCollectionsAndThemes?: (arg: any) => void;
+  setOpenModal?: Dispatch<SetStateAction<boolean>>;
 };
 
 const AddCollectionModal = ({
@@ -24,6 +26,8 @@ const AddCollectionModal = ({
   setInput,
   isEditCollection,
   collectionId,
+  getCollectionsAndThemes = () => {},
+  setOpenModal = () => {},
 }: AddCollectionModalProps) => {
   const [createNewCollection] = useMutation(CREATE_NEW_COLLECTION);
   const [editCollection] = useMutation(EDIT_COLLECTION);
@@ -43,7 +47,7 @@ const AddCollectionModal = ({
   const saveToDb = async () => {
     if (input?.name) {
       if (isEditCollection) {
-        const res = await editCollection({
+        await editCollection({
           variables: {
             data: {
               userEmail: dbUser?.email,
@@ -52,19 +56,11 @@ const AddCollectionModal = ({
             },
           },
         });
-
-        dispatch(
-          setDbUser({
-            ...dbUser,
-            collections: [
-              ...dbUser?.collections?.map((col) =>
-                col?._id === collectionId ? { ...col, name: input?.name } : col
-              ),
-            ],
-          })
-        );
+        getCollectionsAndThemes({ variables: { userId: dbUser?._id } });
+        setOpenModal(false);
+        setInput({ image: null, name: "" });
       } else {
-        const res = await createNewCollection({
+        await createNewCollection({
           variables: {
             data: {
               userEmail: dbUser?.email,
@@ -72,19 +68,10 @@ const AddCollectionModal = ({
             },
           },
         });
-        dispatch(
-          setDbUser({
-            ...dbUser,
-            collections: [
-              ...dbUser?.collections,
-              res?.data?.createNewCollection,
-            ],
-          })
-        );
       }
 
-      setLoadings(false);
-      dispatch(setToggleModal(false));
+      getCollectionsAndThemes({ variables: { userId: dbUser?._id } });
+      setOpenModal(false);
       setInput({ image: null, name: "" });
       if (isEditCollection) {
         reactToastifyNotification("info", "Collection edit successfully");
@@ -92,7 +79,6 @@ const AddCollectionModal = ({
         reactToastifyNotification("info", "Collection add successfully");
       }
     } else {
-      setLoadings(false);
       reactToastifyNotification("info", "Please write collection name");
     }
   };
@@ -127,16 +113,6 @@ const AddCollectionModal = ({
                 },
               },
             });
-
-            dispatch(
-              setDbUser({
-                ...dbUser,
-                collections: [
-                  ...dbUser?.collections,
-                  res?.data?.createNewCollection,
-                ],
-              })
-            );
             setLoadings(false);
             dispatch(setToggleModal(false));
             setInput({ image: null, name: "" });
@@ -197,7 +173,7 @@ const AddCollectionModal = ({
         <div className={styles.buttonGroup}>
           <SubmitBtn
             style={{ backgroundColor: "#fe5d1f", marginRight: "30px" }}
-            handleClick={submitData}
+            handleClick={saveToDb}
             text={loading ? "Loading..." : "Submit"}
           />
           <CancleBtn handleClick={() => dispatch(setToggleModal(false))} />
