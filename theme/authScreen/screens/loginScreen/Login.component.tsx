@@ -1,26 +1,24 @@
-import Link from 'next/link';
-import React, { useState } from 'react';
-import ButtonComponent from '../../../button/buttonA/button.component';
-import InputField from '../../../input/registerInput/RegisterInput';
-import SocialTray from '../../authComponents/socialTray/socialTray.component';
-import styles from './Login.module.scss';
-import Image from 'next/image';
-import HighlightOffOutlinedIcon from '../../../../public/icons/highlight_off_black_36dp.svg';
-import { Auth } from 'aws-amplify';
-// import { setLoading } from '../../../../redux/slices/utilitySlice';
-import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
-import reactToastifyNotification from '../../../../components/utility/reactToastifyNotification';
+import Link from "next/link";
+import React, { useState } from "react";
+import ButtonComponent from "../../../button/buttonA/button.component";
+import InputField from "../../../input/registerInput/RegisterInput";
+import SocialTray from "../../authComponents/socialTray/socialTray.component";
+import styles from "./Login.module.scss";
+import Image from "next/image";
+import HighlightOffOutlinedIcon from "../../../../public/icons/highlight_off_black_36dp.svg";
+import { Auth } from "aws-amplify";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
 import {
   setDbUser,
   setProvider,
   setUser,
-} from '../../../../redux/slices/userSlice';
-import { useRouter, Router } from 'next/router';
-import { useMutation } from '@apollo/client';
-import CREATE_NEW_USER from '../../../../gqlLib/user/mutations/createNewUser';
-import { setAllRecipeWithinCollectionsId } from '../../../../redux/slices/collectionSlice';
-import { useForm } from 'react-hook-form';
-import CircularRotatingLoader from '../../../loader/circularRotatingLoader.component';
+} from "../../../../redux/slices/userSlice";
+import { useRouter, Router } from "next/router";
+import { useMutation } from "@apollo/client";
+import CREATE_NEW_USER from "../../../../gqlLib/user/mutations/createNewUser";
+import { useForm } from "react-hook-form";
+import CircularRotatingLoader from "../../../loader/circularRotatingLoader.component";
 
 const LoginScreen = () => {
   const dispatch = useAppDispatch();
@@ -35,39 +33,26 @@ const LoginScreen = () => {
   } = useForm();
 
   const [isLoading, setIsLoading] = useState(false);
-  // const isLoading = useAppSelector((state) => state.user.isLoading);
-  // console.log(isLoading);
 
   const onSubmit = async (input) => {
     setIsLoading(true);
-    // dispatch(setLoading(true));
     try {
       const {
         attributes: { email },
       } = await Auth.signIn(input?.email, input?.password);
       const { data } = await createNewUser({
         variables: {
-          data: { email: email, provider: 'email' },
+          data: { email: email, provider: "email" },
         },
       });
 
-      // dispatch(setLoading(false));
-      // reactToastifyNotification('info', 'Login successfully');
-      let recipesId = [];
-      data?.createNewUser?.collections?.forEach((col) => {
-        const recipes = col?.recipes;
-        recipes?.forEach((recipe) => {
-          recipesId?.push(recipe?._id);
-        });
-      });
-      dispatch(setAllRecipeWithinCollectionsId(recipesId));
       dispatch(setUser(email));
       dispatch(setDbUser(data?.createNewUser));
-      dispatch(setProvider('email'));
-      router.push('/');
+      dispatch(setProvider("email"));
+      router.push("/");
     } catch (error) {
       setIsLoading(false);
-      reactToastifyNotification('error', error?.message);
+      reactToastifyNotification("error", error?.message);
     }
   };
 
@@ -81,8 +66,8 @@ const LoginScreen = () => {
                 <Image
                   src="/images/logo.png"
                   alt="logo will soon load"
-                  layout={'fill'}
-                  objectFit={'contain'}
+                  layout={"fill"}
+                  objectFit={"contain"}
                   quality={100}
                 />
               </a>
@@ -103,17 +88,17 @@ const LoginScreen = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <InputField
               type="email"
-              style={{ marginBottom: '20px' }}
+              style={{ marginBottom: "20px" }}
               placeholder="Email"
               register={register}
               name="email"
-              defaultValue="mdfoysalkazi@gmail.com"
+              defaultValue=""
               required={{
-                required: 'Email requried',
+                required: "Email requried",
                 pattern: {
                   value:
                     /^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/,
-                  message: 'Enter valid email',
+                  message: "Enter valid email",
                 },
               }}
               error={{
@@ -127,9 +112,9 @@ const LoginScreen = () => {
               placeholder="Password"
               register={register}
               name="password"
-              defaultValue="H!ello12"
+              defaultValue=""
               required={{
-                required: 'password requried',
+                required: "password requried",
               }}
               error={{
                 isError: errors?.password ? true : false,
@@ -151,18 +136,18 @@ const LoginScreen = () => {
             <div className={styles.buttonDiv}>
               <ButtonComponent
                 type="primary"
-                style={{ height: '100%' }}
+                style={{ height: "100%" }}
                 value={
-                  !isLoading
-                    ? 'Login'
-                    : () => (
-                        <div className={styles.loggingInBtn}>
-                          <span>
-                            <CircularRotatingLoader />
-                          </span>
-                          Logging In
-                        </div>
-                      )
+                  !isLoading ? (
+                    "Login"
+                  ) : (
+                    <div className={styles.loggingInBtn}>
+                      <span>
+                        <CircularRotatingLoader />
+                      </span>
+                      Logging In
+                    </div>
+                  )
                 }
                 fullWidth={true}
                 submit={true}
@@ -192,7 +177,7 @@ const LoginScreen = () => {
                 <a>
                   <ButtonComponent
                     type="text"
-                    style={{ height: '100%' }}
+                    style={{ height: "100%" }}
                     value="Sign Up"
                     fullWidth={true}
                   />

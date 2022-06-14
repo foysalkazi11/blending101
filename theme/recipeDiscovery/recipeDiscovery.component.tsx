@@ -30,10 +30,7 @@ import { useRouter } from "next/router";
 import SaveToCollectionModal from "../modal/saveToCollectionModal/SaveToCollectionModal";
 import SkeletonRecipeDiscovery from "../skeletons/skeletonRecipeDiscovery/SkeletonRecipeDiscovery";
 import useLocalStorage from "../../customHooks/useLocalStorage";
-import useWindowSize from "../../components/utility/useWindowSize";
 import GET_RECIPE_WIDGET from "../../gqlLib/recipes/queries/getRecipeWidget";
-import ToggleMenu from "../toggleMenu/ToggleMenu";
-import MenubarComponent from "../menuBar/menuBar.component";
 import WidgetCollection from "./Widget";
 
 const RecipeDetails = () => {
@@ -41,14 +38,13 @@ const RecipeDetails = () => {
   const { blends, ingredients, openFilterTray } = useAppSelector(
     (state) => state.sideTray,
   );
-  const { user, dbUser } = useAppSelector((state) => state?.user);
-  const { lastModifiedCollection, collectionDetailsId, showAllRecipes } =
+  const { dbUser } = useAppSelector((state) => state?.user);
+  const { lastModifiedCollection, showAllRecipes, singleCollectionInfo } =
     useAppSelector((state) => state?.collections);
   const { latest, popular, recommended } = useAppSelector(
     (state) => state?.recipe,
   );
   const { filters } = useAppSelector((state) => state?.filterRecipe);
-
   const { data, error, loading: widgetLoading } = useQuery(GET_RECIPE_WIDGET);
   const [getAllRecommendedRecipes] = useLazyQuery(GET_ALL_RECOMMENDED_RECIPES);
   const [getAllPopularRecipes] = useLazyQuery(GET_ALL_POPULAR_RECIPES);
@@ -56,13 +52,10 @@ const RecipeDetails = () => {
 
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
-  const [loading, setLoading] = useState(true);
   const [compareRecipeList, setcompareRecipeList] = useLocalStorage(
     "compareList",
     [],
   );
-  const windowSize = useWindowSize();
-
   const handleCompareRecipe = () => {
     dispatch(setOpenCollectionsTary(true));
     dispatch(setChangeRecipeWithinCollection(true));
@@ -70,7 +63,6 @@ const RecipeDetails = () => {
   };
 
   const getAllRecipes = async () => {
-    setLoading(true);
     try {
       if (!recommended?.length) {
         const recommendedRecipes = await getAllRecommendedRecipes({
@@ -96,10 +88,7 @@ const RecipeDetails = () => {
         });
         dispatch(setLatest(latestRecipes?.data?.getAllLatestRecipes || []));
       }
-
-      setLoading(false);
     } catch (error) {
-      setLoading(false);
       console.log(error?.messae);
     }
   };
@@ -138,7 +127,7 @@ const RecipeDetails = () => {
             ) : null}
           </div>
 
-          {collectionDetailsId || showAllRecipes ? (
+          {singleCollectionInfo?.name || showAllRecipes ? (
             <ShowCollectionRecipes />
           ) : blends.length || ingredients.length || filters?.length ? (
             <FilterPageBottom
@@ -185,6 +174,7 @@ const RecipeDetails = () => {
                             addedToCompare={item?.addedToCompare}
                             compareRecipeList={compareRecipeList}
                             setcompareRecipeList={setcompareRecipeList}
+                            isCollectionId={item?.collection}
                           />
                         </div>
                       );
@@ -233,6 +223,7 @@ const RecipeDetails = () => {
                               addedToCompare={item?.addedToCompare}
                               compareRecipeList={compareRecipeList}
                               setcompareRecipeList={setcompareRecipeList}
+                              isCollectionId={item?.collection}
                             />
                           </div>
                         );
@@ -281,6 +272,7 @@ const RecipeDetails = () => {
                               addedToCompare={item?.addedToCompare}
                               compareRecipeList={compareRecipeList}
                               setcompareRecipeList={setcompareRecipeList}
+                              isCollectionId={item?.collection}
                             />
                           </div>
                         );

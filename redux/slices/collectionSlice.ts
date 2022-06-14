@@ -1,5 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+interface SingleCollectionInfo {
+  id: string;
+  name: string;
+}
+
 type collectionsSliceState = {
   allRecipeWithinCollectionsId: string[];
   changeRecipeWithinCollection: boolean;
@@ -7,8 +12,10 @@ type collectionsSliceState = {
   lastModifiedCollection: string;
   collectionDetailsId: string;
   showAllRecipes: boolean;
-  allRecipeWithinCollections: {}[];
+  allRecipeWithinCollections: any[];
   allCollections: {}[];
+  recipeWithinCollection: string;
+  singleCollectionInfo: SingleCollectionInfo;
 };
 
 const initialState: collectionsSliceState = {
@@ -20,6 +27,8 @@ const initialState: collectionsSliceState = {
   showAllRecipes: false,
   allRecipeWithinCollections: [],
   allCollections: [],
+  recipeWithinCollection: "",
+  singleCollectionInfo: { id: "", name: "" },
 };
 
 export const collectionsSlice = createSlice({
@@ -41,6 +50,9 @@ export const collectionsSlice = createSlice({
     setActiveRecipeId: (state, action: PayloadAction<string>) => {
       state.activeRecipeId = action?.payload;
     },
+    setRecipeWithinCollecion: (state, action: PayloadAction<string>) => {
+      state.recipeWithinCollection = action?.payload;
+    },
     setLastModifiedCollection: (state, action: PayloadAction<string>) => {
       state.lastModifiedCollection = action?.payload;
     },
@@ -50,11 +62,17 @@ export const collectionsSlice = createSlice({
     setShowAllRecipes: (state, action: PayloadAction<boolean>) => {
       state.showAllRecipes = action?.payload;
     },
-    setAllRecipeWithinCollections: (state, action: PayloadAction<{}[]>) => {
+    setAllRecipeWithinCollections: (state, action: PayloadAction<any[]>) => {
       state.allRecipeWithinCollections = action?.payload;
     },
     setAllCollections: (state, action: PayloadAction<{}[]>) => {
       state.allCollections = action?.payload;
+    },
+    setSingleCollectionInfo: (
+      state,
+      action: PayloadAction<SingleCollectionInfo>,
+    ) => {
+      state.singleCollectionInfo = action?.payload;
     },
   },
 });
@@ -68,6 +86,8 @@ export const {
   setShowAllRecipes,
   setAllRecipeWithinCollections,
   setAllCollections,
+  setRecipeWithinCollecion,
+  setSingleCollectionInfo,
 } = collectionsSlice?.actions;
 
 export default collectionsSlice?.reducer;

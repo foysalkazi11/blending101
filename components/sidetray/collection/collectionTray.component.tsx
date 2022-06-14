@@ -9,6 +9,8 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import CustomModal from "../../../theme/modal/customModal/CustomModal";
 import AddCollectionModal from "./addCollectionModal/AddCollectionModal";
 import { setToggleModal } from "../../../redux/slices/sideTraySlice";
+import GET_COLLECTIONS_AND_THEMES from "../../../gqlLib/collection/query/getCollectionsAndThemes";
+import { useLazyQuery, useQuery } from "@apollo/client";
 
 export default function CollectionTray(props) {
   const [toggle, setToggle] = useState(1);
@@ -20,13 +22,30 @@ export default function CollectionTray(props) {
   const [collectionId, setCollectionId] = useState("");
   const { dbUser } = useAppSelector((state) => state?.user);
   const { changeRecipeWithinCollection } = useAppSelector(
-    (state) => state?.collections
+    (state) => state?.collections,
   );
   const { openSaveRecipeModal } = useAppSelector((state) => state?.sideTray);
-
+  const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
   const dispatch = useAppDispatch();
-
   const reff = useRef<any>();
+
+  const [
+    getCollectionsAndThemes,
+    {
+      data: collectionsData,
+      loading: collectionsLoading,
+      error: collectionsError,
+    },
+  ] = useLazyQuery(GET_COLLECTIONS_AND_THEMES, {
+    fetchPolicy: "network-only",
+  });
+
+  useEffect(() => {
+    if (openCollectionsTary) {
+      getCollectionsAndThemes({ variables: { userId: dbUser?._id } });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openCollectionsTary]);
 
   const handleToggle = (no: number) => {
     if (!changeRecipeWithinCollection) {
@@ -94,10 +113,14 @@ export default function CollectionTray(props) {
         {toggle === 1 && (
           <div>
             <CollectionComponent
-              collections={dbUser?.collections}
+              collections={
+                collectionsData?.getUserCollectionsAndThemes?.collections || []
+              }
+              collectionsLoading={collectionsLoading}
               setInput={setInput}
               setIsEditCollection={setIsEditCollection}
               setCollectionId={setCollectionId}
+              getCollectionsAndThemes={getCollectionsAndThemes}
             />
           </div>
         )}

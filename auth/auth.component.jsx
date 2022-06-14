@@ -1,15 +1,14 @@
-import React, { useEffect, useState, useContext, createContext } from 'react';
-import { useRouter } from 'next/router';
-import { connect } from 'react-redux';
-import { setActiveUser } from '../redux/users/user.action';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import Loader from '../theme/loader/Loader';
-import { Auth } from 'aws-amplify';
-import { setDbUser, setProvider, setUser } from '../redux/slices/userSlice';
-import { useMutation } from '@apollo/client';
-import CREATE_NEW_USER from '../gqlLib/user/mutations/createNewUser';
-import { setAllRecipeWithinCollectionsId } from '../redux/slices/collectionSlice';
-import { setLoading } from '../redux/slices/utilitySlice';
+import React, { useEffect, useState, useContext, createContext } from "react";
+import { useRouter } from "next/router";
+import { connect } from "react-redux";
+import { setActiveUser } from "../redux/users/user.action";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import Loader from "../theme/loader/Loader";
+import { Auth } from "aws-amplify";
+import { setDbUser, setProvider, setUser } from "../redux/slices/userSlice";
+import { useMutation } from "@apollo/client";
+import CREATE_NEW_USER from "../gqlLib/user/mutations/createNewUser";
+import { setLoading } from "../redux/slices/utilitySlice";
 
 // INITIALIZE 1: CREATE AUTH CONTEXT
 const AuthContext = createContext();
@@ -33,15 +32,15 @@ function AuthProvider({ children, activeUser }) {
   const isCurrentUser = async () => {
     dispatch(setLoading(true));
     try {
-      let userEmail = '';
-      let provider = '';
+      let userEmail = "";
+      let provider = "";
       const user = await Auth.currentAuthenticatedUser();
       if (user?.attributes) {
         const {
           attributes: { email },
         } = user;
         userEmail = email;
-        provider = 'email';
+        provider = "email";
       } else {
         const {
           signInUserSession: {
@@ -59,16 +58,7 @@ function AuthProvider({ children, activeUser }) {
           data: { email: userEmail, provider },
         },
       });
-      let recipesId = [];
-
-      data?.createNewUser?.collections?.forEach((col) => {
-        const recipes = col?.recipes;
-        recipes?.forEach((recipe) => {
-          recipesId?.push(recipe?._id);
-        });
-      });
       dispatch(setLoading(false));
-      dispatch(setAllRecipeWithinCollectionsId(recipesId));
       dispatch(setUser(userEmail));
       dispatch(setDbUser(data?.createNewUser));
       dispatch(setProvider(provider));
@@ -79,12 +69,12 @@ function AuthProvider({ children, activeUser }) {
       if (
         !user &&
         process.browser &&
-        page !== '/login' &&
-        page !== '/signup' &&
-        page !== '/verify_email' &&
-        page !== '/forget_password'
+        page !== "/login" &&
+        page !== "/signup" &&
+        page !== "/verify_email" &&
+        page !== "/forget_password"
       )
-        router.push('/login');
+        router.push("/login");
       // console.log("uncomment code in auth folder");
     }
   };
@@ -105,10 +95,10 @@ function AuthProvider({ children, activeUser }) {
 
   useEffect(() => {
     if (
-      page === '/login' ||
-      page === '/signup' ||
-      page === '/verify_email' ||
-      page === '/forget_password'
+      page === "/login" ||
+      page === "/signup" ||
+      page === "/verify_email" ||
+      page === "/forget_password"
     ) {
       setActive(true);
     }

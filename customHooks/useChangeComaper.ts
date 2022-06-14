@@ -1,16 +1,10 @@
 import { useMutation } from "@apollo/client";
-import { useEffect, useState } from "react";
 import notification from "../components/utility/reactToastifyNotification";
 import CHANGE_COMPARE from "../gqlLib/compare/mutation/changeCompare";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import {
-  setCompareList,
-  setLatest,
-  setPopular,
-  setRecommended,
-} from "../redux/slices/recipeSlice";
+import { setCompareList } from "../redux/slices/recipeSlice";
 import { setDbUser } from "../redux/slices/userSlice";
-import useLocalStorage from "./useLocalStorage";
+import useUpdateRecipeField from "./useUpdateRecipeFirld";
 
 const useChangeCompare = () => {
   const dispatch = useAppDispatch();
@@ -18,18 +12,15 @@ const useChangeCompare = () => {
     fetchPolicy: "network-only",
   });
   const { dbUser } = useAppSelector((state) => state?.user);
-  const { latest, popular, recommended } = useAppSelector(
-    (state) => state?.recipe
-  );
-
   const { compareList } = useAppSelector((state) => state.recipe);
+  const updateRecipe = useUpdateRecipeField();
 
   const handleChangeCompare = async (
     e: React.SyntheticEvent,
     id: string,
     compared: boolean,
     compareRecipeList: any[],
-    setcompareRecipeList: (state: any) => void
+    setcompareRecipeList: (state: any) => void,
   ) => {
     e.stopPropagation();
     let alredyCompared = compared;
@@ -39,7 +30,7 @@ const useChangeCompare = () => {
         dispatch(
           setCompareList([
             ...compareList?.filter((recipe) => recipe?._id !== id),
-          ])
+          ]),
         );
         const item = compareRecipeList?.find((item) => item?._id === id);
 
@@ -63,12 +54,12 @@ const useChangeCompare = () => {
           setDbUser({
             ...dbUser,
             compareLength: Number(data?.changeCompare),
-          })
+          }),
         );
       }
     } catch (error) {
       notification("error", "Unable to add compare list");
-      updateRecipeCompare(id, !alredyCompared);
+      // updateRecipeCompare(id, !alredyCompared);
     }
   };
 
@@ -79,29 +70,9 @@ const useChangeCompare = () => {
         compareLength: addedToCompare
           ? dbUser?.compareLength + 1
           : dbUser?.compareLength - 1,
-      })
+      }),
     );
-    dispatch(
-      setRecommended(
-        recommended?.map((recipe) =>
-          recipe?._id === id ? { ...recipe, addedToCompare } : recipe
-        )
-      )
-    );
-    dispatch(
-      setLatest(
-        latest?.map((recipe) =>
-          recipe?._id === id ? { ...recipe, addedToCompare } : recipe
-        )
-      )
-    );
-    dispatch(
-      setPopular(
-        popular?.map((recipe) =>
-          recipe?._id === id ? { ...recipe, addedToCompare } : recipe
-        )
-      )
-    );
+    updateRecipe(id, { addedToCompare: addedToCompare });
   };
 
   return handleChangeCompare;

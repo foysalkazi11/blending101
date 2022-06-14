@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import { MdFavoriteBorder, MdOutlineStarOutline } from "react-icons/md";
 import GET_ALL_RECIPES_WITHIN_COLLECTIONS from "../../gqlLib/collection/query/getAllRecipesWhithiCollections";
@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
   setAllRecipeWithinCollections,
   setShowAllRecipes,
+  setSingleCollectionInfo,
 } from "../../redux/slices/collectionSlice";
 import { setLoading } from "../../redux/slices/utilitySlice";
 import DatacardComponent from "../cards/dataCard/dataCard.component";
@@ -15,86 +16,105 @@ import styles from "./ShowCollectionRecipes.module.scss";
 import reactToastifyNotification from "../../components/utility/reactToastifyNotification";
 import SkeletonCollectionRecipe from "../skeletons/skeletonCollectionRecipe/SkeletonCollectionRecipe";
 import useLocalStorage from "../../customHooks/useLocalStorage";
+import GET_SINGLE_COLLECTION from "../../gqlLib/collection/query/getSingleCollection";
 
 const ShowCollectionRecipes = () => {
-  const [allRecipes, setAllRecipes] = useState([]);
-  const [selectedCollectionRecipe, setSelectedCollectionRecipe] = useState([]);
   const [collectionName, setCollectionName] = useState("");
-  const [getAllRecipesWithinCollections] = useLazyQuery(
-    GET_ALL_RECIPES_WITHIN_COLLECTIONS,
-  );
   const { dbUser } = useAppSelector((state) => state?.user);
-  const { collectionDetailsId, showAllRecipes, allRecipeWithinCollections } =
+  const { singleCollectionInfo, showAllRecipes, allRecipeWithinCollections } =
     useAppSelector((state) => state?.collections);
-  const [loading, setLoading] = useState(false);
+  const [
+    getAllCollections,
+    {
+      data: allCollectionData,
+      loading: allCollectionLoading,
+      error: allCollectionError,
+    },
+  ] = useLazyQuery(GET_ALL_RECIPES_WITHIN_COLLECTIONS);
+  const [
+    getSingleCollections,
+    {
+      data: singleCollectionData,
+      loading: singleCollectionLoading,
+      error: singleCollectionError,
+    },
+  ] = useLazyQuery(GET_SINGLE_COLLECTION);
+
   const dispatch = useAppDispatch();
   const [compareRecipeList, setcompareRecipeList] = useLocalStorage(
     "compareList",
     [],
   );
 
-  const handleCollctionRecipe = (allRecipeWithinCollections) => {
+  const handleColseCollections = () => {
+    if (singleCollectionInfo.id) {
+      dispatch(setShowAllRecipes(true));
+      dispatch(setSingleCollectionInfo({ id: "", name: "" }));
+    }
     if (showAllRecipes) {
-      setAllRecipes(allRecipeWithinCollections);
-      setCollectionName("All Recipes");
-    } else {
-      const findCollectionRecipes = dbUser?.collections?.find(
-        (col) => col?._id === collectionDetailsId,
-      );
-      setCollectionName(findCollectionRecipes?.name);
-      const recipeId = [];
-      const recipes = [];
-      findCollectionRecipes?.recipes?.forEach((recipe) => {
-        recipeId?.push(recipe?._id);
-      });
-      allRecipeWithinCollections?.forEach((recipe) => {
-        //@ts-ignore
-        if (recipeId?.includes(recipe?._id)) {
-          recipes?.push(recipe);
-        }
-      });
-      setSelectedCollectionRecipe(recipes);
-    }
-  };
-
-  const fectchCollectionRecipes = async () => {
-    try {
-      setLoading(true);
-      const { data } = await getAllRecipesWithinCollections({
-        variables: {
-          userEmail: dbUser?.email,
-          userId: dbUser?._id,
-        },
-      });
-      dispatch(
-        setAllRecipeWithinCollections(data?.getAllRecipesFromCollection),
-      );
-      handleCollctionRecipe(data?.getAllRecipesFromCollection);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      console.log(error);
-      reactToastifyNotification("error", error?.message);
+      dispatch(setShowAllRecipes(false));
+      dispatch(setSingleCollectionInfo({ id: "", name: "" }));
     }
   };
 
   useEffect(() => {
-    if (allRecipeWithinCollections?.length) {
-      handleCollctionRecipe(allRecipeWithinCollections);
-    } else {
-      fectchCollectionRecipes();
+    if (
+      !allCollectionLoading &&
+      allCollectionData?.getAllRecipesFromCollection
+    ) {
+      if (showAllRecipes) {
+        setCollectionName("All Recipes");
+        dispatch(
+          setAllRecipeWithinCollections([
+            ...allCollectionData?.getAllRecipesFromCollection,
+          ]),
+        );
+      }
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [collectionDetailsId, showAllRecipes]);
+  }, [allCollectionLoading, allCollectionData?.getAllRecipesFromCollection]);
 
   useEffect(() => {
-    if (collectionDetailsId || showAllRecipes) {
-      fectchCollectionRecipes();
+    if (
+      !singleCollectionLoading &&
+      singleCollectionData?.getASingleCollection
+    ) {
+      if (singleCollectionInfo?.id) {
+        setCollectionName(singleCollectionInfo?.name);
+        dispatch(
+          setAllRecipeWithinCollections([
+            ...singleCollectionData?.getASingleCollection?.map((recipe) => ({
+              ...recipe,
+              collection: singleCollectionInfo?.id,
+            })),
+          ]),
+        );
+      }
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [singleCollectionLoading, singleCollectionData?.getASingleCollection]);
+
+  useEffect(() => {
+    if (showAllRecipes) {
+      getAllCollections({
+        variables: { userId: dbUser?._id },
+      });
+    } else {
+      if (singleCollectionInfo?.id) {
+        getSingleCollections({
+          variables: {
+            userId: dbUser?._id,
+            collectionId: singleCollectionInfo?.id,
+          },
+        });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dbUser?.collections]);
+  }, [singleCollectionInfo?.name, showAllRecipes]);
 
-  if (loading) {
+  if (allCollectionLoading || singleCollectionLoading) {
     return (
       <div className={styles.showRecipeCollectionsContainer}>
         <SkeletonCollectionRecipe />
@@ -114,50 +134,17 @@ const ShowCollectionRecipes = () => {
 
           <h2>{collectionName}</h2>
         </div>
-        {showAllRecipes ? null : (
-          <img
-            src="/icons/close.svg"
-            alt="closeIcon"
-            onClick={() => dispatch(setShowAllRecipes(true))}
-            style={{ cursor: "pointer" }}
-          />
-        )}
+
+        <img
+          src="/icons/close.svg"
+          alt="closeIcon"
+          onClick={handleColseCollections}
+          style={{ cursor: "pointer" }}
+        />
       </div>
       <div className={styles.showRecipes}>
-        {showAllRecipes
-          ? allRecipes?.length
-            ? allRecipes?.map((item, index) => {
-                let ingredients = [];
-                item?.ingredients?.forEach((ing) => {
-                  const ingredient = ing?.ingredientId?.ingredientName;
-                  ingredients.push(ingredient);
-                });
-                const ing = ingredients.toString();
-                return (
-                  <div className={styles.slider__card} key={index}>
-                    <DatacardComponent
-                      title={item.name}
-                      ingredients={ing}
-                      category={item.recipeBlendCategory?.name}
-                      ratings={item?.averageRating}
-                      noOfRatings={item?.numberOfRating}
-                      carbs={item.carbs}
-                      score={item.score}
-                      calorie={item.calorie}
-                      noOfComments={item?.numberOfRating}
-                      image={item.image[0]?.image}
-                      recipeId={item?._id}
-                      notes={item?.notes}
-                      addedToCompare={item?.addedToCompare}
-                      compareRecipeList={compareRecipeList}
-                      setcompareRecipeList={setcompareRecipeList}
-                    />
-                  </div>
-                );
-              })
-            : null
-          : selectedCollectionRecipe?.length
-          ? selectedCollectionRecipe?.map((item, index) => {
+        {allRecipeWithinCollections?.length
+          ? allRecipeWithinCollections?.map((item, index) => {
               let ingredients = [];
               item?.ingredients?.forEach((ing) => {
                 const ingredient = ing?.ingredientId?.ingredientName;
@@ -182,6 +169,7 @@ const ShowCollectionRecipes = () => {
                     addedToCompare={item?.addedToCompare}
                     compareRecipeList={compareRecipeList}
                     setcompareRecipeList={setcompareRecipeList}
+                    isCollectionId={item?.collection}
                   />
                 </div>
               );

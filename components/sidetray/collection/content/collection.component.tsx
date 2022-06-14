@@ -8,54 +8,50 @@ import {
   setToggleModal,
 } from "../../../../redux/slices/sideTraySlice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import { setLoading } from "../../../../redux/slices/utilitySlice";
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import DELETE_COLLECTION from "../../../../gqlLib/collection/mutation/deleteCollection";
 import { setDbUser } from "../../../../redux/slices/userSlice";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
 import CustomCheckbox from "../../../../theme/checkbox/CustomCheckbox";
-import ADD_EXISTING_RECIPE_TO_ANOTHER_COLLECTION from "../../../../gqlLib/collection/mutation/addExistingRecipeToAnotherCollection";
-import REMOVE_EXISTING_RECIPE_TO_ANOTHER_COLLECTION from "../../../../gqlLib/collection/mutation/removeReicpeFromExistingCollection";
 import {
   setAllRecipeWithinCollectionsId,
-  setCollectionDetailsId,
+  setRecipeWithinCollecion,
   setShowAllRecipes,
+  setSingleCollectionInfo,
 } from "../../../../redux/slices/collectionSlice";
-import GET_LAST_MODIFIED_COLLECTION from "../../../../gqlLib/collection/query/getLastModifiedCollection";
 import ADD_OR_REMOVE_RECIPE_FORM_COLLECTION from "../../../../gqlLib/collection/mutation/addOrRemoveRecipeFromCollection";
 import SkeletonCollection from "../../../../theme/skeletons/skeletonCollection/SkeletonCollection";
+import SkeletonCollections from "../../../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollections";
+import useUpdateRecipeField from "../../../../customHooks/useUpdateRecipeFirld";
 
-type CollectionComponentProps = {
+interface CollectionComponentProps {
   collections: {}[];
   setInput: any;
   setIsEditCollection: any;
   setCollectionId: any;
-};
+  collectionsLoading: boolean;
+  getCollectionsAndThemes: (arg: any) => void;
+}
 
 export default function CollectionComponent({
   collections,
   setInput,
   setIsEditCollection,
   setCollectionId,
+  collectionsLoading,
+  getCollectionsAndThemes = () => {},
 }: CollectionComponentProps) {
   const dispatch = useAppDispatch();
   const [deleteCollection] = useMutation(DELETE_COLLECTION);
-  const [addExistingRecipeToAnotherCollection] = useMutation(
-    ADD_EXISTING_RECIPE_TO_ANOTHER_COLLECTION
-  );
-  const [removeRecipeFromExistingCollection] = useMutation(
-    REMOVE_EXISTING_RECIPE_TO_ANOTHER_COLLECTION
-  );
   const [addOrRemoveRecipeFromCollection] = useMutation(
-    ADD_OR_REMOVE_RECIPE_FORM_COLLECTION
+    ADD_OR_REMOVE_RECIPE_FORM_COLLECTION,
   );
   const { dbUser } = useAppSelector((state) => state?.user);
   const {
     changeRecipeWithinCollection,
-    allRecipeWithinCollectionsId,
     activeRecipeId,
+    recipeWithinCollection,
   } = useAppSelector((state) => state?.collections);
-  const menu = useRef<any>();
   const [showMenu, setShowMenu] = useState(false);
   const [menuIndex, setMenuIndex] = useState(0);
   const [hoverIndex, setHoverIndex] = useState(0);
@@ -63,72 +59,47 @@ export default function CollectionComponent({
   const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
   const [isCollectionUpdate, setIsCollectionUpdate] = useState(false);
   const isMounted = useRef(null);
-  const [loading, setLoading] = useState(false);
+  const updateRecipe = useUpdateRecipeField();
 
   const handleAddorRemoveRecipeFormCollection = async () => {
-    setLoading(true);
     try {
-      const { data } = await addOrRemoveRecipeFromCollection({
+      await addOrRemoveRecipeFromCollection({
         variables: {
           data: {
             userEmail: dbUser?.email,
-            addToTheseCollections: collectionHasRecipe,
+            addToTheseCollections: recipeWithinCollection
+              ? [recipeWithinCollection]
+              : [],
             recipe: activeRecipeId,
           },
         },
       });
-      dispatch(
-        setDbUser({
-          ...dbUser,
-          collections: [...data?.addOrRemoveRecipeFromCollection],
-        })
-      );
-
-      let recipesId = [];
-      data?.addOrRemoveRecipeFromCollection?.forEach((col) => {
-        const recipes = col?.recipes;
-        recipes?.forEach((recipe) => {
-          recipesId?.push(recipe?._id);
-        });
+      updateRecipe(activeRecipeId, {
+        collection: recipeWithinCollection ? recipeWithinCollection : null,
       });
-      dispatch(setAllRecipeWithinCollectionsId(recipesId));
 
-      setLoading(false);
       reactToastifyNotification("info", `Collection update successfully`);
       setIsCollectionUpdate(false);
     } catch (error) {
-      setLoading(false);
       reactToastifyNotification("eror", error?.message);
       setIsCollectionUpdate(false);
     }
   };
 
-  const handleChange = async (e, collectionId) => {
-    setIsCollectionUpdate(true);
-    if (e?.target?.checked) {
-      setCollectionHasRecipe((pre) => [...pre, collectionId]);
-    } else {
-      setCollectionHasRecipe((pre) => [
-        ...pre?.filter((id) => id !== collectionId),
-      ]);
-    }
-  };
-
-  // const checkExistingRecipe = (item) => {
-  //   let result: boolean = false;
-  //   item?.recipes?.forEach((recipe) => {
-  //     if (recipe._id === activeRecipeId) {
-  //       result = true;
-  //       return;
-  //     }
-  //   });
-  //   return result;
+  // const handleChange = async (e, collectionId) => {
+  //   setIsCollectionUpdate(true);
+  //   if (e?.target?.checked) {
+  //     setCollectionHasRecipe((pre) => [...pre, collectionId]);
+  //   } else {
+  //     setCollectionHasRecipe((pre) => [
+  //       ...pre?.filter((id) => id !== collectionId),
+  //     ]);
+  //   }
   // };
 
   const handleDeleteCollection = async (collectionId: string) => {
-    setLoading(true);
     try {
-      const { data } = await deleteCollection({
+      await deleteCollection({
         variables: {
           data: {
             collectionId: collectionId,
@@ -136,29 +107,15 @@ export default function CollectionComponent({
           },
         },
       });
-
-      dispatch(
-        setDbUser({
-          ...dbUser,
-          collections: [...data?.deleteCollection],
-        })
-      );
-
-      let recipesId = [];
-      data?.deleteCollection?.forEach((col) => {
-        const recipes = col?.recipes;
-        recipes?.forEach((recipe) => {
-          recipesId?.push(recipe?._id);
-        });
+      getCollectionsAndThemes({ variables: { userId: dbUser?._id } });
+      dispatch(setSingleCollectionInfo({ id: "", name: "" }));
+      dispatch(setShowAllRecipes(true));
+      updateRecipe(activeRecipeId, {
+        collection: null,
       });
-      dispatch(setAllRecipeWithinCollectionsId(recipesId));
-      dispatch(setCollectionDetailsId(""));
-      dispatch(setShowAllRecipes(false));
 
-      setLoading(false);
       reactToastifyNotification("info", "Collection delete successfully");
     } catch (error) {
-      setLoading(false);
       reactToastifyNotification("eror", error?.message);
     }
   };
@@ -171,30 +128,15 @@ export default function CollectionComponent({
       setMenuIndex(index);
       setShowMenu(true);
     }
-
-    // const elem = menu.current;
-    // elem.classList.toggle(styles.showMenu);
   };
 
-  useEffect(() => {
-    let collectionIds: string[] = [];
-    if (changeRecipeWithinCollection) {
-      collections?.forEach((col) => {
-        //@ts-ignore
-        const recipes = col?.recipes;
-        //@ts-ignore
-        const id = col?._id;
-        recipes?.forEach((recipe) => {
-          if (recipe._id === activeRecipeId) {
-            collectionIds?.push(id);
-          }
-        });
-      });
-      setCollectionHasRecipe(collectionIds);
-    }
+  // useEffect(() => {
+  //   if (recipeWithinCollection) {
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeRecipeId, changeRecipeWithinCollection]);
+  //     setCollectionHasRecipe([recipeWithinCollection]);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [recipeWithinCollection]);
 
   useEffect(() => {
     if (isMounted.current) {
@@ -206,6 +148,7 @@ export default function CollectionComponent({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openCollectionsTary]);
+
   useEffect(() => {
     isMounted.current = true;
 
@@ -213,10 +156,6 @@ export default function CollectionComponent({
       isMounted.current = false;
     };
   }, []);
-
-  if (loading) {
-    return <SkeletonCollection />;
-  }
 
   return (
     <div className={styles.collection}>
@@ -228,6 +167,12 @@ export default function CollectionComponent({
               className={styles.leftSide}
               onClick={() => {
                 dispatch(setShowAllRecipes(true));
+                dispatch(
+                  setSingleCollectionInfo({
+                    id: "",
+                    name: "",
+                  }),
+                );
                 dispatch(setOpenCollectionsTary(false));
               }}
             >
@@ -248,13 +193,12 @@ export default function CollectionComponent({
             </div>
           </div>
         )}
-        {collections?.length &&
+        {collectionsLoading ? (
+          <SkeletonCollections />
+        ) : (
           collections?.map((item, i) => {
             //@ts-ignore
-            const defaultImage = item?.recipes[
-              //@ts-ignore
-              item?.recipes?.length - 1
-            ]?.image?.find((img) => img?.default === true)?.image;
+            const defaultImage = item?.image;
 
             return (
               <div
@@ -267,8 +211,14 @@ export default function CollectionComponent({
                   className={styles.leftSide}
                   onClick={() => {
                     dispatch(setShowAllRecipes(false));
-                    /* @ts-ignore */
-                    dispatch(setCollectionDetailsId(item?._id));
+                    dispatch(
+                      setSingleCollectionInfo({
+                        //@ts-ignore
+                        id: item?._id,
+                        //@ts-ignore
+                        name: item?.name,
+                      }),
+                    );
                     dispatch(setOpenCollectionsTary(false));
                   }}
                 >
@@ -290,12 +240,19 @@ export default function CollectionComponent({
                 {changeRecipeWithinCollection ? (
                   <div className={styles.checkBox}>
                     <CustomCheckbox
-                      checked={
-                        /* @ts-ignore */
-                        collectionHasRecipe?.includes(item?._id)
-                      }
                       /* @ts-ignore */
-                      handleChange={(e) => handleChange(e, item?._id)}
+                      checked={recipeWithinCollection === item?._id}
+                      /* @ts-ignore */
+                      handleChange={(e) => {
+                        if (e?.target?.checked) {
+                          setIsCollectionUpdate(true);
+                          //@ts-ignore
+                          dispatch(setRecipeWithinCollecion(item?._id));
+                        } else {
+                          setIsCollectionUpdate(true);
+                          dispatch(setRecipeWithinCollecion(""));
+                        }
+                      }}
                     />
                   </div>
                 ) : hoverIndex === i + 1 ? (
@@ -341,12 +298,15 @@ export default function CollectionComponent({
                     </div>
                   )
                 ) : (
-                  // @ts-ignore
-                  <p style={{ marginRight: "10px" }}>{item?.recipes?.length}</p>
+                  <p style={{ marginRight: "10px" }}>
+                    {/* @ts-ignore */}
+                    {item?.recipes?.length}
+                  </p>
                 )}
               </div>
             );
-          })}
+          })
+        )}
       </div>
     </div>
   );
