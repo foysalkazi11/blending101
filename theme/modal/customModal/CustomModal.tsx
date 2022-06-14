@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setToggleModal } from "../../../redux/slices/sideTraySlice";
 import styles from "./CustomModal.module.scss";
@@ -8,6 +8,8 @@ type CustomModalProps = {
   overlayStyle?: React.CSSProperties;
   contentStyle?: React.CSSProperties;
   shouldCloseOnOverlayClick?: boolean;
+  open?: boolean;
+  setOpen?: Dispatch<SetStateAction<boolean>>;
 };
 
 const CustomModal = ({
@@ -15,24 +17,23 @@ const CustomModal = ({
   contentStyle = {},
   overlayStyle = {},
   shouldCloseOnOverlayClick = true,
+  open = false,
+  setOpen = () => {},
 }: CustomModalProps) => {
-  const { openModal } = useAppSelector((state) => state?.sideTray);
-  const dispatch = useAppDispatch();
-
   const handleOverlayClick = () => {
     if (shouldCloseOnOverlayClick) {
-      dispatch(setToggleModal(false));
+      setOpen(false);
     }
   };
 
   return (
     <div
-      className={`${styles.overlay} ${openModal ? styles.activeOverlay : ""}`}
+      className={`${styles.overlay} ${open ? styles.activeOverlay : ""}`}
       style={overlayStyle}
       onClick={handleOverlayClick}
     >
       <div
-        className={`${styles.content} ${openModal ? styles.activeContent : ""}`}
+        className={`${styles.content} ${open ? styles.activeContent : ""}`}
         style={contentStyle}
         onClick={(e) => e?.stopPropagation()}
       >
