@@ -1,4 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import styles from "./content.module.scss";
 import { MdMoreVert, MdDeleteOutline } from "react-icons/md";
 import { HiOutlineShare } from "react-icons/hi";
@@ -31,6 +37,7 @@ interface CollectionComponentProps {
   setCollectionId: any;
   collectionsLoading: boolean;
   getCollectionsAndThemes: (arg: any) => void;
+  setOpenModal?: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function CollectionComponent({
@@ -40,6 +47,7 @@ export default function CollectionComponent({
   setCollectionId,
   collectionsLoading,
   getCollectionsAndThemes = () => {},
+  setOpenModal = () => {},
 }: CollectionComponentProps) {
   const dispatch = useAppDispatch();
   const [deleteCollection] = useMutation(DELETE_COLLECTION);
@@ -285,7 +293,7 @@ export default function CollectionComponent({
                             setIsEditCollection(true);
                             /* @ts-ignore */
                             setCollectionId(item?._id);
-                            dispatch(setToggleModal(true));
+                            setOpenModal(true);
                           }}
                         />
                         <MdDeleteOutline

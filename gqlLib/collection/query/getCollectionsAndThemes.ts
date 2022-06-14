@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 const GET_COLLECTIONS_AND_THEMES = gql`
-  query GetAllrecomendedRecipes($userId: String!) {
+  query GetUserCollectionsAndThemes($userId: String!) {
     getUserCollectionsAndThemes(userId: $userId) {
       collections {
         _id
