@@ -1,29 +1,24 @@
 import { gql } from "@apollo/client";
 
-const GET_ALL_LATEST_RECIPES = gql`
-  query GetAllLatestRecipes($userId: String!) {
-    getAllLatestRecipes(userId: $userId) {
-      datePublished
-      name
-      recipeIngredients
-      recipeBlendCategory {
-        name
-      }
-      testIngredient {
-        quantity
-        unit
-        name
-      }
+const GET_SINGLE_COLLECTION = gql`
+  query GetASingleCollection($userId: String!, $collectionId: String!) {
+    getASingleCollection(userId: $userId, CollectionId: $collectionId) {
       image {
-        image
         default
+        image
       }
+      name
+      _id
       description
       prepTime
       cookTime
       totalTime
-      _id
+      recipeYield
+      recipeIngredients
+      recipeInstructions
+      recipeCuisines
       url
+      discovery
       favicon
       averageRating
       numberOfRating
@@ -40,4 +35,4 @@ const GET_ALL_LATEST_RECIPES = gql`
   }
 `;
 
-export default GET_ALL_LATEST_RECIPES;
+export default GET_SINGLE_COLLECTION;

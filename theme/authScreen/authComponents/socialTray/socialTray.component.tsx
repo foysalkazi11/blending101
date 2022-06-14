@@ -1,17 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useState, useEffect } from 'react';
-import styles from './socialTray.module.scss';
-import { Auth } from 'aws-amplify';
-import { useMutation } from '@apollo/client';
-import CREATE_NEW_USER from '../../../../gqlLib/user/mutations/createNewUser';
-import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
+import React, { useState, useEffect } from "react";
+import styles from "./socialTray.module.scss";
+import { Auth } from "aws-amplify";
+import { useMutation } from "@apollo/client";
+import CREATE_NEW_USER from "../../../../gqlLib/user/mutations/createNewUser";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import {
   setDbUser,
   setProvider,
   setUser,
-} from '../../../../redux/slices/userSlice';
-import { useRouter } from 'next/router';
-import { setAllRecipeWithinCollectionsId } from '../../../../redux/slices/collectionSlice';
+} from "../../../../redux/slices/userSlice";
+import { useRouter } from "next/router";
 
 const SocialTray = () => {
   const [createNewUser] = useMutation(CREATE_NEW_USER);
@@ -40,21 +39,10 @@ const SocialTray = () => {
         },
       });
 
-      // reactToastifyNotification("info", "Sign up successfully");
-
-      let recipesId = [];
-
-      data?.createNewUser?.collections?.forEach((col) => {
-        const recipes = col?.recipes;
-        recipes?.forEach((recipe) => {
-          recipesId?.push(recipe?._id);
-        });
-      });
-      dispatch(setAllRecipeWithinCollectionsId(recipesId));
       dispatch(setUser(email));
       dispatch(setDbUser(data?.createNewUser));
       dispatch(setProvider(identities?.[0]?.providerName?.toLowerCase()));
-      history.push('/recipe_discovery');
+      history.push("/recipe_discovery");
     } catch (error) {
       console.log(error);
     }
@@ -70,7 +58,6 @@ const SocialTray = () => {
   const handleSocialSignup = async (provider) => {
     try {
       await Auth.federatedSignIn({ provider: provider });
-      // if (!user) await updateUser();
     } catch (error) {
       console.log(error?.message);
     }
@@ -82,24 +69,24 @@ const SocialTray = () => {
       <ul className={styles.socialWrap}>
         <li className={styles.listElem}>
           <img
-            src={'/images/google.png'}
+            src={"/images/google.png"}
             alt="Icons will soon Load"
             //@ts-ignore
-            onClick={() => handleSocialSignup('Google')}
+            onClick={() => handleSocialSignup("Google")}
           />
         </li>
         <li className={styles.listElem}>
           <img
-            src={'/images/fb.png'}
+            src={"/images/fb.png"}
             alt="Icons will soon Load"
-            onClick={() => handleSocialSignup('Facebook')}
+            onClick={() => handleSocialSignup("Facebook")}
           />
         </li>
         <li className={styles.listElem}>
-          <img src={'/images/twitter.png'} alt="Icons will soon Load" />
+          <img src={"/images/twitter.png"} alt="Icons will soon Load" />
         </li>
         <li className={styles.listElem}>
-          <img src={'/images/apple.png'} alt="Icons will soon Load" />
+          <img src={"/images/apple.png"} alt="Icons will soon Load" />
         </li>
       </ul>
     </>
