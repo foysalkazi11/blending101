@@ -17,13 +17,11 @@ import { setAllCategories } from "../../../../redux/slices/categroySlice";
 import { IoCloseCircle } from "react-icons/io5";
 import { MdOutlineEdit } from "react-icons/md";
 import { AiOutlineSave } from "react-icons/ai";
-import { BiDetail } from "react-icons/bi";
 import useOnClickOutside from "../../../utility/useOnClickOutside";
 import CREATE_A_RECIPE_BY_USER from "../../../../gqlLib/recipes/mutations/createARecipeByUser";
 import imageUploadS3 from "../../../utility/imageUploadS3";
 import notification from "../../../utility/reactToastifyNotification";
 import { useRouter } from "next/router";
-import { setLoading } from "../../../../redux/slices/utilitySlice";
 import EDIT_A_RECIPE from "../../../../gqlLib/recipes/mutations/editARecipe";
 import Tooltip from "../../../../theme/toolTip/CustomToolTip";
 import CreateRecipeSkeleton from "../../../../theme/skeletons/createRecipeSkeleton/CreateRecipeSkeleton";
@@ -49,10 +47,10 @@ const CreateNewRecipe = ({
       // fetchPolicy: "network-only",
     });
   const [filterIngredientByCategroyAndClass] = useLazyQuery(
-    FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS
+    FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS,
   );
   const [getAllBlendCategory, { loading: blendCategroyLoading }] = useLazyQuery(
-    FETCH_BLEND_CATEGORIES
+    FETCH_BLEND_CATEGORIES,
   );
   const [createNewRecipeByUser] = useMutation(CREATE_A_RECIPE_BY_USER);
   const { allCategories } = useAppSelector((state) => state?.categroy);
@@ -102,7 +100,7 @@ const CreateNewRecipe = ({
                       ingredientId,
                       selectedPortionName,
                       weightInGram,
-                    })
+                    }),
                   ),
                   recipeBlendCategory: createNewRecipe?.recipeBlendCategory,
                 },
@@ -119,7 +117,7 @@ const CreateNewRecipe = ({
       } else {
         notification(
           "warning",
-          "You can't save recipe without name and ingredients"
+          "You can't save recipe without name and ingredients",
         );
       }
     } else {
@@ -146,7 +144,7 @@ const CreateNewRecipe = ({
                 ingredientId,
                 selectedPortionName,
                 weightInGram,
-              })
+              }),
             ),
           };
           const { data } = await createNewRecipeByUser({
@@ -168,7 +166,7 @@ const CreateNewRecipe = ({
       } else {
         notification(
           "warning",
-          "You can't save recipe without name and ingredients"
+          "You can't save recipe without name and ingredients",
         );
       }
     }
@@ -177,7 +175,7 @@ const CreateNewRecipe = ({
   const updataNewRecipe = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    >,
   ) => {
     const { name, value } = e?.target;
     setCreateNewRecipe((state) => ({ ...state, [name]: value }));
@@ -271,7 +269,7 @@ const CreateNewRecipe = ({
           //@ts-ignore
           item?.ingredientName
             ?.toLowerCase()
-            ?.includes(inputVlaue?.toLowerCase())
+            ?.includes(inputVlaue?.toLowerCase()),
         );
         setSearchIngredientData(filter);
       }

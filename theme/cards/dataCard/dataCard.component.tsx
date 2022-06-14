@@ -11,19 +11,19 @@ import {
 } from "../../../redux/slices/sideTraySlice";
 import {
   setActiveRecipeId,
-  setAllRecipeWithinCollectionsId,
   setChangeRecipeWithinCollection,
   setLastModifiedCollection,
+  setRecipeWithinCollecion,
 } from "../../../redux/slices/collectionSlice";
 import { setLoading } from "../../../redux/slices/utilitySlice";
 import ADD_NEW_RECIPE_TO_COLLECTION from "../../../gqlLib/collection/mutation/addNewRecipeToCollection";
 import { useMutation, useLazyQuery } from "@apollo/client";
-import { setDbUser } from "../../../redux/slices/userSlice";
 import GET_LAST_MODIFIED_COLLECTION from "../../../gqlLib/collection/query/getLastModifiedCollection";
 import { setCurrentRecipeInfo } from "../../../redux/slices/recipeSlice";
 import { useRouter } from "next/router";
 import useChangeCompare from "../../../customHooks/useChangeComaper";
 import { MdOutlineEdit } from "react-icons/md";
+import useUpdateRecipeField from "../../../customHooks/useUpdateRecipeFirld";
 
 interface dataCardInterface {
   title: string;
@@ -36,7 +36,6 @@ interface dataCardInterface {
   calorie: number;
   noOfComments: number;
   image: string;
-  checkWithinCollection?: boolean;
   recipeId?: string;
   notes?: number;
   addedToCompare?: boolean;
@@ -45,6 +44,7 @@ interface dataCardInterface {
   showMoreMenu?: boolean;
   showOptionalEditIcon?: boolean;
   changeToFormulateRecipe?: () => void;
+  isCollectionId?: string;
 }
 
 export default function DatacardComponent({
@@ -58,7 +58,6 @@ export default function DatacardComponent({
   calorie,
   noOfComments,
   image,
-  checkWithinCollection = false,
   recipeId = "",
   notes = 0,
   addedToCompare = false,
@@ -67,6 +66,7 @@ export default function DatacardComponent({
   showMoreMenu = true,
   showOptionalEditIcon = false,
   changeToFormulateRecipe = () => {},
+  isCollectionId = null,
 }: dataCardInterface) {
   title = title || "Triple Berry Smoothie";
   ingredients = ingredients;
@@ -81,10 +81,7 @@ export default function DatacardComponent({
   const menu = useRef<any>();
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
-  const { allRecipeWithinCollectionsId } = useAppSelector(
-    (state) => state?.collections,
-  );
+  const updateRecipe = useUpdateRecipeField();
   const [addNewRecipeToCollection] = useMutation(ADD_NEW_RECIPE_TO_COLLECTION);
   const [getLastModifiedCollection] = useLazyQuery(
     GET_LAST_MODIFIED_COLLECTION,
@@ -95,7 +92,6 @@ export default function DatacardComponent({
 
   const addToCollection = async (recipeId: string, e: React.SyntheticEvent) => {
     e.stopPropagation();
-    dispatch(setLoading(true));
     dispatch(setActiveRecipeId(recipeId));
     dispatch(setOpenCollectionsTary(false));
     const variablesData = {
@@ -104,7 +100,8 @@ export default function DatacardComponent({
     };
 
     try {
-      const { data } = await addNewRecipeToCollection({
+      updateRecipe(recipeId, { collection: recipeId });
+      await addNewRecipeToCollection({
         variables: {
           data: variablesData,
         },
@@ -117,42 +114,31 @@ export default function DatacardComponent({
       });
 
       dispatch(
-        setDbUser({
-          ...dbUser,
-          collections: [...data?.addTolastModifiedCollection],
-        }),
-      );
-
-      dispatch(
         setLastModifiedCollection(
           lastModified?.getLastModifieldCollection?.name,
         ),
       );
 
-      let recipesId = [];
-      data?.addTolastModifiedCollection?.forEach((col) => {
-        const recipes = col?.recipes;
-        recipes?.forEach((recipe) => {
-          recipesId?.push(recipe?._id);
-        });
-      });
-      dispatch(setAllRecipeWithinCollectionsId(recipesId));
-      dispatch(setLoading(false));
       dispatch(setToggleSaveRecipeModal(true));
       setTimeout(() => {
         dispatch(setToggleSaveRecipeModal(false));
       }, 5000);
       // reactToastifyNotification("info", `Successfully added to new collection`);
     } catch (error) {
-      dispatch(setLoading(false));
+      updateRecipe(recipeId, { collection: null });
       console.log(error);
 
       // reactToastifyNotification("eror", error?.message);
     }
   };
 
-  const handleCompare = (id: string, e: React.SyntheticEvent) => {
+  const handleOpenCollectionTray = (
+    id: string,
+    collectionId: string,
+    e: React.SyntheticEvent,
+  ) => {
     e?.stopPropagation();
+    dispatch(setRecipeWithinCollecion(collectionId));
     dispatch(setOpenCollectionsTary(true));
     dispatch(setChangeRecipeWithinCollection(true));
     dispatch(setActiveRecipeId(id));
@@ -310,50 +296,46 @@ export default function DatacardComponent({
             <div className={styles.datacard__body__bottom__right}>
               <ul>
                 <li>
-                  {addedToCompare ? (
-                    <img
-                      src="/icons/compare-1.svg"
-                      alt="eclipse"
-                      onClick={(e) =>
-                        handleChangeCompare(
-                          e,
-                          recipeId,
-                          false,
-                          compareRecipeList,
-                          setcompareRecipeList,
-                        )
-                      }
-                    />
-                  ) : (
-                    <img
-                      src="/icons/eclipse.svg"
-                      alt="eclipse"
-                      onClick={(e) =>
-                        handleChangeCompare(
-                          e,
-                          recipeId,
-                          true,
-                          compareRecipeList,
-                          setcompareRecipeList,
-                        )
-                      }
-                    />
-                  )}
+                  <img
+                    src={
+                      addedToCompare
+                        ? "/icons/compare-1.svg"
+                        : "/icons/eclipse.svg"
+                    }
+                    alt="eclipse"
+                    onClick={(e) =>
+                      addedToCompare
+                        ? handleChangeCompare(
+                            e,
+                            recipeId,
+                            false,
+                            compareRecipeList,
+                            setcompareRecipeList,
+                          )
+                        : handleChangeCompare(
+                            e,
+                            recipeId,
+                            true,
+                            compareRecipeList,
+                            setcompareRecipeList,
+                          )
+                    }
+                  />
                 </li>
                 <li>
-                  {allRecipeWithinCollectionsId?.includes(recipeId) ? (
-                    <img
-                      src="/icons/compare.svg"
-                      alt="compare"
-                      onClick={(e) => handleCompare(recipeId, e)}
-                    />
-                  ) : (
-                    <img
-                      src="/images/BookmarksStar.svg"
-                      alt="compare"
-                      onClick={(e) => addToCollection(recipeId, e)}
-                    />
-                  )}
+                  <img
+                    src={
+                      isCollectionId
+                        ? "/icons/compare.svg"
+                        : "/images/BookmarksStar.svg"
+                    }
+                    alt="compare"
+                    onClick={(e) =>
+                      isCollectionId
+                        ? handleOpenCollectionTray(recipeId, isCollectionId, e)
+                        : addToCollection(recipeId, e)
+                    }
+                  />
                 </li>
                 <li>{hangleShowCommentsAndNotesIcon(noOfComments, notes)}</li>
               </ul>

@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 const GET_ALL_RECIPES_WITHIN_COLLECTIONS = gql`
-  query GetAllRecipesFromCollection($userId: String!, $userEmail: String!) {
-    getAllRecipesFromCollection(userId: $userId, userEmail: $userEmail) {
+  query GetAllRecipesFromCollection($userId: String!) {
+    getAllRecipesFromCollection(userId: $userId) {
       image {
         default
         image
@@ -30,6 +30,7 @@ const GET_ALL_RECIPES_WITHIN_COLLECTIONS = gql`
       }
       notes
       addedToCompare
+      collection
     }
   }
 `;
