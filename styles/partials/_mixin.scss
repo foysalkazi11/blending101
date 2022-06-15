@@ -18,6 +18,11 @@ $media: (
     }
   }
 }
+@mixin certainBreakpoint($width) {
+  @media (min-width: $width) {
+    @content;
+  }
+}
 
 @mixin SliderbuttonShape {
   width: 30px;
@@ -34,6 +39,12 @@ $media: (
   &:hover {
     background-color: $primaryColor !important;
   }
+}
+
+@mixin transform($property) {
+  -webkit-transform: $property;
+  -ms-transform: $property;
+  transform: $property;
 }
 
 // @mixin for-size($size) {

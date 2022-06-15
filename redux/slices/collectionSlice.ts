@@ -9,12 +9,12 @@ type collectionsSliceState = {
   allRecipeWithinCollectionsId: string[];
   changeRecipeWithinCollection: boolean;
   activeRecipeId: string;
-  lastModifiedCollection: string;
+  lastModifiedCollection: { id: string; name: string };
   collectionDetailsId: string;
   showAllRecipes: boolean;
   allRecipeWithinCollections: any[];
   allCollections: {}[];
-  recipeWithinCollection: string;
+  singleRecipeWithinCollections: string[];
   singleCollectionInfo: SingleCollectionInfo;
 };
 
@@ -22,12 +22,12 @@ const initialState: collectionsSliceState = {
   allRecipeWithinCollectionsId: [],
   changeRecipeWithinCollection: false,
   activeRecipeId: "",
-  lastModifiedCollection: "Default",
+  lastModifiedCollection: { id: "", name: "" },
   collectionDetailsId: "",
   showAllRecipes: false,
   allRecipeWithinCollections: [],
   allCollections: [],
-  recipeWithinCollection: "",
+  singleRecipeWithinCollections: [],
   singleCollectionInfo: { id: "", name: "" },
 };
 
@@ -50,10 +50,16 @@ export const collectionsSlice = createSlice({
     setActiveRecipeId: (state, action: PayloadAction<string>) => {
       state.activeRecipeId = action?.payload;
     },
-    setRecipeWithinCollecion: (state, action: PayloadAction<string>) => {
-      state.recipeWithinCollection = action?.payload;
+    setSingleRecipeWithinCollecions: (
+      state,
+      action: PayloadAction<string[]>,
+    ) => {
+      state.singleRecipeWithinCollections = action?.payload;
     },
-    setLastModifiedCollection: (state, action: PayloadAction<string>) => {
+    setLastModifiedCollection: (
+      state,
+      action: PayloadAction<{ id: string; name: string }>,
+    ) => {
       state.lastModifiedCollection = action?.payload;
     },
     setCollectionDetailsId: (state, action: PayloadAction<string>) => {
@@ -86,7 +92,7 @@ export const {
   setShowAllRecipes,
   setAllRecipeWithinCollections,
   setAllCollections,
-  setRecipeWithinCollecion,
+  setSingleRecipeWithinCollecions,
   setSingleCollectionInfo,
 } = collectionsSlice?.actions;
 

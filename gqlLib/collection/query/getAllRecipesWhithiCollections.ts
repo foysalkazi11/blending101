@@ -30,7 +30,7 @@ const GET_ALL_RECIPES_WITHIN_COLLECTIONS = gql`
       }
       notes
       addedToCompare
-      collection
+      userCollections
     }
   }
 `;

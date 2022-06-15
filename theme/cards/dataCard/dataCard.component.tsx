@@ -13,7 +13,7 @@ import {
   setActiveRecipeId,
   setChangeRecipeWithinCollection,
   setLastModifiedCollection,
-  setRecipeWithinCollecion,
+  setSingleRecipeWithinCollecions,
 } from "../../../redux/slices/collectionSlice";
 import { setLoading } from "../../../redux/slices/utilitySlice";
 import ADD_NEW_RECIPE_TO_COLLECTION from "../../../gqlLib/collection/mutation/addNewRecipeToCollection";
@@ -44,7 +44,7 @@ interface dataCardInterface {
   showMoreMenu?: boolean;
   showOptionalEditIcon?: boolean;
   changeToFormulateRecipe?: () => void;
-  isCollectionId?: string;
+  isCollectionIds?: string[] | null;
 }
 
 export default function DatacardComponent({
@@ -66,7 +66,7 @@ export default function DatacardComponent({
   showMoreMenu = true,
   showOptionalEditIcon = false,
   changeToFormulateRecipe = () => {},
-  isCollectionId = null,
+  isCollectionIds = [] || null,
 }: dataCardInterface) {
   title = title || "Triple Berry Smoothie";
   ingredients = ingredients;
@@ -100,7 +100,6 @@ export default function DatacardComponent({
     };
 
     try {
-      updateRecipe(recipeId, { collection: recipeId });
       await addNewRecipeToCollection({
         variables: {
           data: variablesData,
@@ -112,11 +111,14 @@ export default function DatacardComponent({
           userEmail: dbUser?.email,
         },
       });
-
+      updateRecipe(recipeId, {
+        userCollections: [lastModified?.getLastModifieldCollection?._id],
+      });
       dispatch(
-        setLastModifiedCollection(
-          lastModified?.getLastModifieldCollection?.name,
-        ),
+        setLastModifiedCollection({
+          id: lastModified?.getLastModifieldCollection?._id,
+          name: lastModified?.getLastModifieldCollection?.name,
+        }),
       );
 
       dispatch(setToggleSaveRecipeModal(true));
@@ -125,7 +127,7 @@ export default function DatacardComponent({
       }, 5000);
       // reactToastifyNotification("info", `Successfully added to new collection`);
     } catch (error) {
-      updateRecipe(recipeId, { collection: null });
+      updateRecipe(recipeId, { userCollections: null });
       console.log(error);
 
       // reactToastifyNotification("eror", error?.message);
@@ -134,11 +136,11 @@ export default function DatacardComponent({
 
   const handleOpenCollectionTray = (
     id: string,
-    collectionId: string,
+    collectionIds: string[],
     e: React.SyntheticEvent,
   ) => {
     e?.stopPropagation();
-    dispatch(setRecipeWithinCollecion(collectionId));
+    dispatch(setSingleRecipeWithinCollecions(collectionIds));
     dispatch(setOpenCollectionsTary(true));
     dispatch(setChangeRecipeWithinCollection(true));
     dispatch(setActiveRecipeId(id));
@@ -325,14 +327,14 @@ export default function DatacardComponent({
                 <li>
                   <img
                     src={
-                      isCollectionId
+                      isCollectionIds?.length
                         ? "/icons/compare.svg"
                         : "/images/BookmarksStar.svg"
                     }
                     alt="compare"
                     onClick={(e) =>
-                      isCollectionId
-                        ? handleOpenCollectionTray(recipeId, isCollectionId, e)
+                      isCollectionIds?.length
+                        ? handleOpenCollectionTray(recipeId, isCollectionIds, e)
                         : addToCollection(recipeId, e)
                     }
                   />

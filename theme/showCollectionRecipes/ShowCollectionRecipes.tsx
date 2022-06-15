@@ -9,11 +9,8 @@ import {
   setShowAllRecipes,
   setSingleCollectionInfo,
 } from "../../redux/slices/collectionSlice";
-import { setLoading } from "../../redux/slices/utilitySlice";
 import DatacardComponent from "../cards/dataCard/dataCard.component";
-import SkeletonRecipeDiscovery from "../skeletons/skeletonRecipeDiscovery/SkeletonRecipeDiscovery";
 import styles from "./ShowCollectionRecipes.module.scss";
-import reactToastifyNotification from "../../components/utility/reactToastifyNotification";
 import SkeletonCollectionRecipe from "../skeletons/skeletonCollectionRecipe/SkeletonCollectionRecipe";
 import useLocalStorage from "../../customHooks/useLocalStorage";
 import GET_SINGLE_COLLECTION from "../../gqlLib/collection/query/getSingleCollection";
@@ -84,10 +81,7 @@ const ShowCollectionRecipes = () => {
         setCollectionName(singleCollectionInfo?.name);
         dispatch(
           setAllRecipeWithinCollections([
-            ...singleCollectionData?.getASingleCollection?.map((recipe) => ({
-              ...recipe,
-              collection: singleCollectionInfo?.id,
-            })),
+            ...singleCollectionData?.getASingleCollection,
           ]),
         );
       }
@@ -152,7 +146,7 @@ const ShowCollectionRecipes = () => {
               });
               const ing = ingredients.toString();
               return (
-                <div className={styles.slider__card} key={index}>
+                <div key={index}>
                   <DatacardComponent
                     title={item.name}
                     ingredients={ing}
@@ -169,7 +163,7 @@ const ShowCollectionRecipes = () => {
                     addedToCompare={item?.addedToCompare}
                     compareRecipeList={compareRecipeList}
                     setcompareRecipeList={setcompareRecipeList}
-                    isCollectionId={item?.collection}
+                    isCollectionIds={item?.userCollections}
                   />
                 </div>
               );
