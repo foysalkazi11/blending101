@@ -30,7 +30,7 @@ const GET_SINGLE_COLLECTION = gql`
       }
       notes
       addedToCompare
-      collection
+      userCollections
     }
   }
 `;

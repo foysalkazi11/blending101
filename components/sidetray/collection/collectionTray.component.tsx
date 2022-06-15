@@ -5,12 +5,11 @@ import CollectionComponent from "./content/collection.component";
 import ThemeComponent from "./content/theme.component";
 import styles from "./trayleft.module.scss";
 import { MdOutlineAddCircleOutline } from "react-icons/md";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { useAppSelector } from "../../../redux/hooks";
 import CustomModal from "../../../theme/modal/customModal/CustomModal";
 import AddCollectionModal from "./addCollectionModal/AddCollectionModal";
-import { setToggleModal } from "../../../redux/slices/sideTraySlice";
 import GET_COLLECTIONS_AND_THEMES from "../../../gqlLib/collection/query/getCollectionsAndThemes";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 
 export default function CollectionTray(props) {
   const [toggle, setToggle] = useState(1);
@@ -26,7 +25,6 @@ export default function CollectionTray(props) {
   );
   const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
   const [openModal, setOpenModal] = useState(false);
-  const dispatch = useAppDispatch();
   const reff = useRef<any>();
 
   const [
