@@ -10,7 +10,10 @@ import SearchtagsComponent from "../../components/searchtags/searchtags.componen
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import FilterPageBottom from "../../components/recipe/recipeFilter/filterBottom.component";
 import FooterRecipeFilter from "../../components/footer/footerRecipeFilter.component";
-import { setChangeRecipeWithinCollection } from "../../redux/slices/collectionSlice";
+import {
+  setChangeRecipeWithinCollection,
+  setSingleRecipeWithinCollecions,
+} from "../../redux/slices/collectionSlice";
 import {
   setOpenCollectionsTary,
   setToggleSaveRecipeModal,
@@ -27,11 +30,11 @@ import {
   setRecommended,
 } from "../../redux/slices/recipeSlice";
 import { useRouter } from "next/router";
-import SaveToCollectionModal from "../modal/saveToCollectionModal/SaveToCollectionModal";
 import SkeletonRecipeDiscovery from "../skeletons/skeletonRecipeDiscovery/SkeletonRecipeDiscovery";
 import useLocalStorage from "../../customHooks/useLocalStorage";
 import GET_RECIPE_WIDGET from "../../gqlLib/recipes/queries/getRecipeWidget";
 import WidgetCollection from "./Widget";
+import CustomModal from "../modal/customModal/CustomModal";
 
 const RecipeDetails = () => {
   const router = useRouter();
@@ -57,6 +60,7 @@ const RecipeDetails = () => {
     [],
   );
   const handleCompareRecipe = () => {
+    dispatch(setSingleRecipeWithinCollecions([lastModifiedCollection?.id]));
     dispatch(setOpenCollectionsTary(true));
     dispatch(setChangeRecipeWithinCollection(true));
     dispatch(setToggleSaveRecipeModal(false));
@@ -174,7 +178,7 @@ const RecipeDetails = () => {
                             addedToCompare={item?.addedToCompare}
                             compareRecipeList={compareRecipeList}
                             setcompareRecipeList={setcompareRecipeList}
-                            isCollectionId={item?.collection}
+                            isCollectionIds={item?.userCollections}
                           />
                         </div>
                       );
@@ -223,7 +227,7 @@ const RecipeDetails = () => {
                               addedToCompare={item?.addedToCompare}
                               compareRecipeList={compareRecipeList}
                               setcompareRecipeList={setcompareRecipeList}
-                              isCollectionId={item?.collection}
+                              isCollectionIds={item?.userCollections}
                             />
                           </div>
                         );
@@ -272,7 +276,7 @@ const RecipeDetails = () => {
                               addedToCompare={item?.addedToCompare}
                               compareRecipeList={compareRecipeList}
                               setcompareRecipeList={setcompareRecipeList}
-                              isCollectionId={item?.collection}
+                              isCollectionIds={item?.userCollections}
                             />
                           </div>
                         );
@@ -304,12 +308,12 @@ const RecipeDetails = () => {
           <FooterRecipeFilter />
         </div>
       </AContainer>
-      <SaveToCollectionModal>
+      <CustomModal>
         <SaveRecipe
-          title={lastModifiedCollection}
+          title={lastModifiedCollection?.name}
           handleChange={handleCompareRecipe}
         />
-      </SaveToCollectionModal>
+      </CustomModal>
     </>
   );
 };

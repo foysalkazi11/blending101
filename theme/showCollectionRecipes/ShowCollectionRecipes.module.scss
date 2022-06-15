@@ -1,4 +1,5 @@
 .showRecipeCollectionsContainer {
+  width: 100%;
   margin: 20px 0;
 }
 .showRecipeCollectionsHeader {
@@ -24,9 +25,11 @@
 }
 
 .showRecipes {
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 16px;
+  grid-auto-rows: auto;
 
   @media only screen and (max-width: 1280px) {
     grid-template-columns: repeat(3, 1fr);

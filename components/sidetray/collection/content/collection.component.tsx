@@ -9,24 +9,17 @@ import styles from "./content.module.scss";
 import { MdMoreVert, MdDeleteOutline } from "react-icons/md";
 import { HiOutlineShare } from "react-icons/hi";
 import { BiEditAlt } from "react-icons/bi";
-import {
-  setOpenCollectionsTary,
-  setToggleModal,
-} from "../../../../redux/slices/sideTraySlice";
+import { setOpenCollectionsTary } from "../../../../redux/slices/sideTraySlice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { useMutation } from "@apollo/client";
 import DELETE_COLLECTION from "../../../../gqlLib/collection/mutation/deleteCollection";
-import { setDbUser } from "../../../../redux/slices/userSlice";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
 import CustomCheckbox from "../../../../theme/checkbox/CustomCheckbox";
 import {
-  setAllRecipeWithinCollectionsId,
-  setRecipeWithinCollecion,
   setShowAllRecipes,
   setSingleCollectionInfo,
 } from "../../../../redux/slices/collectionSlice";
 import ADD_OR_REMOVE_RECIPE_FORM_COLLECTION from "../../../../gqlLib/collection/mutation/addOrRemoveRecipeFromCollection";
-import SkeletonCollection from "../../../../theme/skeletons/skeletonCollection/SkeletonCollection";
 import SkeletonCollections from "../../../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollections";
 import useUpdateRecipeField from "../../../../customHooks/useUpdateRecipeFirld";
 
@@ -58,7 +51,7 @@ export default function CollectionComponent({
   const {
     changeRecipeWithinCollection,
     activeRecipeId,
-    recipeWithinCollection,
+    singleRecipeWithinCollections,
   } = useAppSelector((state) => state?.collections);
   const [showMenu, setShowMenu] = useState(false);
   const [menuIndex, setMenuIndex] = useState(0);
@@ -75,15 +68,15 @@ export default function CollectionComponent({
         variables: {
           data: {
             userEmail: dbUser?.email,
-            addToTheseCollections: recipeWithinCollection
-              ? [recipeWithinCollection]
-              : [],
+            addToTheseCollections: collectionHasRecipe,
             recipe: activeRecipeId,
           },
         },
       });
       updateRecipe(activeRecipeId, {
-        collection: recipeWithinCollection ? recipeWithinCollection : null,
+        userCollections: collectionHasRecipe?.length
+          ? singleRecipeWithinCollections
+          : null,
       });
 
       reactToastifyNotification("info", `Collection update successfully`);
@@ -94,16 +87,16 @@ export default function CollectionComponent({
     }
   };
 
-  // const handleChange = async (e, collectionId) => {
-  //   setIsCollectionUpdate(true);
-  //   if (e?.target?.checked) {
-  //     setCollectionHasRecipe((pre) => [...pre, collectionId]);
-  //   } else {
-  //     setCollectionHasRecipe((pre) => [
-  //       ...pre?.filter((id) => id !== collectionId),
-  //     ]);
-  //   }
-  // };
+  const handleChange = async (e, collectionId) => {
+    setIsCollectionUpdate(true);
+    if (e?.target?.checked) {
+      setCollectionHasRecipe((pre) => [...pre, collectionId]);
+    } else {
+      setCollectionHasRecipe((pre) => [
+        ...pre?.filter((id) => id !== collectionId),
+      ]);
+    }
+  };
 
   const handleDeleteCollection = async (collectionId: string) => {
     try {
@@ -138,13 +131,9 @@ export default function CollectionComponent({
     }
   };
 
-  // useEffect(() => {
-  //   if (recipeWithinCollection) {
-
-  //     setCollectionHasRecipe([recipeWithinCollection]);
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [recipeWithinCollection]);
+  useEffect(() => {
+    setCollectionHasRecipe(singleRecipeWithinCollections);
+  }, [singleRecipeWithinCollections]);
 
   useEffect(() => {
     if (isMounted.current) {
@@ -248,19 +237,12 @@ export default function CollectionComponent({
                 {changeRecipeWithinCollection ? (
                   <div className={styles.checkBox}>
                     <CustomCheckbox
-                      /* @ts-ignore */
-                      checked={recipeWithinCollection === item?._id}
-                      /* @ts-ignore */
-                      handleChange={(e) => {
-                        if (e?.target?.checked) {
-                          setIsCollectionUpdate(true);
-                          //@ts-ignore
-                          dispatch(setRecipeWithinCollecion(item?._id));
-                        } else {
-                          setIsCollectionUpdate(true);
-                          dispatch(setRecipeWithinCollecion(""));
-                        }
-                      }}
+                      checked={collectionHasRecipe?.includes(
+                        //@ts-ignore
+                        item?._id,
+                      )}
+                      // @ts-ignore
+                      handleChange={(e) => handleChange(e, item?._id)}
                     />
                   </div>
                 ) : hoverIndex === i + 1 ? (
