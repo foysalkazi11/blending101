@@ -52,6 +52,7 @@ const RecipeDetails = () => {
   const [getAllRecommendedRecipes] = useLazyQuery(GET_ALL_RECOMMENDED_RECIPES);
   const [getAllPopularRecipes] = useLazyQuery(GET_ALL_POPULAR_RECIPES);
   const [getAllLatestRecipes] = useLazyQuery(GET_ALL_LATEST_RECIPES);
+  const [openCollectionModal, setOpenCollectionModal] = useState(false);
 
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
@@ -63,7 +64,7 @@ const RecipeDetails = () => {
     dispatch(setSingleRecipeWithinCollecions([lastModifiedCollection?.id]));
     dispatch(setOpenCollectionsTary(true));
     dispatch(setChangeRecipeWithinCollection(true));
-    dispatch(setToggleSaveRecipeModal(false));
+    setOpenCollectionModal(false);
   };
 
   const getAllRecipes = async () => {
@@ -179,6 +180,7 @@ const RecipeDetails = () => {
                             compareRecipeList={compareRecipeList}
                             setcompareRecipeList={setcompareRecipeList}
                             isCollectionIds={item?.userCollections}
+                            setOpenCollectionModal={setOpenCollectionModal}
                           />
                         </div>
                       );
@@ -228,6 +230,7 @@ const RecipeDetails = () => {
                               compareRecipeList={compareRecipeList}
                               setcompareRecipeList={setcompareRecipeList}
                               isCollectionIds={item?.userCollections}
+                              setOpenCollectionModal={setOpenCollectionModal}
                             />
                           </div>
                         );
@@ -277,6 +280,7 @@ const RecipeDetails = () => {
                               compareRecipeList={compareRecipeList}
                               setcompareRecipeList={setcompareRecipeList}
                               isCollectionIds={item?.userCollections}
+                              setOpenCollectionModal={setOpenCollectionModal}
                             />
                           </div>
                         );
@@ -308,7 +312,7 @@ const RecipeDetails = () => {
           <FooterRecipeFilter />
         </div>
       </AContainer>
-      <CustomModal>
+      <CustomModal open={openCollectionModal}>
         <SaveRecipe
           title={lastModifiedCollection?.name}
           handleChange={handleCompareRecipe}
