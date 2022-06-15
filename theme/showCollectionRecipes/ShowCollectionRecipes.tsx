@@ -95,18 +95,38 @@ const ShowCollectionRecipes = () => {
       getAllCollections({
         variables: { userId: dbUser?._id },
       });
-    } else {
-      if (singleCollectionInfo?.id) {
-        getSingleCollections({
-          variables: {
-            userId: dbUser?._id,
-            collectionId: singleCollectionInfo?.id,
-          },
-        });
+      if (allCollectionData?.getAllRecipesFromCollection) {
+        setCollectionName("All Recipes");
+        dispatch(
+          setAllRecipeWithinCollections([
+            ...allCollectionData?.getAllRecipesFromCollection,
+          ]),
+        );
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [singleCollectionInfo?.name, showAllRecipes]);
+  }, [showAllRecipes]);
+
+  useEffect(() => {
+    if (singleCollectionInfo?.id) {
+      getSingleCollections({
+        variables: {
+          userId: dbUser?._id,
+          collectionId: singleCollectionInfo?.id,
+        },
+      });
+      if (singleCollectionData?.getASingleCollection) {
+        setCollectionName(singleCollectionInfo?.name);
+        dispatch(
+          setAllRecipeWithinCollections([
+            ...singleCollectionData?.getASingleCollection,
+          ]),
+        );
+      }
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [singleCollectionInfo?.name]);
 
   if (allCollectionLoading || singleCollectionLoading) {
     return (
