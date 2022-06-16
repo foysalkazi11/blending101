@@ -10,8 +10,8 @@ import {
   FaLinkedinIn,
 } from "react-icons/fa";
 import { MdMoreHoriz } from "react-icons/md";
-import { useAppDispatch } from "../../../../redux/hooks";
-import { setToggleModal } from "../../../../redux/slices/sideTraySlice";
+import { useAppDispatch } from "../../redux/hooks";
+import { setToggleModal } from "../../redux/slices/sideTraySlice";
 
 const ShareRecipeModal = () => {
   const [showMore, setShowMore] = useState(false);

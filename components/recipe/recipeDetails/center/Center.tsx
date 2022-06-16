@@ -12,8 +12,8 @@ import {
   setToggleModal,
 } from "../../../../redux/slices/sideTraySlice";
 import Modal from "../../../../theme/modal/customModal/CustomModal";
-import ShareRecipeModal from "../shareRecipeModal/ShareRecipeModal";
-import SaveRecipe from "../saveRecipe/SaveRecipe";
+import ShareRecipeModal from "../../../../theme/shareRecipeModal/ShareRecipeModal";
+import SaveRecipe from "../../../../theme/saveRecipeModal/SaveRecipeModal";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
@@ -21,6 +21,9 @@ import useGetDefaultPortionOfnutration from "../../../../customHooks/useGetDefau
 import { setActiveRecipeId } from "../../../../redux/slices/collectionSlice";
 import { setCurrentRecipeInfo } from "../../../../redux/slices/recipeSlice";
 import PanelHeaderCenter from "../../share/panelHeader/PanelHeaderCenter";
+import IconWithText from "./Icon/IconWithText";
+import useForAddToCollection from "../../../../customHooks/useForAddToCollection";
+import useForOpenCollectionTray from "../../../../customHooks/useForOpenCollection";
 
 const scaleMenu = [
   { label: ".5x", value: 0.5 },
@@ -49,10 +52,12 @@ const Center = ({
 }: center) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const [showRecipeModal, setShowRecipeModal] = useState(true);
+  const [showCollectionModal, setShowCollectionModal] = useState(true);
   const [ingredientId, setIngredientId] = useState("");
-  const recipeDetails = recipeData;
+  const [openModal, setOpenModal] = useState(false);
   useGetDefaultPortionOfnutration(ingredientId);
+  const handleAddToCollection = useForAddToCollection();
+  const handleOpenCollectionTray = useForOpenCollectionTray();
 
   const ReadMore = ({ children }) => {
     const text = children;
@@ -92,6 +97,11 @@ const Center = ({
     dispatch(setOpenCollectionsTary(false));
   };
 
+  const addToCollection = (id: string, e: React.SyntheticEvent) => {
+    setShowCollectionModal(true);
+    handleAddToCollection(id, setOpenModal, e);
+  };
+
   const hangleShowCommentsAndNotesIcon = () => {
     const notes = recipeData?.notes;
     const comments = recipeData?.numberOfRating;
@@ -101,17 +111,13 @@ const Center = ({
 
     const showCommentsAndNotes = (icon: string, num: number | string) => {
       return (
-        <>
-          <img
-            src={`/icons/${icon}.svg`}
-            alt="icon"
-            onClick={(e) => handleComment(recipeId, title, defaultImage, e)}
-          />
-          <span style={{ color: num ? "#7cbc39" : "#c4c4c4" }}>
-            {" "}
-            {` ${num}`}
-          </span>
-        </>
+        <IconWithText
+          wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
+          handleClick={(e) => handleComment(recipeId, title, defaultImage, e)}
+          icon={`/icons/${icon}.svg`}
+          text={num}
+          textStyle={{ color: num ? "#7cbc39" : "#c4c4c4" }}
+        />
       );
     };
 
@@ -130,24 +136,22 @@ const Center = ({
     <div style={{ width: "100%" }}>
       <PanelHeaderCenter
         backLink="/"
-        editOrSavebtnFunc={() =>
-          router.push(`/edit_recipe/${recipeDetails?._id}`)
-        }
+        editOrSavebtnFunc={() => router.push(`/edit_recipe/${recipeData?._id}`)}
         editOrSavebtnText="Edit"
       />
 
       <div className={styles.contentBox}>
         <div className={styles.heading}>
-          <h3>{recipeDetails?.name}</h3>
+          <h3>{recipeData?.name}</h3>
           <span className={styles.ratingBox}>
             <img src="/images/rating.svg" alt="" />
-            {recipeDetails?.averageRating} ({recipeDetails?.numberOfRating})
+            {recipeData?.averageRating} ({recipeData?.numberOfRating})
           </span>
         </div>
         <div className={styles.subMenu}>
           <div className={styles.alignItems}>
             <div className={styles.recipeType}>
-              {recipeDetails?.recipeBlendCategory?.name}
+              {recipeData?.recipeBlendCategory?.name}
             </div>
             <img
               src="/images/yummly-logo.png"
@@ -156,42 +160,50 @@ const Center = ({
             />
           </div>
           <div className={styles.alignItems}>
-            <div className={styles.iconWithText}>
-              <img src="/images/calendar-alt-light.svg" alt="calender" />
-              <p>Planner</p>
-            </div>
+            <IconWithText
+              wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
+              handleClick={() => {}}
+              icon="/images/calendar-alt-light.svg"
+              text="Planner"
+            />
 
-            <div
-              className={styles.iconWithText}
-              onClick={() => {
-                setShowRecipeModal(false);
+            <IconWithText
+              wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
+              handleClick={(e) =>
+                recipeData?.userCollections?.length
+                  ? handleOpenCollectionTray(
+                      recipeData?._id,
+                      recipeData?.userCollections,
+                      e,
+                    )
+                  : addToCollection(recipeData?._id, e)
+              }
+              icon={
+                recipeData?.userCollections?.length
+                  ? "/icons/compare.svg"
+                  : "/images/BookmarksStar.svg" //"/images/BookmarksStar-orange.svg"
+              }
+              text="Saved"
+            />
+
+            <IconWithText
+              wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
+              handleClick={() => {
+                setShowCollectionModal(true);
                 dispatch(setToggleModal(true));
               }}
-            >
-              <img src="/images/BookmarksStar-orange.svg" alt="saved" />
-              <p>Saved</p>
-            </div>
-            <div
-              className={styles.iconWithText}
-              onClick={() => {
-                setShowRecipeModal(true);
-                dispatch(setToggleModal(true));
-              }}
-            >
-              <img src="/images/share-alt-light-grey.svg" alt="share" />
-              <p>Share</p>
-            </div>
+              icon="/images/share-alt-light-grey.svg"
+              text="Share"
+            />
 
-            <div className={styles.iconWithText}>
-              {hangleShowCommentsAndNotesIcon()}
-            </div>
+            {hangleShowCommentsAndNotesIcon()}
           </div>
         </div>
 
         <div className={styles.sliderBox}>
-          {recipeDetails?.image ? (
+          {recipeData?.image ? (
             <SlickSlider>
-              {recipeDetails?.image.map((img, index) => {
+              {recipeData?.image.map((img, index) => {
                 return (
                   <div key={index} className={styles.imageBox}>
                     {img?.image && (
@@ -219,7 +231,7 @@ const Center = ({
           )}
         </div>
         <div>
-          <ReadMore>{recipeDetails?.description}</ReadMore>
+          <ReadMore>{recipeData?.description}</ReadMore>
         </div>
         <div className={styles.infoContainer}>
           <div className={styles.infoBox}>
@@ -274,8 +286,8 @@ const Center = ({
           </div>
         </div>
         <div className={styles.ingredentDisContainer}>
-          {recipeDetails?.ingredients ? (
-            recipeDetails?.ingredients?.map((ingredient, index) => {
+          {recipeData?.ingredients ? (
+            recipeData?.ingredients?.map((ingredient, index) => {
               return (
                 <div
                   className={styles.singleIngredent}
@@ -382,8 +394,8 @@ const Center = ({
           <img src="/images/chef.svg" alt="basket" />
           <h3>How to</h3>
         </div>
-        {recipeDetails?.recipeInstructions ? (
-          recipeDetails?.recipeInstructions?.map((step, index) => {
+        {recipeData?.recipeInstructions ? (
+          recipeData?.recipeInstructions?.map((step, index) => {
             return (
               <div
                 className={styles.steps}
@@ -400,7 +412,9 @@ const Center = ({
           </div>
         )}
       </div>
-      <Modal>{showRecipeModal ? <ShareRecipeModal /> : <SaveRecipe />}</Modal>
+      <Modal open={openModal} setOpen={setOpenModal}>
+        {showCollectionModal ? <SaveRecipe /> : <ShareRecipeModal />}
+      </Modal>
     </div>
   );
 };

@@ -1,8 +1,8 @@
 import React from "react";
 import styles from "./ContentTray.module.scss";
 import Image from "next/image";
-import Slider from "../../../theme/carousel/carousel.component";
-import MenubarComponent from "../../menuBar/menuBar.component";
+import Slider from "../../../../theme/carousel/carousel.component";
+import MenubarComponent from "../../../../theme/menuBar/menuBar.component";
 
 const ContentTray = (props) => {
   const { hasFilter, filters, customHTML, tabState } = props;

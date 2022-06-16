@@ -1,18 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import styles from "./tray.module.scss";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { setOpenFilterTray } from "../../redux/slices/sideTraySlice";
 
 interface leftTrayInterface {
   children: any;
-  filter:any;
-  id:any
+  filter: any;
+  id: any;
 }
 
-export default function FilterTrayWrapper({
-  children,
-}: leftTrayInterface) {
+export default function FilterTrayWrapper({ children }: leftTrayInterface) {
   const { openFilterTray } = useAppSelector((state) => state?.sideTray);
   const dispatch = useAppDispatch();
 
