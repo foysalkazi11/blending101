@@ -1,40 +1,37 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
-import AContainer from "../../containers/A.container";
+import AContainer from "../../../containers/A.container";
 import styles from "./recipeDiscovery.module.scss";
 import AppdownLoadCard from "./AppdownLoadCard/AppdownLoadCard.component";
 import ContentTray from "./ContentTray/ContentTray.component";
-import DatacardComponent from "../cards/dataCard/dataCard.component";
+import DatacardComponent from "../../../theme/cards/dataCard/dataCard.component";
 import SearchBar from "./searchBar/SearchBar.component";
-import SearchtagsComponent from "../../components/searchtags/searchtags.component";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import FilterPageBottom from "../../components/recipe/recipeFilter/filterBottom.component";
-import FooterRecipeFilter from "../../components/footer/footerRecipeFilter.component";
+import SearchtagsComponent from "../../searchtags/searchtags.component";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import FilterPageBottom from "../recipeFilter/filterBottom.component";
+import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
 import {
   setChangeRecipeWithinCollection,
   setSingleRecipeWithinCollecions,
-} from "../../redux/slices/collectionSlice";
-import {
-  setOpenCollectionsTary,
-  setToggleSaveRecipeModal,
-} from "../../redux/slices/sideTraySlice";
-import SaveRecipe from "../saveRecipeModal/SaveRecipeModal";
-import ShowCollectionRecipes from "../showCollectionRecipes/ShowCollectionRecipes";
+} from "../../../redux/slices/collectionSlice";
+import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
+import SaveRecipe from "../../../theme/saveRecipeModal/SaveRecipeModal";
+import ShowCollectionRecipes from "../../../theme/showCollectionRecipes/ShowCollectionRecipes";
 import { useLazyQuery, useQuery } from "@apollo/client";
-import GET_ALL_RECOMMENDED_RECIPES from "../../gqlLib/recipes/queries/getRecommendedRecipes";
-import GET_ALL_POPULAR_RECIPES from "../../gqlLib/recipes/queries/getAllPopularRecipes";
-import GET_ALL_LATEST_RECIPES from "../../gqlLib/recipes/queries/getAllLatestRecipes";
+import GET_ALL_RECOMMENDED_RECIPES from "../../../gqlLib/recipes/queries/getRecommendedRecipes";
+import GET_ALL_POPULAR_RECIPES from "../../../gqlLib/recipes/queries/getAllPopularRecipes";
+import GET_ALL_LATEST_RECIPES from "../../../gqlLib/recipes/queries/getAllLatestRecipes";
 import {
   setLatest,
   setPopular,
   setRecommended,
-} from "../../redux/slices/recipeSlice";
+} from "../../../redux/slices/recipeSlice";
 import { useRouter } from "next/router";
-import SkeletonRecipeDiscovery from "../skeletons/skeletonRecipeDiscovery/SkeletonRecipeDiscovery";
-import useLocalStorage from "../../customHooks/useLocalStorage";
-import GET_RECIPE_WIDGET from "../../gqlLib/recipes/queries/getRecipeWidget";
+import SkeletonRecipeDiscovery from "../../../theme/skeletons/skeletonRecipeDiscovery/SkeletonRecipeDiscovery";
+import useLocalStorage from "../../../customHooks/useLocalStorage";
+import GET_RECIPE_WIDGET from "../../../gqlLib/recipes/queries/getRecipeWidget";
 import WidgetCollection from "./Widget";
-import CustomModal from "../modal/customModal/CustomModal";
+import CustomModal from "../../../theme/modal/customModal/CustomModal";
 
 const RecipeDetails = () => {
   const router = useRouter();
