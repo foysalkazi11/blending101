@@ -3,27 +3,18 @@ import React, { Dispatch, SetStateAction, useRef } from "react";
 import styles from "./dataCard.module.scss";
 import MoreVertIcon from "../../../public/icons/more_vert_black_36dp.svg";
 import { slicedString } from "../../../services/string.service";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch } from "../../../redux/hooks";
 import {
   setOpenCollectionsTary,
   setOpenCommentsTray,
-  setToggleSaveRecipeModal,
 } from "../../../redux/slices/sideTraySlice";
-import {
-  setActiveRecipeId,
-  setChangeRecipeWithinCollection,
-  setLastModifiedCollection,
-  setSingleRecipeWithinCollecions,
-} from "../../../redux/slices/collectionSlice";
-import { setLoading } from "../../../redux/slices/utilitySlice";
-import ADD_NEW_RECIPE_TO_COLLECTION from "../../../gqlLib/collection/mutation/addNewRecipeToCollection";
-import { useMutation, useLazyQuery } from "@apollo/client";
-import GET_LAST_MODIFIED_COLLECTION from "../../../gqlLib/collection/query/getLastModifiedCollection";
+import { setActiveRecipeId } from "../../../redux/slices/collectionSlice";
 import { setCurrentRecipeInfo } from "../../../redux/slices/recipeSlice";
 import { useRouter } from "next/router";
 import useChangeCompare from "../../../customHooks/useChangeComaper";
 import { MdOutlineEdit } from "react-icons/md";
-import useUpdateRecipeField from "../../../customHooks/useUpdateRecipeFirld";
+import useForAddToCollection from "../../../customHooks/useForAddToCollection";
+import useForOpenCollectionTray from "../../../customHooks/useForOpenCollection";
 
 interface dataCardInterface {
   title: string;
@@ -83,70 +74,9 @@ export default function DatacardComponent({
   const menu = useRef<any>();
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const updateRecipe = useUpdateRecipeField();
-  const [addNewRecipeToCollection] = useMutation(ADD_NEW_RECIPE_TO_COLLECTION);
-  const [getLastModifiedCollection] = useLazyQuery(
-    GET_LAST_MODIFIED_COLLECTION,
-    { fetchPolicy: "network-only" },
-  );
-  const { dbUser } = useAppSelector((state) => state?.user);
   const handleChangeCompare = useChangeCompare();
-
-  const addToCollection = async (recipeId: string, e: React.SyntheticEvent) => {
-    e.stopPropagation();
-    dispatch(setActiveRecipeId(recipeId));
-    dispatch(setOpenCollectionsTary(false));
-    const variablesData = {
-      recipe: recipeId,
-      userEmail: dbUser?.email,
-    };
-
-    try {
-      await addNewRecipeToCollection({
-        variables: {
-          data: variablesData,
-        },
-      });
-
-      const { data: lastModified } = await getLastModifiedCollection({
-        variables: {
-          userEmail: dbUser?.email,
-        },
-      });
-      updateRecipe(recipeId, {
-        userCollections: [lastModified?.getLastModifieldCollection?._id],
-      });
-      dispatch(
-        setLastModifiedCollection({
-          id: lastModified?.getLastModifieldCollection?._id,
-          name: lastModified?.getLastModifieldCollection?.name,
-        }),
-      );
-
-      setOpenCollectionModal(true);
-      setTimeout(() => {
-        setOpenCollectionModal(false);
-      }, 5000);
-      // reactToastifyNotification("info", `Successfully added to new collection`);
-    } catch (error) {
-      updateRecipe(recipeId, { userCollections: null });
-      console.log(error);
-
-      // reactToastifyNotification("eror", error?.message);
-    }
-  };
-
-  const handleOpenCollectionTray = (
-    id: string,
-    collectionIds: string[],
-    e: React.SyntheticEvent,
-  ) => {
-    e?.stopPropagation();
-    dispatch(setSingleRecipeWithinCollecions(collectionIds));
-    dispatch(setOpenCollectionsTary(true));
-    dispatch(setChangeRecipeWithinCollection(true));
-    dispatch(setActiveRecipeId(id));
-  };
+  const handleAddToCollection = useForAddToCollection();
+  const handleOpenCollectionTray = useForOpenCollectionTray();
 
   const handleComment = (
     id: string,
@@ -337,7 +267,11 @@ export default function DatacardComponent({
                     onClick={(e) =>
                       isCollectionIds?.length
                         ? handleOpenCollectionTray(recipeId, isCollectionIds, e)
-                        : addToCollection(recipeId, e)
+                        : handleAddToCollection(
+                            recipeId,
+                            setOpenCollectionModal,
+                            e,
+                          )
                     }
                   />
                 </li>
