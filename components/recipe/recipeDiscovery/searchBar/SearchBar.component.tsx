@@ -78,12 +78,14 @@ const SearchBar = () => {
           }
         >
           <Tooltip content="Filter" direction="bottom">
-            <FiFilter
-              className={`${styles.filterIcon} ${
-                openFilterTray ? styles.active : ""
-              }`}
-              onClick={() => dispatch(setOpenFilterTray(!openFilterTray))}
-            />
+            {openFilterTray ? null : (
+              <FiFilter
+                className={`${styles.filterIcon} ${
+                  openFilterTray ? styles.active : ""
+                }`}
+                onClick={() => dispatch(setOpenFilterTray(!openFilterTray))}
+              />
+            )}
           </Tooltip>
         </div>
         <div className={styles.inputBox}>

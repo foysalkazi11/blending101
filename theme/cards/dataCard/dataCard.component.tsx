@@ -3,18 +3,13 @@ import React, { Dispatch, SetStateAction, useRef } from "react";
 import styles from "./dataCard.module.scss";
 import MoreVertIcon from "../../../public/icons/more_vert_black_36dp.svg";
 import { slicedString } from "../../../services/string.service";
-import { useAppDispatch } from "../../../redux/hooks";
-import {
-  setOpenCollectionsTary,
-  setOpenCommentsTray,
-} from "../../../redux/slices/sideTraySlice";
-import { setActiveRecipeId } from "../../../redux/slices/collectionSlice";
-import { setCurrentRecipeInfo } from "../../../redux/slices/recipeSlice";
 import { useRouter } from "next/router";
 import useChangeCompare from "../../../customHooks/useChangeComaper";
 import { MdOutlineEdit } from "react-icons/md";
 import useForAddToCollection from "../../../customHooks/useForAddToCollection";
 import useForOpenCollectionTray from "../../../customHooks/useForOpenCollection";
+import useForOpenCommentsTray from "../../../customHooks/useForOpenCommentsTray";
+import useForSelectCommentsAndNotesIcon from "../../../customHooks/useForSelectCommentsAndNotesIcon";
 
 interface dataCardInterface {
   title: string;
@@ -73,24 +68,11 @@ export default function DatacardComponent({
   ratings = Math.ceil(ratings);
   const menu = useRef<any>();
   const router = useRouter();
-  const dispatch = useAppDispatch();
   const handleChangeCompare = useChangeCompare();
   const handleAddToCollection = useForAddToCollection();
   const handleOpenCollectionTray = useForOpenCollectionTray();
-
-  const handleComment = (
-    id: string,
-    title: string,
-    image: string,
-    e: React.SyntheticEvent,
-  ) => {
-    // HANDLE COMMENTS CLICK HERE
-    e?.stopPropagation();
-    dispatch(setActiveRecipeId(id));
-    dispatch(setOpenCommentsTray(true));
-    dispatch(setCurrentRecipeInfo({ name: title, image }));
-    dispatch(setOpenCollectionsTary(false));
-  };
+  const handleOpenCommentsTray = useForOpenCommentsTray();
+  const selectCommentsAndNotesIcon = useForSelectCommentsAndNotesIcon();
 
   const handleClick = () => {
     const elem = menu.current;
@@ -155,28 +137,19 @@ export default function DatacardComponent({
   );
 
   const hangleShowCommentsAndNotesIcon = (comments: number, notes: number) => {
-    const showCommentsAndNotes = (icon: string, num: number | string) => {
-      return (
-        <>
-          <img
-            src={`/icons/${icon}.svg`}
-            alt="icon"
-            onClick={(e) => handleComment(recipeId, title, image, e)}
-          />{" "}
-          <span style={{ color: num ? "#7cbc39" : "#c4c4c4" }}>{num}</span>
-        </>
-      );
-    };
-
-    if (!comments && !notes) {
-      return showCommentsAndNotes("noComments&NoNotes", 0);
-    } else if (comments && !notes) {
-      return showCommentsAndNotes("commentsOnly", comments);
-    } else if (!comments && notes) {
-      return showCommentsAndNotes("notesOnly", "");
-    } else {
-      return showCommentsAndNotes("comments&notes", comments);
-    }
+    const res = selectCommentsAndNotesIcon(comments, notes);
+    return (
+      <>
+        <img
+          src={`/icons/${res?.icon}.svg`}
+          alt="icon"
+          onClick={(e) => handleOpenCommentsTray(recipeId, title, image, e)}
+        />{" "}
+        <span style={{ color: res?.amount ? "#7cbc39" : "#c4c4c4" }}>
+          {res?.amount}
+        </span>
+      </>
+    );
   };
 
   return (

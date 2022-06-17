@@ -52,6 +52,7 @@ export default function CollectionComponent({
     changeRecipeWithinCollection,
     activeRecipeId,
     singleRecipeWithinCollections,
+    singleCollectionInfo,
   } = useAppSelector((state) => state?.collections);
   const [showMenu, setShowMenu] = useState(false);
   const [menuIndex, setMenuIndex] = useState(0);
@@ -109,8 +110,10 @@ export default function CollectionComponent({
         },
       });
       getCollectionsAndThemes({ variables: { userId: dbUser?._id } });
-      dispatch(setSingleCollectionInfo({ id: "", name: "" }));
-      dispatch(setShowAllRecipes(true));
+      if (singleCollectionInfo?.id) {
+        dispatch(setSingleCollectionInfo({ id: "", name: "" }));
+        dispatch(setShowAllRecipes(true));
+      }
       updateRecipe(activeRecipeId, {
         collection: null,
       });
