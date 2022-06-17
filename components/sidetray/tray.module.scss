@@ -1,13 +1,14 @@
+@import "../../styles/partials/variables";
 .tray {
-  width: 280px;
+  width: 300px;
   background-color: #fff;
   position: absolute;
   height: calc(100vh - 55px);
   box-shadow: 0px 2px 6px #ececec;
-  left: -293px;
+  left: -300px;
   transition: all;
   transition-duration: 0.4s;
-  padding: 20px 0;
+
   z-index: 9999;
 
   &__inner {
@@ -45,24 +46,20 @@
 
 .image {
   position: absolute;
-  right: 15px;
-  top: 100px;
-  transform: translateX(100%);
+  right: -35px;
+  top: 45px;
+
   cursor: pointer;
   transition: all;
   transition-duration: 0.2s;
   z-index: -99 !important;
-
-  &:hover {
-    right: 5px;
-  }
 
   img {
     width: 50px;
   }
 }
 .hovered {
-  right: 5px !important;
+  right: -45px !important;
 }
 .imageContained {
   position: absolute;
@@ -95,4 +92,26 @@
   z-index: 99999;
   transition: all;
   transition-duration: 0.4s;
+}
+
+.filterTaryTag {
+  position: absolute;
+  right: -30px;
+  top: 45px;
+  cursor: pointer;
+  transition: all 0.3s;
+  z-index: -99 !important;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-top-right-radius: 7px;
+  border-bottom-right-radius: 7px;
+  border: 1px solid $primaryColor;
+}
+.filterTaryHovered {
+  right: -45px !important;
+  background-color: $primaryColor;
 }
