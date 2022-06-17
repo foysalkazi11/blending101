@@ -9,27 +9,27 @@ const SkeletonBlendType = () => {
       <div className={styles.category_wraper}>
         <SkeletonElement
           type="thumbnail"
-          style={{ width: "65px", height: "65px", margin: "5px 0" }}
+          style={{ width: "100%", height: "65px", margin: "5px 0" }}
         />
         <SkeletonElement
           type="thumbnail"
-          style={{ width: "65px", height: "65px", margin: "5px 0" }}
+          style={{ width: "100%", height: "65px", margin: "5px 0" }}
         />
         <SkeletonElement
           type="thumbnail"
-          style={{ width: "65px", height: "65px", margin: "5px 0" }}
+          style={{ width: "100%", height: "65px", margin: "5px 0" }}
         />
         <SkeletonElement
           type="thumbnail"
-          style={{ width: "65px", height: "65px", margin: "5px 0" }}
+          style={{ width: "100%", height: "65px", margin: "5px 0" }}
         />
         <SkeletonElement
           type="thumbnail"
-          style={{ width: "65px", height: "65px", margin: "5px 0" }}
+          style={{ width: "100%", height: "65px", margin: "5px 0" }}
         />
         <SkeletonElement
           type="thumbnail"
-          style={{ width: "65px", height: "65px", margin: "5px 0" }}
+          style={{ width: "100%", height: "65px", margin: "5px 0" }}
         />
       </div>
     </div>
