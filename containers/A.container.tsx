@@ -2,7 +2,6 @@ import React from "react";
 import { useAuth } from "../auth/auth.component";
 import HeaderComponent from "../components/header/Header.component";
 import SidebarComponent from "../components/sidebar/Sidebar.component";
-import SidetrayrightComponent from "../components/sidetray/sidetrayRight/SidetrayRight.component";
 import styles from "./container.module.scss";
 import WikiTray from "../components/sidetray/wiki/wikiTray.component";
 import CollectionTray from "../components/sidetray/collection/collectionTray.component";
@@ -11,6 +10,7 @@ import HealthTrayComponent from "../components/sidetray/wiki/health/heath.compon
 import IngredientTrayComponent from "../components/sidetray/wiki/ingredient/ingredient.component";
 import Filtertray from "../components/sidetray/filter/filterTray.component";
 import CommentsTray from "../components/sidetray/commentsTray/CommentsTray";
+import CartPanel from "../component/templates/Panel/CartPanel.component";
 
 type AContainerProps = {
   showHeader?: boolean;
@@ -68,7 +68,7 @@ export default function AContainer(props: AContainerProps) {
         ) : null}
         {showRighTray ? (
           <div className={styles.fixed__main__right}>
-            <SidetrayrightComponent />
+            <CartPanel />
           </div>
         ) : null}
         {nutritionTray && (

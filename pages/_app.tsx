@@ -21,7 +21,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const AuthLayoutProvider = [
     "/login",
     "/forget_password",
-    // '/reset_password',
+    "/reset_password",
     "/signup",
     "/verify_email",
   ].includes(router.pathname)

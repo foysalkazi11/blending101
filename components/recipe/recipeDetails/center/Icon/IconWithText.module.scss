@@ -1,4 +1,4 @@
-@import "../../../../../styles/partials/variables";
+@import "../../../../../styles/variables";
 .iconWithTextContainer {
   display: flex;
   align-items: center;
@@ -6,6 +6,6 @@
   .text {
     font-size: 14px;
     margin-left: 8px;
-    color: $fontSightGray;
+    color: $darkGrey;
   }
 }
