@@ -47,8 +47,7 @@
 .image {
   position: absolute;
   right: -35px;
-  top: 45px;
-
+  top: 40px;
   cursor: pointer;
   transition: all;
   transition-duration: 0.2s;
@@ -97,7 +96,7 @@
 .filterTaryTag {
   position: absolute;
   right: -30px;
-  top: 45px;
+  top: 40px;
   cursor: pointer;
   transition: all 0.3s;
   z-index: -99 !important;
