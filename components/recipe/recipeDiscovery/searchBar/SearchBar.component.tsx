@@ -77,16 +77,14 @@ const SearchBar = () => {
             openFilterTray ? { marginRight: "10px", paddingRight: "20px" } : {}
           }
         >
-          <Tooltip content="Filter" direction="bottom">
-            {openFilterTray ? null : (
-              <FiFilter
-                className={`${styles.filterIcon} ${
-                  openFilterTray ? styles.active : ""
-                }`}
-                onClick={() => dispatch(setOpenFilterTray(!openFilterTray))}
-              />
-            )}
-          </Tooltip>
+          {openFilterTray ? null : (
+            <FiFilter
+              className={`${styles.filterIcon} ${
+                openFilterTray ? styles.active : ""
+              }`}
+              onClick={() => dispatch(setOpenFilterTray(!openFilterTray))}
+            />
+          )}
         </div>
         <div className={styles.inputBox}>
           {isInputFocus ? null : isMicOn ? (

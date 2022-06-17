@@ -2,18 +2,15 @@
 import CheckCircle from "../../../public/icons/check_circle_black_24dp.svg";
 import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setIngredients } from "../../../redux/slices/sideTraySlice";
 import CalciumSearchElem from "../../../theme/calcium/calcium.component";
 import DropdownTwoComponent from "../../../theme/dropDown/dropdownTwo.component";
 import Linearcomponent from "../../../theme/linearProgress/LinearProgress.component";
 import SwitchTwoComponent from "../../../theme/switch/switchTwo.component";
 import styles from "./filter.module.scss";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
-import { GET_ALL_INGREDIENTS_DATA_BASED_ON_NUTRITION } from "../../../gqlLib/recipeDiscovery/query/recipeDiscovery";
 import { setAllIngredients } from "../../../redux/slices/ingredientsSlice";
 import SkeletonIngredients from "../../../theme/skeletons/skeletonIngredients/SkeletonIngredients";
-import CircularRotatingLoader from "../../../theme/loader/circularRotatingLoader.component";
 import useGetAllIngredientsDataBasedOnNutrition from "../../../customHooks/useGetAllIngredientsDataBasedOnNutrition";
 import IngredientPanelSkeleton from "../../../theme/skeletons/ingredientPanelSleketon/IngredientPanelSkeleton";
 
@@ -39,11 +36,7 @@ export default function FilterbottomComponent({
 }: FilterbottomComponentProps) {
   const [toggle, setToggle] = useState(1);
   const [dpd, setDpd] = useState({ title: "All", val: "All" });
-
   const dispatch = useAppDispatch();
-  const { ingredients: ingredientsList, openFilterTray } = useAppSelector(
-    (state) => state.sideTray,
-  );
   const { allIngredients } = useAppSelector((state) => state?.ingredients);
   const [searchIngredientData, setSearchIngredientData] = useState<any[]>([]);
   const [searchInput, setSearchInput] = useState("");
@@ -204,6 +197,7 @@ export default function FilterbottomComponent({
                         </div>
                       )}
                     </div>
+
                     <p>{item?.ingredientName}</p>
                   </div>
                 ))}
