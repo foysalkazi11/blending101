@@ -54,7 +54,7 @@ export default function CollectionTray(props) {
     }
   };
   return (
-    <LeftTrayWrapper id="collection123">
+    <LeftTrayWrapper>
       <div className={styles.main}>
         <div className={styles.main__top}>
           <div className={styles.main__top__menu}>

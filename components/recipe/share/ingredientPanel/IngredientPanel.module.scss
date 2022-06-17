@@ -7,6 +7,7 @@
   }
 }
 .ingrdeintpanelContainer {
+  padding: 10px;
   @include media(xl) {
     -webkit-box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;
     box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;

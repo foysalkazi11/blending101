@@ -117,11 +117,10 @@ const RecipeDetails = () => {
       <AContainer showLeftTray={true} filterTray={true} commentsTray={true}>
         <div className={styles.main__div}>
           <div
-            style={
-              openFilterTray
-                ? { marginLeft: "280px", transition: "all 0.5s" }
-                : { transition: "all 0.5s" }
-            }
+            style={{
+              marginLeft: openFilterTray ? "310px" : "16px",
+              transition: "all 0.5s",
+            }}
           >
             <SearchBar />
             {blends.length || ingredients.length || filters?.length ? (

@@ -6,11 +6,7 @@ import { MdOutlineInfo } from "react-icons/md";
 import { BiBarChart } from "react-icons/bi";
 import { BsCartPlus } from "react-icons/bs";
 import { useAppDispatch } from "../../../../redux/hooks";
-import {
-  setOpenCollectionsTary,
-  setOpenCommentsTray,
-  setToggleModal,
-} from "../../../../redux/slices/sideTraySlice";
+import { setToggleModal } from "../../../../redux/slices/sideTraySlice";
 import Modal from "../../../../theme/modal/customModal/CustomModal";
 import ShareRecipeModal from "../../../../theme/shareRecipeModal/ShareRecipeModal";
 import SaveRecipe from "../../../../theme/saveRecipeModal/SaveRecipeModal";
@@ -18,12 +14,12 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
 import useGetDefaultPortionOfnutration from "../../../../customHooks/useGetDefaultPortionOfNutration";
-import { setActiveRecipeId } from "../../../../redux/slices/collectionSlice";
-import { setCurrentRecipeInfo } from "../../../../redux/slices/recipeSlice";
 import PanelHeaderCenter from "../../share/panelHeader/PanelHeaderCenter";
 import IconWithText from "./Icon/IconWithText";
 import useForAddToCollection from "../../../../customHooks/useForAddToCollection";
 import useForOpenCollectionTray from "../../../../customHooks/useForOpenCollection";
+import useForOpenCommentsTray from "../../../../customHooks/useForOpenCommentsTray";
+import useForSelectCommentsAndNotesIcon from "../../../../customHooks/useForSelectCommentsAndNotesIcon";
 
 const scaleMenu = [
   { label: ".5x", value: 0.5 },
@@ -58,6 +54,8 @@ const Center = ({
   useGetDefaultPortionOfnutration(ingredientId);
   const handleAddToCollection = useForAddToCollection();
   const handleOpenCollectionTray = useForOpenCollectionTray();
+  const handleOpenCommentsTray = useForOpenCommentsTray();
+  const handleSelectCommentsAndNotesIcon = useForSelectCommentsAndNotesIcon();
 
   const ReadMore = ({ children }) => {
     const text = children;
@@ -83,20 +81,6 @@ const Center = ({
     }
   };
 
-  const handleComment = (
-    id: string,
-    title: string,
-    image: string,
-    e: React.SyntheticEvent,
-  ) => {
-    // HANDLE COMMENTS CLICK HERE
-    e?.stopPropagation();
-    dispatch(setActiveRecipeId(id));
-    dispatch(setOpenCommentsTray(true));
-    dispatch(setCurrentRecipeInfo({ name: title, image }));
-    dispatch(setOpenCollectionsTary(false));
-  };
-
   const addToCollection = (id: string, e: React.SyntheticEvent) => {
     setShowCollectionModal(true);
     handleAddToCollection(id, setOpenModal, e);
@@ -108,28 +92,18 @@ const Center = ({
     const title = recipeData?.name;
     const recipeId = recipeData?._id;
     const defaultImage = recipeData?.image?.find((img) => img?.default)?.image;
-
-    const showCommentsAndNotes = (icon: string, num: number | string) => {
-      return (
-        <IconWithText
-          wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
-          handleClick={(e) => handleComment(recipeId, title, defaultImage, e)}
-          icon={`/icons/${icon}.svg`}
-          text={num}
-          textStyle={{ color: num ? "#7cbc39" : "#c4c4c4" }}
-        />
-      );
-    };
-
-    if (!comments && !notes) {
-      return showCommentsAndNotes("noComments&NoNotes", 0);
-    } else if (comments && !notes) {
-      return showCommentsAndNotes("commentsOnly", comments);
-    } else if (!comments && notes) {
-      return showCommentsAndNotes("notesOnly", "");
-    } else {
-      return showCommentsAndNotes("comments&notes", comments);
-    }
+    const commentsAndNotes = handleSelectCommentsAndNotesIcon(comments, notes);
+    return (
+      <IconWithText
+        wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
+        handleClick={(e) =>
+          handleOpenCommentsTray(recipeId, title, defaultImage, e)
+        }
+        icon={`/icons/${commentsAndNotes?.icon}.svg`}
+        text={commentsAndNotes?.amount}
+        textStyle={{ color: commentsAndNotes?.amount ? "#7cbc39" : "#c4c4c4" }}
+      />
+    );
   };
 
   return (
