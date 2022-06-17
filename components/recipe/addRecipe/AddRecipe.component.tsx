@@ -1,27 +1,26 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
 import AContainer from "../../../containers/A.container";
-import styles from "./AddRecipe.module.scss";
-import Center_header from "./header/centerHeader/Center_header.component";
-import RightTray from "./rightTray/rightTray.component";
-import Left_tray_recipe_edit from "./leftTray/left_tray_recipe_edit.component";
+import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
 import Center_Elements from "./recipe_elements/centerElements.component";
 import IngredientList from "./recipe_elements/ingredientList/ingredientList&Howto.component";
-import Image from "next/image";
 import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setLoading } from "../../../redux/slices/utilitySlice";
 import imageUploadS3 from "../../utility/imageUploadS3";
 import { BLEND_CATEGORY } from "../../../gqlLib/recipes/queries/getEditRecipe";
 import { useMutation, useQuery } from "@apollo/client";
-import RightTrayComponents from "../../rightTray/rightTray.component";
 import CREATE_A_RECIPE_BY_USER from "../../../gqlLib/recipes/mutations/createARecipeByUser";
 import notification from "../../utility/reactToastifyNotification";
 import { useRouter } from "next/router";
 import useGetBlendNutritionBasedOnRecipexxx from "../../../customHooks/useGetBlendNutritionBasedOnRecipexxx";
+import IngredientPanel from "../share/ingredientPanel/IngredientPanel";
+import useWindowSize from "../../utility/useWindowSize";
+import IngredientFixedPanle from "../share/ingredientFixedPanel/IngredientFixedPanle";
+import NutritionPanel from "../share/nutritionPanel/NutritionPanel";
+import PanelHeaderCenter from "../share/panelHeader/PanelHeaderCenter";
 
 const AddRecipePage = () => {
-  const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
   const [images, setImages] = useState<any[]>([]);
   const [selectedBlendValueState, setSelectedBlendValueState] = useState(
     "61cafc34e1f3e015e7936587",
@@ -39,6 +38,7 @@ const AddRecipePage = () => {
   const isMounted = useRef(false);
   const { dbUser } = useAppSelector((state) => state?.user);
   const router = useRouter();
+  const { width } = useWindowSize();
 
   const { loading: nutritionDataLoading, data: nutritionData } =
     useGetBlendNutritionBasedOnRecipexxx(
@@ -175,48 +175,25 @@ const AddRecipePage = () => {
 
   return (
     <AContainer>
+      {width < 1280 ? (
+        <IngredientFixedPanle
+          handleIngredientClick={handleIngredientClick}
+          checkActive={checkActive}
+        />
+      ) : null}
       <div className={styles.main}>
-        <div
-          className={styles.left}
-          style={leftTrayVisibleState ? { marginLeft: "0px" } : {}}
-        >
-          <div
-            className={styles.left__Drag__lightGreen}
-            style={
-              leftTrayVisibleState
-                ? {
-                    backgroundImage: `url("/icons/ingr-green.svg")`,
-                    backgroundSize: "contain",
-                  }
-                : {
-                    backgroundImage: `url("/icons/ingr-white.svg")`,
-                    backgroundSize: "contain",
-                  }
-            }
-            onClick={() => setLeftTrayVisibleState(!leftTrayVisibleState)}
+        <div className={styles.left}>
+          <IngredientPanel
+            handleIngredientClick={handleIngredientClick}
+            checkActive={checkActive}
           />
-          <div className={styles.left__title}>
-            <div className={styles.left__title__bagicon}>
-              <Image
-                src={"/icons/basket.svg"}
-                alt="Picture will load soon"
-                height={"100%"}
-                width={"100%"}
-                layout="responsive"
-                objectFit="contain"
-              />
-            </div>
-            Ingredient List
-          </div>
-          <div className={styles.left__ingredientlistTray}>
-            <Left_tray_recipe_edit
-              handleIngredientClick={handleIngredientClick}
-              checkActive={checkActive}
-            />
-          </div>
         </div>
         <div className={styles.center}>
-          <Center_header handleSaveRecipe={handleSubmitData} />
+          <PanelHeaderCenter
+            backLink="/"
+            editOrSavebtnFunc={handleSubmitData}
+            editOrSavebtnText="Save"
+          />
           <Center_Elements
             blendCategoryList={
               blendCategoriesData?.getAllCategories
@@ -247,8 +224,8 @@ const AddRecipePage = () => {
             setHowToSteps={setHowToSteps}
           />
         </div>
-        <div className={styles.right__main}>
-          <RightTrayComponents
+        <div className={styles.right}>
+          <NutritionPanel
             counter={counter}
             nutritionTrayData={
               nutritionData &&
@@ -259,6 +236,7 @@ const AddRecipePage = () => {
             isComeFormRecipeEditPage={true}
             calculatedIngOz={calculateIngOz}
             nutritionDataLoading={nutritionDataLoading}
+            adjusterFunc={adjusterFunc}
           />
         </div>
       </div>

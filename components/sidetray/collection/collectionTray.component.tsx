@@ -5,10 +5,11 @@ import CollectionComponent from "./content/collection.component";
 import ThemeComponent from "./content/theme.component";
 import styles from "./trayleft.module.scss";
 import { MdOutlineAddCircleOutline } from "react-icons/md";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { useAppSelector } from "../../../redux/hooks";
 import CustomModal from "../../../theme/modal/customModal/CustomModal";
 import AddCollectionModal from "./addCollectionModal/AddCollectionModal";
-import { setToggleModal } from "../../../redux/slices/sideTraySlice";
+import GET_COLLECTIONS_AND_THEMES from "../../../gqlLib/collection/query/getCollectionsAndThemes";
+import { useLazyQuery } from "@apollo/client";
 
 export default function CollectionTray(props) {
   const [toggle, setToggle] = useState(1);
@@ -20,13 +21,27 @@ export default function CollectionTray(props) {
   const [collectionId, setCollectionId] = useState("");
   const { dbUser } = useAppSelector((state) => state?.user);
   const { changeRecipeWithinCollection } = useAppSelector(
-    (state) => state?.collections
+    (state) => state?.collections,
   );
-  const { openSaveRecipeModal } = useAppSelector((state) => state?.sideTray);
-
-  const dispatch = useAppDispatch();
-
+  const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
+  const [openModal, setOpenModal] = useState(false);
   const reff = useRef<any>();
+
+  const [
+    getCollectionsAndThemes,
+    {
+      data: collectionsData,
+      loading: collectionsLoading,
+      error: collectionsError,
+    },
+  ] = useLazyQuery(GET_COLLECTIONS_AND_THEMES);
+
+  useEffect(() => {
+    if (openCollectionsTary) {
+      getCollectionsAndThemes({ variables: { userId: dbUser?._id } });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openCollectionsTary]);
 
   const handleToggle = (no: number) => {
     if (!changeRecipeWithinCollection) {
@@ -39,7 +54,7 @@ export default function CollectionTray(props) {
     }
   };
   return (
-    <LeftTrayWrapper id="collection123">
+    <LeftTrayWrapper>
       <div className={styles.main}>
         <div className={styles.main__top}>
           <div className={styles.main__top__menu}>
@@ -81,7 +96,7 @@ export default function CollectionTray(props) {
             onClick={() => {
               setIsEditCollection(false);
               setInput((pre) => ({ ...pre, name: "" }));
-              dispatch(setToggleModal(true));
+              setOpenModal(true);
             }}
           />
         </div>
@@ -94,23 +109,29 @@ export default function CollectionTray(props) {
         {toggle === 1 && (
           <div>
             <CollectionComponent
-              collections={dbUser?.collections}
+              collections={
+                collectionsData?.getUserCollectionsAndThemes?.collections || []
+              }
+              collectionsLoading={collectionsLoading}
               setInput={setInput}
               setIsEditCollection={setIsEditCollection}
               setCollectionId={setCollectionId}
+              getCollectionsAndThemes={getCollectionsAndThemes}
+              setOpenModal={setOpenModal}
             />
           </div>
         )}
-        {openSaveRecipeModal ? null : (
-          <CustomModal>
-            <AddCollectionModal
-              input={input}
-              setInput={setInput}
-              isEditCollection={isEditCollection}
-              collectionId={collectionId}
-            />
-          </CustomModal>
-        )}
+
+        <CustomModal open={openModal} setOpen={setOpenModal}>
+          <AddCollectionModal
+            input={input}
+            setInput={setInput}
+            isEditCollection={isEditCollection}
+            collectionId={collectionId}
+            getCollectionsAndThemes={getCollectionsAndThemes}
+            setOpenModal={setOpenModal}
+          />
+        </CustomModal>
       </div>
     </LeftTrayWrapper>
   );

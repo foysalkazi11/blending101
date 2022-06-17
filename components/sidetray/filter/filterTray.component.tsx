@@ -1,37 +1,37 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useRef, useState } from 'react';
-import FilterTrayWrapper from '../filter.wrapper';
-import styles from './filter.module.scss';
-import { FaEye } from 'react-icons/fa';
-import { BsTagsFill } from 'react-icons/bs';
-import TagSection from './tag/TagSection';
-import VisualSection from './visaul/VisualSection';
-import { categories } from '../../utility/staticData';
+import React, { useRef, useState } from "react";
+import FilterTrayWrapper from "../filter.wrapper";
+import styles from "./filter.module.scss";
+import { FaEye } from "react-icons/fa";
+import { BsTagsFill } from "react-icons/bs";
+import TagSection from "./tag/TagSection";
+import VisualSection from "./visaul/VisualSection";
+import { categories } from "../../utility/staticData";
 
 export default function Filtertray({ filter }) {
   const [toggle, setToggle] = useState(1);
-  const reff = useRef<any>();
+  const ref = useRef<any>();
 
   const handleToggle = (no: number) => {
     if (no === 1) {
-      reff.current.style.left = '0';
+      ref.current.style.left = "0";
     } else {
-      reff.current.style.left = '50%';
+      ref.current.style.left = "50%";
     }
     setToggle(no);
   };
 
   return (
-    <FilterTrayWrapper filter={filter} id={'filter123'}>
+    <FilterTrayWrapper filter={filter} id={"filter123"}>
       <div className={styles.main}>
         <div className={styles.main__top}>
           <div className={styles.main__top__menu}>
-            <div className={styles.active} ref={reff}></div>
+            <div className={styles.active} ref={ref}></div>
             <div
               className={
                 toggle === 2
                   ? styles.main__top__menu__child
-                  : styles.main__top__menu__child + ' ' + styles.active__menu
+                  : styles.main__top__menu__child + " " + styles.active__menu
               }
               onClick={() => handleToggle(1)}
             >
@@ -41,7 +41,7 @@ export default function Filtertray({ filter }) {
               className={
                 toggle === 1
                   ? styles.main__top__menu__child
-                  : styles.main__top__menu__child + ' ' + styles.active__menu
+                  : styles.main__top__menu__child + " " + styles.active__menu
               }
               onClick={() => handleToggle(2)}
             >

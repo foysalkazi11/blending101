@@ -1,30 +1,25 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState } from "react";
-import { FiEdit2 } from "react-icons/fi";
-import { MdOutlineClose } from "react-icons/md";
 import SlickSlider from "../../../../theme/carousel/carousel.component";
 import styles from "./Center.module.scss";
-import ChevronRightIcon from "../../../../public/icons/chevron_right_black_36dp.svg";
-import ChevronLeftIcon from "../../../../public/icons/chevron_left_black_36dp.svg";
-import { MdOutlineInfo, MdAdd, MdRemove } from "react-icons/md";
+import { MdOutlineInfo } from "react-icons/md";
 import { BiBarChart } from "react-icons/bi";
 import { BsCartPlus } from "react-icons/bs";
 import { useAppDispatch } from "../../../../redux/hooks";
-import {
-  setOpenCollectionsTary,
-  setOpenCommentsTray,
-  setToggleModal,
-} from "../../../../redux/slices/sideTraySlice";
+import { setToggleModal } from "../../../../redux/slices/sideTraySlice";
 import Modal from "../../../../theme/modal/customModal/CustomModal";
-import ShareRecipeModal from "../shareRecipeModal/ShareRecipeModal";
-import SaveRecipe from "../saveRecipe/SaveRecipe";
+import ShareRecipeModal from "../../../../theme/shareRecipeModal/ShareRecipeModal";
+import SaveRecipe from "../../../../theme/saveRecipeModal/SaveRecipeModal";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
 import useGetDefaultPortionOfnutration from "../../../../customHooks/useGetDefaultPortionOfNutration";
-import { setActiveRecipeId } from "../../../../redux/slices/collectionSlice";
-import { setCurrentRecipeInfo } from "../../../../redux/slices/recipeSlice";
-import ToggleMenu from "../../../../theme/toggleMenu/ToggleMenu";
+import PanelHeaderCenter from "../../share/panelHeader/PanelHeaderCenter";
+import IconWithText from "./Icon/IconWithText";
+import useForAddToCollection from "../../../../customHooks/useForAddToCollection";
+import useForOpenCollectionTray from "../../../../customHooks/useForOpenCollection";
+import useForOpenCommentsTray from "../../../../customHooks/useForOpenCommentsTray";
+import useForSelectCommentsAndNotesIcon from "../../../../customHooks/useForSelectCommentsAndNotesIcon";
 
 const scaleMenu = [
   { label: ".5x", value: 0.5 },
@@ -53,27 +48,14 @@ const Center = ({
 }: center) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const [showRecipeModal, setShowRecipeModal] = useState(true);
+  const [showCollectionModal, setShowCollectionModal] = useState(true);
   const [ingredientId, setIngredientId] = useState("");
-  const recipeDetails = recipeData;
+  const [openModal, setOpenModal] = useState(false);
   useGetDefaultPortionOfnutration(ingredientId);
-
-  const PreviousButton = (prop) => {
-    const { className, onClick } = prop;
-    return (
-      <div className={className + " " + styles.prevBtn} onClick={onClick}>
-        <ChevronLeftIcon />
-      </div>
-    );
-  };
-  const NextButton = (prop) => {
-    const { className, onClick } = prop;
-    return (
-      <div className={className + " " + styles.nextBtn} onClick={onClick}>
-        <ChevronRightIcon />
-      </div>
-    );
-  };
+  const handleAddToCollection = useForAddToCollection();
+  const handleOpenCollectionTray = useForOpenCollectionTray();
+  const handleOpenCommentsTray = useForOpenCommentsTray();
+  const handleSelectCommentsAndNotesIcon = useForSelectCommentsAndNotesIcon();
 
   const ReadMore = ({ children }) => {
     const text = children;
@@ -99,23 +81,9 @@ const Center = ({
     }
   };
 
-  const responsiveSetting = {
-    nextArrow: <NextButton />,
-    prevArrow: <PreviousButton />,
-  };
-
-  const handleComment = (
-    id: string,
-    title: string,
-    image: string,
-    e: React.SyntheticEvent,
-  ) => {
-    // HANDLE COMMENTS CLICK HERE
-    e?.stopPropagation();
-    dispatch(setActiveRecipeId(id));
-    dispatch(setOpenCommentsTray(true));
-    dispatch(setCurrentRecipeInfo({ name: title, image }));
-    dispatch(setOpenCollectionsTary(false));
+  const addToCollection = (id: string, e: React.SyntheticEvent) => {
+    setShowCollectionModal(true);
+    handleAddToCollection(id, setOpenModal, e);
   };
 
   const hangleShowCommentsAndNotesIcon = () => {
@@ -124,78 +92,40 @@ const Center = ({
     const title = recipeData?.name;
     const recipeId = recipeData?._id;
     const defaultImage = recipeData?.image?.find((img) => img?.default)?.image;
-
-    if (!comments && !notes) {
-      return (
-        <>
-          <img
-            src="/icons/no-comment.svg"
-            alt="message"
-            onClick={(e) => handleComment(recipeId, title, defaultImage, e)}
-          />{" "}
-          <p style={{ color: "#c4c4c4" }}>0</p>
-        </>
-      );
-    }
-    if (!comments) {
-      return (
-        <>
-          <img
-            src="/icons/message.svg"
-            alt="message"
-            onClick={(e) => handleComment(recipeId, title, defaultImage, e)}
-            className={`${styles.inActiveImg}`}
-          />{" "}
-          <p>{""}</p>
-        </>
-      );
-    }
-
+    const commentsAndNotes = handleSelectCommentsAndNotesIcon(comments, notes);
     return (
-      <>
-        <img
-          src="/icons/message.svg"
-          alt="message"
-          onClick={(e) => handleComment(recipeId, title, defaultImage, e)}
-        />{" "}
-        {comments ? <p style={{ color: "#7cbc39" }}>{comments}</p> : null}
-      </>
+      <IconWithText
+        wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
+        handleClick={(e) =>
+          handleOpenCommentsTray(recipeId, title, defaultImage, e)
+        }
+        icon={`/icons/${commentsAndNotes?.icon}.svg`}
+        text={commentsAndNotes?.amount}
+        textStyle={{ color: commentsAndNotes?.amount ? "#7cbc39" : "#c4c4c4" }}
+      />
     );
   };
 
   return (
-    <div>
-      <div className={styles.header}>
-        <div className={styles.alignItems}>
-          <img src="/images/recipe-icon.svg" alt="recipe icon" />
-          <h3>Recipe</h3>
-        </div>
-        <div className={styles.alignItems}>
-          <div
-            className={styles.editBox}
-            onClick={() => router.push(`/edit_recipe/${recipeDetails?._id}`)}
-          >
-            <p className={styles.editIcon}>Edit</p>
-            {/* <FiEdit2 className={styles.editIcon} /> */}
-          </div>
-          <div className={styles.closeBox} onClick={() => router.push(`/`)}>
-            <MdOutlineClose className={styles.closeIcon} />
-          </div>
-        </div>
-      </div>
+    <div style={{ width: "100%" }}>
+      <PanelHeaderCenter
+        backLink="/"
+        editOrSavebtnFunc={() => router.push(`/edit_recipe/${recipeData?._id}`)}
+        editOrSavebtnText="Edit"
+      />
 
       <div className={styles.contentBox}>
         <div className={styles.heading}>
-          <h3>{recipeDetails?.name}</h3>
+          <h3>{recipeData?.name}</h3>
           <span className={styles.ratingBox}>
             <img src="/images/rating.svg" alt="" />
-            {recipeDetails?.averageRating} ({recipeDetails?.numberOfRating})
+            {recipeData?.averageRating} ({recipeData?.numberOfRating})
           </span>
         </div>
         <div className={styles.subMenu}>
           <div className={styles.alignItems}>
             <div className={styles.recipeType}>
-              {recipeDetails?.recipeBlendCategory?.name}
+              {recipeData?.recipeBlendCategory?.name}
             </div>
             <img
               src="/images/yummly-logo.png"
@@ -204,42 +134,50 @@ const Center = ({
             />
           </div>
           <div className={styles.alignItems}>
-            <div className={styles.iconWithText}>
-              <img src="/images/calendar-alt-light.svg" alt="calender" />
-              <p>Planner</p>
-            </div>
+            <IconWithText
+              wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
+              handleClick={() => {}}
+              icon="/images/calendar-alt-light.svg"
+              text="Planner"
+            />
 
-            <div
-              className={styles.iconWithText}
-              onClick={() => {
-                setShowRecipeModal(false);
+            <IconWithText
+              wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
+              handleClick={(e) =>
+                recipeData?.userCollections?.length
+                  ? handleOpenCollectionTray(
+                      recipeData?._id,
+                      recipeData?.userCollections,
+                      e,
+                    )
+                  : addToCollection(recipeData?._id, e)
+              }
+              icon={
+                recipeData?.userCollections?.length
+                  ? "/icons/compare.svg"
+                  : "/images/BookmarksStar.svg" //"/images/BookmarksStar-orange.svg"
+              }
+              text="Saved"
+            />
+
+            <IconWithText
+              wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
+              handleClick={() => {
+                setShowCollectionModal(true);
                 dispatch(setToggleModal(true));
               }}
-            >
-              <img src="/images/BookmarksStar-orange.svg" alt="saved" />
-              <p>Saved</p>
-            </div>
-            <div
-              className={styles.iconWithText}
-              onClick={() => {
-                setShowRecipeModal(true);
-                dispatch(setToggleModal(true));
-              }}
-            >
-              <img src="/images/share-alt-light-grey.svg" alt="share" />
-              <p>Share</p>
-            </div>
+              icon="/images/share-alt-light-grey.svg"
+              text="Share"
+            />
 
-            <div className={styles.iconWithText}>
-              {hangleShowCommentsAndNotesIcon()}
-            </div>
+            {hangleShowCommentsAndNotesIcon()}
           </div>
         </div>
 
         <div className={styles.sliderBox}>
-          {recipeDetails?.image ? (
-            <SlickSlider moreSetting={responsiveSetting}>
-              {recipeDetails?.image.map((img, index) => {
+          {recipeData?.image ? (
+            <SlickSlider>
+              {recipeData?.image.map((img, index) => {
                 return (
                   <div key={index} className={styles.imageBox}>
                     {img?.image && (
@@ -267,7 +205,7 @@ const Center = ({
           )}
         </div>
         <div>
-          <ReadMore>{recipeDetails?.description}</ReadMore>
+          <ReadMore>{recipeData?.description}</ReadMore>
         </div>
         <div className={styles.infoContainer}>
           <div className={styles.infoBox}>
@@ -322,8 +260,8 @@ const Center = ({
           </div>
         </div>
         <div className={styles.ingredentDisContainer}>
-          {recipeDetails?.ingredients ? (
-            recipeDetails?.ingredients?.map((ingredient, index) => {
+          {recipeData?.ingredients ? (
+            recipeData?.ingredients?.map((ingredient, index) => {
               return (
                 <div
                   className={styles.singleIngredent}
@@ -430,8 +368,8 @@ const Center = ({
           <img src="/images/chef.svg" alt="basket" />
           <h3>How to</h3>
         </div>
-        {recipeDetails?.recipeInstructions ? (
-          recipeDetails?.recipeInstructions?.map((step, index) => {
+        {recipeData?.recipeInstructions ? (
+          recipeData?.recipeInstructions?.map((step, index) => {
             return (
               <div
                 className={styles.steps}
@@ -448,7 +386,9 @@ const Center = ({
           </div>
         )}
       </div>
-      <Modal>{showRecipeModal ? <ShareRecipeModal /> : <SaveRecipe />}</Modal>
+      <Modal open={openModal} setOpen={setOpenModal}>
+        {showCollectionModal ? <SaveRecipe /> : <ShareRecipeModal />}
+      </Modal>
     </div>
   );
 };

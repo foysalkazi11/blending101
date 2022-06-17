@@ -16,7 +16,7 @@ const SaveRecipe = ({
         <h3>
           Added to <span> {title}</span> collection
         </h3>
-        <a onClick={() => handleChange()}>Change</a>
+        <a onClick={handleChange}>Change</a>
       </div>
     </div>
   );

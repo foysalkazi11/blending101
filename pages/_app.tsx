@@ -3,6 +3,7 @@ import { store } from "../redux/store";
 import { Provider } from "react-redux";
 import AuthProvider from "../auth/auth.component";
 import { AppProps } from "next/app";
+import "../styles/variables.module.scss";
 import Amplify from "aws-amplify";
 import awsconfig from "../configs/aws";
 import Loader from "../theme/loader/Loader";
@@ -12,6 +13,7 @@ import { ApolloProvider } from "@apollo/client";
 import client from "../gqlLib/client";
 import { useRouter } from "next/router";
 import { Fragment } from "react";
+import FooterRecipeFilter from "../components/footer/footerRecipeFilter.component";
 Amplify.configure(awsconfig);
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -30,12 +32,12 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <ApolloProvider client={client}>
         <Provider store={store}>
-          <AuthLayoutProvider>
+          <AuthProvider>
             <Loader />
             <ToastContainer />
             {/* @ts-ignore */}
             <Component {...pageProps} />
-          </AuthLayoutProvider>
+          </AuthProvider>
         </Provider>
       </ApolloProvider>
     </>

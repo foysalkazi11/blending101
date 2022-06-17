@@ -1,22 +1,21 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useState } from "react";
-import S3_CONFIG from "../../../../configs/s3";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import { setDbUser } from "../../../../redux/slices/userSlice";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import CancleBtn from "../../commentsTray/buttons/CancleBtn";
 import SubmitBtn from "../../commentsTray/buttons/SubmitBtn";
 import styles from "./AddCollection.module.scss";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
 import CREATE_NEW_COLLECTION from "../../../../gqlLib/collection/mutation/createNewCollection";
 import { useMutation } from "@apollo/client";
-import { setToggleModal } from "../../../../redux/slices/sideTraySlice";
 import EDIT_COLLECTION from "../../../../gqlLib/collection/mutation/editCollection";
+import { useAppSelector } from "../../../../redux/hooks";
 
 type AddCollectionModalProps = {
   input: any;
   setInput: any;
   isEditCollection: boolean;
   collectionId: string;
+  getCollectionsAndThemes?: (arg: any) => void;
+  setOpenModal?: Dispatch<SetStateAction<boolean>>;
 };
 
 const AddCollectionModal = ({
@@ -24,10 +23,11 @@ const AddCollectionModal = ({
   setInput,
   isEditCollection,
   collectionId,
+  getCollectionsAndThemes = () => {},
+  setOpenModal = () => {},
 }: AddCollectionModalProps) => {
   const [createNewCollection] = useMutation(CREATE_NEW_COLLECTION);
   const [editCollection] = useMutation(EDIT_COLLECTION);
-  const dispatch = useAppDispatch();
   const { dbUser } = useAppSelector((state) => state?.user);
   const [loading, setLoadings] = useState(false);
 
@@ -43,7 +43,7 @@ const AddCollectionModal = ({
   const saveToDb = async () => {
     if (input?.name) {
       if (isEditCollection) {
-        const res = await editCollection({
+        await editCollection({
           variables: {
             data: {
               userEmail: dbUser?.email,
@@ -52,19 +52,11 @@ const AddCollectionModal = ({
             },
           },
         });
-
-        dispatch(
-          setDbUser({
-            ...dbUser,
-            collections: [
-              ...dbUser?.collections?.map((col) =>
-                col?._id === collectionId ? { ...col, name: input?.name } : col
-              ),
-            ],
-          })
-        );
+        getCollectionsAndThemes({ variables: { userId: dbUser?._id } });
+        setOpenModal(false);
+        setInput({ image: null, name: "" });
       } else {
-        const res = await createNewCollection({
+        await createNewCollection({
           variables: {
             data: {
               userEmail: dbUser?.email,
@@ -72,19 +64,10 @@ const AddCollectionModal = ({
             },
           },
         });
-        dispatch(
-          setDbUser({
-            ...dbUser,
-            collections: [
-              ...dbUser?.collections,
-              res?.data?.createNewCollection,
-            ],
-          })
-        );
       }
 
-      setLoadings(false);
-      dispatch(setToggleModal(false));
+      getCollectionsAndThemes({ variables: { userId: dbUser?._id } });
+      setOpenModal(false);
       setInput({ image: null, name: "" });
       if (isEditCollection) {
         reactToastifyNotification("info", "Collection edit successfully");
@@ -92,63 +75,27 @@ const AddCollectionModal = ({
         reactToastifyNotification("info", "Collection add successfully");
       }
     } else {
-      setLoadings(false);
       reactToastifyNotification("info", "Please write collection name");
     }
   };
 
   const uploadImage = async () => {
-    fetch(S3_CONFIG.objectURL)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error("Response Failed");
-        }
-      })
-      .then((data) => {
-        const { Key, uploadURL } = data;
-        fetch(uploadURL, {
-          method: "PUT",
-          body: input?.image,
-        }).then(async (response) => {
-          if (response.ok) {
-            const imageURL = `${S3_CONFIG.baseURL}/${Key}`;
-
-            const res = await createNewCollection({
-              variables: {
-                data: {
-                  UserEmail: dbUser?.email,
-                  collection: {
-                    image: imageURL,
-                    name: input?.name,
-                    recipes: [],
-                  },
-                },
-              },
-            });
-
-            dispatch(
-              setDbUser({
-                ...dbUser,
-                collections: [
-                  ...dbUser?.collections,
-                  res?.data?.createNewCollection,
-                ],
-              })
-            );
-            setLoadings(false);
-            dispatch(setToggleModal(false));
-            setInput({ image: null, name: "" });
-
-            reactToastifyNotification("info", "Collection add successfully");
-          }
-        });
-      })
-      .catch((error) => {
-        setLoadings(false);
-        reactToastifyNotification("error", error?.message);
-      });
+    await createNewCollection({
+      variables: {
+        data: {
+          UserEmail: dbUser?.email,
+          collection: {
+            image: "",
+            name: input?.name,
+            recipes: [],
+          },
+        },
+      },
+    });
+    setLoadings(false);
+    setOpenModal(false);
+    setInput({ image: null, name: "" });
+    reactToastifyNotification("info", "Collection add successfully");
   };
 
   const submitData = async () => {
@@ -197,10 +144,10 @@ const AddCollectionModal = ({
         <div className={styles.buttonGroup}>
           <SubmitBtn
             style={{ backgroundColor: "#fe5d1f", marginRight: "30px" }}
-            handleClick={submitData}
+            handleClick={saveToDb}
             text={loading ? "Loading..." : "Submit"}
           />
-          <CancleBtn handleClick={() => dispatch(setToggleModal(false))} />
+          <CancleBtn handleClick={() => setOpenModal(false)} />
         </div>
       </div>
     </div>

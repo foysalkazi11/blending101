@@ -38,7 +38,6 @@ import {
   addStaples,
   deleteCartIngredients,
 } from "../../../redux/slices/Cart.slice";
-import { item } from "../../../components/searchtags/searchtag.module.scss";
 
 function CartPanel(props) {
   const [open, setOpen] = useState(false);

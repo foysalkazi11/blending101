@@ -1,16 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import AContainer from "../../../containers/A.container";
-import styles from "./EditRecipe.module.scss";
-import Center_header from "./header/centerHeader/Center_header.component";
-import RightTray from "../../rightTray/rightTray.component";
-import Left_tray_recipe_edit from "./leftTray/left_tray_recipe_edit.component";
+import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
 import Center_Elements from "./recipe_elements/centerElements.component";
 import IngredientList from "./recipe_elements/ingredientList/ingredientList&Howto.component";
-import Image from "next/image";
 import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setServingCounter } from "../../../redux/edit_recipe/editRecipeStates";
+import {
+  setSelectedIngredientsList,
+  setServingCounter,
+} from "../../../redux/edit_recipe/editRecipeStates";
+import IngredientPanel from "../share/ingredientPanel/IngredientPanel";
+import IngredientFixedPanle from "../share/ingredientFixedPanel/IngredientFixedPanle";
+import useWindowSize from "../../utility/useWindowSize";
+import NutritionPanel from "../share/nutritionPanel/NutritionPanel";
+import PanelHeaderCenter from "../share/panelHeader/PanelHeaderCenter";
 
 interface editRecipe {
   recipeName: string;
@@ -28,6 +32,7 @@ interface editRecipe {
   images?: any[];
   nutritionState?: object;
   setNutritionState?: Dispatch<SetStateAction<object>>;
+  recipeId?: string | string[];
 }
 
 const EditRecipePage = ({
@@ -46,12 +51,39 @@ const EditRecipePage = ({
   setExistingImage = () => {},
   nutritionState = {},
   setNutritionState = () => {},
+  recipeId = "",
 }: editRecipe) => {
-  const [leftTrayVisibleState, setLeftTrayVisibleState] = useState(true);
   const dispatch = useAppDispatch();
+  const { width } = useWindowSize();
   const servingCounter = useAppSelector(
     (state) => state.editRecipeReducer.servingCounter,
   );
+  const selectedIngredientsList = useAppSelector(
+    (state) => state.editRecipeReducer.selectedIngredientsList,
+  );
+
+  const handleIngredientClick = (ingredient: any, present: boolean) => {
+    let blendz = [];
+    if (!present) {
+      blendz = [...selectedIngredientsList, ingredient];
+    } else {
+      blendz = selectedIngredientsList?.filter((blen) => {
+        return blen?._id !== ingredient?._id;
+      });
+    }
+
+    dispatch(setSelectedIngredientsList(blendz));
+  };
+
+  const checkActive = (id: string) => {
+    let present = false;
+    selectedIngredientsList?.forEach((blen) => {
+      if (blen?._id === id) {
+        present = true;
+      }
+    });
+    return present;
+  };
 
   const adjusterFunc = (value) => {
     if (value < 1) {
@@ -63,49 +95,26 @@ const EditRecipePage = ({
 
   return (
     <AContainer>
+      {width < 1280 ? (
+        <IngredientFixedPanle
+          handleIngredientClick={handleIngredientClick}
+          checkActive={checkActive}
+        />
+      ) : null}
+
       <div className={styles.main}>
-        <div
-          className={styles.left}
-          style={leftTrayVisibleState ? { marginLeft: "0px" } : {}}
-        >
-          <div
-            className={styles.left__Drag__lightGreen}
-            style={
-              leftTrayVisibleState
-                ? {
-                    backgroundImage: `url("/icons/ingr-green.svg")`,
-                    backgroundSize: "contain",
-                  }
-                : {
-                    backgroundImage: `url("/icons/ingr-white.svg")`,
-                    backgroundSize: "contain",
-                  }
-            }
-            onClick={() => setLeftTrayVisibleState(!leftTrayVisibleState)}
-          >
-            <div>
-              {/* left basket drag button, images are used as backgound images for this div in scss files */}
-            </div>
-          </div>
-          <div className={styles.left__title}>
-            <div className={styles.left__title__bagicon}>
-              <Image
-                src={"/icons/basket.svg"}
-                alt="Picture will load soon"
-                height={"100%"}
-                width={"100%"}
-                layout="responsive"
-                objectFit="contain"
-              />
-            </div>
-            Ingredient List
-          </div>
-          <div className={styles.left__ingredientlistTray}>
-            <Left_tray_recipe_edit allIngredients={allIngredients} />
-          </div>
+        <div className={styles.left}>
+          <IngredientPanel
+            handleIngredientClick={handleIngredientClick}
+            checkActive={checkActive}
+          />
         </div>
         <div className={styles.center}>
-          <Center_header editARecipeFunction={editARecipeFunction} />
+          <PanelHeaderCenter
+            backLink={`/recipe_details/${recipeId}`}
+            editOrSavebtnFunc={editARecipeFunction}
+            editOrSavebtnText="Save"
+          />
           <Center_Elements
             recipeName={recipeName}
             allBlendCategories={allBlendCategories}
@@ -124,8 +133,8 @@ const EditRecipePage = ({
             calculatedIngOz={calculatedIngOz}
           />
         </div>
-        <div className={styles.right__main}>
-          <RightTray
+        <div className={styles.right}>
+          <NutritionPanel
             counter={servingCounter}
             nutritionTrayData={nutritionTrayData}
             nutritionState={nutritionState}

@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import index from "../../pages/component";
 import { useAppDispatch } from "../../redux/hooks";
 import {
   setCollectionDetailsId,
