@@ -45,9 +45,13 @@
   &__input {
     & input {
       padding-right: 4.5rem !important;
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
       height: 5.5rem !important;
+    }
+    &--active {
+      & input {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
     }
   }
   &__panel {

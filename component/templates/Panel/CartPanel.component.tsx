@@ -186,7 +186,7 @@ const GroceryPanel = () => {
           menu={[{ icon: "cart__tray" }, { icon: "cart__tray" }]}
         />
         <div className="text-green" style={{ transform: "translateX(-7.5px)" }}>
-          List
+          {toggle === 1 ? "List" : "Pantry"}
         </div>
         <div>
           <IconButton
@@ -446,10 +446,12 @@ const SearchPanel = ({ toggle }) => {
       <div className={styles.search__box}>
         <Textfield
           placeholder="Enter a Ingredient"
-          className={styles.search__input}
+          className={`${styles.search__input} ${
+            open ? styles["search__input--active"] : ""
+          }`}
           onChange={searchHandler}
         />
-        <div className={styles.search__icon}>
+        {/* <div className={styles.search__icon}>
           <IconButton
             size="small"
             variant="secondary"
@@ -462,7 +464,7 @@ const SearchPanel = ({ toggle }) => {
           >
             <FaPlus />
           </IconButton>
-        </div>
+        </div> */}
       </div>
       {open && (
         <div
