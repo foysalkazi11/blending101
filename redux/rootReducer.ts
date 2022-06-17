@@ -9,10 +9,12 @@ import recipeReducer from "./slices/recipeSlice";
 import ingredientsReducer from "./slices/ingredientsSlice";
 import filterRecipeSliceReducer from "./slices/filterRecipeSlice";
 import categroyReducer from "./slices/categroySlice";
-import editRecipeMainReducer from './edit_recipe/editRecipeStates'
+import CartReducer from "./slices/Cart.slice";
+import editRecipeMainReducer from "./edit_recipe/editRecipeStates";
 
 const rootReducer = combineReducers({
   user: userReducer,
+  cart: CartReducer,
   sideTray: sideTrayReducer,
   utility: utilityReducer,
   quantityAdjuster: editRecipeReducer,
@@ -21,7 +23,7 @@ const rootReducer = combineReducers({
   ingredients: ingredientsReducer,
   filterRecipe: filterRecipeSliceReducer,
   categroy: categroyReducer,
-  editRecipeReducer:editRecipeMainReducer
+  editRecipeReducer: editRecipeMainReducer,
 });
 
 // export type RootState = ReturnType<typeof rootReducer>;
