@@ -11,7 +11,13 @@ import AddCollectionModal from "./addCollectionModal/AddCollectionModal";
 import GET_COLLECTIONS_AND_THEMES from "../../../gqlLib/collection/query/getCollectionsAndThemes";
 import { useLazyQuery } from "@apollo/client";
 
-export default function CollectionTray(props) {
+interface CollectionTrayProps {
+  showTagByDefaut?: boolean;
+}
+
+export default function CollectionTray({
+  showTagByDefaut = true,
+}: CollectionTrayProps) {
   const [toggle, setToggle] = useState(1);
   const [input, setInput] = useState<any>({
     image: null,
@@ -54,7 +60,7 @@ export default function CollectionTray(props) {
     }
   };
   return (
-    <LeftTrayWrapper>
+    <LeftTrayWrapper showTagByDefaut={showTagByDefaut}>
       <div className={styles.main}>
         <div className={styles.main__top}>
           <div className={styles.main__top__menu}>

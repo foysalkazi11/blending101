@@ -24,6 +24,7 @@ const useForAddToCollection = () => {
     recipeId: string,
     setOpenCollectionModal: Dispatch<SetStateAction<boolean>>,
     e: React.SyntheticEvent,
+    setRecipeDetails: Dispatch<SetStateAction<any>> = (val: any) => {},
   ) => {
     e.stopPropagation();
     dispatch(setActiveRecipeId(recipeId));
@@ -45,6 +46,10 @@ const useForAddToCollection = () => {
           userEmail: dbUser?.email,
         },
       });
+      setRecipeDetails((recipe) => ({
+        ...recipe,
+        userCollections: [lastModified?.getLastModifieldCollection?._id],
+      }));
       updateRecipe(recipeId, {
         userCollections: [lastModified?.getLastModifieldCollection?._id],
       });
