@@ -20,6 +20,7 @@ import useForAddToCollection from "../../../../customHooks/useForAddToCollection
 import useForOpenCollectionTray from "../../../../customHooks/useForOpenCollection";
 import useForOpenCommentsTray from "../../../../customHooks/useForOpenCommentsTray";
 import useForSelectCommentsAndNotesIcon from "../../../../customHooks/useForSelectCommentsAndNotesIcon";
+import useLocalStorage from "../../../../customHooks/useLocalStorage";
 
 const scaleMenu = [
   { label: ".5x", value: 0.5 },
@@ -56,6 +57,10 @@ const Center = ({
   const handleOpenCollectionTray = useForOpenCollectionTray();
   const handleOpenCommentsTray = useForOpenCommentsTray();
   const handleSelectCommentsAndNotesIcon = useForSelectCommentsAndNotesIcon();
+  const [recipeDetails, setRecipeDetails] = useLocalStorage(
+    "recipeDetails",
+    {},
+  );
 
   const ReadMore = ({ children }) => {
     const text = children;
@@ -83,7 +88,7 @@ const Center = ({
 
   const addToCollection = (id: string, e: React.SyntheticEvent) => {
     setShowCollectionModal(true);
-    handleAddToCollection(id, setOpenModal, e);
+    handleAddToCollection(id, setOpenModal, e, setRecipeDetails);
   };
 
   const hangleShowCommentsAndNotesIcon = () => {

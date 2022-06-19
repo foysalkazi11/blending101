@@ -336,7 +336,7 @@ const CompareRecipe = () => {
   }, []);
 
   return (
-    <AContainer showLeftTray={false} logo={false} headerTitle="Compare Recipe">
+    <AContainer logo={false} headerTitle="Compare Recipe">
       <div className={styles.mainContentDiv}>
         <div className={styles.CompareContainer}>
           {loading ? (
