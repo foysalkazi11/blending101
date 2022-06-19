@@ -8,9 +8,13 @@ import useHover from "../utility/useHover";
 
 interface leftTrayInterface {
   children: ReactNode;
+  showTagByDefaut?: boolean;
 }
 
-export default function LeftTrayWrapper({ children }: leftTrayInterface) {
+export default function LeftTrayWrapper({
+  children,
+  showTagByDefaut = true,
+}: leftTrayInterface) {
   const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
   const dispatch = useAppDispatch();
   const [hoevrRef, hover] = useHover();
@@ -32,14 +36,16 @@ export default function LeftTrayWrapper({ children }: leftTrayInterface) {
             handleClick();
           }}
         >
-          <img
-            src={
-              hover
-                ? "/icons/left__drawer__orange.svg"
-                : "/icons/left__drawer.svg"
-            }
-            alt="Icon"
-          />
+          {!openCollectionsTary && !showTagByDefaut ? null : (
+            <img
+              src={
+                hover
+                  ? "/icons/left__drawer__orange.svg"
+                  : "/icons/left__drawer.svg"
+              }
+              alt="Icon"
+            />
+          )}
         </div>
 
         {children}

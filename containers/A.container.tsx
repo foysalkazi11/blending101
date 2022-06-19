@@ -12,10 +12,15 @@ import Filtertray from "../components/sidetray/filter/filterTray.component";
 import CommentsTray from "../components/sidetray/commentsTray/CommentsTray";
 import CartPanel from "../component/templates/Panel/CartPanel.component";
 
+interface ShowTray {
+  show: boolean;
+  showTagByDeafult?: boolean;
+}
+
 type AContainerProps = {
   showHeader?: boolean;
   showSidebar?: boolean;
-  showLeftTray?: boolean;
+  showCollectionTray?: ShowTray;
   showRighTray?: boolean;
   logo?: boolean;
   headerTitle?: string;
@@ -34,7 +39,7 @@ export default function AContainer(props: AContainerProps) {
   const {
     showHeader = true,
     showSidebar = true,
-    showLeftTray = false,
+    showCollectionTray = { show: false, showTagByDeafult: true },
     showRighTray = false,
     logo = true,
     headerTitle = "",
@@ -61,9 +66,11 @@ export default function AContainer(props: AContainerProps) {
             fullWidth={headerFullWidth}
           />
         ) : null}
-        {showLeftTray ? (
+        {showCollectionTray?.show ? (
           <div className={styles.fixed__main__left}>
-            <CollectionTray />
+            <CollectionTray
+              showTagByDefaut={showCollectionTray?.showTagByDeafult}
+            />
           </div>
         ) : null}
         {showRighTray ? (
