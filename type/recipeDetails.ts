@@ -1,0 +1,58 @@
+export interface RecipeDetailsType {
+  _id: string;
+  name: string;
+  prepTime: any;
+  description: string;
+  recipeIngredients: any[];
+  recipeInstructions: string[];
+  totalRating: number;
+  numberOfRating: number;
+  averageRating: number;
+  totalViews: number;
+  recipeBlendCategory: RecipeBlendCategory;
+  ingredients: Ingredient[];
+  image: Image[];
+  servingSize: number;
+  addedToCompare: boolean;
+  notes: number;
+  servings: number;
+  recipeVersion: any[];
+  userCollections: string[];
+}
+
+export interface RecipeBlendCategory {
+  name: string;
+  _id: string;
+}
+
+export interface Ingredient {
+  ingredientId: IngredientId;
+  portions: Portion[];
+  weightInGram: number;
+  selectedPortion: SelectedPortion;
+}
+
+export interface IngredientId {
+  ingredientName: string;
+  _id: string;
+  images: string[];
+  featuredImage?: string;
+}
+
+export interface Portion {
+  name: string;
+  gram: number;
+  default: boolean;
+  quantity: any;
+}
+
+export interface SelectedPortion {
+  name: string;
+  quantity: number;
+  gram: number;
+}
+
+export interface Image {
+  image: string;
+  default: boolean;
+}
