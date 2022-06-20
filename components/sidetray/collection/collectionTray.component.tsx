@@ -1,22 +1,26 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useRef, useState } from "react";
-import LeftTrayWrapper from "../leftTray.wrapper";
+import TrayWrapper from "../Tray.wrapper";
 import CollectionComponent from "./content/collection.component";
 import ThemeComponent from "./content/theme.component";
 import styles from "./trayleft.module.scss";
 import { MdOutlineAddCircleOutline } from "react-icons/md";
-import { useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import CustomModal from "../../../theme/modal/customModal/CustomModal";
 import AddCollectionModal from "./addCollectionModal/AddCollectionModal";
 import GET_COLLECTIONS_AND_THEMES from "../../../gqlLib/collection/query/getCollectionsAndThemes";
 import { useLazyQuery } from "@apollo/client";
+import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
+import { setChangeRecipeWithinCollection } from "../../../redux/slices/collectionSlice";
 
 interface CollectionTrayProps {
   showTagByDefaut?: boolean;
+  showPanle?: "left" | "right";
 }
 
 export default function CollectionTray({
   showTagByDefaut = true,
+  showPanle = "left",
 }: CollectionTrayProps) {
   const [toggle, setToggle] = useState(1);
   const [input, setInput] = useState<any>({
@@ -32,6 +36,12 @@ export default function CollectionTray({
   const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
   const [openModal, setOpenModal] = useState(false);
   const reff = useRef<any>();
+  const dispatch = useAppDispatch();
+
+  const closeTray = () => {
+    dispatch(setOpenCollectionsTary(!openCollectionsTary));
+    dispatch(setChangeRecipeWithinCollection(false));
+  };
 
   const [
     getCollectionsAndThemes,
@@ -60,7 +70,12 @@ export default function CollectionTray({
     }
   };
   return (
-    <LeftTrayWrapper showTagByDefaut={showTagByDefaut}>
+    <TrayWrapper
+      showTagByDefaut={showTagByDefaut}
+      closeTray={closeTray}
+      openTray={openCollectionsTary}
+      showPanle={showPanle}
+    >
       <div className={styles.main}>
         <div className={styles.main__top}>
           <div className={styles.main__top__menu}>
@@ -139,6 +154,6 @@ export default function CollectionTray({
           />
         </CustomModal>
       </div>
-    </LeftTrayWrapper>
+    </TrayWrapper>
   );
 }

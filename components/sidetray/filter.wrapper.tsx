@@ -23,7 +23,7 @@ export default function FilterTrayWrapper({ children }: leftTrayInterface) {
 
   return (
     <div
-      className={`${styles.tray} ${openFilterTray ? styles.open : ""}`}
+      className={`${styles.filterTary} ${openFilterTray ? styles.open : ""}`}
       ref={hoevrRef}
     >
       <div className={styles.tray__inner}>

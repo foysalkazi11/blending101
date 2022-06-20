@@ -53,7 +53,7 @@ const RecipeDetails = () => {
 
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
-  const [compareRecipeList, setcompareRecipeList] = useLocalStorage(
+  const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
     "compareList",
     [],
   );
