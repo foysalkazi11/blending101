@@ -21,6 +21,7 @@ import useForOpenCollectionTray from "../../../../customHooks/useForOpenCollecti
 import useForOpenCommentsTray from "../../../../customHooks/useForOpenCommentsTray";
 import useForSelectCommentsAndNotesIcon from "../../../../customHooks/useForSelectCommentsAndNotesIcon";
 import useLocalStorage from "../../../../customHooks/useLocalStorage";
+import { setOpenVersionTray } from "../../../../redux/slices/versionTraySlice";
 
 const scaleMenu = [
   { label: ".5x", value: 0.5 },
@@ -138,7 +139,14 @@ const Center = ({
               className={styles.recipeLogo}
             />
           </div>
+
           <div className={styles.alignItems}>
+            <IconWithText
+              wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
+              handleClick={() => dispatch(setOpenVersionTray(true))}
+              icon="/icons/Versions.svg"
+              text="Versions"
+            />
             <IconWithText
               wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
               handleClick={() => {}}

@@ -6,13 +6,13 @@ import { FiEdit2 } from "react-icons/fi";
 import { format, parseISO } from "date-fns";
 import { useMutation } from "@apollo/client";
 import CREATE_NEW_NOTE from "../../../../gqlLib/notes/mutation/createNewNote";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import { setLoading } from "../../../../redux/slices/utilitySlice";
+import { useAppSelector } from "../../../../redux/hooks";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
 import EDIT_MY_NOTE from "../../../../gqlLib/notes/mutation/editMyNote";
-import { MdDeleteOutline } from "react-icons/md";
 import DELETE_MY_NOTE from "../../../../gqlLib/notes/mutation/deleteMyNote";
 import SkeletonNote from "../../../../theme/skeletons/skeletonNote/SkeletonNote";
+import NoteBody from "./noteBody/NoteBody";
+import NoteHead from "./noteHead/NoteHead";
 type NoteSectionProps = {
   allNotes: any[];
   setAllNotes: Dispatch<SetStateAction<any[]>>;
@@ -29,10 +29,9 @@ const NoteSection = ({ allNotes, setAllNotes }: NoteSectionProps) => {
   const { dbUser } = useAppSelector((state) => state?.user);
   const { activeRecipeId } = useAppSelector((state) => state?.collections);
   const [loading, setLoading] = useState(false);
-  const dispatch = useAppDispatch();
 
   const updateNoteForm = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e?.target;
     setNoteForm((pre) => ({ ...pre, [name]: value }));
@@ -96,7 +95,7 @@ const NoteSection = ({ allNotes, setAllNotes }: NoteSectionProps) => {
       setLoading(false);
       reactToastifyNotification(
         "info",
-        `Note ${updateNote ? "updated" : "created"} successfully`
+        `Note ${updateNote ? "updated" : "created"} successfully`,
       );
     } catch (error) {
       setLoading(false);
@@ -104,87 +103,39 @@ const NoteSection = ({ allNotes, setAllNotes }: NoteSectionProps) => {
     }
   };
 
-  const updateNoteValue = (id: string, title: string, body: string) => {
+  const updateNoteValue = (val: any) => {
+    const title = val?.title;
+    const id = val?._id;
+    const body = val?.body;
     setUpdateNote(true);
     setNoteForm((pre) => ({ ...pre, title, body }));
     setUpdateNoteId(id);
     toggleNoteForm();
   };
 
+  const handleButtonClick = () => {
+    toggleNoteForm();
+    setUpdateNote(false);
+    setNoteForm((pre) => ({ ...pre, title: "", body: "" }));
+  };
+
   return (
     <>
-      {showNoteForm ? (
-        <NoteForm
-          toggleNoteForm={toggleNoteForm}
-          noteForm={noteForm}
-          updateNoteForm={updateNoteForm}
-          createOrUpdateNote={createOrUpdateNote}
-        />
-      ) : (
-        <div className={styles.commentsIconBox}>
-          <span></span>
-
-          <button
-            onClick={() => {
-              toggleNoteForm();
-              setUpdateNote(false);
-              setNoteForm((pre) => ({ ...pre, title: "", body: "" }));
-            }}
-          >
-            <img src="/images/plus-white-icon.svg" alt="add-icon" />
-            <span>Add</span>
-          </button>
-        </div>
-      )}
-
-      {loading ? (
-        <SkeletonNote />
-      ) : (
-        <div className={`${styles.noteEditBox} y-scroll`}>
-          {allNotes?.length ? (
-            allNotes?.map((note, index) => {
-              return (
-                <div className={styles.singleNoteEdit} key={index}>
-                  <div className={styles.header}>
-                    <h3>{note?.title}</h3>
-                    <div className={styles.rightSide}>
-                      <div
-                        className={styles.editIconBox}
-                        onClick={() =>
-                          updateNoteValue(note?._id, note?.title, note?.body)
-                        }
-                      >
-                        <FiEdit2 className={styles.icon} />
-                      </div>
-                      <div
-                        className={styles.editIconBox}
-                        onClick={() => removeNote(note?._id)}
-                      >
-                        <MdDeleteOutline className={styles.icon} />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className={styles.noteDis}>
-                    <p>{note?.body}</p>
-                    <span>
-                      {note?.updatedAt ? (
-                        <>
-                          {format(parseISO(note?.updatedAt), "dd/mm/yyyy")} (edited)
-                        </>
-                      ) : (
-                        format(parseISO(note?.createdAt), "dd/mm/yyyy")
-                      )}
-                    </span>
-                  </div>
-                </div>
-              );
-            })
-          ) : (
-            <p className={styles.noNotes}>No notes</p>
-          )}
-        </div>
-      )}
+      <NoteHead
+        showForm={showNoteForm}
+        toggleNoteForm={toggleNoteForm}
+        noteForm={noteForm}
+        updateNoteForm={updateNoteForm}
+        createOrUpdateNote={createOrUpdateNote}
+        handleButtonClick={handleButtonClick}
+      />
+      <NoteBody
+        data={allNotes}
+        deleteItem={removeNote}
+        updateItem={updateNoteValue}
+        varient="notes"
+        loading={loading}
+      />
     </>
   );
 };

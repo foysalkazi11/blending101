@@ -114,7 +114,7 @@ const CompareRecipe = () => {
   const [isFormulatePage, setIsFormulatePage] = useState(false);
   const router = useRouter();
   const { compareList } = useAppSelector((state) => state.recipe);
-  const [compareRecipeList, setcompareRecipeList] = useLocalStorage(
+  const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
     "compareList",
     [],
   );
