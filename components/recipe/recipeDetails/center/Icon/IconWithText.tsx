@@ -3,7 +3,7 @@ import React from "react";
 import styles from "./IconWithText.module.scss";
 
 interface IconWithTextProps {
-  icon: string;
+  icon: string | React.ReactNode;
   text: string | number;
   handleClick: (e: React.SyntheticEvent) => void;
   textStyle?: React.CSSProperties;
@@ -23,7 +23,12 @@ const IconWithText = ({
       className={styles.iconWithTextContainer}
       style={wraperStyle}
     >
-      <Image src={icon} alt={`${text} icon`} width={16} height={16} />
+      {typeof icon === "string" ? (
+        <Image src={icon} alt={`${text} icon`} width={16} height={16} />
+      ) : (
+        icon
+      )}
+
       <p className={styles.text} style={textStyle}>
         {text}
       </p>

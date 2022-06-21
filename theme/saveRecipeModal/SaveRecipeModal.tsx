@@ -3,7 +3,7 @@ import styles from "./SaveRecipe.module.scss";
 
 type SaveRecipeProps = {
   title?: string;
-  handleChange?: () => void;
+  handleChange?: (e: React.SyntheticEvent) => void;
 };
 
 const SaveRecipe = ({

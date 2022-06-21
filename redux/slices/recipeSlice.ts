@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RecipeDetailsType } from "../../type/recipeDetails";
 
 type recipeSliceState = {
   recommended: any[];
@@ -6,6 +7,7 @@ type recipeSliceState = {
   latest: any[];
   currentRecipeInfo: { name: string; image: string };
   compareList: any[];
+  detailsARecipe: RecipeDetailsType;
 };
 
 const initialState: recipeSliceState = {
@@ -14,6 +16,7 @@ const initialState: recipeSliceState = {
   recommended: [],
   currentRecipeInfo: { name: "", image: "" },
   compareList: [],
+  detailsARecipe: {} as RecipeDetailsType,
 };
 
 export const recipeSlice = createSlice({
@@ -31,12 +34,15 @@ export const recipeSlice = createSlice({
     },
     setCurrentRecipeInfo: (
       state,
-      action: PayloadAction<{ name: string; image: string }>
+      action: PayloadAction<{ name: string; image: string }>,
     ) => {
       state.currentRecipeInfo = action?.payload;
     },
     setCompareList: (state, action: PayloadAction<any[]>) => {
       state.compareList = action?.payload;
+    },
+    setDetailsARecipe: (state, action: PayloadAction<RecipeDetailsType>) => {
+      state.detailsARecipe = action?.payload;
     },
   },
 });
@@ -47,6 +53,7 @@ export const {
   setRecommended,
   setCurrentRecipeInfo,
   setCompareList,
+  setDetailsARecipe,
 } = recipeSlice?.actions;
 
 export default recipeSlice?.reducer;

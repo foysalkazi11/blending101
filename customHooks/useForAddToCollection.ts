@@ -7,11 +7,13 @@ import {
   setActiveRecipeId,
   setLastModifiedCollection,
 } from "../redux/slices/collectionSlice";
+import { setDetailsARecipe } from "../redux/slices/recipeSlice";
 import { setOpenCollectionsTary } from "../redux/slices/sideTraySlice";
 import useUpdateRecipeField from "./useUpdateRecipeFirld";
 
 const useForAddToCollection = () => {
   const { dbUser } = useAppSelector((state) => state?.user);
+  const { detailsARecipe } = useAppSelector((state) => state?.recipe);
   const dispatch = useAppDispatch();
   const updateRecipe = useUpdateRecipeField();
   const [addNewRecipeToCollection] = useMutation(ADD_NEW_RECIPE_TO_COLLECTION);
@@ -24,7 +26,6 @@ const useForAddToCollection = () => {
     recipeId: string,
     setOpenCollectionModal: Dispatch<SetStateAction<boolean>>,
     e: React.SyntheticEvent,
-    setRecipeDetails: Dispatch<SetStateAction<any>> = (val: any) => {},
   ) => {
     e.stopPropagation();
     dispatch(setActiveRecipeId(recipeId));
@@ -46,10 +47,12 @@ const useForAddToCollection = () => {
           userEmail: dbUser?.email,
         },
       });
-      setRecipeDetails((recipe) => ({
-        ...recipe,
-        userCollections: [lastModified?.getLastModifieldCollection?._id],
-      }));
+      dispatch(
+        setDetailsARecipe({
+          ...detailsARecipe,
+          userCollections: [lastModified?.getLastModifieldCollection?._id],
+        }),
+      );
       updateRecipe(recipeId, {
         userCollections: [lastModified?.getLastModifieldCollection?._id],
       });

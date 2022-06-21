@@ -6,6 +6,8 @@ const ADD_VERSION = gql`
       _id
       postfixTitle
       description
+      createdAt
+      editedAt
     }
   }
 `;
