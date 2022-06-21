@@ -19,7 +19,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "components/utility/reactToastifyNotification.js"
+    "components/utility/reactToastifyNotification.ts"
   ],
   "exclude": ["node_modules"]
 }
