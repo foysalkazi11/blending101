@@ -14,6 +14,8 @@ import EDIT_A_VERSION_OF_RECIPE from "../../../gqlLib/versions/mutation/editAVer
 import { useRouter } from "next/router";
 import { VscVersions } from "react-icons/vsc";
 import { setDetailsARecipe } from "../../../redux/slices/recipeSlice";
+import REMOVE_A_RECIPE_VERSION from "../../../gqlLib/versions/mutation/removeARecipeVersion";
+import notification from "../../utility/reactToastifyNotification";
 interface VersionTrayProps {
   showTagByDefaut?: boolean;
   showPanle?: "left" | "right";
@@ -28,10 +30,12 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
   const dispatch = useAppDispatch();
 
-  const [addVersion, { data: newVersionData, loading: newVersionLoading }] =
-    useMutation(ADD_VERSION);
+  const [addVersion, { loading: newVersionLoading }] = useMutation(ADD_VERSION);
   const [editVersion, { data: editVersionData, loading: editVersionLoading }] =
     useMutation(EDIT_A_VERSION_OF_RECIPE);
+  const [removeVersion, { loading: removeVersionLoading }] = useMutation(
+    REMOVE_A_RECIPE_VERSION,
+  );
   const isMounted = useRef(false);
   const router = useRouter();
 
@@ -62,7 +66,32 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           },
         },
       });
-      console.log(data);
+      dispatch(
+        setDetailsARecipe({
+          ...detailsARecipe,
+          recipeVersion: data?.addVersion,
+        }),
+      );
+      notification("success", "Recipe version create successfully");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteRecipeVersion = async (id: string) => {
+    try {
+      const { data } = await removeVersion({
+        variables: {
+          versionId: id,
+        },
+      });
+      dispatch(
+        setDetailsARecipe({
+          ...detailsARecipe,
+          recipeVersion: data?.removeARecipeVersion,
+        }),
+      );
+      notification("success", "Recipe version remove successfully");
     } catch (error) {
       console.log(error);
     }
@@ -83,20 +112,6 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     setUpdateVersionId(id);
     toggleForm();
   };
-
-  useEffect(() => {
-    if (isMounted.current) {
-      if (!newVersionLoading && newVersionData?.addVersion) {
-        dispatch(
-          setDetailsARecipe({
-            ...detailsARecipe,
-            recipeVersion: newVersionData?.addVersion,
-          }),
-        );
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [newVersionData?.addVersion]);
 
   useEffect(() => {
     isMounted.current = true;
@@ -136,10 +151,10 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
         />
         <NoteBody
           data={detailsARecipe?.recipeVersion || []}
-          deleteItem={() => {}}
-          updateItem={() => {}}
+          deleteItem={deleteRecipeVersion}
+          updateItem={(id) => router?.push(`/edit_recipe/${id}/version`)}
           varient="versions"
-          loading={newVersionLoading}
+          loading={newVersionLoading || removeVersionLoading}
         />
       </div>
     </TrayWrapper>
