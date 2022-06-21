@@ -12,6 +12,8 @@ import { useMutation } from "@apollo/client";
 import ADD_VERSION from "../../../gqlLib/versions/mutation/addVersion";
 import EDIT_A_VERSION_OF_RECIPE from "../../../gqlLib/versions/mutation/editAVersionOfRecipe";
 import { useRouter } from "next/router";
+import { VscVersions } from "react-icons/vsc";
+import { setDetailsARecipe } from "../../../redux/slices/recipeSlice";
 interface VersionTrayProps {
   showTagByDefaut?: boolean;
   showPanle?: "left" | "right";
@@ -23,11 +25,9 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   const [formState, setFormState] = useState({ title: "", body: "" });
   const [updateVersionId, setUpdateVersionId] = useState("");
   const { openVersionTray } = useAppSelector((state) => state?.versionTray);
+  const { detailsARecipe } = useAppSelector((state) => state?.recipe);
   const dispatch = useAppDispatch();
-  const [recipeDetails, setRecipeDetails] = useLocalStorage<RecipeDetailsType>(
-    "recipeDetails",
-    {},
-  );
+
   const [addVersion, { data: newVersionData, loading: newVersionLoading }] =
     useMutation(ADD_VERSION);
   const [editVersion, { data: editVersionData, loading: editVersionLoading }] =
@@ -56,7 +56,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
       const { data } = await addVersion({
         variables: {
           data: {
-            recipeId: recipeDetails?._id,
+            recipeId: detailsARecipe?._id,
             postfixTitle: formState?.title,
             description: formState?.body,
           },
@@ -87,10 +87,12 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   useEffect(() => {
     if (isMounted.current) {
       if (!newVersionLoading && newVersionData?.addVersion) {
-        setRecipeDetails((pre) => ({
-          ...pre,
-          recipeVersion: newVersionData?.addVersion,
-        }));
+        dispatch(
+          setDetailsARecipe({
+            ...detailsARecipe,
+            recipeVersion: newVersionData?.addVersion,
+          }),
+        );
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -113,15 +115,16 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     >
       <div className={styles.versionContainer}>
         <div className={styles.header}>
-          <Image src="/icons/Versions.svg" alt="Icon" width={24} height={24} />
+          <VscVersions fontSize={24} color="#7cbc39" />
+
           <h3 className={styles.heading}>Version</h3>
         </div>
         <div className={styles.recipeName}>
           <img
-            src={recipeDetails?.image?.find((img) => img?.default)?.image || ""}
+            src={detailsARecipe?.image?.find((img) => img?.default)?.image}
             alt="recipe_img"
           />
-          <h3>{recipeDetails?.name}</h3>
+          <h3>{detailsARecipe?.name}</h3>
         </div>
         <NoteHead
           showForm={showForm}
@@ -132,7 +135,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           handleButtonClick={handleButtonClick}
         />
         <NoteBody
-          data={recipeDetails?.recipeVersion || []}
+          data={detailsARecipe?.recipeVersion || []}
           deleteItem={() => {}}
           updateItem={() => {}}
           varient="versions"

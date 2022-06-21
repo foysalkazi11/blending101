@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import { useAppSelector } from "../redux/hooks";
 import { setAllRecipeWithinCollections } from "../redux/slices/collectionSlice";
 import {
+  setDetailsARecipe,
   setLatest,
   setPopular,
   setRecommended,
@@ -9,7 +10,7 @@ import {
 
 const useUpdateRecipeField = () => {
   const dispatch = useDispatch();
-  const { latest, popular, recommended } = useAppSelector(
+  const { latest, popular, recommended, detailsARecipe } = useAppSelector(
     (state) => state?.recipe,
   );
   const { allRecipeWithinCollections } = useAppSelector(
@@ -17,6 +18,13 @@ const useUpdateRecipeField = () => {
   );
 
   const updateRecipe = (id: string, obj: object) => {
+    dispatch(
+      setDetailsARecipe({
+        ...detailsARecipe,
+        ...obj,
+      }),
+    );
+
     dispatch(
       setAllRecipeWithinCollections([
         ...allRecipeWithinCollections?.map((recipe) =>
