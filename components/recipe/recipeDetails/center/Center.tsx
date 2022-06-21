@@ -5,7 +5,7 @@ import styles from "./Center.module.scss";
 import { MdOutlineInfo } from "react-icons/md";
 import { BiBarChart } from "react-icons/bi";
 import { BsCartPlus } from "react-icons/bs";
-import { useAppDispatch } from "../../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { setToggleModal } from "../../../../redux/slices/sideTraySlice";
 import Modal from "../../../../theme/modal/customModal/CustomModal";
 import ShareRecipeModal from "../../../../theme/shareRecipeModal/ShareRecipeModal";
@@ -20,6 +20,8 @@ import useForAddToCollection from "../../../../customHooks/useForAddToCollection
 import useForOpenCollectionTray from "../../../../customHooks/useForOpenCollection";
 import useForOpenCommentsTray from "../../../../customHooks/useForOpenCommentsTray";
 import useForSelectCommentsAndNotesIcon from "../../../../customHooks/useForSelectCommentsAndNotesIcon";
+import { setOpenVersionTray } from "../../../../redux/slices/versionTraySlice";
+import { VscVersions } from "react-icons/vsc";
 
 const scaleMenu = [
   { label: ".5x", value: 0.5 },
@@ -56,6 +58,9 @@ const Center = ({
   const handleOpenCollectionTray = useForOpenCollectionTray();
   const handleOpenCommentsTray = useForOpenCommentsTray();
   const handleSelectCommentsAndNotesIcon = useForSelectCommentsAndNotesIcon();
+  const { lastModifiedCollection } = useAppSelector(
+    (state) => state?.collections,
+  );
 
   const ReadMore = ({ children }) => {
     const text = children;
@@ -133,7 +138,20 @@ const Center = ({
               className={styles.recipeLogo}
             />
           </div>
+
           <div className={styles.alignItems}>
+            <IconWithText
+              wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
+              handleClick={(e) => dispatch(setOpenVersionTray(true))}
+              icon={
+                <VscVersions
+                  color={
+                    recipeData?.recipeVersion?.length ? "#7cbc39" : "#c4c4c4"
+                  }
+                />
+              }
+              text="Versions"
+            />
             <IconWithText
               wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
               handleClick={() => {}}
@@ -387,7 +405,20 @@ const Center = ({
         )}
       </div>
       <Modal open={openModal} setOpen={setOpenModal}>
-        {showCollectionModal ? <SaveRecipe /> : <ShareRecipeModal />}
+        {showCollectionModal ? (
+          <SaveRecipe
+            title={lastModifiedCollection?.name}
+            handleChange={(e) =>
+              handleOpenCollectionTray(
+                recipeData?._id,
+                recipeData?.userCollections,
+                e,
+              )
+            }
+          />
+        ) : (
+          <ShareRecipeModal />
+        )}
       </Modal>
     </div>
   );

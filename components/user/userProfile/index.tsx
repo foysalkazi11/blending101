@@ -139,12 +139,12 @@ const UserProfile = () => {
           setDbUser({
             ...dbUser,
             configuration: { ...dbUser?.configuration, ...arrangData },
-          })
+          }),
         );
         dispatch(setLoading(false));
         reactToastifyNotification(
           "info",
-          "Congratulation! you updated profile successfully"
+          "Congratulation! you updated profile successfully",
         );
         history.push("/recipe_discovery");
       } catch (error) {
@@ -164,7 +164,7 @@ const UserProfile = () => {
           setDbUser({
             ...dbUser,
             configuration: { ...dbUser?.configuration, ...arrangData },
-          })
+          }),
         );
         dispatch(setLoading(false));
         reactToastifyNotification("info", "Updated successfully");
@@ -245,7 +245,6 @@ const UserProfile = () => {
   return (
     <AContainer
       headerTitle="Profile"
-      showLeftTray={false}
       showRighTray={false}
       showSidebar={false}
       headerFullWidth={true}

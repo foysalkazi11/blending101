@@ -6,7 +6,6 @@ import {
   setIngredients,
 } from "../../../../redux/slices/sideTraySlice";
 import styles from "../filter.module.scss";
-import { blendTypes } from "../filterRankingList";
 import CheckCircle from "../../../../public/icons/check_circle_black_24dp.svg";
 import FilterbottomComponent from "../filterBottom.component";
 import { useLazyQuery } from "@apollo/client";
@@ -152,7 +151,8 @@ const VisualSection = ({ categories }: VisualSectionProps) => {
                           </div>
                         )}
                       </div>
-                      <p>{blend.name}</p>
+
+                      <p>{blend?.name}</p>
                     </div>
                   ))
                 : null}
@@ -160,12 +160,13 @@ const VisualSection = ({ categories }: VisualSectionProps) => {
           </div>
         </div>
       )}
-
-      <FilterbottomComponent
-        categories={categories}
-        handleIngredientClick={handleIngredientClick}
-        checkActiveIngredient={checkActiveIngredient}
-      />
+      <div style={{ paddingTop: "10px" }}>
+        <FilterbottomComponent
+          categories={categories}
+          handleIngredientClick={handleIngredientClick}
+          checkActiveIngredient={checkActiveIngredient}
+        />
+      </div>
     </div>
   );
 };

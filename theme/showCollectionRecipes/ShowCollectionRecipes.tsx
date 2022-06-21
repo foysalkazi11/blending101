@@ -38,7 +38,7 @@ const ShowCollectionRecipes = () => {
   ] = useLazyQuery(GET_SINGLE_COLLECTION);
 
   const dispatch = useAppDispatch();
-  const [compareRecipeList, setcompareRecipeList] = useLocalStorage(
+  const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
     "compareList",
     [],
   );

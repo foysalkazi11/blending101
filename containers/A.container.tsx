@@ -11,11 +11,19 @@ import IngredientTrayComponent from "../components/sidetray/wiki/ingredient/ingr
 import Filtertray from "../components/sidetray/filter/filterTray.component";
 import CommentsTray from "../components/sidetray/commentsTray/CommentsTray";
 import CartPanel from "../component/templates/Panel/CartPanel.component/Panel.component";
+import VersionTray from "../components/sidetray/versionTray/VersionTray";
+
+interface ShowTray {
+  show: boolean;
+  showTagByDeafult?: boolean;
+  showPanle?: "left" | "right";
+}
 
 type AContainerProps = {
   showHeader?: boolean;
   showSidebar?: boolean;
-  showLeftTray?: boolean;
+  showCollectionTray?: ShowTray;
+  showVersionTray?: ShowTray;
   showRighTray?: boolean;
   logo?: boolean;
   headerTitle?: string;
@@ -34,7 +42,16 @@ export default function AContainer(props: AContainerProps) {
   const {
     showHeader = true,
     showSidebar = true,
-    showLeftTray = false,
+    showCollectionTray = {
+      show: false,
+      showTagByDeafult: true,
+      showPanle: "left",
+    },
+    showVersionTray = {
+      show: false,
+      showTagByDeafult: true,
+      showPanle: "right",
+    },
     showRighTray = false,
     logo = true,
     headerTitle = "",
@@ -61,9 +78,20 @@ export default function AContainer(props: AContainerProps) {
             fullWidth={headerFullWidth}
           />
         ) : null}
-        {showLeftTray ? (
-          <div className={styles.fixed__main__left}>
-            <CollectionTray />
+        {showCollectionTray?.show ? (
+          <div className={`${styles.fixed__main__left}`}>
+            <CollectionTray
+              showTagByDefaut={showCollectionTray?.showTagByDeafult}
+              showPanle={showCollectionTray?.showPanle}
+            />
+          </div>
+        ) : null}
+        {showVersionTray?.show ? (
+          <div className={`${styles.fixed__main__right}`}>
+            <VersionTray
+              showTagByDefaut={showVersionTray?.showTagByDeafult}
+              showPanle={showVersionTray?.showPanle}
+            />
           </div>
         ) : null}
         {showRighTray ? (

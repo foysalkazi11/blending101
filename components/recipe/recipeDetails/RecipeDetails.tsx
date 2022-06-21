@@ -27,6 +27,16 @@ const RecipeDetails = ({
       headerTitle="Blend Recipe"
       showRighTray={true}
       commentsTray={true}
+      showCollectionTray={{
+        show: true,
+        showTagByDeafult: false,
+        showPanle: "left",
+      }}
+      showVersionTray={{
+        show: true,
+        showPanle: "right",
+        showTagByDeafult: false,
+      }}
     >
       <div className={styles.main}>
         <div className={styles.left}>

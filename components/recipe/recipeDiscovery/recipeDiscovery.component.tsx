@@ -53,7 +53,7 @@ const RecipeDetails = () => {
 
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
-  const [compareRecipeList, setcompareRecipeList] = useLocalStorage(
+  const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
     "compareList",
     [],
   );
@@ -114,7 +114,11 @@ const RecipeDetails = () => {
   const recipeWidget = data?.getWidgetsForClient;
   return (
     <>
-      <AContainer showLeftTray={true} filterTray={true} commentsTray={true}>
+      <AContainer
+        showCollectionTray={{ show: true, showTagByDeafult: true }}
+        filterTray={true}
+        commentsTray={true}
+      >
         <div className={styles.main__div}>
           <div
             style={{

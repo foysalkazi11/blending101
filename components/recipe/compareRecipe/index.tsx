@@ -114,7 +114,7 @@ const CompareRecipe = () => {
   const [isFormulatePage, setIsFormulatePage] = useState(false);
   const router = useRouter();
   const { compareList } = useAppSelector((state) => state.recipe);
-  const [compareRecipeList, setcompareRecipeList] = useLocalStorage(
+  const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
     "compareList",
     [],
   );
@@ -336,7 +336,7 @@ const CompareRecipe = () => {
   }, []);
 
   return (
-    <AContainer showLeftTray={false} logo={false} headerTitle="Compare Recipe">
+    <AContainer logo={false} headerTitle="Compare Recipe">
       <div className={styles.mainContentDiv}>
         <div className={styles.CompareContainer}>
           {loading ? (
