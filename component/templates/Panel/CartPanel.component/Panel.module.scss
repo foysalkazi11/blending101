@@ -10,6 +10,7 @@
   z-index: 999;
   padding: 20px;
 }
+
 .tray .image {
   position: absolute;
   left: -0.5px;
@@ -19,6 +20,7 @@
   transition: all;
   transition-duration: 0.2s;
 }
+
 .tray .image img {
   width: 35px;
 }
@@ -44,8 +46,8 @@
   }
   &__input {
     & input {
-      padding-right: 4.5rem !important;
-      height: 5.5rem !important;
+      // padding-right: 4.5rem !important;
+      height: 4.5rem !important;
     }
     &--active {
       & input {
@@ -148,22 +150,26 @@
     align-items: center;
     width: 80%;
     & ~ div {
-      transition: transform 0.3s linear;
-      transform: translateX(85px);
+      transition: opacity 0.3s linear;
+      opacity: 0;
+      transform: translateX(15px);
     }
   }
 
   &__item:hover &__content ~ div {
-    transform: translateX(15px);
+    opacity: 1;
   }
 
   &__title {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     margin-bottom: 5px;
   }
+
   &__quantity {
-    font-size: 1.3rem;
+    font-size: 12px;
+    color: #b4b0b0;
   }
+
   &__image {
     & img {
       height: 2.5rem;
@@ -187,5 +193,11 @@
     & > li {
       padding: 0.3rem 0;
     }
+  }
+}
+
+.button {
+  svg {
+    color: #8ac34f;
   }
 }
