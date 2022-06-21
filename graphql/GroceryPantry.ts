@@ -7,6 +7,9 @@ export const GET_CART_DATA = gql`
         _id
         ingredientName
         featuredImage
+        portions {
+          measurement
+        }
       }
       selectedPortion
       quantity
@@ -69,16 +72,28 @@ export const ADD_STAPLE_ITEM = gql`
   }
 `;
 
+export const EDIT_CART_ITEM = gql`
+  mutation EditCartItem(
+    $list: String!
+    $memberId: String!
+    $ingredient: CreateGroceryIngreidnets!
+  ) {
+    editAListItem(listType: $list, memberId: $memberId, ingredient: $ingredient)
+  }
+`;
+
 export const DELETE_CART_ITEM = gql`
   mutation DeleteCartItem(
     $userId: String!
-    $ingredients: [ID!]!
-    $listType: String!
+    $groceries: [ID!]!
+    $pantries: [ID!]!
+    $staples: [ID!]!
   ) {
     deleteSomeFromList(
       memberId: $userId
-      ingredients: $ingredients
-      listType: $listType
+      stapleIngredients: $staples
+      groceryIngredients: $groceries
+      pantryIngredients: $pantries
     )
   }
 `;

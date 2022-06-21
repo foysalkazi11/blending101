@@ -40,14 +40,49 @@ export const CartSlice = createSlice({
     addStaple: (state, action: { payload: Grocery }) => {
       state.staples.push(action.payload);
     },
+    editCartIngredients: (state, action) => {
+      const { listType, ingredient } = action.payload;
+      if (listType === "Grocery") {
+        const groceries = state.groceries.map((grocery) => {
+          if (grocery.ingredientId._id === ingredient.ingredientId) {
+            grocery.selectedPortion = ingredient.selectedPortion;
+            grocery.quantity = ingredient.quantity;
+          }
+          return grocery;
+        });
+        state.groceries = groceries;
+      } else if (listType === "Pantry") {
+        const pantries = state.pantries.map((pantry) => {
+          if (pantry.ingredientId._id === ingredient.ingredientId) {
+            pantry.selectedPortion = ingredient.selectedPortion;
+            pantry.quantity = ingredient.quantity;
+          }
+          return pantry;
+        });
+        state.groceries = pantries;
+      } else {
+        const grocery = state.groceries.find(
+          (grocery) => grocery.ingredientId._id === ingredient.ingredientId,
+        );
+        if (grocery) {
+          grocery.selectedPortion = ingredient.selectedPortion;
+          grocery.quantity = ingredient.quantity;
+        }
+      }
+    },
     deleteCartIngredients: (
       state,
-      action: { payload: { type: keyof CartState; ids: string[] } },
+      action: { payload: { ingredients: any } },
     ) => {
-      const type = action.payload.type;
-      const ids = action.payload.ids;
-      state[type] = state[type].filter(
-        (item) => !ids.includes(item.ingredientId._id),
+      const { ingredients } = action.payload;
+      state.groceries = state.groceries.filter(
+        (item) => !ingredients?.groceries.includes(item.ingredientId._id),
+      );
+      state.pantries = state.pantries.filter(
+        (item) => !ingredients?.pantries.includes(item.ingredientId._id),
+      );
+      state.staples = state.staples.filter(
+        (item) => !ingredients?.staples.includes(item.ingredientId._id),
       );
     },
   },
@@ -60,6 +95,7 @@ export const {
   addPantry,
   addStaples,
   addStaple,
+  editCartIngredients,
   deleteCartIngredients,
 } = CartSlice.actions;
 

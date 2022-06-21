@@ -10,7 +10,7 @@ import HealthTrayComponent from "../components/sidetray/wiki/health/heath.compon
 import IngredientTrayComponent from "../components/sidetray/wiki/ingredient/ingredient.component";
 import Filtertray from "../components/sidetray/filter/filterTray.component";
 import CommentsTray from "../components/sidetray/commentsTray/CommentsTray";
-import CartPanel from "../component/templates/Panel/CartPanel.component";
+import CartPanel from "../component/templates/Panel/CartPanel.component/Panel.component";
 
 type AContainerProps = {
   showHeader?: boolean;
