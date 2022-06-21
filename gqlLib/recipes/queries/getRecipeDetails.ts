@@ -51,6 +51,8 @@ export const GET_RECIPE = gql`
         _id
         postfixTitle
         description
+        createdAt
+        editedAt
       }
       userCollections
     }
