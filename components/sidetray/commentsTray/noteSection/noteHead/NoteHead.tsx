@@ -11,6 +11,7 @@ type NoteFormProps = {
   ) => void;
   createOrUpdateNote: () => void;
   handleButtonClick: () => void;
+  isFromRecipePage?: "details" | "edit" | "default";
 };
 
 const NoteHead = ({
@@ -20,6 +21,7 @@ const NoteHead = ({
   toggleNoteForm,
   updateNoteForm,
   handleButtonClick,
+  isFromRecipePage = "default",
 }: NoteFormProps) => {
   return (
     <div>
@@ -30,7 +32,7 @@ const NoteHead = ({
           updateNoteForm={updateNoteForm}
           createOrUpdateNote={createOrUpdateNote}
         />
-      ) : (
+      ) : isFromRecipePage === "default" || isFromRecipePage === "edit" ? (
         <div className={styles.commentsIconBox}>
           <span></span>
 
@@ -43,7 +45,7 @@ const NoteHead = ({
             <span>Add</span>
           </button>
         </div>
-      )}
+      ) : null}
     </div>
   );
 };
