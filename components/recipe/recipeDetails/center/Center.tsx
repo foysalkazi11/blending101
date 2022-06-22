@@ -20,7 +20,10 @@ import useForAddToCollection from "../../../../customHooks/useForAddToCollection
 import useForOpenCollectionTray from "../../../../customHooks/useForOpenCollection";
 import useForOpenCommentsTray from "../../../../customHooks/useForOpenCommentsTray";
 import useForSelectCommentsAndNotesIcon from "../../../../customHooks/useForSelectCommentsAndNotesIcon";
-import { setOpenVersionTray } from "../../../../redux/slices/versionTraySlice";
+import {
+  setOpenVersionTray,
+  setOpenVersionTrayFormWhichPage,
+} from "../../../../redux/slices/versionTraySlice";
 import { VscVersions } from "react-icons/vsc";
 
 const scaleMenu = [
@@ -115,13 +118,19 @@ const Center = ({
     <div style={{ width: "100%" }}>
       <PanelHeaderCenter
         backLink="/"
-        editOrSavebtnFunc={() => router.push(`/edit_recipe/${recipeData?._id}`)}
+        editOrSavebtnFunc={() =>
+          router.push(
+            recipeData?.versionId
+              ? `/edit_recipe/${recipeData?._id}/${recipeData?.versionId}`
+              : `/edit_recipe/${recipeData?._id}`,
+          )
+        }
         editOrSavebtnText="Edit"
       />
 
       <div className={styles.contentBox}>
         <div className={styles.heading}>
-          <h3>{recipeData?.name}</h3>
+          <h3>{recipeData?.versionName || recipeData?.name}</h3>
           <span className={styles.ratingBox}>
             <img src="/images/rating.svg" alt="" />
             {recipeData?.averageRating} ({recipeData?.numberOfRating})
@@ -142,7 +151,10 @@ const Center = ({
           <div className={styles.alignItems}>
             <IconWithText
               wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
-              handleClick={(e) => dispatch(setOpenVersionTray(true))}
+              handleClick={(e) => {
+                dispatch(setOpenVersionTray(true));
+                dispatch(setOpenVersionTrayFormWhichPage("details"));
+              }}
               icon={
                 <VscVersions
                   color={

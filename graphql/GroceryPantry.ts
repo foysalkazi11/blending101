@@ -42,8 +42,8 @@ export const GET_CART_DATA = gql`
 `;
 
 export const SEARCH_INGREDIENTS_FOR_GROCERY = gql`
-  query SearchIngredients($query: String!) {
-    searchBlendIngredientsForGrocery(searchTerm: $query) {
+  query SearchIngredients($query: String!, $memberId: String!) {
+    searchBlendIngredientsForGrocery(memberId: $memberId, searchTerm: $query) {
       _id
       ingredientName
       featuredImage

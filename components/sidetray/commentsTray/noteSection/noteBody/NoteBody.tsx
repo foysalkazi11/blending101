@@ -7,10 +7,12 @@ import SkeletonNote from "../../../../../theme/skeletons/skeletonNote/SkeletonNo
 
 interface NoteBodyPops {
   data?: any[];
-  updateItem?: (id: string) => void;
+  updateItem?: (val: any) => void;
   deleteItem?: (id: string) => void;
   varient?: "notes" | "versions";
   loading?: boolean;
+  isFromRecipePage?: "details" | "edit" | "default";
+  handleTitleClick?: (id: string) => void;
 }
 const NoteBody = ({
   data = [],
@@ -18,6 +20,8 @@ const NoteBody = ({
   updateItem = () => {},
   varient = "notes",
   loading = false,
+  isFromRecipePage = "default",
+  handleTitleClick = () => {},
 }: NoteBodyPops) => {
   return (
     <div className={`${styles.noteEditBox} y-scroll`}>
@@ -28,21 +32,35 @@ const NoteBody = ({
           return (
             <div className={styles.singleNoteEdit} key={index}>
               <div className={styles.header}>
-                <h3>{item?.title || item?.postfixTitle}</h3>
-                <div className={styles.rightSide}>
-                  <div
-                    className={styles.editIconBox}
-                    onClick={() => updateItem(item?._id)}
-                  >
-                    <FiEdit2 className={styles.icon} />
+                <h3
+                  onClick={() => handleTitleClick(item?._id)}
+                  style={{
+                    cursor:
+                      isFromRecipePage === "edit" ||
+                      isFromRecipePage === "details"
+                        ? "pointer"
+                        : null,
+                  }}
+                >
+                  {item?.title || item?.postfixTitle}
+                </h3>
+                {isFromRecipePage === "default" ||
+                isFromRecipePage === "edit" ? (
+                  <div className={styles.rightSide}>
+                    <div
+                      className={styles.editIconBox}
+                      onClick={() => updateItem(item)}
+                    >
+                      <FiEdit2 className={styles.icon} />
+                    </div>
+                    <div
+                      className={styles.editIconBox}
+                      onClick={() => deleteItem(item?._id)}
+                    >
+                      <MdDeleteOutline className={styles.icon} />
+                    </div>
                   </div>
-                  <div
-                    className={styles.editIconBox}
-                    onClick={() => deleteItem(item?._id)}
-                  >
-                    <MdDeleteOutline className={styles.icon} />
-                  </div>
-                </div>
+                ) : null}
               </div>
 
               <div className={styles.noteDis}>

@@ -128,6 +128,7 @@ const NoteSection = ({ allNotes, setAllNotes }: NoteSectionProps) => {
         updateNoteForm={updateNoteForm}
         createOrUpdateNote={createOrUpdateNote}
         handleButtonClick={handleButtonClick}
+        isFromRecipePage="default"
       />
       <NoteBody
         data={allNotes}
@@ -135,6 +136,7 @@ const NoteSection = ({ allNotes, setAllNotes }: NoteSectionProps) => {
         updateItem={updateNoteValue}
         varient="notes"
         loading={loading}
+        isFromRecipePage="default"
       />
     </>
   );

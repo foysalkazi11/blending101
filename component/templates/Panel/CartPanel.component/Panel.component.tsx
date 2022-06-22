@@ -13,7 +13,6 @@ import Textfield from "../../../organisms/Forms/Textfield.component";
 import ToggleMenu from "../../../organisms/Tabmenu/ToggleMenu.component";
 // import GroceryComponent from "./grocery/Grocery.component";
 import styles from "./Panel.module.scss";
-import ButtonComponent from "../../../../theme/button/button.component";
 import Combobox from "../../../organisms/Forms/Combobox.component";
 import Checkbox from "../../../organisms/Forms/Checkbox.component";
 import useHideOnClickOutside from "../../../../hooks/useHideOnClickOutside";
@@ -99,6 +98,7 @@ const GroceryPanel = () => {
 
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<"query" | "quantity">("query");
+  const [isStaple, setIsStaple] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedIngredient, setSelectedIngredient] = useState<any>({});
 
@@ -139,8 +139,7 @@ const GroceryPanel = () => {
     });
   };
 
-  const openEditPanel = (item) => {
-    console.log(item);
+  const openEditPanel = (item, isStaple) => {
     methods.reset({
       ammount: item.quantity,
       units: item.selectedPortion,
@@ -148,16 +147,20 @@ const GroceryPanel = () => {
 
     setOpen(true);
     setMode("quantity");
+
     const ingredient = {
       id: item?.ingredientId?._id,
       ingredientName: item?.ingredientId?.ingredientName,
       featuredImage: item?.ingredientId?.featuredImage,
       portions: item?.ingredientId?.portions || [],
     };
-    console.log(item);
-
     setSelectedIngredient(ingredient);
     setIsEditMode(true);
+    if (isStaple) {
+      setIsStaple(true);
+    } else {
+      setIsStaple(false);
+    }
   };
 
   useMemo(() => {
@@ -211,9 +214,10 @@ const GroceryPanel = () => {
         </div>
       </div>
       <SearchPanel
-        isEditMode={isEditMode}
         methods={methods}
         toggle={toggle}
+        isEditModeState={[isEditMode, setIsEditMode]}
+        isStapleState={[isStaple, setIsStaple]}
         openState={[open, setOpen]}
         modeState={[mode, setMode]}
         selectedIngredientState={[selectedIngredient, setSelectedIngredient]}

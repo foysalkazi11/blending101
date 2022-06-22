@@ -11,7 +11,7 @@ interface ItemListProps {
   checkedGroceriesState: [string[], any];
   checkedPantriesState: [string[], any];
   checkedStaplesState: [string[], any];
-  openEditPanel: (item: any) => void;
+  openEditPanel: (item: any, isStaple?: boolean) => void;
   deleteItems: any;
   isStaples?: boolean;
 }
@@ -92,15 +92,17 @@ const ItemList = (props: ItemListProps) => {
             </div>
           </div>
           <div className="flex ai-center">
-            <IconButton
-              size="small"
-              variant="fade"
-              className={styles.button}
-              style={{ marginRight: 5 }}
-              onClick={() => openEditPanel(item)}
-            >
-              <FaPen />
-            </IconButton>
+            {!isStaples && (
+              <IconButton
+                size="small"
+                variant="fade"
+                className={styles.button}
+                style={{ marginRight: 5 }}
+                onClick={() => openEditPanel(item, isStaples)}
+              >
+                <FaPen />
+              </IconButton>
+            )}
             <IconButton
               size="small"
               variant="fade"
