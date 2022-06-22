@@ -94,7 +94,13 @@ const EditRecipePage = ({
   };
 
   return (
-    <AContainer>
+    <AContainer
+      showVersionTray={{
+        show: true,
+        showPanle: "right",
+        showTagByDeafult: false,
+      }}
+    >
       {width < 1280 ? (
         <IngredientFixedPanle
           handleIngredientClick={handleIngredientClick}
