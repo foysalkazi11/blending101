@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { useState, useMemo } from "react";
 import { useForm, FormProvider } from "react-hook-form";
-import { FaChevronLeft } from "react-icons/fa";
+import { FaChevronLeft, FaPlus, FaTimes } from "react-icons/fa";
 import {
   SEARCH_INGREDIENTS_FOR_GROCERY,
   ADD_GROCERY_ITEM,
@@ -25,6 +25,7 @@ import Combobox from "../../../organisms/Forms/Combobox.component";
 import Textfield from "../../../organisms/Forms/Textfield.component";
 
 import styles from "./Panel.module.scss";
+import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
 
 export const defaultGrocery = {
   ammount: "",
@@ -32,11 +33,12 @@ export const defaultGrocery = {
 };
 
 interface SearchPanelProps {
-  isEditMode: boolean;
   methods: any;
   toggle: 1 | 2;
   openState: [boolean, any];
   modeState: ["query" | "quantity", any];
+  isEditModeState: [boolean, any];
+  isStapleState: [boolean, any];
   selectedIngredientState: [any, any];
 }
 
@@ -45,18 +47,32 @@ const SearchPanel = (props: SearchPanelProps) => {
     toggle,
     openState,
     modeState,
+    isStapleState,
     methods,
-    isEditMode,
+    isEditModeState,
     selectedIngredientState,
   } = props;
 
   const [open, setOpen] = openState;
   const [mode, setMode] = modeState;
+  const [isEditMode, setIsEditMode] = isEditModeState;
   const [selectedIngredient, setSelectedIngredient] = selectedIngredientState;
+  const [isStaple, setIsStaple] = isStapleState;
 
-  const [isStaple, setIsStaple] = useState(false);
+  const [query, setQuery] = useState("");
 
-  const hideOutsideClick = useHideOnClickOutside(() => open && setOpen(false));
+  const resetPanel = () => {
+    if (open) {
+      setOpen(false);
+      setMode("query");
+      setSelectedIngredient({});
+      setIsStaple(false);
+      setIsEditMode(false);
+      methods.reset(defaultGrocery);
+    }
+  };
+
+  const hideOutsideClick = useHideOnClickOutside(resetPanel);
 
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user.dbUser);
@@ -69,12 +85,16 @@ const SearchPanel = (props: SearchPanelProps) => {
 
   const searchHandler = (e) => {
     if (e.target.value) {
-      searchIngredient({ variables: { query: e.target.value } });
+      searchIngredient({
+        variables: { query: e.target.value, memberId: userId._id },
+      });
       setOpen(true);
+      setQuery(e.target.value);
     }
   };
 
   const ingredientHandler = (item) => {
+    console.log(item);
     setMode("quantity");
     setSelectedIngredient(item);
   };
@@ -101,9 +121,6 @@ const SearchPanel = (props: SearchPanelProps) => {
       state: toggle === 1 ? groceryState : pantryState,
       success: `Added ${toggle === 1 ? "Grocery" : "Pantry"} Successfully`,
       onSuccess: () => {
-        setOpen(false);
-        setMode("quantity");
-
         if (toggle === 1) {
           dispatch(
             addGrocery({
@@ -143,8 +160,7 @@ const SearchPanel = (props: SearchPanelProps) => {
             );
           }
         }
-        methods.reset(defaultGrocery);
-        setSelectedIngredient({});
+        resetPanel();
       },
     });
   };
@@ -166,52 +182,8 @@ const SearchPanel = (props: SearchPanelProps) => {
       state: editState,
       success: `Edited ${listType} Successfully`,
       onSuccess: () => {
-        setOpen(false);
-        setMode("search");
-
         dispatch(editCartIngredients({ listType, ingredient }));
-
-        // if (toggle === 1) {
-        //   dispatch(
-        //     addGrocery({
-        //       ingredientId: {
-        //         _id: selectedIngredient._id,
-        //         ingredientName: selectedIngredient.ingredientName,
-        //         featuredImage: selectedIngredient.featuredImage,
-        //       },
-        //       quantity: data.ammount,
-        //       selectedPortion: data.units,
-        //     }),
-        //   );
-        // } else if (toggle === 2) {
-        //   if (isStaple) {
-        //     dispatch(
-        //       addStaple({
-        //         ingredientId: {
-        //           _id: selectedIngredient._id,
-        //           ingredientName: selectedIngredient.ingredientName,
-        //           featuredImage: selectedIngredient.featuredImage,
-        //         },
-        //         quantity: data.ammount,
-        //         selectedPortion: data.units,
-        //       }),
-        //     );
-        //   } else {
-        //     dispatch(
-        //       addPantry({
-        //         ingredientId: {
-        //           _id: selectedIngredient._id,
-        //           ingredientName: selectedIngredient.ingredientName,
-        //           featuredImage: selectedIngredient.featuredImage,
-        //         },
-        //         quantity: data.ammount,
-        //         selectedPortion: data.units,
-        //       }),
-        //     );
-        //   }
-        // }
-        methods.reset(defaultGrocery);
-        setSelectedIngredient({});
+        resetPanel();
       },
     });
   };
@@ -223,6 +195,8 @@ const SearchPanel = (props: SearchPanelProps) => {
       await onAdd(data);
     }
   };
+
+  console.log(isEditMode);
 
   const portionOptions = useMemo(
     () =>
@@ -244,35 +218,59 @@ const SearchPanel = (props: SearchPanelProps) => {
           className={`${styles.search__input} ${
             open ? styles["search__input--active"] : ""
           }`}
+          value={query}
           onChange={searchHandler}
         />
+        {query && (
+          <div className={styles.search__icon}>
+            <IconButton
+              size="small"
+              variant="primary"
+              className="ml-10"
+              onClick={() => {
+                setQuery("");
+                setOpen(false);
+              }}
+            >
+              <FaTimes />
+            </IconButton>
+          </div>
+        )}
       </div>
       {open && (
         <div
           className={styles.search__panel}
           style={{ overflow: mode === "quantity" ? "hidden" : "auto" }}
         >
-          {mode === "query" && (
-            <ul className={styles.search__list}>
-              {filteredIngredints?.searchBlendIngredientsForGrocery.map(
-                (item) => (
-                  <li
-                    key={item.ingredientName}
-                    onClick={() => ingredientHandler(item)}
-                  >
-                    <Image
-                      src={item.featuredImage || "/food/Dandelion.png"}
-                      alt={item.ingredientName}
-                      layout="fixed"
-                      height={25}
-                      width={25}
-                    />
-                    <span className="ml-10">{item.ingredientName}</span>
-                  </li>
-                ),
-              )}
-            </ul>
-          )}
+          {mode === "query" &&
+            (searching ? (
+              <div
+                className="flex ai-center jc-center"
+                style={{ height: "19rem", overflow: "hidden" }}
+              >
+                <CircularRotatingLoader />
+              </div>
+            ) : (
+              <ul className={styles.search__list}>
+                {filteredIngredints?.searchBlendIngredientsForGrocery.map(
+                  (item) => (
+                    <li
+                      key={item.ingredientName}
+                      onClick={() => ingredientHandler(item)}
+                    >
+                      <Image
+                        src={item.featuredImage || "/food/Dandelion.png"}
+                        alt={item.ingredientName}
+                        layout="fixed"
+                        height={25}
+                        width={25}
+                      />
+                      <span className="ml-10">{item.ingredientName}</span>
+                    </li>
+                  ),
+                )}
+              </ul>
+            ))}
           {mode === "quantity" && (
             <div className={styles.search__details}>
               <div className="row">
@@ -293,19 +291,20 @@ const SearchPanel = (props: SearchPanelProps) => {
                     </span>
                   </div>
                 </div>
-                <div className="col-2">
-                  <IconButton
-                    variant="white"
-                    size="small"
-                    onClick={() => {
-                      setOpen(false);
-                      setMode("quantity");
-                      setSelectedIngredient({});
-                    }}
-                  >
-                    <FaChevronLeft />
-                  </IconButton>
-                </div>
+                {!isEditMode && (
+                  <div className="col-2">
+                    <IconButton
+                      variant="white"
+                      size="small"
+                      onClick={() => {
+                        resetPanel();
+                        setOpen(true);
+                      }}
+                    >
+                      <FaChevronLeft />
+                    </IconButton>
+                  </div>
+                )}
               </div>
               {toggle === 2 && (
                 <div className="row">

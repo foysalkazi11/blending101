@@ -59,15 +59,7 @@ export const CartSlice = createSlice({
           }
           return pantry;
         });
-        state.groceries = pantries;
-      } else {
-        const grocery = state.groceries.find(
-          (grocery) => grocery.ingredientId._id === ingredient.ingredientId,
-        );
-        if (grocery) {
-          grocery.selectedPortion = ingredient.selectedPortion;
-          grocery.quantity = ingredient.quantity;
-        }
+        state.pantries = pantries;
       }
     },
     deleteCartIngredients: (
