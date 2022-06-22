@@ -9,6 +9,7 @@ interface leftTrayInterface {
   showPanle?: "left" | "right";
   openTray?: boolean;
   closeTray?: () => void;
+  panleTag?: ReactNode;
   iconDefault?: string;
   iconWhenHover?: string;
 }

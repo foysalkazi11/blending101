@@ -8,7 +8,7 @@ import styles from "./VersionsTray.module.scss";
 import { RecipeDetailsType } from "../../../type/recipeDetails";
 import NoteHead from "../commentsTray/noteSection/noteHead/NoteHead";
 import NoteBody from "../commentsTray/noteSection/noteBody/NoteBody";
-import { useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import ADD_VERSION from "../../../gqlLib/versions/mutation/addVersion";
 import EDIT_A_VERSION_OF_RECIPE from "../../../gqlLib/versions/mutation/editAVersionOfRecipe";
 import { useRouter } from "next/router";
@@ -16,6 +16,10 @@ import { VscVersions } from "react-icons/vsc";
 import { setDetailsARecipe } from "../../../redux/slices/recipeSlice";
 import REMOVE_A_RECIPE_VERSION from "../../../gqlLib/versions/mutation/removeARecipeVersion";
 import notification from "../../utility/reactToastifyNotification";
+import GET_A_RECIPE_VERSION_ONLY from "../../../gqlLib/versions/query/getARecipeVersionOnly";
+import GET_A_RECIPE_VERSION from "../../../gqlLib/versions/query/getARecipeVersion";
+import { RecipeVersionType } from "../../../type/recipeVersionType";
+import { GET_RECIPE } from "../../../gqlLib/recipes/queries/getRecipeDetails";
 interface VersionTrayProps {
   showTagByDefaut?: boolean;
   showPanle?: "left" | "right";
@@ -26,18 +30,76 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   const [updateVersion, setUpdateVersion] = useState(false);
   const [formState, setFormState] = useState({ title: "", body: "" });
   const [updateVersionId, setUpdateVersionId] = useState("");
-  const { openVersionTray } = useAppSelector((state) => state?.versionTray);
+  const { openVersionTray, openVersionTrayFormWhichPage } = useAppSelector(
+    (state) => state?.versionTray,
+  );
+  const { dbUser } = useAppSelector((state) => state?.user);
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
-  const dispatch = useAppDispatch();
-
   const [addVersion, { loading: newVersionLoading }] = useMutation(ADD_VERSION);
   const [editVersion, { data: editVersionData, loading: editVersionLoading }] =
     useMutation(EDIT_A_VERSION_OF_RECIPE);
   const [removeVersion, { loading: removeVersionLoading }] = useMutation(
     REMOVE_A_RECIPE_VERSION,
   );
+  const [
+    getARecipeVersionOnly,
+    { data: recipeVersionOnlyData, loading: recipeVersionOnlyLoading },
+  ] = useLazyQuery(GET_A_RECIPE_VERSION_ONLY);
+  const [
+    getARecipeVersion,
+    { data: recipeVersionData, loading: recipeVersionLoading },
+  ] = useLazyQuery(GET_A_RECIPE_VERSION);
+
+  const [getARecipe, { data: recipeData, loading: recipeLoading }] =
+    useLazyQuery(GET_RECIPE, {
+      fetchPolicy: "network-only",
+    });
+  const dispatch = useAppDispatch();
   const isMounted = useRef(false);
   const router = useRouter();
+
+  const handleGetARecipe = async () => {
+    try {
+      const { data } = await getARecipe({
+        variables: { recipeId: detailsARecipe?._id, userId: dbUser?._id },
+      });
+      dispatch(setDetailsARecipe(data?.getARecipe));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleToGetARecipeVersionOnly = () => {
+    getARecipeVersionOnly({
+      variables: { recipeId: detailsARecipe?._id, userId: dbUser?._id },
+    });
+  };
+  const handleToGetARecipeVersion = async (id: string) => {
+    if (openVersionTrayFormWhichPage === "details") {
+      try {
+        const { data } = await getARecipeVersion({
+          variables: { versionId: id },
+        });
+
+        const { _id, recipeId, postfixTitle, ...rest }: RecipeVersionType =
+          data?.getARecipeVersion;
+        const obj = {
+          _id: recipeId,
+          versionId: _id,
+          versionName: `${detailsARecipe?.name}(${postfixTitle})`,
+          ...rest,
+        };
+        dispatch(
+          setDetailsARecipe({
+            ...detailsARecipe,
+            ...obj,
+          }),
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   const toggleForm = () => {
     setShowForm((pre) => !pre);
@@ -139,7 +201,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
             src={detailsARecipe?.image?.find((img) => img?.default)?.image}
             alt="recipe_img"
           />
-          <h3>{detailsARecipe?.name}</h3>
+          <h3 onClick={handleGetARecipe}>{detailsARecipe?.name}</h3>
         </div>
         <NoteHead
           showForm={showForm}
@@ -148,13 +210,16 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           updateNoteForm={updateForm}
           createOrUpdateNote={createOrUpdateVarsion}
           handleButtonClick={handleButtonClick}
+          isFromRecipePage={openVersionTrayFormWhichPage}
         />
         <NoteBody
           data={detailsARecipe?.recipeVersion || []}
           deleteItem={deleteRecipeVersion}
-          updateItem={(id) => router?.push(`/edit_recipe/${id}/version`)}
+          updateItem={(val) => router?.push(`/edit_recipe/${val?._id}/version`)}
           varient="versions"
           loading={newVersionLoading || removeVersionLoading}
+          isFromRecipePage={openVersionTrayFormWhichPage}
+          handleTitleClick={handleToGetARecipeVersion}
         />
       </div>
     </TrayWrapper>

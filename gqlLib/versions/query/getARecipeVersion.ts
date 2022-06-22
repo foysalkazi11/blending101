@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 const GET_A_RECIPE_VERSION = gql`
-  query Query($versionId: String!) {
+  query GetARecipeVersion($versionId: String!) {
     getARecipeVersion(versionId: $versionId) {
       _id
       recipeId

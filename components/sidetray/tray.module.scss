@@ -125,7 +125,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
   border-top-right-radius: 7px;
   border-bottom-right-radius: 7px;
   border: 1px solid $primaryColor;
@@ -133,4 +132,13 @@
 .filterTaryHovered {
   right: -45px !important;
   background-color: $primaryColor;
+}
+
+.rightRadius {
+  border-top-right-radius: 7px;
+  border-bottom-right-radius: 7px;
+}
+.leftRadius {
+  border-top-left-radius: 7px;
+  border-bottom-left-radius: 7px;
 }
