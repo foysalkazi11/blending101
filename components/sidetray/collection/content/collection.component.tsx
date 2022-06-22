@@ -83,7 +83,7 @@ export default function CollectionComponent({
       reactToastifyNotification("info", `Collection update successfully`);
       setIsCollectionUpdate(false);
     } catch (error) {
-      reactToastifyNotification("eror", error?.message);
+      reactToastifyNotification("error", error?.message);
       setIsCollectionUpdate(false);
     }
   };
@@ -120,7 +120,7 @@ export default function CollectionComponent({
 
       reactToastifyNotification("info", "Collection delete successfully");
     } catch (error) {
-      reactToastifyNotification("eror", error?.message);
+      reactToastifyNotification("error", error?.message);
     }
   };
 

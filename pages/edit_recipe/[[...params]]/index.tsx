@@ -24,7 +24,8 @@ import useGetBlendNutritionBasedOnRecipexxx from "../../../customHooks/useGetBle
 
 const EditRecipeComponent = () => {
   const router = useRouter();
-  const { recipeId } = router.query;
+  const { params = [] } = router.query;
+  const recipeId = params?.[0] || "";
   const { dbUser } = useAppSelector((state) => state?.user);
   const dispatch = useAppDispatch();
   const [calculateIngOz, SetcalculateIngOz] = useState(null);
@@ -42,6 +43,8 @@ const EditRecipeComponent = () => {
       SetcalculateIngOz,
     );
 
+  console.log(params);
+
   const servingCounter = useAppSelector(
     (state) => state.editRecipeReducer.servingCounter,
   );
@@ -49,9 +52,6 @@ const EditRecipeComponent = () => {
     (state) => state?.editRecipeReducer?.recipeName,
   );
 
-  const ingredientArrayForNutrition = useAppSelector(
-    (state) => state?.editRecipeReducer?.ingredientArrayForNutrition,
-  );
   const recipeInstruction = useAppSelector(
     (state) => state?.editRecipeReducer?.recipeInstruction,
   );

@@ -1,19 +1,25 @@
 import { toast } from "react-toastify";
 
-// type notificationProps = {
-//   type?: string;
-//   content?: string;
-//   position?: string;
-//   autoClose?: number;
-//   hideProgressBar?: boolean;
-//   closeOnClick?: boolean;
-//   pauseOnHover?: boolean;
-//   draggable?: boolean;
-//   progress?: boolean | undefined;
-// };
+type notificationProps = (
+  type?: "success" | "error" | "info" | "warning",
+  content?: string,
+  position?:
+    | "top-right"
+    | "top-right"
+    | "top-right"
+    | "bottom-left"
+    | "bottom-right"
+    | "bottom-center",
+  autoClose?: number,
+  hideProgressBar?: boolean,
+  closeOnClick?: boolean,
+  pauseOnHover?: boolean,
+  draggable?: boolean,
+  progress?: string | number,
+) => void;
 
-const notification = (
-  type = "",
+const notification: notificationProps = (
+  type = "success",
   content = "",
   position = "top-right",
   autoClose = 5000,
@@ -21,11 +27,10 @@ const notification = (
   closeOnClick = true,
   pauseOnHover = true,
   draggable = true,
-  progress = undefined
+  progress = 0,
 ) => {
   if (type === "success") {
     return toast.success(content, {
-      //@ts-ignore
       position,
       autoClose,
       hideProgressBar,
@@ -37,7 +42,6 @@ const notification = (
   }
   if (type === "error") {
     return toast.error(content, {
-      //@ts-ignore
       position,
       autoClose,
       hideProgressBar,
@@ -49,7 +53,6 @@ const notification = (
   }
   if (type === "info") {
     return toast.info(content, {
-      //@ts-ignore
       position,
       autoClose,
       hideProgressBar,
@@ -61,7 +64,6 @@ const notification = (
   }
   if (type === "warning") {
     return toast.warning(content, {
-      //@ts-ignore
       position,
       autoClose,
       hideProgressBar,
@@ -71,8 +73,8 @@ const notification = (
       progress,
     });
   }
+  //@ts-ignore
   return toast.default(content, {
-    //@ts-ignore
     position,
     autoClose,
     hideProgressBar,

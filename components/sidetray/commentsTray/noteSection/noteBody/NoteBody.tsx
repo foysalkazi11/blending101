@@ -7,7 +7,7 @@ import SkeletonNote from "../../../../../theme/skeletons/skeletonNote/SkeletonNo
 
 interface NoteBodyPops {
   data?: any[];
-  updateItem?: (val: any) => void;
+  updateItem?: (id: string) => void;
   deleteItem?: (id: string) => void;
   varient?: "notes" | "versions";
   loading?: boolean;
@@ -19,12 +19,11 @@ const NoteBody = ({
   varient = "notes",
   loading = false,
 }: NoteBodyPops) => {
-  if (loading) {
-    return <SkeletonNote />;
-  }
   return (
     <div className={`${styles.noteEditBox} y-scroll`}>
-      {data?.length ? (
+      {loading ? (
+        <SkeletonNote />
+      ) : data?.length ? (
         data?.map((item, index) => {
           return (
             <div className={styles.singleNoteEdit} key={index}>
@@ -49,7 +48,7 @@ const NoteBody = ({
               <div className={styles.noteDis}>
                 <p>{item?.body || item?.description}</p>
                 <span>
-                  {varient === "versions" ? null : item?.updatedAt ? (
+                  {item?.updatedAt ? (
                     <>
                       {format(parseISO(item?.updatedAt), "dd/mm/yyyy")} (edited)
                     </>
