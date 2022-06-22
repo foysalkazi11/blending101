@@ -5,20 +5,26 @@ import React, {
   useEffect,
   useRef,
   useState,
-} from 'react';
-import styles from './centerElements.module.scss';
-import MoreVertIcon from '../../../../public/icons/more_vert_black_36dp.svg';
-import ScoreTray from './scoreTray/scoreTray.component';
-import Image from 'next/image';
-import { setQuantity } from '../../../../redux/edit_recipe/quantity';
-import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
+} from "react";
+import styles from "./centerElements.module.scss";
+import MoreVertIcon from "../../../../public/icons/more_vert_black_36dp.svg";
+import ScoreTray from "./scoreTray/scoreTray.component";
+import Image from "next/image";
+import { setQuantity } from "../../../../redux/edit_recipe/quantity";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import {
   setDescriptionRecipe,
   setEditRecipeName,
   setSelectedBlendCategory,
-} from '../../../../redux/edit_recipe/editRecipeStates';
-import RecipeDropDown from '../../../../theme/dropDown/recipeDropDown.component';
-import HandleImageShow from '../../share/handleImageShow/HandleImageShow';
+} from "../../../../redux/edit_recipe/editRecipeStates";
+import RecipeDropDown from "../../../../theme/dropDown/recipeDropDown.component";
+import HandleImageShow from "../../share/handleImageShow/HandleImageShow";
+import IconWithText from "../../recipeDetails/center/Icon/IconWithText";
+import {
+  setOpenVersionTray,
+  setOpenVersionTrayFormWhichPage,
+} from "../../../../redux/slices/versionTraySlice";
+import { VscVersions } from "react-icons/vsc";
 
 type CenterElementsProps = {
   recipeName?: string;
@@ -42,6 +48,7 @@ const Center_Elements = ({
   const dispatch = useAppDispatch();
   const editRecipeHeading = useRef();
   const [blendCategoryState, setBlendCategoryState] = useState(null);
+  const { detailsARecipe } = useAppSelector((state) => state?.recipe);
 
   const quantity_number = useAppSelector(
     (state) => state?.quantityAdjuster?.quantityNum,
@@ -51,18 +58,18 @@ const Center_Elements = ({
   );
 
   let BlendtecItem = [{ name: `Blentec` }, { name: `Blentec` }];
-  let OzItem = [{ name: '64oz' }, { name: '64oz' }];
+  let OzItem = [{ name: "64oz" }, { name: "64oz" }];
   let dropDownStyle = {
-    paddingRight: '0px',
-    width: '111%',
+    paddingRight: "0px",
+    width: "111%",
   };
 
   const adjusterFunc = (task, type) => {
-    if (type === 'quantity_number') {
-      if (quantity_number <= 0 && task === '-') {
+    if (type === "quantity_number") {
+      if (quantity_number <= 0 && task === "-") {
         dispatch(setQuantity(0));
       } else {
-        task === '+'
+        task === "+"
           ? dispatch(setQuantity(quantity_number + 1))
           : dispatch(setQuantity(quantity_number - 1));
       }
@@ -114,8 +121,23 @@ const Center_Elements = ({
           }}
         />
 
-        <div className={styles.topSection__RightIcon}>
-          <MoreVertIcon />
+        <div>
+          {/* <MoreVertIcon /> */}
+          <IconWithText
+            wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
+            handleClick={(e) => {
+              dispatch(setOpenVersionTray(true));
+              dispatch(setOpenVersionTrayFormWhichPage("edit"));
+            }}
+            icon={
+              <VscVersions
+                color={
+                  detailsARecipe?.recipeVersion?.length ? "#7cbc39" : "#c4c4c4"
+                }
+              />
+            }
+            text="Versions"
+          />
         </div>
       </div>
       <div className={styles.addImagediv}>
@@ -147,7 +169,7 @@ const Center_Elements = ({
               <li>
                 <div
                   className={styles.left__options}
-                  style={{ minWidth: '125px' }}
+                  style={{ minWidth: "125px" }}
                 >
                   <RecipeDropDown
                     ElemList={allBlendCategories}
@@ -160,7 +182,7 @@ const Center_Elements = ({
               <li>
                 <div
                   className={styles.left__options}
-                  style={{ minWidth: '115px' }}
+                  style={{ minWidth: "115px" }}
                 >
                   <RecipeDropDown
                     ElemList={BlendtecItem}
@@ -171,7 +193,7 @@ const Center_Elements = ({
               <li>
                 <div
                   className={styles.left__options}
-                  style={{ minWidth: '35px' }}
+                  style={{ minWidth: "35px" }}
                 >
                   <RecipeDropDown ElemList={OzItem} style={dropDownStyle} />
                 </div>
@@ -185,22 +207,22 @@ const Center_Elements = ({
                 <div className={styles.arrow_div}>
                   <Image
                     onClick={() => {
-                      adjusterFunc('+', 'quantity_number');
+                      adjusterFunc("+", "quantity_number");
                     }}
-                    src={'/icons/dropdown.svg'}
+                    src={"/icons/dropdown.svg"}
                     alt="icon"
-                    width={'17px'}
-                    height={'15px'}
+                    width={"17px"}
+                    height={"15px"}
                     className={styles.reverse_arrow}
                   />
                   <Image
                     onClick={() => {
-                      adjusterFunc('-', 'quantity_number');
+                      adjusterFunc("-", "quantity_number");
                     }}
-                    src={'/icons/dropdown.svg'}
+                    src={"/icons/dropdown.svg"}
                     alt="icon"
-                    width={'17px'}
-                    height={'15px'}
+                    width={"17px"}
+                    height={"15px"}
                     className={styles.original_arrow}
                   />
                 </div>
@@ -208,10 +230,10 @@ const Center_Elements = ({
             </div>
             <span className={styles.timer_icon}>
               <Image
-                src={'/icons/time-icon.svg'}
+                src={"/icons/time-icon.svg"}
                 alt="Picture will load soon"
-                height={'20px'}
-                width={'20px'}
+                height={"20px"}
+                width={"20px"}
               />
             </span>
           </div>
