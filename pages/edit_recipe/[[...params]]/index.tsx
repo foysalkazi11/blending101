@@ -22,6 +22,12 @@ import imageUploadS3 from "../../../components/utility/imageUploadS3";
 import reactToastifyNotification from "../../../components/utility/reactToastifyNotification";
 import useGetBlendNutritionBasedOnRecipexxx from "../../../customHooks/useGetBlendNutritionBasedOnRecipexxx";
 import useToGetARecipeVersion from "../../../customHooks/useToGetARecipeVersion";
+import useToGetARecipe from "../../../customHooks/useToGetARecipe";
+import {
+  setOpenVersionTray,
+  setOpenVersionTrayFormWhichPage,
+} from "../../../redux/slices/versionTraySlice";
+import { setDetailsARecipe } from "../../../redux/slices/recipeSlice";
 
 const EditRecipeComponent = () => {
   const router = useRouter();
@@ -38,24 +44,36 @@ const EditRecipeComponent = () => {
   const selectedIngredientsList = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedIngredientsList,
   );
+  const { detailsARecipe } = useAppSelector((state) => state?.recipe);
   const { loading: nutritionDataLoading, data: nutritionData } =
     useGetBlendNutritionBasedOnRecipexxx(
       selectedIngredientsList,
       nutritionState,
       SetcalculateIngOz,
     );
-  const { data: recipeData, loading: recipeLoading } = useQuery(GET_RECIPE, {
-    variables: { recipeId: recipeId, userId: dbUser?._id },
-    fetchPolicy: "network-only",
-  });
 
   const handleToGetARecipeVersion = useToGetARecipeVersion();
+  const handleToGetARecipe = useToGetARecipe();
 
-  console.log(params);
+  const updateEditRecipe = (key: string, value: any) => {
+    dispatch(setDetailsARecipe({ ...detailsARecipe, [key]: value }));
+  };
+
+  useEffect(() => {
+    dispatch(setOpenVersionTray(false));
+    dispatch(setOpenVersionTrayFormWhichPage("edit"));
+  }, []);
 
   useEffect(() => {
     if (versionId) {
-      handleToGetARecipeVersion(versionId);
+      //@ts-ignore
+      if (detailsARecipe?.versionId !== versionId) {
+        handleToGetARecipeVersion(versionId);
+      }
+    } else {
+      if (detailsARecipe?._id !== recipeId) {
+        handleToGetARecipe(recipeId);
+      }
     }
   }, []);
 
@@ -88,7 +106,7 @@ const EditRecipeComponent = () => {
     recipeBasedNutrition,
   ] = [
     classData?.filterIngredientByCategoryAndClass,
-    recipeData?.getARecipe,
+    detailsARecipe,
     allBlendCategory?.getAllCategories,
     nutritionData?.getBlendNutritionBasedOnRecipexxx,
   ];
@@ -196,6 +214,7 @@ const EditRecipeComponent = () => {
 
   return (
     <EditRecipePage
+      updateEditRecipe={updateEditRecipe}
       recipeName={recipeName}
       allIngredients={classBasedData}
       nutritionTrayData={

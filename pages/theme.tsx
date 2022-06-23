@@ -71,7 +71,7 @@ export default function Home() {
             <div className={styles.button__container}>
               <ButtonComponent
                 value="Default"
-                type="primaryy"
+                type="primary"
                 style={{ height: "45px" }}
                 fullWidth={undefined}
                 width={undefined}

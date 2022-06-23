@@ -4,10 +4,12 @@ import { GET_RECIPE } from "../gqlLib/recipes/queries/getRecipeDetails";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setDetailsARecipe } from "../redux/slices/recipeSlice";
 
-const useToGetARecipe = (recipeId: string) => {
+const useToGetARecipe = () => {
   const dispatch = useAppDispatch();
 
-  const [getARecipe, data] = useLazyQuery(GET_RECIPE, {});
+  const [getARecipe] = useLazyQuery(GET_RECIPE, {
+    fetchPolicy: "network-only",
+  });
   const { dbUser } = useAppSelector((state) => state?.user);
 
   const handleToGetARecipe = async (id: string) => {
@@ -21,13 +23,7 @@ const useToGetARecipe = (recipeId: string) => {
     }
   };
 
-  useEffect(() => {
-    if (recipeId) {
-      handleToGetARecipe(recipeId);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [recipeId]);
-
-  return data;
+  return handleToGetARecipe;
 };
+
+export default useToGetARecipe;

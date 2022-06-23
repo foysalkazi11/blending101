@@ -17,6 +17,10 @@ $slider-height: 220px;
     font-size: 28px;
     font-weight: bold;
     color: #000;
+    span {
+      font-weight: normal;
+      font-size: 20px;
+    }
   }
 
   .ratingBox {
