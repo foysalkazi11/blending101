@@ -117,7 +117,29 @@ const GroceryPanel = () => {
   });
   const [deleteCartItem, deleteState] = useMutation(DELETE_CART_ITEM);
 
-  const deleteItems = async (ids: string[], isStaples?: boolean) => {
+  const deleteItem = async (ids: string[], isStaples?: boolean) => {
+    const variables = {
+      userId: userId._id,
+      groceries: toggle === 1 ? ids : [],
+      pantries: toggle === 2 && !isStaples ? ids : [],
+      staples: toggle === 2 && isStaples ? ids : [],
+    };
+    await Publish({
+      mutate: deleteCartItem,
+      variables: variables,
+      state: deleteState,
+      success: `Deleted ${toggle === 1 ? "Grocery" : "Pantry"} Successfully`,
+      onSuccess: () => {
+        dispatch(
+          deleteCartIngredients({
+            ingredients: variables,
+          }),
+        );
+      },
+    });
+  };
+
+  const deleteItems = async () => {
     const variables = {
       userId: userId._id,
       groceries: checkedGroceries,
@@ -205,9 +227,7 @@ const GroceryPanel = () => {
           <IconButton
             size="medium"
             variant={hasBatchDelete ? "primary" : "disabled"}
-            onClick={() =>
-              deleteItems(toggle === 1 ? checkedGroceries : checkedPantries)
-            }
+            onClick={deleteItems}
           >
             <FaRegTrashAlt />
           </IconButton>
@@ -234,7 +254,7 @@ const GroceryPanel = () => {
           checkedPantriesState={[checkedPantries, setCheckedPantries]}
           checkedStaplesState={[checkedStaples, setCheckedStaples]}
           openEditPanel={openEditPanel}
-          deleteItems={deleteItems}
+          deleteItems={deleteItem}
         />
       </div>
       {toggle === 2 && (
@@ -248,7 +268,7 @@ const GroceryPanel = () => {
             checkedPantriesState={[checkedPantries, setCheckedPantries]}
             checkedStaplesState={[checkedStaples, setCheckedStaples]}
             openEditPanel={openEditPanel}
-            deleteItems={deleteItems}
+            deleteItems={deleteItem}
           />
         </div>
       )}

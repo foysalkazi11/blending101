@@ -107,7 +107,7 @@ const ItemList = (props: ItemListProps) => {
               size="small"
               variant="fade"
               className={styles.button}
-              onClick={() => deleteItems([item.ingredientId._id])}
+              onClick={() => deleteItems([item.ingredientId._id], isStaples)}
             >
               <FaRegTrashAlt />
             </IconButton>
