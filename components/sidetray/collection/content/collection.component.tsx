@@ -180,15 +180,10 @@ export default function CollectionComponent({
                 <div
                   className={styles.abs}
                   style={{
-                    backgroundImage: `url(${
-                      //@ts-ignore
-                      "/cards/food.png"
-                    })`,
+                    backgroundImage: `url(${"/cards/food.png"})`,
                   }}
                 ></div>
               </div>
-
-              {/* @ts-ignore */}
               <p>All Recipies</p>
             </div>
           </div>

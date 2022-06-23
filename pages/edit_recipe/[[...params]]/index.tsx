@@ -21,11 +21,13 @@ import { setLoading } from "../../../redux/slices/utilitySlice";
 import imageUploadS3 from "../../../components/utility/imageUploadS3";
 import reactToastifyNotification from "../../../components/utility/reactToastifyNotification";
 import useGetBlendNutritionBasedOnRecipexxx from "../../../customHooks/useGetBlendNutritionBasedOnRecipexxx";
+import useToGetARecipeVersion from "../../../customHooks/useToGetARecipeVersion";
 
 const EditRecipeComponent = () => {
   const router = useRouter();
   const { params = [] } = router.query;
   const recipeId = params?.[0] || "";
+  const versionId = params?.[2] || "";
   const { dbUser } = useAppSelector((state) => state?.user);
   const dispatch = useAppDispatch();
   const [calculateIngOz, SetcalculateIngOz] = useState(null);
@@ -42,8 +44,20 @@ const EditRecipeComponent = () => {
       nutritionState,
       SetcalculateIngOz,
     );
+  const { data: recipeData, loading: recipeLoading } = useQuery(GET_RECIPE, {
+    variables: { recipeId: recipeId, userId: dbUser?._id },
+    fetchPolicy: "network-only",
+  });
+
+  const handleToGetARecipeVersion = useToGetARecipeVersion();
 
   console.log(params);
+
+  useEffect(() => {
+    if (versionId) {
+      handleToGetARecipeVersion(versionId);
+    }
+  }, []);
 
   const servingCounter = useAppSelector(
     (state) => state.editRecipeReducer.servingCounter,
@@ -65,10 +79,6 @@ const EditRecipeComponent = () => {
     variables: { classType: "All" },
   });
 
-  const { data: recipeData, loading: recipeLoading } = useQuery(GET_RECIPE, {
-    variables: { recipeId: recipeId, userId: dbUser?._id },
-    fetchPolicy: "network-only",
-  });
   const { data: allBlendCategory } = useQuery(BLEND_CATEGORY);
   const [editRecipe] = useMutation(EDIT_A_RECIPE);
   const [
