@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import styles from "./ingredientList&Howto.module.scss";
 import Image from "next/image";
 import AddSharpIcon from "../../../../../public/icons/add_black_36dp.svg";
@@ -18,6 +18,7 @@ import CircularRotatingLoader from "../../../../../theme/loader/circularRotating
 import { MdOutlineDelete, MdOutlineInfo } from "react-icons/md";
 import { BiBarChart } from "react-icons/bi";
 import useGetDefaultPortionOfnutration from "../../../../../customHooks/useGetDefaultPortionOfNutration";
+import IngredientSection from "../../../../../component/module/Recipe/Ingredient.module";
 
 type IngredientListPorps = {
   recipeInstructions?: string[];
@@ -177,275 +178,20 @@ const IngredientList = ({
   };
 
   return (
-    <div className={styles.mainCard}>
-      <div className={styles.ingredients__main__card}>
-        <div className={styles.headingDiv}>
-          <div className={styles.basket__icon}>
-            <Image
-              src={"/icons/basket.svg"}
-              alt="icon"
-              width={"17px"}
-              height={"15px"}
-              className={styles.original_arrow}
-            />
-          </div>
-          <h5>Ingredients</h5>
-        </div>
-        <div className={styles.blending__ingredients}>
-          <div className={styles.servings}>
-            <div className={styles.servings__adjuster}>
-              <span className={styles.servings__adjuster__name}>
-                Servings :
-              </span>
-              <div
-                className={styles.servings__adjuster__icondiv}
-                onClick={() => {
-                  adjusterFunc(servingCounter - 1);
-                }}
-              >
-                <RemoveSharpIcon />
-              </div>
-              <span className={styles.servings__adjuster__score}>
-                {servingCounter}
-              </span>
-              <div
-                className={styles.servings__adjuster__icondiv}
-                onClick={() => {
-                  adjusterFunc(servingCounter + 1);
-                }}
-              >
-                <AddSharpIcon />
-              </div>
-            </div>
-            <div className={styles.servings__size}>
-              <span className={styles.servings__adjuster__name}>Volume :</span>
-              <span className={styles.servings__size__score}>
-                {calculatedIngOz}&nbsp;oz
-              </span>
-            </div>
-            <div className={styles.servings__units}>
-              <div className={styles.servings__units__active}>
-                <span className={styles.servings__units__country}>Us</span>
-                <span className={styles.servings__units__scale}>Metric</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className={styles.ingredients}>
-          <DragDropContext
-            onDragEnd={(result) => handleOnDragEnd(result, "ingredients")}
-          >
-            <Droppable droppableId="draggableIngredientList">
-              {(provided) => (
-                <ul {...provided.droppableProps} ref={provided.innerRef}>
-                  {selectedIngredientsList ? (
-                    selectedIngredientsList?.map((elem, index) => {
-                      return (
-                        <Draggable
-                          key={elem.ingredientName + elem?._id}
-                          draggableId={elem.ingredientName + elem?._id}
-                          index={index}
-                        >
-                          {(provided) => (
-                            <li
-                              className={styles.ingredients__li}
-                              {...provided.draggableProps}
-                              ref={provided.innerRef}
-                            >
-                              <div
-                                className={styles.ingredients__drag}
-                                {...provided.dragHandleProps}
-                              >
-                                <DragIndicatorIcon
-                                  className={styles.ingredients__drag}
-                                />
-                              </div>
-                              <div className={styles.ingredients__icons}>
-                                {elem.featuredImage || elem.images?.length ? (
-                                  <Image
-                                    src={elem.featuredImage || elem.images[0]}
-                                    alt="Picture will load soon"
-                                    objectFit="contain"
-                                    layout="fill"
-                                  />
-                                ) : (
-                                  <Image
-                                    src={"/food/Dandelion.png"}
-                                    alt="Picture will load soon"
-                                    objectFit="contain"
-                                    layout="fill"
-                                  />
-                                )}
-                              </div>
-                              {/* to create ingredients lists  */}
-                              <div className={styles.ingredients__text}>
-                                <span>1 &nbsp;</span>
-                                <span>
-                                  {elem.portions[0].measurement ===
-                                  "Quantity not specified"
-                                    ? ""
-                                    : elem.portions[0].measurement}
-                                  &nbsp;
-                                </span>
-                                {
-                                  //@ts-ignore
-                                  elem._id === nutritionState?._id ? (
-                                    <span
-                                      className={
-                                        styles.ingredients__text__highlighted
-                                      }
-                                      onClick={() => {
-                                        window.scrollBy(0, 0);
-                                        setNutritionState({});
-                                      }}
-                                      style={{ color: "#fe5d1f" }}
-                                    >
-                                      {elem.ingredientName}
-                                    </span>
-                                  ) : (
-                                    <span
-                                      className={
-                                        styles.ingredients__text__highlighted
-                                      }
-                                      onClick={() => {
-                                        window.scrollBy(0, 0);
-                                        setNutritionState(elem);
-                                      }}
-                                    >
-                                      {elem.ingredientName}
-                                    </span>
-                                  )
-                                }
-                              </div>
-
-                              <div
-                                className={styles.ingredients__iconTray}
-                                style={
-                                  // @ts-ignore
-                                  elem._id === nutritionState?._id
-                                    ? { display: "flex" }
-                                    : {}
-                                }
-                              >
-                                <MdOutlineInfo
-                                  className={
-                                    styles.ingredients__iconTray__icons
-                                  }
-                                  onClick={() => setIngredientId(elem._id)}
-                                />
-
-                                {
-                                  //@ts-ignore
-                                  elem._id === nutritionState?._id ? (
-                                    <BiBarChart
-                                      style={{ color: "#fe5d1f" }}
-                                      className={
-                                        styles.ingredients__iconTray__icons
-                                      }
-                                      onClick={() => {
-                                        window.scrollBy(0, 0);
-                                        setNutritionState({});
-                                      }}
-                                    />
-                                  ) : (
-                                    <BiBarChart
-                                      className={
-                                        styles.ingredients__iconTray__icons
-                                      }
-                                      onClick={() => {
-                                        window.scrollBy(0, 0);
-                                        setNutritionState(elem);
-                                      }}
-                                    />
-                                  )
-                                }
-                                <MdOutlineDelete
-                                  className={
-                                    styles.ingredients__iconTray__icons
-                                  }
-                                  onClick={() => removeIngredient(elem?._id)}
-                                />
-                              </div>
-                            </li>
-                          )}
-                        </Draggable>
-                      );
-                    })
-                  ) : (
-                    <div style={{ margin: "30px 0px" }}>
-                      <CircularRotatingLoader />
-                    </div>
-                  )}
-                  {provided.placeholder}
-                </ul>
-              )}
-            </Droppable>
-          </DragDropContext>
-          <div className={styles.ingredients__searchBar}>
-            <span>
-              <input
-                onKeyDown={(e) => {
-                  recipeIngredientsOnKeyDown(e);
-                }}
-                value={inputIngredientValue}
-                onChange={(e) => {
-                  recipeIngredientsOnInput(e);
-                }}
-                type="text"
-                name="recipe elements"
-                id=""
-                placeholder="Enter a single ingredient or paste several ingredients"
-              />
-            </span>
-          </div>
-          <div
-            className={styles.suggested__searchBar}
-            style={
-              suggestedIngredients.length === 0
-                ? { display: "none", marginTop: "20px" }
-                : { display: "block", marginTop: "20px" }
-            }
-          >
-            <span style={{ justifyContent: "left", flexDirection: "column" }}>
-              {suggestedIngredients?.map((elem) => {
-                return (
-                  <li
-                    key={elem?._id}
-                    style={{ listStyle: "none" }}
-                    className={styles.suggested__li}
-                    onClick={() => {
-                      selectIngredientOnClick(elem);
-                    }}
-                  >
-                    <div className={styles.suggested__div}>
-                      {elem.featuredImage !== null ? (
-                        <div className={styles.ingredients__icons}>
-                          <Image
-                            src={elem.featuredImage}
-                            alt="Picture will load soon"
-                            objectFit="contain"
-                            layout="fill"
-                          />
-                        </div>
-                      ) : (
-                        <div className={styles.ingredients__icons}>
-                          <Image
-                            src={"/food/Dandelion.png"}
-                            alt="Picture will load soon"
-                            objectFit="contain"
-                            layout="fill"
-                          />
-                        </div>
-                      )}
-                    </div>
-                    {elem.ingredientName}
-                  </li>
-                );
-              })}
-            </span>
-          </div>
-        </div>
-      </div>
+    <Fragment>
+      <IngredientSection
+        allIngredients={allIngredients}
+        adjusterFunc={adjusterFunc}
+        servingCounter={servingCounter}
+        calculatedIngOz={calculatedIngOz}
+        handleOnDragEnd={handleOnDragEnd}
+        ingredients={selectedIngredientsList}
+        nutritionState={nutritionState}
+        setNutritionState={setNutritionState}
+        setIngredientId={setIngredientId}
+        removeIngredient={removeIngredient}
+        recipeIngredientsOnKeyDown={recipeIngredientsOnKeyDown}
+      />
       <div className={styles.how__to}>
         <h4 className={styles.how__to__heading}>
           <div className={styles.how__to__icon}>
@@ -574,7 +320,43 @@ const IngredientList = ({
           </div>
         )}
       </div> */}
-    </div>
+    </Fragment>
   );
 };
+
 export default IngredientList;
+
+const data = {
+  __typename: "BlendIngredientData",
+  _id: "620b6bce40d3f19b558f0bc1",
+  ingredientName: "Amaranth leaves",
+  category: "Leafy",
+  blendStatus: "Active",
+  classType: "Class - 1",
+  description: "Amaranth leaves, raw",
+  images: [],
+  featuredImage: "https://blending.s3.us-east-1.amazonaws.com/7826404.png",
+  portions: [
+    {
+      __typename: "BlendPortion",
+      measurement: "cup",
+      measurement2: null,
+      meausermentWeight: "28",
+      default: true,
+    },
+    {
+      __typename: "BlendPortion",
+      measurement: "leaf",
+      measurement2: null,
+      meausermentWeight: "14",
+      default: false,
+    },
+    {
+      __typename: "BlendPortion",
+      measurement: "mug",
+      measurement2: null,
+      meausermentWeight: "100",
+      default: false,
+    },
+  ],
+};

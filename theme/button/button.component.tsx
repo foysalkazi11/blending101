@@ -3,7 +3,13 @@ import React, { useState } from "react";
 import styles from "./button.module.scss";
 
 interface buttonInterface {
-  type: string;
+  type:
+    | "text"
+    | "primary"
+    | "buttonWithIcon"
+    | "transparent"
+    | "transparentHover"
+    | "border";
   value: string;
   fullWidth?: number;
   width?: number;
