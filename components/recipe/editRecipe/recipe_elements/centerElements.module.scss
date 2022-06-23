@@ -4,31 +4,6 @@
   }
 }
 
-@mixin input {
-  input {
-    width: 100%;
-    padding: 8px;
-    outline: none;
-    border: none;
-    border: 2px dashed #e2dfdf;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: 16px;
-    &:active,
-    &:hover {
-      border-color: $secondaryColor;
-    }
-    &::placeholder {
-      font-weight: bold;
-      color: #e2dfdf;
-    }
-  }
-
-  .rightSide {
-    margin-left: 10px;
-  }
-}
-
 .main {
   padding: 25px 20px;
   padding-bottom: 25px;
@@ -48,73 +23,39 @@
   .topSection {
     display: flex;
     justify-content: space-between;
-    width: 100%;
-    margin: 0px auto;
+    align-items: center;
 
-    &__heading {
-      font-size: 20px;
-      font-weight: 600;
+    .reightSight {
+      margin-left: 10px;
       position: relative;
-      left: 1%;
-      min-width: 100px;
-      padding: 5px 0px;
-      border-bottom: 2px dashed #e2dfdf;
 
-      &:active {
-        outline: none !important;
-      }
-
-      &:focus {
-        outline: none !important;
-      }
-    }
-
-    &__RightIcon {
-      position: relative;
-      right: 4.5%;
-      cursor: pointer;
-
-      svg {
+      .menu {
         position: absolute;
-        top: 50%;
-        transform: translateY(-50%) scale(0.55);
-      }
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-width: 30px;
+        padding: 4px 15px;
+        max-height: 30px;
+        border: 1px solid #eeeeee;
+        border-radius: 8px;
+        background: #eeeeeef2;
+        top: 35px;
+        right: 20px;
 
-      @include responsive(0px, 1300px) {
-        right: 5%;
-      }
-
-      @include responsive(0px, 991px) {
-        right: 2%;
+        .icon {
+          cursor: pointer;
+          color: #929292;
+          &:hover {
+            color: #fe5d1f;
+          }
+        }
       }
     }
   }
 
   .scoreTraydiv {
-    &__description {
-      margin-top: 28px;
-      padding: 20px;
-      border-radius: 7px;
-      background-color: #fbfbfb;
-      border: 2px solid #f2f2f8;
-
-      textarea {
-        display: flex;
-        border: 1px solid #e2dcdcd3;
-        border-radius: 7px;
-        min-height: 76px;
-        padding: 0 15px;
-        line-height: 30px;
-        color: #bcbcbc;
-        font-size: 14px;
-        min-width: 100%;
-        max-width: 100%;
-
-        &:focus {
-          outline: none;
-        }
-      }
-    }
+    margin-top: 20px;
 
     .blendingOptions {
       margin-top: 42px;

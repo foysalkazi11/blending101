@@ -12,11 +12,7 @@ import ScoreTray from "./scoreTray/scoreTray.component";
 import Image from "next/image";
 import { setQuantity } from "../../../../redux/edit_recipe/quantity";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import {
-  setDescriptionRecipe,
-  setEditRecipeName,
-  setSelectedBlendCategory,
-} from "../../../../redux/edit_recipe/editRecipeStates";
+import { setSelectedBlendCategory } from "../../../../redux/edit_recipe/editRecipeStates";
 import RecipeDropDown from "../../../../theme/dropDown/recipeDropDown.component";
 import HandleImageShow from "../../share/handleImageShow/HandleImageShow";
 import IconWithText from "../../recipeDetails/center/Icon/IconWithText";
@@ -25,6 +21,11 @@ import {
   setOpenVersionTrayFormWhichPage,
 } from "../../../../redux/slices/versionTraySlice";
 import { VscVersions } from "react-icons/vsc";
+import InputComponent from "../../../../theme/input/input.component";
+import TextArea from "../../../../theme/textArea/TextArea";
+import { MdMoreVert } from "react-icons/md";
+import IconWraper from "../../../../theme/iconWraper/IconWraper";
+import useHover from "../../../utility/useHover";
 
 type CenterElementsProps = {
   recipeName?: string;
@@ -34,6 +35,7 @@ type CenterElementsProps = {
   setExistingImage?: Dispatch<SetStateAction<string[]>>;
   setImages?: Dispatch<SetStateAction<any[]>>;
   images?: any[];
+  updateEditRecipe?: (key: string, value: any) => void;
 };
 
 const Center_Elements = ({
@@ -44,11 +46,13 @@ const Center_Elements = ({
   setImages = () => {},
   existingImage = [],
   setExistingImage = () => {},
+  updateEditRecipe = () => {},
 }: CenterElementsProps) => {
   const dispatch = useAppDispatch();
-  const editRecipeHeading = useRef();
   const [blendCategoryState, setBlendCategoryState] = useState(null);
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
+  const [openMenu, setOpenMenu] = useState(false);
+  const [hoverRef, hover] = useHover();
 
   const quantity_number = useAppSelector(
     (state) => state?.quantityAdjuster?.quantityNum,
@@ -76,25 +80,10 @@ const Center_Elements = ({
     }
   };
 
-  const handleDescriptionChange = (text) => {
-    dispatch(setDescriptionRecipe(text));
-  };
-
-  const handleHeadingchange = (text) => {
-    //@ts-ignore
-    editRecipeHeading.current.textContent = text;
-    dispatch(setEditRecipeName(text));
-  };
-
   useEffect(() => {
     if (!selectedBLendCategory) return;
     setBlendCategoryState(selectedBLendCategory);
   }, [selectedBLendCategory]);
-
-  useEffect(() => {
-    if (!recipeName) return;
-    handleHeadingchange(recipeName);
-  }, [recipeName]);
 
   useEffect(() => {
     let blendCategoryId = allBlendCategories?.filter((elem) => {
@@ -110,34 +99,37 @@ const Center_Elements = ({
   return (
     <div className={styles.main}>
       <div className={styles.topSection}>
-        <h3
-          className={styles.topSection__heading}
-          contentEditable
-          suppressContentEditableWarning
-          id="recipeTitle"
-          ref={editRecipeHeading}
-          onInput={(e) => {
-            handleHeadingchange(e.currentTarget.textContent);
-          }}
+        <InputComponent
+          borderSecondary={true}
+          style={{ fontWeight: "bold", color: "#000000" }}
+          value={
+            detailsARecipe?.postfixTitle
+              ? detailsARecipe?.postfixTitle
+              : detailsARecipe?.name
+          }
+          name={detailsARecipe?.postfixTitle ? "postfixTitle" : "name"}
+          onChange={(e) => updateEditRecipe(e?.target?.name, e?.target?.value)}
         />
 
-        <div>
-          {/* <MoreVertIcon /> */}
-          <IconWithText
-            wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
-            handleClick={(e) => {
-              dispatch(setOpenVersionTray(true));
-              dispatch(setOpenVersionTrayFormWhichPage("edit"));
-            }}
-            icon={
+        <div className={styles.reightSight} ref={hoverRef}>
+          <IconWraper
+            hover="bgSlightGray"
+            style={{ width: "36px", height: "36px" }}
+            handleClick={() => setOpenMenu((prev) => !prev)}
+          >
+            <MdMoreVert fontSize={24} />
+          </IconWraper>
+          {openMenu ? (
+            <div className={`${styles.menu} `}>
               <VscVersions
-                color={
-                  detailsARecipe?.recipeVersion?.length ? "#7cbc39" : "#c4c4c4"
-                }
+                className={styles.icon}
+                onClick={() => {
+                  dispatch(setOpenVersionTray(true));
+                  dispatch(setOpenVersionTrayFormWhichPage("edit"));
+                }}
               />
-            }
-            text="Versions"
-          />
+            </div>
+          ) : null}
         </div>
       </div>
       <div className={styles.addImagediv}>
@@ -147,21 +139,16 @@ const Center_Elements = ({
           setExistingImage={setExistingImage}
           setImages={setImages}
         />
-        {/* <AddRecipeCard
-          imageState={recipeImagesArray}
-          imageRenderingHandler={imageRenderingHandler}
-          removeImage={removeImage}
-        /> */}
       </div>
       <div className={styles.scoreTraydiv}>
-        <div className={styles.scoreTraydiv__description}>
-          <textarea
-            value={recipeDescription}
-            onChange={(e) => {
-              handleDescriptionChange(e.target.value);
-            }}
-          />
-        </div>
+        <TextArea
+          name="description"
+          borderSecondary={true}
+          value={detailsARecipe?.description}
+          onChange={(e) => updateEditRecipe(e?.target?.name, e?.target?.value)}
+          style={{ color: "#484848" }}
+        />
+
         <ScoreTray />
         <div className={styles.blendingOptions}>
           <div className={styles.blendingOptions__left}>
