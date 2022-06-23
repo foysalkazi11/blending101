@@ -18,12 +18,11 @@ const useToGetARecipeVersion = () => {
         variables: { versionId: id },
       });
 
-      const { _id, recipeId, postfixTitle, ...rest }: RecipeVersionType =
+      const { _id, recipeId, ...rest }: RecipeVersionType =
         data?.getARecipeVersion;
       const obj = {
         _id: recipeId,
         versionId: _id,
-        versionName: `${detailsARecipe?.name}(${postfixTitle})`,
         ...rest,
       };
       dispatch(

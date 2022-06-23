@@ -9,6 +9,8 @@ const GET_A_RECIPE_VERSION_ONLY = gql`
         description
         createdAt
         editedAt
+        isDefault
+        isOriginal
       }
     }
   }

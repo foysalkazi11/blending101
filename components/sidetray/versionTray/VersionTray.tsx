@@ -86,22 +86,29 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   const createOrUpdateVarsion = async () => {
     toggleForm();
     try {
-      const { data } = await addVersion({
-        variables: {
-          data: {
-            recipeId: detailsARecipe?._id,
-            postfixTitle: formState?.title,
-            description: formState?.body,
+      if (updateVersion) {
+      } else {
+        const { data } = await addVersion({
+          variables: {
+            data: {
+              recipeId: detailsARecipe?._id,
+              postfixTitle: formState?.title,
+              description: formState?.body,
+            },
           },
-        },
-      });
-      dispatch(
-        setDetailsARecipe({
-          ...detailsARecipe,
-          recipeVersion: data?.addVersion,
-        }),
-      );
-      notification("success", "Recipe version create successfully");
+        });
+        dispatch(
+          setDetailsARecipe({
+            ...detailsARecipe,
+            recipeVersion: data?.addVersion,
+          }),
+        );
+
+        notification(
+          "success",
+          `Recipe version ${updateVersion ? "updated" : "create"} successfully`,
+        );
+      }
     } catch (error) {
       console.log(error);
     }
@@ -178,11 +185,12 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           createOrUpdateNote={createOrUpdateVarsion}
           handleButtonClick={handleButtonClick}
           isFromRecipePage={openVersionTrayFormWhichPage}
+          varient="versions"
         />
         <NoteBody
           data={detailsARecipe?.recipeVersion || []}
           deleteItem={deleteRecipeVersion}
-          updateItem={(val) => handleToGetARecipeVersion(val?._id)}
+          updateItem={(val) => updateVersionValue(val)}
           varient="versions"
           loading={newVersionLoading || removeVersionLoading}
           isFromRecipePage={openVersionTrayFormWhichPage}

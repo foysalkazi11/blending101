@@ -27,7 +27,7 @@ const NoteBody = ({
     <div className={`${styles.noteEditBox} y-scroll`}>
       {loading ? (
         <SkeletonNote />
-      ) : data?.length ? (
+      ) : data?.length >= 1 ? (
         data?.map((item, index) => {
           return (
             <div className={styles.singleNoteEdit} key={index}>
@@ -65,15 +65,28 @@ const NoteBody = ({
 
               <div className={styles.noteDis}>
                 <p>{item?.body || item?.description}</p>
-                <span>
-                  {item?.updatedAt ? (
-                    <>
-                      {format(parseISO(item?.updatedAt), "dd/mm/yyyy")} (edited)
-                    </>
-                  ) : (
-                    format(parseISO(item?.createdAt), "dd/mm/yyyy")
-                  )}
-                </span>
+
+                <div className={styles.buttomDis}>
+                  <span>
+                    {item?.updatedAt ? (
+                      <>
+                        {format(parseISO(item?.updatedAt), "dd/mm/yyyy")}{" "}
+                        (edited)
+                      </>
+                    ) : (
+                      format(parseISO(item?.createdAt), "dd/mm/yyyy")
+                    )}
+                  </span>
+                  {isFromRecipePage === "edit" ? (
+                    <span
+                      className={`${styles.star} ${
+                        item?.isDefault ? styles.on : styles.off
+                      }`}
+                    >
+                      &#9733;
+                    </span>
+                  ) : null}
+                </div>
               </div>
             </div>
           );

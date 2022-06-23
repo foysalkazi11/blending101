@@ -33,6 +33,7 @@ interface editRecipe {
   nutritionState?: object;
   setNutritionState?: Dispatch<SetStateAction<object>>;
   recipeId?: string | string[];
+  updateEditRecipe?: (key: string, value: any) => void;
 }
 
 const EditRecipePage = ({
@@ -52,6 +53,7 @@ const EditRecipePage = ({
   nutritionState = {},
   setNutritionState = () => {},
   recipeId = "",
+  updateEditRecipe = () => {},
 }: editRecipe) => {
   const dispatch = useAppDispatch();
   const { width } = useWindowSize();
@@ -122,6 +124,7 @@ const EditRecipePage = ({
             editOrSavebtnText="Save"
           />
           <Center_Elements
+            // updateEditRecipe={updateEditRecipe}
             recipeName={recipeName}
             allBlendCategories={allBlendCategories}
             selectedBLendCategory={selectedBLendCategory}
