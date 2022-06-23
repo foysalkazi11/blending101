@@ -7,9 +7,10 @@ type NoteFormProps = {
   toggleNoteForm: () => void;
   noteForm: { title: string; body: string };
   updateNoteForm: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
   createOrUpdateNote: () => void;
+  varient?: "notes" | "versions";
 };
 
 const NoteForm = ({
@@ -17,10 +18,11 @@ const NoteForm = ({
   noteForm,
   updateNoteForm,
   createOrUpdateNote,
+  varient = "notes",
 }: NoteFormProps) => {
   return (
     <div className={styles.noteFormContainer}>
-      <h3>Add Note</h3>
+      <h3>Add {`${varient === "notes" ? "note" : "version"}`}</h3>
       <input name="title" value={noteForm?.title} onChange={updateNoteForm} />
       <textarea name="body" value={noteForm?.body} onChange={updateNoteForm} />
       <div className={styles.btnBox}>

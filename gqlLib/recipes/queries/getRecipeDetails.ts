@@ -53,6 +53,8 @@ export const GET_RECIPE = gql`
         description
         createdAt
         editedAt
+        isDefault
+        isOriginal
       }
       userCollections
     }

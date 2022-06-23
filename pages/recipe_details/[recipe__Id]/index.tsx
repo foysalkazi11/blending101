@@ -6,6 +6,10 @@ import { useRouter } from "next/router";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import useGetBlendNutritionBasedOnRecipexxx from "../../../customHooks/useGetBlendNutritionBasedOnRecipexxx";
 import { setDetailsARecipe } from "../../../redux/slices/recipeSlice";
+import {
+  setOpenVersionTray,
+  setOpenVersionTrayFormWhichPage,
+} from "../../../redux/slices/versionTraySlice";
 
 const Index = () => {
   const router = useRouter();
@@ -26,6 +30,12 @@ const Index = () => {
     );
   const dispatch = useAppDispatch();
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
+
+  useEffect(() => {
+    dispatch(setOpenVersionTray(false));
+    dispatch(setOpenVersionTrayFormWhichPage("details"));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (!recipeLoading && recipeData?.getARecipe) {

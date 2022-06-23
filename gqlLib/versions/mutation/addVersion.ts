@@ -8,6 +8,8 @@ const ADD_VERSION = gql`
       description
       createdAt
       editedAt
+      isDefault
+      isOriginal
     }
   }
 `;
