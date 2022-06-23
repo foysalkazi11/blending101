@@ -1,0 +1,43 @@
+.ingredient {
+  &__add {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 6rem;
+    margin: 2rem 1.5rem;
+    & > button {
+      padding: 1rem;
+      color: #88c34c !important;
+      border: 1px solid #88c34c;
+      transition: all 0.3s ease-in;
+      &:hover {
+        background-color: #88c34c !important;
+        color: #fff !important;
+      }
+    }
+  }
+}
+.addToCart {
+  display: flex;
+  align-items: center;
+  height: 6rem;
+  background-color: #fbfbfb;
+  border-radius: 8px;
+  &--top {
+    margin: 2rem 1.5rem;
+    padding: 0 1rem;
+  }
+  &--edit {
+    padding: 0 1rem !important;
+  }
+  &__form {
+    flex-grow: 1;
+    & > div > div {
+      padding-bottom: 0 !important;
+    }
+  }
+  &__buttons {
+    width: 15%;
+    padding: 0.5rem 0 0.5rem 1rem;
+  }
+}

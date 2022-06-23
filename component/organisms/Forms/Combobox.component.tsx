@@ -44,7 +44,9 @@ const Combobox = (props: ComboboxProps) => {
   } = props;
 
   const formContext = useFormContext();
-  let register: any = () => {};
+  let register: any = () => ({
+    onChange: onChange,
+  });
   if (formContext && !onChange) {
     register = formContext.register;
   }
@@ -58,7 +60,9 @@ const Combobox = (props: ComboboxProps) => {
           {placeholder}
         </option>
       ) : (
-        <option value="">{placeholder}</option>
+        <option disabled value="">
+          {placeholder}
+        </option>
       )}
       {options &&
         options.map((option) => (
@@ -93,7 +97,7 @@ const Combobox = (props: ComboboxProps) => {
             message: `Please fill the value of ${label} field`,
           },
         })}
-        onChange={onChange}
+        // onChange={onChange}
       >
         {Options}
       </select>

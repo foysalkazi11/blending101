@@ -213,39 +213,40 @@ $sharedHeightForIcons: 20px;
 }
 
 .ingredients {
-  padding: 20px;
+  padding: 0rem 2rem 2rem;
 
   ul {
-    margin: 34px 0px 24px 0px;
+    margin: 0 0px 24px 0px;
     list-style-type: none;
     min-height: 50px;
 
     li {
-      position: relative;
-      height: 42px;
-      display: flex;
-      align-items: center;
       margin-bottom: 15px;
-
-      &:hover .ingredients__edit {
-        display: flex;
-        flex-direction: column;
-      }
-
-      &:hover .ingredients__iconTray {
-        display: flex;
-      }
-
-      &:hover .ingredients__drag {
-        display: block;
-      }
     }
 
     @include resoponsive(0px, 1300px) {
       margin: 14px 0px 24px 0px;
     }
   }
+  &__item {
+    position: relative;
+    height: 42px;
+    display: flex;
+    align-items: center;
 
+    &:hover .ingredients__edit {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &:hover .ingredients__iconTray {
+      display: flex;
+    }
+
+    &:hover .ingredients__drag {
+      display: block;
+    }
+  }
   &__icons {
     position: relative;
     width: 40px;
