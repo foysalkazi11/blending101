@@ -124,7 +124,7 @@ const EditRecipePage = ({
             editOrSavebtnText="Save"
           />
           <Center_Elements
-            // updateEditRecipe={updateEditRecipe}
+            updateEditRecipe={updateEditRecipe}
             recipeName={recipeName}
             allBlendCategories={allBlendCategories}
             selectedBLendCategory={selectedBLendCategory}

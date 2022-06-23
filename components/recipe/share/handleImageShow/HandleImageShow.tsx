@@ -1,9 +1,9 @@
-import React, { Dispatch, SetStateAction, useRef, useState } from 'react';
-import styles from './HandleImageShow.module.scss';
-import AddIcon from '../../../../public/icons/add_black_36dp.svg';
-import Image from 'next/image';
-import { MdClose } from 'react-icons/md';
-import IconWraper from '../../../../theme/iconWraper/IconWraper';
+import React, { Dispatch, SetStateAction, useRef, useState } from "react";
+import styles from "./HandleImageShow.module.scss";
+import AddIcon from "../../../../public/icons/add_black_36dp.svg";
+import Image from "next/image";
+import { MdClose } from "react-icons/md";
+import IconWraper from "../../../../theme/iconWraper/IconWraper";
 
 interface AddRecipeCardProps {
   existingImage?: string[];
@@ -50,9 +50,10 @@ const HandleImageShow = ({
             <div className={styles.icon}>
               <IconWraper
                 style={{
-                  position: 'absolute',
-                  top: '2px',
-                  right: '1px',
+                  position: "absolute",
+                  top: "2px",
+                  right: "1px",
+                  backgroundColor: "#c9c9c9",
                 }}
                 handleClick={() => removeExistingImage(photo)}
               >
@@ -70,9 +71,9 @@ const HandleImageShow = ({
             <div className={styles.icon}>
               <IconWraper
                 style={{
-                  position: 'absolute',
-                  top: '2px',
-                  right: '2px',
+                  position: "absolute",
+                  top: "2px",
+                  right: "2px",
                 }}
                 handleClick={() => removeImage(index)}
               >
