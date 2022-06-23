@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, useState } from "react";
+import React, { InputHTMLAttributes } from "react";
 import styles from "./input.module.scss";
 
 interface InputComponentProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -6,14 +6,15 @@ interface InputComponentProps extends InputHTMLAttributes<HTMLInputElement> {
   style?: React.CSSProperties;
   value?: string | number;
   placeholder?: string;
-  textarea?: any;
+  textarea?: boolean;
   fullWidth?: boolean;
   maxWidth?: string;
-  fieldName?: string;
   handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   name?: string;
   min?: number;
   max?: number;
+  borderSecondary?: boolean;
+  fieldName?: string;
 }
 
 export default function InputComponent({
@@ -24,14 +25,14 @@ export default function InputComponent({
   textarea,
   fullWidth,
   maxWidth,
-  fieldName,
   handleChange = () => {},
   name,
   min = 0,
   max,
+  borderSecondary = false,
+  fieldName = "",
   ...InputProps
 }: InputComponentProps) {
-  const [focused, setFocused] = useState(false);
   // STEP 1: INITIALIZE PROPS TO AVOID UI FALL
   type = type || "text";
   style = style || {};
@@ -45,13 +46,12 @@ export default function InputComponent({
 
   // CASE: DEFAULT RETURN INPUT COMPONENT
 
-  const handleFocus = () => {
-    setFocused(true);
-  };
   return (
     <input
       name={name}
-      className={styles.input}
+      className={`${styles.input} ${
+        borderSecondary ? styles.borderSecondary : null
+      }`}
       type={type}
       style={style}
       value={value}
@@ -59,7 +59,6 @@ export default function InputComponent({
       placeholder={placeholder}
       min={min}
       max={max}
-      onBlur={handleFocus}
       {...InputProps}
     />
   );
