@@ -75,6 +75,7 @@ const ResetPassword = () => {
               required={{ required: "Enter Previous password" }}
               error={{
                 isError: errors?.oldPassword ? true : false,
+                //@ts-ignore
                 message: errors?.oldPassword?.message,
               }}
             />
@@ -96,6 +97,7 @@ const ResetPassword = () => {
               }}
               error={{
                 isError: errors?.newPassword ? true : false,
+                //@ts-ignore
                 message: errors?.newPassword?.message,
               }}
             />
