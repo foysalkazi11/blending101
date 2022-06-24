@@ -84,7 +84,6 @@ const EditRecipeComponent = () => {
 
   useEffect(() => {
     if (versionId) {
-      //@ts-ignore
       if (detailsARecipe?.versionId !== versionId) {
         handleToGetARecipeVersion(versionId);
       }
