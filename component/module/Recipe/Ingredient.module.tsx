@@ -47,8 +47,6 @@ const IngredientSection = (props) => {
     setEditIngredientId("");
     methods.reset(defaultValues);
   };
-
-  console.log(ingredients);
   return (
     <div className={classes.ingredients__main__card}>
       <div className={classes.headingDiv}>

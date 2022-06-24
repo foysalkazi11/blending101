@@ -8,14 +8,13 @@ import NoteBody from "../commentsTray/noteSection/noteBody/NoteBody";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import ADD_VERSION from "../../../gqlLib/versions/mutation/addVersion";
 import EDIT_A_VERSION_OF_RECIPE from "../../../gqlLib/versions/mutation/editAVersionOfRecipe";
-import { useRouter } from "next/router";
 import { VscVersions } from "react-icons/vsc";
 import { setDetailsARecipe } from "../../../redux/slices/recipeSlice";
 import REMOVE_A_RECIPE_VERSION from "../../../gqlLib/versions/mutation/removeARecipeVersion";
 import notification from "../../utility/reactToastifyNotification";
 import GET_A_RECIPE_VERSION_ONLY from "../../../gqlLib/versions/query/getARecipeVersionOnly";
-import { GET_RECIPE } from "../../../gqlLib/recipes/queries/getRecipeDetails";
 import useToGetARecipeVersion from "../../../customHooks/useToGetARecipeVersion";
+import useToGetARecipe from "../../../customHooks/useToGetARecipe";
 interface VersionTrayProps {
   showTagByDefaut?: boolean;
   showPanle?: "left" | "right";
@@ -43,24 +42,9 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   ] = useLazyQuery(GET_A_RECIPE_VERSION_ONLY);
   const handleToGetARecipeVersion = useToGetARecipeVersion();
 
-  const [getARecipe, { data: recipeData, loading: recipeLoading }] =
-    useLazyQuery(GET_RECIPE, {
-      fetchPolicy: "network-only",
-    });
+  const handleGetARecipe = useToGetARecipe();
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
-  const router = useRouter();
-
-  const handleGetARecipe = async () => {
-    try {
-      const { data } = await getARecipe({
-        variables: { recipeId: detailsARecipe?._id, userId: dbUser?._id },
-      });
-      dispatch(setDetailsARecipe(data?.getARecipe));
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const handleToGetARecipeVersionOnly = () => {
     getARecipeVersionOnly({
@@ -87,6 +71,17 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     toggleForm();
     try {
       if (updateVersion) {
+        await editVersion({
+          variables: {
+            data: {
+              editId: updateVersionId,
+              editableObject: {
+                postfixTitle: formState?.title,
+                description: formState?.body,
+              },
+            },
+          },
+        });
       } else {
         const { data } = await addVersion({
           variables: {
@@ -103,12 +98,11 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
             recipeVersion: data?.addVersion,
           }),
         );
-
-        notification(
-          "success",
-          `Recipe version ${updateVersion ? "updated" : "create"} successfully`,
-        );
       }
+      notification(
+        "success",
+        `Recipe version ${updateVersion ? "updated" : "create"} successfully`,
+      );
     } catch (error) {
       console.log(error);
     }
@@ -149,6 +143,9 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     toggleForm();
   };
 
+  const isOrginalVersion = detailsARecipe?.recipeVersion?.find(
+    (version) => version?.isOriginal,
+  );
   useEffect(() => {
     isMounted.current = true;
 
@@ -175,7 +172,17 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
             src={detailsARecipe?.image?.find((img) => img?.default)?.image}
             alt="recipe_img"
           />
-          <h3 onClick={handleGetARecipe}>{detailsARecipe?.name}</h3>
+          <h3 onClick={() => handleGetARecipe(detailsARecipe?._id)}>
+            {isOrginalVersion?.postfixTitle}
+          </h3>
+
+          <span
+            className={`${styles.star} ${
+              isOrginalVersion?.isDefault ? styles.on : styles.off
+            }`}
+          >
+            &#9733;
+          </span>
         </div>
         <NoteHead
           showForm={showForm}
@@ -188,7 +195,11 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           varient="versions"
         />
         <NoteBody
-          data={detailsARecipe?.recipeVersion || []}
+          data={
+            detailsARecipe?.recipeVersion?.filter(
+              (version) => !version?.isOriginal,
+            ) || []
+          }
           deleteItem={deleteRecipeVersion}
           updateItem={(val) => updateVersionValue(val)}
           varient="versions"
