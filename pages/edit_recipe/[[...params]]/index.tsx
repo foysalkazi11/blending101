@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import EditRecipePage from "../../../components/recipe/editRecipe/EditRecipe.component";
-import { useMutation, useQuery } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import {
   BLEND_CATEGORY,
   INGREDIENTS_BY_CATEGORY_AND_CLASS,
@@ -26,12 +26,14 @@ import {
 import EDIT_A_VERSION_OF_RECIPE from "../../../gqlLib/versions/mutation/editAVersionOfRecipe";
 import notification from "../../../components/utility/reactToastifyNotification";
 import { RecipeDetailsType } from "../../../type/recipeDetails";
+import { GET_RECIPE } from "../../../gqlLib/recipes/queries/getRecipeDetails";
+import { setDetailsARecipe } from "../../../redux/slices/recipeSlice";
 
 const EditRecipeComponent = () => {
   const router = useRouter();
   const { params = [] } = router.query;
   const recipeId = params?.[0] || "";
-  const versionId = params?.[2] || "";
+  const versionId = params?.[1] || "";
   const dispatch = useAppDispatch();
   const [calculateIngOz, SetcalculateIngOz] = useState(null);
   const [images, setImages] = useState<any[]>([]);
@@ -39,6 +41,7 @@ const EditRecipeComponent = () => {
   const [nutritionState, setNutritionState] = useState(null);
   const [copyDetailsRecipe, setCopyDetailsRecipe] =
     useState<RecipeDetailsType>(null);
+  const { dbUser } = useAppSelector((state) => state?.user);
   const isMounted = useRef(false);
   const selectedIngredientsList = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedIngredientsList,
@@ -54,6 +57,12 @@ const EditRecipeComponent = () => {
     editAVersionOfRecipe,
     { data: versionEditData, loading: versionEditLoading },
   ] = useMutation(EDIT_A_VERSION_OF_RECIPE);
+
+  const [getARecipe, { loading: recipeLoading }] = useLazyQuery(GET_RECIPE, {
+    fetchPolicy: "network-only",
+    variables: { recipeId, userId: dbUser?._id },
+  });
+
   const servingCounter = useAppSelector(
     (state) => state.editRecipeReducer.servingCounter,
   );
@@ -68,34 +77,15 @@ const EditRecipeComponent = () => {
   const { data: classData } = useQuery(INGREDIENTS_BY_CATEGORY_AND_CLASS, {
     variables: { classType: "All" },
   });
-  console.log(detailsARecipe);
-
   const handleToGetARecipeVersion = useToGetARecipeVersion();
+  const { data: allBlendCategory } = useQuery(BLEND_CATEGORY);
+  const [editRecipe] = useMutation(EDIT_A_RECIPE);
   const handleToGetARecipe = useToGetARecipe();
 
   const updateEditRecipe = (key: string, value: any) => {
     setCopyDetailsRecipe((prev) => ({ ...prev, [key]: value }));
   };
 
-  useEffect(() => {
-    dispatch(setOpenVersionTray(false));
-    dispatch(setOpenVersionTrayFormWhichPage("edit"));
-  }, []);
-
-  useEffect(() => {
-    if (versionId) {
-      if (detailsARecipe?.versionId !== versionId) {
-        handleToGetARecipeVersion(versionId);
-      }
-    } else {
-      if (detailsARecipe?._id !== recipeId) {
-        handleToGetARecipe(recipeId);
-      }
-    }
-  }, []);
-
-  const { data: allBlendCategory } = useQuery(BLEND_CATEGORY);
-  const [editRecipe] = useMutation(EDIT_A_RECIPE);
   const [classBasedData, allBlendBasedCategory, recipeBasedNutrition] = [
     classData?.filterIngredientByCategoryAndClass,
     allBlendCategory?.getAllCategories,
@@ -105,19 +95,23 @@ const EditRecipeComponent = () => {
   useEffect(() => {
     if (!classBasedData || !detailsARecipe) return;
 
-    const presentIngredient = [];
+    // const presentIngredient = [];
+    // setCopyDetailsRecipe({ ...detailsARecipe });
+    // classBasedData?.forEach((elem) => {
+    //   const itemMatch = detailsARecipe?.ingredients?.find(
+    //     (itm) => elem._id === itm?.ingredientId?._id,
+    //   );
+
+    //   if (itemMatch) return presentIngredient.push({ ...elem, ...itemMatch });
+    // });
+
     setCopyDetailsRecipe({ ...detailsARecipe });
-    classBasedData?.forEach((elem) => {
-      const itemMatch = detailsARecipe?.ingredients?.find(
+    const presentIngredient = classBasedData?.filter((elem) => {
+      return detailsARecipe?.ingredients?.find(
         (itm) => elem._id === itm?.ingredientId?._id,
       );
-
-      if (itemMatch) return presentIngredient.push({ ...elem, ...itemMatch });
     });
 
-    // console.log(presentIngredient);
-
-    // dispatch(setIngredients(recipeBasedData.ingredients));
     dispatch(setSelectedIngredientsList(presentIngredient));
     dispatch(setServingCounter(detailsARecipe?.servings));
     SetcalculateIngOz(detailsARecipe?.servingSize);
@@ -215,6 +209,19 @@ const EditRecipeComponent = () => {
       reactToastifyNotification("error", "Error while saving Recipe");
     }
   };
+
+  useEffect(() => {
+    dispatch(setOpenVersionTray(false));
+    dispatch(setOpenVersionTrayFormWhichPage("edit"));
+  }, []);
+
+  useEffect(() => {
+    if (detailsARecipe?._id !== recipeId) {
+      if (dbUser?._id) {
+        handleToGetARecipe(recipeId, dbUser?._id);
+      }
+    }
+  }, [recipeId, dbUser?._id]);
 
   useEffect(() => {
     isMounted.current = true;

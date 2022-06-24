@@ -172,7 +172,9 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
             src={detailsARecipe?.image?.find((img) => img?.default)?.image}
             alt="recipe_img"
           />
-          <h3 onClick={() => handleGetARecipe(detailsARecipe?._id)}>
+          <h3
+            onClick={() => handleGetARecipe(detailsARecipe?._id, dbUser?._id)}
+          >
             {isOrginalVersion?.postfixTitle}
           </h3>
 
