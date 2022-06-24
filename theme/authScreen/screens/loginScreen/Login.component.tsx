@@ -83,7 +83,7 @@ const LoginScreen = () => {
             <SocialTray />
             <div className={styles.seperator} />
           </div>
-          <p className={styles.loginPara}>Enter email and password</p>
+          <p>Enter email and password</p>
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <InputField
@@ -103,6 +103,7 @@ const LoginScreen = () => {
               }}
               error={{
                 isError: errors?.email ? true : false,
+                //@ts-ignore
                 message: errors?.email?.message,
               }}
             />
@@ -118,6 +119,7 @@ const LoginScreen = () => {
               }}
               error={{
                 isError: errors?.password ? true : false,
+                //@ts-ignore
                 message: errors?.password?.message,
               }}
             />

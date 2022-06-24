@@ -19,7 +19,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Icon from "../../atoms/Icon/Icon.component";
 import ButtonComponent from "../../../theme/button/button.component";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
-import { useAppDispatch } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setRecipeIngredients } from "../../../redux/edit_recipe/editRecipeStates";
 
 const IngredientSection = (props) => {
@@ -37,6 +37,7 @@ const IngredientSection = (props) => {
   } = props;
   const [showAddIngredient, setShowAddIngredient] = useState(false);
   const [editIngredientId, setEditIngredientId] = useState("");
+
   const methods = useForm({
     defaultValues: useMemo(() => defaultValues, []),
   });
@@ -47,6 +48,7 @@ const IngredientSection = (props) => {
     methods.reset(defaultValues);
   };
 
+  console.log(ingredients);
   return (
     <div className={classes.ingredients__main__card}>
       <div className={classes.headingDiv}>
@@ -125,6 +127,10 @@ const IngredientSection = (props) => {
               <ul {...provided.droppableProps} ref={provided.innerRef}>
                 {ingredients ? (
                   ingredients?.map((elem, index) => {
+                    // const orgIngredient = orgIngredients.find(
+                    //   (ing) => ing.ingredientId._id === elem?._id,
+                    // );
+                    // if (!orgIngredient) return;
                     return (
                       <Draggable
                         key={elem.ingredientName + elem?._id}
@@ -164,13 +170,20 @@ const IngredientSection = (props) => {
                               </div>
                               {/* to create ingredients lists  */}
                               <div className={classes.ingredients__text}>
-                                <span>{elem.quantity || 1} &nbsp;</span>
+                                <span>
+                                  {elem.selectedPortion?.quantity || 1}
+                                  &nbsp;
+                                </span>
                                 <span>
                                   {/* {elem.portions[0].measurement ===
                                   "Quantity not specified"
                                     ? ""
                                     : elem.portions[0].measurement} */}
-                                  {elem.units ||
+                                  {/* {elem.units ||
+                                    orgIngredient.selectedPortion?.name ||
+                                    elem?.portions[0]?.measurement ||
+                                    "cup"} */}
+                                  {elem.selectedPortion?.name ||
                                     elem?.portions[0]?.measurement ||
                                     "cup"}
                                   &nbsp;
@@ -331,7 +344,20 @@ const AddToCartForm = (props) => {
   }, [allIngredients, ingredientId]);
 
   const onSubmit = (data) => {
-    const value = { ...ingredient, ...data };
+    const portion = ingredient?.portions.find(
+      (portion) => portion?.measurement === data.units,
+    );
+    const weightInGram =
+      parseInt(portion?.meausermentWeight) * parseInt(data.quantity);
+    const value = {
+      ...ingredient,
+      weightInGram,
+      selectedPortion: {
+        name: data?.units,
+        quantity: data?.quantity,
+        gram: weightInGram,
+      },
+    };
     dispatch(setRecipeIngredients(value));
     onReset();
   };

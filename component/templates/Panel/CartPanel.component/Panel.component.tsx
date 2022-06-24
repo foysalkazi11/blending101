@@ -39,6 +39,9 @@ import {
 import SearchPanel, { defaultGrocery } from "./_SearchPanel";
 import ItemList from "./_ItemList";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCoffee } from "@fortawesome/free-solid-svg-icons";
+
 function CartPanel(props) {
   const [open, setOpen] = useState(false);
   const [toggle, setToggle] = useState(1);
@@ -224,13 +227,12 @@ const GroceryPanel = () => {
           {toggle === 1 ? "List" : "Pantry"}
         </div>
         <div>
-          <IconButton
+          <FontAwesomeIcon icon={faCoffee} />
+          {/* <IconButton
             size="medium"
             variant={hasBatchDelete ? "primary" : "disabled"}
             onClick={deleteItems}
-          >
-            <FaRegTrashAlt />
-          </IconButton>
+          ></IconButton> */}
         </div>
       </div>
       <SearchPanel

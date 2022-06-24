@@ -15,7 +15,7 @@ interface Inputproperties extends InputHTMLAttributes<HTMLInputElement> {
   handleChange?: Function;
   error?: {
     isError?: boolean;
-    message?: string;
+    message?: any;
   };
 }
 export default function InputField({

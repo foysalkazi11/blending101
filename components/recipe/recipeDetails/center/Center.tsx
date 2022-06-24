@@ -25,12 +25,7 @@ import {
   setOpenVersionTrayFormWhichPage,
 } from "../../../../redux/slices/versionTraySlice";
 import { VscVersions } from "react-icons/vsc";
-
-const scaleMenu = [
-  { label: ".5x", value: 0.5 },
-  { label: "1x", value: 1 },
-  { label: "2x", value: 2 },
-];
+import IngredientDetails from "../../../../component/module/Recipe/Ingredient-Details.module";
 
 interface center {
   recipeData: any;
@@ -253,146 +248,15 @@ const Center = ({
           </div>
         </div>
       </div>
-      <div className={styles.ingredentContainer}>
-        <div className={styles.ingredentHeader}>
-          <img src="/images/basket.svg" alt="basket" />
-          <h3>Ingredients</h3>
-        </div>
-        <div className={styles.counterBox}>
-          <div className={styles.counter}>
-            <p>Scaling : </p>
-
-            <div className={styles.tab}>
-              {scaleMenu?.map((item, index) => {
-                return (
-                  <div
-                    key={item?.value}
-                    className={`${styles.menu} ${
-                      counter === item?.value ? styles.active : null
-                    }`}
-                    onClick={() => setCounter(item?.value)}
-                  >
-                    {item?.label}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-          <div className={styles.size}>
-            <p>Volume : </p>
-            <span>
-              {Math.round(parseInt(recipeData?.servingSize) * counter)} 0z
-            </span>
-          </div>
-          <div className={styles.usMatric}>
-            <span>US</span>
-            <p>| Metric</p>
-          </div>
-        </div>
-        <div className={styles.ingredentDisContainer}>
-          {recipeData?.ingredients ? (
-            recipeData?.ingredients?.map((ingredient, index) => {
-              return (
-                <div
-                  className={styles.singleIngredent}
-                  key={index + "ingredients_recipeDetails"}
-                >
-                  <div className={styles.leftSide}>
-                    {ingredient?.ingredientId?.featuredImage ||
-                    ingredient?.ingredientId?.images?.length ? (
-                      <img
-                        src={
-                          ingredient?.ingredientId?.featuredImage ||
-                          ingredient?.ingredientId?.images[0]
-                        }
-                        alt="icon"
-                      />
-                    ) : (
-                      <img src="/images/5-2-avocado-png-hd.png" alt="icon" />
-                    )}
-
-                    <div>
-                      {`${ingredient?.selectedPortion?.quantity * counter}
-                      ${ingredient.selectedPortion.name} `}
-                      {ingredient?.ingredientId?._id ===
-                      nutritionState?.ingredientId?._id ? (
-                        <span
-                          className={styles.leftSide__highlighted}
-                          style={{ color: "#fe5d1f" }}
-                          onClick={() => {
-                            window.scrollBy(0, 0);
-                            setNutritionState({});
-                          }}
-                        >
-                          {ingredient?.ingredientId?.ingredientName}
-                        </span>
-                      ) : (
-                        <span
-                          className={styles.leftSide__highlighted}
-                          onClick={() => {
-                            window.scrollBy(0, 0);
-                            setNutritionState(ingredient);
-                          }}
-                        >
-                          {ingredient?.ingredientId?.ingredientName}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  {ingredient?.ingredientId?._id ===
-                  nutritionState?.ingredientId?._id ? (
-                    <div
-                      className={styles.iconGroup}
-                      style={{ display: "flex" }}
-                    >
-                      <MdOutlineInfo
-                        className={styles.icon}
-                        onClick={() =>
-                          setIngredientId(ingredient?.ingredientId?._id)
-                        }
-                      />
-
-                      <BiBarChart
-                        style={{ color: "#fe5d1f" }}
-                        className={styles.icon}
-                        onClick={() => {
-                          setsingleElement(!singleElement);
-                          setNutritionState({});
-                        }}
-                      />
-                      <BsCartPlus className={styles.icon} />
-                    </div>
-                  ) : (
-                    <div className={styles.iconGroup}>
-                      <MdOutlineInfo
-                        className={styles.icon}
-                        onClick={() =>
-                          setIngredientId(ingredient?.ingredientId?._id)
-                        }
-                      />
-
-                      <BiBarChart
-                        className={styles.icon}
-                        onClick={() => {
-                          window.scrollBy(0, 0);
-                          setsingleElement(true);
-                          setNutritionState(ingredient);
-                        }}
-                      />
-
-                      <BsCartPlus className={styles.icon} />
-                    </div>
-                  )}
-                </div>
-              );
-            })
-          ) : (
-            <div style={{ margin: "30px 0px" }}>
-              <CircularRotatingLoader />
-            </div>
-          )}
-        </div>
-      </div>
+      <IngredientDetails
+        counter={counter}
+        setCounter={setCounter}
+        recipeData={recipeData}
+        nutritionState={nutritionState}
+        setIngredientId={setIngredientId}
+        singleElement={singleElement}
+        setsingleElement={setsingleElement}
+      />
       <div className={styles.ingredentContainer}>
         <div className={styles.ingredentHeader}>
           <img src="/images/chef.svg" alt="basket" />

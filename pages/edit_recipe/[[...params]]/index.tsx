@@ -96,12 +96,19 @@ const EditRecipeComponent = () => {
   useEffect(() => {
     if (!classBasedData || !recipeBasedData) return;
 
-    const presentIngredient = classBasedData?.filter((elem) => {
+    const presentIngredient = [];
+    classBasedData?.forEach((elem) => {
       const itemMatch = recipeBasedData?.ingredients?.filter((itm) => {
         return elem._id === itm?.ingredientId?._id;
       });
-      if (itemMatch?.length) return itemMatch[0];
+
+      if (itemMatch?.length)
+        return presentIngredient.push({ ...elem, ...itemMatch[0] });
     });
+
+    console.log(presentIngredient);
+
+    // dispatch(setIngredients(recipeBasedData.ingredients));
     dispatch(setSelectedIngredientsList(presentIngredient));
     dispatch(setEditRecipeName(recipeBasedData?.name));
     dispatch(setDescriptionRecipe(recipeBasedData?.description));
@@ -117,13 +124,13 @@ const EditRecipeComponent = () => {
     let ingArr = [];
     selectedIngredientsList?.forEach((item) => {
       let value = item?.portions?.find((item) => item.default);
-      if (value) {
-        ingArr?.push({
-          ingredientId: item?._id,
-          selectedPortionName: value?.measurement,
-          weightInGram: Number(value?.meausermentWeight),
-        });
-      }
+      ingArr?.push({
+        ingredientId: item?._id,
+        selectedPortionName: item?.units || value?.measurement,
+        weightInGram: item?.weightInGram
+          ? Number(item?.weightInGram)
+          : Number(value?.meausermentWeight),
+      });
     });
 
     const howToArr = recipeInstruction?.map((item) => `${item?.step}`);
