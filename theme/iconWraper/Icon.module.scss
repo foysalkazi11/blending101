@@ -1,3 +1,4 @@
+@import "../../styles/partials/variables";
 .iconContainer {
   z-index: 1;
   width: 24px;
@@ -6,11 +7,25 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #c9c9c9;
+  // background-color: #c9c9c9;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.3s linear;
+}
 
+.bgPrimary {
   &:hover {
-    background-color: #fe5d1f;
+    color: $white;
+    background-color: $primaryColor;
+  }
+}
+.bgSecondery {
+  color: $white;
+  &:hover {
+    background-color: $secondaryColor;
+  }
+}
+.bgSlightGray {
+  &:hover {
+    background-color: $slightGray;
   }
 }

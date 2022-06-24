@@ -6,6 +6,10 @@ import { useRouter } from "next/router";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import useGetBlendNutritionBasedOnRecipexxx from "../../../customHooks/useGetBlendNutritionBasedOnRecipexxx";
 import { setDetailsARecipe } from "../../../redux/slices/recipeSlice";
+import {
+  setOpenVersionTray,
+  setOpenVersionTrayFormWhichPage,
+} from "../../../redux/slices/versionTraySlice";
 
 const Index = () => {
   const router = useRouter();
@@ -14,7 +18,6 @@ const Index = () => {
   const [singleElement, setsingleElement] = useState(false);
   const { dbUser } = useAppSelector((state) => state?.user);
   const { data: recipeData, loading: recipeLoading } = useQuery(GET_RECIPE, {
-    fetchPolicy: "network-only",
     variables: { recipeId: recipe__Id, userId: dbUser?._id },
   });
   const { loading: nutritionDataLoading, data: nutritionData } =
@@ -26,6 +29,12 @@ const Index = () => {
     );
   const dispatch = useAppDispatch();
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
+
+  useEffect(() => {
+    dispatch(setOpenVersionTray(false));
+    dispatch(setOpenVersionTrayFormWhichPage("details"));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (!recipeLoading && recipeData?.getARecipe) {

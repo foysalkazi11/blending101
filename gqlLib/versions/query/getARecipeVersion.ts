@@ -29,6 +29,7 @@ const GET_A_RECIPE_VERSION = gql`
           gram
         }
       }
+      servingSize
     }
   }
 `;

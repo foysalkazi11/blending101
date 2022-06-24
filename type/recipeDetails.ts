@@ -18,6 +18,8 @@ export interface RecipeDetailsType {
   servings: number;
   recipeVersion: any[];
   userCollections: string[];
+  versionId?: string;
+  postfixTitle?: string;
 }
 
 export interface RecipeBlendCategory {

@@ -31,5 +31,9 @@
     color: #000;
     margin-left: 16px;
     cursor: pointer;
+    transition: color 0.3s linear;
+    &:hover {
+      color: $primaryColor;
+    }
   }
 }

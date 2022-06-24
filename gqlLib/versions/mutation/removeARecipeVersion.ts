@@ -8,6 +8,8 @@ const REMOVE_A_RECIPE_VERSION = gql`
       description
       createdAt
       editedAt
+      isDefault
+      isOriginal
     }
   }
 `;

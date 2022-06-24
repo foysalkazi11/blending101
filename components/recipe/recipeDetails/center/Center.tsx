@@ -125,7 +125,12 @@ const Center = ({
 
       <div className={styles.contentBox}>
         <div className={styles.heading}>
-          <h3>{recipeData?.versionName || recipeData?.name}</h3>
+          <h3>
+            {recipeData?.name}{" "}
+            <span>{`${
+              recipeData?.postfixTitle ? `(${recipeData?.postfixTitle})` : ""
+            }`}</span>{" "}
+          </h3>
           <span className={styles.ratingBox}>
             <img src="/images/rating.svg" alt="" />
             {recipeData?.averageRating} ({recipeData?.numberOfRating})
@@ -153,7 +158,9 @@ const Center = ({
               icon={
                 <VscVersions
                   color={
-                    recipeData?.recipeVersion?.length ? "#7cbc39" : "#c4c4c4"
+                    recipeData?.recipeVersion?.length >= 1
+                      ? "#7cbc39"
+                      : "#c4c4c4"
                   }
                 />
               }

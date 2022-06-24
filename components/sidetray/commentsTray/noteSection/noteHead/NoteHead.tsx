@@ -12,6 +12,7 @@ type NoteFormProps = {
   createOrUpdateNote: () => void;
   handleButtonClick: () => void;
   isFromRecipePage?: "details" | "edit" | "default";
+  varient?: "notes" | "versions";
 };
 
 const NoteHead = ({
@@ -22,6 +23,7 @@ const NoteHead = ({
   updateNoteForm,
   handleButtonClick,
   isFromRecipePage = "default",
+  varient = "notes",
 }: NoteFormProps) => {
   return (
     <div>
