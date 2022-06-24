@@ -15,9 +15,10 @@ import IngredientFixedPanle from "../share/ingredientFixedPanel/IngredientFixedP
 import useWindowSize from "../../utility/useWindowSize";
 import NutritionPanel from "../share/nutritionPanel/NutritionPanel";
 import PanelHeaderCenter from "../share/panelHeader/PanelHeaderCenter";
+import { RecipeDetailsType } from "../../../type/recipeDetails";
 
 interface editRecipe {
-  recipeName: string;
+  copyDetailsRecipe?: RecipeDetailsType;
   allIngredients: [];
   nutritionTrayData: any;
   recipeInstructions: string[];
@@ -37,7 +38,7 @@ interface editRecipe {
 }
 
 const EditRecipePage = ({
-  recipeName,
+  copyDetailsRecipe = null,
   allIngredients,
   nutritionTrayData,
   recipeInstructions,
@@ -124,8 +125,8 @@ const EditRecipePage = ({
             editOrSavebtnText="Save"
           />
           <Center_Elements
+            copyDetailsRecipe={copyDetailsRecipe}
             updateEditRecipe={updateEditRecipe}
-            recipeName={recipeName}
             allBlendCategories={allBlendCategories}
             selectedBLendCategory={selectedBLendCategory}
             images={images}
