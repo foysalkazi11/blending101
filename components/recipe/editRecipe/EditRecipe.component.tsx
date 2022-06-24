@@ -156,7 +156,7 @@ const EditRecipePage = ({
           />
         </div>
       </div>
-      <div className={styles.footerMainDiv}>
+      <div>
         <FooterRecipeFilter />
       </div>
     </AContainer>

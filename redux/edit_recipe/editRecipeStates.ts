@@ -32,7 +32,6 @@ export const editRecipeStateSlice = createSlice({
     setRecipeFileImagesArray: (state, action) => {
       state.recipeFileImagesArray = action?.payload;
     },
-
     setSelectedBlendCategory: (state, action) => {
       state.selectedBlendCategory = action?.payload;
     },
