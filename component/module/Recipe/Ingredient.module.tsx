@@ -119,6 +119,8 @@ const IngredientSection = (props) => {
         </div>
       )}
       <div className={classes.ingredients}>
+        {/*
+ // @ts-ignore */}
         <DragDropContext
           onDragEnd={(result) => handleOnDragEnd(result, "ingredients")}
         >
