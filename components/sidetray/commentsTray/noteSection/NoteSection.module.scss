@@ -78,8 +78,8 @@
       h3 {
         font-size: 14px;
         font-weight: 600;
-
         color: #000000;
+        transition: all 0.3s linear;
       }
       .rightSide {
         display: flex;
@@ -116,6 +116,13 @@
         margin: 0;
       }
     }
+  }
+}
+
+.headingHover {
+  cursor: pointer;
+  &:hover {
+    color: #fe5d1f !important;
   }
 }
 

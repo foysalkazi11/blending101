@@ -34,13 +34,12 @@ const NoteBody = ({
               <div className={styles.header}>
                 <h3
                   onClick={() => handleTitleClick(item?._id)}
-                  style={{
-                    cursor:
-                      isFromRecipePage === "edit" ||
-                      isFromRecipePage === "details"
-                        ? "pointer"
-                        : null,
-                  }}
+                  className={`${
+                    isFromRecipePage === "edit" ||
+                    isFromRecipePage === "details"
+                      ? styles.headingHover
+                      : null
+                  }`}
                 >
                   {item?.title || item?.postfixTitle}
                 </h3>

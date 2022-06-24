@@ -1,13 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styles from "./centerElements.module.scss";
-import MoreVertIcon from "../../../../public/icons/more_vert_black_36dp.svg";
 import ScoreTray from "./scoreTray/scoreTray.component";
 import Image from "next/image";
 import { setQuantity } from "../../../../redux/edit_recipe/quantity";
@@ -15,7 +8,6 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { setSelectedBlendCategory } from "../../../../redux/edit_recipe/editRecipeStates";
 import RecipeDropDown from "../../../../theme/dropDown/recipeDropDown.component";
 import HandleImageShow from "../../share/handleImageShow/HandleImageShow";
-import IconWithText from "../../recipeDetails/center/Icon/IconWithText";
 import {
   setOpenVersionTray,
   setOpenVersionTrayFormWhichPage,
@@ -26,39 +18,37 @@ import TextArea from "../../../../theme/textArea/TextArea";
 import { MdMoreVert } from "react-icons/md";
 import IconWraper from "../../../../theme/iconWraper/IconWraper";
 import useHover from "../../../utility/useHover";
+import { setDetailsARecipe } from "../../../../redux/slices/recipeSlice";
+import { RecipeDetailsType } from "../../../../type/recipeDetails";
 
 type CenterElementsProps = {
-  recipeName?: string;
+  copyDetailsRecipe?: RecipeDetailsType;
+  updateEditRecipe?: (key: string, value: any) => void;
   allBlendCategories?: [];
   selectedBLendCategory?: string;
   existingImage?: string[];
   setExistingImage?: Dispatch<SetStateAction<string[]>>;
   setImages?: Dispatch<SetStateAction<any[]>>;
   images?: any[];
-  updateEditRecipe?: (key: string, value: any) => void;
 };
 
 const Center_Elements = ({
-  recipeName,
+  copyDetailsRecipe = null,
+  updateEditRecipe = () => {},
   allBlendCategories,
   selectedBLendCategory,
   images = [],
   setImages = () => {},
   existingImage = [],
   setExistingImage = () => {},
-  updateEditRecipe = () => {},
 }: CenterElementsProps) => {
   const dispatch = useAppDispatch();
   const [blendCategoryState, setBlendCategoryState] = useState(null);
-  const { detailsARecipe } = useAppSelector((state) => state?.recipe);
   const [openMenu, setOpenMenu] = useState(false);
   const [hoverRef, hover] = useHover();
 
   const quantity_number = useAppSelector(
     (state) => state?.quantityAdjuster?.quantityNum,
-  );
-  const recipeDescription = useAppSelector(
-    (state) => state?.editRecipeReducer?.descriptionRecipe,
   );
 
   let BlendtecItem = [{ name: `Blentec` }, { name: `Blentec` }];
@@ -66,18 +56,6 @@ const Center_Elements = ({
   let dropDownStyle = {
     paddingRight: "0px",
     width: "111%",
-  };
-
-  const adjusterFunc = (task, type) => {
-    if (type === "quantity_number") {
-      if (quantity_number <= 0 && task === "-") {
-        dispatch(setQuantity(0));
-      } else {
-        task === "+"
-          ? dispatch(setQuantity(quantity_number + 1))
-          : dispatch(setQuantity(quantity_number - 1));
-      }
-    }
   };
 
   useEffect(() => {
@@ -103,11 +81,11 @@ const Center_Elements = ({
           borderSecondary={true}
           style={{ fontWeight: "bold", color: "#000000" }}
           value={
-            detailsARecipe?.postfixTitle
-              ? detailsARecipe?.postfixTitle
-              : detailsARecipe?.name
+            copyDetailsRecipe?.versionId
+              ? copyDetailsRecipe?.postfixTitle
+              : copyDetailsRecipe?.name
           }
-          name={detailsARecipe?.postfixTitle ? "postfixTitle" : "name"}
+          name={copyDetailsRecipe?.versionId ? "postfixTitle" : "name"}
           onChange={(e) => updateEditRecipe(e?.target?.name, e?.target?.value)}
         />
 
@@ -144,7 +122,7 @@ const Center_Elements = ({
         <TextArea
           name="description"
           borderSecondary={true}
-          value={detailsARecipe?.description}
+          value={copyDetailsRecipe?.description}
           onChange={(e) => updateEditRecipe(e?.target?.name, e?.target?.value)}
           style={{ color: "#484848" }}
         />
@@ -194,7 +172,11 @@ const Center_Elements = ({
                 <div className={styles.arrow_div}>
                   <Image
                     onClick={() => {
-                      adjusterFunc("+", "quantity_number");
+                      dispatch(
+                        setQuantity(
+                          quantity_number < 1 ? 1 : quantity_number - 1,
+                        ),
+                      );
                     }}
                     src={"/icons/dropdown.svg"}
                     alt="icon"
@@ -204,7 +186,7 @@ const Center_Elements = ({
                   />
                   <Image
                     onClick={() => {
-                      adjusterFunc("-", "quantity_number");
+                      dispatch(setQuantity(quantity_number + 1));
                     }}
                     src={"/icons/dropdown.svg"}
                     alt="icon"
