@@ -18,7 +18,6 @@ const Index = () => {
   const [singleElement, setsingleElement] = useState(false);
   const { dbUser } = useAppSelector((state) => state?.user);
   const { data: recipeData, loading: recipeLoading } = useQuery(GET_RECIPE, {
-    fetchPolicy: "network-only",
     variables: { recipeId: recipe__Id, userId: dbUser?._id },
   });
   const { loading: nutritionDataLoading, data: nutritionData } =
