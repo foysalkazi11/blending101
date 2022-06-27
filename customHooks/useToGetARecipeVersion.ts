@@ -2,6 +2,7 @@ import { useLazyQuery } from "@apollo/client";
 import GET_A_RECIPE_VERSION from "../gqlLib/versions/query/getARecipeVersion";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setDetailsARecipe } from "../redux/slices/recipeSlice";
+import { setOpenVersionTray } from "../redux/slices/versionTraySlice";
 import { RecipeVersionType } from "../type/recipeVersionType";
 
 const useToGetARecipeVersion = () => {
@@ -31,6 +32,7 @@ const useToGetARecipeVersion = () => {
           ...obj,
         }),
       );
+      dispatch(setOpenVersionTray(false));
     } catch (error) {
       console.log(error);
     }

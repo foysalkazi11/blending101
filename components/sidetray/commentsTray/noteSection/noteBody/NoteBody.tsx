@@ -12,7 +12,12 @@ interface NoteBodyPops {
   varient?: "notes" | "versions";
   loading?: boolean;
   isFromRecipePage?: "details" | "edit" | "default";
-  handleTitleClick?: (id: string) => void;
+  handleToGetARecipeVersion?: (id: string) => void;
+  handleToChangeDefaultVersion?: (
+    versionId: string,
+    isDefault: boolean,
+  ) => void;
+  handleGetARecipe?: () => void;
 }
 const NoteBody = ({
   data = [],
@@ -21,7 +26,9 @@ const NoteBody = ({
   varient = "notes",
   loading = false,
   isFromRecipePage = "default",
-  handleTitleClick = () => {},
+  handleToGetARecipeVersion = () => {},
+  handleToChangeDefaultVersion = () => {},
+  handleGetARecipe = () => {},
 }: NoteBodyPops) => {
   return (
     <div className={`${styles.noteEditBox} y-scroll`}>
@@ -33,7 +40,11 @@ const NoteBody = ({
             <div className={styles.singleNoteEdit} key={index}>
               <div className={styles.header}>
                 <h3
-                  onClick={() => handleTitleClick(item?._id)}
+                  onClick={() =>
+                    item?.isDefault
+                      ? handleGetARecipe()
+                      : handleToGetARecipeVersion(item?._id)
+                  }
                   className={`${
                     isFromRecipePage === "edit" ||
                     isFromRecipePage === "details"
@@ -78,6 +89,9 @@ const NoteBody = ({
                   </span>
                   {isFromRecipePage === "edit" ? (
                     <span
+                      onClick={() =>
+                        handleToChangeDefaultVersion(item?._id, item?.isDefault)
+                      }
                       className={`${styles.star} ${
                         item?.isDefault ? styles.on : styles.off
                       }`}

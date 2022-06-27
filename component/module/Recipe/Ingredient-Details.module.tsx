@@ -56,8 +56,6 @@ const IngredientDetails = (props) => {
       },
     };
 
-    console.log(ingredient);
-
     await Publish({
       mutate: addGroceryList,
       variables: variables,
@@ -148,7 +146,6 @@ const IngredientDetails = (props) => {
               (grocery) =>
                 grocery.ingredientId._id === ingredient?.ingredientId._id,
             );
-            console.log(addedToCart);
             return (
               <div
                 className={styles.singleIngredent}

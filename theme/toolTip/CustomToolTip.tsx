@@ -6,6 +6,7 @@ type ToolTipProps = {
   content: string;
   delay?: number;
   direction?: "top" | "bottom" | "left" | "right" | "";
+  bgColor?: "bgBlack" | "bgPrimary" | "bgSecondary";
   // style?: React.CSSProperties;
 };
 
@@ -14,6 +15,7 @@ const Tooltip = ({
   content,
   delay = 300,
   direction = "",
+  bgColor = "bgBlack",
 }: ToolTipProps) => {
   let timeout;
   const [active, setActive] = useState(false);

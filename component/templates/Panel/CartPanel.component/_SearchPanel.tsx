@@ -196,8 +196,6 @@ const SearchPanel = (props: SearchPanelProps) => {
     }
   };
 
-  console.log(isEditMode);
-
   const portionOptions = useMemo(
     () =>
       selectedIngredient.hasOwnProperty("portions")
