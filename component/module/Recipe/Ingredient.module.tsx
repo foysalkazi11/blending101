@@ -265,11 +265,35 @@ const IngredientSection = (props) => {
                                   onClick={() => {
                                     setEditIngredientId(elem?._id);
                                     setShowAddIngredient(false);
+                                    let resetIngredient;
+                                    if (
+                                      elem.hasOwnProperty("selectedPortion")
+                                    ) {
+                                      //! Preparation needs to be handled here
+                                      resetIngredient = {
+                                        units: elem?.selectedPortion?.name,
+                                        quantity:
+                                          elem?.selectedPortion?.quantity,
+                                        preparation: 0,
+                                      };
+                                    } else {
+                                      const value = elem?.portions?.find(
+                                        (item) => item.default,
+                                      );
+
+                                      resetIngredient = {
+                                        units:
+                                          value?.measurement ||
+                                          elem?.portions[0]?.measurement ||
+                                          "cup",
+                                        quantity: 1,
+                                        preparation: 0,
+                                      };
+                                    }
+
                                     methods.reset({
                                       ingredientId: elem?._id,
-                                      units: elem?.units,
-                                      quantity: elem?.quantity,
-                                      preparation: elem?.preparation,
+                                      ...resetIngredient,
                                     });
                                   }}
                                 />
@@ -353,7 +377,7 @@ const AddToCartForm = (props) => {
       selectedPortion: {
         name: data?.units,
         quantity: data?.quantity,
-        gram: weightInGram,
+        gram: parseInt(portion?.meausermentWeight),
       },
     };
     dispatch(setRecipeIngredients(value));

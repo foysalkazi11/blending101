@@ -57,10 +57,16 @@ const useGetBlendNutritionBasedOnRecipexxx = (
       } else {
         let ingArr = [];
         let ozArr = 0;
+        console.log(selectedIngredientsList);
         selectedIngredientsList?.forEach((item) => {
-          let value = item?.portions?.find(
-            (item) => item.default,
-          )?.meausermentWeight;
+          let value: any = 0;
+          if (item.hasOwnProperty("selectedPortion")) {
+            value = item?.selectedPortion?.gram;
+          } else {
+            value = item?.portions?.find(
+              (item) => item.default,
+            )?.meausermentWeight;
+          }
           ozArr += value && parseInt(value);
           if (value) {
             ingArr?.push({
