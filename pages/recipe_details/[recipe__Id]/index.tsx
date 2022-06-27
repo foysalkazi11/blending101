@@ -21,6 +21,7 @@ const Index = () => {
   const dispatch = useAppDispatch();
   const { data: recipeData, loading: recipeLoading } = useQuery(GET_RECIPE, {
     variables: { recipeId: recipe__Id, userId: dbUser?._id },
+    fetchPolicy: "network-only",
   });
   const { loading: nutritionDataLoading, data: nutritionData } =
     useGetBlendNutritionBasedOnRecipexxx(

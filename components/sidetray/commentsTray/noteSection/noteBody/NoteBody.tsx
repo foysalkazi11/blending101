@@ -87,9 +87,11 @@ const NoteBody = ({
                       format(parseISO(item?.createdAt), "dd/mm/yyyy")
                     )}
                   </span>
-                  {isFromRecipePage === "edit" ? (
+                  {isFromRecipePage === "edit" ||
+                  isFromRecipePage === "details" ? (
                     <span
                       onClick={() =>
+                        isFromRecipePage === "edit" &&
                         handleToChangeDefaultVersion(item?._id, item?.isDefault)
                       }
                       className={`${styles.star} ${
