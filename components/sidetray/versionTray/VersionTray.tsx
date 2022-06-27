@@ -15,6 +15,7 @@ import notification from "../../utility/reactToastifyNotification";
 import GET_A_RECIPE_VERSION_ONLY from "../../../gqlLib/versions/query/getARecipeVersionOnly";
 import useToGetARecipeVersion from "../../../customHooks/useToGetARecipeVersion";
 import useToGetARecipe from "../../../customHooks/useToGetARecipe";
+import CHANGE_DEFAULT_VERSION from "../../../gqlLib/versions/mutation/changelDefaultVersion";
 interface VersionTrayProps {
   showTagByDefaut?: boolean;
   showPanle?: "left" | "right";
@@ -40,11 +41,46 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     getARecipeVersionOnly,
     { data: recipeVersionOnlyData, loading: recipeVersionOnlyLoading },
   ] = useLazyQuery(GET_A_RECIPE_VERSION_ONLY);
+  const [changeDefaultVersion] = useMutation(CHANGE_DEFAULT_VERSION);
   const handleToGetARecipeVersion = useToGetARecipeVersion();
 
   const handleGetARecipe = useToGetARecipe();
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
+
+  const funToGetARecipe = () => {
+    handleGetARecipe(detailsARecipe?._id, dbUser?._id);
+  };
+
+  // find orginal version of recipe
+  const isOrginalVersion = detailsARecipe?.recipeVersion?.find(
+    (version) => version?.isOriginal,
+  );
+
+  // func for change default version
+  const handleToChangeDefaultVersion = async (
+    versionId: string,
+    isDefault: boolean,
+  ) => {
+    try {
+      const { data } = await changeDefaultVersion({
+        variables: {
+          recipeId: detailsARecipe?._id,
+          versionId: isDefault ? isOrginalVersion?._id : versionId,
+        },
+      });
+      dispatch(
+        setDetailsARecipe({
+          ...detailsARecipe,
+          recipeVersion: data?.changeDefaultVersion,
+        }),
+      );
+      notification("info", "Default version change successfully");
+    } catch (error) {
+      console.log(error);
+      notification("info", error?.message || "Something went wrong");
+    }
+  };
 
   const handleToGetARecipeVersionOnly = () => {
     getARecipeVersionOnly({
@@ -82,6 +118,21 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
             },
           },
         });
+
+        dispatch(
+          setDetailsARecipe({
+            ...detailsARecipe,
+            recipeVersion: detailsARecipe?.recipeVersion?.map((version) =>
+              version?._id === updateVersionId
+                ? {
+                    ...version,
+                    postfixTitle: formState?.title,
+                    description: formState?.body,
+                  }
+                : version,
+            ),
+          }),
+        );
       } else {
         const { data } = await addVersion({
           variables: {
@@ -121,7 +172,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           recipeVersion: data?.removeARecipeVersion,
         }),
       );
-      notification("success", "Recipe version remove successfully");
+      notification("success", "Recipe version removed successfully");
     } catch (error) {
       console.log(error);
     }
@@ -143,9 +194,6 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     toggleForm();
   };
 
-  const isOrginalVersion = detailsARecipe?.recipeVersion?.find(
-    (version) => version?.isOriginal,
-  );
   useEffect(() => {
     isMounted.current = true;
 
@@ -173,12 +221,23 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
             alt="recipe_img"
           />
           <h3
-            onClick={() => handleGetARecipe(detailsARecipe?._id, dbUser?._id)}
+            onClick={() =>
+              isOrginalVersion?.isDefault
+                ? funToGetARecipe()
+                : handleToGetARecipeVersion(isOrginalVersion?._id)
+            }
           >
             {isOrginalVersion?.postfixTitle}
           </h3>
 
           <span
+            onClick={() =>
+              !isOrginalVersion?.isDefault &&
+              handleToChangeDefaultVersion(
+                isOrginalVersion?._id,
+                isOrginalVersion?.isDefault,
+              )
+            }
             className={`${styles.star} ${
               isOrginalVersion?.isDefault ? styles.on : styles.off
             }`}
@@ -207,7 +266,9 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           varient="versions"
           loading={newVersionLoading || removeVersionLoading}
           isFromRecipePage={openVersionTrayFormWhichPage}
-          handleTitleClick={handleToGetARecipeVersion}
+          handleToGetARecipeVersion={handleToGetARecipeVersion}
+          handleGetARecipe={funToGetARecipe}
+          handleToChangeDefaultVersion={handleToChangeDefaultVersion}
         />
       </div>
     </TrayWrapper>

@@ -7,8 +7,8 @@
 }
 
 .main {
-  padding: 25px 20px;
-  padding-bottom: 25px;
+  padding: 20px;
+
   background-color: rgb(255, 255, 255);
   box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
   margin-bottom: 20px;
@@ -26,6 +26,15 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    .title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #000;
+      span {
+        font-weight: 400;
+        font-size: 20px;
+      }
+    }
 
     .reightSight {
       margin-left: 10px;
@@ -58,6 +67,13 @@
 
   .scoreTraydiv {
     margin-top: 20px;
+    .discripation {
+      margin-bottom: 20px;
+      color: #ababab;
+      font-size: 14px;
+      line-height: 1.7;
+      font-weight: 400;
+    }
 
     .blendingOptions {
       margin-top: 42px;
