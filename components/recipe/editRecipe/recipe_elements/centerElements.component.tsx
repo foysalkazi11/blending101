@@ -58,6 +58,11 @@ const Center_Elements = ({
     width: "111%",
   };
 
+  // find default version of recipe
+  const isDefaultVersion = (id) =>
+    copyDetailsRecipe?.recipeVersion?.find((version) => version?._id === id)
+      ?.isDeafult;
+
   useEffect(() => {
     if (!selectedBLendCategory) return;
     setBlendCategoryState(selectedBLendCategory);
@@ -80,11 +85,15 @@ const Center_Elements = ({
         {copyDetailsRecipe?.versionId ? (
           <h3 className={styles.title}>
             {copyDetailsRecipe?.name}
-            <span>{`${
-              copyDetailsRecipe?.postfixTitle
-                ? `(${copyDetailsRecipe?.postfixTitle})`
-                : ""
-            }`}</span>
+            <span>
+              {isDefaultVersion(copyDetailsRecipe?.versionId)
+                ? ""
+                : `${
+                    copyDetailsRecipe?.postfixTitle
+                      ? `(${copyDetailsRecipe?.postfixTitle})`
+                      : ""
+                  }`}
+            </span>
           </h3>
         ) : (
           <InputComponent
