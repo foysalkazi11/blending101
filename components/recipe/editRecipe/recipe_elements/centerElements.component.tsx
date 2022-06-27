@@ -77,18 +77,30 @@ const Center_Elements = ({
   return (
     <div className={styles.main}>
       <div className={styles.topSection}>
-        <InputComponent
-          borderSecondary={true}
-          style={{ fontWeight: "bold", color: "#000000" }}
-          value={
-            copyDetailsRecipe?.versionId
-              ? copyDetailsRecipe?.postfixTitle
-              : copyDetailsRecipe?.name
-          }
-          name={copyDetailsRecipe?.versionId ? "postfixTitle" : "name"}
-          onChange={(e) => updateEditRecipe(e?.target?.name, e?.target?.value)}
-        />
-
+        {copyDetailsRecipe?.versionId ? (
+          <h3 className={styles.title}>
+            {copyDetailsRecipe?.name}
+            <span>{`${
+              copyDetailsRecipe?.postfixTitle
+                ? `(${copyDetailsRecipe?.postfixTitle})`
+                : ""
+            }`}</span>
+          </h3>
+        ) : (
+          <InputComponent
+            borderSecondary={true}
+            style={{ fontWeight: "bold", color: "#000000", fontSize: "16px" }}
+            value={
+              copyDetailsRecipe?.versionId
+                ? copyDetailsRecipe?.postfixTitle
+                : copyDetailsRecipe?.name
+            }
+            name={copyDetailsRecipe?.versionId ? "postfixTitle" : "name"}
+            onChange={(e) =>
+              updateEditRecipe(e?.target?.name, e?.target?.value)
+            }
+          />
+        )}
         <div className={styles.reightSight} ref={hoverRef}>
           <IconWraper
             hover="bgSlightGray"
@@ -119,13 +131,21 @@ const Center_Elements = ({
         />
       </div>
       <div className={styles.scoreTraydiv}>
-        <TextArea
-          name="description"
-          borderSecondary={true}
-          value={copyDetailsRecipe?.description}
-          onChange={(e) => updateEditRecipe(e?.target?.name, e?.target?.value)}
-          style={{ color: "#484848" }}
-        />
+        {copyDetailsRecipe?.versionId ? (
+          <p className={styles.discripation}>
+            {copyDetailsRecipe?.description}
+          </p>
+        ) : (
+          <TextArea
+            name="description"
+            borderSecondary={true}
+            value={copyDetailsRecipe?.description}
+            onChange={(e) =>
+              updateEditRecipe(e?.target?.name, e?.target?.value)
+            }
+            style={{ color: "#484848" }}
+          />
+        )}
 
         <ScoreTray />
         <div className={styles.blendingOptions}>

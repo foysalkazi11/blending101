@@ -17,18 +17,18 @@ const Index = () => {
   const [nutritionState, setNutritionState] = useState(null);
   const [singleElement, setsingleElement] = useState(false);
   const { dbUser } = useAppSelector((state) => state?.user);
+  const { detailsARecipe } = useAppSelector((state) => state?.recipe);
+  const dispatch = useAppDispatch();
   const { data: recipeData, loading: recipeLoading } = useQuery(GET_RECIPE, {
     variables: { recipeId: recipe__Id, userId: dbUser?._id },
   });
   const { loading: nutritionDataLoading, data: nutritionData } =
     useGetBlendNutritionBasedOnRecipexxx(
-      recipeData?.getARecipe?.ingredients,
+      detailsARecipe?.ingredients,
       nutritionState,
       () => {},
       true,
     );
-  const dispatch = useAppDispatch();
-  const { detailsARecipe } = useAppSelector((state) => state?.recipe);
 
   useEffect(() => {
     dispatch(setOpenVersionTray(false));
