@@ -14,6 +14,7 @@ const useGetBlendNutritionBasedOnRecipexxx = (
   useEffect(() => {
     if (isRecipeDetailsPage) {
       if (nutritionState?.ingredientId?._id) {
+        // Single Ingredient Details
         getBlendNutritionBasedOnRecipe({
           variables: {
             ingredientsInfo: [
