@@ -8,6 +8,7 @@ const useGetBlendNutritionBasedOnRecipexxx = (
   SetcalculateIngOz: Dispatch<SetStateAction<number>> = () => {},
   isRecipeDetailsPage: boolean = false,
 ) => {
+  // console.log(selectedIngredientsList);
   const [getBlendNutritionBasedOnRecipe, { loading, data, error }] =
     useLazyQuery(GET_BLEND_NUTRITION_BASED_ON_RECIPE_XXX);
 
@@ -62,7 +63,7 @@ const useGetBlendNutritionBasedOnRecipexxx = (
         selectedIngredientsList?.forEach((item) => {
           let value: any = 0;
           if (item.hasOwnProperty("selectedPortion")) {
-            value = item?.selectedPortion?.gram;
+            value = item?.weightInGram;
           } else {
             value = item?.portions?.find(
               (item) => item.default,

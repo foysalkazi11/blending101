@@ -60,6 +60,8 @@ const Center = ({
     (state) => state?.collections,
   );
 
+  console.log(ingredientId);
+
   const ReadMore = ({ children }) => {
     const text = children;
     const [isReadMore, setIsReadMore] = useState(true);

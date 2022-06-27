@@ -1,3 +1,5 @@
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useRef, useState } from "react";
 import Icon from "../../atoms/Icon/Icon.component";
 import styles from "./ToggleMenu.module.scss";
@@ -6,7 +8,7 @@ interface ToggleMenuProps {
   width?: string | number;
   menu: {
     label?: string;
-    icon?: string;
+    icon?: IconDefinition;
     onClick?: (item: any) => void;
   }[];
   toggleState: [number, any];
@@ -36,7 +38,7 @@ const ToggleMenu: React.FC<ToggleMenuProps> = (props) => {
         <div className={styles.active} ref={toggleRef}></div>
         {menu.map((item, index) => (
           <div
-            key={item.label || item.icon}
+            key={item.label}
             className={
               toggle === index + 1
                 ? styles.main__top__menu__child + " " + styles.active__menu
@@ -47,8 +49,8 @@ const ToggleMenu: React.FC<ToggleMenuProps> = (props) => {
               item.onClick && item.onClick(item);
             }}
           >
-            <Icon size={20}>{item.icon}</Icon>
-            {item.label}
+            <FontAwesomeIcon icon={item.icon} size="lg" />
+            {item.label && <span className="ml-10">{item.label}</span>}
           </div>
         ))}
       </div>

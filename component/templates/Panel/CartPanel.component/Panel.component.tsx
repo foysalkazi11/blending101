@@ -40,7 +40,13 @@ import SearchPanel, { defaultGrocery } from "./_SearchPanel";
 import ItemList from "./_ItemList";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCoffee } from "@fortawesome/free-solid-svg-icons";
+import {
+  faListCheck,
+  faBagShopping,
+  faCartShopping,
+  faTrashCan,
+} from "@fortawesome/free-solid-svg-icons";
+import { faRefrigerator } from "@fortawesome/pro-solid-svg-icons";
 
 function CartPanel(props) {
   const [open, setOpen] = useState(false);
@@ -81,8 +87,8 @@ function CartPanel(props) {
           <ToggleMenu
             toggleState={[toggle, setToggle]}
             menu={[
-              { label: "Grocery", icon: "cart__tray" },
-              { label: "Shopping", icon: "cart__tray" },
+              { label: "Grocery", icon: faCartShopping },
+              { label: "Shopping", icon: faBagShopping },
             ]}
           />
           {toggle === 1 && <GroceryPanel />}
@@ -221,18 +227,18 @@ const GroceryPanel = () => {
         <ToggleMenu
           toggleState={[toggle, setToggle]}
           width="8rem"
-          menu={[{ icon: "cart__tray" }, { icon: "cart__tray" }]}
+          menu={[{ icon: faListCheck }, { icon: faRefrigerator }]}
         />
         <div className="text-green" style={{ transform: "translateX(-7.5px)" }}>
           {toggle === 1 ? "List" : "Pantry"}
         </div>
         <div>
-          <FontAwesomeIcon icon={faCoffee} />
-          {/* <IconButton
+          <IconButton
             size="medium"
+            fontName={faTrashCan}
             variant={hasBatchDelete ? "primary" : "disabled"}
             onClick={deleteItems}
-          ></IconButton> */}
+          />
         </div>
       </div>
       <SearchPanel
