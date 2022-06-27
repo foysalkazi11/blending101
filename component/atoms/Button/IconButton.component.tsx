@@ -1,3 +1,5 @@
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { CSSProperties } from "react";
 import Icon from "../Icon/Icon.component";
 import styles from "./IconButton.module.scss";
@@ -5,6 +7,7 @@ import styles from "./IconButton.module.scss";
 interface IconButtonProps {
   variant?: "fade" | "white" | "primary" | "secondary" | "disabled";
   size?: "small" | "medium" | "large";
+  fontName?: IconDefinition;
   font?: string;
   title?: string;
   value?: string;
@@ -22,6 +25,7 @@ const IconButton: React.FC<IconButtonProps> = (props) => {
     size,
     style,
     font,
+    fontName,
     title,
     value,
     fullWidth,
@@ -75,7 +79,13 @@ const IconButton: React.FC<IconButtonProps> = (props) => {
       style={style}
       disabled={disabled}
     >
-      {children ? children : <Icon font={font} />}
+      {children ? (
+        children
+      ) : fontName ? (
+        <FontAwesomeIcon icon={fontName} />
+      ) : (
+        <Icon font={font} />
+      )}
     </button>
   );
 };

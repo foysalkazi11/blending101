@@ -95,21 +95,13 @@ const EditRecipeComponent = () => {
   useEffect(() => {
     if (!classBasedData || !detailsARecipe) return;
 
-    // const presentIngredient = [];
-    // setCopyDetailsRecipe({ ...detailsARecipe });
-    // classBasedData?.forEach((elem) => {
-    //   const itemMatch = detailsARecipe?.ingredients?.find(
-    //     (itm) => elem._id === itm?.ingredientId?._id,
-    //   );
-
-    //   if (itemMatch) return presentIngredient.push({ ...elem, ...itemMatch });
-    // });
-
     setCopyDetailsRecipe({ ...detailsARecipe });
-    const presentIngredient = classBasedData?.filter((elem) => {
-      return detailsARecipe?.ingredients?.find(
+    const presentIngredient = [];
+    classBasedData?.forEach((elem) => {
+      const items = detailsARecipe?.ingredients?.find(
         (itm) => elem._id === itm?.ingredientId?._id,
       );
+      if (items) return presentIngredient.push({ ...elem, ...items });
     });
 
     dispatch(setSelectedIngredientsList(presentIngredient));
