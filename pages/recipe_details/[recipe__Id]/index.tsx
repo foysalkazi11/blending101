@@ -15,7 +15,6 @@ const Index = () => {
   const router = useRouter();
   const { recipe__Id } = router.query;
   const [nutritionState, setNutritionState] = useState(null);
-  const [singleElement, setsingleElement] = useState(false);
   const { dbUser } = useAppSelector((state) => state?.user);
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
   const dispatch = useAppDispatch();
@@ -54,8 +53,6 @@ const Index = () => {
       }
       nutritionState={nutritionState}
       setNutritionState={setNutritionState}
-      singleElement={singleElement}
-      setsingleElement={setsingleElement}
       nutritionDataLoading={nutritionDataLoading}
     />
   );
