@@ -66,7 +66,6 @@
 
 .image {
   position: absolute;
-  right: -35px;
   top: 40px;
   cursor: pointer;
   transition: all;
@@ -77,9 +76,7 @@
     width: 50px;
   }
 }
-.hovered {
-  right: -45px !important;
-}
+
 .imageContained {
   position: absolute;
   right: 5px;
@@ -115,8 +112,6 @@
 
 .filterTaryTag {
   position: absolute;
-  right: -30px;
-  top: 40px;
   cursor: pointer;
   transition: all 0.3s;
   z-index: -99 !important;
@@ -128,9 +123,11 @@
   border-top-right-radius: 7px;
   border-bottom-right-radius: 7px;
   border: 1px solid $primaryColor;
+  color: $primaryColor;
+  background-color: $white;
 }
 .filterTaryHovered {
-  right: -45px !important;
+  color: $white;
   background-color: $primaryColor;
 }
 

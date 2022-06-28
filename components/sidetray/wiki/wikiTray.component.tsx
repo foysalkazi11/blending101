@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
-import TrayWrapper from "../Tray.wrapper";
+import TrayWrapper from "../TrayWrapper";
 import styles from "./nutritiontray.module.scss";
 
 export default function WikiTray({ title, children }) {
