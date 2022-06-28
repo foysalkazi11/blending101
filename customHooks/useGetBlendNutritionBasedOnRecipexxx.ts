@@ -41,9 +41,7 @@ const useGetBlendNutritionBasedOnRecipexxx = (
     } else {
       // Single Ingredient Details
       if (nutritionState?._id) {
-        let value = nutritionState?.portions?.find(
-          (item) => item.default,
-        )?.meausermentWeight;
+        const value = nutritionState?.selectedPortion?.gram;
         if (value) {
           getBlendNutritionBasedOnRecipe({
             variables: {

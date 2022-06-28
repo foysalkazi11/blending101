@@ -33,8 +33,6 @@ interface center {
   setCounter: any;
   nutritionState: any;
   setNutritionState: any;
-  singleElement: any;
-  setsingleElement: any;
 }
 
 const Center = ({
@@ -43,8 +41,6 @@ const Center = ({
   setCounter,
   nutritionState,
   setNutritionState,
-  singleElement,
-  setsingleElement,
 }: center) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -263,8 +259,7 @@ const Center = ({
         recipeData={recipeData}
         nutritionState={nutritionState}
         setIngredientId={setIngredientId}
-        singleElement={singleElement}
-        setsingleElement={setsingleElement}
+        setNutritionState={setNutritionState}
       />
       <div className={styles.ingredentContainer}>
         <div className={styles.ingredentHeader}>
