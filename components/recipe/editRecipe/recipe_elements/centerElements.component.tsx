@@ -1,5 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import styles from "./centerElements.module.scss";
 import ScoreTray from "./scoreTray/scoreTray.component";
 import Image from "next/image";
@@ -15,11 +21,11 @@ import {
 import { VscVersions } from "react-icons/vsc";
 import InputComponent from "../../../../theme/input/input.component";
 import TextArea from "../../../../theme/textArea/TextArea";
-import { MdMoreVert } from "react-icons/md";
+import { MdMoreVert, MdDeleteOutline } from "react-icons/md";
 import IconWraper from "../../../../theme/iconWraper/IconWraper";
-import useHover from "../../../utility/useHover";
 import { setDetailsARecipe } from "../../../../redux/slices/recipeSlice";
 import { RecipeDetailsType } from "../../../../type/recipeDetails";
+import useOnClickOutside from "../../../utility/useOnClickOutside";
 
 type CenterElementsProps = {
   copyDetailsRecipe?: RecipeDetailsType;
@@ -45,7 +51,8 @@ const Center_Elements = ({
   const dispatch = useAppDispatch();
   const [blendCategoryState, setBlendCategoryState] = useState(null);
   const [openMenu, setOpenMenu] = useState(false);
-  const [hoverRef, hover] = useHover();
+  const outsideClickRef = useRef<HTMLDivElement>(null);
+  useOnClickOutside(outsideClickRef, () => setOpenMenu(false));
 
   const quantity_number = useAppSelector(
     (state) => state?.quantityAdjuster?.quantityNum,
@@ -110,7 +117,7 @@ const Center_Elements = ({
             }
           />
         )}
-        <div className={styles.reightSight} ref={hoverRef}>
+        <div className={styles.reightSight} ref={outsideClickRef}>
           <IconWraper
             hover="bgSlightGray"
             style={{ width: "36px", height: "36px" }}
@@ -127,6 +134,7 @@ const Center_Elements = ({
                   dispatch(setOpenVersionTrayFormWhichPage("edit"));
                 }}
               />
+              <MdDeleteOutline className={styles.icon} />
             </div>
           ) : null}
         </div>
