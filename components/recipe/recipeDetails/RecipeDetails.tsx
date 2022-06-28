@@ -13,8 +13,6 @@ const RecipeDetails = ({
   nutritionData,
   nutritionState,
   setNutritionState,
-  singleElement,
-  setsingleElement,
   nutritionDataLoading = false,
 }) => {
   const [counter, setCounter] = useState(1);
@@ -50,8 +48,6 @@ const RecipeDetails = ({
             setCounter={setCounter}
             setNutritionState={setNutritionState}
             nutritionState={nutritionState}
-            singleElement={singleElement}
-            setsingleElement={setsingleElement}
           />
         </div>
         <div className={styles.right}>

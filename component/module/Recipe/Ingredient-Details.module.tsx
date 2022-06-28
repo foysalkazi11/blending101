@@ -2,7 +2,6 @@ import React from "react";
 import { BiBarChart } from "react-icons/bi";
 import { BsCartPlus } from "react-icons/bs";
 import { MdOutlineInfo } from "react-icons/md";
-import { setNutritionState } from "../../../redux/edit_recipe/quantity";
 import CircularRotatingLoader from "../../../theme/loader/circularRotatingLoader.component";
 
 import styles from "../../../components/recipe/recipeDetails/center/Center.module.scss";
@@ -31,8 +30,7 @@ const IngredientDetails = (props) => {
     recipeData,
     nutritionState,
     setIngredientId,
-    singleElement,
-    setsingleElement,
+    setNutritionState,
   } = props;
 
   const [addGroceryList, groceryState] = useMutation(ADD_GROCERY_ITEM);
@@ -207,7 +205,6 @@ const IngredientDetails = (props) => {
                       style={{ color: "#fe5d1f" }}
                       className={styles.icon}
                       onClick={() => {
-                        setsingleElement(!singleElement);
                         setNutritionState({});
                       }}
                     />
@@ -229,7 +226,6 @@ const IngredientDetails = (props) => {
                       className={styles.icon}
                       onClick={() => {
                         window.scrollBy(0, 0);
-                        setsingleElement(true);
                         setNutritionState(ingredient);
                       }}
                     />
