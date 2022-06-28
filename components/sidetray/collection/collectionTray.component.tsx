@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useRef, useState } from "react";
-import TrayWrapper from "../Tray.wrapper";
+import TrayWrapper from "../TrayWrapper";
 import CollectionComponent from "./content/collection.component";
 import ThemeComponent from "./content/theme.component";
 import styles from "./trayleft.module.scss";
@@ -12,6 +12,9 @@ import GET_COLLECTIONS_AND_THEMES from "../../../gqlLib/collection/query/getColl
 import { useLazyQuery } from "@apollo/client";
 import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
 import { setChangeRecipeWithinCollection } from "../../../redux/slices/collectionSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import TrayTag from "../TrayTag";
+import { faChartTreeMap } from "@fortawesome/pro-regular-svg-icons";
 
 interface CollectionTrayProps {
   showTagByDefaut?: boolean;
@@ -69,12 +72,31 @@ export default function CollectionTray({
       setToggle(no);
     }
   };
+
+  const PanelTag = (hover: boolean = false) => {
+    return (
+      <img
+        src={
+          hover ? "/icons/left__drawer__orange.svg" : "/icons/left__drawer.svg"
+        }
+        alt="Icon"
+      />
+    );
+  };
+
   return (
     <TrayWrapper
       showTagByDefaut={showTagByDefaut}
       closeTray={closeTray}
       openTray={openCollectionsTary}
       showPanle={showPanle}
+      panleTag={(hover) => (
+        <TrayTag
+          icon={<FontAwesomeIcon icon={faChartTreeMap} />}
+          placeMent="left"
+          hover={hover}
+        />
+      )}
     >
       <div className={styles.main}>
         <div className={styles.main__top}>
