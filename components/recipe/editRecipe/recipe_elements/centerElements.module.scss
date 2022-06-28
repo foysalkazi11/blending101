@@ -46,17 +46,21 @@
         align-items: center;
         justify-content: space-between;
 
-        padding: 4px 15px;
+        padding: 4px 10px;
         max-height: 30px;
         border: 1px solid #eeeeee;
         border-radius: 5px;
         background: #eeeeeef2;
         top: 35px;
         right: 20px;
+        .icon:last-child {
+          margin-right: 0px;
+        }
 
         .icon {
           cursor: pointer;
           color: #929292;
+          margin-right: 10px;
           &:hover {
             color: $secondaryColor;
           }

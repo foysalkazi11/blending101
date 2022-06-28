@@ -118,7 +118,7 @@ const EditRecipeComponent = () => {
       let value = item?.portions?.find((item) => item.default);
       ingArr?.push({
         ingredientId: item?._id,
-        selectedPortionName: item?.units || value?.measurement,
+        selectedPortionName: item?.selectedPortion?.name || value?.measurement,
         weightInGram: item?.weightInGram
           ? Number(item?.weightInGram)
           : Number(value?.meausermentWeight),
