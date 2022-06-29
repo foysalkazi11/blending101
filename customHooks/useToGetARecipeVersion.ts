@@ -11,14 +11,13 @@ const useToGetARecipeVersion = () => {
   const [
     getARecipeVersion,
     { data: recipeVersionData, loading: recipeVersionLoading },
-  ] = useLazyQuery(GET_A_RECIPE_VERSION);
+  ] = useLazyQuery(GET_A_RECIPE_VERSION, { fetchPolicy: "network-only" });
 
   const handleToGetARecipeVersion = async (id: string) => {
     try {
       const { data } = await getARecipeVersion({
         variables: { versionId: id },
       });
-
       const { _id, recipeId, ...rest }: RecipeVersionType =
         data?.getARecipeVersion;
       const obj = {

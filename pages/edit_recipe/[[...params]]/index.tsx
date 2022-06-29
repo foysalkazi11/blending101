@@ -110,6 +110,14 @@ const EditRecipeComponent = () => {
     setExistingImages(detailsARecipe?.image?.map((item) => `${item?.image}`));
   }, [classBasedData, detailsARecipe]);
 
+  const isOrginalVersion = detailsARecipe?.recipeVersion?.find(
+    (version) => version?.isOriginal,
+  );
+
+  const checkVersion = copyDetailsRecipe?.recipeVersion?.find(
+    (version) => version?._id === detailsARecipe?.versionId,
+  );
+
   const editARecipeFunction = async () => {
     dispatch(setLoading(true));
 

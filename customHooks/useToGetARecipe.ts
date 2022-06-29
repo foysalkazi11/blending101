@@ -16,7 +16,12 @@ const useToGetARecipe = () => {
       const { data } = await getARecipe({
         variables: { recipeId, userId: userId },
       });
-      dispatch(setDetailsARecipe(data?.getARecipe));
+      dispatch(
+        setDetailsARecipe({
+          ...data?.getARecipe,
+          ingredients: data?.getARecipe?.defaultVersion?.ingredients,
+        }),
+      );
       dispatch(setOpenVersionTray(false));
     } catch (error) {
       console.log(error);

@@ -26,6 +26,8 @@ import IconWraper from "../../../../theme/iconWraper/IconWraper";
 import { setDetailsARecipe } from "../../../../redux/slices/recipeSlice";
 import { RecipeDetailsType } from "../../../../type/recipeDetails";
 import useOnClickOutside from "../../../utility/useOnClickOutside";
+import { BiEditAlt } from "react-icons/bi";
+import useToGetARecipe from "../../../../customHooks/useToGetARecipe";
 
 type CenterElementsProps = {
   copyDetailsRecipe?: RecipeDetailsType;
@@ -53,6 +55,8 @@ const Center_Elements = ({
   const [openMenu, setOpenMenu] = useState(false);
   const outsideClickRef = useRef<HTMLDivElement>(null);
   useOnClickOutside(outsideClickRef, () => setOpenMenu(false));
+  const handleToGetARecipe = useToGetARecipe();
+  const { dbUser } = useAppSelector((state) => state?.user);
 
   const quantity_number = useAppSelector(
     (state) => state?.quantityAdjuster?.quantityNum,
@@ -65,10 +69,10 @@ const Center_Elements = ({
     width: "111%",
   };
 
-  // find default version of recipe
-  const isDefaultVersion = (id) =>
-    copyDetailsRecipe?.recipeVersion?.find((version) => version?._id === id)
-      ?.isDeafult;
+  // check version of recipe
+  const checkVersion = copyDetailsRecipe?.recipeVersion?.find(
+    (version) => version?._id === copyDetailsRecipe?.versionId,
+  );
 
   useEffect(() => {
     if (!selectedBLendCategory) return;
@@ -93,7 +97,7 @@ const Center_Elements = ({
           <h3 className={styles.title}>
             {copyDetailsRecipe?.name}
             <span>
-              {isDefaultVersion(copyDetailsRecipe?.versionId)
+              {checkVersion?.isOrginal
                 ? ""
                 : `${
                     copyDetailsRecipe?.postfixTitle
@@ -133,6 +137,12 @@ const Center_Elements = ({
                   dispatch(setOpenVersionTray(true));
                   dispatch(setOpenVersionTrayFormWhichPage("edit"));
                 }}
+              />
+              <BiEditAlt
+                onClick={() =>
+                  handleToGetARecipe(copyDetailsRecipe?._id, dbUser?._id)
+                }
+                className={styles.icon}
               />
               <MdDeleteOutline className={styles.icon} />
             </div>
