@@ -20,6 +20,16 @@ export interface RecipeDetailsType {
   userCollections: string[];
   versionId?: string;
   postfixTitle?: string;
+  defaultVersion: {
+    _id: string;
+    servingSize: number;
+    recipeId: string;
+    recipeInstructions: any[];
+    postfixTitle: string;
+    description: string;
+    ingredients: Ingredient[];
+  };
+  originalVersion: string;
 }
 
 export interface RecipeBlendCategory {

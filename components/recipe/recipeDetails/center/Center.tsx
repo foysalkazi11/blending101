@@ -26,9 +26,10 @@ import {
 } from "../../../../redux/slices/versionTraySlice";
 import { VscVersions } from "react-icons/vsc";
 import IngredientDetails from "../../../../component/module/Recipe/Ingredient-Details.module";
+import { RecipeDetailsType } from "../../../../type/recipeDetails";
 
 interface center {
-  recipeData: any;
+  recipeData: RecipeDetailsType;
   counter: any;
   setCounter: any;
   nutritionState: any;
@@ -55,8 +56,6 @@ const Center = ({
   const { lastModifiedCollection } = useAppSelector(
     (state) => state?.collections,
   );
-
-  console.log(ingredientId);
 
   const ReadMore = ({ children }) => {
     const text = children;
@@ -125,8 +124,13 @@ const Center = ({
         <div className={styles.heading}>
           <h3>
             {recipeData?.name}{" "}
+            {recipeData?.originalVersion === recipeData?.defaultVersion?._id}
             <span>{`${
-              recipeData?.postfixTitle ? `(${recipeData?.postfixTitle})` : ""
+              recipeData?.originalVersion === recipeData?.defaultVersion?._id
+                ? ""
+                : recipeData?.postfixTitle
+                ? `(${recipeData?.postfixTitle})`
+                : `(${recipeData?.defaultVersion?.postfixTitle})`
             }`}</span>{" "}
           </h3>
           <span className={styles.ratingBox}>

@@ -10,6 +10,7 @@ import {
   setOpenVersionTray,
   setOpenVersionTrayFormWhichPage,
 } from "../../../redux/slices/versionTraySlice";
+import { RecipeVersionType } from "../../../type/recipeVersionType";
 
 const Index = () => {
   const router = useRouter();
@@ -38,7 +39,29 @@ const Index = () => {
 
   useEffect(() => {
     if (!recipeLoading && recipeData?.getARecipe) {
-      dispatch(setDetailsARecipe(recipeData?.getARecipe));
+      const recipe = recipeData?.getARecipe;
+      if (recipe?.originalVersion === recipe?.defaultVersion?._id) {
+        dispatch(
+          setDetailsARecipe({
+            ...recipe,
+            ingredients: recipe?.defaultVersion?.ingredients,
+          }),
+        );
+      } else {
+        const { _id, recipeId, ...rest }: RecipeVersionType =
+          recipe?.defaultVersion;
+        const obj = {
+          _id: recipeId,
+          versionId: _id,
+          ...rest,
+        };
+        dispatch(
+          setDetailsARecipe({
+            ...recipe,
+            ...obj,
+          }),
+        );
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recipeData?.getARecipe]);

@@ -40,11 +40,7 @@ const NoteBody = ({
             <div className={styles.singleNoteEdit} key={index}>
               <div className={styles.header}>
                 <h3
-                  onClick={() =>
-                    item?.isDefault
-                      ? handleGetARecipe()
-                      : handleToGetARecipeVersion(item?._id)
-                  }
+                  onClick={() => handleToGetARecipeVersion(item?._id)}
                   className={`${
                     isFromRecipePage === "edit" ||
                     isFromRecipePage === "details"

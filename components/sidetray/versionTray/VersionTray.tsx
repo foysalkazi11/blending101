@@ -224,19 +224,14 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
             src={detailsARecipe?.image?.find((img) => img?.default)?.image}
             alt="recipe_img"
           />
-          <h3
-            onClick={() =>
-              isOrginalVersion?.isDefault
-                ? funToGetARecipe()
-                : handleToGetARecipeVersion(isOrginalVersion?._id)
-            }
-          >
-            {isOrginalVersion?.postfixTitle}
+          <h3 onClick={() => handleToGetARecipeVersion(isOrginalVersion?._id)}>
+            {detailsARecipe?.name}
           </h3>
 
           <span
             onClick={() =>
               !isOrginalVersion?.isDefault &&
+              openVersionTrayFormWhichPage === "edit" &&
               handleToChangeDefaultVersion(
                 isOrginalVersion?._id,
                 isOrginalVersion?.isDefault,

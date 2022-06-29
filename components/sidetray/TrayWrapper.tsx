@@ -12,7 +12,7 @@ interface leftTrayInterface {
   panleTag?: (hover: boolean) => ReactNode;
 }
 
-export default function LeftTrayWrapper({
+export default function TrayWrapper({
   children,
   showTagByDefaut = true,
   showPanle = "left",
@@ -52,7 +52,7 @@ export default function LeftTrayWrapper({
           style={
             showPanle === "left"
               ? { right: hover ? "5px" : "20px" }
-              : { left: hover ? "-35px" : "-25px" }
+              : { left: hover ? "-40px" : "-25px" }
           }
         >
           {!openTray && !showTagByDefaut ? null : panleTag(hover)}
