@@ -166,23 +166,18 @@ const Center = ({
           </div>
 
           <div className={styles.alignItems}>
-            <IconWithText
-              wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
-              handleClick={(e) => {
-                dispatch(setOpenVersionTray(true));
-                dispatch(setOpenVersionTrayFormWhichPage("details"));
-              }}
-              icon={
-                <VscVersions
-                  color={
-                    recipeData?.recipeVersion?.length >= 1
-                      ? "#7cbc39"
-                      : "#c4c4c4"
-                  }
-                />
-              }
-              text="Versions"
-            />
+            {recipeData?.recipeVersion?.length >= 1 ? (
+              <IconWithText
+                wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
+                handleClick={(e) => {
+                  dispatch(setOpenVersionTray(true));
+                  dispatch(setOpenVersionTrayFormWhichPage("details"));
+                }}
+                icon={<VscVersions color={"#7cbc39"} />}
+                text="Versions"
+              />
+            ) : null}
+
             <IconWithText
               wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
               handleClick={() => {}}
