@@ -53,7 +53,9 @@ export default function CollectionTray({
       loading: collectionsLoading,
       error: collectionsError,
     },
-  ] = useLazyQuery(GET_COLLECTIONS_AND_THEMES);
+  ] = useLazyQuery(GET_COLLECTIONS_AND_THEMES, {
+    fetchPolicy: "cache-and-network",
+  });
 
   useEffect(() => {
     if (openCollectionsTary) {

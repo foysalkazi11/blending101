@@ -24,10 +24,7 @@ export default function Home() {
     setState((pre) => ({ ...pre, [name]: value }));
   };
   return (
-    <AContainer
-      showCollectionTray={{ show: true, showTagByDeafult: true }}
-      showRighTray={true}
-    >
+    <AContainer showCollectionTray={{ show: true, showTagByDeafult: true }}>
       <div className={styles.theme__child}>
         {/* BUTTON THEME COMPONENTS HERE */}
         <div className={styles.theme__box}>
