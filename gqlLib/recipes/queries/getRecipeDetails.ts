@@ -66,7 +66,35 @@ export const GET_RECIPE = gql`
           }
         }
       }
-      originalVersion
+      originalVersion {
+        _id
+        servingSize
+        recipeId
+        recipeInstructions
+        postfixTitle
+        description
+        ingredients {
+          ingredientId {
+            ingredientName
+            _id
+            images
+            featuredImage
+          }
+
+          portions {
+            name
+            gram
+            default
+            quantity
+          }
+          weightInGram
+          selectedPortion {
+            name
+            quantity
+            gram
+          }
+        }
+      }
     }
   }
 `;
