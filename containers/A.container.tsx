@@ -24,7 +24,8 @@ type AContainerProps = {
   showSidebar?: boolean;
   showCollectionTray?: ShowTray;
   showVersionTray?: ShowTray;
-  showRighTray?: boolean;
+  showGroceryTray?: ShowTray;
+  showCommentsTray?: ShowTray;
   logo?: boolean;
   headerTitle?: string;
   headerLogo?: string;
@@ -34,7 +35,6 @@ type AContainerProps = {
   ingredientTray?: Boolean;
   filterTray?: Boolean;
   headerFullWidth?: Boolean;
-  commentsTray?: boolean;
 };
 
 export default function AContainer(props: AContainerProps) {
@@ -52,7 +52,16 @@ export default function AContainer(props: AContainerProps) {
       showTagByDeafult: true,
       showPanle: "right",
     },
-    showRighTray = false,
+    showGroceryTray = {
+      show: false,
+      showTagByDeafult: true,
+      showPanle: "right",
+    },
+    showCommentsTray = {
+      show: false,
+      showTagByDeafult: true,
+      showPanle: "right",
+    },
     logo = true,
     headerTitle = "",
     nutritionTray = false,
@@ -60,7 +69,6 @@ export default function AContainer(props: AContainerProps) {
     ingredientTray = false,
     filterTray = false,
     headerFullWidth = false,
-    commentsTray = false,
   } = props;
 
   return (
@@ -94,11 +102,22 @@ export default function AContainer(props: AContainerProps) {
             />
           </div>
         ) : null}
-        {showRighTray ? (
+        {showGroceryTray?.show ? (
           <div className={styles.fixed__main__right}>
-            <CartPanel />
+            <CartPanel
+              showTagByDefaut={showGroceryTray?.showTagByDeafult}
+              showPanle={showGroceryTray?.showPanle}
+            />
           </div>
         ) : null}
+        {showCommentsTray?.show && (
+          <div className={styles.fixed__main__right}>
+            <CommentsTray
+              showTagByDefaut={showCommentsTray?.showTagByDeafult}
+              showPanle={showCommentsTray?.showPanle}
+            />
+          </div>
+        )}
         {nutritionTray && (
           <div className={styles.fixed__main__left}>
             <NutritionTrayComponent title="Nutrition Lists" />
@@ -119,11 +138,7 @@ export default function AContainer(props: AContainerProps) {
             <Filtertray filter="true" />
           </div>
         )}
-        {commentsTray && (
-          <div className={styles.fixed__main__right}>
-            <CommentsTray />
-          </div>
-        )}
+
         {props.children}
       </div>
     </div>

@@ -47,55 +47,48 @@ import {
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 import { faRefrigerator } from "@fortawesome/pro-solid-svg-icons";
+import TrayWrapper from "../../../../components/sidetray/TrayWrapper";
+import TrayTag from "../../../../components/sidetray/TrayTag";
 
-function CartPanel(props) {
+interface CartPanelProps {
+  showTagByDefaut?: boolean;
+  showPanle?: "left" | "right";
+}
+
+function CartPanel({ showPanle, showTagByDefaut }: CartPanelProps) {
   const [open, setOpen] = useState(false);
   const [toggle, setToggle] = useState(1);
-
-  const ref = useRef<any>();
-
-  useEffect(() => {
-    const elem = ref.current;
-    if (!elem) return;
-    if (open) {
-      elem.style.right = "0";
-    } else {
-      elem.style.right = "-325px";
-    }
-  }, [open]);
 
   const handleClick = () => {
     setOpen(() => !open);
   };
 
   return (
-    <div className={styles.tray} ref={ref}>
-      {open ? (
-        <div className={styles.image} onClick={handleClick}>
-          <img src="/icons/cart__sidebar__orange.png" alt="drawer__orange" />
-        </div>
-      ) : (
-        <div
-          className={styles.image + " " + styles.image__white}
-          onClick={handleClick}
-        >
-          <img src="/icons/cart__sidebar.svg" alt="drawer" />
-        </div>
+    <TrayWrapper
+      showTagByDefaut={showTagByDefaut}
+      closeTray={handleClick}
+      openTray={open}
+      showPanle={showPanle}
+      panleTag={(hover) => (
+        <TrayTag
+          icon={<FontAwesomeIcon icon={faCartShopping} />}
+          placeMent="left"
+          hover={hover}
+        />
       )}
+    >
       <div>
-        <div>
-          <ToggleMenu
-            toggleState={[toggle, setToggle]}
-            menu={[
-              { label: "Grocery", icon: faCartShopping },
-              { label: "Shopping", icon: faBagShopping },
-            ]}
-          />
-          {toggle === 1 && <GroceryPanel />}
-          {toggle === 2 && <ShoppingPanel />}
-        </div>
+        <ToggleMenu
+          toggleState={[toggle, setToggle]}
+          menu={[
+            { label: "Grocery", icon: faCartShopping },
+            { label: "Shopping", icon: faBagShopping },
+          ]}
+        />
+        {toggle === 1 && <GroceryPanel />}
+        {toggle === 2 && <ShoppingPanel />}
       </div>
-    </div>
+    </TrayWrapper>
   );
 }
 

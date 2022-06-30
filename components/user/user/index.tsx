@@ -117,7 +117,7 @@ const User = () => {
   }, [dbUser?._id]);
 
   return (
-    <AContainer headerTitle="My Profile" showRighTray={false} logo={false}>
+    <AContainer headerTitle="My Profile" logo={false}>
       <header className={styles.header}>
         <div className={styles.header__banner}>
           <h2>Blending 101</h2>

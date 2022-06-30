@@ -5,16 +5,26 @@ import { setOpenCommentsTray } from "../../../redux/slices/sideTraySlice";
 import styles from "./CommentsTray.module.scss";
 import CommentSection from "./CommentSection/CommentSection";
 import NoteSection from "./noteSection/NoteSection";
-import { setLoading } from "../../../redux/slices/utilitySlice";
 import { useLazyQuery } from "@apollo/client";
 import GET_ALL_NOTES_FOR_A_RECIPE from "../../../gqlLib/notes/quries/getAllNotesForARecipe";
 import reactToastifyNotification from "../../utility/reactToastifyNotification";
 import GET_ALL_COMMENTS_FOR_A_RECIPE from "../../../gqlLib/comments/query/getAllCommentsForARecipe";
-import useHover from "../../utility/useHover";
 import SkeletonComment from "../../../theme/skeletons/skeletonComment/SkeletonComment";
 import SkeletonNote from "../../../theme/skeletons/skeletonNote/SkeletonNote";
+import TrayWrapper from "../TrayWrapper";
+import TrayTag from "../TrayTag";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMessageDots } from "@fortawesome/pro-solid-svg-icons";
 
-export default function CommentsTray() {
+interface CommentsTrayProps {
+  showTagByDefaut?: boolean;
+  showPanle?: "left" | "right";
+}
+
+export default function CommentsTray({
+  showPanle,
+  showTagByDefaut,
+}: CommentsTrayProps) {
   const [allNotes, setAllNotes] = useState([]);
   const [allComments, setAllComments] = useState([]);
   const [userComments, setUserComments] = useState<any>({});
@@ -34,8 +44,6 @@ export default function CommentsTray() {
   ] = useLazyQuery(GET_ALL_COMMENTS_FOR_A_RECIPE, {
     fetchPolicy: "network-only",
   });
-  const [ref, hovered] = useHover();
-  // const ref = useRef<any>();
   const reff = useRef<any>();
 
   const fetchCommentsAndNotes = async () => {
@@ -79,17 +87,6 @@ export default function CommentsTray() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openCommentsTray, activeRecipeId]);
 
-  useEffect(() => {
-    const elem = ref.current;
-    if (!elem) return;
-    if (openCommentsTray) {
-      elem.style.right = "0";
-    } else {
-      elem.style.right = "-335px";
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openCommentsTray]);
-
   const handleClick = () => {
     dispatch(setOpenCommentsTray(!openCommentsTray));
   };
@@ -104,16 +101,19 @@ export default function CommentsTray() {
   };
 
   return (
-    <div className={`${styles.commentTray}`} ref={ref}>
-      {openCommentsTray ? (
-        <div
-          className={`${styles.imageTag} ${hovered ? styles.hovered : ""}`}
-          onClick={handleClick}
-        >
-          <img src="/images/cmnt-white.svg" alt="message-icon" />
-        </div>
-      ) : null}
-
+    <TrayWrapper
+      showTagByDefaut={showTagByDefaut}
+      closeTray={handleClick}
+      openTray={openCommentsTray}
+      showPanle={showPanle}
+      panleTag={(hover) => (
+        <TrayTag
+          icon={<FontAwesomeIcon icon={faMessageDots} />}
+          placeMent="left"
+          hover={hover}
+        />
+      )}
+    >
       <div className={styles.main}>
         <div className={styles.main__top}>
           <div className={styles.main__top__menu}>
@@ -162,6 +162,6 @@ export default function CommentsTray() {
       ) : (
         <NoteSection allNotes={allNotes} setAllNotes={setAllNotes} />
       )}
-    </div>
+    </TrayWrapper>
   );
 }
