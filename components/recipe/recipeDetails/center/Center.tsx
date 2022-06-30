@@ -138,15 +138,6 @@ const Center = ({
                       : ""
                   }`}
             </span>
-            {/* <span>{`${
-              recipeData?.originalVersion === recipeData?.defaultVersion?._id
-                ? ""
-                : recipeData?.originalVersion === recipeData?.versionId
-                ? ""
-                : recipeData?.postfixTitle
-                ? `(${recipeData?.postfixTitle})`
-                : `(${recipeData?.defaultVersion?.postfixTitle})`
-            }`}</span>{" "} */}
           </h3>
           <span className={styles.ratingBox}>
             <img src="/images/rating.svg" alt="" />
@@ -166,7 +157,7 @@ const Center = ({
           </div>
 
           <div className={styles.alignItems}>
-            {recipeData?.recipeVersion?.length >= 1 ? (
+            {recipeData?.recipeVersion?.length >= 2 ? (
               <IconWithText
                 wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
                 handleClick={(e) => {
