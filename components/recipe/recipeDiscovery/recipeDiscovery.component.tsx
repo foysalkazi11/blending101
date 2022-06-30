@@ -181,6 +181,8 @@ const RecipeDetails = () => {
                             setcompareRecipeList={setcompareRecipeList}
                             isCollectionIds={item?.userCollections}
                             setOpenCollectionModal={setOpenCollectionModal}
+                            isMatch={item?.isMatch}
+                            postfixTitle={item?.defaultVersion?.postfixTitle}
                           />
                         </div>
                       );
@@ -231,6 +233,8 @@ const RecipeDetails = () => {
                               setcompareRecipeList={setcompareRecipeList}
                               isCollectionIds={item?.userCollections}
                               setOpenCollectionModal={setOpenCollectionModal}
+                              isMatch={item?.isMatch}
+                              postfixTitle={item?.defaultVersion?.postfixTitle}
                             />
                           </div>
                         );
@@ -281,6 +285,8 @@ const RecipeDetails = () => {
                               setcompareRecipeList={setcompareRecipeList}
                               isCollectionIds={item?.userCollections}
                               setOpenCollectionModal={setOpenCollectionModal}
+                              isMatch={item?.isMatch}
+                              postfixTitle={item?.defaultVersion?.postfixTitle}
                             />
                           </div>
                         );

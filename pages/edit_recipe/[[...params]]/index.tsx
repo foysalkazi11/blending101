@@ -218,7 +218,7 @@ const EditRecipeComponent = () => {
   useEffect(() => {
     if (detailsARecipe?._id !== recipeId) {
       if (dbUser?._id) {
-        handleToGetARecipe(recipeId, dbUser?._id);
+        handleToGetARecipe(recipeId, dbUser?._id, false);
       }
     }
   }, [recipeId, dbUser?._id]);

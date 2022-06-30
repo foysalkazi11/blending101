@@ -139,9 +139,9 @@ const Center_Elements = ({
                 }}
               />
               <BiEditAlt
-                onClick={() =>
-                  handleToGetARecipe(copyDetailsRecipe?._id, dbUser?._id)
-                }
+                onClick={() => {
+                  handleToGetARecipe(copyDetailsRecipe?._id, dbUser?._id, true);
+                }}
                 className={styles.icon}
               />
               <MdDeleteOutline className={styles.icon} />

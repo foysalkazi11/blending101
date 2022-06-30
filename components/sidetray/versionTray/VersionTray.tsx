@@ -50,7 +50,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   const isMounted = useRef(false);
 
   const funToGetARecipe = () => {
-    handleGetARecipe(detailsARecipe?._id, dbUser?._id);
+    handleGetARecipe(detailsARecipe?._id, dbUser?._id, true);
   };
 
   // find orginal version of recipe
@@ -224,9 +224,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
             src={detailsARecipe?.image?.find((img) => img?.default)?.image}
             alt="recipe_img"
           />
-          <h3 onClick={() => handleToGetARecipeVersion(isOrginalVersion?._id)}>
-            {detailsARecipe?.name}
-          </h3>
+          <h3 onClick={funToGetARecipe}>{detailsARecipe?.name}</h3>
 
           <span
             onClick={() =>
@@ -266,7 +264,6 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           loading={newVersionLoading || removeVersionLoading}
           isFromRecipePage={openVersionTrayFormWhichPage}
           handleToGetARecipeVersion={handleToGetARecipeVersion}
-          handleGetARecipe={funToGetARecipe}
           handleToChangeDefaultVersion={handleToChangeDefaultVersion}
         />
       </div>
