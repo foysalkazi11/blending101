@@ -17,7 +17,6 @@ interface NoteBodyPops {
     versionId: string,
     isDefault: boolean,
   ) => void;
-  handleGetARecipe?: () => void;
 }
 const NoteBody = ({
   data = [],
@@ -28,7 +27,6 @@ const NoteBody = ({
   isFromRecipePage = "default",
   handleToGetARecipeVersion = () => {},
   handleToChangeDefaultVersion = () => {},
-  handleGetARecipe = () => {},
 }: NoteBodyPops) => {
   return (
     <div className={`${styles.noteEditBox} y-scroll`}>

@@ -32,6 +32,8 @@ interface dataCardInterface {
   changeToFormulateRecipe?: () => void;
   isCollectionIds?: string[] | null;
   setOpenCollectionModal?: Dispatch<SetStateAction<boolean>>;
+  postfixTitle?: string;
+  isMatch?: boolean;
 }
 
 export default function DatacardComponent({
@@ -55,6 +57,8 @@ export default function DatacardComponent({
   changeToFormulateRecipe = () => {},
   isCollectionIds = [] || null,
   setOpenCollectionModal = () => {},
+  postfixTitle = "",
+  isMatch = false,
 }: dataCardInterface) {
   title = title || "Triple Berry Smoothie";
   ingredients = ingredients;
@@ -163,6 +167,7 @@ export default function DatacardComponent({
                 onClick={() => router.push(`/recipe_details/${recipeId}`)}
               >
                 {title}
+                {isMatch ? "" : <span>{`(${postfixTitle})`}</span>}
               </h2>
             </div>
             <div className={styles.datacard__body__top__menu}>
