@@ -7,6 +7,7 @@ import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
 import useWindowSize from "../../utility/useWindowSize";
 import RelatedRecipeSlider from "./leftSide/RelatedRecipeSlider";
 import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
+import { useAppSelector } from "../../../redux/hooks";
 
 const RecipeDetails = ({
   recipeData,
@@ -18,13 +19,18 @@ const RecipeDetails = ({
   const [counter, setCounter] = useState(1);
   const { width } = useWindowSize();
 
+  const { openVersionTray } = useAppSelector((state) => state?.versionTray);
+
   return (
     <AContainer
       showHeader={true}
       logo={true}
       headerTitle="Blend Recipe"
-      showRighTray={true}
-      commentsTray={true}
+      showCommentsTray={{
+        show: true,
+        showPanle: "right",
+        showTagByDeafult: false,
+      }}
       showCollectionTray={{
         show: true,
         showTagByDeafult: false,
@@ -34,6 +40,11 @@ const RecipeDetails = ({
         show: true,
         showPanle: "right",
         showTagByDeafult: false,
+      }}
+      showGroceryTray={{
+        show: openVersionTray ? false : true,
+        showPanle: "right",
+        showTagByDeafult: openVersionTray ? false : true,
       }}
     >
       <div className={styles.main}>

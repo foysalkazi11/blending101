@@ -117,7 +117,11 @@ const RecipeDetails = () => {
       <AContainer
         showCollectionTray={{ show: true, showTagByDeafult: true }}
         filterTray={true}
-        commentsTray={true}
+        showCommentsTray={{
+          show: true,
+          showPanle: "right",
+          showTagByDeafult: false,
+        }}
       >
         <div className={styles.main__div}>
           <div
