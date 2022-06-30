@@ -29,7 +29,15 @@ export interface RecipeDetailsType {
     description: string;
     ingredients: Ingredient[];
   };
-  originalVersion: string;
+  originalVersion: {
+    _id: string;
+    servingSize: number;
+    recipeId: string;
+    recipeInstructions: any[];
+    postfixTitle: string;
+    description: string;
+    ingredients: Ingredient[];
+  };
 }
 
 export interface RecipeBlendCategory {

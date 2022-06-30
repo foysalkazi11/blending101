@@ -57,6 +57,11 @@ const Center = ({
     (state) => state?.collections,
   );
 
+  // check version of recipe
+  const checkVersion = recipeData?.recipeVersion?.find(
+    (version) => version?._id === recipeData?.versionId,
+  );
+
   const ReadMore = ({ children }) => {
     const text = children;
     const [isReadMore, setIsReadMore] = useState(true);
@@ -124,14 +129,24 @@ const Center = ({
         <div className={styles.heading}>
           <h3>
             {recipeData?.name}{" "}
-            {recipeData?.originalVersion === recipeData?.defaultVersion?._id}
-            <span>{`${
+            <span>
+              {checkVersion?.isOrginal
+                ? ""
+                : `${
+                    recipeData?.postfixTitle
+                      ? `(${recipeData?.postfixTitle})`
+                      : ""
+                  }`}
+            </span>
+            {/* <span>{`${
               recipeData?.originalVersion === recipeData?.defaultVersion?._id
+                ? ""
+                : recipeData?.originalVersion === recipeData?.versionId
                 ? ""
                 : recipeData?.postfixTitle
                 ? `(${recipeData?.postfixTitle})`
                 : `(${recipeData?.defaultVersion?.postfixTitle})`
-            }`}</span>{" "}
+            }`}</span>{" "} */}
           </h3>
           <span className={styles.ratingBox}>
             <img src="/images/rating.svg" alt="" />
