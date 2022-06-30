@@ -131,20 +131,30 @@ const Center_Elements = ({
           </IconWraper>
           {openMenu ? (
             <div className={`${styles.menu} `}>
-              <VscVersions
-                className={styles.icon}
+              <div
+                className={styles.singleMenu}
                 onClick={() => {
                   dispatch(setOpenVersionTray(true));
                   dispatch(setOpenVersionTrayFormWhichPage("edit"));
                 }}
-              />
-              <BiEditAlt
+              >
+                <VscVersions className={styles.icon} />
+                <p className={styles.text}>Versions</p>
+              </div>
+              <div
+                className={styles.singleMenu}
                 onClick={() => {
                   handleToGetARecipe(copyDetailsRecipe?._id, dbUser?._id, true);
                 }}
-                className={styles.icon}
-              />
-              <MdDeleteOutline className={styles.icon} />
+              >
+                <BiEditAlt className={styles.icon} />
+                <p className={styles.text}>Edit</p>
+              </div>
+
+              <div className={styles.singleMenu}>
+                <MdDeleteOutline className={styles.icon} />
+                <p className={styles.text}>Delete</p>
+              </div>
             </div>
           ) : null}
         </div>

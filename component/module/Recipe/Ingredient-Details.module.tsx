@@ -164,7 +164,10 @@ const IngredientDetails = (props) => {
                   )}
 
                   <div>
-                    {`${ingredient?.selectedPortion?.quantity * counter}
+                    {`${
+                      Math?.round(ingredient?.selectedPortion?.quantity) *
+                      counter
+                    }
                   ${ingredient.selectedPortion.name} `}
                     {ingredient?.ingredientId?._id ===
                     nutritionState?.ingredientId?._id ? (
