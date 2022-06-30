@@ -42,27 +42,40 @@
 
       .menu {
         position: absolute;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
         padding: 4px 10px;
-        max-height: 30px;
         border: 1px solid #eeeeee;
         border-radius: 5px;
         background: #eeeeeef2;
         top: 35px;
         right: 20px;
-        .icon:last-child {
-          margin-right: 0px;
-        }
 
-        .icon {
-          cursor: pointer;
+        .singleMenu {
+          padding-bottom: 5px;
+          display: flex;
+          align-items: center;
           color: #929292;
-          margin-right: 10px;
-          &:hover {
+          cursor: pointer;
+
+          &:hover .icon,
+          &:hover .text {
             color: $secondaryColor;
+          }
+
+          .icon {
+            transition: all 0.3s;
+            margin-right: 10px;
+            &:last-child {
+              margin-right: 0px;
+            }
+          }
+
+          .text {
+            transition: all 0.3s;
+            font-size: 14px;
+          }
+
+          &:last-child {
+            padding-bottom: 0px;
           }
         }
       }
