@@ -1,5 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useMutation, useQuery } from "@apollo/client";
+import { faChartSimple } from "@fortawesome/pro-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import UPDATE_DAILY_GOALS from "../../../../../../gqlLib/dri/mutation/updateDailyGoals";
 import GET_DAILY_BY_USER_ID from "../../../../../../gqlLib/dri/query/getDailyByUserId";
@@ -30,14 +32,14 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
     {
       fetchPolicy: "network-only",
       variables: { userId: dbUser?._id },
-    }
+    },
   );
   const { data: dailyGoalData, loading: dailyGoalLoading } = useQuery(
     GET_DAILY_GOALS,
     {
       fetchPolicy: "network-only",
       variables: { memberId: dbUser?._id },
-    }
+    },
   );
   const [updateDailyGoals] = useMutation(UPDATE_DAILY_GOALS);
 
@@ -86,12 +88,18 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
       const findNut = inputValue?.goals[item?.blendNutrientRef];
 
       if (findNut) {
-        return findNut;
+        return {
+          ...findNut,
+          percentage: item?.percentage,
+          showPercentage: item?.showPercentage,
+        };
       } else {
         return {
           blendNutrientId: item?.blendNutrientRef,
           //@ts-ignore
           dri: parseFloat(item?.data?.value),
+          percentage: item?.percentage,
+          showPercentage: item?.showPercentage,
         };
       }
     });
@@ -120,7 +128,7 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
       setLoading(false);
       reactToastifyNotification(
         "error",
-        error?.message || "Something went wrong"
+        error?.message || "Something went wrong",
       );
 
       console.log(error.message);
@@ -150,6 +158,7 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
     <>
       <div className={styles.dailyIntakeContainer}>
         <header className={styles.header}>
+          <FontAwesomeIcon icon={faChartSimple} className={styles?.icon} />
           <p className={styles.infoText}>
             Your daily recommended intake based on your profile settings
           </p>

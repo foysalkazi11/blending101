@@ -40,7 +40,7 @@ const AccordianElement = ({
   const handleInput = (
     e: { target: { name: string; value: string } },
     blendNutrientId: string,
-    dri: number
+    dri: number,
   ) => {
     let updatedObject = inputValue;
     updatedObject = {
@@ -64,37 +64,56 @@ const AccordianElement = ({
     return (
       dataElem &&
       Object?.entries(data)?.map((elem, index) => {
-        if (elem[1]?.data?.value) {
+        const mainData = elem[1];
+        if (mainData?.data?.value) {
           return (
             <div
-              key={`${elem[1]?.blendNutrientRef}` + `${index}`}
+              key={`${mainData?.blendNutrientRef}` + `${index}`}
               className={styles.accordianDiv__tray}
             >
               <div className={styles.accordianDiv__tray__left}>
-                {elem[1]?.nutrientName}
+                {mainData?.nutrientName}
               </div>
-              <div className={styles.accordianDiv__tray__center}>
-                {`${parseFloat(elem[1]?.data?.value).toFixed(
-                  0
-                )}${elem[1]?.data?.units?.toLowerCase()} `}
-              </div>
+              {title === "Macros" ? (
+                <div className={styles.accordianDiv__tray__centerGrid}>
+                  {mainData?.showPercentage ? (
+                    <div className={styles.leftSide}>
+                      <InputGoal inputValue={mainData?.percentage} />%
+                    </div>
+                  ) : (
+                    <div></div>
+                  )}
+                  <div>
+                    {`${parseFloat(mainData?.data?.value).toFixed(
+                      0,
+                    )}${mainData?.data?.units?.toLowerCase()} `}
+                  </div>
+                </div>
+              ) : (
+                <div className={styles.accordianDiv__tray__center}>
+                  {`${parseFloat(mainData?.data?.value).toFixed(
+                    0,
+                  )}${mainData?.data?.units?.toLowerCase()} `}
+                </div>
+              )}
+
               <div className={styles.accordianDiv__tray__right}>
                 <span className={styles.accordianDiv__tray__right__icon}>
                   {/* <GiGolfFlag /> */}
                 </span>
                 <InputGoal
-                  name={elem[1]?.nutrientName}
+                  name={mainData?.nutrientName}
                   inputValue={
                     // @ts-ignore
-                    inputValue?.goals?.[elem[1]?.blendNutrientRef]?.goal
-                    // parseFloat(elem[1]?.data?.value).toFixed(0)
+                    inputValue?.goals?.[mainData?.blendNutrientRef]?.goal
+                    // parseFloat(mainData?.data?.value).toFixed(0)
                   }
                   // @ts-ignore
                   setInputValue={(e) =>
                     handleInput(
                       e,
-                      elem[1].blendNutrientRef,
-                      parseFloat(elem[1]?.data?.value)
+                      mainData.blendNutrientRef,
+                      parseFloat(mainData?.data?.value),
                     )
                   }
                 />
@@ -110,7 +129,7 @@ const AccordianElement = ({
   };
 
   return (
-    <div>
+    <>
       <div className={styles.centerElement}>
         <div
           className={styles.centerElement__icon}
@@ -123,7 +142,7 @@ const AccordianElement = ({
       <div className={styles.accordianDiv} ref={accordianRef}>
         {populateAccordianData(data)}
       </div>
-    </div>
+    </>
   );
 };
 

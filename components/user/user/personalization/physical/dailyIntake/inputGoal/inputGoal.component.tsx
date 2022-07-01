@@ -1,7 +1,11 @@
 import React from "react";
 import styles from "./inputGoal.module.scss";
 
-const InputGoal = ({ inputValue, setInputValue, name }) => {
+const InputGoal = ({
+  inputValue = "",
+  setInputValue = (e) => {},
+  name = "",
+}) => {
   return (
     <input
       name={name}

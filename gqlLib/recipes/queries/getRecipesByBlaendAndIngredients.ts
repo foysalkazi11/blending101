@@ -33,6 +33,13 @@ const GET_RECIPES_BY_BLEND_AND_INGREDIENTS = gql`
           ingredientName
         }
       }
+      notes
+      addedToCompare
+      userCollections
+      defaultVersion {
+        postfixTitle
+      }
+      isMatch
     }
   }
 `;
