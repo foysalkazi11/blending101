@@ -117,7 +117,11 @@ const RecipeDetails = () => {
       <AContainer
         showCollectionTray={{ show: true, showTagByDeafult: true }}
         filterTray={true}
-        commentsTray={true}
+        showCommentsTray={{
+          show: true,
+          showPanle: "right",
+          showTagByDeafult: false,
+        }}
       >
         <div className={styles.main__div}>
           <div
@@ -181,6 +185,8 @@ const RecipeDetails = () => {
                             setcompareRecipeList={setcompareRecipeList}
                             isCollectionIds={item?.userCollections}
                             setOpenCollectionModal={setOpenCollectionModal}
+                            isMatch={item?.isMatch}
+                            postfixTitle={item?.defaultVersion?.postfixTitle}
                           />
                         </div>
                       );
@@ -231,6 +237,8 @@ const RecipeDetails = () => {
                               setcompareRecipeList={setcompareRecipeList}
                               isCollectionIds={item?.userCollections}
                               setOpenCollectionModal={setOpenCollectionModal}
+                              isMatch={item?.isMatch}
+                              postfixTitle={item?.defaultVersion?.postfixTitle}
                             />
                           </div>
                         );
@@ -281,6 +289,8 @@ const RecipeDetails = () => {
                               setcompareRecipeList={setcompareRecipeList}
                               isCollectionIds={item?.userCollections}
                               setOpenCollectionModal={setOpenCollectionModal}
+                              isMatch={item?.isMatch}
+                              postfixTitle={item?.defaultVersion?.postfixTitle}
                             />
                           </div>
                         );

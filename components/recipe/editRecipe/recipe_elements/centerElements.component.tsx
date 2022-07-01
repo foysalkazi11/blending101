@@ -1,5 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import styles from "./centerElements.module.scss";
 import ScoreTray from "./scoreTray/scoreTray.component";
 import Image from "next/image";
@@ -15,11 +21,13 @@ import {
 import { VscVersions } from "react-icons/vsc";
 import InputComponent from "../../../../theme/input/input.component";
 import TextArea from "../../../../theme/textArea/TextArea";
-import { MdMoreVert } from "react-icons/md";
+import { MdMoreVert, MdDeleteOutline } from "react-icons/md";
 import IconWraper from "../../../../theme/iconWraper/IconWraper";
-import useHover from "../../../utility/useHover";
 import { setDetailsARecipe } from "../../../../redux/slices/recipeSlice";
 import { RecipeDetailsType } from "../../../../type/recipeDetails";
+import useOnClickOutside from "../../../utility/useOnClickOutside";
+import { BiEditAlt } from "react-icons/bi";
+import useToGetARecipe from "../../../../customHooks/useToGetARecipe";
 
 type CenterElementsProps = {
   copyDetailsRecipe?: RecipeDetailsType;
@@ -45,7 +53,10 @@ const Center_Elements = ({
   const dispatch = useAppDispatch();
   const [blendCategoryState, setBlendCategoryState] = useState(null);
   const [openMenu, setOpenMenu] = useState(false);
-  const [hoverRef, hover] = useHover();
+  const outsideClickRef = useRef<HTMLDivElement>(null);
+  useOnClickOutside(outsideClickRef, () => setOpenMenu(false));
+  const handleToGetARecipe = useToGetARecipe();
+  const { dbUser } = useAppSelector((state) => state?.user);
 
   const quantity_number = useAppSelector(
     (state) => state?.quantityAdjuster?.quantityNum,
@@ -58,10 +69,10 @@ const Center_Elements = ({
     width: "111%",
   };
 
-  // find default version of recipe
-  const isDefaultVersion = (id) =>
-    copyDetailsRecipe?.recipeVersion?.find((version) => version?._id === id)
-      ?.isDeafult;
+  // check version of recipe
+  const checkVersion = copyDetailsRecipe?.recipeVersion?.find(
+    (version) => version?._id === copyDetailsRecipe?.versionId,
+  );
 
   useEffect(() => {
     if (!selectedBLendCategory) return;
@@ -86,7 +97,7 @@ const Center_Elements = ({
           <h3 className={styles.title}>
             {copyDetailsRecipe?.name}
             <span>
-              {isDefaultVersion(copyDetailsRecipe?.versionId)
+              {checkVersion?.isOrginal
                 ? ""
                 : `${
                     copyDetailsRecipe?.postfixTitle
@@ -110,7 +121,7 @@ const Center_Elements = ({
             }
           />
         )}
-        <div className={styles.reightSight} ref={hoverRef}>
+        <div className={styles.reightSight} ref={outsideClickRef}>
           <IconWraper
             hover="bgSlightGray"
             style={{ width: "36px", height: "36px" }}
@@ -120,13 +131,30 @@ const Center_Elements = ({
           </IconWraper>
           {openMenu ? (
             <div className={`${styles.menu} `}>
-              <VscVersions
-                className={styles.icon}
+              <div
+                className={styles.singleMenu}
                 onClick={() => {
                   dispatch(setOpenVersionTray(true));
                   dispatch(setOpenVersionTrayFormWhichPage("edit"));
                 }}
-              />
+              >
+                <VscVersions className={styles.icon} />
+                <p className={styles.text}>Versions</p>
+              </div>
+              <div
+                className={styles.singleMenu}
+                onClick={() => {
+                  handleToGetARecipe(copyDetailsRecipe?._id, dbUser?._id, true);
+                }}
+              >
+                <BiEditAlt className={styles.icon} />
+                <p className={styles.text}>Edit</p>
+              </div>
+
+              <div className={styles.singleMenu}>
+                <MdDeleteOutline className={styles.icon} />
+                <p className={styles.text}>Delete</p>
+              </div>
             </div>
           ) : null}
         </div>

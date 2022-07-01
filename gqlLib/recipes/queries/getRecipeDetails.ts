@@ -18,27 +18,7 @@ export const GET_RECIPE = gql`
         name
         _id
       }
-      ingredients {
-        ingredientId {
-          ingredientName
-          _id
-          images
-          featuredImage
-        }
 
-        portions {
-          name
-          gram
-          default
-          quantity
-        }
-        weightInGram
-        selectedPortion {
-          name
-          quantity
-          gram
-        }
-      }
       image {
         image
         default
@@ -57,6 +37,64 @@ export const GET_RECIPE = gql`
         isOriginal
       }
       userCollections
+      defaultVersion {
+        _id
+        servingSize
+        recipeId
+        recipeInstructions
+        postfixTitle
+        description
+        ingredients {
+          ingredientId {
+            ingredientName
+            _id
+            images
+            featuredImage
+          }
+
+          portions {
+            name
+            gram
+            default
+            quantity
+          }
+          weightInGram
+          selectedPortion {
+            name
+            quantity
+            gram
+          }
+        }
+      }
+      originalVersion {
+        _id
+        servingSize
+        recipeId
+        recipeInstructions
+        postfixTitle
+        description
+        ingredients {
+          ingredientId {
+            ingredientName
+            _id
+            images
+            featuredImage
+          }
+
+          portions {
+            name
+            gram
+            default
+            quantity
+          }
+          weightInGram
+          selectedPortion {
+            name
+            quantity
+            gram
+          }
+        }
+      }
     }
   }
 `;

@@ -13,20 +13,24 @@ const GET_DAILY_BY_USER_ID = gql`
       }
       nutrients {
         Energy {
-          nutrientName
-          data {
-            value
-            units
-          }
+          percentage
+          showPercentage
           blendNutrientRef
+          data {
+            units
+            value
+          }
+          nutrientName
         }
         Minerals {
           nutrientName
           data {
-            value
             units
+            value
           }
           blendNutrientRef
+          showPercentage
+          percentage
         }
         Vitamins {
           nutrientName
@@ -35,6 +39,8 @@ const GET_DAILY_BY_USER_ID = gql`
             units
           }
           blendNutrientRef
+          showPercentage
+          percentage
         }
       }
     }

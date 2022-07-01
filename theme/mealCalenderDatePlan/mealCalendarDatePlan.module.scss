@@ -1,0 +1,41 @@
+$sharedHeight:60px;
+
+%sharedFlex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mainContainer {
+    min-height: $sharedHeight;
+    display: flex;
+    margin: 8px 0px;
+
+    &__dateDiv {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: $sharedHeight;
+        width: 50px;
+        height: inherit;
+
+        &__day {
+            @extend %sharedFlex;
+            color: #9d9799;
+            font-size: 10px;
+        }
+
+        &__date {
+            @extend %sharedFlex;
+            color: #6e696b;
+            font-size: 18px;
+            font-weight: 500;
+        }
+    }
+    
+    &__recipeDiv {
+        @extend %sharedFlex;
+        flex-direction: column;
+        width: 100%;
+    }
+}

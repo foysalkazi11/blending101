@@ -245,7 +245,6 @@ const UserProfile = () => {
   return (
     <AContainer
       headerTitle="Profile"
-      showRighTray={false}
       showSidebar={false}
       headerFullWidth={true}
     >

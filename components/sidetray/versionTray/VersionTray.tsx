@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setOpenVersionTray } from "../../../redux/slices/versionTraySlice";
-import TrayWrapper from "../Tray.wrapper";
+import TrayWrapper from "../TrayWrapper";
 import styles from "./VersionsTray.module.scss";
 import NoteHead from "../commentsTray/noteSection/noteHead/NoteHead";
 import NoteBody from "../commentsTray/noteSection/noteBody/NoteBody";
@@ -16,6 +16,7 @@ import GET_A_RECIPE_VERSION_ONLY from "../../../gqlLib/versions/query/getARecipe
 import useToGetARecipeVersion from "../../../customHooks/useToGetARecipeVersion";
 import useToGetARecipe from "../../../customHooks/useToGetARecipe";
 import CHANGE_DEFAULT_VERSION from "../../../gqlLib/versions/mutation/changelDefaultVersion";
+import TrayTag from "../TrayTag";
 interface VersionTrayProps {
   showTagByDefaut?: boolean;
   showPanle?: "left" | "right";
@@ -49,7 +50,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   const isMounted = useRef(false);
 
   const funToGetARecipe = () => {
-    handleGetARecipe(detailsARecipe?._id, dbUser?._id);
+    handleGetARecipe(detailsARecipe?._id, dbUser?._id, true);
   };
 
   // find orginal version of recipe
@@ -208,6 +209,9 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
       closeTray={closeTray}
       openTray={openVersionTray}
       showPanle={showPanle}
+      panleTag={(hover) => (
+        <TrayTag icon={<VscVersions />} placeMent="left" hover={hover} />
+      )}
     >
       <div className={styles.versionContainer}>
         <div className={styles.header}>
@@ -220,19 +224,12 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
             src={detailsARecipe?.image?.find((img) => img?.default)?.image}
             alt="recipe_img"
           />
-          <h3
-            onClick={() =>
-              isOrginalVersion?.isDefault
-                ? funToGetARecipe()
-                : handleToGetARecipeVersion(isOrginalVersion?._id)
-            }
-          >
-            {isOrginalVersion?.postfixTitle}
-          </h3>
+          <h3 onClick={funToGetARecipe}>{detailsARecipe?.name}</h3>
 
           <span
             onClick={() =>
               !isOrginalVersion?.isDefault &&
+              openVersionTrayFormWhichPage === "edit" &&
               handleToChangeDefaultVersion(
                 isOrginalVersion?._id,
                 isOrginalVersion?.isDefault,
@@ -267,7 +264,6 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           loading={newVersionLoading || removeVersionLoading}
           isFromRecipePage={openVersionTrayFormWhichPage}
           handleToGetARecipeVersion={handleToGetARecipeVersion}
-          handleGetARecipe={funToGetARecipe}
           handleToChangeDefaultVersion={handleToChangeDefaultVersion}
         />
       </div>

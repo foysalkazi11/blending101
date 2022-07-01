@@ -10,12 +10,12 @@ import {
   setOpenVersionTray,
   setOpenVersionTrayFormWhichPage,
 } from "../../../redux/slices/versionTraySlice";
+import { RecipeVersionType } from "../../../type/recipeVersionType";
 
 const Index = () => {
   const router = useRouter();
   const { recipe__Id } = router.query;
   const [nutritionState, setNutritionState] = useState(null);
-  const [singleElement, setsingleElement] = useState(false);
   const { dbUser } = useAppSelector((state) => state?.user);
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
   const dispatch = useAppDispatch();
@@ -39,7 +39,29 @@ const Index = () => {
 
   useEffect(() => {
     if (!recipeLoading && recipeData?.getARecipe) {
-      dispatch(setDetailsARecipe(recipeData?.getARecipe));
+      const recipe = recipeData?.getARecipe;
+      if (recipe?.originalVersion === recipe?.defaultVersion?._id) {
+        dispatch(
+          setDetailsARecipe({
+            ...recipe,
+            ingredients: recipe?.defaultVersion?.ingredients,
+          }),
+        );
+      } else {
+        const { _id, recipeId, ...rest }: RecipeVersionType =
+          recipe?.defaultVersion;
+        const obj = {
+          _id: recipeId,
+          versionId: _id,
+          ...rest,
+        };
+        dispatch(
+          setDetailsARecipe({
+            ...recipe,
+            ...obj,
+          }),
+        );
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recipeData?.getARecipe]);
@@ -54,8 +76,6 @@ const Index = () => {
       }
       nutritionState={nutritionState}
       setNutritionState={setNutritionState}
-      singleElement={singleElement}
-      setsingleElement={setsingleElement}
       nutritionDataLoading={nutritionDataLoading}
     />
   );
