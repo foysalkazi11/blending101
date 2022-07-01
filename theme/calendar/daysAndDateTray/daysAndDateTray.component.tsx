@@ -12,6 +12,7 @@ interface DaysAndDateTrayInterface {
   setSelectedDate: any;
   firstDayOfMonth: number;
   numberOfDaysInMonth: number;
+  dateHandler: any;
 }
 const DaysAndDateTray = ({
   date,
@@ -19,19 +20,18 @@ const DaysAndDateTray = ({
   setSelectedDate,
   firstDayOfMonth,
   numberOfDaysInMonth,
+  dateHandler,
 }: DaysAndDateTrayInterface) => {
   return (
     <div className={styles.mainContainer}>
       <div className={styles.daysTray}>
-        {days.map((dayElem,index) => (
+        {days.map((dayElem, index) => (
           <div key={`${dayElem}${index}`}>{dayElem.letter}</div>
         ))}
       </div>
       <div className={styles.datesTray}>
         {[...Array(firstDayOfMonth)].map((elem, index) =>
-          index < firstDayOfMonth - 1 ? (
-            <span key={`${index}`}></span>
-          ) : null
+          index < firstDayOfMonth - 1 ? <span key={`${index}`}></span> : null,
         )}
         {[...Array(numberOfDaysInMonth)].map((elem, index) => (
           <div
@@ -41,7 +41,10 @@ const DaysAndDateTray = ({
                 ? { backgroundColor: "#019688", color: "white" }
                 : {}
             }
-            onClick={() => setSelectedDate(index + 1)}
+            onClick={() => {
+              setSelectedDate(index + 1);
+              dateHandler(index + 1);
+            }}
           >
             {index + 1}
           </div>

@@ -1,3 +1,4 @@
+import { useQuery } from "@apollo/client";
 import React, { useState } from "react";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { FaToolbox } from "react-icons/fa";
@@ -18,6 +19,8 @@ import ToggleCard from "../theme/toggleCard/toggleCard.component";
 const Planner = () => {
   const [centerLeftToggler, setCenterLeftToggler] = useState(false);
   const [uploadState, setUploadState] = useState(false);
+
+  // const {loading, data} = useQuery()
 
   return (
     <AContainer>
@@ -65,7 +68,10 @@ const Planner = () => {
                         rightToggleHeading="Planner"
                         toggler={centerLeftToggler}
                         setTogglerFunc={setCenterLeftToggler}
-                        headingStyle={{ fontSize: "16px" }}
+                        headingStyle={{
+                          fontSize: "1.6rem",
+                          padding: "15px 5px",
+                        }}
                         togglerStyle={{
                           width: "80%",
                           margin: "0px auto",
@@ -125,24 +131,56 @@ export const plannerList = [
     day: "Mon",
     date: 5,
     recipeList: [
-      { color: "#9ac740", name: "Red Hot Blend" },
-      { color: "#ff5140", name: "Triple Berry Smoothie" },
+      {
+        color: "#9ac740",
+        name: "Red Hot Blend",
+        rxScore: 600,
+        calorie: 79,
+      },
+      {
+        color: "#ff5140",
+        name: "Triple Berry Smoothie",
+        rxScore: 880,
+        calorie: 99,
+      },
     ],
   },
   {
     id: "2",
     day: "Tue",
     date: 6,
-    recipeList: [{ color: "#9085d9", name: "Red Hot Blend" }],
+    recipeList: [
+      {
+        color: "#9085d9",
+        name: "Red Hot Blend",
+        rxScore: 600,
+        calorie: 79,
+      },
+    ],
   },
   {
     id: "3",
     day: "Wed",
     date: 7,
     recipeList: [
-      { color: "#ffb440", name: "Triple Berry Smoothie" },
-      { color: "#af895f", name: "Strawberry Green Drink" },
-      { color: "#9ac740", name: "Turmeric Tea" },
+      {
+        color: "#ffb440",
+        name: "Triple Berry Smoothie",
+        rxScore: 600,
+        calorie: 79,
+      },
+      {
+        color: "#af895f",
+        name: "Strawberry Green Drink",
+        rxScore: 600,
+        calorie: 79,
+      },
+      {
+        color: "#9ac740",
+        name: "Turmeric Tea",
+        rxScore: 600,
+        calorie: 79,
+      },
     ],
   },
   {
@@ -150,10 +188,30 @@ export const plannerList = [
     day: "Thur",
     date: 8,
     recipeList: [
-      { color: "#af895f", name: "Red Hot Blend" },
-      { color: "#9ac740", name: "Triple Berry Smoothie" },
-      { color: "#af895f", name: "Strawberry Green Drink" },
-      { color: "#9ac740", name: "Turmeric Tea" },
+      {
+        color: "#af895f",
+        name: "Red Hot Blend",
+        rxScore: 600,
+        calorie: 79,
+      },
+      {
+        color: "#9ac740",
+        name: "Triple Berry Smoothie",
+        rxScore: 600,
+        calorie: 79,
+      },
+      {
+        color: "#af895f",
+        name: "Strawberry Green Drink",
+        rxScore: 600,
+        calorie: 79,
+      },
+      {
+        color: "#9ac740",
+        name: "Turmeric Tea",
+        rxScore: 600,
+        calorie: 79,
+      },
     ],
   },
   { id: "5", day: "Fri", date: 9, recipeList: [] },
@@ -161,8 +219,18 @@ export const plannerList = [
     day: "Sat",
     date: 10,
     recipeList: [
-      { color: "#af895f", name: "Red Hot Blend" },
-      { color: "#9ac740", name: "Triple Berry Smoothie" },
+      {
+        color: "#af895f",
+        name: "Red Hot Blend",
+        rxScore: 600,
+        calorie: 79,
+      },
+      {
+        color: "#9ac740",
+        name: "Triple Berry Smoothie",
+        rxScore: 600,
+        calorie: 79,
+      },
     ],
   },
   {
@@ -170,10 +238,30 @@ export const plannerList = [
     day: "Sun",
     date: 11,
     recipeList: [
-      { color: "#af895f", name: "Red Hot Blend" },
-      { color: "#9ac740", name: "Triple Berry Smoothie" },
-      { color: "#9085d9", name: "Strawberry Green Drink" },
-      { color: "#af895f", name: "Turmeric Tea" },
+      {
+        color: "#af895f",
+        name: "Red Hot Blend",
+        rxScore: 600,
+        calorie: 79,
+      },
+      {
+        color: "#9ac740",
+        name: "Triple Berry Smoothie",
+        rxScore: 600,
+        calorie: 79,
+      },
+      {
+        color: "#9085d9",
+        name: "Strawberry Green Drink",
+        rxScore: 600,
+        calorie: 79,
+      },
+      {
+        color: "#af895f",
+        name: "Turmeric Tea",
+        rxScore: 600,
+        calorie: 79,
+      },
     ],
   },
 ];

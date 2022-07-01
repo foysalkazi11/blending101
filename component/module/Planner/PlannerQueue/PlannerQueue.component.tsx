@@ -20,6 +20,8 @@ import Combobox from "../../../organisms/Forms/Combobox.component";
 import { RECIPE_CATEGORY } from "../../../../data/Recipe";
 import Searchbox from "../../../molecules/Searchbox/Searchbox.component";
 import { GET_BLEND_CATEGORY } from "../../../../graphql/Recipe";
+import { useDispatch } from "react-redux";
+import { addPlanner } from "../../../../redux/slices/Planner.slice";
 
 const plannerIcon = (
   <div className={styles.plannerIcon}>
@@ -162,6 +164,23 @@ const Recipes = (props) => {
   const { recipes } = props;
   const [showCalenderId, setShowCalenderId] = useState("");
 
+  const dispatch = useDispatch();
+  const dateHandler = (recipe: any, date: Date) => {
+    setShowCalenderId("");
+    dispatch(
+      addPlanner({
+        date: date?.toISOString(),
+        recipe: {
+          _id: recipe._id,
+          name: recipe.name,
+          category: recipe?.recipeBlendCategory?.name,
+          rxScore: 786,
+          calorie: 250,
+        },
+      }),
+    );
+  };
+
   return recipes?.map((recipe) => {
     const {
       _id,
@@ -191,7 +210,7 @@ const Recipes = (props) => {
           />
           {showCalenderId === _id && (
             <div className={styles.calender__tray}>
-              <CalendarTray />
+              <CalendarTray handler={(date) => dateHandler(recipe, date)} />
             </div>
           )}
         </div>

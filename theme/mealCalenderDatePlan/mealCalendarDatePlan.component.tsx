@@ -1,17 +1,24 @@
 import React, { useState } from "react";
+import { useAppDispatch } from "../../redux/hooks";
+import {
+  deleteRecipeFromPlanner,
+  IPlannerRecipe,
+} from "../../redux/slices/Planner.slice";
 import styles from "./mealCalendarDatePlan.module.scss";
 import RecipeColorIndicator from "./recipeColorIndicator/recipeColorIndicator.component";
 
 interface MealCalendarDatePlanInteface {
+  plannerId?: string;
   day?: string;
-  date?: number;
+  date?: string;
   indexValue: number;
   setToggleOptionCard?: any;
   toggleOptionCard?: object;
-  recipeList?: [];
+  recipeList?: IPlannerRecipe[];
 }
 
 const MealCalendarDatePlan = ({
+  plannerId,
   day,
   date,
   indexValue,
@@ -19,13 +26,13 @@ const MealCalendarDatePlan = ({
   toggleOptionCard,
   recipeList,
 }: MealCalendarDatePlanInteface) => {
-  
+  const dispatch = useAppDispatch();
 
   if (!day && !date) return null;
   const handleClick = (
-    name: never,
+    name: string,
     day: string | undefined,
-    date: number | undefined
+    date: string | undefined,
   ) => {
     let toggleState = false;
     if (
@@ -41,32 +48,31 @@ const MealCalendarDatePlan = ({
 
     return toggleState;
   };
+
+  const deleteHandler = (id) => {
+    dispatch(deleteRecipeFromPlanner({ recipeId: id, plannerId: plannerId }));
+  };
+
   return (
     <div className={styles.mainContainer}>
       <div
         className={styles.mainContainer__dateDiv}
-        style={
-          indexValue % 2 == 0 ? { backgroundColor: "#eeeeee" } : {}
-        }
+        style={indexValue % 2 == 0 ? { backgroundColor: "#eeeeee" } : {}}
       >
-        <div className={styles.mainContainer__dateDiv__day}>
-          {day}
-        </div>
-        <div className={styles.mainContainer__dateDiv__date}>
-          {date}
-        </div>
+        <div className={styles.mainContainer__dateDiv__day}>{day}</div>
+        <div className={styles.mainContainer__dateDiv__date}>{date}</div>
       </div>
       <div className={styles.mainContainer__recipeDiv}>
-        {recipeList?.map(({ color, name }, index) => (
+        {recipeList?.map((recipe) => (
           <RecipeColorIndicator
-            key={`${name}`}
-            color={color}
-            recipeName={name}
+            key={recipe?._id}
+            recipe={recipe}
             date={date}
             day={day}
-            optionToggle={handleClick(name, day, date)}
+            optionToggle={handleClick(recipe?.name, day, date)}
             toggleOptionCard={toggleOptionCard}
             setToggleOptionCard={setToggleOptionCard}
+            onDelete={deleteHandler}
           />
         ))}
       </div>

@@ -12,6 +12,7 @@ $sharedHeight:60px;
     margin: 8px 0px;
 
     &__dateDiv {
+
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -32,7 +33,7 @@ $sharedHeight:60px;
             font-weight: 500;
         }
     }
-    
+
     &__recipeDiv {
         @extend %sharedFlex;
         flex-direction: column;
