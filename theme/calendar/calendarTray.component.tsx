@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
-import {
-  BsChevronCompactLeft,
-  BsChevronCompactRight,
-} from "react-icons/bs";
+import { BsChevronCompactLeft, BsChevronCompactRight } from "react-icons/bs";
 import styles from "./calendarTray.module.scss";
 import DaysAndDateTray from "./daysAndDateTray/daysAndDateTray.component";
 
-const CalendarTray = () => {
+const CalendarTray = ({ handler }) => {
   // this array reflects the order in which days are considered when we get new Date()
   // sunday is represented by 0 and sat with 6
   const daysArray = [
@@ -58,20 +55,25 @@ const CalendarTray = () => {
   const numberOfDaysInMonth = new Date(
     selectedYear,
     selectedMonthIndex + 1,
-    0
+    0,
   ).getDate();
 
   const firstDayOfMonth = new Date(
     selectedYear,
     selectedMonthIndex,
-    1
+    1,
   ).getDay();
 
   const dateDataObject = new Date(
     selectedYear,
     selectedMonthIndex,
-    selectedDate
+    selectedDate,
   );
+
+  const dateHandler = (selectedDate) => {
+    const date = new Date(selectedYear, selectedMonthIndex, selectedDate);
+    handler(date);
+  };
 
   useEffect(() => {
     setSelectedDate(date);
@@ -104,6 +106,7 @@ const CalendarTray = () => {
       setSelectedMonthIndex(selectedMonthIndex - 1);
     }
   };
+
   return (
     <div className={styles.mainContainer}>
       <div className={styles.mainContainer__controllerTray}>
@@ -113,12 +116,10 @@ const CalendarTray = () => {
             onClick={() => handleArrowClick("-")}
           />
         </span>
-        <span
-          className={styles.mainContainer__controllerTray__dateText}
-        >
+        <span className={styles.mainContainer__controllerTray__dateText}>
           {daysArray[dateDataObject.getDay()]}{" "}
-          {monthArray[dateDataObject.getMonth()]}{" "}
-          {dateDataObject.getDate()}, {dateDataObject.getFullYear()}
+          {monthArray[dateDataObject.getMonth()]} {dateDataObject.getDate()},{" "}
+          {dateDataObject.getFullYear()}
         </span>
         <span>
           <BsChevronCompactRight
@@ -134,6 +135,7 @@ const CalendarTray = () => {
           days={days}
           date={selectedDate}
           setSelectedDate={setSelectedDate}
+          dateHandler={dateHandler}
         />
       </div>
     </div>

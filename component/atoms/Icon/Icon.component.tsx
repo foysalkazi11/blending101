@@ -1,7 +1,10 @@
 import React from "react";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface IconProps {
   font?: string;
+  fontName?: IconDefinition;
   size?: string | number;
   variant?: "bold" | "bolder" | "normal" | "lighter";
   style?: any;
@@ -10,8 +13,9 @@ interface IconProps {
 }
 
 const Icon: React.FC<IconProps> = (props) => {
-  const { font, size, variant, style, className, source, children } = props;
-  // if (children) return children;
+  const { font, size, variant, style, className, fontName, source, children } =
+    props;
+  if (fontName) return <FontAwesomeIcon icon={fontName} />;
   if (children) {
     return (
       <img
