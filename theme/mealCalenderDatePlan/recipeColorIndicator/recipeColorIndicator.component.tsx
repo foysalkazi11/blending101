@@ -8,6 +8,7 @@ import { BsCartPlus } from "react-icons/bs";
 import { BiBarChart } from "react-icons/bi";
 import { RECIPE_CATEGORY_COLOR } from "../../../data/Recipe";
 import { IPlannerRecipe } from "../../../redux/slices/Planner.slice";
+import CalendarTray from "../../calendar/calendarTray.component";
 
 interface RecipeColorIndicatorInterface {
   recipe: IPlannerRecipe;
@@ -16,6 +17,8 @@ interface RecipeColorIndicatorInterface {
   setToggleOptionCard?: any;
   day?: string;
   date?: string;
+  onCopy?: any;
+  onMove?: any;
   onDelete?: any;
 }
 
@@ -26,30 +29,16 @@ const RecipeColorIndicator = ({
   setToggleOptionCard,
   date,
   day,
+  onCopy,
+  onMove,
   onDelete,
 }: RecipeColorIndicatorInterface) => {
   const { _id, name: recipeName, calorie, category, rxScore } = recipe;
 
-  const style = { backgroundColor: RECIPE_CATEGORY_COLOR[category] };
+  const [showMenu, setShowMenu] = useState(false);
+  const [showCalender, setShowCalender] = useState<"move" | "copy" | "">("");
 
-  const handleOptionIcon = (recipeVal: any, dateVal: any, dayVal: any) => {
-    if (
-      // @ts-ignore
-      dateVal === toggleOptionCard?.date &&
-      // @ts-ignore
-      dayVal === toggleOptionCard?.day &&
-      // @ts-ignore
-      recipeVal === toggleOptionCard?.recipe
-    ) {
-      setToggleOptionCard({});
-    } else {
-      setToggleOptionCard({
-        date: dateVal,
-        day: dayVal,
-        recipe: recipeVal,
-      });
-    }
-  };
+  const style = { backgroundColor: RECIPE_CATEGORY_COLOR[category] };
 
   if (!recipeName) return null;
 
@@ -72,16 +61,14 @@ const RecipeColorIndicator = ({
         />
         <BsCartPlus className={styles.mainContainer__tray__icons} />
         <HiOutlineDotsVertical
-          onClick={() => handleOptionIcon(recipeName, date, day)}
+          onClick={() => setShowMenu((prev) => !prev)}
           className={styles.mainContainer__tray__icons}
         />
       </div>
 
       <div
         className={styles.mainContainer__optionTray}
-        style={
-          optionToggle ? { display: "block", zIndex: "1" } : { zIndex: "-1" }
-        }
+        style={showMenu ? { display: "block", zIndex: "1" } : { zIndex: "-1" }}
       >
         <div className={styles.mainContainer__optionTray__pointingDiv} />
         <OptionIconCard
@@ -89,9 +76,35 @@ const RecipeColorIndicator = ({
           icon={<RiDeleteBin6Line />}
           onClick={() => onDelete(_id)}
         />
-        <OptionIconCard text="Copy" icon={<IoCopy />} />
-        <OptionIconCard text="Move" icon={<IoCopy />} />
+        <OptionIconCard
+          text="Copy"
+          icon={<IoCopy />}
+          onClick={() => {
+            setShowCalender("copy");
+            setShowMenu(false);
+          }}
+        />
+        <OptionIconCard
+          text="Move"
+          icon={<IoCopy />}
+          onClick={() => {
+            setShowCalender("move");
+            setShowMenu(false);
+          }}
+        />
       </div>
+      {showCalender !== "" && (
+        <div className={styles.calender}>
+          <CalendarTray
+            handler={(date) => {
+              showCalender === "copy"
+                ? onCopy(date, recipe)
+                : onMove(date, recipe);
+              setShowCalender("");
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 };

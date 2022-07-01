@@ -14,9 +14,9 @@ import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import { useAppSelector } from "../../../../redux/hooks";
 
 const RecipePlanner = (props) => {
-  const { plannerList } = props;
   const [toggleOptionCard, setToggleOptionCard] = useState({});
   const planners = useAppSelector((state) => state.planner.planners);
+  console.log(planners);
   return (
     <div>
       <MealPlanner

@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { useAppDispatch } from "../../redux/hooks";
 import {
-  deleteRecipeFromPlanner,
+  deleteRecipe,
+  duplicateRecipe,
   IPlannerRecipe,
+  moveRecipe,
 } from "../../redux/slices/Planner.slice";
 import styles from "./mealCalendarDatePlan.module.scss";
 import RecipeColorIndicator from "./recipeColorIndicator/recipeColorIndicator.component";
@@ -50,7 +52,15 @@ const MealCalendarDatePlan = ({
   };
 
   const deleteHandler = (id) => {
-    dispatch(deleteRecipeFromPlanner({ recipeId: id, plannerId: plannerId }));
+    dispatch(deleteRecipe({ recipeId: id, plannerId: plannerId }));
+  };
+
+  const copyHandler = (date, recipe) => {
+    dispatch(duplicateRecipe({ date, recipe }));
+  };
+
+  const moveHandler = (date, recipe) => {
+    dispatch(moveRecipe({ plannerId, date, recipe }));
   };
 
   return (
@@ -73,6 +83,8 @@ const MealCalendarDatePlan = ({
             toggleOptionCard={toggleOptionCard}
             setToggleOptionCard={setToggleOptionCard}
             onDelete={deleteHandler}
+            onCopy={copyHandler}
+            onMove={moveHandler}
           />
         ))}
       </div>
