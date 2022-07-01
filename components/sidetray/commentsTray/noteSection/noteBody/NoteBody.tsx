@@ -4,6 +4,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import styles from "../NoteSection.module.scss";
 import { format, parseISO } from "date-fns";
 import SkeletonNote from "../../../../../theme/skeletons/skeletonNote/SkeletonNote";
+import Tooltip from "../../../../../theme/toolTip/CustomToolTip";
 
 interface NoteBodyPops {
   data?: any[];
@@ -83,17 +84,22 @@ const NoteBody = ({
                   </span>
                   {isFromRecipePage === "edit" ||
                   isFromRecipePage === "details" ? (
-                    <span
-                      onClick={() =>
-                        isFromRecipePage === "edit" &&
-                        handleToChangeDefaultVersion(item?._id, item?.isDefault)
-                      }
-                      className={`${styles.star} ${
-                        item?.isDefault ? styles.on : styles.off
-                      }`}
-                    >
-                      &#9733;
-                    </span>
+                    <Tooltip content="Default" direction="left">
+                      <span
+                        onClick={() =>
+                          isFromRecipePage === "edit" &&
+                          handleToChangeDefaultVersion(
+                            item?._id,
+                            item?.isDefault,
+                          )
+                        }
+                        className={`${styles.star} ${
+                          item?.isDefault ? styles.on : styles.off
+                        }`}
+                      >
+                        &#9733;
+                      </span>
+                    </Tooltip>
                   ) : null}
                 </div>
               </div>
