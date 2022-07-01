@@ -3,7 +3,7 @@ import { BsChevronCompactLeft, BsChevronCompactRight } from "react-icons/bs";
 import styles from "./calendarTray.module.scss";
 import DaysAndDateTray from "./daysAndDateTray/daysAndDateTray.component";
 
-const CalendarTray = ({ handler }) => {
+const CalendarTray = ({ handler }: any) => {
   // this array reflects the order in which days are considered when we get new Date()
   // sunday is represented by 0 and sat with 6
   const daysArray = [
