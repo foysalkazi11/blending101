@@ -1,0 +1,37 @@
+%sahredFlexStyle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mainContainer {
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3px 10px;
+    background-color: #f9f9f9;
+    font-size: 10px;
+    width: 100%;
+
+    &__categories {
+        @extend %sahredFlexStyle;
+        background-color: white;
+        width: 55px;
+        height: fit-content;
+        min-height: 18px;
+        border-radius: 3px;
+        border: 1px solid #9d9799;
+        color: #868082
+    }
+
+    &__score {
+        @extend %sahredFlexStyle;
+
+        &__value {
+            margin-left: 6px;
+            color: #fd5109;
+            font-weight: 600;
+        }
+    }
+
+}

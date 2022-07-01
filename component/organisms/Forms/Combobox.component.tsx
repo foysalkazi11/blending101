@@ -109,12 +109,7 @@ const Combobox = (props: ComboboxProps) => {
 };
 
 Combobox.defaultProps = {
-  options: [
-    {
-      value: "",
-      label: "",
-    },
-  ],
+  options: [],
 };
 
 export default Combobox;

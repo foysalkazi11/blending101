@@ -1,0 +1,60 @@
+%sharedFontCss {
+  color: #7cbc39;
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.plannerIcon {
+  position: relative;
+  aspect-ratio: 1;
+  width: 20 px;
+}
+
+.challengePostCardContainer {
+  background-color: white;
+  padding: 30px 20px;
+  border-radius: 6px;
+
+  &__heading {
+    display: flex;
+    align-items: center;
+    margin-bottom: 18px;
+    padding-left: 8px;
+
+    &__dot {
+      font-size: 26px;
+      color: #7cbc39;
+    }
+
+    h5 {
+      @extend %sharedFontCss;
+      margin-left: 6px;
+      color: #c9c7c7;
+    }
+  }
+}
+
+.headingText {
+  @extend %sharedFontCss;
+  margin-top: 30px;
+}
+
+.notesText {
+  margin-left: 15px;
+  margin-top: 15px;
+  font-size: 14px;
+  color: #707070;
+
+  &__heading {
+    font-weight: 500;
+  }
+
+  &__content {
+    font-weight: 500;
+    margin-top: 10px;
+  }
+}
+
+.myRecipeDiv {
+  margin-top: 20px;
+}
