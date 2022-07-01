@@ -36,6 +36,10 @@ const GET_ALL_RECOMMENDED_RECIPES = gql`
       notes
       addedToCompare
       userCollections
+      defaultVersion {
+        postfixTitle
+      }
+      isMatch
     }
   }
 `;

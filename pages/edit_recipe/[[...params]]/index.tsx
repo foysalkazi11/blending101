@@ -110,6 +110,14 @@ const EditRecipeComponent = () => {
     setExistingImages(detailsARecipe?.image?.map((item) => `${item?.image}`));
   }, [classBasedData, detailsARecipe]);
 
+  const isOrginalVersion = detailsARecipe?.recipeVersion?.find(
+    (version) => version?.isOriginal,
+  );
+
+  const checkVersion = copyDetailsRecipe?.recipeVersion?.find(
+    (version) => version?._id === detailsARecipe?.versionId,
+  );
+
   const editARecipeFunction = async () => {
     dispatch(setLoading(true));
 
@@ -118,7 +126,7 @@ const EditRecipeComponent = () => {
       let value = item?.portions?.find((item) => item.default);
       ingArr?.push({
         ingredientId: item?._id,
-        selectedPortionName: item?.units || value?.measurement,
+        selectedPortionName: item?.selectedPortion?.name || value?.measurement,
         weightInGram: item?.weightInGram
           ? Number(item?.weightInGram)
           : Number(value?.meausermentWeight),
@@ -210,7 +218,7 @@ const EditRecipeComponent = () => {
   useEffect(() => {
     if (detailsARecipe?._id !== recipeId) {
       if (dbUser?._id) {
-        handleToGetARecipe(recipeId, dbUser?._id);
+        handleToGetARecipe(recipeId, dbUser?._id, false);
       }
     }
   }, [recipeId, dbUser?._id]);

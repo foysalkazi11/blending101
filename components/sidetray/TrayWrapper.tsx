@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { ReactNode } from "react";
+import React, { FC, ReactNode } from "react";
 import styles from "./tray.module.scss";
 import useHover from "../utility/useHover";
 
@@ -9,19 +9,23 @@ interface leftTrayInterface {
   showPanle?: "left" | "right";
   openTray?: boolean;
   closeTray?: () => void;
-  panleTag?: ReactNode;
-  iconDefault?: string;
-  iconWhenHover?: string;
+  panleTag?: (hover: boolean) => ReactNode;
 }
 
-export default function LeftTrayWrapper({
+export default function TrayWrapper({
   children,
   showTagByDefaut = true,
   showPanle = "left",
   closeTray = () => {},
   openTray = false,
-  iconWhenHover = "/icons/left__drawer__orange.svg",
-  iconDefault = "/icons/left__drawer.svg",
+  panleTag = (hover: boolean) => (
+    <img
+      src={
+        hover ? "/icons/left__drawer__orange.svg" : "/icons/left__drawer.svg"
+      }
+      alt="Icon"
+    />
+  ),
 }: leftTrayInterface) {
   const [hoevrRef, hover] = useHover();
 
@@ -47,13 +51,11 @@ export default function LeftTrayWrapper({
           }}
           style={
             showPanle === "left"
-              ? { right: hover ? "-45px" : "-35px" }
-              : { left: hover ? "-35px" : "-25px" }
+              ? { right: hover ? "5px" : "20px" }
+              : { left: hover ? "-40px" : "-25px" }
           }
         >
-          {!openTray && !showTagByDefaut ? null : (
-            <img src={hover ? iconWhenHover : iconDefault} alt="Icon" />
-          )}
+          {!openTray && !showTagByDefaut ? null : panleTag(hover)}
         </div>
 
         {children}

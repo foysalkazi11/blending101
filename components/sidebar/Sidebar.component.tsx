@@ -42,15 +42,15 @@ export default function SidebarComponent(props) {
   return (
     <div className={styles.sidebar}>
       <div className={styles.logo}>
-        <img src="/logo_small.svg" alt="logo small" />
+        <img src="/logo_small.svg" alt="logo" />
       </div>
       <ul className={styles.list}>
         {pages &&
           pages.map((page, i) => (
             <Tooltip key={"sidebaritem" + i} content={page?.content}>
               <li
-                className={active === i ? styles.active : "null"}
-                onClick={() => handleClick(page.link, i)}
+                className={active === i ? styles.active : ""}
+                onClick={() => handleClick(page?.link, i)}
               >
                 <span>
                   {" "}

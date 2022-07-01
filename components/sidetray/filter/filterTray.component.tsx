@@ -1,16 +1,22 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useRef, useState } from "react";
-import FilterTrayWrapper from "../filter.wrapper";
+import TrayWrapper from "../TrayWrapper";
 import styles from "./filter.module.scss";
 import { FaEye } from "react-icons/fa";
 import { BsTagsFill } from "react-icons/bs";
 import TagSection from "./tag/TagSection";
 import VisualSection from "./visaul/VisualSection";
 import { categories } from "../../utility/staticData";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { setOpenFilterTray } from "../../../redux/slices/sideTraySlice";
+import TrayTag from "../TrayTag";
+import { FiFilter } from "react-icons/fi";
 
 export default function Filtertray({ filter }) {
   const [toggle, setToggle] = useState(1);
+  const { openFilterTray } = useAppSelector((state) => state?.sideTray);
   const ref = useRef<any>();
+  const dispatch = useAppDispatch();
 
   const handleToggle = (no: number) => {
     if (no === 1) {
@@ -21,8 +27,20 @@ export default function Filtertray({ filter }) {
     setToggle(no);
   };
 
+  const toggleTray = () => {
+    dispatch(setOpenFilterTray(!openFilterTray));
+  };
+
   return (
-    <FilterTrayWrapper filter={filter} id={"filter123"}>
+    <TrayWrapper
+      closeTray={toggleTray}
+      openTray={openFilterTray}
+      showTagByDefaut={false}
+      showPanle="left"
+      panleTag={(hover) => (
+        <TrayTag icon={<FiFilter />} placeMent="left" hover={hover} />
+      )}
+    >
       <div className={styles.main}>
         <div className={styles.main__top}>
           <div className={styles.main__top__menu}>
@@ -56,6 +74,6 @@ export default function Filtertray({ filter }) {
       ) : (
         <TagSection categories={categories} />
       )}
-    </FilterTrayWrapper>
+    </TrayWrapper>
   );
 }

@@ -41,9 +41,7 @@ const useGetBlendNutritionBasedOnRecipexxx = (
     } else {
       // Single Ingredient Details
       if (nutritionState?._id) {
-        let value = nutritionState?.portions?.find(
-          (item) => item.default,
-        )?.meausermentWeight;
+        const value = nutritionState?.selectedPortion?.gram;
         if (value) {
           getBlendNutritionBasedOnRecipe({
             variables: {
@@ -59,7 +57,6 @@ const useGetBlendNutritionBasedOnRecipexxx = (
       } else {
         let ingArr = [];
         let ozArr = 0;
-        console.log(selectedIngredientsList);
         selectedIngredientsList?.forEach((item) => {
           let value: any = 0;
           if (item.hasOwnProperty("selectedPortion")) {

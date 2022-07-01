@@ -26,15 +26,14 @@ import {
 } from "../../../../redux/slices/versionTraySlice";
 import { VscVersions } from "react-icons/vsc";
 import IngredientDetails from "../../../../component/module/Recipe/Ingredient-Details.module";
+import { RecipeDetailsType } from "../../../../type/recipeDetails";
 
 interface center {
-  recipeData: any;
+  recipeData: RecipeDetailsType;
   counter: any;
   setCounter: any;
   nutritionState: any;
   setNutritionState: any;
-  singleElement: any;
-  setsingleElement: any;
 }
 
 const Center = ({
@@ -43,8 +42,6 @@ const Center = ({
   setCounter,
   nutritionState,
   setNutritionState,
-  singleElement,
-  setsingleElement,
 }: center) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -60,7 +57,10 @@ const Center = ({
     (state) => state?.collections,
   );
 
-  console.log(ingredientId);
+  // check version of recipe
+  const checkVersion = recipeData?.recipeVersion?.find(
+    (version) => version?._id === recipeData?.versionId,
+  );
 
   const ReadMore = ({ children }) => {
     const text = children;
@@ -129,9 +129,15 @@ const Center = ({
         <div className={styles.heading}>
           <h3>
             {recipeData?.name}{" "}
-            <span>{`${
-              recipeData?.postfixTitle ? `(${recipeData?.postfixTitle})` : ""
-            }`}</span>{" "}
+            <span>
+              {checkVersion?.isOrginal
+                ? ""
+                : `${
+                    recipeData?.postfixTitle
+                      ? `(${recipeData?.postfixTitle})`
+                      : ""
+                  }`}
+            </span>
           </h3>
           <span className={styles.ratingBox}>
             <img src="/images/rating.svg" alt="" />
@@ -151,23 +157,18 @@ const Center = ({
           </div>
 
           <div className={styles.alignItems}>
-            <IconWithText
-              wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
-              handleClick={(e) => {
-                dispatch(setOpenVersionTray(true));
-                dispatch(setOpenVersionTrayFormWhichPage("details"));
-              }}
-              icon={
-                <VscVersions
-                  color={
-                    recipeData?.recipeVersion?.length >= 1
-                      ? "#7cbc39"
-                      : "#c4c4c4"
-                  }
-                />
-              }
-              text="Versions"
-            />
+            {recipeData?.recipeVersion?.length >= 2 ? (
+              <IconWithText
+                wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
+                handleClick={(e) => {
+                  dispatch(setOpenVersionTray(true));
+                  dispatch(setOpenVersionTrayFormWhichPage("details"));
+                }}
+                icon={<VscVersions color={"#7cbc39"} />}
+                text="Versions"
+              />
+            ) : null}
+
             <IconWithText
               wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
               handleClick={() => {}}
@@ -263,8 +264,7 @@ const Center = ({
         recipeData={recipeData}
         nutritionState={nutritionState}
         setIngredientId={setIngredientId}
-        singleElement={singleElement}
-        setsingleElement={setsingleElement}
+        setNutritionState={setNutritionState}
       />
       <div className={styles.ingredentContainer}>
         <div className={styles.ingredentHeader}>
