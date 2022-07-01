@@ -1,19 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react';
-import styles from './DropDown.module.scss';
+import React from "react";
+import styles from "./DropDown.module.scss";
 
 interface dropDown {
   listElem?: { name: string; value: string }[];
   value?: string;
   handleChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  style?: object;
+  style?: React.CSSProperties;
   name?: string;
 }
 const DropDown = ({
   listElem = [],
   style = {},
-  value = '',
-  name = '',
+  value = "",
+  name = "",
   handleChange = () => {},
 }: dropDown) => {
   return (

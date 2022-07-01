@@ -17,6 +17,7 @@ import useToGetARecipeVersion from "../../../customHooks/useToGetARecipeVersion"
 import useToGetARecipe from "../../../customHooks/useToGetARecipe";
 import CHANGE_DEFAULT_VERSION from "../../../gqlLib/versions/mutation/changelDefaultVersion";
 import TrayTag from "../TrayTag";
+import Tooltip from "../../../theme/toolTip/CustomToolTip";
 interface VersionTrayProps {
   showTagByDefaut?: boolean;
   showPanle?: "left" | "right";
@@ -226,21 +227,23 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           />
           <h3 onClick={funToGetARecipe}>{detailsARecipe?.name}</h3>
 
-          <span
-            onClick={() =>
-              !isOrginalVersion?.isDefault &&
-              openVersionTrayFormWhichPage === "edit" &&
-              handleToChangeDefaultVersion(
-                isOrginalVersion?._id,
-                isOrginalVersion?.isDefault,
-              )
-            }
-            className={`${styles.star} ${
-              isOrginalVersion?.isDefault ? styles.on : styles.off
-            }`}
-          >
-            &#9733;
-          </span>
+          <Tooltip content="Default" direction="left">
+            <span
+              onClick={() =>
+                !isOrginalVersion?.isDefault &&
+                openVersionTrayFormWhichPage === "edit" &&
+                handleToChangeDefaultVersion(
+                  isOrginalVersion?._id,
+                  isOrginalVersion?.isDefault,
+                )
+              }
+              className={`${styles.star} ${
+                isOrginalVersion?.isDefault ? styles.on : styles.off
+              }`}
+            >
+              &#9733;
+            </span>
+          </Tooltip>
         </div>
         <NoteHead
           showForm={showForm}
