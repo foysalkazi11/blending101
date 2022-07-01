@@ -3,7 +3,7 @@ import CheckCircle from "../../../public/icons/check_circle_black_24dp.svg";
 import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import CalciumSearchElem from "../../../theme/calcium/calcium.component";
-import DropdownTwoComponent from "../../../theme/dropDown/dropdownTwo.component";
+import Dropdown from "../../../theme/dropDown/DropDown.component";
 import Linearcomponent from "../../../theme/linearProgress/LinearProgress.component";
 import SwitchTwoComponent from "../../../theme/switch/switchTwo.component";
 import styles from "./filter.module.scss";
@@ -13,6 +13,22 @@ import { setAllIngredients } from "../../../redux/slices/ingredientsSlice";
 import SkeletonIngredients from "../../../theme/skeletons/skeletonIngredients/SkeletonIngredients";
 import useGetAllIngredientsDataBasedOnNutrition from "../../../customHooks/useGetAllIngredientsDataBasedOnNutrition";
 import IngredientPanelSkeleton from "../../../theme/skeletons/ingredientPanelSleketon/IngredientPanelSkeleton";
+
+export const categories = [
+  { name: "All", value: "All" },
+  { name: "Leafy", value: "Leafy" },
+  { name: "Berry", value: "Berry" },
+  { name: "Herbal", value: "Herbal" },
+  { name: "Fruity", value: "Fruity" },
+  { name: "Balancer", value: "Balancer" },
+  { name: "Fatty", value: "Fatty" },
+  { name: "Seasoning", value: "Seasoning" },
+  { name: "Flavor", value: "Flavor" },
+  { name: "Rooty", value: "Rooty" },
+  { name: "Flowering", value: "Flowering" },
+  { name: "Liquid", value: "Liquid" },
+  { name: "Tube-Squash", value: "Tube-Squash" },
+];
 
 type FilterbottomComponentProps = {
   categories?: { title: string; val: string }[];
@@ -28,14 +44,18 @@ interface ingredientState {
   ingredientId: string;
 }
 
+interface List {
+  name: string;
+  value: string;
+}
+
 export default function FilterbottomComponent({
-  categories,
   handleIngredientClick = () => {},
   checkActiveIngredient = () => false,
   scrollAreaMaxHeight = { maxHeight: "350px" },
 }: FilterbottomComponentProps) {
   const [toggle, setToggle] = useState(1);
-  const [dpd, setDpd] = useState({ title: "All", val: "All" });
+  const [dpd, setDpd] = useState("All");
   const dispatch = useAppDispatch();
   const { allIngredients } = useAppSelector((state) => state?.ingredients);
   const [searchIngredientData, setSearchIngredientData] = useState<any[]>([]);
@@ -44,8 +64,8 @@ export default function FilterbottomComponent({
   const [loading, setLoading] = useState(false);
   const [arrayOrderState, setArrayOrderState] = useState([]);
   const [ascendingDescending, setascendingDescending] = useState(true);
-  const [list, setList] = useState([]);
-  const [rankingDropDownState, setRankingDropDownState] = useState(null);
+  const [list, setList] = useState<Array<List>>([]);
+  const [rankingDropDownState, setRankingDropDownState] = useState("");
 
   const [filterIngredientByCategroyAndClass] = useLazyQuery(
     FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS,
@@ -53,8 +73,8 @@ export default function FilterbottomComponent({
 
   const { data: IngredientData, loading: nutritionLoading } =
     useGetAllIngredientsDataBasedOnNutrition(
-      rankingDropDownState?.id,
-      dpd?.val,
+      rankingDropDownState,
+      dpd,
       toggle === 2 ? true : false,
     );
 
@@ -64,7 +84,7 @@ export default function FilterbottomComponent({
       const { data } = await filterIngredientByCategroyAndClass({
         variables: {
           data: {
-            ingredientCategory: dpd?.val,
+            ingredientCategory: dpd,
             IngredientClass: 1,
           },
         },
@@ -92,9 +112,9 @@ export default function FilterbottomComponent({
 
   useEffect(() => {
     if (isMounted.current) {
-      if (dpd?.val !== "All") {
+      if (dpd !== "All") {
         setSearchIngredientData(
-          allIngredients?.filter((item) => item?.category === dpd?.val),
+          allIngredients?.filter((item) => item?.category === dpd),
         );
       } else {
         if (allIngredients?.length) {
@@ -152,15 +172,15 @@ export default function FilterbottomComponent({
           titleTwo="Rankings"
         />
         <div className={styles.dropdown}>
-          <DropdownTwoComponent
+          <Dropdown
             value={dpd}
-            list={categories}
-            setValue={setDpd}
+            listElem={categories}
+            handleChange={(e) => setDpd(e?.target?.value)}
           />
         </div>
         {toggle === 1 && (
           <div className={styles.filter__menu}>
-            {dpd?.val === "All" ? (
+            {dpd === "All" ? (
               <input
                 placeholder="Search ingredient"
                 value={searchInput}

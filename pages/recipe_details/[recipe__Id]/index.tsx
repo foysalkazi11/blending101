@@ -68,6 +68,8 @@ const Index = () => {
   //@ts-ignore
   const recipeBasedNutrition = nutritionData?.getBlendNutritionBasedOnRecipexxx;
 
+  console.log(detailsARecipe);
+
   return (
     <RecipeDetails
       recipeData={recipeLoading ? {} : detailsARecipe}
