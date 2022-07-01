@@ -14,6 +14,7 @@ interface recursiveAccordianInterface {
   counter?: number;
   showUser?: boolean;
   servingSize?: number;
+  sinngleIngQuintity?: number;
 }
 
 const UpdatedRecursiveAccordian = ({
@@ -21,6 +22,7 @@ const UpdatedRecursiveAccordian = ({
   counter = 1,
   showUser = true,
   servingSize = 1,
+  sinngleIngQuintity = 1,
 }: recursiveAccordianInterface) => {
   const { user, dbUser } = useAppSelector((state) => state?.user);
   const router = useRouter();
@@ -42,7 +44,9 @@ const UpdatedRecursiveAccordian = ({
               dataObject?.Calories?.calories?.value &&
                 Math?.round(
                   //@ts-ignore
-                  (dataObject?.Calories?.calories?.value * counter) /
+                  (dataObject?.Calories?.calories?.value *
+                    counter *
+                    sinngleIngQuintity) /
                     servingSize,
                 )
             }
@@ -95,6 +99,7 @@ const UpdatedRecursiveAccordian = ({
                 counter={counter}
                 dailyGoalsData={dailyData?.getDailyGoals?.goals}
                 servingSize={servingSize}
+                sinngleIngQuintity={sinngleIngQuintity}
               />
             );
           }
