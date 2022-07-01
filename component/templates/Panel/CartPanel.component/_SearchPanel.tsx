@@ -89,8 +89,10 @@ const SearchPanel = (props: SearchPanelProps) => {
         variables: { query: e.target.value, memberId: userId._id },
       });
       setOpen(true);
-      setQuery(e.target.value);
+    } else {
+      setOpen(false);
     }
+    setQuery(e.target.value);
   };
 
   const ingredientHandler = (item) => {
