@@ -1,0 +1,27 @@
+%sharedTextStyle {
+    font-size: 13px;
+    font-weight: 500;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 10px;
+}
+
+.mainContainer {
+
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    &__text {
+        @extend %sharedTextStyle;
+    }
+
+    &__ingredientText {
+        @extend %sharedTextStyle;
+        font-weight: 400;
+        color: #928f8f;
+    }
+
+}

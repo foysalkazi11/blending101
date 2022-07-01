@@ -19,9 +19,13 @@ export default function SidebarComponent(props) {
     { logo: "/icons/home.svg", link: "/", content: "Home" },
     { logo: "/icons/juicer.svg", link: "/", content: "Discovery" },
     { logo: "/icons/books.svg", link: "/", content: "Wiki" },
-    { logo: "/icons/calender__sidebar.svg", link: "/", content: "Planner" },
+    {
+      logo: "/icons/calender__sidebar.svg",
+      link: "/planner",
+      content: "Planner",
+    },
     { logo: "/icons/book_light.svg", link: "/", content: "News" },
-    { logo: "/icons/whistle.svg", link: "/", content: "Coach" },
+    { logo: "/icons/whistle.svg", link: "/planner", content: "Coach" },
     { logo: "/icons/store.svg", link: "/", content: "Shop" },
   ];
 

@@ -1,0 +1,17 @@
+$sharedBorderStyle: 1.8px solid #e6dfdf;
+$sharedMargin: 14px;
+
+.mainContainer {
+  // background-color: gray;
+
+  &__header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 45px;
+    border-top: $sharedBorderStyle;
+    border-bottom: $sharedBorderStyle;
+    margin-bottom: $sharedMargin;
+  }
+}

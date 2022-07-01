@@ -1,0 +1,31 @@
+.challenge_circle_inside_circle {
+    background-color: #FFFFFF;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    border: 1px solid #EEECEC;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.challenge_circle_inside_date,
+.challenge_circle_day_challenge {
+    color: #B5B5B5;
+    white-space: nowrap;
+}
+
+.challenge_circle_remaining_day {
+    color: white;
+    background: #9AC740;
+    border: 1px solid #EFEAEA;
+    white-space: nowrap;
+
+}
+
+.challenge_circle_remaining_percentage,
+.challenge_circle_remaining_percentage_paragraph {
+    color: #92CE5D;
+    letter-spacing: 0px;
+    white-space: nowrap;
+}

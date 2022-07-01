@@ -1,0 +1,124 @@
+$sharedFontWeight: 400;
+$sharedColor: #5a5a5a;
+
+%sharedFontCss {
+  color: #7cbc39;
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 10px;
+
+  &__cancelDiv {
+    margin-left: auto;
+    font-size: 30px;
+    cursor: pointer;
+    color: #626262;
+    border-radius: 50%;
+
+    &:hover {
+      background-color: #eeeeee;
+    }
+  }
+
+  &__mainHeading {
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
+
+.headingText {
+  @extend %sharedFontCss;
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
+.notesText {
+  padding: 10px 15px;
+  font-size: 14px;
+  color: #707070;
+  background-color: #fbfbfb;
+  border-radius: 4px;
+
+  &__heading {
+    font-weight: 500;
+  }
+
+  &__content {
+    font-weight: 500;
+    margin-top: 10px;
+  }
+}
+
+.notesTray {
+  display: flex;
+
+  &__servings {
+    padding: 14px 10px;
+    min-width: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    h3 {
+      font-size: 13px;
+      font-weight: $sharedFontWeight;
+      margin-bottom: 10px;
+      color: $sharedColor;
+      min-width: max-content;
+    }
+
+    h5 {
+      font-size: 12px;
+      font-weight: $sharedFontWeight;
+      margin-bottom: 10px;
+      color: $sharedColor;
+      min-width: max-content;
+    }
+
+    &__scoreCard {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background-color: #f9f9f9;
+      width: 85%;
+      padding: 5px;
+    }
+  }
+
+  &__imageCard {
+    width: 36%;
+    height: 180px;
+  }
+}
+
+.dropDownTray {
+  display: flex;
+  margin: 20px 0px;
+
+  &__elem {
+    min-width: 200px;
+    margin-left: 10px;
+  }
+}
+
+.textScoreDiv {
+  padding: 0px 10px;
+  margin: 5px 0px;
+  font-size: 12px;
+  min-width: max-content;
+
+  &__text {
+    color: #525252;
+    font-weight: 400;
+  }
+
+  &__score {
+    margin-left: 14px;
+    color: #fd5610;
+    font-weight: 600;
+  }
+}
