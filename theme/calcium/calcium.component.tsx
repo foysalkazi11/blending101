@@ -1,22 +1,27 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useQuery } from "@apollo/client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { FaSortAmountDown, FaSortAmountDownAlt } from "react-icons/fa";
 import { GET_ALL_BLEND_NUTRIENTS } from "../../gqlLib/recipeDiscovery/query/recipeDiscovery";
-import DropdownTwoComponent from "../dropDown/dropdownTwo.component";
+import Dropdown from "../dropDown/DropDown.component";
 import styles from "./calcium.module.scss";
 
 interface calciumStyle {
   style: any;
 }
 
+interface List {
+  name: string;
+  value: string;
+}
+
 interface CalciumSearchElemInterface {
-  ascendingDescending?: any;
-  setascendingDescending?: any;
-  list?: any;
-  setList?: any;
-  dropDownState?: any;
-  setDropDownState?: any;
+  ascendingDescending?: boolean;
+  setascendingDescending?: Dispatch<SetStateAction<boolean>>;
+  list?: List[];
+  setList?: Dispatch<SetStateAction<List[]>>;
+  dropDownState?: string;
+  setDropDownState?: Dispatch<SetStateAction<string>>;
 }
 const CalciumSearchElem = ({
   ascendingDescending,
@@ -25,7 +30,7 @@ const CalciumSearchElem = ({
   setList,
   dropDownState,
   setDropDownState,
-}) => {
+}: CalciumSearchElemInterface) => {
   const [sortState, curSortState] = useState(true);
 
   const SortingOrder = () => {
@@ -37,29 +42,26 @@ const CalciumSearchElem = ({
 
   useEffect(() => {
     if (!allBlendNutrients?.getAllBlendNutrients) return;
-    let tempArray = list;
+    let tempArray: List[] = [];
     allBlendNutrients?.getAllBlendNutrients.map((itm) => {
-      tempArray = [
-        ...tempArray,
-        { title: itm.nutrientName, val: itm.nutrientName, id: itm._id },
-      ];
+      tempArray = [...tempArray, { name: itm.nutrientName, value: itm._id }];
     });
     setList(tempArray);
   }, [allBlendNutrients?.getAllBlendNutrients]);
 
   useEffect(() => {
-    setDropDownState(list[0]);
+    setDropDownState(list?.[0]?.value);
   }, [list]);
 
   return (
     <div className={styles.calciumMg}>
-      <div style={{ width: "100%" }}>
-        <DropdownTwoComponent
-          value={dropDownState}
-          list={list}
-          setValue={setDropDownState}
-        />
-      </div>
+      <Dropdown
+        value={dropDownState}
+        listElem={list}
+        handleChange={(e) => setDropDownState(e?.target?.value)}
+        style={{ width: "100%" }}
+      />
+
       <div className={styles.calciumIcon}>
         <div>
           {sortState ? (
