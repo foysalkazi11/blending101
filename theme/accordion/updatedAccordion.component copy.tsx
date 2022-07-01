@@ -1,5 +1,5 @@
-import React from 'react';
-import AccordComponent from './accordComponent.component';
+import React from "react";
+import AccordComponent from "./accordComponent.component";
 
 type CustomAccordionProps = {
   title: string;
@@ -8,6 +8,7 @@ type CustomAccordionProps = {
   counter?: number;
   dailyGoalsData: string;
   servingSize?: number;
+  sinngleIngQuintity?: number;
 };
 
 const UpdatedCustomAccordion = ({
@@ -17,6 +18,7 @@ const UpdatedCustomAccordion = ({
   counter = 1,
   dailyGoalsData,
   servingSize = 1,
+  sinngleIngQuintity = 1,
 }: CustomAccordionProps) => {
   if (dailyGoalsData) {
     dailyGoalsData = JSON?.parse(dailyGoalsData) || {};
@@ -27,7 +29,11 @@ const UpdatedCustomAccordion = ({
     dailyGoals: number,
   ) => {
     return Math?.round(
-      ((100 / dailyGoals) * recipeNutrientValue * counter) / servingSize,
+      ((100 / dailyGoals) *
+        recipeNutrientValue *
+        counter *
+        sinngleIngQuintity) /
+        servingSize,
     );
   };
 
@@ -66,9 +72,10 @@ const UpdatedCustomAccordion = ({
                           parseFloat(itm[1]?.value),
                           dailyGoals,
                         )}%`
-                      : ''
+                      : ""
                   }
                   counter={counter}
+                  sinngleIngQuintity={sinngleIngQuintity}
                   /* @ts-ignore */
                   nutritionId={itm[1]?.blendNutrientRefference?._id}
                   servingSize={servingSize}
@@ -82,7 +89,7 @@ const UpdatedCustomAccordion = ({
             );
           } else {
             return (
-              <div style={{ marginLeft: '18px' }} key={itm[0] + Date.now()}>
+              <div style={{ marginLeft: "18px" }} key={itm[0] + Date.now()}>
                 <AccordComponent
                   title={itm[0]}
                   plusMinusIcon={true}
@@ -98,9 +105,10 @@ const UpdatedCustomAccordion = ({
                           parseFloat(itm[1]?.value),
                           dailyGoals,
                         )}%`
-                      : ''
+                      : ""
                   }
                   counter={counter}
+                  sinngleIngQuintity={sinngleIngQuintity}
                   /* @ts-ignore */
                   nutritionId={itm[1]?.blendNutrientRefference?._id}
                   servingSize={servingSize}
@@ -132,9 +140,10 @@ const UpdatedCustomAccordion = ({
                           parseFloat(itm[1]?.value),
                           dailyGoals,
                         )}%`
-                      : ''
+                      : ""
                   }
                   counter={counter}
+                  sinngleIngQuintity={sinngleIngQuintity}
                   /* @ts-ignore */
                   nutritionId={itm[1]?.blendNutrientRefference?._id}
                   servingSize={servingSize}
@@ -143,7 +152,7 @@ const UpdatedCustomAccordion = ({
             );
           } else {
             return (
-              <div style={{ marginLeft: '18px' }} key={itm[0] + Date.now()}>
+              <div style={{ marginLeft: "18px" }} key={itm[0] + Date.now()}>
                 <AccordComponent
                   title={itm[0]}
                   plusMinusIcon={false}
@@ -159,9 +168,10 @@ const UpdatedCustomAccordion = ({
                           parseFloat(itm[1]?.value),
                           dailyGoals,
                         )}%`
-                      : ''
+                      : ""
                   }
                   counter={counter}
+                  sinngleIngQuintity={sinngleIngQuintity}
                   /* @ts-ignore */
                   nutritionId={itm[1]?.blendNutrientRefference?._id}
                   servingSize={servingSize}
@@ -182,6 +192,7 @@ const UpdatedCustomAccordion = ({
         counter={counter}
         key={title + Date.now()}
         servingSize={servingSize}
+        sinngleIngQuintity={sinngleIngQuintity}
       >
         {populateAccordianData(content, true)}
       </AccordComponent>
