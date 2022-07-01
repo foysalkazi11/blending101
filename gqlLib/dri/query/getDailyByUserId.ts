@@ -21,16 +21,18 @@ const GET_DAILY_BY_USER_ID = gql`
             value
           }
           nutrientName
+          calorieGram
         }
         Minerals {
           nutrientName
           data {
-            units
             value
+            units
           }
           blendNutrientRef
           showPercentage
           percentage
+          calorieGram
         }
         Vitamins {
           nutrientName
@@ -41,6 +43,7 @@ const GET_DAILY_BY_USER_ID = gql`
           blendNutrientRef
           showPercentage
           percentage
+          calorieGram
         }
       }
     }

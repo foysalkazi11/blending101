@@ -24,7 +24,7 @@ const DailyIntakeAccordian = ({
                 key={`${elem[0]}` + i}
                 inputValue={inputValue}
                 setInputValue={setInputValue}
-                title={elem[0]}
+                title={elem[0] === "Energy" ? "Macros" : elem[0]}
                 data={elem[1]}
               />
             );

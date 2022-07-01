@@ -31,6 +31,10 @@ const GET_SINGLE_COLLECTION = gql`
       notes
       addedToCompare
       userCollections
+      defaultVersion {
+        postfixTitle
+      }
+      isMatch
     }
   }
 `;
