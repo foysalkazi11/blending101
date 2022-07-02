@@ -1,27 +1,4 @@
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  max-width: 400px;
-  height: 100%;
-
-  &__text {
-    font-weight: 500;
-    font-size: 11px;
-  }
-
-  &__icon {
-    color: #fd5109;
-    cursor: pointer;
-    font-size: 15px;
-    stroke-width: 2px;
-  }
-}
-
 .mainContainer {
-  // position: relative;
-
   &__contentDiv {
     background-color: white;
     padding: 0px 20px;
@@ -54,10 +31,6 @@
 
 $sharedPadding: 12px;
 
-// .mainContainer {
-//     // background-color: red;
-// }
-
 .headings {
   display: grid;
   grid-template-columns:
@@ -81,11 +54,36 @@ $sharedPadding: 12px;
   }
 }
 
-//RecipeMealHeader
+//Recipe Header
+.button {
+  background-color: white;
+  min-width: 100px;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  border-radius: 4px;
+  border: 1px solid #eeeeee;
+  color: #fd5109;
+  padding: 3px 5px;
+  cursor: pointer;
 
-.mainContainer {
+  &__text {
+    margin-left: 10px;
+    color: #9d9799;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  max-width: 600px;
+  height: 45px;
+  margin-bottom: 14px;
+  &__wrapper {
+    width: 100%;
+    max-width: 600px;
+  }
 }
 
 .textArrowTray {

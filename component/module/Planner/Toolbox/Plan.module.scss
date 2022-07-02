@@ -1,8 +1,49 @@
+$sharedHeight: 60px;
 $sharedBorderRadius: 5px;
 $sharedBorderStyle: 1px #d1cece solid;
 $sharedBackgroundColor: white;
 
-.mainContainer {
+%sharedFlex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.plan {
+  min-height: $sharedHeight;
+  display: flex;
+  margin: 8px 0px;
+
+  &__dateDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: $sharedHeight;
+    width: 50px;
+    height: inherit;
+
+    &__day {
+      @extend %sharedFlex;
+      color: #9d9799;
+      font-size: 10px;
+    }
+
+    &__date {
+      @extend %sharedFlex;
+      color: #6e696b;
+      font-size: 18px;
+      font-weight: 500;
+    }
+  }
+
+  &__recipeDiv {
+    @extend %sharedFlex;
+    flex-direction: column;
+    width: 100%;
+  }
+}
+
+.recipe {
   width: 100%;
   display: flex;
   font-size: 12px;
@@ -17,7 +58,7 @@ $sharedBackgroundColor: white;
     );
 
   &:hover {
-    .mainContainer__tray {
+    .recipe__tray {
       display: flex;
     }
   }
@@ -98,4 +139,18 @@ $sharedBackgroundColor: white;
   right: 0;
   background-color: #fff;
   z-index: 999;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 10px;
+  cursor: pointer;
+  &:hover {
+    background-color: rgb(238, 238, 238);
+  }
+  &__icon {
+    color: #707070;
+  }
 }
