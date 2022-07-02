@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { FiMinusSquare, FiPlusSquare } from 'react-icons/fi';
-import { BsPlus } from 'react-icons/bs';
-import { BiMinus } from 'react-icons/bi';
-import styles from './updatedAccordion.module.scss';
-import { useRouter } from 'next/router';
+import React, { useEffect, useRef, useState } from "react";
+import { FiMinusSquare, FiPlusSquare } from "react-icons/fi";
+import { BsPlus } from "react-icons/bs";
+import { BiMinus } from "react-icons/bi";
+import styles from "./updatedAccordion.module.scss";
+import { useRouter } from "next/router";
 
 type CustomAccordionProps = {
   title: string;
@@ -20,6 +20,7 @@ type CustomAccordionProps = {
   lastElement?: boolean;
   nutritionId?: string;
   servingSize?: number;
+  sinngleIngQuintity?: number;
 };
 
 const AccordComponent = ({
@@ -34,15 +35,16 @@ const AccordComponent = ({
   unit,
   counter = 1,
   lastElement,
-  nutritionId = '',
+  nutritionId = "",
   servingSize = 1,
+  sinngleIngQuintity = 1,
 }: CustomAccordionProps) => {
   const [expanded, setExpanded] = useState<boolean>(true);
   const contentRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
   const finalNutritionValue = Math?.round(
-    (Math?.round(value) * counter) / servingSize,
+    (Math?.round(value) * counter * sinngleIngQuintity) / servingSize,
   );
   const handleClickNutration = (id: string) => {
     router?.push(`/wiki/Nutrient/${id}`);
@@ -52,7 +54,7 @@ const AccordComponent = ({
     if (contentRef.current) {
       expanded
         ? (contentRef.current.style.maxHeight = `1000px`)
-        : (contentRef.current.style.maxHeight = '0px');
+        : (contentRef.current.style.maxHeight = "0px");
     }
   }, [expanded, contentRef]);
   return (
@@ -65,16 +67,16 @@ const AccordComponent = ({
               <div className={styles.accordionSummaryForNested}>
                 {expanded ? (
                   <BiMinus
-                    className={styles.icon + ' ' + styles.iconCopy}
-                    style={!plusMinusIcon && { visibility: 'hidden' }}
+                    className={styles.icon + " " + styles.iconCopy}
+                    style={!plusMinusIcon && { visibility: "hidden" }}
                     onClick={() => {
                       setExpanded(!expanded);
                     }}
                   />
                 ) : (
                   <BsPlus
-                    className={styles.icon + ' ' + styles.iconCopy}
-                    style={!plusMinusIcon && { visibility: 'hidden' }}
+                    className={styles.icon + " " + styles.iconCopy}
+                    style={!plusMinusIcon && { visibility: "hidden" }}
                     onClick={() => {
                       setExpanded(!expanded);
                     }}
@@ -83,7 +85,7 @@ const AccordComponent = ({
                 {lastElement ? (
                   <div
                     className={styles.accordianContent}
-                    style={{ border: 'none' }}
+                    style={{ border: "none" }}
                   >
                     <div
                       className={
@@ -101,7 +103,7 @@ const AccordComponent = ({
                       {
                         <p
                           className={
-                            styles.valueUnit + ' ' + styles.alignCenter
+                            styles.valueUnit + " " + styles.alignCenter
                           }
                         >
                           {`${finalNutritionValue}${unit?.toLowerCase()}`}
@@ -109,8 +111,8 @@ const AccordComponent = ({
                       }
                     </div>
 
-                    <p className={styles.valueUnit + ' ' + styles.percentage}>
-                      {percentage || ''}
+                    <p className={styles.valueUnit + " " + styles.percentage}>
+                      {percentage || ""}
                     </p>
                   </div>
                 ) : (
@@ -131,7 +133,7 @@ const AccordComponent = ({
                       {
                         <p
                           className={
-                            styles.valueUnit + ' ' + styles.alignCenter
+                            styles.valueUnit + " " + styles.alignCenter
                           }
                         >
                           {`${finalNutritionValue}${unit?.toLowerCase()}`}
@@ -139,8 +141,8 @@ const AccordComponent = ({
                       }
                     </div>
 
-                    <p className={styles.valueUnit + ' ' + styles.percentage}>
-                      {percentage || ''}
+                    <p className={styles.valueUnit + " " + styles.percentage}>
+                      {percentage || ""}
                     </p>
                   </div>
                 )}
@@ -153,16 +155,16 @@ const AccordComponent = ({
           <div className={styles.accordianMainHeading}>
             {expanded ? (
               <FiMinusSquare
-                className={styles.icon + ' ' + styles.iconCopy}
-                style={!plusMinusIcon && { visibility: 'hidden' }}
+                className={styles.icon + " " + styles.iconCopy}
+                style={!plusMinusIcon && { visibility: "hidden" }}
                 onClick={() => {
                   setExpanded(!expanded);
                 }}
               />
             ) : (
               <FiPlusSquare
-                className={styles.icon + ' ' + styles.iconCopy}
-                style={!plusMinusIcon && { visibility: 'hidden' }}
+                className={styles.icon + " " + styles.iconCopy}
+                style={!plusMinusIcon && { visibility: "hidden" }}
                 onClick={() => {
                   setExpanded(!expanded);
                 }}
@@ -171,12 +173,12 @@ const AccordComponent = ({
             <div className={styles.accordianContent}>
               <h5 className={styles.titleAccordianMainHeading}>{title}</h5>
               {value && unit && (
-                <p className={styles.valueUnit + ' ' + styles.alignLeft}>
+                <p className={styles.valueUnit + " " + styles.alignLeft}>
                   {/* {parseFloat(value).toFixed(1)} &nbsp; {unit} */}
                 </p>
               )}
-              <p className={styles.valueUnit + ' ' + styles.percentage}>
-                {percentage || ''}
+              <p className={styles.valueUnit + " " + styles.percentage}>
+                {percentage || ""}
               </p>
             </div>
           </div>

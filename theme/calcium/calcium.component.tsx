@@ -46,7 +46,14 @@ const CalciumSearchElem = ({
     allBlendNutrients?.getAllBlendNutrients.map((itm) => {
       tempArray = [...tempArray, { name: itm.nutrientName, value: itm._id }];
     });
-    setList(tempArray);
+    const sortArry = tempArray?.sort((a, b) => {
+      let na = a?.name?.toLowerCase(),
+        nb = b?.name?.toLowerCase();
+      if (na < nb) return -1;
+      if (na > nb) return 1;
+      return 0;
+    });
+    setList(sortArry);
   }, [allBlendNutrients?.getAllBlendNutrients]);
 
   useEffect(() => {

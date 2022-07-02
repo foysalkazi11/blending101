@@ -141,7 +141,7 @@ const Center_Elements = ({
                 <VscVersions className={styles.icon} />
                 <p className={styles.text}>Versions</p>
               </div>
-              <div
+              {/* <div
                 className={styles.singleMenu}
                 onClick={() => {
                   handleToGetARecipe(copyDetailsRecipe?._id, dbUser?._id, true);
@@ -149,7 +149,7 @@ const Center_Elements = ({
               >
                 <BiEditAlt className={styles.icon} />
                 <p className={styles.text}>Edit</p>
-              </div>
+              </div> */}
 
               <div className={styles.singleMenu}>
                 <MdDeleteOutline className={styles.icon} />

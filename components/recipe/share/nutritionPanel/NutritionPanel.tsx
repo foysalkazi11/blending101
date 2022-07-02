@@ -48,6 +48,8 @@ const NutritionPanel = ({
   const nutrientName =
     nutritionState?.ingredientName ||
     nutritionState?.ingredientId?.ingredientName;
+  const sinngleIngQuintity =
+    parseFloat(nutritionState?.selectedPortion?.quantity) || 1;
 
   const dispatch = useAppDispatch();
   const [servingSizeCounter, setServingSizeCounter] = useState(1);
@@ -71,7 +73,7 @@ const NutritionPanel = ({
                   <>
                     <div>
                       <h3 className={styles.content__name}>
-                        {1}&nbsp;
+                        {sinngleIngQuintity}&nbsp;
                         {measurement}
                         &nbsp;
                         {nutrientName}
@@ -147,6 +149,7 @@ const NutritionPanel = ({
                 isComeFormRecipeEditPage ? counter : servingSizeCounter
               }
               showUser={showUser}
+              sinngleIngQuintity={sinngleIngQuintity}
             />
           )}
         </div>
