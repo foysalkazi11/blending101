@@ -15,10 +15,28 @@ import styles from "./DailyIntake.module.scss";
 import HeadingBox from "./headingBox/headingBox.component";
 import InputGoal from "./inputGoal/inputGoal.component";
 
+interface Goals {
+  blendNutrientId: string;
+  goal?: number;
+  dri: number;
+  percentage: number;
+  showPercentage: boolean;
+}
+
+interface InputValue {
+  memberId: string;
+  calories: {
+    goal: number;
+    dri: number;
+  };
+  bmi: number;
+  goals: {};
+}
+
 const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
   const { dbUser } = useAppSelector((state) => state?.user);
   const [loading, setLoading] = useState(false);
-  const [inputValue, setInputValue] = useState({
+  const [inputValue, setInputValue] = useState<InputValue>({
     memberId: dbUser?._id,
     bmi: null,
     calories: {
@@ -51,75 +69,64 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
 
   useEffect(() => {
     if (!dailyDataLoading && dailyData?.getDailyByUserId) {
-      if (
-        parseFloat(dailyGoalData?.getDailyGoals?.bmi) !==
-        parseFloat(dailyData?.getDailyByUserId?.bmi?.value)
-      ) {
-        setInputValue((pre) => ({
-          ...pre,
-          bmi: Math?.round(dailyGoalData?.getDailyGoals?.bmi),
-        }));
-      }
+      const { Energy, Minerals, Vitamins } =
+        dailyData?.getDailyByUserId?.nutrients;
+
+      let goals = { ...inputValue?.goals };
+      [...Energy, ...Minerals, ...Vitamins]?.forEach((item) => {
+        const entries = goals[item?.blendNutrientRef];
+
+        if (entries) {
+          goals = {
+            ...goals,
+            [item?.blendNutrientRef]: {
+              ...goals[item?.blendNutrientRef],
+              dri: item?.data?.value,
+            },
+          };
+        }
+      });
+
+      setInputValue((prev) => ({ ...prev, goals }));
     }
   }, [dailyData?.getDailyByUserId]);
 
   useEffect(() => {
     if (!dailyGoalLoading && dailyGoalData?.getDailyGoals) {
-      let updatedObject = inputValue;
-      updatedObject = {
-        ...updatedObject,
-        calories: {
-          dri: dailyGoalData?.getDailyGoals?.calories?.dri || null,
-          goal: dailyGoalData?.getDailyGoals?.calories?.goal || null,
-        },
-        goals: JSON?.parse(dailyGoalData?.getDailyGoals?.goals),
-      };
-      setInputValue(updatedObject);
+      const dailyGoals = dailyGoalData?.getDailyGoals;
+      setInputValue((prev) => {
+        return {
+          ...prev,
+          calories: {
+            ...prev?.calories,
+            dri: dailyGoals?.calories?.dri || null,
+            goal: dailyGoals?.calories?.goal || null,
+          },
+          bmi: dailyGoals?.bmi,
+          goals: JSON?.parse(dailyGoalData?.getDailyGoals?.goals),
+        };
+      });
     }
   }, [dailyGoalData?.getDailyGoals]);
 
+  const checkMacrosPercentage = (arr: any[]) => {
+    return arr?.reduce(
+      (pre, current) => pre?.percentage + current?.percentage,
+      0,
+    );
+  };
+
   const updateGoals = async () => {
     setLoading(true);
-    const { Energy, Minerals, Vitamins } =
-      dailyData?.getDailyByUserId?.nutrients;
-    let nutrientsArr = [...Energy, ...Minerals, ...Vitamins];
-
-    nutrientsArr = nutrientsArr?.map((item) => {
-      const findNut = inputValue?.goals[item?.blendNutrientRef];
-
-      if (findNut) {
-        return {
-          ...findNut,
-          percentage: item?.percentage,
-          showPercentage: item?.showPercentage,
-        };
-      } else {
-        return {
-          blendNutrientId: item?.blendNutrientRef,
-          //@ts-ignore
-          dri: parseFloat(item?.data?.value),
-          percentage: item?.percentage,
-          showPercentage: item?.showPercentage,
-        };
-      }
-    });
-
-    const obj = {
-      memberId: inputValue?.memberId ? inputValue?.memberId : dbUser?._id,
-      goals: [...nutrientsArr],
-      calories: inputValue?.calories?.goal
-        ? { ...inputValue?.calories }
-        : {
-            dri: parseFloat(dailyData?.getDailyByUserId?.calories?.value),
-          },
-      bmi:
-        inputValue?.bmi || parseFloat(dailyData?.getDailyByUserId?.bmi?.value),
-    };
 
     try {
       await updateDailyGoals({
         variables: {
-          data: { ...obj },
+          data: {
+            ...inputValue,
+            memberId: inputValue?.memberId || dbUser?._id,
+            goals: Object?.values(inputValue?.goals),
+          },
         },
       });
       setLoading(false);
@@ -145,7 +152,7 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
         ...prv,
         calories: {
           ...prv?.calories,
-          dri: parseFloat(dailyData?.getDailyByUserId?.calories?.value),
+          // dri: parseFloat(dailyData?.getDailyByUserId?.calories?.value),
           goal: parseFloat(value),
         },
       }));

@@ -86,10 +86,9 @@ const EditRecipeComponent = () => {
     setCopyDetailsRecipe((prev) => ({ ...prev, [key]: value }));
   };
 
-  const [classBasedData, allBlendBasedCategory, recipeBasedNutrition] = [
+  const [classBasedData, allBlendBasedCategory] = [
     classData?.filterIngredientByCategoryAndClass,
     allBlendCategory?.getAllCategories,
-    nutritionData?.getBlendNutritionBasedOnRecipexxx,
   ];
 
   useEffect(() => {
@@ -237,7 +236,8 @@ const EditRecipeComponent = () => {
       updateEditRecipe={updateEditRecipe}
       allIngredients={classBasedData}
       nutritionTrayData={
-        recipeBasedNutrition && JSON.parse(recipeBasedNutrition)
+        nutritionData?.getBlendNutritionBasedOnRecipexxx &&
+        JSON.parse(nutritionData?.getBlendNutritionBasedOnRecipexxx)
       }
       recipeInstructions={copyDetailsRecipe?.recipeInstructions}
       allBlendCategories={allBlendBasedCategory}

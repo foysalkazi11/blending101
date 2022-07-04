@@ -7,7 +7,7 @@ import { GiGolfFlag } from "react-icons/gi";
 interface AccordianElementInterface {
   title?: string;
   data: object;
-  inputValue?: object;
+  inputValue?: any;
   setInputValue?: any;
   children?: any;
 }
@@ -38,24 +38,27 @@ const AccordianElement = ({
   }, [collapseAccordian]);
 
   const handleInput = (
-    e: { target: { name: string; value: string } },
-    blendNutrientId: string,
-    dri: number,
+    e: React.ChangeEvent<HTMLInputElement>,
+    mainData: any,
   ) => {
-    let updatedObject = inputValue;
-    updatedObject = {
-      ...updatedObject,
+    const { name, value } = e?.target;
+    const blendNutrientId = mainData.blendNutrientRef;
+    const calorieGram = mainData?.calorieGram;
+
+    setInputValue((prev) => ({
+      ...prev,
       goals: {
-        // @ts-ignore
-        ...updatedObject.goals,
+        ...prev.goals,
         [blendNutrientId]: {
-          goal: parseInt(e.target.value),
-          blendNutrientId,
-          dri,
+          ...prev.goals[blendNutrientId],
+          [name]: parseFloat(value),
+          dri:
+            (parseFloat(prev?.calories?.dri) *
+              parseFloat(`${parseFloat(value) / 100}`)) /
+            parseFloat(calorieGram),
         },
       },
-    };
-    setInputValue(updatedObject);
+    }));
   };
 
   const populateAccordianData = (dataElem) => {
@@ -78,14 +81,22 @@ const AccordianElement = ({
                 <div className={styles.accordianDiv__tray__centerGrid}>
                   {mainData?.showPercentage ? (
                     <div className={styles.leftSide}>
-                      <InputGoal inputValue={mainData?.percentage} />%
+                      <InputGoal
+                        name="percentage"
+                        inputValue={
+                          inputValue?.goals?.[mainData?.blendNutrientRef]
+                            ?.percentage
+                        }
+                        setInputValue={(e) => handleInput(e, mainData)}
+                      />
+                      %
                     </div>
                   ) : (
                     <div></div>
                   )}
                   <div>
-                    {`${parseFloat(mainData?.data?.value).toFixed(
-                      0,
+                    {`${Math.round(
+                      inputValue?.goals?.[mainData?.blendNutrientRef]?.dri,
                     )}${mainData?.data?.units?.toLowerCase()} `}
                   </div>
                 </div>
@@ -102,20 +113,11 @@ const AccordianElement = ({
                   {/* <GiGolfFlag /> */}
                 </span>
                 <InputGoal
-                  name={mainData?.nutrientName}
+                  name="goal"
                   inputValue={
-                    // @ts-ignore
                     inputValue?.goals?.[mainData?.blendNutrientRef]?.goal
-                    // parseFloat(mainData?.data?.value).toFixed(0)
                   }
-                  // @ts-ignore
-                  setInputValue={(e) =>
-                    handleInput(
-                      e,
-                      mainData.blendNutrientRef,
-                      parseFloat(mainData?.data?.value),
-                    )
-                  }
+                  setInputValue={(e) => handleInput(e, mainData)}
                 />
                 <span className={styles.accordianDiv__tray__right__icon}>
                   {/* <FiInfo /> */}
