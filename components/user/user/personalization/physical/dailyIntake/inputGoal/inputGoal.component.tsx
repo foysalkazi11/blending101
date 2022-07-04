@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./inputGoal.module.scss";
 
 const InputGoal = ({
-  inputValue = "",
+  inputValue = null,
   setInputValue = (e) => {},
   name = "",
 }) => {

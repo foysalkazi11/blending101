@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useRef, useState } from "react";
+import React, { Dispatch, SetStateAction, useRef, useState, memo } from "react";
 import styles from "./HandleImageShow.module.scss";
 import AddIcon from "../../../../public/icons/add_black_36dp.svg";
 import Image from "next/image";
@@ -112,4 +112,4 @@ const HandleImageShow = ({
   );
 };
 
-export default HandleImageShow;
+export default memo(HandleImageShow);
