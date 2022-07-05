@@ -1,3 +1,4 @@
+@import "../../../../styles/partials/variables";
 $sharedColor: #fe5d1f;
 $iconGapBasedOnWidth: 24px;
 
@@ -18,7 +19,7 @@ $iconGapBasedOnWidth: 24px;
 
     font-size: 20px;
     font-weight: 600;
-    color: $sharedColor;
+    color: $primaryColor;
 
     margin-left: calc($iconGapBasedOnWidth * 2 * -1);
     margin-right: calc($iconGapBasedOnWidth);
@@ -26,8 +27,20 @@ $iconGapBasedOnWidth: 24px;
     aspect-ratio: 1;
     height: 24px;
     border-radius: 5px;
-    border: 2px $sharedColor solid;
+    border: 2px $primaryColor solid;
     cursor: pointer;
+  }
+
+  .heading {
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    .mainHeading {
+      font-size: 20px;
+      font-weight: 500;
+      width: 33.33%;
+    }
   }
 
   &__mainHeading {
@@ -87,8 +100,13 @@ $iconGapBasedOnWidth: 24px;
         cursor: pointer;
         display: flex;
         align-items: center;
-        color: #fe5d1f !important;
+        color: $primaryColor !important;
       }
     }
   }
+}
+
+.errorText {
+  font-size: 14px;
+  color: $errorColor;
 }
