@@ -7,12 +7,14 @@ interface dailyIntakeAccordian {
   recursiveObject?: object;
   inputValue?: object;
   setInputValue?: any;
+  checkMacrosPercentage?: (agr: any[]) => number;
 }
 
 const DailyIntakeAccordian = ({
   recursiveObject,
   inputValue,
   setInputValue,
+  checkMacrosPercentage = () => null,
 }: dailyIntakeAccordian) => {
   return (
     <>
@@ -26,6 +28,7 @@ const DailyIntakeAccordian = ({
                 setInputValue={setInputValue}
                 title={elem[0] === "Energy" ? "Macros" : elem[0]}
                 data={elem[1]}
+                checkMacrosPercentage={checkMacrosPercentage}
               />
             );
           }

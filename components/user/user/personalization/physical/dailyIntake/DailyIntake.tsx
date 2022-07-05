@@ -10,7 +10,7 @@ import { useAppSelector } from "../../../../../../redux/hooks";
 import ButtonComponent from "../../../../../../theme/button/button.component";
 import CircularRotatingLoader from "../../../../../../theme/loader/circularRotatingLoader.component";
 import DailyIntakeAccordian from "../../../../../customRecursiveAccordian/dailyIntakeAccordian/dailyIntakeAccordian.component";
-import reactToastifyNotification from "../../../../../utility/reactToastifyNotification";
+import notification from "../../../../../utility/reactToastifyNotification";
 import styles from "./DailyIntake.module.scss";
 import HeadingBox from "./headingBox/headingBox.component";
 import InputGoal from "./inputGoal/inputGoal.component";
@@ -67,29 +67,29 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
     nutrients: nutrientsAccordianValue,
   } = dailyData?.getDailyByUserId || {};
 
-  useEffect(() => {
-    if (!dailyDataLoading && dailyData?.getDailyByUserId) {
-      const { Energy, Minerals, Vitamins } =
-        dailyData?.getDailyByUserId?.nutrients;
+  // useEffect(() => {
+  //   if (!dailyDataLoading && dailyData?.getDailyByUserId) {
+  //     const { Energy, Minerals, Vitamins } =
+  //       dailyData?.getDailyByUserId?.nutrients;
 
-      let goals = { ...inputValue?.goals };
-      [...Energy, ...Minerals, ...Vitamins]?.forEach((item) => {
-        const entries = goals[item?.blendNutrientRef];
+  //     let goals = { ...inputValue?.goals };
+  //     [...Energy, ...Minerals, ...Vitamins]?.forEach((item) => {
+  //       const entries = goals[item?.blendNutrientRef];
 
-        if (entries) {
-          goals = {
-            ...goals,
-            [item?.blendNutrientRef]: {
-              ...goals[item?.blendNutrientRef],
-              dri: item?.data?.value,
-            },
-          };
-        }
-      });
+  //       if (entries) {
+  //         goals = {
+  //           ...goals,
+  //           [item?.blendNutrientRef]: {
+  //             ...goals[item?.blendNutrientRef],
+  //             dri: item?.data?.value,
+  //           },
+  //         };
+  //       }
+  //     });
 
-      setInputValue((prev) => ({ ...prev, goals }));
-    }
-  }, [dailyData?.getDailyByUserId]);
+  //     setInputValue((prev) => ({ ...prev, goals }));
+  //   }
+  // }, [dailyData?.getDailyByUserId]);
 
   useEffect(() => {
     if (!dailyGoalLoading && dailyGoalData?.getDailyGoals) {
@@ -110,38 +110,41 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
   }, [dailyGoalData?.getDailyGoals]);
 
   const checkMacrosPercentage = (arr: any[]) => {
+    arr = arr?.filter((item) => item?.showPercentage);
+
     return arr?.reduce(
-      (pre, current) => pre?.percentage + current?.percentage,
+      (pre, current) => pre + parseFloat(current?.percentage || 0),
       0,
     );
   };
 
   const updateGoals = async () => {
-    setLoading(true);
+    const percentage = checkMacrosPercentage(Object?.values(inputValue?.goals));
 
-    try {
-      await updateDailyGoals({
-        variables: {
-          data: {
-            ...inputValue,
-            memberId: inputValue?.memberId || dbUser?._id,
-            goals: Object?.values(inputValue?.goals),
+    if (percentage === 100) {
+      setLoading(true);
+      try {
+        await updateDailyGoals({
+          variables: {
+            data: {
+              ...inputValue,
+              memberId: inputValue?.memberId || dbUser?._id,
+              goals: Object?.values(inputValue?.goals),
+            },
           },
-        },
-      });
+        });
+        setLoading(false);
+        notification("info", "Updated daily goals Successfully");
+      } catch (error) {
+        setLoading(false);
+        notification("error", error?.message || "Something went wrong");
+        console.log(error.message);
+      }
+      setColorToggle(true);
       setLoading(false);
-      reactToastifyNotification("info", "Updated daily goals Successfully");
-    } catch (error) {
-      setLoading(false);
-      reactToastifyNotification(
-        "error",
-        error?.message || "Something went wrong",
-      );
-
-      console.log(error.message);
+    } else {
+      notification("warning", "Macros should be equal 100%");
     }
-    setColorToggle(true);
-    setLoading(false);
   };
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -227,6 +230,7 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
             recursiveObject={nutrientsAccordianValue}
             inputValue={inputValue}
             setInputValue={setInputValue}
+            checkMacrosPercentage={checkMacrosPercentage}
           />
         </div>
       </div>
