@@ -83,7 +83,18 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
             [item?.blendNutrientRef]: {
               ...goals[item?.blendNutrientRef],
               goal: Math.round(goals[item?.blendNutrientRef]?.goal),
-              dri: item?.data?.value,
+              dri: parseFloat(item?.data?.value),
+              percentage: item?.percentage,
+              showPercentage: item?.showPercentage,
+            },
+          };
+        } else {
+          goals = {
+            ...goals,
+            [item?.blendNutrientRef]: {
+              blendNutrientId: item?.blendNutrientRef,
+              goal: null,
+              dri: parseFloat(item?.data?.value),
               percentage: item?.percentage,
               showPercentage: item?.showPercentage,
             },
@@ -91,7 +102,16 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
         }
       });
 
-      setInputValue((prev) => ({ ...prev, goals }));
+      setInputValue((prev) => ({
+        ...prev,
+        bmi: Math?.round(dailyData?.getDailyByUserId?.bmi?.value),
+        calories: {
+          ...prev?.calories,
+          dri:
+            Math?.round(dailyData?.getDailyByUserId?.calories?.value) || null,
+        },
+        goals,
+      }));
     }
   }, [dailyData?.getDailyByUserId]);
 
@@ -103,10 +123,8 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
           ...prev,
           calories: {
             ...prev?.calories,
-            dri: dailyGoals?.calories?.dri || null,
-            goal: dailyGoals?.calories?.goal || null,
+            goal: Math?.round(dailyGoals?.calories?.goal) || null,
           },
-          bmi: dailyGoals?.bmi,
           goals: JSON?.parse(dailyGoalData?.getDailyGoals?.goals),
         };
       });
