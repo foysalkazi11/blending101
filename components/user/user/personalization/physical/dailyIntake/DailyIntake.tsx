@@ -45,13 +45,14 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
     },
     goals: {},
   });
-  const { data: dailyData, loading: dailyDataLoading } = useQuery(
-    GET_DAILY_BY_USER_ID,
-    {
-      fetchPolicy: "network-only",
-      variables: { userId: dbUser?._id },
-    },
-  );
+  const {
+    data: dailyData,
+    loading: dailyDataLoading,
+    refetch,
+  } = useQuery(GET_DAILY_BY_USER_ID, {
+    fetchPolicy: "network-only",
+    variables: { userId: dbUser?._id },
+  });
   const { data: dailyGoalData, loading: dailyGoalLoading } = useQuery(
     GET_DAILY_GOALS,
     {
@@ -67,29 +68,32 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
     nutrients: nutrientsAccordianValue,
   } = dailyData?.getDailyByUserId || {};
 
-  // useEffect(() => {
-  //   if (!dailyDataLoading && dailyData?.getDailyByUserId) {
-  //     const { Energy, Minerals, Vitamins } =
-  //       dailyData?.getDailyByUserId?.nutrients;
+  useEffect(() => {
+    if (!dailyDataLoading && dailyData?.getDailyByUserId) {
+      const { Energy, Minerals, Vitamins } =
+        dailyData?.getDailyByUserId?.nutrients;
 
-  //     let goals = { ...inputValue?.goals };
-  //     [...Energy, ...Minerals, ...Vitamins]?.forEach((item) => {
-  //       const entries = goals[item?.blendNutrientRef];
+      let goals = { ...inputValue?.goals };
+      [...Energy, ...Minerals, ...Vitamins]?.forEach((item) => {
+        const entries = goals[item?.blendNutrientRef];
 
-  //       if (entries) {
-  //         goals = {
-  //           ...goals,
-  //           [item?.blendNutrientRef]: {
-  //             ...goals[item?.blendNutrientRef],
-  //             dri: item?.data?.value,
-  //           },
-  //         };
-  //       }
-  //     });
+        if (entries) {
+          goals = {
+            ...goals,
+            [item?.blendNutrientRef]: {
+              ...goals[item?.blendNutrientRef],
+              goal: Math.round(goals[item?.blendNutrientRef]?.goal),
+              dri: item?.data?.value,
+              percentage: item?.percentage,
+              showPercentage: item?.showPercentage,
+            },
+          };
+        }
+      });
 
-  //     setInputValue((prev) => ({ ...prev, goals }));
-  //   }
-  // }, [dailyData?.getDailyByUserId]);
+      setInputValue((prev) => ({ ...prev, goals }));
+    }
+  }, [dailyData?.getDailyByUserId]);
 
   useEffect(() => {
     if (!dailyGoalLoading && dailyGoalData?.getDailyGoals) {
@@ -106,6 +110,8 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
           goals: JSON?.parse(dailyGoalData?.getDailyGoals?.goals),
         };
       });
+
+      refetch({ userId: dbUser?._id });
     }
   }, [dailyGoalData?.getDailyGoals]);
 
