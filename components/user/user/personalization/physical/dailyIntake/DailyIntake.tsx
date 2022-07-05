@@ -136,6 +136,7 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
             goals = {
               ...goals,
               [item?.blendNutrientId]: {
+                blendNutrientId: item?.blendNutrientId,
                 goal: Math?.round(item?.goal) || null,
               },
             };
