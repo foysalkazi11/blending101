@@ -82,7 +82,7 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
             ...goals,
             [item?.blendNutrientRef]: {
               ...goals[item?.blendNutrientRef],
-              goal: Math.round(goals[item?.blendNutrientRef]?.goal),
+              goal: Math.round(goals[item?.blendNutrientRef]?.goal) || null,
               dri: parseFloat(item?.data?.value),
               percentage: item?.percentage,
               showPercentage: item?.showPercentage,
@@ -118,6 +118,31 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
   useEffect(() => {
     if (!dailyGoalLoading && dailyGoalData?.getDailyGoals) {
       const dailyGoals = dailyGoalData?.getDailyGoals;
+
+      let goals = { ...inputValue?.goals };
+      Object.values(JSON?.parse(dailyGoalData?.getDailyGoals?.goals))?.forEach(
+        (item: any) => {
+          const entries = goals[item?.blendNutrientId];
+
+          if (entries) {
+            goals = {
+              ...goals,
+              [item?.blendNutrientId]: {
+                ...goals[item?.blendNutrientId],
+                goal: Math?.round(item?.goal) || null,
+              },
+            };
+          } else {
+            goals = {
+              ...goals,
+              [item?.blendNutrientId]: {
+                goal: Math?.round(item?.goal) || null,
+              },
+            };
+          }
+        },
+      );
+
       setInputValue((prev) => {
         return {
           ...prev,
@@ -125,11 +150,9 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
             ...prev?.calories,
             goal: Math?.round(dailyGoals?.calories?.goal) || null,
           },
-          goals: JSON?.parse(dailyGoalData?.getDailyGoals?.goals),
+          goals,
         };
       });
-
-      refetch({ userId: dbUser?._id });
     }
   }, [dailyGoalData?.getDailyGoals]);
 
