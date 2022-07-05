@@ -31,8 +31,6 @@ const AccordianElement = ({
     Object?.values(inputValue?.goals) || [],
   );
 
-  console.log(percentage);
-
   useEffect(() => {
     if (collapseAccordian === false) {
       //@ts-ignore
