@@ -10,6 +10,7 @@ interface AccordianElementInterface {
   inputValue?: any;
   setInputValue?: any;
   children?: any;
+  checkMacrosPercentage?: (agr: any[]) => number;
 }
 const AccordianElement = ({
   title,
@@ -17,6 +18,7 @@ const AccordianElement = ({
   inputValue,
   setInputValue,
   children,
+  checkMacrosPercentage = () => null,
 }: AccordianElementInterface) => {
   const [collapseAccordian, setCollapseAccordian] = useState(true);
 
@@ -24,6 +26,12 @@ const AccordianElement = ({
   const handleAccordianClick = () => {
     setCollapseAccordian(!collapseAccordian);
   };
+
+  const percentage = checkMacrosPercentage(
+    Object?.values(inputValue?.goals) || [],
+  );
+
+  console.log(percentage);
 
   useEffect(() => {
     if (collapseAccordian === false) {
@@ -55,7 +63,7 @@ const AccordianElement = ({
           dri:
             (parseFloat(prev?.calories?.dri) *
               parseFloat(`${parseFloat(value) / 100}`)) /
-            parseFloat(calorieGram),
+              parseFloat(calorieGram) || 0,
         },
       },
     }));
@@ -82,6 +90,10 @@ const AccordianElement = ({
                   {mainData?.showPercentage ? (
                     <div className={styles.leftSide}>
                       <InputGoal
+                        style={{
+                          borderColor:
+                            percentage === 100 ? "#dfdfdf" : "#ED4337",
+                        }}
                         name="percentage"
                         inputValue={
                           inputValue?.goals?.[mainData?.blendNutrientRef]
@@ -139,7 +151,17 @@ const AccordianElement = ({
         >
           {collapseAccordian ? "-" : "+"}
         </div>
-        <h3 className={styles.centerElement__mainHeading}>{title}</h3>
+        {title === "Macros" ? (
+          <div className={styles.heading}>
+            <h3 className={styles.mainHeading}>{title}</h3>
+            {percentage === 100 ? null : (
+              <p className={styles.errorText}>Macros should be equla 100%</p>
+            )}
+            <div></div>
+          </div>
+        ) : (
+          <h3 className={styles.centerElement__mainHeading}>{title}</h3>
+        )}
       </div>
       <div className={styles.accordianDiv} ref={accordianRef}>
         {populateAccordianData(data)}
