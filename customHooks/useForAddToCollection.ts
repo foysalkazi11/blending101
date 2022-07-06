@@ -1,5 +1,6 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
 import React, { Dispatch, SetStateAction } from "react";
+import notification from "../components/utility/reactToastifyNotification";
 import ADD_NEW_RECIPE_TO_COLLECTION from "../gqlLib/collection/mutation/addNewRecipeToCollection";
 import GET_LAST_MODIFIED_COLLECTION from "../gqlLib/collection/query/getLastModifiedCollection";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
@@ -70,9 +71,8 @@ const useForAddToCollection = () => {
       // reactToastifyNotification("info", `Successfully added to new collection`);
     } catch (error) {
       updateRecipe(recipeId, { userCollections: null });
+      notification("error", error?.message);
       console.log(error);
-
-      // reactToastifyNotification("eror", error?.message);
     }
   };
 
