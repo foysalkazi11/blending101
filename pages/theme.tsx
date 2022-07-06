@@ -237,7 +237,6 @@ export default function Home() {
             type={undefined}
             value={undefined}
             placeholder={undefined}
-            textarea={undefined}
             fullWidth={undefined}
             fieldName="input"
           />

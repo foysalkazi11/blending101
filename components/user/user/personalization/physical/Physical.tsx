@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import EDIT_CONFIGRATION_BY_ID from "../../../../../gqlLib/user/mutations/editCofigrationById";
 import EDIT_USER_BY_ID from "../../../../../gqlLib/user/mutations/editUserById";
@@ -75,8 +75,6 @@ type PhysicalProps = {
   updateUserProfile: Function;
   setUserData: Function;
   userData: any;
-  setProfileActiveTab?: any;
-  profileActiveTab?: any;
 };
 
 const Physical = ({
@@ -99,6 +97,8 @@ const Physical = ({
   const isMounted = useRef(null);
   const [colorToggle, setColorToggle] = useState(false);
   const [profileActiveTab, setProfileActiveTab] = useState(0);
+
+  console.log(userProfile);
 
   const handleYearsAndMonths = (userProfile) => {
     let value = {
@@ -131,32 +131,78 @@ const Physical = ({
     setValue,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-      centimeters: userProfile?.heightInCentimeters
-        ? Number(userProfile?.heightInCentimeters)?.toFixed(2)
-        : "",
-      feets: userProfile?.heightInCentimeters
-        ? Number(Math?.trunc(userProfile?.heightInCentimeters / 30.48))
-        : "",
-      inches: userProfile?.heightInCentimeters
-        ? Number(
-            ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0),
-          ) === 12
-          ? ""
-          : Number(
+    defaultValues: useMemo(
+      () => ({
+        centimeters: userProfile?.heightInCentimeters
+          ? Number(userProfile?.heightInCentimeters)?.toFixed(2)
+          : "",
+        feets: userProfile?.heightInCentimeters
+          ? Number(Math?.trunc(userProfile?.heightInCentimeters / 30.48))
+          : "",
+        inches: userProfile?.heightInCentimeters
+          ? Number(
               ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0),
-            )
-        : "",
-      kilograms: userProfile?.weightInKilograms
-        ? Number(userProfile?.weightInKilograms?.toFixed(2))
-        : "",
-      months: handleYearsAndMonths(userProfile)?.months || "",
-      pounds: userProfile?.weightInKilograms
-        ? Number((userProfile?.weightInKilograms * 2.205)?.toFixed(0))
-        : "",
-      years: handleYearsAndMonths(userProfile)?.years || "",
-    },
+            ) === 12
+            ? ""
+            : Number(
+                ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0),
+              )
+          : "",
+        kilograms: userProfile?.weightInKilograms
+          ? Number(userProfile?.weightInKilograms?.toFixed(2))
+          : "",
+        months: handleYearsAndMonths(userProfile)?.months || "",
+        pounds: userProfile?.weightInKilograms
+          ? Number((userProfile?.weightInKilograms * 2.205)?.toFixed(0))
+          : "",
+        years: handleYearsAndMonths(userProfile)?.years || "",
+      }),
+      [userProfile],
+    ),
   });
+
+  useEffect(() => {
+    if (userProfile) {
+      setValue(
+        "centimeters",
+        userProfile?.heightInCentimeters
+          ? Number(userProfile?.heightInCentimeters)?.toFixed(2)
+          : "",
+      );
+      setValue(
+        "feets",
+        userProfile?.heightInCentimeters
+          ? Number(Math?.trunc(userProfile?.heightInCentimeters / 30.48))
+          : "",
+      );
+      setValue(
+        "inches",
+        userProfile?.heightInCentimeters
+          ? Number(
+              ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0),
+            ) === 12
+            ? ""
+            : Number(
+                ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0),
+              )
+          : "",
+      );
+      setValue(
+        "kilograms",
+        userProfile?.weightInKilograms
+          ? Number(userProfile?.weightInKilograms?.toFixed(2))
+          : "",
+      );
+      setValue("months", handleYearsAndMonths(userProfile)?.months || "");
+      setValue(
+        "pounds",
+        userProfile?.weightInKilograms
+          ? Number((userProfile?.weightInKilograms * 2.205)?.toFixed(0))
+          : "",
+      );
+      setValue("years", handleYearsAndMonths(userProfile)?.years || "");
+    }
+  }, [userProfile]);
 
   const watchValue = watch();
 

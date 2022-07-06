@@ -5,17 +5,17 @@
   border: 1px solid #dddddd;
   border-radius: 10px;
   height: 50px;
-  font-size: 14px;
+  font-size: 16px;
   color: $lightTextColor;
   letter-spacing: 0.5px;
   line-height: 16px;
-  display: flex;
-  align-items: center;
   font-weight: 300;
   padding: 6px 12px;
-  // margin-bottom: 16px;
-  &:focus {
-    border: 1px solid $primaryColor;
+  font-weight: normal;
+  transition: border 0.3s linear;
+  &:focus,
+  &:hover {
+    border: 1px solid #fe5d1f;
     outline: none;
   }
   &::placeholder {
@@ -45,8 +45,9 @@
   input {
     display: block;
     position: relative;
-    color: #929292;
-    font-size: 14px;
+    color: $lightTextColor;
+    font-size: 16px;
+    font-weight: normal;
   }
 
   input::-ms-reveal {
