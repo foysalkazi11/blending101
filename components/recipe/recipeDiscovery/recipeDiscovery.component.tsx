@@ -10,12 +10,6 @@ import SearchtagsComponent from "../../searchtags/searchtags.component";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import FilterPageBottom from "../recipeFilter/filterBottom.component";
 import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
-import {
-  setChangeRecipeWithinCollection,
-  setSingleRecipeWithinCollecions,
-} from "../../../redux/slices/collectionSlice";
-import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
-import SaveRecipe from "../../../theme/saveRecipeModal/SaveRecipeModal";
 import ShowCollectionRecipes from "../../../theme/showCollectionRecipes/ShowCollectionRecipes";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import GET_ALL_RECOMMENDED_RECIPES from "../../../gqlLib/recipes/queries/getRecommendedRecipes";
@@ -31,7 +25,7 @@ import SkeletonRecipeDiscovery from "../../../theme/skeletons/skeletonRecipeDisc
 import useLocalStorage from "../../../customHooks/useLocalStorage";
 import GET_RECIPE_WIDGET from "../../../gqlLib/recipes/queries/getRecipeWidget";
 import WidgetCollection from "./Widget";
-import CustomModal from "../../../theme/modal/customModal/CustomModal";
+import ShowCollectionModal from "../../showModal/ShowCollectionModal";
 
 const RecipeDetails = () => {
   const router = useRouter();
@@ -39,8 +33,9 @@ const RecipeDetails = () => {
     (state) => state.sideTray,
   );
   const { dbUser } = useAppSelector((state) => state?.user);
-  const { lastModifiedCollection, showAllRecipes, singleCollectionInfo } =
-    useAppSelector((state) => state?.collections);
+  const { showAllRecipes, singleCollectionInfo } = useAppSelector(
+    (state) => state?.collections,
+  );
   const { latest, popular, recommended } = useAppSelector(
     (state) => state?.recipe,
   );
@@ -57,12 +52,6 @@ const RecipeDetails = () => {
     "compareList",
     [],
   );
-  const handleCompareRecipe = () => {
-    dispatch(setSingleRecipeWithinCollecions([lastModifiedCollection?.id]));
-    dispatch(setOpenCollectionsTary(true));
-    dispatch(setChangeRecipeWithinCollection(true));
-    setOpenCollectionModal(false);
-  };
 
   const getAllRecipes = async () => {
     try {
@@ -322,12 +311,11 @@ const RecipeDetails = () => {
           <FooterRecipeFilter />
         </div>
       </AContainer>
-      <CustomModal open={openCollectionModal}>
-        <SaveRecipe
-          title={lastModifiedCollection?.name}
-          handleChange={handleCompareRecipe}
-        />
-      </CustomModal>
+      <ShowCollectionModal
+        open={openCollectionModal}
+        setOpen={setOpenCollectionModal}
+        shouldCloseOnOverlayClick={true}
+      />
     </>
   );
 };

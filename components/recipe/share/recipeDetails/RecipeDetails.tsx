@@ -131,6 +131,8 @@ const RecipeDetails = ({
           addedToCompare={recipe?.addedToCompare}
           compareRecipeList={compareRecipeList}
           setcompareRecipeList={setcompareRecipeList}
+          isMatch={recipe?.isMatch}
+          postfixTitle={recipe?.defaultVersion?.postfixTitle}
           showMoreMenu={showMoreMenu}
           showOptionalEditIcon={showOptionalEditIcon}
         />
