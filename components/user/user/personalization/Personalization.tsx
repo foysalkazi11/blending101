@@ -29,7 +29,7 @@ const Personalization = ({
 
   const checkGoals = (value, fieldName) => {
     const goal = userData?.personalization?.[fieldName]?.find(
-      (item) => item === value
+      (item) => item === value,
     );
     if (goal) {
       return true;
@@ -46,10 +46,9 @@ const Personalization = ({
 
           personalization: {
             ...pre?.personalization,
-            [name]:
-              [
-                ...pre?.personalization[name]?.filter((item) => item !== value),
-              ] || "tempName",
+            [name]: [
+              ...pre?.personalization[name]?.filter((item) => item !== value),
+            ],
           },
         }));
       } else {
@@ -110,8 +109,6 @@ const Personalization = ({
             updateUserProfile={updateUserProfile}
             setUserData={setUserData}
             userData={userData}
-            setProfileActiveTab={setProfileActiveTab}
-            profileActiveTab={profileActiveTab}
           />
         );
       case 1:
@@ -145,8 +142,6 @@ const Personalization = ({
             updateUserProfile={updateUserProfile}
             setUserData={setUserData}
             userData={userData}
-            setProfileActiveTab={setProfileActiveTab}
-            profileActiveTab={profileActiveTab}
           />
         );
     }
