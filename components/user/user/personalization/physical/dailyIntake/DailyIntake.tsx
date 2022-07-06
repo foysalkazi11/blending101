@@ -191,7 +191,7 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
       setColorToggle(true);
       setLoading(false);
     } else {
-      notification("warning", "Macros should be equal 100%");
+      notification("warning", "Macros should equal 100%");
     }
   };
 
