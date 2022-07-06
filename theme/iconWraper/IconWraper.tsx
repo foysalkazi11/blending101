@@ -4,8 +4,9 @@ import styles from "./Icon.module.scss";
 interface IconProps {
   children: React.ReactNode;
   style?: React.CSSProperties;
-  handleClick?: () => void;
+  handleClick?: (e: React.SyntheticEvent) => void;
   hover?: "bgPrimary" | "bgSecondary" | "bgSlightGray";
+  defaultBg?: "gray" | "primary" | "secondary" | "none";
 }
 
 const IconWraper = ({
@@ -13,10 +14,11 @@ const IconWraper = ({
   style = {},
   handleClick = () => {},
   hover = "bgPrimary",
+  defaultBg = "none",
 }: IconProps) => {
   return (
     <div
-      className={`${styles.iconContainer} ${styles[hover]}`}
+      className={`${styles.iconContainer} ${styles[defaultBg]} ${styles[hover]}`}
       style={style}
       onClick={handleClick}
     >
