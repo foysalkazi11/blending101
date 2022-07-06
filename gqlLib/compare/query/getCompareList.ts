@@ -42,6 +42,11 @@ const GET_COMPARE_LIST = gql`
       }
       notes
       addedToCompare
+      userCollections
+      defaultVersion {
+        postfixTitle
+      }
+      isMatch
     }
   }
 `;
