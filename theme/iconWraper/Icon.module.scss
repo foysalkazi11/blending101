@@ -12,6 +12,19 @@
   transition: all 0.3s linear;
 }
 
+.gray {
+  background-color: #ababab;
+  color: $white;
+}
+.primary {
+  background-color: $primaryColor;
+  color: $white;
+}
+.secondary {
+  background-color: $secondaryColor;
+  color: $white;
+}
+
 .bgPrimary {
   &:hover {
     color: $white;

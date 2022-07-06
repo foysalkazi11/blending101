@@ -153,7 +153,7 @@ const AccordianElement = ({
           <div className={styles.heading}>
             <h3 className={styles.mainHeading}>{title}</h3>
             {percentage === 100 ? null : (
-              <p className={styles.errorText}>Macros should be equla 100%</p>
+              <p className={styles.errorText}>Macros should equal 100%</p>
             )}
             <div></div>
           </div>

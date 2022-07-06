@@ -7,6 +7,7 @@ import { MdOutlineClose } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
 import useChangeCompare from "../../../customHooks/useChangeComaper";
 import useLocalStorage from "../../../customHooks/useLocalStorage";
+import IconWraper from "../../iconWraper/IconWraper";
 
 export default function SmallcardComponent({
   img,
@@ -47,9 +48,12 @@ export default function SmallcardComponent({
             className={`${styles.compar}`}
             onClick={(e) => handleUnCheck(e)}
           >
-            <div className={`${styles.closeIconWraper}`}>
-              <IoClose className={styles.icon} />
-            </div>
+            <IconWraper
+              defaultBg="primary"
+              style={{ width: "20px", height: "20px", marginRight: "10px" }}
+            >
+              <IoClose fontSize={16} />
+            </IconWraper>
             compare
           </button>
         ) : (
@@ -64,19 +68,22 @@ export default function SmallcardComponent({
           </button>
         )}
 
-        <div
-          className={`${styles.tick}`}
-          onClick={(e) =>
-            changeCompare(
-              e,
-              recipe?._id,
-              false,
-              compareRecipeList,
-              setcompareRecipeList
-            )
-          }
-        >
-          <IoClose className={styles.icon} />
+        <div className={styles.tick}>
+          <IconWraper
+            hover="bgPrimary"
+            defaultBg="gray"
+            handleClick={(e) =>
+              changeCompare(
+                e,
+                recipe?._id,
+                false,
+                compareRecipeList,
+                setcompareRecipeList,
+              )
+            }
+          >
+            <IoClose />
+          </IconWraper>
         </div>
 
         <div className={styles.smallCard__top} style={style}>

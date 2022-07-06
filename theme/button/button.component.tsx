@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import styles from "./button.module.scss";
 
 interface buttonInterface {
@@ -14,7 +14,7 @@ interface buttonInterface {
   fullWidth?: number;
   width?: number;
   style?: object;
-  icon?: string;
+  icon?: string | ReactNode;
   onClick?: () => void;
 }
 
@@ -57,7 +57,12 @@ export default function ButtonComponent({
         style={style}
         onClick={clickHandler}
       >
-        <img src={icon} alt="icon" className={styles.icon} />
+        {typeof icon === "string" ? (
+          <img src={icon} alt="icon" className={styles.icon} />
+        ) : (
+          <div className={styles.icon}>{icon}</div>
+        )}
+
         {value}
       </button>
     );
