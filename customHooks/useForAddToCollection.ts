@@ -27,6 +27,7 @@ const useForAddToCollection = () => {
     recipeId: string,
     setOpenCollectionModal: Dispatch<SetStateAction<boolean>>,
     e: React.SyntheticEvent,
+    setcompareRecipeList?: (state: any) => void,
   ) => {
     e.stopPropagation();
     dispatch(setActiveRecipeId(recipeId));
@@ -49,6 +50,13 @@ const useForAddToCollection = () => {
         },
       });
       dispatch(
+        setLastModifiedCollection({
+          id: lastModified?.getLastModifieldCollection?._id,
+          name: lastModified?.getLastModifieldCollection?.name,
+        }),
+      );
+
+      dispatch(
         setDetailsARecipe({
           ...detailsARecipe,
           userCollections: [lastModified?.getLastModifieldCollection?._id],
@@ -57,12 +65,6 @@ const useForAddToCollection = () => {
       updateRecipe(recipeId, {
         userCollections: [lastModified?.getLastModifieldCollection?._id],
       });
-      dispatch(
-        setLastModifiedCollection({
-          id: lastModified?.getLastModifieldCollection?._id,
-          name: lastModified?.getLastModifieldCollection?.name,
-        }),
-      );
 
       setOpenCollectionModal(true);
       setTimeout(() => {

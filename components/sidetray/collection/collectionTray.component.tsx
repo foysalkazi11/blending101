@@ -75,17 +75,6 @@ export default function CollectionTray({
     }
   };
 
-  const PanelTag = (hover: boolean = false) => {
-    return (
-      <img
-        src={
-          hover ? "/icons/left__drawer__orange.svg" : "/icons/left__drawer.svg"
-        }
-        alt="Icon"
-      />
-    );
-  };
-
   return (
     <TrayWrapper
       showTagByDefaut={showTagByDefaut}
