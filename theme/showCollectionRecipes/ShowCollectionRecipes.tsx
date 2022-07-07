@@ -184,6 +184,8 @@ const ShowCollectionRecipes = () => {
                     compareRecipeList={compareRecipeList}
                     setcompareRecipeList={setcompareRecipeList}
                     isCollectionIds={item?.userCollections}
+                    isMatch={item?.isMatch}
+                    postfixTitle={item?.defaultVersion?.postfixTitle}
                   />
                 </div>
               );

@@ -216,21 +216,13 @@ export default function DatacardComponent({
                     }
                     alt="eclipse"
                     onClick={(e) =>
-                      addedToCompare
-                        ? handleChangeCompare(
-                            e,
-                            recipeId,
-                            false,
-                            compareRecipeList,
-                            setcompareRecipeList,
-                          )
-                        : handleChangeCompare(
-                            e,
-                            recipeId,
-                            true,
-                            compareRecipeList,
-                            setcompareRecipeList,
-                          )
+                      handleChangeCompare(
+                        e,
+                        recipeId,
+                        addedToCompare ? false : true,
+                        compareRecipeList,
+                        setcompareRecipeList,
+                      )
                     }
                   />
                 </li>

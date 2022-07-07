@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import { useAppSelector } from "../redux/hooks";
 import { setAllRecipeWithinCollections } from "../redux/slices/collectionSlice";
 import {
+  setAllFilterRecipe,
   setDetailsARecipe,
   setLatest,
   setPopular,
@@ -10,12 +11,18 @@ import {
 
 const useUpdateRecipeField = () => {
   const dispatch = useDispatch();
-  const { latest, popular, recommended, detailsARecipe } = useAppSelector(
-    (state) => state?.recipe,
-  );
+  const { latest, popular, recommended, detailsARecipe, allFilterRecipe } =
+    useAppSelector((state) => state?.recipe);
   const { allRecipeWithinCollections } = useAppSelector(
     (state) => state?.collections,
   );
+
+  const recipeUpdate = (arr: any[], obj: object, id: string): any[] => {
+    if (!arr?.length) return arr;
+    return arr?.map((recipe) =>
+      recipe?._id === id ? { ...recipe, ...obj } : recipe,
+    );
+  };
 
   const updateRecipe = (id: string, obj: object) => {
     dispatch(
@@ -27,33 +34,13 @@ const useUpdateRecipeField = () => {
 
     dispatch(
       setAllRecipeWithinCollections([
-        ...allRecipeWithinCollections?.map((recipe) =>
-          recipe?._id === id ? { ...recipe, ...obj } : recipe,
-        ),
+        ...recipeUpdate(allRecipeWithinCollections, obj, id),
       ]),
     );
-
-    dispatch(
-      setRecommended(
-        recommended?.map((recipe) =>
-          recipe?._id === id ? { ...recipe, ...obj } : recipe,
-        ),
-      ),
-    );
-    dispatch(
-      setLatest(
-        latest?.map((recipe) =>
-          recipe?._id === id ? { ...recipe, ...obj } : recipe,
-        ),
-      ),
-    );
-    dispatch(
-      setPopular(
-        popular?.map((recipe) =>
-          recipe?._id === id ? { ...recipe, ...obj } : recipe,
-        ),
-      ),
-    );
+    dispatch(setAllFilterRecipe([...recipeUpdate(allFilterRecipe, obj, id)]));
+    dispatch(setRecommended(recipeUpdate(recommended, obj, id)));
+    dispatch(setLatest(recipeUpdate(latest, obj, id)));
+    dispatch(setPopular(recipeUpdate(popular, obj, id)));
   };
 
   return updateRecipe;
