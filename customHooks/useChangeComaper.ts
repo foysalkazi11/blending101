@@ -15,6 +15,11 @@ const useChangeCompare = () => {
   const { compareList } = useAppSelector((state) => state.recipe);
   const updateRecipe = useUpdateRecipeField();
 
+  const filterRecipe = (arr: any[], id: string): any[] => {
+    if (!arr?.length) return arr;
+    return arr?.filter((item) => item?._id !== id);
+  };
+
   const handleChangeCompare = async (
     e: React.SyntheticEvent,
     id: string,
@@ -27,18 +32,8 @@ const useChangeCompare = () => {
 
     try {
       if (!alredyCompared) {
-        dispatch(
-          setCompareList([
-            ...compareList?.filter((recipe) => recipe?._id !== id),
-          ]),
-        );
-        const item = compareRecipeList?.find((item) => item?._id === id);
-
-        if (item) {
-          setcompareRecipeList((state) => [
-            ...state.filter((item) => item?._id !== id),
-          ]);
-        }
+        dispatch(setCompareList([...filterRecipe(compareList, id)]));
+        setcompareRecipeList((state) => [...filterRecipe(state, id)]);
       }
       updateRecipeCompare(id, alredyCompared);
 

@@ -9,6 +9,7 @@ type recipeSliceState = {
   currentRecipeInfo: { name: string; image: string };
   compareList: any[];
   detailsARecipe: RecipeDetailsType;
+  allFilterRecipe: RecipeType[];
 };
 
 const initialState: recipeSliceState = {
@@ -18,6 +19,7 @@ const initialState: recipeSliceState = {
   currentRecipeInfo: { name: "", image: "" },
   compareList: [],
   detailsARecipe: {} as RecipeDetailsType,
+  allFilterRecipe: [] as RecipeType[],
 };
 
 export const recipeSlice = createSlice({
@@ -45,6 +47,9 @@ export const recipeSlice = createSlice({
     setDetailsARecipe: (state, action: PayloadAction<RecipeDetailsType>) => {
       state.detailsARecipe = action?.payload;
     },
+    setAllFilterRecipe: (state, action: PayloadAction<RecipeType[]>) => {
+      state.allFilterRecipe = [...action?.payload];
+    },
   },
 });
 
@@ -55,6 +60,7 @@ export const {
   setCurrentRecipeInfo,
   setCompareList,
   setDetailsARecipe,
+  setAllFilterRecipe,
 } = recipeSlice?.actions;
 
 export default recipeSlice?.reducer;
