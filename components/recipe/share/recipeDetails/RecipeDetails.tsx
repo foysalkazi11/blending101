@@ -75,6 +75,7 @@ const RecipeDetails = ({
   setcompareRecipeList = () => {},
   showMoreMenu = true,
   showOptionalEditIcon = false,
+  setOpenCollectionModal = () => {},
 }: any) => {
   const [winReady, setwinReady] = useState(false);
   const [getBlendNutritionBasedonRecipeData, { loading, error, data }] =
@@ -132,6 +133,7 @@ const RecipeDetails = ({
           compareRecipeList={compareRecipeList}
           setcompareRecipeList={setcompareRecipeList}
           isCollectionIds={recipe?.userCollections}
+          setOpenCollectionModal={setOpenCollectionModal}
           isMatch={recipe?.isMatch}
           postfixTitle={recipe?.defaultVersion?.postfixTitle}
           showMoreMenu={showMoreMenu}

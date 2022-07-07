@@ -33,6 +33,7 @@ import EMPTY_COMPARE_LIST from "../../../gqlLib/compare/mutation/emptyCompareLis
 import { setDbUser } from "../../../redux/slices/userSlice";
 import { setLoading } from "../../../redux/slices/utilitySlice";
 import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
+import ShowCollectionModal from "../../showModal/ShowCollectionModal";
 
 const compareRecipeResponsiveSetting = {
   slidesToShow: 4,
@@ -122,7 +123,7 @@ const CompareRecipe = () => {
     "newlyCreatedRecipe",
     {},
   );
-
+  const [openCollectionModal, setOpenCollectionModal] = useState(false);
   const dispatch = useAppDispatch();
   const sliderRef = useRef(null);
   const { dbUser } = useAppSelector((state) => state?.user);
@@ -336,108 +337,127 @@ const CompareRecipe = () => {
   }, []);
 
   return (
-    <AContainer logo={false} headerTitle="Compare Recipe">
-      <div className={styles.mainContentDiv}>
-        <div className={styles.CompareContainer}>
-          {loading ? (
-            <SkeletonComparePage />
-          ) : (
-            <>
-              <SubNav
-                backAddress="/recipe_discovery"
-                backIconText="Recipe Discovery"
-                buttonText={isFormulatePage ? "Compare" : "Formulate"}
-                showButton={true}
-                buttonClick={handleCompareButtonClick}
-                compareAmout={dbUser?.compareLength}
-                closeCompare={handleEmptyCompareList}
-              />
-              <Carousel moreSetting={responsiveSetting}>
-                {compareList?.map((recipe, index) => {
-                  return (
-                    <SmallcardComponent
-                      key={index}
-                      imgHeight={undefined}
-                      text={recipe?.name}
-                      //@ts-ignore
-                      img={recipe?.image[0]?.image}
-                      fnc={handleCompare}
-                      recipe={recipe}
-                      findCompareRecipe={findCompareRecipe}
-                      fucUnCheck={removeCompareRecipe}
-                      conpareLength={compareRecipeList.length}
-                      compareRecipeList={compareRecipeList}
-                      setcompareRecipeList={setcompareRecipeList}
-                    />
-                  );
-                })}
-              </Carousel>
+    <>
+      <AContainer
+        logo={false}
+        headerTitle="Compare Recipe"
+        showCollectionTray={{
+          show: true,
+          showPanle: "left",
+          showTagByDeafult: false,
+        }}
+      >
+        <div className={styles.mainContentDiv}>
+          <div className={styles.CompareContainer}>
+            {loading ? (
+              <SkeletonComparePage />
+            ) : (
+              <>
+                <SubNav
+                  backAddress="/recipe_discovery"
+                  backIconText="Recipe Discovery"
+                  buttonText={isFormulatePage ? "Compare" : "Formulate"}
+                  showButton={true}
+                  buttonClick={handleCompareButtonClick}
+                  compareAmout={dbUser?.compareLength}
+                  closeCompare={handleEmptyCompareList}
+                />
+                <Carousel moreSetting={responsiveSetting}>
+                  {compareList?.map((recipe, index) => {
+                    return (
+                      <SmallcardComponent
+                        key={index}
+                        imgHeight={undefined}
+                        text={recipe?.name}
+                        //@ts-ignore
+                        img={recipe?.image[0]?.image}
+                        fnc={handleCompare}
+                        recipe={recipe}
+                        findCompareRecipe={findCompareRecipe}
+                        fucUnCheck={removeCompareRecipe}
+                        conpareLength={compareRecipeList.length}
+                        compareRecipeList={compareRecipeList}
+                        setcompareRecipeList={setcompareRecipeList}
+                      />
+                    );
+                  })}
+                </Carousel>
 
-              <div className={styles.compareRecipeContainer}>
-                {isFormulatePage ? (
-                  <DragDropContext onDragEnd={onDragEnd}>
-                    <div className={styles.comparePageContainer}>
-                      <div className={styles.firstColumn}>
-                        <CreateNewRecipe
-                          newRecipe={newRecipe}
-                          setNewRecipe={setNewRecipe}
-                          setNewlyCreatedRecipe={setNewlyCreatedRecipe}
-                          newlyCreatedRecipe={newlyCreatedRecipe}
-                        />
-                      </div>
+                <div className={styles.compareRecipeContainer}>
+                  {isFormulatePage ? (
+                    <DragDropContext onDragEnd={onDragEnd}>
+                      <div className={styles.comparePageContainer}>
+                        <div className={styles.firstColumn}>
+                          <CreateNewRecipe
+                            newRecipe={newRecipe}
+                            setNewRecipe={setNewRecipe}
+                            setNewlyCreatedRecipe={setNewlyCreatedRecipe}
+                            newlyCreatedRecipe={newlyCreatedRecipe}
+                          />
+                        </div>
 
-                      <div
-                        className={styles.secondColumn}
-                        style={{
-                          ...responsiveColumn(),
-                        }}
-                      >
-                        <Slider
-                          {...formulateRecipeResponsiveSetting(
-                            compareRecipeList?.length,
-                          )}
-                          ref={sliderRef}
+                        <div
+                          className={styles.secondColumn}
+                          style={{
+                            ...responsiveColumn(),
+                          }}
                         >
-                          {compareRecipeList?.map((recipe, index) => {
-                            return (
-                              <RecipeDetails
-                                key={index}
-                                recipe={recipe}
-                                removeCompareRecipe={removeCompareRecipe}
-                                dragAndDrop={true}
-                                id={recipe?._id}
-                                addItem={addIngredient}
-                                compareRecipeList={compareRecipeList}
-                                setcompareRecipeList={setcompareRecipeList}
-                              />
-                            );
-                          })}
-                        </Slider>
+                          <Slider
+                            {...formulateRecipeResponsiveSetting(
+                              compareRecipeList?.length,
+                            )}
+                            ref={sliderRef}
+                          >
+                            {compareRecipeList?.map((recipe, index) => {
+                              return (
+                                <RecipeDetails
+                                  key={index}
+                                  recipe={recipe}
+                                  removeCompareRecipe={removeCompareRecipe}
+                                  dragAndDrop={true}
+                                  id={recipe?._id}
+                                  addItem={addIngredient}
+                                  compareRecipeList={compareRecipeList}
+                                  setcompareRecipeList={setcompareRecipeList}
+                                  setOpenCollectionModal={
+                                    setOpenCollectionModal
+                                  }
+                                />
+                              );
+                            })}
+                          </Slider>
+                        </div>
                       </div>
-                    </div>
-                  </DragDropContext>
-                ) : (
-                  <Slider {...compareRecipeResponsiveSetting} ref={sliderRef}>
-                    {compareRecipeList?.map((recipe, index) => {
-                      return (
-                        <RecipeDetails
-                          key={index}
-                          recipe={recipe}
-                          removeCompareRecipe={removeCompareRecipe}
-                          compareRecipeList={compareRecipeList}
-                          setcompareRecipeList={setcompareRecipeList}
-                        />
-                      );
-                    })}
-                  </Slider>
-                )}
-              </div>
-            </>
-          )}
+                    </DragDropContext>
+                  ) : (
+                    <Slider {...compareRecipeResponsiveSetting} ref={sliderRef}>
+                      {compareRecipeList?.map((recipe, index) => {
+                        return (
+                          <RecipeDetails
+                            key={index}
+                            recipe={recipe}
+                            removeCompareRecipe={removeCompareRecipe}
+                            compareRecipeList={compareRecipeList}
+                            setcompareRecipeList={setcompareRecipeList}
+                            setOpenCollectionModal={setOpenCollectionModal}
+                          />
+                        );
+                      })}
+                    </Slider>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
         </div>
-      </div>
-      <FooterRecipeFilter />
-    </AContainer>
+        <FooterRecipeFilter />
+      </AContainer>
+      <ShowCollectionModal
+        open={openCollectionModal}
+        setOpen={setOpenCollectionModal}
+        shouldCloseOnOverlayClick={true}
+      />
+    </>
   );
 };
 

@@ -3,6 +3,7 @@ import { useAppSelector } from "../redux/hooks";
 import { setAllRecipeWithinCollections } from "../redux/slices/collectionSlice";
 import {
   setAllFilterRecipe,
+  setCompareList,
   setDetailsARecipe,
   setLatest,
   setPopular,
@@ -11,8 +12,14 @@ import {
 
 const useUpdateRecipeField = () => {
   const dispatch = useDispatch();
-  const { latest, popular, recommended, detailsARecipe, allFilterRecipe } =
-    useAppSelector((state) => state?.recipe);
+  const {
+    latest,
+    popular,
+    recommended,
+    detailsARecipe,
+    allFilterRecipe,
+    compareList,
+  } = useAppSelector((state) => state?.recipe);
   const { allRecipeWithinCollections } = useAppSelector(
     (state) => state?.collections,
   );
@@ -24,7 +31,13 @@ const useUpdateRecipeField = () => {
     );
   };
 
-  const updateRecipe = (id: string, obj: object) => {
+  const updateRecipe = (
+    id: string,
+    obj: object,
+    setcompareRecipeList?: (state: any) => void,
+  ) => {
+    dispatch(setCompareList([...recipeUpdate(compareList, obj, id)]));
+    // setcompareRecipeList((state) => [...recipeUpdate(state || [], obj, id)]);
     dispatch(
       setDetailsARecipe({
         ...detailsARecipe,
