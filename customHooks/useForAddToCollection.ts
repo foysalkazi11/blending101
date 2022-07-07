@@ -70,7 +70,7 @@ const useForAddToCollection = () => {
       }, 5000);
       // reactToastifyNotification("info", `Successfully added to new collection`);
     } catch (error) {
-      updateRecipe(recipeId, { userCollections: null });
+      // updateRecipe(recipeId, { userCollections: null });
       notification("error", error?.message);
       console.log(error);
     }
