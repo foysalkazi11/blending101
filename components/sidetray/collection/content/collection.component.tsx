@@ -22,6 +22,7 @@ import {
 import ADD_OR_REMOVE_RECIPE_FORM_COLLECTION from "../../../../gqlLib/collection/mutation/addOrRemoveRecipeFromCollection";
 import SkeletonCollections from "../../../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollections";
 import useUpdateRecipeField from "../../../../customHooks/useUpdateRecipeFirld";
+import useLocalStorage from "../../../../customHooks/useLocalStorage";
 
 interface CollectionComponentProps {
   collections: {}[];
@@ -62,6 +63,10 @@ export default function CollectionComponent({
   const [isCollectionUpdate, setIsCollectionUpdate] = useState(false);
   const isMounted = useRef(null);
   const updateRecipe = useUpdateRecipeField();
+  const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
+    "compareList",
+    [],
+  );
 
   const handleAddorRemoveRecipeFormCollection = async () => {
     try {
@@ -78,6 +83,7 @@ export default function CollectionComponent({
         userCollections: collectionHasRecipe?.length
           ? singleRecipeWithinCollections
           : null,
+        setcompareRecipeList,
       });
 
       reactToastifyNotification("info", `Collection update successfully`);
