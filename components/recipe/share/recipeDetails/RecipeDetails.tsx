@@ -14,6 +14,8 @@ import DragIndicatorIcon from "../../../../../public/icons/drag_indicator_black_
 import useDraggableInPortal from "../../../../customHooks/useDraggableInPortal";
 import { createPortal } from "react-dom";
 import SingleIngredient from "../singleIngredient/SingleIngredient";
+import { IoClose } from "react-icons/io5";
+import IconWraper from "../../../../theme/iconWraper/IconWraper";
 
 function Copyable(props) {
   const { items, addItem, droppableId } = props;
@@ -73,6 +75,7 @@ const RecipeDetails = ({
   setcompareRecipeList = () => {},
   showMoreMenu = true,
   showOptionalEditIcon = false,
+  setOpenCollectionModal = () => {},
 }: any) => {
   const [winReady, setwinReady] = useState(false);
   const [getBlendNutritionBasedonRecipeData, { loading, error, data }] =
@@ -105,11 +108,13 @@ const RecipeDetails = ({
   return (
     <div className={styles.recipeDetailsFirstContainer}>
       <div className={styles.recipeDetailsContainer}>
-        <div
-          className={styles.cancleIcon}
-          onClick={(e) => removeCompareRecipe(recipe?._id, e)}
-        >
-          <CancelIcon />
+        <div className={styles.cancleIcon}>
+          <IconWraper
+            defaultBg="gray"
+            handleClick={(e) => removeCompareRecipe(recipe?._id, e)}
+          >
+            <IoClose />
+          </IconWraper>
         </div>
         <DatacardComponent
           title={recipe?.name}
@@ -127,6 +132,10 @@ const RecipeDetails = ({
           addedToCompare={recipe?.addedToCompare}
           compareRecipeList={compareRecipeList}
           setcompareRecipeList={setcompareRecipeList}
+          isCollectionIds={recipe?.userCollections}
+          setOpenCollectionModal={setOpenCollectionModal}
+          isMatch={recipe?.isMatch}
+          postfixTitle={recipe?.defaultVersion?.postfixTitle}
           showMoreMenu={showMoreMenu}
           showOptionalEditIcon={showOptionalEditIcon}
         />

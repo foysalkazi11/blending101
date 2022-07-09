@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes } from "react";
+import React, { InputHTMLAttributes, ReactNode } from "react";
 import styles from "./input.module.scss";
 
 interface InputComponentProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -6,7 +6,6 @@ interface InputComponentProps extends InputHTMLAttributes<HTMLInputElement> {
   style?: React.CSSProperties;
   value?: string | number;
   placeholder?: string;
-  textarea?: boolean;
   fullWidth?: boolean;
   maxWidth?: string;
   handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -15,6 +14,8 @@ interface InputComponentProps extends InputHTMLAttributes<HTMLInputElement> {
   max?: number;
   borderSecondary?: boolean;
   fieldName?: string;
+  inputWithIcon?: boolean;
+  icon?: ReactNode | string;
 }
 
 export default function InputComponent({
@@ -22,7 +23,6 @@ export default function InputComponent({
   style = {},
   value,
   placeholder,
-  textarea,
   fullWidth,
   maxWidth,
   handleChange = () => {},
@@ -31,6 +31,9 @@ export default function InputComponent({
   max,
   borderSecondary = false,
   fieldName = "",
+  inputWithIcon = false,
+  icon,
+
   ...InputProps
 }: InputComponentProps) {
   // STEP 1: INITIALIZE PROPS TO AVOID UI FALL
@@ -41,10 +44,33 @@ export default function InputComponent({
   value = value || "";
   placeholder = placeholder || "Add your text here";
 
-  // CASE 1: IF TEXTAREA RETURN TEXTAREA COMPONENT
-  if (textarea) return <textarea className={styles.textarea} />;
-
-  // CASE: DEFAULT RETURN INPUT COMPONENT
+  if (inputWithIcon) {
+    return (
+      <div
+        className={`${styles.inputWithIcon} ${
+          borderSecondary ? styles.borderSecondary : null
+        }`}
+      >
+        <input
+          name={name}
+          className={`${styles.input} `}
+          type={type}
+          style={style}
+          value={value}
+          onChange={handleChange}
+          placeholder={placeholder}
+          min={min}
+          max={max}
+          {...InputProps}
+        />
+        {typeof icon === "string" ? (
+          <img className={styles.icon} src={icon} alt="icon" />
+        ) : (
+          <div className={styles.icon}>{icon}</div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <input

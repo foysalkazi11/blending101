@@ -1,19 +1,17 @@
 @import "../../styles/partials/variables";
 
-.input {
+%input {
   width: 100%;
   border: 1px solid #dddddd;
   border-radius: 10px;
   height: 50px;
-  font-size: 14px;
+  font-size: 16px;
   color: $lightTextColor;
   letter-spacing: 0.5px;
   line-height: 16px;
-  display: flex;
-  align-items: center;
-  font-weight: 300;
   padding: 6px 12px;
   transition: border 0.3s linear;
+  font-weight: normal;
   // margin-bottom: 16px;
   &:focus,
   &:hover {
@@ -25,10 +23,44 @@
   }
 }
 
+.input {
+  @extend %input;
+}
+
 .borderSecondary {
   &:focus,
   &:hover {
     border: 1px solid $secondaryColor;
     outline: none;
+  }
+}
+
+.inputWithIcon {
+  display: flex;
+  align-items: center;
+  background: #fbfbfb;
+  border: 1px solid #dddddd;
+  border-radius: 10px;
+  transition: border 0.3s linear;
+  &:focus,
+  &:hover {
+    border: 1px solid #fe5d1f;
+  }
+
+  .input {
+    @extend %input;
+    border: none;
+    outline: none;
+    &:focus,
+    &:hover {
+      border: none;
+      outline: none;
+    }
+  }
+
+  .icon {
+    color: #dcdbdb;
+    margin-right: 10px;
+    font-size: 24px;
   }
 }

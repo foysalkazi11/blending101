@@ -27,7 +27,9 @@ const ShowCollectionRecipes = () => {
       loading: allCollectionLoading,
       error: allCollectionError,
     },
-  ] = useLazyQuery(GET_ALL_RECIPES_WITHIN_COLLECTIONS);
+  ] = useLazyQuery(GET_ALL_RECIPES_WITHIN_COLLECTIONS, {
+    fetchPolicy: "network-only",
+  });
   const [
     getSingleCollections,
     {
@@ -35,7 +37,7 @@ const ShowCollectionRecipes = () => {
       loading: singleCollectionLoading,
       error: singleCollectionError,
     },
-  ] = useLazyQuery(GET_SINGLE_COLLECTION);
+  ] = useLazyQuery(GET_SINGLE_COLLECTION, { fetchPolicy: "network-only" });
 
   const dispatch = useAppDispatch();
   const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
@@ -184,6 +186,8 @@ const ShowCollectionRecipes = () => {
                     compareRecipeList={compareRecipeList}
                     setcompareRecipeList={setcompareRecipeList}
                     isCollectionIds={item?.userCollections}
+                    isMatch={item?.isMatch}
+                    postfixTitle={item?.defaultVersion?.postfixTitle}
                   />
                 </div>
               );

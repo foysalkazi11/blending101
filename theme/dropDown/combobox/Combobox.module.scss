@@ -40,7 +40,8 @@
     border: 0;
   }
 
-  &:focus {
+  &:focus,
+  &:hover {
     border-color: $primaryColor;
   }
 }

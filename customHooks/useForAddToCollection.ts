@@ -1,5 +1,6 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
 import React, { Dispatch, SetStateAction } from "react";
+import notification from "../components/utility/reactToastifyNotification";
 import ADD_NEW_RECIPE_TO_COLLECTION from "../gqlLib/collection/mutation/addNewRecipeToCollection";
 import GET_LAST_MODIFIED_COLLECTION from "../gqlLib/collection/query/getLastModifiedCollection";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
@@ -26,6 +27,7 @@ const useForAddToCollection = () => {
     recipeId: string,
     setOpenCollectionModal: Dispatch<SetStateAction<boolean>>,
     e: React.SyntheticEvent,
+    setcompareRecipeList?: (state: any) => void,
   ) => {
     e.stopPropagation();
     dispatch(setActiveRecipeId(recipeId));
@@ -48,6 +50,13 @@ const useForAddToCollection = () => {
         },
       });
       dispatch(
+        setLastModifiedCollection({
+          id: lastModified?.getLastModifieldCollection?._id,
+          name: lastModified?.getLastModifieldCollection?.name,
+        }),
+      );
+
+      dispatch(
         setDetailsARecipe({
           ...detailsARecipe,
           userCollections: [lastModified?.getLastModifieldCollection?._id],
@@ -56,12 +65,6 @@ const useForAddToCollection = () => {
       updateRecipe(recipeId, {
         userCollections: [lastModified?.getLastModifieldCollection?._id],
       });
-      dispatch(
-        setLastModifiedCollection({
-          id: lastModified?.getLastModifieldCollection?._id,
-          name: lastModified?.getLastModifieldCollection?.name,
-        }),
-      );
 
       setOpenCollectionModal(true);
       setTimeout(() => {
@@ -69,10 +72,9 @@ const useForAddToCollection = () => {
       }, 5000);
       // reactToastifyNotification("info", `Successfully added to new collection`);
     } catch (error) {
-      updateRecipe(recipeId, { userCollections: null });
+      // updateRecipe(recipeId, { userCollections: null });
+      notification("error", error?.message);
       console.log(error);
-
-      // reactToastifyNotification("eror", error?.message);
     }
   };
 

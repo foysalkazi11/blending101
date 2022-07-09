@@ -17,17 +17,13 @@
 
 .cancleIcon {
   position: absolute;
-  right: -5px;
-  top: -6px;
-  color: #ababab;
-  cursor: pointer;
-  transform: scale(0.75);
-  display: none;
+  right: 2px;
+  top: 2px;
+  z-index: 1;
+  // transform: translate(-50%, -50%);
+  // -webkit-transform: translate(-50%, -50%);
 
-  :hover {
-    color: #fe5d1f;
-    display: block;
-  }
+  display: none;
 }
 
 .dividerBox {

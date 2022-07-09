@@ -56,7 +56,6 @@ const SectionWithInput = ({
             type={type}
             value={inputValue}
             placeholder={placeholder}
-            textarea={textarea}
             fullWidth={fullWidth}
             fieldName={fieldName}
             handleChange={handleChange}

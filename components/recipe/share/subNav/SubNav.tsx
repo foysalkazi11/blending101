@@ -5,6 +5,8 @@ import HighlightOffIcon from "../../../../public/icons/highlight_off_black_36dp.
 import ButtonComponent from "../../../../theme/button/button.component";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faScaleBalanced } from "@fortawesome/pro-light-svg-icons";
 
 type SubNavProps = {
   showButton?: boolean;
@@ -40,7 +42,13 @@ const SubNav = (props: SubNavProps) => {
         <ButtonComponent
           type="buttonWithIcon"
           value={buttonText}
-          icon="/images/formulate.svg"
+          icon={
+            buttonText === "Compare" ? (
+              "/images/formulate.svg"
+            ) : (
+              <FontAwesomeIcon icon={faScaleBalanced} />
+            )
+          }
           style={{ height: "50px", width: "234px", borderRadius: "14px" }}
           onClick={buttonClick}
         />
