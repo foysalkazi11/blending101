@@ -13,9 +13,6 @@ import Textfield from "../../../organisms/Forms/Textfield.component";
 import ToggleMenu from "../../../organisms/Tabmenu/ToggleMenu.component";
 // import GroceryComponent from "./grocery/Grocery.component";
 import styles from "./Panel.module.scss";
-import Combobox from "../../../organisms/Forms/Combobox.component";
-import Checkbox from "../../../organisms/Forms/Checkbox.component";
-import useHideOnClickOutside from "../../../../hooks/useHideOnClickOutside";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { FormProvider, useForm } from "react-hook-form";
 import Publish from "../../../../helpers/Publish";
@@ -26,7 +23,7 @@ import {
   DELETE_CART_ITEM,
   GET_CART_DATA,
   SEARCH_INGREDIENTS_FOR_GROCERY,
-} from "../../../../graphql/GroceryPantry";
+} from "../../../../graphql/Cart";
 import {
   addGroceries,
   addGrocery,

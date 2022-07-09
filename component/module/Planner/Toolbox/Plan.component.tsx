@@ -5,8 +5,9 @@ import { IoCopy } from "react-icons/io5";
 import { BsCartPlus } from "react-icons/bs";
 import { BiBarChart } from "react-icons/bi";
 
-import { useAppDispatch } from "../../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import {
+  addPlanner,
   deleteRecipe,
   duplicateRecipe,
   IPlannerRecipe,
@@ -16,6 +17,13 @@ import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
 import CalendarTray from "../../../../theme/calendar/calendarTray.component";
 
 import styles from "./Plan.module.scss";
+import { useMutation } from "@apollo/client";
+import {
+  ADD_RECIPE_TO_PLANNER,
+  DELETE_RECIPE_FROM_PLANNER,
+  MOVE_PLANNER,
+} from "../../../../graphql/Planner";
+import Publish from "../../../../helpers/Publish";
 
 interface PlanProps {
   plannerId?: string;
@@ -29,20 +37,85 @@ interface PlanProps {
 
 const Plan = (props: PlanProps) => {
   const { plannerId, day, date, indexValue, recipeList } = props;
+
   const dispatch = useAppDispatch();
+  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+
+  const [copyRecipes, copyState] = useMutation(ADD_RECIPE_TO_PLANNER);
+  const [moveRecipes, moveState] = useMutation(MOVE_PLANNER);
+  const [deleteRecipes, deleteState] = useMutation(DELETE_RECIPE_FROM_PLANNER);
 
   if (!day && !date) return null;
 
-  const deleteHandler = (id) => {
-    dispatch(deleteRecipe({ recipeId: id, plannerId: plannerId }));
+  const deleteHandler = async (id) => {
+    await Publish({
+      mutate: deleteRecipes,
+      variables: {
+        plannerId,
+        recipeId: id,
+      },
+      state: deleteState,
+      success: `Deleted Planner sucessfully`,
+      onSuccess: () => {
+        dispatch(deleteRecipe({ recipeId: id, plannerId }));
+      },
+    });
   };
 
-  const copyHandler = (date, recipe) => {
-    dispatch(duplicateRecipe({ date, recipe }));
+  const copyHandler = async (date, recipe) => {
+    await Publish({
+      mutate: copyRecipes,
+      variables: {
+        assignDate: date,
+        recipeId: [recipe._id],
+        userId,
+      },
+      state: copyState,
+      success: `Copied Planner sucessfully`,
+      onSuccess: (data) => {
+        dispatch(
+          addPlanner({
+            id: data?.createPlanner?._id,
+            date: date,
+            recipe: {
+              _id: recipe._id,
+              name: recipe.name,
+              category: recipe?.recipeBlendCategory?.name,
+              rxScore: 786,
+              calorie: 250,
+            },
+          }),
+        );
+        // dispatch(duplicateRecipe({ date, recipe }));
+      },
+    });
   };
 
-  const moveHandler = (date, recipe) => {
-    dispatch(moveRecipe({ plannerId, date, recipe }));
+  const moveHandler = async (date, recipe) => {
+    await Publish({
+      mutate: moveRecipes,
+      variables: {
+        data: {
+          editId: plannerId,
+          editableObject: {
+            recipes: [recipe._id],
+            assignDate: date,
+          },
+        },
+      },
+      state: moveState,
+      success: `Moved Planner sucessfully`,
+      onSuccess: (data) => {
+        dispatch(
+          moveRecipe({
+            currentPlannerId: plannerId,
+            newPlannerId: data?.editPlanner?._id,
+            date,
+            recipe,
+          }),
+        );
+      },
+    });
   };
 
   return (
@@ -154,9 +227,13 @@ const PlanRecipe = ({
         <div className={styles.calender}>
           <CalendarTray
             handler={(date) => {
+              const isoDate = new Date(
+                date?.toISOString().slice(0, 10),
+              ).toISOString();
+
               showCalender === "copy"
-                ? onCopy(date, recipe)
-                : onMove(date, recipe);
+                ? onCopy(isoDate, recipe)
+                : onMove(isoDate, recipe);
               setShowCalender("");
             }}
           />

@@ -1,0 +1,50 @@
+@import '../../../styles/variables';
+
+.field {
+  label {
+    margin-bottom: 1rem;
+    display: block;
+
+    &.required:after {
+      content: '*';
+      color: $red;
+      margin-left: 0.3rem;
+    }
+  }
+  & + .field {
+    margin-top: 2rem;
+  }
+}
+
+.custom-input {
+  border: 1px solid $darkGrey;
+  box-shadow: 1px 2px 4px $shadowGrey;
+  padding: 1rem;
+  font-size: 16px;
+  border-radius: 0.8rem;
+  height: 4.5rem;
+  transition: 0.3s;
+  font-family: $font;
+  outline: 0;
+  width: 100%;
+  min-width: 12rem;
+  background-color: white;
+  &::placeholder {
+    color: rgba($color: $lightTextColor, $alpha: 0.7);
+  }
+
+  &[readonly] {
+    pointer-events: none;
+    background-color: $darkGrey;
+    border: 0;
+  }
+
+  &:focus {
+    border-color: $primaryColor;
+  }
+}
+textarea.custom-input {
+  resize: vertical;
+  min-height: 120px;
+  margin-bottom: 0.9rem;
+}

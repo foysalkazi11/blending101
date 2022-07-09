@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import MealCalendarDatePlan from "./Plan.component";
 
@@ -9,8 +9,11 @@ import { MdRemoveCircleOutline } from "react-icons/md";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 
-import { useAppSelector } from "../../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { MONTH } from "../../../../data/Date";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { GET_PLANNER_BY_WEEK } from "../../../../graphql/Planner";
+import { setPlanners } from "../../../../redux/slices/Planner.slice";
 
 const RecipePlanner = () => {
   const [toggleOptionCard, setToggleOptionCard] = useState({});
@@ -36,7 +39,7 @@ const RecipePlanner = () => {
           return (
             <MealCalendarDatePlan
               key={date}
-              plannerId={date}
+              plannerId={planner.id}
               indexValue={index}
               day={dayName}
               date={day}
@@ -52,8 +55,34 @@ const RecipePlanner = () => {
 };
 
 const RecipeMealHeader = () => {
-  const today = new Date();
+  const today = useMemo(() => new Date(), []);
   const [first, setFirst] = useState(today.getDate() - today.getDay() + 1);
+
+  var firstday = useMemo(() => new Date(today.setDate(first)), [first, today]);
+  var lastday = useMemo(
+    () => new Date(today.setDate(today.getDate() + 6)),
+    [today],
+  );
+
+  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const { loading, data } = useQuery(GET_PLANNER_BY_WEEK, {
+    variables: {
+      userId,
+      startDate: firstday.toISOString(),
+      endDate: lastday.toISOString(),
+    },
+  });
+
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    if (data?.getPlannerByDates) dispatch(setPlanners(data?.getPlannerByDates));
+  }, [data?.getPlannerByDates, dispatch]);
+
+  const startMonth = MONTH[firstday.getMonth()];
+  const endMonth = MONTH[lastday.getMonth()];
+
+  const startDate = firstday.getDate();
+  const endDate = lastday.getDate();
 
   const goToPreviousWeek = () => {
     setFirst(first - 7);
@@ -61,15 +90,6 @@ const RecipeMealHeader = () => {
   const goToNextWeek = () => {
     setFirst(first + 7);
   };
-
-  var firstday = new Date(today.setDate(first));
-  var lastday = new Date(today.setDate(today.getDate() + 6));
-
-  const startMonth = MONTH[firstday.getMonth()];
-  const endMonth = MONTH[lastday.getMonth()];
-
-  const startDate = firstday.getDate();
-  const endDate = lastday.getDate();
 
   return (
     <div className={styles.header__wrapper}>
@@ -90,7 +110,7 @@ const RecipeMealHeader = () => {
           onClick={goToNextWeek}
         />
         <div className={styles.button}>
-          <Icon fontName={faArrowsRotate} />
+          <Icon fontName={faArrowsRotate} size="15px" />
           <div className={styles.button__text}>Generate</div>
         </div>
       </div>

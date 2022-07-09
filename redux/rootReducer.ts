@@ -13,8 +13,10 @@ import categroyReducer from "./slices/categroySlice";
 import CartReducer from "./slices/Cart.slice";
 import PlannerReducer from "./slices/Planner.slice";
 import editRecipeMainReducer from "./edit_recipe/editRecipeStates";
+import uiReducer from "./slices/Ui.slice";
 
 const rootReducer = combineReducers({
+  ui: uiReducer,
   user: userReducer,
   cart: CartReducer,
   planner: PlannerReducer,

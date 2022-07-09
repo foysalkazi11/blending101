@@ -25,26 +25,20 @@ const Planner = () => {
   return (
     <AContainer>
       <div className={styles.windowContainer}>
-        <div className={styles.mainContainer}>
-          <div className={styles.mainContainer__pageTitle}>BLENDA COACH</div>
-          <div className={styles.mainContainer__nonHeadingContainer}>
-            {/* Left Tray */}
-            <div
-              className={styles.mainContainer__nonHeadingContainer__leftTray}
-            >
-              <div className={styles.mainContainer}>
-                <div className={styles.mainContainer__tray}>
-                  {centerLeftToggler ? <ChallengeQueue /> : <PlannerQueue />}
-                </div>
-              </div>
+        <div className={styles.planner}>
+          <div className={styles.planner__pageTitle}>BLENDA COACH</div>
+          <div className="row">
+            <div className="col-3">
+              {centerLeftToggler && !uploadState ? (
+                <ChallengeQueue />
+              ) : (
+                <PlannerQueue isUpload={uploadState} />
+              )}
             </div>
-            <div
-              className={styles.mainContainer__nonHeadingContainer__centerTray}
-            >
+            <div className="col-6">
               <div className={styles.mainContainer}>
                 <div className={styles.headingDiv}>
                   <IconHeading title="Toolbox" icon={<FaToolbox />} />
-
                   {centerLeftToggler && (
                     <div
                       className={styles.uploadDiv}
@@ -111,35 +105,35 @@ const Planner = () => {
                 </div>
               </div>
             </div>
-            <div
-              className={styles.mainContainer__nonHeadingContainer__rightTray}
-            >
+            <div className="col-3">
               <PlannerGuide />
             </div>
           </div>
         </div>
       </div>
+
+      {/* </div> */}
     </AContainer>
   );
 };
 
 export default Planner;
 
-export const ingredientCenterList = [
-  {
-    ingredientName: "Coconut Milk",
-    servingSize: "4 med",
-  },
-  {
-    ingredientName: "Celery",
-    servingSize: "4 med",
-  },
-  {
-    ingredientName: "Orange Juice",
-    servingSize: "4 med",
-  },
-  {
-    ingredientName: "Grapes",
-    servingSize: "4 med",
-  },
-];
+// export const ingredientCenterList = [
+//   {
+//     ingredientName: "Coconut Milk",
+//     servingSize: "4 med",
+//   },
+//   {
+//     ingredientName: "Celery",
+//     servingSize: "4 med",
+//   },
+//   {
+//     ingredientName: "Orange Juice",
+//     servingSize: "4 med",
+//   },
+//   {
+//     ingredientName: "Grapes",
+//     servingSize: "4 med",
+//   },
+// ];
