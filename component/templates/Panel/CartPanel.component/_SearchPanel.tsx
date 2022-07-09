@@ -8,7 +8,7 @@ import {
   ADD_GROCERY_ITEM,
   ADD_PANTRY_ITEM,
   EDIT_CART_ITEM,
-} from "../../../../graphql/GroceryPantry";
+} from "../../../../graphql/Cart";
 import Publish from "../../../../helpers/Publish";
 import useHideOnClickOutside from "../../../../hooks/useHideOnClickOutside";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";

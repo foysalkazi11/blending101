@@ -1,5 +1,6 @@
 $sharedFontWeight: 400;
 $sharedColor: #5a5a5a;
+$sharedBorder: 1px #efefef solid;
 
 %sharedFontCss {
   color: #7cbc39;
@@ -55,9 +56,16 @@ $sharedColor: #5a5a5a;
 
 .notesTray {
   display: flex;
-
+  &__input {
+    height: 3.3rem;
+    transform: translateY(-0.5rem);
+    img {
+      margin-bottom: -1px !important;
+      margin-top: -1px !important;
+    }
+  }
   &__servings {
-    padding: 14px 10px;
+    // padding: 14px 10px;
     min-width: 150px;
     display: flex;
     flex-direction: column;
@@ -84,13 +92,13 @@ $sharedColor: #5a5a5a;
       flex-direction: column;
       justify-content: center;
       background-color: #f9f9f9;
-      width: 85%;
+      width: 100%;
       padding: 5px;
     }
   }
 
   &__imageCard {
-    width: 36%;
+    // width: 36%;
     height: 180px;
   }
 }
@@ -106,10 +114,10 @@ $sharedColor: #5a5a5a;
 }
 
 .textScoreDiv {
-  padding: 0px 10px;
+  // padding: 0px 10px;
   margin: 5px 0px;
   font-size: 12px;
-  min-width: max-content;
+  // min-width: max-content;
 
   &__text {
     color: #525252;
@@ -121,4 +129,52 @@ $sharedColor: #5a5a5a;
     color: #fd5610;
     font-weight: 600;
   }
+}
+
+// ADD INGREDIENT
+.ingredient {
+  color: #888888;
+  &:not(:last-of-type) {
+    margin-bottom: 5px;
+  }
+  span {
+    margin-right: 4px;
+    font-size: 1.2rem;
+  }
+
+  &__card {
+    border: $sharedBorder;
+    border-radius: 4px;
+    padding: 5px 10px;
+    max-height: 13.8rem;
+    overflow: auto;
+  }
+}
+
+// RECIPE CARD
+
+.recipe {
+  aspect-ratio: 1;
+  height: 100%;
+  width: 100%;
+  border: 1px solid rgb(235, 233, 233);
+  overflow: hidden;
+  border-radius: 6px;
+  &__title {
+    position: relative;
+    & input {
+      border-bottom-left-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+      border-top-left-radius: 6px !important;
+      border-top-right-radius: 6px !important;
+      &:focus {
+        outline: none !important;
+      }
+    }
+  }
+}
+
+.imageContainer {
+  position: relative;
+  height: 80%;
 }

@@ -2,7 +2,7 @@ import React from "react";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-interface IconProps {
+interface IconProps extends React.HTMLAttributes<HTMLDivElement> {
   font?: string;
   fontName?: IconDefinition;
   size?: string | number;
@@ -13,9 +13,29 @@ interface IconProps {
 }
 
 const Icon: React.FC<IconProps> = (props) => {
-  const { font, size, variant, style, className, fontName, source, children } =
-    props;
-  if (fontName) return <FontAwesomeIcon icon={fontName} />;
+  const {
+    font,
+    size,
+    variant,
+    style,
+    className,
+    fontName,
+    source,
+    children,
+    ...others
+  } = props;
+  if (fontName)
+    return (
+      <FontAwesomeIcon
+        icon={fontName}
+        style={{
+          width: typeof size === "number" ? `${size}px` : size,
+          height: typeof size === "number" ? `${size}px` : size,
+          ...style,
+        }}
+        {...(others as any)}
+      />
+    );
   if (children) {
     return (
       <img
@@ -24,6 +44,7 @@ const Icon: React.FC<IconProps> = (props) => {
         style={{
           width: typeof size === "number" ? `${size}px` : size,
           height: typeof size === "number" ? `${size}px` : size,
+          ...style,
         }}
         className={className}
       />

@@ -6,10 +6,7 @@ import CircularRotatingLoader from "../../../theme/loader/circularRotatingLoader
 
 import styles from "../../../components/recipe/recipeDetails/center/Center.module.scss";
 import { useMutation } from "@apollo/client";
-import {
-  ADD_GROCERY_ITEM,
-  DELETE_CART_ITEM,
-} from "../../../graphql/GroceryPantry";
+import { ADD_GROCERY_ITEM, DELETE_CART_ITEM } from "../../../graphql/Cart";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
   addGrocery,
