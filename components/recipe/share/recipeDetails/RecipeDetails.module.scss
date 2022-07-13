@@ -3,8 +3,8 @@
 }
 .recipeDetailsContainer {
   background-color: #ffffff;
-  padding: 10px;
   height: 100%;
+  padding: 10px;
   position: relative;
   border: 1px solid #f2f2f8;
   border-radius: 7px;
@@ -13,17 +13,17 @@
     color: #ababab;
     display: block;
   }
-}
 
-.cancleIcon {
-  position: absolute;
-  right: 2px;
-  top: 2px;
-  z-index: 1;
-  // transform: translate(-50%, -50%);
-  // -webkit-transform: translate(-50%, -50%);
-
-  display: none;
+  .cancleIcon {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    z-index: 100;
+    // transform: translate(-50%, -50%);
+    // -webkit-transform: translate(-50%, -50%);
+    // left: 50%;
+    display: none;
+  }
 }
 
 .dividerBox {

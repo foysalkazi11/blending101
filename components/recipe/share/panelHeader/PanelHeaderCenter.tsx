@@ -1,6 +1,8 @@
+import { faXmark } from "@fortawesome/pro-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import React from "react";
-import { MdClose } from "react-icons/md";
+import IconWraper from "../../../../theme/iconWraper/IconWraper";
 import Tooltip from "../../../../theme/toolTip/CustomToolTip";
 import PanelHeader from "./PanelHeader";
 import styles from "./PanelHeader.module.scss";
@@ -21,15 +23,23 @@ const PanelHeaderCenter = ({
   const rightSide = (
     <div className={styles.centerRightBtnWraper}>
       <Tooltip content={`${editOrSavebtnText} recipe`} direction="bottom">
-        <button className={styles.headerTextBtn} onClick={editOrSavebtnFunc}>
+        <button
+          className={`${styles.headerTextBtn} hvr-pop`}
+          onClick={editOrSavebtnFunc}
+        >
           {editOrSavebtnText}
         </button>
       </Tooltip>
 
       <Tooltip content="Back" direction="bottom">
-        <div className={styles.iconBtn} onClick={() => router?.push(backLink)}>
-          <MdClose />
-        </div>
+        <IconWraper
+          handleClick={() => router?.push(backLink)}
+          defaultBg="secondary"
+          hover="bgSecondary"
+          style={{ width: "28px", height: "28px" }}
+        >
+          <FontAwesomeIcon icon={faXmark} />
+        </IconWraper>
       </Tooltip>
     </div>
   );

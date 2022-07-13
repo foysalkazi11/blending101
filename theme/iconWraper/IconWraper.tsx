@@ -18,7 +18,7 @@ const IconWraper = ({
 }: IconProps) => {
   return (
     <div
-      className={`${styles.iconContainer} ${styles[defaultBg]} ${styles[hover]}`}
+      className={`${styles.iconContainer} hvr-pop ${styles[defaultBg]} ${styles[hover]}`}
       style={style}
       onClick={handleClick}
     >

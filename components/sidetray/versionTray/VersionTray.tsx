@@ -226,24 +226,26 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
             alt="recipe_img"
           />
           <h3 onClick={funToGetARecipe}>{detailsARecipe?.name}</h3>
-
-          <Tooltip content="Default" direction="left">
-            <span
-              onClick={() =>
-                !isOrginalVersion?.isDefault &&
-                openVersionTrayFormWhichPage === "edit" &&
-                handleToChangeDefaultVersion(
-                  isOrginalVersion?._id,
-                  isOrginalVersion?.isDefault,
-                )
-              }
-              className={`${styles.star} ${
-                isOrginalVersion?.isDefault ? styles.on : styles.off
-              }`}
-            >
-              &#9733;
-            </span>
-          </Tooltip>
+          {openVersionTrayFormWhichPage === "edit" ||
+          isOrginalVersion?.isDefault ? (
+            <Tooltip content="Default" direction="left">
+              <span
+                onClick={() =>
+                  !isOrginalVersion?.isDefault &&
+                  openVersionTrayFormWhichPage === "edit" &&
+                  handleToChangeDefaultVersion(
+                    isOrginalVersion?._id,
+                    isOrginalVersion?.isDefault,
+                  )
+                }
+                className={`${styles.star} ${
+                  isOrginalVersion?.isDefault ? styles.on : styles.off
+                }`}
+              >
+                &#9733;
+              </span>
+            </Tooltip>
+          ) : null}
         </div>
         <NoteHead
           showForm={showForm}
