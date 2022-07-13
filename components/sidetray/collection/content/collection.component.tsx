@@ -23,6 +23,8 @@ import ADD_OR_REMOVE_RECIPE_FORM_COLLECTION from "../../../../gqlLib/collection/
 import SkeletonCollections from "../../../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollections";
 import useUpdateRecipeField from "../../../../customHooks/useUpdateRecipeFirld";
 import useLocalStorage from "../../../../customHooks/useLocalStorage";
+import { setCompareList } from "../../../../redux/slices/recipeSlice";
+import updateRecipeFunc from "../../../utility/updateRecipeFunc";
 
 interface CollectionComponentProps {
   collections: {}[];
@@ -67,6 +69,12 @@ export default function CollectionComponent({
     "compareList",
     [],
   );
+  const { compareList } = useAppSelector((state) => state?.recipe);
+
+  const updateCompareRecipe = (id: string, obj: object) => {
+    dispatch(setCompareList(updateRecipeFunc(compareList, obj, id)));
+    setcompareRecipeList((state) => updateRecipeFunc(state || [], obj, id));
+  };
 
   const handleAddorRemoveRecipeFormCollection = async () => {
     try {
@@ -83,7 +91,11 @@ export default function CollectionComponent({
         userCollections: collectionHasRecipe?.length
           ? singleRecipeWithinCollections
           : null,
-        setcompareRecipeList,
+      });
+      updateCompareRecipe(activeRecipeId, {
+        userCollections: collectionHasRecipe?.length
+          ? singleRecipeWithinCollections
+          : null,
       });
 
       reactToastifyNotification("info", `Collection update successfully`);

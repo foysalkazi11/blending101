@@ -346,6 +346,11 @@ const CompareRecipe = () => {
           showPanle: "left",
           showTagByDeafult: false,
         }}
+        showCommentsTray={{
+          show: true,
+          showPanle: "right",
+          showTagByDeafult: false,
+        }}
       >
         <div className={styles.mainContentDiv}>
           <div className={styles.CompareContainer}>
