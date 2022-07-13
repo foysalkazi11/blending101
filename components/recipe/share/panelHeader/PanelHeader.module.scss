@@ -22,18 +22,6 @@
   align-items: center;
 }
 
-.iconBtn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  height: 28px;
-  width: 28px;
-  background-color: $secondaryColor;
-  color: $slightGray;
-  cursor: pointer;
-}
-
 .headerTextBtn {
   cursor: pointer;
   margin-right: 10px;

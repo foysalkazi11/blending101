@@ -10,19 +10,17 @@ import {
   FaLinkedinIn,
 } from "react-icons/fa";
 import { MdMoreHoriz } from "react-icons/md";
-import { useAppDispatch } from "../../redux/hooks";
-import { setToggleModal } from "../../redux/slices/sideTraySlice";
 
-const ShareRecipeModal = () => {
+interface Props {
+  closeModal: () => void;
+}
+
+const ShareRecipeModal = ({ closeModal }: Props) => {
   const [showMore, setShowMore] = useState(false);
-  const dispatch = useAppDispatch();
   return (
     <div className={styles.shareRecipeModalContainer}>
       <div className={styles.header}>
-        <button
-          onClick={() => dispatch(setToggleModal(false))}
-          className="hvr-pop"
-        >
+        <button onClick={closeModal} className="hvr-pop">
           <MdClose className={styles.closeIcon} />
         </button>
         <h5>Share Recipe</h5>
