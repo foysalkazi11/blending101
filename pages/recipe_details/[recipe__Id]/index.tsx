@@ -40,7 +40,7 @@ const Index = () => {
   useEffect(() => {
     if (!recipeLoading && recipeData?.getARecipe) {
       const recipe = recipeData?.getARecipe;
-      if (recipe?.originalVersion === recipe?.defaultVersion?._id) {
+      if (recipe?.originalVersion?._id === recipe?.defaultVersion?._id) {
         dispatch(
           setDetailsARecipe({
             ...recipe,
@@ -48,11 +48,12 @@ const Index = () => {
           }),
         );
       } else {
-        const { _id, recipeId, ...rest }: RecipeVersionType =
+        const { _id, recipeId, description, ...rest }: RecipeVersionType =
           recipe?.defaultVersion;
         const obj = {
           _id: recipeId,
           versionId: _id,
+          versionDiscription: description,
           ...rest,
         };
         dispatch(
@@ -67,8 +68,6 @@ const Index = () => {
   }, [recipeData?.getARecipe]);
   //@ts-ignore
   const recipeBasedNutrition = nutritionData?.getBlendNutritionBasedOnRecipexxx;
-
-  console.log(detailsARecipe);
 
   return (
     <RecipeDetails

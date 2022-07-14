@@ -3,6 +3,7 @@ export interface RecipeDetailsType {
   name: string;
   prepTime: any;
   description: string;
+  versionDiscription: string;
   recipeIngredients: any[];
   recipeInstructions: string[];
   totalRating: number;
