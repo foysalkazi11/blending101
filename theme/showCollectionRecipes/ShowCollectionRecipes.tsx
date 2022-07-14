@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import { MdFavoriteBorder, MdOutlineStarOutline } from "react-icons/md";
 import GET_ALL_RECIPES_WITHIN_COLLECTIONS from "../../gqlLib/collection/query/getAllRecipesWhithiCollections";
@@ -14,6 +14,9 @@ import styles from "./ShowCollectionRecipes.module.scss";
 import SkeletonCollectionRecipe from "../skeletons/skeletonCollectionRecipe/SkeletonCollectionRecipe";
 import useLocalStorage from "../../customHooks/useLocalStorage";
 import GET_SINGLE_COLLECTION from "../../gqlLib/collection/query/getSingleCollection";
+import IconWraper from "../iconWraper/IconWraper";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/pro-regular-svg-icons";
 
 const ShowCollectionRecipes = () => {
   const [collectionName, setCollectionName] = useState("");
@@ -151,12 +154,14 @@ const ShowCollectionRecipes = () => {
           <h2>{collectionName}</h2>
         </div>
 
-        <img
-          src="/icons/close.svg"
-          alt="closeIcon"
-          onClick={handleColseCollections}
-          style={{ cursor: "pointer" }}
-        />
+        <IconWraper
+          handleClick={handleColseCollections}
+          defaultBg="secondary"
+          hover="bgSecondary"
+          style={{ width: "28px", height: "28px" }}
+        >
+          <FontAwesomeIcon icon={faXmark} />
+        </IconWraper>
       </div>
       <div className={styles.showRecipes}>
         {allRecipeWithinCollections?.length

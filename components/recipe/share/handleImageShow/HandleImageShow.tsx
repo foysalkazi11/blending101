@@ -76,6 +76,7 @@ const HandleImageShow = ({
                   right: "2px",
                 }}
                 handleClick={() => removeImage(index)}
+                hover="bgPrimary"
               >
                 <MdClose color="#f4f4f4" />
               </IconWraper>

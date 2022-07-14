@@ -136,7 +136,6 @@
     border-radius: 10px;
 
     .image {
-      // background-color: steelblue;
       position: relative;
       background-size: cover;
       width: 100%;
@@ -148,6 +147,23 @@
 
       &:hover {
         transform: scale(1.1);
+      }
+      &:hover .imageOverlay {
+        transform: translateY(0px);
+      }
+
+      .imageOverlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        object-fit: cover;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(0, 0, 0, 0.3);
+        transform: translateY(100%);
       }
     }
   }

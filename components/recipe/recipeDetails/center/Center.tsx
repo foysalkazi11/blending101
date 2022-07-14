@@ -237,7 +237,9 @@ const Center = ({
           )}
         </div>
         <div>
-          <ReadMore>{recipeData?.description}</ReadMore>
+          <ReadMore>
+            {recipeData?.versionDiscription || recipeData?.description}
+          </ReadMore>
         </div>
         <div className={styles.infoContainer}>
           <div className={styles.infoBox}>
