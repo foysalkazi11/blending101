@@ -34,6 +34,8 @@ interface dataCardInterface {
   setOpenCollectionModal?: Dispatch<SetStateAction<boolean>>;
   postfixTitle?: string;
   isMatch?: boolean;
+  isImageOverlay?: boolean;
+  imageOverlayFunc?: (arg: string) => void;
 }
 
 export default function DatacardComponent({
@@ -57,8 +59,10 @@ export default function DatacardComponent({
   changeToFormulateRecipe = () => {},
   isCollectionIds = [] || null,
   setOpenCollectionModal = () => {},
+  imageOverlayFunc = () => {},
   postfixTitle = "",
   isMatch = false,
+  isImageOverlay = false,
 }: dataCardInterface) {
   title = title || "Triple Berry Smoothie";
   ingredients = ingredients;
@@ -184,7 +188,17 @@ export default function DatacardComponent({
               <div
                 className={styles.image}
                 style={{ backgroundImage: `url(${image})` }}
-              ></div>
+              >
+                {isImageOverlay ? (
+                  <div className={styles.imageOverlay}>
+                    <img
+                      src="/images/black-add.svg"
+                      alt="add icon"
+                      onClick={() => imageOverlayFunc(image)}
+                    />
+                  </div>
+                ) : null}
+              </div>
             </div>
             <div className={styles.datacard__body__middle__right}>
               <DataBody />

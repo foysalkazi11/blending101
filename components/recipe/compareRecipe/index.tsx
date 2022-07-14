@@ -113,6 +113,7 @@ const formulateRecipeResponsiveSetting = (length: number) => {
 
 const CompareRecipe = () => {
   const [isFormulatePage, setIsFormulatePage] = useState(false);
+  const [copyImage, setCopyImage] = useState("");
   const router = useRouter();
   const { compareList } = useAppSelector((state) => state.recipe);
   const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
@@ -398,6 +399,7 @@ const CompareRecipe = () => {
                             setNewRecipe={setNewRecipe}
                             setNewlyCreatedRecipe={setNewlyCreatedRecipe}
                             newlyCreatedRecipe={newlyCreatedRecipe}
+                            copyImage={copyImage}
                           />
                         </div>
 
@@ -427,6 +429,7 @@ const CompareRecipe = () => {
                                   setOpenCollectionModal={
                                     setOpenCollectionModal
                                   }
+                                  setCopyImage={setCopyImage}
                                 />
                               );
                             })}

@@ -31,6 +31,7 @@ const CreateNewRecipe = ({
   setNewRecipe,
   setNewlyCreatedRecipe = () => {},
   newlyCreatedRecipe = {},
+  copyImage = "",
 }: any) => {
   const [createNewRecipe, setCreateNewRecipe] = useState({
     name: "",
@@ -126,7 +127,10 @@ const CreateNewRecipe = ({
         try {
           let imgArr = [];
           if (createNewRecipe?.image?.length) {
-            const url = await imageUploadS3(createNewRecipe?.image);
+            const url =
+              typeof createNewRecipe?.image[0] === "string"
+                ? createNewRecipe?.image[0]
+                : await imageUploadS3(createNewRecipe?.image);
             imgArr?.push({
               image: `${url}`,
               default: true,
@@ -299,6 +303,11 @@ const CreateNewRecipe = ({
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newRecipe?.ingredients]);
+  useEffect(() => {
+    if (copyImage) {
+      setCreateNewRecipe((state) => ({ ...state, image: [copyImage] }));
+    }
+  }, [copyImage]);
 
   useEffect(() => {
     setWinReady(true);
@@ -397,7 +406,9 @@ const CreateNewRecipe = ({
                 }
                 src={
                   createNewRecipe?.image?.length
-                    ? URL.createObjectURL(createNewRecipe?.image[0])
+                    ? typeof createNewRecipe?.image[0] === "string"
+                      ? createNewRecipe?.image[0]
+                      : URL.createObjectURL(createNewRecipe?.image[0])
                     : "/images/black-add.svg"
                 }
                 alt="addIcon"

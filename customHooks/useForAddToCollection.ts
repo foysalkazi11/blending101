@@ -62,9 +62,11 @@ const useForAddToCollection = () => {
       };
       updateRecipe(recipeId, obj);
       dispatch(setCompareList(updateRecipeFunc(compareList, obj, recipeId)));
-      setcompareRecipeList((state) =>
-        updateRecipeFunc(state || [], obj, recipeId),
-      );
+      if (typeof setcompareRecipeList === "function") {
+        setcompareRecipeList((state = []) =>
+          updateRecipeFunc(state, obj, recipeId),
+        );
+      }
 
       setOpenCollectionModal(true);
       setTimeout(() => {
