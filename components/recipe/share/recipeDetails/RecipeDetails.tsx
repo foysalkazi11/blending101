@@ -76,6 +76,7 @@ const RecipeDetails = ({
   showMoreMenu = true,
   showOptionalEditIcon = false,
   setOpenCollectionModal = () => {},
+  setCopyImage = () => {},
 }: any) => {
   const [winReady, setwinReady] = useState(false);
   const [getBlendNutritionBasedonRecipeData, { loading, error, data }] =
@@ -138,6 +139,8 @@ const RecipeDetails = ({
           postfixTitle={recipe?.defaultVersion?.postfixTitle}
           showMoreMenu={showMoreMenu}
           showOptionalEditIcon={showOptionalEditIcon}
+          isImageOverlay={dragAndDrop}
+          imageOverlayFunc={(image) => setCopyImage(image)}
         />
         <div className={`${styles.dividerBox}`}>
           <SectionTitleWithIcon
