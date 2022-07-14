@@ -168,21 +168,17 @@ const Center_Elements = ({
         />
       </div>
       <div className={styles.scoreTraydiv}>
-        {copyDetailsRecipe?.versionId ? (
-          <p className={styles.discripation}>
-            {copyDetailsRecipe?.description}
-          </p>
-        ) : (
-          <TextArea
-            name="description"
-            borderSecondary={true}
-            value={copyDetailsRecipe?.description}
-            onChange={(e) =>
-              updateEditRecipe(e?.target?.name, e?.target?.value)
-            }
-            style={{ color: "#484848" }}
-          />
-        )}
+        <p className={styles.discripation}>
+          {copyDetailsRecipe?.versionDiscription}
+        </p>
+
+        <TextArea
+          name="description"
+          borderSecondary={true}
+          value={copyDetailsRecipe?.description}
+          onChange={(e) => updateEditRecipe(e?.target?.name, e?.target?.value)}
+          style={{ color: "#484848" }}
+        />
 
         <ScoreTray />
         <div className={styles.blendingOptions}>

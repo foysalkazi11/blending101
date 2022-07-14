@@ -53,10 +53,7 @@ const EditRecipeComponent = () => {
       nutritionState,
       SetcalculateIngOz,
     );
-  const [
-    editAVersionOfRecipe,
-    { data: versionEditData, loading: versionEditLoading },
-  ] = useMutation(EDIT_A_VERSION_OF_RECIPE);
+  const [editAVersionOfRecipe] = useMutation(EDIT_A_VERSION_OF_RECIPE);
 
   const [getARecipe, { loading: recipeLoading }] = useLazyQuery(GET_RECIPE, {
     fetchPolicy: "network-only",
@@ -109,13 +106,39 @@ const EditRecipeComponent = () => {
     setExistingImages(detailsARecipe?.image?.map((item) => `${item?.image}`));
   }, [classBasedData, detailsARecipe]);
 
-  const isOrginalVersion = detailsARecipe?.recipeVersion?.find(
-    (version) => version?.isOriginal,
-  );
+  const updateOrginalRecipe = async (obj: any) => {
+    if (images?.length) {
+      //@ts-ignore
+      let imageArr: string[] = await imageUploadS3(images);
+      imageArr = [...existingimages, ...imageArr];
+      const finalImaArr = imageArr?.map((img, index) =>
+        index === 0
+          ? { image: img, default: true }
+          : { image: img, default: false },
+      );
 
-  const checkVersion = copyDetailsRecipe?.recipeVersion?.find(
-    (version) => version?._id === detailsARecipe?.versionId,
-  );
+      obj = {
+        ...obj,
+        editableObject: { ...obj?.editableObject, image: finalImaArr },
+      };
+      await editRecipe({
+        variables: {
+          data: obj,
+        },
+      });
+
+      setExistingImages(imageArr);
+      setImages([]);
+      return;
+    }
+
+    await editRecipe({
+      variables: {
+        data: obj,
+      },
+    });
+    return;
+  };
 
   const editARecipeFunction = async () => {
     dispatch(setLoading(true));
@@ -139,7 +162,7 @@ const EditRecipeComponent = () => {
         : { image: img, default: false },
     );
 
-    let obj = {
+    let orginalRecipeObj = {
       editId: recipeId,
       editableObject: {
         name: copyDetailsRecipe?.name,
@@ -160,49 +183,32 @@ const EditRecipeComponent = () => {
           editableObject: {
             recipeInstructions: howToArr,
             postfixTitle: copyDetailsRecipe?.postfixTitle,
-            description: copyDetailsRecipe?.description,
+            description: copyDetailsRecipe?.versionDiscription,
             ingredients: ingArr,
             servingSize: calculateIngOz,
           },
         };
 
+        let orginalRecipeObj = {
+          editId: recipeId,
+          editableObject: {
+            name: copyDetailsRecipe?.name,
+            description: copyDetailsRecipe?.description,
+            image: imgArr,
+            recipeBlendCategory: selectedBLendCategory,
+            servings: servingCounter,
+          },
+        };
+        await updateOrginalRecipe(orginalRecipeObj);
         await editAVersionOfRecipe({ variables: { data: obj } });
         dispatch(setLoading(false));
         notification("info", "Version updated sucessfully");
-      } else {
-        if (images?.length) {
-          //@ts-ignore
-          let imageArr: string[] = await imageUploadS3(images);
-          imageArr = [...existingimages, ...imageArr];
-          const finalImaArr = imageArr?.map((img, index) =>
-            index === 0
-              ? { image: img, default: true }
-              : { image: img, default: false },
-          );
-
-          obj = {
-            ...obj,
-            editableObject: { ...obj?.editableObject, image: finalImaArr },
-          };
-          await editRecipe({
-            variables: {
-              data: obj,
-            },
-          });
-          dispatch(setLoading(false));
-          reactToastifyNotification("info", "Recipe Updateded successfully");
-          setExistingImages(imageArr);
-          setImages([]);
-        } else {
-          await editRecipe({
-            variables: {
-              data: obj,
-            },
-          });
-          dispatch(setLoading(false));
-          reactToastifyNotification("info", "Recipe Updateded successfully ");
-        }
+        return;
       }
+
+      await updateOrginalRecipe(orginalRecipeObj);
+      dispatch(setLoading(false));
+      reactToastifyNotification("info", "Recipe Updateded successfully ");
     } catch (error) {
       dispatch(setLoading(false));
       reactToastifyNotification("error", "Error while saving Recipe");
