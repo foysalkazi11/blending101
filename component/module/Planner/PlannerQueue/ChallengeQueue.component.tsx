@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import Image from "next/image";
 import { GoPrimitiveDot } from "react-icons/go";
 
@@ -17,7 +17,7 @@ const plannerIcon = (
 );
 
 const ChallengePanel = () => {
-  const { date, notes, recipes } = useAppSelector(
+  const { date, images, notes, recipes } = useAppSelector(
     (state) => state.planner.challenge,
   );
   return (
@@ -34,32 +34,40 @@ const ChallengePanel = () => {
           />
           <h5>{format(date ? new Date(date) : new Date(), "EEEE, MMMM d")}</h5>
         </div>
-        <SplitImageCard />
-        <h5 className={styles.headingText}>My Notes</h5>
-        <div className={styles.notesText}>
-          {notes.map((note) => (
-            <h5 key={note} className={styles.notesText__heading}>
-              {note}
-            </h5>
-          ))}
-        </div>
-        <h5 className={styles.headingText}>My Recipe</h5>
-        <div className={styles.myRecipeDiv}>
-          {recipes.map((recipe) => (
-            <ViewDataCard
-              key={recipe.id}
-              title={recipe.name}
-              category={recipe.category}
-              companyName={"blending"}
-              rankingScore={4}
-              commentNumber={20}
-              calorieValue={recipe.calorie}
-              nutriScore={recipe.score}
-              ingredientList={recipe.ingredients}
-              showCalender
-            />
-          ))}
-        </div>
+        <SplitImageCard images={images} />
+        {notes && notes.length > 0 && (
+          <Fragment>
+            <h5 className={styles.headingText}>My Notes</h5>
+            <div className={styles.notesText}>
+              {notes.map((note) => (
+                <h5 key={note} className={styles.notesText__heading}>
+                  {note}
+                </h5>
+              ))}
+            </div>
+          </Fragment>
+        )}
+        {recipes && recipes.length > 0 && (
+          <Fragment>
+            <h5 className={styles.headingText}>My Recipe</h5>
+            <div className={styles.myRecipeDiv}>
+              {recipes.map((recipe) => (
+                <ViewDataCard
+                  key={recipe.id}
+                  title={recipe.name}
+                  category={recipe.category}
+                  companyName={"blending"}
+                  rankingScore={4}
+                  commentNumber={20}
+                  calorieValue={recipe.calorie}
+                  nutriScore={recipe.score}
+                  ingredientList={recipe.ingredients}
+                  cardImage={recipe.image}
+                />
+              ))}
+            </div>
+          </Fragment>
+        )}
       </div>
     </>
   );

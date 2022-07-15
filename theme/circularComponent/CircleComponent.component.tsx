@@ -147,9 +147,9 @@ const CircleComponent = ({
       let circles = document.querySelectorAll(
         `.${dateStyles.challenge_circle_single_date}`,
       );
-      // let semiCircle = document.querySelector(
-      //   `.${mainStyles.challenge_circle_semi_circle}`,
-      // );
+      let semiCircle = document.querySelector(
+        `.${mainStyles.challenge_circle_semi_circle}`,
+      );
       circles.forEach((circle) => {
         circle.style.fontSize = cCMCOWidth * 0.018 + "px";
         circle.style.width = cCMCOWidth * 0.075 + "px";
@@ -169,8 +169,8 @@ const CircleComponent = ({
       circle.style.transform = `rotate(${angle - 2}deg) translate(${
         challengeCircleMainCircle.clientWidth / 2
       }px) rotate(-${angle - 150}deg)`;
-      // semiCircle.style.width =
-      //   (cCMCOWidth - challengeCircleInsideCircle.clientWidth) / 2 + 1 + "px";
+      semiCircle.style.width =
+        (cCMCOWidth - challengeCircleInsideCircle.clientWidth) / 2 + 1 + "px";
 
       // For Graph Container
       let challengeCircleGraphData = document.querySelector(

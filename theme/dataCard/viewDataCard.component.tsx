@@ -45,7 +45,7 @@ const ViewDataCard = ({
   commentNumber = commentNumber || 0;
   showCalender = showCalender || false;
   return (
-    <div className={styles.mainContainer}>
+    <div className={`${styles.mainContainer} mb-20`}>
       <div className={styles.mainContainer__imgRankingTray}>
         <div className={styles.mainContainer__imgRankingTray__imageDiv}>
           <Image src={cardImage} alt="" objectFit="cover" layout="fill" />

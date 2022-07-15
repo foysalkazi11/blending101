@@ -10,9 +10,6 @@ interface IconButtonProps {
   fontName?: IconDefinition;
   font?: string;
   title?: string;
-  value?: string;
-  fullWidth?: boolean;
-  width?: number;
   style?: CSSProperties;
   className?: string;
   disabled?: boolean;
@@ -27,9 +24,6 @@ const IconButton: React.FC<IconButtonProps> = (props) => {
     font,
     fontName,
     title,
-    value,
-    fullWidth,
-    width,
     className,
     onClick,
     disabled,

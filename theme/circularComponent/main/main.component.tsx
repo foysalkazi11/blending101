@@ -64,22 +64,15 @@ function Main({
             const categories = activity?.posts.map(
               (post) => post?.recipeBlendCategory?.name || "",
             );
-            // if (!date[0]) {
-            //   return (
-            //     <div key={key} className={styles.challenge_circle_semi_circle} />
-            //   );
-            // }
-
-            // @ts-ignore
             return (
               <SingleDate
-                // selectToday={todayDate === getCurrentDate(date[0]) ? true : false}
                 key={key}
                 date={activity?.assignDate}
                 categories={categories}
               />
             );
           })}
+        <div className={styles.challenge_circle_semi_circle} />
       </div>
     </div>
   );

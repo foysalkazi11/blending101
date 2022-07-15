@@ -26,6 +26,7 @@ export interface IPlannerIngredients {
 interface IChallengeRecipe {
   id: string;
   name: string;
+  image: string;
   category: string;
   score: number;
   calorie: number;
@@ -50,6 +51,12 @@ interface PlannerState {
   };
 }
 
+const initialRecipe = {
+  _id: "",
+  name: "",
+  image: "",
+  ingredients: [],
+};
 const initialState: PlannerState = {
   challenge: {
     date: "",
@@ -59,12 +66,7 @@ const initialState: PlannerState = {
   },
   planners: [],
   post: {
-    recipe: {
-      _id: "",
-      name: "",
-      image: "",
-      ingredients: [],
-    },
+    recipe: initialRecipe,
   },
 };
 
@@ -74,12 +76,16 @@ export const PlannerSlice = createSlice({
   reducers: {
     setChallenge: (state, action) => {
       state.challenge.date = action.payload.date;
+      const images = [];
+      const notes = [];
+      const recipes = [];
       action.payload.posts.forEach((post, idx) => {
-        state.challenge.images.push(post?.images[0] || "");
-        state.challenge.notes.push(post?.note || "");
-        state.challenge.recipes.push({
+        post?.images[0] && images.push(post?.images[0]);
+        post?.note && notes.push(post?.note);
+        recipes.push({
           id: post?._id || idx,
           name: post?.name || "",
+          image: post?.recipeImage || "",
           category: post?.recipeBlendCategory?.name || "",
           score: post?.rxScore || 900,
           calorie: post?.calorie || 60,
@@ -89,6 +95,9 @@ export const PlannerSlice = createSlice({
             ) || [],
         });
       });
+      state.challenge.images = images;
+      state.challenge.notes = notes;
+      state.challenge.recipes = recipes;
     },
     setPlanners: (state, action) => {
       state.planners = action.payload
@@ -235,6 +244,11 @@ export const PlannerSlice = createSlice({
       state.planners = [];
     },
 
+    // Upload Challenge
+    resetForm: (state) => {
+      state.post.recipe = initialRecipe;
+    },
+
     setRecipeInfo: (
       state,
       action: { payload: { _id: string; name: string; image: string } },
@@ -243,14 +257,46 @@ export const PlannerSlice = createSlice({
       state.post.recipe.name = action.payload.name;
       state.post.recipe.image = action.payload.image;
     },
+
     setRecipeIngredients: (
       state,
       action: { payload: { ingredients: IPlannerIngredients[] } },
     ) => {
       state.post.recipe.ingredients = action.payload.ingredients;
     },
-    addIngredient: (state, action: { payload: IPlannerIngredients }) => {
-      state.post.recipe.ingredients.push(action.payload);
+
+    addIngredient: (state, action) => {
+      const ingredientItem = action.payload.ingredient;
+      const qty = Math.floor(Math.random() * 10);
+      const portion =
+        ingredientItem?.portions.find((portion) => portion.default)
+          ?.measurement || ingredientItem?.portions[0].measurement;
+      const unit =
+        portion?.measurement || ingredientItem?.portions[0].measurement;
+      const weight =
+        portion?.meausermentWeight ||
+        ingredientItem?.portions[0].meausermentWeight;
+
+      const ingredient = {
+        ingredientId: {
+          _id: ingredientItem.value,
+          ingredientName: ingredientItem.label,
+        },
+        selectedPortion: {
+          gram: qty * weight,
+          name: unit,
+          quantity: qty,
+        },
+      };
+
+      state.post.recipe.ingredients.push(ingredient);
+    },
+
+    deleteIngredient: (state, action) => {
+      const id = action.payload.id;
+      state.post.recipe.ingredients = state.post.recipe.ingredients.filter(
+        (i) => i.ingredientId._id !== id,
+      );
     },
   },
 });
@@ -266,6 +312,8 @@ export const {
   setRecipeInfo,
   setRecipeIngredients,
   addIngredient,
+  deleteIngredient,
+  resetForm,
 } = PlannerSlice.actions;
 
 export default PlannerSlice.reducer;

@@ -21,20 +21,14 @@ export const GET_CHALLENGE_DETAIL = gql`
     getAllChallengePostByDate(memberId: $userId, date: $date) {
       images
       recipeBlendCategory {
-        _id
         name
       }
       name
       note
+      recipeImage
       ingredients {
         ingredientId {
-          _id
           ingredientName
-        }
-        selectedPortion {
-          name
-          quantity
-          gram
         }
       }
     }

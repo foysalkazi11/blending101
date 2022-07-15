@@ -22,7 +22,6 @@ import {
 } from "../../../../graphql/Planner";
 import Pagination from "../../../molecules/Pagination/ServerPagination.component";
 import Combobox from "../../../organisms/Forms/Combobox.component";
-import { RECIPE_CATEGORY } from "../../../../data/Recipe";
 import Searchbox from "../../../molecules/Searchbox/Searchbox.component";
 import { GET_BLEND_CATEGORY } from "../../../../graphql/Recipe";
 import { useDispatch } from "react-redux";
@@ -46,7 +45,7 @@ interface PlannerPanelProps {
   isUpload: boolean;
 }
 
-const PlannerPanel = (props) => {
+const PlannerPanel = (props: PlannerPanelProps) => {
   const { isUpload } = props;
   const [toggler, setToggler] = useState(true);
   const [query, setQuery] = useState("");

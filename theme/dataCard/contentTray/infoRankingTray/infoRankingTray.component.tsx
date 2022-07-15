@@ -21,9 +21,9 @@ const InfoRankingTray = ({
   return (
     <div className={styles.mainContainer}>
       <div className={styles.mainContainer__title}>{title}</div>
-      <div className={styles.mainContainer__rankingTray}>
+      {/* <div className={styles.mainContainer__rankingTray}>
         <RankingStarTray starNum={rankingScore} commentsNum={commentNumber} />
-      </div>
+      </div> */}
       <div className={styles.mainContainer__ingredientList}>
         {/* {ingredientList &&
           // @ts-ignore

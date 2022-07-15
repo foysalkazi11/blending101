@@ -1,5 +1,5 @@
 $imageContentTrayHeight: 55%;
-$sharedBorderRadius: 5px;
+$sharedBorderRadius: 10px;
 $imageHeightWidth: 95px;
 
 .mainContainer {
@@ -7,7 +7,9 @@ $imageHeightWidth: 95px;
   border-radius: $sharedBorderRadius;
   display: flex;
   flex-direction: column;
-  border: 1px #e0dcdd solid;
+  box-shadow: 0px 0px 3px 2px #0000001a;
+
+  // border: 1px #e0dcdd solid;
   background-color: rgb(255, 255, 255);
 
   &__imgRankingTray {
