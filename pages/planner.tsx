@@ -9,6 +9,8 @@ import PlannerQueue from "../component/module/Planner/PlannerQueue/PlannerQueue.
 import { RecipePlanner } from "../component/module/Planner/Toolbox/RecipePlanner.component";
 import UploadCard from "../component/module/Planner/Toolbox/UploadCard.component";
 import AContainer from "../containers/A.container";
+import { GET_30DAYS_CHALLENGE } from "../graphql/Planner";
+import { useAppSelector } from "../redux/hooks";
 
 import styles from "../styles/pages/planner.module.scss";
 import CircleComponent from "../theme/circularComponent/CircleComponent.component";
@@ -20,7 +22,13 @@ const Planner = () => {
   const [centerLeftToggler, setCenterLeftToggler] = useState(false);
   const [uploadState, setUploadState] = useState(false);
 
-  // const {loading, data} = useQuery()
+  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+
+  const { data } = useQuery(GET_30DAYS_CHALLENGE, {
+    variables: {
+      userId,
+    },
+  });
 
   return (
     <AContainer>
@@ -84,17 +92,22 @@ const Planner = () => {
                               styles.mainContainer__contentDiv__innerDiv__challengeDiv
                             }
                           >
-                            <CircleComponent
-                              categoryObject={food_color}
-                              activityDataList={fake_data}
-                              profileImage={"/images/5.jpeg"}
-                              blendValue={400}
-                              totalBlendValue={750}
-                              numOfDaysChallenge={30}
-                              startDate={21}
-                              startYear={2022}
-                              startMonth={"May"}
-                            />
+                            {data?.getMyThirtyDaysChallenge?.length !== 0 && (
+                              <CircleComponent
+                                activities={
+                                  data?.getMyThirtyDaysChallenge || []
+                                }
+                                categoryObject={food_color}
+                                activityDataList={fake_data}
+                                profileImage={"/images/5.jpeg"}
+                                blendValue={400}
+                                totalBlendValue={750}
+                                numOfDaysChallenge={30}
+                                startDate={21}
+                                startYear={2022}
+                                startMonth={"May"}
+                              />
+                            )}
                           </div>
                         </div>
                       ) : (

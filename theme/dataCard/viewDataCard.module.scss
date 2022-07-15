@@ -1,15 +1,15 @@
-$imageContentTrayHeight:55%;
-$sharedBorderRadius:5px;
-$imageHeightWidth:95px;
-
+$imageContentTrayHeight: 55%;
+$sharedBorderRadius: 10px;
+$imageHeightWidth: 95px;
 
 .mainContainer {
-
-  height: 170px;
+  height: 140px;
   border-radius: $sharedBorderRadius;
   display: flex;
   flex-direction: column;
-  border: 1px #e0dcdd solid;
+  box-shadow: 0px 0px 3px 2px #0000001a;
+
+  // border: 1px #e0dcdd solid;
   background-color: rgb(255, 255, 255);
 
   &__imgRankingTray {
@@ -17,7 +17,6 @@ $imageHeightWidth:95px;
     background-color: rgb(255, 255, 255);
 
     &__imageDiv {
-
       position: relative;
       overflow: hidden;
       height: $imageHeightWidth;
@@ -28,7 +27,6 @@ $imageHeightWidth:95px;
     }
 
     &__content {
-
       display: flex;
       flex-direction: column;
       padding: 8px 16px;
@@ -37,12 +35,10 @@ $imageHeightWidth:95px;
   }
 
   &__elemTray {
-
     height: calc(100% - #{$imageContentTrayHeight});
-    margin-top: auto;
+    margin-top: 10px;
 
     &__bottomTray {
-
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -50,9 +46,7 @@ $imageHeightWidth:95px;
       padding: 0px 10px;
       position: relative;
 
-
       &__companyDiv {
-
         display: flex;
         align-items: center;
         font-size: 10px;
@@ -72,7 +66,6 @@ $imageHeightWidth:95px;
       }
 
       &__calenderTray {
-
         background-color: white;
         min-height: 200px;
         min-width: max-content;
@@ -87,5 +80,4 @@ $imageHeightWidth:95px;
       }
     }
   }
-
 }

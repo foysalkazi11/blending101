@@ -22,7 +22,6 @@ import {
 } from "../../../../graphql/Planner";
 import Pagination from "../../../molecules/Pagination/ServerPagination.component";
 import Combobox from "../../../organisms/Forms/Combobox.component";
-import { RECIPE_CATEGORY } from "../../../../data/Recipe";
 import Searchbox from "../../../molecules/Searchbox/Searchbox.component";
 import { GET_BLEND_CATEGORY } from "../../../../graphql/Recipe";
 import { useDispatch } from "react-redux";
@@ -34,6 +33,7 @@ import {
 import Icon from "../../../atoms/Icon/Icon.component";
 import { faPlusCircle } from "@fortawesome/pro-solid-svg-icons";
 import Publish from "../../../../helpers/Publish";
+import SkeletonElement from "../../../../theme/skeletons/SkeletonElement";
 
 const plannerIcon = (
   <div className={styles.plannerIcon}>
@@ -45,7 +45,7 @@ interface PlannerPanelProps {
   isUpload: boolean;
 }
 
-const PlannerPanel = (props) => {
+const PlannerPanel = (props: PlannerPanelProps) => {
   const { isUpload } = props;
   const [toggler, setToggler] = useState(true);
   const [query, setQuery] = useState("");
@@ -159,7 +159,17 @@ const PlannerPanel = (props) => {
           onBlur={handleShow}
         />
       </div>
-      <Recipes recipes={recipes} isUpload={isUpload} />
+      {discoverLoading || loading ? (
+        [...Array(limit)]?.map((_, index) => (
+          <SkeletonElement
+            type="thumbnail"
+            key={index}
+            style={{ width: "100%", height: "277px" }}
+          />
+        ))
+      ) : (
+        <Recipes recipes={recipes} isUpload={isUpload} />
+      )}
       <div className="flex ai-center jc-center mt-20">
         <Pagination
           limit={5}
