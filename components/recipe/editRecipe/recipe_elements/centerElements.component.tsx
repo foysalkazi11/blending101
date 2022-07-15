@@ -23,11 +23,14 @@ import InputComponent from "../../../../theme/input/input.component";
 import TextArea from "../../../../theme/textArea/TextArea";
 import { MdMoreVert, MdDeleteOutline } from "react-icons/md";
 import IconWraper from "../../../../theme/iconWraper/IconWraper";
-import { setDetailsARecipe } from "../../../../redux/slices/recipeSlice";
 import { RecipeDetailsType } from "../../../../type/recipeDetails";
 import useOnClickOutside from "../../../utility/useOnClickOutside";
-import { BiEditAlt } from "react-icons/bi";
-import useToGetARecipe from "../../../../customHooks/useToGetARecipe";
+import { useMutation } from "@apollo/client";
+import DELETE_A_RECIPE from "../../../../gqlLib/recipes/mutations/deleteARecipe";
+import { useRouter } from "next/router";
+import notification from "../../../utility/reactToastifyNotification";
+import CustomModal from "../../../../theme/modal/customModal/CustomModal";
+import ConfirmationModal from "../../../../theme/confirmationModal/ConfirmationModal";
 
 type CenterElementsProps = {
   copyDetailsRecipe?: RecipeDetailsType;
@@ -50,23 +53,36 @@ const Center_Elements = ({
   existingImage = [],
   setExistingImage = () => {},
 }: CenterElementsProps) => {
+  const [openModal, setOpenModal] = useState(false);
   const dispatch = useAppDispatch();
   const [blendCategoryState, setBlendCategoryState] = useState(null);
   const [openMenu, setOpenMenu] = useState(false);
   const outsideClickRef = useRef<HTMLDivElement>(null);
   useOnClickOutside(outsideClickRef, () => setOpenMenu(false));
-  const handleToGetARecipe = useToGetARecipe();
-  const { dbUser } = useAppSelector((state) => state?.user);
-
   const quantity_number = useAppSelector(
     (state) => state?.quantityAdjuster?.quantityNum,
   );
-
+  const { dbUser } = useAppSelector((state) => state?.user);
+  const [deleteARecipe, { loading }] = useMutation(DELETE_A_RECIPE);
+  const router = useRouter();
   let BlendtecItem = [{ name: `Blentec` }, { name: `Blentec` }];
   let OzItem = [{ name: "64oz" }, { name: "64oz" }];
   let dropDownStyle = {
     paddingRight: "0px",
     width: "111%",
+  };
+
+  // delete one recipe
+  const deleteOneRecipe = async () => {
+    try {
+      await deleteARecipe({
+        variables: { userId: dbUser?._id, recipeId: copyDetailsRecipe?._id },
+      });
+      setOpenModal(false);
+      router?.push("/");
+    } catch (error) {
+      notification("error", "Unable to delete recipe");
+    }
   };
 
   // check version of recipe
@@ -91,177 +107,185 @@ const Center_Elements = ({
   }, [blendCategoryState]);
 
   return (
-    <div className={styles.main}>
-      <div className={styles.topSection}>
-        {copyDetailsRecipe?.versionId ? (
-          <h3 className={styles.title}>
-            {copyDetailsRecipe?.name}
-            <span>
-              {checkVersion?.isOrginal
-                ? ""
-                : `${
-                    copyDetailsRecipe?.postfixTitle
-                      ? `(${copyDetailsRecipe?.postfixTitle})`
-                      : ""
-                  }`}
-            </span>
-          </h3>
-        ) : (
-          <InputComponent
+    <>
+      <div className={styles.main}>
+        <div className={styles.topSection}>
+          {copyDetailsRecipe?.versionId ? (
+            <h3 className={styles.title}>
+              {copyDetailsRecipe?.name}
+              <span>
+                {checkVersion?.isOrginal
+                  ? ""
+                  : `${
+                      copyDetailsRecipe?.postfixTitle
+                        ? `(${copyDetailsRecipe?.postfixTitle})`
+                        : ""
+                    }`}
+              </span>
+            </h3>
+          ) : (
+            <InputComponent
+              borderSecondary={true}
+              style={{ fontWeight: "bold", color: "#000000", fontSize: "16px" }}
+              value={
+                copyDetailsRecipe?.versionId
+                  ? copyDetailsRecipe?.postfixTitle
+                  : copyDetailsRecipe?.name
+              }
+              name={copyDetailsRecipe?.versionId ? "postfixTitle" : "name"}
+              onChange={(e) =>
+                updateEditRecipe(e?.target?.name, e?.target?.value)
+              }
+            />
+          )}
+          <div className={styles.reightSight} ref={outsideClickRef}>
+            <IconWraper
+              hover="bgSlightGray"
+              style={{ width: "36px", height: "36px" }}
+              handleClick={() => setOpenMenu((prev) => !prev)}
+            >
+              <MdMoreVert fontSize={24} />
+            </IconWraper>
+            {openMenu ? (
+              <div className={`${styles.menu} `}>
+                <div
+                  className={styles.singleMenu}
+                  onClick={() => {
+                    dispatch(setOpenVersionTray(true));
+                    dispatch(setOpenVersionTrayFormWhichPage("edit"));
+                  }}
+                >
+                  <VscVersions className={styles.icon} />
+                  <p className={styles.text}>Versions</p>
+                </div>
+
+                {copyDetailsRecipe?.userId === dbUser?._id ? (
+                  <div
+                    className={styles.singleMenu}
+                    onClick={() => setOpenModal(true)}
+                  >
+                    <MdDeleteOutline className={styles.icon} />
+                    <p className={styles.text}>Delete</p>
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+        </div>
+        <div className={styles.addImagediv}>
+          <HandleImageShow
+            existingImage={existingImage}
+            images={images}
+            setExistingImage={setExistingImage}
+            setImages={setImages}
+          />
+        </div>
+        <div className={styles.scoreTraydiv}>
+          <p className={styles.discripation}>
+            {copyDetailsRecipe?.versionDiscription}
+          </p>
+
+          <TextArea
+            name="description"
             borderSecondary={true}
-            style={{ fontWeight: "bold", color: "#000000", fontSize: "16px" }}
-            value={
-              copyDetailsRecipe?.versionId
-                ? copyDetailsRecipe?.postfixTitle
-                : copyDetailsRecipe?.name
-            }
-            name={copyDetailsRecipe?.versionId ? "postfixTitle" : "name"}
+            value={copyDetailsRecipe?.description}
             onChange={(e) =>
               updateEditRecipe(e?.target?.name, e?.target?.value)
             }
+            style={{ color: "#484848" }}
           />
-        )}
-        <div className={styles.reightSight} ref={outsideClickRef}>
-          <IconWraper
-            hover="bgSlightGray"
-            style={{ width: "36px", height: "36px" }}
-            handleClick={() => setOpenMenu((prev) => !prev)}
-          >
-            <MdMoreVert fontSize={24} />
-          </IconWraper>
-          {openMenu ? (
-            <div className={`${styles.menu} `}>
-              <div
-                className={styles.singleMenu}
-                onClick={() => {
-                  dispatch(setOpenVersionTray(true));
-                  dispatch(setOpenVersionTrayFormWhichPage("edit"));
-                }}
-              >
-                <VscVersions className={styles.icon} />
-                <p className={styles.text}>Versions</p>
-              </div>
-              {/* <div
-                className={styles.singleMenu}
-                onClick={() => {
-                  handleToGetARecipe(copyDetailsRecipe?._id, dbUser?._id, true);
-                }}
-              >
-                <BiEditAlt className={styles.icon} />
-                <p className={styles.text}>Edit</p>
-              </div> */}
 
-              <div className={styles.singleMenu}>
-                <MdDeleteOutline className={styles.icon} />
-                <p className={styles.text}>Delete</p>
-              </div>
+          <ScoreTray />
+          <div className={styles.blendingOptions}>
+            <div className={styles.blendingOptions__left}>
+              <ul>
+                <li>
+                  <div
+                    className={styles.left__options}
+                    style={{ minWidth: "125px" }}
+                  >
+                    <RecipeDropDown
+                      ElemList={allBlendCategories}
+                      style={dropDownStyle}
+                      selectedValue={blendCategoryState}
+                      setSelectedValue={setBlendCategoryState}
+                    />
+                  </div>
+                </li>
+                <li>
+                  <div
+                    className={styles.left__options}
+                    style={{ minWidth: "115px" }}
+                  >
+                    <RecipeDropDown
+                      ElemList={BlendtecItem}
+                      style={dropDownStyle}
+                    />
+                  </div>
+                </li>
+                <li>
+                  <div
+                    className={styles.left__options}
+                    style={{ minWidth: "35px" }}
+                  >
+                    <RecipeDropDown ElemList={OzItem} style={dropDownStyle} />
+                  </div>
+                </li>
+              </ul>
             </div>
-          ) : null}
-        </div>
-      </div>
-      <div className={styles.addImagediv}>
-        <HandleImageShow
-          existingImage={existingImage}
-          images={images}
-          setExistingImage={setExistingImage}
-          setImages={setImages}
-        />
-      </div>
-      <div className={styles.scoreTraydiv}>
-        <p className={styles.discripation}>
-          {copyDetailsRecipe?.versionDiscription}
-        </p>
-
-        <TextArea
-          name="description"
-          borderSecondary={true}
-          value={copyDetailsRecipe?.description}
-          onChange={(e) => updateEditRecipe(e?.target?.name, e?.target?.value)}
-          style={{ color: "#484848" }}
-        />
-
-        <ScoreTray />
-        <div className={styles.blendingOptions}>
-          <div className={styles.blendingOptions__left}>
-            <ul>
-              <li>
-                <div
-                  className={styles.left__options}
-                  style={{ minWidth: "125px" }}
-                >
-                  <RecipeDropDown
-                    ElemList={allBlendCategories}
-                    style={dropDownStyle}
-                    selectedValue={blendCategoryState}
-                    setSelectedValue={setBlendCategoryState}
-                  />
-                </div>
-              </li>
-              <li>
-                <div
-                  className={styles.left__options}
-                  style={{ minWidth: "115px" }}
-                >
-                  <RecipeDropDown
-                    ElemList={BlendtecItem}
-                    style={dropDownStyle}
-                  />
-                </div>
-              </li>
-              <li>
-                <div
-                  className={styles.left__options}
-                  style={{ minWidth: "35px" }}
-                >
-                  <RecipeDropDown ElemList={OzItem} style={dropDownStyle} />
-                </div>
-              </li>
-            </ul>
-          </div>
-          <div className={styles.blendingOptions__right}>
-            <div className={styles.blendingOptions__right__options}>
-              <span className={styles.text}>{quantity_number}</span>
-              <div className={styles.arrow}>
-                <div className={styles.arrow_div}>
-                  <Image
-                    onClick={() => {
-                      dispatch(
-                        setQuantity(
-                          quantity_number < 1 ? 1 : quantity_number - 1,
-                        ),
-                      );
-                    }}
-                    src={"/icons/dropdown.svg"}
-                    alt="icon"
-                    width={"17px"}
-                    height={"15px"}
-                    className={styles.reverse_arrow}
-                  />
-                  <Image
-                    onClick={() => {
-                      dispatch(setQuantity(quantity_number + 1));
-                    }}
-                    src={"/icons/dropdown.svg"}
-                    alt="icon"
-                    width={"17px"}
-                    height={"15px"}
-                    className={styles.original_arrow}
-                  />
+            <div className={styles.blendingOptions__right}>
+              <div className={styles.blendingOptions__right__options}>
+                <span className={styles.text}>{quantity_number}</span>
+                <div className={styles.arrow}>
+                  <div className={styles.arrow_div}>
+                    <Image
+                      onClick={() => {
+                        dispatch(
+                          setQuantity(
+                            quantity_number < 1 ? 1 : quantity_number - 1,
+                          ),
+                        );
+                      }}
+                      src={"/icons/dropdown.svg"}
+                      alt="icon"
+                      width={"17px"}
+                      height={"15px"}
+                      className={styles.reverse_arrow}
+                    />
+                    <Image
+                      onClick={() => {
+                        dispatch(setQuantity(quantity_number + 1));
+                      }}
+                      src={"/icons/dropdown.svg"}
+                      alt="icon"
+                      width={"17px"}
+                      height={"15px"}
+                      className={styles.original_arrow}
+                    />
+                  </div>
                 </div>
               </div>
+              <span className={styles.timer_icon}>
+                <Image
+                  src={"/icons/time-icon.svg"}
+                  alt="Picture will load soon"
+                  height={"20px"}
+                  width={"20px"}
+                />
+              </span>
             </div>
-            <span className={styles.timer_icon}>
-              <Image
-                src={"/icons/time-icon.svg"}
-                alt="Picture will load soon"
-                height={"20px"}
-                width={"20px"}
-              />
-            </span>
           </div>
         </div>
       </div>
-    </div>
+      <CustomModal open={openModal} setOpen={setOpenModal}>
+        <ConfirmationModal
+          text="It's will delete everything related recipe !!!"
+          cancleFunc={() => setOpenModal(false)}
+          submitFunc={deleteOneRecipe}
+          loading={loading}
+        />
+      </CustomModal>
+    </>
   );
 };
 
