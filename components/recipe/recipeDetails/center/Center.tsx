@@ -3,10 +3,7 @@ import React, { useState } from "react";
 import SlickSlider from "../../../../theme/carousel/carousel.component";
 import styles from "./Center.module.scss";
 import { MdOutlineInfo } from "react-icons/md";
-import { BiBarChart } from "react-icons/bi";
-import { BsCartPlus } from "react-icons/bs";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import { setToggleModal } from "../../../../redux/slices/sideTraySlice";
 import Modal from "../../../../theme/modal/customModal/CustomModal";
 import ShareRecipeModal from "../../../../theme/shareRecipeModal/ShareRecipeModal";
 import SaveRecipe from "../../../../theme/saveRecipeModal/SaveRecipeModal";
@@ -198,8 +195,8 @@ const Center = ({
             <IconWithText
               wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
               handleClick={() => {
-                setShowCollectionModal(true);
-                dispatch(setToggleModal(true));
+                setShowCollectionModal(false);
+                setOpenModal(true);
               }}
               icon="/images/share-alt-light-grey.svg"
               text="Share"
@@ -240,7 +237,9 @@ const Center = ({
           )}
         </div>
         <div>
-          <ReadMore>{recipeData?.description}</ReadMore>
+          <ReadMore>
+            {recipeData?.versionDiscription || recipeData?.description}
+          </ReadMore>
         </div>
         <div className={styles.infoContainer}>
           <div className={styles.infoBox}>
@@ -302,7 +301,7 @@ const Center = ({
             }
           />
         ) : (
-          <ShareRecipeModal />
+          <ShareRecipeModal closeModal={() => setOpenModal(false)} />
         )}
       </Modal>
     </div>

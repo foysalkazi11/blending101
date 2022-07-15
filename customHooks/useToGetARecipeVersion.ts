@@ -18,11 +18,12 @@ const useToGetARecipeVersion = () => {
       const { data } = await getARecipeVersion({
         variables: { versionId: id },
       });
-      const { _id, recipeId, ...rest }: RecipeVersionType =
+      const { _id, recipeId, description, ...rest }: RecipeVersionType =
         data?.getARecipeVersion;
       const obj = {
         _id: recipeId,
         versionId: _id,
+        versionDiscription: description,
         ...rest,
       };
       dispatch(

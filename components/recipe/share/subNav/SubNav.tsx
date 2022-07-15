@@ -44,9 +44,9 @@ const SubNav = (props: SubNavProps) => {
           value={buttonText}
           icon={
             buttonText === "Compare" ? (
-              "/images/formulate.svg"
+              <FontAwesomeIcon fontSize={20} icon={faScaleBalanced} />
             ) : (
-              <FontAwesomeIcon icon={faScaleBalanced} />
+              "/images/formulate.svg"
             )
           }
           style={{ height: "50px", width: "234px", borderRadius: "14px" }}

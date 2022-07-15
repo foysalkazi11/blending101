@@ -31,18 +31,18 @@ const useChangeCompare = () => {
     let alredyCompared = compared;
 
     try {
-      if (!alredyCompared) {
-        dispatch(setCompareList([...filterRecipe(compareList, id)]));
-        setcompareRecipeList((state) => [...filterRecipe(state, id)]);
-      }
-      updateRecipeCompare(id, alredyCompared);
-
       const { data } = await changeCompare({
         variables: {
           userId: dbUser?._id,
           recipeId: id,
         },
       });
+
+      if (!alredyCompared) {
+        dispatch(setCompareList(filterRecipe(compareList, id)));
+        setcompareRecipeList((state) => filterRecipe(state, id));
+      }
+      updateRecipeCompare(id, alredyCompared);
 
       if (Number(data?.changeCompare) !== Number(dbUser?.compareLength)) {
         dispatch(
@@ -53,7 +53,10 @@ const useChangeCompare = () => {
         );
       }
     } catch (error) {
-      notification("error", "Unable to add compare list");
+      notification(
+        "error",
+        ` Unable to ${alredyCompared ? "remove" : "add"} from compare list`,
+      );
       // updateRecipeCompare(id, !alredyCompared);
     }
   };

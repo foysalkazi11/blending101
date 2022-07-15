@@ -17,7 +17,7 @@ const useToGetARecipe = () => {
   ) => {
     try {
       const { data } = await getARecipe({
-        variables: { recipeId, userId: userId },
+        variables: { recipeId, userId },
       });
       dispatch(
         setDetailsARecipe({
