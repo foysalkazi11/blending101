@@ -1,5 +1,6 @@
 export interface RecipeDetailsType {
   _id: string;
+  userId: string;
   name: string;
   prepTime: any;
   description: string;
