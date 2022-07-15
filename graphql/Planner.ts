@@ -1,5 +1,46 @@
 import { gql } from "@apollo/client";
 
+export const GET_30DAYS_CHALLENGE = gql`
+  query Get30DaysChallenge($userId: String!) {
+    getMyThirtyDaysChallenge(userId: $userId) {
+      assignDate
+      posts {
+        recipeId {
+          _id
+        }
+        recipeBlendCategory {
+          name
+        }
+      }
+    }
+  }
+`;
+
+export const GET_CHALLENGE_DETAIL = gql`
+  query GetChallengeDetail($userId: String!, $date: DateTime!) {
+    getAllChallengePostByDate(memberId: $userId, date: $date) {
+      images
+      recipeBlendCategory {
+        _id
+        name
+      }
+      name
+      note
+      ingredients {
+        ingredientId {
+          _id
+          ingredientName
+        }
+        selectedPortion {
+          name
+          quantity
+          gram
+        }
+      }
+    }
+  }
+`;
+
 export const GET_RECIPES_FOR_PLANNER = gql`
   query GetRecipesForPlanner(
     $searchTerm: String!
@@ -157,5 +198,11 @@ export const MOVE_PLANNER = gql`
 export const DELETE_RECIPE_FROM_PLANNER = gql`
   mutation DeleteRecipeFromPlanner($plannerId: String!, $recipeId: String!) {
     deletePlanner(plannerId: $plannerId, recipeId: $recipeId)
+  }
+`;
+
+export const CREATE_CHALLENGE_POST = gql`
+  mutation CreateChallengePost($data: CreateChallengePost!) {
+    createChallengePost(data: $data)
   }
 `;

@@ -1,36 +1,73 @@
 import styles from "./single-date.module.scss";
 import { food_color } from "../js/my";
+import { RECIPE_CATEGORY_COLOR } from "../../../data/Recipe";
+import { useLazyQuery } from "@apollo/client";
+import { GET_CHALLENGE_DETAIL } from "../../../graphql/Planner";
+import { format } from "date-fns";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { useEffect } from "react";
+import { setChallenge } from "../../../redux/slices/Planner.slice";
 
-function SingleDate({ date, selectToday }: any) {
-  let col = ["transparent"];
-  if (date[3]) {
-    col = date[3].map((value: any) =>
-      // @ts-ignore
-      Object.keys(food_color).find((key) => food_color[key] === value),
-    );
+function getBackgroundColor(categories: string[]) {
+  const length = categories.length;
+  if (length === 0) return "#D8D8D8";
+  else if (length === 1) return RECIPE_CATEGORY_COLOR[categories[0]];
+  else if (length === 2)
+    return `linear-gradient(to left, ${
+      RECIPE_CATEGORY_COLOR[categories[0]]
+    } 50%, ${RECIPE_CATEGORY_COLOR[categories[1]]} 50%)`;
+  else {
+    const baseAngle = 360 / length;
+    const result = categories.reduce((prev, curr, idx) => {
+      return (prev += `${RECIPE_CATEGORY_COLOR[curr]} ${idx * baseAngle}deg, ${
+        RECIPE_CATEGORY_COLOR[curr]
+      } ${(idx + 1) * baseAngle}deg, `);
+    }, "");
+
+    return `conic-gradient(${result.slice(0, -2)})`;
   }
+}
+
+function SingleDate({ date, categories }: any) {
+  const days = new Date(date);
+  const dayName = format(days, "E");
+  const day = format(days, "d");
+  const selectToday = false;
+  const [getChallengeData, { loading, data }] =
+    useLazyQuery(GET_CHALLENGE_DETAIL);
+
+  const dispatch = useAppDispatch();
+  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+
+  const showChallengeDetails = () => {
+    getChallengeData({
+      variables: {
+        userId,
+        date,
+      },
+    });
+  };
+
+  useEffect(() => {
+    if (!data?.getAllChallengePostByDate) return;
+    dispatch(
+      setChallenge({ date: date, posts: data.getAllChallengePostByDate }),
+    );
+  }, [data?.getAllChallengePostByDate, date, dispatch]);
+
   return (
     <div
       className={styles.challenge_circle_single_date}
+      onClick={showChallengeDetails}
       style={{
-        background:
-          col[0] === "transparent"
-            ? "transparent"
-            : col.length === 1
-            ? col[0]
-            : col.length === 2
-            ? `linear-gradient(to left, ${col[0]} 50%, ${col[1]} 50%)`
-            : col.length === 3
-            ? `conic-gradient(${col[0]} 0deg, ${col[0]} 120deg, ${col[1]} 120deg, ${col[1]} 240deg, ${col[2]} 240deg)`
-            : `conic-gradient(${col[0]} 0deg, ${col[0]} 90deg,
-                                                 ${col[1]} 90deg, ${col[1]} 180deg, ${col[2]} 180deg, ${col[2]} 270deg, ${col[3]} 270deg)`,
-        color: col[0] === "transparent" ? "#D8D8D8" : "white",
+        background: getBackgroundColor(categories),
+        color: categories.length === 0 ? "#333" : "white",
         boxShadow: selectToday ? "3px 6px 6px #00000029" : "none",
         border: selectToday ? "1px solid #9C9C9C" : "none",
       }}
     >
-      <p>{date[1]}</p>
-      <p>{date[2]}</p>
+      <p>{day}</p>
+      <p>{dayName}</p>
     </div>
   );
 }

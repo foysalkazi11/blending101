@@ -1,6 +1,7 @@
-import { food_color } from "../js/my";
-import FoodBox from "../food-box/food-box.component";
 import styles from "./food.module.scss";
+import { useQuery } from "@apollo/client";
+import { GET_BLEND_CATEGORY } from "../../../graphql/Recipe";
+import { RECIPE_CATEGORY_COLOR } from "../../../data/Recipe";
 
 interface FoodInterface {
   categoryObject: object;
@@ -8,22 +9,18 @@ interface FoodInterface {
 
 function Food({ categoryObject }: FoodInterface) {
   categoryObject = categoryObject || {};
+  const { data } = useQuery(GET_BLEND_CATEGORY);
   return (
     <div className={styles.challenge_circle_food}>
-      {Object.keys(categoryObject).map((color, key) => {
-        // @ts-ignore
-        if (categoryObject[color] !== "No Activity") {
-          return (
-            <FoodBox
-              key={key}
-              foodColor={color}
-              // @ts-ignore
-              foodName={categoryObject[color]}
-            />
-          );
-        }
-        return;
-      })}
+      {data?.getAllCategories?.map((category) => (
+        <div className={styles.challenge_circle_food_box} key={category.value}>
+          <div
+            className={styles.challenge_circle_food_color_represent}
+            style={{ backgroundColor: RECIPE_CATEGORY_COLOR[category.label] }}
+          ></div>
+          <p className={styles.challenge_circle_food_name}>{category.label}</p>
+        </div>
+      ))}
     </div>
   );
 }

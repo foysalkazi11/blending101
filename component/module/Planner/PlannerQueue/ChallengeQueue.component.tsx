@@ -7,6 +7,8 @@ import SplitImageCard from "../../../../theme/card/splitImageCard/splitImageCard
 import ViewDataCard from "../../../../theme/dataCard/viewDataCard.component";
 
 import styles from "./ChallengeQueue.module.scss";
+import { useAppSelector } from "../../../../redux/hooks";
+import { format } from "date-fns";
 
 const plannerIcon = (
   <div className={styles.plannerIcon}>
@@ -15,6 +17,9 @@ const plannerIcon = (
 );
 
 const ChallengePanel = () => {
+  const { date, notes, recipes } = useAppSelector(
+    (state) => state.planner.challenge,
+  );
   return (
     <>
       <IconHeading
@@ -27,40 +32,33 @@ const ChallengePanel = () => {
           <GoPrimitiveDot
             className={styles.challengePostCardContainer__heading__dot}
           />
-          <h5>Thursday, March 21</h5>
+          <h5>{format(date ? new Date(date) : new Date(), "EEEE, MMMM d")}</h5>
         </div>
         <SplitImageCard />
         <h5 className={styles.headingText}>My Notes</h5>
         <div className={styles.notesText}>
-          <h5 className={styles.notesText__heading}>asdfasd</h5>
-          <h5 className={styles.notesText__content}>
-            asdfas asdfasdf asfd asdfasdf asfasdf asdf asfasdf asfdasdf asdfas
-            fd
-          </h5>
+          {notes.map((note) => (
+            <h5 key={note} className={styles.notesText__heading}>
+              {note}
+            </h5>
+          ))}
         </div>
         <h5 className={styles.headingText}>My Recipe</h5>
         <div className={styles.myRecipeDiv}>
-          <ViewDataCard
-            title={"Smoothie"}
-            category={"wheat"}
-            companyName={"blending"}
-            rankingScore={4}
-            commentNumber={20}
-            calorieValue={90}
-            nutriScore={900}
-            ingredientList={[
-              { ingredientName: "Turmeric" },
-              { ingredientName: "generic" },
-              { ingredientName: "lemon" },
-              { ingredientName: "honey" },
-              { ingredientName: "black pepper" },
-              { ingredientName: "turmeric " },
-              { ingredientName: "ginger" },
-              { ingredientName: "honey" },
-              { ingredientName: "lemon" },
-            ]}
-            showCalender
-          />
+          {recipes.map((recipe) => (
+            <ViewDataCard
+              key={recipe.id}
+              title={recipe.name}
+              category={recipe.category}
+              companyName={"blending"}
+              rankingScore={4}
+              commentNumber={20}
+              calorieValue={recipe.calorie}
+              nutriScore={recipe.score}
+              ingredientList={recipe.ingredients}
+              showCalender
+            />
+          ))}
         </div>
       </div>
     </>

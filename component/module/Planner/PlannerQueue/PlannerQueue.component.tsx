@@ -34,6 +34,7 @@ import {
 import Icon from "../../../atoms/Icon/Icon.component";
 import { faPlusCircle } from "@fortawesome/pro-solid-svg-icons";
 import Publish from "../../../../helpers/Publish";
+import SkeletonElement from "../../../../theme/skeletons/SkeletonElement";
 
 const plannerIcon = (
   <div className={styles.plannerIcon}>
@@ -159,7 +160,17 @@ const PlannerPanel = (props) => {
           onBlur={handleShow}
         />
       </div>
-      <Recipes recipes={recipes} isUpload={isUpload} />
+      {discoverLoading || loading ? (
+        [...Array(limit)]?.map((_, index) => (
+          <SkeletonElement
+            type="thumbnail"
+            key={index}
+            style={{ width: "100%", height: "277px" }}
+          />
+        ))
+      ) : (
+        <Recipes recipes={recipes} isUpload={isUpload} />
+      )}
       <div className="flex ai-center jc-center mt-20">
         <Pagination
           limit={5}

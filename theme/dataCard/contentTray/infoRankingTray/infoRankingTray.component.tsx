@@ -6,7 +6,7 @@ interface InfoRankingTrayInterface {
   title: string;
   rankingScore: number;
   commentNumber: number;
-  ingredientList?: object[];
+  ingredientList?: string[];
 }
 const InfoRankingTray = ({
   title,
@@ -17,7 +17,7 @@ const InfoRankingTray = ({
   title = title || "";
   rankingScore = rankingScore || 0;
   commentNumber = commentNumber || 0;
-  
+
   return (
     <div className={styles.mainContainer}>
       <div className={styles.mainContainer__title}>{title}</div>
@@ -25,13 +25,14 @@ const InfoRankingTray = ({
         <RankingStarTray starNum={rankingScore} commentsNum={commentNumber} />
       </div>
       <div className={styles.mainContainer__ingredientList}>
-        {ingredientList &&
+        {/* {ingredientList &&
           // @ts-ignore
           ingredientList?.map(({ ingredientName }, index) => {
             return index + 1 < ingredientList?.length
               ? `${ingredientName}, `
               : `${ingredientName}.`;
-          })}
+          })} */}
+        {ingredientList.join(", ").slice(0, -1)}
       </div>
     </div>
   );

@@ -23,7 +23,22 @@ export interface IPlannerIngredients {
   };
 }
 
+interface IChallengeRecipe {
+  id: string;
+  name: string;
+  category: string;
+  score: number;
+  calorie: number;
+  ingredients: string[];
+}
+
 interface PlannerState {
+  challenge: {
+    date: string;
+    images: string[];
+    notes: string[];
+    recipes: IChallengeRecipe[];
+  };
   planners: IPlanner[];
   post: {
     recipe: {
@@ -36,20 +51,13 @@ interface PlannerState {
 }
 
 const initialState: PlannerState = {
-  planners: [
-    // {
-    //   date: "2022-07-08T18:00:00.000Z",
-    //   recipes: [
-    //     {
-    //       _id: "6214dd3b5523d9802418b075",
-    //       name: "smoothie",
-    //       category: "Smoothie",
-    //       rxScore: 786,
-    //       calorie: 250,
-    //     },
-    //   ],
-    // },
-  ],
+  challenge: {
+    date: "",
+    images: [],
+    notes: [],
+    recipes: [],
+  },
+  planners: [],
   post: {
     recipe: {
       _id: "",
@@ -64,6 +72,24 @@ export const PlannerSlice = createSlice({
   name: "Planner",
   initialState,
   reducers: {
+    setChallenge: (state, action) => {
+      state.challenge.date = action.payload.date;
+      action.payload.posts.forEach((post, idx) => {
+        state.challenge.images.push(post?.images[0] || "");
+        state.challenge.notes.push(post?.note || "");
+        state.challenge.recipes.push({
+          id: post?._id || idx,
+          name: post?.name || "",
+          category: post?.recipeBlendCategory?.name || "",
+          score: post?.rxScore || 900,
+          calorie: post?.calorie || 60,
+          ingredients:
+            post?.ingredients?.map(
+              (ing) => ing?.ingredientId?.ingredientName || "",
+            ) || [],
+        });
+      });
+    },
     setPlanners: (state, action) => {
       state.planners = action.payload
         .map((planner) => ({
@@ -230,6 +256,7 @@ export const PlannerSlice = createSlice({
 });
 
 export const {
+  setChallenge,
   setPlanners,
   addPlanner,
   deleteRecipe,
