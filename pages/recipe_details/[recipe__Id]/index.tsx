@@ -11,6 +11,7 @@ import {
   setOpenVersionTrayFormWhichPage,
 } from "../../../redux/slices/versionTraySlice";
 import { RecipeVersionType } from "../../../type/recipeVersionType";
+import { RecipeDetailsType } from "../../../type/recipeDetails";
 
 const Index = () => {
   const router = useRouter();
@@ -34,6 +35,8 @@ const Index = () => {
   useEffect(() => {
     dispatch(setOpenVersionTray(false));
     dispatch(setOpenVersionTrayFormWhichPage("details"));
+    dispatch(setDetailsARecipe({} as RecipeDetailsType));
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

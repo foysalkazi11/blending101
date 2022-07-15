@@ -1,11 +1,19 @@
 import React from "react";
-import styles from './CircularRotatingLoader.module.scss';
+import styles from "./CircularRotatingLoader.module.scss";
 import { BiLoaderAlt } from "react-icons/bi";
 
-const CircularRotatingLoader = () => {
+interface Porps {
+  color?: "primary" | "secondary" | "gray" | "white";
+  style?: React.CSSProperties;
+}
+
+const CircularRotatingLoader = ({ color = "secondary", style = {} }: Porps) => {
   return (
     <div className={styles.mainLoader}>
-      <BiLoaderAlt className={styles.mainLoader__loader}/>
+      <BiLoaderAlt
+        className={`${styles.mainLoader__loader} ${styles[color]}`}
+        style={style}
+      />
     </div>
   );
 };

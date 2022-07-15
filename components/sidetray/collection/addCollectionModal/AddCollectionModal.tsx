@@ -1,13 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { Dispatch, SetStateAction, useState } from "react";
-import CancleBtn from "../../commentsTray/buttons/CancleBtn";
-import SubmitBtn from "../../commentsTray/buttons/SubmitBtn";
 import styles from "./AddCollection.module.scss";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
 import CREATE_NEW_COLLECTION from "../../../../gqlLib/collection/mutation/createNewCollection";
 import { useMutation } from "@apollo/client";
 import EDIT_COLLECTION from "../../../../gqlLib/collection/mutation/editCollection";
 import { useAppSelector } from "../../../../redux/hooks";
+import CommentAndNoteButton from "../../../../theme/button/commentAndNoteButton/CommentAndNoteButton";
 
 type AddCollectionModalProps = {
   input: any;
@@ -142,12 +141,16 @@ const AddCollectionModal = ({
           onChange={handleChange}
         />
         <div className={styles.buttonGroup}>
-          <SubmitBtn
-            style={{ backgroundColor: "#fe5d1f", marginRight: "30px" }}
+          <CommentAndNoteButton
+            type="submitBtn"
+            style={{ marginRight: "30px" }}
             handleClick={saveToDb}
             text={loading ? "Loading..." : "Submit"}
           />
-          <CancleBtn handleClick={() => setOpenModal(false)} />
+          <CommentAndNoteButton
+            type="cancleBtn"
+            handleClick={() => setOpenModal(false)}
+          />
         </div>
       </div>
     </div>
