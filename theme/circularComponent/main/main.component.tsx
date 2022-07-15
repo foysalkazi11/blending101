@@ -2,6 +2,7 @@ import SingleDate from "../single-date/single-date.component";
 import Inside from "../inside/inside.component";
 import styles from "./main.module.scss";
 import { daysInMonth } from "../js/my";
+import { format } from "date-fns";
 
 export function getCurrentDate(t: Date) {
   const date = ("0" + t.getDate()).slice(-2);
@@ -11,6 +12,7 @@ export function getCurrentDate(t: Date) {
 }
 
 interface MainInterface {
+  activities: any[];
   activityDataList?: any[];
   profileImage?: string;
   numOfDaysChallenge?: number;
@@ -22,6 +24,7 @@ interface MainInterface {
 }
 
 function Main({
+  activities,
   activityDataList,
   profileImage,
   numOfDaysChallenge,
@@ -41,6 +44,7 @@ function Main({
     startYear,
   );
   const afterAddingDateList = [...dateList, []];
+  // console.log(afterAddingDateList);
   const today: Date = new Date();
   const todayDate = getCurrentDate(today);
 
@@ -54,22 +58,21 @@ function Main({
           blendValue={blendValue}
           totalBlendValue={totalBlendValue}
         />
-        {afterAddingDateList.map((date, key) => {
-          if (!date[0]) {
-            return (
-              <div key={key} className={styles.challenge_circle_semi_circle} />
+        {activities &&
+          activities.length !== 0 &&
+          activities.map((activity, key) => {
+            const categories = activity?.posts.map(
+              (post) => post?.recipeBlendCategory?.name || "",
             );
-          }
-
-          // @ts-ignore
-          return (
-            <SingleDate
-              selectToday={todayDate === getCurrentDate(date[0]) ? true : false}
-              key={key}
-              date={date}
-            />
-          );
-        })}
+            return (
+              <SingleDate
+                key={key}
+                date={activity?.assignDate}
+                categories={categories}
+              />
+            );
+          })}
+        <div className={styles.challenge_circle_semi_circle} />
       </div>
     </div>
   );

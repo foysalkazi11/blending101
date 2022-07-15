@@ -9,11 +9,12 @@ export const RECIPE_CATEGORY = [
 ];
 
 export const RECIPE_CATEGORY_COLOR = {
-  "Whole Food": "#9AC740",
+  WholeFood: "#9AC740",
   Refreshing: "#FFB440",
   Smoothie: "#FF5140",
   Soup: "#FFE740",
-  Tea: "#AF895F",
+  "Tea & Tonic": "#AF895F",
   "Frozen Treat": "#9085D9",
+  Puree: "#9085D9",
   "No Activity": "#D8D8D8",
 };

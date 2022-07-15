@@ -23,7 +23,23 @@ export interface IPlannerIngredients {
   };
 }
 
+interface IChallengeRecipe {
+  id: string;
+  name: string;
+  image: string;
+  category: string;
+  score: number;
+  calorie: number;
+  ingredients: string[];
+}
+
 interface PlannerState {
+  challenge: {
+    date: string;
+    images: string[];
+    notes: string[];
+    recipes: IChallengeRecipe[];
+  };
   planners: IPlanner[];
   post: {
     recipe: {
@@ -35,28 +51,22 @@ interface PlannerState {
   };
 }
 
+const initialRecipe = {
+  _id: "",
+  name: "",
+  image: "",
+  ingredients: [],
+};
 const initialState: PlannerState = {
-  planners: [
-    // {
-    //   date: "2022-07-08T18:00:00.000Z",
-    //   recipes: [
-    //     {
-    //       _id: "6214dd3b5523d9802418b075",
-    //       name: "smoothie",
-    //       category: "Smoothie",
-    //       rxScore: 786,
-    //       calorie: 250,
-    //     },
-    //   ],
-    // },
-  ],
+  challenge: {
+    date: "",
+    images: [],
+    notes: [],
+    recipes: [],
+  },
+  planners: [],
   post: {
-    recipe: {
-      _id: "",
-      name: "",
-      image: "",
-      ingredients: [],
-    },
+    recipe: initialRecipe,
   },
 };
 
@@ -64,6 +74,31 @@ export const PlannerSlice = createSlice({
   name: "Planner",
   initialState,
   reducers: {
+    setChallenge: (state, action) => {
+      state.challenge.date = action.payload.date;
+      const images = [];
+      const notes = [];
+      const recipes = [];
+      action.payload.posts.forEach((post, idx) => {
+        post?.images[0] && images.push(post?.images[0]);
+        post?.note && notes.push(post?.note);
+        recipes.push({
+          id: post?._id || idx,
+          name: post?.name || "",
+          image: post?.recipeImage || "",
+          category: post?.recipeBlendCategory?.name || "",
+          score: post?.rxScore || 900,
+          calorie: post?.calorie || 60,
+          ingredients:
+            post?.ingredients?.map(
+              (ing) => ing?.ingredientId?.ingredientName || "",
+            ) || [],
+        });
+      });
+      state.challenge.images = images;
+      state.challenge.notes = notes;
+      state.challenge.recipes = recipes;
+    },
     setPlanners: (state, action) => {
       state.planners = action.payload
         .map((planner) => ({
@@ -209,6 +244,11 @@ export const PlannerSlice = createSlice({
       state.planners = [];
     },
 
+    // Upload Challenge
+    resetForm: (state) => {
+      state.post.recipe = initialRecipe;
+    },
+
     setRecipeInfo: (
       state,
       action: { payload: { _id: string; name: string; image: string } },
@@ -217,19 +257,52 @@ export const PlannerSlice = createSlice({
       state.post.recipe.name = action.payload.name;
       state.post.recipe.image = action.payload.image;
     },
+
     setRecipeIngredients: (
       state,
       action: { payload: { ingredients: IPlannerIngredients[] } },
     ) => {
       state.post.recipe.ingredients = action.payload.ingredients;
     },
-    addIngredient: (state, action: { payload: IPlannerIngredients }) => {
-      state.post.recipe.ingredients.push(action.payload);
+
+    addIngredient: (state, action) => {
+      const ingredientItem = action.payload.ingredient;
+      const qty = Math.floor(Math.random() * 10);
+      const portion =
+        ingredientItem?.portions.find((portion) => portion.default)
+          ?.measurement || ingredientItem?.portions[0].measurement;
+      const unit =
+        portion?.measurement || ingredientItem?.portions[0].measurement;
+      const weight =
+        portion?.meausermentWeight ||
+        ingredientItem?.portions[0].meausermentWeight;
+
+      const ingredient = {
+        ingredientId: {
+          _id: ingredientItem.value,
+          ingredientName: ingredientItem.label,
+        },
+        selectedPortion: {
+          gram: qty * weight,
+          name: unit,
+          quantity: qty,
+        },
+      };
+
+      state.post.recipe.ingredients.push(ingredient);
+    },
+
+    deleteIngredient: (state, action) => {
+      const id = action.payload.id;
+      state.post.recipe.ingredients = state.post.recipe.ingredients.filter(
+        (i) => i.ingredientId._id !== id,
+      );
     },
   },
 });
 
 export const {
+  setChallenge,
   setPlanners,
   addPlanner,
   deleteRecipe,
@@ -239,6 +312,8 @@ export const {
   setRecipeInfo,
   setRecipeIngredients,
   addIngredient,
+  deleteIngredient,
+  resetForm,
 } = PlannerSlice.actions;
 
 export default PlannerSlice.reducer;

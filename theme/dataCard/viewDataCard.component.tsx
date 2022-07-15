@@ -16,7 +16,7 @@ interface ViewDataCardInterface {
   calorieValue?: number;
   rankingScore?: number;
   commentNumber?: number;
-  ingredientList?: object[];
+  ingredientList?: string[];
   showCalender?: boolean;
   activeCalenderBoolean?: boolean;
 }
@@ -45,21 +45,12 @@ const ViewDataCard = ({
   commentNumber = commentNumber || 0;
   showCalender = showCalender || false;
   return (
-    <div className={styles.mainContainer}>
+    <div className={`${styles.mainContainer} mb-20`}>
       <div className={styles.mainContainer__imgRankingTray}>
-        <div
-          className={styles.mainContainer__imgRankingTray__imageDiv}
-        >
-          <Image
-            src={cardImage}
-            alt=""
-            objectFit="cover"
-            layout="fill"
-          />
+        <div className={styles.mainContainer__imgRankingTray__imageDiv}>
+          <Image src={cardImage} alt="" objectFit="cover" layout="fill" />
         </div>
-        <div
-          className={styles.mainContainer__imgRankingTray__content}
-        >
+        <div className={styles.mainContainer__imgRankingTray__content}>
           <InfoRankingTray
             title={title}
             ingredientList={ingredientList}
@@ -74,40 +65,6 @@ const ViewDataCard = ({
           nutriScore={nutriScore}
           calorieValue={calorieValue}
         />
-        <div className={styles.mainContainer__elemTray__bottomTray}>
-          <div
-            className={
-              styles.mainContainer__elemTray__bottomTray__companyDiv
-            }
-          >
-            <span>
-              <Image
-                src={companyLogo}
-                alt={""}
-                layout={"fill"}
-                objectFit={"cover"}
-              />
-            </span>
-            <div>{companyName}</div>
-          </div>
-
-          {showCalender && (
-            <RiCalendarEventLine
-              className={
-                styles.mainContainer__elemTray__bottomTray__calendar
-              }
-            />
-          )}
-          {activeCalenderBoolean && (
-            <div
-              className={
-                styles.mainContainer__elemTray__bottomTray__calenderTray
-              }
-            >
-              <CalendarTray/>
-            </div>
-          )}
-        </div>
       </div>
     </div>
   );

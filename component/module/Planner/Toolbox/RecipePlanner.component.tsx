@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { format } from "date-fns";
+import React, { useEffect, useState } from "react";
+import { format, startOfWeek, endOfWeek, addWeeks, subWeeks } from "date-fns";
 import MealCalendarDatePlan from "./Plan.component";
 
 import styles from "./RecipePlanner.module.scss";
@@ -55,40 +55,42 @@ const RecipePlanner = () => {
 };
 
 const RecipeMealHeader = () => {
-  const today = useMemo(() => new Date(), []);
-  const [first, setFirst] = useState(today.getDate() - today.getDay() + 1);
-
-  var firstday = useMemo(() => new Date(today.setDate(first)), [first, today]);
-  var lastday = useMemo(
-    () => new Date(today.setDate(today.getDate() + 6)),
-    [today],
+  const [startDate, setStartDate] = useState(
+    startOfWeek(new Date(), { weekStartsOn: 1 }),
+  );
+  const [endDate, setEndDate] = useState(
+    endOfWeek(new Date(), { weekStartsOn: 1 }),
   );
 
+  const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+
   const { loading, data } = useQuery(GET_PLANNER_BY_WEEK, {
     variables: {
       userId,
-      startDate: firstday.toISOString(),
-      endDate: lastday.toISOString(),
+      startDate: new Date(startDate?.setHours(0, 0, 0, 0))?.toISOString(),
+      endDate: new Date(endDate?.setHours(0, 0, 0, 0))?.toISOString(),
     },
   });
 
-  const dispatch = useAppDispatch();
   useEffect(() => {
     if (data?.getPlannerByDates) dispatch(setPlanners(data?.getPlannerByDates));
   }, [data?.getPlannerByDates, dispatch]);
 
-  const startMonth = MONTH[firstday.getMonth()];
-  const endMonth = MONTH[lastday.getMonth()];
+  const startMonth = MONTH[startDate.getMonth()];
+  const endMonth = MONTH[endDate.getMonth()];
 
-  const startDate = firstday.getDate();
-  const endDate = lastday.getDate();
+  const startDay = startDate.getDate();
+  const endDay = endDate.getDate();
 
   const goToPreviousWeek = () => {
-    setFirst(first - 7);
+    setStartDate(subWeeks(startDate, 1));
+    setEndDate(subWeeks(endDate, 1));
   };
+
   const goToNextWeek = () => {
-    setFirst(first + 7);
+    setStartDate(addWeeks(startDate, 1));
+    setEndDate(addWeeks(endDate, 1));
   };
 
   return (
@@ -103,7 +105,7 @@ const RecipeMealHeader = () => {
           onClick={goToPreviousWeek}
         />
         <h4 className={styles.textArrowTray__text}>
-          Meal Plan, {`${startMonth} ${startDate} - ${endMonth} ${endDate}`}
+          Meal Plan, {`${startMonth} ${startDay} - ${endMonth} ${endDay}`}
         </h4>
         <AiOutlineRight
           className={styles.textArrowTray__icon}
