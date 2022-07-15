@@ -68,8 +68,8 @@ const RecipeMealHeader = () => {
   const { loading, data } = useQuery(GET_PLANNER_BY_WEEK, {
     variables: {
       userId,
-      startDate: new Date(startDate?.setHours(0, 0, 0, 0))?.toISOString(),
-      endDate: new Date(endDate?.setHours(0, 0, 0, 0))?.toISOString(),
+      startDate: new Date(startDate?.setUTCHours(0, 0, 0, 0))?.toISOString(),
+      endDate: new Date(endDate?.setUTCHours(0, 0, 0, 0))?.toISOString(),
     },
   });
 
