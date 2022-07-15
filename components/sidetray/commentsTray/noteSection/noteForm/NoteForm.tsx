@@ -1,6 +1,5 @@
 import React from "react";
-import CancleBtn from "../../buttons/CancleBtn";
-import SubmitBtn from "../../buttons/SubmitBtn";
+import CommentAndNoteButton from "../../../../../theme/button/commentAndNoteButton/CommentAndNoteButton";
 import styles from "./NoteForm.module.scss";
 
 type NoteFormProps = {
@@ -26,12 +25,18 @@ const NoteForm = ({
       <input name="title" value={noteForm?.title} onChange={updateNoteForm} />
       <textarea name="body" value={noteForm?.body} onChange={updateNoteForm} />
       <div className={styles.btnBox}>
-        <SubmitBtn
-          style={{ background: "#7DBD3B", boxShadow: "5px 5px 15px #e5e6e4" }}
+        <CommentAndNoteButton
+          type="submitBtn"
+          submitBtnVarient="secondary"
+          style={{ boxShadow: "5px 5px 15px #e5e6e4" }}
           text="Save"
           handleClick={createOrUpdateNote}
         />
-        <CancleBtn text="Cancel" handleClick={toggleNoteForm} />
+        <CommentAndNoteButton
+          type="cancleBtn"
+          text="Cancel"
+          handleClick={toggleNoteForm}
+        />
       </div>
     </div>
   );

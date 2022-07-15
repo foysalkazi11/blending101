@@ -1,5 +1,5 @@
+@import "../../../styles/partials/variables";
 .submitBtn {
-  // background: #FE5D1F;
   // box-shadow: 5px 5px 15px #fe5d1f38;
   border-radius: 23px;
   color: #fff !important;
@@ -16,6 +16,13 @@
   cursor: pointer;
 }
 
+.primary {
+  background: $primaryColor;
+}
+.secondary {
+  background: $secondaryColor;
+}
+
 .cancleBtn {
   min-width: 95px;
   height: 37px;
@@ -24,7 +31,7 @@
   background: transparent;
   font-size: 13px;
   font-weight: 500;
-  color: #f95d2b;
+  color: $primaryColor;
   cursor: pointer;
   &:hover {
     background: transparent;

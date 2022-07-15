@@ -1,6 +1,5 @@
 import React, { Dispatch, SetStateAction } from "react";
-import CancleBtn from "../buttons/CancleBtn";
-import SubmitBtn from "../buttons/SubmitBtn";
+import CommentAndNoteButton from "../../../../theme/button/commentAndNoteButton/CommentAndNoteButton";
 import styles from "./CommentBox.module.scss";
 
 type CommentBoxProps = {
@@ -27,12 +26,14 @@ const CommentBox = ({
         onChange={(e) => setComment(e?.target?.value)}
       />
       <div className={styles.buttonGroup}>
-        <SubmitBtn
+        <CommentAndNoteButton
+          type="submitBtn"
           text={updateComment ? "Update" : "Comment"}
-          style={{ background: "#fe5d1f", boxShadow: "5px 5px 15px #fe5d1f38" }}
+          style={{ boxShadow: "5px 5px 15px #fe5d1f38" }}
           handleClick={createOrUpdateComment}
         />
-        <CancleBtn
+        <CommentAndNoteButton
+          type="cancleBtn"
           text="Cancel"
           handleClick={() => {
             toggleCommentBox();

@@ -162,7 +162,7 @@ const Center = ({
                   dispatch(setOpenVersionTrayFormWhichPage("details"));
                 }}
                 icon={<VscVersions color={"#7cbc39"} />}
-                text="Versions"
+                text={`Versions(${recipeData?.recipeVersion?.length - 1})`}
               />
             ) : null}
 
