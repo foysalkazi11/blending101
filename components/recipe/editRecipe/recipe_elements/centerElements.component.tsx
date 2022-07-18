@@ -279,7 +279,7 @@ const Center_Elements = ({
       </div>
       <CustomModal open={openModal} setOpen={setOpenModal}>
         <ConfirmationModal
-          text="It's will delete everything related recipe !!!"
+          text="All the related entities will be removed along with this recipe !!!"
           cancleFunc={() => setOpenModal(false)}
           submitFunc={deleteOneRecipe}
           loading={loading}
