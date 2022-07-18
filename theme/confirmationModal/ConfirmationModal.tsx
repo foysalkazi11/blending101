@@ -23,7 +23,7 @@ const ConfirmationModal = ({
         <div className={styles.buttonBox}>
           <CommentAndNoteButton
             type="cancleBtn"
-            text="Cancle"
+            text="Cancel"
             handleClick={cancleFunc}
             style={{ marginRight: "20px" }}
           />
