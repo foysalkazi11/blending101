@@ -14,7 +14,7 @@ import styles from "./ShowCollectionRecipes.module.scss";
 import SkeletonCollectionRecipe from "../skeletons/skeletonCollectionRecipe/SkeletonCollectionRecipe";
 import useLocalStorage from "../../customHooks/useLocalStorage";
 import GET_SINGLE_COLLECTION from "../../gqlLib/collection/query/getSingleCollection";
-import IconWraper from "../iconWraper/IconWraper";
+import IconWarper from "../iconWarper/IconWarper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/pro-regular-svg-icons";
 
@@ -154,14 +154,14 @@ const ShowCollectionRecipes = () => {
           <h2>{collectionName}</h2>
         </div>
 
-        <IconWraper
+        <IconWarper
           handleClick={handleColseCollections}
           defaultBg="secondary"
           hover="bgSecondary"
           style={{ width: "28px", height: "28px" }}
         >
           <FontAwesomeIcon icon={faXmark} />
-        </IconWraper>
+        </IconWarper>
       </div>
       <div className={styles.showRecipes}>
         {allRecipeWithinCollections?.length

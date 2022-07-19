@@ -7,7 +7,7 @@ import { MdOutlineClose } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
 import useChangeCompare from "../../../customHooks/useChangeComaper";
 import useLocalStorage from "../../../customHooks/useLocalStorage";
-import IconWraper from "../../iconWraper/IconWraper";
+import IconWraper from "../../iconWarper/IconWarper";
 
 export default function SmallcardComponent({
   img,
