@@ -8,6 +8,7 @@ import ChallengeQueue from "../component/module/Planner/PlannerQueue/ChallengeQu
 import PlannerQueue from "../component/module/Planner/PlannerQueue/PlannerQueue.component";
 import { RecipePlanner } from "../component/module/Planner/Toolbox/RecipePlanner.component";
 import UploadCard from "../component/module/Planner/Toolbox/UploadCard.component";
+import Gallery from "../component/organisms/Gallery/Gallery.component";
 import AContainer from "../containers/A.container";
 import { GET_30DAYS_CHALLENGE } from "../graphql/Planner";
 import { useAppSelector } from "../redux/hooks";

@@ -1,6 +1,8 @@
 import Image from "next/image";
-import React from "react";
+import React, { Fragment, useState } from "react";
 import { BsZoomIn } from "react-icons/bs";
+import Modal from "../../../component/molecules/Modal/Modal.component";
+import Gallery from "../../../component/organisms/Gallery/Gallery.component";
 import styles from "./splitImage.module.scss";
 
 interface SplitImageCardInterface {
@@ -9,37 +11,33 @@ interface SplitImageCardInterface {
   rightImage?: string;
 }
 const SplitImageCard = ({ images }: SplitImageCardInterface) => {
-  // const leftImage = leftImage || "/images/5.jpeg";
-  // rightImage = rightImage || "/images/5.jpeg";
+  const [showGallery, setShowGallery] = useState(false);
   return (
-    <div className={styles.mainContainer}>
-      {images.map((image) => (
-        <div className={styles.mainContainer__Image} key={image}>
-          <Image
-            src={image || "/images/no-image.png"}
-            alt={""}
-            layout={"fill"}
-            objectFit={"cover"}
-          />
-        </div>
-      ))}
-      {/* {leftImage && (
-        <div className={styles.mainContainer__Image}>
-          <Image src={leftImage} alt={""} layout={"fill"} objectFit={"cover"} />
-        </div>
-      )}
-      {rightImage && (
-        <div className={styles.mainContainer__Image}>
-          <Image
-            src={rightImage}
-            alt={""}
-            layout={"fill"}
-            objectFit={"cover"}
-          />
-        </div>
-      )} */}
-      <BsZoomIn className={styles.icon} />
-    </div>
+    <Fragment>
+      <Modal
+        overlayClass={styles.overlay}
+        show={showGallery}
+        hideModal={() => setShowGallery(false)}
+      >
+        <Gallery />
+      </Modal>
+      <div className={styles.mainContainer}>
+        {images.map((image) => (
+          <div className={styles.mainContainer__Image} key={image}>
+            <Image
+              src={image || "/images/no-image.png"}
+              alt={""}
+              layout={"fill"}
+              objectFit={"cover"}
+            />
+          </div>
+        ))}
+        <BsZoomIn
+          className={styles.icon}
+          onClick={() => setShowGallery(true)}
+        />
+      </div>
+    </Fragment>
   );
 };
 
