@@ -22,7 +22,7 @@ import { VscVersions } from "react-icons/vsc";
 import InputComponent from "../../../../theme/input/input.component";
 import TextArea from "../../../../theme/textArea/TextArea";
 import { MdMoreVert, MdDeleteOutline } from "react-icons/md";
-import IconWraper from "../../../../theme/iconWraper/IconWraper";
+import IconWraper from "../../../../theme/iconWarper/IconWarper";
 import { RecipeDetailsType } from "../../../../type/recipeDetails";
 import useOnClickOutside from "../../../utility/useOnClickOutside";
 import { useMutation } from "@apollo/client";

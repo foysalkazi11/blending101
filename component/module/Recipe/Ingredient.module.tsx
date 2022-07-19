@@ -172,7 +172,9 @@ const IngredientSection = (props) => {
                               {/* to create ingredients lists  */}
                               <div className={classes.ingredients__text}>
                                 <span>
-                                  {elem.selectedPortion?.quantity || 1}
+                                  {Math?.round(
+                                    elem.selectedPortion?.quantity || 1,
+                                  )}
                                   &nbsp;
                                 </span>
                                 <span>
