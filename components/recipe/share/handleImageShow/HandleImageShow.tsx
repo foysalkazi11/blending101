@@ -3,7 +3,7 @@ import styles from "./HandleImageShow.module.scss";
 import AddIcon from "../../../../public/icons/add_black_36dp.svg";
 import Image from "next/image";
 import { MdClose } from "react-icons/md";
-import IconWraper from "../../../../theme/iconWraper/IconWraper";
+import IconWraper from "../../../../theme/iconWarper/IconWarper";
 
 interface AddRecipeCardProps {
   existingImage?: string[];
@@ -53,8 +53,8 @@ const HandleImageShow = ({
                   position: "absolute",
                   top: "2px",
                   right: "1px",
-                  backgroundColor: "#c9c9c9",
                 }}
+                defaultBg="gray"
                 handleClick={() => removeExistingImage(photo)}
               >
                 <MdClose color="#f4f4f4" />

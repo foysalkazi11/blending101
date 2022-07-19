@@ -9,7 +9,7 @@ interface IconProps {
   defaultBg?: "gray" | "primary" | "secondary" | "none";
 }
 
-const IconWraper = ({
+const IconWarper = ({
   children,
   style = {},
   handleClick = () => {},
@@ -27,4 +27,4 @@ const IconWraper = ({
   );
 };
 
-export default IconWraper;
+export default IconWarper;
