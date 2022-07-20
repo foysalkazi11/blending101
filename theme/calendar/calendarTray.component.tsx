@@ -71,7 +71,9 @@ const CalendarTray = ({ handler }: any) => {
   );
 
   const dateHandler = (selectedDate) => {
+    // console.log(selectedDate);
     const date = new Date(selectedYear, selectedMonthIndex, selectedDate);
+    // console.log(date);
     handler(date);
   };
 

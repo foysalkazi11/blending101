@@ -34,6 +34,7 @@ import Icon from "../../../atoms/Icon/Icon.component";
 import { faPlusCircle } from "@fortawesome/pro-solid-svg-icons";
 import Publish from "../../../../helpers/Publish";
 import SkeletonElement from "../../../../theme/skeletons/SkeletonElement";
+import { getDateOnly } from "../../../../helpers/Date";
 
 const plannerIcon = (
   <div className={styles.plannerIcon}>
@@ -192,10 +193,12 @@ const Recipes = (props) => {
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
   const dateHandler = async (recipe: any, date: Date) => {
+    const assignDate = getDateOnly(date);
+    console.log(new Date(assignDate), assignDate);
     await Publish({
       mutate: addRecipe,
       variables: {
-        assignDate: date?.toISOString(),
+        assignDate: assignDate,
         recipeId: [recipe._id],
         userId,
       },
@@ -206,7 +209,7 @@ const Recipes = (props) => {
         dispatch(
           addPlanner({
             id: data?.createPlanner?._id,
-            date: date?.toISOString(),
+            date: assignDate,
             recipe: {
               _id: recipe._id,
               name: recipe.name,

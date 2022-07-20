@@ -8,20 +8,22 @@ import ChallengeQueue from "../component/module/Planner/PlannerQueue/ChallengeQu
 import PlannerQueue from "../component/module/Planner/PlannerQueue/PlannerQueue.component";
 import { RecipePlanner } from "../component/module/Planner/Toolbox/RecipePlanner.component";
 import UploadCard from "../component/module/Planner/Toolbox/UploadCard.component";
-import Gallery from "../component/organisms/Gallery/Gallery.component";
 import AContainer from "../containers/A.container";
 import { GET_30DAYS_CHALLENGE } from "../graphql/Planner";
 import { useAppSelector } from "../redux/hooks";
 
 import styles from "../styles/pages/planner.module.scss";
-import CircleComponent from "../theme/circularComponent/CircleComponent.component";
+import CircleComponent from "../component/module/Planner/Challenge/Challenge.component";
+
 import { food_color, fake_data } from "../theme/circularComponent/js/my";
 import IconHeading from "../theme/iconHeading/iconHeading.component";
 import ToggleCard from "../theme/toggleCard/toggleCard.component";
+import Settings from "../component/module/Planner/Setttings/Settings.component";
 
 const Planner = () => {
-  const [centerLeftToggler, setCenterLeftToggler] = useState(false);
-  const [uploadState, setUploadState] = useState(false);
+  const [showChallenge, setShowChallenge] = useState(false);
+  const [showUpload, setShowUpload] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
@@ -31,6 +33,11 @@ const Planner = () => {
     },
   });
 
+  let toolbox = null;
+  if (showChallenge && showUpload)
+    toolbox = <UploadCard setUploadState={setShowUpload} />;
+  else if (showChallenge && showSettings) toolbox = <Settings />;
+
   return (
     <AContainer>
       <div className={styles.windowContainer}>
@@ -38,85 +45,69 @@ const Planner = () => {
           <div className={styles.planner__pageTitle}>BLENDA COACH</div>
           <div className="row">
             <div className="col-3">
-              {centerLeftToggler && !uploadState ? (
+              {showChallenge && !showUpload ? (
                 <ChallengeQueue />
               ) : (
-                <PlannerQueue isUpload={uploadState} />
+                <PlannerQueue isUpload={showUpload} />
               )}
             </div>
             <div className="col-6">
-              <div className={styles.mainContainer}>
-                <div className={styles.headingDiv}>
-                  <IconHeading title="Toolbox" icon={<FaToolbox />} />
-                  {centerLeftToggler && (
-                    <div
-                      className={styles.uploadDiv}
-                      onClick={() => {
-                        setUploadState(true);
-                        setCenterLeftToggler(true);
+              <div className={styles.headingDiv}>
+                <IconHeading title="Toolbox" icon={<FaToolbox />} />
+                {showChallenge && (
+                  <div
+                    className={styles.uploadDiv}
+                    onClick={() => {
+                      setShowUpload(true);
+                      setShowChallenge(true);
+                    }}
+                  >
+                    <AiOutlinePlusCircle className={styles.uploadDiv__icon} />
+                    <span>Upload</span>
+                  </div>
+                )}
+              </div>
+              <div className={styles.toolbox}>
+                {showUpload ? (
+                  <UploadCard setUploadState={setShowUpload} />
+                ) : (
+                  <>
+                    <ToggleCard
+                      leftToggleHeading="Challenge"
+                      rightToggleHeading="Planner"
+                      toggler={showChallenge}
+                      setTogglerFunc={setShowChallenge}
+                      headingStyle={{
+                        fontSize: "1.6rem",
+                        padding: "15px 5px",
+                      }}
+                      togglerStyle={{
+                        width: "80%",
+                        margin: "0px auto",
+                        paddingTop: "18px",
                       }}
                     >
-                      <AiOutlinePlusCircle className={styles.uploadDiv__icon} />
-                      <span>Upload</span>
-                    </div>
-                  )}
-                </div>
-                <div className={styles.mainContainer__contentDiv}>
-                  {uploadState ? (
-                    <UploadCard setUploadState={setUploadState} />
-                  ) : (
-                    <>
-                      <ToggleCard
-                        leftToggleHeading="Challenge"
-                        rightToggleHeading="Planner"
-                        toggler={centerLeftToggler}
-                        setTogglerFunc={setCenterLeftToggler}
-                        headingStyle={{
-                          fontSize: "1.6rem",
-                          padding: "15px 5px",
-                        }}
-                        togglerStyle={{
-                          width: "80%",
-                          margin: "0px auto",
-                          paddingTop: "18px",
-                        }}
-                      >
-                        {/* <SettingComponent/> */}
-                      </ToggleCard>
+                      {/* <SettingComponent/> */}
+                    </ToggleCard>
 
-                      {centerLeftToggler ? (
-                        <div
-                          className={styles.mainContainer__contentDiv__innerDiv}
-                        >
-                          <div
-                            className={
-                              styles.mainContainer__contentDiv__innerDiv__challengeDiv
-                            }
-                          >
-                            {data?.getMyThirtyDaysChallenge?.length !== 0 && (
-                              <CircleComponent
-                                activities={
-                                  data?.getMyThirtyDaysChallenge || []
-                                }
-                                categoryObject={food_color}
-                                activityDataList={fake_data}
-                                profileImage={"/images/5.jpeg"}
-                                blendValue={400}
-                                totalBlendValue={750}
-                                numOfDaysChallenge={30}
-                                startDate={21}
-                                startYear={2022}
-                                startMonth={"May"}
-                              />
-                            )}
-                          </div>
-                        </div>
-                      ) : (
-                        <RecipePlanner />
-                      )}
-                    </>
-                  )}
-                </div>
+                    {showChallenge ? (
+                      <CircleComponent
+                        activities={data?.getMyThirtyDaysChallenge || []}
+                        categoryObject={food_color}
+                        activityDataList={fake_data}
+                        profileImage={"/images/5.jpeg"}
+                        blendValue={400}
+                        totalBlendValue={750}
+                        numOfDaysChallenge={30}
+                        startDate={21}
+                        startYear={2022}
+                        startMonth={"May"}
+                      />
+                    ) : (
+                      <RecipePlanner />
+                    )}
+                  </>
+                )}
               </div>
             </div>
             <div className="col-3">

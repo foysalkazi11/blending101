@@ -13,6 +13,10 @@ $sharedTopMargin: 2%;
   flex-direction: column;
   // padding: 5% 0px;
 }
+.toolbox {
+  background-color: white;
+  padding: 0px 20px;
+}
 
 .planner {
   max-width: 1800px;
@@ -129,36 +133,36 @@ $sharedColor: #fd5109;
   }
 }
 
-.mainContainer {
-  position: relative;
+// .mainContainer {
+//   position: relative;
 
-  &__contentDiv {
-    background-color: white;
-    padding: 0px 20px;
+//   &__contentDiv {
+//     background-color: white;
+//     padding: 0px 20px;
 
-    &__innerDiv {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0px;
+//     &__innerDiv {
+//       display: flex;
+//       justify-content: space-between;
+//       padding: 10px 0px;
 
-      // &__left,
-      // &__right {
-      //   width: 50%;
-      //   padding: 0px 10px;
-      // }
+//       // &__left,
+//       // &__right {
+//       //   width: 50%;
+//       //   padding: 0px 10px;
+//       // }
 
-      // &__left {
-      //   border-right: 1.8px solid #eeeeee;
-      // }
+//       // &__left {
+//       //   border-right: 1.8px solid #eeeeee;
+//       // }
 
-      &__challengeDiv {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-        width: 90%;
-        margin: auto;
-      }
-    }
-  }
-}
+//       &__challengeDiv {
+//         display: flex;
+//         justify-content: center;
+//         align-items: center;
+//         padding: 20px;
+//         width: 90%;
+//         margin: auto;
+//       }
+//     }
+//   }
+// }

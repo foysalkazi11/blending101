@@ -10,6 +10,7 @@ interface IconProps extends React.HTMLAttributes<HTMLDivElement> {
   style?: any;
   className?: string;
   source?: string;
+  color?: string;
 }
 
 const Icon: React.FC<IconProps> = (props) => {

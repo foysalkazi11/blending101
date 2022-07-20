@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useEffect } from "react";
-import styles from "./CircleComponent.module.scss";
+import styles from "./Challenge.module.scss";
 import foodStyles from "./food/food.module.scss";
 import foodBoxStyles from "./food-box/food-box.module.scss";
 import insideStyle from "./inside/inside.module.scss";
@@ -155,7 +155,7 @@ const CircleComponent = ({
         circle.style.width = cCMCOWidth * 0.075 + "px";
       });
 
-      circles = [...circles];
+      circles = [...circles, semiCircle];
       let angle = 360 - 25;
       let dangle = 357 / circles.length;
       let circle;
