@@ -1,8 +1,15 @@
-import { faXmark } from "@fortawesome/pro-solid-svg-icons";
+import { faXmark } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { MdOutlineStarOutline } from "react-icons/md";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
+import SkeletonCollectionRecipe from "../../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollectionRecipe";
 import { WikiListType } from "../../../type/wikiListType";
 import WikiCard from "../wikiCard/WikiCard";
 import styles from "./WikiSingleType.module.scss";
@@ -10,15 +17,60 @@ import styles from "./WikiSingleType.module.scss";
 interface Props {
   type?: string;
   data?: WikiListType[];
+  selectedWikiItem?: string[];
+  setSelectedWikiItem?: Dispatch<SetStateAction<string[]>>;
+  loading?: boolean;
 }
 
-const WikiSingleType = ({ type = "", data = [] }: Props) => {
+const WikiSingleType = ({
+  type = "",
+  data = [],
+  selectedWikiItem = [],
+  setSelectedWikiItem = () => {},
+  loading = false,
+}: Props) => {
+  const [wikiList, setWikiList] = useState<WikiListType[]>([]);
+  const isMounted = useRef(null);
+
+  useEffect(() => {
+    setSelectedWikiItem([]);
+    setWikiList(data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
+  useEffect(() => {
+    if (isMounted.current) {
+      if (selectedWikiItem?.length) {
+        setWikiList(
+          data?.filter((item) => selectedWikiItem?.includes(item?._id)),
+        );
+      } else {
+        setWikiList(data);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedWikiItem]);
+
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
+  if (loading) {
+    return (
+      <div className={styles.showRecipeCollectionsContainer}>
+        <SkeletonCollectionRecipe />
+      </div>
+    );
+  }
   return (
     <div className={styles.showRecipeCollectionsContainer}>
       <div className={styles.showRecipeCollectionsHeader}>
         <div className={styles.heading}>
           <MdOutlineStarOutline className={styles.favoriteIcon} />
-
           <h2>{type}</h2>
         </div>
 
@@ -31,8 +83,8 @@ const WikiSingleType = ({ type = "", data = [] }: Props) => {
         </IconWarper>
       </div>
       <div className={styles.showRecipes}>
-        {data?.length
-          ? data?.map((wikiList, index) => {
+        {wikiList?.length
+          ? wikiList?.map((wiki, index) => {
               const {
                 _id,
                 category,
@@ -47,7 +99,7 @@ const WikiSingleType = ({ type = "", data = [] }: Props) => {
                 type,
                 wikiDescription,
                 wikiTitle,
-              } = wikiList;
+              } = wiki;
               return (
                 <WikiCard
                   key={_id}
@@ -57,6 +109,8 @@ const WikiSingleType = ({ type = "", data = [] }: Props) => {
                   image={image}
                   title={wikiTitle}
                   type={type}
+                  portions={portions}
+                  id={_id}
                 />
               );
             })

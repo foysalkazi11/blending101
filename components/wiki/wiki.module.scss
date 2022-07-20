@@ -13,21 +13,19 @@
   grid-gap: 16px;
 
   @include media(lg) {
-    grid-template-columns: minmax(0, 1fr);
     padding: 0 16px;
   }
   @include media(xl) {
-    grid-template-columns: minmax(300px, 350px) minmax(0, 1fr);
+    grid-template-columns: minmax(300px, 300px) minmax(0, 1fr);
   }
 }
 
 .left {
   width: 100%;
+  display: none;
+
   @include media(xl) {
-    display: block !important;
-  }
-  @include media(sm) {
-    display: none;
+    display: block;
   }
 }
 
@@ -39,12 +37,19 @@
   background-color: #fafbf9;
   min-height: 100vh;
   width: 100%;
-  padding: 40px 0px;
-  margin: 0px auto;
+  max-width: $_3xl;
+  padding: 0 10px;
+  margin: 40px auto 20px auto;
   transition: all 500ms ease;
   display: grid;
-  grid-template-columns: 75% auto;
+  grid-template-columns: minmax(0, auto) minmax(300px, 350px);
   grid-auto-rows: auto;
+  @include media(xl) {
+    grid-template-columns: minmax(300px, 350px) minmax(0, auto) minmax(
+        300px,
+        350px
+      );
+  }
 }
 
 @media only screen and (max-width: 1280px) {
