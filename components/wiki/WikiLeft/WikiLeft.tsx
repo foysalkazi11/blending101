@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import s from "./WikiLeft.module.scss";
 import FilterbottomComponent from "../../sidetray/filter/filterBottom.component";
 import WikiType from "../wikiType/WikiType";
@@ -8,26 +8,37 @@ import WikiHealthPanel from "../wikiHealthPanel/WikiHealthPanel";
 
 interface Props {
   type: string;
-  wikiId: string;
+  setType: Dispatch<SetStateAction<string>>;
+  selectedWikiItem?: string[];
+  setSelectedWikiItem?: Dispatch<SetStateAction<string[]>>;
 }
 
-const WikiLeft = ({ type = "", wikiId = "" }: Props) => {
+const WikiLeft = ({
+  type = "",
+  selectedWikiItem = [],
+  setSelectedWikiItem = () => {},
+  setType = () => {},
+}: Props) => {
   const router = useRouter();
   const checkActiveIngredient = (id: string) => {
-    return wikiId === id;
+    return selectedWikiItem?.includes(id);
   };
 
   const handleIngredientClick = (item: any = {}, isExist) => {
     if (isExist) {
-      router?.push(`/wiki/${type}`);
+      //router?.push(`/wiki/${type}`);
+      setSelectedWikiItem((wikiItem) =>
+        wikiItem?.filter((items) => items !== item?._id),
+      );
     } else {
-      const measurementWeight = item?.portions?.find(
-        (items) => items?.default,
-      )?.meausermentWeight;
+      setSelectedWikiItem((wikiItem) => [...wikiItem, item?._id]);
+      // const measurementWeight = item?.portions?.find(
+      //   (items) => items?.default,
+      // )?.meausermentWeight;
 
-      if (measurementWeight) {
-        router?.push(`/wiki/${type}/${item?._id}/${measurementWeight}`);
-      }
+      // if (measurementWeight) {
+      //   router?.push(`/wiki/${type}/${item?._id}/${measurementWeight}`);
+      // }
     }
   };
 
@@ -41,7 +52,7 @@ const WikiLeft = ({ type = "", wikiId = "" }: Props) => {
             scrollAreaMaxHeight={{ maxHeight: "450px" }}
           />
         );
-      case "Nutrition":
+      case "Nutrient":
         return <WikiNutritionPanel />;
 
       case "Health":
@@ -54,7 +65,7 @@ const WikiLeft = ({ type = "", wikiId = "" }: Props) => {
 
   return (
     <div className={s.wikiLeftContainer}>
-      <WikiType type={type} />
+      <WikiType type={type} setType={setType} />
       {type && renderUi(type)}
     </div>
   );
