@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { FaToolbox } from "react-icons/fa";
 import PlannerGuide from "../component/module/Planner/PlannerGuide/PlannerGuide.component";
@@ -13,7 +13,7 @@ import { GET_30DAYS_CHALLENGE } from "../graphql/Planner";
 import { useAppSelector } from "../redux/hooks";
 
 import styles from "../styles/pages/planner.module.scss";
-import CircleComponent from "../component/module/Planner/Challenge/Challenge.component";
+import Challenge from "../component/module/Planner/Challenge/Challenge.component";
 
 import { food_color, fake_data } from "../theme/circularComponent/js/my";
 import IconHeading from "../theme/iconHeading/iconHeading.component";
@@ -54,24 +54,38 @@ const Planner = () => {
             <div className="col-6">
               <div className={styles.headingDiv}>
                 <IconHeading title="Toolbox" icon={<FaToolbox />} />
-                {showChallenge && (
-                  <div
-                    className={styles.uploadDiv}
-                    onClick={() => {
-                      setShowUpload(true);
-                      setShowChallenge(true);
-                    }}
-                  >
-                    <AiOutlinePlusCircle className={styles.uploadDiv__icon} />
-                    <span>Upload</span>
+                {showChallenge && !showUpload && !showSettings && (
+                  <div className="flex ai-center">
+                    <div
+                      className={styles.uploadDiv}
+                      onClick={() => {
+                        setShowUpload(false);
+                        setShowSettings(true);
+                        setShowChallenge(true);
+                      }}
+                    >
+                      <AiOutlinePlusCircle className={styles.uploadDiv__icon} />
+                      <span>Settings</span>
+                    </div>
+                    <div
+                      className={styles.uploadDiv}
+                      onClick={() => {
+                        setShowUpload(true);
+                        setShowSettings(false);
+                        setShowChallenge(true);
+                      }}
+                    >
+                      <AiOutlinePlusCircle className={styles.uploadDiv__icon} />
+                      <span>Upload</span>
+                    </div>
                   </div>
                 )}
               </div>
               <div className={styles.toolbox}>
-                {showUpload ? (
-                  <UploadCard setUploadState={setShowUpload} />
+                {toolbox !== null ? (
+                  toolbox
                 ) : (
-                  <>
+                  <Fragment>
                     <ToggleCard
                       leftToggleHeading="Challenge"
                       rightToggleHeading="Planner"
@@ -86,12 +100,9 @@ const Planner = () => {
                         margin: "0px auto",
                         paddingTop: "18px",
                       }}
-                    >
-                      {/* <SettingComponent/> */}
-                    </ToggleCard>
-
+                    />
                     {showChallenge ? (
-                      <CircleComponent
+                      <Challenge
                         activities={data?.getMyThirtyDaysChallenge || []}
                         categoryObject={food_color}
                         activityDataList={fake_data}
@@ -106,7 +117,7 @@ const Planner = () => {
                     ) : (
                       <RecipePlanner />
                     )}
-                  </>
+                  </Fragment>
                 )}
               </div>
             </div>
@@ -116,29 +127,8 @@ const Planner = () => {
           </div>
         </div>
       </div>
-
-      {/* </div> */}
     </AContainer>
   );
 };
 
 export default Planner;
-
-// export const ingredientCenterList = [
-//   {
-//     ingredientName: "Coconut Milk",
-//     servingSize: "4 med",
-//   },
-//   {
-//     ingredientName: "Celery",
-//     servingSize: "4 med",
-//   },
-//   {
-//     ingredientName: "Orange Juice",
-//     servingSize: "4 med",
-//   },
-//   {
-//     ingredientName: "Grapes",
-//     servingSize: "4 med",
-//   },
-// ];
