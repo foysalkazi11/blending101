@@ -4,9 +4,17 @@ import {
   faEllipsisVertical,
 } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import useGetDefaultPortionOfnutration from "../../../customHooks/useGetDefaultPortionOfNutration";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
 import styles from "./WikiCard.module.scss";
+
+interface PortionsType {
+  default: boolean;
+  measurement: string;
+  meausermentWeight: string;
+}
 
 interface WikiCardProps {
   style?: React.CSSProperties;
@@ -18,6 +26,8 @@ interface WikiCardProps {
   rxScore?: number;
   comments?: number;
   author?: string;
+  portions?: PortionsType[];
+  id?: string;
 }
 
 const WikiCard = ({
@@ -30,11 +40,40 @@ const WikiCard = ({
   title = "",
   type = "",
   author = "",
+  portions = [],
+  id = "",
 }: WikiCardProps) => {
+  const [nutrientId, setNutrientId] = useState("");
+  const router = useRouter();
+  useGetDefaultPortionOfnutration(nutrientId);
+  const handleClickTitle = async (
+    id: string,
+    portions: PortionsType[],
+    type: string,
+  ) => {
+    console.log(id, portions, type);
+
+    const measurementWeight = portions?.find(
+      (items) => items?.default,
+    )?.meausermentWeight;
+
+    if (measurementWeight) {
+      router?.push(`/wiki/${type}/${id}/${measurementWeight}`);
+    } else {
+      if (type === "Nutrient") {
+        setNutrientId(id);
+      }
+    }
+  };
   return (
     <div className={styles.wikiCardContainer} style={style}>
       <header className={styles.header}>
-        <p className={styles.title}>{title}</p>
+        <p
+          className={styles.title}
+          onClick={() => handleClickTitle(id, portions, type)}
+        >
+          {title}
+        </p>
         <IconWarper hover="bgSlightGray">
           <FontAwesomeIcon icon={faEllipsisVertical} />
         </IconWarper>

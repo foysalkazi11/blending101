@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import AContainer from "../../containers/A.container";
 import GET_WIKI_LIST from "../../gqlLib/wiki/query/getWikiList";
 import styles from "./wiki.module.scss";
@@ -11,55 +11,48 @@ import WikiSingleItem from "./wikiSingleItem/WikiSingleItem";
 import WikiSingleType from "./wikiSingleType/WikiSingleType";
 
 const WikiHome = () => {
-  const [currentWikiType, setCurrentWikiType] = useState("");
+  const [selectedWikiItem, setSelectedWikiItem] = useState<string[]>([]);
   const router = useRouter();
-  const { params = [] } = router?.query;
-  const type = params?.[0] || "";
-  const wikiId = params?.[1] || "";
-  const measurementWeight = params?.[2] || "";
-
+  const [type, setType] = useState("Ingredient");
+  // const { params = [] } = router?.query;
+  // const type = params?.[0] || "Ingredient";
+  // const wikiId = params?.[1] || "";
+  // const measurementWeight = params?.[2] || "";
   const {
     data: wikiListData,
     loading: wikiListLoading,
     error: wikiListError,
   } = useQuery(GET_WIKI_LIST);
 
-  const renderUi = (params: any = []) => {
-    const [type, wikiId, measurementWeight] = params;
-    if (type && wikiId) {
-      return (
-        <WikiSingleItem
-          measurementWeight={measurementWeight}
-          type={type}
-          wikiId={wikiId}
-        />
-      );
-    } else if (type && !wikiId) {
-      return (
-        <WikiSingleType
-          type={type}
-          data={wikiListData?.getWikiList?.filter(
-            (item) => item?.type === (type === "Nutrition" ? "Nutrient" : type),
-          )}
-        />
-      );
-    } else {
-      return (
-        <WikiLanding
-          wikiList={wikiListData?.getWikiList}
-          wikiLoading={wikiListLoading}
-        />
-      );
-    }
-  };
+  const filterType = useMemo(
+    () =>
+      wikiListData?.getWikiList?.filter(
+        (item) => item?.type === (type === "Nutrition" ? "Nutrient" : type),
+      ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [type, wikiListData?.getWikiList],
+  );
 
   return (
     <AContainer>
       <div className={styles.main}>
         <div className={styles.left}>
-          <WikiLeft type={type} wikiId={wikiId} />
+          <WikiLeft
+            type={type}
+            setType={setType}
+            selectedWikiItem={selectedWikiItem}
+            setSelectedWikiItem={setSelectedWikiItem}
+          />
         </div>
-        <div className={styles.center}>{renderUi(params)}</div>
+        <div className={styles.center}>
+          <WikiSingleType
+            type={type}
+            data={filterType}
+            selectedWikiItem={selectedWikiItem}
+            setSelectedWikiItem={setSelectedWikiItem}
+            loading={wikiListLoading}
+          />
+        </div>
       </div>
     </AContainer>
   );

@@ -13,7 +13,7 @@ const useGetDefaultPortionOfnutration = async (id: string) => {
     GET_DEFAULT_PORTION,
     {
       fetchPolicy: "network-only",
-    }
+    },
   );
 
   const handleIngredientWiki = async (id: string) => {
