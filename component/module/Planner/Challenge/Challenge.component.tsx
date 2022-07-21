@@ -116,6 +116,7 @@ const CircleComponent = ({
         `.${insideStyle.challenge_circle_remaining_percentage_paragraph}`,
       );
 
+      if (!challengeCircleMainCircleOuter) return;
       challengeCircleMainCircleOuter.style.width =
         challengeCircleBox.clientWidth * insideWidth + "px";
 

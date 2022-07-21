@@ -152,7 +152,7 @@ export const GET_PLANNER_BY_WEEK = gql`
 export const ADD_RECIPE_TO_PLANNER = gql`
   mutation AddRecipeToPlanner(
     $userId: ID!
-    $recipeId: [ID!]!
+    $recipeId: ID!
     $assignDate: DateTime!
   ) {
     createPlanner(
@@ -198,5 +198,19 @@ export const DELETE_RECIPE_FROM_PLANNER = gql`
 export const CREATE_CHALLENGE_POST = gql`
   mutation CreateChallengePost($data: CreateChallengePost!) {
     createChallengePost(data: $data)
+  }
+`;
+
+export const CLEAR_PLANNER = gql`
+  mutation ClearPlanner(
+    $userId: String!
+    $startDate: DateTime!
+    $endDate: DateTime!
+  ) {
+    clearPlannerByDates(
+      userId: $userId
+      startDate: $startDate
+      endDate: $endDate
+    )
   }
 `;

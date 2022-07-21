@@ -24,6 +24,7 @@ import {
   MOVE_PLANNER,
 } from "../../../../graphql/Planner";
 import Publish from "../../../../helpers/Publish";
+import { getDateOnly } from "../../../../helpers/Date";
 
 interface PlanProps {
   plannerId?: string;
@@ -67,12 +68,13 @@ const Plan = (props: PlanProps) => {
       mutate: copyRecipes,
       variables: {
         assignDate: date,
-        recipeId: [recipe._id],
+        recipeId: recipe._id,
         userId,
       },
       state: copyState,
       success: `Copied Planner sucessfully`,
       onSuccess: (data) => {
+        console.log(recipe);
         dispatch(
           addPlanner({
             id: data?.createPlanner?._id,
@@ -80,7 +82,7 @@ const Plan = (props: PlanProps) => {
             recipe: {
               _id: recipe._id,
               name: recipe.name,
-              category: recipe?.recipeBlendCategory?.name,
+              category: recipe?.category,
               rxScore: 786,
               calorie: 250,
             },
@@ -227,9 +229,7 @@ const PlanRecipe = ({
         <div className={styles.calender}>
           <CalendarTray
             handler={(date) => {
-              const isoDate = new Date(
-                date?.toISOString().slice(0, 10),
-              ).toISOString();
+              const isoDate = getDateOnly(date);
 
               showCalender === "copy"
                 ? onCopy(isoDate, recipe)

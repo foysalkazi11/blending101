@@ -194,7 +194,6 @@ const Recipes = (props) => {
 
   const dateHandler = async (recipe: any, date: Date) => {
     const assignDate = getDateOnly(date);
-    console.log(new Date(assignDate), assignDate);
     await Publish({
       mutate: addRecipe,
       variables: {

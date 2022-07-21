@@ -1,4 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
+import {
+  startOfWeek,
+  endOfWeek,
+  addWeeks,
+  subWeeks,
+  isWithinInterval,
+} from "date-fns";
 
 export type IPlannerRecipe = {
   _id: string;
@@ -40,6 +47,10 @@ interface PlannerState {
     notes: string[];
     recipes: IChallengeRecipe[];
   };
+  planner: {
+    startDate: Date;
+    endDate: Date;
+  };
   planners: IPlanner[];
   post: {
     recipe: {
@@ -63,6 +74,10 @@ const initialState: PlannerState = {
     images: [],
     notes: [],
     recipes: [],
+  },
+  planner: {
+    startDate: startOfWeek(new Date(), { weekStartsOn: 1 }),
+    endDate: endOfWeek(new Date(), { weekStartsOn: 1 }),
   },
   planners: [],
   post: {
@@ -99,29 +114,50 @@ export const PlannerSlice = createSlice({
       state.challenge.notes = notes;
       state.challenge.recipes = recipes;
     },
+
+    //PLANNER
+
+    gotoPreviousWeek: (state) => {
+      state.planner.startDate = subWeeks(state.planner.startDate, 1);
+      state.planner.endDate = subWeeks(state.planner.endDate, 1);
+    },
+
+    gotoNextWeek: (state) => {
+      state.planner.startDate = addWeeks(state.planner.startDate, 1);
+      state.planner.endDate = addWeeks(state.planner.endDate, 1);
+    },
+
     setPlanners: (state, action) => {
-      state.planners = action.payload
-        .map((planner) => ({
-          id: planner._id,
-          date: planner.assignDate,
-          recipes: planner.recipes.map((recipe) => ({
-            _id: recipe?._id,
-            name: recipe?.name,
-            category: recipe?.recipeBlendCategory?.name,
-            rxScore: 786,
-            calorie: 250,
-          })),
-        }))
-        .sort(
-          //@ts-ignore
-          (a: any, b: any) => new Date(a.date) - new Date(b.date),
-        );
+      state.planners = action.payload.map((planner) => ({
+        id: planner._id,
+        date: planner.assignDate,
+        recipes: planner.recipes.map((recipe) => ({
+          _id: recipe?._id,
+          name: recipe?.name,
+          category: recipe?.recipeBlendCategory?.name,
+          rxScore: 786,
+          calorie: 250,
+        })),
+      }));
+
+      // state.planners = [...state.planners, ...planners].sort(
+      //   //@ts-ignore
+      //   (a: any, b: any) => new Date(a.date) - new Date(b.date),
+      // );
     },
 
     addPlanner: (
       state,
       action: { payload: { id: string; date: string; recipe: IPlannerRecipe } },
     ) => {
+      if (
+        !isWithinInterval(new Date(action.payload.date), {
+          start: state.planner.startDate,
+          end: state.planner.endDate,
+        })
+      )
+        return;
+
       const date = action.payload.date;
       const planner = state.planners.find((p) => p.date === date);
       if (planner) {
@@ -314,6 +350,8 @@ export const {
   addIngredient,
   deleteIngredient,
   resetForm,
+  gotoPreviousWeek,
+  gotoNextWeek,
 } = PlannerSlice.actions;
 
 export default PlannerSlice.reducer;

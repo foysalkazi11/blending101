@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { format, startOfWeek, endOfWeek, addWeeks, subWeeks } from "date-fns";
+import {
+  format,
+  startOfWeek,
+  endOfWeek,
+  addWeeks,
+  subWeeks,
+  getDate,
+} from "date-fns";
 import MealCalendarDatePlan from "./Plan.component";
 
 import styles from "./RecipePlanner.module.scss";
@@ -11,9 +18,18 @@ import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { MONTH } from "../../../../data/Date";
-import { useLazyQuery, useQuery } from "@apollo/client";
-import { GET_PLANNER_BY_WEEK } from "../../../../graphql/Planner";
-import { setPlanners } from "../../../../redux/slices/Planner.slice";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import {
+  CLEAR_PLANNER,
+  GET_PLANNER_BY_WEEK,
+} from "../../../../graphql/Planner";
+import {
+  clearAllPlanner,
+  gotoNextWeek,
+  gotoPreviousWeek,
+  setPlanners,
+} from "../../../../redux/slices/Planner.slice";
+import Publish from "../../../../helpers/Publish";
 
 const RecipePlanner = () => {
   const [toggleOptionCard, setToggleOptionCard] = useState({});
@@ -55,23 +71,21 @@ const RecipePlanner = () => {
 };
 
 const RecipeMealHeader = () => {
-  const [startDate, setStartDate] = useState(
-    startOfWeek(new Date(), { weekStartsOn: 1 }),
-  );
-  const [endDate, setEndDate] = useState(
-    endOfWeek(new Date(), { weekStartsOn: 1 }),
-  );
-
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const { startDate, endDate } = useAppSelector(
+    (state) => state.planner.planner,
+  );
 
   const { loading, data } = useQuery(GET_PLANNER_BY_WEEK, {
     variables: {
       userId,
-      startDate: new Date(startDate?.setUTCHours(0, 0, 0, 0))?.toISOString(),
-      endDate: new Date(endDate?.setUTCHours(0, 0, 0, 0))?.toISOString(),
+      startDate,
+      endDate,
     },
+    fetchPolicy: "network-only",
   });
+  const [clearPlanner, clearState] = useMutation(CLEAR_PLANNER);
 
   useEffect(() => {
     if (data?.getPlannerByDates) dispatch(setPlanners(data?.getPlannerByDates));
@@ -83,33 +97,38 @@ const RecipeMealHeader = () => {
   const startDay = startDate.getDate();
   const endDay = endDate.getDate();
 
-  const goToPreviousWeek = () => {
-    setStartDate(subWeeks(startDate, 1));
-    setEndDate(subWeeks(endDate, 1));
+  const clearAllHandler = async () => {
+    await Publish({
+      mutate: clearPlanner,
+      variables: {
+        userId,
+        startDate,
+        endDate,
+      },
+      state: clearState,
+      success: `Deleted Planner sucessfully`,
+      onSuccess: () => {
+        dispatch(clearAllPlanner());
+      },
+    });
   };
-
-  const goToNextWeek = () => {
-    setStartDate(addWeeks(startDate, 1));
-    setEndDate(addWeeks(endDate, 1));
-  };
-
   return (
     <div className={styles.header__wrapper}>
       <div className={styles.textArrowTray}>
-        <div className={styles.button}>
+        <div className={styles.button} onClick={clearAllHandler}>
           <MdRemoveCircleOutline />
           <div className={styles.button__text}>Clear All</div>
         </div>
         <AiOutlineLeft
           className={styles.textArrowTray__icon}
-          onClick={goToPreviousWeek}
+          onClick={() => dispatch(gotoPreviousWeek())}
         />
         <h4 className={styles.textArrowTray__text}>
           Meal Plan, {`${startMonth} ${startDay} - ${endMonth} ${endDay}`}
         </h4>
         <AiOutlineRight
           className={styles.textArrowTray__icon}
-          onClick={goToNextWeek}
+          onClick={() => dispatch(gotoNextWeek())}
         />
         <div className={styles.button}>
           <Icon fontName={faArrowsRotate} size="15px" />

@@ -82,7 +82,7 @@ const Planner = () => {
                 )}
               </div>
               <div className={styles.toolbox}>
-                {toolbox !== null ? (
+                {toolbox && toolbox !== null ? (
                   toolbox
                 ) : (
                   <Fragment>
