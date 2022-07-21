@@ -20,11 +20,11 @@ const WikiLeft = ({
   setType = () => {},
 }: Props) => {
   const router = useRouter();
-  const checkActiveIngredient = (id: string) => {
+  const checkActive = (id: string) => {
     return selectedWikiItem?.includes(id);
   };
 
-  const handleIngredientClick = (item: any = {}, isExist) => {
+  const handleItemClick = (item: any = {}, isExist) => {
     if (isExist) {
       //router?.push(`/wiki/${type}`);
       setSelectedWikiItem((wikiItem) =>
@@ -47,13 +47,18 @@ const WikiLeft = ({
       case "Ingredient":
         return (
           <FilterbottomComponent
-            checkActiveIngredient={checkActiveIngredient}
-            handleIngredientClick={handleIngredientClick}
+            checkActiveIngredient={checkActive}
+            handleIngredientClick={handleItemClick}
             scrollAreaMaxHeight={{ maxHeight: "450px" }}
           />
         );
       case "Nutrient":
-        return <WikiNutritionPanel />;
+        return (
+          <WikiNutritionPanel
+            checkActiveNutrition={checkActive}
+            handleNutritionClick={handleItemClick}
+          />
+        );
 
       case "Health":
         return <WikiHealthPanel />;
