@@ -53,15 +53,15 @@ const WikiCard = ({
   ) => {
     console.log(id, portions, type);
 
-    const measurementWeight = portions?.find(
-      (items) => items?.default,
-    )?.meausermentWeight;
-
-    if (measurementWeight) {
-      router?.push(`/wiki/${type}/${id}/${measurementWeight}`);
+    if (type === "Nutrient") {
+      router?.push(`/wiki/${type}/${id}`);
     } else {
-      if (type === "Nutrient") {
-        setNutrientId(id);
+      const measurementWeight = portions?.find(
+        (items) => items?.default,
+      )?.meausermentWeight;
+
+      if (measurementWeight) {
+        router?.push(`/wiki/${type}/${id}/${measurementWeight}`);
       }
     }
   };
