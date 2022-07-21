@@ -6,6 +6,10 @@ import CancelIcon from "../../../public/icons/cancel_black_36dp.svg";
 import FiberManualRecordIcon from "../../../public/icons/fiber_manual_record_black_36dp.svg";
 import CustomSlider from "../../../theme/carousel/carousel.component";
 import perser from "html-react-parser";
+import IconWarper from "../../../theme/iconWarper/IconWarper";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/pro-regular-svg-icons";
+import { useRouter } from "next/router";
 
 //read more read less functionality
 // const ReadMore = ({ children }) => {
@@ -45,6 +49,7 @@ function WikiCenterComponent({
   heading = "About Heading",
   name = "Name",
 }: WikiCenterComponentProps) {
+  const router = useRouter();
   return (
     <div className={styles.centerMain}>
       <div className={styles.recipeHeadingTopSection}>
@@ -63,7 +68,15 @@ function WikiCenterComponent({
           </span>
           {heading}
         </h3>
-        <CancelIcon className={styles.cancleBtn} />
+        <IconWarper
+          defaultBg="secondary"
+          hover="bgSecondary"
+          style={{ width: "28px", height: "28px" }}
+          handleClick={() => router?.back()}
+        >
+          <FontAwesomeIcon icon={faXmark} />
+        </IconWarper>
+        {/* <CancelIcon className={styles.cancleBtn} /> */}
       </div>
       <div className={styles.card}>
         <div className={styles.blendingRecipeHeading}>

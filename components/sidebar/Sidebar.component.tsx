@@ -18,7 +18,7 @@ export default function SidebarComponent(props) {
   const pages = [
     { logo: "/icons/home.svg", link: "/", content: "Home" },
     { logo: "/icons/juicer.svg", link: "/", content: "Discovery" },
-    { logo: "/icons/books.svg", link: "/", content: "Wiki" },
+    { logo: "/icons/books.svg", link: "/wiki", content: "Wiki" },
     {
       logo: "/icons/calender__sidebar.svg",
       link: "/planner",

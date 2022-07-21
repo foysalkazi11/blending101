@@ -2,7 +2,7 @@ import { faXmark } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import React from "react";
-import IconWraper from "../../../../theme/iconWraper/IconWraper";
+import IconWraper from "../../../../theme/iconWarper/IconWarper";
 import Tooltip from "../../../../theme/toolTip/CustomToolTip";
 import PanelHeader from "./PanelHeader";
 import styles from "./PanelHeader.module.scss";

@@ -15,7 +15,7 @@ import useDraggableInPortal from "../../../../customHooks/useDraggableInPortal";
 import { createPortal } from "react-dom";
 import SingleIngredient from "../singleIngredient/SingleIngredient";
 import { IoClose } from "react-icons/io5";
-import IconWraper from "../../../../theme/iconWraper/IconWraper";
+import IconWraper from "../../../../theme/iconWarper/IconWarper";
 
 function Copyable(props) {
   const { items, addItem, droppableId } = props;
