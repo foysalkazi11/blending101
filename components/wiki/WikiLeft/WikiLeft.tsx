@@ -2,47 +2,37 @@ import React, { Dispatch, SetStateAction } from "react";
 import s from "./WikiLeft.module.scss";
 import FilterbottomComponent from "../../sidetray/filter/filterBottom.component";
 import WikiType from "../wikiType/WikiType";
-import { useRouter } from "next/router";
 import WikiNutritionPanel from "../wikiNutritionPanel/WikiNutritionPanel";
 import WikiHealthPanel from "../wikiHealthPanel/WikiHealthPanel";
-
+import { Type } from "..";
 interface Props {
-  type: string;
-  setType: Dispatch<SetStateAction<string>>;
+  type: Type;
+  setType: Dispatch<SetStateAction<Type>>;
   selectedWikiItem?: string[];
   setSelectedWikiItem?: Dispatch<SetStateAction<string[]>>;
 }
 
 const WikiLeft = ({
-  type = "",
+  type = "Ingredient",
   selectedWikiItem = [],
   setSelectedWikiItem = () => {},
   setType = () => {},
 }: Props) => {
-  const router = useRouter();
   const checkActive = (id: string) => {
     return selectedWikiItem?.includes(id);
   };
 
   const handleItemClick = (item: any = {}, isExist) => {
     if (isExist) {
-      //router?.push(`/wiki/${type}`);
       setSelectedWikiItem((wikiItem) =>
         wikiItem?.filter((items) => items !== item?._id),
       );
     } else {
       setSelectedWikiItem((wikiItem) => [...wikiItem, item?._id]);
-      // const measurementWeight = item?.portions?.find(
-      //   (items) => items?.default,
-      // )?.meausermentWeight;
-
-      // if (measurementWeight) {
-      //   router?.push(`/wiki/${type}/${item?._id}/${measurementWeight}`);
-      // }
     }
   };
 
-  const renderUi = (type: string = "") => {
+  const renderUi = (type: Type) => {
     switch (type) {
       case "Ingredient":
         return (
@@ -71,7 +61,7 @@ const WikiLeft = ({
   return (
     <div className={s.wikiLeftContainer}>
       <WikiType type={type} setType={setType} />
-      {type && renderUi(type)}
+      {renderUi(type)}
     </div>
   );
 };

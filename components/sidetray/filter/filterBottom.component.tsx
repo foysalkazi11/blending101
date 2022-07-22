@@ -13,6 +13,9 @@ import { setAllIngredients } from "../../../redux/slices/ingredientsSlice";
 import SkeletonIngredients from "../../../theme/skeletons/skeletonIngredients/SkeletonIngredients";
 import useGetAllIngredientsDataBasedOnNutrition from "../../../customHooks/useGetAllIngredientsDataBasedOnNutrition";
 import IngredientPanelSkeleton from "../../../theme/skeletons/ingredientPanelSleketon/IngredientPanelSkeleton";
+import InputComponent from "../../../theme/input/input.component";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/pro-solid-svg-icons";
 
 export const categories = [
   { name: "All", value: "All" },
@@ -181,7 +184,17 @@ export default function FilterbottomComponent({
         {toggle === 1 && (
           <div className={styles.filter__menu}>
             {dpd === "All" ? (
-              <input
+              <InputComponent
+                borderSecondary={true}
+                style={{
+                  padding: "10px",
+                  fontSize: "12px",
+                  borderRadius: "10px",
+                }}
+                inputWithIcon={true}
+                icon={
+                  <FontAwesomeIcon icon={faMagnifyingGlass} fontSize="16" />
+                }
                 placeholder="Search ingredient"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e?.target?.value)}
