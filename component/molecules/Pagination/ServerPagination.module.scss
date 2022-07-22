@@ -19,7 +19,16 @@
 }
 
 .pagination button.is-active {
-  background-color: #2ecc71;
   border-radius: 100%;
   color: #fff;
+}
+
+.default {
+  background-color: #2ecc71 !important;
+}
+.primary {
+  background-color: #fe5d1f !important;
+}
+.secondary {
+  background-color: #7dbd3b !important;
 }

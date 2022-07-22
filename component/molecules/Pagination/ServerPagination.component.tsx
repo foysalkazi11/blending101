@@ -5,9 +5,10 @@ interface PaginationState {
   limit: number;
   pageState: [number, any];
   totalPage: number;
+  activeBgColor?: "default" | "primary" | "secondary";
 }
 const Pagination = (props: PaginationState) => {
-  const { limit, pageState, totalPage } = props;
+  const { limit, pageState, totalPage, activeBgColor = "default" } = props;
   const [currentPage, setCurrentPage] = pageState;
 
   const pages = useMemo(() => {
@@ -23,7 +24,11 @@ const Pagination = (props: PaginationState) => {
         pages.push(
           <button
             key={i}
-            className={currentPage === i ? styles["is-active"] : ""}
+            className={
+              currentPage === i
+                ? `${styles["is-active"]} ${styles[activeBgColor]}`
+                : ""
+            }
             onClick={(e) => {
               e.preventDefault();
               setCurrentPage(i);
@@ -35,6 +40,7 @@ const Pagination = (props: PaginationState) => {
       }
     }
     return pages;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, limit, setCurrentPage, totalPage]);
 
   if (totalPage === 0) return null;

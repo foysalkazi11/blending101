@@ -1,27 +1,23 @@
-import { useRouter } from "next/router";
 import React, { Dispatch, SetStateAction } from "react";
+import { Type } from "..";
 import CheckIcon from "../../../theme/checkIcon/CheckIcon";
 import s from "./WikiType.module.scss";
 
-const typeList = [
+const typeList: { icon: string; title: Type }[] = [
   { icon: "/icons/Ingredients.svg", title: "Ingredient" },
   { icon: "/icons/Nurtition.svg", title: "Nutrient" },
   { icon: "/icons/Heart_rate.svg", title: "Health" },
 ];
 
 interface Props {
-  type: string;
-  setType: Dispatch<SetStateAction<string>>;
+  type: Type;
+  setType: Dispatch<SetStateAction<Type>>;
 }
 
-const WikiType = ({ type = "", setType = () => {} }: Props) => {
-  const router = useRouter();
-  const changeWikiType = (title: string) => {
-    if (title === type) {
-      //router?.push(`/wiki`);
-    } else {
+const WikiType = ({ type = "Ingredient", setType = () => {} }: Props) => {
+  const changeWikiType = (title: Type) => {
+    if (title !== type) {
       setType(title);
-      //router?.push(`/wiki/${title}`);
     }
   };
 

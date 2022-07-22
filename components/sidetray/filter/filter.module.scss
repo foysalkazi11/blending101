@@ -35,24 +35,6 @@
 
 .filter__menu {
   margin-top: 20px;
-  input {
-    border: 1px solid #ececec;
-    border-radius: 10px;
-    padding: 0 15px;
-    font-size: 10px;
-    color: #bcbcbc;
-    line-height: 36px;
-    font-size: 12px;
-    min-height: 30px;
-    width: 100%;
-    outline: none;
-    &:focus {
-      border: 1px solid #7dbd3b;
-    }
-    &::placeholder {
-      color: #bcbcbc;
-    }
-  }
 
   .ingredientContainer {
     max-width: 100%;
