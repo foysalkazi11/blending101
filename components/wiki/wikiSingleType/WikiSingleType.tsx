@@ -1,6 +1,7 @@
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { faXmark } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import router from "next/router";
 import React, {
   Dispatch,
   SetStateAction,
@@ -33,7 +34,6 @@ const WikiSingleType = ({
   setSelectedWikiItem = () => {},
 }: Props) => {
   const [wikiList, setWikiList] = useState<WikiListType[]>([]);
-  const [wikiListMain, setWikiListMain] = useState<WikiListType[]>([]);
   const [page, setPage] = useState(1);
   const [limit] = useState(12);
   const [pageLength, setPageLength] = useState(12);
@@ -46,32 +46,44 @@ const WikiSingleType = ({
     GET_NUTRIENT_WIKI_LIST,
   );
 
-  const fetchList = async (FetchFunc: any, page: number) => {
+  const handleClose = () => {
+    if (selectedWikiItem?.length) {
+      setSelectedWikiItem([]);
+    } else {
+      router?.back();
+    }
+  };
+
+  const fetchList = async (
+    FetchFunc: any,
+    page: number,
+    ids: string[] = [],
+  ) => {
     try {
       const { data } = await FetchFunc({
         variables: {
           userId: dbUser?._id,
           page,
           limit,
+          ids,
         },
       });
 
       const res = data?.getNutrientWikiList || data?.getIngredientWikiList;
       setPageLength(res?.total);
       setWikiList(res?.wikiList);
-      setWikiListMain(res?.wikiList);
     } catch (error) {
       notification("error", "Failed to fetch ingredient list");
     }
   };
 
-  const selectOptions = (type: Type, page: number) => {
+  const selectOptions = (type: Type, page: number, ids: string[] = []) => {
     switch (type) {
       case "Ingredient":
-        fetchList(getIngredientList, page);
+        fetchList(getIngredientList, page, ids);
         break;
       case "Nutrient":
-        fetchList(getNutrientList, page);
+        fetchList(getNutrientList, page, ids);
         break;
       case "Health":
         setPage(1);
@@ -84,34 +96,22 @@ const WikiSingleType = ({
   };
 
   useEffect(() => {
-    if (type) {
-      selectOptions(type, 1);
+    if (type && dbUser?._id) {
+      selectOptions(type, 1, []);
       setPage(1);
+      setSelectedWikiItem([]);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type]);
+  }, [type, dbUser?._id]);
 
   useEffect(() => {
     if (isMounted.current) {
-      selectOptions(type, page);
+      selectOptions(type, page, selectedWikiItem);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
-
-  useEffect(() => {
-    if (isMounted.current) {
-      if (selectedWikiItem?.length) {
-        setWikiList(
-          wikiListMain?.filter((item) => selectedWikiItem?.includes(item?._id)),
-        );
-      } else {
-        setWikiList(wikiListMain);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedWikiItem]);
+  }, [page, selectedWikiItem]);
 
   useEffect(() => {
     isMounted.current = true;
@@ -151,6 +151,7 @@ const WikiSingleType = ({
             defaultBg="secondary"
             hover="bgSecondary"
             style={{ width: "28px", height: "28px" }}
+            handleClick={handleClose}
           >
             <FontAwesomeIcon icon={faXmark} />
           </IconWarper>
