@@ -1,8 +1,18 @@
 import { gql } from "@apollo/client";
 
 const GET_NUTRIENT_WIKI_LIST = gql`
-  query GetNutrientWikiList($page: Float, $limit: Float, $userId: String) {
-    getNutrientWikiList(page: $page, limit: $limit, userId: $userId) {
+  query GetNutrientWikiList(
+    $page: Float
+    $limit: Float
+    $userId: String
+    $ids: [String!]
+  ) {
+    getNutrientWikiList(
+      page: $page
+      limit: $limit
+      userId: $userId
+      ids: $ids
+    ) {
       total
       wikiList {
         _id
