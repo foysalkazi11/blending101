@@ -1,5 +1,5 @@
-import { useQuery } from "@apollo/client";
-import React, { Fragment, useState } from "react";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import React, { Fragment, useEffect, useState } from "react";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { FaToolbox } from "react-icons/fa";
 import PlannerGuide from "../component/module/Planner/PlannerGuide/PlannerGuide.component";
@@ -27,16 +27,24 @@ const Planner = () => {
 
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
-  const { data } = useQuery(GET_30DAYS_CHALLENGE, {
-    variables: {
-      userId,
+  const [get30DaysChallenge, { loading, data }] = useLazyQuery(
+    GET_30DAYS_CHALLENGE,
+    {
+      variables: {
+        userId,
+      },
     },
-  });
+  );
+
+  useEffect(() => {
+    if (userId) get30DaysChallenge();
+  }, [get30DaysChallenge, userId]);
 
   let toolbox = null;
   if (showChallenge && showUpload)
     toolbox = <UploadCard setUploadState={setShowUpload} />;
-  else if (showChallenge && showSettings) toolbox = <Settings hideSettings={() => setShowSettings(false)}/>;
+  else if (showChallenge && showSettings)
+    toolbox = <Settings hideSettings={() => setShowSettings(false)} />;
 
   return (
     <AContainer>
@@ -101,9 +109,18 @@ const Planner = () => {
                         paddingTop: "18px",
                       }}
                     />
-                    {showChallenge ? (
+                    {showChallenge &&
+                    data &&
+                    data?.getMyThirtyDaysChallenge &&
+                    data?.getMyThirtyDaysChallenge?.length ? (
                       <Challenge
-                        activities={data?.getMyThirtyDaysChallenge || []}
+                        activities={
+                          data &&
+                          data?.getMyThirtyDaysChallenge &&
+                          data?.getMyThirtyDaysChallenge?.length > 0
+                            ? data?.getMyThirtyDaysChallenge
+                            : []
+                        }
                         categoryObject={food_color}
                         activityDataList={fake_data}
                         profileImage={"/images/5.jpeg"}

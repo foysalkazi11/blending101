@@ -50,6 +50,7 @@ const CircleComponent = ({
   totalBlendValue,
 }: CircleComponentInterface) => {
   useEffect(() => {
+    // if (activities.length === 0) return;
     function handleResize() {
       const insideWidth = 0.82;
       // For Food
@@ -213,7 +214,7 @@ const CircleComponent = ({
     window.addEventListener("resize", handleResize);
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
-  }, [activities]);
+  }, []);
 
   return (
     <div className={styles.mainContainer__contentDiv__innerDiv}>
