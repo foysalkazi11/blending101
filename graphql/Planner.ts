@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const GET_30DAYS_CHALLENGE = gql`
   query Get30DaysChallenge($userId: String!) {
-    getMyThirtyDaysChallenge(userId: $userId) {
+    getMyThirtyDaysChallenge(memberId: $userId) {
       assignDate
       posts {
         recipeId {
@@ -195,12 +195,6 @@ export const DELETE_RECIPE_FROM_PLANNER = gql`
   }
 `;
 
-export const CREATE_CHALLENGE_POST = gql`
-  mutation CreateChallengePost($data: CreateChallengePost!) {
-    createChallengePost(data: $data)
-  }
-`;
-
 export const CLEAR_PLANNER = gql`
   mutation ClearPlanner(
     $userId: String!
@@ -212,5 +206,36 @@ export const CLEAR_PLANNER = gql`
       startDate: $startDate
       endDate: $endDate
     )
+  }
+`;
+
+/*
+ * -------------------------------------------------*
+ * CHALLENGE API
+ * SETTINGS API
+ * -------------------------------------------------*
+ */
+
+export const CREATE_CHALLENGE_POST = gql`
+  mutation CreateChallengePost($data: CreateChallengePost!) {
+    createChallengePost(data: $data)
+  }
+`;
+
+export const GET_CHALLENGES = gql`
+  query GetAllChallenges($memberId: String!) {
+    getMyChallengeList(memberId: $memberId) {
+      _id
+      challengeName
+      startDate
+      days
+      isActive
+    }
+  }
+`;
+
+export const CREATE_CHALLENGE = gql`
+  mutation CreateChallenge($data: CreateUserChallenge!) {
+    createUserChallenge(data: $data)
   }
 `;

@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import styles from "./NumberField.module.scss";
 
 interface NumberFieldProps {
@@ -18,16 +18,17 @@ const NumberField = (props: NumberFieldProps) => {
     } else {
       if (task === "+") {
         ammount += 1;
-        // setNumber((number) => (number += 1));
       } else {
         ammount -= 1;
-        // setNumber((number) => (number -= 1));
       }
     }
-    // value = number;
-    onChange({ target: { value: ammount } });
+    value = ammount;
+    onChange && onChange({ target: { value: ammount } });
     setNumber(ammount);
   };
+  useEffect(() => {
+    if (value !== number) setNumber(value);
+  }, [number, value]);
   return (
     <Fragment>
       {label && <label className={styles.label}>{label}</label>}

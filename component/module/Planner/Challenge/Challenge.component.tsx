@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import styles from "./Challenge.module.scss";
 import foodStyles from "./food/food.module.scss";
 import foodBoxStyles from "./food-box/food-box.module.scss";
@@ -116,10 +116,9 @@ const CircleComponent = ({
         `.${insideStyle.challenge_circle_remaining_percentage_paragraph}`,
       );
 
-      if (!challengeCircleMainCircleOuter) return;
+      // if (!challengeCircleMainCircleOuter) return;
       challengeCircleMainCircleOuter.style.width =
         challengeCircleBox.clientWidth * insideWidth + "px";
-
       const cCMCOWidth = challengeCircleMainCircleOuter.clientWidth;
 
       challengeCircleMainCircle.style.width = cCMCOWidth * 0.85 + "px";
@@ -214,7 +213,7 @@ const CircleComponent = ({
     window.addEventListener("resize", handleResize);
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [activities]);
 
   return (
     <div className={styles.mainContainer__contentDiv__innerDiv}>
