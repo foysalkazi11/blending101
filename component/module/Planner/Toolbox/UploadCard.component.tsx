@@ -174,7 +174,7 @@ const UploadCard = ({ setUploadState }: UploadCardInterface) => {
           </div>
         </div>
         <h5 className={styles.headingText}>My Notes</h5>
-        <Textarea name="note" rows={2} placeholder="Write down your notes..." />
+        <Textarea name="note" placeholder="Write down your notes..." />
       </FormProvider>
     </div>
   );

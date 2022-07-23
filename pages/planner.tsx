@@ -21,7 +21,7 @@ import ToggleCard from "../theme/toggleCard/toggleCard.component";
 import Settings from "../component/module/Planner/Setttings/Settings.component";
 
 const Planner = () => {
-  const [showChallenge, setShowChallenge] = useState(false);
+  const [showChallenge, setShowChallenge] = useState(true);
   const [showUpload, setShowUpload] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
 
@@ -36,7 +36,7 @@ const Planner = () => {
   let toolbox = null;
   if (showChallenge && showUpload)
     toolbox = <UploadCard setUploadState={setShowUpload} />;
-  else if (showChallenge && showSettings) toolbox = <Settings />;
+  else if (showChallenge && showSettings) toolbox = <Settings hideSettings={() => setShowSettings(false)}/>;
 
   return (
     <AContainer>

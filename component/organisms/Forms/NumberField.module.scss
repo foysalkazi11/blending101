@@ -1,5 +1,5 @@
-@import '../../../styles/variables';
-@import '../../../styles/mixins';
+@import "../../../styles/variables";
+@import "../../../styles/mixins";
 
 @mixin responsive($min_width, $max_width) {
   @media only screen and (min-width: $min_width) and (max-width: $max_width) {
@@ -12,7 +12,7 @@
   display: block;
 
   &.required:after {
-    content: '*';
+    content: "*";
     color: $red;
     margin-left: 0.3rem;
   }
@@ -20,7 +20,7 @@
 
 .numberField {
   display: flex;
-  height: 45px;
+  height: 42px;
   span {
     margin-right: 14px;
     display: flex;
@@ -33,11 +33,12 @@
     width: 100%;
     height: 100%;
     background-color: #fff;
-    border-radius: 5px;
     overflow: hidden;
-    border: 1px solid $darkGrey;
-    box-shadow: 1px 2px 4px $shadowGrey;
-    border-radius: 6px;
+    border: 1px solid $shadowGrey;
+    // box-shadow: 1px 2px 4px $shadowGrey;
+    border-radius: 10px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,
+      -webkit-box-shadow 0.15s ease-in-out, -moz-box-shadow 0.15s ease-in-out;
   }
 
   .text {
