@@ -60,8 +60,6 @@ const WikiNutritionPanel = ({
 
   useEffect(() => {
     if (!nutrientLoading && nutrientData?.getAllBlendNutrients) {
-      console.log(nutrientData?.getAllBlendNutrients);
-
       setNutrientList(nutrientData?.getAllBlendNutrients);
     }
 

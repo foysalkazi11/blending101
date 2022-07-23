@@ -3,6 +3,7 @@
 
 .showRecipeCollectionsContainer {
   width: 100%;
+  min-height: 80vh;
   margin: 20px 0;
 }
 .showRecipeCollectionsHeader {
@@ -43,4 +44,11 @@
   @include certainBreakpoint(1380px) {
     grid-template-columns: repeat(4, 1fr);
   }
+}
+
+.paginationWarper {
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
