@@ -31,10 +31,6 @@ export default function TrayWrapper({
 }: leftTrayInterface) {
   const [hoevrRef, hover] = useHover();
 
-  const handleClick = () => {
-    closeTray();
-  };
-
   return (
     <div className={`${isolated ? styles[showPanle] : ""}`}>
       <div
@@ -49,9 +45,7 @@ export default function TrayWrapper({
         <div className={styles.tray__inner}>
           <div
             className={`${styles.image}`}
-            onClick={() => {
-              handleClick();
-            }}
+            onClick={closeTray}
             style={
               showPanle === "left"
                 ? { right: hover ? "5px" : "20px" }
