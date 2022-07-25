@@ -1,5 +1,4 @@
 import React from "react";
-import { useAuth } from "../auth/auth.component";
 import HeaderComponent from "../components/header/Header.component";
 import SidebarComponent from "../components/sidebar/Sidebar.component";
 import styles from "./container.module.scss";
@@ -38,7 +37,6 @@ type AContainerProps = {
 };
 
 export default function AContainer(props: AContainerProps) {
-  const { user } = useAuth();
   const {
     showHeader = true,
     showSidebar = true,

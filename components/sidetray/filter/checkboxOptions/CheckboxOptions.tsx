@@ -14,15 +14,11 @@ const CheckboxOptions = ({
 }: CheckboxOptionsProps) => {
   const { dbUser } = useAppSelector((state) => state?.user);
   const { recipeFilterByIngredientCategory } = useAppSelector(
-    (state) => state?.ingredients
+    (state) => state?.ingredients,
   );
-  const options = {
-    Collection: dbUser?.collections?.map((item) => item?.name),
-    Dynamic: ["Popular", "Recommended", "Latest"],
-  };
   return (
     <div className={styles.checkboxOptionsContainer}>
-      {options[recipeFilterByIngredientCategory]?.map((item, index) => {
+      {["Popular", "Recommended", "Latest"]?.map((item, index) => {
         return (
           <div key={index} className={styles.singleCheckbox}>
             <CustomCheckbox

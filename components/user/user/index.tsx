@@ -40,8 +40,8 @@ const User = () => {
       allergies: [],
       dieteryLifeStyle: "",
       gender: "",
-      heightInCentimeters: "",
-      weightInKilograms: "",
+      heightInCentimeters: null,
+      weightInKilograms: null,
       meditcation: [],
       preExistingMedicalConditions: [],
       whyBlending: [],
@@ -79,10 +79,10 @@ const User = () => {
         pregnantOrLactating,
       } = configuration;
 
-      setUserData((pre) => ({
-        ...pre,
+      setUserData({
+        ...userData,
         about: {
-          ...pre?.about,
+          ...userData?.about,
           bio: bio || "",
           image,
           firstName,
@@ -93,7 +93,7 @@ const User = () => {
           yourBlender,
         },
         personalization: {
-          ...pre?.personalization,
+          ...userData?.personalization,
           activity,
           age: {
             quantity: age?.quantity,
@@ -110,7 +110,7 @@ const User = () => {
           whyBlending: whyBlending || [],
           pregnantOrLactating,
         },
-      }));
+      });
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

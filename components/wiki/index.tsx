@@ -1,7 +1,8 @@
 import { faBooks } from "@fortawesome/pro-thin-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import AContainer from "../../containers/A.container";
+import useLocalStorage from "../../customHooks/useLocalStorage";
 import TrayTag from "../sidetray/TrayTag";
 import TrayWrapper from "../sidetray/TrayWrapper";
 import useWindowSize from "../utility/useWindowSize";
@@ -10,11 +11,15 @@ import WikiLeft from "./WikiLeft/WikiLeft";
 import WikiSingleType from "./wikiSingleType/WikiSingleType";
 
 export type Type = "Nutrient" | "Ingredient" | "Health";
+export type SelectedWikiType = {
+  [key in Type]: string[];
+};
 
 const WikiHome = () => {
-  const [selectedWikiItem, setSelectedWikiItem] = useState<string[]>([]);
-  const [type, setType] = useState<Type>("Ingredient");
-  const [openTray, setOpenTray] = useState(true);
+  const [selectedWikiItem, setSelectedWikiItem] =
+    useLocalStorage<SelectedWikiType>("selectedWikiItem", {});
+  const [type, setType] = useLocalStorage<Type>("type", "Ingredient");
+  const [openTray, setOpenTray] = useState(false);
   const { width } = useWindowSize();
 
   return (
@@ -36,28 +41,29 @@ const WikiHome = () => {
           />
         </div>
       </div>
-      <TrayWrapper
-        isolated={true}
-        showPanle="left"
-        showTagByDefaut={width < 1280 ? true : false}
-        openTray={openTray}
-        closeTray={() => setOpenTray(false)}
-        panleTag={(hover) => (
-          <TrayTag
-            hover={hover}
-            icon={<FontAwesomeIcon icon={faBooks} />}
-            placeMent="left"
-            handleTagClick={() => setOpenTray((pre) => !pre)}
+      {width < 1280 ? (
+        <TrayWrapper
+          isolated={true}
+          showPanle="left"
+          showTagByDefaut={true}
+          openTray={openTray}
+          panleTag={(hover) => (
+            <TrayTag
+              hover={hover}
+              icon={<FontAwesomeIcon icon={faBooks} />}
+              placeMent="left"
+              handleTagClick={() => setOpenTray((prev) => !prev)}
+            />
+          )}
+        >
+          <WikiLeft
+            type={type}
+            setType={setType}
+            selectedWikiItem={selectedWikiItem}
+            setSelectedWikiItem={setSelectedWikiItem}
           />
-        )}
-      >
-        <WikiLeft
-          type={type}
-          setType={setType}
-          selectedWikiItem={selectedWikiItem}
-          setSelectedWikiItem={setSelectedWikiItem}
-        />
-      </TrayWrapper>
+        </TrayWrapper>
+      ) : null}
     </AContainer>
   );
 };

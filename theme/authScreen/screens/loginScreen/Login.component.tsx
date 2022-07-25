@@ -8,7 +8,6 @@ import Image from "next/image";
 import HighlightOffOutlinedIcon from "../../../../public/icons/highlight_off_black_36dp.svg";
 import { Auth } from "aws-amplify";
 import { useAppDispatch } from "../../../../redux/hooks";
-import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
 import {
   setDbUser,
   setProvider,
@@ -19,6 +18,7 @@ import { useMutation } from "@apollo/client";
 import CREATE_NEW_USER from "../../../../gqlLib/user/mutations/createNewUser";
 import { useForm } from "react-hook-form";
 import CircularRotatingLoader from "../../../loader/circularRotatingLoader.component";
+import notification from "../../../../components/utility/reactToastifyNotification";
 
 const LoginScreen = () => {
   const dispatch = useAppDispatch();
@@ -52,7 +52,7 @@ const LoginScreen = () => {
       router.push("/");
     } catch (error) {
       setIsLoading(false);
-      reactToastifyNotification("error", error?.message);
+      notification("error", error?.message);
     }
   };
 
