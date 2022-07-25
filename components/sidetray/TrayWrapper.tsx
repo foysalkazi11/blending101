@@ -10,6 +10,7 @@ interface leftTrayInterface {
   openTray?: boolean;
   closeTray?: () => void;
   panleTag?: (hover: boolean) => ReactNode;
+  isolated?: boolean;
 }
 
 export default function TrayWrapper({
@@ -26,6 +27,7 @@ export default function TrayWrapper({
       alt="Icon"
     />
   ),
+  isolated = false,
 }: leftTrayInterface) {
   const [hoevrRef, hover] = useHover();
 
@@ -34,31 +36,33 @@ export default function TrayWrapper({
   };
 
   return (
-    <div
-      className={`${styles.tray} `}
-      ref={hoevrRef}
-      style={
-        showPanle === "left"
-          ? { left: openTray ? "0px" : "-300px" }
-          : { right: openTray ? "0px" : "-300px" }
-      }
-    >
-      <div className={styles.tray__inner}>
-        <div
-          className={`${styles.image}`}
-          onClick={() => {
-            handleClick();
-          }}
-          style={
-            showPanle === "left"
-              ? { right: hover ? "5px" : "20px" }
-              : { left: hover ? "-40px" : "-25px" }
-          }
-        >
-          {!openTray && !showTagByDefaut ? null : panleTag(hover)}
-        </div>
+    <div className={`${isolated ? styles[showPanle] : ""}`}>
+      <div
+        className={`${styles.tray} `}
+        ref={hoevrRef}
+        style={
+          showPanle === "left"
+            ? { left: openTray ? "0px" : "-300px" }
+            : { right: openTray ? "0px" : "-300px" }
+        }
+      >
+        <div className={styles.tray__inner}>
+          <div
+            className={`${styles.image}`}
+            onClick={() => {
+              handleClick();
+            }}
+            style={
+              showPanle === "left"
+                ? { right: hover ? "5px" : "20px" }
+                : { left: hover ? "-40px" : "-25px" }
+            }
+          >
+            {!openTray && !showTagByDefaut ? null : panleTag(hover)}
+          </div>
 
-        {children}
+          {children}
+        </div>
       </div>
     </div>
   );

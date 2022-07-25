@@ -87,7 +87,7 @@ const WikiSingleType = ({
         break;
       case "Health":
         setPage(1);
-        setPageLength(12);
+        setPageLength(0);
         setWikiList([]);
         break;
       default:
