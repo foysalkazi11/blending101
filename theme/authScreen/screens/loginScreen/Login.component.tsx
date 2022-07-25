@@ -7,14 +7,14 @@ import styles from "./Login.module.scss";
 import Image from "next/image";
 import HighlightOffOutlinedIcon from "../../../../public/icons/highlight_off_black_36dp.svg";
 import { Auth } from "aws-amplify";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import { useAppDispatch } from "../../../../redux/hooks";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
 import {
   setDbUser,
   setProvider,
   setUser,
 } from "../../../../redux/slices/userSlice";
-import { useRouter, Router } from "next/router";
+import { useRouter } from "next/router";
 import { useMutation } from "@apollo/client";
 import CREATE_NEW_USER from "../../../../gqlLib/user/mutations/createNewUser";
 import { useForm } from "react-hook-form";

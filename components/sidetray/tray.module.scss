@@ -1,5 +1,17 @@
 @import "../../styles/partials/variables";
 
+.left {
+  position: fixed;
+  z-index: 999999;
+  top: 55px;
+}
+.right {
+  position: fixed;
+  z-index: 999999;
+  right: 0;
+  top: 55px;
+}
+
 @mixin tray {
   width: 300px;
   background-color: #fff;
