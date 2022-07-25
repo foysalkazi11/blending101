@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import styles from "./socialTray.module.scss";
 import { Auth } from "aws-amplify";
 import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth/lib/types";
@@ -50,7 +50,7 @@ const SocialTray = () => {
       dispatch(setProvider(identities?.[0]?.providerName?.toLowerCase()));
       history.push("/");
     } catch (error) {
-      notification("error", error?.message);
+      //notification("error", error?.message);
       console.log(error);
     }
   };

@@ -21,16 +21,17 @@ import { WikiListType } from "../../../type/wikiListType";
 import notification from "../../utility/reactToastifyNotification";
 import WikiCard from "../wikiCard/WikiCard";
 import styles from "./WikiSingleType.module.scss";
+import { SelectedWikiType } from "..";
 
 interface Props {
   type?: Type;
-  selectedWikiItem?: string[];
-  setSelectedWikiItem?: Dispatch<SetStateAction<string[]>>;
+  selectedWikiItem?: SelectedWikiType;
+  setSelectedWikiItem?: Dispatch<SetStateAction<SelectedWikiType>>;
 }
 
 const WikiSingleType = ({
   type = "Ingredient",
-  selectedWikiItem = [],
+  selectedWikiItem = {} as SelectedWikiType,
   setSelectedWikiItem = () => {},
 }: Props) => {
   const [wikiList, setWikiList] = useState<WikiListType[]>([]);
@@ -47,10 +48,8 @@ const WikiSingleType = ({
   );
 
   const handleClose = () => {
-    if (selectedWikiItem?.length) {
-      setSelectedWikiItem([]);
-    } else {
-      router?.back();
+    if (selectedWikiItem[type].length) {
+      setSelectedWikiItem((wikiItem) => ({ ...wikiItem, [type]: [] }));
     }
   };
 
@@ -97,9 +96,8 @@ const WikiSingleType = ({
 
   useEffect(() => {
     if (type && dbUser?._id) {
-      selectOptions(type, 1, []);
+      selectOptions(type, 1, selectedWikiItem[type]);
       setPage(1);
-      setSelectedWikiItem([]);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -107,7 +105,7 @@ const WikiSingleType = ({
 
   useEffect(() => {
     if (isMounted.current) {
-      selectOptions(type, page, selectedWikiItem);
+      selectOptions(type, page, selectedWikiItem[type]);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -158,7 +156,7 @@ const WikiSingleType = ({
         </div>
         <div className={styles.showRecipes}>
           {wikiList?.length
-            ? wikiList.slice(0, 20)?.map((wiki, index) => {
+            ? wikiList?.map((wiki, index) => {
                 const {
                   _id,
                   category,

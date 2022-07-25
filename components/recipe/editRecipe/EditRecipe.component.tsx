@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import AContainer from "../../../containers/A.container";
 import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
 import Center_Elements from "./recipe_elements/centerElements.component";
@@ -11,11 +11,15 @@ import {
   setServingCounter,
 } from "../../../redux/edit_recipe/editRecipeStates";
 import IngredientPanel from "../share/ingredientPanel/IngredientPanel";
-import IngredientFixedPanle from "../share/ingredientFixedPanel/IngredientFixedPanle";
 import useWindowSize from "../../utility/useWindowSize";
 import NutritionPanel from "../share/nutritionPanel/NutritionPanel";
 import PanelHeaderCenter from "../share/panelHeader/PanelHeaderCenter";
 import { RecipeDetailsType } from "../../../type/recipeDetails";
+import TrayWrapper from "../../sidetray/TrayWrapper";
+import TrayTag from "../../sidetray/TrayTag";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBasketShopping as faBasketShoppingRegular } from "@fortawesome/pro-regular-svg-icons";
+import { faBasketShopping as faBasketShoppingSolid } from "@fortawesome/pro-solid-svg-icons";
 
 interface editRecipe {
   copyDetailsRecipe?: RecipeDetailsType;
@@ -56,6 +60,7 @@ const EditRecipePage = ({
   recipeId = "",
   updateEditRecipe = () => {},
 }: editRecipe) => {
+  const [openTray, setOpenTray] = useState(false);
   const dispatch = useAppDispatch();
   const { width } = useWindowSize();
   const servingCounter = useAppSelector(
@@ -105,10 +110,33 @@ const EditRecipePage = ({
       }}
     >
       {width < 1280 ? (
-        <IngredientFixedPanle
-          handleIngredientClick={handleIngredientClick}
-          checkActive={checkActive}
-        />
+        <>
+          <TrayWrapper
+            isolated={true}
+            showPanle="left"
+            showTagByDefaut={true}
+            openTray={openTray}
+            panleTag={(hover) => (
+              <TrayTag
+                hover={hover}
+                icon={
+                  <FontAwesomeIcon
+                    icon={
+                      hover ? faBasketShoppingRegular : faBasketShoppingSolid
+                    }
+                  />
+                }
+                placeMent="left"
+                handleTagClick={() => setOpenTray((prev) => !prev)}
+              />
+            )}
+          >
+            <IngredientPanel
+              handleIngredientClick={handleIngredientClick}
+              checkActive={checkActive}
+            />
+          </TrayWrapper>
+        </>
       ) : null}
 
       <div className={styles.main}>

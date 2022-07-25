@@ -16,9 +16,13 @@ import { useRouter } from "next/router";
 import useGetBlendNutritionBasedOnRecipexxx from "../../../customHooks/useGetBlendNutritionBasedOnRecipexxx";
 import IngredientPanel from "../share/ingredientPanel/IngredientPanel";
 import useWindowSize from "../../utility/useWindowSize";
-import IngredientFixedPanle from "../share/ingredientFixedPanel/IngredientFixedPanle";
 import NutritionPanel from "../share/nutritionPanel/NutritionPanel";
 import PanelHeaderCenter from "../share/panelHeader/PanelHeaderCenter";
+import TrayWrapper from "../../sidetray/TrayWrapper";
+import TrayTag from "../../sidetray/TrayTag";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBasketShopping as faBasketShoppingRegular } from "@fortawesome/pro-regular-svg-icons";
+import { faBasketShopping as faBasketShoppingSolid } from "@fortawesome/pro-solid-svg-icons";
 
 const AddRecipePage = () => {
   const [images, setImages] = useState<any[]>([]);
@@ -39,6 +43,7 @@ const AddRecipePage = () => {
   const { dbUser } = useAppSelector((state) => state?.user);
   const router = useRouter();
   const { width } = useWindowSize();
+  const [openTray, setOpenTray] = useState(false);
 
   const { loading: nutritionDataLoading, data: nutritionData } =
     useGetBlendNutritionBasedOnRecipexxx(
@@ -176,11 +181,35 @@ const AddRecipePage = () => {
   return (
     <AContainer>
       {width < 1280 ? (
-        <IngredientFixedPanle
-          handleIngredientClick={handleIngredientClick}
-          checkActive={checkActive}
-        />
+        <>
+          <TrayWrapper
+            isolated={true}
+            showPanle="left"
+            showTagByDefaut={true}
+            openTray={openTray}
+            panleTag={(hover) => (
+              <TrayTag
+                hover={hover}
+                icon={
+                  <FontAwesomeIcon
+                    icon={
+                      hover ? faBasketShoppingRegular : faBasketShoppingSolid
+                    }
+                  />
+                }
+                placeMent="left"
+                handleTagClick={() => setOpenTray((prev) => !prev)}
+              />
+            )}
+          >
+            <IngredientPanel
+              handleIngredientClick={handleIngredientClick}
+              checkActive={checkActive}
+            />
+          </TrayWrapper>
+        </>
       ) : null}
+
       <div className={styles.main}>
         <div className={styles.left}>
           <IngredientPanel

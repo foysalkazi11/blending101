@@ -7,13 +7,24 @@ import notification from "../utility/reactToastifyNotification";
 import { Auth } from "aws-amplify";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setLoading } from "../../redux/slices/utilitySlice";
-import { setUser, setNonConfirmedUser, setDbUser } from "../../redux/slices/userSlice";
+import {
+  setUser,
+  setNonConfirmedUser,
+  setDbUser,
+} from "../../redux/slices/userSlice";
 import { HiOutlineUserCircle } from "react-icons/hi";
-import { MdOutlineAdminPanelSettings, MdHelpOutline, MdOutlineLogout, MdOutlineLogin, MdPublishedWithChanges } from "react-icons/md";
+import {
+  MdOutlineAdminPanelSettings,
+  MdHelpOutline,
+  MdOutlineLogout,
+  MdOutlineLogin,
+  MdPublishedWithChanges,
+} from "react-icons/md";
 import Link from "next/link";
 import { FaRegUser } from "react-icons/fa";
 import Image from "next/image";
 import useOnClickOutside from "../utility/useOnClickOutside";
+import { DbUserType } from "../../type/dbUserType";
 
 interface headerInterface {
   logo: Boolean;
@@ -21,7 +32,11 @@ interface headerInterface {
   fullWidth?: Boolean;
 }
 
-export default function HeaderComponent({ logo = true, headerTitle = "Home", fullWidth }: headerInterface) {
+export default function HeaderComponent({
+  logo = true,
+  headerTitle = "Home",
+  fullWidth,
+}: headerInterface) {
   const [openPopup, setOpenPopup] = useState(false);
   const dispatch = useAppDispatch();
   const { user, dbUser } = useAppSelector((state) => state?.user);
@@ -37,7 +52,7 @@ export default function HeaderComponent({ logo = true, headerTitle = "Home", ful
       notification("info", "Logout successfully");
       dispatch(setUser(""));
       dispatch(setNonConfirmedUser(""));
-      dispatch(setDbUser({}));
+      dispatch(setDbUser({} as DbUserType));
     } catch (error) {
       dispatch(setLoading(false));
       notification("error", error?.message);
@@ -51,7 +66,9 @@ export default function HeaderComponent({ logo = true, headerTitle = "Home", ful
       <div className={styles.header} style={style}>
         <div className={styles.header__inner}>
           <Link href="/" passHref>
-            <div className={styles.left + " " + styles.logo}>{logo && <img src="/logo.png" alt="logo" />}</div>
+            <div className={styles.left + " " + styles.logo}>
+              {logo && <img src="/logo.png" alt="logo" />}
+            </div>
           </Link>
           <div className={styles.center + " " + styles.info}>
             <h3>{headerTitle}</h3>
@@ -76,7 +93,10 @@ export default function HeaderComponent({ logo = true, headerTitle = "Home", ful
                         onClick={() => setOpenPopup((pre) => !pre)}
                       />
                     ) : (
-                      <FaRegUser className={styles.userName__image} onClick={() => setOpenPopup((pre) => !pre)} />
+                      <FaRegUser
+                        className={styles.userName__image}
+                        onClick={() => setOpenPopup((pre) => !pre)}
+                      />
                     )}
                   </div>
                 ) : null}

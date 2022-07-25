@@ -4,7 +4,7 @@ import styles from "./tray.module.scss";
 interface TrayTagProps {
   hover?: boolean;
   handleTagClick?: () => void;
-  icon: ReactNode;
+  icon: string | ReactNode;
   placeMent?: "right" | "left";
 }
 
@@ -23,7 +23,7 @@ const TrayTag = ({
       `}
       onClick={handleTagClick}
     >
-      {icon}
+      {typeof icon === "string" ? <img src={icon} alt="icon" /> : icon}
     </div>
   );
 };
