@@ -1,7 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import styles from "./socialTray.module.scss";
 import { Auth } from "aws-amplify";
+import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth/lib/types";
 import { useMutation } from "@apollo/client";
 import CREATE_NEW_USER from "../../../../gqlLib/user/mutations/createNewUser";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
@@ -11,6 +12,11 @@ import {
   setUser,
 } from "../../../../redux/slices/userSlice";
 import { useRouter } from "next/router";
+import notification from "../../../../components/utility/reactToastifyNotification";
+
+type SocialLoginType = (
+  provider: "Amazon" | "Google" | "Facebook" | "Apple" | "Cognito",
+) => void;
 
 const SocialTray = () => {
   const [createNewUser] = useMutation(CREATE_NEW_USER);
@@ -42,8 +48,9 @@ const SocialTray = () => {
       dispatch(setUser(email));
       dispatch(setDbUser(data?.createNewUser));
       dispatch(setProvider(identities?.[0]?.providerName?.toLowerCase()));
-      history.push("/recipe_discovery");
+      history.push("/");
     } catch (error) {
+      //notification("error", error?.message);
       console.log(error);
     }
   };
@@ -55,11 +62,14 @@ const SocialTray = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSocialSignup = async (provider) => {
+  const handleSocialSighup: SocialLoginType = async (provider) => {
     try {
-      await Auth.federatedSignIn({ provider: provider });
+      await Auth.federatedSignIn({
+        provider: CognitoHostedUIIdentityProvider[provider],
+      });
     } catch (error) {
-      console.log(error?.message);
+      notification("error", error?.message);
+      console.log(error);
     }
   };
 
@@ -70,23 +80,26 @@ const SocialTray = () => {
         <li className={styles.listElem}>
           <img
             src={"/images/google.png"}
-            alt="Icons will soon Load"
-            //@ts-ignore
-            onClick={() => handleSocialSignup("Google")}
+            alt="Icon"
+            onClick={() => handleSocialSighup("Google")}
           />
         </li>
         <li className={styles.listElem}>
           <img
             src={"/images/fb.png"}
-            alt="Icons will soon Load"
-            onClick={() => handleSocialSignup("Facebook")}
+            alt="Icon"
+            onClick={() => handleSocialSighup("Facebook")}
           />
         </li>
         <li className={styles.listElem}>
-          <img src={"/images/twitter.png"} alt="Icons will soon Load" />
+          <img src={"/images/twitter.png"} alt="Icon" />
         </li>
         <li className={styles.listElem}>
-          <img src={"/images/apple.png"} alt="Icons will soon Load" />
+          <img
+            src={"/images/apple.png"}
+            alt="Icon"
+            onClick={() => handleSocialSighup("Apple")}
+          />
         </li>
       </ul>
     </>

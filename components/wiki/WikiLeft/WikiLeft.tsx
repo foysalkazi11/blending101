@@ -1,34 +1,45 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
 import s from "./WikiLeft.module.scss";
 import FilterbottomComponent from "../../sidetray/filter/filterBottom.component";
 import WikiType from "../wikiType/WikiType";
 import WikiNutritionPanel from "../wikiNutritionPanel/WikiNutritionPanel";
 import WikiHealthPanel from "../wikiHealthPanel/WikiHealthPanel";
-import { Type } from "..";
+import { SelectedWikiType, Type } from "..";
 interface Props {
   type: Type;
   setType: Dispatch<SetStateAction<Type>>;
-  selectedWikiItem?: string[];
-  setSelectedWikiItem?: Dispatch<SetStateAction<string[]>>;
+  selectedWikiItem?: SelectedWikiType;
+  setSelectedWikiItem?: Dispatch<SetStateAction<SelectedWikiType>>;
 }
 
 const WikiLeft = ({
   type = "Ingredient",
-  selectedWikiItem = [],
+  selectedWikiItem = {} as SelectedWikiType,
   setSelectedWikiItem = () => {},
   setType = () => {},
 }: Props) => {
   const checkActive = (id: string) => {
-    return selectedWikiItem?.includes(id);
+    return selectedWikiItem[type]?.includes(id);
   };
 
   const handleItemClick = (item: any = {}, isExist) => {
+    const checkWikiList = (list: string[], id: string) => {
+      if (list?.length) {
+        return [...list, id];
+      } else {
+        return [id];
+      }
+    };
     if (isExist) {
-      setSelectedWikiItem((wikiItem) =>
-        wikiItem?.filter((items) => items !== item?._id),
-      );
+      setSelectedWikiItem((wikiItem) => ({
+        ...wikiItem,
+        [type]: wikiItem[type]?.filter((items) => items !== item?._id) || [],
+      }));
     } else {
-      setSelectedWikiItem((wikiItem) => [...wikiItem, item?._id]);
+      setSelectedWikiItem((wikiItem) => ({
+        ...wikiItem,
+        [type]: [...checkWikiList(wikiItem[type], item?._id)],
+      }));
     }
   };
 

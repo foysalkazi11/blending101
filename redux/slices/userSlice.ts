@@ -1,24 +1,26 @@
 // import type { RootState } from "../store";
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import sampleUser from "../../data/sampleUser";
+import { DbUserType } from "../../type/dbUserType";
 
 type SideTrayState = {
   nonConfirmedUser: string;
   user: string | null;
-  dbUser: any;
+  dbUser: DbUserType;
   provider: string;
   isNewUseImage: any[];
 };
 
 const initialState: SideTrayState = {
-  nonConfirmedUser: '',
-  user: null,
-  dbUser: {},
-  provider: 'email',
+  nonConfirmedUser: "",
+  user: "",
+  dbUser: {} as DbUserType,
+  provider: "email",
   isNewUseImage: [],
 };
 
 export const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<string>) => {
@@ -27,7 +29,7 @@ export const userSlice = createSlice({
     setNonConfirmedUser: (state, action: PayloadAction<string>) => {
       state.nonConfirmedUser = action?.payload;
     },
-    setDbUser: (state, action: PayloadAction<any>) => {
+    setDbUser: (state, action: PayloadAction<DbUserType>) => {
       state.dbUser = action?.payload;
     },
     setProvider: (state, action: PayloadAction<string>) => {

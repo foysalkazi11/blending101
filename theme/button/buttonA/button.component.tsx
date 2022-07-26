@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import styles from './button.module.scss';
+import React, { useState } from "react";
+import styles from "./button.module.scss";
 
 interface buttonInterface {
-  type: 'text' | 'primary' | 'transparent' | 'transparentHover' | 'border';
+  type: "text" | "primary" | "transparent" | "transparentHover" | "border";
   value: string | React.ReactNode;
   fullWidth: boolean;
   disabled?: boolean;
@@ -23,57 +23,58 @@ export default function ButtonComponent({
   submit = false,
 }: buttonInterface) {
   // STEP 1: INITIALIZE PROPS TO AVOID UI FALL
-  type = type || 'text';
+  type = type || "text";
   style = style || {};
-  if (fullWidth) style = { ...style, width: '100%' };
+  if (fullWidth) style = { ...style, width: "100%" };
   if (width) style = { ...style, width: width };
   value = value || type;
 
   // CASE PRIMARY: IF TYPE IS PRIMARY RETURN PRIMARY BUTTON
-  if (type === 'primary')
+  if (type === "primary")
     return (
       <button
-        className={styles.button + ' ' + styles.primary}
+        className={styles.button + " " + styles.primary}
         style={style}
         onClick={handleClick}
         disabled={disabled}
       >
-        {typeof value === 'string' ? value : React.createElement(value as any)}
+        {value}
+        {/* {typeof value === 'string' ? value : React.createElement(value as any)} */}
       </button>
     );
 
   // CASE TRANSPARENT: RETURN TRANSPARENT BUTTON
-  if (type === 'transparent')
+  if (type === "transparent")
     return (
       <button
-        className={styles.button + ' ' + styles.transparent}
+        className={styles.button + " " + styles.transparent}
         style={style}
         onClick={handleClick}
-        type={submit ? 'submit' : 'button'}
+        type={submit ? "submit" : "button"}
       >
         {value}
       </button>
     );
 
-  if (type === 'transparentHover')
+  if (type === "transparentHover")
     return (
       <button
-        className={styles.button + ' ' + styles.transparent__hover}
+        className={styles.button + " " + styles.transparent__hover}
         style={style}
         onClick={handleClick}
-        type={submit ? 'submit' : 'button'}
+        type={submit ? "submit" : "button"}
       >
         {value}
       </button>
     );
 
-  if (type === 'border')
+  if (type === "border")
     return (
       <button
         className={styles.border__button}
         style={style}
         onClick={handleClick}
-        type={submit ? 'submit' : 'button'}
+        type={submit ? "submit" : "button"}
       >
         {value}
       </button>
@@ -85,7 +86,7 @@ export default function ButtonComponent({
       className={styles.button}
       style={style}
       onClick={handleClick}
-      type={submit ? 'submit' : 'button'}
+      type={submit ? "submit" : "button"}
     >
       {value}
     </button>

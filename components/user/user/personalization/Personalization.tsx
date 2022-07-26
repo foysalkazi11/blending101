@@ -1,12 +1,9 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { useAppSelector } from "../../../../redux/hooks";
+import React, { Dispatch, SetStateAction } from "react";
 import ToggleMenu from "../../../../theme/toggleMenu/ToggleMenu";
 import Dietary from "./dietary/Dietary";
 import Physical from "./physical/Physical";
-
 import Medical from "./medical/Medical";
 import AchiveGoals from "./achiveGoals/AchiveGoals";
-import { useRouter } from "next/router";
 
 type PersonalizationProps = {
   userData: any;
