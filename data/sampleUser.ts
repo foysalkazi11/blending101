@@ -41,6 +41,7 @@ const sampleUser: DbUserType = {
     ],
   },
   compareLength: 4,
+  wikiCompareCount: 0,
 };
 
 export default sampleUser;
