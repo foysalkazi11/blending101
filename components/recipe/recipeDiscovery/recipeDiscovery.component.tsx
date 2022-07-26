@@ -5,7 +5,7 @@ import styles from "./recipeDiscovery.module.scss";
 import AppdownLoadCard from "./AppdownLoadCard/AppdownLoadCard.component";
 import ContentTray from "./ContentTray/ContentTray.component";
 import DatacardComponent from "../../../theme/cards/dataCard/dataCard.component";
-import SearchBar from "./searchBar/SearchBar.component";
+import DiscoverPageSearch from "./discoverPageSearch/DiscoverPageSearch.Component";
 import SearchtagsComponent from "../../searchtags/searchtags.component";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import FilterPageBottom from "../recipeFilter/filterBottom.component";
@@ -119,7 +119,7 @@ const RecipeDetails = () => {
               transition: "all 0.5s",
             }}
           >
-            <SearchBar />
+            <DiscoverPageSearch />
             {blends.length || ingredients.length || filters?.length ? (
               <SearchtagsComponent />
             ) : null}
