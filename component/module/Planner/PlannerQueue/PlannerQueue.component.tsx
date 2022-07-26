@@ -198,7 +198,7 @@ const Recipes = (props) => {
       mutate: addRecipe,
       variables: {
         assignDate: assignDate,
-        recipeId: [recipe._id],
+        recipeId: recipe._id,
         userId,
       },
       state: addState,

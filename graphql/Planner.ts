@@ -163,8 +163,6 @@ export const ADD_RECIPE_TO_PLANNER = gql`
   }
 `;
 
-// export const DELETE_RECIPE_FROM_PLANNER = gql``;
-
 export const GET_INGREDIENTS_BY_RECIPE = gql`
   query getIngredientsByRecipe($recipeId: String!) {
     getIngredientsFromARecipe(recipeId: $recipeId) {
@@ -237,5 +235,13 @@ export const GET_CHALLENGES = gql`
 export const CREATE_CHALLENGE = gql`
   mutation CreateChallenge($data: CreateUserChallenge!) {
     createUserChallenge(data: $data)
+  }
+`;
+
+export const ACTIVATE_CHALLENGE = gql`
+  mutation ActivateChallenge($memberId: ID!, $challengeId: ID!) {
+    editUserChallenge(
+      data: { memberId: $memberId, challengeId: $challengeId, isActive: true }
+    )
   }
 `;

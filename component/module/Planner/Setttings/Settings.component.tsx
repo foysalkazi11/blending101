@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo, useRef, useState } from "react";
+import React, { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useMutation, useQuery } from "@apollo/client";
 import { faChevronLeft, faTimes } from "@fortawesome/pro-solid-svg-icons";
@@ -10,7 +10,11 @@ import NumberField from "../../../organisms/Forms/NumberField.component";
 import Textarea from "../../../organisms/Forms/Textarea.component";
 import Textfield from "../../../organisms/Forms/Textfield.component";
 
-import { CREATE_CHALLENGE, GET_CHALLENGES } from "../../../../graphql/Planner";
+import {
+  ACTIVATE_CHALLENGE,
+  CREATE_CHALLENGE,
+  GET_CHALLENGES,
+} from "../../../../graphql/Planner";
 import { useAppSelector } from "../../../../redux/hooks";
 import Publish from "../../../../helpers/Publish";
 
@@ -80,13 +84,26 @@ const ChallengeList = () => {
       memberId,
     },
   });
+  const [activateChallenge, activateState] = useMutation(ACTIVATE_CHALLENGE);
 
   const [activeId, setActiveId] = useState("");
 
-  const activeHandler = (id) => {
-    setActiveId(id);
+  const activeHandler = async (challengeId) => {
+    await Publish({
+      mutate: activateChallenge,
+      variables: {
+        memberId,
+        challengeId,
+      },
+      state: activateState,
+      success: `Activated Challenge Sucessfully`,
+      onSuccess: () => {
+        setActiveId(challengeId);
+      },
+    });
   };
 
+  console.log(activeId);
   return (
     <Fragment>
       <div className="row mb-10 mt-10">
@@ -121,7 +138,13 @@ const ChallengeList = () => {
             </div>
             <div className="col-1">
               <RadioButton
-                selected={activeId === challenge._id ? "" : "Unchecked"}
+                selected={
+                  activeId === "" && challenge.isActive
+                    ? ""
+                    : activeId === challenge._id
+                    ? ""
+                    : "unchecked"
+                }
                 options={[""]}
                 className="ml-50"
                 onChange={() => activeHandler(challenge._id)}
