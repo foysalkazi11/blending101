@@ -7,7 +7,9 @@ import TrayTag from "../sidetray/TrayTag";
 import TrayWrapper from "../sidetray/TrayWrapper";
 import useWindowSize from "../utility/useWindowSize";
 import styles from "./wiki.module.scss";
+import WikiBanner from "./wikiBanner/WikiBanner";
 import WikiLeft from "./WikiLeft/WikiLeft";
+import WikiSearchBar from "./wikiSearchBar/WikiSearchBar";
 import WikiSingleType from "./wikiSingleType/WikiSingleType";
 
 export type Type = "Nutrient" | "Ingredient" | "Health";
@@ -34,6 +36,8 @@ const WikiHome = () => {
           />
         </div>
         <div className={styles.center}>
+          <WikiSearchBar />
+          <WikiBanner />
           <WikiSingleType
             type={type}
             selectedWikiItem={selectedWikiItem}

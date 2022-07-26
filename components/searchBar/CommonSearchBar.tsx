@@ -1,42 +1,79 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, {
+  useRef,
+  useState,
+  Dispatch,
+  SetStateAction,
+  FormEvent,
+  ReactNode,
+  CSSProperties,
+} from "react";
 import styles from "./SearchBar.module.scss";
 import { FiFilter } from "react-icons/fi";
 import { BsMic, BsSoundwave, BsSearch } from "react-icons/bs";
 import { AiOutlineClose } from "react-icons/ai";
-import RecipeDiscoverButton from "../../../../theme/button/recipeDiscoverButton/RecipeDiscoverButton";
-import AddCircleOutlineIcon from "../../../../public/icons/add_circle_outline_black_36dp.svg";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import {
-  setIngredients,
-  setOpenFilterTray,
-  setBlendTye,
-} from "../../../../redux/slices/sideTraySlice";
-import useOnClickOutside from "../../../utility/useOnClickOutside";
-import { useRouter } from "next/router";
-import Tooltip from "../../../../theme/toolTip/CustomToolTip";
+import AddCircleOutlineIcon from "../../public/icons/add_circle_outline_black_36dp.svg";
 
-interface searchBarProps {
-  blends: any[];
-  ingredients: any[];
+import { useRouter } from "next/router";
+import useOnClickOutside from "../utility/useOnClickOutside";
+import Tooltip from "../../theme/toolTip/CustomToolTip";
+import RecipeDiscoverButton from "../../theme/button/recipeDiscoverButton/RecipeDiscoverButton";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCirclePlus } from "@fortawesome/pro-regular-svg-icons";
+
+interface SearchBarProps {
+  input?: string;
+  setInput?: Dispatch<SetStateAction<string>>;
+  //handleCleanSearch?: () => void;
+  handleSearchTagCleanFunc?: () => void;
+  openPanel?: () => void;
+  handleSubmitFunc?: () => void;
+  compareButton?: CompareButtonProps;
+  isSearchTag?: boolean;
+  isOpenPanel?: boolean;
+  comeFromWhichPage?: "discovery" | "wiki";
 }
 
-const SearchBar = () => {
+interface CompareButtonProps {
+  icon?: string | ReactNode;
+  text?: string | number;
+  disable?: boolean;
+  handleClick?: () => void;
+  style?: CSSProperties;
+}
+
+const CommonSearchBar = ({
+  input = "",
+  setInput = () => {},
+  //handleCleanSearch = () => {},
+  handleSubmitFunc = () => {},
+  handleSearchTagCleanFunc = () => {},
+  openPanel = () => {},
+  compareButton = {
+    disable: false,
+    handleClick: () => {},
+    icon: "",
+    style: {},
+    text: "",
+  },
+  isOpenPanel = false,
+  isSearchTag = false,
+  comeFromWhichPage = "discovery",
+}: SearchBarProps) => {
   const router = useRouter();
   const [isInputFocus, setIsInputFocus] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
-  const [input, setInput] = useState("");
   const [isMicOn, setIsMicOn] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const { openFilterTray, blends, ingredients } = useAppSelector(
-    (state) => state?.sideTray,
-  );
-  const { dbUser } = useAppSelector((state) => state?.user);
-  const dispatch = useAppDispatch();
+  useOnClickOutside(inputRef, () => {
+    setIsSubmit(false);
+    setIsInputFocus(false);
+  });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (input) {
       setIsSubmit(true);
+      handleSubmitFunc();
     }
   };
 
@@ -46,27 +83,12 @@ const SearchBar = () => {
     setIsInputFocus(false);
     // inputRef?.current?.focus();
   };
+
   const handleSearchTagClean = () => {
-    dispatch(setIngredients([]));
-    dispatch(setBlendTye([]));
+    handleSearchTagCleanFunc();
     setIsSubmit(false);
     setIsInputFocus(false);
   };
-  useOnClickOutside(inputRef, () => {
-    setIsSubmit(false);
-    setIsInputFocus(false);
-  });
-
-  useEffect(() => {
-    let str: string = input;
-
-    str = [
-      ...blends?.map((item) => `${item?.title}`),
-      ...ingredients?.map((item) => `${item?.title}`),
-    ]?.join(", ");
-    setInput(str);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blends, ingredients]);
 
   return (
     <div className={styles.searchBarContainer}>
@@ -74,15 +96,15 @@ const SearchBar = () => {
         <div
           className={styles.filterIconContainer}
           style={
-            openFilterTray ? { marginRight: "10px", paddingRight: "20px" } : {}
+            isOpenPanel ? { marginRight: "10px", paddingRight: "20px" } : {}
           }
         >
-          {openFilterTray ? null : (
+          {isOpenPanel ? null : (
             <FiFilter
               className={`${styles.filterIcon} ${
-                openFilterTray ? styles.active : ""
+                isOpenPanel ? styles.active : ""
               }`}
-              onClick={() => dispatch(setOpenFilterTray(!openFilterTray))}
+              onClick={openPanel}
             />
           )}
         </div>
@@ -94,7 +116,7 @@ const SearchBar = () => {
           )}
           <form onSubmit={handleSubmit}>
             <input
-              style={openFilterTray ? { width: "30vw", minWidth: "200px" } : {}}
+              style={isOpenPanel ? { width: "30vw", minWidth: "200px" } : {}}
               disabled={isMicOn}
               placeholder={isMicOn ? "Speak" : "Search"}
               value={input}
@@ -120,7 +142,7 @@ const SearchBar = () => {
             />
           ) : (
             <>
-              {blends?.length || ingredients?.length ? (
+              {isSearchTag ? (
                 <AiOutlineClose
                   className={styles.seachIconActive}
                   onClick={handleSearchTagClean}
@@ -140,34 +162,35 @@ const SearchBar = () => {
       <div style={{ marginLeft: "40px" }} className={styles.buttonContainer}>
         <Tooltip content="Compare recipe" direction="bottom">
           <RecipeDiscoverButton
-            image={
-              dbUser?.compareLength
-                ? "/images/compare-fill-icon.svg"
-                : "/icons/eclipse.svg"
-            }
-            text={`Compare(${
-              dbUser?.compareLength ? dbUser?.compareLength : 0
-            })`}
-            disable={dbUser?.compareLength ? false : true}
-            style={{
-              backgroundColor: dbUser?.compareLength ? "inherit" : "#ececec",
-            }}
-            handleClick={() => router.push(`/recipe/compare`)}
+            icon={compareButton?.icon}
+            text={compareButton?.text}
+            disable={compareButton?.disable}
+            style={compareButton?.style}
+            handleClick={compareButton?.handleClick}
           />
         </Tooltip>
       </div>
 
-      <div style={{ marginLeft: "30px" }} className={styles.buttonContainer}>
-        <Tooltip content="Add recipe" direction="bottom">
-          <RecipeDiscoverButton
-            Icon={AddCircleOutlineIcon}
-            text="Recipe"
-            handleClick={() => router.push(`/add_recipe`)}
-          />
-        </Tooltip>
-      </div>
+      {comeFromWhichPage === "discovery" ? (
+        <div style={{ marginLeft: "30px" }} className={styles.buttonContainer}>
+          <Tooltip content="Add recipe" direction="bottom">
+            <RecipeDiscoverButton
+              icon={
+                <FontAwesomeIcon
+                  icon={faCirclePlus}
+                  color="#fe5d1f"
+                  fontSize={20}
+                  style={{ marginRight: "5px" }}
+                />
+              }
+              text="Recipe"
+              handleClick={() => router.push(`/add_recipe`)}
+            />
+          </Tooltip>
+        </div>
+      ) : null}
     </div>
   );
 };
 
-export default SearchBar;
+export default CommonSearchBar;

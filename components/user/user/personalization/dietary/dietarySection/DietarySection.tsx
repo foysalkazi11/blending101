@@ -34,7 +34,8 @@ const DietarySection = ({
                       ? alredyExist(item?.label?.toLowerCase(), "allergies")
                         ? styles.active
                         : ""
-                      : item?.label?.toLowerCase() === userProfile[fieldName]
+                      : item?.label?.toLowerCase() ===
+                        userProfile[fieldName]?.toLowerCase()
                       ? styles.active
                       : ""
                   }`}
