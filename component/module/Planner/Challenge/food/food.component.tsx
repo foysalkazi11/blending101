@@ -3,12 +3,7 @@ import { useQuery } from "@apollo/client";
 import { RECIPE_CATEGORY_COLOR } from "../../../../../data/Recipe";
 import { GET_BLEND_CATEGORY } from "../../../../../graphql/Recipe";
 
-interface FoodInterface {
-  categoryObject: object;
-}
-
-function Food({ categoryObject }: FoodInterface) {
-  categoryObject = categoryObject || {};
+function Food() {
   const { data } = useQuery(GET_BLEND_CATEGORY);
   return (
     <div className={styles.challenge_circle_food}>

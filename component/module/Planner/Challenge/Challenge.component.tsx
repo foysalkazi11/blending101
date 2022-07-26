@@ -50,7 +50,6 @@ const CircleComponent = ({
   totalBlendValue,
 }: CircleComponentInterface) => {
   useEffect(() => {
-    // if (activities.length === 0) return;
     function handleResize() {
       const insideWidth = 0.82;
       // For Food
@@ -66,8 +65,8 @@ const CircleComponent = ({
         `.${foodStyles.challenge_circle_food_box}`,
       );
 
-      // challengeCircleFood.style.width =
-      //   challengeCircleBox.clientWidth * insideWidth + "px";
+      challengeCircleFood.style.width =
+        challengeCircleBox.clientWidth * insideWidth + "px";
       // challengeCircleFood.style.marginBottom =
       //   challengeCircleBox.clientWidth * 0.02 + "px";
       challengeCircleFoodBoxList.forEach((challengeCircleFoodBox) => {
@@ -219,29 +218,29 @@ const CircleComponent = ({
   return (
     <div className={styles.mainContainer__contentDiv__innerDiv}>
       <div className={styles.mainContainer__contentDiv__innerDiv__challengeDiv}>
-        {activities && activities?.length !== 0 && (
-          <div className={styles.challenge_circle_box}>
-            <Food categoryObject={categoryObject} />
-            <Main
-              activities={activities}
-              activityDataList={activityDataList}
-              profileImage={profileImage}
-              numOfDaysChallenge={numOfDaysChallenge}
-              blendValue={blendValue}
-              totalBlendValue={totalBlendValue}
-              startDate={startDate}
-              startMonth={startMonth}
-              startYear={startYear}
-            />
-            <GraphDetailContainer
-              activityDataList={activityDataList}
-              categoryObject={categoryObject}
-              startDate={startDate}
-              startMonth={startMonth}
-              startYear={startYear}
-            />
-          </div>
-        )}
+        {/* {activities && activities?.length !== 0 && ( */}
+        <div className={styles.challenge_circle_box}>
+          <Food categoryObject={categoryObject} />
+          <Main
+            activities={activities}
+            activityDataList={activityDataList}
+            profileImage={profileImage}
+            numOfDaysChallenge={numOfDaysChallenge}
+            blendValue={blendValue}
+            totalBlendValue={totalBlendValue}
+            startDate={startDate}
+            startMonth={startMonth}
+            startYear={startYear}
+          />
+          <GraphDetailContainer
+            activityDataList={activityDataList}
+            categoryObject={categoryObject}
+            startDate={startDate}
+            startMonth={startMonth}
+            startYear={startYear}
+          />
+        </div>
+        {/* )} */}
       </div>
     </div>
   );
