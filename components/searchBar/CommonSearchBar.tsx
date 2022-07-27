@@ -12,13 +12,13 @@ import { FiFilter } from "react-icons/fi";
 import { BsMic, BsSoundwave, BsSearch } from "react-icons/bs";
 import { AiOutlineClose } from "react-icons/ai";
 import AddCircleOutlineIcon from "../../public/icons/add_circle_outline_black_36dp.svg";
-
 import { useRouter } from "next/router";
 import useOnClickOutside from "../utility/useOnClickOutside";
 import Tooltip from "../../theme/toolTip/CustomToolTip";
 import RecipeDiscoverButton from "../../theme/button/recipeDiscoverButton/RecipeDiscoverButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/pro-regular-svg-icons";
+import { type } from "os";
 
 interface SearchBarProps {
   input?: string;
@@ -31,6 +31,7 @@ interface SearchBarProps {
   isSearchTag?: boolean;
   isOpenPanel?: boolean;
   comeFromWhichPage?: "discovery" | "wiki";
+  wikiType?: "Nutrient" | "Ingredient" | "Health";
 }
 
 interface CompareButtonProps {
@@ -58,6 +59,7 @@ const CommonSearchBar = ({
   isOpenPanel = false,
   isSearchTag = false,
   comeFromWhichPage = "discovery",
+  wikiType = "Ingredient",
 }: SearchBarProps) => {
   const router = useRouter();
   const [isInputFocus, setIsInputFocus] = useState(false);
@@ -89,6 +91,20 @@ const CommonSearchBar = ({
     setIsSubmit(false);
     setIsInputFocus(false);
   };
+
+  const compareBtn = (
+    <div style={{ marginLeft: "40px" }} className={styles.buttonContainer}>
+      <Tooltip content="Compare recipe" direction="bottom">
+        <RecipeDiscoverButton
+          icon={compareButton?.icon}
+          text={compareButton?.text}
+          disable={compareButton?.disable}
+          style={compareButton?.style}
+          handleClick={compareButton?.handleClick}
+        />
+      </Tooltip>
+    </div>
+  );
 
   return (
     <div className={styles.searchBarContainer}>
@@ -159,17 +175,11 @@ const CommonSearchBar = ({
           )}
         </div>
       </div>
-      <div style={{ marginLeft: "40px" }} className={styles.buttonContainer}>
-        <Tooltip content="Compare recipe" direction="bottom">
-          <RecipeDiscoverButton
-            icon={compareButton?.icon}
-            text={compareButton?.text}
-            disable={compareButton?.disable}
-            style={compareButton?.style}
-            handleClick={compareButton?.handleClick}
-          />
-        </Tooltip>
-      </div>
+      {comeFromWhichPage === "discovery"
+        ? compareBtn
+        : comeFromWhichPage === "wiki" && wikiType === "Ingredient"
+        ? compareBtn
+        : null}
 
       {comeFromWhichPage === "discovery" ? (
         <div style={{ marginLeft: "30px" }} className={styles.buttonContainer}>
