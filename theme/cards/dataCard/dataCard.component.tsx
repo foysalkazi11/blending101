@@ -228,7 +228,7 @@ export default function DatacardComponent({
                         ? "/icons/compare-1.svg"
                         : "/icons/eclipse.svg"
                     }
-                    alt="eclipse"
+                    alt="icon"
                     onClick={(e) =>
                       handleChangeCompare(
                         e,

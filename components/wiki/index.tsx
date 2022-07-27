@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import AContainer from "../../containers/A.container";
 import useLocalStorage from "../../customHooks/useLocalStorage";
+import { WikiType } from "../../type/wikiListType";
 import TrayTag from "../sidetray/TrayTag";
 import TrayWrapper from "../sidetray/TrayWrapper";
 import useWindowSize from "../utility/useWindowSize";
@@ -12,31 +13,36 @@ import WikiLeft from "./WikiLeft/WikiLeft";
 import WikiSearchBar from "./wikiSearchBar/WikiSearchBar";
 import WikiSingleType from "./wikiSingleType/WikiSingleType";
 
-export type Type = "Nutrient" | "Ingredient" | "Health";
 export type SelectedWikiType = {
-  [key in Type]: string[];
+  [key in WikiType]: string[];
 };
 
 const WikiHome = () => {
   const [selectedWikiItem, setSelectedWikiItem] =
     useLocalStorage<SelectedWikiType>("selectedWikiItem", {});
-  const [type, setType] = useLocalStorage<Type>("type", "Ingredient");
+  const [type, setType] = useLocalStorage<WikiType>("type", "Ingredient");
   const [openTray, setOpenTray] = useState(false);
   const { width } = useWindowSize();
+
+  const wikiLeftSide = (
+    <WikiLeft
+      type={type}
+      setType={setType}
+      selectedWikiItem={selectedWikiItem}
+      setSelectedWikiItem={setSelectedWikiItem}
+    />
+  );
 
   return (
     <AContainer>
       <div className={styles.main}>
-        <div className={styles.left}>
-          <WikiLeft
-            type={type}
-            setType={setType}
-            selectedWikiItem={selectedWikiItem}
-            setSelectedWikiItem={setSelectedWikiItem}
-          />
-        </div>
+        <div className={styles.left}>{wikiLeftSide}</div>
         <div className={styles.center}>
-          <WikiSearchBar />
+          <WikiSearchBar
+            openTray={width < 1280 ? openTray : true}
+            setOpenTray={width < 1280 ? setOpenTray : () => {}}
+            type={type}
+          />
           <WikiBanner />
           <WikiSingleType
             type={type}
@@ -45,7 +51,7 @@ const WikiHome = () => {
           />
         </div>
       </div>
-      {width < 1280 ? (
+      {width < 1280 && openTray ? (
         <TrayWrapper
           isolated={true}
           showPanle="left"
@@ -60,12 +66,7 @@ const WikiHome = () => {
             />
           )}
         >
-          <WikiLeft
-            type={type}
-            setType={setType}
-            selectedWikiItem={selectedWikiItem}
-            setSelectedWikiItem={setSelectedWikiItem}
-          />
+          {wikiLeftSide}
         </TrayWrapper>
       ) : null}
     </AContainer>

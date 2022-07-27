@@ -2,7 +2,7 @@ export interface WikiListType {
   _id: string;
   wikiTitle: string;
   wikiDescription: string;
-  type: string;
+  type: WikiType;
   category: string;
   image: string;
   status: string;
@@ -13,6 +13,8 @@ export interface WikiListType {
   commentsCount: number;
   hasInCompare: boolean;
 }
+
+export type WikiType = "Nutrient" | "Ingredient" | "Health";
 
 export interface Portion {
   measurement: string;

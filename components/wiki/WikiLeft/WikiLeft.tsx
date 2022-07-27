@@ -1,10 +1,11 @@
-import React, { Dispatch, SetStateAction, useEffect } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import s from "./WikiLeft.module.scss";
 import FilterbottomComponent from "../../sidetray/filter/filterBottom.component";
-import WikiType from "../wikiType/WikiType";
+import WikiTypes from "../wikiTypes/WikiTypes";
 import WikiNutritionPanel from "../wikiNutritionPanel/WikiNutritionPanel";
 import WikiHealthPanel from "../wikiHealthPanel/WikiHealthPanel";
-import { SelectedWikiType, Type } from "..";
+import { SelectedWikiType } from "..";
+import { WikiType as Type } from "../../../type/wikiListType";
 interface Props {
   type: Type;
   setType: Dispatch<SetStateAction<Type>>;
@@ -71,7 +72,7 @@ const WikiLeft = ({
 
   return (
     <div className={s.wikiLeftContainer}>
-      <WikiType type={type} setType={setType} />
+      <WikiTypes type={type} setType={setType} />
       {renderUi(type)}
     </div>
   );
