@@ -10,21 +10,20 @@ import React, {
   useState,
 } from "react";
 import { MdOutlineStarOutline } from "react-icons/md";
-import { Type } from "..";
 import Pagination from "../../../component/molecules/Pagination/ServerPagination.component";
 import GET_INGREDIENT_WIKI_LIST from "../../../gqlLib/wiki/query/getIngredientWikiList";
 import GET_NUTRIENT_WIKI_LIST from "../../../gqlLib/wiki/query/getNutrientWikiList";
 import { useAppSelector } from "../../../redux/hooks";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
 import SkeletonCollectionRecipe from "../../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollectionRecipe";
-import { WikiListType } from "../../../type/wikiListType";
+import { WikiListType, WikiType } from "../../../type/wikiListType";
 import notification from "../../utility/reactToastifyNotification";
 import WikiCard from "../wikiCard/WikiCard";
 import styles from "./WikiSingleType.module.scss";
 import { SelectedWikiType } from "..";
 
 interface Props {
-  type?: Type;
+  type?: WikiType;
   selectedWikiItem?: SelectedWikiType;
   setSelectedWikiItem?: Dispatch<SetStateAction<SelectedWikiType>>;
 }
@@ -76,7 +75,7 @@ const WikiSingleType = ({
     }
   };
 
-  const selectOptions = (type: Type, page: number, ids: string[] = []) => {
+  const selectOptions = (type: WikiType, page: number, ids: string[] = []) => {
     switch (type) {
       case "Ingredient":
         fetchList(getIngredientList, page, ids);
@@ -183,6 +182,8 @@ const WikiSingleType = ({
                     type={type}
                     portions={portions}
                     id={_id}
+                    hasInCompare={hasInCompare}
+                    setWikiList={setWikiList}
                   />
                 );
               })

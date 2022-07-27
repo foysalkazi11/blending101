@@ -124,9 +124,20 @@
     align-items: center;
     color: #c4c4c4;
     font-size: 16px;
+
+    .icon {
+      margin-right: 10px;
+      cursor: pointer;
+    }
     .text {
-      margin-left: 5px;
+      margin-left: 3px;
       font-size: 14px;
+    }
+
+    .commentsIconBox {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
     }
   }
 }
