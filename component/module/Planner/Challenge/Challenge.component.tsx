@@ -44,7 +44,6 @@ const CircleComponent = ({
   startDate,
   startMonth,
   startYear,
-  profileImage,
   numOfDaysChallenge,
   blendValue,
   totalBlendValue,
@@ -224,7 +223,6 @@ const CircleComponent = ({
           <Main
             activities={activities}
             activityDataList={activityDataList}
-            profileImage={profileImage}
             numOfDaysChallenge={numOfDaysChallenge}
             blendValue={blendValue}
             totalBlendValue={totalBlendValue}
@@ -233,6 +231,7 @@ const CircleComponent = ({
             startYear={startYear}
           />
           <GraphDetailContainer
+            activities={activities}
             activityDataList={activityDataList}
             categoryObject={categoryObject}
             startDate={startDate}
