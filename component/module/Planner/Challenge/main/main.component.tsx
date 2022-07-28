@@ -53,7 +53,6 @@ function Main({
       <div className={styles.challenge_circle_main_circle}>
         <Inside
           dateList={dateList}
-          profileImage={profileImage}
           numOfDaysChallenge={numOfDaysChallenge}
           blendValue={blendValue}
           totalBlendValue={totalBlendValue}
