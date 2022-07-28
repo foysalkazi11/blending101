@@ -1,17 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "./smallcard.module.scss";
-import { BsCheck } from "react-icons/bs";
-import { RiCloseCircleFill } from "react-icons/ri";
-import { MdOutlineClose } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
 import useChangeCompare from "../../../customHooks/useChangeComaper";
-import useLocalStorage from "../../../customHooks/useLocalStorage";
 import IconWraper from "../../iconWarper/IconWarper";
 
 export default function SmallcardComponent({
   img,
-  imgHeight,
   text,
   fnc,
   recipe,
@@ -22,10 +17,6 @@ export default function SmallcardComponent({
   setcompareRecipeList = (state: any) => {},
 }) {
   const changeCompare = useChangeCompare();
-
-  const style = {};
-  //@ts-ignore
-  if (imgHeight) style.height = imgHeight;
 
   text = text || "Chocolate Avocado Smoothie";
   img = img || "/cards/coriander.png";
@@ -86,7 +77,7 @@ export default function SmallcardComponent({
           </IconWraper>
         </div>
 
-        <div className={styles.smallCard__top} style={style}>
+        <div className={styles.smallCard__top}>
           <img src={img} alt="coriander" />
         </div>
         <div

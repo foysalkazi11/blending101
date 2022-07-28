@@ -36,7 +36,7 @@ const WikiSearchBar = ({
         icon: dbUser?.wikiCompareCount
           ? "/images/compare-fill-icon.svg"
           : "/icons/eclipse.svg",
-        disable: dbUser?.wikiCompareCount ? true : false,
+        disable: dbUser?.wikiCompareCount ? false : true,
         handleClick: () => router.push(`/wiki/compare`),
         style: {
           backgroundColor: dbUser?.wikiCompareCount ? "inherit" : "#ececec",

@@ -374,7 +374,6 @@ export default function Home() {
           <div className={styles.cardsfive}>
             <div className={styles.card__five}>
               <SmallcardComponent
-                imgHeight={undefined}
                 text={undefined}
                 fnc={undefined}
                 img={undefined}
