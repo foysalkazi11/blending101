@@ -2,6 +2,8 @@ import { daysInMonth } from "../js/my";
 import styles from "./graph-detail-container.module.scss";
 // @ts-ignore
 import HSBar from "react-horizontal-stacked-bar-chart";
+import { RECIPE_CATEGORY_COLOR } from "../../../../../data/Recipe";
+import { useMemo } from "react";
 
 interface GraphDetailContainerInterface {
   categoryObject: object;
@@ -9,6 +11,7 @@ interface GraphDetailContainerInterface {
   startDate: number;
   startMonth: string;
   startYear?: number;
+  activities?: any[];
 }
 function GraphDetailContainer({
   categoryObject,
@@ -16,6 +19,7 @@ function GraphDetailContainer({
   startDate,
   startMonth,
   startYear,
+  activities,
 }: GraphDetailContainerInterface) {
   let date = new Date();
   date = new Date(date.getTime() - 1000 * 60 * 60 * 24 * 6);
@@ -27,7 +31,7 @@ function GraphDetailContainer({
     activityDataList,
     startDate,
     startMonth,
-    startYear
+    startYear,
   ).filter((val) => {
     if (
       // @ts-ignore
@@ -50,9 +54,9 @@ function GraphDetailContainer({
       main[3].map((value: any) =>
         Object.keys(categoryObject).find(
           // @ts-ignore
-          (key) => categoryObject[key] === value
-        )
-      )
+          (key) => categoryObject[key] === value,
+        ),
+      ),
     )
     .flat()
     .filter((remove) => remove !== "#D8D8D8");
@@ -68,29 +72,52 @@ function GraphDetailContainer({
         };
       else obj[color].value++;
       return obj;
-    }, {})
+    }, {}),
   );
+
+  const chartData = useMemo(() => {
+    const categories = {};
+
+    Object.keys(RECIPE_CATEGORY_COLOR).forEach((category) => {
+      categories[category] = {
+        name: category,
+        description: category,
+        color: RECIPE_CATEGORY_COLOR[category],
+        value: 0,
+      };
+    });
+
+    activities?.forEach((activity) => {
+      activity?.posts?.forEach((post) => {
+        if (post?.recipeBlendCategory?.name) {
+          categories[post.recipeBlendCategory?.name].value++;
+        }
+      });
+    });
+
+    return Object.values(categories).filter(
+      (category: any) => category?.value > 0,
+    );
+  }, [activities]);
+
+  console.log(chartData);
 
   return (
     <div className={styles.challenge_circle_graph_data}>
       <div className={styles.challenge_circle_streak}>
         <p className={styles.challenge_circle_no_of_days}>7 Days</p>
-        <p className={styles.challenge_circle_paragraph}>
-          Current Streak
-        </p>
+        <p className={styles.challenge_circle_paragraph}>Current Streak</p>
       </div>
       <div className={styles.challenge_circle_graph_box}>
         <HSBar
-          height={"100%"}
+          height={"40px"}
           id={styles.challenge_circle_new_id}
-          data={output}
+          data={chartData}
         />
       </div>
       <div className={styles.challenge_circle_streak}>
         <p className={styles.challenge_circle_no_of_days}>7 Days</p>
-        <p className={styles.challenge_circle_paragraph}>
-          Longest Streak
-        </p>
+        <p className={styles.challenge_circle_paragraph}>Longest Streak</p>
       </div>
     </div>
   );

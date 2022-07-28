@@ -20,6 +20,7 @@ import styles from "./Plan.module.scss";
 import { useMutation } from "@apollo/client";
 import {
   ADD_RECIPE_TO_PLANNER,
+  ADD_TO_GROCERY_LIST,
   DELETE_RECIPE_FROM_PLANNER,
   MOVE_PLANNER,
 } from "../../../../graphql/Planner";
@@ -161,9 +162,28 @@ const PlanRecipe = ({
   const [showMenu, setShowMenu] = useState(false);
   const [showCalender, setShowCalender] = useState<"move" | "copy" | "">("");
 
+  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+
+  const [addToGrocery, addState] = useMutation(ADD_TO_GROCERY_LIST, {
+    refetchQueries: ["GetCartData"],
+  });
+
   const style = { backgroundColor: RECIPE_CATEGORY_COLOR[category] };
 
   if (!recipeName) return null;
+
+  const addToGroceryList = async () => {
+    await Publish({
+      mutate: addToGrocery,
+      variables: {
+        recipeId: _id,
+        memberId: userId,
+      },
+      state: addState,
+      success: `Added Ingredients to the Grocery List`,
+      onSuccess: (data) => {},
+    });
+  };
 
   return (
     <div className={styles.recipe}>
@@ -182,7 +202,10 @@ const PlanRecipe = ({
           className={styles.recipe__tray__icons}
           style={{ fontSize: "22px" }}
         />
-        <BsCartPlus className={styles.recipe__tray__icons} />
+        <BsCartPlus
+          className={styles.recipe__tray__icons}
+          onClick={addToGroceryList}
+        />
         <HiOutlineDotsVertical
           onClick={() => setShowMenu((prev) => !prev)}
           className={styles.recipe__tray__icons}

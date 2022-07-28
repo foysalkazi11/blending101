@@ -24,6 +24,7 @@ const Planner = () => {
   const [showChallenge, setShowChallenge] = useState(true);
   const [showUpload, setShowUpload] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showGroceryTray] = useState(true);
 
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
@@ -47,7 +48,13 @@ const Planner = () => {
     toolbox = <Settings hideSettings={() => setShowSettings(false)} />;
 
   return (
-    <AContainer>
+    <AContainer
+      showGroceryTray={{
+        show: showGroceryTray,
+        showPanle: "right",
+        showTagByDeafult: showGroceryTray,
+      }}
+    >
       <div className={styles.windowContainer}>
         <div className={styles.planner}>
           <div className={styles.planner__pageTitle}>BLENDA COACH</div>

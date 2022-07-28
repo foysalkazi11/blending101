@@ -245,3 +245,9 @@ export const ACTIVATE_CHALLENGE = gql`
     )
   }
 `;
+
+export const ADD_TO_GROCERY_LIST = gql`
+  mutation AddToGroceryFromPlanner($recipeId: String!, $memberId: String!) {
+    addToGroceryFromPlanner(recipeId: $recipeId, memberId: $memberId)
+  }
+`;

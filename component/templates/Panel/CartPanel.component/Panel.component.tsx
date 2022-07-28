@@ -111,7 +111,7 @@ const GroceryPanel = () => {
     defaultValues: useMemo(() => defaultGrocery, []),
   });
 
-  const { data, loading, error } = useQuery(GET_CART_DATA, {
+  const { data } = useQuery(GET_CART_DATA, {
     variables: { userId: userId._id },
   });
   const [deleteCartItem, deleteState] = useMutation(DELETE_CART_ITEM);

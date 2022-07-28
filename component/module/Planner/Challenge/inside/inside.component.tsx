@@ -50,17 +50,16 @@ function Inside({
       }
       return (totalCount += 0);
     },
-    0
+    0,
   );
 
-  const calculatedPercentage = (
-    (blendValue / totalBlendValue) *
-    100
-  ).toFixed(1);
+  const calculatedPercentage = ((blendValue / totalBlendValue) * 100).toFixed(
+    1,
+  );
 
   return (
     <div className={styles.challenge_circle_inside_circle}>
-      <Profile profileImage={profileImage} />
+      <Profile />
       <div className={styles.challenge_circle_inside_date}>
         {week[dt.getDay()]}, {year[dt.getMonth()]} {dt.getDate()}
       </div>
@@ -75,11 +74,7 @@ function Inside({
       <p className={styles.challenge_circle_remaining_percentage}>
         {calculatedPercentage}%
       </p>
-      <p
-        className={
-          styles.challenge_circle_remaining_percentage_paragraph
-        }
-      >
+      <p className={styles.challenge_circle_remaining_percentage_paragraph}>
         Blend Score
       </p>
     </div>
