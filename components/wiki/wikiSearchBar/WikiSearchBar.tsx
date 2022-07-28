@@ -2,14 +2,20 @@ import { useRouter } from "next/router";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setOpenFilterTray } from "../../../redux/slices/sideTraySlice";
+import { WikiType } from "../../../type/wikiListType";
 import CommonSearchBar from "../../searchBar/CommonSearchBar";
 
 interface Props {
   openTray?: boolean;
-  setOpenTray?: Dispatch<SetStateAction<boolean>>;
+  setOpenTray?: (agr: boolean) => void | Dispatch<SetStateAction<boolean>>;
+  type?: WikiType;
 }
 
-const WikiSearchBar = ({ openTray = false, setOpenTray = () => {} }: Props) => {
+const WikiSearchBar = ({
+  openTray = false,
+  setOpenTray = () => {},
+  type = "Ingredient",
+}: Props) => {
   const router = useRouter();
   const [input, setInput] = useState("");
   const { dbUser } = useAppSelector((state) => state?.user);
@@ -42,6 +48,7 @@ const WikiSearchBar = ({ openTray = false, setOpenTray = () => {} }: Props) => {
       isOpenPanel={openTray}
       isSearchTag={false}
       comeFromWhichPage="wiki"
+      wikiType={type}
     />
   );
 };

@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
-import { Type } from "..";
 import CheckIcon from "../../../theme/checkIcon/CheckIcon";
+import { WikiType as Type } from "../../../type/wikiListType";
 import s from "./WikiType.module.scss";
 
 const typeList: { icon: string; title: Type }[] = [
@@ -14,7 +14,7 @@ interface Props {
   setType: Dispatch<SetStateAction<Type>>;
 }
 
-const WikiType = ({ type = "Ingredient", setType = () => {} }: Props) => {
+const WikiTypes = ({ type = "Ingredient", setType = () => {} }: Props) => {
   const changeWikiType = (title: Type) => {
     if (title !== type) {
       setType(title);
@@ -54,4 +54,4 @@ const WikiType = ({ type = "Ingredient", setType = () => {} }: Props) => {
   );
 };
 
-export default WikiType;
+export default WikiTypes;
