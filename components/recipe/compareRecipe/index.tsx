@@ -373,9 +373,7 @@ const CompareRecipe = () => {
                     return (
                       <SmallcardComponent
                         key={index}
-                        imgHeight={undefined}
                         text={recipe?.name}
-                        //@ts-ignore
                         img={recipe?.image[0]?.image}
                         fnc={handleCompare}
                         recipe={recipe}
