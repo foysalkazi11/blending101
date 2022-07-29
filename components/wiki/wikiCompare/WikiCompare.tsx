@@ -65,7 +65,7 @@ const WikiCompare = () => {
               backAddress="/wiki"
               backIconText="Wiki Discovery"
               buttonText={"Compare"}
-              showButton={true}
+              showButton={false}
               buttonClick={() => {}}
               compareAmout={dbUser?.wikiCompareCount}
               closeCompare={() => {}}
@@ -87,7 +87,7 @@ const WikiCompare = () => {
                       recipe={item}
                       findCompareRecipe={findCompareRecipe}
                       fucUnCheck={removeCompareRecipe}
-                      conpareLength={wikiCompareList?.length}
+                      compareLength={wikiCompareList?.length}
                     />
                   );
                 },
@@ -103,9 +103,6 @@ const WikiCompare = () => {
                   key={index}
                   ingredient={item}
                   removeCompareRecipe={removeCompareRecipe}
-                  // compareRecipeList={compareRecipeList}
-                  // setcompareRecipeList={setcompareRecipeList}
-                  // setOpenCollectionModal={setOpenCollectionModal}
                 />
               );
             })}

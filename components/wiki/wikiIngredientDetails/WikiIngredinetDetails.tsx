@@ -6,8 +6,7 @@ import WikiCard from "../wikiCard/WikiCard";
 import styles from "./WikiIngredientDetails.module.scss";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
 import { WikiCompareList } from "../../../type/wikiCompareList";
-import { useLazyQuery, useQuery } from "@apollo/client";
-import GET_BLEND_NUTRITION_BASED_ON_RECIPE_DATA from "../../../gqlLib/compare/query/getBlendNutritionBasedOnRecipeData";
+import { useQuery } from "@apollo/client";
 import UpdatedRecursiveAccordion from "../../customRecursiveAccordian/updatedRecursiveAccordian.component";
 import GET_BLEND_NUTRITION_BASED_ON_RECIPEXXX from "../../../gqlLib/nutrition/query/getBlendNutritionBasedOnRecipexxx";
 
@@ -70,6 +69,7 @@ const WikiIngredientDetails = ({
           title={wikiTitle}
           id={_id}
           hasInCompare={hasInCompare}
+          type={type}
         />
 
         <div className={styles.dividerBox}>
