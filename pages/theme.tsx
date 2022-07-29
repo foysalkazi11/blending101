@@ -380,7 +380,7 @@ export default function Home() {
                 recipe={undefined}
                 findCompareRecipe={undefined}
                 fucUnCheck={undefined}
-                conpareLength={undefined}
+                compareLength={undefined}
               />
             </div>
           </div>
