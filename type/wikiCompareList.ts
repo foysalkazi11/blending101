@@ -1,3 +1,5 @@
+import { WikiType } from "./wikiListType";
+
 export interface WikiCompareList {
   _id: string;
   category: string;
@@ -5,7 +7,7 @@ export interface WikiCompareList {
   featuredImage: string;
   wikiTitle: string;
   wikiDescription: string;
-  type: string;
+  type: WikiType;
   image: string;
   publishedBy: string;
   commentsCount: number;

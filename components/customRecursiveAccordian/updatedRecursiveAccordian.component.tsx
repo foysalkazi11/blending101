@@ -41,10 +41,10 @@ const UpdatedRecursiveAccordian = ({
           <div className={styles.recursiveAccordianHeading__heading__2}>
             {
               //@ts-ignore
-              dataObject?.Calories?.calories?.value &&
+              dataObject?.Calories?.cals?.value &&
                 Math?.round(
                   //@ts-ignore
-                  (dataObject?.Calories?.calories?.value *
+                  (dataObject?.Calories?.cals?.value *
                     counter *
                     sinngleIngQuintity) /
                     servingSize,
