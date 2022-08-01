@@ -34,7 +34,13 @@ const WikiHome = () => {
   );
 
   return (
-    <AContainer>
+    <AContainer
+      showWikiCommentsTray={{
+        show: true,
+        showPanle: "right",
+        showTagByDeafult: false,
+      }}
+    >
       <div className={styles.main}>
         <div className={styles.left}>{wikiLeftSide}</div>
         <div className={styles.center}>

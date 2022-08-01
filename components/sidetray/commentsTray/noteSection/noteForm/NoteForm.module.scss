@@ -9,36 +9,6 @@
     margin-bottom: 25px;
     color: #000000;
   }
-  input {
-    border: 1px solid #ececec;
-    border-radius: 10px;
-    padding: 0 15px;
-    font-size: 10px;
-    color: #929292;
-    line-height: 36px;
-    font-size: 12px;
-    margin-bottom: 10px;
-    width: 100%;
-    outline: none;
-    &:focus {
-      border: 1px solid #7dbd3b;
-    }
-  }
-  textarea {
-    min-height: 82px;
-    border: 1px solid #ececec;
-    border-radius: 10px;
-    padding: 10px;
-    color: #929292;
-    font-size: 12px;
-    resize: none;
-    width: 100%;
-    outline: none;
-    margin-bottom: 10px;
-    &:focus {
-      border: 1px solid #7cbc39;
-    }
-  }
   .btnBox {
     display: flex;
     justify-content: space-between;

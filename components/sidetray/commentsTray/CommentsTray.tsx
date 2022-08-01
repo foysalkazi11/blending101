@@ -44,7 +44,7 @@ export default function CommentsTray({
   ] = useLazyQuery(GET_ALL_COMMENTS_FOR_A_RECIPE, {
     fetchPolicy: "network-only",
   });
-  const reff = useRef<any>();
+  const ref = useRef<any>();
 
   const fetchCommentsAndNotes = async () => {
     try {
@@ -93,9 +93,9 @@ export default function CommentsTray({
 
   const handleToggle = (no: number) => {
     if (no === 1) {
-      reff.current.style.left = "0";
+      ref.current.style.left = "0";
     } else {
-      reff.current.style.left = "50%";
+      ref.current.style.left = "50%";
     }
     setToggle(no);
   };
@@ -117,7 +117,7 @@ export default function CommentsTray({
       <div className={styles.main}>
         <div className={styles.main__top}>
           <div className={styles.main__top__menu}>
-            <div className={styles.active} ref={reff}></div>
+            <div className={styles.active} ref={ref}></div>
             <div
               className={
                 toggle === 2
@@ -142,7 +142,7 @@ export default function CommentsTray({
         </div>
       </div>
       <div className={styles.recipeName}>
-        <img src={currentRecipeInfo?.image} alt="recipe_img" />
+        <img src={currentRecipeInfo?.image} alt="img" />
         <h3>{currentRecipeInfo?.name}</h3>
       </div>
 

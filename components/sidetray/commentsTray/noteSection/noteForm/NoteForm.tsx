@@ -1,5 +1,7 @@
 import React from "react";
 import CommentAndNoteButton from "../../../../../theme/button/commentAndNoteButton/CommentAndNoteButton";
+import InputComponent from "../../../../../theme/input/input.component";
+import TextArea from "../../../../../theme/textArea/TextArea";
 import styles from "./NoteForm.module.scss";
 
 type NoteFormProps = {
@@ -9,7 +11,7 @@ type NoteFormProps = {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
   createOrUpdateNote: () => void;
-  varient?: "notes" | "versions";
+  variant?: "notes" | "versions";
 };
 
 const NoteForm = ({
@@ -17,13 +19,27 @@ const NoteForm = ({
   noteForm,
   updateNoteForm,
   createOrUpdateNote,
-  varient = "notes",
+  variant = "notes",
 }: NoteFormProps) => {
   return (
     <div className={styles.noteFormContainer}>
-      <h3>Add {`${varient === "notes" ? "note" : "version"}`}</h3>
-      <input name="title" value={noteForm?.title} onChange={updateNoteForm} />
-      <textarea name="body" value={noteForm?.body} onChange={updateNoteForm} />
+      <h3>Add {`${variant}`}</h3>
+      <InputComponent
+        name="title"
+        value={noteForm?.title}
+        onChange={updateNoteForm}
+        placeholder={`${variant} title`}
+        borderSecondary={true}
+        style={{ fontSize: "12px", marginBottom: "10px", borderRadius: "10px" }}
+      />
+      <TextArea
+        name="body"
+        value={noteForm?.body}
+        onChange={updateNoteForm}
+        placeholder={`${variant} description`}
+        style={{ fontSize: "12px", marginBottom: "10px", borderRadius: "10px" }}
+        borderSecondary={true}
+      />
       <div className={styles.btnBox}>
         <CommentAndNoteButton
           type="submitBtn"

@@ -255,7 +255,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           createOrUpdateNote={createOrUpdateVarsion}
           handleButtonClick={handleButtonClick}
           isFromRecipePage={openVersionTrayFormWhichPage}
-          varient="versions"
+          variant="versions"
         />
         <NoteBody
           data={
