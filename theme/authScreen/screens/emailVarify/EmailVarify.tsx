@@ -2,7 +2,6 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import ButtonComponent from "../../../button/buttonA/button.component";
-import InputField from "../../../input/inputField.component";
 import styles from "./EmailVarify.module.scss";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import {
@@ -16,6 +15,7 @@ import { useRouter } from "next/router";
 import { Auth } from "aws-amplify";
 import CREATE_NEW_USER from "./../../../../gqlLib/user/mutations/createNewUser";
 import { useMutation } from "@apollo/client";
+import InputComponent from "../../../input/input.component";
 
 const ForgotPassword = () => {
   const [code, setCode] = useState("");
@@ -59,7 +59,7 @@ const ForgotPassword = () => {
       dispatch(setLoading(false));
       reactToastifyNotification(
         "info",
-        "A new verification code has been send to you email."
+        "A new verification code has been send to you email.",
       );
     } catch (error) {
       dispatch(setLoading(false));
@@ -74,13 +74,13 @@ const ForgotPassword = () => {
         <h2>Verify Email</h2>
         <p>A Verification code is sent to your mail. Please paste it below.</p>
         <form onSubmit={handleSubmit}>
-          <InputField
+          <InputComponent
             type="text"
             style={{ margin: "4px auto 15px auto" }}
             value={code}
             placeholder="Verify your account"
             fullWidth={true}
-            setValue={setCode}
+            onChange={(e) => setCode(e?.target?.value)}
           />
 
           <div className={styles.buttonContainer}>

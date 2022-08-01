@@ -5,11 +5,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import client from "../../../gqlLib/client";
-import ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/query/addOrRemoveToWikiCompareList";
+import ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/mutation/addOrRemoveToWikiCompareList";
 import GET_INGREDIENT_WIKI_LIST from "../../../gqlLib/wiki/query/getIngredientWikiList";
 import GET_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/query/getWikiCompareList";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setDbUser } from "../../../redux/slices/userSlice";
+import {
+  setIsOpenWikiCommentsTray,
+  setWikiCommentsCurrentIngredient,
+} from "../../../redux/slices/wikiSlice";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
 import { WikiListType, WikiType } from "../../../type/wikiListType";
 import notification from "../../utility/reactToastifyNotification";
@@ -140,6 +144,18 @@ const WikiCard = ({
       }
     }
   };
+
+  const openWikiCommentsTray = (id: string, title: string, image: string) => {
+    dispatch(setIsOpenWikiCommentsTray(true));
+    dispatch(
+      setWikiCommentsCurrentIngredient({
+        id,
+        image,
+        title,
+        type,
+      }),
+    );
+  };
   return (
     <div className={styles.wikiCardContainer} style={style}>
       <header className={styles.header}>
@@ -196,7 +212,12 @@ const WikiCard = ({
             </div>
           ) : null}
 
-          <div className={styles.commentsIconBox}>
+          <div
+            className={styles.commentsIconBox}
+            onClick={() =>
+              openWikiCommentsTray(id, title, image || "/images/imgbig4.png")
+            }
+          >
             <FontAwesomeIcon icon={faMessageDots} />
             <p className={styles.text}>{comments}</p>
           </div>

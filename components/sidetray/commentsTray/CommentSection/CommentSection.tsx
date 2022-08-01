@@ -44,7 +44,7 @@ const CommentSection = ({
   const [deleteComment] = useMutation(DELETE_COMMENT);
   const { activeRecipeId } = useAppSelector((state) => state?.collections);
   const { latest, popular, recommended } = useAppSelector(
-    (state) => state?.recipe
+    (state) => state?.recipe,
   );
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
@@ -52,34 +52,34 @@ const CommentSection = ({
   const updateRecipeRating = (
     id: string,
     averageRating: number,
-    numberOfRating: number
+    numberOfRating: number,
   ) => {
     dispatch(
       setRecommended(
         recommended?.map((recipe) =>
           recipe?._id === id
             ? { ...recipe, averageRating, numberOfRating }
-            : recipe
-        )
-      )
+            : recipe,
+        ),
+      ),
     );
     dispatch(
       setLatest(
         latest?.map((recipe) =>
           recipe?._id === id
             ? { ...recipe, averageRating, numberOfRating }
-            : recipe
-        )
-      )
+            : recipe,
+        ),
+      ),
     );
     dispatch(
       setPopular(
         popular?.map((recipe) =>
           recipe?._id === id
             ? { ...recipe, averageRating, numberOfRating }
-            : recipe
-        )
-      )
+            : recipe,
+        ),
+      ),
     );
   };
 
@@ -152,7 +152,7 @@ const CommentSection = ({
       setLoading(false);
       reactToastifyNotification(
         "info",
-        `Comment ${updateComment ? "update" : "create"} successfully`
+        `Comment ${updateComment ? "update" : "create"} successfully`,
       );
       toggleCommentBox();
     } catch (error) {
@@ -218,23 +218,12 @@ const CommentSection = ({
                     dbUser?.email}
                 </h6>
               </div>
-              <div>
-                {[...Array(5)].map((star, index) => {
-                  return (
-                    <span
-                      key={index}
-                      className={`${styles.star} ${
-                        //@ts-ignore
-                        index <= userComments?.rating - 1
-                          ? styles.on
-                          : styles.off
-                      }`}
-                    >
-                      &#9733;
-                    </span>
-                  );
-                })}
-              </div>
+
+              <StarRating
+                //@ts-ignore
+                rating={userComments?.rating}
+                isAbleToSetRating={false}
+              />
             </div>
             {/* @ts-ignore */}
             <p>{userComments?.comment}</p>
@@ -246,7 +235,7 @@ const CommentSection = ({
                     {format(
                       /* @ts-ignore */
                       new Date(userComments?.updatedAt),
-                      "dd/MM/yyyy"
+                      "dd/MM/yyyy",
                     )}{" "}
                     (edited)
                   </>
@@ -265,7 +254,7 @@ const CommentSection = ({
                       /* @ts-ignore */
                       userComments?.comment,
                       /* @ts-ignore */
-                      userComments?.rating
+                      userComments?.rating,
                     )
                   }
                 >
@@ -368,23 +357,10 @@ const CommentSection = ({
                         comment?.userId?.email}
                     </h6>
                   </div>
-                  <div>
-                    {[...Array(5)].map((star, index) => {
-                      return (
-                        <span
-                          key={index}
-                          className={`${styles.star} ${
-                            //@ts-ignore
-                            index <= comment?.rating - 1
-                              ? styles.on
-                              : styles.off
-                          }`}
-                        >
-                          &#9733;
-                        </span>
-                      );
-                    })}
-                  </div>
+                  <StarRating
+                    rating={comment?.rating}
+                    isAbleToSetRating={false}
+                  />
                 </div>
                 <p>{comment?.comment}</p>
                 <div className={styles.buttomSection}>
