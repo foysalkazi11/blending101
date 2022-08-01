@@ -1,0 +1,66 @@
+.wikiCommentsContainer {
+  width: 100%;
+  margin: 20px auto;
+}
+
+.wikiItemName {
+  display: flex;
+  align-items: center;
+  padding: 20px 0px;
+  border-bottom: 1px solid #ececec;
+  img {
+    width: 45px;
+    height: 45px;
+    border-radius: 8px;
+    overflow: hidden;
+    object-fit: contain;
+  }
+  h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #000;
+    margin-left: 16px;
+  }
+}
+
+.userImage {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 20px;
+
+  .imageBox {
+    width: 28px;
+    height: 28px;
+    background: #ececec;
+    border-radius: 50%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #9e9e9e8f;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+  }
+
+  h6 {
+    font-size: 14px;
+    font-weight: 600;
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 16px;
+  }
+}
+
+.addCommentsIcon {
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}

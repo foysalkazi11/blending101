@@ -158,26 +158,15 @@
     img {
       max-width: 77px;
     }
-
-    .on {
-      color: #fe5d1f;
-    }
-    .off {
-      color: #ccc;
-    }
-
-    .star {
-      font-size: 16px;
-    }
   }
   p {
     color: #646464;
     font-size: 12px;
   }
   .buttomSection {
-    // display: flex;
-    // align-items: center;
-    // justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin: 10px 0;
     span {
       font-size: 10px;
