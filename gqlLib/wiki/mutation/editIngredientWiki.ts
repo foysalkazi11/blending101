@@ -1,7 +1,7 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 const EDIT_INGREDIENT_WIKI = gql`
-  mutation Mutation($data: EditIngredientAndNutrientInWiki!) {
+  mutation EditIngredientWiki($data: EditIngredientAndNutrientInWiki!) {
     editIngredientWiki(data: $data)
   }
 `;

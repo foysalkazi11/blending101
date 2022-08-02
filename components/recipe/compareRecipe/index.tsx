@@ -34,6 +34,7 @@ import { setDbUser } from "../../../redux/slices/userSlice";
 import { setLoading } from "../../../redux/slices/utilitySlice";
 import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
 import ShowCollectionModal from "../../showModal/ShowCollectionModal";
+import useChangeCompare from "../../../customHooks/useChangeComaper";
 
 const compareRecipeResponsiveSetting = {
   slidesToShow: 4,
@@ -142,9 +143,14 @@ const CompareRecipe = () => {
   const { latest, popular, recommended } = useAppSelector(
     (state) => state?.recipe,
   );
+  const changeCompare = useChangeCompare();
 
   const findCompareRecipe = (id: string) => {
     return compareRecipeList?.find((item) => item?._id === id);
+  };
+
+  const handleRemoveFromCompareList = (id: string, e: React.SyntheticEvent) => {
+    changeCompare(e, id, false, compareRecipeList, setcompareRecipeList);
   };
 
   const handleCompare = (recipe) => {
@@ -373,17 +379,14 @@ const CompareRecipe = () => {
                     return (
                       <SmallcardComponent
                         key={index}
-                        imgHeight={undefined}
                         text={recipe?.name}
-                        //@ts-ignore
                         img={recipe?.image[0]?.image}
                         fnc={handleCompare}
                         recipe={recipe}
                         findCompareRecipe={findCompareRecipe}
                         fucUnCheck={removeCompareRecipe}
-                        conpareLength={compareRecipeList.length}
-                        compareRecipeList={compareRecipeList}
-                        setcompareRecipeList={setcompareRecipeList}
+                        compareLength={compareRecipeList.length}
+                        handleRemoveFromCompare={handleRemoveFromCompareList}
                       />
                     );
                   })}
