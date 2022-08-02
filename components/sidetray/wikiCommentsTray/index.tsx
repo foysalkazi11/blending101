@@ -3,16 +3,23 @@ import { faMessageDots, faPlus } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import CREATE_WIKI_COMMENT from "../../../gqlLib/wiki/mutation/createWikiComment";
+import EDIT_WIKI_COMMENTS from "../../../gqlLib/wiki/mutation/editWikiComment";
+import REMOVE_WIKI_COMMENT from "../../../gqlLib/wiki/mutation/removeAWikiComment";
 import GET_ALL_WIKI_COMMENTS_FOR_A_WIKI_ENTITY from "../../../gqlLib/wiki/query/getAllWikiCommentsForAWikiEntity";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setIsOpenWikiCommentsTray } from "../../../redux/slices/wikiSlice";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
 import SkeletonComment from "../../../theme/skeletons/skeletonComment/SkeletonComment";
 import Tooltip from "../../../theme/toolTip/CustomToolTip";
+import {
+  WikiCommentsType,
+  WikiUserComment,
+} from "../../../type/wikiCommentsType";
 import notification from "../../utility/reactToastifyNotification";
 import CommentBox from "../commentsTray/commentBox/CommentBox";
 import TrayTag from "../TrayTag";
 import TrayWrapper from "../TrayWrapper";
+import CommentsBottomSection from "./CommentsBottomSection";
 import CommentsTopSection from "./CommentsTopSection";
 import s from "./WikiCommentsTray.module.scss";
 
@@ -25,51 +32,93 @@ const WikiCommentsTray = ({
   showPanle = "right",
   showTagByDefaut = false,
 }: Props) => {
-  const [rating, setRating] = useState(0);
   const [showCommentBox, setShowCommentBox] = useState(false);
   const [updateComment, setUpdateComment] = useState(false);
-  const [updateCommentId, setUpdateCommentId] = useState("");
   const [comment, setComment] = useState("");
+  const [wikiComments, setWikiComments] = useState<WikiCommentsType>(
+    {} as WikiCommentsType,
+  );
   const dispatch = useAppDispatch();
   const { isOpenWikiCommentsTray, wikiCommentsTrayCurrentWikiEntity } =
     useAppSelector((state) => state?.wiki);
   const { dbUser } = useAppSelector((state) => state?.user);
   const [
     getAllWikiCommentsForAWikiEntity,
-    {
-      data: getAllWikiCommentsData,
-      loading: getAllWikiCommentsLoading,
-      error: getAllWikiCommentsError,
-    },
+    { loading: getAllWikiCommentsLoading },
   ] = useLazyQuery(GET_ALL_WIKI_COMMENTS_FOR_A_WIKI_ENTITY);
-  const [
-    crateWikiComment,
-    {
-      data: createWikiCommentData,
-      loading: createWikiCommentLoading,
-      error: createWikiCommentError,
-    },
-  ] = useMutation(CREATE_WIKI_COMMENT);
+  const [crateWikiComment, { loading: createWikiCommentLoading }] =
+    useMutation(CREATE_WIKI_COMMENT);
+  const [editWikiComment, { loading: editWikiCommentLoading }] =
+    useMutation(EDIT_WIKI_COMMENTS);
+  const [removeWikiComment, { loading: removeWikiCommentLoading }] =
+    useMutation(REMOVE_WIKI_COMMENT);
 
-  console.log(getAllWikiCommentsData);
+  // update Comment value
+  const updateCommentValue = (comment: string) => {
+    setUpdateComment(true);
+    setComment(comment);
+    setShowCommentBox(true);
+  };
 
-  // create or update wiki comment
-
-  const createOrUpdateWikiComment = async () => {
-    const { id, type } = wikiCommentsTrayCurrentWikiEntity;
+  // delete wiki comment
+  const handleToRemoveWikiComment = async () => {
+    const { id } = wikiCommentsTrayCurrentWikiEntity;
     try {
-      const { data } = await crateWikiComment({
+      await removeWikiComment({
         variables: {
-          data: {
-            comment,
-            type,
-            entityId: id,
-            userId: dbUser?._id,
-          },
+          entityId: id,
+          userId: dbUser?._id,
         },
       });
 
-      console.log(data);
+      setWikiComments((prev) => ({
+        ...prev,
+        userComment: null,
+      }));
+    } catch (error) {
+      notification("error", "Unable to delete wiki comment");
+    }
+  };
+
+  // create or update wiki comment
+  const createOrUpdateWikiComment = async () => {
+    const { id, type } = wikiCommentsTrayCurrentWikiEntity;
+    try {
+      let res: WikiUserComment = null;
+      if (updateComment) {
+        const { data } = await editWikiComment({
+          variables: {
+            data: {
+              comment,
+              entityId: id,
+              userId: dbUser?._id,
+            },
+          },
+        });
+        res = data?.editWikiComment;
+        setUpdateComment(false);
+        setShowCommentBox(false);
+        setComment("");
+      } else {
+        const { data } = await crateWikiComment({
+          variables: {
+            data: {
+              comment,
+              type,
+              entityId: id,
+              userId: dbUser?._id,
+            },
+          },
+        });
+        res = data?.createWikiComment;
+        setShowCommentBox(false);
+        setComment("");
+      }
+
+      setWikiComments((prev) => ({
+        ...prev,
+        userComment: { ...prev?.userComment, ...res },
+      }));
     } catch (error) {
       notification(
         "error",
@@ -85,19 +134,33 @@ const WikiCommentsTray = ({
 
   //  get All Wiki Comments for a wiki entity
 
-  useEffect(() => {
-    if (wikiCommentsTrayCurrentWikiEntity?.id) {
-      getAllWikiCommentsForAWikiEntity({
-        variables: { entityId: wikiCommentsTrayCurrentWikiEntity?.id },
+  const handleToGetAllWikiComments = async () => {
+    try {
+      const { data } = await getAllWikiCommentsForAWikiEntity({
+        variables: {
+          entityId: wikiCommentsTrayCurrentWikiEntity?.id,
+          userId: dbUser?._id,
+        },
       });
+      const res: WikiCommentsType = data?.getAllWikiCommentsForAWikiEntity;
+      setWikiComments(res);
+    } catch (error) {
+      notification("error", "Unable to fetch wiki entry comments");
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (wikiCommentsTrayCurrentWikiEntity?.id && dbUser?._id) {
+      handleToGetAllWikiComments();
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wikiCommentsTrayCurrentWikiEntity?.id]);
 
-  if (getAllWikiCommentsLoading || createWikiCommentLoading) {
-    return <SkeletonComment />;
-  }
+  // if (getAllWikiCommentsLoading ) {
+  //   return <SkeletonComment />;
+  // }
 
   return (
     <TrayWrapper
@@ -119,8 +182,21 @@ const WikiCommentsTray = ({
           <h3>{wikiCommentsTrayCurrentWikiEntity?.title}</h3>
         </header>
       </section>
-      <CommentsTopSection rating={rating} setRating={setRating} user={dbUser} />
-      {!showCommentBox && (
+
+      {wikiComments?.userComment ? (
+        <>
+          <CommentsTopSection user={dbUser} page="wiki" />
+          <CommentsBottomSection
+            userComments={wikiComments?.userComment}
+            updateCommentValue={updateCommentValue}
+            removeComment={handleToRemoveWikiComment}
+            isCurrentUser={true}
+          />
+        </>
+      ) : (
+        <CommentsTopSection user={dbUser} page="wiki" />
+      )}
+      {!wikiComments?.userComment && (
         <div className={s.addCommentsIcon}>
           <Tooltip direction="left" content="Add Comments">
             <IconWarper
@@ -144,6 +220,26 @@ const WikiCommentsTray = ({
           updateComment={updateComment}
         />
       )}
+
+      <div className={`${s.commentsShowContainer} y-scroll`}>
+        {wikiComments?.comments?.length ? (
+          wikiComments?.comments?.map((comment, index) => {
+            return (
+              <div className={s.singleComment} key={index}>
+                <CommentsTopSection user={comment?.userId} page="wiki" />
+                <CommentsBottomSection
+                  userComments={comment}
+                  isCurrentUser={false}
+                />
+              </div>
+            );
+          })
+        ) : (
+          <p className={s.noComments}>
+            {wikiComments?.userComment ? "No other comments " : "No comments"}
+          </p>
+        )}
+      </div>
     </TrayWrapper>
   );
 };

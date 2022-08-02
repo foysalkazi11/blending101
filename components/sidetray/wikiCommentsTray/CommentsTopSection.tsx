@@ -1,5 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
-import { MdPersonOutline } from "react-icons/md";
+import { FiEdit2 } from "react-icons/fi";
+import { MdDeleteOutline, MdPersonOutline } from "react-icons/md";
 import StarRating from "../../../theme/starRating/StarRating";
 import styles from "./WikiCommentsTray.module.scss";
 
@@ -9,6 +10,7 @@ interface Props {
   setRating?: Dispatch<SetStateAction<number>>;
   isAbleToSetRating?: boolean;
   userRating?: number;
+  page?: "wiki" | "recipe";
 }
 
 const CommentsTopSection = ({
@@ -17,6 +19,7 @@ const CommentsTopSection = ({
   user = {},
   isAbleToSetRating = true,
   userRating = 0,
+  page = "recipe",
 }: Props) => {
   return (
     <div className={styles.userImage}>
@@ -35,11 +38,13 @@ const CommentsTopSection = ({
             user?.email}
         </h6>
       </div>
-      <StarRating
-        rating={isAbleToSetRating ? rating : userRating}
-        setRating={setRating}
-        isAbleToSetRating={isAbleToSetRating}
-      />
+      {page === "recipe" && (
+        <StarRating
+          rating={isAbleToSetRating ? rating : userRating}
+          setRating={setRating}
+          isAbleToSetRating={isAbleToSetRating}
+        />
+      )}
     </div>
   );
 };
