@@ -1,32 +1,19 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "./smallcard.module.scss";
-import { BsCheck } from "react-icons/bs";
-import { RiCloseCircleFill } from "react-icons/ri";
-import { MdOutlineClose } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
-import useChangeCompare from "../../../customHooks/useChangeComaper";
-import useLocalStorage from "../../../customHooks/useLocalStorage";
-import IconWraper from "../../iconWarper/IconWarper";
+import IconWarper from "../../iconWarper/IconWarper";
 
 export default function SmallcardComponent({
   img,
-  imgHeight,
   text,
   fnc,
   recipe,
   findCompareRecipe,
   fucUnCheck,
-  conpareLength,
-  compareRecipeList = [],
-  setcompareRecipeList = (state: any) => {},
+  compareLength,
+  handleRemoveFromCompare = (id: string, e: React.SyntheticEvent) => {},
 }) {
-  const changeCompare = useChangeCompare();
-
-  const style = {};
-  //@ts-ignore
-  if (imgHeight) style.height = imgHeight;
-
   text = text || "Chocolate Avocado Smoothie";
   img = img || "/cards/coriander.png";
 
@@ -48,19 +35,19 @@ export default function SmallcardComponent({
             className={`${styles.compar}`}
             onClick={(e) => handleUnCheck(e)}
           >
-            <IconWraper
+            <IconWarper
               defaultBg="primary"
               style={{ width: "20px", height: "20px", marginRight: "10px" }}
             >
               <IoClose fontSize={16} />
-            </IconWraper>
+            </IconWarper>
             compare
           </button>
         ) : (
           <button
-            disabled={conpareLength === 8 ? true : false}
+            disabled={compareLength === 8 ? true : false}
             className={`${styles.compar} 
-         ${conpareLength === 8 ? styles.disable : ""}
+         ${compareLength === 8 ? styles.disable : ""}
          `}
             onClick={handleClick}
           >
@@ -69,24 +56,16 @@ export default function SmallcardComponent({
         )}
 
         <div className={styles.tick}>
-          <IconWraper
+          <IconWarper
             hover="bgPrimary"
             defaultBg="gray"
-            handleClick={(e) =>
-              changeCompare(
-                e,
-                recipe?._id,
-                false,
-                compareRecipeList,
-                setcompareRecipeList,
-              )
-            }
+            handleClick={(e) => handleRemoveFromCompare(recipe?._id, e)}
           >
             <IoClose />
-          </IconWraper>
+          </IconWarper>
         </div>
 
-        <div className={styles.smallCard__top} style={style}>
+        <div className={styles.smallCard__top}>
           <img src={img} alt="coriander" />
         </div>
         <div

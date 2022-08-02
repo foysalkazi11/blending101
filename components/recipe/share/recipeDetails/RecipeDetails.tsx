@@ -1,18 +1,14 @@
 import React, { useState, useEffect } from "react";
 import DatacardComponent from "../../../../theme/cards/dataCard/dataCard.component";
 import SectionTitleWithIcon from "../../../../theme/recipe/sectionTitleWithIcon/SectionTitleWithIcon.component";
-import RecipeItem from "../../../../theme/recipe/recipeItem/RecipeItem.component";
 import styles from "./RecipeDetails.module.scss";
 import { Droppable, Draggable } from "react-beautiful-dnd";
-import CancelIcon from "../../../../public/icons/cancel_black_36dp.svg";
 import uniqueId from "../../../utility/uniqueId";
 import { useLazyQuery } from "@apollo/client";
 import GET_BLEND_NUTRITION_BASED_ON_RECIPE_DATA from "../../../../gqlLib/compare/query/getBlendNutritionBasedOnRecipeData";
 import NutrationPanelSkeleton from "../../../../theme/skeletons/nutrationPanelSkeleton/NutrationPanelSkeleton";
 import UpdatedRecursiveAccordian from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
-import DragIndicatorIcon from "../../../../../public/icons/drag_indicator_black_36dp.svg";
 import useDraggableInPortal from "../../../../customHooks/useDraggableInPortal";
-import { createPortal } from "react-dom";
 import SingleIngredient from "../singleIngredient/SingleIngredient";
 import { IoClose } from "react-icons/io5";
 import IconWraper from "../../../../theme/iconWarper/IconWarper";

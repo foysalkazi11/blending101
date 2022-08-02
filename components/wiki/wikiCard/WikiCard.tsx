@@ -4,10 +4,16 @@ import { faEllipsisVertical } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import React, { Dispatch, SetStateAction, useState } from "react";
-import ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/query/addOrRemoveToWikiCompareList";
+import client from "../../../gqlLib/client";
+import ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/mutation/addOrRemoveToWikiCompareList";
 import GET_INGREDIENT_WIKI_LIST from "../../../gqlLib/wiki/query/getIngredientWikiList";
+import GET_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/query/getWikiCompareList";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setDbUser } from "../../../redux/slices/userSlice";
+import {
+  setIsOpenWikiCommentsTray,
+  setWikiCommentsCurrentIngredient,
+} from "../../../redux/slices/wikiSlice";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
 import { WikiListType, WikiType } from "../../../type/wikiListType";
 import notification from "../../utility/reactToastifyNotification";
@@ -57,29 +63,24 @@ const WikiCard = ({
   const { dbUser } = useAppSelector((state) => state?.user);
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const { isOpenWikiCommentsTray } = useAppSelector((state) => state?.wiki);
   const [addOrRemoveToWikiCompareList] = useMutation(
     ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST,
     // {
-    //   update(cache) {
-    //     const { getIngredientWikiList } = cache?.readQuery({
-    //       query: GET_INGREDIENT_WIKI_LIST,
+    //   update(cache, { data }) {
+    //     const wikiData = cache.readQuery({
+    //       query: GET_WIKI_COMPARE_LIST,
+    //       variables: { userId: dbUser?._id },
     //     });
+
     //     cache?.writeQuery({
-    //       query: GET_INGREDIENT_WIKI_LIST,
+    //       query: GET_WIKI_COMPARE_LIST,
     //       data: {
-    //         getIngredientWikiList: {
-    //           ...getIngredientWikiList,
-    //           wikiList: [
-    //             ...getIngredientWikiList?.wikiList?.map((item) =>
-    //               item?._id === updateWikiItem?.ingredientId
-    //                 ? {
-    //                     ...item,
-    //                     hasInCompare: updateWikiItem?.isCompared ? false : true,
-    //                   }
-    //                 : item,
-    //             ),
-    //           ],
-    //         },
+    //         getWikiCompareList: updateWikiItem?.isCompared ?
+    //         [
+    //           getWikiCompareList?.map(item => item?._id !== updateWikiItem?.ingredientId)
+    //         ]  :  getWikiCompareList,
+
     //       },
     //     });
     //   },
@@ -96,6 +97,12 @@ const WikiCard = ({
       await addOrRemoveToWikiCompareList({
         variables: { ingredientId, userId: dbUser?._id },
       });
+      // const data = client?.readQuery({
+      //   query: GET_WIKI_COMPARE_LIST,
+      //   variables: { userId: dbUser?._id },
+      // });
+      // console.log(data);
+
       dispatch(
         setDbUser({
           ...dbUser,
@@ -137,6 +144,26 @@ const WikiCard = ({
         router?.push(`/wiki/${type}/${id}/${measurementWeight}`);
       }
     }
+  };
+
+  const openWikiCommentsTray = (
+    e: React.SyntheticEvent,
+    id: string,
+    title: string,
+    image: string,
+  ) => {
+    e?.stopPropagation;
+    if (!isOpenWikiCommentsTray) {
+      dispatch(setIsOpenWikiCommentsTray(true));
+    }
+    dispatch(
+      setWikiCommentsCurrentIngredient({
+        id,
+        image,
+        title,
+        type,
+      }),
+    );
   };
   return (
     <div className={styles.wikiCardContainer} style={style}>
@@ -194,7 +221,12 @@ const WikiCard = ({
             </div>
           ) : null}
 
-          <div className={styles.commentsIconBox}>
+          <div
+            className={styles.commentsIconBox}
+            onClick={(e) =>
+              openWikiCommentsTray(e, id, title, image || "/images/imgbig4.png")
+            }
+          >
             <FontAwesomeIcon icon={faMessageDots} />
             <p className={styles.text}>{comments}</p>
           </div>

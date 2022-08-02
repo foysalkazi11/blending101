@@ -52,7 +52,7 @@ const DiscoverPageSearch = () => {
         icon: dbUser?.compareLength
           ? "/images/compare-fill-icon.svg"
           : "/icons/eclipse.svg",
-        disable: dbUser?.compareLength ? true : false,
+        disable: dbUser?.compareLength ? false : true,
         handleClick: () => router.push(`/recipe/compare`),
         style: {
           backgroundColor: dbUser?.compareLength ? "inherit" : "#ececec",

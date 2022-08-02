@@ -1,7 +1,9 @@
 import { gql } from "@apollo/client";
 
 const GET_ALL_COMMENTS_FOR_A_RECIPE = gql`
-  query Query($getAllCommentsForARecipeData2: GetAllComments!) {
+  query GetAllCommentsForARecipe(
+    $getAllCommentsForARecipeData2: GetAllComments!
+  ) {
     getAllCommentsForARecipe(data: $getAllCommentsForARecipeData2) {
       userComment {
         _id
