@@ -63,6 +63,7 @@ const WikiCard = ({
   const { dbUser } = useAppSelector((state) => state?.user);
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const { isOpenWikiCommentsTray } = useAppSelector((state) => state?.wiki);
   const [addOrRemoveToWikiCompareList] = useMutation(
     ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST,
     // {
@@ -145,8 +146,16 @@ const WikiCard = ({
     }
   };
 
-  const openWikiCommentsTray = (id: string, title: string, image: string) => {
-    dispatch(setIsOpenWikiCommentsTray(true));
+  const openWikiCommentsTray = (
+    e: React.SyntheticEvent,
+    id: string,
+    title: string,
+    image: string,
+  ) => {
+    e?.stopPropagation;
+    if (!isOpenWikiCommentsTray) {
+      dispatch(setIsOpenWikiCommentsTray(true));
+    }
     dispatch(
       setWikiCommentsCurrentIngredient({
         id,
@@ -214,8 +223,8 @@ const WikiCard = ({
 
           <div
             className={styles.commentsIconBox}
-            onClick={() =>
-              openWikiCommentsTray(id, title, image || "/images/imgbig4.png")
+            onClick={(e) =>
+              openWikiCommentsTray(e, id, title, image || "/images/imgbig4.png")
             }
           >
             <FontAwesomeIcon icon={faMessageDots} />
