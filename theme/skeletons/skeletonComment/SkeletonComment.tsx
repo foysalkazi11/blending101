@@ -4,7 +4,7 @@ import SkeletonElement from "../SkeletonElement";
 import styles from "./SkeletonComment.module.scss";
 
 interface Props {
-  singleComment?: false;
+  singleComment?: boolean;
 }
 
 const SkeletonComment = ({ singleComment = false }: Props) => {
