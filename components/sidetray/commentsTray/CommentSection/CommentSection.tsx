@@ -35,7 +35,7 @@ const CommentSection = ({
 }: CommentSectionProps) => {
   const [showCommentBox, setShowCommentBox] = useState(false);
   const [rating, setRating] = useState(0);
-  const { user, dbUser } = useAppSelector((state) => state?.user);
+  const { dbUser } = useAppSelector((state) => state?.user);
   const [updateComment, setUpdateComment] = useState(false);
   const [updateCommentId, setUpdateCommentId] = useState("");
   const [comment, setComment] = useState("");
