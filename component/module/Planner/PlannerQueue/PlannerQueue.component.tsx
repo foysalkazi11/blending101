@@ -3,11 +3,7 @@ import Image from "next/image";
 
 import ToggleCard from "../../../../theme/toggleCard/toggleCard.component";
 import IconHeading from "../../../../theme/iconHeading/iconHeading.component";
-import DropDownSearch from "../../../../theme/toggleCard/customTray/dropdownSearch/dropDownSearch.component";
-import QueueTray from "../../../../theme/toggleCard/customTray/queueTray/queueTray.component";
-
 import styles from "./PlannerQueue.module.scss";
-import ViewDataCard from "../../../../theme/dataCard/viewDataCard.component";
 import RecipeCard from "../../../molecules/Card/RecipeCard.component";
 
 import { RiCalendarEventLine } from "react-icons/ri";
@@ -53,7 +49,7 @@ const PlannerPanel = (props: PlannerPanelProps) => {
   const [page, setPage] = useState(1);
   const [limit] = useState(3);
   const [pageLength, setPageLength] = useState(1);
-  const [type, setType] = useState("");
+  const [type, setType] = useState("All");
   const [recipes, setRecipes] = useState([]);
 
   const blendTypeRef = useRef<HTMLDivElement>(null);
@@ -124,7 +120,6 @@ const PlannerPanel = (props: PlannerPanelProps) => {
     blendTypeRef?.current.classList.remove(styles["blendType--show"]);
     blendTypeRef?.current.classList.add(styles["blendType--hide"]);
   };
-
   return (
     <Fragment>
       <IconHeading
@@ -144,7 +139,10 @@ const PlannerPanel = (props: PlannerPanelProps) => {
       <div className={styles.action}>
         <div ref={blendTypeRef}>
           <Combobox
-            options={categories?.getAllCategories}
+            options={[
+              { label: "All", value: "" },
+              ...categories?.getAllCategories,
+            ]}
             className={styles.blendType}
             value={type}
             onChange={(e) => setType(e.target.value)}
