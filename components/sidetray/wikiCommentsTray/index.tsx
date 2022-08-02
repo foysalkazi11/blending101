@@ -82,6 +82,7 @@ const WikiCommentsTray = ({
 
   // create or update wiki comment
   const createOrUpdateWikiComment = async () => {
+    setShowCommentBox(false);
     const { id, type } = wikiCommentsTrayCurrentWikiEntity;
     try {
       let res: WikiUserComment = null;
@@ -97,7 +98,6 @@ const WikiCommentsTray = ({
         });
         res = data?.editWikiComment;
         setUpdateComment(false);
-        setShowCommentBox(false);
         setComment("");
       } else {
         const { data } = await crateWikiComment({
@@ -111,7 +111,6 @@ const WikiCommentsTray = ({
           },
         });
         res = data?.createWikiComment;
-        setShowCommentBox(false);
         setComment("");
       }
 
@@ -158,10 +157,6 @@ const WikiCommentsTray = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wikiCommentsTrayCurrentWikiEntity?.id]);
 
-  // if (getAllWikiCommentsLoading ) {
-  //   return <SkeletonComment />;
-  // }
-
   return (
     <TrayWrapper
       openTray={isOpenWikiCommentsTray}
@@ -183,63 +178,78 @@ const WikiCommentsTray = ({
         </header>
       </section>
 
-      {wikiComments?.userComment ? (
-        <>
-          <CommentsTopSection user={dbUser} page="wiki" />
-          <CommentsBottomSection
-            userComments={wikiComments?.userComment}
-            updateCommentValue={updateCommentValue}
-            removeComment={handleToRemoveWikiComment}
-            isCurrentUser={true}
-          />
-        </>
+      {getAllWikiCommentsLoading ? (
+        <SkeletonComment />
       ) : (
-        <CommentsTopSection user={dbUser} page="wiki" />
-      )}
-      {!wikiComments?.userComment && (
-        <div className={s.addCommentsIcon}>
-          <Tooltip direction="left" content="Add Comments">
-            <IconWarper
-              defaultBg="secondary"
-              hover="bgSecondary"
-              style={{ width: "28px", height: "28px" }}
-              handleClick={toggleCommentBox}
-            >
-              <FontAwesomeIcon icon={faPlus} />
-            </IconWarper>
-          </Tooltip>
-        </div>
-      )}
-      {showCommentBox && (
-        <CommentBox
-          toggleCommentBox={toggleCommentBox}
-          comment={comment}
-          setComment={setComment}
-          createOrUpdateComment={createOrUpdateWikiComment}
-          setUpdateComment={setUpdateComment}
-          updateComment={updateComment}
-        />
-      )}
-
-      <div className={`${s.commentsShowContainer} y-scroll`}>
-        {wikiComments?.comments?.length ? (
-          wikiComments?.comments?.map((comment, index) => {
-            return (
-              <div className={s.singleComment} key={index}>
-                <CommentsTopSection user={comment?.userId} page="wiki" />
+        <>
+          {wikiComments?.userComment ? (
+            editWikiCommentLoading || removeWikiCommentLoading ? (
+              <SkeletonComment singleComment={true} />
+            ) : (
+              <>
+                <CommentsTopSection user={dbUser} page="wiki" />
                 <CommentsBottomSection
-                  userComments={comment}
-                  isCurrentUser={false}
+                  userComments={wikiComments?.userComment}
+                  updateCommentValue={updateCommentValue}
+                  removeComment={handleToRemoveWikiComment}
+                  isCurrentUser={true}
                 />
-              </div>
-            );
-          })
-        ) : (
-          <p className={s.noComments}>
-            {wikiComments?.userComment ? "No other comments " : "No comments"}
-          </p>
-        )}
-      </div>
+              </>
+            )
+          ) : createWikiCommentLoading ? (
+            <SkeletonComment singleComment={true} />
+          ) : (
+            <CommentsTopSection user={dbUser} page="wiki" />
+          )}
+
+          {showCommentBox || wikiComments?.userComment ? null : (
+            <div className={s.addCommentsIcon}>
+              <Tooltip direction="left" content="Add Comments">
+                <IconWarper
+                  defaultBg="secondary"
+                  hover="bgSecondary"
+                  style={{ width: "28px", height: "28px" }}
+                  handleClick={toggleCommentBox}
+                >
+                  <FontAwesomeIcon icon={faPlus} />
+                </IconWarper>
+              </Tooltip>
+            </div>
+          )}
+          {showCommentBox && (
+            <CommentBox
+              toggleCommentBox={toggleCommentBox}
+              comment={comment}
+              setComment={setComment}
+              createOrUpdateComment={createOrUpdateWikiComment}
+              setUpdateComment={setUpdateComment}
+              updateComment={updateComment}
+            />
+          )}
+
+          <div className={`${s.commentsShowContainer} y-scroll`}>
+            {wikiComments?.comments?.length ? (
+              wikiComments?.comments?.map((comment, index) => {
+                return (
+                  <div className={s.singleComment} key={index}>
+                    <CommentsTopSection user={comment?.userId} page="wiki" />
+                    <CommentsBottomSection
+                      userComments={comment}
+                      isCurrentUser={false}
+                    />
+                  </div>
+                );
+              })
+            ) : (
+              <p className={s.noComments}>
+                {wikiComments?.userComment
+                  ? "No other comments "
+                  : "No comments"}
+              </p>
+            )}
+          </div>
+        </>
+      )}
     </TrayWrapper>
   );
 };
