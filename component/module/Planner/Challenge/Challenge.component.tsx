@@ -12,42 +12,13 @@ import Food from "./food/food.component";
 import GraphDetailContainer from "./graph-detail-container/graph-detail-container.component";
 import Main from "./main/main.component";
 
-interface CircleComponentInterface {
-  categoryObject?: object;
+interface ChallengeProps {
   activities: any[];
-  activityDataList?: any[];
-  startDate?: number;
-  startMonth?:
-    | "Jan"
-    | "Feb"
-    | "Mar"
-    | "Apr"
-    | "May"
-    | "Jun"
-    | "Jul"
-    | "Aug"
-    | "Sep"
-    | "Oct"
-    | "Nov"
-    | "Dec";
-  startYear?: number;
-  profileImage?: string;
-  numOfDaysChallenge?: number;
-  blendValue?: number;
-  totalBlendValue?: number;
+  statistics: any;
 }
 
-const CircleComponent = ({
-  activities,
-  categoryObject,
-  activityDataList,
-  startDate,
-  startMonth,
-  startYear,
-  numOfDaysChallenge,
-  blendValue,
-  totalBlendValue,
-}: CircleComponentInterface) => {
+const Challenge = (props: ChallengeProps) => {
+  const { activities, statistics } = props;
   useEffect(() => {
     function handleResize() {
       const insideWidth = 0.82;
@@ -212,37 +183,22 @@ const CircleComponent = ({
     window.addEventListener("resize", handleResize);
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  });
 
   return (
     <div className={styles.mainContainer__contentDiv__innerDiv}>
       <div className={styles.mainContainer__contentDiv__innerDiv__challengeDiv}>
-        {/* {activities && activities?.length !== 0 && ( */}
         <div className={styles.challenge_circle_box}>
-          <Food categoryObject={categoryObject} />
-          <Main
-            activities={activities}
-            activityDataList={activityDataList}
-            numOfDaysChallenge={numOfDaysChallenge}
-            blendValue={blendValue}
-            totalBlendValue={totalBlendValue}
-            startDate={startDate}
-            startMonth={startMonth}
-            startYear={startYear}
-          />
+          <Food />
+          <Main activities={activities} statistics={statistics} />
           <GraphDetailContainer
             activities={activities}
-            activityDataList={activityDataList}
-            categoryObject={categoryObject}
-            startDate={startDate}
-            startMonth={startMonth}
-            startYear={startYear}
+            statistics={statistics}
           />
         </div>
-        {/* )} */}
       </div>
     </div>
   );
 };
 
-export default CircleComponent;
+export default Challenge;

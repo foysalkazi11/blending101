@@ -1,5 +1,17 @@
-import React, { Fragment, useEffect, useMemo, useRef, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import {
+  FormProvider,
+  useForm,
+  useFormContext,
+  useWatch,
+} from "react-hook-form";
 import { useMutation, useQuery } from "@apollo/client";
 import { faChevronLeft, faTimes } from "@fortawesome/pro-solid-svg-icons";
 
@@ -19,7 +31,7 @@ import { useAppSelector } from "../../../../redux/hooks";
 import Publish from "../../../../helpers/Publish";
 
 import styles from "./Settings.module.scss";
-import { format } from "date-fns";
+import { addDays, differenceInDays, format, isBefore } from "date-fns";
 import RadioButton from "../../../organisms/Forms/RadioButton.component";
 
 interface SettingsProps {
@@ -29,6 +41,14 @@ interface SettingsProps {
 const Settings = (props: SettingsProps) => {
   const { hideSettings } = props;
   const [showForm, setShowForm] = useState(false);
+  const [challenge, setChallenge] = useState<any>(null);
+
+  const editFormHandler = useCallback((data) => {
+    console.log("first");
+    setShowForm(true);
+    setChallenge(data);
+  }, []);
+
   return (
     <div className={styles.settings}>
       <div className={styles.settings__header}>
@@ -56,6 +76,7 @@ const Settings = (props: SettingsProps) => {
               fontSize: "1.5rem",
             }}
             onClick={() => {
+              setChallenge(null);
               setShowForm(true);
             }}
           />
@@ -71,12 +92,18 @@ const Settings = (props: SettingsProps) => {
           />
         )}
       </div>
-      <div>{showForm ? <ChallengeForm /> : <ChallengeList />}</div>
+      <div>
+        {showForm ? (
+          <ChallengeForm challenge={challenge} setShowForm={setShowForm} />
+        ) : (
+          <ChallengeList editFormHandler={editFormHandler} />
+        )}
+      </div>
     </div>
   );
 };
 
-const ChallengeList = () => {
+const ChallengeList = ({ editFormHandler }) => {
   const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
   const { data } = useQuery(GET_CHALLENGES, {
@@ -84,7 +111,10 @@ const ChallengeList = () => {
       memberId,
     },
   });
-  const [activateChallenge, activateState] = useMutation(ACTIVATE_CHALLENGE);
+
+  const [activateChallenge, activateState] = useMutation(ACTIVATE_CHALLENGE, {
+    refetchQueries: ["Get30DaysChallenge", "GetAllChallenges"],
+  });
 
   const [activeId, setActiveId] = useState("");
 
@@ -103,7 +133,6 @@ const ChallengeList = () => {
     });
   };
 
-  console.log(activeId);
   return (
     <Fragment>
       <div className="row mb-10 mt-10">
@@ -122,7 +151,11 @@ const ChallengeList = () => {
         return (
           <div className="row" key={challenge._id}>
             <div className="col-5">
-              <Textfield defaultValue={challenge.challengeName} disabled />
+              <div className={styles.challengeName}>
+                <a onClick={() => editFormHandler(challenge)}>
+                  {challenge.challengeName}
+                </a>
+              </div>
             </div>
             <div className="col-3">
               <Textfield
@@ -165,7 +198,7 @@ const defaultValues = {
   notification: false,
 };
 
-const ChallengeForm = () => {
+const ChallengeForm = ({ setShowForm, challenge }) => {
   const days = useRef(0);
   const methods = useForm({
     defaultValues: useMemo(() => defaultValues, []),
@@ -173,6 +206,21 @@ const ChallengeForm = () => {
   const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
   const [addChallenge, addState] = useMutation(CREATE_CHALLENGE);
+
+  useEffect(() => {
+    if (challenge) {
+      const { challengeName, description, endDate, startDate, notification } =
+        challenge;
+      methods.reset({
+        challengeName,
+        startDate: format(new Date(startDate), "yyyy-MM-dd"),
+        endDate: format(new Date(endDate), "yyyy-MM-dd"),
+        description,
+        notification,
+      });
+    }
+  }, [challenge, methods]);
+
   const handleSubmit = async (data) => {
     await Publish({
       mutate: addChallenge,
@@ -189,6 +237,7 @@ const ChallengeForm = () => {
       success: "Created Challenge Successfully",
       onSuccess: () => {
         methods.reset(defaultValues);
+        setShowForm(false);
         days.current = 0;
       },
     });
@@ -202,17 +251,7 @@ const ChallengeForm = () => {
             <Textfield label="Challenge Name" name="challengeName" />
           </div>
         </div>
-        <div className="row mb-30">
-          <div className="col-5">
-            <Textfield label="Start Date" name="startDate" type="date" />
-          </div>
-          <div className="col-2">
-            <NumberField label="End Days" value={days.current} />
-          </div>
-          <div className="col-5">
-            <Textfield label="End Date" name="endDate" type="date" />
-          </div>
-        </div>
+        <ChallengeDate />
         <div className="row mb-10">
           <div className="col-12">
             <Textarea
@@ -242,4 +281,49 @@ const ChallengeForm = () => {
   );
 };
 
+const ChallengeDate = () => {
+  const [days, setDays] = useState(0);
+  const { control, setValue } = useFormContext();
+
+  const startDate = useWatch({
+    control,
+    name: "startDate",
+    defaultValue: format(new Date(), "yyyy-MM-dd"),
+  });
+
+  const endDate = useWatch({
+    control,
+    name: "endDate",
+  });
+
+  const endDays = (e) => {
+    setDays(e.target.value);
+    if (startDate) {
+      setValue(
+        "endDate",
+        format(addDays(new Date(startDate), e.target.value), "yyyy-MM-dd"),
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (endDate && !isBefore(new Date(endDate), new Date(startDate))) {
+      setDays(differenceInDays(new Date(endDate), new Date(startDate)));
+    }
+  }, [endDate, startDate]);
+
+  return (
+    <div className="row mb-30">
+      <div className="col-5">
+        <Textfield label="Start Date" name="startDate" type="date" />
+      </div>
+      <div className="col-2">
+        <NumberField label="End Day" value={days} onChange={endDays} />
+      </div>
+      <div className="col-5">
+        <Textfield label="End Date" name="endDate" type="date" />
+      </div>
+    </div>
+  );
+};
 export default Settings;

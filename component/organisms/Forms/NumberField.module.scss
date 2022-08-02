@@ -44,7 +44,7 @@
   .text {
     font-size: 16px;
     margin-left: 10px;
-
+    color: #bcbcbc;
     @include responsive(0px, 991px) {
       margin-left: 0px;
       width: fit-content;

@@ -27,7 +27,7 @@ const NumberField = (props: NumberFieldProps) => {
     setNumber(ammount);
   };
   useEffect(() => {
-    if (value !== number) setNumber(value);
+    if (value !== 0 && value !== number) setNumber(value);
   }, [number, value]);
   return (
     <Fragment>
