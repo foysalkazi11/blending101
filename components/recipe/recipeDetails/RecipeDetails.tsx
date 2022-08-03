@@ -15,6 +15,7 @@ const RecipeDetails = ({
   nutritionState,
   setNutritionState,
   nutritionDataLoading = false,
+  giGl,
 }) => {
   const [counter, setCounter] = useState(1);
   const { width } = useWindowSize();
@@ -59,6 +60,7 @@ const RecipeDetails = ({
             setCounter={setCounter}
             setNutritionState={setNutritionState}
             nutritionState={nutritionState}
+            giGl={giGl}
           />
         </div>
         <div className={styles.right}>

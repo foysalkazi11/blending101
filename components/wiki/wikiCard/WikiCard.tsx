@@ -1,5 +1,6 @@
 import { useMutation } from "@apollo/client";
-import { faMessageDots } from "@fortawesome/pro-light-svg-icons";
+import { faMessageDots as faMessageDotsSolid } from "@fortawesome/pro-solid-svg-icons";
+import { faMessageDots as faMessageDotsLight } from "@fortawesome/pro-light-svg-icons";
 import { faEllipsisVertical } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
@@ -227,8 +228,15 @@ const WikiCard = ({
               openWikiCommentsTray(e, id, title, image || "/images/imgbig4.png")
             }
           >
-            <FontAwesomeIcon icon={faMessageDots} />
-            <p className={styles.text}>{comments}</p>
+            <FontAwesomeIcon
+              icon={comments ? faMessageDotsSolid : faMessageDotsLight}
+              className={`${comments ? styles.activeIcon : ""}`}
+            />
+            <p
+              className={`${styles.text} ${comments ? styles.activeIcon : ""}`}
+            >
+              {comments}
+            </p>
           </div>
         </div>
       </div>

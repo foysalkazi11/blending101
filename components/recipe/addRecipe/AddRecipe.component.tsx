@@ -258,7 +258,9 @@ const AddRecipePage = () => {
             counter={counter}
             nutritionTrayData={
               nutritionData &&
-              JSON?.parse(nutritionData?.getBlendNutritionBasedOnRecipexxx)
+              JSON?.parse(
+                nutritionData?.getNutrientsListAndGiGlByIngredients?.nutrients,
+              )
             }
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}
