@@ -25,13 +25,16 @@ const SubNav = (props: SubNavProps) => {
     buttonText = "Button",
     buttonClick = () => {},
     backIconText = "Back",
-    backAddress = "#",
+    backAddress = "/",
     compareAmout = 0,
     closeCompare = () => {},
   } = props;
   return (
     <div className={styles.subNav}>
-      <div className={styles.subNav__discover} onClick={() => router.push("/")}>
+      <div
+        className={styles.subNav__discover}
+        onClick={() => router.push(backAddress)}
+      >
         <Link href={backAddress} passHref>
           <ArrowBackIcon className={styles.subNav__discover__icon} />
         </Link>

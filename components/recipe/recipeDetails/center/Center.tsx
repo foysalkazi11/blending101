@@ -24,6 +24,7 @@ import {
 import { VscVersions } from "react-icons/vsc";
 import IngredientDetails from "../../../../component/module/Recipe/Ingredient-Details.module";
 import { RecipeDetailsType } from "../../../../type/recipeDetails";
+import { GiGl } from "../../../../type/nutrationType";
 
 interface center {
   recipeData: RecipeDetailsType;
@@ -31,6 +32,7 @@ interface center {
   setCounter: any;
   nutritionState: any;
   setNutritionState: any;
+  giGl: GiGl;
 }
 
 const Center = ({
@@ -39,6 +41,11 @@ const Center = ({
   setCounter,
   nutritionState,
   setNutritionState,
+  giGl = {
+    netCarbs: 0,
+    totalGi: 0,
+    totalGL: 0,
+  },
 }: center) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -243,11 +250,11 @@ const Center = ({
         </div>
         <div className={styles.infoContainer}>
           <div className={styles.infoBox}>
-            <span>45</span>
+            <span>{Math?.round(giGl?.netCarbs)}</span>
             <p>Net Carbs</p>
           </div>
           <div className={styles.infoBox}>
-            <span>16</span>
+            <span>{Math?.round(giGl?.totalGL)}</span>
             <p>Glycemic Load</p>
           </div>
           <div className={styles.infoBox}>

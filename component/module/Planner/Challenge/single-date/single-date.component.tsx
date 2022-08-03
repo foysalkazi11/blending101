@@ -1,7 +1,7 @@
 import styles from "./single-date.module.scss";
 import { food_color } from "../js/my";
 import { useLazyQuery } from "@apollo/client";
-import { format, isToday } from "date-fns";
+import { format, isAfter, isToday } from "date-fns";
 import { useEffect } from "react";
 import { RECIPE_CATEGORY_COLOR } from "../../../../../data/Recipe";
 import { GET_CHALLENGE_DETAIL } from "../../../../../graphql/Planner";
@@ -28,23 +28,21 @@ function getBackgroundColor(categories: string[], selectToday: boolean) {
   }
 }
 
-function SingleDate({ date, categories }: any) {
+function SingleDate({ date, categories, disabled }: any) {
   const days = new Date(date);
   const dayName = format(days, "E");
   const day = format(days, "d");
   const selectToday = isToday(new Date(date));
-  console.log(selectToday, date);
-  const [getChallengeData, { loading, data }] = useLazyQuery(
-    GET_CHALLENGE_DETAIL,
-    {
-      fetchPolicy: "no-cache",
-    },
-  );
+
+  const [getChallengeData, { data }] = useLazyQuery(GET_CHALLENGE_DETAIL, {
+    fetchPolicy: "no-cache",
+  });
 
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
   const showChallengeDetails = () => {
+    if (disabled) return;
     getChallengeData({
       variables: {
         userId,
@@ -65,14 +63,21 @@ function SingleDate({ date, categories }: any) {
       className={styles.challenge_circle_single_date}
       onClick={showChallengeDetails}
       style={{
-        background: getBackgroundColor(categories, selectToday),
-        color: categories.length === 0 ? "#333" : "white",
+        background:
+          !isAfter(days, new Date()) && disabled === null
+            ? getBackgroundColor(categories, selectToday)
+            : "#fff",
+        color: selectToday || isAfter(days, new Date()) ? "#333" : "white",
         boxShadow: selectToday ? "3px 6px 6px #00000029" : "none",
-        border: selectToday ? "1px solid #9C9C9C" : "none",
+        border: disabled !== null || selectToday ? "1px solid #dddada" : "none",
       }}
     >
-      <p>{day}</p>
-      <p>{dayName}</p>
+      {(disabled === null || selectToday) && (
+        <>
+          <p>{day}</p>
+          <p>{dayName}</p>
+        </>
+      )}
     </div>
   );
 }

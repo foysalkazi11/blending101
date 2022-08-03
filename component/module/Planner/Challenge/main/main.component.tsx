@@ -24,6 +24,7 @@ function Main({ activities, statistics }: MainInterface) {
                 key={key}
                 date={activity?.assignDate}
                 categories={categories}
+                disabled={activity?.disabled}
               />
             );
           })}
