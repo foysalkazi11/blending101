@@ -227,7 +227,7 @@ const defaultValues = {
 };
 
 const ChallengeForm = ({ setShowForm, challenge }) => {
-  const days = useRef(0);
+  const [days, setDays] = useState(0);
   const [isEditMode, setIsEditMode] = useState(false);
   const methods = useForm({
     defaultValues: useMemo(() => defaultValues, []),
@@ -261,7 +261,7 @@ const ChallengeForm = ({ setShowForm, challenge }) => {
       data: {
         memberId,
         ...data,
-        days: days.current,
+        days: days,
         startDate: new Date(data.startDate).toISOString(),
         endDate: new Date(data.endDate).toISOString(),
       },
@@ -277,7 +277,7 @@ const ChallengeForm = ({ setShowForm, challenge }) => {
       onSuccess: () => {
         methods.reset(defaultValues);
         setShowForm(false);
-        days.current = 0;
+        setDays(0);
       },
     });
   };
@@ -290,7 +290,7 @@ const ChallengeForm = ({ setShowForm, challenge }) => {
             <Textfield label="Challenge Name" name="challengeName" />
           </div>
         </div>
-        <ChallengeDate />
+        <ChallengeDate dayState={[days, setDays]} />
         <div className="row mb-10">
           <div className="col-12">
             <Textarea
@@ -320,8 +320,8 @@ const ChallengeForm = ({ setShowForm, challenge }) => {
   );
 };
 
-const ChallengeDate = () => {
-  const [days, setDays] = useState(0);
+const ChallengeDate = ({ dayState }) => {
+  const [days, setDays] = dayState;
   const { control, setValue } = useFormContext();
 
   const startDate = useWatch({
@@ -349,7 +349,7 @@ const ChallengeDate = () => {
     if (endDate && !isBefore(new Date(endDate), new Date(startDate))) {
       setDays(differenceInDays(new Date(endDate), new Date(startDate)));
     }
-  }, [endDate, startDate]);
+  }, [endDate, setDays, startDate]);
 
   return (
     <div className="row mb-30">
