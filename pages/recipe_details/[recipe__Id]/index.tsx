@@ -12,6 +12,7 @@ import {
 } from "../../../redux/slices/versionTraySlice";
 import { RecipeVersionType } from "../../../type/recipeVersionType";
 import { RecipeDetailsType } from "../../../type/recipeDetails";
+import { GiGl } from "../../../type/nutrationType";
 
 const Index = () => {
   const router = useRouter();
@@ -70,7 +71,9 @@ const Index = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recipeData?.getARecipe]);
   //@ts-ignore
-  const recipeBasedNutrition = nutritionData?.getBlendNutritionBasedOnRecipexxx;
+  const recipeBasedNutrition =
+    nutritionData?.getNutrientsListAndGiGlByIngredients?.nutrients;
+  const giGl: GiGl = nutritionData?.getNutrientsListAndGiGlByIngredients?.giGl;
 
   return (
     <RecipeDetails
@@ -81,6 +84,7 @@ const Index = () => {
       nutritionState={nutritionState}
       setNutritionState={setNutritionState}
       nutritionDataLoading={nutritionDataLoading}
+      giGl={giGl}
     />
   );
 };

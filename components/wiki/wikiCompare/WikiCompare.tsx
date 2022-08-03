@@ -24,7 +24,10 @@ const WikiCompare = () => {
     data: wikiCompareData,
     loading: wikiCompareDataLoading,
     error: wikiCompareDataError,
-  } = useQuery(GET_WIKI_COMPARE_LIST, { variables: { userId: dbUser?._id } });
+  } = useQuery(GET_WIKI_COMPARE_LIST, {
+    variables: { userId: dbUser?._id },
+    fetchPolicy: "network-only",
+  });
   const [wikiCompareList, setWikiCompareList] = useLocalStorage<
     WikiCompareList[]
   >("wikiCompareList", []);
@@ -55,7 +58,14 @@ const WikiCompare = () => {
   };
 
   return (
-    <AContainer headerTitle="Compare Ingredient">
+    <AContainer
+      headerTitle="Compare Ingredient"
+      showWikiCommentsTray={{
+        show: true,
+        showPanle: "right",
+        showTagByDeafult: false,
+      }}
+    >
       <div className={s.wikiCompareContainer}>
         {wikiCompareDataLoading ? (
           <SkeletonComparePage />
@@ -64,7 +74,6 @@ const WikiCompare = () => {
             <SubNav
               backAddress="/wiki"
               backIconText="Wiki Discovery"
-              buttonText={"Compare"}
               showButton={false}
               buttonClick={() => {}}
               compareAmout={dbUser?.wikiCompareCount}

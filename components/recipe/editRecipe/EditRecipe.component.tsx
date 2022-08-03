@@ -20,6 +20,7 @@ import TrayTag from "../../sidetray/TrayTag";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBasketShopping as faBasketShoppingRegular } from "@fortawesome/pro-regular-svg-icons";
 import { faBasketShopping as faBasketShoppingSolid } from "@fortawesome/pro-solid-svg-icons";
+import { GiGl } from "../../../type/nutrationType";
 
 interface editRecipe {
   copyDetailsRecipe?: RecipeDetailsType;
@@ -39,6 +40,7 @@ interface editRecipe {
   setNutritionState?: Dispatch<SetStateAction<object>>;
   recipeId?: string | string[];
   updateEditRecipe?: (key: string, value: any) => void;
+  giGl?: GiGl;
 }
 
 const EditRecipePage = ({
@@ -59,6 +61,11 @@ const EditRecipePage = ({
   setNutritionState = () => {},
   recipeId = "",
   updateEditRecipe = () => {},
+  giGl = {
+    netCarbs: 0,
+    totalGi: 0,
+    totalGL: 0,
+  },
 }: editRecipe) => {
   const [openTray, setOpenTray] = useState(false);
   const dispatch = useAppDispatch();
@@ -161,6 +168,7 @@ const EditRecipePage = ({
             setImages={setImages}
             existingImage={existingImage}
             setExistingImage={setExistingImage}
+            giGl={giGl}
           />
           <IngredientList
             adjusterFunc={adjusterFunc}
