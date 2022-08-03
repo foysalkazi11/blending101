@@ -1,18 +1,20 @@
-import React, { useRef } from "react";
+import React, { ReactNode, useRef } from "react";
 import styles from "./toggleMenu.module.scss";
 
 type ToggleMenuProps = {
-  toggle: number;
-  setToggle: (val: number) => void;
-  toggleMenuList: string[];
-  maxWidth?: object;
+  toggle?: number;
+  setToggle?: (val: number) => void;
+  toggleMenuList: string[] | ReactNode[];
+  maxWidth?: React.CSSProperties;
+  variant?: "contain" | "outlinePrimary" | "outlineSecondary";
 };
 
 const ToggleMenu = ({
-  toggle,
-  setToggle,
+  toggle = 0,
+  setToggle = () => {},
   toggleMenuList,
   maxWidth = {},
+  variant = "contain",
 }: ToggleMenuProps) => {
   const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -26,9 +28,15 @@ const ToggleMenu = ({
   };
   return (
     <div className={styles.topMenuContainer}>
-      <div className={styles.topMenu} style={maxWidth}>
+      <div
+        className={styles.topMenu}
+        style={{
+          ...maxWidth,
+          // border: toggleMenuList.length === 1 ? "0px" : "1px",
+        }}
+      >
         <div
-          className={styles.active}
+          className={`${styles.active} ${styles[variant]}`}
           ref={menuRef}
           style={{ width: `${100 / toggleMenuList.length}%` }}
         ></div>
@@ -37,7 +45,7 @@ const ToggleMenu = ({
             <div
               key={index}
               className={`${styles.menu} ${
-                toggle === index ? styles.activeMenu : ""
+                toggle === index ? styles[variant] : ""
               }`}
               onClick={() => handleToggle(index)}
               style={{ width: `${100 / toggleMenuList.length}%` }}

@@ -19,15 +19,32 @@
   }
 }
 
-.challengeName {
-  color: #fe5d1f;
-  cursor: pointer;
-  font-size: 1.4rem;
-  display: flex;
-  align-items: center;
-  border: 1px solid #ececec;
-  border-radius: 10px;
-  width: 100%;
-  padding: 0 15px;
-  line-height: 3.9rem;
+.challenge {
+  &__name {
+    color: #fe5d1f;
+    cursor: pointer;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    border: 1px solid #ececec;
+    border-radius: 10px;
+    width: 100%;
+    padding: 0 15px;
+    line-height: 3.9rem;
+  }
+  &__action {
+    display: flex;
+    align-items: center;
+    &__radio {
+      transform: translate(4rem, -1rem);
+    }
+    &__trash {
+      transition: opacity 0.2s ease-out;
+      transform: translate(2rem, 5px);
+      opacity: 0;
+    }
+  }
+  &:hover &__action__trash {
+    opacity: 1;
+  }
 }

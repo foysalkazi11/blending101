@@ -13,7 +13,11 @@ import {
   useWatch,
 } from "react-hook-form";
 import { useMutation, useQuery } from "@apollo/client";
-import { faChevronLeft, faTimes } from "@fortawesome/pro-solid-svg-icons";
+import {
+  faChevronLeft,
+  faTimes,
+  faTrash,
+} from "@fortawesome/pro-solid-svg-icons";
 
 import ButtonComponent from "../../../../theme/button/button.component";
 import IconButton from "../../../atoms/Button/IconButton.component";
@@ -25,6 +29,8 @@ import Textfield from "../../../organisms/Forms/Textfield.component";
 import {
   ACTIVATE_CHALLENGE,
   CREATE_CHALLENGE,
+  DELETE_CHALLENGE,
+  EDIT_CHALLENGE,
   GET_CHALLENGES,
 } from "../../../../graphql/Planner";
 import { useAppSelector } from "../../../../redux/hooks";
@@ -44,7 +50,6 @@ const Settings = (props: SettingsProps) => {
   const [challenge, setChallenge] = useState<any>(null);
 
   const editFormHandler = useCallback((data) => {
-    console.log("first");
     setShowForm(true);
     setChallenge(data);
   }, []);
@@ -115,6 +120,9 @@ const ChallengeList = ({ editFormHandler }) => {
   const [activateChallenge, activateState] = useMutation(ACTIVATE_CHALLENGE, {
     refetchQueries: ["Get30DaysChallenge", "GetAllChallenges"],
   });
+  const [deleteChallenge, deleteState] = useMutation(DELETE_CHALLENGE, {
+    refetchQueries: ["GetAllChallenges"],
+  });
 
   const [activeId, setActiveId] = useState("");
 
@@ -130,6 +138,17 @@ const ChallengeList = ({ editFormHandler }) => {
       onSuccess: () => {
         setActiveId(challengeId);
       },
+    });
+  };
+
+  const deleteHandler = async (challengeId) => {
+    await Publish({
+      mutate: deleteChallenge,
+      variables: {
+        challengeId,
+      },
+      state: deleteState,
+      success: `Deleted Challenge Sucessfully`,
     });
   };
 
@@ -149,9 +168,9 @@ const ChallengeList = ({ editFormHandler }) => {
       </div>
       {data?.getMyChallengeList?.map((challenge) => {
         return (
-          <div className="row" key={challenge._id}>
+          <div className={`row ${styles.challenge}`} key={challenge._id}>
             <div className="col-5">
-              <div className={styles.challengeName}>
+              <div className={styles.challenge__name}>
                 <a onClick={() => editFormHandler(challenge)}>
                   {challenge.challengeName}
                 </a>
@@ -170,18 +189,27 @@ const ChallengeList = ({ editFormHandler }) => {
               <Textfield defaultValue={challenge.days} disabled />
             </div>
             <div className="col-1">
-              <RadioButton
-                selected={
-                  activeId === "" && challenge.isActive
-                    ? ""
-                    : activeId === challenge._id
-                    ? ""
-                    : "unchecked"
-                }
-                options={[""]}
-                className="ml-50"
-                onChange={() => activeHandler(challenge._id)}
-              />
+              <div className={styles.challenge__action}>
+                <RadioButton
+                  selected={
+                    activeId === "" && challenge.isActive
+                      ? ""
+                      : activeId === challenge._id
+                      ? ""
+                      : "unchecked"
+                  }
+                  options={[""]}
+                  onChange={() => activeHandler(challenge._id)}
+                  className={styles.challenge__action__radio}
+                />
+                <IconButton
+                  fontName={faTrash}
+                  variant="primary"
+                  size="small"
+                  className={styles.challenge__action__trash}
+                  onClick={() => deleteHandler(challenge._id)}
+                />
+              </div>
             </div>
           </div>
         );
@@ -200,12 +228,18 @@ const defaultValues = {
 
 const ChallengeForm = ({ setShowForm, challenge }) => {
   const days = useRef(0);
+  const [isEditMode, setIsEditMode] = useState(false);
   const methods = useForm({
     defaultValues: useMemo(() => defaultValues, []),
   });
   const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
-  const [addChallenge, addState] = useMutation(CREATE_CHALLENGE);
+  const [addChallenge, addState] = useMutation(CREATE_CHALLENGE, {
+    refetchQueries: ["GetAllChallenges"],
+  });
+  const [editChallenge, editState] = useMutation(EDIT_CHALLENGE, {
+    refetchQueries: ["GetAllChallenges"],
+  });
 
   useEffect(() => {
     if (challenge) {
@@ -218,23 +252,28 @@ const ChallengeForm = ({ setShowForm, challenge }) => {
         description,
         notification,
       });
+      setIsEditMode(true);
     }
   }, [challenge, methods]);
 
   const handleSubmit = async (data) => {
-    await Publish({
-      mutate: addChallenge,
-      variables: {
-        data: {
-          memberId,
-          ...data,
-          days: days.current,
-          startDate: new Date(data.startDate).toISOString(),
-          endDate: new Date(data.endDate).toISOString(),
-        },
+    const challengeData = {
+      data: {
+        memberId,
+        ...data,
+        days: days.current,
+        startDate: new Date(data.startDate).toISOString(),
+        endDate: new Date(data.endDate).toISOString(),
       },
-      state: addState,
-      success: "Created Challenge Successfully",
+    };
+
+    if (isEditMode) challengeData.data.challengeId = challenge._id;
+
+    await Publish({
+      mutate: isEditMode ? editChallenge : addChallenge,
+      variables: challengeData,
+      state: isEditMode ? editState : addState,
+      success: `${isEditMode ? "Edited" : "Created"} Challenge Successfully`,
       onSuccess: () => {
         methods.reset(defaultValues);
         setShowForm(false);
