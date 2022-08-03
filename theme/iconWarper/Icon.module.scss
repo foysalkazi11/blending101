@@ -10,11 +10,11 @@
   // background-color: #c9c9c9;
   cursor: pointer;
   transition: all 0.3s linear;
+  color: #646464;
 }
 
 .gray {
-  background-color: #ababab;
-  color: $white;
+  background-color: #c9c9c9;
 }
 .primary {
   background-color: $primaryColor;
@@ -37,8 +37,13 @@
     background-color: $secondaryColor;
   }
 }
+.bgGray {
+  &:hover {
+    background-color: #ababab;
+  }
+}
 .bgSlightGray {
   &:hover {
-    background-color: $slightGray;
+    background-color: #c9c9c9;
   }
 }

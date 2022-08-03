@@ -2,8 +2,10 @@ import React from "react";
 import s from "./WikiCommentsTray.module.scss";
 import { format } from "date-fns";
 import { WikiUserComment } from "../../../type/wikiCommentsType";
-import { FiEdit2 } from "react-icons/fi";
-import { MdDeleteOutline } from "react-icons/md";
+import IconWarper from "../../../theme/iconWarper/IconWarper";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPen } from "@fortawesome/pro-light-svg-icons";
+import { faTrash } from "@fortawesome/pro-regular-svg-icons";
 
 interface Props {
   userComments?: WikiUserComment;
@@ -35,15 +37,22 @@ const CommentsBottomSection = ({
       {isCurrentUser && (
         <div className={s.rightSide}>
           <div className={s.content}>
-            <div
-              className={s.editIconBox}
-              onClick={() => updateCommentValue(userComments?.comment)}
+            <IconWarper
+              hover="none"
+              defaultBg="gray"
+              handleClick={() => updateCommentValue(userComments?.comment)}
+              style={{ marginRight: "5px" }}
             >
-              <FiEdit2 className={s.icon} />
-            </div>
-            <div className={s.editIconBox} onClick={removeComment}>
-              <MdDeleteOutline className={s.icon} />
-            </div>
+              <FontAwesomeIcon icon={faPen} fontSize={12} />
+            </IconWarper>
+
+            <IconWarper
+              hover="none"
+              defaultBg="gray"
+              handleClick={removeComment}
+            >
+              <FontAwesomeIcon icon={faTrash} fontSize={12} />
+            </IconWarper>
           </div>
         </div>
       )}
