@@ -1,8 +1,7 @@
 // @ts-nocheck
-import React, { useEffect, useLayoutEffect } from "react";
+import React, { useEffect } from "react";
 import styles from "./Challenge.module.scss";
 import foodStyles from "./food/food.module.scss";
-import foodBoxStyles from "./food-box/food-box.module.scss";
 import insideStyle from "./inside/inside.module.scss";
 import profileStyles from "./profile/profile.module.scss";
 import mainStyles from "./main/main.module.scss";
@@ -35,8 +34,8 @@ const Challenge = (props: ChallengeProps) => {
         `.${foodStyles.challenge_circle_food_box}`,
       );
 
-      challengeCircleFood.style.width =
-        challengeCircleBox.clientWidth * insideWidth + "px";
+      // challengeCircleFood.style.width =
+      //   challengeCircleBox.clientWidth * insideWidth + "px";
       // challengeCircleFood.style.marginBottom =
       //   challengeCircleBox.clientWidth * 0.02 + "px";
       challengeCircleFoodBoxList.forEach((challengeCircleFoodBox) => {
@@ -122,7 +121,8 @@ const Challenge = (props: ChallengeProps) => {
       );
       circles.forEach((circle) => {
         circle.style.fontSize = cCMCOWidth * 0.018 + "px";
-        circle.style.width = cCMCOWidth * 0.075 + "px";
+        // circle.style.width = cCMCOWidth * 0.075 + "px";
+        circle.style.width = "45px";
       });
 
       circles = [...circles, semiCircle];

@@ -251,11 +251,32 @@ export const CREATE_CHALLENGE = gql`
   }
 `;
 
+export const EDIT_CHALLENGE = gql`
+  mutation EditChallenge($data: CreateEditUserChallenge!) {
+    editUserChallenge(data: $data)
+  }
+`;
+
+export const DELETE_CHALLENGE = gql`
+  mutation DeleteChallenge($challengeId: String!) {
+    deleteUserChallenge(challengeId: $challengeId)
+  }
+`;
+
 export const ACTIVATE_CHALLENGE = gql`
   mutation ActivateChallenge($memberId: ID!, $challengeId: ID!) {
     editUserChallenge(
       data: { memberId: $memberId, challengeId: $challengeId, isActive: true }
     )
+  }
+`;
+
+export const CHALLENGE_GALLERY = gql`
+  query GetChallengeGallery($memberId: String!) {
+    getAChallengeGallery(memberId: $memberId) {
+      images
+      assignDate
+    }
   }
 `;
 

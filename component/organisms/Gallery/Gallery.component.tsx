@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useMemo } from "react";
 import Slider from "react-slick";
 import Image from "next/image";
 import "slick-carousel/slick/slick.css";
@@ -10,8 +10,20 @@ import {
   faChevronLeft,
   faChevronRight,
 } from "@fortawesome/pro-solid-svg-icons";
+import { useQuery } from "@apollo/client";
+import { useAppSelector } from "../../../redux/hooks";
+import { CHALLENGE_GALLERY } from "../../../graphql/Planner";
+import image from "next/image";
+import { format } from "date-fns";
 
 const Gallery = () => {
+  const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const { data } = useQuery(CHALLENGE_GALLERY, {
+    variables: {
+      memberId,
+    },
+  });
+
   const [state, setState] = useState({ nav1: null, nav2: null });
   const slider1 = useRef();
   const slider2 = useRef();
@@ -24,6 +36,22 @@ const Gallery = () => {
   }, []);
 
   const { nav1, nav2 } = state;
+
+  const images = useMemo(() => {
+    const imageData = [];
+    if (data?.getAChallengeGallery) {
+      data?.getAChallengeGallery?.forEach((image) => {
+        image.images.forEach((img) => {
+          imageData.push({
+            date: image.assignDate,
+            src: img,
+          });
+        });
+      });
+    }
+    return imageData;
+  }, [data?.getAChallengeGallery]);
+
   return (
     <div className={styles.container}>
       <div>
@@ -33,12 +61,12 @@ const Gallery = () => {
           nextArrow={<MainNextArrow />}
           prevArrow={<MainPrevArrow />}
         >
-          {[1, 2, 3, 4, 5, 6].map((item) => (
-            <div key={item} className={styles.gallery__activeSlide}>
-              <img
-                src={`https://picsum.photos/id/${item}/1200/1200`}
-                alt={item.toString()}
-              />
+          {images.map((item) => (
+            <div
+              key={item.date + item.src}
+              className={styles.gallery__activeSlide}
+            >
+              <img src={item.src} alt={item.date} />
             </div>
           ))}
         </Slider>
@@ -57,14 +85,16 @@ const Gallery = () => {
           nextArrow={<PreviewNextArrow />}
           prevArrow={<PreviewPrevArrow />}
         >
-          {[1, 2, 3, 4, 5, 6].map((item) => (
-            <div key={item} className={styles.gallery__preview}>
+          {images.map((item) => (
+            <div key={item.date + item.src} className={styles.gallery__preview}>
               <img
                 className={styles.gallery__preview__img}
-                src={`https://picsum.photos/id/${item}/600/600`}
-                alt={item.toString()}
+                src={item.src}
+                alt={item.date}
               />
-              <p className={styles.gallery__preview__caption}>Sunday, Mar 21</p>
+              <p className={styles.gallery__preview__caption}>
+                {format(new Date(item.date), "EEEE, MMM dd")}
+              </p>
             </div>
           ))}
         </Slider>
