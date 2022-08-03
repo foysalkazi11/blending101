@@ -1,12 +1,11 @@
 .wikiCommentsContainer {
   width: 100%;
-  margin: 20px auto;
+  margin-bottom: 20px;
 }
 
 .wikiItemName {
   display: flex;
   align-items: center;
-  padding: 20px 0px;
   border-bottom: 1px solid #ececec;
   img {
     width: 45px;
@@ -27,7 +26,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 10px;
   position: relative;
   // &:hover .rightSide {
   //   display: block;
@@ -101,7 +99,7 @@
   margin-top: 10px;
 
   &:hover .rightSide {
-    display: block;
+    transform: translateX(0);
   }
   .date {
     font-size: 10px;
@@ -113,13 +111,15 @@
   .comment {
     color: #646464;
     font-size: 12px;
+    line-height: 16px;
   }
 
   .rightSide {
     position: absolute;
     top: 0;
     right: 0;
-    display: none;
+    transform: translateX(120%);
+    transition: all 0.3s;
     .content {
       display: flex;
       align-items: center;
@@ -137,7 +137,7 @@
         cursor: pointer;
         &:hover {
           box-shadow: 0 10px 10px -10px rgb(0 0 0 / 50%);
-          background: #e0e0e047;
+          color: #e0e0e047;
         }
         .icon {
           font-size: 14px;

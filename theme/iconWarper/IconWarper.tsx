@@ -5,7 +5,7 @@ interface IconProps {
   children: React.ReactNode;
   style?: React.CSSProperties;
   handleClick?: (e: React.SyntheticEvent) => void;
-  hover?: "bgPrimary" | "bgSecondary" | "bgSlightGray";
+  hover?: "bgPrimary" | "bgSecondary" | "bgGray" | "bgSlightGray" | "none";
   defaultBg?: "gray" | "primary" | "secondary" | "none";
 }
 

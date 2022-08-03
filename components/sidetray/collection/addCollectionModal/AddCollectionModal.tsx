@@ -1,12 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { Dispatch, SetStateAction, useState } from "react";
 import styles from "./AddCollection.module.scss";
-import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
 import CREATE_NEW_COLLECTION from "../../../../gqlLib/collection/mutation/createNewCollection";
 import { useMutation } from "@apollo/client";
 import EDIT_COLLECTION from "../../../../gqlLib/collection/mutation/editCollection";
 import { useAppSelector } from "../../../../redux/hooks";
 import CommentAndNoteButton from "../../../../theme/button/commentAndNoteButton/CommentAndNoteButton";
+import InputComponent from "../../../../theme/input/input.component";
+import notification from "../../../../components/utility/reactToastifyNotification";
 
 type AddCollectionModalProps = {
   input: any;
@@ -69,12 +70,12 @@ const AddCollectionModal = ({
       setOpenModal(false);
       setInput({ image: null, name: "" });
       if (isEditCollection) {
-        reactToastifyNotification("info", "Collection edit successfully");
+        notification("info", "Collection edit successfully");
       } else {
-        reactToastifyNotification("info", "Collection add successfully");
+        notification("info", "Collection add successfully");
       }
     } else {
-      reactToastifyNotification("info", "Please write collection name");
+      notification("info", "Please write collection name");
     }
   };
 
@@ -94,7 +95,7 @@ const AddCollectionModal = ({
     setLoadings(false);
     setOpenModal(false);
     setInput({ image: null, name: "" });
-    reactToastifyNotification("info", "Collection add successfully");
+    notification("info", "Collection add successfully");
   };
 
   const submitData = async () => {
@@ -104,14 +105,14 @@ const AddCollectionModal = ({
         if (input?.name) {
           uploadImage();
         } else {
-          reactToastifyNotification("info", "Please write collection name");
+          notification("info", "Please write collection name");
         }
       } else {
         saveToDb();
       }
     } catch (error) {
       setLoadings(false);
-      reactToastifyNotification("error", error?.message);
+      notification("error", error?.message);
     }
   };
 
@@ -134,12 +135,14 @@ const AddCollectionModal = ({
         />
       </div> */}
       <div className={styles.rightSide}>
-        <input
+        <InputComponent
+          borderSecondary={true}
           placeholder="Collection Name"
           value={input?.name}
           name="name"
           onChange={handleChange}
         />
+
         <div className={styles.buttonGroup}>
           <CommentAndNoteButton
             type="submitBtn"
@@ -150,6 +153,7 @@ const AddCollectionModal = ({
           <CommentAndNoteButton
             type="cancleBtn"
             handleClick={() => setOpenModal(false)}
+            text="Cancel"
           />
         </div>
       </div>

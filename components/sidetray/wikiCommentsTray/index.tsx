@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setIsOpenWikiCommentsTray } from "../../../redux/slices/wikiSlice";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
 import SkeletonComment from "../../../theme/skeletons/skeletonComment/SkeletonComment";
+import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
 import Tooltip from "../../../theme/toolTip/CustomToolTip";
 import {
   WikiCommentsType,
@@ -45,7 +46,9 @@ const WikiCommentsTray = ({
   const [
     getAllWikiCommentsForAWikiEntity,
     { loading: getAllWikiCommentsLoading },
-  ] = useLazyQuery(GET_ALL_WIKI_COMMENTS_FOR_A_WIKI_ENTITY);
+  ] = useLazyQuery(GET_ALL_WIKI_COMMENTS_FOR_A_WIKI_ENTITY, {
+    fetchPolicy: "network-only",
+  });
   const [crateWikiComment, { loading: createWikiCommentLoading }] =
     useMutation(CREATE_WIKI_COMMENT);
   const [editWikiComment, { loading: editWikiCommentLoading }] =
@@ -171,6 +174,10 @@ const WikiCommentsTray = ({
         />
       )}
     >
+      <ToggleMenu
+        toggleMenuList={["Wiki Comments"]}
+        variant="outlineSecondary"
+      />
       <section className={s.wikiCommentsContainer}>
         <header className={s.wikiItemName}>
           <img src={wikiCommentsTrayCurrentWikiEntity?.image} alt="img" />
