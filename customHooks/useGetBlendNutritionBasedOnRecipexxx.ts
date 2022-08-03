@@ -1,6 +1,13 @@
 import { useLazyQuery } from "@apollo/client";
 import { Dispatch, SetStateAction, useEffect } from "react";
+import notification from "../components/utility/reactToastifyNotification";
+import GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS from "../gqlLib/nutrition/query/getNutrientsListAndGiGlByIngredients";
 import GET_BLEND_NUTRITION_BASED_ON_RECIPE_XXX from "../gqlLib/recipes/queries/getBlendNutritionBasedOnRecipeXxx";
+
+interface IngredientsInfo {
+  ingredientId: string;
+  value: number;
+}
 
 const useGetBlendNutritionBasedOnRecipexxx = (
   selectedIngredientsList: Array<any> = [],
@@ -9,50 +16,54 @@ const useGetBlendNutritionBasedOnRecipexxx = (
   isRecipeDetailsPage: boolean = false,
 ) => {
   // console.log(selectedIngredientsList);
-  const [getBlendNutritionBasedOnRecipe, { loading, data, error }] =
-    useLazyQuery(GET_BLEND_NUTRITION_BASED_ON_RECIPE_XXX);
+  const [getNutrientsListAndGiGlByIngredients, { loading, data, error }] =
+    useLazyQuery(GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS);
+
+  const fetchData = (ingredientsInfo: IngredientsInfo[]) => {
+    try {
+      getNutrientsListAndGiGlByIngredients({
+        variables: {
+          ingredientsInfo,
+        },
+      });
+    } catch (error) {
+      notification("error", "failed to fetch nutrients list");
+    }
+  };
 
   useEffect(() => {
     if (isRecipeDetailsPage) {
       if (nutritionState?.ingredientId?._id) {
         // Single Ingredient Details
-        getBlendNutritionBasedOnRecipe({
-          variables: {
-            ingredientsInfo: [
-              {
-                ingredientId: nutritionState?.ingredientId?._id,
-                value: parseFloat(nutritionState?.selectedPortion?.gram),
-              },
-            ],
+
+        const data = [
+          {
+            ingredientId: nutritionState?.ingredientId?._id,
+            value: parseFloat(nutritionState?.selectedPortion?.gram),
           },
-        });
+        ];
+        fetchData(data);
       } else {
-        getBlendNutritionBasedOnRecipe({
-          variables: {
-            ingredientsInfo: [
-              ...selectedIngredientsList?.map((item) => ({
-                ingredientId: item.ingredientId._id,
-                value: item?.selectedPortion?.gram,
-              })),
-            ],
-          },
-        });
+        const data = [
+          ...selectedIngredientsList?.map((item) => ({
+            ingredientId: item.ingredientId._id,
+            value: item?.selectedPortion?.gram,
+          })),
+        ];
+        fetchData(data);
       }
     } else {
       // Single Ingredient Details
       if (nutritionState?._id) {
         const value = nutritionState?.selectedPortion?.gram;
         if (value) {
-          getBlendNutritionBasedOnRecipe({
-            variables: {
-              ingredientsInfo: [
-                {
-                  ingredientId: nutritionState?._id,
-                  value: parseFloat(value),
-                },
-              ],
+          const data = [
+            {
+              ingredientId: nutritionState?._id,
+              value: parseFloat(value),
             },
-          });
+          ];
+          fetchData(data);
         }
       } else {
         let ingArr = [];
@@ -75,11 +86,7 @@ const useGetBlendNutritionBasedOnRecipexxx = (
           }
         });
         SetcalculateIngOz(Math?.round(ozArr * 0.033814));
-        getBlendNutritionBasedOnRecipe({
-          variables: {
-            ingredientsInfo: ingArr,
-          },
-        });
+        fetchData(ingArr);
       }
     }
 

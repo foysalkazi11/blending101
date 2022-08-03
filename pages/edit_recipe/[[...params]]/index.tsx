@@ -28,6 +28,7 @@ import notification from "../../../components/utility/reactToastifyNotification"
 import { RecipeDetailsType } from "../../../type/recipeDetails";
 import { GET_RECIPE } from "../../../gqlLib/recipes/queries/getRecipeDetails";
 import { setDetailsARecipe } from "../../../redux/slices/recipeSlice";
+import { GiGl } from "../../../type/nutrationType";
 
 const EditRecipeComponent = () => {
   const router = useRouter();
@@ -236,15 +237,16 @@ const EditRecipeComponent = () => {
     };
   }, []);
 
+  const nutritionList =
+    nutritionData?.getNutrientsListAndGiGlByIngredients?.nutrients;
+  const giGl: GiGl = nutritionData?.getNutrientsListAndGiGlByIngredients?.giGl;
+
   return (
     <EditRecipePage
       copyDetailsRecipe={copyDetailsRecipe}
       updateEditRecipe={updateEditRecipe}
       allIngredients={classBasedData}
-      nutritionTrayData={
-        nutritionData?.getBlendNutritionBasedOnRecipexxx &&
-        JSON.parse(nutritionData?.getBlendNutritionBasedOnRecipexxx)
-      }
+      nutritionTrayData={nutritionList && JSON.parse(nutritionList)}
       recipeInstructions={copyDetailsRecipe?.recipeInstructions}
       allBlendCategories={allBlendBasedCategory}
       selectedBLendCategory={copyDetailsRecipe?.recipeBlendCategory?.name}
@@ -258,6 +260,7 @@ const EditRecipeComponent = () => {
       nutritionState={nutritionState}
       setNutritionState={setNutritionState}
       recipeId={recipeId}
+      giGl={giGl}
     />
   );
 };

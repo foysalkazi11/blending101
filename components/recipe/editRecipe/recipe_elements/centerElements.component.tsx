@@ -31,6 +31,7 @@ import { useRouter } from "next/router";
 import notification from "../../../utility/reactToastifyNotification";
 import CustomModal from "../../../../theme/modal/customModal/CustomModal";
 import ConfirmationModal from "../../../../theme/confirmationModal/ConfirmationModal";
+import { GiGl } from "../../../../type/nutrationType";
 
 type CenterElementsProps = {
   copyDetailsRecipe?: RecipeDetailsType;
@@ -41,6 +42,7 @@ type CenterElementsProps = {
   setExistingImage?: Dispatch<SetStateAction<string[]>>;
   setImages?: Dispatch<SetStateAction<any[]>>;
   images?: any[];
+  giGl?: GiGl;
 };
 
 const Center_Elements = ({
@@ -52,6 +54,11 @@ const Center_Elements = ({
   setImages = () => {},
   existingImage = [],
   setExistingImage = () => {},
+  giGl = {
+    netCarbs: 0,
+    totalGi: 0,
+    totalGL: 0,
+  },
 }: CenterElementsProps) => {
   const [openModal, setOpenModal] = useState(false);
   const dispatch = useAppDispatch();
@@ -195,7 +202,7 @@ const Center_Elements = ({
             style={{ color: "#484848" }}
           />
 
-          <ScoreTray />
+          <ScoreTray giGl={giGl} />
           <div className={styles.blendingOptions}>
             <div className={styles.blendingOptions__left}>
               <ul>
