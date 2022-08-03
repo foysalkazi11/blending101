@@ -15,7 +15,6 @@ import { useAppSelector } from "../redux/hooks";
 import styles from "../styles/pages/planner.module.scss";
 import Challenge from "../component/module/Planner/Challenge/Challenge.component";
 
-import { food_color, fake_data } from "../theme/circularComponent/js/my";
 import IconHeading from "../theme/iconHeading/iconHeading.component";
 import ToggleCard from "../theme/toggleCard/toggleCard.component";
 import Settings from "../component/module/Planner/Setttings/Settings.component";
@@ -116,27 +115,18 @@ const Planner = () => {
                         paddingTop: "18px",
                       }}
                     />
-                    {showChallenge &&
-                    data &&
-                    data?.getMyThirtyDaysChallenge &&
-                    data?.getMyThirtyDaysChallenge?.length ? (
+                    {showChallenge ? (
                       <Challenge
                         activities={
                           data &&
                           data?.getMyThirtyDaysChallenge &&
-                          data?.getMyThirtyDaysChallenge?.length > 0
-                            ? data?.getMyThirtyDaysChallenge
+                          data?.getMyThirtyDaysChallenge?.challenge?.length > 0
+                            ? data?.getMyThirtyDaysChallenge?.challenge
                             : []
                         }
-                        categoryObject={food_color}
-                        activityDataList={fake_data}
-                        profileImage={"/images/5.jpeg"}
-                        blendValue={400}
-                        totalBlendValue={750}
-                        numOfDaysChallenge={30}
-                        startDate={21}
-                        startYear={2022}
-                        startMonth={"May"}
+                        statistics={
+                          data?.getMyThirtyDaysChallenge?.challengeInfo
+                        }
                       />
                     ) : (
                       <RecipePlanner />

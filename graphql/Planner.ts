@@ -3,14 +3,24 @@ import { gql } from "@apollo/client";
 export const GET_30DAYS_CHALLENGE = gql`
   query Get30DaysChallenge($userId: String!) {
     getMyThirtyDaysChallenge(memberId: $userId) {
-      assignDate
-      posts {
-        recipeId {
-          _id
+      challenge {
+        assignDate
+        disabled
+        posts {
+          recipeId {
+            _id
+          }
+          recipeBlendCategory {
+            name
+          }
         }
-        recipeBlendCategory {
-          name
-        }
+      }
+      challengeInfo {
+        longestStreak
+        currentStreak
+        blendScore
+        daysRemaining
+        challengeName
       }
     }
   }
@@ -228,6 +238,9 @@ export const GET_CHALLENGES = gql`
       startDate
       days
       isActive
+      endDate
+      description
+      notification
     }
   }
 `;

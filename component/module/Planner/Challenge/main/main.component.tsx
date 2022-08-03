@@ -12,58 +12,21 @@ export function getCurrentDate(t: Date) {
 }
 
 interface MainInterface {
+  statistics: any;
   activities: any[];
-  activityDataList?: any[];
-  profileImage?: string;
-  numOfDaysChallenge?: number;
-  blendValue: number;
-  totalBlendValue: number;
-  startDate: number;
-  startMonth: string;
-  startYear?: number;
 }
 
-function Main({
-  activities,
-  activityDataList,
-  profileImage,
-  numOfDaysChallenge,
-  blendValue,
-  totalBlendValue,
-  startDate,
-  startMonth,
-  startYear,
-}: MainInterface) {
-  startDate = startDate || 0;
-  startMonth = startMonth || "none";
-  startYear = startYear || 0;
-  const dateList = daysInMonth(
-    activityDataList,
-    startDate,
-    startMonth,
-    startYear,
-  );
-  const afterAddingDateList = [...dateList, []];
-  // console.log(afterAddingDateList);
-  const today: Date = new Date();
-  const todayDate = getCurrentDate(today);
-
+function Main({ activities, statistics }: MainInterface) {
   return (
     <div className={styles.challenge_circle_main_circle_outer}>
       <div className={styles.challenge_circle_main_circle}>
-        <Inside
-          dateList={dateList}
-          numOfDaysChallenge={numOfDaysChallenge}
-          blendValue={blendValue}
-          totalBlendValue={totalBlendValue}
-        />
+        <Inside statistics={statistics} />
         {activities &&
           activities.length !== 0 &&
           activities.map((activity, key) => {
             const categories = activity?.posts.map(
               (post) => post?.recipeBlendCategory?.name || "",
             );
-            console.log(activities.length);
             if (key > 30) return <div></div>;
             return (
               <SingleDate
@@ -80,3 +43,43 @@ function Main({
 }
 
 export default Main;
+
+export const fake_data = [
+  ["Whole Food", "Smoothie"],
+  ["Smoothie"],
+  ["No Activity"],
+  ["Tea"],
+  ["Tea", "Soup", "Frozen Treat", "Smoothie"],
+  ["Frozen Treat"],
+  ["No Activity"],
+  ["Smoothie"],
+  ["Frozen Treat"],
+  ["Smoothie"],
+  ["No Activity"],
+  ["Smoothie"],
+  ["No Activity"],
+  ["No Activity"],
+  ["Smoothie", "Tea"],
+  ["No Activity"],
+  ["No Activity"],
+  ["No Activity"],
+  ["Frozen Treat"],
+  ["Smoothie", "Tea"],
+  ["No Activity"],
+  ["No Activity"],
+  ["No Activity"],
+  ["Smoothie", "Tea"],
+  ["Frozen Treat", "Tea", "Whole Food"],
+  ["Frozen Treat", "Tea"],
+  ["Frozen Treat", "Tea", "Whole Food"],
+  ["Tea", "Soup"],
+  ["No Activity"],
+  ["Frozen Treat", "Tea"],
+  ["Smoothie"],
+  ["No Activity"],
+  ["No Activity"],
+  ["Frozen Treat", "Tea", "Whole Food"],
+  ["No Activity"],
+  ["No Activity"],
+  ["No Activity"],
+];
