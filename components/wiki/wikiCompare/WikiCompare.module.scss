@@ -52,3 +52,11 @@
     }
   }
 }
+
+.button__bar {
+  @include sliderCustomDot;
+}
+
+.button__bar :global(li.slick-active) button {
+  background-color: $primaryColor;
+}

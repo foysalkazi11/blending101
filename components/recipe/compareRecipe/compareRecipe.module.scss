@@ -1,8 +1,5 @@
-@mixin responsive($min_width, $max_width) {
-  @media only screen and (min-width: $min_width) and (max-width: $max_width) {
-    @content;
-  }
-}
+@import "../../../styles/partials/mixin";
+@import "../../../styles/partials/variables";
 
 .CompareContainer {
   padding: 40px 0;
@@ -12,7 +9,7 @@
 }
 
 .mainContentDiv {
-  max-width: 1536px;
+  max-width: $_2xl;
   margin: 0 auto;
   padding: 0px 16px;
 }
@@ -61,48 +58,11 @@
 }
 
 .button__bar {
-  display: inline-block;
-  vertical-align: middle;
-  margin: auto;
-  padding: 0;
-  border-radius: 40px;
-  text-align: center;
-  position: absolute;
-  bottom: 0px;
-  top: -40px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.button__bar li {
-  list-style: none;
-  cursor: pointer;
-  display: inline-block;
-  margin: 0 3px;
-  padding: 0;
-}
-
-.button__bar li button {
-  border: none;
-  background: #d6d6d6;
-  color: transparent;
-  cursor: pointer;
-  display: block;
-  height: 15px;
-  width: 15px;
-  border-radius: 7.5px;
-  outline: 0;
+  @include sliderCustomDot;
 }
 
 .button__bar :global(li.slick-active) button {
-  background-color: #fe5d1f;
-}
-
-.button__bar li button:hover {
-  background: #ababab;
-}
-.button__bar li button:focus {
-  background: #fe5d1f;
+  background-color: $primaryColor;
 }
 
 .slick-slide img {

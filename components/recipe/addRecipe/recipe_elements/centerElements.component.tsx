@@ -1,10 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { Dispatch, SetStateAction } from 'react';
-import styles from './centerElements.module.scss';
-import ScoreTray from './scoreTray/scoreTray.component';
-import Image from 'next/image';
-import DropDown from '../../../../theme/dropDown/DropDown.component';
-import HandleImageShow from '../../share/handleImageShow/HandleImageShow';
+import React, { Dispatch, SetStateAction } from "react";
+import styles from "./centerElements.module.scss";
+import ScoreTray from "./scoreTray/scoreTray.component";
+import Image from "next/image";
+import DropDown from "../../../../theme/dropDown/DropDown.component";
+import HandleImageShow from "../../share/handleImageShow/HandleImageShow";
+import { GiGl } from "../../../../type/nutrationType";
 type CenterElementsProps = {
   images?: any[];
   setImages?: Dispatch<SetStateAction<any[]>>;
@@ -17,20 +18,26 @@ type CenterElementsProps = {
   setRecipeDescription?: Dispatch<SetStateAction<string>>;
   recipePrepareTime?: number;
   setRecipePrepareTime?: Dispatch<SetStateAction<number>>;
+  giGl?: GiGl;
 };
 
 const Center_Elements = ({
   images = [],
   setImages = () => {},
-  recipeTitle = '',
+  recipeTitle = "",
   setRecipeHeading = () => {},
   setDropDownState,
   blendCategoryList,
   selectedBlendValueState,
-  recipeDescription = '',
+  recipeDescription = "",
   setRecipeDescription = () => {},
   recipePrepareTime = 1,
   setRecipePrepareTime = () => {},
+  giGl = {
+    netCarbs: 0,
+    totalGi: 0,
+    totalGL: 0,
+  },
 }: CenterElementsProps) => {
   const adjusterFunc = (value) => {
     if (value < 1) {
@@ -41,16 +48,16 @@ const Center_Elements = ({
   };
 
   let BlendtecItem = [
-    { name: 'Blendtec', value: "'Blendtec" },
-    { name: 'Blendtec', value: 'Blendtec' },
+    { name: "Blendtec", value: "'Blendtec" },
+    { name: "Blendtec", value: "Blendtec" },
   ];
   let OzItem = [
-    { name: '64 oz', value: '64 oz' },
-    { name: '64 oz', value: '64 oz' },
+    { name: "64 oz", value: "64 oz" },
+    { name: "64 oz", value: "64 oz" },
   ];
   let dropDownStyle = {
-    paddingRight: '0px',
-    width: '111%',
+    paddingRight: "0px",
+    width: "111%",
   };
 
   return (
@@ -77,7 +84,7 @@ const Center_Elements = ({
             placeholder="Recipe descripation"
           />
         </div>
-        <ScoreTray />
+        <ScoreTray giGl={giGl} />
 
         <div className={styles.blendingOptions}>
           <div className={styles.blendingOptions__left}>
@@ -85,7 +92,7 @@ const Center_Elements = ({
               <li>
                 <div
                   className={styles.left__options}
-                  style={{ minWidth: '125px' }}
+                  style={{ minWidth: "125px" }}
                 >
                   <DropDown
                     handleChange={(e) => setDropDownState(e?.target?.value)}
@@ -100,7 +107,7 @@ const Center_Elements = ({
               <li>
                 <div
                   className={styles.left__options}
-                  style={{ minWidth: '115px' }}
+                  style={{ minWidth: "115px" }}
                 >
                   <DropDown
                     listElem={BlendtecItem}
@@ -112,7 +119,7 @@ const Center_Elements = ({
               <li>
                 <div
                   className={styles.left__options}
-                  style={{ minWidth: '35px' }}
+                  style={{ minWidth: "35px" }}
                 >
                   <DropDown
                     listElem={OzItem}
@@ -132,20 +139,20 @@ const Center_Elements = ({
                     onClick={() => {
                       adjusterFunc(recipePrepareTime + 1);
                     }}
-                    src={'/icons/dropdown.svg'}
+                    src={"/icons/dropdown.svg"}
                     alt="icon"
-                    width={'17px'}
-                    height={'15px'}
+                    width={"17px"}
+                    height={"15px"}
                     className={styles.reverse_arrow}
                   />
                   <Image
                     onClick={() => {
                       adjusterFunc(recipePrepareTime - 1);
                     }}
-                    src={'/icons/dropdown.svg'}
+                    src={"/icons/dropdown.svg"}
                     alt="icon"
-                    width={'17px'}
-                    height={'15px'}
+                    width={"17px"}
+                    height={"15px"}
                     className={styles.original_arrow}
                   />
                 </div>
@@ -153,10 +160,10 @@ const Center_Elements = ({
             </div>
             <span className={styles.timer_icon}>
               <Image
-                src={'/icons/time-icon.svg'}
+                src={"/icons/time-icon.svg"}
                 alt="Picture will load soon"
-                height={'20px'}
-                width={'20px'}
+                height={"20px"}
+                width={"20px"}
               />
             </span>
           </div>

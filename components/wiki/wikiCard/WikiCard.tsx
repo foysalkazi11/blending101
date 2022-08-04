@@ -1,23 +1,16 @@
-import { useMutation } from "@apollo/client";
 import { faMessageDots as faMessageDotsSolid } from "@fortawesome/pro-solid-svg-icons";
 import { faMessageDots as faMessageDotsLight } from "@fortawesome/pro-light-svg-icons";
 import { faEllipsisVertical } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
-import React, { Dispatch, SetStateAction, useState } from "react";
-import client from "../../../gqlLib/client";
-import ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/mutation/addOrRemoveToWikiCompareList";
-import GET_INGREDIENT_WIKI_LIST from "../../../gqlLib/wiki/query/getIngredientWikiList";
-import GET_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/query/getWikiCompareList";
+import React, { Dispatch, SetStateAction } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setDbUser } from "../../../redux/slices/userSlice";
 import {
   setIsOpenWikiCommentsTray,
   setWikiCommentsCurrentIngredient,
 } from "../../../redux/slices/wikiSlice";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
 import { WikiListType, WikiType } from "../../../type/wikiListType";
-import notification from "../../utility/reactToastifyNotification";
 import styles from "./WikiCard.module.scss";
 
 interface PortionsType {
@@ -40,6 +33,10 @@ interface WikiCardProps {
   id?: string;
   hasInCompare?: boolean;
   setWikiList?: Dispatch<SetStateAction<WikiListType[]>>;
+  handleAddOrRemoveToWikiCompareList?: (
+    ingredientId: string,
+    isCompared: boolean,
+  ) => void;
 }
 
 const WikiCard = ({
@@ -56,77 +53,11 @@ const WikiCard = ({
   id = "",
   hasInCompare = false,
   setWikiList = () => {},
+  handleAddOrRemoveToWikiCompareList = () => {},
 }: WikiCardProps) => {
-  const [updateWikiItem, setUpdateWikiItem] = useState({
-    ingredientId: null,
-    isCompared: null,
-  });
-  const { dbUser } = useAppSelector((state) => state?.user);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { isOpenWikiCommentsTray } = useAppSelector((state) => state?.wiki);
-  const [addOrRemoveToWikiCompareList] = useMutation(
-    ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST,
-    // {
-    //   update(cache, { data }) {
-    //     const wikiData = cache.readQuery({
-    //       query: GET_WIKI_COMPARE_LIST,
-    //       variables: { userId: dbUser?._id },
-    //     });
-
-    //     cache?.writeQuery({
-    //       query: GET_WIKI_COMPARE_LIST,
-    //       data: {
-    //         getWikiCompareList: updateWikiItem?.isCompared ?
-    //         [
-    //           getWikiCompareList?.map(item => item?._id !== updateWikiItem?.ingredientId)
-    //         ]  :  getWikiCompareList,
-
-    //       },
-    //     });
-    //   },
-    // },
-  );
-
-  // add Or Remove from WikiCompare List
-  const handleAddOrRemoveToWikiCompareList = async (
-    ingredientId: string,
-    isCompared: boolean,
-  ) => {
-    //setUpdateWikiItem({ ingredientId, isCompared });
-    try {
-      await addOrRemoveToWikiCompareList({
-        variables: { ingredientId, userId: dbUser?._id },
-      });
-      // const data = client?.readQuery({
-      //   query: GET_WIKI_COMPARE_LIST,
-      //   variables: { userId: dbUser?._id },
-      // });
-      // console.log(data);
-
-      dispatch(
-        setDbUser({
-          ...dbUser,
-          wikiCompareCount: isCompared
-            ? dbUser?.wikiCompareCount - 1
-            : dbUser?.wikiCompareCount + 1,
-        }),
-      );
-      setWikiList((list) =>
-        list?.map((item) =>
-          item?._id === ingredientId
-            ? { ...item, hasInCompare: isCompared ? false : true }
-            : item,
-        ),
-      );
-      notification(
-        "info",
-        `${isCompared ? "Remove form" : "Added"} compare list successfully`,
-      );
-    } catch (error) {
-      notification("error", "Failed to added compare list");
-    }
-  };
 
   // click wiki item title
   const handleClickTitle = async (
