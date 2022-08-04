@@ -1,4 +1,4 @@
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import { faXmark } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import router from "next/router";
@@ -13,7 +13,7 @@ import { MdOutlineStarOutline } from "react-icons/md";
 import Pagination from "../../../component/molecules/Pagination/ServerPagination.component";
 import GET_INGREDIENT_WIKI_LIST from "../../../gqlLib/wiki/query/getIngredientWikiList";
 import GET_NUTRIENT_WIKI_LIST from "../../../gqlLib/wiki/query/getNutrientWikiList";
-import { useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
 import SkeletonCollectionRecipe from "../../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollectionRecipe";
 import { WikiListType, WikiType } from "../../../type/wikiListType";
@@ -21,6 +21,9 @@ import notification from "../../utility/reactToastifyNotification";
 import WikiCard from "../wikiCard/WikiCard";
 import styles from "./WikiSingleType.module.scss";
 import { SelectedWikiType } from "..";
+import ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/mutation/addOrRemoveToWikiCompareList";
+import GET_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/query/getWikiCompareList";
+import { setDbUser } from "../../../redux/slices/userSlice";
 
 interface Props {
   type?: WikiType;
@@ -41,10 +44,17 @@ const WikiSingleType = ({
   const { dbUser } = useAppSelector((state) => state?.user);
   const [getIngredientList, { loading: ingredientListLoading }] = useLazyQuery(
     GET_INGREDIENT_WIKI_LIST,
+    { fetchPolicy: "cache-and-network" },
   );
   const [getNutrientList, { loading: nutrientListLoading }] = useLazyQuery(
     GET_NUTRIENT_WIKI_LIST,
+    { fetchPolicy: "cache-and-network" },
   );
+  const [addOrRemoveToWikiCompareList] = useMutation(
+    ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST,
+  );
+
+  const dispatch = useAppDispatch();
 
   const handleClose = () => {
     if (selectedWikiItem[type].length) {
@@ -90,6 +100,58 @@ const WikiSingleType = ({
         break;
       default:
         break;
+    }
+  };
+
+  // add Or Remove from WikiCompare List
+  const handleAddOrRemoveToWikiCompareList = async (
+    ingredientId: string,
+    isCompared: boolean,
+  ) => {
+    try {
+      await addOrRemoveToWikiCompareList({
+        variables: { ingredientId, userId: dbUser?._id },
+        update(cache) {
+          const { getWikiCompareList } = cache.readQuery({
+            query: GET_WIKI_COMPARE_LIST,
+            variables: { userId: dbUser?._id },
+          });
+
+          cache?.writeQuery({
+            query: GET_WIKI_COMPARE_LIST,
+            variables: { userId: dbUser?._id },
+            data: {
+              getWikiCompareList: isCompared
+                ? getWikiCompareList?.filter(
+                    (item) => item?._id !== ingredientId,
+                  )
+                : getWikiCompareList,
+            },
+          });
+        },
+      });
+
+      dispatch(
+        setDbUser({
+          ...dbUser,
+          wikiCompareCount: isCompared
+            ? dbUser?.wikiCompareCount - 1
+            : dbUser?.wikiCompareCount + 1,
+        }),
+      );
+      setWikiList((list) =>
+        list?.map((item) =>
+          item?._id === ingredientId
+            ? { ...item, hasInCompare: isCompared ? false : true }
+            : item,
+        ),
+      );
+      notification(
+        "info",
+        `${isCompared ? "Remove form" : "Added"} compare list successfully`,
+      );
+    } catch (error) {
+      notification("error", "Failed to added compare list");
     }
   };
 
@@ -184,6 +246,9 @@ const WikiSingleType = ({
                     id={_id}
                     hasInCompare={hasInCompare}
                     setWikiList={setWikiList}
+                    handleAddOrRemoveToWikiCompareList={
+                      handleAddOrRemoveToWikiCompareList
+                    }
                   />
                 );
               })

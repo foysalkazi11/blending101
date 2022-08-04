@@ -21,6 +21,7 @@ import {
   responsiveColumnDesktop,
   responsiveColumnLaptop,
   responsiveColumnScreen,
+  compareRecipeResponsiveSetting,
 } from "./utility";
 import useWindowSize from "../../utility/useWindowSize";
 import {
@@ -36,38 +37,9 @@ import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
 import ShowCollectionModal from "../../showModal/ShowCollectionModal";
 import useChangeCompare from "../../../customHooks/useChangeComaper";
 
-const compareRecipeResponsiveSetting = {
-  slidesToShow: 4,
-  slidesToScroll: 1,
-  swipeToSlide: false,
-  arrows: false,
-  infinite: false,
-  dots: true,
+const compareRecipeResponsiveSettings = {
+  ...compareRecipeResponsiveSetting,
   dotsClass: styles.button__bar,
-
-  responsive: [
-    {
-      breakpoint: 1500,
-      settings: {
-        slidesToShow: 3,
-        slidesToScroll: 1,
-      },
-    },
-    {
-      breakpoint: 1200,
-      settings: {
-        slidesToShow: 2,
-        slidesToScroll: 1,
-      },
-    },
-    {
-      breakpoint: 800,
-      settings: {
-        slidesToShow: 1,
-        slidesToScroll: 1,
-      },
-    },
-  ],
 };
 
 const formulateRecipeResponsiveSetting = (length: number) => {
@@ -117,7 +89,7 @@ const CompareRecipe = () => {
   const [copyImage, setCopyImage] = useState("");
   const router = useRouter();
   const { compareList } = useAppSelector((state) => state.recipe);
-  const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
+  const [compareRecipeList, setCompareRecipeList] = useLocalStorage<any>(
     "compareList",
     [],
   );
@@ -150,7 +122,7 @@ const CompareRecipe = () => {
   };
 
   const handleRemoveFromCompareList = (id: string, e: React.SyntheticEvent) => {
-    changeCompare(e, id, false, compareRecipeList, setcompareRecipeList);
+    changeCompare(e, id, false, compareRecipeList, setCompareRecipeList);
   };
 
   const handleCompare = (recipe) => {
@@ -159,7 +131,7 @@ const CompareRecipe = () => {
     } else {
       const findRecipe = findCompareRecipe(recipe?._id);
       if (!findRecipe) {
-        setcompareRecipeList((state) => [...state, recipe]);
+        setCompareRecipeList((state) => [...state, recipe]);
       } else {
         notification("warning", "alredy exist");
       }
@@ -168,7 +140,7 @@ const CompareRecipe = () => {
 
   const removeCompareRecipe = (id, e) => {
     e?.stopPropagation();
-    setcompareRecipeList((state) => [
+    setCompareRecipeList((state) => [
       ...state.filter((item) => item?._id !== id),
     ]);
   };
@@ -277,7 +249,7 @@ const CompareRecipe = () => {
           compareLength: 0,
         }),
       );
-      setcompareRecipeList([]);
+      setCompareRecipeList([]);
       dispatch(setCompareList([]));
       dispatch(
         setRecommended(
@@ -316,13 +288,13 @@ const CompareRecipe = () => {
 
   const updateFormulateList = (compareList: any[]) => {
     if (compareList?.length === 1) {
-      setcompareRecipeList([{ ...compareList[0] }]);
+      setCompareRecipeList([{ ...compareList[0] }]);
     }
     if (compareList?.length === 2) {
-      setcompareRecipeList([...compareList?.slice(0, 2)]);
+      setCompareRecipeList([...compareList?.slice(0, 2)]);
     }
     if (compareList?.length >= 3) {
-      setcompareRecipeList([...compareList?.slice(0, 3)]);
+      setCompareRecipeList([...compareList?.slice(0, 3)]);
     }
   };
 
@@ -428,7 +400,7 @@ const CompareRecipe = () => {
                                   id={recipe?._id}
                                   addItem={addIngredient}
                                   compareRecipeList={compareRecipeList}
-                                  setcompareRecipeList={setcompareRecipeList}
+                                  setcompareRecipeList={setCompareRecipeList}
                                   setOpenCollectionModal={
                                     setOpenCollectionModal
                                   }
@@ -441,7 +413,10 @@ const CompareRecipe = () => {
                       </div>
                     </DragDropContext>
                   ) : (
-                    <Slider {...compareRecipeResponsiveSetting} ref={sliderRef}>
+                    <Slider
+                      {...compareRecipeResponsiveSettings}
+                      ref={sliderRef}
+                    >
                       {compareRecipeList?.map((recipe, index) => {
                         return (
                           <RecipeDetails
@@ -449,7 +424,7 @@ const CompareRecipe = () => {
                             recipe={recipe}
                             removeCompareRecipe={removeCompareRecipe}
                             compareRecipeList={compareRecipeList}
-                            setcompareRecipeList={setcompareRecipeList}
+                            setcompareRecipeList={setCompareRecipeList}
                             setOpenCollectionModal={setOpenCollectionModal}
                           />
                         );
