@@ -52,8 +52,8 @@ export const compareRecipeResponsiveSetting = {
   swipeToSlide: false,
   arrows: false,
   infinite: false,
-  // afterChange: (num) => console.log("afterChange", num),
-  // beforeChange: (num1, num2) => console.log("befourChange", num1, num2),
+  dots: true,
+  //dotsClass: styles.button__bar,
 
   responsive: [
     {

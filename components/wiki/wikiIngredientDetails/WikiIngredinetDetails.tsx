@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import SectionTitleWithIcon from "../../../theme/recipe/sectionTitleWithIcon/SectionTitleWithIcon.component";
 import NutritionPanelSkeleton from "../../../theme/skeletons/nutrationPanelSkeleton/NutrationPanelSkeleton";
@@ -11,13 +11,18 @@ import UpdatedRecursiveAccordion from "../../customRecursiveAccordian/updatedRec
 import GET_BLEND_NUTRITION_BASED_ON_RECIPEXXX from "../../../gqlLib/nutrition/query/getBlendNutritionBasedOnRecipexxx";
 
 interface Props {
-  removeCompareRecipe?: (id: string, e: React.SyntheticEvent) => void;
+  removeCompareRecipe?: (id: string, e?: React.SyntheticEvent) => void;
   ingredient?: WikiCompareList;
+  handleAddOrRemoveToWikiCompareList?: (
+    id: string,
+    isCompared?: boolean,
+  ) => void;
 }
 
 const WikiIngredientDetails = ({
   removeCompareRecipe = () => {},
   ingredient = {} as WikiCompareList,
+  handleAddOrRemoveToWikiCompareList = () => {},
 }: Props) => {
   const {
     _id,
@@ -70,6 +75,9 @@ const WikiIngredientDetails = ({
           id={_id}
           hasInCompare={hasInCompare}
           type={type}
+          handleAddOrRemoveToWikiCompareList={
+            handleAddOrRemoveToWikiCompareList
+          }
         />
 
         <div className={styles.dividerBox}>

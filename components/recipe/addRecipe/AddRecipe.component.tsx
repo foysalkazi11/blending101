@@ -23,6 +23,7 @@ import TrayTag from "../../sidetray/TrayTag";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBasketShopping as faBasketShoppingRegular } from "@fortawesome/pro-regular-svg-icons";
 import { faBasketShopping as faBasketShoppingSolid } from "@fortawesome/pro-solid-svg-icons";
+import { GiGl } from "../../../type/nutrationType";
 
 const AddRecipePage = () => {
   const [images, setImages] = useState<any[]>([]);
@@ -178,6 +179,10 @@ const AddRecipePage = () => {
     };
   }, []);
 
+  const nutritionListData =
+    nutritionData?.getNutrientsListAndGiGlByIngredients?.nutrients;
+  const giGl: GiGl = nutritionData?.getNutrientsListAndGiGlByIngredients?.giGl;
+
   return (
     <AContainer>
       {width < 1280 ? (
@@ -239,6 +244,7 @@ const AddRecipePage = () => {
             recipeTitle={recipeHeading}
             recipePrepareTime={recipePrepareTime}
             setRecipePrepareTime={setRecipePrepareTime}
+            giGl={giGl}
           />
           <IngredientList
             adjusterFunc={adjusterFunc}

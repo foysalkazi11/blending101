@@ -27,7 +27,12 @@
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
     position: relative;
+    border: 1px solid #dcdbdb;
+    border-bottom: none;
+    padding: 10px;
     img {
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
       width: 100%;
       aspect-ratio: 1;
       object-fit: contain;
@@ -132,7 +137,7 @@
 .tick {
   display: none;
   position: absolute;
-  right: 0px;
-  top: -5px;
+  right: 3px;
+  top: 3px;
   z-index: 1;
 }
