@@ -9,8 +9,8 @@ import PlannerQueue from "../component/module/Planner/PlannerQueue/PlannerQueue.
 import { RecipePlanner } from "../component/module/Planner/Toolbox/RecipePlanner.component";
 import UploadCard from "../component/module/Planner/Toolbox/UploadCard.component";
 import AContainer from "../containers/A.container";
-import { GET_30DAYS_CHALLENGE } from "../graphql/Planner";
-import { useAppSelector } from "../redux/hooks";
+import { GET_30DAYS_CHALLENGE, GET_RECENT_POST } from "../graphql/Planner";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
 import styles from "../styles/pages/planner.module.scss";
 import Challenge from "../component/module/Planner/Challenge/Challenge.component";
@@ -18,6 +18,7 @@ import Challenge from "../component/module/Planner/Challenge/Challenge.component
 import IconHeading from "../theme/iconHeading/iconHeading.component";
 import ToggleCard from "../theme/toggleCard/toggleCard.component";
 import Settings from "../component/module/Planner/Setttings/Settings.component";
+import { setChallenge } from "../redux/slices/Planner.slice";
 
 const Planner = () => {
   const [showChallenge, setShowChallenge] = useState(true);
@@ -25,6 +26,7 @@ const Planner = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [showGroceryTray] = useState(true);
 
+  const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
   const [get30DaysChallenge, { loading, data }] = useLazyQuery(
@@ -35,6 +37,32 @@ const Planner = () => {
       },
     },
   );
+
+  const [getRecentChallengeData, { data: challenge }] = useLazyQuery(
+    GET_RECENT_POST,
+    {
+      fetchPolicy: "no-cache",
+    },
+  );
+
+  useEffect(() => {
+    if (userId !== "")
+      getRecentChallengeData({
+        variables: {
+          memberId: userId,
+        },
+      });
+  }, [userId]);
+
+  useEffect(() => {
+    if (!challenge?.getLatestChallengePost) return;
+    dispatch(
+      setChallenge({
+        date: challenge.getLatestChallengePost?.assignDate,
+        posts: challenge.getLatestChallengePost?.posts,
+      }),
+    );
+  }, [challenge?.getLatestChallengePost, dispatch]);
 
   useEffect(() => {
     if (userId) get30DaysChallenge();

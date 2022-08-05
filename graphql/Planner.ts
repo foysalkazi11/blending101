@@ -45,6 +45,28 @@ export const GET_CHALLENGE_DETAIL = gql`
   }
 `;
 
+export const GET_RECENT_POST = gql`
+  query GetRecentPost($memberId: String!) {
+    getLatestChallengePost(memberId: $memberId) {
+      assignDate
+      posts {
+        images
+        recipeBlendCategory {
+          name
+        }
+        name
+        note
+        recipeImage
+        ingredients {
+          ingredientId {
+            ingredientName
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const GET_RECIPES_FOR_PLANNER = gql`
   query GetRecipesForPlanner(
     $searchTerm: String!
