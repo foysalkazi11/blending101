@@ -1,7 +1,6 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { faXmark } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import router from "next/router";
 import React, {
   Dispatch,
   SetStateAction,
@@ -22,8 +21,9 @@ import WikiCard from "../wikiCard/WikiCard";
 import styles from "./WikiSingleType.module.scss";
 import { SelectedWikiType } from "..";
 import ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/mutation/addOrRemoveToWikiCompareList";
-import GET_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/query/getWikiCompareList";
 import { setDbUser } from "../../../redux/slices/userSlice";
+import useLocalStorage from "../../../customHooks/useLocalStorage";
+import { WikiCompareList } from "../../../type/wikiCompareList";
 
 interface Props {
   type?: WikiType;
@@ -41,7 +41,12 @@ const WikiSingleType = ({
   const [limit] = useState(12);
   const [pageLength, setPageLength] = useState(12);
   const isMounted = useRef(null);
+  const dispatch = useAppDispatch();
   const { dbUser } = useAppSelector((state) => state?.user);
+  const [wikiCompareList, setWikiCompareList] = useLocalStorage<
+    WikiCompareList[]
+  >("wikiCompareList", []);
+
   const [getIngredientList, { loading: ingredientListLoading }] = useLazyQuery(
     GET_INGREDIENT_WIKI_LIST,
     { fetchPolicy: "cache-and-network" },
@@ -54,7 +59,10 @@ const WikiSingleType = ({
     ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST,
   );
 
-  const dispatch = useAppDispatch();
+  // find single wiki items
+  const findCompareWikiEntity = (id: string) => {
+    return wikiCompareList?.find((item) => item?._id === id);
+  };
 
   const handleClose = () => {
     if (selectedWikiItem[type].length) {
@@ -111,24 +119,6 @@ const WikiSingleType = ({
     try {
       await addOrRemoveToWikiCompareList({
         variables: { ingredientId, userId: dbUser?._id },
-        update(cache) {
-          const { getWikiCompareList } = cache.readQuery({
-            query: GET_WIKI_COMPARE_LIST,
-            variables: { userId: dbUser?._id },
-          });
-
-          cache?.writeQuery({
-            query: GET_WIKI_COMPARE_LIST,
-            variables: { userId: dbUser?._id },
-            data: {
-              getWikiCompareList: isCompared
-                ? getWikiCompareList?.filter(
-                    (item) => item?._id !== ingredientId,
-                  )
-                : getWikiCompareList,
-            },
-          });
-        },
       });
 
       dispatch(
@@ -146,12 +136,23 @@ const WikiSingleType = ({
             : item,
         ),
       );
+
+      const findCompareItem = findCompareWikiEntity(ingredientId);
+      if (findCompareItem) {
+        setWikiCompareList((state) => [
+          ...state.filter((item) => item?._id !== ingredientId),
+        ]);
+      }
+
       notification(
         "info",
         `${isCompared ? "Remove form" : "Added"} compare list successfully`,
       );
     } catch (error) {
-      notification("error", "Failed to added compare list");
+      notification(
+        "error",
+        `Failed to ${isCompared ? "Remove form" : "Added"} compare list`,
+      );
     }
   };
 

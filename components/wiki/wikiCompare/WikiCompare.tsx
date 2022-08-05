@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import AContainer from "../../../containers/A.container";
 import GET_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/query/getWikiCompareList";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
@@ -139,6 +139,30 @@ const WikiCompare = () => {
       notification("error", "Failed to empty wiki compare list");
     }
   };
+
+  const updateCompareList = (compareList: any[]) => {
+    if (compareList?.length === 1) {
+      setWikiCompareList([{ ...compareList[0] }]);
+    }
+    if (compareList?.length === 2) {
+      setWikiCompareList([...compareList?.slice(0, 2)]);
+    }
+    if (compareList?.length >= 3) {
+      setWikiCompareList([...compareList?.slice(0, 3)]);
+    }
+  };
+
+  useEffect(() => {
+    if (
+      !wikiCompareDataLoading &&
+      wikiCompareData?.getWikiCompareList?.length
+    ) {
+      if (!wikiCompareList?.length) {
+        updateCompareList(wikiCompareData?.getWikiCompareList);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wikiCompareData]);
 
   return (
     <AContainer
