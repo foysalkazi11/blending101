@@ -124,7 +124,7 @@ const PlannerPanel = (props: PlannerPanelProps) => {
     <Fragment>
       <IconHeading
         icon={plannerIcon}
-        title={"Planner Queue"}
+        title={isUpload ? "Challenge Post" : "Planner Queue"}
         iconStyle={{ fontSize: "18px" }}
       />
       <ToggleCard

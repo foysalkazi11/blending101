@@ -24,7 +24,7 @@ const ChallengePanel = () => {
     <>
       <IconHeading
         icon={plannerIcon}
-        title={"Planner Queue"}
+        title={"Challenge Post"}
         iconStyle={{ fontSize: "18px" }}
       />
       <div className={styles.challengePostCardContainer}>

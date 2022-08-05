@@ -15,6 +15,6 @@ export const RECIPE_CATEGORY_COLOR = {
   Soup: "#FFE740",
   "Tea & Tonic": "#AF895F",
   "Frozen Treat": "#9085D9",
-  Puree: "#9085D9",
+  Puree: "#EFDECD",
   "No Activity": "#D8D8D8",
 };
