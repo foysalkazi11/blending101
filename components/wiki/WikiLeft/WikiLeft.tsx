@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
 import s from "./WikiLeft.module.scss";
-import FilterbottomComponent from "../../sidetray/filter/filterBottom.component";
+import FilterbottomComponent from "../../sidetray/filter/ingredients/Ingredients.component";
 import WikiTypes from "../wikiTypes/WikiTypes";
 import WikiNutritionPanel from "../wikiNutritionPanel/WikiNutritionPanel";
 import WikiHealthPanel from "../wikiHealthPanel/WikiHealthPanel";

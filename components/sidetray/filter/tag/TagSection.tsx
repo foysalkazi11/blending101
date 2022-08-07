@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import CustomAccordion from "../../../../theme/accordion/accordion.component";
 import styles from "./TagSection.module.scss";
-import { blendTypes } from "../filterRankingList";
 import { INGREDIENTS_FILTER } from "../static/recipe";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { setRecipeFilterByIngredientCategory } from "../../../../redux/slices/ingredientsSlice";
@@ -14,6 +13,7 @@ import {
   modifyFilter,
 } from "../../../../redux/slices/filterRecipeSlice";
 import Multiselect from "../multiSelect/MultiSelect";
+import { categories } from "../../../utility/staticData";
 const { INGREDIENTS_BY_CATEGORY, TYPE, ALLERGIES, DIET, EQUIPMENT, DRUGS } =
   INGREDIENTS_FILTER;
 
@@ -31,19 +31,15 @@ const recipeList = [
   "Publish Date",
 ];
 
-type TagSectionProps = {
-  categories?: { title: string; val: string }[];
-};
-
-const TagSection = ({ categories }: TagSectionProps) => {
+const TagSection = () => {
   const [childIngredient, setChailIngredient] = useState("");
   const dispatch = useAppDispatch();
   const { recipeFilterByIngredientCategory } = useAppSelector(
-    (state) => state?.ingredients
+    (state) => state?.ingredients,
   );
 
   const { pageTitle, expandedMenu, activeTab, values } = useAppSelector(
-    (state) => state?.filterRecipe?.activeState
+    (state) => state?.filterRecipe?.activeState,
   );
 
   const recipeFilterByCategroy = (categroy: string, child?: string) => {
@@ -61,7 +57,7 @@ const TagSection = ({ categories }: TagSectionProps) => {
       activeFilter({
         pageTitle: categroy,
         expandedMenu: child,
-      })
+      }),
     );
   };
 
@@ -80,7 +76,7 @@ const TagSection = ({ categories }: TagSectionProps) => {
         values: data,
         isMultiprops: true,
         prefix: pageTitle,
-      })
+      }),
     );
   };
 

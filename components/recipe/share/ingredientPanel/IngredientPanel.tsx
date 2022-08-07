@@ -1,5 +1,5 @@
 import React from "react";
-import FilterbottomComponent from "../../../sidetray/filter/filterBottom.component";
+import FilterbottomComponent from "../../../sidetray/filter/ingredients/Ingredients.component";
 import { categories } from "../../../utility/staticData";
 import PanelHeader from "../panelHeader/PanelHeader";
 import styles from "./IngredientPanel.module.scss";
@@ -18,7 +18,6 @@ const IngredientPanel = ({
       <PanelHeader icon="/icons/basket.svg" title="Ingredient List" />
       <div className={styles.ingrdeintpanelContainer}>
         <FilterbottomComponent
-          categories={categories}
           checkActiveIngredient={checkActive}
           handleIngredientClick={handleIngredientClick}
           scrollAreaMaxHeight={{ maxHeight: "520px" }}
