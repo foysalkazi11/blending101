@@ -6,7 +6,6 @@ import { FaEye } from "react-icons/fa";
 import { BsTagsFill } from "react-icons/bs";
 import TagSection from "./tag/TagSection";
 import VisualSection from "./visaul/VisualSection";
-import { categories } from "../../utility/staticData";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setOpenFilterTray } from "../../../redux/slices/sideTraySlice";
 import TrayTag from "../TrayTag";
@@ -69,11 +68,7 @@ export default function Filtertray({ filter }) {
         </div>
       </div>
 
-      {toggle === 1 ? (
-        <VisualSection categories={categories} />
-      ) : (
-        <TagSection categories={categories} />
-      )}
+      {toggle === 1 ? <VisualSection /> : <TagSection />}
     </TrayWrapper>
   );
 }
