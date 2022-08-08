@@ -3,8 +3,8 @@ import React, { Dispatch, SetStateAction } from "react";
 import InputComponent from "../../../../theme/input/input.component";
 import { faMagnifyingGlass } from "@fortawesome/pro-solid-svg-icons";
 import styles from "../filter.module.scss";
-import SkeletonIngredients from "../../../../theme/skeletons/skeletonIngredients/SkeletonIngredients";
 import CheckCircle from "../../../../public/icons/check_circle_black_24dp.svg";
+import SkeletonBlendType from "../../../../theme/skeletons/skeletonBlendType/SkeletonBlendType";
 
 interface Props {
   searchInput?: string;
@@ -28,8 +28,8 @@ const IngredientPictureSection = ({
   scrollAreaMaxHeight = { maxHeight: "350px" },
 }: Props) => {
   return (
-    <div className={styles.filter__menu}>
-      {ingredientCategory === "All" ? (
+    <div>
+      {ingredientCategory === "All" && (
         <InputComponent
           borderSecondary={true}
           style={{
@@ -43,43 +43,43 @@ const IngredientPictureSection = ({
           value={searchInput}
           onChange={(e) => setSearchInput(e?.target?.value)}
         />
-      ) : null}
+      )}
 
       {loading ? (
-        <SkeletonIngredients />
-      ) : searchIngredientData?.length ? (
-        <div
-          className={`${styles.ingredientContainer} y-scroll`}
-          style={scrollAreaMaxHeight}
-        >
-          {searchIngredientData.map((item, i) => (
-            <div
-              key={i}
-              className={styles.item}
-              onClick={() =>
-                handleIngredientClick(item, checkActiveIngredient(item?._id))
-              }
-            >
-              <div className={styles.image}>
-                <img
-                  src={item?.featuredImage || "/food/chard.png"}
-                  alt={item?.ingredientName}
-                />
-                {checkActiveIngredient(item?._id) && (
-                  <div className={styles.tick}>
-                    <CheckCircle className={styles.ticked} />
-                  </div>
-                )}
-              </div>
-
-              <p>{item?.ingredientName}</p>
-            </div>
-          ))}
-        </div>
+        <SkeletonBlendType amount={16} />
       ) : (
-        <div className={styles.noResult}>
-          <p>No Ingredients</p>
-        </div>
+        <>
+          <div className={`${styles.ingredientContainer} y-scroll`}>
+            {searchIngredientData
+              ? searchIngredientData?.map((item, i) => (
+                  <div
+                    key={item?.ingredientName + i}
+                    className={styles.item}
+                    onClick={() =>
+                      handleIngredientClick(
+                        item,
+                        checkActiveIngredient(item?._id),
+                      )
+                    }
+                  >
+                    <div className={styles.image}>
+                      <img
+                        src={item?.featuredImage || "/food/chard.png"}
+                        alt={item?.ingredientName}
+                      />
+                      {checkActiveIngredient(item?._id) && (
+                        <div className={styles.tick}>
+                          <CheckCircle className={styles.ticked} />
+                        </div>
+                      )}
+                    </div>
+
+                    <p>{item?.ingredientName}</p>
+                  </div>
+                ))
+              : null}
+          </div>
+        </>
       )}
     </div>
   );
