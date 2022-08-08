@@ -85,7 +85,7 @@ const BlendType = () => {
   return (
     <div className={styles.filter__top}>
       <h3>Blend Type</h3>
-      <div className={styles.filter__menu}>
+      <div style={{ marginTop: "20px" }}>
         <div className={`${styles.ingredientContainer} y-scroll`}>
           {allCategories?.length
             ? allCategories.map((blend, i) => (
