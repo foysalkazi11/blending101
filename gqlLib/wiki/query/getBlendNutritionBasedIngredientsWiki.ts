@@ -11,17 +11,15 @@ const GET_BLEND_NUTRITION_BASED_IN_INGREDIENTS_WIKI = gql`
       wikiCoverImages
       wikiFeatureImage
       bodies
-      nutrients
       type
       category
       publishedBy
-      seoTitle
-      seoSlug
-      seoCanonicalURL
-      seoSiteMapPriority
-      seoKeywords
-      seoMetaDescription
       isPublished
+      portions {
+        measurement
+        meausermentWeight
+        default
+      }
     }
   }
 `;

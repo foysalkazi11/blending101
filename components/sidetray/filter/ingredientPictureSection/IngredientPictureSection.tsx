@@ -49,36 +49,43 @@ const IngredientPictureSection = ({
         <SkeletonBlendType amount={16} />
       ) : (
         <>
-          <div className={`${styles.ingredientContainer} y-scroll`}>
-            {searchIngredientData
-              ? searchIngredientData?.map((item, i) => (
-                  <div
-                    key={item?.ingredientName + i}
-                    className={styles.item}
-                    onClick={() =>
-                      handleIngredientClick(
-                        item,
-                        checkActiveIngredient(item?._id),
-                      )
-                    }
-                  >
-                    <div className={styles.image}>
-                      <img
-                        src={item?.featuredImage || "/food/chard.png"}
-                        alt={item?.ingredientName}
-                      />
-                      {checkActiveIngredient(item?._id) && (
-                        <div className={styles.tick}>
-                          <CheckCircle className={styles.ticked} />
-                        </div>
-                      )}
-                    </div>
-
-                    <p>{item?.ingredientName}</p>
+          {searchIngredientData.length ? (
+            <div
+              className={`${styles.ingredientContainer} y-scroll`}
+              style={scrollAreaMaxHeight}
+            >
+              {searchIngredientData?.map((item, i) => (
+                <div
+                  key={item?.ingredientName + i}
+                  className={styles.item}
+                  onClick={() =>
+                    handleIngredientClick(
+                      item,
+                      checkActiveIngredient(item?._id),
+                    )
+                  }
+                >
+                  <div className={styles.image}>
+                    <img
+                      src={item?.featuredImage || "/food/chard.png"}
+                      alt={item?.ingredientName}
+                    />
+                    {checkActiveIngredient(item?._id) && (
+                      <div className={styles.tick}>
+                        <CheckCircle className={styles.ticked} />
+                      </div>
+                    )}
                   </div>
-                ))
-              : null}
-          </div>
+
+                  <p>{item?.ingredientName}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className={styles.noResult}>
+              <p>No Ingredients</p>
+            </div>
+          )}
         </>
       )}
     </div>
