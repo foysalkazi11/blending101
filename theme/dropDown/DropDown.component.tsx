@@ -2,9 +2,9 @@
 import React from "react";
 import styles from "./DropDown.module.scss";
 
-interface dropDown {
-  listElem?: { name: string; value: string }[];
-  value?: string;
+export interface DropDownType {
+  listElem?: { name: string; value: string | number }[];
+  value?: string | number;
   handleChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   style?: React.CSSProperties;
   name?: string;
@@ -15,7 +15,7 @@ const DropDown = ({
   value = "",
   name = "",
   handleChange = () => {},
-}: dropDown) => {
+}: DropDownType) => {
   return (
     <div className={styles.formGroup}>
       <select
