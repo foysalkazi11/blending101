@@ -10,6 +10,16 @@ import IconWarper from "../../../theme/iconWarper/IconWarper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/pro-regular-svg-icons";
 import { useRouter } from "next/router";
+import IngredientInfo from "./ingredientInfo/IngredientInfo";
+import { GiGl } from "../../../type/nutrationType";
+import { WikiType } from "../../../type/wikiListType";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import {
+  setIsOpenWikiCommentsTray,
+  setWikiCommentsCurrentIngredient,
+} from "../../../redux/slices/wikiSlice";
+import { faMessageDots as faMessageDotsSolid } from "@fortawesome/pro-solid-svg-icons";
+import { faMessageDots as faMessageDotsLight } from "@fortawesome/pro-light-svg-icons";
 
 //read more read less functionality
 // const ReadMore = ({ children }) => {
@@ -39,6 +49,10 @@ interface WikiCenterComponentProps {
   author?: string;
   coverImages?: string[];
   body?: any;
+  giGl?: GiGl;
+  type?: WikiType;
+  wikiId?: string;
+  commentsCount?: number;
 }
 
 function WikiCenterComponent({
@@ -48,8 +62,34 @@ function WikiCenterComponent({
   coverImages = [],
   heading = "About Heading",
   name = "Name",
+  giGl = {
+    netCarbs: 0,
+    totalGi: 0,
+    totalGL: 0,
+  },
+  type = "Ingredient",
+  wikiId = "",
+  commentsCount = 0,
 }: WikiCenterComponentProps) {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { isOpenWikiCommentsTray, wikiCommentsTrayCurrentWikiEntity } =
+    useAppSelector((state) => state?.wiki);
+
+  console.log(wikiCommentsTrayCurrentWikiEntity);
+
+  const openWikiCommentsTray = () => {
+    if (!isOpenWikiCommentsTray) {
+      dispatch(setIsOpenWikiCommentsTray(true));
+    }
+    dispatch(
+      setWikiCommentsCurrentIngredient({
+        ...wikiCommentsTrayCurrentWikiEntity,
+        id: wikiId,
+      }),
+    );
+  };
+
   return (
     <div className={styles.centerMain}>
       <div className={styles.recipeHeadingTopSection}>
@@ -85,9 +125,7 @@ function WikiCenterComponent({
         <div className={styles.blendingRecipeTopOptions}>
           <div className={styles.blendingTopLeft}>
             <div className={styles.tagItemBx}>
-              <a className={styles.recipeTag} href="#">
-                {categroy}
-              </a>
+              <p>{categroy}</p>
             </div>
             <div className={styles.authorBx}>
               <div className={styles.dotDiv}>
@@ -97,52 +135,76 @@ function WikiCenterComponent({
               <div className={styles.authName}>{author}</div>
             </div>
           </div>
-          <div className={styles.blendingTopRight}>
-            <ul className={styles.recipeOptionsBtm}>
-              <li>
-                <a className={styles.bookmarkBtn} href="#">
-                  <div className={styles.shareIcon}>
-                    <Image
-                      src={"/icons/share-alt-light-grey.svg"}
-                      alt="Picture will load soon"
-                      height={"10%"}
-                      width={"10%"}
-                      layout="responsive"
-                      objectFit="contain"
-                    />
-                  </div>
-                  <span className={styles.blshare}>Share</span>
-                </a>
-              </li>
-              <li>
-                <button className={styles.commentBtn}>
-                  <div className={styles.commentIcon}>
-                    <Image
-                      src={"/icons/comment.svg"}
-                      alt="Picture will load soon"
-                      height={"100%"}
-                      width={"100%"}
-                      layout="responsive"
-                      objectFit="contain"
-                    />
-                  </div>
-                  <span className={styles.countComment}>21</span>
-                </button>
-              </li>
-            </ul>
-          </div>
+
+          <ul className={styles.recipeOptionsBtm}>
+            <li>
+              <a className={styles.bookmarkBtn} href="#">
+                <div className={styles.shareIcon}>
+                  <Image
+                    src={"/icons/share-alt-light-grey.svg"}
+                    alt="Picture will load soon"
+                    height={"10%"}
+                    width={"10%"}
+                    layout="responsive"
+                    objectFit="contain"
+                  />
+                </div>
+                <span className={styles.blshare}>Share</span>
+              </a>
+            </li>
+            <li>
+              <div
+                className={styles.commentsIconBox}
+                onClick={openWikiCommentsTray}
+              >
+                <FontAwesomeIcon
+                  icon={commentsCount ? faMessageDotsSolid : faMessageDotsLight}
+                  className={`${
+                    commentsCount ? styles.activeIcon : styles.inActiveIcon
+                  }`}
+                />
+                <p
+                  className={`${styles.text} ${
+                    commentsCount ? styles.activeIcon : styles.inActiveIcon
+                  }`}
+                >
+                  {commentsCount}
+                </p>
+              </div>
+            </li>
+          </ul>
         </div>
         <CustomSlider>
           {coverImages?.length
             ? coverImages.map((img, index) => {
                 return (
-                  <div key={index} className={styles.imageBox}>
+                  <div
+                    key={index}
+                    className={styles.imageBox}
+                    //style={{ backgroundImage: `url(${img})` }}
+                  >
                     <img src={img} alt="coverImage" />
                   </div>
                 );
               })
             : null}
         </CustomSlider>
+        {type === "Ingredient" && (
+          <div className={styles.ingredientInfoContainer}>
+            <IngredientInfo borderRight={true} />
+            <IngredientInfo
+              borderRight={true}
+              text="Glycemic Index"
+              amount={Math?.round(giGl?.totalGi)}
+            />
+            <IngredientInfo
+              borderRight={true}
+              text="Glycemic Load"
+              amount={Math?.round(giGl?.totalGL)}
+            />
+            <IngredientInfo amount={240} text="Nutri Score" />
+          </div>
+        )}
       </div>
       {body && JSON.parse(body)?.length ? (
         <div className={styles.bodyContainer}>{perser(JSON.parse(body))}</div>
