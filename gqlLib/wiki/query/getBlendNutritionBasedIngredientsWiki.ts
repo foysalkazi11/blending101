@@ -3,25 +3,28 @@ import { gql } from "@apollo/client";
 const GET_BLEND_NUTRITION_BASED_IN_INGREDIENTS_WIKI = gql`
   query GetBlendNutritionBasedIngredientsWiki(
     $ingredientsInfo: [BlendIngredientInfo!]!
+    $userId: String
   ) {
-    getBlendNutritionBasedIngredientsWiki(ingredientsInfo: $ingredientsInfo) {
+    getBlendNutritionBasedIngredientsWiki(
+      ingredientsInfo: $ingredientsInfo
+      userId: $userId
+    ) {
       wikiTitle
       wikiDescription
       ingredientName
       wikiCoverImages
       wikiFeatureImage
       bodies
-      nutrients
       type
       category
       publishedBy
-      seoTitle
-      seoSlug
-      seoCanonicalURL
-      seoSiteMapPriority
-      seoKeywords
-      seoMetaDescription
       isPublished
+      commentsCount
+      portions {
+        measurement
+        meausermentWeight
+        default
+      }
     }
   }
 `;

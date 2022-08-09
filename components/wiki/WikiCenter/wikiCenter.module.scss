@@ -8,11 +8,15 @@
   width: 100%;
   aspect-ratio: 3/1;
   border-radius: 15px;
+  // background-size: cover;
+  // background-position: center;
+  // background-repeat: no-repeat;
+  // filter: blur(5px);
 
   img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     object-position: center;
     border-radius: 15px;
   }
@@ -60,7 +64,7 @@
   img {
     width: 100%;
     aspect-ratio: 3/1.2;
-    object-fit: cover;
+    object-fit: contain;
     object-position: center;
     border-radius: 15px;
 
@@ -85,6 +89,23 @@
     align-items: center;
     font-weight: 400;
   }
+}
+
+.commentsIconBox {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  .text {
+    margin-left: 3px;
+    font-size: 14px;
+  }
+}
+
+.activeIcon {
+  color: #7cbc39;
+}
+.inActiveIcon {
+  color: #c4c4c4;
 }
 
 .iconPdInner {
@@ -116,6 +137,12 @@
   margin-bottom: 20px;
 }
 
+.ingredientInfoContainer {
+  display: flex;
+  align-items: center;
+  padding-top: 20px;
+}
+
 .blendingRecipeHeading h3 {
   font-size: 28px;
   color: #000;
@@ -135,21 +162,15 @@
 }
 
 .tagItemBx {
-  display: block;
-  box-sizing: border-box;
-}
-
-.recipeTag {
-  font-size: 12px;
-  min-height: 31px;
-  min-width: 92px;
-  text-align: center;
-  padding: 5px 10px;
-  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 10px;
   border: 1px solid #e4e4e4;
-  border-radius: 10px;
+  border-radius: 5px;
   color: #c4c4c4;
   font-weight: 500;
+  font-size: 12px;
 }
 
 .authorBx {
@@ -183,13 +204,9 @@
   font-size: 14px;
 }
 
-.blendingTopRight {
-  align-items: center;
-  width: auto;
-}
-
 .recipeOptionsBtm {
   display: flex;
+  align-items: center;
   list-style-type: none;
 
   &li {

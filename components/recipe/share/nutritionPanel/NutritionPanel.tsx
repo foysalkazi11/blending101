@@ -4,6 +4,9 @@ import React, { useEffect, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import { setIngredientArrayForNutrition } from "../../../../redux/edit_recipe/editRecipeStates";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import DropDown, {
+  DropDownType,
+} from "../../../../theme/dropDown/DropDown.component";
 import NutrationPanelSkeleton from "../../../../theme/skeletons/nutrationPanelSkeleton/NutrationPanelSkeleton";
 import UpdatedRecursiveAccordian from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
 import PanelHeader from "../panelHeader/PanelHeader";
@@ -22,6 +25,7 @@ interface NutritionPanelInterface {
   adjusterFunc?: (value: number) => void;
   showServing?: boolean;
   showUser?: boolean;
+  measurementDropDownState?: DropDownType & { showDropDown: boolean };
 }
 
 const NutritionPanel = ({
@@ -37,10 +41,19 @@ const NutritionPanel = ({
   adjusterFunc = () => {},
   showServing = true,
   showUser = true,
+  measurementDropDownState = {
+    listElem: [],
+    style: {},
+    value: "",
+    name: "",
+    handleChange: () => {},
+    showDropDown: false,
+  },
 }: NutritionPanelInterface) => {
   const selectedIngredientsList = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedIngredientsList,
   );
+  const { showDropDown, ...rest } = measurementDropDownState;
 
   const measurement =
     nutritionState?.portions?.find((itm) => itm?.default)?.measurement ||
@@ -135,6 +148,7 @@ const NutritionPanel = ({
             )
           ) : null}
         </div>
+        {showDropDown ? <DropDown {...rest} /> : null}
 
         <div className={styles.compoent__box__nutrition}>
           {nutritionDataLoading ? (

@@ -2,12 +2,11 @@ import React from "react";
 import HeaderComponent from "../components/header/Header.component";
 import SidebarComponent from "../components/sidebar/Sidebar.component";
 import styles from "./container.module.scss";
-import WikiTray from "../components/sidetray/wiki/wikiTray.component";
 import CollectionTray from "../components/sidetray/collection/collectionTray.component";
 import NutritionTrayComponent from "../components/sidetray/wiki/nutrition/nutrition.component";
 import HealthTrayComponent from "../components/sidetray/wiki/health/heath.component";
 import IngredientTrayComponent from "../components/sidetray/wiki/ingredient/ingredient.component";
-import Filtertray from "../components/sidetray/filter/filterTray.component";
+import FilterTray from "../components/sidetray/filter";
 import CommentsTray from "../components/sidetray/commentsTray/CommentsTray";
 import CartPanel from "../component/templates/Panel/CartPanel.component/Panel.component";
 import VersionTray from "../components/sidetray/versionTray/VersionTray";
@@ -148,7 +147,7 @@ export default function AContainer(props: AContainerProps) {
         )}
         {filterTray && (
           <div className={styles.fixed__main__left}>
-            <Filtertray filter="true" />
+            <FilterTray filter="true" />
           </div>
         )}
 

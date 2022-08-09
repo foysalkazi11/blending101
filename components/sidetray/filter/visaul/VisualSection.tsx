@@ -1,70 +1,22 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useRef, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import {
-  setBlendTye,
-  setIngredients,
-} from "../../../../redux/slices/sideTraySlice";
+import React from "react";
 import styles from "../filter.module.scss";
-import CheckCircle from "../../../../public/icons/check_circle_black_24dp.svg";
-import FilterbottomComponent from "../filterBottom.component";
-import { useLazyQuery } from "@apollo/client";
-import { FETCH_BLEND_CATEGORIES } from "../../../../gqlLib/category/queries/fetchCategories";
-import { setAllCategories } from "../../../../redux/slices/categroySlice";
-import SkeletonBlendType from "../../../../theme/skeletons/skeletonBlendType/SkeletonBlendType";
+import Ingredients from "../ingredients/Ingredients.component";
+import BlendType from "../blendType/BlendType";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import { setIngredients } from "../../../../redux/slices/sideTraySlice";
 
-const defaultBlendImg =
-  "https://blending.s3.us-east-1.amazonaws.com/3383678.jpg";
-
-type VisualSectionProps = {
-  categories?: { title: string; val: string }[];
-};
-
-const VisualSection = ({ categories }: VisualSectionProps) => {
-  const blends = useAppSelector((state) => state.sideTray.blends);
-  const [getAllBlendCategory, { loading: blendCategroyLoading }] = useLazyQuery(
-    FETCH_BLEND_CATEGORIES,
-  );
-  const { allCategories } = useAppSelector((state) => state?.categroy);
-  const { openFilterTray, ingredients: ingredientsList } = useAppSelector(
+const VisualSection = () => {
+  const { ingredients: ingredientsList } = useAppSelector(
     (state) => state?.sideTray,
   );
   const dispatch = useAppDispatch();
-  const isMounted = useRef(false);
-
-  const handleBlendClick = (blend) => {
-    let blendz = [];
-    let present = false;
-    blends.forEach((blen) => {
-      if (blen?.id === blend?.id) {
-        present = true;
-      }
-    });
-    if (!present) {
-      blendz = [...blends, blend];
-    } else {
-      blendz = blends.filter((blen) => {
-        return blen?.id !== blend?.id;
-      });
-    }
-    dispatch(setBlendTye(blendz));
-  };
-
-  const checkActive = (id) => {
-    let present = false;
-    blends.forEach((blen) => {
-      if (blen?.id === id) {
-        present = true;
-      }
-    });
-    return present;
-  };
 
   const handleIngredientClick = (item: any, exist: boolean) => {
-    let blendz = [];
+    let arr = [];
 
     if (!exist) {
-      blendz = [
+      arr = [
         ...ingredientsList,
         {
           title: item?.ingredientName,
@@ -73,100 +25,30 @@ const VisualSection = ({ categories }: VisualSectionProps) => {
         },
       ];
     } else {
-      blendz = ingredientsList.filter((blen) => {
-        return blen?.id !== item?._id;
+      arr = ingredientsList.filter((item) => {
+        return item?.id !== item?._id;
       });
     }
-    dispatch(setIngredients(blendz));
+    dispatch(setIngredients(arr));
   };
 
   const checkActiveIngredient = (id: string) => {
     let present = false;
-    ingredientsList.forEach((blen) => {
-      //@ts-ignore
-      if (blen.id === id) {
+    ingredientsList.forEach((item) => {
+      if (item.id === id) {
         present = true;
       }
     });
     return present;
   };
 
-  const fetchAllBlendCategroy = async () => {
-    try {
-      const { data } = await getAllBlendCategory();
-      dispatch(setAllCategories(data?.getAllCategories));
-    } catch (error) {
-      console.log(error?.message);
-    }
-  };
-
-  useEffect(() => {
-    if (isMounted.current) {
-      if (!allCategories?.length) {
-        fetchAllBlendCategroy();
-      }
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openFilterTray]);
-
-  useEffect(() => {
-    isMounted.current = true;
-
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
-
   return (
     <div className={styles.filter}>
-      {blendCategroyLoading ? (
-        <SkeletonBlendType />
-      ) : (
-        <div className={styles.filter__top}>
-          <h3>Blend Type</h3>
-          <div className={styles.filter__menu}>
-            <div className={`${styles.ingredientContainer} y-scroll`}>
-              {allCategories?.length
-                ? allCategories.map((blend, i) => (
-                    <div
-                      key={blend?.name + i}
-                      className={styles.item}
-                      onClick={() =>
-                        handleBlendClick({
-                          title: blend?.name,
-                          img: blend?.image || defaultBlendImg,
-                          id: blend?._id,
-                        })
-                      }
-                    >
-                      <div className={styles.image}>
-                        <img
-                          src={blend?.image || defaultBlendImg}
-                          alt={blend?.name}
-                        />
-                        {checkActive(blend._id) && (
-                          <div className={styles.tick}>
-                            <CheckCircle className={styles.ticked} />
-                          </div>
-                        )}
-                      </div>
-
-                      <p>{blend?.name}</p>
-                    </div>
-                  ))
-                : null}
-            </div>
-          </div>
-        </div>
-      )}
-      <div style={{ paddingTop: "10px" }}>
-        <FilterbottomComponent
-          categories={categories}
-          handleIngredientClick={handleIngredientClick}
-          checkActiveIngredient={checkActiveIngredient}
-        />
-      </div>
+      <BlendType />
+      <Ingredients
+        checkActiveIngredient={checkActiveIngredient}
+        handleIngredientClick={handleIngredientClick}
+      />
     </div>
   );
 };

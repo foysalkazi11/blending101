@@ -102,7 +102,17 @@ const WikiCard = ({
       <header className={styles.header}>
         <p
           className={styles.title}
-          onClick={() => handleClickTitle(id, portions, type)}
+          onClick={() => {
+            handleClickTitle(id, portions, type);
+            dispatch(
+              setWikiCommentsCurrentIngredient({
+                id: "",
+                image: image || "/images/imgbig4.png",
+                title,
+                type,
+              }),
+            );
+          }}
         >
           {title}
         </p>
