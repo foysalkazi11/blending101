@@ -3,7 +3,6 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import {
@@ -37,8 +36,15 @@ import { useAppSelector } from "../../../../redux/hooks";
 import Publish from "../../../../helpers/Publish";
 
 import styles from "./Settings.module.scss";
-import { addDays, differenceInDays, format, isBefore } from "date-fns";
+import {
+  addDays,
+  differenceInDays,
+  format,
+  formatISO,
+  isBefore,
+} from "date-fns";
 import RadioButton from "../../../organisms/Forms/RadioButton.component";
+import { getDateISO, toIsoString } from "../../../../helpers/Date";
 
 interface SettingsProps {
   hideSettings: () => void;
@@ -179,7 +185,7 @@ const ChallengeList = ({ editFormHandler }) => {
             <div className="col-3">
               <Textfield
                 defaultValue={format(
-                  new Date(challenge.startDate),
+                  getDateISO(new Date(challenge.startDate)),
                   "MMM d, yyyy",
                 )}
                 disabled
@@ -262,10 +268,22 @@ const ChallengeForm = ({ setShowForm, challenge }) => {
         memberId,
         ...data,
         days: days,
-        startDate: new Date(data.startDate).toISOString(),
-        endDate: new Date(data.endDate).toISOString(),
+        startDate: getDateISO(new Date(data.startDate)).toISOString(),
+        endDate: getDateISO(new Date(data.endDate)).toISOString(),
       },
     };
+    console.log(new Date(data.startDate).toISOString());
+    console.log(challengeData);
+    // console.log(
+    //   data.startDate,
+    //   new Date(data.startDate),
+    //   new Date(data.startDate).toISOString(),
+    //   toIsoString(new Date(data.startDate)),
+    // );
+    // console.log(
+    //   format(new Date(data.startDate), "yyyy-MM-dd") + "T23:59:59.999Z",
+    // );
+    // console.log(data.endDate, new Date(data.endDate).toISOString());
 
     if (isEditMode) challengeData.data.challengeId = challenge._id;
 
@@ -335,6 +353,8 @@ const ChallengeDate = ({ dayState }) => {
     name: "endDate",
   });
 
+  // console.log(days, startDate, endDate);
+
   const endDays = (e) => {
     setDays(e.target.value);
     if (startDate) {
@@ -347,7 +367,7 @@ const ChallengeDate = ({ dayState }) => {
 
   useEffect(() => {
     if (endDate && !isBefore(new Date(endDate), new Date(startDate))) {
-      setDays(differenceInDays(new Date(endDate), new Date(startDate)));
+      setDays(differenceInDays(new Date(endDate), new Date(startDate)) + 1);
     }
   }, [endDate, setDays, startDate]);
 

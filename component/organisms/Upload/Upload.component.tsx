@@ -7,6 +7,7 @@ import styles from "./Upload.module.scss";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { removeAllImages, addImage } from "../../../redux/slices/Ui.slice";
 import { faPlus, faTimes } from "@fortawesome/pro-solid-svg-icons";
+import axios from "axios";
 
 interface UploadProps {
   label?: string;
@@ -58,11 +59,11 @@ const Upload = (props: UploadProps) => {
   const addImageHandler = useCallback(
     (e: any) => {
       const files = e.target.files;
+      if (files && files.length === 0) return;
+
       const temporaryImages: string[] = [];
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        const fileName = file.name;
-        let extension = fileName.split(".").pop();
 
         const src = URL.createObjectURL(file);
         if (file["type"].split("/")[0] === "image") {
@@ -70,29 +71,22 @@ const Upload = (props: UploadProps) => {
         }
         temporaryImages.length > 0 &&
           setTempImages([...temporaryImages, ...tempImages]);
-        fetch(`${S3_CONFIG.objectURL}?fileType=${extension}`)
-          .then((response) => {
-            if (response.ok) {
-              return response.json();
-            } else {
-              throw new Error("Response Failed");
-            }
-          })
-          .then((data) => {
-            const { Key, uploadURL } = data;
-            fetch(uploadURL, {
-              method: "PUT",
-              body: file,
-            }).then((response) => {
-              if (response.ok) {
-                const imageURL = `${S3_CONFIG.baseURL}/${Key}`;
-                dispatch(addImage({ url: imageURL }));
-              }
-            });
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+
+        const formdata = new FormData();
+        for (let i = 0; i < files?.length; i++) {
+          const fileName = files[i].name;
+
+          formdata.append("images[]", files[i], fileName);
+        }
+        axios({
+          method: "post",
+          url: S3_CONFIG.baseURL,
+          data: formdata,
+          headers: { "Content-Type": "multipart/form-data" },
+        }).then((response) => {
+          const data = response.data?.images;
+          dispatch(addImage({ urls: data }));
+        });
       }
     },
     [dispatch, tempImages],
@@ -197,7 +191,7 @@ const Upload = (props: UploadProps) => {
             // If the Upload component is not multiple & No Image is Uploaded Yet
             (!multiple && images.length + tempImages.length === 0)) && (
             <label className={styles["add-new-image"]}>
-              <Icon fontName={faPlus} size="30px"/>
+              <Icon fontName={faPlus} size="30px" />
               <input
                 type="file"
                 onChange={(e) => {

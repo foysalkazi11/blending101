@@ -7,6 +7,7 @@ import { RECIPE_CATEGORY_COLOR } from "../../../../../data/Recipe";
 import { GET_CHALLENGE_DETAIL } from "../../../../../graphql/Planner";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
 import { setChallenge } from "../../../../../redux/slices/Planner.slice";
+import { getDateISO } from "../../../../../helpers/Date";
 
 function getBackgroundColor(categories: string[], selectToday: boolean) {
   const length = categories.length;
@@ -29,7 +30,7 @@ function getBackgroundColor(categories: string[], selectToday: boolean) {
 }
 
 function SingleDate({ date, categories, disabled }: any) {
-  const days = new Date(date);
+  const days = getDateISO(new Date(date));
   const dayName = format(days, "E");
   const day = format(days, "d");
   const selectToday = isToday(new Date(date));
