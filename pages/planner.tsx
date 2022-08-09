@@ -1,4 +1,4 @@
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import React, { Fragment, useEffect, useState } from "react";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { FaToolbox } from "react-icons/fa";

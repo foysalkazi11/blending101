@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 interface UiState {
   navigateToTop: {
@@ -17,11 +17,11 @@ const initialState: UiState = {
 };
 
 export const UiSlice = createSlice({
-  name: 'UI',
+  name: "UI",
   initialState,
   reducers: {
     addImage: (state, action) => {
-      state.images.push(action.payload.url);
+      state.images = [...state.images, ...action.payload.urls];
     },
     removeAllImages: (state) => {
       state.images = [];
