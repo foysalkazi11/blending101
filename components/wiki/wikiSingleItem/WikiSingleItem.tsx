@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import AContainer from "../../../containers/A.container";
 import GET_ALL_INGREDIENTS_BASED_ON_NURTITION from "../../../gqlLib/wiki/query/getAllIngredientsBasedOnNutrition";
 import GET_BLEND_NUTRITION_BASED_IN_INGREDIENTS_WIKI from "../../../gqlLib/wiki/query/getBlendNutritionBasedIngredientsWiki";
-import { useAppDispatch } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setLoading } from "../../../redux/slices/utilitySlice";
 import NutritionPanel from "../../recipe/share/nutritionPanel/NutritionPanel";
 import notification from "../../utility/reactToastifyNotification";
@@ -13,6 +13,7 @@ import styles from "../wiki.module.scss";
 import { useRouter } from "next/router";
 import RelatedWikiItem from "./realtedWikiItem/RelatedWikiItem";
 import GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS from "../../../gqlLib/nutrition/query/getNutrientsListAndGiGlByIngredients";
+import { GiGl } from "../../../type/nutrationType";
 
 const placeHolderImage = ["/images/no-image-available.webp"];
 
@@ -31,7 +32,7 @@ function WikiSingleItem() {
   const type = params?.[0] || "Ingredient";
   const wikiId = params?.[1] || "";
   const measurementWeight = params?.[2] || "";
-
+  const { dbUser } = useAppSelector((state) => state?.user);
   const [getAllIngredientsBasedOnNutrition, ingredientsData] = useLazyQuery(
     GET_ALL_INGREDIENTS_BASED_ON_NURTITION,
     { fetchPolicy: "network-only" },
@@ -60,6 +61,7 @@ function WikiSingleItem() {
               value: parseInt(defaultMeasureMentWeight),
             },
           ],
+          userId: dbUser?._id,
         },
       });
     } catch (error) {
@@ -77,12 +79,13 @@ function WikiSingleItem() {
               nutritionID: wikiId,
               category: "All",
             },
+            userId: dbUser?._id,
           },
         });
         dispatch(setLoading(false));
       }
       if (type === "Ingredient") {
-        const { data } = await getBlendNutritionBasedIngredientsWiki({
+        await getBlendNutritionBasedIngredientsWiki({
           variables: {
             ingredientsInfo: [
               {
@@ -90,6 +93,7 @@ function WikiSingleItem() {
                 value: parseInt(measurementWeight),
               },
             ],
+            userId: dbUser?._id,
           },
         });
         dispatch(setLoading(false));
@@ -125,11 +129,19 @@ function WikiSingleItem() {
   };
   //@ts-ignore
   const data = dataObj[type];
-  const mainNutritionPanelData =
-    nutritionPanelData?.getNutrientsListAndGiGlByIngredients;
+  const nutrients =
+    nutritionPanelData?.getNutrientsListAndGiGlByIngredients?.nutrients;
+  const giGl: GiGl =
+    nutritionPanelData?.getNutrientsListAndGiGlByIngredients?.giGl;
 
   return (
-    <AContainer>
+    <AContainer
+      showWikiCommentsTray={{
+        show: true,
+        showPanle: "right",
+        showTagByDeafult: false,
+      }}
+    >
       <div className={styles.mainwiki}>
         <div className={styles.left}>
           <RelatedWikiItem type={type} />
@@ -145,15 +157,15 @@ function WikiSingleItem() {
           }
           heading={`About ${data?.type}`}
           name={data?.wikiTitle}
+          giGl={giGl}
+          type={data?.type}
+          wikiId={wikiId}
+          commentsCount={data?.commentsCount}
         />
         <div style={{ margin: "0 10px" }}>
           {type === "Ingredient" ? (
             <NutritionPanel
-              nutritionTrayData={
-                mainNutritionPanelData?.nutrients
-                  ? JSON?.parse(mainNutritionPanelData?.nutrients)
-                  : {}
-              }
+              nutritionTrayData={nutrients ? JSON?.parse(nutrients) : {}}
               showUser={false}
               counter={1}
               nutritionDataLoading={nutritionPanelDataLoading}
