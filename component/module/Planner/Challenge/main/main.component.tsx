@@ -23,6 +23,8 @@ function Main({ activities, statistics }: MainInterface) {
               <SingleDate
                 key={key}
                 date={activity?.assignDate}
+                dayName={activity?.dayName}
+                day={activity?.date}
                 categories={categories}
                 disabled={activity?.disabled}
               />
