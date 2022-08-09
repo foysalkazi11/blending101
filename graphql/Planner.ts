@@ -5,6 +5,8 @@ export const GET_30DAYS_CHALLENGE = gql`
     getMyThirtyDaysChallenge(memberId: $userId) {
       challenge {
         assignDate
+        dayName
+        date
         disabled
         posts {
           recipeId {

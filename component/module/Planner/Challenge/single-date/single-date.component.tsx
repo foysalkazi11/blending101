@@ -29,10 +29,10 @@ function getBackgroundColor(categories: string[], selectToday: boolean) {
   }
 }
 
-function SingleDate({ date, categories, disabled }: any) {
-  const days = getDateISO(new Date(date));
-  const dayName = format(days, "E");
-  const day = format(days, "d");
+function SingleDate({ date, day, dayName, categories, disabled }: any) {
+  const days = new Date(date);
+  // const dayName = format(days, "E");
+  // const day = format(days, "d");
   const selectToday = isToday(new Date(date));
 
   const [getChallengeData, { data }] = useLazyQuery(GET_CHALLENGE_DETAIL, {
