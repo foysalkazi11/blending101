@@ -1,15 +1,17 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { ReactNode, useState } from "react";
+import Icon from "../../component/atoms/Icon/Icon.component";
 import styles from "./button.module.scss";
 
 interface buttonInterface {
-  type:
+  type?:
     | "text"
     | "primary"
     | "buttonWithIcon"
     | "transparent"
     | "transparentHover"
     | "border";
+  fontName?: any;
   value: string;
   fullWidth?: number;
   width?: number;
@@ -25,6 +27,7 @@ export default function ButtonComponent({
   fullWidth,
   width,
   icon,
+  fontName,
   onClick,
 }: buttonInterface) {
   // STEP 1: INITIALIZE PROPS TO AVOID UI FALL
@@ -64,6 +67,18 @@ export default function ButtonComponent({
         )}
 
         {value}
+      </button>
+    );
+
+  if (fontName)
+    return (
+      <button
+        className={styles.button + " " + styles.primary}
+        style={style}
+        onClick={clickHandler}
+      >
+        <Icon fontName={fontName} size={"2rem"} />
+        <span className="ml-10">{value}</span>
       </button>
     );
 

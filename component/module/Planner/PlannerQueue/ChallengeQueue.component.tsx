@@ -9,6 +9,7 @@ import ViewDataCard from "../../../../theme/dataCard/viewDataCard.component";
 import styles from "./ChallengeQueue.module.scss";
 import { useAppSelector } from "../../../../redux/hooks";
 import { format } from "date-fns";
+import { faTrophy } from "@fortawesome/pro-light-svg-icons";
 
 const plannerIcon = (
   <div className={styles.plannerIcon}>
@@ -23,7 +24,7 @@ const ChallengePanel = () => {
   return (
     <>
       <IconHeading
-        icon={plannerIcon}
+        icon={faTrophy}
         title={"Challenge Post"}
         iconStyle={{ fontSize: "18px" }}
       />

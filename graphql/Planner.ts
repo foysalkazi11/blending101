@@ -259,9 +259,10 @@ export const GET_CHALLENGES = gql`
     getMyChallengeList(memberId: $memberId) {
       _id
       challengeName
-      startDate
       days
       isActive
+      startingDate
+      startDate
       endDate
       description
       notification

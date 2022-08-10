@@ -1,4 +1,5 @@
 import React from "react";
+import Icon from "../../component/atoms/Icon/Icon.component";
 import styles from "./iconHeading.module.scss";
 
 interface IconHeadingInterface {
@@ -17,11 +18,8 @@ const IconHeading = ({
   titleStyle = titleStyle || {};
   return (
     <div className={styles.mainContainer}>
-      <div
-        className={styles.mainContainer__iconDiv}
-        style={iconStyle}
-      >
-        {icon}
+      <div className={styles.mainContainer__iconDiv} style={iconStyle}>
+        <Icon fontName={icon} size={"2.4rem"} />
       </div>
       <div className={styles.mainContainer__title} style={titleStyle}>
         {title}
