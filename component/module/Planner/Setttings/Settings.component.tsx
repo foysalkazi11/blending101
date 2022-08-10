@@ -107,14 +107,17 @@ const Settings = (props: SettingsProps) => {
         {showForm ? (
           <ChallengeForm challenge={challenge} setShowForm={setShowForm} />
         ) : (
-          <ChallengeList editFormHandler={editFormHandler} />
+          <ChallengeList
+            editFormHandler={editFormHandler}
+            hideSettings={hideSettings}
+          />
         )}
       </div>
     </div>
   );
 };
 
-const ChallengeList = ({ editFormHandler }) => {
+const ChallengeList = ({ editFormHandler, hideSettings }) => {
   const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
   const { data } = useQuery(GET_CHALLENGES, {
@@ -143,6 +146,7 @@ const ChallengeList = ({ editFormHandler }) => {
       success: `Activated Challenge Sucessfully`,
       onSuccess: () => {
         setActiveId(challengeId);
+        hideSettings();
       },
     });
   };
@@ -183,13 +187,7 @@ const ChallengeList = ({ editFormHandler }) => {
               </div>
             </div>
             <div className="col-3">
-              <Textfield
-                defaultValue={format(
-                  getDateISO(new Date(challenge.startDate)),
-                  "MMM d, yyyy",
-                )}
-                disabled
-              />
+              <Textfield defaultValue={challenge.startingDate} disabled />
             </div>
             <div className="col-2">
               <Textfield defaultValue={challenge.days} disabled />
@@ -226,7 +224,7 @@ const ChallengeList = ({ editFormHandler }) => {
 
 const defaultValues = {
   challengeName: "",
-  startDate: "",
+  startDate: format(new Date(), "yyyy-MM-dd"),
   endDate: "",
   description: "",
   notification: false,
@@ -253,8 +251,8 @@ const ChallengeForm = ({ setShowForm, challenge }) => {
         challenge;
       methods.reset({
         challengeName,
-        startDate: format(new Date(startDate), "yyyy-MM-dd"),
-        endDate: format(new Date(endDate), "yyyy-MM-dd"),
+        startDate,
+        endDate,
         description,
         notification,
       });
@@ -345,15 +343,12 @@ const ChallengeDate = ({ dayState }) => {
   const startDate = useWatch({
     control,
     name: "startDate",
-    defaultValue: format(new Date(), "yyyy-MM-dd"),
   });
 
   const endDate = useWatch({
     control,
     name: "endDate",
   });
-
-  // console.log(days, startDate, endDate);
 
   const endDays = (e) => {
     setDays(e.target.value);
@@ -366,11 +361,16 @@ const ChallengeDate = ({ dayState }) => {
   };
 
   useEffect(() => {
-    if (endDate && !isBefore(new Date(endDate), new Date(startDate))) {
-      setDays(differenceInDays(new Date(endDate), new Date(startDate)) + 1);
+    if (!endDate) return setDays(0);
+    if (isBefore(new Date(endDate), new Date(startDate))) {
+      setValue("endDate", "");
+      setDays(0);
+      return;
     }
-  }, [endDate, setDays, startDate]);
+    setDays(differenceInDays(new Date(endDate), new Date(startDate)) + 1);
+  }, [endDate, setDays, setValue, startDate]);
 
+  console.log(startDate);
   return (
     <div className="row mb-30">
       <div className="col-5">

@@ -1,7 +1,6 @@
 import { useLazyQuery } from "@apollo/client";
 import React, { Fragment, useEffect, useState } from "react";
 import { AiOutlinePlusCircle } from "react-icons/ai";
-import { FaToolbox } from "react-icons/fa";
 import PlannerGuide from "../component/module/Planner/PlannerGuide/PlannerGuide.component";
 
 import ChallengeQueue from "../component/module/Planner/PlannerQueue/ChallengeQueue.component";
@@ -19,6 +18,7 @@ import IconHeading from "../theme/iconHeading/iconHeading.component";
 import ToggleCard from "../theme/toggleCard/toggleCard.component";
 import Settings from "../component/module/Planner/Setttings/Settings.component";
 import { setChallenge } from "../redux/slices/Planner.slice";
+import { faToolbox } from "@fortawesome/pro-light-svg-icons";
 
 const Planner = () => {
   const [showChallenge, setShowChallenge] = useState(true);
@@ -96,7 +96,7 @@ const Planner = () => {
             </div>
             <div className="col-6">
               <div className={styles.headingDiv}>
-                <IconHeading title="Toolbox" icon={<FaToolbox />} />
+                <IconHeading title="Toolbox" icon={faToolbox} />
                 {showChallenge && !showUpload && !showSettings && (
                   <div className="flex ai-center">
                     <div

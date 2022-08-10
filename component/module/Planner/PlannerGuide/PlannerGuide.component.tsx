@@ -5,13 +5,14 @@ import FriendInvitePoster from "../../../../theme/friendInvitePoster/friendInvit
 import HorizontalLine from "../../../../theme/horizontalLine/horizontalLine.component";
 import IconHeading from "../../../../theme/iconHeading/iconHeading.component";
 import SequenceList from "../../../../theme/sequenceList/sequenceList.component";
+import { faLightbulbOn } from "@fortawesome/pro-light-svg-icons";
 
 import styles from "./PlannerGuide.module.scss";
 
 const PlannerGuide = () => {
   return (
     <div className={styles.mainContainer}>
-      <IconHeading icon={<HiLightBulb />} title={"Planner Guide"} />
+      <IconHeading icon={faLightbulbOn} title={"Planner Guide"} />
 
       <div>
         <FriendInvitePoster
@@ -28,8 +29,9 @@ const PlannerGuide = () => {
         </div>
 
         <div>
-          {topPlannerArticles?.map(({ title, content, imageUrl }) => (
+          {topPlannerArticles?.map(({ title, content, imageUrl }, idx) => (
             <CustomCards
+              idx={idx}
               key={title}
               cardTitle={title}
               cardSummaryText={content}

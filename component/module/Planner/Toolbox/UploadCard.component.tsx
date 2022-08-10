@@ -24,6 +24,8 @@ import {
   GET_30DAYS_CHALLENGE,
 } from "../../../../graphql/Planner";
 import Publish from "../../../../helpers/Publish";
+import ButtonComponent from "../../../../theme/button/button.component";
+import { faFloppyDisk } from "@fortawesome/pro-regular-svg-icons";
 
 interface UploadCardInterface {
   setUploadState?: any;
@@ -105,18 +107,25 @@ const UploadCard = ({ setUploadState }: UploadCardInterface) => {
           <h5 className={styles.mainContainer__mainHeading}>
             Upload Challanges Post
           </h5>
-          <div className="flex">
-            <IconButton
-              size="small"
-              variant="secondary"
-              fontName={faSave}
-              className="mr-10"
+          <div className="flex ai-center">
+            <ButtonComponent
+              value="Save"
+              fontName={faFloppyDisk}
+              icon="/images/plus-white-icon.svg"
+              style={{
+                height: "4rem",
+                width: "8rem",
+                borderRadius: "10px",
+                fontSize: "1.5rem",
+                backgroundColor: "#8ac74b",
+              }}
               onClick={methods.handleSubmit(handleSubmit)}
             />
             <IconButton
               size="small"
-              variant="primary"
+              variant="secondary"
               fontName={faTimes}
+              className="ml-10"
               onClick={() => {
                 setUploadState(false);
               }}

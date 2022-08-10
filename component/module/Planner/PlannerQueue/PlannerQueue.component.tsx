@@ -32,11 +32,7 @@ import Publish from "../../../../helpers/Publish";
 import SkeletonElement from "../../../../theme/skeletons/SkeletonElement";
 import { getDateOnly } from "../../../../helpers/Date";
 
-const plannerIcon = (
-  <div className={styles.plannerIcon}>
-    <Image src={"/images/planner.svg"} alt="" layout="fill" objectFit="cover" />
-  </div>
-);
+import { faCalendarAlt } from "@fortawesome/pro-light-svg-icons";
 
 interface PlannerPanelProps {
   isUpload: boolean;
@@ -123,7 +119,7 @@ const PlannerPanel = (props: PlannerPanelProps) => {
   return (
     <Fragment>
       <IconHeading
-        icon={plannerIcon}
+        icon={faCalendarAlt}
         title={isUpload ? "Challenge Post" : "Planner Queue"}
         iconStyle={{ fontSize: "18px" }}
       />
