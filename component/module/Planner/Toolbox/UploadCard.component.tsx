@@ -26,6 +26,7 @@ import {
 import Publish from "../../../../helpers/Publish";
 import ButtonComponent from "../../../../theme/button/button.component";
 import { faFloppyDisk } from "@fortawesome/pro-regular-svg-icons";
+import { ActionButton } from "../../../atoms/Button/Button.component";
 
 interface UploadCardInterface {
   setUploadState?: any;
@@ -108,24 +109,14 @@ const UploadCard = ({ setUploadState }: UploadCardInterface) => {
             Upload Challanges Post
           </h5>
           <div className="flex ai-center">
-            <ButtonComponent
-              value="Save"
-              fontName={faFloppyDisk}
-              icon="/images/plus-white-icon.svg"
-              style={{
-                height: "4rem",
-                width: "8rem",
-                borderRadius: "10px",
-                fontSize: "1.5rem",
-                backgroundColor: "#8ac74b",
-              }}
-              onClick={methods.handleSubmit(handleSubmit)}
-            />
+            <ActionButton onClick={methods.handleSubmit(handleSubmit)}>
+              Post
+            </ActionButton>
             <IconButton
               size="small"
               variant="secondary"
               fontName={faTimes}
-              className="ml-10"
+              style={{ marginLeft: 5 }}
               onClick={() => {
                 setUploadState(false);
               }}
