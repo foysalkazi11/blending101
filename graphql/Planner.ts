@@ -8,6 +8,7 @@ export const GET_30DAYS_CHALLENGE = gql`
         dayName
         date
         disabled
+        formattedDate
         posts {
           recipeId {
             _id
