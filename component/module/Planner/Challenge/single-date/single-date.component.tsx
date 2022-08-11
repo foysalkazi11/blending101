@@ -33,7 +33,7 @@ function SingleDate({ date, day, dayName, categories, disabled }: any) {
   const days = new Date(date);
   // const dayName = format(days, "E");
   // const day = format(days, "d");
-  const selectToday = isToday(new Date(date));
+  const selectToday = isToday(days);
 
   const [getChallengeData, { data }] = useLazyQuery(GET_CHALLENGE_DETAIL, {
     fetchPolicy: "no-cache",

@@ -22,7 +22,7 @@ function Main({ activities, statistics }: MainInterface) {
             return (
               <SingleDate
                 key={key}
-                date={activity?.assignDate}
+                date={activity?.formattedDate}
                 dayName={activity?.dayName}
                 day={activity?.date}
                 categories={categories}
