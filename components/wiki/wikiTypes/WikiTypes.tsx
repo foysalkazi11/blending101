@@ -18,6 +18,8 @@ const WikiTypes = ({ type = "Ingredient", setType = () => {} }: Props) => {
   const changeWikiType = (title: Type) => {
     if (title !== type) {
       setType(title);
+    } else {
+      setType("");
     }
   };
 
