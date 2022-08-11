@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setOpenFilterTray } from "../../../redux/slices/sideTraySlice";
+import { useAppSelector } from "../../../redux/hooks";
 import { WikiType } from "../../../type/wikiListType";
 import CommonSearchBar from "../../searchBar/CommonSearchBar";
 

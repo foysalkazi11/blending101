@@ -29,12 +29,14 @@ interface Props {
   type?: WikiType;
   selectedWikiItem?: SelectedWikiType;
   setSelectedWikiItem?: Dispatch<SetStateAction<SelectedWikiType>>;
+  setType?: Dispatch<SetStateAction<WikiType>>;
 }
 
 const WikiSingleType = ({
   type = "Ingredient",
   selectedWikiItem = {} as SelectedWikiType,
   setSelectedWikiItem = () => {},
+  setType = () => {},
 }: Props) => {
   const [wikiList, setWikiList] = useState<WikiListType[]>([]);
   const [page, setPage] = useState(1);
@@ -67,6 +69,8 @@ const WikiSingleType = ({
   const handleClose = () => {
     if (selectedWikiItem[type].length) {
       setSelectedWikiItem((wikiItem) => ({ ...wikiItem, [type]: [] }));
+    } else {
+      setType("");
     }
   };
 
