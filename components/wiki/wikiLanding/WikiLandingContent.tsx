@@ -1,10 +1,11 @@
-import React from "react";
+import React, { Dispatch, SetStateAction, useRef, useState } from "react";
 import styles from "./WikiLanding.module.scss";
 import Image from "next/image";
 import Carousel from "../../../theme/carousel/carousel.component";
-import { WikiListType } from "../../../type/wikiListType";
+import { WikiListType, WikiType } from "../../../type/wikiListType";
 import WikiCard from "../wikiCard/WikiCard";
 import SkeletonWikiDiscovery from "../../../theme/skeletons/skeletonWikiDicovery/SkeletonWikiDiscovery";
+import WikiSingleType from "../wikiSingleType/WikiSingleType";
 const responsiveSetting = {
   infinite: false,
   speed: 500,
@@ -38,18 +39,30 @@ const responsiveSetting = {
 };
 
 interface Props {
-  title?: string;
+  title?: WikiType;
   image?: string;
   loading?: boolean;
   list?: WikiListType[];
+  setShowAll?: Dispatch<SetStateAction<WikiType>>;
 }
 
-const WikiLandingContent = ({ image, list, loading, title }: Props) => {
+const WikiLandingContent = ({
+  image = "",
+  list = [],
+  loading = false,
+  title = "",
+  setShowAll = () => {},
+}: Props) => {
+  const sliderRef = useRef(null);
   const setting = {
     ...responsiveSetting,
-    afterChange: (index) => {
-      console.log(index);
-    },
+
+    // beforeChange: (current, next) => {
+    //   console.log(next);
+    // },
+    // afterChange: (index) => {
+    //   console.log(index);
+    // },
   };
   return (
     <div className={styles.main__slider}>
@@ -66,13 +79,15 @@ const WikiLandingContent = ({ image, list, loading, title }: Props) => {
           />
           {title}
         </div>
-        <div className={styles.viewAll}>View All</div>
+        <div className={styles.viewAll} onClick={() => setShowAll(title)}>
+          View All
+        </div>
       </h3>
 
       {loading ? (
         <SkeletonWikiDiscovery />
       ) : (
-        <Carousel moreSetting={setting}>
+        <Carousel moreSetting={setting} ref={sliderRef}>
           {list?.map((wikiList) => {
             const {
               _id,
