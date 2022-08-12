@@ -8,10 +8,11 @@ import notification from "../../utility/reactToastifyNotification";
 import s from "./WikiLanding.module.scss";
 import { WikiType } from "../../../type/wikiListType";
 import WikiLandingContent from "./WikiLandingContent";
-import WikiSingleType from "../wikiSingleType/WikiSingleType";
+import { SelectedWikiType } from "..";
 
 interface Props {
   setType?: Dispatch<SetStateAction<WikiType>>;
+  setSelectedWikiItem?: Dispatch<SetStateAction<SelectedWikiType>>;
 }
 
 interface NormalizeWikiList {
@@ -19,8 +20,10 @@ interface NormalizeWikiList {
   data: WikiListType[];
 }
 
-const WikiLanding = ({ setType = () => {} }: Props) => {
-  const [showAll, setShowAll] = useState<WikiType>("");
+const WikiLanding = ({
+  setType = () => {},
+  setSelectedWikiItem = () => {},
+}: Props) => {
   const { dbUser } = useAppSelector((state) => state?.user);
   const [
     getIngredientList,
@@ -95,6 +98,11 @@ const WikiLanding = ({ setType = () => {} }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleSetType = (type: WikiType) => {
+    setSelectedWikiItem((wikiItem) => ({ ...wikiItem, [type]: [] }));
+    setType(type);
+  };
+
   const ingredientWikiList = ingredientList?.getIngredientWikiList?.wikiList;
   const nutrientWikiListList = nutrientListList?.getNutrientWikiList?.wikiList;
 
@@ -105,7 +113,7 @@ const WikiLanding = ({ setType = () => {} }: Props) => {
         image={"/images/thumbs-up.svg"}
         list={ingredientWikiList}
         loading={ingredientListLoading}
-        setShowAll={setType}
+        setShowAll={handleSetType}
       />
 
       <WikiLandingContent
@@ -113,7 +121,7 @@ const WikiLanding = ({ setType = () => {} }: Props) => {
         image={"/images/thumbs-up.svg"}
         list={nutrientWikiListList}
         loading={nutrientListLoading}
-        setShowAll={setType}
+        setShowAll={handleSetType}
       />
     </div>
   );
