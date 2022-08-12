@@ -25,7 +25,7 @@ export default function SidebarComponent(props) {
       content: "Planner",
     },
     { logo: "/icons/book_light.svg", link: "/", content: "News" },
-    { logo: "/icons/whistle.svg", link: "/planner", content: "Coach" },
+    { logo: "/icons/whistle.svg", link: "/challenge", content: "Coach" },
     { logo: "/icons/store.svg", link: "/", content: "Shop" },
   ];
 

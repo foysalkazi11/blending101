@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React, { ReactNode } from "react";
 import styles from "./toggleCard.module.scss";
 
@@ -36,6 +37,7 @@ const ToggleCard = ({
   nonActiveTogglerHeight = nonActiveTogglerHeight || "1px";
   activeTogglerHeight = activeTogglerHeight || "2px";
 
+  const router = useRouter();
   const activeToggleBorderStyle = {
     borderBottom: `${activeTogglerHeight} solid ${activeBorderColor}`,
     marginBottom: `-${activeTogglerHeight}`,
@@ -61,7 +63,10 @@ const ToggleCard = ({
               ...headingStyle,
               ...(toggler ? activeToggleBorderStyle : {}),
             }}
-            onClick={() => setTogglerFunc && setTogglerFunc(true)}
+            onClick={() => {
+              router.push("/challenge", undefined, { shallow: true });
+              // setTogglerFunc && setTogglerFunc(true);
+            }}
           >
             {leftToggleHeading}
           </div>
@@ -71,7 +76,10 @@ const ToggleCard = ({
               ...headingStyle,
               ...(!toggler ? activeToggleBorderStyle : {}),
             }}
-            onClick={() => setTogglerFunc && setTogglerFunc(false)}
+            onClick={() => {
+              router.push("/planner", undefined, { shallow: true });
+              // setTogglerFunc && setTogglerFunc(false);
+            }}
           >
             {rightToggleHeading}
           </div>
