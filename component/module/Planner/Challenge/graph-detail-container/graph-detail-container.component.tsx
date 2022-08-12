@@ -38,9 +38,9 @@ function GraphDetailContainer({
     const data = [];
     Object.values(categories).forEach((category: any) => {
       if (category?.value <= 0) return;
-      category.description = `${((category.value * 100) / total).toFixed(1)} (${
-        category.value
-      })`;
+      category.description = `${((category.value * 100) / total).toFixed(
+        1,
+      )}% (${category.value})`;
       data.push(category);
     });
 
