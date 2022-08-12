@@ -19,23 +19,36 @@ function GraphDetailContainer({
     Object.keys(RECIPE_CATEGORY_COLOR).forEach((category) => {
       categories[category] = {
         name: category,
-        description: category,
+        description: 0,
         color: RECIPE_CATEGORY_COLOR[category],
         value: 0,
       };
     });
 
+    let total = 0;
     activities?.forEach((activity) => {
       activity?.posts?.forEach((post) => {
         if (post?.recipeBlendCategory?.name) {
           categories[post.recipeBlendCategory?.name].value++;
+          total++;
         }
       });
     });
 
-    return Object.values(categories).filter(
-      (category: any) => category?.value > 0,
-    );
+    const data = [];
+    Object.values(categories).forEach((category: any) => {
+      if (category?.value <= 0) return;
+      category.description = `${((category.value * 100) / total).toFixed(1)} (${
+        category.value
+      })`;
+      data.push(category);
+    });
+
+    return data;
+    // console.log(categories);
+    // return Object.values(categories).filter(
+    //   (category: any) => category?.value > 0,
+    // );
   }, [activities]);
   return (
     <div className={styles.challenge_circle_graph_data}>
