@@ -80,7 +80,7 @@ const Upload = (props: UploadProps) => {
         }
         axios({
           method: "post",
-          url: S3_CONFIG.baseURL,
+          url: `https://om7h45qezg.execute-api.us-east-1.amazonaws.com/prod/file-processing/images/upload`,
           data: formdata,
           headers: { "Content-Type": "multipart/form-data" },
         }).then((response) => {
