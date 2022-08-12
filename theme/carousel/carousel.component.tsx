@@ -10,7 +10,10 @@ type SlickSliderProps = {
   children: React.ReactNode;
 };
 
-const CustomSlider = ({ moreSetting = {}, children }: SlickSliderProps) => {
+const CustomSlider = (
+  { moreSetting = {}, children }: SlickSliderProps,
+  ref,
+) => {
   const SmiplePrevArrow = (props) => {
     const { className, onClick } = props;
 
@@ -69,7 +72,11 @@ const CustomSlider = ({ moreSetting = {}, children }: SlickSliderProps) => {
     ...settings,
     ...moreSetting,
   };
-  return <Slider {...finalSetting}>{children}</Slider>;
+  return (
+    <Slider {...finalSetting} ref={ref}>
+      {children}
+    </Slider>
+  );
 };
 
-export default CustomSlider;
+export default React.forwardRef(CustomSlider);

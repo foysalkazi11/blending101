@@ -1,5 +1,5 @@
 import { useLazyQuery } from "@apollo/client";
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import GET_INGREDIENT_WIKI_LIST from "../../../gqlLib/wiki/query/getIngredientWikiList";
 import GET_NUTRIENT_WIKI_LIST from "../../../gqlLib/wiki/query/getNutrientWikiList";
 import { useAppSelector } from "../../../redux/hooks";
@@ -8,10 +8,11 @@ import notification from "../../utility/reactToastifyNotification";
 import s from "./WikiLanding.module.scss";
 import { WikiType } from "../../../type/wikiListType";
 import WikiLandingContent from "./WikiLandingContent";
+import { SelectedWikiType } from "..";
 
-interface WikiLandingProps {
-  wikiList?: WikiListType[];
-  wikiLoading?: boolean;
+interface Props {
+  setType?: Dispatch<SetStateAction<WikiType>>;
+  setSelectedWikiItem?: Dispatch<SetStateAction<SelectedWikiType>>;
 }
 
 interface NormalizeWikiList {
@@ -19,7 +20,10 @@ interface NormalizeWikiList {
   data: WikiListType[];
 }
 
-const WikiLanding = () => {
+const WikiLanding = ({
+  setType = () => {},
+  setSelectedWikiItem = () => {},
+}: Props) => {
   const { dbUser } = useAppSelector((state) => state?.user);
   const [
     getIngredientList,
@@ -94,6 +98,11 @@ const WikiLanding = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleSetType = (type: WikiType) => {
+    setSelectedWikiItem((wikiItem) => ({ ...wikiItem, [type]: [] }));
+    setType(type);
+  };
+
   const ingredientWikiList = ingredientList?.getIngredientWikiList?.wikiList;
   const nutrientWikiListList = nutrientListList?.getNutrientWikiList?.wikiList;
 
@@ -104,13 +113,15 @@ const WikiLanding = () => {
         image={"/images/thumbs-up.svg"}
         list={ingredientWikiList}
         loading={ingredientListLoading}
+        setShowAll={handleSetType}
       />
 
       <WikiLandingContent
-        title="Nutrition"
+        title="Nutrient"
         image={"/images/thumbs-up.svg"}
         list={nutrientWikiListList}
         loading={nutrientListLoading}
+        setShowAll={handleSetType}
       />
     </div>
   );
