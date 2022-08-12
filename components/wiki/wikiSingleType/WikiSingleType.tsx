@@ -250,7 +250,6 @@ const WikiSingleType = ({
                     portions={portions}
                     id={_id}
                     hasInCompare={hasInCompare}
-                    setWikiList={setWikiList}
                     handleAddOrRemoveToWikiCompareList={
                       handleAddOrRemoveToWikiCompareList
                     }

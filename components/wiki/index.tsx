@@ -1,6 +1,6 @@
 import { faBooks } from "@fortawesome/pro-thin-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AContainer from "../../containers/A.container";
 import useLocalStorage from "../../customHooks/useLocalStorage";
 import { WikiType } from "../../type/wikiListType";
@@ -22,6 +22,11 @@ const WikiHome = () => {
     useLocalStorage<SelectedWikiType>("selectedWikiItem", {});
   const [type, setType] = useLocalStorage<WikiType>("type", "");
   const [openTray, setOpenTray] = useState(false);
+
+  useEffect(() => {
+    setType("");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <AContainer
@@ -46,7 +51,10 @@ const WikiHome = () => {
             setSelectedWikiItem={setSelectedWikiItem}
           />
         ) : (
-          <WikiLanding setType={setType} />
+          <WikiLanding
+            setType={setType}
+            setSelectedWikiItem={setSelectedWikiItem}
+          />
         )}
       </div>
 
