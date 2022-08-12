@@ -6,7 +6,6 @@ import useLocalStorage from "../../customHooks/useLocalStorage";
 import { WikiType } from "../../type/wikiListType";
 import TrayTag from "../sidetray/TrayTag";
 import TrayWrapper from "../sidetray/TrayWrapper";
-import useWindowSize from "../utility/useWindowSize";
 import styles from "./wiki.module.scss";
 import WikiBanner from "./wikiBanner/WikiBanner";
 import WikiLanding from "./wikiLanding/WikiLanding";
@@ -23,16 +22,6 @@ const WikiHome = () => {
     useLocalStorage<SelectedWikiType>("selectedWikiItem", {});
   const [type, setType] = useLocalStorage<WikiType>("type", "");
   const [openTray, setOpenTray] = useState(false);
-  const { width } = useWindowSize();
-
-  const wikiLeftSide = (
-    <WikiLeft
-      type={type}
-      setType={setType}
-      selectedWikiItem={selectedWikiItem}
-      setSelectedWikiItem={setSelectedWikiItem}
-    />
-  );
 
   return (
     <AContainer
@@ -43,25 +32,22 @@ const WikiHome = () => {
       }}
     >
       <div className={styles.main}>
-        {/* <div className={styles.left}>{wikiLeftSide}</div> */}
-        <div>
-          <WikiSearchBar
-            openTray={openTray}
-            setOpenTray={setOpenTray}
+        <WikiSearchBar
+          openTray={openTray}
+          setOpenTray={setOpenTray}
+          type={type}
+        />
+        <WikiBanner />
+        {type ? (
+          <WikiSingleType
             type={type}
+            setType={setType}
+            selectedWikiItem={selectedWikiItem}
+            setSelectedWikiItem={setSelectedWikiItem}
           />
-          <WikiBanner />
-          {type ? (
-            <WikiSingleType
-              type={type}
-              setType={setType}
-              selectedWikiItem={selectedWikiItem}
-              setSelectedWikiItem={setSelectedWikiItem}
-            />
-          ) : (
-            <WikiLanding />
-          )}
-        </div>
+        ) : (
+          <WikiLanding setType={setType} />
+        )}
       </div>
 
       <TrayWrapper
@@ -78,7 +64,12 @@ const WikiHome = () => {
           />
         )}
       >
-        {wikiLeftSide}
+        <WikiLeft
+          type={type}
+          setType={setType}
+          selectedWikiItem={selectedWikiItem}
+          setSelectedWikiItem={setSelectedWikiItem}
+        />
       </TrayWrapper>
     </AContainer>
   );

@@ -1,5 +1,5 @@
 import { useLazyQuery } from "@apollo/client";
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import GET_INGREDIENT_WIKI_LIST from "../../../gqlLib/wiki/query/getIngredientWikiList";
 import GET_NUTRIENT_WIKI_LIST from "../../../gqlLib/wiki/query/getNutrientWikiList";
 import { useAppSelector } from "../../../redux/hooks";
@@ -8,10 +8,10 @@ import notification from "../../utility/reactToastifyNotification";
 import s from "./WikiLanding.module.scss";
 import { WikiType } from "../../../type/wikiListType";
 import WikiLandingContent from "./WikiLandingContent";
+import WikiSingleType from "../wikiSingleType/WikiSingleType";
 
-interface WikiLandingProps {
-  wikiList?: WikiListType[];
-  wikiLoading?: boolean;
+interface Props {
+  setType?: Dispatch<SetStateAction<WikiType>>;
 }
 
 interface NormalizeWikiList {
@@ -19,7 +19,8 @@ interface NormalizeWikiList {
   data: WikiListType[];
 }
 
-const WikiLanding = () => {
+const WikiLanding = ({ setType = () => {} }: Props) => {
+  const [showAll, setShowAll] = useState<WikiType>("");
   const { dbUser } = useAppSelector((state) => state?.user);
   const [
     getIngredientList,
@@ -104,13 +105,15 @@ const WikiLanding = () => {
         image={"/images/thumbs-up.svg"}
         list={ingredientWikiList}
         loading={ingredientListLoading}
+        setShowAll={setType}
       />
 
       <WikiLandingContent
-        title="Nutrition"
+        title="Nutrient"
         image={"/images/thumbs-up.svg"}
         list={nutrientWikiListList}
         loading={nutrientListLoading}
+        setShowAll={setType}
       />
     </div>
   );
