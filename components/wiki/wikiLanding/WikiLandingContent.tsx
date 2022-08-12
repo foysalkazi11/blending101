@@ -5,7 +5,14 @@ import Carousel from "../../../theme/carousel/carousel.component";
 import { WikiListType, WikiType } from "../../../type/wikiListType";
 import WikiCard from "../wikiCard/WikiCard";
 import SkeletonWikiDiscovery from "../../../theme/skeletons/skeletonWikiDicovery/SkeletonWikiDiscovery";
-import WikiSingleType from "../wikiSingleType/WikiSingleType";
+import notification from "../../utility/reactToastifyNotification";
+import ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/mutation/addOrRemoveToWikiCompareList";
+import { useMutation } from "@apollo/client";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { setDbUser } from "../../../redux/slices/userSlice";
+import useLocalStorage from "../../../customHooks/useLocalStorage";
+import { WikiCompareList } from "../../../type/wikiCompareList";
+import GET_INGREDIENT_WIKI_LIST from "../../../gqlLib/wiki/query/getIngredientWikiList";
 const responsiveSetting = {
   infinite: false,
   speed: 500,
@@ -43,7 +50,7 @@ interface Props {
   image?: string;
   loading?: boolean;
   list?: WikiListType[];
-  setShowAll?: Dispatch<SetStateAction<WikiType>>;
+  setShowAll?: (arg: WikiType) => void;
 }
 
 const WikiLandingContent = ({
@@ -53,6 +60,14 @@ const WikiLandingContent = ({
   title = "",
   setShowAll = () => {},
 }: Props) => {
+  const [addOrRemoveToWikiCompareList] = useMutation(
+    ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST,
+  );
+  const dispatch = useAppDispatch();
+  const { dbUser } = useAppSelector((state) => state?.user);
+  const [wikiCompareList, setWikiCompareList] = useLocalStorage<
+    WikiCompareList[]
+  >("wikiCompareList", []);
   const sliderRef = useRef(null);
   const setting = {
     ...responsiveSetting,
@@ -64,6 +79,88 @@ const WikiLandingContent = ({
     //   console.log(index);
     // },
   };
+
+  // find single wiki items
+  const findCompareWikiEntity = (id: string) => {
+    return wikiCompareList?.find((item) => item?._id === id);
+  };
+
+  // add Or Remove from WikiCompare List
+  const handleAddOrRemoveToWikiCompareList = async (
+    ingredientId: string,
+    isCompared: boolean,
+  ) => {
+    try {
+      await addOrRemoveToWikiCompareList({
+        variables: { ingredientId, userId: dbUser?._id },
+        update(cache) {
+          const { getIngredientWikiList } = cache.readQuery({
+            query: GET_INGREDIENT_WIKI_LIST,
+            variables: {
+              userId: dbUser?._id,
+              page: 1,
+              limit: 12,
+              ids: [],
+            },
+          });
+
+          cache?.writeQuery({
+            query: GET_INGREDIENT_WIKI_LIST,
+            variables: {
+              userId: dbUser?._id,
+              page: 1,
+              limit: 12,
+              ids: [],
+            },
+            data: {
+              getIngredientWikiList: {
+                ...getIngredientWikiList,
+                wikiList: getIngredientWikiList?.wikiList?.map((item) =>
+                  item?._id === ingredientId
+                    ? { ...item, hasInCompare: isCompared ? false : true }
+                    : item,
+                ),
+              },
+            },
+          });
+        },
+      });
+
+      dispatch(
+        setDbUser({
+          ...dbUser,
+          wikiCompareCount: isCompared
+            ? dbUser?.wikiCompareCount - 1
+            : dbUser?.wikiCompareCount + 1,
+        }),
+      );
+      // setWikiList((list) =>
+      //   list?.map((item) =>
+      //     item?._id === ingredientId
+      //       ? { ...item, hasInCompare: isCompared ? false : true }
+      //       : item,
+      //   ),
+      // );
+
+      const findCompareItem = findCompareWikiEntity(ingredientId);
+      if (findCompareItem) {
+        setWikiCompareList((state) => [
+          ...state.filter((item) => item?._id !== ingredientId),
+        ]);
+      }
+
+      notification(
+        "info",
+        `${isCompared ? "Remove form" : "Added"} compare list successfully`,
+      );
+    } catch (error) {
+      notification(
+        "error",
+        `Failed to ${isCompared ? "Remove form" : "Added"} compare list`,
+      );
+    }
+  };
+
   return (
     <div className={styles.main__slider}>
       <h3>
@@ -116,6 +213,9 @@ const WikiLandingContent = ({
                 portions={portions}
                 id={_id}
                 hasInCompare={hasInCompare}
+                handleAddOrRemoveToWikiCompareList={
+                  handleAddOrRemoveToWikiCompareList
+                }
               />
             );
           })}
