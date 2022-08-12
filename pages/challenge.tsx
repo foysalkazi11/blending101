@@ -20,8 +20,8 @@ import Settings from "../component/module/Planner/Setttings/Settings.component";
 import { setChallenge } from "../redux/slices/Planner.slice";
 import { faToolbox } from "@fortawesome/pro-light-svg-icons";
 
-const Planner = () => {
-  const [showChallenge, setShowChallenge] = useState(false);
+const ChallengePage = () => {
+  const [showChallenge, setShowChallenge] = useState(true);
   const [showUpload, setShowUpload] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showGroceryTray] = useState(true);
@@ -174,4 +174,4 @@ const Planner = () => {
   );
 };
 
-export default Planner;
+export default ChallengePage;

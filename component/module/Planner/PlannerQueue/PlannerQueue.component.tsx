@@ -135,10 +135,10 @@ const PlannerPanel = (props: PlannerPanelProps) => {
       <div className={styles.action}>
         <div ref={blendTypeRef}>
           <Combobox
-            options={[
+            options={categories?.getAllCategories ? [
               { label: "All", value: "" },
               ...categories?.getAllCategories,
-            ]}
+            ] : [{ label: "All", value: "" }]}
             className={styles.blendType}
             value={type}
             onChange={(e) => setType(e.target.value)}
