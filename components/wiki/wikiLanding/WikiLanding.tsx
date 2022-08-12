@@ -1,8 +1,13 @@
+import { useLazyQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
+import GET_INGREDIENT_WIKI_LIST from "../../../gqlLib/wiki/query/getIngredientWikiList";
+import GET_NUTRIENT_WIKI_LIST from "../../../gqlLib/wiki/query/getNutrientWikiList";
+import { useAppSelector } from "../../../redux/hooks";
 import { WikiListType } from "../../../type/wikiListType";
-import ContentTray from "../../recipe/recipeDiscovery/ContentTray/ContentTray.component";
-import WikiCard from "../wikiCard/WikiCard";
+import notification from "../../utility/reactToastifyNotification";
 import s from "./WikiLanding.module.scss";
+import { WikiType } from "../../../type/wikiListType";
+import WikiLandingContent from "./WikiLandingContent";
 
 interface WikiLandingProps {
   wikiList?: WikiListType[];
@@ -14,76 +19,99 @@ interface NormalizeWikiList {
   data: WikiListType[];
 }
 
-const WikiLanding = ({
-  wikiList = [],
-  wikiLoading = false,
-}: WikiLandingProps) => {
-  const [normalizeWikiList, setNormalizeWikiList] = useState<
-    NormalizeWikiList[]
-  >([]);
-  useEffect(() => {
-    const checkData = (previous, current) => {
-      if (previous) {
-        return [...previous, current];
-      } else {
-        return [current];
-      }
-    };
-    let obj = {};
-    if (!wikiLoading && wikiList?.length) {
-      wikiList?.forEach((wiki) => {
-        obj[wiki?.type] = [...checkData(obj[wiki?.type], wiki)];
-      });
-    }
+const WikiLanding = () => {
+  const { dbUser } = useAppSelector((state) => state?.user);
+  const [
+    getIngredientList,
+    {
+      loading: ingredientListLoading,
+      data: ingredientList,
+      error: ingredientListError,
+    },
+  ] = useLazyQuery(GET_INGREDIENT_WIKI_LIST, {
+    fetchPolicy: "cache-and-network",
+  });
+  const [
+    getNutrientList,
+    {
+      loading: nutrientListLoading,
+      data: nutrientListList,
+      error: nutrientListListError,
+    },
+  ] = useLazyQuery(GET_NUTRIENT_WIKI_LIST, {
+    fetchPolicy: "cache-and-network",
+  });
 
-    const mapData = Object.entries(obj)?.map((wiki) => ({
-      type: wiki[0],
-      data: wiki[1] as WikiListType[],
-    }));
-    setNormalizeWikiList(mapData);
+  const funcObj = {
+    Ingredient: getIngredientList,
+    Nutrient: getNutrientList,
+    Health: () =>
+      new Promise((resolve, reject) => {
+        setTimeout(resolve, 1000, "foo");
+      }),
+  };
+
+  const fetchList = async (
+    type: WikiType = "Ingredient",
+    page: number = 1,
+    limit: number = 12,
+    ids: string[] = [],
+  ) => {
+    try {
+      await funcObj[type]({
+        variables: {
+          userId: dbUser?._id,
+          page,
+          limit,
+          ids,
+        },
+      });
+    } catch (error) {
+      notification("error", "Failed to fetch ingredient list");
+    }
+  };
+
+  useEffect(() => {
+    Promise.all([
+      funcObj["Ingredient"]({
+        variables: {
+          userId: dbUser?._id,
+          page: 1,
+          limit: 12,
+          ids: [],
+        },
+      }),
+      funcObj["Nutrient"]({
+        variables: {
+          userId: dbUser?._id,
+          page: 1,
+          limit: 12,
+          ids: [],
+        },
+      }),
+    ]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wikiList]);
+  }, []);
+
+  const ingredientWikiList = ingredientList?.getIngredientWikiList?.wikiList;
+  const nutrientWikiListList = nutrientListList?.getNutrientWikiList?.wikiList;
+
   return (
-    <div>
-      {normalizeWikiList?.map((wiki) => {
-        return (
-          <ContentTray
-            key={wiki?.type}
-            heading={wiki?.type}
-            image={"/images/thumbs-up.svg"}
-          >
-            {wiki?.data?.map((wikiList) => {
-              const {
-                _id,
-                category,
-                commentsCount,
-                description,
-                hasInCompare,
-                image,
-                isPublished,
-                portions,
-                publishedBy,
-                status,
-                type,
-                wikiDescription,
-                wikiTitle,
-              } = wikiList;
-              return (
-                <WikiCard
-                  key={_id}
-                  author={publishedBy}
-                  comments={commentsCount}
-                  description={wikiDescription}
-                  image={image}
-                  title={wikiTitle}
-                  type={type}
-                />
-              );
-            })}
-          </ContentTray>
-        );
-      })}
+    <div style={{ margin: "20px 0" }}>
+      <WikiLandingContent
+        title="Ingredient"
+        image={"/images/thumbs-up.svg"}
+        list={ingredientWikiList}
+        loading={ingredientListLoading}
+      />
+
+      <WikiLandingContent
+        title="Nutrition"
+        image={"/images/thumbs-up.svg"}
+        list={nutrientWikiListList}
+        loading={nutrientListLoading}
+      />
     </div>
   );
 };

@@ -9,6 +9,7 @@ import TrayWrapper from "../sidetray/TrayWrapper";
 import useWindowSize from "../utility/useWindowSize";
 import styles from "./wiki.module.scss";
 import WikiBanner from "./wikiBanner/WikiBanner";
+import WikiLanding from "./wikiLanding/WikiLanding";
 import WikiLeft from "./WikiLeft/WikiLeft";
 import WikiSearchBar from "./wikiSearchBar/WikiSearchBar";
 import WikiSingleType from "./wikiSingleType/WikiSingleType";
@@ -20,7 +21,7 @@ export type SelectedWikiType = {
 const WikiHome = () => {
   const [selectedWikiItem, setSelectedWikiItem] =
     useLocalStorage<SelectedWikiType>("selectedWikiItem", {});
-  const [type, setType] = useLocalStorage<WikiType>("type", "Ingredient");
+  const [type, setType] = useLocalStorage<WikiType>("type", "");
   const [openTray, setOpenTray] = useState(false);
   const { width } = useWindowSize();
 
@@ -42,39 +43,43 @@ const WikiHome = () => {
       }}
     >
       <div className={styles.main}>
-        <div className={styles.left}>{wikiLeftSide}</div>
-        <div className={styles.center}>
+        {/* <div className={styles.left}>{wikiLeftSide}</div> */}
+        <div>
           <WikiSearchBar
-            openTray={width < 1280 ? openTray : true}
-            setOpenTray={width < 1280 ? setOpenTray : () => {}}
+            openTray={openTray}
+            setOpenTray={setOpenTray}
             type={type}
           />
           <WikiBanner />
-          <WikiSingleType
-            type={type}
-            selectedWikiItem={selectedWikiItem}
-            setSelectedWikiItem={setSelectedWikiItem}
-          />
+          {type ? (
+            <WikiSingleType
+              type={type}
+              setType={setType}
+              selectedWikiItem={selectedWikiItem}
+              setSelectedWikiItem={setSelectedWikiItem}
+            />
+          ) : (
+            <WikiLanding />
+          )}
         </div>
       </div>
-      {width < 1280 && openTray ? (
-        <TrayWrapper
-          isolated={true}
-          showPanle="left"
-          showTagByDefaut={true}
-          openTray={openTray}
-          panleTag={(hover) => (
-            <TrayTag
-              hover={hover}
-              icon={<FontAwesomeIcon icon={faBooks} />}
-              placeMent="left"
-              handleTagClick={() => setOpenTray((prev) => !prev)}
-            />
-          )}
-        >
-          {wikiLeftSide}
-        </TrayWrapper>
-      ) : null}
+
+      <TrayWrapper
+        isolated={true}
+        showPanle="left"
+        showTagByDefaut={false}
+        openTray={openTray}
+        panleTag={(hover) => (
+          <TrayTag
+            hover={hover}
+            icon={<FontAwesomeIcon icon={faBooks} />}
+            placeMent="left"
+            handleTagClick={() => setOpenTray((prev) => !prev)}
+          />
+        )}
+      >
+        {wikiLeftSide}
+      </TrayWrapper>
     </AContainer>
   );
 };

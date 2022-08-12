@@ -18,7 +18,7 @@ import Tooltip from "../../theme/toolTip/CustomToolTip";
 import RecipeDiscoverButton from "../../theme/button/recipeDiscoverButton/RecipeDiscoverButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/pro-regular-svg-icons";
-import { type } from "os";
+import { WikiType } from "../../type/wikiListType";
 
 interface SearchBarProps {
   input?: string;
@@ -31,7 +31,7 @@ interface SearchBarProps {
   isSearchTag?: boolean;
   isOpenPanel?: boolean;
   comeFromWhichPage?: "discovery" | "wiki";
-  wikiType?: "Nutrient" | "Ingredient" | "Health";
+  wikiType?: WikiType;
 }
 
 interface CompareButtonProps {
@@ -175,11 +175,13 @@ const CommonSearchBar = ({
           )}
         </div>
       </div>
-      {comeFromWhichPage === "discovery"
+      {/* {comeFromWhichPage === "discovery"
         ? compareBtn
         : comeFromWhichPage === "wiki" && wikiType === "Ingredient"
         ? compareBtn
-        : null}
+        : null} */}
+
+      {compareBtn}
 
       {comeFromWhichPage === "discovery" ? (
         <div style={{ marginLeft: "30px" }} className={styles.buttonContainer}>

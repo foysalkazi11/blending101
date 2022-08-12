@@ -14,7 +14,7 @@ export interface WikiListType {
   hasInCompare: boolean;
 }
 
-export type WikiType = "Nutrient" | "Ingredient" | "Health";
+export type WikiType = "Nutrient" | "Ingredient" | "Health" | "";
 
 export interface Portion {
   measurement: string;
