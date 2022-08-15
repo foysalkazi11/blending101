@@ -7,8 +7,8 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import DropDown, {
   DropDownType,
 } from "../../../../theme/dropDown/DropDown.component";
-import NutrationPanelSkeleton from "../../../../theme/skeletons/nutrationPanelSkeleton/NutrationPanelSkeleton";
-import UpdatedRecursiveAccordian from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
+import NutritionPanelSkeleton from "../../../../theme/skeletons/nutrationPanelSkeleton/NutrationPanelSkeleton";
+import UpdatedRecursiveAccordion from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
 import PanelHeader from "../panelHeader/PanelHeader";
 import styles from "./NutritionPanel.module.scss";
 
@@ -50,9 +50,11 @@ const NutritionPanel = ({
     showDropDown: false,
   },
 }: NutritionPanelInterface) => {
+  const [servingSizeCounter, setServingSizeCounter] = useState(1);
   const selectedIngredientsList = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedIngredientsList,
   );
+  const dispatch = useAppDispatch();
   const { showDropDown, ...rest } = measurementDropDownState;
 
   const measurement =
@@ -61,11 +63,8 @@ const NutritionPanel = ({
   const nutrientName =
     nutritionState?.ingredientName ||
     nutritionState?.ingredientId?.ingredientName;
-  const sinngleIngQuintity =
+  const singleIngQuantity =
     parseFloat(nutritionState?.selectedPortion?.quantity) || 1;
-
-  const dispatch = useAppDispatch();
-  const [servingSizeCounter, setServingSizeCounter] = useState(1);
 
   useEffect(() => {
     if (servings) {
@@ -86,7 +85,7 @@ const NutritionPanel = ({
                   <>
                     <div>
                       <h3 className={styles.content__name}>
-                        {sinngleIngQuintity}&nbsp;
+                        {singleIngQuantity}&nbsp;
                         {measurement}
                         &nbsp;
                         {nutrientName}
@@ -153,17 +152,17 @@ const NutritionPanel = ({
         <div className={styles.compoent__box__nutrition}>
           {nutritionDataLoading ? (
             <div style={{ padding: " 0 10px" }}>
-              <NutrationPanelSkeleton />
+              <NutritionPanelSkeleton />
             </div>
           ) : (
-            <UpdatedRecursiveAccordian
+            <UpdatedRecursiveAccordion
               dataObject={nutritionTrayData}
               counter={isComeFormRecipeEditPage ? 1 : counter}
               servingSize={
                 isComeFormRecipeEditPage ? counter : servingSizeCounter
               }
               showUser={showUser}
-              sinngleIngQuintity={sinngleIngQuintity}
+              sinngleIngQuintity={singleIngQuantity}
             />
           )}
         </div>
