@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useRef, useState } from "react";
+import React, { useRef } from "react";
 import styles from "./WikiLanding.module.scss";
 import Image from "next/image";
 import Carousel from "../../../theme/carousel/carousel.component";
@@ -68,16 +68,9 @@ const WikiLandingContent = ({
   const [wikiCompareList, setWikiCompareList] = useLocalStorage<
     WikiCompareList[]
   >("wikiCompareList", []);
-  const sliderRef = useRef(null);
+
   const setting = {
     ...responsiveSetting,
-
-    // beforeChange: (current, next) => {
-    //   console.log(next);
-    // },
-    // afterChange: (index) => {
-    //   console.log(index);
-    // },
   };
 
   // find single wiki items
@@ -134,13 +127,6 @@ const WikiLandingContent = ({
             : dbUser?.wikiCompareCount + 1,
         }),
       );
-      // setWikiList((list) =>
-      //   list?.map((item) =>
-      //     item?._id === ingredientId
-      //       ? { ...item, hasInCompare: isCompared ? false : true }
-      //       : item,
-      //   ),
-      // );
 
       const findCompareItem = findCompareWikiEntity(ingredientId);
       if (findCompareItem) {
@@ -184,7 +170,7 @@ const WikiLandingContent = ({
       {loading ? (
         <SkeletonWikiDiscovery />
       ) : (
-        <Carousel moreSetting={setting} ref={sliderRef}>
+        <Carousel moreSetting={setting}>
           {list?.map((wikiList) => {
             const {
               _id,

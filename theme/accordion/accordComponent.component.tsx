@@ -21,6 +21,7 @@ type CustomAccordionProps = {
   nutritionId?: string;
   servingSize?: number;
   sinngleIngQuintity?: number;
+  showChildren?: boolean;
 };
 
 const AccordComponent = ({
@@ -38,8 +39,9 @@ const AccordComponent = ({
   nutritionId = "",
   servingSize = 1,
   sinngleIngQuintity = 1,
+  showChildren = false,
 }: CustomAccordionProps) => {
-  const [expanded, setExpanded] = useState<boolean>(true);
+  const [expanded, setExpanded] = useState<boolean>(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -49,6 +51,14 @@ const AccordComponent = ({
   const handleClickNutration = (id: string) => {
     router?.push(`/wiki/Nutrient/${id}`);
   };
+
+  useEffect(() => {
+    if (type === "mainHeading") {
+      setExpanded(true);
+    } else {
+      setExpanded(showChildren);
+    }
+  }, [showChildren, type]);
 
   useEffect(() => {
     if (contentRef.current) {
@@ -61,94 +71,87 @@ const AccordComponent = ({
     <div className={styles.accordion}>
       {!type ? (
         <div className={`${styles.accordionSummary}`}>
-          {
-            //@ts-ignore
-            finalNutritionValue > 0 && (
-              <div className={styles.accordionSummaryForNested}>
-                {expanded ? (
-                  <BiMinus
-                    className={styles.icon + " " + styles.iconCopy}
-                    style={!plusMinusIcon && { visibility: "hidden" }}
-                    onClick={() => {
-                      setExpanded(!expanded);
-                    }}
-                  />
-                ) : (
-                  <BsPlus
-                    className={styles.icon + " " + styles.iconCopy}
-                    style={!plusMinusIcon && { visibility: "hidden" }}
-                    onClick={() => {
-                      setExpanded(!expanded);
-                    }}
-                  />
-                )}
-                {lastElement ? (
+          {finalNutritionValue > 0 && (
+            <div className={styles.accordionSummaryForNested}>
+              {expanded ? (
+                <BiMinus
+                  className={styles.icon + " " + styles.iconCopy}
+                  style={!plusMinusIcon && { visibility: "hidden" }}
+                  onClick={() => {
+                    setExpanded(!expanded);
+                  }}
+                />
+              ) : (
+                <BsPlus
+                  className={styles.icon + " " + styles.iconCopy}
+                  style={!plusMinusIcon && { visibility: "hidden" }}
+                  onClick={() => {
+                    setExpanded(!expanded);
+                  }}
+                />
+              )}
+              {lastElement ? (
+                <div
+                  className={styles.accordianContent}
+                  style={{ border: "none" }}
+                >
                   <div
-                    className={styles.accordianContent}
-                    style={{ border: "none" }}
+                    className={
+                      value && unit
+                        ? styles.accordianContent__whiteCard
+                        : styles.accordianContent__whiteCard_conditionalSubheading
+                    }
                   >
-                    <div
-                      className={
-                        value && unit
-                          ? styles.accordianContent__whiteCard
-                          : styles.accordianContent__whiteCard_conditionalSubheading
-                      }
+                    <h5
+                      className={styles.titleCopy}
+                      onClick={() => handleClickNutration(nutritionId)}
                     >
-                      <h5
-                        className={styles.titleCopy}
-                        onClick={() => handleClickNutration(nutritionId)}
+                      {title}
+                    </h5>
+                    {
+                      <p
+                        className={styles.valueUnit + " " + styles.alignCenter}
                       >
-                        {title}
-                      </h5>
-                      {
-                        <p
-                          className={
-                            styles.valueUnit + " " + styles.alignCenter
-                          }
-                        >
-                          {`${finalNutritionValue}${unit?.toLowerCase()}`}
-                        </p>
-                      }
-                    </div>
-
-                    <p className={styles.valueUnit + " " + styles.percentage}>
-                      {percentage || ""}
-                    </p>
+                        {`${finalNutritionValue}${unit?.toLowerCase()}`}
+                      </p>
+                    }
                   </div>
-                ) : (
-                  <div className={styles.accordianContent}>
-                    <div
-                      className={
-                        value && unit
-                          ? styles.accordianContent__whiteCard
-                          : styles.accordianContent__whiteCard_conditionalSubheading
-                      }
+
+                  <p className={styles.valueUnit + " " + styles.percentage}>
+                    {percentage || ""}
+                  </p>
+                </div>
+              ) : (
+                <div className={styles.accordianContent}>
+                  <div
+                    className={
+                      value && unit
+                        ? styles.accordianContent__whiteCard
+                        : styles.accordianContent__whiteCard_conditionalSubheading
+                    }
+                  >
+                    <h5
+                      className={styles.titleCopy}
+                      onClick={() => handleClickNutration(nutritionId)}
                     >
-                      <h5
-                        className={styles.titleCopy}
-                        onClick={() => handleClickNutration(nutritionId)}
+                      {title}
+                    </h5>
+                    {
+                      <p
+                        className={styles.valueUnit + " " + styles.alignCenter}
                       >
-                        {title}
-                      </h5>
-                      {
-                        <p
-                          className={
-                            styles.valueUnit + " " + styles.alignCenter
-                          }
-                        >
-                          {`${finalNutritionValue}${unit?.toLowerCase()}`}
-                        </p>
-                      }
-                    </div>
-
-                    <p className={styles.valueUnit + " " + styles.percentage}>
-                      {percentage || ""}
-                    </p>
+                        {`${finalNutritionValue}${unit?.toLowerCase()}`}
+                      </p>
+                    }
                   </div>
-                )}
-              </div>
-            )
-          }
+
+                  <p className={styles.valueUnit + " " + styles.percentage}>
+                    {percentage || ""}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       ) : (
         <div className={`${styles.accordionSummary}`}>

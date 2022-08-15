@@ -37,23 +37,16 @@ const UpdatedCustomAccordion = ({
     );
   };
 
-  const populateAccordianData = (childrenFeild, firstChild) => {
+  const populateAccordionData = (childrenFelid: any, firstChild: boolean) => {
     return (
-      childrenFeild &&
-      Object?.entries(childrenFeild)?.map((itm, index) => {
-        //@ts-ignore
-        const dailyDosePercentage =
-          //@ts-ignore
+      childrenFelid &&
+      Object?.entries(childrenFelid)?.map((itm: any, index) => {
+        const dailyDosePercentage: any =
           dailyGoalsData?.[itm[1]?.blendNutrientRefference?._id];
-
-        //@ts-ignore
         const dailyGoals = dailyDosePercentage?.goal
-          ? //@ts-ignore
-            parseFloat(dailyDosePercentage?.goal)
-          : //@ts-ignore
-            parseFloat(dailyDosePercentage?.dri);
+          ? parseFloat(dailyDosePercentage?.goal)
+          : parseFloat(dailyDosePercentage?.dri);
 
-        //@ts-ignore
         if (itm[1]?.childs && Object.keys(itm[1]?.childs)?.length > 0) {
           if (firstChild) {
             return (
@@ -61,14 +54,11 @@ const UpdatedCustomAccordion = ({
                 <AccordComponent
                   title={itm[0]}
                   plusMinusIcon={true}
-                  //@ts-ignore
                   value={itm[1]?.value}
-                  //@ts-ignore
                   unit={itm[1]?.blendNutrientRefference?.units}
                   percentage={
                     dailyDosePercentage
                       ? `${calculateDailyPercentage(
-                          //@ts-ignore
                           parseFloat(itm[1]?.value),
                           dailyGoals,
                         )}%`
@@ -76,14 +66,11 @@ const UpdatedCustomAccordion = ({
                   }
                   counter={counter}
                   sinngleIngQuintity={sinngleIngQuintity}
-                  /* @ts-ignore */
                   nutritionId={itm[1]?.blendNutrientRefference?._id}
                   servingSize={servingSize}
+                  showChildren={itm[1]?.blendNutrientRefference?.showChildren}
                 >
-                  {
-                    //@ts-ignore
-                    populateAccordianData(itm[1]?.childs, false)
-                  }
+                  {populateAccordionData(itm[1]?.childs, false)}
                 </AccordComponent>
               </div>
             );
@@ -93,15 +80,11 @@ const UpdatedCustomAccordion = ({
                 <AccordComponent
                   title={itm[0]}
                   plusMinusIcon={true}
-                  //@ts-ignore
                   value={itm[1]?.value}
-                  //@ts-ignore
                   unit={itm[1]?.blendNutrientRefference?.units}
-                  //@ts-ignore
                   percentage={
                     dailyDosePercentage
                       ? `${calculateDailyPercentage(
-                          //@ts-ignore
                           parseFloat(itm[1]?.value),
                           dailyGoals,
                         )}%`
@@ -109,14 +92,11 @@ const UpdatedCustomAccordion = ({
                   }
                   counter={counter}
                   sinngleIngQuintity={sinngleIngQuintity}
-                  /* @ts-ignore */
                   nutritionId={itm[1]?.blendNutrientRefference?._id}
                   servingSize={servingSize}
+                  showChildren={itm[1]?.blendNutrientRefference?.showChildren}
                 >
-                  {
-                    //@ts-ignore
-                    populateAccordianData(itm[1]?.childs, false)
-                  }
+                  {populateAccordionData(itm[1]?.childs, false)}
                 </AccordComponent>
               </div>
             );
@@ -128,15 +108,11 @@ const UpdatedCustomAccordion = ({
                 <AccordComponent
                   title={itm[0]}
                   plusMinusIcon={false}
-                  //@ts-ignore
                   value={itm[1]?.value}
-                  //@ts-ignore
                   unit={itm[1]?.blendNutrientRefference?.units}
-                  //@ts-ignore
                   percentage={
                     dailyDosePercentage
                       ? `${calculateDailyPercentage(
-                          //@ts-ignore
                           parseFloat(itm[1]?.value),
                           dailyGoals,
                         )}%`
@@ -144,9 +120,9 @@ const UpdatedCustomAccordion = ({
                   }
                   counter={counter}
                   sinngleIngQuintity={sinngleIngQuintity}
-                  /* @ts-ignore */
                   nutritionId={itm[1]?.blendNutrientRefference?._id}
                   servingSize={servingSize}
+                  showChildren={itm[1]?.blendNutrientRefference?.showChildren}
                 />
               </div>
             );
@@ -156,15 +132,11 @@ const UpdatedCustomAccordion = ({
                 <AccordComponent
                   title={itm[0]}
                   plusMinusIcon={false}
-                  //@ts-ignore
                   value={itm[1]?.value}
-                  //@ts-ignore
                   unit={itm[1]?.blendNutrientRefference?.units}
-                  //@ts-ignore
                   percentage={
                     dailyDosePercentage
                       ? `${calculateDailyPercentage(
-                          //@ts-ignore
                           parseFloat(itm[1]?.value),
                           dailyGoals,
                         )}%`
@@ -172,9 +144,9 @@ const UpdatedCustomAccordion = ({
                   }
                   counter={counter}
                   sinngleIngQuintity={sinngleIngQuintity}
-                  /* @ts-ignore */
                   nutritionId={itm[1]?.blendNutrientRefference?._id}
                   servingSize={servingSize}
+                  showChildren={itm[1]?.blendNutrientRefference?.showChildren}
                 />
               </div>
             );
@@ -194,7 +166,7 @@ const UpdatedCustomAccordion = ({
         servingSize={servingSize}
         sinngleIngQuintity={sinngleIngQuintity}
       >
-        {populateAccordianData(content, true)}
+        {populateAccordionData(content, true)}
       </AccordComponent>
     )
   );
