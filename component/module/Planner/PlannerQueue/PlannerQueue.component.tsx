@@ -45,7 +45,7 @@ const PlannerPanel = (props: PlannerPanelProps) => {
   const [page, setPage] = useState(1);
   const [limit] = useState(3);
   const [pageLength, setPageLength] = useState(1);
-  const [type, setType] = useState("All");
+  const [type, setType] = useState("all");
   const [recipes, setRecipes] = useState([]);
 
   const blendTypeRef = useRef<HTMLDivElement>(null);
@@ -60,6 +60,7 @@ const PlannerPanel = (props: PlannerPanelProps) => {
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
   useEffect(() => {
+    const blendCategory = type === "all" ? "" : type;
     if (userId !== "")
       getRecipes({
         variables: {
@@ -67,7 +68,7 @@ const PlannerPanel = (props: PlannerPanelProps) => {
           searchTerm: query,
           page,
           limit,
-          type,
+          type: blendCategory,
         },
       });
     getQueuedRecipes({
@@ -76,7 +77,7 @@ const PlannerPanel = (props: PlannerPanelProps) => {
         searchTerm: query,
         page,
         limit,
-        type,
+        type: blendCategory,
       },
     });
   }, [getQueuedRecipes, getRecipes, limit, page, query, type, userId]);
@@ -104,7 +105,7 @@ const PlannerPanel = (props: PlannerPanelProps) => {
   useEffect(() => {
     setQuery("");
     setPage(1);
-    setType("");
+    setType("all");
   }, [toggler]);
 
   // Handling the Blendtype Combobox, When the search is focused/hovered it should be hidden or vice-versa
@@ -124,6 +125,7 @@ const PlannerPanel = (props: PlannerPanelProps) => {
         iconStyle={{ fontSize: "18px" }}
       />
       <ToggleCard
+        noRoute
         toggler={toggler}
         setTogglerFunc={setToggler}
         leftToggleHeading="Discover"
@@ -135,10 +137,14 @@ const PlannerPanel = (props: PlannerPanelProps) => {
       <div className={styles.action}>
         <div ref={blendTypeRef}>
           <Combobox
-            options={categories?.getAllCategories ? [
-              { label: "All", value: "" },
-              ...categories?.getAllCategories,
-            ] : [{ label: "All", value: "" }]}
+            options={
+              categories?.getAllCategories
+                ? [
+                    { label: "All", value: "all" },
+                    ...categories?.getAllCategories,
+                  ]
+                : [{ label: "All", value: "all" }]
+            }
             className={styles.blendType}
             value={type}
             onChange={(e) => setType(e.target.value)}
@@ -181,7 +187,9 @@ const Recipes = (props) => {
   const [showCalenderId, setShowCalenderId] = useState("");
 
   const [getIngredients, { data }] = useLazyQuery(GET_INGREDIENTS_BY_RECIPE);
-  const [addRecipe, addState] = useMutation(ADD_RECIPE_TO_PLANNER);
+  const [addRecipe, addState] = useMutation(ADD_RECIPE_TO_PLANNER, {
+    refetchQueries: [GET_QUEUED_RECIPES_FOR_PLANNER],
+  });
 
   const dispatch = useDispatch();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");

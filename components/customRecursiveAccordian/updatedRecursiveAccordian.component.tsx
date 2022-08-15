@@ -5,7 +5,6 @@ import styles from "./updatedRecursiveAccordian.module.scss";
 import Image from "next/image";
 import { FaRegUser } from "react-icons/fa";
 import { useRouter } from "next/router";
-import { GET_DAILY_BY_USER_ID } from "../../gqlLib/user/mutations/query/getDaily";
 import { useQuery } from "@apollo/client";
 import GET_DAILY_GOALS from "../../gqlLib/dri/query/getDailyGoals";
 
@@ -18,7 +17,7 @@ interface recursiveAccordianInterface {
 }
 
 const UpdatedRecursiveAccordian = ({
-  dataObject,
+  dataObject = {},
   counter = 1,
   showUser = true,
   servingSize = 1,
@@ -31,6 +30,7 @@ const UpdatedRecursiveAccordian = ({
     variables: { memberId: dbUser?._id },
   });
 
+  const goals = dailyData?.getDailyGoals?.goals;
   return (
     <>
       <div className={styles.nutritionHeader}>
@@ -97,7 +97,7 @@ const UpdatedRecursiveAccordian = ({
                 content={elem[1]}
                 type={"mainHeading"}
                 counter={counter}
-                dailyGoalsData={dailyData?.getDailyGoals?.goals}
+                dailyGoalsData={goals}
                 servingSize={servingSize}
                 sinngleIngQuintity={sinngleIngQuintity}
               />
