@@ -64,16 +64,16 @@ const UploadCard = ({ setUploadState }: UploadCardInterface) => {
   }, [name]);
 
   const handleSubmit = async (data) => {
-    if (images.length === 0 || ingredients.length === 0) return;
+    // if (images.length === 0 || ingredients.length === 0) return;
     const date = new Date(data.assignDate).toISOString();
     const post = {
       memberId: userId,
       assignDate: date,
       post: {
         images,
-        recipeId: _id,
+        // recipeId: _id,
         name: data.recipeTitle,
-        recipeImage: image,
+        recipeImage: image || "",
         recipeBlendCategory: data.category,
         note: data.note,
         servings: serving,
@@ -93,6 +93,7 @@ const UploadCard = ({ setUploadState }: UploadCardInterface) => {
       state: addState,
       success: "Submitted Post Successfully",
       onSuccess: () => {
+        setUploadState(false);
         methods.reset(defaultValues);
         dispatch(resetForm());
         setImages([]);
@@ -149,7 +150,6 @@ const UploadCard = ({ setUploadState }: UploadCardInterface) => {
                   name="recipeTitle"
                   defaultValue={name}
                   className={styles.recipe__title}
-                  required
                 />
                 <div className={styles.imageContainer}>
                   {image ? (

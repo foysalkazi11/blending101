@@ -60,6 +60,7 @@ const Gallery = () => {
           ref={(slider) => (slider1.current = slider)}
           nextArrow={<MainNextArrow />}
           prevArrow={<MainPrevArrow />}
+          initialSlide={0}
         >
           {images.map((item) => (
             <div
@@ -84,6 +85,8 @@ const Gallery = () => {
           centerPadding="0px"
           nextArrow={<PreviewNextArrow />}
           prevArrow={<PreviewPrevArrow />}
+          initialSlide={0}
+          
         >
           {images.map((item) => (
             <div key={item.date + item.src} className={styles.gallery__preview}>

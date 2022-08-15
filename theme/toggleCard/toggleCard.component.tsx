@@ -3,6 +3,7 @@ import React, { ReactNode } from "react";
 import styles from "./toggleCard.module.scss";
 
 interface ToggleCardInterface {
+  noRoute?: boolean;
   toggler?: boolean;
   leftToggleHeading?: string;
   rightToggleHeading?: string;
@@ -16,6 +17,7 @@ interface ToggleCardInterface {
   setTogglerFunc?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const ToggleCard = ({
+  noRoute,
   toggler,
   leftToggleHeading,
   rightToggleHeading,
@@ -64,8 +66,8 @@ const ToggleCard = ({
               ...(toggler ? activeToggleBorderStyle : {}),
             }}
             onClick={() => {
-              router.push("/challenge", undefined, { shallow: true });
-              // setTogglerFunc && setTogglerFunc(true);
+              if (noRoute) setTogglerFunc && setTogglerFunc(true);
+              else router.push("/challenge", undefined, { shallow: true });
             }}
           >
             {leftToggleHeading}
@@ -77,8 +79,8 @@ const ToggleCard = ({
               ...(!toggler ? activeToggleBorderStyle : {}),
             }}
             onClick={() => {
-              router.push("/planner", undefined, { shallow: true });
-              // setTogglerFunc && setTogglerFunc(false);
+              if (noRoute) setTogglerFunc && setTogglerFunc(false);
+              else router.push("/planner", undefined, { shallow: true });
             }}
           >
             {rightToggleHeading}

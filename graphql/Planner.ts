@@ -10,9 +10,6 @@ export const GET_30DAYS_CHALLENGE = gql`
         disabled
         formattedDate
         posts {
-          recipeId {
-            _id
-          }
           recipeBlendCategory {
             name
           }
