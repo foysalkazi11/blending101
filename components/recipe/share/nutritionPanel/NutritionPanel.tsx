@@ -26,6 +26,7 @@ interface NutritionPanelInterface {
   showServing?: boolean;
   showUser?: boolean;
   measurementDropDownState?: DropDownType & { showDropDown: boolean };
+  showTitle?: boolean;
 }
 
 const NutritionPanel = ({
@@ -49,6 +50,7 @@ const NutritionPanel = ({
     handleChange: () => {},
     showDropDown: false,
   },
+  showTitle = true,
 }: NutritionPanelInterface) => {
   const [servingSizeCounter, setServingSizeCounter] = useState(1);
   const selectedIngredientsList = useAppSelector(
@@ -77,7 +79,8 @@ const NutritionPanel = ({
       <PanelHeader icon="/icons/chart-bar-light-green.svg" title="Rx Facts" />
       <div className={styles.right}>
         <div className={styles.right__headerDiv}>
-          <div className={styles.right__title}>Nutrition</div>
+          {showTitle && <div className={styles.right__title}>Nutrition</div>}
+
           {showServing ? (
             nutritionState?._id || nutritionState?.ingredientId?._id ? (
               <div className={styles.content}>
@@ -147,7 +150,12 @@ const NutritionPanel = ({
             )
           ) : null}
         </div>
-        {showDropDown ? <DropDown {...rest} /> : null}
+        {showDropDown ? (
+          <div className={styles.unitDropDownBox}>
+            <p className={styles.title}>Unit</p>
+            <DropDown {...rest} />
+          </div>
+        ) : null}
 
         <div className={styles.compoent__box__nutrition}>
           {nutritionDataLoading ? (
