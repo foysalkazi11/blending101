@@ -286,3 +286,14 @@
     border: 0;
   }
 }
+
+.unitDropDownBox {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  .title {
+    font-size: 14px;
+    color: #8b8a8a;
+    margin-right: 10px;
+  }
+}
