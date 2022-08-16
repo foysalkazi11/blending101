@@ -9,8 +9,10 @@ $slider-height: 220px;
 }
 
 .heading {
+  width: 100%;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 
   h3 {
     margin: 0;
@@ -27,12 +29,13 @@ $slider-height: 220px;
   .ratingBox {
     display: flex;
     align-items: center;
+    cursor: pointer;
     font-size: 14px;
     font-weight: 500;
     line-height: 1;
-    padding-left: 20px;
+    padding-left: 10px;
     font-weight: 400;
-    width: 7.5rem;
+    width: 80px;
 
     img {
       max-width: 12px;

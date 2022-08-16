@@ -76,8 +76,6 @@ function WikiCenterComponent({
   const { isOpenWikiCommentsTray, wikiCommentsTrayCurrentWikiEntity } =
     useAppSelector((state) => state?.wiki);
 
-  console.log(wikiCommentsTrayCurrentWikiEntity);
-
   const openWikiCommentsTray = () => {
     if (!isOpenWikiCommentsTray) {
       dispatch(setIsOpenWikiCommentsTray(true));

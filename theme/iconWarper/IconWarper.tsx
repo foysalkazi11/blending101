@@ -6,7 +6,7 @@ interface IconProps {
   style?: React.CSSProperties;
   handleClick?: (e: React.SyntheticEvent) => void;
   hover?: "bgPrimary" | "bgSecondary" | "bgGray" | "bgSlightGray" | "none";
-  defaultBg?: "gray" | "primary" | "secondary" | "none";
+  defaultBg?: "gray" | "primary" | "secondary" | "slightGray" | "none";
 }
 
 const IconWarper = ({
