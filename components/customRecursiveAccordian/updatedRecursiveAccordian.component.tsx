@@ -7,6 +7,9 @@ import { FaRegUser } from "react-icons/fa";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import GET_DAILY_GOALS from "../../gqlLib/dri/query/getDailyGoals";
+import DropDown, {
+  DropDownType,
+} from "../../theme/dropDown/DropDown.component";
 
 interface recursiveAccordianInterface {
   dataObject: object;
@@ -14,6 +17,7 @@ interface recursiveAccordianInterface {
   showUser?: boolean;
   servingSize?: number;
   sinngleIngQuintity?: number;
+  measurementDropDownState?: DropDownType & { showDropDown: boolean };
 }
 
 const UpdatedRecursiveAccordian = ({
@@ -22,7 +26,16 @@ const UpdatedRecursiveAccordian = ({
   showUser = true,
   servingSize = 1,
   sinngleIngQuintity = 1,
+  measurementDropDownState = {
+    listElem: [],
+    style: {},
+    value: "",
+    name: "",
+    handleChange: () => {},
+    showDropDown: false,
+  },
 }: recursiveAccordianInterface) => {
+  const { showDropDown, ...rest } = measurementDropDownState;
   const { user, dbUser } = useAppSelector((state) => state?.user);
   const router = useRouter();
   const { data: dailyData } = useQuery(GET_DAILY_GOALS, {
@@ -33,6 +46,12 @@ const UpdatedRecursiveAccordian = ({
   const goals = dailyData?.getDailyGoals?.goals;
   return (
     <>
+      {showDropDown && (
+        <div className={styles.unitDropDownBox}>
+          <p className={styles.title}>Unit</p>
+          <DropDown {...rest} />
+        </div>
+      )}
       <div className={styles.nutritionHeader}>
         <div className={styles.recursiveAccordianHeading__heading}>
           <div className={styles.recursiveAccordianHeading__heading__1}>
