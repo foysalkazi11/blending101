@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import useGetDefaultPortionOfnutration from "../../customHooks/useGetDefaultPortionOfNutration";
 import { setSelectedIngredientsList } from "../../redux/edit_recipe/editRecipeStates";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import Tooltip from "../toolTip/CustomToolTip";
 import styles from "./linearProgress.module.scss";
 import LinearIndicatorcomponent from "./progress/progress.component";
 interface Props {
@@ -14,6 +15,7 @@ interface Props {
   units?: string;
   highestValue: number;
   handleOnChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  measurement?: string;
 }
 
 const Linearcomponent = ({
@@ -26,12 +28,13 @@ const Linearcomponent = ({
   ingredientId = "",
   checkedState,
   handleOnChange = () => {},
+  measurement = "",
 }: Props) => {
   const [ingId, setIngId] = useState("");
   useGetDefaultPortionOfnutration(ingId);
   const dispatch = useAppDispatch();
   const selectedIngredientsList = useAppSelector(
-    (state) => state.editRecipeReducer.selectedIngredientsList
+    (state) => state.editRecipeReducer.selectedIngredientsList,
   );
 
   const handleIngredientClick = (ingredient) => {
@@ -75,6 +78,7 @@ const Linearcomponent = ({
           {`${percent}${units?.toLowerCase()}`}
         </div>
       </div>
+
       <LinearIndicatorcomponent percent={percent} highestValue={highestValue} />
     </div>
   );
