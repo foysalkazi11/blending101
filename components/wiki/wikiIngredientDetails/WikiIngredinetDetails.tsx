@@ -6,7 +6,7 @@ import WikiCard from "../wikiCard/WikiCard";
 import styles from "./WikiIngredientDetails.module.scss";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
 import { WikiCompareList } from "../../../type/wikiCompareList";
-import { useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import UpdatedRecursiveAccordion from "../../customRecursiveAccordian/updatedRecursiveAccordian.component";
 import GET_BLEND_NUTRITION_BASED_ON_RECIPEXXX from "../../../gqlLib/nutrition/query/getBlendNutritionBasedOnRecipexxx";
 
@@ -24,36 +24,55 @@ const WikiIngredientDetails = ({
   ingredient = {} as WikiCompareList,
   handleAddOrRemoveToWikiCompareList = () => {},
 }: Props) => {
+  const [defaultMeasureMentWeight, setDefaultMeasureMentWeight] =
+    useState(null);
   const {
     _id,
     category,
     commentsCount,
     hasInCompare,
     image,
-    portion,
+    portions,
     publishedBy,
     type,
     wikiDescription,
     wikiTitle,
   } = ingredient;
   const [winReady, setWinReady] = useState(false);
-  const { loading, error, data } = useQuery(
-    GET_BLEND_NUTRITION_BASED_ON_RECIPEXXX,
-    {
-      variables: {
-        ingredientsInfo: [
-          {
-            ingredientId: ingredient?._id,
-            value: parseFloat(portion?.meausermentWeight),
-          },
-        ],
-      },
-    },
-  );
+  const [getBlendNutritionBasedOnRecipexxx, { loading, error, data }] =
+    useLazyQuery(GET_BLEND_NUTRITION_BASED_ON_RECIPEXXX);
+
+  const fetchNutritionPanelData = () => {
+    try {
+      getBlendNutritionBasedOnRecipexxx({
+        variables: {
+          ingredientsInfo: [
+            {
+              ingredientId: ingredient?._id,
+              value: parseFloat(defaultMeasureMentWeight),
+            },
+          ],
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     setWinReady(true);
+    setDefaultMeasureMentWeight(
+      portions?.find((item) => item?.default)?.meausermentWeight,
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (defaultMeasureMentWeight) {
+      fetchNutritionPanelData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultMeasureMentWeight]);
 
   return (
     <div className={styles.recipeDetailsFirstContainer}>
@@ -91,14 +110,26 @@ const WikiIngredientDetails = ({
               loading ? (
                 <NutritionPanelSkeleton />
               ) : (
-                <UpdatedRecursiveAccordion
-                  dataObject={
-                    data?.getBlendNutritionBasedOnRecipexxx &&
-                    JSON?.parse(data?.getBlendNutritionBasedOnRecipexxx)
-                  }
-                  showUser={false}
-                  counter={1}
-                />
+                <>
+                  <UpdatedRecursiveAccordion
+                    dataObject={
+                      data?.getBlendNutritionBasedOnRecipexxx &&
+                      JSON?.parse(data?.getBlendNutritionBasedOnRecipexxx)
+                    }
+                    showUser={false}
+                    counter={1}
+                    measurementDropDownState={{
+                      showDropDown: true,
+                      value: defaultMeasureMentWeight,
+                      handleChange: (e) =>
+                        setDefaultMeasureMentWeight(e?.target?.value),
+                      listElem: portions?.map((item) => ({
+                        name: item?.measurement,
+                        value: item?.meausermentWeight,
+                      })),
+                    }}
+                  />
+                </>
               )
             ) : null}
           </div>
