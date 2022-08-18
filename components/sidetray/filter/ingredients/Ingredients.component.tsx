@@ -10,7 +10,7 @@ import { setAllIngredients } from "../../../../redux/slices/ingredientsSlice";
 import useGetAllIngredientsDataBasedOnNutrition from "../../../../customHooks/useGetAllIngredientsDataBasedOnNutrition";
 import IngredientPictureSection from "../ingredientPictureSection/IngredientPictureSection";
 import RankingSection from "../rankingSection/RankingSection";
-import { setIngredients } from "../../../../redux/slices/sideTraySlice";
+import { Portion } from "../../../../type/wikiCompareList";
 
 export const categories = [
   { name: "All", value: "All" },
@@ -33,6 +33,7 @@ export interface ingredientState {
   value: number;
   units: string;
   ingredientId: string;
+  portion: Portion;
 }
 
 export interface List {
