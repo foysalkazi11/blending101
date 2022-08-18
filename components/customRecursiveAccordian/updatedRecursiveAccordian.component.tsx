@@ -48,7 +48,7 @@ const UpdatedRecursiveAccordian = ({
     <>
       {showDropDown && (
         <div className={styles.unitDropDownBox}>
-          <p className={styles.title}>Unit</p>
+          <p className={styles.title}>Portion</p>
           <DropDown {...rest} />
         </div>
       )}
