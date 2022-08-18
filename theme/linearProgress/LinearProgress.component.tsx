@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import useGetDefaultPortionOfnutration from "../../customHooks/useGetDefaultPortionOfNutration";
+import { Portion } from "../../type/wikiCompareList";
 import Tooltip from "../toolTip/CustomToolTip";
 import styles from "./linearProgress.module.scss";
 import LinearIndicatorcomponent from "./progress/progress.component";
@@ -13,7 +14,7 @@ interface Props {
   units?: string;
   highestValue: number;
   handleOnChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  measurement?: string;
+  portion?: Portion;
 }
 
 const Linearcomponent = ({
@@ -26,7 +27,11 @@ const Linearcomponent = ({
   ingredientId = "",
   checkedState,
   handleOnChange = () => {},
-  measurement = "",
+  portion = {
+    default: true,
+    meausermentWeight: "",
+    measurement: "",
+  },
 }: Props) => {
   const [ingId, setIngId] = useState("");
   useGetDefaultPortionOfnutration(ingId);
@@ -52,7 +57,10 @@ const Linearcomponent = ({
           {`${percent}${units?.toLowerCase()}`}
         </div>
       </div>
-      <Tooltip content={measurement} direction="top">
+      <Tooltip
+        content={`1 ${portion?.measurement} (${portion?.meausermentWeight}g)`}
+        direction="top"
+      >
         <LinearIndicatorcomponent
           percent={percent}
           highestValue={highestValue}

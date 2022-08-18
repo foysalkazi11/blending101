@@ -78,7 +78,7 @@ const RankingSection = ({
                       checkActiveIngredient(ingredientId),
                     )
                   }
-                  measurement={portion?.measurement}
+                  portion={portion}
                 />
               );
             },
