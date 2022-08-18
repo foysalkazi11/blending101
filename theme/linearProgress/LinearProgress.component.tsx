@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import useGetDefaultPortionOfnutration from "../../customHooks/useGetDefaultPortionOfNutration";
-import { setSelectedIngredientsList } from "../../redux/edit_recipe/editRecipeStates";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import Tooltip from "../toolTip/CustomToolTip";
 import styles from "./linearProgress.module.scss";
 import LinearIndicatorcomponent from "./progress/progress.component";
@@ -32,29 +30,6 @@ const Linearcomponent = ({
 }: Props) => {
   const [ingId, setIngId] = useState("");
   useGetDefaultPortionOfnutration(ingId);
-  const dispatch = useAppDispatch();
-  const selectedIngredientsList = useAppSelector(
-    (state) => state.editRecipeReducer.selectedIngredientsList,
-  );
-
-  const handleIngredientClick = (ingredient) => {
-    let blendz = [];
-    let present = false;
-    selectedIngredientsList?.forEach((blen) => {
-      if (blen === ingredient) {
-        present = true;
-      }
-    });
-    if (!present) {
-      blendz = [...selectedIngredientsList, ingredient];
-    } else {
-      blendz = selectedIngredientsList?.filter((blen) => {
-        return blen !== ingredient;
-      });
-    }
-
-    dispatch(setSelectedIngredientsList(blendz));
-  };
 
   return (
     <div className={styles.mainDiv}>
@@ -66,7 +41,6 @@ const Linearcomponent = ({
               type="checkbox"
               checked={checkedState}
               onChange={(e) => handleOnChange(e)}
-              // onClick={() => handleIngredientClick(element)}
             />
             <span className={styles.mark}></span>
           </span>
@@ -78,8 +52,12 @@ const Linearcomponent = ({
           {`${percent}${units?.toLowerCase()}`}
         </div>
       </div>
-
-      <LinearIndicatorcomponent percent={percent} highestValue={highestValue} />
+      <Tooltip content={measurement} direction="top">
+        <LinearIndicatorcomponent
+          percent={percent}
+          highestValue={highestValue}
+        />
+      </Tooltip>
     </div>
   );
 };

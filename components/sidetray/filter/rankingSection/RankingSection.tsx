@@ -52,7 +52,10 @@ const RankingSection = ({
           <IngredientPanelSkeleton />
         ) : arrayOrderState?.length ? (
           arrayOrderState?.map(
-            ({ name, value, units, ingredientId }: ingredientState, index) => {
+            (
+              { name, value, units, ingredientId, portion }: ingredientState,
+              index,
+            ) => {
               return (
                 <Linearcomponent
                   name={name}
@@ -75,8 +78,7 @@ const RankingSection = ({
                       checkActiveIngredient(ingredientId),
                     )
                   }
-                  //@ts-ignore
-                  measurement={arrayOrderState?.portion?.measurement}
+                  measurement={portion?.measurement}
                 />
               );
             },
