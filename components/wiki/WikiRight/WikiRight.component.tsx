@@ -3,9 +3,10 @@ import styles from "./WikiRight.module.scss";
 import LinearComponent from "../../../theme/linearProgress/LinearProgress.component";
 import Image from "next/image";
 import { useLazyQuery } from "@apollo/client";
-import GET_ALL_INGREDIENTS_BASED_ON_NURTITION from "../../../gqlLib/wiki/query/getAllIngredientsBasedOnNutrition";
 import IngredientPanelSkeleton from "../../../theme/skeletons/ingredientPanelSleketon/IngredientPanelSkeleton";
 import Combobox from "../../../theme/dropDown/combobox/Combobox.component";
+import { Portion } from "../../../type/wikiListType";
+import GET_ONLY_INGREDIENTS_BASED_ON_NURTITION from "../../../gqlLib/wiki/query/getOnlyIngredientsBasedOnNutrition";
 
 const categories = [
   { label: "All", value: "All" },
@@ -28,6 +29,7 @@ interface ingredientState {
   value: number;
   units: string;
   ingredientId: string;
+  portion: Portion;
 }
 
 interface NutrientPanelProps {
@@ -43,14 +45,14 @@ function WikiRightComponent({
   const [ingredientData, setIngredientData] = useState([]);
 
   const [getAllIngredientsBasedOnNutrition, { data, loading, error }] =
-    useLazyQuery(GET_ALL_INGREDIENTS_BASED_ON_NURTITION, {
-      fetchPolicy: "network-only",
+    useLazyQuery(GET_ONLY_INGREDIENTS_BASED_ON_NURTITION, {
+      fetchPolicy: "cache-and-network",
     });
   const isMounted = useRef(false);
 
   const fetchData = async () => {
     try {
-      await getAllIngredientsBasedOnNutrition({
+      const { data } = await getAllIngredientsBasedOnNutrition({
         variables: {
           data: {
             nutritionID: wikiId,
@@ -58,6 +60,7 @@ function WikiRightComponent({
           },
         },
       });
+      setIngredientData(data?.getAllIngredientsBasedOnNutrition?.ingredients);
     } catch (error) {
       console.log(error);
     }
@@ -76,12 +79,6 @@ function WikiRightComponent({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dpd]);
-
-  useEffect(() => {
-    if (isMounted?.current) {
-      setIngredientData(data?.getAllIngredientsBasedOnNutrition?.ingredients);
-    }
-  }, [data]);
 
   useEffect(() => {
     isMounted.current = true;
@@ -128,8 +125,8 @@ function WikiRightComponent({
           ) : ingredientData?.length ? (
             ingredientData?.map(
               (
-                { name, value, units, ingredientId }: ingredientState,
-                index
+                { name, value, units, ingredientId, portion }: ingredientState,
+                index,
               ) => {
                 return (
                   <LinearComponent
@@ -140,9 +137,10 @@ function WikiRightComponent({
                     //@ts-ignore
                     highestValue={ingredientData[0]?.value}
                     ingredientId={ingredientId}
+                    portion={portion}
                   />
                 );
-              }
+              },
             )
           ) : (
             <p className={styles.noIngredient}>No ingredient found</p>
