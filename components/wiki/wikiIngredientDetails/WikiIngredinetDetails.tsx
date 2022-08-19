@@ -124,7 +124,7 @@ const WikiIngredientDetails = ({
                       handleChange: (e) =>
                         setDefaultMeasureMentWeight(e?.target?.value),
                       listElem: portions?.map((item) => ({
-                        name: item?.measurement,
+                        name: `1 ${item?.measurement} (${item?.meausermentWeight}g)`,
                         value: item?.meausermentWeight,
                       })),
                     }}

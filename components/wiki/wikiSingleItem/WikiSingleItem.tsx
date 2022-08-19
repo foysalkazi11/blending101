@@ -175,7 +175,7 @@ function WikiSingleItem() {
                 handleChange: (e) =>
                   setDefaultMeasureMentWeight(e?.target?.value),
                 listElem: data?.portions?.map((item) => ({
-                  name: item?.measurement,
+                  name: `1 ${item?.measurement} (${item?.meausermentWeight}g)`,
                   value: item?.meausermentWeight,
                 })),
               }}
@@ -184,6 +184,7 @@ function WikiSingleItem() {
             <WikiRightComponent
               ingredient={data?.ingredients}
               wikiId={wikiId}
+              ingredientsDataLoading={ingredientsData?.loading}
             />
           )}
         </>
