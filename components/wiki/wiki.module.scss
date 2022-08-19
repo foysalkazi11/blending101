@@ -34,40 +34,22 @@
   width: 100%;
 }
 
-.mainwiki {
-  background-color: #fafbf9;
+.singleWikiItemContainer {
   min-height: 100vh;
   width: 100%;
   max-width: $_3xl;
   padding: 0 10px;
   margin: 40px auto 20px auto;
-  transition: all 500ms ease;
   display: grid;
-  grid-template-columns: minmax(0, auto) minmax(300px, 350px);
+  grid-template-columns: minmax(0, 1fr);
   grid-auto-rows: auto;
+  grid-gap: 16px;
+
+  @include media(lg) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    padding: 0 16px;
+  }
   @include media(xl) {
-    grid-template-columns: minmax(300px, 350px) minmax(0, auto) minmax(
-        300px,
-        350px
-      );
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr);
   }
 }
-
-@media only screen and (max-width: 1280px) {
-  .mainwiki {
-    grid-template-columns: 70% auto;
-  }
-}
-
-@media only screen and (max-width: 1024px) {
-  .mainwiki {
-    grid-template-columns: 100%;
-  }
-}
-
-// @media only screen and (min-width: 980px) {
-//   .mainwiki {
-//     padding-left: 10px;
-//     padding-right: 10px;
-//   }
-// }

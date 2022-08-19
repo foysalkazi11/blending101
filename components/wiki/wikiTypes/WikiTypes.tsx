@@ -25,7 +25,7 @@ const WikiTypes = ({ type = "Ingredient", setType = () => {} }: Props) => {
 
   return (
     <div className={s.wikiTypeContainer}>
-      <h3 className={s.title}>Type</h3>
+      <h3 className={s.title}>Wiki type</h3>
       <div className={s.borderBottom}></div>
       <div className={s.imageBox}>
         {typeList?.map((item) => {
