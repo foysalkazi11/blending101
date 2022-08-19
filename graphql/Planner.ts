@@ -1,5 +1,31 @@
 import { gql } from "@apollo/client";
 
+export const GET_30DAYS_POST = gql`
+  query GetChallengePosts($userId: String!) {
+    getChallengePosts(page: 1, limit: 30, memberId: $userId) {
+      challenge {
+        _id
+        date
+        images
+        posts {
+          _id
+          recipeBlendCategory {
+            _id
+            name
+          }
+          name
+          note
+          ingredients {
+            ingredientId {
+              ingredientName
+            }
+          }
+        }
+      }
+      totalPost
+    }
+  }
+`;
 export const GET_30DAYS_CHALLENGE = gql`
   query Get30DaysChallenge($userId: String!) {
     getMyThirtyDaysChallenge(memberId: $userId) {
@@ -29,6 +55,8 @@ export const GET_30DAYS_CHALLENGE = gql`
 export const GET_CHALLENGE_DETAIL = gql`
   query GetChallengeDetail($userId: String!, $date: DateTime!) {
     getAllChallengePostByDate(memberId: $userId, date: $date) {
+      docId
+      _id
       images
       recipeBlendCategory {
         name
@@ -39,28 +67,6 @@ export const GET_CHALLENGE_DETAIL = gql`
       ingredients {
         ingredientId {
           ingredientName
-        }
-      }
-    }
-  }
-`;
-
-export const GET_RECENT_POST = gql`
-  query GetRecentPost($memberId: String!) {
-    getLatestChallengePost(memberId: $memberId) {
-      assignDate
-      posts {
-        images
-        recipeBlendCategory {
-          name
-        }
-        name
-        note
-        recipeImage
-        ingredients {
-          ingredientId {
-            ingredientName
-          }
         }
       }
     }
@@ -87,6 +93,7 @@ export const GET_RECIPES_FOR_PLANNER = gql`
         _id
         name
         recipeBlendCategory {
+          _id
           name
         }
         averageRating
@@ -114,6 +121,7 @@ export const GET_RECIPES_FOR_PLANNER = gql`
 
 export const GET_QUEUED_RECIPES_FOR_PLANNER = gql`
   query GetQueuedRecipesForPlanner(
+    $currentDate: String!
     $searchTerm: String!
     $page: Float!
     $limit: Float!
@@ -121,6 +129,7 @@ export const GET_QUEUED_RECIPES_FOR_PLANNER = gql`
     $user: String!
   ) {
     getQuedPlanner(
+      currentDate: $currentDate
       page: $page
       limit: $limit
       userId: $user
@@ -160,8 +169,8 @@ export const GET_QUEUED_RECIPES_FOR_PLANNER = gql`
 export const GET_PLANNER_BY_WEEK = gql`
   query GetPlannerByWeek(
     $userId: String!
-    $startDate: DateTime!
-    $endDate: DateTime!
+    $startDate: String!
+    $endDate: String!
   ) {
     getPlannerByDates(
       userId: $userId
@@ -176,7 +185,7 @@ export const GET_PLANNER_BY_WEEK = gql`
           name
         }
       }
-      assignDate
+      formatedDate
     }
   }
 `;
@@ -185,7 +194,7 @@ export const ADD_RECIPE_TO_PLANNER = gql`
   mutation AddRecipeToPlanner(
     $userId: ID!
     $recipeId: ID!
-    $assignDate: DateTime!
+    $assignDate: String!
   ) {
     createPlanner(
       data: { memberId: $userId, recipe: $recipeId, assignDate: $assignDate }
@@ -212,8 +221,8 @@ export const GET_INGREDIENTS_BY_RECIPE = gql`
 `;
 
 export const MOVE_PLANNER = gql`
-  mutation MovePlanner($data: EditPlanner!) {
-    editPlanner(data: $data) {
+  mutation MovePlanner($data: MovePlanner!) {
+    movePlanner(data: $data) {
       _id
     }
   }
@@ -228,8 +237,8 @@ export const DELETE_RECIPE_FROM_PLANNER = gql`
 export const CLEAR_PLANNER = gql`
   mutation ClearPlanner(
     $userId: String!
-    $startDate: DateTime!
-    $endDate: DateTime!
+    $startDate: String!
+    $endDate: String!
   ) {
     clearPlannerByDates(
       userId: $userId

@@ -8,7 +8,7 @@ import PlannerQueue from "../component/module/Planner/PlannerQueue/PlannerQueue.
 import { RecipePlanner } from "../component/module/Planner/Toolbox/RecipePlanner.component";
 import UploadCard from "../component/module/Planner/Toolbox/UploadCard.component";
 import AContainer from "../containers/A.container";
-import { GET_30DAYS_CHALLENGE, GET_RECENT_POST } from "../graphql/Planner";
+import { GET_30DAYS_CHALLENGE, GET_30DAYS_POST } from "../graphql/Planner";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
 import styles from "../styles/pages/planner.module.scss";
@@ -29,41 +29,29 @@ const Planner = () => {
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
-  const [get30DaysChallenge, { loading, data }] = useLazyQuery(
-    GET_30DAYS_CHALLENGE,
-    {
-      variables: {
-        userId,
-      },
+  const [get30DaysChallenge, { data }] = useLazyQuery(GET_30DAYS_CHALLENGE, {
+    variables: {
+      userId,
     },
-  );
+  });
 
-  const [getRecentChallengeData, { data: challenge }] = useLazyQuery(
-    GET_RECENT_POST,
-    {
-      fetchPolicy: "no-cache",
-    },
-  );
+  const [getChallengePosts, { data: challenge }] =
+    useLazyQuery(GET_30DAYS_POST);
 
   useEffect(() => {
     if (userId !== "")
-      getRecentChallengeData({
+      getChallengePosts({
         variables: {
-          memberId: userId,
+          userId,
         },
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   useEffect(() => {
-    if (!challenge?.getLatestChallengePost) return;
-    dispatch(
-      setChallenge({
-        date: challenge.getLatestChallengePost?.assignDate,
-        posts: challenge.getLatestChallengePost?.posts,
-      }),
-    );
-  }, [challenge?.getLatestChallengePost, dispatch]);
+    if (!challenge?.getChallengePosts) return;
+    dispatch(setChallenge(challenge?.getChallengePosts?.challenge));
+  }, [challenge?.getChallengePosts, dispatch]);
 
   useEffect(() => {
     if (userId) get30DaysChallenge();

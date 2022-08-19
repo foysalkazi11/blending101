@@ -142,10 +142,9 @@ function WikiSingleItem() {
         showTagByDeafult: false,
       }}
     >
-      <div className={styles.mainwiki}>
-        <div className={styles.left}>
-          <RelatedWikiItem type={type} />
-        </div>
+      <div className={styles.singleWikiItemContainer}>
+        <RelatedWikiItem type={type} />
+
         <WikiCenterComponent
           author={data?.publishedBy}
           body={data?.bodies[0]}
@@ -162,11 +161,11 @@ function WikiSingleItem() {
           wikiId={wikiId}
           commentsCount={data?.commentsCount}
         />
-        <div style={{ margin: "0 10px" }}>
+        <>
           {type === "Ingredient" ? (
             <NutritionPanel
               nutritionTrayData={nutrients ? JSON?.parse(nutrients) : {}}
-              showUser={false}
+              showUser={true}
               counter={1}
               nutritionDataLoading={nutritionPanelDataLoading}
               showServing={false}
@@ -176,7 +175,7 @@ function WikiSingleItem() {
                 handleChange: (e) =>
                   setDefaultMeasureMentWeight(e?.target?.value),
                 listElem: data?.portions?.map((item) => ({
-                  name: item?.measurement,
+                  name: `1 ${item?.measurement} (${item?.meausermentWeight}g)`,
                   value: item?.meausermentWeight,
                 })),
               }}
@@ -185,9 +184,10 @@ function WikiSingleItem() {
             <WikiRightComponent
               ingredient={data?.ingredients}
               wikiId={wikiId}
+              ingredientsDataLoading={ingredientsData?.loading}
             />
           )}
-        </div>
+        </>
       </div>
     </AContainer>
   );

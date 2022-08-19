@@ -4,9 +4,7 @@ import React, { useEffect, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import { setIngredientArrayForNutrition } from "../../../../redux/edit_recipe/editRecipeStates";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import DropDown, {
-  DropDownType,
-} from "../../../../theme/dropDown/DropDown.component";
+import { DropDownType } from "../../../../theme/dropDown/DropDown.component";
 import NutritionPanelSkeleton from "../../../../theme/skeletons/nutrationPanelSkeleton/NutrationPanelSkeleton";
 import UpdatedRecursiveAccordion from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
 import PanelHeader from "../panelHeader/PanelHeader";
@@ -26,6 +24,7 @@ interface NutritionPanelInterface {
   showServing?: boolean;
   showUser?: boolean;
   measurementDropDownState?: DropDownType & { showDropDown: boolean };
+  showTitle?: boolean;
 }
 
 const NutritionPanel = ({
@@ -49,14 +48,13 @@ const NutritionPanel = ({
     handleChange: () => {},
     showDropDown: false,
   },
+  showTitle = true,
 }: NutritionPanelInterface) => {
   const [servingSizeCounter, setServingSizeCounter] = useState(1);
   const selectedIngredientsList = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedIngredientsList,
   );
   const dispatch = useAppDispatch();
-  const { showDropDown, ...rest } = measurementDropDownState;
-
   const measurement =
     nutritionState?.portions?.find((itm) => itm?.default)?.measurement ||
     nutritionState?.selectedPortion?.name;
@@ -77,7 +75,8 @@ const NutritionPanel = ({
       <PanelHeader icon="/icons/chart-bar-light-green.svg" title="Rx Facts" />
       <div className={styles.right}>
         <div className={styles.right__headerDiv}>
-          <div className={styles.right__title}>Nutrition</div>
+          {showTitle && <div className={styles.right__title}>Nutrition</div>}
+
           {showServing ? (
             nutritionState?._id || nutritionState?.ingredientId?._id ? (
               <div className={styles.content}>
@@ -147,7 +146,6 @@ const NutritionPanel = ({
             )
           ) : null}
         </div>
-        {showDropDown ? <DropDown {...rest} /> : null}
 
         <div className={styles.compoent__box__nutrition}>
           {nutritionDataLoading ? (
@@ -163,6 +161,7 @@ const NutritionPanel = ({
               }
               showUser={showUser}
               sinngleIngQuintity={singleIngQuantity}
+              measurementDropDownState={measurementDropDownState}
             />
           )}
         </div>

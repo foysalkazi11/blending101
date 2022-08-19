@@ -10,6 +10,9 @@ import useForAddToCollection from "../../../customHooks/useForAddToCollection";
 import useForOpenCollectionTray from "../../../customHooks/useForOpenCollection";
 import useForOpenCommentsTray from "../../../customHooks/useForOpenCommentsTray";
 import useForSelectCommentsAndNotesIcon from "../../../customHooks/useForSelectCommentsAndNotesIcon";
+import IconWarper from "../../iconWarper/IconWarper";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEllipsisVertical } from "@fortawesome/pro-solid-svg-icons";
 
 interface dataCardInterface {
   title: string;
@@ -163,106 +166,113 @@ export default function DatacardComponent({
   return (
     <div className={styles.datacard}>
       <div className={styles.datacard__inner}>
-        <div className={styles.datacard__body}>
-          <div className={styles.datacard__body__top}>
-            <div className={styles.datacard__body__top__heading}>
-              <h2
-                className={styles.title}
-                onClick={() => router.push(`/recipe_details/${recipeId}`)}
-              >
-                {title}
-                {isMatch ? "" : <span>{`(${postfixTitle})`}</span>}
-              </h2>
-            </div>
-            <div className={styles.datacard__body__top__menu}>
-              {showMoreMenu ? (
-                <>
-                  <MoreVertIcon onClick={handleClick} />
-                  <FloatingMenu />
-                </>
+        <div className={styles.heading}>
+          <div className={styles.title}>
+            <h2
+              onClick={(e) => {
+                e?.stopPropagation();
+                router.push(`/recipe_details/${recipeId}`);
+              }}
+            >
+              {title}
+              {isMatch ? "" : <span>{` (${postfixTitle})`}</span>}
+            </h2>
+          </div>
+          <div className={styles.menu}>
+            {showMoreMenu ? (
+              <>
+                <IconWarper
+                  hover="bgSlightGray"
+                  handleClick={handleClick}
+                  style={{ width: "30px", height: "30px" }}
+                >
+                  <FontAwesomeIcon icon={faEllipsisVertical} />
+                </IconWarper>
+
+                <FloatingMenu />
+              </>
+            ) : null}
+          </div>
+        </div>
+        <div className={styles.datacard__body__middle}>
+          <div className={styles.datacard__body__middle__left}>
+            <div
+              className={styles.image}
+              style={{ backgroundImage: `url(${image})` }}
+            >
+              {isImageOverlay ? (
+                <div className={styles.imageOverlay}>
+                  <img
+                    src="/images/black-add.svg"
+                    alt="add icon"
+                    onClick={() => imageOverlayFunc(image)}
+                  />
+                </div>
               ) : null}
             </div>
           </div>
-          <div className={styles.datacard__body__middle}>
-            <div className={styles.datacard__body__middle__left}>
-              <div
-                className={styles.image}
-                style={{ backgroundImage: `url(${image})` }}
-              >
-                {isImageOverlay ? (
-                  <div className={styles.imageOverlay}>
-                    <img
-                      src="/images/black-add.svg"
-                      alt="add icon"
-                      onClick={() => imageOverlayFunc(image)}
-                    />
-                  </div>
-                ) : null}
-              </div>
-            </div>
-            <div className={styles.datacard__body__middle__right}>
-              <DataBody />
-            </div>
+          <div className={styles.datacard__body__middle__right}>
+            <DataBody />
           </div>
-          <div className={styles.datacard__body__belt}>
-            <div className={styles.datacard__body__belt__child}>
-              Net Carbs <span>{carbs}</span>
-            </div>
-            <div className={styles.datacard__body__belt__child}>
-              Rx Score <span>{score}</span>
-            </div>
-            <div className={styles.datacard__body__belt__child}>
-              Calorie <span>{calorie}</span>
-            </div>
+        </div>
+        <div className={styles.datacard__body__belt}>
+          <div className={styles.datacard__body__belt__child}>
+            Net Carbs <span>{carbs}</span>
           </div>
-          <div className={styles.datacard__body__bottom}>
-            <div className={styles.datacard__body__bottom__left}>
-              <img src="/icons/delish.png" alt="brand" />
-            </div>
-            <div className={styles.datacard__body__bottom__right}>
-              <ul>
-                <li>
-                  <img
-                    src={
-                      addedToCompare
-                        ? "/icons/compare-1.svg"
-                        : "/icons/eclipse.svg"
-                    }
-                    alt="icon"
-                    onClick={(e) =>
-                      handleChangeCompare(
-                        e,
-                        recipeId,
-                        addedToCompare ? false : true,
-                        compareRecipeList,
-                        setcompareRecipeList,
-                      )
-                    }
-                  />
-                </li>
-                <li>
-                  <img
-                    src={
-                      isCollectionIds?.length
-                        ? "/icons/compare.svg"
-                        : "/images/BookmarksStar.svg"
-                    }
-                    alt="compare"
-                    onClick={(e) =>
-                      isCollectionIds?.length
-                        ? handleOpenCollectionTray(recipeId, isCollectionIds, e)
-                        : handleAddToCollection(
-                            recipeId,
-                            setOpenCollectionModal,
-                            e,
-                            setcompareRecipeList,
-                          )
-                    }
-                  />
-                </li>
-                <li>{hangleShowCommentsAndNotesIcon(noOfComments, notes)}</li>
-              </ul>
-            </div>
+          <div className={styles.datacard__body__belt__child}>
+            Rx Score <span>{score}</span>
+          </div>
+          <div className={styles.datacard__body__belt__child}>
+            Calorie <span>{calorie}</span>
+          </div>
+        </div>
+        <div className={styles.datacard__body__bottom}>
+          <div className={styles.datacard__body__bottom__left}>
+            <img src="/icons/delish.png" alt="brand" />
+          </div>
+          <div className={styles.datacard__body__bottom__right}>
+            <ul>
+              <li>
+                <img
+                  src={
+                    addedToCompare
+                      ? "/icons/compare-1.svg"
+                      : "/icons/eclipse.svg"
+                  }
+                  alt="icon"
+                  onClick={(e) =>
+                    handleChangeCompare(
+                      e,
+                      recipeId,
+                      addedToCompare ? false : true,
+                      compareRecipeList,
+                      setcompareRecipeList,
+                    )
+                  }
+                />
+              </li>
+              <li>
+                <img
+                  src={
+                    isCollectionIds?.length
+                      ? "/icons/compare.svg"
+                      : "/images/BookmarksStar.svg"
+                  }
+                  alt="compare"
+                  onClick={(e) =>
+                    isCollectionIds?.length
+                      ? handleOpenCollectionTray(recipeId, isCollectionIds, e)
+                      : handleAddToCollection(
+                          recipeId,
+                          setOpenCollectionModal,
+                          e,
+                          setcompareRecipeList,
+                        )
+                  }
+                />
+              </li>
+              <li>{hangleShowCommentsAndNotesIcon(noOfComments, notes)}</li>
+            </ul>
           </div>
         </div>
       </div>

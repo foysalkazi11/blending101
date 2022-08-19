@@ -209,8 +209,7 @@ export default function CollectionComponent({
         {collectionsLoading ? (
           <SkeletonCollections />
         ) : (
-          collections?.map((item, i) => {
-            //@ts-ignore
+          collections?.map((item: any, i: number) => {
             const defaultImage = item?.image;
 
             return (
@@ -226,9 +225,7 @@ export default function CollectionComponent({
                     dispatch(setShowAllRecipes(false));
                     dispatch(
                       setSingleCollectionInfo({
-                        //@ts-ignore
                         id: item?._id,
-                        //@ts-ignore
                         name: item?.name,
                       }),
                     );
@@ -240,32 +237,23 @@ export default function CollectionComponent({
                       className={styles.abs}
                       style={{
                         backgroundImage: `url(${
-                          //@ts-ignore
                           defaultImage || "/cards/food.png"
                         })`,
                       }}
                     ></div>
                   </div>
-
-                  {/* @ts-ignore */}
                   <p>{item?.name}</p>
                 </div>
                 {changeRecipeWithinCollection ? (
                   <div className={styles.checkBox}>
                     <CustomCheckbox
-                      checked={collectionHasRecipe?.includes(
-                        //@ts-ignore
-                        item?._id,
-                      )}
-                      // @ts-ignore
+                      checked={collectionHasRecipe?.includes(item?._id)}
                       handleChange={(e) => handleChange(e, item?._id)}
                     />
                   </div>
                 ) : hoverIndex === i + 1 ? (
-                  /* @ts-ignore */
                   item?.name === "My Favourite" ? (
                     <p style={{ marginRight: "10px" }}>
-                      {/* @ts-ignore */}
                       {item?.recipes?.length}
                     </p>
                   ) : (
@@ -286,17 +274,14 @@ export default function CollectionComponent({
                         <BiEditAlt
                           className={styles.icon}
                           onClick={() => {
-                            /* @ts-ignore */
                             setInput((pre) => ({ ...pre, name: item?.name }));
                             setIsEditCollection(true);
-                            /* @ts-ignore */
                             setCollectionId(item?._id);
                             setOpenModal(true);
                           }}
                         />
                         <MdDeleteOutline
                           className={styles.icon}
-                          /* @ts-ignore  */
                           onClick={() => handleDeleteCollection(item?._id)}
                         />
                         <HiOutlineShare className={styles.icon} />
@@ -304,10 +289,7 @@ export default function CollectionComponent({
                     </div>
                   )
                 ) : (
-                  <p style={{ marginRight: "10px" }}>
-                    {/* @ts-ignore */}
-                    {item?.recipes?.length}
-                  </p>
+                  <p style={{ marginRight: "10px" }}>{item?.recipes?.length}</p>
                 )}
               </div>
             );

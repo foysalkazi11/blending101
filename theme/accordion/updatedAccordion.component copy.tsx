@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import AccordComponent from "./accordComponent.component";
 
 type CustomAccordionProps = {
@@ -172,4 +172,4 @@ const UpdatedCustomAccordion = ({
   );
 };
 
-export default UpdatedCustomAccordion;
+export default memo(UpdatedCustomAccordion);

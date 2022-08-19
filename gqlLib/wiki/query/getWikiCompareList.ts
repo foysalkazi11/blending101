@@ -5,10 +5,10 @@ const GET_WIKI_COMPARE_LIST = gql`
     getWikiCompareList(userId: $userId) {
       _id
       category
-      portion {
-        default
-        meausermentWeight
+      portions {
         measurement
+        meausermentWeight
+        default
       }
       featuredImage
       wikiTitle

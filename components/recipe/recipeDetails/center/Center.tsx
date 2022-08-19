@@ -95,6 +95,15 @@ const Center = ({
     handleAddToCollection(id, setOpenModal, e);
   };
 
+  // open comments tray
+  const openCommentsTray = (e) => {
+    const title = recipeData?.name;
+    const recipeId = recipeData?._id;
+    const defaultImage = recipeData?.image?.find((img) => img?.default)?.image;
+
+    handleOpenCommentsTray(recipeId, title, defaultImage, e);
+  };
+
   const hangleShowCommentsAndNotesIcon = () => {
     const notes = recipeData?.notes;
     const comments = recipeData?.numberOfRating;
@@ -143,10 +152,15 @@ const Center = ({
                   }`}
             </span>
           </h3>
-          <span className={styles.ratingBox}>
-            <img src="/images/rating.svg" alt="" />
-            {recipeData?.averageRating} ({recipeData?.numberOfRating})
-          </span>
+          {recipeData?.averageRating ? (
+            <span
+              className={styles.ratingBox}
+              onClick={(e) => openCommentsTray(e)}
+            >
+              <img src="/images/rating.svg" alt="" />
+              {recipeData?.averageRating} ({recipeData?.numberOfRating})
+            </span>
+          ) : null}
         </div>
         <div className={styles.subMenu}>
           <div className={styles.alignItems}>

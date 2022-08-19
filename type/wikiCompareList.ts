@@ -3,7 +3,7 @@ import { WikiType } from "./wikiListType";
 export interface WikiCompareList {
   _id: string;
   category: string;
-  portion: Portion;
+  portions: Portion[];
   featuredImage: string;
   wikiTitle: string;
   wikiDescription: string;

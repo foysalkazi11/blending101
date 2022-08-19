@@ -30,23 +30,33 @@ export interface IPlannerIngredients {
   };
 }
 
-interface IChallengeRecipe {
-  id: string;
+interface IPosts {
+  _id: string;
   name: string;
-  image: string;
-  category: string;
-  score: number;
-  calorie: number;
-  ingredients: string[];
+  recipeBlendCategory: {
+    _id: string;
+    name: string;
+  };
+  ingredients: {
+    ingredientId: {
+      ingredientName: string;
+    };
+  }[];
+  rxScore: number;
+  calories: number;
+  gl: number;
+  note: string;
+}
+
+export interface IChallengePosts {
+  _id: string;
+  date: string;
+  images: string[];
+  posts: IPosts[];
 }
 
 interface PlannerState {
-  challenge: {
-    date: string;
-    images: string[];
-    notes: string[];
-    recipes: IChallengeRecipe[];
-  };
+  challenges: [];
   planner: {
     startDate: Date;
     endDate: Date;
@@ -58,6 +68,7 @@ interface PlannerState {
       name: string;
       image: string;
       ingredients: IPlannerIngredients[];
+      category: string;
     };
   };
 }
@@ -66,15 +77,11 @@ const initialRecipe = {
   _id: "",
   name: "",
   image: "",
+  category: "",
   ingredients: [],
 };
 const initialState: PlannerState = {
-  challenge: {
-    date: "",
-    images: [],
-    notes: [],
-    recipes: [],
-  },
+  challenges: [],
   planner: {
     startDate: startOfWeek(new Date(), { weekStartsOn: 1 }),
     endDate: endOfWeek(new Date(), { weekStartsOn: 1 }),
@@ -90,29 +97,28 @@ export const PlannerSlice = createSlice({
   initialState,
   reducers: {
     setChallenge: (state, action) => {
-      state.challenge.date = action.payload.date;
-      const images = [];
-      const notes = [];
-      const recipes = [];
-      action.payload.posts.forEach((post, idx) => {
-        post?.images[0] && images.push(post?.images[0]);
-        post?.note && notes.push(post?.note);
-        recipes.push({
-          id: post?._id || idx,
-          name: post?.name || "",
-          image: post?.recipeImage || "",
-          category: post?.recipeBlendCategory?.name || "",
-          score: post?.rxScore || 900,
-          calorie: post?.calorie || 60,
-          ingredients:
-            post?.ingredients?.map(
-              (ing) => ing?.ingredientId?.ingredientName || "",
-            ) || [],
-        });
-      });
-      state.challenge.images = images;
-      state.challenge.notes = notes;
-      state.challenge.recipes = recipes;
+      if (action.payload.length === 0) return;
+      state.challenges = action.payload;
+      // state.challenge.images = action.payload.images;
+      // action.payload.posts.forEach((post, idx) => {
+      //   post?.images[0] && images.push(post?.images[0]);
+      //   post?.note && notes.push(post?.note);
+      //   recipes.push({
+      //     id: post?._id || idx,
+      //     name: post?.name || "",
+      //     image: post?.recipeImage || "",
+      //     category: post?.recipeBlendCategory?.name || "",
+      //     score: post?.rxScore || 900,
+      //     calorie: post?.calorie || 60,
+      //     ingredients:
+      //       post?.ingredients?.map(
+      //         (ing) => ing?.ingredientId?.ingredientName || "",
+      //       ) || [],
+      //   });
+      // });
+      // state.challenge.images = images;
+      // state.challenge.notes = notes;
+      // state.challenge.recipes = recipes;
     },
 
     //PLANNER
@@ -130,7 +136,7 @@ export const PlannerSlice = createSlice({
     setPlanners: (state, action) => {
       state.planners = action.payload.map((planner) => ({
         id: planner._id,
-        date: planner.assignDate,
+        date: planner.formatedDate,
         recipes: planner.recipes.map((recipe) => ({
           _id: recipe?._id,
           name: recipe?.name,
@@ -150,13 +156,12 @@ export const PlannerSlice = createSlice({
       state,
       action: { payload: { id: string; date: string; recipe: IPlannerRecipe } },
     ) => {
-      if (
-        !isWithinInterval(new Date(action.payload.date), {
-          start: state.planner.startDate,
-          end: state.planner.endDate,
-        })
-      )
-        return;
+      const withinInterval = isWithinInterval(new Date(action.payload.date), {
+        start: state.planner.startDate,
+        end: state.planner.endDate,
+      });
+      console.log(withinInterval);
+      if (!withinInterval) return;
 
       const date = action.payload.date;
       const planner = state.planners.find((p) => p.date === date);
@@ -287,11 +292,14 @@ export const PlannerSlice = createSlice({
 
     setRecipeInfo: (
       state,
-      action: { payload: { _id: string; name: string; image: string } },
+      action: {
+        payload: { _id: string; name: string; image: string; category: string };
+      },
     ) => {
       state.post.recipe._id = action.payload._id;
       state.post.recipe.name = action.payload.name;
       state.post.recipe.image = action.payload.image;
+      state.post.recipe.category = action.payload.category;
     },
 
     setRecipeIngredients: (

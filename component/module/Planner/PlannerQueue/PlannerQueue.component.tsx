@@ -33,6 +33,7 @@ import SkeletonElement from "../../../../theme/skeletons/SkeletonElement";
 import { getDateOnly } from "../../../../helpers/Date";
 
 import { faCalendarAlt } from "@fortawesome/pro-light-svg-icons";
+import { format } from "date-fns";
 
 interface PlannerPanelProps {
   isUpload: boolean;
@@ -73,6 +74,7 @@ const PlannerPanel = (props: PlannerPanelProps) => {
       });
     getQueuedRecipes({
       variables: {
+        currentDate: format(new Date(), "yyyy-MM-dd"),
         user: userId,
         searchTerm: query,
         page,
@@ -194,12 +196,11 @@ const Recipes = (props) => {
   const dispatch = useDispatch();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
-  const dateHandler = async (recipe: any, date: Date) => {
-    const assignDate = getDateOnly(date);
+  const dateHandler = async (recipe: any, date: string) => {
     await Publish({
       mutate: addRecipe,
       variables: {
-        assignDate: assignDate,
+        assignDate: date,
         recipeId: recipe._id,
         userId,
       },
@@ -210,7 +211,7 @@ const Recipes = (props) => {
         dispatch(
           addPlanner({
             id: data?.createPlanner?._id,
-            date: assignDate,
+            date: date,
             recipe: {
               _id: recipe._id,
               name: recipe.name,
@@ -224,7 +225,7 @@ const Recipes = (props) => {
     });
   };
 
-  const uploadRecipe = (_id, name, image) => {
+  const uploadRecipe = (_id, name, image, category) => {
     getIngredients({
       variables: {
         recipeId: _id,
@@ -235,6 +236,7 @@ const Recipes = (props) => {
         _id,
         name,
         image: image?.find((img) => img.default)?.image || image[0]?.image,
+        category,
       }),
     );
   };
@@ -274,7 +276,9 @@ const Recipes = (props) => {
               fontName={faPlusCircle}
               style={{ color: "#fe5d1f" }}
               size="25px"
-              onClick={() => uploadRecipe(_id, name, image)}
+              onClick={() =>
+                uploadRecipe(_id, name, image, recipeBlendCategory?._id)
+              }
             />
           ) : (
             <RiCalendarEventLine

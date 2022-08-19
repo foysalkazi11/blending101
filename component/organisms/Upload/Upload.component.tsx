@@ -80,12 +80,13 @@ const Upload = (props: UploadProps) => {
         }
         axios({
           method: "post",
-          url: `https://om7h45qezg.execute-api.us-east-1.amazonaws.com/prod/file-processing/images/upload`,
+          url: S3_CONFIG.objectURL,
           data: formdata,
           headers: { "Content-Type": "multipart/form-data" },
         }).then((response) => {
           const resp = JSON.parse(response?.data);
           const data = resp?.images;
+
           dispatch(addImage({ urls: data }));
         });
       }
