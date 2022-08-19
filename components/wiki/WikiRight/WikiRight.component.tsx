@@ -35,11 +35,13 @@ interface ingredientState {
 interface NutrientPanelProps {
   ingredient?: any[];
   wikiId?: string;
+  ingredientsDataLoading?: boolean;
 }
 
 function WikiRightComponent({
   ingredient = [],
   wikiId = "",
+  ingredientsDataLoading = false,
 }: NutrientPanelProps) {
   const [dpd, setDpd] = useState("All");
   const [ingredientData, setIngredientData] = useState([]);
@@ -120,7 +122,7 @@ function WikiRightComponent({
         />
 
         <div className={styles.progressIndicator}>
-          {loading ? (
+          {loading || ingredientsDataLoading ? (
             <IngredientPanelSkeleton />
           ) : ingredientData?.length ? (
             ingredientData?.map(

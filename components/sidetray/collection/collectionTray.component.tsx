@@ -135,25 +135,20 @@ export default function CollectionTray({
           />
         </div>
 
-        {toggle === 2 && (
-          <div>
-            <ThemeComponent />
-          </div>
-        )}
-        {toggle === 1 && (
-          <div>
-            <CollectionComponent
-              collections={
-                collectionsData?.getUserCollectionsAndThemes?.collections || []
-              }
-              collectionsLoading={collectionsLoading}
-              setInput={setInput}
-              setIsEditCollection={setIsEditCollection}
-              setCollectionId={setCollectionId}
-              getCollectionsAndThemes={getCollectionsAndThemes}
-              setOpenModal={setOpenModal}
-            />
-          </div>
+        {toggle === 1 ? (
+          <CollectionComponent
+            collections={
+              collectionsData?.getUserCollectionsAndThemes?.collections || []
+            }
+            collectionsLoading={collectionsLoading}
+            setInput={setInput}
+            setIsEditCollection={setIsEditCollection}
+            setCollectionId={setCollectionId}
+            getCollectionsAndThemes={getCollectionsAndThemes}
+            setOpenModal={setOpenModal}
+          />
+        ) : (
+          <ThemeComponent />
         )}
 
         <CustomModal open={openModal} setOpen={setOpenModal}>
