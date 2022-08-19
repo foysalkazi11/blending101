@@ -46,7 +46,7 @@
   grid-gap: 16px;
 
   @include media(lg) {
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
     padding: 0 16px;
   }
   @include media(xl) {
