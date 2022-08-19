@@ -27,38 +27,21 @@ function getBackgroundColor(categories: string[], selectToday: boolean) {
   }
 }
 
-function SingleDate({ date, day, dayName, categories, disabled }: any) {
+function SingleDate({
+  date,
+  day,
+  dayName,
+  categories,
+  disabled,
+  showChallengeDetails,
+}: any) {
   const days = new Date(date);
   const selectToday = isToday(days);
-
-  const [getChallengeData, { data }] = useLazyQuery(GET_CHALLENGE_DETAIL, {
-    fetchPolicy: "no-cache",
-  });
-
-  const dispatch = useAppDispatch();
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
-
-  const showChallengeDetails = () => {
-    if (disabled) return;
-    getChallengeData({
-      variables: {
-        userId,
-        date,
-      },
-    });
-  };
-
-  useEffect(() => {
-    if (!data?.getAllChallengePostByDate) return;
-    dispatch(
-      setChallenge({ date: date, posts: data.getAllChallengePostByDate }),
-    );
-  }, [data?.getAllChallengePostByDate, date, dispatch]);
 
   return (
     <div
       className={styles.challenge_circle_single_date}
-      onClick={showChallengeDetails}
+      onClick={() => showChallengeDetails(days, disabled)}
       style={{
         background:
           !isAfter(days, new Date()) && disabled === null

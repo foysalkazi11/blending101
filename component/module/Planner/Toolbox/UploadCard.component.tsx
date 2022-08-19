@@ -25,8 +25,12 @@ import {
 } from "../../../../graphql/Planner";
 import Publish from "../../../../helpers/Publish";
 import ButtonComponent from "../../../../theme/button/button.component";
-import { faFloppyDisk } from "@fortawesome/pro-regular-svg-icons";
+import {
+  faChevronLeft,
+  faFloppyDisk,
+} from "@fortawesome/pro-regular-svg-icons";
 import { ActionButton } from "../../../atoms/Button/Button.component";
+import { format } from "date-fns";
 
 interface UploadCardInterface {
   setUploadState?: any;
@@ -34,7 +38,7 @@ interface UploadCardInterface {
 
 const defaultValues = {
   category: "",
-  assignDate: "",
+  assignDate: format(new Date(), "yyyy-MM-dd"),
   recipeTitle: "",
   note: "",
 };
@@ -49,7 +53,7 @@ const UploadCard = ({ setUploadState }: UploadCardInterface) => {
 
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
-  const { _id, name, image, ingredients } = useAppSelector(
+  const { name, image, ingredients, category } = useAppSelector(
     (state) => state.planner.post.recipe,
   );
 
@@ -59,9 +63,9 @@ const UploadCard = ({ setUploadState }: UploadCardInterface) => {
   });
 
   useEffect(() => {
-    methods.reset({ recipeTitle: name });
+    methods.reset({ recipeTitle: name, category });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [name]);
+  }, [name, category]);
 
   const handleSubmit = async (data) => {
     // if (images.length === 0 || ingredients.length === 0) return;
@@ -128,7 +132,15 @@ const UploadCard = ({ setUploadState }: UploadCardInterface) => {
           <Upload multiple imageState={[images, setImages]} />
         </div>
         <div className="row mt-40">
-          <div className="col-7">
+          <div className="col-6">
+            <Textfield
+              placeholder="Recipe Title"
+              name="recipeTitle"
+              defaultValue={name}
+              className={styles.recipe__title}
+            />
+          </div>
+          <div className="col-3">
             <Combobox
               options={data?.getAllCategories}
               name="category"
@@ -136,21 +148,15 @@ const UploadCard = ({ setUploadState }: UploadCardInterface) => {
               required
             />
           </div>
-          <div className="col-5">
+          <div className="col-3">
             <Textfield type="date" name="assignDate" required />
           </div>
         </div>
         <h5 className={styles.headingText}>My Recipe</h5>
         <div className="row">
-          <div className="col-4">
+          {/* <div className="col-4">
             <div className={styles.notesTray__imageCard}>
               <div className={styles.recipe}>
-                <Textfield
-                  placeholder="Recipe Title"
-                  name="recipeTitle"
-                  defaultValue={name}
-                  className={styles.recipe__title}
-                />
                 <div className={styles.imageContainer}>
                   {image ? (
                     <Image
@@ -165,11 +171,11 @@ const UploadCard = ({ setUploadState }: UploadCardInterface) => {
                 </div>
               </div>
             </div>
-          </div>
-          <div className="col-5">
+          </div> */}
+          <div className="col-6">
             <AddIngredient ingredients={ingredients} />
           </div>
-          <div className="col-3">
+          <div className="col-6">
             <Servings servingState={[serving, setServing]} />
           </div>
         </div>
@@ -196,16 +202,27 @@ const Servings = (props) => {
   };
   return (
     <div className={styles.notesTray__servings}>
-      <div className="flex ai-center" style={{ marginBottom: 4 }}>
-        <h3 className="mr-10">Servings</h3>
-        <NumberField
-          minValue={1}
-          value={serving}
-          onChange={servingHandler}
-          className={styles.notesTray__input}
+      <div className="flex jc-between" style={{ width: "100%" }}>
+        <div className="flex ai-center" style={{ marginBottom: 4 }}>
+          <NumberField
+            minValue={1}
+            value={serving}
+            onChange={servingHandler}
+            className={styles.notesTray__input}
+          />
+          <div className="ml-20">
+            <h3 className="mr-10">Servings</h3>
+            <h5>{SERVINGS.size * serving} oz serving size</h5>
+          </div>
+        </div>
+        <IconButton
+          size="medium"
+          variant="white"
+          className="mr-20"
+          fontName={faChevronLeft}
+          // onClick={hideSettings}
         />
       </div>
-      <h5>{SERVINGS.size * serving} oz serving size</h5>
       <div className={styles.notesTray__servings__scoreCard}>
         <TextScoreDiv
           text="Nutri-Score"

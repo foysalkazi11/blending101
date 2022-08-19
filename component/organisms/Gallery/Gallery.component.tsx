@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect, useMemo } from "react";
 import Slider from "react-slick";
-import Image from "next/image";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -13,10 +12,9 @@ import {
 import { useQuery } from "@apollo/client";
 import { useAppSelector } from "../../../redux/hooks";
 import { CHALLENGE_GALLERY } from "../../../graphql/Planner";
-import image from "next/image";
-import { format } from "date-fns";
+import { format, isSameDay } from "date-fns";
 
-const Gallery = () => {
+const Gallery = ({ date }) => {
   const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
   const { data } = useQuery(CHALLENGE_GALLERY, {
     variables: {
@@ -52,6 +50,7 @@ const Gallery = () => {
     return imageData;
   }, [data?.getAChallengeGallery]);
 
+  const initialSlide = images.findIndex((img) => isSameDay(img.date, date));
   return (
     <div className={styles.container}>
       <div>
@@ -60,7 +59,7 @@ const Gallery = () => {
           ref={(slider) => (slider1.current = slider)}
           nextArrow={<MainNextArrow />}
           prevArrow={<MainPrevArrow />}
-          initialSlide={0}
+          initialSlide={initialSlide}
         >
           {images.map((item) => (
             <div
@@ -79,14 +78,13 @@ const Gallery = () => {
           slidesToShow={4}
           swipeToSlide={true}
           focusOnSelect={true}
-          centerMode={true}
+          // centerMode={true}
           infinite={true}
           lazyLoad="progressive"
           centerPadding="0px"
           nextArrow={<PreviewNextArrow />}
           prevArrow={<PreviewPrevArrow />}
-          initialSlide={0}
-          
+          initialSlide={initialSlide}
         >
           {images.map((item) => (
             <div key={item.date + item.src} className={styles.gallery__preview}>

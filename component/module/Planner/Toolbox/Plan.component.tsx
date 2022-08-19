@@ -99,11 +99,8 @@ const Plan = (props: PlanProps) => {
       mutate: moveRecipes,
       variables: {
         data: {
-          editId: plannerId,
-          editableObject: {
-            recipes: [recipe._id],
-            assignDate: date,
-          },
+          plannerId,
+          assignDate: date,
         },
       },
       state: moveState,
@@ -252,11 +249,9 @@ const PlanRecipe = ({
         <div className={styles.calender}>
           <CalendarTray
             handler={(date) => {
-              const isoDate = getDateOnly(date);
-
               showCalender === "copy"
-                ? onCopy(isoDate, recipe)
-                : onMove(isoDate, recipe);
+                ? onCopy(date, recipe)
+                : onMove(date, recipe);
               setShowCalender("");
             }}
           />

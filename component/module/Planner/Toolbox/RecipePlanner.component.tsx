@@ -77,11 +77,11 @@ const RecipeMealHeader = () => {
     (state) => state.planner.planner,
   );
 
-  const { loading, data } = useQuery(GET_PLANNER_BY_WEEK, {
+  const { data } = useQuery(GET_PLANNER_BY_WEEK, {
     variables: {
       userId,
-      startDate,
-      endDate,
+      startDate: format(startDate, "yyyy-MM-dd"),
+      endDate: format(endDate, "yyyy-MM-dd"),
     },
     fetchPolicy: "network-only",
   });
@@ -102,8 +102,8 @@ const RecipeMealHeader = () => {
       mutate: clearPlanner,
       variables: {
         userId,
-        startDate,
-        endDate,
+        startDate: format(startDate, "yyyy-MM-dd"),
+        endDate: format(endDate, "yyyy-MM-dd"),
       },
       state: clearState,
       success: `Deleted Planner sucessfully`,

@@ -71,9 +71,10 @@ const CalendarTray = ({ handler }: any) => {
   );
 
   const dateHandler = (selectedDate) => {
-    // console.log(selectedDate);
-    const date = new Date(selectedYear, selectedMonthIndex, selectedDate);
-    // console.log(date);
+    const date = `${selectedYear}-${
+      selectedMonthIndex + 1 < 10 ? "0" : ""
+    }${selectedMonthIndex + 1}-${selectedDate < 10 ? "0" : ""}${selectedDate}`;
+
     handler(date);
   };
 

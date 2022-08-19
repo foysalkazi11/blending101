@@ -4,16 +4,13 @@ import React, { Fragment, useState } from "react";
 import { BsZoomIn } from "react-icons/bs";
 import Modal from "../../../component/molecules/Modal/Modal.component";
 import Gallery from "../../../component/organisms/Gallery/Gallery.component";
-import { CHALLENGE_GALLERY } from "../../../graphql/Planner";
-import { useAppSelector } from "../../../redux/hooks";
 import styles from "./splitImage.module.scss";
 
 interface SplitImageCardInterface {
+  date: Date;
   images: string[];
-  leftImage?: string;
-  rightImage?: string;
 }
-const SplitImageCard = ({ images }: SplitImageCardInterface) => {
+const SplitImageCard = ({ images, date }: SplitImageCardInterface) => {
   const [showGallery, setShowGallery] = useState(false);
   return (
     <Fragment>
@@ -22,10 +19,10 @@ const SplitImageCard = ({ images }: SplitImageCardInterface) => {
         show={showGallery}
         hideModal={() => setShowGallery(false)}
       >
-        <Gallery />
+        <Gallery date={date} />
       </Modal>
       <div className={styles.mainContainer}>
-        {images.map((image) => (
+        {images?.slice(0, 2).map((image) => (
           <div className={styles.mainContainer__Image} key={image}>
             <Image
               src={image || "/images/no-image.png"}
