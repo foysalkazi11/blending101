@@ -35,6 +35,11 @@ const GET_ALL_MY_CREATED_RECIPES = gql`
         postfixTitle
       }
       isMatch
+      userId {
+        _id
+        displayName
+        image
+      }
     }
   }
 `;

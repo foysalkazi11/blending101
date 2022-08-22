@@ -88,7 +88,7 @@ export default function HeaderComponent({
                       <Image
                         src={dbUser?.image}
                         alt="prfile.png"
-                        objectFit="contain"
+                        objectFit="cover"
                         layout="fill"
                         onClick={() => setOpenPopup((pre) => !pre)}
                       />

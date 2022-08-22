@@ -35,6 +35,11 @@ const GET_ALL_RECIPES_WITHIN_COLLECTIONS = gql`
         postfixTitle
       }
       isMatch
+      userId {
+        _id
+        displayName
+        image
+      }
     }
   }
 `;
