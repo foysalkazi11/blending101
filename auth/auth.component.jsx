@@ -22,7 +22,7 @@ function AuthProvider({ children, activeUser }) {
   const [createNewUser] = useMutation(CREATE_NEW_USER);
   const dispatch = useAppDispatch();
   
-  console.log("user", user)
+//   console.log("user", user)
 
   const router = useRouter();
 
@@ -37,6 +37,7 @@ function AuthProvider({ children, activeUser }) {
       let userEmail = "";
       let provider = "";
       const user = await Auth.currentAuthenticatedUser();
+      console.log("user", user)
       if (user?.attributes) {
         const {
           attributes: { email },
