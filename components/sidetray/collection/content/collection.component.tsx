@@ -15,16 +15,44 @@ import { useMutation } from "@apollo/client";
 import DELETE_COLLECTION from "../../../../gqlLib/collection/mutation/deleteCollection";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
 import CustomCheckbox from "../../../../theme/checkbox/CustomCheckbox";
-import {
-  setShowAllRecipes,
-  setSingleCollectionInfo,
-} from "../../../../redux/slices/collectionSlice";
+import { setCurrentCollectionInfo } from "../../../../redux/slices/collectionSlice";
 import ADD_OR_REMOVE_RECIPE_FORM_COLLECTION from "../../../../gqlLib/collection/mutation/addOrRemoveRecipeFromCollection";
 import SkeletonCollections from "../../../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollections";
 import useUpdateRecipeField from "../../../../customHooks/useUpdateRecipeFirld";
 import useLocalStorage from "../../../../customHooks/useLocalStorage";
 import { setCompareList } from "../../../../redux/slices/recipeSlice";
 import updateRecipeFunc from "../../../utility/updateRecipeFunc";
+
+const IndividualCollection = ({
+  name = "All Recipes",
+  image = "/cards/food.png",
+}: {
+  name?: string;
+  image?: string;
+}) => {
+  const dispatch = useAppDispatch();
+  return (
+    <div className={styles.collection__child}>
+      <div
+        className={styles.leftSide}
+        onClick={() => {
+          dispatch(setCurrentCollectionInfo({ id: "", name }));
+          dispatch(setOpenCollectionsTary(false));
+        }}
+      >
+        <div className={styles.img}>
+          <div
+            className={styles.abs}
+            style={{
+              backgroundImage: `url(${image})`,
+            }}
+          ></div>
+        </div>
+        <p>{name}</p>
+      </div>
+    </div>
+  );
+};
 
 interface CollectionComponentProps {
   collections: {}[];
@@ -55,7 +83,6 @@ export default function CollectionComponent({
     changeRecipeWithinCollection,
     activeRecipeId,
     singleRecipeWithinCollections,
-    singleCollectionInfo,
   } = useAppSelector((state) => state?.collections);
   const [showMenu, setShowMenu] = useState(false);
   const [menuIndex, setMenuIndex] = useState(0);
@@ -128,10 +155,7 @@ export default function CollectionComponent({
         },
       });
       getCollectionsAndThemes({ variables: { userId: dbUser?._id } });
-      if (singleCollectionInfo?.id) {
-        dispatch(setSingleCollectionInfo({ id: "", name: "" }));
-        dispatch(setShowAllRecipes(true));
-      }
+      dispatch(setCurrentCollectionInfo({ id: "", name: "All Recipes" }));
       updateRecipe(activeRecipeId, {
         collection: null,
       });
@@ -180,31 +204,10 @@ export default function CollectionComponent({
       <div className={styles.collection__add}></div>
       <div className={styles.collection__collections}>
         {changeRecipeWithinCollection ? null : (
-          <div className={styles.collection__child}>
-            <div
-              className={styles.leftSide}
-              onClick={() => {
-                dispatch(setShowAllRecipes(true));
-                dispatch(
-                  setSingleCollectionInfo({
-                    id: "",
-                    name: "",
-                  }),
-                );
-                dispatch(setOpenCollectionsTary(false));
-              }}
-            >
-              <div className={styles.img}>
-                <div
-                  className={styles.abs}
-                  style={{
-                    backgroundImage: `url(${"/cards/food.png"})`,
-                  }}
-                ></div>
-              </div>
-              <p>All Recipies</p>
-            </div>
-          </div>
+          <>
+            <IndividualCollection name="All Recipes" />
+            <IndividualCollection name="My Recipes" />
+          </>
         )}
         {collectionsLoading ? (
           <SkeletonCollections />
@@ -222,9 +225,8 @@ export default function CollectionComponent({
                 <div
                   className={styles.leftSide}
                   onClick={() => {
-                    dispatch(setShowAllRecipes(false));
                     dispatch(
-                      setSingleCollectionInfo({
+                      setCurrentCollectionInfo({
                         id: item?._id,
                         name: item?.name,
                       }),
