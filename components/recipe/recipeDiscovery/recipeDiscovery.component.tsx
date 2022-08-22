@@ -53,8 +53,6 @@ const RecipeDetails = () => {
     [],
   );
 
-  console.log(currentCollectionInfo);
-
   const getAllRecipes = async () => {
     try {
       if (!recommended?.length) {
@@ -178,6 +176,7 @@ const RecipeDetails = () => {
                             setOpenCollectionModal={setOpenCollectionModal}
                             isMatch={item?.isMatch}
                             postfixTitle={item?.defaultVersion?.postfixTitle}
+                            userId={item?.userId}
                           />
                         </div>
                       );
@@ -230,6 +229,7 @@ const RecipeDetails = () => {
                               setOpenCollectionModal={setOpenCollectionModal}
                               isMatch={item?.isMatch}
                               postfixTitle={item?.defaultVersion?.postfixTitle}
+                              userId={item?.userId}
                             />
                           </div>
                         );
@@ -282,6 +282,7 @@ const RecipeDetails = () => {
                               setOpenCollectionModal={setOpenCollectionModal}
                               isMatch={item?.isMatch}
                               postfixTitle={item?.defaultVersion?.postfixTitle}
+                              userId={item?.userId}
                             />
                           </div>
                         );

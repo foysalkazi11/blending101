@@ -40,6 +40,11 @@ const GET_ALL_RECOMMENDED_RECIPES = gql`
         postfixTitle
       }
       isMatch
+      userId {
+        _id
+        displayName
+        image
+      }
     }
   }
 `;

@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RecipeType } from "../../type/recipeType";
 
 interface CurrentCollectionInfo {
   id: string;
@@ -12,7 +13,7 @@ type collectionsSliceState = {
   lastModifiedCollection: { id: string; name: string };
   collectionDetailsId: string;
   showAllRecipes: boolean;
-  allRecipeWithinCollections: any[];
+  allRecipeWithinCollections: RecipeType[];
   allCollections: {}[];
   singleRecipeWithinCollections: string[];
   currentCollectionInfo: CurrentCollectionInfo;
