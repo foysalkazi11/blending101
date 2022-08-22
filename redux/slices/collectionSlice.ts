@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface SingleCollectionInfo {
+interface CurrentCollectionInfo {
   id: string;
-  name: string;
+  name: "All Recipes" | "My Recipes" | string;
 }
 
 type collectionsSliceState = {
@@ -15,7 +15,7 @@ type collectionsSliceState = {
   allRecipeWithinCollections: any[];
   allCollections: {}[];
   singleRecipeWithinCollections: string[];
-  singleCollectionInfo: SingleCollectionInfo;
+  currentCollectionInfo: CurrentCollectionInfo;
 };
 
 const initialState: collectionsSliceState = {
@@ -28,7 +28,7 @@ const initialState: collectionsSliceState = {
   allRecipeWithinCollections: [],
   allCollections: [],
   singleRecipeWithinCollections: [],
-  singleCollectionInfo: { id: "", name: "" },
+  currentCollectionInfo: { id: "", name: "" },
 };
 
 export const collectionsSlice = createSlice({
@@ -74,11 +74,12 @@ export const collectionsSlice = createSlice({
     setAllCollections: (state, action: PayloadAction<{}[]>) => {
       state.allCollections = action?.payload;
     },
-    setSingleCollectionInfo: (
+
+    setCurrentCollectionInfo: (
       state,
-      action: PayloadAction<SingleCollectionInfo>,
+      action: PayloadAction<CurrentCollectionInfo>,
     ) => {
-      state.singleCollectionInfo = action?.payload;
+      state.currentCollectionInfo = action?.payload;
     },
   },
 });
@@ -93,7 +94,8 @@ export const {
   setAllRecipeWithinCollections,
   setAllCollections,
   setSingleRecipeWithinCollecions,
-  setSingleCollectionInfo,
+
+  setCurrentCollectionInfo,
 } = collectionsSlice?.actions;
 
 export default collectionsSlice?.reducer;
