@@ -35,6 +35,11 @@ const GET_SINGLE_COLLECTION = gql`
         postfixTitle
       }
       isMatch
+      userId {
+        _id
+        displayName
+        image
+      }
     }
   }
 `;

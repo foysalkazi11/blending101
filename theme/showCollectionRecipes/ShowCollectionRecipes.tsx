@@ -155,6 +155,7 @@ const ShowCollectionRecipes = () => {
                     isCollectionIds={item?.userCollections}
                     isMatch={item?.isMatch}
                     postfixTitle={item?.defaultVersion?.postfixTitle}
+                    userId={item?.userId}
                   />
                 </div>
               );
