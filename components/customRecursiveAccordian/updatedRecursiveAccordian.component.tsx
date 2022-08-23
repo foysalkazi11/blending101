@@ -78,7 +78,7 @@ const UpdatedRecursiveAccordian = ({
                     <Image
                       src={dbUser?.image}
                       alt="prfile.png"
-                      objectFit="contain"
+                      objectFit="cover"
                       layout="fill"
                       onClick={() =>
                         router?.push("/user/?type=personalization&toggle=1")

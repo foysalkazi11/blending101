@@ -13,6 +13,9 @@ import useForSelectCommentsAndNotesIcon from "../../../customHooks/useForSelectC
 import IconWarper from "../../iconWarper/IconWarper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisVertical } from "@fortawesome/pro-solid-svg-icons";
+import { faUser } from "@fortawesome/pro-light-svg-icons";
+import Tooltip from "../../toolTip/CustomToolTip";
+import { RecipeCreatorInfo } from "../../../type/recipeType";
 
 interface dataCardInterface {
   title: string;
@@ -39,6 +42,7 @@ interface dataCardInterface {
   isMatch?: boolean;
   isImageOverlay?: boolean;
   imageOverlayFunc?: (arg: string) => void;
+  userId?: null | RecipeCreatorInfo;
 }
 
 export default function DatacardComponent({
@@ -66,6 +70,7 @@ export default function DatacardComponent({
   postfixTitle = "",
   isMatch = false,
   isImageOverlay = false,
+  userId = null,
 }: dataCardInterface) {
   title = title || "Triple Berry Smoothie";
   ingredients = ingredients;
@@ -228,7 +233,30 @@ export default function DatacardComponent({
         </div>
         <div className={styles.datacard__body__bottom}>
           <div className={styles.datacard__body__bottom__left}>
-            <img src="/icons/delish.png" alt="brand" />
+            {userId ? (
+              <Tooltip
+                content={userId?.displayName || "User name"}
+                direction="right"
+              >
+                {userId?.image ? (
+                  <img
+                    className={styles.user}
+                    src={userId?.image}
+                    alt="brand"
+                  />
+                ) : (
+                  <div className={styles.userIcon}>
+                    <FontAwesomeIcon icon={faUser} />
+                  </div>
+                )}
+              </Tooltip>
+            ) : (
+              <img
+                className={styles.brand}
+                src="/icons/delish.png"
+                alt="brand"
+              />
+            )}
           </div>
           <div className={styles.datacard__body__bottom__right}>
             <ul>

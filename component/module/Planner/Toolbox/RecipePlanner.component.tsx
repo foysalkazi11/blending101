@@ -54,7 +54,7 @@ const RecipePlanner = () => {
           const day = format(days, "d");
           return (
             <MealCalendarDatePlan
-              key={date}
+              key={planner.id}
               plannerId={planner.id}
               indexValue={index}
               day={dayName}

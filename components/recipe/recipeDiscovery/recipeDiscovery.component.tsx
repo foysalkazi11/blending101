@@ -33,7 +33,7 @@ const RecipeDetails = () => {
     (state) => state.sideTray,
   );
   const { dbUser } = useAppSelector((state) => state?.user);
-  const { showAllRecipes, singleCollectionInfo } = useAppSelector(
+  const { currentCollectionInfo } = useAppSelector(
     (state) => state?.collections,
   );
   const { latest, popular, recommended } = useAppSelector(
@@ -125,7 +125,7 @@ const RecipeDetails = () => {
             ) : null}
           </div>
 
-          {singleCollectionInfo?.name || showAllRecipes ? (
+          {currentCollectionInfo?.name ? (
             <ShowCollectionRecipes />
           ) : blends.length || ingredients.length || filters?.length ? (
             <FilterPageBottom
@@ -176,6 +176,7 @@ const RecipeDetails = () => {
                             setOpenCollectionModal={setOpenCollectionModal}
                             isMatch={item?.isMatch}
                             postfixTitle={item?.defaultVersion?.postfixTitle}
+                            userId={item?.userId}
                           />
                         </div>
                       );
@@ -228,6 +229,7 @@ const RecipeDetails = () => {
                               setOpenCollectionModal={setOpenCollectionModal}
                               isMatch={item?.isMatch}
                               postfixTitle={item?.defaultVersion?.postfixTitle}
+                              userId={item?.userId}
                             />
                           </div>
                         );
@@ -280,6 +282,7 @@ const RecipeDetails = () => {
                               setOpenCollectionModal={setOpenCollectionModal}
                               isMatch={item?.isMatch}
                               postfixTitle={item?.defaultVersion?.postfixTitle}
+                              userId={item?.userId}
                             />
                           </div>
                         );
@@ -321,42 +324,3 @@ const RecipeDetails = () => {
 };
 
 export default RecipeDetails;
-
-// useEffect(()=>{
-//   if (!recommendedRecipesLoading && recommendedRecipesData?.getAllrecomendedRecipes) {
-//     if (!recommended?.length){
-//       dispatch(
-//         setRecommended(
-//           recommendedRecipesData?.getAllrecomendedRecipes || [],
-//         ),
-//       );
-//     }
-//   }
-
-// },[recommendedRecipesData?.getAllrecomendedRecipes])
-
-// useEffect(()=>{
-//   if (!popularRecipesLoading && popularRecipesData?.getAllpopularRecipes) {
-//     if (!popular?.length){
-//       dispatch(
-//         setPopular(
-//           popularRecipesData?.getAllpopularRecipes || [],
-//         ),
-//       );
-//     }
-//   }
-
-// },[popularRecipesData?.getAllpopularRecipes])
-
-// useEffect(()=>{
-//   if (!latestRecipesLoading && latestRecipesData?.getAllLatestRecipes) {
-//     if (!latest?.length){
-//       dispatch(
-//         setLatest(
-//           latestRecipesData?.getAllLatestRecipes || [],
-//         ),
-//       );
-//     }
-//   }
-
-// },[latestRecipesData?.getAllLatestRecipes])

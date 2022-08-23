@@ -1,7 +1,6 @@
 import { faSearch, faTimes } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { InputHTMLAttributes, ReactHTMLElement, useRef } from "react";
-import IconButton from "../../atoms/Button/IconButton.component";
+import React, { InputHTMLAttributes, useRef } from "react";
 import styles from "./Searchbox.module.scss";
 
 interface SearchboxProps
@@ -14,78 +13,41 @@ interface SearchboxProps
 
 const Searchbox = (props: SearchboxProps) => {
   const { value, onChange, onReset, ...inputProps } = props;
+  const inputWrapperRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const hasQuery = value !== "";
+  const handleReset = () => {
+    document.body.focus();
+    // inputWrapperRef.current.blur();
+    // inputWrapperRef.current.classList.add(styles.reset);
+  };
   return (
     <div className={styles.search}>
-      <div className={styles["search-container"]} {...inputProps}>
+      <div
+        ref={inputWrapperRef}
+        className={styles["search-container"]}
+        {...inputProps}
+      >
         <input
+          ref={inputRef}
           placeholder="Search"
           type="text"
           className={styles.input}
           value={value}
           onChange={onChange}
         />
-        <button className={styles.button} onClick={hasQuery && onReset}>
+        <button
+          className={styles.button}
+          onClick={() => {
+            hasQuery && onReset();
+            handleReset();
+          }}
+        >
           <FontAwesomeIcon icon={hasQuery ? faTimes : faSearch} />
         </button>
       </div>
     </div>
   );
 };
-
-// const Searchbox: React.FC = () => {
-//   const searchBtn = useRef<HTMLButtonElement>(null);
-//   const input = useRef<HTMLInputElement>(null);
-//   const handleExpand = () => {
-//     searchBtn?.current.classList.toggle(styles.close);
-//     input?.current.classList.toggle(styles.square);
-//   };
-//   return (
-//     <div className={styles.searchbox}>
-//       <form className={styles.content}>
-//         <input
-//           ref={input}
-//           type="text"
-//           name="input"
-//           className={styles.input}
-//           id="search-input"
-//         />
-//         <button
-//           ref={searchBtn}
-//           type="reset"
-//           className={styles.search}
-//           id="search-btn"
-//           onClick={handleExpand}
-//         ></button>
-//       </form>
-//     </div>
-//   );
-// };
-// const Searchbox = () => {
-//   return (
-//     <form
-//       className={"search-container"}
-//       action="//llamaswill.tumblr.com/search"
-//     >
-//       <input
-//         id="search-box"
-//         type="text"
-//         className={styles["search-box"]}
-//         name="q"
-//       />
-//       <label htmlFor="search-box">
-//         <span className={styles["search-icon"]}>
-//           <FontAwesomeIcon icon={faSearch} />
-//         </span>
-//         {/* <span className="glyphicon glyphicon-search search-icon"></span> */}
-//       </label>
-//       <input
-//         type="submit"
-//         id="search-submit"
-//         className={styles["search-submit"]}
-//       />
-//     </form>
-//   );
-// };
 
 export default Searchbox;

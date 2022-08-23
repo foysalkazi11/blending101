@@ -1,6 +1,4 @@
-import { daysInMonth } from "../js/my";
 import styles from "./graph-detail-container.module.scss";
-// @ts-ignore
 import HSBar from "react-horizontal-stacked-bar-chart";
 import { RECIPE_CATEGORY_COLOR } from "../../../../../data/Recipe";
 import { useMemo } from "react";
@@ -45,10 +43,6 @@ function GraphDetailContainer({
     });
 
     return data;
-    // console.log(categories);
-    // return Object.values(categories).filter(
-    //   (category: any) => category?.value > 0,
-    // );
   }, [activities]);
   return (
     <div className={styles.challenge_circle_graph_data}>

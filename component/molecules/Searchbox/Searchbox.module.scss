@@ -83,3 +83,12 @@
 .button i {
   font-size: 85%;
 }
+
+.reset {
+  width: 4rem !important;
+  border-radius: 2rem !important;
+  & input {
+    width: 0 !important;
+    padding: 0 !important;
+  }
+}
