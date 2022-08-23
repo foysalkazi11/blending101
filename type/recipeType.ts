@@ -20,12 +20,20 @@ export interface RecipeType {
   userCollections: string[];
   defaultVersion: DefaultVersion;
   isMatch: boolean;
-
   carbs: number;
   score: number;
   calorie: number;
+  userId: null | RecipeCreatorInfo;
 }
 
+export interface RecipeCreatorInfo {
+  displayName: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  _id: string;
+  image: string;
+}
 export interface DefaultVersion {
   postfixTitle: string;
 }

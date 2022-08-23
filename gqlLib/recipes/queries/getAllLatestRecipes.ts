@@ -40,6 +40,11 @@ const GET_ALL_LATEST_RECIPES = gql`
         postfixTitle
       }
       isMatch
+      userId {
+        _id
+        displayName
+        image
+      }
     }
   }
 `;
