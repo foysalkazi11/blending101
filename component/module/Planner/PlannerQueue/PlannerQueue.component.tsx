@@ -111,11 +111,11 @@ const PlannerPanel = (props: PlannerPanelProps) => {
   }, [toggler]);
 
   // Handling the Blendtype Combobox, When the search is focused/hovered it should be hidden or vice-versa
-  const handleShow = (e) => {
+  const handleShow = () => {
     blendTypeRef?.current.classList.add(styles["blendType--show"]);
     blendTypeRef?.current.classList.remove(styles["blendType--hide"]);
   };
-  const handleHide = (e) => {
+  const handleHide = () => {
     blendTypeRef?.current.classList.remove(styles["blendType--show"]);
     blendTypeRef?.current.classList.add(styles["blendType--hide"]);
   };
@@ -155,7 +155,10 @@ const PlannerPanel = (props: PlannerPanelProps) => {
         <Searchbox
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          onReset={() => setQuery("")}
+          onReset={() => {
+            setQuery("");
+            handleHide();
+          }}
           onFocus={handleHide}
           onMouseEnter={handleHide}
           onMouseLeave={handleShow}
@@ -173,13 +176,15 @@ const PlannerPanel = (props: PlannerPanelProps) => {
       ) : (
         <Recipes recipes={recipes} isUpload={isUpload} />
       )}
-      <div className="flex ai-center jc-center mt-20">
-        <Pagination
-          limit={5}
-          pageState={[page, setPage]}
-          totalPage={pageLength}
-        />
-      </div>
+      {recipes.length > 3 && (
+        <div className="flex ai-center jc-center mt-20">
+          <Pagination
+            limit={5}
+            pageState={[page, setPage]}
+            totalPage={pageLength}
+          />
+        </div>
+      )}
     </Fragment>
   );
 };

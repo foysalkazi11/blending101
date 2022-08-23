@@ -102,7 +102,7 @@ const GroceryPanel = () => {
   const [selectedIngredient, setSelectedIngredient] = useState<any>({});
 
   const dispatch = useAppDispatch();
-  const userId = useAppSelector((state) => state.user.dbUser);
+  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
   const { groceries, pantries, staples } = useAppSelector(
     (state) => state.cart,
   );
@@ -112,13 +112,14 @@ const GroceryPanel = () => {
   });
 
   const { data } = useQuery(GET_CART_DATA, {
-    variables: { userId: userId._id },
+    variables: { userId },
+    skip: userId === "",
   });
   const [deleteCartItem, deleteState] = useMutation(DELETE_CART_ITEM);
 
   const deleteItem = async (ids: string[], isStaples?: boolean) => {
     const variables = {
-      userId: userId._id,
+      userId: userId,
       groceries: toggle === 1 ? ids : [],
       pantries: toggle === 2 && !isStaples ? ids : [],
       staples: toggle === 2 && isStaples ? ids : [],
@@ -140,7 +141,7 @@ const GroceryPanel = () => {
 
   const deleteItems = async () => {
     const variables = {
-      userId: userId._id,
+      userId: userId,
       groceries: checkedGroceries,
       pantries: checkedPantries,
       staples: checkedStaples,

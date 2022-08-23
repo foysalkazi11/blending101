@@ -1,24 +1,27 @@
-import { useLazyQuery } from "@apollo/client";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useState } from "react";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { AiOutlinePlusCircle } from "react-icons/ai";
+import { faToolbox } from "@fortawesome/pro-light-svg-icons";
+
 import PlannerGuide from "../component/module/Planner/PlannerGuide/PlannerGuide.component";
-
-import { GET_30DAYS_CHALLENGE, GET_30DAYS_POST } from "../graphql/Planner";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-
 import ChallengeQueue from "../component/module/Planner/PlannerQueue/ChallengeQueue.component";
 import PlannerQueue from "../component/module/Planner/PlannerQueue/PlannerQueue.component";
 import { RecipePlanner } from "../component/module/Planner/Toolbox/RecipePlanner.component";
 import UploadCard from "../component/module/Planner/Toolbox/UploadCard.component";
-import AContainer from "../containers/A.container";
 import Challenge from "../component/module/Planner/Challenge/Challenge.component";
-import IconHeading from "../theme/iconHeading/iconHeading.component";
-import ToggleCard from "../theme/toggleCard/toggleCard.component";
 import Settings from "../component/module/Planner/Setttings/Settings.component";
 
-import { setChallenge } from "../redux/slices/Planner.slice";
-import { faToolbox } from "@fortawesome/pro-light-svg-icons";
+import AContainer from "../containers/A.container";
+import IconHeading from "../theme/iconHeading/iconHeading.component";
+import ToggleCard from "../theme/toggleCard/toggleCard.component";
+
+import { GET_30DAYS_CHALLENGE } from "../graphql/Planner";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+
 import styles from "../styles/pages/planner.module.scss";
+import { useEffect } from "react";
+import { setChallengeInterval } from "../redux/slices/Challenge.slice";
+import { isWithinInterval } from "date-fns";
 
 const ChallengePage = () => {
   const [showChallenge, setShowChallenge] = useState(true);
@@ -28,37 +31,41 @@ const ChallengePage = () => {
 
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
-
-  const [get30DaysChallenge, { loading, data }] = useLazyQuery(
-    GET_30DAYS_CHALLENGE,
-    {
-      variables: {
-        userId,
-      },
-    },
+  const { activeDate, startDate, endDate } = useAppSelector(
+    (state) => state.challenge,
   );
 
-  const [getChallengePosts, { data: challenge }] =
-    useLazyQuery(GET_30DAYS_POST);
+  const [getChallenges, { data }] = useLazyQuery(GET_30DAYS_CHALLENGE);
 
   useEffect(() => {
-    if (userId !== "")
-      getChallengePosts({
-        variables: {
-          userId,
-        },
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId]);
+    if (
+      userId === "" ||
+      (![activeDate, startDate, endDate].includes("") &&
+        isWithinInterval(new Date(activeDate), {
+          start: new Date(startDate),
+          end: new Date(endDate),
+        }))
+    )
+      return;
+    getChallenges({
+      variables: {
+        userId,
+        startDate: activeDate,
+      },
+    });
+  }, [activeDate, endDate, getChallenges, startDate, userId]);
 
   useEffect(() => {
-    if (!challenge?.getChallengePosts) return;
-    dispatch(setChallenge(challenge?.getChallengePosts?.challenge));
-  }, [challenge?.getChallengePosts, dispatch]);
+    const challenges = data?.getMyThirtyDaysChallenge?.challenge || [];
+    if (challenges.length === 0) return;
 
-  useEffect(() => {
-    if (userId) get30DaysChallenge();
-  }, [get30DaysChallenge, userId]);
+    dispatch(
+      setChallengeInterval({
+        startDate: challenges[0]?.date,
+        endDate: challenges[challenges.length - 1]?.date,
+      }),
+    );
+  }, [data, dispatch]);
 
   let toolbox = null;
   if (showChallenge && showUpload)
@@ -80,7 +87,9 @@ const ChallengePage = () => {
           <div className="row">
             <div className="col-3">
               {showChallenge && !showUpload ? (
-                <ChallengeQueue />
+                <ChallengeQueue
+                  challenges={data?.getMyThirtyDaysChallenge?.challenge}
+                />
               ) : (
                 <PlannerQueue isUpload={showUpload} />
               )}
@@ -137,13 +146,7 @@ const ChallengePage = () => {
                     />
                     {showChallenge ? (
                       <Challenge
-                        activities={
-                          data &&
-                          data?.getMyThirtyDaysChallenge &&
-                          data?.getMyThirtyDaysChallenge?.challenge?.length > 0
-                            ? data?.getMyThirtyDaysChallenge?.challenge
-                            : []
-                        }
+                        activities={data?.getMyThirtyDaysChallenge?.challenge}
                         statistics={
                           data?.getMyThirtyDaysChallenge?.challengeInfo
                         }

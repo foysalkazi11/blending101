@@ -37,9 +37,11 @@ const LoginScreen = () => {
   const onSubmit = async (input) => {
     setIsLoading(true);
     try {
+      const cognitoData = await Auth.signIn(input?.email, input?.password);
+      console.log(cognitoData)
       const {
         attributes: { email },
-      } = await Auth.signIn(input?.email, input?.password);
+      } = cognitoData;
       const { data } = await createNewUser({
         variables: {
           data: { email: email, provider: "email" },

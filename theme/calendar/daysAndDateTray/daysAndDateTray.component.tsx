@@ -13,6 +13,7 @@ interface DaysAndDateTrayInterface {
   firstDayOfMonth: number;
   numberOfDaysInMonth: number;
   dateHandler: any;
+  onClose: any;
 }
 const DaysAndDateTray = ({
   date,
@@ -21,6 +22,7 @@ const DaysAndDateTray = ({
   firstDayOfMonth,
   numberOfDaysInMonth,
   dateHandler,
+  onClose,
 }: DaysAndDateTrayInterface) => {
   return (
     <div className={styles.mainContainer}>
@@ -53,7 +55,7 @@ const DaysAndDateTray = ({
       <div className={styles.mainContainer__actionTray}>
         <span>Set</span>
         <span>Today</span>
-        <span>Close</span>
+        <span onClick={onClose}>Close</span>
       </div>
     </div>
   );

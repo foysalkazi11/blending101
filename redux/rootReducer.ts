@@ -12,6 +12,8 @@ import filterRecipeSliceReducer from "./slices/filterRecipeSlice";
 import categroyReducer from "./slices/categroySlice";
 import CartReducer from "./slices/Cart.slice";
 import PlannerReducer from "./slices/Planner.slice";
+import ChallengeSlice from "./slices/Challenge.slice";
+
 import editRecipeMainReducer from "./edit_recipe/editRecipeStates";
 import uiReducer from "./slices/Ui.slice";
 import wikiReducer from "./slices/wikiSlice";
@@ -21,6 +23,7 @@ const rootReducer = combineReducers({
   user: userReducer,
   cart: CartReducer,
   planner: PlannerReducer,
+  challenge: ChallengeSlice,
   sideTray: sideTrayReducer,
   versionTray: versionTrayReducer,
   utility: utilityReducer,

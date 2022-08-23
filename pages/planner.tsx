@@ -8,7 +8,7 @@ import PlannerQueue from "../component/module/Planner/PlannerQueue/PlannerQueue.
 import { RecipePlanner } from "../component/module/Planner/Toolbox/RecipePlanner.component";
 import UploadCard from "../component/module/Planner/Toolbox/UploadCard.component";
 import AContainer from "../containers/A.container";
-import { GET_30DAYS_CHALLENGE, GET_30DAYS_POST } from "../graphql/Planner";
+import { GET_30DAYS_CHALLENGE } from "../graphql/Planner";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
 import styles from "../styles/pages/planner.module.scss";
@@ -17,7 +17,6 @@ import Challenge from "../component/module/Planner/Challenge/Challenge.component
 import IconHeading from "../theme/iconHeading/iconHeading.component";
 import ToggleCard from "../theme/toggleCard/toggleCard.component";
 import Settings from "../component/module/Planner/Setttings/Settings.component";
-import { setChallenge } from "../redux/slices/Planner.slice";
 import { faToolbox } from "@fortawesome/pro-light-svg-icons";
 
 const Planner = () => {
@@ -26,36 +25,36 @@ const Planner = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [showGroceryTray] = useState(true);
 
-  const dispatch = useAppDispatch();
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  // const dispatch = useAppDispatch();
+  // const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
-  const [get30DaysChallenge, { data }] = useLazyQuery(GET_30DAYS_CHALLENGE, {
-    variables: {
-      userId,
-    },
-  });
+  // const [get30DaysChallenge, { data }] = useLazyQuery(GET_30DAYS_CHALLENGE, {
+  //   variables: {
+  //     userId,
+  //   },
+  // });
 
-  const [getChallengePosts, { data: challenge }] =
-    useLazyQuery(GET_30DAYS_POST);
+  // const [getChallengePosts, { data: challenge }] =
+  //   useLazyQuery(GET_30DAYS_POST);
 
-  useEffect(() => {
-    if (userId !== "")
-      getChallengePosts({
-        variables: {
-          userId,
-        },
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId]);
+  // useEffect(() => {
+  //   if (userId !== "")
+  //     getChallengePosts({
+  //       variables: {
+  //         userId,
+  //       },
+  //     });
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [userId]);
 
-  useEffect(() => {
-    if (!challenge?.getChallengePosts) return;
-    dispatch(setChallenge(challenge?.getChallengePosts?.challenge));
-  }, [challenge?.getChallengePosts, dispatch]);
+  // useEffect(() => {
+  //   if (!challenge?.getChallengePosts) return;
+  //   dispatch(setChallenge(challenge?.getChallengePosts?.challenge));
+  // }, [challenge?.getChallengePosts, dispatch]);
 
-  useEffect(() => {
-    if (userId) get30DaysChallenge();
-  }, [get30DaysChallenge, userId]);
+  // useEffect(() => {
+  //   if (userId) get30DaysChallenge();
+  // }, [get30DaysChallenge, userId]);
 
   let toolbox = null;
   if (showChallenge && showUpload)
@@ -76,11 +75,13 @@ const Planner = () => {
           <div className={styles.planner__pageTitle}>BLENDA COACH</div>
           <div className="row">
             <div className="col-3">
-              {showChallenge && !showUpload ? (
+              <PlannerQueue isUpload={showUpload} />
+
+              {/* {showChallenge && !showUpload ? (
                 <ChallengeQueue />
               ) : (
                 <PlannerQueue isUpload={showUpload} />
-              )}
+              )} */}
             </div>
             <div className="col-6">
               <div className={styles.headingDiv}>
@@ -132,7 +133,9 @@ const Planner = () => {
                         paddingTop: "18px",
                       }}
                     />
-                    {showChallenge ? (
+                    <RecipePlanner />
+
+                    {/* {showChallenge ? (
                       <Challenge
                         activities={
                           data &&
@@ -147,7 +150,7 @@ const Planner = () => {
                       />
                     ) : (
                       <RecipePlanner />
-                    )}
+                    )} */}
                   </Fragment>
                 )}
               </div>

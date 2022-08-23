@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { forwardRef, Fragment, useRef, useEffect, useMemo } from "react";
 import IconHeading from "../../../../theme/iconHeading/iconHeading.component";
 import SplitImageCard from "../../../../theme/card/splitImageCard/splitImageCard.component";
 
@@ -11,22 +11,53 @@ import Icon from "../../../atoms/Icon/Icon.component";
 import { faCircle } from "@fortawesome/pro-solid-svg-icons";
 import { IChallengePosts } from "../../../../redux/slices/Planner.slice";
 
-interface IChallenge {
-  date: string;
-  images: string[];
-  posts: {
-    id: string;
-    title: string;
-    category: string;
-    ingredients: any[];
-    rxScore: number;
-    calories: number;
-    gl: number;
-    note: string;
-  }[];
+interface ChallengePanelProps {
+  challenges: any[];
 }
-const ChallengePanel = () => {
-  const challenges = useAppSelector((state) => state.planner.challenges);
+const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
+  const { challenges } = props;
+  const activeDate = useAppSelector((state) => state.challenge.activeDate);
+
+  // const challenges = useAppSelector((state) => state.planner.challenges);
+
+  const blendContainer = useRef<HTMLDivElement>(null);
+  const blends = useRef<HTMLDivElement[]>([]);
+
+  const addToBlendsRef = (element: HTMLDivElement) => {
+    if (element && !blends.current.includes(element)) {
+      blends.current.push(element);
+    }
+  };
+
+  useEffect(() => {
+    if (!activeDate) return;
+    blends.current.forEach((element) => {
+      if (element && activeDate === element?.dataset?.date) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+        // const headerOffset = 55;
+        // const elementPosition = element.getBoundingClientRect().top;
+        // console.log(elementPosition);
+        // const offsetPosition =
+        //   elementPosition + window.pageYOffset - headerOffset;
+        // blendContainer.current.scrollTo({
+        //   top: offsetPosition,
+        //   behavior: "smooth",
+        // });
+      }
+    });
+    return;
+  }, [activeDate]);
+
+  const challengePosts = useMemo(() => {
+    const challengPosts = [];
+    challenges?.forEach((challenge: IChallengePosts) => {
+      if (challenge.posts.length === 0) return;
+      challengPosts.push(
+        <BlendCard key={challenge?._id} ref={addToBlendsRef} {...challenge} />,
+      );
+    });
+    return challengPosts;
+  }, [challenges]);
 
   return (
     <Fragment>
@@ -35,21 +66,21 @@ const ChallengePanel = () => {
         title={"Challenge Post"}
         iconStyle={{ fontSize: "18px" }}
       />
-      <div className={styles.card__wrapper}>
-        {challenges &&
-          challenges.length > 0 &&
-          challenges?.map((challenge: IChallengePosts) => (
-            <BlendCard key={challenge?._id} {...challenge} />
-          ))}
+      <div className={styles.card__wrapper} ref={blendContainer}>
+        {challengePosts.reverse()}
       </div>
     </Fragment>
   );
 };
 
-const BlendCard = (props: IChallengePosts) => {
+ChallengePanel.defaultProps = {
+  challenges: [],
+};
+
+const BlendCard = forwardRef((props: IChallengePosts, ref: any) => {
   const { date, images, posts } = props;
   return (
-    <div className={styles.card}>
+    <div className={styles.card} data-date={date} ref={ref}>
       <div className={styles.card__headline}>
         <Icon fontName={faCircle} size="2rem" style={{ color: "#7cbc39" }} />
         <h5>{format(date ? new Date(date) : new Date(), "EEEE, MMMM d")}</h5>
@@ -113,5 +144,8 @@ const BlendCard = (props: IChallengePosts) => {
       </div>
     </div>
   );
-};
+});
+
+BlendCard.displayName = "BlendCard";
+
 export default ChallengePanel;

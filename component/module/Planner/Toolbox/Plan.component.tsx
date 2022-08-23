@@ -9,9 +9,7 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import {
   addPlanner,
   deleteRecipe,
-  duplicateRecipe,
   IPlannerRecipe,
-  moveRecipe,
 } from "../../../../redux/slices/Planner.slice";
 import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
 import CalendarTray from "../../../../theme/calendar/calendarTray.component";
@@ -25,7 +23,6 @@ import {
   MOVE_PLANNER,
 } from "../../../../graphql/Planner";
 import Publish from "../../../../helpers/Publish";
-import { getDateOnly } from "../../../../helpers/Date";
 
 interface PlanProps {
   plannerId?: string;
@@ -44,7 +41,9 @@ const Plan = (props: PlanProps) => {
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
   const [copyRecipes, copyState] = useMutation(ADD_RECIPE_TO_PLANNER);
-  const [moveRecipes, moveState] = useMutation(MOVE_PLANNER);
+  const [moveRecipes, moveState] = useMutation(MOVE_PLANNER, {
+    refetchQueries: ["GetPlannerByWeek"],
+  });
   const [deleteRecipes, deleteState] = useMutation(DELETE_RECIPE_FROM_PLANNER);
 
   if (!day && !date) return null;
@@ -101,20 +100,22 @@ const Plan = (props: PlanProps) => {
         data: {
           plannerId,
           assignDate: date,
+          recipeId: recipe._id,
         },
       },
       state: moveState,
       success: `Moved Planner sucessfully`,
-      onSuccess: (data) => {
-        dispatch(
-          moveRecipe({
-            currentPlannerId: plannerId,
-            newPlannerId: data?.editPlanner?._id,
-            date,
-            recipe,
-          }),
-        );
-      },
+      // onSuccess: (data) => {
+      //   console.log(data);
+      //   dispatch(
+      //     moveRecipe({
+      //       currentPlannerId: plannerId,
+      //       newPlannerId: data?.movePlanner?._id,
+      //       date,
+      //       recipe,
+      //     }),
+      //   );
+      // },
     });
   };
 

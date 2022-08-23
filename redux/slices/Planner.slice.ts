@@ -160,7 +160,6 @@ export const PlannerSlice = createSlice({
         start: state.planner.startDate,
         end: state.planner.endDate,
       });
-      console.log(withinInterval);
       if (!withinInterval) return;
 
       const date = action.payload.date;
@@ -197,87 +196,6 @@ export const PlannerSlice = createSlice({
           ...state.planners[plannerIdx],
           recipes: recipe,
         };
-      }
-    },
-
-    duplicateRecipe: (
-      state,
-      action: { payload: { id: string; date: Date; recipe: IPlannerRecipe } },
-    ) => {
-      const date = action?.payload?.date?.toISOString();
-      const index = state.planners.findIndex((p) => p.date === date);
-      if (index === -1) {
-        state.planners.push({
-          id: action.payload.id,
-          date,
-          recipes: [action.payload.recipe],
-        });
-        state.planners.sort(
-          //@ts-ignore
-          (a: any, b: any) => new Date(a.date) - new Date(b.date),
-        );
-      } else {
-        const recipe = state.planners[index].recipes.find(
-          (recipe) => recipe._id === action.payload.recipe._id,
-        );
-        if (!recipe) {
-          state.planners[index].recipes.push(action.payload.recipe);
-        }
-      }
-    },
-
-    moveRecipe: (
-      state,
-      action: {
-        payload: {
-          currentPlannerId: string;
-          newPlannerId: string;
-          date: string;
-          recipe: IPlannerRecipe;
-        };
-      },
-    ) => {
-      const date = action?.payload?.date;
-
-      //Find the planner
-      const plannerIdx = state.planners.findIndex(
-        (planner) => planner.id === action.payload.currentPlannerId,
-      );
-
-      //Check if the current date and new date different
-      if (state.planners[plannerIdx].date === date) return;
-
-      //Find the recipe of that planner
-      const recipeIdx = state.planners[plannerIdx].recipes.findIndex(
-        (recipe) => recipe._id === action.payload.recipe?._id,
-      );
-
-      if (state.planners[plannerIdx].recipes.length === 1 && recipeIdx !== -1) {
-        //If the recipe is only one, delete the whole planner
-        state.planners.splice(plannerIdx, 1);
-      } else {
-        //Remove the recipe from the planner
-        state.planners[plannerIdx].recipes.splice(recipeIdx, 1);
-      }
-
-      //Check if the date exist otherwise create new date
-      const newPlannerIdx = state.planners.findIndex(
-        (planner) => planner.date === date,
-      );
-
-      //Add the recipe to the new date
-      if (newPlannerIdx === -1) {
-        state.planners.push({
-          id: action.payload.newPlannerId,
-          date: date,
-          recipes: [action.payload.recipe],
-        });
-        state.planners.sort(
-          //@ts-ignore
-          (a: any, b: any) => new Date(a.date) - new Date(b.date),
-        );
-      } else {
-        state.planners[newPlannerIdx].recipes.push(action.payload.recipe);
       }
     },
 
@@ -350,8 +268,6 @@ export const {
   setPlanners,
   addPlanner,
   deleteRecipe,
-  duplicateRecipe,
-  moveRecipe,
   clearAllPlanner,
   setRecipeInfo,
   setRecipeIngredients,

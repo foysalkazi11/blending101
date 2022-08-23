@@ -1,12 +1,13 @@
 import { gql } from "@apollo/client";
 
-export const GET_30DAYS_POST = gql`
-  query GetChallengePosts($userId: String!) {
-    getChallengePosts(page: 1, limit: 30, memberId: $userId) {
+export const GET_30DAYS_CHALLENGE = gql`
+  query Get30DaysChallenge($userId: String!, $startDate: String) {
+    getMyThirtyDaysChallenge(memberId: $userId, startDate: $startDate) {
       challenge {
         _id
-        date
         images
+        date: formattedDate
+        disabled
         posts {
           _id
           recipeBlendCategory {
@@ -22,52 +23,13 @@ export const GET_30DAYS_POST = gql`
           }
         }
       }
-      totalPost
-    }
-  }
-`;
-export const GET_30DAYS_CHALLENGE = gql`
-  query Get30DaysChallenge($userId: String!) {
-    getMyThirtyDaysChallenge(memberId: $userId) {
-      challenge {
-        assignDate
-        dayName
-        date
-        disabled
-        formattedDate
-        posts {
-          recipeBlendCategory {
-            name
-          }
-        }
-      }
       challengeInfo {
         longestStreak
         currentStreak
         blendScore
         daysRemaining
         challengeName
-      }
-    }
-  }
-`;
-
-export const GET_CHALLENGE_DETAIL = gql`
-  query GetChallengeDetail($userId: String!, $date: DateTime!) {
-    getAllChallengePostByDate(memberId: $userId, date: $date) {
-      docId
-      _id
-      images
-      recipeBlendCategory {
-        name
-      }
-      name
-      note
-      recipeImage
-      ingredients {
-        ingredientId {
-          ingredientName
-        }
+        totalChallengePosts
       }
     }
   }
