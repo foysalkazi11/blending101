@@ -9,19 +9,9 @@ import {
   faChevronLeft,
   faChevronRight,
 } from "@fortawesome/pro-solid-svg-icons";
-import { useQuery } from "@apollo/client";
-import { useAppSelector } from "../../../redux/hooks";
-import { CHALLENGE_GALLERY } from "../../../graphql/Planner";
 import { format, isSameDay } from "date-fns";
 
-const Gallery = ({ date }) => {
-  const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
-  const { data } = useQuery(CHALLENGE_GALLERY, {
-    variables: {
-      memberId,
-    },
-  });
-
+const Gallery = ({ date, galleries }) => {
   const [state, setState] = useState({ nav1: null, nav2: null });
   const slider1 = useRef();
   const slider2 = useRef();
@@ -32,25 +22,23 @@ const Gallery = ({ date }) => {
       nav2: slider2.current,
     });
   }, []);
-
   const { nav1, nav2 } = state;
 
   const images = useMemo(() => {
     const imageData = [];
-    if (data?.getAChallengeGallery) {
-      data?.getAChallengeGallery?.forEach((image) => {
-        image.images.forEach((img) => {
-          imageData.push({
-            date: image.assignDate,
-            src: img,
-          });
+    galleries?.forEach((gallery) => {
+      gallery.images.forEach((img) => {
+        imageData.push({
+          date: gallery.assignDate,
+          src: img,
         });
       });
-    }
+    });
     return imageData;
-  }, [data?.getAChallengeGallery]);
+  }, [galleries]);
 
   const initialSlide = images.findIndex((img) => isSameDay(img.date, date));
+
   return (
     <div className={styles.container}>
       <div>

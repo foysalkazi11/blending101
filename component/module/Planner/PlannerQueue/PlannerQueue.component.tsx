@@ -1,39 +1,37 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { useDispatch } from "react-redux";
+import { faPlusCircle } from "@fortawesome/pro-solid-svg-icons";
+import { faCalendarAlt } from "@fortawesome/pro-light-svg-icons";
+import { faCalendarDay } from "@fortawesome/pro-regular-svg-icons";
+import { format } from "date-fns";
 
+import Pagination from "../../../molecules/Pagination/ServerPagination.component";
+import Combobox from "../../../organisms/Forms/Combobox.component";
+import Searchbox from "../../../molecules/Searchbox/Searchbox.component";
 import ToggleCard from "../../../../theme/toggleCard/toggleCard.component";
 import IconHeading from "../../../../theme/iconHeading/iconHeading.component";
-import styles from "./PlannerQueue.module.scss";
-import RecipeCard from "../../../molecules/Card/RecipeCard.component";
-
-import { RiCalendarEventLine } from "react-icons/ri";
 import CalendarTray from "../../../../theme/calendar/calendarTray.component";
+import SkeletonElement from "../../../../theme/skeletons/SkeletonElement";
+import RecipeCard from "../../../molecules/Card/RecipeCard.component";
+import Icon from "../../../atoms/Icon/Icon.component";
+
 import { useAppSelector } from "../../../../redux/hooks";
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import {
   ADD_RECIPE_TO_PLANNER,
   GET_INGREDIENTS_BY_RECIPE,
   GET_QUEUED_RECIPES_FOR_PLANNER,
   GET_RECIPES_FOR_PLANNER,
 } from "../../../../graphql/Planner";
-import Pagination from "../../../molecules/Pagination/ServerPagination.component";
-import Combobox from "../../../organisms/Forms/Combobox.component";
-import Searchbox from "../../../molecules/Searchbox/Searchbox.component";
 import { GET_BLEND_CATEGORY } from "../../../../graphql/Recipe";
-import { useDispatch } from "react-redux";
 import {
   addPlanner,
   setRecipeInfo,
   setRecipeIngredients,
 } from "../../../../redux/slices/Planner.slice";
-import Icon from "../../../atoms/Icon/Icon.component";
-import { faPlusCircle } from "@fortawesome/pro-solid-svg-icons";
 import Publish from "../../../../helpers/Publish";
-import SkeletonElement from "../../../../theme/skeletons/SkeletonElement";
-import { getDateOnly } from "../../../../helpers/Date";
 
-import { faCalendarAlt } from "@fortawesome/pro-light-svg-icons";
-import { format } from "date-fns";
+import styles from "./PlannerQueue.module.scss";
 
 interface PlannerPanelProps {
   isUpload: boolean;
@@ -62,7 +60,7 @@ const PlannerPanel = (props: PlannerPanelProps) => {
 
   useEffect(() => {
     const blendCategory = type === "all" ? "" : type;
-    if (userId !== "")
+    if (userId !== "") {
       getRecipes({
         variables: {
           user: userId,
@@ -72,16 +70,17 @@ const PlannerPanel = (props: PlannerPanelProps) => {
           type: blendCategory,
         },
       });
-    getQueuedRecipes({
-      variables: {
-        currentDate: format(new Date(), "yyyy-MM-dd"),
-        user: userId,
-        searchTerm: query,
-        page,
-        limit,
-        type: blendCategory,
-      },
-    });
+      getQueuedRecipes({
+        variables: {
+          currentDate: format(new Date(), "yyyy-MM-dd"),
+          user: userId,
+          searchTerm: query,
+          page,
+          limit,
+          type: blendCategory,
+        },
+      });
+    }
   }, [getQueuedRecipes, getRecipes, limit, page, query, type, userId]);
 
   useEffect(() => {
@@ -280,14 +279,16 @@ const Recipes = (props) => {
             <Icon
               fontName={faPlusCircle}
               style={{ color: "#fe5d1f" }}
-              size="25px"
+              size="20px"
               onClick={() =>
                 uploadRecipe(_id, name, image, recipeBlendCategory?._id)
               }
             />
           ) : (
-            <RiCalendarEventLine
-              className={styles.calender}
+            <Icon
+              fontName={faCalendarDay}
+              style={{ color: "#fe5d1f" }}
+              size="20px"
               onClick={() =>
                 setShowCalenderId((prev) => (showCalenderId === _id ? "" : _id))
               }

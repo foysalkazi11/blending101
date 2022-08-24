@@ -6,6 +6,7 @@ import styles from "./IconButton.module.scss";
 
 interface IconButtonProps {
   variant?: "fade" | "white" | "primary" | "secondary" | "disabled";
+  color?: "primary" | "secondary";
   size?: "small" | "medium" | "large";
   fontName?: IconDefinition;
   font?: string;
@@ -51,6 +52,7 @@ const IconButton: React.FC<IconButtonProps> = (props) => {
       variantClass = "";
       break;
   }
+
   let sizeClass: string;
   switch (size) {
     case "small":

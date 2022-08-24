@@ -52,8 +52,6 @@ const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
   const dispatch = useAppDispatch();
   const activeDate = useAppSelector((state) => state.challenge.activeDate);
 
-  // const challenges = useAppSelector((state) => state.planner.challenges);
-
   const blendContainer = useRef<HTMLDivElement>(null);
   const blends = useRef<HTMLDivElement[]>([]);
 
@@ -96,14 +94,34 @@ const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
 
   const challengePosts = useMemo(() => {
     const challengPosts = [];
+    const challengeImages = [];
+    //Handling Each Challenge
     challenges?.forEach((challenge: IChallengePosts) => {
       if (challenge.posts.length === 0) return;
+      let images = [];
+      const postsEl = [];
+      //Handling Each Post
+      challenge.posts.forEach((post) => {
+        images = [...images, ...post?.images];
+        challengeImages.push({ assignDate: challenge?.date, images });
+        postsEl.push(
+          <Post
+            key={post._id}
+            id={challenge?._id}
+            date={challenge?.date}
+            post={post}
+            onEdit={editHandler}
+          />,
+        );
+      });
       challengPosts.push(
         <BlendCard
-          key={challenge?._id}
           ref={addToBlendsRef}
-          {...challenge}
-          onEdit={editHandler}
+          key={challenge?._id}
+          date={challenge?.date}
+          images={images}
+          postsEl={postsEl}
+          challengeImages={challengeImages}
         />,
       );
     });
@@ -128,77 +146,15 @@ ChallengePanel.defaultProps = {
   challenges: [],
 };
 
-interface BlendCardProps extends IChallengePosts {
-  onEdit: any;
+interface BlendCardProps {
+  date: string;
+  images: string[];
+  postsEl: React.ReactNode[];
+  challengeImages: any[];
 }
 const BlendCard = forwardRef((props: BlendCardProps, ref: any) => {
-  const { _id, date, posts, onEdit } = props;
-  const [images, postsEl] = useMemo(() => {
-    let images = [];
-    const postsEl = [];
-    posts.forEach((post) => {
-      images = [...images, ...post?.images];
+  const { date, postsEl, images, challengeImages } = props;
 
-      let ingredients = "";
-      post.ingredients.forEach((ingredient, index) => {
-        ingredients +=
-          ingredient?.ingredientId?.ingredientName +
-          `${index + 1 !== post.ingredients.length ? ", " : ""}`;
-      });
-      postsEl.push(
-        <div key={post._id} className="mb-10">
-          <div className={styles.recipe}>
-            <div className={styles.space}>
-              <h3
-                className={styles.recipe__title}
-                onClick={() => onEdit(_id, date, post)}
-              >
-                <Icon
-                  fontName={faCircle}
-                  size="2rem"
-                  style={{
-                    color:
-                      RECIPE_CATEGORY_COLOR[post?.recipeBlendCategory?.name],
-                  }}
-                />
-                {post.name}
-              </h3>
-              <div className="flex jc-between ai-center">
-                <span className={styles.recipe__category}>
-                  {post?.recipeBlendCategory?.name}
-                </span>
-                <IconButton
-                  fontName={faChartBar}
-                  variant="fade"
-                  size="small"
-                  // onClick={editHandler}
-                />
-              </div>
-              <p className={styles.recipe__ingredients}>{ingredients}</p>
-            </div>
-            <div className={styles.recipe__summary}>
-              <span>
-                RX Score <b>240</b>
-              </span>
-              <span>
-                Calories <b>275</b>
-              </span>
-              <span>
-                GL <b>240</b>
-              </span>
-            </div>
-          </div>
-          {post.note && (
-            <div className={styles.note}>
-              <h5 className={styles.note__headline}>Blend Notes</h5>
-              <p className={styles.note__content}>{post.note}</p>
-            </div>
-          )}
-        </div>,
-      );
-    });
-    return [images, postsEl];
-  }, [date, onEdit, posts]);
   return (
     <div className={styles.card} data-date={date} ref={ref}>
       <div className={styles.card__headline}>
@@ -208,6 +164,7 @@ const BlendCard = forwardRef((props: BlendCardProps, ref: any) => {
         {images.length > 0 && (
           <div className={styles.space}>
             <SplitImageCard
+              challengeImages={challengeImages}
               images={images}
               date={date ? new Date(date) : new Date()}
             />
@@ -218,7 +175,74 @@ const BlendCard = forwardRef((props: BlendCardProps, ref: any) => {
     </div>
   );
 });
-
 BlendCard.displayName = "BlendCard";
+
+interface PostProps {
+  id: string;
+  date: string;
+  post: IPost;
+  onEdit: any;
+}
+const Post = (props: PostProps) => {
+  const { id, date, post, onEdit } = props;
+
+  let ingredients = "";
+  post.ingredients.forEach((ingredient, index) => {
+    ingredients +=
+      ingredient?.ingredientId?.ingredientName +
+      `${index + 1 !== post.ingredients.length ? ", " : ""}`;
+  });
+
+  return (
+    <div className="mb-10">
+      <div className={styles.recipe}>
+        <div className={styles.space}>
+          <h3
+            className={styles.recipe__title}
+            onClick={() => onEdit(id, date, post)}
+          >
+            <Icon
+              fontName={faCircle}
+              size="2rem"
+              style={{
+                color: RECIPE_CATEGORY_COLOR[post?.recipeBlendCategory?.name],
+              }}
+            />
+            {post.name}
+          </h3>
+          <div className="flex jc-between ai-center">
+            <span className={styles.recipe__category}>
+              {post?.recipeBlendCategory?.name}
+            </span>
+            <IconButton
+              fontName={faChartBar}
+              variant="fade"
+              size="small"
+              // onClick={editHandler}
+            />
+          </div>
+          <p className={styles.recipe__ingredients}>{ingredients}</p>
+        </div>
+        <div className={styles.recipe__summary}>
+          <span>
+            RX Score <b>240</b>
+          </span>
+          <span>
+            Calories <b>275</b>
+          </span>
+          <span>
+            GL <b>240</b>
+          </span>
+        </div>
+      </div>
+      {post.note && (
+        <div className={styles.note}>
+          <h5 className={styles.note__headline}>Blend Notes</h5>
+          <p className={styles.note__content}>{post.note}</p>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default ChallengePanel;

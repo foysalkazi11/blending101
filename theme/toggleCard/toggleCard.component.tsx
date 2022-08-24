@@ -5,6 +5,7 @@ import styles from "./toggleCard.module.scss";
 interface ToggleCardInterface {
   noRoute?: boolean;
   toggler?: boolean;
+  active?: string;
   leftToggleHeading?: string;
   rightToggleHeading?: string;
   headingStyle?: object;
@@ -17,6 +18,7 @@ interface ToggleCardInterface {
   setTogglerFunc?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const ToggleCard = ({
+  active,
   noRoute,
   toggler,
   leftToggleHeading,
@@ -63,11 +65,13 @@ const ToggleCard = ({
             className={styles.mainContainer__card__toggler__left}
             style={{
               ...headingStyle,
-              ...(toggler ? activeToggleBorderStyle : {}),
+              ...(noRoute && toggler ? activeToggleBorderStyle : {}),
+              ...(active === "challenge" ? activeToggleBorderStyle : {}),
             }}
             onClick={() => {
               if (noRoute) setTogglerFunc && setTogglerFunc(true);
-              else router.push("/challenge", undefined, { shallow: true });
+              else
+                router.push("/coach/challenge", undefined, { shallow: true });
             }}
           >
             {leftToggleHeading}
@@ -76,11 +80,12 @@ const ToggleCard = ({
             className={styles.mainContainer__card__toggler__right}
             style={{
               ...headingStyle,
-              ...(!toggler ? activeToggleBorderStyle : {}),
+              ...(noRoute && !toggler ? activeToggleBorderStyle : {}),
+              ...(active === "planner" ? activeToggleBorderStyle : {}),
             }}
             onClick={() => {
               if (noRoute) setTogglerFunc && setTogglerFunc(false);
-              else router.push("/planner", undefined, { shallow: true });
+              else router.push("/coach/planner", undefined, { shallow: true });
             }}
           >
             {rightToggleHeading}

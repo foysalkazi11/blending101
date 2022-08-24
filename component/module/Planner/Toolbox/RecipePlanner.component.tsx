@@ -1,24 +1,13 @@
 import React, { useEffect, useState } from "react";
-import {
-  format,
-  startOfWeek,
-  endOfWeek,
-  addWeeks,
-  subWeeks,
-  getDate,
-} from "date-fns";
+import { format } from "date-fns";
 import MealCalendarDatePlan from "./Plan.component";
 
 import styles from "./RecipePlanner.module.scss";
 import Icon from "../../../atoms/Icon/Icon.component";
 
-import { MdRemoveCircleOutline } from "react-icons/md";
-import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
-import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
-
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { MONTH } from "../../../../data/Date";
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import {
   CLEAR_PLANNER,
   GET_PLANNER_BY_WEEK,
@@ -30,6 +19,13 @@ import {
   setPlanners,
 } from "../../../../redux/slices/Planner.slice";
 import Publish from "../../../../helpers/Publish";
+import IconButton from "../../../atoms/Button/IconButton.component";
+import {
+  faArrowsRotate,
+  faChevronLeft,
+  faChevronRight,
+  faCircleMinus,
+} from "@fortawesome/pro-regular-svg-icons";
 
 const RecipePlanner = () => {
   const [toggleOptionCard, setToggleOptionCard] = useState({});
@@ -83,7 +79,7 @@ const RecipeMealHeader = () => {
       startDate: format(startDate, "yyyy-MM-dd"),
       endDate: format(endDate, "yyyy-MM-dd"),
     },
-    fetchPolicy: "network-only",
+    skip: userId === "",
   });
   const [clearPlanner, clearState] = useMutation(CLEAR_PLANNER);
 
@@ -116,18 +112,20 @@ const RecipeMealHeader = () => {
     <div className={styles.header__wrapper}>
       <div className={styles.textArrowTray}>
         <div className={styles.button} onClick={clearAllHandler}>
-          <MdRemoveCircleOutline />
+          <Icon fontName={faCircleMinus} size="15px" />
           <div className={styles.button__text}>Clear All</div>
         </div>
-        <AiOutlineLeft
-          className={styles.textArrowTray__icon}
+        <IconButton
+          size="small"
+          fontName={faChevronLeft}
           onClick={() => dispatch(gotoPreviousWeek())}
         />
         <h4 className={styles.textArrowTray__text}>
           Meal Plan, {`${startMonth} ${startDay} - ${endMonth} ${endDay}`}
         </h4>
-        <AiOutlineRight
-          className={styles.textArrowTray__icon}
+        <IconButton
+          size="small"
+          fontName={faChevronRight}
           onClick={() => dispatch(gotoNextWeek())}
         />
         <div className={styles.button}>

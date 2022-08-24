@@ -57,8 +57,7 @@ const Planner = () => {
   // }, [get30DaysChallenge, userId]);
 
   let toolbox = null;
-  if (showChallenge && showUpload)
-    toolbox = <UploadCard setUploadState={setShowUpload} />;
+  if (showChallenge && showUpload) toolbox = <UploadCard />;
   else if (showChallenge && showSettings)
     toolbox = <Settings hideSettings={() => setShowSettings(false)} />;
 
