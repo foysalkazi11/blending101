@@ -84,7 +84,7 @@ const Upload = (props: UploadProps) => {
           data: formdata,
           headers: { "Content-Type": "multipart/form-data" },
         }).then((response) => {
-          const resp = JSON.parse(response?.data);
+          const resp = response?.data;
           const data = resp?.images;
 
           dispatch(addImage({ urls: data }));
