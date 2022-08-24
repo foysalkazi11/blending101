@@ -21,10 +21,14 @@ export default function SidebarComponent(props) {
     { logo: "/icons/books.svg", link: "/wiki", content: "Wiki" },
     {
       logo: "/icons/calender__sidebar.svg",
-      link: "/planner",
+      link: "/coach/planner",
       content: "Planner",
     },
-    { logo: "/icons/whistle.svg", link: "/challenge", content: "Challenge" },
+    {
+      logo: "/icons/whistle.svg",
+      link: "/coach/challenge",
+      content: "Challenge",
+    },
     { logo: "/icons/book_light.svg", link: "/", content: "News" },
     { logo: "/icons/store.svg", link: "/", content: "Shop" },
   ];
