@@ -30,7 +30,7 @@ export interface IPlannerIngredients {
   };
 }
 
-interface IPosts {
+interface IPost {
   _id: string;
   name: string;
   recipeBlendCategory: {
@@ -52,7 +52,7 @@ export interface IChallengePosts {
   _id: string;
   date: string;
   images: string[];
-  posts: IPosts[];
+  posts: IPost[];
 }
 
 interface PlannerState {

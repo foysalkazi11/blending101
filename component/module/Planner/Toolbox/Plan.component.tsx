@@ -23,6 +23,8 @@ import {
   MOVE_PLANNER,
 } from "../../../../graphql/Planner";
 import Publish from "../../../../helpers/Publish";
+import { faChartSimple } from "@fortawesome/pro-solid-svg-icons";
+import IconButton from "../../../atoms/Button/IconButton.component";
 
 interface PlanProps {
   plannerId?: string;
@@ -196,6 +198,7 @@ const PlanRecipe = ({
       <div className={styles.recipe__rxScore}>{rxScore}</div>
       <div className={styles.recipe__calories}>{calorie}</div>
       <div className={styles.recipe__tray}>
+        {/* <IconButton size="medium" fontName={faChartSimple} /> */}
         <BiBarChart
           className={styles.recipe__tray__icons}
           style={{ fontSize: "22px" }}

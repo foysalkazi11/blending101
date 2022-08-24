@@ -17,15 +17,6 @@ interface RecipeProps {
   recipeId?: string;
   notes?: number;
   className?: string;
-
-  // addedToCompare?: boolean;
-  // compareRecipeList?: any[];
-  // setcompareRecipeList?: (state: any) => void;
-  // showMoreMenu?: boolean;
-  // showOptionalEditIcon?: boolean;
-  // changeToFormulateRecipe?: () => void;
-  // isCollectionIds?: string[] | null;
-  // setOpenCollectionModal?: Dispatch<SetStateAction<boolean>>;
 }
 
 const RecipeCard: React.FC<RecipeProps> = (props) => {
@@ -38,20 +29,13 @@ const RecipeCard: React.FC<RecipeProps> = (props) => {
     carbs,
     score,
     calorie,
-    noOfComments,
     image,
     recipeId,
-    notes,
     children,
     className,
   } = props;
   const menu = useRef<any>();
   const router = useRouter();
-
-  const handleClick = () => {
-    const elem = menu.current;
-    elem.classList.toggle("show__hidden");
-  };
 
   return (
     <div className={`${styles.datacard} ${className}`}>
@@ -66,14 +50,7 @@ const RecipeCard: React.FC<RecipeProps> = (props) => {
                 {title}
               </h2>
             </div>
-            <div className={styles.datacard__body__top__menu}>
-              {/* {showMoreMenu ? (
-                <>
-                  <MoreVertIcon onClick={handleClick} />
-                  <FloatingMenu />
-                </>
-              ) : null} */}
-            </div>
+            <div className={styles.datacard__body__top__menu} />
           </div>
           <div className={styles.datacard__body__middle}>
             <div className={styles.datacard__body__middle__left}>
@@ -87,7 +64,6 @@ const RecipeCard: React.FC<RecipeProps> = (props) => {
                 <div className={styles.databody__top}>
                   <div className={styles.databody__top__label}>
                     <div className={styles.category}>{category}</div>
-                    {/* {showOptionalEditIcon ? <FloatingMenu2 /> : false} */}
                   </div>
                   <div className={styles.databody__top__info}>
                     {noOfRatings ? (
@@ -125,55 +101,6 @@ const RecipeCard: React.FC<RecipeProps> = (props) => {
                 {Children.map(children, (child) => (
                   <li>{child}</li>
                 ))}
-                {/* {children} */}
-
-                {/* <li>
-                  <img
-                    src={
-                      addedToCompare
-                        ? "/icons/compare-1.svg"
-                        : "/icons/eclipse.svg"
-                    }
-                    alt="eclipse"
-                    onClick={(e) =>
-                      addedToCompare
-                        ? handleChangeCompare(
-                            e,
-                            recipeId,
-                            false,
-                            compareRecipeList,
-                            setcompareRecipeList,
-                          )
-                        : handleChangeCompare(
-                            e,
-                            recipeId,
-                            true,
-                            compareRecipeList,
-                            setcompareRecipeList,
-                          )
-                    }
-                  />
-                </li>
-                <li>
-                  <img
-                    src={
-                      isCollectionIds?.length
-                        ? "/icons/compare.svg"
-                        : "/images/BookmarksStar.svg"
-                    }
-                    alt="compare"
-                    onClick={(e) =>
-                      isCollectionIds?.length
-                        ? handleOpenCollectionTray(recipeId, isCollectionIds, e)
-                        : handleAddToCollection(
-                            recipeId,
-                            setOpenCollectionModal,
-                            e,
-                          )
-                    }
-                  />
-                </li>
-                <li>{hangleShowCommentsAndNotesIcon(noOfComments, notes)}</li> */}
               </ul>
             </div>
           </div>

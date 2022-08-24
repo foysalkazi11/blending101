@@ -1,17 +1,11 @@
 import React, { useState, useMemo, useEffect } from "react";
-import Image from "next/image";
 import { useMutation, useQuery } from "@apollo/client";
-import { faPlus, faSave, faTimes } from "@fortawesome/pro-solid-svg-icons";
+import { faPlus, faTimes } from "@fortawesome/pro-solid-svg-icons";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { GET_INGREDIENTS } from "../../../../graphql/Ingredients";
 import { GET_BLEND_CATEGORY } from "../../../../graphql/Recipe";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import {
-  addIngredient,
-  deleteIngredient,
-  resetForm,
-} from "../../../../redux/slices/Planner.slice";
 import IconButton from "../../../atoms/Button/IconButton.component";
 import Combobox from "../../../organisms/Forms/Combobox.component";
 import NumberField from "../../../organisms/Forms/NumberField.component";
@@ -21,20 +15,19 @@ import Upload from "../../../organisms/Upload/Upload.component";
 import styles from "./UploadCard.module.scss";
 import {
   CREATE_CHALLENGE_POST,
+  EDIT_CHALLENGE_POST,
   GET_30DAYS_CHALLENGE,
 } from "../../../../graphql/Planner";
 import Publish from "../../../../helpers/Publish";
-import ButtonComponent from "../../../../theme/button/button.component";
-import {
-  faChevronLeft,
-  faFloppyDisk,
-} from "@fortawesome/pro-regular-svg-icons";
+import { faChevronLeft } from "@fortawesome/pro-regular-svg-icons";
 import { ActionButton } from "../../../atoms/Button/Button.component";
 import { format } from "date-fns";
-
-interface UploadCardInterface {
-  setUploadState?: any;
-}
+import {
+  addIngredient,
+  deleteIngredient,
+  setShowPostForm,
+  resetForm,
+} from "../../../../redux/slices/Challenge.slice";
 
 const defaultValues = {
   category: "",
@@ -43,7 +36,7 @@ const defaultValues = {
   note: "",
 };
 
-const UploadCard = ({ setUploadState }: UploadCardInterface) => {
+const UploadCard = () => {
   const [images, setImages] = useState([]);
   const [serving, setServing] = useState(1);
 
@@ -53,31 +46,43 @@ const UploadCard = ({ setUploadState }: UploadCardInterface) => {
 
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
-  const { name, image, ingredients, category } = useAppSelector(
-    (state) => state.planner.post.recipe,
-  );
-
+  const {
+    isEditMode,
+    id,
+    docId,
+    title,
+    images: postImages,
+    ingredients,
+    category,
+    startDate,
+    notes,
+  } = useAppSelector((state) => state.challenge.post);
   const { data } = useQuery(GET_BLEND_CATEGORY);
   const [addPost, addState] = useMutation(CREATE_CHALLENGE_POST, {
     refetchQueries: [{ query: GET_30DAYS_CHALLENGE, variables: { userId } }],
   });
+  const [editPost, editState] = useMutation(EDIT_CHALLENGE_POST, {
+    refetchQueries: [{ query: GET_30DAYS_CHALLENGE, variables: { userId } }],
+  });
 
   useEffect(() => {
-    methods.reset({ recipeTitle: name, category });
+    methods.reset({
+      recipeTitle: title,
+      category,
+      assignDate: startDate,
+      note: notes,
+    });
+    setImages(postImages);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [name, category]);
+  }, [title, category, startDate, notes]);
 
   const handleSubmit = async (data) => {
-    // if (images.length === 0 || ingredients.length === 0) return;
-    const date = new Date(data.assignDate).toISOString();
-    const post = {
+    const post: any = {
       memberId: userId,
-      assignDate: date,
+      assignDate: data.assignDate,
       post: {
         images,
-        // recipeId: _id,
         name: data.recipeTitle,
-        recipeImage: image || "",
         recipeBlendCategory: data.category,
         note: data.note,
         servings: serving,
@@ -89,15 +94,19 @@ const UploadCard = ({ setUploadState }: UploadCardInterface) => {
         })),
       },
     };
+    if (isEditMode) {
+      post.post._id = id;
+      post.post.docId = docId;
+    }
     await Publish({
-      mutate: addPost,
+      mutate: isEditMode ? editPost : addPost,
       variables: {
         data: post,
       },
-      state: addState,
+      state: isEditMode ? editState : addState,
       success: "Submitted Post Successfully",
       onSuccess: () => {
-        setUploadState(false);
+        dispatch(setShowPostForm(false));
         methods.reset(defaultValues);
         dispatch(resetForm());
         setImages([]);
@@ -123,7 +132,7 @@ const UploadCard = ({ setUploadState }: UploadCardInterface) => {
               fontName={faTimes}
               style={{ marginLeft: 5 }}
               onClick={() => {
-                setUploadState(false);
+                dispatch(setShowPostForm(false));
               }}
             />
           </div>
@@ -136,7 +145,7 @@ const UploadCard = ({ setUploadState }: UploadCardInterface) => {
             <Textfield
               placeholder="Recipe Title"
               name="recipeTitle"
-              defaultValue={name}
+              defaultValue={title}
               className={styles.recipe__title}
             />
           </div>

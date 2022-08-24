@@ -1,39 +1,45 @@
-import React, { Fragment, useState } from "react";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import React, { Fragment, useState, useEffect } from "react";
+import { useLazyQuery } from "@apollo/client";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { faToolbox } from "@fortawesome/pro-light-svg-icons";
-
-import PlannerGuide from "../component/module/Planner/PlannerGuide/PlannerGuide.component";
-import ChallengeQueue from "../component/module/Planner/PlannerQueue/ChallengeQueue.component";
-import PlannerQueue from "../component/module/Planner/PlannerQueue/PlannerQueue.component";
-import { RecipePlanner } from "../component/module/Planner/Toolbox/RecipePlanner.component";
-import UploadCard from "../component/module/Planner/Toolbox/UploadCard.component";
-import Challenge from "../component/module/Planner/Challenge/Challenge.component";
-import Settings from "../component/module/Planner/Setttings/Settings.component";
-
-import AContainer from "../containers/A.container";
-import IconHeading from "../theme/iconHeading/iconHeading.component";
-import ToggleCard from "../theme/toggleCard/toggleCard.component";
-
-import { GET_30DAYS_CHALLENGE } from "../graphql/Planner";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-
-import styles from "../styles/pages/planner.module.scss";
-import { useEffect } from "react";
-import { setChallengeInterval } from "../redux/slices/Challenge.slice";
 import { isWithinInterval } from "date-fns";
 
+import PlannerGuide from "../../component/module/Planner/PlannerGuide/PlannerGuide.component";
+import ChallengeQueue from "../../component/module/Planner/PlannerQueue/ChallengeQueue.component";
+import PlannerQueue from "../../component/module/Planner/PlannerQueue/PlannerQueue.component";
+import { RecipePlanner } from "../../component/module/Planner/Toolbox/RecipePlanner.component";
+import UploadCard from "../../component/module/Planner/Toolbox/UploadCard.component";
+import Challenge from "../../component/module/Planner/Challenge/Challenge.component";
+import Settings from "../../component/module/Planner/Setttings/Settings.component";
+
+import AContainer from "../../containers/A.container";
+import IconHeading from "../../theme/iconHeading/iconHeading.component";
+import ToggleCard from "../../theme/toggleCard/toggleCard.component";
+
+import { GET_30DAYS_CHALLENGE } from "../../graphql/Planner";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import {
+  setChallengeInterval,
+  setShowPostForm,
+} from "../../redux/slices/Challenge.slice";
+
+import styles from "../../styles/pages/planner.module.scss";
+import { useRouter } from "next/router";
+
 const ChallengePage = () => {
-  const [showChallenge, setShowChallenge] = useState(true);
-  const [showUpload, setShowUpload] = useState(false);
+  const type = useRouter().query.type as "challenge" | "planner";
+  const showChallenge = type === "challenge";
   const [showSettings, setShowSettings] = useState(false);
   const [showGroceryTray] = useState(true);
 
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
-  const { activeDate, startDate, endDate } = useAppSelector(
-    (state) => state.challenge,
-  );
+  const {
+    activeDate,
+    startDate,
+    endDate,
+    showPostForm: showUpload,
+  } = useAppSelector((state) => state.challenge);
 
   const [getChallenges, { data }] = useLazyQuery(GET_30DAYS_CHALLENGE);
 
@@ -68,8 +74,7 @@ const ChallengePage = () => {
   }, [data, dispatch]);
 
   let toolbox = null;
-  if (showChallenge && showUpload)
-    toolbox = <UploadCard setUploadState={setShowUpload} />;
+  if (showChallenge && showUpload) toolbox = <UploadCard />;
   else if (showChallenge && showSettings)
     toolbox = <Settings hideSettings={() => setShowSettings(false)} />;
 
@@ -102,9 +107,9 @@ const ChallengePage = () => {
                     <div
                       className={styles.uploadDiv}
                       onClick={() => {
-                        setShowUpload(false);
+                        dispatch(setShowPostForm(false));
                         setShowSettings(true);
-                        setShowChallenge(true);
+                        // setShowChallenge(true);
                       }}
                     >
                       <AiOutlinePlusCircle className={styles.uploadDiv__icon} />
@@ -113,9 +118,9 @@ const ChallengePage = () => {
                     <div
                       className={styles.uploadDiv}
                       onClick={() => {
-                        setShowUpload(true);
+                        dispatch(setShowPostForm(true));
                         setShowSettings(false);
-                        setShowChallenge(true);
+                        // setShowChallenge(true);
                       }}
                     >
                       <AiOutlinePlusCircle className={styles.uploadDiv__icon} />
@@ -130,10 +135,9 @@ const ChallengePage = () => {
                 ) : (
                   <Fragment>
                     <ToggleCard
+                      active={type}
                       leftToggleHeading="Challenge"
                       rightToggleHeading="Planner"
-                      toggler={showChallenge}
-                      setTogglerFunc={setShowChallenge}
                       headingStyle={{
                         fontSize: "1.6rem",
                         padding: "15px 5px",
@@ -144,7 +148,7 @@ const ChallengePage = () => {
                         paddingTop: "18px",
                       }}
                     />
-                    {showChallenge ? (
+                    {type === "challenge" ? (
                       <Challenge
                         activities={data?.getMyThirtyDaysChallenge?.challenge}
                         statistics={

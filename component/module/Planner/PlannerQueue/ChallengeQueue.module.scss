@@ -38,9 +38,6 @@
     display: flex;
     align-items: center;
     margin-bottom: 1rem;
-    & svg {
-      margin-right: 1rem;
-    }
   }
   &__content {
     border: 1px solid #f1f1f1;
@@ -51,7 +48,19 @@
   position: relative;
   &__title {
     margin-bottom: 1rem;
-    font-weight: 800;
+    font-weight: 600;
+    font-size: 1.6rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    text-transform: capitalize;
+    transition: 0.2s color ease-out;
+    & svg {
+      margin-right: 1rem;
+    }
+    &:hover {
+      color: #fe5d1f;
+    }
   }
   &__category {
     display: flex;

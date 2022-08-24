@@ -5,7 +5,6 @@ export const GET_30DAYS_CHALLENGE = gql`
     getMyThirtyDaysChallenge(memberId: $userId, startDate: $startDate) {
       challenge {
         _id
-        images
         date: formattedDate
         disabled
         posts {
@@ -15,10 +14,17 @@ export const GET_30DAYS_CHALLENGE = gql`
             name
           }
           name
+          images
           note
           ingredients {
             ingredientId {
+              _id
               ingredientName
+            }
+            selectedPortion {
+              name
+              quantity
+              gram
             }
           }
         }
@@ -220,6 +226,12 @@ export const CLEAR_PLANNER = gql`
 export const CREATE_CHALLENGE_POST = gql`
   mutation CreateChallengePost($data: CreateChallengePost!) {
     createChallengePost(data: $data)
+  }
+`;
+
+export const EDIT_CHALLENGE_POST = gql`
+  mutation EditChallengePost($data: EditChallengePost!) {
+    editAChallengePost(data: $data)
   }
 `;
 

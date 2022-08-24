@@ -9,8 +9,13 @@ import styles from "./splitImage.module.scss";
 interface SplitImageCardInterface {
   date: Date;
   images: string[];
+  challengeImages: any[];
 }
-const SplitImageCard = ({ images, date }: SplitImageCardInterface) => {
+const SplitImageCard = ({
+  images,
+  date,
+  challengeImages,
+}: SplitImageCardInterface) => {
   const [showGallery, setShowGallery] = useState(false);
   return (
     <Fragment>
@@ -19,7 +24,7 @@ const SplitImageCard = ({ images, date }: SplitImageCardInterface) => {
         show={showGallery}
         hideModal={() => setShowGallery(false)}
       >
-        <Gallery date={date} />
+        <Gallery date={date} galleries={challengeImages} />
       </Modal>
       <div className={styles.mainContainer}>
         {images?.slice(0, 2).map((image) => (
