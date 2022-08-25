@@ -47,6 +47,24 @@
   padding-top: 16px;
 }
 
+.dropDownBox{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-top: 16px;
+  .dropDown{
+    flex: 1;
+    margin-right: 10px;
+  }
+
+  .downArrowIcon{
+    color: #a6a6a6;
+    cursor: pointer;
+    font-size: 20px;
+    
+  }
+}
+
 .noIngredient {
   text-align: center;
   color: #c4c4c4;

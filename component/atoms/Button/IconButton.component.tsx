@@ -1,12 +1,14 @@
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { CSSProperties } from "react";
+import { theme } from "../../../configs/themes";
 import Icon from "../Icon/Icon.component";
 import styles from "./IconButton.module.scss";
 
 interface IconButtonProps {
-  variant?: "fade" | "white" | "primary" | "secondary" | "disabled";
+  variant?: "hover" | "fade" | "white" | "primary" | "secondary" | "disabled";
   color?: "primary" | "secondary";
+  colorCode?: string;
   size?: "small" | "medium" | "large";
   fontName?: IconDefinition;
   font?: string;
@@ -22,6 +24,8 @@ const IconButton: React.FC<IconButtonProps> = (props) => {
     variant,
     size,
     style,
+    color,
+    colorCode,
     font,
     fontName,
     title,
@@ -33,6 +37,12 @@ const IconButton: React.FC<IconButtonProps> = (props) => {
 
   let variantClass: string;
   switch (variant) {
+    case "hover":
+      variantClass = [
+        styles["btn-icon-hover"],
+        styles[`btn-icon-hover--${color}`],
+      ].join(" ");
+      break;
     case "fade":
       variantClass = styles["btn-icon-fade"];
       break;
@@ -78,7 +88,10 @@ const IconButton: React.FC<IconButtonProps> = (props) => {
       {children ? (
         children
       ) : fontName ? (
-        <FontAwesomeIcon icon={fontName} />
+        <FontAwesomeIcon
+          icon={fontName}
+          color={variant !== "hover" && color ? theme.color[color] : colorCode}
+        />
       ) : (
         <Icon font={font} />
       )}
@@ -90,6 +103,7 @@ IconButton.defaultProps = {
   className: "",
   variant: "fade",
   size: "medium",
+  colorCode: theme.color.dark,
 };
 
 export default IconButton;

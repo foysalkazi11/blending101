@@ -6,16 +6,17 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
+import { format } from "date-fns";
+import { faCircle } from "@fortawesome/pro-solid-svg-icons";
+import { faChartSimple } from "@fortawesome/pro-regular-svg-icons";
+import { faTrophy } from "@fortawesome/pro-light-svg-icons";
+
 import IconHeading from "../../../../theme/iconHeading/iconHeading.component";
 import SplitImageCard from "../../../../theme/card/splitImageCard/splitImageCard.component";
 
-import styles from "./ChallengeQueue.module.scss";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import { format } from "date-fns";
-import { faChartBar, faTrophy } from "@fortawesome/pro-light-svg-icons";
 import IconButton from "../../../atoms/Button/IconButton.component";
 import Icon from "../../../atoms/Icon/Icon.component";
-import { faCircle } from "@fortawesome/pro-solid-svg-icons";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import {
   IPostIngredient,
   setChallengePost,
@@ -23,6 +24,8 @@ import {
 } from "../../../../redux/slices/Challenge.slice";
 import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
 import { setShowPanel } from "../../../../redux/slices/Ui.slice";
+
+import styles from "./ChallengeQueue.module.scss";
 
 interface IPost {
   _id: string;
@@ -141,7 +144,7 @@ const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
       );
     });
     return challengPosts;
-  }, [challenges, editHandler]);
+  }, [challenges, editHandler, nutrientPanelHandler]);
 
   return (
     <Fragment>
@@ -231,8 +234,9 @@ const Post = (props: PostProps) => {
               {post?.recipeBlendCategory?.name}
             </span>
             <IconButton
-              fontName={faChartBar}
+              fontName={faChartSimple}
               variant="fade"
+              color="primary"
               size="small"
               onClick={() => onShowNutrient(post.ingredients)}
             />

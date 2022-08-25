@@ -1,7 +1,12 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { useLazyQuery } from "@apollo/client";
 import { AiOutlinePlusCircle } from "react-icons/ai";
-import { faToolbox } from "@fortawesome/pro-light-svg-icons";
+import {
+  faGear,
+  faPlusCircle,
+  faToolbox,
+  faUpload,
+} from "@fortawesome/pro-light-svg-icons";
 import { isWithinInterval } from "date-fns";
 
 import RXPanel from "../../component/templates/Panel/RXFacts/RXPanel.component";
@@ -26,6 +31,8 @@ import {
 
 import styles from "../../styles/pages/planner.module.scss";
 import { useRouter } from "next/router";
+import Icon from "../../component/atoms/Icon/Icon.component";
+import { theme } from "../../configs/themes";
 
 const ChallengePage = () => {
   const type = useRouter().query.type as "challenge" | "planner";
@@ -111,10 +118,13 @@ const ChallengePage = () => {
                       onClick={() => {
                         dispatch(setShowPostForm(false));
                         setShowSettings(true);
-                        // setShowChallenge(true);
                       }}
                     >
-                      <AiOutlinePlusCircle className={styles.uploadDiv__icon} />
+                      <Icon
+                        fontName={faGear}
+                        size="1.6rem"
+                        color={theme.color.primary}
+                      />
                       <span>Settings</span>
                     </div>
                     <div
@@ -122,10 +132,13 @@ const ChallengePage = () => {
                       onClick={() => {
                         dispatch(setShowPostForm(true));
                         setShowSettings(false);
-                        // setShowChallenge(true);
                       }}
                     >
-                      <AiOutlinePlusCircle className={styles.uploadDiv__icon} />
+                      <Icon
+                        fontName={faPlusCircle}
+                        size="1.6rem"
+                        color={theme.color.primary}
+                      />
                       <span>Upload</span>
                     </div>
                   </div>

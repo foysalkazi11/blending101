@@ -23,9 +23,13 @@ import {
   MOVE_PLANNER,
 } from "../../../../graphql/Planner";
 import Publish from "../../../../helpers/Publish";
-import { faChartSimple } from "@fortawesome/pro-solid-svg-icons";
+import {
+  faChartSimple,
+  faEllipsisVertical,
+} from "@fortawesome/pro-regular-svg-icons";
 import IconButton from "../../../atoms/Button/IconButton.component";
 import { setShowPanel } from "../../../../redux/slices/Ui.slice";
+import { faCartShopping } from "@fortawesome/pro-light-svg-icons";
 
 interface PlanProps {
   plannerId?: string;
@@ -195,10 +199,11 @@ const PlanRecipe = ({
       <div className={styles.recipe__rxScore}>{rxScore}</div>
       <div className={styles.recipe__calories}>{calorie}</div>
       <div className={styles.recipe__tray}>
-        {/* <IconButton size="medium" fontName={faChartSimple} /> */}
-        <BiBarChart
-          className={styles.recipe__tray__icons}
-          style={{ fontSize: "22px" }}
+        <IconButton
+          size="medium"
+          variant="hover"
+          fontName={faChartSimple}
+          color="primary"
           onClick={() =>
             dispatch(
               setShowPanel({
@@ -212,13 +217,19 @@ const PlanRecipe = ({
             )
           }
         />
-        <BsCartPlus
-          className={styles.recipe__tray__icons}
+        <IconButton
+          size="medium"
+          variant="hover"
+          fontName={faCartShopping}
+          color="primary"
           onClick={addToGroceryList}
         />
-        <HiOutlineDotsVertical
+        <IconButton
+          size="medium"
+          variant="hover"
+          fontName={faEllipsisVertical}
+          color="primary"
           onClick={() => setShowMenu((prev) => !prev)}
-          className={styles.recipe__tray__icons}
         />
       </div>
 
