@@ -1,0 +1,60 @@
+@import "../../../styles/partials/variables";
+
+.versionContainer {
+  padding: 20px 0;
+}
+.header {
+  display: flex;
+  align-items: center;
+
+  .heading {
+    color: $secondaryColor;
+    padding-left: 10px;
+  }
+}
+
+.recipeName {
+  display: flex;
+  align-items: center;
+  padding: 20px 0px;
+  border-bottom: 1px solid #ececec;
+  transition: all 0.3s linear;
+  &:hover img {
+    transform: scale(1.05);
+  }
+  &:hover h3 {
+    color: $primaryColor;
+  }
+  img {
+    transition: all 0.3s linear;
+    width: 45px;
+    height: 45px;
+    border-radius: 8px;
+    overflow: hidden;
+    object-fit: cover;
+  }
+  h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #000;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: color 0.3s linear;
+    width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .on {
+    color: #fe5d1f;
+  }
+  .off {
+    color: #c1c1c1;
+  }
+
+  .star {
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+}
