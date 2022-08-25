@@ -7,6 +7,8 @@ import IngredientPanelSkeleton from "../../../theme/skeletons/ingredientPanelSle
 import Combobox from "../../../theme/dropDown/combobox/Combobox.component";
 import { Portion } from "../../../type/wikiListType";
 import GET_ONLY_INGREDIENTS_BASED_ON_NURTITION from "../../../gqlLib/wiki/query/getOnlyIngredientsBasedOnNutrition";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowDownWideShort,faArrowDownShortWide } from "@fortawesome/pro-solid-svg-icons";
 
 const categories = [
   { label: "All", value: "All" },
@@ -45,6 +47,7 @@ function WikiRightComponent({
 }: NutrientPanelProps) {
   const [dpd, setDpd] = useState("All");
   const [ingredientData, setIngredientData] = useState([]);
+  const [ascendingOrder, setAscendingOrder] = useState(true);
 
   const [getAllIngredientsBasedOnNutrition, { data, loading, error }] =
     useLazyQuery(GET_ONLY_INGREDIENTS_BASED_ON_NURTITION, {
@@ -82,6 +85,13 @@ function WikiRightComponent({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dpd]);
 
+  useEffect(()=>{
+    if (isMounted?.current) {
+      setIngredientData(prev => [...prev]?.reverse())
+    }
+
+  },[ascendingOrder])
+
   useEffect(() => {
     isMounted.current = true;
 
@@ -113,14 +123,20 @@ function WikiRightComponent({
       </div>
       <div className={styles.rightCard}>
         <div className={styles.rightCardHeading}>Ingredients</div>
-        <Combobox
+        <div className={styles.dropDownBox}>
+          <div className={styles.dropDown}>
+          <Combobox
           value={dpd}
           options={categories}
           onChange={(e) => setDpd(e?.target?.value)}
-          style={{ marginTop: "16px", width: "100%" }}
+          style={{ width: "100%" }}
           placeholder="Categories"
         />
 
+          </div>
+        
+        {ascendingOrder ? <FontAwesomeIcon icon={faArrowDownWideShort} onClick={()=>setAscendingOrder(prev=>!prev)} className={styles.downArrowIcon} /> : <FontAwesomeIcon icon={faArrowDownShortWide} onClick={()=>setAscendingOrder(prev=>!prev)} className={styles.downArrowIcon} />}
+        </div>
         <div className={styles.progressIndicator}>
           {loading || ingredientsDataLoading ? (
             <IngredientPanelSkeleton />
