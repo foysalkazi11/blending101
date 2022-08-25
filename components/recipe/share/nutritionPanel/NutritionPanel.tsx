@@ -11,6 +11,7 @@ import PanelHeader from "../panelHeader/PanelHeader";
 import styles from "./NutritionPanel.module.scss";
 
 interface NutritionPanelInterface {
+  variant?: "panel" | "main";
   nutritionTrayData?: any;
   nutritionState?: any;
   setNutritionState?: any;
@@ -28,6 +29,7 @@ interface NutritionPanelInterface {
 }
 
 const NutritionPanel = ({
+  variant = "main",
   nutritionTrayData = {},
   setNutritionState = () => {},
   counter = 1,
@@ -72,9 +74,15 @@ const NutritionPanel = ({
 
   return (
     <div className={styles.rightTaryContainer}>
-      <PanelHeader icon="/icons/chart-bar-light-green.svg" title="Rx Facts" />
-      <div className={styles.right}>
-        <div className={styles.right__headerDiv}>
+      <PanelHeader
+        icon={variant === "panel" ? "" : "/icons/chart-bar-light-green.svg"}
+        title="Rx Facts"
+      />
+      <div
+        className={styles.right}
+        style={variant === "panel" ? { boxShadow: "none" } : {}}
+      >
+        <div>
           {showTitle && <div className={styles.right__title}>Nutrition</div>}
 
           {showServing ? (
@@ -154,6 +162,7 @@ const NutritionPanel = ({
             </div>
           ) : (
             <UpdatedRecursiveAccordion
+              variant={variant}
               dataObject={nutritionTrayData}
               counter={isComeFormRecipeEditPage ? 1 : counter}
               servingSize={

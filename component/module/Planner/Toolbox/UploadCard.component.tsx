@@ -1,6 +1,10 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { useMutation, useQuery } from "@apollo/client";
-import { faPlus, faTimes } from "@fortawesome/pro-solid-svg-icons";
+import {
+  faPlus,
+  faTimes,
+  faChartSimple,
+} from "@fortawesome/pro-solid-svg-icons";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { GET_INGREDIENTS } from "../../../../graphql/Ingredients";
@@ -19,7 +23,6 @@ import {
   GET_30DAYS_CHALLENGE,
 } from "../../../../graphql/Planner";
 import Publish from "../../../../helpers/Publish";
-import { faChevronLeft } from "@fortawesome/pro-regular-svg-icons";
 import { ActionButton } from "../../../atoms/Button/Button.component";
 import { format } from "date-fns";
 import {
@@ -28,6 +31,7 @@ import {
   setShowPostForm,
   resetForm,
 } from "../../../../redux/slices/Challenge.slice";
+import { setShowPanel } from "../../../../redux/slices/Ui.slice";
 
 const defaultValues = {
   category: "",
@@ -115,6 +119,19 @@ const UploadCard = () => {
     });
   };
 
+  const showNutrientInfo = () => {
+    dispatch(
+      setShowPanel({
+        name: "RXPanel",
+        show: true,
+        payload: ingredients.map((ing) => ({
+          ingredientId: ing?.ingredientId?._id,
+          value: ing?.selectedPortion?.gram,
+        })),
+      }),
+    );
+  };
+
   return (
     <div className={styles.mainContainer}>
       <FormProvider {...methods}>
@@ -163,29 +180,14 @@ const UploadCard = () => {
         </div>
         <h5 className={styles.headingText}>My Recipe</h5>
         <div className="row">
-          {/* <div className="col-4">
-            <div className={styles.notesTray__imageCard}>
-              <div className={styles.recipe}>
-                <div className={styles.imageContainer}>
-                  {image ? (
-                    <Image
-                      src={image || "/images/5.jpeg"}
-                      alt={""}
-                      objectFit="cover"
-                      layout={"fill"}
-                    />
-                  ) : (
-                    <div style={{ height: "100%", width: "100%" }} />
-                  )}
-                </div>
-              </div>
-            </div>
-          </div> */}
           <div className="col-6">
             <AddIngredient ingredients={ingredients} />
           </div>
           <div className="col-6">
-            <Servings servingState={[serving, setServing]} />
+            <Servings
+              servingState={[serving, setServing]}
+              showNutrientInfo={showNutrientInfo}
+            />
           </div>
         </div>
         <h5 className={styles.headingText}>My Notes</h5>
@@ -228,8 +230,8 @@ const Servings = (props) => {
           size="medium"
           variant="white"
           className="mr-20"
-          fontName={faChevronLeft}
-          // onClick={hideSettings}
+          fontName={faChartSimple}
+          onClick={props.showNutrientInfo}
         />
       </div>
       <div className={styles.notesTray__servings__scoreCard}>

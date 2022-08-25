@@ -13,6 +13,7 @@ export type IPlannerRecipe = {
   category: string;
   rxScore: number;
   calorie: number;
+  ingredients?: any[];
 };
 
 type IPlanner = {
@@ -99,26 +100,6 @@ export const PlannerSlice = createSlice({
     setChallenge: (state, action) => {
       if (action.payload.length === 0) return;
       state.challenges = action.payload;
-      // state.challenge.images = action.payload.images;
-      // action.payload.posts.forEach((post, idx) => {
-      //   post?.images[0] && images.push(post?.images[0]);
-      //   post?.note && notes.push(post?.note);
-      //   recipes.push({
-      //     id: post?._id || idx,
-      //     name: post?.name || "",
-      //     image: post?.recipeImage || "",
-      //     category: post?.recipeBlendCategory?.name || "",
-      //     score: post?.rxScore || 900,
-      //     calorie: post?.calorie || 60,
-      //     ingredients:
-      //       post?.ingredients?.map(
-      //         (ing) => ing?.ingredientId?.ingredientName || "",
-      //       ) || [],
-      //   });
-      // });
-      // state.challenge.images = images;
-      // state.challenge.notes = notes;
-      // state.challenge.recipes = recipes;
     },
 
     //PLANNER
@@ -143,6 +124,7 @@ export const PlannerSlice = createSlice({
           category: recipe?.recipeBlendCategory?.name,
           rxScore: 786,
           calorie: 250,
+          ingredients: recipe?.ingredients,
         })),
       }));
 

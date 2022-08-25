@@ -16,7 +16,14 @@ const PanelHeader = ({
   return (
     <div className={styles.headingContainer}>
       <div className={styles.recipeHeadingTopSec}>
-        <Image src={icon} alt="Picture will load soon" width={22} height={22} />
+        {icon && (
+          <Image
+            src={icon}
+            alt="Picture will load soon"
+            width={22}
+            height={22}
+          />
+        )}
 
         <h3>{title}</h3>
       </div>

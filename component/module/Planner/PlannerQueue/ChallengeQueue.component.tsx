@@ -22,6 +22,7 @@ import {
   setShowPostForm,
 } from "../../../../redux/slices/Challenge.slice";
 import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
+import { setShowPanel } from "../../../../redux/slices/Ui.slice";
 
 interface IPost {
   _id: string;
@@ -92,6 +93,19 @@ const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
     [dispatch],
   );
 
+  const nutrientPanelHandler = (ingredients) => {
+    dispatch(
+      setShowPanel({
+        name: "RXPanel",
+        show: true,
+        payload: ingredients.map((ing) => ({
+          ingredientId: ing?.ingredientId?._id,
+          value: ing?.selectedPortion?.gram,
+        })),
+      }),
+    );
+  };
+
   const challengePosts = useMemo(() => {
     const challengPosts = [];
     const challengeImages = [];
@@ -111,6 +125,7 @@ const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
             date={challenge?.date}
             post={post}
             onEdit={editHandler}
+            onShowNutrient={nutrientPanelHandler}
           />,
         );
       });
@@ -182,9 +197,10 @@ interface PostProps {
   date: string;
   post: IPost;
   onEdit: any;
+  onShowNutrient: any;
 }
 const Post = (props: PostProps) => {
-  const { id, date, post, onEdit } = props;
+  const { id, date, post, onEdit, onShowNutrient } = props;
 
   let ingredients = "";
   post.ingredients.forEach((ingredient, index) => {
@@ -218,7 +234,7 @@ const Post = (props: PostProps) => {
               fontName={faChartBar}
               variant="fade"
               size="small"
-              // onClick={editHandler}
+              onClick={() => onShowNutrient(post.ingredients)}
             />
           </div>
           <p className={styles.recipe__ingredients}>{ingredients}</p>
