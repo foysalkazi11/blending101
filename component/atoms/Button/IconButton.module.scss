@@ -110,3 +110,12 @@
   color: $darkBlue;
   cursor: not-allowed;
 }
+
+.btn-icon-hover {
+  @extend .btn-icon;
+  &--primary {
+    &:hover svg {
+      color: $primaryColor;
+    }
+  }
+}

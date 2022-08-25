@@ -1,7 +1,7 @@
-import { useQuery } from "@apollo/client";
+import { faMagnifyingGlassPlus } from "@fortawesome/pro-regular-svg-icons";
 import Image from "next/image";
 import React, { Fragment, useState } from "react";
-import { BsZoomIn } from "react-icons/bs";
+import IconButton from "../../../component/atoms/Button/IconButton.component";
 import Modal from "../../../component/molecules/Modal/Modal.component";
 import Gallery from "../../../component/organisms/Gallery/Gallery.component";
 import styles from "./splitImage.module.scss";
@@ -37,8 +37,11 @@ const SplitImageCard = ({
             />
           </div>
         ))}
-        <BsZoomIn
+        <IconButton
+          variant="white"
+          colorCode="#333"
           className={styles.icon}
+          fontName={faMagnifyingGlassPlus}
           onClick={() => setShowGallery(true)}
         />
       </div>

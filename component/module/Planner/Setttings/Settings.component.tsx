@@ -270,19 +270,6 @@ const ChallengeForm = ({ setShowForm, challenge }) => {
         endDate: getDateISO(new Date(data.endDate)).toISOString(),
       },
     };
-    console.log(new Date(data.startDate).toISOString());
-    console.log(challengeData);
-    // console.log(
-    //   data.startDate,
-    //   new Date(data.startDate),
-    //   new Date(data.startDate).toISOString(),
-    //   toIsoString(new Date(data.startDate)),
-    // );
-    // console.log(
-    //   format(new Date(data.startDate), "yyyy-MM-dd") + "T23:59:59.999Z",
-    // );
-    // console.log(data.endDate, new Date(data.endDate).toISOString());
-
     if (isEditMode) challengeData.data.challengeId = challenge._id;
 
     await Publish({
