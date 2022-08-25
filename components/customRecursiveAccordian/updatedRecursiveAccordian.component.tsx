@@ -12,6 +12,7 @@ import DropDown, {
 } from "../../theme/dropDown/DropDown.component";
 
 interface recursiveAccordianInterface {
+  variant?: string;
   dataObject: object;
   counter?: number;
   showUser?: boolean;
@@ -21,6 +22,7 @@ interface recursiveAccordianInterface {
 }
 
 const UpdatedRecursiveAccordian = ({
+  variant = "main",
   dataObject = {},
   counter = 1,
   showUser = true,
@@ -106,7 +108,10 @@ const UpdatedRecursiveAccordian = ({
           Daily%
         </div>
       </div>
-      <div className={`${styles.recursiveAccordianBody}`}>
+      <div
+        className={`${styles.recursiveAccordianBody}`}
+        style={variant === "panel" ? { maxHeight: 680 } : {}}
+      >
         {Object?.entries(dataObject)?.map((elem) => {
           if (elem[0] !== "Calories") {
             return (

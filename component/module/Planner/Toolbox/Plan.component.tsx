@@ -25,6 +25,7 @@ import {
 import Publish from "../../../../helpers/Publish";
 import { faChartSimple } from "@fortawesome/pro-solid-svg-icons";
 import IconButton from "../../../atoms/Button/IconButton.component";
+import { setShowPanel } from "../../../../redux/slices/Ui.slice";
 
 interface PlanProps {
   plannerId?: string;
@@ -76,7 +77,6 @@ const Plan = (props: PlanProps) => {
       state: copyState,
       success: `Copied Planner sucessfully`,
       onSuccess: (data) => {
-        console.log(recipe);
         dispatch(
           addPlanner({
             id: data?.createPlanner?._id,
@@ -90,7 +90,6 @@ const Plan = (props: PlanProps) => {
             },
           }),
         );
-        // dispatch(duplicateRecipe({ date, recipe }));
       },
     });
   };
@@ -107,17 +106,6 @@ const Plan = (props: PlanProps) => {
       },
       state: moveState,
       success: `Moved Planner sucessfully`,
-      // onSuccess: (data) => {
-      //   console.log(data);
-      //   dispatch(
-      //     moveRecipe({
-      //       currentPlannerId: plannerId,
-      //       newPlannerId: data?.movePlanner?._id,
-      //       date,
-      //       recipe,
-      //     }),
-      //   );
-      // },
     });
   };
 
@@ -157,11 +145,20 @@ const PlanRecipe = ({
   onMove,
   onDelete,
 }: RecipeColorIndicatorInterface) => {
-  const { _id, name: recipeName, calorie, category, rxScore } = recipe;
+  const {
+    _id,
+    name: recipeName,
+    calorie,
+    category,
+    rxScore,
+    ingredients,
+  } = recipe;
 
+  console.log(ingredients);
   const [showMenu, setShowMenu] = useState(false);
   const [showCalender, setShowCalender] = useState<"move" | "copy" | "">("");
 
+  const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
   const [addToGrocery, addState] = useMutation(ADD_TO_GROCERY_LIST, {
@@ -202,6 +199,18 @@ const PlanRecipe = ({
         <BiBarChart
           className={styles.recipe__tray__icons}
           style={{ fontSize: "22px" }}
+          onClick={() =>
+            dispatch(
+              setShowPanel({
+                name: "RXPanel",
+                show: true,
+                payload: ingredients.map((ing) => ({
+                  ingredientId: ing?.ingredientId?._id,
+                  value: ing?.selectedPortion?.gram,
+                })),
+              }),
+            )
+          }
         />
         <BsCartPlus
           className={styles.recipe__tray__icons}

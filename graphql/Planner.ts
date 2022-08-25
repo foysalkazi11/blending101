@@ -126,6 +126,9 @@ export const GET_QUEUED_RECIPES_FOR_PLANNER = gql`
             ingredientId {
               ingredientName
             }
+            selectedPortion {
+              gram
+            }
           }
         }
       }
@@ -151,6 +154,14 @@ export const GET_PLANNER_BY_WEEK = gql`
         name
         recipeBlendCategory {
           name
+        }
+        ingredients {
+          ingredientId {
+            _id
+          }
+          selectedPortion {
+            gram
+          }
         }
       }
       formatedDate

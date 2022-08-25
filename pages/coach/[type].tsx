@@ -4,6 +4,7 @@ import { AiOutlinePlusCircle } from "react-icons/ai";
 import { faToolbox } from "@fortawesome/pro-light-svg-icons";
 import { isWithinInterval } from "date-fns";
 
+import RXPanel from "../../component/templates/Panel/RXFacts/RXPanel.component";
 import PlannerGuide from "../../component/module/Planner/PlannerGuide/PlannerGuide.component";
 import ChallengeQueue from "../../component/module/Planner/PlannerQueue/ChallengeQueue.component";
 import PlannerQueue from "../../component/module/Planner/PlannerQueue/PlannerQueue.component";
@@ -86,6 +87,7 @@ const ChallengePage = () => {
         showTagByDeafult: showGroceryTray,
       }}
     >
+      <RXPanel />
       <div className={styles.windowContainer}>
         <div className={styles.planner}>
           <div className={styles.planner__pageTitle}>BLENDA COACH</div>
