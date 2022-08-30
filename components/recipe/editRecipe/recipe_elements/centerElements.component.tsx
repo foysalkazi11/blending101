@@ -166,7 +166,7 @@ const Center_Elements = ({
                   <p className={styles.text}>Versions</p>
                 </div>
 
-                {copyDetailsRecipe?.userId === dbUser?._id ? (
+                {copyDetailsRecipe?.userId?._id === dbUser?._id ? (
                   <div
                     className={styles.singleMenu}
                     onClick={() => setOpenModal(true)}
@@ -199,7 +199,7 @@ const Center_Elements = ({
             onChange={(e) =>
               updateEditRecipe(e?.target?.name, e?.target?.value)
             }
-            style={{ color: "#484848" }}
+            style={{ color: "#484848",resize:'vertical' }}
           />
 
           <ScoreTray giGl={giGl} />

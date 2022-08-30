@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import EditRecipePage from "../../../components/recipe/editRecipe/EditRecipe.component";
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import {
   BLEND_CATEGORY,
   INGREDIENTS_BY_CATEGORY_AND_CLASS,
@@ -26,8 +26,6 @@ import {
 import EDIT_A_VERSION_OF_RECIPE from "../../../gqlLib/versions/mutation/editAVersionOfRecipe";
 import notification from "../../../components/utility/reactToastifyNotification";
 import { RecipeDetailsType } from "../../../type/recipeDetails";
-import { GET_RECIPE } from "../../../gqlLib/recipes/queries/getRecipeDetails";
-import { setDetailsARecipe } from "../../../redux/slices/recipeSlice";
 import { GiGl } from "../../../type/nutrationType";
 
 const EditRecipeComponent = () => {
@@ -55,11 +53,6 @@ const EditRecipeComponent = () => {
       SetcalculateIngOz,
     );
   const [editAVersionOfRecipe] = useMutation(EDIT_A_VERSION_OF_RECIPE);
-
-  const [getARecipe, { loading: recipeLoading }] = useLazyQuery(GET_RECIPE, {
-    fetchPolicy: "network-only",
-    variables: { recipeId, userId: dbUser?._id },
-  });
 
   const servingCounter = useAppSelector(
     (state) => state.editRecipeReducer.servingCounter,

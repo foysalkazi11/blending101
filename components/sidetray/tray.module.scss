@@ -1,5 +1,7 @@
 @import "../../styles/partials/variables";
 
+$sideTrayWidth:320px;
+
 .left {
   position: fixed;
   z-index: 999999;
@@ -13,7 +15,7 @@
 }
 
 @mixin tray {
-  width: 300px;
+  width: $sideTrayWidth;
   background-color: #fff;
   position: absolute;
   height: calc(100vh - 55px);
@@ -56,13 +58,13 @@
 }
 .filterTary {
   @include tray;
-  left: -300px;
+  left: -$sideTrayWidth;
 }
 .hideLeft {
-  left: -300px;
+  left: -$sideTrayWidth;
 }
 .hideRight {
-  right: -300px;
+  right: -$sideTrayWidth;
 }
 
 .openLeft {

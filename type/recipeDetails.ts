@@ -1,6 +1,8 @@
+import { RecipeCreatorInfo } from "./recipeType";
+
 export interface RecipeDetailsType {
   _id: string;
-  userId: string;
+  userId: RecipeCreatorInfo;
   name: string;
   prepTime: any;
   description: string;
