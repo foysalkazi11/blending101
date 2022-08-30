@@ -1,7 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { FC, ReactNode } from "react";
+import React, { ReactNode } from "react";
 import styles from "./tray.module.scss";
 import useHover from "../utility/useHover";
+
+const panelWidth= '320px'
 
 interface leftTrayInterface {
   children: ReactNode;
@@ -38,8 +40,8 @@ export default function TrayWrapper({
         ref={hoevrRef}
         style={
           showPanle === "left"
-            ? { left: openTray ? "0px" : "-300px" }
-            : { right: openTray ? "0px" : "-300px" }
+            ? { left: openTray ? "0px" : `-${panelWidth}` }
+            : { right: openTray ? "0px" : `-${panelWidth}` }
         }
       >
         <div className={styles.tray__inner}>

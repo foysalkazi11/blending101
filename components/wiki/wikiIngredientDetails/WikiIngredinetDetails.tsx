@@ -97,6 +97,7 @@ const WikiIngredientDetails = ({
           handleAddOrRemoveToWikiCompareList={
             handleAddOrRemoveToWikiCompareList
           }
+          portions={portions}
         />
 
         <div className={styles.dividerBox}>

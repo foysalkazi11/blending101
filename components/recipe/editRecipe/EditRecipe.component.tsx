@@ -21,6 +21,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBasketShopping as faBasketShoppingRegular } from "@fortawesome/pro-regular-svg-icons";
 import { faBasketShopping as faBasketShoppingSolid } from "@fortawesome/pro-solid-svg-icons";
 import { GiGl } from "../../../type/nutrationType";
+import FloatingLeftPanel from "./floatingLeftPanel/FloatingLeftPanel";
 
 interface editRecipe {
   copyDetailsRecipe?: RecipeDetailsType;
@@ -116,35 +117,16 @@ const EditRecipePage = ({
         showTagByDeafult: false,
       }}
     >
-      {width < 1280 ? (
-        <>
-          <TrayWrapper
-            isolated={true}
-            showPanle="left"
-            showTagByDefaut={true}
-            openTray={openTray}
-            panleTag={(hover) => (
-              <TrayTag
-                hover={hover}
-                icon={
-                  <FontAwesomeIcon
-                    icon={
-                      hover ? faBasketShoppingRegular : faBasketShoppingSolid
-                    }
-                  />
-                }
-                placeMent="left"
-                handleTagClick={() => setOpenTray((prev) => !prev)}
-              />
-            )}
-          >
+      {width < 1280 && (
+       
+          <FloatingLeftPanel>
             <IngredientPanel
               handleIngredientClick={handleIngredientClick}
               checkActive={checkActive}
             />
-          </TrayWrapper>
-        </>
-      ) : null}
+          </FloatingLeftPanel>
+        
+      ) }
 
       <div className={styles.main}>
         <div className={styles.left}>
