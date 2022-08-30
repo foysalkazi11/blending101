@@ -235,7 +235,7 @@ export default function DatacardComponent({
           <div className={styles.datacard__body__bottom__left}>
             {userId ? (
               <Tooltip
-                content={userId?.displayName || "User name"}
+                content={userId?.displayName || userId?.firstName || userId?.lastName || userId?.email || "User name"}
                 direction="right"
               >
                 {userId?.image ? (

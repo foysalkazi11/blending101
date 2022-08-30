@@ -4,9 +4,12 @@ export const GET_RECIPE = gql`
   query GetARecipe($recipeId: String!, $userId: String) {
     getARecipe(recipeId: $recipeId, userId: $userId) {
       userId {
-        _id
-        displayName
-        image
+        email
+      lastName
+      firstName
+      image
+      displayName
+      _id
       }
       _id
       name

@@ -36,6 +36,8 @@ export const GET_30DAYS_CHALLENGE = gql`
         daysRemaining
         challengeName
         totalChallengePosts
+        startDate
+        endDate
       }
     }
   }
