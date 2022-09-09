@@ -174,7 +174,7 @@ const WikiLandingContent = ({
           {list?.map((wikiList) => {
             const {
               _id,
-              category,
+
               commentsCount,
               description,
               hasInCompare,
