@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { useState } from "react";
-
+import { forwardRef, useState } from "react";
+import DatePicker from "react-datepicker";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
 import { faCalendarDay } from "@fortawesome/pro-light-svg-icons";
 import { format, isAfter, isToday } from "date-fns";
@@ -9,6 +9,7 @@ import Icon from "../../../../atoms/Icon/Icon.component";
 import { RECIPE_CATEGORY_COLOR } from "../../../../../data/Recipe";
 import { setChallengeDate } from "../../../../../redux/slices/Challenge.slice";
 import styles from "./main.module.scss";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface MainInterface {
   statistics: any;
@@ -16,16 +17,8 @@ interface MainInterface {
 }
 
 function Main({ activities, statistics }: MainInterface) {
-  const [showCalender, setShowCalender] = useState(false);
-
-  const dispatch = useAppDispatch();
   const profileImage = useAppSelector((state) => state.user.dbUser.image);
   const activeDate = useAppSelector((state) => state.challenge.activeDate);
-
-  const dateHandler = (date) => {
-    dispatch(setChallengeDate(date));
-    setShowCalender(false);
-  };
 
   return (
     <div className={styles.challenge_circle_main_circle_outer}>
@@ -44,21 +37,11 @@ function Main({ activities, statistics }: MainInterface) {
               activeDate !== "" ? new Date(activeDate) : new Date(),
               "EEEE, MMM dd",
             )}
-            <span
-              className="ml-10"
-              style={{ cursor: "pointer", transform: "translateY(-1.5px)" }}
-              onClick={() => setShowCalender((prev) => !prev)}
-            >
-              <Icon fontName={faCalendarDay} size="2rem" color="#fe5d1f" />
-            </span>
-            {showCalender && (
-              <div className={styles.calender__tray}>
-                <CalendarTray
-                  onClose={() => setShowCalender(false)}
-                  handler={dateHandler}
-                />
-              </div>
-            )}
+            <DateSelector
+              activeDate={activeDate}
+              startDate={statistics?.startDate}
+              endDate={statistics?.endDate}
+            />
           </div>
           <p className={styles.challenge_circle_day_challenge}>
             {statistics?.challengeName || ""}
@@ -97,6 +80,42 @@ function Main({ activities, statistics }: MainInterface) {
     </div>
   );
 }
+
+const DatePickerButton = forwardRef(({ value, onClick }: any, ref: any) => (
+  <span
+    className="ml-10"
+    style={{ cursor: "pointer", transform: "translateY(-1.5px)" }}
+    onClick={onClick}
+    ref={ref}
+  >
+    <Icon fontName={faCalendarDay} size="2rem" color="#fe5d1f" />
+  </span>
+));
+DatePickerButton.displayName = "DatePickerButton";
+
+interface DateSelectorProps {
+  activeDate: string;
+  startDate: string;
+  endDate: string;
+}
+const DateSelector = (props: DateSelectorProps) => {
+  const dispatch = useAppDispatch();
+  const { activeDate, startDate, endDate } = props;
+
+  const dateHandler = (date) => {
+    dispatch(setChallengeDate(format(date, "yyyy-MM-dd")));
+  };
+
+  return (
+    <DatePicker
+      selected={activeDate ? new Date(activeDate) : new Date()}
+      minDate={new Date(startDate)}
+      maxDate={new Date(endDate)}
+      onChange={dateHandler}
+      customInput={<DatePickerButton />}
+    />
+  );
+};
 
 function DateButton({ date, isActive, categories, disabled }: any) {
   const days = new Date(date);

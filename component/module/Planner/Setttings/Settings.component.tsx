@@ -32,7 +32,7 @@ import {
   EDIT_CHALLENGE,
   GET_CHALLENGES,
 } from "../../../../graphql/Planner";
-import { useAppSelector } from "../../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import Publish from "../../../../helpers/Publish";
 
 import styles from "./Settings.module.scss";
@@ -42,9 +42,11 @@ import {
   format,
   formatISO,
   isBefore,
+  isPast,
 } from "date-fns";
 import RadioButton from "../../../organisms/Forms/RadioButton.component";
 import { getDateISO, toIsoString } from "../../../../helpers/Date";
+import { setChallengeDate } from "../../../../redux/slices/Challenge.slice";
 
 interface SettingsProps {
   hideSettings: () => void;
@@ -118,6 +120,7 @@ const Settings = (props: SettingsProps) => {
 };
 
 const ChallengeList = ({ editFormHandler, hideSettings }) => {
+  const dispatch = useAppDispatch();
   const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
   const { data } = useQuery(GET_CHALLENGES, {
@@ -145,6 +148,7 @@ const ChallengeList = ({ editFormHandler, hideSettings }) => {
       state: activateState,
       success: `Activated Challenge Sucessfully`,
       onSuccess: () => {
+        dispatch(setChallengeDate(""));
         setActiveId(challengeId);
         hideSettings();
       },
@@ -180,7 +184,14 @@ const ChallengeList = ({ editFormHandler, hideSettings }) => {
         return (
           <div className={`row ${styles.challenge}`} key={challenge._id}>
             <div className="col-5">
-              <div className={styles.challenge__name}>
+              <div
+                className={styles.challenge__name}
+                style={
+                  isPast(new Date(challenge.endDate))
+                    ? { backgroundColor: "#eee", color: "#333" }
+                    : {}
+                }
+              >
                 <a onClick={() => editFormHandler(challenge)}>
                   {challenge.challengeName}
                 </a>
