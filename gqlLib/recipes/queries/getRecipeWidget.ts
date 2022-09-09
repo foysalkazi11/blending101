@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 const GET_RECIPE_WIDGET = gql`
   query GetRecipeWidget {
@@ -23,11 +23,7 @@ const GET_RECIPE_WIDGET = gql`
             recipeBlendCategory {
               name
             }
-            testIngredient {
-              quantity
-              unit
-              name
-            }
+
             image {
               image
               default
