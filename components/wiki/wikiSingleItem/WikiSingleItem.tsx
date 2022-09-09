@@ -31,7 +31,7 @@ function WikiSingleItem() {
   const { params = [] } = router?.query;
   const type = params?.[0] || "Ingredient";
   const wikiId = params?.[1] || "";
-  const measurementWeight = params?.[2] || "";
+  const measurementWeight = params?.[2] || "0";
   const { dbUser } = useAppSelector((state) => state?.user);
   const [getAllIngredientsBasedOnNutrition, ingredientsData] = useLazyQuery(
     GET_ALL_INGREDIENTS_BASED_ON_NURTITION,
