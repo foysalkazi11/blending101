@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 const GET_NUTRIENT_WIKI_LIST = gql`
-  query GetNutrientWikiList(
+  query GetNutrientWikiList2(
     $page: Float
     $limit: Float
     $userId: String
@@ -19,7 +19,6 @@ const GET_NUTRIENT_WIKI_LIST = gql`
         wikiTitle
         wikiDescription
         type
-        category
         image
         status
         portions {
