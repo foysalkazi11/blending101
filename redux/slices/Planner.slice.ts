@@ -190,24 +190,24 @@ export const PlannerSlice = createSlice({
       state.post.recipe = initialRecipe;
     },
 
-    setRecipeInfo: (
-      state,
-      action: {
-        payload: { _id: string; name: string; image: string; category: string };
-      },
-    ) => {
-      state.post.recipe._id = action.payload._id;
-      state.post.recipe.name = action.payload.name;
-      state.post.recipe.image = action.payload.image;
-      state.post.recipe.category = action.payload.category;
-    },
+    // setRecipeInfo: (
+    //   state,
+    //   action: {
+    //     payload: { _id: string; name: string; image: string; category: string };
+    //   },
+    // ) => {
+    //   state.post.recipe._id = action.payload._id;
+    //   state.post.recipe.name = action.payload.name;
+    //   state.post.recipe.image = action.payload.image;
+    //   state.post.recipe.category = action.payload.category;
+    // },
 
-    setRecipeIngredients: (
-      state,
-      action: { payload: { ingredients: IPlannerIngredients[] } },
-    ) => {
-      state.post.recipe.ingredients = action.payload.ingredients;
-    },
+    // setRecipeIngredients: (
+    //   state,
+    //   action: { payload: { ingredients: IPlannerIngredients[] } },
+    // ) => {
+    //   state.post.recipe.ingredients = action.payload.ingredients;
+    // },
 
     addIngredient: (state, action) => {
       const ingredientItem = action.payload.ingredient;
@@ -251,8 +251,8 @@ export const {
   addPlanner,
   deleteRecipe,
   clearAllPlanner,
-  setRecipeInfo,
-  setRecipeIngredients,
+  // setRecipeInfo,
+  // setRecipeIngredients,
   addIngredient,
   deleteIngredient,
   resetForm,

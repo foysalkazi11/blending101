@@ -1,11 +1,11 @@
 import React, { Children, useRef } from "react";
 import { useRouter } from "next/router";
 import styles from "./RecipeCard.module.scss";
-import { slicedString } from "../../../services/string.service";
+import { IPostIngredient } from "../../../redux/slices/Challenge.slice";
 
 interface RecipeProps {
   title?: string;
-  ingredients?: string;
+  ingredients?: IPostIngredient[];
   category?: string;
   ratings?: number;
   noOfRatings?: number;
@@ -76,7 +76,14 @@ const RecipeCard: React.FC<RecipeProps> = (props) => {
                   </div>
                 </div>
                 <div className={styles.databody__bottom}>
-                  <p>{slicedString(ingredients, 0, 12)}</p>
+                  <p>
+                    {ingredients?.map(
+                      (ing, idx) =>
+                        `${ing?.ingredientId?.ingredientName}${
+                          idx + 1 == ingredients.length ? "" : ", "
+                        }`,
+                    )}
+                  </p>
                 </div>
               </div>
             </div>
@@ -112,8 +119,8 @@ const RecipeCard: React.FC<RecipeProps> = (props) => {
 
 RecipeCard.defaultProps = {
   title: "Triple Berry Smoothie",
-  ingredients: "Apple, Banana, Strawberry",
-  category: "Smoothie",
+  ingredients: [],
+  category: "Uncategorized",
   noOfRatings: 0,
   carbs: 23,
   score: 704,

@@ -1,3 +1,5 @@
+@import "../../../../styles/mixins";
+
 .plannerIcon {
   position: relative;
   aspect-ratio: 1;
@@ -43,6 +45,28 @@
   // max-width: 80%;
   // height: 1rem;
   min-width: 34rem;
+  @include respond(1740px) {
+    min-width: 31rem;
+  }
+  @include respond(1600px) {
+    min-width: 28rem;
+  }
+  @include respond(1500px) {
+    min-width: 26rem;
+  }
+  @include respond(1400px) {
+    min-width: 24rem;
+  }
+  @include respond(1320px) {
+    min-width: 22rem;
+  }
+  @include respond(1250px) {
+    min-width: 20rem;
+  }
+  @include respond(1150px) {
+    min-width: 18rem;
+  }
+
   overflow: hidden;
   &--show {
     display: block !important;

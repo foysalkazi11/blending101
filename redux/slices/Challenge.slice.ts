@@ -71,6 +71,24 @@ export const ChallengeSlice = createSlice({
     resetForm: (state) => {
       state.post = initialPost;
     },
+    setRecipeInfo: (
+      state,
+      action: {
+        payload: {
+          _id: string;
+          name: string;
+          image: string;
+          category: string;
+          ingredients: IPostIngredient[];
+        };
+      },
+    ) => {
+      state.post.id = action.payload._id;
+      state.post.title = action.payload.name;
+      state.post.images = [action.payload.image];
+      state.post.category = action.payload.category;
+      state.post.ingredients = action.payload.ingredients || [];
+    },
     addIngredient: (state, action) => {
       const ingredientItem = action.payload.ingredient;
       const qty = Math.floor(Math.random() * 10);
@@ -113,6 +131,7 @@ export const {
   setChallengePost,
   setShowPostForm,
   resetForm,
+  setRecipeInfo,
   addIngredient,
   deleteIngredient,
 } = ChallengeSlice.actions;
