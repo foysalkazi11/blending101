@@ -13,41 +13,45 @@ const Pagination = (props: PaginationState) => {
 
   const pages = useMemo(() => {
     const pages = [];
-    for (let i = 1; i <= totalPage; i++) {
-      let start = 1;
-      let end = limit;
-      if (currentPage > limit) {
-        start = currentPage - limit;
-        end = currentPage;
-      }
-      if (i >= start && i <= end) {
-        pages.push(
-          <button
-            key={i}
-            className={
-              currentPage === i
-                ? `${styles["is-active"]} ${styles[activeBgColor]}`
-                : ""
-            }
-            onClick={(e) => {
-              e.preventDefault();
-              setCurrentPage(i);
-            }}
-          >
-            <li>{i}</li>
-          </button>,
-        );
+    let startPage, endPage;
+    if (currentPage <= limit) {
+      startPage = 1;
+      endPage = totalPage < limit ? totalPage : limit;
+    } else {
+      if (totalPage - currentPage < 5) {
+        startPage = totalPage - 5;
+        endPage = totalPage;
+      } else {
+        startPage = currentPage - 2;
+        endPage = currentPage + 2;
       }
     }
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(
+        <button
+          key={i}
+          className={
+            currentPage === i
+              ? `${styles["is-active"]} ${styles[activeBgColor]}`
+              : ""
+          }
+          onClick={(e) => {
+            e.preventDefault();
+            setCurrentPage(i);
+          }}
+        >
+          <li>{i}</li>
+        </button>,
+      );
+    }
     return pages;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, limit, setCurrentPage, totalPage]);
+  }, [activeBgColor, currentPage, limit, setCurrentPage, totalPage]);
 
   if (totalPage === 0) return null;
 
   return (
     <ul className={styles.pagination}>
-      {currentPage > 1 && (
+      {currentPage > limit && (
         <button
           onClick={() => {
             setCurrentPage((prev) => prev - 1);
@@ -57,7 +61,7 @@ const Pagination = (props: PaginationState) => {
         </button>
       )}
       {pages}
-      {currentPage !== totalPage && (
+      {totalPage > limit && currentPage + 2 < totalPage && (
         <button
           onClick={() => {
             setCurrentPage((prev) => prev + 1);

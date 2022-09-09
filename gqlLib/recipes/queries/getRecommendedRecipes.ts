@@ -9,11 +9,7 @@ const GET_ALL_RECOMMENDED_RECIPES = gql`
       recipeBlendCategory {
         name
       }
-      testIngredient {
-        quantity
-        unit
-        name
-      }
+
       image {
         image
         default

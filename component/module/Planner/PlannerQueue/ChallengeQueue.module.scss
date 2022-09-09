@@ -1,3 +1,8 @@
+$sharedHeight: 60px;
+$sharedBorderRadius: 5px;
+$sharedBorderStyle: 1px #d1cece solid;
+$sharedBackgroundColor: white;
+
 .space {
   padding: 1rem;
 }
@@ -46,6 +51,19 @@
 
 .recipe {
   position: relative;
+  &__buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    // &:hover button {
+    //   visibility: visible;
+    // }
+    & > button {
+      // visibility: hidden;
+      transform: translateY(-5px);
+    }
+  }
   &__title {
     margin-bottom: 1rem;
     font-weight: 600;
@@ -58,9 +76,9 @@
     & svg {
       margin-right: 1rem;
     }
-    &:hover {
-      color: #fe5d1f;
-    }
+    // &:hover {
+    //   color: #fe5d1f;
+    // }
   }
   &__category {
     display: flex;
@@ -95,6 +113,33 @@
       color: #fe5d1f;
     }
   }
+  &__optionTray {
+    background-color: $sharedBackgroundColor;
+    position: absolute;
+    right: -7px;
+    top: 78%;
+    width: 120px;
+    font-size: 1.4rem;
+    border-radius: $sharedBorderRadius;
+    border: $sharedBorderStyle;
+    z-index: 1;
+    padding: 10px 0px;
+    display: none;
+
+    &__pointingDiv {
+      z-index: -1;
+      height: 10px;
+      aspect-ratio: 1;
+      background-color: $sharedBackgroundColor;
+      position: absolute;
+      top: -5px;
+      right: 20px;
+      transform: rotate(45deg);
+      border-radius: 2px;
+      border-left: $sharedBorderStyle;
+      border-top: $sharedBorderStyle;
+    }
+  }
 }
 
 .note {
@@ -109,5 +154,25 @@
     font-size: 1.2rem;
     font-weight: 300;
     line-height: 1.4rem;
+  }
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 10px;
+  cursor: pointer;
+  &:hover {
+    background-color: rgb(238, 238, 238);
+  }
+  &__icon {
+    color: #707070;
+  }
+  &__calender {
+    position: absolute;
+    right: 0;
+    background-color: #fff;
+    z-index: 999;
   }
 }

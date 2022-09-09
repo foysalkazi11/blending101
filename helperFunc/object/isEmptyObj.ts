@@ -1,4 +1,4 @@
-const isEmptyObj = (obj: object) =>
+const isEmptyObj = (obj: object): boolean =>
   Reflect.ownKeys(obj).length === 0 && obj.constructor === Object;
 
 export default isEmptyObj;

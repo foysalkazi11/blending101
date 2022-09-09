@@ -24,14 +24,11 @@ import {
   GET_RECIPES_FOR_PLANNER,
 } from "../../../../graphql/Planner";
 import { GET_BLEND_CATEGORY } from "../../../../graphql/Recipe";
-import {
-  addPlanner,
-  setRecipeInfo,
-  setRecipeIngredients,
-} from "../../../../redux/slices/Planner.slice";
+import { addPlanner } from "../../../../redux/slices/Planner.slice";
 import Publish from "../../../../helpers/Publish";
 
 import styles from "./PlannerQueue.module.scss";
+import { setRecipeInfo } from "../../../../redux/slices/Challenge.slice";
 
 interface PlannerPanelProps {
   isUpload: boolean;
@@ -136,7 +133,7 @@ const PlannerPanel = (props: PlannerPanelProps) => {
         }}
       />
       <div className={styles.action}>
-        <div ref={blendTypeRef}>
+        <div ref={blendTypeRef} style={{ width: "100%" }}>
           <Combobox
             options={
               categories?.getAllCategories
@@ -148,7 +145,10 @@ const PlannerPanel = (props: PlannerPanelProps) => {
             }
             className={styles.blendType}
             value={type}
-            onChange={(e) => setType(e.target.value)}
+            onChange={(e) => {
+              setPage(1);
+              setType(e.target.value);
+            }}
           />
         </div>
         <Searchbox
@@ -175,7 +175,7 @@ const PlannerPanel = (props: PlannerPanelProps) => {
       ) : (
         <Recipes recipes={recipes} isUpload={isUpload} />
       )}
-      {recipes.length > 3 && (
+      {pageLength > 3 && (
         <div className="flex ai-center jc-center mt-20">
           <Pagination
             limit={5}
@@ -229,30 +229,18 @@ const Recipes = (props) => {
     });
   };
 
-  const uploadRecipe = (_id, name, image, category) => {
-    getIngredients({
-      variables: {
-        recipeId: _id,
-      },
-    });
+  const uploadRecipe = (_id, name, image, category, ingredients) => {
+    console.log(ingredients);
     dispatch(
       setRecipeInfo({
         _id,
         name,
         image: image?.find((img) => img.default)?.image || image[0]?.image,
         category,
+        ingredients,
       }),
     );
   };
-
-  useEffect(() => {
-    if (data?.getIngredientsFromARecipe)
-      dispatch(
-        setRecipeIngredients({
-          ingredients: data?.getIngredientsFromARecipe || [],
-        }),
-      );
-  }, [data?.getIngredientsFromARecipe, dispatch]);
 
   return recipes?.map((recipe) => {
     const {
@@ -262,6 +250,7 @@ const Recipes = (props) => {
       averageRating,
       totalRating,
       image,
+      defaultVersion,
     } = recipe;
     return (
       <RecipeCard
@@ -273,6 +262,7 @@ const Recipes = (props) => {
         noOfRatings={totalRating}
         image={image.find((img) => img.default === true)?.image}
         recipeId={_id}
+        ingredients={defaultVersion?.ingredients || []}
       >
         <div>
           {isUpload ? (
@@ -281,7 +271,13 @@ const Recipes = (props) => {
               style={{ color: "#fe5d1f" }}
               size="20px"
               onClick={() =>
-                uploadRecipe(_id, name, image, recipeBlendCategory?._id)
+                uploadRecipe(
+                  _id,
+                  name,
+                  image,
+                  recipeBlendCategory?._id,
+                  defaultVersion?.ingredients,
+                )
               }
             />
           ) : (

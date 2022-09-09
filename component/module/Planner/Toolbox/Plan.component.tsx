@@ -25,11 +25,15 @@ import {
 import Publish from "../../../../helpers/Publish";
 import {
   faChartSimple,
+  faClone,
   faEllipsisVertical,
+  faTrash,
+  faUpDownLeftRight,
 } from "@fortawesome/pro-regular-svg-icons";
 import IconButton from "../../../atoms/Button/IconButton.component";
 import { setShowPanel } from "../../../../redux/slices/Ui.slice";
 import { faCartShopping } from "@fortawesome/pro-light-svg-icons";
+import Icon from "../../../atoms/Icon/Icon.component";
 
 interface PlanProps {
   plannerId?: string;
@@ -241,7 +245,7 @@ const PlanRecipe = ({
         <div className={styles.option} onClick={() => onDelete(_id)}>
           <span>Remove</span>
           <span className={styles.option__icon}>
-            <RiDeleteBin6Line />
+            <Icon fontName={faTrash} size="1.5rem" />
           </span>
         </div>
         <div
@@ -253,7 +257,7 @@ const PlanRecipe = ({
         >
           <span>Copy</span>
           <span className={styles.option__icon}>
-            <IoCopy />
+            <Icon fontName={faClone} size="1.5rem" />
           </span>
         </div>
         <div
@@ -265,7 +269,7 @@ const PlanRecipe = ({
         >
           <span>Move</span>
           <span className={styles.option__icon}>
-            <IoCopy />
+            <Icon fontName={faUpDownLeftRight} size="1.5rem" />
           </span>
         </div>
       </div>

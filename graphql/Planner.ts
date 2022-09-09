@@ -1,48 +1,5 @@
 import { gql } from "@apollo/client";
 
-export const GET_30DAYS_CHALLENGE = gql`
-  query Get30DaysChallenge($userId: String!, $startDate: String) {
-    getMyThirtyDaysChallenge(memberId: $userId, startDate: $startDate) {
-      challenge {
-        _id
-        date: formattedDate
-        disabled
-        posts {
-          _id
-          recipeBlendCategory {
-            _id
-            name
-          }
-          name
-          images
-          note
-          ingredients {
-            ingredientId {
-              _id
-              ingredientName
-            }
-            selectedPortion {
-              name
-              quantity
-              gram
-            }
-          }
-        }
-      }
-      challengeInfo {
-        longestStreak
-        currentStreak
-        blendScore
-        daysRemaining
-        challengeName
-        totalChallengePosts
-        startDate
-        endDate
-      }
-    }
-  }
-`;
-
 export const GET_RECIPES_FOR_PLANNER = gql`
   query GetRecipesForPlanner(
     $searchTerm: String!
@@ -79,7 +36,13 @@ export const GET_RECIPES_FOR_PLANNER = gql`
           postfixTitle
           ingredients {
             ingredientId {
+              _id
               ingredientName
+            }
+            selectedPortion {
+              name
+              quantity
+              gram
             }
           }
         }
@@ -126,9 +89,12 @@ export const GET_QUEUED_RECIPES_FOR_PLANNER = gql`
           postfixTitle
           ingredients {
             ingredientId {
+              _id
               ingredientName
             }
             selectedPortion {
+              name
+              quantity
               gram
             }
           }
@@ -229,24 +195,18 @@ export const CLEAR_PLANNER = gql`
   }
 `;
 
+export const ADD_TO_GROCERY_LIST = gql`
+  mutation AddToGroceryFromPlanner($recipeId: String!, $memberId: String!) {
+    addToGroceryFromPlanner(recipeId: $recipeId, memberId: $memberId)
+  }
+`;
+
 /*
  * -------------------------------------------------*
  * CHALLENGE API
  * SETTINGS API
  * -------------------------------------------------*
  */
-
-export const CREATE_CHALLENGE_POST = gql`
-  mutation CreateChallengePost($data: CreateChallengePost!) {
-    createChallengePost(data: $data)
-  }
-`;
-
-export const EDIT_CHALLENGE_POST = gql`
-  mutation EditChallengePost($data: EditChallengePost!) {
-    editAChallengePost(data: $data)
-  }
-`;
 
 export const GET_CHALLENGES = gql`
   query GetAllChallenges($memberId: String!) {
@@ -290,17 +250,104 @@ export const ACTIVATE_CHALLENGE = gql`
   }
 `;
 
+export const GET_30DAYS_CHALLENGE = gql`
+  query Get30DaysChallenge($userId: String!, $startDate: String) {
+    getMyThirtyDaysChallenge(memberId: $userId, startDate: $startDate) {
+      challenge {
+        _id
+        date: formattedDate
+        disabled
+        posts {
+          _id
+          recipeBlendCategory {
+            _id
+            name
+          }
+          name
+          images
+          note
+          ingredients {
+            ingredientId {
+              _id
+              ingredientName
+            }
+            selectedPortion {
+              name
+              quantity
+              gram
+            }
+          }
+        }
+      }
+      challengeInfo {
+        longestStreak
+        currentStreak
+        blendScore
+        daysRemaining
+        challengeName
+        totalChallengePosts
+        startDate
+        endDate
+      }
+    }
+  }
+`;
+
+export const CREATE_CHALLENGE_POST = gql`
+  mutation CreateChallengePost($data: CreateChallengePost!) {
+    createChallengePost(data: $data)
+  }
+`;
+
+export const EDIT_CHALLENGE_POST = gql`
+  mutation EditChallengePost($data: EditChallengePost!) {
+    editAChallengePost(data: $data)
+  }
+`;
+
+export const DELETE_CHALLENGE_POST = gql`
+  mutation DeleteChallengePost($postId: String!, $challengeId: String!) {
+    deleteAChallengePost(postId: $postId, docId: $challengeId)
+  }
+`;
+
+export const COPY_CHALLENGE_POST = gql`
+  mutation DuplicateChallenge(
+    $memberId: String!
+    $date: String!
+    $postId: String!
+    $challengeId: String!
+  ) {
+    copyAChallengePost(
+      memberId: $memberId
+      assignDate: $date
+      postId: $postId
+      docId: $challengeId
+    )
+  }
+`;
+
+export const MOVE_CHALLENGE_POST = gql`
+  mutation DuplicateChallenge(
+    $memberId: String!
+    $date: String!
+    $postId: String!
+    $challengeId: String!
+  ) {
+    moveAChallengePost(
+      memberId: $memberId
+      assignDate: $date
+      postId: $postId
+      docId: $challengeId
+    )
+  }
+`;
+
 export const CHALLENGE_GALLERY = gql`
   query GetChallengeGallery($memberId: String!) {
     getAChallengeGallery(memberId: $memberId) {
       images
       assignDate
     }
-  }
-`;
-
-export const ADD_TO_GROCERY_LIST = gql`
-  mutation AddToGroceryFromPlanner($recipeId: String!, $memberId: String!) {
-    addToGroceryFromPlanner(recipeId: $recipeId, memberId: $memberId)
   }
 `;

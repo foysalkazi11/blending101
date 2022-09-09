@@ -6,11 +6,6 @@ const GET_COMPARE_LIST = gql`
       datePublished
       name
       recipeIngredients
-      testIngredient {
-        quantity
-        unit
-        name
-      }
       image {
         image
         default

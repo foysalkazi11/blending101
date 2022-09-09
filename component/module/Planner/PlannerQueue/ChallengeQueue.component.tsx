@@ -5,11 +5,22 @@ import React, {
   useEffect,
   useMemo,
   useCallback,
+  useState,
 } from "react";
 import { format } from "date-fns";
 import { faCircle } from "@fortawesome/pro-solid-svg-icons";
-import { faChartSimple } from "@fortawesome/pro-regular-svg-icons";
-import { faTrophy } from "@fortawesome/pro-light-svg-icons";
+import {
+  faChartSimple,
+  faEllipsisVertical,
+  faPenToSquare,
+} from "@fortawesome/pro-regular-svg-icons";
+import {
+  faClone,
+  faTrash,
+  faTrophy,
+  faUpDownLeftRight,
+} from "@fortawesome/pro-light-svg-icons";
+import DatePicker from "react-datepicker";
 
 import IconHeading from "../../../../theme/iconHeading/iconHeading.component";
 import SplitImageCard from "../../../../theme/card/splitImageCard/splitImageCard.component";
@@ -26,6 +37,14 @@ import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
 import { setShowPanel } from "../../../../redux/slices/Ui.slice";
 
 import styles from "./ChallengeQueue.module.scss";
+import useHideOnClickOutside from "../../../../hooks/useHideOnClickOutside";
+import { useMutation } from "@apollo/client";
+import {
+  COPY_CHALLENGE_POST,
+  DELETE_CHALLENGE_POST,
+  MOVE_CHALLENGE_POST,
+} from "../../../../graphql/Planner";
+import Publish from "../../../../helpers/Publish";
 
 interface IPost {
   _id: string;
@@ -47,9 +66,11 @@ interface IChallengePosts {
   date: string;
   posts: IPost[];
 }
+
 interface ChallengePanelProps {
   challenges: any[];
 }
+
 const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
   const { challenges } = props;
 
@@ -58,6 +79,16 @@ const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
 
   const blendContainer = useRef<HTMLDivElement>(null);
   const blends = useRef<HTMLDivElement[]>([]);
+
+  const [deletePost, deleteState] = useMutation(DELETE_CHALLENGE_POST, {
+    refetchQueries: ["Get30DaysChallenge"],
+  });
+  const [copyPost, copyState] = useMutation(COPY_CHALLENGE_POST, {
+    refetchQueries: ["Get30DaysChallenge"],
+  });
+  const [movePost, moveState] = useMutation(MOVE_CHALLENGE_POST, {
+    refetchQueries: ["Get30DaysChallenge"],
+  });
 
   const addToBlendsRef = (element: HTMLDivElement) => {
     if (element && !blends.current.includes(element)) {
@@ -96,22 +127,62 @@ const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
     [dispatch],
   );
 
-  const nutrientPanelHandler = (ingredients) => {
-    dispatch(
-      setShowPanel({
-        name: "RXPanel",
-        show: true,
-        payload: ingredients.map((ing) => ({
-          ingredientId: ing?.ingredientId?._id,
-          value: ing?.selectedPortion?.gram,
-        })),
-      }),
-    );
-  };
-
   const challengePosts = useMemo(() => {
     const challengPosts = [];
     const challengeImages = [];
+    const nutrientPanelHandler = (ingredients) => {
+      dispatch(
+        setShowPanel({
+          name: "RXPanel",
+          show: true,
+          payload: ingredients.map((ing) => ({
+            ingredientId: ing?.ingredientId?._id,
+            value: ing?.selectedPortion?.gram,
+          })),
+        }),
+      );
+    };
+
+    const copyHandler = async (memberId, date, challengeId, postId) => {
+      await Publish({
+        mutate: copyPost,
+        variables: {
+          memberId,
+          date: format(new Date(date), "yyyy-MM-dd"),
+          postId,
+          challengeId,
+        },
+        state: copyState,
+        success: `Duplicated Challenge Post sucessfully`,
+      });
+    };
+
+    const moveHandler = async (memberId, date, challengeId, postId) => {
+      await Publish({
+        mutate: movePost,
+        variables: {
+          memberId,
+          date: format(new Date(date), "yyyy-MM-dd"),
+          postId,
+          challengeId,
+        },
+        state: moveState,
+        success: `Moved Challenge Post sucessfully`,
+      });
+    };
+
+    const deleteHandler = async (challengeId, postId) => {
+      await Publish({
+        mutate: deletePost,
+        variables: {
+          postId,
+          challengeId,
+        },
+        state: deleteState,
+        success: `Deleted Challenge Post sucessfully`,
+      });
+    };
+
     //Handling Each Challenge
     challenges?.forEach((challenge: IChallengePosts) => {
       if (challenge.posts.length === 0) return;
@@ -128,6 +199,9 @@ const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
             date={challenge?.date}
             post={post}
             onEdit={editHandler}
+            onCopy={copyHandler}
+            onMove={moveHandler}
+            onDelete={deleteHandler}
             onShowNutrient={nutrientPanelHandler}
           />,
         );
@@ -144,7 +218,17 @@ const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
       );
     });
     return challengPosts;
-  }, [challenges, editHandler, nutrientPanelHandler]);
+  }, [
+    challenges,
+    copyPost,
+    copyState,
+    deletePost,
+    deleteState,
+    dispatch,
+    editHandler,
+    movePost,
+    moveState,
+  ]);
 
   return (
     <Fragment>
@@ -200,10 +284,16 @@ interface PostProps {
   date: string;
   post: IPost;
   onEdit: any;
+  onCopy: any;
+  onMove: any;
+  onDelete: any;
   onShowNutrient: any;
 }
+
 const Post = (props: PostProps) => {
-  const { id, date, post, onEdit, onShowNutrient } = props;
+  const [showMenu, setShowMenu] = useState(false);
+  const { id, date, post, onEdit, onCopy, onMove, onDelete, onShowNutrient } =
+    props;
 
   let ingredients = "";
   post.ingredients.forEach((ingredient, index) => {
@@ -212,14 +302,13 @@ const Post = (props: PostProps) => {
       `${index + 1 !== post.ingredients.length ? ", " : ""}`;
   });
 
+  const menuRef = useHideOnClickOutside(() => setShowMenu(false));
+
   return (
     <div className="mb-10">
       <div className={styles.recipe}>
         <div className={styles.space}>
-          <h3
-            className={styles.recipe__title}
-            onClick={() => onEdit(id, date, post)}
-          >
+          <h3 className={styles.recipe__title}>
             <Icon
               fontName={faCircle}
               size="2rem"
@@ -229,17 +318,73 @@ const Post = (props: PostProps) => {
             />
             {post.name}
           </h3>
-          <div className="flex jc-between ai-center">
+          <div className={styles.recipe__buttons}>
             <span className={styles.recipe__category}>
               {post?.recipeBlendCategory?.name}
             </span>
-            <IconButton
-              fontName={faChartSimple}
-              variant="fade"
-              color="primary"
-              size="small"
-              onClick={() => onShowNutrient(post.ingredients)}
-            />
+            <div className="flex ai-center">
+              <IconButton
+                fontName={faChartSimple}
+                variant="fade"
+                color="primary"
+                size="small"
+                onClick={() => onShowNutrient(post.ingredients)}
+              />
+              <div ref={menuRef}>
+                <IconButton
+                  variant="fade"
+                  color="primary"
+                  size="small"
+                  fontName={faEllipsisVertical}
+                  onClick={() => setShowMenu((prev) => !prev)}
+                />
+                <div
+                  className={styles.recipe__optionTray}
+                  style={
+                    showMenu
+                      ? { display: "block", zIndex: "1" }
+                      : { zIndex: "-1" }
+                  }
+                >
+                  <div className={styles.recipe__optionTray__pointingDiv} />
+                  <div
+                    className={styles.option}
+                    onClick={() => onEdit(id, date, post)}
+                  >
+                    <span>Edit</span>
+                    <span className={styles.option__icon}>
+                      <Icon fontName={faPenToSquare} size="1.5rem" />
+                    </span>
+                  </div>
+                  <div
+                    className={styles.option}
+                    onClick={() => {
+                      setShowMenu(false);
+                      onDelete(id, post?._id);
+                    }}
+                  >
+                    <span>Remove</span>
+                    <span className={styles.option__icon}>
+                      <Icon fontName={faTrash} size="1.5rem" />
+                    </span>
+                  </div>
+                  <DateSelector
+                    type="Copy"
+                    postId={post?._id}
+                    challengeId={id}
+                    setShowMenu={setShowMenu}
+                    dateHandler={onCopy}
+                  />
+                  <DateSelector
+                    type="Move"
+                    postId={post?._id}
+                    challengeId={id}
+                    setShowMenu={setShowMenu}
+                    dateHandler={onMove}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
           <p className={styles.recipe__ingredients}>{ingredients}</p>
         </div>
@@ -262,6 +407,47 @@ const Post = (props: PostProps) => {
         </div>
       )}
     </div>
+  );
+};
+
+const DatePickerButton = forwardRef(({ type, onClick }: any, ref: any) => {
+  return (
+    <div className={styles.option} onClick={onClick} ref={ref}>
+      <span>{type}</span>
+      <span className={styles.option__icon}>
+        <Icon
+          fontName={type === "Move" ? faUpDownLeftRight : faClone}
+          size="1.5rem"
+        />
+      </span>
+    </div>
+  );
+});
+DatePickerButton.displayName = "DatePickerButton";
+
+interface DateSelectorProps {
+  type: "Move" | "Copy";
+  postId: string;
+  challengeId: string;
+  dateHandler: any;
+  setShowMenu: any;
+}
+const DateSelector = (props: DateSelectorProps) => {
+  const { setShowMenu, type, postId, challengeId, dateHandler } = props;
+  const startDate = useAppSelector((state) => state.challenge.startDate);
+  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+
+  return (
+    <DatePicker
+      selected={new Date()}
+      minDate={new Date(startDate)}
+      maxDate={new Date()}
+      onChange={(date) => {
+        setShowMenu(false);
+        dateHandler(userId, date, challengeId, postId);
+      }}
+      customInput={<DatePickerButton type={type} />}
+    />
   );
 };
 
