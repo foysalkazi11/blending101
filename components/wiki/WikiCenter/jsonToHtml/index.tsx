@@ -6,7 +6,7 @@ import Embed from "./renderers/Embed";
 import Table from "./renderers/Table";
 import List from "./renderers/List";
 import Code from "./renderers/Code";
-import Image from "./renderers/Image";
+import ImageBlock from "./renderers/Image";
 import Raw from "./renderers/Raw";
 import Quote from "./renderers/Quote";
 
@@ -14,8 +14,6 @@ interface Props {
   blocks: BlockType[];
 }
 const RenderJsonToHtml = ({ blocks }: Props) => {
-  console.log(blocks);
-
   const renderHtml = (block: BlockType) => {
     const { type } = block;
 
@@ -33,7 +31,7 @@ const RenderJsonToHtml = ({ blocks }: Props) => {
       case "code":
         return <Code block={block} />;
       case "image":
-        return <Image block={block} />;
+        return <ImageBlock block={block} />;
       case "raw":
         return <Raw block={block} />;
       case "quote":

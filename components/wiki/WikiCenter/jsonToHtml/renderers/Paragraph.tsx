@@ -1,6 +1,4 @@
-import { createElement } from "react";
 import { BlockType } from "../../../../../type/editorjsBlockType";
-import convertStringToHTML from "../ConvertStringToHTML ";
 import HTMLReactParser from "html-react-parser";
 
 interface Props {
