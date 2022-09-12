@@ -147,7 +147,7 @@ function WikiSingleItem() {
 
         <WikiCenterComponent
           author={data?.publishedBy}
-          body={data?.bodies[0]}
+          body={data?.bodies}
           categroy={data?.category}
           coverImages={
             data?.wikiCoverImages.length
