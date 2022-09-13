@@ -52,6 +52,7 @@ interface WikiCenterComponentProps {
   type?: WikiType;
   wikiId?: string;
   commentsCount?: number;
+  scrollPoint?: string;
 }
 
 function WikiCenterComponent({
@@ -69,6 +70,7 @@ function WikiCenterComponent({
   type = "Ingredient",
   wikiId = "",
   commentsCount = 0,
+  scrollPoint = "",
 }: WikiCenterComponentProps) {
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -87,7 +89,7 @@ function WikiCenterComponent({
     );
   };
 
-  console.log(body && JSON.stringify(JSON.parse(body), null, 3));
+  //console.log(body && JSON.stringify(JSON.parse(body), null, 3));
 
   return (
     <div className={styles.centerMain}>
@@ -205,7 +207,12 @@ function WikiCenterComponent({
           </div>
         )}
       </div>
-      {body ? <RenderJsonToHtml blocks={JSON.parse(body)?.blocks} /> : null}
+      {body ? (
+        <RenderJsonToHtml
+          blocks={JSON.parse(body)?.blocks}
+          scrollPoint={scrollPoint}
+        />
+      ) : null}
     </div>
   );
 }

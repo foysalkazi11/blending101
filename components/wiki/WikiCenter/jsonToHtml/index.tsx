@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { BlockType } from "../../../../type/editorjsBlockType";
 import Header from "./renderers/Header";
 import Paragraph from "./renderers/Paragraph";
@@ -12,8 +13,9 @@ import Quote from "./renderers/Quote";
 
 interface Props {
   blocks: BlockType[];
+  scrollPoint?: string;
 }
-const RenderJsonToHtml = ({ blocks }: Props) => {
+const RenderJsonToHtml = ({ blocks, scrollPoint = "" }: Props) => {
   const renderHtml = (block: BlockType) => {
     const { type } = block;
 
@@ -41,6 +43,14 @@ const RenderJsonToHtml = ({ blocks }: Props) => {
         return null;
     }
   };
+
+  useEffect(() => {
+    if (scrollPoint) {
+      const titleElement = document.getElementById(scrollPoint);
+
+      titleElement?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [scrollPoint]);
 
   return (
     <div className={s.bodyContainer}>
