@@ -8,17 +8,13 @@ import React, {
   useState,
 } from "react";
 import { format } from "date-fns";
-import { faCircle } from "@fortawesome/pro-solid-svg-icons";
-import {
-  faChartSimple,
-  faEllipsisVertical,
-  faPenToSquare,
-} from "@fortawesome/pro-regular-svg-icons";
+import { faCircle, faEllipsisVertical } from "@fortawesome/pro-solid-svg-icons";
 import {
   faClone,
   faTrash,
   faTrophy,
   faUpDownLeftRight,
+  faChartSimple,
 } from "@fortawesome/pro-light-svg-icons";
 import DatePicker from "react-datepicker";
 
@@ -76,6 +72,9 @@ const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
 
   const dispatch = useAppDispatch();
   const activeDate = useAppSelector((state) => state.challenge.activeDate);
+  const panelList = useAppSelector((state) => state.ui.panel);
+  const panel = panelList.find((panel) => panel.name === "RXPanel");
+  // console.log(panel);
 
   const blendContainer = useRef<HTMLDivElement>(null);
   const blends = useRef<HTMLDivElement[]>([]);
@@ -127,22 +126,29 @@ const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
     [dispatch],
   );
 
+  const nutrientPanelHandler = useCallback(
+    (ingredients) => {
+      if (panel && panel?.show) {
+        dispatch(setShowPanel({ name: "RXPanel", show: false }));
+      } else {
+        dispatch(
+          setShowPanel({
+            name: "RXPanel",
+            show: true,
+            payload: ingredients.map((ing) => ({
+              ingredientId: ing?.ingredientId?._id,
+              value: ing?.selectedPortion?.gram,
+            })),
+          }),
+        );
+      }
+    },
+    [dispatch, panel],
+  );
+
   const challengePosts = useMemo(() => {
     const challengPosts = [];
     const challengeImages = [];
-    const nutrientPanelHandler = (ingredients) => {
-      dispatch(
-        setShowPanel({
-          name: "RXPanel",
-          show: true,
-          payload: ingredients.map((ing) => ({
-            ingredientId: ing?.ingredientId?._id,
-            value: ing?.selectedPortion?.gram,
-          })),
-        }),
-      );
-    };
-
     const copyHandler = async (memberId, date, challengeId, postId) => {
       await Publish({
         mutate: copyPost,
@@ -224,10 +230,10 @@ const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
     copyState,
     deletePost,
     deleteState,
-    dispatch,
     editHandler,
     movePost,
     moveState,
+    nutrientPanelHandler,
   ]);
 
   return (
@@ -292,6 +298,7 @@ interface PostProps {
 
 const Post = (props: PostProps) => {
   const [showMenu, setShowMenu] = useState(false);
+  const [showChart, setShowChart] = useState(false);
   const { id, date, post, onEdit, onCopy, onMove, onDelete, onShowNutrient } =
     props;
 
@@ -308,7 +315,10 @@ const Post = (props: PostProps) => {
     <div className="mb-10">
       <div className={styles.recipe}>
         <div className={styles.space}>
-          <h3 className={styles.recipe__title}>
+          <h3
+            className={styles.recipe__title}
+            onClick={() => onEdit(id, date, post)}
+          >
             <Icon
               fontName={faCircle}
               size="2rem"
@@ -325,16 +335,20 @@ const Post = (props: PostProps) => {
             <div className="flex ai-center">
               <IconButton
                 fontName={faChartSimple}
-                variant="fade"
+                variant="hover"
                 color="primary"
-                size="small"
-                onClick={() => onShowNutrient(post.ingredients)}
+                style={{ fontSize: "1.6rem" }}
+                active={showChart}
+                onClick={() => {
+                  setShowChart((prev) => !prev);
+                  onShowNutrient(post.ingredients);
+                }}
               />
               <div ref={menuRef}>
                 <IconButton
-                  variant="fade"
+                  variant="hover"
                   color="primary"
-                  size="small"
+                  style={{ fontSize: "1.6rem" }}
                   fontName={faEllipsisVertical}
                   onClick={() => setShowMenu((prev) => !prev)}
                 />
@@ -347,7 +361,7 @@ const Post = (props: PostProps) => {
                   }
                 >
                   <div className={styles.recipe__optionTray__pointingDiv} />
-                  <div
+                  {/* <div
                     className={styles.option}
                     onClick={() => onEdit(id, date, post)}
                   >
@@ -355,7 +369,7 @@ const Post = (props: PostProps) => {
                     <span className={styles.option__icon}>
                       <Icon fontName={faPenToSquare} size="1.5rem" />
                     </span>
-                  </div>
+                  </div> */}
                   <div
                     className={styles.option}
                     onClick={() => {

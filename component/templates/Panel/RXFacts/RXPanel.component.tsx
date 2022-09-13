@@ -32,13 +32,14 @@ const RXPanel = () => {
     }
   }, [getNutrientFacts, panel]);
 
-  const hideOutsideClick = useHideOnClickOutside(() =>
-    dispatch(setShowPanel({ name: "RXPanel", show: false })),
-  );
+  // const hideOutsideClick = useHideOnClickOutside(() => {
+  //   if (panel && panel?.show)
+  //     dispatch(setShowPanel({ name: "RXPanel", show: false }));
+  // });
 
   return (
     <div
-      ref={hideOutsideClick}
+      // ref={hideOutsideClick}
       className={`${classes["side-panel"]} ${
         panel?.show ? classes.active : ""
       }`}

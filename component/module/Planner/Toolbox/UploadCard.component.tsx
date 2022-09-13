@@ -61,6 +61,9 @@ const UploadCard = () => {
     startDate,
     notes,
   } = useAppSelector((state) => state.challenge.post);
+  const panelList = useAppSelector((state) => state.ui.panel);
+  const panel = panelList.find((panel) => panel.name === "RXPanel");
+
   const { data } = useQuery(GET_BLEND_CATEGORY);
   const [addPost, addState] = useMutation(CREATE_CHALLENGE_POST, {
     refetchQueries: [{ query: GET_30DAYS_CHALLENGE, variables: { userId } }],
@@ -79,6 +82,15 @@ const UploadCard = () => {
     setImages(postImages);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title, category, startDate, notes]);
+
+  const closeForm = () => {
+    dispatch(setShowPostForm(false));
+    methods.reset(defaultValues);
+    dispatch(resetForm());
+    setImages([]);
+    setServing(1);
+    dispatch(setShowPanel({ name: "RXPanel", show: false }));
+  };
 
   const handleSubmit = async (data) => {
     const post: any = {
@@ -109,27 +121,25 @@ const UploadCard = () => {
       },
       state: isEditMode ? editState : addState,
       success: "Submitted Post Successfully",
-      onSuccess: () => {
-        dispatch(setShowPostForm(false));
-        methods.reset(defaultValues);
-        dispatch(resetForm());
-        setImages([]);
-        setServing(1);
-      },
+      onSuccess: closeForm,
     });
   };
 
   const showNutrientInfo = () => {
-    dispatch(
-      setShowPanel({
-        name: "RXPanel",
-        show: true,
-        payload: ingredients.map((ing) => ({
-          ingredientId: ing?.ingredientId?._id,
-          value: ing?.selectedPortion?.gram,
-        })),
-      }),
-    );
+    if (panel && panel?.show) {
+      dispatch(setShowPanel({ name: "RXPanel", show: false }));
+    } else {
+      dispatch(
+        setShowPanel({
+          name: "RXPanel",
+          show: true,
+          payload: ingredients.map((ing) => ({
+            ingredientId: ing?.ingredientId?._id,
+            value: ing?.selectedPortion?.gram,
+          })),
+        }),
+      );
+    }
   };
 
   return (
@@ -148,9 +158,7 @@ const UploadCard = () => {
               variant="secondary"
               fontName={faTimes}
               style={{ marginLeft: 5 }}
-              onClick={() => {
-                dispatch(setShowPostForm(false));
-              }}
+              onClick={closeForm}
             />
           </div>
         </div>
