@@ -27,67 +27,11 @@
 }
 
 .bodyContainer {
-  all: none;
   background-color: white;
   padding: 20px;
   border-radius: 14px;
   -webkit-box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;
   box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;
-  line-height: normal;
-
-  h1 {
-    all: none;
-    font-size: clamp(30px, 30px + 2vw, 60px);
-  }
-
-  h2: {
-    all: none;
-    font-size: clamp(26px, 26px + 2vw, 50px);
-  }
-  h3: {
-    all: none;
-    font-size: clamp(24px, 24px + 2vw, 40px);
-  }
-  h4: {
-    all: none;
-    font-size: clamp(20px, 20px + 2vw, 26px);
-  }
-  h5: {
-    font-size: clamp(18px, 18px + 2vw, 24px);
-  }
-  h6 : {
-    all: none;
-    font-size: clamp(16px, 16px + 2vw, 22px);
-  }
-  .paragraph {
-    all: none;
-    font-size: clamp(16px, 16px + 1vw, 20px);
-    line-height: normal;
-  }
-  blockquote : {
-    all: none;
-    font-size: clamp(26px, 26px + 2vw, 40px);
-  }
-
-  img {
-    all: none;
-    width: 100%;
-    aspect-ratio: 3/1.2;
-    object-fit: contain;
-    object-position: center;
-    border-radius: 15px;
-
-    @media (max-width: 768px) {
-      aspect-ratio: 2/1;
-    }
-  }
-
-  ul,
-  ol {
-    margin: 0;
-    padding-left: 40px;
-    outline: none;
-  }
 }
 
 .recipeHeadingTopSection {

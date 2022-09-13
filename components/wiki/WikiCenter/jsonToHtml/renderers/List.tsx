@@ -1,5 +1,6 @@
 import HTMLReactParser from "html-react-parser";
 import React, { FC } from "react";
+import s from "../index.module.scss";
 
 import { BlockType } from "../../../../../type/editorjsBlockType";
 interface Props {
@@ -25,23 +26,25 @@ const Group: FC<{
   items: NestedListItem[];
   className?: string;
   align?: any;
-}> = ({ Tag, items, align = "left", ...props }) => (
-  <Tag {...props} style={{ textAlign: align }}>
-    {items.map((item, i) => (
-      <Bullet key={i}>
-        {typeof item === "string" ? (
-          HTMLReactParser(item)
-        ) : (
-          <>
-            {HTMLReactParser(item?.content)}
-            {item?.items?.length > 0 && (
-              <Group Tag={Tag} items={item.items} {...props} />
-            )}
-          </>
-        )}
-      </Bullet>
-    ))}
-  </Tag>
+}> = ({ Tag, items, className, align = "left", ...props }) => (
+  <div className={className}>
+    <Tag {...props} style={{ textAlign: align }}>
+      {items.map((item, i) => (
+        <Bullet key={i}>
+          {typeof item === "string" ? (
+            HTMLReactParser(item)
+          ) : (
+            <>
+              {HTMLReactParser(item?.content)}
+              {item?.items?.length > 0 && (
+                <Group Tag={Tag} items={item.items} {...props} />
+              )}
+            </>
+          )}
+        </Bullet>
+      ))}
+    </Tag>
+  </div>
 );
 
 const List = ({ block }: Props) => {
@@ -61,7 +64,15 @@ const List = ({ block }: Props) => {
     data?.style === "ordered" ? `ol` : `ul`
   ) as keyof JSX.IntrinsicElements;
   return (
-    data && <Group Tag={Tag} items={data.items} align={align} {...props} />
+    data && (
+      <Group
+        Tag={Tag}
+        className={s.list}
+        items={data.items}
+        align={align}
+        {...props}
+      />
+    )
   );
 };
 
