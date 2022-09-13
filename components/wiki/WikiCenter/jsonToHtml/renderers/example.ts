@@ -1,4 +1,4 @@
-export default {
+export const obj = {
   methods: {
     makeParagraph(obj) {
       return `<p class="blog_post_text">
