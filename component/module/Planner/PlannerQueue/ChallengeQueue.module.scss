@@ -76,9 +76,9 @@ $sharedBackgroundColor: white;
     & svg {
       margin-right: 1rem;
     }
-    // &:hover {
-    //   color: #fe5d1f;
-    // }
+    &:hover {
+      color: #fe5d1f;
+    }
   }
   &__category {
     display: flex;

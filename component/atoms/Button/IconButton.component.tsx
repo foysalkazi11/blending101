@@ -15,6 +15,7 @@ interface IconButtonProps {
   title?: string;
   style?: CSSProperties;
   className?: string;
+  active?: boolean;
   disabled?: boolean;
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => any;
 }
@@ -31,6 +32,7 @@ const IconButton: React.FC<IconButtonProps> = (props) => {
     title,
     className,
     onClick,
+    active,
     disabled,
     children,
   } = props;
@@ -80,7 +82,9 @@ const IconButton: React.FC<IconButtonProps> = (props) => {
     <button
       type="button"
       title={title}
-      className={`${variantClass} ${sizeClass} ${className}`}
+      className={`${variantClass} ${sizeClass} ${className} ${
+        active ? styles["btn-icon-active"] : ""
+      }`}
       onClick={onClick}
       style={style}
       disabled={disabled}

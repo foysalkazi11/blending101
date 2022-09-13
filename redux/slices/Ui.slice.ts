@@ -36,8 +36,8 @@ export const UiSlice = createSlice({
       const { name, show, payload } = action.payload;
       const panelIdx = state.panel.findIndex((panel) => panel.name === name);
 
-      if (panelIdx === -1) {
-        if (!show) return;
+      if (panelIdx === -1 && show) {
+        // if (!show) return;
         state.panel.push({ name, show, payload });
       } else {
         if (!show) state.panel.splice(panelIdx, 1);

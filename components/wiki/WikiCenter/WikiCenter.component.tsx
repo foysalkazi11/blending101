@@ -1,11 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useState } from "react";
+import React from "react";
 import styles from "./wikiCenter.module.scss";
 import Image from "next/image";
-import CancelIcon from "../../../public/icons/cancel_black_36dp.svg";
 import FiberManualRecordIcon from "../../../public/icons/fiber_manual_record_black_36dp.svg";
 import CustomSlider from "../../../theme/carousel/carousel.component";
-import perser from "html-react-parser";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/pro-regular-svg-icons";
@@ -20,6 +18,7 @@ import {
 } from "../../../redux/slices/wikiSlice";
 import { faMessageDots as faMessageDotsSolid } from "@fortawesome/pro-solid-svg-icons";
 import { faMessageDots as faMessageDotsLight } from "@fortawesome/pro-light-svg-icons";
+import RenderJsonToHtml from "./jsonToHtml";
 
 //read more read less functionality
 // const ReadMore = ({ children }) => {
@@ -53,6 +52,7 @@ interface WikiCenterComponentProps {
   type?: WikiType;
   wikiId?: string;
   commentsCount?: number;
+  scrollPoint?: string;
 }
 
 function WikiCenterComponent({
@@ -70,6 +70,7 @@ function WikiCenterComponent({
   type = "Ingredient",
   wikiId = "",
   commentsCount = 0,
+  scrollPoint = "",
 }: WikiCenterComponentProps) {
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -87,6 +88,8 @@ function WikiCenterComponent({
       }),
     );
   };
+
+  //console.log(body && JSON.stringify(JSON.parse(body), null, 3));
 
   return (
     <div className={styles.centerMain}>
@@ -204,8 +207,11 @@ function WikiCenterComponent({
           </div>
         )}
       </div>
-      {body && JSON.parse(body)?.length ? (
-        <div className={styles.bodyContainer}>{perser(JSON.parse(body))}</div>
+      {body ? (
+        <RenderJsonToHtml
+          blocks={JSON.parse(body)?.blocks}
+          scrollPoint={scrollPoint}
+        />
       ) : null}
     </div>
   );

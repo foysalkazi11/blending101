@@ -14,7 +14,6 @@ import { useRouter } from "next/router";
 import RelatedWikiItem from "./realtedWikiItem/RelatedWikiItem";
 import GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS from "../../../gqlLib/nutrition/query/getNutrientsListAndGiGlByIngredients";
 import { GiGl } from "../../../type/nutrationType";
-
 const placeHolderImage = ["/images/no-image-available.webp"];
 
 interface Props {
@@ -26,12 +25,13 @@ interface Props {
 function WikiSingleItem() {
   const [defaultMeasureMentWeight, setDefaultMeasureMentWeight] =
     useState(null);
+  const [scrollPoint, setScrollPoint] = useState("");
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { params = [] } = router?.query;
   const type = params?.[0] || "Ingredient";
   const wikiId = params?.[1] || "";
-  const measurementWeight = params?.[2] || "0";
+  const params2 = params?.[2] || "0";
   const { dbUser } = useAppSelector((state) => state?.user);
   const [getAllIngredientsBasedOnNutrition, ingredientsData] = useLazyQuery(
     GET_ALL_INGREDIENTS_BASED_ON_NURTITION,
@@ -90,7 +90,7 @@ function WikiSingleItem() {
             ingredientsInfo: [
               {
                 ingredientId: wikiId,
-                value: parseInt(measurementWeight),
+                value: parseInt(params2),
               },
             ],
             userId: dbUser?._id,
@@ -108,7 +108,7 @@ function WikiSingleItem() {
   useEffect(() => {
     if (wikiId) {
       fetchData();
-      setDefaultMeasureMentWeight(measurementWeight);
+      setDefaultMeasureMentWeight(params2);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wikiId]);
@@ -119,6 +119,14 @@ function WikiSingleItem() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultMeasureMentWeight]);
+
+  useEffect(() => {
+    const hash = window.location.hash;
+
+    if (hash?.slice(0, 1) === "#") {
+      setScrollPoint(hash?.slice(1));
+    }
+  }, []);
 
   if (ingredientsData?.error || nutritionData?.error) {
     return <div>Error</div>;
@@ -147,7 +155,7 @@ function WikiSingleItem() {
 
         <WikiCenterComponent
           author={data?.publishedBy}
-          body={data?.bodies[0]}
+          body={data?.bodies}
           categroy={data?.category}
           coverImages={
             data?.wikiCoverImages.length
@@ -160,6 +168,7 @@ function WikiSingleItem() {
           type={data?.type}
           wikiId={wikiId}
           commentsCount={data?.commentsCount}
+          scrollPoint={scrollPoint}
         />
         <>
           {type === "Ingredient" ? (

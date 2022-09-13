@@ -73,6 +73,16 @@
   }
 }
 
+.btn-icon-active {
+  @extend .btn-icon;
+  color: $primaryColor;
+  background-color: white;
+  box-shadow: 1px 1px 6px #d8d8d8;
+  &:hover {
+    background-color: darken($color: white, $amount: 10);
+  }
+}
+
 .btn-icon-primary {
   @extend .btn-icon;
   border-color: $primaryColor;
