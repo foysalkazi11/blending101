@@ -29,6 +29,10 @@ label {
   padding: 0;
   font-family: "Poppins", sans-serif;
 }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 60px;
+}
 .show__hidden {
   display: block !important;
 }

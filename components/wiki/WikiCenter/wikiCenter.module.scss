@@ -33,6 +33,7 @@
   border-radius: 14px;
   -webkit-box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;
   box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;
+  line-height: normal;
 
   h1 {
     all: none;
@@ -58,9 +59,10 @@
     all: none;
     font-size: clamp(16px, 16px + 2vw, 22px);
   }
-  p : {
+  .paragraph {
     all: none;
     font-size: clamp(16px, 16px + 1vw, 20px);
+    line-height: normal;
   }
   blockquote : {
     all: none;
