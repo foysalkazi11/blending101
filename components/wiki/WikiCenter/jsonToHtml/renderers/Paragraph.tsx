@@ -1,5 +1,6 @@
 import { BlockType } from "../../../../../type/editorjsBlockType";
 import HTMLReactParser from "html-react-parser";
+import s from "../index.module.scss";
 
 interface Props {
   block: BlockType;
@@ -19,7 +20,7 @@ const Paragraph = ({ block }: Props) => {
   }
 
   return (
-    <p {...props} style={{ textAlign: align }}>
+    <p className={s.paragraph} {...props} style={{ textAlign: align }}>
       {data?.text && HTMLReactParser(data.text)}
     </p>
   );
