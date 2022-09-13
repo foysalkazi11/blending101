@@ -51,21 +51,21 @@ function WikiSingleItem() {
     },
   ] = useLazyQuery(GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS);
 
-  const fetchNutritionPanelData = async () => {
+  const fetchNutritionPanelData = async (measureMentWeight: string) => {
     try {
       await getNutrientsListAndGiGlByIngredients({
         variables: {
           ingredientsInfo: [
             {
               ingredientId: wikiId,
-              value: parseInt(defaultMeasureMentWeight),
+              value: parseInt(measureMentWeight),
             },
           ],
           userId: dbUser?._id,
         },
       });
     } catch (error) {
-      notification("error", "Failed to nutrition panel data");
+      notification("error", "Failed to fetch nutrition panel data");
     }
   };
 
@@ -108,17 +108,11 @@ function WikiSingleItem() {
   useEffect(() => {
     if (wikiId) {
       fetchData();
+      fetchNutritionPanelData(params2);
       setDefaultMeasureMentWeight(params2);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wikiId]);
-
-  useEffect(() => {
-    if (defaultMeasureMentWeight) {
-      fetchNutritionPanelData();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultMeasureMentWeight]);
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -181,8 +175,10 @@ function WikiSingleItem() {
               measurementDropDownState={{
                 showDropDown: true,
                 value: defaultMeasureMentWeight,
-                handleChange: (e) =>
-                  setDefaultMeasureMentWeight(e?.target?.value),
+                handleChange: (e) => {
+                  setDefaultMeasureMentWeight(e?.target?.value);
+                  fetchNutritionPanelData(e?.target?.value);
+                },
                 listElem: data?.portions?.map((item) => ({
                   name: `1 ${item?.measurement} (${item?.meausermentWeight}g)`,
                   value: item?.meausermentWeight,
