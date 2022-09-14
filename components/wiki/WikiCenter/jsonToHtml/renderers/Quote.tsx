@@ -1,5 +1,6 @@
 import HTMLReactParser from "html-react-parser";
 import React from "react";
+import s from "../index.module.scss";
 
 import { BlockType } from "../../../../../type/editorjsBlockType";
 interface Props {
@@ -19,7 +20,7 @@ const Quote = ({ block }: Props) => {
     props["data-anchor"] = anchor;
   }
   return (
-    <blockquote {...props}>
+    <blockquote {...props} className={s.blockquote}>
       {data?.text &&
         data.text
           .split("\n\n")
