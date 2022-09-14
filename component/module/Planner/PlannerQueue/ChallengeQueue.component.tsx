@@ -78,6 +78,8 @@ const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
 
   const blendContainer = useRef<HTMLDivElement>(null);
   const blends = useRef<HTMLDivElement[]>([]);
+  const lastPostChartId = useRef("");
+  const [showChart, setShowChart] = useState("");
 
   const [deletePost, deleteState] = useMutation(DELETE_CHALLENGE_POST, {
     refetchQueries: ["Get30DaysChallenge"],
@@ -127,8 +129,8 @@ const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
   );
 
   const nutrientPanelHandler = useCallback(
-    (ingredients) => {
-      if (panel && panel?.show) {
+    (ingredients, id) => {
+      if (panel && panel?.show && lastPostChartId.current === id) {
         dispatch(setShowPanel({ name: "RXPanel", show: false }));
       } else {
         dispatch(
@@ -141,6 +143,7 @@ const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
             })),
           }),
         );
+        lastPostChartId.current = id;
       }
     },
     [dispatch, panel],
@@ -189,6 +192,24 @@ const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
       });
     };
 
+    const nutrientPanelHandler = (ingredients, id) => {
+      if (panel && panel?.show && lastPostChartId.current === id) {
+        dispatch(setShowPanel({ name: "RXPanel", show: false }));
+      } else {
+        dispatch(
+          setShowPanel({
+            name: "RXPanel",
+            show: true,
+            payload: ingredients.map((ing) => ({
+              ingredientId: ing?.ingredientId?._id,
+              value: ing?.selectedPortion?.gram,
+            })),
+          }),
+        );
+        lastPostChartId.current = id;
+      }
+    };
+
     //Handling Each Challenge
     challenges?.forEach((challenge: IChallengePosts) => {
       if (challenge.posts.length === 0) return;
@@ -203,6 +224,8 @@ const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
             key={post._id}
             id={challenge?._id}
             date={challenge?.date}
+            showPanel={panel?.show}
+            showChartState={[showChart, setShowChart]}
             post={post}
             onEdit={editHandler}
             onCopy={copyHandler}
@@ -230,10 +253,12 @@ const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
     copyState,
     deletePost,
     deleteState,
+    dispatch,
     editHandler,
     movePost,
     moveState,
-    nutrientPanelHandler,
+    panel,
+    showChart,
   ]);
 
   return (
@@ -289,6 +314,8 @@ interface PostProps {
   id: string;
   date: string;
   post: IPost;
+  showPanel: boolean;
+  showChartState: any;
   onEdit: any;
   onCopy: any;
   onMove: any;
@@ -297,10 +324,21 @@ interface PostProps {
 }
 
 const Post = (props: PostProps) => {
+  const {
+    id,
+    date,
+    showPanel,
+    showChartState,
+    post,
+    onEdit,
+    onCopy,
+    onMove,
+    onDelete,
+    onShowNutrient,
+  } = props;
+
   const [showMenu, setShowMenu] = useState(false);
-  const [showChart, setShowChart] = useState(false);
-  const { id, date, post, onEdit, onCopy, onMove, onDelete, onShowNutrient } =
-    props;
+  const [showChart, setShowChart] = showChartState;
 
   let ingredients = "";
   post.ingredients.forEach((ingredient, index) => {
@@ -310,6 +348,7 @@ const Post = (props: PostProps) => {
   });
 
   const menuRef = useHideOnClickOutside(() => setShowMenu(false));
+  // console.log({ showChart, id: post._id, showPanel });
 
   return (
     <div className="mb-10">
@@ -338,10 +377,10 @@ const Post = (props: PostProps) => {
                 variant="hover"
                 color="primary"
                 style={{ fontSize: "1.6rem" }}
-                active={showChart}
+                active={showChart === post._id && showPanel}
                 onClick={() => {
-                  setShowChart((prev) => !prev);
-                  onShowNutrient(post.ingredients);
+                  setShowChart(showChart === post._id ? "" : post._id);
+                  onShowNutrient(post.ingredients, post._id);
                 }}
               />
               <div ref={menuRef}>
