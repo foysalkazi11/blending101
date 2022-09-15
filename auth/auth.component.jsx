@@ -19,7 +19,7 @@ function AuthProvider({ children, activeUser }) {
 
   const [loading, setLoading] = useState(false);
   const [active, setActive] = useState(null);
-  const { user } = useAppSelector((state) => state?.user);
+  const { user, dbUser } = useAppSelector((state) => state?.user);
   const [createNewUser, { loading: userLoading }] =
     useMutation(CREATE_NEW_USER);
   const dispatch = useAppDispatch();
@@ -80,13 +80,17 @@ function AuthProvider({ children, activeUser }) {
   };
 
   useEffect(() => {
-    // if (!user) return;
-    if (!user?.dbUser?.isCreated) router.push("/user/profile/");
-    else if (user?.dbUser?.isCreated) router.push("/");
+    if (!dbUser.hasOwnProperty("isCreated")) {
+      // setLoading(false);
+      return;
+    }
+    console.log(dbUser);
+    if (!dbUser?.isCreated) router.push("/user/profile/");
+    else if (dbUser?.isCreated) router.push("/");
     setLoading(false);
     // console.log(loading);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.dbUser?.isCreated, loading]);
+  }, [dbUser, loading]);
 
   useEffect(() => {
     if (user) {
