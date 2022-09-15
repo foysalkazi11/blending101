@@ -37,6 +37,7 @@ const CREATE_NEW_USER = gql`
       }
       compareLength
       wikiCompareCount
+      isCreated
     }
   }
 `;
