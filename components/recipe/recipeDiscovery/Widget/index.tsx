@@ -24,7 +24,7 @@ const WidgetCollection = (props: WidgetCollectionProps) => {
     tab === "All"
       ? results
       : results.filter((recipe) => {
-          console.log(recipe);
+          // console.log(recipe);
           const filterProps = recipe[filterType];
           if (Array.isArray(filterProps)) {
             return filterProps.includes(tab);
