@@ -38,7 +38,7 @@ const LoginScreen = () => {
     setIsLoading(true);
     try {
       const cognitoData = await Auth.signIn(input?.email, input?.password);
-      console.log(cognitoData)
+      console.log(cognitoData);
       const {
         attributes: { email },
       } = cognitoData;
@@ -51,7 +51,9 @@ const LoginScreen = () => {
       dispatch(setUser(email));
       dispatch(setDbUser(data?.createNewUser));
       dispatch(setProvider("email"));
-      router.push("/");
+      console.log(data);
+      if (!data?.createNewUser?.isCreated) router.push("/user/profile/");
+      else router.push("/");
     } catch (error) {
       setIsLoading(false);
       notification("error", error?.message);

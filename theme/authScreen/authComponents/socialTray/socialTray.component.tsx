@@ -48,7 +48,8 @@ const SocialTray = () => {
       dispatch(setUser(email));
       dispatch(setDbUser(data?.createNewUser));
       dispatch(setProvider(identities?.[0]?.providerName?.toLowerCase()));
-      history.push("/");
+      if (!data?.createNewUser?.isCreated) history.push("/user/profile/");
+      else history.push("/");
     } catch (error) {
       //notification("error", error?.message);
       console.log(error);
