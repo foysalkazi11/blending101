@@ -108,8 +108,10 @@ function WikiSingleItem() {
   useEffect(() => {
     if (wikiId) {
       fetchData();
-      fetchNutritionPanelData(params2);
       setDefaultMeasureMentWeight(params2);
+      if (type === "Ingredient") {
+        fetchNutritionPanelData(params2);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wikiId]);
@@ -126,8 +128,8 @@ function WikiSingleItem() {
     return <div>Error</div>;
   }
   const dataObj = {
-    Nutrient: ingredientsData?.data?.getAllIngredientsBasedOnNutrition,
-    Ingredient: nutritionData?.data?.getBlendNutritionBasedIngredientsWiki,
+    Nutrient: ingredientsData?.data?.getAllIngredientsBasedOnNutrition2,
+    Ingredient: nutritionData?.data?.getBlendNutritionBasedIngredientsWiki2,
   };
   //@ts-ignore
   const data = dataObj[type];
