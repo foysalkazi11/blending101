@@ -3,12 +3,12 @@ import { useRouter } from "next/router";
 import { connect } from "react-redux";
 import { setActiveUser } from "../redux/users/user.action";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import Loader from "../theme/loader/Loader";
 import { Auth } from "aws-amplify";
 import { setDbUser, setProvider, setUser } from "../redux/slices/userSlice";
 import { useMutation } from "@apollo/client";
 import CREATE_NEW_USER from "../gqlLib/user/mutations/createNewUser";
 import { setLoading } from "../redux/slices/utilitySlice";
+import Loader from "../component/atoms/Loader/loader.component";
 
 // INITIALIZE 1: CREATE AUTH CONTEXT
 const AuthContext = createContext();
@@ -17,9 +17,11 @@ const AuthContext = createContext();
 function AuthProvider({ children, activeUser }) {
   // INITIALIZE 2: DEFINE STATES
 
+  const [loading, setLoading] = useState(false);
   const [active, setActive] = useState(null);
-  const { user } = useAppSelector((state) => state?.user);
-  const [createNewUser] = useMutation(CREATE_NEW_USER);
+  const { user, dbUser } = useAppSelector((state) => state?.user);
+  const [createNewUser, { loading: userLoading }] =
+    useMutation(CREATE_NEW_USER);
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -29,7 +31,7 @@ function AuthProvider({ children, activeUser }) {
   const page = router.pathname;
 
   const isCurrentUser = async () => {
-    dispatch(setLoading(true));
+    setLoading(true);
     try {
       let userEmail = "";
       let provider = "";
@@ -58,14 +60,12 @@ function AuthProvider({ children, activeUser }) {
           data: { email: userEmail, provider },
         },
       });
-      dispatch(setLoading(false));
       dispatch(setUser(userEmail));
       dispatch(setDbUser(data?.createNewUser));
       dispatch(setProvider(provider));
       setActive(true);
     } catch (error) {
-      console.log(error?.message);
-      dispatch(setLoading(false));
+      setLoading(false);
       if (
         !user &&
         process.browser &&
@@ -78,6 +78,19 @@ function AuthProvider({ children, activeUser }) {
       // console.log("uncomment code in auth folder");
     }
   };
+
+  useEffect(() => {
+    if (!dbUser.hasOwnProperty("isCreated")) {
+      // setLoading(false);
+      return;
+    }
+    console.log(dbUser);
+    if (!dbUser?.isCreated) router.push("/user/profile/");
+    else if (dbUser?.isCreated) router.push("/");
+    setLoading(false);
+    // console.log(loading);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dbUser, loading]);
 
   useEffect(() => {
     if (user) {
@@ -107,6 +120,10 @@ function AuthProvider({ children, activeUser }) {
   // IF NO USER REDIRECT TO LOGIN PAGE
   // to be uncommented when want to ensure user should not leave login page if not authorised
   // if (!active) return <Loader active={true} />;
+
+  if (loading || userLoading) {
+    return <Loader />;
+  }
 
   return (
     <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>

@@ -1,26 +1,24 @@
-import Link from "next/link";
-import React, { useState } from "react";
-import ButtonComponent from "../../../button/buttonA/button.component";
-import InputField from "../../../input/registerInput/RegisterInput";
-import SocialTray from "../../authComponents/socialTray/socialTray.component";
-import styles from "./Login.module.scss";
-import Image from "next/image";
-import HighlightOffOutlinedIcon from "../../../../public/icons/highlight_off_black_36dp.svg";
-import { Auth } from "aws-amplify";
-import { useAppDispatch } from "../../../../redux/hooks";
-import {
-  setDbUser,
-  setProvider,
-  setUser,
-} from "../../../../redux/slices/userSlice";
-import { useRouter } from "next/router";
 import { useMutation } from "@apollo/client";
-import CREATE_NEW_USER from "../../../../gqlLib/user/mutations/createNewUser";
-import { useForm } from "react-hook-form";
-import CircularRotatingLoader from "../../../loader/circularRotatingLoader.component";
-import notification from "../../../../components/utility/reactToastifyNotification";
+import { Auth } from "aws-amplify";
+import Link from "next/link";
+import Image from "next/image";
 
-const LoginScreen = () => {
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import notification from "../../components/utility/reactToastifyNotification";
+import CREATE_NEW_USER from "../../gqlLib/user/mutations/createNewUser";
+import { useAppDispatch } from "../../redux/hooks";
+import { setUser, setDbUser, setProvider } from "../../redux/slices/userSlice";
+import styles from "../../styles/pages/auth.module.scss";
+import SocialTray from "../../theme/authScreen/authComponents/socialTray/socialTray.component";
+import LoginScreen from "../../theme/authScreen/screens/loginScreen/Login.component";
+import ButtonComponent from "../../theme/button/buttonA/button.component";
+import InputField from "../../theme/input/registerInput/RegisterInput";
+import CircularRotatingLoader from "../../theme/loader/circularRotatingLoader.component";
+import HighlightOffOutlinedIcon from "../../public/icons/highlight_off_black_36dp.svg";
+
+const Login = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [createNewUser] = useMutation(CREATE_NEW_USER);
@@ -51,7 +49,7 @@ const LoginScreen = () => {
       dispatch(setUser(email));
       dispatch(setDbUser(data?.createNewUser));
       dispatch(setProvider("email"));
-      // console.log(data);
+      console.log(data);
       // if (!data?.createNewUser?.isCreated) router.push("/user/profile/");
       // else router.push("/");
     } catch (error) {
@@ -61,10 +59,10 @@ const LoginScreen = () => {
   };
 
   return (
-    <>
-      <div className={styles.inputMainDiv} style={{}}>
-        <div className={styles.inputContentDiv}>
-          <div className={styles.logo}>
+    <div className={styles.auth}>
+      <div className={styles.auth__content}>
+        <div className={styles.login__form}>
+          <div className={styles.login__logo}>
             <Link href="/">
               <a href="">
                 <Image
@@ -76,17 +74,16 @@ const LoginScreen = () => {
                 />
               </a>
             </Link>
-            <div className={styles.cross}>
+            {/* <div className={styles.cross}>
               <HighlightOffOutlinedIcon />
-            </div>
+            </div> */}
           </div>
           <h2>Login</h2>
-          {/* <button onClick={logOut}>Log out</button> */}
-          <div className={styles.quickLogin}>
+          {/* <div className={styles.quickLogin}>
             <span>Quick and easy social login</span>
             <SocialTray />
             <div className={styles.seperator} />
-          </div>
+          </div> */}
           <p>Enter email and password</p>
 
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -127,39 +124,38 @@ const LoginScreen = () => {
                 message: errors?.password?.message,
               }}
             />
+
             <div className={styles.forgetPassword}>
               <div>
                 <input type="checkbox" />
                 <label>Keep me looged</label>
               </div>
-              {/* <Link href="/reset_password">
-                <a style={{ marginRight: "16px" }}>Change Password?</a>
-              </Link> */}
               <Link href="/forget_password">
                 <a>Forget Password?</a>
               </Link>
             </div>
-            <div className={styles.buttonDiv}>
-              <ButtonComponent
-                type="primary"
-                style={{ height: "100%" }}
-                value={
-                  !isLoading ? (
-                    "Login"
-                  ) : (
-                    <div className={styles.loggingInBtn}>
-                      <span>
-                        <CircularRotatingLoader />
-                      </span>
-                      Logging In
-                    </div>
-                  )
-                }
-                fullWidth={true}
-                submit={true}
-                disabled={isLoading}
-              />
-            </div>
+
+            {/* <div className={styles.buttonDiv}> */}
+            <ButtonComponent
+              type="primary"
+              style={{ height: "100%" }}
+              value={
+                !isLoading ? (
+                  "Login"
+                ) : (
+                  <div className={styles.loggingInBtn}>
+                    <span>
+                      <CircularRotatingLoader />
+                    </span>
+                    Logging In
+                  </div>
+                )
+              }
+              fullWidth={true}
+              submit={true}
+              disabled={isLoading}
+            />
+            {/* </div> */}
           </form>
           <div className={styles.lineSocialDiv}>
             <div className={styles.seperator} />
@@ -167,34 +163,11 @@ const LoginScreen = () => {
           </div>
         </div>
       </div>
-      <div
-        className={styles.imgMainDiv}
-        style={{ backgroundImage: `url("/images/new-user-bg.png")` }}
-      >
-        <div className={styles.imgContentDiv}>
-          <div className={styles.contentCard}>
-            <h2>New User</h2>
-            <p>
-              Aliquam vestibulum nunc quis blandit rutrum. Curabitur vel
-              scelerisque leo.
-            </p>
-            <div className={styles.buttonRightDiv}>
-              <Link href="/signup">
-                <a>
-                  <ButtonComponent
-                    type="text"
-                    style={{ height: "100%" }}
-                    value="Sign Up"
-                    fullWidth={true}
-                  />
-                </a>
-              </Link>
-            </div>
-          </div>
-        </div>
+      <div className={styles.auth__footer}>
+        <p>Copywrite © 2021 Blending 101</p>
       </div>
-    </>
+    </div>
   );
 };
 
-export default LoginScreen;
+export default Login;
