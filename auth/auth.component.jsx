@@ -86,7 +86,7 @@ function AuthProvider({ children, activeUser }) {
     }
     console.log(dbUser);
     if (!dbUser?.isCreated) router.push("/user/profile/");
-    else if (dbUser?.isCreated) router.push("/");
+    // else if (dbUser?.isCreated) router.push("/");
     setLoading(false);
     // console.log(loading);
     // eslint-disable-next-line react-hooks/exhaustive-deps
