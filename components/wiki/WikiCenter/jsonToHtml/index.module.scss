@@ -161,3 +161,15 @@
     @extend %figcaption;
   }
 }
+
+@keyframes pulse {
+  0% {
+    background-color: #d2e7bc;
+  }
+  100% {
+    background-color: #fff;
+  }
+}
+.animateBlock {
+  background-color: #d2e7bc !important;
+}
