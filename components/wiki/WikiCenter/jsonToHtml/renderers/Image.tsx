@@ -3,24 +3,18 @@ import React from "react";
 import s from "../index.module.scss";
 
 import { BlockType } from "../../../../../type/editorjsBlockType";
+import useBlock from "../useBlock";
 interface Props {
   block: BlockType;
 }
 
 const Image = ({ block }: Props) => {
-  const props: {
-    [s: string]: any;
-  } = {};
-  const { data, id, tunes } = block;
-  const alignment: any = tunes?.alignmentTuneTool?.alignment || "left";
-  const anchor = tunes?.anchorTune?.anchor;
-  const anchorId = anchor ? `#${anchor}` : id;
-  props.id = id;
-  if (anchor) {
-    props["data-anchor"] = anchor;
-  }
+  const { data, tunes } = block;
+  const handleBlockData = useBlock();
+  const alignment = tunes?.alignmentTuneTool?.alignment;
+  const align: any = alignment || "left";
   return (
-    <figure {...props} className={s.image}>
+    <figure {...handleBlockData(block)} className={s.image}>
       {data?.file?.url && (
         <img
           src={data.file.url}
