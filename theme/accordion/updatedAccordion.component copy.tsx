@@ -9,6 +9,8 @@ type CustomAccordionProps = {
   dailyGoalsData: string;
   servingSize?: number;
   sinngleIngQuintity?: number;
+  disabled?: undefined | boolean;
+  link?: undefined | null | string;
 };
 
 const UpdatedCustomAccordion = ({
@@ -19,6 +21,8 @@ const UpdatedCustomAccordion = ({
   dailyGoalsData,
   servingSize = 1,
   sinngleIngQuintity = 1,
+  disabled = undefined,
+  link = undefined,
 }: CustomAccordionProps) => {
   if (dailyGoalsData) {
     dailyGoalsData = JSON?.parse(dailyGoalsData) || {};
@@ -46,6 +50,7 @@ const UpdatedCustomAccordion = ({
         const dailyGoals = dailyDosePercentage?.goal
           ? parseFloat(dailyDosePercentage?.goal)
           : parseFloat(dailyDosePercentage?.dri);
+        const value = itm[1];
 
         if (itm[1]?.childs && Object.keys(itm[1]?.childs)?.length > 0) {
           if (firstChild) {
@@ -69,6 +74,8 @@ const UpdatedCustomAccordion = ({
                   nutritionId={itm[1]?.blendNutrientRefference?._id}
                   servingSize={servingSize}
                   showChildren={itm[1]?.blendNutrientRefference?.showChildren}
+                  disabled={value?.disabled}
+                  link={value?.link}
                 >
                   {populateAccordionData(itm[1]?.childs, false)}
                 </AccordComponent>
@@ -95,6 +102,8 @@ const UpdatedCustomAccordion = ({
                   nutritionId={itm[1]?.blendNutrientRefference?._id}
                   servingSize={servingSize}
                   showChildren={itm[1]?.blendNutrientRefference?.showChildren}
+                  disabled={value?.disabled}
+                  link={value?.link}
                 >
                   {populateAccordionData(itm[1]?.childs, false)}
                 </AccordComponent>
@@ -123,6 +132,8 @@ const UpdatedCustomAccordion = ({
                   nutritionId={itm[1]?.blendNutrientRefference?._id}
                   servingSize={servingSize}
                   showChildren={itm[1]?.blendNutrientRefference?.showChildren}
+                  disabled={value?.disabled}
+                  link={value?.link}
                 />
               </div>
             );
@@ -147,6 +158,8 @@ const UpdatedCustomAccordion = ({
                   nutritionId={itm[1]?.blendNutrientRefference?._id}
                   servingSize={servingSize}
                   showChildren={itm[1]?.blendNutrientRefference?.showChildren}
+                  disabled={value?.disabled}
+                  link={value?.link}
                 />
               </div>
             );
@@ -165,6 +178,8 @@ const UpdatedCustomAccordion = ({
         key={title + Date.now()}
         servingSize={servingSize}
         sinngleIngQuintity={sinngleIngQuintity}
+        disabled={disabled}
+        link={link}
       >
         {populateAccordionData(content, true)}
       </AccordComponent>
