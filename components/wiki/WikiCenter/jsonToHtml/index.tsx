@@ -50,13 +50,14 @@ const RenderJsonToHtml = ({ blocks, scrollPoint = "" }: Props) => {
     let timer;
     if (scrollPoint) {
       const titleElement = document.getElementById(scrollPoint);
+      if (titleElement) {
+        titleElement?.scrollIntoView({ behavior: "smooth" });
+        titleElement.style.backgroundColor = "#d2e7bc";
 
-      titleElement?.scrollIntoView({ behavior: "smooth" });
-      titleElement.style.backgroundColor = "#d2e7bc";
-
-      timer = setTimeout(() => {
-        titleElement.style.backgroundColor = "";
-      }, 2500);
+        timer = setTimeout(() => {
+          titleElement.style.backgroundColor = "";
+        }, 2500);
+      }
     }
     return () => {
       clearTimeout(timer);
@@ -71,12 +72,14 @@ const RenderJsonToHtml = ({ blocks, scrollPoint = "" }: Props) => {
 
         const titleElement = document.getElementById(scrollPoint);
 
-        titleElement?.scrollIntoView({ behavior: "smooth" });
-        titleElement.style.backgroundColor = "#d2e7bc";
+        if (titleElement) {
+          titleElement?.scrollIntoView({ behavior: "smooth" });
+          titleElement.style.backgroundColor = "#d2e7bc";
 
-        timer = setTimeout(() => {
-          titleElement.style.backgroundColor = "";
-        }, 2500);
+          timer = setTimeout(() => {
+            titleElement.style.backgroundColor = "";
+          }, 2500);
+        }
       }
     };
 
