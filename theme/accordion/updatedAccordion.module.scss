@@ -164,8 +164,11 @@
   display: flex;
   align-items: center;
   padding: 6px 0px;
-  cursor: pointer;
+
   transition: color 0.3s linear;
+}
+.titleCopy.active {
+  cursor: pointer;
   &:hover {
     color: #fe5d1f;
   }
