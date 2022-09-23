@@ -22,6 +22,8 @@ type CustomAccordionProps = {
   servingSize?: number;
   sinngleIngQuintity?: number;
   showChildren?: boolean;
+  disabled?: undefined | boolean;
+  link?: undefined | null | string;
 };
 
 const AccordComponent = ({
@@ -40,6 +42,8 @@ const AccordComponent = ({
   servingSize = 1,
   sinngleIngQuintity = 1,
   showChildren = false,
+  disabled = undefined,
+  link = undefined,
 }: CustomAccordionProps) => {
   const [expanded, setExpanded] = useState<boolean>(false);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -48,8 +52,18 @@ const AccordComponent = ({
   const finalNutritionValue = Math?.round(
     (Math?.round(value) * counter * sinngleIngQuintity) / servingSize,
   );
-  const handleClickNutration = (id: string) => {
-    router?.push(`/wiki/Nutrient/${id}`);
+  const handleClickNutration = (
+    id: string,
+    disabled: undefined | boolean = undefined,
+    link: undefined | null | string = undefined,
+  ) => {
+    if (!disabled) {
+      router?.push(`/wiki/Nutrient/${id}`);
+    } else if (disabled && link) {
+      const splitted = link?.split("Nutrient");
+      const second = splitted[1];
+      router?.push(`/wiki/Nutrient/${second}`);
+    }
   };
 
   useEffect(() => {
@@ -103,8 +117,12 @@ const AccordComponent = ({
                     }
                   >
                     <h5
-                      className={styles.titleCopy}
-                      onClick={() => handleClickNutration(nutritionId)}
+                      className={`${styles.titleCopy} ${
+                        disabled && !link ? "" : styles.active
+                      }`}
+                      onClick={() =>
+                        handleClickNutration(nutritionId, disabled, link)
+                      }
                     >
                       {title}
                     </h5>
@@ -131,8 +149,12 @@ const AccordComponent = ({
                     }
                   >
                     <h5
-                      className={styles.titleCopy}
-                      onClick={() => handleClickNutration(nutritionId)}
+                      className={`${styles.titleCopy} ${
+                        disabled && !link ? "" : styles.active
+                      }`}
+                      onClick={() =>
+                        handleClickNutration(nutritionId, disabled, link)
+                      }
                     >
                       {title}
                     </h5>
