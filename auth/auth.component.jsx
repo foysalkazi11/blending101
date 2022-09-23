@@ -79,18 +79,18 @@ function AuthProvider({ children, activeUser }) {
     }
   };
 
-  useEffect(() => {
-    if (!dbUser.hasOwnProperty("isCreated")) {
-      // setLoading(false);
-      return;
-    }
-    console.log(dbUser);
-    if (!dbUser?.isCreated) router.push("/user/profile/");
-    // else if (dbUser?.isCreated) router.push("/");
-    setLoading(false);
-    // console.log(loading);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dbUser, loading]);
+  // useEffect(() => {
+  //   if (!dbUser.hasOwnProperty("isCreated")) {
+  //     // setLoading(false);
+  //     return;
+  //   }
+  //   console.log(dbUser);
+  //   if (!dbUser?.isCreated) router.push("/user/profile/");
+  //   // else if (dbUser?.isCreated) router.push("/");
+  //   setLoading(false);
+  //   // console.log(loading);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [dbUser, loading]);
 
   useEffect(() => {
     if (user) {
