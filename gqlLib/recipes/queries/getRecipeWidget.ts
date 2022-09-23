@@ -7,6 +7,8 @@ const GET_RECIPE_WIDGET = gql`
       widgetName
       widgetType
       widgetCollections {
+        _id
+        themeLink
         displayName
         icon
         banner

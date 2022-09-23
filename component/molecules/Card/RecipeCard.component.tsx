@@ -17,6 +17,7 @@ interface RecipeProps {
   recipeId?: string;
   notes?: number;
   className?: string;
+  children?: React.ReactNode;
 }
 
 const RecipeCard: React.FC<RecipeProps> = (props) => {

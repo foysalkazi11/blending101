@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./Button.module.scss";
 
 interface ActionButtonProps {
+  children?: React.ReactNode;
   onClick: (e) => any;
 }
 

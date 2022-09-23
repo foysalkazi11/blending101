@@ -24,7 +24,7 @@ import { useRouter } from "next/router";
 import SkeletonRecipeDiscovery from "../../../theme/skeletons/skeletonRecipeDiscovery/SkeletonRecipeDiscovery";
 import useLocalStorage from "../../../customHooks/useLocalStorage";
 import GET_RECIPE_WIDGET from "../../../gqlLib/recipes/queries/getRecipeWidget";
-import WidgetCollection from "./Widget";
+import Widget from "../../../component/module/Widget/Widget.component";
 import ShowCollectionModal from "../../showModal/ShowCollectionModal";
 
 const RecipeDetails = () => {
@@ -100,7 +100,6 @@ const RecipeDetails = () => {
     };
   }, []);
 
-  const recipeWidget = data?.getWidgetsForClient;
   return (
     <>
       <AContainer
@@ -134,7 +133,7 @@ const RecipeDetails = () => {
               filters={filters}
             />
           ) : (
-            <div className={styles.bottom}>
+            <div>
               <AppdownLoadCard />
               <div className={styles.main__tray}>
                 {/* its for recommended */}
@@ -295,8 +294,13 @@ const RecipeDetails = () => {
 
                 {/* its for widget */}
                 {!widgetLoading ? (
+                  <Widget type="SLIDER" widget={data?.getWidgetsForClient} />
+                ) : (
+                  <SkeletonRecipeDiscovery />
+                )}
+                {/* {!widgetLoading ? (
                   recipeWidget?.widgetCollections.map((collection: any) => (
-                    <WidgetCollection
+                    <Widget
                       key={collection.displayName}
                       collection={collection}
                       compareRecipeList={compareRecipeList}
@@ -305,7 +309,7 @@ const RecipeDetails = () => {
                   ))
                 ) : (
                   <SkeletonRecipeDiscovery />
-                )}
+                )} */}
               </div>
             </div>
           )}
