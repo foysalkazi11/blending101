@@ -10,12 +10,14 @@ import Code from "./renderers/Code";
 import ImageBlock from "./renderers/Image";
 import Raw from "./renderers/Raw";
 import Quote from "./renderers/Quote";
+import { useRouter } from "next/router";
 
 interface Props {
   blocks: BlockType[];
   scrollPoint?: string;
 }
 const RenderJsonToHtml = ({ blocks, scrollPoint = "" }: Props) => {
+  const router = useRouter();
   const renderHtml = (block: BlockType) => {
     const { type } = block;
 
@@ -45,12 +47,49 @@ const RenderJsonToHtml = ({ blocks, scrollPoint = "" }: Props) => {
   };
 
   useEffect(() => {
+    let timer;
     if (scrollPoint) {
       const titleElement = document.getElementById(scrollPoint);
+      if (titleElement) {
+        titleElement?.scrollIntoView({ behavior: "smooth" });
+        titleElement.style.backgroundColor = "#d2e7bc";
 
-      titleElement?.scrollIntoView({ behavior: "smooth" });
+        timer = setTimeout(() => {
+          titleElement.style.backgroundColor = "";
+        }, 2500);
+      }
     }
+    return () => {
+      clearTimeout(timer);
+    };
   }, [scrollPoint]);
+
+  useEffect(() => {
+    let timer;
+    const onHashChanged = () => {
+      if (window.location?.hash) {
+        const scrollPoint = window.location?.hash?.slice(1);
+
+        const titleElement = document.getElementById(scrollPoint);
+
+        if (titleElement) {
+          titleElement?.scrollIntoView({ behavior: "smooth" });
+          titleElement.style.backgroundColor = "#d2e7bc";
+
+          timer = setTimeout(() => {
+            titleElement.style.backgroundColor = "";
+          }, 2500);
+        }
+      }
+    };
+
+    window.addEventListener("hashchange", onHashChanged);
+
+    return () => {
+      window.removeEventListener("hashchange", onHashChanged);
+      clearTimeout(timer);
+    };
+  }, []);
 
   return (
     <div className={s.bodyContainer}>

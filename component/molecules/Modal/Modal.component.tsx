@@ -12,6 +12,7 @@ interface ModalProps {
   height?: number | string;
   width?: number | string;
   overlayClass?: string;
+  children?: React.ReactNode;
 }
 const Modal: React.FC<ModalProps> = (props) => {
   const { show, children, ...modalProps } = props;

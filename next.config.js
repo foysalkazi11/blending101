@@ -9,10 +9,11 @@ module.exports = {
       "./theme/wiki/WikiCenter/Assets/cardiogram.svg",
       "blending.s3.us-east-1.amazonaws.com",
       "www.fivehearthome.com",
-      "www.inspiredtaste.net"
+      "www.inspiredtaste.net",
     ],
   },
-  webpack(config) {
+  webpack: (config, { isServer }) => {
+    if (!isServer) config.resolve.fallback.fs = false;
     config.module.rules.push({
       test: /\.svg$/i,
       issuer: /\.[jt]sx?$/,
