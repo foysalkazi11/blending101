@@ -51,9 +51,9 @@ const LoginScreen = () => {
       dispatch(setUser(email));
       dispatch(setDbUser(data?.createNewUser));
       dispatch(setProvider("email"));
-      // console.log(data);
-      // if (!data?.createNewUser?.isCreated) router.push("/user/profile/");
-      // else router.push("/");
+      console.log(data);
+      if (!data?.createNewUser?.isCreated) router.push("/user/profile/");
+      else router.push("/");
     } catch (error) {
       setIsLoading(false);
       notification("error", error?.message);
