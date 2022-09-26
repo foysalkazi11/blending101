@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import styles from "./wikiCenter.module.scss";
 import Image from "next/image";
 import FiberManualRecordIcon from "../../../public/icons/fiber_manual_record_black_36dp.svg";
@@ -19,27 +19,10 @@ import {
 import { faMessageDots as faMessageDotsSolid } from "@fortawesome/pro-solid-svg-icons";
 import { faMessageDots as faMessageDotsLight } from "@fortawesome/pro-light-svg-icons";
 import RenderJsonToHtml from "./jsonToHtml";
-
-//read more read less functionality
-// const ReadMore = ({ children }) => {
-//   const text = children.toString();
-//   const [isReadMore, setIsReadMore] = useState(true);
-//   const toggleReadMore = () => {
-//     setIsReadMore(!isReadMore);
-//   };
-//   return (
-//     <p className={styles.text}>
-//       {isReadMore ? text.slice(0, 300) : text},
-//       <span onClick={toggleReadMore} className={styles.read_or_hide}>
-//         {isReadMore ? (
-//           <span>&nbsp; {"Read More"}</span>
-//         ) : (
-//           <span>&nbsp; {"Read Less"}</span>
-//         )}
-//       </span>
-//     </p>
-//   );
-// };
+import {
+  IngredientBookmarkListType,
+  NutrientBookmarkListType,
+} from "../../../type/wikiDetailsType";
 
 interface WikiCenterComponentProps {
   heading?: string;
@@ -53,6 +36,11 @@ interface WikiCenterComponentProps {
   wikiId?: string;
   commentsCount?: number;
   scrollPoint?: string;
+  ingredientBookmarkList?: IngredientBookmarkListType[];
+  nutrientBookmarkList?: NutrientBookmarkListType[];
+  fetchNutritionPanelData?: (measureMentWeight: string, id: string) => void;
+  setDefaultMeasureMentWeight?: Dispatch<SetStateAction<string>>;
+  setCurrentWikiId?: Dispatch<SetStateAction<string>>;
 }
 
 function WikiCenterComponent({
@@ -71,7 +59,13 @@ function WikiCenterComponent({
   wikiId = "",
   commentsCount = 0,
   scrollPoint = "",
+  ingredientBookmarkList = [],
+  nutrientBookmarkList = [],
+  fetchNutritionPanelData = () => {},
+  setCurrentWikiId = () => {},
+  setDefaultMeasureMentWeight = () => {},
 }: WikiCenterComponentProps) {
+  const [activeVariant, setActiveVariant] = useState(0);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { isOpenWikiCommentsTray, wikiCommentsTrayCurrentWikiEntity } =
@@ -89,7 +83,22 @@ function WikiCenterComponent({
     );
   };
 
-  //console.log(body && JSON.stringify(JSON.parse(body), null, 3));
+  const updatePanel = (
+    index: number,
+    id: string,
+    measureMentWeight?: string,
+  ) => {
+    if (type === "Nutrient") {
+      setActiveVariant(index);
+      setCurrentWikiId(id);
+    }
+    if (type === "Ingredient") {
+      setActiveVariant(index);
+      fetchNutritionPanelData(id, measureMentWeight);
+      setCurrentWikiId(id);
+      setDefaultMeasureMentWeight(measureMentWeight);
+    }
+  };
 
   return (
     <div className={styles.centerMain}>
@@ -117,7 +126,6 @@ function WikiCenterComponent({
         >
           <FontAwesomeIcon icon={faXmark} />
         </IconWarper>
-        {/* <CancelIcon className={styles.cancleBtn} /> */}
       </div>
       <div className={styles.card}>
         <div className={styles.blendingRecipeHeading}>
@@ -139,7 +147,7 @@ function WikiCenterComponent({
 
           <ul className={styles.recipeOptionsBtm}>
             <li>
-              <a className={styles.bookmarkBtn} href="#">
+              <div className={styles.bookmarkBtn}>
                 <div className={styles.shareIcon}>
                   <Image
                     src={"/icons/share-alt-light-grey.svg"}
@@ -151,7 +159,7 @@ function WikiCenterComponent({
                   />
                 </div>
                 <span className={styles.blshare}>Share</span>
-              </a>
+              </div>
             </li>
             <li>
               <div
@@ -206,6 +214,75 @@ function WikiCenterComponent({
             <IngredientInfo amount={240} text="Nutri Score" />
           </div>
         )}
+        <div className={styles.variantContainer}>
+          {nutrientBookmarkList?.length ? (
+            <>
+              <p
+                onClick={() => updatePanel(0, wikiId)}
+                className={`${styles.variantItem} ${
+                  activeVariant === 0 ? styles.activeVariant : ""
+                }`}
+              >
+                {name}
+              </p>
+              {nutrientBookmarkList
+                .filter((variant) => !variant?.customBookmarkName)
+                ?.map((variant, index) => {
+                  return (
+                    <p
+                      onClick={() =>
+                        updatePanel(index + 1, variant.nutrientId._id)
+                      }
+                      key={variant?.nutrientId?._id}
+                      className={`${styles.variantItem} ${
+                        activeVariant === index + 1 ? styles.activeVariant : ""
+                      }`}
+                    >
+                      {variant?.nutrientId?.nutrientName}
+                    </p>
+                  );
+                })}
+            </>
+          ) : null}
+
+          {ingredientBookmarkList?.length ? (
+            <>
+              <p
+                onClick={() => updatePanel(0, wikiId)}
+                className={`${styles.variantItem} ${
+                  activeVariant === 0 ? styles.activeVariant : ""
+                }`}
+              >
+                {name}
+              </p>
+              {ingredientBookmarkList
+                .filter((variant) => !variant?.customBookmarkName)
+                ?.map((variant, index) => {
+                  const defaultMeasureMentWeight =
+                    variant?.ingredientId?.portions?.find(
+                      (item) => item?.default,
+                    );
+                  return (
+                    <p
+                      onClick={() =>
+                        updatePanel(
+                          index + 1,
+                          variant?.ingredientId?._id,
+                          defaultMeasureMentWeight?.meausermentWeight,
+                        )
+                      }
+                      key={variant?.ingredientId?._id}
+                      className={`${styles.variantItem} ${
+                        activeVariant === index + 1 ? styles.activeVariant : ""
+                      }`}
+                    >
+                      {variant?.ingredientId?.ingredientName}
+                    </p>
+                  );
+                })}
+            </>
+          ) : null}
+        </div>
       </div>
       {body ? (
         <RenderJsonToHtml
