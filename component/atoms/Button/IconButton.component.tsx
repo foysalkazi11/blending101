@@ -18,6 +18,7 @@ interface IconButtonProps {
   active?: boolean;
   disabled?: boolean;
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => any;
+  children?: React.ReactNode;
 }
 
 const IconButton: React.FC<IconButtonProps> = (props) => {

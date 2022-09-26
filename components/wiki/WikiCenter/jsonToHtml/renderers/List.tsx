@@ -11,6 +11,7 @@ interface Props {
 export interface ListBlockData {
   style: "ordered" | "unordered";
   items: NestedListItem[];
+  children?: React.ReactNode;
 }
 
 export type NestedListItem =
@@ -20,7 +21,9 @@ export type NestedListItem =
     }
   | string;
 
-const Bullet: FC = ({ children }) => <li>{children}</li>;
+const Bullet: FC<{ children?: React.ReactNode }> = ({ children }) => (
+  <li>{children}</li>
+);
 
 const Group: FC<{
   Tag: keyof JSX.IntrinsicElements;

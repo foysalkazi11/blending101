@@ -1,32 +1,19 @@
-import React from 'react';
-import styles from './content.module.scss';
+import { useQuery } from "@apollo/client";
+import React from "react";
+import GET_RECIPE_WIDGET from "../../../../gqlLib/recipes/queries/getRecipeWidget";
+import Widget from "../../../../component/module/Widget/Widget.component";
 
 export default function ThemeComponent(props) {
-	const data = [
-		{ title: 'Valentine', img: '/cards/valentine.png' },
-		{ title: 'Children', img: '/cards/children.png' },
-		{ title: 'Diabetes', img: '/cards/diabetes.png' },
-        { title: 'Weight Loss', img: '/cards/food.png' },
-        { title: 'Children', img: '/cards/children.png' },
-		{ title: 'Diabetes', img: '/cards/diabetes.png' },
-	];
+  const { data } = useQuery(GET_RECIPE_WIDGET);
 
-	return (
-		<div className={styles.theme}>
-			{data &&
-				data.map((item, i) => (
-					<div
-						className={styles.theme__child}
-						key={'theme__child' + i}
-					>
-                        <div className={styles.theme__cover} >
-                            <div  className={styles.theme__cover__abs} style={{ backgroundImage: `url(${item.img})` }}>
+  // const data = [
+  //   { title: "Valentine", img: "/cards/valentine.png" },
+  //   { title: "Children", img: "/cards/children.png" },
+  //   { title: "Diabetes", img: "/cards/diabetes.png" },
+  //   { title: "Weight Loss", img: "/cards/food.png" },
+  //   { title: "Children", img: "/cards/children.png" },
+  //   { title: "Diabetes", img: "/cards/diabetes.png" },
+  // ];
 
-                            </div>
-                        </div>
-						<p>{item.title}</p>
-					</div>
-				))}
-		</div>
-	);
+  return <Widget widget={data?.getWidgetsForClient} type="GRID" />;
 }
