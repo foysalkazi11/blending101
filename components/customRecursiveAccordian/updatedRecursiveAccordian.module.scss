@@ -77,7 +77,7 @@
   &__3 {
     @extend %headingAccordian;
 
-    div {
+    .userName {
       @extend %headingAccordian;
       aspect-ratio: 1;
       width: 32px;
@@ -85,6 +85,9 @@
       background-color: #f1f1f1;
       position: relative;
       cursor: pointer;
+      img {
+        border-radius: 50%;
+      }
     }
   }
 }
