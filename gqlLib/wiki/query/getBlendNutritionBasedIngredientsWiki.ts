@@ -31,6 +31,7 @@ const GET_BLEND_NUTRITION_BASED_IN_INGREDIENTS_WIKI = gql`
           portions {
             meausermentWeight
             default
+            measurement
           }
         }
         link

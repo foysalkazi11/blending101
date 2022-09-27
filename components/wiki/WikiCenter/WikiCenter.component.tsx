@@ -10,7 +10,7 @@ import { faXmark } from "@fortawesome/pro-regular-svg-icons";
 import { useRouter } from "next/router";
 import IngredientInfo from "./ingredientInfo/IngredientInfo";
 import { GiGl } from "../../../type/nutrationType";
-import { WikiType } from "../../../type/wikiListType";
+import { Portion, WikiType } from "../../../type/wikiListType";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
   setIsOpenWikiCommentsTray,
@@ -41,6 +41,8 @@ interface WikiCenterComponentProps {
   fetchNutritionPanelData?: (measureMentWeight: string, id: string) => void;
   setDefaultMeasureMentWeight?: Dispatch<SetStateAction<string>>;
   setCurrentWikiId?: Dispatch<SetStateAction<string>>;
+  setPortions?: Dispatch<SetStateAction<any[]>>;
+  originalPortions?: Portion[];
 }
 
 function WikiCenterComponent({
@@ -64,6 +66,8 @@ function WikiCenterComponent({
   fetchNutritionPanelData = () => {},
   setCurrentWikiId = () => {},
   setDefaultMeasureMentWeight = () => {},
+  setPortions = () => {},
+  originalPortions: originalPortions = [],
 }: WikiCenterComponentProps) {
   const [activeVariant, setActiveVariant] = useState(0);
   const router = useRouter();
@@ -83,20 +87,18 @@ function WikiCenterComponent({
     );
   };
 
-  const updatePanel = (
-    index: number,
-    id: string,
-    measureMentWeight?: string,
-  ) => {
+  const updatePanel = (index: number, id: string, portions?: Portion[]) => {
     if (type === "Nutrient") {
       setActiveVariant(index);
       setCurrentWikiId(id);
     }
     if (type === "Ingredient") {
-      setActiveVariant(index);
-      fetchNutritionPanelData(id, measureMentWeight);
+      const defaultMeasureMentWeight = portions?.find((item) => item?.default);
+      setPortions(portions);
       setCurrentWikiId(id);
-      setDefaultMeasureMentWeight(measureMentWeight);
+      setDefaultMeasureMentWeight(defaultMeasureMentWeight?.meausermentWeight);
+      setActiveVariant(index);
+      fetchNutritionPanelData(defaultMeasureMentWeight?.meausermentWeight, id);
     }
   };
 
@@ -248,7 +250,7 @@ function WikiCenterComponent({
           {ingredientBookmarkList?.length ? (
             <>
               <p
-                onClick={() => updatePanel(0, wikiId)}
+                onClick={() => updatePanel(0, wikiId, originalPortions)}
                 className={`${styles.variantItem} ${
                   activeVariant === 0 ? styles.activeVariant : ""
                 }`}
@@ -258,17 +260,13 @@ function WikiCenterComponent({
               {ingredientBookmarkList
                 .filter((variant) => !variant?.customBookmarkName)
                 ?.map((variant, index) => {
-                  const defaultMeasureMentWeight =
-                    variant?.ingredientId?.portions?.find(
-                      (item) => item?.default,
-                    );
                   return (
                     <p
                       onClick={() =>
                         updatePanel(
                           index + 1,
                           variant?.ingredientId?._id,
-                          defaultMeasureMentWeight?.meausermentWeight,
+                          variant?.ingredientId?.portions,
                         )
                       }
                       key={variant?.ingredientId?._id}

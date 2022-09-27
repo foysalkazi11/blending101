@@ -31,6 +31,7 @@ function WikiSingleItem() {
   const [defaultMeasureMentWeight, setDefaultMeasureMentWeight] = useState("");
   const [scrollPoint, setScrollPoint] = useState("");
   const [currentWikiId, setCurrentWikiId] = useState("");
+  const [portions, setPortions] = useState<any[]>([]);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { params = [] } = router?.query;
@@ -56,8 +57,6 @@ function WikiSingleItem() {
     },
   ] = useLazyQuery(GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS);
 
-  useEffect(() => {}, []);
-
   const fetchNutritionPanelData = async (
     measureMentWeight: string,
     id?: string,
@@ -68,7 +67,9 @@ function WikiSingleItem() {
           ingredientsInfo: [
             {
               ingredientId: id || currentWikiId,
-              value: parseInt(measureMentWeight || defaultMeasureMentWeight),
+              value: parseInt(
+                measureMentWeight || params2 || defaultMeasureMentWeight,
+              ),
             },
           ],
           userId: dbUser?._id,
@@ -95,7 +96,7 @@ function WikiSingleItem() {
         dispatch(setLoading(false));
       }
       if (type === "Ingredient") {
-        await getBlendNutritionBasedIngredientsWiki({
+        const { data } = await getBlendNutritionBasedIngredientsWiki({
           variables: {
             ingredientsInfo: [
               {
@@ -106,6 +107,10 @@ function WikiSingleItem() {
             userId: dbUser?._id,
           },
         });
+
+        const res: WikiDetailsIngredientType =
+          data?.getBlendNutritionBasedIngredientsWiki2;
+        setPortions(res?.portions);
         dispatch(setLoading(false));
       }
     } catch (error) {
@@ -181,6 +186,8 @@ function WikiSingleItem() {
           fetchNutritionPanelData={fetchNutritionPanelData}
           setDefaultMeasureMentWeight={setDefaultMeasureMentWeight}
           setCurrentWikiId={setCurrentWikiId}
+          setPortions={setPortions}
+          originalPortions={data?.portions}
         />
         <>
           {type === "Ingredient" && (
@@ -197,7 +204,7 @@ function WikiSingleItem() {
                   setDefaultMeasureMentWeight(e?.target?.value);
                   fetchNutritionPanelData(e?.target?.value);
                 },
-                listElem: data?.portions?.map((item) => ({
+                listElem: portions?.map((item) => ({
                   name: `1 ${item?.measurement} (${item?.meausermentWeight}g)`,
                   value: item?.meausermentWeight,
                 })),
