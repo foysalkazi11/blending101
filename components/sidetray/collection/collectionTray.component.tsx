@@ -2,7 +2,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import TrayWrapper from "../TrayWrapper";
 import CollectionComponent from "./content/collection.component";
-import ThemeComponent from "./content/theme.component";
 import styles from "./trayleft.module.scss";
 import { MdOutlineAddCircleOutline } from "react-icons/md";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
@@ -15,6 +14,7 @@ import { setChangeRecipeWithinCollection } from "../../../redux/slices/collectio
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TrayTag from "../TrayTag";
 import { faChartTreeMap } from "@fortawesome/pro-regular-svg-icons";
+import GridWidget from "../../../component/module/Widget/GridWidget.component";
 
 interface CollectionTrayProps {
   showTagByDefaut?: boolean;
@@ -148,7 +148,7 @@ export default function CollectionTray({
             setOpenModal={setOpenModal}
           />
         ) : (
-          <ThemeComponent />
+          <GridWidget name="62597e685e28381b901eff23" />
         )}
 
         <CustomModal open={openModal} setOpen={setOpenModal}>

@@ -3,9 +3,10 @@ import styles from "./ContentTray.module.scss";
 import Image from "next/image";
 import Slider from "../../../../theme/carousel/carousel.component";
 import MenubarComponent from "../../../../theme/menuBar/menuBar.component";
+import Link from "next/link";
 
 const ContentTray = (props) => {
-  const { hasFilter, filters, customHTML, tabState } = props;
+  const { hasFilter, filters, customHTML, tabState, allUrl } = props;
 
   const responsiveSetting = {
     infinite: false,
@@ -62,7 +63,11 @@ const ContentTray = (props) => {
             value={tabState[0]}
           />
         )}
-        <div className={styles.viewAll}>View All</div>
+        <Link href={allUrl || "#"}>
+          <a style={{ textDecoration: "none" }}>
+            <div className={styles.viewAll}>View All</div>
+          </a>
+        </Link>
       </h3>
       <div>
         {customHTML ? (

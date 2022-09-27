@@ -1,0 +1,16 @@
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 4rem 0 2rem;
+  &__title {
+    font-weight: 500;
+    font-size: 22px;
+    color: #fe5d1f;
+  }
+  &__icon {
+    height: 3rem;
+    width: 3rem;
+    margin-right: 2rem;
+  }
+}

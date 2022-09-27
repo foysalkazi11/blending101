@@ -27,6 +27,15 @@ const GET_ALL_INGREDIENTS_BASED_ON_NURTITION = gql`
       publishedBy
       isPublished
       commentsCount
+      nutrientBookmarkList {
+        nutrientId {
+          _id
+          nutrientName
+        }
+        customBookmarkName
+        link
+        active
+      }
     }
   }
 `;

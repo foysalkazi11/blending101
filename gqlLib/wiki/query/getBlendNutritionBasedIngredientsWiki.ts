@@ -24,6 +24,20 @@ const GET_BLEND_NUTRITION_BASED_IN_INGREDIENTS_WIKI = gql`
         meausermentWeight
         default
       }
+      ingredientBookmarkList {
+        ingredientId {
+          _id
+          ingredientName
+          portions {
+            meausermentWeight
+            default
+            measurement
+          }
+        }
+        link
+        active
+        customBookmarkName
+      }
     }
   }
 `;

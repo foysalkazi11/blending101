@@ -8,7 +8,10 @@ import Combobox from "../../../theme/dropDown/combobox/Combobox.component";
 import { Portion } from "../../../type/wikiListType";
 import GET_ONLY_INGREDIENTS_BASED_ON_NURTITION from "../../../gqlLib/wiki/query/getOnlyIngredientsBasedOnNutrition";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowDownWideShort,faArrowDownShortWide } from "@fortawesome/pro-solid-svg-icons";
+import {
+  faArrowDownWideShort,
+  faArrowDownShortWide,
+} from "@fortawesome/pro-solid-svg-icons";
 
 const categories = [
   { label: "All", value: "All" },
@@ -83,14 +86,13 @@ function WikiRightComponent({
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dpd]);
+  }, [dpd, wikiId]);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (isMounted?.current) {
-      setIngredientData(prev => [...prev]?.reverse())
+      setIngredientData((prev) => [...prev]?.reverse());
     }
-
-  },[ascendingOrder])
+  }, [ascendingOrder]);
 
   useEffect(() => {
     isMounted.current = true;
@@ -125,17 +127,28 @@ function WikiRightComponent({
         <div className={styles.rightCardHeading}>Ingredients</div>
         <div className={styles.dropDownBox}>
           <div className={styles.dropDown}>
-          <Combobox
-          value={dpd}
-          options={categories}
-          onChange={(e) => setDpd(e?.target?.value)}
-          style={{ width: "100%" }}
-          placeholder="Categories"
-        />
-
+            <Combobox
+              value={dpd}
+              options={categories}
+              onChange={(e) => setDpd(e?.target?.value)}
+              style={{ width: "100%" }}
+              placeholder="Categories"
+            />
           </div>
-        
-        {ascendingOrder ? <FontAwesomeIcon icon={faArrowDownWideShort} onClick={()=>setAscendingOrder(prev=>!prev)} className={styles.downArrowIcon} /> : <FontAwesomeIcon icon={faArrowDownShortWide} onClick={()=>setAscendingOrder(prev=>!prev)} className={styles.downArrowIcon} />}
+
+          {ascendingOrder ? (
+            <FontAwesomeIcon
+              icon={faArrowDownWideShort}
+              onClick={() => setAscendingOrder((prev) => !prev)}
+              className={styles.downArrowIcon}
+            />
+          ) : (
+            <FontAwesomeIcon
+              icon={faArrowDownShortWide}
+              onClick={() => setAscendingOrder((prev) => !prev)}
+              className={styles.downArrowIcon}
+            />
+          )}
         </div>
         <div className={styles.progressIndicator}>
           {loading || ingredientsDataLoading ? (
