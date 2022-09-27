@@ -23,9 +23,9 @@ import {
 import { useRouter } from "next/router";
 import SkeletonRecipeDiscovery from "../../../theme/skeletons/skeletonRecipeDiscovery/SkeletonRecipeDiscovery";
 import useLocalStorage from "../../../customHooks/useLocalStorage";
-import GET_RECIPE_WIDGET from "../../../gqlLib/recipes/queries/getRecipeWidget";
-import Widget from "../../../component/module/Widget/Widget.component";
+import Widget from "../../../component/module/Widget/SliderWidget.component";
 import ShowCollectionModal from "../../showModal/ShowCollectionModal";
+import SliderWidget from "../../../component/module/Widget/SliderWidget.component";
 
 const RecipeDetails = () => {
   const router = useRouter();
@@ -40,7 +40,7 @@ const RecipeDetails = () => {
     (state) => state?.recipe,
   );
   const { filters } = useAppSelector((state) => state?.filterRecipe);
-  const { data, error, loading: widgetLoading } = useQuery(GET_RECIPE_WIDGET);
+  // const { data, error, loading: widgetLoading } = useQuery(GET_RECIPE_WIDGET);
   const [getAllRecommendedRecipes] = useLazyQuery(GET_ALL_RECOMMENDED_RECIPES);
   const [getAllPopularRecipes] = useLazyQuery(GET_ALL_POPULAR_RECIPES);
   const [getAllLatestRecipes] = useLazyQuery(GET_ALL_LATEST_RECIPES);
@@ -142,6 +142,7 @@ const RecipeDetails = () => {
                   <ContentTray
                     heading={"Recommended"}
                     image={"/images/thumbs-up.svg"}
+                    allUrl="recommended"
                   >
                     {recommended?.map((item, index) => {
                       let ingredients = [];
@@ -191,6 +192,7 @@ const RecipeDetails = () => {
                   <ContentTray
                     heading={"Recent"}
                     image={"/images/clock-light.svg"}
+                    allUrl="latest"
                   >
                     {latest?.map((item, index) => {
                       let ingredients = [];
@@ -244,6 +246,7 @@ const RecipeDetails = () => {
                   <ContentTray
                     heading={"Popular"}
                     image={"/images/fire-alt-light.svg"}
+                    allUrl="popular"
                   >
                     {popular?.map((item, index) => {
                       let ingredients = [];
@@ -291,25 +294,7 @@ const RecipeDetails = () => {
                 ) : (
                   <SkeletonRecipeDiscovery />
                 )}
-
-                {/* its for widget */}
-                {!widgetLoading ? (
-                  <Widget type="SLIDER" widget={data?.getWidgetsForClient} />
-                ) : (
-                  <SkeletonRecipeDiscovery />
-                )}
-                {/* {!widgetLoading ? (
-                  recipeWidget?.widgetCollections.map((collection: any) => (
-                    <Widget
-                      key={collection.displayName}
-                      collection={collection}
-                      compareRecipeList={compareRecipeList}
-                      setcompareRecipeList={setcompareRecipeList}
-                    />
-                  ))
-                ) : (
-                  <SkeletonRecipeDiscovery />
-                )} */}
+                <SliderWidget widgetId="62597e685e28381b901eff23" />
               </div>
             </div>
           )}

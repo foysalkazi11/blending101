@@ -1,43 +1,79 @@
-import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import { useQuery } from "@apollo/client";
+import { id } from "date-fns/locale";
 import ejs from "ejs";
-
+import { useRouter } from "next/router";
+import { type } from "os";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import ContentTray from "../../../components/recipe/recipeDiscovery/ContentTray/ContentTray.component";
+import { GET_SLIDER_WIDGET } from "../../../graphql/Widget";
 import useThemeMethod from "../../../hooks/modules/useThemeMethod";
 import styles from "./SliderWidget.module.scss";
-// import Theme from "../../../data/Theme";
 
 interface SliderWidgetProps {
-  id: string;
-  title: string;
-  items: any[];
-  theme: string;
-  filters: any[];
-  tabState: any;
-  icon: string;
-  showTabMenu: boolean;
+  widgetId: string;
 }
-const SliderWidget = (props: SliderWidgetProps) => {
-  const { id, title, filters, tabState, items, theme, icon, showTabMenu } =
-    props;
 
+const SliderWidget = (props: SliderWidgetProps) => {
+  const { widgetId } = props;
+  const { data } = useQuery(GET_SLIDER_WIDGET, {
+    variables: {
+      widgetId,
+    },
+    skip: !widgetId,
+  });
+
+  const widget = data?.getWidgetsForClient;
+  return (
+    <Fragment>
+      {widget &&
+        widget?.widgetCollections?.map((collection: any) => (
+          <WidgetCollection
+            key={collection?._id}
+            widget={widget?._id}
+            collection={collection}
+          />
+        ))}
+    </Fragment>
+  );
+};
+
+const WidgetCollection = ({ widget, collection }) => {
+  const { data, filter, icon, themeLink, displayName, showTabMenu, slug } =
+    collection;
+
+  const [tab, setTab] = useState("All");
   const [html, setHtml] = useState("");
   useEffect(() => {
-    if (!theme) return;
-    fetch(theme)
+    if (!themeLink) return;
+    fetch(themeLink)
       .then((r) => r.text())
       .then((t) => {
         setHtml(t);
       });
-  }, [theme]);
+  }, [themeLink]);
+
+  const { filterType, values } = filter;
+  const results = data[data?.collectionType] || [];
+  const items =
+    tab === "All"
+      ? results
+      : results.filter((recipe) => {
+          const filterProps = recipe[filterType];
+          if (Array.isArray(filterProps)) {
+            return filterProps.includes(tab);
+          } else {
+            return filterProps === tab;
+          }
+        });
 
   return (
     <ContentTray
       key={id}
-      heading={title}
+      allUrl={`/${slug}?id=${widget}`}
+      heading={displayName}
       hasFilter={showTabMenu}
-      filters={filters}
-      tabState={tabState}
+      filters={[...values].sort()}
+      tabState={[tab, setTab]}
       image={icon}
       customHTML={items.length === 0}
     >
