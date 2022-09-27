@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useAppSelector } from "../../redux/hooks";
 import UpdatedCustomAccordion from "../../theme/accordion/updatedAccordion.component copy";
 import styles from "./updatedRecursiveAccordian.module.scss";
