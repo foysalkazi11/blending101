@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import styles from './menubar.module.scss';
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import styles from "./menubar.module.scss";
 
 interface menuBarInterface {
   childs: Array<[]>;
@@ -9,43 +9,47 @@ interface menuBarInterface {
 }
 
 export default function MenubarComponent({
+  containerId,
   childs,
   setValue,
-  value,
   className,
 }: any) {
   childs = childs || [
-    'All',
-    'Wholefood',
-    'Smoothie',
-    'Refreshing',
-    'Teas & Tonics',
+    "All",
+    "Wholefood",
+    "Smoothie",
+    "Refreshing",
+    "Teas & Tonics",
   ];
 
   const lineRef = useRef<any>();
+
+  const handleClick = (menu: string) => {
+    moveLine(menu);
+  };
+
+  const moveLine = useCallback(
+    (menu: string) => {
+      const id = "menubar__child" + menu + containerId;
+      const elem = document.getElementById(id);
+      setValue && setValue(menu);
+
+      if (!elem) return;
+      const elemWidth = elem.offsetWidth + "px";
+      const fromLeft = elem.offsetLeft + "px";
+
+      if (!lineRef.current) return;
+      const ref = lineRef.current;
+      ref.style.width = elemWidth;
+      ref.style.left = fromLeft;
+    },
+    [setValue, containerId],
+  );
+
   useEffect(() => {
-    moveLine(0, childs[0]);
+    moveLine(childs[0]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const handleClick = (no: number) => {
-    moveLine(no, childs[no]);
-  };
-
-  const moveLine = (no: any, VALUE: string) => {
-    const id = 'menubar__child' + no;
-    const elem = document.getElementById(id);
-
-    setValue && setValue(VALUE);
-
-    if (!elem) return;
-    const elemWidth = elem.offsetWidth + 'px';
-    const fromLeft = elem.offsetLeft + 'px';
-
-    if (!lineRef.current) return;
-    const ref = lineRef.current;
-    ref.style.width = elemWidth;
-    ref.style.left = fromLeft;
-  };
 
   return (
     <div className={`${styles.menu} ${className}`}>
@@ -54,9 +58,9 @@ export default function MenubarComponent({
           childs?.map((child: any, i: number) => (
             <div
               className={styles.menu__child}
-              key={'menubar' + child + i}
-              onClick={() => handleClick(i)}
-              id={'menubar__child' + i}
+              key={"menubar" + child + i}
+              onClick={() => handleClick(child)}
+              id={"menubar__child" + child + containerId}
             >
               {child}
             </div>

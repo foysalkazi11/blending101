@@ -41,7 +41,7 @@ const WidgetCollection = ({ widget, collection }) => {
   const { data, filter, icon, themeLink, displayName, showTabMenu, slug } =
     collection;
 
-  const [tab, setTab] = useState("All");
+  const [tab, setTab] = useState("");
   const [html, setHtml] = useState("");
   useEffect(() => {
     if (!themeLink) return;
@@ -69,6 +69,7 @@ const WidgetCollection = ({ widget, collection }) => {
   return (
     <ContentTray
       key={id}
+      id={collection?._id}
       allUrl={`/${slug}?id=${widget}`}
       heading={displayName}
       hasFilter={showTabMenu}

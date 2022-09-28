@@ -142,7 +142,7 @@ const RecipeDetails = () => {
                   <ContentTray
                     heading={"Recommended"}
                     image={"/images/thumbs-up.svg"}
-                    allUrl="recommended"
+                    allUrl="recipes/recommended"
                   >
                     {recommended?.map((item, index) => {
                       let ingredients = [];
@@ -154,7 +154,7 @@ const RecipeDetails = () => {
                       return (
                         <div
                           className={styles.slider__card}
-                          key={"recommended" + index}
+                          key={"recipes/recommended" + index}
                         >
                           <DatacardComponent
                             title={item.name}
@@ -192,7 +192,7 @@ const RecipeDetails = () => {
                   <ContentTray
                     heading={"Recent"}
                     image={"/images/clock-light.svg"}
-                    allUrl="latest"
+                    allUrl="recipes/latest"
                   >
                     {latest?.map((item, index) => {
                       let ingredients = [];
@@ -246,7 +246,7 @@ const RecipeDetails = () => {
                   <ContentTray
                     heading={"Popular"}
                     image={"/images/fire-alt-light.svg"}
-                    allUrl="popular"
+                    allUrl="recipes/popular"
                   >
                     {popular?.map((item, index) => {
                       let ingredients = [];
