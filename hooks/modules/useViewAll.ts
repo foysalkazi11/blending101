@@ -1,15 +1,13 @@
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { faClock, faFire, faThumbsUp } from "@fortawesome/pro-light-svg-icons";
 import { useState, useEffect, useMemo } from "react";
-import Icon from "../../component/atoms/Icon/Icon.component";
 
 import GET_ALL_LATEST_RECIPES from "../../gqlLib/recipes/queries/getAllLatestRecipes";
 import GET_ALL_POPULAR_RECIPES from "../../gqlLib/recipes/queries/getAllPopularRecipes";
 import GET_ALL_RECOMMENDED_RECIPES from "../../gqlLib/recipes/queries/getRecommendedRecipes";
-import { GET_GRID_WIDGET_DATA } from "../../graphql/Widget";
 import { useAppSelector } from "../../redux/hooks";
 
-const useViewAll = (params: string[], widgetId: string) => {
+const useViewAll = (param: string) => {
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
   const [response, setResponse] = useState([]);
@@ -34,7 +32,7 @@ const useViewAll = (params: string[], widgetId: string) => {
   useEffect(() => {
     async function fetchData() {
       let response: any;
-      switch (params[0]) {
+      switch (param) {
         case "recommended":
           response = await getAllrecomendedRecipes();
           break;
@@ -47,17 +45,16 @@ const useViewAll = (params: string[], widgetId: string) => {
         default:
           return;
       }
-      setResponse(response?.data[QUERY_DICTIONARY[params[0]]?.query]);
+      setResponse(response?.data[QUERY_DICTIONARY[param]?.query]);
     }
-    if (params && params[0]) {
+    if (param !== "") {
       fetchData();
     }
   }, [
     getAllLatestRecipes,
     getAllPopularRecipes,
     getAllrecomendedRecipes,
-    params,
-    widgetId,
+    param,
   ]);
 
   return response;
@@ -72,13 +69,13 @@ export const QUERY_DICTIONARY = {
     icon: faThumbsUp,
   },
   popular: {
-    title: "Recommended",
+    title: "Popular",
     query: "getAllpopularRecipes",
-    icon: faClock,
+    icon: faFire,
   },
   latest: {
-    title: "Recommended",
+    title: "Recent",
     query: "getAllLatestRecipes",
-    icon: faFire,
+    icon: faClock,
   },
 };

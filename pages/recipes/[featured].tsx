@@ -20,11 +20,10 @@ import classes from "../../styles/pages/viewAll.module.scss";
 
 const ViewAll = () => {
   const router = useRouter();
-  const widgetId = router.query?.id as string;
-  const params = router.query?.viewAll as string[];
-  const page = params && QUERY_DICTIONARY[params[0]];
+  const featured = router.query?.featured as string;
+  const page = featured && QUERY_DICTIONARY[featured];
 
-  const data = useViewAll(params, widgetId);
+  const data = useViewAll(featured);
   const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
     "compareList",
     [],
@@ -62,9 +61,7 @@ const ViewAll = () => {
           ) : null}
         </div>
 
-        {currentCollectionInfo?.name ? (
-          <ShowCollectionRecipes />
-        ) : blends.length || ingredients.length || filters?.length ? (
+        {blends.length || ingredients.length || filters?.length ? (
           <FilterPageBottom
             blends={blends}
             ingredients={ingredients}
@@ -78,14 +75,14 @@ const ViewAll = () => {
                   className={classes.head__icon}
                   fontName={page?.icon}
                   size="3rem"
+                  color="#fe5d1f"
                 />
                 <h2 className={classes.head__title}>{page?.title}</h2>
               </div>
               <IconButton
-                className={classes.head__icon}
                 fontName={faTimes}
                 variant="secondary"
-                size="medium"
+                size="small"
                 colorCode="#fff"
                 onClick={() => {
                   router.back();

@@ -120,7 +120,7 @@ const DateSelector = (props: DateSelectorProps) => {
 function DateButton({ date, isActive, categories, disabled }: any) {
   const days = new Date(date);
   const day = format(days, "d");
-  const dayName = format(days, "eee");
+  const dayName = format(days, "MMM");
 
   const dispatch = useAppDispatch();
   const activateDate = () => {
