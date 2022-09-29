@@ -3,10 +3,11 @@ import styles from "./ContentTray.module.scss";
 import Image from "next/image";
 import Slider from "../../../../theme/carousel/carousel.component";
 import MenubarComponent from "../../../../theme/menuBar/menuBar.component";
+import Link from "next/link";
 
 const ContentTray = (props) => {
-  const { hasFilter, filters, customHTML, tabState } = props;
-
+  const { id, hasFilter, filters, customHTML, tabState, allUrl } = props;
+  console.log(filters, tabState);
   const responsiveSetting = {
     infinite: false,
     speed: 500,
@@ -52,17 +53,22 @@ const ContentTray = (props) => {
             height={30}
             width={30}
           />
-          {props.heading}
+          <span className="ml-10">{props.heading}</span>
         </div>
         {hasFilter && (
           <MenubarComponent
             className={styles.main__slider__tabmenu}
+            containerId={id}
             childs={filters}
             setValue={tabState[1]}
             value={tabState[0]}
           />
         )}
-        <div className={styles.viewAll}>View All</div>
+        <Link href={allUrl || "#"}>
+          <a style={{ textDecoration: "none" }}>
+            <div className={styles.viewAll}>View All</div>
+          </a>
+        </Link>
       </h3>
       <div>
         {customHTML ? (

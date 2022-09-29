@@ -30,6 +30,7 @@ const Icon: React.FC<IconProps> = (props) => {
     return (
       <FontAwesomeIcon
         icon={fontName}
+        className={className}
         style={{
           width: typeof size === "number" ? `${size}px` : size,
           height: typeof size === "number" ? `${size}px` : size,
