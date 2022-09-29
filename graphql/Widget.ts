@@ -16,7 +16,10 @@ export const GET_SLIDER_WIDGET = gql`
         showTabMenu
         filter {
           filterType
-          values
+          values {
+            label
+            value
+          }
         }
         data {
           collectionType
@@ -24,9 +27,9 @@ export const GET_SLIDER_WIDGET = gql`
             name
             recipeIngredients
             recipeBlendCategory {
+              _id
               name
             }
-
             image {
               image
               default
@@ -49,6 +52,7 @@ export const GET_SLIDER_WIDGET = gql`
     }
   }
 `;
+
 export const GET_GRID_WIDGET = gql`
   query GetRecipeWidget($id: String!) {
     getWidgetsForClient(widgetId: $id) {

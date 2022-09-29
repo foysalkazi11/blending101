@@ -121,7 +121,7 @@ const ViewAll = () => {
               {items?.map((item, idx) => (
                 <div
                   key={idx}
-                  className="col-3"
+                  className="col-2"
                   dangerouslySetInnerHTML={{
                     __html: ejs.render(theme, { data: item, methods: {} }),
                   }}

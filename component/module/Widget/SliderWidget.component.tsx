@@ -59,13 +59,18 @@ const WidgetCollection = ({ widget, collection }) => {
       ? results
       : results.filter((recipe) => {
           const filterProps = recipe[filterType];
+          console.log(filterProps);
           if (Array.isArray(filterProps)) {
             return filterProps.includes(tab);
+          } else if (typeof filterProps === "object") {
+            const filter = values.find((val) => val.label === tab);
+            return filterProps._id === filter?.value;
           } else {
             return filterProps === tab;
           }
         });
 
+  console.log(tab);
   return (
     <ContentTray
       key={id}
@@ -73,7 +78,7 @@ const WidgetCollection = ({ widget, collection }) => {
       allUrl={`/${slug}?id=${widget}`}
       heading={displayName}
       hasFilter={showTabMenu}
-      filters={[...values].sort()}
+      filters={values.map((value) => value.label)}
       tabState={[tab, setTab]}
       image={icon}
       customHTML={items.length === 0}

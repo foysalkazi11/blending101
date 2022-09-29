@@ -7,7 +7,6 @@ import Link from "next/link";
 
 const ContentTray = (props) => {
   const { id, hasFilter, filters, customHTML, tabState, allUrl } = props;
-  console.log(filters, tabState);
   const responsiveSetting = {
     infinite: false,
     speed: 500,
