@@ -3,15 +3,20 @@ import styles from "./AppdownLoad.module.scss";
 import Image from "next/image";
 import Link from "next/link";
 
-const AppdownLoadCard = () => {
+interface Props {
+  title?: string;
+  subTitle?: string;
+}
+
+const AppdownLoadCard = ({
+  title = "DOWNLOAD THE APP NOW!",
+  subTitle = "EXPLORE INGREDIENTS, NUTRITION AND HEALTH CATEGORIES WITH THE ALL-NEW BLENDING APP.",
+}: Props) => {
   return (
     <div className={styles.orange__card}>
       <div className={styles.orange__card__left}>
-        <h2>DOWNLOAD THE APP NOW!</h2>
-        <p>
-          EXPLORE INGREDIENTS, NUTRITION AND HEALTH CATEGORIES WITH THE ALL-NEW
-          BLENDING APP.
-        </p>
+        <h2>{title}</h2>
+        <p>{subTitle}</p>
         <div className={styles.orange__card__left__Buttons}>
           <div className={styles.btn}>
             <Link href={"#"}>
