@@ -1,8 +1,6 @@
 @import "../../../../styles/partials/variables";
 @import "../../../../styles/partials/mixin";
 
-$tooltip-text-color: white;
-$tooltip-background-color: black;
 $tooltip-margin: 30px;
 $tooltip-arrow-size: 6px;
 
@@ -130,6 +128,36 @@ $tooltip-arrow-size: 6px;
   }
   span {
     @extend %span;
+  }
+}
+
+.toggle {
+  @extend %block;
+  .header {
+    display: flex;
+    align-items: center;
+    .icon {
+      cursor: pointer;
+    }
+
+    .text {
+      padding-left: 10px;
+      font-weight: 500;
+      @extend %paragraph;
+      a {
+        @extend %anchor;
+      }
+      mark {
+        @extend %mark;
+      }
+      span {
+        @extend %span;
+      }
+    }
+  }
+
+  .nestedContainer {
+    padding-left: 20px;
   }
 }
 
