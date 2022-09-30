@@ -1,50 +1,51 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BlockType } from "../../../../type/editorjsBlockType";
-import Header from "./renderers/Header";
-import Paragraph from "./renderers/Paragraph";
 import s from "../wikiCenter.module.scss";
-import Embed from "./renderers/Embed";
-import Table from "./renderers/Table";
-import List from "./renderers/List";
-import Code from "./renderers/Code";
-import ImageBlock from "./renderers/Image";
-import Raw from "./renderers/Raw";
-import Quote from "./renderers/Quote";
-import { useRouter } from "next/router";
+import JsonToHtml from "./JsonToHtml";
 
 interface Props {
   blocks: BlockType[];
   scrollPoint?: string;
 }
 const RenderJsonToHtml = ({ blocks, scrollPoint = "" }: Props) => {
-  const router = useRouter();
-  const renderHtml = (block: BlockType) => {
-    const { type } = block;
+  const [normalizeBlocks, setNormalizeBlocks] = useState<BlockType[]>([]);
 
-    switch (type) {
-      case "header":
-        return <Header block={block} />;
-      case "paragraph":
-        return <Paragraph block={block} />;
-      case "embed":
-        return <Embed block={block} />;
-      case "table":
-        return <Table block={block} />;
-      case "list":
-        return <List block={block} />;
-      case "code":
-        return <Code block={block} />;
-      case "image":
-        return <ImageBlock block={block} />;
-      case "raw":
-        return <Raw block={block} />;
-      case "quote":
-        return <Quote block={block} />;
-
-      default:
-        return null;
+  const checkBlock = (
+    block: BlockType,
+    copyBlocks: BlockType[],
+    index: number,
+  ) => {
+    const blockType = block.type;
+    if (blockType === "toggle") {
+      let spliceBlock: BlockType[] = copyBlocks.splice(
+        index + 1,
+        parseInt(block?.data?.items),
+      );
+      let newBlock = {
+        ...block,
+        nestedBlocks: loopBlock(spliceBlock),
+      };
+      return newBlock;
+    } else {
+      return block;
     }
   };
+
+  const loopBlock = (copyBlocks: BlockType[]) => {
+    let arr: BlockType[] = [];
+    copyBlocks?.forEach((block, index) => {
+      arr.push(checkBlock(block, copyBlocks, index));
+    });
+    return arr;
+  };
+
+  useEffect(() => {
+    if (blocks?.length) {
+      let copyBlocks: BlockType[] = [...blocks];
+      let prepareBlock: BlockType[] = loopBlock(copyBlocks);
+      setNormalizeBlocks(prepareBlock);
+    }
+  }, [blocks]);
 
   useEffect(() => {
     let timer;
@@ -93,7 +94,7 @@ const RenderJsonToHtml = ({ blocks, scrollPoint = "" }: Props) => {
 
   return (
     <div className={s.bodyContainer}>
-      {blocks?.map((block: BlockType) => renderHtml(block))}
+      {normalizeBlocks?.map((block: BlockType) => JsonToHtml(block))}
     </div>
   );
 };
