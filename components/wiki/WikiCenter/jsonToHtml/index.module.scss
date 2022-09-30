@@ -1,5 +1,11 @@
 @import "../../../../styles/partials/variables";
 @import "../../../../styles/partials/mixin";
+
+$tooltip-text-color: white;
+$tooltip-background-color: black;
+$tooltip-margin: 30px;
+$tooltip-arrow-size: 6px;
+
 .block {
   padding: 8px 0px;
 }
@@ -11,6 +17,47 @@
 %anchor {
   text-decoration: none;
   color: $secondaryColor;
+}
+
+%span {
+  font-size: inherit;
+  background: rgb(255, 239, 213);
+  text-decoration: underline;
+  border-radius: 6px;
+  transition: all 0.9s;
+
+  &:hover {
+    transition: all 0.9s;
+    position: relative;
+  }
+  &[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    padding: 1px 3px;
+    position: absolute;
+    left: 0;
+
+    white-space: nowrap;
+    z-index: 20;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: $secondaryColor;
+    color: #fff;
+    bottom: 100%;
+  }
+
+  &[data-tooltip]:hover::before {
+    content: " ";
+    left: 50%;
+    border: solid transparent;
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-width: $tooltip-arrow-size;
+    margin-left: calc(($tooltip-arrow-size) * -1);
+    top: 0;
+    border-top-color: $secondaryColor;
+  }
 }
 
 %paragraph {
@@ -27,6 +74,7 @@
 %mark {
   background-color: #d2e7bc;
   color: $fontDeepGray;
+  border-radius: 6px;
 }
 
 %figcaption {
@@ -79,6 +127,9 @@
   }
   mark {
     @extend %mark;
+  }
+  span {
+    @extend %span;
   }
 }
 
