@@ -14,4 +14,5 @@ export interface BlockType {
       alignment: string;
     };
   };
+  nestedBlocks?: BlockType[];
 }
