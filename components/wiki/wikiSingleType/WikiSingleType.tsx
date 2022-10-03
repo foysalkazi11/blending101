@@ -89,7 +89,7 @@ const WikiSingleType = ({
         },
       });
 
-      const res = data?.getNutrientWikiList || data?.getIngredientWikiList;
+      const res = data?.getNutrientWikiList2 || data?.getIngredientWikiList2;
       setPageLength(res?.total);
       setWikiList(res?.wikiList);
     } catch (error) {
