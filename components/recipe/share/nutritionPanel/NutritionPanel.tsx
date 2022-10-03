@@ -1,14 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useEffect, useState } from "react";
-import { MdOutlineClose } from "react-icons/md";
-import { setIngredientArrayForNutrition } from "../../../../redux/edit_recipe/editRecipeStates";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import { faChartColumn, faUser } from "@fortawesome/pro-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useState } from "react";
 import { DropDownType } from "../../../../theme/dropDown/DropDown.component";
-import NutritionPanelSkeleton from "../../../../theme/skeletons/nutrationPanelSkeleton/NutrationPanelSkeleton";
-import UpdatedRecursiveAccordion from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
+import ToggleMenu from "../../../../theme/toggleMenu/ToggleMenu";
 import PanelHeader from "../panelHeader/PanelHeader";
 import styles from "./NutritionPanel.module.scss";
+import NutritionPanelMyFacts from "./NutritionPanelMyFacts";
+import NutritionPanelRxFacts from "./NutritionPanleRxFacts";
 
 interface NutritionPanelInterface {
   variant?: "panel" | "main";
@@ -26,155 +26,66 @@ interface NutritionPanelInterface {
   showUser?: boolean;
   measurementDropDownState?: DropDownType & { showDropDown: boolean };
   showTitle?: boolean;
+  isNutrientPanelHasMyFacts?: boolean;
 }
 
-const NutritionPanel = ({
-  variant = "main",
-  nutritionTrayData = {},
-  setNutritionState = () => {},
-  counter = 1,
-  isComeFormRecipeEditPage = false,
-  calculatedIngOz = 0,
-  nutritionState = {},
-  nutritionDataLoading,
-  servingSize = 0,
-  servings = 1,
-  adjusterFunc = () => {},
-  showServing = true,
-  showUser = true,
-  measurementDropDownState = {
-    listElem: [],
-    style: {},
-    value: "",
-    name: "",
-    handleChange: () => {},
-    showDropDown: false,
+const panelHeaders = [
+  {
+    title: "Rx Facts",
+    icon: faChartColumn,
   },
-  showTitle = true,
-}: NutritionPanelInterface) => {
-  const [servingSizeCounter, setServingSizeCounter] = useState(1);
-  const selectedIngredientsList = useAppSelector(
-    (state) => state?.editRecipeReducer?.selectedIngredientsList,
-  );
-  const dispatch = useAppDispatch();
-  const measurement =
-    nutritionState?.portions?.find((itm) => itm?.default)?.measurement ||
-    nutritionState?.selectedPortion?.name;
-  const nutrientName =
-    nutritionState?.ingredientName ||
-    nutritionState?.ingredientId?.ingredientName;
-  const singleIngQuantity =
-    parseFloat(nutritionState?.selectedPortion?.quantity) || 1;
+  {
+    title: "My Facts",
+    icon: faUser,
+  },
+];
 
-  useEffect(() => {
-    if (servings) {
-      setServingSizeCounter(servings);
-    }
-  }, [servings]);
+const NutritionPanel = (props: NutritionPanelInterface) => {
+  const { variant = "main", isNutrientPanelHasMyFacts = false } = props;
+  const [toggle, setToggle] = useState(0);
+
+  const handleHeaderClick = (index: number = 0) => {
+    setToggle(index);
+  };
 
   return (
     <div className={styles.rightTaryContainer}>
-      <PanelHeader
-        icon={variant === "panel" ? "" : "/icons/chart-bar-light-green.svg"}
-        title="Rx Facts"
-      />
-      <div
-        className={styles.right}
-        style={variant === "panel" ? { boxShadow: "none" } : {}}
-      >
-        <div>
-          {showTitle && <div className={styles.right__title}>Nutrition</div>}
-
-          {showServing ? (
-            nutritionState?._id || nutritionState?.ingredientId?._id ? (
-              <div className={styles.content}>
-                <div className={styles.content__heading__nutrition}>
-                  <>
-                    <div>
-                      <h3 className={styles.content__name}>
-                        {singleIngQuantity}&nbsp;
-                        {measurement}
-                        &nbsp;
-                        {nutrientName}
-                      </h3>
-                    </div>
-                    <div
-                      className={styles.content__closeBox}
-                      onClick={() => {
-                        setNutritionState({});
-                        dispatch(
-                          setIngredientArrayForNutrition(
-                            selectedIngredientsList,
-                          ),
-                        );
-                      }}
-                    >
-                      <MdOutlineClose
-                        className={styles.content__closeBox__closeIcon}
-                      />
-                    </div>
-                  </>
-                </div>
-              </div>
-            ) : (
-              <div className={styles.right__counterTray}>
-                {/* <p className={styles.servings}>{counter}</p> */}
-
-                <div className={styles.right__counterTray__counter}>
-                  <input
-                    className={styles.right__counterTray__counter__input}
-                    type="number"
-                    value={
-                      isComeFormRecipeEditPage ? counter : servingSizeCounter
-                    }
-                    min={1}
-                    onChange={(e) => {
-                      isComeFormRecipeEditPage
-                        ? adjusterFunc(parseInt(e?.target?.value))
-                        : setServingSizeCounter(parseInt(e?.target?.value));
-                    }}
-                  />
-                </div>
-
-                <div className={styles.right__counterTray__serving}>
-                  <div>servings</div>
-                </div>
-                <div className={styles.right__counterTray__servingsize}>
-                  <div className={styles.right__counterTray__serving__num}>
-                    {isComeFormRecipeEditPage
-                      ? Math.round(calculatedIngOz / counter)
-                      : Math.round(
-                          (servingSize * counter) / servingSizeCounter,
-                        )}
-                    oz
-                  </div>
-                  &nbsp; : &nbsp; serving size
-                </div>
-              </div>
-            )
-          ) : null}
-        </div>
-
-        <div className={styles.compoent__box__nutrition}>
-          {nutritionDataLoading ? (
-            <div style={{ padding: " 0 10px" }}>
-              <NutritionPanelSkeleton />
-            </div>
-          ) : (
-            <UpdatedRecursiveAccordion
-              variant={variant}
-              dataObject={nutritionTrayData}
-              counter={isComeFormRecipeEditPage ? 1 : counter}
-              servingSize={
-                isComeFormRecipeEditPage ? counter : servingSizeCounter
-              }
-              showUser={showUser}
-              sinngleIngQuintity={singleIngQuantity}
-              measurementDropDownState={measurementDropDownState}
-            />
-          )}
-        </div>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        {isNutrientPanelHasMyFacts ? (
+          panelHeaders?.map((header, index) => {
+            return (
+              <PanelHeader
+                key={header?.title}
+                activeHeader={index === toggle}
+                index={index}
+                handleClick={handleHeaderClick}
+                icon={
+                  variant === "panel" ? (
+                    ""
+                  ) : (
+                    <FontAwesomeIcon icon={header.icon} fontSize="24" />
+                  )
+                }
+                title={header?.title}
+                panelHeaderVariant="headerBorderBottom"
+              />
+            );
+          })
+        ) : (
+          <PanelHeader
+            icon={
+              variant === "panel" ? "" : "/icons/chart-bar-light-green.svg"
+              // <FontAwesomeIcon icon={faChartColumn} fontSize="24" />
+            }
+            title="Rx Facts"
+          />
+        )}
       </div>
+      {toggle === 0 ? (
+        <NutritionPanelRxFacts {...props} />
+      ) : (
+        <NutritionPanelMyFacts />
+      )}
     </div>
   );
 };
