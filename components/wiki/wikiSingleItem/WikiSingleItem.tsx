@@ -209,6 +209,7 @@ function WikiSingleItem() {
                   value: item?.meausermentWeight,
                 })),
               }}
+              isNutrientPanelHasMyFacts={true}
             />
           )}
           {type === "Nutrient" && (

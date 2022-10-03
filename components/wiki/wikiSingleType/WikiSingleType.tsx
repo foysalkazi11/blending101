@@ -67,7 +67,7 @@ const WikiSingleType = ({
   };
 
   const handleClose = () => {
-    if (selectedWikiItem[type].length) {
+    if (selectedWikiItem[type]?.length) {
       setSelectedWikiItem((wikiItem) => ({ ...wikiItem, [type]: [] }));
     } else {
       setType("");
