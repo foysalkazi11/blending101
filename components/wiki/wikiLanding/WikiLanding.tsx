@@ -103,8 +103,8 @@ const WikiLanding = ({
     setType(type);
   };
 
-  const ingredientWikiList = ingredientList?.getIngredientWikiList?.wikiList;
-  const nutrientWikiListList = nutrientListList?.getNutrientWikiList?.wikiList;
+  const ingredientWikiList = ingredientList?.getIngredientWikiList2?.wikiList;
+  const nutrientWikiListList = nutrientListList?.getNutrientWikiList2?.wikiList;
 
   return (
     <div style={{ margin: "20px 0" }}>

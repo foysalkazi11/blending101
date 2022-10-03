@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import styles from "./WikiLanding.module.scss";
 import Image from "next/image";
 import Carousel from "../../../theme/carousel/carousel.component";
@@ -87,7 +87,7 @@ const WikiLandingContent = ({
       await addOrRemoveToWikiCompareList({
         variables: { ingredientId, userId: dbUser?._id },
         update(cache) {
-          const { getIngredientWikiList } = cache.readQuery({
+          const { getIngredientWikiList2 } = cache.readQuery({
             query: GET_INGREDIENT_WIKI_LIST,
             variables: {
               userId: dbUser?._id,
@@ -106,9 +106,9 @@ const WikiLandingContent = ({
               ids: [],
             },
             data: {
-              getIngredientWikiList: {
-                ...getIngredientWikiList,
-                wikiList: getIngredientWikiList?.wikiList?.map((item) =>
+              getIngredientWikiList2: {
+                ...getIngredientWikiList2,
+                wikiList: getIngredientWikiList2?.wikiList?.map((item) =>
                   item?._id === ingredientId
                     ? { ...item, hasInCompare: isCompared ? false : true }
                     : item,
@@ -149,23 +149,23 @@ const WikiLandingContent = ({
 
   return (
     <div className={styles.main__slider}>
-      <h3>
-        <div className={styles.title}>
+      <div className={styles.headingContainer}>
+        <div className={styles.heading}>
           <Image
             src={image}
             alt={"Icon"}
             layout="fixed"
             objectFit={"contain"}
             quality={100}
-            height={30}
-            width={30}
+            height={24}
+            width={24}
           />
-          {title}
+          <h2 className={styles.title}>{title}</h2>
         </div>
         <div className={styles.viewAll} onClick={() => setShowAll(title)}>
           View All
         </div>
-      </h3>
+      </div>
 
       {loading ? (
         <SkeletonWikiDiscovery />
