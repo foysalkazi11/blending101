@@ -7,7 +7,7 @@ const GET_NUTRIENT_WIKI_LIST = gql`
     $userId: String
     $ids: [String!]
   ) {
-    getNutrientWikiList(
+    getNutrientWikiList2(
       page: $page
       limit: $limit
       userId: $userId
