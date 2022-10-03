@@ -96,7 +96,7 @@ export default function CollectionTray({
               className={styles.active}
               ref={reff}
               style={{ width: changeRecipeWithinCollection ? "100%" : null }}
-            ></div>
+            />
 
             <div
               className={

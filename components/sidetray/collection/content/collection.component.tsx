@@ -22,35 +22,35 @@ import useUpdateRecipeField from "../../../../customHooks/useUpdateRecipeFirld";
 import useLocalStorage from "../../../../customHooks/useLocalStorage";
 import { setCompareList } from "../../../../redux/slices/recipeSlice";
 import updateRecipeFunc from "../../../utility/updateRecipeFunc";
+import Link from "next/link";
 
 const IndividualCollection = ({
   name = "All Recipes",
   image = "/cards/food.png",
+  slug = "",
 }: {
   name?: string;
   image?: string;
+  slug?: string;
 }) => {
-  const dispatch = useAppDispatch();
   return (
-    <div className={styles.collection__child}>
-      <div
-        className={styles.leftSide}
-        onClick={() => {
-          dispatch(setCurrentCollectionInfo({ id: "", name }));
-          dispatch(setOpenCollectionsTary(false));
-        }}
-      >
-        <div className={styles.img}>
-          <div
-            className={styles.abs}
-            style={{
-              backgroundImage: `url(${image})`,
-            }}
-          ></div>
+    <Link href={`/collection/${slug}`}>
+      <a>
+        <div className={styles.collection__child}>
+          <div className={styles.leftSide}>
+            <div className={styles.img}>
+              <div
+                className={styles.abs}
+                style={{
+                  backgroundImage: `url(${image})`,
+                }}
+              ></div>
+            </div>
+            <p>{name}</p>
+          </div>
         </div>
-        <p>{name}</p>
-      </div>
-    </div>
+      </a>
+    </Link>
   );
 };
 
@@ -205,8 +205,8 @@ export default function CollectionComponent({
       <div className={styles.collection__collections}>
         {changeRecipeWithinCollection ? null : (
           <>
-            <IndividualCollection name="All Recipes" />
-            <IndividualCollection name="My Recipes" />
+            <IndividualCollection name="All Recipes" slug="all-recipes" />
+            <IndividualCollection name="My Recipes" slug="my-recipes" />
           </>
         )}
         {collectionsLoading ? (
@@ -216,84 +216,82 @@ export default function CollectionComponent({
             const defaultImage = item?.image;
 
             return (
-              <div
-                className={styles.collection__child}
-                key={"collections__child" + i}
-                onMouseOver={() => setHoverIndex(i + 1)}
-                onMouseLeave={() => setHoverIndex(0)}
-              >
-                <div
-                  className={styles.leftSide}
-                  onClick={() => {
-                    dispatch(
-                      setCurrentCollectionInfo({
-                        id: item?._id,
-                        name: item?.name,
-                      }),
-                    );
-                    dispatch(setOpenCollectionsTary(false));
-                  }}
-                >
-                  <div className={styles.img}>
-                    <div
-                      className={styles.abs}
-                      style={{
-                        backgroundImage: `url(${
-                          defaultImage || "/cards/food.png"
-                        })`,
-                      }}
-                    ></div>
-                  </div>
-                  <p>{item?.name}</p>
-                </div>
-                {changeRecipeWithinCollection ? (
-                  <div className={styles.checkBox}>
-                    <CustomCheckbox
-                      checked={collectionHasRecipe?.includes(item?._id)}
-                      handleChange={(e) => handleChange(e, item?._id)}
-                    />
-                  </div>
-                ) : hoverIndex === i + 1 ? (
-                  item?.name === "My Favourite" ? (
-                    <p style={{ marginRight: "10px" }}>
-                      {item?.recipes?.length}
-                    </p>
-                  ) : (
-                    <div className={styles.rightSide}>
-                      <MdMoreVert
-                        className={styles.moreIcon}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleClick(i);
-                        }}
-                      />
-
-                      <div
-                        className={`${styles.menu} ${
-                          menuIndex === i && showMenu ? styles.showMenu : ""
-                        }`}
-                      >
-                        <BiEditAlt
-                          className={styles.icon}
-                          onClick={() => {
-                            setInput((pre) => ({ ...pre, name: item?.name }));
-                            setIsEditCollection(true);
-                            setCollectionId(item?._id);
-                            setOpenModal(true);
+              <Link key={item?._id} href={`/collection/${item?._id}`}>
+                <a>
+                  <div
+                    className={styles.collection__child}
+                    key={"collections__child" + i}
+                    onMouseOver={() => setHoverIndex(i + 1)}
+                    onMouseLeave={() => setHoverIndex(0)}
+                  >
+                    <div className={styles.leftSide}>
+                      <div className={styles.img}>
+                        <div
+                          className={styles.abs}
+                          style={{
+                            backgroundImage: `url(${
+                              defaultImage || "/cards/food.png"
+                            })`,
                           }}
-                        />
-                        <MdDeleteOutline
-                          className={styles.icon}
-                          onClick={() => handleDeleteCollection(item?._id)}
-                        />
-                        <HiOutlineShare className={styles.icon} />
+                        ></div>
                       </div>
+                      <p>{item?.name}</p>
                     </div>
-                  )
-                ) : (
-                  <p style={{ marginRight: "10px" }}>{item?.recipes?.length}</p>
-                )}
-              </div>
+                    {changeRecipeWithinCollection ? (
+                      <div className={styles.checkBox}>
+                        <CustomCheckbox
+                          checked={collectionHasRecipe?.includes(item?._id)}
+                          handleChange={(e) => handleChange(e, item?._id)}
+                        />
+                      </div>
+                    ) : hoverIndex === i + 1 ? (
+                      item?.name === "My Favourite" ? (
+                        <p style={{ marginRight: "10px" }}>
+                          {item?.recipes?.length}
+                        </p>
+                      ) : (
+                        <div className={styles.rightSide}>
+                          <MdMoreVert
+                            className={styles.moreIcon}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleClick(i);
+                            }}
+                          />
+
+                          <div
+                            className={`${styles.menu} ${
+                              menuIndex === i && showMenu ? styles.showMenu : ""
+                            }`}
+                          >
+                            <BiEditAlt
+                              className={styles.icon}
+                              onClick={() => {
+                                setInput((pre) => ({
+                                  ...pre,
+                                  name: item?.name,
+                                }));
+                                setIsEditCollection(true);
+                                setCollectionId(item?._id);
+                                setOpenModal(true);
+                              }}
+                            />
+                            <MdDeleteOutline
+                              className={styles.icon}
+                              onClick={() => handleDeleteCollection(item?._id)}
+                            />
+                            <HiOutlineShare className={styles.icon} />
+                          </div>
+                        </div>
+                      )
+                    ) : (
+                      <p style={{ marginRight: "10px" }}>
+                        {item?.recipes?.length}
+                      </p>
+                    )}
+                  </div>
+                </a>
+              </Link>
             );
           })
         )}
