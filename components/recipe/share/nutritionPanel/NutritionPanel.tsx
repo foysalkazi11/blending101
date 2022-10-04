@@ -7,7 +7,7 @@ import { DropDownType } from "../../../../theme/dropDown/DropDown.component";
 import PanelHeader from "../panelHeader/PanelHeader";
 import styles from "./NutritionPanel.module.scss";
 import NutritionPanelMyFacts from "./myFacts";
-import NutritionPanelRxFacts from "./NutritionPanleRxFacts";
+import NutritionPanelRxFacts from "./RxFacts";
 
 interface NutritionPanelInterface {
   variant?: "panel" | "main";
