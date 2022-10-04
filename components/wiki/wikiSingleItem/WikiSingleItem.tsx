@@ -210,6 +210,7 @@ function WikiSingleItem() {
                 })),
               }}
               isNutrientPanelHasMyFacts={true}
+              wikiId={wikiId}
             />
           )}
           {type === "Nutrient" && (

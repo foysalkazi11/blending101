@@ -53,3 +53,9 @@
     grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr);
   }
 }
+
+.stickyContainer {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 60px;
+}
