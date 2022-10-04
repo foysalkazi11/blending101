@@ -15,6 +15,7 @@ interface Props {
   highestValue: number;
   handleOnChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   portion?: Portion;
+  highLight?: boolean;
 }
 
 const Linearcomponent = ({
@@ -32,6 +33,7 @@ const Linearcomponent = ({
     meausermentWeight: "",
     measurement: "",
   },
+  highLight = false,
 }: Props) => {
   const [ingId, setIngId] = useState("");
   useGetDefaultPortionOfnutration(ingId);
@@ -64,6 +66,7 @@ const Linearcomponent = ({
         <LinearIndicatorcomponent
           percent={percent}
           highestValue={highestValue}
+          highLight={highLight}
         />
       </Tooltip>
     </div>
