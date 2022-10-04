@@ -4,10 +4,9 @@ import { faChartColumn, faUser } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { DropDownType } from "../../../../theme/dropDown/DropDown.component";
-import ToggleMenu from "../../../../theme/toggleMenu/ToggleMenu";
 import PanelHeader from "../panelHeader/PanelHeader";
 import styles from "./NutritionPanel.module.scss";
-import NutritionPanelMyFacts from "./NutritionPanelMyFacts";
+import NutritionPanelMyFacts from "./myFacts";
 import NutritionPanelRxFacts from "./NutritionPanleRxFacts";
 
 interface NutritionPanelInterface {
@@ -27,6 +26,7 @@ interface NutritionPanelInterface {
   measurementDropDownState?: DropDownType & { showDropDown: boolean };
   showTitle?: boolean;
   isNutrientPanelHasMyFacts?: boolean;
+  wikiId?: string;
 }
 
 const panelHeaders = [
@@ -41,7 +41,7 @@ const panelHeaders = [
 ];
 
 const NutritionPanel = (props: NutritionPanelInterface) => {
-  const { variant = "main", isNutrientPanelHasMyFacts = false } = props;
+  const { variant = "main", isNutrientPanelHasMyFacts = false, wikiId } = props;
   const [toggle, setToggle] = useState(0);
 
   const handleHeaderClick = (index: number = 0) => {
@@ -84,7 +84,7 @@ const NutritionPanel = (props: NutritionPanelInterface) => {
       {toggle === 0 ? (
         <NutritionPanelRxFacts {...props} />
       ) : (
-        <NutritionPanelMyFacts />
+        <NutritionPanelMyFacts wikiId={wikiId} />
       )}
     </div>
   );

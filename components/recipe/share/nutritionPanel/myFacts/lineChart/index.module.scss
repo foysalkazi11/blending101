@@ -1,0 +1,36 @@
+.lineChartContainer {
+  padding: 20px 16px;
+  width: 100%;
+  height: auto;
+  min-height: 200px;
+  border-radius: 14px;
+  transition: all 0.2s;
+  background-color: white;
+  box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 22px;
+  color: #000;
+  font-weight: 500;
+}
+
+.description {
+  padding: 16px 0;
+
+  .singleItem {
+    color: #b6b6b6;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    line-height: 24px;
+    font-size: 15px;
+    span {
+      color: #8b8a8a;
+      font-weight: 500;
+      font-size: inherit;
+      padding-right: 5px;
+    }
+  }
+}
