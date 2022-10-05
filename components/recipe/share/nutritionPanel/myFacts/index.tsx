@@ -11,8 +11,10 @@ interface Props {
 }
 
 const MyFacts = ({ wikiId }: Props) => {
-  const [getIngredientsStats, { data, loading, error }] =
-    useLazyQuery(GET_INGREDIENT_STATS);
+  const [getIngredientsStats, { data, loading, error }] = useLazyQuery(
+    GET_INGREDIENT_STATS,
+    { fetchPolicy: "cache-and-network" },
+  );
   const { dbUser } = useAppSelector((state) => state?.user);
 
   const fetchData = async (type?: string) => {
@@ -23,7 +25,7 @@ const MyFacts = ({ wikiId }: Props) => {
           ingredientId: wikiId,
           memberId: dbUser?._id,
           currentDate: `${today}`,
-          type: type || "Y",
+          type: type || "M",
         },
       });
       console.log(data);
@@ -40,6 +42,8 @@ const MyFacts = ({ wikiId }: Props) => {
       <LineChartIndex
         stats={data?.testGetIngredientsStats?.stats}
         portion={data?.testGetIngredientsStats?.portion}
+        fetchChartData={fetchData}
+        loading={loading}
       />
       <BarChart
         loading={loading}

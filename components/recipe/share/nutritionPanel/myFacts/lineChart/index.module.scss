@@ -1,3 +1,4 @@
+@import "../../../../../../styles/partials/variables";
 .lineChartContainer {
   padding: 20px 16px;
   width: 100%;
@@ -33,4 +34,42 @@
       padding-right: 5px;
     }
   }
+}
+
+.lineChartDurationPointBox {
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .term {
+    cursor: pointer;
+    color: #8b8a8a;
+    font-size: 14px;
+    padding: 0 10px;
+    border-right: 2px solid #8b8a8a;
+    font-weight: 500;
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  .active {
+    color: $secondaryColor;
+  }
+}
+
+.lineChartBoxContainer {
+  width: 100%;
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.noRecordFound {
+  text-align: center;
+  color: #c4c4c4;
+  font-weight: 400;
+  font-family: inherit;
 }
