@@ -1,8 +1,26 @@
 import { gql } from "@apollo/client";
 
+export const GET_WIDGET_TYPE = gql`
+  query GetWidgetType($slug: String!) {
+    getWidgetTypeBySlug(slug: $slug)
+  }
+`;
+
+export const GET_GRID_WIDGET = gql`
+  query GetRecipeWidget($slug: String!) {
+    getWidgetsForClient(slug: $slug) {
+      widgetCollections {
+        slug
+        displayName
+        icon
+      }
+    }
+  }
+`;
+
 export const GET_SLIDER_WIDGET = gql`
-  query GetRecipeWidget($widgetId: String!) {
-    getWidgetsForClient(widgetId: $widgetId) {
+  query GetRecipeWidget($slug: String!) {
+    getWidgetsForClient(slug: $slug) {
       _id
       widgetName
       widgetType
@@ -53,22 +71,12 @@ export const GET_SLIDER_WIDGET = gql`
   }
 `;
 
-export const GET_GRID_WIDGET = gql`
-  query GetRecipeWidget($id: String!) {
-    getWidgetsForClient(widgetId: $id) {
-      _id
-      widgetCollections {
-        slug
-        displayName
-        icon
-      }
-    }
-  }
-`;
-
-export const GET_GRID_WIDGET_DATA = gql`
-  query GetGridWidgetData($collection: String!, $widget: String!) {
-    getWidgetCollectionbyDisplayName(slug: $collection, widgetid: $widget) {
+export const GET_ALL_WIDGET_COLLECTION_DATA = gql`
+  query GetGridWidgetData($widgetSlug: String!, $collectionSlug: String!) {
+    getWidgetCollectionbySlugForClient(
+      widgetSlug: $widgetSlug
+      slug: $collectionSlug
+    ) {
       displayName
       icon
       themeLink
@@ -79,6 +87,7 @@ export const GET_GRID_WIDGET_DATA = gql`
           name
           recipeIngredients
           recipeBlendCategory {
+            _id
             name
           }
           image {

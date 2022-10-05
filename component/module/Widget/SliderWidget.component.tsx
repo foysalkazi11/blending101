@@ -10,16 +10,17 @@ import useThemeMethod from "../../../hooks/modules/useThemeMethod";
 import styles from "./SliderWidget.module.scss";
 
 interface SliderWidgetProps {
-  widgetId: string;
+  name: string;
+  column?: number;
 }
 
 const SliderWidget = (props: SliderWidgetProps) => {
-  const { widgetId } = props;
+  const { name } = props;
   const { data } = useQuery(GET_SLIDER_WIDGET, {
     variables: {
-      widgetId,
+      slug: name,
     },
-    skip: !widgetId,
+    skip: !name,
   });
 
   const widget = data?.getWidgetsForClient;
@@ -29,7 +30,7 @@ const SliderWidget = (props: SliderWidgetProps) => {
         widget?.widgetCollections?.map((collection: any) => (
           <WidgetCollection
             key={collection?._id}
-            widget={widget?._id}
+            widget={name}
             collection={collection}
           />
         ))}
@@ -70,12 +71,11 @@ const WidgetCollection = ({ widget, collection }) => {
           }
         });
 
-  console.log(tab);
   return (
     <ContentTray
       key={id}
       id={collection?._id}
-      allUrl={`/${slug}?id=${widget}`}
+      allUrl={`/${widget}/${slug}`}
       heading={displayName}
       hasFilter={showTabMenu}
       filters={values.map((value) => value.label)}

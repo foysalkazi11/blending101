@@ -13,7 +13,7 @@ import IconButton from "../component/atoms/Button/IconButton.component";
 
 import useLocalStorage from "../customHooks/useLocalStorage";
 import { useAppSelector } from "../redux/hooks";
-import { GET_GRID_WIDGET_DATA } from "../graphql/Widget";
+import { GET_ALL_WIDGET_COLLECTION_DATA } from "../graphql/Widget";
 
 import styles from "../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";
 import classes from "../styles/pages/viewAll.module.scss";
@@ -28,16 +28,16 @@ const ViewAll = () => {
     (state) => state.sideTray,
   );
 
-  const { data } = useQuery(GET_GRID_WIDGET_DATA, {
+  const { data } = useQuery(GET_ALL_WIDGET_COLLECTION_DATA, {
     variables: {
-      collection: params && params[0],
-      widget: widgetId,
+      widgetSlug: params && params[0],
+      collectionSlug: params && params[1],
     },
-    skip: widgetId === "" || params?.length === 0,
+    skip: params?.length === 0,
   });
 
-  const collection = data?.getWidgetCollectionbyDisplayName;
-  const items = collection?.data[collection?.data?.collectionType] || [];
+  const collection = data?.getWidgetCollectionbySlugForClient;
+  const items = collection?.data?.[collection?.data?.collectionType] || [];
 
   const [theme, setTheme] = useState("");
   useEffect(() => {

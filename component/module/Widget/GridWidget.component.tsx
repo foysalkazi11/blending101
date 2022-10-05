@@ -6,35 +6,28 @@ import styles from "./GridWidget.module.scss";
 
 interface GridWidgetProps {
   name: string;
+  elements: (item: any) => React.ReactNode;
 }
 const GridWidget: React.FC<GridWidgetProps> = (props) => {
-  const { name } = props;
+  const { name, elements } = props;
   const { data } = useQuery(GET_GRID_WIDGET, {
     variables: {
-      id: name,
+      slug: name,
     },
     skip: name === "",
   });
 
   const widget = data?.getWidgetsForClient;
   return (
-    <div className={styles.theme}>
+    <div className="row">
       {widget &&
-        widget?.widgetCollections?.map((item) => (
-          <Link key={item.slug} href={`/${item.slug}?id=${widget?._id}`}>
-            <a>
-              <div className={styles.theme__child}>
-                <div className={styles.theme__cover}>
-                  <div
-                    className={styles.theme__cover__abs}
-                    style={{ backgroundImage: `url(${item.icon})` }}
-                  />
-                </div>
-                <p>{item.displayName}</p>
-              </div>
-            </a>
-          </Link>
-        ))}
+        widget?.widgetCollections?.map((item) =>
+          elements ? (
+            elements(item)
+          ) : (
+            <p>WIDGET - NO FRONTEND THEME - {item.displayName}</p>
+          ),
+        )}
     </div>
   );
 };

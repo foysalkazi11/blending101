@@ -1,8 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+
 import TrayWrapper from "../TrayWrapper";
 import CollectionComponent from "./content/collection.component";
-import styles from "./trayleft.module.scss";
 import { MdOutlineAddCircleOutline } from "react-icons/md";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import CustomModal from "../../../theme/modal/customModal/CustomModal";
@@ -15,6 +16,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TrayTag from "../TrayTag";
 import { faChartTreeMap } from "@fortawesome/pro-regular-svg-icons";
 import GridWidget from "../../../component/module/Widget/GridWidget.component";
+
+import styles from "./collectionTray.module.scss";
+import Widget from "../../../component/module/Widget/Widget.component";
 
 interface CollectionTrayProps {
   showTagByDefaut?: boolean;
@@ -148,7 +152,26 @@ export default function CollectionTray({
             setOpenModal={setOpenModal}
           />
         ) : (
-          <GridWidget name="62597e685e28381b901eff23" />
+          <Widget
+            slug="recipe-editor"
+            elements={(item) => (
+              <div key={item.slug} className={"col-4"}>
+                <Link href={`/recipe-editor/${item.slug}`}>
+                  <a>
+                    <div className={styles.theme__child}>
+                      <div className={styles.theme__cover}>
+                        <div
+                          className={styles.theme__cover__abs}
+                          style={{ backgroundImage: `url(${item.icon})` }}
+                        />
+                      </div>
+                      <p>{item.displayName}</p>
+                    </div>
+                  </a>
+                </Link>
+              </div>
+            )}
+          />
         )}
 
         <CustomModal open={openModal} setOpen={setOpenModal}>
