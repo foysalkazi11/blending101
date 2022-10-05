@@ -3,31 +3,43 @@ import React from "react";
 import styles from "./PanelHeader.module.scss";
 
 interface PanelHeaderProps {
-  icon?: string;
+  icon?: string | React.ReactNode;
   title?: string;
-  rightSide?: React.ReactNode;
+  rightSide?: React.ReactNode | null;
+  panelHeaderVariant?: "headerSolid" | "headerBorderBottom";
+  activeHeader?: boolean;
+  index?: number;
+  handleClick?: (index: number) => void;
 }
 
 const PanelHeader = ({
   icon = "/icons/chart-bar-light-green.svg",
   title = "Rx Facts",
-  rightSide = <div></div>,
+  rightSide = null,
+  panelHeaderVariant = "headerSolid",
+  activeHeader = false,
+  index = 0,
+  handleClick = () => {},
 }: PanelHeaderProps) => {
   return (
     <div className={styles.headingContainer}>
-      <div className={styles.recipeHeadingTopSec}>
-        {icon && (
-          <Image
-            src={icon}
-            alt="Picture will load soon"
-            width={22}
-            height={22}
-          />
-        )}
+      <div
+        className={`${styles[panelHeaderVariant]} ${
+          activeHeader ? styles.activeTab : ""
+        }`}
+        onClick={() => handleClick(index)}
+      >
+        <div className={styles.icon}>
+          {typeof icon === "string" ? (
+            <img src={icon} alt="Picture will load soon" />
+          ) : (
+            icon
+          )}
+        </div>
 
-        <h3>{title}</h3>
+        <h3 className={styles.title}>{title}</h3>
       </div>
-      {rightSide}
+      {rightSide && rightSide}
     </div>
   );
 };
