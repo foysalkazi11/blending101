@@ -30,13 +30,13 @@ const ViewAll = () => {
 
   const { data } = useQuery(GET_GRID_WIDGET_DATA, {
     variables: {
-      collection: params && params[0],
-      widget: widgetId,
+      widgetSlug: params && params[0],
+      collectionSlug: params && params[1],
     },
-    skip: widgetId === "" || params?.length === 0,
+    skip: params?.length === 0,
   });
 
-  const collection = data?.getWidgetCollectionbyDisplayName;
+  const collection = data?.getWidgetCollectionbySlugForClient;
   const items = collection?.data[collection?.data?.collectionType] || [];
 
   const [theme, setTheme] = useState("");

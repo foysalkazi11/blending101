@@ -1,8 +1,13 @@
 import { gql } from "@apollo/client";
 
+export const GET_WIDGET_TYPE = gql`
+  query GetWidgetType($slug: String!) {
+    getWidgetTypeBySlug(slug: $slug)
+  }
+`;
 export const GET_SLIDER_WIDGET = gql`
-  query GetRecipeWidget($widgetId: String!) {
-    getWidgetsForClient(widgetId: $widgetId) {
+  query GetRecipeWidget($slug: String!) {
+    getWidgetsForClient(slug: $slug) {
       _id
       widgetName
       widgetType
@@ -54,9 +59,8 @@ export const GET_SLIDER_WIDGET = gql`
 `;
 
 export const GET_GRID_WIDGET = gql`
-  query GetRecipeWidget($id: String!) {
-    getWidgetsForClient(widgetId: $id) {
-      _id
+  query GetRecipeWidget($slug: String!) {
+    getWidgetsForClient(slug: $slug) {
       widgetCollections {
         slug
         displayName
@@ -67,38 +71,15 @@ export const GET_GRID_WIDGET = gql`
 `;
 
 export const GET_GRID_WIDGET_DATA = gql`
-  query GetGridWidgetData($collection: String!, $widget: String!) {
-    getWidgetCollectionbyDisplayName(slug: $collection, widgetid: $widget) {
+  query GetGridWidgetData($widgetSlug: String!, $collectionSlug: String!) {
+    getWidgetCollectionbySlugForClient(
+      widgetSlug: $widgetSlug
+      slug: $collectionSlug
+    ) {
       displayName
       icon
       themeLink
       bannerLink
-      data {
-        collectionType
-        Recipe {
-          name
-          recipeIngredients
-          recipeBlendCategory {
-            name
-          }
-          image {
-            image
-            default
-          }
-          description
-          prepTime
-          cookTime
-          totalTime
-          _id
-          url
-          favicon
-          averageRating
-          numberOfRating
-          foodCategories
-          notes
-          addedToCompare
-        }
-      }
     }
   }
 `;

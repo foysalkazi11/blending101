@@ -44,21 +44,20 @@ const ViewAll = () => {
     if (!slug) return;
     if (slug == "all-recipes") {
       getAllRecipes({ variables: { userId } }).then((res: any) => {
-        setRecipes(res?.data?.getAllRecipesFromCollection);
         setTitle("All Recipes");
+        setRecipes(res?.data?.getAllRecipesFromCollection);
       });
     } else if (slug === "my-recipes") {
       getMyRecipes({ variables: { userId } }).then((res: any) => {
-        setRecipes(res?.data?.getAllMyCreatedRecipes);
         setTitle("My Recipes");
+        setRecipes(res?.data?.getAllMyCreatedRecipes);
       });
     } else {
-      getCustomRecipes({ variables: { userId, collectionId: slug } }).then(
-        (res: any) => {
-          setRecipes(res?.data?.getASingleCollection);
-          setTitle("My Recipes");
-        },
-      );
+      getCustomRecipes({ variables: { userId, slug } }).then((res: any) => {
+        setTitle(res?.data?.getASingleCollection?.name);
+        setIcon(res?.data?.getASingleCollection?.image);
+        setRecipes(res?.data?.getASingleCollection?.recipes);
+      });
     }
   }, [getAllRecipes, getCustomRecipes, getMyRecipes, slug, userId]);
 
@@ -105,13 +104,9 @@ const ViewAll = () => {
           <div>
             <div className={classes.head}>
               <div className="flex ai-center">
-                <Icon
-                  className={classes.head__icon}
-                  size="3rem"
-                  color="#fe5d1f"
-                >
-                  {icon}
-                </Icon>
+                {icon && (
+                  <img src={icon} alt={title} className={classes.head__icon} />
+                )}
                 <h2 className={classes.head__title}>{title}</h2>
               </div>
               <IconButton

@@ -216,7 +216,7 @@ export default function CollectionComponent({
             const defaultImage = item?.image;
 
             return (
-              <Link key={item?._id} href={`/collection/${item?._id}`}>
+              <Link key={item?.slug} href={`/collection/${item?.slug}`}>
                 <a>
                   <div
                     className={styles.collection__child}

@@ -23,7 +23,7 @@ import {
 import { useRouter } from "next/router";
 import SkeletonRecipeDiscovery from "../../../theme/skeletons/skeletonRecipeDiscovery/SkeletonRecipeDiscovery";
 import useLocalStorage from "../../../customHooks/useLocalStorage";
-import Widget from "../../../component/module/Widget/SliderWidget.component";
+import Widget from "../../../component/module/Widget/Widget.component";
 import ShowCollectionModal from "../../showModal/ShowCollectionModal";
 import SliderWidget from "../../../component/module/Widget/SliderWidget.component";
 
@@ -294,7 +294,7 @@ const RecipeDetails = () => {
                 ) : (
                   <SkeletonRecipeDiscovery />
                 )}
-                <SliderWidget widgetId="62597e685e28381b901eff23" />
+                <Widget slug="recipe-editor" />
               </div>
             </div>
           )}
