@@ -15,7 +15,7 @@ const MyFacts = ({ wikiId }: Props) => {
     useLazyQuery(GET_INGREDIENT_STATS);
   const { dbUser } = useAppSelector((state) => state?.user);
 
-  const fetchData = async (category?: string, type?: string) => {
+  const fetchData = async (type?: string) => {
     const today = new Date().toISOString().slice(0, 10);
     try {
       const { data } = await getIngredientsStats({
@@ -24,11 +24,12 @@ const MyFacts = ({ wikiId }: Props) => {
           memberId: dbUser?._id,
           currentDate: `${today}`,
           type: type || "Y",
-          categoy: category || "All",
         },
       });
       console.log(data);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -49,6 +50,7 @@ const MyFacts = ({ wikiId }: Props) => {
         }
         fetchChartData={fetchData}
         wikiId={wikiId}
+        category={data?.testGetIngredientsStats?.category}
       />
     </div>
   );
