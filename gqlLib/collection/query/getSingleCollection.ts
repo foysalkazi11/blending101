@@ -1,44 +1,48 @@
 import { gql } from "@apollo/client";
 
 const GET_SINGLE_COLLECTION = gql`
-  query GetASingleCollection($userId: String!, $collectionId: String!) {
-    getASingleCollection(userId: $userId, CollectionId: $collectionId) {
-      image {
-        default
-        image
-      }
+  query GetASingleCollection($userId: String!, $slug: String!) {
+    getASingleCollection(userId: $userId, slug: $slug) {
       name
-      _id
-      description
-      prepTime
-      cookTime
-      totalTime
-      recipeYield
-      recipeIngredients
-      recipeInstructions
-      recipeCuisines
-      url
-      discovery
-      favicon
-      averageRating
-      numberOfRating
-      ingredients {
-        ingredientId {
-          _id
-          ingredientName
+      image
+      recipes {
+        image {
+          default
+          image
         }
-      }
-      notes
-      addedToCompare
-      userCollections
-      defaultVersion {
-        postfixTitle
-      }
-      isMatch
-      userId {
+        name
         _id
-        displayName
-        image
+        description
+        prepTime
+        cookTime
+        totalTime
+        recipeYield
+        recipeIngredients
+        recipeInstructions
+        recipeCuisines
+        url
+        discovery
+        favicon
+        averageRating
+        numberOfRating
+        ingredients {
+          ingredientId {
+            _id
+            ingredientName
+          }
+        }
+        notes
+        addedToCompare
+        userCollections
+        defaultVersion {
+          postfixTitle
+        }
+        isMatch
+        userId {
+          _id
+          displayName
+          image
+        }
       }
     }
   }

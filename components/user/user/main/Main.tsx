@@ -28,8 +28,7 @@ type MainProps = {
 
 const Main = ({ userData, setUserData }: MainProps) => {
   const router = useRouter();
-  console.log(router.query);
-  const { type, active } = router.query;
+  const { type } = router.query;
   const [activeTab, setActiveTab] = useState(type);
 
   useEffect(() => {
@@ -104,7 +103,7 @@ const Main = ({ userData, setUserData }: MainProps) => {
               ...dbUser?.configuration,
               ...userData?.personalization,
             },
-          })
+          }),
         );
         dispatch(setLoading(false));
 
@@ -138,7 +137,7 @@ const Main = ({ userData, setUserData }: MainProps) => {
               ...dbUser?.configuration,
               ...userData?.personalization,
             },
-          })
+          }),
         );
         dispatch(setLoading(false));
         notification("info", "Updated successfully");

@@ -67,7 +67,7 @@ const WikiSingleType = ({
   };
 
   const handleClose = () => {
-    if (selectedWikiItem[type].length) {
+    if (selectedWikiItem[type]?.length) {
       setSelectedWikiItem((wikiItem) => ({ ...wikiItem, [type]: [] }));
     } else {
       setType("");
@@ -89,7 +89,7 @@ const WikiSingleType = ({
         },
       });
 
-      const res = data?.getNutrientWikiList || data?.getIngredientWikiList;
+      const res = data?.getNutrientWikiList2 || data?.getIngredientWikiList2;
       setPageLength(res?.total);
       setWikiList(res?.wikiList);
     } catch (error) {
