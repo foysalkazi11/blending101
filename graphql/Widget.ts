@@ -5,6 +5,19 @@ export const GET_WIDGET_TYPE = gql`
     getWidgetTypeBySlug(slug: $slug)
   }
 `;
+
+export const GET_GRID_WIDGET = gql`
+  query GetRecipeWidget($slug: String!) {
+    getWidgetsForClient(slug: $slug) {
+      widgetCollections {
+        slug
+        displayName
+        icon
+      }
+    }
+  }
+`;
+
 export const GET_SLIDER_WIDGET = gql`
   query GetRecipeWidget($slug: String!) {
     getWidgetsForClient(slug: $slug) {
@@ -58,19 +71,7 @@ export const GET_SLIDER_WIDGET = gql`
   }
 `;
 
-export const GET_GRID_WIDGET = gql`
-  query GetRecipeWidget($slug: String!) {
-    getWidgetsForClient(slug: $slug) {
-      widgetCollections {
-        slug
-        displayName
-        icon
-      }
-    }
-  }
-`;
-
-export const GET_GRID_WIDGET_DATA = gql`
+export const GET_ALL_WIDGET_COLLECTION_DATA = gql`
   query GetGridWidgetData($widgetSlug: String!, $collectionSlug: String!) {
     getWidgetCollectionbySlugForClient(
       widgetSlug: $widgetSlug
@@ -80,6 +81,33 @@ export const GET_GRID_WIDGET_DATA = gql`
       icon
       themeLink
       bannerLink
+      data {
+        collectionType
+        Recipe {
+          name
+          recipeIngredients
+          recipeBlendCategory {
+            _id
+            name
+          }
+          image {
+            image
+            default
+          }
+          description
+          prepTime
+          cookTime
+          totalTime
+          _id
+          url
+          favicon
+          averageRating
+          numberOfRating
+          foodCategories
+          notes
+          addedToCompare
+        }
+      }
     }
   }
 `;
