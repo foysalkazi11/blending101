@@ -6,14 +6,12 @@ const GET_INGREDIENT_STATS = gql`
     $memberId: String!
     $currentDate: String!
     $type: String
-    $categoy: String
   ) {
     testGetIngredientsStats(
       ingredientId: $ingredientId
       memberId: $memberId
       currentDate: $currentDate
       type: $type
-      categoy: $categoy
     ) {
       stats {
         _id
@@ -34,6 +32,7 @@ const GET_INGREDIENT_STATS = gql`
           default
         }
       }
+      category
     }
   }
 `;
