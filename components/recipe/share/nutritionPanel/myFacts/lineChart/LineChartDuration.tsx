@@ -10,7 +10,7 @@ const chartDuration = [
     value: "M",
   },
   {
-    name: "YID",
+    name: "YTD",
     value: "YD",
   },
   {
