@@ -9,6 +9,7 @@ interface Props {
   portion?: Portion;
   fetchChartData?: (type?: string) => void;
   loading?: boolean;
+  category?: string;
 }
 
 const LineChartIndex = ({
@@ -16,13 +17,18 @@ const LineChartIndex = ({
   stats = [],
   fetchChartData = () => {},
   loading = false,
+  category = "",
 }: Props) => {
   return (
     <div className={s.lineChartContainer}>
       <h2 className={s.title}>Ingredients</h2>
-      <LineChartHeadingForIngredient portion={portion} stats={stats} />
+      <LineChartHeadingForIngredient
+        portion={portion}
+        stats={stats}
+        category={category}
+      />
       <LineChartDuration fetchChartData={fetchChartData} />
-      <LineChart lineChartData={stats} loading={loading} />
+      <LineChart lineChartData={stats} loading={loading} category={category} />
     </div>
   );
 };

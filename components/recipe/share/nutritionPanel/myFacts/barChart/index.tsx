@@ -1,6 +1,7 @@
 import React from "react";
 import Linearcomponent from "../../../../../../theme/linearProgress/LinearProgress.component";
 import IngredientPanelSkeleton from "../../../../../../theme/skeletons/ingredientPanelSleketon/IngredientPanelSkeleton";
+import { measurementConverter } from "../measurementConverter";
 import s from "./index.module.scss";
 
 interface Props {
@@ -28,13 +29,24 @@ const BarChart = ({
       ) : barChartData?.length ? (
         barChartData?.map(
           ({ name, consumptionInGram, _id, portion }, index) => {
+            const measurement = measurementConverter(
+              category,
+              consumptionInGram,
+            );
             return (
               <Linearcomponent
                 name={name}
-                percent={parseInt(consumptionInGram?.toFixed(2))}
+                // percent={parseInt(consumptionInGram?.toFixed(2))}
+                percent={measurement?.amount}
                 key={index}
-                units="G"
-                highestValue={barChartData[0]?.consumptionInGram}
+                // units="G"
+                units={measurement?.measurement}
+                highestValue={
+                  measurementConverter(
+                    category,
+                    barChartData[0]?.consumptionInGram,
+                  )?.amount
+                }
                 ingredientId={_id}
                 portion={portion}
                 highLight={wikiId === _id}

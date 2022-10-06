@@ -65,6 +65,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-top: 10px;
 }
 
 .noRecordFound {
@@ -72,4 +73,18 @@
   color: #c4c4c4;
   font-weight: 400;
   font-family: inherit;
+}
+
+.customTooltipBox {
+  background-color: #d2e7bc;
+  padding: 8px 5px;
+  border-radius: 6px;
+
+  .label {
+    font-size: 12px;
+  }
+  .dateLabel {
+    font-size: 12px;
+    line-height: 24px;
+  }
 }
