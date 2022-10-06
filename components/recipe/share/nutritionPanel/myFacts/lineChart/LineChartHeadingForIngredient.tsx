@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Portion } from "../../../../../../type/wikiListType";
+import { measurementConverter } from "../measurementConverter";
 import s from "./index.module.scss";
 
 interface Props {
   stats?: any[];
   portion?: Portion;
+  category?: string;
 }
-
-const pound = 0.00220462;
 
 const LineChartHeadingForIngredient = ({
   portion = { default: true, measurement: "", meausermentWeight: "" },
   stats = [],
+  category = "",
 }: Props) => {
   const [totalConsumption, setTotalConsumption] = useState(0);
 
@@ -27,7 +28,10 @@ const LineChartHeadingForIngredient = ({
       <div className={s.singleItem}>
         <p>Total Consumption</p>
         <p>
-          <span>{(totalConsumption * pound).toFixed(2)}</span>Pounds
+          <span>
+            {measurementConverter(category, totalConsumption)?.amount}
+          </span>
+          {measurementConverter(category, totalConsumption)?.measurement}
         </p>
       </div>
       <div className={s.singleItem}>

@@ -44,6 +44,7 @@ const MyFacts = ({ wikiId }: Props) => {
         portion={data?.testGetIngredientsStats?.portion}
         fetchChartData={fetchData}
         loading={loading}
+        category={data?.testGetIngredientsStats?.category}
       />
       <BarChart
         loading={loading}

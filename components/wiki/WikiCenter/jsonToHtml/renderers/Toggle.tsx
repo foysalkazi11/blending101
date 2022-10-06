@@ -22,7 +22,7 @@ const Toggle = ({ block, nestedBlocks = [] }: Props) => {
   const [toggleNestedBlock, setToggleNestedBlock] = useState(false);
 
   useEffect(() => {
-    setToggleNestedBlock(status);
+    setToggleNestedBlock(status === "open" ? true : false);
   }, []);
 
   return (
