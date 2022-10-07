@@ -58,7 +58,9 @@ const LineChart = ({
       const formatedDate = formatDate(new Date(payload[0].payload?.assignDate));
       return (
         <div className={s.customTooltipBox}>
-          <p className={s.label}>{`Consume : ${payload[0].value}`}</p>
+          <p className={s.label}>{`Consume : ${payload[0].value?.toFixed(
+            2,
+          )}`}</p>
           <p className={s.dateLabel}>{`${formatedDate?.month} ${
             chartDurationPoint === "Y" || chartDurationPoint === "YD"
               ? ""

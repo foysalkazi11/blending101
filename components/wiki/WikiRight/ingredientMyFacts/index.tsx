@@ -1,10 +1,7 @@
 import { useLazyQuery } from "@apollo/client";
 import React, { useEffect } from "react";
-import GET_INGREDIENT_STATS from "../../../../gqlLib/wiki/query/getIngredientsStats";
 import GET_NUTRIENT_STATS from "../../../../gqlLib/wiki/query/getNutrientStats";
 import { useAppSelector } from "../../../../redux/hooks";
-// import GET_INGREDIENT_STATS from "../../../../../gqlLib/wiki/query/getIngredientsStats";
-// import { useAppSelector } from "../../../../../redux/hooks";
 import BarChart from "./barChart";
 import s from "./index.module.scss";
 import LineChartIndex from "./lineChart";
@@ -39,7 +36,9 @@ const IngredientMyFactsIndex = ({ wikiId }: Props) => {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   return (
     <div className={s.myFactsContainer}>
       <LineChartIndex

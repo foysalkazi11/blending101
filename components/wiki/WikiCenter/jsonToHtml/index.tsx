@@ -45,6 +45,7 @@ const RenderJsonToHtml = ({ blocks, scrollPoint = "" }: Props) => {
       let prepareBlock: BlockType[] = loopBlock(copyBlocks);
       setNormalizeBlocks(prepareBlock);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blocks]);
 
   useEffect(() => {
