@@ -23,6 +23,7 @@ const Toggle = ({ block, nestedBlocks = [] }: Props) => {
 
   useEffect(() => {
     setToggleNestedBlock(status === "open" ? true : false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
