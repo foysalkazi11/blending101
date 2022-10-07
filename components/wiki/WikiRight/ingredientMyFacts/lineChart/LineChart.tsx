@@ -7,8 +7,7 @@ import {
   BarChart,
   Bar,
 } from "recharts";
-import SkeletonElement from "../../../../../../theme/skeletons/SkeletonElement";
-import { measurementConverter } from "../measurementConverter";
+import SkeletonElement from "../../../../../theme/skeletons/SkeletonElement";
 import s from "./index.module.scss";
 
 interface Props {
@@ -55,13 +54,13 @@ const LineChart = ({
 }: Props) => {
   const customTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
-      const measurement = measurementConverter(category, payload[0].value);
-      const formatedDate = formatDate(new Date(payload[0].payload?._id));
+      // const measurement = measurementConverter(category, payload[0].value);
+      const formatedDate = formatDate(new Date(payload[0].payload?.assignDate));
       return (
         <div className={s.customTooltipBox}>
-          <p
-            className={s.label}
-          >{`Consume : ${measurement?.amount}${measurement?.measurement}`}</p>
+          <p className={s.label}>{`Consume : ${payload[0].value?.toFixed(
+            2,
+          )}`}</p>
           <p className={s.dateLabel}>{`${formatedDate?.month} ${
             chartDurationPoint === "Y" || chartDurationPoint === "YD"
               ? ""
@@ -96,7 +95,7 @@ const LineChart = ({
             <Tooltip content={customTooltip} />
             <Area
               type="monotone"
-              dataKey="consumptionInGram"
+              dataKey="totalAmount"
               stroke="#7dbd3b"
               fill="#d2e7bc"
             />
@@ -114,7 +113,7 @@ const LineChart = ({
             }}
           >
             <Tooltip content={customTooltip} />
-            <Bar dataKey="consumptionInGram" fill="#d2e7bc" />
+            <Bar dataKey="totalAmount" fill="#d2e7bc" />
           </BarChart>
         )
       ) : (
