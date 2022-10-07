@@ -20,24 +20,28 @@ const LineChartHeadingForIngredient = ({
         <p>Daily Average</p>
         <p>
           <span>{dailyAverage.toFixed(2)}</span>
+          mg
         </p>
       </div>
       <div className={s.singleItem}>
         <p>Daily Recommended</p>
         <p>
           <span>{dailyRecomended.toFixed(2)}</span>
+          mg
         </p>
       </div>
       <div className={s.singleItem}>
         <p>Attainment</p>
         <p>
           <span>{attainment.toFixed(2)}</span>
+          mg
         </p>
       </div>
       <div className={s.singleItem}>
         <p>Upper Limit</p>
         <p>
           <span>{upperLimit.toFixed(2)}</span>
+          mg
         </p>
       </div>
     </div>
