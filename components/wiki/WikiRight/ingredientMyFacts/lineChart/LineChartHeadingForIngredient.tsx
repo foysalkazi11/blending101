@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import s from "./index.module.scss";
 
 interface Props {
@@ -14,32 +14,30 @@ const LineChartHeadingForIngredient = ({
   dailyRecomended = 0,
   upperLimit = 0,
 }: Props) => {
-  const [totalConsumption, setTotalConsumption] = useState(0);
-
   return (
     <div className={s.description}>
       <div className={s.singleItem}>
         <p>Daily Average</p>
         <p>
-          <span>{dailyAverage}</span>
+          <span>{dailyAverage.toFixed(2)}</span>
         </p>
       </div>
       <div className={s.singleItem}>
         <p>Daily Recommended</p>
         <p>
-          <span>{dailyRecomended}</span>
+          <span>{dailyRecomended.toFixed(2)}</span>
         </p>
       </div>
       <div className={s.singleItem}>
         <p>Attainment</p>
         <p>
-          <span>{attainment}</span>
+          <span>{attainment.toFixed(2)}</span>
         </p>
       </div>
       <div className={s.singleItem}>
         <p>Upper Limit</p>
         <p>
-          <span>{upperLimit}</span>
+          <span>{upperLimit.toFixed(2)}</span>
         </p>
       </div>
     </div>
