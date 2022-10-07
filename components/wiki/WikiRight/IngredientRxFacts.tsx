@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./WikiRight.module.scss";
 import LinearComponent from "../../../theme/linearProgress/LinearProgress.component";
-import Image from "next/image";
 import { useLazyQuery } from "@apollo/client";
 import IngredientPanelSkeleton from "../../../theme/skeletons/ingredientPanelSleketon/IngredientPanelSkeleton";
 import Combobox from "../../../theme/dropDown/combobox/Combobox.component";
@@ -28,7 +27,7 @@ interface NutrientPanelProps {
   ingredientsDataLoading?: boolean;
 }
 
-function WikiRightComponent({
+function IngredientRxFacts({
   ingredient = [],
   wikiId = "",
   ingredientsDataLoading = false,
@@ -92,79 +91,62 @@ function WikiRightComponent({
   }
 
   return (
-    <div className={styles.right}>
-      <div className={styles.recipeHeadingTopSec}>
-        <h3>
-          <div className={styles.chartbarIconDiv}>
-            <Image
-              src={"/icons/chart-bar-light-green.svg"}
-              alt="Picture will load soon"
-              height={"100%"}
-              width={"100%"}
-              layout="responsive"
-              objectFit="contain"
-            />
-          </div>
-          Rx Facts
-        </h3>
-      </div>
-      <div className={styles.rightCard}>
-        <div className={styles.rightCardHeading}>Ingredients</div>
-        <div className={styles.dropDownBox}>
-          <div className={styles.dropDown}>
-            <Combobox
-              value={dpd}
-              options={categories}
-              onChange={(e) => setDpd(e?.target?.value)}
-              style={{ width: "100%" }}
-              placeholder="Categories"
-            />
-          </div>
+    <div className={styles.rightCard}>
+      <div className={styles.rightCardHeading}>Ingredients</div>
+      <div className={styles.dropDownBox}>
+        <div className={styles.dropDown}>
+          <Combobox
+            value={dpd}
+            options={categories}
+            onChange={(e) => setDpd(e?.target?.value)}
+            style={{ width: "100%" }}
+            placeholder="Categories"
+          />
+        </div>
 
-          {ascendingOrder ? (
-            <FontAwesomeIcon
-              icon={faArrowDownWideShort}
-              onClick={() => setAscendingOrder((prev) => !prev)}
-              className={styles.downArrowIcon}
-            />
-          ) : (
-            <FontAwesomeIcon
-              icon={faArrowDownShortWide}
-              onClick={() => setAscendingOrder((prev) => !prev)}
-              className={styles.downArrowIcon}
-            />
-          )}
-        </div>
-        <div className={styles.progressIndicator}>
-          {loading || ingredientsDataLoading ? (
-            <IngredientPanelSkeleton />
-          ) : ingredientData?.length ? (
-            ingredientData?.map(
-              (
-                { name, value, units, ingredientId, portion }: ingredientState,
-                index,
-              ) => {
-                return (
-                  <LinearComponent
-                    name={name}
-                    percent={Number(value?.toFixed(2))}
-                    key={index}
-                    units={units}
-                    //@ts-ignore
-                    highestValue={ingredientData[0]?.value}
-                    ingredientId={ingredientId}
-                    portion={portion}
-                  />
-                );
-              },
-            )
-          ) : (
-            <p className={styles.noIngredient}>No ingredient found</p>
-          )}
-        </div>
+        {ascendingOrder ? (
+          <FontAwesomeIcon
+            icon={faArrowDownWideShort}
+            onClick={() => setAscendingOrder((prev) => !prev)}
+            className={styles.downArrowIcon}
+          />
+        ) : (
+          <FontAwesomeIcon
+            icon={faArrowDownShortWide}
+            onClick={() => setAscendingOrder((prev) => !prev)}
+            className={styles.downArrowIcon}
+          />
+        )}
+      </div>
+      <div className={styles.progressIndicator}>
+        {loading || ingredientsDataLoading ? (
+          <IngredientPanelSkeleton />
+        ) : ingredientData?.length ? (
+          ingredientData?.map(
+            (
+              { name, value, units, ingredientId, portion }: ingredientState,
+              index,
+            ) => {
+              return (
+                <LinearComponent
+                  name={name}
+                  percent={Number(value?.toFixed(2))}
+                  key={index}
+                  units={units}
+                  //@ts-ignore
+                  highestValue={ingredientData[0]?.value}
+                  ingredientId={ingredientId}
+                  portion={portion}
+                />
+              );
+            },
+          )
+        ) : (
+          <p className={styles.noIngredient}>No ingredient found</p>
+        )}
       </div>
     </div>
   );
 }
 
-export default WikiRightComponent;
+export default IngredientRxFacts;
