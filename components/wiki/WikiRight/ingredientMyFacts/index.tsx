@@ -51,6 +51,7 @@ const IngredientMyFactsIndex = ({ wikiId }: Props) => {
         dailyRecomended={data?.testGetNuteientsStats?.dailyRecomended}
         attainment={data?.testGetNuteientsStats?.attainment}
         upperLimit={data?.testGetNuteientsStats?.upperLimit}
+        units={data?.testGetNuteientsStats?.units}
       />
       <BarChart
         loading={loading}
