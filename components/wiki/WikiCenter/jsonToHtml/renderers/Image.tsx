@@ -4,17 +4,18 @@ import s from "../index.module.scss";
 
 import { BlockType } from "../../../../../type/editorjsBlockType";
 import useBlock from "../useBlock";
-interface Props {
-  block: BlockType;
-}
+import { BlockProps } from "..";
 
-const Image = ({ block }: Props) => {
+const Image = ({ block, addBlockPadding }: BlockProps) => {
   const { data, tunes } = block;
   const handleBlockData = useBlock();
   const alignment = tunes?.alignmentTuneTool?.alignment;
   const align: any = alignment || "left";
   return (
-    <figure {...handleBlockData(block)} className={s.image}>
+    <figure
+      {...handleBlockData(block)}
+      className={`${s.image} ${addBlockPadding ? "" : s.noBlockPadding}`}
+    >
       {data?.file?.url && (
         <img
           src={data.file.url}
