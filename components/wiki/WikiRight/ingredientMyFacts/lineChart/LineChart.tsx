@@ -15,6 +15,7 @@ interface Props {
   loading?: boolean;
   category?: string;
   chartDurationPoint?: string;
+  units?: string;
 }
 
 const month_names_short = [
@@ -51,10 +52,10 @@ const LineChart = ({
   loading = false,
   category = "",
   chartDurationPoint = "M",
+  units = "",
 }: Props) => {
   const customTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
-      // const measurement = measurementConverter(category, payload[0].value);
       const formatedDate = formatDate(new Date(payload[0].payload?.assignDate));
       const durationYearOrYearToday =
         chartDurationPoint === "Y" || chartDurationPoint === "YD";
@@ -62,7 +63,7 @@ const LineChart = ({
         <div className={s.customTooltipBox}>
           <p className={s.label}>{`Consume : ${payload[0].value?.toFixed(
             2,
-          )}`}</p>
+          )}${units.toLowerCase()}`}</p>
           <p className={s.dateLabel}>{`${formatedDate?.month} ${
             chartDurationPoint === "Y" || chartDurationPoint === "YD"
               ? ""

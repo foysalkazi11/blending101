@@ -6,6 +6,7 @@ interface Props {
   dailyRecomended: number;
   attainment: number;
   upperLimit: number;
+  units?: string;
 }
 
 const LineChartHeadingForIngredient = ({
@@ -13,35 +14,40 @@ const LineChartHeadingForIngredient = ({
   dailyAverage = 0,
   dailyRecomended = 0,
   upperLimit = 0,
+  units = "",
 }: Props) => {
+  const unitsLowerCase = units?.toLowerCase();
+  const handleToFixed = (nam: number, toFixedLength: number = 2) => {
+    return nam?.toFixed(toFixedLength);
+  };
   return (
     <div className={s.description}>
       <div className={s.singleItem}>
         <p>Daily Average</p>
         <p>
-          <span>{dailyAverage.toFixed(2)}</span>
-          mg
+          <span>{handleToFixed(dailyAverage)}</span>
+          {unitsLowerCase}
         </p>
       </div>
       <div className={s.singleItem}>
         <p>Daily Recommended</p>
         <p>
-          <span>{dailyRecomended.toFixed(2)}</span>
-          mg
+          <span>{handleToFixed(dailyRecomended)}</span>
+          {unitsLowerCase}
         </p>
       </div>
       <div className={s.singleItem}>
         <p>Attainment</p>
         <p>
-          <span>{attainment.toFixed(2)}</span>
-          mg
+          <span>{handleToFixed(attainment)}</span>
+          {unitsLowerCase}
         </p>
       </div>
       <div className={s.singleItem}>
         <p>Upper Limit</p>
         <p>
-          <span>{upperLimit.toFixed(2)}</span>
-          mg
+          <span>{handleToFixed(upperLimit)}</span>
+          {unitsLowerCase}
         </p>
       </div>
     </div>

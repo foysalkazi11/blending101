@@ -32,6 +32,7 @@ const GET_NUTRIENT_STATS = gql`
       dailyRecomended
       attainment
       upperLimit
+      units
     }
   }
 `;
