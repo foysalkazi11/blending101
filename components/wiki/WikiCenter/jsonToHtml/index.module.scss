@@ -12,12 +12,20 @@ $tooltip-arrow-size: 6px;
 }
 
 %block {
-  padding: 8px 0px;
+  padding: 10px 0px;
 }
 
 %anchor {
   text-decoration: none;
   color: $secondaryColor;
+}
+
+%sup {
+  padding: 0px 5px;
+  border: 2px solid $fontGray;
+  color: $secondaryColor;
+  margin-left: 3px;
+  border-radius: 6px;
 }
 
 %span {
@@ -135,6 +143,9 @@ $tooltip-arrow-size: 6px;
   }
   span {
     @extend %span;
+  }
+  sup {
+    @extend %sup;
   }
 }
 

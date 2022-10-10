@@ -14,6 +14,7 @@ interface Props {
   dailyRecomended?: number;
   attainment?: number;
   upperLimit?: number;
+  units?: string;
 }
 
 const LineChartIndex = ({
@@ -26,6 +27,7 @@ const LineChartIndex = ({
   dailyAverage = 0,
   dailyRecomended = 0,
   upperLimit = 0,
+  units = "",
 }: Props) => {
   const [chartDurationPoint, setChartDurationPoint] = useState("M");
   return (
@@ -36,6 +38,7 @@ const LineChartIndex = ({
         dailyRecomended={dailyRecomended}
         attainment={attainment}
         upperLimit={upperLimit}
+        units={units}
       />
       <LineChartDuration
         fetchChartData={fetchChartData}
@@ -47,6 +50,7 @@ const LineChartIndex = ({
         loading={loading}
         category={category}
         chartDurationPoint={chartDurationPoint}
+        units={units}
       />
     </div>
   );
