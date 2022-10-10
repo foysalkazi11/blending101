@@ -1,11 +1,8 @@
 import HTMLReactParser from "html-react-parser";
 import React, { FC } from "react";
-
-import { BlockType } from "../../../../../type/editorjsBlockType";
+import { BlockProps } from "..";
 import useBlock from "../useBlock";
-interface Props {
-  block: BlockType;
-}
+import s from "../index.module.scss";
 
 type Row = string[];
 type Content = Row[];
@@ -41,7 +38,7 @@ const Tr: FC<{
   </tr>
 );
 
-const Table = ({ block }: Props) => {
+const Table = ({ block, addBlockPadding }: BlockProps) => {
   const { data, tunes } = block;
   const handleBlockData = useBlock();
   const alignment = tunes?.alignmentTuneTool?.alignment;
@@ -51,7 +48,11 @@ const Table = ({ block }: Props) => {
   const withRowHeadings = !!data?.header;
 
   return (
-    <table {...handleBlockData(block)} style={{ textAlign: align }}>
+    <table
+      {...handleBlockData(block)}
+      className={`${s.table} ${addBlockPadding ? "" : s.noBlockPadding}`}
+      style={{ textAlign: align }}
+    >
       <>
         {data?.caption && <caption>{HTMLReactParser(data.caption)}</caption>}
         {header && <THead row={header} />}

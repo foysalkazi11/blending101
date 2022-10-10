@@ -57,16 +57,16 @@ const LineChart = ({
     if (active && payload && payload.length) {
       const measurement = measurementConverter(category, payload[0].value);
       const formatedDate = formatDate(new Date(payload[0].payload?._id));
+      const durationYearOrYearToday =
+        chartDurationPoint === "Y" || chartDurationPoint === "YD";
       return (
         <div className={s.customTooltipBox}>
           <p
             className={s.label}
           >{`Consume : ${measurement?.amount}${measurement?.measurement}`}</p>
           <p className={s.dateLabel}>{`${formatedDate?.month} ${
-            chartDurationPoint === "Y" || chartDurationPoint === "YD"
-              ? ""
-              : formatedDate?.day
-          }, ${formatedDate?.year}`}</p>
+            durationYearOrYearToday ? "" : formatedDate?.day
+          }${durationYearOrYearToday ? "" : ","} ${formatedDate?.year}`}</p>
         </div>
       );
     }

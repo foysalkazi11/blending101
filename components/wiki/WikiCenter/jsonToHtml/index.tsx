@@ -3,12 +3,18 @@ import { BlockType } from "../../../../type/editorjsBlockType";
 import s from "../wikiCenter.module.scss";
 import JsonToHtml from "./JsonToHtml";
 
+export interface BlockProps {
+  block: BlockType;
+  addBlockPadding?: boolean;
+}
+
 interface Props {
   blocks: BlockType[];
   scrollPoint?: string;
 }
 const RenderJsonToHtml = ({ blocks, scrollPoint = "" }: Props) => {
   const [normalizeBlocks, setNormalizeBlocks] = useState<BlockType[]>([]);
+  console.log(blocks);
 
   const checkBlock = (
     block: BlockType,

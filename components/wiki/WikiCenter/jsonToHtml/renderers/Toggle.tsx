@@ -6,13 +6,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretRight, faCaretDown } from "@fortawesome/pro-regular-svg-icons";
 import { useEffect, useState } from "react";
 import JsonToHtml from "../JsonToHtml";
+import { BlockProps } from "..";
 
-interface Props {
-  block: BlockType;
-  nestedBlocks?: BlockType[];
-}
-
-const Toggle = ({ block, nestedBlocks = [] }: Props) => {
+const Toggle = ({
+  block,
+  addBlockPadding,
+  nestedBlocks = [],
+}: BlockProps & { nestedBlocks?: BlockType[] }) => {
   const { data, tunes } = block;
   const { text, status } = data;
 
@@ -27,7 +27,10 @@ const Toggle = ({ block, nestedBlocks = [] }: Props) => {
   }, []);
 
   return (
-    <div className={s.toggle} {...handleBlockData(block)}>
+    <div
+      className={`${s.toggle} ${addBlockPadding ? "" : s.noBlockPadding}`}
+      {...handleBlockData(block)}
+    >
       <div className={s.header}>
         {toggleNestedBlock ? (
           <FontAwesomeIcon

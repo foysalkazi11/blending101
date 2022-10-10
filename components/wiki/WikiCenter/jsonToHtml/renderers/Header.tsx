@@ -1,14 +1,11 @@
 import HTMLReactParser from "html-react-parser";
 import React, { createElement } from "react";
+import { BlockProps } from "..";
 import { BlockType } from "../../../../../type/editorjsBlockType";
 import s from "../index.module.scss";
 import useBlock from "../useBlock";
 
-interface Props {
-  block: BlockType;
-}
-
-const Header = ({ block }: Props) => {
+const Header = ({ block, addBlockPadding = true }: BlockProps) => {
   const { data, tunes } = block;
   const handleBlockData = useBlock();
   const alignment = tunes?.alignmentTuneTool?.alignment;
@@ -18,7 +15,7 @@ const Header = ({ block }: Props) => {
 
   return (
     <Tag
-      className={`${s.block} ${s[Tag]}`}
+      className={`${s[Tag]} ${addBlockPadding ? "" : s.noBlockPadding}`}
       {...handleBlockData(block)}
       style={{ textAlign: align }}
     >
