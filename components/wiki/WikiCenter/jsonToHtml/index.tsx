@@ -240,7 +240,7 @@ const RenderJsonToHtml = ({ blocks, scrollPoint = "" }: Props) => {
         ({ content, header }: SectionDivideByHeaderType, index) => {
           return (
             <div key={index} className={s.sectionDivider}>
-              {header && JsonToHtml(header)}
+              {header && JsonToHtml(header, true, true)}
               {content?.map((block: BlockType) => JsonToHtml(block))}
             </div>
           );
