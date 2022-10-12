@@ -3,6 +3,7 @@ import HTMLReactParser from "html-react-parser";
 import s from "../index.module.scss";
 import useBlock from "../useBlock";
 import { BlockProps } from "..";
+import ReadMore from "../../../../../helpers/readMore/ReadMore";
 
 const Paragraph = ({ block, addBlockPadding }: BlockProps) => {
   const { data, tunes } = block;
@@ -11,13 +12,15 @@ const Paragraph = ({ block, addBlockPadding }: BlockProps) => {
   const align: any = alignment || "left";
 
   return (
-    <p
-      className={`${s.paragraph} ${addBlockPadding ? "" : s.noBlockPadding}`}
-      {...handleBlockData(block)}
-      style={{ textAlign: align }}
-    >
-      {data?.text && HTMLReactParser(data.text)}
-    </p>
+    <ReadMore>
+      <p
+        className={`${s.paragraph} ${addBlockPadding ? "" : s.noBlockPadding}`}
+        {...handleBlockData(block)}
+        style={{ textAlign: align }}
+      >
+        {data?.text && HTMLReactParser(data.text)}
+      </p>
+    </ReadMore>
   );
 };
 
