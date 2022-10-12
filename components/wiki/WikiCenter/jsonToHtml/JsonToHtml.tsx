@@ -12,12 +12,22 @@ import Quote from "./renderers/Quote";
 import Toggle from "./renderers/Toggle";
 import Columns from "./renderers/Columns";
 
-const JsonToHtml = (block: BlockType, addBlockPadding: boolean = true) => {
+const JsonToHtml = (
+  block: BlockType,
+  addBlockPadding: boolean = true,
+  showHeaderIcon: boolean = false,
+) => {
   const { type } = block;
 
   switch (type) {
     case "header":
-      return <Header block={block} addBlockPadding={addBlockPadding} />;
+      return (
+        <Header
+          block={block}
+          addBlockPadding={addBlockPadding}
+          showIcon={showHeaderIcon}
+        />
+      );
     case "paragraph":
       return <Paragraph block={block} addBlockPadding={addBlockPadding} />;
     case "embed":
