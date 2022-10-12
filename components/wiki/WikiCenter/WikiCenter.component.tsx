@@ -23,6 +23,7 @@ import {
   IngredientBookmarkListType,
   NutrientBookmarkListType,
 } from "../../../type/wikiDetailsType";
+import PanelHeader from "../../recipe/share/panelHeader/PanelHeader";
 
 interface WikiCenterComponentProps {
   heading?: string;
@@ -104,31 +105,24 @@ function WikiCenterComponent({
 
   return (
     <div className={styles.centerMain}>
-      <div className={styles.recipeHeadingTopSection}>
-        <h3>
-          <span className={styles.iconPdInner}>
-            <div>
-              <Image
-                src={"/icons/information.svg"}
-                alt="icon"
-                height={"100%"}
-                width={"100%"}
-                layout="responsive"
-                objectFit="cover"
-              />
-            </div>
-          </span>
-          {heading}
-        </h3>
-        <IconWarper
-          defaultBg="secondary"
-          hover="bgSecondary"
-          style={{ width: "28px", height: "28px" }}
-          handleClick={() => router?.back()}
-        >
-          <FontAwesomeIcon icon={faXmark} />
-        </IconWarper>
-      </div>
+      <PanelHeader
+        icon={
+          "/icons/information.svg"
+          // <FontAwesomeIcon icon={faChartColumn} fontSize="24" />
+        }
+        title="Related Products"
+        rightSide={
+          <IconWarper
+            defaultBg="secondary"
+            hover="bgSecondary"
+            style={{ width: "28px", height: "28px" }}
+            handleClick={() => router?.back()}
+          >
+            <FontAwesomeIcon icon={faXmark} />
+          </IconWarper>
+        }
+      />
+
       <div className={styles.card}>
         <div className={styles.blendingRecipeHeading}>
           <h3>{name}</h3>

@@ -13,6 +13,13 @@ export interface BlockType {
     alignmentTuneTool: {
       alignment: string;
     };
+    footnotes: FootnotesType[];
   };
   nestedBlocks?: BlockType[];
+}
+
+export interface FootnotesType {
+  id: string;
+  content: string;
+  superscript: number;
 }
