@@ -21,11 +21,21 @@ $tooltip-arrow-size: 6px;
 }
 
 %sup {
-  padding: 0px 5px;
-  border: 2px solid $fontGray;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 3px 0 5px;
+  padding: 3px 6px;
+  font-size: 12px;
+  line-height: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #ffffff;
+  border: 1px solid $fontGray;
+  // box-shadow: 0 2px 0 0 rgb(29 32 43 / 15%), 0 4px 12px -3px rgb(29 32 43 / 15%);
+  border-radius: 5px;
+  user-select: none;
   color: $secondaryColor;
-  margin-left: 3px;
-  border-radius: 6px;
 }
 
 %span {
@@ -101,6 +111,9 @@ $tooltip-arrow-size: 6px;
   @include media(md) {
     font-size: 40px;
   }
+  sup {
+    @extend %sup;
+  }
 }
 
 .h2 {
@@ -111,6 +124,9 @@ $tooltip-arrow-size: 6px;
   @include media(md) {
     font-size: 38px;
   }
+  sup {
+    @extend %sup;
+  }
 }
 .h3 {
   @extend %block;
@@ -119,6 +135,9 @@ $tooltip-arrow-size: 6px;
   color: $fontDeepGray;
   @include media(md) {
     font-size: 30px;
+  }
+  sup {
+    @extend %sup;
   }
 }
 
@@ -129,6 +148,9 @@ $tooltip-arrow-size: 6px;
   color: $fontDeepGray;
   @include media(md) {
     font-size: 24px;
+  }
+  sup {
+    @extend %sup;
   }
 }
 
@@ -187,6 +209,9 @@ $tooltip-arrow-size: 6px;
     li {
       margin-left: 40px;
       @extend %paragraph;
+      sup {
+        @extend %sup;
+      }
       a {
         @extend %anchor;
       }
@@ -240,6 +265,9 @@ $tooltip-arrow-size: 6px;
   footer {
     @extend %figcaption;
   }
+  sup {
+    @extend %sup;
+  }
 }
 
 .image {
@@ -276,6 +304,21 @@ $tooltip-arrow-size: 6px;
 }
 .table {
   @extend %block;
+}
+
+.footnotes {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.sectionDivider {
+  background-color: white;
+  padding: 20px;
+  border-radius: 14px;
+  -webkit-box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;
+  box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;
+  margin-bottom: 20px;
 }
 
 @keyframes pulse {
