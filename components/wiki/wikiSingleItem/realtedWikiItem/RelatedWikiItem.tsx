@@ -1,4 +1,5 @@
 import React from "react";
+import PanelHeader from "../../../recipe/share/panelHeader/PanelHeader";
 import WikiCard from "../../wikiCard/WikiCard";
 import dummyData from "../dummyData";
 
@@ -9,6 +10,13 @@ interface Props {
 const RelatedWikiItem = ({ type = "Ingredient" }: Props) => {
   return (
     <div style={{ width: "100%" }}>
+      <PanelHeader
+        icon={
+          "/icons/information.svg"
+          // <FontAwesomeIcon icon={faChartColumn} fontSize="24" />
+        }
+        title="Related Products"
+      />
       {dummyData[type]?.map((wikiItem) => {
         const {
           _id,
