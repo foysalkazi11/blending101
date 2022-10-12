@@ -1,4 +1,3 @@
-import { BlockType } from "../../../../../type/editorjsBlockType";
 import HTMLReactParser from "html-react-parser";
 import s from "../index.module.scss";
 import useBlock from "../useBlock";
