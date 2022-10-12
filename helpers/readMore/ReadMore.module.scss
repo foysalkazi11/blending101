@@ -1,0 +1,19 @@
+.clamp {
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow-wrap: break-word;
+}
+.longText {
+  margin-bottom: 10px;
+}
+
+.showMoreText {
+  font-size: 14px;
+  color: #8b8a8a;
+  line-height: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
