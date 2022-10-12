@@ -8,11 +8,11 @@ $tooltip-arrow-size: 6px;
   padding: 8px 0px;
 }
 .noBlockPadding {
-  padding: 0px !important;
+  margin: 0px !important;
 }
 
 %block {
-  padding: 10px 0px;
+  margin: 10px 0px;
 }
 
 %anchor {
