@@ -3,6 +3,7 @@ import { BlockType, FootnotesType } from "../../../../type/editorjsBlockType";
 import s from "./index.module.scss";
 import FootNotes from "./FootNotes";
 import JsonToHtml from "./JsonToHtml";
+import CollapseBlock from "./renderers/CollapseBlock";
 
 export interface BlockProps {
   block: BlockType;
@@ -82,8 +83,8 @@ const sectionDivideByHeader = (
   let arr = [];
   let obj: { [key: string]: any } = {};
   blocks?.forEach((block, index) => {
-    const { type } = block;
-    if (type === "header") {
+    const { type, data } = block;
+    if (type === "header" && data?.level === 1) {
       if (arr.length) {
         arr.push(obj);
         obj = {};
@@ -240,8 +241,23 @@ const RenderJsonToHtml = ({ blocks, scrollPoint = "" }: Props) => {
         ({ content, header }: SectionDivideByHeaderType, index) => {
           return (
             <div key={index} className={s.sectionDivider}>
-              {header && JsonToHtml(header, true, true)}
-              {content?.map((block: BlockType) => JsonToHtml(block))}
+              {content && header ? (
+                <>
+                  {JsonToHtml(header, true, true)}
+                  {content
+                    ?.slice(0, 1)
+                    ?.map((block: BlockType) => JsonToHtml(block))}
+                  {content?.slice(1)?.length && (
+                    <CollapseBlock>
+                      {content
+                        ?.slice(1)
+                        ?.map((block: BlockType) => JsonToHtml(block))}
+                    </CollapseBlock>
+                  )}
+                </>
+              ) : (
+                content?.map((block: BlockType) => JsonToHtml(block))
+              )}
             </div>
           );
         },
