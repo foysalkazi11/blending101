@@ -176,8 +176,13 @@ $tooltip-arrow-size: 6px;
   .header {
     display: flex;
     align-items: center;
+    cursor: pointer;
+
     .icon {
-      cursor: pointer;
+      transition: transform linear 0.3s;
+    }
+    .iconRotate {
+      transform: rotate(90deg);
     }
 
     .text {
@@ -319,6 +324,14 @@ $tooltip-arrow-size: 6px;
   -webkit-box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;
   box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;
   margin-bottom: 20px;
+  height: 100%;
+}
+
+.showMoreText {
+  font-size: 14px;
+  color: #484848;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 @keyframes pulse {
