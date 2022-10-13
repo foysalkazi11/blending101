@@ -127,17 +127,19 @@ export default function CollectionTray({
             )}
           </div>
         </div>
-        <div className={styles.addCollectioContainer}>
-          <p>Add to</p>
-          <MdOutlineAddCircleOutline
-            className={styles.addIcon}
-            onClick={() => {
-              setIsEditCollection(false);
-              setInput((pre) => ({ ...pre, name: "" }));
-              setOpenModal(true);
-            }}
-          />
-        </div>
+        {toggle === 1 && (
+          <div className={styles.addCollectioContainer}>
+            <p>Add to</p>
+            <MdOutlineAddCircleOutline
+              className={styles.addIcon}
+              onClick={() => {
+                setIsEditCollection(false);
+                setInput((pre) => ({ ...pre, name: "" }));
+                setOpenModal(true);
+              }}
+            />
+          </div>
+        )}
 
         {toggle === 1 ? (
           <CollectionComponent

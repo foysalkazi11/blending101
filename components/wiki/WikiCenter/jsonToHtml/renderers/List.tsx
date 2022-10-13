@@ -4,9 +4,7 @@ import s from "../index.module.scss";
 
 import { BlockType } from "../../../../../type/editorjsBlockType";
 import useBlock from "../useBlock";
-interface Props {
-  block: BlockType;
-}
+import { BlockProps } from "..";
 
 export interface ListBlockData {
   style: "ordered" | "unordered";
@@ -51,7 +49,7 @@ const Group: FC<{
   </div>
 );
 
-const List = ({ block }: Props) => {
+const List = ({ block, addBlockPadding }: BlockProps) => {
   const { data, tunes } = block;
   const handleBlockData = useBlock();
   const alignment = tunes?.alignmentTuneTool?.alignment;
@@ -63,7 +61,7 @@ const List = ({ block }: Props) => {
     data && (
       <Group
         Tag={Tag}
-        className={s.list}
+        className={`${s.list} ${addBlockPadding ? "" : s.noBlockPadding}`}
         items={data.items}
         align={align}
         {...handleBlockData(block)}

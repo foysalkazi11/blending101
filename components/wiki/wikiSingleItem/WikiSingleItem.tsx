@@ -8,7 +8,7 @@ import { setLoading } from "../../../redux/slices/utilitySlice";
 import NutritionPanel from "../../recipe/share/nutritionPanel/NutritionPanel";
 import notification from "../../utility/reactToastifyNotification";
 import WikiCenterComponent from "../WikiCenter/WikiCenter.component";
-import WikiRightComponent from "../WikiRight/WikiRight.component";
+import WikiRightComponent from "../WikiRight";
 import styles from "../wiki.module.scss";
 import { useRouter } from "next/router";
 import RelatedWikiItem from "./realtedWikiItem/RelatedWikiItem";
@@ -176,6 +176,7 @@ function WikiSingleItem() {
           }
           heading={`About ${data?.type}`}
           name={data?.wikiTitle}
+          description={data?.wikiDescription}
           giGl={giGl}
           type={data?.type}
           wikiId={wikiId}
@@ -218,6 +219,8 @@ function WikiSingleItem() {
               ingredient={data?.ingredients}
               wikiId={currentWikiId}
               ingredientsDataLoading={ingredientsData?.loading}
+              isIngredientHasMyFacts={true}
+              mainWikiId={wikiId}
             />
           )}
         </>

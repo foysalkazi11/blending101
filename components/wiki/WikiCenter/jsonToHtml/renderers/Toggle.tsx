@@ -6,13 +6,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretRight, faCaretDown } from "@fortawesome/pro-regular-svg-icons";
 import { useEffect, useState } from "react";
 import JsonToHtml from "../JsonToHtml";
+import { BlockProps } from "..";
+import Collapsible from "../../../../../theme/collapsible";
 
-interface Props {
-  block: BlockType;
-  nestedBlocks?: BlockType[];
-}
-
-const Toggle = ({ block, nestedBlocks = [] }: Props) => {
+const Toggle = ({
+  block,
+  addBlockPadding,
+  nestedBlocks = [],
+}: BlockProps & { nestedBlocks?: BlockType[] }) => {
   const { data, tunes } = block;
   const { text, status } = data;
 
@@ -22,39 +23,33 @@ const Toggle = ({ block, nestedBlocks = [] }: Props) => {
   const [toggleNestedBlock, setToggleNestedBlock] = useState(false);
 
   useEffect(() => {
-    setToggleNestedBlock(status);
+    setToggleNestedBlock(status === "open" ? true : false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <div className={s.toggle} {...handleBlockData(block)}>
-      <div className={s.header}>
-        {toggleNestedBlock ? (
-          <FontAwesomeIcon
-            icon={faCaretDown}
-            onClick={() => setToggleNestedBlock((pre) => !pre)}
-            className={s.icon}
-          />
-        ) : (
-          <FontAwesomeIcon
-            icon={faCaretRight}
-            onClick={() => setToggleNestedBlock((pre) => !pre)}
-            className={s.icon}
-          />
-        )}
+    <div
+      className={`${s.toggle} ${addBlockPadding ? "" : s.noBlockPadding}`}
+      {...handleBlockData(block)}
+    >
+      <Collapsible
+        label={
+          <div className={s.header}>
+            <FontAwesomeIcon
+              icon={faCaretRight}
+              className={`${s.icon} ${toggleNestedBlock && s.iconRotate}`}
+            />
 
-        <p
-          className={s.text}
-
-          //   style={{ textAlign: align }}
-        >
-          {text && HTMLReactParser(text)}
-        </p>
-      </div>
-      <div className={s.nestedContainer}>
-        {toggleNestedBlock
-          ? nestedBlocks?.map((block: BlockType) => JsonToHtml(block))
-          : null}
-      </div>
+            <p className={s.text}>{text && HTMLReactParser(text)}</p>
+          </div>
+        }
+        open={toggleNestedBlock}
+        setOpen={setToggleNestedBlock}
+      >
+        <div className={s.nestedContainer}>
+          {nestedBlocks?.map((block: BlockType) => JsonToHtml(block))}
+        </div>
+      </Collapsible>
     </div>
   );
 };

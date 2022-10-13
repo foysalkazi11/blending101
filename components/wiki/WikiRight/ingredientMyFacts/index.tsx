@@ -1,7 +1,7 @@
 import { useLazyQuery } from "@apollo/client";
 import React, { useEffect } from "react";
-import GET_INGREDIENT_STATS from "../../../../../gqlLib/wiki/query/getIngredientsStats";
-import { useAppSelector } from "../../../../../redux/hooks";
+import GET_NUTRIENT_STATS from "../../../../gqlLib/wiki/query/getNutrientStats";
+import { useAppSelector } from "../../../../redux/hooks";
 import BarChart from "./barChart";
 import s from "./index.module.scss";
 import LineChartIndex from "./lineChart";
@@ -10,9 +10,9 @@ interface Props {
   wikiId: string;
 }
 
-const MyFacts = ({ wikiId }: Props) => {
-  const [getIngredientsStats, { data, loading, error }] = useLazyQuery(
-    GET_INGREDIENT_STATS,
+const IngredientMyFactsIndex = ({ wikiId }: Props) => {
+  const [getNutrientStats, { data, loading, error }] = useLazyQuery(
+    GET_NUTRIENT_STATS,
     { fetchPolicy: "cache-and-network" },
   );
   const { dbUser } = useAppSelector((state) => state?.user);
@@ -20,9 +20,9 @@ const MyFacts = ({ wikiId }: Props) => {
   const fetchData = async (type?: string) => {
     const today = new Date().toISOString().slice(0, 10);
     try {
-      const { data } = await getIngredientsStats({
+      const { data } = await getNutrientStats({
         variables: {
-          ingredientId: wikiId,
+          nutrientId: wikiId,
           memberId: dbUser?._id,
           currentDate: `${today}`,
           type: type || "M",
@@ -38,28 +38,34 @@ const MyFacts = ({ wikiId }: Props) => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   return (
     <div className={s.myFactsContainer}>
       <LineChartIndex
-        stats={data?.testGetIngredientsStats?.stats}
-        portion={data?.testGetIngredientsStats?.portion}
+        stats={data?.testGetNuteientsStats?.dateStats}
+        portion={data?.testGetNuteientsStats?.portion}
         fetchChartData={fetchData}
         loading={loading}
-        category={data?.testGetIngredientsStats?.category}
+        category={data?.testGetNuteientsStats?.category}
+        dailyAverage={data?.testGetNuteientsStats?.dailyAverage}
+        dailyRecomended={data?.testGetNuteientsStats?.dailyRecomended}
+        attainment={data?.testGetNuteientsStats?.attainment}
+        upperLimit={data?.testGetNuteientsStats?.upperLimit}
+        units={data?.testGetNuteientsStats?.units}
       />
       <BarChart
         loading={loading}
         barChartData={
-          data?.testGetIngredientsStats?.otherIngredients
-            ? data?.testGetIngredientsStats?.otherIngredients
+          data?.testGetNuteientsStats?.ingredientStats
+            ? data?.testGetNuteientsStats?.ingredientStats
             : []
         }
         fetchChartData={fetchData}
         wikiId={wikiId}
-        category={data?.testGetIngredientsStats?.category}
+        category={data?.testGetNuteientsStats?.category}
       />
     </div>
   );
 };
 
-export default MyFacts;
+export default IngredientMyFactsIndex;

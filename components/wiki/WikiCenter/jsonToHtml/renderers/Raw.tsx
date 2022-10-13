@@ -1,13 +1,11 @@
 import HTMLReactParser from "html-react-parser";
 import React from "react";
+import { BlockProps } from "..";
 
 import { BlockType } from "../../../../../type/editorjsBlockType";
 import useBlock from "../useBlock";
-interface Props {
-  block: BlockType;
-}
 
-const Raw = ({ block }: Props) => {
+const Raw = ({ block }: BlockProps) => {
   const { data, tunes } = block;
   const handleBlockData = useBlock();
   const alignment = tunes?.alignmentTuneTool?.alignment;
