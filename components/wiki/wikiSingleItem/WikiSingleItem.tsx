@@ -176,6 +176,7 @@ function WikiSingleItem() {
           }
           heading={`About ${data?.type}`}
           name={data?.wikiTitle}
+          description={data?.wikiDescription}
           giGl={giGl}
           type={data?.type}
           wikiId={wikiId}

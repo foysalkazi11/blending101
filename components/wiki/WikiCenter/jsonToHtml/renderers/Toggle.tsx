@@ -7,6 +7,7 @@ import { faCaretRight, faCaretDown } from "@fortawesome/pro-regular-svg-icons";
 import { useEffect, useState } from "react";
 import JsonToHtml from "../JsonToHtml";
 import { BlockProps } from "..";
+import Collapsible from "../../../../../theme/collapsible";
 
 const Toggle = ({
   block,
@@ -31,34 +32,24 @@ const Toggle = ({
       className={`${s.toggle} ${addBlockPadding ? "" : s.noBlockPadding}`}
       {...handleBlockData(block)}
     >
-      <div className={s.header}>
-        {toggleNestedBlock ? (
-          <FontAwesomeIcon
-            icon={faCaretDown}
-            onClick={() => setToggleNestedBlock((pre) => !pre)}
-            className={s.icon}
-          />
-        ) : (
-          <FontAwesomeIcon
-            icon={faCaretRight}
-            onClick={() => setToggleNestedBlock((pre) => !pre)}
-            className={s.icon}
-          />
-        )}
+      <Collapsible
+        label={
+          <div className={s.header}>
+            <FontAwesomeIcon
+              icon={faCaretRight}
+              className={`${s.icon} ${toggleNestedBlock && s.iconRotate}`}
+            />
 
-        <p
-          className={s.text}
-
-          //   style={{ textAlign: align }}
-        >
-          {text && HTMLReactParser(text)}
-        </p>
-      </div>
-      <div className={s.nestedContainer}>
-        {toggleNestedBlock
-          ? nestedBlocks?.map((block: BlockType) => JsonToHtml(block))
-          : null}
-      </div>
+            <p className={s.text}>{text && HTMLReactParser(text)}</p>
+          </div>
+        }
+        open={toggleNestedBlock}
+        setOpen={setToggleNestedBlock}
+      >
+        <div className={s.nestedContainer}>
+          {nestedBlocks?.map((block: BlockType) => JsonToHtml(block))}
+        </div>
+      </Collapsible>
     </div>
   );
 };

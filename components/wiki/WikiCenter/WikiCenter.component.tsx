@@ -24,10 +24,12 @@ import {
   NutrientBookmarkListType,
 } from "../../../type/wikiDetailsType";
 import PanelHeader from "../../recipe/share/panelHeader/PanelHeader";
+import ReadMore from "../../../theme/readMore";
 
 interface WikiCenterComponentProps {
   heading?: string;
   name?: string;
+  description?: string;
   categroy?: string;
   author?: string;
   coverImages?: string[];
@@ -53,6 +55,7 @@ function WikiCenterComponent({
   coverImages = [],
   heading = "About Heading",
   name = "Name",
+  description = "",
   giGl = {
     netCarbs: 0,
     totalGi: 0,
@@ -274,6 +277,11 @@ function WikiCenterComponent({
                 })}
             </>
           ) : null}
+        </div>
+        <div className={styles.wikiDescriptionBox}>
+          <ReadMore>
+            <p className={styles.textDis}>{description}</p>
+          </ReadMore>
         </div>
       </div>
       {body ? (
