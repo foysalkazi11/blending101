@@ -18,7 +18,7 @@ const SectionDivideByHeader = ({ dividedBlocksByHeader }: Props) => {
             <div key={index} className={s.sectionDivider}>
               {content && header ? (
                 <>
-                  {JsonToHtml(header, true, true)}
+                  {JsonToHtml(header)}
                   {content
                     ?.slice(0, 1)
                     ?.map((block: BlockType) => JsonToHtml(block))}
