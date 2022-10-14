@@ -6,7 +6,7 @@ import FiberManualRecordIcon from "../../../public/icons/fiber_manual_record_bla
 import CustomSlider from "../../../theme/carousel/carousel.component";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/pro-regular-svg-icons";
+import { faXmark, faAnglesDown } from "@fortawesome/pro-regular-svg-icons";
 import { useRouter } from "next/router";
 import IngredientInfo from "./ingredientInfo/IngredientInfo";
 import { GiGl } from "../../../type/nutrationType";
@@ -74,6 +74,7 @@ function WikiCenterComponent({
   originalPortions: originalPortions = [],
 }: WikiCenterComponentProps) {
   const [activeVariant, setActiveVariant] = useState(0);
+  const [expandAllCollapse, setExpandAllCollapse] = useState(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { isOpenWikiCommentsTray, wikiCommentsTrayCurrentWikiEntity } =
@@ -113,7 +114,7 @@ function WikiCenterComponent({
           "/icons/information.svg"
           // <FontAwesomeIcon icon={faChartColumn} fontSize="24" />
         }
-        title="Related Products"
+        title={`About ${type}`}
         rightSide={
           <IconWarper
             defaultBg="secondary"
@@ -179,6 +180,16 @@ function WikiCenterComponent({
                   {commentsCount}
                 </p>
               </div>
+            </li>
+            <li>
+              <FontAwesomeIcon
+                icon={faAnglesDown}
+                className={` ${
+                  expandAllCollapse ? styles.activeIcon : styles.inActiveIcon
+                }`}
+                style={{ cursor: "pointer" }}
+                onClick={() => setExpandAllCollapse((prev) => !prev)}
+              />
             </li>
           </ul>
         </div>
@@ -288,6 +299,7 @@ function WikiCenterComponent({
         <RenderJsonToHtml
           blocks={JSON.parse(body)?.blocks}
           scrollPoint={scrollPoint}
+          expandAllCollapse={expandAllCollapse}
         />
       ) : null}
     </div>

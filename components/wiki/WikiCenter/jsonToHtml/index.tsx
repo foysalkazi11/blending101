@@ -37,6 +37,7 @@ export interface SectionDivideByHeaderType {
 interface Props {
   blocks: BlockType[];
   scrollPoint?: string;
+  expandAllCollapse?: boolean;
 }
 
 const checkBlock = (
@@ -119,30 +120,17 @@ const sectionDivideByHeader = (
   return arr;
 };
 
-const RenderJsonToHtml = ({ blocks, scrollPoint = "" }: Props) => {
+const RenderJsonToHtml = ({
+  blocks,
+  scrollPoint = "",
+  expandAllCollapse = false,
+}: Props) => {
   const [normalizeBlocks, setNormalizeBlocks] = useState<BlockType[]>([]);
   const [dividedBlocksByHeader, setDividedBlocksByHeader] = useState<
     SectionDivideByHeaderType[]
   >([]);
   const [allFootNotes, setAllFootNotes] = useState<FootnotesType[]>([]);
   const [openFootnotesCollapse, setOpenFootnotesCollapse] = useState(false);
-  const [footnotesDynamicContent, setFootnotesDynamicContent] =
-    useState<FootnotesDynamicContentType>({
-      isOpen: false,
-      content: "",
-      position: {
-        top: "",
-        bottom: "",
-        left: "",
-        right: "",
-        height: "",
-        width: "",
-        x: "",
-        y: "",
-      },
-    });
-
-  const footnotesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (blocks?.length) {
@@ -237,23 +225,19 @@ const RenderJsonToHtml = ({ blocks, scrollPoint = "" }: Props) => {
       //     obj[key] = `${rect[key]?.toFixed()}`;
       //   }
       // }
-
-      // setFootnotesDynamicContent((prev) => ({
-      //   ...prev,
-      //   isOpen: true,
-      //   content: targetFootnote?.content,
-      //   position: {
-      //     ...prev?.position,
-      //     ...obj,
-      //   },
-      // }));
     }
   };
 
   return (
     <div onClick={handleClickWikiBlog}>
-      <SectionDivideByHeader dividedBlocksByHeader={dividedBlocksByHeader} />
-      {/* {normalizeBlocks?.map((block: BlockType) => JsonToHtml(block))} */}
+      {expandAllCollapse ? (
+        <div className={s.sectionDivider}>
+          {normalizeBlocks?.map((block: BlockType) => JsonToHtml(block))}
+        </div>
+      ) : (
+        <SectionDivideByHeader dividedBlocksByHeader={dividedBlocksByHeader} />
+      )}
+
       <FootNotes
         allFootNotes={allFootNotes}
         open={openFootnotesCollapse}
