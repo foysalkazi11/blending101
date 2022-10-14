@@ -4,15 +4,29 @@ import s from "../index.module.scss";
 
 interface Props {
   label?: string | React.ReactNode;
+  positionLabel?: "top" | "bottom";
 }
 
-const CollapseBlock: React.FC<Props> = ({ children, label }) => {
-  const [open, setOpen] = useState(false);
-  const collapseLabel = (
+export const DefaultLabel = ({ open }: { open: boolean }) => {
+  return (
     <span className={s.showMoreText}>{`Read ${open ? "less" : "More"}`}</span>
   );
+};
+
+const CollapseBlock: React.FC<Props> = ({
+  children,
+  label,
+  positionLabel = "bottom",
+}) => {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Collapsible label={label || collapseLabel} open={open} setOpen={setOpen}>
+    <Collapsible
+      label={label || <DefaultLabel open={open} />}
+      open={open}
+      setOpen={setOpen}
+      positionLabel={positionLabel}
+    >
       {children}
     </Collapsible>
   );
