@@ -4,6 +4,8 @@ import s from "./index.module.scss";
 import FootNotes from "./FootNotes";
 import JsonToHtml from "./JsonToHtml";
 import CollapseBlock from "./renderers/CollapseBlock";
+import HTMLReactParser from "html-react-parser";
+import SectionDivideByHeader from "./SectionDivideByHeader";
 
 export interface BlockProps {
   block: BlockType;
@@ -27,7 +29,7 @@ export interface FootnotesDynamicContentType {
   position: FootnotesDynamicStyleType;
 }
 
-interface SectionDivideByHeaderType {
+export interface SectionDivideByHeaderType {
   header: BlockType;
   content: BlockType[];
 }
@@ -123,6 +125,7 @@ const RenderJsonToHtml = ({ blocks, scrollPoint = "" }: Props) => {
     SectionDivideByHeaderType[]
   >([]);
   const [allFootNotes, setAllFootNotes] = useState<FootnotesType[]>([]);
+  const [openFootnotesCollapse, setOpenFootnotesCollapse] = useState(false);
   const [footnotesDynamicContent, setFootnotesDynamicContent] =
     useState<FootnotesDynamicContentType>({
       isOpen: false,
@@ -143,14 +146,13 @@ const RenderJsonToHtml = ({ blocks, scrollPoint = "" }: Props) => {
 
   useEffect(() => {
     if (blocks?.length) {
-      const copyBlocks: BlockType[] = [...blocks];
-      const prepareBlock: BlockType[] = loopBlock(copyBlocks);
-      const footnotes: FootnotesType[] = checkFootnotes(copyBlocks);
-      const divideByHeader: SectionDivideByHeaderType[] =
-        sectionDivideByHeader(prepareBlock);
-
+      const prepareBlock: BlockType[] = loopBlock([...blocks]);
+      const footnotes: FootnotesType[] = checkFootnotes([...blocks]);
+      const divideByHeader: SectionDivideByHeaderType[] = sectionDivideByHeader(
+        [...prepareBlock],
+      );
+      setNormalizeBlocks(prepareBlock);
       setDividedBlocksByHeader(divideByHeader);
-      // setNormalizeBlocks(prepareBlock);
       setAllFootNotes(footnotes);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -179,9 +181,7 @@ const RenderJsonToHtml = ({ blocks, scrollPoint = "" }: Props) => {
     const onHashChanged = () => {
       if (window.location?.hash) {
         const scrollPoint = window.location?.hash?.slice(1);
-
         const titleElement = document.getElementById(scrollPoint);
-
         if (titleElement) {
           titleElement?.scrollIntoView({ behavior: "smooth" });
           titleElement.style.backgroundColor = "#d2e7bc";
@@ -204,66 +204,61 @@ const RenderJsonToHtml = ({ blocks, scrollPoint = "" }: Props) => {
   // click wiki blog specific element.
   const handleClickWikiBlog = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e?.target;
-
     //  @ts-ignore
     const datasetTune = target?.dataset?.tune;
     //  @ts-ignore
     const datasetId = target?.dataset?.id;
     if (target && datasetTune && datasetId) {
-      const targetFootnote = allFootNotes?.find(
+      const targetFootnote: FootnotesType = allFootNotes?.find(
         (footnote) => footnote?.id === datasetId,
       );
-      //  @ts-ignore
-      const rect: FootnotesDynamicStyleType = target.getBoundingClientRect();
 
-      let obj: FootnotesDynamicStyleType = {} as FootnotesDynamicStyleType;
-      for (const key in rect) {
-        if (key !== "toJSON") {
-          obj[key] = `${rect[key]?.toFixed()}`;
+      if (targetFootnote) {
+        let timer;
+        const titleElement = document.getElementById(targetFootnote.id);
+
+        if (titleElement) {
+          titleElement?.scrollIntoView({ behavior: "smooth" });
+          titleElement.style.backgroundColor = "#d2e7bc";
+          setOpenFootnotesCollapse(true);
+
+          timer = setTimeout(() => {
+            titleElement.style.backgroundColor = "";
+          }, 2500);
         }
       }
 
-      setFootnotesDynamicContent((prev) => ({
-        ...prev,
-        isOpen: true,
-        content: targetFootnote?.content,
-        position: {
-          ...prev?.position,
-          ...obj,
-        },
-      }));
+      // //  @ts-ignore
+      // const rect: FootnotesDynamicStyleType = target.getBoundingClientRect();
+
+      // let obj: FootnotesDynamicStyleType = {} as FootnotesDynamicStyleType;
+      // for (const key in rect) {
+      //   if (key !== "toJSON") {
+      //     obj[key] = `${rect[key]?.toFixed()}`;
+      //   }
+      // }
+
+      // setFootnotesDynamicContent((prev) => ({
+      //   ...prev,
+      //   isOpen: true,
+      //   content: targetFootnote?.content,
+      //   position: {
+      //     ...prev?.position,
+      //     ...obj,
+      //   },
+      // }));
     }
   };
 
   return (
     <div onClick={handleClickWikiBlog}>
-      {dividedBlocksByHeader?.map(
-        ({ content, header }: SectionDivideByHeaderType, index) => {
-          return (
-            <div key={index} className={s.sectionDivider}>
-              {content && header ? (
-                <>
-                  {JsonToHtml(header, true, true)}
-                  {content
-                    ?.slice(0, 1)
-                    ?.map((block: BlockType) => JsonToHtml(block))}
-                  {content?.slice(1)?.length && (
-                    <CollapseBlock>
-                      {content
-                        ?.slice(1)
-                        ?.map((block: BlockType) => JsonToHtml(block))}
-                    </CollapseBlock>
-                  )}
-                </>
-              ) : (
-                content?.map((block: BlockType) => JsonToHtml(block))
-              )}
-            </div>
-          );
-        },
-      )}
+      <SectionDivideByHeader dividedBlocksByHeader={dividedBlocksByHeader} />
       {/* {normalizeBlocks?.map((block: BlockType) => JsonToHtml(block))} */}
-      {/* <FootNotes {...footnotesDynamicContent} /> */}
+      <FootNotes
+        allFootNotes={allFootNotes}
+        open={openFootnotesCollapse}
+        setOpen={setOpenFootnotesCollapse}
+      />
     </div>
   );
 };

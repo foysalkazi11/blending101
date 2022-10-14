@@ -334,6 +334,22 @@ $tooltip-arrow-size: 6px;
   cursor: pointer;
 }
 
+.footnotesContainer {
+  .footnoteHeading {
+    font-weight: 500;
+    font-size: 20px;
+    color: #484848;
+  }
+  .footnoteContentWrapper {
+    padding-top: 10px;
+    .footnoteConten {
+      font-size: 16px;
+      color: #484848;
+      line-height: 24px;
+    }
+  }
+}
+
 @keyframes pulse {
   0% {
     background-color: #d2e7bc;
