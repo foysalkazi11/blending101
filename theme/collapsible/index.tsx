@@ -11,9 +11,16 @@ interface Props {
   label: string | React.ReactNode;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
+  positionLabel?: "top" | "bottom";
 }
 
-const Collapsible: React.FC<Props> = ({ children, label, open, setOpen }) => {
+const Collapsible: React.FC<Props> = ({
+  children,
+  label,
+  open,
+  setOpen,
+  positionLabel = "top",
+}) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState<number | undefined>(
     open ? undefined : 0,
@@ -43,7 +50,7 @@ const Collapsible: React.FC<Props> = ({ children, label, open, setOpen }) => {
 
   return (
     <>
-      <div onClick={toggle}>{label}</div>
+      {positionLabel === "top" && <div onClick={toggle}>{label}</div>}
 
       <div
         className={s.contentParent}
@@ -58,6 +65,7 @@ const Collapsible: React.FC<Props> = ({ children, label, open, setOpen }) => {
           <div className={s.content}>{children}</div>
         </div>
       </div>
+      {positionLabel === "bottom" && <div onClick={toggle}>{label}</div>}
     </>
   );
 };
