@@ -3,7 +3,7 @@ import React, { Dispatch, SetStateAction } from "react";
 import Collapsible from "../../../../theme/collapsible";
 import { FootnotesType } from "../../../../type/editorjsBlockType";
 import s from "./index.module.scss";
-import CollapseBlock, { DefaultLabel } from "./renderers/CollapseBlock";
+import { DefaultLabel } from "./renderers/CollapseBlock";
 
 interface Props {
   allFootNotes: FootnotesType[];

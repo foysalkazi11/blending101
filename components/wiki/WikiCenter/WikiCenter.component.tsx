@@ -120,7 +120,7 @@ function WikiCenterComponent({
             defaultBg="secondary"
             hover="bgSecondary"
             style={{ width: "28px", height: "28px" }}
-            handleClick={() => router?.back()}
+            handleClick={() => router.push("/wiki")}
           >
             <FontAwesomeIcon icon={faXmark} />
           </IconWarper>
@@ -300,6 +300,7 @@ function WikiCenterComponent({
           blocks={JSON.parse(body)?.blocks}
           scrollPoint={scrollPoint}
           expandAllCollapse={expandAllCollapse}
+          setExpandAllCollapse={setExpandAllCollapse}
         />
       ) : null}
     </div>
