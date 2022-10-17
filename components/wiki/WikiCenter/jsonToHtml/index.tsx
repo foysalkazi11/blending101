@@ -1,10 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { BlockType, FootnotesType } from "../../../../type/editorjsBlockType";
 import s from "./index.module.scss";
 import FootNotes from "./FootNotes";
 import JsonToHtml from "./JsonToHtml";
-import CollapseBlock from "./renderers/CollapseBlock";
-import HTMLReactParser from "html-react-parser";
 import SectionDivideByHeader from "./SectionDivideByHeader";
 
 export interface BlockProps {
@@ -38,6 +36,7 @@ interface Props {
   blocks: BlockType[];
   scrollPoint?: string;
   expandAllCollapse?: boolean;
+  setExpandAllCollapse?: Dispatch<SetStateAction<boolean>>;
 }
 
 const checkBlock = (
@@ -124,6 +123,7 @@ const RenderJsonToHtml = ({
   blocks,
   scrollPoint = "",
   expandAllCollapse = false,
+  setExpandAllCollapse = () => {},
 }: Props) => {
   const [normalizeBlocks, setNormalizeBlocks] = useState<BlockType[]>([]);
   const [dividedBlocksByHeader, setDividedBlocksByHeader] = useState<
@@ -131,6 +131,7 @@ const RenderJsonToHtml = ({
   >([]);
   const [allFootNotes, setAllFootNotes] = useState<FootnotesType[]>([]);
   const [openFootnotesCollapse, setOpenFootnotesCollapse] = useState(false);
+  let timer = useRef(null);
 
   useEffect(() => {
     if (blocks?.length) {
@@ -147,34 +148,34 @@ const RenderJsonToHtml = ({
   }, [blocks]);
 
   useEffect(() => {
-    let timer;
     if (scrollPoint) {
+      setExpandAllCollapse(true);
       const titleElement = document.getElementById(scrollPoint);
       if (titleElement) {
         titleElement?.scrollIntoView({ behavior: "smooth" });
         titleElement.style.backgroundColor = "#d2e7bc";
-
-        timer = setTimeout(() => {
+        timer.current = setTimeout(() => {
           titleElement.style.backgroundColor = "";
         }, 2500);
       }
     }
     return () => {
-      clearTimeout(timer);
+      clearTimeout(timer.current);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollPoint]);
 
   useEffect(() => {
-    let timer;
     const onHashChanged = () => {
-      if (window.location?.hash) {
-        const scrollPoint = window.location?.hash?.slice(1);
+      const hash = window.location.hash;
+      if (hash) {
+        setExpandAllCollapse(true);
+        const scrollPoint = hash?.slice(1);
         const titleElement = document.getElementById(scrollPoint);
         if (titleElement) {
           titleElement?.scrollIntoView({ behavior: "smooth" });
           titleElement.style.backgroundColor = "#d2e7bc";
-
-          timer = setTimeout(() => {
+          timer.current = setTimeout(() => {
             titleElement.style.backgroundColor = "";
           }, 2500);
         }
@@ -185,8 +186,9 @@ const RenderJsonToHtml = ({
 
     return () => {
       window.removeEventListener("hashchange", onHashChanged);
-      clearTimeout(timer);
+      clearTimeout(timer.current);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // click wiki blog specific element.
@@ -202,7 +204,6 @@ const RenderJsonToHtml = ({
       );
 
       if (targetFootnote) {
-        let timer;
         const titleElement = document.getElementById(targetFootnote.id);
 
         if (titleElement) {
@@ -210,7 +211,7 @@ const RenderJsonToHtml = ({
           titleElement.style.backgroundColor = "#d2e7bc";
           setOpenFootnotesCollapse(true);
 
-          timer = setTimeout(() => {
+          timer.current = setTimeout(() => {
             titleElement.style.backgroundColor = "";
           }, 2500);
         }
