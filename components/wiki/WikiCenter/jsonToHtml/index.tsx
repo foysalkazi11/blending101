@@ -149,6 +149,7 @@ const RenderJsonToHtml = ({
 
   useEffect(() => {
     if (scrollPoint) {
+      console.log(scrollPoint);
       setExpandAllCollapse(true);
       const titleElement = document.getElementById(scrollPoint);
       if (titleElement) {
@@ -158,6 +159,8 @@ const RenderJsonToHtml = ({
           titleElement.style.backgroundColor = "";
         }, 2500);
       }
+    } else {
+      setExpandAllCollapse(false);
     }
     return () => {
       clearTimeout(timer.current);
