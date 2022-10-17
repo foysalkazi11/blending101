@@ -74,7 +74,7 @@ function WikiCenterComponent({
   originalPortions: originalPortions = [],
 }: WikiCenterComponentProps) {
   const [activeVariant, setActiveVariant] = useState(0);
-  const [expandAllCollapse, setExpandAllCollapse] = useState(false);
+  const [expandAllCollapse, setExpandAllCollapse] = useState(true);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { isOpenWikiCommentsTray, wikiCommentsTrayCurrentWikiEntity } =
