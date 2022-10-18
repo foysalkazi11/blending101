@@ -122,7 +122,7 @@ const sectionDivideByHeader = (
 const RenderJsonToHtml = ({
   blocks,
   scrollPoint = "",
-  expandAllCollapse = false,
+  expandAllCollapse = true,
   setExpandAllCollapse = () => {},
 }: Props) => {
   const [normalizeBlocks, setNormalizeBlocks] = useState<BlockType[]>([]);
@@ -149,9 +149,9 @@ const RenderJsonToHtml = ({
 
   useEffect(() => {
     if (scrollPoint) {
-      console.log(scrollPoint);
-      setExpandAllCollapse(true);
       const titleElement = document.getElementById(scrollPoint);
+      console.log(titleElement);
+
       if (titleElement) {
         titleElement?.scrollIntoView({ behavior: "smooth" });
         titleElement.style.backgroundColor = "#d2e7bc";

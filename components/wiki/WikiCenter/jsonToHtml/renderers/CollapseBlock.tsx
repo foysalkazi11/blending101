@@ -1,3 +1,5 @@
+import { faSquareCaretUp } from "@fortawesome/pro-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import Collapsible from "../../../../../theme/collapsible";
 import s from "../index.module.scss";
@@ -9,7 +11,15 @@ interface Props {
 
 export const DefaultLabel = ({ open }: { open: boolean }) => {
   return (
-    <span className={s.showMoreText}>{`Read ${open ? "less" : "More"}`}</span>
+    <div className={s.readMoreBox}>
+      <FontAwesomeIcon
+        icon={faSquareCaretUp}
+        className={`${s.icon} ${open && s.rotatedIcon180Deg} ${
+          open && s.activeIcon
+        }`}
+      />
+      <span className={s.showMoreText}>{`Read ${open ? "less" : "More"}`}</span>
+    </div>
   );
 };
 

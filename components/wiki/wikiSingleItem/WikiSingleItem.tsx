@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setLoading } from "../../../redux/slices/utilitySlice";
 import NutritionPanel from "../../recipe/share/nutritionPanel/NutritionPanel";
 import notification from "../../utility/reactToastifyNotification";
-import WikiCenterComponent from "../WikiCenter/WikiCenter.component";
+import WikiCenterComponent from "../WikiCenter";
 import WikiRightComponent from "../WikiRight";
 import styles from "../wiki.module.scss";
 import { useRouter } from "next/router";
