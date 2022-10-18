@@ -3,7 +3,7 @@ import HTMLReactParser from "html-react-parser";
 import s from "../index.module.scss";
 import useBlock from "../useBlock";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretRight, faCaretDown } from "@fortawesome/pro-regular-svg-icons";
+import { faCaretRight, faCaretDown } from "@fortawesome/pro-solid-svg-icons";
 import { useEffect, useState } from "react";
 import JsonToHtml from "../JsonToHtml";
 import { BlockProps } from "..";
@@ -37,7 +37,9 @@ const Toggle = ({
           <div className={s.header}>
             <FontAwesomeIcon
               icon={faCaretRight}
-              className={`${s.icon} ${toggleNestedBlock && s.iconRotate}`}
+              className={`${s.icon} ${toggleNestedBlock && s.activeIcon} ${
+                toggleNestedBlock && s.iconRotate
+              }`}
             />
 
             <p className={s.text}>{text && HTMLReactParser(text)}</p>

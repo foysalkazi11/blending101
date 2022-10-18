@@ -34,19 +34,47 @@
   box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;
 }
 
+.subHeadingIconBoxRight {
+  display: flex;
+  align-items: center;
+  list-style-type: none;
+
+  li {
+    display: flex;
+    align-items: center;
+
+    cursor: pointer;
+    margin-right: 10px;
+    .innerIcon {
+      margin-right: 5px;
+      color: #c4c4c4;
+      transition: all 0.3s;
+    }
+    .innerText {
+      font-size: 14px;
+      color: #ababab;
+    }
+  }
+}
+
+.rotatedIcon180Deg {
+  transform: rotate(180deg);
+}
+
 .commentsIconBox {
   display: flex;
   align-items: center;
   cursor: pointer;
   margin-right: 10px;
-  .text {
+  .countComments {
     margin-left: 3px;
+    color: #ababab;
     font-size: 14px;
   }
 }
 
 .activeIcon {
-  color: #7cbc39;
+  color: #7cbc39 !important;
 }
 .inActiveIcon {
   color: #c4c4c4;
@@ -147,17 +175,6 @@
   font-size: 14px;
 }
 
-.recipeOptionsBtm {
-  display: flex;
-  align-items: center;
-  list-style-type: none;
-
-  &li {
-    display: flex;
-    align-items: center;
-  }
-}
-
 .bookmarkBtn {
   align-items: center;
   cursor: pointer;
@@ -196,9 +213,9 @@
 }
 
 .countComment {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 400;
-  color: #7cbc39;
+  color: #ababab;
 }
 
 .content {
