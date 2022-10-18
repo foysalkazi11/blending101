@@ -10,6 +10,13 @@ $tooltip-arrow-size: 6px;
 .noBlockPadding {
   margin: 0px !important;
 }
+.rotatedIcon180Deg {
+  transform: rotate(180deg);
+}
+
+.activeIcon {
+  color: $secondaryColor !important;
+}
 
 %block {
   margin: 10px 0px;
@@ -177,9 +184,11 @@ $tooltip-arrow-size: 6px;
     display: flex;
     align-items: center;
     cursor: pointer;
+    padding-left: 5px;
 
     .icon {
       transition: transform linear 0.3s;
+      color: #484848;
     }
     .iconRotate {
       transform: rotate(90deg);
@@ -325,6 +334,18 @@ $tooltip-arrow-size: 6px;
   box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;
   margin-bottom: 20px;
   height: 100%;
+}
+
+.readMoreBox {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #484848;
+  transition: all 0.3s;
+  .icon {
+    margin-right: 5px;
+    transition: all 0.3s;
+  }
 }
 
 .showMoreText {
