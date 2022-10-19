@@ -14,25 +14,28 @@ const SectionDivideByHeader = ({ dividedBlocksByHeader }: Props) => {
     <>
       {dividedBlocksByHeader?.map(
         ({ content, header }: SectionDivideByHeaderType, index) => {
+          const findImage: BlockType = content?.find(
+            (block) => block?.type === "image",
+          );
+          const findParagraph: BlockType = content?.find(
+            (block) => block?.type === "paragraph",
+          );
+          const filterHeadingThree = content?.filter(
+            (block) => block?.type === "header" && block?.data?.level === 3,
+          );
+
           return (
             <div key={index} className={s.sectionDivider}>
-              {content && header ? (
-                <>
-                  {JsonToHtml(header)}
-                  {content
-                    ?.slice(0, 1)
-                    ?.map((block: BlockType) => JsonToHtml(block))}
-                  {content?.slice(1)?.length ? (
-                    <CollapseBlock>
-                      {content
-                        ?.slice(1)
-                        ?.map((block: BlockType) => JsonToHtml(block))}
-                    </CollapseBlock>
-                  ) : null}
-                </>
-              ) : (
-                content?.map((block: BlockType) => JsonToHtml(block))
-              )}
+              <CollapseBlock
+                headingThree={filterHeadingThree}
+                findImage={findImage}
+                findParagraph={findParagraph}
+                header={header}
+              >
+                {header && JsonToHtml(header, true, true)}
+
+                {content?.map((block: BlockType) => JsonToHtml(block))}
+              </CollapseBlock>
             </div>
           );
         },

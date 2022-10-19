@@ -44,14 +44,14 @@ function WikiCenterComponent(props: WikiCenterComponentProps) {
         expandAllCollapse={expandAllCollapse}
         setExpandAllCollapse={setExpandAllCollapse}
       />
-      {body ? (
+      {body && (
         <SecondPortion
           blocks={JSON.parse(body)?.blocks}
           scrollPoint={scrollPoint}
           expandAllCollapse={expandAllCollapse}
           setExpandAllCollapse={setExpandAllCollapse}
         />
-      ) : null}
+      )}
     </div>
   );
 }
