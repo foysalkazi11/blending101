@@ -1,7 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import s from "./ReadMore.module.scss";
 
-const ReadMore: React.FC = ({ children }) => {
+interface Props {
+  showReadMoreButton?: boolean;
+}
+
+const ReadMore: React.FC<Props> = ({ children, showReadMoreButton = true }) => {
   const [clamped, setClamped] = useState(true);
   const [showButton, setShowButton] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -40,7 +44,7 @@ const ReadMore: React.FC = ({ children }) => {
       <div ref={containerRef} className={` ${clamped && s.clamp}`}>
         {children}
       </div>
-      {showButton && (
+      {showButton && showReadMoreButton && (
         <span className={s.showMoreText} onClick={handleClick}>
           Read {clamped ? "more" : "less"}
         </span>

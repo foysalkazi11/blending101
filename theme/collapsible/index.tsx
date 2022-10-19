@@ -9,6 +9,7 @@ import s from "./Collapsible.module.scss";
 
 interface Props {
   label: string | React.ReactNode;
+  extraLabel?: string | React.ReactNode;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
   positionLabel?: "top" | "bottom";
@@ -20,6 +21,7 @@ const Collapsible: React.FC<Props> = ({
   open,
   setOpen,
   positionLabel = "top",
+  extraLabel,
 }) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState<number | undefined>(
@@ -50,7 +52,12 @@ const Collapsible: React.FC<Props> = ({
 
   return (
     <>
-      {positionLabel === "top" && <div onClick={toggle}>{label}</div>}
+      {positionLabel === "top" && (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <div onClick={toggle}>{label}</div>
+          {extraLabel && extraLabel}
+        </div>
+      )}
 
       <div
         className={s.contentParent}
@@ -65,7 +72,12 @@ const Collapsible: React.FC<Props> = ({
           <div className={s.content}>{children}</div>
         </div>
       </div>
-      {positionLabel === "bottom" && <div onClick={toggle}>{label}</div>}
+      {positionLabel === "bottom" && (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <div onClick={toggle}>{label}</div>
+          {extraLabel && extraLabel}
+        </div>
+      )}
     </>
   );
 };
