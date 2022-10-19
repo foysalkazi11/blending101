@@ -48,11 +48,10 @@ $tooltip-arrow-size: 6px;
 %span {
   font-size: inherit;
   background: rgb(255, 239, 213);
-  text-decoration: underline;
   border-radius: 6px;
   transition: all 0.9s;
 
-  &:hover {
+  &[data-tooltip] {
     transition: all 0.9s;
     position: relative;
   }
@@ -368,6 +367,26 @@ $tooltip-arrow-size: 6px;
       color: #484848;
       line-height: 24px;
     }
+  }
+}
+
+.showHeadingThreeTitleBox {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  .headingThreeTitle {
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 14px;
+    font-weight: 500;
+    color: $secondaryColor;
+    border: 1px solid $secondaryColor;
+    padding: 3px 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 5px;
   }
 }
 

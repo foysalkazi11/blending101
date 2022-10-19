@@ -86,7 +86,7 @@ const sectionDivideByHeader = (
   let obj: { [key: string]: any } = {};
   blocks?.forEach((block, index) => {
     const { type, data } = block;
-    if (type === "header" && data?.level === 1) {
+    if (type === "header" && data?.level === 2) {
       if (arr.length) {
         arr.push(obj);
         obj = {};
@@ -150,7 +150,6 @@ const RenderJsonToHtml = ({
   useEffect(() => {
     if (scrollPoint) {
       const titleElement = document.getElementById(scrollPoint);
-      console.log(titleElement);
 
       if (titleElement) {
         titleElement?.scrollIntoView({ behavior: "smooth" });
@@ -235,9 +234,18 @@ const RenderJsonToHtml = ({
   return (
     <div onClick={handleClickWikiBlog}>
       {expandAllCollapse ? (
-        <div className={s.sectionDivider}>
-          {normalizeBlocks?.map((block: BlockType) => JsonToHtml(block))}
-        </div>
+        <>
+          {dividedBlocksByHeader?.map(({ content, header }, index) => {
+            return (
+              <div key={index} className={s.sectionDivider}>
+                {header && JsonToHtml(header, true, true)}
+
+                {content?.map((block: BlockType) => JsonToHtml(block))}
+              </div>
+            );
+          })}
+          {/* {normalizeBlocks?.map((block: BlockType) => JsonToHtml(block))} */}
+        </>
       ) : (
         <SectionDivideByHeader dividedBlocksByHeader={dividedBlocksByHeader} />
       )}
