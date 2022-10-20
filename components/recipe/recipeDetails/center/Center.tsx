@@ -230,17 +230,16 @@ const Center = ({
         <div className={styles.sliderBox}>
           {recipeData?.image ? (
             <SlickSlider>
-              {recipeData?.image.map((img, index) => {
+              {recipeData?.image?.map((img, index) => {
                 return (
                   <div key={index} className={styles.imageBox}>
-                    {img?.image && (
-                      <div
-                        className={styles.imageBlurBox}
-                        style={{
-                          backgroundImage: `url(${img.image})`,
-                        }}
-                      />
-                    )}
+                    <div
+                      className={styles.imageBlurBox}
+                      style={{
+                        backgroundImage: `url(${img.image})`,
+                      }}
+                    />
+
                     <Image
                       src={img.image}
                       alt="recipe_image"
