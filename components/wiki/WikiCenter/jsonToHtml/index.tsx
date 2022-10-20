@@ -3,7 +3,7 @@ import { BlockType, FootnotesType } from "../../../../type/editorjsBlockType";
 import s from "./index.module.scss";
 import FootNotes from "./FootNotes";
 import JsonToHtml from "./JsonToHtml";
-import SectionDivideByHeader from "./SectionDivideByHeader";
+import ShowBlocksWithinCollapse from "./SectionDivideByHeader";
 
 export interface BlockProps {
   block: BlockType;
@@ -234,20 +234,14 @@ const RenderJsonToHtml = ({
   return (
     <div onClick={handleClickWikiBlog}>
       {expandAllCollapse ? (
-        <>
-          {dividedBlocksByHeader?.map(({ content, header }, index) => {
-            return (
-              <div key={index} className={s.sectionDivider}>
-                {header && JsonToHtml(header, true, true)}
-
-                {content?.map((block: BlockType) => JsonToHtml(block))}
-              </div>
-            );
-          })}
-          {/* {normalizeBlocks?.map((block: BlockType) => JsonToHtml(block))} */}
-        </>
+        <ShowBlocksWithoutCollapse
+          dividedBlocksByHeader={dividedBlocksByHeader}
+        />
       ) : (
-        <SectionDivideByHeader dividedBlocksByHeader={dividedBlocksByHeader} />
+        /* {normalizeBlocks?.map((block: BlockType) => JsonToHtml(block))} */
+        <ShowBlocksWithinCollapse
+          dividedBlocksByHeader={dividedBlocksByHeader}
+        />
       )}
 
       <FootNotes
@@ -260,3 +254,25 @@ const RenderJsonToHtml = ({
 };
 
 export default RenderJsonToHtml;
+
+interface ShowBlocksWithoutCollapseProps {
+  dividedBlocksByHeader: SectionDivideByHeaderType[];
+}
+
+const ShowBlocksWithoutCollapse = ({
+  dividedBlocksByHeader,
+}: ShowBlocksWithoutCollapseProps) => {
+  return (
+    <>
+      {dividedBlocksByHeader?.map(({ content, header }, index) => {
+        return (
+          <div key={index} className={s.sectionDivider}>
+            {header && JsonToHtml(header, true, true)}
+
+            {content?.map((block: BlockType) => JsonToHtml(block))}
+          </div>
+        );
+      })}
+    </>
+  );
+};

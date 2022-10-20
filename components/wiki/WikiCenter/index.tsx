@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styles from "./wikiCenter.module.scss";
 import { GiGl } from "../../../type/nutrationType";
 import { Portion, WikiType } from "../../../type/wikiListType";
@@ -9,7 +9,13 @@ import {
   NutrientBookmarkListType,
 } from "../../../type/wikiDetailsType";
 import FirstPortion from "./firstPortion";
+import { BlockType } from "../../../type/editorjsBlockType";
 
+export interface CoverImageType {
+  url: string;
+  id: string;
+  caption: string;
+}
 export interface WikiCenterComponentProps {
   heading?: string;
   name?: string;
@@ -33,20 +39,54 @@ export interface WikiCenterComponentProps {
 }
 
 function WikiCenterComponent(props: WikiCenterComponentProps) {
-  const { body = "", scrollPoint = "", ...rest } = props;
+  const { body = "", scrollPoint = "", coverImages } = props;
 
   const [expandAllCollapse, setExpandAllCollapse] = useState(true);
+  const [imagesWithinBlock, setImagesWithinBlock] = useState<CoverImageType[]>(
+    [],
+  );
+
+  useEffect(() => {
+    if (body) {
+      const blocks: BlockType[] = JSON.parse(body)?.blocks;
+      let allImagesWithinBlock: CoverImageType[] = [];
+      blocks?.forEach((block) => {
+        if (block?.type === "image") {
+          const { data, id, tunes } = block;
+          const anchor = tunes?.anchorTune?.anchor;
+          const anchorId = anchor ? anchor : id;
+
+          allImagesWithinBlock?.push({
+            url: data?.file?.url || "",
+            id: anchorId || "",
+            caption: data?.caption || "",
+          });
+        }
+      });
+
+      coverImages?.forEach((img) => {
+        allImagesWithinBlock?.push({
+          url: img || "",
+          id: "",
+          caption: "",
+        });
+      });
+      setImagesWithinBlock(allImagesWithinBlock);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [body]);
 
   return (
     <div className={styles.centerMain}>
       <FirstPortion
-        {...rest}
+        {...props}
         expandAllCollapse={expandAllCollapse}
         setExpandAllCollapse={setExpandAllCollapse}
+        imagesWithinBlock={imagesWithinBlock}
       />
       {body && (
         <SecondPortion
-          blocks={JSON.parse(body)?.blocks}
+          blocks={body ? JSON.parse(body)?.blocks : []}
           scrollPoint={scrollPoint}
           expandAllCollapse={expandAllCollapse}
           setExpandAllCollapse={setExpandAllCollapse}
