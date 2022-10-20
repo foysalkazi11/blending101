@@ -1,7 +1,13 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useState,
+  useRef,
+  useEffect,
+} from "react";
 import styles from "../wikiCenter.module.scss";
 import CustomSlider from "../../../../theme/carousel/carousel.component";
-import { WikiCenterComponentProps } from "..";
+import { CoverImageType, WikiCenterComponentProps } from "..";
 import TopHeader from "./TopHeader";
 import SubHeader from "./SubHeader";
 import { Portion } from "../../../../type/wikiListType";
@@ -9,6 +15,9 @@ import IngredientInfo from "./ingredientInfo/IngredientInfo";
 import NutrientBookmarkList from "./NutrientBookmarkList";
 import IngredientBookmarkList from "./IngredientBookmarkList";
 import ReadMore from "../../../../theme/readMore";
+import { BlockType } from "../../../../type/editorjsBlockType";
+import { placeHolderImage } from "../../wikiSingleItem/WikiSingleItem";
+import Image from "next/image";
 
 const FirstPortion = ({
   author = "Author",
@@ -34,11 +43,16 @@ const FirstPortion = ({
   originalPortions: originalPortions = [],
   expandAllCollapse = true,
   setExpandAllCollapse = () => {},
+  imagesWithinBlock = [],
 }: WikiCenterComponentProps & {
   expandAllCollapse?: boolean;
   setExpandAllCollapse?: Dispatch<SetStateAction<boolean>>;
+  imagesWithinBlock?: CoverImageType[];
 }) => {
   const [activeVariant, setActiveVariant] = useState<number>(0);
+  const captionRef = useRef<HTMLDivElement>(null);
+  const imageSliderContainerRef = useRef<HTMLDivElement>(null);
+  let timer = useRef(null);
 
   const updatePanel = (index: number, id: string, portions?: Portion[]) => {
     if (type === "Nutrient") {
@@ -54,6 +68,30 @@ const FirstPortion = ({
       fetchNutritionPanelData(defaultMeasureMentWeight?.meausermentWeight, id);
     }
   };
+
+  const findImageBlock = (id: string) => {
+    if (!id) {
+      return;
+    }
+    setExpandAllCollapse(true);
+
+    let titleElement = null;
+    timer.current = setTimeout(() => {
+      titleElement = document.getElementById(id);
+      titleElement?.scrollIntoView({ behavior: "smooth" });
+      titleElement.style.backgroundColor = "#d2e7bc";
+      // titleElement.style.backgroundColor = "";
+    }, 300);
+    timer.current = setTimeout(() => {
+      titleElement.style.backgroundColor = "";
+    }, 2500);
+  };
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(timer.current);
+    };
+  }, []);
 
   return (
     <>
@@ -72,19 +110,53 @@ const FirstPortion = ({
           setExpandAllCollapse={setExpandAllCollapse}
         />
         <CustomSlider>
-          {coverImages?.length
-            ? coverImages.map((img, index) => {
-                return (
+          {imagesWithinBlock?.length ? (
+            imagesWithinBlock.map((img, index) => {
+              return (
+                <div
+                  key={index}
+                  className={styles.imageSliderContainer}
+                  ref={imageSliderContainerRef}
+                >
                   <div
-                    key={index}
-                    className={styles.imageBox}
-                    //style={{ backgroundImage: `url(${img})` }}
-                  >
-                    <img src={img} alt="coverImage" />
-                  </div>
-                );
-              })
-            : null}
+                    className={styles.bgBlurImage}
+                    style={{ backgroundImage: `url(${img.url})` }}
+                  ></div>
+
+                  <Image
+                    src={img.url}
+                    alt="coverImage"
+                    layout="fill"
+                    objectFit="contain"
+                  />
+                  {img?.caption && (
+                    <div
+                      className={styles.imageCaption}
+                      // style={{
+                      //   top: `${
+                      //     imageSliderContainerRef?.current?.getBoundingClientRect()
+                      //       ?.height -
+                      //     (captionRef?.current?.getBoundingClientRect()
+                      //       ?.height +
+                      //       32)
+                      //   }px`,
+                      // }}
+                    >
+                      <p
+                        className={styles.captionText}
+                        ref={captionRef}
+                        onClick={() => findImageBlock(img?.id)}
+                      >
+                        {img?.caption}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              );
+            })
+          ) : (
+            <img src={placeHolderImage} alt="coverImage" />
+          )}
         </CustomSlider>
         {type === "Ingredient" && (
           <div className={styles.ingredientInfoContainer}>

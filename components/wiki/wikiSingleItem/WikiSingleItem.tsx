@@ -19,7 +19,7 @@ import {
   WikiDetailsNutrientType,
 } from "../../../type/wikiDetailsType";
 import { WikiType } from "../../../type/wikiListType";
-const placeHolderImage = ["/images/no-image-available.webp"];
+export const placeHolderImage = "/images/no-image-available.webp";
 
 interface Props {
   type?: string;
@@ -169,11 +169,7 @@ function WikiSingleItem() {
           author={data?.publishedBy}
           body={data?.bodies}
           categroy={data?.category}
-          coverImages={
-            data?.wikiCoverImages.length
-              ? data?.wikiCoverImages
-              : placeHolderImage
-          }
+          coverImages={data?.wikiCoverImages}
           heading={`About ${data?.type}`}
           name={data?.wikiTitle}
           description={data?.wikiDescription}
