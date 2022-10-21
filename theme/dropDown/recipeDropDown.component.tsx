@@ -7,7 +7,7 @@ interface dropDown {
   name?: string;
   style?: object;
   mode?: string;
-  selectedValue?:string;
+  selectedValue?: string;
   setSelectedValue?: any;
 }
 const RecipeDropDown = ({
@@ -23,7 +23,7 @@ const RecipeDropDown = ({
         name={name}
         id="dropdown"
         className={styles.customSelectbx}
-        style={{ backgroundImage: `url(/icons/dropdown.svg)`, ...style }}
+        style={{ ...style }}
         onChange={(e) => {
           setSelectedValue(e.target.value);
         }}
@@ -44,3 +44,5 @@ const RecipeDropDown = ({
 };
 
 export default RecipeDropDown;
+
+//backgroundImage: `url(/icons/dropdown.svg)`

@@ -74,10 +74,6 @@ const Center_Elements = ({
   const router = useRouter();
   let BlendtecItem = [{ name: `Blentec` }, { name: `Blentec` }];
   let OzItem = [{ name: "64oz" }, { name: "64oz" }];
-  let dropDownStyle = {
-    paddingRight: "0px",
-    width: "111%",
-  };
 
   // delete one recipe
   const deleteOneRecipe = async () => {
@@ -199,7 +195,7 @@ const Center_Elements = ({
             onChange={(e) =>
               updateEditRecipe(e?.target?.name, e?.target?.value)
             }
-            style={{ color: "#484848",resize:'vertical' }}
+            style={{ color: "#484848", resize: "vertical" }}
           />
 
           <ScoreTray giGl={giGl} />
@@ -207,35 +203,22 @@ const Center_Elements = ({
             <div className={styles.blendingOptions__left}>
               <ul>
                 <li>
-                  <div
-                    className={styles.left__options}
-                    style={{ minWidth: "125px" }}
-                  >
+                  <div className={styles.left__options}>
                     <RecipeDropDown
                       ElemList={allBlendCategories}
-                      style={dropDownStyle}
                       selectedValue={blendCategoryState}
                       setSelectedValue={setBlendCategoryState}
                     />
                   </div>
                 </li>
                 <li>
-                  <div
-                    className={styles.left__options}
-                    style={{ minWidth: "115px" }}
-                  >
-                    <RecipeDropDown
-                      ElemList={BlendtecItem}
-                      style={dropDownStyle}
-                    />
+                  <div className={styles.left__options}>
+                    <RecipeDropDown ElemList={BlendtecItem} />
                   </div>
                 </li>
                 <li>
-                  <div
-                    className={styles.left__options}
-                    style={{ minWidth: "35px" }}
-                  >
-                    <RecipeDropDown ElemList={OzItem} style={dropDownStyle} />
+                  <div className={styles.left__options}>
+                    <RecipeDropDown ElemList={OzItem} />
                   </div>
                 </li>
               </ul>
