@@ -15,7 +15,7 @@ const RelatedWikiItem = ({ type = "Ingredient" }: Props) => {
           "/icons/information.svg"
           // <FontAwesomeIcon icon={faChartColumn} fontSize="24" />
         }
-        title="Related Products"
+        title={`Related ${type}`}
       />
       {dummyData[type]?.map((wikiItem) => {
         const {
