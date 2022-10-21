@@ -152,8 +152,11 @@ const RenderJsonToHtml = ({
       const titleElement = document.getElementById(scrollPoint);
 
       if (titleElement) {
-        titleElement?.scrollIntoView({ behavior: "smooth" });
-        titleElement.style.backgroundColor = "#d2e7bc";
+        timer.current = setTimeout(() => {
+          titleElement?.scrollIntoView({ behavior: "smooth" });
+          titleElement.style.backgroundColor = "#d2e7bc";
+          // titleElement.style.backgroundColor = "";
+        }, 300);
         timer.current = setTimeout(() => {
           titleElement.style.backgroundColor = "";
         }, 2500);
