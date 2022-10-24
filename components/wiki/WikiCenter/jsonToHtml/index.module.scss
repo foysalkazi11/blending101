@@ -8,7 +8,7 @@ $tooltip-arrow-size: 6px;
   padding: 8px 0px;
 }
 .noBlockPadding {
-  margin: 0px !important;
+  padding: 0px !important;
 }
 .rotatedIcon180Deg {
   transform: rotate(180deg);
@@ -19,7 +19,7 @@ $tooltip-arrow-size: 6px;
 }
 
 %block {
-  margin: 10px 0px;
+  padding: 10px 0px;
 }
 
 %anchor {
@@ -284,11 +284,11 @@ $tooltip-arrow-size: 6px;
 }
 
 .image {
+  @extend %block;
   width: 100%;
   max-width: $md;
   margin: auto;
   text-align: center;
-  @extend %block;
 
   img {
     width: 100%;
@@ -319,6 +319,40 @@ $tooltip-arrow-size: 6px;
   @extend %block;
 }
 
+.callout {
+  @extend %block;
+  // font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
+  color: #41314e;
+  line-height: 1.6em;
+  font-size: 16px;
+  background-color: #e0edd2;
+  border: 1px solid #f6f8fa;
+  box-shadow: none;
+  white-space: pre;
+  word-wrap: normal;
+  overflow-x: auto;
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  .icon {
+    margin-right: 0.8rem;
+    font-size: 20px;
+  }
+  .text {
+    margin: 0;
+    padding: 0;
+    // font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+    white-space: pre-wrap;
+    @extend %paragraph;
+    a {
+      @extend %anchor;
+    }
+    mark {
+      @extend %mark;
+    }
+  }
+}
+
 .footnotes {
   position: absolute;
   top: 0;
@@ -336,6 +370,7 @@ $tooltip-arrow-size: 6px;
 }
 
 .readMoreBox {
+  margin: 5px 0;
   display: flex;
   align-items: center;
   cursor: pointer;
