@@ -11,6 +11,7 @@ import Raw from "./renderers/Raw";
 import Quote from "./renderers/Quote";
 import Toggle from "./renderers/Toggle";
 import Columns from "./renderers/Columns";
+import Callout from "./renderers/Callout";
 
 const JsonToHtml = (
   block: BlockType,
@@ -54,6 +55,8 @@ const JsonToHtml = (
       );
     case "columns":
       return <Columns block={block} addBlockPadding={addBlockPadding} />;
+    case "callout":
+      return <Callout block={block} addBlockPadding={addBlockPadding} />;
 
     default:
       return null;
