@@ -38,5 +38,5 @@ yarn-error.log*
 # serverless
 .serverless_nextjs
 
-yarn.lock
-package-lock.json
+# yarn.lock
+# package-lock.json
