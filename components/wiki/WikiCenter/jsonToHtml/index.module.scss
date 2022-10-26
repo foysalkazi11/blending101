@@ -24,7 +24,11 @@ $tooltip-arrow-size: 6px;
 
 %anchor {
   text-decoration: none;
-  color: $secondaryColor;
+  transition: all 0.5s;
+  color: $primaryColor;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 %sup {
@@ -47,12 +51,15 @@ $tooltip-arrow-size: 6px;
 
 %span {
   font-size: inherit;
-  background: rgb(255, 239, 213);
-  border-radius: 6px;
-  transition: all 0.9s;
+  border-bottom: 2px solid #ffffff;
+  box-shadow: inset 0 -7px 0 0 #e0edd2;
+  transition: all 0.3s;
+  &:hover {
+    box-shadow: inset 0 -25px 0 0 #eee;
+  }
 
   &[data-tooltip] {
-    transition: all 0.9s;
+    transition: all 0.3s;
     position: relative;
   }
   &[data-tooltip]:hover::after {
@@ -97,7 +104,7 @@ $tooltip-arrow-size: 6px;
   }
 }
 %mark {
-  background-color: #d2e7bc;
+  background-color: #e0edd2;
   color: $fontDeepGray;
   border-radius: 6px;
 }
@@ -322,7 +329,7 @@ $tooltip-arrow-size: 6px;
 .callout {
   @extend %block;
   // font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
-  color: #41314e;
+  // color: #41314e;
   line-height: 1.6em;
   font-size: 16px;
   background-color: #e0edd2;
