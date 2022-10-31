@@ -1,9 +1,3 @@
-import {
-  faHeartPulse,
-  faSquareExclamation,
-} from "@fortawesome/pro-regular-svg-icons";
-import { faBooks } from "@fortawesome/pro-thin-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import HTMLReactParser from "html-react-parser";
 import React from "react";
 import { BlockProps } from "..";
@@ -32,7 +26,7 @@ const Header = ({
       {...handleBlockData(block)}
       style={{ textAlign: align }}
     >
-      {showIcon && (
+      {/* {showIcon && (
         <FontAwesomeIcon
           icon={faSquareExclamation}
           color="#7dbd3b"
@@ -41,7 +35,7 @@ const Header = ({
             fontSize: "24px",
           }}
         />
-      )}
+      )} */}
 
       {data?.text && HTMLReactParser(data.text)}
     </Tag>
