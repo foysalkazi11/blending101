@@ -124,8 +124,11 @@ $tooltip-arrow-size: 6px;
   @include media(md) {
     font-size: 40px;
   }
-  sup {
+  sup:not([data-icon_name]) {
     @extend %sup;
+  }
+  sup:is([data-icon_name]) {
+    color: $secondaryColor;
   }
 }
 
@@ -137,8 +140,11 @@ $tooltip-arrow-size: 6px;
   @include media(md) {
     font-size: 38px;
   }
-  sup {
+  sup:not([data-icon_name]) {
     @extend %sup;
+  }
+  sup:is([data-icon_name]) {
+    color: $secondaryColor;
   }
 }
 .h3 {
@@ -149,8 +155,11 @@ $tooltip-arrow-size: 6px;
   @include media(md) {
     font-size: 30px;
   }
-  sup {
+  sup:not([data-icon_name]) {
     @extend %sup;
+  }
+  sup:is([data-icon_name]) {
+    color: $secondaryColor;
   }
 }
 
@@ -162,8 +171,11 @@ $tooltip-arrow-size: 6px;
   @include media(md) {
     font-size: 24px;
   }
-  sup {
+  sup:not([data-icon_name]) {
     @extend %sup;
+  }
+  sup:is([data-icon_name]) {
+    color: $secondaryColor;
   }
 }
 
@@ -179,8 +191,11 @@ $tooltip-arrow-size: 6px;
   span {
     @extend %span;
   }
-  sup {
+  sup:not([data-icon_name]) {
     @extend %sup;
+  }
+  sup:is([data-icon_name]) {
+    color: $secondaryColor;
   }
 }
 
@@ -213,6 +228,12 @@ $tooltip-arrow-size: 6px;
       span {
         @extend %span;
       }
+      sup:not([data-icon_name]) {
+        @extend %sup;
+      }
+      sup:is([data-icon_name]) {
+        color: $secondaryColor;
+      }
     }
   }
 
@@ -229,8 +250,11 @@ $tooltip-arrow-size: 6px;
     li {
       margin-left: 40px;
       @extend %paragraph;
-      sup {
+      sup:not([data-icon_name]) {
         @extend %sup;
+      }
+      sup:is([data-icon_name]) {
+        color: $secondaryColor;
       }
       a {
         @extend %anchor;
@@ -285,8 +309,11 @@ $tooltip-arrow-size: 6px;
   footer {
     @extend %figcaption;
   }
-  sup {
+  sup:not([data-icon_name]) {
     @extend %sup;
+  }
+  sup:is([data-icon_name]) {
+    color: $secondaryColor;
   }
 }
 
@@ -356,6 +383,12 @@ $tooltip-arrow-size: 6px;
     }
     mark {
       @extend %mark;
+    }
+    sup:not([data-icon_name]) {
+      @extend %sup;
+    }
+    sup:is([data-icon_name]) {
+      color: $secondaryColor;
     }
   }
 }
