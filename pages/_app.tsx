@@ -14,14 +14,10 @@ import client from "../gqlLib/client";
 import { useRouter } from "next/router";
 import { Fragment } from "react";
 import FooterRecipeFilter from "../components/footer/footerRecipeFilter.component";
-
 import { config } from "@fortawesome/fontawesome-svg-core";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
-
 import "@fortawesome/fontawesome-svg-core/styles.css";
-config.autoAddCss = false;
 
+config.autoAddCss = false;
 Amplify.configure(awsconfig);
 
 function MyApp({ Component, pageProps }: AppProps) {

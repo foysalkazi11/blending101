@@ -4,6 +4,7 @@ import s from "./index.module.scss";
 import FootNotes from "./FootNotes";
 import JsonToHtml from "./JsonToHtml";
 import ShowBlocksWithinCollapse from "./SectionDivideByHeader";
+import "@fortawesome/fontawesome-pro/css/all.min.css";
 
 export interface BlockProps {
   block: BlockType;
