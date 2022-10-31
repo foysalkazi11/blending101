@@ -12,10 +12,10 @@ const RelatedWikiItem = ({ type = "Ingredient" }: Props) => {
     <div style={{ width: "100%" }}>
       <PanelHeader
         icon={
-          "/icons/information.svg"
+          "/images/telescope.svg"
           // <FontAwesomeIcon icon={faChartColumn} fontSize="24" />
         }
-        title="Related Products"
+        title={`Related ${type}`}
       />
       {dummyData[type]?.map((wikiItem) => {
         const {

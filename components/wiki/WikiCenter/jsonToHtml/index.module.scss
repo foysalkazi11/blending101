@@ -8,16 +8,27 @@ $tooltip-arrow-size: 6px;
   padding: 8px 0px;
 }
 .noBlockPadding {
-  margin: 0px !important;
+  padding: 0px !important;
+}
+.rotatedIcon180Deg {
+  transform: rotate(180deg);
+}
+
+.activeIcon {
+  color: $secondaryColor !important;
 }
 
 %block {
-  margin: 10px 0px;
+  padding: 10px 0px;
 }
 
 %anchor {
   text-decoration: none;
-  color: $secondaryColor;
+  transition: all 0.5s;
+  color: $primaryColor;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 %sup {
@@ -40,13 +51,15 @@ $tooltip-arrow-size: 6px;
 
 %span {
   font-size: inherit;
-  background: rgb(255, 239, 213);
-  text-decoration: underline;
-  border-radius: 6px;
-  transition: all 0.9s;
-
+  border-bottom: 2px solid #ffffff;
+  box-shadow: inset 0 -7px 0 0 #e0edd2;
+  transition: all 0.3s;
   &:hover {
-    transition: all 0.9s;
+    box-shadow: inset 0 -25px 0 0 #eee;
+  }
+
+  &[data-tooltip] {
+    transition: all 0.3s;
     position: relative;
   }
   &[data-tooltip]:hover::after {
@@ -91,7 +104,7 @@ $tooltip-arrow-size: 6px;
   }
 }
 %mark {
-  background-color: #d2e7bc;
+  background-color: #e0edd2;
   color: $fontDeepGray;
   border-radius: 6px;
 }
@@ -111,8 +124,11 @@ $tooltip-arrow-size: 6px;
   @include media(md) {
     font-size: 40px;
   }
-  sup {
+  sup:not([data-icon_name]) {
     @extend %sup;
+  }
+  sup:is([data-icon_name]) {
+    color: $secondaryColor;
   }
 }
 
@@ -124,8 +140,11 @@ $tooltip-arrow-size: 6px;
   @include media(md) {
     font-size: 38px;
   }
-  sup {
+  sup:not([data-icon_name]) {
     @extend %sup;
+  }
+  sup:is([data-icon_name]) {
+    color: $secondaryColor;
   }
 }
 .h3 {
@@ -136,8 +155,11 @@ $tooltip-arrow-size: 6px;
   @include media(md) {
     font-size: 30px;
   }
-  sup {
+  sup:not([data-icon_name]) {
     @extend %sup;
+  }
+  sup:is([data-icon_name]) {
+    color: $secondaryColor;
   }
 }
 
@@ -149,8 +171,11 @@ $tooltip-arrow-size: 6px;
   @include media(md) {
     font-size: 24px;
   }
-  sup {
+  sup:not([data-icon_name]) {
     @extend %sup;
+  }
+  sup:is([data-icon_name]) {
+    color: $secondaryColor;
   }
 }
 
@@ -166,8 +191,11 @@ $tooltip-arrow-size: 6px;
   span {
     @extend %span;
   }
-  sup {
+  sup:not([data-icon_name]) {
     @extend %sup;
+  }
+  sup:is([data-icon_name]) {
+    color: $secondaryColor;
   }
 }
 
@@ -177,9 +205,11 @@ $tooltip-arrow-size: 6px;
     display: flex;
     align-items: center;
     cursor: pointer;
+    padding-left: 5px;
 
     .icon {
       transition: transform linear 0.3s;
+      color: #484848;
     }
     .iconRotate {
       transform: rotate(90deg);
@@ -198,6 +228,12 @@ $tooltip-arrow-size: 6px;
       span {
         @extend %span;
       }
+      sup:not([data-icon_name]) {
+        @extend %sup;
+      }
+      sup:is([data-icon_name]) {
+        color: $secondaryColor;
+      }
     }
   }
 
@@ -214,8 +250,11 @@ $tooltip-arrow-size: 6px;
     li {
       margin-left: 40px;
       @extend %paragraph;
-      sup {
+      sup:not([data-icon_name]) {
         @extend %sup;
+      }
+      sup:is([data-icon_name]) {
+        color: $secondaryColor;
       }
       a {
         @extend %anchor;
@@ -270,17 +309,20 @@ $tooltip-arrow-size: 6px;
   footer {
     @extend %figcaption;
   }
-  sup {
+  sup:not([data-icon_name]) {
     @extend %sup;
+  }
+  sup:is([data-icon_name]) {
+    color: $secondaryColor;
   }
 }
 
 .image {
+  @extend %block;
   width: 100%;
   max-width: $md;
   margin: auto;
   text-align: center;
-  @extend %block;
 
   img {
     width: 100%;
@@ -311,6 +353,46 @@ $tooltip-arrow-size: 6px;
   @extend %block;
 }
 
+.callout {
+  @extend %block;
+  // font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
+  // color: #41314e;
+  line-height: 1.6em;
+  font-size: 16px;
+  background-color: #e0edd2;
+  border: 1px solid #f6f8fa;
+  box-shadow: none;
+  white-space: pre;
+  word-wrap: normal;
+  overflow-x: auto;
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  .icon {
+    margin-right: 0.8rem;
+    font-size: 20px;
+  }
+  .text {
+    margin: 0;
+    padding: 0;
+    // font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+    white-space: pre-wrap;
+    @extend %paragraph;
+    a {
+      @extend %anchor;
+    }
+    mark {
+      @extend %mark;
+    }
+    sup:not([data-icon_name]) {
+      @extend %sup;
+    }
+    sup:is([data-icon_name]) {
+      color: $secondaryColor;
+    }
+  }
+}
+
 .footnotes {
   position: absolute;
   top: 0;
@@ -327,11 +409,60 @@ $tooltip-arrow-size: 6px;
   height: 100%;
 }
 
+.readMoreBox {
+  margin: 5px 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #484848;
+  transition: all 0.3s;
+  .icon {
+    margin-right: 5px;
+    transition: all 0.3s;
+  }
+}
+
 .showMoreText {
   font-size: 14px;
   color: #484848;
   font-weight: bold;
   cursor: pointer;
+}
+
+.footnotesContainer {
+  .footnoteHeading {
+    font-weight: 500;
+    font-size: 20px;
+    color: #484848;
+  }
+  .footnoteContentWrapper {
+    padding-top: 10px;
+    .footnoteConten {
+      font-size: 16px;
+      color: #484848;
+      line-height: 24px;
+    }
+  }
+}
+
+.showHeadingThreeTitleBox {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  .headingThreeTitle {
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 14px;
+    font-weight: 500;
+    color: $secondaryColor;
+    border: 1px solid $secondaryColor;
+    padding: 3px 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 5px;
+  }
 }
 
 @keyframes pulse {

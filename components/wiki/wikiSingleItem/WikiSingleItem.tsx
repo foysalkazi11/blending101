@@ -7,9 +7,9 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setLoading } from "../../../redux/slices/utilitySlice";
 import NutritionPanel from "../../recipe/share/nutritionPanel/NutritionPanel";
 import notification from "../../utility/reactToastifyNotification";
-import WikiCenterComponent from "../WikiCenter/WikiCenter.component";
+import WikiCenterComponent from "../WikiCenter";
 import WikiRightComponent from "../WikiRight";
-import styles from "../wiki.module.scss";
+import styles from "../../pageLayout/pageLayout.module.scss";
 import { useRouter } from "next/router";
 import RelatedWikiItem from "./realtedWikiItem/RelatedWikiItem";
 import GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS from "../../../gqlLib/nutrition/query/getNutrientsListAndGiGlByIngredients";
@@ -19,7 +19,10 @@ import {
   WikiDetailsNutrientType,
 } from "../../../type/wikiDetailsType";
 import { WikiType } from "../../../type/wikiListType";
-const placeHolderImage = ["/images/no-image-available.webp"];
+import useWindowSize from "../../utility/useWindowSize";
+import ShowRelatedItems from "../../showRelatedItems";
+import dummyData from "./dummyData";
+export const placeHolderImage = "/images/no-image-available.webp";
 
 interface Props {
   type?: string;
@@ -47,6 +50,7 @@ function WikiSingleItem() {
     GET_BLEND_NUTRITION_BASED_IN_INGREDIENTS_WIKI,
     { fetchPolicy: "network-only" },
   );
+  const { width } = useWindowSize();
 
   const [
     getNutrientsListAndGiGlByIngredients,
@@ -162,35 +166,35 @@ function WikiSingleItem() {
         showTagByDeafult: false,
       }}
     >
-      <div className={styles.singleWikiItemContainer}>
-        <RelatedWikiItem type={type} />
+      <div className={styles.main}>
+        <div className={styles.left}>
+          <RelatedWikiItem type={type} />
+        </div>
 
-        <WikiCenterComponent
-          author={data?.publishedBy}
-          body={data?.bodies}
-          categroy={data?.category}
-          coverImages={
-            data?.wikiCoverImages.length
-              ? data?.wikiCoverImages
-              : placeHolderImage
-          }
-          heading={`About ${data?.type}`}
-          name={data?.wikiTitle}
-          description={data?.wikiDescription}
-          giGl={giGl}
-          type={data?.type}
-          wikiId={wikiId}
-          commentsCount={data?.commentsCount}
-          scrollPoint={scrollPoint}
-          ingredientBookmarkList={data?.ingredientBookmarkList || []}
-          nutrientBookmarkList={data?.nutrientBookmarkList || []}
-          fetchNutritionPanelData={fetchNutritionPanelData}
-          setDefaultMeasureMentWeight={setDefaultMeasureMentWeight}
-          setCurrentWikiId={setCurrentWikiId}
-          setPortions={setPortions}
-          originalPortions={data?.portions}
-        />
-        <>
+        <div className={styles.center}>
+          <WikiCenterComponent
+            author={data?.publishedBy}
+            body={data?.bodies}
+            categroy={data?.category}
+            coverImages={data?.wikiCoverImages}
+            heading={`About ${data?.type}`}
+            name={data?.wikiTitle}
+            description={data?.wikiDescription}
+            giGl={giGl}
+            type={data?.type}
+            wikiId={wikiId}
+            commentsCount={data?.commentsCount}
+            scrollPoint={scrollPoint}
+            ingredientBookmarkList={data?.ingredientBookmarkList || []}
+            nutrientBookmarkList={data?.nutrientBookmarkList || []}
+            fetchNutritionPanelData={fetchNutritionPanelData}
+            setDefaultMeasureMentWeight={setDefaultMeasureMentWeight}
+            setCurrentWikiId={setCurrentWikiId}
+            setPortions={setPortions}
+            originalPortions={data?.portions}
+          />
+        </div>
+        <div className={styles.right}>
           {type === "Ingredient" && (
             <NutritionPanel
               nutritionTrayData={nutrients ? JSON?.parse(nutrients) : {}}
@@ -223,8 +227,17 @@ function WikiSingleItem() {
               mainWikiId={wikiId}
             />
           )}
-        </>
+        </div>
       </div>
+      {width < 1280 ? (
+        <ShowRelatedItems
+          category="wiki"
+          title={`Related ${type}`}
+          itemsList={
+            type === "Ingredient" ? dummyData?.Ingredient : dummyData?.Nutrient
+          }
+        />
+      ) : null}
     </AContainer>
   );
 }

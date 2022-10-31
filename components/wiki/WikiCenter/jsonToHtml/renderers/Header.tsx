@@ -1,6 +1,3 @@
-import { faHeartPulse } from "@fortawesome/pro-regular-svg-icons";
-import { faBooks } from "@fortawesome/pro-thin-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import HTMLReactParser from "html-react-parser";
 import React from "react";
 import { BlockProps } from "..";
@@ -11,10 +8,14 @@ const Header = ({
   block,
   addBlockPadding = true,
   showIcon = false,
-}: BlockProps & { showIcon?: boolean }) => {
+  headerAlinement,
+}: BlockProps & {
+  showIcon?: boolean;
+  headerAlinement?: "left" | "right" | "center";
+}) => {
   const { data, tunes } = block;
   const handleBlockData = useBlock();
-  const alignment = tunes?.alignmentTuneTool?.alignment;
+  const alignment = headerAlinement || tunes?.alignmentTuneTool?.alignment;
   const align: any = alignment || "left";
 
   const Tag = `h${data?.level || 1}` as keyof JSX.IntrinsicElements;
@@ -25,16 +26,16 @@ const Header = ({
       {...handleBlockData(block)}
       style={{ textAlign: align }}
     >
-      {showIcon && (
+      {/* {showIcon && (
         <FontAwesomeIcon
-          icon={faHeartPulse}
+          icon={faSquareExclamation}
           color="#7dbd3b"
           style={{
             paddingRight: "10px",
             fontSize: "24px",
           }}
         />
-      )}
+      )} */}
 
       {data?.text && HTMLReactParser(data.text)}
     </Tag>

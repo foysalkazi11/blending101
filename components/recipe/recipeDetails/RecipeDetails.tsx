@@ -5,9 +5,10 @@ import Center from "./center/Center";
 import NutritionPanel from "../share/nutritionPanel/NutritionPanel";
 import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
 import useWindowSize from "../../utility/useWindowSize";
-import RelatedRecipeSlider from "./leftSide/RelatedRecipeSlider";
 import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
 import { useAppSelector } from "../../../redux/hooks";
+import ShowRelatedItems from "../../showRelatedItems";
+import { recommendedList } from "../fackData/recipeDetails";
 
 const RecipeDetails = ({
   recipeData,
@@ -75,7 +76,13 @@ const RecipeDetails = ({
           />
         </div>
       </div>
-      {width < 1280 ? <RelatedRecipeSlider /> : null}
+      {width < 1280 ? (
+        <ShowRelatedItems
+          category="recipe"
+          title="Related Recipes"
+          itemsList={recommendedList}
+        />
+      ) : null}
       <FooterRecipeFilter />
     </AContainer>
   );
