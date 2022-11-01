@@ -96,8 +96,11 @@ $tooltip-arrow-size: 6px;
   font-size: 16px;
   color: $fontDeepGray;
   line-height: 24px;
-  i {
+  i:not([data-icon_name]) {
     font-style: italic;
+  }
+  i:is([data-icon_name]) {
+    color: $secondaryColor;
   }
   b {
     font-weight: bold;
@@ -124,10 +127,10 @@ $tooltip-arrow-size: 6px;
   @include media(md) {
     font-size: 40px;
   }
-  sup:not([data-icon_name]) {
+  sup {
     @extend %sup;
   }
-  sup:is([data-icon_name]) {
+  i:is([data-icon_name]) {
     color: $secondaryColor;
   }
 }
@@ -140,10 +143,10 @@ $tooltip-arrow-size: 6px;
   @include media(md) {
     font-size: 38px;
   }
-  sup:not([data-icon_name]) {
+  sup {
     @extend %sup;
   }
-  sup:is([data-icon_name]) {
+  i:is([data-icon_name]) {
     color: $secondaryColor;
   }
 }
@@ -155,10 +158,10 @@ $tooltip-arrow-size: 6px;
   @include media(md) {
     font-size: 30px;
   }
-  sup:not([data-icon_name]) {
+  sup {
     @extend %sup;
   }
-  sup:is([data-icon_name]) {
+  i:is([data-icon_name]) {
     color: $secondaryColor;
   }
 }
@@ -171,10 +174,10 @@ $tooltip-arrow-size: 6px;
   @include media(md) {
     font-size: 24px;
   }
-  sup:not([data-icon_name]) {
+  sup {
     @extend %sup;
   }
-  sup:is([data-icon_name]) {
+  i:is([data-icon_name]) {
     color: $secondaryColor;
   }
 }
@@ -191,10 +194,10 @@ $tooltip-arrow-size: 6px;
   span {
     @extend %span;
   }
-  sup:not([data-icon_name]) {
+  sup {
     @extend %sup;
   }
-  sup:is([data-icon_name]) {
+  i:is([data-icon_name]) {
     color: $secondaryColor;
   }
 }
@@ -228,10 +231,10 @@ $tooltip-arrow-size: 6px;
       span {
         @extend %span;
       }
-      sup:not([data-icon_name]) {
+      sup {
         @extend %sup;
       }
-      sup:is([data-icon_name]) {
+      i:is([data-icon_name]) {
         color: $secondaryColor;
       }
     }
@@ -250,10 +253,10 @@ $tooltip-arrow-size: 6px;
     li {
       margin-left: 40px;
       @extend %paragraph;
-      sup:not([data-icon_name]) {
+      sup {
         @extend %sup;
       }
-      sup:is([data-icon_name]) {
+      i:is([data-icon_name]) {
         color: $secondaryColor;
       }
       a {
@@ -309,10 +312,10 @@ $tooltip-arrow-size: 6px;
   footer {
     @extend %figcaption;
   }
-  sup:not([data-icon_name]) {
+  sup {
     @extend %sup;
   }
-  sup:is([data-icon_name]) {
+  i:is([data-icon_name]) {
     color: $secondaryColor;
   }
 }
@@ -384,10 +387,10 @@ $tooltip-arrow-size: 6px;
     mark {
       @extend %mark;
     }
-    sup:not([data-icon_name]) {
+    sup {
       @extend %sup;
     }
-    sup:is([data-icon_name]) {
+    i:is([data-icon_name]) {
       color: $secondaryColor;
     }
   }
