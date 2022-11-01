@@ -17,6 +17,10 @@ import { GET_ALL_WIDGET_COLLECTION_DATA } from "../graphql/Widget";
 
 import styles from "../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";
 import classes from "../styles/pages/viewAll.module.scss";
+import ShowCollectionModal from "../components/showModal/ShowCollectionModal";
+import useForAddToCollection from "../customHooks/useForAddToCollection";
+import useForOpenCollectionTray from "../customHooks/useForOpenCollection";
+import useThemeMethod from "../hooks/modules/useThemeMethod";
 
 const ViewAll = () => {
   const router = useRouter();
@@ -40,6 +44,8 @@ const ViewAll = () => {
   const items = collection?.data?.[collection?.data?.collectionType] || [];
 
   const [theme, setTheme] = useState("");
+  const [openCollectionModal, setOpenCollectionModal] = useState(false);
+
   useEffect(() => {
     if (!collection?.themeLink) return;
     fetch(collection?.themeLink)
@@ -59,6 +65,31 @@ const ViewAll = () => {
       });
   }, [collection?.bannerLink]);
 
+  const handleAddToCollection = useForAddToCollection();
+  const handleOpenCollectionTray = useForOpenCollectionTray();
+  const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
+    "compareList",
+    [],
+  );
+
+  const collectionHandler = (e, id: string) => {
+    console.log(e);
+    alert("I am executed");
+    // const item = items.find((i) => i._id === id);
+    // const isCollectionIds = item?.userCollections;
+    // const recipeId = item?._id;
+    // isCollectionIds?.length
+    //   ? handleOpenCollectionTray(recipeId, isCollectionIds, e)
+    //   : handleAddToCollection(
+    //       recipeId,
+    //       setOpenCollectionModal,
+    //       e,
+    //       setcompareRecipeList,
+    //     );
+  };
+
+  const RecipeRef = useThemeMethod({ toggleCollection: collectionHandler });
+
   return (
     <AContainer
       showCollectionTray={{ show: true, showTagByDeafult: true }}
@@ -69,6 +100,11 @@ const ViewAll = () => {
         showTagByDeafult: false,
       }}
     >
+      <ul className="list-collection">
+        <li className="toggleCollection">1</li>
+        <li className="toggleCollection">2</li>
+        <li className="toggleCollection">3</li>
+      </ul>
       <div className={styles.main__div}>
         <div
           style={{
@@ -81,7 +117,6 @@ const ViewAll = () => {
             <SearchtagsComponent />
           ) : null}
         </div>
-
         {blends.length || ingredients.length || filters?.length ? (
           <FilterPageBottom
             blends={blends}
@@ -96,6 +131,10 @@ const ViewAll = () => {
                   className={classes.head__icon}
                   src={collection?.icon}
                   alt={collection?.displayName}
+                />
+                <img
+                  src="https://blending.s3.us-east-1.amazonaws.com/thumbnail/Recipe/_3009104.50140353/images/rating.svg"
+                  alt=""
                 />
                 <h2 className={classes.head__title}>
                   {collection?.displayName}
@@ -121,9 +160,14 @@ const ViewAll = () => {
               {items?.map((item, idx) => (
                 <div
                   key={idx}
-                  className="col-2"
+                  ref={RecipeRef}
+                  className="col-3"
+                  data-id={item._id}
                   dangerouslySetInnerHTML={{
-                    __html: ejs.render(theme, { data: item, methods: {} }),
+                    __html: ejs.render(theme, {
+                      data: item,
+                      methods: { toggleCollection: collectionHandler },
+                    }),
                   }}
                 />
               ))}
@@ -131,6 +175,11 @@ const ViewAll = () => {
           </div>
         )}
       </div>
+      <ShowCollectionModal
+        open={openCollectionModal}
+        setOpen={setOpenCollectionModal}
+        shouldCloseOnOverlayClick={true}
+      />
       <div className={styles.footerMainDiv}>
         <FooterRecipeFilter />
       </div>

@@ -15,6 +15,13 @@ import { useRouter } from "next/router";
 import { Fragment } from "react";
 import FooterRecipeFilter from "../components/footer/footerRecipeFilter.component";
 import { config } from "@fortawesome/fontawesome-svg-core";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
+import dynamic from "next/dynamic";
+const FeedbackImport = dynamic(() => import("simple-screenshot-feedback"), {
+  ssr: false,
+});
+
 import "@fortawesome/fontawesome-svg-core/styles.css";
 
 config.autoAddCss = false;
@@ -32,6 +39,10 @@ function MyApp({ Component, pageProps }: AppProps) {
     ? Fragment
     : AuthProvider;
 
+  const handleSubmitError = (error: any) => {
+    console.log(error);
+  };
+
   return (
     <>
       <ApolloProvider client={client}>
@@ -39,6 +50,14 @@ function MyApp({ Component, pageProps }: AppProps) {
           <AuthProvider>
             <Loader />
             <ToastContainer />
+            {/* @ts-ignore */}
+            <FeedbackImport
+              //@ts-ignore
+              slackToken={process.env.NEXT_PUBLIC_SLACK_API_KEY}
+              slackChannel={process.env.NEXT_PUBLIC_SLACK_CHANNEL}
+              handleSubmitError={handleSubmitError}
+            />
+
             {/* <FontAwesomeIcon icon={solid("1")} /> */}
 
             {/* @ts-ignore */}

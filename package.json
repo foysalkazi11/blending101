@@ -44,6 +44,7 @@
     "react-toastify": "^8.1.0",
     "recharts": "^2.1.14",
     "sass": "^1.43.4",
+    "simple-screenshot-feedback": "^1.0.9",
     "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
