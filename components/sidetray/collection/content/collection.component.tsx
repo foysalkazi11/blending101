@@ -250,14 +250,14 @@ export default function CollectionComponent({
                           {item?.recipes?.length}
                         </p>
                       ) : (
-                        <div className={styles.rightSide}>
-                          <MdMoreVert
-                            className={styles.moreIcon}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleClick(i);
-                            }}
-                          />
+                        <div
+                          className={styles.rightSide}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleClick(i);
+                          }}
+                        >
+                          <MdMoreVert className={styles.moreIcon} />
 
                           <div
                             className={`${styles.menu} ${
