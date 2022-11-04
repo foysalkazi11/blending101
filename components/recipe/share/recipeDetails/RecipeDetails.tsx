@@ -4,14 +4,13 @@ import SectionTitleWithIcon from "../../../../theme/recipe/sectionTitleWithIcon/
 import styles from "./RecipeDetails.module.scss";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import uniqueId from "../../../utility/uniqueId";
-import { useLazyQuery } from "@apollo/client";
-import GET_BLEND_NUTRITION_BASED_ON_RECIPE_DATA from "../../../../gqlLib/compare/query/getBlendNutritionBasedOnRecipeData";
 import NutrationPanelSkeleton from "../../../../theme/skeletons/nutrationPanelSkeleton/NutrationPanelSkeleton";
 import UpdatedRecursiveAccordian from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
 import useDraggableInPortal from "../../../../customHooks/useDraggableInPortal";
 import SingleIngredient from "../singleIngredient/SingleIngredient";
 import { IoClose } from "react-icons/io5";
 import IconWraper from "../../../../theme/iconWarper/IconWarper";
+import useGetBlendNutritionBasedOnRecipexxx from "../../../../customHooks/useGetBlendNutritionBasedOnRecipexxx";
 
 function Copyable(props) {
   const { items, addItem, droppableId } = props;
@@ -75,10 +74,14 @@ const RecipeDetails = ({
   setCopyImage = () => {},
 }: any) => {
   const [winReady, setwinReady] = useState(false);
-  const [getBlendNutritionBasedonRecipeData, { loading, error, data }] =
-    useLazyQuery(GET_BLEND_NUTRITION_BASED_ON_RECIPE_DATA, {
-      // fetchPolicy: "network-only",
-    });
+
+  const { loading: nutritionDataLoading, data: nutritionData } =
+    useGetBlendNutritionBasedOnRecipexxx(
+      recipe?.ingredients,
+      {},
+      () => {},
+      true,
+    );
 
   const makeIngredients = (ing) => {
     let arr = [];
@@ -91,15 +94,6 @@ const RecipeDetails = ({
 
   useEffect(() => {
     setwinReady(true);
-  }, []);
-
-  useEffect(() => {
-    if (recipe?._id) {
-      getBlendNutritionBasedonRecipeData({
-        variables: { recipeId: recipe?._id },
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -123,7 +117,7 @@ const RecipeDetails = ({
           score={recipe?.score}
           calorie={recipe?.calorie}
           noOfComments={recipe?.numberOfRating}
-          image={recipe.image[0]?.image}
+          image={recipe.image[0]?.image || ""}
           recipeId={recipe?._id}
           notes={recipe?.notes}
           addedToCompare={recipe?.addedToCompare}
@@ -175,13 +169,17 @@ const RecipeDetails = ({
 
           <div className={`${styles.ingredientsDetails} `}>
             {winReady ? (
-              loading ? (
+              nutritionDataLoading ? (
                 <NutrationPanelSkeleton />
               ) : (
                 <UpdatedRecursiveAccordian
                   dataObject={
-                    data?.getBlendNutritionBasedOnRecipeData &&
-                    JSON?.parse(data?.getBlendNutritionBasedOnRecipeData)
+                    nutritionData?.getNutrientsListAndGiGlByIngredients
+                      ?.nutrients &&
+                    JSON?.parse(
+                      nutritionData?.getNutrientsListAndGiGlByIngredients
+                        ?.nutrients,
+                    )
                   }
                   showUser={false}
                   counter={1}

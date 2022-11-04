@@ -9,11 +9,6 @@ const GET_RECIPES_BY_BLEND_AND_INGREDIENTS = gql`
       recipeBlendCategory {
         name
       }
-      testIngredient {
-        quantity
-        unit
-        name
-      }
       image {
         image
         default

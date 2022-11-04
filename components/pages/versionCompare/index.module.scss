@@ -1,0 +1,39 @@
+@import "../../../styles/partials/variables";
+@import "../../../styles/partials/mixin";
+
+.versionCompareContainer {
+  max-width: $_2xl;
+  margin: 0 auto;
+  padding: 40px 16px;
+}
+
+.versionCompareNav {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  transition: all 0.3s;
+  cursor: pointer;
+  &:hover &__icon,
+  &:hover p {
+    color: #fe5d1f !important;
+  }
+  &__icon {
+    margin-right: 5px;
+    cursor: pointer;
+    width: 27px;
+    color: #000;
+  }
+  p {
+    color: #000 !important;
+    font-weight: 500;
+    font-size: 18px;
+  }
+}
+
+.button__bar {
+  @include sliderCustomDot;
+}
+
+.button__bar :global(li.slick-active) button {
+  background-color: $primaryColor;
+}
