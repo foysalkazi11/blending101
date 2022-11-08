@@ -43,6 +43,7 @@ interface dataCardInterface {
   isImageOverlay?: boolean;
   imageOverlayFunc?: (arg: string) => void;
   userId?: null | RecipeCreatorInfo;
+  customMenu?: React.ReactNode | null;
 }
 
 export default function DatacardComponent({
@@ -71,6 +72,7 @@ export default function DatacardComponent({
   isMatch = false,
   isImageOverlay = false,
   userId = null,
+  customMenu = null,
 }: dataCardInterface) {
   title = title || "Triple Berry Smoothie";
   ingredients = ingredients;
@@ -184,19 +186,24 @@ export default function DatacardComponent({
             </h2>
           </div>
           <div className={styles.menu}>
-            {showMoreMenu ? (
+            {showMoreMenu && (
               <>
-                <IconWarper
-                  hover="bgSlightGray"
-                  handleClick={handleClick}
-                  style={{ width: "30px", height: "30px" }}
-                >
-                  <FontAwesomeIcon icon={faEllipsisVertical} />
-                </IconWarper>
-
-                <FloatingMenu />
+                {customMenu ? (
+                  customMenu
+                ) : (
+                  <>
+                    <IconWarper
+                      hover="bgSlightGray"
+                      handleClick={handleClick}
+                      style={{ width: "30px", height: "30px" }}
+                    >
+                      <FontAwesomeIcon icon={faEllipsisVertical} />
+                    </IconWarper>
+                    <FloatingMenu />
+                  </>
+                )}
               </>
-            ) : null}
+            )}
           </div>
         </div>
         <div className={styles.datacard__body__middle}>
@@ -235,7 +242,13 @@ export default function DatacardComponent({
           <div className={styles.datacard__body__bottom__left}>
             {userId ? (
               <Tooltip
-                content={userId?.displayName || userId?.firstName || userId?.lastName || userId?.email || "User name"}
+                content={
+                  userId?.displayName ||
+                  userId?.firstName ||
+                  userId?.lastName ||
+                  userId?.email ||
+                  "User name"
+                }
                 direction="right"
               >
                 {userId?.image ? (

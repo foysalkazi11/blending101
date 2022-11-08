@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from "react";
-import DatacardComponent from "../../../../theme/cards/dataCard/dataCard.component";
-import SectionTitleWithIcon from "../../../../theme/recipe/sectionTitleWithIcon/SectionTitleWithIcon.component";
-import styles from "./RecipeDetails.module.scss";
+import styles from "../index.module.scss";
 import { Droppable, Draggable } from "react-beautiful-dnd";
+import { IoClose } from "react-icons/io5";
+import useDraggableInPortal from "../../../../customHooks/useDraggableInPortal";
+import SingleIngredient from "../../../recipe/share/singleIngredient/SingleIngredient";
 import uniqueId from "../../../utility/uniqueId";
+import useGetBlendNutritionBasedOnRecipexxx from "../../../../customHooks/useGetBlendNutritionBasedOnRecipexxx";
+import DataCardComponent from "../../../../theme/cards/dataCard/dataCard.component";
+import SectionTitleWithIcon from "../../../../theme/recipe/sectionTitleWithIcon/SectionTitleWithIcon.component";
 import NutrationPanelSkeleton from "../../../../theme/skeletons/nutrationPanelSkeleton/NutrationPanelSkeleton";
 import UpdatedRecursiveAccordian from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
-import useDraggableInPortal from "../../../../customHooks/useDraggableInPortal";
-import SingleIngredient from "../singleIngredient/SingleIngredient";
-import { IoClose } from "react-icons/io5";
 import IconWraper from "../../../../theme/iconWarper/IconWarper";
-import { useQuery } from "@apollo/client";
+import IconWarper from "../../../../theme/iconWarper/IconWarper";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit } from "@fortawesome/pro-regular-svg-icons";
 import GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS from "../../../../gqlLib/nutrition/query/getNutrientsListAndGiGlByIngredients";
+import { useQuery } from "@apollo/client";
 
 function Copyable(props) {
   const { items, addItem, droppableId } = props;
@@ -61,7 +65,7 @@ function Copyable(props) {
   );
 }
 
-const RecipeDetails = ({
+const VersionDetails = ({
   recipe = {},
   id = uniqueId(),
   addItem = () => {},
@@ -73,9 +77,9 @@ const RecipeDetails = ({
   showOptionalEditIcon = false,
   setOpenCollectionModal = () => {},
   setCopyImage = () => {},
-  customMenu = null,
+  editVersion = () => {},
 }: any) => {
-  const [winReady, setwinReady] = useState(false);
+  const [winReady, setWinReady] = useState(false);
 
   const { loading: nutritionDataLoading, data: nutritionData } = useQuery(
     GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS,
@@ -99,9 +103,8 @@ const RecipeDetails = ({
     });
     return arr?.join(", ");
   };
-
   useEffect(() => {
-    setwinReady(true);
+    setWinReady(true);
   }, []);
 
   return (
@@ -115,7 +118,7 @@ const RecipeDetails = ({
             <IoClose />
           </IconWraper>
         </div>
-        <DatacardComponent
+        <DataCardComponent
           title={recipe?.name}
           ingredients={makeIngredients(recipe?.ingredients)}
           category={recipe?.recipeBlendCategory?.name}
@@ -139,7 +142,15 @@ const RecipeDetails = ({
           showOptionalEditIcon={showOptionalEditIcon}
           isImageOverlay={dragAndDrop}
           imageOverlayFunc={(image) => setCopyImage(image)}
-          customMenu={customMenu}
+          customMenu={
+            <IconWarper
+              hover="bgSlightGray"
+              handleClick={() => editVersion(true)}
+              style={{ width: "30px", height: "30px" }}
+            >
+              <FontAwesomeIcon icon={faEdit} />
+            </IconWarper>
+          }
         />
         <div className={`${styles.dividerBox}`}>
           <SectionTitleWithIcon
@@ -202,4 +213,4 @@ const RecipeDetails = ({
   );
 };
 
-export default RecipeDetails;
+export default VersionDetails;
