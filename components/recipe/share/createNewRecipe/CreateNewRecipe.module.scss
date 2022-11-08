@@ -29,6 +29,21 @@
   border: 2px solid #f2f2f8;
   border-radius: 7px;
   width: 100%;
+  margin-top: 12px;
+  &:hover .closeNewRecipeIcon {
+    color: #ababab;
+    display: block;
+  }
+
+  .closeNewRecipeIcon {
+    position: absolute;
+    top: 2px;
+    z-index: 10000;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    left: 50%;
+    display: none;
+  }
 }
 
 .ingredientsDetails {

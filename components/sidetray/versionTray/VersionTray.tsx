@@ -289,7 +289,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
             ) || []
           }
           deleteItem={deleteRecipeVersion}
-          updateItem={(val) => updateVersionValue(val)}
+          updateItem={updateVersionValue}
           varient="versions"
           loading={newVersionLoading || removeVersionLoading}
           isFromRecipePage={openVersionTrayFormWhichPage}

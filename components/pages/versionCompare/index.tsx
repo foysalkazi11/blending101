@@ -8,10 +8,11 @@ import SkeletonComparePage from "../../../theme/skeletons/skeletonComparePage/Sk
 import styles from "./index.module.scss";
 import Slider from "react-slick";
 import { compareRecipeResponsiveSetting } from "./utility";
-import RecipeDetails from "../../recipe/share/recipeDetails/RecipeDetails";
 import { useAppSelector } from "../../../redux/hooks";
 import ErrorPage from "../404Page";
 import ArrowBackIcon from "../../../public/icons/arrow_back_black_36dp.svg";
+import VersionDetailsIndex from "./versionDetails";
+import { DragDropContext } from "react-beautiful-dnd";
 
 const compareRecipeResponsiveSettings = {
   ...compareRecipeResponsiveSetting,
@@ -19,6 +20,7 @@ const compareRecipeResponsiveSettings = {
 };
 
 const VersionCompare = () => {
+  const [allVersionsEditMode, setAllVersionsEditMode] = useState(false);
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
   const router = useRouter();
   const recipeId = router.query?.recipeId;
@@ -28,6 +30,20 @@ const VersionCompare = () => {
   });
   const sliderRef = useRef(null);
 
+  const handleNormalizeData = (data: any): any[] => {
+    const normalizeData = data?.recipeVersion?.map(
+      ({ _id, postfixTitle, description, ...rest }) => ({
+        ...data,
+        name: postfixTitle ? postfixTitle : data?.name,
+        description: description ? description : data?.description,
+        versionId: _id,
+        ...rest,
+      }),
+    );
+
+    return normalizeData;
+  };
+
   if (loading) {
     return (
       <LayoutComponent>
@@ -35,18 +51,6 @@ const VersionCompare = () => {
       </LayoutComponent>
     );
   }
-  const handleNormalizeData = (data: any): any[] => {
-    const normalizeData = data?.recipeVersion?.map(
-      ({ postfixTitle, description, ...rest }) => ({
-        ...data,
-        name: postfixTitle ? postfixTitle : data?.name,
-        description: description ? description : data?.description,
-        ...rest,
-      }),
-    );
-
-    return normalizeData;
-  };
 
   if (error) {
     return (
@@ -63,18 +67,23 @@ const VersionCompare = () => {
           <ArrowBackIcon className={styles.versionCompareNav__icon} />
           <p>Back</p>
         </div>
-
-        <Slider {...compareRecipeResponsiveSettings} ref={sliderRef}>
-          {handleNormalizeData(data?.getAllVersions)?.map((recipe, index) => {
-            return (
-              <RecipeDetails
-                key={index}
-                recipe={recipe}
-                setOpenCollectionModal={setOpenCollectionModal}
-              />
-            );
-          })}
-        </Slider>
+        <DragDropContext onDragEnd={(result) => {}}>
+          <Slider {...compareRecipeResponsiveSettings} ref={sliderRef}>
+            {handleNormalizeData(data?.getAllVersions)?.map((recipe, index) => {
+              return (
+                <VersionDetailsIndex
+                  key={index}
+                  recipe={recipe}
+                  mainRecipe={{ ...data?.getAllVersions }}
+                  versionId={recipe?.versionId}
+                  setOpenCollectionModal={setOpenCollectionModal}
+                  dragAndDrop={allVersionsEditMode}
+                  setAllVersionsEditMode={setAllVersionsEditMode}
+                />
+              );
+            })}
+          </Slider>
+        </DragDropContext>
       </LayoutComponent>
     </>
   );

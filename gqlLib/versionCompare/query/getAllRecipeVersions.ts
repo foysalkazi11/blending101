@@ -8,6 +8,7 @@ const GET_ALL_RECIPE_VERSION = gql`
       recipeIngredients
       recipeBlendCategory {
         name
+        _id
       }
 
       image {
