@@ -16,6 +16,7 @@ import { faEllipsisVertical } from "@fortawesome/pro-solid-svg-icons";
 import { faUser } from "@fortawesome/pro-light-svg-icons";
 import Tooltip from "../../toolTip/CustomToolTip";
 import { RecipeCreatorInfo } from "../../../type/recipeType";
+import useHover from "../../../components/utility/useHover";
 
 interface dataCardInterface {
   title: string;
@@ -44,6 +45,7 @@ interface dataCardInterface {
   imageOverlayFunc?: (arg: string) => void;
   userId?: null | RecipeCreatorInfo;
   customMenu?: React.ReactNode | null;
+  showMoreMenuAtHover?: boolean;
 }
 
 export default function DatacardComponent({
@@ -73,6 +75,7 @@ export default function DatacardComponent({
   isImageOverlay = false,
   userId = null,
   customMenu = null,
+  showMoreMenuAtHover = false,
 }: dataCardInterface) {
   title = title || "Triple Berry Smoothie";
   ingredients = ingredients;
@@ -91,6 +94,7 @@ export default function DatacardComponent({
   const handleOpenCollectionTray = useForOpenCollectionTray();
   const handleOpenCommentsTray = useForOpenCommentsTray();
   const selectCommentsAndNotesIcon = useForSelectCommentsAndNotesIcon();
+  const [hoverRef, isHover] = useHover();
 
   const handleClick = () => {
     const elem = menu.current;
@@ -132,7 +136,7 @@ export default function DatacardComponent({
     </div>
   );
 
-  const FloatingMenu = () => (
+  const floatingMenu = (
     <div className={styles.floating__menu} ref={menu}>
       <ul>
         <li>
@@ -154,6 +158,19 @@ export default function DatacardComponent({
     </div>
   );
 
+  const showFloatingMenu = (
+    <>
+      <IconWarper
+        hover="bgSlightGray"
+        handleClick={handleClick}
+        style={{ width: "30px", height: "30px" }}
+      >
+        <FontAwesomeIcon icon={faEllipsisVertical} />
+      </IconWarper>
+      {floatingMenu}
+    </>
+  );
+
   const hangleShowCommentsAndNotesIcon = (comments: number, notes: number) => {
     const res = selectCommentsAndNotesIcon(comments, notes);
     return (
@@ -171,7 +188,7 @@ export default function DatacardComponent({
   };
 
   return (
-    <div className={styles.datacard}>
+    <div className={styles.datacard} ref={hoverRef}>
       <div className={styles.datacard__inner}>
         <div className={styles.heading}>
           <div className={styles.title}>
@@ -186,24 +203,14 @@ export default function DatacardComponent({
             </h2>
           </div>
           <div className={styles.menu}>
-            {showMoreMenu && (
-              <>
-                {customMenu ? (
-                  customMenu
-                ) : (
-                  <>
-                    <IconWarper
-                      hover="bgSlightGray"
-                      handleClick={handleClick}
-                      style={{ width: "30px", height: "30px" }}
-                    >
-                      <FontAwesomeIcon icon={faEllipsisVertical} />
-                    </IconWarper>
-                    <FloatingMenu />
-                  </>
-                )}
-              </>
-            )}
+            {showMoreMenu &&
+              (showMoreMenuAtHover ? (
+                <div style={{ visibility: isHover ? "visible" : "hidden" }}>
+                  {customMenu ? customMenu : showFloatingMenu}
+                </div>
+              ) : (
+                <>{customMenu ? customMenu : showFloatingMenu}</>
+              ))}
           </div>
         </div>
         <div className={styles.datacard__body__middle}>

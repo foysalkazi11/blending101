@@ -74,6 +74,7 @@ const RecipeDetails = ({
   setOpenCollectionModal = () => {},
   setCopyImage = () => {},
   customMenu = null,
+  showMoreMenuAtHover = false,
 }: any) => {
   const [winReady, setwinReady] = useState(false);
 
@@ -140,6 +141,7 @@ const RecipeDetails = ({
           isImageOverlay={dragAndDrop}
           imageOverlayFunc={(image) => setCopyImage(image)}
           customMenu={customMenu}
+          showMoreMenuAtHover={showMoreMenuAtHover}
         />
         <div className={`${styles.dividerBox}`}>
           <SectionTitleWithIcon
