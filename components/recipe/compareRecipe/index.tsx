@@ -513,6 +513,9 @@ const CompareRecipe = () => {
                           copyImage={copyImage}
                           updateData={updateData}
                           handleCreateNewRecipe={handleCreateNewRecipeByUser}
+                          closeCreateNewRecipeInterface={() =>
+                            setIsFormulatePage(false)
+                          }
                         />
                       </div>
 

@@ -4,7 +4,7 @@ import styles from "./CreateNewRecipe.module.scss";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import SectionTitleWithIcon from "../../../../theme/recipe/sectionTitleWithIcon/SectionTitleWithIcon.component";
 import SingleIngredient from "../singleIngredient/SingleIngredient";
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import GET_BLEND_NUTRITION_BASED_ON_RECIPE_XXX from "../../../../gqlLib/recipes/queries/getBlendNutritionBasedOnRecipeXxx";
 import NutrationPanelSkeleton from "../../../../theme/skeletons/nutrationPanelSkeleton/NutrationPanelSkeleton";
 import UpdatedRecursiveAccordian from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
@@ -18,14 +18,12 @@ import { IoClose, IoCloseCircle } from "react-icons/io5";
 import { MdOutlineEdit } from "react-icons/md";
 import { AiOutlineSave } from "react-icons/ai";
 import useOnClickOutside from "../../../utility/useOnClickOutside";
-import CREATE_A_RECIPE_BY_USER from "../../../../gqlLib/recipes/mutations/createARecipeByUser";
-import imageUploadS3 from "../../../utility/imageUploadS3";
-import notification from "../../../utility/reactToastifyNotification";
 import { useRouter } from "next/router";
-import EDIT_A_RECIPE from "../../../../gqlLib/recipes/mutations/editARecipe";
 import Tooltip from "../../../../theme/toolTip/CustomToolTip";
 import CreateRecipeSkeleton from "../../../../theme/skeletons/createRecipeSkeleton/CreateRecipeSkeleton";
 import IconWraper from "../../../../theme/iconWarper/IconWarper";
+import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
+import InputComponent from "../../../../theme/input/input.component";
 
 const CreateNewRecipe = ({
   newRecipe = {},
@@ -39,13 +37,8 @@ const CreateNewRecipe = ({
   closeCreateNewRecipeInterface = () => {},
   disableCategory = false,
   disableImageUpload = false,
+  recipeSaveLoading = false,
 }: any) => {
-  // const [createNewRecipe, setCreateNewRecipe] = useState({
-  //   name: "",
-  //   image: [],
-  //   description: "",
-  //   recipeBlendCategory: "61cafc34e1f3e015e7936587",
-  // });
   const [winReady, setWinReady] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const { allIngredients } = useAppSelector((state) => state?.ingredients);
@@ -62,16 +55,11 @@ const CreateNewRecipe = ({
   const [getAllBlendCategory, { loading: blendCategroyLoading }] = useLazyQuery(
     FETCH_BLEND_CATEGORIES,
   );
-  const [createNewRecipeByUser] = useMutation(CREATE_A_RECIPE_BY_USER);
   const { allCategories } = useAppSelector((state) => state?.categroy);
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
-  const [openFloatingMenu, setOpenFloatingMenu] = useState(false);
-  const folatingMenuRef = useRef(null);
-  useOnClickOutside(folatingMenuRef, () => setOpenFloatingMenu(false));
+
   const router = useRouter();
-  const { dbUser } = useAppSelector((state) => state?.user);
-  const [editRecipe] = useMutation(EDIT_A_RECIPE);
 
   const findItem = (id) => {
     return newRecipe?.ingredients?.find((item) => item?.ingredientId === id);
@@ -205,23 +193,22 @@ const CreateNewRecipe = ({
     };
   }, []);
 
-  const FloatingMenu = () => {
-    return (
-      <div className={styles.floating__menu}>
-        <ul>
-          {newlyCreatedRecipe?._id ? (
-            <>
-              <Tooltip content="Edit view" direction="right">
-                <li>
-                  <MdOutlineEdit
-                    className={styles.icon}
-                    onClick={() =>
-                      router?.push(`/edit_recipe/${newlyCreatedRecipe?._id}`)
-                    }
-                  />
-                </li>
-              </Tooltip>
-              {/* <Tooltip content={"Details view"} direction="right">
+  const floatingMenu = (
+    <div className={styles.floating__menu}>
+      <ul>
+        {newlyCreatedRecipe?._id ? (
+          <>
+            <Tooltip content="Edit view" direction="top">
+              <li>
+                <MdOutlineEdit
+                  className={styles.icon}
+                  onClick={() =>
+                    router?.push(`/edit_recipe/${newlyCreatedRecipe?._id}`)
+                  }
+                />
+              </li>
+            </Tooltip>
+            {/* <Tooltip content={"Details view"} direction="right">
                 <li>
                   <BiDetail
                     className={styles.icon}
@@ -231,21 +218,30 @@ const CreateNewRecipe = ({
                   />
                 </li>
               </Tooltip> */}
-            </>
-          ) : null}
+          </>
+        ) : null}
 
-          <Tooltip
-            content={newlyCreatedRecipe?._id ? "Update recipe" : "Save recipe"}
-            direction="right"
-          >
-            <li onClick={(e) => handleCreateNewRecipe(e)}>
-              <AiOutlineSave className={styles.icon} />
-            </li>
-          </Tooltip>
-        </ul>
-      </div>
-    );
-  };
+        <Tooltip
+          content={newlyCreatedRecipe?._id ? "Update recipe" : "Save recipe"}
+          direction="top"
+        >
+          <li>
+            {recipeSaveLoading ? (
+              <CircularRotatingLoader
+                style={{ fontSize: "16px" }}
+                color="secondary"
+              />
+            ) : (
+              <AiOutlineSave
+                className={styles.icon}
+                onClick={(e) => handleCreateNewRecipe(e)}
+              />
+            )}
+          </li>
+        </Tooltip>
+      </ul>
+    </div>
+  );
 
   if (loading) {
     return <CreateRecipeSkeleton />;
@@ -304,14 +300,14 @@ const CreateNewRecipe = ({
                 }
                 alt="addIcon"
               />
-              {newRecipe?.image?.length ? (
+              {newRecipe?.image?.length && !disableImageUpload && (
                 <IoCloseCircle
                   className={styles.cancleIcon}
                   onClick={() =>
                     setNewRecipe((state) => ({ ...state, image: [] }))
                   }
                 />
-              ) : null}
+              )}
             </div>
 
             <div className={styles.dropDown}>
@@ -331,7 +327,7 @@ const CreateNewRecipe = ({
                     );
                   })}
                 </select>
-                <FloatingMenu />
+                {floatingMenu}
               </div>
 
               <textarea
