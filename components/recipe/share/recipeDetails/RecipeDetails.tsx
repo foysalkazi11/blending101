@@ -142,6 +142,7 @@ const RecipeDetails = ({
           imageOverlayFunc={(image) => setCopyImage(image)}
           customMenu={customMenu}
           showMoreMenuAtHover={showMoreMenuAtHover}
+          description={recipe?.description}
         />
         <div className={`${styles.dividerBox}`}>
           <SectionTitleWithIcon

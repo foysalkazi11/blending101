@@ -229,27 +229,6 @@ const VersionCompare = () => {
           }, // DocumentNode object parsed with gql
           "GetAllVersions", // Query name
         ],
-        // update(cache) {
-        //   cache.writeQuery({
-        //     query: GET_ALL_RECIPE_VERSION,
-        //     variables: { recipeId, userId: dbUser._id },
-        //     data: {
-        //       getAllVersions: {
-        //         ...data?.getAllVersions,
-        //         recipeVersion: data?.getAllVersions?.recipeVersion?.map(
-        //           (version) =>
-        //             version?._id === newRecipe?.versionId
-        //               ? {
-        //                   ...version,
-        //                   postfixTitle: newRecipe?.name,
-        //                   description: newRecipe?.description,
-        //                 }
-        //               : version,
-        //         ),
-        //       },
-        //     },
-        //   });
-        // },
       });
 
       handleEditMode(false, null);
@@ -258,6 +237,16 @@ const VersionCompare = () => {
       notification("error", "Version updated failed");
     }
   };
+
+  const customEditIcon = (recipe: any, isEditMode: boolean, index: number) => (
+    <IconWarper
+      hover="bgSlightGray"
+      handleClick={() => editVersionClick(recipe, true, index)}
+      style={{ width: "24px", height: "24px" }}
+    >
+      <FontAwesomeIcon icon={faPen} fontSize={12} />
+    </IconWarper>
+  );
 
   if (loading) {
     return (
@@ -300,15 +289,7 @@ const VersionCompare = () => {
                   singleVersionsEditMode={singleVersionsEditMode}
                   handleSubmitEditedVersion={handleSubmitEditedVersion}
                   handleEditMode={handleEditMode}
-                  customMenu={
-                    <IconWarper
-                      hover="bgSlightGray"
-                      handleClick={() => editVersionClick(recipe, true, index)}
-                      style={{ width: "24px", height: "24px" }}
-                    >
-                      <FontAwesomeIcon icon={faPen} fontSize={12} />
-                    </IconWarper>
-                  }
+                  customMenu={customEditIcon(recipe, true, index)}
                   versionUpdateLoading={versionUpdateLoading}
                   showMoreMenuAtHover={true}
                 />
