@@ -46,6 +46,7 @@ interface dataCardInterface {
   userId?: null | RecipeCreatorInfo;
   customMenu?: React.ReactNode | null;
   showMoreMenuAtHover?: boolean;
+  description?: string;
 }
 
 export default function DatacardComponent({
@@ -76,6 +77,7 @@ export default function DatacardComponent({
   userId = null,
   customMenu = null,
   showMoreMenuAtHover = false,
+  description = "",
 }: dataCardInterface) {
   title = title || "Triple Berry Smoothie";
   ingredients = ingredients;
@@ -131,7 +133,7 @@ export default function DatacardComponent({
         </div>
       </div>
       <div className={styles.databody__bottom}>
-        <p>{slicedString(ingredients, 0, 12)}</p>
+        <p>{description ? description : ingredients}</p>
       </div>
     </div>
   );

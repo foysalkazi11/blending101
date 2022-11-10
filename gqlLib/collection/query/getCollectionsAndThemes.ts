@@ -4,6 +4,7 @@ const GET_COLLECTIONS_AND_THEMES = gql`
   query GetUserCollectionsAndThemes($userId: String!) {
     getUserCollectionsAndThemes(userId: $userId) {
       collections {
+        _id
         name
         slug
         recipes
