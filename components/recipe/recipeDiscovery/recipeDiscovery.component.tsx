@@ -29,9 +29,7 @@ import SliderWidget from "../../../component/module/Widget/SliderWidget.componen
 
 const RecipeDetails = () => {
   const router = useRouter();
-  const { blends, ingredients, openFilterTray } = useAppSelector(
-    (state) => state.sideTray,
-  );
+  const { openFilterTray } = useAppSelector((state) => state.sideTray);
   const { dbUser } = useAppSelector((state) => state?.user);
   const { currentCollectionInfo } = useAppSelector(
     (state) => state?.collections,
@@ -39,7 +37,7 @@ const RecipeDetails = () => {
   const { latest, popular, recommended } = useAppSelector(
     (state) => state?.recipe,
   );
-  const { filters } = useAppSelector((state) => state?.filterRecipe);
+  const { allFilters } = useAppSelector((state) => state?.filterRecipe);
   // const { data, error, loading: widgetLoading } = useQuery(GET_RECIPE_WIDGET);
   const [getAllRecommendedRecipes] = useLazyQuery(GET_ALL_RECOMMENDED_RECIPES);
   const [getAllPopularRecipes] = useLazyQuery(GET_ALL_POPULAR_RECIPES);
@@ -119,19 +117,15 @@ const RecipeDetails = () => {
             }}
           >
             <DiscoverPageSearch />
-            {blends.length || ingredients.length || filters?.length ? (
-              <SearchtagsComponent />
+            {allFilters?.length ? (
+              <SearchtagsComponent allFilters={allFilters} />
             ) : null}
           </div>
 
           {currentCollectionInfo?.name ? (
             <ShowCollectionRecipes />
-          ) : blends.length || ingredients.length || filters?.length ? (
-            <FilterPageBottom
-              blends={blends}
-              ingredients={ingredients}
-              filters={filters}
-            />
+          ) : allFilters?.length ? (
+            <FilterPageBottom allFilters={allFilters} />
           ) : (
             <div>
               <AppdownLoadCard />

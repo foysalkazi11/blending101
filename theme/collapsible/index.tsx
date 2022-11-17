@@ -23,11 +23,11 @@ const Collapsible: React.FC<Props> = ({
   positionLabel = "top",
   extraLabel,
 }) => {
+  //const [open, setOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState<number | undefined>(
     open ? undefined : 0,
   );
-  //   const [open, setOPen] = useState(false);
 
   const toggle = () => {
     setOpen((prev) => !prev);
