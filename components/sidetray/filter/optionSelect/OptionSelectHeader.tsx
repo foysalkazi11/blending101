@@ -1,34 +1,57 @@
 import React from "react";
 import { BsArrowRepeat, BsChevronLeft } from "react-icons/bs";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import { resetFilterValue } from "../../../../redux/slices/filterRecipeSlice";
+import {
+  ActiveFilterTagCriteria,
+  FilterCriteriaOptions,
+  resetFilterValue,
+  updateActiveFilterTag,
+  updateFilterCriteriaItem,
+} from "../../../../redux/slices/filterRecipeSlice";
 import { setRecipeFilterByIngredientCategory } from "../../../../redux/slices/ingredientsSlice";
 import styles from "./OptionSelect.module.scss";
 
 type OptionSelectHeaderProps = {
-  pageTitle?: string;
+  activeTab: string;
+  filterCriteria: any;
 };
 
-const OptionSelectHeader = ({ pageTitle }: OptionSelectHeaderProps) => {
+const OptionSelectHeader = ({
+  activeTab,
+  filterCriteria,
+}: OptionSelectHeaderProps) => {
   const dispatch = useAppDispatch();
-  const { recipeFilterByIngredientCategory } = useAppSelector(
-    (state) => state.ingredients
-  );
+
   return (
     <div className={styles.optionSelectHeaderContainer}>
       <div className={styles.header}>
         <div className={styles.leftSide}>
           <div
             className={styles.icon}
-            onClick={() => dispatch(setRecipeFilterByIngredientCategory(""))}
+            onClick={() =>
+              dispatch(
+                updateActiveFilterTag({
+                  activeTab: "",
+                  childTab: "",
+                  filterCriteria: null,
+                }),
+              )
+            }
           >
             <BsChevronLeft />
           </div>
-          <h3>{pageTitle}</h3>
+          <h3>{activeTab}</h3>
         </div>
         <div
           className={styles.rightSide}
-          onClick={() => dispatch(resetFilterValue({ pageTitle }))}
+          onClick={() =>
+            dispatch(
+              updateFilterCriteriaItem({
+                filterCriteria,
+                updateStatus: "removeAll",
+              }),
+            )
+          }
         >
           <BsArrowRepeat />
         </div>

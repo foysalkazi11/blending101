@@ -30,13 +30,11 @@ const ViewAll = () => {
   );
 
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
-  const { filters } = useAppSelector((state) => state?.filterRecipe);
+  const { allFilters } = useAppSelector((state) => state?.filterRecipe);
   const { currentCollectionInfo } = useAppSelector(
     (state) => state?.collections,
   );
-  const { blends, ingredients, openFilterTray } = useAppSelector(
-    (state) => state.sideTray,
-  );
+  const { openFilterTray } = useAppSelector((state) => state.sideTray);
 
   return (
     <AContainer
@@ -56,17 +54,13 @@ const ViewAll = () => {
           }}
         >
           <DiscoverPageSearch />
-          {blends.length || ingredients.length || filters?.length ? (
-            <SearchtagsComponent />
+          {allFilters?.length ? (
+            <SearchtagsComponent allFilters={allFilters} />
           ) : null}
         </div>
 
-        {blends.length || ingredients.length || filters?.length ? (
-          <FilterPageBottom
-            blends={blends}
-            ingredients={ingredients}
-            filters={filters}
-          />
+        {allFilters?.length ? (
+          <FilterPageBottom allFilters={allFilters} />
         ) : (
           <div>
             <div className={classes.head}>

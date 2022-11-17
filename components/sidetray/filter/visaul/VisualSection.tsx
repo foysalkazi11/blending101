@@ -3,51 +3,45 @@ import React from "react";
 import styles from "../filter.module.scss";
 import Ingredients from "../ingredients/Ingredients.component";
 import BlendType from "../blendType/BlendType";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import { setIngredients } from "../../../../redux/slices/sideTraySlice";
+import {
+  FilterCriteriaOptions,
+  FilterCriteriaValue,
+} from "../../../../redux/slices/filterRecipeSlice";
+import { BlendCategoryType } from "../../../../type/blendCategoryType";
 
-const VisualSection = () => {
-  const { ingredients: ingredientsList } = useAppSelector(
-    (state) => state?.sideTray,
-  );
-  const dispatch = useAppDispatch();
+interface Props {
+  checkActiveItem: (id: string) => boolean;
+  handleBlendAndIngredientUpdate: (
+    value: FilterCriteriaValue,
+    present: boolean,
+  ) => void;
+  blendCategoryData: BlendCategoryType[];
+  blendCategoryLoading: boolean;
+  ingredientCategoryData: any[];
+  ingredientCategoryLoading: boolean;
+}
 
-  const handleIngredientClick = (item: any, exist: boolean) => {
-    let arr = [];
-
-    if (!exist) {
-      arr = [
-        ...ingredientsList,
-        {
-          title: item?.ingredientName,
-          img: item?.featuredImage || "/food/chard.png",
-          id: item?._id,
-        },
-      ];
-    } else {
-      arr = ingredientsList.filter((item) => {
-        return item?.id !== item?._id;
-      });
-    }
-    dispatch(setIngredients(arr));
-  };
-
-  const checkActiveIngredient = (id: string) => {
-    let present = false;
-    ingredientsList.forEach((item) => {
-      if (item.id === id) {
-        present = true;
-      }
-    });
-    return present;
-  };
-
+const VisualSection = ({
+  checkActiveItem = () => false,
+  handleBlendAndIngredientUpdate = () => {},
+  blendCategoryData = [],
+  blendCategoryLoading = false,
+  ingredientCategoryData = [],
+  ingredientCategoryLoading = false,
+}: Props) => {
   return (
     <div className={styles.filter}>
-      <BlendType />
+      <BlendType
+        checkActiveItem={checkActiveItem}
+        handleBlendAndIngredientUpdate={handleBlendAndIngredientUpdate}
+        blendCategoryData={blendCategoryData}
+        blendCategoryLoading={blendCategoryLoading}
+      />
       <Ingredients
-        checkActiveIngredient={checkActiveIngredient}
-        handleIngredientClick={handleIngredientClick}
+        checkActiveIngredient={checkActiveItem}
+        handleIngredientClick={handleBlendAndIngredientUpdate}
+        ingredientCategoryData={ingredientCategoryData}
+        ingredientCategoryLoading={ingredientCategoryLoading}
       />
     </div>
   );

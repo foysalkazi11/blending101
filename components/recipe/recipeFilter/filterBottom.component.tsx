@@ -9,12 +9,20 @@ import { setLoading } from "../../../redux/slices/utilitySlice";
 import useLocalStorage from "../../../customHooks/useLocalStorage";
 import ShowCollectionModal from "../../showModal/ShowCollectionModal";
 import { setAllFilterRecipe } from "../../../redux/slices/recipeSlice";
+import FILTER_RECIPE from "../../../gqlLib/recipes/queries/filterRecipe";
+import {
+  FilterCriteriaValue,
+  FilterCriteriaOptions,
+} from "../../../redux/slices/filterRecipeSlice";
 
-function FilterPageBottom({ blends, ingredients, filters }) {
-  const [getRecipesByBlendAndIngredients, { data, loading }] = useLazyQuery(
-    GET_RECIPES_BY_BLEND_AND_INGREDIENTS,
-    { fetchPolicy: "network-only" },
-  );
+interface Props {
+  allFilters: FilterCriteriaValue[];
+}
+
+function FilterPageBottom({ allFilters = [] }: Props) {
+  const [filterRecipe, { data, loading }] = useLazyQuery(FILTER_RECIPE, {
+    fetchPolicy: "network-only",
+  });
   const { dbUser } = useAppSelector((state) => state?.user);
   const { allFilterRecipe } = useAppSelector((state) => state?.recipe);
   const dispatch = useAppDispatch();
@@ -25,27 +33,137 @@ function FilterPageBottom({ blends, ingredients, filters }) {
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
 
   const fetchGetRecipesByBlendAndIngredients = async () => {
-    let arr = [];
-    blends?.forEach((blend) => {
-      arr?.push(`${blend?.id}`);
-    });
-    let ingredientIds: string[] = [];
-    ingredients?.forEach((blend) => {
-      ingredientIds?.push(blend?.id);
-    });
+    let blendTypesArr: string[] = allFilters
+      .filter((filter) => filter.filterCriteria === "blendTypes")
+      ?.map((item) => item.id);
+    let ingredientIds: string[] = allFilters
+      .filter((filter) => filter.filterCriteria === "includeIngredientIds")
+      ?.map((item) => item.id);
+    let nutrientFiltersMap = allFilters
+      .filter((filter) => filter.filterCriteria === "nutrientFilters")
+      ?.map(
+        ({
+          id,
+          name,
+          //@ts-ignore
+          between,
+          //@ts-ignore
+          category,
+          //@ts-ignore
+          greaterThan,
+          //@ts-ignore
+          lessThan,
+          //@ts-ignore
+          lessThanValue,
+          //@ts-ignore
+          greaterThanValue,
+          //@ts-ignore
+          betweenStartValue,
+          //@ts-ignore
+          betweenEndValue,
+        }) => {
+          let arrangeValue = {
+            beetween: between,
+            category: category.toLowerCase(),
+            greaterThan,
+            lessThan,
+            nutrientId: id,
+            value: 0,
+            value1: 0,
+            value2: 0,
+          };
+          if (lessThan) {
+            arrangeValue = {
+              ...arrangeValue,
+              value: lessThanValue,
+            };
+          }
+          if (greaterThan) {
+            arrangeValue = {
+              ...arrangeValue,
+              value: greaterThanValue,
+            };
+          }
+          if (between) {
+            arrangeValue = {
+              ...arrangeValue,
+              value1: betweenStartValue,
+              value2: betweenEndValue,
+            };
+          }
+
+          return arrangeValue;
+        },
+      );
+
+    let nutrientMatrixMap = allFilters
+      .filter((filter) => filter.filterCriteria === "nutrientMatrix")
+      ?.map(
+        ({
+          id,
+          name,
+          //@ts-ignore
+          between,
+          //@ts-ignore
+          greaterThan,
+          //@ts-ignore
+          lessThan,
+          //@ts-ignore
+          lessThanValue,
+          //@ts-ignore
+          greaterThanValue,
+          //@ts-ignore
+          betweenStartValue,
+          //@ts-ignore
+          betweenEndValue,
+        }) => {
+          let arrangeValue = {
+            matrixName: name.toLowerCase(),
+            beetween: between,
+            greaterThan,
+            lessThan,
+            value: 0,
+            value1: 0,
+            value2: 0,
+          };
+          if (lessThan) {
+            arrangeValue = {
+              ...arrangeValue,
+              value: lessThanValue,
+            };
+          }
+          if (greaterThan) {
+            arrangeValue = {
+              ...arrangeValue,
+              value: greaterThanValue,
+            };
+          }
+          if (between) {
+            arrangeValue = {
+              ...arrangeValue,
+              value1: betweenStartValue,
+              value2: betweenEndValue,
+            };
+          }
+
+          return arrangeValue;
+        },
+      );
     dispatch(setLoading(true));
     try {
-      const { data } = await getRecipesByBlendAndIngredients({
+      const { data } = await filterRecipe({
         variables: {
           data: {
             userId: dbUser?._id,
-            blendTypes: arr,
-            includeIngredientIds: ingredientIds?.length ? ingredientIds : [],
+            blendTypes: blendTypesArr,
+            includeIngredientIds: ingredientIds,
+            nutrientFilters: nutrientFiltersMap,
+            nutrientMatrix: nutrientMatrixMap,
           },
         },
       });
 
-      dispatch(setAllFilterRecipe(data?.getAllRecipesByBlendCategory || []));
+      dispatch(setAllFilterRecipe(data?.filterRecipe || []));
       dispatch(setLoading(false));
     } catch (error) {
       dispatch(setLoading(false));
@@ -56,7 +174,7 @@ function FilterPageBottom({ blends, ingredients, filters }) {
   useEffect(() => {
     fetchGetRecipesByBlendAndIngredients();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blends, ingredients]);
+  }, [allFilters]);
 
   return (
     <>
