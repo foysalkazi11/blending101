@@ -36,17 +36,19 @@
   position: absolute;
   right: 0px;
   overflow: hidden;
-  top: -12px;
-  width: fit-content;
+  top: -8px;
 }
 
 .ticked {
-  border-radius: 50%;
-  width: 100%;
-  transform: scale(0.7);
-  aspect-ratio: 1;
+  // border-radius: 50%;
+  // width: 100%;
+  //  transform: scale(0.7);
+  // aspect-ratio: 1;
   color: #f95d2b;
   background-color: white;
+}
+.activeColor {
+  color: #f95d2b;
 }
 
 .optionSelectHeaderContainer {

@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const FETCH_BLEND_CATEGORIES = gql`
-  query Query {
+  query GetAllCategories {
     getAllCategories {
       _id
       name

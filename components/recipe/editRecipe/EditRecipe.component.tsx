@@ -15,11 +15,6 @@ import useWindowSize from "../../utility/useWindowSize";
 import NutritionPanel from "../share/nutritionPanel/NutritionPanel";
 import PanelHeaderCenter from "../share/panelHeader/PanelHeaderCenter";
 import { RecipeDetailsType } from "../../../type/recipeDetails";
-import TrayWrapper from "../../sidetray/TrayWrapper";
-import TrayTag from "../../sidetray/TrayTag";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBasketShopping as faBasketShoppingRegular } from "@fortawesome/pro-regular-svg-icons";
-import { faBasketShopping as faBasketShoppingSolid } from "@fortawesome/pro-solid-svg-icons";
 import { GiGl } from "../../../type/nutrationType";
 import FloatingLeftPanel from "./floatingLeftPanel/FloatingLeftPanel";
 
@@ -68,7 +63,6 @@ const EditRecipePage = ({
     totalGL: 0,
   },
 }: editRecipe) => {
-  const [openTray, setOpenTray] = useState(false);
   const dispatch = useAppDispatch();
   const { width } = useWindowSize();
   const servingCounter = useAppSelector(
@@ -118,15 +112,13 @@ const EditRecipePage = ({
       }}
     >
       {width < 1280 && (
-       
-          <FloatingLeftPanel>
-            <IngredientPanel
-              handleIngredientClick={handleIngredientClick}
-              checkActive={checkActive}
-            />
-          </FloatingLeftPanel>
-        
-      ) }
+        <FloatingLeftPanel>
+          <IngredientPanel
+            handleIngredientClick={handleIngredientClick}
+            checkActive={checkActive}
+          />
+        </FloatingLeftPanel>
+      )}
 
       <div className={styles.main}>
         <div className={styles.left}>
