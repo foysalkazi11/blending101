@@ -214,6 +214,18 @@ export const filterRecipeSlice = createSlice({
       },
     ) => {
       const payload = action.payload;
+      const dummyObj = {
+        id: "",
+        name: "",
+        between: false,
+        category: "",
+        greaterThan: false,
+        lessThan: true,
+        lessThanValue: 0,
+        greaterThanValue: 0,
+        betweenStartValue: 0,
+        betweenEndValue: 0,
+      };
 
       // when update status add
       if (payload.updateStatus === "add") {
@@ -233,19 +245,6 @@ export const filterRecipeSlice = createSlice({
         state.allFilters = state.allFilters.filter(
           (filter) => filter.id !== payload.value.id,
         );
-
-        const dummyObj = {
-          id: "",
-          name: "",
-          between: false,
-          category: "",
-          greaterThan: false,
-          lessThan: true,
-          lessThanValue: 0,
-          greaterThanValue: 0,
-          betweenStartValue: 0,
-          betweenEndValue: 0,
-        };
 
         if (
           payload.value.filterCriteria === "nutrientFilters" ||
@@ -270,6 +269,10 @@ export const filterRecipeSlice = createSlice({
           (filter) =>
             filter.filterCriteria !== state.activeFilterTag.filterCriteria,
         );
+        // @ts-ignore
+        state.numericFilterState = {
+          ...dummyObj,
+        };
       }
       // when update status focus
       if (payload.updateStatus === "focus") {
@@ -299,6 +302,10 @@ export const filterRecipeSlice = createSlice({
     ) => {
       state.numericFilterState = { ...action.payload };
     },
+
+    resetAllFilters: (state) => {
+      state.allFilters = [];
+    },
   },
 });
 
@@ -314,6 +321,7 @@ export const {
   updateFilterCriteriaItem,
   updateActiveFilterTag,
   updateNumericFilterState,
+  resetAllFilters,
 } = filterRecipeSlice.actions;
 
 export default filterRecipeSlice.reducer;

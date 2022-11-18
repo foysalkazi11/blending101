@@ -158,7 +158,6 @@ const TagSection = ({
   ingredientCategoryData = [],
   ingredientCategoryLoading = false,
 }: Props) => {
-  const [openCollapse, setOpenCollapse] = useState(false);
   const [optionSelectItems, setOptionSelectItems] = useState<any[]>([]);
   const [childIngredient, setChailIngredient] = useState("");
   const dispatch = useAppDispatch();
@@ -172,7 +171,7 @@ const TagSection = ({
     activeFilterTag: { activeTab, childTab, filterCriteria },
   } = useAppSelector((state) => state?.filterRecipe);
 
-  const { pageTitle, expandedMenu, values } = useAppSelector(
+  const { values } = useAppSelector(
     (state) => state?.filterRecipe?.activeState,
   );
 
