@@ -13,7 +13,16 @@ import FILTER_RECIPE from "../../../gqlLib/recipes/queries/filterRecipe";
 import {
   FilterCriteriaValue,
   FilterCriteriaOptions,
+  resetAllFilters,
 } from "../../../redux/slices/filterRecipeSlice";
+import IconWarper from "../../../theme/iconWarper/IconWarper";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChartTreeMap,
+  faShareNodes,
+  faXmark,
+} from "@fortawesome/pro-regular-svg-icons";
+import SkeletonCollectionRecipe from "../../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollectionRecipe";
 
 interface Props {
   allFilters: FilterCriteriaValue[];
@@ -33,16 +42,19 @@ function FilterPageBottom({ allFilters = [] }: Props) {
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
 
   const fetchGetRecipesByBlendAndIngredients = async () => {
-    let blendTypesArr: string[] = allFilters
-      .filter((filter) => filter.filterCriteria === "blendTypes")
-      ?.map((item) => item.id);
-    let ingredientIds: string[] = allFilters
-      .filter((filter) => filter.filterCriteria === "includeIngredientIds")
-      ?.map((item) => item.id);
-    let nutrientFiltersMap = allFilters
-      .filter((filter) => filter.filterCriteria === "nutrientFilters")
-      ?.map(
-        ({
+    let blendTypesArr: string[] = [];
+    let ingredientIds: string[] = [];
+    let nutrientFiltersMap = [];
+    let nutrientMatrixMap = [];
+    allFilters.forEach((filter) => {
+      if (filter.filterCriteria === "blendTypes") {
+        blendTypesArr.push(filter.id);
+      }
+      if (filter.filterCriteria === "includeIngredientIds") {
+        ingredientIds.push(filter.id);
+      }
+      if (filter.filterCriteria === "nutrientFilters") {
+        const {
           id,
           name,
           //@ts-ignore
@@ -61,45 +73,41 @@ function FilterPageBottom({ allFilters = [] }: Props) {
           betweenStartValue,
           //@ts-ignore
           betweenEndValue,
-        }) => {
-          let arrangeValue = {
-            beetween: between,
-            category: category.toLowerCase(),
-            greaterThan,
-            lessThan,
-            nutrientId: id,
-            value: 0,
-            value1: 0,
-            value2: 0,
+        } = filter;
+        let arrangeValue = {
+          beetween: between,
+          category: category.toLowerCase(),
+          greaterThan,
+          lessThan,
+          nutrientId: id,
+          value: 0,
+          value1: 0,
+          value2: 0,
+        };
+        if (lessThan) {
+          arrangeValue = {
+            ...arrangeValue,
+            value: lessThanValue,
           };
-          if (lessThan) {
-            arrangeValue = {
-              ...arrangeValue,
-              value: lessThanValue,
-            };
-          }
-          if (greaterThan) {
-            arrangeValue = {
-              ...arrangeValue,
-              value: greaterThanValue,
-            };
-          }
-          if (between) {
-            arrangeValue = {
-              ...arrangeValue,
-              value1: betweenStartValue,
-              value2: betweenEndValue,
-            };
-          }
+        }
+        if (greaterThan) {
+          arrangeValue = {
+            ...arrangeValue,
+            value: greaterThanValue,
+          };
+        }
+        if (between) {
+          arrangeValue = {
+            ...arrangeValue,
+            value1: betweenStartValue,
+            value2: betweenEndValue,
+          };
+        }
+        nutrientFiltersMap.push(arrangeValue);
+      }
 
-          return arrangeValue;
-        },
-      );
-
-    let nutrientMatrixMap = allFilters
-      .filter((filter) => filter.filterCriteria === "nutrientMatrix")
-      ?.map(
-        ({
+      if (filter.filterCriteria === "nutrientMatrix") {
+        const {
           id,
           name,
           //@ts-ignore
@@ -116,40 +124,39 @@ function FilterPageBottom({ allFilters = [] }: Props) {
           betweenStartValue,
           //@ts-ignore
           betweenEndValue,
-        }) => {
-          let arrangeValue = {
-            matrixName: name.toLowerCase(),
-            beetween: between,
-            greaterThan,
-            lessThan,
-            value: 0,
-            value1: 0,
-            value2: 0,
+        } = filter;
+        let arrangeValue = {
+          matrixName: name.toLowerCase(),
+          beetween: between,
+          greaterThan,
+          lessThan,
+          value: 0,
+          value1: 0,
+          value2: 0,
+        };
+        if (lessThan) {
+          arrangeValue = {
+            ...arrangeValue,
+            value: lessThanValue,
           };
-          if (lessThan) {
-            arrangeValue = {
-              ...arrangeValue,
-              value: lessThanValue,
-            };
-          }
-          if (greaterThan) {
-            arrangeValue = {
-              ...arrangeValue,
-              value: greaterThanValue,
-            };
-          }
-          if (between) {
-            arrangeValue = {
-              ...arrangeValue,
-              value1: betweenStartValue,
-              value2: betweenEndValue,
-            };
-          }
+        }
+        if (greaterThan) {
+          arrangeValue = {
+            ...arrangeValue,
+            value: greaterThanValue,
+          };
+        }
+        if (between) {
+          arrangeValue = {
+            ...arrangeValue,
+            value1: betweenStartValue,
+            value2: betweenEndValue,
+          };
+        }
+        nutrientMatrixMap.push(arrangeValue);
+      }
+    });
 
-          return arrangeValue;
-        },
-      );
-    dispatch(setLoading(true));
     try {
       const { data } = await filterRecipe({
         variables: {
@@ -164,9 +171,7 @@ function FilterPageBottom({ allFilters = [] }: Props) {
       });
 
       dispatch(setAllFilterRecipe(data?.filterRecipe || []));
-      dispatch(setLoading(false));
     } catch (error) {
-      dispatch(setLoading(false));
       console.log(error?.message);
     }
   };
@@ -176,36 +181,50 @@ function FilterPageBottom({ allFilters = [] }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allFilters]);
 
+  if (loading) {
+    return (
+      <div style={{ marginTop: "30px" }}>
+        <SkeletonCollectionRecipe />;
+      </div>
+    );
+  }
+
   return (
     <>
       <div className={styles.mainDiv}>
         <div className={styles.mainDiv__results}>
           <div className={styles.mainDiv__results__heading}>
-            <div className={styles.mainDiv__results__heading__left}>
-              {allFilterRecipe.length} results
+            <div>
+              <p>
+                {allFilterRecipe.length} <span>results</span>
+              </p>
             </div>
-            <div className={styles.mainDiv__results__heading__right}>
-              <div className={styles.mainDiv__results__heading__right__image}>
-                <div>
-                  <Image
-                    src={"/icons/dash-icon.svg"}
-                    alt=""
-                    layout="fill"
-                    objectFit="contain"
-                  />
-                </div>
-              </div>
-              <div className={styles.mainDiv__results__heading__right__image}>
-                <div>
-                  {" "}
-                  <Image
-                    src={"/icons/share-orange.png"}
-                    alt=""
-                    layout="fill"
-                    objectFit="contain"
-                  />
-                </div>
-              </div>
+
+            <div style={{ display: "flex" }}>
+              <IconWarper
+                defaultBg="slightGray"
+                hover="bgPrimary"
+                style={{ width: "28px", height: "28px", marginRight: "10px" }}
+              >
+                <FontAwesomeIcon icon={faChartTreeMap} />
+              </IconWarper>
+              <IconWarper
+                defaultBg="slightGray"
+                hover="bgPrimary"
+                style={{ width: "28px", height: "28px" }}
+              >
+                <FontAwesomeIcon icon={faShareNodes} />
+              </IconWarper>
+            </div>
+            <div>
+              <IconWarper
+                defaultBg="slightGray"
+                hover="bgPrimary"
+                style={{ width: "28px", height: "28px" }}
+                handleClick={() => dispatch(resetAllFilters())}
+              >
+                <FontAwesomeIcon icon={faXmark} />
+              </IconWarper>
             </div>
           </div>
           <div className={styles.mainDiv__results__body}>

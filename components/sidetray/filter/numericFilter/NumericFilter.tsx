@@ -10,6 +10,7 @@ import {
 } from "../../../../redux/slices/filterRecipeSlice";
 import { parentPort } from "worker_threads";
 import useDebounce from "../../../../customHooks/useDebounce";
+import debounce from "../../../../helperFunc/debounce";
 
 type NumericFilterProps = {
   filterCriteria: FilterCriteriaOptions;
@@ -27,18 +28,6 @@ const NumericFilter = ({
   const dispatch = useAppDispatch();
   const [debouncedTrigger, setDebouncedTrigger] = useState<any>(null);
 
-  const lessThanRef = useRef<any>(null);
-  const greaterThanRef = useRef<any>(null);
-  const startFromRef = useRef<any>(null);
-  const endToRef = useRef<any>(null);
-  const [startCounter, setStartCounter] = useState(0);
-  const [endCounter, setEndCounter] = useState(0);
-  // const [tabValue, setTabValue] = useState(activeTab || "less than");
-
-  const [lessThanInput, setLessThanInput] = useState(0);
-  const [greaterThanInput, setGreaterThanInput] = useState(0);
-  const [startFormInput, setStartFormInput] = useState(0);
-  const [endFormInput, setEndFormInput] = useState(0);
   const isMounted = useRef(false);
 
   const { numericFilterState } = useAppSelector((state) => state.filterRecipe);
@@ -87,34 +76,25 @@ const NumericFilter = ({
 
     if (newNumericFilterState.id) {
       dispatch(updateNumericFilterState(newNumericFilterState));
-      setDebouncedTrigger(newNumericFilterState);
+      dispatch(
+        updateFilterCriteriaItem({
+          updateStatus: "update",
+          value: newNumericFilterState,
+          filterCriteria,
+        }),
+      );
     }
   };
 
-  const resetInput = useCallback(
-    (title: "Less Than" | "Start" | "End" | "Greater Than") => {
-      const reset = (ref: any) => {
-        if (type === "counter") ref?.current?.reset();
-        else ref.current.value = "";
-      };
-      // prettier-ignore
-      if (title === 'Less Than') {
-        if (greaterThanRef.current) reset(greaterThanRef)
-        if (startFromRef.current) reset(startFromRef)
-        if (endToRef.current) reset(endToRef)
-      } 
-      else if (title === 'Greater Than') {
-        if (lessThanRef.current) reset(lessThanRef)
-        if (startFromRef.current) reset(startFromRef)
-        if (endToRef.current) reset(endToRef)
-      }
-      else if (title === 'Start' || title === 'End') {
-        if (lessThanRef.current) reset(lessThanRef)
-        if (greaterThanRef.current) reset(greaterThanRef)
-      }
-    },
-    [type],
-  );
+  const handleUpdateNumericFilterState = debounce((value) => {
+    dispatch(
+      updateFilterCriteriaItem({
+        updateStatus: "update",
+        value,
+        filterCriteria,
+      }),
+    );
+  }, 700);
 
   const counterHandler = (
     value: number = 0,
@@ -124,11 +104,6 @@ const NumericFilter = ({
       | "betweenEndValue"
       | "greaterThanValue",
   ) => {
-    // const titleType = pageTitle;
-    // let values = "";
-    // let tabMenu = "";
-    // let range: [number, number] = [0, 0];
-
     let newNumericFilterState = { ...numericFilterState };
 
     // prettier-ignore
@@ -139,74 +114,35 @@ const NumericFilter = ({
           tagLabel:`${activeTab} | ${newNumericFilterState.name} < ${value}`
         };
 
-
-      // values = `${titleType} < ${value}`;
-      // tabMenu = "less than";
-      // setLessThanInput(value);
-      // setGreaterThanInput(0);
-      // setStartFormInput(0);
-      // setEndFormInput(0);
     } else if (title === "greaterThanValue") {
        newNumericFilterState = {
          ...newNumericFilterState,
          greaterThanValue: value,
          tagLabel: `${activeTab} | ${value} >  ${newNumericFilterState.name} `,
        };
-      // values = `${value} > ${titleType}`;
-      // tabMenu = "greater than";
-      // setGreaterThanInput(value);
-      // setLessThanInput(0);
-      // setStartFormInput(0);
-      // setEndFormInput(0);
+      
     } else if (title === "betweenStartValue") {
        newNumericFilterState = {
          ...newNumericFilterState,
          betweenStartValue: value,
          tagLabel: `${activeTab} | ${value} <  ${newNumericFilterState.name} < ${newNumericFilterState.betweenEndValue}`,
        };
-      // values = `${value} < ${titleType} < ${endCounter}`;
-      // tabMenu = "between";
-      // range = [value, endCounter];
-      // setStartCounter(value);
-      // setStartFormInput(value);
-      // setGreaterThanInput(0);
-      // setLessThanInput(0);
+      
     } else if (title === "betweenEndValue") {
       newNumericFilterState = {
         ...newNumericFilterState,
         betweenEndValue: value,
         tagLabel: `${activeTab} | ${newNumericFilterState.betweenStartValue} <  ${newNumericFilterState.name} < ${value}`,
       };
-      // values = `${startCounter} < ${titleType} < ${value}`;
-      // tabMenu = "between";
-      // range = [startCounter, value];
-      // setEndCounter(value);
-      // setEndFormInput(value);
-      // setGreaterThanInput(0);
-      // setLessThanInput(0);
     }
     if (newNumericFilterState.id) {
       dispatch(updateNumericFilterState(newNumericFilterState));
       setDebouncedTrigger(newNumericFilterState);
     }
-
-    // dispatch(
-    //   modifyFilter({
-    //     pageTitle: pageTitle,
-    //     expandedMenu: expandedMenu || "",
-    //     activeTab: tabMenu,
-    //     values: [values],
-    //     prefix: titleType,
-    //     range: range,
-    //     value: value,
-    //   }),
-    // );
   };
 
   useEffect(() => {
     if (!isMounted.current) return;
-
-    console.log("trigger");
 
     dispatch(
       updateFilterCriteriaItem({
