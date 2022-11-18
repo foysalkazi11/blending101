@@ -32,6 +32,7 @@ interface SearchBarProps {
   isOpenPanel?: boolean;
   comeFromWhichPage?: "discovery" | "wiki";
   wikiType?: WikiType;
+  handleOnChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface CompareButtonProps {
@@ -60,6 +61,7 @@ const CommonSearchBar = ({
   isSearchTag = false,
   comeFromWhichPage = "discovery",
   wikiType = "Ingredient",
+  handleOnChange = () => {},
 }: SearchBarProps) => {
   const router = useRouter();
   const [isInputFocus, setIsInputFocus] = useState(false);
@@ -136,7 +138,7 @@ const CommonSearchBar = ({
               disabled={isMicOn}
               placeholder={isMicOn ? "Speak" : "Search"}
               value={input}
-              onChange={(e) => setInput(e?.target?.value)}
+              onChange={(e) => handleOnChange(e)}
               onFocus={() => setIsInputFocus(true)}
             />
           </form>

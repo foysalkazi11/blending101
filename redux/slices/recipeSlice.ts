@@ -10,6 +10,7 @@ type recipeSliceState = {
   compareList: any[];
   detailsARecipe: RecipeDetailsType;
   allFilterRecipe: RecipeType[];
+  searchRecipeResults: RecipeType[];
 };
 
 const initialState: recipeSliceState = {
@@ -20,6 +21,7 @@ const initialState: recipeSliceState = {
   compareList: [],
   detailsARecipe: {} as RecipeDetailsType,
   allFilterRecipe: [] as RecipeType[],
+  searchRecipeResults: [],
 };
 
 export const recipeSlice = createSlice({
@@ -50,6 +52,9 @@ export const recipeSlice = createSlice({
     setAllFilterRecipe: (state, action: PayloadAction<RecipeType[]>) => {
       state.allFilterRecipe = [...action?.payload];
     },
+    updateSearchRecipeResult: (state, action: PayloadAction<RecipeType[]>) => {
+      state.searchRecipeResults = [...action.payload];
+    },
   },
 });
 
@@ -61,6 +66,7 @@ export const {
   setCompareList,
   setDetailsARecipe,
   setAllFilterRecipe,
+  updateSearchRecipeResult,
 } = recipeSlice?.actions;
 
 export default recipeSlice?.reducer;

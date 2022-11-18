@@ -19,6 +19,7 @@ import {
   setLatest,
   setPopular,
   setRecommended,
+  updateSearchRecipeResult,
 } from "../../../redux/slices/recipeSlice";
 import { useRouter } from "next/router";
 import SkeletonRecipeDiscovery from "../../../theme/skeletons/skeletonRecipeDiscovery/SkeletonRecipeDiscovery";
@@ -26,15 +27,24 @@ import useLocalStorage from "../../../customHooks/useLocalStorage";
 import Widget from "../../../component/module/Widget/Widget.component";
 import ShowCollectionModal from "../../showModal/ShowCollectionModal";
 import SliderWidget from "../../../component/module/Widget/SliderWidget.component";
+import ShowRecipeContainer from "../../showRecipeContainer";
+import SEARCH_RECIPE from "../../../gqlLib/recipes/queries/searchRecipe";
+import useDebounce from "../../../customHooks/useDebounce";
+import { resetAllFilters } from "../../../redux/slices/filterRecipeSlice";
+import notification from "../../utility/reactToastifyNotification";
+import IconWarper from "../../../theme/iconWarper/IconWarper";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/pro-regular-svg-icons";
 
 const RecipeDetails = () => {
   const router = useRouter();
+  const [recipeSearchInput, setRecipeSearchInput] = useState("");
   const { openFilterTray } = useAppSelector((state) => state.sideTray);
   const { dbUser } = useAppSelector((state) => state?.user);
   const { currentCollectionInfo } = useAppSelector(
     (state) => state?.collections,
   );
-  const { latest, popular, recommended } = useAppSelector(
+  const { latest, popular, recommended, searchRecipeResults } = useAppSelector(
     (state) => state?.recipe,
   );
   const { allFilters } = useAppSelector((state) => state?.filterRecipe);
@@ -50,6 +60,23 @@ const RecipeDetails = () => {
     "compareList",
     [],
   );
+  const debounceSearchTerm = useDebounce(recipeSearchInput, 700);
+
+  const [searchRecipe, { error: searchError, loading: searchLoading }] =
+    useLazyQuery(SEARCH_RECIPE, {
+      fetchPolicy: "cache-and-network",
+    });
+
+  const handleSearchRecipe = async (value: string) => {
+    try {
+      const { data } = await searchRecipe({
+        variables: { userId: dbUser._id, searchTerm: value },
+      });
+      dispatch(updateSearchRecipeResult(data.searchRecipes || []));
+    } catch (error) {
+      notification("error", "Failed search recipes");
+    }
+  };
 
   const getAllRecipes = async () => {
     try {
@@ -90,6 +117,20 @@ const RecipeDetails = () => {
     }
   }, [dbUser?._id]);
 
+  // useEffect(() => {
+  //   if (isMounted.current) {
+  //     if (debounceSearchTerm.length) {
+  //       handleSearchRecipe(debounceSearchTerm);
+  //     } else {
+  //       dispatch(updateSearchRecipeResult([]));
+  //     }
+
+  //     if (allFilters.length) {
+  //       dispatch(resetAllFilters());
+  //     }
+  //   }
+  // }, [debounceSearchTerm]);
+
   useEffect(() => {
     isMounted.current = true;
 
@@ -116,7 +157,12 @@ const RecipeDetails = () => {
               transition: "all 0.5s",
             }}
           >
-            <DiscoverPageSearch />
+            <DiscoverPageSearch
+              input={recipeSearchInput}
+              handleOnChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setRecipeSearchInput(e.target.value);
+              }}
+            />
             {allFilters?.length ? (
               <SearchtagsComponent allFilters={allFilters} />
             ) : null}
@@ -125,7 +171,31 @@ const RecipeDetails = () => {
           {currentCollectionInfo?.name ? (
             <ShowCollectionRecipes />
           ) : allFilters?.length ? (
-            <FilterPageBottom allFilters={allFilters} />
+            <>
+              <FilterPageBottom allFilters={allFilters} />
+
+              {/* {searchRecipeResults.length ? (
+                <ShowRecipeContainer
+                  data={searchRecipeResults}
+                  loading={searchLoading}
+                  headerLestSide={
+                    <p>
+                      {searchRecipeResults.length} <span>results</span>
+                    </p>
+                  }
+                  headerRightSide={
+                    <IconWarper
+                      defaultBg="slightGray"
+                      hover="bgPrimary"
+                      style={{ width: "28px", height: "28px" }}
+                      handleClick={() => dispatch(updateSearchRecipeResult([]))}
+                    >
+                      <FontAwesomeIcon icon={faXmark} />
+                    </IconWarper>
+                  }
+                />
+              ) : null} */}
+            </>
           ) : (
             <div>
               <AppdownLoadCard />

@@ -46,6 +46,17 @@ const SkeletonCollectionRecipe = () => {
             );
           })}
         </div>
+        <div className={styles.content}>
+          {[...Array(slideSize)]?.map((item, index) => {
+            return (
+              <SkeletonElement
+                type="thumbnail"
+                key={index}
+                style={{ width: "100%", height: "277px" }}
+              />
+            );
+          })}
+        </div>
       </div>
     </>
   );

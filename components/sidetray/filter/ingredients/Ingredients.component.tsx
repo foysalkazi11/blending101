@@ -53,7 +53,7 @@ export default function FilterbottomComponent({
   const [list, setList] = useState<Array<List>>([]);
   const [rankingDropDownState, setRankingDropDownState] = useState("");
 
-  const { data: IngredientData, loading: nutritionLoading } =
+  const { data: ingredientData, loading: nutritionLoading } =
     useGetAllIngredientsDataBasedOnNutrition(
       rankingDropDownState,
       dpd,
@@ -101,14 +101,17 @@ export default function FilterbottomComponent({
   }, [searchInput]);
   useEffect(() => {
     if (isMounted.current) {
-      if (!ingredientCategoryData) return;
+      if (!ingredientData?.getAllIngredientsDataBasedOnNutrition) return;
       let tempArray = ascendingDescending
-        ? [...ingredientCategoryData]
-        : [...ingredientCategoryData]?.reverse();
+        ? [...ingredientData?.getAllIngredientsDataBasedOnNutrition]
+        : [...ingredientData?.getAllIngredientsDataBasedOnNutrition]?.reverse();
       setArrayOrderState(tempArray);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ascendingDescending, IngredientData]);
+  }, [
+    ascendingDescending,
+    ingredientData?.getAllIngredientsDataBasedOnNutrition,
+  ]);
 
   useEffect(() => {
     isMounted.current = true;
