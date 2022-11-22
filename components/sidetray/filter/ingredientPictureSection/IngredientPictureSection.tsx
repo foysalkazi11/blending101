@@ -19,8 +19,9 @@ interface Props {
   scrollAreaMaxHeight?: React.CSSProperties;
   checkActiveItem: (id: string) => boolean;
   handleBlendAndIngredientUpdate: (
-    value: FilterCriteriaValue,
-    present: boolean,
+    value?: any | FilterCriteriaValue,
+    present?: boolean,
+    extraInfo?: any | FilterCriteriaValue,
   ) => void;
 }
 
@@ -67,6 +68,8 @@ const IngredientPictureSection = ({
                   className={styles.item}
                   onClick={() =>
                     handleBlendAndIngredientUpdate(
+                      item,
+                      checkActiveItem(item?._id),
                       {
                         id: item?._id,
                         image: item?.featuredImage || "/food/chard.png",
@@ -74,7 +77,6 @@ const IngredientPictureSection = ({
                         tagLabel: "",
                         filterCriteria: "includeIngredientIds",
                       },
-                      checkActiveItem(item?._id),
                     )
                   }
                 >

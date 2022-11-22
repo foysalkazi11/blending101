@@ -7,31 +7,49 @@ import styles from "./index.module.scss";
 
 interface Props {
   errorMessage?: string;
+  image?: string;
+  style?: React.CSSProperties;
+  showBackIcon?: boolean;
+  showHomeIcon?: boolean;
+  imageWidth?: number;
+  imageHight?: number;
 }
 
-const ErrorPage = ({ errorMessage = "An error occurred" }: Props) => {
+const ErrorPage = ({
+  errorMessage = "An error occurred",
+  image = "/icons/page_not_found.svg",
+  imageHight = 400,
+  imageWidth = 400,
+  showBackIcon = true,
+  showHomeIcon = true,
+  style = {},
+}: Props) => {
   const router = useRouter();
   return (
-    <div className={styles.errorPageContainer}>
+    <div className={styles.errorPageContainer} style={style}>
       <Image
-        src={"/icons/page_not_found.svg"}
+        src={image}
         alt="error"
-        width={400}
-        height={400}
+        width={imageWidth}
+        height={imageHight}
         objectFit="contain"
       />
       <div className={styles.info}>
         <p className={styles.text}>{errorMessage} </p>
-        <FontAwesomeIcon
-          icon={faArrowLeft}
-          className={styles.icon}
-          onClick={() => router.back()}
-        />
-        <FontAwesomeIcon
-          icon={faHouse}
-          className={styles.icon}
-          onClick={() => router.push("/")}
-        />
+        {showBackIcon && (
+          <FontAwesomeIcon
+            icon={faArrowLeft}
+            className={styles.icon}
+            onClick={() => router.back()}
+          />
+        )}
+        {showHomeIcon && (
+          <FontAwesomeIcon
+            icon={faHouse}
+            className={styles.icon}
+            onClick={() => router.push("/")}
+          />
+        )}
       </div>
     </div>
   );

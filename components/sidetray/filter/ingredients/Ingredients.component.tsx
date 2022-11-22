@@ -29,8 +29,9 @@ interface Props {
   scrollAreaMaxHeight?: React.CSSProperties;
   checkActiveIngredient: (id: string) => boolean;
   handleIngredientClick: (
-    value: any | FilterCriteriaValue,
-    present: boolean,
+    value?: any | FilterCriteriaValue,
+    present?: boolean,
+    extraInfo?: any | FilterCriteriaValue,
   ) => void;
   ingredientCategoryData?: any[];
   ingredientCategoryLoading?: boolean;

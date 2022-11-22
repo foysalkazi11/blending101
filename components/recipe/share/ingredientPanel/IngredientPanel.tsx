@@ -1,6 +1,7 @@
+import { useQuery } from "@apollo/client";
 import React from "react";
+import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
 import FilterbottomComponent from "../../../sidetray/filter/ingredients/Ingredients.component";
-import { categories } from "../../../utility/staticData";
 import PanelHeader from "../panelHeader/PanelHeader";
 import styles from "./IngredientPanel.module.scss";
 
@@ -13,6 +14,16 @@ const IngredientPanel = ({
   checkActive = () => false,
   handleIngredientClick = () => {},
 }: IngredientPanelPorps) => {
+  const { data: ingredientCategoryData, loading: ingredientCategoryLoading } =
+    useQuery(FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS, {
+      variables: {
+        data: {
+          ingredientCategory: "All",
+          IngredientClass: 1,
+        },
+      },
+    });
+
   return (
     <div className={styles.ingrdeintpanelWraper}>
       <PanelHeader icon="/icons/basket.svg" title="Ingredient List" />
@@ -21,6 +32,9 @@ const IngredientPanel = ({
           checkActiveIngredient={checkActive}
           handleIngredientClick={handleIngredientClick}
           scrollAreaMaxHeight={{ maxHeight: "520px" }}
+          ingredientCategoryData={
+            ingredientCategoryData?.filterIngredientByCategoryAndClass
+          }
         />
       </div>
     </div>
