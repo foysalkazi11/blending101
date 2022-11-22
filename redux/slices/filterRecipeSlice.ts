@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { RecipeType } from "../../type/recipeType";
 
 type FilterProps = {
   pageTitle: string;
@@ -54,12 +55,6 @@ export type FilterCriteriaOptions =
   | "nutrientFilters"
   | "nutrientMatrix";
 
-export type ActiveFilterTagCriteria =
-  | "blendTypes"
-  | "includeIngredientIds"
-  | "nutrientFilters"
-  | "nutrientMatrix"
-  | "";
 interface ActiveFilterTagCriteriaType {
   filterCriteria: FilterCriteriaOptions;
   activeTab: string;
@@ -71,14 +66,19 @@ export type FilterCriteriaValue =
   | NutrientFiltersType
   | NutrientMatrixType;
 
+interface AllFilterRecipes {
+  filterRecipes: RecipeType[];
+  isFiltering: boolean;
+}
+
 interface FilterState {
   isActive: boolean;
   filters: FilterProps[];
   activeState: FilterProps;
   allFilters: FilterCriteriaValue[];
-
   activeFilterTag: ActiveFilterTagCriteriaType;
   numericFilterState: NutrientFiltersType | NutrientMatrixType;
+  allFilterRecipes: AllFilterRecipes;
 }
 
 const initialState: FilterState = {
@@ -97,6 +97,10 @@ const initialState: FilterState = {
   },
   allFilters: [],
   numericFilterState: {} as NutrientFiltersType | NutrientMatrixType,
+  allFilterRecipes: {
+    filterRecipes: [],
+    isFiltering: false,
+  },
 };
 
 export const filterRecipeSlice = createSlice({
@@ -302,6 +306,9 @@ export const filterRecipeSlice = createSlice({
     ) => {
       state.numericFilterState = { ...action.payload };
     },
+    updateAllFilterRecipes: (state, action: { payload: AllFilterRecipes }) => {
+      state.allFilterRecipes = { ...action.payload };
+    },
 
     resetAllFilters: (state) => {
       state.allFilters = [];
@@ -322,6 +329,7 @@ export const {
   updateActiveFilterTag,
   updateNumericFilterState,
   resetAllFilters,
+  updateAllFilterRecipes,
 } = filterRecipeSlice.actions;
 
 export default filterRecipeSlice.reducer;

@@ -2,134 +2,81 @@
 import React, { useEffect, useRef, useState } from "react";
 import AContainer from "../../../containers/A.container";
 import styles from "./recipeDiscovery.module.scss";
-import AppdownLoadCard from "./AppdownLoadCard/AppdownLoadCard.component";
-import ContentTray from "./ContentTray/ContentTray.component";
-import DatacardComponent from "../../../theme/cards/dataCard/dataCard.component";
 import DiscoverPageSearch from "./discoverPageSearch/DiscoverPageSearch.Component";
-import SearchtagsComponent from "../../searchtags/searchtags.component";
+import SearchTagsComponent from "../../searchtags/searchtags.component";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import FilterPageBottom from "../recipeFilter/filterBottom.component";
 import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
-import ShowCollectionRecipes from "../../../theme/showCollectionRecipes/ShowCollectionRecipes";
-import { useLazyQuery, useQuery } from "@apollo/client";
-import GET_ALL_RECOMMENDED_RECIPES from "../../../gqlLib/recipes/queries/getRecommendedRecipes";
-import GET_ALL_POPULAR_RECIPES from "../../../gqlLib/recipes/queries/getAllPopularRecipes";
-import GET_ALL_LATEST_RECIPES from "../../../gqlLib/recipes/queries/getAllLatestRecipes";
-import {
-  setLatest,
-  setPopular,
-  setRecommended,
-  updateSearchRecipeResult,
-} from "../../../redux/slices/recipeSlice";
-import { useRouter } from "next/router";
-import SkeletonRecipeDiscovery from "../../../theme/skeletons/skeletonRecipeDiscovery/SkeletonRecipeDiscovery";
-import useLocalStorage from "../../../customHooks/useLocalStorage";
-import Widget from "../../../component/module/Widget/Widget.component";
 import ShowCollectionModal from "../../showModal/ShowCollectionModal";
-import SliderWidget from "../../../component/module/Widget/SliderWidget.component";
-import ShowRecipeContainer from "../../showRecipeContainer";
+import RegularRecipes from "./regularRecipes";
+import ShowSearchRecipes from "./showSearchRecipes";
 import SEARCH_RECIPE from "../../../gqlLib/recipes/queries/searchRecipe";
+import { useLazyQuery } from "@apollo/client";
 import useDebounce from "../../../customHooks/useDebounce";
-import { resetAllFilters } from "../../../redux/slices/filterRecipeSlice";
-import notification from "../../utility/reactToastifyNotification";
-import IconWarper from "../../../theme/iconWarper/IconWarper";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/pro-regular-svg-icons";
+import { updateAllFilterRecipes } from "../../../redux/slices/filterRecipeSlice";
+import FILTER_RECIPE from "../../../gqlLib/recipes/queries/filterRecipe";
+import useFetchGetRecipesByBlendAndIngredients from "./helperFunc/useFetchGetRecipesByBlendAndIngredients";
+import useHandleSearchRecipe from "./helperFunc/useSearchRecipes";
 
 const RecipeDetails = () => {
-  const router = useRouter();
   const [recipeSearchInput, setRecipeSearchInput] = useState("");
   const { openFilterTray } = useAppSelector((state) => state.sideTray);
-  const { dbUser } = useAppSelector((state) => state?.user);
-  const { currentCollectionInfo } = useAppSelector(
-    (state) => state?.collections,
+  const { allFilters, allFilterRecipes } = useAppSelector(
+    (state) => state?.filterRecipe,
   );
-  const { latest, popular, recommended, searchRecipeResults } = useAppSelector(
-    (state) => state?.recipe,
-  );
-  const { allFilters } = useAppSelector((state) => state?.filterRecipe);
-  // const { data, error, loading: widgetLoading } = useQuery(GET_RECIPE_WIDGET);
-  const [getAllRecommendedRecipes] = useLazyQuery(GET_ALL_RECOMMENDED_RECIPES);
-  const [getAllPopularRecipes] = useLazyQuery(GET_ALL_POPULAR_RECIPES);
-  const [getAllLatestRecipes] = useLazyQuery(GET_ALL_LATEST_RECIPES);
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
-
-  const dispatch = useAppDispatch();
   const isMounted = useRef(false);
-  const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
-    "compareList",
-    [],
-  );
-  const debounceSearchTerm = useDebounce(recipeSearchInput, 700);
-
-  const [searchRecipe, { error: searchError, loading: searchLoading }] =
-    useLazyQuery(SEARCH_RECIPE, {
+  const dispatch = useAppDispatch();
+  const [searchRecipe, { loading: searchRecipeLoading }] = useLazyQuery(
+    SEARCH_RECIPE,
+    {
       fetchPolicy: "cache-and-network",
-    });
-
-  const handleSearchRecipe = async (value: string) => {
-    try {
-      const { data } = await searchRecipe({
-        variables: { userId: dbUser._id, searchTerm: value },
-      });
-      dispatch(updateSearchRecipeResult(data.searchRecipes || []));
-    } catch (error) {
-      notification("error", "Failed search recipes");
-    }
-  };
-
-  const getAllRecipes = async () => {
-    try {
-      if (!recommended?.length) {
-        const recommendedRecipes = await getAllRecommendedRecipes({
-          variables: { userId: dbUser?._id },
-        });
-        dispatch(
-          setRecommended(
-            recommendedRecipes?.data?.getAllrecomendedRecipes || [],
-          ),
-        );
-      }
-
-      if (!popular?.length) {
-        const popularRecipes = await getAllPopularRecipes({
-          variables: { userId: dbUser?._id },
-        });
-        dispatch(setPopular(popularRecipes?.data?.getAllpopularRecipes || []));
-      }
-
-      if (!latest?.length) {
-        const latestRecipes = await getAllLatestRecipes({
-          variables: { userId: dbUser?._id },
-        });
-        dispatch(setLatest(latestRecipes?.data?.getAllLatestRecipes || []));
-      }
-    } catch (error) {
-      console.log(error?.messae);
-    }
-  };
+    },
+  );
+  const [filterRecipe, { loading: filterRecipesLoading }] = useLazyQuery(
+    FILTER_RECIPE,
+    {
+      fetchPolicy: "cache-and-network",
+    },
+  );
+  const debounceSearchTerm = useDebounce(recipeSearchInput, 500);
+  const handleFilterRecipes = useFetchGetRecipesByBlendAndIngredients();
+  const handleSearchRecipes = useHandleSearchRecipe();
 
   useEffect(() => {
-    if (dbUser?._id) {
-      if (!latest?.length || !popular?.length || !recommended?.length) {
-        getAllRecipes();
+    if (isMounted.current) {
+      // filter recipe func
+      if (allFilters.length) {
+        handleFilterRecipes(allFilters, filterRecipe);
+      } else {
+        dispatch(
+          updateAllFilterRecipes({
+            filterRecipes: [],
+            isFiltering: false,
+          }),
+        );
       }
     }
-  }, [dbUser?._id]);
 
-  // useEffect(() => {
-  //   if (isMounted.current) {
-  //     if (debounceSearchTerm.length) {
-  //       handleSearchRecipe(debounceSearchTerm);
-  //     } else {
-  //       dispatch(updateSearchRecipeResult([]));
-  //     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allFilters]);
 
-  //     if (allFilters.length) {
-  //       dispatch(resetAllFilters());
-  //     }
-  //   }
-  // }, [debounceSearchTerm]);
+  useEffect(() => {
+    if (isMounted.current) {
+      // search recipe func
+      if (debounceSearchTerm.length) {
+        handleSearchRecipes(debounceSearchTerm, searchRecipe);
+      } else {
+        dispatch(
+          updateAllFilterRecipes({
+            filterRecipes: [],
+            isFiltering: false,
+          }),
+        );
+      }
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debounceSearchTerm]);
 
   useEffect(() => {
     isMounted.current = true;
@@ -163,204 +110,20 @@ const RecipeDetails = () => {
                 setRecipeSearchInput(e.target.value);
               }}
             />
+
             {allFilters?.length ? (
-              <SearchtagsComponent allFilters={allFilters} />
+              <SearchTagsComponent allFilters={allFilters} />
             ) : null}
           </div>
-
-          {currentCollectionInfo?.name ? (
-            <ShowCollectionRecipes />
-          ) : allFilters?.length ? (
-            <>
-              <FilterPageBottom allFilters={allFilters} />
-
-              {/* {searchRecipeResults.length ? (
-                <ShowRecipeContainer
-                  data={searchRecipeResults}
-                  loading={searchLoading}
-                  headerLestSide={
-                    <p>
-                      {searchRecipeResults.length} <span>results</span>
-                    </p>
-                  }
-                  headerRightSide={
-                    <IconWarper
-                      defaultBg="slightGray"
-                      hover="bgPrimary"
-                      style={{ width: "28px", height: "28px" }}
-                      handleClick={() => dispatch(updateSearchRecipeResult([]))}
-                    >
-                      <FontAwesomeIcon icon={faXmark} />
-                    </IconWarper>
-                  }
-                />
-              ) : null} */}
-            </>
+          {allFilterRecipes.filterRecipes.length ||
+          allFilterRecipes.isFiltering ? (
+            <ShowSearchRecipes
+              recipes={allFilterRecipes.filterRecipes}
+              loading={filterRecipesLoading || searchRecipeLoading}
+              setOpenCollectionModal={setOpenCollectionModal}
+            />
           ) : (
-            <div>
-              <AppdownLoadCard />
-              <div className={styles.main__tray}>
-                {/* its for recommended */}
-
-                {recommended?.length ? (
-                  <ContentTray
-                    heading={"Recommended"}
-                    image={"/images/thumbs-up.svg"}
-                    allUrl="recipes/recommended"
-                  >
-                    {recommended?.map((item, index) => {
-                      let ingredients = [];
-                      item?.ingredients?.forEach((ing) => {
-                        const ingredient = ing?.ingredientId?.ingredientName;
-                        ingredients.push(ingredient);
-                      });
-                      const ing = ingredients.join(", ");
-                      return (
-                        <div
-                          className={styles.slider__card}
-                          key={"recipes/recommended" + index}
-                        >
-                          <DatacardComponent
-                            title={item.name}
-                            ingredients={ing}
-                            category={item.recipeBlendCategory?.name}
-                            ratings={item?.averageRating}
-                            noOfRatings={item?.numberOfRating}
-                            carbs={item?.carbs}
-                            score={item?.score}
-                            calorie={item?.calorie}
-                            noOfComments={item?.numberOfRating}
-                            image={item.image[0]?.image}
-                            recipeId={item?._id}
-                            notes={item?.notes}
-                            addedToCompare={item?.addedToCompare}
-                            compareRecipeList={compareRecipeList}
-                            setcompareRecipeList={setcompareRecipeList}
-                            isCollectionIds={item?.userCollections}
-                            setOpenCollectionModal={setOpenCollectionModal}
-                            isMatch={item?.isMatch}
-                            postfixTitle={item?.defaultVersion?.postfixTitle}
-                            userId={item?.userId}
-                          />
-                        </div>
-                      );
-                    })}
-                  </ContentTray>
-                ) : (
-                  <SkeletonRecipeDiscovery />
-                )}
-
-                {/* its for Recent*/}
-
-                {latest.length ? (
-                  <ContentTray
-                    heading={"Recent"}
-                    image={"/images/clock-light.svg"}
-                    allUrl="recipes/latest"
-                  >
-                    {latest?.map((item, index) => {
-                      let ingredients = [];
-                      item?.ingredients?.forEach((ing) => {
-                        const ingredient = ing?.ingredientId?.ingredientName;
-                        ingredients.push(ingredient);
-                      });
-                      const ing = ingredients.join(", ");
-                      {
-                        return (
-                          <div
-                            className={styles.slider__card}
-                            key={"latest" + index}
-                            onClick={() =>
-                              router.push(`/recipe_details/${item?._id}`)
-                            }
-                          >
-                            <DatacardComponent
-                              title={item.name}
-                              ingredients={ing}
-                              category={item.recipeBlendCategory?.name}
-                              ratings={item?.averageRating}
-                              noOfRatings={item?.numberOfRating}
-                              carbs={item.carbs}
-                              score={item.score}
-                              calorie={item.calorie}
-                              noOfComments={item?.numberOfRating}
-                              image={item.image[0]?.image}
-                              recipeId={item?._id}
-                              notes={item?.notes}
-                              addedToCompare={item?.addedToCompare}
-                              compareRecipeList={compareRecipeList}
-                              setcompareRecipeList={setcompareRecipeList}
-                              isCollectionIds={item?.userCollections}
-                              setOpenCollectionModal={setOpenCollectionModal}
-                              isMatch={item?.isMatch}
-                              postfixTitle={item?.defaultVersion?.postfixTitle}
-                              userId={item?.userId}
-                            />
-                          </div>
-                        );
-                      }
-                    })}
-                  </ContentTray>
-                ) : (
-                  <SkeletonRecipeDiscovery />
-                )}
-                {/* its for Popular */}
-
-                {popular.length ? (
-                  <ContentTray
-                    heading={"Popular"}
-                    image={"/images/fire-alt-light.svg"}
-                    allUrl="recipes/popular"
-                  >
-                    {popular?.map((item, index) => {
-                      let ingredients = [];
-                      item?.ingredients?.forEach((ing) => {
-                        const ingredient = ing?.ingredientId?.ingredientName;
-                        ingredients.push(ingredient);
-                      });
-                      const ing = ingredients.join(", ");
-                      {
-                        return (
-                          <div
-                            className={styles.slider__card}
-                            key={"popular" + index}
-                            onClick={() =>
-                              router.push(`/recipe_details/${item?._id}`)
-                            }
-                          >
-                            <DatacardComponent
-                              title={item.name}
-                              ingredients={ing}
-                              category={item.recipeBlendCategory?.name}
-                              ratings={item?.averageRating}
-                              noOfRatings={item?.numberOfRating}
-                              carbs={item.carbs}
-                              score={item.score}
-                              calorie={item.calorie}
-                              noOfComments={item?.numberOfRating}
-                              image={item.image[0]?.image}
-                              recipeId={item?._id}
-                              notes={item?.notes}
-                              addedToCompare={item?.addedToCompare}
-                              compareRecipeList={compareRecipeList}
-                              setcompareRecipeList={setcompareRecipeList}
-                              isCollectionIds={item?.userCollections}
-                              setOpenCollectionModal={setOpenCollectionModal}
-                              isMatch={item?.isMatch}
-                              postfixTitle={item?.defaultVersion?.postfixTitle}
-                              userId={item?.userId}
-                            />
-                          </div>
-                        );
-                      }
-                    })}
-                  </ContentTray>
-                ) : (
-                  <SkeletonRecipeDiscovery />
-                )}
-                <Widget slug="recipe-editor" />
-              </div>
-            </div>
+            <RegularRecipes setOpenCollectionModal={setOpenCollectionModal} />
           )}
         </div>
         <div className={styles.footerMainDiv}>

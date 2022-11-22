@@ -73,6 +73,8 @@ const EditRecipePage = ({
   );
 
   const handleIngredientClick = (ingredient: any, present: boolean) => {
+    console.log(ingredient, present);
+
     let blendz = [];
     if (!present) {
       blendz = [...selectedIngredientsList, ingredient];

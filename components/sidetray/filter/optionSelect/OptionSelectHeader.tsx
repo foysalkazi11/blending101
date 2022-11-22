@@ -1,14 +1,10 @@
 import React from "react";
 import { BsArrowRepeat, BsChevronLeft } from "react-icons/bs";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import { useAppDispatch } from "../../../../redux/hooks";
 import {
-  ActiveFilterTagCriteria,
-  FilterCriteriaOptions,
-  resetFilterValue,
   updateActiveFilterTag,
   updateFilterCriteriaItem,
 } from "../../../../redux/slices/filterRecipeSlice";
-import { setRecipeFilterByIngredientCategory } from "../../../../redux/slices/ingredientsSlice";
 import styles from "./OptionSelect.module.scss";
 
 type OptionSelectHeaderProps = {
