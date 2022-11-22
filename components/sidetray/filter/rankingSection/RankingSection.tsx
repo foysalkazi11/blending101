@@ -19,8 +19,9 @@ interface Props {
   scrollAreaMaxHeight?: React.CSSProperties;
   checkActiveItem: (id: string) => boolean;
   handleBlendAndIngredientUpdate: (
-    value: any | FilterCriteriaValue,
-    present: boolean,
+    value?: any | FilterCriteriaValue,
+    present?: boolean,
+    extraInfo?: any | FilterCriteriaValue,
   ) => void;
   nutritionLoading?: boolean;
   arrayOrderState?: any[];
@@ -42,16 +43,13 @@ const RankingSection = ({
   allIngredients = [],
 }: Props) => {
   const handleIngredientClick = (item) => {
-    handleBlendAndIngredientUpdate(
-      {
-        id: item?._id,
-        image: item?.featuredImage || "/food/chard.png",
-        name: item?.ingredientName,
-        tagLabel: "",
-        filterCriteria: "includeIngredientIds",
-      },
-      checkActiveItem(item?._id),
-    );
+    handleBlendAndIngredientUpdate(item, checkActiveItem(item?._id), {
+      id: item?._id,
+      image: item?.featuredImage || "/food/chard.png",
+      name: item?.ingredientName,
+      tagLabel: "",
+      filterCriteria: "includeIngredientIds",
+    });
   };
   return (
     <div className={styles.rankings}>

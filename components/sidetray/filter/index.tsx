@@ -11,7 +11,6 @@ import { setOpenFilterTray } from "../../../redux/slices/sideTraySlice";
 import TrayTag from "../TrayTag";
 import { FiFilter } from "react-icons/fi";
 import {
-  FilterCriteriaOptions,
   FilterCriteriaValue,
   updateFilterCriteriaItem,
 } from "../../../redux/slices/filterRecipeSlice";
@@ -61,12 +60,13 @@ export default function Filtertray({ filter }) {
   const handleBlendAndIngredientUpdate = (
     item: any | FilterCriteriaValue,
     isItemExist: boolean,
+    extraInfo?: any,
   ) => {
     // const isItemExist = checkActiveItem(item?.id);
     dispatch(
       updateFilterCriteriaItem({
         updateStatus: isItemExist ? "remove" : "add",
-        value: item,
+        value: extraInfo,
         filterCriteria: item.filterCategory,
       }),
     );

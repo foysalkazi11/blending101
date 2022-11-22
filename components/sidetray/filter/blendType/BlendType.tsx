@@ -14,8 +14,9 @@ const defaultBlendImg =
 interface Props {
   checkActiveItem: (id: string) => boolean;
   handleBlendAndIngredientUpdate: (
-    value: any | FilterCriteriaValue,
-    present: boolean,
+    value?: any | FilterCriteriaValue,
+    present?: boolean,
+    extraInfo?: any | FilterCriteriaValue,
   ) => void;
   blendCategoryData: BlendCategoryType[];
   blendCategoryLoading: boolean;
@@ -29,8 +30,12 @@ const BlendType = ({
 }: Props) => {
   const isMounted = useRef(false);
 
-  const handleBlendClick = (blend) => {
-    handleBlendAndIngredientUpdate(blend, checkActiveItem(blend.id));
+  const handleBlendClick = (blend, extraInfo) => {
+    handleBlendAndIngredientUpdate(
+      blend,
+      checkActiveItem(blend?._id),
+      extraInfo,
+    );
   };
 
   useEffect(() => {
@@ -56,13 +61,17 @@ const BlendType = ({
                   key={blend?.name + i}
                   className={styles.item}
                   onClick={() =>
-                    handleBlendClick({
-                      name: blend?.name,
-                      image: blend?.image || defaultBlendImg,
-                      id: blend?._id,
-                      tagLabel: "",
-                      filterCriteria: "blendTypes",
-                    })
+                    handleBlendAndIngredientUpdate(
+                      blend,
+                      checkActiveItem(blend?._id),
+                      {
+                        name: blend?.name,
+                        image: blend?.image || defaultBlendImg,
+                        id: blend?._id,
+                        tagLabel: "",
+                        filterCriteria: "blendTypes",
+                      },
+                    )
                   }
                 >
                   <div className={styles.image}>

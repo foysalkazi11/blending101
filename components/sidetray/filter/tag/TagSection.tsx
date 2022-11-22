@@ -3,17 +3,13 @@ import CustomAccordion from "../../../../theme/accordion/accordion.component";
 import styles from "./TagSection.module.scss";
 import { INGREDIENTS_FILTER } from "../static/recipe";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import { setRecipeFilterByIngredientCategory } from "../../../../redux/slices/ingredientsSlice";
 import OptionSelect from "../optionSelect/OptionSelect";
 import OptionSelectHeader from "../optionSelect/OptionSelectHeader";
 import NumericFilter from "../numericFilter/NumericFilter";
 import CheckboxOptions from "../checkboxOptions/CheckboxOptions";
 import {
-  activeFilter,
-  ActiveFilterTagCriteria,
   FilterCriteriaOptions,
   FilterCriteriaValue,
-  modifyFilter,
   updateActiveFilterTag,
 } from "../../../../redux/slices/filterRecipeSlice";
 import Multiselect from "../multiSelect/MultiSelect";
