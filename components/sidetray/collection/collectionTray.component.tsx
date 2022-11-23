@@ -19,6 +19,7 @@ import GridWidget from "../../../component/module/Widget/GridWidget.component";
 
 import styles from "./collectionTray.module.scss";
 import Widget from "../../../component/module/Widget/Widget.component";
+import { faBookmark } from "@fortawesome/pro-solid-svg-icons";
 
 interface CollectionTrayProps {
   showTagByDefaut?: boolean;
@@ -87,7 +88,7 @@ export default function CollectionTray({
       showPanle={showPanle}
       panleTag={(hover) => (
         <TrayTag
-          icon={<FontAwesomeIcon icon={faChartTreeMap} />}
+          icon={<FontAwesomeIcon icon={faBookmark} />}
           placeMent="left"
           hover={hover}
         />

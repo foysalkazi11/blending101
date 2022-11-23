@@ -107,6 +107,7 @@ const EditRecipePage = ({
 
   return (
     <AContainer
+      headerTitle="Recipe edit"
       showVersionTray={{
         show: true,
         showPanle: "right",

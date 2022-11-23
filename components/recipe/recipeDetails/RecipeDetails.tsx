@@ -27,7 +27,7 @@ const RecipeDetails = ({
     <AContainer
       showHeader={true}
       logo={true}
-      headerTitle="Blend Recipe"
+      headerTitle="Recipe details"
       showCommentsTray={{
         show: true,
         showPanle: "right",

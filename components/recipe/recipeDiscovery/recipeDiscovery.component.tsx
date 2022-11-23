@@ -12,7 +12,10 @@ import ShowSearchRecipes from "./showSearchRecipes";
 import SEARCH_RECIPE from "../../../gqlLib/recipes/queries/searchRecipe";
 import { useLazyQuery } from "@apollo/client";
 import useDebounce from "../../../customHooks/useDebounce";
-import { updateAllFilterRecipes } from "../../../redux/slices/filterRecipeSlice";
+import {
+  resetAllFilters,
+  updateAllFilterRecipes,
+} from "../../../redux/slices/filterRecipeSlice";
 import FILTER_RECIPE from "../../../gqlLib/recipes/queries/filterRecipe";
 import useFetchGetRecipesByBlendAndIngredients from "./helperFunc/useFetchGetRecipesByBlendAndIngredients";
 import useHandleSearchRecipe from "./helperFunc/useSearchRecipes";
@@ -59,6 +62,18 @@ const RecipeDetails = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allFilters]);
+
+  // close filter or search recipes
+
+  const closeFilterRecipes = () => {
+    dispatch(
+      updateAllFilterRecipes({
+        filterRecipes: [],
+        isFiltering: false,
+      }),
+    );
+    dispatch(resetAllFilters());
+  };
 
   useEffect(() => {
     if (isMounted.current) {
@@ -121,6 +136,7 @@ const RecipeDetails = () => {
               recipes={allFilterRecipes.filterRecipes}
               loading={filterRecipesLoading || searchRecipeLoading}
               setOpenCollectionModal={setOpenCollectionModal}
+              closeHandler={closeFilterRecipes}
             />
           ) : (
             <RegularRecipes setOpenCollectionModal={setOpenCollectionModal} />

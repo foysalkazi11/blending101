@@ -1,15 +1,8 @@
-import {
-  faChartTreeMap,
-  faShareNodes,
-  faXmark,
-} from "@fortawesome/pro-regular-svg-icons";
+import { faShareNodes, faXmark } from "@fortawesome/pro-regular-svg-icons";
+import { faBookmark } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import {
-  resetAllFilters,
-  updateAllFilterRecipes,
-} from "../../../../redux/slices/filterRecipeSlice";
 import IconWarper from "../../../../theme/iconWarper/IconWarper";
 import { RecipeType } from "../../../../type/recipeType";
 import ShowRecipeContainer from "../../../showRecipeContainer";
@@ -21,6 +14,7 @@ interface ShowSearchRecipesType {
   headerRightSide?: React.ReactChild | string | null;
   headerLeftSide?: React.ReactChild | string | null;
   headerMiddle?: React.ReactChild | string | null;
+  closeHandler?: () => void;
 }
 
 const ShowSearchRecipes = ({
@@ -30,9 +24,8 @@ const ShowSearchRecipes = ({
   headerLeftSide,
   headerMiddle,
   headerRightSide,
+  closeHandler,
 }: ShowSearchRecipesType) => {
-  const dispatch = useAppDispatch();
-
   return (
     <ShowRecipeContainer
       data={recipes || []}
@@ -49,13 +42,15 @@ const ShowSearchRecipes = ({
         headerMiddle || (
           <div style={{ display: "flex" }}>
             <IconWarper
+              iconColor="iconColorPrimary"
               defaultBg="slightGray"
               hover="bgPrimary"
               style={{ width: "28px", height: "28px", marginRight: "10px" }}
             >
-              <FontAwesomeIcon icon={faChartTreeMap} />
+              <FontAwesomeIcon icon={faBookmark} />
             </IconWarper>
             <IconWarper
+              iconColor="iconColorPrimary"
               defaultBg="slightGray"
               hover="bgPrimary"
               style={{ width: "28px", height: "28px" }}
@@ -68,18 +63,11 @@ const ShowSearchRecipes = ({
       headerRightSide={
         headerRightSide || (
           <IconWarper
-            defaultBg="slightGray"
+            iconColor="iconColorWhite"
+            defaultBg="primary"
             hover="bgPrimary"
             style={{ width: "28px", height: "28px" }}
-            handleClick={() => {
-              dispatch(
-                updateAllFilterRecipes({
-                  filterRecipes: [],
-                  isFiltering: false,
-                }),
-              );
-              dispatch(resetAllFilters());
-            }}
+            handleClick={closeHandler}
           >
             <FontAwesomeIcon icon={faXmark} />
           </IconWarper>
