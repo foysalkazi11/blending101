@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import useLocalStorage from "../../customHooks/useLocalStorage";
 import DatacardComponent from "../../theme/cards/dataCard/dataCard.component";
 import SkeletonCollectionRecipe from "../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollectionRecipe";
 import { RecipeType } from "../../type/recipeType";
 import ErrorPage from "../pages/404Page";
-
 import styles from "./index.module.scss";
 
 interface Props {
