@@ -122,7 +122,7 @@ RecipeCard.defaultProps = {
   title: "Triple Berry Smoothie",
   ingredients: [],
   category: "Uncategorized",
-  noOfRatings: 0,
+  noOfRatings: 10,
   carbs: 23,
   score: 704,
   calorie: 270,

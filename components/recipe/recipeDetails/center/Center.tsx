@@ -25,6 +25,7 @@ import { VscVersions } from "react-icons/vsc";
 import IngredientDetails from "../../../../component/module/Recipe/Ingredient-Details.module";
 import { RecipeDetailsType } from "../../../../type/recipeDetails";
 import { GiGl } from "../../../../type/nutrationType";
+import Share from "../../../../component/organisms/Share/Share.component";
 
 interface center {
   recipeData: RecipeDetailsType;
@@ -49,6 +50,7 @@ const Center = ({
 }: center) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const [showShareModal, setShowShareModal] = useState(false);
   const [showCollectionModal, setShowCollectionModal] = useState(true);
   const [ingredientId, setIngredientId] = useState("");
   const [openModal, setOpenModal] = useState(false);
@@ -217,7 +219,8 @@ const Center = ({
               wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
               handleClick={() => {
                 setShowCollectionModal(false);
-                setOpenModal(true);
+                setShowShareModal(true);
+                // setOpenModal(true);
               }}
               icon="/images/share-alt-light-grey.svg"
               text="Share"
@@ -324,6 +327,14 @@ const Center = ({
           <ShareRecipeModal closeModal={() => setOpenModal(false)} />
         )}
       </Modal>
+      <Share
+        id={recipeData?._id}
+        title={recipeData?.name}
+        image={recipeData?.image?.length > 0 ? recipeData?.image[0]?.image : ""}
+        show={showShareModal}
+        setShow={setShowShareModal}
+        type="recipe"
+      />
     </div>
   );
 };

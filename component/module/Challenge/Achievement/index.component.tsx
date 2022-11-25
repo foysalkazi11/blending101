@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 
-import styles from "./Challenge.module.scss";
+import styles from "./index.module.scss";
 
-import Food from "./food/food.component";
-import GraphDetailContainer from "./graph-detail-container/graph-detail-container.component";
-import Main from "./main/main.component";
+import RecipeCategory from "./_RecipeCategory.component";
+import Streakbar from "./_Streakbar.component";
+import Dialer from "./_Dialer.component";
 import useChallengeLayout from "../../../../hooks/modules/useChallengeLayout";
 
 interface ChallengeProps {
@@ -20,12 +20,9 @@ const Challenge: React.FC<ChallengeProps> = (props) => {
     <div className={styles.mainContainer__contentDiv__innerDiv}>
       <div className={styles.mainContainer__contentDiv__innerDiv__challengeDiv}>
         <div className={styles.challenge_circle_box}>
-          <Food />
-          <Main activities={activities} statistics={statistics} />
-          <GraphDetailContainer
-            activities={activities}
-            statistics={statistics}
-          />
+          <RecipeCategory />
+          <Dialer activities={activities} statistics={statistics} />
+          <Streakbar activities={activities} statistics={statistics} />
         </div>
       </div>
     </div>

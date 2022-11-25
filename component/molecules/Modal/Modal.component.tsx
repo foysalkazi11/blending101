@@ -12,19 +12,30 @@ interface ModalProps {
   height?: number | string;
   width?: number | string;
   overlayClass?: string;
+  closeClass?: string;
   children?: React.ReactNode;
 }
+
 const Modal: React.FC<ModalProps> = (props) => {
   const { show, children, ...modalProps } = props;
-  if (!show) return null;
+  if (!show || typeof window === "undefined") return null;
+  const modalEl = window.document?.getElementById("modal-portal");
   return ReactDOM.createPortal(
     <ModalBody {...modalProps}>{children}</ModalBody>,
-    document.getElementById("modal-portal")!,
+    modalEl!,
   );
 };
 
 const ModalBody: React.FC<ModalProps> = (props) => {
-  const { children, title, hideModal, height, width, overlayClass } = props;
+  const {
+    children,
+    title,
+    hideModal,
+    height,
+    width,
+    overlayClass,
+    closeClass,
+  } = props;
   return (
     <Fragment>
       <div
@@ -53,7 +64,7 @@ const ModalBody: React.FC<ModalProps> = (props) => {
           fontName={faTimes}
           size="small"
           variant="primary"
-          className={styles.modal__close}
+          className={`${styles.modal__close} ${closeClass}`}
           onClick={hideModal}
         />
       </div>

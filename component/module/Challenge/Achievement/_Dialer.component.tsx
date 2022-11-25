@@ -1,14 +1,15 @@
+import { forwardRef } from "react";
 import Image from "next/image";
-import { forwardRef, useState } from "react";
 import DatePicker from "react-datepicker";
-import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
 import { faCalendarDay } from "@fortawesome/pro-light-svg-icons";
 import { format, isAfter, isToday } from "date-fns";
-import CalendarTray from "../../../../../theme/calendar/calendarTray.component";
-import Icon from "../../../../atoms/Icon/Icon.component";
-import { RECIPE_CATEGORY_COLOR } from "../../../../../data/Recipe";
-import { setChallengeDate } from "../../../../../redux/slices/Challenge.slice";
-import styles from "./main.module.scss";
+
+import Icon from "../../../atoms/Icon/Icon.component";
+import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
+import { setChallengeDate } from "../../../../redux/slices/Challenge.slice";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+
+import styles from "./_Dialer.module.scss";
 import "react-datepicker/dist/react-datepicker.css";
 
 interface MainInterface {

@@ -1,10 +1,10 @@
 // @ts-nocheck
 import { useEffect } from "react";
 
-import styles from "../../component/module/Planner/Challenge/Challenge.module.scss";
-import foodStyles from "../../component/module/Planner/Challenge/food/food.module.scss";
-import mainStyles from "../../component/module/Planner/Challenge/main/main.module.scss";
-import graphStyles from "../../component/module/Planner/Challenge/graph-detail-container/graph-detail-container.module.scss";
+import styles from "../../component/module/Challenge/Achievement/index.module.scss";
+import foodStyles from "../../component/module/Challenge/Achievement/_RecipeCategory.module.scss";
+import mainStyles from "../../component/module/Challenge/Achievement/_Dialer.module.scss";
+import graphStyles from "../../component/module/Challenge/Achievement/_Streakbar.module.scss";
 
 const useChallengeLayout = () => {
   useEffect(() => {
@@ -147,8 +147,8 @@ const useChallengeLayout = () => {
         challengeCircleBox.clientWidth * insideWidth + "px";
       challengeCircleGraphData.style.marginTop =
         challengeCircleBox.clientWidth * 0.035 + "px";
-      challengeCircleGraphData.style.marginBottom =
-        challengeCircleBox.clientWidth * 0.09 + "px";
+      // challengeCircleGraphData.style.marginBottom =
+      //   challengeCircleBox.clientWidth * 0.09 + "px";
 
       challengeCircleNoOfDaysList.forEach((challengeCircleNoOfDays) => {
         challengeCircleNoOfDays.style.fontSize =

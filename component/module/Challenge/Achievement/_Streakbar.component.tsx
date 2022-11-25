@@ -1,7 +1,9 @@
-import styles from "./graph-detail-container.module.scss";
-import HSBar from "react-horizontal-stacked-bar-chart";
-import { RECIPE_CATEGORY_COLOR } from "../../../../../data/Recipe";
 import { useMemo } from "react";
+import HSBar from "react-horizontal-stacked-bar-chart";
+
+import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
+
+import styles from "./_Streakbar.module.scss";
 
 interface GraphDetailContainerInterface {
   activities?: any[];

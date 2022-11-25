@@ -1,9 +1,10 @@
-import styles from "./food.module.scss";
 import { useQuery } from "@apollo/client";
-import { RECIPE_CATEGORY_COLOR } from "../../../../../data/Recipe";
-import { GET_BLEND_CATEGORY } from "../../../../../graphql/Recipe";
+import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
+import { GET_BLEND_CATEGORY } from "../../../../graphql/Recipe";
 
-function Food() {
+import styles from "./_RecipeCategory.module.scss";
+
+function RecipeCategory() {
   const { data } = useQuery(GET_BLEND_CATEGORY);
   return (
     <div className={styles.challenge_circle_food}>
@@ -12,7 +13,7 @@ function Food() {
           <div
             className={styles.challenge_circle_food_color_represent}
             style={{ backgroundColor: RECIPE_CATEGORY_COLOR[category.label] }}
-          ></div>
+          />
           <p className={styles.challenge_circle_food_name}>{category.label}</p>
         </div>
       ))}
@@ -20,4 +21,4 @@ function Food() {
   );
 }
 
-export default Food;
+export default RecipeCategory;

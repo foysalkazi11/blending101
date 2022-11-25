@@ -1,0 +1,66 @@
+@import "../../../styles/variables";
+
+.statistics {
+  width: 100%;
+  height: 100%;
+
+  &__body {
+    padding: 3rem 2rem;
+    background-color: white;
+    border-radius: 10px;
+  }
+
+  &__graph {
+    margin-bottom: 2rem;
+    h3 {
+      font-size: 1.8rem;
+      font-weight: 400;
+      color: $secondaryColor;
+    }
+    h5 {
+      font-size: 1.4rem;
+      font-weight: 400;
+      margin-top: 1rem;
+    }
+  }
+
+  &__timeframes {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    button {
+      background-color: transparent;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 25px;
+      margin-right: 1rem;
+      cursor: pointer;
+    }
+  }
+
+  &__legend {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.4rem;
+    margin-top: 6px;
+    margin-bottom: 1rem;
+    span {
+      &:not(:last-child) {
+        margin-right: 15px;
+      }
+    }
+    i {
+      display: inline-block;
+      padding: 4px 8px;
+      background-color: #b9eb84;
+      border-radius: 5px;
+      font-weight: 600;
+      margin-left: 2px;
+    }
+  }
+}
+
+#statistics__progress {
+  border-radius: 10px;
+}

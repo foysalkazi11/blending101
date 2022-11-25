@@ -6,29 +6,30 @@ import { faCalendarAlt } from "@fortawesome/pro-light-svg-icons";
 import { faCalendarDay } from "@fortawesome/pro-regular-svg-icons";
 import { format } from "date-fns";
 
-import Pagination from "../../../molecules/Pagination/ServerPagination.component";
-import Combobox from "../../../organisms/Forms/Combobox.component";
-import Searchbox from "../../../molecules/Searchbox/Searchbox.component";
-import ToggleCard from "../../../../theme/toggleCard/toggleCard.component";
-import IconHeading from "../../../../theme/iconHeading/iconHeading.component";
-import CalendarTray from "../../../../theme/calendar/calendarTray.component";
-import SkeletonElement from "../../../../theme/skeletons/SkeletonElement";
-import RecipeCard from "../../../molecules/Card/RecipeCard.component";
-import Icon from "../../../atoms/Icon/Icon.component";
+import Pagination from "../../molecules/Pagination/ServerPagination.component";
+import Combobox from "../../organisms/Forms/Combobox.component";
+import Searchbox from "../../molecules/Searchbox/Searchbox.component";
+import ToggleCard from "../../../theme/toggleCard/toggleCard.component";
+import IconHeading from "../../../theme/iconHeading/iconHeading.component";
+import CalendarTray from "../../../theme/calendar/calendarTray.component";
+import SkeletonElement from "../../../theme/skeletons/SkeletonElement";
+import RecipeCard from "../../molecules/Card/RecipeCard.component";
+import Icon from "../../atoms/Icon/Icon.component";
 
-import { useAppSelector } from "../../../../redux/hooks";
 import {
   ADD_RECIPE_TO_PLANNER,
   GET_INGREDIENTS_BY_RECIPE,
   GET_QUEUED_RECIPES_FOR_PLANNER,
   GET_RECIPES_FOR_PLANNER,
-} from "../../../../graphql/Planner";
-import { GET_BLEND_CATEGORY } from "../../../../graphql/Recipe";
-import { addPlanner } from "../../../../redux/slices/Planner.slice";
-import Publish from "../../../../helpers/Publish";
+} from "../../../graphql/Planner";
+import { GET_BLEND_CATEGORY } from "../../../graphql/Recipe";
+import { useAppSelector } from "../../../redux/hooks";
+import { addPlanner } from "../../../redux/slices/Planner.slice";
+import { setRecipeInfo } from "../../../redux/slices/Challenge.slice";
 
-import styles from "./PlannerQueue.module.scss";
-import { setRecipeInfo } from "../../../../redux/slices/Challenge.slice";
+import Publish from "../../../helpers/Publish";
+
+import styles from "./Queue.module.scss";
 
 interface PlannerPanelProps {
   isUpload: boolean;

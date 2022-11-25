@@ -18,29 +18,29 @@ import {
 } from "@fortawesome/pro-light-svg-icons";
 import DatePicker from "react-datepicker";
 
-import IconHeading from "../../../../theme/iconHeading/iconHeading.component";
-import SplitImageCard from "../../../../theme/card/splitImageCard/splitImageCard.component";
+import IconHeading from "../../../theme/iconHeading/iconHeading.component";
+import SplitImageCard from "../../../theme/card/splitImageCard/splitImageCard.component";
 
-import IconButton from "../../../atoms/Button/IconButton.component";
-import Icon from "../../../atoms/Icon/Icon.component";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import IconButton from "../../atoms/Button/IconButton.component";
+import Icon from "../../atoms/Icon/Icon.component";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
   IPostIngredient,
   setChallengePost,
   setShowPostForm,
-} from "../../../../redux/slices/Challenge.slice";
-import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
-import { setShowPanel } from "../../../../redux/slices/Ui.slice";
+} from "../../../redux/slices/Challenge.slice";
+import { RECIPE_CATEGORY_COLOR } from "../../../data/Recipe";
+import { setShowPanel } from "../../../redux/slices/Ui.slice";
 
-import styles from "./ChallengeQueue.module.scss";
-import useHideOnClickOutside from "../../../../hooks/useHideOnClickOutside";
+import styles from "./Post.module.scss";
+import useHideOnClickOutside from "../../../hooks/useHideOnClickOutside";
 import { useMutation } from "@apollo/client";
 import {
   COPY_CHALLENGE_POST,
   DELETE_CHALLENGE_POST,
   MOVE_CHALLENGE_POST,
-} from "../../../../graphql/Planner";
-import Publish from "../../../../helpers/Publish";
+} from "../../../graphql/Planner";
+import Publish from "../../../helpers/Publish";
 
 interface IPost {
   _id: string;

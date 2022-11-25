@@ -7,31 +7,31 @@ import {
 } from "@fortawesome/pro-solid-svg-icons";
 import { FormProvider, useForm } from "react-hook-form";
 
-import { GET_INGREDIENTS } from "../../../../graphql/Ingredients";
-import { GET_BLEND_CATEGORY } from "../../../../graphql/Recipe";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import IconButton from "../../../atoms/Button/IconButton.component";
-import Combobox from "../../../organisms/Forms/Combobox.component";
-import NumberField from "../../../organisms/Forms/NumberField.component";
-import Textarea from "../../../organisms/Forms/Textarea.component";
-import Textfield from "../../../organisms/Forms/Textfield.component";
-import Upload from "../../../organisms/Upload/Upload.component";
-import styles from "./UploadCard.module.scss";
+import { GET_INGREDIENTS } from "../../../graphql/Ingredients";
+import { GET_BLEND_CATEGORY } from "../../../graphql/Recipe";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import IconButton from "../../atoms/Button/IconButton.component";
+import Combobox from "../../organisms/Forms/Combobox.component";
+import NumberField from "../../organisms/Forms/NumberField.component";
+import Textarea from "../../organisms/Forms/Textarea.component";
+import Textfield from "../../organisms/Forms/Textfield.component";
+import Upload from "../../organisms/Upload/Upload.component";
+import styles from "./Upload.module.scss";
 import {
   CREATE_CHALLENGE_POST,
   EDIT_CHALLENGE_POST,
   GET_30DAYS_CHALLENGE,
-} from "../../../../graphql/Planner";
-import Publish from "../../../../helpers/Publish";
-import { ActionButton } from "../../../atoms/Button/Button.component";
+} from "../../../graphql/Planner";
+import Publish from "../../../helpers/Publish";
+import { ActionButton } from "../../atoms/Button/Button.component";
 import { format } from "date-fns";
 import {
   addIngredient,
   deleteIngredient,
   setShowPostForm,
   resetForm,
-} from "../../../../redux/slices/Challenge.slice";
-import { setShowPanel } from "../../../../redux/slices/Ui.slice";
+} from "../../../redux/slices/Challenge.slice";
+import { setShowPanel } from "../../../redux/slices/Ui.slice";
 
 const defaultValues = {
   category: "",

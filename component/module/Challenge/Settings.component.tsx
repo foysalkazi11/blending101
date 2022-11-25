@@ -18,12 +18,12 @@ import {
   faTrash,
 } from "@fortawesome/pro-solid-svg-icons";
 
-import ButtonComponent from "../../../../theme/button/button.component";
-import IconButton from "../../../atoms/Button/IconButton.component";
-import Checkbox from "../../../organisms/Forms/Checkbox.component";
-import NumberField from "../../../organisms/Forms/NumberField.component";
-import Textarea from "../../../organisms/Forms/Textarea.component";
-import Textfield from "../../../organisms/Forms/Textfield.component";
+import ButtonComponent from "../../../theme/button/button.component";
+import IconButton from "../../atoms/Button/IconButton.component";
+import Checkbox from "../../organisms/Forms/Checkbox.component";
+import NumberField from "../../organisms/Forms/NumberField.component";
+import Textarea from "../../organisms/Forms/Textarea.component";
+import Textfield from "../../organisms/Forms/Textfield.component";
 
 import {
   ACTIVATE_CHALLENGE,
@@ -31,9 +31,9 @@ import {
   DELETE_CHALLENGE,
   EDIT_CHALLENGE,
   GET_CHALLENGES,
-} from "../../../../graphql/Planner";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import Publish from "../../../../helpers/Publish";
+} from "../../../graphql/Planner";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import Publish from "../../../helpers/Publish";
 
 import styles from "./Settings.module.scss";
 import {
@@ -44,9 +44,9 @@ import {
   isBefore,
   isPast,
 } from "date-fns";
-import RadioButton from "../../../organisms/Forms/RadioButton.component";
-import { getDateISO, toIsoString } from "../../../../helpers/Date";
-import { setChallengeDate } from "../../../../redux/slices/Challenge.slice";
+import RadioButton from "../../organisms/Forms/RadioButton.component";
+import { getDateISO } from "../../../helpers/Date";
+import { setChallengeDate } from "../../../redux/slices/Challenge.slice";
 
 interface SettingsProps {
   hideSettings: () => void;

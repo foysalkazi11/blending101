@@ -14,7 +14,6 @@ import {
 import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
 import CalendarTray from "../../../../theme/calendar/calendarTray.component";
 
-import styles from "./Plan.module.scss";
 import { useMutation } from "@apollo/client";
 import {
   ADD_RECIPE_TO_PLANNER,
@@ -35,6 +34,8 @@ import { setShowPanel } from "../../../../redux/slices/Ui.slice";
 import { faCartShopping } from "@fortawesome/pro-light-svg-icons";
 import Icon from "../../../atoms/Icon/Icon.component";
 
+import styles from "./_DayPlan.module.scss";
+
 interface PlanProps {
   plannerId?: string;
   day?: string;
@@ -45,7 +46,7 @@ interface PlanProps {
   recipeList?: IPlannerRecipe[];
 }
 
-const Plan = (props: PlanProps) => {
+const DayPlan = (props: PlanProps) => {
   const { plannerId, day, date, indexValue, recipeList } = props;
 
   const dispatch = useAppDispatch();
@@ -128,7 +129,7 @@ const Plan = (props: PlanProps) => {
       </div>
       <div className={styles.plan__recipeDiv}>
         {recipeList?.map((recipe) => (
-          <PlanRecipe
+          <PlanItem
             key={recipe?._id}
             recipe={recipe}
             onDelete={deleteHandler}
@@ -141,13 +142,15 @@ const Plan = (props: PlanProps) => {
   );
 };
 
+export default DayPlan;
+
 interface RecipeColorIndicatorInterface {
   recipe: IPlannerRecipe;
   onCopy?: any;
   onMove?: any;
   onDelete?: any;
 }
-const PlanRecipe = ({
+const PlanItem = ({
   recipe,
   onCopy,
   onMove,
@@ -161,8 +164,6 @@ const PlanRecipe = ({
     rxScore,
     ingredients,
   } = recipe;
-
-  console.log(ingredients);
   const [showMenu, setShowMenu] = useState(false);
   const [showCalender, setShowCalender] = useState<"move" | "copy" | "">("");
 
@@ -288,5 +289,3 @@ const PlanRecipe = ({
     </div>
   );
 };
-
-export default Plan;

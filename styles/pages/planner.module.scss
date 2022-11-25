@@ -6,13 +6,8 @@
 
 $sharedWidth: 25%;
 $sharedTopMargin: 2%;
+$sharedColor: #fd5109;
 
-.windowContainer {
-  background-color: #f8f8f8;
-  display: flex;
-  flex-direction: column;
-  // padding: 5% 0px;
-}
 .toolbox {
   background-color: white;
   padding: 0px 20px;
@@ -28,83 +23,6 @@ $sharedTopMargin: 2%;
     margin-top: 30px;
   }
 }
-// .mainContainer {
-//   // min-height: 80vh;
-//   max-width: 1800px;
-//   margin: auto;
-//   padding: 36px 16px;
-//   // &__tray {
-//   //   min-height: 400px;
-//   //   position: relative;
-//   // }
-
-//   &__pageTitle {
-//     font-weight: 600;
-//     margin-bottom: 16px;
-//   }
-
-//   &__nonHeadingContainer {
-//     display: flex;
-
-//     @include responsive(0px) {
-//       flex-direction: column;
-//     }
-
-//     @include responsive(1000px) {
-//       flex-direction: row;
-//     }
-
-//     &__leftTray {
-//       margin-right: auto;
-
-//       // background-color: yellow;
-//       transition: all 0.5s ease-in;
-
-//       @include responsive(0px) {
-//         width: 100%;
-//       }
-
-//       @include responsive(1000px) {
-//         min-width: $sharedWidth;
-//         max-width: $sharedWidth;
-//       }
-//     }
-
-//     &__centerTray {
-//       min-width: $sharedWidth;
-
-//       @include responsive(0) {
-//         width: 100%;
-//         margin-top: $sharedTopMargin;
-//       }
-
-//       @include responsive(1000px) {
-//         min-width: max-content;
-//         margin: 0px 30px;
-//         max-width: calc(#{$sharedWidth} * 2);
-//         margin-top: 0px;
-//       }
-//     }
-
-//     &__rightTray {
-//       margin-left: auto;
-
-//       @include responsive(0px) {
-//         width: 100%;
-//         margin-top: $sharedTopMargin;
-//       }
-
-//       @include responsive(1000px) {
-//         width: 100%;
-//         min-width: $sharedWidth;
-//         max-width: $sharedWidth;
-//         margin-top: 0px;
-//       }
-//     }
-//   }
-// }
-
-$sharedColor: #fd5109;
 
 .headingDiv {
   display: flex;
@@ -134,36 +52,135 @@ $sharedColor: #fd5109;
   }
 }
 
-// .mainContainer {
-//   position: relative;
-
-//   &__contentDiv {
-//     background-color: white;
-//     padding: 0px 20px;
-
-//     &__innerDiv {
-//       display: flex;
-//       justify-content: space-between;
-//       padding: 10px 0px;
-
-//       // &__left,
-//       // &__right {
-//       //   width: 50%;
-//       //   padding: 0px 10px;
-//       // }
-
-//       // &__left {
-//       //   border-right: 1.8px solid #eeeeee;
-//       // }
-
-//       &__challengeDiv {
-//         display: flex;
-//         justify-content: center;
-//         align-items: center;
-//         padding: 20px;
-//         width: 90%;
-//         margin: auto;
-//       }
-//     }
-//   }
-// }
+//Shared Page
+.shared {
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 160rem;
+    margin: 1.5rem auto;
+    img {
+      height: 5rem;
+    }
+    button {
+      border: none;
+      background-color: transparent;
+      color: #707070;
+      font-family: "Poppins", sans-serif;
+      font-size: 2rem;
+      padding: 10px 20px;
+      cursor: pointer;
+      &:not(:last-child) {
+        margin-right: 30px;
+      }
+      &:last-child {
+        background-color: #7cbc39;
+        border-radius: 28px;
+        color: #fefefe;
+        font-weight: 600;
+      }
+    }
+  }
+  &__main {
+    max-width: 160rem;
+    margin: 2rem auto -17rem;
+    h1 {
+      font-size: 4rem;
+      color: #323232;
+      font-weight: 600;
+      margin-top: 7rem;
+    }
+    p {
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      color: #626262;
+      font-size: 2.8rem;
+      font-weight: 200;
+    }
+    button {
+      border: none;
+      background-color: #fe5717;
+      border-radius: 4rem;
+      color: #fefefe;
+      font-weight: 600;
+      font-family: "Poppins", sans-serif;
+      font-size: 2.4rem;
+      padding: 1rem 5rem;
+      cursor: pointer;
+      margin: auto;
+      display: block;
+    }
+    h3 {
+      font-size: 2.4rem;
+      text-align: center;
+      margin-top: 2rem;
+      margin-bottom: 3rem;
+    }
+    &_mockup {
+      position: relative;
+      top: 80px;
+      transform: rotate(22deg);
+      overflow: hidden;
+      width: 40rem;
+      z-index: -1;
+    }
+  }
+  &__preview {
+    padding: 10px;
+    border: 1px solid #dcdbdb;
+    position: relative;
+    z-index: 200;
+    img {
+      width: 100%;
+      max-height: 16rem;
+      object-fit: cover;
+      overflow: hidden;
+    }
+    & > div {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 5px;
+    }
+    h6 {
+      color: #303030;
+      font-size: 1.6rem;
+      font-weight: 600;
+      text-align: center;
+      margin: 1rem 0 1.3rem;
+    }
+    span {
+      display: flex;
+      font-size: 1.4rem;
+    }
+    i {
+      margin-left: 5px;
+      font-weight: 600;
+      color: #fd5109;
+    }
+  }
+  &__footer {
+    position: relative;
+    width: 100%;
+    font-family: "Poppins", sans-serif;
+    &_bg {
+      background-color: #fafbf9;
+      height: 10rem;
+    }
+    &_social {
+      position: absolute;
+      top: 70%;
+      left: 50%;
+      transform: translateX(-50%);
+      p {
+        text-align: center;
+        margin-top: 2rem;
+      }
+    }
+    & > img {
+      width: 100%;
+      background-size: 100%;
+      background-repeat: no-repeat;
+    }
+  }
+}
