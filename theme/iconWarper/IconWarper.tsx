@@ -7,6 +7,11 @@ interface IconProps {
   handleClick?: (e: React.SyntheticEvent) => void;
   hover?: "bgPrimary" | "bgSecondary" | "bgGray" | "bgSlightGray" | "none";
   defaultBg?: "gray" | "primary" | "secondary" | "slightGray" | "none";
+  iconColor?:
+    | "iconColorPrimary"
+    | "iconColorSecondary"
+    | "iconColorWhite"
+    | "iconColorDefault";
 }
 
 const IconWarper = ({
@@ -15,10 +20,11 @@ const IconWarper = ({
   handleClick = () => {},
   hover = "bgPrimary",
   defaultBg = "none",
+  iconColor = "iconColorDefault",
 }: IconProps) => {
   return (
     <div
-      className={`${styles.iconContainer} hvr-pop ${styles[defaultBg]} ${styles[hover]}`}
+      className={`${styles.iconContainer} ${styles[iconColor]} ${styles[defaultBg]} ${styles[hover]}  hvr-pop`}
       style={style}
       onClick={handleClick}
     >

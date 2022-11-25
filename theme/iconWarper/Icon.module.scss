@@ -10,7 +10,7 @@
   // background-color: #c9c9c9;
   cursor: pointer;
   transition: all 0.3s linear;
-  color: #646464;
+  //color: #646464;
 }
 
 .gray {
@@ -21,12 +21,12 @@
 }
 
 .primary {
-  background-color: $primaryColor;
   color: $white;
+  background-color: $primaryColor;
 }
 .secondary {
-  background-color: $secondaryColor;
   color: $white;
+  background-color: $secondaryColor;
 }
 
 .bgPrimary {
@@ -35,9 +35,9 @@
     background-color: $primaryColor;
   }
 }
-.bgSecondery {
-  color: $white;
+.bgSecondary {
   &:hover {
+    color: $white;
     background-color: $secondaryColor;
   }
 }
@@ -50,4 +50,16 @@
   &:hover {
     background-color: #d6d6d6;
   }
+}
+.iconColorPrimary {
+  color: $primaryColor;
+}
+.iconColorSecondary {
+  color: $secondaryColor;
+}
+.iconColorWhite {
+  color: $white;
+}
+.iconColorDefault {
+  color: #646464;
 }

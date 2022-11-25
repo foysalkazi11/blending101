@@ -28,9 +28,8 @@ const ViewAll = () => {
   const params = router.query?.viewAll as string[];
 
   const { filters } = useAppSelector((state) => state?.filterRecipe);
-  const { blends, ingredients, openFilterTray } = useAppSelector(
-    (state) => state.sideTray,
-  );
+  const { openFilterTray } = useAppSelector((state) => state.sideTray);
+  const { allFilters } = useAppSelector((state) => state.filterRecipe);
 
   const { data } = useQuery(GET_ALL_WIDGET_COLLECTION_DATA, {
     variables: {
@@ -98,16 +97,12 @@ const ViewAll = () => {
           }}
         >
           <DiscoverPageSearch />
-          {blends.length || ingredients.length || filters?.length ? (
-            <SearchtagsComponent />
+          {allFilters.length ? (
+            <SearchtagsComponent allFilters={allFilters} />
           ) : null}
         </div>
-        {blends.length || ingredients.length || filters?.length ? (
-          <FilterPageBottom
-            blends={blends}
-            ingredients={ingredients}
-            filters={filters}
-          />
+        {allFilters.length ? (
+          <FilterPageBottom allFilters={allFilters} />
         ) : (
           <div>
             <div className={classes.head}>

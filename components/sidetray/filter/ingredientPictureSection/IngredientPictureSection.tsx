@@ -5,6 +5,10 @@ import { faMagnifyingGlass } from "@fortawesome/pro-solid-svg-icons";
 import styles from "../filter.module.scss";
 import CheckCircle from "../../../../public/icons/check_circle_black_24dp.svg";
 import SkeletonBlendType from "../../../../theme/skeletons/skeletonBlendType/SkeletonBlendType";
+import {
+  FilterCriteriaOptions,
+  FilterCriteriaValue,
+} from "../../../../redux/slices/filterRecipeSlice";
 
 interface Props {
   searchInput?: string;
@@ -13,8 +17,12 @@ interface Props {
   loading?: boolean;
   searchIngredientData?: any[];
   scrollAreaMaxHeight?: React.CSSProperties;
-  handleIngredientClick?: (item: any, exist: boolean) => void;
-  checkActiveIngredient?: (arg: any) => boolean;
+  checkActiveItem: (id: string) => boolean;
+  handleBlendAndIngredientUpdate: (
+    value?: any | FilterCriteriaValue,
+    present?: boolean,
+    extraInfo?: any | FilterCriteriaValue,
+  ) => void;
 }
 
 const IngredientPictureSection = ({
@@ -23,8 +31,8 @@ const IngredientPictureSection = ({
   setSearchInput = () => {},
   loading = false,
   searchIngredientData = [],
-  handleIngredientClick = () => {},
-  checkActiveIngredient = () => false,
+  checkActiveItem = () => false,
+  handleBlendAndIngredientUpdate = () => {},
   scrollAreaMaxHeight = { maxHeight: "350px" },
 }: Props) => {
   return (
@@ -59,9 +67,16 @@ const IngredientPictureSection = ({
                   key={item?.ingredientName + i}
                   className={styles.item}
                   onClick={() =>
-                    handleIngredientClick(
+                    handleBlendAndIngredientUpdate(
                       item,
-                      checkActiveIngredient(item?._id),
+                      checkActiveItem(item?._id),
+                      {
+                        id: item?._id,
+                        image: item?.featuredImage || "/food/chard.png",
+                        name: item?.ingredientName,
+                        tagLabel: "",
+                        filterCriteria: "includeIngredientIds",
+                      },
                     )
                   }
                 >
@@ -70,7 +85,7 @@ const IngredientPictureSection = ({
                       src={item?.featuredImage || "/food/chard.png"}
                       alt={item?.ingredientName}
                     />
-                    {checkActiveIngredient(item?._id) && (
+                    {checkActiveItem(item?._id) && (
                       <div className={styles.tick}>
                         <CheckCircle className={styles.ticked} />
                       </div>

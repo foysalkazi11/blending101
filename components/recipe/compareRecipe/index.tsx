@@ -36,6 +36,9 @@ import { setLoading } from "../../../redux/slices/utilitySlice";
 import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
 import ShowCollectionModal from "../../showModal/ShowCollectionModal";
 import useChangeCompare from "../../../customHooks/useChangeComaper";
+import imageUploadS3 from "../../utility/imageUploadS3";
+import CREATE_A_RECIPE_BY_USER from "../../../gqlLib/recipes/mutations/createARecipeByUser";
+import EDIT_A_RECIPE from "../../../gqlLib/recipes/mutations/editARecipe";
 
 const compareRecipeResponsiveSettings = {
   ...compareRecipeResponsiveSetting,
@@ -85,6 +88,8 @@ const formulateRecipeResponsiveSetting = (length: number) => {
 };
 
 const CompareRecipe = () => {
+  const [createAndEditRecipeLoading, setCreateAndEditRecipeLoading] =
+    useState(false);
   const [isFormulatePage, setIsFormulatePage] = useState(false);
   const [copyImage, setCopyImage] = useState("");
   const router = useRouter();
@@ -93,10 +98,12 @@ const CompareRecipe = () => {
     "compareList",
     [],
   );
-  const [newlyCreatedRecipe, setNewlyCreatedRecipe] = useLocalStorage(
+  const [newlyCreatedRecipe, setNewlyCreatedRecipe] = useLocalStorage<any>(
     "newlyCreatedRecipe",
     {},
   );
+  const [createNewRecipeByUser] = useMutation(CREATE_A_RECIPE_BY_USER);
+  const [editRecipe] = useMutation(EDIT_A_RECIPE);
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
   const dispatch = useAppDispatch();
   const sliderRef = useRef(null);
@@ -108,6 +115,10 @@ const CompareRecipe = () => {
   const windowSize = useWindowSize();
   const [newRecipe, setNewRecipe] = useState({
     userId: dbUser?._id,
+    name: "",
+    image: [],
+    description: "",
+    recipeBlendCategory: "61cafc34e1f3e015e7936587",
     ingredients: [],
   });
 
@@ -116,6 +127,23 @@ const CompareRecipe = () => {
     (state) => state?.recipe,
   );
   const changeCompare = useChangeCompare();
+
+  const [uploadNewImage, setUploadNewImage] = useState(false);
+
+  const updateData = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | any
+    >,
+  ) => {
+    const target = e?.target;
+    const { name, value } = target;
+    if (target?.files) {
+      setNewRecipe((state) => ({ ...state, image: e?.target?.files }));
+      setUploadNewImage(true);
+    } else {
+      setNewRecipe((state) => ({ ...state, [name]: value }));
+    }
+  };
 
   const findCompareRecipe = (id: string) => {
     return compareRecipeList?.find((item) => item?._id === id);
@@ -298,6 +326,115 @@ const CompareRecipe = () => {
     }
   };
 
+  const handleCreateNewRecipeByUser = async (e: React.SyntheticEvent) => {
+    e.stopPropagation();
+    if (newlyCreatedRecipe?._id) {
+      if (newRecipe?.name && newRecipe?.ingredients?.length) {
+        setCreateAndEditRecipeLoading(true);
+        try {
+          let imgArr = [];
+          if (uploadNewImage && newRecipe?.image?.length) {
+            const url = await imageUploadS3(newRecipe?.image);
+            imgArr?.push({
+              image: `${url}`,
+              default: true,
+            });
+          } else {
+            if (newlyCreatedRecipe?.image?.length) {
+              imgArr?.push({
+                image: `${newlyCreatedRecipe?.image[0]?.image}`,
+                default: newlyCreatedRecipe?.image[0]?.default,
+              });
+            }
+          }
+          await editRecipe({
+            variables: {
+              data: {
+                editId: newlyCreatedRecipe?._id,
+                editableObject: {
+                  name: newRecipe?.name,
+                  image: imgArr,
+                  description: newRecipe?.description,
+                  ingredients: newRecipe?.ingredients?.map(
+                    ({ ingredientId, selectedPortionName, weightInGram }) => ({
+                      ingredientId,
+                      selectedPortionName,
+                      weightInGram,
+                    }),
+                  ),
+                  recipeBlendCategory: newRecipe?.recipeBlendCategory,
+                },
+              },
+            },
+          });
+
+          setCreateAndEditRecipeLoading(false);
+          notification("success", "Recipe updated successfully");
+        } catch (error) {
+          setCreateAndEditRecipeLoading(false);
+          notification("error", "Failed to updated recipe");
+        }
+      } else {
+        notification(
+          "warning",
+          "You can't save recipe without name and ingredients",
+        );
+      }
+    } else {
+      if (newRecipe?.name && newRecipe?.ingredients?.length) {
+        setCreateAndEditRecipeLoading(true);
+        try {
+          let imgArr = [];
+          if (newRecipe?.image?.length) {
+            const url =
+              typeof newRecipe?.image[0] === "string"
+                ? newRecipe?.image[0]
+                : await imageUploadS3(newRecipe?.image);
+            imgArr?.push({
+              image: `${url}`,
+              default: true,
+            });
+          }
+
+          const obj = {
+            userId: dbUser?._id,
+            name: newRecipe?.name,
+            image: imgArr,
+            description: newRecipe?.description,
+            recipeBlendCategory: newRecipe?.recipeBlendCategory,
+            ingredients: newRecipe?.ingredients?.map(
+              ({ ingredientId, selectedPortionName, weightInGram }) => ({
+                ingredientId,
+                selectedPortionName,
+                weightInGram,
+              }),
+            ),
+          };
+          const { data } = await createNewRecipeByUser({
+            variables: {
+              data: obj,
+            },
+          });
+          setCreateAndEditRecipeLoading(false);
+          notification("success", "Recive saved successfully");
+          if (data?.addRecipeFromUser?._id) {
+            setNewlyCreatedRecipe(data?.addRecipeFromUser);
+            setUploadNewImage(false);
+            // router?.push(`/recipe_details/${data?.addRecipeFromUser?._id}`);
+          }
+        } catch (error) {
+          setCreateAndEditRecipeLoading(false);
+          notification("error", "Failed to saved new recipe");
+        }
+      } else {
+        notification(
+          "warning",
+          "You can't save recipe without name and ingredients",
+        );
+      }
+    }
+  };
+
   useEffect(() => {
     if (!loading) {
       if (!compareRecipeList?.length) {
@@ -332,109 +469,107 @@ const CompareRecipe = () => {
         }}
       >
         <div className={styles.mainContentDiv}>
-          <div className={styles.CompareContainer}>
-            {loading ? (
-              <SkeletonComparePage />
-            ) : (
-              <>
-                <SubNav
-                  backAddress="/recipe_discovery"
-                  backIconText="Recipe Discovery"
-                  buttonText={isFormulatePage ? "Compare" : "Formulate"}
-                  showButton={true}
-                  buttonClick={handleCompareButtonClick}
-                  compareAmout={dbUser?.compareLength}
-                  closeCompare={handleEmptyCompareList}
-                />
-                <Carousel moreSetting={responsiveSetting}>
-                  {compareList?.map((recipe, index) => {
-                    return (
-                      <SmallcardComponent
-                        key={index}
-                        text={recipe?.name}
-                        img={recipe?.image[0]?.image}
-                        fnc={handleCompare}
-                        recipe={recipe}
-                        findCompareRecipe={findCompareRecipe}
-                        fucUnCheck={removeCompareRecipe}
-                        compareLength={compareRecipeList.length}
-                        handleRemoveFromCompare={handleRemoveFromCompareList}
-                      />
-                    );
-                  })}
-                </Carousel>
+          {loading ? (
+            <SkeletonComparePage />
+          ) : (
+            <>
+              <SubNav
+                backAddress="/recipe_discovery"
+                backIconText="Recipe Discovery"
+                buttonText={isFormulatePage ? "Compare" : "Formulate"}
+                showButton={true}
+                buttonClick={handleCompareButtonClick}
+                compareAmout={dbUser?.compareLength}
+                closeCompare={handleEmptyCompareList}
+              />
+              <Carousel moreSetting={responsiveSetting}>
+                {compareList?.map((recipe, index) => {
+                  return (
+                    <SmallcardComponent
+                      key={index}
+                      text={recipe?.name}
+                      img={recipe?.image[0]?.image}
+                      fnc={handleCompare}
+                      recipe={recipe}
+                      findCompareRecipe={findCompareRecipe}
+                      fucUnCheck={removeCompareRecipe}
+                      compareLength={compareRecipeList.length}
+                      handleRemoveFromCompare={handleRemoveFromCompareList}
+                    />
+                  );
+                })}
+              </Carousel>
 
-                <div className={styles.compareRecipeContainer}>
-                  {isFormulatePage ? (
-                    <DragDropContext onDragEnd={onDragEnd}>
-                      <div className={styles.comparePageContainer}>
-                        <div className={styles.firstColumn}>
-                          <CreateNewRecipe
-                            newRecipe={newRecipe}
-                            setNewRecipe={setNewRecipe}
-                            setNewlyCreatedRecipe={setNewlyCreatedRecipe}
-                            newlyCreatedRecipe={newlyCreatedRecipe}
-                            copyImage={copyImage}
-                          />
-                        </div>
-
-                        <div
-                          className={styles.secondColumn}
-                          style={{
-                            ...responsiveColumn(),
-                          }}
-                        >
-                          <Slider
-                            {...formulateRecipeResponsiveSetting(
-                              compareRecipeList?.length,
-                            )}
-                            ref={sliderRef}
-                          >
-                            {compareRecipeList?.map((recipe, index) => {
-                              return (
-                                <RecipeDetails
-                                  key={index}
-                                  recipe={recipe}
-                                  removeCompareRecipe={removeCompareRecipe}
-                                  dragAndDrop={true}
-                                  id={recipe?._id}
-                                  addItem={addIngredient}
-                                  compareRecipeList={compareRecipeList}
-                                  setcompareRecipeList={setCompareRecipeList}
-                                  setOpenCollectionModal={
-                                    setOpenCollectionModal
-                                  }
-                                  setCopyImage={setCopyImage}
-                                />
-                              );
-                            })}
-                          </Slider>
-                        </div>
+              <div className={styles.compareRecipeContainer}>
+                {isFormulatePage ? (
+                  <DragDropContext onDragEnd={onDragEnd}>
+                    <div className={styles.comparePageContainer}>
+                      <div className={styles.firstColumn}>
+                        <CreateNewRecipe
+                          newRecipe={newRecipe}
+                          setNewRecipe={setNewRecipe}
+                          setNewlyCreatedRecipe={setNewlyCreatedRecipe}
+                          newlyCreatedRecipe={newlyCreatedRecipe}
+                          copyImage={copyImage}
+                          updateData={updateData}
+                          handleCreateNewRecipe={handleCreateNewRecipeByUser}
+                          closeCreateNewRecipeInterface={() =>
+                            setIsFormulatePage(false)
+                          }
+                        />
                       </div>
-                    </DragDropContext>
-                  ) : (
-                    <Slider
-                      {...compareRecipeResponsiveSettings}
-                      ref={sliderRef}
-                    >
-                      {compareRecipeList?.map((recipe, index) => {
-                        return (
-                          <RecipeDetails
-                            key={index}
-                            recipe={recipe}
-                            removeCompareRecipe={removeCompareRecipe}
-                            compareRecipeList={compareRecipeList}
-                            setcompareRecipeList={setCompareRecipeList}
-                            setOpenCollectionModal={setOpenCollectionModal}
-                          />
-                        );
-                      })}
-                    </Slider>
-                  )}
-                </div>
-              </>
-            )}
-          </div>
+
+                      <div
+                        className={styles.secondColumn}
+                        style={{
+                          ...responsiveColumn(),
+                        }}
+                      >
+                        <Slider
+                          {...formulateRecipeResponsiveSetting(
+                            compareRecipeList?.length,
+                          )}
+                          ref={sliderRef}
+                        >
+                          {compareRecipeList?.map((recipe, index) => {
+                            return (
+                              <RecipeDetails
+                                key={index}
+                                recipe={recipe}
+                                removeCompareRecipe={removeCompareRecipe}
+                                dragAndDrop={true}
+                                id={recipe?._id}
+                                addItem={addIngredient}
+                                compareRecipeList={compareRecipeList}
+                                setcompareRecipeList={setCompareRecipeList}
+                                setOpenCollectionModal={setOpenCollectionModal}
+                                setCopyImage={setCopyImage}
+                              />
+                            );
+                          })}
+                        </Slider>
+                      </div>
+                    </div>
+                  </DragDropContext>
+                ) : (
+                  <Slider {...compareRecipeResponsiveSettings} ref={sliderRef}>
+                    {compareRecipeList?.map((recipe, index) => {
+                      return (
+                        <RecipeDetails
+                          key={index}
+                          recipe={recipe}
+                          removeCompareRecipe={removeCompareRecipe}
+                          compareRecipeList={compareRecipeList}
+                          setcompareRecipeList={setCompareRecipeList}
+                          setOpenCollectionModal={setOpenCollectionModal}
+                        />
+                      );
+                    })}
+                  </Slider>
+                )}
+              </div>
+            </>
+          )}
         </div>
         <FooterRecipeFilter />
       </AContainer>

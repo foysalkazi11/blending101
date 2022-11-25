@@ -187,7 +187,7 @@ const IngredientSection = (props) => {
                                     elem?.portions[0]?.measurement ||
                                     "cup"} */}
                                   {elem.selectedPortion?.name ||
-                                    elem?.portions[0]?.measurement ||
+                                    elem?.portions?.[0]?.measurement ||
                                     "cup"}
                                   &nbsp;
                                 </span>
@@ -289,7 +289,7 @@ const IngredientSection = (props) => {
                                       resetIngredient = {
                                         units:
                                           value?.measurement ||
-                                          elem?.portions[0]?.measurement ||
+                                          elem?.portions?.[0]?.measurement ||
                                           "cup",
                                         quantity: 1,
                                         preparation: 0,
