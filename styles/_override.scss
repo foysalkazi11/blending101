@@ -68,3 +68,13 @@
 //   border-left-color: #ccc !important;
 //   right: 1em !important;
 // }
+
+//! ----------- CSS for Simple Screenshot Feedback ----------- !//
+
+div[data-html2canvas-ignore] {
+  font-family: $font;
+  & img {
+    filter: brightness(0) saturate(100%) invert(43%) sepia(23%) saturate(7411%)
+      hue-rotate(353deg) brightness(97%) contrast(107%) !important;
+  }
+}

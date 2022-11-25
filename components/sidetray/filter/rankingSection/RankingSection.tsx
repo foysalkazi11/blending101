@@ -4,6 +4,10 @@ import Linearcomponent from "../../../../theme/linearProgress/LinearProgress.com
 import IngredientPanelSkeleton from "../../../../theme/skeletons/ingredientPanelSleketon/IngredientPanelSkeleton";
 import { ingredientState, List } from "../ingredients/Ingredients.component";
 import styles from "../filter.module.scss";
+import {
+  FilterCriteriaOptions,
+  FilterCriteriaValue,
+} from "../../../../redux/slices/filterRecipeSlice";
 
 interface Props {
   ascendingDescending?: boolean;
@@ -13,8 +17,12 @@ interface Props {
   rankingDropDownState?: string;
   setRankingDropDownState?: Dispatch<SetStateAction<string>>;
   scrollAreaMaxHeight?: React.CSSProperties;
-  handleIngredientClick?: (item: any, exist: boolean) => void;
-  checkActiveIngredient?: (arg: any) => boolean;
+  checkActiveItem: (id: string) => boolean;
+  handleBlendAndIngredientUpdate: (
+    value?: any | FilterCriteriaValue,
+    present?: boolean,
+    extraInfo?: any | FilterCriteriaValue,
+  ) => void;
   nutritionLoading?: boolean;
   arrayOrderState?: any[];
   allIngredients?: any[];
@@ -27,13 +35,22 @@ const RankingSection = ({
   setList = () => {},
   setRankingDropDownState = () => {},
   setascendingDescending = () => {},
-  handleIngredientClick = () => {},
-  checkActiveIngredient = () => false,
+  checkActiveItem = () => false,
+  handleBlendAndIngredientUpdate = () => {},
   scrollAreaMaxHeight = { maxHeight: "350px" },
   nutritionLoading = false,
   arrayOrderState = [],
   allIngredients = [],
 }: Props) => {
+  const handleIngredientClick = (item) => {
+    handleBlendAndIngredientUpdate(item, checkActiveItem(item?._id), {
+      id: item?._id,
+      image: item?.featuredImage || "/food/chard.png",
+      name: item?.ingredientName,
+      tagLabel: "",
+      filterCriteria: "includeIngredientIds",
+    });
+  };
   return (
     <div className={styles.rankings}>
       <CalciumSearchElem
@@ -69,13 +86,12 @@ const RankingSection = ({
                       : arrayOrderState[arrayOrderState?.length - 1]?.value
                   }
                   checkbox={true}
-                  checkedState={checkActiveIngredient(ingredientId)}
+                  checkedState={checkActiveItem(ingredientId)}
                   handleOnChange={() =>
                     handleIngredientClick(
                       allIngredients?.find(
                         (item) => item?._id === ingredientId,
                       ) || {},
-                      checkActiveIngredient(ingredientId),
                     )
                   }
                   portion={portion}

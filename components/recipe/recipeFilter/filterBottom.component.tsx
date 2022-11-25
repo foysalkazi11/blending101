@@ -9,12 +9,29 @@ import { setLoading } from "../../../redux/slices/utilitySlice";
 import useLocalStorage from "../../../customHooks/useLocalStorage";
 import ShowCollectionModal from "../../showModal/ShowCollectionModal";
 import { setAllFilterRecipe } from "../../../redux/slices/recipeSlice";
+import FILTER_RECIPE from "../../../gqlLib/recipes/queries/filterRecipe";
+import {
+  FilterCriteriaValue,
+  FilterCriteriaOptions,
+  resetAllFilters,
+} from "../../../redux/slices/filterRecipeSlice";
+import IconWarper from "../../../theme/iconWarper/IconWarper";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChartTreeMap,
+  faShareNodes,
+  faXmark,
+} from "@fortawesome/pro-regular-svg-icons";
+import SkeletonCollectionRecipe from "../../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollectionRecipe";
 
-function FilterPageBottom({ blends, ingredients, filters }) {
-  const [getRecipesByBlendAndIngredients, { data, loading }] = useLazyQuery(
-    GET_RECIPES_BY_BLEND_AND_INGREDIENTS,
-    { fetchPolicy: "network-only" },
-  );
+interface Props {
+  allFilters: FilterCriteriaValue[];
+}
+
+function FilterPageBottom({ allFilters = [] }: Props) {
+  const [filterRecipe, { data, loading }] = useLazyQuery(FILTER_RECIPE, {
+    fetchPolicy: "network-only",
+  });
   const { dbUser } = useAppSelector((state) => state?.user);
   const { allFilterRecipe } = useAppSelector((state) => state?.recipe);
   const dispatch = useAppDispatch();
@@ -25,30 +42,136 @@ function FilterPageBottom({ blends, ingredients, filters }) {
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
 
   const fetchGetRecipesByBlendAndIngredients = async () => {
-    let arr = [];
-    blends?.forEach((blend) => {
-      arr?.push(`${blend?.id}`);
-    });
+    let blendTypesArr: string[] = [];
     let ingredientIds: string[] = [];
-    ingredients?.forEach((blend) => {
-      ingredientIds?.push(blend?.id);
+    let nutrientFiltersMap = [];
+    let nutrientMatrixMap = [];
+    allFilters.forEach((filter) => {
+      if (filter.filterCriteria === "blendTypes") {
+        blendTypesArr.push(filter.id);
+      }
+      if (filter.filterCriteria === "includeIngredientIds") {
+        ingredientIds.push(filter.id);
+      }
+      if (filter.filterCriteria === "nutrientFilters") {
+        const {
+          id,
+          name,
+          //@ts-ignore
+          between,
+          //@ts-ignore
+          category,
+          //@ts-ignore
+          greaterThan,
+          //@ts-ignore
+          lessThan,
+          //@ts-ignore
+          lessThanValue,
+          //@ts-ignore
+          greaterThanValue,
+          //@ts-ignore
+          betweenStartValue,
+          //@ts-ignore
+          betweenEndValue,
+        } = filter;
+        let arrangeValue = {
+          beetween: between,
+          category: category.toLowerCase(),
+          greaterThan,
+          lessThan,
+          nutrientId: id,
+          value: 0,
+          value1: 0,
+          value2: 0,
+        };
+        if (lessThan) {
+          arrangeValue = {
+            ...arrangeValue,
+            value: lessThanValue,
+          };
+        }
+        if (greaterThan) {
+          arrangeValue = {
+            ...arrangeValue,
+            value: greaterThanValue,
+          };
+        }
+        if (between) {
+          arrangeValue = {
+            ...arrangeValue,
+            value1: betweenStartValue,
+            value2: betweenEndValue,
+          };
+        }
+        nutrientFiltersMap.push(arrangeValue);
+      }
+
+      if (filter.filterCriteria === "nutrientMatrix") {
+        const {
+          id,
+          name,
+          //@ts-ignore
+          between,
+          //@ts-ignore
+          greaterThan,
+          //@ts-ignore
+          lessThan,
+          //@ts-ignore
+          lessThanValue,
+          //@ts-ignore
+          greaterThanValue,
+          //@ts-ignore
+          betweenStartValue,
+          //@ts-ignore
+          betweenEndValue,
+        } = filter;
+        let arrangeValue = {
+          matrixName: name.toLowerCase(),
+          beetween: between,
+          greaterThan,
+          lessThan,
+          value: 0,
+          value1: 0,
+          value2: 0,
+        };
+        if (lessThan) {
+          arrangeValue = {
+            ...arrangeValue,
+            value: lessThanValue,
+          };
+        }
+        if (greaterThan) {
+          arrangeValue = {
+            ...arrangeValue,
+            value: greaterThanValue,
+          };
+        }
+        if (between) {
+          arrangeValue = {
+            ...arrangeValue,
+            value1: betweenStartValue,
+            value2: betweenEndValue,
+          };
+        }
+        nutrientMatrixMap.push(arrangeValue);
+      }
     });
-    dispatch(setLoading(true));
+
     try {
-      const { data } = await getRecipesByBlendAndIngredients({
+      const { data } = await filterRecipe({
         variables: {
           data: {
             userId: dbUser?._id,
-            blendTypes: arr,
-            includeIngredientIds: ingredientIds?.length ? ingredientIds : [],
+            blendTypes: blendTypesArr,
+            includeIngredientIds: ingredientIds,
+            nutrientFilters: nutrientFiltersMap,
+            nutrientMatrix: nutrientMatrixMap,
           },
         },
       });
 
-      dispatch(setAllFilterRecipe(data?.getAllRecipesByBlendCategory || []));
-      dispatch(setLoading(false));
+      dispatch(setAllFilterRecipe(data?.filterRecipe || []));
     } catch (error) {
-      dispatch(setLoading(false));
       console.log(error?.message);
     }
   };
@@ -56,38 +179,52 @@ function FilterPageBottom({ blends, ingredients, filters }) {
   useEffect(() => {
     fetchGetRecipesByBlendAndIngredients();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blends, ingredients]);
+  }, [allFilters]);
+
+  if (loading) {
+    return (
+      <div style={{ marginTop: "30px" }}>
+        <SkeletonCollectionRecipe />;
+      </div>
+    );
+  }
 
   return (
     <>
       <div className={styles.mainDiv}>
         <div className={styles.mainDiv__results}>
           <div className={styles.mainDiv__results__heading}>
-            <div className={styles.mainDiv__results__heading__left}>
-              {allFilterRecipe.length} results
+            <div>
+              <p>
+                {allFilterRecipe.length} <span>results</span>
+              </p>
             </div>
-            <div className={styles.mainDiv__results__heading__right}>
-              <div className={styles.mainDiv__results__heading__right__image}>
-                <div>
-                  <Image
-                    src={"/icons/dash-icon.svg"}
-                    alt=""
-                    layout="fill"
-                    objectFit="contain"
-                  />
-                </div>
-              </div>
-              <div className={styles.mainDiv__results__heading__right__image}>
-                <div>
-                  {" "}
-                  <Image
-                    src={"/icons/share-orange.png"}
-                    alt=""
-                    layout="fill"
-                    objectFit="contain"
-                  />
-                </div>
-              </div>
+
+            <div style={{ display: "flex" }}>
+              <IconWarper
+                defaultBg="slightGray"
+                hover="bgPrimary"
+                style={{ width: "28px", height: "28px", marginRight: "10px" }}
+              >
+                <FontAwesomeIcon icon={faChartTreeMap} />
+              </IconWarper>
+              <IconWarper
+                defaultBg="slightGray"
+                hover="bgPrimary"
+                style={{ width: "28px", height: "28px" }}
+              >
+                <FontAwesomeIcon icon={faShareNodes} />
+              </IconWarper>
+            </div>
+            <div>
+              <IconWarper
+                defaultBg="slightGray"
+                hover="bgPrimary"
+                style={{ width: "28px", height: "28px" }}
+                handleClick={() => dispatch(resetAllFilters())}
+              >
+                <FontAwesomeIcon icon={faXmark} />
+              </IconWarper>
             </div>
           </div>
           <div className={styles.mainDiv__results__body}>

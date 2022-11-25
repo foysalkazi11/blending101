@@ -18,6 +18,13 @@ import useToGetARecipe from "../../../customHooks/useToGetARecipe";
 import CHANGE_DEFAULT_VERSION from "../../../gqlLib/versions/mutation/changelDefaultVersion";
 import TrayTag from "../TrayTag";
 import Tooltip from "../../../theme/toolTip/CustomToolTip";
+import PanelHeader from "../../recipe/share/panelHeader/PanelHeader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faRectangleVerticalHistory,
+  faScaleBalanced,
+} from "@fortawesome/pro-regular-svg-icons";
+import { useRouter } from "next/router";
 interface VersionTrayProps {
   showTagByDefaut?: boolean;
   showPanle?: "left" | "right";
@@ -45,7 +52,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   ] = useLazyQuery(GET_A_RECIPE_VERSION_ONLY);
   const [changeDefaultVersion] = useMutation(CHANGE_DEFAULT_VERSION);
   const handleToGetARecipeVersion = useToGetARecipeVersion();
-
+  const router = useRouter();
   const handleGetARecipe = useToGetARecipe();
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
@@ -54,8 +61,8 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     handleGetARecipe(detailsARecipe?._id, dbUser?._id, true);
   };
 
-  // find orginal version of recipe
-  const isOrginalVersion = detailsARecipe?.recipeVersion?.find(
+  // find original version of recipe
+  const isOriginalVersion = detailsARecipe?.recipeVersion?.find(
     (version) => version?.isOriginal,
   );
 
@@ -68,7 +75,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
       const { data } = await changeDefaultVersion({
         variables: {
           recipeId: detailsARecipe?._id,
-          versionId: isDefault ? isOrginalVersion?._id : versionId,
+          versionId: isDefault ? isOriginalVersion?._id : versionId,
         },
       });
       dispatch(
@@ -216,9 +223,27 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     >
       <div className={styles.versionContainer}>
         <div className={styles.header}>
-          <VscVersions fontSize={24} color="#7cbc39" />
-
-          <h3 className={styles.heading}>Version</h3>
+          <div className={styles.headingLeft}>
+            <FontAwesomeIcon
+              icon={faRectangleVerticalHistory}
+              color="#7cbc39"
+            />
+            <h3 className={styles.text}>Recipe versions</h3>
+          </div>
+          <div
+            className={styles.headingRight}
+            onClick={() =>
+              router.push(
+                `/versionCompare/${
+                  detailsARecipe?._id || isOriginalVersion?._id
+                }`,
+              )
+            }
+          >
+            <Tooltip content="Compare versions" direction="left">
+              <FontAwesomeIcon icon={faScaleBalanced} color="#7cbc39" />
+            </Tooltip>
+          </div>
         </div>
         <div className={styles.recipeName}>
           <img
@@ -227,19 +252,19 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           />
           <h3 onClick={funToGetARecipe}>{detailsARecipe?.name}</h3>
           {openVersionTrayFormWhichPage === "edit" ||
-          isOrginalVersion?.isDefault ? (
+          isOriginalVersion?.isDefault ? (
             <Tooltip content="Default" direction="left">
               <span
                 onClick={() =>
-                  !isOrginalVersion?.isDefault &&
+                  !isOriginalVersion?.isDefault &&
                   openVersionTrayFormWhichPage === "edit" &&
                   handleToChangeDefaultVersion(
-                    isOrginalVersion?._id,
-                    isOrginalVersion?.isDefault,
+                    isOriginalVersion?._id,
+                    isOriginalVersion?.isDefault,
                   )
                 }
                 className={`${styles.star} ${
-                  isOrginalVersion?.isDefault ? styles.on : styles.off
+                  isOriginalVersion?.isDefault ? styles.on : styles.off
                 }`}
               >
                 &#9733;
@@ -264,7 +289,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
             ) || []
           }
           deleteItem={deleteRecipeVersion}
-          updateItem={(val) => updateVersionValue(val)}
+          updateItem={updateVersionValue}
           varient="versions"
           loading={newVersionLoading || removeVersionLoading}
           isFromRecipePage={openVersionTrayFormWhichPage}

@@ -1,33 +1,17 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useRef, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import Dropdown from "../../../../theme/dropDown/DropDown.component";
 import SwitchTwoComponent from "../../../../theme/switch/switchTwo.component";
 import styles from "../filter.module.scss";
-import { useLazyQuery } from "@apollo/client";
-import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
-import { setAllIngredients } from "../../../../redux/slices/ingredientsSlice";
 import useGetAllIngredientsDataBasedOnNutrition from "../../../../customHooks/useGetAllIngredientsDataBasedOnNutrition";
 import IngredientPictureSection from "../ingredientPictureSection/IngredientPictureSection";
 import RankingSection from "../rankingSection/RankingSection";
 import { Portion } from "../../../../type/wikiCompareList";
-
-export const categories = [
-  { name: "All", value: "All" },
-  { name: "Leafy", value: "Leafy" },
-  { name: "Berry", value: "Berry" },
-  { name: "Herbal", value: "Herbal" },
-  { name: "Fruity", value: "Fruity" },
-  { name: "Balancer", value: "Balancer" },
-  { name: "Fatty", value: "Fatty" },
-  { name: "Seasoning", value: "Seasoning" },
-  { name: "Flavor", value: "Flavor" },
-  { name: "Rooty", value: "Rooty" },
-  { name: "Flowering", value: "Flowering" },
-  { name: "Liquid", value: "Liquid" },
-  { name: "Tube-Squash", value: "Tube-Squash" },
-];
-
+import {
+  FilterCriteriaOptions,
+  FilterCriteriaValue,
+} from "../../../../redux/slices/filterRecipeSlice";
+import { categories } from "../../../../data/categories";
 export interface ingredientState {
   name: string;
   value: number;
@@ -43,81 +27,56 @@ export interface List {
 
 interface Props {
   scrollAreaMaxHeight?: React.CSSProperties;
-  handleIngredientClick?: (item: any, exist: boolean) => void;
-  checkActiveIngredient?: (arg: any) => boolean;
+  checkActiveIngredient: (id: string) => boolean;
+  handleIngredientClick: (
+    value?: any | FilterCriteriaValue,
+    present?: boolean,
+    extraInfo?: any | FilterCriteriaValue,
+  ) => void;
+  ingredientCategoryData?: any[];
+  ingredientCategoryLoading?: boolean;
 }
 
 export default function FilterbottomComponent({
-  handleIngredientClick = () => {},
   checkActiveIngredient = () => false,
+  handleIngredientClick = () => {},
   scrollAreaMaxHeight = { maxHeight: "350px" },
+  ingredientCategoryData = [],
+  ingredientCategoryLoading = false,
 }: Props) {
   const [toggle, setToggle] = useState(1);
   const [dpd, setDpd] = useState("All");
-  const dispatch = useAppDispatch();
-  const { allIngredients } = useAppSelector((state) => state?.ingredients);
   const [searchIngredientData, setSearchIngredientData] = useState<any[]>([]);
   const [searchInput, setSearchInput] = useState("");
   const isMounted = useRef(false);
-  const [loading, setLoading] = useState(false);
   const [arrayOrderState, setArrayOrderState] = useState([]);
   const [ascendingDescending, setascendingDescending] = useState(true);
   const [list, setList] = useState<Array<List>>([]);
   const [rankingDropDownState, setRankingDropDownState] = useState("");
 
-  const [filterIngredientByCategroyAndClass] = useLazyQuery(
-    FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS,
-  );
-  const { data: IngredientData, loading: nutritionLoading } =
+  const { data: ingredientData, loading: nutritionLoading } =
     useGetAllIngredientsDataBasedOnNutrition(
       rankingDropDownState,
       dpd,
       toggle === 2 ? true : false,
     );
 
-  const fetchFilterIngredientByCategroyAndClass = async () => {
-    setLoading(true);
-    try {
-      const { data } = await filterIngredientByCategroyAndClass({
-        variables: {
-          data: {
-            ingredientCategory: dpd,
-            IngredientClass: 1,
-          },
-        },
-      });
-
-      dispatch(setAllIngredients(data?.filterIngredientByCategoryAndClass));
-      setSearchIngredientData(data?.filterIngredientByCategoryAndClass);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      console.log(error?.message);
-    }
-  };
-
   useEffect(() => {
-    if (!allIngredients?.length) {
-      fetchFilterIngredientByCategroyAndClass();
-    } else {
-      setSearchIngredientData(allIngredients);
+    if (ingredientCategoryData?.length) {
+      setSearchIngredientData(ingredientCategoryData);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [ingredientCategoryData]);
 
   useEffect(() => {
     if (isMounted.current) {
       if (dpd !== "All") {
         setSearchIngredientData(
-          allIngredients?.filter((item) => item?.category === dpd),
+          ingredientCategoryData?.filter((item) => item?.category === dpd),
         );
       } else {
-        if (allIngredients?.length) {
-          setSearchIngredientData(allIngredients);
-        } else {
-          fetchFilterIngredientByCategroyAndClass();
-        }
+        setSearchIngredientData(ingredientCategoryData);
       }
     }
 
@@ -127,9 +86,9 @@ export default function FilterbottomComponent({
   useEffect(() => {
     if (isMounted.current) {
       if (searchInput === "") {
-        setSearchIngredientData(allIngredients);
+        setSearchIngredientData(ingredientCategoryData);
       } else {
-        const filter = allIngredients?.filter((item) =>
+        const filter = ingredientCategoryData?.filter((item) =>
           //@ts-ignore
           item?.ingredientName
             ?.toLowerCase()
@@ -141,6 +100,19 @@ export default function FilterbottomComponent({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchInput]);
+  useEffect(() => {
+    if (isMounted.current) {
+      if (!ingredientData?.getAllIngredientsDataBasedOnNutrition) return;
+      let tempArray = ascendingDescending
+        ? [...ingredientData?.getAllIngredientsDataBasedOnNutrition]
+        : [...ingredientData?.getAllIngredientsDataBasedOnNutrition]?.reverse();
+      setArrayOrderState(tempArray);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    ascendingDescending,
+    ingredientData?.getAllIngredientsDataBasedOnNutrition,
+  ]);
 
   useEffect(() => {
     isMounted.current = true;
@@ -148,14 +120,6 @@ export default function FilterbottomComponent({
       isMounted.current = false;
     };
   }, []);
-
-  useEffect(() => {
-    if (!IngredientData?.getAllIngredientsDataBasedOnNutrition) return;
-    let tempArray = ascendingDescending
-      ? [...IngredientData?.getAllIngredientsDataBasedOnNutrition]
-      : [...IngredientData?.getAllIngredientsDataBasedOnNutrition]?.reverse();
-    setArrayOrderState(tempArray);
-  }, [ascendingDescending, IngredientData]);
 
   return (
     <div className={styles.filter__top}>
@@ -170,16 +134,19 @@ export default function FilterbottomComponent({
         <div className={styles.dropdown}>
           <Dropdown
             value={dpd}
-            listElem={categories}
+            listElem={categories?.map((cat) => ({
+              name: cat.label,
+              value: cat.value,
+            }))}
             handleChange={(e) => setDpd(e?.target?.value)}
           />
         </div>
         {toggle === 1 ? (
           <IngredientPictureSection
-            checkActiveIngredient={checkActiveIngredient}
-            handleIngredientClick={handleIngredientClick}
+            checkActiveItem={checkActiveIngredient}
+            handleBlendAndIngredientUpdate={handleIngredientClick}
             ingredientCategory={dpd}
-            loading={loading}
+            loading={ingredientCategoryLoading}
             searchIngredientData={searchIngredientData}
             searchInput={searchInput}
             setSearchInput={setSearchInput}
@@ -187,11 +154,11 @@ export default function FilterbottomComponent({
           />
         ) : (
           <RankingSection
-            allIngredients={allIngredients}
+            allIngredients={ingredientCategoryData}
             arrayOrderState={arrayOrderState}
             ascendingDescending={ascendingDescending}
-            checkActiveIngredient={checkActiveIngredient}
-            handleIngredientClick={handleIngredientClick}
+            checkActiveItem={checkActiveIngredient}
+            handleBlendAndIngredientUpdate={handleIngredientClick}
             list={list}
             nutritionLoading={nutritionLoading}
             rankingDropDownState={rankingDropDownState}

@@ -13,7 +13,6 @@ const FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS = gql`
       featuredImage
       portions {
         measurement
-        measurement2
         meausermentWeight
         default
       }

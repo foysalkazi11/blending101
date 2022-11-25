@@ -34,6 +34,7 @@ const PanelHeaderCenter = ({
       <Tooltip content="Back" direction="bottom">
         <IconWraper
           handleClick={() => router?.push(backLink)}
+          iconColor="iconColorWhite"
           defaultBg="secondary"
           hover="bgSecondary"
           style={{ width: "28px", height: "28px" }}

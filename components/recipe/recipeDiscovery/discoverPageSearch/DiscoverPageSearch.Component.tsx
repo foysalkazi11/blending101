@@ -7,14 +7,27 @@ import {
 } from "../../../../redux/slices/sideTraySlice";
 import { useRouter } from "next/router";
 import CommonSearchBar from "../../../searchBar/CommonSearchBar";
+import { useLazyQuery } from "@apollo/client";
+import SEARCH_RECIPE from "../../../../gqlLib/recipes/queries/searchRecipe";
+import debounce from "../../../../helperFunc/debounce";
+import notification from "../../../utility/reactToastifyNotification";
 
-const DiscoverPageSearch = () => {
+interface Props {
+  input?: string;
+  handleOnChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const DiscoverPageSearch = ({
+  handleOnChange = () => {},
+  input = "",
+}: Props) => {
   const router = useRouter();
-  const [input, setInput] = useState("");
+
   const { openFilterTray, blends, ingredients } = useAppSelector(
     (state) => state?.sideTray,
   );
   const { dbUser } = useAppSelector((state) => state?.user);
+
   const dispatch = useAppDispatch();
 
   const toggleFilterPanel = () => {
@@ -30,21 +43,10 @@ const DiscoverPageSearch = () => {
     dispatch(setBlendTye([]));
   };
 
-  useEffect(() => {
-    let str: string = input;
-
-    str = [
-      ...blends?.map((item) => `${item?.title}`),
-      ...ingredients?.map((item) => `${item?.title}`),
-    ]?.join(", ");
-    setInput(str);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blends, ingredients]);
-
   return (
     <CommonSearchBar
       input={input}
-      setInput={setInput}
+      handleOnChange={handleOnChange}
       handleSubmitFunc={handleSubmit}
       handleSearchTagCleanFunc={handleSearchTagClean}
       openPanel={toggleFilterPanel}

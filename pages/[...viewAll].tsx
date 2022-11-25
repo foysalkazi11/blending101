@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { faTimes } from "@fortawesome/pro-solid-svg-icons";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
@@ -28,9 +28,8 @@ const ViewAll = () => {
   const params = router.query?.viewAll as string[];
 
   const { filters } = useAppSelector((state) => state?.filterRecipe);
-  const { blends, ingredients, openFilterTray } = useAppSelector(
-    (state) => state.sideTray,
-  );
+  const { openFilterTray } = useAppSelector((state) => state.sideTray);
+  const { allFilters } = useAppSelector((state) => state.filterRecipe);
 
   const { data } = useQuery(GET_ALL_WIDGET_COLLECTION_DATA, {
     variables: {
@@ -72,24 +71,6 @@ const ViewAll = () => {
     [],
   );
 
-  const collectionHandler = (e, id: string) => {
-    console.log(e);
-    alert("I am executed");
-    // const item = items.find((i) => i._id === id);
-    // const isCollectionIds = item?.userCollections;
-    // const recipeId = item?._id;
-    // isCollectionIds?.length
-    //   ? handleOpenCollectionTray(recipeId, isCollectionIds, e)
-    //   : handleAddToCollection(
-    //       recipeId,
-    //       setOpenCollectionModal,
-    //       e,
-    //       setcompareRecipeList,
-    //     );
-  };
-
-  const RecipeRef = useThemeMethod({ toggleCollection: collectionHandler });
-
   return (
     <AContainer
       showCollectionTray={{ show: true, showTagByDeafult: true }}
@@ -100,6 +81,9 @@ const ViewAll = () => {
         showTagByDeafult: false,
       }}
     >
+      {/* {[1, 2, 3].map((el) => (
+        <div ref={ref}>Hello World</div>
+      ))} */}
       <ul className="list-collection">
         <li className="toggleCollection">1</li>
         <li className="toggleCollection">2</li>
@@ -113,16 +97,12 @@ const ViewAll = () => {
           }}
         >
           <DiscoverPageSearch />
-          {blends.length || ingredients.length || filters?.length ? (
-            <SearchtagsComponent />
+          {allFilters.length ? (
+            <SearchtagsComponent allFilters={allFilters} />
           ) : null}
         </div>
-        {blends.length || ingredients.length || filters?.length ? (
-          <FilterPageBottom
-            blends={blends}
-            ingredients={ingredients}
-            filters={filters}
-          />
+        {allFilters.length ? (
+          <FilterPageBottom allFilters={allFilters} />
         ) : (
           <div>
             <div className={classes.head}>
@@ -158,17 +138,14 @@ const ViewAll = () => {
             />
             <div className="row mb-20">
               {items?.map((item, idx) => (
-                <div
+                <Item
                   key={idx}
-                  ref={RecipeRef}
-                  className="col-3"
-                  data-id={item._id}
-                  dangerouslySetInnerHTML={{
-                    __html: ejs.render(theme, {
-                      data: item,
-                      methods: { toggleCollection: collectionHandler },
-                    }),
-                  }}
+                  item={item}
+                  theme={theme}
+                  handleOpenCollectionTray={handleOpenCollectionTray}
+                  handleAddToCollection={handleAddToCollection}
+                  setOpenCollectionModal={setOpenCollectionModal}
+                  setcompareRecipeList={setcompareRecipeList}
                 />
               ))}
             </div>
@@ -184,6 +161,44 @@ const ViewAll = () => {
         <FooterRecipeFilter />
       </div>
     </AContainer>
+  );
+};
+
+const Item = ({
+  item,
+  theme,
+  handleOpenCollectionTray,
+  handleAddToCollection,
+  setOpenCollectionModal,
+  setcompareRecipeList,
+}) => {
+  const collectionHandler = (e) => {
+    const isCollectionIds = item?.userCollections;
+    const recipeId = item?._id;
+    isCollectionIds?.length
+      ? handleOpenCollectionTray(recipeId, isCollectionIds, e)
+      : handleAddToCollection(
+          recipeId,
+          setOpenCollectionModal,
+          e,
+          setcompareRecipeList,
+        );
+  };
+
+  const RecipeRef = useThemeMethod({ toggleCollection: collectionHandler });
+
+  return (
+    <div
+      ref={RecipeRef}
+      className="col-3"
+      data-id={item._id}
+      dangerouslySetInnerHTML={{
+        __html: ejs.render(theme, {
+          data: item,
+          methods: { toggleCollection: collectionHandler },
+        }),
+      }}
+    />
   );
 };
 

@@ -4,7 +4,7 @@ import styles from "./CreateNewRecipe.module.scss";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import SectionTitleWithIcon from "../../../../theme/recipe/sectionTitleWithIcon/SectionTitleWithIcon.component";
 import SingleIngredient from "../singleIngredient/SingleIngredient";
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import GET_BLEND_NUTRITION_BASED_ON_RECIPE_XXX from "../../../../gqlLib/recipes/queries/getBlendNutritionBasedOnRecipeXxx";
 import NutrationPanelSkeleton from "../../../../theme/skeletons/nutrationPanelSkeleton/NutrationPanelSkeleton";
 import UpdatedRecursiveAccordian from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
@@ -14,181 +14,52 @@ import { setAllIngredients } from "../../../../redux/slices/ingredientsSlice";
 import Image from "next/image";
 import { FETCH_BLEND_CATEGORIES } from "../../../../gqlLib/category/queries/fetchCategories";
 import { setAllCategories } from "../../../../redux/slices/categroySlice";
-import { IoCloseCircle } from "react-icons/io5";
+import { IoClose, IoCloseCircle } from "react-icons/io5";
 import { MdOutlineEdit } from "react-icons/md";
 import { AiOutlineSave } from "react-icons/ai";
 import useOnClickOutside from "../../../utility/useOnClickOutside";
-import CREATE_A_RECIPE_BY_USER from "../../../../gqlLib/recipes/mutations/createARecipeByUser";
-import imageUploadS3 from "../../../utility/imageUploadS3";
-import notification from "../../../utility/reactToastifyNotification";
 import { useRouter } from "next/router";
-import EDIT_A_RECIPE from "../../../../gqlLib/recipes/mutations/editARecipe";
 import Tooltip from "../../../../theme/toolTip/CustomToolTip";
 import CreateRecipeSkeleton from "../../../../theme/skeletons/createRecipeSkeleton/CreateRecipeSkeleton";
+import IconWraper from "../../../../theme/iconWarper/IconWarper";
+import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
+import InputComponent from "../../../../theme/input/input.component";
 
 const CreateNewRecipe = ({
-  newRecipe,
-  setNewRecipe,
+  newRecipe = {},
+  setNewRecipe = () => {},
   setNewlyCreatedRecipe = () => {},
   newlyCreatedRecipe = {},
   copyImage = "",
+  updateData = () => {},
+  handleCreateNewRecipe = () => {},
+  loading = false,
+  closeCreateNewRecipeInterface = () => {},
+  disableCategory = false,
+  disableImageUpload = false,
+  recipeSaveLoading = false,
 }: any) => {
-  const [createNewRecipe, setCreateNewRecipe] = useState({
-    name: "",
-    image: [],
-    description: "",
-    recipeBlendCategory: "61cafc34e1f3e015e7936587",
-  });
   const [winReady, setWinReady] = useState(false);
-  const [inputVlaue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState("");
   const { allIngredients } = useAppSelector((state) => state?.ingredients);
   const [searchIngredientData, setSearchIngredientData] = useState<any[]>([]);
-  const [getBlendNutritionBasedOnRecipeXxx, { data, loading, error }] =
-    useLazyQuery(GET_BLEND_NUTRITION_BASED_ON_RECIPE_XXX, {
-      // fetchPolicy: "network-only",
-    });
+  const [
+    getBlendNutritionBasedOnRecipeXxx,
+    { data, loading: nutritionLoading, error },
+  ] = useLazyQuery(GET_BLEND_NUTRITION_BASED_ON_RECIPE_XXX, {
+    // fetchPolicy: "network-only",
+  });
   const [filterIngredientByCategroyAndClass] = useLazyQuery(
     FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS,
   );
   const [getAllBlendCategory, { loading: blendCategroyLoading }] = useLazyQuery(
     FETCH_BLEND_CATEGORIES,
   );
-  const [createNewRecipeByUser] = useMutation(CREATE_A_RECIPE_BY_USER);
   const { allCategories } = useAppSelector((state) => state?.categroy);
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
-  const [openFloatingMenu, setOpenFloatingMenu] = useState(false);
-  const folatingMenuRef = useRef(null);
-  useOnClickOutside(folatingMenuRef, () => setOpenFloatingMenu(false));
+
   const router = useRouter();
-  const { dbUser } = useAppSelector((state) => state?.user);
-  const [editRecipe] = useMutation(EDIT_A_RECIPE);
-  const [uploadNewImage, setUploadNewImage] = useState(false);
-  const [createAndEditRecipeLoading, setCreateAndEditRecipeLoading] =
-    useState(false);
-
-  const handleCreateNewRecipeByUser = async (e: React.SyntheticEvent) => {
-    e.stopPropagation();
-    if (newlyCreatedRecipe?._id) {
-      if (createNewRecipe?.name && newRecipe?.ingredients?.length) {
-        setCreateAndEditRecipeLoading(true);
-        try {
-          let imgArr = [];
-          if (uploadNewImage && createNewRecipe?.image?.length) {
-            const url = await imageUploadS3(createNewRecipe?.image);
-            imgArr?.push({
-              image: `${url}`,
-              default: true,
-            });
-          } else {
-            if (newlyCreatedRecipe?.image?.length) {
-              imgArr?.push({
-                image: `${newlyCreatedRecipe?.image[0]?.image}`,
-                default: newlyCreatedRecipe?.image[0]?.default,
-              });
-            }
-          }
-          await editRecipe({
-            variables: {
-              data: {
-                editId: newlyCreatedRecipe?._id,
-                editableObject: {
-                  name: createNewRecipe?.name,
-                  image: imgArr,
-                  description: createNewRecipe?.description,
-                  ingredients: newRecipe?.ingredients?.map(
-                    ({ ingredientId, selectedPortionName, weightInGram }) => ({
-                      ingredientId,
-                      selectedPortionName,
-                      weightInGram,
-                    }),
-                  ),
-                  recipeBlendCategory: createNewRecipe?.recipeBlendCategory,
-                },
-              },
-            },
-          });
-
-          setCreateAndEditRecipeLoading(false);
-          notification("success", "Recipe updated successfully");
-        } catch (error) {
-          setCreateAndEditRecipeLoading(false);
-          notification("error", "Failed to updated recipe");
-        }
-      } else {
-        notification(
-          "warning",
-          "You can't save recipe without name and ingredients",
-        );
-      }
-    } else {
-      if (createNewRecipe?.name && newRecipe?.ingredients?.length) {
-        setCreateAndEditRecipeLoading(true);
-        try {
-          let imgArr = [];
-          if (createNewRecipe?.image?.length) {
-            const url =
-              typeof createNewRecipe?.image[0] === "string"
-                ? createNewRecipe?.image[0]
-                : await imageUploadS3(createNewRecipe?.image);
-            imgArr?.push({
-              image: `${url}`,
-              default: true,
-            });
-          }
-
-          const obj = {
-            userId: dbUser?._id,
-            name: createNewRecipe?.name,
-            image: imgArr,
-            description: createNewRecipe?.description,
-            recipeBlendCategory: createNewRecipe?.recipeBlendCategory,
-            ingredients: newRecipe?.ingredients?.map(
-              ({ ingredientId, selectedPortionName, weightInGram }) => ({
-                ingredientId,
-                selectedPortionName,
-                weightInGram,
-              }),
-            ),
-          };
-          const { data } = await createNewRecipeByUser({
-            variables: {
-              data: obj,
-            },
-          });
-          setCreateAndEditRecipeLoading(false);
-          notification("success", "Recive saved successfully");
-          if (data?.addRecipeFromUser?._id) {
-            setNewlyCreatedRecipe(data?.addRecipeFromUser);
-            setUploadNewImage(false);
-            // router?.push(`/recipe_details/${data?.addRecipeFromUser?._id}`);
-          }
-        } catch (error) {
-          setCreateAndEditRecipeLoading(false);
-          notification("error", "Failed to saved new recipe");
-        }
-      } else {
-        notification(
-          "warning",
-          "You can't save recipe without name and ingredients",
-        );
-      }
-    }
-  };
-
-  const updataNewRecipe = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >,
-  ) => {
-    const { name, value } = e?.target;
-    setCreateNewRecipe((state) => ({ ...state, [name]: value }));
-  };
-
-  const handleFile = (e: any) => {
-    setCreateNewRecipe((state) => ({ ...state, image: e?.target?.files }));
-    setUploadNewImage(true);
-  };
 
   const findItem = (id) => {
     return newRecipe?.ingredients?.find((item) => item?.ingredientId === id);
@@ -266,21 +137,21 @@ const CreateNewRecipe = ({
 
   useEffect(() => {
     if (isMounted.current) {
-      if (inputVlaue === "") {
+      if (inputValue === "") {
         setSearchIngredientData([]);
       } else {
         const filter = allIngredients?.filter((item) =>
           //@ts-ignore
           item?.ingredientName
             ?.toLowerCase()
-            ?.includes(inputVlaue?.toLowerCase()),
+            ?.includes(inputValue?.toLowerCase()),
         );
         setSearchIngredientData(filter);
       }
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inputVlaue]);
+  }, [inputValue]);
 
   useEffect(() => {
     if (!allIngredients?.length) {
@@ -305,8 +176,9 @@ const CreateNewRecipe = ({
   }, [newRecipe?.ingredients]);
   useEffect(() => {
     if (copyImage) {
-      setCreateNewRecipe((state) => ({ ...state, image: [copyImage] }));
+      setNewRecipe((state) => ({ ...state, image: [copyImage] }));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [copyImage]);
 
   useEffect(() => {
@@ -321,23 +193,22 @@ const CreateNewRecipe = ({
     };
   }, []);
 
-  const FloatingMenu = () => {
-    return (
-      <div className={styles.floating__menu}>
-        <ul>
-          {newlyCreatedRecipe?._id ? (
-            <>
-              <Tooltip content="Edit view" direction="right">
-                <li>
-                  <MdOutlineEdit
-                    className={styles.icon}
-                    onClick={() =>
-                      router?.push(`/edit_recipe/${newlyCreatedRecipe?._id}`)
-                    }
-                  />
-                </li>
-              </Tooltip>
-              {/* <Tooltip content={"Details view"} direction="right">
+  const floatingMenu = (
+    <div className={styles.floating__menu}>
+      <ul>
+        {newlyCreatedRecipe?._id ? (
+          <>
+            <Tooltip content="Edit view" direction="top">
+              <li>
+                <MdOutlineEdit
+                  className={styles.icon}
+                  onClick={() =>
+                    router?.push(`/edit_recipe/${newlyCreatedRecipe?._id}`)
+                  }
+                />
+              </li>
+            </Tooltip>
+            {/* <Tooltip content={"Details view"} direction="right">
                 <li>
                   <BiDetail
                     className={styles.icon}
@@ -347,28 +218,45 @@ const CreateNewRecipe = ({
                   />
                 </li>
               </Tooltip> */}
-            </>
-          ) : null}
+          </>
+        ) : null}
 
-          <Tooltip
-            content={newlyCreatedRecipe?._id ? "Update recipe" : "Save recipe"}
-            direction="right"
-          >
-            <li onClick={(e) => handleCreateNewRecipeByUser(e)}>
-              <AiOutlineSave className={styles.icon} />
-            </li>
-          </Tooltip>
-        </ul>
-      </div>
-    );
-  };
+        <Tooltip
+          content={newlyCreatedRecipe?._id ? "Update recipe" : "Save recipe"}
+          direction="top"
+        >
+          <li>
+            {recipeSaveLoading ? (
+              <CircularRotatingLoader
+                style={{ fontSize: "16px" }}
+                color="secondary"
+              />
+            ) : (
+              <AiOutlineSave
+                className={styles.icon}
+                onClick={(e) => handleCreateNewRecipe(e)}
+              />
+            )}
+          </li>
+        </Tooltip>
+      </ul>
+    </div>
+  );
 
-  if (createAndEditRecipeLoading) {
+  if (loading) {
     return <CreateRecipeSkeleton />;
   }
 
   return (
     <div className={styles.createNewRecipeContainer}>
+      <div className={styles.closeNewRecipeIcon}>
+        <IconWraper
+          defaultBg="gray"
+          handleClick={closeCreateNewRecipeInterface}
+        >
+          <IoClose />
+        </IconWraper>
+      </div>
       <div className={styles.firstContainer}>
         <div className={styles.firstContainer__firstSection}>
           <div className={styles.addRecipeTitle}>
@@ -376,8 +264,8 @@ const CreateNewRecipe = ({
               type="text"
               name="name"
               placeholder="Add Recipe Title"
-              value={createNewRecipe?.name}
-              onChange={(e) => updataNewRecipe(e)}
+              value={newRecipe?.name}
+              onChange={(e) => updateData(e)}
             />
             {/* {createNewRecipe?.name && newRecipe?.ingredients?.length ? (
               <div>
@@ -392,35 +280,34 @@ const CreateNewRecipe = ({
           </div>
           <div className={styles.imageBoxContainer}>
             <div className={styles.fileUpload}>
-              {createNewRecipe?.image?.length ? null : (
+              {newRecipe?.image?.length ? null : (
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) => handleFile(e)}
+                  onChange={(e) => updateData(e)}
+                  disabled={disableImageUpload}
                 />
               )}
 
               <img
-                className={
-                  createNewRecipe?.image?.length ? styles.imageBox : null
-                }
+                className={newRecipe?.image?.length ? styles.imageBox : null}
                 src={
-                  createNewRecipe?.image?.length
-                    ? typeof createNewRecipe?.image[0] === "string"
-                      ? createNewRecipe?.image[0]
-                      : URL.createObjectURL(createNewRecipe?.image[0])
+                  newRecipe?.image?.length
+                    ? typeof newRecipe?.image[0] === "string"
+                      ? newRecipe?.image[0]
+                      : URL.createObjectURL(newRecipe?.image[0])
                     : "/images/black-add.svg"
                 }
                 alt="addIcon"
               />
-              {createNewRecipe?.image?.length ? (
+              {newRecipe?.image?.length && !disableImageUpload && (
                 <IoCloseCircle
                   className={styles.cancleIcon}
                   onClick={() =>
-                    setCreateNewRecipe((state) => ({ ...state, image: [] }))
+                    setNewRecipe((state) => ({ ...state, image: [] }))
                   }
                 />
-              ) : null}
+              )}
             </div>
 
             <div className={styles.dropDown}>
@@ -428,8 +315,9 @@ const CreateNewRecipe = ({
                 <select
                   id="cars"
                   name="recipeBlendCategory"
-                  value={createNewRecipe?.recipeBlendCategory}
-                  onChange={(e) => updataNewRecipe(e)}
+                  value={newRecipe?.recipeBlendCategory}
+                  onChange={(e) => updateData(e)}
+                  disabled={disableCategory}
                 >
                   {allCategories?.map((cat) => {
                     return (
@@ -439,15 +327,15 @@ const CreateNewRecipe = ({
                     );
                   })}
                 </select>
-                <FloatingMenu />
+                {floatingMenu}
               </div>
 
               <textarea
                 className="y-scroll"
                 placeholder="Discripation"
-                value={createNewRecipe?.description}
+                value={newRecipe?.description}
                 name="description"
-                onChange={(e) => updataNewRecipe(e)}
+                onChange={(e) => updateData(e)}
               />
             </div>
           </div>
@@ -474,7 +362,7 @@ const CreateNewRecipe = ({
         <div className={styles.addRecipeIngredients}>
           <form onSubmit={handleSubmit}>
             <input
-              value={inputVlaue}
+              value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               type="text"
               placeholder="Search ingredients"
@@ -587,7 +475,7 @@ const CreateNewRecipe = ({
         </div>
 
         <div className={styles.ingredientsDetails}>
-          {loading ? (
+          {nutritionLoading ? (
             <NutrationPanelSkeleton />
           ) : data?.getBlendNutritionBasedOnRecipexxx ? (
             <UpdatedRecursiveAccordian
