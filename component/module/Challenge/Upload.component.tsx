@@ -21,7 +21,7 @@ import {
   CREATE_CHALLENGE_POST,
   EDIT_CHALLENGE_POST,
   GET_30DAYS_CHALLENGE,
-} from "../../../graphql/Planner";
+} from "../../../graphql/Challenge";
 import Publish from "../../../helpers/Publish";
 import { ActionButton } from "../../atoms/Button/Button.component";
 import { format } from "date-fns";

@@ -10,10 +10,11 @@ import useChallengeLayout from "../../../../hooks/modules/useChallengeLayout";
 interface ChallengeProps {
   activities: any[];
   statistics: any;
+  progressRef: any;
 }
 
 const Challenge: React.FC<ChallengeProps> = (props) => {
-  const { activities, statistics } = props;
+  const { activities, statistics, progressRef } = props;
   useChallengeLayout();
 
   return (
@@ -21,7 +22,11 @@ const Challenge: React.FC<ChallengeProps> = (props) => {
       <div className={styles.mainContainer__contentDiv__innerDiv__challengeDiv}>
         <div className={styles.challenge_circle_box}>
           <RecipeCategory />
-          <Dialer activities={activities} statistics={statistics} />
+          <Dialer
+            progressRef={progressRef}
+            activities={activities}
+            statistics={statistics}
+          />
           <Streakbar activities={activities} statistics={statistics} />
         </div>
       </div>

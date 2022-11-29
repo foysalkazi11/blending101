@@ -15,14 +15,18 @@ import "react-datepicker/dist/react-datepicker.css";
 interface MainInterface {
   statistics: any;
   activities: any[];
+  progressRef: any;
 }
 
-function Main({ activities, statistics }: MainInterface) {
+function Main({ progressRef, activities, statistics }: MainInterface) {
   const profileImage = useAppSelector((state) => state.user.dbUser.image);
   const activeDate = useAppSelector((state) => state.challenge.activeDate);
 
   return (
-    <div className={styles.challenge_circle_main_circle_outer}>
+    <div
+      className={styles.challenge_circle_main_circle_outer}
+      ref={progressRef}
+    >
       <div className={styles.challenge_circle_main_circle}>
         <div className={styles.challenge_circle_inside_circle}>
           <div className={styles.wheel__profile}>

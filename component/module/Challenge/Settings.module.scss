@@ -36,15 +36,15 @@
     display: flex;
     align-items: center;
     &__radio {
-      transform: translate(4rem, -1rem);
+      transform: translate(1rem, 0.7rem);
     }
     &__trash {
       transition: opacity 0.2s ease-out;
-      transform: translate(2rem, 5px);
-      opacity: 0;
+      // transform: translate(2rem, 5px);
+      // opacity: 0;
     }
   }
-  &:hover &__action__trash {
-    opacity: 1;
-  }
+  // &:hover &__action__trash {
+  //   opacity: 1;
+  // }
 }
