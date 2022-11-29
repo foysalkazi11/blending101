@@ -21,12 +21,12 @@ export default function SidebarComponent(props) {
     { logo: "/icons/books.svg", link: "/wiki", content: "Wiki" },
     {
       logo: "/icons/calender__sidebar.svg",
-      link: "/coach/planner",
+      link: "/planner",
       content: "Planner",
     },
     {
       logo: "/icons/whistle.svg",
-      link: "/coach/challenge",
+      link: "/challenge",
       content: "Challenge",
     },
     { logo: "/icons/book_light.svg", link: "/", content: "News" },
