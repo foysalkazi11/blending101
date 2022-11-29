@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLazyQuery } from "@apollo/client";
 import {
   faGear,
   faPlusCircle,
+  faShare,
   faToolbox,
 } from "@fortawesome/pro-light-svg-icons";
+import html2canvas from "html2canvas";
 import { isWithinInterval } from "date-fns";
 
 import RXPanel from "../../component/templates/Panel/RXFacts/RXPanel.component";
@@ -18,7 +20,7 @@ import Settings from "../../component/module/Challenge/Settings.component";
 import AContainer from "../../containers/A.container";
 import IconHeading from "../../theme/iconHeading/iconHeading.component";
 
-import { GET_30DAYS_CHALLENGE } from "../../graphql/Planner";
+import { GET_30DAYS_CHALLENGE } from "../../graphql/Challenge";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
   setChallengeInterval,
@@ -29,10 +31,17 @@ import styles from "../../styles/pages/planner.module.scss";
 import Icon from "../../component/atoms/Icon/Icon.component";
 
 import { theme } from "../../configs/themes";
+import ChallengeShareModal from "../../component/organisms/Share/ChallengeShare.component";
+import { useRouter } from "next/router";
 
 const ChallengePage = () => {
+  const router = useRouter();
+  const { id, token } = router.query;
+  const challengeProgress = useRef<HTMLDivElement>(null);
+
   const [showSettings, setShowSettings] = useState(false);
   const [showGroceryTray] = useState(true);
+  const [showShare, setShowShare] = useState(false);
 
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
@@ -44,6 +53,25 @@ const ChallengePage = () => {
   } = useAppSelector((state) => state.challenge);
 
   const [getChallenges, { data }] = useLazyQuery(GET_30DAYS_CHALLENGE);
+
+  const handleScreenshot = async () => {
+    const element = challengeProgress.current;
+    const canvas = await html2canvas(element);
+
+    const data = canvas.toDataURL("image/jpg");
+    const link = document.createElement("a");
+
+    if (typeof link.download === "string") {
+      link.href = data;
+      link.download = "image.jpg";
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      window.open(data);
+    }
+  };
 
   useEffect(() => {
     if (
@@ -59,9 +87,19 @@ const ChallengePage = () => {
       variables: {
         userId,
         startDate: activeDate,
+        challengeId: router.query?.id,
+        token: router.query?.token,
       },
     });
-  }, [activeDate, endDate, getChallenges, startDate, userId]);
+  }, [
+    activeDate,
+    endDate,
+    getChallenges,
+    router.query?.id,
+    router.query?.token,
+    startDate,
+    userId,
+  ]);
 
   useEffect(() => {
     const challenges = data?.getMyThirtyDaysChallenge?.challenge || [];
@@ -89,6 +127,12 @@ const ChallengePage = () => {
       }}
     >
       <RXPanel />
+      <ChallengeShareModal
+        id={data?.getMyThirtyDaysChallenge?.challengeInfo?.challengeId}
+        name={data?.getMyThirtyDaysChallenge?.challengeInfo?.challengeName}
+        show={showShare}
+        setShow={setShowShare}
+      />
       <div className={styles.planner}>
         <div className={styles.planner__pageTitle}>BLENDA CHALLENGE</div>
         <div className="row">
@@ -105,6 +149,19 @@ const ChallengePage = () => {
             <div className={styles.headingDiv}>
               <IconHeading title="Challenge" icon={faToolbox} />
               <div className="flex ai-center">
+                <div
+                  className={styles.uploadDiv}
+                  onClick={() => {
+                    setShowShare(true);
+                  }}
+                >
+                  <Icon
+                    fontName={faShare}
+                    size="1.6rem"
+                    color={theme.color.primary}
+                  />
+                  <span>Share</span>
+                </div>
                 <div
                   className={styles.uploadDiv}
                   onClick={() => {
@@ -140,6 +197,7 @@ const ChallengePage = () => {
                 toolbox
               ) : (
                 <Challenge
+                  progressRef={challengeProgress}
                   activities={data?.getMyThirtyDaysChallenge?.challenge}
                   statistics={data?.getMyThirtyDaysChallenge?.challengeInfo}
                 />

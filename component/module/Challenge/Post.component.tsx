@@ -17,30 +17,32 @@ import {
   faChartSimple,
 } from "@fortawesome/pro-light-svg-icons";
 import DatePicker from "react-datepicker";
+import { useMutation } from "@apollo/client";
 
-import IconHeading from "../../../theme/iconHeading/iconHeading.component";
 import SplitImageCard from "../../../theme/card/splitImageCard/splitImageCard.component";
-
+import IconHeading from "../../../theme/iconHeading/iconHeading.component";
 import IconButton from "../../atoms/Button/IconButton.component";
 import Icon from "../../atoms/Icon/Icon.component";
+
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
   IPostIngredient,
   setChallengePost,
   setShowPostForm,
 } from "../../../redux/slices/Challenge.slice";
+
 import { RECIPE_CATEGORY_COLOR } from "../../../data/Recipe";
 import { setShowPanel } from "../../../redux/slices/Ui.slice";
 
-import styles from "./Post.module.scss";
 import useHideOnClickOutside from "../../../hooks/useHideOnClickOutside";
-import { useMutation } from "@apollo/client";
 import {
   COPY_CHALLENGE_POST,
   DELETE_CHALLENGE_POST,
   MOVE_CHALLENGE_POST,
-} from "../../../graphql/Planner";
+} from "../../../graphql/Challenge";
+
 import Publish from "../../../helpers/Publish";
+import styles from "./Post.module.scss";
 
 interface IPost {
   _id: string;
@@ -74,7 +76,6 @@ const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
   const activeDate = useAppSelector((state) => state.challenge.activeDate);
   const panelList = useAppSelector((state) => state.ui.panel);
   const panel = panelList.find((panel) => panel.name === "RXPanel");
-  // console.log(panel);
 
   const blendContainer = useRef<HTMLDivElement>(null);
   const blends = useRef<HTMLDivElement[]>([]);

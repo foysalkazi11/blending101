@@ -120,11 +120,7 @@ const Share = (props: ShareProps) => {
   };
 
   return (
-    <CustomModal
-      open={show}
-      setOpen={setShow}
-      // closeClass={styles.share__modal_close}
-    >
+    <CustomModal open={show} setOpen={setShow}>
       <div className={styles.share}>
         <div className={styles.share__header}>
           <Icon fontName={faShareNodes} size="2.5rem" />

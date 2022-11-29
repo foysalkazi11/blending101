@@ -16,6 +16,7 @@ import {
   faChevronLeft,
   faTimes,
   faTrash,
+  faShareNodes,
 } from "@fortawesome/pro-solid-svg-icons";
 
 import ButtonComponent from "../../../theme/button/button.component";
@@ -31,19 +32,12 @@ import {
   DELETE_CHALLENGE,
   EDIT_CHALLENGE,
   GET_CHALLENGES,
-} from "../../../graphql/Planner";
+} from "../../../graphql/Challenge";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import Publish from "../../../helpers/Publish";
 
 import styles from "./Settings.module.scss";
-import {
-  addDays,
-  differenceInDays,
-  format,
-  formatISO,
-  isBefore,
-  isPast,
-} from "date-fns";
+import { addDays, differenceInDays, format, isBefore, isPast } from "date-fns";
 import RadioButton from "../../organisms/Forms/RadioButton.component";
 import { getDateISO } from "../../../helpers/Date";
 import { setChallengeDate } from "../../../redux/slices/Challenge.slice";
@@ -169,7 +163,8 @@ const ChallengeList = ({ editFormHandler, hideSettings }) => {
   return (
     <Fragment>
       <div className="row mb-10 mt-10">
-        <div className="col-5">
+        <div className="col-1" />
+        <div className="col-4">
           <h5>Challenge Name</h5>
         </div>
         <div className="col-3">
@@ -178,12 +173,28 @@ const ChallengeList = ({ editFormHandler, hideSettings }) => {
         <div className="col-2">
           <h5>Days</h5>
         </div>
-        <div className="col-1">&nbsp;</div>
+        <div className="col-2">&nbsp;</div>
       </div>
       {data?.getMyChallengeList?.map((challenge) => {
         return (
           <div className={`row ${styles.challenge}`} key={challenge._id}>
-            <div className="col-5">
+            <div className="col-1">
+              <div className={styles.challenge__action}>
+                <RadioButton
+                  selected={
+                    activeId === "" && challenge.isActive
+                      ? ""
+                      : activeId === challenge._id
+                      ? ""
+                      : "unchecked"
+                  }
+                  options={[""]}
+                  onChange={() => activeHandler(challenge._id)}
+                  className={styles.challenge__action__radio}
+                />
+              </div>
+            </div>
+            <div className="col-4">
               <div
                 className={styles.challenge__name}
                 style={
@@ -203,28 +214,20 @@ const ChallengeList = ({ editFormHandler, hideSettings }) => {
             <div className="col-2">
               <Textfield defaultValue={challenge.days} disabled />
             </div>
-            <div className="col-1">
-              <div className={styles.challenge__action}>
-                <RadioButton
-                  selected={
-                    activeId === "" && challenge.isActive
-                      ? ""
-                      : activeId === challenge._id
-                      ? ""
-                      : "unchecked"
-                  }
-                  options={[""]}
-                  onChange={() => activeHandler(challenge._id)}
-                  className={styles.challenge__action__radio}
-                />
-                <IconButton
-                  fontName={faTrash}
-                  variant="primary"
-                  size="small"
-                  className={styles.challenge__action__trash}
-                  onClick={() => deleteHandler(challenge._id)}
-                />
-              </div>
+            <div className="col-2">
+              <IconButton
+                fontName={faShareNodes}
+                variant="primary"
+                size="small"
+                className={`${styles.challenge__action__trash} ml-30`}
+              />
+              <IconButton
+                fontName={faTrash}
+                variant="primary"
+                size="small"
+                className={`${styles.challenge__action__trash} ml-10`}
+                onClick={() => deleteHandler(challenge._id)}
+              />
             </div>
           </div>
         );

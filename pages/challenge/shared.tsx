@@ -94,7 +94,7 @@ const shared = () => {
           </div>
           <div
             className="col-3"
-            style={{ overflow: "hidden", height: "45rem" }}
+            style={{ overflow: "hidden", height: "30rem" }}
           >
             <img
               src="/images/iphone_mockup.png"
