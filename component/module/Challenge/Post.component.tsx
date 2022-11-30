@@ -338,8 +338,10 @@ const Post = (props: PostProps) => {
     onShowNutrient,
   } = props;
 
-  const [showMenu, setShowMenu] = useState(false);
   const [showChart, setShowChart] = showChartState;
+  const [showMenu, setShowMenu] = useState(false);
+
+  const viewOnly = useAppSelector((state) => state.challenge.viewOnly);
 
   let ingredients = "";
   post.ingredients.forEach((ingredient, index) => {
@@ -384,24 +386,25 @@ const Post = (props: PostProps) => {
                   onShowNutrient(post.ingredients, post._id);
                 }}
               />
-              <div ref={menuRef}>
-                <IconButton
-                  variant="hover"
-                  color="primary"
-                  style={{ fontSize: "1.6rem" }}
-                  fontName={faEllipsisVertical}
-                  onClick={() => setShowMenu((prev) => !prev)}
-                />
-                <div
-                  className={styles.recipe__optionTray}
-                  style={
-                    showMenu
-                      ? { display: "block", zIndex: "1" }
-                      : { zIndex: "-1" }
-                  }
-                >
-                  <div className={styles.recipe__optionTray__pointingDiv} />
-                  {/* <div
+              {!viewOnly && (
+                <div ref={menuRef}>
+                  <IconButton
+                    variant="hover"
+                    color="primary"
+                    style={{ fontSize: "1.6rem" }}
+                    fontName={faEllipsisVertical}
+                    onClick={() => setShowMenu((prev) => !prev)}
+                  />
+                  <div
+                    className={styles.recipe__optionTray}
+                    style={
+                      showMenu
+                        ? { display: "block", zIndex: "1" }
+                        : { zIndex: "-1" }
+                    }
+                  >
+                    <div className={styles.recipe__optionTray__pointingDiv} />
+                    {/* <div
                     className={styles.option}
                     onClick={() => onEdit(id, date, post)}
                   >
@@ -410,34 +413,35 @@ const Post = (props: PostProps) => {
                       <Icon fontName={faPenToSquare} size="1.5rem" />
                     </span>
                   </div> */}
-                  <div
-                    className={styles.option}
-                    onClick={() => {
-                      setShowMenu(false);
-                      onDelete(id, post?._id);
-                    }}
-                  >
-                    <span>Remove</span>
-                    <span className={styles.option__icon}>
-                      <Icon fontName={faTrash} size="1.5rem" />
-                    </span>
+                    <div
+                      className={styles.option}
+                      onClick={() => {
+                        setShowMenu(false);
+                        onDelete(id, post?._id);
+                      }}
+                    >
+                      <span>Remove</span>
+                      <span className={styles.option__icon}>
+                        <Icon fontName={faTrash} size="1.5rem" />
+                      </span>
+                    </div>
+                    <DateSelector
+                      type="Copy"
+                      postId={post?._id}
+                      challengeId={id}
+                      setShowMenu={setShowMenu}
+                      dateHandler={onCopy}
+                    />
+                    <DateSelector
+                      type="Move"
+                      postId={post?._id}
+                      challengeId={id}
+                      setShowMenu={setShowMenu}
+                      dateHandler={onMove}
+                    />
                   </div>
-                  <DateSelector
-                    type="Copy"
-                    postId={post?._id}
-                    challengeId={id}
-                    setShowMenu={setShowMenu}
-                    dateHandler={onCopy}
-                  />
-                  <DateSelector
-                    type="Move"
-                    postId={post?._id}
-                    challengeId={id}
-                    setShowMenu={setShowMenu}
-                    dateHandler={onMove}
-                  />
                 </div>
-              </div>
+              )}
             </div>
           </div>
           <p className={styles.recipe__ingredients}>{ingredients}</p>
