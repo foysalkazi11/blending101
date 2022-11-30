@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import html2canvas from "html2canvas";
 import { FaFacebookF, FaPinterestP, FaTwitter } from "react-icons/fa";
 import {
   FacebookShareButton,
@@ -13,15 +14,17 @@ import styles from "../../../theme/shareRecipeModal/ShareRecipeModal.module.scss
 import { useMutation } from "@apollo/client";
 import { SHARE_CHALLENGE } from "../../../graphql/Challenge";
 import { useAppSelector } from "../../../redux/hooks";
+import { dataURLtoFile } from "../../../helpers/File";
 
 interface Props {
   id: string;
   name: string;
   show: boolean;
   setShow: any;
+  element: HTMLDivElement;
 }
 
-const ChallengeShareModal = ({ id, name, show, setShow }: Props) => {
+const ChallengeShareModal = ({ id, name, show, setShow, element }: Props) => {
   const [link, setLink] = useState("");
   const [shareChallenge] = useMutation(SHARE_CHALLENGE);
 
@@ -38,8 +41,31 @@ const ChallengeShareModal = ({ id, name, show, setShow }: Props) => {
       setLink(
         `${process.env.NEXT_PUBLIC_HOSTING_DOMAIN}/challenge?id=${id}&token=${res.data?.shareGlobalChallenge}`,
       );
+
+      navigator.clipboard.writeText(
+        `${process.env.NEXT_PUBLIC_HOSTING_DOMAIN}/challenge/shared?id=${id}&token=${res.data?.shareGlobalChallenge}`,
+      );
+
+      html2canvas(element, { backgroundColor: null }).then((canvas) => {
+        const data = canvas.toDataURL("image/jpg");
+        const file = dataURLtoFile(data, "challenge.png");
+
+        const link = document.createElement("a");
+
+        if (typeof link.download === "string") {
+          link.href = data;
+          link.download = "image.jpg";
+
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        } else {
+          window.open(data);
+        }
+      });
     });
-  }, [id, shareChallenge, show, userId]);
+    // handleScreenshot();
+  }, [element, id, shareChallenge, show, userId]);
 
   console.log(link);
 

@@ -16,7 +16,7 @@ import {
   faChevronLeft,
   faTimes,
   faTrash,
-  faShareNodes,
+  faUserPlus,
 } from "@fortawesome/pro-solid-svg-icons";
 
 import ButtonComponent from "../../../theme/button/button.component";
@@ -216,14 +216,14 @@ const ChallengeList = ({ editFormHandler, hideSettings }) => {
             </div>
             <div className="col-2">
               <IconButton
-                fontName={faShareNodes}
-                variant="primary"
+                fontName={faUserPlus}
+                variant="fade"
                 size="small"
                 className={`${styles.challenge__action__trash} ml-30`}
               />
               <IconButton
                 fontName={faTrash}
-                variant="primary"
+                variant="fade"
                 size="small"
                 className={`${styles.challenge__action__trash} ml-10`}
                 onClick={() => deleteHandler(challenge._id)}

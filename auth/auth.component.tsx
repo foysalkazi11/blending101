@@ -7,7 +7,6 @@ import { Auth } from "aws-amplify";
 import { setDbUser, setProvider, setUser } from "../redux/slices/userSlice";
 import { useMutation } from "@apollo/client";
 import CREATE_NEW_USER from "../gqlLib/user/mutations/createNewUser";
-import { setLoading } from "../redux/slices/utilitySlice";
 import Loader from "../component/atoms/Loader/loader.component";
 
 // INITIALIZE 1: CREATE AUTH CONTEXT
@@ -17,9 +16,9 @@ const AuthContext = createContext(null);
 function AuthProvider({ children, activeUser }) {
   // INITIALIZE 2: DEFINE STATES
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   // const [active, setActive] = useState(null);
-  const { user, dbUser } = useAppSelector((state) => state?.user);
+  const { user } = useAppSelector((state) => state?.user);
   const [createNewUser, { loading: userLoading }] =
     useMutation(CREATE_NEW_USER);
   const dispatch = useAppDispatch();
@@ -36,7 +35,6 @@ function AuthProvider({ children, activeUser }) {
       let userEmail = "";
       let provider = "";
       const user = await Auth.currentAuthenticatedUser();
-      console.log("user", user);
       if (user?.attributes) {
         const {
           attributes: { email },
@@ -72,25 +70,12 @@ function AuthProvider({ children, activeUser }) {
         page !== "/login" &&
         page !== "/signup" &&
         page !== "/verify_email" &&
-        page !== "/forget_password"
+        page !== "/forget_password" &&
+        page !== "/welcome_blending101_extension"
       )
         router.push("/login");
-      // console.log("uncomment code in auth folder");
     }
   };
-
-  // useEffect(() => {
-  //   if (!dbUser.hasOwnProperty("isCreated")) {
-  //     // setLoading(false);
-  //     return;
-  //   }
-  //   console.log(dbUser);
-  //   if (!dbUser?.isCreated) router.push("/user/profile/");
-  //   // else if (dbUser?.isCreated) router.push("/");
-  //   setLoading(false);
-  //   // console.log(loading);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [dbUser, loading]);
 
   useEffect(() => {
     if (user) {
@@ -98,27 +83,12 @@ function AuthProvider({ children, activeUser }) {
     } else {
       isCurrentUser();
     }
-    // else {
-    //   if (!user && process.browser && page !== "/login" && page !== "/signup")
-    //     router.push("/login");
-    // }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  useEffect(() => {
-    if (
-      page === "/login" ||
-      page === "/signup" ||
-      page === "/verify_email" ||
-      page === "/forget_password"
-    ) {
-      // setActive(true);
-    }
-  }, [page]);
-
   // IF NO USER REDIRECT TO LOGIN PAGE
-  // to be uncommented when want to ensure user should not leave login page if not authorised
+  // to be uncommented when want to ensure user should not leave login page if not authorized
   // if (!active) return <Loader active={true} />;
 
   if (loading || userLoading) {

@@ -97,6 +97,10 @@ export const GET_30DAYS_CHALLENGE = gql`
         totalChallengePosts
         startDate
         endDate
+        viewOnly
+        memberInfo {
+          image
+        }
       }
     }
   }
@@ -164,5 +168,16 @@ export const CHALLENGE_GALLERY = gql`
 export const SHARE_CHALLENGE = gql`
   mutation ShareChallenge($userId: String!, $challengeId: String!) {
     shareGlobalChallenge(memberId: $userId, challengeId: $challengeId)
+  }
+`;
+
+export const GET_SHARED_CHALLENGE_DETAILS = gql`
+  query GetSharedChallengeInfo($challengeId: String!) {
+    getChallengeInfoById(challengeId: $challengeId, token: "") {
+      challengeName
+      memberInfo {
+        displayName
+      }
+    }
   }
 `;

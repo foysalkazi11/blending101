@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useLazyQuery } from "@apollo/client";
 import {
   faGear,
@@ -6,7 +6,6 @@ import {
   faShare,
   faToolbox,
 } from "@fortawesome/pro-light-svg-icons";
-import html2canvas from "html2canvas";
 import { isWithinInterval } from "date-fns";
 
 import RXPanel from "../../component/templates/Panel/RXFacts/RXPanel.component";
@@ -25,6 +24,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
   setChallengeInterval,
   setShowPostForm,
+  setChallengeView,
 } from "../../redux/slices/Challenge.slice";
 
 import styles from "../../styles/pages/planner.module.scss";
@@ -33,6 +33,8 @@ import Icon from "../../component/atoms/Icon/Icon.component";
 import { theme } from "../../configs/themes";
 import ChallengeShareModal from "../../component/organisms/Share/ChallengeShare.component";
 import { useRouter } from "next/router";
+import html2canvas from "html2canvas";
+import { dataURLtoFile } from "../../helpers/File";
 
 const ChallengePage = () => {
   const router = useRouter();
@@ -53,25 +55,7 @@ const ChallengePage = () => {
   } = useAppSelector((state) => state.challenge);
 
   const [getChallenges, { data }] = useLazyQuery(GET_30DAYS_CHALLENGE);
-
-  const handleScreenshot = async () => {
-    const element = challengeProgress.current;
-    const canvas = await html2canvas(element);
-
-    const data = canvas.toDataURL("image/jpg");
-    const link = document.createElement("a");
-
-    if (typeof link.download === "string") {
-      link.href = data;
-      link.download = "image.jpg";
-
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } else {
-      window.open(data);
-    }
-  };
+  const viewOnly = data?.getMyThirtyDaysChallenge?.challengeInfo?.viewOnly;
 
   useEffect(() => {
     if (
@@ -105,13 +89,14 @@ const ChallengePage = () => {
     const challenges = data?.getMyThirtyDaysChallenge?.challenge || [];
     if (challenges.length === 0) return;
 
+    dispatch(setChallengeView(viewOnly));
     dispatch(
       setChallengeInterval({
         startDate: challenges[0]?.date,
         endDate: challenges[challenges.length - 1]?.date,
       }),
     );
-  }, [data, dispatch]);
+  }, [data, dispatch, viewOnly]);
 
   let toolbox = null;
   if (showUpload) toolbox = <UploadCard />;
@@ -132,6 +117,7 @@ const ChallengePage = () => {
         name={data?.getMyThirtyDaysChallenge?.challengeInfo?.challengeName}
         show={showShare}
         setShow={setShowShare}
+        element={challengeProgress.current}
       />
       <div className={styles.planner}>
         <div className={styles.planner__pageTitle}>BLENDA CHALLENGE</div>
@@ -149,19 +135,21 @@ const ChallengePage = () => {
             <div className={styles.headingDiv}>
               <IconHeading title="Challenge" icon={faToolbox} />
               <div className="flex ai-center">
-                <div
-                  className={styles.uploadDiv}
-                  onClick={() => {
-                    setShowShare(true);
-                  }}
-                >
-                  <Icon
-                    fontName={faShare}
-                    size="1.6rem"
-                    color={theme.color.primary}
-                  />
-                  <span>Share</span>
-                </div>
+                {!viewOnly && (
+                  <div
+                    className={styles.uploadDiv}
+                    onClick={() => {
+                      setShowShare(true);
+                    }}
+                  >
+                    <Icon
+                      fontName={faShare}
+                      size="1.6rem"
+                      color={theme.color.primary}
+                    />
+                    <span>Share</span>
+                  </div>
+                )}
                 <div
                   className={styles.uploadDiv}
                   onClick={() => {
@@ -176,20 +164,22 @@ const ChallengePage = () => {
                   />
                   <span>Settings</span>
                 </div>
-                <div
-                  className={styles.uploadDiv}
-                  onClick={() => {
-                    dispatch(setShowPostForm(true));
-                    setShowSettings(false);
-                  }}
-                >
-                  <Icon
-                    fontName={faPlusCircle}
-                    size="1.6rem"
-                    color={theme.color.primary}
-                  />
-                  <span>Upload</span>
-                </div>
+                {!viewOnly && (
+                  <div
+                    className={styles.uploadDiv}
+                    onClick={() => {
+                      dispatch(setShowPostForm(true));
+                      setShowSettings(false);
+                    }}
+                  >
+                    <Icon
+                      fontName={faPlusCircle}
+                      size="1.6rem"
+                      color={theme.color.primary}
+                    />
+                    <span>Upload</span>
+                  </div>
+                )}
               </div>
             </div>
             <div className={styles.toolbox}>

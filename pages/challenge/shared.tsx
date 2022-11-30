@@ -1,3 +1,4 @@
+import { useQuery } from "@apollo/client";
 import {
   faFacebook,
   faInstagram,
@@ -6,98 +7,55 @@ import {
   faTwitter,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
+import { useRouter } from "next/router";
 import React, { Fragment } from "react";
 import Icon from "../../component/atoms/Icon/Icon.component";
+import { GET_SHARED_CHALLENGE_DETAILS } from "../../graphql/Challenge";
 
-import styles from "../../styles/pages/planner.module.scss";
+import styles from "../../styles/pages/challenge.module.scss";
 
-const shared = () => {
+const Shared = () => {
+  const router = useRouter();
+  const { data } = useQuery(GET_SHARED_CHALLENGE_DETAILS, {
+    variables: {
+      challengeId: router.query?.id,
+    },
+  });
+
+  const onViewChallenge = (e) => {
+    router.push(
+      `/challenge?id=${router.query?.id}&token=${router.query?.token}`,
+    );
+  };
+
+  if (!router.query?.id || !router.query?.token) return <></>;
   return (
     <Fragment>
       <header className={styles.shared__header}>
         <img src="/logo.png" alt="" />
-        <nav>
-          <button>Sign In</button>
-          <button className="signup">Sign Up</button>
-        </nav>
       </header>
       <main className={styles.shared__main}>
         <div className="row">
-          <div className="col-9">
-            <h1>Gabriel has shared a Poily meal plan with you!</h1>
+          <div className="col-8">
+            <h1>
+              {data?.getChallengeInfoById?.memberInfo?.displayName} has shared a
+              Poily Challenge with you!
+            </h1>
             <p>
-              Meal plans complete with recipes and ingredients ready to be added
-              to your grocery list and shopped.
+              Follow along has Gabriel&apos;s daily blending builds a habitual
+              practice of blending.
             </p>
-            <button>View Plan</button>
-            <div>
-              <h3>High Protein Vegan Blend Plan</h3>
-              <div className="row">
-                <div className="col-3">
-                  <div className={styles.shared__preview}>
-                    <img src="/images/img1.png" alt="" />
-                    <h6>Red Hots Smoothie</h6>
-                    <div>
-                      <span>
-                        RX Score <i>905</i>
-                      </span>
-                      <span>
-                        Calories <i>15</i>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-3">
-                  <div className={styles.shared__preview}>
-                    <img src="/images/img5.png" alt="" />
-                    <h6>Red Hots Smoothie</h6>
-                    <div>
-                      <span>
-                        RX Score <i>905</i>
-                      </span>
-                      <span>
-                        Calories <i>15</i>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-3">
-                  <div className={styles.shared__preview}>
-                    <img src="/images/img1.png" alt="" />
-                    <h6>Red Hots Smoothie</h6>
-                    <div>
-                      <span>
-                        RX Score <i>905</i>
-                      </span>
-                      <span>
-                        Calories <i>15</i>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-3">
-                  <div className={styles.shared__preview}>
-                    <img src="/images/img5.png" alt="" />
-                    <h6>Red Hots Smoothie</h6>
-                    <div>
-                      <span>
-                        RX Score <i>905</i>
-                      </span>
-                      <span>
-                        Calories <i>15</i>
-                      </span>
-                    </div>
-                  </div>
-                </div>
+            <button onClick={onViewChallenge}>View Challenge</button>
+            <div style={{ textAlign: "center" }}>
+              <h3>{data?.getChallengeInfoById?.challengeName}</h3>
+              <div className={styles.shared__preview}>
+                <img src="/images/challenge.jpg" alt="Challenge Preview" />
               </div>
             </div>
           </div>
-          <div
-            className="col-3"
-            style={{ overflow: "hidden", height: "30rem" }}
-          >
+          <div className="col-4">
             <img
-              src="/images/iphone_mockup.png"
+              src="/images/scnd_phone.png"
               alt=""
               className={styles.shared__main_mockup}
             />
@@ -121,4 +79,4 @@ const shared = () => {
   );
 };
 
-export default shared;
+export default Shared;
