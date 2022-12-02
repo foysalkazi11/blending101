@@ -16,15 +16,34 @@ interface searchtagsComponentProps {
 export default function SearchtagsComponent({
   allFilters = [],
 }: searchtagsComponentProps) {
+  //check active filter item
+  const checkExcludeIngredientIds = (id: string) => {
+    return allFilters.some(
+      (item) =>
+        item?.filterCriteria === "includeIngredientIds" &&
+        item?.id === id &&
+        //@ts-ignore
+        item?.excludeIngredientIds,
+    );
+  };
   return (
     <div className={styles.searchtab}>
       {allFilters?.length
         ? allFilters.map((filterItem) => {
-            const { tagLabel } = filterItem;
+            const { tagLabel, id } = filterItem;
+            const checkExcludeId = checkExcludeIngredientIds(id);
             return tagLabel ? (
-              <FilterByTag key={filterItem?.id} item={filterItem} />
+              <FilterByTag
+                key={id}
+                item={filterItem}
+                isIdExcluded={checkExcludeId}
+              />
             ) : (
-              <FilterByPicture key={filterItem?.id} item={filterItem} />
+              <FilterByPicture
+                key={id}
+                item={filterItem}
+                isIdExcluded={checkExcludeId}
+              />
             );
           })
         : null}
@@ -32,10 +51,20 @@ export default function SearchtagsComponent({
   );
 }
 
-const FilterByPicture = ({ item }: { item: FilterCriteriaValue }) => {
+const FilterByPicture = ({
+  item,
+  isIdExcluded = false,
+}: {
+  item: FilterCriteriaValue;
+  isIdExcluded: boolean;
+}) => {
   const dispatch = useAppDispatch();
   return (
-    <div className={styles.item}>
+    <div
+      className={`${styles.item} ${
+        isIdExcluded ? styles.activeItemPrimary : ""
+      }`}
+    >
       <div
         className={styles.cross}
         onClick={() => {
@@ -60,10 +89,21 @@ const FilterByPicture = ({ item }: { item: FilterCriteriaValue }) => {
   );
 };
 
-const FilterByTag = ({ item }: { item: FilterCriteriaValue }) => {
+const FilterByTag = ({
+  item,
+  isIdExcluded = false,
+}: {
+  item: FilterCriteriaValue;
+  isIdExcluded: boolean;
+}) => {
   const dispatch = useAppDispatch();
   return (
-    <div className={styles.item} style={{ minHeight: "35px" }}>
+    <div
+      className={`${styles.item} ${
+        isIdExcluded ? styles.activeItemPrimary : ""
+      }`}
+      style={{ minHeight: "35px" }}
+    >
       <div
         className={styles.cross}
         onClick={() => {
