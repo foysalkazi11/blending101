@@ -23,6 +23,8 @@ type OptionSelectProps = {
   ) => void;
   optionSelectItems: any[];
   filterCriteria: FilterCriteriaOptions;
+  checkExcludeIngredientIds?: (id: string) => boolean;
+  focusOptionId?: string;
 };
 
 const OptionSelect = ({
@@ -30,6 +32,8 @@ const OptionSelect = ({
   handleBlendAndIngredientUpdate = () => {},
   filterCriteria,
   optionSelectItems = [],
+  checkExcludeIngredientIds = () => false,
+  focusOptionId = "",
 }: OptionSelectProps) => {
   const { recipeFilterByIngredientCategory, allIngredients } = useAppSelector(
     (state) => state?.ingredients,
@@ -42,6 +46,7 @@ const OptionSelect = ({
         {optionSelectItems?.length
           ? optionSelectItems?.map((item, index) => {
               const isSelected = checkActiveItem(item.id);
+              const isIdExcluded = checkExcludeIngredientIds(item.id);
               return (
                 <Chip
                   key={item?.id}
@@ -51,6 +56,8 @@ const OptionSelect = ({
                     handleBlendAndIngredientUpdate
                   }
                   isSelected={isSelected}
+                  isIdExcluded={isIdExcluded}
+                  focusOptionId={focusOptionId}
                 />
               );
             })
@@ -65,16 +72,21 @@ const Chip = ({
   isSelected,
   filterCriteria,
   handleBlendAndIngredientUpdate,
+  isIdExcluded,
+  focusOptionId = "",
 }) => {
   const [isChipHovered, setIsChipHovered] = useState(false);
   const dispatch = useAppDispatch();
-  const {
-    numericFilterState: { id },
-  } = useAppSelector((state) => state.filterRecipe);
 
   return (
     <div
-      className={`${styles.signleItem} ${isSelected ? styles.selected : ""}`}
+      className={`${styles.signleItem} ${
+        isSelected
+          ? isIdExcluded
+            ? styles.selectedPrimary
+            : styles.selectedSecondary
+          : ""
+      }`}
       onClick={(e) => {
         e.stopPropagation();
         dispatch(
@@ -88,7 +100,15 @@ const Chip = ({
       onMouseOver={() => setIsChipHovered(true)}
       onMouseOut={() => setIsChipHovered(false)}
     >
-      <span className={`${item.id === id ? styles.activeColor : ""}`}>
+      <span
+        className={`${
+          item.id === focusOptionId
+            ? isIdExcluded
+              ? styles.activeColorPrimary
+              : styles.activeColorSecondary
+            : ""
+        }`}
+      >
         {item?.name}
       </span>
       {isSelected && (

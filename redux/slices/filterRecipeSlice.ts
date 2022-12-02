@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RecipeType } from "../../type/recipeType";
 
+export type ActiveSectionType = "visual" | "tags";
+
 type FilterProps = {
   pageTitle: string;
   expandedMenu: string;
@@ -13,14 +15,22 @@ type FilterProps = {
   value?: number;
 };
 
-interface BlendOrIngredientType {
+export interface BlendType {
   name: string;
   id: string;
   image?: string;
   tagLabel: string;
   filterCriteria: FilterCriteriaOptions;
 }
-interface NutrientFiltersType {
+export interface IngredientType {
+  name: string;
+  id: string;
+  image?: string;
+  tagLabel: string;
+  filterCriteria: FilterCriteriaOptions;
+  excludeIngredientIds: boolean;
+}
+export interface NutrientFiltersType {
   between: boolean;
   category: "energy" | "mineral" | "vitamin";
   greaterThan: boolean;
@@ -35,7 +45,7 @@ interface NutrientFiltersType {
   filterCriteria: FilterCriteriaOptions;
 }
 
-interface NutrientMatrixType {
+export interface NutrientMatrixType {
   between: boolean;
   greaterThan: boolean;
   lessThan: boolean;
@@ -56,13 +66,15 @@ export type FilterCriteriaOptions =
   | "nutrientMatrix";
 
 interface ActiveFilterTagCriteriaType {
+  activeSection: ActiveSectionType;
   filterCriteria: FilterCriteriaOptions;
   activeTab: string;
   childTab: string;
 }
 
 export type FilterCriteriaValue =
-  | BlendOrIngredientType
+  | BlendType
+  | IngredientType
   | NutrientFiltersType
   | NutrientMatrixType;
 
@@ -79,6 +91,7 @@ interface FilterState {
   activeFilterTag: ActiveFilterTagCriteriaType;
   numericFilterState: NutrientFiltersType | NutrientMatrixType;
   allFilterRecipes: AllFilterRecipes;
+  excludeFilterState: IngredientType;
 }
 
 const initialState: FilterState = {
@@ -91,6 +104,7 @@ const initialState: FilterState = {
     values: [],
   },
   activeFilterTag: {
+    activeSection: "visual",
     filterCriteria: null,
     activeTab: "",
     childTab: "",
@@ -101,6 +115,7 @@ const initialState: FilterState = {
     filterRecipes: [],
     isFiltering: false,
   },
+  excludeFilterState: {} as IngredientType,
 };
 
 export const filterRecipeSlice = createSlice({
@@ -243,6 +258,12 @@ export const filterRecipeSlice = createSlice({
             ...payload.value,
           };
         }
+        if (payload.value.filterCriteria === "includeIngredientIds") {
+          // @ts-ignore
+          state.excludeFilterState = {
+            ...payload.value,
+          };
+        }
       }
       // when update status remove
       if (payload.updateStatus === "remove") {
@@ -261,11 +282,24 @@ export const filterRecipeSlice = createSlice({
             };
           }
         }
+        if (payload.value.filterCriteria === "includeIngredientIds") {
+          if (state.excludeFilterState.id === payload.value.id) {
+            // @ts-ignore
+            state.excludeFilterState = {};
+          }
+        }
       }
       if (payload.updateStatus === "update") {
         state.allFilters = state.allFilters.map((filter) =>
           filter.id === payload.value.id ? payload.value : filter,
         );
+        if (payload.value.filterCriteria === "includeIngredientIds") {
+          // @ts-ignore
+          state.excludeFilterState = {
+            ...state.excludeFilterState,
+            ...payload.value,
+          };
+        }
       }
       // when update status removeAll
       if (payload.updateStatus === "removeAll") {
@@ -277,17 +311,29 @@ export const filterRecipeSlice = createSlice({
         state.numericFilterState = {
           ...dummyObj,
         };
+        // @ts-ignore
+        state.excludeFilterState = {};
       }
       // when update status focus
       if (payload.updateStatus === "focus") {
+        const findOneItem = state.allFilters.find(
+          (item) => item.id === payload.value.id,
+        );
         if (
-          payload.value.filterCriteria === "nutrientFilters" ||
+          (findOneItem && payload.value.filterCriteria === "nutrientFilters") ||
           payload.value.filterCriteria === "nutrientMatrix"
         ) {
           // @ts-ignore
-          const findOneItem: NutrientFiltersType | NutrientMatrixType =
-            state.allFilters.find((item) => item.id === payload.value.id);
           state.numericFilterState = {
+            ...findOneItem,
+          };
+        }
+        if (
+          findOneItem &&
+          payload.value.filterCriteria === "includeIngredientIds"
+        ) {
+          // @ts-ignore
+          state.excludeFilterState = {
             ...findOneItem,
           };
         }
