@@ -55,6 +55,16 @@ export default function Filtertray({ filter }) {
   const checkActiveItem = (id: string) => {
     return allFilters.some((item) => item?.id === id);
   };
+  //check active filter item
+  const checkExcludeIngredientIds = (id: string) => {
+    return allFilters.some(
+      (item) =>
+        item?.filterCriteria === "includeIngredientIds" &&
+        item?.id === id &&
+        //@ts-ignore
+        item?.excludeIngredientIds,
+    );
+  };
 
   // blend and ingredient update function
   const handleBlendAndIngredientUpdate = (
@@ -131,6 +141,7 @@ export default function Filtertray({ filter }) {
             ingredientCategoryData?.filterIngredientByCategoryAndClass
           }
           ingredientCategoryLoading={ingredientCategoryLoading}
+          checkExcludeIngredientIds={checkExcludeIngredientIds}
         />
       )}
     </TrayWrapper>

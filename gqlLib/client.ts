@@ -1,7 +1,9 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 
+const API_URL = "https://blenda.onrender.com/graphql";
+
 const client = new ApolloClient({
-  uri: "https://blendarecipe2.herokuapp.com/graphql",
+  uri: API_URL,
   cache: new InMemoryCache(),
   // defaultOptions: {
   //   watchQuery: {
