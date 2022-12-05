@@ -6,7 +6,11 @@ type ToggleMenuProps = {
   setToggle?: (val: number) => void;
   toggleMenuList: string[] | ReactNode[];
   maxWidth?: React.CSSProperties;
-  variant?: "contain" | "outlinePrimary" | "outlineSecondary";
+  variant?:
+    | "containPrimary"
+    | "containSecondary"
+    | "outlinePrimary"
+    | "outlineSecondary";
 };
 
 const ToggleMenu = ({
@@ -14,7 +18,7 @@ const ToggleMenu = ({
   setToggle = () => {},
   toggleMenuList,
   maxWidth = {},
-  variant = "contain",
+  variant = "containPrimary",
 }: ToggleMenuProps) => {
   const menuRef = useRef<HTMLDivElement | null>(null);
 

@@ -28,8 +28,11 @@
       justify-content: center;
       transition: all 0.3s;
     }
-    .contain {
-      color: white;
+    .containPrimary {
+      color: #fff;
+    }
+    .containSecondary {
+      color: #fff;
     }
     .outlinePrimary {
       color: $primaryColor;
@@ -58,8 +61,11 @@
   transition: all 0.3s;
 }
 
-.contain {
+.containPrimary {
   background-color: $primaryColor;
+}
+.containSecondary {
+  background-color: $secondaryColor;
 }
 .outlinePrimary {
   border: 2px solid $primaryColor;
