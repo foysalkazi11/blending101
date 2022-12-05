@@ -167,11 +167,9 @@ const TagSection = ({
   ] = useLazyQuery(GET_BLEND_NUTRIENTS_BASED_ON_CATEGORY, {
     fetchPolicy: "cache-and-network",
   });
-  const {
-    activeFilterTag: { activeTab, childTab, filterCriteria },
-    excludeFilterState,
-    numericFilterState,
-  } = useAppSelector((state) => state?.filterRecipe);
+  const { activeFilterTag, excludeFilterState, numericFilterState } =
+    useAppSelector((state) => state?.filterRecipe);
+  const { activeTab, childTab, filterCriteria } = activeFilterTag;
 
   const { values } = useAppSelector(
     (state) => state?.filterRecipe?.activeState,
@@ -221,21 +219,6 @@ const TagSection = ({
         childTab: childTab || activeTab,
       }),
     );
-    // child = child || "";
-    // category = category || "";
-    // if (child === "Ingredient" || child === "Nutrition") {
-    //   dispatch(setRecipeFilterByIngredientCategory(child));
-    //   setChailIngredient(category);
-    // } else {
-    //   dispatch(setRecipeFilterByIngredientCategory(category));
-    //   setChailIngredient(child);
-    // }
-    // dispatch(
-    //   activeFilter({
-    //     pageTitle: category,
-    //     expandedMenu: child,
-    //   }),
-    // );
   };
 
   const optionSelectorHandler = (chip: string) => {
@@ -345,8 +328,8 @@ const TagSection = ({
               optionSelectItems={optionSelectItems}
               filterCriteria={filterCriteria}
               checkActiveItem={checkActiveItem}
-              handleBlendAndIngredientUpdate={handleBlendAndIngredientUpdate}
               checkExcludeIngredientIds={checkExcludeIngredientIds}
+              activeFilterTag={activeFilterTag}
             />
           ) : null}
           {activeTab === "Ingredient" ? (
@@ -356,9 +339,9 @@ const TagSection = ({
                 optionSelectItems={optionSelectItems}
                 filterCriteria={filterCriteria}
                 checkActiveItem={checkActiveItem}
-                handleBlendAndIngredientUpdate={handleBlendAndIngredientUpdate}
                 checkExcludeIngredientIds={checkExcludeIngredientIds}
                 focusOptionId={excludeFilterState.id}
+                activeFilterTag={activeFilterTag}
               />
             </>
           ) : null}
@@ -374,8 +357,8 @@ const TagSection = ({
                 optionSelectItems={optionSelectItems}
                 filterCriteria={filterCriteria}
                 checkActiveItem={checkActiveItem}
-                handleBlendAndIngredientUpdate={handleBlendAndIngredientUpdate}
                 focusOptionId={numericFilterState.id}
+                activeFilterTag={activeFilterTag}
               />
             </>
           ) : null}

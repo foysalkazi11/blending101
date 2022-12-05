@@ -1,45 +1,40 @@
-import React, { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import { INGREDIENTS_FILTER } from "../static/recipe";
+import React, { useState } from "react";
+import { useAppDispatch } from "../../../../redux/hooks";
 import styles from "./OptionSelect.module.scss";
-import CheckCircle from "../../../../public/icons/check_circle_black_24dp.svg";
 import {
+  ActiveFilterTagCriteriaType,
   FilterCriteriaOptions,
   FilterCriteriaValue,
   updateFilterCriteriaItem,
 } from "../../../../redux/slices/filterRecipeSlice";
-import useHover from "../../../utility/useHover";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircleXmark,
   faCircleCheck,
 } from "@fortawesome/free-solid-svg-icons";
+import OptionSelectSkeleton from "../../../../theme/skeletons/optionSelectSkeleton/OptionSelectSkeleton";
 
 type OptionSelectProps = {
   checkActiveItem: (id: string) => boolean;
-  handleBlendAndIngredientUpdate: (
-    value: FilterCriteriaValue,
-    present: boolean,
-  ) => void;
+  // handleBlendAndIngredientUpdate: (
+  //   value: FilterCriteriaValue,
+  //   present: boolean,
+  // ) => void;
   optionSelectItems: any[];
   filterCriteria: FilterCriteriaOptions;
   checkExcludeIngredientIds?: (id: string) => boolean;
   focusOptionId?: string;
+  activeFilterTag: ActiveFilterTagCriteriaType;
 };
 
 const OptionSelect = ({
   checkActiveItem = () => false,
-  handleBlendAndIngredientUpdate = () => {},
   filterCriteria,
   optionSelectItems = [],
   checkExcludeIngredientIds = () => false,
   focusOptionId = "",
+  activeFilterTag,
 }: OptionSelectProps) => {
-  const { recipeFilterByIngredientCategory, allIngredients } = useAppSelector(
-    (state) => state?.ingredients,
-  );
-  // const [hoverRef, isHovered] = useHover();
-
   return (
     <div className={styles.optionSelectContainer}>
       <div className={styles.options}>
@@ -52,12 +47,10 @@ const OptionSelect = ({
                   key={item?.id}
                   item={item}
                   filterCriteria={filterCriteria}
-                  handleBlendAndIngredientUpdate={
-                    handleBlendAndIngredientUpdate
-                  }
                   isSelected={isSelected}
                   isIdExcluded={isIdExcluded}
                   focusOptionId={focusOptionId}
+                  activeFilterTag={activeFilterTag}
                 />
               );
             })
@@ -71,9 +64,9 @@ const Chip = ({
   item,
   isSelected,
   filterCriteria,
-  handleBlendAndIngredientUpdate,
   isIdExcluded,
   focusOptionId = "",
+  activeFilterTag = {},
 }) => {
   const [isChipHovered, setIsChipHovered] = useState(false);
   const dispatch = useAppDispatch();
@@ -92,7 +85,10 @@ const Chip = ({
         dispatch(
           updateFilterCriteriaItem({
             updateStatus: isSelected ? "focus" : "add",
-            value: item,
+            value: {
+              ...item,
+              origin: { ...activeFilterTag },
+            },
             filterCriteria,
           }),
         );
@@ -122,7 +118,10 @@ const Chip = ({
                 dispatch(
                   updateFilterCriteriaItem({
                     updateStatus: "remove",
-                    value: item,
+                    value: {
+                      ...item,
+                      origin: { ...activeFilterTag },
+                    },
                     filterCriteria,
                   }),
                 );

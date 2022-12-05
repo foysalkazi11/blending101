@@ -5,9 +5,12 @@ import { useAppDispatch } from "../../redux/hooks";
 
 import styles from "./searchtag.module.scss";
 import {
+  ActiveFilterTagCriteriaType,
   FilterCriteriaValue,
+  updateActiveFilterTag,
   updateFilterCriteriaItem,
 } from "../../redux/slices/filterRecipeSlice";
+import { setOpenFilterTray } from "../../redux/slices/sideTraySlice";
 
 interface searchtagsComponentProps {
   allFilters?: FilterCriteriaValue[];
@@ -16,6 +19,7 @@ interface searchtagsComponentProps {
 export default function SearchtagsComponent({
   allFilters = [],
 }: searchtagsComponentProps) {
+  const dispatch = useAppDispatch();
   //check active filter item
   const checkExcludeIngredientIds = (id: string) => {
     return allFilters.some(
@@ -25,6 +29,13 @@ export default function SearchtagsComponent({
         //@ts-ignore
         item?.excludeIngredientIds,
     );
+  };
+
+  const handleUpdateActiveFilterTag = (
+    activeFilterTag: ActiveFilterTagCriteriaType,
+  ) => {
+    dispatch(setOpenFilterTray(true));
+    dispatch(updateActiveFilterTag(activeFilterTag));
   };
   return (
     <div className={styles.searchtab}>
@@ -37,12 +48,14 @@ export default function SearchtagsComponent({
                 key={id}
                 item={filterItem}
                 isIdExcluded={checkExcludeId}
+                handleUpdateActiveFilterTag={handleUpdateActiveFilterTag}
               />
             ) : (
               <FilterByPicture
                 key={id}
                 item={filterItem}
                 isIdExcluded={checkExcludeId}
+                handleUpdateActiveFilterTag={handleUpdateActiveFilterTag}
               />
             );
           })
@@ -54,9 +67,11 @@ export default function SearchtagsComponent({
 const FilterByPicture = ({
   item,
   isIdExcluded = false,
+  handleUpdateActiveFilterTag,
 }: {
   item: FilterCriteriaValue;
   isIdExcluded: boolean;
+  handleUpdateActiveFilterTag: (args: ActiveFilterTagCriteriaType) => void;
 }) => {
   const dispatch = useAppDispatch();
   return (
@@ -64,6 +79,7 @@ const FilterByPicture = ({
       className={`${styles.item} ${
         isIdExcluded ? styles.activeItemPrimary : ""
       }`}
+      onClick={() => handleUpdateActiveFilterTag(item?.origin)}
     >
       <div
         className={styles.cross}
@@ -92,9 +108,11 @@ const FilterByPicture = ({
 const FilterByTag = ({
   item,
   isIdExcluded = false,
+  handleUpdateActiveFilterTag,
 }: {
   item: FilterCriteriaValue;
   isIdExcluded: boolean;
+  handleUpdateActiveFilterTag: (args: ActiveFilterTagCriteriaType) => void;
 }) => {
   const dispatch = useAppDispatch();
   return (
@@ -103,6 +121,7 @@ const FilterByTag = ({
         isIdExcluded ? styles.activeItemPrimary : ""
       }`}
       style={{ minHeight: "35px" }}
+      onClick={() => handleUpdateActiveFilterTag(item?.origin)}
     >
       <div
         className={styles.cross}

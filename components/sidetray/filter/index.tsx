@@ -21,7 +21,6 @@ import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/
 import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
 
 export default function Filtertray({ filter }) {
-  const [toggle, setToggle] = useState(0);
   const { openFilterTray } = useAppSelector((state) => state?.sideTray);
   const { allFilters, activeFilterTag } = useAppSelector(
     (state) => state?.filterRecipe,
@@ -42,7 +41,6 @@ export default function Filtertray({ filter }) {
 
   // toggle tab
   const handleToggle = (no: number) => {
-    setToggle(no);
     dispatch(
       updateActiveFilterTag({
         ...activeFilterTag,
@@ -98,13 +96,13 @@ export default function Filtertray({ filter }) {
     >
       <ToggleMenu
         setToggle={handleToggle}
-        toggle={toggle}
+        toggle={activeFilterTag.activeSection === "visual" ? 0 : 1}
         toggleMenuList={[
-          <div key={0} style={{ display: "flex", alignItems: "center" }}>
+          <div key={"key0"} style={{ display: "flex", alignItems: "center" }}>
             <FaEye className={styles.tag} />
             <p>Visual</p>
           </div>,
-          <div key={1} style={{ display: "flex", alignItems: "center" }}>
+          <div key={"key1"} style={{ display: "flex", alignItems: "center" }}>
             <BsTagsFill className={styles.tag} />
             <p>Tags</p>
           </div>,

@@ -21,6 +21,7 @@ export interface BlendType {
   image?: string;
   tagLabel: string;
   filterCriteria: FilterCriteriaOptions;
+  origin: ActiveFilterTagCriteriaType;
 }
 export interface IngredientType {
   name: string;
@@ -29,6 +30,7 @@ export interface IngredientType {
   tagLabel: string;
   filterCriteria: FilterCriteriaOptions;
   excludeIngredientIds: boolean;
+  origin: ActiveFilterTagCriteriaType;
 }
 export interface NutrientFiltersType {
   between: boolean;
@@ -43,6 +45,7 @@ export interface NutrientFiltersType {
   tagLabel: string;
   name: string;
   filterCriteria: FilterCriteriaOptions;
+  origin: ActiveFilterTagCriteriaType;
 }
 
 export interface NutrientMatrixType {
@@ -58,6 +61,7 @@ export interface NutrientMatrixType {
   tagLabel: string;
   name: string;
   filterCriteria: FilterCriteriaOptions;
+  origin: ActiveFilterTagCriteriaType;
 }
 export type FilterCriteriaOptions =
   | "blendTypes"
@@ -65,7 +69,7 @@ export type FilterCriteriaOptions =
   | "nutrientFilters"
   | "nutrientMatrix";
 
-interface ActiveFilterTagCriteriaType {
+export interface ActiveFilterTagCriteriaType {
   activeSection: ActiveSectionType;
   filterCriteria: FilterCriteriaOptions;
   activeTab: string;
