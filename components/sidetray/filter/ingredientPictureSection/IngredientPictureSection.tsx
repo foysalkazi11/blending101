@@ -76,6 +76,12 @@ const IngredientPictureSection = ({
                         name: item?.ingredientName,
                         tagLabel: "",
                         filterCriteria: "includeIngredientIds",
+                        origin: {
+                          activeSection: "visual",
+                          filterCriteria: "includeIngredientIds",
+                          activeTab: "Ingredients",
+                          childTab: item?.ingredientName || "",
+                        },
                       },
                     )
                   }
