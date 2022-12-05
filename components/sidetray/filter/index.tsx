@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import TrayWrapper from "../TrayWrapper";
 import styles from "./filter.module.scss";
 import { FaEye } from "react-icons/fa";
@@ -12,17 +12,20 @@ import TrayTag from "../TrayTag";
 import { FiFilter } from "react-icons/fi";
 import {
   FilterCriteriaValue,
+  updateActiveFilterTag,
   updateFilterCriteriaItem,
 } from "../../../redux/slices/filterRecipeSlice";
 import { useQuery } from "@apollo/client";
 import { FETCH_BLEND_CATEGORIES } from "../../../gqlLib/category/queries/fetchCategories";
 import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
+import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
 
 export default function Filtertray({ filter }) {
-  const [toggle, setToggle] = useState(1);
+  const [toggle, setToggle] = useState(0);
   const { openFilterTray } = useAppSelector((state) => state?.sideTray);
-  const { allFilters } = useAppSelector((state) => state?.filterRecipe);
-  const ref = useRef<any>();
+  const { allFilters, activeFilterTag } = useAppSelector(
+    (state) => state?.filterRecipe,
+  );
   const dispatch = useAppDispatch();
   const { data: blendCategoryData, loading: blendCategoryLoading } = useQuery(
     FETCH_BLEND_CATEGORIES,
@@ -39,12 +42,13 @@ export default function Filtertray({ filter }) {
 
   // toggle tab
   const handleToggle = (no: number) => {
-    if (no === 1) {
-      ref.current.style.left = "0";
-    } else {
-      ref.current.style.left = "50%";
-    }
     setToggle(no);
+    dispatch(
+      updateActiveFilterTag({
+        ...activeFilterTag,
+        activeSection: no === 0 ? "visual" : "tags",
+      }),
+    );
   };
 
   const toggleTray = () => {
@@ -92,35 +96,23 @@ export default function Filtertray({ filter }) {
         <TrayTag icon={<FiFilter />} placeMent="left" hover={hover} />
       )}
     >
-      <div className={styles.main}>
-        <div className={styles.main__top}>
-          <div className={styles.main__top__menu}>
-            <div className={styles.active} ref={ref}></div>
-            <div
-              className={
-                toggle === 2
-                  ? styles.main__top__menu__child
-                  : styles.main__top__menu__child + " " + styles.active__menu
-              }
-              onClick={() => handleToggle(1)}
-            >
-              <FaEye className={styles.tag} /> Visual
-            </div>
-            <div
-              className={
-                toggle === 1
-                  ? styles.main__top__menu__child
-                  : styles.main__top__menu__child + " " + styles.active__menu
-              }
-              onClick={() => handleToggle(2)}
-            >
-              <BsTagsFill className={styles.tag} /> Tags
-            </div>
-          </div>
-        </div>
-      </div>
+      <ToggleMenu
+        setToggle={handleToggle}
+        toggle={toggle}
+        toggleMenuList={[
+          <div key={0} style={{ display: "flex", alignItems: "center" }}>
+            <FaEye className={styles.tag} />
+            <p>Visual</p>
+          </div>,
+          <div key={1} style={{ display: "flex", alignItems: "center" }}>
+            <BsTagsFill className={styles.tag} />
+            <p>Tags</p>
+          </div>,
+        ]}
+        variant={"containSecondary"}
+      />
 
-      {toggle === 1 ? (
+      {activeFilterTag.activeSection === "visual" && (
         <VisualSection
           checkActiveItem={checkActiveItem}
           handleBlendAndIngredientUpdate={handleBlendAndIngredientUpdate}
@@ -131,7 +123,8 @@ export default function Filtertray({ filter }) {
           }
           ingredientCategoryLoading={ingredientCategoryLoading}
         />
-      ) : (
+      )}
+      {activeFilterTag.activeSection === "tags" && (
         <TagSection
           checkActiveItem={checkActiveItem}
           handleBlendAndIngredientUpdate={handleBlendAndIngredientUpdate}
