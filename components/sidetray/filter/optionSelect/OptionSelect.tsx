@@ -25,6 +25,7 @@ type OptionSelectProps = {
   checkExcludeIngredientIds?: (id: string) => boolean;
   focusOptionId?: string;
   activeFilterTag: ActiveFilterTagCriteriaType;
+  optionsLoading?: boolean;
 };
 
 const OptionSelect = ({
@@ -34,7 +35,12 @@ const OptionSelect = ({
   checkExcludeIngredientIds = () => false,
   focusOptionId = "",
   activeFilterTag,
+  optionsLoading = false,
 }: OptionSelectProps) => {
+  if (optionsLoading) {
+    return <OptionSelectSkeleton />;
+  }
+
   return (
     <div className={styles.optionSelectContainer}>
       <div className={styles.options}>
