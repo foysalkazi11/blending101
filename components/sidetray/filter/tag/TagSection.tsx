@@ -359,6 +359,7 @@ const TagSection = ({
                 checkActiveItem={checkActiveItem}
                 focusOptionId={numericFilterState.id}
                 activeFilterTag={activeFilterTag}
+                optionsLoading={blendNutrientLoading}
               />
             </>
           ) : null}
