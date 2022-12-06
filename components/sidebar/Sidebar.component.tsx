@@ -29,7 +29,7 @@ export default function SidebarComponent(props) {
       link: "/challenge",
       content: "Challenge",
     },
-    { logo: "/icons/book_light.svg", link: "/", content: "News" },
+    { logo: "/icons/book_light.svg", link: "/blog", content: "News" },
     { logo: "/icons/store.svg", link: "/", content: "Shop" },
   ];
 
