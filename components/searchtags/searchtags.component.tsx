@@ -83,7 +83,8 @@ const FilterByPicture = ({
     >
       <div
         className={styles.cross}
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           dispatch(
             updateFilterCriteriaItem({
               updateStatus: "remove",
@@ -125,7 +126,8 @@ const FilterByTag = ({
     >
       <div
         className={styles.cross}
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           dispatch(
             updateFilterCriteriaItem({
               updateStatus: "remove",

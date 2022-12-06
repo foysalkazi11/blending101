@@ -2,7 +2,6 @@ import { faShareNodes, faXmark } from "@fortawesome/pro-regular-svg-icons";
 import { faBookmark } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import IconWarper from "../../../../theme/iconWarper/IconWarper";
 import { RecipeType } from "../../../../type/recipeType";
 import ShowRecipeContainer from "../../../showRecipeContainer";
