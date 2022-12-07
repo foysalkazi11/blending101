@@ -7,7 +7,8 @@ $paddingValue: 5px 5px;
 
   &__card {
     background-color: white;
-
+    border-top-left-radius: 9px;
+    border-top-right-radius: 9px;
     &__toggler {
       display: flex;
       justify-content: space-between;

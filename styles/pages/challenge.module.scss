@@ -91,3 +91,119 @@
     }
   }
 }
+
+.invited {
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 160rem;
+    margin: 1.5rem auto;
+    img {
+      height: 5rem;
+    }
+  }
+  &__main {
+    max-width: 160rem;
+    margin: 2rem auto -33rem;
+    h1 {
+      font-size: 4rem;
+      color: #323232;
+      font-weight: 600;
+      margin-top: 7rem;
+    }
+    p {
+      margin-top: 2rem;
+      margin-bottom: 3rem;
+      color: #626262;
+      font-size: 3.4rem;
+      line-height: 4.2rem;
+      font-weight: 200;
+      span {
+        color: #fd5109;
+        font-weight: 400;
+      }
+    }
+    button {
+      border: none;
+      background-color: #fe5717;
+      border-radius: 4rem;
+      color: #fefefe;
+      font-weight: 600;
+      font-family: "Poppins", sans-serif;
+      font-size: 2.4rem;
+      padding: 2rem 5rem;
+      cursor: pointer;
+      margin: auto;
+      display: block;
+    }
+    h3 {
+      font-size: 2.4rem;
+      text-align: center;
+      margin-top: 2rem;
+    }
+    &_mockup {
+      position: relative;
+      top: 140px;
+      transform: rotate(12deg);
+      overflow: hidden;
+      width: 32rem;
+      z-index: -1;
+    }
+    &_ing {
+      position: relative;
+      top: 440px;
+      left: -200px;
+      // transform: rotate(12deg);
+      overflow: hidden;
+      width: 32rem;
+      z-index: 1;
+    }
+    &_leader {
+      position: relative;
+      top: -70px;
+      left: -80px;
+      // transform: rotate(12deg);
+      overflow: hidden;
+      width: 48rem;
+      z-index: 1;
+    }
+  }
+  &__preview {
+    text-align: center;
+    position: relative;
+    z-index: 1000;
+    background-color: rgb(255 255 255 / 49%);
+    display: inline-block;
+    padding: 3rem;
+    border-radius: 50%;
+    img {
+      border-radius: 50%;
+    }
+  }
+  &__footer {
+    position: relative;
+    width: 100%;
+    font-family: "Poppins", sans-serif;
+    background-color: #ecf2e5;
+    &_bg {
+      background-color: #ecf2e5;
+      height: 15rem;
+    }
+    &_social {
+      position: absolute;
+      top: 70%;
+      left: 50%;
+      transform: translateX(-50%);
+      p {
+        text-align: center;
+        margin-top: 2rem;
+      }
+    }
+    & > img {
+      width: 100%;
+      background-size: 100%;
+      background-repeat: no-repeat;
+    }
+  }
+}

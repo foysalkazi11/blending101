@@ -33,8 +33,6 @@ import Icon from "../../component/atoms/Icon/Icon.component";
 import { theme } from "../../configs/themes";
 import ChallengeShareModal from "../../component/organisms/Share/ChallengeShare.component";
 import { useRouter } from "next/router";
-import html2canvas from "html2canvas";
-import { dataURLtoFile } from "../../helpers/File";
 
 const ChallengePage = () => {
   const router = useRouter();
@@ -105,6 +103,7 @@ const ChallengePage = () => {
 
   return (
     <AContainer
+      headerTitle="BLENDA CHALLENGE"
       showGroceryTray={{
         show: showGroceryTray,
         showPanle: "right",
@@ -120,8 +119,7 @@ const ChallengePage = () => {
         element={challengeProgress.current}
       />
       <div className={styles.planner}>
-        <div className={styles.planner__pageTitle}>BLENDA CHALLENGE</div>
-        <div className="row">
+        <div className="row mt-20">
           <div className="col-3">
             {showUpload ? (
               <PlannerQueue isUpload={showUpload} />
@@ -151,7 +149,7 @@ const ChallengePage = () => {
                   </div>
                 )}
                 <div
-                  className={styles.uploadDiv}
+                  className={`${styles.uploadDiv} ml-10`}
                   onClick={() => {
                     dispatch(setShowPostForm(false));
                     setShowSettings(true);
@@ -166,7 +164,7 @@ const ChallengePage = () => {
                 </div>
                 {!viewOnly && (
                   <div
-                    className={styles.uploadDiv}
+                    className={`${styles.uploadDiv} ml-10`}
                     onClick={() => {
                       dispatch(setShowPostForm(true));
                       setShowSettings(false);
@@ -182,7 +180,7 @@ const ChallengePage = () => {
                 )}
               </div>
             </div>
-            <div className={styles.toolbox}>
+            <div className={styles.plan}>
               {toolbox && toolbox !== null ? (
                 toolbox
               ) : (
@@ -195,7 +193,9 @@ const ChallengePage = () => {
             </div>
           </div>
           <div className="col-3">
-            <Statistics />
+            <Statistics
+              statistics={data?.getMyThirtyDaysChallenge?.challengeInfo}
+            />
           </div>
         </div>
       </div>

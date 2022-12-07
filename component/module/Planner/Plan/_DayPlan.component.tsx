@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import { HiOutlineDotsVertical } from "react-icons/hi";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import { IoCopy } from "react-icons/io5";
-import { BsCartPlus } from "react-icons/bs";
-import { BiBarChart } from "react-icons/bi";
+import { useMutation } from "@apollo/client";
+import {
+  faChartSimple,
+  faClone,
+  faEllipsisVertical,
+  faTrash,
+  faUpDownLeftRight,
+  faCartShopping,
+} from "@fortawesome/pro-regular-svg-icons";
 
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import {
@@ -11,10 +15,10 @@ import {
   deleteRecipe,
   IPlannerRecipe,
 } from "../../../../redux/slices/Planner.slice";
+
 import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
 import CalendarTray from "../../../../theme/calendar/calendarTray.component";
 
-import { useMutation } from "@apollo/client";
 import {
   ADD_RECIPE_TO_PLANNER,
   ADD_TO_GROCERY_LIST,
@@ -22,16 +26,8 @@ import {
   MOVE_PLANNER,
 } from "../../../../graphql/Planner";
 import Publish from "../../../../helpers/Publish";
-import {
-  faChartSimple,
-  faClone,
-  faEllipsisVertical,
-  faTrash,
-  faUpDownLeftRight,
-} from "@fortawesome/pro-regular-svg-icons";
 import IconButton from "../../../atoms/Button/IconButton.component";
 import { setShowPanel } from "../../../../redux/slices/Ui.slice";
-import { faCartShopping } from "@fortawesome/pro-light-svg-icons";
 import Icon from "../../../atoms/Icon/Icon.component";
 
 import styles from "./_DayPlan.module.scss";

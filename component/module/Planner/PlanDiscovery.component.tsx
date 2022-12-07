@@ -1,9 +1,11 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { useDispatch } from "react-redux";
-import { faPlusCircle } from "@fortawesome/pro-solid-svg-icons";
-import { faCalendarAlt } from "@fortawesome/pro-light-svg-icons";
-import { faCalendarDay } from "@fortawesome/pro-regular-svg-icons";
+import {
+  faCalendarDay,
+  faTelescope,
+  faPlusCircle,
+} from "@fortawesome/pro-regular-svg-icons";
 import { format } from "date-fns";
 
 import Pagination from "../../molecules/Pagination/ServerPagination.component";
@@ -29,13 +31,14 @@ import { setRecipeInfo } from "../../../redux/slices/Challenge.slice";
 
 import Publish from "../../../helpers/Publish";
 
-import styles from "./Queue.module.scss";
+import styles from "./PlanDiscovery.module.scss";
+import PlanCard from "./PlanCard.component";
 
 interface PlannerPanelProps {
   isUpload: boolean;
 }
 
-const PlannerPanel = (props: PlannerPanelProps) => {
+const PlanDiscovery = (props: PlannerPanelProps) => {
   const { isUpload } = props;
   const [toggler, setToggler] = useState(true);
   const [query, setQuery] = useState("");
@@ -119,8 +122,8 @@ const PlannerPanel = (props: PlannerPanelProps) => {
   return (
     <Fragment>
       <IconHeading
-        icon={faCalendarAlt}
-        title="Recipe Queue"
+        icon={faTelescope}
+        title="Plan Discovery"
         iconStyle={{ fontSize: "18px" }}
       />
       <ToggleCard
@@ -136,7 +139,6 @@ const PlannerPanel = (props: PlannerPanelProps) => {
 
       {toggler && (
         <div className={styles.action}>
-          {}
           <div ref={blendTypeRef} style={{ width: "100%" }}>
             <Combobox
               options={
@@ -178,10 +180,11 @@ const PlannerPanel = (props: PlannerPanelProps) => {
               style={{ width: "100%", height: "277px" }}
             />
           ))
+        ) : toggler ? (
+          <Plans recipes={recipes} isUpload={isUpload} />
         ) : (
           <Recipes recipes={recipes} isUpload={isUpload} />
         )}
-
         {pageLength > 3 && (
           <div className="flex ai-center jc-center mt-20">
             <Pagination
@@ -194,6 +197,15 @@ const PlannerPanel = (props: PlannerPanelProps) => {
       </div>
     </Fragment>
   );
+};
+
+const Plans = (props) => {
+  const { recipes } = props;
+
+  return recipes?.map((recipe) => {
+    const { _id } = recipe;
+    return <PlanCard key={_id} className="mt-10" />;
+  });
 };
 
 const Recipes = (props) => {
@@ -308,4 +320,5 @@ const Recipes = (props) => {
     );
   });
 };
-export default PlannerPanel;
+
+export default PlanDiscovery;

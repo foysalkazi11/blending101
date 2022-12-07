@@ -15,6 +15,7 @@ import { useMutation } from "@apollo/client";
 import { SHARE_CHALLENGE } from "../../../graphql/Challenge";
 import { useAppSelector } from "../../../redux/hooks";
 import { dataURLtoFile } from "../../../helpers/File";
+import axios from "axios";
 
 interface Props {
   id: string;
@@ -46,12 +47,20 @@ const ChallengeShareModal = ({ id, name, show, setShow, element }: Props) => {
         `${process.env.NEXT_PUBLIC_HOSTING_DOMAIN}/challenge/shared?id=${id}&token=${res.data?.shareGlobalChallenge}`,
       );
 
-      html2canvas(element, { backgroundColor: null }).then((canvas) => {
+      html2canvas(element).then((canvas) => {
         const data = canvas.toDataURL("image/jpg");
         const file = dataURLtoFile(data, "challenge.png");
 
-        const link = document.createElement("a");
+        // STORING THE DIALER IMAGE
+        const formdata = new FormData();
+        formdata.append("image", file, `${id}.jpg`);
 
+        axios.post(
+          "https://om7h45qezg.execute-api.us-east-1.amazonaws.com/prod//file-processing/images/single",
+          formdata,
+        );
+
+        const link = document.createElement("a");
         if (typeof link.download === "string") {
           link.href = data;
           link.download = "image.jpg";
@@ -64,7 +73,6 @@ const ChallengeShareModal = ({ id, name, show, setShow, element }: Props) => {
         }
       });
     });
-    // handleScreenshot();
   }, [element, id, shareChallenge, show, userId]);
 
   console.log(link);

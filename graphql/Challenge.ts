@@ -101,6 +101,19 @@ export const GET_30DAYS_CHALLENGE = gql`
         memberInfo {
           image
         }
+        sharedWith {
+          memberId {
+            displayName
+          }
+          blendScore
+        }
+        topIngredients {
+          ingredientId {
+            ingredientName
+            featuredImage
+          }
+          count
+        }
       }
     }
   }

@@ -1,7 +1,7 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 
 const client = new ApolloClient({
-  uri: "https://blendarecipe2.herokuapp.com/graphql",
+  uri: "https://srcfooddb-production.up.railway.app/graphql",
   cache: new InMemoryCache(),
   // defaultOptions: {
   //   watchQuery: {
