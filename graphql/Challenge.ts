@@ -194,3 +194,39 @@ export const GET_SHARED_CHALLENGE_DETAILS = gql`
     }
   }
 `;
+
+export const INVITE_CHALLENGE = gql`
+  mutation InviteChallenge(
+    $shareWithOther: Boolean!
+    $emails: [String!]!
+    $user: String!
+    $challengeId: String!
+  ) {
+    inviteToChallenge(
+      canInviteWithOthers: $shareWithOther
+      invitedWith: $emails
+      invitedBy: $user
+      challengeId: $challengeId
+    )
+  }
+`;
+
+export const ACCEPT_CHALLENGE = gql`
+  mutation AcceptChallenge($user: String!, $token: String!) {
+    acceptChallenge(memberId: $user, inviteId: $token)
+  }
+`;
+
+export const GET_INVITE_CHALLENGE_DETAILS = gql`
+  query GetInviteChallenge($id: String!) {
+    getInviteChallengeInfo(inviteId: $id) {
+      invitedBy {
+        displayName
+      }
+      challengeId {
+        challengeName
+        challengeId
+      }
+    }
+  }
+`;

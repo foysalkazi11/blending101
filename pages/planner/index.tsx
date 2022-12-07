@@ -114,7 +114,7 @@ const PlanDiscovery = ({
                   disabled={isMicOn}
                   placeholder={isMicOn ? "Speak" : "Search"}
                   value={input}
-                  onChange={(e) => handleOnChange(e)}
+                  onChange={(e) => handleOnChange()}
                   onFocus={() => setIsInputFocus(true)}
                 />
               </form>
@@ -142,6 +142,7 @@ const PlanDiscovery = ({
                       onClick={handleSearchTagClean}
                     />
                   ) : (
+                    //@ts-ignore
                     <Tooltip direction="bottom" content="Voice search">
                       <BsMic
                         className={`${classes.mic} ${

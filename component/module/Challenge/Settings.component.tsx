@@ -41,6 +41,7 @@ import { addDays, differenceInDays, format, isBefore, isPast } from "date-fns";
 import RadioButton from "../../organisms/Forms/RadioButton.component";
 import { getDateISO } from "../../../helpers/Date";
 import { setChallengeDate } from "../../../redux/slices/Challenge.slice";
+import Invite from "../../organisms/Share/Invite.component";
 
 interface SettingsProps {
   hideSettings: () => void;
@@ -114,6 +115,10 @@ const Settings = (props: SettingsProps) => {
 };
 
 const ChallengeList = ({ editFormHandler, hideSettings }) => {
+  const [show, setShow] = useState(false);
+  const [activeId, setActiveId] = useState("");
+  const [challengeInfo, setChallengeInfo] = useState({});
+
   const dispatch = useAppDispatch();
   const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
@@ -129,8 +134,6 @@ const ChallengeList = ({ editFormHandler, hideSettings }) => {
   const [deleteChallenge, deleteState] = useMutation(DELETE_CHALLENGE, {
     refetchQueries: ["GetAllChallenges"],
   });
-
-  const [activeId, setActiveId] = useState("");
 
   const activeHandler = async (challengeId) => {
     await Publish({
@@ -162,6 +165,7 @@ const ChallengeList = ({ editFormHandler, hideSettings }) => {
 
   return (
     <Fragment>
+      <Invite show={show} setShow={setShow} {...challengeInfo} />
       <div className="row mb-10 mt-10">
         <div className="col-1" />
         <div className="col-4">
@@ -220,6 +224,13 @@ const ChallengeList = ({ editFormHandler, hideSettings }) => {
                 variant="fade"
                 size="small"
                 className={`${styles.challenge__action__trash} ml-30`}
+                onClick={() => {
+                  setShow(true);
+                  setChallengeInfo({
+                    id: challenge._id,
+                    title: challenge.challengeName,
+                  });
+                }}
               />
               <IconButton
                 fontName={faTrash}

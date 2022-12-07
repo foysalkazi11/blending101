@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import {
   faFacebook,
   faInstagram,
@@ -10,25 +10,36 @@ import {
 import { useRouter } from "next/router";
 import React, { Fragment } from "react";
 import Icon from "../../component/atoms/Icon/Icon.component";
-import { GET_SHARED_CHALLENGE_DETAILS } from "../../graphql/Challenge";
+import {
+  ACCEPT_CHALLENGE,
+  GET_INVITE_CHALLENGE_DETAILS,
+} from "../../graphql/Challenge";
+import { useAppSelector } from "../../redux/hooks";
 
 import styles from "../../styles/pages/challenge.module.scss";
 
 const Invited = () => {
+  const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
+
   const router = useRouter();
-  const { data } = useQuery(GET_SHARED_CHALLENGE_DETAILS, {
+  const { data } = useQuery(GET_INVITE_CHALLENGE_DETAILS, {
     variables: {
-      challengeId: router.query?.id,
+      id: router.query?.id,
     },
   });
+  const [acceptChallenge] = useMutation(ACCEPT_CHALLENGE);
 
-  const onViewChallenge = (e) => {
-    router.push(
-      `/challenge?id=${router.query?.id}&token=${router.query?.token}`,
-    );
+  const onJoinChallenge = () => {
+    acceptChallenge({
+      variables: {
+        user: memberId,
+        token: router.query?.id,
+      },
+    }).then((response) => {
+      router.push(`/challenge/?id=${response?.data?.acceptChallenge}`);
+    });
   };
 
-  // if (!router.query?.id || !router.query?.token) return <></>;
   return (
     <Fragment>
       <header className={styles.invited__header}>
@@ -36,25 +47,50 @@ const Invited = () => {
       </header>
       <main className={styles.invited__main}>
         <div className="row">
-          <div className="col-8">
+          <div className="col-9">
             <h1>
-              {data?.getChallengeInfoById?.memberInfo?.displayName || "Gabriel"}{" "}
-              has invited you to join a Poily Challenge!
+              {data?.getInviteChallengeInfo?.invitedBy?.displayName} has invited
+              you to join a Poily Challenge!
             </h1>
             <p>
               Join the{" "}
-              <span>&quot;Team Tiger 30 Day Blending Challenge&quot;</span>.
-              Track and visualize your daily blending habit with ease.
+              <span>
+                &quot;{data?.getInviteChallengeInfo?.challengeId?.challengeName}
+                &quot;
+              </span>
+              . Track and visualize your daily blending habit with ease.
             </p>
-            <button onClick={onViewChallenge}>Join Challenge</button>
-            <div style={{ textAlign: "center" }}>
-              <h3>{data?.getChallengeInfoById?.challengeName}</h3>
-              <div className={styles.invited__preview}>
-                <img src="/images/challenge.jpg" alt="Challenge Preview" />
+            <button onClick={onJoinChallenge}>Join Challenge</button>
+            <div className="row mt-60">
+              <div className="col-4"></div>
+              <div className="col-8 flex jc-center">
+                <div className={styles.invited__info}>
+                  <div>
+                    <h2>
+                      Challenge <span>Superpowers</span>
+                    </h2>
+                    <ul>
+                      <li>Log blend ingredients by typing or speaking</li>
+                      <li>Generate pantry aware grocery list</li>
+                      <li>Share your challenge progress on social media</li>
+                      <li>
+                        Quickly add recipes from your plan or recipe discovery
+                      </li>
+                      <li>
+                        See how you rank with other Challenge participants
+                      </li>
+                      <li>Track your medicinal performance over time</li>
+                      <li>
+                        Get analytics on what you consume i.e. ingredients,
+                        processed foods, macros, nutrients, etc.
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <div className="col-4" style={{ position: "relative" }}>
+          <div className="col-3" style={{ position: "relative" }}>
             <img
               src="/images/top-ingredients.png"
               alt=""

@@ -36,7 +36,6 @@ import { useRouter } from "next/router";
 
 const ChallengePage = () => {
   const router = useRouter();
-  const { id, token } = router.query;
   const challengeProgress = useRef<HTMLDivElement>(null);
 
   const [showSettings, setShowSettings] = useState(false);
