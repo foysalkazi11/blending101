@@ -28,7 +28,7 @@ const Shared = () => {
     );
   };
 
-  if (!router.query?.id || !router.query?.token) return <></>;
+  // if (!router.query?.id || !router.query?.token) return <></>;
   return (
     <Fragment>
       <header className={styles.shared__header}>
@@ -45,11 +45,14 @@ const Shared = () => {
               Follow along has Gabriel&apos;s daily blending builds a habitual
               practice of blending.
             </p>
-            <button onClick={onViewChallenge}>View Challenge</button>
+            <button onClick={onViewChallenge}>Join Challenge</button>
             <div style={{ textAlign: "center" }}>
               <h3>{data?.getChallengeInfoById?.challengeName}</h3>
               <div className={styles.shared__preview}>
-                <img src="/images/challenge.jpg" alt="Challenge Preview" />
+                <img
+                  src={`https://blending.s3.us-east-1.amazonaws.com/images/single/${router.query?.id}.jpg`}
+                  alt="Challenge Preview"
+                />
               </div>
             </div>
           </div>

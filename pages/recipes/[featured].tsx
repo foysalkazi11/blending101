@@ -17,6 +17,10 @@ import ShowCollectionRecipes from "../../theme/showCollectionRecipes/ShowCollect
 
 import styles from "../../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";
 import classes from "../../styles/pages/viewAll.module.scss";
+import ShowRecipeContainer from "../../components/showRecipeContainer";
+import IconWarper from "../../theme/iconWarper/IconWarper";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBookmark, faShareNodes } from "@fortawesome/pro-light-svg-icons";
 
 const ViewAll = () => {
   const router = useRouter();
@@ -47,81 +51,53 @@ const ViewAll = () => {
       }}
     >
       <div className={styles.main__div}>
-        <div
-          style={{
-            marginLeft: openFilterTray ? "310px" : "16px",
-            transition: "all 0.5s",
-          }}
-        >
-          <DiscoverPageSearch />
-          {allFilters?.length ? (
-            <SearchtagsComponent allFilters={allFilters} />
-          ) : null}
-        </div>
-
-        {allFilters?.length ? (
-          <FilterPageBottom allFilters={allFilters} />
-        ) : (
-          <div>
-            <div className={classes.head}>
-              <div className="flex ai-center">
-                <Icon
-                  className={classes.head__icon}
-                  fontName={page?.icon}
-                  size="3rem"
-                  color="#fe5d1f"
-                />
-                <h2 className={classes.head__title}>{page?.title}</h2>
-              </div>
-              <IconButton
-                fontName={faTimes}
-                variant="secondary"
-                size="small"
-                colorCode="#fff"
-                onClick={() => {
-                  router.back();
-                }}
+        <ShowRecipeContainer
+          data={data || []}
+          loading={data.length ? false : true}
+          setOpenCollectionModal={setOpenCollectionModal}
+          headerLeftSide={
+            <div className="flex ai-center">
+              <Icon
+                className={classes.head__icon}
+                fontName={page?.icon}
+                size="3rem"
+                color="#fe5d1f"
               />
+              <h2 className={classes.head__title}>{page?.title}</h2>
             </div>
-            {/* <AppdownLoadCard /> */}
-            <div className="row mb-20">
-              {data?.map((item) => {
-                let ingredients = [];
-                item?.ingredients?.forEach((ing) => {
-                  const ingredient = ing?.ingredientId?.ingredientName;
-                  ingredients.push(ingredient);
-                });
-                const ing = ingredients.join(", ");
-                return (
-                  <div className="col-3" key={item._id}>
-                    <DatacardComponent
-                      title={item.name}
-                      ingredients={ing}
-                      category={item.recipeBlendCategory?.name}
-                      ratings={item?.averageRating}
-                      noOfRatings={item?.numberOfRating}
-                      carbs={item?.carbs}
-                      score={item?.score}
-                      calorie={item?.calorie}
-                      noOfComments={item?.numberOfRating}
-                      image={item.image[0]?.image}
-                      recipeId={item?._id}
-                      notes={item?.notes}
-                      addedToCompare={item?.addedToCompare}
-                      compareRecipeList={compareRecipeList}
-                      setcompareRecipeList={setcompareRecipeList}
-                      isCollectionIds={item?.userCollections}
-                      setOpenCollectionModal={setOpenCollectionModal}
-                      isMatch={item?.isMatch}
-                      postfixTitle={item?.defaultVersion?.postfixTitle}
-                      userId={item?.userId}
-                    />
-                  </div>
-                );
-              })}
+          }
+          headerMiddle={
+            <div style={{ display: "flex" }}>
+              <IconWarper
+                iconColor="iconColorPrimary"
+                defaultBg="slightGray"
+                hover="bgPrimary"
+                style={{ width: "28px", height: "28px", marginRight: "10px" }}
+              >
+                <FontAwesomeIcon icon={faBookmark} />
+              </IconWarper>
+              <IconWarper
+                iconColor="iconColorPrimary"
+                defaultBg="slightGray"
+                hover="bgPrimary"
+                style={{ width: "28px", height: "28px" }}
+              >
+                <FontAwesomeIcon icon={faShareNodes} />
+              </IconWarper>
             </div>
-          </div>
-        )}
+          }
+          headerRightSide={
+            <IconButton
+              fontName={faTimes}
+              variant="secondary"
+              size="small"
+              colorCode="#fff"
+              onClick={() => {
+                router.back();
+              }}
+            />
+          }
+        />
       </div>
       <div className={styles.footerMainDiv}>
         <FooterRecipeFilter />

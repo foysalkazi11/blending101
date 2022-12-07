@@ -30,6 +30,7 @@ const OptionSelectHeader = ({
                   activeTab: "",
                   childTab: "",
                   filterCriteria: null,
+                  activeSection: "tags",
                 }),
               )
             }

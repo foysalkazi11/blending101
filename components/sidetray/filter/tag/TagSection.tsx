@@ -8,6 +8,7 @@ import OptionSelectHeader from "../optionSelect/OptionSelectHeader";
 import NumericFilter from "../numericFilter/NumericFilter";
 import CheckboxOptions from "../checkboxOptions/CheckboxOptions";
 import {
+  ActiveSectionType,
   FilterCriteriaOptions,
   FilterCriteriaValue,
   updateActiveFilterTag,
@@ -18,6 +19,7 @@ import { categories } from "../../../../data/categories";
 import { useLazyQuery } from "@apollo/client";
 import GET_BLEND_NUTRIENTS_BASED_ON_CATEGORY from "../../../../gqlLib/nutrition/query/getBlendNutrientsBasedOnCategoey";
 import Collapsible from "../../../../theme/collapsible";
+import ExcludeFilter from "../excludeFilter";
 const { INGREDIENTS_BY_CATEGORY, TYPE, ALLERGIES, DIET, EQUIPMENT, DRUGS } =
   INGREDIENTS_FILTER;
 
@@ -144,6 +146,7 @@ interface Props {
   blendCategoryLoading: boolean;
   ingredientCategoryData: any[];
   ingredientCategoryLoading: boolean;
+  checkExcludeIngredientIds: (id: string) => boolean;
 }
 
 const TagSection = ({
@@ -153,6 +156,7 @@ const TagSection = ({
   blendCategoryLoading = false,
   ingredientCategoryData = [],
   ingredientCategoryLoading = false,
+  checkExcludeIngredientIds = () => false,
 }: Props) => {
   const [optionSelectItems, setOptionSelectItems] = useState<any[]>([]);
   const [childIngredient, setChailIngredient] = useState("");
@@ -163,9 +167,9 @@ const TagSection = ({
   ] = useLazyQuery(GET_BLEND_NUTRIENTS_BASED_ON_CATEGORY, {
     fetchPolicy: "cache-and-network",
   });
-  const {
-    activeFilterTag: { activeTab, childTab, filterCriteria },
-  } = useAppSelector((state) => state?.filterRecipe);
+  const { activeFilterTag, excludeFilterState, numericFilterState } =
+    useAppSelector((state) => state?.filterRecipe);
+  const { activeTab, childTab, filterCriteria } = activeFilterTag;
 
   const { values } = useAppSelector(
     (state) => state?.filterRecipe?.activeState,
@@ -202,32 +206,19 @@ const TagSection = ({
   };
 
   const recipeFilterByCategory = (
+    activeSection: ActiveSectionType,
     filterCriteria: FilterCriteriaOptions,
     activeTab: string,
     childTab?: string,
   ) => {
     dispatch(
       updateActiveFilterTag({
+        activeSection,
         filterCriteria,
         activeTab,
         childTab: childTab || activeTab,
       }),
     );
-    // child = child || "";
-    // category = category || "";
-    // if (child === "Ingredient" || child === "Nutrition") {
-    //   dispatch(setRecipeFilterByIngredientCategory(child));
-    //   setChailIngredient(category);
-    // } else {
-    //   dispatch(setRecipeFilterByIngredientCategory(category));
-    //   setChailIngredient(child);
-    // }
-    // dispatch(
-    //   activeFilter({
-    //     pageTitle: category,
-    //     expandedMenu: child,
-    //   }),
-    // );
   };
 
   const optionSelectorHandler = (chip: string) => {
@@ -272,6 +263,7 @@ const TagSection = ({
               name: item?.ingredientName,
               tagLabel: "",
               filterCriteria: "includeIngredientIds",
+              excludeIngredientIds: false,
             })),
         );
       } else {
@@ -282,6 +274,7 @@ const TagSection = ({
             name: item?.ingredientName,
             tagLabel: "",
             filterCriteria: "includeIngredientIds",
+            excludeIngredientIds: false,
           })),
         );
       }
@@ -330,13 +323,27 @@ const TagSection = ({
             activeTab={childTab}
             filterCriteria={filterCriteria}
           />
-          {activeTab === "Blend Type" || activeTab === "Ingredient" ? (
+          {activeTab === "Blend Type" ? (
             <OptionSelect
               optionSelectItems={optionSelectItems}
               filterCriteria={filterCriteria}
               checkActiveItem={checkActiveItem}
-              handleBlendAndIngredientUpdate={handleBlendAndIngredientUpdate}
+              checkExcludeIngredientIds={checkExcludeIngredientIds}
+              activeFilterTag={activeFilterTag}
             />
+          ) : null}
+          {activeTab === "Ingredient" ? (
+            <>
+              <ExcludeFilter excludeFilterState={excludeFilterState} />
+              <OptionSelect
+                optionSelectItems={optionSelectItems}
+                filterCriteria={filterCriteria}
+                checkActiveItem={checkActiveItem}
+                checkExcludeIngredientIds={checkExcludeIngredientIds}
+                focusOptionId={excludeFilterState.id}
+                activeFilterTag={activeFilterTag}
+              />
+            </>
           ) : null}
 
           {activeTab === "Nutrition" ? (
@@ -350,7 +357,9 @@ const TagSection = ({
                 optionSelectItems={optionSelectItems}
                 filterCriteria={filterCriteria}
                 checkActiveItem={checkActiveItem}
-                handleBlendAndIngredientUpdate={handleBlendAndIngredientUpdate}
+                focusOptionId={numericFilterState.id}
+                activeFilterTag={activeFilterTag}
+                optionsLoading={blendNutrientLoading}
               />
             </>
           ) : null}
@@ -372,7 +381,9 @@ const TagSection = ({
           <input className={styles.tagSectionInput} placeholder="Search" />
           <div
             className={styles.singleItem}
-            onClick={() => recipeFilterByCategory("blendTypes", "Blend Type")}
+            onClick={() =>
+              recipeFilterByCategory("tags", "blendTypes", "Blend Type")
+            }
           >
             <h5>Blend Type</h5>
           </div>
@@ -386,6 +397,7 @@ const TagSection = ({
                       key={index}
                       onClick={() =>
                         recipeFilterByCategory(
+                          "tags",
                           "includeIngredientIds",
                           "Ingredient",
                           item?.value,
@@ -418,6 +430,7 @@ const TagSection = ({
                                 key={index}
                                 onClick={() =>
                                   recipeFilterByCategory(
+                                    "tags",
                                     item.title === "Nutrition Metrics"
                                       ? "nutrientMatrix"
                                       : "nutrientFilters",
@@ -437,6 +450,7 @@ const TagSection = ({
                           key={index}
                           onClick={() =>
                             recipeFilterByCategory(
+                              "tags",
                               item.title === "Nutrition Metrics"
                                 ? "nutrientMatrix"
                                 : "nutrientFilters",

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import {
   setIngredients,
@@ -7,10 +7,6 @@ import {
 } from "../../../../redux/slices/sideTraySlice";
 import { useRouter } from "next/router";
 import CommonSearchBar from "../../../searchBar/CommonSearchBar";
-import { useLazyQuery } from "@apollo/client";
-import SEARCH_RECIPE from "../../../../gqlLib/recipes/queries/searchRecipe";
-import debounce from "../../../../helperFunc/debounce";
-import notification from "../../../utility/reactToastifyNotification";
 
 interface Props {
   input?: string;
@@ -27,7 +23,6 @@ const DiscoverPageSearch = ({
     (state) => state?.sideTray,
   );
   const { dbUser } = useAppSelector((state) => state?.user);
-
   const dispatch = useAppDispatch();
 
   const toggleFilterPanel = () => {

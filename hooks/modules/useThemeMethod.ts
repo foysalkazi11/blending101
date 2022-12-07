@@ -4,7 +4,7 @@ interface ThemeMethods {
   toggleCollection?: (e: any) => any;
 }
 const useThemeMethod = (props?: ThemeMethods) => {
-  const { toggleCollection = () => {} } = props;
+  // const { toggleCollection = () => {} } = props;
   const ref = useRef<any>(null);
 
   useEffect(() => {

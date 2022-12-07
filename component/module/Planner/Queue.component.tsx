@@ -120,7 +120,7 @@ const PlannerPanel = (props: PlannerPanelProps) => {
     <Fragment>
       <IconHeading
         icon={faCalendarAlt}
-        title={isUpload ? "Challenge Post" : "Planner Queue"}
+        title="Recipe Queue"
         iconStyle={{ fontSize: "18px" }}
       />
       <ToggleCard
@@ -133,58 +133,65 @@ const PlannerPanel = (props: PlannerPanelProps) => {
           padding: "15px 5px",
         }}
       />
-      <div className={styles.action}>
-        <div ref={blendTypeRef} style={{ width: "100%" }}>
-          <Combobox
-            options={
-              categories?.getAllCategories
-                ? [
-                    { label: "All", value: "all" },
-                    ...categories?.getAllCategories,
-                  ]
-                : [{ label: "All", value: "all" }]
-            }
-            className={styles.blendType}
-            value={type}
-            onChange={(e) => {
-              setPage(1);
-              setType(e.target.value);
+
+      {toggler && (
+        <div className={styles.action}>
+          {}
+          <div ref={blendTypeRef} style={{ width: "100%" }}>
+            <Combobox
+              options={
+                categories?.getAllCategories
+                  ? [
+                      { label: "All", value: "all" },
+                      ...categories?.getAllCategories,
+                    ]
+                  : [{ label: "All", value: "all" }]
+              }
+              className={styles.blendType}
+              value={type}
+              onChange={(e) => {
+                setPage(1);
+                setType(e.target.value);
+              }}
+            />
+          </div>
+          <Searchbox
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onReset={() => {
+              setQuery("");
+              handleHide();
             }}
+            onFocus={handleHide}
+            onMouseEnter={handleHide}
+            onMouseLeave={handleShow}
+            onBlur={handleShow}
           />
         </div>
-        <Searchbox
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onReset={() => {
-            setQuery("");
-            handleHide();
-          }}
-          onFocus={handleHide}
-          onMouseEnter={handleHide}
-          onMouseLeave={handleShow}
-          onBlur={handleShow}
-        />
+      )}
+      <div className={styles.wrapper}>
+        {discoverLoading || loading ? (
+          [...Array(limit)]?.map((_, index) => (
+            <SkeletonElement
+              type="thumbnail"
+              key={index}
+              style={{ width: "100%", height: "277px" }}
+            />
+          ))
+        ) : (
+          <Recipes recipes={recipes} isUpload={isUpload} />
+        )}
+
+        {pageLength > 3 && (
+          <div className="flex ai-center jc-center mt-20">
+            <Pagination
+              limit={5}
+              pageState={[page, setPage]}
+              totalPage={pageLength}
+            />
+          </div>
+        )}
       </div>
-      {discoverLoading || loading ? (
-        [...Array(limit)]?.map((_, index) => (
-          <SkeletonElement
-            type="thumbnail"
-            key={index}
-            style={{ width: "100%", height: "277px" }}
-          />
-        ))
-      ) : (
-        <Recipes recipes={recipes} isUpload={isUpload} />
-      )}
-      {pageLength > 3 && (
-        <div className="flex ai-center jc-center mt-20">
-          <Pagination
-            limit={5}
-            pageState={[page, setPage]}
-            totalPage={pageLength}
-          />
-        </div>
-      )}
     </Fragment>
   );
 };

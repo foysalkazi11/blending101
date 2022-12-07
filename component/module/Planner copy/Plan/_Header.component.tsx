@@ -1,10 +1,8 @@
 import React, { useEffect } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import {
-  faCircleMinus,
   faChevronLeft,
   faChevronRight,
-  faArrowsRotate,
 } from "@fortawesome/pro-light-svg-icons";
 import { format } from "date-fns";
 
@@ -72,10 +70,6 @@ const PlanHeader = () => {
     <div className={styles.header}>
       <div className={styles.header__wrapper}>
         <div className={styles.textArrowTray}>
-          <div className={styles.button} onClick={clearAllHandler}>
-            <Icon fontName={faCircleMinus} size="15px" />
-            <div className={styles.button__text}>Clear All</div>
-          </div>
           <IconButton
             size="small"
             fontName={faChevronLeft}
@@ -89,10 +83,6 @@ const PlanHeader = () => {
             fontName={faChevronRight}
             onClick={() => dispatch(gotoNextWeek())}
           />
-          <div className={styles.button}>
-            <Icon fontName={faArrowsRotate} size="15px" />
-            <div className={styles.button__text}>Generate</div>
-          </div>
         </div>
       </div>
     </div>

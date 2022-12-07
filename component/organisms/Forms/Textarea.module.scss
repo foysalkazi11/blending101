@@ -32,9 +32,10 @@
   min-width: 12rem;
   background-color: white;
   &::placeholder {
-    color: rgba($color: $lightTextColor, $alpha: 0.7);
+    font-size: 14px;
+    color: #bcbcbc;
+    margin-left: 2rem;
   }
-
   &[readonly] {
     pointer-events: none;
     background-color: $darkGrey;

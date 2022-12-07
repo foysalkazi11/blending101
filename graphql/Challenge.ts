@@ -101,6 +101,19 @@ export const GET_30DAYS_CHALLENGE = gql`
         memberInfo {
           image
         }
+        sharedWith {
+          memberId {
+            displayName
+          }
+          blendScore
+        }
+        topIngredients {
+          ingredientId {
+            ingredientName
+            featuredImage
+          }
+          count
+        }
       }
     }
   }
@@ -177,6 +190,42 @@ export const GET_SHARED_CHALLENGE_DETAILS = gql`
       challengeName
       memberInfo {
         displayName
+      }
+    }
+  }
+`;
+
+export const INVITE_CHALLENGE = gql`
+  mutation InviteChallenge(
+    $shareWithOther: Boolean!
+    $emails: [String!]!
+    $user: String!
+    $challengeId: String!
+  ) {
+    inviteToChallenge(
+      canInviteWithOthers: $shareWithOther
+      invitedWith: $emails
+      invitedBy: $user
+      challengeId: $challengeId
+    )
+  }
+`;
+
+export const ACCEPT_CHALLENGE = gql`
+  mutation AcceptChallenge($user: String!, $token: String!) {
+    acceptChallenge(memberId: $user, inviteId: $token)
+  }
+`;
+
+export const GET_INVITE_CHALLENGE_DETAILS = gql`
+  query GetInviteChallenge($id: String!) {
+    getInviteChallengeInfo(inviteId: $id) {
+      invitedBy {
+        displayName
+      }
+      challengeId {
+        challengeName
+        challengeId
       }
     }
   }

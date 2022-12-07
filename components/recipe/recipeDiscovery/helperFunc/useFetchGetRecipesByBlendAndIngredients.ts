@@ -11,32 +11,29 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
     let ingredientIds: string[] = [];
     let nutrientFiltersMap = [];
     let nutrientMatrixMap = [];
-    allFilters.forEach((filter) => {
+    let excludeIngredientIds = [];
+    allFilters.forEach((filter: any) => {
       if (filter.filterCriteria === "blendTypes") {
         blendTypesArr.push(filter.id);
       }
       if (filter.filterCriteria === "includeIngredientIds") {
-        ingredientIds.push(filter.id);
+        if (filter.excludeIngredientIds) {
+          excludeIngredientIds.push(filter.id);
+        } else {
+          ingredientIds.push(filter.id);
+        }
       }
       if (filter.filterCriteria === "nutrientFilters") {
         const {
           id,
           name,
-          //@ts-ignore
           between,
-          //@ts-ignore
           category,
-          //@ts-ignore
           greaterThan,
-          //@ts-ignore
           lessThan,
-          //@ts-ignore
           lessThanValue,
-          //@ts-ignore
           greaterThanValue,
-          //@ts-ignore
           betweenStartValue,
-          //@ts-ignore
           betweenEndValue,
         } = filter;
         let arrangeValue = {
@@ -75,19 +72,12 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
         const {
           id,
           name,
-          //@ts-ignore
           between,
-          //@ts-ignore
           greaterThan,
-          //@ts-ignore
           lessThan,
-          //@ts-ignore
           lessThanValue,
-          //@ts-ignore
           greaterThanValue,
-          //@ts-ignore
           betweenStartValue,
-          //@ts-ignore
           betweenEndValue,
         } = filter;
         let arrangeValue = {
@@ -131,6 +121,7 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
             includeIngredientIds: ingredientIds,
             nutrientFilters: nutrientFiltersMap,
             nutrientMatrix: nutrientMatrixMap,
+            excludeIngredientIds,
           },
         },
       });
