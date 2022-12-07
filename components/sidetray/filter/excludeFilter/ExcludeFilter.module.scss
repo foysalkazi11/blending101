@@ -1,8 +1,4 @@
-.numericFilterContainer {
-  width: 100%;
-  margin-bottom: 16px;
-}
-
+@import "../../../../styles/partials/variables";
 .tabContainer {
   background-color: white;
   box-shadow: 1px 2px 4px #ececec;
@@ -12,16 +8,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-weight: 400;
-  letter-spacing: 1px;
+  margin-bottom: 1rem;
+  letter-spacing: 0.1rem;
 
   .firstChild {
+    width: 100%;
     border-top-left-radius: 3.5rem;
     border-bottom-left-radius: 3.5rem;
     border-top-right-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
     padding: 8px;
     font-size: 12px;
+    font-weight: 400;
     text-align: center;
     cursor: pointer;
     &:hover {
@@ -29,8 +27,10 @@
     }
   }
   .middleChild {
+    width: 100%;
     padding: 8px;
     font-size: 12px;
+    font-weight: 400;
     text-align: center;
     border-radius: 5px;
     cursor: pointer;
@@ -39,70 +39,38 @@
     }
   }
   .lastChild {
+    width: 100%;
     border-top-right-radius: 3.5rem;
     border-bottom-right-radius: 3.5rem;
     border-top-left-radius: 0 !important;
     border-bottom-left-radius: 0 !important;
     padding: 8px;
     font-size: 12px;
+    font-weight: 400;
+
     text-align: center;
     cursor: pointer;
     &:hover {
       background-color: rgba(17, 36, 51, 0.1);
     }
   }
-  .active {
-    background-color: #7dbd3b;
+  .activeSecondary {
+    background-color: $secondaryColor;
     color: #ffffff;
 
     &:hover {
-      background-color: #7dbd3b !important;
+      background-color: $secondaryColor !important;
+    }
+  }
+  .activePrimary {
+    background-color: $primaryColor;
+    color: #ffffff;
+
+    &:hover {
+      background-color: $primaryColor !important;
     }
   }
 }
 .activeTabTabContainer {
   border-color: #7dbd3b;
-}
-
-.counterContainer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 20px;
-  border: 1px solid #dbdbdb;
-  box-shadow: 1px 2px 4px #ececec;
-  padding: 5px 10px;
-  font-size: 16px;
-  border-radius: 10rem;
-
-  .counterContainerInput {
-    border: none;
-    outline: none;
-    text-align: center;
-  }
-  .counterContainerInput::-webkit-inner-spin-button,
-  .counterContainerInput::-webkit-outer-spin-button {
-    opacity: 0;
-  }
-
-  .counterButton {
-    width: 30px;
-    height: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #112433;
-    border-radius: 50%;
-    cursor: pointer;
-    &:hover {
-      background-color: rgba(17, 36, 51, 0.1);
-    }
-  }
-}
-
-.counterBetween {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }

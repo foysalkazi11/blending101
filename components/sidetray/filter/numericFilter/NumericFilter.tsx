@@ -39,6 +39,7 @@ const NumericFilter = ({
     betweenStartValue = 0,
     greaterThanValue = 0,
     lessThanValue = 0,
+    id = "",
   } = numericFilterState;
 
   const debouncedSearchTerm: any = useDebounce<any>(debouncedTrigger, 800);
@@ -165,7 +166,11 @@ const NumericFilter = ({
 
   return (
     <div className={styles.numericFilterContainer}>
-      <div className={styles.tabContainer}>
+      <div
+        className={`${styles.tabContainer} ${
+          id ? styles.activeTabTabContainer : ""
+        }`}
+      >
         <div
           className={`${styles.firstChild} ${lessThan ? styles.active : ""}`}
           onClick={() => handleActiveTab("lessThan")}

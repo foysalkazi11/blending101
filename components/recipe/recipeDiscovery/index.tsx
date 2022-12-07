@@ -20,7 +20,7 @@ import FILTER_RECIPE from "../../../gqlLib/recipes/queries/filterRecipe";
 import useFetchGetRecipesByBlendAndIngredients from "./helperFunc/useFetchGetRecipesByBlendAndIngredients";
 import useHandleSearchRecipe from "./helperFunc/useSearchRecipes";
 
-const RecipeDetails = () => {
+const RecipeDiscovery = () => {
   const [recipeSearchInput, setRecipeSearchInput] = useState("");
   const { openFilterTray } = useAppSelector((state) => state.sideTray);
   const { allFilters, allFilterRecipes } = useAppSelector(
@@ -155,4 +155,4 @@ const RecipeDetails = () => {
   );
 };
 
-export default RecipeDetails;
+export default RecipeDiscovery;

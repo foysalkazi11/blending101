@@ -1,3 +1,4 @@
+@import "../../../../styles/partials/variables";
 .optionSelectContainer {
   width: 100%;
 
@@ -26,8 +27,11 @@
         border: 1px solid #dbdbdb;
       }
     }
-    .selected {
-      border: 1px solid #fe5209 !important;
+    .selectedSecondary {
+      border-color: $secondaryColor;
+    }
+    .selectedPrimary {
+      border-color: $primaryColor;
     }
   }
 }
@@ -47,8 +51,11 @@
   color: #f95d2b;
   background-color: white;
 }
-.activeColor {
-  color: #f95d2b;
+.activeColorPrimary {
+  color: $primaryColor;
+}
+.activeColorSecondary {
+  color: $secondaryColor;
 }
 
 .optionSelectHeaderContainer {

@@ -70,6 +70,12 @@ const BlendType = ({
                         id: blend?._id,
                         tagLabel: "",
                         filterCriteria: "blendTypes",
+                        origin: {
+                          activeSection: "visual",
+                          filterCriteria: "blendTypes",
+                          activeTab: "Blend Type",
+                          childTab: blend?.name || "",
+                        },
                       },
                     )
                   }
