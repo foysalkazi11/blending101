@@ -19,6 +19,7 @@ import {
 import FILTER_RECIPE from "../../../gqlLib/recipes/queries/filterRecipe";
 import useFetchGetRecipesByBlendAndIngredients from "./helperFunc/useFetchGetRecipesByBlendAndIngredients";
 import useHandleSearchRecipe from "./helperFunc/useSearchRecipes";
+import DiscoveryPageSearchBar from "./searchBar";
 
 const RecipeDiscovery = () => {
   const [recipeSearchInput, setRecipeSearchInput] = useState("");
@@ -106,6 +107,7 @@ const RecipeDiscovery = () => {
       <AContainer
         showCollectionTray={{ show: true, showTagByDeafult: true }}
         filterTray={true}
+        headerTitle="Discovery"
         showCommentsTray={{
           show: true,
           showPanle: "right",
@@ -119,7 +121,7 @@ const RecipeDiscovery = () => {
               transition: "all 0.5s",
             }}
           >
-            <DiscoverPageSearch
+            <DiscoveryPageSearchBar
               input={recipeSearchInput}
               handleOnChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setRecipeSearchInput(e.target.value);
