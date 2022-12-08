@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   ResponsiveContainer,
   Tooltip,
@@ -17,7 +17,33 @@ import IconHeading from "../../../theme/iconHeading/iconHeading.component";
 
 import styles from "./Statistics.module.scss";
 
-const Statistics = () => {
+const useStatistics = (statistics) => {
+  const [leaderboard, setLeaderboard] = useState([]);
+  const [rxScore, setRxScore] = useState([]);
+  const [topIngredients, setTopIngredients] = useState([]);
+
+  useMemo(() => {
+    setLeaderboard(
+      statistics?.sharedWith.map((user) => ({
+        name: user?.memberId?.displayName,
+        score: Math.round(user?.blendScore),
+      })),
+    );
+    setTopIngredients(
+      statistics?.topIngredients.slice(0, 5).map((ing) => ({
+        icon:
+          ing?.ingredientId?.featuredImage ||
+          "https://freepngimg.com/thumb/mango/1-2-mango-png.png",
+        label: ing?.ingredientId?.ingredientName,
+        quantity: ing?.count,
+      })),
+    );
+  }, [statistics]);
+  return { leaderboard, rxScore, topIngredients };
+};
+const Statistics = ({ statistics }) => {
+  const { leaderboard, rxScore, topIngredients } = useStatistics(statistics);
+  console.log(leaderboard);
   return (
     <div className={styles.statistics}>
       <IconHeading icon={faLightbulbOn} title={"Challenge Stats"} />
@@ -42,7 +68,7 @@ const Statistics = () => {
           </ResponsiveContainer>
         </div>
         <RxScore />
-        <TopIngredients />
+        <TopIngredients ingredients={topIngredients} />
       </div>
     </div>
   );
@@ -153,10 +179,10 @@ const RxScore = () => {
 const renderCustomizedLabel = (props) => {
   const { x, y, value } = props;
 
-  return <image x={x - 40} y={y - 10} href={value} height="25" width="25" />;
+  return <image x={x - 40} y={y - 2} href={value} height="25" width="25" />;
 };
 
-const TopIngredients = () => {
+const TopIngredients = ({ ingredients }) => {
   const [type, setType] = useState<"Weekly" | "Monthly">("Weekly");
 
   return (
@@ -248,56 +274,5 @@ const rxScore = [
     uv: 115,
     pv: 24,
     amt: 23,
-  },
-];
-
-const leaderboard = [
-  {
-    name: "Badhon Khan",
-    score: 94,
-  },
-  {
-    name: "Faysal Khan",
-    score: 67,
-  },
-  {
-    name: "Gabriel Braun",
-    score: 76,
-  },
-  {
-    name: "Abdul Rafay Ghani",
-    score: 49,
-  },
-  {
-    name: "Jubel Ahmed",
-    score: 73,
-  },
-];
-
-const ingredients = [
-  {
-    icon: "https://freepngimg.com/thumb/orange/19-orange-png-image-download.png",
-    label: "Orange",
-    quantity: 22,
-  },
-  {
-    icon: "https://freepngimg.com/thumb/strawberry/1-strawberry-png-images.png",
-    label: "Strawberry",
-    quantity: 18,
-  },
-  {
-    icon: "https://freepngimg.com/thumb/apple/9-apple-png-image.png",
-    label: "Apple",
-    quantity: 15,
-  },
-  {
-    icon: "https://freepngimg.com/thumb/mango/1-2-mango-png.png",
-    label: "Mango",
-    quantity: 15,
-  },
-  {
-    icon: "https://freepngimg.com/thumb/pineapple/2-pineapple-png-image-download.png",
-    label: "Pineapple",
-    quantity: 15,
   },
 ];

@@ -11,8 +11,10 @@ $sharedBackgroundColor: white;
   background-color: white;
   padding: 2rem 1.8rem;
   &__wrapper {
-    max-height: 84rem;
+    max-height: 84.1rem;
     overflow: auto;
+    border-radius: 9px;
+
     &::-webkit-scrollbar-track {
       box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
       -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);

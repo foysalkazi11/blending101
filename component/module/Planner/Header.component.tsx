@@ -1,30 +1,24 @@
 import React, { useEffect } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import {
-  faCircleMinus,
   faChevronLeft,
   faChevronRight,
-  faArrowsRotate,
-} from "@fortawesome/pro-light-svg-icons";
+} from "@fortawesome/pro-solid-svg-icons";
 import { format } from "date-fns";
 
-import { MONTH } from "../../../../data/Date";
-import {
-  GET_PLANNER_BY_WEEK,
-  CLEAR_PLANNER,
-} from "../../../../graphql/Planner";
-import Publish from "../../../../helpers/Publish";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import { MONTH } from "../../../data/Date";
+import { GET_PLANNER_BY_WEEK } from "../../../graphql/Planner";
+
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
   setPlanners,
-  clearAllPlanner,
   gotoPreviousWeek,
   gotoNextWeek,
-} from "../../../../redux/slices/Planner.slice";
-import IconButton from "../../../atoms/Button/IconButton.component";
-import Icon from "../../../atoms/Icon/Icon.component";
+} from "../../../redux/slices/Planner.slice";
+import IconButton from "../../atoms/Button/IconButton.component";
 
-import styles from "./_Header.module.scss";
+import styles from "./Header.module.scss";
+import { faEllipsis, faEllipsisV } from "@fortawesome/pro-regular-svg-icons";
 
 const PlanHeader = () => {
   const dispatch = useAppDispatch();
@@ -41,7 +35,6 @@ const PlanHeader = () => {
     },
     skip: userId === "",
   });
-  const [clearPlanner, clearState] = useMutation(CLEAR_PLANNER);
 
   useEffect(() => {
     if (data?.getPlannerByDates) dispatch(setPlanners(data?.getPlannerByDates));
@@ -53,29 +46,10 @@ const PlanHeader = () => {
   const startDay = startDate.getDate();
   const endDay = endDate.getDate();
 
-  const clearAllHandler = async () => {
-    await Publish({
-      mutate: clearPlanner,
-      variables: {
-        userId,
-        startDate: format(startDate, "yyyy-MM-dd"),
-        endDate: format(endDate, "yyyy-MM-dd"),
-      },
-      state: clearState,
-      success: `Deleted Planner sucessfully`,
-      onSuccess: () => {
-        dispatch(clearAllPlanner());
-      },
-    });
-  };
   return (
     <div className={styles.header}>
       <div className={styles.header__wrapper}>
         <div className={styles.textArrowTray}>
-          <div className={styles.button} onClick={clearAllHandler}>
-            <Icon fontName={faCircleMinus} size="15px" />
-            <div className={styles.button__text}>Clear All</div>
-          </div>
           <IconButton
             size="small"
             fontName={faChevronLeft}
@@ -89,11 +63,12 @@ const PlanHeader = () => {
             fontName={faChevronRight}
             onClick={() => dispatch(gotoNextWeek())}
           />
-          <div className={styles.button}>
-            <Icon fontName={faArrowsRotate} size="15px" />
-            <div className={styles.button__text}>Generate</div>
-          </div>
         </div>
+        <IconButton
+          size="medium"
+          fontName={faEllipsisV}
+          className={styles.header__menu}
+        />
       </div>
     </div>
   );

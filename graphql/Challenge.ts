@@ -97,6 +97,23 @@ export const GET_30DAYS_CHALLENGE = gql`
         totalChallengePosts
         startDate
         endDate
+        viewOnly
+        memberInfo {
+          image
+        }
+        sharedWith {
+          memberId {
+            displayName
+          }
+          blendScore
+        }
+        topIngredients {
+          ingredientId {
+            ingredientName
+            featuredImage
+          }
+          count
+        }
       }
     }
   }
@@ -164,5 +181,52 @@ export const CHALLENGE_GALLERY = gql`
 export const SHARE_CHALLENGE = gql`
   mutation ShareChallenge($userId: String!, $challengeId: String!) {
     shareGlobalChallenge(memberId: $userId, challengeId: $challengeId)
+  }
+`;
+
+export const GET_SHARED_CHALLENGE_DETAILS = gql`
+  query GetSharedChallengeInfo($challengeId: String!) {
+    getChallengeInfoById(challengeId: $challengeId, token: "") {
+      challengeName
+      memberInfo {
+        displayName
+      }
+    }
+  }
+`;
+
+export const INVITE_CHALLENGE = gql`
+  mutation InviteChallenge(
+    $shareWithOther: Boolean!
+    $emails: [String!]!
+    $user: String!
+    $challengeId: String!
+  ) {
+    inviteToChallenge(
+      canInviteWithOthers: $shareWithOther
+      invitedWith: $emails
+      invitedBy: $user
+      challengeId: $challengeId
+    )
+  }
+`;
+
+export const ACCEPT_CHALLENGE = gql`
+  mutation AcceptChallenge($user: String!, $token: String!) {
+    acceptChallenge(memberId: $user, inviteId: $token)
+  }
+`;
+
+export const GET_INVITE_CHALLENGE_DETAILS = gql`
+  query GetInviteChallenge($id: String!) {
+    getInviteChallengeInfo(inviteId: $id) {
+      invitedBy {
+        displayName
+      }
+      challengeId {
+        challengeName
+        challengeId
+      }
+    }
   }
 `;

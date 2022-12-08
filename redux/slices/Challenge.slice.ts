@@ -23,6 +23,7 @@ export interface IPost {
 }
 
 interface ChallengeState {
+  viewOnly: boolean;
   activeDate: string;
   startDate: string;
   endDate: string;
@@ -44,6 +45,7 @@ const initialPost = {
 };
 
 const initialState: ChallengeState = {
+  viewOnly: true,
   activeDate: "",
   startDate: "",
   endDate: "",
@@ -57,6 +59,9 @@ export const ChallengeSlice = createSlice({
   reducers: {
     setChallengeDate: (state, action) => {
       state.activeDate = action.payload;
+    },
+    setChallengeView: (state, action) => {
+      state.viewOnly = action.payload;
     },
     setChallengeInterval: (state, action) => {
       state.startDate = action.payload.startDate;
@@ -134,6 +139,7 @@ export const {
   setRecipeInfo,
   addIngredient,
   deleteIngredient,
+  setChallengeView,
 } = ChallengeSlice.actions;
 
 export default ChallengeSlice.reducer;

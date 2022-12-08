@@ -40,6 +40,9 @@
     }
     &__trash {
       transition: opacity 0.2s ease-out;
+      svg {
+        color: #fe5d1f;
+      }
       // transform: translate(2rem, 5px);
       // opacity: 0;
     }

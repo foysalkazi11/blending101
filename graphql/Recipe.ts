@@ -8,3 +8,13 @@ export const GET_BLEND_CATEGORY = gql`
     }
   }
 `;
+
+export const GET_BLEND_CATEGORYS = gql`
+  query GetBlendCategories {
+    getAllCategories {
+      _id
+      name
+      image
+    }
+  }
+`;
