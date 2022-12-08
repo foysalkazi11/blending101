@@ -6,7 +6,13 @@ interface IconProps {
   style?: React.CSSProperties;
   handleClick?: (e: React.SyntheticEvent) => void;
   hover?: "bgPrimary" | "bgSecondary" | "bgGray" | "bgSlightGray" | "none";
-  defaultBg?: "gray" | "primary" | "secondary" | "slightGray" | "none";
+  defaultBg?:
+    | "gray"
+    | "primary"
+    | "secondary"
+    | "slightGray"
+    | "none"
+    | "slightDark";
   iconColor?:
     | "iconColorPrimary"
     | "iconColorSecondary"
