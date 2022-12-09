@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import ReadMore from "../../../../theme/readMore";
 import { BlogDetailsType } from "../../../../type/blog";
 import ImageSlider from "../../../wiki/WikiCenter/firstPortion/ImageSlider";
 import SubHeader from "../../../wiki/WikiCenter/firstPortion/SubHeader";
 import TopHeader from "../../../wiki/WikiCenter/firstPortion/TopHeader";
+import RenderJsonToHtml from "../../../wiki/WikiCenter/jsonToHtml";
 import styles from "./BlogDetails.module.scss";
 interface Props {
   blogDetails: BlogDetailsType;
@@ -16,6 +18,7 @@ const BlogDetailsCenter = ({ blogDetails }: Props) => {
     description,
     mediaUrl,
     commentsCount,
+    body,
   } = blogDetails;
   const [expandAllCollapse, setExpandAllCollapse] = useState(false);
   return (
@@ -37,7 +40,21 @@ const BlogDetailsCenter = ({ blogDetails }: Props) => {
           imagesWithinBlock={[{ url: coverImage, id: "", caption: "" }]}
           setExpandAllCollapse={setExpandAllCollapse}
         />
+        <div className={styles.descriptionBox}>
+          <ReadMore>
+            <p className={styles.textDis}>{description}</p>
+          </ReadMore>
+        </div>
       </div>
+
+      {body && (
+        <RenderJsonToHtml
+          blocks={body ? JSON.parse(body)?.blocks : []}
+          // scrollPoint={scrollPoint}
+          expandAllCollapse={expandAllCollapse}
+          setExpandAllCollapse={setExpandAllCollapse}
+        />
+      )}
     </>
   );
 };

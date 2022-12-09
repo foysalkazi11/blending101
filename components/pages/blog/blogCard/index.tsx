@@ -59,7 +59,7 @@ const BlogCard = ({ blogData }: Props) => {
             className={styles.playButton}
             style={{ top: `${titleWidth?.current?.clientHeight || 34}px` }}
           >
-            <audio controls autoPlay muted>
+            <audio controls autoPlay>
               <source src={mediaUrl} />
               Your browser does not support the video tag.
             </audio>
@@ -75,7 +75,7 @@ const BlogCard = ({ blogData }: Props) => {
               height="100%"
               controls
               autoPlay
-              muted
+
               // onMouseLeave={() => setPlay(false)}
             >
               <source src={mediaUrl} />

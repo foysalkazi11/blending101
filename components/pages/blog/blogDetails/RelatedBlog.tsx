@@ -48,7 +48,7 @@ const RelatedBlog = ({ relatedBlogs }: Props) => {
         }
         title={`Related blog`}
       />
-      {width < 1280 ? (
+      {width < 1024 ? (
         <CustomSlider moreSetting={responsiveSetting}>
           {relatedBlogs?.map((blog: BlogListType) => {
             return <BlogCard key={blog?._id} blogData={blog} />;
