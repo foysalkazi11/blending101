@@ -82,7 +82,10 @@ export default function AContainer(props: AContainerProps) {
           <SidebarComponent />
         </div>
       ) : null}
-      <div className={styles.mainA}>
+      <div
+        className={styles.mainA}
+        style={headerFullWidth ? { width: "100%" } : {}}
+      >
         {showHeader ? (
           <HeaderComponent
             logo={logo}
