@@ -41,9 +41,15 @@ export const DELETE_CHALLENGE = gql`
 `;
 
 export const ACTIVATE_CHALLENGE = gql`
-  mutation ActivateChallenge($memberId: ID!, $challengeId: ID!) {
-    editUserChallenge(
-      data: { memberId: $memberId, challengeId: $challengeId, isActive: true }
+  mutation ActivateChallenge(
+    $prevChallenge: String!
+    $newChallenge: String!
+    $memberId: String!
+  ) {
+    activateChallenge(
+      previousDefaultChallengeId: $prevChallenge
+      challengeId: $newChallenge
+      memberId: $memberId
     )
   }
 `;
@@ -234,15 +240,20 @@ export const GET_INVITE_CHALLENGE_DETAILS = gql`
 export const GET_RECENT_CHALLENGES = gql`
   query GetRecentChallenges($userId: String!, $startDate: String!) {
     getLastSevenDaysChallenge(startDate: $startDate, memberId: $userId) {
-      _id
-      assignDate
-      date: formattedDate
-      disabled
-      posts {
-        recipeBlendCategory {
-          _id
-          name
+      challenge {
+        _id
+        assignDate
+        date: formattedDate
+        disabled
+        posts {
+          recipeBlendCategory {
+            _id
+            name
+          }
         }
+      }
+      challengeInfo {
+        blendScore
       }
     }
   }

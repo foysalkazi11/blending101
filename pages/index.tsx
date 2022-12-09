@@ -18,6 +18,9 @@ import SpecialcardComponent from "../theme/cards/specialCard.component";
 
 const Home = () => {
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const displayName = useAppSelector(
+    (state) => state.user?.dbUser?.displayName || "",
+  );
 
   const { data: recipes } = useQuery(GET_ALL_LATEST_RECIPES, {
     variables: { userId },
@@ -27,7 +30,6 @@ const Home = () => {
 
   const [wikiType, setWikiType] = useState("All");
 
-  console.log(wikiType);
   return (
     <AContainer
       headerTitle="Home"
@@ -46,7 +48,7 @@ const Home = () => {
           <div className="col-9">
             <div className={styles.alert}>
               <div className={styles.alert__content}>
-                <h3>Hello Gabriel!</h3>
+                <h3>Hello {displayName}!</h3>
                 <p>
                   You have current blending score is{" "}
                   <span className="bold text-green">85%</span>. Did you know

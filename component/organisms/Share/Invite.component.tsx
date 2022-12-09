@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState, useEffect } from "react";
+import React, { Fragment, useRef, useState, useEffect, useMemo } from "react";
 import {
   faFacebook,
   faPinterest,
@@ -17,10 +17,11 @@ import Textarea from "../Forms/Textarea.component";
 import styles from "./Share.module.scss";
 import CustomModal from "../../../theme/modal/customModal/CustomModal";
 
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_SHARE_LINK } from "../../../graphql/Share";
 import { useAppSelector } from "../../../redux/hooks";
 import { INVITE_CHALLENGE } from "../../../graphql/Challenge";
+import { GET_ALL_USER_LIST } from "../../../graphql/User";
 
 interface ShareProps {
   id?: string;
@@ -31,12 +32,15 @@ interface ShareProps {
 
 const Invite = (props: ShareProps) => {
   const { id, title, show, setShow } = props;
-  const [inviteChallenge, { data }] = useMutation(INVITE_CHALLENGE);
+
+  const { data } = useQuery(GET_ALL_USER_LIST);
+  const [inviteChallenge] = useMutation(INVITE_CHALLENGE);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [showSuggestion, setShowSuggestion] = useState(false);
 
   const [link, setLink] = useState("");
+  const [input, setInput] = useState("");
   const [emails, setEmails] = useState([]);
 
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
@@ -53,7 +57,7 @@ const Invite = (props: ShareProps) => {
   };
 
   const onInputBlur = () => {
-    setShowSuggestion(false);
+    // setShowSuggestion(false);
     if (inputRef.current) {
       const inputEl = inputRef.current;
       inputEl.style.borderColor = "#e5e5e5";
@@ -61,9 +65,7 @@ const Invite = (props: ShareProps) => {
   };
 
   const onInputChange = (event) => {
-    const email = event.target.value;
-    if (email !== "") setShowSuggestion(true);
-    else setShowSuggestion(false);
+    setInput(event.target.value);
   };
 
   const onAddEmail = (event) => {
@@ -75,12 +77,13 @@ const Invite = (props: ShareProps) => {
         )
       )
         return;
-      event.target.value = "";
       setEmails([...emails, email]);
+      setInput("");
     }
   };
 
   const handleInvitation = () => {
+    if (emails.length === 0) return;
     inviteChallenge({
       variables: {
         shareWithOther: false,
@@ -88,10 +91,36 @@ const Invite = (props: ShareProps) => {
         user: userId,
         challengeId: id,
       },
-    }).then(() => {
+    }).then((response) => {
       setShow(false);
+      navigator.clipboard.writeText(
+        `${process.env.NEXT_PUBLIC_HOSTING_DOMAIN}/challenge/invited/?id=${response.data.inviteId}`,
+      );
     });
   };
+
+  const resetModal = () => {
+    setEmails([]);
+    setInput("");
+    setShowSuggestion(false);
+  };
+
+  const suggestions = useMemo(() => {
+    let users = [];
+    if (data?.getAllusers && input !== "") {
+      users =
+        data?.getAllusers.filter(
+          (user) =>
+            !emails.includes(user.email) &&
+            (user.displayName as string)
+              ?.toLowerCase()
+              .startsWith(input.toLowerCase()),
+        ) || [];
+    }
+    if (users.length !== 0) setShowSuggestion(true);
+    else setShowSuggestion(false);
+    return users;
+  }, [data?.getAllusers, emails, input]);
 
   return (
     <CustomModal open={show} setOpen={setShow}>
@@ -114,6 +143,7 @@ const Invite = (props: ShareProps) => {
           ))}
           <input
             type="email"
+            value={input}
             placeholder={!hasEmails ? "Enter Name or Email" : ""}
             className={styles.email__input}
             onFocus={onInputFocus}
@@ -124,14 +154,21 @@ const Invite = (props: ShareProps) => {
             <div className={styles.email__suggestion}>
               <h6>Select a Person</h6>
               <ul>
-                <li>
-                  <span>B</span>
-                  Badhon Khan
-                </li>
-                <li>
-                  <span>G</span>
-                  Gabriel Braun
-                </li>
+                {suggestions.slice(0, 3).map((user) => {
+                  return (
+                    <li
+                      key={user?.email}
+                      onClick={() => {
+                        setEmails([...emails, user?.email]);
+                        setShowSuggestion(false);
+                        setInput("");
+                      }}
+                    >
+                      <span>{user?.displayName?.charAt(0)}</span>
+                      {user?.displayName}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           )}
@@ -150,7 +187,10 @@ const Invite = (props: ShareProps) => {
           </button>
           <button
             className={`${styles.share__button} ${styles["share__button--cancel"]}`}
-            onClick={() => setShow(false)}
+            onClick={() => {
+              resetModal();
+              setShow(false);
+            }}
           >
             Cancel
           </button>
