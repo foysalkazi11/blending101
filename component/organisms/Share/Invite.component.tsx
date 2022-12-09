@@ -94,7 +94,7 @@ const Invite = (props: ShareProps) => {
     }).then((response) => {
       setShow(false);
       navigator.clipboard.writeText(
-        `${process.env.NEXT_PUBLIC_HOSTING_DOMAIN}/challenge/invited/?id=${response.data.inviteId}`,
+        `${process.env.NEXT_PUBLIC_HOSTING_DOMAIN}/challenge/invited/?id=${response.data.inviteToChallenge}`,
       );
     });
   };
