@@ -70,8 +70,8 @@ export default function HeaderComponent({
               {logo && <img src="/logo.png" alt="logo" />}
             </div>
           </Link>
-          <div className={styles.center + " " + styles.info}>
-            <h3>{headerTitle}</h3>
+          <div className={styles.center}>
+            <h3 className={styles.title}>{headerTitle}</h3>
           </div>
           <div className={styles.right + " " + styles.logo}>
             <div>
