@@ -9,7 +9,7 @@ export const GET_BLEND_CATEGORY = gql`
   }
 `;
 
-export const GET_BLEND_CATEGORYS = gql`
+export const GET_BLEND_TYPES = gql`
   query GetBlendCategories {
     getAllCategories {
       _id

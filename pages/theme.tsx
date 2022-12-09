@@ -139,7 +139,7 @@ export default function Home() {
           <div className={styles.cards}>
             <div className={styles.card}>
               <CardComponent
-                title="Primary Card"
+                title="Banana Mango Smoothie"
                 img={undefined}
                 icon={undefined}
                 rating={undefined}

@@ -4,21 +4,16 @@ import { AiOutlineClose } from "react-icons/ai";
 import { BsSoundwave, BsSearch, BsMic } from "react-icons/bs";
 import { FiFilter } from "react-icons/fi";
 import { Tooltip } from "recharts";
+
 import PlanCard from "../../component/module/Planner/PlanCard.component";
 import AppdownLoadCard from "../../components/recipe/recipeDiscovery/AppdownLoadCard/AppdownLoadCard.component";
 import ContentTray from "../../components/recipe/recipeDiscovery/ContentTray/ContentTray.component";
-import DiscoverPageSearch from "../../components/recipe/recipeDiscovery/discoverPageSearch/DiscoverPageSearch.Component";
+
 import useOnClickOutside from "../../components/utility/useOnClickOutside";
 import AContainer from "../../containers/A.container";
 import styles from "../../styles/pages/planner.module.scss";
 import classes from "../../components/searchBar/SearchBar.module.scss";
-import {
-  faCirclePlus,
-  faUser,
-  faUserCircle,
-} from "@fortawesome/pro-light-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import RecipeDiscoverButton from "../../theme/button/recipeDiscoverButton/RecipeDiscoverButton";
+import { faUserCircle } from "@fortawesome/pro-light-svg-icons";
 import Icon from "../../component/atoms/Icon/Icon.component";
 
 const PlanDiscovery = ({

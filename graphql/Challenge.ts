@@ -14,8 +14,8 @@ export const GET_CHALLENGES = gql`
       days
       isActive
       startingDate
-      startDate
-      endDate
+      startDate: startDateString
+      endDate: endDateString
       description
       notification
     }
@@ -226,6 +226,23 @@ export const GET_INVITE_CHALLENGE_DETAILS = gql`
       challengeId {
         challengeName
         challengeId
+      }
+    }
+  }
+`;
+
+export const GET_RECENT_CHALLENGES = gql`
+  query GetRecentChallenges($userId: String!, $startDate: String!) {
+    getLastSevenDaysChallenge(startDate: $startDate, memberId: $userId) {
+      _id
+      assignDate
+      date: formattedDate
+      disabled
+      posts {
+        recipeBlendCategory {
+          _id
+          name
+        }
       }
     }
   }

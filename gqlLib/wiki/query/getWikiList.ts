@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 const GET_WIKI_LIST = gql`
   query GetWikiList {
@@ -19,6 +19,17 @@ const GET_WIKI_LIST = gql`
       description
       publishedBy
       isPublished
+    }
+  }
+`;
+
+export const GET_WIKI_HIGHLIGHTS = gql`
+  query GetWikiHighlights {
+    getWikiList {
+      _id
+      wikiTitle
+      type
+      image
     }
   }
 `;

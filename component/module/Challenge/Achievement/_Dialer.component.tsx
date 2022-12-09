@@ -180,7 +180,7 @@ function DateButton({ date, isActive, categories, disabled }: any) {
   }
 }
 
-function getBackgroundColor(categories: string[]) {
+export function getBackgroundColor(categories: string[]) {
   const length = categories.length;
   if (length === 0) return "#D8D8D8";
   else if (length === 1) return RECIPE_CATEGORY_COLOR[categories[0]];

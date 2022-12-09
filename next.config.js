@@ -10,6 +10,7 @@ module.exports = {
       "blending.s3.us-east-1.amazonaws.com",
       "www.fivehearthome.com",
       "www.inspiredtaste.net",
+      "imagesvc.meredithcorp.io",
     ],
   },
   webpack: (config, { isServer }) => {
