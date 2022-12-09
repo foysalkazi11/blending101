@@ -10,18 +10,18 @@ import time_ago from "../../../../helperFunc/date/time_ago";
 import Image from "next/image";
 // import { faBookmark } from "@fortawesome/pro-solid-svg-icons";
 import { faBookmark, faMessageDots } from "@fortawesome/pro-light-svg-icons";
+import { useRouter } from "next/router";
 
 interface Props {
   blogData: BlogListType;
 }
 
 const BlogCard = ({ blogData }: Props) => {
-  const { coverImage, title, type, createdBy, publishDate, mediaUrl } =
+  const { coverImage, title, type, createdBy, publishDate, mediaUrl, slug } =
     blogData;
   const [play, setPlay] = useState(false);
-
   const titleWidth = useRef<HTMLDivElement>(null);
-  console.log(titleWidth);
+  const router = useRouter();
 
   const togglePlay = (status: boolean = false) => {
     setPlay(status);
@@ -35,7 +35,12 @@ const BlogCard = ({ blogData }: Props) => {
         onMouseLeave={() => togglePlay(false)}
       >
         <div className={styles.titleBox} ref={titleWidth}>
-          <p className={styles.title}>{title}</p>
+          <p
+            className={styles.title}
+            onClick={() => router.push(`/blog/${slug}`)}
+          >
+            {title}
+          </p>
         </div>
         {(type === "audio" || type === "video") && !play && (
           <div className={styles.playButton}>
@@ -50,8 +55,11 @@ const BlogCard = ({ blogData }: Props) => {
           </div>
         )}
         {type === "audio" && play && (
-          <div className={styles.playButton}>
-            <audio controls autoPlay>
+          <div
+            className={styles.playButton}
+            style={{ top: `${titleWidth?.current?.clientHeight || 34}px` }}
+          >
+            <audio controls autoPlay muted>
               <source src={mediaUrl} />
               Your browser does not support the video tag.
             </audio>
@@ -67,6 +75,7 @@ const BlogCard = ({ blogData }: Props) => {
               height="100%"
               controls
               autoPlay
+              muted
               // onMouseLeave={() => setPlay(false)}
             >
               <source src={mediaUrl} />

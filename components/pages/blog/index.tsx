@@ -6,9 +6,9 @@ import BlogCard from "./blogCard";
 import SkeletonCollectionRecipe from "../../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollectionRecipe";
 import { BlogListType } from "../../../type/blog";
 import styles from "./BlogList.module.scss";
-import DiscoverPageSearch from "../../recipe/recipeDiscovery/discoverPageSearch/DiscoverPageSearch.Component";
 import CommonSearchBar from "../../searchBar/CommonSearchBar";
 import WikiBanner from "../../wiki/wikiBanner/WikiBanner";
+import ErrorPage from "../404Page";
 
 const BlogList = () => {
   const [blogSearchInput, setBlogSearchInput] = useState("");
@@ -30,6 +30,16 @@ const BlogList = () => {
         setBlogSearchInput={setBlogSearchInput}
       >
         <SkeletonCollectionRecipe />;
+      </Layout>
+    );
+  }
+  if (generalBlogError) {
+    return (
+      <Layout
+        blogSearchInput={blogSearchInput}
+        setBlogSearchInput={setBlogSearchInput}
+      >
+        <ErrorPage />;
       </Layout>
     );
   }
