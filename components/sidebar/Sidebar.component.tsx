@@ -10,28 +10,28 @@ import { setOpenCollectionsTary } from "../../redux/slices/sideTraySlice";
 import Tooltip from "../../theme/toolTip/CustomToolTip";
 import styles from "./sidebar.module.scss";
 
+export const PAGES = [
+  { logo: "/icons/home.svg", link: "/", content: "Home" },
+  { logo: "/icons/juicer.svg", link: "/discovery", content: "Discovery" },
+  { logo: "/icons/books.svg", link: "/wiki", content: "Wiki" },
+  {
+    logo: "/icons/calender__sidebar.svg",
+    link: "/planner",
+    content: "Planner",
+  },
+  {
+    logo: "/icons/whistle.svg",
+    link: "/challenge",
+    content: "Challenge",
+  },
+  { logo: "/icons/book_light.svg", link: "/blog", content: "News" },
+  { logo: "/icons/store.svg", link: "/", content: "Shop" },
+];
+
 export default function SidebarComponent(props) {
   const [active, setActive] = useState(0);
   const router = useRouter();
   const dispatch = useAppDispatch();
-
-  const pages = [
-    { logo: "/icons/home.svg", link: "/", content: "Home" },
-    { logo: "/icons/juicer.svg", link: "/", content: "Discovery" },
-    { logo: "/icons/books.svg", link: "/wiki", content: "Wiki" },
-    {
-      logo: "/icons/calender__sidebar.svg",
-      link: "/planner",
-      content: "Planner",
-    },
-    {
-      logo: "/icons/whistle.svg",
-      link: "/challenge",
-      content: "Challenge",
-    },
-    { logo: "/icons/book_light.svg", link: "/blog", content: "News" },
-    { logo: "/icons/store.svg", link: "/", content: "Shop" },
-  ];
 
   const handleClick = (link: string, i: number) => {
     setActive(i);
@@ -49,8 +49,8 @@ export default function SidebarComponent(props) {
         <img src="/logo_small.svg" alt="logo" />
       </div>
       <ul className={styles.list}>
-        {pages &&
-          pages.map((page, i) => (
+        {PAGES &&
+          PAGES.map((page, i) => (
             <Tooltip key={"sidebaritem" + i} content={page?.content}>
               <li
                 className={active === i ? styles.active : ""}

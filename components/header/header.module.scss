@@ -91,6 +91,9 @@
   position: absolute;
   left: calc(50% - 61px);
   transform: translateX(-50%);
+  .title {
+    font-weight: 500;
+  }
 }
 
 .userPopupMenu {
