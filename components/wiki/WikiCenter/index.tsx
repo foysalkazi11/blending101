@@ -75,7 +75,6 @@ function WikiCenterComponent(props: WikiCenterComponentProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [body]);
-
   return (
     <div className={styles.centerMain}>
       <FirstPortion

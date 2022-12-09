@@ -40,12 +40,20 @@
   background-color: white;
   padding: 20px;
   border-radius: 14px;
-  // -webkit-box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;
-  // box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;
+  -webkit-box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;
+  box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;
   margin-bottom: 20px;
   .topHeading {
     font-size: 28px;
     color: #000;
     font-weight: bold;
+  }
+  .descriptionBox {
+    padding-top: 10px;
+    .textDis {
+      font-size: 16px;
+      color: #484848;
+      line-height: 24px;
+    }
   }
 }
