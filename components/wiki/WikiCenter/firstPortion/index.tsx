@@ -59,7 +59,7 @@ const FirstPortion = ({
 
   return (
     <>
-      <TopHeader type={type} />
+      <TopHeader title={type} backAddress="/wiki" />
 
       <div className={styles.card}>
         <div className={styles.blendingRecipeHeading}>

@@ -259,7 +259,7 @@ const BlendType = () => {
     <div className={styles.insights__graph}>
       <h3>Blending Trend</h3>
       <div className={styles.wheel}>
-        {data?.getLastSevenDaysChallenge.map((activity, key) => {
+        {data?.getLastSevenDaysChallenge?.challenge?.map((activity, key) => {
           const categories = activity?.posts.map(
             (post) => post?.recipeBlendCategory?.name || "",
           );

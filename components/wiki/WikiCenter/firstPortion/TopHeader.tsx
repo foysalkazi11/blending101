@@ -6,10 +6,11 @@ import IconWarper from "../../../../theme/iconWarper/IconWarper";
 import PanelHeader from "../../../recipe/share/panelHeader/PanelHeader";
 
 interface Props {
-  type: string;
+  title: string;
+  backAddress: string;
 }
 
-const TopHeader = ({ type }: Props) => {
+const TopHeader = ({ title, backAddress }: Props) => {
   const router = useRouter();
   return (
     <PanelHeader
@@ -17,13 +18,14 @@ const TopHeader = ({ type }: Props) => {
         "/icons/information.svg"
         // <FontAwesomeIcon icon={faChartColumn} fontSize="24" />
       }
-      title={`About ${type}`}
+      title={`About ${title}`}
       rightSide={
         <IconWarper
+          iconColor="iconColorWhite"
           defaultBg="secondary"
           hover="bgSecondary"
           style={{ width: "28px", height: "28px" }}
-          handleClick={() => router.push("/wiki")}
+          handleClick={() => router.push(backAddress)}
         >
           <FontAwesomeIcon icon={faXmark} />
         </IconWarper>

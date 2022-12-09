@@ -12,3 +12,22 @@ export interface BlogListType {
   type: "post" | "audio" | "video";
   commentsCount: number;
 }
+
+export interface BlogDetailsType {
+  _id: string;
+  title: string;
+  body: string;
+  commentsCount: number;
+  coverImage: string;
+  type: string;
+  slug: string;
+  publishDateString: string;
+  publishDate: string;
+  mediaUrl: string;
+  mediaLength: string;
+  keywords: string[];
+  hasInCollection: boolean;
+  description: string;
+  createdBy: string;
+  category: string;
+}

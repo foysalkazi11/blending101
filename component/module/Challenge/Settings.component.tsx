@@ -44,11 +44,13 @@ import { setChallengeDate } from "../../../redux/slices/Challenge.slice";
 import Invite from "../../organisms/Share/Invite.component";
 
 interface SettingsProps {
+  currentChallenge: string;
+  challenges: any;
   hideSettings: () => void;
 }
 
 const Settings = (props: SettingsProps) => {
-  const { hideSettings } = props;
+  const { currentChallenge, hideSettings, challenges } = props;
   const [showForm, setShowForm] = useState(false);
   const [challenge, setChallenge] = useState<any>(null);
 
@@ -105,6 +107,8 @@ const Settings = (props: SettingsProps) => {
           <ChallengeForm challenge={challenge} setShowForm={setShowForm} />
         ) : (
           <ChallengeList
+            currentChallenge={currentChallenge}
+            challenges={challenges}
             editFormHandler={editFormHandler}
             hideSettings={hideSettings}
           />
@@ -114,19 +118,18 @@ const Settings = (props: SettingsProps) => {
   );
 };
 
-const ChallengeList = ({ editFormHandler, hideSettings }) => {
+const ChallengeList = ({
+  currentChallenge,
+  challenges,
+  editFormHandler,
+  hideSettings,
+}) => {
   const [show, setShow] = useState(false);
   const [activeId, setActiveId] = useState("");
   const [challengeInfo, setChallengeInfo] = useState({});
 
   const dispatch = useAppDispatch();
   const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
-
-  const { data } = useQuery(GET_CHALLENGES, {
-    variables: {
-      memberId,
-    },
-  });
 
   const [activateChallenge, activateState] = useMutation(ACTIVATE_CHALLENGE, {
     refetchQueries: ["Get30DaysChallenge", "GetAllChallenges"],
@@ -140,7 +143,8 @@ const ChallengeList = ({ editFormHandler, hideSettings }) => {
       mutate: activateChallenge,
       variables: {
         memberId,
-        challengeId,
+        newChallenge: challengeId,
+        prevChallenge: currentChallenge,
       },
       state: activateState,
       success: `Activated Challenge Sucessfully`,
@@ -179,7 +183,8 @@ const ChallengeList = ({ editFormHandler, hideSettings }) => {
         </div>
         <div className="col-2">&nbsp;</div>
       </div>
-      {data?.getMyChallengeList?.map((challenge) => {
+      {challenges?.getMyChallengeList?.map((challenge) => {
+        const canShareWithOthers = isPast(new Date(challenge.startDate));
         return (
           <div className={`row ${styles.challenge}`} key={challenge._id}>
             <div className="col-1">
@@ -223,6 +228,7 @@ const ChallengeList = ({ editFormHandler, hideSettings }) => {
                 fontName={faUserPlus}
                 variant="fade"
                 size="small"
+                disabled={canShareWithOthers}
                 className={`${styles.challenge__action__trash} ml-30`}
                 onClick={() => {
                   setShow(true);
@@ -267,7 +273,7 @@ const ChallengeForm = ({ setShowForm, challenge }) => {
     refetchQueries: ["GetAllChallenges"],
   });
   const [editChallenge, editState] = useMutation(EDIT_CHALLENGE, {
-    refetchQueries: ["GetAllChallenges"],
+    refetchQueries: ["GetAllChallenges", "Get30DaysChallenge"],
   });
 
   useEffect(() => {
