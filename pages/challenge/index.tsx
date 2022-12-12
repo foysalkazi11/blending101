@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import {
   faGear,
   faPlusCircle,
@@ -19,7 +19,7 @@ import Settings from "../../component/module/Challenge/Settings.component";
 import AContainer from "../../containers/A.container";
 import IconHeading from "../../theme/iconHeading/iconHeading.component";
 
-import { GET_30DAYS_CHALLENGE } from "../../graphql/Challenge";
+import { GET_30DAYS_CHALLENGE, GET_CHALLENGES } from "../../graphql/Challenge";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
   setChallengeInterval,
@@ -52,6 +52,12 @@ const ChallengePage = () => {
   } = useAppSelector((state) => state.challenge);
 
   const [getChallenges, { data }] = useLazyQuery(GET_30DAYS_CHALLENGE);
+  const { data: challenges } = useQuery(GET_CHALLENGES, {
+    variables: {
+      memberId: userId,
+    },
+  });
+
   const viewOnly = data?.getMyThirtyDaysChallenge?.challengeInfo?.viewOnly;
 
   useEffect(() => {
@@ -98,7 +104,15 @@ const ChallengePage = () => {
   let toolbox = null;
   if (showUpload) toolbox = <UploadCard />;
   else if (showSettings)
-    toolbox = <Settings hideSettings={() => setShowSettings(false)} />;
+    toolbox = (
+      <Settings
+        currentChallenge={
+          data?.getMyThirtyDaysChallenge?.challengeInfo?.challengeId
+        }
+        challenges={challenges}
+        hideSettings={() => setShowSettings(false)}
+      />
+    );
 
   return (
     <AContainer

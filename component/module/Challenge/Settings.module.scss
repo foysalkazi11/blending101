@@ -40,6 +40,15 @@
     }
     &__trash {
       transition: opacity 0.2s ease-out;
+      &:disabled {
+        cursor: default;
+        &:hover {
+          background-color: transparent !important;
+        }
+        svg {
+          color: #7d7d7d;
+        }
+      }
       svg {
         color: #fe5d1f;
       }
