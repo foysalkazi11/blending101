@@ -1,8 +1,6 @@
 import { useRef, useState } from "react";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
-import IconButton from "../../../../component/atoms/Button/IconButton.component";
 import { BlogListType } from "../../../../type/blog";
 import styles from "./BlogCard.module.scss";
 import IconWarper from "../../../../theme/iconWarper/IconWarper";
@@ -31,8 +29,12 @@ const BlogCard = ({ blogData }: Props) => {
       <div
         className={styles.coverImage}
         style={{ backgroundImage: `url(${coverImage})` }}
-        onMouseEnter={() => togglePlay(true)}
-        onMouseLeave={() => togglePlay(false)}
+        onMouseEnter={() =>
+          (type === "audio" || type === "video") && togglePlay(true)
+        }
+        onMouseLeave={() =>
+          (type === "audio" || type === "video") && togglePlay(false)
+        }
       >
         <div className={styles.titleBox} ref={titleWidth}>
           <p

@@ -19,7 +19,7 @@ export interface BlogDetailsType {
   body: string;
   commentsCount: number;
   coverImage: string;
-  type: string;
+  type: "post" | "audio" | "video";
   slug: string;
   publishDateString: string;
   publishDate: string;
