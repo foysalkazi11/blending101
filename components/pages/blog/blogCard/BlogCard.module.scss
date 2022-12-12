@@ -39,6 +39,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: all 0.3s;
+
+    .videoBox {
+      transform: scale(1.1);
+      overflow: hidden;
+    }
   }
   .authorAndDate {
     width: 100%;
