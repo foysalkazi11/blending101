@@ -54,7 +54,7 @@ const WikiSearchBar = ({
             })`}
             disable={dbUser?.wikiCompareCount ? false : true}
             style={{
-              backgroundColor: dbUser?.compareLength ? "inherit" : "#ececec",
+              backgroundColor: dbUser?.compareLength ? "#fff" : "#ececec",
             }}
             handleClick={() => router.push(`/wiki/compare`)}
           />

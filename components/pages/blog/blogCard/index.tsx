@@ -36,14 +36,17 @@ const BlogCard = ({ blogData }: Props) => {
           (type === "audio" || type === "video") && togglePlay(false)
         }
       >
-        <div className={styles.titleBox} ref={titleWidth}>
-          <p
-            className={styles.title}
-            onClick={() => router.push(`/blog/${slug}`)}
-          >
-            {title}
-          </p>
-        </div>
+        {type !== "video" && (
+          <div className={styles.titleBox} ref={titleWidth}>
+            <p
+              className={styles.title}
+              onClick={() => router.push(`/blog/${slug}`)}
+            >
+              {title}
+            </p>
+          </div>
+        )}
+
         {(type === "audio" || type === "video") && !play && (
           <div className={styles.playButton}>
             <IconWarper
@@ -61,29 +64,26 @@ const BlogCard = ({ blogData }: Props) => {
             className={styles.playButton}
             style={{ top: `${titleWidth?.current?.clientHeight || 34}px` }}
           >
-            <audio controls autoPlay>
+            <audio controls autoPlay muted>
               <source src={mediaUrl} />
               Your browser does not support the video tag.
             </audio>
           </div>
         )}
         {type === "video" && play && (
-          <div
-            className={styles.playButton}
-            style={{ top: `${titleWidth?.current?.clientHeight || 34}px` }}
+          <video
+            className={`${styles.playButton} ${styles.videoBox}`}
+            onClick={() => router.push(`/blog/${slug}`)}
+            width="100%"
+            height="100%"
+            controls
+            autoPlay
+            muted
+            // onMouseLeave={() => setPlay(false)}
           >
-            <video
-              width="100%"
-              height="100%"
-              controls
-              autoPlay
-
-              // onMouseLeave={() => setPlay(false)}
-            >
-              <source src={mediaUrl} />
-              Your browser does not support the video tag.
-            </video>
-          </div>
+            <source src={mediaUrl} />
+            Your browser does not support the video tag.
+          </video>
         )}
       </div>
       <div className={styles.authorAndDate}>
