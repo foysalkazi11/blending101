@@ -1,9 +1,18 @@
-import React, { Dispatch, SetStateAction, useRef, useEffect } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useRef,
+  useEffect,
+  useState,
+} from "react";
 import styles from "../wikiCenter.module.scss";
 import CustomSlider from "../../../../theme/carousel/carousel.component";
 import Image from "next/image";
 import { placeHolderImage } from "../../wikiSingleItem/WikiSingleItem";
 import { CoverImageType } from "..";
+import IconWarper from "../../../../theme/iconWarper/IconWarper";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlay } from "@fortawesome/pro-solid-svg-icons";
 
 interface Props {
   imagesWithinBlock?: CoverImageType[];
@@ -14,6 +23,7 @@ const ImageSlider = ({
   imagesWithinBlock = [],
   setExpandAllCollapse = () => {},
 }: Props) => {
+  const [play, setPlay] = useState(false);
   const captionRef = useRef<HTMLDivElement>(null);
   const imageSliderContainerRef = useRef<HTMLDivElement>(null);
   let timer = useRef(null);
@@ -35,6 +45,9 @@ const ImageSlider = ({
       titleElement.style.backgroundColor = "";
     }, 2500);
   };
+  const togglePlay = (status: boolean = false) => {
+    setPlay(status);
+  };
 
   useEffect(() => {
     return () => {
@@ -46,11 +59,18 @@ const ImageSlider = ({
     <CustomSlider>
       {imagesWithinBlock?.length ? (
         imagesWithinBlock.map((img, index) => {
+          const { caption, id, url, mediaUrl, type } = img;
           return (
             <div
               key={index}
               className={styles.imageSliderContainer}
               ref={imageSliderContainerRef}
+              onMouseEnter={() =>
+                (type === "audio" || type === "video") && togglePlay(true)
+              }
+              onMouseLeave={() =>
+                (type === "audio" || type === "video") && togglePlay(false)
+              }
             >
               <div
                 className={styles.bgBlurImage}
@@ -65,24 +85,55 @@ const ImageSlider = ({
               />
               {img?.caption && (
                 <div
+                  ref={captionRef}
                   className={styles.imageCaption}
-                  // style={{
-                  //   top: `${
-                  //     imageSliderContainerRef?.current?.getBoundingClientRect()
-                  //       ?.height -
-                  //     (captionRef?.current?.getBoundingClientRect()
-                  //       ?.height +
-                  //       32)
-                  //   }px`,
-                  // }}
+                  style={{
+                    top: `calc(100% - ${
+                      captionRef?.current?.clientHeight || 34
+                    }px)`,
+                  }}
                 >
                   <p
                     className={styles.captionText}
-                    ref={captionRef}
                     onClick={() => findImageBlock(img?.id)}
                   >
                     {img?.caption}
                   </p>
+                </div>
+              )}
+              {(type === "audio" || type === "video") && !play && (
+                <div className={styles.playButton}>
+                  <IconWarper
+                    // handleClick={() => router?.push(backLink)}
+                    iconColor="iconColorWhite"
+                    defaultBg="primary"
+                    style={{ width: "40px", height: "40px" }}
+                  >
+                    <FontAwesomeIcon icon={faPlay} />
+                  </IconWarper>
+                </div>
+              )}
+              {type === "audio" && mediaUrl && play && (
+                <div className={styles.playButton}>
+                  <audio controls autoPlay muted>
+                    <source src={mediaUrl} />
+                    Your browser does not support the video tag.
+                  </audio>
+                </div>
+              )}
+              {type === "video" && mediaUrl && play && (
+                <div className={styles.playButton}>
+                  <video
+                    width="100%"
+                    height="100%"
+                    controls
+                    autoPlay
+                    muted
+                    // onMouseLeave={() => setPlay(false)}
+                  >
+                    <source src={mediaUrl} />
+                    Your browser does not support the video tag.
+                  </video>
                 </div>
               )}
             </div>

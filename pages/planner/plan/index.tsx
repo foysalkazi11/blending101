@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { faToolbox } from "@fortawesome/pro-light-svg-icons";
 import { faSearch } from "@fortawesome/pro-regular-svg-icons";
 import { useRouter } from "next/router";
@@ -10,15 +10,47 @@ import AContainer from "../../../containers/A.container";
 import IconHeading from "../../../theme/iconHeading/iconHeading.component";
 import Insights from "../../../component/module/Planner/Insights.component";
 import PlanHeader from "../../../component/module/Planner/Header.component";
-import PlanForm from "../../../component/module/Planner/PlanForm.component";
+import PlanForm, {
+  defaultPlan,
+} from "../../../component/module/Planner/PlanForm.component";
 import Icon from "../../../component/atoms/Icon/Icon.component";
 
 import styles from "../../../styles/pages/planner.module.scss";
+import { useForm } from "react-hook-form";
+import { useMutation } from "@apollo/client";
+import { CREATE_PLAN } from "../../../graphql/Planner";
+import { useAppSelector } from "../../../redux/hooks";
+import { addDays, isBefore, isEqual, isPast } from "date-fns";
 
 const MyPlan = () => {
+  const router = useRouter();
+  const [createPlan] = useMutation(CREATE_PLAN);
+  const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const plans = useAppSelector((state) => state.planner.plans);
+  const methods = useForm({
+    defaultValues: useMemo(() => defaultPlan, []),
+  });
+
   const [showGroceryTray] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const router = useRouter();
+
+  const handlePlanSave = (data) => {
+    if (!showForm) return setShowForm(true);
+    createPlan({
+      variables: {
+        data: {
+          memberId,
+          ...data,
+          planData: plans.map((plan, idx) => ({
+            day: idx,
+            recipes: plan.recipes.map((recipe) => recipe._id),
+          })),
+        },
+      },
+    }).then(() => {
+      setShowForm(false);
+    });
+  };
 
   return (
     <AContainer
@@ -58,17 +90,15 @@ const MyPlan = () => {
                 <div className="flex ai-center">
                   <div
                     className={`${styles.uploadDiv} ${styles.uploadDiv__save}`}
-                    onClick={() => setShowForm((prev) => !prev)}
+                    onClick={methods.handleSubmit(handlePlanSave)}
                   >
                     <span>{showForm ? "Save" : "Save As"}</span>
                   </div>
                 </div>
               </div>
-              {showForm && <PlanForm />}
               <div className={styles.plan}>
-                {/* <PlannerHeader /> */}
-                <PlanHeader />
-                <PlanList />
+                {showForm ? <PlanForm methods={methods} /> : <PlanHeader />}
+                <PlanList data={plans} />
               </div>
             </div>
             <div className="col-3">

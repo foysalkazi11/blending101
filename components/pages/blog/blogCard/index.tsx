@@ -1,8 +1,6 @@
 import { useRef, useState } from "react";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
-import IconButton from "../../../../component/atoms/Button/IconButton.component";
 import { BlogListType } from "../../../../type/blog";
 import styles from "./BlogCard.module.scss";
 import IconWarper from "../../../../theme/iconWarper/IconWarper";
@@ -31,17 +29,24 @@ const BlogCard = ({ blogData }: Props) => {
       <div
         className={styles.coverImage}
         style={{ backgroundImage: `url(${coverImage})` }}
-        onMouseEnter={() => togglePlay(true)}
-        onMouseLeave={() => togglePlay(false)}
+        onMouseEnter={() =>
+          (type === "audio" || type === "video") && togglePlay(true)
+        }
+        onMouseLeave={() =>
+          (type === "audio" || type === "video") && togglePlay(false)
+        }
       >
-        <div className={styles.titleBox} ref={titleWidth}>
-          <p
-            className={styles.title}
-            onClick={() => router.push(`/blog/${slug}`)}
-          >
-            {title}
-          </p>
-        </div>
+        {type !== "video" && (
+          <div className={styles.titleBox} ref={titleWidth}>
+            <p
+              className={styles.title}
+              onClick={() => router.push(`/blog/${slug}`)}
+            >
+              {title}
+            </p>
+          </div>
+        )}
+
         {(type === "audio" || type === "video") && !play && (
           <div className={styles.playButton}>
             <IconWarper
@@ -66,22 +71,19 @@ const BlogCard = ({ blogData }: Props) => {
           </div>
         )}
         {type === "video" && play && (
-          <div
-            className={styles.playButton}
-            style={{ top: `${titleWidth?.current?.clientHeight || 34}px` }}
+          <video
+            className={`${styles.playButton} ${styles.videoBox}`}
+            onClick={() => router.push(`/blog/${slug}`)}
+            width="100%"
+            height="100%"
+            controls
+            autoPlay
+            muted
+            // onMouseLeave={() => setPlay(false)}
           >
-            <video
-              width="100%"
-              height="100%"
-              controls
-              autoPlay
-              muted
-              // onMouseLeave={() => setPlay(false)}
-            >
-              <source src={mediaUrl} />
-              Your browser does not support the video tag.
-            </video>
-          </div>
+            <source src={mediaUrl} />
+            Your browser does not support the video tag.
+          </video>
         )}
       </div>
       <div className={styles.authorAndDate}>

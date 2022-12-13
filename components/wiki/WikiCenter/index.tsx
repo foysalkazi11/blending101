@@ -15,6 +15,8 @@ export interface CoverImageType {
   url: string;
   id: string;
   caption: string;
+  type?: "audio" | "video" | "post";
+  mediaUrl?: string;
 }
 export interface WikiCenterComponentProps {
   heading?: string;
@@ -40,7 +42,6 @@ export interface WikiCenterComponentProps {
 
 function WikiCenterComponent(props: WikiCenterComponentProps) {
   const { body = "", scrollPoint = "", coverImages } = props;
-
   const [expandAllCollapse, setExpandAllCollapse] = useState(true);
   const [imagesWithinBlock, setImagesWithinBlock] = useState<CoverImageType[]>(
     [],
@@ -50,6 +51,14 @@ function WikiCenterComponent(props: WikiCenterComponentProps) {
     if (body) {
       const blocks: BlockType[] = JSON.parse(body)?.blocks;
       let allImagesWithinBlock: CoverImageType[] = [];
+      coverImages?.forEach((img) => {
+        allImagesWithinBlock?.push({
+          url: img || "",
+          id: "",
+          caption: "",
+        });
+      });
+
       blocks?.forEach((block) => {
         if (block?.type === "image") {
           const { data, id, tunes } = block;
@@ -64,18 +73,10 @@ function WikiCenterComponent(props: WikiCenterComponentProps) {
         }
       });
 
-      coverImages?.forEach((img) => {
-        allImagesWithinBlock?.push({
-          url: img || "",
-          id: "",
-          caption: "",
-        });
-      });
       setImagesWithinBlock(allImagesWithinBlock);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [body]);
-
   return (
     <div className={styles.centerMain}>
       <FirstPortion

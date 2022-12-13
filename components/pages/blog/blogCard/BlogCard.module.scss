@@ -7,6 +7,13 @@
   border: 1px solid #e9e9e9;
   opacity: 1;
   border-radius: 5px;
+  overflow: hidden;
+  transition: all 0.3s;
+  &:hover {
+    .titleBox {
+      transform: translateY(0%);
+    }
+  }
 
   .coverImage {
     position: relative;
@@ -20,6 +27,7 @@
   }
 
   .titleBox {
+    transition: all 0.3s;
     width: 100%;
     height: auto;
     background-color: #808080bd;
@@ -27,6 +35,7 @@
     color: #e9e9e9;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
+    transform: translateY(-100%);
     .title {
       font-size: 14px;
       font-weight: 500;
@@ -39,6 +48,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: all 0.3s;
+  }
+  .videoBox {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    cursor: pointer;
   }
   .authorAndDate {
     width: 100%;

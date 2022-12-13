@@ -181,22 +181,68 @@ export const DELETE_RECIPE_FROM_PLANNER = gql`
   }
 `;
 
-export const CLEAR_PLANNER = gql`
-  mutation ClearPlanner(
-    $userId: String!
-    $startDate: String!
-    $endDate: String!
-  ) {
-    clearPlannerByDates(
-      userId: $userId
-      startDate: $startDate
-      endDate: $endDate
-    )
-  }
-`;
-
 export const ADD_TO_GROCERY_LIST = gql`
   mutation AddToGroceryFromPlanner($recipeId: String!, $memberId: String!) {
     addToGroceryFromPlanner(recipeId: $recipeId, memberId: $memberId)
+  }
+`;
+
+export const CREATE_PLAN = gql`
+  mutation CreatePlan($data: CreateNewPlan!) {
+    createAPlan(input: $data)
+  }
+`;
+
+export const GET_ALL_PLANS = gql`
+  query GetAllPlan {
+    getAllGlobalPlans {
+      _id
+      planName
+      description
+    }
+  }
+`;
+
+export const GET_PLAN = gql`
+  query GetPlan($planId: String!) {
+    getAPlan(planId: $planId) {
+      _id
+      planName
+      description
+      planData {
+        day
+        recipes {
+          isMatch
+          _id
+          name
+          recipeBlendCategory {
+            name
+          }
+          averageRating
+          totalRating
+          brand {
+            brandName
+          }
+          image {
+            image
+            default
+          }
+          defaultVersion {
+            postfixTitle
+            ingredients {
+              ingredientId {
+                _id
+                ingredientName
+              }
+              selectedPortion {
+                name
+                quantity
+                gram
+              }
+            }
+          }
+        }
+      }
+    }
   }
 `;

@@ -212,6 +212,7 @@ const WikiSingleType = ({
           </div>
 
           <IconWarper
+            iconColor="iconColorWhite"
             defaultBg="secondary"
             hover="bgSecondary"
             style={{ width: "28px", height: "28px" }}

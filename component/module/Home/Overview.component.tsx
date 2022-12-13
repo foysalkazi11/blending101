@@ -49,16 +49,20 @@ const RxScore = () => {
   return (
     <div className={styles.insights__graph}>
       <h3 className="mb-20">RX Score</h3>
-      <HSBar
-        height={"20px"}
-        id={styles.insights__progress}
-        data={[
-          { value: 32, color: "#FF8252" },
-          { value: 30, color: "#66A7FF" },
-          { value: 25, color: "#B9EB84" },
-          { value: 13, color: "#f7f7f7" },
-        ]}
-      />
+      <div className={styles.stacked__outline}>
+        <span>0</span>
+        <div className={styles.stacked}>
+          <div id="variety" />
+          <div id="quality" />
+          <div id="quantity">
+            <span className={styles.stacked__total}>
+              90
+              <i>&nbsp;</i>
+            </span>
+          </div>
+        </div>
+        <span>100</span>
+      </div>
       <div className={styles.insights__score}>
         <span>
           Variety <i style={{ background: "#b9eb84" }}>20</i>
@@ -74,11 +78,10 @@ const RxScore = () => {
         {type === "Weekly" ? (
           <BarChart
             data={rxScore}
+            barGap={7}
+            barSize={30}
             margin={{
-              top: 20,
-              right: 30,
-              left: 20,
-              bottom: 5,
+              left: -20,
             }}
           >
             <XAxis dataKey="name" tickLine={false} />
@@ -94,10 +97,7 @@ const RxScore = () => {
             height={400}
             data={rxScore}
             margin={{
-              top: 10,
-              right: 30,
-              left: 0,
-              bottom: 0,
+              left: -20,
             }}
           >
             <YAxis />
