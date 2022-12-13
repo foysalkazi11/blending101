@@ -29,7 +29,7 @@ const BlogList = () => {
         blogSearchInput={blogSearchInput}
         setBlogSearchInput={setBlogSearchInput}
       >
-        <SkeletonCollectionRecipe />;
+        <SkeletonCollectionRecipe style={{ marginTop: "20px" }} />;
       </Layout>
     );
   }

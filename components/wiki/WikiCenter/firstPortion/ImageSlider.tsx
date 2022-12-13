@@ -85,20 +85,16 @@ const ImageSlider = ({
               />
               {img?.caption && (
                 <div
+                  ref={captionRef}
                   className={styles.imageCaption}
-                  // style={{
-                  //   top: `${
-                  //     imageSliderContainerRef?.current?.getBoundingClientRect()
-                  //       ?.height -
-                  //     (captionRef?.current?.getBoundingClientRect()
-                  //       ?.height +
-                  //       32)
-                  //   }px`,
-                  // }}
+                  style={{
+                    top: `calc(100% - ${
+                      captionRef?.current?.clientHeight || 34
+                    }px)`,
+                  }}
                 >
                   <p
                     className={styles.captionText}
-                    ref={captionRef}
                     onClick={() => findImageBlock(img?.id)}
                   >
                     {img?.caption}
@@ -119,7 +115,7 @@ const ImageSlider = ({
               )}
               {type === "audio" && mediaUrl && play && (
                 <div className={styles.playButton}>
-                  <audio controls autoPlay>
+                  <audio controls autoPlay muted>
                     <source src={mediaUrl} />
                     Your browser does not support the video tag.
                   </audio>
@@ -128,11 +124,11 @@ const ImageSlider = ({
               {type === "video" && mediaUrl && play && (
                 <div className={styles.playButton}>
                   <video
-                    width="auto"
+                    width="100%"
                     height="100%"
                     controls
                     autoPlay
-
+                    muted
                     // onMouseLeave={() => setPlay(false)}
                   >
                     <source src={mediaUrl} />
