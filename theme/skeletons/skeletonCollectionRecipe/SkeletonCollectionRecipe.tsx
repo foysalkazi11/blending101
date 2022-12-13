@@ -3,7 +3,11 @@ import useWindowSize from "../../../components/utility/useWindowSize";
 import SkeletonElement from "../SkeletonElement";
 import styles from "../skeletonRecipeDiscovery/SkeletonRecipeDiscovery.module.scss";
 
-const SkeletonCollectionRecipe = () => {
+interface Props {
+  style?: React.CSSProperties;
+}
+
+const SkeletonCollectionRecipe = ({ style = {} }: Props) => {
   const [slideSize, setSlideSize] = useState(4);
   const { height, width } = useWindowSize();
 
@@ -22,7 +26,7 @@ const SkeletonCollectionRecipe = () => {
   }, [width]);
   return (
     <>
-      <div className={styles.sectionContainer}>
+      <div className={styles.sectionContainer} style={style}>
         <SkeletonElement type="title" style={{ marginBottom: "20px" }} />
         <div className={styles.content}>
           {[...Array(slideSize)]?.map((item, index) => {

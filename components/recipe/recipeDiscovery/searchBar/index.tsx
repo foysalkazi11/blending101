@@ -36,7 +36,7 @@ const DiscoveryPageSearchBar = ({
             })`}
             disable={dbUser?.compareLength ? false : true}
             style={{
-              backgroundColor: dbUser?.compareLength ? "inherit" : "#ececec",
+              backgroundColor: dbUser?.compareLength ? "#fff" : "#ececec",
             }}
             handleClick={() => router.push(`/recipe/compare`)}
           />
