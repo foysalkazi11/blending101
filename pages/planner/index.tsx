@@ -4,6 +4,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { BsSoundwave, BsSearch, BsMic } from "react-icons/bs";
 import { FiFilter } from "react-icons/fi";
 import { Tooltip } from "recharts";
+import { faUserCircle } from "@fortawesome/pro-light-svg-icons";
 
 import PlanCard from "../../component/module/Planner/PlanCard.component";
 import AppdownLoadCard from "../../components/recipe/recipeDiscovery/AppdownLoadCard/AppdownLoadCard.component";
@@ -11,32 +12,28 @@ import ContentTray from "../../components/recipe/recipeDiscovery/ContentTray/Con
 
 import useOnClickOutside from "../../components/utility/useOnClickOutside";
 import AContainer from "../../containers/A.container";
-import styles from "../../styles/pages/planner.module.scss";
-import classes from "../../components/searchBar/SearchBar.module.scss";
-import { faUserCircle } from "@fortawesome/pro-light-svg-icons";
 import Icon from "../../component/atoms/Icon/Icon.component";
+import WeekPicker from "../../component/molecules/DatePicker/Week.component";
+
+import classes from "../../components/searchBar/SearchBar.module.scss";
+import styles from "../../styles/pages/planner.module.scss";
+import "react-datepicker/dist/react-datepicker.css";
+import { useQuery } from "@apollo/client";
+import { GET_ALL_PLANS } from "../../graphql/Planner";
 
 const PlanDiscovery = ({
   input = "",
   setInput = () => {},
-  //handleCleanSearch = () => {},
   handleSubmitFunc = () => {},
   handleSearchTagCleanFunc = () => {},
   openPanel = () => {},
-  compareButton = {
-    disable: false,
-    handleClick: () => {},
-    icon: "",
-    style: {},
-    text: "",
-  },
   isOpenPanel = false,
   isSearchTag = false,
-  comeFromWhichPage = "discovery",
-  wikiType = "Ingredient",
   handleOnChange = () => {},
 }) => {
   const router = useRouter();
+  const { data } = useQuery(GET_ALL_PLANS);
+
   const [isInputFocus, setIsInputFocus] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
   const [isMicOn, setIsMicOn] = useState(false);
@@ -167,13 +164,13 @@ const PlanDiscovery = ({
             image="/images/thumbs-up.svg"
             allUrl="planner/recommended"
           >
-            {[1, 2, 3, 4, 5, 6]?.map((item, index) => {
-              return (
-                <div className={styles.slider__card} key={`${index}`}>
-                  <PlanCard />
+            {data?.getAllGlobalPlans?.map((item) => (
+              <div key={item?._id}>
+                <div className="mr-10">
+                  <PlanCard planId={item?._id} title={item.planName} />
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </ContentTray>
         </div>
         <div className="mt-40">
@@ -182,13 +179,13 @@ const PlanDiscovery = ({
             image="/images/clock-light.svg"
             allUrl="planner/recommended"
           >
-            {[1, 2, 3, 4, 5, 6]?.map((item, index) => {
-              return (
-                <div className={styles.slider__card} key={`${index}`}>
-                  <PlanCard />
+            {data?.getAllGlobalPlans?.map((item) => (
+              <div key={item?._id}>
+                <div className="mr-10">
+                  <PlanCard planId={item?._id} title={item.planName} />
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </ContentTray>
         </div>
         <div className="mt-40">
@@ -197,13 +194,13 @@ const PlanDiscovery = ({
             image="/images/fire-alt-light.svg"
             allUrl="planner/recommended"
           >
-            {[1, 2, 3, 4, 5, 6]?.map((item, index) => {
-              return (
-                <div className={styles.slider__card} key={`${index}`}>
-                  <PlanCard />
+            {data?.getAllGlobalPlans?.map((item) => (
+              <div key={item?._id}>
+                <div className="mr-10">
+                  <PlanCard planId={item?._id} title={item.planName} />
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </ContentTray>
         </div>
       </div>

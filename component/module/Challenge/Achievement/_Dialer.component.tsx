@@ -114,6 +114,7 @@ const DateSelector = (props: DateSelectorProps) => {
       minDate={new Date(startDate)}
       maxDate={new Date(endDate)}
       onChange={dateHandler}
+      fixedHeight
       customInput={<DatePickerButton />}
     />
   );

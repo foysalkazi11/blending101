@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { forwardRef, useMemo, useState } from "react";
 import {
   faBookmark,
   faCalendarWeek,
@@ -21,10 +21,37 @@ import { useRouter } from "next/router";
 
 import styles from "../../../styles/pages/planner.module.scss";
 import IconButton from "../../../component/atoms/Button/IconButton.component";
+import WeekPicker from "../../../component/molecules/DatePicker/Week.component";
+import { startOfWeek, endOfWeek } from "date-fns";
+import { useQuery } from "@apollo/client";
+import { GET_PLAN } from "../../../graphql/Planner";
 
 const MyPlan = () => {
-  const [showGroceryTray] = useState(true);
   const router = useRouter();
+  const { data } = useQuery(GET_PLAN, {
+    variables: { planId: router.query.planId },
+    skip: router.query.planId === "",
+  });
+
+  const [showGroceryTray] = useState(true);
+  const [week, setWeek] = useState({
+    start: startOfWeek(new Date()),
+    end: endOfWeek(new Date()),
+  });
+
+  const weekChangeHandler = (start, end) => {};
+
+  const plan = data?.getAPlan;
+  const allPlannedRecipes = useMemo(
+    () =>
+      plan?.planData
+        .reduce((acc, cur) => acc.concat(cur.recipes), [])
+        .filter(
+          (value, index, self) =>
+            index === self.findIndex((t) => t._id === value._id),
+        ),
+    [plan],
+  );
 
   return (
     <AContainer
@@ -56,7 +83,7 @@ const MyPlan = () => {
           </div>
           <div className="row">
             <div className="col-3">
-              <PlanDiscovery isUpload={false} />
+              <PlanDiscovery isUpload={false} recipes={allPlannedRecipes} />
             </div>
             <div className="col-6" style={{ padding: "0 1.5rem" }}>
               <div className={styles.headingDiv}>
@@ -77,9 +104,7 @@ const MyPlan = () => {
                 </div>
               </div>
               <div className={styles.preview}>
-                <h3 className={styles.preview__title}>
-                  Diabetic Friendly Meal Plan
-                </h3>
+                <h3 className={styles.preview__title}>{plan?.planName}</h3>
                 <div className={styles.preview__actions}>
                   <span>
                     <img
@@ -91,21 +116,18 @@ const MyPlan = () => {
                     Blending 101
                   </span>
                   <div>
-                    <span>
-                      <Icon
-                        fontName={faCalendarWeek}
-                        size="2rem"
-                        className="mr-10"
-                      />
-                      Planner
-                    </span>
+                    <WeekPicker
+                      element={<DatePickerButton />}
+                      week={week}
+                      onWeekChange={weekChangeHandler}
+                    />
                     <span>
                       <Icon
                         fontName={faBookmark}
                         size="2rem"
                         className="mr-10"
                       />
-                      Planner
+                      Bookmark
                     </span>
                     <span>
                       <Icon
@@ -113,7 +135,7 @@ const MyPlan = () => {
                         size="2rem"
                         className="mr-10"
                       />
-                      Planner
+                      Share
                     </span>
                     <span>
                       <Icon
@@ -126,14 +148,11 @@ const MyPlan = () => {
                   </div>
                 </div>
                 <hr />
-                <p>
-                  Great plan for building lean muscle. Seven tasty wholefood and
-                  smoothie blends. All blends have at least 30 grams of protein.
-                </p>
+                <p>{plan?.description}</p>
               </div>
 
               <div className={`${styles.plan} ${styles["plan--details"]}`}>
-                <PlanList showStatic data={PLAN} />
+                <PlanList showStatic data={plan?.planData} />
               </div>
             </div>
             <div className="col-3">
@@ -145,6 +164,14 @@ const MyPlan = () => {
     </AContainer>
   );
 };
+
+const DatePickerButton = forwardRef(({ value, onClick }: any, ref: any) => (
+  <span onClick={onClick} ref={ref}>
+    <Icon fontName={faCalendarWeek} size="2rem" className="mr-10" />
+    Planner
+  </span>
+));
+DatePickerButton.displayName = "DatePickerButton";
 
 export default MyPlan;
 

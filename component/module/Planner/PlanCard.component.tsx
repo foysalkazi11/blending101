@@ -1,23 +1,27 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { Dispatch, SetStateAction, useRef } from "react";
+import React, {
+  Dispatch,
+  forwardRef,
+  SetStateAction,
+  useRef,
+  useState,
+} from "react";
 import styles from "./PlanCard.module.scss";
-import MoreVertIcon from "../../../public/icons/more_vert_black_36dp.svg";
-import { slicedString } from "../../../services/string.service";
 import { useRouter } from "next/router";
 import useChangeCompare from "../../../customHooks/useChangeComaper";
-import { MdOutlineEdit } from "react-icons/md";
 import useForAddToCollection from "../../../customHooks/useForAddToCollection";
 import useForOpenCollectionTray from "../../../customHooks/useForOpenCollection";
 import useForOpenCommentsTray from "../../../customHooks/useForOpenCommentsTray";
 import useForSelectCommentsAndNotesIcon from "../../../customHooks/useForSelectCommentsAndNotesIcon";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisVertical } from "@fortawesome/pro-solid-svg-icons";
-import { faCalendarWeek, faUser } from "@fortawesome/pro-light-svg-icons";
+import { faCalendarWeek } from "@fortawesome/pro-light-svg-icons";
 import { RecipeCreatorInfo } from "../../../type/recipeType";
 import useHover from "../../../components/utility/useHover";
-import { Tooltip } from "recharts";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
 import Icon from "../../atoms/Icon/Icon.component";
+import WeekPicker from "../../molecules/DatePicker/Week.component";
+import { startOfWeek, endOfWeek } from "date-fns";
 
 interface dataCardInterface {
   title?: string;
@@ -30,7 +34,7 @@ interface dataCardInterface {
   calorie?: number;
   noOfComments?: number;
   image?: string;
-  recipeId?: string;
+  planId?: string;
   notes?: number;
   addedToCompare?: boolean;
   compareRecipeList?: any[];
@@ -49,9 +53,13 @@ interface dataCardInterface {
   showMoreMenuAtHover?: boolean;
   description?: string;
   className?: string;
+  weekRange?: {
+    start: Date;
+    end: Date;
+  };
 }
 
-export default function PlanCard({
+function PlanCard({
   className,
   title,
   ingredients,
@@ -63,24 +71,15 @@ export default function PlanCard({
   calorie,
   noOfComments,
   image,
-  recipeId = "asf4weyfdh5477",
+  weekRange,
+  planId = "asf4weyfdh5477",
   notes = 0,
-  addedToCompare = false,
-  compareRecipeList = [],
   setcompareRecipeList = () => {},
   showMoreMenu = true,
-  showOptionalEditIcon = false,
-  changeToFormulateRecipe = () => {},
   isCollectionIds = [] || null,
   setOpenCollectionModal = () => {},
-  imageOverlayFunc = () => {},
-  postfixTitle = "",
-  isMatch = false,
-  isImageOverlay = false,
-  userId = null,
   customMenu = null,
   showMoreMenuAtHover = false,
-  description = "",
 }: dataCardInterface) {
   title = title || "Diabetes Friendly Meal Plan: Week 1";
   ingredients = ingredients;
@@ -94,52 +93,17 @@ export default function PlanCard({
   ratings = Math.ceil(ratings);
   const menu = useRef<any>();
   const router = useRouter();
-  const handleChangeCompare = useChangeCompare();
   const handleAddToCollection = useForAddToCollection();
   const handleOpenCollectionTray = useForOpenCollectionTray();
   const handleOpenCommentsTray = useForOpenCommentsTray();
   const selectCommentsAndNotesIcon = useForSelectCommentsAndNotesIcon();
   const [hoverRef, isHover] = useHover();
 
+  const [week, setWeek] = useState(weekRange);
   const handleClick = () => {
     const elem = menu.current;
     elem.classList.toggle("show__hidden");
   };
-
-  const FloatingMenu2 = () => {
-    return (
-      <div className={styles.floating__menu2}>
-        <ul>
-          <li onClick={changeToFormulateRecipe}>
-            <MdOutlineEdit className={styles.icon} />
-          </li>
-        </ul>
-      </div>
-    );
-  };
-
-  const DataBody = () => (
-    <div className={styles.databody}>
-      <div className={styles.databody__top}>
-        <div className={styles.databody__top__label}>
-          <div className={styles.category}>{category}</div>
-          {showOptionalEditIcon ? <FloatingMenu2 /> : false}
-        </div>
-        <div className={styles.databody__top__info}>
-          {noOfRatings ? (
-            <>
-              <img src="/icons/star.svg" alt="star" />
-              <span>{ratings}</span>&nbsp;
-              <span>({noOfRatings})</span>
-            </>
-          ) : null}
-        </div>
-      </div>
-      <div className={styles.databody__bottom}>
-        <p>{description ? description : ingredients}</p>
-      </div>
-    </div>
-  );
 
   const floatingMenu = (
     <div className={styles.floating__menu} ref={menu}>
@@ -183,7 +147,7 @@ export default function PlanCard({
         <img
           src={`/icons/${res?.icon}.svg`}
           alt="icon"
-          onClick={(e) => handleOpenCommentsTray(recipeId, title, image, e)}
+          onClick={(e) => handleOpenCommentsTray(planId, title, image, e)}
         />{" "}
         <span style={{ color: res?.amount ? "#7cbc39" : "#c4c4c4" }}>
           {res?.amount}
@@ -191,6 +155,8 @@ export default function PlanCard({
       </>
     );
   };
+
+  const weekChangeHandler = (start, end) => {};
 
   return (
     <div className={`${styles.datacard} ${className || ""}`} ref={hoverRef}>
@@ -200,7 +166,7 @@ export default function PlanCard({
             <h2
               onClick={(e) => {
                 e?.stopPropagation();
-                router.push(`/planner/plan/${recipeId}`);
+                router.push(`/planner/plan/${planId}`);
               }}
             >
               {title}
@@ -242,7 +208,11 @@ export default function PlanCard({
           <div className={styles.datacard__body__bottom__right}>
             <ul>
               <li>
-                <Icon fontName={faCalendarWeek} size="2rem" color="#aaa" />
+                <WeekPicker
+                  element={<DatePickerButton />}
+                  week={week}
+                  onWeekChange={weekChangeHandler}
+                />
               </li>
               <li>
                 <img
@@ -254,9 +224,9 @@ export default function PlanCard({
                   alt="compare"
                   onClick={(e) =>
                     isCollectionIds?.length
-                      ? handleOpenCollectionTray(recipeId, isCollectionIds, e)
+                      ? handleOpenCollectionTray(planId, isCollectionIds, e)
                       : handleAddToCollection(
-                          recipeId,
+                          planId,
                           setOpenCollectionModal,
                           e,
                           setcompareRecipeList,
@@ -272,3 +242,15 @@ export default function PlanCard({
     </div>
   );
 }
+
+const DatePickerButton = forwardRef(({ value, onClick }: any, ref: any) => (
+  <span onClick={onClick} ref={ref}>
+    <Icon fontName={faCalendarWeek} size="2rem" color="#aaa" />
+  </span>
+));
+DatePickerButton.displayName = "DatePickerButton";
+
+PlanCard.defaultProps = {
+  weekRange: { start: startOfWeek(new Date()), end: endOfWeek(new Date()) },
+};
+export default PlanCard;

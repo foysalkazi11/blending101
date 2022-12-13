@@ -74,17 +74,15 @@ const BlendType = () => {
           </div>
         ))}
       </div>
-      <div style={{ width: "25rem", margin: "2rem auto" }}>
-        <HSBar
-          height={"35px"}
-          id={styles.insights__progress}
-          data={[
-            { value: 32, color: "#FF8252" },
-            { value: 30, color: "#66A7FF" },
-            { value: 25, color: "#B9EB84" },
-          ]}
-        />
-      </div>
+      <HSBar
+        height={"35px"}
+        id={styles.insights__progress}
+        data={[
+          { value: 32, color: "#FF8252" },
+          { value: 30, color: "#66A7FF" },
+          { value: 25, color: "#B9EB84" },
+        ]}
+      />
     </div>
   );
 };
@@ -131,7 +129,6 @@ const TopIngredients = () => {
 
 const renderLegend = (props) => {
   const { payload } = props;
-  console.log(payload);
   return (
     <ul className={styles.insights__legend}>
       {payload.map((entry, index) => (

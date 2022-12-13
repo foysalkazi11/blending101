@@ -20,6 +20,7 @@ import Icon from "../../atoms/Icon/Icon.component";
 
 import {
   ADD_RECIPE_TO_PLANNER,
+  GET_ALL_PLANS,
   GET_INGREDIENTS_BY_RECIPE,
   GET_QUEUED_RECIPES_FOR_PLANNER,
   GET_RECIPES_FOR_PLANNER,
@@ -35,74 +36,23 @@ import styles from "./PlanDiscovery.module.scss";
 import PlanCard from "./PlanCard.component";
 
 interface PlannerPanelProps {
+  recipes: any[];
   isUpload: boolean;
 }
 
 const PlanDiscovery = (props: PlannerPanelProps) => {
-  const { isUpload } = props;
+  const { recipes, isUpload } = props;
   const [toggler, setToggler] = useState(true);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [limit] = useState(3);
   const [pageLength, setPageLength] = useState(1);
   const [type, setType] = useState("all");
-  const [recipes, setRecipes] = useState([]);
 
   const blendTypeRef = useRef<HTMLDivElement>(null);
 
+  const { data, loading } = useQuery(GET_ALL_PLANS);
   const { data: categories } = useQuery(GET_BLEND_CATEGORY);
-  const [getRecipes, { loading: discoverLoading, data: discoverData }] =
-    useLazyQuery(GET_RECIPES_FOR_PLANNER);
-  const [getQueuedRecipes, { loading, data: queuedData }] = useLazyQuery(
-    GET_QUEUED_RECIPES_FOR_PLANNER,
-  );
-
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
-
-  useEffect(() => {
-    const blendCategory = type === "all" ? "" : type;
-    if (userId !== "") {
-      getRecipes({
-        variables: {
-          user: userId,
-          searchTerm: query,
-          page,
-          limit,
-          type: blendCategory,
-        },
-      });
-      getQueuedRecipes({
-        variables: {
-          currentDate: format(new Date(), "yyyy-MM-dd"),
-          user: userId,
-          searchTerm: query,
-          page,
-          limit,
-          type: blendCategory,
-        },
-      });
-    }
-  }, [getQueuedRecipes, getRecipes, limit, page, query, type, userId]);
-
-  useEffect(() => {
-    if (toggler) {
-      setRecipes(discoverData?.getAllRecipesForPlanner?.recipes || []);
-      setPageLength(
-        Math.ceil(discoverData?.getAllRecipesForPlanner?.totalRecipe / limit) ||
-          1,
-      );
-    } else {
-      setRecipes(queuedData?.getQuedPlanner?.recipes || []);
-      setPageLength(
-        Math.ceil(queuedData?.getQuedPlanner?.totalRecipe / limit) || 1,
-      );
-    }
-  }, [
-    discoverData?.getAllRecipesForPlanner,
-    limit,
-    queuedData?.getQuedPlanner,
-    toggler,
-  ]);
 
   useEffect(() => {
     setQuery("");
@@ -172,7 +122,7 @@ const PlanDiscovery = (props: PlannerPanelProps) => {
         </div>
       )}
       <div className={styles.wrapper}>
-        {discoverLoading || loading ? (
+        {loading ? (
           [...Array(limit)]?.map((_, index) => (
             <SkeletonElement
               type="thumbnail"
@@ -181,9 +131,9 @@ const PlanDiscovery = (props: PlannerPanelProps) => {
             />
           ))
         ) : toggler ? (
-          <Plans recipes={recipes} isUpload={isUpload} />
+          <Plans plans={data?.getAllGlobalPlans || []} isUpload={isUpload} />
         ) : (
-          <Recipes recipes={recipes} isUpload={isUpload} />
+          <Recipes recipes={recipes || []} isUpload={isUpload} />
         )}
         {pageLength > 3 && (
           <div className="flex ai-center jc-center mt-20">
@@ -200,54 +150,22 @@ const PlanDiscovery = (props: PlannerPanelProps) => {
 };
 
 const Plans = (props) => {
-  const { recipes } = props;
-
-  return recipes?.map((recipe) => {
-    const { _id } = recipe;
-    return <PlanCard key={_id} className="mt-10" />;
-  });
+  const { plans } = props;
+  return plans?.map((plan) => (
+    <PlanCard
+      key={plan?._id}
+      className="mt-10"
+      planId={plan?._id}
+      title={plan.planName}
+    />
+  ));
 };
 
 const Recipes = (props) => {
   const { recipes, isUpload } = props;
   const [showCalenderId, setShowCalenderId] = useState("");
 
-  const [getIngredients, { data }] = useLazyQuery(GET_INGREDIENTS_BY_RECIPE);
-  const [addRecipe, addState] = useMutation(ADD_RECIPE_TO_PLANNER, {
-    refetchQueries: [GET_QUEUED_RECIPES_FOR_PLANNER],
-  });
-
   const dispatch = useDispatch();
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
-
-  const dateHandler = async (recipe: any, date: string) => {
-    await Publish({
-      mutate: addRecipe,
-      variables: {
-        assignDate: date,
-        recipeId: recipe._id,
-        userId,
-      },
-      state: addState,
-      success: `Added Planner sucessfully`,
-      onSuccess: (data) => {
-        setShowCalenderId("");
-        dispatch(
-          addPlanner({
-            id: data?.createPlanner?._id,
-            date: date,
-            recipe: {
-              _id: recipe._id,
-              name: recipe.name,
-              category: recipe?.recipeBlendCategory?.name,
-              rxScore: 786,
-              calorie: 250,
-            },
-          }),
-        );
-      },
-    });
-  };
 
   const uploadRecipe = (_id, name, image, category, ingredients) => {
     console.log(ingredients);
@@ -309,11 +227,6 @@ const Recipes = (props) => {
                 setShowCalenderId((prev) => (showCalenderId === _id ? "" : _id))
               }
             />
-          )}
-          {showCalenderId === _id && (
-            <div className={styles.calender__tray}>
-              <CalendarTray handler={(date) => dateHandler(recipe, date)} />
-            </div>
           )}
         </div>
       </RecipeCard>

@@ -37,6 +37,15 @@
   background-color: #7cbc39 !important;
   // color: white !important;
 }
+
+.react-datepicker__week:hover {
+  .react-datepicker__day {
+    border-radius: 3px;
+    color: white;
+    font-weight: bold;
+    background-color: #9fdb5e;
+  }
+}
 // .react-datepicker {
 //   font-size: 1em !important;
 // }
