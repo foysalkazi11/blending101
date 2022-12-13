@@ -16,7 +16,7 @@
   overflow: hidden;
 
   &:hover .imageCaption {
-    transform: translateY(0px);
+    transform: translateY(0%);
   }
 
   .bgBlurImage {
@@ -79,11 +79,8 @@
     background-color: rgba(0, 0, 0, 0.4); /* Black w/opacity/see-through */
     transition: transform 0.3s;
     position: absolute;
-    top: 80%;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    transform: translateY(101%);
+    inset: 0;
+    transform: translateY(100%);
     padding: 16px;
     .captionText {
       color: white;
@@ -92,6 +89,13 @@
       cursor: pointer;
     }
   }
+}
+.playButton {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .bodyContainer {
