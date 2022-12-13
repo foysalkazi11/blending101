@@ -9,11 +9,11 @@
   border-radius: 5px;
   overflow: hidden;
   transition: all 0.3s;
-  &:hover {
-    .titleBox {
-      transform: translateY(0%);
-    }
-  }
+  // &:hover {
+  //   .titleBox {
+  //     transform: translateY(0%);
+  //   }
+  // }
 
   .coverImage {
     position: relative;
@@ -35,7 +35,7 @@
     color: #e9e9e9;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
-    transform: translateY(-100%);
+    // transform: translateY(-100%);
     .title {
       font-size: 14px;
       font-weight: 500;

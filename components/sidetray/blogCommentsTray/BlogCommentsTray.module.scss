@@ -1,0 +1,23 @@
+.wikiCommentsContainer {
+  width: 100%;
+  margin-bottom: 20px;
+  .wikiItemName {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ececec;
+    padding-bottom: 10px;
+    img {
+      width: 45px;
+      height: 45px;
+      border-radius: 8px;
+      overflow: hidden;
+      object-fit: contain;
+    }
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #000;
+      margin-left: 16px;
+    }
+  }
+}
