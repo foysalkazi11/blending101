@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import {
   faChevronLeft,
   faChevronRight,
 } from "@fortawesome/pro-solid-svg-icons";
+import { faEllipsisV } from "@fortawesome/pro-regular-svg-icons";
 import { format } from "date-fns";
 
 import { MONTH } from "../../../data/Date";
@@ -18,20 +19,17 @@ import {
 import IconButton from "../../atoms/Button/IconButton.component";
 
 import styles from "./Header.module.scss";
-import { faEllipsis, faEllipsisV } from "@fortawesome/pro-regular-svg-icons";
 
 const PlanHeader = () => {
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
-  const { startDate, endDate } = useAppSelector(
-    (state) => state.planner.planner,
-  );
+  const { start, end } = useAppSelector((state) => state.planner);
 
   const { data } = useQuery(GET_PLANNER_BY_WEEK, {
     variables: {
       userId,
-      startDate: format(startDate, "yyyy-MM-dd"),
-      endDate: format(endDate, "yyyy-MM-dd"),
+      startDate: format(start, "yyyy-MM-dd"),
+      endDate: format(end, "yyyy-MM-dd"),
     },
     skip: userId === "",
   });
@@ -40,11 +38,11 @@ const PlanHeader = () => {
     if (data?.getPlannerByDates) dispatch(setPlanners(data?.getPlannerByDates));
   }, [data?.getPlannerByDates, dispatch]);
 
-  const startMonth = MONTH[startDate.getMonth()];
-  const endMonth = MONTH[endDate.getMonth()];
+  const startMonth = MONTH[start.getMonth()];
+  const endMonth = MONTH[end.getMonth()];
 
-  const startDay = startDate.getDate();
-  const endDay = endDate.getDate();
+  const startDay = start.getDate();
+  const endDay = end.getDate();
 
   return (
     <div className={styles.header}>

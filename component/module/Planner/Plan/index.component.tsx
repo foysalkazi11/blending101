@@ -1,9 +1,10 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import { format } from "date-fns";
 
 import MealCalendarDatePlan from "./_DayPlan.component";
 
 import { useAppSelector } from "../../../../redux/hooks";
+import styles from "./index.module.scss";
 
 interface PlanListProps {
   data?: any[];
@@ -11,47 +12,32 @@ interface PlanListProps {
 }
 const PlanList = ({ data, showStatic }: PlanListProps) => {
   const [toggleOptionCard, setToggleOptionCard] = useState({});
-  const planners = useAppSelector((state) => state.planner.planners);
   return (
-    <Fragment>
-      {showStatic
-        ? data?.map((planner, index) => {
-            const { formatedDate: date, recipes } = planner;
-            const days = new Date(date);
-            const dayName = format(days, "E");
-            const day = format(days, "d");
-            return (
-              <MealCalendarDatePlan
-                key={planner.id}
-                plannerId={planner.id}
-                indexValue={index}
-                day={dayName}
-                date={day}
-                recipeList={recipes}
-                setToggleOptionCard={setToggleOptionCard}
-                toggleOptionCard={toggleOptionCard}
-              />
-            );
-          })
-        : planners?.map((planner, index) => {
-            const { date, recipes } = planner;
-            const days = new Date(date);
-            const dayName = format(days, "E");
-            const day = format(days, "d");
-            return (
-              <MealCalendarDatePlan
-                key={planner.id}
-                plannerId={planner.id}
-                indexValue={index}
-                day={dayName}
-                date={day}
-                recipeList={recipes}
-                setToggleOptionCard={setToggleOptionCard}
-                toggleOptionCard={toggleOptionCard}
-              />
-            );
-          })}
-    </Fragment>
+    <div className={styles.wrapper}>
+      {data?.map((planner, index) => {
+        let dayName, day;
+        if (planner?.day) {
+          dayName = "Day";
+          day = planner?.day;
+        } else if (planner?.date) {
+          const days = new Date(planner?.date);
+          dayName = format(days, "E");
+          day = format(days, "d");
+        }
+        return (
+          <MealCalendarDatePlan
+            key={planner.id}
+            plannerId={planner.id}
+            indexValue={index}
+            day={dayName}
+            date={day}
+            recipeList={planner?.recipes}
+            setToggleOptionCard={setToggleOptionCard}
+            toggleOptionCard={toggleOptionCard}
+          />
+        );
+      })}
+    </div>
   );
 };
 

@@ -12,7 +12,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import {
   addPlanner,
-  deleteRecipe,
+  deleteRecipeFromPlan,
   IPlannerRecipe,
 } from "../../../../redux/slices/Planner.slice";
 
@@ -66,7 +66,7 @@ const DayPlan = (props: PlanProps) => {
       state: deleteState,
       success: `Deleted Planner sucessfully`,
       onSuccess: () => {
-        dispatch(deleteRecipe({ recipeId: id, plannerId }));
+        dispatch(deleteRecipeFromPlan({ recipeId: id, plannerId }));
       },
     });
   };
@@ -152,14 +152,16 @@ const PlanItem = ({
   onMove,
   onDelete,
 }: RecipeColorIndicatorInterface) => {
-  const {
+  let {
     _id,
     name: recipeName,
     calorie,
     category,
+    recipeBlendCategory,
     rxScore,
     ingredients,
   } = recipe;
+  category = recipeBlendCategory?.name || category;
   const [showMenu, setShowMenu] = useState(false);
   const [showCalender, setShowCalender] = useState<"move" | "copy" | "">("");
 
