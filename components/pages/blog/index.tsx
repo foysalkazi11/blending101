@@ -69,7 +69,7 @@ const Layout: FC<{
       showCollectionTray={{ show: true, showTagByDeafult: true }}
       filterTray={true}
       headerTitle="Blog"
-      showCommentsTray={{
+      showBlogCommentsTray={{
         show: true,
         showPanle: "right",
         showTagByDeafult: false,

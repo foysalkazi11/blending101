@@ -27,6 +27,7 @@
       align-items: center;
       justify-content: center;
       transition: all 0.3s;
+      font-weight: 500;
     }
     .containPrimary {
       color: #fff;
@@ -35,10 +36,10 @@
       color: #fff;
     }
     .outlinePrimary {
-      color: $primaryColor;
+      color: #929292;
     }
     .outlineSecondary {
-      color: $secondaryColor;
+      color: #929292;
     }
   }
 }

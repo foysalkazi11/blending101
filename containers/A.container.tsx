@@ -11,6 +11,7 @@ import CommentsTray from "../components/sidetray/commentsTray/CommentsTray";
 import CartPanel from "../component/templates/Panel/CartPanel.component/Panel.component";
 import VersionTray from "../components/sidetray/versionTray/VersionTray";
 import WikiCommentsTray from "../components/sidetray/wikiCommentsTray";
+import BlogCommentsTray from "../components/sidetray/blogCommentsTray";
 
 interface ShowTray {
   show: boolean;
@@ -26,6 +27,7 @@ type AContainerProps = {
   showGroceryTray?: ShowTray;
   showCommentsTray?: ShowTray;
   showWikiCommentsTray?: ShowTray;
+  showBlogCommentsTray?: ShowTray;
   logo?: boolean;
   headerTitle?: string;
   headerLogo?: string;
@@ -62,6 +64,11 @@ export default function AContainer(props: AContainerProps) {
       showPanle: "right",
     },
     showWikiCommentsTray = {
+      show: false,
+      showTagByDeafult: false,
+      showPanle: "right",
+    },
+    showBlogCommentsTray = {
       show: false,
       showTagByDeafult: false,
       showPanle: "right",
@@ -130,6 +137,14 @@ export default function AContainer(props: AContainerProps) {
             <WikiCommentsTray
               showTagByDefaut={showWikiCommentsTray?.showTagByDeafult}
               showPanle={showWikiCommentsTray?.showPanle}
+            />
+          </div>
+        )}
+        {showBlogCommentsTray?.show && (
+          <div className={styles.fixed__main__right}>
+            <BlogCommentsTray
+              showTagByDefaut={showBlogCommentsTray?.showTagByDeafult}
+              showPanle={showBlogCommentsTray?.showPanle}
             />
           </div>
         )}

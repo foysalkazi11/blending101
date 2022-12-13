@@ -36,16 +36,14 @@ const BlogCard = ({ blogData }: Props) => {
           (type === "audio" || type === "video") && togglePlay(false)
         }
       >
-        {type !== "video" && (
-          <div className={styles.titleBox} ref={titleWidth}>
-            <p
-              className={styles.title}
-              onClick={() => router.push(`/blog/${slug}`)}
-            >
-              {title}
-            </p>
-          </div>
-        )}
+        <div className={styles.titleBox} ref={titleWidth}>
+          <p
+            className={styles.title}
+            onClick={() => router.push(`/blog/${slug}`)}
+          >
+            {title}
+          </p>
+        </div>
 
         {(type === "audio" || type === "video") && !play && (
           <div className={styles.playButton}>
