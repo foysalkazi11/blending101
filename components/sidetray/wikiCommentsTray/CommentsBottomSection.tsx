@@ -9,7 +9,7 @@ import { faTrash } from "@fortawesome/pro-regular-svg-icons";
 
 interface Props {
   userComments?: WikiUserComment;
-  updateCommentValue?: (agr: string) => void;
+  updateCommentValue?: (agr: string, id?: string) => void;
   removeComment?: () => void;
   isCurrentUser?: boolean;
 }
@@ -40,7 +40,9 @@ const CommentsBottomSection = ({
             <IconWarper
               hover="none"
               defaultBg="gray"
-              handleClick={() => updateCommentValue(userComments?.comment)}
+              handleClick={() =>
+                updateCommentValue(userComments?.comment, userComments?._id)
+              }
               style={{ marginRight: "5px" }}
             >
               <FontAwesomeIcon icon={faPen} fontSize={12} />
