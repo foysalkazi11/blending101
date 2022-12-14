@@ -9,17 +9,33 @@ import Image from "next/image";
 // import { faBookmark } from "@fortawesome/pro-solid-svg-icons";
 import { faBookmark, faMessageDots } from "@fortawesome/pro-light-svg-icons";
 import { useRouter } from "next/router";
+import { useAppDispatch } from "../../../../redux/hooks";
+import {
+  setIsOpenBlogCommentsTray,
+  updateCurrentBlogForShowComments,
+} from "../../../../redux/slices/blogSlice";
 
 interface Props {
   blogData: BlogListType;
 }
 
 const BlogCard = ({ blogData }: Props) => {
-  const { coverImage, title, type, createdBy, publishDate, mediaUrl, slug } =
-    blogData;
+  const {
+    coverImage,
+    title,
+    type,
+    createdBy,
+    publishDate,
+    mediaUrl,
+    slug,
+    _id,
+    commentsCount,
+    hasInCollection,
+  } = blogData;
   const [play, setPlay] = useState(false);
   const titleWidth = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const togglePlay = (status: boolean = false) => {
     setPlay(status);
@@ -85,7 +101,7 @@ const BlogCard = ({ blogData }: Props) => {
         )}
       </div>
       <div className={styles.authorAndDate}>
-        <p>Gabriel Branu</p>
+        <p>{createdBy}</p>
         <p>{time_ago(publishDate)}</p>
       </div>
       <div className={styles.authorAndDate}>
@@ -95,7 +111,20 @@ const BlogCard = ({ blogData }: Props) => {
         </div>
         <div className={styles.brandBox}>
           <FontAwesomeIcon icon={faBookmark} />
-          <FontAwesomeIcon icon={faMessageDots} className={styles.brandName} />
+          <FontAwesomeIcon
+            icon={faMessageDots}
+            className={styles.brandName}
+            onClick={() => {
+              dispatch(
+                updateCurrentBlogForShowComments({
+                  id: _id,
+                  image: coverImage,
+                  title,
+                }),
+              );
+              dispatch(setIsOpenBlogCommentsTray(true));
+            }}
+          />
         </div>
       </div>
     </div>
