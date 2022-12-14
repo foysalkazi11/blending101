@@ -9,6 +9,7 @@ import styles from "./BlogList.module.scss";
 import CommonSearchBar from "../../searchBar/CommonSearchBar";
 import WikiBanner from "../../wiki/wikiBanner/WikiBanner";
 import ErrorPage from "../404Page";
+import GET_ALL_ADMIN from "../../../gqlLib/user/queries/getAllAdmin";
 
 const BlogList = () => {
   const [blogSearchInput, setBlogSearchInput] = useState("");
@@ -22,6 +23,13 @@ const BlogList = () => {
     },
     fetchPolicy: "cache-and-network",
   });
+
+  const { data: allAdminData } = useQuery(GET_ALL_ADMIN);
+
+  const findAmin = (id: string) => {
+    const admin = allAdminData?.getAllAdmin?.find((admin) => admin?._id === id);
+    return admin ? `${admin?.firstName} ${admin?.lastName}` : "Gabriel Branu";
+  };
 
   if (generalBlogLoading) {
     return (
@@ -52,7 +60,12 @@ const BlogList = () => {
       <div className={styles.blogCardContainer}>
         {generalBlogData?.getAllGeneralBlogForClient?.map(
           (blog: BlogListType) => {
-            return <BlogCard key={blog?._id} blogData={blog} />;
+            return (
+              <BlogCard
+                key={blog?._id}
+                blogData={{ ...blog, createdBy: findAmin(blog?._id) }}
+              />
+            );
           },
         )}
       </div>
