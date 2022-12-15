@@ -7,7 +7,11 @@ import IconWarper from "../../../../theme/iconWarper/IconWarper";
 import time_ago from "../../../../helperFunc/date/time_ago";
 import Image from "next/image";
 // import { faBookmark } from "@fortawesome/pro-solid-svg-icons";
-import { faBookmark, faMessageDots } from "@fortawesome/pro-light-svg-icons";
+import { faMessageDots as faMessageDotsSolid } from "@fortawesome/pro-solid-svg-icons";
+import {
+  faMessageDots as faMessageDotsLight,
+  faBookmark,
+} from "@fortawesome/pro-light-svg-icons";
 import { useRouter } from "next/router";
 import { useAppDispatch } from "../../../../redux/hooks";
 import {
@@ -110,10 +114,12 @@ const BlogCard = ({ blogData }: Props) => {
           <p className={styles.brandName}>Blending 101</p>
         </div>
         <div className={styles.brandBox}>
-          <FontAwesomeIcon icon={faBookmark} />
+          <FontAwesomeIcon icon={faBookmark} className={`${styles.icon}`} />
           <FontAwesomeIcon
-            icon={faMessageDots}
-            className={styles.brandName}
+            icon={commentsCount ? faMessageDotsSolid : faMessageDotsLight}
+            className={`${styles.icon} ${
+              commentsCount ? styles.activeIcon : ""
+            }`}
             onClick={() => {
               dispatch(
                 updateCurrentBlogForShowComments({
@@ -125,6 +131,15 @@ const BlogCard = ({ blogData }: Props) => {
               dispatch(setIsOpenBlogCommentsTray(true));
             }}
           />
+          {commentsCount ? (
+            <p
+              className={`${styles.text} ${
+                commentsCount ? styles.activeIcon : ""
+              }`}
+            >
+              {commentsCount}
+            </p>
+          ) : null}
         </div>
       </div>
     </div>
