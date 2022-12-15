@@ -4,6 +4,7 @@ import React, { FC } from "react";
 import AContainer from "../../../../containers/A.container";
 import GET_A_GENERAL_BLOG_BY_SLUG from "../../../../gqlLib/blog/query/getAGeneralBlogBySlug";
 import GET_ALL_GENERAL_BLOG_FOR_CLIENT from "../../../../gqlLib/blog/query/getAllGeneralBlogForClient";
+import GET_ALL_ADMIN from "../../../../gqlLib/user/queries/getAllAdmin";
 import SkeletonBlogDetails from "../../../../theme/skeletons/skeletonBlogDetails";
 import ErrorPage from "../../404Page";
 import styles from "./BlogDetails.module.scss";
@@ -28,6 +29,12 @@ const BlogDetails = () => {
     },
     fetchPolicy: "cache-and-network",
   });
+  const { data: allAdminData } = useQuery(GET_ALL_ADMIN);
+
+  const findAmin = (id: string) => {
+    const admin = allAdminData?.getAllAdmin?.find((admin) => admin?._id === id);
+    return admin ? `${admin?.firstName} ${admin?.lastName}` : "Gabriel Branu";
+  };
 
   if (blogLoading) {
     return (
@@ -51,10 +58,14 @@ const BlogDetails = () => {
             relatedBlogs={
               generalBlogData?.getAllGeneralBlogForClient?.slice(0, 4) || []
             }
+            findAmin={findAmin}
           />
         </div>
         <div className={styles.center}>
-          <BlogDetailsCenter blogDetails={blogData?.getAgeneralBlogBySlug} />
+          <BlogDetailsCenter
+            blogDetails={blogData?.getAgeneralBlogBySlug}
+            findAmin={findAmin}
+          />
         </div>
       </div>
     </Layout>
@@ -63,7 +74,15 @@ const BlogDetails = () => {
 
 const Layout: FC = ({ children }) => {
   return (
-    <AContainer headerTitle="Blog details" logo={true}>
+    <AContainer
+      headerTitle="Blog details"
+      logo={true}
+      showBlogCommentsTray={{
+        show: true,
+        showPanle: "right",
+        showTagByDeafult: false,
+      }}
+    >
       {children}
     </AContainer>
   );

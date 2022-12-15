@@ -63,7 +63,7 @@ const BlogList = () => {
             return (
               <BlogCard
                 key={blog?._id}
-                blogData={{ ...blog, createdBy: findAmin(blog?._id) }}
+                blogData={{ ...blog, createdBy: findAmin(blog?.createdBy) }}
               />
             );
           },
