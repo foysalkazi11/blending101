@@ -18,38 +18,24 @@ import {
 } from "../../../../redux/slices/wikiSlice";
 
 interface Props {
-  wikiId: string;
+  id: string;
   categroy?: string;
   author?: string;
   commentsCount?: number;
   expandAllCollapse?: boolean;
   setExpandAllCollapse?: Dispatch<SetStateAction<boolean>>;
+  handleToOpenCommentTray?: (id) => void;
 }
 
 const SubHeader = ({
-  wikiId,
+  id,
   author,
   categroy,
   commentsCount,
   expandAllCollapse = true,
   setExpandAllCollapse = () => {},
+  handleToOpenCommentTray = () => {},
 }: Props) => {
-  const dispatch = useAppDispatch();
-  const { isOpenWikiCommentsTray, wikiCommentsTrayCurrentWikiEntity } =
-    useAppSelector((state) => state?.wiki);
-
-  const openWikiCommentsTray = () => {
-    if (!isOpenWikiCommentsTray) {
-      dispatch(setIsOpenWikiCommentsTray(true));
-    }
-    dispatch(
-      setWikiCommentsCurrentIngredient({
-        ...wikiCommentsTrayCurrentWikiEntity,
-        id: wikiId,
-      }),
-    );
-  };
-
   return (
     <div className={styles.blendingRecipeTopOptions}>
       <div className={styles.blendingTopLeft}>
@@ -82,7 +68,7 @@ const SubHeader = ({
           />
           <span className={`${styles.innerText} `}>Expand All</span>
         </li>
-        <li onClick={openWikiCommentsTray}>
+        <li onClick={() => handleToOpenCommentTray(id)}>
           <FontAwesomeIcon
             icon={commentsCount ? faMessageDotsSolid : faMessageDotsLight}
             className={`${styles.innerIcon} ${

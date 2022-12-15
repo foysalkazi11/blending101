@@ -9,6 +9,11 @@ import NutrientBookmarkList from "./NutrientBookmarkList";
 import IngredientBookmarkList from "./IngredientBookmarkList";
 import ReadMore from "../../../../theme/readMore";
 import ImageSlider from "./ImageSlider";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import {
+  setIsOpenWikiCommentsTray,
+  setWikiCommentsCurrentIngredient,
+} from "../../../../redux/slices/wikiSlice";
 
 const FirstPortion = ({
   author = "Author",
@@ -41,6 +46,21 @@ const FirstPortion = ({
   imagesWithinBlock?: CoverImageType[];
 }) => {
   const [activeVariant, setActiveVariant] = useState<number>(0);
+  const { isOpenWikiCommentsTray, wikiCommentsTrayCurrentWikiEntity } =
+    useAppSelector((state) => state?.wiki);
+  const dispatch = useAppDispatch();
+
+  const openWikiCommentsTray = (id: string) => {
+    if (!isOpenWikiCommentsTray) {
+      dispatch(setIsOpenWikiCommentsTray(true));
+    }
+    dispatch(
+      setWikiCommentsCurrentIngredient({
+        ...wikiCommentsTrayCurrentWikiEntity,
+        id,
+      }),
+    );
+  };
 
   const updatePanel = (index: number, id: string, portions?: Portion[]) => {
     if (type === "Nutrient") {
@@ -66,12 +86,13 @@ const FirstPortion = ({
           <h3>{name}</h3>
         </div>
         <SubHeader
-          wikiId={wikiId}
+          id={wikiId}
           author={author}
           categroy={categroy}
           commentsCount={commentsCount}
           expandAllCollapse={expandAllCollapse}
           setExpandAllCollapse={setExpandAllCollapse}
+          handleToOpenCommentTray={openWikiCommentsTray}
         />
         <ImageSlider
           imagesWithinBlock={imagesWithinBlock}
