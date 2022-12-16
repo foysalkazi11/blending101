@@ -35,10 +35,12 @@ const responsiveSetting = {
 
 interface Props {
   relatedBlogs: BlogListType[];
+  findAmin: (id: string) => string;
 }
 
-const RelatedBlog = ({ relatedBlogs }: Props) => {
+const RelatedBlog = ({ relatedBlogs, findAmin }: Props) => {
   const { width } = useWindowSize();
+
   return (
     <>
       <PanelHeader
@@ -51,12 +53,22 @@ const RelatedBlog = ({ relatedBlogs }: Props) => {
       {width < 1024 ? (
         <CustomSlider moreSetting={responsiveSetting}>
           {relatedBlogs?.map((blog: BlogListType) => {
-            return <BlogCard key={blog?._id} blogData={blog} />;
+            return (
+              <BlogCard
+                key={blog?._id}
+                blogData={{ ...blog, createdBy: findAmin(blog?.createdBy) }}
+              />
+            );
           })}
         </CustomSlider>
       ) : (
         relatedBlogs?.map((blog: BlogListType) => {
-          return <BlogCard key={blog?._id} blogData={blog} />;
+          return (
+            <BlogCard
+              key={blog?._id}
+              blogData={{ ...blog, createdBy: findAmin(blog?.createdBy) }}
+            />
+          );
         })
       )}
     </>

@@ -9,6 +9,7 @@ export interface WikiUserComment {
   entityId: string;
   createdAt: string;
   updatedAt: string;
+  _id?: string;
 }
 
 export interface WikiComment {

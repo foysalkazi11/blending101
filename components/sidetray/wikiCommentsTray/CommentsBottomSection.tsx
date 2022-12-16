@@ -6,12 +6,14 @@ import IconWarper from "../../../theme/iconWarper/IconWarper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/pro-light-svg-icons";
 import { faTrash } from "@fortawesome/pro-regular-svg-icons";
+import CircularRotatingLoader from "../../../theme/loader/circularRotatingLoader.component";
 
 interface Props {
   userComments?: WikiUserComment;
-  updateCommentValue?: (agr: string) => void;
-  removeComment?: () => void;
+  updateCommentValue?: (agr: string, id?: string) => void;
+  removeComment?: (id: string) => void;
   isCurrentUser?: boolean;
+  deleteCommentLoading?: boolean;
 }
 
 const CommentsBottomSection = ({
@@ -19,6 +21,7 @@ const CommentsBottomSection = ({
   updateCommentValue = () => {},
   removeComment = () => {},
   isCurrentUser = false,
+  deleteCommentLoading = false,
 }: Props) => {
   return (
     <div className={s.bottomSection}>
@@ -40,7 +43,9 @@ const CommentsBottomSection = ({
             <IconWarper
               hover="none"
               defaultBg="gray"
-              handleClick={() => updateCommentValue(userComments?.comment)}
+              handleClick={() =>
+                updateCommentValue(userComments?.comment, userComments?._id)
+              }
               style={{ marginRight: "5px" }}
             >
               <FontAwesomeIcon icon={faPen} fontSize={12} />
@@ -49,9 +54,16 @@ const CommentsBottomSection = ({
             <IconWarper
               hover="none"
               defaultBg="gray"
-              handleClick={removeComment}
+              handleClick={() => removeComment(userComments?._id)}
             >
-              <FontAwesomeIcon icon={faTrash} fontSize={12} />
+              {deleteCommentLoading ? (
+                <CircularRotatingLoader
+                  color="white"
+                  style={{ fontSize: "16px" }}
+                />
+              ) : (
+                <FontAwesomeIcon icon={faTrash} fontSize={12} />
+              )}
             </IconWarper>
           </div>
         </div>

@@ -10,7 +10,7 @@ interface Props {
   setRating?: Dispatch<SetStateAction<number>>;
   isAbleToSetRating?: boolean;
   userRating?: number;
-  page?: "wiki" | "recipe";
+  page?: "wiki" | "blog" | "recipe";
 }
 
 const CommentsTopSection = ({

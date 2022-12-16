@@ -17,6 +17,7 @@ import ChallengeSlice from "./slices/Challenge.slice";
 import editRecipeMainReducer from "./edit_recipe/editRecipeStates";
 import uiReducer from "./slices/Ui.slice";
 import wikiReducer from "./slices/wikiSlice";
+import blogReducer from "./slices/blogSlice";
 
 const rootReducer = combineReducers({
   ui: uiReducer,
@@ -35,6 +36,7 @@ const rootReducer = combineReducers({
   categroy: categroyReducer,
   editRecipeReducer: editRecipeMainReducer,
   wiki: wikiReducer,
+  blog: blogReducer,
 });
 
 // export type RootState = ReturnType<typeof rootReducer>;

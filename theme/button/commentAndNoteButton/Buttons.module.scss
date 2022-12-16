@@ -13,6 +13,7 @@
   align-items: center;
   border: 0;
   cursor: pointer;
+  font-family: "Poppins", sans-serif;
 }
 
 .primary {
@@ -32,6 +33,7 @@
   font-weight: 500;
   color: $primaryColor;
   cursor: pointer;
+  font-family: "Poppins", sans-serif;
   &:hover {
     background: transparent;
     box-shadow: 5px 5px 15px #fe5d1f38;
