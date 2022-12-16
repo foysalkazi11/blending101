@@ -36,18 +36,16 @@ const WikiCommentsTray = ({
   const [showCommentBox, setShowCommentBox] = useState(false);
   const [updateComment, setUpdateComment] = useState(false);
   const [comment, setComment] = useState("");
-  const [wikiComments, setWikiComments] = useState<WikiCommentsType>(
-    {} as WikiCommentsType,
-  );
+  const [updateCommentId, setUpdateCommentId] = useState("");
   const dispatch = useAppDispatch();
   const { isOpenWikiCommentsTray, wikiCommentsTrayCurrentWikiEntity } =
     useAppSelector((state) => state?.wiki);
   const { dbUser } = useAppSelector((state) => state?.user);
   const [
     getAllWikiCommentsForAWikiEntity,
-    { loading: getAllWikiCommentsLoading },
+    { data: allWikiCommentsData, loading: getAllWikiCommentsLoading },
   ] = useLazyQuery(GET_ALL_WIKI_COMMENTS_FOR_A_WIKI_ENTITY, {
-    fetchPolicy: "network-only",
+    fetchPolicy: "cache-and-network",
   });
   const [crateWikiComment, { loading: createWikiCommentLoading }] =
     useMutation(CREATE_WIKI_COMMENT);
@@ -57,27 +55,37 @@ const WikiCommentsTray = ({
     useMutation(REMOVE_WIKI_COMMENT);
 
   // update Comment value
-  const updateCommentValue = (comment: string) => {
+  const updateCommentValue = (comment: string, id?: string) => {
     setUpdateComment(true);
     setComment(comment);
+    setUpdateCommentId(id);
     setShowCommentBox(true);
   };
 
   // delete wiki comment
-  const handleToRemoveWikiComment = async () => {
-    const { id } = wikiCommentsTrayCurrentWikiEntity;
+  const handleToRemoveWikiComment = async (commentId: string) => {
     try {
       await removeWikiComment({
         variables: {
-          entityId: id,
+          commentId,
           userId: dbUser?._id,
         },
+        update(cache) {
+          cache.writeQuery({
+            query: GET_ALL_WIKI_COMMENTS_FOR_A_WIKI_ENTITY,
+            variables: {
+              entityId: wikiCommentsTrayCurrentWikiEntity?.id,
+              userId: dbUser?._id,
+            },
+            data: {
+              getAllWikiCommentsForAWikiEntity:
+                allWikiCommentsData?.getAllWikiCommentsForAWikiEntity?.filter(
+                  (wiki) => wiki?._id !== commentId,
+                ),
+            },
+          });
+        },
       });
-
-      setWikiComments((prev) => ({
-        ...prev,
-        userComment: null,
-      }));
     } catch (error) {
       notification("error", "Unable to delete wiki comment");
     }
@@ -90,20 +98,40 @@ const WikiCommentsTray = ({
     try {
       let res: WikiUserComment = null;
       if (updateComment) {
-        const { data } = await editWikiComment({
+        await editWikiComment({
           variables: {
             data: {
-              comment,
-              entityId: id,
+              editableObject: {
+                comment,
+              },
+              editId: updateCommentId,
               userId: dbUser?._id,
             },
           },
+          update(cache, { data: { editWikiComment } }) {
+            cache.writeQuery({
+              query: GET_ALL_WIKI_COMMENTS_FOR_A_WIKI_ENTITY,
+              variables: {
+                entityId: wikiCommentsTrayCurrentWikiEntity?.id,
+                userId: dbUser?._id,
+              },
+              data: {
+                getAllWikiCommentsForAWikiEntity:
+                  allWikiCommentsData?.getAllWikiCommentsForAWikiEntity?.map(
+                    (wiki) =>
+                      wiki?._id === editWikiComment?._id
+                        ? { ...wiki, ...editWikiComment }
+                        : wiki,
+                  ),
+              },
+            });
+          },
         });
-        res = data?.editWikiComment;
+        // res = data?.editWikiComment;
         setUpdateComment(false);
         setComment("");
       } else {
-        const { data } = await crateWikiComment({
+        await crateWikiComment({
           variables: {
             data: {
               comment,
@@ -112,15 +140,25 @@ const WikiCommentsTray = ({
               userId: dbUser?._id,
             },
           },
+          update(cache, { data: { createWikiComment } }) {
+            cache.writeQuery({
+              query: GET_ALL_WIKI_COMMENTS_FOR_A_WIKI_ENTITY,
+              variables: {
+                entityId: wikiCommentsTrayCurrentWikiEntity?.id,
+                userId: dbUser?._id,
+              },
+              data: {
+                getAllWikiCommentsForAWikiEntity: [
+                  createWikiComment,
+                  ...allWikiCommentsData?.getAllWikiCommentsForAWikiEntity,
+                ],
+              },
+            });
+          },
         });
-        res = data?.createWikiComment;
+        // res = data?.createWikiComment;
         setComment("");
       }
-
-      setWikiComments((prev) => ({
-        ...prev,
-        userComment: { ...prev?.userComment, ...res },
-      }));
     } catch (error) {
       notification(
         "error",
@@ -145,7 +183,6 @@ const WikiCommentsTray = ({
         },
       });
       const res: WikiCommentsType = data?.getAllWikiCommentsForAWikiEntity;
-      setWikiComments(res);
     } catch (error) {
       notification("error", "Unable to fetch wiki entry comments");
       console.log(error);
@@ -184,78 +221,60 @@ const WikiCommentsTray = ({
           <h3>{wikiCommentsTrayCurrentWikiEntity?.title}</h3>
         </header>
       </section>
+      {!showCommentBox && (
+        <div className={s.addCommentsIcon}>
+          <Tooltip direction="left" content="Add Comments">
+            <IconWarper
+              iconColor="iconColorWhite"
+              defaultBg="secondary"
+              hover="bgSecondary"
+              style={{ width: "28px", height: "28px" }}
+              handleClick={toggleCommentBox}
+            >
+              <FontAwesomeIcon icon={faPlus} />
+            </IconWarper>
+          </Tooltip>
+        </div>
+      )}
 
+      {editWikiCommentLoading ||
+        (createWikiCommentLoading && <SkeletonComment singleComment={true} />)}
+
+      {showCommentBox && (
+        <CommentBox
+          toggleCommentBox={toggleCommentBox}
+          comment={comment}
+          setComment={setComment}
+          createOrUpdateComment={createOrUpdateWikiComment}
+          setUpdateComment={setUpdateComment}
+          updateComment={updateComment}
+        />
+      )}
       {getAllWikiCommentsLoading ? (
         <SkeletonComment />
       ) : (
-        <>
-          {wikiComments?.userComment ? (
-            editWikiCommentLoading || removeWikiCommentLoading ? (
-              <SkeletonComment singleComment={true} />
-            ) : (
-              <>
-                <CommentsTopSection user={dbUser} page="wiki" />
-                <CommentsBottomSection
-                  userComments={wikiComments?.userComment}
-                  updateCommentValue={updateCommentValue}
-                  removeComment={handleToRemoveWikiComment}
-                  isCurrentUser={true}
-                />
-              </>
-            )
-          ) : createWikiCommentLoading ? (
-            <SkeletonComment singleComment={true} />
-          ) : (
-            <CommentsTopSection user={dbUser} page="wiki" />
-          )}
-
-          {showCommentBox || wikiComments?.userComment ? null : (
-            <div className={s.addCommentsIcon}>
-              <Tooltip direction="left" content="Add Comments">
-                <IconWarper
-                  defaultBg="secondary"
-                  hover="bgSecondary"
-                  style={{ width: "28px", height: "28px" }}
-                  handleClick={toggleCommentBox}
-                >
-                  <FontAwesomeIcon icon={faPlus} />
-                </IconWarper>
-              </Tooltip>
-            </div>
-          )}
-          {showCommentBox && (
-            <CommentBox
-              toggleCommentBox={toggleCommentBox}
-              comment={comment}
-              setComment={setComment}
-              createOrUpdateComment={createOrUpdateWikiComment}
-              setUpdateComment={setUpdateComment}
-              updateComment={updateComment}
-            />
-          )}
-
-          <div className={`${s.commentsShowContainer} y-scroll`}>
-            {wikiComments?.comments?.length ? (
-              wikiComments?.comments?.map((comment, index) => {
+        <div className={`${s.commentsShowContainer} y-scroll`}>
+          {allWikiCommentsData?.getAllWikiCommentsForAWikiEntity.length ? (
+            allWikiCommentsData?.getAllWikiCommentsForAWikiEntity?.map(
+              (comment, index) => {
                 return (
                   <div className={s.singleComment} key={index}>
                     <CommentsTopSection user={comment?.userId} page="wiki" />
                     <CommentsBottomSection
                       userComments={comment}
-                      isCurrentUser={false}
+                      isCurrentUser={comment?.userId?._id === dbUser?._id}
+                      updateCommentValue={updateCommentValue}
+                      removeComment={handleToRemoveWikiComment}
+                      deleteCommentLoading={removeWikiCommentLoading}
                     />
                   </div>
                 );
-              })
-            ) : (
-              <p className={s.noComments}>
-                {wikiComments?.userComment
-                  ? "No other comments "
-                  : "No comments"}
-              </p>
-            )}
-          </div>
-        </>
+              },
+            )
+          ) : (
+            <p className={s.noComments}>{"No comments"}</p>
+          )}
+        </div>
       )}
     </TrayWrapper>
   );
