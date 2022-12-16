@@ -4,8 +4,9 @@ import { faMessageDots } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import CREATE_BLOG_COMMENT from "../../../gqlLib/blog/query/createBlogComment";
-import EDIT_BLOG_COMMENT from "../../../gqlLib/blog/query/editBlogComment";
+import CREATE_BLOG_COMMENT from "../../../gqlLib/blog/mutation/createBlogComment";
+import EDIT_BLOG_COMMENT from "../../../gqlLib/blog/mutation/editBlogComment";
+import REMOVE_A_BLOG_COMMENT from "../../../gqlLib/blog/mutation/removeABlogComment";
 import GET_ALL_COMMENTS_FOR_A_BLOG from "../../../gqlLib/blog/query/getAllCommentsForABlog";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setIsOpenBlogCommentsTray } from "../../../redux/slices/blogSlice";
@@ -48,6 +49,9 @@ const BlogCommentsTray = ({
     useMutation(CREATE_BLOG_COMMENT);
   const [editBlogComment, { loading: editBlogCommentLoading }] =
     useMutation(EDIT_BLOG_COMMENT);
+  const [removeABlogComment, { loading: removeBlogLoading }] = useMutation(
+    REMOVE_A_BLOG_COMMENT,
+  );
   const dispatch = useAppDispatch();
   const { dbUser } = useAppSelector((state) => state.user);
 
@@ -64,7 +68,6 @@ const BlogCommentsTray = ({
     setShowCommentBox(false);
     const { id } = currentBlogForShowComments;
     try {
-      let res = null;
       if (updateComment) {
         await editBlogComment({
           variables: {
@@ -123,6 +126,33 @@ const BlogCommentsTray = ({
         "error",
         `Failed to ${updateComment ? "update" : "create"} comment`,
       );
+    }
+  };
+
+  // delete blog comment
+  const handleToRemoveBlogComment = async (id: string) => {
+    const { id: blogId } = currentBlogForShowComments;
+    try {
+      await removeABlogComment({
+        variables: {
+          commentId: id,
+          memberId: dbUser?._id,
+        },
+        update(cache) {
+          cache.writeQuery({
+            query: GET_ALL_COMMENTS_FOR_A_BLOG,
+            variables: { blogId },
+            data: {
+              getAllCommentsForABlog:
+                allCommentsData?.getAllCommentsForABlog?.filter(
+                  (blog) => blog?._id !== id,
+                ),
+            },
+          });
+        },
+      });
+    } catch (error) {
+      notification("error", "Unable to delete blog comment");
     }
   };
 
@@ -215,7 +245,8 @@ const BlogCommentsTray = ({
                     userComments={comment}
                     isCurrentUser={comment?.memberId?._id === dbUser?._id}
                     updateCommentValue={updateCommentValue}
-                    // removeComment={handleToRemoveWikiComment}
+                    removeComment={handleToRemoveBlogComment}
+                    deleteCommentLoading={removeBlogLoading}
                   />
                 </div>
               );
