@@ -1,8 +1,9 @@
 import { gql } from "@apollo/client";
 
 const EDIT_WIKI_COMMENTS = gql`
-  mutation EditWikiComment($data: CreateEditWikiComment!) {
+  mutation EditWikiComment($data: EditWikiComment!) {
     editWikiComment(data: $data) {
+      _id
       comment
       updatedAt
     }
