@@ -1,9 +1,6 @@
-import React, { useState } from "react";
+import React, { useMemo } from "react";
 import {
   ResponsiveContainer,
-  Tooltip,
-  AreaChart,
-  Area,
   Legend,
   BarChart,
   Bar,
@@ -24,7 +21,13 @@ import { useQuery } from "@apollo/client";
 import { GET_BLEND_CATEGORY } from "../../../graphql/Recipe";
 import { RECIPE_CATEGORY_COLOR } from "../../../data/Recipe";
 
-const Insights = () => {
+interface InsightsProps {
+  categories: any[];
+  ingredients: any[];
+}
+
+const Insights = (props: InsightsProps) => {
+  const { categories, ingredients } = props;
   return (
     <div className={styles.insights}>
       <IconHeading icon={faLightbulbOn} title="Plan Insights" />
@@ -43,8 +46,8 @@ const Insights = () => {
             <span>Cost</span>
           </div>
         </div>
-        <BlendType />
-        <TopIngredients />
+        <BlendType categories={categories} />
+        <TopIngredients ingredients={ingredients} />
         <MacroMakeup />
       </div>
     </div>
@@ -53,8 +56,16 @@ const Insights = () => {
 
 export default Insights;
 
-const BlendType = () => {
+const BlendType = ({ categories }) => {
   const { data } = useQuery(GET_BLEND_CATEGORY);
+  const types = useMemo(
+    () =>
+      categories?.map((category) => ({
+        value: category?.percentage,
+        color: RECIPE_CATEGORY_COLOR[category.name],
+      })),
+    [categories],
+  );
   return (
     <div className={styles.insights__graph}>
       <h3>Blend Type</h3>
@@ -74,26 +85,30 @@ const BlendType = () => {
           </div>
         ))}
       </div>
-      <HSBar
-        height={"35px"}
-        id={styles.insights__progress}
-        data={[
-          { value: 32, color: "#FF8252" },
-          { value: 30, color: "#66A7FF" },
-          { value: 25, color: "#B9EB84" },
-        ]}
-      />
+      <div id={styles.insights__progress_wrapper}>
+        <HSBar
+          height="50px"
+          id={styles.insights__progress}
+          data={types || []}
+        />
+      </div>
     </div>
   );
 };
 
-const renderCustomizedLabel = (props) => {
-  const { x, y, value } = props;
+const renderCustomizedLabel = ({ x, y, value }) => (
+  <image x={x - 40} y={y - 5} href={value} height="28" width="28" />
+);
 
-  return <image x={x - 40} y={y - 10} href={value} height="25" width="25" />;
-};
+const renderIngredientName = ({ x, y, value }) => (
+  <text name={value} x={x} y={y} width="246.75" height="22" offset="35">
+    <tspan x="100" dy="1em">
+      {value}
+    </tspan>
+  </text>
+);
 
-const TopIngredients = () => {
+const TopIngredients = ({ ingredients }) => {
   return (
     <div className={styles.insights__graph}>
       <h3>Top Ingredients</h3>
@@ -106,20 +121,24 @@ const TopIngredients = () => {
             padding={{ top: 20 }}
             axisLine={false}
             type="category"
-            dataKey="name"
+            dataKey="&nbsp;"
           />
-          <Bar dataKey="quantity" fill="#FFA482" layout="vertical">
+          <Bar dataKey="count" fill="#FFA482" layout="vertical">
             <LabelList
-              dataKey="icon"
+              dataKey="featuredImage"
               position="left"
               content={renderCustomizedLabel}
             />
             <LabelList
-              dataKey="quantity"
+              dataKey="count"
               position="insideLeft"
               formatter={(value) => `${value} | `}
             />
-            <LabelList dataKey="label" position="insideLeft" offset={35} />
+            <LabelList
+              dataKey="name"
+              position="insideLeft"
+              content={renderIngredientName}
+            />
           </Bar>
         </BarChart>
       </ResponsiveContainer>
@@ -171,34 +190,6 @@ const MacroMakeup = () => (
     </ResponsiveContainer>
   </div>
 );
-
-const ingredients = [
-  {
-    icon: "https://freepngimg.com/thumb/orange/19-orange-png-image-download.png",
-    label: "Orange",
-    quantity: 22,
-  },
-  {
-    icon: "https://freepngimg.com/thumb/strawberry/1-strawberry-png-images.png",
-    label: "Strawberry",
-    quantity: 18,
-  },
-  {
-    icon: "https://freepngimg.com/thumb/apple/9-apple-png-image.png",
-    label: "Apple",
-    quantity: 15,
-  },
-  {
-    icon: "https://freepngimg.com/thumb/mango/1-2-mango-png.png",
-    label: "Mango",
-    quantity: 15,
-  },
-  {
-    icon: "https://freepngimg.com/thumb/pineapple/2-pineapple-png-image-download.png",
-    label: "Pineapple",
-    quantity: 15,
-  },
-];
 
 const macroMakeup = [
   { name: "Carbs", value: 400 },

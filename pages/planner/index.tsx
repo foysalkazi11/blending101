@@ -19,7 +19,7 @@ import classes from "../../components/searchBar/SearchBar.module.scss";
 import styles from "../../styles/pages/planner.module.scss";
 import "react-datepicker/dist/react-datepicker.css";
 import { useQuery } from "@apollo/client";
-import { GET_ALL_PLANS } from "../../graphql/Planner";
+import { GET_ALL_PLANS, GET_FEATURED_PLANS } from "../../graphql/Planner";
 
 const PlanDiscovery = ({
   input = "",
@@ -32,7 +32,7 @@ const PlanDiscovery = ({
   handleOnChange = () => {},
 }) => {
   const router = useRouter();
-  const { data } = useQuery(GET_ALL_PLANS);
+  const { data } = useQuery(GET_FEATURED_PLANS);
 
   const [isInputFocus, setIsInputFocus] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
@@ -164,7 +164,7 @@ const PlanDiscovery = ({
             image="/images/thumbs-up.svg"
             allUrl="planner/recommended"
           >
-            {data?.getAllGlobalPlans?.map((item) => (
+            {data?.getAllRecommendedPlans?.map((item) => (
               <div key={item?._id}>
                 <div className="mr-10">
                   <PlanCard planId={item?._id} title={item.planName} />
@@ -179,7 +179,7 @@ const PlanDiscovery = ({
             image="/images/clock-light.svg"
             allUrl="planner/recommended"
           >
-            {data?.getAllGlobalPlans?.map((item) => (
+            {data?.getAllRecentPlans?.map((item) => (
               <div key={item?._id}>
                 <div className="mr-10">
                   <PlanCard planId={item?._id} title={item.planName} />
@@ -194,7 +194,7 @@ const PlanDiscovery = ({
             image="/images/fire-alt-light.svg"
             allUrl="planner/recommended"
           >
-            {data?.getAllGlobalPlans?.map((item) => (
+            {data?.getAllPopularPlans?.map((item) => (
               <div key={item?._id}>
                 <div className="mr-10">
                   <PlanCard planId={item?._id} title={item.planName} />

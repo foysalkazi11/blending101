@@ -1,4 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { useAppDispatch } from "../../../../redux/hooks";
+import {
+  setIsOpenBlogCommentsTray,
+  updateCurrentBlogForShowComments,
+} from "../../../../redux/slices/blogSlice";
 import ReadMore from "../../../../theme/readMore";
 import { BlogDetailsType } from "../../../../type/blog";
 import { BlockType } from "../../../../type/editorjsBlockType";
@@ -10,8 +15,9 @@ import RenderJsonToHtml from "../../../wiki/WikiCenter/jsonToHtml";
 import styles from "./BlogDetails.module.scss";
 interface Props {
   blogDetails: BlogDetailsType;
+  findAmin: (id: string) => string;
 }
-const BlogDetailsCenter = ({ blogDetails }: Props) => {
+const BlogDetailsCenter = ({ blogDetails, findAmin }: Props) => {
   const {
     _id,
     title,
@@ -22,11 +28,24 @@ const BlogDetailsCenter = ({ blogDetails }: Props) => {
     commentsCount,
     body,
     type,
+    createdBy,
   } = blogDetails;
   const [expandAllCollapse, setExpandAllCollapse] = useState(false);
   const [allMediaWithinBlog, setAllMediaWithinBlog] = useState<
     CoverImageType[]
   >([]);
+  const dispatch = useAppDispatch();
+
+  const openBlogCommentTray = (id: string) => {
+    dispatch(
+      updateCurrentBlogForShowComments({
+        id: _id,
+        image: coverImage,
+        title,
+      }),
+    );
+    dispatch(setIsOpenBlogCommentsTray(true));
+  };
   useEffect(() => {
     if (body) {
       const blocks: BlockType[] = JSON.parse(body)?.blocks;
@@ -67,12 +86,13 @@ const BlogDetailsCenter = ({ blogDetails }: Props) => {
           <h3>{title}</h3>
         </div>
         <SubHeader
-          wikiId={_id}
-          author={"Gabriel Branu"}
-          categroy={category}
+          id={_id}
+          author={findAmin(createdBy)}
+          categroy={type}
           commentsCount={commentsCount}
           expandAllCollapse={expandAllCollapse}
           setExpandAllCollapse={setExpandAllCollapse}
+          handleToOpenCommentTray={openBlogCommentTray}
         />
         <ImageSlider
           imagesWithinBlock={allMediaWithinBlog}

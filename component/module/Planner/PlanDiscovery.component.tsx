@@ -51,9 +51,21 @@ const PlanDiscovery = (props: PlannerPanelProps) => {
 
   const blendTypeRef = useRef<HTMLDivElement>(null);
 
-  const { data, loading } = useQuery(GET_ALL_PLANS);
+  const [getAllPlan, { data, loading }] = useLazyQuery(GET_ALL_PLANS);
   const { data: categories } = useQuery(GET_BLEND_CATEGORY);
 
+  useEffect(() => {
+    getAllPlan({
+      variables: {
+        limit,
+        page,
+      },
+    }).then((response) => {
+      setPageLength(
+        Math.ceil(response.data.getAllGlobalPlans.totalPlans / limit),
+      );
+    });
+  }, [getAllPlan, limit, page]);
   useEffect(() => {
     setQuery("");
     setPage(1);
@@ -131,14 +143,17 @@ const PlanDiscovery = (props: PlannerPanelProps) => {
             />
           ))
         ) : toggler ? (
-          <Plans plans={data?.getAllGlobalPlans || []} isUpload={isUpload} />
+          <Plans
+            plans={data?.getAllGlobalPlans?.plans || []}
+            isUpload={isUpload}
+          />
         ) : (
           <Recipes recipes={recipes || []} isUpload={isUpload} />
         )}
-        {pageLength > 3 && (
+        {pageLength > 1 && (
           <div className="flex ai-center jc-center mt-20">
             <Pagination
-              limit={5}
+              limit={3}
               pageState={[page, setPage]}
               totalPage={pageLength}
             />

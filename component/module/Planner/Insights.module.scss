@@ -77,9 +77,12 @@
   }
 }
 
-#statistics__progress {
-  border-radius: 10px;
-  margin: 3rem 0rem 0;
+#insights__progress {
+  border-radius: 50px;
+  &_wrapper {
+    width: 30rem;
+    margin: auto;
+  }
 }
 
 .challenge_circle {

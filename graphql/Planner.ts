@@ -116,23 +116,36 @@ export const GET_PLANNER_BY_WEEK = gql`
       startDate: $startDate
       endDate: $endDate
     ) {
-      _id
-      recipes {
+      planners {
+        _id
+        recipes {
+          _id
+          name
+          recipeBlendCategory {
+            name
+          }
+          ingredients {
+            ingredientId {
+              _id
+            }
+            selectedPortion {
+              gram
+            }
+          }
+        }
+        formatedDate
+      }
+      topIngredients {
+        featuredImage
+        name
+        count
+      }
+      recipeCategoriesPercentage {
         _id
         name
-        recipeBlendCategory {
-          name
-        }
-        ingredients {
-          ingredientId {
-            _id
-          }
-          selectedPortion {
-            gram
-          }
-        }
+        count
+        percentage
       }
-      formatedDate
     }
   }
 `;
@@ -193,12 +206,40 @@ export const CREATE_PLAN = gql`
   }
 `;
 
-export const GET_ALL_PLANS = gql`
-  query GetAllPlan {
-    getAllGlobalPlans {
+export const GET_FEATURED_PLANS = gql`
+  query GetFeaturedPlans {
+    getAllRecentPlans(limit: 8) {
       _id
       planName
       description
+      startDateString
+      endDateString
+    }
+    getAllRecommendedPlans(limit: 8) {
+      _id
+      planName
+      description
+      startDateString
+      endDateString
+    }
+    getAllPopularPlans(limit: 8) {
+      _id
+      planName
+      description
+      startDateString
+      endDateString
+    }
+  }
+`;
+export const GET_ALL_PLANS = gql`
+  query GetAllPlan($limit: Float!, $page: Float!) {
+    getAllGlobalPlans(limit: $limit, page: $page) {
+      plans {
+        _id
+        planName
+        description
+      }
+      totalPlans
     }
   }
 `;
@@ -206,43 +247,107 @@ export const GET_ALL_PLANS = gql`
 export const GET_PLAN = gql`
   query GetPlan($planId: String!) {
     getAPlan(planId: $planId) {
-      _id
-      planName
-      description
-      planData {
-        day
-        recipes {
-          isMatch
-          _id
-          name
-          recipeBlendCategory {
+      plan {
+        _id
+        planName
+        description
+        planData {
+          id: _id
+          day
+          recipes {
+            isMatch
+            _id
             name
-          }
-          averageRating
-          totalRating
-          brand {
-            brandName
-          }
-          image {
-            image
-            default
-          }
-          defaultVersion {
-            postfixTitle
-            ingredients {
-              ingredientId {
-                _id
-                ingredientName
-              }
-              selectedPortion {
-                name
-                quantity
-                gram
+            recipeBlendCategory {
+              name
+            }
+            averageRating
+            totalRating
+            brand {
+              brandName
+            }
+            image {
+              image
+              default
+            }
+            defaultVersion {
+              postfixTitle
+              ingredients {
+                ingredientId {
+                  _id
+                  ingredientName
+                }
+                selectedPortion {
+                  name
+                  quantity
+                  gram
+                }
               }
             }
           }
         }
       }
+      topIngredients {
+        name
+        count
+        featuredImage
+      }
+      recipeCategoriesPercentage {
+        name
+        percentage
+      }
     }
+  }
+`;
+
+// PLANNER COMMENTS
+export const GET_ALL_PLAN_COMMENTS = gql`
+  query GetPlanComments($id: String!) {
+    getAllCommentsForAPlan(planId: $id) {
+      _id
+      comment
+      memberId {
+        _id
+        image
+        displayName
+        firstName
+        lastName
+      }
+      createdAt
+    }
+  }
+`;
+
+export const ADD_PLAN_COMMENT = gql`
+  mutation AddPlanComment($planId: ID!, $memberId: ID!, $comment: String!) {
+    createPlanComment(
+      data: { planId: $planId, memberId: $memberId, comment: $comment }
+    ) {
+      _id
+    }
+  }
+`;
+
+export const EDIT_PLAN_COMMENT = gql`
+  mutation EditPlanComment(
+    $memberId: ID!
+    $commentId: String!
+    $comment: String!
+  ) {
+    editPlanComment(
+      data: {
+        editId: $commentId
+        memberId: $memberId
+        editableObject: { comment: $comment }
+      }
+    ) {
+      _id
+    }
+  }
+`;
+
+export const REMOVE_PLAN_COMMENT = gql`
+  mutation RemovePlanComment($memberId: String!, $commentId: String!) {
+    removeAPlanComment(memberId: $memberId, commentId: $commentId)
   }
 `;
