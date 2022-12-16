@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setOpenCommentsTray } from "../../../redux/slices/sideTraySlice";
 import styles from "./CommentsTray.module.scss";
@@ -14,7 +14,8 @@ import SkeletonNote from "../../../theme/skeletons/skeletonNote/SkeletonNote";
 import TrayWrapper from "../TrayWrapper";
 import TrayTag from "../TrayTag";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMessageDots } from "@fortawesome/pro-solid-svg-icons";
+import { faMemo, faMessageDots } from "@fortawesome/pro-solid-svg-icons";
+import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
 
 interface CommentsTrayProps {
   showTagByDefaut?: boolean;
@@ -28,7 +29,7 @@ export default function CommentsTray({
   const [allNotes, setAllNotes] = useState([]);
   const [allComments, setAllComments] = useState([]);
   const [userComments, setUserComments] = useState<any>({});
-  const [toggle, setToggle] = useState(1);
+  const [toggle, setToggle] = useState(0);
   const { openCommentsTray } = useAppSelector((state) => state?.sideTray);
   const dispatch = useAppDispatch();
   const { dbUser } = useAppSelector((state) => state?.user);
@@ -36,21 +37,20 @@ export default function CommentsTray({
   const { currentRecipeInfo } = useAppSelector((state) => state?.recipe);
   const [getAllNotesForARecipe, { data: noteData, loading: noteLoading }] =
     useLazyQuery(GET_ALL_NOTES_FOR_A_RECIPE, {
-      fetchPolicy: "network-only",
+      fetchPolicy: "cache-and-network",
     });
   const [
     getAllCommentsForARecipe,
     { data: commentData, loading: commentLoading },
   ] = useLazyQuery(GET_ALL_COMMENTS_FOR_A_RECIPE, {
-    fetchPolicy: "network-only",
+    fetchPolicy: "cache-and-network",
   });
-  const ref = useRef<any>();
 
   const fetchCommentsAndNotes = async () => {
     try {
       getAllCommentsForARecipe({
         variables: {
-          getAllCommentsForARecipeData2: {
+          data: {
             recipeId: activeRecipeId,
             userId: dbUser?._id,
           },
@@ -92,11 +92,6 @@ export default function CommentsTray({
   };
 
   const handleToggle = (no: number) => {
-    if (no === 1) {
-      ref.current.style.left = "0";
-    } else {
-      ref.current.style.left = "50%";
-    }
     setToggle(no);
   };
 
@@ -114,45 +109,38 @@ export default function CommentsTray({
         />
       )}
     >
-      <div className={styles.main}>
-        <div className={styles.main__top}>
-          <div className={styles.main__top__menu}>
-            <div className={styles.active} ref={ref}></div>
-            <div
-              className={
-                toggle === 2
-                  ? styles.main__top__menu__child + " " + styles.inActiveImg
-                  : styles.main__top__menu__child + " " + styles.active__menu
-              }
-              onClick={() => handleToggle(1)}
-            >
-              <img src="/icons/comment.svg" alt="comment_icon" /> Comments
-            </div>
-            <div
-              className={
-                toggle === 1
-                  ? styles.main__top__menu__child + " " + styles.inActiveImg
-                  : styles.main__top__menu__child + " " + styles.active__menu
-              }
-              onClick={() => handleToggle(2)}
-            >
-              <img src="/images/noun_note_3378544.svg" alt="note_icon" /> Notes
-            </div>
-          </div>
-        </div>
-      </div>
+      <ToggleMenu
+        setToggle={handleToggle}
+        toggle={toggle}
+        toggleMenuList={[
+          <div key={"key0"} style={{ display: "flex", alignItems: "center" }}>
+            <FontAwesomeIcon
+              icon={faMessageDots}
+              style={{ marginRight: "5px" }}
+            />
+
+            <p>Comments</p>
+          </div>,
+          <div key={"key1"} style={{ display: "flex", alignItems: "center" }}>
+            <FontAwesomeIcon icon={faMemo} style={{ marginRight: "5px" }} />
+            <p>Notes</p>
+          </div>,
+        ]}
+        variant={"outlineSecondary"}
+      />
+
       <div className={styles.recipeName}>
         <img src={currentRecipeInfo?.image} alt="img" />
         <h3>{currentRecipeInfo?.name}</h3>
       </div>
 
       {noteLoading || commentLoading ? (
-        toggle === 1 ? (
+        toggle === 0 ? (
           <SkeletonComment />
         ) : (
           <SkeletonNote />
         )
-      ) : toggle === 1 ? (
+      ) : toggle === 0 ? (
         <CommentSection
           allComments={allComments}
           setComments={setAllComments}
