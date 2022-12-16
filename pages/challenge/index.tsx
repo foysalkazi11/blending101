@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import {
   faGear,
   faPlusCircle,
@@ -19,7 +19,11 @@ import Settings from "../../component/module/Challenge/Settings.component";
 import AContainer from "../../containers/A.container";
 import IconHeading from "../../theme/iconHeading/iconHeading.component";
 
-import { GET_30DAYS_CHALLENGE, GET_CHALLENGES } from "../../graphql/Challenge";
+import {
+  GET_30DAYS_CHALLENGE,
+  GET_CHALLENGES,
+  SHARE_CHALLENGE,
+} from "../../graphql/Challenge";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
   setChallengeInterval,
@@ -31,8 +35,11 @@ import styles from "../../styles/pages/planner.module.scss";
 import Icon from "../../component/atoms/Icon/Icon.component";
 
 import { theme } from "../../configs/themes";
-import ChallengeShareModal from "../../component/organisms/Share/ChallengeShare.component";
+import ShareModal from "../../component/organisms/Share/Share.component";
 import { useRouter } from "next/router";
+import axios from "axios";
+import html2canvas from "html2canvas";
+import { dataURLtoFile } from "../../helpers/File";
 
 const ChallengePage = () => {
   const router = useRouter();
@@ -40,6 +47,8 @@ const ChallengePage = () => {
 
   const [showSettings, setShowSettings] = useState(false);
   const [showGroceryTray] = useState(true);
+
+  const [link, setLink] = useState("");
   const [showShare, setShowShare] = useState(false);
 
   const dispatch = useAppDispatch();
@@ -57,6 +66,7 @@ const ChallengePage = () => {
       memberId: userId,
     },
   });
+  const [shareChallenge] = useMutation(SHARE_CHALLENGE);
 
   const viewOnly = data?.getMyThirtyDaysChallenge?.challengeInfo?.viewOnly;
 
@@ -101,6 +111,55 @@ const ChallengePage = () => {
     );
   }, [data, dispatch, viewOnly]);
 
+  const shareChallengeHandler = useCallback(() => {
+    const id = data?.getMyThirtyDaysChallenge?.challengeInfo?.challengeId;
+
+    shareChallenge({
+      variables: {
+        userId,
+        challengeId: id,
+      },
+    }).then((res) => {
+      setLink(
+        `${process.env.NEXT_PUBLIC_HOSTING_DOMAIN}/challenge?id=${id}&token=${res.data?.shareGlobalChallenge}`,
+      );
+
+      navigator.clipboard.writeText(
+        `${process.env.NEXT_PUBLIC_HOSTING_DOMAIN}/challenge/shared?id=${id}&token=${res.data?.shareGlobalChallenge}`,
+      );
+
+      html2canvas(challengeProgress.current).then((canvas) => {
+        const data = canvas.toDataURL("image/jpg");
+        const file = dataURLtoFile(data, "challenge.png");
+
+        // STORING THE DIALER IMAGE
+        const formdata = new FormData();
+        formdata.append("image", file, `${id}.jpg`);
+
+        axios.post(
+          "https://om7h45qezg.execute-api.us-east-1.amazonaws.com/prod//file-processing/images/single",
+          formdata,
+        );
+
+        const link = document.createElement("a");
+        if (typeof link.download === "string") {
+          link.href = data;
+          link.download = "image.jpg";
+
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        } else {
+          window.open(data);
+        }
+      });
+    });
+  }, [
+    data?.getMyThirtyDaysChallenge?.challengeInfo?.challengeId,
+    shareChallenge,
+    userId,
+  ]);
+
   let toolbox = null;
   if (showUpload) toolbox = <UploadCard />;
   else if (showSettings)
@@ -124,18 +183,18 @@ const ChallengePage = () => {
       }}
     >
       <RXPanel />
-      <ChallengeShareModal
-        id={data?.getMyThirtyDaysChallenge?.challengeInfo?.challengeId}
+      <ShareModal
         name={data?.getMyThirtyDaysChallenge?.challengeInfo?.challengeName}
         show={showShare}
         setShow={setShowShare}
-        element={challengeProgress.current}
+        link={link}
+        onShare={shareChallengeHandler}
       />
       <div className={styles.planner}>
         <div className="row mt-20">
           <div className="col-3">
             {showUpload ? (
-              <PlannerQueue isUpload={showUpload} />
+              <PlannerQueue panel="challenge" />
             ) : (
               <ChallengeQueue
                 challenges={data?.getMyThirtyDaysChallenge?.challenge}

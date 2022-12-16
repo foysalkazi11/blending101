@@ -25,7 +25,7 @@ import { VscVersions } from "react-icons/vsc";
 import IngredientDetails from "../../../../component/module/Recipe/Ingredient-Details.module";
 import { RecipeDetailsType } from "../../../../type/recipeDetails";
 import { GiGl } from "../../../../type/nutrationType";
-import Share from "../../../../component/organisms/Share/Share.component";
+import Share from "../../../../component/organisms/Share/Distribute.component";
 
 interface center {
   recipeData: RecipeDetailsType;
