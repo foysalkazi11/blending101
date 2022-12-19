@@ -1,10 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { Dispatch, SetStateAction, useState } from "react";
-import styles from "./NoteSection.module.scss";
-import NoteForm from "./noteForm/NoteForm";
-import { FiEdit2 } from "react-icons/fi";
-import { format, parseISO } from "date-fns";
-import { useMutation } from "@apollo/client";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import CREATE_NEW_NOTE from "../../../../gqlLib/notes/mutation/createNewNote";
 import { useAppSelector } from "../../../../redux/hooks";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
@@ -13,12 +9,13 @@ import DELETE_MY_NOTE from "../../../../gqlLib/notes/mutation/deleteMyNote";
 import SkeletonNote from "../../../../theme/skeletons/skeletonNote/SkeletonNote";
 import NoteBody from "./noteBody/NoteBody";
 import NoteHead from "./noteHead/NoteHead";
+import GET_ALL_NOTES_FOR_A_RECIPE from "../../../../gqlLib/notes/quries/getAllNotesForARecipe";
 type NoteSectionProps = {
   allNotes: any[];
   setAllNotes: Dispatch<SetStateAction<any[]>>;
 };
 
-const NoteSection = ({ allNotes, setAllNotes }: NoteSectionProps) => {
+const NoteSection = () => {
   const [showNoteForm, setShowNoteForm] = useState(false);
   const [updateNote, setUpdateNote] = useState(false);
   const [updateNoteId, setUpdateNoteId] = useState("");
@@ -28,7 +25,30 @@ const NoteSection = ({ allNotes, setAllNotes }: NoteSectionProps) => {
   const [deleteNote] = useMutation(DELETE_MY_NOTE);
   const { dbUser } = useAppSelector((state) => state?.user);
   const { activeRecipeId } = useAppSelector((state) => state?.collections);
+  const { openCommentsTray } = useAppSelector((state) => state?.sideTray);
   const [loading, setLoading] = useState(false);
+
+  const [getAllNotesForARecipe, { data: noteData, loading: noteLoading }] =
+    useLazyQuery(GET_ALL_NOTES_FOR_A_RECIPE, {
+      fetchPolicy: "cache-and-network",
+    });
+
+  const fetchNotes = async () => {
+    try {
+      getAllNotesForARecipe({
+        variables: { data: { recipeId: activeRecipeId, userId: dbUser?._id } },
+      });
+    } catch (error) {
+      reactToastifyNotification(error?.message);
+    }
+  };
+
+  useEffect(() => {
+    if (openCommentsTray && activeRecipeId) {
+      fetchNotes();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openCommentsTray, activeRecipeId]);
 
   const updateNoteForm = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -52,7 +72,7 @@ const NoteSection = ({ allNotes, setAllNotes }: NoteSectionProps) => {
           },
         },
       });
-      setAllNotes(data?.removeMyNote);
+
       setLoading(false);
       reactToastifyNotification("info", "Delete successfully");
     } catch (error) {
@@ -76,8 +96,6 @@ const NoteSection = ({ allNotes, setAllNotes }: NoteSectionProps) => {
             },
           },
         });
-
-        setAllNotes(data?.editMyNote);
       } else {
         const { data } = await createNote({
           variables: {
@@ -89,7 +107,6 @@ const NoteSection = ({ allNotes, setAllNotes }: NoteSectionProps) => {
             },
           },
         });
-        setAllNotes(data?.createNewNote);
       }
 
       setLoading(false);
@@ -119,6 +136,10 @@ const NoteSection = ({ allNotes, setAllNotes }: NoteSectionProps) => {
     setNoteForm((pre) => ({ ...pre, title: "", body: "" }));
   };
 
+  if (noteLoading) {
+    return <SkeletonNote />;
+  }
+
   return (
     <>
       <NoteHead
@@ -131,7 +152,7 @@ const NoteSection = ({ allNotes, setAllNotes }: NoteSectionProps) => {
         isFromRecipePage="default"
       />
       <NoteBody
-        data={allNotes}
+        data={noteData?.getMyNotesForARecipe}
         deleteItem={removeNote}
         updateItem={updateNoteValue}
         varient="notes"
