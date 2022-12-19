@@ -3,13 +3,6 @@ import { gql } from "@apollo/client";
 const CREATE_NET_COMMENT = gql`
   mutation Mutation($data: CreateComment!) {
     createComment(data: $data) {
-      userComment {
-        comment
-        rating
-        createdAt
-        updatedAt
-        _id
-      }
       comments {
         _id
         comment

@@ -105,21 +105,49 @@ const CommentSection = () => {
     );
   };
 
+  // delete or remove comment
   const removeComment = async (id: string) => {
     try {
-      const { data } = await deleteComment({
+      await deleteComment({
         variables: {
           data: {
             recipeId: activeRecipeId,
             userId: dbUser?._id,
             commentId: id,
           },
+          update(cache, { data: { removeComment } }) {
+            cache.writeQuery({
+              query: GET_ALL_COMMENTS_FOR_A_RECIPE,
+              variables: {
+                data: {
+                  recipeId: activeRecipeId,
+                  userId: dbUser?._id,
+                },
+              },
+              data: {
+                getAllCommentsForARecipe: {
+                  comments:
+                    commentData?.getAllCommentsForARecipe?.comments?.filter(
+                      (comment) =>
+                        comment._id !== removeComment?.comments?.[0]._id,
+                    ),
+                  recipe: {
+                    ...removeComment?.recipe,
+                  },
+                },
+                // getAllCommentsForARecipe:
+                //   commentData?.getAllCommentsForARecipe?.comments?.filter(
+                //     (comment) => comment._id !== removeComment.comments._id,
+                //   ),
+              },
+            });
+          },
         },
       });
 
-      const { averageRating, numberOfRating, _id } =
-        data?.removeComment?.recipe;
-      updateRecipeRating(_id, averageRating, numberOfRating);
+      // const { averageRating, numberOfRating, _id } =
+      //   data?.removeComment?.recipe;
+      // updateRecipeRating(_id, averageRating, numberOfRating);
 
       setUpdateComment(false);
       reactToastifyNotification("info", "Delete comment successfully");
@@ -129,9 +157,10 @@ const CommentSection = () => {
   };
 
   const createOrUpdateComment = async () => {
+    setShowCommentBox(false);
     try {
       if (!updateComment) {
-        const { data } = await createComment({
+        await createComment({
           variables: {
             data: {
               comment: comment,
@@ -140,15 +169,37 @@ const CommentSection = () => {
               userId: dbUser?._id,
             },
           },
+          update(cache, { data: { createComment } }) {
+            cache.writeQuery({
+              query: GET_ALL_COMMENTS_FOR_A_RECIPE,
+              variables: {
+                data: {
+                  recipeId: activeRecipeId,
+                  userId: dbUser?._id,
+                },
+              },
+              data: {
+                getAllCommentsForARecipe: {
+                  comments: [
+                    createComment?.comments,
+                    ...commentData.getAllCommentsForARecipe?.comments,
+                  ],
+                  recipe: {
+                    ...createComment?.recipe,
+                  },
+                },
+              },
+            });
+          },
         });
 
-        const { averageRating, numberOfRating, _id } =
-          data?.createComment?.recipe;
-        updateRecipeRating(_id, averageRating, numberOfRating);
+        // const { averageRating, numberOfRating, _id } =
+        //   data?.createComment?.recipe;
+        // updateRecipeRating(_id, averageRating, numberOfRating);
       } else {
-        const { data: editData } = await editComment({
+        await editComment({
           variables: {
-            editCommentData2: {
+            data: {
               editId: updateCommentId,
               recipeId: activeRecipeId,
               userId: dbUser?._id,
@@ -158,10 +209,30 @@ const CommentSection = () => {
               },
             },
           },
+          update(cache, { data: { editComment } }) {
+            cache.writeQuery({
+              query: GET_ALL_COMMENTS_FOR_A_RECIPE,
+              variables: {
+                data: {
+                  recipeId: activeRecipeId,
+                  userId: dbUser?._id,
+                },
+              },
+              data: {
+                getAllCommentsForARecipe:
+                  commentData?.getAllCommentsForARecipe?.comments?.map(
+                    (comment) =>
+                      comment._id === editComment.comments._id
+                        ? { ...comment, ...editComment }
+                        : comment,
+                  ),
+              },
+            });
+          },
         });
-        const { averageRating, numberOfRating, _id } =
-          editData?.editComment?.recipe;
-        updateRecipeRating(_id, averageRating, numberOfRating);
+        // const { averageRating, numberOfRating, _id } =
+        //   editData?.editComment?.recipe;
+        // updateRecipeRating(_id, averageRating, numberOfRating);
         setUpdateComment(false);
       }
 
@@ -169,7 +240,6 @@ const CommentSection = () => {
         "info",
         `Comment ${updateComment ? "update" : "create"} successfully`,
       );
-      toggleCommentBox();
     } catch (error) {
       reactToastifyNotification("error", error?.message);
     }
@@ -184,6 +254,7 @@ const CommentSection = () => {
   };
 
   const toggleCommentBox = () => {
+    setComment("");
     setShowCommentBox((pre) => !pre);
   };
 
