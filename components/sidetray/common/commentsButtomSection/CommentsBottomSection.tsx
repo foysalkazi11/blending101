@@ -1,19 +1,20 @@
 import React from "react";
-import s from "./WikiCommentsTray.module.scss";
+import s from "./CommentsBottomSection.module.scss";
 import { format } from "date-fns";
-import { WikiUserComment } from "../../../type/wikiCommentsType";
-import IconWarper from "../../../theme/iconWarper/IconWarper";
+import { WikiUserComment } from "../../../../type/wikiCommentsType";
+import IconWarper from "../../../../theme/iconWarper/IconWarper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/pro-light-svg-icons";
 import { faTrash } from "@fortawesome/pro-regular-svg-icons";
-import CircularRotatingLoader from "../../../theme/loader/circularRotatingLoader.component";
+import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
 
 interface Props {
   userComments?: WikiUserComment;
-  updateCommentValue?: (agr: string, id?: string) => void;
+  updateCommentValue?: (agr: string, id?: string, rating?: number) => void;
   removeComment?: (id: string) => void;
   isCurrentUser?: boolean;
   deleteCommentLoading?: boolean;
+  rating?: number;
 }
 
 const CommentsBottomSection = ({
@@ -22,6 +23,7 @@ const CommentsBottomSection = ({
   removeComment = () => {},
   isCurrentUser = false,
   deleteCommentLoading = false,
+  rating = 0,
 }: Props) => {
   return (
     <div className={s.bottomSection}>
@@ -44,7 +46,11 @@ const CommentsBottomSection = ({
               hover="none"
               defaultBg="gray"
               handleClick={() =>
-                updateCommentValue(userComments?.comment, userComments?._id)
+                updateCommentValue(
+                  userComments?.comment,
+                  userComments?._id,
+                  rating,
+                )
               }
               style={{ marginRight: "5px" }}
             >

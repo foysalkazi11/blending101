@@ -1,8 +1,8 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { FiEdit2 } from "react-icons/fi";
 import { MdDeleteOutline, MdPersonOutline } from "react-icons/md";
-import StarRating from "../../../theme/starRating/StarRating";
-import styles from "./WikiCommentsTray.module.scss";
+import StarRating from "../../../../theme/starRating/StarRating";
+import styles from "./CommentsTopSection.module.scss";
 
 interface Props {
   user?: any;
