@@ -39,6 +39,11 @@ export const PlannerSlice = createSlice({
   name: "Planner",
   initialState,
   reducers: {
+    setWeek: (state, action) => {
+      state.start = action.payload.start;
+      state.end = action.payload.start;
+    },
+
     gotoPreviousWeek: (state) => {
       state.start = subWeeks(state.start, 1);
       state.end = subWeeks(state.end, 1);
@@ -114,6 +119,7 @@ export const PlannerSlice = createSlice({
 });
 
 export const {
+  setWeek,
   setPlanners,
   addPlanner,
   deleteRecipeFromPlan,

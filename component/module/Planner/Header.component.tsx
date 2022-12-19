@@ -22,21 +22,7 @@ import styles from "./Header.module.scss";
 
 const PlanHeader = () => {
   const dispatch = useAppDispatch();
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
   const { start, end } = useAppSelector((state) => state.planner);
-
-  const { data } = useQuery(GET_PLANNER_BY_WEEK, {
-    variables: {
-      userId,
-      startDate: format(start, "yyyy-MM-dd"),
-      endDate: format(end, "yyyy-MM-dd"),
-    },
-    skip: userId === "",
-  });
-
-  useEffect(() => {
-    if (data?.getPlannerByDates) dispatch(setPlanners(data?.getPlannerByDates));
-  }, [data?.getPlannerByDates, dispatch]);
 
   const startMonth = MONTH[start.getMonth()];
   const endMonth = MONTH[end.getMonth()];

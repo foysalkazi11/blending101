@@ -83,7 +83,7 @@ export default function AContainer(props: AContainerProps) {
   } = props;
 
   return (
-    <div className={styles.containerA}>
+    <div className={styles.containerA} style={{ overflow: "hidden" }}>
       {showSidebar ? (
         <div className={styles.sidebarA}>
           <SidebarComponent />

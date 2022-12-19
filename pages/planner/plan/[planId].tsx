@@ -1,4 +1,4 @@
-import React, { forwardRef, useMemo, useState } from "react";
+import React, { forwardRef, useEffect, useMemo, useState } from "react";
 import {
   faBookmark,
   faCalendarWeek,
@@ -22,26 +22,59 @@ import { useRouter } from "next/router";
 import styles from "../../../styles/pages/planner.module.scss";
 import IconButton from "../../../component/atoms/Button/IconButton.component";
 import WeekPicker from "../../../component/molecules/DatePicker/Week.component";
-import { startOfWeek, endOfWeek } from "date-fns";
+import { startOfWeek, endOfWeek, format } from "date-fns";
 import { useQuery } from "@apollo/client";
-import { GET_PLAN } from "../../../graphql/Planner";
+import { GET_ALL_PLAN_COMMENTS, GET_PLAN } from "../../../graphql/Planner";
+import PlanForm, {
+  defaultPlan,
+} from "../../../component/module/Planner/PlanForm.component";
+import { useForm } from "react-hook-form";
+import PlannerQueue from "../../../component/module/Planner/Queue.component";
+import ShareModal from "../../../component/organisms/Share/Share.component";
+import CollectionDrawer from "../../../component/templates/Drawer/Collection/Collection.component";
+import CommentDrawer from "../../../component/templates/Drawer/Comment/Comment.component";
 
 const MyPlan = () => {
   const router = useRouter();
+  const methods = useForm({
+    defaultValues: useMemo(() => defaultPlan, []),
+  });
   const { data } = useQuery(GET_PLAN, {
     variables: { planId: router.query.planId },
     skip: router.query.planId === "",
   });
+  const { data: comments } = useQuery(GET_ALL_PLAN_COMMENTS, {
+    variables: { id: router.query.planId },
+    skip: router.query.planId === "",
+  });
 
-  const [showGroceryTray] = useState(true);
+  const [link, setLink] = useState("");
+  const [showShare, setShowShare] = useState(false);
+  const [showComments, setShowComments] = useState(true);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [planlist, setPlanlist] = useState([]);
   const [week, setWeek] = useState({
     start: startOfWeek(new Date()),
     end: endOfWeek(new Date()),
   });
 
-  const weekChangeHandler = (start, end) => {};
+  const weekChangeHandler = (start, end) => {
+    router.push(
+      `/planner/plan/?plan=${router.query.planId}&start=${format(
+        new Date(start),
+        "yyyy-MM-dd",
+      )}&end=${format(new Date(end), "yyyy-MM-dd")}`,
+    );
+  };
 
-  const plan = data?.getAPlan;
+  const plan = data?.getAPlan?.plan;
+
+  useEffect(() => {
+    if (data?.getAPlan) {
+      setPlanlist(data?.getAPlan?.plan?.planData || []);
+    }
+  }, [data?.getAPlan]);
+
   const allPlannedRecipes = useMemo(
     () =>
       plan?.planData
@@ -53,16 +86,65 @@ const MyPlan = () => {
     [plan],
   );
 
+  const modifyPlan = (day, recipe) => {
+    if (!day) return;
+    setPlanlist((list) =>
+      list.map((plan, idx) => {
+        if (+day === idx + 1) {
+          const isDuplicateRecipe = plan.recipes.some(
+            (item) => item?._id === recipe?._id,
+          );
+          if (isDuplicateRecipe) return plan;
+          else {
+            return {
+              ...plan,
+              recipes: [...plan.recipes, recipe],
+            };
+          }
+        } else {
+          return plan;
+        }
+      }),
+    );
+  };
+
+  const editHandler = (data) => {
+    if (!isEditMode) return setIsEditMode(true);
+    const plan = {
+      ...data,
+      planData: planlist.map((plan) => ({
+        day: plan.day,
+        recipes: plan.recipes.map((recipe) => recipe._id),
+      })),
+    };
+    setIsEditMode(false);
+  };
+
   return (
     <AContainer
       headerTitle="MEAL PLAN"
-      showGroceryTray={{
-        show: showGroceryTray,
+      showCommentsTray={{
+        show: true,
         showPanle: "right",
-        showTagByDeafult: showGroceryTray,
+        showTagByDeafult: false,
       }}
     >
+      <CommentDrawer
+        id={plan?._id}
+        title={plan?.planName}
+        comments={comments?.getAllCommentsForAPlan}
+        show={showComments}
+        onClose={() => setShowComments(false)}
+      />
+      <CollectionDrawer />
       <RXPanel />
+      <ShareModal
+        name={plan?.planName}
+        show={showShare}
+        setShow={setShowShare}
+        link={link}
+        onShare={() => {}}
+      />
       <div className={styles.windowContainer}>
         <div className={styles.planner}>
           <div className="row ai-center">
@@ -83,7 +165,11 @@ const MyPlan = () => {
           </div>
           <div className="row">
             <div className="col-3">
-              <PlanDiscovery isUpload={false} recipes={allPlannedRecipes} />
+              {isEditMode ? (
+                <PlannerQueue panel="plan" modifyPlan={modifyPlan} />
+              ) : (
+                <PlanDiscovery isUpload={false} recipes={allPlannedRecipes} />
+              )}
             </div>
             <div className="col-6" style={{ padding: "0 1.5rem" }}>
               <div className={styles.headingDiv}>
@@ -91,8 +177,9 @@ const MyPlan = () => {
                 <div className="flex ai-center">
                   <div
                     className={`${styles.uploadDiv} ${styles.uploadDiv__save}`}
+                    onClick={methods.handleSubmit(editHandler)}
                   >
-                    <span>Edit</span>
+                    <span>{isEditMode ? "Save" : "Edit"}</span>
                   </div>
                   <IconButton
                     fontName={faTimes}
@@ -103,60 +190,66 @@ const MyPlan = () => {
                   />
                 </div>
               </div>
-              <div className={styles.preview}>
-                <h3 className={styles.preview__title}>{plan?.planName}</h3>
-                <div className={styles.preview__actions}>
-                  <span>
-                    <img
-                      src="/logo_small.svg"
-                      alt=""
-                      height={30}
-                      className="mr-10"
-                    />
-                    Blending 101
-                  </span>
-                  <div>
-                    <WeekPicker
-                      element={<DatePickerButton />}
-                      week={week}
-                      onWeekChange={weekChangeHandler}
-                    />
+              {isEditMode ? (
+                <PlanForm methods={methods} />
+              ) : (
+                <div className={styles.preview}>
+                  <h3 className={styles.preview__title}>{plan?.planName}</h3>
+                  <div className={styles.preview__actions}>
                     <span>
-                      <Icon
-                        fontName={faBookmark}
-                        size="2rem"
+                      <img
+                        src="/logo_small.svg"
+                        alt=""
+                        height={30}
                         className="mr-10"
                       />
-                      Bookmark
+                      Blending 101
                     </span>
-                    <span>
-                      <Icon
-                        fontName={faShareNodes}
-                        size="2rem"
-                        className="mr-10"
+                    <div>
+                      <WeekPicker
+                        element={<DatePickerButton />}
+                        week={week}
+                        onWeekChange={weekChangeHandler}
                       />
-                      Share
-                    </span>
-                    <span>
-                      <Icon
-                        fontName={faMessageDots}
-                        size="2rem"
-                        className="mr-10"
-                      />
-                      21
-                    </span>
+                      <span>
+                        <Icon
+                          fontName={faBookmark}
+                          size="2rem"
+                          className="mr-10"
+                        />
+                        Bookmark
+                      </span>
+                      <span onClick={() => setShowShare(true)}>
+                        <Icon
+                          fontName={faShareNodes}
+                          size="2rem"
+                          className="mr-10"
+                        />
+                        Share
+                      </span>
+                      <span onClick={() => setShowComments((prev) => !prev)}>
+                        <Icon
+                          fontName={faMessageDots}
+                          size="2rem"
+                          className="mr-10"
+                        />
+                        {comments?.getAllCommentsForAPlan?.length || 0}
+                      </span>
+                    </div>
                   </div>
+                  <hr />
+                  <p>{plan?.description}</p>
                 </div>
-                <hr />
-                <p>{plan?.description}</p>
-              </div>
-
+              )}
               <div className={`${styles.plan} ${styles["plan--details"]}`}>
-                <PlanList showStatic data={plan?.planData} />
+                <PlanList data={planlist} />
               </div>
             </div>
             <div className="col-3">
-              <Insights />
+              <Insights
+                categories={data?.getAPlan?.recipeCategoriesPercentage}
+                ingredients={data?.getAPlan?.topIngredients}
+              />
             </div>
           </div>
         </div>
@@ -174,35 +267,3 @@ const DatePickerButton = forwardRef(({ value, onClick }: any, ref: any) => (
 DatePickerButton.displayName = "DatePickerButton";
 
 export default MyPlan;
-
-const PLAN = [
-  {
-    _id: "63844207dbe9a59fae359025",
-    recipes: [
-      {
-        _id: "6373356aec53f6deda27a522",
-        name: "Jhoy",
-        recipeBlendCategory: {
-          name: "WholeFood",
-          __typename: "RecipeCategory",
-        },
-        ingredients: [
-          {
-            ingredientId: {
-              _id: "620b6bce40d3f19b558f0bc1",
-              __typename: "BlendIngredientData",
-            },
-            selectedPortion: {
-              gram: 28,
-              __typename: "SelectedPortion",
-            },
-            __typename: "IngredientData",
-          },
-        ],
-        __typename: "Recipe",
-      },
-    ],
-    formatedDate: "2022-11-30",
-    __typename: "PlannerWithRecipes",
-  },
-];

@@ -44,7 +44,6 @@ interface PlanProps {
 
 const DayPlan = (props: PlanProps) => {
   const { plannerId, day, date, indexValue, recipeList } = props;
-
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
@@ -54,7 +53,7 @@ const DayPlan = (props: PlanProps) => {
   });
   const [deleteRecipes, deleteState] = useMutation(DELETE_RECIPE_FROM_PLANNER);
 
-  if (!day && !date) return null;
+  // if (!day && !date) return null;
 
   const deleteHandler = async (id) => {
     await Publish({
@@ -152,6 +151,7 @@ const PlanItem = ({
   onMove,
   onDelete,
 }: RecipeColorIndicatorInterface) => {
+  // console.log(recipe);
   let {
     _id,
     name: recipeName,
