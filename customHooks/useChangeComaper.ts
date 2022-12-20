@@ -37,6 +37,10 @@ const useChangeCompare = () => {
           recipeId: id,
         },
       });
+      notification(
+        "success",
+        ` ${!alredyCompared ? "Removed from" : "Added to"} compare list`,
+      );
 
       if (!alredyCompared) {
         dispatch(setCompareList(filterRecipe(compareList, id)));

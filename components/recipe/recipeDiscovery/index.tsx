@@ -2,7 +2,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import AContainer from "../../../containers/A.container";
 import styles from "./recipeDiscovery.module.scss";
-import DiscoverPageSearch from "./discoverPageSearch/DiscoverPageSearch.Component";
 import SearchTagsComponent from "../../searchtags/searchtags.component";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
