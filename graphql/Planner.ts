@@ -188,6 +188,12 @@ export const MOVE_PLANNER = gql`
   }
 `;
 
+export const SHARE_PLAN = gql`
+  mutation SharePlan($userId: String!, $planId: String!) {
+    sharePlan(memberId: $userId, planId: $planId)
+  }
+`;
+
 export const DELETE_RECIPE_FROM_PLANNER = gql`
   mutation DeleteRecipeFromPlanner($plannerId: String!, $recipeId: String!) {
     deletePlanner(plannerId: $plannerId, recipeId: $recipeId)
@@ -231,6 +237,7 @@ export const GET_FEATURED_PLANS = gql`
     }
   }
 `;
+
 export const GET_ALL_PLANS = gql`
   query GetAllPlan($limit: Float!, $page: Float!) {
     getAllGlobalPlans(limit: $limit, page: $page) {
@@ -251,6 +258,7 @@ export const GET_PLAN = gql`
         _id
         planName
         description
+        memberId
         planData {
           id: _id
           day
@@ -349,5 +357,23 @@ export const EDIT_PLAN_COMMENT = gql`
 export const REMOVE_PLAN_COMMENT = gql`
   mutation RemovePlanComment($memberId: String!, $commentId: String!) {
     removeAPlanComment(memberId: $memberId, commentId: $commentId)
+  }
+`;
+
+export const ADD_TO_MY_PLAN = gql`
+  mutation AddToMyPlan(
+    $type: mergerOrRemove!
+    $planId: String!
+    $memberId: String!
+    $startDate: String!
+    $endDate: String!
+  ) {
+    mergeOrReplacePlanner(
+      mergeOrReplace: $type
+      planId: $planId
+      memberId: $memberId
+      startDate: $startDate
+      endDate: $endDate
+    )
   }
 `;

@@ -14,10 +14,6 @@ import {
   Pie,
   Cell,
 } from "recharts";
-import { faLightbulbOn } from "@fortawesome/pro-light-svg-icons";
-import HSBar from "react-horizontal-stacked-bar-chart";
-
-import IconHeading from "../../../theme/iconHeading/iconHeading.component";
 
 import styles from "./Overview.module.scss";
 import { useQuery } from "@apollo/client";
@@ -27,13 +23,12 @@ import { GET_RECENT_CHALLENGES } from "../../../graphql/Challenge";
 import { format, isAfter, isToday, subDays } from "date-fns";
 import { getBackgroundColor } from "../Challenge/Achievement/_Dialer.component";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setChallengeDate } from "../../../redux/slices/Challenge.slice";
 
 const Overview = () => {
   return (
     <div className={styles.insights}>
       <div className={styles.insights__body}>
-        <BlendType />
+        <BlendTrend />
         <RxScore />
         <TopIngredients />
         <MacroMakeup />
@@ -47,98 +42,100 @@ export default Overview;
 const RxScore = () => {
   const [type, setType] = useState<"Weekly" | "Monthly">("Weekly");
   return (
-    <div className={styles.insights__graph}>
-      <h3 className="mb-20">RX Score</h3>
-      <div className={styles.stacked__outline}>
-        <span>0</span>
-        <div className={styles.stacked}>
-          <div id="variety" />
-          <div id="quality" />
-          <div id="quantity">
-            <span className={styles.stacked__total}>
-              90
-              <i>&nbsp;</i>
-            </span>
+    <div className="mb-50">
+      <div className={styles.insights__graph}>
+        <h3 className="mb-20">RX Score</h3>
+        <div className={styles.stacked__outline}>
+          <span>0</span>
+          <div className={styles.stacked}>
+            <div id="variety" />
+            <div id="quality" />
+            <div id="quantity">
+              <span className={styles.stacked__total}>
+                90
+                <i>&nbsp;</i>
+              </span>
+            </div>
           </div>
+          <span>100</span>
         </div>
-        <span>100</span>
-      </div>
-      <div className={styles.insights__score}>
-        <span>
-          Variety <i style={{ background: "#b9eb84" }}>20</i>
-        </span>
-        <span>
-          Quality <i style={{ background: "#66A7FF", color: "#fff" }}>30</i>
-        </span>
-        <span>
-          Quantity <i style={{ background: "#FF8252", color: "#fff" }}>10</i>
-        </span>
-      </div>
-      <ResponsiveContainer width="100%" height={170}>
-        {type === "Weekly" ? (
-          <BarChart
-            data={rxScore}
-            barGap={7}
-            barSize={30}
-            margin={{
-              left: -20,
-            }}
+        <div className={styles.insights__score}>
+          <span>
+            Variety <i style={{ background: "#b9eb84" }}>20</i>
+          </span>
+          <span>
+            Quality <i style={{ background: "#66A7FF", color: "#fff" }}>30</i>
+          </span>
+          <span>
+            Quantity <i style={{ background: "#FF8252", color: "#fff" }}>10</i>
+          </span>
+        </div>
+        <ResponsiveContainer width="100%" height={170}>
+          {type === "Weekly" ? (
+            <BarChart
+              data={rxScore}
+              barGap={7}
+              barSize={30}
+              margin={{
+                left: -20,
+              }}
+            >
+              <XAxis dataKey="name" tickLine={false} />
+              <YAxis tickLine={false} />
+              <Tooltip />
+              <Bar dataKey="variety" stackId="a" fill="#FF8252" />
+              <Bar dataKey="quality" stackId="a" fill="#66A7FF" />
+              <Bar dataKey="quantity" stackId="a" fill="#B9EB84" />
+            </BarChart>
+          ) : (
+            <AreaChart
+              width={500}
+              height={400}
+              data={rxScore}
+              margin={{
+                left: -20,
+              }}
+            >
+              <YAxis />
+              <Tooltip />
+              <Area
+                type="monotone"
+                dataKey="variety"
+                stackId="1"
+                stroke="#FF8252"
+                fill="#FF8252"
+              />
+              <Area
+                type="monotone"
+                dataKey="quality"
+                stackId="1"
+                stroke="#66A7FF"
+                fill="#66A7FF"
+              />
+              <Area
+                type="monotone"
+                dataKey="quantity"
+                stackId="1"
+                stroke="#B9EB84"
+                fill="#B9EB84"
+              />
+            </AreaChart>
+          )}
+        </ResponsiveContainer>
+        <div className={styles.insights__timeframes}>
+          <button
+            style={type === "Weekly" ? { backgroundColor: "#B9EB84" } : {}}
+            onClick={() => setType("Weekly")}
           >
-            <XAxis dataKey="name" tickLine={false} />
-            <YAxis tickLine={false} />
-            <Tooltip />
-            <Bar dataKey="pv" stackId="a" fill="#FF8252" />
-            <Bar dataKey="uv" stackId="a" fill="#66A7FF" />
-            <Bar dataKey="amt" stackId="a" fill="#B9EB84" />
-          </BarChart>
-        ) : (
-          <AreaChart
-            width={500}
-            height={400}
-            data={rxScore}
-            margin={{
-              left: -20,
-            }}
+            Weekly
+          </button>
+          <button
+            style={type === "Monthly" ? { backgroundColor: "#B9EB84" } : {}}
+            onClick={() => setType("Monthly")}
           >
-            <YAxis />
-            <Tooltip />
-            <Area
-              type="monotone"
-              dataKey="uv"
-              stackId="1"
-              stroke="#FF8252"
-              fill="#FF8252"
-            />
-            <Area
-              type="monotone"
-              dataKey="pv"
-              stackId="1"
-              stroke="#66A7FF"
-              fill="#66A7FF"
-            />
-            <Area
-              type="monotone"
-              dataKey="amt"
-              stackId="1"
-              stroke="#B9EB84"
-              fill="#B9EB84"
-            />
-          </AreaChart>
-        )}
-      </ResponsiveContainer>
-      <div className={styles.insights__timeframes}>
-        <button
-          style={type === "Weekly" ? { backgroundColor: "#B9EB84" } : {}}
-          onClick={() => setType("Weekly")}
-        >
-          Weekly
-        </button>
-        <button
-          style={type === "Monthly" ? { backgroundColor: "#B9EB84" } : {}}
-          onClick={() => setType("Monthly")}
-        >
-          Monthly
-        </button>
+            Monthly
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -147,45 +144,45 @@ const RxScore = () => {
 const rxScore = [
   {
     name: "S",
-    uv: 60,
-    pv: 34,
-    amt: 23,
+    variety: 60,
+    quality: 34,
+    quantity: 23,
   },
   {
     name: "M",
-    uv: 15,
-    pv: 35,
-    amt: 26,
+    variety: 15,
+    quality: 35,
+    quantity: 26,
   },
   {
     name: "T",
-    uv: 52,
-    pv: 72,
-    amt: 12,
+    variety: 52,
+    quality: 72,
+    quantity: 12,
   },
   {
     name: "W",
-    uv: 123,
-    pv: 74,
-    amt: 93,
+    variety: 123,
+    quality: 74,
+    quantity: 93,
   },
   {
     name: "T",
-    uv: 82,
-    pv: 107,
-    amt: 34,
+    variety: 82,
+    quality: 107,
+    quantity: 34,
   },
   {
     name: "F",
-    uv: 96,
-    pv: 61,
-    amt: 123,
+    variety: 96,
+    quality: 61,
+    quantity: 123,
   },
   {
     name: "S",
-    uv: 115,
-    pv: 24,
-    amt: 23,
+    variety: 115,
+    quality: 24,
+    quantity: 23,
   },
 ];
 
@@ -243,7 +240,7 @@ function DateButton({ date, isActive, categories, disabled }: any) {
   }
 }
 
-const BlendType = () => {
+const BlendTrend = () => {
   const date = new Date();
   const today = format(date, "yyyy-MM-dd");
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
@@ -256,27 +253,29 @@ const BlendType = () => {
   });
 
   return (
-    <div className={styles.insights__graph}>
-      <h3>Blending Trend</h3>
-      <div className={styles.wheel}>
-        {data?.getLastSevenDaysChallenge?.challenge?.map((activity, key) => {
-          const categories = activity?.posts.map(
-            (post) => post?.recipeBlendCategory?.name || "",
-          );
-          return (
-            <DateButton
-              key={activity?._id}
-              date={activity?.date}
-              categories={categories}
-              disabled={activity?.disabled}
-              isActive={
-                today !== ""
-                  ? activity?.date === today
-                  : isToday(new Date(activity?.date))
-              }
-            />
-          );
-        })}
+    <div className="mb-50">
+      <div className={styles.insights__graph}>
+        <h3>Blending Trend</h3>
+        <div className={styles.wheel}>
+          {data?.getLastSevenDaysChallenge?.challenge?.map((activity, key) => {
+            const categories = activity?.posts.map(
+              (post) => post?.recipeBlendCategory?.name || "",
+            );
+            return (
+              <DateButton
+                key={activity?._id}
+                date={activity?.date}
+                categories={categories}
+                disabled={activity?.disabled}
+                isActive={
+                  today !== ""
+                    ? activity?.date === today
+                    : isToday(new Date(activity?.date))
+                }
+              />
+            );
+          })}
+        </div>
       </div>
     </div>
   );
@@ -290,34 +289,36 @@ const renderCustomizedLabel = (props) => {
 
 const TopIngredients = () => {
   return (
-    <div className={styles.insights__graph}>
-      <h3>Top Ingredients</h3>
-      <h5>Servings</h5>
-      <ResponsiveContainer width="100%" height={170}>
-        <BarChart layout="vertical" data={ingredients}>
-          <XAxis hide type="number" />
-          <YAxis
-            tickLine={false}
-            padding={{ top: 20 }}
-            axisLine={false}
-            type="category"
-            dataKey="name"
-          />
-          <Bar dataKey="quantity" fill="#FFA482" layout="vertical">
-            <LabelList
-              dataKey="icon"
-              position="left"
-              content={renderCustomizedLabel}
+    <div className="mb-50">
+      <div className={styles.insights__graph}>
+        <h3>Top Ingredients</h3>
+        <h5>Servings</h5>
+        <ResponsiveContainer width="100%" height={170}>
+          <BarChart layout="vertical" data={ingredients}>
+            <XAxis hide type="number" />
+            <YAxis
+              tickLine={false}
+              padding={{ top: 20 }}
+              axisLine={false}
+              type="category"
+              dataKey="name"
             />
-            <LabelList
-              dataKey="quantity"
-              position="insideLeft"
-              formatter={(value) => `${value} | `}
-            />
-            <LabelList dataKey="label" position="insideLeft" offset={35} />
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+            <Bar dataKey="quantity" fill="#FFA482" layout="vertical">
+              <LabelList
+                dataKey="icon"
+                position="left"
+                content={renderCustomizedLabel}
+              />
+              <LabelList
+                dataKey="quantity"
+                position="insideLeft"
+                formatter={(value) => `${value} | `}
+              />
+              <LabelList dataKey="label" position="insideLeft" offset={35} />
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 };

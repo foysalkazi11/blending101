@@ -1,10 +1,13 @@
 import React from "react";
-import { FiEdit2 } from "react-icons/fi";
-import { MdDeleteOutline } from "react-icons/md";
 import styles from "../NoteSection.module.scss";
-import { format, parseISO } from "date-fns";
+import { format } from "date-fns";
 import SkeletonNote from "../../../../../theme/skeletons/skeletonNote/SkeletonNote";
 import Tooltip from "../../../../../theme/toolTip/CustomToolTip";
+import IconWarper from "../../../../../theme/iconWarper/IconWarper";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPen } from "@fortawesome/pro-light-svg-icons";
+import CircularRotatingLoader from "../../../../../theme/loader/circularRotatingLoader.component";
+import { faTrash } from "@fortawesome/pro-regular-svg-icons";
 
 interface NoteBodyPops {
   data?: any[];
@@ -18,6 +21,7 @@ interface NoteBodyPops {
     versionId: string,
     isDefault: boolean,
   ) => void;
+  deleteItemLoading?: boolean;
 }
 const NoteBody = ({
   data = [],
@@ -28,6 +32,7 @@ const NoteBody = ({
   isFromRecipePage = "default",
   handleToGetARecipeVersion = () => {},
   handleToChangeDefaultVersion = () => {},
+  deleteItemLoading = false,
 }: NoteBodyPops) => {
   return (
     <div className={`${styles.noteEditBox} y-scroll`}>
@@ -52,17 +57,30 @@ const NoteBody = ({
                 {isFromRecipePage === "default" ||
                 isFromRecipePage === "edit" ? (
                   <div className={styles.rightSide}>
-                    <div
-                      className={styles.editIconBox}
-                      onClick={() => updateItem(item)}
-                    >
-                      <FiEdit2 className={styles.icon} />
-                    </div>
-                    <div
-                      className={styles.editIconBox}
-                      onClick={() => deleteItem(item?._id)}
-                    >
-                      <MdDeleteOutline className={styles.icon} />
+                    <div className={styles.content}>
+                      <IconWarper
+                        hover="none"
+                        defaultBg="gray"
+                        handleClick={() => updateItem(item)}
+                        style={{ marginRight: "5px" }}
+                      >
+                        <FontAwesomeIcon icon={faPen} fontSize={12} />
+                      </IconWarper>
+
+                      <IconWarper
+                        hover="none"
+                        defaultBg="gray"
+                        handleClick={() => deleteItem(item?._id)}
+                      >
+                        {deleteItemLoading ? (
+                          <CircularRotatingLoader
+                            color="white"
+                            style={{ fontSize: "16px" }}
+                          />
+                        ) : (
+                          <FontAwesomeIcon icon={faTrash} fontSize={12} />
+                        )}
+                      </IconWarper>
                     </div>
                   </div>
                 ) : null}
@@ -75,11 +93,12 @@ const NoteBody = ({
                   <span>
                     {item?.updatedAt ? (
                       <>
-                        {format(parseISO(item?.updatedAt), "dd/mm/yyyy")}{" "}
+                        {format(new Date(item?.updatedAt), "dd/MM/yyyy")}{" "}
                         (edited)
                       </>
                     ) : (
-                      format(parseISO(item?.createdAt), "dd/mm/yyyy")
+                      item?.createdAt &&
+                      format(new Date(item?.createdAt), "dd/MM/yyyy")
                     )}
                   </span>
                   {isFromRecipePage === "edit" ||

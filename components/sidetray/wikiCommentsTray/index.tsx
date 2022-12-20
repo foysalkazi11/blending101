@@ -18,10 +18,12 @@ import {
 } from "../../../type/wikiCommentsType";
 import notification from "../../utility/reactToastifyNotification";
 import CommentBox from "../commentsTray/commentBox/CommentBox";
+import IconForAddComment from "../common/iconForAddComment/IconForAddComment";
+import ItemHeading from "../common/itemHeading/ItemHeading";
 import TrayTag from "../TrayTag";
 import TrayWrapper from "../TrayWrapper";
-import CommentsBottomSection from "./CommentsBottomSection";
-import CommentsTopSection from "./CommentsTopSection";
+import CommentsBottomSection from "../common/commentsButtomSection/CommentsBottomSection";
+import CommentsTopSection from "../common/commentsTopSection/CommentsTopSection";
 import s from "./WikiCommentsTray.module.scss";
 
 interface Props {
@@ -215,26 +217,12 @@ const WikiCommentsTray = ({
         toggleMenuList={["Wiki Comments"]}
         variant="outlineSecondary"
       />
-      <section className={s.wikiCommentsContainer}>
-        <header className={s.wikiItemName}>
-          <img src={wikiCommentsTrayCurrentWikiEntity?.image} alt="img" />
-          <h3>{wikiCommentsTrayCurrentWikiEntity?.title}</h3>
-        </header>
-      </section>
+      <ItemHeading
+        image={wikiCommentsTrayCurrentWikiEntity?.image}
+        title={wikiCommentsTrayCurrentWikiEntity?.title}
+      />
       {!showCommentBox && (
-        <div className={s.addCommentsIcon}>
-          <Tooltip direction="left" content="Add Comments">
-            <IconWarper
-              iconColor="iconColorWhite"
-              defaultBg="secondary"
-              hover="bgSecondary"
-              style={{ width: "28px", height: "28px" }}
-              handleClick={toggleCommentBox}
-            >
-              <FontAwesomeIcon icon={faPlus} />
-            </IconWarper>
-          </Tooltip>
-        </div>
+        <IconForAddComment handleIconClick={toggleCommentBox} />
       )}
 
       {editWikiCommentLoading ||

@@ -1,19 +1,7 @@
-.recipeName {
+.menu {
   display: flex;
   align-items: center;
-  padding: 20px 0px;
-  border-bottom: 1px solid #ececec;
-  img {
-    width: 45px;
-    height: 45px;
-    border-radius: 8px;
-    overflow: hidden;
-    object-fit: cover;
-  }
-  h3 {
-    font-size: 16px;
-    font-weight: 600;
-    color: #000;
-    margin-left: 16px;
+  .icon {
+    margin-right: 5px;
   }
 }

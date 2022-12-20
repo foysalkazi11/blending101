@@ -16,10 +16,12 @@ import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
 import Tooltip from "../../../theme/toolTip/CustomToolTip";
 import notification from "../../utility/reactToastifyNotification";
 import CommentBox from "../commentsTray/commentBox/CommentBox";
+import IconForAddComment from "../common/iconForAddComment/IconForAddComment";
+import ItemHeading from "../common/itemHeading/ItemHeading";
 import TrayTag from "../TrayTag";
 import TrayWrapper from "../TrayWrapper";
-import CommentsBottomSection from "../wikiCommentsTray/CommentsBottomSection";
-import CommentsTopSection from "../wikiCommentsTray/CommentsTopSection";
+import CommentsBottomSection from "../common/commentsButtomSection/CommentsBottomSection";
+import CommentsTopSection from "../common/commentsTopSection/CommentsTopSection";
 import styles from "./BlogCommentsTray.module.scss";
 
 interface Props {
@@ -187,40 +189,17 @@ const BlogCommentsTray = ({
         toggleMenuList={["Blog Comments"]}
         variant="outlineSecondary"
       />
-      <section className={styles.blogCommentsContainer}>
-        <header className={styles.blogItemName}>
-          <div className={styles.imgBox}>
-            <Image
-              src={currentBlogForShowComments?.image}
-              alt="img"
-              width={45}
-              height={45}
-              objectFit="cover"
-            />
-          </div>
-
-          {/* <img src={currentBlogForShowComments?.image} alt="img" /> */}
-          <h3>{currentBlogForShowComments?.title}</h3>
-        </header>
-      </section>
+      <ItemHeading
+        image={currentBlogForShowComments?.image}
+        title={currentBlogForShowComments?.title}
+      />
       {!showCommentBox && (
-        <div className={styles.addCommentsIcon}>
-          <Tooltip direction="left" content="Add Comments">
-            <IconWarper
-              iconColor="iconColorWhite"
-              defaultBg="secondary"
-              hover="bgSecondary"
-              style={{ width: "28px", height: "28px" }}
-              handleClick={toggleCommentBox}
-            >
-              <FontAwesomeIcon icon={faPlus} />
-            </IconWarper>
-          </Tooltip>
-        </div>
+        <IconForAddComment handleIconClick={toggleCommentBox} />
       )}
 
-      {editBlogCommentLoading ||
-        (createBlogCommentLoading && <SkeletonComment singleComment={true} />)}
+      {(editBlogCommentLoading || createBlogCommentLoading) && (
+        <SkeletonComment singleComment={true} />
+      )}
 
       {showCommentBox && (
         <CommentBox

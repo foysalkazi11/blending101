@@ -85,15 +85,16 @@
     margin-right: 1%;
   }
   &__category {
-    width: 54%;
+    width: 55.5%;
     img {
       margin-bottom: 5px !important;
     }
     span {
       height: 4px;
+      width: 6rem;
       border-radius: 45px;
-      width: 100%;
       display: block;
+      margin: auto;
       margin-bottom: 5px;
     }
   }

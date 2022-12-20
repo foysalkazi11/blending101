@@ -6,7 +6,8 @@ import MenubarComponent from "../../../../theme/menuBar/menuBar.component";
 import Link from "next/link";
 
 const ContentTray = (props) => {
-  const { id, hasFilter, filters, customHTML, tabState, allUrl } = props;
+  const { id, hasFilter, filters, customHTML, tabState, allUrl, settings } =
+    props;
   const responsiveSetting = {
     infinite: false,
     speed: 500,
@@ -37,6 +38,7 @@ const ContentTray = (props) => {
         },
       },
     ],
+    ...settings,
   };
 
   return (

@@ -300,14 +300,14 @@ const CreateNewRecipe = ({
                 }
                 alt="addIcon"
               />
-              {newRecipe?.image?.length && !disableImageUpload && (
+              {newRecipe?.image?.length && !disableImageUpload ? (
                 <IoCloseCircle
                   className={styles.cancleIcon}
                   onClick={() =>
                     setNewRecipe((state) => ({ ...state, image: [] }))
                   }
                 />
-              )}
+              ) : null}
             </div>
 
             <div className={styles.dropDown}>
