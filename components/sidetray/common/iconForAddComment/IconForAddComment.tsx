@@ -7,12 +7,16 @@ import styles from "./IconForAddComment.module.scss";
 
 interface Props {
   handleIconClick: () => void;
+  tooltipText?: string;
 }
 
-const IconForAddComment = ({ handleIconClick }: Props) => {
+const IconForAddComment = ({
+  handleIconClick,
+  tooltipText = "Add Comments",
+}: Props) => {
   return (
     <div className={styles.addCommentsIcon}>
-      <Tooltip direction="left" content="Add Comments">
+      <Tooltip direction="left" content={tooltipText}>
         <IconWarper
           iconColor="iconColorWhite"
           defaultBg="secondary"

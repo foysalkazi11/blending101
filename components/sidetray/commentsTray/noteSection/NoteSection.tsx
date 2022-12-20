@@ -10,6 +10,8 @@ import SkeletonNote from "../../../../theme/skeletons/skeletonNote/SkeletonNote"
 import NoteBody from "./noteBody/NoteBody";
 import NoteHead from "./noteHead/NoteHead";
 import GET_ALL_NOTES_FOR_A_RECIPE from "../../../../gqlLib/notes/quries/getAllNotesForARecipe";
+import IconForAddComment from "../../common/iconForAddComment/IconForAddComment";
+import NoteForm from "./noteForm/NoteForm";
 type NoteSectionProps = {
   allNotes: any[];
   setAllNotes: Dispatch<SetStateAction<any[]>>;
@@ -20,19 +22,21 @@ const NoteSection = () => {
   const [updateNote, setUpdateNote] = useState(false);
   const [updateNoteId, setUpdateNoteId] = useState("");
   const [noteForm, setNoteForm] = useState({ title: "", body: "" });
-  const [createNote] = useMutation(CREATE_NEW_NOTE);
-  const [editNote] = useMutation(EDIT_MY_NOTE);
-  const [deleteNote] = useMutation(DELETE_MY_NOTE);
+  const [createNote, { loading: createNoteLoading }] =
+    useMutation(CREATE_NEW_NOTE);
+  const [editNote, { loading: editNoteLoading }] = useMutation(EDIT_MY_NOTE);
+  const [deleteNote, { loading: deleteNoteLoading }] =
+    useMutation(DELETE_MY_NOTE);
   const { dbUser } = useAppSelector((state) => state?.user);
   const { activeRecipeId } = useAppSelector((state) => state?.collections);
   const { openCommentsTray } = useAppSelector((state) => state?.sideTray);
-  const [loading, setLoading] = useState(false);
 
   const [getAllNotesForARecipe, { data: noteData, loading: noteLoading }] =
     useLazyQuery(GET_ALL_NOTES_FOR_A_RECIPE, {
       fetchPolicy: "cache-and-network",
     });
 
+  // fetch all notes for a recipe
   const fetchNotes = async () => {
     try {
       getAllNotesForARecipe({
@@ -50,20 +54,24 @@ const NoteSection = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openCommentsTray, activeRecipeId]);
 
+  // update note form
   const updateNoteForm = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e?.target;
     setNoteForm((pre) => ({ ...pre, [name]: value }));
   };
+
+  // toggle note form
   const toggleNoteForm = () => {
     setShowNoteForm((pre) => !pre);
+    setNoteForm((pre) => ({ ...pre, title: "", body: "" }));
   };
 
+  // remove a note
   const removeNote = async (id: string) => {
-    setLoading(true);
     try {
-      const { data } = await deleteNote({
+      await deleteNote({
         variables: {
           data: {
             recipeId: activeRecipeId,
@@ -71,22 +79,31 @@ const NoteSection = () => {
             noteId: id,
           },
         },
+        update(cache, { data: { removeMyNote } }) {
+          cache.writeQuery({
+            query: GET_ALL_NOTES_FOR_A_RECIPE,
+            variables: {
+              data: { recipeId: activeRecipeId, userId: dbUser?._id },
+            },
+            data: {
+              getMyNotesForARecipe: [...removeMyNote],
+            },
+          });
+        },
       });
 
-      setLoading(false);
       reactToastifyNotification("info", "Delete successfully");
     } catch (error) {
-      setLoading(false);
       reactToastifyNotification("error", error?.message);
     }
   };
 
+  // create or update note value
   const createOrUpdateNote = async () => {
-    toggleNoteForm();
-    setLoading(true);
+    setShowNoteForm(false);
     try {
       if (updateNote) {
-        const { data } = await editNote({
+        await editNote({
           variables: {
             editMyNoteData2: {
               editableObject: { body: noteForm?.body, title: noteForm?.title },
@@ -95,9 +112,20 @@ const NoteSection = () => {
               recipeId: activeRecipeId,
             },
           },
+          update(cache, { data: { editMyNote } }) {
+            cache.writeQuery({
+              query: GET_ALL_NOTES_FOR_A_RECIPE,
+              variables: {
+                data: { recipeId: activeRecipeId, userId: dbUser?._id },
+              },
+              data: {
+                getMyNotesForARecipe: [...editMyNote],
+              },
+            });
+          },
         });
       } else {
-        const { data } = await createNote({
+        await createNote({
           variables: {
             data: {
               body: noteForm?.body,
@@ -106,16 +134,25 @@ const NoteSection = () => {
               userId: dbUser?._id,
             },
           },
+          update(cache, { data: { createNewNote } }) {
+            cache.writeQuery({
+              query: GET_ALL_NOTES_FOR_A_RECIPE,
+              variables: {
+                data: { recipeId: activeRecipeId, userId: dbUser?._id },
+              },
+              data: {
+                getMyNotesForARecipe: [...createNewNote],
+              },
+            });
+          },
         });
       }
 
-      setLoading(false);
       reactToastifyNotification(
         "info",
         `Note ${updateNote ? "updated" : "created"} successfully`,
       );
     } catch (error) {
-      setLoading(false);
       reactToastifyNotification("error", error?.message);
     }
   };
@@ -127,7 +164,8 @@ const NoteSection = () => {
     setUpdateNote(true);
     setNoteForm((pre) => ({ ...pre, title, body }));
     setUpdateNoteId(id);
-    toggleNoteForm();
+    setShowNoteForm(true);
+    // toggleNoteForm();
   };
 
   const handleButtonClick = () => {
@@ -136,13 +174,27 @@ const NoteSection = () => {
     setNoteForm((pre) => ({ ...pre, title: "", body: "" }));
   };
 
-  if (noteLoading) {
-    return <SkeletonNote />;
-  }
-
   return (
     <>
-      <NoteHead
+      {!showNoteForm && (
+        <IconForAddComment
+          handleIconClick={toggleNoteForm}
+          tooltipText="Add Notes"
+        />
+      )}
+      {(createNoteLoading || editNoteLoading) && (
+        <SkeletonNote singleNote={true} />
+      )}
+      {showNoteForm && (
+        <NoteForm
+          toggleNoteForm={toggleNoteForm}
+          noteForm={noteForm}
+          updateNoteForm={updateNoteForm}
+          createOrUpdateNote={createOrUpdateNote}
+          variant="notes"
+        />
+      )}
+      {/* <NoteHead
         showForm={showNoteForm}
         toggleNoteForm={toggleNoteForm}
         noteForm={noteForm}
@@ -150,14 +202,16 @@ const NoteSection = () => {
         createOrUpdateNote={createOrUpdateNote}
         handleButtonClick={handleButtonClick}
         isFromRecipePage="default"
-      />
+      /> */}
+
       <NoteBody
         data={noteData?.getMyNotesForARecipe}
         deleteItem={removeNote}
         updateItem={updateNoteValue}
         varient="notes"
-        loading={loading}
+        loading={noteLoading}
         isFromRecipePage="default"
+        deleteItemLoading={deleteNoteLoading}
       />
     </>
   );

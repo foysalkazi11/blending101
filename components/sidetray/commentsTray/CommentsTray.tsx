@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setOpenCommentsTray } from "../../../redux/slices/sideTraySlice";
 import styles from "./CommentsTray.module.scss";
