@@ -1,4 +1,10 @@
-import React, { forwardRef, useEffect, useMemo, useState } from "react";
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   faBookmark,
   faCalendarWeek,
@@ -23,8 +29,13 @@ import styles from "../../../styles/pages/planner.module.scss";
 import IconButton from "../../../component/atoms/Button/IconButton.component";
 import WeekPicker from "../../../component/molecules/DatePicker/Week.component";
 import { startOfWeek, endOfWeek, format } from "date-fns";
-import { useQuery } from "@apollo/client";
-import { GET_ALL_PLAN_COMMENTS, GET_PLAN } from "../../../graphql/Planner";
+import { useMutation, useQuery } from "@apollo/client";
+import {
+  CREATE_PLAN,
+  GET_ALL_PLAN_COMMENTS,
+  GET_PLAN,
+  SHARE_PLAN,
+} from "../../../graphql/Planner";
 import PlanForm, {
   defaultPlan,
 } from "../../../component/module/Planner/PlanForm.component";
@@ -33,12 +44,15 @@ import PlannerQueue from "../../../component/module/Planner/Queue.component";
 import ShareModal from "../../../component/organisms/Share/Share.component";
 import CollectionDrawer from "../../../component/templates/Drawer/Collection/Collection.component";
 import CommentDrawer from "../../../component/templates/Drawer/Comment/Comment.component";
+import { useAppSelector } from "../../../redux/hooks";
+import Publish from "../../../helpers/Publish";
 
 const MyPlan = () => {
   const router = useRouter();
   const methods = useForm({
     defaultValues: useMemo(() => defaultPlan, []),
   });
+
   const { data } = useQuery(GET_PLAN, {
     variables: { planId: router.query.planId },
     skip: router.query.planId === "",
@@ -48,15 +62,20 @@ const MyPlan = () => {
     skip: router.query.planId === "",
   });
 
+  const [createPlan, createState] = useMutation(CREATE_PLAN);
+  const [sharePlan, shareState] = useMutation(SHARE_PLAN);
+
   const [link, setLink] = useState("");
   const [showShare, setShowShare] = useState(false);
-  const [showComments, setShowComments] = useState(true);
+  const [showComments, setShowComments] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [planlist, setPlanlist] = useState([]);
   const [week, setWeek] = useState({
     start: startOfWeek(new Date()),
     end: endOfWeek(new Date()),
   });
+
+  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
   const weekChangeHandler = (start, end) => {
     router.push(
@@ -108,17 +127,38 @@ const MyPlan = () => {
     );
   };
 
-  const editHandler = (data) => {
+  const editHandler = async (data) => {
     if (!isEditMode) return setIsEditMode(true);
-    const plan = {
+    const planData = {
+      memberId: plan?.memberId,
       ...data,
       planData: planlist.map((plan) => ({
         day: plan.day,
         recipes: plan.recipes.map((recipe) => recipe._id),
       })),
     };
-    setIsEditMode(false);
+    await Publish({
+      mutate: createPlan,
+      state: createState,
+      variables: { data: planData },
+      success: "Created a new version of the Plan",
+      onSuccess: () => {
+        setIsEditMode(false);
+      },
+    });
+    if (plan?.memberId === userId) {
+    } else {
+    }
   };
+
+  const shareHandler = useCallback(async () => {
+    sharePlan({
+      variables: {
+        userId,
+        planId: router.query.planId,
+      },
+    });
+  }, [router.query.planId, sharePlan, userId]);
 
   return (
     <AContainer
@@ -143,7 +183,7 @@ const MyPlan = () => {
         show={showShare}
         setShow={setShowShare}
         link={link}
-        onShare={() => {}}
+        onShare={shareHandler}
       />
       <div className={styles.windowContainer}>
         <div className={styles.planner}>

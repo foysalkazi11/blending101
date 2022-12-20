@@ -37,7 +37,7 @@
     flex: 1;
     min-width: 0; /* or some value */
     h2 {
-      white-space: nowrap;
+      white-space: pre-wrap;
       // overflow: hidden;
       text-overflow: ellipsis;
       font-size: 17px;

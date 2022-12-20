@@ -24,10 +24,16 @@ import IconButton from "../../../component/atoms/Button/IconButton.component";
 
 import { useAppSelector } from "../../../redux/hooks";
 import { format, endOfWeek, startOfWeek, addWeeks, subWeeks } from "date-fns";
-import { CREATE_PLAN, GET_PLANNER_BY_WEEK } from "../../../graphql/Planner";
+import {
+  ADD_TO_MY_PLAN,
+  CREATE_PLAN,
+  GET_PLANNER_BY_WEEK,
+} from "../../../graphql/Planner";
 import { MONTH } from "../../../data/Date";
 
 import styles from "../../../styles/pages/planner.module.scss";
+import ConfirmAlert from "../../../component/molecules/Alert/Confirm.component";
+import Publish from "../../../helpers/Publish";
 
 const MyPlan = () => {
   const router = useRouter();
@@ -38,6 +44,7 @@ const MyPlan = () => {
 
   const fetchedFromUrl = useRef(false);
   const [showGroceryTray] = useState(true);
+  const [showDuplicateAlert, setShowDuplicateAlert] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [week, setWeek] = useState({
     start: startOfWeek(new Date(), { weekStartsOn: 1 }),
@@ -45,6 +52,10 @@ const MyPlan = () => {
   });
 
   const [getPlanByWeek, { data }] = useLazyQuery(GET_PLANNER_BY_WEEK);
+  const [addToMyPlan, addToMyPlanState] = useMutation(ADD_TO_MY_PLAN, {
+    refetchQueries: ["GetPlannerByWeek"],
+  });
+  const [createPlan] = useMutation(CREATE_PLAN);
 
   useEffect(() => {
     if (fetchedFromUrl.current || !router.query.start || !router.query.end)
@@ -75,15 +86,11 @@ const MyPlan = () => {
         !fetchedFromUrl.current &&
         response?.data?.getPlannerByDates?.planners.length > 0
       ) {
-        // const doReplace = confirm(
-        //   "There are already plans listed in this week. Click OK to replace. Otherwise these plan will be merged",
-        // );
+        setShowDuplicateAlert(true);
       }
       fetchedFromUrl.current = true;
     });
   }, [getPlanByWeek, memberId, router.query, week]);
-
-  const [createPlan] = useMutation(CREATE_PLAN);
 
   const startMonth = MONTH[week.start.getMonth()];
   const endMonth = MONTH[week.end.getMonth()];
@@ -127,6 +134,24 @@ const MyPlan = () => {
     });
   };
 
+  const handleMergeOrReplace = async (type: "MERGE" | "REPLACE") => {
+    await Publish({
+      mutate: addToMyPlan,
+      state: addToMyPlanState,
+      variables: {
+        type,
+        planId: router.query?.plan,
+        memberId,
+        startDate: router.query?.start,
+        endDate: router.query?.end,
+      },
+      success: "Added to My Plan successfully",
+      onSuccess: () => {
+        setShowDuplicateAlert(false);
+      },
+    });
+  };
+
   return (
     <AContainer
       headerTitle="MEAL PLAN"
@@ -137,6 +162,12 @@ const MyPlan = () => {
       }}
     >
       <RXPanel />
+      <ConfirmAlert
+        show={showDuplicateAlert}
+        setShow={setShowDuplicateAlert}
+        onConfirm={handleMergeOrReplace}
+        message="There are already plans listed in this week."
+      />
       <div className={styles.windowContainer}>
         <div className={styles.planner}>
           <div className="row ai-center">
