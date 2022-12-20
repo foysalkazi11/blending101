@@ -135,19 +135,11 @@ const CommentSection = () => {
                     ...removeComment?.recipe,
                   },
                 },
-                // getAllCommentsForARecipe:
-                //   commentData?.getAllCommentsForARecipe?.comments?.filter(
-                //     (comment) => comment._id !== removeComment.comments._id,
-                //   ),
               },
             });
           },
         },
       });
-
-      // const { averageRating, numberOfRating, _id } =
-      //   data?.removeComment?.recipe;
-      // updateRecipeRating(_id, averageRating, numberOfRating);
 
       setUpdateComment(false);
       reactToastifyNotification("info", "Delete comment successfully");
@@ -192,10 +184,6 @@ const CommentSection = () => {
             });
           },
         });
-
-        // const { averageRating, numberOfRating, _id } =
-        //   data?.createComment?.recipe;
-        // updateRecipeRating(_id, averageRating, numberOfRating);
       } else {
         await editComment({
           variables: {
@@ -230,9 +218,6 @@ const CommentSection = () => {
             });
           },
         });
-        // const { averageRating, numberOfRating, _id } =
-        //   editData?.editComment?.recipe;
-        // updateRecipeRating(_id, averageRating, numberOfRating);
         setUpdateComment(false);
       }
 
