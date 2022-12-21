@@ -1,6 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setToggleModal } from "../../../redux/slices/sideTraySlice";
+import React, { Dispatch, SetStateAction } from "react";
 import styles from "./CustomModal.module.scss";
 
 type CustomModalProps = {

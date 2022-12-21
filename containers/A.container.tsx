@@ -2,16 +2,17 @@ import React from "react";
 import HeaderComponent from "../components/header/Header.component";
 import SidebarComponent from "../components/sidebar/Sidebar.component";
 import styles from "./container.module.scss";
-import CollectionTray from "../components/sidetray/collection/collectionTray.component";
+import CollectionTray from "../components/sidetray/collection/RecipeCollectionAndThemeTray";
 import NutritionTrayComponent from "../components/sidetray/wiki/nutrition/nutrition.component";
 import HealthTrayComponent from "../components/sidetray/wiki/health/heath.component";
 import IngredientTrayComponent from "../components/sidetray/wiki/ingredient/ingredient.component";
 import FilterTray from "../components/sidetray/filter";
-import CommentsTray from "../components/sidetray/commentsTray/CommentsTray";
+import CommentsTray from "../components/sidetray/commentsTray/RecipeCommentsTray";
 import CartPanel from "../component/templates/Panel/CartPanel.component/Panel.component";
 import VersionTray from "../components/sidetray/versionTray/VersionTray";
 import WikiCommentsTray from "../components/sidetray/wikiCommentsTray";
 import BlogCommentsTray from "../components/sidetray/blogCommentsTray";
+import BlogCollectionTray from "../components/sidetray/blogCollectionTray";
 
 interface ShowTray {
   show: boolean;
@@ -28,6 +29,7 @@ type AContainerProps = {
   showCommentsTray?: ShowTray;
   showWikiCommentsTray?: ShowTray;
   showBlogCommentsTray?: ShowTray;
+  showBlogCollectionTray?: ShowTray;
   logo?: boolean;
   headerTitle?: string;
   headerLogo?: string;
@@ -72,6 +74,11 @@ export default function AContainer(props: AContainerProps) {
       show: false,
       showTagByDeafult: false,
       showPanle: "right",
+    },
+    showBlogCollectionTray = {
+      show: false,
+      showTagByDeafult: false,
+      showPanle: "left",
     },
     logo = true,
     headerTitle = "",
@@ -145,6 +152,14 @@ export default function AContainer(props: AContainerProps) {
             <BlogCommentsTray
               showTagByDefaut={showBlogCommentsTray?.showTagByDeafult}
               showPanle={showBlogCommentsTray?.showPanle}
+            />
+          </div>
+        )}
+        {showBlogCollectionTray?.show && (
+          <div className={styles.fixed__main__left}>
+            <BlogCollectionTray
+              showTagByDefaut={showBlogCollectionTray?.showTagByDeafult}
+              showPanle={showBlogCollectionTray?.showPanle}
             />
           </div>
         )}

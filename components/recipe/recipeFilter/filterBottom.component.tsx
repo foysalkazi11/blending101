@@ -7,7 +7,7 @@ import GET_RECIPES_BY_BLEND_AND_INGREDIENTS from "../../../gqlLib/recipes/querie
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setLoading } from "../../../redux/slices/utilitySlice";
 import useLocalStorage from "../../../customHooks/useLocalStorage";
-import ShowCollectionModal from "../../showModal/ShowCollectionModal";
+import ShowCollectionModal from "../../showLastModifiedCollection/ShowLastModifiedCollection";
 import { setAllFilterRecipe } from "../../../redux/slices/recipeSlice";
 import FILTER_RECIPE from "../../../gqlLib/recipes/queries/filterRecipe";
 import {
@@ -23,6 +23,11 @@ import {
   faXmark,
 } from "@fortawesome/pro-regular-svg-icons";
 import SkeletonCollectionRecipe from "../../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollectionRecipe";
+import {
+  setChangeRecipeWithinCollection,
+  setSingleRecipeWithinCollecions,
+} from "../../../redux/slices/collectionSlice";
+import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
 
 interface Props {
   allFilters: FilterCriteriaValue[];
@@ -40,6 +45,17 @@ function FilterPageBottom({ allFilters = [] }: Props) {
     [],
   );
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
+  const { lastModifiedCollection } = useAppSelector(
+    (state) => state?.collections,
+  );
+
+  // open recipe collection panel after added a recipe to a collection
+  const handleOpenCollectionTray = () => {
+    dispatch(setSingleRecipeWithinCollecions([lastModifiedCollection?.id]));
+    dispatch(setOpenCollectionsTary(true));
+    dispatch(setChangeRecipeWithinCollection(true));
+    setOpenCollectionModal(false);
+  };
 
   const fetchGetRecipesByBlendAndIngredients = async () => {
     let blendTypesArr: string[] = [];
@@ -277,6 +293,8 @@ function FilterPageBottom({ allFilters = [] }: Props) {
         open={openCollectionModal}
         setOpen={setOpenCollectionModal}
         shouldCloseOnOverlayClick={true}
+        lastModifiedCollectionName={lastModifiedCollection?.name}
+        openCollectionPanel={handleOpenCollectionTray}
       />
     </>
   );

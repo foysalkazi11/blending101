@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React from "react";
 import { faTimes } from "@fortawesome/pro-solid-svg-icons";
 import IconButton from "../../component/atoms/Button/IconButton.component";
 import Icon from "../../component/atoms/Icon/Icon.component";
@@ -13,7 +13,12 @@ import classes from "../../styles/pages/viewAll.module.scss";
 import ShowRecipeContainer from "../../components/showRecipeContainer";
 import IconWarper from "../../theme/iconWarper/IconWarper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookmark, faShareNodes } from "@fortawesome/pro-light-svg-icons";
+
+import {
+  faBookmark,
+  faShareNodes,
+  faXmark,
+} from "@fortawesome/pro-regular-svg-icons";
 
 const ViewAll = () => {
   const router = useRouter();
@@ -25,7 +30,6 @@ const ViewAll = () => {
     "compareList",
     [],
   );
-  const [openCollectionModal, setOpenCollectionModal] = useState(false);
 
   return (
     <AContainer
@@ -41,7 +45,6 @@ const ViewAll = () => {
         <ShowRecipeContainer
           data={data || []}
           loading={data.length ? false : true}
-          setOpenCollectionModal={setOpenCollectionModal}
           headerLeftSide={
             <div className="flex ai-center">
               <Icon
@@ -74,15 +77,15 @@ const ViewAll = () => {
             </div>
           }
           headerRightSide={
-            <IconButton
-              fontName={faTimes}
-              variant="secondary"
-              size="small"
-              colorCode="#fff"
-              onClick={() => {
-                router.back();
-              }}
-            />
+            <IconWarper
+              handleClick={() => router.back()}
+              iconColor="iconColorWhite"
+              defaultBg="secondary"
+              hover="bgSecondary"
+              style={{ width: "28px", height: "28px" }}
+            >
+              <FontAwesomeIcon icon={faXmark} />
+            </IconWarper>
           }
         />
       </div>

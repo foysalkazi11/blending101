@@ -6,7 +6,7 @@ type SaveRecipeProps = {
   handleChange?: (e: React.SyntheticEvent) => void;
 };
 
-const SaveRecipe = ({
+const LastModifiedCollectionModalContent = ({
   title = "Favorite",
   handleChange = () => {},
 }: SaveRecipeProps) => {
@@ -22,4 +22,4 @@ const SaveRecipe = ({
   );
 };
 
-export default SaveRecipe;
+export default LastModifiedCollectionModalContent;
