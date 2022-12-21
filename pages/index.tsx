@@ -9,6 +9,7 @@ import AContainer from "../containers/A.container";
 import { RECIPE_CATEGORY_COLOR } from "../data/Recipe";
 import GET_ALL_LATEST_RECIPES from "../gqlLib/recipes/queries/getAllLatestRecipes";
 import { GET_WIKI_HIGHLIGHTS } from "../gqlLib/wiki/query/getWikiList";
+import { GET_ALL_PLANS } from "../graphql/Planner";
 import { GET_BLEND_TYPES } from "../graphql/Recipe";
 import { useAppSelector } from "../redux/hooks";
 
@@ -25,8 +26,11 @@ const Home = () => {
   const { data: recipes } = useQuery(GET_ALL_LATEST_RECIPES, {
     variables: { userId },
   });
-  const { data: blendTypes } = useQuery(GET_BLEND_TYPES);
+  const { data: plans } = useQuery(GET_ALL_PLANS, {
+    variables: { limit: 8, page: 1 },
+  });
   const { data: wikis } = useQuery(GET_WIKI_HIGHLIGHTS);
+  const { data: blendTypes } = useQuery(GET_BLEND_TYPES);
 
   const [wikiType, setWikiType] = useState("All");
 
@@ -113,18 +117,22 @@ const Home = () => {
                 image="/images/clock-light.svg"
                 allUrl="/discovery"
               >
-                {recipes?.getAllLatestRecipes?.map((recipe) => {
-                  return (
-                    <div className={styles.slider__card} key={recipe?._id}>
-                      <CardComponent
-                        title={recipe?.name}
-                        img={recipe?.image[0]?.image || null}
-                        rating={recipe?.averageRating}
-                        noOfRating={recipe?.numberOfRating}
-                      />
+                {recipes?.getAllLatestRecipes?.map((recipe) => (
+                  <div key={recipe?._id}>
+                    <div style={{ paddingRight: "1rem" }}>
+                      <Link href={`/recipe_details/${recipe?._id}/`}>
+                        <a style={{ color: "initial" }}>
+                          <CardComponent
+                            title={recipe?.name}
+                            img={recipe?.image[0]?.image || null}
+                            rating={recipe?.averageRating}
+                            noOfRating={recipe?.numberOfRating}
+                          />
+                        </a>
+                      </Link>
                     </div>
-                  );
-                })}
+                  </div>
+                ))}
               </ContentTray>
             </div>
 
@@ -134,14 +142,17 @@ const Home = () => {
                 heading="Popular Plans"
                 image="/images/fire-alt-light.svg"
                 allUrl="/planner"
+                settings={{
+                  adaptiveHeight: true,
+                }}
               >
-                {[1, 2, 3, 4, 5, 6]?.map((item, index) => {
-                  return (
-                    <div className={styles.slider__card} key={`${index}`}>
-                      <PlanCard />
+                {plans?.getAllGlobalPlans?.plans?.map((plan) => (
+                  <div className={styles.slider__card} key={plan?._id}>
+                    <div style={{ paddingRight: "1rem" }}>
+                      <PlanCard planId={plan?._id} title={plan?.planName} />
                     </div>
-                  );
-                })}
+                  </div>
+                ))}
               </ContentTray>
             </div>
 
@@ -163,12 +174,20 @@ const Home = () => {
                   .map((wiki) => {
                     return (
                       <div className={styles.slider__card} key={wiki._id}>
-                        <SpecialcardComponent
-                          title={wiki?.wikiTitle}
-                          img={wiki?.image}
-                          category={wiki?.type}
-                          rx={45}
-                        />
+                        <div style={{ paddingRight: "1rem" }}>
+                          <Link
+                            href={`/wiki/Ingredient/62534fde2816ed76999e521d/182/`}
+                          >
+                            <a style={{ color: "initial" }}>
+                              <SpecialcardComponent
+                                title={wiki?.wikiTitle}
+                                img={wiki?.image}
+                                category={wiki?.type}
+                                rx={45}
+                              />
+                            </a>
+                          </Link>
+                        </div>
                       </div>
                     );
                   })}
@@ -185,15 +204,17 @@ const Home = () => {
                 {[1, 2, 3, 4, 5, 6]?.map((item, index) => {
                   return (
                     <div className={styles.slider__card} key={`${index}`}>
-                      <SpecialcardComponent
-                        type="secondary"
-                        img="/cards/milk.png"
-                        title="Another Special Card With Secondary Attribute."
-                        style={undefined}
-                        imageHeight={undefined}
-                        color={undefined}
-                        rx={23}
-                      />
+                      <div style={{ paddingRight: "1rem" }}>
+                        <SpecialcardComponent
+                          type="secondary"
+                          img="/cards/milk.png"
+                          title="Another Special Card With Secondary Attribute."
+                          style={undefined}
+                          imageHeight={undefined}
+                          color={undefined}
+                          rx={23}
+                        />
+                      </div>
                     </div>
                   );
                 })}
