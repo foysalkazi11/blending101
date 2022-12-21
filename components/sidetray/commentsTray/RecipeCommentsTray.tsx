@@ -17,7 +17,7 @@ interface CommentsTrayProps {
   showPanle?: "left" | "right";
 }
 
-export default function CommentsTray({
+export default function RecipeCommentsTray({
   showPanle,
   showTagByDefaut,
 }: CommentsTrayProps) {

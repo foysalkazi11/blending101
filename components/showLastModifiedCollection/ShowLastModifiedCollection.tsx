@@ -6,7 +6,7 @@ import {
 } from "../../redux/slices/collectionSlice";
 import { setOpenCollectionsTary } from "../../redux/slices/sideTraySlice";
 import CustomModal from "../../theme/modal/customModal/CustomModal";
-import SaveRecipe from "../../theme/saveRecipeModal/SaveRecipeModal";
+import LastModifiedCollectionModalContent from "../../theme/lastModifiedColletionModalContent/LastModifiedCollectionModalContent";
 
 interface Props {
   overlayStyle?: React.CSSProperties;
@@ -14,25 +14,19 @@ interface Props {
   shouldCloseOnOverlayClick?: boolean;
   open?: boolean;
   setOpen?: Dispatch<SetStateAction<boolean>>;
+  lastModifiedCollectionName: string;
+  openCollectionPanel: () => void;
 }
 
-const ShowCollectionModal = ({
+const ShowLastModifiedCollection = ({
   open,
   setOpen,
   contentStyle,
   overlayStyle,
   shouldCloseOnOverlayClick,
+  lastModifiedCollectionName,
+  openCollectionPanel,
 }: Props) => {
-  const { lastModifiedCollection } = useAppSelector(
-    (state) => state?.collections,
-  );
-  const dispatch = useAppDispatch();
-  const handleCompareRecipe = () => {
-    dispatch(setSingleRecipeWithinCollecions([lastModifiedCollection?.id]));
-    dispatch(setOpenCollectionsTary(true));
-    dispatch(setChangeRecipeWithinCollection(true));
-    setOpen(false);
-  };
   return (
     <CustomModal
       open={open}
@@ -41,12 +35,12 @@ const ShowCollectionModal = ({
       overlayStyle={overlayStyle}
       shouldCloseOnOverlayClick={shouldCloseOnOverlayClick}
     >
-      <SaveRecipe
-        title={lastModifiedCollection?.name}
-        handleChange={handleCompareRecipe}
+      <LastModifiedCollectionModalContent
+        title={lastModifiedCollectionName}
+        handleChange={openCollectionPanel}
       />
     </CustomModal>
   );
 };
 
-export default ShowCollectionModal;
+export default ShowLastModifiedCollection;
