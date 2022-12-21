@@ -5,9 +5,8 @@ import styles from "./recipeDiscovery.module.scss";
 import SearchTagsComponent from "../../searchtags/searchtags.component";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
-import ShowCollectionModal from "../../showModal/ShowCollectionModal";
+import ShowLastModifiedCollection from "../../showLastModifiedCollection/ShowLastModifiedCollection";
 import RegularRecipes from "./regularRecipes";
-import ShowSearchRecipes from "./showSearchRecipes";
 import SEARCH_RECIPE from "../../../gqlLib/recipes/queries/searchRecipe";
 import { useLazyQuery } from "@apollo/client";
 import useDebounce from "../../../customHooks/useDebounce";
@@ -19,6 +18,12 @@ import FILTER_RECIPE from "../../../gqlLib/recipes/queries/filterRecipe";
 import useFetchGetRecipesByBlendAndIngredients from "./helperFunc/useFetchGetRecipesByBlendAndIngredients";
 import useHandleSearchRecipe from "./helperFunc/useSearchRecipes";
 import DiscoveryPageSearchBar from "./searchBar";
+import {
+  setChangeRecipeWithinCollection,
+  setSingleRecipeWithinCollecions,
+} from "../../../redux/slices/collectionSlice";
+import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
+import ShowRecipeContainer from "../../showRecipeContainer";
 
 const RecipeDiscovery = () => {
   const [recipeSearchInput, setRecipeSearchInput] = useState("");
@@ -44,6 +49,17 @@ const RecipeDiscovery = () => {
   const debounceSearchTerm = useDebounce(recipeSearchInput, 500);
   const handleFilterRecipes = useFetchGetRecipesByBlendAndIngredients();
   const handleSearchRecipes = useHandleSearchRecipe();
+  const { lastModifiedCollection } = useAppSelector(
+    (state) => state?.collections,
+  );
+
+  // open recipe collection panel after added a recipe to a collection
+  const handleOpenCollectionTray = () => {
+    dispatch(setSingleRecipeWithinCollecions([lastModifiedCollection?.id]));
+    dispatch(setOpenCollectionsTary(true));
+    dispatch(setChangeRecipeWithinCollection(true));
+    setOpenCollectionModal(false);
+  };
 
   useEffect(() => {
     if (isMounted.current) {
@@ -133,10 +149,9 @@ const RecipeDiscovery = () => {
           </div>
           {allFilterRecipes.filterRecipes.length ||
           allFilterRecipes.isFiltering ? (
-            <ShowSearchRecipes
-              recipes={allFilterRecipes.filterRecipes}
+            <ShowRecipeContainer
+              data={allFilterRecipes.filterRecipes}
               loading={filterRecipesLoading || searchRecipeLoading}
-              setOpenCollectionModal={setOpenCollectionModal}
               closeHandler={closeFilterRecipes}
             />
           ) : (
@@ -147,10 +162,12 @@ const RecipeDiscovery = () => {
           <FooterRecipeFilter />
         </div>
       </AContainer>
-      <ShowCollectionModal
+      <ShowLastModifiedCollection
         open={openCollectionModal}
         setOpen={setOpenCollectionModal}
         shouldCloseOnOverlayClick={true}
+        lastModifiedCollectionName={lastModifiedCollection?.name}
+        openCollectionPanel={handleOpenCollectionTray}
       />
     </>
   );

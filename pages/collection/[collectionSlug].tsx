@@ -1,43 +1,32 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { faTimes } from "@fortawesome/pro-solid-svg-icons";
-
-import IconButton from "../../component/atoms/Button/IconButton.component";
-import Icon from "../../component/atoms/Icon/Icon.component";
 import FooterRecipeFilter from "../../components/footer/footerRecipeFilter.component";
-import DiscoverPageSearch from "../../components/recipe/recipeDiscovery/discoverPageSearch/DiscoverPageSearch.Component";
-import FilterPageBottom from "../../components/recipe/recipeFilter/filterBottom.component";
-import SearchtagsComponent from "../../components/searchtags/searchtags.component";
 import AContainer from "../../containers/A.container";
-import useLocalStorage from "../../customHooks/useLocalStorage";
-import useViewAll, { QUERY_DICTIONARY } from "../../hooks/modules/useViewAll";
 import { useAppSelector } from "../../redux/hooks";
-import DatacardComponent from "../../theme/cards/dataCard/dataCard.component";
-import ShowCollectionRecipes from "../../theme/showCollectionRecipes/ShowCollectionRecipes";
-
 import styles from "../../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";
 import classes from "../../styles/pages/viewAll.module.scss";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import GET_SINGLE_COLLECTION from "../../gqlLib/collection/query/getSingleCollection";
 import GET_ALL_MY_CREATED_RECIPES from "../../gqlLib/collection/query/getAllMyCreatedRecipes";
 import GET_ALL_RECIPES_WITHIN_COLLECTIONS from "../../gqlLib/collection/query/getAllRecipesWhithiCollections";
+import ShowRecipeContainer from "../../components/showRecipeContainer";
 
 const ViewAll = () => {
   const router = useRouter();
   const slug = router.query?.collectionSlug as string;
-
   const [title, setTitle] = useState("");
   const [icon, setIcon] = useState("");
   const [recipes, setRecipes] = useState([]);
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
-  const [getAllRecipes] = useLazyQuery(GET_ALL_RECIPES_WITHIN_COLLECTIONS);
-  const [getMyRecipes] = useLazyQuery(GET_ALL_MY_CREATED_RECIPES);
-  const [getCustomRecipes] = useLazyQuery(GET_SINGLE_COLLECTION);
-
-  const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
-    "compareList",
-    [],
+  const [getAllRecipes, { loading: getAllRecipesLoading }] = useLazyQuery(
+    GET_ALL_RECIPES_WITHIN_COLLECTIONS,
+  );
+  const [getMyRecipes, { loading: getMyRecipesLoading }] = useLazyQuery(
+    GET_ALL_MY_CREATED_RECIPES,
+  );
+  const [getCustomRecipes, { loading: getCustomRecipesLoading }] = useLazyQuery(
+    GET_SINGLE_COLLECTION,
   );
 
   useEffect(() => {
@@ -61,17 +50,6 @@ const ViewAll = () => {
     }
   }, [getAllRecipes, getCustomRecipes, getMyRecipes, slug, userId]);
 
-  const [openCollectionModal, setOpenCollectionModal] = useState(false);
-
-  const { filters } = useAppSelector((state) => state?.filterRecipe);
-  const { currentCollectionInfo } = useAppSelector(
-    (state) => state?.collections,
-  );
-  const { blends, ingredients, openFilterTray } = useAppSelector(
-    (state) => state.sideTray,
-  );
-  const { allFilters } = useAppSelector((state) => state.filterRecipe);
-
   return (
     <AContainer
       showCollectionTray={{ show: true, showTagByDeafult: true }}
@@ -83,78 +61,23 @@ const ViewAll = () => {
       }}
     >
       <div className={styles.main__div}>
-        <div
-          style={{
-            marginLeft: openFilterTray ? "310px" : "16px",
-            transition: "all 0.5s",
-          }}
-        >
-          <DiscoverPageSearch />
-          {allFilters.length ? (
-            <SearchtagsComponent allFilters={allFilters} />
-          ) : null}
-        </div>
-
-        {allFilters?.length ? (
-          <FilterPageBottom allFilters={allFilters} />
-        ) : (
-          <div>
-            <div className={classes.head}>
-              <div className="flex ai-center">
-                {icon && (
-                  <img src={icon} alt={title} className={classes.head__icon} />
-                )}
-                <h2 className={classes.head__title}>{title}</h2>
-              </div>
-              <IconButton
-                fontName={faTimes}
-                variant="secondary"
-                size="small"
-                colorCode="#fff"
-                onClick={() => {
-                  router.back();
-                }}
-              />
+        <ShowRecipeContainer
+          data={recipes}
+          loading={
+            getAllRecipesLoading ||
+            getMyRecipesLoading ||
+            getCustomRecipesLoading
+          }
+          headerLeftSide={
+            <div className="flex ai-center">
+              {icon && (
+                <img src={icon} alt={title} className={classes.head__icon} />
+              )}
+              <h2 className={classes.head__title}>{title}</h2>
             </div>
-            {/* <AppdownLoadCard /> */}
-            <div className="row mb-20">
-              {recipes?.map((item) => {
-                let ingredients = [];
-                item?.ingredients?.forEach((ing) => {
-                  const ingredient = ing?.ingredientId?.ingredientName;
-                  ingredients.push(ingredient);
-                });
-                const ing = ingredients.join(", ");
-                return (
-                  <div className="col-3" key={item._id}>
-                    <DatacardComponent
-                      title={item.name}
-                      ingredients={ing}
-                      category={item.recipeBlendCategory?.name}
-                      ratings={item?.averageRating}
-                      noOfRatings={item?.numberOfRating}
-                      carbs={item?.carbs}
-                      score={item?.score}
-                      calorie={item?.calorie}
-                      noOfComments={item?.numberOfRating}
-                      image={item.image[0]?.image}
-                      recipeId={item?._id}
-                      notes={item?.notes}
-                      addedToCompare={item?.addedToCompare}
-                      compareRecipeList={compareRecipeList}
-                      setcompareRecipeList={setcompareRecipeList}
-                      isCollectionIds={item?.userCollections}
-                      setOpenCollectionModal={setOpenCollectionModal}
-                      isMatch={item?.isMatch}
-                      postfixTitle={item?.defaultVersion?.postfixTitle}
-                      userId={item?.userId}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
+          }
+          closeHandler={() => router.push("/discovery")}
+        />
       </div>
       <div className={styles.footerMainDiv}>
         <FooterRecipeFilter />

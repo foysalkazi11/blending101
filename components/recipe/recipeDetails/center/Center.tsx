@@ -6,7 +6,7 @@ import { MdOutlineInfo } from "react-icons/md";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import Modal from "../../../../theme/modal/customModal/CustomModal";
 import ShareRecipeModal from "../../../../theme/shareRecipeModal/ShareRecipeModal";
-import SaveRecipe from "../../../../theme/saveRecipeModal/SaveRecipeModal";
+import SaveRecipe from "../../../../theme/lastModifiedColletionModalContent/LastModifiedCollectionModalContent";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
