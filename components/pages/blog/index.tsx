@@ -79,12 +79,10 @@ const Layout: FC<{
 }> = ({ children, blogSearchInput, setBlogSearchInput }) => {
   return (
     <AContainer
-      showCollectionTray={{ show: true, showTagByDeafult: true }}
-      filterTray={true}
       headerTitle="Blog"
-      showBlogCommentsTray={{
+      showBlogCollectionTray={{
         show: true,
-        showPanle: "right",
+        showPanle: "left",
         showTagByDeafult: false,
       }}
     >

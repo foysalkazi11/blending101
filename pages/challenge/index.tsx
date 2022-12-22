@@ -203,8 +203,12 @@ const ChallengePage = () => {
           </div>
           <div className="col-6">
             <div className={styles.headingDiv}>
-              <IconHeading title="Challenge" icon={faToolbox} />
-              <div className="flex ai-center">
+              <IconHeading
+                title="Challenge"
+                icon={faToolbox}
+                iconStyle={{ marginLeft: 20 }}
+              />
+              <div className="flex ai-center mr-20">
                 {!viewOnly && (
                   <div
                     className={styles.uploadDiv}

@@ -2,7 +2,7 @@ import { forwardRef } from "react";
 import Image from "next/image";
 import DatePicker from "react-datepicker";
 import { faCalendarDay } from "@fortawesome/pro-light-svg-icons";
-import { format, isAfter, isToday } from "date-fns";
+import { differenceInDays, format, isAfter, isToday } from "date-fns";
 
 import Icon from "../../../atoms/Icon/Icon.component";
 import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
@@ -19,7 +19,9 @@ interface MainInterface {
 
 function Main({ activities, statistics }: MainInterface) {
   const activeDate = useAppSelector((state) => state.challenge.activeDate);
-
+  const begin = new Date(statistics?.startDate);
+  const today = new Date(activeDate !== "" ? activeDate : new Date());
+  const end = new Date(statistics?.endDate);
   return (
     <div className={styles.challenge_circle_main_circle_outer}>
       <div className={styles.challenge_circle_main_circle}>
@@ -35,22 +37,18 @@ function Main({ activities, statistics }: MainInterface) {
             />
           </div>
           <div className={`${styles.challenge_circle_inside_date} mt-10`}>
-            {format(
-              activeDate !== "" ? new Date(activeDate) : new Date(),
-              "EEEE, MMM dd",
-            )}
+            {format(today, "EEEE, MMM dd")}
             <DateSelector
               activeDate={activeDate}
-              startDate={statistics?.startDate}
-              endDate={statistics?.endDate}
+              startDate={begin}
+              endDate={end}
             />
           </div>
-          <p className={styles.challenge_circle_day_challenge}>
-            {statistics?.challengeName || ""}
-          </p>
-          <span className={styles.challenge_circle_remaining_day}>
-            {statistics?.daysRemaining || 0} Day Remaining
-          </span>
+          <div className={styles.dialer__summary}>
+            <span>Total Days: {statistics?.days || 0}</span>
+            <span>Completed: {differenceInDays(today, begin) + 1 || 0}</span>
+            <span>Remaining: {statistics?.daysRemaining || 0}</span>
+          </div>
           <p className={styles.challenge_circle_remaining_percentage}>
             {parseFloat(statistics?.blendScore || 0).toFixed(1)}%
           </p>
@@ -97,8 +95,8 @@ DatePickerButton.displayName = "DatePickerButton";
 
 interface DateSelectorProps {
   activeDate: string;
-  startDate: string;
-  endDate: string;
+  startDate: Date;
+  endDate: Date;
 }
 const DateSelector = (props: DateSelectorProps) => {
   const dispatch = useAppDispatch();
@@ -111,8 +109,8 @@ const DateSelector = (props: DateSelectorProps) => {
   return (
     <DatePicker
       selected={activeDate ? new Date(activeDate) : new Date()}
-      minDate={new Date(startDate)}
-      maxDate={new Date(endDate)}
+      minDate={startDate}
+      maxDate={endDate}
       onChange={dateHandler}
       fixedHeight
       customInput={<DatePickerButton />}

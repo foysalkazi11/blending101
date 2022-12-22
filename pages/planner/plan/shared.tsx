@@ -1,3 +1,6 @@
+import React, { Fragment } from "react";
+import { useRouter } from "next/router";
+import { useQuery } from "@apollo/client";
 import {
   faFacebook,
   faInstagram,
@@ -7,72 +10,77 @@ import {
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
 import { faArrowRightLong } from "@fortawesome/pro-regular-svg-icons";
-import React, { Fragment } from "react";
-import Icon from "../../component/atoms/Icon/Icon.component";
 
-import styles from "../../styles/pages/planner.module.scss";
+import Icon from "../../../component/atoms/Icon/Icon.component";
+import { PLAN_SHARE_INFO } from "../../../graphql/Planner";
 
-const shared = () => {
+import styles from "../../../styles/pages/planner.module.scss";
+
+const Shared = () => {
+  const router = useRouter();
+  const token = router.query.token;
+
+  const { data } = useQuery(PLAN_SHARE_INFO, {
+    variables: {
+      token: token,
+    },
+    skip: token === "",
+  });
+  const share = data?.getPlanShareInfo;
+
+  const handleViewPlan = () => {
+    router.push(
+      `${process.env.NEXT_PUBLIC_HOSTING_DOMAIN}/planner/plan/${share?.plan?._id}?token=${token}`,
+    );
+  };
+
   return (
     <Fragment>
       <header className={styles.shared__header}>
         <img src="/logo.png" alt="" />
       </header>
       <main className={styles.shared__main}>
-        <h1>Gabriel has shared a Poily meal plan with you!</h1>
+        <h1>
+          {share?.invitedBy?.displayName} has shared a Poily meal plan with you!
+        </h1>
         <p>
           Meal plans complete with recipes and ingredients ready to be added to
           your grocery list and shopped.
         </p>
         <div className="row">
           <div className="col-6">
-            <button>View Plan</button>
+            <button onClick={handleViewPlan}>View Plan</button>
             <div className={styles.shared__preview_header}>
-              <h3>High Protein Vegan Blend Plan</h3>
+              <h3>{share?.plan?.planName}</h3>
               <div>
-                3 of 7
+                3 of {share?.recipeCount}
                 <a>
                   more <Icon fontName={faArrowRightLong} size="2rem" />
                 </a>
               </div>
             </div>
             <div className={styles.shared__preview_wrapper}>
-              <div className={styles.shared__preview}>
-                <img src="/images/img1.png" alt="" />
-                <h6>Red Hots Smoothie</h6>
-                <div>
-                  <span>
-                    RX Score <i>905</i>
-                  </span>
-                  <span>
-                    Calories <i>15</i>
-                  </span>
+              {share?.recipes?.map((recipe) => (
+                <div className={styles.shared__preview} key={recipe?._id}>
+                  <img
+                    src={
+                      recipe.image.find((img) => img.default)?.image ||
+                      recipe.image[0].image ||
+                      "/images/img1.png"
+                    }
+                    alt=""
+                  />
+                  <h6>{recipe?.name}</h6>
+                  <div>
+                    <span>
+                      RX Score <i>905</i>
+                    </span>
+                    <span>
+                      Calories <i>15</i>
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <div className={styles.shared__preview}>
-                <img src="/images/img5.png" alt="" />
-                <h6>Red Hots Smoothie</h6>
-                <div>
-                  <span>
-                    RX Score <i>905</i>
-                  </span>
-                  <span>
-                    Calories <i>15</i>
-                  </span>
-                </div>
-              </div>
-              <div className={styles.shared__preview}>
-                <img src="/images/img1.png" alt="" />
-                <h6>Red Hots Smoothie</h6>
-                <div>
-                  <span>
-                    RX Score <i>905</i>
-                  </span>
-                  <span>
-                    Calories <i>15</i>
-                  </span>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
           <div className="col-6">
@@ -118,4 +126,4 @@ const shared = () => {
   );
 };
 
-export default shared;
+export default Shared;

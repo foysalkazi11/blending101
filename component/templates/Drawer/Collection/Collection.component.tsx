@@ -96,9 +96,6 @@ function CollectionDrawer({
           <AddCollectionModal
             input={input}
             setInput={setInput}
-            isEditCollection={isEditCollection}
-            collectionId={collectionId}
-            getCollectionsAndThemes={getCollectionsAndThemes}
             setOpenModal={setOpenModal}
           />
         </CustomModal>

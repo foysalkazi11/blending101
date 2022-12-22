@@ -34,11 +34,16 @@ import EMPTY_COMPARE_LIST from "../../../gqlLib/compare/mutation/emptyCompareLis
 import { setDbUser } from "../../../redux/slices/userSlice";
 import { setLoading } from "../../../redux/slices/utilitySlice";
 import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
-import ShowCollectionModal from "../../showModal/ShowCollectionModal";
+import ShowCollectionModal from "../../showLastModifiedCollection/ShowLastModifiedCollection";
 import useChangeCompare from "../../../customHooks/useChangeComaper";
 import imageUploadS3 from "../../utility/imageUploadS3";
 import CREATE_A_RECIPE_BY_USER from "../../../gqlLib/recipes/mutations/createARecipeByUser";
 import EDIT_A_RECIPE from "../../../gqlLib/recipes/mutations/editARecipe";
+import {
+  setChangeRecipeWithinCollection,
+  setSingleRecipeWithinCollecions,
+} from "../../../redux/slices/collectionSlice";
+import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
 
 const compareRecipeResponsiveSettings = {
   ...compareRecipeResponsiveSetting,
@@ -129,6 +134,17 @@ const CompareRecipe = () => {
   const changeCompare = useChangeCompare();
 
   const [uploadNewImage, setUploadNewImage] = useState(false);
+  const { lastModifiedCollection } = useAppSelector(
+    (state) => state?.collections,
+  );
+
+  // open recipe collection panel after added a recipe to a collection
+  const handleOpenCollectionTray = () => {
+    dispatch(setSingleRecipeWithinCollecions([lastModifiedCollection?.id]));
+    dispatch(setOpenCollectionsTary(true));
+    dispatch(setChangeRecipeWithinCollection(true));
+    setOpenCollectionModal(false);
+  };
 
   const updateData = (
     e: React.ChangeEvent<
@@ -577,6 +593,8 @@ const CompareRecipe = () => {
         open={openCollectionModal}
         setOpen={setOpenCollectionModal}
         shouldCloseOnOverlayClick={true}
+        lastModifiedCollectionName={lastModifiedCollection?.name}
+        openCollectionPanel={handleOpenCollectionTray}
       />
     </>
   );
