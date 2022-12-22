@@ -81,6 +81,7 @@ const MyPlan = () => {
           : router.query.end,
       },
     }).then((response) => {
+      console.log(response);
       if (
         router.query?.plan &&
         !fetchedFromUrl.current &&

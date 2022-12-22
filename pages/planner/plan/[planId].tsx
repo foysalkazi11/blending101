@@ -63,7 +63,7 @@ const MyPlan = () => {
   });
 
   const [createPlan, createState] = useMutation(CREATE_PLAN);
-  const [sharePlan, shareState] = useMutation(SHARE_PLAN);
+  const [sharePlan, { data: share }] = useMutation(SHARE_PLAN);
 
   const [link, setLink] = useState("");
   const [showShare, setShowShare] = useState(false);
@@ -160,6 +160,15 @@ const MyPlan = () => {
     });
   }, [router.query.planId, sharePlan, userId]);
 
+  useEffect(() => {
+    if (!share?.sharePlan) return;
+    setLink(
+      `${process.env.NEXT_PUBLIC_HOSTING_DOMAIN}/planner/plan/shared/?token=${share?.sharePlan}`,
+    );
+    navigator.clipboard.writeText(
+      `${process.env.NEXT_PUBLIC_HOSTING_DOMAIN}/planner/plan/shared/?token=${share?.sharePlan}`,
+    );
+  }, [share]);
   return (
     <AContainer
       headerTitle="MEAL PLAN"
