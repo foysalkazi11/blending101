@@ -21,6 +21,10 @@ const Challenge: React.FC<ChallengeProps> = (props) => {
     <div className={styles.mainContainer__contentDiv__innerDiv}>
       <div className={styles.mainContainer__contentDiv__innerDiv__challengeDiv}>
         <div className={styles.challenge_circle_box}>
+          <div className={styles.title}>
+            <h2>{statistics?.challengeName || ""}</h2>
+            <hr />
+          </div>
           <RecipeCategory />
           <div ref={progressRef}>
             <Dialer activities={activities} statistics={statistics} />

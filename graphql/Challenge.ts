@@ -104,12 +104,15 @@ export const GET_30DAYS_CHALLENGE = gql`
         startDate
         endDate
         viewOnly
+        days
         memberInfo {
           image
         }
         sharedWith {
           memberId {
+            _id
             displayName
+            image
           }
           blendScore
         }

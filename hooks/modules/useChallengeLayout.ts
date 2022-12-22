@@ -61,9 +61,9 @@ const useChallengeLayout = () => {
       let challengeCircleInsideDate = document.querySelector(
         `.${mainStyles.challenge_circle_inside_date}`,
       );
-      let challengeCircleDayChallenge = document.querySelector(
-        `.${mainStyles.challenge_circle_day_challenge}`,
-      );
+      // let challengeCircleDayChallenge = document.querySelector(
+      //   `.${mainStyles.challenge_circle_day_challenge}`,
+      // );
       let challengeCircleRemainingDay = document.querySelector(
         `.${mainStyles.challenge_circle_remaining_day}`,
       );
@@ -84,14 +84,14 @@ const useChallengeLayout = () => {
       // challengeCircleProfile.style.width = cCMCOWidth * 0.1 + "px";
       challengeCircleInsideDate.style.fontSize = cCMCOWidth * 0.035 + "px";
       challengeCircleInsideDate.style.marginTop = cCMCOWidth * 0.01 + "px";
-      challengeCircleDayChallenge.style.fontSize = cCMCOWidth * 0.07 + "px";
-      challengeCircleDayChallenge.style.marginTop = cCMCOWidth * 0.03 + "px";
-      challengeCircleRemainingDay.style.fontSize = cCMCOWidth * 0.035 + "px";
-      challengeCircleRemainingDay.style.borderRadius = cCMCOWidth * 0.1 + "px";
-      challengeCircleRemainingDay.style.padding = `${cCMCOWidth * 0.01}px ${
-        cCMCOWidth * 0.05
-      }px`;
-      challengeCircleRemainingDay.style.marginTop = cCMCOWidth * 0.03 + "px";
+      // challengeCircleDayChallenge.style.fontSize = cCMCOWidth * 0.07 + "px";
+      // challengeCircleDayChallenge.style.marginTop = cCMCOWidth * 0.03 + "px";
+      // challengeCircleRemainingDay.style.fontSize = cCMCOWidth * 0.035 + "px";
+      // challengeCircleRemainingDay.style.borderRadius = cCMCOWidth * 0.1 + "px";
+      // challengeCircleRemainingDay.style.padding = `${cCMCOWidth * 0.01}px ${
+      //   cCMCOWidth * 0.05
+      // }px`;
+      // challengeCircleRemainingDay.style.marginTop = cCMCOWidth * 0.03 + "px";
       challengeCircleRemainingPercentage.style.fontSize =
         cCMCOWidth * 0.06 + "px";
       challengeCircleRemainingPercentage.style.marginTop =

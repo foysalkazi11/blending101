@@ -67,30 +67,34 @@ const BlendType = ({ categories }) => {
     [categories],
   );
   return (
-    <div className={styles.insights__graph}>
-      <h3>Blend Type</h3>
-      <div className={styles.challenge_circle}>
-        {data?.getAllCategories?.map((category) => (
-          <div
-            className={styles.challenge_circle_food_box}
-            key={category.value}
-          >
+    <div className="mt-50 mb-50">
+      <div className={styles.insights__graph}>
+        <h3>Blend Type</h3>
+        <div className={styles.challenge_circle}>
+          {data?.getAllCategories?.map((category) => (
             <div
-              className={styles.challenge_circle_food_color_represent}
-              style={{ backgroundColor: RECIPE_CATEGORY_COLOR[category.label] }}
-            />
-            <p className={styles.challenge_circle_food_name}>
-              {category.label}
-            </p>
-          </div>
-        ))}
-      </div>
-      <div id={styles.insights__progress_wrapper}>
-        <HSBar
-          height="50px"
-          id={styles.insights__progress}
-          data={types || []}
-        />
+              className={styles.challenge_circle_food_box}
+              key={category.value}
+            >
+              <div
+                className={styles.challenge_circle_food_color_represent}
+                style={{
+                  backgroundColor: RECIPE_CATEGORY_COLOR[category.label],
+                }}
+              />
+              <p className={styles.challenge_circle_food_name}>
+                {category.label}
+              </p>
+            </div>
+          ))}
+        </div>
+        <div id={styles.insights__progress_wrapper}>
+          <HSBar
+            height="50px"
+            id={styles.insights__progress}
+            data={types || []}
+          />
+        </div>
       </div>
     </div>
   );
@@ -110,38 +114,40 @@ const renderIngredientName = ({ x, y, value }) => (
 
 const TopIngredients = ({ ingredients }) => {
   return (
-    <div className={styles.insights__graph}>
-      <h3>Top Ingredients</h3>
-      <h5>Servings</h5>
-      <ResponsiveContainer width="100%" height={170}>
-        <BarChart layout="vertical" data={ingredients}>
-          <XAxis hide type="number" />
-          <YAxis
-            tickLine={false}
-            padding={{ top: 20 }}
-            axisLine={false}
-            type="category"
-            dataKey="&nbsp;"
-          />
-          <Bar dataKey="count" fill="#FFA482" layout="vertical">
-            <LabelList
-              dataKey="featuredImage"
-              position="left"
-              content={renderCustomizedLabel}
+    <div className="mb-50">
+      <div className={styles.insights__graph}>
+        <h3>Top Ingredients</h3>
+        <h5>Servings</h5>
+        <ResponsiveContainer width="100%" height={170}>
+          <BarChart layout="vertical" data={ingredients}>
+            <XAxis hide type="number" />
+            <YAxis
+              tickLine={false}
+              padding={{ top: 20 }}
+              axisLine={false}
+              type="category"
+              dataKey="&nbsp;"
             />
-            <LabelList
-              dataKey="count"
-              position="insideLeft"
-              formatter={(value) => `${value} | `}
-            />
-            <LabelList
-              dataKey="name"
-              position="insideLeft"
-              content={renderIngredientName}
-            />
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+            <Bar dataKey="count" fill="#FFA482" layout="vertical">
+              <LabelList
+                dataKey="featuredImage"
+                position="left"
+                content={renderCustomizedLabel}
+              />
+              <LabelList
+                dataKey="count"
+                position="insideLeft"
+                formatter={(value) => `${value} | `}
+              />
+              <LabelList
+                dataKey="name"
+                position="insideLeft"
+                content={renderIngredientName}
+              />
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 };

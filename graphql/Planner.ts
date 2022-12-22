@@ -188,12 +188,6 @@ export const MOVE_PLANNER = gql`
   }
 `;
 
-export const SHARE_PLAN = gql`
-  mutation SharePlan($userId: String!, $planId: String!) {
-    sharePlan(memberId: $userId, planId: $planId)
-  }
-`;
-
 export const DELETE_RECIPE_FROM_PLANNER = gql`
   mutation DeleteRecipeFromPlanner($plannerId: String!, $recipeId: String!) {
     deletePlanner(plannerId: $plannerId, recipeId: $recipeId)
@@ -375,5 +369,39 @@ export const ADD_TO_MY_PLAN = gql`
       startDate: $startDate
       endDate: $endDate
     )
+  }
+`;
+
+// PLAN SHARE
+export const SHARE_PLAN = gql`
+  mutation SharePlan($userId: String!, $planId: String!) {
+    sharePlan(memberId: $userId, planId: $planId)
+  }
+`;
+
+export const PLAN_SHARE_INFO = gql`
+  query GetPlanShareInfo($token: String!) {
+    getPlanShareInfo(planShareId: $token) {
+      plan {
+        _id
+        planName
+      }
+      recipes {
+        _id
+        name
+        image {
+          image
+          default
+        }
+      }
+
+      recipeCount
+      invitedBy {
+        displayName
+        email
+        firstName
+        _id
+      }
+    }
   }
 `;
