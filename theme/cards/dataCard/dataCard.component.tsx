@@ -2,7 +2,6 @@
 import React, { Dispatch, SetStateAction, useRef } from "react";
 import styles from "./dataCard.module.scss";
 import MoreVertIcon from "../../../public/icons/more_vert_black_36dp.svg";
-import { slicedString } from "../../../services/string.service";
 import { useRouter } from "next/router";
 import useChangeCompare from "../../../customHooks/useChangeComaper";
 import { MdOutlineEdit } from "react-icons/md";
