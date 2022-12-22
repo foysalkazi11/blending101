@@ -5,11 +5,24 @@ const DELETE_COMMENT = gql`
     removeComment(data: $data) {
       comments {
         _id
+        comment
+        rating
+        createdAt
+        updatedAt
+        userId {
+          _id
+          email
+          displayName
+          firstName
+          image
+          lastName
+        }
       }
       recipe {
         _id
         averageRating
         numberOfRating
+        totalRating
       }
     }
   }

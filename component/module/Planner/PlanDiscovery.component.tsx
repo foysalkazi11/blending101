@@ -50,6 +50,7 @@ const PlanDiscovery = (props: PlannerPanelProps) => {
   const [type, setType] = useState("all");
 
   const blendTypeRef = useRef<HTMLDivElement>(null);
+  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
   const [getAllPlan, { data, loading }] = useLazyQuery(GET_ALL_PLANS);
   const { data: categories } = useQuery(GET_BLEND_CATEGORY);
@@ -59,13 +60,14 @@ const PlanDiscovery = (props: PlannerPanelProps) => {
       variables: {
         limit,
         page,
+        memberId: userId,
       },
     }).then((response) => {
       setPageLength(
         Math.ceil(response.data.getAllGlobalPlans.totalPlans / limit),
       );
     });
-  }, [getAllPlan, limit, page]);
+  }, [getAllPlan, limit, page, userId]);
   useEffect(() => {
     setQuery("");
     setPage(1);
