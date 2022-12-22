@@ -82,8 +82,11 @@
     }
   }
 }
-.activeIcon {
+.activeIconSecondary {
   color: $secondaryColor;
+}
+.activeIconPrimary {
+  color: $primaryColor;
 }
 .inActiveIcon {
   color: #c4c4c4;

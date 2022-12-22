@@ -213,22 +213,22 @@ export const CREATE_PLAN = gql`
 `;
 
 export const GET_FEATURED_PLANS = gql`
-  query GetFeaturedPlans {
-    getAllRecentPlans(limit: 8) {
+  query GetFeaturedPlans($memberId: String!, $limit: Float!) {
+    getAllRecentPlans(limit: $limit, memberId: $memberId) {
       _id
       planName
       description
       startDateString
       endDateString
     }
-    getAllRecommendedPlans(limit: 8) {
+    getAllRecommendedPlans(memberId: $memberId, limit: $limit) {
       _id
       planName
       description
       startDateString
       endDateString
     }
-    getAllPopularPlans(limit: 8) {
+    getAllPopularPlans(memberId: $memberId, limit: $limit) {
       _id
       planName
       description
@@ -239,8 +239,8 @@ export const GET_FEATURED_PLANS = gql`
 `;
 
 export const GET_ALL_PLANS = gql`
-  query GetAllPlan($limit: Float!, $page: Float!) {
-    getAllGlobalPlans(limit: $limit, page: $page) {
+  query GetAllGlobalPlans($page: Float, $limit: Float, $memberId: String) {
+    getAllGlobalPlans(page: $page, limit: $limit, memberId: $memberId) {
       plans {
         _id
         planName

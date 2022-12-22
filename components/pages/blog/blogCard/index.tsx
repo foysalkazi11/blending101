@@ -6,24 +6,32 @@ import styles from "./BlogCard.module.scss";
 import IconWarper from "../../../../theme/iconWarper/IconWarper";
 import time_ago from "../../../../helperFunc/date/time_ago";
 import Image from "next/image";
-// import { faBookmark } from "@fortawesome/pro-solid-svg-icons";
-import { faMessageDots as faMessageDotsSolid } from "@fortawesome/pro-solid-svg-icons";
+import {
+  faMessageDots as faMessageDotsSolid,
+  faBookmark as faBookmarkSolid,
+} from "@fortawesome/pro-solid-svg-icons";
 import {
   faMessageDots as faMessageDotsLight,
-  faBookmark,
+  faBookmark as faBookmarkLight,
 } from "@fortawesome/pro-light-svg-icons";
 import { useRouter } from "next/router";
-import { useAppDispatch } from "../../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import {
+  setIsOpenBlogCollectionTray,
   setIsOpenBlogCommentsTray,
   updateCurrentBlogForShowComments,
 } from "../../../../redux/slices/blogSlice";
+import useToAddBlogCollection from "../../../../customHooks/blog/useToAddBlogCollection";
 
 interface Props {
   blogData: BlogListType;
+  setOpenLastModifiedCollectionModal?: (arg: boolean) => void;
 }
 
-const BlogCard = ({ blogData }: Props) => {
+const BlogCard = ({
+  blogData,
+  setOpenLastModifiedCollectionModal = () => {},
+}: Props) => {
   const {
     coverImage,
     title,
@@ -36,10 +44,13 @@ const BlogCard = ({ blogData }: Props) => {
     commentsCount,
     hasInCollection,
   } = blogData;
+
   const [play, setPlay] = useState(false);
   const titleWidth = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const handleToAddBlogAtCollection = useToAddBlogCollection();
+  const memberId = useAppSelector((state) => state?.user?.dbUser?._id || "");
 
   const togglePlay = (status: boolean = false) => {
     setPlay(status);
@@ -114,11 +125,25 @@ const BlogCard = ({ blogData }: Props) => {
           <p className={styles.brandName}>Blending 101</p>
         </div>
         <div className={styles.brandBox}>
-          <FontAwesomeIcon icon={faBookmark} className={`${styles.icon}`} />
+          <FontAwesomeIcon
+            icon={hasInCollection ? faBookmarkSolid : faBookmarkLight}
+            className={`${styles.icon} ${
+              hasInCollection ? styles.activeIconPrimary : ""
+            }`}
+            onClick={() => {
+              hasInCollection
+                ? dispatch(setIsOpenBlogCollectionTray(true))
+                : handleToAddBlogAtCollection(
+                    _id,
+                    memberId,
+                    setOpenLastModifiedCollectionModal,
+                  );
+            }}
+          />
           <FontAwesomeIcon
             icon={commentsCount ? faMessageDotsSolid : faMessageDotsLight}
             className={`${styles.icon} ${
-              commentsCount ? styles.activeIcon : ""
+              commentsCount ? styles.activeIconSecondary : ""
             }`}
             onClick={() => {
               dispatch(

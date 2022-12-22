@@ -10,9 +10,16 @@ import CommonSearchBar from "../../searchBar/CommonSearchBar";
 import WikiBanner from "../../wiki/wikiBanner/WikiBanner";
 import ErrorPage from "../404Page";
 import GET_ALL_ADMIN from "../../../gqlLib/user/queries/getAllAdmin";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import ShowLastModifiedCollection from "../../showLastModifiedCollection/ShowLastModifiedCollection";
+import { setIsOpenBlogCollectionTray } from "../../../redux/slices/blogSlice";
 
 const BlogList = () => {
+  const [openCollectionModal, setOpenCollectionModal] = useState(false);
+  const { dbUser } = useAppSelector((state) => state?.user);
+  const { lastModifiedBlogCollection } = useAppSelector((state) => state?.blog);
   const [blogSearchInput, setBlogSearchInput] = useState("");
+  const dispatch = useAppDispatch();
   const {
     data: generalBlogData,
     loading: generalBlogLoading,
@@ -20,6 +27,7 @@ const BlogList = () => {
   } = useQuery(GET_ALL_GENERAL_BLOG_FOR_CLIENT, {
     variables: {
       currentDate: new Date().toISOString().slice(0, 10),
+      memberId: dbUser._id,
     },
     fetchPolicy: "cache-and-network",
   });
@@ -64,11 +72,19 @@ const BlogList = () => {
               <BlogCard
                 key={blog?._id}
                 blogData={{ ...blog, createdBy: findAmin(blog?.createdBy) }}
+                setOpenLastModifiedCollectionModal={setOpenCollectionModal}
               />
             );
           },
         )}
       </div>
+      <ShowLastModifiedCollection
+        open={openCollectionModal}
+        setOpen={setOpenCollectionModal}
+        shouldCloseOnOverlayClick={true}
+        lastModifiedCollectionName={lastModifiedBlogCollection?.name}
+        openCollectionPanel={() => dispatch(setIsOpenBlogCollectionTray(true))}
+      />
     </Layout>
   );
 };
@@ -83,7 +99,7 @@ const Layout: FC<{
       showBlogCollectionTray={{
         show: true,
         showPanle: "left",
-        showTagByDeafult: false,
+        showTagByDeafult: true,
       }}
     >
       <div className={styles.blogPageLayout}>

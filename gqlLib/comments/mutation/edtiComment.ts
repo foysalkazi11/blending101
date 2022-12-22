@@ -7,7 +7,16 @@ const EDIT_COMMENT = gql`
         _id
         comment
         rating
+        createdAt
         updatedAt
+        userId {
+          _id
+          email
+          displayName
+          firstName
+          image
+          lastName
+        }
       }
       recipe {
         _id
