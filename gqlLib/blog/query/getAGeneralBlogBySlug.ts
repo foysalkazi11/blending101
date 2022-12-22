@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 const GET_A_GENERAL_BLOG_BY_SLUG = gql`
-  query GetAgeneralBlogBySlug($slug: String!) {
-    getAgeneralBlogBySlug(slug: $slug) {
+  query GetAgeneralBlogBySlug($memberId: ID!, $slug: String!) {
+    getAgeneralBlogBySlug(memberId: $memberId, slug: $slug) {
       _id
       title
       body

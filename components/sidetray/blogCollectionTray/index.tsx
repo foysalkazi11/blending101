@@ -2,6 +2,8 @@ import { faRectangleHistory } from "@fortawesome/pro-regular-svg-icons";
 import { faBookmark } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { setIsOpenBlogCollectionTray } from "../../../redux/slices/blogSlice";
 import CustomModal from "../../../theme/modal/customModal/CustomModal";
 import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
 import AddCollectionModal from "../collection/addCollectionModal/AddCollectionModal";
@@ -25,6 +27,8 @@ const BlogCollectionTray = ({
   });
   const [isEditCollection, setIsEditCollection] = useState(false);
   const [collectionId, setCollectionId] = useState("");
+  const { isOpenBlogCollectionTray } = useAppSelector((state) => state?.blog);
+  const dispatch = useAppDispatch();
 
   // open collection modal
   const addNewCollection = () => {
@@ -35,8 +39,10 @@ const BlogCollectionTray = ({
   return (
     <TrayWrapper
       showTagByDefaut={showTagByDefaut}
-      closeTray={() => {}}
-      openTray={false}
+      closeTray={() =>
+        dispatch(setIsOpenBlogCollectionTray(!isOpenBlogCollectionTray))
+      }
+      openTray={isOpenBlogCollectionTray}
       showPanle={showPanle}
       panleTag={(hover) => (
         <TrayTag

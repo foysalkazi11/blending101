@@ -20,6 +20,7 @@ import styles from "../../styles/pages/planner.module.scss";
 import "react-datepicker/dist/react-datepicker.css";
 import { useQuery } from "@apollo/client";
 import { GET_ALL_PLANS, GET_FEATURED_PLANS } from "../../graphql/Planner";
+import { useAppSelector } from "../../redux/hooks";
 
 const PlanDiscovery = ({
   input = "",
@@ -32,7 +33,10 @@ const PlanDiscovery = ({
   handleOnChange = () => {},
 }) => {
   const router = useRouter();
-  const { data } = useQuery(GET_FEATURED_PLANS);
+  const userId = useAppSelector((state) => state.user.dbUser._id || "");
+  const { data } = useQuery(GET_FEATURED_PLANS, {
+    variables: { limit: 8, memberId: userId },
+  });
 
   const [isInputFocus, setIsInputFocus] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
