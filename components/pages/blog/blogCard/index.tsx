@@ -20,6 +20,7 @@ import {
   setIsOpenBlogCollectionTray,
   setIsOpenBlogCommentsTray,
   updateCurrentBlogForShowComments,
+  setIsActiveBlogForCollection,
 } from "../../../../redux/slices/blogSlice";
 import useToAddBlogCollection from "../../../../customHooks/blog/useToAddBlogCollection";
 
@@ -54,6 +55,11 @@ const BlogCard = ({
 
   const togglePlay = (status: boolean = false) => {
     setPlay(status);
+  };
+
+  const handleOpenCollectionTray = (id: string) => {
+    dispatch(setIsActiveBlogForCollection(id));
+    dispatch(setIsOpenBlogCollectionTray(true));
   };
   return (
     <div className={styles.cardContainer}>
@@ -132,7 +138,7 @@ const BlogCard = ({
             }`}
             onClick={() => {
               hasInCollection
-                ? dispatch(setIsOpenBlogCollectionTray(true))
+                ? handleOpenCollectionTray(_id)
                 : handleToAddBlogAtCollection(
                     _id,
                     memberId,
