@@ -12,6 +12,7 @@ import {
   setIsOpenBlogCollectionTray,
 } from "../../../redux/slices/blogSlice";
 import CustomModal from "../../../theme/modal/customModal/CustomModal";
+import SkeletonCollections from "../../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollections";
 import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
 import notification from "../../utility/reactToastifyNotification";
 import AddCollectionModal from "../collection/addCollectionModal/AddCollectionModal";
@@ -212,35 +213,39 @@ const BlogCollectionTray = ({
         handleIconClick={addNewCollection}
         tooltipText="Add collection"
       />
-      {allCollectionData?.getAllBlogCollections?.blogCollections?.map(
-        (collection, i) => {
-          const { _id, name, slug, collectionDataCount, image, blogs } =
-            collection;
+      {allCollectionLoading ? (
+        <SkeletonCollections />
+      ) : (
+        allCollectionData?.getAllBlogCollections?.blogCollections?.map(
+          (collection, i) => {
+            const { _id, name, slug, collectionDataCount, image, blogs } =
+              collection;
 
-          return (
-            <SingleCollection
-              key={_id}
-              id={_id}
-              name={name}
-              slug={slug}
-              image={image || "/cards/food.png"}
-              collectionItemLength={collectionDataCount}
-              showMoreMenu={true}
-              handleDeleteCollection={handleDeleteCollection}
-              handleEditCollection={handleEditCollection}
-              index={i}
-              menuIndex={menuIndex}
-              setMenuIndex={setMenuIndex}
-              changeItemWithinCollection={
-                isActiveBlogForCollection ? true : false
-              }
-              isRecipeWithinCollection={blogs?.includes(
-                isActiveBlogForCollection,
-              )}
-              deleteCollectionLoading={deleteCollectionLoading}
-            />
-          );
-        },
+            return (
+              <SingleCollection
+                key={_id}
+                id={_id}
+                name={name}
+                slug={slug}
+                image={image || "/cards/food.png"}
+                collectionItemLength={collectionDataCount}
+                showMoreMenu={true}
+                handleDeleteCollection={handleDeleteCollection}
+                handleEditCollection={handleEditCollection}
+                index={i}
+                menuIndex={menuIndex}
+                setMenuIndex={setMenuIndex}
+                changeItemWithinCollection={
+                  isActiveBlogForCollection ? true : false
+                }
+                isRecipeWithinCollection={blogs?.includes(
+                  isActiveBlogForCollection,
+                )}
+                deleteCollectionLoading={deleteCollectionLoading}
+              />
+            );
+          },
+        )
       )}
       <CustomModal open={openModal} setOpen={setOpenModal}>
         <AddCollectionModal
