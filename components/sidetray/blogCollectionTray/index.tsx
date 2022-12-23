@@ -2,8 +2,10 @@ import { useLazyQuery, useMutation } from "@apollo/client";
 import { faRectangleHistory } from "@fortawesome/pro-regular-svg-icons";
 import { faBookmark } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import useToUpdateBlogField from "../../../customHooks/blog/useToUpdateBlogFirld";
 import ADD_NEW_BLOG_COLLECTION from "../../../gqlLib/blog/mutation/addNewBlogCllection";
+import ADD_OR_REMOVE_TO_BLOG_COLLECTION from "../../../gqlLib/blog/mutation/addOrRemoveToBlogCollection";
 import DELETE_BLOG_COLLECTION from "../../../gqlLib/blog/mutation/deleteBlogCollection";
 import GET_ALL_BLOG_COLLECTIONS from "../../../gqlLib/blog/query/getAllBlogCollections";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
@@ -30,6 +32,7 @@ const BlogCollectionTray = ({
   showPanle,
   showTagByDefaut,
 }: BlogCollectionTrayProps) => {
+  const [collectionHasRecipe, setCollectionHasRecipe] = useState<string[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [input, setInput] = useState({
     image: null,
@@ -39,9 +42,11 @@ const BlogCollectionTray = ({
   const [menuIndex, setMenuIndex] = useState(0);
   const [isEditCollection, setIsEditCollection] = useState(false);
   const [collectionId, setCollectionId] = useState("");
+  const [isCollectionUpdate, setIsCollectionUpdate] = useState(false);
   const { isOpenBlogCollectionTray, isActiveBlogForCollection } =
     useAppSelector((state) => state?.blog);
   const memberId = useAppSelector((state) => state?.user?.dbUser?._id || "");
+  const isMounted = useRef(null);
   const [
     getAllBlogCollections,
     {
@@ -57,10 +62,42 @@ const BlogCollectionTray = ({
   const [deleteCollection, { loading: deleteCollectionLoading }] = useMutation(
     DELETE_BLOG_COLLECTION,
   );
+  const [addOrRemoveBlogFromCollection] = useMutation(
+    ADD_OR_REMOVE_TO_BLOG_COLLECTION,
+  );
   const dispatch = useAppDispatch();
+  const handleToUpdateBlog = useToUpdateBlogField();
+
+  const handleAddOrRemoveBlogFormCollection = async () => {
+    try {
+      const { data } = await addOrRemoveBlogFromCollection({
+        variables: {
+          memberId,
+          collectionIds: collectionHasRecipe,
+          blogId: isActiveBlogForCollection,
+        },
+      });
+      let isBlogWithingCollection = false;
+
+      data?.getAllBlogCollections?.blogCollections?.forEach((collection) => {
+        const { _id, blogs } = collection;
+
+        if (blogs?.includes(isActiveBlogForCollection)) {
+          isBlogWithingCollection = true;
+        }
+      });
+
+      dispatch(setIsActiveBlogForCollection(""));
+      notification("info", `Collection update successfully`);
+      setIsCollectionUpdate(false);
+      handleToUpdateBlog(isActiveBlogForCollection, { hasInCollection: false });
+    } catch (error) {
+      notification("error", error?.message);
+      setIsCollectionUpdate(false);
+    }
+  };
 
   // add or edit collection
-
   const handleAddOrEditCollection = async () => {
     try {
       if (input?.name) {
@@ -174,17 +211,69 @@ const BlogCollectionTray = ({
     setOpenModal(true);
   };
 
+  // handle change blog form collection
+  const handleChange = async (e, collectionId) => {
+    setIsCollectionUpdate(true);
+    if (e?.target?.checked) {
+      setCollectionHasRecipe((pre) => [...pre, collectionId]);
+    } else {
+      setCollectionHasRecipe((pre) => [
+        ...pre?.filter((id) => id !== collectionId),
+      ]);
+    }
+  };
+
   useEffect(() => {
     if (isOpenBlogCollectionTray) {
       getAllBlogCollections({ variables: { memberId } });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpenBlogCollectionTray]);
+  useEffect(() => {
+    if (isActiveBlogForCollection && isOpenBlogCollectionTray) {
+      setCollectionHasRecipe([]);
+      allCollectionData?.getAllBlogCollections?.blogCollections?.forEach(
+        (collection) => {
+          const { _id, blogs } = collection;
+
+          if (blogs?.includes(isActiveBlogForCollection)) {
+            setCollectionHasRecipe((pre) => {
+              if (pre) {
+                return [...pre, _id];
+              } else {
+                return [_id];
+              }
+            });
+          }
+        },
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isActiveBlogForCollection, allCollectionData]);
+
+  useEffect(() => {
+    if (isMounted.current) {
+      if (!isOpenBlogCollectionTray) {
+        if (isCollectionUpdate && isActiveBlogForCollection) {
+          handleAddOrRemoveBlogFormCollection();
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpenBlogCollectionTray]);
+
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
   return (
     <TrayWrapper
       showTagByDefaut={showTagByDefaut}
       closeTray={() => {
-        dispatch(setIsActiveBlogForCollection(""));
+        !isCollectionUpdate && dispatch(setIsActiveBlogForCollection(""));
         dispatch(setIsOpenBlogCollectionTray(!isOpenBlogCollectionTray));
       }}
       openTray={isOpenBlogCollectionTray}
@@ -238,10 +327,9 @@ const BlogCollectionTray = ({
                 changeItemWithinCollection={
                   isActiveBlogForCollection ? true : false
                 }
-                isRecipeWithinCollection={blogs?.includes(
-                  isActiveBlogForCollection,
-                )}
+                isRecipeWithinCollection={collectionHasRecipe?.includes(_id)}
                 deleteCollectionLoading={deleteCollectionLoading}
+                handleClickCheckBox={handleChange}
               />
             );
           },

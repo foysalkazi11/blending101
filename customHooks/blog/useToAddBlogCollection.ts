@@ -6,9 +6,11 @@ import {
   setIsActiveBlogForCollection,
   updateLastModifiedBlogCollection,
 } from "../../redux/slices/blogSlice";
+import useToUpdateBlogField from "./useToUpdateBlogFirld";
 
 const useToAddBlogCollection = () => {
   const dispatch = useAppDispatch();
+  const handleToUpdateBlog = useToUpdateBlogField();
   let timeOut;
   const [addToBlogCollection] = useMutation(
     ADD_TO_LAST_MODIFIED_BLOG_COLLECTION,
@@ -28,10 +30,12 @@ const useToAddBlogCollection = () => {
           memberId,
         },
       });
+
       dispatch(
         updateLastModifiedBlogCollection(addToLastModifiedBlogCollection),
       );
       dispatch(setIsActiveBlogForCollection(blogId));
+      handleToUpdateBlog(blogId, { hasInCollection: true });
       setOpenLastModifiedBlogCollectionModal(true);
       timeOut = setTimeout(() => {
         setOpenLastModifiedBlogCollectionModal(false);
