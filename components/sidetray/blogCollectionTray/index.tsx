@@ -90,7 +90,11 @@ const BlogCollectionTray = ({
       dispatch(setIsActiveBlogForCollection(""));
       notification("info", `Collection update successfully`);
       setIsCollectionUpdate(false);
-      handleToUpdateBlog(isActiveBlogForCollection, { hasInCollection: false });
+      // if (!isBlogWithingCollection) {
+      //   handleToUpdateBlog(isActiveBlogForCollection, {
+      //     hasInCollection: false,
+      //   });
+      // }
     } catch (error) {
       notification("error", error?.message);
       setIsCollectionUpdate(false);
