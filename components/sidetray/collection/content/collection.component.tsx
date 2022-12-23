@@ -6,15 +6,10 @@ import React, {
   useState,
 } from "react";
 import styles from "./content.module.scss";
-import { MdMoreVert, MdDeleteOutline } from "react-icons/md";
-import { HiOutlineShare } from "react-icons/hi";
-import { BiEditAlt } from "react-icons/bi";
-import { setOpenCollectionsTary } from "../../../../redux/slices/sideTraySlice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { useMutation } from "@apollo/client";
 import DELETE_COLLECTION from "../../../../gqlLib/collection/mutation/deleteCollection";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
-import CustomCheckbox from "../../../../theme/checkbox/CustomCheckbox";
 import { setCurrentCollectionInfo } from "../../../../redux/slices/collectionSlice";
 import ADD_OR_REMOVE_RECIPE_FORM_COLLECTION from "../../../../gqlLib/collection/mutation/addOrRemoveRecipeFromCollection";
 import SkeletonCollections from "../../../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollections";
@@ -22,37 +17,7 @@ import useUpdateRecipeField from "../../../../customHooks/useUpdateRecipeFirld";
 import useLocalStorage from "../../../../customHooks/useLocalStorage";
 import { setCompareList } from "../../../../redux/slices/recipeSlice";
 import updateRecipeFunc from "../../../utility/updateRecipeFunc";
-import Link from "next/link";
-
-const IndividualCollection = ({
-  name = "All Recipes",
-  image = "/cards/food.png",
-  slug = "",
-}: {
-  name?: string;
-  image?: string;
-  slug?: string;
-}) => {
-  return (
-    <Link href={`/collection/${slug}`}>
-      <a>
-        <div className={styles.collection__child}>
-          <div className={styles.leftSide}>
-            <div className={styles.img}>
-              <div
-                className={styles.abs}
-                style={{
-                  backgroundImage: `url(${image})`,
-                }}
-              ></div>
-            </div>
-            <p>{name}</p>
-          </div>
-        </div>
-      </a>
-    </Link>
-  );
-};
+import SingleCollection from "../../common/singleCollection/SingleCollection";
 
 interface CollectionComponentProps {
   collections: {}[];
@@ -103,7 +68,7 @@ export default function CollectionComponent({
     setcompareRecipeList((state) => updateRecipeFunc(state || [], obj, id));
   };
 
-  const handleAddorRemoveRecipeFormCollection = async () => {
+  const handleAddOrRemoveRecipeFormCollection = async () => {
     try {
       await addOrRemoveRecipeFromCollection({
         variables: {
@@ -166,6 +131,17 @@ export default function CollectionComponent({
     }
   };
 
+  const handleEditCollection = (id: string, name: string, slug: string) => {
+    setInput((pre) => ({
+      ...pre,
+      name,
+      slug,
+    }));
+    setIsEditCollection(true);
+    setCollectionId(id);
+    setOpenModal(true);
+  };
+
   const handleClick = (index: number) => {
     if (menuIndex === index) {
       setMenuIndex(index);
@@ -184,7 +160,7 @@ export default function CollectionComponent({
     if (isMounted.current) {
       if (!openCollectionsTary) {
         if (isCollectionUpdate) {
-          handleAddorRemoveRecipeFormCollection();
+          handleAddOrRemoveRecipeFormCollection();
         }
       }
     }
@@ -200,99 +176,40 @@ export default function CollectionComponent({
   }, []);
 
   return (
-    <div className={styles.collection}>
-      <div className={styles.collection__add}></div>
-      <div className={styles.collection__collections}>
-        {changeRecipeWithinCollection ? null : (
-          <>
-            <IndividualCollection name="All Recipes" slug="all-recipes" />
-            <IndividualCollection name="My Recipes" slug="my-recipes" />
-          </>
-        )}
-        {collectionsLoading ? (
-          <SkeletonCollections />
-        ) : (
-          collections?.map((item: any, i: number) => {
-            const defaultImage = item?.image;
+    <div>
+      {changeRecipeWithinCollection ? null : (
+        <>
+          <SingleCollection name="All Recipes" slug="all-recipes" />
+          <SingleCollection name="My Recipes" slug="my-recipes" />
+        </>
+      )}
+      {collectionsLoading ? (
+        <SkeletonCollections />
+      ) : (
+        collections?.map((collection: any, i: number) => {
+          const { _id, image, name, slug, recipes } = collection;
 
-            return (
-              <div
-                className={styles.collection__child}
-                key={"collections__child" + i}
-                onMouseOver={() => setHoverIndex(i + 1)}
-                onMouseLeave={() => setHoverIndex(0)}
-              >
-                <Link href={`/collection/${item?.slug}`} passHref>
-                  <div className={styles.leftSide}>
-                    <div className={styles.img}>
-                      <div
-                        className={styles.abs}
-                        style={{
-                          backgroundImage: `url(${
-                            defaultImage || "/cards/food.png"
-                          })`,
-                        }}
-                      ></div>
-                    </div>
-                    <p>{item?.name}</p>
-                  </div>
-                </Link>
-
-                {changeRecipeWithinCollection ? (
-                  <div className={styles.checkBox}>
-                    <CustomCheckbox
-                      checked={collectionHasRecipe?.includes(item?._id)}
-                      handleChange={(e) => handleChange(e, item?._id)}
-                    />
-                  </div>
-                ) : hoverIndex === i + 1 ? (
-                  item?.name === "My Favourite" ? (
-                    <p style={{ marginRight: "10px" }}>
-                      {item?.recipes?.length}
-                    </p>
-                  ) : (
-                    <div
-                      className={styles.rightSide}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleClick(i);
-                      }}
-                    >
-                      <MdMoreVert className={styles.moreIcon} />
-
-                      <div
-                        className={`${styles.menu} ${
-                          menuIndex === i && showMenu ? styles.showMenu : ""
-                        }`}
-                      >
-                        <BiEditAlt
-                          className={styles.icon}
-                          onClick={() => {
-                            setInput((pre) => ({
-                              ...pre,
-                              name: item?.name,
-                            }));
-                            setIsEditCollection(true);
-                            setCollectionId(item?._id);
-                            setOpenModal(true);
-                          }}
-                        />
-                        <MdDeleteOutline
-                          className={styles.icon}
-                          onClick={() => handleDeleteCollection(item?._id)}
-                        />
-                        <HiOutlineShare className={styles.icon} />
-                      </div>
-                    </div>
-                  )
-                ) : (
-                  <p style={{ marginRight: "10px" }}>{item?.recipes?.length}</p>
-                )}
-              </div>
-            );
-          })
-        )}
-      </div>
+          return (
+            <SingleCollection
+              key={collection?._id}
+              name={name}
+              slug={slug}
+              id={_id}
+              image={image || "/cards/food.png"}
+              isRecipeWithinCollection={collectionHasRecipe?.includes(_id)}
+              index={i}
+              collectionItemLength={recipes?.length}
+              changeItemWithinCollection={changeRecipeWithinCollection}
+              handleClickCheckBox={handleChange}
+              showMoreMenu={true}
+              menuIndex={menuIndex}
+              setMenuIndex={setMenuIndex}
+              handleDeleteCollection={handleDeleteCollection}
+              handleEditCollection={handleEditCollection}
+            />
+          );
+        })
+      )}
     </div>
   );
 }

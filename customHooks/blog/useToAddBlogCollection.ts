@@ -2,7 +2,10 @@ import { useMutation } from "@apollo/client";
 import { useEffect } from "react";
 import ADD_TO_LAST_MODIFIED_BLOG_COLLECTION from "../../gqlLib/blog/mutation/addTolastModifiedBlogCollection";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { updateLastModifiedBlogCollection } from "../../redux/slices/blogSlice";
+import {
+  setIsActiveBlogForCollection,
+  updateLastModifiedBlogCollection,
+} from "../../redux/slices/blogSlice";
 
 const useToAddBlogCollection = () => {
   const dispatch = useAppDispatch();
@@ -28,6 +31,7 @@ const useToAddBlogCollection = () => {
       dispatch(
         updateLastModifiedBlogCollection(addToLastModifiedBlogCollection),
       );
+      dispatch(setIsActiveBlogForCollection(blogId));
       setOpenLastModifiedBlogCollectionModal(true);
       timeOut = setTimeout(() => {
         setOpenLastModifiedBlogCollectionModal(false);

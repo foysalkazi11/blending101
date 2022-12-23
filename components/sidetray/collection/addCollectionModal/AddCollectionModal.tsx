@@ -3,6 +3,8 @@ import React, { Dispatch, SetStateAction } from "react";
 import styles from "./AddCollection.module.scss";
 import CommentAndNoteButton from "../../../../theme/button/commentAndNoteButton/CommentAndNoteButton";
 import InputComponent from "../../../../theme/input/input.component";
+import slugStringGenerator from "../../../utility/slugStringGenerator";
+import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
 
 type AddCollectionModalProps = {
   input: any;
@@ -24,7 +26,12 @@ const AddCollectionModal = ({
     if (type === "file") {
       setInput((pre) => ({ ...pre, image: e?.target?.files[0] }));
     } else {
-      setInput((pre) => ({ ...pre, [name]: value }));
+      if (name === "name") {
+        const convertToSlug = slugStringGenerator(value);
+        setInput((pre) => ({ ...pre, name: value, slug: convertToSlug }));
+      } else {
+        setInput((pre) => ({ ...pre, [name]: value }));
+      }
     }
   };
 
@@ -91,13 +98,27 @@ const AddCollectionModal = ({
           name="name"
           onChange={handleChange}
         />
+        <InputComponent
+          style={{ marginTop: "10px" }}
+          borderSecondary={true}
+          placeholder="Slug"
+          value={input?.slug}
+          name="slug"
+          onChange={handleChange}
+        />
 
         <div className={styles.buttonGroup}>
           <CommentAndNoteButton
             type="submitBtn"
             style={{ marginRight: "30px" }}
             handleClick={handleToAddOrUpdateCollection}
-            text={isAddOrUpdateCollectionLoading ? "Loading..." : "Submit"}
+            text={
+              isAddOrUpdateCollectionLoading ? (
+                <CircularRotatingLoader color="white" />
+              ) : (
+                "Submit"
+              )
+            }
           />
           <CommentAndNoteButton
             type="cancleBtn"

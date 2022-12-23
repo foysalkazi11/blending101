@@ -36,6 +36,7 @@ export default function RecipeCollectionAndThemeTray({
   const [input, setInput] = useState<any>({
     image: null,
     name: "",
+    slug: "",
   });
   const [isEditCollection, setIsEditCollection] = useState(false);
   const [collectionId, setCollectionId] = useState("");
