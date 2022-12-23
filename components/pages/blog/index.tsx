@@ -83,7 +83,10 @@ const BlogList = () => {
         setOpen={setOpenCollectionModal}
         shouldCloseOnOverlayClick={true}
         lastModifiedCollectionName={lastModifiedBlogCollection?.name}
-        openCollectionPanel={() => dispatch(setIsOpenBlogCollectionTray(true))}
+        openCollectionPanel={() => {
+          dispatch(setIsOpenBlogCollectionTray(true));
+          setOpenCollectionModal(false);
+        }}
       />
     </Layout>
   );
