@@ -6,7 +6,6 @@ const GET_ALL_GENERAL_BLOG_FOR_CLIENT = gql`
       _id
       coverImage
       createdBy
-      hasInCollection
       mediaLength
       mediaUrl
       publishDate
@@ -15,6 +14,7 @@ const GET_ALL_GENERAL_BLOG_FOR_CLIENT = gql`
       publishDateString
       type
       commentsCount
+      blogCollections
     }
   }
 `;

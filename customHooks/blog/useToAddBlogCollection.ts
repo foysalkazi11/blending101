@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/client";
 import { useEffect } from "react";
 import ADD_TO_LAST_MODIFIED_BLOG_COLLECTION from "../../gqlLib/blog/mutation/addTolastModifiedBlogCollection";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { useAppDispatch } from "../../redux/hooks";
 import {
   setIsActiveBlogForCollection,
   updateLastModifiedBlogCollection,
@@ -34,8 +34,15 @@ const useToAddBlogCollection = () => {
       dispatch(
         updateLastModifiedBlogCollection(addToLastModifiedBlogCollection),
       );
-      dispatch(setIsActiveBlogForCollection(blogId));
-      handleToUpdateBlog(blogId, { hasInCollection: true });
+      dispatch(
+        setIsActiveBlogForCollection({
+          id: blogId,
+          collectionIds: [addToLastModifiedBlogCollection?._id],
+        }),
+      );
+      handleToUpdateBlog(blogId, {
+        blogCollections: [addToLastModifiedBlogCollection?._id],
+      });
       setOpenLastModifiedBlogCollectionModal(true);
       timeOut = setTimeout(() => {
         setOpenLastModifiedBlogCollectionModal(false);

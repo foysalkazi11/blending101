@@ -9,13 +9,17 @@ interface LastModifiedBlogCollectionType {
   _id: string;
   name: string;
 }
+interface ActiveBlogForCollectionType {
+  id: string;
+  collectionIds: string[];
+}
 
 interface BlogSliceState {
   currentBlogForShowComments: CurrentBlogForShowComments;
   isOpenBlogCommentsTray: boolean;
   isOpenBlogCollectionTray: boolean;
   lastModifiedBlogCollection: LastModifiedBlogCollectionType;
-  isActiveBlogForCollection: string;
+  activeBlogForCollection: ActiveBlogForCollectionType;
 }
 
 const initialState: BlogSliceState = {
@@ -30,7 +34,10 @@ const initialState: BlogSliceState = {
     _id: "",
     name: "",
   },
-  isActiveBlogForCollection: "",
+  activeBlogForCollection: {
+    id: "",
+    collectionIds: [],
+  },
 };
 
 export const blogSlice = createSlice({
@@ -55,8 +62,11 @@ export const blogSlice = createSlice({
     ) => {
       state.lastModifiedBlogCollection = { ...action.payload };
     },
-    setIsActiveBlogForCollection: (state, action: PayloadAction<string>) => {
-      state.isActiveBlogForCollection = action.payload;
+    setIsActiveBlogForCollection: (
+      state,
+      action: PayloadAction<ActiveBlogForCollectionType>,
+    ) => {
+      state.activeBlogForCollection = action.payload;
     },
   },
 });

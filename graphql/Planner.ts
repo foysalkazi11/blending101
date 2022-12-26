@@ -214,6 +214,8 @@ export const GET_FEATURED_PLANS = gql`
       description
       startDateString
       endDateString
+      collections
+      commentsCount
     }
     getAllRecommendedPlans(memberId: $memberId, limit: $limit) {
       _id
@@ -221,6 +223,8 @@ export const GET_FEATURED_PLANS = gql`
       description
       startDateString
       endDateString
+      collections
+      commentsCount
     }
     getAllPopularPlans(memberId: $memberId, limit: $limit) {
       _id
@@ -228,6 +232,8 @@ export const GET_FEATURED_PLANS = gql`
       description
       startDateString
       endDateString
+      collections
+      commentsCount
     }
   }
 `;
@@ -402,6 +408,18 @@ export const PLAN_SHARE_INFO = gql`
         firstName
         _id
       }
+    }
+  }
+`;
+
+export const ADD_TO_LAST_MODIFIED_PLAN_COLLECTION = gql`
+  mutation AddToLastModifiedPlanCollection(
+    $planId: String!
+    $memberId: String!
+  ) {
+    addToLastModifiedPlanCollection(planId: $planId, memberId: $memberId) {
+      _id
+      name
     }
   }
 `;

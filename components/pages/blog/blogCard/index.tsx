@@ -43,7 +43,7 @@ const BlogCard = ({
     slug,
     _id,
     commentsCount,
-    hasInCollection,
+    blogCollections,
   } = blogData;
 
   const [play, setPlay] = useState(false);
@@ -57,8 +57,8 @@ const BlogCard = ({
     setPlay(status);
   };
 
-  const handleOpenCollectionTray = (id: string) => {
-    dispatch(setIsActiveBlogForCollection(id));
+  const handleOpenCollectionTray = (id: string, collectionIds: string[]) => {
+    dispatch(setIsActiveBlogForCollection({ id, collectionIds }));
     dispatch(setIsOpenBlogCollectionTray(true));
   };
   return (
@@ -132,13 +132,13 @@ const BlogCard = ({
         </div>
         <div className={styles.brandBox}>
           <FontAwesomeIcon
-            icon={hasInCollection ? faBookmarkSolid : faBookmarkLight}
+            icon={blogCollections.length ? faBookmarkSolid : faBookmarkLight}
             className={`${styles.icon} ${
-              hasInCollection ? styles.activeIconPrimary : ""
+              blogCollections.length ? styles.activeIconPrimary : ""
             }`}
             onClick={() => {
-              hasInCollection
-                ? handleOpenCollectionTray(_id)
+              blogCollections.length
+                ? handleOpenCollectionTray(_id, blogCollections)
                 : handleToAddBlogAtCollection(
                     _id,
                     memberId,
