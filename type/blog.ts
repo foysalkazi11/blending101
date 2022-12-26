@@ -2,7 +2,7 @@ export interface BlogListType {
   _id: string;
   coverImage: string;
   createdBy: string;
-  hasInCollection: boolean;
+  blogCollections: string[];
   mediaLength: string;
   mediaUrl: string;
   publishDate: string;
