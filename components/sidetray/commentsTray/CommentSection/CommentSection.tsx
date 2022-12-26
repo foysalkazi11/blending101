@@ -115,29 +115,26 @@ const CommentSection = () => {
             userId: dbUser?._id,
             commentId: id,
           },
-          update(cache, { data: { removeComment } }) {
-            cache.writeQuery({
-              query: GET_ALL_COMMENTS_FOR_A_RECIPE,
-              variables: {
-                data: {
-                  recipeId: activeRecipeId,
-                  userId: dbUser?._id,
-                },
-              },
+        },
+        update(cache, { data: { removeComment } }) {
+          cache.writeQuery({
+            query: GET_ALL_COMMENTS_FOR_A_RECIPE,
+            variables: {
               data: {
-                getAllCommentsForARecipe: {
-                  comments:
-                    commentData?.getAllCommentsForARecipe?.comments?.filter(
-                      (comment) =>
-                        comment._id !== removeComment?.comments?.[0]._id,
-                    ),
-                  recipe: {
-                    ...removeComment?.recipe,
-                  },
+                recipeId: activeRecipeId,
+                userId: dbUser?._id,
+              },
+            },
+            data: {
+              getAllCommentsForARecipe: {
+                comments: [...removeComment?.comments],
+
+                recipe: {
+                  ...removeComment?.recipe,
                 },
               },
-            });
-          },
+            },
+          });
         },
       });
 
@@ -172,10 +169,7 @@ const CommentSection = () => {
               },
               data: {
                 getAllCommentsForARecipe: {
-                  comments: [
-                    createComment?.comments,
-                    ...commentData.getAllCommentsForARecipe?.comments,
-                  ],
+                  comments: [...createComment?.comments],
                   recipe: {
                     ...createComment?.recipe,
                   },
@@ -207,13 +201,12 @@ const CommentSection = () => {
                 },
               },
               data: {
-                getAllCommentsForARecipe:
-                  commentData?.getAllCommentsForARecipe?.comments?.map(
-                    (comment) =>
-                      comment._id === editComment.comments._id
-                        ? { ...comment, ...editComment }
-                        : comment,
-                  ),
+                getAllCommentsForARecipe: {
+                  comments: [...editComment?.comments],
+                  recipe: {
+                    ...editComment?.recipe,
+                  },
+                },
               },
             });
           },

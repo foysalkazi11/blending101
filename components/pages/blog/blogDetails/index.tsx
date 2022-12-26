@@ -5,6 +5,7 @@ import AContainer from "../../../../containers/A.container";
 import GET_A_GENERAL_BLOG_BY_SLUG from "../../../../gqlLib/blog/query/getAGeneralBlogBySlug";
 import GET_ALL_GENERAL_BLOG_FOR_CLIENT from "../../../../gqlLib/blog/query/getAllGeneralBlogForClient";
 import GET_ALL_ADMIN from "../../../../gqlLib/user/queries/getAllAdmin";
+import { useAppSelector } from "../../../../redux/hooks";
 import SkeletonBlogDetails from "../../../../theme/skeletons/skeletonBlogDetails";
 import ErrorPage from "../../404Page";
 import styles from "./BlogDetails.module.scss";
@@ -12,13 +13,16 @@ import BlogDetailsCenter from "./BlogDetailsCenter";
 import RelatedBlog from "./RelatedBlog";
 
 const BlogDetails = () => {
+  const { dbUser } = useAppSelector((state) => state?.user);
   const router = useRouter();
   const { blog_slug } = router.query;
   const {
     data: blogData,
     loading: blogLoading,
     error: blogError,
-  } = useQuery(GET_A_GENERAL_BLOG_BY_SLUG, { variables: { slug: blog_slug } });
+  } = useQuery(GET_A_GENERAL_BLOG_BY_SLUG, {
+    variables: { slug: blog_slug, memberId: dbUser._id },
+  });
   const {
     data: generalBlogData,
     loading: generalBlogLoading,
@@ -26,6 +30,7 @@ const BlogDetails = () => {
   } = useQuery(GET_ALL_GENERAL_BLOG_FOR_CLIENT, {
     variables: {
       currentDate: new Date().toISOString().slice(0, 10),
+      memberId: dbUser._id,
     },
     fetchPolicy: "cache-and-network",
   });

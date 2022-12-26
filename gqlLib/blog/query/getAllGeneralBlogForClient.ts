@@ -1,12 +1,11 @@
 import { gql } from "@apollo/client";
 
 const GET_ALL_GENERAL_BLOG_FOR_CLIENT = gql`
-  query GetAllGeneralBlogForClient($currentDate: String!) {
-    getAllGeneralBlogForClient(currentDate: $currentDate) {
+  query GetAllGeneralBlogForClient($memberId: String!, $currentDate: String!) {
+    getAllGeneralBlogForClient(memberId: $memberId, currentDate: $currentDate) {
       _id
       coverImage
       createdBy
-      hasInCollection
       mediaLength
       mediaUrl
       publishDate
@@ -15,6 +14,7 @@ const GET_ALL_GENERAL_BLOG_FOR_CLIENT = gql`
       publishDateString
       type
       commentsCount
+      blogCollections
     }
   }
 `;
