@@ -1,6 +1,6 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 
-const API_URL = "https://srcfooddb-production.up.railway.app/graphql";
+const API_URL = "https://srcblending-production.up.railway.app/graphql";
 
 const client = new ApolloClient({
   uri: API_URL,

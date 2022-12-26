@@ -207,34 +207,40 @@ export const CREATE_PLAN = gql`
 `;
 
 export const GET_FEATURED_PLANS = gql`
-  query GetFeaturedPlans {
-    getAllRecentPlans(limit: 8) {
+  query GetFeaturedPlans($memberId: String!, $limit: Float!) {
+    getAllRecentPlans(limit: $limit, memberId: $memberId) {
       _id
       planName
       description
       startDateString
       endDateString
+      collections
+      commentsCount
     }
-    getAllRecommendedPlans(limit: 8) {
+    getAllRecommendedPlans(memberId: $memberId, limit: $limit) {
       _id
       planName
       description
       startDateString
       endDateString
+      collections
+      commentsCount
     }
-    getAllPopularPlans(limit: 8) {
+    getAllPopularPlans(memberId: $memberId, limit: $limit) {
       _id
       planName
       description
       startDateString
       endDateString
+      collections
+      commentsCount
     }
   }
 `;
 
 export const GET_ALL_PLANS = gql`
-  query GetAllPlan($limit: Float!, $page: Float!) {
-    getAllGlobalPlans(limit: $limit, page: $page) {
+  query GetAllGlobalPlans($page: Float, $limit: Float, $memberId: String) {
+    getAllGlobalPlans(page: $page, limit: $limit, memberId: $memberId) {
       plans {
         _id
         planName
@@ -402,6 +408,18 @@ export const PLAN_SHARE_INFO = gql`
         firstName
         _id
       }
+    }
+  }
+`;
+
+export const ADD_TO_LAST_MODIFIED_PLAN_COLLECTION = gql`
+  mutation AddToLastModifiedPlanCollection(
+    $planId: String!
+    $memberId: String!
+  ) {
+    addToLastModifiedPlanCollection(planId: $planId, memberId: $memberId) {
+      _id
+      name
     }
   }
 `;

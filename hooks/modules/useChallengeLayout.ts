@@ -67,12 +67,12 @@ const useChallengeLayout = () => {
       let challengeCircleRemainingDay = document.querySelector(
         `.${mainStyles.challenge_circle_remaining_day}`,
       );
-      let challengeCircleRemainingPercentage = document.querySelector(
-        `.${mainStyles.challenge_circle_remaining_percentage}`,
-      );
-      let challengeCircleRemainingPercentageParagraph = document.querySelector(
-        `.${mainStyles.challenge_circle_remaining_percentage_paragraph}`,
-      );
+      // let challengeCircleRemainingPercentage = document.querySelector(
+      //   `.${mainStyles.challenge_circle_remaining_percentage}`,
+      // );
+      // let challengeCircleRemainingPercentageParagraph = document.querySelector(
+      //   `.${mainStyles.challenge_circle_remaining_percentage_paragraph}`,
+      // );
 
       // if (!challengeCircleMainCircleOuter) return;
       challengeCircleMainCircleOuter.style.width =
@@ -92,14 +92,14 @@ const useChallengeLayout = () => {
       //   cCMCOWidth * 0.05
       // }px`;
       // challengeCircleRemainingDay.style.marginTop = cCMCOWidth * 0.03 + "px";
-      challengeCircleRemainingPercentage.style.fontSize =
-        cCMCOWidth * 0.06 + "px";
-      challengeCircleRemainingPercentage.style.marginTop =
-        cCMCOWidth * 0.01 + "px";
-      challengeCircleRemainingPercentageParagraph.style.fontSize =
-        cCMCOWidth * 0.038 + "px";
-      challengeCircleRemainingPercentageParagraph.style.marginTop =
-        cCMCOWidth * 0.005 + "px";
+      // challengeCircleRemainingPercentage.style.fontSize =
+      //   cCMCOWidth * 0.06 + "px";
+      // challengeCircleRemainingPercentage.style.marginTop =
+      //   cCMCOWidth * 0.01 + "px";
+      // challengeCircleRemainingPercentageParagraph.style.fontSize =
+      //   cCMCOWidth * 0.038 + "px";
+      // challengeCircleRemainingPercentageParagraph.style.marginTop =
+      //   cCMCOWidth * 0.005 + "px";
 
       // Ring Logic
       let circles = document.querySelectorAll(`.${mainStyles.wheel__button}`);

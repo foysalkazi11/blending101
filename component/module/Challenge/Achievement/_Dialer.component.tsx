@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { forwardRef, useState } from "react";
 import Image from "next/image";
 import DatePicker from "react-datepicker";
 import { faCalendarDay } from "@fortawesome/pro-light-svg-icons";
@@ -17,7 +17,9 @@ interface MainInterface {
   activities: any[];
 }
 
+type ILabel = "Total Days" | "Days Completed" | "Days Remaining";
 function Main({ activities, statistics }: MainInterface) {
+  const [label, setLabel] = useState<ILabel>("Days Completed");
   const activeDate = useAppSelector((state) => state.challenge.activeDate);
   const begin = new Date(statistics?.startDate);
   const today = new Date(activeDate !== "" ? activeDate : new Date());
@@ -44,17 +46,54 @@ function Main({ activities, statistics }: MainInterface) {
               endDate={end}
             />
           </div>
-          <div className={styles.dialer__summary}>
-            <span>Total Days: {statistics?.days || 0}</span>
-            <span>Completed: {differenceInDays(today, begin) + 1 || 0}</span>
-            <span>Remaining: {statistics?.daysRemaining || 0}</span>
+          <div className={styles.dialer__days}>
+            <span
+              className={
+                label === "Total Days" ? styles["dialer__days--active"] : ""
+              }
+              onClick={() => setLabel("Total Days")}
+            >
+              {statistics?.days || 0}
+            </span>
+            <span
+              className={
+                label === "Days Completed" ? styles["dialer__days--active"] : ""
+              }
+              onClick={() => setLabel("Days Completed")}
+            >
+              {differenceInDays(today, begin) + 1 || 0}
+            </span>
+            <span
+              className={
+                label === "Days Remaining" ? styles["dialer__days--active"] : ""
+              }
+              onClick={() => setLabel("Days Remaining")}
+            >
+              {statistics?.daysRemaining || 0}
+            </span>
           </div>
-          <p className={styles.challenge_circle_remaining_percentage}>
+          <div className={styles.dialer__timeline_wrapper}>
+            <div className={styles.dialer__timeline}>
+              <span>Mar 21</span>
+              <div className={styles.dialer__progress_wrapper}>
+                <div className={styles.dialer__progress}>
+                  <div style={{ width: `${statistics?.blendScore}%` }} />
+                </div>
+              </div>
+              <span>May 02</span>
+            </div>
+            <h3>{label}</h3>
+          </div>
+          <div className={styles.dialer__score}>
+            <h4>{parseFloat(statistics?.blendScore || 0).toFixed(1)}%</h4>
+            <span>Blend Score</span>
+          </div>
+          {/* <p className={styles.challenge_circle_remaining_percentage}>
             {parseFloat(statistics?.blendScore || 0).toFixed(1)}%
           </p>
           <p className={styles.challenge_circle_remaining_percentage_paragraph}>
             Blend Score
-          </p>
+          </p> */}
         </div>
         {activities.map((activity, key) => {
           const categories = activity?.posts.map(

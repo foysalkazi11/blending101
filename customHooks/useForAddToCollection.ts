@@ -1,5 +1,5 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
 import notification from "../components/utility/reactToastifyNotification";
 import updateRecipeFunc from "../components/utility/updateRecipeFunc";
 import ADD_NEW_RECIPE_TO_COLLECTION from "../gqlLib/collection/mutation/addNewRecipeToCollection";
@@ -23,6 +23,8 @@ const useForAddToCollection = () => {
     GET_LAST_MODIFIED_COLLECTION,
     { fetchPolicy: "network-only" },
   );
+
+  let timeOut;
 
   const addToCollection = async (
     recipeId: string,
@@ -69,7 +71,7 @@ const useForAddToCollection = () => {
       }
 
       setOpenCollectionModal(true);
-      setTimeout(() => {
+      timeOut = setTimeout(() => {
         setOpenCollectionModal(false);
       }, 5000);
       // reactToastifyNotification("info", `Successfully added to new collection`);
@@ -79,6 +81,12 @@ const useForAddToCollection = () => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(timeOut);
+    };
+  }, [timeOut]);
 
   return addToCollection;
 };

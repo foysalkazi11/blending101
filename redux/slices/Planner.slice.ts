@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   startOfWeek,
   endOfWeek,
@@ -22,17 +22,29 @@ type IPlanner = {
   date: string;
   recipes: IPlannerRecipe[];
 };
-
+interface LastModifiedPlanCollectionType {
+  _id: string;
+  name: string;
+}
 interface PlannerState {
   start: Date;
   end: Date;
   plans: IPlanner[];
+  isOpenPlanCollectionTray: boolean;
+  lastModifiedPlanCollection: LastModifiedPlanCollectionType;
+  isActivePlanForCollection: string;
 }
 
 const initialState: PlannerState = {
   start: startOfWeek(new Date(), { weekStartsOn: 1 }),
   end: endOfWeek(new Date(), { weekStartsOn: 1 }),
   plans: [],
+  isOpenPlanCollectionTray: false,
+  lastModifiedPlanCollection: {
+    _id: "",
+    name: "",
+  },
+  isActivePlanForCollection: "",
 };
 
 export const PlannerSlice = createSlice({
@@ -115,6 +127,18 @@ export const PlannerSlice = createSlice({
         };
       }
     },
+    setIsOpenPlanCollectionTray: (state, action: PayloadAction<boolean>) => {
+      state.isOpenPlanCollectionTray = action.payload;
+    },
+    updateLastModifiedPlanCollection: (
+      state,
+      action: PayloadAction<LastModifiedPlanCollectionType>,
+    ) => {
+      state.lastModifiedPlanCollection = { ...action.payload };
+    },
+    setIsActivePlanForCollection: (state, action: PayloadAction<string>) => {
+      state.isActivePlanForCollection = action.payload;
+    },
   },
 });
 
@@ -125,6 +149,9 @@ export const {
   deleteRecipeFromPlan,
   gotoPreviousWeek,
   gotoNextWeek,
+  setIsActivePlanForCollection,
+  setIsOpenPlanCollectionTray,
+  updateLastModifiedPlanCollection,
 } = PlannerSlice.actions;
 
 export default PlannerSlice.reducer;

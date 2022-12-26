@@ -10,10 +10,12 @@ const CREATE_NET_COMMENT = gql`
         createdAt
         updatedAt
         userId {
+          _id
+          email
           displayName
           firstName
-          lastName
           image
+          lastName
         }
       }
       recipe {
