@@ -1,4 +1,4 @@
-@use '../../breakpoints.module.scss' as bp;
+@use "../../breakpoints.module.scss" as bp;
 
 .inputMainDiv {
   position: relative;
@@ -262,7 +262,7 @@
     margin-bottom: 20px;
 
     &:before {
-      content: 'or';
+      content: "or";
       position: absolute;
       left: 50%;
       transform: translate(-50%, -50%);
@@ -271,7 +271,7 @@
       top: 50%;
       background-color: #f5f5f5;
       padding: 0px 10px;
-      font-family: 'Poppins';
+      font-family: "Segoe UI";
     }
 
     @media screen and (max-width: bp.$breakPoint10) {
