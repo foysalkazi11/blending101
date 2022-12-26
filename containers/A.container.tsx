@@ -13,6 +13,7 @@ import VersionTray from "../components/sidetray/versionTray/VersionTray";
 import WikiCommentsTray from "../components/sidetray/wikiCommentsTray";
 import BlogCommentsTray from "../components/sidetray/blogCommentsTray";
 import BlogCollectionTray from "../components/sidetray/blogCollectionTray";
+import PlanCollectionTray from "../components/sidetray/blogCollectionTray";
 
 interface ShowTray {
   show: boolean;
@@ -30,6 +31,7 @@ type AContainerProps = {
   showWikiCommentsTray?: ShowTray;
   showBlogCommentsTray?: ShowTray;
   showBlogCollectionTray?: ShowTray;
+  showPlanCollectionTray?: ShowTray;
   logo?: boolean;
   headerTitle?: string;
   headerLogo?: string;
@@ -76,6 +78,11 @@ export default function AContainer(props: AContainerProps) {
       showPanle: "right",
     },
     showBlogCollectionTray = {
+      show: false,
+      showTagByDeafult: false,
+      showPanle: "left",
+    },
+    showPlanCollectionTray = {
       show: false,
       showTagByDeafult: false,
       showPanle: "left",
@@ -160,6 +167,14 @@ export default function AContainer(props: AContainerProps) {
             <BlogCollectionTray
               showTagByDefaut={showBlogCollectionTray?.showTagByDeafult}
               showPanle={showBlogCollectionTray?.showPanle}
+            />
+          </div>
+        )}
+        {showPlanCollectionTray?.show && (
+          <div className={styles.fixed__main__left}>
+            <PlanCollectionTray
+              showTagByDefaut={showPlanCollectionTray?.showTagByDeafult}
+              showPanle={showPlanCollectionTray?.showPanle}
             />
           </div>
         )}

@@ -77,6 +77,11 @@ const PlanDiscovery = ({
         showPanle: "right",
         // showTagByDeafult: showGroceryTray,
       }}
+      showPlanCollectionTray={{
+        show: true,
+        showPanle: "left",
+        showTagByDeafult: true,
+      }}
     >
       <div className={styles.discovery}>
         <div className={classes.searchBarContainer}>
