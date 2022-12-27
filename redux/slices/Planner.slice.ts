@@ -26,13 +26,17 @@ interface LastModifiedPlanCollectionType {
   _id: string;
   name: string;
 }
+interface ActivePlanForCollectionType {
+  id: string;
+  collectionIds: string[];
+}
 interface PlannerState {
   start: Date;
   end: Date;
   plans: IPlanner[];
   isOpenPlanCollectionTray: boolean;
   lastModifiedPlanCollection: LastModifiedPlanCollectionType;
-  isActivePlanForCollection: string;
+  activePlanForCollection: ActivePlanForCollectionType;
 }
 
 const initialState: PlannerState = {
@@ -44,7 +48,10 @@ const initialState: PlannerState = {
     _id: "",
     name: "",
   },
-  isActivePlanForCollection: "",
+  activePlanForCollection: {
+    id: "",
+    collectionIds: [],
+  },
 };
 
 export const PlannerSlice = createSlice({
@@ -136,8 +143,11 @@ export const PlannerSlice = createSlice({
     ) => {
       state.lastModifiedPlanCollection = { ...action.payload };
     },
-    setIsActivePlanForCollection: (state, action: PayloadAction<string>) => {
-      state.isActivePlanForCollection = action.payload;
+    setIsActivePlanForCollection: (
+      state,
+      action: PayloadAction<ActivePlanForCollectionType>,
+    ) => {
+      state.activePlanForCollection = action.payload;
     },
   },
 });
