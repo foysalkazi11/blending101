@@ -6,6 +6,8 @@ import WikiNutritionPanel from "../wikiNutritionPanel/WikiNutritionPanel";
 import WikiHealthPanel from "../wikiHealthPanel/WikiHealthPanel";
 import { SelectedWikiType } from "..";
 import { WikiType as Type } from "../../../type/wikiListType";
+import { useQuery } from "@apollo/client";
+import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
 interface Props {
   type: Type;
   setType: Dispatch<SetStateAction<Type>>;
@@ -19,6 +21,16 @@ const WikiLeft = ({
   setSelectedWikiItem = () => {},
   setType = () => {},
 }: Props) => {
+  const { data: ingredientCategoryData, loading: ingredientCategoryLoading } =
+    useQuery(FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS, {
+      variables: {
+        data: {
+          ingredientCategory: "All",
+          IngredientClass: 1,
+        },
+      },
+    });
+
   const checkActive = (id: string) => {
     return selectedWikiItem[type]?.includes(id);
   };
@@ -52,6 +64,10 @@ const WikiLeft = ({
             checkActiveIngredient={checkActive}
             handleIngredientClick={handleItemClick}
             scrollAreaMaxHeight={{ maxHeight: "450px" }}
+            ingredientCategoryData={
+              ingredientCategoryData?.filterIngredientByCategoryAndClass
+            }
+            ingredientCategoryLoading={ingredientCategoryLoading}
           />
         );
       case "Nutrient":
