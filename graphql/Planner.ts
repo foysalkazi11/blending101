@@ -214,7 +214,7 @@ export const GET_FEATURED_PLANS = gql`
       description
       startDateString
       endDateString
-      collections
+      planCollections
       commentsCount
     }
     getAllRecommendedPlans(memberId: $memberId, limit: $limit) {
@@ -223,7 +223,7 @@ export const GET_FEATURED_PLANS = gql`
       description
       startDateString
       endDateString
-      collections
+      planCollections
       commentsCount
     }
     getAllPopularPlans(memberId: $memberId, limit: $limit) {
@@ -232,7 +232,7 @@ export const GET_FEATURED_PLANS = gql`
       description
       startDateString
       endDateString
-      collections
+      planCollections
       commentsCount
     }
   }
@@ -411,7 +411,7 @@ export const PLAN_SHARE_INFO = gql`
     }
   }
 `;
-
+// PLAN COLLECTION
 export const ADD_TO_LAST_MODIFIED_PLAN_COLLECTION = gql`
   mutation AddToLastModifiedPlanCollection(
     $planId: String!
@@ -420,6 +420,82 @@ export const ADD_TO_LAST_MODIFIED_PLAN_COLLECTION = gql`
     addToLastModifiedPlanCollection(planId: $planId, memberId: $memberId) {
       _id
       name
+    }
+  }
+`;
+
+export const GET_ALL_PLAN_COLLECTION = gql`
+  query GetAllPlanCollection($memberId: String!) {
+    getAllPlanCollection(memberId: $memberId) {
+      planCollections {
+        plans
+        _id
+        collectionDataCount
+        image
+        name
+        slug
+      }
+    }
+  }
+`;
+export const ADD_NEW_PLAN_COLLECTION = gql`
+  mutation AddNewPlanCollection($data: CreateNewPlanCollection!) {
+    addNewPlanCollection(data: $data) {
+      plans
+      _id
+      collectionDataCount
+      image
+      name
+      slug
+    }
+  }
+`;
+export const EDIT_PLAN_COLLECTION = gql`
+  mutation EditAPlanCollection($data: EditPlanCollection!) {
+    editAPlanCollection(data: $data) {
+      plans
+      _id
+      collectionDataCount
+      image
+      name
+      slug
+    }
+  }
+`;
+export const DELETE_PLAN_COLLECTION = gql`
+  mutation DeletePlanCollection($memberId: String!, $collectionId: String!) {
+    deletePlanCollection(memberId: $memberId, collectionId: $collectionId) {
+      planCollections {
+        plans
+        _id
+        collectionDataCount
+        image
+        name
+        slug
+      }
+    }
+  }
+`;
+
+export const ADD_OR_REMOVE_PLAN_COLLECTION = gql`
+  mutation addOrRemovePlanCollection(
+    $planId: String!
+    $memberId: String!
+    $collectionIds: [String!]!
+  ) {
+    addOrRemovePlanCollection(
+      planId: $planId
+      memberId: $memberId
+      collectionIds: $collectionIds
+    ) {
+      planCollections {
+        plans
+        _id
+        collectionDataCount
+        image
+        name
+        slug
+      }
     }
   }
 `;

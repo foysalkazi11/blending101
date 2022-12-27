@@ -140,6 +140,7 @@ const PlanCollectionTray = ({
                 memberId,
                 name: input.name,
                 slug: input.slug,
+                description: input.description,
               },
             },
             update(cache, { data: { addNewBlogCollection } }) {
