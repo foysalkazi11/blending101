@@ -13,18 +13,6 @@ const REMOVE_EXISTING_RECIPE_TO_ANOTHER_COLLECTION = gql`
         }
         name
         _id
-        description
-        prepTime
-        cookTime
-        totalTime
-        recipeYield
-        recipeIngredients
-        recipeInstructions
-        recipeCuisines
-
-        url
-        discovery
-        favicon
       }
     }
   }

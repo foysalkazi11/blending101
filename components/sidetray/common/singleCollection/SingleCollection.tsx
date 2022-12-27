@@ -16,6 +16,7 @@ interface IndividualCollectionType {
   name?: string;
   image?: string;
   slug?: string;
+  description?: string;
   showMoreMenu?: boolean;
   changeItemWithinCollection?: boolean;
   isRecipeWithinCollection?: boolean;
@@ -26,7 +27,12 @@ interface IndividualCollectionType {
   menuIndex?: number;
   setMenuIndex?: Dispatch<SetStateAction<number>>;
   handleDeleteCollection?: (id: string) => void;
-  handleEditCollection?: (id: string, name: string, slug: string) => void;
+  handleEditCollection?: (
+    id: string,
+    name: string,
+    slug: string,
+    description: string,
+  ) => void;
   deleteCollectionLoading?: boolean;
 }
 
@@ -34,6 +40,7 @@ const SingleCollection = ({
   name = "All Recipes",
   image = "/cards/food.png",
   slug = "",
+  description = "",
   showMoreMenu = false,
   changeItemWithinCollection = false,
   isRecipeWithinCollection = false,
@@ -102,7 +109,9 @@ const SingleCollection = ({
                   <FontAwesomeIcon
                     icon={faPencil}
                     className={styles.icon}
-                    onClick={() => handleEditCollection(id, name, slug)}
+                    onClick={() =>
+                      handleEditCollection(id, name, slug, description)
+                    }
                   />
                   {deleteCollectionLoading ? (
                     <CircularRotatingLoader

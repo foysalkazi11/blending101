@@ -16,11 +16,12 @@ import {
   setIsActivePlanForCollection,
   setIsOpenPlanCollectionTray,
 } from "../../../redux/slices/Planner.slice";
+import ConfirmationModal from "../../../theme/confirmationModal/ConfirmationModal";
 import CustomModal from "../../../theme/modal/customModal/CustomModal";
 import SkeletonCollections from "../../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollections";
 import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
 import notification from "../../utility/reactToastifyNotification";
-import AddCollectionModal from "../collection/addCollectionModal/AddCollectionModal";
+import AddCollectionModal from "../common/addCollectionModal/AddCollectionModal";
 import IconForAddComment from "../common/iconForAddComment/IconForAddComment";
 import SingleCollection from "../common/singleCollection/SingleCollection";
 import TrayTag from "../TrayTag";
@@ -44,6 +45,7 @@ const PlanCollectionTray = ({
   });
   const [menuIndex, setMenuIndex] = useState(0);
   const [isEditCollection, setIsEditCollection] = useState(false);
+  const [isDeleteCollection, setIsDeleteCollection] = useState(false);
   const [collectionId, setCollectionId] = useState("");
   const [isCollectionUpdate, setIsCollectionUpdate] = useState(false);
   const { isOpenPlanCollectionTray, activePlanForCollection } = useAppSelector(
@@ -179,6 +181,7 @@ const PlanCollectionTray = ({
   };
   // open collection modal
   const addNewCollection = () => {
+    setIsDeleteCollection(false);
     setIsEditCollection(false);
     setInput((pre) => ({
       ...pre,
@@ -190,8 +193,15 @@ const PlanCollectionTray = ({
     setOpenModal(true);
   };
 
+  // delete collection
+  const handleOpenConfirmationModal = (collectionId: string) => {
+    setIsDeleteCollection(true);
+    setCollectionId(collectionId);
+    setOpenModal(true);
+  };
+
   // handle delete collection
-  const handleDeleteCollection = async (collectionId: string) => {
+  const handleDeleteCollection = async () => {
     try {
       await deletePlanCollection({
         variables: {
@@ -210,19 +220,27 @@ const PlanCollectionTray = ({
           });
         },
       });
-
+      setOpenModal(false);
       notification("info", "Delete collection successfully");
     } catch (error) {
+      setOpenModal(false);
       notification("error", error?.message);
     }
   };
 
   // edit a collection
-  const handleEditCollection = (id: string, name: string, slug: string) => {
+  const handleEditCollection = (
+    id: string,
+    name: string,
+    slug: string,
+    description: string,
+  ) => {
+    setIsDeleteCollection(false);
     setInput((pre) => ({
       ...pre,
       name,
       slug,
+      description,
     }));
     setIsEditCollection(true);
     setCollectionId(id);
@@ -318,19 +336,27 @@ const PlanCollectionTray = ({
       ) : (
         allCollectionData?.getAllPlanCollection?.planCollections?.map(
           (collection, i) => {
-            const { _id, name, slug, collectionDataCount, image, blogs } =
-              collection;
+            const {
+              _id,
+              name,
+              slug,
+              collectionDataCount,
+              image,
+              blogs,
+              description,
+            } = collection;
 
             return (
               <SingleCollection
                 key={_id}
                 id={_id}
                 name={name}
+                description={description}
                 slug={slug}
                 image={image || "/cards/food.png"}
                 collectionItemLength={collectionDataCount}
                 showMoreMenu={true}
-                handleDeleteCollection={handleDeleteCollection}
+                handleDeleteCollection={handleOpenConfirmationModal}
                 handleEditCollection={handleEditCollection}
                 index={i}
                 menuIndex={menuIndex}
@@ -349,15 +375,24 @@ const PlanCollectionTray = ({
         )
       )}
       <CustomModal open={openModal} setOpen={setOpenModal}>
-        <AddCollectionModal
-          input={input}
-          setInput={setInput}
-          setOpenModal={setOpenModal}
-          handleToAddOrUpdateCollection={handleAddOrEditCollection}
-          isAddOrUpdateCollectionLoading={
-            addNewPlanCollectionLoading || editPlanCollectionLoading
-          }
-        />
+        {isDeleteCollection ? (
+          <ConfirmationModal
+            text="All the related entities will be removed along with this collection !!!"
+            cancleFunc={() => setOpenModal(false)}
+            submitFunc={handleDeleteCollection}
+            loading={deletePlanCollectionLoading}
+          />
+        ) : (
+          <AddCollectionModal
+            input={input}
+            setInput={setInput}
+            setOpenModal={setOpenModal}
+            handleToAddOrUpdateCollection={handleAddOrEditCollection}
+            isAddOrUpdateCollectionLoading={
+              addNewPlanCollectionLoading || editPlanCollectionLoading
+            }
+          />
+        )}
       </CustomModal>
     </TrayWrapper>
   );

@@ -5,10 +5,18 @@ import CommentAndNoteButton from "../../../../theme/button/commentAndNoteButton/
 import InputComponent from "../../../../theme/input/input.component";
 import slugStringGenerator from "../../../utility/slugStringGenerator";
 import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
+import TextArea from "../../../../theme/textArea/TextArea";
+
+interface InputValueType {
+  name: string;
+  slug: string;
+  description: string;
+  image?: string | null;
+}
 
 type AddCollectionModalProps = {
-  input: any;
-  setInput: any;
+  input: InputValueType;
+  setInput: Dispatch<SetStateAction<InputValueType>>;
   setOpenModal?: Dispatch<SetStateAction<boolean>>;
   handleToAddOrUpdateCollection?: () => void;
   isAddOrUpdateCollectionLoading?: boolean;
@@ -21,9 +29,12 @@ const AddCollectionModal = ({
   handleToAddOrUpdateCollection = () => {},
   isAddOrUpdateCollectionLoading = false,
 }: AddCollectionModalProps) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value, type } = e?.target;
     if (type === "file") {
+      // @ts-ignore
       setInput((pre) => ({ ...pre, image: e?.target?.files[0] }));
     } else {
       if (name === "name") {
@@ -98,12 +109,12 @@ const AddCollectionModal = ({
           name="name"
           onChange={handleChange}
         />
-        <InputComponent
+        <TextArea
           style={{ marginTop: "10px" }}
           borderSecondary={true}
-          placeholder="Slug"
-          value={input?.slug}
-          name="slug"
+          placeholder="Description"
+          value={input?.description}
+          name="description"
           onChange={handleChange}
         />
 
