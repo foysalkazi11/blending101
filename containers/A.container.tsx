@@ -13,7 +13,7 @@ import VersionTray from "../components/sidetray/versionTray/VersionTray";
 import WikiCommentsTray from "../components/sidetray/wikiCommentsTray";
 import BlogCommentsTray from "../components/sidetray/blogCommentsTray";
 import BlogCollectionTray from "../components/sidetray/blogCollectionTray";
-import PlanCollectionTray from "../components/sidetray/blogCollectionTray";
+import PlanCollectionTray from "../components/sidetray/planCollectionTray";
 
 interface ShowTray {
   show: boolean;

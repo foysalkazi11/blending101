@@ -8,9 +8,6 @@ import React, {
 } from "react";
 import styles from "./PlanCard.module.scss";
 import { useRouter } from "next/router";
-import useChangeCompare from "../../../customHooks/useChangeComaper";
-import useForAddToCollection from "../../../customHooks/useForAddToCollection";
-import useForOpenCollectionTray from "../../../customHooks/useForOpenCollection";
 import useForOpenCommentsTray from "../../../customHooks/useForOpenCommentsTray";
 import useForSelectCommentsAndNotesIcon from "../../../customHooks/useForSelectCommentsAndNotesIcon";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -22,6 +19,12 @@ import IconWarper from "../../../theme/iconWarper/IconWarper";
 import Icon from "../../atoms/Icon/Icon.component";
 import WeekPicker from "../../molecules/DatePicker/Week.component";
 import { startOfWeek, endOfWeek } from "date-fns";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import {
+  setIsActivePlanForCollection,
+  setIsOpenPlanCollectionTray,
+} from "../../../redux/slices/Planner.slice";
+import useToAddPlanToCollection from "../../../customHooks/plan/useToAddPlanToCollection";
 
 interface dataCardInterface {
   title?: string;
@@ -93,13 +96,13 @@ function PlanCard({
   ratings = Math.ceil(ratings);
   const menu = useRef<any>();
   const router = useRouter();
-  const handleAddToCollection = useForAddToCollection();
-  const handleOpenCollectionTray = useForOpenCollectionTray();
+  const handleAddToCollection = useToAddPlanToCollection();
   const handleOpenCommentsTray = useForOpenCommentsTray();
   const selectCommentsAndNotesIcon = useForSelectCommentsAndNotesIcon();
   const [hoverRef, isHover] = useHover();
-
   const [week, setWeek] = useState(weekRange);
+  const dispatch = useAppDispatch();
+  const memberId = useAppSelector((state) => state?.user?.dbUser?._id || "");
   const handleClick = () => {
     const elem = menu.current;
     elem.classList.toggle("show__hidden");
@@ -157,6 +160,11 @@ function PlanCard({
   };
 
   const weekChangeHandler = (start, end) => {};
+
+  const handleOpenCollectionTray = (id: string, collectionIds: string[]) => {
+    dispatch(setIsActivePlanForCollection({ id, collectionIds }));
+    dispatch(setIsOpenPlanCollectionTray(true));
+  };
 
   return (
     <div className={`${styles.datacard} ${className || ""}`} ref={hoverRef}>
@@ -224,12 +232,11 @@ function PlanCard({
                   alt="compare"
                   onClick={(e) =>
                     isCollectionIds?.length
-                      ? handleOpenCollectionTray(planId, isCollectionIds, e)
+                      ? handleOpenCollectionTray(planId, isCollectionIds)
                       : handleAddToCollection(
                           planId,
+                          memberId,
                           setOpenCollectionModal,
-                          e,
-                          setcompareRecipeList,
                         )
                   }
                 />
