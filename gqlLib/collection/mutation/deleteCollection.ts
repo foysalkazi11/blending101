@@ -6,6 +6,7 @@ const DELETE_COLLECTION = gql`
       _id
       name
       image
+      slug
       recipes {
         image {
           default
@@ -13,18 +14,6 @@ const DELETE_COLLECTION = gql`
         }
         name
         _id
-        description
-        prepTime
-        cookTime
-        totalTime
-        recipeYield
-        recipeIngredients
-        recipeInstructions
-        recipeCuisines
-
-        url
-        discovery
-        favicon
       }
     }
   }

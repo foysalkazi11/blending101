@@ -14,6 +14,7 @@ const CREATE_NEW_COLLECTION = gql`
         _id
       }
       image
+      slug
     }
   }
 `;
