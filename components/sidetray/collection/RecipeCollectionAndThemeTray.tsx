@@ -5,11 +5,14 @@ import TrayWrapper from "../TrayWrapper";
 import CollectionComponent from "./content/collection.component";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import CustomModal from "../../../theme/modal/customModal/CustomModal";
-import AddCollectionModal from "./addCollectionModal/AddCollectionModal";
+import AddCollectionModal from "../common/addCollectionModal/AddCollectionModal";
 import GET_COLLECTIONS_AND_THEMES from "../../../gqlLib/collection/query/getCollectionsAndThemes";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
-import { setChangeRecipeWithinCollection } from "../../../redux/slices/collectionSlice";
+import {
+  setChangeRecipeWithinCollection,
+  setCurrentCollectionInfo,
+} from "../../../redux/slices/collectionSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TrayTag from "../TrayTag";
 import { faRectangleHistory } from "@fortawesome/pro-regular-svg-icons";
@@ -22,6 +25,9 @@ import IconForAddComment from "../common/iconForAddComment/IconForAddComment";
 import CREATE_NEW_COLLECTION from "../../../gqlLib/collection/mutation/createNewCollection";
 import EDIT_COLLECTION from "../../../gqlLib/collection/mutation/editCollection";
 import notification from "../../utility/reactToastifyNotification";
+import ConfirmationModal from "../../../theme/confirmationModal/ConfirmationModal";
+import DELETE_COLLECTION from "../../../gqlLib/collection/mutation/deleteCollection";
+import useUpdateRecipeField from "../../../customHooks/useUpdateRecipeFirld";
 
 interface CollectionTrayProps {
   showTagByDefaut?: boolean;
@@ -33,12 +39,14 @@ export default function RecipeCollectionAndThemeTray({
   showPanle = "left",
 }: CollectionTrayProps) {
   const [toggle, setToggle] = useState(0);
-  const [input, setInput] = useState<any>({
+  const [input, setInput] = useState({
     image: null,
     name: "",
     slug: "",
+    description: "",
   });
   const [isEditCollection, setIsEditCollection] = useState(false);
+  const [isDeleteCollection, setIsDeleteCollection] = useState(false);
   const [collectionId, setCollectionId] = useState("");
   const { dbUser } = useAppSelector((state) => state?.user);
   const { changeRecipeWithinCollection } = useAppSelector(
@@ -52,7 +60,11 @@ export default function RecipeCollectionAndThemeTray({
   );
   const [editCollection, { loading: editCollectionLoading }] =
     useMutation(EDIT_COLLECTION);
+  const [deleteCollection, { loading: deleteCollectionLoading }] =
+    useMutation(DELETE_COLLECTION);
+  const updateRecipe = useUpdateRecipeField();
 
+  // close recipe collection tray
   const closeTray = () => {
     dispatch(setOpenCollectionsTary(!openCollectionsTary));
     dispatch(setChangeRecipeWithinCollection(false));
@@ -82,7 +94,9 @@ export default function RecipeCollectionAndThemeTray({
     }
   };
 
+  // add new collection open modal
   const addNewCollection = () => {
+    setIsDeleteCollection(false);
     setIsEditCollection(false);
     setInput((pre) => ({ ...pre, name: "" }));
     setOpenModal(true);
@@ -99,10 +113,26 @@ export default function RecipeCollectionAndThemeTray({
               newName: input?.name,
             },
           },
+          update(cache, { data: { editACollection } }) {
+            cache.writeQuery({
+              query: GET_COLLECTIONS_AND_THEMES,
+              variables: { userId: dbUser?._id },
+              data: {
+                getUserCollectionsAndThemes: {
+                  collections:
+                    collectionsData?.getUserCollectionsAndThemes?.collections?.map(
+                      (collection) =>
+                        collection?._id === collectionId
+                          ? { ...collection, ...input }
+                          : collection,
+                    ),
+                },
+              },
+            });
+          },
         });
-        getCollectionsAndThemes({ variables: { userId: dbUser?._id } });
         setOpenModal(false);
-        setInput({ image: null, name: "" });
+        setInput({ image: null, name: "", description: "", slug: "" });
       } else {
         await createNewCollection({
           variables: {
@@ -111,12 +141,26 @@ export default function RecipeCollectionAndThemeTray({
               collection: { image: null, name: input?.name, recipes: [] },
             },
           },
+          update(cache, { data: { createNewCollection } }) {
+            cache.writeQuery({
+              query: GET_COLLECTIONS_AND_THEMES,
+              variables: { userId: dbUser?._id },
+              data: {
+                getUserCollectionsAndThemes: {
+                  collections: [
+                    ...collectionsData?.getUserCollectionsAndThemes
+                      ?.collections,
+                    createNewCollection,
+                  ],
+                },
+              },
+            });
+          },
         });
       }
 
-      getCollectionsAndThemes({ variables: { userId: dbUser?._id } });
       setOpenModal(false);
-      setInput({ image: null, name: "" });
+      setInput({ image: null, name: "", description: "", slug: "" });
       if (isEditCollection) {
         notification("info", "Collection edit successfully");
       } else {
@@ -124,6 +168,65 @@ export default function RecipeCollectionAndThemeTray({
       }
     } else {
       notification("info", "Please write collection name");
+    }
+  };
+
+  const handleEditCollection = (
+    id: string,
+    name: string,
+    slug: string,
+    description: string,
+  ) => {
+    setIsDeleteCollection(false);
+    setInput((pre) => ({
+      ...pre,
+      name,
+      slug,
+      description,
+    }));
+    setIsEditCollection(true);
+    setCollectionId(id);
+    setOpenModal(true);
+  };
+
+  // delete collection
+  const handleOpenConfirmationModal = (collectionId: string) => {
+    setIsDeleteCollection(true);
+    setCollectionId(collectionId);
+    setOpenModal(true);
+  };
+  // delete collection
+  const handleDeleteCollection = async () => {
+    try {
+      await deleteCollection({
+        variables: {
+          data: {
+            collectionId: collectionId,
+            userEmail: dbUser?.email,
+          },
+        },
+        update(cache, { data: { deleteCollection } }) {
+          cache.writeQuery({
+            query: GET_COLLECTIONS_AND_THEMES,
+            variables: { userId: dbUser?._id },
+            data: {
+              getUserCollectionsAndThemes: {
+                collections: [...deleteCollection],
+              },
+            },
+          });
+        },
+      });
+      dispatch(setCurrentCollectionInfo({ id: "", name: "All Recipes" }));
+      setOpenModal(false);
+      // updateRecipe(activeRecipeId, {
+      //   collection: null,
+      // });
+
+      notification("info", "Collection delete successfully");
+    } catch (error) {
+      setOpenModal(false);
+      notification("error", error?.message);
     }
   };
 
@@ -190,11 +293,8 @@ export default function RecipeCollectionAndThemeTray({
             collectionsData?.getUserCollectionsAndThemes?.collections || []
           }
           collectionsLoading={collectionsLoading}
-          setInput={setInput}
-          setIsEditCollection={setIsEditCollection}
-          setCollectionId={setCollectionId}
-          getCollectionsAndThemes={getCollectionsAndThemes}
-          setOpenModal={setOpenModal}
+          handleDeleteCollection={handleOpenConfirmationModal}
+          handleEditCollection={handleEditCollection}
         />
       ) : (
         <Widget
@@ -220,15 +320,24 @@ export default function RecipeCollectionAndThemeTray({
       )}
 
       <CustomModal open={openModal} setOpen={setOpenModal}>
-        <AddCollectionModal
-          input={input}
-          setInput={setInput}
-          setOpenModal={setOpenModal}
-          handleToAddOrUpdateCollection={saveToDb}
-          isAddOrUpdateCollectionLoading={
-            addCollectionLoading || editCollectionLoading
-          }
-        />
+        {isDeleteCollection ? (
+          <ConfirmationModal
+            text="All the related entities will be removed along with this collection !!!"
+            cancleFunc={() => setOpenModal(false)}
+            submitFunc={handleDeleteCollection}
+            loading={deleteCollectionLoading}
+          />
+        ) : (
+          <AddCollectionModal
+            input={input}
+            setInput={setInput}
+            setOpenModal={setOpenModal}
+            handleToAddOrUpdateCollection={saveToDb}
+            isAddOrUpdateCollectionLoading={
+              addCollectionLoading || editCollectionLoading
+            }
+          />
+        )}
       </CustomModal>
     </TrayWrapper>
   );
