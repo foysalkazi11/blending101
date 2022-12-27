@@ -7,6 +7,7 @@ import GET_ALL_BLEND_NUTRIENTS from "../../../gqlLib/nutrition/query/getAllBlend
 import CheckIcon from "../../../theme/checkIcon/CheckIcon";
 import DropDown from "../../../theme/dropDown/DropDown.component";
 import InputComponent from "../../../theme/input/input.component";
+import NutritionListSkeleton from "../../../theme/skeletons/nutritionListSkeleton/NutritionListSkeleton";
 import s from "./WikiNutritionPanel.module.scss";
 
 interface List {
@@ -56,7 +57,10 @@ const WikiNutritionPanel = ({
       setNutrientCategory((pre) => [...pre, ...data]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nutrientCategoryData?.getAllBlendNutrientCategories]);
+  }, [
+    nutrientCategoryData?.getAllBlendNutrientCategories,
+    nutrientCategoryLoading,
+  ]);
 
   useEffect(() => {
     if (!nutrientLoading && nutrientData?.getAllBlendNutrients) {
@@ -64,7 +68,7 @@ const WikiNutritionPanel = ({
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nutrientData?.getAllBlendNutrients]);
+  }, [nutrientData?.getAllBlendNutrients, nutrientLoading]);
 
   useEffect(() => {
     if (isMounted.current) {
@@ -128,24 +132,28 @@ const WikiNutritionPanel = ({
         />
       </div>
       <div className={`${s.nutrientListWarper} y-scroll`}>
-        {nutrientList?.map((item, index) => {
-          return (
-            <p
-              key={index}
-              className={s.text}
-              onClick={() =>
-                handleNutritionClick(item, checkActiveNutrition(item?._id))
-              }
-            >
-              {item?.nutrientName}
-              {checkActiveNutrition(item?._id) && (
-                <CheckIcon
-                  style={{ position: "absolute", top: "0px", right: "5px" }}
-                />
-              )}
-            </p>
-          );
-        })}
+        {nutrientLoading ? (
+          <NutritionListSkeleton />
+        ) : (
+          nutrientList?.map((item, index) => {
+            return (
+              <p
+                key={index}
+                className={s.text}
+                onClick={() =>
+                  handleNutritionClick(item, checkActiveNutrition(item?._id))
+                }
+              >
+                {item?.nutrientName}
+                {checkActiveNutrition(item?._id) && (
+                  <CheckIcon
+                    style={{ position: "absolute", top: "0px", right: "5px" }}
+                  />
+                )}
+              </p>
+            );
+          })
+        )}
       </div>
     </div>
   );
