@@ -7,11 +7,10 @@ import React, {
   ReactNode,
   CSSProperties,
 } from "react";
-import styles from "./SearchBar.module.scss";
+import classes from "./SearchBar.module.scss";
 import { FiFilter } from "react-icons/fi";
 import { BsMic, BsSoundwave, BsSearch } from "react-icons/bs";
 import { AiOutlineClose } from "react-icons/ai";
-import { useRouter } from "next/router";
 import useOnClickOutside from "../utility/useOnClickOutside";
 import Tooltip from "../../theme/toolTip/CustomToolTip";
 
@@ -25,6 +24,7 @@ interface SearchBarProps {
   isSearchTag?: boolean;
   isOpenPanel?: boolean;
   handleOnChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  styles?: CSSProperties;
 }
 
 interface CompareButtonProps {
@@ -38,16 +38,14 @@ interface CompareButtonProps {
 const CommonSearchBar = ({
   input = "",
   setInput = () => {},
-  //handleCleanSearch = () => {},
   handleSubmitFunc = () => {},
   handleSearchTagCleanFunc = () => {},
   openPanel = () => {},
-
   isOpenPanel = false,
   isSearchTag = false,
   handleOnChange = () => {},
+  styles = {},
 }: SearchBarProps) => {
-  const router = useRouter();
   const [isInputFocus, setIsInputFocus] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
   const [isMicOn, setIsMicOn] = useState(false);
@@ -79,25 +77,25 @@ const CommonSearchBar = ({
   };
 
   return (
-    <div className={styles.inputContainer} ref={inputRef}>
+    <div className={classes.inputContainer} ref={inputRef} style={styles}>
       <div
-        className={styles.filterIconContainer}
+        className={classes.filterIconContainer}
         style={isOpenPanel ? { marginRight: "10px", paddingRight: "20px" } : {}}
       >
         {isOpenPanel ? null : (
           <FiFilter
-            className={`${styles.filterIcon} ${
-              isOpenPanel ? styles.active : ""
+            className={`${classes.filterIcon} ${
+              isOpenPanel ? classes.active : ""
             }`}
             onClick={openPanel}
           />
         )}
       </div>
-      <div className={styles.inputBox}>
+      <div className={classes.inputBox}>
         {isInputFocus ? null : isMicOn ? (
-          <BsSoundwave className={styles.waveIcon} />
+          <BsSoundwave className={classes.waveIcon} />
         ) : (
-          <BsSearch className={styles.seachIcon} />
+          <BsSearch className={classes.seachIcon} />
         )}
         <form onSubmit={handleSubmit}>
           <input
@@ -112,12 +110,12 @@ const CommonSearchBar = ({
 
         {isSubmit ? (
           <AiOutlineClose
-            className={styles.seachIconActive}
+            className={classes.seachIconActive}
             onClick={handleClean}
           />
         ) : isInputFocus ? (
           <BsSearch
-            className={`${styles.seachIconActive}`}
+            className={`${classes.seachIconActive}`}
             onClick={(e) => {
               e.stopPropagation();
               if (input) {
@@ -129,13 +127,13 @@ const CommonSearchBar = ({
           <>
             {isSearchTag ? (
               <AiOutlineClose
-                className={styles.seachIconActive}
+                className={classes.seachIconActive}
                 onClick={handleSearchTagClean}
               />
             ) : (
               <Tooltip direction="bottom" content="Voice search">
                 <BsMic
-                  className={`${styles.mic} ${isMicOn ? styles.active : ""}`}
+                  className={`${classes.mic} ${isMicOn ? classes.active : ""}`}
                   onClick={() => setIsMicOn(!isMicOn)}
                 />
               </Tooltip>

@@ -153,6 +153,7 @@ const RecipeDiscovery = () => {
               data={allFilterRecipes.filterRecipes}
               loading={filterRecipesLoading || searchRecipeLoading}
               closeHandler={closeFilterRecipes}
+              showItems="recipe"
             />
           ) : (
             <RegularRecipes setOpenCollectionModal={setOpenCollectionModal} />

@@ -499,3 +499,30 @@ export const ADD_OR_REMOVE_PLAN_COLLECTION = gql`
     }
   }
 `;
+
+export const GET_ALL_PLANS_FOR_A_COLLECTION = gql`
+  query GetAllPlansForACollection(
+    $slug: String
+    $memberId: String
+    $limit: Float
+    $page: Float
+  ) {
+    getAllPlansForACollection(
+      slug: $slug
+      memberId: $memberId
+      limit: $limit
+      page: $page
+    ) {
+      totalPlans
+      plans {
+        _id
+        planName
+        description
+        startDateString
+        endDateString
+        planCollections
+        commentsCount
+      }
+    }
+  }
+`;

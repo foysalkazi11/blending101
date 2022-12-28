@@ -369,6 +369,7 @@ const PlanCollectionTray = ({
                 )}
                 deleteCollectionLoading={deletePlanCollectionLoading}
                 handleClickCheckBox={handleChange}
+                collectionRoute="planCollection"
               />
             );
           },

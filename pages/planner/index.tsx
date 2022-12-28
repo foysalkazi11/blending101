@@ -76,6 +76,7 @@ const PlanDiscovery = ({
                     planId={item?._id}
                     title={item.planName}
                     isCollectionIds={item?.planCollections}
+                    noOfComments={item?.commentsCount}
                     setOpenCollectionModal={setOpenCollectionModal}
                   />
                 </div>
@@ -96,6 +97,7 @@ const PlanDiscovery = ({
                     planId={item?._id}
                     title={item.planName}
                     isCollectionIds={item?.planCollections}
+                    noOfComments={item?.commentsCount}
                     setOpenCollectionModal={setOpenCollectionModal}
                   />
                 </div>
@@ -116,6 +118,7 @@ const PlanDiscovery = ({
                     planId={item?._id}
                     title={item.planName}
                     isCollectionIds={item?.planCollections}
+                    noOfComments={item?.commentsCount}
                     setOpenCollectionModal={setOpenCollectionModal}
                   />
                 </div>

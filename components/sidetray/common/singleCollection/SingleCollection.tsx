@@ -34,6 +34,7 @@ interface IndividualCollectionType {
     description: string,
   ) => void;
   deleteCollectionLoading?: boolean;
+  collectionRoute: "recipeCollection" | "blogCollection" | "planCollection";
 }
 
 const SingleCollection = ({
@@ -53,6 +54,7 @@ const SingleCollection = ({
   handleDeleteCollection = () => {},
   handleEditCollection = () => {},
   deleteCollectionLoading = false,
+  collectionRoute = "recipeCollection",
 }: IndividualCollectionType) => {
   const [hoverRef, isHovered] = useHover();
   const handleClick = (index: number) => {
@@ -66,7 +68,7 @@ const SingleCollection = ({
   return (
     <>
       <div className={styles.collection__child} key={id} ref={hoverRef}>
-        <Link href={`/collection/${slug}`} passHref>
+        <Link href={`/collection/${collectionRoute}/${slug}`} passHref>
           <div className={styles.leftSide}>
             <div className={styles.img}>
               <div
@@ -98,7 +100,6 @@ const SingleCollection = ({
                   handleClick(index);
                 }}
               >
-                {/* <MdMoreVert className={styles.moreIcon} /> */}
                 <FontAwesomeIcon icon={faEllipsisVertical} />
 
                 <div

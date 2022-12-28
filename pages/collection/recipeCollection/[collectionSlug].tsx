@@ -1,22 +1,27 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import FooterRecipeFilter from "../../components/footer/footerRecipeFilter.component";
-import AContainer from "../../containers/A.container";
-import { useAppSelector } from "../../redux/hooks";
-import styles from "../../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";
-import classes from "../../styles/pages/viewAll.module.scss";
+import FooterRecipeFilter from "../../../components/footer/footerRecipeFilter.component";
+import AContainer from "../../../containers/A.container";
+import { useAppSelector } from "../../../redux/hooks";
+import styles from "../../../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";
+import classes from "../../../styles/pages/viewAll.module.scss";
 import { useLazyQuery } from "@apollo/client";
-import GET_SINGLE_COLLECTION from "../../gqlLib/collection/query/getSingleCollection";
-import GET_ALL_MY_CREATED_RECIPES from "../../gqlLib/collection/query/getAllMyCreatedRecipes";
-import GET_ALL_RECIPES_WITHIN_COLLECTIONS from "../../gqlLib/collection/query/getAllRecipesWhithiCollections";
-import ShowRecipeContainer from "../../components/showRecipeContainer";
+import GET_SINGLE_COLLECTION from "../../../gqlLib/collection/query/getSingleCollection";
+import GET_ALL_MY_CREATED_RECIPES from "../../../gqlLib/collection/query/getAllMyCreatedRecipes";
+import GET_ALL_RECIPES_WITHIN_COLLECTIONS from "../../../gqlLib/collection/query/getAllRecipesWhithiCollections";
+import ShowRecipeContainer from "../../../components/showRecipeContainer";
+import CommonSearchBar from "../../../components/searchBar/CommonSearchBar";
+import WikiBanner from "../../../components/wiki/wikiBanner/WikiBanner";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart, faStar } from "@fortawesome/pro-regular-svg-icons";
 
-const ViewAll = () => {
+const CollectionRecipes = () => {
   const router = useRouter();
   const slug = router.query?.collectionSlug as string;
   const [title, setTitle] = useState("");
   const [icon, setIcon] = useState("");
   const [recipes, setRecipes] = useState([]);
+  const [input, setInput] = useState("");
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
   const [getAllRecipes, { loading: getAllRecipesLoading }] = useLazyQuery(
@@ -61,6 +66,14 @@ const ViewAll = () => {
       }}
     >
       <div className={styles.main__div}>
+        <CommonSearchBar
+          input={input}
+          setInput={setInput}
+          isSearchTag={false}
+          styles={{ marginLeft: "16px" }}
+        />
+        <WikiBanner />
+
         <ShowRecipeContainer
           data={recipes}
           loading={
@@ -70,13 +83,20 @@ const ViewAll = () => {
           }
           headerLeftSide={
             <div className="flex ai-center">
-              {icon && (
-                <img src={icon} alt={title} className={classes.head__icon} />
+              {slug === "my-favorite" ? (
+                <FontAwesomeIcon
+                  icon={faHeart}
+                  className={classes.head__icon}
+                />
+              ) : (
+                <FontAwesomeIcon icon={faStar} className={classes.head__icon} />
               )}
+
               <h2 className={classes.head__title}>{title}</h2>
             </div>
           }
           closeHandler={() => router.push("/discovery")}
+          showItems="recipe"
         />
       </div>
       <div className={styles.footerMainDiv}>
@@ -86,4 +106,4 @@ const ViewAll = () => {
   );
 };
 
-export default ViewAll;
+export default CollectionRecipes;
