@@ -367,6 +367,7 @@ const PlanCollectionTray = ({
                 )}
                 deleteCollectionLoading={deleteCollectionLoading}
                 handleClickCheckBox={handleChange}
+                collectionRoute="blogCollection"
               />
             );
           },
