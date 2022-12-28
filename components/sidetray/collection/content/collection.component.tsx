@@ -129,8 +129,16 @@ export default function CollectionComponent({
     <div>
       {changeRecipeWithinCollection ? null : (
         <>
-          <SingleCollection name="All Recipes" slug="all-recipes" />
-          <SingleCollection name="My Recipes" slug="my-recipes" />
+          <SingleCollection
+            name="All Recipes"
+            slug="all-recipes"
+            collectionRoute="recipeCollection"
+          />
+          <SingleCollection
+            name="My Recipes"
+            slug="my-recipes"
+            collectionRoute="recipeCollection"
+          />
         </>
       )}
       {collectionsLoading ? (
@@ -157,6 +165,7 @@ export default function CollectionComponent({
               setMenuIndex={setMenuIndex}
               handleDeleteCollection={handleDeleteCollection}
               handleEditCollection={handleEditCollection}
+              collectionRoute="recipeCollection"
             />
           );
         })
