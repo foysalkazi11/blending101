@@ -32,7 +32,8 @@ const DiscoverPageSearch = ({
       handleSubmitFunc={handleSubmit}
       openPanel={toggleFilterPanel}
       isOpenPanel={openFilterTray}
-      isSearchTag={allFilters?.length ? true : false}
+      // isSearchTag={allFilters?.length ? true : false}
+      styles={{ marginLeft: "16px" }}
     />
   );
 };

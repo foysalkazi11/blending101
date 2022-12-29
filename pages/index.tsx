@@ -1,6 +1,8 @@
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import Overview from "../component/module/Home/Overview.component";
 import PlanCard from "../component/module/Planner/PlanCard.component";
 import ContentTray from "../components/recipe/recipeDiscovery/ContentTray/ContentTray.component";
@@ -12,17 +14,20 @@ import { GET_WIKI_HIGHLIGHTS } from "../gqlLib/wiki/query/getWikiList";
 import { GET_ALL_PLANS } from "../graphql/Planner";
 import { GET_BLEND_TYPES } from "../graphql/Recipe";
 import { useAppSelector } from "../redux/hooks";
+import { updateFilterCriteriaItem } from "../redux/slices/filterRecipeSlice";
+import { setOpenFilterTray } from "../redux/slices/sideTraySlice";
 
 import styles from "../styles/pages/home.module.scss";
 import CardComponent from "../theme/cards/card.component";
 import SpecialcardComponent from "../theme/cards/specialCard.component";
+const defaultBlendImg =
+  "https://blending.s3.us-east-1.amazonaws.com/3383678.jpg";
 
 const Home = () => {
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
   const displayName = useAppSelector(
     (state) => state.user?.dbUser?.displayName || "",
   );
-
   const { data: recipes } = useQuery(GET_ALL_LATEST_RECIPES, {
     variables: { userId },
   });
@@ -31,22 +36,24 @@ const Home = () => {
   });
   const { data: wikis } = useQuery(GET_WIKI_HIGHLIGHTS);
   const { data: blendTypes } = useQuery(GET_BLEND_TYPES);
-
   const [wikiType, setWikiType] = useState("All");
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const handleToShowBlendTypes = (value: any) => {
+    dispatch(
+      updateFilterCriteriaItem({
+        updateStatus: "add",
+        value: value,
+        filterCriteria: value.filterCategory,
+      }),
+    );
+    // dispatch(setOpenFilterTray(true));
+    router.push("/discovery");
+  };
 
   return (
-    <AContainer
-      headerTitle="Home"
-      headerFullWidth={true}
-      showSidebar={false}
-      showCollectionTray={{ show: false, showTagByDeafult: true }}
-      filterTray={true}
-      showCommentsTray={{
-        show: true,
-        showPanle: "right",
-        showTagByDeafult: false,
-      }}
-    >
+    <AContainer headerTitle="Home" headerFullWidth={true} showSidebar={false}>
       <div className={styles.container}>
         <div className="row">
           <div className="col-9">
@@ -94,17 +101,34 @@ const Home = () => {
                 <div>
                   {blendTypes?.getAllCategories &&
                     blendTypes?.getAllCategories.map((type, idx) => (
-                      <Link key={type._id} href={type._id}>
-                        <a>
-                          <img src={type.image} alt={type.name} />
-                          <span
-                            style={{
-                              backgroundColor: RECIPE_CATEGORY_COLOR[type.name],
-                            }}
-                          />
-                          <h6>{type.name}</h6>
-                        </a>
-                      </Link>
+                      <a
+                        key={type._id}
+                        // href={type._id}
+                        // passHref
+                        onClick={() =>
+                          handleToShowBlendTypes({
+                            name: type?.name,
+                            image: type?.image || defaultBlendImg,
+                            id: type?._id,
+                            tagLabel: "",
+                            filterCriteria: "blendTypes",
+                            origin: {
+                              activeSection: "visual",
+                              filterCriteria: "blendTypes",
+                              activeTab: "Blend Type",
+                              childTab: type?.name || "",
+                            },
+                          })
+                        }
+                      >
+                        <img src={type.image} alt={type.name} />
+                        <span
+                          style={{
+                            backgroundColor: RECIPE_CATEGORY_COLOR[type.name],
+                          }}
+                        />
+                        <h6>{type.name}</h6>
+                      </a>
                     ))}
                 </div>
               </div>
