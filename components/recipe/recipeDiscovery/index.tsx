@@ -24,6 +24,9 @@ import {
 } from "../../../redux/slices/collectionSlice";
 import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
 import ShowRecipeContainer from "../../showRecipeContainer";
+import IconWarper from "../../../theme/iconWarper/IconWarper";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBookmark, faShareNodes } from "@fortawesome/pro-regular-svg-icons";
 
 const RecipeDiscovery = () => {
   const [recipeSearchInput, setRecipeSearchInput] = useState("");
@@ -154,6 +157,30 @@ const RecipeDiscovery = () => {
               loading={filterRecipesLoading || searchRecipeLoading}
               closeHandler={closeFilterRecipes}
               showItems="recipe"
+              headerMiddle={
+                <div style={{ display: "flex" }}>
+                  <IconWarper
+                    iconColor="iconColorPrimary"
+                    defaultBg="slightGray"
+                    hover="bgPrimary"
+                    style={{
+                      width: "28px",
+                      height: "28px",
+                      marginRight: "10px",
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faBookmark} />
+                  </IconWarper>
+                  <IconWarper
+                    iconColor="iconColorPrimary"
+                    defaultBg="slightGray"
+                    hover="bgPrimary"
+                    style={{ width: "28px", height: "28px" }}
+                  >
+                    <FontAwesomeIcon icon={faShareNodes} />
+                  </IconWarper>
+                </div>
+              }
             />
           ) : (
             <RegularRecipes setOpenCollectionModal={setOpenCollectionModal} />
