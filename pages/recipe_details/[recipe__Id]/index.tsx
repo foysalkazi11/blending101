@@ -69,7 +69,7 @@ const Index = () => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [recipeData?.getARecipe]);
+  }, [recipeData?.getARecipe, recipeLoading]);
   //@ts-ignore
   const recipeBasedNutrition =
     nutritionData?.getNutrientsListAndGiGlByIngredients?.nutrients;

@@ -78,26 +78,29 @@ const ShowRecipeContainer = ({
             <span style={{ fontWeight: "600" }}>{data?.length}</span> results
           </p>
         )}
-        {headerMiddle || (
-          <div style={{ display: "flex" }}>
-            <IconWarper
-              iconColor="iconColorPrimary"
-              defaultBg="slightGray"
-              hover="bgPrimary"
-              style={{ width: "28px", height: "28px", marginRight: "10px" }}
-            >
-              <FontAwesomeIcon icon={faBookmark} />
-            </IconWarper>
-            <IconWarper
-              iconColor="iconColorPrimary"
-              defaultBg="slightGray"
-              hover="bgPrimary"
-              style={{ width: "28px", height: "28px" }}
-            >
-              <FontAwesomeIcon icon={faShareNodes} />
-            </IconWarper>
-          </div>
-        )}
+        {
+          headerMiddle
+          // (
+          //   <div style={{ display: "flex" }}>
+          //     <IconWarper
+          //       iconColor="iconColorPrimary"
+          //       defaultBg="slightGray"
+          //       hover="bgPrimary"
+          //       style={{ width: "28px", height: "28px", marginRight: "10px" }}
+          //     >
+          //       <FontAwesomeIcon icon={faBookmark} />
+          //     </IconWarper>
+          //     <IconWarper
+          //       iconColor="iconColorPrimary"
+          //       defaultBg="slightGray"
+          //       hover="bgPrimary"
+          //       style={{ width: "28px", height: "28px" }}
+          //     >
+          //       <FontAwesomeIcon icon={faShareNodes} />
+          //     </IconWarper>
+          //   </div>
+          // )
+        }
         {headerRightSide || (
           <IconWarper
             iconColor="iconColorWhite"
