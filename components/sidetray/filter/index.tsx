@@ -125,7 +125,6 @@ export default function Filtertray({ filter }) {
       {activeFilterTag.activeSection === "tags" && (
         <TagSection
           checkActiveItem={checkActiveItem}
-          handleBlendAndIngredientUpdate={handleBlendAndIngredientUpdate}
           blendCategoryData={blendCategoryData?.getAllCategories}
           blendCategoryLoading={blendCategoryLoading}
           ingredientCategoryData={

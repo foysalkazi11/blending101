@@ -138,10 +138,6 @@ const nutrient = [
 
 interface Props {
   checkActiveItem: (id: string) => boolean;
-  handleBlendAndIngredientUpdate: (
-    value: FilterCriteriaValue,
-    present: boolean,
-  ) => void;
   blendCategoryData: BlendCategoryType[];
   blendCategoryLoading: boolean;
   ingredientCategoryData: any[];
@@ -151,7 +147,6 @@ interface Props {
 
 const TagSection = ({
   checkActiveItem = () => false,
-  handleBlendAndIngredientUpdate = () => {},
   blendCategoryData = [],
   blendCategoryLoading = false,
   ingredientCategoryData = [],

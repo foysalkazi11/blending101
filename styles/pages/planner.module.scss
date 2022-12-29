@@ -177,24 +177,6 @@ $sharedColor: #fd5109;
     img {
       height: 5rem;
     }
-    button {
-      border: none;
-      background-color: transparent;
-      color: #707070;
-      font-family: "Poppins", sans-serif;
-      font-size: 2rem;
-      padding: 10px 20px;
-      cursor: pointer;
-      &:not(:last-child) {
-        margin-right: 30px;
-      }
-      &:last-child {
-        background-color: #7cbc39;
-        border-radius: 28px;
-        color: #fefefe;
-        font-weight: 600;
-      }
-    }
   }
   &__main {
     max-width: 170rem;
@@ -220,7 +202,7 @@ $sharedColor: #fd5109;
       border-radius: 4rem;
       color: #fefefe;
       font-weight: 600;
-      font-family: "Poppins", sans-serif;
+      font-family: "Segoe UI", sans-serif;
       font-size: 2.4rem;
       padding: 1rem 5rem;
       cursor: pointer;
@@ -313,7 +295,7 @@ $sharedColor: #fd5109;
     background-color: rgb(255 255 255 / 49%);
     display: inline-block;
     padding: 3rem;
-    font-family: "Poppins", sans-serif;
+    font-family: "Segoe UI", sans-serif;
 
     div {
       background-color: white;
@@ -342,7 +324,7 @@ $sharedColor: #fd5109;
   &__footer {
     position: relative;
     width: 100%;
-    font-family: "Poppins", sans-serif;
+    font-family: "Segoe UI", sans-serif;
     &_bg {
       background-color: #f8f8f8;
       height: 10rem;
@@ -373,7 +355,7 @@ $sharedColor: #fd5109;
   border: none;
   padding: 1.5rem 2rem;
   border-radius: 3rem;
-  font-family: "Poppins", sans-serif;
+  font-family: "Segoe UI", sans-serif;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -404,7 +386,7 @@ $sharedColor: #fd5109;
     border-radius: 8px;
     margin-left: 3rem;
     cursor: pointer;
-    font-family: "Poppins", sans-serif;
+    font-family: "Segoe UI", sans-serif;
     svg {
       color: #fe5d1f;
     }

@@ -29,15 +29,6 @@ const BlendType = ({
   blendCategoryLoading = false,
 }: Props) => {
   const isMounted = useRef(false);
-
-  const handleBlendClick = (blend, extraInfo) => {
-    handleBlendAndIngredientUpdate(
-      blend,
-      checkActiveItem(blend?._id),
-      extraInfo,
-    );
-  };
-
   useEffect(() => {
     isMounted.current = true;
 
