@@ -175,7 +175,7 @@ const ChallengePage = () => {
 
   return (
     <AContainer
-      headerTitle="BLENDA CHALLENGE"
+      headerTitle="CHALLENGE"
       showGroceryTray={{
         show: showGroceryTray,
         showPanle: "right",

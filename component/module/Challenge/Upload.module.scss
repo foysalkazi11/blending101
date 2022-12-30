@@ -11,8 +11,8 @@ $sharedBorder: 1px #efefef solid;
 .mainContainer {
   display: flex;
   flex-direction: column;
-  padding: 20px 10px;
-
+  padding: 20px 3rem;
+  background-color: white;
   &__cancelDiv {
     margin-left: auto;
     font-size: 30px;
@@ -135,7 +135,7 @@ $sharedBorder: 1px #efefef solid;
 // ADD INGREDIENT
 .ingredient {
   color: #888888;
-  select {
+  input {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }
