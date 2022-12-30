@@ -113,6 +113,12 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
     });
 
     try {
+      dispatch(
+        updateAllFilterRecipes({
+          filterRecipes: [],
+          isFiltering: true,
+        }),
+      );
       const { data } = await filterRecipe({
         variables: {
           data: {
@@ -129,7 +135,7 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
       dispatch(
         updateAllFilterRecipes({
           filterRecipes: data?.filterRecipe || [],
-          isFiltering: true,
+          isFiltering: false,
         }),
       );
     } catch (error) {
@@ -138,7 +144,7 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
       dispatch(
         updateAllFilterRecipes({
           filterRecipes: [],
-          isFiltering: true,
+          isFiltering: false,
         }),
       );
     }

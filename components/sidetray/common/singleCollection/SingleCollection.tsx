@@ -16,6 +16,7 @@ interface IndividualCollectionType {
   name?: string;
   image?: string;
   slug?: string;
+  description?: string;
   showMoreMenu?: boolean;
   changeItemWithinCollection?: boolean;
   isRecipeWithinCollection?: boolean;
@@ -26,14 +27,21 @@ interface IndividualCollectionType {
   menuIndex?: number;
   setMenuIndex?: Dispatch<SetStateAction<number>>;
   handleDeleteCollection?: (id: string) => void;
-  handleEditCollection?: (id: string, name: string, slug: string) => void;
+  handleEditCollection?: (
+    id: string,
+    name: string,
+    slug: string,
+    description: string,
+  ) => void;
   deleteCollectionLoading?: boolean;
+  collectionRoute: "recipeCollection" | "blogCollection" | "planCollection";
 }
 
 const SingleCollection = ({
   name = "All Recipes",
   image = "/cards/food.png",
   slug = "",
+  description = "",
   showMoreMenu = false,
   changeItemWithinCollection = false,
   isRecipeWithinCollection = false,
@@ -46,6 +54,7 @@ const SingleCollection = ({
   handleDeleteCollection = () => {},
   handleEditCollection = () => {},
   deleteCollectionLoading = false,
+  collectionRoute = "recipeCollection",
 }: IndividualCollectionType) => {
   const [hoverRef, isHovered] = useHover();
   const handleClick = (index: number) => {
@@ -59,7 +68,7 @@ const SingleCollection = ({
   return (
     <>
       <div className={styles.collection__child} key={id} ref={hoverRef}>
-        <Link href={`/collection/${slug}`} passHref>
+        <Link href={`/collection/${collectionRoute}/${slug}`} passHref>
           <div className={styles.leftSide}>
             <div className={styles.img}>
               <div
@@ -91,7 +100,6 @@ const SingleCollection = ({
                   handleClick(index);
                 }}
               >
-                {/* <MdMoreVert className={styles.moreIcon} /> */}
                 <FontAwesomeIcon icon={faEllipsisVertical} />
 
                 <div
@@ -102,7 +110,9 @@ const SingleCollection = ({
                   <FontAwesomeIcon
                     icon={faPencil}
                     className={styles.icon}
-                    onClick={() => handleEditCollection(id, name, slug)}
+                    onClick={() =>
+                      handleEditCollection(id, name, slug, description)
+                    }
                   />
                   {deleteCollectionLoading ? (
                     <CircularRotatingLoader

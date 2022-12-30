@@ -24,6 +24,9 @@ import {
 } from "../../../redux/slices/collectionSlice";
 import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
 import ShowRecipeContainer from "../../showRecipeContainer";
+import IconWarper from "../../../theme/iconWarper/IconWarper";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBookmark, faShareNodes } from "@fortawesome/pro-regular-svg-icons";
 
 const RecipeDiscovery = () => {
   const [recipeSearchInput, setRecipeSearchInput] = useState("");
@@ -62,18 +65,16 @@ const RecipeDiscovery = () => {
   };
 
   useEffect(() => {
-    if (isMounted.current) {
-      // filter recipe func
-      if (allFilters.length) {
-        handleFilterRecipes(allFilters, filterRecipe);
-      } else {
-        dispatch(
-          updateAllFilterRecipes({
-            filterRecipes: [],
-            isFiltering: false,
-          }),
-        );
-      }
+    // filter recipe func
+    if (allFilters.length) {
+      handleFilterRecipes(allFilters, filterRecipe);
+    } else {
+      dispatch(
+        updateAllFilterRecipes({
+          filterRecipes: [],
+          isFiltering: false,
+        }),
+      );
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -129,13 +130,14 @@ const RecipeDiscovery = () => {
           showTagByDeafult: false,
         }}
       >
-        <div className={styles.main__div}>
-          <div
-            style={{
-              marginLeft: openFilterTray ? "310px" : "16px",
-              transition: "all 0.5s",
-            }}
-          >
+        <div
+          className={styles.main__div}
+          style={{
+            marginLeft: openFilterTray ? "310px" : "0px",
+            transition: "all 0.3s",
+          }}
+        >
+          <div>
             <DiscoveryPageSearchBar
               input={recipeSearchInput}
               handleOnChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -148,11 +150,37 @@ const RecipeDiscovery = () => {
             ) : null}
           </div>
           {allFilterRecipes.filterRecipes.length ||
-          allFilterRecipes.isFiltering ? (
+          filterRecipesLoading ||
+          searchRecipeLoading ? (
             <ShowRecipeContainer
               data={allFilterRecipes.filterRecipes}
               loading={filterRecipesLoading || searchRecipeLoading}
               closeHandler={closeFilterRecipes}
+              showItems="recipe"
+              headerMiddle={
+                <div style={{ display: "flex" }}>
+                  <IconWarper
+                    iconColor="iconColorPrimary"
+                    defaultBg="slightGray"
+                    hover="bgPrimary"
+                    style={{
+                      width: "28px",
+                      height: "28px",
+                      marginRight: "10px",
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faBookmark} />
+                  </IconWarper>
+                  <IconWarper
+                    iconColor="iconColorPrimary"
+                    defaultBg="slightGray"
+                    hover="bgPrimary"
+                    style={{ width: "28px", height: "28px" }}
+                  >
+                    <FontAwesomeIcon icon={faShareNodes} />
+                  </IconWarper>
+                </div>
+              }
             />
           ) : (
             <RegularRecipes setOpenCollectionModal={setOpenCollectionModal} />

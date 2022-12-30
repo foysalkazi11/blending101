@@ -3,99 +3,95 @@ import { faRectangleHistory } from "@fortawesome/pro-regular-svg-icons";
 import { faBookmark } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
-import useToUpdateBlogField from "../../../customHooks/blog/useToUpdateBlogFirld";
-import ADD_NEW_BLOG_COLLECTION from "../../../gqlLib/blog/mutation/addNewBlogCllection";
-import ADD_OR_REMOVE_TO_BLOG_COLLECTION from "../../../gqlLib/blog/mutation/addOrRemoveToBlogCollection";
-import DELETE_BLOG_COLLECTION from "../../../gqlLib/blog/mutation/deleteBlogCollection";
-import GET_ALL_BLOG_COLLECTIONS from "../../../gqlLib/blog/query/getAllBlogCollections";
+import useToUpdatePlanField from "../../../customHooks/plan/useToUpdatePlanField";
+import {
+  EDIT_PLAN_COLLECTION,
+  GET_ALL_PLAN_COLLECTION,
+  ADD_NEW_PLAN_COLLECTION,
+  DELETE_PLAN_COLLECTION,
+  ADD_OR_REMOVE_PLAN_COLLECTION,
+} from "../../../graphql/Planner";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
   setIsActivePlanForCollection,
   setIsOpenPlanCollectionTray,
 } from "../../../redux/slices/Planner.slice";
+import ConfirmationModal from "../../../theme/confirmationModal/ConfirmationModal";
 import CustomModal from "../../../theme/modal/customModal/CustomModal";
 import SkeletonCollections from "../../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollections";
 import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
 import notification from "../../utility/reactToastifyNotification";
-import AddCollectionModal from "../collection/addCollectionModal/AddCollectionModal";
+import AddCollectionModal from "../common/addCollectionModal/AddCollectionModal";
 import IconForAddComment from "../common/iconForAddComment/IconForAddComment";
 import SingleCollection from "../common/singleCollection/SingleCollection";
 import TrayTag from "../TrayTag";
 import TrayWrapper from "../TrayWrapper";
-import styles from "./BlogCollectionTray.module.scss";
+import styles from "./PlanCollectionTray.module.scss";
 
 interface BlogCollectionTrayProps {
   showTagByDefaut?: boolean;
   showPanle?: "left" | "right";
 }
-const BlogCollectionTray = ({
+const PlanCollectionTray = ({
   showPanle,
   showTagByDefaut,
 }: BlogCollectionTrayProps) => {
-  const [collectionHasRecipe, setCollectionHasRecipe] = useState<string[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [input, setInput] = useState({
-    image: null,
+    image: "",
     name: "",
     slug: "",
+    description: "",
   });
   const [menuIndex, setMenuIndex] = useState(0);
   const [isEditCollection, setIsEditCollection] = useState(false);
+  const [isDeleteCollection, setIsDeleteCollection] = useState(false);
   const [collectionId, setCollectionId] = useState("");
   const [isCollectionUpdate, setIsCollectionUpdate] = useState(false);
-  const { isOpenPlanCollectionTray, isActivePlanForCollection } =
-    useAppSelector((state) => state?.planner);
+  const { isOpenPlanCollectionTray, activePlanForCollection } = useAppSelector(
+    (state) => state?.planner,
+  );
   const memberId = useAppSelector((state) => state?.user?.dbUser?._id || "");
   const isMounted = useRef(null);
   const [
-    getAllBlogCollections,
+    getAllPlanCollection,
     {
       data: allCollectionData,
       loading: allCollectionLoading,
       error: allCollectionError,
     },
-  ] = useLazyQuery(GET_ALL_BLOG_COLLECTIONS, {
+  ] = useLazyQuery(GET_ALL_PLAN_COLLECTION, {
     fetchPolicy: "cache-and-network",
   });
-  const [addNewBlogCollection, { loading: addNewBlogCollectionLoading }] =
-    useMutation(ADD_NEW_BLOG_COLLECTION);
-  const [deleteCollection, { loading: deleteCollectionLoading }] = useMutation(
-    DELETE_BLOG_COLLECTION,
-  );
-  const [addOrRemoveBlogFromCollection] = useMutation(
-    ADD_OR_REMOVE_TO_BLOG_COLLECTION,
+  const [editPlanCollection, { loading: editPlanCollectionLoading }] =
+    useMutation(EDIT_PLAN_COLLECTION);
+  const [addNewPlanCollection, { loading: addNewPlanCollectionLoading }] =
+    useMutation(ADD_NEW_PLAN_COLLECTION);
+  const [deletePlanCollection, { loading: deletePlanCollectionLoading }] =
+    useMutation(DELETE_PLAN_COLLECTION);
+  const [addOrRemovePlanFromCollection] = useMutation(
+    ADD_OR_REMOVE_PLAN_COLLECTION,
   );
   const dispatch = useAppDispatch();
-  const handleToUpdateBlog = useToUpdateBlogField();
+  const handleUpdatePlanField = useToUpdatePlanField();
 
   const handleAddOrRemoveBlogFormCollection = async () => {
     try {
-      const { data } = await addOrRemoveBlogFromCollection({
+      await addOrRemovePlanFromCollection({
         variables: {
           memberId,
-          collectionIds: collectionHasRecipe,
-          blogId: isActivePlanForCollection,
+          collectionIds: activePlanForCollection.collectionIds,
+          planId: activePlanForCollection.id,
         },
       });
-      let isBlogWithingCollection = false;
 
-      for (const collection of data?.addOrRemoveToBlogCollection
-        ?.blogCollections) {
-        const { _id, blogs } = collection;
-        if (blogs?.includes(isActivePlanForCollection)) {
-          isBlogWithingCollection = true;
-          break;
-        }
-      }
+      handleUpdatePlanField(activePlanForCollection.id, {
+        planCollections: activePlanForCollection.collectionIds,
+      });
 
-      dispatch(setIsActivePlanForCollection(""));
+      dispatch(setIsActivePlanForCollection({ id: "", collectionIds: [] }));
       notification("info", `Collection update successfully`);
       setIsCollectionUpdate(false);
-      if (!isBlogWithingCollection) {
-        handleToUpdateBlog(isActivePlanForCollection, {
-          hasInCollection: false,
-        });
-      }
     } catch (error) {
       notification("error", error?.message);
       setIsCollectionUpdate(false);
@@ -107,37 +103,60 @@ const BlogCollectionTray = ({
     try {
       if (input?.name) {
         if (isEditCollection) {
-          //  await editCollection({
-          //    variables: {
-          //      data: {
-          //        userEmail: dbUser?.email,
-          //        collectionId: collectionId,
-          //        newName: input?.name,
-          //      },
-          //    },
-          //  });
-          //  setOpenModal(false);
-          //  setInput({ image: null, name: "" });
+          await editPlanCollection({
+            variables: {
+              data: {
+                memberId,
+                editId: collectionId,
+                editableObject: {
+                  description: input.description,
+                  slug: input.slug,
+                  name: input.name,
+                },
+              },
+            },
+            update(cache, { data: { editAPlanCollection } }) {
+              cache.writeQuery({
+                query: GET_ALL_PLAN_COLLECTION,
+                variables: { memberId },
+                data: {
+                  getAllPlanCollection: {
+                    planCollections:
+                      allCollectionData?.getAllPlanCollection?.planCollections.map(
+                        (collection) =>
+                          collection?._id === editAPlanCollection?._id
+                            ? { ...collection, ...editAPlanCollection }
+                            : collection,
+                      ),
+                  },
+                },
+              });
+            },
+          });
+          setOpenModal(false);
+          setInput({ image: "", name: "", description: "", slug: "" });
           setOpenModal(false);
         } else {
-          await addNewBlogCollection({
+          await addNewPlanCollection({
             variables: {
               data: {
                 memberId,
                 name: input.name,
                 slug: input.slug,
+                description: input.description,
+                image: input.image,
               },
             },
-            update(cache, { data: { addNewBlogCollection } }) {
+            update(cache, { data: { addNewPlanCollection } }) {
               cache.writeQuery({
-                query: GET_ALL_BLOG_COLLECTIONS,
+                query: GET_ALL_PLAN_COLLECTION,
                 variables: { memberId },
                 data: {
-                  getAllBlogCollections: {
-                    blogCollections: [
-                      ...allCollectionData?.getAllBlogCollections
-                        ?.blogCollections,
-                      addNewBlogCollection,
+                  getAllPlanCollection: {
+                    planCollections: [
+                      ...allCollectionData?.getAllPlanCollection
+                        ?.planCollections,
+                      addNewPlanCollection,
                     ],
                   },
                 },
@@ -147,7 +166,7 @@ const BlogCollectionTray = ({
         }
 
         setOpenModal(false);
-        setInput({ image: null, name: "", slug: "" });
+        setInput({ image: "", name: "", slug: "", description: "" });
         if (isEditCollection) {
           notification("info", "Collection edit successfully");
         } else {
@@ -162,49 +181,66 @@ const BlogCollectionTray = ({
   };
   // open collection modal
   const addNewCollection = () => {
+    setIsDeleteCollection(false);
     setIsEditCollection(false);
-    setInput((pre) => ({ ...pre, name: "", slug: "" }));
+    setInput((pre) => ({
+      ...pre,
+      name: "",
+      slug: "",
+      description: "",
+      image: "",
+    }));
+    setOpenModal(true);
+  };
+
+  // delete collection
+  const handleOpenConfirmationModal = (collectionId: string) => {
+    setIsDeleteCollection(true);
+    setCollectionId(collectionId);
     setOpenModal(true);
   };
 
   // handle delete collection
-  const handleDeleteCollection = async (collectionId: string) => {
+  const handleDeleteCollection = async () => {
     try {
-      await deleteCollection({
+      await deletePlanCollection({
         variables: {
           collectionId,
           memberId,
         },
-        update(cache, { data: { deleteBlogCollection } }) {
-          // const allCollectionData = cache.readQuery({
-          //   query: GET_ALL_BLOG_COLLECTIONS,
-          //   variables: { memberId },
-          // });
-
+        update(cache, { data: { deletePlanCollection } }) {
           cache.writeQuery({
-            query: GET_ALL_BLOG_COLLECTIONS,
+            query: GET_ALL_PLAN_COLLECTION,
             variables: { memberId },
             data: {
-              getAllBlogCollections: {
-                blogCollections: [...deleteBlogCollection?.blogCollections],
+              getAllPlanCollection: {
+                planCollections: [...deletePlanCollection?.planCollections],
               },
             },
           });
         },
       });
-
+      setOpenModal(false);
       notification("info", "Delete collection successfully");
     } catch (error) {
+      setOpenModal(false);
       notification("error", error?.message);
     }
   };
 
   // edit a collection
-  const handleEditCollection = (id: string, name: string, slug: string) => {
+  const handleEditCollection = (
+    id: string,
+    name: string,
+    slug: string,
+    description: string,
+  ) => {
+    setIsDeleteCollection(false);
     setInput((pre) => ({
       ...pre,
       name,
       slug,
+      description,
     }));
     setIsEditCollection(true);
     setCollectionId(id);
@@ -215,46 +251,38 @@ const BlogCollectionTray = ({
   const handleChange = async (e, collectionId) => {
     setIsCollectionUpdate(true);
     if (e?.target?.checked) {
-      setCollectionHasRecipe((pre) => [...pre, collectionId]);
+      dispatch(
+        setIsActivePlanForCollection({
+          ...activePlanForCollection,
+          collectionIds: [
+            ...activePlanForCollection.collectionIds,
+            collectionId,
+          ],
+        }),
+      );
     } else {
-      setCollectionHasRecipe((pre) => [
-        ...pre?.filter((id) => id !== collectionId),
-      ]);
+      dispatch(
+        setIsActivePlanForCollection({
+          ...activePlanForCollection,
+          collectionIds: activePlanForCollection.collectionIds.filter(
+            (id) => id !== collectionId,
+          ),
+        }),
+      );
     }
   };
 
   useEffect(() => {
     if (isOpenPlanCollectionTray) {
-      getAllBlogCollections({ variables: { memberId } });
+      getAllPlanCollection({ variables: { memberId } });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpenPlanCollectionTray]);
-  useEffect(() => {
-    if (isActivePlanForCollection && isOpenPlanCollectionTray) {
-      setCollectionHasRecipe([]);
-      allCollectionData?.getAllBlogCollections?.blogCollections?.forEach(
-        (collection) => {
-          const { _id, blogs } = collection;
-
-          if (blogs?.includes(isActivePlanForCollection)) {
-            setCollectionHasRecipe((pre) => {
-              if (pre) {
-                return [...pre, _id];
-              } else {
-                return [_id];
-              }
-            });
-          }
-        },
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isActivePlanForCollection, allCollectionData]);
 
   useEffect(() => {
     if (isMounted.current) {
       if (!isOpenPlanCollectionTray) {
-        if (isCollectionUpdate && isActivePlanForCollection) {
+        if (isCollectionUpdate && activePlanForCollection.id) {
           handleAddOrRemoveBlogFormCollection();
         }
       }
@@ -273,7 +301,8 @@ const BlogCollectionTray = ({
     <TrayWrapper
       showTagByDefaut={showTagByDefaut}
       closeTray={() => {
-        !isCollectionUpdate && dispatch(setIsActivePlanForCollection(""));
+        !isCollectionUpdate &&
+          dispatch(setIsActivePlanForCollection({ id: "", collectionIds: [] }));
         dispatch(setIsOpenPlanCollectionTray(!isOpenPlanCollectionTray));
       }}
       openTray={isOpenPlanCollectionTray}
@@ -305,47 +334,69 @@ const BlogCollectionTray = ({
       {allCollectionLoading ? (
         <SkeletonCollections />
       ) : (
-        allCollectionData?.getAllBlogCollections?.blogCollections?.map(
+        allCollectionData?.getAllPlanCollection?.planCollections?.map(
           (collection, i) => {
-            const { _id, name, slug, collectionDataCount, image, blogs } =
-              collection;
+            const {
+              _id,
+              name,
+              slug,
+              collectionDataCount,
+              image,
+              blogs,
+              description,
+            } = collection;
 
             return (
               <SingleCollection
                 key={_id}
                 id={_id}
                 name={name}
+                description={description}
                 slug={slug}
                 image={image || "/cards/food.png"}
                 collectionItemLength={collectionDataCount}
                 showMoreMenu={true}
-                handleDeleteCollection={handleDeleteCollection}
+                handleDeleteCollection={handleOpenConfirmationModal}
                 handleEditCollection={handleEditCollection}
                 index={i}
                 menuIndex={menuIndex}
                 setMenuIndex={setMenuIndex}
                 changeItemWithinCollection={
-                  isActivePlanForCollection ? true : false
+                  activePlanForCollection.id ? true : false
                 }
-                isRecipeWithinCollection={collectionHasRecipe?.includes(_id)}
-                deleteCollectionLoading={deleteCollectionLoading}
+                isRecipeWithinCollection={activePlanForCollection.collectionIds?.includes(
+                  _id,
+                )}
+                deleteCollectionLoading={deletePlanCollectionLoading}
                 handleClickCheckBox={handleChange}
+                collectionRoute="planCollection"
               />
             );
           },
         )
       )}
       <CustomModal open={openModal} setOpen={setOpenModal}>
-        <AddCollectionModal
-          input={input}
-          setInput={setInput}
-          setOpenModal={setOpenModal}
-          handleToAddOrUpdateCollection={handleAddOrEditCollection}
-          isAddOrUpdateCollectionLoading={addNewBlogCollectionLoading}
-        />
+        {isDeleteCollection ? (
+          <ConfirmationModal
+            text="All the related entities will be removed along with this collection !!!"
+            cancleFunc={() => setOpenModal(false)}
+            submitFunc={handleDeleteCollection}
+            loading={deletePlanCollectionLoading}
+          />
+        ) : (
+          <AddCollectionModal
+            input={input}
+            setInput={setInput}
+            setOpenModal={setOpenModal}
+            handleToAddOrUpdateCollection={handleAddOrEditCollection}
+            isAddOrUpdateCollectionLoading={
+              addNewPlanCollectionLoading || editPlanCollectionLoading
+            }
+          />
+        )}
       </CustomModal>
     </TrayWrapper>
   );
 };
 
-export default BlogCollectionTray;
+export default PlanCollectionTray;

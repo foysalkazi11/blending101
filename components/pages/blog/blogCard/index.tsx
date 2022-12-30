@@ -132,12 +132,12 @@ const BlogCard = ({
         </div>
         <div className={styles.brandBox}>
           <FontAwesomeIcon
-            icon={blogCollections.length ? faBookmarkSolid : faBookmarkLight}
+            icon={blogCollections ? faBookmarkSolid : faBookmarkLight}
             className={`${styles.icon} ${
-              blogCollections.length ? styles.activeIconPrimary : ""
+              blogCollections ? styles.activeIconPrimary : ""
             }`}
             onClick={() => {
-              blogCollections.length
+              blogCollections
                 ? handleOpenCollectionTray(_id, blogCollections)
                 : handleToAddBlogAtCollection(
                     _id,

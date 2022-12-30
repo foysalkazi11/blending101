@@ -1,26 +1,19 @@
 import { useRouter } from "next/router";
-import React, { FormEvent, useRef, useState } from "react";
-import { AiOutlineClose } from "react-icons/ai";
-import { BsSoundwave, BsSearch, BsMic } from "react-icons/bs";
-import { FiFilter } from "react-icons/fi";
-import { Tooltip } from "recharts";
+import React, { useState } from "react";
 import { faUserCircle } from "@fortawesome/pro-light-svg-icons";
-
 import PlanCard from "../../component/module/Planner/PlanCard.component";
 import AppdownLoadCard from "../../components/recipe/recipeDiscovery/AppdownLoadCard/AppdownLoadCard.component";
 import ContentTray from "../../components/recipe/recipeDiscovery/ContentTray/ContentTray.component";
-
-import useOnClickOutside from "../../components/utility/useOnClickOutside";
 import AContainer from "../../containers/A.container";
 import Icon from "../../component/atoms/Icon/Icon.component";
-import WeekPicker from "../../component/molecules/DatePicker/Week.component";
-
-import classes from "../../components/searchBar/SearchBar.module.scss";
 import styles from "../../styles/pages/planner.module.scss";
 import "react-datepicker/dist/react-datepicker.css";
 import { useQuery } from "@apollo/client";
 import { GET_ALL_PLANS, GET_FEATURED_PLANS } from "../../graphql/Planner";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import ShowLastModifiedCollection from "../../components/showLastModifiedCollection/ShowLastModifiedCollection";
+import { setIsOpenPlanCollectionTray } from "../../redux/slices/Planner.slice";
+import CommonSearchBar from "../../components/searchBar/CommonSearchBar";
 
 const PlanDiscovery = ({
   input = "",
@@ -37,46 +30,16 @@ const PlanDiscovery = ({
   const { data } = useQuery(GET_FEATURED_PLANS, {
     variables: { limit: 8, memberId: userId },
   });
+  const [openCollectionModal, setOpenCollectionModal] = useState(false);
 
-  const [isInputFocus, setIsInputFocus] = useState(false);
-  const [isSubmit, setIsSubmit] = useState(false);
-  const [isMicOn, setIsMicOn] = useState(false);
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  useOnClickOutside(inputRef, () => {
-    setIsSubmit(false);
-    setIsInputFocus(false);
-  });
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (input) {
-      setIsSubmit(true);
-      handleSubmitFunc();
-    }
-  };
-
-  const handleClean = () => {
-    //@ts-ignore
-    setInput("");
-    setIsSubmit(false);
-    setIsInputFocus(false);
-    // inputRef?.current?.focus();
-  };
-
-  const handleSearchTagClean = () => {
-    handleSearchTagCleanFunc();
-    setIsSubmit(false);
-    setIsInputFocus(false);
-  };
+  const { lastModifiedPlanCollection } = useAppSelector(
+    (state) => state?.planner,
+  );
+  const dispatch = useAppDispatch();
 
   return (
     <AContainer
       headerTitle="MEAL PLAN DISCOVERY"
-      showGroceryTray={{
-        show: false,
-        showPanle: "right",
-        // showTagByDeafult: showGroceryTray,
-      }}
       showPlanCollectionTray={{
         show: true,
         showPanle: "left",
@@ -84,79 +47,12 @@ const PlanDiscovery = ({
       }}
     >
       <div className={styles.discovery}>
-        <div className={classes.searchBarContainer}>
-          <div className={classes.inputContainer} ref={inputRef}>
-            <div
-              className={classes.filterIconContainer}
-              style={
-                isOpenPanel ? { marginRight: "10px", paddingRight: "20px" } : {}
-              }
-            >
-              {isOpenPanel ? null : (
-                <FiFilter
-                  className={`${classes.filterIcon} ${
-                    isOpenPanel ? classes.active : ""
-                  }`}
-                  onClick={openPanel}
-                />
-              )}
-            </div>
-            <div className={classes.inputBox}>
-              {isInputFocus ? null : isMicOn ? (
-                <BsSoundwave className={classes.waveIcon} />
-              ) : (
-                <BsSearch className={classes.seachIcon} />
-              )}
-              <form onSubmit={handleSubmit}>
-                <input
-                  style={
-                    isOpenPanel ? { width: "30vw", minWidth: "200px" } : {}
-                  }
-                  disabled={isMicOn}
-                  placeholder={isMicOn ? "Speak" : "Search"}
-                  value={input}
-                  onChange={(e) => handleOnChange()}
-                  onFocus={() => setIsInputFocus(true)}
-                />
-              </form>
-
-              {isSubmit ? (
-                <AiOutlineClose
-                  className={classes.seachIconActive}
-                  onClick={handleClean}
-                />
-              ) : isInputFocus ? (
-                <BsSearch
-                  className={`${classes.seachIconActive}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (input) {
-                      setIsSubmit(true);
-                    }
-                  }}
-                />
-              ) : (
-                <>
-                  {isSearchTag ? (
-                    <AiOutlineClose
-                      className={classes.seachIconActive}
-                      onClick={handleSearchTagClean}
-                    />
-                  ) : (
-                    //@ts-ignore
-                    <Tooltip direction="bottom" content="Voice search">
-                      <BsMic
-                        className={`${classes.mic} ${
-                          isMicOn ? classes.active : ""
-                        }`}
-                        onClick={() => setIsMicOn(!isMicOn)}
-                      />
-                    </Tooltip>
-                  )}
-                </>
-              )}
-            </div>
-          </div>
+        <div className={styles.searchBarContainer}>
+          <CommonSearchBar
+            input={input}
+            setInput={setInput}
+            isSearchTag={false}
+          />
           <button
             className={styles.discovery__myplan}
             onClick={() => router.push("/planner/plan/")}
@@ -176,7 +72,13 @@ const PlanDiscovery = ({
             {data?.getAllRecommendedPlans?.map((item) => (
               <div key={item?._id}>
                 <div className="mr-10">
-                  <PlanCard planId={item?._id} title={item.planName} />
+                  <PlanCard
+                    planId={item?._id}
+                    title={item.planName}
+                    isCollectionIds={item?.planCollections}
+                    noOfComments={item?.commentsCount}
+                    setOpenCollectionModal={setOpenCollectionModal}
+                  />
                 </div>
               </div>
             ))}
@@ -191,7 +93,13 @@ const PlanDiscovery = ({
             {data?.getAllRecentPlans?.map((item) => (
               <div key={item?._id}>
                 <div className="mr-10">
-                  <PlanCard planId={item?._id} title={item.planName} />
+                  <PlanCard
+                    planId={item?._id}
+                    title={item.planName}
+                    isCollectionIds={item?.planCollections}
+                    noOfComments={item?.commentsCount}
+                    setOpenCollectionModal={setOpenCollectionModal}
+                  />
                 </div>
               </div>
             ))}
@@ -206,13 +114,29 @@ const PlanDiscovery = ({
             {data?.getAllPopularPlans?.map((item) => (
               <div key={item?._id}>
                 <div className="mr-10">
-                  <PlanCard planId={item?._id} title={item.planName} />
+                  <PlanCard
+                    planId={item?._id}
+                    title={item.planName}
+                    isCollectionIds={item?.planCollections}
+                    noOfComments={item?.commentsCount}
+                    setOpenCollectionModal={setOpenCollectionModal}
+                  />
                 </div>
               </div>
             ))}
           </ContentTray>
         </div>
       </div>
+      <ShowLastModifiedCollection
+        open={openCollectionModal}
+        setOpen={setOpenCollectionModal}
+        shouldCloseOnOverlayClick={true}
+        lastModifiedCollectionName={lastModifiedPlanCollection?.name}
+        openCollectionPanel={() => {
+          dispatch(setIsOpenPlanCollectionTray(true));
+          setOpenCollectionModal(false);
+        }}
+      />
     </AContainer>
   );
 };

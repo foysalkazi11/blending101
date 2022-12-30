@@ -15,18 +15,6 @@ const ADD_NEW_RECIPE_TO_COLLECTION = gql`
         }
         name
         _id
-        description
-        prepTime
-        cookTime
-        totalTime
-        recipeYield
-        recipeIngredients
-        recipeInstructions
-        recipeCuisines
-
-        url
-        discovery
-        favicon
       }
     }
   }

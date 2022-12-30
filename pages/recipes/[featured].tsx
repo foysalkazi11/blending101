@@ -87,6 +87,7 @@ const ViewAll = () => {
               <FontAwesomeIcon icon={faXmark} />
             </IconWarper>
           }
+          showItems="recipe"
         />
       </div>
       <div className={styles.footerMainDiv}>

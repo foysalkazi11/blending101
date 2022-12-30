@@ -5,12 +5,9 @@ import React, {
   useRef,
   useState,
 } from "react";
-import styles from "./content.module.scss";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { useMutation } from "@apollo/client";
-import DELETE_COLLECTION from "../../../../gqlLib/collection/mutation/deleteCollection";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
-import { setCurrentCollectionInfo } from "../../../../redux/slices/collectionSlice";
 import ADD_OR_REMOVE_RECIPE_FORM_COLLECTION from "../../../../gqlLib/collection/mutation/addOrRemoveRecipeFromCollection";
 import SkeletonCollections from "../../../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollections";
 import useUpdateRecipeField from "../../../../customHooks/useUpdateRecipeFirld";
@@ -21,25 +18,23 @@ import SingleCollection from "../../common/singleCollection/SingleCollection";
 
 interface CollectionComponentProps {
   collections: {}[];
-  setInput: any;
-  setIsEditCollection: any;
-  setCollectionId: any;
   collectionsLoading: boolean;
-  getCollectionsAndThemes: (arg: any) => void;
-  setOpenModal?: Dispatch<SetStateAction<boolean>>;
+  handleDeleteCollection?: (id: string) => void;
+  handleEditCollection?: (
+    id: string,
+    name: string,
+    slug: string,
+    description: string,
+  ) => void;
 }
 
 export default function CollectionComponent({
   collections,
-  setInput,
-  setIsEditCollection,
-  setCollectionId,
   collectionsLoading,
-  getCollectionsAndThemes = () => {},
-  setOpenModal = () => {},
+  handleDeleteCollection = () => {},
+  handleEditCollection = () => {},
 }: CollectionComponentProps) {
   const dispatch = useAppDispatch();
-  const [deleteCollection] = useMutation(DELETE_COLLECTION);
   const [addOrRemoveRecipeFromCollection] = useMutation(
     ADD_OR_REMOVE_RECIPE_FORM_COLLECTION,
   );
@@ -49,9 +44,7 @@ export default function CollectionComponent({
     activeRecipeId,
     singleRecipeWithinCollections,
   } = useAppSelector((state) => state?.collections);
-  const [showMenu, setShowMenu] = useState(false);
   const [menuIndex, setMenuIndex] = useState(0);
-  const [hoverIndex, setHoverIndex] = useState(0);
   const [collectionHasRecipe, setCollectionHasRecipe] = useState<string[]>([]);
   const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
   const [isCollectionUpdate, setIsCollectionUpdate] = useState(false);
@@ -109,49 +102,6 @@ export default function CollectionComponent({
     }
   };
 
-  const handleDeleteCollection = async (collectionId: string) => {
-    try {
-      await deleteCollection({
-        variables: {
-          data: {
-            collectionId: collectionId,
-            userEmail: dbUser?.email,
-          },
-        },
-      });
-      getCollectionsAndThemes({ variables: { userId: dbUser?._id } });
-      dispatch(setCurrentCollectionInfo({ id: "", name: "All Recipes" }));
-      updateRecipe(activeRecipeId, {
-        collection: null,
-      });
-
-      reactToastifyNotification("info", "Collection delete successfully");
-    } catch (error) {
-      reactToastifyNotification("error", error?.message);
-    }
-  };
-
-  const handleEditCollection = (id: string, name: string, slug: string) => {
-    setInput((pre) => ({
-      ...pre,
-      name,
-      slug,
-    }));
-    setIsEditCollection(true);
-    setCollectionId(id);
-    setOpenModal(true);
-  };
-
-  const handleClick = (index: number) => {
-    if (menuIndex === index) {
-      setMenuIndex(index);
-      setShowMenu((pre) => !pre);
-    } else {
-      setMenuIndex(index);
-      setShowMenu(true);
-    }
-  };
-
   useEffect(() => {
     setCollectionHasRecipe(singleRecipeWithinCollections);
   }, [singleRecipeWithinCollections]);
@@ -179,15 +129,23 @@ export default function CollectionComponent({
     <div>
       {changeRecipeWithinCollection ? null : (
         <>
-          <SingleCollection name="All Recipes" slug="all-recipes" />
-          <SingleCollection name="My Recipes" slug="my-recipes" />
+          <SingleCollection
+            name="All Recipes"
+            slug="all-recipes"
+            collectionRoute="recipeCollection"
+          />
+          <SingleCollection
+            name="My Recipes"
+            slug="my-recipes"
+            collectionRoute="recipeCollection"
+          />
         </>
       )}
       {collectionsLoading ? (
         <SkeletonCollections />
       ) : (
         collections?.map((collection: any, i: number) => {
-          const { _id, image, name, slug, recipes } = collection;
+          const { _id, image, name, slug, recipes, description } = collection;
 
           return (
             <SingleCollection
@@ -195,6 +153,7 @@ export default function CollectionComponent({
               name={name}
               slug={slug}
               id={_id}
+              description={description}
               image={image || "/cards/food.png"}
               isRecipeWithinCollection={collectionHasRecipe?.includes(_id)}
               index={i}
@@ -206,6 +165,7 @@ export default function CollectionComponent({
               setMenuIndex={setMenuIndex}
               handleDeleteCollection={handleDeleteCollection}
               handleEditCollection={handleEditCollection}
+              collectionRoute="recipeCollection"
             />
           );
         })

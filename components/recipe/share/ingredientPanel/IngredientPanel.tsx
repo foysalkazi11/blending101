@@ -35,6 +35,7 @@ const IngredientPanel = ({
           ingredientCategoryData={
             ingredientCategoryData?.filterIngredientByCategoryAndClass
           }
+          ingredientCategoryLoading={ingredientCategoryLoading}
         />
       </div>
     </div>
