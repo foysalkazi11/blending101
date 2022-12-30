@@ -6,11 +6,16 @@ import { differenceInDays, format, isAfter, isToday } from "date-fns";
 
 import Icon from "../../../atoms/Icon/Icon.component";
 import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
-import { setChallengeDate } from "../../../../redux/slices/Challenge.slice";
+import {
+  setChallengeDate,
+  setChallengePost,
+  setShowPostForm,
+} from "../../../../redux/slices/Challenge.slice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 
 import styles from "./_Dialer.module.scss";
 import "react-datepicker/dist/react-datepicker.css";
+import Tooltip from "../../../../theme/toolTip/CustomToolTip";
 
 interface MainInterface {
   statistics: any;
@@ -18,12 +23,35 @@ interface MainInterface {
 }
 
 type ILabel = "Total Days" | "Days Completed" | "Days Remaining";
+
 function Main({ activities, statistics }: MainInterface) {
   const [label, setLabel] = useState<ILabel>("Days Completed");
+
+  const dispatch = useAppDispatch();
   const activeDate = useAppSelector((state) => state.challenge.activeDate);
   const begin = new Date(statistics?.startDate);
   const today = new Date(activeDate !== "" ? activeDate : new Date());
   const end = new Date(statistics?.endDate);
+
+  const onDateDblClick = (date) => {
+    dispatch(setShowPostForm(true));
+    dispatch(
+      setChallengePost({
+        isEditMode: false,
+        id: "",
+        docId: statistics?.challengeId,
+        startDate: date,
+        title: "",
+        category: "",
+        images: [],
+        ingredients: [],
+        notes: "",
+        serving: 0,
+      }),
+    );
+  };
+
+  console.log(activities);
   return (
     <div className={styles.challenge_circle_main_circle_outer}>
       <div className={styles.challenge_circle_main_circle}>
@@ -86,7 +114,7 @@ function Main({ activities, statistics }: MainInterface) {
           </div>
           <div className={styles.dialer__score}>
             <h4>{parseFloat(statistics?.blendScore || 0).toFixed(1)}%</h4>
-            <span>Blend Score</span>
+            <span>Score</span>
           </div>
           {/* <p className={styles.challenge_circle_remaining_percentage}>
             {parseFloat(statistics?.blendScore || 0).toFixed(1)}%
@@ -111,6 +139,7 @@ function Main({ activities, statistics }: MainInterface) {
                   ? activity?.date === activeDate
                   : isToday(new Date(activity?.date))
               }
+              onDateDblClick={onDateDblClick}
             />
           );
         })}
@@ -157,9 +186,16 @@ const DateSelector = (props: DateSelectorProps) => {
   );
 };
 
-function DateButton({ date, isActive, categories, disabled }: any) {
+function DateButton({
+  date,
+  isActive,
+  categories,
+  disabled,
+  onDateDblClick,
+}: any) {
   const days = new Date(date);
   const day = format(days, "d");
+  const dayOfWeek = format(days, "eeee");
   const dayName = format(days, "MMM");
 
   const dispatch = useAppDispatch();
@@ -170,6 +206,7 @@ function DateButton({ date, isActive, categories, disabled }: any) {
   // Case - 1 - That day is not in the Challenge Range -> Disabled White Circle with border with no text
   if (disabled) {
     return (
+      // <Tooltip content={dayOfWeek}>
       <div
         className={`${styles.wheel__button} ${styles["wheel__button--disabled"]}`}
         style={{
@@ -177,11 +214,13 @@ function DateButton({ date, isActive, categories, disabled }: any) {
           border: "1px solid #dddada",
         }}
       />
+      // </Tooltip>
     );
   } else {
     // Case - 2 - That day is stil not passed -> Disabled White Circle with text and without any border
     if (isAfter(days, new Date())) {
       return (
+        // <Tooltip content={dayOfWeek}>
         <div
           className={`${styles.wheel__button} ${styles["wheel__button--disabled"]}`}
           style={{
@@ -192,6 +231,7 @@ function DateButton({ date, isActive, categories, disabled }: any) {
           <p>{day}</p>
           <p>{dayName}</p>
         </div>
+        // </Tooltip>
       );
     } else {
       // Case - 3 - That day is passed and it didn't had any post -> Disabled grey Circle with text and border
@@ -200,10 +240,12 @@ function DateButton({ date, isActive, categories, disabled }: any) {
       const hasPosts = categories.length !== 0;
       return (
         <div
+          title={dayOfWeek}
           className={`${styles.wheel__button} ${
             hasPosts ? "" : styles["wheel__button--disabled"]
           }`}
           onClick={hasPosts ? activateDate : null}
+          onDoubleClick={() => onDateDblClick(date)}
           style={{
             background: getBackgroundColor(categories),
             color: "white",

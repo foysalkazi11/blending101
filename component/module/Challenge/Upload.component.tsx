@@ -66,6 +66,7 @@ const UploadCard = () => {
 
   const { data } = useQuery(GET_BLEND_CATEGORY);
   const [addPost, addState] = useMutation(CREATE_CHALLENGE_POST, {
+    // update(cache, { data: { createChallengePost } }) {},
     refetchQueries: [{ query: GET_30DAYS_CHALLENGE, variables: { userId } }],
   });
   const [editPost, editState] = useMutation(EDIT_CHALLENGE_POST, {
@@ -285,19 +286,18 @@ const AddIngredient = ({ ingredients }) => {
   return (
     <div className={styles.ingredient}>
       <div className="flex ai-center">
-        <Combobox
-          placeholder="Ingredients"
-          options={ingredientList}
+        <Textfield
+          placeholder="Type your ingredients..."
           value={ingredient}
           onChange={(e) => setIngredient(e.target.value)}
         />
-        <IconButton
+        {/* <IconButton
           size="small"
           variant="secondary"
           fontName={faPlus}
           style={{ marginLeft: 5 }}
           onClick={addIngredintHandler}
-        />
+        /> */}
       </div>
       <div className={styles.ingredient__card}>
         {ingredients.map((ingredient) => (
