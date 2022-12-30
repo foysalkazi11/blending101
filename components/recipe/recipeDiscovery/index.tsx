@@ -56,6 +56,9 @@ const RecipeDiscovery = () => {
     (state) => state?.collections,
   );
 
+  // var viewport_meta = document.querySelector("[name=viewport]");
+  // console.log(viewport_meta);
+
   // open recipe collection panel after added a recipe to a collection
   const handleOpenCollectionTray = () => {
     dispatch(setSingleRecipeWithinCollecions([lastModifiedCollection?.id]));
@@ -122,7 +125,11 @@ const RecipeDiscovery = () => {
     <>
       <AContainer
         showCollectionTray={{ show: true, showTagByDeafult: true }}
-        filterTray={true}
+        showRecipeFilterTray={{
+          show: true,
+          showPanle: "left",
+          showTagByDeafult: false,
+        }}
         headerTitle="Discovery"
         showCommentsTray={{
           show: true,

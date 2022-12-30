@@ -20,7 +20,12 @@ import { FETCH_BLEND_CATEGORIES } from "../../../gqlLib/category/queries/fetchCa
 import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
 import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
 
-export default function Filtertray({ filter }) {
+interface Props {
+  showTagByDefaut?: boolean;
+  showPanle?: "left" | "right";
+}
+
+export default function Filtertray({ showPanle, showTagByDefaut }: Props) {
   const { openFilterTray } = useAppSelector((state) => state?.sideTray);
   const { allFilters, activeFilterTag } = useAppSelector(
     (state) => state?.filterRecipe,
@@ -88,8 +93,8 @@ export default function Filtertray({ filter }) {
     <TrayWrapper
       closeTray={toggleTray}
       openTray={openFilterTray}
-      showTagByDefaut={false}
-      showPanle="left"
+      showTagByDefaut={showTagByDefaut}
+      showPanle={showPanle}
       panleTag={(hover) => (
         <TrayTag icon={<FiFilter />} placeMent="left" hover={hover} />
       )}
