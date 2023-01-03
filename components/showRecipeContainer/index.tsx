@@ -6,23 +6,30 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import PlanCard from "../../component/module/Planner/PlanCard.component";
+import Pagination from "../../component/molecules/Pagination/ServerPagination.component";
 import useLocalStorage from "../../customHooks/useLocalStorage";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
+  setActiveRecipeId,
   setChangeRecipeWithinCollection,
   setSingleRecipeWithinCollecions,
+  updateBulkRecipeIdsForAddedInCollection,
 } from "../../redux/slices/collectionSlice";
 import { setOpenCollectionsTary } from "../../redux/slices/sideTraySlice";
 import DatacardComponent from "../../theme/cards/dataCard/dataCard.component";
 import IconWarper from "../../theme/iconWarper/IconWarper";
 import SkeletonCollectionRecipe from "../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollectionRecipe";
 import { BlogListType } from "../../type/blog";
-import { RecipeType } from "../../type/recipeType";
 import ErrorPage from "../pages/404Page";
 import BlogCard from "../pages/blog/blogCard";
 import ShowLastModifiedCollection from "../showLastModifiedCollection/ShowLastModifiedCollection";
 import styles from "./index.module.scss";
-
+interface InputValueType {
+  name: string;
+  slug: string;
+  description: string;
+  image?: string | null;
+}
 interface Props {
   data: any[];
   loading: boolean;
@@ -32,6 +39,14 @@ interface Props {
   closeHandler?: () => void;
   showItems: "recipe" | "blog" | "plan";
   findAmin?: (id: string) => string;
+  hasPagination?: boolean;
+  limit?: number;
+  pageNo?: number;
+  setPageNo?: React.Dispatch<React.SetStateAction<number>>;
+  dataLength?: number;
+  showDefaultLeftHeader?: boolean;
+  showDefaultMiddleHeader?: boolean;
+  showDefaultRightHeader?: boolean;
 }
 
 const ShowRecipeContainer = ({
@@ -43,6 +58,14 @@ const ShowRecipeContainer = ({
   closeHandler = () => {},
   showItems = "recipe",
   findAmin = () => "",
+  dataLength = 0,
+  hasPagination = false,
+  limit = 12,
+  pageNo = 1,
+  setPageNo = () => {},
+  showDefaultLeftHeader = false,
+  showDefaultMiddleHeader = false,
+  showDefaultRightHeader = false,
 }: Props) => {
   const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
     "compareList",
@@ -62,6 +85,21 @@ const ShowRecipeContainer = ({
     setOpenCollectionModal(false);
   };
 
+  const handleToOpenCollectionTray = () => {
+    const dataIds = data?.map((item) => item?._id);
+    if (showItems === "recipe") {
+      dispatch(setSingleRecipeWithinCollecions([]));
+      dispatch(setOpenCollectionsTary(true));
+      dispatch(setChangeRecipeWithinCollection(true));
+      dispatch(setActiveRecipeId(""));
+      dispatch(updateBulkRecipeIdsForAddedInCollection(dataIds));
+    }
+    // if (!openModal) {
+    //   setInput({ image: null, name: "", description: "", slug: "" });
+    //   setOpenModal(true);
+    // }
+  };
+
   if (loading) {
     return (
       <div className={styles.showRecipeCollectionsContainer}>
@@ -73,35 +111,43 @@ const ShowRecipeContainer = ({
   return (
     <div className={styles.showRecipeCollectionsContainer}>
       <div className={styles.showRecipeCollectionsHeader}>
-        {headerLeftSide || (
+        {headerLeftSide ? (
+          headerLeftSide
+        ) : showDefaultLeftHeader ? (
           <p style={{ color: "#ababab" }}>
             <span style={{ fontWeight: "600" }}>{data?.length}</span> results
           </p>
+        ) : (
+          <div></div>
         )}
-        {
+        {headerMiddle ? (
           headerMiddle
-          // (
-          //   <div style={{ display: "flex" }}>
-          //     <IconWarper
-          //       iconColor="iconColorPrimary"
-          //       defaultBg="slightGray"
-          //       hover="bgPrimary"
-          //       style={{ width: "28px", height: "28px", marginRight: "10px" }}
-          //     >
-          //       <FontAwesomeIcon icon={faBookmark} />
-          //     </IconWarper>
-          //     <IconWarper
-          //       iconColor="iconColorPrimary"
-          //       defaultBg="slightGray"
-          //       hover="bgPrimary"
-          //       style={{ width: "28px", height: "28px" }}
-          //     >
-          //       <FontAwesomeIcon icon={faShareNodes} />
-          //     </IconWarper>
-          //   </div>
-          // )
-        }
-        {headerRightSide || (
+        ) : showDefaultMiddleHeader ? (
+          <div style={{ display: "flex" }}>
+            <IconWarper
+              iconColor="iconColorPrimary"
+              defaultBg="slightGray"
+              hover="bgPrimary"
+              style={{ width: "28px", height: "28px", marginRight: "10px" }}
+              handleClick={handleToOpenCollectionTray}
+            >
+              <FontAwesomeIcon icon={faBookmark} />
+            </IconWarper>
+            <IconWarper
+              iconColor="iconColorPrimary"
+              defaultBg="slightGray"
+              hover="bgPrimary"
+              style={{ width: "28px", height: "28px" }}
+            >
+              <FontAwesomeIcon icon={faShareNodes} />
+            </IconWarper>
+          </div>
+        ) : (
+          <div></div>
+        )}
+        {headerRightSide ? (
+          headerRightSide
+        ) : showDefaultRightHeader ? (
           <IconWarper
             iconColor="iconColorWhite"
             defaultBg="primary"
@@ -111,6 +157,8 @@ const ShowRecipeContainer = ({
           >
             <FontAwesomeIcon icon={faXmark} />
           </IconWarper>
+        ) : (
+          <div></div>
         )}
       </div>
 
@@ -186,6 +234,15 @@ const ShowRecipeContainer = ({
           style={{ height: "40vh" }}
         />
       )}
+
+      <div className={styles.paginationWarper}>
+        <Pagination
+          limit={limit}
+          pageState={[pageNo, setPageNo]}
+          totalPage={Math?.ceil(dataLength / limit)}
+          activeBgColor="primary"
+        />
+      </div>
       <ShowLastModifiedCollection
         open={openCollectionModal}
         setOpen={setOpenCollectionModal}

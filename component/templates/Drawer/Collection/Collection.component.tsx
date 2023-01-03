@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { useLazyQuery } from "@apollo/client";
 import { faBookmark } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,7 +11,6 @@ import { useAppSelector, useAppDispatch } from "../../../../redux/hooks";
 import { setChangeRecipeWithinCollection } from "../../../../redux/slices/collectionSlice";
 import { setOpenCollectionsTary } from "../../../../redux/slices/sideTraySlice";
 import CustomModal from "../../../../theme/modal/customModal/CustomModal";
-import Widget from "../../../module/Widget/Widget.component";
 import styles from "./Collection.module.scss";
 
 interface CollectionTrayProps {
@@ -24,20 +22,13 @@ function CollectionDrawer({
   showTagByDefaut = true,
   showPanle = "left",
 }: CollectionTrayProps) {
-  const [toggle, setToggle] = useState(1);
   const [input, setInput] = useState<any>({
     image: null,
     name: "",
   });
-  const [isEditCollection, setIsEditCollection] = useState(false);
-  const [collectionId, setCollectionId] = useState("");
   const { dbUser } = useAppSelector((state) => state?.user);
-  const { changeRecipeWithinCollection } = useAppSelector(
-    (state) => state?.collections,
-  );
   const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
   const [openModal, setOpenModal] = useState(false);
-  const reff = useRef<any>();
   const dispatch = useAppDispatch();
 
   const closeTray = () => {

@@ -194,7 +194,10 @@ const BlogCommentsTray = ({
         title={currentBlogForShowComments?.title}
       />
       {!showCommentBox && (
-        <IconForAddComment handleIconClick={toggleCommentBox} />
+        <IconForAddComment
+          handleIconClick={toggleCommentBox}
+          label="Add Comments"
+        />
       )}
 
       {(editBlogCommentLoading || createBlogCommentLoading) && (

@@ -96,6 +96,7 @@ const CollectionRecipes = () => {
           }
           closeHandler={() => router.push("/discovery")}
           showItems="recipe"
+          showDefaultRightHeader
         />
       </div>
       <div className={styles.footerMainDiv}>
