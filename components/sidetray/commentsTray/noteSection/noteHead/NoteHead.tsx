@@ -1,4 +1,5 @@
 import React from "react";
+import IconForAddComment from "../../../common/iconForAddComment/IconForAddComment";
 import NoteForm from "../noteForm/NoteForm";
 import styles from "../NoteSection.module.scss";
 
@@ -37,16 +38,10 @@ const NoteHead = ({
         />
       ) : isFromRecipePage === "default" || isFromRecipePage === "edit" ? (
         <div className={styles.commentsIconBox}>
-          <span></span>
-
-          <button
-            onClick={() => {
-              handleButtonClick();
-            }}
-          >
-            <img src="/images/plus-white-icon.svg" alt="add-icon" />
-            <span>Add</span>
-          </button>
+          <IconForAddComment
+            handleIconClick={handleButtonClick}
+            label="Add version"
+          />
         </div>
       ) : null}
     </div>

@@ -177,10 +177,7 @@ const NoteSection = () => {
   return (
     <>
       {!showNoteForm && (
-        <IconForAddComment
-          handleIconClick={toggleNoteForm}
-          tooltipText="Add Notes"
-        />
+        <IconForAddComment handleIconClick={toggleNoteForm} label="Add Notes" />
       )}
       {(createNoteLoading || editNoteLoading) && (
         <SkeletonNote singleNote={true} />

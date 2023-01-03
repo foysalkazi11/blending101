@@ -48,6 +48,7 @@ const Home = () => {
         filterCriteria: value.filterCategory,
       }),
     );
+    dispatch(updateSidebarActiveMenuNo(1));
     router.push("/discovery");
   };
 

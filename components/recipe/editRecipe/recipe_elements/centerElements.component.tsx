@@ -149,7 +149,7 @@ const Center_Elements = ({
             >
               <MdMoreVert fontSize={24} />
             </IconWraper>
-            {openMenu ? (
+            {/* {openMenu ? (
               <div className={`${styles.menu} `}>
                 <div
                   className={styles.singleMenu}
@@ -172,7 +172,7 @@ const Center_Elements = ({
                   </div>
                 ) : null}
               </div>
-            ) : null}
+            ) : null} */}
           </div>
         </div>
         <div className={styles.addImagediv}>

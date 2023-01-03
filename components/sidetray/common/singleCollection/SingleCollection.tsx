@@ -5,8 +5,11 @@ import {
 } from "@fortawesome/pro-regular-svg-icons";
 import { faEllipsisVertical } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { Dispatch, SetStateAction } from "react";
+import { useDispatch } from "react-redux";
+import { setChangeRecipeWithinCollection } from "../../../../redux/slices/collectionSlice";
+import { setOpenCollectionsTary } from "../../../../redux/slices/sideTraySlice";
 import CustomCheckbox from "../../../../theme/checkbox/CustomCheckbox";
 import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
 import useHover from "../../../utility/useHover";
@@ -57,6 +60,8 @@ const SingleCollection = ({
   collectionRoute = "recipeCollection",
 }: IndividualCollectionType) => {
   const [hoverRef, isHovered] = useHover();
+  const router = useRouter();
+  const dispatch = useDispatch();
   const handleClick = (index: number) => {
     if (menuIndex === index) {
       setMenuIndex(index);
@@ -65,22 +70,35 @@ const SingleCollection = ({
     }
   };
 
+  // close recipe collection tray
+  const handleCollectionRoute = (route: string) => {
+    router.push(route);
+    if (collectionRoute === "recipeCollection") {
+      dispatch(setOpenCollectionsTary(false));
+      dispatch(setChangeRecipeWithinCollection(false));
+    }
+  };
+
   return (
     <>
       <div className={styles.collection__child} key={id} ref={hoverRef}>
-        <Link href={`/collection/${collectionRoute}/${slug}`} passHref>
-          <div className={styles.leftSide}>
-            <div className={styles.img}>
-              <div
-                className={styles.abs}
-                style={{
-                  backgroundImage: `url(${image})`,
-                }}
-              ></div>
-            </div>
-            <p>{name}</p>
+        <div
+          className={styles.leftSide}
+          onClick={() =>
+            handleCollectionRoute(`/collection/${collectionRoute}/${slug}`)
+          }
+        >
+          <div className={styles.img}>
+            <div
+              className={styles.abs}
+              style={{
+                backgroundImage: `url(${image})`,
+              }}
+            ></div>
           </div>
-        </Link>
+          <p>{name}</p>
+        </div>
+
         {showMoreMenu ? (
           changeItemWithinCollection ? (
             <div className={styles.checkBox}>
