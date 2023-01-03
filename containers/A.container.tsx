@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import HeaderComponent from "../components/header/Header.component";
 import SidebarComponent from "../components/sidebar/Sidebar.component";
 import styles from "./container.module.scss";
@@ -17,6 +17,7 @@ import PlanCollectionTray from "../components/sidetray/planCollectionTray";
 // import { push as Menu } from "react-burger-menu";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../redux/hooks";
+import useWindowSize from "../components/utility/useWindowSize";
 
 interface ShowTray {
   show: boolean;
@@ -105,8 +106,36 @@ const AContainer: FC<AContainerProps> = (props) => {
 
   const dispatch = useDispatch();
   const { openFilterTray } = useAppSelector((state) => state?.sideTray);
+  const { width } = useWindowSize();
   // dispatch(setOpenFilterTray(!openFilterTray));
 
+  // useEffect(() => {
+  //   let viewport_meta = document.querySelector("[name=viewport]");
+  //   if (viewport_meta) {
+  //     let viewport = {
+  //       default: `width=${width}`,
+  //       responsiveWidth: `width=${600}`,
+  //     };
+  //     console.log(viewport_meta);
+  //     console.log(viewport_meta.getAttribute("content"));
+  //     console.log(viewport_meta.getAttribute("content").slice(6));
+  //     // console.log(
+  //     //   `${parseFloat(viewport_meta.getAttribute("content").slice(6)) - 320}`,
+  //     // );
+  //     const documentWidth = document.documentElement.clientWidth;
+  //     const screenWidth = window.screen.width;
+  //     const viewportWidth = window.innerWidth;
+  //     console.log(documentWidth, screenWidth, viewportWidth);
+
+  //     if (openFilterTray) {
+  //       viewport_meta.setAttribute("content", viewport.responsiveWidth);
+  //     } else {
+  //       viewport_meta.setAttribute("content", viewport.default);
+  //     }
+  //   }
+
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [openFilterTray]);
   return (
     <div className={styles.containerA} style={{ overflow: "hidden" }}>
       {showSidebar ? (

@@ -56,9 +56,6 @@ const RecipeDiscovery = () => {
     (state) => state?.collections,
   );
 
-  // var viewport_meta = document.querySelector("[name=viewport]");
-  // console.log(viewport_meta);
-
   // open recipe collection panel after added a recipe to a collection
   const handleOpenCollectionTray = () => {
     dispatch(setSingleRecipeWithinCollecions([lastModifiedCollection?.id]));
@@ -164,30 +161,9 @@ const RecipeDiscovery = () => {
               loading={filterRecipesLoading || searchRecipeLoading}
               closeHandler={closeFilterRecipes}
               showItems="recipe"
-              headerMiddle={
-                <div style={{ display: "flex" }}>
-                  <IconWarper
-                    iconColor="iconColorPrimary"
-                    defaultBg="slightGray"
-                    hover="bgPrimary"
-                    style={{
-                      width: "28px",
-                      height: "28px",
-                      marginRight: "10px",
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faBookmark} />
-                  </IconWarper>
-                  <IconWarper
-                    iconColor="iconColorPrimary"
-                    defaultBg="slightGray"
-                    hover="bgPrimary"
-                    style={{ width: "28px", height: "28px" }}
-                  >
-                    <FontAwesomeIcon icon={faShareNodes} />
-                  </IconWarper>
-                </div>
-              }
+              showDefaultLeftHeader
+              showDefaultMiddleHeader
+              showDefaultRightHeader
             />
           ) : (
             <RegularRecipes setOpenCollectionModal={setOpenCollectionModal} />

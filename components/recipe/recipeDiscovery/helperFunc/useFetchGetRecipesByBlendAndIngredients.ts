@@ -6,7 +6,12 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
   const dispatch = useAppDispatch();
   const { dbUser } = useAppSelector((state) => state.user);
 
-  const handleFilterRecipes = async (allFilters, filterRecipe) => {
+  const handleFilterRecipes = async (
+    allFilters,
+    filterRecipe,
+    page = 1,
+    limit = 12,
+  ) => {
     let blendTypesArr: string[] = [];
     let ingredientIds: string[] = [];
     let nutrientFiltersMap = [];
@@ -129,12 +134,14 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
             nutrientMatrix: nutrientMatrixMap,
             excludeIngredientIds,
           },
+          page,
+          limit,
         },
       });
 
       dispatch(
         updateAllFilterRecipes({
-          filterRecipes: data?.filterRecipe || [],
+          filterRecipes: data?.filterRecipe?.recipes || [],
           isFiltering: false,
         }),
       );

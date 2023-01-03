@@ -135,6 +135,7 @@ const EditRecipePage = ({
             backLink={`/recipe_details/${recipeId}`}
             editOrSavebtnFunc={editARecipeFunction}
             editOrSavebtnText="Save"
+            pageComeFrom="edit"
           />
           <Center_Elements
             copyDetailsRecipe={copyDetailsRecipe}
