@@ -114,7 +114,10 @@ const ShowRecipeContainer = ({
           headerLeftSide
         ) : showDefaultLeftHeader ? (
           <p style={{ color: "#ababab" }}>
-            <span style={{ fontWeight: "600" }}>{data?.length}</span> results
+            <span style={{ fontWeight: "600" }}>
+              {totalDataCount || data?.length}
+            </span>{" "}
+            results
           </p>
         ) : (
           <div></div>
