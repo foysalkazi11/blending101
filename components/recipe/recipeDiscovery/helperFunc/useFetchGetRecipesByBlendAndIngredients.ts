@@ -1,16 +1,21 @@
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import { updateAllFilterRecipes } from "../../../../redux/slices/filterRecipeSlice";
+import {
+  updateAllFilterRecipes,
+  updateShowFilterOrSearchRecipes,
+} from "../../../../redux/slices/filterRecipeSlice";
 import notification from "../../../utility/reactToastifyNotification";
 
 const useFetchGetRecipesByBlendAndIngredients = () => {
   const dispatch = useAppDispatch();
   const { dbUser } = useAppSelector((state) => state.user);
+  const { allFilterRecipes } = useAppSelector((state) => state?.filterRecipe);
 
   const handleFilterRecipes = async (
     allFilters,
     filterRecipe,
     page = 1,
     limit = 12,
+    newLength: boolean = true,
   ) => {
     let blendTypesArr: string[] = [];
     let ingredientIds: string[] = [];
@@ -118,12 +123,7 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
     });
 
     try {
-      dispatch(
-        updateAllFilterRecipes({
-          filterRecipes: [],
-          isFiltering: true,
-        }),
-      );
+      dispatch(updateShowFilterOrSearchRecipes(true));
       const { data } = await filterRecipe({
         variables: {
           data: {
@@ -138,11 +138,16 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
           limit,
         },
       });
-
       dispatch(
         updateAllFilterRecipes({
-          filterRecipes: data?.filterRecipe?.recipes || [],
+          filterRecipes: newLength
+            ? [...data?.filterRecipe?.recipes]
+            : [
+                ...allFilterRecipes.filterRecipes,
+                ...data?.filterRecipe?.recipes,
+              ],
           isFiltering: false,
+          totalItems: data?.filterRecipe?.totalRecipes,
         }),
       );
     } catch (error) {
@@ -152,6 +157,7 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
         updateAllFilterRecipes({
           filterRecipes: [],
           isFiltering: false,
+          totalItems: 0,
         }),
       );
     }
