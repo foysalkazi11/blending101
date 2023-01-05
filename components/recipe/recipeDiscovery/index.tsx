@@ -184,7 +184,7 @@ const RecipeDiscovery = () => {
                 allFilterRecipes.filterRecipes.length ? true : false
               }
               showDefaultRightHeader
-              hasMore={allFilterRecipes?.totalItems > dataLimit * (pageNum + 1)}
+              hasMore={allFilterRecipes?.totalItems > dataLimit * pageNum}
               totalDataCount={allFilterRecipes?.totalItems}
               nextPage={() => {
                 setPageNum((page) => page + 1);
