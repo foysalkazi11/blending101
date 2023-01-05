@@ -1,20 +1,35 @@
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import { updateAllFilterRecipes } from "../../../../redux/slices/filterRecipeSlice";
+import {
+  updateAllFilterRecipes,
+  updateShowFilterOrSearchRecipes,
+} from "../../../../redux/slices/filterRecipeSlice";
 import notification from "../../../utility/reactToastifyNotification";
 
 const useHandleSearchRecipe = () => {
   const dispatch = useAppDispatch();
   const { dbUser } = useAppSelector((state) => state.user);
-  const handleSearchRecipes = async (value: string, searchRecipe: any) => {
+  const handleSearchRecipes = async (
+    value: string,
+    searchRecipe: any,
+    pageNo: number = 1,
+    limitParPage: number = 12,
+  ) => {
     try {
+      dispatch(updateShowFilterOrSearchRecipes(true));
       const { data } = await searchRecipe({
-        variables: { userId: dbUser._id, searchTerm: value },
+        variables: {
+          userId: dbUser._id,
+          searchTerm: value,
+          page: pageNo,
+          limit: limitParPage,
+        },
       });
 
       dispatch(
         updateAllFilterRecipes({
-          filterRecipes: data?.searchRecipes || [],
-          isFiltering: true,
+          filterRecipes: [...data?.searchRecipes?.recipes],
+          isFiltering: false,
+          totalItems: 0,
         }),
       );
     } catch (error) {
@@ -22,7 +37,8 @@ const useHandleSearchRecipe = () => {
       dispatch(
         updateAllFilterRecipes({
           filterRecipes: [],
-          isFiltering: true,
+          isFiltering: false,
+          totalItems: 0,
         }),
       );
     }

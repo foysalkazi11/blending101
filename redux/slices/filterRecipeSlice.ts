@@ -85,6 +85,7 @@ export type FilterCriteriaValue =
 interface AllFilterRecipes {
   filterRecipes: RecipeType[];
   isFiltering: boolean;
+  totalItems: number;
 }
 
 interface FilterState {
@@ -96,6 +97,7 @@ interface FilterState {
   numericFilterState: NutrientFiltersType | NutrientMatrixType;
   allFilterRecipes: AllFilterRecipes;
   excludeFilterState: IngredientType;
+  showFilterOrSearchRecipes: boolean;
 }
 
 const initialState: FilterState = {
@@ -118,8 +120,10 @@ const initialState: FilterState = {
   allFilterRecipes: {
     filterRecipes: [],
     isFiltering: false,
+    totalItems: 0,
   },
   excludeFilterState: {} as IngredientType,
+  showFilterOrSearchRecipes: false,
 };
 
 export const filterRecipeSlice = createSlice({
@@ -359,6 +363,9 @@ export const filterRecipeSlice = createSlice({
     updateAllFilterRecipes: (state, action: { payload: AllFilterRecipes }) => {
       state.allFilterRecipes = { ...action.payload };
     },
+    updateShowFilterOrSearchRecipes: (state, action: { payload: boolean }) => {
+      state.showFilterOrSearchRecipes = action.payload;
+    },
 
     resetAllFilters: (state) => {
       state.allFilters = [];
@@ -380,6 +387,7 @@ export const {
   updateNumericFilterState,
   resetAllFilters,
   updateAllFilterRecipes,
+  updateShowFilterOrSearchRecipes,
 } = filterRecipeSlice.actions;
 
 export default filterRecipeSlice.reducer;
