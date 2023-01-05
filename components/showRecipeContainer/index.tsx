@@ -4,9 +4,9 @@ import {
   faXmark,
 } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PlanCard from "../../component/module/Planner/PlanCard.component";
-import Pagination from "../../component/molecules/Pagination/ServerPagination.component";
+import useIntersectionObserver from "../../customHooks/useIntersectionObserver";
 import useLocalStorage from "../../customHooks/useLocalStorage";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
@@ -24,12 +24,7 @@ import ErrorPage from "../pages/404Page";
 import BlogCard from "../pages/blog/blogCard";
 import ShowLastModifiedCollection from "../showLastModifiedCollection/ShowLastModifiedCollection";
 import styles from "./index.module.scss";
-interface InputValueType {
-  name: string;
-  slug: string;
-  description: string;
-  image?: string | null;
-}
+
 interface Props {
   data: any[];
   loading: boolean;
@@ -39,14 +34,12 @@ interface Props {
   closeHandler?: () => void;
   showItems: "recipe" | "blog" | "plan";
   findAmin?: (id: string) => string;
-  hasPagination?: boolean;
-  limit?: number;
-  pageNo?: number;
-  setPageNo?: React.Dispatch<React.SetStateAction<number>>;
-  dataLength?: number;
+  totalDataCount?: number;
   showDefaultLeftHeader?: boolean;
   showDefaultMiddleHeader?: boolean;
   showDefaultRightHeader?: boolean;
+  hasMore?: boolean;
+  nextPage?: () => void;
 }
 
 const ShowRecipeContainer = ({
@@ -58,14 +51,12 @@ const ShowRecipeContainer = ({
   closeHandler = () => {},
   showItems = "recipe",
   findAmin = () => "",
-  dataLength = 0,
-  hasPagination = false,
-  limit = 12,
-  pageNo = 1,
-  setPageNo = () => {},
+  totalDataCount = 0,
   showDefaultLeftHeader = false,
   showDefaultMiddleHeader = false,
   showDefaultRightHeader = false,
+  hasMore = false,
+  nextPage = () => {},
 }: Props) => {
   const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
     "compareList",
@@ -75,7 +66,19 @@ const ShowRecipeContainer = ({
   const { lastModifiedCollection } = useAppSelector(
     (state) => state?.collections,
   );
+  const observer = useRef<any>();
   const dispatch = useAppDispatch();
+  const entry = useIntersectionObserver(observer, { rootMargin: "100px" });
+
+  // fetch next page
+  useEffect(() => {
+    if (!entry) return;
+    if (entry.isIntersecting && hasMore) {
+      nextPage();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entry]);
 
   // open recipe collection panel after added a recipe to a collection
   const handleOpenCollectionTray = () => {
@@ -94,19 +97,15 @@ const ShowRecipeContainer = ({
       dispatch(setActiveRecipeId(""));
       dispatch(updateBulkRecipeIdsForAddedInCollection(dataIds));
     }
-    // if (!openModal) {
-    //   setInput({ image: null, name: "", description: "", slug: "" });
-    //   setOpenModal(true);
-    // }
   };
 
-  if (loading) {
-    return (
-      <div className={styles.showRecipeCollectionsContainer}>
-        <SkeletonCollectionRecipe />
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className={styles.showRecipeCollectionsContainer}>
+  //       <SkeletonCollectionRecipe />
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className={styles.showRecipeCollectionsContainer}>
@@ -162,87 +161,92 @@ const ShowRecipeContainer = ({
         )}
       </div>
 
-      {data?.length ? (
-        <div className={styles.showRecipes}>
-          {showItems === "recipe" &&
-            data?.map((item, index) => {
-              let ingredients = [];
-              item?.ingredients?.forEach((ing) => {
-                const ingredient = ing?.ingredientId?.ingredientName;
-                ingredients.push(ingredient);
-              });
-              const ing = ingredients.toString();
-              return (
-                <DatacardComponent
-                  key={index}
-                  title={item.name}
-                  ingredients={ing}
-                  category={item.recipeBlendCategory?.name}
-                  ratings={item?.averageRating}
-                  noOfRatings={item?.numberOfRating}
-                  carbs={item.carbs}
-                  score={item.score}
-                  calorie={item.calorie}
-                  noOfComments={item?.numberOfRating}
-                  image={item.image[0]?.image}
-                  recipeId={item?._id}
-                  notes={item?.notes}
-                  addedToCompare={item?.addedToCompare}
-                  compareRecipeList={compareRecipeList}
-                  setcompareRecipeList={setcompareRecipeList}
-                  setOpenCollectionModal={setOpenCollectionModal}
-                  isCollectionIds={item?.userCollections}
-                  isMatch={item?.isMatch}
-                  postfixTitle={item?.defaultVersion?.postfixTitle}
-                  userId={item?.userId}
-                />
-              );
-            })}
-          {showItems === "blog" &&
-            data?.map((blog: BlogListType) => {
-              return (
-                <BlogCard
-                  key={blog?._id}
-                  blogData={{ ...blog, createdBy: findAmin(blog?.createdBy) }}
-                  setOpenLastModifiedCollectionModal={setOpenCollectionModal}
-                />
-              );
-            })}
-          {showItems === "plan" &&
-            data?.map((plan) => {
-              const { _id, planName, planCollections, commentsCount } = plan;
-              return (
-                <PlanCard
-                  key={_id}
-                  planId={_id}
-                  title={planName}
-                  isCollectionIds={planCollections}
-                  noOfComments={commentsCount}
-                  setOpenCollectionModal={setOpenCollectionModal}
-                />
-              );
-            })}
-        </div>
-      ) : (
-        <ErrorPage
-          errorMessage="No recipes found, search again !!!"
-          image="/icons/empty_data.svg"
-          showBackIcon={false}
-          showHomeIcon={false}
-          imageHight={250}
-          imageWidth={250}
-          style={{ height: "40vh" }}
-        />
-      )}
+      {
+        <>
+          <div className={styles.showRecipes}>
+            {showItems === "recipe" &&
+              data?.map((item, index) => {
+                let ingredients = [];
+                item?.ingredients?.forEach((ing) => {
+                  const ingredient = ing?.ingredientId?.ingredientName;
+                  ingredients.push(ingredient);
+                });
+                const ing = ingredients.toString();
+                return (
+                  <DatacardComponent
+                    key={index}
+                    title={item.name}
+                    ingredients={ing}
+                    category={item.recipeBlendCategory?.name}
+                    ratings={item?.averageRating}
+                    noOfRatings={item?.numberOfRating}
+                    carbs={item.carbs}
+                    score={item.score}
+                    calorie={item.calorie}
+                    noOfComments={item?.numberOfRating}
+                    image={item.image[0]?.image}
+                    recipeId={item?._id}
+                    notes={item?.notes}
+                    addedToCompare={item?.addedToCompare}
+                    compareRecipeList={compareRecipeList}
+                    setcompareRecipeList={setcompareRecipeList}
+                    setOpenCollectionModal={setOpenCollectionModal}
+                    isCollectionIds={item?.userCollections}
+                    isMatch={item?.isMatch}
+                    postfixTitle={item?.defaultVersion?.postfixTitle}
+                    userId={item?.userId}
+                  />
+                );
+              })}
+            {showItems === "blog" &&
+              data?.map((blog: BlogListType) => {
+                return (
+                  <BlogCard
+                    key={blog?._id}
+                    blogData={{ ...blog, createdBy: findAmin(blog?.createdBy) }}
+                    setOpenLastModifiedCollectionModal={setOpenCollectionModal}
+                  />
+                );
+              })}
+            {showItems === "plan" &&
+              data?.map((plan) => {
+                const { _id, planName, planCollections, commentsCount } = plan;
+                return (
+                  <PlanCard
+                    key={_id}
+                    planId={_id}
+                    title={planName}
+                    isCollectionIds={planCollections}
+                    noOfComments={commentsCount}
+                    setOpenCollectionModal={setOpenCollectionModal}
+                  />
+                );
+              })}
+          </div>
+          {loading && <SkeletonCollectionRecipe />}
+          {<div ref={observer}></div>}
+          {!loading && !data?.length && (
+            <ErrorPage
+              errorMessage={`No ${showItems} found, search again !!!`}
+              image="/icons/empty_data.svg"
+              showBackIcon={false}
+              showHomeIcon={false}
+              imageHight={250}
+              imageWidth={250}
+              style={{ height: "70vh" }}
+            />
+          )}
+        </>
+      }
 
-      <div className={styles.paginationWarper}>
+      {/* <div className={styles.paginationWarper}>
         <Pagination
           limit={limit}
           pageState={[pageNo, setPageNo]}
-          totalPage={Math?.ceil(dataLength / limit)}
+          totalPage={Math?.ceil(totalDataCount / limit)}
           activeBgColor="primary"
         />
-      </div>
+      </div> */}
       <ShowLastModifiedCollection
         open={openCollectionModal}
         setOpen={setOpenCollectionModal}
