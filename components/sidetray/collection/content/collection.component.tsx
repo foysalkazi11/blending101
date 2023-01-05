@@ -73,6 +73,7 @@ export default function CollectionComponent({
             recipes: activeRecipeId
               ? [activeRecipeId]
               : bulkRecipeIdsForAddedInCollection,
+            isCollectionData: activeRecipeId ? false : true,
           },
         },
       });
