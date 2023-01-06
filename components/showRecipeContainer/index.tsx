@@ -227,7 +227,7 @@ const ShowRecipeContainer = ({
               })}
           </div>
           {loading && <SkeletonCollectionRecipe />}
-          {<div ref={observer}></div>}
+          <div ref={observer}></div>
           {!loading && !data?.length && (
             <ErrorPage
               errorMessage={`No ${showItems} found, search again !!!`}
