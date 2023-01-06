@@ -1,4 +1,5 @@
-import { toast } from 'react-toastify';
+import { ApolloCache, FetchResult } from "@apollo/client";
+import { toast } from "react-toastify";
 
 type IProperties = {
   mutate: any;
@@ -8,12 +9,28 @@ type IProperties = {
   onSuccess?: any;
   error?: string;
   onError?: any;
+  onUpdate?: (
+    cache: ApolloCache<any>,
+    data: Omit<
+      FetchResult<any, Record<string, any>, Record<string, any>>,
+      "context"
+    >,
+  ) => void;
 };
 
 const Publish = async (properties: IProperties) => {
-  const { mutate, variables, state, success, onSuccess, error, onError } =
-    properties;
-  const loading = toast.loading('Info Notification !', {
+  const {
+    mutate,
+    variables,
+    state,
+    success,
+    onSuccess,
+    error,
+    onUpdate,
+    onError,
+  } = properties;
+
+  const loading = toast.loading("Info Notification !", {
     position: toast.POSITION.TOP_RIGHT,
   });
   try {
@@ -21,10 +38,11 @@ const Publish = async (properties: IProperties) => {
       variables: {
         ...variables,
       },
+      update: onUpdate,
     });
     toast.update(loading, {
       render: success,
-      type: 'success',
+      type: "success",
       isLoading: false,
       autoClose: 3000,
     });
@@ -33,10 +51,10 @@ const Publish = async (properties: IProperties) => {
     //! We might need to implement Sentry
     // console.log({ error });
     // When application is in production mode then we will show default formal error message
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === "production") {
       toast.update(loading, {
-        render: error || 'Error Happened',
-        type: 'error',
+        render: error || "Error Happened",
+        type: "error",
         isLoading: false,
         autoClose: 3000,
       });
@@ -51,7 +69,7 @@ const Publish = async (properties: IProperties) => {
       2. If there is any internal server problem before going to the Apollo Server (ex: Database connection failed, Server start problem)
     */
     if (error?.networkError) {
-      if (typeof window !== 'undefined' && !window?.navigator.onLine) {
+      if (typeof window !== "undefined" && !window?.navigator.onLine) {
         errorMessages = ["Sorry, Can't post. Your browser is offline."];
       } else {
         errorMessages =
@@ -74,7 +92,7 @@ const Publish = async (properties: IProperties) => {
       if (idx === 0) {
         toast.update(loading, {
           render: () => <div dangerouslySetInnerHTML={{ __html: msg }} />,
-          type: 'error',
+          type: "error",
           isLoading: false,
           autoClose: 3000,
           pauseOnFocusLoss: true,

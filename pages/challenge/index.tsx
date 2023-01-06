@@ -40,6 +40,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import html2canvas from "html2canvas";
 import { dataURLtoFile } from "../../helpers/File";
+import client from "../../gqlLib/client";
 
 const ChallengePage = () => {
   const router = useRouter();

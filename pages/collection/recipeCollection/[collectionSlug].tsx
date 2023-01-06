@@ -58,7 +58,6 @@ const CollectionRecipes = () => {
   return (
     <AContainer
       showCollectionTray={{ show: true, showTagByDeafult: true }}
-      filterTray={true}
       showCommentsTray={{
         show: true,
         showPanle: "right",
@@ -97,6 +96,7 @@ const CollectionRecipes = () => {
           }
           closeHandler={() => router.push("/discovery")}
           showItems="recipe"
+          showDefaultRightHeader
         />
       </div>
       <div className={styles.footerMainDiv}>

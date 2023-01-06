@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { useMutation, useQuery } from "@apollo/client";
+import { ApolloCache, useMutation, useQuery } from "@apollo/client";
 import {
   faPlus,
   faTimes,
@@ -32,6 +32,7 @@ import {
   resetForm,
 } from "../../../redux/slices/Challenge.slice";
 import { setShowPanel } from "../../../redux/slices/Ui.slice";
+import client from "../../../gqlLib/client";
 
 const defaultValues = {
   category: "",
@@ -66,12 +67,36 @@ const UploadCard = () => {
 
   const { data } = useQuery(GET_BLEND_CATEGORY);
   const [addPost, addState] = useMutation(CREATE_CHALLENGE_POST, {
-    // update(cache, { data: { createChallengePost } }) {},
-    refetchQueries: [{ query: GET_30DAYS_CHALLENGE, variables: { userId } }],
+    update(cache, { data: { createChallengePost } }) {
+      update30DaysChallenge(cache, createChallengePost);
+    },
   });
   const [editPost, editState] = useMutation(EDIT_CHALLENGE_POST, {
-    refetchQueries: [{ query: GET_30DAYS_CHALLENGE, variables: { userId } }],
+    update(cache, { data: { editAChallengePost } }) {
+      update30DaysChallenge(cache, editAChallengePost);
+    },
   });
+
+  const update30DaysChallenge = (cache: ApolloCache<any>, mutated) => {
+    const definition = {
+      query: GET_30DAYS_CHALLENGE,
+      variables: {
+        userId,
+        startDate: "",
+      },
+    };
+    const { getMyThirtyDaysChallenge } = cache.readQuery<any>(definition);
+    const data = {
+      challenge: getMyThirtyDaysChallenge.challenge.map((day) =>
+        day.date === mutated?.challenge?.date ? mutated?.challenge : day,
+      ),
+      challengeInfo: mutated?.challengeInfo,
+    };
+    cache.writeQuery({
+      ...definition,
+      data: { getMyThirtyDaysChallenge: data },
+    });
+  };
 
   useEffect(() => {
     methods.reset({
@@ -123,6 +148,25 @@ const UploadCard = () => {
       state: isEditMode ? editState : addState,
       success: "Submitted Post Successfully",
       onSuccess: closeForm,
+      // onUpdate: (cache, { data: { createChallengePost } }) => {
+      //   const { getMyThirtyDaysChallenge } = cache.readQuery<any>({
+      //     query: GET_30DAYS_CHALLENGE,
+      //   });
+      //   const data = {
+      //     challenge: getMyThirtyDaysChallenge.challenge.map((day) => {
+      //       if (day.date === createChallengePost?.challenge?.date) {
+      //         return createChallengePost?.challenge;
+      //       }
+      //       return day;
+      //     }),
+      //     challengeInfo: createChallengePost?.challengeInfo,
+      //   };
+      //   console.log(data);
+      //   cache.writeQuery({
+      //     query: GET_30DAYS_CHALLENGE,
+      //     data: getMyThirtyDaysChallenge,
+      //   });
+      // },
     });
   };
 
@@ -263,41 +307,71 @@ const Servings = (props) => {
 const AddIngredient = ({ ingredients }) => {
   const dispatch = useAppDispatch();
   const [ingredient, setIngredient] = useState("");
+  const [showSuggestion, setShowSuggestion] = useState(false);
 
   const { data } = useQuery(GET_INGREDIENTS, {
     variables: { classType: "All" },
   });
 
-  const ingredientList = data?.filterIngredientByCategoryAndClass || [];
-
-  const addIngredintHandler = () => {
-    const ingredientItem = ingredientList.find(
-      (ing) => ing.value === ingredient,
-    );
+  const addIngredintHandler = (id: string) => {
+    const ingredientItem = ingredientList.find((ing) => ing.value === id);
     if (!ingredientItem) return;
     dispatch(addIngredient({ ingredient: ingredientItem }));
     setIngredient("");
+    setShowSuggestion(false);
   };
 
   const deleteIngredientHandler = (id) => {
     dispatch(deleteIngredient({ id }));
   };
 
+  const ingredientList = useMemo(() => {
+    let results = [];
+    results = data?.filterIngredientByCategoryAndClass.filter((ing) => {
+      const isAlreadySelected = ingredients.some(
+        (item) => item?.ingredientId._id === ing?.value,
+      );
+      if (ingredient) {
+        console.log(
+          !isAlreadySelected &&
+            ing?.label.toLowerCase().startsWith(ingredient.toLowerCase()),
+        );
+        return (
+          !isAlreadySelected &&
+          ing?.label.toLowerCase().startsWith(ingredient.toLowerCase())
+        );
+      } else return !isAlreadySelected;
+    });
+    return results;
+  }, [data?.filterIngredientByCategoryAndClass, ingredient, ingredients]);
+
   return (
     <div className={styles.ingredient}>
-      <div className="flex ai-center">
+      <div className={styles.ingredient__field}>
         <Textfield
           placeholder="Type your ingredients..."
           value={ingredient}
           onChange={(e) => setIngredient(e.target.value)}
+          onFocus={() => {
+            setShowSuggestion(true);
+          }}
+          // onBlur={(e) => {
+          //   console.log(e.target);
+          //   setShowSuggestion(false);
+          // }}
         />
-        {/* <IconButton
-          size="small"
-          variant="secondary"
-          fontName={faPlus}
-          style={{ marginLeft: 5 }}
-          onClick={addIngredintHandler}
-        /> */}
+        {showSuggestion && (
+          <ul>
+            {ingredientList.map((ing) => (
+              <li
+                key={ing.value}
+                onClick={() => addIngredintHandler(ing.value)}
+              >
+                {ing.label}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
       <div className={styles.ingredient__card}>
         {ingredients.map((ingredient) => (

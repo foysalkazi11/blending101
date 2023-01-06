@@ -1,12 +1,22 @@
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import { updateAllFilterRecipes } from "../../../../redux/slices/filterRecipeSlice";
+import {
+  updateAllFilterRecipes,
+  updateShowFilterOrSearchRecipes,
+} from "../../../../redux/slices/filterRecipeSlice";
 import notification from "../../../utility/reactToastifyNotification";
 
 const useFetchGetRecipesByBlendAndIngredients = () => {
   const dispatch = useAppDispatch();
   const { dbUser } = useAppSelector((state) => state.user);
+  const { allFilterRecipes } = useAppSelector((state) => state?.filterRecipe);
 
-  const handleFilterRecipes = async (allFilters, filterRecipe) => {
+  const handleFilterRecipes = async (
+    allFilters,
+    filterRecipe,
+    page = 1,
+    limit = 12,
+    isNewItems: boolean = true,
+  ) => {
     let blendTypesArr: string[] = [];
     let ingredientIds: string[] = [];
     let nutrientFiltersMap = [];
@@ -113,12 +123,16 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
     });
 
     try {
-      dispatch(
-        updateAllFilterRecipes({
-          filterRecipes: [],
-          isFiltering: true,
-        }),
-      );
+      dispatch(updateShowFilterOrSearchRecipes(true));
+      if (isNewItems) {
+        dispatch(
+          updateAllFilterRecipes({
+            filterRecipes: [],
+            isFiltering: false,
+            totalItems: 0,
+          }),
+        );
+      }
       const { data } = await filterRecipe({
         variables: {
           data: {
@@ -129,13 +143,20 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
             nutrientMatrix: nutrientMatrixMap,
             excludeIngredientIds,
           },
+          page,
+          limit,
         },
       });
-
       dispatch(
         updateAllFilterRecipes({
-          filterRecipes: data?.filterRecipe || [],
+          filterRecipes: isNewItems
+            ? [...data?.filterRecipe?.recipes]
+            : [
+                ...allFilterRecipes.filterRecipes,
+                ...data?.filterRecipe?.recipes,
+              ],
           isFiltering: false,
+          totalItems: data?.filterRecipe?.totalRecipes,
         }),
       );
     } catch (error) {
@@ -145,6 +166,7 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
         updateAllFilterRecipes({
           filterRecipes: [],
           isFiltering: false,
+          totalItems: 0,
         }),
       );
     }

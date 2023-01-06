@@ -7,26 +7,25 @@ import styles from "./IconForAddComment.module.scss";
 
 interface Props {
   handleIconClick: () => void;
-  tooltipText?: string;
+  label?: string;
 }
 
 const IconForAddComment = ({
   handleIconClick,
-  tooltipText = "Add Comments",
+  label = "Add Comments",
 }: Props) => {
   return (
     <div className={styles.addCommentsIcon}>
-      <Tooltip direction="left" content={tooltipText}>
-        <IconWarper
-          iconColor="iconColorWhite"
-          defaultBg="secondary"
-          hover="bgSecondary"
-          style={{ width: "28px", height: "28px" }}
-          handleClick={handleIconClick}
-        >
-          <FontAwesomeIcon icon={faPlus} />
-        </IconWarper>
-      </Tooltip>
+      <p className={styles.text}>{label}</p>
+      <IconWarper
+        iconColor="iconColorWhite"
+        defaultBg="secondary"
+        hover="bgSecondary"
+        style={{ width: "28px", height: "28px" }}
+        handleClick={handleIconClick}
+      >
+        <FontAwesomeIcon icon={faPlus} />
+      </IconWarper>
     </div>
   );
 };

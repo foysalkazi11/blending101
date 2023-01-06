@@ -1,12 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 import { useRouter } from "next/router";
-import React, { useState } from "react";
-import { useAppDispatch } from "../../redux/hooks";
+import React from "react";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
   setCollectionDetailsId,
   setShowAllRecipes,
 } from "../../redux/slices/collectionSlice";
 import { setOpenCollectionsTary } from "../../redux/slices/sideTraySlice";
+import { updateSidebarActiveMenuNo } from "../../redux/slices/utilitySlice";
 import Tooltip from "../../theme/toolTip/CustomToolTip";
 import styles from "./sidebar.module.scss";
 
@@ -29,17 +30,17 @@ export const PAGES = [
 ];
 
 export default function SidebarComponent(props) {
-  const [active, setActive] = useState(0);
+  const { sidebarActiveMenuNo } = useAppSelector((state) => state.utility);
   const router = useRouter();
   const dispatch = useAppDispatch();
 
   const handleClick = (link: string, i: number) => {
-    setActive(i);
     if (i === 1) {
       dispatch(setCollectionDetailsId(""));
       dispatch(setOpenCollectionsTary(false));
       dispatch(setShowAllRecipes(false));
     }
+    dispatch(updateSidebarActiveMenuNo(i));
     router?.push(link);
   };
 
@@ -53,7 +54,7 @@ export default function SidebarComponent(props) {
           PAGES.map((page, i) => (
             <Tooltip key={"sidebaritem" + i} content={page?.content}>
               <li
-                className={active === i ? styles.active : ""}
+                className={sidebarActiveMenuNo === i ? styles.active : ""}
                 onClick={() => handleClick(page?.link, i)}
               >
                 <span>

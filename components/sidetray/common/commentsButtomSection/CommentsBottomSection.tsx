@@ -31,11 +31,11 @@ const CommentsBottomSection = ({
       <span className={s.date}>
         {userComments?.updatedAt ? (
           <>
-            {format(new Date(userComments?.updatedAt), "dd/MM/yyyy")} (edited)
+            {format(new Date(userComments?.updatedAt), "MM/dd/yyyy")} (edited)
           </>
         ) : (
           userComments?.createdAt &&
-          format(new Date(userComments?.createdAt), "dd/MM/yyyy")
+          format(new Date(userComments?.createdAt), "MM/dd/yyyy")
         )}
       </span>
 

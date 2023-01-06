@@ -17,6 +17,7 @@ type collectionsSliceState = {
   allCollections: {}[];
   singleRecipeWithinCollections: string[];
   currentCollectionInfo: CurrentCollectionInfo;
+  bulkRecipeIdsForAddedInCollection: string[];
 };
 
 const initialState: collectionsSliceState = {
@@ -30,6 +31,7 @@ const initialState: collectionsSliceState = {
   allCollections: [],
   singleRecipeWithinCollections: [],
   currentCollectionInfo: { id: "", name: "" },
+  bulkRecipeIdsForAddedInCollection: [],
 };
 
 export const collectionsSlice = createSlice({
@@ -82,6 +84,12 @@ export const collectionsSlice = createSlice({
     ) => {
       state.currentCollectionInfo = action?.payload;
     },
+    updateBulkRecipeIdsForAddedInCollection: (
+      state,
+      action: PayloadAction<string[]>,
+    ) => {
+      state.bulkRecipeIdsForAddedInCollection = action?.payload;
+    },
   },
 });
 
@@ -95,7 +103,7 @@ export const {
   setAllRecipeWithinCollections,
   setAllCollections,
   setSingleRecipeWithinCollecions,
-
+  updateBulkRecipeIdsForAddedInCollection,
   setCurrentCollectionInfo,
 } = collectionsSlice?.actions;
 

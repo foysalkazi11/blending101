@@ -4,6 +4,8 @@
 .showRecipeCollectionsContainer {
   width: 100%;
   margin: 20px 0;
+  // container-type: inline-size;
+  // contain: content;
 }
 .showRecipeCollectionsHeader {
   display: flex;
@@ -40,4 +42,11 @@
   align-items: center;
   color: #bcbcbc;
   font-weight: 600;
+}
+
+.paginationWarper {
+  margin: 20px auto;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }

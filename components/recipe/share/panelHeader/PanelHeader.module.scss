@@ -80,3 +80,13 @@
   border: none;
   letter-spacing: 1px;
 }
+.headerTextBtnOutline {
+  border: 1px solid $secondaryColor;
+  background-color: $white;
+  color: $secondaryColor;
+  &:hover {
+    background-color: $secondaryColor;
+    color: $slightGray;
+    border: 0px solid $secondaryColor;
+  }
+}

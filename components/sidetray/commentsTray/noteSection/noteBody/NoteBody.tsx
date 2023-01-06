@@ -38,7 +38,7 @@ const NoteBody = ({
     <div className={`${styles.noteEditBox} y-scroll`}>
       {loading ? (
         <SkeletonNote />
-      ) : data?.length >= 1 ? (
+      ) : data?.length ? (
         data?.map((item, index) => {
           return (
             <div className={styles.singleNoteEdit} key={index}>
@@ -93,12 +93,12 @@ const NoteBody = ({
                   <span>
                     {item?.updatedAt ? (
                       <>
-                        {format(new Date(item?.updatedAt), "dd/MM/yyyy")}{" "}
+                        {format(new Date(item?.updatedAt), "MM/dd/yyyy")}{" "}
                         (edited)
                       </>
                     ) : (
                       item?.createdAt &&
-                      format(new Date(item?.createdAt), "dd/MM/yyyy")
+                      format(new Date(item?.createdAt), "MM/dd/yyyy")
                     )}
                   </span>
                   {isFromRecipePage === "edit" ||

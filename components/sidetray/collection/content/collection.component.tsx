@@ -55,7 +55,9 @@ export default function CollectionComponent({
     [],
   );
   const { compareList } = useAppSelector((state) => state?.recipe);
-
+  const { bulkRecipeIdsForAddedInCollection } = useAppSelector(
+    (state) => state?.collections,
+  );
   const updateCompareRecipe = (id: string, obj: object) => {
     dispatch(setCompareList(updateRecipeFunc(compareList, obj, id)));
     setcompareRecipeList((state) => updateRecipeFunc(state || [], obj, id));
@@ -66,9 +68,12 @@ export default function CollectionComponent({
       await addOrRemoveRecipeFromCollection({
         variables: {
           data: {
-            userEmail: dbUser?.email,
+            userId: dbUser?._id,
             addToTheseCollections: collectionHasRecipe,
-            recipe: activeRecipeId,
+            recipes: activeRecipeId
+              ? [activeRecipeId]
+              : bulkRecipeIdsForAddedInCollection,
+            isCollectionData: activeRecipeId ? false : true,
           },
         },
       });

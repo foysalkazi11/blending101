@@ -13,6 +13,7 @@ import useDebounce from "../../../customHooks/useDebounce";
 import {
   resetAllFilters,
   updateAllFilterRecipes,
+  updateShowFilterOrSearchRecipes,
 } from "../../../redux/slices/filterRecipeSlice";
 import FILTER_RECIPE from "../../../gqlLib/recipes/queries/filterRecipe";
 import useFetchGetRecipesByBlendAndIngredients from "./helperFunc/useFetchGetRecipesByBlendAndIngredients";
@@ -24,16 +25,17 @@ import {
 } from "../../../redux/slices/collectionSlice";
 import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
 import ShowRecipeContainer from "../../showRecipeContainer";
-import IconWarper from "../../../theme/iconWarper/IconWarper";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookmark, faShareNodes } from "@fortawesome/pro-regular-svg-icons";
+let dataLimit = 12;
 
 const RecipeDiscovery = () => {
+  const [pageNum, setPageNum] = useState(1);
+  const [searchRecipeType, setSearchRecipeType] = useState<"filter" | "search">(
+    "filter",
+  );
   const [recipeSearchInput, setRecipeSearchInput] = useState("");
   const { openFilterTray } = useAppSelector((state) => state.sideTray);
-  const { allFilters, allFilterRecipes } = useAppSelector(
-    (state) => state?.filterRecipe,
-  );
+  const { allFilters, allFilterRecipes, showFilterOrSearchRecipes } =
+    useAppSelector((state) => state?.filterRecipe);
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
   const isMounted = useRef(false);
   const dispatch = useAppDispatch();
@@ -64,17 +66,56 @@ const RecipeDiscovery = () => {
     setOpenCollectionModal(false);
   };
 
+  // handle next page
+  const handleNextPage = () => {
+    setPageNum((page) => page + 1);
+    if (searchRecipeType === "filter") {
+      handleFilterRecipes(
+        allFilters,
+        filterRecipe,
+        pageNum + 1,
+        dataLimit,
+        false,
+      );
+    }
+    if (searchRecipeType === "search") {
+      handleSearchRecipes(
+        recipeSearchInput,
+        searchRecipe,
+        pageNum + 1,
+        dataLimit,
+        false,
+      );
+    }
+  };
+
   useEffect(() => {
     // filter recipe func
     if (allFilters.length) {
-      handleFilterRecipes(allFilters, filterRecipe);
+      setSearchRecipeType("filter");
+      setPageNum(1);
+      handleFilterRecipes(allFilters, filterRecipe, 1, dataLimit, true);
     } else {
-      dispatch(
-        updateAllFilterRecipes({
-          filterRecipes: [],
-          isFiltering: false,
-        }),
-      );
+      if (recipeSearchInput.length) {
+        setSearchRecipeType("search");
+        setPageNum(1);
+        handleSearchRecipes(
+          recipeSearchInput,
+          searchRecipe,
+          1,
+          dataLimit,
+          true,
+        );
+      } else {
+        dispatch(
+          updateAllFilterRecipes({
+            filterRecipes: [],
+            isFiltering: false,
+            totalItems: 0,
+          }),
+        );
+        setPageNum(1);
+      }
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -83,27 +124,47 @@ const RecipeDiscovery = () => {
   // close filter or search recipes
 
   const closeFilterRecipes = () => {
+    setRecipeSearchInput("");
     dispatch(
       updateAllFilterRecipes({
         filterRecipes: [],
         isFiltering: false,
+        totalItems: 0,
       }),
     );
     dispatch(resetAllFilters());
+    dispatch(updateShowFilterOrSearchRecipes(false));
+    setPageNum(1);
   };
 
   useEffect(() => {
     if (isMounted.current) {
       // search recipe func
-      if (debounceSearchTerm.length) {
-        handleSearchRecipes(debounceSearchTerm, searchRecipe);
-      } else {
-        dispatch(
-          updateAllFilterRecipes({
-            filterRecipes: [],
-            isFiltering: false,
-          }),
+      if (recipeSearchInput.length) {
+        setSearchRecipeType("search");
+        setPageNum(1);
+        handleSearchRecipes(
+          recipeSearchInput,
+          searchRecipe,
+          1,
+          dataLimit,
+          true,
         );
+      } else {
+        if (allFilters.length) {
+          setSearchRecipeType("filter");
+          setPageNum(1);
+          handleFilterRecipes(allFilters, filterRecipe, 1, dataLimit, true);
+        } else {
+          dispatch(
+            updateAllFilterRecipes({
+              filterRecipes: [],
+              isFiltering: false,
+              totalItems: 0,
+            }),
+          );
+          setPageNum(1);
+        }
       }
     }
 
@@ -122,7 +183,11 @@ const RecipeDiscovery = () => {
     <>
       <AContainer
         showCollectionTray={{ show: true, showTagByDeafult: true }}
-        filterTray={true}
+        showRecipeFilterTray={{
+          show: true,
+          showPanle: "left",
+          showTagByDeafult: false,
+        }}
         headerTitle="Discovery"
         showCommentsTray={{
           show: true,
@@ -149,38 +214,20 @@ const RecipeDiscovery = () => {
               <SearchTagsComponent allFilters={allFilters} />
             ) : null}
           </div>
-          {allFilterRecipes.filterRecipes.length ||
-          filterRecipesLoading ||
-          searchRecipeLoading ? (
+          {showFilterOrSearchRecipes ? (
             <ShowRecipeContainer
               data={allFilterRecipes.filterRecipes}
               loading={filterRecipesLoading || searchRecipeLoading}
               closeHandler={closeFilterRecipes}
               showItems="recipe"
-              headerMiddle={
-                <div style={{ display: "flex" }}>
-                  <IconWarper
-                    iconColor="iconColorPrimary"
-                    defaultBg="slightGray"
-                    hover="bgPrimary"
-                    style={{
-                      width: "28px",
-                      height: "28px",
-                      marginRight: "10px",
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faBookmark} />
-                  </IconWarper>
-                  <IconWarper
-                    iconColor="iconColorPrimary"
-                    defaultBg="slightGray"
-                    hover="bgPrimary"
-                    style={{ width: "28px", height: "28px" }}
-                  >
-                    <FontAwesomeIcon icon={faShareNodes} />
-                  </IconWarper>
-                </div>
+              showDefaultLeftHeader
+              showDefaultMiddleHeader={
+                allFilterRecipes.filterRecipes.length ? true : false
               }
+              showDefaultRightHeader
+              hasMore={allFilterRecipes?.totalItems > dataLimit * pageNum}
+              totalDataCount={allFilterRecipes?.totalItems}
+              nextPage={handleNextPage}
             />
           ) : (
             <RegularRecipes setOpenCollectionModal={setOpenCollectionModal} />

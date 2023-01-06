@@ -15,7 +15,7 @@ import { GET_ALL_PLANS } from "../graphql/Planner";
 import { GET_BLEND_TYPES } from "../graphql/Recipe";
 import { useAppSelector } from "../redux/hooks";
 import { updateFilterCriteriaItem } from "../redux/slices/filterRecipeSlice";
-import { setOpenFilterTray } from "../redux/slices/sideTraySlice";
+import { updateSidebarActiveMenuNo } from "../redux/slices/utilitySlice";
 
 import styles from "../styles/pages/home.module.scss";
 import CardComponent from "../theme/cards/card.component";
@@ -48,8 +48,13 @@ const Home = () => {
         filterCriteria: value.filterCategory,
       }),
     );
-    // dispatch(setOpenFilterTray(true));
+    dispatch(updateSidebarActiveMenuNo(1));
     router.push("/discovery");
+  };
+
+  const handleToRoutePage = (index: number, route: string) => {
+    dispatch(updateSidebarActiveMenuNo(index));
+    router.push(route);
   };
 
   return (
@@ -84,12 +89,13 @@ const Home = () => {
                   {PAGES &&
                     PAGES.map((page, idx) =>
                       idx !== 0 ? (
-                        <Link key={page.content} href={page.link}>
-                          <a>
-                            <img src={page.logo} alt={page.content} />
-                            <h6>{page.content}</h6>
-                          </a>
-                        </Link>
+                        <a
+                          key={page.content}
+                          onClick={() => handleToRoutePage(idx, page.link)}
+                        >
+                          <img src={page.logo} alt={page.content} />
+                          <h6>{page.content}</h6>
+                        </a>
                       ) : (
                         <></>
                       ),
