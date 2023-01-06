@@ -29,7 +29,7 @@ let dataLimit = 12;
 
 const RecipeDiscovery = () => {
   const [pageNum, setPageNum] = useState(1);
-  const [searchRecipeType, setSearchType] = useState<"filter" | "search">(
+  const [searchRecipeType, setSearchRecipeType] = useState<"filter" | "search">(
     "filter",
   );
   const [recipeSearchInput, setRecipeSearchInput] = useState("");
@@ -66,14 +66,46 @@ const RecipeDiscovery = () => {
     setOpenCollectionModal(false);
   };
 
+  // handle next page
+  const handleNextPage = () => {
+    setPageNum((page) => page + 1);
+    if (searchRecipeType === "filter") {
+      handleFilterRecipes(
+        allFilters,
+        filterRecipe,
+        pageNum + 1,
+        dataLimit,
+        false,
+      );
+    }
+    if (searchRecipeType === "search") {
+      handleSearchRecipes(
+        recipeSearchInput,
+        searchRecipe,
+        pageNum + 1,
+        dataLimit,
+        false,
+      );
+    }
+  };
+
   useEffect(() => {
     // filter recipe func
     if (allFilters.length) {
+      setSearchRecipeType("filter");
       setPageNum(1);
       handleFilterRecipes(allFilters, filterRecipe, 1, dataLimit, true);
     } else {
-      if (debounceSearchTerm.length) {
-        handleSearchRecipes(debounceSearchTerm, searchRecipe);
+      if (recipeSearchInput.length) {
+        setSearchRecipeType("search");
+        setPageNum(1);
+        handleSearchRecipes(
+          recipeSearchInput,
+          searchRecipe,
+          1,
+          dataLimit,
+          true,
+        );
       } else {
         dispatch(
           updateAllFilterRecipes({
@@ -108,10 +140,19 @@ const RecipeDiscovery = () => {
   useEffect(() => {
     if (isMounted.current) {
       // search recipe func
-      if (debounceSearchTerm.length) {
-        handleSearchRecipes(debounceSearchTerm, searchRecipe);
+      if (recipeSearchInput.length) {
+        setSearchRecipeType("search");
+        setPageNum(1);
+        handleSearchRecipes(
+          recipeSearchInput,
+          searchRecipe,
+          1,
+          dataLimit,
+          true,
+        );
       } else {
         if (allFilters.length) {
+          setSearchRecipeType("filter");
           setPageNum(1);
           handleFilterRecipes(allFilters, filterRecipe, 1, dataLimit, true);
         } else {
@@ -186,16 +227,7 @@ const RecipeDiscovery = () => {
               showDefaultRightHeader
               hasMore={allFilterRecipes?.totalItems > dataLimit * pageNum}
               totalDataCount={allFilterRecipes?.totalItems}
-              nextPage={() => {
-                setPageNum((page) => page + 1);
-                handleFilterRecipes(
-                  allFilters,
-                  filterRecipe,
-                  pageNum + 1,
-                  dataLimit,
-                  false,
-                );
-              }}
+              nextPage={handleNextPage}
             />
           ) : (
             <RegularRecipes setOpenCollectionModal={setOpenCollectionModal} />
