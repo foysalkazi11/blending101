@@ -5,6 +5,67 @@ import { gql } from "@apollo/client";
  * SETTINGS API
  * -------------------------------------------------*
  */
+const CHALLENGE_FIELDS = gql`
+  fragment ChallengeFields on Challenge {
+    _id
+    date: formattedDate
+    disabled
+    posts {
+      _id
+      recipeBlendCategory {
+        _id
+        name
+      }
+      name
+      images
+      note
+      ingredients {
+        ingredientId {
+          _id
+          ingredientName
+        }
+        selectedPortion {
+          name
+          quantity
+          gram
+        }
+      }
+    }
+  }
+`;
+const CHALLENGE_INFO_FIELDS = gql`
+  fragment ChallengeInfoFields on ChallengeInfo {
+    challengeId
+    longestStreak
+    currentStreak
+    blendScore
+    daysRemaining
+    challengeName
+    totalChallengePosts
+    startDate
+    endDate
+    viewOnly
+    days
+    memberInfo {
+      image
+    }
+    sharedWith {
+      memberId {
+        _id
+        displayName
+        image
+      }
+      blendScore
+    }
+    topIngredients {
+      ingredientId {
+        ingredientName
+        featuredImage
+      }
+      count
+    }
+  }
+`;
 
 export const GET_CHALLENGES = gql`
   query GetAllChallenges($memberId: String!) {
@@ -68,76 +129,45 @@ export const GET_30DAYS_CHALLENGE = gql`
       token: $token
     ) {
       challenge {
-        _id
-        date: formattedDate
-        disabled
-        posts {
-          _id
-          recipeBlendCategory {
-            _id
-            name
-          }
-          name
-          images
-          note
-          ingredients {
-            ingredientId {
-              _id
-              ingredientName
-            }
-            selectedPortion {
-              name
-              quantity
-              gram
-            }
-          }
-        }
+        ...ChallengeFields
       }
       challengeInfo {
-        challengeId
-        longestStreak
-        currentStreak
-        blendScore
-        daysRemaining
-        challengeName
-        totalChallengePosts
-        startDate
-        endDate
-        viewOnly
-        days
-        memberInfo {
-          image
-        }
-        sharedWith {
-          memberId {
-            _id
-            displayName
-            image
-          }
-          blendScore
-        }
-        topIngredients {
-          ingredientId {
-            ingredientName
-            featuredImage
-          }
-          count
-        }
+        ...ChallengeInfoFields
       }
     }
   }
+  ${CHALLENGE_FIELDS}
+  ${CHALLENGE_INFO_FIELDS}
 `;
 
 export const CREATE_CHALLENGE_POST = gql`
   mutation CreateChallengePost($data: CreateChallengePost!) {
-    createChallengePost(data: $data)
+    createChallengePost(data: $data) {
+      challenge {
+        ...ChallengeFields
+      }
+      challengeInfo {
+        ...ChallengeInfoFields
+      }
+    }
   }
+  ${CHALLENGE_FIELDS}
+  ${CHALLENGE_INFO_FIELDS}
 `;
 
 export const EDIT_CHALLENGE_POST = gql`
   mutation EditChallengePost($data: EditChallengePost!) {
-    editAChallengePost(data: $data)
+    editAChallengePost(data: $data) {
+      challenge {
+        ...ChallengeFields
+      }
+      challengeInfo {
+        ...ChallengeInfoFields
+      }
+    }
   }
+  ${CHALLENGE_FIELDS}
+  ${CHALLENGE_INFO_FIELDS}
 `;
 
 export const DELETE_CHALLENGE_POST = gql`

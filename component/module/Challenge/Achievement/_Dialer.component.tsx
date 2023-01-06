@@ -51,7 +51,6 @@ function Main({ activities, statistics }: MainInterface) {
     );
   };
 
-  console.log(activities);
   return (
     <div className={styles.challenge_circle_main_circle_outer}>
       <div className={styles.challenge_circle_main_circle}>
