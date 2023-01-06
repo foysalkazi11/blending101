@@ -15,7 +15,7 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
     filterRecipe,
     page = 1,
     limit = 12,
-    newLength: boolean = true,
+    isNewItems: boolean = true,
   ) => {
     let blendTypesArr: string[] = [];
     let ingredientIds: string[] = [];
@@ -124,6 +124,15 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
 
     try {
       dispatch(updateShowFilterOrSearchRecipes(true));
+      if (isNewItems) {
+        dispatch(
+          updateAllFilterRecipes({
+            filterRecipes: [],
+            isFiltering: false,
+            totalItems: 0,
+          }),
+        );
+      }
       const { data } = await filterRecipe({
         variables: {
           data: {
@@ -140,7 +149,7 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
       });
       dispatch(
         updateAllFilterRecipes({
-          filterRecipes: newLength
+          filterRecipes: isNewItems
             ? [...data?.filterRecipe?.recipes]
             : [
                 ...allFilterRecipes.filterRecipes,

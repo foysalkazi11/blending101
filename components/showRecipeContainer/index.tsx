@@ -72,8 +72,11 @@ const ShowRecipeContainer = ({
 
   // fetch next page
   useEffect(() => {
+    console.log(hasMore);
     if (!entry) return;
     if (entry.isIntersecting && hasMore) {
+      console.log(hasMore);
+
       nextPage();
     }
 
@@ -227,7 +230,7 @@ const ShowRecipeContainer = ({
               })}
           </div>
           {loading && <SkeletonCollectionRecipe />}
-          {<div ref={observer}></div>}
+          <div ref={observer}></div>
           {!loading && !data?.length && (
             <ErrorPage
               errorMessage={`No ${showItems} found, search again !!!`}
