@@ -72,11 +72,8 @@ const ShowRecipeContainer = ({
 
   // fetch next page
   useEffect(() => {
-    console.log(hasMore);
     if (!entry) return;
     if (entry.isIntersecting && hasMore) {
-      console.log(hasMore);
-
       nextPage();
     }
 
