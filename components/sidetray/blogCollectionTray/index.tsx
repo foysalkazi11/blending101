@@ -327,7 +327,7 @@ const PlanCollectionTray = ({
       />
       <IconForAddComment
         handleIconClick={addNewCollection}
-        tooltipText="Add collection"
+        label="Add collection"
       />
       {allCollectionLoading ? (
         <SkeletonCollections />

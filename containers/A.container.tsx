@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC, useEffect } from "react";
 import HeaderComponent from "../components/header/Header.component";
 import SidebarComponent from "../components/sidebar/Sidebar.component";
 import styles from "./container.module.scss";
@@ -14,6 +14,10 @@ import WikiCommentsTray from "../components/sidetray/wikiCommentsTray";
 import BlogCommentsTray from "../components/sidetray/blogCommentsTray";
 import BlogCollectionTray from "../components/sidetray/blogCollectionTray";
 import PlanCollectionTray from "../components/sidetray/planCollectionTray";
+// import { push as Menu } from "react-burger-menu";
+import { useDispatch } from "react-redux";
+import { useAppSelector } from "../redux/hooks";
+import useWindowSize from "../components/utility/useWindowSize";
 
 interface ShowTray {
   show: boolean;
@@ -32,6 +36,7 @@ type AContainerProps = {
   showBlogCommentsTray?: ShowTray;
   showBlogCollectionTray?: ShowTray;
   showPlanCollectionTray?: ShowTray;
+  showRecipeFilterTray?: ShowTray;
   logo?: boolean;
   headerTitle?: string;
   headerLogo?: string;
@@ -39,11 +44,10 @@ type AContainerProps = {
   nutritionTray?: Boolean;
   healthTray?: Boolean;
   ingredientTray?: Boolean;
-  filterTray?: Boolean;
   headerFullWidth?: Boolean;
 };
 
-export default function AContainer(props: AContainerProps) {
+const AContainer: FC<AContainerProps> = (props) => {
   const {
     showHeader = true,
     showSidebar = true,
@@ -87,15 +91,51 @@ export default function AContainer(props: AContainerProps) {
       showTagByDeafult: false,
       showPanle: "left",
     },
+    showRecipeFilterTray = {
+      show: false,
+      showPanle: "left",
+      showTagByDeafult: false,
+    },
     logo = true,
     headerTitle = "",
     nutritionTray = false,
     healthTray = false,
     ingredientTray = false,
-    filterTray = false,
     headerFullWidth = false,
   } = props;
 
+  const dispatch = useDispatch();
+  const { openFilterTray } = useAppSelector((state) => state?.sideTray);
+  const { width } = useWindowSize();
+  // dispatch(setOpenFilterTray(!openFilterTray));
+
+  // useEffect(() => {
+  //   let viewport_meta = document.querySelector("[name=viewport]");
+  //   if (viewport_meta) {
+  //     let viewport = {
+  //       default: `width=${width}`,
+  //       responsiveWidth: `width=${600}`,
+  //     };
+  //     console.log(viewport_meta);
+  //     console.log(viewport_meta.getAttribute("content"));
+  //     console.log(viewport_meta.getAttribute("content").slice(6));
+  //     // console.log(
+  //     //   `${parseFloat(viewport_meta.getAttribute("content").slice(6)) - 320}`,
+  //     // );
+  //     const documentWidth = document.documentElement.clientWidth;
+  //     const screenWidth = window.screen.width;
+  //     const viewportWidth = window.innerWidth;
+  //     console.log(documentWidth, screenWidth, viewportWidth);
+
+  //     if (openFilterTray) {
+  //       viewport_meta.setAttribute("content", viewport.responsiveWidth);
+  //     } else {
+  //       viewport_meta.setAttribute("content", viewport.default);
+  //     }
+  //   }
+
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [openFilterTray]);
   return (
     <div className={styles.containerA} style={{ overflow: "hidden" }}>
       {showSidebar ? (
@@ -106,6 +146,7 @@ export default function AContainer(props: AContainerProps) {
       <div
         className={styles.mainA}
         style={headerFullWidth ? { width: "100%" } : {}}
+        id="outer-container"
       >
         {showHeader ? (
           <HeaderComponent
@@ -193,14 +234,28 @@ export default function AContainer(props: AContainerProps) {
             <IngredientTrayComponent title="Ingredient Lists" />
           </div>
         )}
-        {filterTray && (
+        {showRecipeFilterTray && (
+          // <Menu
+          //   pageWrapId={"page-wrap"}
+          //   outerContainerId={"outer-container"}
+          //   isOpen={openFilterTray}
+          //   customBurgerIcon={false}
+          //   itemListElement="div"
+          //   noOverlay
+          // >
+
+          // </Menu>
           <div className={styles.fixed__main__left}>
-            <FilterTray filter="true" />
+            <FilterTray
+              showTagByDefaut={showRecipeFilterTray?.showTagByDeafult}
+              showPanle={showRecipeFilterTray?.showPanle}
+            />
           </div>
         )}
-
-        {props.children}
+        <div id="page-wrap">{props.children}</div>
       </div>
     </div>
   );
-}
+};
+
+export default AContainer;

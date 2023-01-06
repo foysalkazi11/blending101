@@ -1,15 +1,15 @@
 import { gql } from "@apollo/client";
 
 export const GET_RECIPE = gql`
-  query GetARecipe($recipeId: String!, $userId: String) {
-    getARecipe(recipeId: $recipeId, userId: $userId) {
+  query GetARecipe($userId: String!, $recipeId: String, $token: String) {
+    getARecipe(userId: $userId, recipeId: $recipeId, token: $token) {
       userId {
         email
-      lastName
-      firstName
-      image
-      displayName
-      _id
+        lastName
+        firstName
+        image
+        displayName
+        _id
       }
       _id
       name

@@ -3,59 +3,6 @@
   justify-content: flex-end;
   align-items: center;
   padding-top: 20px;
-  span {
-    font-size: 10px;
-    color: #7e7c7c;
-    display: block;
-  }
-  button {
-    background-color: #7cbc39;
-    border: none;
-    border-radius: 50%;
-    width: 28px;
-    height: 28px;
-    position: relative;
-    cursor: pointer;
-    transition: 0.5s;
-    &:hover span {
-      visibility: visible;
-    }
-    img {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      margin: auto;
-    }
-    span {
-      left: -48px;
-      padding: 0 5px;
-      position: absolute;
-      visibility: hidden;
-      background-color: #7cbc39;
-      color: #fff;
-      text-align: center;
-      z-index: 1;
-      min-width: 24px;
-      border-radius: 2px;
-      top: 4px;
-      font-size: 14px;
-      &::before {
-        content: "";
-        position: absolute;
-        width: 0px;
-        height: 0px;
-        border-top: 5px solid transparent;
-        border-bottom: 5px solid transparent;
-        border-left: 8px solid #7cbc39;
-        right: -7px;
-        top: 0;
-        bottom: 0;
-        margin: auto;
-      }
-    }
-  }
 }
 
 .noteEditBox {

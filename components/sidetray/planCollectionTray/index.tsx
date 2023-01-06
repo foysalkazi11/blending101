@@ -28,14 +28,11 @@ import TrayTag from "../TrayTag";
 import TrayWrapper from "../TrayWrapper";
 import styles from "./PlanCollectionTray.module.scss";
 
-interface BlogCollectionTrayProps {
+interface Props {
   showTagByDefaut?: boolean;
   showPanle?: "left" | "right";
 }
-const PlanCollectionTray = ({
-  showPanle,
-  showTagByDefaut,
-}: BlogCollectionTrayProps) => {
+const PlanCollectionTray = ({ showPanle, showTagByDefaut }: Props) => {
   const [openModal, setOpenModal] = useState(false);
   const [input, setInput] = useState({
     image: "",
@@ -329,7 +326,7 @@ const PlanCollectionTray = ({
       />
       <IconForAddComment
         handleIconClick={addNewCollection}
-        tooltipText="Add collection"
+        label="Add collection"
       />
       {allCollectionLoading ? (
         <SkeletonCollections />

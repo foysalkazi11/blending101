@@ -98,73 +98,86 @@ export default function RecipeCollectionAndThemeTray({
   const addNewCollection = () => {
     setIsDeleteCollection(false);
     setIsEditCollection(false);
-    setInput((pre) => ({ ...pre, name: "" }));
+    setInput({ image: null, name: "", slug: "", description: "" });
     setOpenModal(true);
   };
 
   const saveToDb = async () => {
     if (input?.name) {
-      if (isEditCollection) {
-        await editCollection({
-          variables: {
-            data: {
-              userEmail: dbUser?.email,
-              collectionId: collectionId,
-              newName: input?.name,
-            },
-          },
-          update(cache, { data: { editACollection } }) {
-            cache.writeQuery({
-              query: GET_COLLECTIONS_AND_THEMES,
-              variables: { userId: dbUser?._id },
+      try {
+        if (isEditCollection) {
+          await editCollection({
+            variables: {
               data: {
-                getUserCollectionsAndThemes: {
-                  collections:
-                    collectionsData?.getUserCollectionsAndThemes?.collections?.map(
-                      (collection) =>
-                        collection?._id === collectionId
-                          ? { ...collection, ...input }
-                          : collection,
-                    ),
+                userEmail: dbUser?.email,
+                collectionId: collectionId,
+                newName: input?.name,
+              },
+            },
+            update(cache, { data: { editACollection } }) {
+              cache.writeQuery({
+                query: GET_COLLECTIONS_AND_THEMES,
+                variables: { userId: dbUser?._id },
+                data: {
+                  getUserCollectionsAndThemes: {
+                    collections:
+                      collectionsData?.getUserCollectionsAndThemes?.collections?.map(
+                        (collection) =>
+                          collection?._id === collectionId
+                            ? { ...collection, ...input }
+                            : collection,
+                      ),
+                  },
+                },
+              });
+            },
+          });
+          setOpenModal(false);
+          setInput({ image: null, name: "", description: "", slug: "" });
+        } else {
+          await createNewCollection({
+            variables: {
+              data: {
+                userId: dbUser?._id,
+                collection: {
+                  image: null,
+                  name: input?.name,
+                  recipes: [],
+                  slug: input.slug,
                 },
               },
-            });
-          },
-        });
+            },
+            update(cache, { data: { createNewCollection } }) {
+              cache.writeQuery({
+                query: GET_COLLECTIONS_AND_THEMES,
+                variables: { userId: dbUser?._id },
+                data: {
+                  getUserCollectionsAndThemes: {
+                    collections: [
+                      ...collectionsData?.getUserCollectionsAndThemes
+                        ?.collections,
+                      createNewCollection,
+                    ],
+                  },
+                },
+              });
+            },
+          });
+        }
         setOpenModal(false);
         setInput({ image: null, name: "", description: "", slug: "" });
-      } else {
-        await createNewCollection({
-          variables: {
-            data: {
-              userEmail: dbUser?.email,
-              collection: { image: null, name: input?.name, recipes: [] },
-            },
-          },
-          update(cache, { data: { createNewCollection } }) {
-            cache.writeQuery({
-              query: GET_COLLECTIONS_AND_THEMES,
-              variables: { userId: dbUser?._id },
-              data: {
-                getUserCollectionsAndThemes: {
-                  collections: [
-                    ...collectionsData?.getUserCollectionsAndThemes
-                      ?.collections,
-                    createNewCollection,
-                  ],
-                },
-              },
-            });
-          },
-        });
-      }
-
-      setOpenModal(false);
-      setInput({ image: null, name: "", description: "", slug: "" });
-      if (isEditCollection) {
-        notification("info", "Collection edit successfully");
-      } else {
-        notification("info", "Collection add successfully");
+        if (isEditCollection) {
+          notification("info", "Collection edit successfully");
+        } else {
+          notification("info", "Collection add successfully");
+        }
+      } catch (error) {
+        setOpenModal(false);
+        if (isEditCollection) {
+          notification("error", "Failed to edit collection ");
+        } else {
+          notification("error", "Failed to add collection ");
+        }
       }
     } else {
       notification("info", "Please write collection name");
@@ -211,7 +224,10 @@ export default function RecipeCollectionAndThemeTray({
             variables: { userId: dbUser?._id },
             data: {
               getUserCollectionsAndThemes: {
-                collections: [...deleteCollection],
+                collections:
+                  collectionsData?.getUserCollectionsAndThemes?.collections?.filter(
+                    (collection) => collection?._id !== collectionId,
+                  ),
               },
             },
           });
@@ -283,7 +299,7 @@ export default function RecipeCollectionAndThemeTray({
       {toggle === 0 && (
         <IconForAddComment
           handleIconClick={addNewCollection}
-          tooltipText="Add collection"
+          label="Add collection"
         />
       )}
 
