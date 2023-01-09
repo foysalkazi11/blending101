@@ -33,16 +33,14 @@ interface ShareProps {
 const Share = (props: ShareProps) => {
   const { id, title, image, type, show, setShow } = props;
   const [createShareLink, { data }] = useMutation(CREATE_SHARE_LINK);
-
   const inputRef = useRef<HTMLInputElement>(null);
   const [hasCopied, setHasCopied] = useState(false);
   const [showMsgField, setShowMsgField] = useState(false);
   const [showSuggestion, setShowSuggestion] = useState(false);
-
   const [link, setLink] = useState("");
   const [emails, setEmails] = useState([]);
-
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const { detailsARecipe } = useAppSelector((state) => state?.recipe);
 
   const hasEmails = emails.length > 0;
 
@@ -107,10 +105,12 @@ const Share = (props: ShareProps) => {
     const response = await createShareLink({
       variables: {
         data: {
+          shareData: {
+            recipeId: detailsARecipe._id,
+            version: detailsARecipe.versionId,
+          },
+          shareTo: [...emails],
           sharedBy: userId,
-          shareTo: emails,
-          shareData: [id],
-          type,
         },
       },
     });

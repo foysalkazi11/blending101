@@ -18,13 +18,13 @@ import useToGetARecipe from "../../../customHooks/useToGetARecipe";
 import CHANGE_DEFAULT_VERSION from "../../../gqlLib/versions/mutation/changelDefaultVersion";
 import TrayTag from "../TrayTag";
 import Tooltip from "../../../theme/toolTip/CustomToolTip";
-import PanelHeader from "../../recipe/share/panelHeader/PanelHeader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faRectangleVerticalHistory,
   faScaleBalanced,
 } from "@fortawesome/pro-regular-svg-icons";
 import { useRouter } from "next/router";
+
 interface VersionTrayProps {
   showTagByDefaut?: boolean;
   showPanle?: "left" | "right";
@@ -41,15 +41,11 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   const { dbUser } = useAppSelector((state) => state?.user);
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
   const [addVersion, { loading: newVersionLoading }] = useMutation(ADD_VERSION);
-  const [editVersion, { data: editVersionData, loading: editVersionLoading }] =
-    useMutation(EDIT_A_VERSION_OF_RECIPE);
+  const [editVersion] = useMutation(EDIT_A_VERSION_OF_RECIPE);
   const [removeVersion, { loading: removeVersionLoading }] = useMutation(
     REMOVE_A_RECIPE_VERSION,
   );
-  const [
-    getARecipeVersionOnly,
-    { data: recipeVersionOnlyData, loading: recipeVersionOnlyLoading },
-  ] = useLazyQuery(GET_A_RECIPE_VERSION_ONLY);
+  const [getARecipeVersionOnly] = useLazyQuery(GET_A_RECIPE_VERSION_ONLY);
   const [changeDefaultVersion] = useMutation(CHANGE_DEFAULT_VERSION);
   const handleToGetARecipeVersion = useToGetARecipeVersion();
   const router = useRouter();
@@ -58,7 +54,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   const isMounted = useRef(false);
 
   const funToGetARecipe = () => {
-    handleGetARecipe(detailsARecipe?._id, dbUser?._id, true);
+    handleGetARecipe(detailsARecipe?._id, dbUser?._id);
   };
 
   // find original version of recipe
