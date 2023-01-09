@@ -52,6 +52,7 @@ const EditRecipeComponent = () => {
       nutritionState,
       SetcalculateIngOz,
     );
+
   const [editAVersionOfRecipe] = useMutation(EDIT_A_VERSION_OF_RECIPE);
 
   const servingCounter = useAppSelector(
@@ -216,8 +217,8 @@ const EditRecipeComponent = () => {
 
   useEffect(() => {
     if (detailsARecipe?._id !== recipeId) {
-      if (dbUser?._id) {
-        handleToGetARecipe(recipeId, dbUser?._id, false);
+      if (dbUser?._id && recipeId) {
+        handleToGetARecipe(recipeId, dbUser?._id);
       }
     }
   }, [recipeId, dbUser?._id]);
