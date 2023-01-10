@@ -23,11 +23,9 @@
 
 .left {
   width: 100%;
+  display: none;
   @include media(xl) {
     display: block !important;
-  }
-  @include media(sm) {
-    display: none;
   }
 }
 
