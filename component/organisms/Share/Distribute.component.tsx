@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   faFacebook,
   faPinterest,
@@ -10,16 +10,15 @@ import {
   PinterestShareButton,
   TwitterShareButton,
 } from "react-share";
-
 import Icon from "../../atoms/Icon/Icon.component";
-import Textarea from "../Forms/Textarea.component";
-
 import styles from "./Share.module.scss";
 import CustomModal from "../../../theme/modal/customModal/CustomModal";
-
 import { useMutation } from "@apollo/client";
 import { CREATE_SHARE_LINK } from "../../../graphql/Share";
 import { useAppSelector } from "../../../redux/hooks";
+import notification from "../../../components/utility/reactToastifyNotification";
+import InviteUserForm from "./InviteUserForm";
+import CircularRotatingLoader from "../../../theme/loader/circularRotatingLoader.component";
 
 interface ShareProps {
   id: string;
@@ -32,7 +31,8 @@ interface ShareProps {
 
 const Share = (props: ShareProps) => {
   const { id, title, image, type, show, setShow } = props;
-  const [createShareLink, { data }] = useMutation(CREATE_SHARE_LINK);
+  const [createShareLink, { data, loading: createLinkLoading }] =
+    useMutation(CREATE_SHARE_LINK);
   const inputRef = useRef<HTMLInputElement>(null);
   const [hasCopied, setHasCopied] = useState(false);
   const [showMsgField, setShowMsgField] = useState(false);
@@ -41,14 +41,6 @@ const Share = (props: ShareProps) => {
   const [emails, setEmails] = useState([]);
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
-
-  const hasEmails = emails.length > 0;
-
-  // useEffect(() => {
-  //   return () => {
-  //     setHasCopied(false);
-  //   };
-  // });
 
   const onInputFocus = () => {
     setShowMsgField(true);
@@ -68,56 +60,48 @@ const Share = (props: ShareProps) => {
     }
   };
 
-  const onInputChange = (event) => {
-    const email = event.target.value;
-    if (email !== "") setShowSuggestion(true);
-    else setShowSuggestion(false);
-  };
-
-  const onAddEmail = (event) => {
-    if (event.key === "Enter") {
-      const email = event.target.value;
-      if (
-        !email.match(
-          /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-        )
-      )
-        return;
-      event.target.value = "";
-      setEmails([...emails, email]);
-    }
-  };
-
   const onCancel = () => {
     setShowMsgField(false);
     setEmails([]);
   };
 
-  const copyLinkHandler = async () => {
-    await generateShareLink();
-    console.log(data, link);
-
+  const copyLinkHandler = async (isGlobalShare: boolean = true) => {
+    if (!isGlobalShare && !emails.length) {
+      notification("warning", "Please enter email");
+      return;
+    }
+    const link = await generateShareLink(isGlobalShare);
     navigator.clipboard.writeText(link);
+    notification("success", "Link has been copied in clipboard");
     setHasCopied(true);
+    // setShow(false);
   };
 
-  const generateShareLink = async () => {
-    const response = await createShareLink({
-      variables: {
-        data: {
-          shareData: {
-            recipeId: detailsARecipe._id,
-            version: detailsARecipe.versionId,
+  const generateShareLink = async (isGlobalShare: boolean = true) => {
+    try {
+      const response = await createShareLink({
+        variables: {
+          data: {
+            shareData: {
+              recipeId: detailsARecipe._id,
+              version: detailsARecipe.versionId,
+            },
+            shareTo: isGlobalShare ? [] : emails,
+            sharedBy: userId,
           },
-          shareTo: [...emails],
-          sharedBy: userId,
         },
-      },
-    });
-    let link = `https://duacpw47bhqi1.cloudfront.net/recipe_details/${id}?token=${response.data?.createShareLink}`;
-    console.log(link);
-    setLink(link);
+      });
+      let link = `https://duacpw47bhqi1.cloudfront.net/recipe_details/${id}?token=${response.data?.createShareLink}`;
+      setLink(link);
+      return link;
+    } catch (error) {
+      notification("error", "Not able to share recipe");
+    }
   };
+
+  useEffect(() => {
+    setShowMsgField(false);
+  }, []);
 
   return (
     <CustomModal open={show} setOpen={setShow}>
@@ -130,70 +114,33 @@ const Share = (props: ShareProps) => {
           <img src={image || "/cards/coriander.png"} alt="" />
           <h3>{title}</h3>
         </div>
-        <div
-          ref={inputRef}
-          className={styles.email}
-          style={hasEmails ? {} : { padding: 10 }}
-          onClick={onInputFocus}
-          onBlur={onInputBlur}
-        >
-          {emails.map((email) => (
-            <span className={styles.email__address} key={email}>
-              {email}
-            </span>
-          ))}
-          <input
-            type="email"
-            placeholder={!hasEmails ? "Enter Name or Email" : ""}
-            className={styles.email__input}
-            onFocus={onInputFocus}
-            onChange={onInputChange}
-            onKeyDown={onAddEmail}
-          />
-          {showSuggestion && (
-            <div className={styles.email__suggestion}>
-              <h6>Select a Person</h6>
-              <ul>
-                <li>
-                  <span>B</span>
-                  Badhon Khan
-                </li>
-                <li>
-                  <span>G</span>
-                  Gabriel Braun
-                </li>
-              </ul>
-            </div>
-          )}
-        </div>
         {showMsgField ? (
-          <Fragment>
-            <Textarea
-              name="message"
-              placeholder="Enter Message"
-              className={styles.share__message}
-            />
-            <div className={styles.share__button_wraper}>
-              <button
-                className={`${styles.share__button} ${styles["share__button--save"]} mr-30`}
-              >
-                Change
-              </button>
-              <button
-                className={`${styles.share__button} ${styles["share__button--cancel"]}`}
-                onClick={onCancel}
-              >
-                Cancel
-              </button>
-            </div>
-          </Fragment>
-        ) : (
-          <SharePanel
-            link={link}
-            copyLinkHandler={copyLinkHandler}
-            generateShareLink={generateShareLink}
-            hasCopied={hasCopied}
+          <InviteUserForm
+            emails={emails}
+            setEmails={setEmails}
+            handleCancel={onCancel}
+            handleInvitation={() => copyLinkHandler(false)}
+            submitBtnText="Share"
+            loading={createLinkLoading}
           />
+        ) : (
+          <div className="d-flex">
+            <button
+              // disabled={hasCopied}
+              className={styles.share__link_btn}
+              onClick={() => setShowMsgField(true)}
+            >
+              <Icon fontName={faShareNodes} size="2rem" className="mr-10" />
+              <p style={{ flexShrink: 0 }}>Find users</p>
+            </button>
+            <SharePanel
+              link={link}
+              copyLinkHandler={copyLinkHandler}
+              generateShareLink={generateShareLink}
+              hasCopied={hasCopied}
+              loading={createLinkLoading}
+            />
+          </div>
         )}
       </div>
     </CustomModal>
@@ -201,7 +148,8 @@ const Share = (props: ShareProps) => {
 };
 
 const SharePanel = (props) => {
-  const { link, copyLinkHandler, generateShareLink, hasCopied } = props;
+  const { link, copyLinkHandler, generateShareLink, hasCopied, loading } =
+    props;
   return (
     <div className={styles.share__social}>
       <button
@@ -209,33 +157,44 @@ const SharePanel = (props) => {
         className={styles.share__link_btn}
         onClick={copyLinkHandler}
       >
-        <Icon fontName={faLinkSimple} size="2rem" className="mr-10" />
-        {hasCopied ? "Copied Link" : "Copy Link"}
+        {loading ? (
+          <CircularRotatingLoader
+            color="primary"
+            style={{ width: "20px", height: "20px", marginRight: "10px" }}
+          />
+        ) : (
+          <Icon fontName={faLinkSimple} size="2rem" className="mr-10" />
+        )}
+        <p style={{ flexShrink: 0 }}>
+          {hasCopied ? "Copied Link" : "Copy Link"}
+        </p>
       </button>
       <div className={styles.share__social_icons}>
         <FacebookShareButton
           url={link}
           quote={"This is quote"}
           hashtag="#Branding"
-          beforeOnClick={generateShareLink}
+          beforeOnClick={link ? () => {} : generateShareLink}
           className={styles["share__social--facebook"]}
         >
           <Icon fontName={faFacebook} size="3.5rem" className="mr-10" />
         </FacebookShareButton>
         <TwitterShareButton
-          url="https://duacpw47bhqi1.cloudfront.net/recipe_details/621ccee8ede2edf391c431fe/"
+          url={link}
           title="Blending101"
           hashtags={["Branding"]}
           via="http://blending101.com/"
           className={styles["share__social--twitter"]}
+          beforeOnClick={link ? () => {} : generateShareLink}
         >
           <Icon fontName={faTwitter} size="3.5rem" className="mr-10" />
         </TwitterShareButton>
         <PinterestShareButton
           media="https://blending101.com/Blend_Formula.png"
-          url="https://duacpw47bhqi1.cloudfront.net/recipe_details/621ccee8ede2edf391c431fe/"
+          url={link}
           description="Hello World"
           className={styles["share__social--pinterest"]}
+          beforeOnClick={link ? () => {} : generateShareLink}
         >
           <Icon fontName={faPinterest} size="3.5rem" className="mr-10" />
         </PinterestShareButton>
