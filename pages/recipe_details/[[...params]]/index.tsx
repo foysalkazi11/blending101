@@ -14,7 +14,9 @@ import useToGetARecipe from "../../../customHooks/useToGetARecipe";
 
 const Index = () => {
   const router = useRouter();
-  const { recipe__Id }: any = router.query;
+  const { params = [], token = "" } = router.query;
+  const recipe__Id = params?.[0] || "";
+  const versionId = params?.[1] || "";
   const [nutritionState, setNutritionState] = useState(null);
   const { dbUser } = useAppSelector((state) => state?.user);
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
@@ -43,9 +45,7 @@ const Index = () => {
   useEffect(() => {
     if (detailsARecipe?._id !== recipe__Id) {
       if (dbUser?._id && recipe__Id) {
-        console.log("fetch data");
-
-        handleToGetARecipe(recipe__Id, dbUser?._id, getARecipe);
+        handleToGetARecipe(recipe__Id, dbUser?._id, getARecipe, token);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
