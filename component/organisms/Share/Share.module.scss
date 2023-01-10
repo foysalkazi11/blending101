@@ -80,7 +80,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 2.5rem;
+    // margin-top: 2.5rem;
     &_icons {
       display: flex;
       align-items: center;
@@ -153,6 +153,7 @@
   display: flex;
   flex-wrap: wrap;
   position: relative;
+  transition: all 0.3s;
   &__address {
     font-size: 1.2rem;
     line-height: 2.4rem;
@@ -162,6 +163,16 @@
     margin-right: 1rem;
     margin-bottom: 1rem;
     color: #a5a5a5;
+    position: relative;
+    &:hover .closeBtn {
+      display: block;
+    }
+    .closeBtn {
+      display: none;
+      position: absolute;
+      top: -5px;
+      right: 0px;
+    }
   }
   &__input {
     border: none;
