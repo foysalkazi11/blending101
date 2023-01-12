@@ -24,6 +24,7 @@ const useToGetARecipeVersion = () => {
         _id: recipeId,
         versionId: _id,
         versionDiscription: description,
+        isVersionActive: true,
         ...rest,
       };
       dispatch(
