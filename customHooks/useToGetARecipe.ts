@@ -31,6 +31,7 @@ const useToGetARecipe = () => {
             versionId: _id,
             versionDiscription: description,
             ingredients: recipe?.defaultVersion?.ingredients,
+            isVersionActive: false,
           }),
         );
       } else {
@@ -40,6 +41,7 @@ const useToGetARecipe = () => {
           _id: recipeId,
           versionId: _id,
           versionDiscription: description,
+          isVersionActive: true,
           ...rest,
         };
         dispatch(

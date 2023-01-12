@@ -113,7 +113,7 @@ const Center_Elements = ({
     <>
       <div className={styles.main}>
         <div className={styles.topSection}>
-          {copyDetailsRecipe?.versionId ? (
+          {copyDetailsRecipe?.isVersionActive ? (
             <h3 className={styles.title}>
               {copyDetailsRecipe?.name}
               <span>
@@ -130,12 +130,10 @@ const Center_Elements = ({
             <InputComponent
               borderSecondary={true}
               style={{ fontWeight: "bold", color: "#000000", fontSize: "16px" }}
-              value={
-                copyDetailsRecipe?.versionId
-                  ? copyDetailsRecipe?.postfixTitle
-                  : copyDetailsRecipe?.name
+              value={copyDetailsRecipe?.name}
+              name={
+                copyDetailsRecipe?.isVersionActive ? "postfixTitle" : "name"
               }
-              name={copyDetailsRecipe?.versionId ? "postfixTitle" : "name"}
               onChange={(e) =>
                 updateEditRecipe(e?.target?.name, e?.target?.value)
               }

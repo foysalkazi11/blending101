@@ -42,6 +42,7 @@ export interface RecipeDetailsType {
     description: string;
     ingredients: Ingredient[];
   };
+  isVersionActive: boolean;
 }
 
 export interface RecipeBlendCategory {
