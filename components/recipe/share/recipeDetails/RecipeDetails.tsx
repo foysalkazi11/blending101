@@ -143,6 +143,7 @@ const RecipeDetails = ({
           customMenu={customMenu}
           showMoreMenuAtHover={showMoreMenuAtHover}
           description={recipe?.description}
+          recipeVersion={recipe?.recipeVersion}
         />
         <div className={`${styles.dividerBox}`}>
           <SectionTitleWithIcon

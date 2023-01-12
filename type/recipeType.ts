@@ -24,6 +24,15 @@ export interface RecipeType {
   score: number;
   calorie: number;
   userId: null | RecipeCreatorInfo;
+  recipeVersion: RecipeSmallVersionType[];
+}
+
+export interface RecipeSmallVersionType {
+  _id: string;
+  isDefault: boolean;
+  isOriginal: boolean;
+  postfixTitle: string;
+  description: string;
 }
 
 export interface RecipeCreatorInfo {

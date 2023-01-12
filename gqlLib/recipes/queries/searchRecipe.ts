@@ -52,6 +52,13 @@ const SEARCH_RECIPE = gql`
           displayName
           image
         }
+        recipeVersion {
+          _id
+          isDefault
+          isOriginal
+          postfixTitle
+          description
+        }
       }
       totalRecipes
     }

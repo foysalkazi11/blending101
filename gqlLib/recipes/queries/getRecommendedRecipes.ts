@@ -41,6 +41,13 @@ const GET_ALL_RECOMMENDED_RECIPES = gql`
         displayName
         image
       }
+      recipeVersion {
+        _id
+        isDefault
+        isOriginal
+        postfixTitle
+        description
+      }
     }
   }
 `;

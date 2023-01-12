@@ -41,6 +41,13 @@ const GET_ALL_LATEST_RECIPES = gql`
         displayName
         image
       }
+      recipeVersion {
+        _id
+        isDefault
+        isOriginal
+        postfixTitle
+        description
+      }
     }
   }
 `;
