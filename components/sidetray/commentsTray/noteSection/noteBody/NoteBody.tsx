@@ -103,7 +103,10 @@ const NoteBody = ({
                   </span>
                   {isFromRecipePage === "edit" ||
                   (isFromRecipePage === "details" && item?.isDefault) ? (
-                    <Tooltip content="Default" direction="left">
+                    <Tooltip
+                      content={item?.isDefault ? "Default" : "Make default"}
+                      direction="left"
+                    >
                       <span
                         onClick={() =>
                           isFromRecipePage === "edit" &&

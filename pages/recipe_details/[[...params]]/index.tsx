@@ -11,6 +11,8 @@ import {
 } from "../../../redux/slices/versionTraySlice";
 import { GiGl } from "../../../type/nutrationType";
 import useToGetARecipe from "../../../customHooks/useToGetARecipe";
+import SkeletonRecipeDetails from "../../../theme/skeletons/skeletonRecipeDetails";
+import AContainer from "../../../containers/A.container";
 
 const Index = () => {
   const router = useRouter();
@@ -55,6 +57,14 @@ const Index = () => {
   const recipeBasedNutrition =
     nutritionData?.getNutrientsListAndGiGlByIngredients?.nutrients;
   const giGl: GiGl = nutritionData?.getNutrientsListAndGiGlByIngredients?.giGl;
+
+  if (recipeLoading) {
+    return (
+      <AContainer showHeader={true} logo={true}>
+        <SkeletonRecipeDetails />;
+      </AContainer>
+    );
+  }
 
   return (
     <RecipeDetails
