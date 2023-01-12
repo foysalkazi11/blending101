@@ -197,6 +197,7 @@ const ShowRecipes = ({
               isMatch={item?.isMatch}
               postfixTitle={item?.defaultVersion?.postfixTitle}
               userId={item?.userId}
+              recipeVersion={item?.recipeVersion}
             />
           </div>
         );
