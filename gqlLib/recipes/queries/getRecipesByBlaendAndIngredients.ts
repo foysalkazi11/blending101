@@ -35,6 +35,13 @@ const GET_RECIPES_BY_BLEND_AND_INGREDIENTS = gql`
         postfixTitle
       }
       isMatch
+      recipeVersion {
+        _id
+        isDefault
+        isOriginal
+        postfixTitle
+        description
+      }
     }
   }
 `;

@@ -260,29 +260,32 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
       )}
     >
       <div className={styles.versionContainer}>
-        <div className={styles.header}>
-          <div className={styles.headingLeft}>
-            <FontAwesomeIcon
-              icon={faRectangleVerticalHistory}
-              color="#7cbc39"
-            />
-            <h3 className={styles.text}>Recipe versions</h3>
+        {detailsARecipe?.recipeVersion?.length >= 2 ? (
+          <div className={styles.header}>
+            <div className={styles.headingLeft}>
+              <FontAwesomeIcon
+                icon={faRectangleVerticalHistory}
+                color="#7cbc39"
+              />
+              <h3 className={styles.text}>Recipe versions</h3>
+            </div>
+            <div
+              className={styles.headingRight}
+              onClick={() =>
+                router.push(
+                  `/versionCompare/${
+                    detailsARecipe?._id || isOriginalVersion?._id
+                  }`,
+                )
+              }
+            >
+              <Tooltip content="Compare versions" direction="left">
+                <FontAwesomeIcon icon={faScaleBalanced} color="#7cbc39" />
+              </Tooltip>
+            </div>
           </div>
-          <div
-            className={styles.headingRight}
-            onClick={() =>
-              router.push(
-                `/versionCompare/${
-                  detailsARecipe?._id || isOriginalVersion?._id
-                }`,
-              )
-            }
-          >
-            <Tooltip content="Compare versions" direction="left">
-              <FontAwesomeIcon icon={faScaleBalanced} color="#7cbc39" />
-            </Tooltip>
-          </div>
-        </div>
+        ) : null}
+
         <div className={styles.recipeName}>
           <img
             src={detailsARecipe?.image?.find((img) => img?.default)?.image}

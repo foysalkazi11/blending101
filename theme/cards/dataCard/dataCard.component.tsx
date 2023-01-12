@@ -14,8 +14,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisVertical } from "@fortawesome/pro-solid-svg-icons";
 import { faUser } from "@fortawesome/pro-light-svg-icons";
 import Tooltip from "../../toolTip/CustomToolTip";
-import { RecipeCreatorInfo } from "../../../type/recipeType";
+import {
+  RecipeCreatorInfo,
+  RecipeSmallVersionType,
+} from "../../../type/recipeType";
 import useHover from "../../../components/utility/useHover";
+import { faRectangleVerticalHistory } from "@fortawesome/pro-light-svg-icons";
 
 interface dataCardInterface {
   title: string;
@@ -46,6 +50,7 @@ interface dataCardInterface {
   customMenu?: React.ReactNode | null;
   showMoreMenuAtHover?: boolean;
   description?: string;
+  recipeVersion?: RecipeSmallVersionType[];
 }
 
 export default function DatacardComponent({
@@ -77,6 +82,7 @@ export default function DatacardComponent({
   customMenu = null,
   showMoreMenuAtHover = false,
   description = "",
+  recipeVersion = [],
 }: dataCardInterface) {
   title = title || "Triple Berry Smoothie";
   ingredients = ingredients;
@@ -175,16 +181,18 @@ export default function DatacardComponent({
   const hangleShowCommentsAndNotesIcon = (comments: number, notes: number) => {
     const res = selectCommentsAndNotesIcon(comments, notes);
     return (
-      <>
-        <img
-          src={`/icons/${res?.icon}.svg`}
-          alt="icon"
-          onClick={(e) => handleOpenCommentsTray(recipeId, title, image, e)}
-        />{" "}
-        <span style={{ color: res?.amount ? "#7cbc39" : "#c4c4c4" }}>
-          {res?.amount}
-        </span>
-      </>
+      <Tooltip direction="left" content="Comments & Notes">
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <img
+            src={`/icons/${res?.icon}.svg`}
+            alt="icon"
+            onClick={(e) => handleOpenCommentsTray(recipeId, title, image, e)}
+          />{" "}
+          <span style={{ color: res?.amount ? "#7cbc39" : "#c4c4c4" }}>
+            {res?.amount}
+          </span>
+        </div>
+      </Tooltip>
     );
   };
 
@@ -282,43 +290,58 @@ export default function DatacardComponent({
           <div className={styles.datacard__body__bottom__right}>
             <ul>
               <li>
-                <img
-                  src={
-                    addedToCompare
-                      ? "/icons/compare-1.svg"
-                      : "/icons/eclipse.svg"
-                  }
-                  alt="icon"
-                  onClick={(e) =>
-                    handleChangeCompare(
-                      e,
-                      recipeId,
-                      addedToCompare ? false : true,
-                      compareRecipeList,
-                      setcompareRecipeList,
-                    )
-                  }
-                />
+                {recipeVersion?.length >= 2 ? (
+                  <Tooltip direction="top" content="Versions">
+                    <FontAwesomeIcon
+                      icon={faRectangleVerticalHistory}
+                      color="#7cbc39"
+                      onClick={() => router.push(`/versionCompare/${recipeId}`)}
+                    />
+                  </Tooltip>
+                ) : null}
               </li>
               <li>
-                <img
-                  src={
-                    isCollectionIds?.length
-                      ? "/icons/compare.svg"
-                      : "/images/BookmarksStar.svg"
-                  }
-                  alt="compare"
-                  onClick={(e) =>
-                    isCollectionIds?.length
-                      ? handleOpenCollectionTray(recipeId, isCollectionIds, e)
-                      : handleAddToCollection(
-                          recipeId,
-                          setOpenCollectionModal,
-                          e,
-                          setcompareRecipeList,
-                        )
-                  }
-                />
+                <Tooltip direction="top" content="Compare">
+                  <img
+                    src={
+                      addedToCompare
+                        ? "/icons/compare-1.svg"
+                        : "/icons/eclipse.svg"
+                    }
+                    alt="icon"
+                    onClick={(e) =>
+                      handleChangeCompare(
+                        e,
+                        recipeId,
+                        addedToCompare ? false : true,
+                        compareRecipeList,
+                        setcompareRecipeList,
+                      )
+                    }
+                  />
+                </Tooltip>
+              </li>
+              <li>
+                <Tooltip direction="top" content="Collection">
+                  <img
+                    src={
+                      isCollectionIds?.length
+                        ? "/icons/compare.svg"
+                        : "/images/BookmarksStar.svg"
+                    }
+                    alt="compare"
+                    onClick={(e) =>
+                      isCollectionIds?.length
+                        ? handleOpenCollectionTray(recipeId, isCollectionIds, e)
+                        : handleAddToCollection(
+                            recipeId,
+                            setOpenCollectionModal,
+                            e,
+                            setcompareRecipeList,
+                          )
+                    }
+                  />
+                </Tooltip>
               </li>
               <li>{hangleShowCommentsAndNotesIcon(noOfComments, notes)}</li>
             </ul>
