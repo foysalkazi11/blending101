@@ -1,16 +1,4 @@
 import React, { useMemo } from "react";
-import {
-  ResponsiveContainer,
-  Legend,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  LabelList,
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts";
 import { faLightbulbOn } from "@fortawesome/pro-light-svg-icons";
 import HSBar from "react-horizontal-stacked-bar-chart";
 
@@ -20,6 +8,8 @@ import styles from "./Insights.module.scss";
 import { useQuery } from "@apollo/client";
 import { GET_BLEND_CATEGORY } from "../../../graphql/Recipe";
 import { RECIPE_CATEGORY_COLOR } from "../../../data/Recipe";
+import TopIngredients from "../../molecules/Charts/TopIngredients.component";
+import MacroMakeup from "../../molecules/Charts/MacroMakeup.component";
 
 interface InsightsProps {
   categories: any[];
@@ -48,7 +38,7 @@ const Insights = (props: InsightsProps) => {
         </div>
         <BlendType categories={categories} />
         <TopIngredients ingredients={ingredients} />
-        <MacroMakeup />
+        <MacroMakeup showBar={false} />
       </div>
     </div>
   );
@@ -100,106 +90,54 @@ const BlendType = ({ categories }) => {
   );
 };
 
-const renderCustomizedLabel = ({ x, y, value }) => (
-  <image x={x - 40} y={y - 5} href={value} height="28" width="28" />
-);
+// const renderLegend = (props) => {
+//   const { payload } = props;
+//   return (
+//     <ul className={styles.insights__legend}>
+//       {payload.map((entry, index) => (
+//         <li key={`item-${index}`}>
+//           {entry?.value}
+//           <span style={{ backgroundColor: entry?.color }}>
+//             {entry?.payload?.value}
+//           </span>
+//         </li>
+//       ))}
+//     </ul>
+//   );
+// };
 
-const renderIngredientName = ({ x, y, value }) => (
-  <text name={value} x={x} y={y} width="246.75" height="22" offset="35">
-    <tspan x="100" dy="1em">
-      {value}
-    </tspan>
-  </text>
-);
+// const MacroMakeup = () => (
+//   <div className={styles.insights__graph}>
+//     <h3 className="mb-20">RX Score</h3>
+//     <ResponsiveContainer width={"100%"} height={200}>
+//       <PieChart margin={{ top: 120 }}>
+//         <Pie
+//           data={macroMakeup}
+//           startAngle={180}
+//           endAngle={0}
+//           innerRadius={100}
+//           outerRadius={140}
+//           fill="#8884d8"
+//           dataKey="value"
+//         >
+//           {macroMakeup.map((entry, index) => (
+//             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+//           ))}
+//         </Pie>
+//         <Legend
+//           verticalAlign="bottom"
+//           height={36}
+//           margin={{ top: 80 }}
+//           content={renderLegend}
+//         />
+//       </PieChart>
+//     </ResponsiveContainer>
+//   </div>
+// );
 
-const TopIngredients = ({ ingredients }) => {
-  return (
-    <div className="mb-50">
-      <div className={styles.insights__graph}>
-        <h3>Top Ingredients</h3>
-        <h5>Servings</h5>
-        <ResponsiveContainer width="100%" height={170}>
-          <BarChart layout="vertical" data={ingredients}>
-            <XAxis hide type="number" />
-            <YAxis
-              tickLine={false}
-              padding={{ top: 20 }}
-              axisLine={false}
-              type="category"
-              dataKey="&nbsp;"
-            />
-            <Bar dataKey="count" fill="#FFA482" layout="vertical">
-              <LabelList
-                dataKey="featuredImage"
-                position="left"
-                content={renderCustomizedLabel}
-              />
-              <LabelList
-                dataKey="count"
-                position="insideLeft"
-                formatter={(value) => `${value} | `}
-              />
-              <LabelList
-                dataKey="name"
-                position="insideLeft"
-                content={renderIngredientName}
-              />
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-    </div>
-  );
-};
-
-const renderLegend = (props) => {
-  const { payload } = props;
-  return (
-    <ul className={styles.insights__legend}>
-      {payload.map((entry, index) => (
-        <li key={`item-${index}`}>
-          {entry?.value}
-          <span style={{ backgroundColor: entry?.color }}>
-            {entry?.payload?.value}
-          </span>
-        </li>
-      ))}
-    </ul>
-  );
-};
-
-const MacroMakeup = () => (
-  <div className={styles.insights__graph}>
-    <h3 className="mb-20">RX Score</h3>
-    <ResponsiveContainer width={"100%"} height={200}>
-      <PieChart margin={{ top: 120 }}>
-        <Pie
-          data={macroMakeup}
-          startAngle={180}
-          endAngle={0}
-          innerRadius={100}
-          outerRadius={140}
-          fill="#8884d8"
-          dataKey="value"
-        >
-          {macroMakeup.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-          ))}
-        </Pie>
-        <Legend
-          verticalAlign="bottom"
-          height={36}
-          margin={{ top: 80 }}
-          content={renderLegend}
-        />
-      </PieChart>
-    </ResponsiveContainer>
-  </div>
-);
-
-const macroMakeup = [
-  { name: "Carbs", value: 400 },
-  { name: "Fats", value: 300 },
-  { name: "Protein", value: 300 },
-];
-const COLORS = ["#B9EB84", "#66A7FF", "#FF8252"];
+// const macroMakeup = [
+//   { name: "Carbs", value: 400 },
+//   { name: "Fats", value: 300 },
+//   { name: "Protein", value: 300 },
+// ];
+// const COLORS = ["#B9EB84", "#66A7FF", "#FF8252"];

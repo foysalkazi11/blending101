@@ -136,9 +136,9 @@ export const GET_PLANNER_BY_WEEK = gql`
         formatedDate
       }
       topIngredients {
-        featuredImage
-        name
-        count
+        icon: featuredImage
+        label: name
+        quantity: count
       }
       recipeCategoriesPercentage {
         _id
@@ -296,9 +296,9 @@ export const GET_PLAN = gql`
         }
       }
       topIngredients {
-        name
-        count
-        featuredImage
+        icon: featuredImage
+        label: name
+        quantity: count
       }
       recipeCategoriesPercentage {
         name
