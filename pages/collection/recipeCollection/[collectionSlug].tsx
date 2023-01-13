@@ -17,6 +17,7 @@ import { faHeart, faStar } from "@fortawesome/pro-regular-svg-icons";
 
 const CollectionRecipes = () => {
   const router = useRouter();
+  const shareBy = router.query?.shareBy as string;
   const slug = router.query?.collectionSlug as string;
   const [title, setTitle] = useState("");
   const [icon, setIcon] = useState("");
@@ -47,13 +48,15 @@ const CollectionRecipes = () => {
         setRecipes(res?.data?.getAllMyCreatedRecipes);
       });
     } else {
-      getCustomRecipes({ variables: { userId, slug } }).then((res: any) => {
+      getCustomRecipes({
+        variables: { userId, slug, creatorId: shareBy || "" },
+      }).then((res: any) => {
         setTitle(res?.data?.getASingleCollection?.name);
         setIcon(res?.data?.getASingleCollection?.image);
         setRecipes(res?.data?.getASingleCollection?.recipes);
       });
     }
-  }, [getAllRecipes, getCustomRecipes, getMyRecipes, slug, userId]);
+  }, [getAllRecipes, getCustomRecipes, getMyRecipes, shareBy, slug, userId]);
 
   return (
     <AContainer
