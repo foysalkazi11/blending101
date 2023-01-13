@@ -178,7 +178,7 @@ export default function DatacardComponent({
     </>
   );
 
-  const hangleShowCommentsAndNotesIcon = (comments: number, notes: number) => {
+  const handleShowCommentsAndNotesIcon = (comments: number, notes: number) => {
     const res = selectCommentsAndNotesIcon(comments, notes);
     return (
       <Tooltip direction="left" content="Comments & Notes">
@@ -291,7 +291,10 @@ export default function DatacardComponent({
             <ul>
               <li>
                 {recipeVersion?.length >= 2 ? (
-                  <Tooltip direction="top" content="Versions">
+                  <Tooltip
+                    direction="top"
+                    content={`Versions(${recipeVersion?.length - 1})`}
+                  >
                     <FontAwesomeIcon
                       icon={faRectangleVerticalHistory}
                       color="#7cbc39"
@@ -343,7 +346,7 @@ export default function DatacardComponent({
                   />
                 </Tooltip>
               </li>
-              <li>{hangleShowCommentsAndNotesIcon(noOfComments, notes)}</li>
+              <li>{handleShowCommentsAndNotesIcon(noOfComments, notes)}</li>
             </ul>
           </div>
         </div>
