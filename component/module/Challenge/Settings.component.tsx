@@ -32,6 +32,7 @@ import {
   DELETE_CHALLENGE,
   EDIT_CHALLENGE,
   GET_CHALLENGES,
+  INVITE_CHALLENGE,
 } from "../../../graphql/Challenge";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import Publish from "../../../helpers/Publish";
@@ -126,7 +127,7 @@ const ChallengeList = ({
 }) => {
   const [show, setShow] = useState(false);
   const [activeId, setActiveId] = useState("");
-  const [challengeInfo, setChallengeInfo] = useState({});
+  const [challengeInfo, setChallengeInfo] = useState<any>({});
 
   const dispatch = useAppDispatch();
   const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
@@ -137,6 +138,33 @@ const ChallengeList = ({
   const [deleteChallenge, deleteState] = useMutation(DELETE_CHALLENGE, {
     refetchQueries: ["GetAllChallenges"],
   });
+
+  const [inviteChallenge, { loading: inviteChallengeLoading }] =
+    useMutation(INVITE_CHALLENGE);
+  const [emails, setEmails] = useState([]);
+  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+
+  const handleInvitation = () => {
+    if (emails.length === 0) return;
+    inviteChallenge({
+      variables: {
+        shareWithOther: false,
+        emails,
+        user: userId,
+        challengeId: challengeInfo?.id,
+      },
+    }).then((response) => {
+      setShow(false);
+      navigator.clipboard.writeText(
+        `${process.env.NEXT_PUBLIC_HOSTING_DOMAIN}/challenge/invited/?id=${response.data.inviteToChallenge}`,
+      );
+    });
+  };
+
+  const resetModal = () => {
+    setEmails([]);
+    setShow(false);
+  };
 
   const activeHandler = async (challengeId) => {
     await Publish({
@@ -169,7 +197,16 @@ const ChallengeList = ({
 
   return (
     <Fragment>
-      <Invite show={show} setShow={setShow} {...challengeInfo} />
+      <Invite
+        show={show}
+        setShow={setShow}
+        {...challengeInfo}
+        emails={emails}
+        setEmails={setEmails}
+        handleCancel={resetModal}
+        handleInvitation={handleInvitation}
+        loading={inviteChallengeLoading}
+      />
       <div className="row mb-10 mt-10">
         <div className="col-1" />
         <div className="col-4">

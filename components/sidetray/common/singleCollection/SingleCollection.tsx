@@ -12,6 +12,7 @@ import { setChangeRecipeWithinCollection } from "../../../../redux/slices/collec
 import { setOpenCollectionsTary } from "../../../../redux/slices/sideTraySlice";
 import CustomCheckbox from "../../../../theme/checkbox/CustomCheckbox";
 import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
+import Tooltip from "../../../../theme/toolTip/CustomToolTip";
 import useHover from "../../../utility/useHover";
 import styles from "./SingleMenu.module.scss";
 
@@ -30,6 +31,7 @@ interface IndividualCollectionType {
   menuIndex?: number;
   setMenuIndex?: Dispatch<SetStateAction<number>>;
   handleDeleteCollection?: (id: string) => void;
+  handleShareCollection?: (id: string, name: string) => void;
   handleEditCollection?: (
     id: string,
     name: string,
@@ -38,6 +40,15 @@ interface IndividualCollectionType {
   ) => void;
   deleteCollectionLoading?: boolean;
   collectionRoute: "recipeCollection" | "blogCollection" | "planCollection";
+  isShared?: boolean;
+  sharedBy?: {
+    _id?: string;
+    email?: string;
+    firstName?: string;
+    displayName?: string;
+    lastName?: string;
+    image?: string;
+  };
 }
 
 const SingleCollection = ({
@@ -55,9 +66,19 @@ const SingleCollection = ({
   menuIndex = 0,
   setMenuIndex = () => {},
   handleDeleteCollection = () => {},
+  handleShareCollection = () => {},
   handleEditCollection = () => {},
   deleteCollectionLoading = false,
   collectionRoute = "recipeCollection",
+  isShared = false,
+  sharedBy = {
+    _id: "",
+    displayName: "",
+    email: "",
+    firstName: "",
+    image: "",
+    lastName: "",
+  },
 }: IndividualCollectionType) => {
   const [hoverRef, isHovered] = useHover();
   const router = useRouter();
@@ -85,7 +106,11 @@ const SingleCollection = ({
         <div
           className={styles.leftSide}
           onClick={() =>
-            handleCollectionRoute(`/collection/${collectionRoute}/${slug}`)
+            handleCollectionRoute(
+              `/collection/${collectionRoute}/${slug}${
+                isShared ? "?shareBy=" + sharedBy?._id : ""
+              }`,
+            )
           }
         >
           <div className={styles.img}>
@@ -108,7 +133,7 @@ const SingleCollection = ({
               />
             </div>
           ) : isHovered ? (
-            name === "My Favorite" ? (
+            name === "My Favorite" || isShared ? (
               <p style={{ marginRight: "10px" }}>{collectionItemLength}</p>
             ) : (
               <div
@@ -125,30 +150,37 @@ const SingleCollection = ({
                     menuIndex === index ? styles.showMenu : ""
                   }`}
                 >
-                  <FontAwesomeIcon
-                    icon={faPencil}
-                    className={styles.icon}
-                    onClick={() =>
-                      handleEditCollection(id, name, slug, description)
-                    }
-                  />
+                  <Tooltip content="Edit" direction="top">
+                    <FontAwesomeIcon
+                      icon={faPencil}
+                      className={styles.icon}
+                      onClick={() =>
+                        handleEditCollection(id, name, slug, description)
+                      }
+                    />
+                  </Tooltip>
+
                   {deleteCollectionLoading ? (
                     <CircularRotatingLoader
                       color="primary"
                       style={{ fontSize: "16px" }}
                     />
                   ) : (
-                    <FontAwesomeIcon
-                      icon={faTrash}
-                      className={styles.icon}
-                      onClick={() => handleDeleteCollection(id)}
-                    />
+                    <Tooltip content="Delete" direction="top">
+                      <FontAwesomeIcon
+                        icon={faTrash}
+                        className={styles.icon}
+                        onClick={() => handleDeleteCollection(id)}
+                      />
+                    </Tooltip>
                   )}
-
-                  <FontAwesomeIcon
-                    icon={faShareNodes}
-                    className={styles.icon}
-                  />
+                  <Tooltip content="Share" direction="top">
+                    <FontAwesomeIcon
+                      icon={faShareNodes}
+                      className={styles.icon}
+                      onClick={() => handleShareCollection(id, name)}
+                    />
+                  </Tooltip>
                 </div>
               </div>
             )

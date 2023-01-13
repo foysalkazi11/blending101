@@ -136,6 +136,7 @@ const EditRecipePage = ({
             editOrSavebtnFunc={editARecipeFunction}
             editOrSavebtnText="Save"
             pageComeFrom="edit"
+            recipeVersionLength={copyDetailsRecipe?.recipeVersion?.length}
           />
           <Center_Elements
             copyDetailsRecipe={copyDetailsRecipe}

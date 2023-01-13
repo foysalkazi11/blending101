@@ -4,7 +4,11 @@ import {
   faPinterest,
   faTwitter,
 } from "@fortawesome/free-brands-svg-icons";
-import { faLinkSimple, faShareNodes } from "@fortawesome/pro-regular-svg-icons";
+import {
+  faLinkSimple,
+  faShareNodes,
+  faUserGroup,
+} from "@fortawesome/pro-regular-svg-icons";
 import {
   FacebookShareButton,
   PinterestShareButton,
@@ -27,10 +31,19 @@ interface ShareProps {
   image: string;
   show: boolean;
   setShow: any;
+  heading?: string;
 }
 
 const Share = (props: ShareProps) => {
-  const { id, title, image, type, show, setShow } = props;
+  const {
+    id,
+    title,
+    image,
+    type,
+    show,
+    setShow,
+    heading = "Share Recipe",
+  } = props;
   const [createShareLink, { data, loading: createLinkLoading }] =
     useMutation(CREATE_SHARE_LINK);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -108,7 +121,7 @@ const Share = (props: ShareProps) => {
       <div className={styles.share}>
         <div className={styles.share__header}>
           <Icon fontName={faShareNodes} size="2.5rem" />
-          <h3>Share Recipe</h3>
+          <h3>{heading}</h3>
         </div>
         <div className={styles.share__title}>
           <img src={image || "/cards/coriander.png"} alt="" />
@@ -130,7 +143,7 @@ const Share = (props: ShareProps) => {
               className={styles.share__link_btn}
               onClick={() => setShowMsgField(true)}
             >
-              <Icon fontName={faShareNodes} size="2rem" className="mr-10" />
+              <Icon fontName={faUserGroup} size="2rem" className="mr-10" />
               <p style={{ flexShrink: 0 }}>Find users</p>
             </button>
             <SharePanel

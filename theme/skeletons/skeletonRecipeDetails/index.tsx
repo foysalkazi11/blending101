@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import randomNum from "../randomNum";
 import SkeletonElement from "../SkeletonElement";
 import styles from "./SkeletonRecipeDetails.module.scss";
@@ -47,60 +47,72 @@ export const RecipeDetailsRightSide = () => (
     </div>
   </div>
 );
-export const RecipeDetailsMiddle = () => (
-  <>
-    <SkeletonElement type="title" />
-    <div className={`${styles.containerBorder}`}>
-      <SkeletonElement type="title" style={{ width: "100%" }} />
+export const RecipeDetailsMiddle = () => {
+  const makeRandomPercent = useMemo(() => randomNum(), []);
+  return (
+    <>
       <SkeletonElement type="title" />
-      <SkeletonElement type="text" style={{ marginBottom: "20px" }} />
-      <SkeletonElement
-        type="thumbnail"
-        style={{ height: "250px", width: "100%" }}
-      />
-      <SkeletonElement type="text" style={{ marginBottom: "20px" }} />
-    </div>
-    <div style={{ marginTop: "30px" }} className={`${styles.containerBorder}`}>
-      <SkeletonElement type="title" />
-      <div>
-        {[...Array(4)].map((item, index) => {
-          return (
-            <div key={index} style={{ display: "flex", alignItems: "center" }}>
-              <SkeletonElement
-                type="avatar"
-                style={{
-                  marginRight: "20px",
-                  width: "30px",
-                  height: "30px",
-                }}
-              />
-              <SkeletonElement
-                type="text"
-                style={{ width: `${randomNum()}%`, margin: "5px 0" }}
-              />
-            </div>
-          );
-        })}
+      <div className={`${styles.containerBorder}`}>
+        <SkeletonElement type="title" style={{ width: "100%" }} />
+        <SkeletonElement type="title" />
+        <SkeletonElement type="text" style={{ marginBottom: "20px" }} />
+        <SkeletonElement
+          type="thumbnail"
+          style={{ height: "250px", width: "100%" }}
+        />
+        <SkeletonElement type="text" style={{ marginBottom: "20px" }} />
       </div>
-    </div>
-    <div style={{ marginTop: "30px" }} className={`${styles.containerBorder}`}>
-      <SkeletonElement type="title" />
-      <div>
-        {[...Array(2)].map((item, index) => {
-          return (
-            <div key={index} style={{ marginTop: "30px" }}>
-              <SkeletonElement type="title" style={{}} />
-              <SkeletonElement type="text" />
-              <SkeletonElement
-                type="text"
-                style={{ width: `${randomNum()}%`, margin: "5px 0" }}
-              />
-            </div>
-          );
-        })}
+      <div
+        style={{ marginTop: "30px" }}
+        className={`${styles.containerBorder}`}
+      >
+        <SkeletonElement type="title" />
+        <div>
+          {[...Array(4)].map((item, index) => {
+            return (
+              <div
+                key={index}
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                <SkeletonElement
+                  type="avatar"
+                  style={{
+                    marginRight: "20px",
+                    width: "30px",
+                    height: "30px",
+                  }}
+                />
+                <SkeletonElement
+                  type="text"
+                  style={{ width: `${makeRandomPercent}%`, margin: "5px 0" }}
+                />
+              </div>
+            );
+          })}
+        </div>
       </div>
-    </div>
-  </>
-);
+      <div
+        style={{ marginTop: "30px" }}
+        className={`${styles.containerBorder}`}
+      >
+        <SkeletonElement type="title" />
+        <div>
+          {[...Array(2)].map((item, index) => {
+            return (
+              <div key={index} style={{ marginTop: "30px" }}>
+                <SkeletonElement type="title" style={{}} />
+                <SkeletonElement type="text" />
+                <SkeletonElement
+                  type="text"
+                  style={{ width: `${makeRandomPercent}%`, margin: "5px 0" }}
+                />
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </>
+  );
+};
 
 export default SkeletonRecipeDetails;
