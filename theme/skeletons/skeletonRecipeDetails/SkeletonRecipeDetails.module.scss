@@ -1,17 +1,5 @@
-@import "../../styles/partials/variables";
-@import "../../styles/partials/mixin";
-
-.ordinaryPageLayout {
-  width: 100%;
-  max-width: $_3xl;
-  margin: 20px auto;
-  padding: 0 10px;
-
-  @include media(lg) {
-    margin: 40px auto 20px auto;
-    padding: 0 16px;
-  }
-}
+@import "../../../styles/partials/variables";
+@import "../../../styles/partials/mixin";
 
 .main {
   min-height: 100vh;
@@ -39,6 +27,13 @@
   @include media(xl) {
     display: block !important;
   }
+
+  .content {
+    display: flex;
+    column-gap: 16px;
+    align-items: center;
+    flex-direction: column;
+  }
 }
 
 .center {
@@ -47,4 +42,12 @@
 
 .right {
   width: 100%;
+}
+
+.containerBorder {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
 }

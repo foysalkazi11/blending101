@@ -3,9 +3,13 @@ import useWindowSize from "../../../components/utility/useWindowSize";
 import SkeletonElement from "../SkeletonElement";
 import styles from "./SkeletonRecipeDiscovery.module.scss";
 
-const SkeletonRecipeDiscovery = () => {
+const SkeletonRecipeDiscovery = ({
+  style = {},
+}: {
+  style?: React.CSSProperties;
+}) => {
   const [slideSize, setSlideSize] = useState(4);
-  const { height, width } = useWindowSize();
+  const { width } = useWindowSize();
 
   useEffect(() => {
     if (width <= 600) {
@@ -22,7 +26,7 @@ const SkeletonRecipeDiscovery = () => {
   }, [width]);
   return (
     <>
-      <div className={styles.sectionContainer}>
+      <div className={styles.sectionContainer} style={style}>
         <SkeletonElement type="title" style={{ marginBottom: "20px" }} />
         <div className={styles.content}>
           {[...Array(slideSize)]?.map((item, index) => {

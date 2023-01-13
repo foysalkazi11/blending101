@@ -1,8 +1,7 @@
 import { useLazyQuery } from "@apollo/client";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useCallback } from "react";
 import notification from "../components/utility/reactToastifyNotification";
 import GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS from "../gqlLib/nutrition/query/getNutrientsListAndGiGlByIngredients";
-import GET_BLEND_NUTRITION_BASED_ON_RECIPE_XXX from "../gqlLib/recipes/queries/getBlendNutritionBasedOnRecipeXxx";
 
 interface IngredientsInfo {
   ingredientId: string;
@@ -15,7 +14,6 @@ const useGetBlendNutritionBasedOnRecipexxx = (
   SetcalculateIngOz: Dispatch<SetStateAction<number>> = () => {},
   isRecipeDetailsPage: boolean = false,
 ) => {
-  // console.log(selectedIngredientsList);
   const [getNutrientsListAndGiGlByIngredients, { loading, data, error }] =
     useLazyQuery(GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS);
 
@@ -31,7 +29,7 @@ const useGetBlendNutritionBasedOnRecipexxx = (
     }
   };
 
-  useEffect(() => {
+  const handleFetchIngrdients = useCallback(() => {
     if (isRecipeDetailsPage) {
       if (nutritionState?.ingredientId?._id) {
         // Single Ingredient Details
@@ -92,6 +90,10 @@ const useGetBlendNutritionBasedOnRecipexxx = (
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedIngredientsList, nutritionState]);
+
+  useEffect(() => {
+    handleFetchIngrdients();
+  }, [handleFetchIngrdients]);
 
   return { data, loading, error };
 };

@@ -1,30 +1,33 @@
-import { useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import RecipeDetails from "../../../components/recipe/recipeDetails/RecipeDetails";
 import { GET_RECIPE } from "../../../gqlLib/recipes/queries/getRecipeDetails";
 import { useRouter } from "next/router";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import useGetBlendNutritionBasedOnRecipexxx from "../../../customHooks/useGetBlendNutritionBasedOnRecipexxx";
-import { setDetailsARecipe } from "../../../redux/slices/recipeSlice";
 import {
   setOpenVersionTray,
   setOpenVersionTrayFormWhichPage,
 } from "../../../redux/slices/versionTraySlice";
-import { RecipeVersionType } from "../../../type/recipeVersionType";
-import { RecipeDetailsType } from "../../../type/recipeDetails";
 import { GiGl } from "../../../type/nutrationType";
+import useToGetARecipe from "../../../customHooks/useToGetARecipe";
+import SkeletonRecipeDetails from "../../../theme/skeletons/skeletonRecipeDetails";
+import AContainer from "../../../containers/A.container";
 
 const Index = () => {
   const router = useRouter();
-  const { recipe__Id } = router.query;
+  const { params = [], token = "" } = router.query;
+  const recipe__Id = params?.[0] || "";
+  const versionId = params?.[1] || "";
   const [nutritionState, setNutritionState] = useState(null);
   const { dbUser } = useAppSelector((state) => state?.user);
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
   const dispatch = useAppDispatch();
-  const { data: recipeData, loading: recipeLoading } = useQuery(GET_RECIPE, {
-    variables: { recipeId: recipe__Id, userId: dbUser?._id },
+
+  const [getARecipe, { loading: recipeLoading }] = useLazyQuery(GET_RECIPE, {
     fetchPolicy: "cache-and-network",
   });
+  const handleToGetARecipe = useToGetARecipe();
   const { loading: nutritionDataLoading, data: nutritionData } =
     useGetBlendNutritionBasedOnRecipexxx(
       detailsARecipe?.ingredients,
@@ -36,44 +39,32 @@ const Index = () => {
   useEffect(() => {
     dispatch(setOpenVersionTray(false));
     dispatch(setOpenVersionTrayFormWhichPage("details"));
-    dispatch(setDetailsARecipe({} as RecipeDetailsType));
+    // dispatch(setDetailsARecipe({} as RecipeDetailsType));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (!recipeLoading && recipeData?.getARecipe) {
-      const recipe = recipeData?.getARecipe;
-      if (recipe?.originalVersion?._id === recipe?.defaultVersion?._id) {
-        dispatch(
-          setDetailsARecipe({
-            ...recipe,
-            ingredients: recipe?.defaultVersion?.ingredients,
-          }),
-        );
-      } else {
-        const { _id, recipeId, description, ...rest }: RecipeVersionType =
-          recipe?.defaultVersion;
-        const obj = {
-          _id: recipeId,
-          versionId: _id,
-          versionDiscription: description,
-          ...rest,
-        };
-        dispatch(
-          setDetailsARecipe({
-            ...recipe,
-            ...obj,
-          }),
-        );
+    if (detailsARecipe?._id !== recipe__Id) {
+      if (dbUser?._id && recipe__Id) {
+        handleToGetARecipe(recipe__Id, dbUser?._id, getARecipe, token);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [recipeData?.getARecipe, recipeLoading]);
+  }, [recipe__Id, dbUser?._id]);
+
   //@ts-ignore
   const recipeBasedNutrition =
     nutritionData?.getNutrientsListAndGiGlByIngredients?.nutrients;
   const giGl: GiGl = nutritionData?.getNutrientsListAndGiGlByIngredients?.giGl;
+
+  if (recipeLoading) {
+    return (
+      <AContainer showHeader={true} logo={true}>
+        <SkeletonRecipeDetails />;
+      </AContainer>
+    );
+  }
 
   return (
     <RecipeDetails

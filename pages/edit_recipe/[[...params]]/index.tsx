@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import EditRecipePage from "../../../components/recipe/editRecipe/EditRecipe.component";
-import { useMutation, useQuery } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import {
   BLEND_CATEGORY,
   INGREDIENTS_BY_CATEGORY_AND_CLASS,
@@ -27,6 +27,8 @@ import EDIT_A_VERSION_OF_RECIPE from "../../../gqlLib/versions/mutation/editAVer
 import notification from "../../../components/utility/reactToastifyNotification";
 import { RecipeDetailsType } from "../../../type/recipeDetails";
 import { GiGl } from "../../../type/nutrationType";
+import { GET_RECIPE } from "../../../gqlLib/recipes/queries/getRecipeDetails";
+import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
 
 const EditRecipeComponent = () => {
   const router = useRouter();
@@ -52,6 +54,7 @@ const EditRecipeComponent = () => {
       nutritionState,
       SetcalculateIngOz,
     );
+
   const [editAVersionOfRecipe] = useMutation(EDIT_A_VERSION_OF_RECIPE);
 
   const servingCounter = useAppSelector(
@@ -65,40 +68,52 @@ const EditRecipeComponent = () => {
   const selectedBLendCategory = useAppSelector(
     (state) => state?.editRecipeReducer?.selectedBlendCategory,
   );
-  const { data: classData } = useQuery(INGREDIENTS_BY_CATEGORY_AND_CLASS, {
-    variables: { classType: "All" },
-  });
+
   const handleToGetARecipeVersion = useToGetARecipeVersion();
   const { data: allBlendCategory } = useQuery(BLEND_CATEGORY);
   const [editRecipe] = useMutation(EDIT_A_RECIPE);
   const handleToGetARecipe = useToGetARecipe();
+  const [getARecipe] = useLazyQuery(GET_RECIPE, {
+    fetchPolicy: "cache-and-network",
+  });
+  const { data: ingredientCategoryData, loading: ingredientCategoryLoading } =
+    useQuery(FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS, {
+      variables: {
+        data: {
+          ingredientCategory: "All",
+          IngredientClass: 1,
+        },
+      },
+    });
 
   const updateEditRecipe = (key: string, value: any) => {
     setCopyDetailsRecipe((prev) => ({ ...prev, [key]: value }));
   };
 
-  const [classBasedData, allBlendBasedCategory] = [
-    classData?.filterIngredientByCategoryAndClass,
-    allBlendCategory?.getAllCategories,
-  ];
+  useEffect(() => {
+    if (!ingredientCategoryData?.filterIngredientByCategoryAndClass) return;
+    const presentIngredient = [];
+    ingredientCategoryData?.filterIngredientByCategoryAndClass?.forEach(
+      (elem) => {
+        const items = detailsARecipe?.ingredients?.find(
+          (itm) => elem._id === itm?.ingredientId?._id,
+        );
+        if (items) return presentIngredient.push({ ...elem, ...items });
+      },
+    );
+    dispatch(setSelectedIngredientsList(presentIngredient));
+  }, [
+    ingredientCategoryData?.filterIngredientByCategoryAndClass,
+    detailsARecipe,
+  ]);
 
   useEffect(() => {
-    if (!classBasedData || !detailsARecipe) return;
-
+    if (!detailsARecipe) return;
     setCopyDetailsRecipe({ ...detailsARecipe });
-    const presentIngredient = [];
-    classBasedData?.forEach((elem) => {
-      const items = detailsARecipe?.ingredients?.find(
-        (itm) => elem._id === itm?.ingredientId?._id,
-      );
-      if (items) return presentIngredient.push({ ...elem, ...items });
-    });
-
-    dispatch(setSelectedIngredientsList(presentIngredient));
     dispatch(setServingCounter(detailsARecipe?.servings));
     SetcalculateIngOz(detailsARecipe?.servingSize);
     setExistingImages(detailsARecipe?.image?.map((item) => `${item?.image}`));
-  }, [classBasedData, detailsARecipe]);
+  }, [detailsARecipe]);
 
   const updateOrginalRecipe = async (obj: any) => {
     if (images?.length) {
@@ -171,7 +186,7 @@ const EditRecipeComponent = () => {
     };
 
     try {
-      if (detailsARecipe?.versionId) {
+      if (detailsARecipe?.isVersionActive) {
         let obj = {
           editId: detailsARecipe?.versionId,
           editableObject: {
@@ -216,8 +231,8 @@ const EditRecipeComponent = () => {
 
   useEffect(() => {
     if (detailsARecipe?._id !== recipeId) {
-      if (dbUser?._id) {
-        handleToGetARecipe(recipeId, dbUser?._id, false);
+      if (dbUser?._id && recipeId) {
+        handleToGetARecipe(recipeId, dbUser?._id);
       }
     }
   }, [recipeId, dbUser?._id]);
@@ -238,10 +253,12 @@ const EditRecipeComponent = () => {
     <EditRecipePage
       copyDetailsRecipe={copyDetailsRecipe}
       updateEditRecipe={updateEditRecipe}
-      allIngredients={classBasedData}
+      allIngredients={
+        ingredientCategoryData?.filterIngredientByCategoryAndClass
+      }
       nutritionTrayData={nutritionList && JSON.parse(nutritionList)}
       recipeInstructions={copyDetailsRecipe?.recipeInstructions}
-      allBlendCategories={allBlendBasedCategory}
+      allBlendCategories={allBlendCategory?.getAllCategories}
       selectedBLendCategory={copyDetailsRecipe?.recipeBlendCategory?.name}
       editARecipeFunction={editARecipeFunction}
       calculatedIngOz={calculateIngOz}

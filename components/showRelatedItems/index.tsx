@@ -65,6 +65,7 @@ const ShowRelatedItems = ({
                   calorie={item.calorie}
                   noOfComments={item.noOfComments}
                   image={item.image}
+                  recipeVersion={item?.recipeVersion}
                 />
               ) : (
                 <WikiCard
