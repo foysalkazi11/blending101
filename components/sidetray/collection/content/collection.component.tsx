@@ -209,7 +209,7 @@ export default function CollectionComponent({
             sharedBy,
           } = collection;
 
-          return (
+          return changeRecipeWithinCollection && isShared ? null : (
             <SingleCollection
               key={collection?._id}
               name={name}
