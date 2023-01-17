@@ -1,3 +1,4 @@
+import { faHandHolding } from "@fortawesome/free-solid-svg-icons";
 import {
   faPencil,
   faShareNodes,
@@ -122,6 +123,9 @@ const SingleCollection = ({
             ></div>
           </div>
           <p>{name}</p>
+          {isShared && (
+            <FontAwesomeIcon icon={faHandHolding} className={styles.handIcon} />
+          )}
         </div>
 
         {showMoreMenu ? (
