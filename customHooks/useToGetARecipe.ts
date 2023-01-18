@@ -1,5 +1,6 @@
 import { useLazyQuery } from "@apollo/client";
 import { useRouter } from "next/router";
+import notification from "../components/utility/reactToastifyNotification";
 import { GET_RECIPE } from "../gqlLib/recipes/queries/getRecipeDetails";
 import { useAppDispatch } from "../redux/hooks";
 import { setDetailsARecipe } from "../redux/slices/recipeSlice";
@@ -54,7 +55,8 @@ const useToGetARecipe = () => {
 
       dispatch(setOpenVersionTray(false));
     } catch (error) {
-      router.push("/404");
+      notification("error", "Recipe not found");
+      // router.push("/404");
     }
   };
 
