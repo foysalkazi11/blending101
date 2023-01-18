@@ -14,10 +14,12 @@ import CommonSearchBar from "../../../components/searchBar/CommonSearchBar";
 import WikiBanner from "../../../components/wiki/wikiBanner/WikiBanner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faStar } from "@fortawesome/pro-regular-svg-icons";
+import ErrorPage from "../../../components/pages/404Page";
 
 const CollectionRecipes = () => {
   const router = useRouter();
   const shareBy = router.query?.shareBy as string;
+  const token = router.query?.token as string;
   const slug = router.query?.collectionSlug as string;
   const [title, setTitle] = useState("");
   const [icon, setIcon] = useState("");
@@ -31,9 +33,10 @@ const CollectionRecipes = () => {
   const [getMyRecipes, { loading: getMyRecipesLoading }] = useLazyQuery(
     GET_ALL_MY_CREATED_RECIPES,
   );
-  const [getCustomRecipes, { loading: getCustomRecipesLoading }] = useLazyQuery(
-    GET_SINGLE_COLLECTION,
-  );
+  const [
+    getCustomRecipes,
+    { loading: getCustomRecipesLoading, error: getCollectionRecipeError },
+  ] = useLazyQuery(GET_SINGLE_COLLECTION);
 
   useEffect(() => {
     if (!slug) return;
@@ -49,14 +52,31 @@ const CollectionRecipes = () => {
       });
     } else {
       getCustomRecipes({
-        variables: { userId, slug, creatorId: shareBy || "" },
+        variables: {
+          userId,
+          slug,
+          creatorId: shareBy || "",
+          token: token || "",
+        },
       }).then((res: any) => {
         setTitle(res?.data?.getASingleCollection?.name);
         setIcon(res?.data?.getASingleCollection?.image);
         setRecipes(res?.data?.getASingleCollection?.recipes);
       });
     }
-  }, [getAllRecipes, getCustomRecipes, getMyRecipes, shareBy, slug, userId]);
+  }, [
+    getAllRecipes,
+    getCustomRecipes,
+    getMyRecipes,
+    shareBy,
+    token,
+    slug,
+    userId,
+  ]);
+
+  if (getCollectionRecipeError) {
+    return <ErrorPage errorMessage="No collection recipe found" />;
+  }
 
   return (
     <AContainer

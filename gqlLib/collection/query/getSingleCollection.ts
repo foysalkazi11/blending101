@@ -1,12 +1,18 @@
 import { gql } from "@apollo/client";
 
 const GET_SINGLE_COLLECTION = gql`
-  query getASingleCollection(
-    $creatorId: String
+  query GetASingleCollection(
     $userId: String!
     $slug: String!
+    $creatorId: String
+    $token: String
   ) {
-    getASingleCollection(creatorId: $creatorId, userId: $userId, slug: $slug) {
+    getASingleCollection(
+      userId: $userId
+      slug: $slug
+      creatorId: $creatorId
+      token: $token
+    ) {
       name
       image
       recipes {
