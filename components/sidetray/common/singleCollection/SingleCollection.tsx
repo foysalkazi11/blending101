@@ -32,7 +32,12 @@ interface IndividualCollectionType {
   menuIndex?: number;
   setMenuIndex?: Dispatch<SetStateAction<number>>;
   handleDeleteCollection?: (id: string) => void;
-  handleShareCollection?: (id: string, name: string) => void;
+  handleShareCollection?: (
+    id: string,
+    name: string,
+    image: string,
+    slug: string,
+  ) => void;
   handleEditCollection?: (
     id: string,
     name: string,
@@ -182,7 +187,9 @@ const SingleCollection = ({
                     <FontAwesomeIcon
                       icon={faShareNodes}
                       className={styles.icon}
-                      onClick={() => handleShareCollection(id, name)}
+                      onClick={() =>
+                        handleShareCollection(id, name, image, slug)
+                      }
                     />
                   </Tooltip>
                 </div>

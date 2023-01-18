@@ -26,6 +26,7 @@ import IngredientDetails from "../../../../component/module/Recipe/Ingredient-De
 import { RecipeDetailsType } from "../../../../type/recipeDetails";
 import { GiGl } from "../../../../type/nutrationType";
 import Share from "../../../../component/organisms/Share/Distribute.component";
+import ShareRecipe from "./shareRecipe";
 
 interface center {
   recipeData: RecipeDetailsType;
@@ -327,13 +328,14 @@ const Center = ({
           <ShareRecipeModal closeModal={() => setOpenModal(false)} />
         )}
       </Modal>
-      <Share
+      <ShareRecipe
         id={recipeData?._id}
         title={recipeData?.name}
         image={recipeData?.image?.length > 0 ? recipeData?.image[0]?.image : ""}
         show={showShareModal}
         setShow={setShowShareModal}
         type="recipe"
+        heading="Share Recipe"
       />
     </div>
   );
