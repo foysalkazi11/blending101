@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./authScreen.module.scss";
 import LoginScreen from "./screens/loginScreen/Login.component";
 import SignupScreen from "./screens/signupScreen/SignupScreen.component";
 import ForgotPassword from "./screens/forgotPassword/ForgotPassword.component";
 import Footer from "./authComponents/socialTray/footer/footer.component";
 import Reset_password from "./screens/resetPassword/resetPassword.component";
+import { useDispatch } from "react-redux";
+import { updateHeadTagInfo } from "../../redux/slices/headDataSlice";
 
 interface authScreen {
   type: "login" | "signup" | "password_reset" | "forget_password" | "";
@@ -12,6 +14,17 @@ interface authScreen {
 
 const AuthScreen = ({ type }: authScreen) => {
   type = type || "";
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(
+      updateHeadTagInfo({
+        title: `${type}`?.toUpperCase(),
+        description: `${type}`,
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // login screen
   if (type === "login") {

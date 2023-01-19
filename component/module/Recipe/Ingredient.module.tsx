@@ -58,7 +58,7 @@ const IngredientSection = (props) => {
             height={"15px"}
           />
         </div>
-        <h5>Ingredients</h5>
+        <h5>Ingredient List</h5>
       </div>
       <div className={classes.blending__ingredients}>
         <div className={classes.servings}>

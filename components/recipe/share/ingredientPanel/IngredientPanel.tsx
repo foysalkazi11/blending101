@@ -26,7 +26,7 @@ const IngredientPanel = ({
 
   return (
     <div className={styles.ingrdeintpanelWraper}>
-      <PanelHeader icon="/icons/basket.svg" title="Ingredient List" />
+      <PanelHeader icon="/icons/basket.svg" title="Ingredients" />
       <div className={styles.ingrdeintpanelContainer}>
         <FilterbottomComponent
           checkActiveIngredient={checkActive}

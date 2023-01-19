@@ -10,7 +10,6 @@ import {
 
 import CustomModal from "../../../theme/modal/customModal/CustomModal";
 import styles from "../../../theme/shareRecipeModal/ShareRecipeModal.module.scss";
-import { useAppSelector } from "../../../redux/hooks";
 
 interface ShareProps {
   name: string;

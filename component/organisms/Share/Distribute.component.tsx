@@ -1,10 +1,14 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   faFacebook,
   faPinterest,
   faTwitter,
 } from "@fortawesome/free-brands-svg-icons";
-import { faLinkSimple, faShareNodes } from "@fortawesome/pro-regular-svg-icons";
+import {
+  faLinkSimple,
+  faShareNodes,
+  faUserGroup,
+} from "@fortawesome/pro-regular-svg-icons";
 import {
   FacebookShareButton,
   PinterestShareButton,
@@ -13,94 +17,53 @@ import {
 import Icon from "../../atoms/Icon/Icon.component";
 import styles from "./Share.module.scss";
 import CustomModal from "../../../theme/modal/customModal/CustomModal";
-import { useMutation } from "@apollo/client";
-import { CREATE_SHARE_LINK } from "../../../graphql/Share";
-import { useAppSelector } from "../../../redux/hooks";
-import notification from "../../../components/utility/reactToastifyNotification";
 import InviteUserForm from "./InviteUserForm";
 import CircularRotatingLoader from "../../../theme/loader/circularRotatingLoader.component";
 
 interface ShareProps {
-  id: string;
-  title: string;
-  type: "recipe";
-  image: string;
+  title?: string;
+  type?: "recipe";
+  image?: string;
   show: boolean;
   setShow: any;
+  heading?: string;
+  generatedLink?: string;
+  showMsgField?: boolean;
+  setShowMsgField?: React.Dispatch<React.SetStateAction<boolean>>;
+  emails?: string[];
+  setEmails?: React.Dispatch<React.SetStateAction<string[]>>;
+  copyLinkHandler?: (args?: boolean) => Promise<void>;
+  onCancel?: () => void;
+  generateShareLink?: (isGlobalShare?: boolean) => void | Promise<string>;
+  createLinkLoading?: boolean;
+  hasCopied?: boolean;
+  submitBtnText?: string;
 }
 
 const Share = (props: ShareProps) => {
-  const { id, title, image, type, show, setShow } = props;
-  const [createShareLink, { data, loading: createLinkLoading }] =
-    useMutation(CREATE_SHARE_LINK);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [hasCopied, setHasCopied] = useState(false);
-  const [showMsgField, setShowMsgField] = useState(false);
-  const [showSuggestion, setShowSuggestion] = useState(false);
-  const [link, setLink] = useState("");
-  const [emails, setEmails] = useState([]);
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
-  const { detailsARecipe } = useAppSelector((state) => state?.recipe);
-
-  const onInputFocus = () => {
-    setShowMsgField(true);
-    if (inputRef.current) {
-      const inputEl = inputRef.current;
-      inputEl.style.borderColor = "#7dbd3b";
-      inputEl.style.cursor = "text";
-      inputEl.querySelector("input").focus();
-    }
-  };
-
-  const onInputBlur = () => {
-    setShowSuggestion(false);
-    if (inputRef.current) {
-      const inputEl = inputRef.current;
-      inputEl.style.borderColor = "#e5e5e5";
-    }
-  };
-
-  const onCancel = () => {
-    setShowMsgField(false);
-    setEmails([]);
-  };
-
-  const copyLinkHandler = async (isGlobalShare: boolean = true) => {
-    if (!isGlobalShare && !emails.length) {
-      notification("warning", "Please enter email");
-      return;
-    }
-    const link = await generateShareLink(isGlobalShare);
-    navigator.clipboard.writeText(link);
-    notification("success", "Link has been copied in clipboard");
-    setHasCopied(true);
-    // setShow(false);
-  };
-
-  const generateShareLink = async (isGlobalShare: boolean = true) => {
-    try {
-      const response = await createShareLink({
-        variables: {
-          data: {
-            shareData: {
-              recipeId: detailsARecipe._id,
-              version: detailsARecipe.versionId,
-            },
-            shareTo: isGlobalShare ? [] : emails,
-            sharedBy: userId,
-          },
-        },
-      });
-      let link = `https://duacpw47bhqi1.cloudfront.net/recipe_details/${id}?token=${response.data?.createShareLink}`;
-      setLink(link);
-      return link;
-    } catch (error) {
-      notification("error", "Not able to share recipe");
-    }
-  };
+  const {
+    title,
+    image,
+    type,
+    show,
+    setShow,
+    heading = "Share Recipe",
+    generatedLink = "",
+    setShowMsgField = () => {},
+    showMsgField = false,
+    emails = [],
+    setEmails = () => {},
+    copyLinkHandler,
+    createLinkLoading = false,
+    generateShareLink,
+    hasCopied = false,
+    onCancel = () => {},
+    submitBtnText = "Share",
+  } = props;
 
   useEffect(() => {
     setShowMsgField(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -108,7 +71,7 @@ const Share = (props: ShareProps) => {
       <div className={styles.share}>
         <div className={styles.share__header}>
           <Icon fontName={faShareNodes} size="2.5rem" />
-          <h3>Share Recipe</h3>
+          <h3>{heading}</h3>
         </div>
         <div className={styles.share__title}>
           <img src={image || "/cards/coriander.png"} alt="" />
@@ -120,7 +83,7 @@ const Share = (props: ShareProps) => {
             setEmails={setEmails}
             handleCancel={onCancel}
             handleInvitation={() => copyLinkHandler(false)}
-            submitBtnText="Share"
+            submitBtnText={submitBtnText}
             loading={createLinkLoading}
           />
         ) : (
@@ -130,11 +93,11 @@ const Share = (props: ShareProps) => {
               className={styles.share__link_btn}
               onClick={() => setShowMsgField(true)}
             >
-              <Icon fontName={faShareNodes} size="2rem" className="mr-10" />
+              <Icon fontName={faUserGroup} size="2rem" className="mr-10" />
               <p style={{ flexShrink: 0 }}>Find users</p>
             </button>
             <SharePanel
-              link={link}
+              link={generatedLink}
               copyLinkHandler={copyLinkHandler}
               generateShareLink={generateShareLink}
               hasCopied={hasCopied}
@@ -147,7 +110,15 @@ const Share = (props: ShareProps) => {
   );
 };
 
-const SharePanel = (props) => {
+interface SharePanelProps {
+  link?: string;
+  copyLinkHandler?: (value?: boolean) => Promise<void>;
+  generateShareLink?: (value?: boolean) => any;
+  hasCopied?: boolean;
+  loading?: boolean;
+}
+
+const SharePanel = (props: SharePanelProps) => {
   const { link, copyLinkHandler, generateShareLink, hasCopied, loading } =
     props;
   return (
@@ -155,7 +126,7 @@ const SharePanel = (props) => {
       <button
         // disabled={hasCopied}
         className={styles.share__link_btn}
-        onClick={copyLinkHandler}
+        onClick={() => copyLinkHandler()}
       >
         {loading ? (
           <CircularRotatingLoader
@@ -171,30 +142,30 @@ const SharePanel = (props) => {
       </button>
       <div className={styles.share__social_icons}>
         <FacebookShareButton
-          url={link}
+          url={link || "http://blending101.com/"}
           quote={"This is quote"}
           hashtag="#Branding"
-          beforeOnClick={link ? () => {} : generateShareLink}
+          beforeOnClick={generateShareLink}
           className={styles["share__social--facebook"]}
         >
           <Icon fontName={faFacebook} size="3.5rem" className="mr-10" />
         </FacebookShareButton>
         <TwitterShareButton
-          url={link}
+          url={link || "http://blending101.com/"}
           title="Blending101"
           hashtags={["Branding"]}
           via="http://blending101.com/"
           className={styles["share__social--twitter"]}
-          beforeOnClick={link ? () => {} : generateShareLink}
+          beforeOnClick={() => generateShareLink()}
         >
           <Icon fontName={faTwitter} size="3.5rem" className="mr-10" />
         </TwitterShareButton>
         <PinterestShareButton
           media="https://blending101.com/Blend_Formula.png"
-          url={link}
+          url={link || "http://blending101.com/"}
           description="Hello World"
           className={styles["share__social--pinterest"]}
-          beforeOnClick={link ? () => {} : generateShareLink}
+          beforeOnClick={() => generateShareLink()}
         >
           <Icon fontName={faPinterest} size="3.5rem" className="mr-10" />
         </PinterestShareButton>

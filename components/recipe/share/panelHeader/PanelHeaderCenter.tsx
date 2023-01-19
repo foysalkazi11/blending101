@@ -1,3 +1,4 @@
+import { faRectangleVerticalHistory } from "@fortawesome/pro-light-svg-icons";
 import { faXmark } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
@@ -17,6 +18,7 @@ interface PanelHeaderCenterProps {
   editOrSavebtnFunc?: () => void;
   backLink?: string;
   pageComeFrom?: "edit" | "details";
+  recipeVersionLength?: number;
 }
 
 const PanelHeaderCenter = ({
@@ -24,6 +26,7 @@ const PanelHeaderCenter = ({
   editOrSavebtnFunc = () => {},
   editOrSavebtnText = "",
   pageComeFrom,
+  recipeVersionLength = 0,
 }: PanelHeaderCenterProps) => {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -39,7 +42,12 @@ const PanelHeaderCenter = ({
               dispatch(setOpenVersionTrayFormWhichPage("edit"));
             }}
           >
+            <FontAwesomeIcon
+              icon={faRectangleVerticalHistory}
+              style={{ marginRight: "5px" }}
+            />
             Version
+            {recipeVersionLength === 1 ? "" : `(${recipeVersionLength - 1})`}
           </button>
         </Tooltip>
       )}
