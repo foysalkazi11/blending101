@@ -138,7 +138,7 @@ const NutritionPanelRxFacts = ({
                     : Math.round((servingSize * counter) / servingSizeCounter)}
                   oz
                 </div>
-                &nbsp; : &nbsp; serving size
+                &nbsp; serving size
               </div>
             </div>
           )

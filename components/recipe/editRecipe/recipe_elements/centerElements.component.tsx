@@ -139,7 +139,7 @@ const Center_Elements = ({
               }
             />
           )}
-          <div className={styles.reightSight} ref={outsideClickRef}>
+          {/* <div className={styles.reightSight} ref={outsideClickRef}>
             <IconWraper
               hover="bgSlightGray"
               style={{ width: "36px", height: "36px" }}
@@ -147,7 +147,7 @@ const Center_Elements = ({
             >
               <MdMoreVert fontSize={24} />
             </IconWraper>
-            {/* {openMenu ? (
+            {openMenu ? (
               <div className={`${styles.menu} `}>
                 <div
                   className={styles.singleMenu}
@@ -170,8 +170,8 @@ const Center_Elements = ({
                   </div>
                 ) : null}
               </div>
-            ) : null} */}
-          </div>
+            ) : null}
+          </div> */}
         </div>
         <div className={styles.addImagediv}>
           <HandleImageShow
