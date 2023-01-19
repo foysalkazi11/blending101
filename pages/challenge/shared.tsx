@@ -8,14 +8,17 @@ import {
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
 import { useRouter } from "next/router";
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import Icon from "../../component/atoms/Icon/Icon.component";
 import { GET_SHARED_CHALLENGE_DETAILS } from "../../graphql/Challenge";
+import { updateHeadTagInfo } from "../../redux/slices/headDataSlice";
 
 import styles from "../../styles/pages/challenge.module.scss";
 
 const Shared = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const { data } = useQuery(GET_SHARED_CHALLENGE_DETAILS, {
     variables: {
       challengeId: router.query?.id,
@@ -27,6 +30,16 @@ const Shared = () => {
       `/challenge?id=${router.query?.id}&token=${router.query?.token}`,
     );
   };
+
+  useEffect(() => {
+    dispatch(
+      updateHeadTagInfo({
+        title: "Challenge share",
+        description: "challenge share",
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // if (!router.query?.id || !router.query?.token) return <></>;
   return (

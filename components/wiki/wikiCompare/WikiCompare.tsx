@@ -22,6 +22,7 @@ import { setDbUser } from "../../../redux/slices/userSlice";
 import { useRouter } from "next/router";
 import EMPTY_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/mutation/emptyWikiCompareList";
 import ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/mutation/addOrRemoveToWikiCompareList";
+import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 
 const compareRecipeResponsiveSettings = {
   ...compareRecipeResponsiveSetting,
@@ -163,6 +164,16 @@ const WikiCompare = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wikiCompareData]);
+
+  useEffect(() => {
+    dispatch(
+      updateHeadTagInfo({
+        title: "Wiki compare",
+        description: "wiki compare",
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <AContainer

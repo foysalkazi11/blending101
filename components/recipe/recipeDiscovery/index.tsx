@@ -25,6 +25,7 @@ import {
 } from "../../../redux/slices/collectionSlice";
 import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
 import ShowRecipeContainer from "../../showRecipeContainer";
+import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 let dataLimit = 12;
 
 const RecipeDiscovery = () => {
@@ -136,6 +137,10 @@ const RecipeDiscovery = () => {
     dispatch(updateShowFilterOrSearchRecipes(false));
     setPageNum(1);
   };
+
+  useEffect(() => {
+    dispatch(updateHeadTagInfo({ description: "blends", title: "Blends" }));
+  }, []);
 
   useEffect(() => {
     if (isMounted.current) {

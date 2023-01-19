@@ -29,6 +29,7 @@ import { RecipeDetailsType } from "../../../type/recipeDetails";
 import { GiGl } from "../../../type/nutrationType";
 import { GET_RECIPE } from "../../../gqlLib/recipes/queries/getRecipeDetails";
 import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
+import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 
 const EditRecipeComponent = () => {
   const router = useRouter();
@@ -236,6 +237,16 @@ const EditRecipeComponent = () => {
       }
     }
   }, [recipeId, dbUser?._id]);
+
+  useEffect(() => {
+    dispatch(
+      updateHeadTagInfo({
+        title: "Edit a recipe",
+        description: "edit a recipe",
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     isMounted.current = true;

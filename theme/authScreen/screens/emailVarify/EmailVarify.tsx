@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ButtonComponent from "../../../button/buttonA/button.component";
 import styles from "./EmailVarify.module.scss";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
@@ -16,8 +16,9 @@ import { Auth } from "aws-amplify";
 import CREATE_NEW_USER from "./../../../../gqlLib/user/mutations/createNewUser";
 import { useMutation } from "@apollo/client";
 import InputComponent from "../../../input/input.component";
+import { updateHeadTagInfo } from "../../../../redux/slices/headDataSlice";
 
-const ForgotPassword = () => {
+const EmailVerify = () => {
   const [code, setCode] = useState("");
 
   const { nonConfirmedUser } = useAppSelector((state) => state?.user);
@@ -66,6 +67,17 @@ const ForgotPassword = () => {
       reactToastifyNotification("error", error?.message);
     }
   };
+
+  useEffect(() => {
+    dispatch(
+      updateHeadTagInfo({
+        title: `Email verify`,
+        description: `email verify`,
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className={styles.mainDiv}>
       <div className={styles.varifyEmailContainer}>
@@ -104,4 +116,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+export default EmailVerify;

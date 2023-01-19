@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FooterRecipeFilter from "../../../components/footer/footerRecipeFilter.component";
 import AContainer from "../../../containers/A.container";
-import { useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import styles from "../../../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";
 import classes from "../../../styles/pages/viewAll.module.scss";
 import { useQuery } from "@apollo/client";
@@ -13,13 +13,12 @@ import GET_ALL_ADMIN from "../../../gqlLib/user/queries/getAllAdmin";
 import GET_ALL_BLOGS_FOR_A_COLLECTION from "../../../gqlLib/blog/query/getAllBlogsForACollection";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faStar } from "@fortawesome/pro-regular-svg-icons";
+import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 
 const CollectionBlog = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const slug = router.query?.collectionSlug as string;
-  const [title, setTitle] = useState("");
-  const [icon, setIcon] = useState("");
-  const [recipes, setRecipes] = useState([]);
   const [input, setInput] = useState("");
   const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
   const { data: allAdminData } = useQuery(GET_ALL_ADMIN);
@@ -38,6 +37,16 @@ const CollectionBlog = () => {
     const admin = allAdminData?.getAllAdmin?.find((admin) => admin?._id === id);
     return admin ? `${admin?.firstName} ${admin?.lastName}` : "Gabriel Branu";
   };
+
+  useEffect(() => {
+    dispatch(
+      updateHeadTagInfo({
+        title: "Blog collection",
+        description: "blog collection",
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <AContainer

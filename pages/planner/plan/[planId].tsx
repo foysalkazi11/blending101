@@ -46,9 +46,12 @@ import CollectionDrawer from "../../../component/templates/Drawer/Collection/Col
 import CommentDrawer from "../../../component/templates/Drawer/Comment/Comment.component";
 import { useAppSelector } from "../../../redux/hooks";
 import Publish from "../../../helpers/Publish";
+import { useDispatch } from "react-redux";
+import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 
 const MyPlan = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const methods = useForm({
     defaultValues: useMemo(() => defaultPlan, []),
   });
@@ -64,7 +67,6 @@ const MyPlan = () => {
 
   const [createPlan, createState] = useMutation(CREATE_PLAN);
   const [sharePlan, { data: share }] = useMutation(SHARE_PLAN);
-
   const [link, setLink] = useState("");
   const [showShare, setShowShare] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -169,6 +171,16 @@ const MyPlan = () => {
       `${process.env.NEXT_PUBLIC_HOSTING_DOMAIN}/planner/plan/shared/?token=${share?.sharePlan}`,
     );
   }, [share]);
+
+  useEffect(() => {
+    dispatch(
+      updateHeadTagInfo({
+        title: "Plans details",
+        description: "plans details",
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <AContainer
       headerTitle="MEAL PLAN"

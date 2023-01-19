@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
-import React, { FC, useRef, useState } from "react";
+import React, { FC, useRef, useState, useEffect } from "react";
 import AContainer from "../../../containers/A.container";
 import GET_ALL_RECIPE_VERSION from "../../../gqlLib/versionCompare/query/getAllRecipeVersions";
 import SkeletonComparePage from "../../../theme/skeletons/skeletonComparePage/SkeletonComparePage";
@@ -18,6 +18,8 @@ import EDIT_A_VERSION_OF_RECIPE from "../../../gqlLib/versions/mutation/editAVer
 import notification from "../../utility/reactToastifyNotification";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
 import { faPen } from "@fortawesome/pro-light-svg-icons";
+import { useDispatch } from "react-redux";
+import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 
 const compareRecipeResponsiveSettings = {
   ...compareRecipeResponsiveSetting,
@@ -38,6 +40,7 @@ const VersionCompare = () => {
     ingredients: [],
   });
   const router = useRouter();
+  const dispatch = useDispatch();
   const recipeId = router.query?.recipeId;
   const { dbUser } = useAppSelector((state) => state.user);
   const { data, loading, error } = useQuery(GET_ALL_RECIPE_VERSION, {
@@ -237,6 +240,16 @@ const VersionCompare = () => {
       notification("error", "Version updated failed");
     }
   };
+
+  useEffect(() => {
+    dispatch(
+      updateHeadTagInfo({
+        title: "Recipe version compare",
+        description: "recipe version compare",
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const customEditIcon = (recipe: any, isEditMode: boolean, index: number) => (
     <IconWarper

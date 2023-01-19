@@ -18,6 +18,7 @@ import {
 import notification from "../../../utility/reactToastifyNotification";
 import ButtonComponent from "../../../../theme/button/button.component";
 import { useRouter } from "next/router";
+import { updateHeadTagInfo } from "../../../../redux/slices/headDataSlice";
 
 const tab = ["About", "Membership", "Notification", "Personalization"];
 
@@ -184,6 +185,16 @@ const Main = ({ userData, setUserData }: MainProps) => {
   useEffect(() => {
     setColorToggle(false);
   }, [activeTab, toggle, profileActiveTab]);
+
+  useEffect(() => {
+    dispatch(
+      updateHeadTagInfo({
+        title: `User profile (${activeTab})`,
+        description: `user profile (${activeTab})`,
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
 
   return (
     <div className={styles.mainContainer}>
