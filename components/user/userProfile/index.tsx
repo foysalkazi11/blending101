@@ -7,7 +7,6 @@ import StepTwo from "./steps/stepTwo/StepTwo";
 import ChangeSteps from "./changeSteps/ChangeSteps";
 import StepThree from "./steps/stepThree/StepThree";
 import StepFour from "./steps/stepFour/StepFour";
-import uniqueId from "../../utility/uniqueId";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
 import { useMutation } from "@apollo/client";
 import EDIT_CONFIGRATION_BY_ID from "../../../gqlLib/user/mutations/editCofigrationById";
@@ -15,6 +14,7 @@ import { setDbUser } from "../../../redux/slices/userSlice";
 import { setLoading } from "../../../redux/slices/utilitySlice";
 import reactToastifyNotification from "../../../components/utility/reactToastifyNotification";
 import { useRouter } from "next/router";
+import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 
 const UserProfile = () => {
   const [userProfile, setUserProfile] = useState<any>({
@@ -242,6 +242,17 @@ const UserProfile = () => {
         );
     }
   };
+
+  useEffect(() => {
+    dispatch(
+      updateHeadTagInfo({
+        title: `User onboarding`,
+        description: `user onboarding `,
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <AContainer
       headerTitle="Profile"

@@ -34,9 +34,12 @@ import { MONTH } from "../../../data/Date";
 import styles from "../../../styles/pages/planner.module.scss";
 import ConfirmAlert from "../../../component/molecules/Alert/Confirm.component";
 import Publish from "../../../helpers/Publish";
+import { useDispatch } from "react-redux";
+import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 
 const MyPlan = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const methods = useForm({
     defaultValues: useMemo(() => defaultPlan, []),
   });
@@ -95,7 +98,6 @@ const MyPlan = () => {
 
   const startMonth = MONTH[week.start.getMonth()];
   const endMonth = MONTH[week.end.getMonth()];
-
   const startDay = week.start.getDate();
   const endDay = week.end.getDate();
 
@@ -152,6 +154,16 @@ const MyPlan = () => {
       },
     });
   };
+
+  useEffect(() => {
+    dispatch(
+      updateHeadTagInfo({
+        title: "Plans details",
+        description: "plans details",
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <AContainer

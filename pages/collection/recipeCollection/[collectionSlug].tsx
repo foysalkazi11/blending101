@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import FooterRecipeFilter from "../../../components/footer/footerRecipeFilter.component";
 import AContainer from "../../../containers/A.container";
-import { useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import styles from "../../../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";
 import classes from "../../../styles/pages/viewAll.module.scss";
 import { useLazyQuery } from "@apollo/client";
@@ -15,9 +15,11 @@ import WikiBanner from "../../../components/wiki/wikiBanner/WikiBanner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faStar } from "@fortawesome/pro-regular-svg-icons";
 import ErrorPage from "../../../components/pages/404Page";
+import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 
 const CollectionRecipes = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const shareBy = router.query?.shareBy as string;
   const token = router.query?.token as string;
   const slug = router.query?.collectionSlug as string;
@@ -73,6 +75,16 @@ const CollectionRecipes = () => {
     slug,
     userId,
   ]);
+
+  useEffect(() => {
+    dispatch(
+      updateHeadTagInfo({
+        title: "Recipe collection",
+        description: "Recipe collection",
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (getCollectionRecipeError) {
     return <ErrorPage errorMessage="No collection recipe found" />;
