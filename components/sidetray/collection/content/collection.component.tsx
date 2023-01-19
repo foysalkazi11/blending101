@@ -15,6 +15,10 @@ import useLocalStorage from "../../../../customHooks/useLocalStorage";
 import { setCompareList } from "../../../../redux/slices/recipeSlice";
 import updateRecipeFunc from "../../../utility/updateRecipeFunc";
 import SingleCollection from "../../common/singleCollection/SingleCollection";
+import Invite from "../../../../component/organisms/Share/Invite.component";
+import CREATE_SHARE_COLLECTION_LINK from "../../../../gqlLib/collection/mutation/createShareCollectionLink";
+import notification from "../../../../components/utility/reactToastifyNotification";
+import Share from "../../../../component/organisms/Share/Distribute.component";
 
 interface CollectionComponentProps {
   collections: {}[];
@@ -44,10 +48,17 @@ export default function CollectionComponent({
     activeRecipeId,
     singleRecipeWithinCollections,
   } = useAppSelector((state) => state?.collections);
+  const [emails, setEmails] = useState([]);
+  const [collectionInfo, setCollectionInfo] = useState<any>({});
+  const [showInviteModal, setShowInviteModal] = useState(false);
   const [menuIndex, setMenuIndex] = useState(0);
   const [collectionHasRecipe, setCollectionHasRecipe] = useState<string[]>([]);
   const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
   const [isCollectionUpdate, setIsCollectionUpdate] = useState(false);
+  const [hasCopied, setHasCopied] = useState(false);
+  const [showMsgField, setShowMsgField] = useState(false);
+  const [link, setLink] = useState("");
+
   const isMounted = useRef(null);
   const updateRecipe = useUpdateRecipeField();
   const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
@@ -58,6 +69,68 @@ export default function CollectionComponent({
   const { bulkRecipeIdsForAddedInCollection } = useAppSelector(
     (state) => state?.collections,
   );
+  const [shareCollection, { loading: shareCollectionLoading }] = useMutation(
+    CREATE_SHARE_COLLECTION_LINK,
+  );
+
+  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+
+  const handleOpenShareModal = (
+    id: string,
+    title: string,
+    image: string,
+    slug: string,
+  ) => {
+    setCollectionInfo({ id, title, image, slug });
+    setShowInviteModal(true);
+    setEmails([]);
+  };
+
+  const copyLinkHandler = async (isGlobalShare: boolean = true) => {
+    if (!isGlobalShare && !emails.length) {
+      notification("warning", "Please enter email");
+      return;
+    }
+    const link = await generateShareLink(isGlobalShare);
+    navigator.clipboard.writeText(link);
+    notification("success", "Link has been copied in clipboard");
+    setHasCopied(true);
+    // setShow(false)//;
+  };
+
+  const generateShareLink = async (isGlobalShare: boolean = true) => {
+    try {
+      const { data } = await shareCollection({
+        variables: {
+          data: {
+            shareToEmails: isGlobalShare ? [] : emails,
+            sharedBy: userId,
+            collectionId: collectionInfo?.id,
+          },
+        },
+      });
+      setShowInviteModal(false);
+      const generatedLink = `${
+        process.env.NODE_ENV === "production"
+          ? process.env.NEXT_PUBLIC_HOSTING_DOMAIN
+          : "http://localhost:3000"
+      }/collection/recipeCollection/${collectionInfo?.slug}?${
+        isGlobalShare
+          ? "token=" + data.createShareCollectionLink
+          : "shareBy=" + userId
+      }`;
+      setLink(link);
+      return generatedLink;
+    } catch (error) {
+      notification("error", "Not able to share collection");
+    }
+  };
+
+  const resetModal = () => {
+    setEmails([]);
+    setShowInviteModal(false);
+  };
+
   const updateCompareRecipe = (id: string, obj: object) => {
     dispatch(setCompareList(updateRecipeFunc(compareList, obj, id)));
     setcompareRecipeList((state) => updateRecipeFunc(state || [], obj, id));
@@ -150,9 +223,18 @@ export default function CollectionComponent({
         <SkeletonCollections />
       ) : (
         collections?.map((collection: any, i: number) => {
-          const { _id, image, name, slug, recipes, description } = collection;
+          const {
+            _id,
+            image,
+            name,
+            slug,
+            recipes,
+            description,
+            isShared,
+            sharedBy,
+          } = collection;
 
-          return (
+          return changeRecipeWithinCollection && isShared ? null : (
             <SingleCollection
               key={collection?._id}
               name={name}
@@ -171,10 +253,44 @@ export default function CollectionComponent({
               handleDeleteCollection={handleDeleteCollection}
               handleEditCollection={handleEditCollection}
               collectionRoute="recipeCollection"
+              handleShareCollection={handleOpenShareModal}
+              isShared={isShared}
+              sharedBy={sharedBy}
             />
           );
         })
       )}
+
+      <Share
+        image={collectionInfo?.image}
+        setShow={setShowInviteModal}
+        show={showInviteModal}
+        title={collectionInfo?.title}
+        copyLinkHandler={copyLinkHandler}
+        createLinkLoading={shareCollectionLoading}
+        emails={emails}
+        generatedLink={link}
+        generateShareLink={generateShareLink}
+        hasCopied={hasCopied}
+        heading={"Share Collection"}
+        onCancel={resetModal}
+        setEmails={setEmails}
+        setShowMsgField={setShowMsgField}
+        showMsgField={showMsgField}
+        submitBtnText="Share"
+      />
+      {/* 
+      <Invite
+        show={showInviteModal}
+        setShow={setShowInviteModal}
+        {...collectionInfo}
+        emails={emails}
+        setEmails={setEmails}
+        handleCancel={resetModal}
+        handleInvitation={handleInvitation}
+        loading={shareCollectionLoading}
+        submitBtnText="Share"
+      /> */}
     </div>
   );
 }

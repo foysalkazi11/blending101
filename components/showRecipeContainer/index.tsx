@@ -18,11 +18,13 @@ import {
 import { setOpenCollectionsTary } from "../../redux/slices/sideTraySlice";
 import DatacardComponent from "../../theme/cards/dataCard/dataCard.component";
 import IconWarper from "../../theme/iconWarper/IconWarper";
+import CustomModal from "../../theme/modal/customModal/CustomModal";
 import SkeletonCollectionRecipe from "../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollectionRecipe";
 import { BlogListType } from "../../type/blog";
 import ErrorPage from "../pages/404Page";
 import BlogCard from "../pages/blog/blogCard";
 import ShowLastModifiedCollection from "../showLastModifiedCollection/ShowLastModifiedCollection";
+import AddCollectionModal from "../sidetray/common/addCollectionModal/AddCollectionModal";
 import styles from "./index.module.scss";
 
 interface Props {
@@ -58,11 +60,19 @@ const ShowRecipeContainer = ({
   hasMore = false,
   nextPage = () => {},
 }: Props) => {
+  const [input, setInput] = useState({
+    image: null,
+    name: "",
+    slug: "",
+    description: "",
+  });
   const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
     "compareList",
     [],
   );
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
+  const [openCreateCollectionModal, setOpenCreateCollectionModal] =
+    useState(false);
   const { lastModifiedCollection } = useAppSelector(
     (state) => state?.collections,
   );
@@ -140,6 +150,7 @@ const ShowRecipeContainer = ({
               defaultBg="slightGray"
               hover="bgPrimary"
               style={{ width: "28px", height: "28px" }}
+              handleClick={() => setOpenCreateCollectionModal(true)}
             >
               <FontAwesomeIcon icon={faShareNodes} />
             </IconWarper>
@@ -257,6 +268,18 @@ const ShowRecipeContainer = ({
         lastModifiedCollectionName={lastModifiedCollection?.name}
         openCollectionPanel={handleOpenCollectionTray}
       />
+      {/* <CustomModal
+        setOpen={setOpenCreateCollectionModal}
+        open={openCreateCollectionModal}
+      >
+        <AddCollectionModal
+          input={input}
+          setInput={setInput}
+          setOpenModal={setOpenCreateCollectionModal}
+          handleToAddOrUpdateCollection={() => {}}
+          isAddOrUpdateCollectionLoading={false}
+        />
+      </CustomModal> */}
     </div>
   );
 };

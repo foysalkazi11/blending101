@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import {
@@ -15,11 +15,13 @@ import Icon from "../../../component/atoms/Icon/Icon.component";
 import { PLAN_SHARE_INFO } from "../../../graphql/Planner";
 
 import styles from "../../../styles/pages/planner.module.scss";
+import { useDispatch } from "react-redux";
+import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 
 const Shared = () => {
   const router = useRouter();
   const token = router.query.token;
-
+  const dispatch = useDispatch();
   const { data } = useQuery(PLAN_SHARE_INFO, {
     variables: {
       token: token,
@@ -33,6 +35,16 @@ const Shared = () => {
       `${process.env.NEXT_PUBLIC_HOSTING_DOMAIN}/planner/plan/${share?.plan?._id}?token=${token}`,
     );
   };
+
+  useEffect(() => {
+    dispatch(
+      updateHeadTagInfo({
+        title: "Plans share",
+        description: "plans share",
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Fragment>

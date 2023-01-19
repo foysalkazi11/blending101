@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import AContainer from "../../../containers/A.container";
 import GET_ALL_GENERAL_BLOG_FOR_CLIENT from "../../../gqlLib/blog/query/getAllGeneralBlogForClient";
 import BlogCard from "./blogCard";
@@ -13,6 +13,7 @@ import GET_ALL_ADMIN from "../../../gqlLib/user/queries/getAllAdmin";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import ShowLastModifiedCollection from "../../showLastModifiedCollection/ShowLastModifiedCollection";
 import { setIsOpenBlogCollectionTray } from "../../../redux/slices/blogSlice";
+import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 
 const BlogList = () => {
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
@@ -38,6 +39,16 @@ const BlogList = () => {
     const admin = allAdminData?.getAllAdmin?.find((admin) => admin?._id === id);
     return admin ? `${admin?.firstName} ${admin?.lastName}` : "Gabriel Branu";
   };
+
+  useEffect(() => {
+    dispatch(
+      updateHeadTagInfo({
+        title: "Blog",
+        description: "blog",
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (generalBlogLoading) {
     return (

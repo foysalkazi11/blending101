@@ -2,7 +2,9 @@ import { faArrowLeft, faHouse } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 import styles from "./index.module.scss";
 
 interface Props {
@@ -25,6 +27,18 @@ const ErrorPage = ({
   style = {},
 }: Props) => {
   const router = useRouter();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(
+      updateHeadTagInfo({
+        title: errorMessage || "Page not found",
+        description: errorMessage || "page not found(404)",
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className={styles.errorPageContainer} style={style}>
       <Image

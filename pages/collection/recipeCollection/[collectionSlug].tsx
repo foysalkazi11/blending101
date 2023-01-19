@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import FooterRecipeFilter from "../../../components/footer/footerRecipeFilter.component";
 import AContainer from "../../../containers/A.container";
-import { useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import styles from "../../../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";
 import classes from "../../../styles/pages/viewAll.module.scss";
 import { useLazyQuery } from "@apollo/client";
@@ -14,9 +14,14 @@ import CommonSearchBar from "../../../components/searchBar/CommonSearchBar";
 import WikiBanner from "../../../components/wiki/wikiBanner/WikiBanner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faStar } from "@fortawesome/pro-regular-svg-icons";
+import ErrorPage from "../../../components/pages/404Page";
+import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 
 const CollectionRecipes = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const shareBy = router.query?.shareBy as string;
+  const token = router.query?.token as string;
   const slug = router.query?.collectionSlug as string;
   const [title, setTitle] = useState("");
   const [icon, setIcon] = useState("");
@@ -30,9 +35,10 @@ const CollectionRecipes = () => {
   const [getMyRecipes, { loading: getMyRecipesLoading }] = useLazyQuery(
     GET_ALL_MY_CREATED_RECIPES,
   );
-  const [getCustomRecipes, { loading: getCustomRecipesLoading }] = useLazyQuery(
-    GET_SINGLE_COLLECTION,
-  );
+  const [
+    getCustomRecipes,
+    { loading: getCustomRecipesLoading, error: getCollectionRecipeError },
+  ] = useLazyQuery(GET_SINGLE_COLLECTION);
 
   useEffect(() => {
     if (!slug) return;
@@ -47,13 +53,42 @@ const CollectionRecipes = () => {
         setRecipes(res?.data?.getAllMyCreatedRecipes);
       });
     } else {
-      getCustomRecipes({ variables: { userId, slug } }).then((res: any) => {
+      getCustomRecipes({
+        variables: {
+          userId,
+          slug,
+          creatorId: shareBy || "",
+          token: token || "",
+        },
+      }).then((res: any) => {
         setTitle(res?.data?.getASingleCollection?.name);
         setIcon(res?.data?.getASingleCollection?.image);
         setRecipes(res?.data?.getASingleCollection?.recipes);
       });
     }
-  }, [getAllRecipes, getCustomRecipes, getMyRecipes, slug, userId]);
+  }, [
+    getAllRecipes,
+    getCustomRecipes,
+    getMyRecipes,
+    shareBy,
+    token,
+    slug,
+    userId,
+  ]);
+
+  useEffect(() => {
+    dispatch(
+      updateHeadTagInfo({
+        title: "Recipe collection",
+        description: "Recipe collection",
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (getCollectionRecipeError) {
+    return <ErrorPage errorMessage="No collection recipe found" />;
+  }
 
   return (
     <AContainer

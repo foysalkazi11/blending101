@@ -44,6 +44,7 @@ import {
   setSingleRecipeWithinCollecions,
 } from "../../../redux/slices/collectionSlice";
 import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
+import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 
 const compareRecipeResponsiveSettings = {
   ...compareRecipeResponsiveSetting,
@@ -465,6 +466,16 @@ const CompareRecipe = () => {
     if (!compareRecipeList?.length && compareList?.length) {
       updateFormulateList(compareList);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    dispatch(
+      updateHeadTagInfo({
+        title: "Recipe compare",
+        description: "recipe compare",
+      }),
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

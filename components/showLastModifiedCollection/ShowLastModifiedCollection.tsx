@@ -1,10 +1,4 @@
 import React, { Dispatch, SetStateAction } from "react";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import {
-  setChangeRecipeWithinCollection,
-  setSingleRecipeWithinCollecions,
-} from "../../redux/slices/collectionSlice";
-import { setOpenCollectionsTary } from "../../redux/slices/sideTraySlice";
 import CustomModal from "../../theme/modal/customModal/CustomModal";
 import LastModifiedCollectionModalContent from "../../theme/lastModifiedColletionModalContent/LastModifiedCollectionModalContent";
 

@@ -9,6 +9,15 @@ const GET_COLLECTIONS_AND_THEMES = gql`
         slug
         recipes
         image
+        isShared
+        sharedBy {
+          _id
+          email
+          firstName
+          displayName
+          lastName
+          image
+        }
       }
     }
   }

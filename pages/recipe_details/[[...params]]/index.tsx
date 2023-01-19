@@ -13,6 +13,8 @@ import { GiGl } from "../../../type/nutrationType";
 import useToGetARecipe from "../../../customHooks/useToGetARecipe";
 import SkeletonRecipeDetails from "../../../theme/skeletons/skeletonRecipeDetails";
 import AContainer from "../../../containers/A.container";
+import ErrorPage from "../../../components/pages/404Page";
+import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 
 const Index = () => {
   const router = useRouter();
@@ -24,9 +26,10 @@ const Index = () => {
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
   const dispatch = useAppDispatch();
 
-  const [getARecipe, { loading: recipeLoading }] = useLazyQuery(GET_RECIPE, {
-    fetchPolicy: "cache-and-network",
-  });
+  const [getARecipe, { loading: recipeLoading, error: getARecipeError }] =
+    useLazyQuery(GET_RECIPE, {
+      fetchPolicy: "cache-and-network",
+    });
   const handleToGetARecipe = useToGetARecipe();
   const { loading: nutritionDataLoading, data: nutritionData } =
     useGetBlendNutritionBasedOnRecipexxx(
@@ -53,6 +56,16 @@ const Index = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recipe__Id, dbUser?._id]);
 
+  useEffect(() => {
+    dispatch(
+      updateHeadTagInfo({
+        title: "Details a recipe",
+        description: "details a recipe",
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   //@ts-ignore
   const recipeBasedNutrition =
     nutritionData?.getNutrientsListAndGiGlByIngredients?.nutrients;
@@ -64,6 +77,9 @@ const Index = () => {
         <SkeletonRecipeDetails />;
       </AContainer>
     );
+  }
+  if (getARecipeError) {
+    return <ErrorPage errorMessage="Recipe not found" />;
   }
 
   return (
