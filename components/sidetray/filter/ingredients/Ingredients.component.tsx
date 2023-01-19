@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useRef, useState } from "react";
 import Dropdown from "../../../../theme/dropDown/DropDown.component";
-import SwitchTwoComponent from "../../../../theme/switch/switchTwo.component";
 import styles from "../filter.module.scss";
 import useGetAllIngredientsDataBasedOnNutrition from "../../../../customHooks/useGetAllIngredientsDataBasedOnNutrition";
 import IngredientPictureSection from "../ingredientPictureSection/IngredientPictureSection";
@@ -12,6 +11,9 @@ import {
   FilterCriteriaValue,
 } from "../../../../redux/slices/filterRecipeSlice";
 import { categories } from "../../../../data/categories";
+import ToggleMenu from "../../../../theme/toggleMenu/ToggleMenu";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faImage, faRankingStar } from "@fortawesome/pro-light-svg-icons";
 export interface ingredientState {
   name: string;
   value: number;
@@ -44,7 +46,7 @@ export default function FilterbottomComponent({
   ingredientCategoryData = [],
   ingredientCategoryLoading = false,
 }: Props) {
-  const [toggle, setToggle] = useState(1);
+  const [toggle, setToggle] = useState(0);
   const [dpd, setDpd] = useState("All");
   const [searchIngredientData, setSearchIngredientData] = useState<any[]>([]);
   const [searchInput, setSearchInput] = useState("");
@@ -58,7 +60,7 @@ export default function FilterbottomComponent({
     useGetAllIngredientsDataBasedOnNutrition(
       rankingDropDownState,
       dpd,
-      toggle === 2 ? true : false,
+      toggle === 1 ? true : false,
     );
 
   useEffect(() => {
@@ -125,11 +127,23 @@ export default function FilterbottomComponent({
     <div className={styles.filter__top}>
       <h3>Ingredients</h3>
       <div className={styles.filter__bottom}>
-        <SwitchTwoComponent
-          value={toggle}
-          setValue={setToggle}
-          titleOne="Pictures"
-          titleTwo="Rankings"
+        <ToggleMenu
+          setToggle={setToggle}
+          toggle={toggle}
+          toggleMenuList={[
+            <div key={"key0"} style={{ display: "flex", alignItems: "center" }}>
+              <FontAwesomeIcon icon={faImage} style={{ marginRight: "5px" }} />
+              <p>Picture</p>
+            </div>,
+            <div key={"key1"} style={{ display: "flex", alignItems: "center" }}>
+              <FontAwesomeIcon
+                icon={faRankingStar}
+                style={{ marginRight: "5px" }}
+              />
+              <p>Ranking</p>
+            </div>,
+          ]}
+          variant={"outlineSecondary"}
         />
         <div className={styles.dropdown}>
           <Dropdown
@@ -141,7 +155,7 @@ export default function FilterbottomComponent({
             handleChange={(e) => setDpd(e?.target?.value)}
           />
         </div>
-        {toggle === 1 ? (
+        {toggle === 0 ? (
           <IngredientPictureSection
             checkActiveItem={checkActiveIngredient}
             handleBlendAndIngredientUpdate={handleIngredientClick}

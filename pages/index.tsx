@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Overview from "../component/module/Home/Overview.component";
 import PlanCard from "../component/module/Planner/PlanCard.component";
@@ -15,6 +15,7 @@ import { GET_ALL_PLANS } from "../graphql/Planner";
 import { GET_BLEND_TYPES } from "../graphql/Recipe";
 import { useAppSelector } from "../redux/hooks";
 import { updateFilterCriteriaItem } from "../redux/slices/filterRecipeSlice";
+import { updateHeadTagInfo } from "../redux/slices/headDataSlice";
 import { updateSidebarActiveMenuNo } from "../redux/slices/utilitySlice";
 
 import styles from "../styles/pages/home.module.scss";
@@ -56,6 +57,13 @@ const Home = () => {
     dispatch(updateSidebarActiveMenuNo(index));
     router.push(route);
   };
+
+  useEffect(() => {
+    dispatch(
+      updateHeadTagInfo({ description: "home page content", title: "Home" }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <AContainer headerTitle="Home" headerFullWidth={true} showSidebar={false}>
