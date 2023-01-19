@@ -1,8 +1,8 @@
 import React from "react";
-import EmailVarify from "../theme/authScreen/screens/emailVarify/EmailVarify";
+import EmailVerify from "../theme/authScreen/screens/emailVarify/EmailVarify";
 
-const varify_email = () => {
-  return <EmailVarify />;
+const Verify_email = () => {
+  return <EmailVerify />;
 };
 
-export default varify_email;
+export default Verify_email;

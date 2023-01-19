@@ -8,19 +8,21 @@ import {
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
 import { useRouter } from "next/router";
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import Icon from "../../component/atoms/Icon/Icon.component";
 import {
   ACCEPT_CHALLENGE,
   GET_INVITE_CHALLENGE_DETAILS,
 } from "../../graphql/Challenge";
 import { useAppSelector } from "../../redux/hooks";
+import { updateHeadTagInfo } from "../../redux/slices/headDataSlice";
 
 import styles from "../../styles/pages/challenge.module.scss";
 
 const Invited = () => {
   const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
-
+  const dispatch = useDispatch();
   const router = useRouter();
   const { data } = useQuery(GET_INVITE_CHALLENGE_DETAILS, {
     variables: {
@@ -39,6 +41,16 @@ const Invited = () => {
       router.push(`/challenge/?id=${response?.data?.acceptChallenge}`);
     });
   };
+
+  useEffect(() => {
+    dispatch(
+      updateHeadTagInfo({
+        title: "Challenge invite",
+        description: "challenge invite",
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Fragment>

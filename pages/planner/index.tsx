@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { faUserCircle } from "@fortawesome/pro-light-svg-icons";
 import PlanCard from "../../component/module/Planner/PlanCard.component";
 import AppdownLoadCard from "../../components/recipe/recipeDiscovery/AppdownLoadCard/AppdownLoadCard.component";
@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import ShowLastModifiedCollection from "../../components/showLastModifiedCollection/ShowLastModifiedCollection";
 import { setIsOpenPlanCollectionTray } from "../../redux/slices/Planner.slice";
 import CommonSearchBar from "../../components/searchBar/CommonSearchBar";
+import { updateHeadTagInfo } from "../../redux/slices/headDataSlice";
 
 const PlanDiscovery = ({
   input = "",
@@ -36,6 +37,16 @@ const PlanDiscovery = ({
     (state) => state?.planner,
   );
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(
+      updateHeadTagInfo({
+        title: "Plans",
+        description: "plans",
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <AContainer

@@ -24,6 +24,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBasketShopping as faBasketShoppingRegular } from "@fortawesome/pro-regular-svg-icons";
 import { faBasketShopping as faBasketShoppingSolid } from "@fortawesome/pro-solid-svg-icons";
 import { GiGl } from "../../../type/nutrationType";
+import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 
 const AddRecipePage = () => {
   const [images, setImages] = useState<any[]>([]);
@@ -66,7 +67,7 @@ const AddRecipePage = () => {
     }
   };
 
-  // sumbit data for add recipe
+  // submit data for add recipe
 
   const handleSubmitData = async () => {
     if (recipeHeading && selectedIngredientsList?.length) {
@@ -170,6 +171,16 @@ const AddRecipePage = () => {
     });
     return present;
   };
+
+  useEffect(() => {
+    dispatch(
+      updateHeadTagInfo({
+        title: "Add new recipe",
+        description: "add new recipe",
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     isMounted.current = true;
