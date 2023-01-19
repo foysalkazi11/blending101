@@ -66,7 +66,6 @@ const CalciumSearchElem = ({
         value={dropDownState}
         listElem={list}
         handleChange={(e) => setDropDownState(e?.target?.value)}
-        style={{ width: "100%" }}
       />
 
       <div className={styles.calciumIcon}>
