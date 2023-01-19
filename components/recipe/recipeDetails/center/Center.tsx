@@ -169,13 +169,25 @@ const Center = ({
             <div className={styles.recipeType}>
               {recipeData?.recipeBlendCategory?.name}
             </div>
-            <img
-              src="/images/yummly-logo.png"
-              alt="recipe_logo"
-              className={styles.recipeLogo}
-            />
+            <a href="https://www.yummly.com/dish/981850/tomato-casserole-a-new-england-dish-thats-anything-but-common">
+              <img
+                src="/images/yummly-logo.png"
+                alt="recipe_logo"
+                className={styles.recipeLogo}
+              />
+            </a>
+            <a
+              href="https://www.allrecipes.com/recipe/269881/saucy-sriracha-franks/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img
+                src="/images/yummly-logo.png"
+                alt="recipe_logo"
+                className={styles.recipeLogo}
+              />
+            </a>
           </div>
-
           <div className={styles.alignItems}>
             {recipeData?.recipeVersion?.length >= 2 ? (
               <IconWithText
