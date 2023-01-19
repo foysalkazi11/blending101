@@ -13,19 +13,20 @@ import styles from "./sidebar.module.scss";
 
 export const PAGES = [
   { logo: "/icons/home.svg", link: "/", content: "Home" },
-  { logo: "/icons/juicer.svg", link: "/discovery", content: "Discovery" },
-  { logo: "/icons/books.svg", link: "/wiki", content: "Wiki" },
+  { logo: "/icons/juicer.svg", link: "/discovery", content: "Blends" },
+
   {
     logo: "/icons/calender__sidebar.svg",
     link: "/planner",
-    content: "Planner",
+    content: "Plans",
   },
   {
     logo: "/icons/whistle.svg",
     link: "/challenge",
     content: "Challenge",
   },
-  { logo: "/icons/book_light.svg", link: "/blog", content: "News" },
+  { logo: "/icons/books.svg", link: "/wiki", content: "Wiki" },
+  { logo: "/icons/book_light.svg", link: "/blog", content: "Blog" },
   { logo: "/icons/store.svg", link: "/", content: "Shop" },
 ];
 
