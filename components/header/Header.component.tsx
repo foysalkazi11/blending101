@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import styles from "./header.module.scss";
 import SocialComponent from "./social/Social.component";
 import LocalMallIcon from "../../public/icons/local_mall_black_36dp.svg";
@@ -62,8 +62,6 @@ export default function HeaderComponent({
   };
 
   const style = fullWidth ? { width: "100%" } : {};
-
-  console.log(typeof headerIcon === "string");
 
   return (
     <div className={styles.wrapper}>

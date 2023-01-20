@@ -8,6 +8,7 @@ import GET_ALL_GENERAL_BLOG_FOR_CLIENT from "../../../../gqlLib/blog/query/getAl
 import GET_ALL_ADMIN from "../../../../gqlLib/user/queries/getAllAdmin";
 import { useAppSelector } from "../../../../redux/hooks";
 import { updateHeadTagInfo } from "../../../../redux/slices/headDataSlice";
+import { updateSidebarActiveMenuName } from "../../../../redux/slices/utilitySlice";
 import SkeletonBlogDetails from "../../../../theme/skeletons/skeletonBlogDetails";
 import ErrorPage from "../../404Page";
 import styles from "./BlogDetails.module.scss";
@@ -51,6 +52,7 @@ const BlogDetails = () => {
         description: "blog details",
       }),
     );
+    dispatch(updateSidebarActiveMenuName("Blogs"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

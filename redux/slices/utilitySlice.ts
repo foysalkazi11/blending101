@@ -1,13 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { sidebarActiveMenuNameType } from "../../components/sidebar/Sidebar.component";
 
 type SideTrayState = {
   loading: boolean;
-  sidebarActiveMenuNo: number;
+  sidebarActiveMenuName: sidebarActiveMenuNameType;
 };
 
 const initialState: SideTrayState = {
   loading: false,
-  sidebarActiveMenuNo: 0,
+  sidebarActiveMenuName: "Home",
 };
 
 export const utilitySlice = createSlice({
@@ -17,12 +18,16 @@ export const utilitySlice = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action?.payload;
     },
-    updateSidebarActiveMenuNo: (state, action: PayloadAction<number>) => {
-      state.sidebarActiveMenuNo = action.payload;
+    updateSidebarActiveMenuName: (
+      state,
+      action: PayloadAction<sidebarActiveMenuNameType>,
+    ) => {
+      state.sidebarActiveMenuName = action.payload;
     },
   },
 });
 
-export const { setLoading, updateSidebarActiveMenuNo } = utilitySlice?.actions;
+export const { setLoading, updateSidebarActiveMenuName } =
+  utilitySlice?.actions;
 
 export default utilitySlice?.reducer;

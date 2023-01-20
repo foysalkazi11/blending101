@@ -198,6 +198,7 @@ const ShowRecipes = ({
               postfixTitle={item?.defaultVersion?.postfixTitle}
               userId={item?.userId}
               recipeVersion={item?.recipeVersion}
+              showMoreMenuAtHover={true}
             />
           </div>
         );
