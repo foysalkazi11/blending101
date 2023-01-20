@@ -175,15 +175,16 @@ const MyPlan = () => {
   useEffect(() => {
     dispatch(
       updateHeadTagInfo({
-        title: "Plans details",
-        description: "plans details",
+        title: "Meal plan details",
+        description: "meal plans details",
       }),
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <AContainer
-      headerTitle="MEAL PLAN"
+      headerIcon="/icons/calender__sidebar.svg"
+      headerTitle="MEAL PLAN DETAILS"
       showCommentsTray={{
         show: true,
         showPanle: "right",

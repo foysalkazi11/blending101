@@ -27,6 +27,7 @@ const RecipeDetails = ({
     <AContainer
       showHeader={true}
       logo={true}
+      headerIcon="/icons/juicer.svg"
       headerTitle="Recipe details"
       showCommentsTray={{
         show: true,

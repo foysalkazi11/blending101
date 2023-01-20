@@ -66,7 +66,12 @@ const Home = () => {
   }, []);
 
   return (
-    <AContainer headerTitle="Home" headerFullWidth={true} showSidebar={false}>
+    <AContainer
+      headerTitle="Home"
+      headerFullWidth={true}
+      showSidebar={false}
+      headerIcon={"/icons/home.svg"}
+    >
       <div className={styles.container}>
         <div className="row">
           <div className="col-9">

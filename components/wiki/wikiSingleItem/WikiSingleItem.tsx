@@ -171,6 +171,8 @@ function WikiSingleItem() {
 
   return (
     <AContainer
+      headerIcon={"/icons/books.svg"}
+      headerTitle="Wiki details"
       showWikiCommentsTray={{
         show: true,
         showPanle: "right",
