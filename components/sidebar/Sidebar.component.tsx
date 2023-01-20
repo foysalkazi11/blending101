@@ -23,10 +23,10 @@ export const PAGES = [
   {
     logo: "/icons/whistle.svg",
     link: "/challenge",
-    content: "Challenge",
+    content: "Challenges",
   },
   { logo: "/icons/books.svg", link: "/wiki", content: "Wiki" },
-  { logo: "/icons/book_light.svg", link: "/blog", content: "Blog" },
+  { logo: "/icons/book_light.svg", link: "/blog", content: "Blogs" },
   { logo: "/icons/store.svg", link: "/", content: "Shop" },
 ];
 

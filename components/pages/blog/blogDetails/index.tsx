@@ -93,6 +93,7 @@ const BlogDetails = () => {
 const Layout: FC = ({ children }) => {
   return (
     <AContainer
+      headerIcon="/icons/book_light.svg"
       headerTitle="Blog details"
       logo={true}
       showBlogCommentsTray={{

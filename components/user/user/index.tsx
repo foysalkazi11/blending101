@@ -4,6 +4,8 @@ import styles from "./User.module.scss";
 import SideBar from "./sidebar/SideBar";
 import Main from "./main/Main";
 import { useAppSelector } from "../../../redux/hooks";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/pro-regular-svg-icons";
 
 const User = () => {
   const [userData, setUserData] = useState({
@@ -117,7 +119,13 @@ const User = () => {
   }, [dbUser?._id]);
 
   return (
-    <AContainer headerTitle="My Profile" logo={false}>
+    <AContainer
+      headerTitle="My Profile"
+      logo={false}
+      headerIcon={
+        <FontAwesomeIcon icon={faUser} color="#7dbd3b" fontSize={20} />
+      }
+    >
       <header className={styles.header}>
         <div className={styles.header__banner}>
           <h2>Blending 101</h2>

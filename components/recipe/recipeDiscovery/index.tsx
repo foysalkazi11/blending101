@@ -90,6 +90,20 @@ const RecipeDiscovery = () => {
     }
   };
 
+  const closeFilterRecipes = () => {
+    setRecipeSearchInput("");
+    dispatch(
+      updateAllFilterRecipes({
+        filterRecipes: [],
+        isFiltering: false,
+        totalItems: 0,
+      }),
+    );
+    dispatch(resetAllFilters());
+    dispatch(updateShowFilterOrSearchRecipes(false));
+    setPageNum(1);
+  };
+
   useEffect(() => {
     // filter recipe func
     if (allFilters.length) {
@@ -108,6 +122,7 @@ const RecipeDiscovery = () => {
           true,
         );
       } else {
+        dispatch(updateShowFilterOrSearchRecipes(false));
         dispatch(
           updateAllFilterRecipes({
             filterRecipes: [],
@@ -123,24 +138,6 @@ const RecipeDiscovery = () => {
   }, [allFilters]);
 
   // close filter or search recipes
-
-  const closeFilterRecipes = () => {
-    setRecipeSearchInput("");
-    dispatch(
-      updateAllFilterRecipes({
-        filterRecipes: [],
-        isFiltering: false,
-        totalItems: 0,
-      }),
-    );
-    dispatch(resetAllFilters());
-    dispatch(updateShowFilterOrSearchRecipes(false));
-    setPageNum(1);
-  };
-
-  useEffect(() => {
-    dispatch(updateHeadTagInfo({ description: "blends", title: "Blends" }));
-  }, []);
 
   useEffect(() => {
     if (isMounted.current) {
@@ -161,6 +158,7 @@ const RecipeDiscovery = () => {
           setPageNum(1);
           handleFilterRecipes(allFilters, filterRecipe, 1, dataLimit, true);
         } else {
+          dispatch(updateShowFilterOrSearchRecipes(false));
           dispatch(
             updateAllFilterRecipes({
               filterRecipes: [],
@@ -177,6 +175,10 @@ const RecipeDiscovery = () => {
   }, [debounceSearchTerm]);
 
   useEffect(() => {
+    dispatch(updateHeadTagInfo({ description: "blends", title: "Blends" }));
+  }, []);
+
+  useEffect(() => {
     isMounted.current = true;
 
     return () => {
@@ -187,13 +189,14 @@ const RecipeDiscovery = () => {
   return (
     <>
       <AContainer
+        headerIcon="/icons/juicer.svg"
         showCollectionTray={{ show: true, showTagByDeafult: true }}
         showRecipeFilterTray={{
           show: true,
           showPanle: "left",
           showTagByDeafult: false,
         }}
-        headerTitle="Discovery"
+        headerTitle="Blend Discovery"
         showCommentsTray={{
           show: true,
           showPanle: "right",

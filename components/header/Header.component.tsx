@@ -30,12 +30,14 @@ interface headerInterface {
   logo: Boolean;
   headerTitle: string;
   fullWidth?: Boolean;
+  headerIcon?: string | React.ReactNode;
 }
 
 export default function HeaderComponent({
   logo = true,
   headerTitle = "Home",
   fullWidth,
+  headerIcon = "",
 }: headerInterface) {
   const [openPopup, setOpenPopup] = useState(false);
   const dispatch = useAppDispatch();
@@ -61,6 +63,8 @@ export default function HeaderComponent({
 
   const style = fullWidth ? { width: "100%" } : {};
 
+  console.log(typeof headerIcon === "string");
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.header} style={style}>
@@ -71,7 +75,14 @@ export default function HeaderComponent({
             </div>
           </Link>
           <div className={styles.center}>
-            <h3 className={styles.title}>{headerTitle}</h3>
+            {headerIcon ? (
+              typeof headerIcon === "string" ? (
+                <img src={headerIcon} alt="icon" />
+              ) : (
+                headerIcon
+              )
+            ) : null}
+            <h2 className={styles.title}>{headerTitle}</h2>
           </div>
           <div className={styles.right + " " + styles.logo}>
             <div>
