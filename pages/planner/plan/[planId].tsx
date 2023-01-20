@@ -48,6 +48,7 @@ import { useAppSelector } from "../../../redux/hooks";
 import Publish from "../../../helpers/Publish";
 import { useDispatch } from "react-redux";
 import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
+import { updateSidebarActiveMenuName } from "../../../redux/slices/utilitySlice";
 
 const MyPlan = () => {
   const router = useRouter();
@@ -179,6 +180,7 @@ const MyPlan = () => {
         description: "meal plans details",
       }),
     );
+    dispatch(updateSidebarActiveMenuName("Plans"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (

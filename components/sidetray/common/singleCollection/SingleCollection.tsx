@@ -129,7 +129,25 @@ const SingleCollection = ({
           </div>
           <p>{name}</p>
           {isShared && (
-            <FontAwesomeIcon icon={faHandHolding} className={styles.handIcon} />
+            <Tooltip
+              content={`Shared by : ${
+                sharedBy.displayName
+                  ? sharedBy.displayName
+                  : sharedBy.firstName
+                  ? sharedBy.firstName
+                  : sharedBy.lastName
+                  ? sharedBy.lastName
+                  : sharedBy.email
+                  ? sharedBy.email
+                  : ""
+              }`}
+              direction="top"
+            >
+              <FontAwesomeIcon
+                icon={faHandHolding}
+                className={styles.handIcon}
+              />
+            </Tooltip>
           )}
         </div>
 

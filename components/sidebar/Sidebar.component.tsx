@@ -7,11 +7,24 @@ import {
   setShowAllRecipes,
 } from "../../redux/slices/collectionSlice";
 import { setOpenCollectionsTary } from "../../redux/slices/sideTraySlice";
-import { updateSidebarActiveMenuNo } from "../../redux/slices/utilitySlice";
+import { updateSidebarActiveMenuName } from "../../redux/slices/utilitySlice";
 import Tooltip from "../../theme/toolTip/CustomToolTip";
 import styles from "./sidebar.module.scss";
 
-export const PAGES = [
+export type sidebarActiveMenuNameType =
+  | "Home"
+  | "Blends"
+  | "Plans"
+  | "Challenges"
+  | "Wiki"
+  | "Blogs"
+  | "Shop";
+
+export const PAGES: {
+  logo: string;
+  link: string;
+  content: sidebarActiveMenuNameType;
+}[] = [
   { logo: "/icons/home.svg", link: "/", content: "Home" },
   { logo: "/icons/juicer.svg", link: "/discovery", content: "Blends" },
 
@@ -31,17 +44,17 @@ export const PAGES = [
 ];
 
 export default function SidebarComponent(props) {
-  const { sidebarActiveMenuNo } = useAppSelector((state) => state.utility);
+  const { sidebarActiveMenuName } = useAppSelector((state) => state.utility);
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const handleClick = (link: string, i: number) => {
-    if (i === 1) {
+  const handleClick = (link: string, menuName: sidebarActiveMenuNameType) => {
+    if (menuName === "Home") {
       dispatch(setCollectionDetailsId(""));
       dispatch(setOpenCollectionsTary(false));
       dispatch(setShowAllRecipes(false));
     }
-    dispatch(updateSidebarActiveMenuNo(i));
+    dispatch(updateSidebarActiveMenuName(menuName));
     router?.push(link);
   };
 
@@ -55,8 +68,10 @@ export default function SidebarComponent(props) {
           PAGES.map((page, i) => (
             <Tooltip key={"sidebaritem" + i} content={page?.content}>
               <li
-                className={sidebarActiveMenuNo === i ? styles.active : ""}
-                onClick={() => handleClick(page?.link, i)}
+                className={
+                  sidebarActiveMenuName === page.content ? styles.active : ""
+                }
+                onClick={() => handleClick(page?.link, page?.content)}
               >
                 <span>
                   {" "}
