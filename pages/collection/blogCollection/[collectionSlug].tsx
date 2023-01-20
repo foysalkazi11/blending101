@@ -50,6 +50,8 @@ const CollectionBlog = () => {
 
   return (
     <AContainer
+      headerIcon="/icons/book_light.svg"
+      headerTitle="Blog collection"
       showBlogCollectionTray={{
         show: true,
         showPanle: "left",

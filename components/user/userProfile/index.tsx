@@ -15,6 +15,8 @@ import { setLoading } from "../../../redux/slices/utilitySlice";
 import reactToastifyNotification from "../../../components/utility/reactToastifyNotification";
 import { useRouter } from "next/router";
 import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/pro-regular-svg-icons";
 
 const UserProfile = () => {
   const [userProfile, setUserProfile] = useState<any>({
@@ -255,7 +257,10 @@ const UserProfile = () => {
 
   return (
     <AContainer
-      headerTitle="Profile"
+      headerIcon={
+        <FontAwesomeIcon icon={faUser} color="#7dbd3b" fontSize={20} />
+      }
+      headerTitle="User onboarding"
       showSidebar={false}
       headerFullWidth={true}
     >
