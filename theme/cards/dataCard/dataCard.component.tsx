@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { Dispatch, SetStateAction, useRef } from "react";
+import React, { Dispatch, SetStateAction, useRef, useState } from "react";
 import styles from "./dataCard.module.scss";
 import MoreVertIcon from "../../../public/icons/more_vert_black_36dp.svg";
 import { useRouter } from "next/router";
@@ -80,7 +80,6 @@ export default function DatacardComponent({
   isImageOverlay = false,
   userId = null,
   customMenu = null,
-  showMoreMenuAtHover = false,
   description = "",
   recipeVersion = [],
 }: dataCardInterface) {
@@ -102,11 +101,7 @@ export default function DatacardComponent({
   const handleOpenCommentsTray = useForOpenCommentsTray();
   const selectCommentsAndNotesIcon = useForSelectCommentsAndNotesIcon();
   const [hoverRef, isHover] = useHover();
-
-  const handleClick = () => {
-    const elem = menu.current;
-    elem.classList.toggle("show__hidden");
-  };
+  const [hoverRefMoreMenu, isHoverMoreMenu] = useHover();
 
   const FloatingMenu2 = () => {
     return (
@@ -144,15 +139,12 @@ export default function DatacardComponent({
   );
 
   const floatingMenu = (
-    <div className={styles.floating__menu} ref={menu}>
+    <div className={styles.floating__menu}>
       <ul>
-        <li>
-          <img src="/icons/square.png" alt="square" />
-        </li>
         <li>
           <img src="/icons/share.png" alt="square" />
         </li>
-        <li>
+        <li onClick={() => router.push(`/edit_recipe/${recipeId}`)}>
           <img src="/icons/edit.png" alt="square" />
         </li>
         <li>
@@ -166,16 +158,15 @@ export default function DatacardComponent({
   );
 
   const showFloatingMenu = (
-    <>
+    <div style={{ position: "relative" }}>
       <IconWarper
         hover="bgSlightGray"
-        handleClick={handleClick}
         style={{ width: "30px", height: "30px" }}
       >
         <FontAwesomeIcon icon={faEllipsisVertical} />
       </IconWarper>
-      {floatingMenu}
-    </>
+      {isHoverMoreMenu ? floatingMenu : null}
+    </div>
   );
 
   const handleShowCommentsAndNotesIcon = (comments: number, notes: number) => {
@@ -212,14 +203,14 @@ export default function DatacardComponent({
             </h2>
           </div>
           <div className={styles.menu}>
-            {showMoreMenu &&
-              (showMoreMenuAtHover ? (
-                <div style={{ visibility: isHover ? "visible" : "hidden" }}>
-                  {customMenu ? customMenu : showFloatingMenu}
-                </div>
-              ) : (
-                <>{customMenu ? customMenu : showFloatingMenu}</>
-              ))}
+            {showMoreMenu && (
+              <div
+                style={{ visibility: isHover ? "visible" : "hidden" }}
+                ref={hoverRefMoreMenu}
+              >
+                {customMenu ? customMenu : showFloatingMenu}
+              </div>
+            )}
           </div>
         </div>
         <div className={styles.datacard__body__middle}>

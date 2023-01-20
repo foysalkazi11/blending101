@@ -4,7 +4,10 @@ import AContainer from "../../../containers/A.container";
 import GET_ALL_INGREDIENTS_BASED_ON_NURTITION from "../../../gqlLib/wiki/query/getAllIngredientsBasedOnNutrition";
 import GET_BLEND_NUTRITION_BASED_IN_INGREDIENTS_WIKI from "../../../gqlLib/wiki/query/getBlendNutritionBasedIngredientsWiki";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setLoading } from "../../../redux/slices/utilitySlice";
+import {
+  setLoading,
+  updateSidebarActiveMenuName,
+} from "../../../redux/slices/utilitySlice";
 import NutritionPanel from "../../recipe/share/nutritionPanel/NutritionPanel";
 import notification from "../../utility/reactToastifyNotification";
 import WikiCenterComponent from "../WikiCenter";
@@ -152,6 +155,7 @@ function WikiSingleItem() {
         description: `wiki ${type} details`,
       }),
     );
+    dispatch(updateSidebarActiveMenuName("Wiki"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
 
