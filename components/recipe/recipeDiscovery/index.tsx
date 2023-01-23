@@ -26,9 +26,16 @@ import {
 import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
 import ShowRecipeContainer from "../../showRecipeContainer";
 import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
+import ShareRecipe from "../recipeDetails/center/shareRecipe";
 let dataLimit = 12;
 
 const RecipeDiscovery = () => {
+  const [shareRecipeData, setShareRecipeData] = useState({
+    id: "",
+    image: "",
+    name: "",
+  });
+  const [openShareModal, setOpenShareModal] = useState(false);
   const [pageNum, setPageNum] = useState(1);
   const [searchRecipeType, setSearchRecipeType] = useState<"filter" | "search">(
     "filter",
@@ -236,9 +243,16 @@ const RecipeDiscovery = () => {
               hasMore={allFilterRecipes?.totalItems > dataLimit * pageNum}
               totalDataCount={allFilterRecipes?.totalItems}
               nextPage={handleNextPage}
+              setOpenCollectionModal={setOpenCollectionModal}
+              setOpenShareModal={setOpenShareModal}
+              setShareRecipeData={setShareRecipeData}
             />
           ) : (
-            <RegularRecipes setOpenCollectionModal={setOpenCollectionModal} />
+            <RegularRecipes
+              setOpenCollectionModal={setOpenCollectionModal}
+              setOpenShareModal={setOpenShareModal}
+              setShareRecipeData={setShareRecipeData}
+            />
           )}
         </div>
         <div className={styles.footerMainDiv}>
@@ -251,6 +265,15 @@ const RecipeDiscovery = () => {
         shouldCloseOnOverlayClick={true}
         lastModifiedCollectionName={lastModifiedCollection?.name}
         openCollectionPanel={handleOpenCollectionTray}
+      />
+      <ShareRecipe
+        id={shareRecipeData?.id}
+        title={shareRecipeData?.name}
+        image={shareRecipeData?.image}
+        show={openShareModal}
+        setShow={setOpenShareModal}
+        type="recipe"
+        heading="Share Recipe"
       />
     </>
   );
