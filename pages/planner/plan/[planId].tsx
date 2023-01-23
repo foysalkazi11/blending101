@@ -176,8 +176,8 @@ const MyPlan = () => {
   useEffect(() => {
     dispatch(
       updateHeadTagInfo({
-        title: "Meal plan details",
-        description: "meal plans details",
+        title: "Blending plan details",
+        description: "blending plans details",
       }),
     );
     dispatch(updateSidebarActiveMenuName("Plans"));
@@ -186,12 +186,12 @@ const MyPlan = () => {
   return (
     <AContainer
       headerIcon="/icons/calender__sidebar.svg"
-      headerTitle="MEAL PLAN DETAILS"
-      showCommentsTray={{
-        show: true,
-        showPanle: "right",
-        showTagByDeafult: false,
-      }}
+      headerTitle="BLENDING PLAN DETAILS"
+      // showCommentsTray={{
+      //   show: true,
+      //   showPanle: "right",
+      //   showTagByDeafult: false,
+      // }}
     >
       <CommentDrawer
         id={plan?._id}
@@ -200,7 +200,7 @@ const MyPlan = () => {
         show={showComments}
         onClose={() => setShowComments(false)}
       />
-      <CollectionDrawer />
+      {/* <CollectionDrawer /> */}
       <RXPanel />
       <ShareModal
         name={plan?.planName}

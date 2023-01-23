@@ -51,6 +51,10 @@ interface dataCardInterface {
   showMoreMenuAtHover?: boolean;
   description?: string;
   recipeVersion?: RecipeSmallVersionType[];
+  setOpenShareModal?: React.Dispatch<React.SetStateAction<boolean>>;
+  setShareRecipeData?: React.Dispatch<
+    React.SetStateAction<{ id: string; image: string; name: string }>
+  >;
 }
 
 export default function DatacardComponent({
@@ -82,6 +86,8 @@ export default function DatacardComponent({
   customMenu = null,
   description = "",
   recipeVersion = [],
+  setOpenShareModal = () => {},
+  setShareRecipeData = () => {},
 }: dataCardInterface) {
   title = title || "Triple Berry Smoothie";
   ingredients = ingredients;
@@ -102,6 +108,11 @@ export default function DatacardComponent({
   const selectCommentsAndNotesIcon = useForSelectCommentsAndNotesIcon();
   const [hoverRef, isHover] = useHover();
   const [hoverRefMoreMenu, isHoverMoreMenu] = useHover();
+
+  const handleOpenShareRecipeModal = (id, name, image) => {
+    setShareRecipeData({ id, image, name });
+    setOpenShareModal(true);
+  };
 
   const FloatingMenu2 = () => {
     return (
@@ -138,10 +149,10 @@ export default function DatacardComponent({
     </div>
   );
 
-  const floatingMenu = (
+  const showFloatingMenu = (id: string, name: string, image: string) => (
     <div className={styles.floating__menu}>
       <ul>
-        <li>
+        <li onClick={() => handleOpenShareRecipeModal(id, name, image)}>
           <img src="/icons/share.png" alt="square" />
         </li>
         <li onClick={() => router.push(`/edit_recipe/${recipeId}`)}>
@@ -154,18 +165,6 @@ export default function DatacardComponent({
           <img src="/icons/cart.png" alt="square" />
         </li>
       </ul>
-    </div>
-  );
-
-  const showFloatingMenu = (
-    <div style={{ position: "relative" }}>
-      <IconWarper
-        hover="bgSlightGray"
-        style={{ width: "30px", height: "30px" }}
-      >
-        <FontAwesomeIcon icon={faEllipsisVertical} />
-      </IconWarper>
-      {isHoverMoreMenu ? floatingMenu : null}
     </div>
   );
 
@@ -208,7 +207,20 @@ export default function DatacardComponent({
                 style={{ visibility: isHover ? "visible" : "hidden" }}
                 ref={hoverRefMoreMenu}
               >
-                {customMenu ? customMenu : showFloatingMenu}
+                {customMenu ? (
+                  customMenu
+                ) : (
+                  <div style={{ position: "relative" }}>
+                    <IconWarper
+                      hover="bgSlightGray"
+                      style={{ width: "30px", height: "30px" }}
+                    >
+                      <FontAwesomeIcon icon={faEllipsisVertical} />
+                    </IconWarper>
+                    {isHoverMoreMenu &&
+                      showFloatingMenu(recipeId, title, image)}
+                  </div>
+                )}
               </div>
             )}
           </div>

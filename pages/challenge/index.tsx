@@ -188,7 +188,7 @@ const ChallengePage = () => {
   return (
     <AContainer
       headerIcon="/icons/whistle.svg"
-      headerTitle="Challenges Discovery"
+      headerTitle="Challenges"
       showGroceryTray={{
         show: showGroceryTray,
         showPanle: "right",

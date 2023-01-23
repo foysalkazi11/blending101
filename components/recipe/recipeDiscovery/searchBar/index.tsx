@@ -2,10 +2,11 @@ import { faCirclePlus } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import React from "react";
-import { useAppSelector } from "../../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import { setOpenFilterTray } from "../../../../redux/slices/sideTraySlice";
 import RecipeDiscoverButton from "../../../../theme/button/recipeDiscoverButton/RecipeDiscoverButton";
 import Tooltip from "../../../../theme/toolTip/CustomToolTip";
-import DiscoverPageSearch from "../discoverPageSearch/DiscoverPageSearch.Component";
+import CommonSearchBar from "../../../searchBar/CommonSearchBar";
 interface Props {
   input?: string;
   handleOnChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -17,9 +18,25 @@ const DiscoveryPageSearchBar = ({
 }: Props) => {
   const router = useRouter();
   const { dbUser } = useAppSelector((state) => state?.user);
+  const { openFilterTray } = useAppSelector((state) => state?.sideTray);
+  const dispatch = useAppDispatch();
+  const toggleFilterPanel = () => {
+    dispatch(setOpenFilterTray(!openFilterTray));
+  };
+
+  const handleSubmit = () => {
+    //
+  };
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
-      <DiscoverPageSearch input={input} handleOnChange={handleOnChange} />
+      <CommonSearchBar
+        input={input}
+        handleOnChange={handleOnChange}
+        handleSubmitFunc={handleSubmit}
+        openPanel={toggleFilterPanel}
+        isOpenPanel={openFilterTray}
+        styles={{ marginLeft: "16px" }}
+      />
       <div
         style={{ marginLeft: "40px" }}
         // className={styles.buttonContainer}
