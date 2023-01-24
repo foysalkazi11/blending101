@@ -80,7 +80,7 @@ const CommonSearchBar = ({
     <div className={classes.inputContainer} ref={inputRef} style={styles}>
       <div
         className={classes.filterIconContainer}
-        style={isOpenPanel ? { marginRight: "10px", paddingRight: "20px" } : {}}
+        // style={isOpenPanel ? { marginRight: "10px", paddingRight: "20px" } : {}}
       >
         {isOpenPanel ? null : (
           <FiFilter

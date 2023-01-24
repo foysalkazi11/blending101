@@ -168,8 +168,8 @@ const WikiCompare = () => {
   useEffect(() => {
     dispatch(
       updateHeadTagInfo({
-        title: "Wiki compare",
-        description: "wiki compare",
+        title: "Compare Ingredient",
+        description: "compare Ingredient",
       }),
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -177,6 +177,7 @@ const WikiCompare = () => {
 
   return (
     <AContainer
+      headerIcon={"/icons/books.svg"}
       headerTitle="Compare Ingredient"
       showWikiCommentsTray={{
         show: true,

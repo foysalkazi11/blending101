@@ -482,6 +482,7 @@ const CompareRecipe = () => {
   return (
     <>
       <AContainer
+        headerIcon="/icons/juicer.svg"
         logo={false}
         headerTitle="Compare Recipe"
         showCollectionTray={{

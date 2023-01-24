@@ -109,7 +109,8 @@ const Layout: FC<{
 }> = ({ children, blogSearchInput, setBlogSearchInput }) => {
   return (
     <AContainer
-      headerTitle="Blog"
+      headerIcon="/icons/book_light.svg"
+      headerTitle="Blog Discovery"
       showBlogCollectionTray={{
         show: true,
         showPanle: "left",

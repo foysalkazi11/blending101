@@ -9,6 +9,7 @@ import { useAppSelector } from "../../../../redux/hooks";
 import DatacardComponent from "../../../../theme/cards/dataCard/dataCard.component";
 import SkeletonRecipeDiscovery from "../../../../theme/skeletons/skeletonRecipeDiscovery/SkeletonRecipeDiscovery";
 import { Ingredient, RecipeType } from "../../../../type/recipeType";
+import ShareRecipe from "../../recipeDetails/center/shareRecipe";
 import AppdownLoadCard from "../AppdownLoadCard/AppdownLoadCard.component";
 import ContentTray from "../ContentTray/ContentTray.component";
 import styles from "../recipeDiscovery.module.scss";
@@ -20,8 +21,16 @@ const defaultHeadingContent = {
 };
 interface RegularRecipesType {
   setOpenCollectionModal?: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenShareModal?: React.Dispatch<React.SetStateAction<boolean>>;
+  setShareRecipeData?: React.Dispatch<
+    React.SetStateAction<{ id: string; image: string; name: string }>
+  >;
 }
-const RegularRecipes = ({ setOpenCollectionModal }: RegularRecipesType) => {
+const RegularRecipes = ({
+  setOpenCollectionModal,
+  setOpenShareModal,
+  setShareRecipeData,
+}: RegularRecipesType) => {
   const { dbUser } = useAppSelector((state) => state?.user);
   const {
     data: recommendedRecipesData,
@@ -49,45 +58,6 @@ const RegularRecipes = ({ setOpenCollectionModal }: RegularRecipesType) => {
     variables: { userId: dbUser?._id },
   });
 
-  // const getAllRecipes = async () => {
-  //   try {
-  //     if (!recommended?.length) {
-  //       const recommendedRecipes = await getAllRecommendedRecipes({
-  //         variables: { userId: dbUser?._id },
-  //       });
-  //       dispatch(
-  //         setRecommended(
-  //           recommendedRecipes?.data?.getAllrecomendedRecipes || [],
-  //         ),
-  //       );
-  //     }
-
-  //     if (!popular?.length) {
-  //       const popularRecipes = await getAllPopularRecipes({
-  //         variables: { userId: dbUser?._id },
-  //       });
-  //       dispatch(setPopular(popularRecipes?.data?.getAllpopularRecipes || []));
-  //     }
-
-  //     if (!latest?.length) {
-  //       const latestRecipes = await getAllLatestRecipes({
-  //         variables: { userId: dbUser?._id },
-  //       });
-  //       dispatch(setLatest(latestRecipes?.data?.getAllLatestRecipes || []));
-  //     }
-  //   } catch (error) {
-  //     console.log(error?.message);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (dbUser?._id) {
-  //     if (!latest?.length || !popular?.length || !recommended?.length) {
-  //       getAllRecipes();
-  //     }
-  //   }
-  // }, [dbUser?._id]);
-
   return (
     <>
       <AppdownLoadCard />
@@ -102,6 +72,8 @@ const RegularRecipes = ({ setOpenCollectionModal }: RegularRecipesType) => {
           loading={recommendedRecipesLoading}
           recipes={recommendedRecipesData?.getAllrecomendedRecipes}
           setOpenCollectionModal={setOpenCollectionModal}
+          setOpenShareModal={setOpenShareModal}
+          setShareRecipeData={setShareRecipeData}
         />
         {/* its for latest */}
         <ShowRecipes
@@ -113,6 +85,8 @@ const RegularRecipes = ({ setOpenCollectionModal }: RegularRecipesType) => {
           loading={latestRecipesLoading}
           recipes={latestRecipesData?.getAllLatestRecipes}
           setOpenCollectionModal={setOpenCollectionModal}
+          setOpenShareModal={setOpenShareModal}
+          setShareRecipeData={setShareRecipeData}
         />
         {/* its for popular */}
         <ShowRecipes
@@ -124,6 +98,8 @@ const RegularRecipes = ({ setOpenCollectionModal }: RegularRecipesType) => {
           loading={popularRecipesLoading}
           recipes={popularRecipesData?.getAllpopularRecipes}
           setOpenCollectionModal={setOpenCollectionModal}
+          setOpenShareModal={setOpenShareModal}
+          setShareRecipeData={setShareRecipeData}
         />
 
         <Widget slug="recipe-editor" />
@@ -141,6 +117,10 @@ interface ShowRecipesType {
     allUrl: string;
   };
   setOpenCollectionModal?: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenShareModal?: React.Dispatch<React.SetStateAction<boolean>>;
+  setShareRecipeData?: React.Dispatch<
+    React.SetStateAction<{ id: string; image: string; name: string }>
+  >;
 }
 
 const ShowRecipes = ({
@@ -148,6 +128,8 @@ const ShowRecipes = ({
   loading = false,
   recipes = [],
   setOpenCollectionModal,
+  setOpenShareModal = () => {},
+  setShareRecipeData = () => {},
 }: ShowRecipesType) => {
   const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
     "compareList",
@@ -167,43 +149,50 @@ const ShowRecipes = ({
   if (loading) {
     return <SkeletonRecipeDiscovery />;
   }
-  return recipes.length ? (
-    <ContentTray {...headerData}>
-      {recipes?.map((item, index) => {
-        const ing = joniIngredients(item?.ingredients);
-        return (
-          <div
-            className={styles.slider__card}
-            key={`${headerData.heading}${index}`}
-          >
-            <DatacardComponent
-              title={item.name}
-              ingredients={ing}
-              category={item.recipeBlendCategory?.name}
-              ratings={item?.averageRating}
-              noOfRatings={item?.numberOfRating}
-              carbs={item?.carbs}
-              score={item?.score}
-              calorie={item?.calorie}
-              noOfComments={item?.numberOfRating}
-              image={item.image[0]?.image}
-              recipeId={item?._id}
-              notes={item?.notes}
-              addedToCompare={item?.addedToCompare}
-              compareRecipeList={compareRecipeList}
-              setcompareRecipeList={setcompareRecipeList}
-              isCollectionIds={item?.userCollections}
-              setOpenCollectionModal={setOpenCollectionModal}
-              isMatch={item?.isMatch}
-              postfixTitle={item?.defaultVersion?.postfixTitle}
-              userId={item?.userId}
-              recipeVersion={item?.recipeVersion}
-            />
-          </div>
-        );
-      })}
-    </ContentTray>
-  ) : null;
+  return (
+    <>
+      {recipes.length ? (
+        <ContentTray {...headerData}>
+          {recipes?.map((item, index) => {
+            const ing = joniIngredients(item?.ingredients);
+            return (
+              <div
+                className={styles.slider__card}
+                key={`${headerData.heading}${index}`}
+              >
+                <DatacardComponent
+                  title={item.name}
+                  ingredients={ing}
+                  category={item.recipeBlendCategory?.name}
+                  ratings={item?.averageRating}
+                  noOfRatings={item?.numberOfRating}
+                  carbs={item?.carbs}
+                  score={item?.score}
+                  calorie={item?.calorie}
+                  noOfComments={item?.numberOfRating}
+                  image={item.image[0]?.image}
+                  recipeId={item?._id}
+                  notes={item?.notes}
+                  addedToCompare={item?.addedToCompare}
+                  compareRecipeList={compareRecipeList}
+                  setcompareRecipeList={setcompareRecipeList}
+                  isCollectionIds={item?.userCollections}
+                  setOpenCollectionModal={setOpenCollectionModal}
+                  isMatch={item?.isMatch}
+                  postfixTitle={item?.defaultVersion?.postfixTitle}
+                  userId={item?.userId}
+                  recipeVersion={item?.recipeVersion}
+                  showMoreMenuAtHover={true}
+                  setShareRecipeData={setShareRecipeData}
+                  setOpenShareModal={setOpenShareModal}
+                />
+              </div>
+            );
+          })}
+        </ContentTray>
+      ) : null}
+    </>
+  );
 };
 
 export default RegularRecipes;

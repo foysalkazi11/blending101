@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import styles from "./header.module.scss";
 import SocialComponent from "./social/Social.component";
 import LocalMallIcon from "../../public/icons/local_mall_black_36dp.svg";
@@ -30,12 +30,14 @@ interface headerInterface {
   logo: Boolean;
   headerTitle: string;
   fullWidth?: Boolean;
+  headerIcon?: string | React.ReactNode;
 }
 
 export default function HeaderComponent({
   logo = true,
   headerTitle = "Home",
   fullWidth,
+  headerIcon = "",
 }: headerInterface) {
   const [openPopup, setOpenPopup] = useState(false);
   const dispatch = useAppDispatch();
@@ -71,7 +73,14 @@ export default function HeaderComponent({
             </div>
           </Link>
           <div className={styles.center}>
-            <h3 className={styles.title}>{headerTitle}</h3>
+            {headerIcon ? (
+              typeof headerIcon === "string" ? (
+                <img src={headerIcon} alt="icon" />
+              ) : (
+                headerIcon
+              )
+            ) : null}
+            <h2 className={styles.title}>{headerTitle}</h2>
           </div>
           <div className={styles.right + " " + styles.logo}>
             <div>

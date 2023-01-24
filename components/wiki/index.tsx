@@ -43,6 +43,8 @@ const WikiHome = () => {
 
   return (
     <AContainer
+      headerTitle="Wiki Discovery"
+      headerIcon={"/icons/books.svg"}
       showWikiCommentsTray={{
         show: true,
         showPanle: "right",

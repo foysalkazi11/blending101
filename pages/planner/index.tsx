@@ -50,7 +50,8 @@ const PlanDiscovery = ({
 
   return (
     <AContainer
-      headerTitle="MEAL PLAN DISCOVERY"
+      headerIcon="/icons/calender__sidebar.svg"
+      headerTitle="Plan Discovery"
       showPlanCollectionTray={{
         show: true,
         showPanle: "left",

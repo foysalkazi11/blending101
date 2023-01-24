@@ -48,6 +48,7 @@ import { useAppSelector } from "../../../redux/hooks";
 import Publish from "../../../helpers/Publish";
 import { useDispatch } from "react-redux";
 import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
+import { updateSidebarActiveMenuName } from "../../../redux/slices/utilitySlice";
 
 const MyPlan = () => {
   const router = useRouter();
@@ -175,20 +176,22 @@ const MyPlan = () => {
   useEffect(() => {
     dispatch(
       updateHeadTagInfo({
-        title: "Plans details",
-        description: "plans details",
+        title: "Blending plan details",
+        description: "blending plans details",
       }),
     );
+    dispatch(updateSidebarActiveMenuName("Plans"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <AContainer
-      headerTitle="MEAL PLAN"
-      showCommentsTray={{
-        show: true,
-        showPanle: "right",
-        showTagByDeafult: false,
-      }}
+      headerIcon="/icons/calender__sidebar.svg"
+      headerTitle="BLENDING PLAN DETAILS"
+      // showCommentsTray={{
+      //   show: true,
+      //   showPanle: "right",
+      //   showTagByDeafult: false,
+      // }}
     >
       <CommentDrawer
         id={plan?._id}
@@ -197,7 +200,7 @@ const MyPlan = () => {
         show={showComments}
         onClose={() => setShowComments(false)}
       />
-      <CollectionDrawer />
+      {/* <CollectionDrawer /> */}
       <RXPanel />
       <ShareModal
         name={plan?.planName}

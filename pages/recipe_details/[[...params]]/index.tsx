@@ -15,6 +15,7 @@ import SkeletonRecipeDetails from "../../../theme/skeletons/skeletonRecipeDetail
 import AContainer from "../../../containers/A.container";
 import ErrorPage from "../../../components/pages/404Page";
 import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
+import { updateSidebarActiveMenuName } from "../../../redux/slices/utilitySlice";
 
 const Index = () => {
   const router = useRouter();
@@ -63,6 +64,7 @@ const Index = () => {
         description: "details a recipe",
       }),
     );
+    dispatch(updateSidebarActiveMenuName("Home"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -107,6 +107,7 @@ const EditRecipePage = ({
 
   return (
     <AContainer
+      headerIcon="/icons/juicer.svg"
       headerTitle="Recipe edit"
       showVersionTray={{
         show: true,

@@ -42,6 +42,11 @@ interface Props {
   showDefaultRightHeader?: boolean;
   hasMore?: boolean;
   nextPage?: () => void;
+  setOpenCollectionModal?: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenShareModal?: React.Dispatch<React.SetStateAction<boolean>>;
+  setShareRecipeData?: React.Dispatch<
+    React.SetStateAction<{ id: string; image: string; name: string }>
+  >;
 }
 
 const ShowRecipeContainer = ({
@@ -59,6 +64,9 @@ const ShowRecipeContainer = ({
   showDefaultRightHeader = false,
   hasMore = false,
   nextPage = () => {},
+  setOpenCollectionModal = () => {},
+  setOpenShareModal = () => {},
+  setShareRecipeData = () => {},
 }: Props) => {
   const [input, setInput] = useState({
     image: null,
@@ -70,7 +78,6 @@ const ShowRecipeContainer = ({
     "compareList",
     [],
   );
-  const [openCollectionModal, setOpenCollectionModal] = useState(false);
   const [openCreateCollectionModal, setOpenCreateCollectionModal] =
     useState(false);
   const { lastModifiedCollection } = useAppSelector(
@@ -209,6 +216,8 @@ const ShowRecipeContainer = ({
                     isMatch={item?.isMatch}
                     postfixTitle={item?.defaultVersion?.postfixTitle}
                     userId={item?.userId}
+                    setShareRecipeData={setShareRecipeData}
+                    setOpenShareModal={setOpenShareModal}
                   />
                 );
               })}
@@ -253,21 +262,6 @@ const ShowRecipeContainer = ({
         </>
       }
 
-      {/* <div className={styles.paginationWarper}>
-        <Pagination
-          limit={limit}
-          pageState={[pageNo, setPageNo]}
-          totalPage={Math?.ceil(totalDataCount / limit)}
-          activeBgColor="primary"
-        />
-      </div> */}
-      <ShowLastModifiedCollection
-        open={openCollectionModal}
-        setOpen={setOpenCollectionModal}
-        shouldCloseOnOverlayClick={true}
-        lastModifiedCollectionName={lastModifiedCollection?.name}
-        openCollectionPanel={handleOpenCollectionTray}
-      />
       {/* <CustomModal
         setOpen={setOpenCreateCollectionModal}
         open={openCreateCollectionModal}
