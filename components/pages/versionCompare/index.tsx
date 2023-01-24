@@ -17,7 +17,10 @@ import { reorder } from "../../recipe/compareRecipe/utility";
 import EDIT_A_VERSION_OF_RECIPE from "../../../gqlLib/versions/mutation/editAVersionOfRecipe";
 import notification from "../../utility/reactToastifyNotification";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
-import { faPen } from "@fortawesome/pro-light-svg-icons";
+import {
+  faPen,
+  faRectangleVerticalHistory,
+} from "@fortawesome/pro-light-svg-icons";
 import { useDispatch } from "react-redux";
 import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 
@@ -319,6 +322,13 @@ const LayoutComponent: FC = ({ children }) => {
   return (
     <AContainer
       logo={false}
+      headerIcon={
+        <FontAwesomeIcon
+          icon={faRectangleVerticalHistory}
+          color="#7cbc39"
+          fontSize={20}
+        />
+      }
       headerTitle="Compare versions"
       showCollectionTray={{
         show: true,

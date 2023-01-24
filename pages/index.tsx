@@ -29,6 +29,7 @@ const defaultBlendImg =
 
 const Home = () => {
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const { allFilters } = useAppSelector((state) => state?.filterRecipe);
   const displayName = useAppSelector(
     (state) => state.user?.dbUser?.displayName || "",
   );
@@ -45,14 +46,18 @@ const Home = () => {
   const router = useRouter();
 
   const handleToShowBlendTypes = (value: any) => {
-    dispatch(
-      updateFilterCriteriaItem({
-        updateStatus: "add",
-        value: value,
-        filterCriteria: value.filterCategory,
-      }),
-    );
-    dispatch(updateSidebarActiveMenuName("Home"));
+    const findFilter = allFilters?.find((filter) => filter?.id === value?.id);
+    if (!findFilter) {
+      dispatch(
+        updateFilterCriteriaItem({
+          updateStatus: "add",
+          value: value,
+          filterCriteria: value.filterCategory,
+        }),
+      );
+    }
+
+    dispatch(updateSidebarActiveMenuName("Blends"));
     router.push("/discovery");
   };
 

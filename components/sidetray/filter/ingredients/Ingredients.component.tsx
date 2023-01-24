@@ -125,7 +125,9 @@ export default function FilterbottomComponent({
 
   return (
     <div className={styles.filter__top}>
-      <h3>Ingredients</h3>
+      <div className={styles.header}>
+        <h3 className={styles.title}>Ingredients</h3>
+      </div>
       <div className={styles.filter__bottom}>
         <ToggleMenu
           setToggle={setToggle}

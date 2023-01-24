@@ -28,16 +28,17 @@ const ErrorPage = ({
 }: Props) => {
   const router = useRouter();
   const dispatch = useDispatch();
+  console.log(router.asPath);
 
-  useEffect(() => {
-    dispatch(
-      updateHeadTagInfo({
-        title: errorMessage || "Page not found",
-        description: errorMessage || "page not found(404)",
-      }),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   dispatch(
+  //     updateHeadTagInfo({
+  //       title: errorMessage || "Page not found",
+  //       description: errorMessage || "page not found(404)",
+  //     }),
+  //   );
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   return (
     <div className={styles.errorPageContainer} style={style}>
