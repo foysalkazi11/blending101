@@ -120,7 +120,8 @@ const EditRecipePage = ({
           <IngredientPanel
             handleIngredientClick={handleIngredientClick}
             checkActive={checkActive}
-            showHeader={false}
+            showHeader={true}
+            showTopHeader={false}
           />
         </FloatingLeftPanel>
       )}
