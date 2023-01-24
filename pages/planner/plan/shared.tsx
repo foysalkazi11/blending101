@@ -39,8 +39,8 @@ const Shared = () => {
   useEffect(() => {
     dispatch(
       updateHeadTagInfo({
-        title: "Plans share",
-        description: "plans share",
+        title: "Meal Plans share",
+        description: "meal plans share",
       }),
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps

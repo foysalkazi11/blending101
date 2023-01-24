@@ -92,6 +92,8 @@ const CollectionRecipes = () => {
 
   return (
     <AContainer
+      headerIcon="/icons/juicer.svg"
+      headerTitle="Recipe collection"
       showCollectionTray={{ show: true, showTagByDeafult: true }}
       showCommentsTray={{
         show: true,

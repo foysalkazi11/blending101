@@ -195,7 +195,7 @@ const AddRecipePage = () => {
   const giGl: GiGl = nutritionData?.getNutrientsListAndGiGlByIngredients?.giGl;
 
   return (
-    <AContainer>
+    <AContainer headerIcon="/icons/juicer.svg" headerTitle="Add new blend">
       {width < 1280 ? (
         <>
           <TrayWrapper

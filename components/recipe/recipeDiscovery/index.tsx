@@ -26,9 +26,16 @@ import {
 import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
 import ShowRecipeContainer from "../../showRecipeContainer";
 import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
+import ShareRecipe from "../recipeDetails/center/shareRecipe";
 let dataLimit = 12;
 
 const RecipeDiscovery = () => {
+  const [shareRecipeData, setShareRecipeData] = useState({
+    id: "",
+    image: "",
+    name: "",
+  });
+  const [openShareModal, setOpenShareModal] = useState(false);
   const [pageNum, setPageNum] = useState(1);
   const [searchRecipeType, setSearchRecipeType] = useState<"filter" | "search">(
     "filter",
@@ -90,6 +97,20 @@ const RecipeDiscovery = () => {
     }
   };
 
+  const closeFilterRecipes = () => {
+    setRecipeSearchInput("");
+    dispatch(
+      updateAllFilterRecipes({
+        filterRecipes: [],
+        isFiltering: false,
+        totalItems: 0,
+      }),
+    );
+    dispatch(resetAllFilters());
+    dispatch(updateShowFilterOrSearchRecipes(false));
+    setPageNum(1);
+  };
+
   useEffect(() => {
     // filter recipe func
     if (allFilters.length) {
@@ -108,6 +129,7 @@ const RecipeDiscovery = () => {
           true,
         );
       } else {
+        dispatch(updateShowFilterOrSearchRecipes(false));
         dispatch(
           updateAllFilterRecipes({
             filterRecipes: [],
@@ -123,24 +145,6 @@ const RecipeDiscovery = () => {
   }, [allFilters]);
 
   // close filter or search recipes
-
-  const closeFilterRecipes = () => {
-    setRecipeSearchInput("");
-    dispatch(
-      updateAllFilterRecipes({
-        filterRecipes: [],
-        isFiltering: false,
-        totalItems: 0,
-      }),
-    );
-    dispatch(resetAllFilters());
-    dispatch(updateShowFilterOrSearchRecipes(false));
-    setPageNum(1);
-  };
-
-  useEffect(() => {
-    dispatch(updateHeadTagInfo({ description: "blends", title: "Blends" }));
-  }, []);
 
   useEffect(() => {
     if (isMounted.current) {
@@ -161,6 +165,7 @@ const RecipeDiscovery = () => {
           setPageNum(1);
           handleFilterRecipes(allFilters, filterRecipe, 1, dataLimit, true);
         } else {
+          dispatch(updateShowFilterOrSearchRecipes(false));
           dispatch(
             updateAllFilterRecipes({
               filterRecipes: [],
@@ -177,6 +182,10 @@ const RecipeDiscovery = () => {
   }, [debounceSearchTerm]);
 
   useEffect(() => {
+    dispatch(updateHeadTagInfo({ description: "blends", title: "Blends" }));
+  }, []);
+
+  useEffect(() => {
     isMounted.current = true;
 
     return () => {
@@ -187,13 +196,14 @@ const RecipeDiscovery = () => {
   return (
     <>
       <AContainer
+        headerIcon="/icons/juicer.svg"
         showCollectionTray={{ show: true, showTagByDeafult: true }}
         showRecipeFilterTray={{
           show: true,
           showPanle: "left",
           showTagByDeafult: false,
         }}
-        headerTitle="Discovery"
+        headerTitle="Blend Discovery"
         showCommentsTray={{
           show: true,
           showPanle: "right",
@@ -233,9 +243,16 @@ const RecipeDiscovery = () => {
               hasMore={allFilterRecipes?.totalItems > dataLimit * pageNum}
               totalDataCount={allFilterRecipes?.totalItems}
               nextPage={handleNextPage}
+              setOpenCollectionModal={setOpenCollectionModal}
+              setOpenShareModal={setOpenShareModal}
+              setShareRecipeData={setShareRecipeData}
             />
           ) : (
-            <RegularRecipes setOpenCollectionModal={setOpenCollectionModal} />
+            <RegularRecipes
+              setOpenCollectionModal={setOpenCollectionModal}
+              setOpenShareModal={setOpenShareModal}
+              setShareRecipeData={setShareRecipeData}
+            />
           )}
         </div>
         <div className={styles.footerMainDiv}>
@@ -248,6 +265,15 @@ const RecipeDiscovery = () => {
         shouldCloseOnOverlayClick={true}
         lastModifiedCollectionName={lastModifiedCollection?.name}
         openCollectionPanel={handleOpenCollectionTray}
+      />
+      <ShareRecipe
+        id={shareRecipeData?.id}
+        title={shareRecipeData?.name}
+        image={shareRecipeData?.image}
+        show={openShareModal}
+        setShow={setOpenShareModal}
+        type="recipe"
+        heading="Share Recipe"
       />
     </>
   );

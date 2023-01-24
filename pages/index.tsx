@@ -1,12 +1,15 @@
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Overview from "../component/module/Home/Overview.component";
 import PlanCard from "../component/module/Planner/PlanCard.component";
 import ContentTray from "../components/recipe/recipeDiscovery/ContentTray/ContentTray.component";
-import { PAGES } from "../components/sidebar/Sidebar.component";
+import {
+  PAGES,
+  sidebarActiveMenuNameType,
+} from "../components/sidebar/Sidebar.component";
 import AContainer from "../containers/A.container";
 import { RECIPE_CATEGORY_COLOR } from "../data/Recipe";
 import GET_ALL_LATEST_RECIPES from "../gqlLib/recipes/queries/getAllLatestRecipes";
@@ -15,7 +18,8 @@ import { GET_ALL_PLANS } from "../graphql/Planner";
 import { GET_BLEND_TYPES } from "../graphql/Recipe";
 import { useAppSelector } from "../redux/hooks";
 import { updateFilterCriteriaItem } from "../redux/slices/filterRecipeSlice";
-import { updateSidebarActiveMenuNo } from "../redux/slices/utilitySlice";
+import { updateHeadTagInfo } from "../redux/slices/headDataSlice";
+import { updateSidebarActiveMenuName } from "../redux/slices/utilitySlice";
 
 import styles from "../styles/pages/home.module.scss";
 import CardComponent from "../theme/cards/card.component";
@@ -48,17 +52,32 @@ const Home = () => {
         filterCriteria: value.filterCategory,
       }),
     );
-    dispatch(updateSidebarActiveMenuNo(1));
+    dispatch(updateSidebarActiveMenuName("Home"));
     router.push("/discovery");
   };
 
-  const handleToRoutePage = (index: number, route: string) => {
-    dispatch(updateSidebarActiveMenuNo(index));
+  const handleToRoutePage = (
+    route: string,
+    menuName: sidebarActiveMenuNameType,
+  ) => {
+    dispatch(updateSidebarActiveMenuName(menuName));
     router.push(route);
   };
 
+  useEffect(() => {
+    dispatch(
+      updateHeadTagInfo({ description: "home page content", title: "Home" }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
-    <AContainer headerTitle="Home" headerFullWidth={true} showSidebar={false}>
+    <AContainer
+      headerTitle="Home"
+      headerFullWidth={true}
+      showSidebar={false}
+      headerIcon={"/icons/home.svg"}
+    >
       <div className={styles.container}>
         <div className="row">
           <div className="col-9">
@@ -91,7 +110,9 @@ const Home = () => {
                       idx !== 0 ? (
                         <a
                           key={page.content}
-                          onClick={() => handleToRoutePage(idx, page.link)}
+                          onClick={() =>
+                            handleToRoutePage(page.link, page.content)
+                          }
                         >
                           <img src={page.logo} alt={page.content} />
                           <h6>{page.content}</h6>

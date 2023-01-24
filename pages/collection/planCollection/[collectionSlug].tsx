@@ -45,6 +45,8 @@ const CollectionsOfPlan = () => {
 
   return (
     <AContainer
+      headerIcon="/icons/calender__sidebar.svg"
+      headerTitle="Plan collection"
       showPlanCollectionTray={{
         show: true,
         showPanle: "left",
