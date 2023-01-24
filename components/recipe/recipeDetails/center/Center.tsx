@@ -170,13 +170,16 @@ const Center = ({
             <div className={styles.recipeType}>
               {recipeData?.recipeBlendCategory?.name}
             </div>
-            <img
-              src="/images/yummly-logo.png"
-              alt="recipe_logo"
-              className={styles.recipeLogo}
-            />
+            <a
+              href={`https://www.yummly.com/dish/981850/tomato-casserole-a-new-england-dish-thats-anything-but-common?blend-redirected=true&recipe=${recipeData?._id}`}
+            >
+              <img
+                src="/images/yummly-logo.png"
+                alt="recipe_logo"
+                className={styles.recipeLogo}
+              />
+            </a>
           </div>
-
           <div className={styles.alignItems}>
             {recipeData?.recipeVersion?.length >= 2 ? (
               <IconWithText

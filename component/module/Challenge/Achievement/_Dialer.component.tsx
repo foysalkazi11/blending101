@@ -29,9 +29,10 @@ function Main({ activities, statistics }: MainInterface) {
 
   const dispatch = useAppDispatch();
   const activeDate = useAppSelector((state) => state.challenge.activeDate);
-  const begin = new Date(statistics?.startDate);
   const today = new Date(activeDate !== "" ? activeDate : new Date());
-  const end = new Date(statistics?.endDate);
+  const begin = statistics?.startDate ? new Date(statistics?.startDate) : today;
+  const end = statistics?.endDate ? new Date(statistics?.endDate) : today;
+  const hasChallengeEnded = isAfter(today, end);
 
   const onDateDblClick = (date) => {
     dispatch(setShowPostForm(true));
@@ -88,7 +89,8 @@ function Main({ activities, statistics }: MainInterface) {
               }
               onClick={() => setLabel("Days Completed")}
             >
-              {differenceInDays(today, begin) + 1 || 0}
+              {differenceInDays(hasChallengeEnded ? end : today, begin) + 1 ||
+                0}
             </span>
             <span
               className={
@@ -101,13 +103,13 @@ function Main({ activities, statistics }: MainInterface) {
           </div>
           <div className={styles.dialer__timeline_wrapper}>
             <div className={styles.dialer__timeline}>
-              <span>Mar 21</span>
+              <span>{begin && format(begin, "MMM dd")}</span>
               <div className={styles.dialer__progress_wrapper}>
                 <div className={styles.dialer__progress}>
                   <div style={{ width: `${statistics?.blendScore}%` }} />
                 </div>
               </div>
-              <span>May 02</span>
+              <span>{end && format(end, "MMM dd")}</span>
             </div>
             <h3>{label}</h3>
           </div>
