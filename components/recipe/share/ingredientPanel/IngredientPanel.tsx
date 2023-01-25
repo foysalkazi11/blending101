@@ -9,12 +9,14 @@ interface IngredientPanelPorps {
   handleIngredientClick?: (ingredient: any, present: boolean) => void;
   checkActive?: (id: string) => boolean;
   showHeader?: boolean;
+  showTopHeader?: boolean;
 }
 
 const IngredientPanel = ({
   checkActive = () => false,
   handleIngredientClick = () => {},
   showHeader = false,
+  showTopHeader = true,
 }: IngredientPanelPorps) => {
   const { data: ingredientCategoryData, loading: ingredientCategoryLoading } =
     useQuery(FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS, {
@@ -28,7 +30,10 @@ const IngredientPanel = ({
 
   return (
     <div className={styles.ingrdeintpanelWraper}>
-      <PanelHeader icon="/icons/basket.svg" title="Ingredients" />
+      {showTopHeader && (
+        <PanelHeader icon="/icons/basket.svg" title="Ingredients" />
+      )}
+
       <div className={styles.ingrdeintpanelContainer}>
         <FilterbottomComponent
           checkActiveIngredient={checkActive}
