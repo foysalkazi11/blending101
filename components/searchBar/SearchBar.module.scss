@@ -27,6 +27,10 @@
     font-size: 20px;
     color: #495057;
     cursor: pointer;
+    transition: 0.3s;
+    &:hover {
+      color: #fe5d1f;
+    }
   }
   .filterIcon.active {
     color: #fe5d1f;
@@ -67,6 +71,10 @@
     font-size: 22px;
     color: #495057;
     cursor: pointer;
+    transition: 0.3s;
+    &:hover {
+      color: #fe5d1f;
+    }
   }
   .mic.active {
     color: #fe5d1f;
