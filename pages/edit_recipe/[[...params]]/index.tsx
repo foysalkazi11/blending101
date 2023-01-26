@@ -13,7 +13,10 @@ import {
   setServingCounter,
 } from "../../../redux/edit_recipe/editRecipeStates";
 import EDIT_A_RECIPE from "../../../gqlLib/recipes/mutations/editARecipe";
-import { setLoading } from "../../../redux/slices/utilitySlice";
+import {
+  setLoading,
+  updateSidebarActiveMenuName,
+} from "../../../redux/slices/utilitySlice";
 import imageUploadS3 from "../../../components/utility/imageUploadS3";
 import reactToastifyNotification from "../../../components/utility/reactToastifyNotification";
 import useGetBlendNutritionBasedOnRecipexxx from "../../../customHooks/useGetBlendNutritionBasedOnRecipexxx";
@@ -245,6 +248,7 @@ const EditRecipeComponent = () => {
         description: "edit a recipe",
       }),
     );
+    dispatch(updateSidebarActiveMenuName("Blends"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

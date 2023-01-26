@@ -35,7 +35,6 @@ const DiscoveryPageSearchBar = ({
         handleSubmitFunc={handleSubmit}
         openPanel={toggleFilterPanel}
         isOpenPanel={openFilterTray}
-        styles={{ marginLeft: "16px" }}
       />
       <div
         style={{ marginLeft: "40px" }}

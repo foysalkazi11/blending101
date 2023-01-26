@@ -217,18 +217,17 @@ const RecipeDiscovery = () => {
             transition: "all 0.3s",
           }}
         >
-          <div>
-            <DiscoveryPageSearchBar
-              input={recipeSearchInput}
-              handleOnChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setRecipeSearchInput(e.target.value);
-              }}
-            />
+          <DiscoveryPageSearchBar
+            input={recipeSearchInput}
+            handleOnChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setRecipeSearchInput(e.target.value);
+            }}
+          />
 
-            {allFilters?.length ? (
-              <SearchTagsComponent allFilters={allFilters} />
-            ) : null}
-          </div>
+          {allFilters?.length ? (
+            <SearchTagsComponent allFilters={allFilters} />
+          ) : null}
+
           {showFilterOrSearchRecipes ? (
             <ShowRecipeContainer
               data={allFilterRecipes.filterRecipes}
