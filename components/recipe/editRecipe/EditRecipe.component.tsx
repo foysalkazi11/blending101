@@ -73,8 +73,6 @@ const EditRecipePage = ({
   );
 
   const handleIngredientClick = (ingredient: any, present: boolean) => {
-    console.log(ingredient, present);
-
     let blendz = [];
     if (!present) {
       blendz = [...selectedIngredientsList, ingredient];
@@ -108,7 +106,7 @@ const EditRecipePage = ({
   return (
     <AContainer
       headerIcon="/icons/juicer.svg"
-      headerTitle="Recipe edit"
+      headerTitle="Edit a recipe"
       showVersionTray={{
         show: true,
         showPanle: "right",

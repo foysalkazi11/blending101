@@ -28,7 +28,7 @@ const RecipeDetails = ({
       showHeader={true}
       logo={true}
       headerIcon="/icons/juicer.svg"
-      headerTitle="Recipe details"
+      headerTitle="Details a recipe"
       showCommentsTray={{
         show: true,
         showPanle: "right",

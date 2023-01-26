@@ -64,7 +64,7 @@ const Index = () => {
         description: "details a recipe",
       }),
     );
-    dispatch(updateSidebarActiveMenuName("Home"));
+    dispatch(updateSidebarActiveMenuName("Blends"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
