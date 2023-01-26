@@ -118,14 +118,13 @@ const Layout: FC<{
       }}
     >
       <div className={styles.blogPageLayout}>
-        <div style={{ paddingLeft: "16px" }}>
-          <CommonSearchBar
-            input={blogSearchInput}
-            handleOnChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setBlogSearchInput(e.target.value);
-            }}
-          />
-        </div>
+        <CommonSearchBar
+          input={blogSearchInput}
+          handleOnChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setBlogSearchInput(e.target.value);
+          }}
+        />
+
         <WikiBanner />
         {children}
       </div>
