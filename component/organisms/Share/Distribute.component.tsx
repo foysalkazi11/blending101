@@ -23,7 +23,6 @@ import CircularRotatingLoader from "../../../theme/loader/circularRotatingLoader
 export interface SharedUserInfoType {
   email: string;
   canCollaborate?: boolean;
-  canShareAgain?: boolean;
   active?: boolean;
 }
 
