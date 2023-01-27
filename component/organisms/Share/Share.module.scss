@@ -164,6 +164,7 @@
     margin-bottom: 1rem;
     color: #a5a5a5;
     position: relative;
+
     &:hover .closeBtn {
       display: block;
     }
@@ -235,4 +236,31 @@
       }
     }
   }
+}
+
+.activeEmailInfoContainer {
+  display: none;
+  transition: all 0.3s;
+
+  .checkBoxContainer {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+
+    .label {
+      margin-left: 10px;
+      font-weight: 500;
+      color: #a5a5a5;
+    }
+  }
+}
+
+.showInfo {
+  display: block;
+  padding: 10px 0;
+  transition: all 0.3s;
+}
+
+.activeEmail {
+  border-color: #fe5d1f;
 }

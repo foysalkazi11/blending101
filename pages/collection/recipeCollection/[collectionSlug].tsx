@@ -20,7 +20,7 @@ import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 const CollectionRecipes = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const shareBy = router.query?.shareBy as string;
+  const collectionId = router.query?.collectionId as string;
   const token = router.query?.token as string;
   const slug = router.query?.collectionSlug as string;
   const [title, setTitle] = useState("");
@@ -57,7 +57,7 @@ const CollectionRecipes = () => {
         variables: {
           userId,
           slug,
-          creatorId: shareBy || "",
+          collectionId: collectionId || "",
           token: token || "",
         },
       }).then((res: any) => {
@@ -70,7 +70,7 @@ const CollectionRecipes = () => {
     getAllRecipes,
     getCustomRecipes,
     getMyRecipes,
-    shareBy,
+    collectionId,
     token,
     slug,
     userId,

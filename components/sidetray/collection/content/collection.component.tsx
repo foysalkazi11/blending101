@@ -18,7 +18,9 @@ import SingleCollection from "../../common/singleCollection/SingleCollection";
 import Invite from "../../../../component/organisms/Share/Invite.component";
 import CREATE_SHARE_COLLECTION_LINK from "../../../../gqlLib/collection/mutation/createShareCollectionLink";
 import notification from "../../../../components/utility/reactToastifyNotification";
-import Share from "../../../../component/organisms/Share/Distribute.component";
+import Share, {
+  SharedUserInfoType,
+} from "../../../../component/organisms/Share/Distribute.component";
 
 interface CollectionComponentProps {
   collections: {}[];
@@ -48,7 +50,7 @@ export default function CollectionComponent({
     activeRecipeId,
     singleRecipeWithinCollections,
   } = useAppSelector((state) => state?.collections);
-  const [emails, setEmails] = useState([]);
+  const [emails, setEmails] = useState<SharedUserInfoType[]>([]);
   const [collectionInfo, setCollectionInfo] = useState<any>({});
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [menuIndex, setMenuIndex] = useState(0);
@@ -91,10 +93,15 @@ export default function CollectionComponent({
       notification("warning", "Please enter email");
       return;
     }
-    const link = await generateShareLink(isGlobalShare);
-    navigator.clipboard.writeText(link);
-    notification("success", "Link has been copied in clipboard");
-    setHasCopied(true);
+    try {
+      const link = await generateShareLink(isGlobalShare);
+      navigator.clipboard.writeText(link);
+      notification("success", "Link has been copied in clipboard");
+      setHasCopied(true);
+    } catch (error) {
+      notification("error", "Not able to share collection");
+    }
+
     // setShow(false)//;
   };
 
@@ -103,7 +110,13 @@ export default function CollectionComponent({
       const { data } = await shareCollection({
         variables: {
           data: {
-            shareToEmails: isGlobalShare ? [] : emails,
+            shareTo: isGlobalShare
+              ? []
+              : emails.map((info) => ({
+                  shareToEmail: info.email,
+                  canContribute: info.canCollaborate,
+                  canShareWithOthers: info.canShareAgain,
+                })),
             sharedBy: userId,
             collectionId: collectionInfo?.id,
           },
@@ -117,18 +130,19 @@ export default function CollectionComponent({
       }/collection/recipeCollection/${collectionInfo?.slug}?${
         isGlobalShare
           ? "token=" + data.createShareCollectionLink
-          : "shareBy=" + userId
+          : "collectionId=" + collectionInfo?.id
       }`;
       setLink(link);
       return generatedLink;
     } catch (error) {
       notification("error", "Not able to share collection");
+      return error;
     }
   };
 
   const resetModal = () => {
     setEmails([]);
-    setShowInviteModal(false);
+    setShowMsgField(false);
   };
 
   const updateCompareRecipe = (id: string, obj: object) => {
@@ -278,6 +292,7 @@ export default function CollectionComponent({
         setShowMsgField={setShowMsgField}
         showMsgField={showMsgField}
         submitBtnText="Share"
+        isAdditionInfoNeedForPersonalShare={true}
       />
       {/* 
       <Invite

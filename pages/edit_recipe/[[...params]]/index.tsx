@@ -244,8 +244,8 @@ const EditRecipeComponent = () => {
   useEffect(() => {
     dispatch(
       updateHeadTagInfo({
-        title: "Edit a recipe",
-        description: "edit a recipe",
+        title: "Recipe Edit",
+        description: "recipe Edit",
       }),
     );
     dispatch(updateSidebarActiveMenuName("Blends"));

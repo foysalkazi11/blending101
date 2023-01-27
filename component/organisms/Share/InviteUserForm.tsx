@@ -10,18 +10,21 @@ import React, {
   useEffect,
 } from "react";
 import { GET_ALL_USER_LIST } from "../../../graphql/User";
+import CustomCheckbox from "../../../theme/checkbox/CustomCheckbox";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
 import CircularRotatingLoader from "../../../theme/loader/circularRotatingLoader.component";
 import Textarea from "../Forms/Textarea.component";
+import { SharedUserInfoType } from "./Distribute.component";
 import styles from "./Share.module.scss";
 
 interface Props {
   handleInvitation?: () => void;
   handleCancel?: () => void;
-  emails?: string[];
-  setEmails?: Dispatch<SetStateAction<string[]>>;
+  emails?: SharedUserInfoType[];
+  setEmails?: Dispatch<SetStateAction<SharedUserInfoType[]>>;
   submitBtnText?: string;
   loading?: boolean;
+  isAdditionInfoNeedForPersonalShare?: boolean;
 }
 
 const InviteUserForm = ({
@@ -31,6 +34,7 @@ const InviteUserForm = ({
   setEmails = () => {},
   submitBtnText = "Invite",
   loading = false,
+  isAdditionInfoNeedForPersonalShare = false,
 }: Props) => {
   const { data } = useQuery(GET_ALL_USER_LIST);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -68,7 +72,10 @@ const InviteUserForm = ({
         )
       )
         return;
-      setEmails([...emails, email]);
+      setEmails((prevEmails) => [
+        ...prevEmails?.map((info) => ({ ...info, active: false })),
+        { email, canCollaborate: false, canShareAgain: false, active: true },
+      ]);
       setInput("");
     }
   };
@@ -79,7 +86,7 @@ const InviteUserForm = ({
       users =
         data?.getAllusers.filter(
           (user) =>
-            !emails.includes(user.email) &&
+            !emails?.map((el) => el?.email).includes(user.email) &&
             (user.displayName as string)
               ?.toLowerCase()
               .startsWith(input.toLowerCase()),
@@ -90,8 +97,31 @@ const InviteUserForm = ({
     return users;
   }, [data?.getAllusers, emails, input]);
 
+  const activeEmailInfo = useMemo(() => {
+    return emails.find((info) => info.active);
+  }, [emails]);
+
   const handleFilterEmail = (emailProps: string) => {
-    setEmails((emails) => emails.filter((email) => email !== emailProps));
+    setEmails((emails) => emails.filter((email) => email.email !== emailProps));
+  };
+
+  const handleAddNewEmail = (info: SharedUserInfoType) => {
+    setEmails((prevEmails) => [
+      ...prevEmails?.map((info) => ({ ...info, active: false })),
+      info,
+    ]);
+    setShowSuggestion(false);
+    setInput("");
+  };
+
+  const toggleActiveEmail = (sharedPersonInfo: SharedUserInfoType) => {
+    setEmails((prevEmails) => [
+      ...prevEmails?.map((info) =>
+        info?.email === sharedPersonInfo.email
+          ? { ...info, ...sharedPersonInfo }
+          : { ...info, active: false },
+      ),
+    ]);
   };
 
   useEffect(() => {
@@ -110,8 +140,18 @@ const InviteUserForm = ({
         onBlur={onInputBlur}
       >
         {emails.map((email) => (
-          <span className={styles.email__address} key={email}>
-            {email}
+          <span
+            className={`${styles.email__address} ${
+              isAdditionInfoNeedForPersonalShare && email?.active
+                ? styles.activeEmail
+                : ""
+            }`}
+            key={email?.email}
+            onClick={() =>
+              toggleActiveEmail({ ...email, active: !email?.active })
+            }
+          >
+            {email?.email}
             <div className={styles.closeBtn}>
               <IconWarper
                 defaultBg="primary"
@@ -120,7 +160,7 @@ const InviteUserForm = ({
                   height: "16px",
                 }}
                 iconColor="iconColorWhite"
-                handleClick={() => handleFilterEmail(email)}
+                handleClick={() => handleFilterEmail(email?.email)}
               >
                 <FontAwesomeIcon icon={faXmark} fontSize="10px" />
               </IconWarper>
@@ -136,6 +176,7 @@ const InviteUserForm = ({
           onChange={onInputChange}
           onKeyDown={onAddEmail}
         />
+
         {showSuggestion && (
           <div className={styles.email__suggestion}>
             <h6>Select a Person</h6>
@@ -144,11 +185,14 @@ const InviteUserForm = ({
                 return (
                   <li
                     key={user?.email}
-                    onClick={() => {
-                      setEmails([...emails, user?.email]);
-                      setShowSuggestion(false);
-                      setInput("");
-                    }}
+                    onClick={() =>
+                      handleAddNewEmail({
+                        email: user?.email,
+                        canCollaborate: false,
+                        canShareAgain: false,
+                        active: true,
+                      })
+                    }
                   >
                     <span>{user?.displayName?.charAt(0)}</span>
                     {user?.displayName}
@@ -159,6 +203,45 @@ const InviteUserForm = ({
           </div>
         )}
       </div>
+
+      <div
+        className={`${styles.activeEmailInfoContainer} ${
+          isAdditionInfoNeedForPersonalShare && activeEmailInfo?.active
+            ? styles.showInfo
+            : ""
+        }`}
+      >
+        <div className={styles.checkBoxContainer}>
+          <CustomCheckbox
+            checked={activeEmailInfo?.canCollaborate}
+            handleChange={(e) =>
+              toggleActiveEmail({
+                ...activeEmailInfo,
+                canCollaborate: !activeEmailInfo?.canCollaborate,
+              })
+            }
+            id="canCollaborate"
+          />
+          <label className={styles.label} htmlFor="canCollaborate">
+            Collaborate
+          </label>
+        </div>
+        <div className={styles.checkBoxContainer}>
+          <CustomCheckbox
+            checked={activeEmailInfo?.canShareAgain}
+            handleChange={(e) =>
+              toggleActiveEmail({
+                ...activeEmailInfo,
+                canShareAgain: !activeEmailInfo?.canShareAgain,
+              })
+            }
+          />
+          <label className={styles.label} htmlFor="canShareAgain">
+            Can share
+          </label>
+        </div>
+      </div>
+
       <Textarea
         name="message"
         placeholder="Enter Message"

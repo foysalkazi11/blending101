@@ -106,7 +106,7 @@ const EditRecipePage = ({
   return (
     <AContainer
       headerIcon="/icons/juicer.svg"
-      headerTitle="Edit a recipe"
+      headerTitle="Recipe Edit"
       showVersionTray={{
         show: true,
         showPanle: "right",

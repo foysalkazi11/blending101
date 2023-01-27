@@ -4,6 +4,7 @@ import Icon from "../../atoms/Icon/Icon.component";
 import styles from "./Share.module.scss";
 import CustomModal from "../../../theme/modal/customModal/CustomModal";
 import InviteUserForm from "./InviteUserForm";
+import { SharedUserInfoType } from "./Distribute.component";
 
 interface ShareProps {
   id?: string;
@@ -12,8 +13,8 @@ interface ShareProps {
   setShow: any;
   handleInvitation?: () => void;
   handleCancel?: () => void;
-  emails?: string[];
-  setEmails?: Dispatch<SetStateAction<string[]>>;
+  emails?: SharedUserInfoType[];
+  setEmails?: Dispatch<SetStateAction<SharedUserInfoType[]>>;
   submitBtnText?: string;
   loading?: boolean;
 }
