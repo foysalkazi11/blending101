@@ -292,6 +292,7 @@ export default function CollectionComponent({
         setShowMsgField={setShowMsgField}
         showMsgField={showMsgField}
         submitBtnText="Share"
+        isAdditionInfoNeedForPersonalShare={true}
       />
       {/* 
       <Invite
