@@ -20,6 +20,13 @@ import CustomModal from "../../../theme/modal/customModal/CustomModal";
 import InviteUserForm from "./InviteUserForm";
 import CircularRotatingLoader from "../../../theme/loader/circularRotatingLoader.component";
 
+export interface SharedUserInfoType {
+  email: string;
+  canCollaborate?: boolean;
+  canShareAgain?: boolean;
+  active?: boolean;
+}
+
 interface ShareProps {
   title?: string;
   type?: "recipe";
@@ -30,8 +37,8 @@ interface ShareProps {
   generatedLink?: string;
   showMsgField?: boolean;
   setShowMsgField?: React.Dispatch<React.SetStateAction<boolean>>;
-  emails?: string[];
-  setEmails?: React.Dispatch<React.SetStateAction<string[]>>;
+  emails?: SharedUserInfoType[];
+  setEmails?: React.Dispatch<React.SetStateAction<SharedUserInfoType[]>>;
   copyLinkHandler?: (args?: boolean) => Promise<void>;
   onCancel?: () => void;
   generateShareLink?: (isGlobalShare?: boolean) => void | Promise<string>;

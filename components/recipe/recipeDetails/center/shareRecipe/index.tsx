@@ -1,6 +1,8 @@
 import { useMutation } from "@apollo/client";
 import React, { useState } from "react";
-import Share from "../../../../../component/organisms/Share/Distribute.component";
+import Share, {
+  SharedUserInfoType,
+} from "../../../../../component/organisms/Share/Distribute.component";
 import { CREATE_SHARE_LINK } from "../../../../../graphql/Share";
 import { useAppSelector } from "../../../../../redux/hooks";
 import notification from "../../../../utility/reactToastifyNotification";
@@ -29,7 +31,7 @@ const ShareRecipe = ({
   const [hasCopied, setHasCopied] = useState(false);
   const [showMsgField, setShowMsgField] = useState(false);
   const [link, setLink] = useState("");
-  const [emails, setEmails] = useState([]);
+  const [emails, setEmails] = useState<SharedUserInfoType[]>([]);
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
 
@@ -59,7 +61,7 @@ const ShareRecipe = ({
               recipeId: detailsARecipe._id,
               version: detailsARecipe.versionId,
             },
-            shareTo: isGlobalShare ? [] : emails,
+            shareTo: isGlobalShare ? [] : emails?.map((info) => info?.email),
             sharedBy: userId,
           },
         },
