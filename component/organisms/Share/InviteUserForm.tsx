@@ -24,6 +24,7 @@ interface Props {
   setEmails?: Dispatch<SetStateAction<SharedUserInfoType[]>>;
   submitBtnText?: string;
   loading?: boolean;
+  isAdditionInfoNeedForPersonalShare?: boolean;
 }
 
 const InviteUserForm = ({
@@ -33,6 +34,7 @@ const InviteUserForm = ({
   setEmails = () => {},
   submitBtnText = "Invite",
   loading = false,
+  isAdditionInfoNeedForPersonalShare = false,
 }: Props) => {
   const { data } = useQuery(GET_ALL_USER_LIST);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -140,7 +142,9 @@ const InviteUserForm = ({
         {emails.map((email) => (
           <span
             className={`${styles.email__address} ${
-              email?.active ? styles.activeEmail : ""
+              isAdditionInfoNeedForPersonalShare && email?.active
+                ? styles.activeEmail
+                : ""
             }`}
             key={email?.email}
             onClick={() =>
@@ -202,7 +206,9 @@ const InviteUserForm = ({
 
       <div
         className={`${styles.activeEmailInfoContainer} ${
-          activeEmailInfo?.active ? styles.showInfo : ""
+          isAdditionInfoNeedForPersonalShare && activeEmailInfo?.active
+            ? styles.showInfo
+            : ""
         }`}
       >
         <div className={styles.checkBoxContainer}>

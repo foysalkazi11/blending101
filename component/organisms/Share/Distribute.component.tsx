@@ -45,6 +45,7 @@ interface ShareProps {
   createLinkLoading?: boolean;
   hasCopied?: boolean;
   submitBtnText?: string;
+  isAdditionInfoNeedForPersonalShare?: boolean;
 }
 
 const Share = (props: ShareProps) => {
@@ -66,6 +67,7 @@ const Share = (props: ShareProps) => {
     hasCopied = false,
     onCancel = () => {},
     submitBtnText = "Share",
+    isAdditionInfoNeedForPersonalShare = false,
   } = props;
 
   useEffect(() => {
@@ -92,6 +94,9 @@ const Share = (props: ShareProps) => {
             handleInvitation={() => copyLinkHandler(false)}
             submitBtnText={submitBtnText}
             loading={createLinkLoading}
+            isAdditionInfoNeedForPersonalShare={
+              isAdditionInfoNeedForPersonalShare
+            }
           />
         ) : (
           <div className="d-flex">
