@@ -60,8 +60,8 @@ const Index = () => {
   useEffect(() => {
     dispatch(
       updateHeadTagInfo({
-        title: "Details a recipe",
-        description: "details a recipe",
+        title: "Recipe Details",
+        description: "recipe Details",
       }),
     );
     dispatch(updateSidebarActiveMenuName("Blends"));

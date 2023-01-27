@@ -43,6 +43,7 @@ import RadioButton from "../../organisms/Forms/RadioButton.component";
 import { getDateISO } from "../../../helpers/Date";
 import { setChallengeDate } from "../../../redux/slices/Challenge.slice";
 import Invite from "../../organisms/Share/Invite.component";
+import { SharedUserInfoType } from "../../organisms/Share/Distribute.component";
 
 interface SettingsProps {
   currentChallenge: string;
@@ -141,7 +142,7 @@ const ChallengeList = ({
 
   const [inviteChallenge, { loading: inviteChallengeLoading }] =
     useMutation(INVITE_CHALLENGE);
-  const [emails, setEmails] = useState([]);
+  const [emails, setEmails] = useState<SharedUserInfoType[]>([]);
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
   const handleInvitation = () => {
@@ -149,7 +150,7 @@ const ChallengeList = ({
     inviteChallenge({
       variables: {
         shareWithOther: false,
-        emails,
+        emails: emails?.map((info) => info?.email),
         user: userId,
         challengeId: challengeInfo?.id,
       },
