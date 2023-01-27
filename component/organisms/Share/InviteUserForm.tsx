@@ -145,6 +145,10 @@ const InviteUserForm = ({
               isAdditionInfoNeedForPersonalShare && email?.active
                 ? styles.activeEmail
                 : ""
+            } ${
+              isAdditionInfoNeedForPersonalShare && email.canCollaborate
+                ? styles.collaborationAccessEmail
+                : ""
             }`}
             key={email?.email}
             onClick={() =>
@@ -189,7 +193,6 @@ const InviteUserForm = ({
                       handleAddNewEmail({
                         email: user?.email,
                         canCollaborate: false,
-                        canShareAgain: false,
                         active: true,
                       })
                     }
@@ -224,20 +227,6 @@ const InviteUserForm = ({
           />
           <label className={styles.label} htmlFor="canCollaborate">
             Collaborate
-          </label>
-        </div>
-        <div className={styles.checkBoxContainer}>
-          <CustomCheckbox
-            checked={activeEmailInfo?.canShareAgain}
-            handleChange={(e) =>
-              toggleActiveEmail({
-                ...activeEmailInfo,
-                canShareAgain: !activeEmailInfo?.canShareAgain,
-              })
-            }
-          />
-          <label className={styles.label} htmlFor="canShareAgain">
-            Can share
           </label>
         </div>
       </div>

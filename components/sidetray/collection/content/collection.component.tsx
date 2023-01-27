@@ -115,7 +115,7 @@ export default function CollectionComponent({
               : emails.map((info) => ({
                   shareToEmail: info.email,
                   canContribute: info.canCollaborate,
-                  canShareWithOthers: info.canShareAgain,
+                  canShareWithOthers: info.canCollaborate,
                 })),
             sharedBy: userId,
             collectionId: collectionInfo?.id,
