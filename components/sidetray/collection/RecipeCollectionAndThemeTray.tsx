@@ -109,7 +109,7 @@ export default function RecipeCollectionAndThemeTray({
           await editCollection({
             variables: {
               data: {
-                userEmail: dbUser?.email,
+                userId: dbUser?._id,
                 collectionId: collectionId,
                 newName: input?.name,
               },

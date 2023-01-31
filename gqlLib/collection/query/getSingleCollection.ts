@@ -4,13 +4,13 @@ const GET_SINGLE_COLLECTION = gql`
   query GetASingleCollection(
     $userId: String!
     $slug: String!
-    $creatorId: String
+    $collectionId: String
     $token: String
   ) {
     getASingleCollection(
       userId: $userId
       slug: $slug
-      creatorId: $creatorId
+      collectionId: $collectionId
       token: $token
     ) {
       name
