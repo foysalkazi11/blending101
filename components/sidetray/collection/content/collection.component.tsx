@@ -246,12 +246,14 @@ export default function CollectionComponent({
             description,
             isShared,
             sharedBy,
+            personalizedName,
+            canContribute,
           } = collection;
 
           return changeRecipeWithinCollection && isShared ? null : (
             <SingleCollection
               key={collection?._id}
-              name={name}
+              name={personalizedName || name}
               slug={slug}
               id={_id}
               description={description}
@@ -270,6 +272,7 @@ export default function CollectionComponent({
               handleShareCollection={handleOpenShareModal}
               isShared={isShared}
               sharedBy={sharedBy}
+              canContribute={canContribute}
             />
           );
         })

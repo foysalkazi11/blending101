@@ -55,6 +55,7 @@ interface IndividualCollectionType {
     lastName?: string;
     image?: string;
   };
+  canContribute?: boolean;
 }
 
 const SingleCollection = ({
@@ -85,6 +86,7 @@ const SingleCollection = ({
     image: "",
     lastName: "",
   },
+  canContribute,
 }: IndividualCollectionType) => {
   const [hoverRef, isHovered] = useHover();
   const router = useRouter();
@@ -160,7 +162,7 @@ const SingleCollection = ({
               />
             </div>
           ) : isHovered ? (
-            name === "My Favorite" || isShared ? (
+            name === "My Favorite" || !canContribute ? (
               <p style={{ marginRight: "10px" }}>{collectionItemLength}</p>
             ) : (
               <div

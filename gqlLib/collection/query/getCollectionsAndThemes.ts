@@ -18,6 +18,10 @@ const GET_COLLECTIONS_AND_THEMES = gql`
           lastName
           image
         }
+        canContribute
+        canShareWithOther
+        description
+        personalizedName
       }
     }
   }

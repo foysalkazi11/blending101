@@ -9,10 +9,18 @@ import React, {
   Dispatch,
   useEffect,
 } from "react";
+import AddCollectionModal, {
+  InputValueType,
+} from "../../../components/sidetray/common/addCollectionModal/AddCollectionModal";
+import slugStringGenerator from "../../../components/utility/slugStringGenerator";
 import { GET_ALL_USER_LIST } from "../../../graphql/User";
+import formatDate from "../../../helperFunc/date/formatDate";
+import CustomAccordion from "../../../theme/accordion/accordion.component";
 import CustomCheckbox from "../../../theme/checkbox/CustomCheckbox";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
+import InputComponent from "../../../theme/input/input.component";
 import CircularRotatingLoader from "../../../theme/loader/circularRotatingLoader.component";
+import TextArea from "../../../theme/textArea/TextArea";
 import Textarea from "../Forms/Textarea.component";
 import { SharedUserInfoType } from "./Distribute.component";
 import styles from "./Share.module.scss";
@@ -25,6 +33,11 @@ interface Props {
   submitBtnText?: string;
   loading?: boolean;
   isAdditionInfoNeedForPersonalShare?: boolean;
+  createCollectionProps?: {
+    input: InputValueType;
+    setInput: React.Dispatch<React.SetStateAction<InputValueType>>;
+    showCreateCollectionComponents: boolean;
+  };
 }
 
 const InviteUserForm = ({
@@ -35,12 +48,46 @@ const InviteUserForm = ({
   submitBtnText = "Invite",
   loading = false,
   isAdditionInfoNeedForPersonalShare = false,
+  createCollectionProps = {
+    input: {
+      description: "",
+      name: "",
+      slug: "",
+      image: "",
+    },
+    setInput: () => {},
+    showCreateCollectionComponents: false,
+  },
 }: Props) => {
   const { data } = useQuery(GET_ALL_USER_LIST);
   const inputRef = useRef<HTMLInputElement>(null);
   const [showSuggestion, setShowSuggestion] = useState(false);
   const [input, setInput] = useState("");
   const hasEmails = emails.length > 0;
+  const {
+    showCreateCollectionComponents = false,
+    input: createCollectionInput,
+    setInput: setCreateCollectionInput,
+  } = createCollectionProps;
+
+  // create collection input change
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value, type } = e?.target;
+
+    if (name === "name") {
+      const convertToSlug = slugStringGenerator(value);
+      setCreateCollectionInput((pre) => ({
+        ...pre,
+        name: value,
+        slug: convertToSlug,
+      }));
+    } else {
+      setCreateCollectionInput((pre) => ({ ...pre, [name]: value }));
+    }
+  };
 
   const onInputFocus = () => {
     if (inputRef.current) {
@@ -126,12 +173,39 @@ const InviteUserForm = ({
 
   useEffect(() => {
     setEmails([]);
-    setInput;
+    setInput("");
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
+      {showCreateCollectionComponents && (
+        <CustomAccordion
+          title="Change default name"
+          iconRight={true}
+          style={{ marginBottom: "10px" }}
+        >
+          <div style={{ margin: "10px 0" }}>
+            <InputComponent
+              borderSecondary={true}
+              placeholder="Collection Name"
+              value={createCollectionInput?.name}
+              name="name"
+              onChange={handleChange}
+              style={{ fontSize: "12px" }}
+            />
+            <TextArea
+              style={{ marginTop: "10px", fontSize: "12px" }}
+              borderSecondary={true}
+              placeholder="Description"
+              value={createCollectionInput?.description}
+              name="description"
+              onChange={handleChange}
+            />
+          </div>
+        </CustomAccordion>
+      )}
       <div
         ref={inputRef}
         className={styles.email}
@@ -171,10 +245,11 @@ const InviteUserForm = ({
             </div>
           </span>
         ))}
+
         <input
           type="email"
           value={input}
-          placeholder={!hasEmails ? "Enter Name or Email" : ""}
+          placeholder={!hasEmails ? "Search or enter email" : ""}
           className={styles.email__input}
           onFocus={onInputFocus}
           onChange={onInputChange}
@@ -236,6 +311,7 @@ const InviteUserForm = ({
         placeholder="Enter Message"
         className={styles.share__message}
       />
+
       <div className={styles.share__button_wraper}>
         <button
           className={`${styles.share__button} ${styles["share__button--save"]} mr-30`}

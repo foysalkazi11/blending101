@@ -7,7 +7,7 @@ import slugStringGenerator from "../../../utility/slugStringGenerator";
 import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
 import TextArea from "../../../../theme/textArea/TextArea";
 
-interface InputValueType {
+export interface InputValueType {
   name: string;
   slug: string;
   description: string;

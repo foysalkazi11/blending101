@@ -6,14 +6,19 @@
     margin-bottom: 2.5rem;
     display: flex;
     align-items: center;
-    & svg {
-      color: $primaryColor;
-    }
-    & h3 {
-      margin-left: 1.5rem;
-      font-size: 1.6rem;
-      color: #444;
-      font-weight: 600;
+    justify-content: space-between;
+    .leftSide {
+      display: flex;
+      align-items: center;
+      & svg {
+        color: $primaryColor;
+      }
+      & h3 {
+        margin-left: 1.5rem;
+        font-size: 1.6rem;
+        color: #444;
+        font-weight: 600;
+      }
     }
   }
   &__title {
