@@ -32,6 +32,7 @@ const GET_RECIPES_BY_BLEND_AND_INGREDIENTS = gql`
       addedToCompare
       userCollections
       defaultVersion {
+        _id
         postfixTitle
       }
       isMatch
