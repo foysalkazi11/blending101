@@ -53,8 +53,14 @@ interface dataCardInterface {
   recipeVersion?: RecipeSmallVersionType[];
   setOpenShareModal?: React.Dispatch<React.SetStateAction<boolean>>;
   setShareRecipeData?: React.Dispatch<
-    React.SetStateAction<{ id: string; image: string; name: string }>
+    React.SetStateAction<{
+      id: string;
+      image: string;
+      name: string;
+      versionId: string;
+    }>
   >;
+  defaultVersionId?: string;
 }
 
 export default function DatacardComponent({
@@ -88,6 +94,7 @@ export default function DatacardComponent({
   recipeVersion = [],
   setOpenShareModal = () => {},
   setShareRecipeData = () => {},
+  defaultVersionId = "",
 }: dataCardInterface) {
   title = title || "Triple Berry Smoothie";
   ingredients = ingredients;
@@ -109,8 +116,8 @@ export default function DatacardComponent({
   const [hoverRef, isHover] = useHover();
   const [hoverRefMoreMenu, isHoverMoreMenu] = useHover();
 
-  const handleOpenShareRecipeModal = (id, name, image) => {
-    setShareRecipeData({ id, image, name });
+  const handleOpenShareRecipeModal = (id, name, image, versionId) => {
+    setShareRecipeData({ id, image, name, versionId });
     setOpenShareModal(true);
   };
 
@@ -152,7 +159,11 @@ export default function DatacardComponent({
   const showFloatingMenu = (id: string, name: string, image: string) => (
     <div className={styles.floating__menu}>
       <ul>
-        <li onClick={() => handleOpenShareRecipeModal(id, name, image)}>
+        <li
+          onClick={() =>
+            handleOpenShareRecipeModal(id, name, image, defaultVersionId)
+          }
+        >
           <img src="/icons/share.png" alt="square" />
         </li>
         <li onClick={() => router.push(`/edit_recipe/${recipeId}`)}>

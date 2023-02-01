@@ -24,8 +24,6 @@ import SkeletonCollectionRecipe from "../../theme/skeletons/skeletonCollectionRe
 import { BlogListType } from "../../type/blog";
 import ErrorPage from "../pages/404Page";
 import BlogCard from "../pages/blog/blogCard";
-import ShowLastModifiedCollection from "../showLastModifiedCollection/ShowLastModifiedCollection";
-import AddCollectionModal from "../sidetray/common/addCollectionModal/AddCollectionModal";
 import styles from "./index.module.scss";
 import ShareItems from "./ShareItems";
 
@@ -76,9 +74,6 @@ const ShowRecipeContainer = ({
   );
   const [openCreateCollectionModal, setOpenCreateCollectionModal] =
     useState(false);
-  const { lastModifiedCollection } = useAppSelector(
-    (state) => state?.collections,
-  );
   const observer = useRef<any>();
   const dispatch = useAppDispatch();
   const entry = useIntersectionObserver(observer, { rootMargin: "100px" });
@@ -92,14 +87,6 @@ const ShowRecipeContainer = ({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entry]);
-
-  // open recipe collection panel after added a recipe to a collection
-  const handleOpenCollectionTray = () => {
-    dispatch(setSingleRecipeWithinCollecions([lastModifiedCollection?.id]));
-    dispatch(setOpenCollectionsTary(true));
-    dispatch(setChangeRecipeWithinCollection(true));
-    setOpenCollectionModal(false);
-  };
 
   const handleToOpenCollectionTray = () => {
     const dataIds = data?.map((item) => item?._id);
@@ -212,6 +199,7 @@ const ShowRecipeContainer = ({
                       isCollectionIds={item?.userCollections}
                       isMatch={item?.isMatch}
                       postfixTitle={item?.defaultVersion?.postfixTitle}
+                      defaultVersionId={item?.defaultVersion?._id}
                       userId={item?.userId}
                       setShareRecipeData={setShareRecipeData}
                       setOpenShareModal={setOpenShareModal}

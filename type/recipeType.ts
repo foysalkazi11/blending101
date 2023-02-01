@@ -45,6 +45,7 @@ export interface RecipeCreatorInfo {
 }
 export interface DefaultVersion {
   postfixTitle: string;
+  _id: string;
 }
 
 export interface Ingredient {

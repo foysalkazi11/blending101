@@ -33,6 +33,7 @@ const GET_ALL_POPULAR_RECIPES = gql`
       addedToCompare
       userCollections
       defaultVersion {
+        _id
         postfixTitle
       }
       isMatch

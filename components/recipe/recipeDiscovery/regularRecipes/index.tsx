@@ -180,6 +180,7 @@ const ShowRecipes = ({
                   setOpenCollectionModal={setOpenCollectionModal}
                   isMatch={item?.isMatch}
                   postfixTitle={item?.defaultVersion?.postfixTitle}
+                  defaultVersionId={item?.defaultVersion?._id}
                   userId={item?.userId}
                   recipeVersion={item?.recipeVersion}
                   showMoreMenuAtHover={true}

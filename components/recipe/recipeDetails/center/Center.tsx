@@ -333,6 +333,7 @@ const Center = ({
       </Modal>
       <ShareRecipe
         id={recipeData?._id}
+        versionId={recipeData.versionId}
         title={recipeData?.name}
         image={recipeData?.image?.length > 0 ? recipeData?.image[0]?.image : ""}
         show={showShareModal}
