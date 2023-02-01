@@ -39,7 +39,7 @@ const ShareItems = ({
   const [showMsgField, setShowMsgField] = useState(false);
   const [link, setLink] = useState("");
   const [emails, setEmails] = useState<SharedUserInfoType[]>([]);
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const { dbUser } = useAppSelector((state) => state.user);
   const [input, setInput] = useState<InputValueType>({
     image: null,
     name: "",
@@ -81,7 +81,7 @@ const ShareItems = ({
                     canContribute: info.canCollaborate,
                     canShareWithOthers: info.canCollaborate,
                   })),
-              sharedBy: userId,
+              sharedBy: dbUser._id,
             },
           },
         });
@@ -110,15 +110,21 @@ const ShareItems = ({
   useEffect(() => {
     const newDate = new Date();
     const currentDate = formatDate(newDate);
-    const currentDateFormate = `${currentDate.day} ${currentDate.month}, ${
+    const currentDateFormate = `${currentDate.day} ${currentDate.month} ${
       currentDate.year
-    }_${newDate.toLocaleTimeString().slice(0, 5)}`;
+    }_${newDate.toLocaleTimeString().slice(0, 4)}_${
+      dbUser?.displayName ||
+      dbUser?.lastName ||
+      dbUser?.firstName ||
+      dbUser?.email
+    }`;
     const convertToSlug = slugStringGenerator(currentDateFormate);
     setInput((pre) => ({
       ...pre,
       name: currentDateFormate,
       slug: convertToSlug,
     }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [show, showMsgField]);
 
   return (
