@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
 import {
   faFacebook,
   faPinterest,
@@ -45,16 +45,21 @@ interface ShareProps {
   setEmails?: React.Dispatch<React.SetStateAction<SharedUserInfoType[]>>;
   copyLinkHandler?: (args?: boolean) => Promise<void>;
   onCancel?: () => void;
-  generateShareLink?: (isGlobalShare?: boolean) => void;
+  generateShareLink?: (
+    isGlobalShare?: boolean,
+    copyLinkAtClipboard?: boolean,
+  ) => void;
   createLinkLoading?: boolean;
   hasCopied?: boolean;
   submitBtnText?: string;
   isAdditionInfoNeedForPersonalShare?: boolean;
   createCollectionProps?: {
     input: InputValueType;
-    setInput: React.Dispatch<React.SetStateAction<InputValueType>>;
+    setInput: Dispatch<SetStateAction<InputValueType>>;
     showCreateCollectionComponents: boolean;
   };
+  message?: string;
+  setMessage?: Dispatch<SetStateAction<string>>;
 }
 
 const Share = (props: ShareProps) => {
@@ -78,6 +83,8 @@ const Share = (props: ShareProps) => {
     submitBtnText = "Share",
     isAdditionInfoNeedForPersonalShare = false,
     createCollectionProps,
+    message = "",
+    setMessage = () => {},
   } = props;
 
   useEffect(() => {
@@ -121,6 +128,8 @@ const Share = (props: ShareProps) => {
               isAdditionInfoNeedForPersonalShare
             }
             createCollectionProps={createCollectionProps}
+            message={message}
+            setMessage={setMessage}
           />
         ) : (
           <div className="d-flex">
@@ -149,7 +158,7 @@ const Share = (props: ShareProps) => {
 interface SharePanelProps {
   link?: string;
   copyLinkHandler?: (value?: boolean) => Promise<void>;
-  generateShareLink?: (value?: boolean) => any;
+  generateShareLink?: (value?: boolean, copyLinkAtClipboard?: boolean) => any;
   hasCopied?: boolean;
   loading?: boolean;
 }
@@ -181,7 +190,7 @@ const SharePanel = (props: SharePanelProps) => {
           url={link || "http://blending101.com/"}
           quote={"This is quote"}
           hashtag="#Branding"
-          beforeOnClick={() => generateShareLink(false)}
+          beforeOnClick={() => generateShareLink(true, false)}
           className={styles["share__social--facebook"]}
         >
           <Icon fontName={faFacebook} size="3.5rem" className="mr-10" />
@@ -192,7 +201,7 @@ const SharePanel = (props: SharePanelProps) => {
           hashtags={["Branding"]}
           via="http://blending101.com/"
           className={styles["share__social--twitter"]}
-          beforeOnClick={() => generateShareLink(false)}
+          beforeOnClick={() => generateShareLink(true, false)}
         >
           <Icon fontName={faTwitter} size="3.5rem" className="mr-10" />
         </TwitterShareButton>
@@ -201,7 +210,7 @@ const SharePanel = (props: SharePanelProps) => {
           url={link || "http://blending101.com/"}
           description="Hello World"
           className={styles["share__social--pinterest"]}
-          beforeOnClick={() => generateShareLink(false)}
+          beforeOnClick={() => generateShareLink(true, false)}
         >
           <Icon fontName={faPinterest} size="3.5rem" className="mr-10" />
         </PinterestShareButton>

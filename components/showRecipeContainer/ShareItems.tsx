@@ -46,13 +46,17 @@ const ShareItems = ({
     slug: "",
     description: "",
   });
+  const [message, setMessage] = useState("");
 
   const onCancel = () => {
     setShowMsgField(false);
     setEmails([]);
   };
 
-  const generateShareLink = async (isGlobalShare: boolean = true) => {
+  const generateShareLink = async (
+    isGlobalShare: boolean = true,
+    copyLinkAtClipboard: boolean = true,
+  ) => {
     if (!isGlobalShare && !emails.length) {
       notification("warning", "Please enter email");
       return;
@@ -64,7 +68,7 @@ const ShareItems = ({
           variables: {
             data: {
               newCollectionData: {
-                description: input.description,
+                description: message,
                 image: input.image,
                 name: input.name,
                 recipes: itemsIds,
@@ -91,10 +95,12 @@ const ShareItems = ({
             : "collectionId=" + data.createCollectionAndShare
         }`;
         setLink(generatedLink);
-
-        navigator.clipboard.writeText(generatedLink);
-        notification("success", "Link has been copied in clipboard");
-        setHasCopied(true);
+        if (copyLinkAtClipboard) {
+          navigator.clipboard.writeText(generatedLink);
+          notification("success", "Link has been copied in clipboard");
+          setHasCopied(true);
+        }
+        setShow(false);
       } catch (error) {
         notification("error", "Not able to share recipe");
       }
@@ -102,15 +108,18 @@ const ShareItems = ({
   };
 
   useEffect(() => {
-    const currentDate = formatDate(new Date());
-    const currentDateFormate = `${currentDate.day} ${currentDate.month}, ${currentDate.year}`;
+    const newDate = new Date();
+    const currentDate = formatDate(newDate);
+    const currentDateFormate = `${currentDate.day} ${currentDate.month}, ${
+      currentDate.year
+    }_${newDate.toLocaleTimeString().slice(0, 5)}`;
     const convertToSlug = slugStringGenerator(currentDateFormate);
     setInput((pre) => ({
       ...pre,
       name: currentDateFormate,
       slug: convertToSlug,
     }));
-  }, []);
+  }, [show, showMsgField]);
 
   return (
     <Share
@@ -135,6 +144,9 @@ const ShareItems = ({
         setInput,
         showCreateCollectionComponents: true,
       }}
+      message={message}
+      setMessage={setMessage}
+      isAdditionInfoNeedForPersonalShare={true}
     />
   );
 };

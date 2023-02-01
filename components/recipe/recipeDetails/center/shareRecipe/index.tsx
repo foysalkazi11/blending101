@@ -9,6 +9,7 @@ import notification from "../../../../utility/reactToastifyNotification";
 
 interface Props {
   id: string;
+  versionId: string;
   title: string;
   type: "recipe";
   image: string;
@@ -19,6 +20,7 @@ interface Props {
 
 const ShareRecipe = ({
   id = "",
+  versionId = "",
   image = "",
   setShow = () => {},
   show = false,
@@ -58,8 +60,8 @@ const ShareRecipe = ({
         variables: {
           data: {
             shareData: {
-              recipeId: detailsARecipe._id,
-              version: detailsARecipe.versionId,
+              recipeId: id,
+              version: versionId,
             },
             shareTo: isGlobalShare ? [] : emails?.map((info) => info?.email),
             sharedBy: userId,

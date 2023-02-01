@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, ReactNode } from "react";
+import React, { forwardRef, InputHTMLAttributes, ReactNode } from "react";
 import styles from "./input.module.scss";
 
 interface InputComponentProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -18,24 +18,27 @@ interface InputComponentProps extends InputHTMLAttributes<HTMLInputElement> {
   icon?: ReactNode | string;
 }
 
-export default function InputComponent({
-  type,
-  style = {},
-  value,
-  placeholder,
-  fullWidth,
-  maxWidth,
-  handleChange = () => {},
-  name,
-  min = 0,
-  max,
-  borderSecondary = false,
-  fieldName = "",
-  inputWithIcon = false,
-  icon,
+function InputComponent(
+  {
+    type,
+    style = {},
+    value,
+    placeholder,
+    fullWidth,
+    maxWidth,
+    handleChange = () => {},
+    name,
+    min = 0,
+    max,
+    borderSecondary = false,
+    fieldName = "",
+    inputWithIcon = false,
+    icon,
 
-  ...InputProps
-}: InputComponentProps) {
+    ...InputProps
+  }: InputComponentProps,
+  ref,
+) {
   // STEP 1: INITIALIZE PROPS TO AVOID UI FALL
   type = type || "text";
   style = style || {};
@@ -61,6 +64,7 @@ export default function InputComponent({
           placeholder={placeholder}
           min={min}
           max={max}
+          ref={ref}
           {...InputProps}
         />
         {typeof icon === "string" ? (
@@ -85,7 +89,10 @@ export default function InputComponent({
       placeholder={placeholder}
       min={min}
       max={max}
+      ref={ref}
       {...InputProps}
     />
   );
 }
+
+export default forwardRef(InputComponent);

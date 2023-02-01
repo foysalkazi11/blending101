@@ -34,6 +34,7 @@ const RecipeDiscovery = () => {
     id: "",
     image: "",
     name: "",
+    versionId: "",
   });
   const [openShareModal, setOpenShareModal] = useState(false);
   const [pageNum, setPageNum] = useState(1);
@@ -267,6 +268,7 @@ const RecipeDiscovery = () => {
       />
       <ShareRecipe
         id={shareRecipeData?.id}
+        versionId={shareRecipeData.versionId}
         title={shareRecipeData?.name}
         image={shareRecipeData?.image}
         show={openShareModal}

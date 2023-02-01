@@ -159,6 +159,7 @@
   flex-wrap: wrap;
   position: relative;
   transition: all 0.3s;
+
   &__address {
     font-size: 1.2rem;
     line-height: 2.4rem;
@@ -186,6 +187,7 @@
     font-size: 1.2rem;
     height: 36px;
     color: #a5a5a5;
+    font-family: "Segoe UI", sans-serif;
     &:focus {
       outline: none;
     }

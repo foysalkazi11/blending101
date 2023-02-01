@@ -35,9 +35,11 @@ interface Props {
   isAdditionInfoNeedForPersonalShare?: boolean;
   createCollectionProps?: {
     input: InputValueType;
-    setInput: React.Dispatch<React.SetStateAction<InputValueType>>;
+    setInput: Dispatch<SetStateAction<InputValueType>>;
     showCreateCollectionComponents: boolean;
   };
+  message?: string;
+  setMessage?: Dispatch<SetStateAction<string>>;
 }
 
 const InviteUserForm = ({
@@ -58,9 +60,12 @@ const InviteUserForm = ({
     setInput: () => {},
     showCreateCollectionComponents: false,
   },
+  message = "",
+  setMessage = () => {},
 }: Props) => {
   const { data } = useQuery(GET_ALL_USER_LIST);
   const inputRef = useRef<HTMLInputElement>(null);
+  const collectionNameInputRef = useRef<HTMLInputElement>(null);
   const [showSuggestion, setShowSuggestion] = useState(false);
   const [input, setInput] = useState("");
   const hasEmails = emails.length > 0;
@@ -174,6 +179,7 @@ const InviteUserForm = ({
   useEffect(() => {
     setEmails([]);
     setInput("");
+    collectionNameInputRef?.current && collectionNameInputRef.current.focus();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -181,30 +187,17 @@ const InviteUserForm = ({
   return (
     <>
       {showCreateCollectionComponents && (
-        <CustomAccordion
-          title="Change default name"
-          iconRight={true}
-          style={{ marginBottom: "10px" }}
-        >
-          <div style={{ margin: "10px 0" }}>
-            <InputComponent
-              borderSecondary={true}
-              placeholder="Collection Name"
-              value={createCollectionInput?.name}
-              name="name"
-              onChange={handleChange}
-              style={{ fontSize: "12px" }}
-            />
-            <TextArea
-              style={{ marginTop: "10px", fontSize: "12px" }}
-              borderSecondary={true}
-              placeholder="Description"
-              value={createCollectionInput?.description}
-              name="description"
-              onChange={handleChange}
-            />
-          </div>
-        </CustomAccordion>
+        <div style={{ margin: "10px 0" }}>
+          <InputComponent
+            borderSecondary={true}
+            placeholder="Collection Name"
+            value={createCollectionInput?.name}
+            name="name"
+            onChange={handleChange}
+            style={{ fontSize: "12px" }}
+            ref={collectionNameInputRef}
+          />
+        </div>
       )}
       <div
         ref={inputRef}
@@ -310,6 +303,8 @@ const InviteUserForm = ({
         name="message"
         placeholder="Enter Message"
         className={styles.share__message}
+        value={message}
+        onChange={(e) => setMessage(e?.target?.value)}
       />
 
       <div className={styles.share__button_wraper}>

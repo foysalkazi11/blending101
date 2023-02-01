@@ -44,6 +44,7 @@ const SEARCH_RECIPE = gql`
         addedToCompare
         userCollections
         defaultVersion {
+          _id
           postfixTitle
         }
         isMatch
