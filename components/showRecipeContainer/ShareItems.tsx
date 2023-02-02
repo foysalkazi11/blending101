@@ -112,7 +112,7 @@ const ShareItems = ({
     const currentDate = formatDate(newDate);
     const currentDateFormate = `${currentDate.day} ${currentDate.month} ${
       currentDate.year
-    }_${newDate.toLocaleTimeString().slice(0, 4)}_${
+    }_${newDate.toLocaleTimeString().slice(0, 5)}_${
       dbUser?.displayName ||
       dbUser?.lastName ||
       dbUser?.firstName ||
