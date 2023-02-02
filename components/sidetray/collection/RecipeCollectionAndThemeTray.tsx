@@ -44,9 +44,12 @@ export default function RecipeCollectionAndThemeTray({
     name: "",
     slug: "",
     description: "",
+    isSharedCollection: false,
   });
   const [isEditCollection, setIsEditCollection] = useState(false);
   const [isDeleteCollection, setIsDeleteCollection] = useState(false);
+  const [isDeleteCollectionShared, setIsDeleteCollectionShared] =
+    useState(false);
   const [collectionId, setCollectionId] = useState("");
   const { dbUser } = useAppSelector((state) => state?.user);
   const { changeRecipeWithinCollection } = useAppSelector(
@@ -98,7 +101,13 @@ export default function RecipeCollectionAndThemeTray({
   const addNewCollection = () => {
     setIsDeleteCollection(false);
     setIsEditCollection(false);
-    setInput({ image: null, name: "", slug: "", description: "" });
+    setInput({
+      image: null,
+      name: "",
+      slug: "",
+      description: "",
+      isSharedCollection: false,
+    });
     setOpenModal(true);
   };
 
@@ -112,6 +121,7 @@ export default function RecipeCollectionAndThemeTray({
                 userId: dbUser?._id,
                 collectionId: collectionId,
                 newName: input?.name,
+                isSharedCollection: input?.isSharedCollection,
               },
             },
             update(cache, { data: { editACollection } }) {
@@ -124,7 +134,13 @@ export default function RecipeCollectionAndThemeTray({
                       collectionsData?.getUserCollectionsAndThemes?.collections?.map(
                         (collection) =>
                           collection?._id === collectionId
-                            ? { ...collection, ...input }
+                            ? {
+                                ...collection,
+                                ...input,
+                                personalizedName: input?.isSharedCollection
+                                  ? input.name
+                                  : "",
+                              }
                             : collection,
                       ),
                   },
@@ -133,7 +149,13 @@ export default function RecipeCollectionAndThemeTray({
             },
           });
           setOpenModal(false);
-          setInput({ image: null, name: "", description: "", slug: "" });
+          setInput({
+            image: null,
+            name: "",
+            description: "",
+            slug: "",
+            isSharedCollection: false,
+          });
         } else {
           await createNewCollection({
             variables: {
@@ -165,7 +187,13 @@ export default function RecipeCollectionAndThemeTray({
           });
         }
         setOpenModal(false);
-        setInput({ image: null, name: "", description: "", slug: "" });
+        setInput({
+          image: null,
+          name: "",
+          description: "",
+          slug: "",
+          isSharedCollection: false,
+        });
         if (isEditCollection) {
           notification("info", "Collection edit successfully");
         } else {
@@ -189,6 +217,7 @@ export default function RecipeCollectionAndThemeTray({
     name: string,
     slug: string,
     description: string,
+    isSharedCollection: boolean = false,
   ) => {
     setIsDeleteCollection(false);
     setInput((pre) => ({
@@ -196,6 +225,7 @@ export default function RecipeCollectionAndThemeTray({
       name,
       slug,
       description,
+      isSharedCollection,
     }));
     setIsEditCollection(true);
     setCollectionId(id);
@@ -203,7 +233,11 @@ export default function RecipeCollectionAndThemeTray({
   };
 
   // delete collection
-  const handleOpenConfirmationModal = (collectionId: string) => {
+  const handleOpenConfirmationModal = (
+    collectionId: string,
+    isSharedCollection: boolean = false,
+  ) => {
+    setIsDeleteCollectionShared(isSharedCollection);
     setIsDeleteCollection(true);
     setCollectionId(collectionId);
     setOpenModal(true);
@@ -215,7 +249,8 @@ export default function RecipeCollectionAndThemeTray({
         variables: {
           data: {
             collectionId: collectionId,
-            userEmail: dbUser?.email,
+            userId: dbUser?._id,
+            isSharedCollection: isDeleteCollectionShared,
           },
         },
         update(cache, { data: { deleteCollection } }) {

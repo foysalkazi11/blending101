@@ -175,8 +175,8 @@ const AddRecipePage = () => {
   useEffect(() => {
     dispatch(
       updateHeadTagInfo({
-        title: "Add new recipe",
-        description: "add new recipe",
+        title: "Add New Blend",
+        description: "add new blend",
       }),
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -195,7 +195,7 @@ const AddRecipePage = () => {
   const giGl: GiGl = nutritionData?.getNutrientsListAndGiGlByIngredients?.giGl;
 
   return (
-    <AContainer headerIcon="/icons/juicer.svg" headerTitle="Add new blend">
+    <AContainer headerIcon="/icons/juicer.svg" headerTitle="Add New Blend">
       {width < 1280 ? (
         <>
           <TrayWrapper
