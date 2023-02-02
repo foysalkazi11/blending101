@@ -25,12 +25,13 @@ import Share, {
 interface CollectionComponentProps {
   collections: {}[];
   collectionsLoading: boolean;
-  handleDeleteCollection?: (id: string) => void;
+  handleDeleteCollection?: (id: string, isSharedCollection?: boolean) => void;
   handleEditCollection?: (
     id: string,
     name: string,
     slug: string,
     description: string,
+    isSharedCollection?: boolean,
   ) => void;
 }
 

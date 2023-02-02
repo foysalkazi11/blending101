@@ -31,7 +31,7 @@ interface IndividualCollectionType {
   collectionItemLength?: number;
   menuIndex?: number;
   setMenuIndex?: Dispatch<SetStateAction<number>>;
-  handleDeleteCollection?: (id: string) => void;
+  handleDeleteCollection?: (id: string, isShared?: boolean) => void;
   handleShareCollection?: (
     id: string,
     name: string,
@@ -43,6 +43,7 @@ interface IndividualCollectionType {
     name: string,
     slug: string,
     description: string,
+    isShared?: boolean,
   ) => void;
   deleteCollectionLoading?: boolean;
   collectionRoute: "recipeCollection" | "blogCollection" | "planCollection";
@@ -116,7 +117,7 @@ const SingleCollection = ({
           onClick={() =>
             handleCollectionRoute(
               `/collection/${collectionRoute}/${slug}${
-                isShared ? "?shareBy=" + sharedBy?._id : ""
+                isShared ? "?collectionId=" + id : ""
               }`,
             )
           }
@@ -162,7 +163,7 @@ const SingleCollection = ({
               />
             </div>
           ) : isHovered ? (
-            name === "My Favorite" || !canContribute ? (
+            name === "My Favorite" ? (
               <p style={{ marginRight: "10px" }}>{collectionItemLength}</p>
             ) : (
               <div
@@ -184,7 +185,13 @@ const SingleCollection = ({
                       icon={faPencil}
                       className={styles.icon}
                       onClick={() =>
-                        handleEditCollection(id, name, slug, description)
+                        handleEditCollection(
+                          id,
+                          name,
+                          slug,
+                          description,
+                          isShared,
+                        )
                       }
                     />
                   </Tooltip>
@@ -199,19 +206,21 @@ const SingleCollection = ({
                       <FontAwesomeIcon
                         icon={faTrash}
                         className={styles.icon}
-                        onClick={() => handleDeleteCollection(id)}
+                        onClick={() => handleDeleteCollection(id, isShared)}
                       />
                     </Tooltip>
                   )}
-                  <Tooltip content="Share" direction="top">
-                    <FontAwesomeIcon
-                      icon={faShareNodes}
-                      className={styles.icon}
-                      onClick={() =>
-                        handleShareCollection(id, name, image, slug)
-                      }
-                    />
-                  </Tooltip>
+                  {canContribute && (
+                    <Tooltip content="Share" direction="top">
+                      <FontAwesomeIcon
+                        icon={faShareNodes}
+                        className={styles.icon}
+                        onClick={() =>
+                          handleShareCollection(id, name, image, slug)
+                        }
+                      />
+                    </Tooltip>
+                  )}
                 </div>
               </div>
             )
