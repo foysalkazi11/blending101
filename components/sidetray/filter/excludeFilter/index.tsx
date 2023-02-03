@@ -32,7 +32,11 @@ const ExcludeFilter = ({ excludeFilterState }: Props) => {
   return (
     <div
       className={`${styles.tabContainer} ${
-        id ? styles.activeTabTabContainer : ""
+        excludeIngredientIds === undefined
+          ? ""
+          : excludeIngredientIds
+          ? styles.activeTabContainerPrimary
+          : styles.activeTabContainerSecondary
       }`}
     >
       <div

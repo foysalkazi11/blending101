@@ -71,6 +71,9 @@
     }
   }
 }
-.activeTabTabContainer {
+.activeTabContainerSecondary {
   border-color: #7dbd3b;
+}
+.activeTabContainerPrimary {
+  border-color: $primaryColor;
 }

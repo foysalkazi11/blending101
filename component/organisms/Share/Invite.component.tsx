@@ -26,8 +26,10 @@ const Invite = (props: ShareProps) => {
     <CustomModal open={show} setOpen={setShow}>
       <div className={styles.share}>
         <div className={styles.share__header}>
-          <Icon fontName={faShareNodes} size="2.5rem" />
-          <h3>{title}</h3>
+          <div className={styles.leftSide}>
+            <Icon fontName={faShareNodes} size="2.5rem" />
+            <h3>{title}</h3>
+          </div>
         </div>
         <InviteUserForm {...rest} />
       </div>
