@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect } from "react";
 import {
   faFacebook,
   faPinterest,
+  faSquareTwitter,
   faTwitter,
 } from "@fortawesome/free-brands-svg-icons";
 import {
@@ -203,7 +204,7 @@ const SharePanel = (props: SharePanelProps) => {
           className={styles["share__social--twitter"]}
           beforeOnClick={() => generateShareLink(true, false)}
         >
-          <Icon fontName={faTwitter} size="3.5rem" className="mr-10" />
+          <Icon fontName={faSquareTwitter} size="3.5rem" className="mr-10" />
         </TwitterShareButton>
         <PinterestShareButton
           media="https://blending101.com/Blend_Formula.png"

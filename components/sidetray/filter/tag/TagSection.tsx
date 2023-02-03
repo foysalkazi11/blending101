@@ -293,14 +293,18 @@ const TagSection = ({
         const findOneNutrient = findNutrient(childTab);
         handleGetBlendNutrition(
           findOneNutrient.id,
-          findOneNutrient.name.toLowerCase(),
+          findOneNutrient.name
+            .toLowerCase()
+            .slice(0, findOneNutrient.name.length - 1),
         );
       }
       if (childTab === "Minerals") {
         const findOneNutrient = findNutrient(childTab);
         handleGetBlendNutrition(
           findOneNutrient.id,
-          findOneNutrient.name.toLowerCase(),
+          findOneNutrient.name
+            .toLowerCase()
+            .slice(0, findOneNutrient.name.length - 1),
         );
       }
       if (childTab === "Phytonutrients") {
