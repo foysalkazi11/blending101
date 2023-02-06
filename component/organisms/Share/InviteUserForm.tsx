@@ -40,6 +40,7 @@ interface Props {
   };
   message?: string;
   setMessage?: Dispatch<SetStateAction<string>>;
+  sharedUserEmail?: string;
 }
 
 const InviteUserForm = ({
@@ -62,6 +63,7 @@ const InviteUserForm = ({
   },
   message = "",
   setMessage = () => {},
+  sharedUserEmail = "",
 }: Props) => {
   const { data } = useQuery(GET_ALL_USER_LIST);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -263,6 +265,9 @@ const InviteUserForm = ({
                         canCollaborate: false,
                         active: true,
                       })
+                    }
+                    className={
+                      user?.email === sharedUserEmail ? styles.disableEmail : ""
                     }
                   >
                     <span>{user?.displayName?.charAt(0)}</span>

@@ -97,12 +97,13 @@
       visibility: hidden;
 
       .iconBox {
-        margin-right: 10px;
+        &:not(:last-child) {
+          margin-right: 10px;
+        }
       }
 
       .icon {
         color: #929292;
-        margin-right: 10px;
 
         &:hover {
           color: #fe5d1f;

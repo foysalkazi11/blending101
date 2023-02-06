@@ -37,6 +37,8 @@ interface IndividualCollectionType {
     name: string,
     image: string,
     slug: string,
+    isSharedCollection?: boolean,
+    sharedUserEmail?: string,
   ) => void;
   handleEditCollection?: (
     id: string,
@@ -74,7 +76,14 @@ const SingleCollection = ({
   menuIndex = 0,
   setMenuIndex = () => {},
   handleDeleteCollection = () => {},
-  handleShareCollection = () => {},
+  handleShareCollection = (
+    id: string = "",
+    name: string = "",
+    image: string = "",
+    slug: string = "",
+    isSharedCollection = false,
+    sharedUserEmail = "",
+  ) => {},
   handleEditCollection = () => {},
   deleteCollectionLoading = false,
   collectionRoute = "recipeCollection",
@@ -134,15 +143,11 @@ const SingleCollection = ({
           {isShared && (
             <Tooltip
               content={`Shared by : ${
-                sharedBy.displayName
-                  ? sharedBy.displayName
-                  : sharedBy.firstName
-                  ? sharedBy.firstName
-                  : sharedBy.lastName
-                  ? sharedBy.lastName
-                  : sharedBy.email
-                  ? sharedBy.email
-                  : ""
+                sharedBy.displayName ||
+                sharedBy.firstName ||
+                sharedBy.lastName ||
+                sharedBy.email ||
+                ""
               }`}
               direction="top"
             >
@@ -180,46 +185,61 @@ const SingleCollection = ({
                     menuIndex === index ? styles.showMenu : ""
                   }`}
                 >
-                  <Tooltip content="Edit" direction="top">
-                    <FontAwesomeIcon
-                      icon={faPencil}
-                      className={styles.icon}
-                      onClick={() =>
-                        handleEditCollection(
-                          id,
-                          name,
-                          slug,
-                          description,
-                          isShared,
-                        )
-                      }
-                    />
-                  </Tooltip>
-
-                  {deleteCollectionLoading ? (
-                    <CircularRotatingLoader
-                      color="primary"
-                      style={{ fontSize: "16px" }}
-                    />
-                  ) : (
-                    <Tooltip content="Delete" direction="top">
+                  <div className={styles.iconBox}>
+                    <Tooltip content="Edit" direction="top">
                       <FontAwesomeIcon
-                        icon={faTrash}
-                        className={styles.icon}
-                        onClick={() => handleDeleteCollection(id, isShared)}
-                      />
-                    </Tooltip>
-                  )}
-                  {canContribute && (
-                    <Tooltip content="Share" direction="top">
-                      <FontAwesomeIcon
-                        icon={faShareNodes}
+                        icon={faPencil}
                         className={styles.icon}
                         onClick={() =>
-                          handleShareCollection(id, name, image, slug)
+                          handleEditCollection(
+                            id,
+                            name,
+                            slug,
+                            description,
+                            isShared,
+                          )
                         }
                       />
                     </Tooltip>
+                  </div>
+
+                  {deleteCollectionLoading ? (
+                    <div className={styles.iconBox}>
+                      <CircularRotatingLoader
+                        color="primary"
+                        style={{ fontSize: "16px" }}
+                      />
+                    </div>
+                  ) : (
+                    <div className={styles.iconBox}>
+                      <Tooltip content="Delete" direction="top">
+                        <FontAwesomeIcon
+                          icon={faTrash}
+                          className={styles.icon}
+                          onClick={() => handleDeleteCollection(id, isShared)}
+                        />
+                      </Tooltip>
+                    </div>
+                  )}
+                  {canContribute && (
+                    <div className={styles.iconBox}>
+                      <Tooltip content="Share" direction="top">
+                        <FontAwesomeIcon
+                          icon={faShareNodes}
+                          className={styles.icon}
+                          onClick={() =>
+                            handleShareCollection(
+                              id,
+                              name,
+                              image,
+                              slug,
+                              isShared,
+                              sharedBy?.email || "",
+                            )
+                          }
+                        />
+                      </Tooltip>
+                    </div>
                   )}
                 </div>
               </div>

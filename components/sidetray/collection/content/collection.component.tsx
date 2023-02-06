@@ -83,8 +83,17 @@ export default function CollectionComponent({
     title: string,
     image: string,
     slug: string,
+    isSharedCollection: boolean = false,
+    sharedUserEmail: string = "",
   ) => {
-    setCollectionInfo({ id, title, image, slug });
+    setCollectionInfo({
+      id,
+      title,
+      image,
+      slug,
+      isSharedCollection,
+      sharedUserEmail,
+    });
     setShowInviteModal(true);
     setEmails([]);
   };
@@ -120,6 +129,7 @@ export default function CollectionComponent({
                 })),
             sharedBy: userId,
             collectionId: collectionInfo?.id,
+            isSharedCollection: collectionInfo?.isSharedCollection,
           },
         },
       });
@@ -297,6 +307,7 @@ export default function CollectionComponent({
         showMsgField={showMsgField}
         submitBtnText="Share"
         isAdditionInfoNeedForPersonalShare={true}
+        sharedUserEmail={collectionInfo?.sharedUserEmail}
       />
       {/* 
       <Invite
