@@ -242,6 +242,11 @@
         text-transform: uppercase;
       }
     }
+    .disableEmail {
+      cursor: not-allowed;
+      background-color: #f6f6f6;
+      pointer-events: none;
+    }
   }
 }
 
