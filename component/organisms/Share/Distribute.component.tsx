@@ -61,6 +61,7 @@ interface ShareProps {
   };
   message?: string;
   setMessage?: Dispatch<SetStateAction<string>>;
+  sharedUserEmail?: string;
 }
 
 const Share = (props: ShareProps) => {
@@ -86,6 +87,7 @@ const Share = (props: ShareProps) => {
     createCollectionProps,
     message = "",
     setMessage = () => {},
+    sharedUserEmail = "",
   } = props;
 
   useEffect(() => {
@@ -131,6 +133,7 @@ const Share = (props: ShareProps) => {
             createCollectionProps={createCollectionProps}
             message={message}
             setMessage={setMessage}
+            sharedUserEmail={sharedUserEmail}
           />
         ) : (
           <div className="d-flex">
