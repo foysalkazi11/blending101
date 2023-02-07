@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import FooterRecipeFilter from "../../../components/footer/footerRecipeFilter.component";
 import AContainer from "../../../containers/A.container";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import styles from "../../../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";
@@ -95,9 +94,6 @@ const CollectionBlog = () => {
           showItems="blog"
           findAmin={findAmin}
         />
-      </div>
-      <div className={styles.footerMainDiv}>
-        <FooterRecipeFilter />
       </div>
     </AContainer>
   );

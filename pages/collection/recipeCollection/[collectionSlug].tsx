@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
-import FooterRecipeFilter from "../../../components/footer/footerRecipeFilter.component";
+import React, { FC, useEffect, useState } from "react";
 import AContainer from "../../../containers/A.container";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import styles from "../../../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";
@@ -87,9 +86,45 @@ const CollectionRecipes = () => {
   }, []);
 
   if (getCollectionRecipeError) {
-    return <ErrorPage errorMessage="No collection recipe found" />;
+    return (
+      <Layout>
+        <ErrorPage
+          style={{ height: "50vh" }}
+          errorMessage="No collection recipe found"
+        />
+        ;
+      </Layout>
+    );
   }
 
+  return (
+    <Layout>
+      <ShowRecipeContainer
+        data={recipes}
+        loading={
+          getAllRecipesLoading || getMyRecipesLoading || getCustomRecipesLoading
+        }
+        headerLeftSide={
+          <div className="flex ai-center">
+            {slug === "my-favorite" ? (
+              <FontAwesomeIcon icon={faHeart} className={classes.head__icon} />
+            ) : (
+              <FontAwesomeIcon icon={faStar} className={classes.head__icon} />
+            )}
+
+            <h2 className={classes.head__title}>{title}</h2>
+          </div>
+        }
+        closeHandler={() => router.push("/discovery")}
+        showItems="recipe"
+        showDefaultRightHeader
+      />
+    </Layout>
+  );
+};
+
+const Layout: FC = ({ children }) => {
+  const [input, setInput] = useState("");
   return (
     <AContainer
       headerIcon="/icons/juicer.svg"
@@ -106,38 +141,9 @@ const CollectionRecipes = () => {
           input={input}
           setInput={setInput}
           isSearchTag={false}
-          styles={{ marginLeft: "16px" }}
         />
         <WikiBanner />
-
-        <ShowRecipeContainer
-          data={recipes}
-          loading={
-            getAllRecipesLoading ||
-            getMyRecipesLoading ||
-            getCustomRecipesLoading
-          }
-          headerLeftSide={
-            <div className="flex ai-center">
-              {slug === "my-favorite" ? (
-                <FontAwesomeIcon
-                  icon={faHeart}
-                  className={classes.head__icon}
-                />
-              ) : (
-                <FontAwesomeIcon icon={faStar} className={classes.head__icon} />
-              )}
-
-              <h2 className={classes.head__title}>{title}</h2>
-            </div>
-          }
-          closeHandler={() => router.push("/discovery")}
-          showItems="recipe"
-          showDefaultRightHeader
-        />
-      </div>
-      <div className={styles.footerMainDiv}>
-        <FooterRecipeFilter />
+        {children}
       </div>
     </AContainer>
   );

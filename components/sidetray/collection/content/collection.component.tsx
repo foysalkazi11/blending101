@@ -242,6 +242,11 @@ export default function CollectionComponent({
             slug="my-recipes"
             collectionRoute="recipeCollection"
           />
+          <SingleCollection
+            name="Shared With Me"
+            collectionRoute="recipeCollection"
+            route={`/collection/recipeCollection/shared_with_me`}
+          />
         </>
       )}
       {collectionsLoading ? (

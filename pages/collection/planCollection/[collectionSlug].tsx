@@ -82,9 +82,6 @@ const CollectionsOfPlan = () => {
           showItems="plan"
         />
       </div>
-      <div className={styles.footerMainDiv}>
-        <FooterRecipeFilter />
-      </div>
     </AContainer>
   );
 };
