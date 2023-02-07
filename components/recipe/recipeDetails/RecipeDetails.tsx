@@ -5,7 +5,6 @@ import Center from "./center/Center";
 import NutritionPanel from "../share/nutritionPanel/NutritionPanel";
 import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
 import useWindowSize from "../../utility/useWindowSize";
-import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
 import { useAppSelector } from "../../../redux/hooks";
 import ShowRelatedItems from "../../showRelatedItems";
 import { recommendedList } from "../fackData/recipeDetails";
@@ -84,7 +83,6 @@ const RecipeDetails = ({
           itemsList={recommendedList}
         />
       ) : null}
-      <FooterRecipeFilter />
     </AContainer>
   );
 };

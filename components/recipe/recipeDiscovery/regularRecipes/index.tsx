@@ -123,7 +123,7 @@ interface ShowRecipesType {
   >;
 }
 
-const ShowRecipes = ({
+export const ShowRecipes = ({
   headerData = defaultHeadingContent,
   loading = false,
   recipes = [],

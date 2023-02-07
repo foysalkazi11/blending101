@@ -4,7 +4,6 @@ import AContainer from "../../../containers/A.container";
 import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
 import Center_Elements from "./recipe_elements/centerElements.component";
 import IngredientList from "./recipe_elements/ingredientList/ingredientList&Howto.component";
-import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setLoading } from "../../../redux/slices/utilitySlice";
 import imageUploadS3 from "../../utility/imageUploadS3";
@@ -287,9 +286,6 @@ const AddRecipePage = () => {
             adjusterFunc={adjusterFunc}
           />
         </div>
-      </div>
-      <div className={styles.footerMainDiv}>
-        <FooterRecipeFilter />
       </div>
     </AContainer>
   );

@@ -1,9 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
-import { faTimes } from "@fortawesome/pro-solid-svg-icons";
-import IconButton from "../../component/atoms/Button/IconButton.component";
 import Icon from "../../component/atoms/Icon/Icon.component";
-import FooterRecipeFilter from "../../components/footer/footerRecipeFilter.component";
 import AContainer from "../../containers/A.container";
 import useLocalStorage from "../../customHooks/useLocalStorage";
 import useViewAll, { QUERY_DICTIONARY } from "../../hooks/modules/useViewAll";
@@ -88,9 +85,6 @@ const ViewAll = () => {
           }
           showItems="recipe"
         />
-      </div>
-      <div className={styles.footerMainDiv}>
-        <FooterRecipeFilter />
       </div>
     </AContainer>
   );
