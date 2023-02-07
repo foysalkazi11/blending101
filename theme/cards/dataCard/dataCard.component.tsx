@@ -61,6 +61,7 @@ interface dataCardInterface {
     }>
   >;
   defaultVersionId?: string;
+  token?: string;
 }
 
 export default function DatacardComponent({
@@ -95,6 +96,7 @@ export default function DatacardComponent({
   setOpenShareModal = () => {},
   setShareRecipeData = () => {},
   defaultVersionId = "",
+  token = "",
 }: dataCardInterface) {
   title = title || "Triple Berry Smoothie";
   ingredients = ingredients;
@@ -205,7 +207,11 @@ export default function DatacardComponent({
             <h2
               onClick={(e) => {
                 e?.stopPropagation();
-                router.push(`/recipe_details/${recipeId}`);
+                router.push(
+                  `/recipe_details/${recipeId}/${
+                    token ? "?token=" + token : ""
+                  } `,
+                );
               }}
             >
               {title}
