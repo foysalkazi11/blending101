@@ -6,12 +6,14 @@ const GET_SINGLE_COLLECTION = gql`
     $slug: String!
     $collectionId: String
     $token: String
+    $singleRecipeCollectionId: String
   ) {
     getASingleCollection(
       userId: $userId
       slug: $slug
       collectionId: $collectionId
       token: $token
+      singleRecipeCollectionId: $singleRecipeCollectionId
     ) {
       name
       image

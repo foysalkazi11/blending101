@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
-import FooterRecipeFilter from "../../../components/footer/footerRecipeFilter.component";
 import AContainer from "../../../containers/A.container";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import styles from "../../../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";

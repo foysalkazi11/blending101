@@ -6,12 +6,39 @@ import WikiBanner from "../../../components/wiki/wikiBanner/WikiBanner";
 import { useQuery } from "@apollo/client";
 import GET_SHARE_WITH_ME_COLLECTIONS from "../../../gqlLib/collection/query/getShareWithMeCollections";
 import { ShowRecipes } from "../../../components/recipe/recipeDiscovery/regularRecipes";
-import { useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import SkeletonRecipeDiscovery from "../../../theme/skeletons/skeletonRecipeDiscovery/SkeletonRecipeDiscovery";
 import ErrorPage from "../../../components/pages/404Page";
+import ShowLastModifiedCollection from "../../../components/showLastModifiedCollection/ShowLastModifiedCollection";
+import ShareRecipe from "../../../components/recipe/recipeDetails/center/shareRecipe";
+import {
+  setChangeRecipeWithinCollection,
+  setSingleRecipeWithinCollecions,
+} from "../../../redux/slices/collectionSlice";
+import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
 
 const SharedWithMe = () => {
+  const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user.dbUser._id);
+  const [openCollectionModal, setOpenCollectionModal] = useState(false);
+  const [shareRecipeData, setShareRecipeData] = useState({
+    id: "",
+    image: "",
+    name: "",
+    versionId: "",
+  });
+  const [openShareModal, setOpenShareModal] = useState(false);
+  const { lastModifiedCollection } = useAppSelector(
+    (state) => state?.collections,
+  );
+
+  // open recipe collection panel after added a recipe to a collection
+  const handleOpenCollectionTray = () => {
+    dispatch(setSingleRecipeWithinCollecions([lastModifiedCollection?.id]));
+    dispatch(setOpenCollectionsTary(true));
+    dispatch(setChangeRecipeWithinCollection(true));
+    setOpenCollectionModal(false);
+  };
 
   const { data, loading, error } = useQuery(GET_SHARE_WITH_ME_COLLECTIONS, {
     variables: { userId },
@@ -39,7 +66,7 @@ const SharedWithMe = () => {
     <Layout>
       <div style={{ marginTop: "20px" }}>
         {data?.getSharedWithMeCollections?.length ? (
-          data?.getSharedWithMeCollections?.map((item) => {
+          data?.getSharedWithMeCollections?.map((item, index) => {
             const { _id, description, image, name, recipes, slug } = item;
             return (
               <ShowRecipes
@@ -47,13 +74,15 @@ const SharedWithMe = () => {
                 headerData={{
                   heading: name,
                   image: "/images/fire-alt-light.svg",
-                  allUrl: `/collection/recipeCollection/${slug}?collectionId=${_id}`,
+                  allUrl: `/collection/recipeCollection/${slug}?${
+                    index === 0 ? "singleRecipeCollectionId" : "collectionId"
+                  }=${_id}`,
                 }}
                 loading={loading}
                 recipes={recipes}
-                // setOpenCollectionModal={setOpenCollectionModal}
-                // setOpenShareModal={setOpenShareModal}
-                // setShareRecipeData={setShareRecipeData}
+                setOpenCollectionModal={setOpenCollectionModal}
+                setOpenShareModal={setOpenShareModal}
+                setShareRecipeData={setShareRecipeData}
               />
             );
           })
@@ -65,6 +94,23 @@ const SharedWithMe = () => {
           />
         )}
       </div>
+      <ShowLastModifiedCollection
+        open={openCollectionModal}
+        setOpen={setOpenCollectionModal}
+        shouldCloseOnOverlayClick={true}
+        lastModifiedCollectionName={lastModifiedCollection?.name}
+        openCollectionPanel={handleOpenCollectionTray}
+      />
+      <ShareRecipe
+        id={shareRecipeData?.id}
+        versionId={shareRecipeData.versionId}
+        title={shareRecipeData?.name}
+        image={shareRecipeData?.image}
+        show={openShareModal}
+        setShow={setOpenShareModal}
+        type="recipe"
+        heading="Share Recipe"
+      />
     </Layout>
   );
 };
