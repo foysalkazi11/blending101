@@ -54,6 +54,7 @@ const GET_SHARE_WITH_ME_COLLECTIONS = gql`
           postfixTitle
           description
         }
+        token
       }
       slug
     }

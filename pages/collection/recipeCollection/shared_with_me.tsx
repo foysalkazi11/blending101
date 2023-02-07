@@ -75,7 +75,9 @@ const SharedWithMe = () => {
                   heading: name,
                   image: "/images/fire-alt-light.svg",
                   allUrl: `/collection/recipeCollection/${slug}?${
-                    index === 0 ? "singleRecipeCollectionId" : "collectionId"
+                    name === "Single Recipes"
+                      ? "singleRecipeCollectionId"
+                      : "collectionId"
                   }=${_id}`,
                 }}
                 loading={loading}
