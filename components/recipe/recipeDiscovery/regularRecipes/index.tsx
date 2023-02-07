@@ -186,6 +186,7 @@ export const ShowRecipes = ({
                   showMoreMenuAtHover={true}
                   setShareRecipeData={setShareRecipeData}
                   setOpenShareModal={setOpenShareModal}
+                  token={item?.token}
                 />
               </div>
             );

@@ -25,6 +25,7 @@ export interface RecipeType {
   calorie: number;
   userId: null | RecipeCreatorInfo;
   recipeVersion: RecipeSmallVersionType[];
+  token?: string;
 }
 
 export interface RecipeSmallVersionType {
