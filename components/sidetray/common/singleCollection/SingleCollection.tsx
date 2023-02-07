@@ -59,6 +59,7 @@ interface IndividualCollectionType {
     image?: string;
   };
   canContribute?: boolean;
+  route?: string;
 }
 
 const SingleCollection = ({
@@ -97,6 +98,7 @@ const SingleCollection = ({
     lastName: "",
   },
   canContribute,
+  route = "",
 }: IndividualCollectionType) => {
   const [hoverRef, isHovered] = useHover();
   const router = useRouter();
@@ -124,11 +126,13 @@ const SingleCollection = ({
         <div
           className={styles.leftSide}
           onClick={() =>
-            handleCollectionRoute(
-              `/collection/${collectionRoute}/${slug}${
-                isShared ? "?collectionId=" + id : ""
-              }`,
-            )
+            route
+              ? router.push(route)
+              : handleCollectionRoute(
+                  `/collection/${collectionRoute}/${slug}${
+                    isShared ? "?collectionId=" + id : ""
+                  }`,
+                )
           }
         >
           <div className={styles.img}>

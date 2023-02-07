@@ -33,7 +33,6 @@ import {
 import EMPTY_COMPARE_LIST from "../../../gqlLib/compare/mutation/emptyCompareList";
 import { setDbUser } from "../../../redux/slices/userSlice";
 import { setLoading } from "../../../redux/slices/utilitySlice";
-import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
 import ShowCollectionModal from "../../showLastModifiedCollection/ShowLastModifiedCollection";
 import useChangeCompare from "../../../customHooks/useChangeComaper";
 import imageUploadS3 from "../../utility/imageUploadS3";
@@ -599,7 +598,6 @@ const CompareRecipe = () => {
             </>
           )}
         </div>
-        <FooterRecipeFilter />
       </AContainer>
       <ShowCollectionModal
         open={openCollectionModal}

@@ -4,7 +4,6 @@ import AContainer from "../../../containers/A.container";
 import styles from "./recipeDiscovery.module.scss";
 import SearchTagsComponent from "../../searchtags/searchtags.component";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
 import ShowLastModifiedCollection from "../../showLastModifiedCollection/ShowLastModifiedCollection";
 import RegularRecipes from "./regularRecipes";
 import SEARCH_RECIPE from "../../../gqlLib/recipes/queries/searchRecipe";
@@ -254,9 +253,6 @@ const RecipeDiscovery = () => {
               setShareRecipeData={setShareRecipeData}
             />
           )}
-        </div>
-        <div className={styles.footerMainDiv}>
-          <FooterRecipeFilter />
         </div>
       </AContainer>
       <ShowLastModifiedCollection
