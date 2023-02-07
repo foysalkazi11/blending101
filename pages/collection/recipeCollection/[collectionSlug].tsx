@@ -15,19 +15,36 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faStar } from "@fortawesome/pro-regular-svg-icons";
 import ErrorPage from "../../../components/pages/404Page";
 import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
+import ShowLastModifiedCollection from "../../../components/showLastModifiedCollection/ShowLastModifiedCollection";
+import ShareRecipe from "../../../components/recipe/recipeDetails/center/shareRecipe";
+import {
+  setChangeRecipeWithinCollection,
+  setSingleRecipeWithinCollecions,
+} from "../../../redux/slices/collectionSlice";
+import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
 
 const CollectionRecipes = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const collectionId = router.query?.collectionId as string;
+  const singleRecipeCollectionId = router.query
+    ?.singleRecipeCollectionId as string;
   const token = router.query?.token as string;
   const slug = router.query?.collectionSlug as string;
   const [title, setTitle] = useState("");
-  const [icon, setIcon] = useState("");
+  const [openCollectionModal, setOpenCollectionModal] = useState(false);
+  const [shareRecipeData, setShareRecipeData] = useState({
+    id: "",
+    image: "",
+    name: "",
+    versionId: "",
+  });
+  const [openShareModal, setOpenShareModal] = useState(false);
   const [recipes, setRecipes] = useState([]);
-  const [input, setInput] = useState("");
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
-
+  const { lastModifiedCollection } = useAppSelector(
+    (state) => state?.collections,
+  );
   const [getAllRecipes, { loading: getAllRecipesLoading }] = useLazyQuery(
     GET_ALL_RECIPES_WITHIN_COLLECTIONS,
   );
@@ -38,6 +55,14 @@ const CollectionRecipes = () => {
     getCustomRecipes,
     { loading: getCustomRecipesLoading, error: getCollectionRecipeError },
   ] = useLazyQuery(GET_SINGLE_COLLECTION);
+
+  // open recipe collection panel after added a recipe to a collection
+  const handleOpenCollectionTray = () => {
+    dispatch(setSingleRecipeWithinCollecions([lastModifiedCollection?.id]));
+    dispatch(setOpenCollectionsTary(true));
+    dispatch(setChangeRecipeWithinCollection(true));
+    setOpenCollectionModal(false);
+  };
 
   useEffect(() => {
     if (!slug) return;
@@ -58,10 +83,10 @@ const CollectionRecipes = () => {
           slug,
           collectionId: collectionId || "",
           token: token || "",
+          singleRecipeCollectionId: singleRecipeCollectionId || "",
         },
       }).then((res: any) => {
         setTitle(res?.data?.getASingleCollection?.name);
-        setIcon(res?.data?.getASingleCollection?.image);
         setRecipes(res?.data?.getASingleCollection?.recipes);
       });
     }
@@ -73,6 +98,7 @@ const CollectionRecipes = () => {
     token,
     slug,
     userId,
+    singleRecipeCollectionId,
   ]);
 
   useEffect(() => {
@@ -118,6 +144,26 @@ const CollectionRecipes = () => {
         closeHandler={() => router.push("/discovery")}
         showItems="recipe"
         showDefaultRightHeader
+        setOpenCollectionModal={setOpenCollectionModal}
+        setOpenShareModal={setOpenShareModal}
+        setShareRecipeData={setShareRecipeData}
+      />
+      <ShowLastModifiedCollection
+        open={openCollectionModal}
+        setOpen={setOpenCollectionModal}
+        shouldCloseOnOverlayClick={true}
+        lastModifiedCollectionName={lastModifiedCollection?.name}
+        openCollectionPanel={handleOpenCollectionTray}
+      />
+      <ShareRecipe
+        id={shareRecipeData?.id}
+        versionId={shareRecipeData.versionId}
+        title={shareRecipeData?.name}
+        image={shareRecipeData?.image}
+        show={openShareModal}
+        setShow={setOpenShareModal}
+        type="recipe"
+        heading="Share Recipe"
       />
     </Layout>
   );

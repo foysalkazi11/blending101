@@ -266,7 +266,7 @@ export default function CollectionComponent({
             canContribute,
           } = collection;
 
-          return changeRecipeWithinCollection && isShared ? null : (
+          return !canContribute ? null : (
             <SingleCollection
               key={collection?._id}
               name={personalizedName || name}
