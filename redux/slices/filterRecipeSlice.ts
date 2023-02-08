@@ -23,6 +23,7 @@ export interface BlendType {
   filterCriteria: FilterCriteriaOptions;
   origin: ActiveFilterTagCriteriaType;
 }
+
 export interface IngredientType {
   name: string;
   id: string;
@@ -67,7 +68,8 @@ export type FilterCriteriaOptions =
   | "blendTypes"
   | "includeIngredientIds"
   | "nutrientFilters"
-  | "nutrientMatrix";
+  | "nutrientMatrix"
+  | "collectionIds";
 
 export interface ActiveFilterTagCriteriaType {
   activeSection: ActiveSectionType;
