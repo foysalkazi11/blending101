@@ -1,12 +1,7 @@
-$orange_color: #fe5d1f;
-$arrow_distance: -45px;
-
+@import "../../../../styles/partials/variables";
 .main__slider {
   margin-bottom: 40px;
   &__tabmenu {
-    // margin: auto;
-    // transform: translateX(30px);
-    // flex-grow: 1;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -17,30 +12,32 @@ $arrow_distance: -45px;
     margin-bottom: 20px;
   }
 
-  h3 {
-    position: relative;
-    font-weight: 500;
-    font-size: 22px;
+  .heading {
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    line-height: 1.2;
-    color: $orange_color;
-    min-height: 25px;
-    margin: 0 2rem 20px;
+    margin: 0 10px 10px 10px;
 
-    @media only screen and (max-width: 500px) {
-      font-size: 18px;
-      min-width: 200px;
+    .leftSide {
+      display: flex;
+      align-items: center;
+      .title {
+        font-weight: 500;
+        font-size: 22px;
+        line-height: 1.2;
+        color: $primaryColor;
+        margin-left: 10px;
+
+        @media only screen and (max-width: 500px) {
+          font-size: 18px;
+        }
+      }
     }
 
-    .viewAll {
-      //   margin-left: auto;
-      //   margin-right: 20px;
-      //   margin-top: auto;
-      //   margin-bottom: auto;
+    .rightSide {
       font-size: 14px;
       border-bottom: 1px solid transparent;
-      color: #7cbc39;
+      color: $secondaryColor;
       cursor: pointer;
       padding: 4px;
       transition: all 0.3s ease 0s;
@@ -51,25 +48,8 @@ $arrow_distance: -45px;
 
       &:hover {
         background-position: right;
-        color: $orange_color;
-        border-bottom: 1px solid $orange_color;
-      }
-    }
-
-    .title {
-      display: flex;
-      align-items: center;
-      & > div {
-        margin-right: 1rem;
-      }
-      @media only screen and (max-width: 500px) {
-        display: none;
-      }
-      @media only screen and (min-width: 500px) and (max-width: 980px) {
-        margin-left: 30px;
-      }
-      @media only screen and (min-width: 980px) and (max-width: 1290px) {
-        margin-left: 29px;
+        color: $primaryColor;
+        border-bottom: 1px solid $primaryColor;
       }
     }
   }

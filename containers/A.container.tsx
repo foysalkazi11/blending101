@@ -18,6 +18,7 @@ import PlanCollectionTray from "../components/sidetray/planCollectionTray";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../redux/hooks";
 import useWindowSize from "../components/utility/useWindowSize";
+import FooterRecipeFilter from "../components/footer/footerRecipeFilter.component";
 
 interface ShowTray {
   show: boolean;
@@ -223,6 +224,7 @@ const AContainer: FC<AContainerProps> = (props) => {
           </div>
         )}
         <div id="page-wrap">{props.children}</div>
+        <FooterRecipeFilter />
       </div>
     </div>
   );

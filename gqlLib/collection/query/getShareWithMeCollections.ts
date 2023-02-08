@@ -57,6 +57,13 @@ const GET_SHARE_WITH_ME_COLLECTIONS = gql`
         token
       }
       slug
+      creatorInfo {
+        displayName
+        email
+        firstName
+        image
+        lastName
+      }
     }
   }
 `;

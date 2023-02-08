@@ -1,4 +1,6 @@
 import { useQuery } from "@apollo/client";
+import { faThumbsUp } from "@fortawesome/pro-light-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import Widget from "../../../../component/module/Widget/Widget.component";
 import useLocalStorage from "../../../../customHooks/useLocalStorage";
@@ -9,7 +11,6 @@ import { useAppSelector } from "../../../../redux/hooks";
 import DatacardComponent from "../../../../theme/cards/dataCard/dataCard.component";
 import SkeletonRecipeDiscovery from "../../../../theme/skeletons/skeletonRecipeDiscovery/SkeletonRecipeDiscovery";
 import { Ingredient, RecipeType } from "../../../../type/recipeType";
-import ShareRecipe from "../../recipeDetails/center/shareRecipe";
 import AppdownLoadCard from "../AppdownLoadCard/AppdownLoadCard.component";
 import ContentTray from "../ContentTray/ContentTray.component";
 import styles from "../recipeDiscovery.module.scss";
@@ -66,7 +67,9 @@ const RegularRecipes = ({
         <ShowRecipes
           headerData={{
             heading: "Recommended",
-            image: "/images/thumbs-up.svg",
+            image: (
+              <FontAwesomeIcon icon={faThumbsUp} color="#fe5d1f" size="2x" />
+            ),
             allUrl: "recipes/recommended",
           }}
           loading={recommendedRecipesLoading}
@@ -113,7 +116,7 @@ interface ShowRecipesType {
   loading: boolean;
   headerData: {
     heading: string;
-    image: string;
+    image: string | React.ReactChild;
     allUrl: string;
   };
   setOpenCollectionModal?: React.Dispatch<React.SetStateAction<boolean>>;
