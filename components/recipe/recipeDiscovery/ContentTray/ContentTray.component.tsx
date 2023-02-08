@@ -43,34 +43,36 @@ const ContentTray = (props) => {
 
   return (
     <div className={styles.main__slider}>
-      <h3>
-        <div className={styles.title}>
-          <Image
-            src={props.image}
-            alt={"Icon"}
-            layout="fixed"
-            objectFit={"contain"}
-            quality={100}
-            height={30}
-            width={30}
-          />
-          <span className="ml-10">{props.heading}</span>
+      <div className={styles.heading}>
+        <div className={styles.leftSide}>
+          {typeof props?.image === "string" ? (
+            <Image
+              src={props.image}
+              alt={"Icon"}
+              objectFit={"contain"}
+              height={30}
+              width={30}
+              style={{ borderRadius: "50px" }}
+            />
+          ) : (
+            props?.image
+          )}
+
+          <h3 className={styles.title}>{props.heading}</h3>
+          {hasFilter && (
+            <MenubarComponent
+              className={styles.main__slider__tabmenu}
+              containerId={id}
+              childs={filters}
+              setValue={tabState[1]}
+              value={tabState[0]}
+            />
+          )}
         </div>
-        {hasFilter && (
-          <MenubarComponent
-            className={styles.main__slider__tabmenu}
-            containerId={id}
-            childs={filters}
-            setValue={tabState[1]}
-            value={tabState[0]}
-          />
-        )}
-        <Link href={allUrl || "#"}>
-          <a style={{ textDecoration: "none" }}>
-            <div className={styles.viewAll}>View All</div>
-          </a>
+        <Link href={allUrl || "#"} passHref>
+          <span className={styles.rightSide}>View All</span>
         </Link>
-      </h3>
+      </div>
       <div>
         {customHTML ? (
           <div

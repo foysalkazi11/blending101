@@ -1,17 +1,8 @@
 .mainDiv {
-  // background-color: red;
-  width: 100%;
-  margin: 0 auto;
-  min-height: 83vh;
-  display: flex;
-  flex-direction: column;
-  margin-top: 30px;
-
   &__footer {
     margin-top: auto;
     display: flex;
     background-color: white;
-
     &__ul {
       display: flex;
       list-style-type: none;
@@ -21,7 +12,6 @@
 
       &__div {
         height: 100%;
-
 
         &__left {
           display: flex;
@@ -34,10 +24,9 @@
           display: flex;
           justify-content: space-between;
           width: 320px;
-          margin-right: - 10px;
+          margin-right: -10px;
         }
       }
-
 
       &__li {
         display: flex;
@@ -61,7 +50,7 @@
 
   &::before {
     content: "\2022";
-    color: #7DBD3B;
+    color: #7dbd3b;
     font-size: 40px;
   }
 }

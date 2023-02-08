@@ -24,13 +24,13 @@
   @include media(lg) {
     margin: 30px 20px;
   }
+}
 
-  .slider__card {
+.slider__card {
+  padding-right: 10px;
+
+  @include media(sm) {
     padding-right: 10px;
-
-    @include media(sm) {
-      padding-right: 10px;
-    }
   }
 }
 
