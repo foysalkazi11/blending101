@@ -1,10 +1,4 @@
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { useMutation } from "@apollo/client";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
@@ -15,7 +9,6 @@ import useLocalStorage from "../../../../customHooks/useLocalStorage";
 import { setCompareList } from "../../../../redux/slices/recipeSlice";
 import updateRecipeFunc from "../../../utility/updateRecipeFunc";
 import SingleCollection from "../../common/singleCollection/SingleCollection";
-import Invite from "../../../../component/organisms/Share/Invite.component";
 import CREATE_SHARE_COLLECTION_LINK from "../../../../gqlLib/collection/mutation/createShareCollectionLink";
 import notification from "../../../../components/utility/reactToastifyNotification";
 import Share, {

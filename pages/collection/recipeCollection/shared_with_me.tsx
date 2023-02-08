@@ -67,13 +67,21 @@ const SharedWithMe = () => {
       <div style={{ marginTop: "20px" }}>
         {data?.getSharedWithMeCollections?.length ? (
           data?.getSharedWithMeCollections?.map((item, index) => {
-            const { _id, description, image, name, recipes, slug } = item;
+            const {
+              _id,
+              description,
+              image,
+              name,
+              recipes,
+              slug,
+              creatorInfo,
+            } = item;
             return (
               <ShowRecipes
                 key={_id}
                 headerData={{
                   heading: name,
-                  image: "/images/fire-alt-light.svg",
+                  image: creatorInfo?.image || "/images/fire-alt-light.svg",
                   allUrl: `/collection/recipeCollection/${slug}?${
                     name === "Single Recipes"
                       ? "singleRecipeCollectionId"

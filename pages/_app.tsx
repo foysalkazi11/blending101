@@ -11,7 +11,6 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ApolloProvider } from "@apollo/client";
 import client from "../gqlLib/client";
-import { useRouter } from "next/router";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import dynamic from "next/dynamic";
 
@@ -19,17 +18,12 @@ const FeedbackImport = dynamic(() => import("simple-screenshot-feedback"), {
   ssr: false,
 });
 import "@fortawesome/fontawesome-svg-core/styles.css";
-import Head from "next/head";
-import { useAppSelector } from "../redux/hooks";
 import HeadTagInfo from "../theme/headTagInfo";
-import FooterRecipeFilter from "../components/footer/footerRecipeFilter.component";
 
 config.autoAddCss = false;
 Amplify.configure(awsconfig);
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const router = useRouter();
-
   const handleSubmitError = (error: any) => {
     console.log(error);
   };
@@ -52,7 +46,6 @@ function MyApp({ Component, pageProps }: AppProps) {
 
             {/* @ts-ignore */}
             <Component {...pageProps} />
-            <FooterRecipeFilter />
           </AuthProvider>
         </Provider>
       </ApolloProvider>
