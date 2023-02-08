@@ -16,10 +16,11 @@ import {
 import Multiselect from "../multiSelect/MultiSelect";
 import { BlendCategoryType } from "../../../../type/blendCategoryType";
 import { categories } from "../../../../data/categories";
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import GET_BLEND_NUTRIENTS_BASED_ON_CATEGORY from "../../../../gqlLib/nutrition/query/getBlendNutrientsBasedOnCategoey";
 import Collapsible from "../../../../theme/collapsible";
 import ExcludeFilter from "../excludeFilter";
+import GET_COLLECTIONS_AND_THEMES from "../../../../gqlLib/collection/query/getCollectionsAndThemes";
 const { INGREDIENTS_BY_CATEGORY, TYPE, ALLERGIES, DIET, EQUIPMENT, DRUGS } =
   INGREDIENTS_FILTER;
 
@@ -136,6 +137,8 @@ const nutrient = [
   },
 ];
 
+const collections = ["Own Collections", "Shared With Me"];
+
 interface Props {
   checkActiveItem: (id: string) => boolean;
   blendCategoryData: BlendCategoryType[];
@@ -156,11 +159,19 @@ const TagSection = ({
   const [optionSelectItems, setOptionSelectItems] = useState<any[]>([]);
   const [childIngredient, setChailIngredient] = useState("");
   const dispatch = useAppDispatch();
+  const userId = useAppSelector((state) => state?.user?.dbUser?._id);
   const [
     getBlendNutrientsBasedOnCategoey,
     { data: blendNutrientData, loading: blendNutrientLoading },
   ] = useLazyQuery(GET_BLEND_NUTRIENTS_BASED_ON_CATEGORY, {
     fetchPolicy: "cache-and-network",
+  });
+  const {
+    data: collectionsData,
+    loading: collectionsLoading,
+    error: collectionsError,
+  } = useQuery(GET_COLLECTIONS_AND_THEMES, {
+    variables: { userId },
   });
   const { activeFilterTag, excludeFilterState, numericFilterState } =
     useAppSelector((state) => state?.filterRecipe);
@@ -236,6 +247,36 @@ const TagSection = ({
   };
 
   useEffect(() => {
+    if (activeTab === "Collections") {
+      if (childTab === "Own Collections") {
+        let collections =
+          collectionsData?.getUserCollectionsAndThemes?.collections;
+        (collections = collections
+          ?.filter((collection) => !collection?.isShared)
+          ?.map((item) => ({
+            id: item?._id,
+            name: item?.personalizedName || item?.name,
+            image: item?.image,
+            tagLabel: `Own | ${item?.personalizedName || item?.name}`,
+            filterCriteria: "collectionIds",
+          }))),
+          setOptionSelectItems(collections);
+      }
+      if (childTab === "Shared With Me") {
+        let collections =
+          collectionsData?.getUserCollectionsAndThemes?.collections;
+        (collections = collections
+          ?.filter((collection) => collection?.isShared)
+          ?.map((item) => ({
+            id: item?._id,
+            name: item?.personalizedName || item?.name,
+            image: item?.image,
+            tagLabel: `Shared | ${item?.personalizedName || item?.name}`,
+            filterCriteria: "collectionIds",
+          }))),
+          setOptionSelectItems(collections);
+      }
+    }
     if (childTab === "Blend Type") {
       setOptionSelectItems(
         blendCategoryData?.map((item) => ({
@@ -322,7 +363,7 @@ const TagSection = ({
             activeTab={childTab}
             filterCriteria={filterCriteria}
           />
-          {activeTab === "Blend Type" ? (
+          {activeTab === "Blend Type" || activeTab === "Collections" ? (
             <OptionSelect
               optionSelectItems={optionSelectItems}
               filterCriteria={filterCriteria}
@@ -462,6 +503,29 @@ const TagSection = ({
                         </div>
                       )}
                     </>
+                  );
+                })
+              : null}
+          </CustomAccordion>
+
+          <CustomAccordion title="Collections" iconRight={true}>
+            {collections?.length
+              ? collections?.map((item, index) => {
+                  return (
+                    <div
+                      className={styles.singleItemInside}
+                      key={index}
+                      onClick={() =>
+                        recipeFilterByCategory(
+                          "tags",
+                          "collectionIds",
+                          "Collections",
+                          item,
+                        )
+                      }
+                    >
+                      <h5>{item}</h5>
+                    </div>
                   );
                 })
               : null}

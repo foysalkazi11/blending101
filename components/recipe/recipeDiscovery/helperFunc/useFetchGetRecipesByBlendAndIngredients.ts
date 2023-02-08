@@ -19,10 +19,14 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
   ) => {
     let blendTypesArr: string[] = [];
     let ingredientIds: string[] = [];
+    let collectionsIds: string[] = [];
     let nutrientFiltersMap = [];
     let nutrientMatrixMap = [];
     let excludeIngredientIds = [];
     allFilters.forEach((filter: any) => {
+      if (filter.filterCriteria === "collectionIds") {
+        collectionsIds.push(filter.id);
+      }
       if (filter.filterCriteria === "blendTypes") {
         blendTypesArr.push(filter.id);
       }
@@ -142,6 +146,7 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
             nutrientFilters: nutrientFiltersMap,
             nutrientMatrix: nutrientMatrixMap,
             excludeIngredientIds,
+            collectionsIds,
           },
           page,
           limit,

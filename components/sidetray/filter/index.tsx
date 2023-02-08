@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useState } from "react";
+import React from "react";
 import TrayWrapper from "../TrayWrapper";
 import styles from "./filter.module.scss";
 import { FaEye } from "react-icons/fa";
