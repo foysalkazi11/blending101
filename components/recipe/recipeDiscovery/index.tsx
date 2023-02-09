@@ -53,14 +53,14 @@ const RecipeDiscovery = () => {
       fetchPolicy: "cache-and-network",
     },
   );
-  const [filterRecipe, { loading: filterRecipesLoading }] = useLazyQuery(
-    FILTER_RECIPE,
-    {
-      fetchPolicy: "cache-and-network",
-    },
-  );
+
   const debounceSearchTerm = useDebounce(recipeSearchInput, 500);
-  const handleFilterRecipes = useFetchGetRecipesByBlendAndIngredients();
+  const {
+    handleFilterRecipes,
+    loading: filterRecipesLoading,
+    error,
+    data,
+  } = useFetchGetRecipesByBlendAndIngredients();
   const handleSearchRecipes = useHandleSearchRecipe();
   const { lastModifiedCollection } = useAppSelector(
     (state) => state?.collections,
@@ -78,13 +78,7 @@ const RecipeDiscovery = () => {
   const handleNextPage = () => {
     setPageNum((page) => page + 1);
     if (searchRecipeType === "filter") {
-      handleFilterRecipes(
-        allFilters,
-        filterRecipe,
-        pageNum + 1,
-        dataLimit,
-        false,
-      );
+      handleFilterRecipes(allFilters, pageNum + 1, dataLimit, false);
     }
     if (searchRecipeType === "search") {
       handleSearchRecipes(
@@ -116,7 +110,7 @@ const RecipeDiscovery = () => {
     if (allFilters.length) {
       setSearchRecipeType("filter");
       setPageNum(1);
-      handleFilterRecipes(allFilters, filterRecipe, 1, dataLimit, true);
+      handleFilterRecipes(allFilters, 1, dataLimit, true);
     } else {
       if (recipeSearchInput.length) {
         setSearchRecipeType("search");
@@ -163,7 +157,7 @@ const RecipeDiscovery = () => {
         if (allFilters.length) {
           setSearchRecipeType("filter");
           setPageNum(1);
-          handleFilterRecipes(allFilters, filterRecipe, 1, dataLimit, true);
+          handleFilterRecipes(allFilters, 1, dataLimit, true);
         } else {
           dispatch(updateShowFilterOrSearchRecipes(false));
           dispatch(
