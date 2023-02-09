@@ -35,6 +35,12 @@
   .filterIcon.active {
     color: #fe5d1f;
   }
+  .filterIconNotVisible {
+    visibility: hidden;
+  }
+  .filterIconVisible {
+    visibility: visible;
+  }
 }
 
 .inputBox {

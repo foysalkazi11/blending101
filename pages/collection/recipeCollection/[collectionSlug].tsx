@@ -21,9 +21,24 @@ import {
   setChangeRecipeWithinCollection,
   setSingleRecipeWithinCollecions,
 } from "../../../redux/slices/collectionSlice";
-import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
+import {
+  setOpenCollectionsTary,
+  setOpenFilterTray,
+} from "../../../redux/slices/sideTraySlice";
+import useFetchGetRecipesByBlendAndIngredients from "../../../components/recipe/recipeDiscovery/helperFunc/useFetchGetRecipesByBlendAndIngredients";
+import SearchtagsComponent from "../../../components/searchtags/searchtags.component";
+import {
+  resetAllFilters,
+  updateAllFilterRecipes,
+} from "../../../redux/slices/filterRecipeSlice";
+import GET_SHARE_WITH_ME_COLLECTIONS from "../../../gqlLib/collection/query/getShareWithMeCollections";
+import { ShowRecipes } from "../../../components/recipe/recipeDiscovery/regularRecipes";
+
+let dataLimit = 12;
 
 const CollectionRecipes = () => {
+  const [pageNum, setPageNum] = useState(1);
+  const [isSharedWithMeCollection, setShareWithMeCollection] = useState(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const collectionId = router.query?.collectionId as string;
@@ -55,6 +70,42 @@ const CollectionRecipes = () => {
     getCustomRecipes,
     { loading: getCustomRecipesLoading, error: getCollectionRecipeError },
   ] = useLazyQuery(GET_SINGLE_COLLECTION);
+  const [
+    getShareWithMeCollection,
+    {
+      data: shareWithMeCollectionData,
+      loading: shareWithMeCollectionLoading,
+      error: shareWithMeCollectionError,
+    },
+  ] = useLazyQuery(GET_SHARE_WITH_ME_COLLECTIONS, {
+    variables: { userId },
+  });
+  const {
+    handleFilterRecipes,
+    loading: filterRecipesLoading,
+    error: filterRecipesError,
+    data: filteredRecipes,
+  } = useFetchGetRecipesByBlendAndIngredients();
+  const { allFilters, allFilterRecipes, showFilterOrSearchRecipes } =
+    useAppSelector((state) => state?.filterRecipe);
+
+  // handle next page
+  const handleNextPage = () => {
+    setPageNum((page) => page + 1);
+    handleFilterRecipes(allFilters, pageNum + 1, dataLimit, false);
+  };
+
+  const closeFilterRecipes = () => {
+    dispatch(
+      updateAllFilterRecipes({
+        filterRecipes: [],
+        isFiltering: false,
+        totalItems: 0,
+      }),
+    );
+    dispatch(resetAllFilters());
+    setPageNum(1);
+  };
 
   // open recipe collection panel after added a recipe to a collection
   const handleOpenCollectionTray = () => {
@@ -66,11 +117,15 @@ const CollectionRecipes = () => {
 
   useEffect(() => {
     if (!slug) return;
+    setShareWithMeCollection(false);
     if (slug == "all-recipes") {
       getAllRecipes({ variables: { userId } }).then((res: any) => {
         setTitle("All Recipes");
         setRecipes(res?.data?.getAllRecipesFromCollection);
       });
+    } else if (slug === "shared_with_me") {
+      setShareWithMeCollection(true);
+      getShareWithMeCollection();
     } else if (slug === "my-recipes") {
       getMyRecipes({ variables: { userId } }).then((res: any) => {
         setTitle("My Recipes");
@@ -90,6 +145,7 @@ const CollectionRecipes = () => {
         setRecipes(res?.data?.getASingleCollection?.recipes);
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     getAllRecipes,
     getCustomRecipes,
@@ -102,6 +158,24 @@ const CollectionRecipes = () => {
   ]);
 
   useEffect(() => {
+    // filter recipe func
+    if (allFilters.length) {
+      setPageNum(1);
+      handleFilterRecipes(allFilters, 1, dataLimit, true);
+    } else {
+      dispatch(
+        updateAllFilterRecipes({
+          filterRecipes: [],
+          isFiltering: false,
+          totalItems: 0,
+        }),
+      );
+      setPageNum(1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allFilters]);
+
+  useEffect(() => {
     dispatch(
       updateHeadTagInfo({
         title: "Recipe collection",
@@ -111,43 +185,81 @@ const CollectionRecipes = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (getCollectionRecipeError) {
+  if (
+    getCollectionRecipeError ||
+    filterRecipesError ||
+    shareWithMeCollectionError
+  ) {
     return (
       <Layout>
         <ErrorPage
           style={{ height: "50vh" }}
           errorMessage="No collection recipe found"
         />
-        ;
       </Layout>
     );
   }
 
   return (
-    <Layout>
-      <ShowRecipeContainer
-        data={recipes}
-        loading={
-          getAllRecipesLoading || getMyRecipesLoading || getCustomRecipesLoading
-        }
-        headerLeftSide={
-          <div className="flex ai-center">
-            {slug === "my-favorite" ? (
-              <FontAwesomeIcon icon={faHeart} className={classes.head__icon} />
-            ) : (
-              <FontAwesomeIcon icon={faStar} className={classes.head__icon} />
-            )}
+    <Layout allFilters={allFilters}>
+      {allFilters.length ? (
+        <ShowRecipeContainer
+          data={allFilterRecipes.filterRecipes}
+          loading={filterRecipesLoading}
+          closeHandler={closeFilterRecipes}
+          showItems="recipe"
+          showDefaultLeftHeader
+          showDefaultMiddleHeader={
+            allFilterRecipes.filterRecipes.length ? true : false
+          }
+          showDefaultRightHeader
+          hasMore={allFilterRecipes?.totalItems > dataLimit * pageNum}
+          totalDataCount={allFilterRecipes?.totalItems}
+          nextPage={handleNextPage}
+          setOpenCollectionModal={setOpenCollectionModal}
+          setOpenShareModal={setOpenShareModal}
+          setShareRecipeData={setShareRecipeData}
+        />
+      ) : isSharedWithMeCollection ? (
+        <SharedWithMe
+          data={shareWithMeCollectionData?.getSharedWithMeCollections}
+          loading={shareWithMeCollectionLoading}
+          error={shareWithMeCollectionError}
+          setOpenCollectionModal={setOpenCollectionModal}
+          setOpenShareModal={setOpenShareModal}
+          setShareRecipeData={setShareRecipeData}
+        />
+      ) : (
+        <ShowRecipeContainer
+          data={recipes}
+          loading={
+            getAllRecipesLoading ||
+            getMyRecipesLoading ||
+            getCustomRecipesLoading
+          }
+          headerLeftSide={
+            <div className="flex ai-center">
+              {slug === "my-favorite" ? (
+                <FontAwesomeIcon
+                  icon={faHeart}
+                  className={classes.head__icon}
+                />
+              ) : (
+                <FontAwesomeIcon icon={faStar} className={classes.head__icon} />
+              )}
 
-            <h2 className={classes.head__title}>{title}</h2>
-          </div>
-        }
-        closeHandler={() => router.push("/discovery")}
-        showItems="recipe"
-        showDefaultRightHeader
-        setOpenCollectionModal={setOpenCollectionModal}
-        setOpenShareModal={setOpenShareModal}
-        setShareRecipeData={setShareRecipeData}
-      />
+              <h2 className={classes.head__title}>{title}</h2>
+            </div>
+          }
+          closeHandler={() => router.push("/discovery")}
+          showItems="recipe"
+          showDefaultRightHeader
+          setOpenCollectionModal={setOpenCollectionModal}
+          setOpenShareModal={setOpenShareModal}
+          setShareRecipeData={setShareRecipeData}
+        />
+      )}
+
       <ShowLastModifiedCollection
         open={openCollectionModal}
         setOpen={setOpenCollectionModal}
@@ -169,8 +281,13 @@ const CollectionRecipes = () => {
   );
 };
 
-const Layout: FC = ({ children }) => {
+const Layout: FC<{ allFilters?: any[] }> = ({ children, allFilters = [] }) => {
   const [input, setInput] = useState("");
+  const { openFilterTray } = useAppSelector((state) => state?.sideTray);
+  const dispatch = useAppDispatch();
+  const toggleFilterPanel = () => {
+    dispatch(setOpenFilterTray(!openFilterTray));
+  };
   return (
     <AContainer
       headerIcon="/icons/juicer.svg"
@@ -181,17 +298,82 @@ const Layout: FC = ({ children }) => {
         showPanle: "right",
         showTagByDeafult: false,
       }}
+      showRecipeFilterTray={{
+        show: true,
+        showPanle: "left",
+        showTagByDeafult: false,
+      }}
     >
       <div className={styles.main__div}>
         <CommonSearchBar
           input={input}
           setInput={setInput}
           isSearchTag={false}
+          openPanel={toggleFilterPanel}
+          isOpenPanel={openFilterTray}
         />
+        {allFilters?.length ? (
+          <SearchtagsComponent allFilters={allFilters} />
+        ) : null}
+
         <WikiBanner />
         {children}
       </div>
     </AContainer>
+  );
+};
+
+const SharedWithMe = ({
+  data,
+  loading,
+  error,
+  setOpenCollectionModal,
+  setOpenShareModal,
+  setShareRecipeData,
+}) => {
+  return (
+    <>
+      <div style={{ marginTop: "20px" }}>
+        {data?.length ? (
+          data?.map((item, index) => {
+            const {
+              _id,
+              description,
+              image,
+              name,
+              recipes,
+              slug,
+              creatorInfo,
+            } = item;
+            return (
+              <ShowRecipes
+                key={_id}
+                headerData={{
+                  heading: name,
+                  image: creatorInfo?.image || "/images/fire-alt-light.svg",
+                  allUrl: `/collection/recipeCollection/${slug}?${
+                    name === "Single Recipes"
+                      ? "singleRecipeCollectionId"
+                      : "collectionId"
+                  }=${_id}`,
+                }}
+                loading={loading}
+                recipes={recipes}
+                setOpenCollectionModal={setOpenCollectionModal}
+                setOpenShareModal={setOpenShareModal}
+                setShareRecipeData={setShareRecipeData}
+              />
+            );
+          })
+        ) : (
+          <ErrorPage
+            style={{ height: "50vh" }}
+            image="/icons/empty_data.svg"
+            errorMessage="No data found"
+          />
+        )}
+      </div>
+    </>
   );
 };
 

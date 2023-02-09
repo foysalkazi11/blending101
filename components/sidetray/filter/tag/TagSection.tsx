@@ -137,7 +137,7 @@ const nutrient = [
   },
 ];
 
-const collections = ["Own Collections", "Shared With Me"];
+const collections = ["My Collections", "Shared With Me"];
 
 interface Props {
   checkActiveItem: (id: string) => boolean;
@@ -248,7 +248,7 @@ const TagSection = ({
 
   useEffect(() => {
     if (activeTab === "Collections") {
-      if (childTab === "Own Collections") {
+      if (childTab === "My Collections") {
         let collections =
           collectionsData?.getUserCollectionsAndThemes?.collections;
         (collections = collections
