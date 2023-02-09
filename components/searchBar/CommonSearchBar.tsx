@@ -82,14 +82,14 @@ const CommonSearchBar = ({
         className={classes.filterIconContainer}
         // style={isOpenPanel ? { marginRight: "10px", paddingRight: "20px" } : {}}
       >
-        {isOpenPanel ? null : (
-          <FiFilter
-            className={`${classes.filterIcon} ${
-              isOpenPanel ? classes.active : ""
-            }`}
-            onClick={openPanel}
-          />
-        )}
+        <FiFilter
+          className={`${classes.filterIcon} ${
+            isOpenPanel
+              ? classes.filterIconNotVisible
+              : classes.filterIconVisible
+          } ${isOpenPanel ? classes.active : ""}`}
+          onClick={openPanel}
+        />
       </div>
       <div className={classes.inputBox}>
         {isInputFocus ? null : isMicOn ? (
@@ -99,7 +99,7 @@ const CommonSearchBar = ({
         )}
         <form onSubmit={handleSubmit}>
           <input
-            style={isOpenPanel ? { width: "30vw", minWidth: "200px" } : {}}
+            // style={isOpenPanel ? { width: "30vw", minWidth: "200px" } : {}}
             disabled={isMicOn}
             placeholder={isMicOn ? "Speak" : "Search"}
             value={input}

@@ -1,3 +1,5 @@
+import { useLazyQuery } from "@apollo/client";
+import FILTER_RECIPE from "../../../../gqlLib/recipes/queries/filterRecipe";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import {
   updateAllFilterRecipes,
@@ -9,10 +11,15 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
   const dispatch = useAppDispatch();
   const { dbUser } = useAppSelector((state) => state.user);
   const { allFilterRecipes } = useAppSelector((state) => state?.filterRecipe);
+  const [filterRecipe, { loading, data, error, ...rest }] = useLazyQuery(
+    FILTER_RECIPE,
+    {
+      fetchPolicy: "cache-and-network",
+    },
+  );
 
   const handleFilterRecipes = async (
     allFilters,
-    filterRecipe,
     page = 1,
     limit = 12,
     isNewItems: boolean = true,
@@ -177,7 +184,13 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
     }
   };
 
-  return handleFilterRecipes;
+  return {
+    handleFilterRecipes,
+    loading,
+    data: data?.filterRecipe,
+    error,
+    ...rest,
+  };
 };
 
 export default useFetchGetRecipesByBlendAndIngredients;
