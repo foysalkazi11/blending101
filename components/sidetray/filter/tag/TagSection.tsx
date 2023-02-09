@@ -137,7 +137,14 @@ const nutrient = [
   },
 ];
 
-const collections = ["My Collections", "Shared With Me"];
+const collections = [
+  { name: "My Collections", child: [] },
+  { name: "Shared With Me", child: [] },
+  {
+    name: "Global",
+    child: ["Blending101", "Brands", "My Recipes", "Shared With Me"],
+  },
+];
 
 interface Props {
   checkActiveItem: (id: string) => boolean;
@@ -275,6 +282,17 @@ const TagSection = ({
             filterCriteria: "collectionIds",
           }))),
           setOptionSelectItems(collections);
+      }
+      if (childTab === "Global") {
+        let global = collections?.find((col) => col?.name === childTab);
+        let mapGlobal = global.child?.map((item, index) => ({
+          id: index,
+          name: item,
+          image: "",
+          tagLabel: item,
+          filterCriteria: "collectionIds",
+        }));
+        setOptionSelectItems(mapGlobal);
       }
     }
     if (childTab === "Blend Type") {
@@ -520,16 +538,22 @@ const TagSection = ({
                           "tags",
                           "collectionIds",
                           "Collections",
-                          item,
+                          item.name,
                         )
                       }
                     >
-                      <h5>{item}</h5>
+                      <h5>{item.name}</h5>
                     </div>
                   );
                 })
               : null}
           </CustomAccordion>
+          <div
+            className={styles.singleItem}
+            // onClick={() => recipeFilterByCategory("Diet")}
+          >
+            <h5>Brands</h5>
+          </div>
           <div
             className={styles.singleItem}
             // onClick={() => recipeFilterByCategory("Diet")}

@@ -225,11 +225,11 @@ export default function CollectionComponent({
     <div>
       {changeRecipeWithinCollection ? null : (
         <>
-          <SingleCollection
+          {/* <SingleCollection
             name="All Recipes"
             slug="all-recipes"
             collectionRoute="recipeCollection"
-          />
+          /> */}
           <SingleCollection
             name="My Recipes"
             slug="my-recipes"
