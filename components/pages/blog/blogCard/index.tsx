@@ -76,14 +76,17 @@ const BlogCard = ({
       parseInt(sec) || 0,
     );
     let time;
+    const addZero = (sec: number) => {
+      return sec > 9 ? sec : `0${sec}`;
+    };
     if (s) {
-      time = `${s}`;
+      time = `0:${addZero(s)}`;
     }
     if (m) {
-      time = `${m}:${s}`;
+      time = `${m}:${addZero(s)}`;
     }
     if (h) {
-      time = `${h}:${m}:${s}`;
+      time = `${h}:${m}:${addZero(s)}`;
     }
 
     return time;
@@ -159,10 +162,14 @@ const BlogCard = ({
       </div>
       <div className={styles.authorAndDate}>
         <p>{createdBy}</p>
-        <p>
-          {mediaLength ? `Time: ${arrangeTimeLength(mediaLength)} ` : null}
-          {time_ago(publishDate)}
-        </p>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          {mediaLength ? (
+            <p className={styles.timeDuration}>
+              {`${arrangeTimeLength(mediaLength)}`}
+            </p>
+          ) : null}
+          <p>{time_ago(publishDate)}</p>
+        </div>
       </div>
       <div className={styles.authorAndDate}>
         <div className={styles.brandBox}>
