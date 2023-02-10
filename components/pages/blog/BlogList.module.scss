@@ -5,6 +5,7 @@
   max-width: $_3xl;
   margin: 20px auto;
   padding: 0 10px;
+  min-height: 90vh;
 
   @include media(lg) {
     margin: 20px auto;

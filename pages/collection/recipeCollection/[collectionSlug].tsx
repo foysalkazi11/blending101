@@ -33,6 +33,8 @@ import {
 } from "../../../redux/slices/filterRecipeSlice";
 import GET_SHARE_WITH_ME_COLLECTIONS from "../../../gqlLib/collection/query/getShareWithMeCollections";
 import { ShowRecipes } from "../../../components/recipe/recipeDiscovery/regularRecipes";
+import Tooltip from "../../../theme/toolTip/CustomToolTip";
+import RecipeDiscoverButton from "../../../theme/button/recipeDiscoverButton/RecipeDiscoverButton";
 
 let dataLimit = 12;
 
@@ -288,6 +290,8 @@ const Layout: FC<{ allFilters?: any[] }> = ({ children, allFilters = [] }) => {
   const toggleFilterPanel = () => {
     dispatch(setOpenFilterTray(!openFilterTray));
   };
+  const { dbUser } = useAppSelector((state) => state?.user);
+  const router = useRouter();
   return (
     <AContainer
       headerIcon="/icons/juicer.svg"
@@ -305,13 +309,38 @@ const Layout: FC<{ allFilters?: any[] }> = ({ children, allFilters = [] }) => {
       }}
     >
       <div className={styles.main__div}>
-        <CommonSearchBar
-          input={input}
-          setInput={setInput}
-          isSearchTag={false}
-          openPanel={toggleFilterPanel}
-          isOpenPanel={openFilterTray}
-        />
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <CommonSearchBar
+            input={input}
+            setInput={setInput}
+            isSearchTag={false}
+            openPanel={toggleFilterPanel}
+            isOpenPanel={openFilterTray}
+          />
+          <div
+            style={{ marginLeft: "40px" }}
+            // className={styles.buttonContainer}
+          >
+            <Tooltip content="Compare recipe" direction="bottom">
+              <RecipeDiscoverButton
+                icon={
+                  dbUser?.compareLength
+                    ? "/images/compare-fill-icon.svg"
+                    : "/icons/eclipse.svg"
+                }
+                text={`Compare(${
+                  dbUser?.compareLength ? dbUser?.compareLength : 0
+                })`}
+                disable={dbUser?.compareLength ? false : true}
+                style={{
+                  backgroundColor: dbUser?.compareLength ? "#fff" : "#ececec",
+                }}
+                handleClick={() => router.push(`/recipe/compare`)}
+              />
+            </Tooltip>
+          </div>
+        </div>
+
         {allFilters?.length ? (
           <SearchtagsComponent allFilters={allFilters} />
         ) : null}
