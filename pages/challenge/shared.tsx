@@ -87,7 +87,7 @@ const Shared = () => {
           <Icon className="mr-20" fontName={faYoutube} size={24} />
           <Icon className="mr-20" fontName={faPinterest} size={24} />
           <Icon fontName={faTiktok} size={24} />
-          <p>© 2022 Blending101 - 2022</p>
+          <p>{`© ${new Date().getFullYear()} Blending101 - ${new Date().getFullYear()}`}</p>
         </div>
         <img src="/images/footer-img.png" alt="" />
       </footer>

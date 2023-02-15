@@ -7,7 +7,9 @@ import IconWarper from "../../../../../theme/iconWarper/IconWarper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/pro-light-svg-icons";
 import CircularRotatingLoader from "../../../../../theme/loader/circularRotatingLoader.component";
-import { faTrash } from "@fortawesome/pro-regular-svg-icons";
+import { faShareNodes, faTrash } from "@fortawesome/pro-regular-svg-icons";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { faStarSharp } from "@fortawesome/pro-solid-svg-icons";
 
 interface NoteBodyPops {
   data?: any[];
@@ -103,25 +105,32 @@ const NoteBody = ({
                   </span>
                   {isFromRecipePage === "edit" ||
                   (isFromRecipePage === "details" && item?.isDefault) ? (
-                    <Tooltip
-                      content={item?.isDefault ? "Default" : "Make default"}
-                      direction="left"
-                    >
-                      <span
-                        onClick={() =>
-                          isFromRecipePage === "edit" &&
-                          handleToChangeDefaultVersion(
-                            item?._id,
-                            item?.isDefault,
-                          )
-                        }
-                        className={`${styles.star} ${
-                          item?.isDefault ? styles.on : styles.off
-                        }`}
+                    <div className={styles.leftSide}>
+                      <Tooltip content="Share off" direction="left">
+                        <FontAwesomeIcon
+                          icon={faShareNodes}
+                          className={`${styles.star} ${styles.off}`}
+                        />
+                      </Tooltip>
+                      <Tooltip
+                        content={item?.isDefault ? "Default" : "Make default"}
+                        direction="left"
                       >
-                        &#9733;
-                      </span>
-                    </Tooltip>
+                        <FontAwesomeIcon
+                          onClick={() =>
+                            isFromRecipePage === "edit" &&
+                            handleToChangeDefaultVersion(
+                              item?._id,
+                              item?.isDefault,
+                            )
+                          }
+                          className={`${styles.star} ${
+                            item?.isDefault ? styles.on : styles.off
+                          }`}
+                          icon={faStarSharp}
+                        />
+                      </Tooltip>
+                    </div>
                   ) : null}
                 </div>
               </div>

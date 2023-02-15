@@ -22,9 +22,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faRectangleVerticalHistory,
   faScaleBalanced,
+  faShareNodes,
 } from "@fortawesome/pro-regular-svg-icons";
 import { useRouter } from "next/router";
 import { RecipeVersionType } from "../../../type/recipeVersionType";
+import Image from "next/image";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { faStarSharp } from "@fortawesome/pro-solid-svg-icons";
 
 interface VersionTrayProps {
   showTagByDefaut?: boolean;
@@ -287,38 +291,66 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
         ) : null}
 
         <div className={styles.recipeName}>
-          <img
-            src={detailsARecipe?.image?.find((img) => img?.default)?.image}
-            alt="recipe_img"
-          />
-          <h3
-            onClick={() =>
-              isOriginalVersion?.isDefault
-                ? funToGetARecipe()
-                : handleToGetARecipeVersion(isOriginalVersion?._id)
-            }
-          >
-            {detailsARecipe?.name}
-          </h3>
+          <div className={styles.leftSide}>
+            <Image
+              src={detailsARecipe?.image?.find((img) => img?.default)?.image}
+              alt="recipe_img"
+              width={45}
+              height={45}
+              objectFit="cover"
+              loading="lazy"
+            />
+            <h3
+              onClick={() =>
+                isOriginalVersion?.isDefault
+                  ? funToGetARecipe()
+                  : handleToGetARecipeVersion(isOriginalVersion?._id)
+              }
+            >
+              {detailsARecipe?.name}
+            </h3>
+          </div>
           {openVersionTrayFormWhichPage === "edit" ||
           isOriginalVersion?.isDefault ? (
-            <Tooltip content="Default" direction="left">
-              <span
-                onClick={() =>
-                  !isOriginalVersion?.isDefault &&
-                  openVersionTrayFormWhichPage === "edit" &&
-                  handleToChangeDefaultVersion(
-                    isOriginalVersion?._id,
-                    isOriginalVersion?.isDefault,
-                  )
-                }
-                className={`${styles.star} ${
-                  isOriginalVersion?.isDefault ? styles.on : styles.off
-                }`}
-              >
-                &#9733;
-              </span>
-            </Tooltip>
+            <div className={styles.rightSide}>
+              <Tooltip content="Share off" direction="left">
+                <FontAwesomeIcon
+                  icon={faShareNodes}
+                  className={`${styles.star} ${styles.off}`}
+                />
+              </Tooltip>
+              <Tooltip content="Default" direction="left">
+                <FontAwesomeIcon
+                  onClick={() =>
+                    !isOriginalVersion?.isDefault &&
+                    openVersionTrayFormWhichPage === "edit" &&
+                    handleToChangeDefaultVersion(
+                      isOriginalVersion?._id,
+                      isOriginalVersion?.isDefault,
+                    )
+                  }
+                  icon={faStarSharp}
+                  className={`${styles.star} ${
+                    isOriginalVersion?.isDefault ? styles.on : styles.off
+                  }`}
+                />
+                {/* <span
+                  onClick={() =>
+                    !isOriginalVersion?.isDefault &&
+                    openVersionTrayFormWhichPage === "edit" &&
+                    handleToChangeDefaultVersion(
+                      isOriginalVersion?._id,
+                      isOriginalVersion?.isDefault,
+                    )
+                  }
+                  className={`${styles.star} ${
+                    isOriginalVersion?.isDefault ? styles.on : styles.off
+                  }`}
+                >
+                  &#9733;
+                </span> */}
+              </Tooltip>
+            </div>
           ) : null}
         </div>
         <NoteHead

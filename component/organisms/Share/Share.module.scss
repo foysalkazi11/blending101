@@ -253,20 +253,18 @@
 .activeEmailInfoContainer {
   display: none;
   transition: all 0.3s;
+}
+.checkBoxContainer {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
 
-  .checkBoxContainer {
-    display: flex;
-    align-items: center;
-    margin: 10px 0;
-
-    .label {
-      margin-left: 10px;
-      font-weight: 500;
-      color: #a5a5a5;
-    }
+  .label {
+    margin-left: 10px;
+    font-weight: 500;
+    color: #a5a5a5;
   }
 }
-
 .showInfo {
   display: block;
   padding: 10px 0;

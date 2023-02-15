@@ -31,35 +31,42 @@
 .recipeName {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 20px 0px;
   border-bottom: 1px solid #ececec;
   transition: all 0.3s linear;
-  &:hover img {
+  &:hover .leftSide img {
     transform: scale(1.05);
   }
-  &:hover h3 {
+  &:hover .leftSide h3 {
     color: $primaryColor;
   }
-  img {
-    transition: all 0.3s linear;
-    width: 45px;
-    height: 45px;
-    border-radius: 8px;
-    overflow: hidden;
-    object-fit: cover;
+
+  .leftSide {
+    display: flex;
+    align-items: center;
+    img {
+      transition: all 0.3s linear;
+      // width: 45px;
+      // height: 45px;
+      border-radius: 8px;
+      // overflow: hidden;
+      // object-fit: cover;
+    }
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #000;
+      margin-left: 10px;
+      cursor: pointer;
+      transition: color 0.3s linear;
+      width: 180px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
-  h3 {
-    font-size: 16px;
-    font-weight: 600;
-    color: #000;
-    margin-left: 10px;
-    cursor: pointer;
-    transition: color 0.3s linear;
-    width: 180px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+
   .on {
     color: #fe5d1f;
   }
@@ -67,8 +74,13 @@
     color: #c1c1c1;
   }
 
+  .rightSide {
+    display: flex;
+    align-items: center;
+  }
+
   .star {
-    font-size: 20px;
+    // font-size: 20px;
     cursor: pointer;
     margin-left: 10px;
   }

@@ -1,6 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RecipeDetailsType } from "../../type/recipeDetails";
-import { RecipeType } from "../../type/recipeType";
+import {
+  RecipeType,
+  ReferenceOfRecipeUpdateFuncType,
+} from "../../type/recipeType";
 
 type recipeSliceState = {
   recommended: RecipeType[];
@@ -11,6 +14,7 @@ type recipeSliceState = {
   detailsARecipe: RecipeDetailsType;
   allFilterRecipe: RecipeType[];
   searchRecipeResults: RecipeType[];
+  referenceOfRecipeUpdateFunc: ReferenceOfRecipeUpdateFuncType;
 };
 
 const initialState: recipeSliceState = {
@@ -22,6 +26,7 @@ const initialState: recipeSliceState = {
   detailsARecipe: {} as RecipeDetailsType,
   allFilterRecipe: [] as RecipeType[],
   searchRecipeResults: [],
+  referenceOfRecipeUpdateFunc: () => {},
 };
 
 export const recipeSlice = createSlice({
@@ -55,6 +60,12 @@ export const recipeSlice = createSlice({
     updateSearchRecipeResult: (state, action: PayloadAction<RecipeType[]>) => {
       state.searchRecipeResults = [...action.payload];
     },
+    setReferenceOfRecipeUpdateFunc: (
+      state,
+      action: PayloadAction<ReferenceOfRecipeUpdateFuncType>,
+    ) => {
+      state.referenceOfRecipeUpdateFunc = action.payload;
+    },
   },
 });
 
@@ -67,6 +78,7 @@ export const {
   setDetailsARecipe,
   setAllFilterRecipe,
   updateSearchRecipeResult,
+  setReferenceOfRecipeUpdateFunc,
 } = recipeSlice?.actions;
 
 export default recipeSlice?.reducer;

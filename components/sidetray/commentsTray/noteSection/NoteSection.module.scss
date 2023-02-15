@@ -112,8 +112,14 @@
     color: #c1c1c1;
   }
 
-  .star {
-    font-size: 20px;
-    cursor: pointer;
+  .leftSide {
+    display: flex;
+    align-items: center;
+
+    .star {
+      margin-left: 10px;
+      // font-size: 20px;
+      cursor: pointer;
+    }
   }
 }
