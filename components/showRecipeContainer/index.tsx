@@ -4,7 +4,7 @@ import {
   faXmark,
 } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import PlanCard from "../../component/module/Planner/PlanCard.component";
 import Share from "../../component/organisms/Share/Distribute.component";
 import useIntersectionObserver from "../../customHooks/useIntersectionObserver";
@@ -68,6 +68,7 @@ const ShowRecipeContainer = ({
   setOpenShareModal = () => {},
   setShareRecipeData = () => {},
 }: Props) => {
+  const [containerData, setContainerData] = useState([]);
   const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
     "compareList",
     [],
@@ -98,6 +99,22 @@ const ShowRecipeContainer = ({
       dispatch(updateBulkRecipeIdsForAddedInCollection(dataIds));
     }
   };
+
+  const updateContainerData = useCallback(
+    (id: string, updateObj: { [key: string]: any }) => {
+      setContainerData((prev) =>
+        prev.map((item) =>
+          item?._id === id ? { ...item, ...updateObj } : item,
+        ),
+      );
+    },
+    [],
+  );
+
+  useEffect(() => {
+    setContainerData(data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
   // if (loading) {
   //   return (
@@ -170,7 +187,7 @@ const ShowRecipeContainer = ({
           <>
             <div className={styles.showRecipes}>
               {showItems === "recipe" &&
-                data?.map((item, index) => {
+                containerData?.map((item, index) => {
                   let ingredients = [];
                   item?.ingredients?.forEach((ing) => {
                     const ingredient = ing?.ingredientId?.ingredientName;
@@ -203,11 +220,12 @@ const ShowRecipeContainer = ({
                       userId={item?.userId}
                       setShareRecipeData={setShareRecipeData}
                       setOpenShareModal={setOpenShareModal}
+                      updateDataFunc={updateContainerData}
                     />
                   );
                 })}
               {showItems === "blog" &&
-                data?.map((blog: BlogListType) => {
+                containerData?.map((blog: BlogListType) => {
                   return (
                     <BlogCard
                       key={blog?._id}
@@ -222,7 +240,7 @@ const ShowRecipeContainer = ({
                   );
                 })}
               {showItems === "plan" &&
-                data?.map((plan) => {
+                containerData?.map((plan) => {
                   const { _id, planName, planCollections, commentsCount } =
                     plan;
                   return (
@@ -239,7 +257,7 @@ const ShowRecipeContainer = ({
             </div>
             {loading && <SkeletonCollectionRecipe />}
             <div ref={observer}></div>
-            {!loading && !data?.length && (
+            {!loading && !containerData?.length && (
               <ErrorPage
                 errorMessage={`No ${showItems} found, search again !!!`}
                 image="/icons/empty_data.svg"
@@ -271,7 +289,7 @@ const ShowRecipeContainer = ({
         show={openCreateCollectionModal}
         setShow={setOpenCreateCollectionModal}
         type={showItems}
-        itemsIds={data?.map((item) => item?._id)}
+        itemsIds={containerData?.map((item) => item?._id)}
       />
     </>
   );

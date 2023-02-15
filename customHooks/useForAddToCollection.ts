@@ -30,7 +30,10 @@ const useForAddToCollection = () => {
     recipeId: string,
     setOpenCollectionModal: Dispatch<SetStateAction<boolean>>,
     e: React.SyntheticEvent,
-    setcompareRecipeList?: (state: any) => void,
+    updateDataFunc: (
+      id: string,
+      obj: { [key: string]: any },
+    ) => void = () => {},
   ) => {
     e.stopPropagation();
     dispatch(setActiveRecipeId(recipeId));
@@ -62,13 +65,14 @@ const useForAddToCollection = () => {
       const obj = {
         userCollections: [lastModified?.getLastModifieldCollection?._id],
       };
-      updateRecipe(recipeId, obj);
-      dispatch(setCompareList(updateRecipeFunc(compareList, obj, recipeId)));
-      if (typeof setcompareRecipeList === "function") {
-        setcompareRecipeList((state = []) =>
-          updateRecipeFunc(state, obj, recipeId),
-        );
-      }
+      updateDataFunc(recipeId, obj);
+      // updateRecipe(recipeId, obj);
+      // dispatch(setCompareList(updateRecipeFunc(compareList, obj, recipeId)));
+      // if (typeof setcompareRecipeList === "function") {
+      //   setcompareRecipeList((state = []) =>
+      //     updateRecipeFunc(state, obj, recipeId),
+      //   );
+      // }
 
       setOpenCollectionModal(true);
       timeOut = setTimeout(() => {
@@ -77,8 +81,7 @@ const useForAddToCollection = () => {
       // reactToastifyNotification("info", `Successfully added to new collection`);
     } catch (error) {
       // updateRecipe(recipeId, { userCollections: null });
-      notification("error", error?.message);
-      console.log(error);
+      notification("error", error?.message || "Added to collection failed");
     }
   };
 

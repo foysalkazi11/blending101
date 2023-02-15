@@ -166,7 +166,13 @@ const CompareRecipe = () => {
   };
 
   const handleRemoveFromCompareList = (id: string, e: React.SyntheticEvent) => {
-    changeCompare(e, id, false, compareRecipeList, setCompareRecipeList);
+    changeCompare(e, id, false, (id, updateObj) =>
+      compareRecipeList((prev) =>
+        prev.map((item) =>
+          item?._id === id ? { ...item, ...updateObj } : item,
+        ),
+      ),
+    );
   };
 
   const handleCompare = (recipe) => {

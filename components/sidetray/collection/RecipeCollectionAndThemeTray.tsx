@@ -81,7 +81,7 @@ export default function RecipeCollectionAndThemeTray({
       error: collectionsError,
     },
   ] = useLazyQuery(GET_COLLECTIONS_AND_THEMES, {
-    fetchPolicy: "cache-and-network",
+    // fetchPolicy: "cache-and-network",
   });
 
   useEffect(() => {

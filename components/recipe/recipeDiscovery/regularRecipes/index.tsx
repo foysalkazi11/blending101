@@ -1,9 +1,10 @@
 import { useQuery } from "@apollo/client";
 import { faThumbsUp } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Widget from "../../../../component/module/Widget/Widget.component";
 import useLocalStorage from "../../../../customHooks/useLocalStorage";
+import client from "../../../../gqlLib/client";
 import GET_ALL_LATEST_RECIPES from "../../../../gqlLib/recipes/queries/getAllLatestRecipes";
 import GET_ALL_POPULAR_RECIPES from "../../../../gqlLib/recipes/queries/getAllPopularRecipes";
 import GET_ALL_RECOMMENDED_RECIPES from "../../../../gqlLib/recipes/queries/getRecommendedRecipes";
@@ -15,6 +16,7 @@ import AppdownLoadCard from "../AppdownLoadCard/AppdownLoadCard.component";
 import ContentTray from "../ContentTray/ContentTray.component";
 import styles from "../recipeDiscovery.module.scss";
 
+type UpdateRecipeFunc = (id: string, obj: object) => void;
 const defaultHeadingContent = {
   heading: "Recommended",
   image: "/images/thumbs-up.svg",
@@ -38,7 +40,7 @@ const RegularRecipes = ({
     loading: recommendedRecipesLoading,
     error: recommendedRecipesError,
   } = useQuery(GET_ALL_RECOMMENDED_RECIPES, {
-    fetchPolicy: "cache-and-network",
+    // fetchPolicy: "cache-and-network",
 
     variables: { userId: dbUser?._id },
   });
@@ -47,7 +49,7 @@ const RegularRecipes = ({
     loading: popularRecipesLoading,
     error: popularRecipesError,
   } = useQuery(GET_ALL_POPULAR_RECIPES, {
-    fetchPolicy: "cache-and-network",
+    // fetchPolicy: "cache-and-network",
     variables: { userId: dbUser?._id },
   });
   const {
@@ -55,9 +57,51 @@ const RegularRecipes = ({
     loading: latestRecipesLoading,
     error: latestRecipesError,
   } = useQuery(GET_ALL_LATEST_RECIPES, {
-    fetchPolicy: "cache-and-network",
+    // fetchPolicy: "cache-and-network",
     variables: { userId: dbUser?._id },
   });
+
+  const updateRecipe: UpdateRecipeFunc = useCallback(
+    (id = "", obj = {}) => {
+      // update apollo client cache
+
+      client.writeQuery({
+        query: GET_ALL_RECOMMENDED_RECIPES,
+        variables: { userId: dbUser?._id },
+        data: {
+          getAllrecomendedRecipes:
+            recommendedRecipesData?.getAllrecomendedRecipes?.map((recipe) =>
+              recipe?._id === id ? { ...recipe, ...obj } : recipe,
+            ),
+        },
+      });
+      client.writeQuery({
+        query: GET_ALL_POPULAR_RECIPES,
+        variables: { userId: dbUser?._id },
+        data: {
+          getAllpopularRecipes: popularRecipesData?.getAllpopularRecipes?.map(
+            (recipe) => (recipe?._id === id ? { ...recipe, ...obj } : recipe),
+          ),
+        },
+      });
+      client.writeQuery({
+        query: GET_ALL_LATEST_RECIPES,
+        variables: { userId: dbUser?._id },
+        data: {
+          getAllLatestRecipes: latestRecipesData?.getAllLatestRecipes?.map(
+            (recipe) => (recipe?._id === id ? { ...recipe, ...obj } : recipe),
+          ),
+        },
+      });
+    },
+
+    [
+      dbUser?._id,
+      latestRecipesData?.getAllLatestRecipes,
+      popularRecipesData?.getAllpopularRecipes,
+      recommendedRecipesData?.getAllrecomendedRecipes,
+    ],
+  );
 
   return (
     <>
@@ -77,6 +121,7 @@ const RegularRecipes = ({
           setOpenCollectionModal={setOpenCollectionModal}
           setOpenShareModal={setOpenShareModal}
           setShareRecipeData={setShareRecipeData}
+          updateDataFunc={updateRecipe}
         />
         {/* its for latest */}
         <ShowRecipes
@@ -90,6 +135,7 @@ const RegularRecipes = ({
           setOpenCollectionModal={setOpenCollectionModal}
           setOpenShareModal={setOpenShareModal}
           setShareRecipeData={setShareRecipeData}
+          updateDataFunc={updateRecipe}
         />
         {/* its for popular */}
         <ShowRecipes
@@ -103,6 +149,7 @@ const RegularRecipes = ({
           setOpenCollectionModal={setOpenCollectionModal}
           setOpenShareModal={setOpenShareModal}
           setShareRecipeData={setShareRecipeData}
+          updateDataFunc={updateRecipe}
         />
 
         <Widget slug="recipe-editor" />
@@ -124,7 +171,18 @@ interface ShowRecipesType {
   setShareRecipeData?: React.Dispatch<
     React.SetStateAction<{ id: string; image: string; name: string }>
   >;
+  updateDataFunc?: (id: string, obj: { [key: string]: any }) => void;
 }
+
+// joni ingredients
+const joniIngredients = (ingredients: Ingredient[]) => {
+  let ingredientsArr: string[] = [];
+  ingredients?.forEach((ing) => {
+    const ingredient = ing?.ingredientId?.ingredientName;
+    ingredientsArr.push(ingredient);
+  });
+  return ingredientsArr.join(", ");
+};
 
 export const ShowRecipes = ({
   headerData = defaultHeadingContent,
@@ -133,21 +191,12 @@ export const ShowRecipes = ({
   setOpenCollectionModal,
   setOpenShareModal = () => {},
   setShareRecipeData = () => {},
+  updateDataFunc = () => {},
 }: ShowRecipesType) => {
   const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
     "compareList",
     [],
   );
-
-  // joni ingredients
-  const joniIngredients = (ingredients: Ingredient[]) => {
-    let ingredientsArr: string[] = [];
-    ingredients?.forEach((ing) => {
-      const ingredient = ing?.ingredientId?.ingredientName;
-      ingredientsArr.push(ingredient);
-    });
-    return ingredientsArr.join(", ");
-  };
 
   if (loading) {
     return <SkeletonRecipeDiscovery />;
@@ -190,6 +239,7 @@ export const ShowRecipes = ({
                   setShareRecipeData={setShareRecipeData}
                   setOpenShareModal={setOpenShareModal}
                   token={item?.token}
+                  updateDataFunc={updateDataFunc}
                 />
               </div>
             );

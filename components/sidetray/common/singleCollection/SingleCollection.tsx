@@ -126,13 +126,12 @@ const SingleCollection = ({
         <div
           className={styles.leftSide}
           onClick={() =>
-            route
-              ? router.push(route)
-              : handleCollectionRoute(
-                  `/collection/${collectionRoute}/${slug}${
-                    isShared ? "?collectionId=" + id : ""
-                  }`,
-                )
+            handleCollectionRoute(
+              route ||
+                `/collection/${collectionRoute}/${slug}${
+                  isShared ? "?collectionId=" + id : ""
+                }`,
+            )
           }
         >
           <div className={styles.img}>
