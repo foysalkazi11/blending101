@@ -42,9 +42,8 @@ const CommentSection = () => {
   const [deleteComment, { loading: deleteCommentsLoading }] =
     useMutation(DELETE_COMMENT);
   const { activeRecipeId } = useAppSelector((state) => state?.collections);
-  const { latest, popular, recommended } = useAppSelector(
-    (state) => state?.recipe,
-  );
+  const { latest, popular, recommended, referenceOfRecipeUpdateFunc } =
+    useAppSelector((state) => state?.recipe);
   const dispatch = useAppDispatch();
   const { openCommentsTray } = useAppSelector((state) => state?.sideTray);
 
@@ -108,7 +107,7 @@ const CommentSection = () => {
   // delete or remove comment
   const removeComment = async (id: string) => {
     try {
-      await deleteComment({
+      const { data } = await deleteComment({
         variables: {
           data: {
             recipeId: activeRecipeId,
@@ -138,6 +137,12 @@ const CommentSection = () => {
         },
       });
 
+      referenceOfRecipeUpdateFunc(activeRecipeId, {
+        numberOfRating: data?.removeComment?.comments?.length
+          ? data?.removeComment?.comments?.length
+          : null,
+      });
+
       setUpdateComment(false);
       reactToastifyNotification("info", "Delete comment successfully");
     } catch (error) {
@@ -149,7 +154,7 @@ const CommentSection = () => {
     setShowCommentBox(false);
     try {
       if (!updateComment) {
-        await createComment({
+        const { data } = await createComment({
           variables: {
             data: {
               comment: comment,
@@ -177,6 +182,11 @@ const CommentSection = () => {
               },
             });
           },
+        });
+        referenceOfRecipeUpdateFunc(activeRecipeId, {
+          numberOfRating: data?.createComment?.comments?.length
+            ? data?.createComment?.comments?.length
+            : null,
         });
       } else {
         await editComment({

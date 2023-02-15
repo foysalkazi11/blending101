@@ -25,6 +25,7 @@ import CircularRotatingLoader from "../../../theme/loader/circularRotatingLoader
 import { InputValueType } from "../../../components/sidetray/common/addCollectionModal/AddCollectionModal";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import CustomCheckbox from "../../../theme/checkbox/CustomCheckbox";
 
 export interface SharedUserInfoType {
   email: string;
@@ -154,6 +155,22 @@ const Share = (props: ShareProps) => {
             />
           </div>
         )}
+
+        <div className={styles.checkBoxContainer} style={{ marginTop: "20px" }}>
+          <CustomCheckbox
+            // checked={activeEmailInfo?.canCollaborate}
+            // handleChange={(e) =>
+            //   toggleActiveEmail({
+            //     ...activeEmailInfo,
+            //     canCollaborate: !activeEmailInfo?.canCollaborate,
+            //   })
+            // }
+            id="shareOtherVersions"
+          />
+          <label className={styles.label} htmlFor="shareOtherVersions">
+            Share Other Versions
+          </label>
+        </div>
       </div>
     </CustomModal>
   );

@@ -30,6 +30,9 @@ const NoteSection = () => {
   const { dbUser } = useAppSelector((state) => state?.user);
   const { activeRecipeId } = useAppSelector((state) => state?.collections);
   const { openCommentsTray } = useAppSelector((state) => state?.sideTray);
+  const { referenceOfRecipeUpdateFunc } = useAppSelector(
+    (state) => state?.recipe,
+  );
 
   const [getAllNotesForARecipe, { data: noteData, loading: noteLoading }] =
     useLazyQuery(GET_ALL_NOTES_FOR_A_RECIPE, {
@@ -71,7 +74,7 @@ const NoteSection = () => {
   // remove a note
   const removeNote = async (id: string) => {
     try {
-      await deleteNote({
+      const { data } = await deleteNote({
         variables: {
           data: {
             recipeId: activeRecipeId,
@@ -90,6 +93,9 @@ const NoteSection = () => {
             },
           });
         },
+      });
+      referenceOfRecipeUpdateFunc(activeRecipeId, {
+        notes: data?.removeMyNote?.length ? data?.removeMyNote?.length : null,
       });
 
       reactToastifyNotification("info", "Delete successfully");
@@ -125,7 +131,7 @@ const NoteSection = () => {
           },
         });
       } else {
-        await createNote({
+        const { data } = await createNote({
           variables: {
             data: {
               body: noteForm?.body,
@@ -145,6 +151,12 @@ const NoteSection = () => {
               },
             });
           },
+        });
+
+        referenceOfRecipeUpdateFunc(activeRecipeId, {
+          notes: data?.createNewNote?.length
+            ? data?.createNewNote?.length
+            : null,
         });
       }
 

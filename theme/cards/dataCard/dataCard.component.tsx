@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { Dispatch, SetStateAction, useRef, useState } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import styles from "./dataCard.module.scss";
 import MoreVertIcon from "../../../public/icons/more_vert_black_36dp.svg";
 import { useRouter } from "next/router";
@@ -17,6 +17,7 @@ import Tooltip from "../../toolTip/CustomToolTip";
 import {
   RecipeCreatorInfo,
   RecipeSmallVersionType,
+  ReferenceOfRecipeUpdateFuncType,
 } from "../../../type/recipeType";
 import useHover from "../../../components/utility/useHover";
 import { faRectangleVerticalHistory } from "@fortawesome/pro-light-svg-icons";
@@ -62,19 +63,20 @@ interface dataCardInterface {
   >;
   defaultVersionId?: string;
   token?: string;
+  updateDataFunc?: ReferenceOfRecipeUpdateFuncType;
 }
 
 export default function DatacardComponent({
-  title,
+  title = "Triple Berry Smoothie",
   ingredients,
-  category,
+  category = "Smoothie",
   ratings,
-  noOfRatings,
-  carbs,
-  score,
-  calorie,
-  noOfComments,
-  image,
+  noOfRatings = 0,
+  carbs = 23,
+  score = 701,
+  calorie = 270,
+  noOfComments = 0,
+  image = "/cards/juice.png",
   recipeId = "",
   notes = 0,
   addedToCompare = false,
@@ -97,18 +99,9 @@ export default function DatacardComponent({
   setShareRecipeData = () => {},
   defaultVersionId = "",
   token = "",
+  updateDataFunc = () => {},
 }: dataCardInterface) {
-  title = title || "Triple Berry Smoothie";
-  ingredients = ingredients;
-  category = category || "Smoothie";
-  noOfRatings = noOfRatings || 0;
-  carbs = carbs || 23;
-  calorie = calorie || 270;
-  score = score || 701;
-  noOfComments = noOfComments || 0;
-  image = image || "/cards/juice.png";
   ratings = Math.ceil(ratings);
-  const menu = useRef<any>();
   const router = useRouter();
   const handleChangeCompare = useChangeCompare();
   const handleAddToCollection = useForAddToCollection();
@@ -181,7 +174,11 @@ export default function DatacardComponent({
     </div>
   );
 
-  const handleShowCommentsAndNotesIcon = (comments: number, notes: number) => {
+  const handleShowCommentsAndNotesIcon = (
+    comments: number,
+    notes: number,
+    updateDataFunc?: ReferenceOfRecipeUpdateFuncType,
+  ) => {
     const res = selectCommentsAndNotesIcon(comments, notes);
     return (
       <Tooltip direction="left" content="Comments & Notes">
@@ -189,7 +186,9 @@ export default function DatacardComponent({
           <img
             src={`/icons/${res?.icon}.svg`}
             alt="icon"
-            onClick={(e) => handleOpenCommentsTray(recipeId, title, image, e)}
+            onClick={(e) =>
+              handleOpenCommentsTray(recipeId, title, image, e, updateDataFunc)
+            }
           />{" "}
           <span style={{ color: res?.amount ? "#7cbc39" : "#c4c4c4" }}>
             {res?.amount}
@@ -337,8 +336,7 @@ export default function DatacardComponent({
                         e,
                         recipeId,
                         addedToCompare ? false : true,
-                        compareRecipeList,
-                        setcompareRecipeList,
+                        updateDataFunc,
                       )
                     }
                   />
@@ -355,18 +353,29 @@ export default function DatacardComponent({
                     alt="compare"
                     onClick={(e) =>
                       isCollectionIds?.length
-                        ? handleOpenCollectionTray(recipeId, isCollectionIds, e)
+                        ? handleOpenCollectionTray(
+                            recipeId,
+                            isCollectionIds,
+                            e,
+                            updateDataFunc,
+                          )
                         : handleAddToCollection(
                             recipeId,
                             setOpenCollectionModal,
                             e,
-                            setcompareRecipeList,
+                            updateDataFunc,
                           )
                     }
                   />
                 </Tooltip>
               </li>
-              <li>{handleShowCommentsAndNotesIcon(noOfComments, notes)}</li>
+              <li>
+                {handleShowCommentsAndNotesIcon(
+                  noOfComments,
+                  notes,
+                  updateDataFunc,
+                )}
+              </li>
             </ul>
           </div>
         </div>

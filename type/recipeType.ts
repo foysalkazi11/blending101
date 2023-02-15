@@ -61,3 +61,8 @@ export interface IngredientID {
 export interface RecipeBlendCategory {
   name: string;
 }
+
+export type ReferenceOfRecipeUpdateFuncType = (
+  id: string,
+  obj: { [key: string]: any },
+) => void;

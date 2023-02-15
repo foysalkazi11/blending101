@@ -61,7 +61,9 @@ export default function CollectionComponent({
     "compareList",
     [],
   );
-  const { compareList } = useAppSelector((state) => state?.recipe);
+  const { compareList, referenceOfRecipeUpdateFunc } = useAppSelector(
+    (state) => state?.recipe,
+  );
   const { bulkRecipeIdsForAddedInCollection } = useAppSelector(
     (state) => state?.collections,
   );
@@ -168,16 +170,21 @@ export default function CollectionComponent({
           },
         },
       });
-      updateRecipe(activeRecipeId, {
+      // updateRecipe(activeRecipeId, {
+      //   userCollections: collectionHasRecipe?.length
+      //     ? singleRecipeWithinCollections
+      //     : null,
+      // });
+      referenceOfRecipeUpdateFunc(activeRecipeId, {
         userCollections: collectionHasRecipe?.length
           ? singleRecipeWithinCollections
           : null,
       });
-      updateCompareRecipe(activeRecipeId, {
-        userCollections: collectionHasRecipe?.length
-          ? singleRecipeWithinCollections
-          : null,
-      });
+      // updateCompareRecipe(activeRecipeId, {
+      //   userCollections: collectionHasRecipe?.length
+      //     ? singleRecipeWithinCollections
+      //     : null,
+      // });
 
       reactToastifyNotification("info", `Collection update successfully`);
       setIsCollectionUpdate(false);
