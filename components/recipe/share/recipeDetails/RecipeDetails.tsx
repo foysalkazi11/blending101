@@ -75,6 +75,7 @@ const RecipeDetails = ({
   setCopyImage = () => {},
   customMenu = null,
   showMoreMenuAtHover = false,
+  updateCompareList = () => {},
 }: any) => {
   const [winReady, setwinReady] = useState(false);
 
@@ -130,8 +131,6 @@ const RecipeDetails = ({
           recipeId={recipe?._id}
           notes={recipe?.notes}
           addedToCompare={recipe?.addedToCompare}
-          compareRecipeList={compareRecipeList}
-          setcompareRecipeList={setcompareRecipeList}
           isCollectionIds={recipe?.userCollections}
           setOpenCollectionModal={setOpenCollectionModal}
           isMatch={recipe?.isMatch}
@@ -144,6 +143,7 @@ const RecipeDetails = ({
           showMoreMenuAtHover={showMoreMenuAtHover}
           description={recipe?.description}
           recipeVersion={recipe?.recipeVersion}
+          updateDataFunc={updateCompareList}
         />
         <div className={`${styles.dividerBox}`}>
           <SectionTitleWithIcon

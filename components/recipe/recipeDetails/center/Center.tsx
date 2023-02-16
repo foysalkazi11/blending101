@@ -27,6 +27,7 @@ import { RecipeDetailsType } from "../../../../type/recipeDetails";
 import { GiGl } from "../../../../type/nutrationType";
 import Share from "../../../../component/organisms/Share/Distribute.component";
 import ShareRecipe from "./shareRecipe";
+import { setDetailsARecipe } from "../../../../redux/slices/recipeSlice";
 
 interface center {
   recipeData: RecipeDetailsType;
@@ -63,6 +64,7 @@ const Center = ({
   const { lastModifiedCollection } = useAppSelector(
     (state) => state?.collections,
   );
+  const { detailsARecipe } = useAppSelector((state) => state?.recipe);
 
   // check version of recipe
   const checkVersion = recipeData?.recipeVersion?.find(
@@ -93,9 +95,18 @@ const Center = ({
     }
   };
 
+  const updateCollection = (id, obj) => {
+    dispatch(
+      setDetailsARecipe({
+        ...detailsARecipe,
+        ...obj,
+      }),
+    );
+  };
+
   const addToCollection = (id: string, e: React.SyntheticEvent) => {
     setShowCollectionModal(true);
-    handleAddToCollection(id, setOpenModal, e);
+    handleAddToCollection(id, setOpenModal, e, updateCollection);
   };
 
   // open comments tray
@@ -103,8 +114,7 @@ const Center = ({
     const title = recipeData?.name;
     const recipeId = recipeData?._id;
     const defaultImage = recipeData?.image?.find((img) => img?.default)?.image;
-
-    handleOpenCommentsTray(recipeId, title, defaultImage, e);
+    handleOpenCommentsTray(recipeId, title, defaultImage, e, updateCollection);
   };
 
   const hangleShowCommentsAndNotesIcon = () => {
@@ -208,6 +218,7 @@ const Center = ({
                       recipeData?._id,
                       recipeData?.userCollections,
                       e,
+                      updateCollection,
                     )
                   : addToCollection(recipeData?._id, e)
               }
@@ -324,6 +335,7 @@ const Center = ({
                 recipeData?._id,
                 recipeData?.userCollections,
                 e,
+                updateCollection,
               )
             }
           />
