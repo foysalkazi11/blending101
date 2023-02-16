@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styles from "./recipe.module.scss";
-import Image from "next/image";
 import DatacardComponent from "../../../theme/cards/dataCard/dataCard.component";
 import { useLazyQuery } from "@apollo/client";
-import GET_RECIPES_BY_BLEND_AND_INGREDIENTS from "../../../gqlLib/recipes/queries/getRecipesByBlaendAndIngredients";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setLoading } from "../../../redux/slices/utilitySlice";
-import useLocalStorage from "../../../customHooks/useLocalStorage";
 import ShowCollectionModal from "../../showLastModifiedCollection/ShowLastModifiedCollection";
 import { setAllFilterRecipe } from "../../../redux/slices/recipeSlice";
 import FILTER_RECIPE from "../../../gqlLib/recipes/queries/filterRecipe";
 import {
   FilterCriteriaValue,
-  FilterCriteriaOptions,
   resetAllFilters,
 } from "../../../redux/slices/filterRecipeSlice";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
@@ -40,10 +35,6 @@ function FilterPageBottom({ allFilters = [] }: Props) {
   const { dbUser } = useAppSelector((state) => state?.user);
   const { allFilterRecipe } = useAppSelector((state) => state?.recipe);
   const dispatch = useAppDispatch();
-  const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
-    "compareList",
-    [],
-  );
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
   const { lastModifiedCollection } = useAppSelector(
     (state) => state?.collections,
@@ -273,8 +264,6 @@ function FilterPageBottom({ allFilters = [] }: Props) {
                             recipeId={item?._id}
                             notes={item?.notes}
                             addedToCompare={item?.addedToCompare}
-                            compareRecipeList={compareRecipeList}
-                            setcompareRecipeList={setcompareRecipeList}
                             isCollectionIds={item?.userCollections}
                             setOpenCollectionModal={setOpenCollectionModal}
                             isMatch={item?.isMatch}
