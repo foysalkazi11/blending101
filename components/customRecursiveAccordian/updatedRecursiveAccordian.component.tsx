@@ -10,6 +10,7 @@ import GET_DAILY_GOALS from "../../gqlLib/dri/query/getDailyGoals";
 import DropDown, {
   DropDownType,
 } from "../../theme/dropDown/DropDown.component";
+import useWindowSize from "../utility/useWindowSize";
 
 interface recursiveAccordianInterface {
   variant?: string;
@@ -37,6 +38,7 @@ const UpdatedRecursiveAccordian = ({
     showDropDown: false,
   },
 }: recursiveAccordianInterface) => {
+  const { height } = useWindowSize();
   const { showDropDown, ...rest } = measurementDropDownState;
   const { user, dbUser } = useAppSelector((state) => state?.user);
   const router = useRouter();
@@ -109,8 +111,12 @@ const UpdatedRecursiveAccordian = ({
         </div>
       </div>
       <div
-        className={`${styles.recursiveAccordianBody}`}
-        style={variant === "panel" ? { maxHeight: 680 } : {}}
+        className={`${styles.recursiveAccordianBody} y-scroll`}
+        style={
+          variant === "panel"
+            ? { maxHeight: 680 }
+            : { maxHeight: `${height - 350}px` }
+        }
       >
         {Object?.entries(dataObject)?.map((elem) => {
           if (elem[0] !== "Calories") {

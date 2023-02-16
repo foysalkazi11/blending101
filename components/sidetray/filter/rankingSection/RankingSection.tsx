@@ -8,6 +8,7 @@ import {
   FilterCriteriaOptions,
   FilterCriteriaValue,
 } from "../../../../redux/slices/filterRecipeSlice";
+import useWindowSize from "../../../utility/useWindowSize";
 
 interface Props {
   ascendingDescending?: boolean;
@@ -42,6 +43,7 @@ const RankingSection = ({
   arrayOrderState = [],
   allIngredients = [],
 }: Props) => {
+  const { height } = useWindowSize();
   const handleIngredientClick = (item) => {
     handleBlendAndIngredientUpdate(item, checkActiveItem(item?._id), {
       id: item?._id,
@@ -69,7 +71,7 @@ const RankingSection = ({
       />
       <div
         className={`${styles.rankgingItemContainer} y-scroll`}
-        style={scrollAreaMaxHeight}
+        style={{ maxHeight: `${height - 350}px` }}
       >
         {nutritionLoading ? (
           <IngredientPanelSkeleton />
