@@ -9,6 +9,7 @@ import {
   FilterCriteriaOptions,
   FilterCriteriaValue,
 } from "../../../../redux/slices/filterRecipeSlice";
+import useWindowSize from "../../../utility/useWindowSize";
 
 interface Props {
   searchInput?: string;
@@ -35,6 +36,7 @@ const IngredientPictureSection = ({
   handleBlendAndIngredientUpdate = () => {},
   scrollAreaMaxHeight = { maxHeight: "350px" },
 }: Props) => {
+  const { height } = useWindowSize();
   return (
     <div>
       {ingredientCategory === "All" && (
@@ -60,7 +62,7 @@ const IngredientPictureSection = ({
           {searchIngredientData.length ? (
             <div
               className={`${styles.ingredientContainer} y-scroll`}
-              style={scrollAreaMaxHeight}
+              style={{ maxHeight: `${height - 350}px` }}
             >
               {searchIngredientData?.map((item, i) => (
                 <div
