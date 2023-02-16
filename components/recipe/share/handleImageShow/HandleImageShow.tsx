@@ -61,7 +61,7 @@ const HandleImageShow = ({
               </IconWraper>
             </div>
 
-            <Image src={photo} alt="" layout="fill" objectFit="fill" />
+            <Image src={photo} alt="" layout="fill" objectFit="cover" />
           </div>
         );
       })}

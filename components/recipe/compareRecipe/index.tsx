@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import AContainer from "../../../containers/A.container";
 import SubNav from "../share/subNav/SubNav";
 import styles from "./compareRecipe.module.scss";
@@ -93,8 +93,6 @@ const formulateRecipeResponsiveSetting = (length: number) => {
 };
 
 const CompareRecipe = () => {
-  const [createAndEditRecipeLoading, setCreateAndEditRecipeLoading] =
-    useState(false);
   const [isFormulatePage, setIsFormulatePage] = useState(false);
   const [copyImage, setCopyImage] = useState("");
   const router = useRouter();
@@ -136,6 +134,39 @@ const CompareRecipe = () => {
   const [uploadNewImage, setUploadNewImage] = useState(false);
   const { lastModifiedCollection } = useAppSelector(
     (state) => state?.collections,
+  );
+  // filter recipe
+  const filterRecipe = (arr: any[], id: string): any[] => {
+    if (!arr?.length) return arr;
+    return arr?.filter((item) => item?._id !== id);
+  };
+  // mapped recipe
+  const mapped = (
+    arr: any[],
+    id: string,
+    updateObj: { [key: string]: any },
+  ): any[] => {
+    if (!arr?.length) return arr;
+    return arr?.map((item) =>
+      item?._id === id ? { ...item, ...updateObj } : item,
+    );
+  };
+
+  // update compare List
+  const updateCompareList = useCallback(
+    (id: string, updateObj: { [key: string]: any }) => {
+      let isCompareObj = "addedToCompare";
+      isCompareObj = updateObj[isCompareObj];
+
+      if (isCompareObj === undefined) {
+        dispatch(setCompareList(mapped(compareList, id, updateObj)));
+        setCompareRecipeList((state) => mapped(state, id, updateObj));
+      } else {
+        dispatch(setCompareList(filterRecipe(compareList, id)));
+        setCompareRecipeList((state) => filterRecipe(state, id));
+      }
+    },
+    [compareList, dispatch, setCompareRecipeList],
   );
 
   // open recipe collection panel after added a recipe to a collection
@@ -352,7 +383,6 @@ const CompareRecipe = () => {
     e.stopPropagation();
     if (newlyCreatedRecipe?._id) {
       if (newRecipe?.name && newRecipe?.ingredients?.length) {
-        setCreateAndEditRecipeLoading(true);
         try {
           let imgArr = [];
           if (uploadNewImage && newRecipe?.image?.length) {
@@ -389,11 +419,8 @@ const CompareRecipe = () => {
               },
             },
           });
-
-          setCreateAndEditRecipeLoading(false);
           notification("success", "Recipe updated successfully");
         } catch (error) {
-          setCreateAndEditRecipeLoading(false);
           notification("error", "Failed to updated recipe");
         }
       } else {
@@ -404,7 +431,6 @@ const CompareRecipe = () => {
       }
     } else {
       if (newRecipe?.name && newRecipe?.ingredients?.length) {
-        setCreateAndEditRecipeLoading(true);
         try {
           let imgArr = [];
           if (newRecipe?.image?.length) {
@@ -437,7 +463,6 @@ const CompareRecipe = () => {
               data: obj,
             },
           });
-          setCreateAndEditRecipeLoading(false);
           notification("success", "Recive saved successfully");
           if (data?.addRecipeFromUser?._id) {
             setNewlyCreatedRecipe(data?.addRecipeFromUser);
@@ -445,7 +470,6 @@ const CompareRecipe = () => {
             // router?.push(`/recipe_details/${data?.addRecipeFromUser?._id}`);
           }
         } catch (error) {
-          setCreateAndEditRecipeLoading(false);
           notification("error", "Failed to saved new recipe");
         }
       } else {
@@ -577,6 +601,7 @@ const CompareRecipe = () => {
                                 setcompareRecipeList={setCompareRecipeList}
                                 setOpenCollectionModal={setOpenCollectionModal}
                                 setCopyImage={setCopyImage}
+                                updateCompareList={updateCompareList}
                               />
                             );
                           })}
@@ -595,6 +620,7 @@ const CompareRecipe = () => {
                           compareRecipeList={compareRecipeList}
                           setcompareRecipeList={setCompareRecipeList}
                           setOpenCollectionModal={setOpenCollectionModal}
+                          updateCompareList={updateCompareList}
                         />
                       );
                     })}

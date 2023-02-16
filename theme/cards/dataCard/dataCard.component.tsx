@@ -36,8 +36,6 @@ interface dataCardInterface {
   recipeId?: string;
   notes?: number;
   addedToCompare?: boolean;
-  compareRecipeList?: any[];
-  setcompareRecipeList?: (state: any) => void;
   showMoreMenu?: boolean;
   showOptionalEditIcon?: boolean;
   changeToFormulateRecipe?: () => void;
@@ -80,8 +78,6 @@ export default function DatacardComponent({
   recipeId = "",
   notes = 0,
   addedToCompare = false,
-  compareRecipeList = [],
-  setcompareRecipeList = () => {},
   showMoreMenu = true,
   showOptionalEditIcon = false,
   changeToFormulateRecipe = () => {},

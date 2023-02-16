@@ -6,10 +6,8 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import PlanCard from "../../component/module/Planner/PlanCard.component";
-import Share from "../../component/organisms/Share/Distribute.component";
 import useIntersectionObserver from "../../customHooks/useIntersectionObserver";
-import useLocalStorage from "../../customHooks/useLocalStorage";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { useAppDispatch } from "../../redux/hooks";
 import {
   setActiveRecipeId,
   setChangeRecipeWithinCollection,
@@ -19,7 +17,6 @@ import {
 import { setOpenCollectionsTary } from "../../redux/slices/sideTraySlice";
 import DatacardComponent from "../../theme/cards/dataCard/dataCard.component";
 import IconWarper from "../../theme/iconWarper/IconWarper";
-import CustomModal from "../../theme/modal/customModal/CustomModal";
 import SkeletonCollectionRecipe from "../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollectionRecipe";
 import { BlogListType } from "../../type/blog";
 import ErrorPage from "../pages/404Page";
@@ -69,10 +66,6 @@ const ShowRecipeContainer = ({
   setShareRecipeData = () => {},
 }: Props) => {
   const [containerData, setContainerData] = useState([]);
-  const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
-    "compareList",
-    [],
-  );
   const [openCreateCollectionModal, setOpenCreateCollectionModal] =
     useState(false);
   const observer = useRef<any>();
@@ -210,8 +203,6 @@ const ShowRecipeContainer = ({
                       recipeId={item?._id}
                       notes={item?.notes}
                       addedToCompare={item?.addedToCompare}
-                      compareRecipeList={compareRecipeList}
-                      setcompareRecipeList={setcompareRecipeList}
                       setOpenCollectionModal={setOpenCollectionModal}
                       isCollectionIds={item?.userCollections}
                       isMatch={item?.isMatch}

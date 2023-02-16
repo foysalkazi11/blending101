@@ -1,9 +1,8 @@
 import { useQuery } from "@apollo/client";
 import { faThumbsUp } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback } from "react";
 import Widget from "../../../../component/module/Widget/Widget.component";
-import useLocalStorage from "../../../../customHooks/useLocalStorage";
 import client from "../../../../gqlLib/client";
 import GET_ALL_LATEST_RECIPES from "../../../../gqlLib/recipes/queries/getAllLatestRecipes";
 import GET_ALL_POPULAR_RECIPES from "../../../../gqlLib/recipes/queries/getAllPopularRecipes";
@@ -193,11 +192,6 @@ export const ShowRecipes = ({
   setShareRecipeData = () => {},
   updateDataFunc = () => {},
 }: ShowRecipesType) => {
-  const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
-    "compareList",
-    [],
-  );
-
   if (loading) {
     return <SkeletonRecipeDiscovery />;
   }
@@ -226,8 +220,6 @@ export const ShowRecipes = ({
                   recipeId={item?._id}
                   notes={item?.notes}
                   addedToCompare={item?.addedToCompare}
-                  compareRecipeList={compareRecipeList}
-                  setcompareRecipeList={setcompareRecipeList}
                   isCollectionIds={item?.userCollections}
                   setOpenCollectionModal={setOpenCollectionModal}
                   isMatch={item?.isMatch}

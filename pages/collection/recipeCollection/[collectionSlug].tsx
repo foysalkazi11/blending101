@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import AContainer from "../../../containers/A.container";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import styles from "../../../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";
@@ -360,49 +360,71 @@ const SharedWithMe = ({
   setOpenShareModal,
   setShareRecipeData,
 }) => {
+  const [containerData, setContainerData] = useState<{ [key: string]: any }[]>(
+    [],
+  );
+
+  const updateContainerData = useCallback(
+    (objectId: string, recipeId: string, updateObj: { [key: string]: any }) => {
+      setContainerData((prev) =>
+        prev.map((item) =>
+          item?._id === objectId
+            ? {
+                ...item,
+                recipes: item?.recipes?.map((recipe) =>
+                  recipe?._id === recipeId
+                    ? { ...recipe, ...updateObj }
+                    : recipe,
+                ),
+              }
+            : item,
+        ),
+      );
+    },
+    [],
+  );
+
+  useEffect(() => {
+    setContainerData(data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
   return (
-    <>
-      <div style={{ marginTop: "20px" }}>
-        {data?.length ? (
-          data?.map((item, index) => {
-            const {
-              _id,
-              description,
-              image,
-              name,
-              recipes,
-              slug,
-              creatorInfo,
-            } = item;
-            return (
-              <ShowRecipes
-                key={_id}
-                headerData={{
-                  heading: name,
-                  image: creatorInfo?.image || "/images/fire-alt-light.svg",
-                  allUrl: `/collection/recipeCollection/${slug}?${
-                    name === "Single Recipes"
-                      ? "singleRecipeCollectionId"
-                      : "collectionId"
-                  }=${_id}`,
-                }}
-                loading={loading}
-                recipes={recipes}
-                setOpenCollectionModal={setOpenCollectionModal}
-                setOpenShareModal={setOpenShareModal}
-                setShareRecipeData={setShareRecipeData}
-              />
-            );
-          })
-        ) : (
-          <ErrorPage
-            style={{ height: "50vh" }}
-            image="/icons/empty_data.svg"
-            errorMessage="No data found"
-          />
-        )}
-      </div>
-    </>
+    <div style={{ marginTop: "20px" }}>
+      {containerData?.length ? (
+        containerData?.map((item, index) => {
+          const { _id, description, image, name, recipes, slug, creatorInfo } =
+            item;
+          return (
+            <ShowRecipes
+              key={_id}
+              headerData={{
+                heading: name,
+                image: creatorInfo?.image || "/images/fire-alt-light.svg",
+                allUrl: `/collection/recipeCollection/${slug}?${
+                  name === "Single Recipes"
+                    ? "singleRecipeCollectionId"
+                    : "collectionId"
+                }=${_id}`,
+              }}
+              loading={loading}
+              recipes={recipes}
+              setOpenCollectionModal={setOpenCollectionModal}
+              setOpenShareModal={setOpenShareModal}
+              setShareRecipeData={setShareRecipeData}
+              updateDataFunc={(recipeId, updateObj) =>
+                updateContainerData(_id, recipeId, updateObj)
+              }
+            />
+          );
+        })
+      ) : (
+        <ErrorPage
+          style={{ height: "50vh" }}
+          image="/icons/empty_data.svg"
+          errorMessage="No data found"
+        />
+      )}
+    </div>
   );
 };
 
