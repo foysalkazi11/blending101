@@ -2,8 +2,8 @@
 @import "../../../styles/partials/mixin";
 
 .main__div {
-  display: flex;
-  flex-direction: column;
+  // display: flex;
+  // flex-direction: column;
   min-height: 90vh;
   width: 100%;
   max-width: $_3xl;
@@ -38,4 +38,13 @@
   margin-top: auto;
   width: 100%;
   min-width: 100px;
+}
+
+.move {
+  margin-left: 310px;
+  transition: all 0.3s;
+}
+
+.back {
+  transition: all 0.3s;
 }
