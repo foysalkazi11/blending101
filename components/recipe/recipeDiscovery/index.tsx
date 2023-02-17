@@ -204,49 +204,45 @@ const RecipeDiscovery = () => {
           showTagByDeafult: false,
         }}
       >
-        <div
-          className={styles.main__div}
-          style={{
-            marginLeft: openFilterTray ? "310px" : "0px",
-            transition: "all 0.3s",
-          }}
-        >
-          <DiscoveryPageSearchBar
-            input={recipeSearchInput}
-            handleOnChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setRecipeSearchInput(e.target.value);
-            }}
-          />
-
-          {allFilters?.length ? (
-            <SearchTagsComponent allFilters={allFilters} />
-          ) : null}
-
-          {showFilterOrSearchRecipes ? (
-            <ShowRecipeContainer
-              data={allFilterRecipes.filterRecipes}
-              loading={filterRecipesLoading || searchRecipeLoading}
-              closeHandler={closeFilterRecipes}
-              showItems="recipe"
-              showDefaultLeftHeader
-              showDefaultMiddleHeader={
-                allFilterRecipes.filterRecipes.length ? true : false
-              }
-              showDefaultRightHeader
-              hasMore={allFilterRecipes?.totalItems > dataLimit * pageNum}
-              totalDataCount={allFilterRecipes?.totalItems}
-              nextPage={handleNextPage}
-              setOpenCollectionModal={setOpenCollectionModal}
-              setOpenShareModal={setOpenShareModal}
-              setShareRecipeData={setShareRecipeData}
+        <div className={styles.main__div}>
+          <div className={openFilterTray ? styles.move : styles.back}>
+            <DiscoveryPageSearchBar
+              input={recipeSearchInput}
+              handleOnChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setRecipeSearchInput(e.target.value);
+              }}
             />
-          ) : (
-            <RegularRecipes
-              setOpenCollectionModal={setOpenCollectionModal}
-              setOpenShareModal={setOpenShareModal}
-              setShareRecipeData={setShareRecipeData}
-            />
-          )}
+
+            {allFilters?.length ? (
+              <SearchTagsComponent allFilters={allFilters} />
+            ) : null}
+
+            {showFilterOrSearchRecipes ? (
+              <ShowRecipeContainer
+                data={allFilterRecipes.filterRecipes}
+                loading={filterRecipesLoading || searchRecipeLoading}
+                closeHandler={closeFilterRecipes}
+                showItems="recipe"
+                showDefaultLeftHeader
+                showDefaultMiddleHeader={
+                  allFilterRecipes.filterRecipes.length ? true : false
+                }
+                showDefaultRightHeader
+                hasMore={allFilterRecipes?.totalItems > dataLimit * pageNum}
+                totalDataCount={allFilterRecipes?.totalItems}
+                nextPage={handleNextPage}
+                setOpenCollectionModal={setOpenCollectionModal}
+                setOpenShareModal={setOpenShareModal}
+                setShareRecipeData={setShareRecipeData}
+              />
+            ) : (
+              <RegularRecipes
+                setOpenCollectionModal={setOpenCollectionModal}
+                setOpenShareModal={setOpenShareModal}
+                setShareRecipeData={setShareRecipeData}
+              />
+            )}
+          </div>
         </div>
       </AContainer>
       <ShowLastModifiedCollection
