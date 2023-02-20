@@ -26,6 +26,9 @@ export interface RecipeType {
   userId: null | RecipeCreatorInfo;
   recipeVersion: RecipeSmallVersionType[];
   token?: string;
+  recipeId?: { [key: string]: any };
+  allRecipes?: boolean;
+  myRecipes?: boolean;
 }
 
 export interface RecipeSmallVersionType {
@@ -47,6 +50,8 @@ export interface RecipeCreatorInfo {
 export interface DefaultVersion {
   postfixTitle: string;
   _id: string;
+  ingredients?: Ingredient[];
+  description?: string;
 }
 
 export interface Ingredient {
