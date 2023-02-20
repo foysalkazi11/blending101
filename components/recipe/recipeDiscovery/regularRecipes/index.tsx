@@ -8,7 +8,7 @@ import GET_ALL_LATEST_RECIPES from "../../../../gqlLib/recipes/queries/getAllLat
 import GET_ALL_POPULAR_RECIPES from "../../../../gqlLib/recipes/queries/getAllPopularRecipes";
 import GET_ALL_RECOMMENDED_RECIPES from "../../../../gqlLib/recipes/queries/getRecommendedRecipes";
 import { useAppSelector } from "../../../../redux/hooks";
-import DatacardComponent from "../../../../theme/cards/dataCard/dataCard.component";
+import DataCardComponent from "../../../../theme/cards/dataCard/dataCard.component";
 import SkeletonRecipeDiscovery from "../../../../theme/skeletons/skeletonRecipeDiscovery/SkeletonRecipeDiscovery";
 import { Ingredient, RecipeType } from "../../../../type/recipeType";
 import AppdownLoadCard from "../AppdownLoadCard/AppdownLoadCard.component";
@@ -68,9 +68,9 @@ const RegularRecipes = ({
         query: GET_ALL_RECOMMENDED_RECIPES,
         variables: { userId: dbUser?._id },
         data: {
-          getAllrecomendedRecipes:
-            recommendedRecipesData?.getAllrecomendedRecipes?.map((recipe) =>
-              recipe?._id === id ? { ...recipe, ...obj } : recipe,
+          getAllrecomendedRecipes2:
+            recommendedRecipesData?.getAllrecomendedRecipes2?.map((recipe) =>
+              recipe?.recipeId?._id === id ? { ...recipe, ...obj } : recipe,
             ),
         },
       });
@@ -78,8 +78,9 @@ const RegularRecipes = ({
         query: GET_ALL_POPULAR_RECIPES,
         variables: { userId: dbUser?._id },
         data: {
-          getAllpopularRecipes: popularRecipesData?.getAllpopularRecipes?.map(
-            (recipe) => (recipe?._id === id ? { ...recipe, ...obj } : recipe),
+          getAllpopularRecipes2: popularRecipesData?.getAllpopularRecipes2?.map(
+            (recipe) =>
+              recipe?.recipeId?._id === id ? { ...recipe, ...obj } : recipe,
           ),
         },
       });
@@ -87,8 +88,9 @@ const RegularRecipes = ({
         query: GET_ALL_LATEST_RECIPES,
         variables: { userId: dbUser?._id },
         data: {
-          getAllLatestRecipes: latestRecipesData?.getAllLatestRecipes?.map(
-            (recipe) => (recipe?._id === id ? { ...recipe, ...obj } : recipe),
+          getAllLatestRecipes2: latestRecipesData?.getAllLatestRecipes2?.map(
+            (recipe) =>
+              recipe?.recipeId?._id === id ? { ...recipe, ...obj } : recipe,
           ),
         },
       });
@@ -96,9 +98,9 @@ const RegularRecipes = ({
 
     [
       dbUser?._id,
-      latestRecipesData?.getAllLatestRecipes,
-      popularRecipesData?.getAllpopularRecipes,
-      recommendedRecipesData?.getAllrecomendedRecipes,
+      latestRecipesData?.getAllLatestRecipes2,
+      popularRecipesData?.getAllpopularRecipes2,
+      recommendedRecipesData?.getAllrecomendedRecipes2,
     ],
   );
 
@@ -116,7 +118,7 @@ const RegularRecipes = ({
             allUrl: "recipes/recommended",
           }}
           loading={recommendedRecipesLoading}
-          recipes={recommendedRecipesData?.getAllrecomendedRecipes}
+          recipes={recommendedRecipesData?.getAllrecomendedRecipes2}
           setOpenCollectionModal={setOpenCollectionModal}
           setOpenShareModal={setOpenShareModal}
           setShareRecipeData={setShareRecipeData}
@@ -130,7 +132,7 @@ const RegularRecipes = ({
             allUrl: "recipes/latest",
           }}
           loading={latestRecipesLoading}
-          recipes={latestRecipesData?.getAllLatestRecipes}
+          recipes={latestRecipesData?.getAllLatestRecipes2}
           setOpenCollectionModal={setOpenCollectionModal}
           setOpenShareModal={setOpenShareModal}
           setShareRecipeData={setShareRecipeData}
@@ -144,7 +146,7 @@ const RegularRecipes = ({
             allUrl: "recipes/popular",
           }}
           loading={popularRecipesLoading}
-          recipes={popularRecipesData?.getAllpopularRecipes}
+          recipes={popularRecipesData?.getAllpopularRecipes2}
           setOpenCollectionModal={setOpenCollectionModal}
           setOpenShareModal={setOpenShareModal}
           setShareRecipeData={setShareRecipeData}
@@ -174,7 +176,7 @@ interface ShowRecipesType {
 }
 
 // joni ingredients
-const joniIngredients = (ingredients: Ingredient[]) => {
+const joniIngredients = (ingredients: Ingredient[] = []) => {
   let ingredientsArr: string[] = [];
   ingredients?.forEach((ing) => {
     const ingredient = ing?.ingredientId?.ingredientName;
@@ -200,32 +202,56 @@ export const ShowRecipes = ({
       {recipes.length ? (
         <ContentTray {...headerData}>
           {recipes?.map((item, index) => {
-            const ing = joniIngredients(item?.ingredients);
+            const {
+              recipeId: {
+                _id = "",
+                name = "",
+                image = "",
+                originalVersion = "",
+                numberOfRating = 0,
+                averageRating = 0,
+                recipeBlendCategory,
+                userId,
+              },
+              defaultVersion: {
+                _id: defaultVersionId = "",
+                postfixTitle = "",
+                ingredients,
+                description = "",
+              },
+              isMatch = false,
+              allRecipes = false,
+              myRecipes = false,
+              notes = 0,
+              addedToCompare = false,
+              userCollections = [],
+            } = item;
+            const ing = joniIngredients(ingredients);
             return (
               <div
                 className={styles.slider__card}
                 key={`${headerData.heading}${index}`}
               >
-                <DatacardComponent
-                  title={item.name}
+                <DataCardComponent
+                  title={name}
                   ingredients={ing}
-                  category={item.recipeBlendCategory?.name}
-                  ratings={item?.averageRating}
-                  noOfRatings={item?.numberOfRating}
+                  category={recipeBlendCategory?.name}
+                  ratings={averageRating}
+                  noOfRatings={numberOfRating}
                   carbs={item?.carbs}
                   score={item?.score}
                   calorie={item?.calorie}
-                  noOfComments={item?.numberOfRating}
-                  image={item.image[0]?.image}
-                  recipeId={item?._id}
-                  notes={item?.notes}
-                  addedToCompare={item?.addedToCompare}
-                  isCollectionIds={item?.userCollections}
+                  noOfComments={numberOfRating}
+                  image={image?.[0]?.image}
+                  recipeId={_id}
+                  notes={notes}
+                  addedToCompare={addedToCompare}
+                  isCollectionIds={userCollections}
                   setOpenCollectionModal={setOpenCollectionModal}
-                  isMatch={item?.isMatch}
-                  postfixTitle={item?.defaultVersion?.postfixTitle}
-                  defaultVersionId={item?.defaultVersion?._id}
-                  userId={item?.userId}
+                  isMatch={isMatch}
+                  postfixTitle={postfixTitle}
+                  defaultVersionId={defaultVersionId}
+                  userId={userId}
                   recipeVersion={item?.recipeVersion}
                   showMoreMenuAtHover={true}
                   setShareRecipeData={setShareRecipeData}
