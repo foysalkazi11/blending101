@@ -8,6 +8,17 @@ import useWindowSize from "../../utility/useWindowSize";
 import { useAppSelector } from "../../../redux/hooks";
 import ShowRelatedItems from "../../showRelatedItems";
 import { recommendedList } from "../fackData/recipeDetails";
+import { RecipeDetailsType } from "../../../type/recipeDetailsType";
+import { GiGl } from "../../../type/nutrationType";
+
+interface Props {
+  recipeData: RecipeDetailsType;
+  nutritionData: any;
+  nutritionState: any;
+  setNutritionState: any;
+  nutritionDataLoading: boolean;
+  giGl: GiGl;
+}
 
 const RecipeDetails = ({
   recipeData,
@@ -16,7 +27,7 @@ const RecipeDetails = ({
   setNutritionState,
   nutritionDataLoading = false,
   giGl,
-}) => {
+}: Props) => {
   const [counter, setCounter] = useState(1);
   const { width } = useWindowSize();
 
@@ -71,8 +82,8 @@ const RecipeDetails = ({
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}
             nutritionDataLoading={nutritionDataLoading}
-            servingSize={parseInt(recipeData?.servingSize || 0)}
-            servings={recipeData?.servings}
+            servingSize={parseInt(recipeData.recipeId?.servingSize || "0")}
+            servings={recipeData?.recipeId?.servings}
           />
         </div>
       </div>

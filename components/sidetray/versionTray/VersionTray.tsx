@@ -54,18 +54,18 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   const [changeDefaultVersion] = useMutation(CHANGE_DEFAULT_VERSION);
   const handleToGetARecipeVersion = useToGetARecipeVersion();
   const router = useRouter();
-  const handleGetARecipe = useToGetARecipe();
+  const { handleToGetARecipe } = useToGetARecipe();
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
 
   const funToGetARecipe = () => {
-    handleGetARecipe(detailsARecipe?._id, dbUser?._id);
+    handleToGetARecipe(detailsARecipe?.recipeId._id, dbUser?._id);
   };
 
   // find original version of recipe
-  const isOriginalVersion = detailsARecipe?.recipeVersion?.find(
-    (version) => version?.isOriginal,
-  );
+  // const isOriginalVersion = detailsARecipe?.recipeVersion?.find(
+  //   (version) => version?.isOriginal,
+  // );
 
   // func for change default version
   const handleToChangeDefaultVersion = async (
@@ -75,44 +75,47 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     try {
       const { data } = await changeDefaultVersion({
         variables: {
-          recipeId: detailsARecipe?._id,
-          versionId: isDefault ? isOriginalVersion?._id : versionId,
+          recipeId: detailsARecipe?.recipeId?._id,
+          versionId: detailsARecipe?.defaultVersion?._id,
         },
       });
 
-      const currentDefaultVersion = data?.changeDefaultVersion?.find(
-        (version) => version?.isDefault,
+      dispatch(
+        setDetailsARecipe({
+          ...detailsARecipe,
+          ...data?.changeDefaultVersion,
+        }),
       );
 
-      if (currentDefaultVersion?.isOriginal) {
-        const { _id, description }: RecipeVersionType =
-          detailsARecipe?.originalVersion;
-        dispatch(
-          setDetailsARecipe({
-            ...detailsARecipe,
-            versionId: _id,
-            versionDiscription: description,
-            ingredients: detailsARecipe?.originalVersion?.ingredients,
-            recipeVersion: data?.changeDefaultVersion,
-            isVersionActive: true,
-          }),
-        );
-      } else {
-        //  const { _id, recipeId, description, ...rest }: RecipeVersionType =
-        //    recipe?.defaultVersion;
-        const obj = {
-          versionId: currentDefaultVersion?._id,
-          versionDiscription: currentDefaultVersion?.description,
-          recipeVersion: data?.changeDefaultVersion,
-          isVersionActive: true,
-        };
-        dispatch(
-          setDetailsARecipe({
-            ...detailsARecipe,
-            ...obj,
-          }),
-        );
-      }
+      // if (currentDefaultVersion?.isOriginal) {
+      //   const { _id, description }: RecipeVersionType =
+      //     detailsARecipe?.originalVersion;
+      //   dispatch(
+      //     setDetailsARecipe({
+      //       ...detailsARecipe,
+      //       versionId: _id,
+      //       versionDiscription: description,
+      //       ingredients: detailsARecipe?.originalVersion?.ingredients,
+      //       recipeVersion: data?.changeDefaultVersion,
+      //       isVersionActive: true,
+      //     }),
+      //   );
+      // } else {
+      //   //  const { _id, recipeId, description, ...rest }: RecipeVersionType =
+      //   //    recipe?.defaultVersion;
+      //   const obj = {
+      //     versionId: currentDefaultVersion?._id,
+      //     versionDiscription: currentDefaultVersion?.description,
+      //     recipeVersion: data?.changeDefaultVersion,
+      //     isVersionActive: true,
+      //   };
+      //   dispatch(
+      //     setDetailsARecipe({
+      //       ...detailsARecipe,
+      //       ...obj,
+      //     }),
+      //   );
+      // }
 
       notification("info", "Default version change successfully");
     } catch (error) {
@@ -122,7 +125,10 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
 
   const handleToGetARecipeVersionOnly = () => {
     getARecipeVersionOnly({
-      variables: { recipeId: detailsARecipe?._id, userId: dbUser?._id },
+      variables: {
+        recipeId: detailsARecipe?.recipeId?._id,
+        userId: dbUser?._id,
+      },
     });
   };
 
@@ -157,36 +163,36 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           },
         });
 
-        dispatch(
-          setDetailsARecipe({
-            ...detailsARecipe,
-            recipeVersion: detailsARecipe?.recipeVersion?.map((version) =>
-              version?._id === updateVersionId
-                ? {
-                    ...version,
-                    postfixTitle: formState?.title,
-                    description: formState?.body,
-                  }
-                : version,
-            ),
-          }),
-        );
+        // dispatch(
+        //   setDetailsARecipe({
+        //     ...detailsARecipe,
+        //     recipeVersion: detailsARecipe?.recipeVersion?.map((version) =>
+        //       version?._id === updateVersionId
+        //         ? {
+        //             ...version,
+        //             postfixTitle: formState?.title,
+        //             description: formState?.body,
+        //           }
+        //         : version,
+        //     ),
+        //   }),
+        // );
       } else {
         const { data } = await addVersion({
           variables: {
             data: {
-              recipeId: detailsARecipe?._id,
+              recipeId: detailsARecipe?.recipeId?._id,
               postfixTitle: formState?.title,
               description: formState?.body,
             },
           },
         });
-        dispatch(
-          setDetailsARecipe({
-            ...detailsARecipe,
-            recipeVersion: data?.addVersion,
-          }),
-        );
+        // dispatch(
+        //   setDetailsARecipe({
+        //     ...detailsARecipe,
+        //     recipeVersion: data?.addVersion,
+        //   }),
+        // );
       }
       notification(
         "success",
@@ -204,12 +210,12 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           versionId: id,
         },
       });
-      dispatch(
-        setDetailsARecipe({
-          ...detailsARecipe,
-          recipeVersion: data?.removeARecipeVersion,
-        }),
-      );
+      // dispatch(
+      //   setDetailsARecipe({
+      //     ...detailsARecipe,
+      //     recipeVersion: data?.removeARecipeVersion,
+      //   }),
+      // );
       notification("success", "Recipe version removed successfully");
     } catch (error) {
       console.log(error);
@@ -235,10 +241,10 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   // handle to get recipe version or original recipe
 
   const getARecipeVersion = (id: string) => {
-    const isDefaultVersion = detailsARecipe?.recipeVersion?.find(
-      (version) => version?.isDefault,
-    );
-    if (id === isDefaultVersion?._id) {
+    // const isDefaultVersion = detailsARecipe?.recipeVersion?.find(
+    //   (version) => version?.isDefault,
+    // );
+    if (detailsARecipe?.isMatch) {
       funToGetARecipe();
     } else {
       handleToGetARecipeVersion(id);
@@ -264,7 +270,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
       )}
     >
       <div className={styles.versionContainer}>
-        {detailsARecipe?.recipeVersion?.length >= 2 ? (
+        {detailsARecipe?.versionsCount >= 2 ? (
           <div className={styles.header}>
             <div className={styles.headingLeft}>
               <FontAwesomeIcon
@@ -276,11 +282,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
             <div
               className={styles.headingRight}
               onClick={() =>
-                router.push(
-                  `/versionCompare/${
-                    detailsARecipe?._id || isOriginalVersion?._id
-                  }`,
-                )
+                router.push(`/versionCompare/${detailsARecipe?.recipeId?._id}`)
               }
             >
               <Tooltip content="Compare versions" direction="left">
@@ -293,7 +295,10 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
         <div className={styles.recipeName}>
           <div className={styles.leftSide}>
             <Image
-              src={detailsARecipe?.image?.find((img) => img?.default)?.image}
+              src={
+                detailsARecipe?.recipeId?.image?.find((img) => img?.default)
+                  ?.image
+              }
               alt="recipe_img"
               width={45}
               height={45}
@@ -302,16 +307,18 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
             />
             <h3
               onClick={() =>
-                isOriginalVersion?.isDefault
+                detailsARecipe?.isMatch
                   ? funToGetARecipe()
-                  : handleToGetARecipeVersion(isOriginalVersion?._id)
+                  : handleToGetARecipeVersion(
+                      detailsARecipe?.defaultVersion?._id,
+                    )
               }
             >
-              {detailsARecipe?.name}
+              {detailsARecipe?.recipeId?.name}
             </h3>
           </div>
           {openVersionTrayFormWhichPage === "edit" ||
-          isOriginalVersion?.isDefault ? (
+          detailsARecipe?.isMatch ? (
             <div className={styles.rightSide}>
               <Tooltip content="Share off" direction="left">
                 <FontAwesomeIcon
@@ -322,16 +329,16 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
               <Tooltip content="Default" direction="left">
                 <FontAwesomeIcon
                   onClick={() =>
-                    !isOriginalVersion?.isDefault &&
+                    !detailsARecipe?.isMatch &&
                     openVersionTrayFormWhichPage === "edit" &&
                     handleToChangeDefaultVersion(
-                      isOriginalVersion?._id,
-                      isOriginalVersion?.isDefault,
+                      detailsARecipe?.defaultVersion?._id,
+                      detailsARecipe?.isMatch,
                     )
                   }
                   icon={faStarSharp}
                   className={`${styles.star} ${
-                    isOriginalVersion?.isDefault ? styles.on : styles.off
+                    detailsARecipe?.isMatch ? styles.on : styles.off
                   }`}
                 />
                 {/* <span
@@ -364,11 +371,10 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           variant="versions"
         />
         <NoteBody
-          data={
-            detailsARecipe?.recipeVersion?.filter(
-              (version) => !version?.isOriginal,
-            ) || []
-          }
+          data={[
+            ...detailsARecipe?.turnedOnVersions,
+            ...detailsARecipe?.turnedOffVersions,
+          ]}
           deleteItem={deleteRecipeVersion}
           updateItem={updateVersionValue}
           varient="versions"

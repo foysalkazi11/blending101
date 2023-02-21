@@ -29,6 +29,7 @@ export interface RecipeType {
   recipeId?: { [key: string]: any };
   allRecipes?: boolean;
   myRecipes?: boolean;
+  versionCount: number;
 }
 
 export interface RecipeSmallVersionType {

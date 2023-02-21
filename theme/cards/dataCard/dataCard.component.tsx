@@ -49,7 +49,7 @@ interface dataCardInterface {
   customMenu?: React.ReactNode | null;
   showMoreMenuAtHover?: boolean;
   description?: string;
-  recipeVersion?: RecipeSmallVersionType[];
+  recipeVersion?: number;
   setOpenShareModal?: React.Dispatch<React.SetStateAction<boolean>>;
   setShareRecipeData?: React.Dispatch<
     React.SetStateAction<{
@@ -90,7 +90,7 @@ export default function DatacardComponent({
   userId = null,
   customMenu = null,
   description = "",
-  recipeVersion = [],
+  recipeVersion = 0,
   setOpenShareModal = () => {},
   setShareRecipeData = () => {},
   defaultVersionId = "",
@@ -305,10 +305,10 @@ export default function DatacardComponent({
           <div className={styles.datacard__body__bottom__right}>
             <ul>
               <li>
-                {recipeVersion?.length >= 2 ? (
+                {recipeVersion >= 2 ? (
                   <Tooltip
                     direction="top"
-                    content={`Versions(${recipeVersion?.length - 1})`}
+                    content={`Versions(${recipeVersion - 1})`}
                   >
                     <FontAwesomeIcon
                       icon={faRectangleVerticalHistory}
