@@ -225,6 +225,7 @@ export const ShowRecipes = ({
               notes = 0,
               addedToCompare = false,
               userCollections = [],
+              versionCount = 0,
             } = item;
             const ing = joniIngredients(ingredients);
             return (
@@ -252,7 +253,7 @@ export const ShowRecipes = ({
                   postfixTitle={postfixTitle}
                   defaultVersionId={defaultVersionId}
                   userId={userId}
-                  recipeVersion={item?.recipeVersion}
+                  recipeVersion={versionCount}
                   showMoreMenuAtHover={true}
                   setShareRecipeData={setShareRecipeData}
                   setOpenShareModal={setOpenShareModal}

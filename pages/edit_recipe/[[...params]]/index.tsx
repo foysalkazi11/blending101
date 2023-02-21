@@ -28,9 +28,9 @@ import {
 } from "../../../redux/slices/versionTraySlice";
 import EDIT_A_VERSION_OF_RECIPE from "../../../gqlLib/versions/mutation/editAVersionOfRecipe";
 import notification from "../../../components/utility/reactToastifyNotification";
-import { RecipeDetailsType } from "../../../type/recipeDetails";
+import { RecipeDetailsType } from "../../../type/recipeDetailsType";
 import { GiGl } from "../../../type/nutrationType";
-import { GET_RECIPE } from "../../../gqlLib/recipes/queries/getRecipeDetails";
+import GET_RECIPE from "../../../gqlLib/recipes/queries/getRecipeDetails";
 import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
 import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 
@@ -76,7 +76,7 @@ const EditRecipeComponent = () => {
   const handleToGetARecipeVersion = useToGetARecipeVersion();
   const { data: allBlendCategory } = useQuery(BLEND_CATEGORY);
   const [editRecipe] = useMutation(EDIT_A_RECIPE);
-  const handleToGetARecipe = useToGetARecipe();
+  const { handleToGetARecipe } = useToGetARecipe();
   const [getARecipe] = useLazyQuery(GET_RECIPE, {
     fetchPolicy: "cache-and-network",
   });
@@ -99,7 +99,7 @@ const EditRecipeComponent = () => {
     const presentIngredient = [];
     ingredientCategoryData?.filterIngredientByCategoryAndClass?.forEach(
       (elem) => {
-        const items = detailsARecipe?.ingredients?.find(
+        const items = detailsARecipe?.defaultVersion?.ingredients?.find(
           (itm) => elem._id === itm?.ingredientId?._id,
         );
         if (items) return presentIngredient.push({ ...elem, ...items });
@@ -114,9 +114,11 @@ const EditRecipeComponent = () => {
   useEffect(() => {
     if (!detailsARecipe) return;
     setCopyDetailsRecipe({ ...detailsARecipe });
-    dispatch(setServingCounter(detailsARecipe?.servings));
-    SetcalculateIngOz(detailsARecipe?.servingSize);
-    setExistingImages(detailsARecipe?.image?.map((item) => `${item?.image}`));
+    dispatch(setServingCounter(detailsARecipe?.recipeId?.servings));
+    SetcalculateIngOz(detailsARecipe?.recipeId?.servingSize);
+    setExistingImages(
+      detailsARecipe?.recipeId?.image?.map((item) => `${item?.image}`),
+    );
   }, [detailsARecipe]);
 
   const updateOrginalRecipe = async (obj: any) => {
@@ -178,8 +180,8 @@ const EditRecipeComponent = () => {
     let orginalRecipeObj = {
       editId: recipeId,
       editableObject: {
-        name: copyDetailsRecipe?.name,
-        description: copyDetailsRecipe?.description,
+        name: copyDetailsRecipe?.recipeId?.name,
+        description: copyDetailsRecipe?.recipeId?.description,
         image: imgArr,
         ingredients: ingArr,
         recipeBlendCategory: selectedBLendCategory,
@@ -190,13 +192,13 @@ const EditRecipeComponent = () => {
     };
 
     try {
-      if (detailsARecipe?.isVersionActive) {
+      if (!detailsARecipe?.isMatch) {
         let obj = {
-          editId: detailsARecipe?.versionId,
+          editId: detailsARecipe?.defaultVersion?._id,
           editableObject: {
             recipeInstructions: howToArr,
-            postfixTitle: copyDetailsRecipe?.postfixTitle,
-            description: copyDetailsRecipe?.versionDiscription,
+            postfixTitle: copyDetailsRecipe?.defaultVersion.postfixTitle,
+            description: copyDetailsRecipe?.defaultVersion.description,
             ingredients: ingArr,
             servingSize: calculateIngOz,
           },
@@ -205,8 +207,8 @@ const EditRecipeComponent = () => {
         let orginalRecipeObj = {
           editId: recipeId,
           editableObject: {
-            name: copyDetailsRecipe?.name,
-            description: copyDetailsRecipe?.description,
+            name: copyDetailsRecipe?.recipeId?.name,
+            description: copyDetailsRecipe?.recipeId?.description,
             image: imgArr,
             recipeBlendCategory: selectedBLendCategory,
             servings: servingCounter,
@@ -234,7 +236,7 @@ const EditRecipeComponent = () => {
   }, []);
 
   useEffect(() => {
-    if (detailsARecipe?._id !== recipeId) {
+    if (detailsARecipe?.recipeId?._id !== recipeId) {
       if (dbUser?._id && recipeId) {
         handleToGetARecipe(recipeId, dbUser?._id);
       }
@@ -272,9 +274,11 @@ const EditRecipeComponent = () => {
         ingredientCategoryData?.filterIngredientByCategoryAndClass
       }
       nutritionTrayData={nutritionList && JSON.parse(nutritionList)}
-      recipeInstructions={copyDetailsRecipe?.recipeInstructions}
+      recipeInstructions={copyDetailsRecipe?.recipeId.recipeInstructions}
       allBlendCategories={allBlendCategory?.getAllCategories}
-      selectedBLendCategory={copyDetailsRecipe?.recipeBlendCategory?.name}
+      selectedBLendCategory={
+        copyDetailsRecipe?.recipeId.recipeBlendCategory?.name
+      }
       editARecipeFunction={editARecipeFunction}
       calculatedIngOz={calculateIngOz}
       nutritionDataLoading={nutritionDataLoading}

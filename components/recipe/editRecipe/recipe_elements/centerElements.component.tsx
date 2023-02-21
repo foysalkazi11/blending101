@@ -23,7 +23,7 @@ import InputComponent from "../../../../theme/input/input.component";
 import TextArea from "../../../../theme/textArea/TextArea";
 import { MdMoreVert, MdDeleteOutline } from "react-icons/md";
 import IconWraper from "../../../../theme/iconWarper/IconWarper";
-import { RecipeDetailsType } from "../../../../type/recipeDetails";
+import { RecipeDetailsType } from "../../../../type/recipeDetailsType";
 import useOnClickOutside from "../../../utility/useOnClickOutside";
 import { useMutation } from "@apollo/client";
 import DELETE_A_RECIPE from "../../../../gqlLib/recipes/mutations/deleteARecipe";
@@ -79,7 +79,10 @@ const Center_Elements = ({
   const deleteOneRecipe = async () => {
     try {
       await deleteARecipe({
-        variables: { userId: dbUser?._id, recipeId: copyDetailsRecipe?._id },
+        variables: {
+          userId: dbUser?._id,
+          recipeId: copyDetailsRecipe?.recipeId._id,
+        },
       });
       setOpenModal(false);
       router?.push("/");
@@ -88,10 +91,10 @@ const Center_Elements = ({
     }
   };
 
-  // check version of recipe
-  const checkVersion = copyDetailsRecipe?.recipeVersion?.find(
-    (version) => version?._id === copyDetailsRecipe?.versionId,
-  );
+  // // check version of recipe
+  // const checkVersion = copyDetailsRecipe?.recipeVersion?.find(
+  //   (version) => version?._id === copyDetailsRecipe?.versionId,
+  // );
 
   useEffect(() => {
     if (!selectedBLendCategory) return;
@@ -113,27 +116,21 @@ const Center_Elements = ({
     <>
       <div className={styles.main}>
         <div className={styles.topSection}>
-          {copyDetailsRecipe?.isVersionActive ? (
+          {copyDetailsRecipe?.isMatch ? (
             <h3 className={styles.title}>
-              {copyDetailsRecipe?.name}
+              {copyDetailsRecipe?.recipeId.name}
               <span>
-                {checkVersion?.isOrginal
+                {copyDetailsRecipe?.isMatch
                   ? ""
-                  : `${
-                      copyDetailsRecipe?.postfixTitle
-                        ? `(${copyDetailsRecipe?.postfixTitle})`
-                        : ""
-                    }`}
+                  : copyDetailsRecipe?.defaultVersion?.postfixTitle}
               </span>
             </h3>
           ) : (
             <InputComponent
               borderSecondary={true}
               style={{ fontWeight: "bold", color: "#000000", fontSize: "16px" }}
-              value={copyDetailsRecipe?.name}
-              name={
-                copyDetailsRecipe?.isVersionActive ? "postfixTitle" : "name"
-              }
+              value={copyDetailsRecipe?.recipeId?.name}
+              name={copyDetailsRecipe?.isMatch ? "name" : "postfixTitle"}
               onChange={(e) =>
                 updateEditRecipe(e?.target?.name, e?.target?.value)
               }
@@ -183,13 +180,13 @@ const Center_Elements = ({
         </div>
         <div className={styles.scoreTraydiv}>
           <p className={styles.discripation}>
-            {copyDetailsRecipe?.versionDiscription}
+            {copyDetailsRecipe?.defaultVersion?.description}
           </p>
 
           <TextArea
             name="description"
             borderSecondary={true}
-            value={copyDetailsRecipe?.description}
+            value={copyDetailsRecipe?.recipeId?.description}
             onChange={(e) =>
               updateEditRecipe(e?.target?.name, e?.target?.value)
             }

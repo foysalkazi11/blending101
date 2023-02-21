@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RecipeDetailsType } from "../../type/recipeDetails";
+import { RecipeDetailsType } from "../../type/recipeDetailsType";
 import {
   RecipeType,
   ReferenceOfRecipeUpdateFuncType,

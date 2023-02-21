@@ -268,7 +268,7 @@ function FilterPageBottom({ allFilters = [] }: Props) {
                             setOpenCollectionModal={setOpenCollectionModal}
                             isMatch={item?.isMatch}
                             postfixTitle={item?.defaultVersion?.postfixTitle}
-                            recipeVersion={item?.recipeVersion}
+                            recipeVersion={item?.versionCount}
                           />
                         </div>
                       </li>
