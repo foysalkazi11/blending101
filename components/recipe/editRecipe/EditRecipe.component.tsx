@@ -13,7 +13,7 @@ import IngredientPanel from "../share/ingredientPanel/IngredientPanel";
 import useWindowSize from "../../utility/useWindowSize";
 import NutritionPanel from "../share/nutritionPanel/NutritionPanel";
 import PanelHeaderCenter from "../share/panelHeader/PanelHeaderCenter";
-import { RecipeDetailsType } from "../../../type/recipeDetails";
+import { RecipeDetailsType } from "../../../type/recipeDetailsType";
 import { GiGl } from "../../../type/nutrationType";
 import FloatingLeftPanel from "./floatingLeftPanel/FloatingLeftPanel";
 
@@ -137,7 +137,7 @@ const EditRecipePage = ({
             editOrSavebtnFunc={editARecipeFunction}
             editOrSavebtnText="Save"
             pageComeFrom="edit"
-            recipeVersionLength={copyDetailsRecipe?.recipeVersion?.length}
+            recipeVersionLength={copyDetailsRecipe?.versionsCount}
           />
           <Center_Elements
             copyDetailsRecipe={copyDetailsRecipe}
