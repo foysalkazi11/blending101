@@ -52,12 +52,11 @@ const EditRecipeComponent = () => {
     (state) => state?.editRecipeReducer?.selectedIngredientsList,
   );
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
-  const { loading: nutritionDataLoading, data: nutritionData } =
-    useGetBlendNutritionBasedOnRecipexxx(
-      selectedIngredientsList,
-      nutritionState,
-      SetcalculateIngOz,
-    );
+  const {
+    handleFetchIngrdients,
+    loading: nutritionDataLoading,
+    data: nutritionData,
+  } = useGetBlendNutritionBasedOnRecipexxx();
 
   const [editAVersionOfRecipe] = useMutation(EDIT_A_VERSION_OF_RECIPE);
 
@@ -94,17 +93,26 @@ const EditRecipeComponent = () => {
     setCopyDetailsRecipe((prev) => ({ ...prev, [key]: value }));
   };
 
+  const findIngredient = (id) =>
+    detailsARecipe?.defaultVersion?.ingredients?.find(
+      (item) => item?.ingredientId?._id === id,
+    );
+
   useEffect(() => {
     if (!ingredientCategoryData?.filterIngredientByCategoryAndClass) return;
+    const defaultIngredientIds =
+      detailsARecipe?.defaultVersion?.ingredients?.map(
+        (ing) => ing?.ingredientId?._id,
+      );
     const presentIngredient = [];
     ingredientCategoryData?.filterIngredientByCategoryAndClass?.forEach(
       (elem) => {
-        const items = detailsARecipe?.defaultVersion?.ingredients?.find(
-          (itm) => elem._id === itm?.ingredientId?._id,
-        );
-        if (items) return presentIngredient.push({ ...elem, ...items });
+        if (defaultIngredientIds.includes(elem._id)) {
+          presentIngredient.push({ ...elem, ...findIngredient(elem._id) });
+        }
       },
     );
+
     dispatch(setSelectedIngredientsList(presentIngredient));
   }, [
     ingredientCategoryData?.filterIngredientByCategoryAndClass,
@@ -114,8 +122,8 @@ const EditRecipeComponent = () => {
   useEffect(() => {
     if (!detailsARecipe) return;
     setCopyDetailsRecipe({ ...detailsARecipe });
-    dispatch(setServingCounter(detailsARecipe?.recipeId?.servings));
-    SetcalculateIngOz(detailsARecipe?.recipeId?.servingSize);
+    dispatch(setServingCounter(detailsARecipe?.recipeId?.servings || 1));
+    SetcalculateIngOz(detailsARecipe?.defaultVersion?.servingSize);
     setExistingImages(
       detailsARecipe?.recipeId?.image?.map((item) => `${item?.image}`),
     );
@@ -255,6 +263,14 @@ const EditRecipeComponent = () => {
   }, []);
 
   useEffect(() => {
+    handleFetchIngrdients(
+      selectedIngredientsList,
+      nutritionState,
+      SetcalculateIngOz,
+    );
+  }, [selectedIngredientsList, nutritionState]);
+
+  useEffect(() => {
     isMounted.current = true;
 
     return () => {
@@ -273,8 +289,8 @@ const EditRecipeComponent = () => {
       allIngredients={
         ingredientCategoryData?.filterIngredientByCategoryAndClass
       }
-      nutritionTrayData={nutritionList && JSON.parse(nutritionList)}
-      recipeInstructions={copyDetailsRecipe?.recipeId.recipeInstructions}
+      nutritionTrayData={nutritionList ? JSON.parse(nutritionList) : []}
+      recipeInstructions={copyDetailsRecipe?.defaultVersion.recipeInstructions}
       allBlendCategories={allBlendCategory?.getAllCategories}
       selectedBLendCategory={
         copyDetailsRecipe?.recipeId.recipeBlendCategory?.name
