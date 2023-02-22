@@ -28,6 +28,7 @@ import { GiGl } from "../../../../type/nutrationType";
 import Share from "../../../../component/organisms/Share/Distribute.component";
 import ShareRecipe from "./shareRecipe";
 import { setDetailsARecipe } from "../../../../redux/slices/recipeSlice";
+import HowTo from "./howTo/HowTo";
 
 interface center {
   recipeData: RecipeDetailsType;
@@ -297,29 +298,9 @@ const Center = ({
         setIngredientId={setIngredientId}
         setNutritionState={setNutritionState}
       />
-      <div className={styles.ingredentContainer}>
-        <div className={styles.ingredentHeader}>
-          <img src="/images/chef.svg" alt="basket" />
-          <h3>How to</h3>
-        </div>
-        {recipeData?.recipeId?.recipeInstructions ? (
-          recipeData?.recipeId?.recipeInstructions?.map((step, index) => {
-            return (
-              <div
-                className={styles.steps}
-                key={index + "recipeInstruction__recipeDetails"}
-              >
-                <span>Step {index + 1}</span>
-                <p>{step}</p>
-              </div>
-            );
-          })
-        ) : (
-          <div style={{ margin: "30px 0px" }}>
-            <CircularRotatingLoader />
-          </div>
-        )}
-      </div>
+      <HowTo
+        recipeInstructions={recipeData?.defaultVersion?.recipeInstructions}
+      />
       <Modal open={openModal} setOpen={setOpenModal}>
         {showCollectionModal ? (
           <SaveRecipe

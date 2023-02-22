@@ -16,6 +16,7 @@ import AContainer from "../../../containers/A.container";
 import ErrorPage from "../../../components/pages/404Page";
 import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 import { updateSidebarActiveMenuName } from "../../../redux/slices/utilitySlice";
+import { RecipeDetailsType } from "../../../type/recipeDetailsType";
 
 const Index = () => {
   const router = useRouter();
@@ -33,13 +34,11 @@ const Index = () => {
     loading: getARecipeLoading,
     error: getARecipeError,
   } = useToGetARecipe();
-  const { loading: nutritionDataLoading, data: nutritionData } =
-    useGetBlendNutritionBasedOnRecipexxx(
-      detailsARecipe?.recipeId?.ingredients,
-      nutritionState,
-      () => {},
-      true,
-    );
+  const {
+    handleFetchIngrdients,
+    loading: nutritionDataLoading,
+    data: nutritionData,
+  } = useGetBlendNutritionBasedOnRecipexxx();
 
   useEffect(() => {
     dispatch(setOpenVersionTray(false));
@@ -69,6 +68,16 @@ const Index = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    handleFetchIngrdients(
+      detailsARecipe?.defaultVersion?.ingredients,
+      nutritionState,
+      () => {},
+      true,
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [detailsARecipe?.defaultVersion?.ingredients, nutritionState]);
+
   //@ts-ignore
   const recipeBasedNutrition =
     nutritionData?.getNutrientsListAndGiGlByIngredients?.nutrients;
@@ -87,7 +96,9 @@ const Index = () => {
 
   return (
     <RecipeDetails
-      recipeData={getARecipeLoading ? ({} as any) : detailsARecipe}
+      recipeData={
+        getARecipeLoading ? ({} as RecipeDetailsType) : detailsARecipe
+      }
       nutritionData={
         recipeBasedNutrition ? JSON.parse(recipeBasedNutrition) : []
       }

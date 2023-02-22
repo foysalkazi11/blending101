@@ -8,14 +8,10 @@ interface IngredientsInfo {
   value: number;
 }
 
-const useGetBlendNutritionBasedOnRecipexxx = (
-  selectedIngredientsList: Array<any> = [],
-  nutritionState: any = {},
-  SetcalculateIngOz: Dispatch<SetStateAction<number>> = () => {},
-  isRecipeDetailsPage: boolean = false,
-) => {
-  const [getNutrientsListAndGiGlByIngredients, { loading, data, error }] =
-    useLazyQuery(GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS);
+const useGetBlendNutritionBasedOnRecipexxx = () => {
+  const [getNutrientsListAndGiGlByIngredients, { ...rest }] = useLazyQuery(
+    GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS,
+  );
 
   const fetchData = (ingredientsInfo: IngredientsInfo[]) => {
     try {
@@ -29,7 +25,12 @@ const useGetBlendNutritionBasedOnRecipexxx = (
     }
   };
 
-  const handleFetchIngrdients = useCallback(() => {
+  const handleFetchIngrdients = (
+    selectedIngredientsList: Array<any> = [],
+    nutritionState: any = {},
+    SetcalculateIngOz: Dispatch<SetStateAction<number>> = () => {},
+    isRecipeDetailsPage: boolean = false,
+  ) => {
     if (isRecipeDetailsPage) {
       if (nutritionState?.ingredientId?._id) {
         // Single Ingredient Details
@@ -89,13 +90,9 @@ const useGetBlendNutritionBasedOnRecipexxx = (
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedIngredientsList, nutritionState]);
+  };
 
-  useEffect(() => {
-    handleFetchIngrdients();
-  }, [handleFetchIngrdients]);
-
-  return { data, loading, error };
+  return { handleFetchIngrdients, ...rest };
 };
 
 export default useGetBlendNutritionBasedOnRecipexxx;
