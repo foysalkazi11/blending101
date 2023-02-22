@@ -372,8 +372,8 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
         />
         <NoteBody
           data={[
-            ...detailsARecipe?.turnedOnVersions,
-            ...detailsARecipe?.turnedOffVersions,
+            ...(detailsARecipe?.turnedOnVersions || []),
+            ...(detailsARecipe?.turnedOffVersions || []),
           ]}
           deleteItem={deleteRecipeVersion}
           updateItem={updateVersionValue}

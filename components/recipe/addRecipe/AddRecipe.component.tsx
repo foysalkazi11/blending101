@@ -46,12 +46,11 @@ const AddRecipePage = () => {
   const { width } = useWindowSize();
   const [openTray, setOpenTray] = useState(false);
 
-  const { loading: nutritionDataLoading, data: nutritionData } =
-    useGetBlendNutritionBasedOnRecipexxx(
-      selectedIngredientsList,
-      nutritionState,
-      SetcalculateIngOz,
-    );
+  const {
+    handleFetchIngrdients,
+    loading: nutritionDataLoading,
+    data: nutritionData,
+  } = useGetBlendNutritionBasedOnRecipexxx();
 
   const { loading: blendCategoriesInProgress, data: blendCategoriesData } =
     useQuery(BLEND_CATEGORY);
@@ -180,6 +179,14 @@ const AddRecipePage = () => {
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    handleFetchIngrdients(
+      selectedIngredientsList,
+      nutritionState,
+      SetcalculateIngOz,
+    );
+  }, [selectedIngredientsList, nutritionState]);
 
   useEffect(() => {
     isMounted.current = true;

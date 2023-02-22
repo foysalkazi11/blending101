@@ -82,7 +82,7 @@ const RecipeDetails = ({
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}
             nutritionDataLoading={nutritionDataLoading}
-            servingSize={parseInt(recipeData.recipeId?.servingSize || "0")}
+            servingSize={recipeData.defaultVersion?.servingSize}
             servings={recipeData?.recipeId?.servings}
           />
         </div>
