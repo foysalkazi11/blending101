@@ -290,7 +290,9 @@ const EditRecipeComponent = () => {
         ingredientCategoryData?.filterIngredientByCategoryAndClass
       }
       nutritionTrayData={nutritionList ? JSON.parse(nutritionList) : []}
-      recipeInstructions={copyDetailsRecipe?.defaultVersion.recipeInstructions}
+      recipeInstructions={
+        copyDetailsRecipe?.defaultVersion.recipeInstructions || []
+      }
       allBlendCategories={allBlendCategory?.getAllCategories}
       selectedBLendCategory={
         copyDetailsRecipe?.recipeId.recipeBlendCategory?.name
