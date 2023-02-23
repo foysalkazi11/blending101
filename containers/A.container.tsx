@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC } from "react";
 import HeaderComponent from "../components/header/Header.component";
 import SidebarComponent from "../components/sidebar/Sidebar.component";
 import styles from "./container.module.scss";
@@ -14,10 +14,6 @@ import WikiCommentsTray from "../components/sidetray/wikiCommentsTray";
 import BlogCommentsTray from "../components/sidetray/blogCommentsTray";
 import BlogCollectionTray from "../components/sidetray/blogCollectionTray";
 import PlanCollectionTray from "../components/sidetray/planCollectionTray";
-// import { push as Menu } from "react-burger-menu";
-import { useDispatch } from "react-redux";
-import { useAppSelector } from "../redux/hooks";
-import useWindowSize from "../components/utility/useWindowSize";
 import FooterRecipeFilter from "../components/footer/footerRecipeFilter.component";
 
 interface ShowTray {
@@ -107,7 +103,7 @@ const AContainer: FC<AContainerProps> = (props) => {
   } = props;
 
   return (
-    <div className={styles.containerA} style={{ overflow: "hidden" }}>
+    <div className={styles.containerA}>
       {showSidebar ? (
         <div className={styles.sidebarA}>
           <SidebarComponent />
@@ -116,7 +112,6 @@ const AContainer: FC<AContainerProps> = (props) => {
       <div
         className={styles.mainA}
         style={headerFullWidth ? { width: "100%" } : {}}
-        id="outer-container"
       >
         {showHeader ? (
           <HeaderComponent
@@ -223,7 +218,7 @@ const AContainer: FC<AContainerProps> = (props) => {
             />
           </div>
         )}
-        <div id="page-wrap">{props.children}</div>
+        {props.children}
         <FooterRecipeFilter />
       </div>
     </div>

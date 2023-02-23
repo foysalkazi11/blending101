@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -61,7 +62,7 @@ export default function SidebarComponent(props) {
   return (
     <div className={styles.sidebar}>
       <div className={styles.logo}>
-        <img src="/logo_small.svg" alt="logo" />
+        <Image src="/logo_small.svg" width={150} height={150} alt="logo" />
       </div>
       <ul className={styles.list}>
         {PAGES &&
