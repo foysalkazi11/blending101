@@ -91,11 +91,6 @@ const Center_Elements = ({
     }
   };
 
-  // // check version of recipe
-  // const checkVersion = copyDetailsRecipe?.recipeVersion?.find(
-  //   (version) => version?._id === copyDetailsRecipe?.versionId,
-  // );
-
   useEffect(() => {
     if (!selectedBLendCategory) return;
     setBlendCategoryState(selectedBLendCategory);
@@ -136,39 +131,6 @@ const Center_Elements = ({
               }
             />
           )}
-          {/* <div className={styles.reightSight} ref={outsideClickRef}>
-            <IconWraper
-              hover="bgSlightGray"
-              style={{ width: "36px", height: "36px" }}
-              handleClick={() => setOpenMenu((prev) => !prev)}
-            >
-              <MdMoreVert fontSize={24} />
-            </IconWraper>
-            {openMenu ? (
-              <div className={`${styles.menu} `}>
-                <div
-                  className={styles.singleMenu}
-                  onClick={() => {
-                    dispatch(setOpenVersionTray(true));
-                    dispatch(setOpenVersionTrayFormWhichPage("edit"));
-                  }}
-                >
-                  <VscVersions className={styles.icon} />
-                  <p className={styles.text}>Versions</p>
-                </div>
-
-                {copyDetailsRecipe?.userId?._id === dbUser?._id ? (
-                  <div
-                    className={styles.singleMenu}
-                    onClick={() => setOpenModal(true)}
-                  >
-                    <MdDeleteOutline className={styles.icon} />
-                    <p className={styles.text}>Delete</p>
-                  </div>
-                ) : null}
-              </div>
-            ) : null}
-          </div> */}
         </div>
         <div className={styles.addImagediv}>
           <HandleImageShow

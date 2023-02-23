@@ -47,7 +47,7 @@ const PanelHeaderCenter = ({
               style={{ marginRight: "5px" }}
             />
             Version
-            {recipeVersionLength === 1 ? "" : `(${recipeVersionLength - 1})`}
+            {recipeVersionLength ? `(${recipeVersionLength})` : ""}
           </button>
         </Tooltip>
       )}
