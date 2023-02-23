@@ -188,7 +188,7 @@ const Center = ({
             </a>
           </div>
           <div className={styles.alignItems}>
-            {recipeData?.versionsCount >= 2 ? (
+            {recipeData?.versionsCount ? (
               <IconWithText
                 wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
                 handleClick={(e) => {
@@ -196,7 +196,7 @@ const Center = ({
                   dispatch(setOpenVersionTrayFormWhichPage("details"));
                 }}
                 icon={<VscVersions color={"#7cbc39"} />}
-                text={`Versions(${recipeData?.versionsCount - 1})`}
+                text={`Versions(${recipeData?.versionsCount})`}
               />
             ) : null}
 
