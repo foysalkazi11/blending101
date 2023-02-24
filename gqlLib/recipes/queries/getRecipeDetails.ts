@@ -30,6 +30,7 @@ const GET_A_RECIPE = gql`
         servingSize
         token
         totalRating
+        description
       }
       defaultVersion {
         _id
