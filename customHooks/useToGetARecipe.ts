@@ -5,6 +5,7 @@ import GET_A_RECIPE from "../gqlLib/recipes/queries/getRecipeDetails";
 import { useAppDispatch } from "../redux/hooks";
 import { setDetailsARecipe } from "../redux/slices/recipeSlice";
 import { setOpenVersionTray } from "../redux/slices/versionTraySlice";
+import { RecipeDetailsType } from "../type/recipeDetailsType";
 import { RecipeVersionType } from "../type/recipeVersionType";
 
 const useToGetARecipe = () => {
@@ -22,39 +23,26 @@ const useToGetARecipe = () => {
       const { data } = await getARecipe({
         variables: { recipeId: token ? "" : recipeId, userId, token },
       });
-      const recipe = data?.getARecipe2;
-      const { recipeId: recipeDetails, defaultVersion, isMatch } = recipe;
-      dispatch(setDetailsARecipe(recipe));
+      const recipe: RecipeDetailsType = data?.getARecipe2;
 
-      // if (isMatch) {
-      //   const { _id, description }: RecipeVersionType =
-      //     recipeDetails?.originalVersion;
-      //   dispatch(
-      //     setDetailsARecipe({
-      //       ...recipe,
-      //       versionId: _id,
-      //       versionDiscription: description,
-      //       ingredients: recipe?.defaultVersion?.ingredients,
-      //       isVersionActive: false,
-      //     }),
-      //   );
-      // } else {
-      //   const { _id, recipeId, description, ...rest }: RecipeVersionType =
-      //     recipe?.defaultVersion;
-      //   const obj = {
-      //     _id: recipeId,
-      //     versionId: _id,
-      //     versionDiscription: description,
-      //     isVersionActive: true,
-      //     ...rest,
-      //   };
-      //   dispatch(
-      //     setDetailsARecipe({
-      //       ...recipe,
-      //       ...obj,
-      //     }),
-      //   );
-      // }
+      let obj = recipe?.isMatch
+        ? {
+            ...recipe?.defaultVersion,
+            ...recipe?.defaultVersion,
+            postfixTitle: recipe?.recipeId?.name || "",
+            description: recipe?.recipeId?.description || "",
+          }
+        : {
+            ...recipe?.defaultVersion,
+            ...recipe?.defaultVersion,
+          };
+      dispatch(
+        setDetailsARecipe({
+          ...recipe,
+          isVersionActive: false,
+          defaultVersion: obj,
+        }),
+      );
 
       dispatch(setOpenVersionTray(false));
     } catch (error) {

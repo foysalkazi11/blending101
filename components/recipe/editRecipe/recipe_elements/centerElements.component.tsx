@@ -111,7 +111,7 @@ const Center_Elements = ({
     <>
       <div className={styles.main}>
         <div className={styles.topSection}>
-          {copyDetailsRecipe?.isMatch ? (
+          {/* {copyDetailsRecipe?.isMatch ? (
             <h3 className={styles.title}>
               {copyDetailsRecipe?.recipeId.name}
               <span>
@@ -121,16 +121,17 @@ const Center_Elements = ({
               </span>
             </h3>
           ) : (
-            <InputComponent
-              borderSecondary={true}
-              style={{ fontWeight: "bold", color: "#000000", fontSize: "16px" }}
-              value={copyDetailsRecipe?.recipeId?.name}
-              name={copyDetailsRecipe?.isMatch ? "name" : "postfixTitle"}
-              onChange={(e) =>
-                updateEditRecipe(e?.target?.name, e?.target?.value)
-              }
-            />
-          )}
+           
+          )} */}
+          <InputComponent
+            borderSecondary={true}
+            style={{ fontWeight: "bold", color: "#000000", fontSize: "16px" }}
+            value={copyDetailsRecipe?.defaultVersion?.postfixTitle}
+            name={"postfixTitle"}
+            onChange={(e) =>
+              updateEditRecipe(e?.target?.name, e?.target?.value)
+            }
+          />
         </div>
         <div className={styles.addImagediv}>
           <HandleImageShow
@@ -141,14 +142,14 @@ const Center_Elements = ({
           />
         </div>
         <div className={styles.scoreTraydiv}>
-          <p className={styles.discripation}>
+          {/* <p className={styles.discripation}>
             {copyDetailsRecipe?.defaultVersion?.description}
-          </p>
+          </p> */}
 
           <TextArea
             name="description"
             borderSecondary={true}
-            value={copyDetailsRecipe?.recipeId?.description}
+            value={copyDetailsRecipe?.defaultVersion?.description}
             onChange={(e) =>
               updateEditRecipe(e?.target?.name, e?.target?.value)
             }

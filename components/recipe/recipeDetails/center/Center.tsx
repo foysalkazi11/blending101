@@ -154,12 +154,12 @@ const Center = ({
       <div className={styles.contentBox}>
         <div className={styles.heading}>
           <h3>
-            {recipeData?.recipeId?.name}{" "}
-            <span>
+            {recipeData?.defaultVersion?.postfixTitle}
+            {/* <span>
               {recipeData?.isMatch
                 ? ""
                 : recipeData?.defaultVersion?.postfixTitle}
-            </span>
+            </span> */}
           </h3>
           {recipeData?.recipeId?.averageRating ? (
             <span
