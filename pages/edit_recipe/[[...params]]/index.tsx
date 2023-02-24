@@ -90,7 +90,10 @@ const EditRecipeComponent = () => {
     });
 
   const updateEditRecipe = (key: string, value: any) => {
-    setCopyDetailsRecipe((prev) => ({ ...prev, [key]: value }));
+    setCopyDetailsRecipe((prev) => ({
+      ...prev,
+      defaultVersion: { ...prev?.defaultVersion, [key]: value },
+    }));
   };
 
   const findIngredient = (id) =>
@@ -107,7 +110,7 @@ const EditRecipeComponent = () => {
     const presentIngredient = [];
     ingredientCategoryData?.filterIngredientByCategoryAndClass?.forEach(
       (elem) => {
-        if (defaultIngredientIds.includes(elem._id)) {
+        if (defaultIngredientIds?.includes(elem._id)) {
           presentIngredient.push({ ...elem, ...findIngredient(elem._id) });
         }
       },
@@ -291,11 +294,11 @@ const EditRecipeComponent = () => {
       }
       nutritionTrayData={nutritionList ? JSON.parse(nutritionList) : []}
       recipeInstructions={
-        copyDetailsRecipe?.defaultVersion.recipeInstructions || []
+        copyDetailsRecipe?.defaultVersion?.recipeInstructions || []
       }
       allBlendCategories={allBlendCategory?.getAllCategories}
       selectedBLendCategory={
-        copyDetailsRecipe?.recipeId.recipeBlendCategory?.name
+        copyDetailsRecipe?.recipeId?.recipeBlendCategory?.name
       }
       editARecipeFunction={editARecipeFunction}
       calculatedIngOz={calculateIngOz}

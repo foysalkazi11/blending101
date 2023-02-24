@@ -5,6 +5,7 @@ export interface RecipeVersionType {
   postfixTitle: string;
   description: string;
   ingredients: Ingredient[];
+  servingSize: number;
 }
 
 export interface Ingredient {

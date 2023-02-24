@@ -13,7 +13,7 @@ export interface RecipeDetailsType {
   // postfixTitle?: string;
   // versionId?: string;
   // originalVersion: VersionDataType;
-  // isVersionActive: boolean;
+  isVersionActive: boolean;
   recipeId: {
     _id: string;
     userId: RecipeCreatorInfo;
@@ -38,6 +38,7 @@ export interface RecipeDetailsType {
 
   turnedOnVersions: VersionDataType[];
   turnedOffVersions: VersionDataType[];
+  // activeVersion?: VersionDataType | null;
 }
 
 export interface VersionDataType {

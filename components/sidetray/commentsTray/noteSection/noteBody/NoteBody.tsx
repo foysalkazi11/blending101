@@ -11,17 +11,19 @@ import { faShareNodes, faTrash } from "@fortawesome/pro-regular-svg-icons";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { faStarSharp } from "@fortawesome/pro-solid-svg-icons";
 
+type isFromRecipePageType = "details" | "edit" | "default";
+
 interface NoteBodyPops {
   data?: any[];
   updateItem?: (val: any) => void;
   deleteItem?: (id: string) => void;
   varient?: "notes" | "versions";
   loading?: boolean;
-  isFromRecipePage?: "details" | "edit" | "default";
+  isFromRecipePage?: isFromRecipePageType;
   handleToGetARecipeVersion?: (id: string) => void;
   handleToChangeDefaultVersion?: (
     versionId: string,
-    isDefault: boolean,
+    isOriginalVersion: boolean,
   ) => void;
   deleteItemLoading?: boolean;
 }
@@ -58,33 +60,12 @@ const NoteBody = ({
                 </h3>
                 {isFromRecipePage === "default" ||
                 isFromRecipePage === "edit" ? (
-                  <div className={styles.rightSide}>
-                    <div className={styles.content}>
-                      <IconWarper
-                        hover="none"
-                        defaultBg="gray"
-                        handleClick={() => updateItem(item)}
-                        style={{ marginRight: "5px" }}
-                      >
-                        <FontAwesomeIcon icon={faPen} fontSize={12} />
-                      </IconWarper>
-
-                      <IconWarper
-                        hover="none"
-                        defaultBg="gray"
-                        handleClick={() => deleteItem(item?._id)}
-                      >
-                        {deleteItemLoading ? (
-                          <CircularRotatingLoader
-                            color="white"
-                            style={{ fontSize: "16px" }}
-                          />
-                        ) : (
-                          <FontAwesomeIcon icon={faTrash} fontSize={12} />
-                        )}
-                      </IconWarper>
-                    </div>
-                  </div>
+                  <FloodingMenuOne
+                    deleteItem={deleteItem}
+                    deleteItemLoading={deleteItemLoading}
+                    item={item}
+                    updateItem={updateItem}
+                  />
                 ) : null}
               </div>
 
@@ -104,33 +85,14 @@ const NoteBody = ({
                     )}
                   </span>
                   {isFromRecipePage === "edit" ||
-                  (isFromRecipePage === "details" && item?.isDefault) ? (
-                    <div className={styles.leftSide}>
-                      <Tooltip content="Share off" direction="left">
-                        <FontAwesomeIcon
-                          icon={faShareNodes}
-                          className={`${styles.star} ${styles.off}`}
-                        />
-                      </Tooltip>
-                      <Tooltip
-                        content={item?.isDefault ? "Default" : "Make default"}
-                        direction="left"
-                      >
-                        <FontAwesomeIcon
-                          onClick={() =>
-                            isFromRecipePage === "edit" &&
-                            handleToChangeDefaultVersion(
-                              item?._id,
-                              item?.isDefault,
-                            )
-                          }
-                          className={`${styles.star} ${
-                            item?.isDefault ? styles.on : styles.off
-                          }`}
-                          icon={faStarSharp}
-                        />
-                      </Tooltip>
-                    </div>
+                  isFromRecipePage === "details" ? (
+                    <FloodingMenuTwo
+                      handleToChangeDefaultVersion={
+                        handleToChangeDefaultVersion
+                      }
+                      isFromRecipePage={isFromRecipePage}
+                      item={item}
+                    />
                   ) : null}
                 </div>
               </div>
@@ -147,3 +109,95 @@ const NoteBody = ({
 };
 
 export default NoteBody;
+
+interface FloodingMenuOneProps {
+  item: any;
+  updateItem: (agr: any) => void;
+  deleteItem: (agr: any) => void;
+  deleteItemLoading: boolean;
+}
+
+const FloodingMenuOne = ({
+  item,
+  updateItem = () => {},
+  deleteItem = () => {},
+  deleteItemLoading = false,
+}: FloodingMenuOneProps) => {
+  return (
+    <div className={styles.rightSide}>
+      <div className={styles.content}>
+        <IconWarper
+          hover="none"
+          defaultBg="gray"
+          handleClick={() => updateItem(item)}
+          style={{ marginRight: "5px" }}
+        >
+          <FontAwesomeIcon icon={faPen} fontSize={12} />
+        </IconWarper>
+
+        <IconWarper
+          hover="none"
+          defaultBg="gray"
+          handleClick={() => deleteItem(item?._id)}
+        >
+          {deleteItemLoading ? (
+            <CircularRotatingLoader
+              color="white"
+              style={{ fontSize: "16px" }}
+            />
+          ) : (
+            <FontAwesomeIcon icon={faTrash} fontSize={12} />
+          )}
+        </IconWarper>
+      </div>
+    </div>
+  );
+};
+
+interface FloodingMenuTwoProps {
+  item: any;
+  isFromRecipePage: isFromRecipePageType;
+  handleToChangeDefaultVersion: (
+    versionId: string,
+    isOriginalVersion: boolean,
+  ) => void;
+}
+
+const FloodingMenuTwo = ({
+  item = {},
+  handleToChangeDefaultVersion = () => {},
+  isFromRecipePage = "default",
+}: FloodingMenuTwoProps) => {
+  return (
+    <div className={styles.leftSide}>
+      <Tooltip
+        content={`Share ${item?.isVersionSharable ? "On" : "Off"}`}
+        direction="left"
+      >
+        <FontAwesomeIcon
+          icon={faShareNodes}
+          className={`${styles.star} ${
+            isFromRecipePage !== "edit" && styles.pointerEventNone
+          } ${item?.isVersionSharable ? styles.on : styles.off}`}
+        />
+      </Tooltip>
+      {item?.isVersionSharable && (
+        <Tooltip
+          content={item?.isDefault ? "Default" : "Make default"}
+          direction="left"
+        >
+          <FontAwesomeIcon
+            onClick={() =>
+              isFromRecipePage === "edit" &&
+              handleToChangeDefaultVersion(item?._id, false)
+            }
+            className={`${styles.star} ${
+              isFromRecipePage !== "edit" && styles.pointerEventNone
+            } ${item?.isDefault ? styles.on : styles.off}`}
+            icon={faStarSharp}
+          />
+        </Tooltip>
+      )}
+    </div>
+  );
+};

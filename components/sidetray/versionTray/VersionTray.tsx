@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setOpenVersionTray } from "../../../redux/slices/versionTraySlice";
 import TrayWrapper from "../TrayWrapper";
@@ -15,6 +15,7 @@ import notification from "../../utility/reactToastifyNotification";
 import GET_A_RECIPE_VERSION_ONLY from "../../../gqlLib/versions/query/getARecipeVersionOnly";
 import useToGetARecipeVersion from "../../../customHooks/useToGetARecipeVersion";
 import useToGetARecipe from "../../../customHooks/useToGetARecipe";
+import useToChangeDefaultVersion from "../../../customHooks/useToChangeDefaultVersion";
 import CHANGE_DEFAULT_VERSION from "../../../gqlLib/versions/mutation/changelDefaultVersion";
 import TrayTag from "../TrayTag";
 import Tooltip from "../../../theme/toolTip/CustomToolTip";
@@ -55,6 +56,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   const handleToGetARecipeVersion = useToGetARecipeVersion();
   const router = useRouter();
   const { handleToGetARecipe } = useToGetARecipe();
+  const { handleToUpdateDefaultVersion } = useToChangeDefaultVersion();
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
 
@@ -66,62 +68,6 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   // const isOriginalVersion = detailsARecipe?.recipeVersion?.find(
   //   (version) => version?.isOriginal,
   // );
-
-  // func for change default version
-  const handleToChangeDefaultVersion = async (
-    versionId: string,
-    isDefault: boolean,
-  ) => {
-    try {
-      const { data } = await changeDefaultVersion({
-        variables: {
-          recipeId: detailsARecipe?.recipeId?._id,
-          versionId: detailsARecipe?.defaultVersion?._id,
-        },
-      });
-
-      dispatch(
-        setDetailsARecipe({
-          ...detailsARecipe,
-          ...data?.changeDefaultVersion,
-        }),
-      );
-
-      // if (currentDefaultVersion?.isOriginal) {
-      //   const { _id, description }: RecipeVersionType =
-      //     detailsARecipe?.originalVersion;
-      //   dispatch(
-      //     setDetailsARecipe({
-      //       ...detailsARecipe,
-      //       versionId: _id,
-      //       versionDiscription: description,
-      //       ingredients: detailsARecipe?.originalVersion?.ingredients,
-      //       recipeVersion: data?.changeDefaultVersion,
-      //       isVersionActive: true,
-      //     }),
-      //   );
-      // } else {
-      //   //  const { _id, recipeId, description, ...rest }: RecipeVersionType =
-      //   //    recipe?.defaultVersion;
-      //   const obj = {
-      //     versionId: currentDefaultVersion?._id,
-      //     versionDiscription: currentDefaultVersion?.description,
-      //     recipeVersion: data?.changeDefaultVersion,
-      //     isVersionActive: true,
-      //   };
-      //   dispatch(
-      //     setDetailsARecipe({
-      //       ...detailsARecipe,
-      //       ...obj,
-      //     }),
-      //   );
-      // }
-
-      notification("info", "Default version change successfully");
-    } catch (error) {
-      notification("info", error?.message || "Something went wrong");
-    }
-  };
 
   const handleToGetARecipeVersionOnly = () => {
     getARecipeVersionOnly({
@@ -184,15 +130,19 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
               recipeId: detailsARecipe?.recipeId?._id,
               postfixTitle: formState?.title,
               description: formState?.body,
+              userId: dbUser?._id,
             },
           },
         });
-        // dispatch(
-        //   setDetailsARecipe({
-        //     ...detailsARecipe,
-        //     recipeVersion: data?.addVersion,
-        //   }),
-        // );
+        dispatch(
+          setDetailsARecipe({
+            ...detailsARecipe,
+            turnedOnVersions: [
+              data?.addVersion,
+              ...detailsARecipe?.turnedOnVersions,
+            ],
+          }),
+        );
       }
       notification(
         "success",
@@ -251,6 +201,35 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     }
   };
 
+  const allVersions = useMemo(() => {
+    let versions = [
+      ...(detailsARecipe?.turnedOnVersions?.map((version) =>
+        !detailsARecipe?.isMatch &&
+        version?._id === detailsARecipe.defaultVersion._id
+          ? {
+              ...version,
+              isVersionSharable: true,
+              isDefault: true,
+            }
+          : {
+              ...version,
+              isVersionSharable: true,
+              isDefault: false,
+            },
+      ) || []),
+      ...(detailsARecipe?.turnedOffVersions?.map((version) => ({
+        ...version,
+        isVersionSharable: false,
+      })) || []),
+    ];
+    return versions;
+  }, [
+    detailsARecipe.defaultVersion?._id,
+    detailsARecipe?.isMatch,
+    detailsARecipe?.turnedOffVersions,
+    detailsARecipe?.turnedOnVersions,
+  ]);
+
   useEffect(() => {
     isMounted.current = true;
 
@@ -286,7 +265,14 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
               }
             >
               <Tooltip content="Compare versions" direction="left">
-                <FontAwesomeIcon icon={faScaleBalanced} color="#7cbc39" />
+                <Image
+                  src={"/images/compare-fill-icon.svg"}
+                  alt="icon"
+                  loading="lazy"
+                  width={16}
+                  height={16}
+                />
+                {/* <FontAwesomeIcon icon={faScaleBalanced} color="#7cbc39" /> */}
               </Tooltip>
             </div>
           </div>
@@ -317,48 +303,44 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
               {detailsARecipe?.recipeId?.name}
             </h3>
           </div>
-          {openVersionTrayFormWhichPage === "edit" ||
-          detailsARecipe?.isMatch ? (
-            <div className={styles.rightSide}>
-              <Tooltip content="Share off" direction="left">
-                <FontAwesomeIcon
-                  icon={faShareNodes}
-                  className={`${styles.star} ${styles.off}`}
-                />
-              </Tooltip>
-              <Tooltip content="Default" direction="left">
-                <FontAwesomeIcon
-                  onClick={() =>
-                    !detailsARecipe?.isMatch &&
-                    openVersionTrayFormWhichPage === "edit" &&
-                    handleToChangeDefaultVersion(
-                      detailsARecipe?.defaultVersion?._id,
-                      detailsARecipe?.isMatch,
-                    )
-                  }
-                  icon={faStarSharp}
-                  className={`${styles.star} ${
-                    detailsARecipe?.isMatch ? styles.on : styles.off
-                  }`}
-                />
-                {/* <span
-                  onClick={() =>
-                    !isOriginalVersion?.isDefault &&
-                    openVersionTrayFormWhichPage === "edit" &&
-                    handleToChangeDefaultVersion(
-                      isOriginalVersion?._id,
-                      isOriginalVersion?.isDefault,
-                    )
-                  }
-                  className={`${styles.star} ${
-                    isOriginalVersion?.isDefault ? styles.on : styles.off
-                  }`}
-                >
-                  &#9733;
-                </span> */}
-              </Tooltip>
-            </div>
-          ) : null}
+
+          <div className={styles.rightSide}>
+            {/* <Tooltip
+              content={`Share ${detailsARecipe?.isMatch ? "on" : "off"}`}
+              direction="left"
+            >
+              <FontAwesomeIcon
+                icon={faShareNodes}
+                className={`${styles.star} ${
+                  detailsARecipe?.isMatch ? styles.on : styles.off
+                }`}
+              />
+            </Tooltip> */}
+            <Tooltip
+              content={`${
+                detailsARecipe?.isMatch ? "Default" : "Make default"
+              }`}
+              direction="left"
+            >
+              <FontAwesomeIcon
+                onClick={() =>
+                  !detailsARecipe?.isMatch &&
+                  openVersionTrayFormWhichPage === "edit" &&
+                  handleToUpdateDefaultVersion(
+                    dbUser?._id,
+                    detailsARecipe?.recipeId?._id,
+                    detailsARecipe?.recipeId?.originalVersion?._id,
+                    true,
+                  )
+                }
+                icon={faStarSharp}
+                className={`${styles.star} ${
+                  openVersionTrayFormWhichPage !== "edit" &&
+                  styles.pointerEventNone
+                } ${detailsARecipe?.isMatch ? styles.on : styles.off}`}
+              />
+            </Tooltip>
+          </div>
         </div>
         <NoteHead
           showForm={showForm}
@@ -371,17 +353,21 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           variant="versions"
         />
         <NoteBody
-          data={[
-            ...(detailsARecipe?.turnedOnVersions || []),
-            ...(detailsARecipe?.turnedOffVersions || []),
-          ]}
+          data={allVersions}
           deleteItem={deleteRecipeVersion}
           updateItem={updateVersionValue}
           varient="versions"
           loading={newVersionLoading || removeVersionLoading}
           isFromRecipePage={openVersionTrayFormWhichPage}
-          handleToGetARecipeVersion={getARecipeVersion}
-          handleToChangeDefaultVersion={handleToChangeDefaultVersion}
+          handleToGetARecipeVersion={handleToGetARecipeVersion}
+          handleToChangeDefaultVersion={(versionId, isOriginalVersion) =>
+            handleToUpdateDefaultVersion(
+              dbUser?._id,
+              detailsARecipe?.recipeId?._id,
+              versionId,
+              isOriginalVersion,
+            )
+          }
         />
       </div>
     </TrayWrapper>
