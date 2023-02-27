@@ -64,20 +64,6 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     handleToGetARecipe(detailsARecipe?.recipeId._id, dbUser?._id);
   };
 
-  // find original version of recipe
-  // const isOriginalVersion = detailsARecipe?.recipeVersion?.find(
-  //   (version) => version?.isOriginal,
-  // );
-
-  const handleToGetARecipeVersionOnly = () => {
-    getARecipeVersionOnly({
-      variables: {
-        recipeId: detailsARecipe?.recipeId?._id,
-        userId: dbUser?._id,
-      },
-    });
-  };
-
   const toggleForm = () => {
     setShowForm((pre) => !pre);
   };
@@ -188,21 +174,10 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     toggleForm();
   };
 
-  // handle to get recipe version or original recipe
-
-  const getARecipeVersion = (id: string) => {
-    // const isDefaultVersion = detailsARecipe?.recipeVersion?.find(
-    //   (version) => version?.isDefault,
-    // );
-    if (detailsARecipe?.isMatch) {
-      funToGetARecipe();
-    } else {
-      handleToGetARecipeVersion(id);
-    }
-  };
-
   const allVersions = useMemo(() => {
-    let versions = [
+    let versions = [];
+
+    versions = [
       ...(detailsARecipe?.turnedOnVersions?.map((version) =>
         !detailsARecipe?.isMatch &&
         version?._id === detailsARecipe.defaultVersion._id
@@ -297,6 +272,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
                   ? funToGetARecipe()
                   : handleToGetARecipeVersion(
                       detailsARecipe?.defaultVersion?._id,
+                      true,
                     )
               }
             >
@@ -360,7 +336,10 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           loading={newVersionLoading || removeVersionLoading}
           isFromRecipePage={openVersionTrayFormWhichPage}
           handleToGetARecipeVersion={handleToGetARecipeVersion}
-          handleToChangeDefaultVersion={(versionId, isOriginalVersion) =>
+          handleToChangeDefaultVersion={(
+            versionId,
+            isOriginalVersion = false,
+          ) =>
             handleToUpdateDefaultVersion(
               dbUser?._id,
               detailsARecipe?.recipeId?._id,

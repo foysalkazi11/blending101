@@ -38,7 +38,7 @@ export interface RecipeDetailsType {
 
   turnedOnVersions: VersionDataType[];
   turnedOffVersions: VersionDataType[];
-  // activeVersion?: VersionDataType | null;
+  activeVersion?: VersionDataType | null;
 }
 
 export interface VersionDataType {
