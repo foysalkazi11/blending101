@@ -24,23 +24,26 @@ const useToGetARecipe = () => {
         variables: { recipeId: token ? "" : recipeId, userId, token },
       });
       const recipe: RecipeDetailsType = data?.getARecipe2;
-
-      let obj = recipe?.isMatch
+      let defaultVersion = recipe?.isMatch
         ? {
-            ...recipe?.defaultVersion,
             ...recipe?.defaultVersion,
             postfixTitle: recipe?.recipeId?.name || "",
             description: recipe?.recipeId?.description || "",
           }
         : {
             ...recipe?.defaultVersion,
-            ...recipe?.defaultVersion,
           };
+      let turnedOnVersions = recipe?.isMatch
+        ? [...recipe?.turnedOnVersions]
+        : [recipe?.defaultVersion, ...recipe?.turnedOnVersions];
+
       dispatch(
         setDetailsARecipe({
           ...recipe,
           isVersionActive: false,
-          defaultVersion: obj,
+          activeVersion: null,
+          defaultVersion,
+          turnedOnVersions,
         }),
       );
 

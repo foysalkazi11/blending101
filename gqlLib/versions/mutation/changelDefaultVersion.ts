@@ -11,31 +11,33 @@ const CHANGE_DEFAULT_VERSION = gql`
       recipeId: $recipeId
       versionID: $versionId
     ) {
-      _id
-      description
-      postfixTitle
-      recipeId
-      recipeInstructions
-      servingSize
-      ingredients {
-        ingredientId {
-          ingredientName
-          _id
-          images
-          featuredImage
-        }
+      defaultVersion {
+        _id
+        description
+        postfixTitle
+        recipeId
+        recipeInstructions
+        servingSize
+        ingredients {
+          ingredientId {
+            ingredientName
+            _id
+            images
+            featuredImage
+          }
 
-        portions {
-          name
-          gram
-          default
-          quantity
-        }
-        weightInGram
-        selectedPortion {
-          name
-          quantity
-          gram
+          portions {
+            name
+            gram
+            default
+            quantity
+          }
+          weightInGram
+          selectedPortion {
+            name
+            quantity
+            gram
+          }
         }
       }
     }

@@ -32,15 +32,19 @@ const useToChangeDefaultVersion = () => {
       updateObj = isOriginalVersion
         ? {
             ...detailsARecipe.defaultVersion,
-            ...data?.changeDefaultVersion,
+            ...data?.changeDefaultVersion?.defaultVersion,
             postfixTitle: detailsARecipe?.recipeId?.name || "",
             description: detailsARecipe?.recipeId?.description || "",
           }
-        : { ...detailsARecipe.defaultVersion, ...data?.changeDefaultVersion };
+        : {
+            ...detailsARecipe.defaultVersion,
+            ...data?.changeDefaultVersion?.defaultVersion,
+          };
       dispatch(
         setDetailsARecipe({
           ...detailsARecipe,
           isVersionActive: false,
+          activeVersion: null,
           isMatch: isOriginalVersion,
           defaultVersion: updateObj,
         }),
