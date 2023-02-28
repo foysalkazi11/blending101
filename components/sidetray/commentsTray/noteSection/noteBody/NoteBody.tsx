@@ -26,6 +26,7 @@ interface NoteBodyPops {
     isOriginalVersion: boolean,
   ) => void;
   deleteItemLoading?: boolean;
+  handleTurnOnOrOffVersion?: (turnedOn: boolean, versionId: string) => void;
 }
 const NoteBody = ({
   data = [],
@@ -37,6 +38,7 @@ const NoteBody = ({
   handleToGetARecipeVersion = () => {},
   handleToChangeDefaultVersion = () => {},
   deleteItemLoading = false,
+  handleTurnOnOrOffVersion = () => {},
 }: NoteBodyPops) => {
   return (
     <div className={`${styles.noteEditBox} y-scroll`}>
@@ -90,6 +92,7 @@ const NoteBody = ({
                       handleToChangeDefaultVersion={
                         handleToChangeDefaultVersion
                       }
+                      handleTurnOnOrOffVersion={handleTurnOnOrOffVersion}
                       isFromRecipePage={isFromRecipePage}
                       item={item}
                     />
@@ -161,12 +164,14 @@ interface FloodingMenuTwoProps {
     versionId: string,
     isOriginalVersion: boolean,
   ) => void;
+  handleTurnOnOrOffVersion?: (turnedOn: boolean, versionId: string) => void;
 }
 
 const FloodingMenuTwo = ({
   item = {},
   handleToChangeDefaultVersion = () => {},
   isFromRecipePage = "default",
+  handleTurnOnOrOffVersion = () => {},
 }: FloodingMenuTwoProps) => {
   return (
     <div className={styles.leftSide}>
@@ -179,6 +184,13 @@ const FloodingMenuTwo = ({
           className={`${styles.star} ${
             isFromRecipePage !== "edit" && styles.pointerEventNone
           } ${item?.isVersionSharable ? styles.on : styles.off}`}
+          onClick={() =>
+            isFromRecipePage === "edit" &&
+            handleTurnOnOrOffVersion(
+              item?.isVersionSharable ? false : true,
+              item?._id,
+            )
+          }
         />
       </Tooltip>
       {item?.isVersionSharable && (

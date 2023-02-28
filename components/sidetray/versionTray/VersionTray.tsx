@@ -30,6 +30,8 @@ import { RecipeVersionType } from "../../../type/recipeVersionType";
 import Image from "next/image";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { faStarSharp } from "@fortawesome/pro-solid-svg-icons";
+import useTurnedOnOrOffVersion from "../../../customHooks/useTurnedOnOrOffVersion";
+import useToAddARecipeVersion from "../../../customHooks/useToAddARecipeVersion";
 
 interface VersionTrayProps {
   showTagByDefaut?: boolean;
@@ -46,7 +48,6 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   );
   const { dbUser } = useAppSelector((state) => state?.user);
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
-  const [addVersion, { loading: newVersionLoading }] = useMutation(ADD_VERSION);
   const [editVersion] = useMutation(EDIT_A_VERSION_OF_RECIPE);
   const [removeVersion, { loading: removeVersionLoading }] = useMutation(
     REMOVE_A_RECIPE_VERSION,
@@ -57,6 +58,9 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   const router = useRouter();
   const { handleToGetARecipe } = useToGetARecipe();
   const { handleToUpdateDefaultVersion } = useToChangeDefaultVersion();
+  const { handleTurnOnOrOffVersion } = useTurnedOnOrOffVersion();
+  const { handleToAddRecipeVersion, loading: addNewVersionLoading } =
+    useToAddARecipeVersion();
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
 
@@ -110,30 +114,16 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
         //   }),
         // );
       } else {
-        const { data } = await addVersion({
-          variables: {
-            data: {
-              recipeId: detailsARecipe?.recipeId?._id,
-              postfixTitle: formState?.title,
-              description: formState?.body,
-              userId: dbUser?._id,
-            },
-          },
-        });
-        dispatch(
-          setDetailsARecipe({
-            ...detailsARecipe,
-            turnedOnVersions: [
-              data?.addVersion,
-              ...detailsARecipe?.turnedOnVersions,
-            ],
-          }),
+        const obj = {
+          description: formState?.body,
+          postfixTitle: formState?.title,
+        };
+        handleToAddRecipeVersion(
+          dbUser?._id,
+          detailsARecipe?.recipeId?._id,
+          obj,
         );
       }
-      notification(
-        "success",
-        `Recipe version ${updateVersion ? "updated" : "create"} successfully`,
-      );
     } catch (error) {
       console.log(error);
     }
@@ -333,7 +323,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           deleteItem={deleteRecipeVersion}
           updateItem={updateVersionValue}
           varient="versions"
-          loading={newVersionLoading || removeVersionLoading}
+          loading={addNewVersionLoading || removeVersionLoading}
           isFromRecipePage={openVersionTrayFormWhichPage}
           handleToGetARecipeVersion={handleToGetARecipeVersion}
           handleToChangeDefaultVersion={(
@@ -345,6 +335,14 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
               detailsARecipe?.recipeId?._id,
               versionId,
               isOriginalVersion,
+            )
+          }
+          handleTurnOnOrOffVersion={(turnedOn, versionId) =>
+            handleTurnOnOrOffVersion(
+              turnedOn,
+              dbUser?._id,
+              detailsARecipe?.recipeId?._id,
+              versionId,
             )
           }
         />
