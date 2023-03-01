@@ -5,7 +5,6 @@ import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
 import Center_Elements from "./recipe_elements/centerElements.component";
 import IngredientList from "./recipe_elements/ingredientList/ingredientList&Howto.component";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setLoading } from "../../../redux/slices/utilitySlice";
 import imageUploadS3 from "../../utility/imageUploadS3";
 import { BLEND_CATEGORY } from "../../../gqlLib/recipes/queries/getEditRecipe";
 import { useMutation, useQuery } from "@apollo/client";
@@ -45,6 +44,7 @@ const AddRecipePage = () => {
   const router = useRouter();
   const { width } = useWindowSize();
   const [openTray, setOpenTray] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const {
     handleFetchIngrdients,
@@ -69,7 +69,7 @@ const AddRecipePage = () => {
 
   const handleSubmitData = async () => {
     if (recipeHeading && selectedIngredientsList?.length) {
-      dispatch(setLoading(true));
+      setLoading(true);
       let ingArr = [];
       selectedIngredientsList?.forEach((item) => {
         let value = item?.portions?.find((item) => item.default);
@@ -114,7 +114,7 @@ const AddRecipePage = () => {
               data: obj,
             },
           });
-          dispatch(setLoading(false));
+          setLoading(false);
           notification("success", "recipe create successfully");
           if (data?.addRecipeFromUser?._id) {
             router?.push(`/recipe_details/${data?.addRecipeFromUser?._id}`);
@@ -125,14 +125,14 @@ const AddRecipePage = () => {
               data: obj,
             },
           });
-          dispatch(setLoading(false));
+          setLoading(false);
           notification("success", "recipe create successfully");
           if (data?.addRecipeFromUser?._id) {
             router?.push(`/recipe_details/${data?.addRecipeFromUser?._id}`);
           }
         }
       } catch (error) {
-        dispatch(setLoading(false));
+        setLoading(false);
         notification("error", error?.message || "Something went wrong");
       }
     } else {
@@ -244,6 +244,7 @@ const AddRecipePage = () => {
             backLink="/"
             editOrSavebtnFunc={handleSubmitData}
             editOrSavebtnText="Save"
+            loading={loading}
           />
           <Center_Elements
             blendCategoryList={

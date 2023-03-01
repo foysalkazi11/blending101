@@ -13,7 +13,7 @@ type CenterElementsProps = {
   images?: any[];
   setImages?: Dispatch<SetStateAction<any[]>>;
   setRecipeHeading?: Dispatch<SetStateAction<string>>;
-  setDropDownState?: any;
+  setDropDownState?: Dispatch<SetStateAction<string>>;
   blendCategoryList: any;
   recipeTitle?: string;
   selectedBlendValueState: string;
@@ -29,7 +29,7 @@ const Center_Elements = ({
   setImages = () => {},
   recipeTitle = "",
   setRecipeHeading = () => {},
-  setDropDownState,
+  setDropDownState = () => {},
   blendCategoryList,
   selectedBlendValueState,
   recipeDescription = "",
