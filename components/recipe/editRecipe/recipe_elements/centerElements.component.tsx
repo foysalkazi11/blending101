@@ -72,8 +72,14 @@ const Center_Elements = ({
   const { dbUser } = useAppSelector((state) => state?.user);
   const [deleteARecipe, { loading }] = useMutation(DELETE_A_RECIPE);
   const router = useRouter();
-  let BlendtecItem = [{ name: `Blentec` }, { name: `Blentec` }];
-  let OzItem = [{ name: "64oz" }, { name: "64oz" }];
+  let BlendtecItem = [
+    { name: `Blentec`, value: `Blentec` },
+    { value: `Blentec`, name: `Blentec` },
+  ];
+  let OzItem = [
+    { name: "64oz", value: "64oz" },
+    { value: "64oz", name: "64oz" },
+  ];
 
   // delete one recipe
   const deleteOneRecipe = async () => {
@@ -163,7 +169,7 @@ const Center_Elements = ({
                 <li>
                   <div className={styles.left__options}>
                     <RecipeDropDown
-                      ElemList={allBlendCategories}
+                      elemList={allBlendCategories}
                       selectedValue={blendCategoryState}
                       setSelectedValue={setBlendCategoryState}
                     />
@@ -171,12 +177,12 @@ const Center_Elements = ({
                 </li>
                 <li>
                   <div className={styles.left__options}>
-                    <RecipeDropDown ElemList={BlendtecItem} />
+                    <RecipeDropDown elemList={BlendtecItem} />
                   </div>
                 </li>
                 <li>
                   <div className={styles.left__options}>
-                    <RecipeDropDown ElemList={OzItem} />
+                    <RecipeDropDown elemList={OzItem} />
                   </div>
                 </li>
               </ul>
