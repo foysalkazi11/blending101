@@ -3,7 +3,7 @@ import React from "react";
 import styles from "./DropDown.module.scss";
 
 interface dropDown {
-  ElemList?: { name: string; value: string }[];
+  elemList?: { name: string; value: string }[];
   name?: string;
   style?: object;
   mode?: string;
@@ -12,7 +12,7 @@ interface dropDown {
 }
 const RecipeDropDown = ({
   style = {},
-  ElemList,
+  elemList,
   name = "dropdown",
   selectedValue = "",
   setSelectedValue = () => {},
@@ -29,7 +29,7 @@ const RecipeDropDown = ({
         }}
         value={selectedValue}
       >
-        {ElemList?.map((item, index) => {
+        {elemList?.map((item, index) => {
           return (
             <option value={item?.value} key={index}>
               {item?.name}

@@ -95,7 +95,7 @@ const Center_Elements = ({
               <li>
                 <div className={styles.left__options}>
                   <RecipeDropDown
-                    ElemList={blendCategoryList?.map((item) => ({
+                    elemList={blendCategoryList?.map((item) => ({
                       name: item?.name,
                       value: item?._id,
                     }))}
@@ -107,7 +107,7 @@ const Center_Elements = ({
               <li>
                 <div className={styles.left__options}>
                   <RecipeDropDown
-                    ElemList={BlendtecItem}
+                    elemList={BlendtecItem}
                     selectedValue={BlendtecItem?.[0]?.value}
                     setSelectedValue={() => {}}
                   />
@@ -116,7 +116,7 @@ const Center_Elements = ({
               <li>
                 <div className={styles.left__options}>
                   <RecipeDropDown
-                    ElemList={OzItem}
+                    elemList={OzItem}
                     setSelectedValue={() => {}}
                   />
                 </div>
