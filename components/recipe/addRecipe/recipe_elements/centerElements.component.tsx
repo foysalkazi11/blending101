@@ -13,7 +13,7 @@ type CenterElementsProps = {
   images?: any[];
   setImages?: Dispatch<SetStateAction<any[]>>;
   setRecipeHeading?: Dispatch<SetStateAction<string>>;
-  setDropDownState?: any;
+  setDropDownState?: Dispatch<SetStateAction<string>>;
   blendCategoryList: any;
   recipeTitle?: string;
   selectedBlendValueState: string;
@@ -29,7 +29,7 @@ const Center_Elements = ({
   setImages = () => {},
   recipeTitle = "",
   setRecipeHeading = () => {},
-  setDropDownState,
+  setDropDownState = () => {},
   blendCategoryList,
   selectedBlendValueState,
   recipeDescription = "",
@@ -95,7 +95,7 @@ const Center_Elements = ({
               <li>
                 <div className={styles.left__options}>
                   <RecipeDropDown
-                    ElemList={blendCategoryList?.map((item) => ({
+                    elemList={blendCategoryList?.map((item) => ({
                       name: item?.name,
                       value: item?._id,
                     }))}
@@ -107,7 +107,7 @@ const Center_Elements = ({
               <li>
                 <div className={styles.left__options}>
                   <RecipeDropDown
-                    ElemList={BlendtecItem}
+                    elemList={BlendtecItem}
                     selectedValue={BlendtecItem?.[0]?.value}
                     setSelectedValue={() => {}}
                   />
@@ -116,7 +116,7 @@ const Center_Elements = ({
               <li>
                 <div className={styles.left__options}>
                   <RecipeDropDown
-                    ElemList={OzItem}
+                    elemList={OzItem}
                     setSelectedValue={() => {}}
                   />
                 </div>

@@ -3,7 +3,7 @@ import React from "react";
 import styles from "./DropDown.module.scss";
 
 interface dropDown {
-  ElemList?: object[];
+  elemList?: { name: string; value: string }[];
   name?: string;
   style?: object;
   mode?: string;
@@ -12,10 +12,10 @@ interface dropDown {
 }
 const RecipeDropDown = ({
   style = {},
-  ElemList,
+  elemList,
   name = "dropdown",
-  selectedValue,
-  setSelectedValue,
+  selectedValue = "",
+  setSelectedValue = () => {},
 }: dropDown): JSX.Element => {
   return (
     <div className={styles.formGroup}>
@@ -29,11 +29,9 @@ const RecipeDropDown = ({
         }}
         value={selectedValue}
       >
-        {ElemList?.map((item, index) => {
+        {elemList?.map((item, index) => {
           return (
-            // @ts-ignore
-            <option value={item?.name} key={index}>
-              {/* @ts-ignore */}
+            <option value={item?.value} key={index}>
               {item?.name}
             </option>
           );
