@@ -6,6 +6,10 @@ export interface RecipeVersionType {
   description: string;
   ingredients: Ingredient[];
   servingSize: number;
+  tempVersionInfo?: {
+    id?: string;
+    isShareAble?: boolean;
+  };
 }
 
 export interface Ingredient {

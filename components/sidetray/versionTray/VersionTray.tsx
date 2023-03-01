@@ -5,33 +5,23 @@ import TrayWrapper from "../TrayWrapper";
 import styles from "./VersionsTray.module.scss";
 import NoteHead from "../commentsTray/noteSection/noteHead/NoteHead";
 import NoteBody from "../commentsTray/noteSection/noteBody/NoteBody";
-import { useLazyQuery, useMutation } from "@apollo/client";
-import ADD_VERSION from "../../../gqlLib/versions/mutation/addVersion";
-import EDIT_A_VERSION_OF_RECIPE from "../../../gqlLib/versions/mutation/editAVersionOfRecipe";
+import { useMutation } from "@apollo/client";
 import { VscVersions } from "react-icons/vsc";
-import { setDetailsARecipe } from "../../../redux/slices/recipeSlice";
 import REMOVE_A_RECIPE_VERSION from "../../../gqlLib/versions/mutation/removeARecipeVersion";
 import notification from "../../utility/reactToastifyNotification";
-import GET_A_RECIPE_VERSION_ONLY from "../../../gqlLib/versions/query/getARecipeVersionOnly";
 import useToGetARecipeVersion from "../../../customHooks/useToGetARecipeVersion";
 import useToGetARecipe from "../../../customHooks/useToGetARecipe";
 import useToChangeDefaultVersion from "../../../customHooks/useToChangeDefaultVersion";
-import CHANGE_DEFAULT_VERSION from "../../../gqlLib/versions/mutation/changelDefaultVersion";
 import TrayTag from "../TrayTag";
 import Tooltip from "../../../theme/toolTip/CustomToolTip";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faRectangleVerticalHistory,
-  faScaleBalanced,
-  faShareNodes,
-} from "@fortawesome/pro-regular-svg-icons";
+import { faRectangleVerticalHistory } from "@fortawesome/pro-regular-svg-icons";
 import { useRouter } from "next/router";
-import { RecipeVersionType } from "../../../type/recipeVersionType";
 import Image from "next/image";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { faStarSharp } from "@fortawesome/pro-solid-svg-icons";
 import useTurnedOnOrOffVersion from "../../../customHooks/useTurnedOnOrOffVersion";
 import useToAddARecipeVersion from "../../../customHooks/useToAddARecipeVersion";
+import useToEditOfARecipeVersion from "../../../customHooks/useToEditOfARecipeVersion";
 
 interface VersionTrayProps {
   showTagByDefaut?: boolean;
@@ -43,17 +33,15 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   const [updateVersion, setUpdateVersion] = useState(false);
   const [formState, setFormState] = useState({ title: "", body: "" });
   const [updateVersionId, setUpdateVersionId] = useState("");
+  const [isVersionSharable, setIsVersionSharable] = useState(false);
   const { openVersionTray, openVersionTrayFormWhichPage } = useAppSelector(
     (state) => state?.versionTray,
   );
   const { dbUser } = useAppSelector((state) => state?.user);
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
-  const [editVersion] = useMutation(EDIT_A_VERSION_OF_RECIPE);
   const [removeVersion, { loading: removeVersionLoading }] = useMutation(
     REMOVE_A_RECIPE_VERSION,
   );
-  const [getARecipeVersionOnly] = useLazyQuery(GET_A_RECIPE_VERSION_ONLY);
-  const [changeDefaultVersion] = useMutation(CHANGE_DEFAULT_VERSION);
   const handleToGetARecipeVersion = useToGetARecipeVersion();
   const router = useRouter();
   const { handleToGetARecipe } = useToGetARecipe();
@@ -61,6 +49,8 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   const { handleTurnOnOrOffVersion } = useTurnedOnOrOffVersion();
   const { handleToAddRecipeVersion, loading: addNewVersionLoading } =
     useToAddARecipeVersion();
+  const { handleToEditARecipeVersion, loading: editOrCreateVersionLoading } =
+    useToEditOfARecipeVersion();
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
 
@@ -87,32 +77,16 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     toggleForm();
     try {
       if (updateVersion) {
-        await editVersion({
-          variables: {
-            data: {
-              editId: updateVersionId,
-              editableObject: {
-                postfixTitle: formState?.title,
-                description: formState?.body,
-              },
-            },
+        handleToEditARecipeVersion(
+          dbUser?._id,
+          detailsARecipe?.recipeId?._id,
+          updateVersionId,
+          isVersionSharable,
+          {
+            postfixTitle: formState?.title,
+            description: formState?.body,
           },
-        });
-
-        // dispatch(
-        //   setDetailsARecipe({
-        //     ...detailsARecipe,
-        //     recipeVersion: detailsARecipe?.recipeVersion?.map((version) =>
-        //       version?._id === updateVersionId
-        //         ? {
-        //             ...version,
-        //             postfixTitle: formState?.title,
-        //             description: formState?.body,
-        //           }
-        //         : version,
-        //     ),
-        //   }),
-        // );
+        );
       } else {
         const obj = {
           description: formState?.body,
@@ -158,6 +132,8 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     const title = val?.postfixTitle;
     const id = val?._id;
     const body = val?.description;
+    const isVersionSharable = val?.isVersionSharable;
+    setIsVersionSharable(isVersionSharable);
     setUpdateVersion(true);
     setFormState((pre) => ({ ...pre, title, body }));
     setUpdateVersionId(id);
@@ -261,8 +237,9 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
                 detailsARecipe?.isMatch
                   ? funToGetARecipe()
                   : handleToGetARecipeVersion(
-                      detailsARecipe?.defaultVersion?._id,
+                      detailsARecipe?.recipeId?.originalVersion?._id,
                       true,
+                      null,
                     )
               }
             >

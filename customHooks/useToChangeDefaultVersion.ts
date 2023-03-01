@@ -27,31 +27,32 @@ const useToChangeDefaultVersion = () => {
         },
       });
 
-      let updateObj: RecipeVersionType = {} as RecipeVersionType;
+      // let updateObj: RecipeVersionType = {} as RecipeVersionType;
 
-      updateObj = isOriginalVersion
-        ? {
-            ...detailsARecipe.defaultVersion,
-            ...data?.changeDefaultVersion?.defaultVersion,
-            postfixTitle: detailsARecipe?.recipeId?.name || "",
-            description: detailsARecipe?.recipeId?.description || "",
-          }
-        : {
-            ...detailsARecipe.defaultVersion,
-            ...data?.changeDefaultVersion?.defaultVersion,
-          };
+      // updateObj = isOriginalVersion
+      //   ? {
+      //       ...detailsARecipe.defaultVersion,
+      //       ...data?.changeDefaultVersion?.defaultVersion,
+      //       postfixTitle: detailsARecipe?.recipeId?.name || "",
+      //       description: detailsARecipe?.recipeId?.description || "",
+      //       tempVersionInfo: {},
+      //     }
+      //   : {
+      //       ...detailsARecipe.defaultVersion,
+      //       ...data?.changeDefaultVersion?.defaultVersion,
+      //       tempVersionInfo: {},
+      //     };
       dispatch(
         setDetailsARecipe({
           ...detailsARecipe,
           isVersionActive: false,
-          activeVersion: null,
           isMatch: isOriginalVersion,
-          defaultVersion: updateObj,
+          defaultVersion: { ...detailsARecipe.defaultVersion, _id: versionId },
         }),
       );
-      notification("info", "Default version change successfully");
+      notification("success", "Default version change successfully");
     } catch (error) {
-      notification("info", error?.message || "Something went wrong");
+      notification("error", error?.message || "Something went wrong");
     }
   };
 

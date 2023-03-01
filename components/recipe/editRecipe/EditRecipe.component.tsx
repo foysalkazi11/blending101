@@ -24,7 +24,7 @@ interface editRecipe {
   recipeInstructions: string[];
   allBlendCategories: [];
   selectedBLendCategory: string;
-  editARecipeFunction: any;
+  editARecipeFunction: () => void;
   calculatedIngOz?: number;
   nutritionDataLoading: boolean;
   existingImage?: string[];
@@ -36,6 +36,7 @@ interface editRecipe {
   recipeId?: string | string[];
   updateEditRecipe?: (key: string, value: any) => void;
   giGl?: GiGl;
+  recipeEditOrVersionEditLoading?: boolean;
 }
 
 const EditRecipePage = ({
@@ -45,7 +46,7 @@ const EditRecipePage = ({
   recipeInstructions,
   allBlendCategories,
   selectedBLendCategory,
-  editARecipeFunction,
+  editARecipeFunction = () => {},
   calculatedIngOz = 0,
   nutritionDataLoading,
   images = [],
@@ -61,6 +62,7 @@ const EditRecipePage = ({
     totalGi: 0,
     totalGL: 0,
   },
+  recipeEditOrVersionEditLoading = false,
 }: editRecipe) => {
   const dispatch = useAppDispatch();
   const { width } = useWindowSize();
@@ -138,6 +140,7 @@ const EditRecipePage = ({
             editOrSavebtnText="Save"
             pageComeFrom="edit"
             recipeVersionLength={copyDetailsRecipe?.versionsCount}
+            recipeEditOrVersionEditLoading={recipeEditOrVersionEditLoading}
           />
           <Center_Elements
             copyDetailsRecipe={copyDetailsRecipe}
