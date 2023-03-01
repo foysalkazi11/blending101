@@ -140,7 +140,7 @@ const EditRecipePage = ({
             editOrSavebtnText="Save"
             pageComeFrom="edit"
             recipeVersionLength={copyDetailsRecipe?.versionsCount}
-            recipeEditOrVersionEditLoading={recipeEditOrVersionEditLoading}
+            loading={recipeEditOrVersionEditLoading}
           />
           <Center_Elements
             copyDetailsRecipe={copyDetailsRecipe}

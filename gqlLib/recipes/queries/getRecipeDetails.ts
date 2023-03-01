@@ -31,6 +31,10 @@ const GET_A_RECIPE = gql`
         token
         totalRating
         description
+        recipeBlendCategory {
+          _id
+          name
+        }
       }
       defaultVersion {
         _id

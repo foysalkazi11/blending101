@@ -29,6 +29,7 @@ const useToEditOfARecipeVersion = () => {
     editId: string,
     turnedOn: boolean,
     editableObject: VersionEditAbleData,
+    isOriginalVersion: boolean = false,
   ) => {
     try {
       const { data } = await editAVersionOfRecipe({

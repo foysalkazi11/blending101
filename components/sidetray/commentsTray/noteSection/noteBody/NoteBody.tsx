@@ -10,6 +10,7 @@ import CircularRotatingLoader from "../../../../../theme/loader/circularRotating
 import { faShareNodes, faTrash } from "@fortawesome/pro-regular-svg-icons";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { faStarSharp } from "@fortawesome/pro-solid-svg-icons";
+import { useAppSelector } from "../../../../../redux/hooks";
 
 type isFromRecipePageType = "details" | "edit" | "default";
 
@@ -44,6 +45,7 @@ const NoteBody = ({
   deleteItemLoading = false,
   handleTurnOnOrOffVersion = () => {},
 }: NoteBodyPops) => {
+  const { detailsARecipe } = useAppSelector((state) => state?.recipe);
   return (
     <div className={`${styles.noteEditBox} y-scroll`}>
       {loading ? (
@@ -66,6 +68,11 @@ const NoteBody = ({
                     isFromRecipePage === "details"
                       ? styles.headingHover
                       : null
+                  } ${
+                    detailsARecipe?.defaultVersion?.tempVersionInfo?.id ===
+                    item?._id
+                      ? styles.active
+                      : ""
                   }`}
                 >
                   {item?.title || item?.postfixTitle}

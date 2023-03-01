@@ -10,6 +10,7 @@ import {
   setOpenVersionTrayFormWhichPage,
 } from "../../../../redux/slices/versionTraySlice";
 import IconWraper from "../../../../theme/iconWarper/IconWarper";
+import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
 import Tooltip from "../../../../theme/toolTip/CustomToolTip";
 import PanelHeader from "./PanelHeader";
 import styles from "./PanelHeader.module.scss";
@@ -20,7 +21,7 @@ interface PanelHeaderCenterProps {
   backLink?: string;
   pageComeFrom?: "edit" | "details";
   recipeVersionLength?: number;
-  recipeEditOrVersionEditLoading?: boolean;
+  loading?: boolean;
 }
 
 const PanelHeaderCenter = ({
@@ -29,7 +30,7 @@ const PanelHeaderCenter = ({
   editOrSavebtnText = "",
   pageComeFrom,
   recipeVersionLength = 0,
-  recipeEditOrVersionEditLoading = false,
+  loading = false,
 }: PanelHeaderCenterProps) => {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -57,9 +58,17 @@ const PanelHeaderCenter = ({
       <Tooltip content={`${editOrSavebtnText} recipe`} direction="bottom">
         <button
           className={`${styles.headerTextBtn} hvr-pop`}
-          onClick={editOrSavebtnFunc}
+          onClick={!loading && editOrSavebtnFunc}
+          style={{ minWidth: "45px" }}
         >
-          {recipeEditOrVersionEditLoading ? "Loading..." : editOrSavebtnText}
+          {loading ? (
+            <CircularRotatingLoader
+              color="white"
+              style={{ width: "18px", height: "18px" }}
+            />
+          ) : (
+            editOrSavebtnText
+          )}
         </button>
       </Tooltip>
 
