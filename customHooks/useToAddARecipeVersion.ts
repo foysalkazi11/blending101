@@ -39,6 +39,10 @@ const useToAddARecipeVersion = () => {
             data?.addVersion,
             ...detailsARecipe?.turnedOnVersions,
           ],
+          versionsCount:
+            detailsARecipe?.turnedOnVersions?.length +
+            detailsARecipe?.turnedOffVersions?.length +
+            1,
         }),
       );
       notification("success", `Recipe version create successfully`);

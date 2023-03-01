@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import EditRecipePage from "../../../components/recipe/editRecipe/EditRecipe.component";
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import {
   BLEND_CATEGORY,
   INGREDIENTS_BY_CATEGORY_AND_CLASS,
@@ -20,7 +20,6 @@ import {
 import imageUploadS3 from "../../../components/utility/imageUploadS3";
 import reactToastifyNotification from "../../../components/utility/reactToastifyNotification";
 import useGetBlendNutritionBasedOnRecipexxx from "../../../customHooks/useGetBlendNutritionBasedOnRecipexxx";
-import useToGetARecipeVersion from "../../../customHooks/useToGetARecipeVersion";
 import useToGetARecipe from "../../../customHooks/useToGetARecipe";
 import {
   setOpenVersionTray,
@@ -30,9 +29,9 @@ import EDIT_A_VERSION_OF_RECIPE from "../../../gqlLib/versions/mutation/editAVer
 import notification from "../../../components/utility/reactToastifyNotification";
 import { RecipeDetailsType } from "../../../type/recipeDetailsType";
 import { GiGl } from "../../../type/nutrationType";
-import GET_RECIPE from "../../../gqlLib/recipes/queries/getRecipeDetails";
 import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
 import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
+import useToEditOfARecipeVersion from "../../../customHooks/useToEditOfARecipeVersion";
 
 const EditRecipeComponent = () => {
   const router = useRouter();
@@ -58,7 +57,8 @@ const EditRecipeComponent = () => {
     data: nutritionData,
   } = useGetBlendNutritionBasedOnRecipexxx();
 
-  const [editAVersionOfRecipe] = useMutation(EDIT_A_VERSION_OF_RECIPE);
+  const { handleToEditARecipeVersion, loading: editOrCreateVersionLoading } =
+    useToEditOfARecipeVersion();
 
   const servingCounter = useAppSelector(
     (state) => state.editRecipeReducer.servingCounter,
@@ -72,13 +72,9 @@ const EditRecipeComponent = () => {
     (state) => state?.editRecipeReducer?.selectedBlendCategory,
   );
 
-  const handleToGetARecipeVersion = useToGetARecipeVersion();
   const { data: allBlendCategory } = useQuery(BLEND_CATEGORY);
   const [editRecipe] = useMutation(EDIT_A_RECIPE);
   const { handleToGetARecipe } = useToGetARecipe();
-  const [getARecipe] = useLazyQuery(GET_RECIPE, {
-    fetchPolicy: "cache-and-network",
-  });
   const { data: ingredientCategoryData, loading: ingredientCategoryLoading } =
     useQuery(FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS, {
       variables: {
@@ -119,7 +115,7 @@ const EditRecipeComponent = () => {
     dispatch(setSelectedIngredientsList(presentIngredient));
   }, [
     ingredientCategoryData?.filterIngredientByCategoryAndClass,
-    detailsARecipe,
+    detailsARecipe?.defaultVersion?.ingredients,
   ]);
 
   useEffect(() => {
@@ -130,7 +126,7 @@ const EditRecipeComponent = () => {
     setExistingImages(
       detailsARecipe?.recipeId?.image?.map((item) => `${item?.image}`),
     );
-  }, [detailsARecipe]);
+  }, [detailsARecipe?.defaultVersion]);
 
   const updateOrginalRecipe = async (obj: any) => {
     if (images?.length) {
@@ -167,7 +163,7 @@ const EditRecipeComponent = () => {
   };
 
   const editARecipeFunction = async () => {
-    dispatch(setLoading(true));
+    // dispatch(setLoading(true));
 
     let ingArr = [];
     selectedIngredientsList?.forEach((item) => {
@@ -203,9 +199,15 @@ const EditRecipeComponent = () => {
     };
 
     try {
-      if (!detailsARecipe?.isMatch) {
-        let obj = {
-          editId: detailsARecipe?.defaultVersion?._id,
+      if (detailsARecipe?.isVersionActive) {
+        let versionUpdateObj = {
+          editId: detailsARecipe?.isVersionActive
+            ? detailsARecipe?.defaultVersion?.tempVersionInfo?.id
+            : detailsARecipe?.defaultVersion?._id,
+          recipeId: detailsARecipe?.recipeId?._id,
+          turnedOn:
+            detailsARecipe?.defaultVersion?.tempVersionInfo?.isShareAble,
+          userId: dbUser?._id,
           editableObject: {
             recipeInstructions: howToArr,
             postfixTitle: copyDetailsRecipe?.defaultVersion.postfixTitle,
@@ -225,16 +227,23 @@ const EditRecipeComponent = () => {
             servings: servingCounter,
           },
         };
-        await updateOrginalRecipe(orginalRecipeObj);
-        await editAVersionOfRecipe({ variables: { data: obj } });
-        dispatch(setLoading(false));
-        notification("info", "Version updated sucessfully");
+
+        // await updateOrginalRecipe(orginalRecipeObj);
+        handleToEditARecipeVersion(
+          versionUpdateObj?.userId,
+          versionUpdateObj?.recipeId,
+          versionUpdateObj?.editId,
+          versionUpdateObj?.turnedOn,
+          versionUpdateObj?.editableObject,
+        );
+        // dispatch(setLoading(false));
+        // notification("info", "Version updated sucessfully");
         return;
       }
 
-      await updateOrginalRecipe(orginalRecipeObj);
+      // await updateOrginalRecipe(orginalRecipeObj);
       dispatch(setLoading(false));
-      reactToastifyNotification("info", "Recipe Updateded successfully ");
+      // reactToastifyNotification("info", "Recipe Updateded successfully ");
     } catch (error) {
       dispatch(setLoading(false));
       reactToastifyNotification("error", "Error while saving Recipe");
@@ -311,6 +320,7 @@ const EditRecipeComponent = () => {
       setNutritionState={setNutritionState}
       recipeId={recipeId}
       giGl={giGl}
+      recipeEditOrVersionEditLoading={editOrCreateVersionLoading}
     />
   );
 };

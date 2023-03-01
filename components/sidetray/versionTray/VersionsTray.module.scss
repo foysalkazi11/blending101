@@ -45,7 +45,7 @@
   .leftSide {
     display: flex;
     align-items: center;
-    img {
+    .image {
       transition: all 0.3s linear;
       // width: 45px;
       // height: 45px;
@@ -53,7 +53,7 @@
       // overflow: hidden;
       // object-fit: cover;
     }
-    h3 {
+    .heading {
       font-size: 16px;
       font-weight: 600;
       color: #000;
@@ -86,4 +86,8 @@
     cursor: pointer;
     margin-left: 10px;
   }
+}
+
+.active {
+  color: #fe5d1f;
 }

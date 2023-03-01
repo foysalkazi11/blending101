@@ -3,6 +3,7 @@ import GET_A_RECIPE_VERSION from "../gqlLib/versions/query/getARecipeVersion";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setDetailsARecipe } from "../redux/slices/recipeSlice";
 import { setOpenVersionTray } from "../redux/slices/versionTraySlice";
+import { VersionDataType } from "../type/recipeDetailsType";
 import { RecipeVersionType } from "../type/recipeVersionType";
 
 const useToGetARecipeVersion = () => {
@@ -15,6 +16,7 @@ const useToGetARecipeVersion = () => {
   const handleToGetARecipeVersion = async (
     versionId: string,
     isOriginalVersion: boolean = false,
+    isShareAble: boolean | null = true,
   ) => {
     try {
       const { data } = await getARecipeVersion({
@@ -22,18 +24,24 @@ const useToGetARecipeVersion = () => {
       });
       const { _id, ...rest } = data?.getARecipeVersion;
 
-      let obj = isOriginalVersion
+      let obj: VersionDataType = isOriginalVersion
         ? {
             ...detailsARecipe?.defaultVersion,
             ...rest,
             postfixTitle: detailsARecipe?.recipeId?.name || "",
             description: detailsARecipe?.recipeId?.description || "",
-            tempVersionId: _id,
+            tempVersionInfo: {
+              id: versionId,
+              isShareAble,
+            },
           }
         : {
             ...detailsARecipe?.defaultVersion,
             ...rest,
-            tempVersionId: _id,
+            tempVersionInfo: {
+              id: versionId,
+              isShareAble,
+            },
           };
 
       dispatch(

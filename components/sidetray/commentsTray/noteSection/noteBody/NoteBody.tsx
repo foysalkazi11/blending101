@@ -10,6 +10,7 @@ import CircularRotatingLoader from "../../../../../theme/loader/circularRotating
 import { faShareNodes, faTrash } from "@fortawesome/pro-regular-svg-icons";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { faStarSharp } from "@fortawesome/pro-solid-svg-icons";
+import { useAppSelector } from "../../../../../redux/hooks";
 
 type isFromRecipePageType = "details" | "edit" | "default";
 
@@ -20,7 +21,11 @@ interface NoteBodyPops {
   varient?: "notes" | "versions";
   loading?: boolean;
   isFromRecipePage?: isFromRecipePageType;
-  handleToGetARecipeVersion?: (id: string) => void;
+  handleToGetARecipeVersion?: (
+    id: string,
+    isOriginalVersion: boolean,
+    isShareAble: boolean | null,
+  ) => void;
   handleToChangeDefaultVersion?: (
     versionId: string,
     isOriginalVersion: boolean,
@@ -40,6 +45,7 @@ const NoteBody = ({
   deleteItemLoading = false,
   handleTurnOnOrOffVersion = () => {},
 }: NoteBodyPops) => {
+  const { detailsARecipe } = useAppSelector((state) => state?.recipe);
   return (
     <div className={`${styles.noteEditBox} y-scroll`}>
       {loading ? (
@@ -50,12 +56,23 @@ const NoteBody = ({
             <div className={styles.singleNoteEdit} key={index}>
               <div className={styles.header}>
                 <h3
-                  onClick={() => handleToGetARecipeVersion(item?._id)}
+                  onClick={() =>
+                    handleToGetARecipeVersion(
+                      item?._id,
+                      false,
+                      item?.isDefault ? null : item?.isShareAble,
+                    )
+                  }
                   className={`${
                     isFromRecipePage === "edit" ||
                     isFromRecipePage === "details"
                       ? styles.headingHover
                       : null
+                  } ${
+                    detailsARecipe?.defaultVersion?.tempVersionInfo?.id ===
+                    item?._id
+                      ? styles.active
+                      : ""
                   }`}
                 >
                   {item?.title || item?.postfixTitle}
@@ -193,23 +210,31 @@ const FloodingMenuTwo = ({
           }
         />
       </Tooltip>
-      {item?.isVersionSharable && (
-        <Tooltip
-          content={item?.isDefault ? "Default" : "Make default"}
-          direction="left"
-        >
-          <FontAwesomeIcon
-            onClick={() =>
-              isFromRecipePage === "edit" &&
-              handleToChangeDefaultVersion(item?._id, false)
-            }
-            className={`${styles.star} ${
-              isFromRecipePage !== "edit" && styles.pointerEventNone
-            } ${item?.isDefault ? styles.on : styles.off}`}
-            icon={faStarSharp}
-          />
-        </Tooltip>
-      )}
+
+      <Tooltip
+        content={
+          item?.isVersionSharable
+            ? item?.isDefault
+              ? "Default"
+              : "Make default"
+            : "Make default off"
+        }
+        direction="left"
+      >
+        <FontAwesomeIcon
+          onClick={() =>
+            isFromRecipePage === "edit" && item?.isVersionSharable
+              ? handleToChangeDefaultVersion(item?._id, false)
+              : () => {}
+          }
+          className={`${styles.star} ${
+            isFromRecipePage === "edit" && item?.isVersionSharable
+              ? ""
+              : styles.pointerEventNone
+          } ${item?.isDefault ? styles.on : styles.off}`}
+          icon={faStarSharp}
+        />
+      </Tooltip>
     </div>
   );
 };

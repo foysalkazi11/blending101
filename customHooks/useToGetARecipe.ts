@@ -29,9 +29,11 @@ const useToGetARecipe = () => {
             ...recipe?.defaultVersion,
             postfixTitle: recipe?.recipeId?.name || "",
             description: recipe?.recipeId?.description || "",
+            tempVersionInfo: {},
           }
         : {
             ...recipe?.defaultVersion,
+            tempVersionInfo: {},
           };
       let turnedOnVersions = recipe?.isMatch
         ? [...recipe?.turnedOnVersions]
@@ -41,7 +43,6 @@ const useToGetARecipe = () => {
         setDetailsARecipe({
           ...recipe,
           isVersionActive: false,
-          activeVersion: null,
           defaultVersion,
           turnedOnVersions,
         }),
