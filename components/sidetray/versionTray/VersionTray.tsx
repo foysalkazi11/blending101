@@ -231,8 +231,12 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
               height={45}
               objectFit="cover"
               loading="lazy"
+              className={styles.image}
             />
             <h3
+              className={`${styles.heading} 
+             
+              `}
               onClick={() =>
                 detailsARecipe?.isMatch
                   ? funToGetARecipe()

@@ -115,7 +115,7 @@ const EditRecipeComponent = () => {
     dispatch(setSelectedIngredientsList(presentIngredient));
   }, [
     ingredientCategoryData?.filterIngredientByCategoryAndClass,
-    detailsARecipe,
+    detailsARecipe?.defaultVersion?.ingredients,
   ]);
 
   useEffect(() => {
@@ -126,7 +126,7 @@ const EditRecipeComponent = () => {
     setExistingImages(
       detailsARecipe?.recipeId?.image?.map((item) => `${item?.image}`),
     );
-  }, [detailsARecipe]);
+  }, [detailsARecipe?.defaultVersion]);
 
   const updateOrginalRecipe = async (obj: any) => {
     if (images?.length) {
