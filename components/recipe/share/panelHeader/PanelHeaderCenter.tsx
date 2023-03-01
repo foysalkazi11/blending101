@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import React from "react";
 import { useDispatch } from "react-redux";
+import Loader from "../../../../component/atoms/Loader/loader.component";
 import {
   setOpenVersionTray,
   setOpenVersionTrayFormWhichPage,
@@ -19,6 +20,7 @@ interface PanelHeaderCenterProps {
   backLink?: string;
   pageComeFrom?: "edit" | "details";
   recipeVersionLength?: number;
+  recipeEditOrVersionEditLoading?: boolean;
 }
 
 const PanelHeaderCenter = ({
@@ -27,6 +29,7 @@ const PanelHeaderCenter = ({
   editOrSavebtnText = "",
   pageComeFrom,
   recipeVersionLength = 0,
+  recipeEditOrVersionEditLoading = false,
 }: PanelHeaderCenterProps) => {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -56,7 +59,7 @@ const PanelHeaderCenter = ({
           className={`${styles.headerTextBtn} hvr-pop`}
           onClick={editOrSavebtnFunc}
         >
-          {editOrSavebtnText}
+          {recipeEditOrVersionEditLoading ? "Loading..." : editOrSavebtnText}
         </button>
       </Tooltip>
 

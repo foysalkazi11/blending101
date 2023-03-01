@@ -28,33 +28,36 @@ const useTurnedOnOrOffVersion = () => {
         },
       });
 
-      // const version = turnedOn
-      //   ? detailsARecipe?.turnedOffVersions?.find(
-      //       (version) => version?._id === versionId,
-      //     )
-      //   : detailsARecipe?.turnedOnVersions?.find(
-      //       (version) => version?._id === versionId,
-      //     );
+      const version = turnedOn
+        ? detailsARecipe?.turnedOffVersions?.find(
+            (version) => version?._id === versionId,
+          )
+        : detailsARecipe?.turnedOnVersions?.find(
+            (version) => version?._id === versionId,
+          );
 
-      //     const turnedOnVersions = turnedOn
-      //       ? [...detailsARecipe?.turnedOnVersions, version]
-      //       : detailsARecipe?.turnedOnVersions?.filter(version => version?._id !== versionId)
+      const turnedOnVersions = turnedOn
+        ? [...detailsARecipe?.turnedOnVersions, version]
+        : detailsARecipe?.turnedOnVersions?.filter(
+            (version) => version?._id !== versionId,
+          );
 
-      //     const turnedOffVersions = turnedOn
-      //     ? detailsARecipe?.turnedOffVersions?.filter(version => version?._id !== versionId)
-      //     : [...detailsARecipe?.turnedOffVersions, version]
+      const turnedOffVersions = turnedOn
+        ? detailsARecipe?.turnedOffVersions?.filter(
+            (version) => version?._id !== versionId,
+          )
+        : [...detailsARecipe?.turnedOffVersions, version];
 
       dispatch(
         setDetailsARecipe({
           ...detailsARecipe,
           isVersionActive: false,
-          activeVersion: null,
-          turnedOnVersions: data?.turnedOnOrOffVersion?.turnedOnVersions,
-          turnedOffVersions: data?.turnedOnOrOffVersion?.turnedOffVersions,
+          turnedOnVersions,
+          turnedOffVersions,
         }),
       );
     } catch (error) {
-      notification("error", `Version turn ${turnedOn} failed`);
+      notification("error", `Version turn ${turnedOn ? "on" : "off"} failed`);
     }
   };
 

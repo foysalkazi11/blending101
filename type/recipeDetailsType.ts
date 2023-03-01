@@ -38,7 +38,6 @@ export interface RecipeDetailsType {
 
   turnedOnVersions: VersionDataType[];
   turnedOffVersions: VersionDataType[];
-  activeVersion?: VersionDataType | null;
 }
 
 export interface VersionDataType {
@@ -49,6 +48,10 @@ export interface VersionDataType {
   postfixTitle: string;
   description: string;
   ingredients: Ingredient[];
+  tempVersionInfo?: {
+    id?: string;
+    isShareAble?: boolean;
+  };
 }
 
 export interface RecipeBlendCategory {
