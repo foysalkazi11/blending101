@@ -209,8 +209,8 @@ export default function DatacardComponent({
                 );
               }}
             >
-              {title}
-              {isMatch ? "" : <span>{` (${postfixTitle})`}</span>}
+              {postfixTitle || title}
+              {/* {isMatch ? "" : <span>{` (${postfixTitle})`}</span>} */}
             </h2>
           </div>
           <div className={styles.menu}>

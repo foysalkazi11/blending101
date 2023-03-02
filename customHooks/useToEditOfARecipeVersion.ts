@@ -26,7 +26,7 @@ const useToEditOfARecipeVersion = () => {
   const handleToEditARecipeVersion = async (
     userId: string,
     recipeId: string,
-    editId: string,
+    versionId: string,
     turnedOn: boolean,
     editableObject: VersionEditAbleData,
     isOriginalVersion: boolean = false,
@@ -35,7 +35,7 @@ const useToEditOfARecipeVersion = () => {
       const { data } = await editAVersionOfRecipe({
         variables: {
           data: {
-            editId,
+            editId: versionId,
             recipeId,
             turnedOn,
             userId,
@@ -60,19 +60,37 @@ const useToEditOfARecipeVersion = () => {
           ...detailsARecipe,
           turnedOnVersions: turnedOn
             ? detailsARecipe?.turnedOnVersions.map((version) =>
-                version?._id === editId
+                version?._id === versionId
                   ? { ...version, ...updateRecipeVersionObj }
                   : version,
               )
             : detailsARecipe?.turnedOnVersions,
 
           turnedOffVersions: turnedOn
-            ? detailsARecipe?.turnedOffVersions.map((version) =>
-                version?._id === editId
+            ? detailsARecipe?.turnedOffVersions
+            : detailsARecipe?.turnedOffVersions.map((version) =>
+                version?._id === versionId
                   ? { ...version, ...updateRecipeVersionObj }
                   : version,
-              )
-            : detailsARecipe?.turnedOffVersions,
+              ),
+          recipeId: {
+            ...detailsARecipe?.recipeId,
+            originalVersion: isOriginalVersion
+              ? {
+                  ...detailsARecipe?.recipeId?.originalVersion,
+                  postfixTitle: editableObject.postfixTitle,
+                  description: editableObject?.description,
+                }
+              : detailsARecipe?.recipeId?.originalVersion,
+          },
+          defaultVersion:
+            detailsARecipe?.defaultVersion?._id === versionId
+              ? {
+                  ...detailsARecipe?.defaultVersion,
+                  postfixTitle: editableObject.postfixTitle,
+                  description: editableObject?.description,
+                }
+              : detailsARecipe?.defaultVersion,
         }),
       );
       notification("success", "Version update successfully");

@@ -45,7 +45,6 @@ const useToChangeDefaultVersion = () => {
       dispatch(
         setDetailsARecipe({
           ...detailsARecipe,
-          isVersionActive: false,
           isMatch: isOriginalVersion,
           defaultVersion: { ...detailsARecipe.defaultVersion, _id: versionId },
         }),

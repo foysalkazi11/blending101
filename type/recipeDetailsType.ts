@@ -13,7 +13,7 @@ export interface RecipeDetailsType {
   // postfixTitle?: string;
   // versionId?: string;
   // originalVersion: VersionDataType;
-  isVersionActive: boolean;
+  //isVersionActive: boolean;
   recipeId: {
     _id: string;
     userId: RecipeCreatorInfo;
@@ -38,6 +38,11 @@ export interface RecipeDetailsType {
 
   turnedOnVersions: VersionDataType[];
   turnedOffVersions: VersionDataType[];
+  tempVersionInfo?: {
+    id: string;
+    isShareAble: boolean;
+    isOriginalVersion: boolean;
+  } | null;
 }
 
 export interface VersionDataType {
@@ -48,10 +53,6 @@ export interface VersionDataType {
   postfixTitle: string;
   description: string;
   ingredients: Ingredient[];
-  tempVersionInfo?: {
-    id?: string;
-    isShareAble?: boolean;
-  };
 }
 
 export interface RecipeBlendCategory {

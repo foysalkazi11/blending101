@@ -1,6 +1,7 @@
 import React from "react";
 import CommentAndNoteButton from "../../../../../theme/button/commentAndNoteButton/CommentAndNoteButton";
 import InputComponent from "../../../../../theme/input/input.component";
+import CircularRotatingLoader from "../../../../../theme/loader/circularRotatingLoader.component";
 import TextArea from "../../../../../theme/textArea/TextArea";
 import styles from "./NoteForm.module.scss";
 
@@ -12,6 +13,7 @@ type NoteFormProps = {
   ) => void;
   createOrUpdateNote: () => void;
   variant?: "notes" | "versions";
+  addNewItemLoading?: boolean;
 };
 
 const NoteForm = ({
@@ -20,6 +22,7 @@ const NoteForm = ({
   updateNoteForm,
   createOrUpdateNote,
   variant = "notes",
+  addNewItemLoading = false,
 }: NoteFormProps) => {
   return (
     <div className={styles.noteFormContainer}>
@@ -45,7 +48,16 @@ const NoteForm = ({
           type="submitBtn"
           submitBtnVarient="secondary"
           style={{ boxShadow: "5px 5px 15px #e5e6e4" }}
-          text="Save"
+          text={
+            addNewItemLoading ? (
+              <CircularRotatingLoader
+                color="white"
+                style={{ fontSize: "16px" }}
+              />
+            ) : (
+              "Save"
+            )
+          }
           handleClick={createOrUpdateNote}
         />
         <CommentAndNoteButton

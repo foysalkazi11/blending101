@@ -5,12 +5,8 @@ import TrayWrapper from "../TrayWrapper";
 import styles from "./VersionsTray.module.scss";
 import NoteHead from "../commentsTray/noteSection/noteHead/NoteHead";
 import NoteBody from "../commentsTray/noteSection/noteBody/NoteBody";
-import { useMutation } from "@apollo/client";
 import { VscVersions } from "react-icons/vsc";
-import REMOVE_A_RECIPE_VERSION from "../../../gqlLib/versions/mutation/removeARecipeVersion";
-import notification from "../../utility/reactToastifyNotification";
 import useToGetARecipeVersion from "../../../customHooks/useToGetARecipeVersion";
-import useToGetARecipe from "../../../customHooks/useToGetARecipe";
 import useToChangeDefaultVersion from "../../../customHooks/useToChangeDefaultVersion";
 import TrayTag from "../TrayTag";
 import Tooltip from "../../../theme/toolTip/CustomToolTip";
@@ -22,6 +18,8 @@ import { faStarSharp } from "@fortawesome/pro-solid-svg-icons";
 import useTurnedOnOrOffVersion from "../../../customHooks/useTurnedOnOrOffVersion";
 import useToAddARecipeVersion from "../../../customHooks/useToAddARecipeVersion";
 import useToEditOfARecipeVersion from "../../../customHooks/useToEditOfARecipeVersion";
+import useToRemoveARecipeVersion from "../../../customHooks/useToRemoveARecipeVersion";
+import notification from "../../utility/reactToastifyNotification";
 
 interface VersionTrayProps {
   showTagByDefaut?: boolean;
@@ -39,24 +37,18 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   );
   const { dbUser } = useAppSelector((state) => state?.user);
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
-  const [removeVersion, { loading: removeVersionLoading }] = useMutation(
-    REMOVE_A_RECIPE_VERSION,
-  );
-  const handleToGetARecipeVersion = useToGetARecipeVersion();
+  const { handleToGetARecipeVersion } = useToGetARecipeVersion();
   const router = useRouter();
-  const { handleToGetARecipe } = useToGetARecipe();
   const { handleToUpdateDefaultVersion } = useToChangeDefaultVersion();
   const { handleTurnOnOrOffVersion } = useTurnedOnOrOffVersion();
   const { handleToAddRecipeVersion, loading: addNewVersionLoading } =
     useToAddARecipeVersion();
   const { handleToEditARecipeVersion, loading: editOrCreateVersionLoading } =
     useToEditOfARecipeVersion();
+  const { handleToRemoveARecipeVersion, loading: removeARecipeVersionLoading } =
+    useToRemoveARecipeVersion();
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
-
-  const funToGetARecipe = () => {
-    handleToGetARecipe(detailsARecipe?.recipeId._id, dbUser?._id);
-  };
 
   const toggleForm = () => {
     setShowForm((pre) => !pre);
@@ -74,10 +66,9 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   };
 
   const createOrUpdateVarsion = async () => {
-    toggleForm();
     try {
       if (updateVersion) {
-        handleToEditARecipeVersion(
+        await handleToEditARecipeVersion(
           dbUser?._id,
           detailsARecipe?.recipeId?._id,
           updateVersionId,
@@ -87,39 +78,36 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
             description: formState?.body,
           },
         );
+        toggleForm();
       } else {
         const obj = {
           description: formState?.body,
           postfixTitle: formState?.title,
         };
-        handleToAddRecipeVersion(
+        await handleToAddRecipeVersion(
           dbUser?._id,
           detailsARecipe?.recipeId?._id,
           obj,
         );
+        toggleForm();
       }
     } catch (error) {
       console.log(error);
+      notification("error", "Something went wrong");
+      toggleForm();
     }
   };
 
-  const deleteRecipeVersion = async (id: string) => {
-    try {
-      const { data } = await removeVersion({
-        variables: {
-          versionId: id,
-        },
-      });
-      // dispatch(
-      //   setDetailsARecipe({
-      //     ...detailsARecipe,
-      //     recipeVersion: data?.removeARecipeVersion,
-      //   }),
-      // );
-      notification("success", "Recipe version removed successfully");
-    } catch (error) {
-      console.log(error);
-    }
+  const deleteRecipeVersion = async (
+    versionId: string,
+    isTurnedOn?: boolean,
+  ) => {
+    handleToRemoveARecipeVersion(
+      dbUser?._id,
+      detailsARecipe?.recipeId?._id,
+      versionId,
+      isTurnedOn,
+    );
   };
 
   const handleButtonClick = () => {
@@ -238,16 +226,15 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
              
               `}
               onClick={() =>
-                detailsARecipe?.isMatch
-                  ? funToGetARecipe()
-                  : handleToGetARecipeVersion(
-                      detailsARecipe?.recipeId?.originalVersion?._id,
-                      true,
-                      null,
-                    )
+                handleToGetARecipeVersion(
+                  detailsARecipe?.recipeId?.originalVersion?._id,
+                  true,
+                  null,
+                )
               }
             >
-              {detailsARecipe?.recipeId?.name}
+              {detailsARecipe?.recipeId?.originalVersion?.postfixTitle ||
+                detailsARecipe?.recipeId?.name}
             </h3>
           </div>
 
@@ -298,13 +285,14 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           handleButtonClick={handleButtonClick}
           isFromRecipePage={openVersionTrayFormWhichPage}
           variant="versions"
+          addNewItemLoading={addNewVersionLoading || editOrCreateVersionLoading}
         />
         <NoteBody
           data={allVersions}
           deleteItem={deleteRecipeVersion}
           updateItem={updateVersionValue}
           varient="versions"
-          loading={addNewVersionLoading || removeVersionLoading}
+          // loading={addNewVersionLoading}
           isFromRecipePage={openVersionTrayFormWhichPage}
           handleToGetARecipeVersion={handleToGetARecipeVersion}
           handleToChangeDefaultVersion={(
@@ -326,6 +314,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
               versionId,
             )
           }
+          deleteItemLoading={removeARecipeVersionLoading}
         />
       </div>
     </TrayWrapper>

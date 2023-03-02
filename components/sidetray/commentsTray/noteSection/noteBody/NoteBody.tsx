@@ -17,7 +17,7 @@ type isFromRecipePageType = "details" | "edit" | "default";
 interface NoteBodyPops {
   data?: any[];
   updateItem?: (val: any) => void;
-  deleteItem?: (id: string) => void;
+  deleteItem?: (id: string, isTurnedOn?: boolean) => void;
   varient?: "notes" | "versions";
   loading?: boolean;
   isFromRecipePage?: isFromRecipePageType;
@@ -69,8 +69,7 @@ const NoteBody = ({
                       ? styles.headingHover
                       : null
                   } ${
-                    detailsARecipe?.defaultVersion?.tempVersionInfo?.id ===
-                    item?._id
+                    detailsARecipe?.tempVersionInfo?.id === item?._id
                       ? styles.active
                       : ""
                   }`}
@@ -133,7 +132,7 @@ export default NoteBody;
 interface FloodingMenuOneProps {
   item: any;
   updateItem: (agr: any) => void;
-  deleteItem: (agr: any) => void;
+  deleteItem: (versionId: string, isTurnedOn?: boolean) => void;
   deleteItemLoading: boolean;
 }
 
@@ -158,7 +157,7 @@ const FloodingMenuOne = ({
         <IconWarper
           hover="none"
           defaultBg="gray"
-          handleClick={() => deleteItem(item?._id)}
+          handleClick={() => deleteItem(item?._id, item?.isVersionSharable)}
         >
           {deleteItemLoading ? (
             <CircularRotatingLoader

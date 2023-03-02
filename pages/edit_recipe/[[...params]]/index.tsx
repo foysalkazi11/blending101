@@ -199,14 +199,11 @@ const EditRecipeComponent = () => {
     };
 
     try {
-      if (detailsARecipe?.isVersionActive) {
+      if (detailsARecipe?.tempVersionInfo) {
         let versionUpdateObj = {
-          editId: detailsARecipe?.isVersionActive
-            ? detailsARecipe?.defaultVersion?.tempVersionInfo?.id
-            : detailsARecipe?.defaultVersion?._id,
+          editId: detailsARecipe?.tempVersionInfo?.id,
           recipeId: detailsARecipe?.recipeId?._id,
-          turnedOn:
-            detailsARecipe?.defaultVersion?.tempVersionInfo?.isShareAble,
+          turnedOn: detailsARecipe?.tempVersionInfo?.isShareAble,
           userId: dbUser?._id,
           editableObject: {
             recipeInstructions: howToArr,
@@ -215,6 +212,7 @@ const EditRecipeComponent = () => {
             ingredients: ingArr,
             servingSize: calculateIngOz,
           },
+          isOriginalVersion: detailsARecipe?.tempVersionInfo?.isOriginalVersion,
         };
 
         let orginalRecipeObj = {
@@ -235,6 +233,7 @@ const EditRecipeComponent = () => {
           versionUpdateObj?.editId,
           versionUpdateObj?.turnedOn,
           versionUpdateObj?.editableObject,
+          versionUpdateObj?.isOriginalVersion,
         );
         // dispatch(setLoading(false));
         // notification("info", "Version updated sucessfully");

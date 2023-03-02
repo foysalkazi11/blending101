@@ -22,33 +22,19 @@ const useToGetARecipeVersion = () => {
       const { data } = await getARecipeVersion({
         variables: { versionId },
       });
-      const { _id, ...rest } = data?.getARecipeVersion;
-
-      let obj: VersionDataType = isOriginalVersion
-        ? {
-            ...detailsARecipe?.defaultVersion,
-            ...rest,
-            postfixTitle: detailsARecipe?.recipeId?.name || "",
-            description: detailsARecipe?.recipeId?.description || "",
-            tempVersionInfo: {
-              id: versionId,
-              isShareAble,
-            },
-          }
-        : {
-            ...detailsARecipe?.defaultVersion,
-            ...rest,
-            tempVersionInfo: {
-              id: versionId,
-              isShareAble,
-            },
-          };
 
       dispatch(
         setDetailsARecipe({
           ...detailsARecipe,
-          isVersionActive: true,
-          defaultVersion: obj,
+          defaultVersion: {
+            ...detailsARecipe?.defaultVersion,
+            ...data?.getARecipeVersion,
+          },
+          tempVersionInfo: {
+            id: versionId,
+            isShareAble,
+            isOriginalVersion,
+          },
         }),
       );
       dispatch(setOpenVersionTray(false));
@@ -57,7 +43,7 @@ const useToGetARecipeVersion = () => {
     }
   };
 
-  return handleToGetARecipeVersion;
+  return { handleToGetARecipeVersion, ...rest };
 };
 
 export default useToGetARecipeVersion;
