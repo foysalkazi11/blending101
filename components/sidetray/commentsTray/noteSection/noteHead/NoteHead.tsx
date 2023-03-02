@@ -14,6 +14,7 @@ type NoteFormProps = {
   handleButtonClick: () => void;
   isFromRecipePage?: "details" | "edit" | "default";
   variant?: "notes" | "versions";
+  addNewItemLoading?: boolean;
 };
 
 const NoteHead = ({
@@ -25,6 +26,7 @@ const NoteHead = ({
   handleButtonClick,
   isFromRecipePage = "default",
   variant = "notes",
+  addNewItemLoading = false,
 }: NoteFormProps) => {
   return (
     <div>
@@ -35,6 +37,7 @@ const NoteHead = ({
           updateNoteForm={updateNoteForm}
           createOrUpdateNote={createOrUpdateNote}
           variant={variant}
+          addNewItemLoading={addNewItemLoading}
         />
       ) : isFromRecipePage === "default" || isFromRecipePage === "edit" ? (
         <div className={styles.commentsIconBox}>

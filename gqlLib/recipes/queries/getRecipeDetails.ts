@@ -12,6 +12,7 @@ const GET_A_RECIPE = gql`
         }
         originalVersion {
           _id
+          description
           postfixTitle
         }
         userId {

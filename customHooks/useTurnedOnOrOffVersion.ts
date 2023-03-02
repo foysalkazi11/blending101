@@ -51,7 +51,6 @@ const useTurnedOnOrOffVersion = () => {
       dispatch(
         setDetailsARecipe({
           ...detailsARecipe,
-          isVersionActive: false,
           turnedOnVersions,
           turnedOffVersions,
         }),

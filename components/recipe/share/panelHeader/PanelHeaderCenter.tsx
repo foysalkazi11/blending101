@@ -58,13 +58,13 @@ const PanelHeaderCenter = ({
       <Tooltip content={`${editOrSavebtnText} recipe`} direction="bottom">
         <button
           className={`${styles.headerTextBtn} hvr-pop`}
-          onClick={!loading && editOrSavebtnFunc}
+          onClick={editOrSavebtnFunc}
           style={{ minWidth: "45px" }}
         >
           {loading ? (
             <CircularRotatingLoader
               color="white"
-              style={{ width: "18px", height: "18px" }}
+              style={{ fontSize: "16px" }}
             />
           ) : (
             editOrSavebtnText
