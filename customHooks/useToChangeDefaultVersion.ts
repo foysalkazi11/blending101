@@ -19,7 +19,7 @@ const useToChangeDefaultVersion = () => {
     isOriginalVersion: boolean = false,
   ) => {
     try {
-      const { data } = await changeDefaultVersion({
+      await changeDefaultVersion({
         variables: {
           userId,
           recipeId,

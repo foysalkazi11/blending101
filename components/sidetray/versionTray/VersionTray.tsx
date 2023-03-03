@@ -177,7 +177,12 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
       const {
         editableObject: { postfixTitle = "", description = "" },
       } = isNewVersionInfo;
-      handleButtonClick(postfixTitle, description);
+      setFormState((pre) => ({
+        ...pre,
+        title: postfixTitle,
+        body: description,
+      }));
+      setShowForm(true);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
