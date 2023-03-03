@@ -4,7 +4,6 @@ import Link from "next/link";
 import TrayWrapper from "../TrayWrapper";
 import CollectionComponent from "./content/collection.component";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import CustomModal from "../../../theme/modal/customModal/CustomModal";
 import AddCollectionModal from "../common/addCollectionModal/AddCollectionModal";
 import GET_COLLECTIONS_AND_THEMES from "../../../gqlLib/collection/query/getCollectionsAndThemes";
 import { useLazyQuery, useMutation } from "@apollo/client";
@@ -369,27 +368,28 @@ export default function RecipeCollectionAndThemeTray({
           )}
         />
       )}
-
-      <CustomModal open={openModal} setOpen={setOpenModal}>
-        {isDeleteCollection ? (
-          <ConfirmationModal
-            text="All the related entities will be removed along with this collection !!!"
-            cancleFunc={() => setOpenModal(false)}
-            submitFunc={handleDeleteCollection}
-            loading={deleteCollectionLoading}
-          />
-        ) : (
-          <AddCollectionModal
-            input={input}
-            setInput={setInput}
-            setOpenModal={setOpenModal}
-            handleToAddOrUpdateCollection={saveToDb}
-            isAddOrUpdateCollectionLoading={
-              addCollectionLoading || editCollectionLoading
-            }
-          />
-        )}
-      </CustomModal>
+      {isDeleteCollection && (
+        <ConfirmationModal
+          text="All the related entities will be removed along with this collection !!!"
+          cancleFunc={() => setOpenModal(false)}
+          submitFunc={handleDeleteCollection}
+          loading={deleteCollectionLoading}
+          openModal={openModal}
+          setOpenModal={setOpenModal}
+        />
+      )}
+      {!isDeleteCollection && (
+        <AddCollectionModal
+          input={input}
+          setInput={setInput}
+          setOpenModal={setOpenModal}
+          handleToAddOrUpdateCollection={saveToDb}
+          isAddOrUpdateCollectionLoading={
+            addCollectionLoading || editCollectionLoading
+          }
+          openModal={openModal}
+        />
+      )}
     </TrayWrapper>
   );
 }

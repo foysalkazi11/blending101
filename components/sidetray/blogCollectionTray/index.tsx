@@ -15,7 +15,6 @@ import {
   setIsOpenBlogCollectionTray,
 } from "../../../redux/slices/blogSlice";
 import ConfirmationModal from "../../../theme/confirmationModal/ConfirmationModal";
-import CustomModal from "../../../theme/modal/customModal/CustomModal";
 import SkeletonCollections from "../../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollections";
 import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
 import notification from "../../utility/reactToastifyNotification";
@@ -373,26 +372,28 @@ const PlanCollectionTray = ({
           },
         )
       )}
-      <CustomModal open={openModal} setOpen={setOpenModal}>
-        {isDeleteCollection ? (
-          <ConfirmationModal
-            text="All the related entities will be removed along with this collection !!!"
-            cancleFunc={() => setOpenModal(false)}
-            submitFunc={handleDeleteCollection}
-            loading={deleteCollectionLoading}
-          />
-        ) : (
-          <AddCollectionModal
-            input={input}
-            setInput={setInput}
-            setOpenModal={setOpenModal}
-            handleToAddOrUpdateCollection={handleAddOrEditCollection}
-            isAddOrUpdateCollectionLoading={
-              addNewBlogCollectionLoading || editBlogCollectionLoading
-            }
-          />
-        )}
-      </CustomModal>
+      {isDeleteCollection && (
+        <ConfirmationModal
+          text="All the related entities will be removed along with this collection !!!"
+          cancleFunc={() => setOpenModal(false)}
+          submitFunc={handleDeleteCollection}
+          loading={deleteCollectionLoading}
+          openModal={openModal}
+          setOpenModal={setOpenModal}
+        />
+      )}
+      {!isDeleteCollection && (
+        <AddCollectionModal
+          input={input}
+          setInput={setInput}
+          setOpenModal={setOpenModal}
+          handleToAddOrUpdateCollection={handleAddOrEditCollection}
+          isAddOrUpdateCollectionLoading={
+            addNewBlogCollectionLoading || editBlogCollectionLoading
+          }
+          openModal={openModal}
+        />
+      )}
     </TrayWrapper>
   );
 };

@@ -3,11 +3,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 type varsionState = {
   openVersionTray: boolean;
   openVersionTrayFormWhichPage: "details" | "edit" | "default";
+  isNewVersionInfo: { [key: string]: any } | null;
 };
 
 const initialState: varsionState = {
   openVersionTray: false,
   openVersionTrayFormWhichPage: "default",
+  isNewVersionInfo: null,
 };
 
 export const versionTraySlice = createSlice({
@@ -23,10 +25,19 @@ export const versionTraySlice = createSlice({
     ) => {
       state.openVersionTrayFormWhichPage = action?.payload;
     },
+    setIsNewVersionInfo: (
+      state,
+      action: PayloadAction<{ [key: string]: any } | null>,
+    ) => {
+      state.isNewVersionInfo = action?.payload;
+    },
   },
 });
 
-export const { setOpenVersionTray, setOpenVersionTrayFormWhichPage } =
-  versionTraySlice?.actions;
+export const {
+  setOpenVersionTray,
+  setOpenVersionTrayFormWhichPage,
+  setIsNewVersionInfo,
+} = versionTraySlice?.actions;
 
 export default versionTraySlice?.reducer;

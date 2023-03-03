@@ -14,15 +14,8 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { setSelectedBlendCategory } from "../../../../redux/edit_recipe/editRecipeStates";
 import RecipeDropDown from "../../../../theme/dropDown/recipeDropDown.component";
 import HandleImageShow from "../../share/handleImageShow/HandleImageShow";
-import {
-  setOpenVersionTray,
-  setOpenVersionTrayFormWhichPage,
-} from "../../../../redux/slices/versionTraySlice";
-import { VscVersions } from "react-icons/vsc";
 import InputComponent from "../../../../theme/input/input.component";
 import TextArea from "../../../../theme/textArea/TextArea";
-import { MdMoreVert, MdDeleteOutline } from "react-icons/md";
-import IconWraper from "../../../../theme/iconWarper/IconWarper";
 import { RecipeDetailsType } from "../../../../type/recipeDetailsType";
 import useOnClickOutside from "../../../utility/useOnClickOutside";
 import { useMutation } from "@apollo/client";
@@ -231,14 +224,15 @@ const Center_Elements = ({
           </div>
         </div>
       </div>
-      <CustomModal open={openModal} setOpen={setOpenModal}>
-        <ConfirmationModal
-          text="All the related entities will be removed along with this recipe !!!"
-          cancleFunc={() => setOpenModal(false)}
-          submitFunc={deleteOneRecipe}
-          loading={loading}
-        />
-      </CustomModal>
+
+      <ConfirmationModal
+        text="All the related entities will be removed along with this recipe !!!"
+        cancleFunc={() => setOpenModal(false)}
+        submitFunc={deleteOneRecipe}
+        loading={loading}
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+      />
     </>
   );
 };

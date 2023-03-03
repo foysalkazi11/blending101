@@ -1,6 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setOpenVersionTray } from "../../../redux/slices/versionTraySlice";
+import {
+  setIsNewVersionInfo,
+  setOpenVersionTray,
+} from "../../../redux/slices/versionTraySlice";
 import TrayWrapper from "../TrayWrapper";
 import styles from "./VersionsTray.module.scss";
 import NoteHead from "../commentsTray/noteSection/noteHead/NoteHead";
@@ -20,6 +23,7 @@ import useToAddARecipeVersion from "../../../customHooks/useToAddARecipeVersion"
 import useToEditOfARecipeVersion from "../../../customHooks/useToEditOfARecipeVersion";
 import useToRemoveARecipeVersion from "../../../customHooks/useToRemoveARecipeVersion";
 import notification from "../../utility/reactToastifyNotification";
+import ConfirmationModal from "../../../theme/confirmationModal/ConfirmationModal";
 
 interface VersionTrayProps {
   showTagByDefaut?: boolean;
@@ -27,14 +31,17 @@ interface VersionTrayProps {
 }
 
 const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
+  const [openModal, setOpenModal] = useState(false);
+  const [removeVersionInfo, setRemoveVersionInfo] = useState<{
+    [key: string]: any;
+  }>({});
   const [showForm, setShowForm] = useState(false);
   const [updateVersion, setUpdateVersion] = useState(false);
   const [formState, setFormState] = useState({ title: "", body: "" });
   const [updateVersionId, setUpdateVersionId] = useState("");
   const [isVersionSharable, setIsVersionSharable] = useState(false);
-  const { openVersionTray, openVersionTrayFormWhichPage } = useAppSelector(
-    (state) => state?.versionTray,
-  );
+  const { openVersionTray, openVersionTrayFormWhichPage, isNewVersionInfo } =
+    useAppSelector((state) => state?.versionTray);
   const { dbUser } = useAppSelector((state) => state?.user);
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
   const { handleToGetARecipeVersion } = useToGetARecipeVersion();
@@ -90,6 +97,9 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           obj,
         );
         toggleForm();
+        if (isNewVersionInfo) {
+          dispatch(setIsNewVersionInfo(null));
+        }
       }
     } catch (error) {
       console.log(error);
@@ -98,22 +108,25 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     }
   };
 
-  const deleteRecipeVersion = async (
-    versionId: string,
-    isTurnedOn?: boolean,
-  ) => {
-    handleToRemoveARecipeVersion(
-      dbUser?._id,
-      detailsARecipe?.recipeId?._id,
-      versionId,
-      isTurnedOn,
-    );
+  const openConfirmationModal = (versionId: string, isTurnedOn?: boolean) => {
+    setRemoveVersionInfo({ versionId, isTurnedOn });
+    setOpenModal(true);
   };
 
-  const handleButtonClick = () => {
-    toggleForm();
+  const deleteRecipeVersion = async () => {
+    await handleToRemoveARecipeVersion(
+      dbUser?._id,
+      detailsARecipe?.recipeId?._id,
+      removeVersionInfo?.versionId,
+      removeVersionInfo?.isTurnedOn,
+    );
+    setOpenModal(false);
+  };
+
+  const handleButtonClick = (title = "", body = "") => {
+    setFormState((pre) => ({ ...pre, title, body }));
     setUpdateVersion(false);
-    setFormState((pre) => ({ ...pre, title: "", body: "" }));
+    toggleForm();
   };
 
   const updateVersionValue = (val: any) => {
@@ -158,6 +171,17 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     detailsARecipe?.turnedOffVersions,
     detailsARecipe?.turnedOnVersions,
   ]);
+
+  useEffect(() => {
+    if (isNewVersionInfo) {
+      const {
+        editableObject: { postfixTitle = "", description = "" },
+      } = isNewVersionInfo;
+      handleButtonClick(postfixTitle, description);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isNewVersionInfo]);
 
   useEffect(() => {
     isMounted.current = true;
@@ -282,14 +306,14 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           noteForm={formState}
           updateNoteForm={updateForm}
           createOrUpdateNote={createOrUpdateVarsion}
-          handleButtonClick={handleButtonClick}
+          handleButtonClick={() => handleButtonClick()}
           isFromRecipePage={openVersionTrayFormWhichPage}
           variant="versions"
           addNewItemLoading={addNewVersionLoading || editOrCreateVersionLoading}
         />
         <NoteBody
           data={allVersions}
-          deleteItem={deleteRecipeVersion}
+          deleteItem={openConfirmationModal}
           updateItem={updateVersionValue}
           varient="versions"
           // loading={addNewVersionLoading}
@@ -314,9 +338,17 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
               versionId,
             )
           }
-          deleteItemLoading={removeARecipeVersionLoading}
+          // deleteItemLoading={removeARecipeVersionLoading}
         />
       </div>
+      <ConfirmationModal
+        text="All the related entities will be removed along with this version !!!"
+        cancleFunc={() => setOpenModal(false)}
+        submitFunc={deleteRecipeVersion}
+        loading={removeARecipeVersionLoading}
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+      />
     </TrayWrapper>
   );
 };
