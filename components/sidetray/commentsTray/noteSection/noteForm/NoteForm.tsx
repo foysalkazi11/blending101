@@ -18,7 +18,7 @@ type NoteFormProps = {
 
 const NoteForm = ({
   toggleNoteForm,
-  noteForm,
+  noteForm = { body: "", title: "" },
   updateNoteForm,
   createOrUpdateNote,
   variant = "notes",

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, memo, SetStateAction, useState } from "react";
 import AContainer from "../../../containers/A.container";
 import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
 import Center_Elements from "./recipe_elements/centerElements.component";
@@ -178,4 +178,4 @@ const EditRecipePage = ({
     </AContainer>
   );
 };
-export default EditRecipePage;
+export default memo(EditRecipePage);
