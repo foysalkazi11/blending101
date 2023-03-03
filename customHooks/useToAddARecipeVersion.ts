@@ -20,6 +20,10 @@ const useToAddARecipeVersion = () => {
     versionAddData: VersionAddData,
   ) => {
     const { description, postfixTitle } = versionAddData;
+    if (!postfixTitle) {
+      notification("info", `Please enter a title`);
+      return;
+    }
 
     try {
       const { data } = await addVersion({
