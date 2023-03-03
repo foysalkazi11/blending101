@@ -12,11 +12,7 @@ const REMOVE_A_RECIPE_VERSION = gql`
       userId: $userId
       recipeId: $recipeId
       versionId: $versionId
-    ) {
-      defaultVersion {
-        _id
-      }
-    }
+    )
   }
 `;
 export default REMOVE_A_RECIPE_VERSION;

@@ -12,20 +12,7 @@ const TURN_ON_OR_OFF_VERSION = gql`
       versionId: $versionId
       recipeId: $recipeId
       userId: $userId
-    ) {
-      turnedOnVersions {
-        _id
-
-        postfixTitle
-        description
-      }
-      turnedOffVersions {
-        _id
-
-        postfixTitle
-        description
-      }
-    }
+    )
   }
 `;
 

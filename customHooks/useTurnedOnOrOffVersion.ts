@@ -19,7 +19,7 @@ const useTurnedOnOrOffVersion = () => {
     versionId: string,
   ) => {
     try {
-      const { data } = await turnedOnOrOffVersion({
+      await turnedOnOrOffVersion({
         variables: {
           turnedOn,
           userId,

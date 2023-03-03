@@ -10,37 +10,7 @@ const CHANGE_DEFAULT_VERSION = gql`
       userId: $userId
       recipeId: $recipeId
       versionID: $versionId
-    ) {
-      defaultVersion {
-        _id
-        description
-        postfixTitle
-        recipeId
-        recipeInstructions
-        servingSize
-        ingredients {
-          ingredientId {
-            ingredientName
-            _id
-            images
-            featuredImage
-          }
-
-          portions {
-            name
-            gram
-            default
-            quantity
-          }
-          weightInGram
-          selectedPortion {
-            name
-            quantity
-            gram
-          }
-        }
-      }
-    }
+    )
   }
 `;
 
