@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import EditRecipePage from "../../../components/recipe/editRecipe/EditRecipe.component";
 import { useMutation, useQuery } from "@apollo/client";
@@ -22,6 +22,7 @@ import reactToastifyNotification from "../../../components/utility/reactToastify
 import useGetBlendNutritionBasedOnRecipexxx from "../../../customHooks/useGetBlendNutritionBasedOnRecipexxx";
 import useToGetARecipe from "../../../customHooks/useToGetARecipe";
 import {
+  setIsNewVersionInfo,
   setOpenVersionTray,
   setOpenVersionTrayFormWhichPage,
 } from "../../../redux/slices/versionTraySlice";
@@ -32,6 +33,7 @@ import { GiGl } from "../../../type/nutrationType";
 import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
 import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 import useToEditOfARecipeVersion from "../../../customHooks/useToEditOfARecipeVersion";
+import ConfirmationModal from "../../../theme/confirmationModal/ConfirmationModal";
 
 const EditRecipeComponent = () => {
   const router = useRouter();
@@ -39,6 +41,10 @@ const EditRecipeComponent = () => {
   const recipeId = params?.[0] || "";
   const versionId = params?.[1] || "";
   const dispatch = useAppDispatch();
+  const [newVersionInfo, setNewVersionInfo] = useState<{ [key: string]: any }>(
+    {},
+  );
+  const [openModal, setOpenModal] = useState(false);
   const [calculateIngOz, SetcalculateIngOz] = useState(null);
   const [images, setImages] = useState<any[]>([]);
   const [existingimages, setExistingImages] = useState<string[]>([]);
@@ -56,22 +62,11 @@ const EditRecipeComponent = () => {
     loading: nutritionDataLoading,
     data: nutritionData,
   } = useGetBlendNutritionBasedOnRecipexxx();
-
   const { handleToEditARecipeVersion, loading: editOrCreateVersionLoading } =
     useToEditOfARecipeVersion();
-
-  const servingCounter = useAppSelector(
-    (state) => state.editRecipeReducer.servingCounter,
-  );
-
   const recipeInstruction = useAppSelector(
     (state) => state?.editRecipeReducer?.recipeInstruction,
   );
-
-  const selectedBLendCategory = useAppSelector(
-    (state) => state?.editRecipeReducer?.selectedBlendCategory,
-  );
-
   const { data: allBlendCategory } = useQuery(BLEND_CATEGORY);
   const [editRecipe] = useMutation(EDIT_A_RECIPE);
   const { handleToGetARecipe } = useToGetARecipe();
@@ -85,6 +80,17 @@ const EditRecipeComponent = () => {
       },
     });
 
+  const openConfirmationModal = (data: { [key: string]: any }) => {
+    setOpenModal(true);
+    setNewVersionInfo(data);
+  };
+
+  const handleOpenVersionTray = () => {
+    dispatch(setOpenVersionTray(true));
+    dispatch(setIsNewVersionInfo(newVersionInfo));
+    setOpenModal(false);
+  };
+
   const updateEditRecipe = (key: string, value: any) => {
     setCopyDetailsRecipe((prev) => ({
       ...prev,
@@ -96,37 +102,6 @@ const EditRecipeComponent = () => {
     detailsARecipe?.defaultVersion?.ingredients?.find(
       (item) => item?.ingredientId?._id === id,
     );
-
-  useEffect(() => {
-    if (!ingredientCategoryData?.filterIngredientByCategoryAndClass) return;
-    const defaultIngredientIds =
-      detailsARecipe?.defaultVersion?.ingredients?.map(
-        (ing) => ing?.ingredientId?._id,
-      );
-    const presentIngredient = [];
-    ingredientCategoryData?.filterIngredientByCategoryAndClass?.forEach(
-      (elem) => {
-        if (defaultIngredientIds?.includes(elem._id)) {
-          presentIngredient.push({ ...elem, ...findIngredient(elem._id) });
-        }
-      },
-    );
-
-    dispatch(setSelectedIngredientsList(presentIngredient));
-  }, [
-    ingredientCategoryData?.filterIngredientByCategoryAndClass,
-    detailsARecipe?.defaultVersion?.ingredients,
-  ]);
-
-  useEffect(() => {
-    if (!detailsARecipe) return;
-    setCopyDetailsRecipe({ ...detailsARecipe });
-    dispatch(setServingCounter(detailsARecipe?.recipeId?.servings || 1));
-    SetcalculateIngOz(detailsARecipe?.defaultVersion?.servingSize);
-    setExistingImages(
-      detailsARecipe?.recipeId?.image?.map((item) => `${item?.image}`),
-    );
-  }, [detailsARecipe?.defaultVersion]);
 
   const updateOrginalRecipe = async (obj: any) => {
     if (images?.length) {
@@ -184,19 +159,19 @@ const EditRecipeComponent = () => {
         : { image: img, default: false },
     );
 
-    let orginalRecipeObj = {
-      editId: recipeId,
-      editableObject: {
-        name: copyDetailsRecipe?.recipeId?.name,
-        description: copyDetailsRecipe?.recipeId?.description,
-        image: imgArr,
-        ingredients: ingArr,
-        recipeBlendCategory: selectedBLendCategory,
-        servingSize: calculateIngOz,
-        servings: servingCounter,
-        recipeInstructions: howToArr,
-      },
-    };
+    // let orginalRecipeObj = {
+    //   editId: recipeId,
+    //   editableObject: {
+    //     name: copyDetailsRecipe?.recipeId?.name,
+    //     description: copyDetailsRecipe?.recipeId?.description,
+    //     image: imgArr,
+    //     ingredients: ingArr,
+    //     recipeBlendCategory: selectedBLendCategory,
+    //     servingSize: calculateIngOz,
+    //     servings: servingCounter,
+    //     recipeInstructions: howToArr,
+    //   },
+    // };
 
     try {
       if (detailsARecipe?.tempVersionInfo) {
@@ -215,39 +190,107 @@ const EditRecipeComponent = () => {
           isOriginalVersion: detailsARecipe?.tempVersionInfo?.isOriginalVersion,
         };
 
-        let orginalRecipeObj = {
-          editId: recipeId,
+        if (
+          detailsARecipe?.tempVersionInfo?.isOriginalVersion &&
+          detailsARecipe?.recipeId?.userId?._id !== dbUser?._id
+        ) {
+          openConfirmationModal(versionUpdateObj);
+        } else {
+          // let orginalRecipeObj = {
+          //   editId: recipeId,
+          //   editableObject: {
+          //     name: copyDetailsRecipe?.recipeId?.name,
+          //     description: copyDetailsRecipe?.recipeId?.description,
+          //     image: imgArr,
+          //     recipeBlendCategory: selectedBLendCategory,
+          //     servings: servingCounter,
+          //   },
+          // };
+
+          // await updateOrginalRecipe(orginalRecipeObj);
+          handleToEditARecipeVersion(
+            versionUpdateObj?.userId,
+            versionUpdateObj?.recipeId,
+            versionUpdateObj?.editId,
+            versionUpdateObj?.turnedOn,
+            versionUpdateObj?.editableObject,
+            versionUpdateObj?.isOriginalVersion,
+          );
+          // dispatch(setLoading(false));
+          // notification("info", "Version updated sucessfully");
+        }
+      } else {
+        let versionUpdateObj = {
+          editId: detailsARecipe?.defaultVersion?._id,
+          recipeId: detailsARecipe?.recipeId?._id,
+          turnedOn: null,
+          userId: dbUser?._id,
           editableObject: {
-            name: copyDetailsRecipe?.recipeId?.name,
-            description: copyDetailsRecipe?.recipeId?.description,
-            image: imgArr,
-            recipeBlendCategory: selectedBLendCategory,
-            servings: servingCounter,
+            recipeInstructions: howToArr,
+            postfixTitle: copyDetailsRecipe?.defaultVersion.postfixTitle,
+            description: copyDetailsRecipe?.defaultVersion.description,
+            ingredients: ingArr,
+            servingSize: calculateIngOz,
           },
+          isOriginalVersion: detailsARecipe?.isMatch,
         };
 
-        // await updateOrginalRecipe(orginalRecipeObj);
-        handleToEditARecipeVersion(
-          versionUpdateObj?.userId,
-          versionUpdateObj?.recipeId,
-          versionUpdateObj?.editId,
-          versionUpdateObj?.turnedOn,
-          versionUpdateObj?.editableObject,
-          versionUpdateObj?.isOriginalVersion,
-        );
-        // dispatch(setLoading(false));
-        // notification("info", "Version updated sucessfully");
-        return;
+        if (
+          detailsARecipe?.defaultVersion?._id ===
+            detailsARecipe?.recipeId?.originalVersion?._id &&
+          detailsARecipe?.recipeId?.userId?._id !== dbUser?._id
+        ) {
+          openConfirmationModal(versionUpdateObj);
+        } else {
+          handleToEditARecipeVersion(
+            versionUpdateObj?.userId,
+            versionUpdateObj?.recipeId,
+            versionUpdateObj?.editId,
+            versionUpdateObj?.turnedOn,
+            versionUpdateObj?.editableObject,
+            versionUpdateObj?.isOriginalVersion,
+          );
+        }
       }
 
       // await updateOrginalRecipe(orginalRecipeObj);
-      dispatch(setLoading(false));
+      // dispatch(setLoading(false));
       // reactToastifyNotification("info", "Recipe Updateded successfully ");
     } catch (error) {
       dispatch(setLoading(false));
       reactToastifyNotification("error", "Error while saving Recipe");
     }
   };
+  useEffect(() => {
+    if (!ingredientCategoryData?.filterIngredientByCategoryAndClass) return;
+    const defaultIngredientIds =
+      detailsARecipe?.defaultVersion?.ingredients?.map(
+        (ing) => ing?.ingredientId?._id,
+      );
+    const presentIngredient = [];
+    ingredientCategoryData?.filterIngredientByCategoryAndClass?.forEach(
+      (elem) => {
+        if (defaultIngredientIds?.includes(elem._id)) {
+          presentIngredient.push({ ...elem, ...findIngredient(elem._id) });
+        }
+      },
+    );
+
+    dispatch(setSelectedIngredientsList(presentIngredient));
+  }, [
+    ingredientCategoryData?.filterIngredientByCategoryAndClass,
+    detailsARecipe?.defaultVersion?.ingredients,
+  ]);
+
+  useEffect(() => {
+    if (!detailsARecipe) return;
+    setCopyDetailsRecipe({ ...detailsARecipe });
+    dispatch(setServingCounter(detailsARecipe?.recipeId?.servings || 1));
+    SetcalculateIngOz(detailsARecipe?.defaultVersion?.servingSize);
+    setExistingImages(
+      detailsARecipe?.recipeId?.image?.map((item) => `${item?.image}`),
+    );
+  }, [detailsARecipe?.defaultVersion]);
 
   useEffect(() => {
     dispatch(setOpenVersionTray(false));
@@ -289,38 +332,58 @@ const EditRecipeComponent = () => {
     };
   }, []);
 
-  const nutritionList =
-    nutritionData?.getNutrientsListAndGiGlByIngredients?.nutrients;
-  const giGl: GiGl = nutritionData?.getNutrientsListAndGiGlByIngredients?.giGl;
+  const nutritionList = useMemo(
+    () => nutritionData?.getNutrientsListAndGiGlByIngredients?.nutrients,
+    [nutritionData?.getNutrientsListAndGiGlByIngredients?.nutrients],
+  );
+
+  const giGl: GiGl = useMemo(
+    () => nutritionData?.getNutrientsListAndGiGlByIngredients?.giGl,
+    [nutritionData?.getNutrientsListAndGiGlByIngredients?.giGl],
+  );
 
   return (
-    <EditRecipePage
-      copyDetailsRecipe={copyDetailsRecipe}
-      updateEditRecipe={updateEditRecipe}
-      allIngredients={
-        ingredientCategoryData?.filterIngredientByCategoryAndClass
-      }
-      nutritionTrayData={nutritionList ? JSON.parse(nutritionList) : []}
-      recipeInstructions={
-        copyDetailsRecipe?.defaultVersion?.recipeInstructions || []
-      }
-      allBlendCategories={allBlendCategory?.getAllCategories}
-      selectedBLendCategory={
-        copyDetailsRecipe?.recipeId?.recipeBlendCategory?.name
-      }
-      editARecipeFunction={editARecipeFunction}
-      calculatedIngOz={calculateIngOz}
-      nutritionDataLoading={nutritionDataLoading}
-      images={images}
-      setImages={setImages}
-      existingImage={existingimages}
-      setExistingImage={setExistingImages}
-      nutritionState={nutritionState}
-      setNutritionState={setNutritionState}
-      recipeId={recipeId}
-      giGl={giGl}
-      recipeEditOrVersionEditLoading={editOrCreateVersionLoading}
-    />
+    <>
+      <EditRecipePage
+        copyDetailsRecipe={copyDetailsRecipe}
+        updateEditRecipe={updateEditRecipe}
+        allIngredients={
+          ingredientCategoryData?.filterIngredientByCategoryAndClass
+        }
+        nutritionTrayData={nutritionList ? JSON.parse(nutritionList) : []}
+        recipeInstructions={
+          copyDetailsRecipe?.defaultVersion?.recipeInstructions || []
+        }
+        allBlendCategories={allBlendCategory?.getAllCategories}
+        selectedBLendCategory={
+          copyDetailsRecipe?.recipeId?.recipeBlendCategory?.name
+        }
+        editARecipeFunction={editARecipeFunction}
+        calculatedIngOz={calculateIngOz}
+        nutritionDataLoading={nutritionDataLoading}
+        images={images}
+        setImages={setImages}
+        existingImage={existingimages}
+        setExistingImage={setExistingImages}
+        nutritionState={nutritionState}
+        setNutritionState={setNutritionState}
+        recipeId={recipeId}
+        giGl={giGl}
+        recipeEditOrVersionEditLoading={editOrCreateVersionLoading}
+      />
+      <ConfirmationModal
+        text="You can't edit original recipe but you can make a new version like original one"
+        cancleFunc={() => {
+          setOpenModal(false);
+          dispatch(setIsNewVersionInfo(null));
+        }}
+        submitFunc={handleOpenVersionTray}
+        // loading={removeARecipeVersionLoading}
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        submitButText="Proceed"
+      />
+    </>
   );
 };
 

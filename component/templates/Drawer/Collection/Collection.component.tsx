@@ -75,13 +75,13 @@ function CollectionDrawer({
           }
           collectionsLoading={collectionsLoading}
         />
-        <CustomModal open={openModal} setOpen={setOpenModal}>
-          <AddCollectionModal
-            input={input}
-            setInput={setInput}
-            setOpenModal={setOpenModal}
-          />
-        </CustomModal>
+
+        <AddCollectionModal
+          input={input}
+          setInput={setInput}
+          setOpenModal={setOpenModal}
+          openModal={openModal}
+        />
       </div>
     </TrayWrapper>
   );
