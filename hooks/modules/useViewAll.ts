@@ -9,7 +9,6 @@ import { useAppSelector } from "../../redux/hooks";
 
 const useViewAll = (param: string) => {
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
-
   const [response, setResponse] = useState([]);
 
   const config = useMemo(
@@ -22,42 +21,71 @@ const useViewAll = (param: string) => {
     [userId],
   );
 
-  const [getAllrecomendedRecipes] = useLazyQuery(
+  const [getAllRecommendedRecipes, getAllRecommendedRecipesData] = useLazyQuery(
     GET_ALL_RECOMMENDED_RECIPES,
     config,
   );
-  const [getAllPopularRecipes] = useLazyQuery(GET_ALL_POPULAR_RECIPES, config);
-  const [getAllLatestRecipes] = useLazyQuery(GET_ALL_LATEST_RECIPES, config);
+  const [getAllPopularRecipes, getAllPopularRecipesData] = useLazyQuery(
+    GET_ALL_POPULAR_RECIPES,
+    config,
+  );
+  const [getAllLatestRecipes, getAllLatestRecipesData] = useLazyQuery(
+    GET_ALL_LATEST_RECIPES,
+    config,
+  );
+
+  const responseObj = useMemo(
+    () => ({
+      recommended: {
+        method: getAllRecommendedRecipes,
+        data: getAllRecommendedRecipesData,
+      },
+      popular: {
+        method: getAllPopularRecipes,
+        data: getAllPopularRecipesData,
+      },
+      latest: {
+        method: getAllLatestRecipes,
+        data: getAllLatestRecipesData,
+      },
+    }),
+    [
+      getAllLatestRecipes,
+      getAllLatestRecipesData,
+      getAllPopularRecipes,
+      getAllPopularRecipesData,
+      getAllRecommendedRecipes,
+      getAllRecommendedRecipesData,
+    ],
+  );
+
+  async function fetchData() {
+    await responseObj?.[param]?.method();
+    // let response: any;
+    // switch (param) {
+    //   case "recommended":
+    //     response = await getAllRecommendedRecipes();
+    //     break;
+    //   case "popular":
+    //     response = await getAllPopularRecipes();
+    //     break;
+    //   case "latest":
+    //     response = await getAllLatestRecipes();
+    //     break;
+    //   default:
+    //     return;
+    // }
+    // setResponse(response?.data[QUERY_DICTIONARY[param]?.query]);
+  }
 
   useEffect(() => {
-    async function fetchData() {
-      let response: any;
-      switch (param) {
-        case "recommended":
-          response = await getAllrecomendedRecipes();
-          break;
-        case "popular":
-          response = await getAllPopularRecipes();
-          break;
-        case "latest":
-          response = await getAllLatestRecipes();
-          break;
-        default:
-          return;
-      }
-      setResponse(response?.data[QUERY_DICTIONARY[param]?.query]);
-    }
     if (param !== "") {
       fetchData();
     }
-  }, [
-    getAllLatestRecipes,
-    getAllPopularRecipes,
-    getAllrecomendedRecipes,
-    param,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [param]);
 
-  return response;
+  return { ...responseObj[param]?.data };
 };
 
 export default useViewAll;
@@ -65,17 +93,17 @@ export default useViewAll;
 export const QUERY_DICTIONARY = {
   recommended: {
     title: "Recommended",
-    query: "getAllrecomendedRecipes",
+    query: "getAllrecomendedRecipes2",
     icon: faThumbsUp,
   },
   popular: {
     title: "Popular",
-    query: "getAllpopularRecipes",
+    query: "getAllpopularRecipes2",
     icon: faFire,
   },
   latest: {
     title: "Recent",
-    query: "getAllLatestRecipes",
+    query: "getAllLatestRecipes2",
     icon: faClock,
   },
 };
