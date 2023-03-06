@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import PlanCard from "../../component/module/Planner/PlanCard.component";
 import useIntersectionObserver from "../../customHooks/useIntersectionObserver";
+import joniIngredients from "../../helperFunc/joinIngredients";
 import { useAppDispatch } from "../../redux/hooks";
 import {
   setActiveRecipeId,
@@ -181,36 +182,59 @@ const ShowRecipeContainer = ({
             <div className={styles.showRecipes}>
               {showItems === "recipe" &&
                 containerData?.map((item, index) => {
-                  let ingredients = [];
-                  item?.ingredients?.forEach((ing) => {
-                    const ingredient = ing?.ingredientId?.ingredientName;
-                    ingredients.push(ingredient);
-                  });
-                  const ing = ingredients.toString();
+                  const {
+                    recipeId: {
+                      _id = "",
+                      name = "",
+                      image = "",
+                      originalVersion = "",
+                      numberOfRating = 0,
+                      averageRating = 0,
+                      recipeBlendCategory,
+                      userId,
+                    },
+                    defaultVersion: {
+                      _id: defaultVersionId = "",
+                      postfixTitle = "",
+                      ingredients,
+                      description = "",
+                    },
+                    isMatch = false,
+                    allRecipes = false,
+                    myRecipes = false,
+                    notes = 0,
+                    addedToCompare = false,
+                    userCollections = [],
+                    versionCount = 0,
+                  } = item;
+                  const ing = joniIngredients(ingredients);
                   return (
                     <DatacardComponent
-                      key={index}
-                      title={item.name}
+                      key={_id}
+                      title={name}
                       ingredients={ing}
-                      category={item.recipeBlendCategory?.name}
-                      ratings={item?.averageRating}
-                      noOfRatings={item?.numberOfRating}
-                      carbs={item.carbs}
-                      score={item.score}
-                      calorie={item.calorie}
-                      noOfComments={item?.numberOfRating}
-                      image={item.image[0]?.image}
-                      recipeId={item?._id}
-                      notes={item?.notes}
-                      addedToCompare={item?.addedToCompare}
+                      category={recipeBlendCategory?.name}
+                      ratings={averageRating}
+                      noOfRatings={numberOfRating}
+                      carbs={item?.carbs}
+                      score={item?.score}
+                      calorie={item?.calorie}
+                      noOfComments={numberOfRating}
+                      image={image?.[0]?.image}
+                      recipeId={_id}
+                      notes={notes}
+                      addedToCompare={addedToCompare}
+                      isCollectionIds={userCollections}
                       setOpenCollectionModal={setOpenCollectionModal}
-                      isCollectionIds={item?.userCollections}
-                      isMatch={item?.isMatch}
-                      postfixTitle={item?.defaultVersion?.postfixTitle}
-                      defaultVersionId={item?.defaultVersion?._id}
-                      userId={item?.userId}
+                      isMatch={isMatch}
+                      postfixTitle={postfixTitle}
+                      defaultVersionId={defaultVersionId}
+                      userId={userId}
+                      recipeVersion={versionCount}
+                      showMoreMenuAtHover={true}
                       setShareRecipeData={setShareRecipeData}
                       setOpenShareModal={setOpenShareModal}
+                      token={item?.token}
                       updateDataFunc={updateContainerData}
                     />
                   );

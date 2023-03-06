@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { faThumbsUp } from "@fortawesome/pro-light-svg-icons";
+import { faClock, faFire, faThumbsUp } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useCallback } from "react";
 import Widget from "../../../../component/module/Widget/Widget.component";
@@ -7,6 +7,7 @@ import client from "../../../../gqlLib/client";
 import GET_ALL_LATEST_RECIPES from "../../../../gqlLib/recipes/queries/getAllLatestRecipes";
 import GET_ALL_POPULAR_RECIPES from "../../../../gqlLib/recipes/queries/getAllPopularRecipes";
 import GET_ALL_RECOMMENDED_RECIPES from "../../../../gqlLib/recipes/queries/getRecommendedRecipes";
+import joniIngredients from "../../../../helperFunc/joinIngredients";
 import { useAppSelector } from "../../../../redux/hooks";
 import DataCardComponent from "../../../../theme/cards/dataCard/dataCard.component";
 import SkeletonRecipeDiscovery from "../../../../theme/skeletons/skeletonRecipeDiscovery/SkeletonRecipeDiscovery";
@@ -128,7 +129,7 @@ const RegularRecipes = ({
         <ShowRecipes
           headerData={{
             heading: "Recent",
-            image: "/images/clock-light.svg",
+            image: <FontAwesomeIcon icon={faClock} color="#fe5d1f" size="2x" />,
             allUrl: "recipes/latest",
           }}
           loading={latestRecipesLoading}
@@ -142,7 +143,7 @@ const RegularRecipes = ({
         <ShowRecipes
           headerData={{
             heading: "Popular",
-            image: "/images/fire-alt-light.svg",
+            image: <FontAwesomeIcon icon={faFire} color="#fe5d1f" size="2x" />,
             allUrl: "recipes/popular",
           }}
           loading={popularRecipesLoading}
@@ -174,16 +175,6 @@ interface ShowRecipesType {
   >;
   updateDataFunc?: (id: string, obj: { [key: string]: any }) => void;
 }
-
-// joni ingredients
-const joniIngredients = (ingredients: Ingredient[] = []) => {
-  let ingredientsArr: string[] = [];
-  ingredients?.forEach((ing) => {
-    const ingredient = ing?.ingredientId?.ingredientName;
-    ingredientsArr.push(ingredient);
-  });
-  return ingredientsArr.join(", ");
-};
 
 export const ShowRecipes = ({
   headerData = defaultHeadingContent,

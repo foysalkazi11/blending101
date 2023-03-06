@@ -22,7 +22,7 @@ const ViewAll = () => {
   const featured = router.query?.featured as string;
   const page = featured && QUERY_DICTIONARY[featured];
 
-  const data = useViewAll(featured);
+  const { data, loading } = useViewAll(featured);
   const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
     "compareList",
     [],
@@ -39,8 +39,8 @@ const ViewAll = () => {
     >
       <div className={styles.main__div}>
         <ShowRecipeContainer
-          data={data || []}
-          loading={data.length ? false : true}
+          data={data?.[page?.query] || []}
+          loading={loading}
           headerLeftSide={
             <div className="flex ai-center">
               <Icon
