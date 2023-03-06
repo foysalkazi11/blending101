@@ -140,7 +140,7 @@ const Center = ({
   return (
     <div style={{ width: "100%" }}>
       <PanelHeaderCenter
-        backLink="/"
+        backLink="/discovery"
         editOrSavebtnFunc={() =>
           router.push(
             recipeData?.isMatch

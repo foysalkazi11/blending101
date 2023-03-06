@@ -305,10 +305,10 @@ export default function DatacardComponent({
           <div className={styles.datacard__body__bottom__right}>
             <ul>
               <li>
-                {recipeVersion >= 2 ? (
+                {recipeVersion ? (
                   <Tooltip
                     direction="top"
-                    content={`Versions(${recipeVersion - 1})`}
+                    content={`Versions(${recipeVersion})`}
                   >
                     <FontAwesomeIcon
                       icon={faRectangleVerticalHistory}
