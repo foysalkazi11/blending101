@@ -12,7 +12,11 @@ export default function SmallcardComponent({
   findCompareRecipe,
   fucUnCheck,
   compareLength,
-  handleRemoveFromCompare = (id: string, e: React.SyntheticEvent) => {},
+  handleRemoveFromCompare = (
+    id: string,
+    versionId: string,
+    e: React.SyntheticEvent,
+  ) => {},
 }) {
   text = text || "Chocolate Avocado Smoothie";
   img = img || "/cards/coriander.png";
@@ -59,7 +63,13 @@ export default function SmallcardComponent({
           <IconWarper
             hover="bgPrimary"
             defaultBg="gray"
-            handleClick={(e) => handleRemoveFromCompare(recipe?._id, e)}
+            handleClick={(e) =>
+              handleRemoveFromCompare(
+                recipe?._id,
+                recipe?.defaultVersion?._id,
+                e,
+              )
+            }
           >
             <IoClose />
           </IconWarper>
