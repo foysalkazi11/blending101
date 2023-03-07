@@ -23,6 +23,7 @@ const useChangeCompare = () => {
   const handleChangeCompare = async (
     e: React.SyntheticEvent,
     id: string,
+    versionId: string,
     compared: boolean,
     updateDataFunc: (
       id: string,
@@ -34,6 +35,7 @@ const useChangeCompare = () => {
     try {
       const { data } = await changeCompare({
         variables: {
+          versionId,
           userId: dbUser?._id,
           recipeId: id,
         },

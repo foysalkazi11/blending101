@@ -196,14 +196,12 @@ const CompareRecipe = () => {
     return compareRecipeList?.find((item) => item?._id === id);
   };
 
-  const handleRemoveFromCompareList = (id: string, e: React.SyntheticEvent) => {
-    changeCompare(e, id, false, (id, updateObj) =>
-      compareRecipeList((prev) =>
-        prev.map((item) =>
-          item?._id === id ? { ...item, ...updateObj } : item,
-        ),
-      ),
-    );
+  const handleRemoveFromCompareList = (
+    id: string,
+    versionId: string,
+    e: React.SyntheticEvent,
+  ) => {
+    changeCompare(e, id, versionId, false, updateCompareList);
   };
 
   const handleCompare = (recipe) => {
