@@ -40,6 +40,7 @@ const GET_COMPARE_LIST = gql`
       userCollections
       defaultVersion {
         postfixTitle
+        _id
       }
       isMatch
     }

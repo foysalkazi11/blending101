@@ -331,6 +331,7 @@ export default function DatacardComponent({
                       handleChangeCompare(
                         e,
                         recipeId,
+                        defaultVersionId,
                         addedToCompare ? false : true,
                         updateDataFunc,
                       )

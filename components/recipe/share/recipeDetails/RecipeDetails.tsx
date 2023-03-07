@@ -144,6 +144,7 @@ const RecipeDetails = ({
           description={recipe?.description}
           recipeVersion={recipe?.recipeVersion}
           updateDataFunc={updateCompareList}
+          defaultVersionId={recipe?.defaultVersion?._id}
         />
         <div className={`${styles.dividerBox}`}>
           <SectionTitleWithIcon
