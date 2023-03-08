@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { CompareRecipeType } from "../../type/compareRecipeType";
 import { RecipeDetailsType } from "../../type/recipeDetailsType";
 import {
   RecipeType,
@@ -10,7 +11,7 @@ type recipeSliceState = {
   popular: RecipeType[];
   latest: RecipeType[];
   currentRecipeInfo: { name: string; image: string };
-  compareList: any[];
+  compareList: CompareRecipeType[];
   detailsARecipe: RecipeDetailsType;
   allFilterRecipe: RecipeType[];
   searchRecipeResults: RecipeType[];
@@ -48,7 +49,7 @@ export const recipeSlice = createSlice({
     ) => {
       state.currentRecipeInfo = action?.payload;
     },
-    setCompareList: (state, action: PayloadAction<any[]>) => {
+    setCompareList: (state, action: PayloadAction<CompareRecipeType[]>) => {
       state.compareList = action?.payload;
     },
     setDetailsARecipe: (state, action: PayloadAction<RecipeDetailsType>) => {

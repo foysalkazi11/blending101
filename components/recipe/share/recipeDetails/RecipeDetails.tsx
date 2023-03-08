@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import DatacardComponent from "../../../../theme/cards/dataCard/dataCard.component";
 import SectionTitleWithIcon from "../../../../theme/recipe/sectionTitleWithIcon/SectionTitleWithIcon.component";
 import styles from "./RecipeDetails.module.scss";
 import { Droppable, Draggable } from "react-beautiful-dnd";
@@ -12,6 +11,10 @@ import { IoClose } from "react-icons/io5";
 import IconWraper from "../../../../theme/iconWarper/IconWarper";
 import { useQuery } from "@apollo/client";
 import GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS from "../../../../gqlLib/nutrition/query/getNutrientsListAndGiGlByIngredients";
+import { CompareRecipeType } from "../../../../type/compareRecipeType";
+import joniIngredients from "../../../../helperFunc/joinIngredients";
+import DatacardComponent from "../../../../theme/cards/dataCard/dataCard.component";
+import { ReferenceOfRecipeUpdateFuncType } from "../../../../type/recipeType";
 
 function Copyable(props) {
   const { items, addItem, droppableId } = props;
@@ -61,11 +64,30 @@ function Copyable(props) {
   );
 }
 
+interface RecipeDetailsProps {
+  recipe: CompareRecipeType;
+  id?: string;
+  addItem?: (id: string, index: number) => void;
+  removeCompareRecipe: (id: string, e: React.SyntheticEvent) => void;
+  dragAndDrop?: boolean;
+  compareRecipeList: CompareRecipeType[];
+  setcompareRecipeList: React.Dispatch<
+    React.SetStateAction<CompareRecipeType[]>
+  >;
+  showMoreMenu?: boolean;
+  showOptionalEditIcon?: boolean;
+  setOpenCollectionModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setCopyImage?: React.Dispatch<React.SetStateAction<string>>;
+  customMenu?: any;
+  showMoreMenuAtHover?: boolean;
+  updateCompareList: ReferenceOfRecipeUpdateFuncType;
+}
+
 const RecipeDetails = ({
-  recipe = {},
+  recipe = {} as CompareRecipeType,
   id = uniqueId(),
   addItem = () => {},
-  removeCompareRecipe = () => {},
+  removeCompareRecipe,
   dragAndDrop = false,
   compareRecipeList = [],
   setcompareRecipeList = () => {},
@@ -76,31 +98,45 @@ const RecipeDetails = ({
   customMenu = null,
   showMoreMenuAtHover = false,
   updateCompareList = () => {},
-}: any) => {
+}: RecipeDetailsProps) => {
   const [winReady, setwinReady] = useState(false);
+  // const {
+  //   recipeId: {
+  //     _id = "",
+  //     name = "",
+  //     image,
+  //     originalVersion = "",
+  //     numberOfRating = 0,
+  //     averageRating = 0,
+  //     recipeBlendCategory,
+  //     userId,
+  //   },
+  //   defaultVersion: {
+  //     _id: defaultVersionId = "",
+  //     postfixTitle = "",
+  //     ingredients,
+  //     description = "",
+  //   },
+  //   isMatch = false,
+  //   allRecipes = false,
+  //   myRecipes = false,
+  //   notes = 0,
+  //   addedToCompare = false,
+  //   userCollections = [],
+  //   versionCount = 0,
+  // } = recipe;
 
   const { loading: nutritionDataLoading, data: nutritionData } = useQuery(
     GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS,
     {
       variables: {
-        ingredientsInfo: [
-          ...recipe?.ingredients?.map((item) => ({
-            ingredientId: item.ingredientId._id,
-            value: item?.selectedPortion?.gram,
-          })),
-        ],
+        ingredientsInfo: recipe?.defaultVersion?.ingredients?.map((item) => ({
+          ingredientId: item.ingredientId._id,
+          value: item?.selectedPortion?.gram,
+        })),
       },
     },
   );
-
-  const makeIngredients = (ing) => {
-    let arr = [];
-    ing?.forEach((ing) => {
-      const ingredient = ing?.ingredientId?.ingredientName;
-      arr?.push(ingredient);
-    });
-    return arr?.join(", ");
-  };
 
   useEffect(() => {
     setwinReady(true);
@@ -112,23 +148,20 @@ const RecipeDetails = ({
         <div className={styles.cancleIcon}>
           <IconWraper
             defaultBg="gray"
-            handleClick={(e) => removeCompareRecipe(recipe?._id, e)}
+            handleClick={(e) => removeCompareRecipe(recipe?.recipeId?._id, e)}
           >
             <IoClose />
           </IconWraper>
         </div>
         <DatacardComponent
-          title={recipe?.name}
-          ingredients={makeIngredients(recipe?.ingredients)}
-          category={recipe?.recipeBlendCategory?.name}
-          ratings={recipe?.averageRating}
-          noOfRatings={recipe?.numberOfRating}
-          carbs={recipe?.carbs}
-          score={recipe?.score}
-          calorie={recipe?.calorie}
-          noOfComments={recipe?.numberOfRating}
-          image={recipe.image[0]?.image || ""}
-          recipeId={recipe?._id}
+          title={recipe?.recipeId?.name}
+          ingredients={joniIngredients(recipe?.defaultVersion?.ingredients)}
+          category={recipe?.recipeId?.recipeBlendCategory?.name}
+          ratings={recipe?.recipeId?.averageRating}
+          noOfRatings={recipe?.recipeId?.numberOfRating}
+          noOfComments={recipe?.recipeId?.numberOfRating}
+          image={recipe?.recipeId?.image?.[0]?.image || ""}
+          recipeId={recipe?.recipeId?._id}
           notes={recipe?.notes}
           addedToCompare={recipe?.addedToCompare}
           isCollectionIds={recipe?.userCollections}
@@ -141,10 +174,11 @@ const RecipeDetails = ({
           imageOverlayFunc={(image) => setCopyImage(image)}
           customMenu={customMenu}
           showMoreMenuAtHover={showMoreMenuAtHover}
-          description={recipe?.description}
-          recipeVersion={recipe?.recipeVersion}
-          updateDataFunc={updateCompareList}
+          description={recipe?.recipeId?.description}
+          recipeVersion={recipe?.versionCount}
           defaultVersionId={recipe?.defaultVersion?._id}
+          updateDataFunc={updateCompareList}
+          userId={recipe?.recipeId?.userId}
         />
         <div className={`${styles.dividerBox}`}>
           <SectionTitleWithIcon
@@ -155,13 +189,13 @@ const RecipeDetails = ({
             {dragAndDrop ? (
               winReady ? (
                 <Copyable
-                  items={recipe?.ingredients}
+                  items={recipe?.defaultVersion?.ingredients}
                   addItem={addItem}
                   droppableId={`${id}`}
                 />
               ) : null
             ) : (
-              recipe?.ingredients?.map((item, index) => {
+              recipe?.defaultVersion?.ingredients?.map((item, index) => {
                 const ingredientName = item?.ingredientId?.ingredientName;
                 const selectedPortionName = item?.selectedPortion?.name;
                 const selectedPortionQuantity = item?.selectedPortion?.quantity;

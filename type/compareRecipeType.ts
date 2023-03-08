@@ -1,0 +1,39 @@
+import {
+  Ingredient,
+  RecipeBlendCategory,
+  VersionDataType,
+  Image,
+} from "./recipeDetailsType";
+import { RecipeCreatorInfo } from "./recipeType";
+
+export interface CompareRecipeType {
+  addedToCompare: boolean;
+  notes: number;
+  userCollections: string[];
+  defaultVersion: VersionDataType;
+  allRecipes: boolean;
+  isMatch: boolean;
+  myRecipes: boolean;
+  versionCount: number;
+  recipeId: {
+    _id: string;
+    userId: RecipeCreatorInfo;
+    name: string;
+    prepTime: any;
+    description: string;
+    versionDiscription: string;
+    recipeIngredients: any[];
+    recipeInstructions: string[];
+    totalRating: number;
+    numberOfRating: number;
+    averageRating: number;
+    totalViews: number;
+    recipeBlendCategory: RecipeBlendCategory;
+    ingredients: Ingredient[];
+    image: Image[];
+    servingSize: string;
+    servings: number;
+    originalVersion: VersionDataType;
+    token: string;
+  };
+}
