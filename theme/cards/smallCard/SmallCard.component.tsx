@@ -8,40 +8,43 @@ import { CompareRecipeType } from "../../../type/compareRecipeType";
 interface SmallCardComponentProps {
   img: string;
   text: string;
-  fnc: (recipe: CompareRecipeType) => void;
-  recipe: CompareRecipeType;
-  findCompareRecipe: (id: string) => CompareRecipeType;
+  fnc: (recipe: any) => void;
+  recipe: any;
+  findCompareRecipe: (id: string) => any;
   fucUnCheck: (id: string, e: React.SyntheticEvent) => void;
   compareLength: number;
   handleRemoveFromCompare: (
     id: string,
-    versionId: string,
     e: React.SyntheticEvent,
+    versionId: string,
   ) => void;
+  id: string;
+  defaultVersionId?: string;
 }
 
 export default function SmallCardComponent({
   img,
   text,
   fnc,
-  recipe,
   findCompareRecipe,
   fucUnCheck,
   compareLength,
   handleRemoveFromCompare = () => {},
+  id = "",
+  defaultVersionId = "",
+  recipe,
 }: SmallCardComponentProps) {
   text = text || "Chocolate Avocado Smoothie";
   img = img || "/cards/coriander.png";
 
-  const findRecipe =
-    findCompareRecipe && findCompareRecipe(recipe?.recipeId?._id);
+  const findRecipe = findCompareRecipe && findCompareRecipe(id);
 
   const handleClick = () => {
     fnc && fnc(recipe);
   };
 
   const handleUnCheck = (e: React.SyntheticEvent) => {
-    fucUnCheck && fucUnCheck(recipe?.recipeId?._id, e);
+    fucUnCheck && fucUnCheck(id, e);
   };
 
   return (
@@ -78,11 +81,7 @@ export default function SmallCardComponent({
             hover="bgPrimary"
             defaultBg="gray"
             handleClick={(e) =>
-              handleRemoveFromCompare(
-                recipe?.recipeId?._id,
-                recipe?.defaultVersion?._id,
-                e,
-              )
+              handleRemoveFromCompare(id, e, defaultVersionId)
             }
           >
             <IoClose />

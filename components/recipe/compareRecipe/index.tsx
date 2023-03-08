@@ -198,8 +198,8 @@ const CompareRecipe = () => {
 
   const handleRemoveFromCompareList = (
     id: string,
-    versionId: string,
     e: React.SyntheticEvent,
+    versionId: string,
   ) => {
     changeCompare(e, id, versionId, false, updateCompareList);
   };
@@ -550,6 +550,8 @@ const CompareRecipe = () => {
                       fucUnCheck={removeCompareRecipe}
                       compareLength={compareRecipeList.length}
                       handleRemoveFromCompare={handleRemoveFromCompareList}
+                      id={recipe?.recipeId?._id}
+                      defaultVersionId={recipe?.defaultVersion?._id}
                     />
                   );
                 })}

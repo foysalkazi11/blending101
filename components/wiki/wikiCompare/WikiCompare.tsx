@@ -218,6 +218,7 @@ const WikiCompare = () => {
                       handleRemoveFromCompare={(id) =>
                         handleAddOrRemoveToWikiCompareList(id)
                       }
+                      id={item?._id}
                     />
                   );
                 },
