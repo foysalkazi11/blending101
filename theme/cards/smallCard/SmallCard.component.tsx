@@ -6,33 +6,33 @@ import IconWarper from "../../iconWarper/IconWarper";
 import { CompareRecipeType } from "../../../type/compareRecipeType";
 
 interface SmallCardComponentProps {
-  img: string;
-  text: string;
-  fnc: (recipe: any) => void;
-  recipe: any;
-  findCompareRecipe: (id: string) => any;
-  fucUnCheck: (id: string, e: React.SyntheticEvent) => void;
+  img?: string;
+  text?: string;
+  fnc?: (recipe: any) => void;
+  recipe?: any;
+  findCompareRecipe?: (id: string) => any;
+  fucUnCheck?: (id: string, e: React.SyntheticEvent) => void;
   compareLength: number;
-  handleRemoveFromCompare: (
+  handleRemoveFromCompare?: (
     id: string,
     e: React.SyntheticEvent,
     versionId: string,
   ) => void;
-  id: string;
+  id?: string;
   defaultVersionId?: string;
 }
 
 export default function SmallCardComponent({
-  img,
-  text,
-  fnc,
-  findCompareRecipe,
-  fucUnCheck,
-  compareLength,
+  img = "",
+  text = "",
+  fnc = () => {},
+  findCompareRecipe = () => {},
+  fucUnCheck = () => {},
+  compareLength = 0,
   handleRemoveFromCompare = () => {},
   id = "",
   defaultVersionId = "",
-  recipe,
+  recipe = {},
 }: SmallCardComponentProps) {
   text = text || "Chocolate Avocado Smoothie";
   img = img || "/cards/coriander.png";
