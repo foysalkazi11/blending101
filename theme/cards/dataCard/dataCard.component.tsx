@@ -28,9 +28,9 @@ interface dataCardInterface {
   category: string;
   ratings: number;
   noOfRatings: number;
-  carbs: number;
-  score: number;
-  calorie: number;
+  carbs?: number;
+  score?: number;
+  calorie?: number;
   noOfComments: number;
   image: string;
   recipeId?: string;
