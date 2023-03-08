@@ -59,6 +59,10 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
 
   const toggleForm = () => {
     setShowForm((pre) => !pre);
+
+    if (isNewVersionInfo) {
+      dispatch(setIsNewVersionInfo(null));
+    }
   };
 
   const updateForm = (
@@ -207,7 +211,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
       )}
     >
       <div className={styles.versionContainer}>
-        {detailsARecipe?.versionsCount >= 2 ? (
+        {detailsARecipe?.versionsCount ? (
           <div className={styles.header}>
             <div className={styles.headingLeft}>
               <FontAwesomeIcon

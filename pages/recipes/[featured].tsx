@@ -52,26 +52,27 @@ const ViewAll = () => {
               <h2 className={classes.head__title}>{page?.title}</h2>
             </div>
           }
-          headerMiddle={
-            <div style={{ display: "flex" }}>
-              <IconWarper
-                iconColor="iconColorPrimary"
-                defaultBg="slightGray"
-                hover="bgPrimary"
-                style={{ width: "28px", height: "28px", marginRight: "10px" }}
-              >
-                <FontAwesomeIcon icon={faBookmark} />
-              </IconWarper>
-              <IconWarper
-                iconColor="iconColorPrimary"
-                defaultBg="slightGray"
-                hover="bgPrimary"
-                style={{ width: "28px", height: "28px" }}
-              >
-                <FontAwesomeIcon icon={faShareNodes} />
-              </IconWarper>
-            </div>
-          }
+          // headerMiddle={
+          //   <div style={{ display: "flex" }}>
+          //     <IconWarper
+          //       iconColor="iconColorPrimary"
+          //       defaultBg="slightGray"
+          //       hover="bgPrimary"
+          //       style={{ width: "28px", height: "28px", marginRight: "10px" }}
+          //     >
+          //       <FontAwesomeIcon icon={faBookmark} />
+          //     </IconWarper>
+          //     <IconWarper
+          //       iconColor="iconColorPrimary"
+          //       defaultBg="slightGray"
+          //       hover="bgPrimary"
+          //       style={{ width: "28px", height: "28px" }}
+          //     >
+          //       <FontAwesomeIcon icon={faShareNodes} />
+          //     </IconWarper>
+          //   </div>
+          // }
+          // showDefaultMiddleHeader={true}
           headerRightSide={
             <IconWarper
               handleClick={() => router.back()}

@@ -16,30 +16,6 @@ $sharedHeightForIcons: 20px;
   // justify-content: center;
   align-items: center;
   width: 100%;
-
-  span {
-    width: 100%;
-    min-height: 40px;
-    display: flex;
-    justify-content: center;
-
-    input {
-      border: 1px solid #e2dcdcd3;
-      border-radius: 7px;
-      min-height: 36px;
-      padding: 0 15px;
-      color: #bcbcbc;
-      line-height: 36px;
-      font-size: 12px;
-      width: 100%;
-
-      &:focus {
-        outline: none;
-        border: 1px solid #7cbc39;
-        color: #000;
-      }
-    }
-  }
 }
 
 @mixin edit_bin_icon {
