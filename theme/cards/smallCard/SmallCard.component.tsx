@@ -3,8 +3,24 @@ import React from "react";
 import styles from "./smallcard.module.scss";
 import { IoClose } from "react-icons/io5";
 import IconWarper from "../../iconWarper/IconWarper";
+import { CompareRecipeType } from "../../../type/compareRecipeType";
 
-export default function SmallcardComponent({
+interface SmallCardComponentProps {
+  img: string;
+  text: string;
+  fnc: (recipe: CompareRecipeType) => void;
+  recipe: CompareRecipeType;
+  findCompareRecipe: (id: string) => CompareRecipeType;
+  fucUnCheck: (id: string, e: React.SyntheticEvent) => void;
+  compareLength: number;
+  handleRemoveFromCompare: (
+    id: string,
+    versionId: string,
+    e: React.SyntheticEvent,
+  ) => void;
+}
+
+export default function SmallCardComponent({
   img,
   text,
   fnc,
@@ -12,23 +28,20 @@ export default function SmallcardComponent({
   findCompareRecipe,
   fucUnCheck,
   compareLength,
-  handleRemoveFromCompare = (
-    id: string,
-    versionId: string,
-    e: React.SyntheticEvent,
-  ) => {},
-}) {
+  handleRemoveFromCompare = () => {},
+}: SmallCardComponentProps) {
   text = text || "Chocolate Avocado Smoothie";
   img = img || "/cards/coriander.png";
 
-  const findRecipe = findCompareRecipe && findCompareRecipe(recipe?._id);
+  const findRecipe =
+    findCompareRecipe && findCompareRecipe(recipe?.recipeId?._id);
 
   const handleClick = () => {
     fnc && fnc(recipe);
   };
 
   const handleUnCheck = (e: React.SyntheticEvent) => {
-    fucUnCheck && fucUnCheck(recipe?._id, e);
+    fucUnCheck && fucUnCheck(recipe?.recipeId?._id, e);
   };
 
   return (
@@ -42,6 +55,7 @@ export default function SmallcardComponent({
             <IconWarper
               defaultBg="primary"
               style={{ width: "20px", height: "20px", marginRight: "10px" }}
+              iconColor="iconColorWhite"
             >
               <IoClose fontSize={16} />
             </IconWarper>
@@ -65,7 +79,7 @@ export default function SmallcardComponent({
             defaultBg="gray"
             handleClick={(e) =>
               handleRemoveFromCompare(
-                recipe?._id,
+                recipe?.recipeId?._id,
                 recipe?.defaultVersion?._id,
                 e,
               )
