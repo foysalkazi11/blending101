@@ -372,7 +372,7 @@ const EditRecipeComponent = () => {
         recipeEditOrVersionEditLoading={editOrCreateVersionLoading}
       />
       <ConfirmationModal
-        text="You can't edit original recipe but you can make a new version like original one"
+        text="You can't edit original recipe but you can make a new version like original one !!!"
         cancleFunc={() => {
           setOpenModal(false);
           dispatch(setIsNewVersionInfo(null));

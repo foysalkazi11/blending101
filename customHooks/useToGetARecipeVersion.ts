@@ -23,12 +23,14 @@ const useToGetARecipeVersion = () => {
         variables: { versionId },
       });
 
+      const { _id, ...rest } = data?.getARecipeVersion;
+
       dispatch(
         setDetailsARecipe({
           ...detailsARecipe,
           defaultVersion: {
             ...detailsARecipe?.defaultVersion,
-            ...data?.getARecipeVersion,
+            ...rest,
           },
           tempVersionInfo: {
             id: versionId,
