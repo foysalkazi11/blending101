@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { Dispatch, memo, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import AContainer from "../../../containers/A.container";
 import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
 import Center_Elements from "./recipe_elements/centerElements.component";
@@ -37,6 +37,7 @@ interface editRecipe {
   updateEditRecipe?: (key: string, value: any) => void;
   giGl?: GiGl;
   recipeEditOrVersionEditLoading?: boolean;
+  versionsCount?: number;
 }
 
 const EditRecipePage = ({
@@ -63,6 +64,7 @@ const EditRecipePage = ({
     totalGL: 0,
   },
   recipeEditOrVersionEditLoading = false,
+  versionsCount = 0,
 }: editRecipe) => {
   const dispatch = useAppDispatch();
   const { width } = useWindowSize();
@@ -139,7 +141,7 @@ const EditRecipePage = ({
             editOrSavebtnFunc={editARecipeFunction}
             editOrSavebtnText="Save"
             pageComeFrom="edit"
-            recipeVersionLength={copyDetailsRecipe?.versionsCount}
+            recipeVersionLength={versionsCount}
             loading={recipeEditOrVersionEditLoading}
           />
           <Center_Elements
@@ -178,4 +180,4 @@ const EditRecipePage = ({
     </AContainer>
   );
 };
-export default memo(EditRecipePage);
+export default EditRecipePage;
