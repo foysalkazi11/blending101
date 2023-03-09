@@ -370,6 +370,7 @@ const EditRecipeComponent = () => {
         recipeId={recipeId}
         giGl={giGl}
         recipeEditOrVersionEditLoading={editOrCreateVersionLoading}
+        versionsCount={detailsARecipe?.versionsCount}
       />
       <ConfirmationModal
         text="You can't edit original recipe but you can make a new version like original one !!!"

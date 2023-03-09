@@ -211,34 +211,42 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
       )}
     >
       <div className={styles.versionContainer}>
-        {detailsARecipe?.versionsCount ? (
-          <div className={styles.header}>
-            <div className={styles.headingLeft}>
-              <FontAwesomeIcon
-                icon={faRectangleVerticalHistory}
-                color="#7cbc39"
-              />
-              <h3 className={styles.text}>Recipe versions</h3>
-            </div>
-            <div
-              className={styles.headingRight}
-              onClick={() =>
-                router.push(`/versionCompare/${detailsARecipe?.recipeId?._id}`)
-              }
-            >
-              <Tooltip content="Compare versions" direction="left">
-                <Image
-                  src={"/images/compare-fill-icon.svg"}
-                  alt="icon"
-                  loading="lazy"
-                  width={16}
-                  height={16}
-                />
-                {/* <FontAwesomeIcon icon={faScaleBalanced} color="#7cbc39" /> */}
-              </Tooltip>
-            </div>
+        <div className={styles.header}>
+          <div className={styles.headingLeft}>
+            <FontAwesomeIcon
+              icon={faRectangleVerticalHistory}
+              color="#7cbc39"
+            />
+            <h3 className={styles.text}>Recipe versions</h3>
           </div>
-        ) : null}
+          <div
+            className={styles.headingRight}
+            onClick={() =>
+              detailsARecipe?.versionsCount &&
+              router.push(`/versionCompare/${detailsARecipe?.recipeId?._id}`)
+            }
+          >
+            <Tooltip content="Compare versions" direction="left">
+              <Image
+                src={
+                  detailsARecipe?.versionsCount
+                    ? "/images/compare-fill-icon.svg"
+                    : "/images/compare-fill-icon-gray.svg"
+                }
+                alt="icon"
+                loading="lazy"
+                width={16}
+                height={16}
+                style={{
+                  cursor: detailsARecipe?.versionsCount
+                    ? "pointer"
+                    : "not-allowed",
+                }}
+              />
+              {/* <FontAwesomeIcon icon={faScaleBalanced} color="#7cbc39" /> */}
+            </Tooltip>
+          </div>
+        </div>
 
         <div className={styles.recipeName}>
           <div className={styles.leftSide}>
