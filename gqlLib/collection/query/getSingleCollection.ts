@@ -7,6 +7,8 @@ const GET_SINGLE_COLLECTION = gql`
     $collectionId: String
     $token: String
     $singleRecipeCollectionId: String
+    $page: Float
+    $limit: Float
   ) {
     getASingleCollection(
       userId: $userId
@@ -14,46 +16,94 @@ const GET_SINGLE_COLLECTION = gql`
       collectionId: $collectionId
       token: $token
       singleRecipeCollectionId: $singleRecipeCollectionId
+      page: $page
+      limit: $limit
     ) {
-      name
-      image
-      recipes {
-        image {
-          default
-          image
-        }
-        name
+      _id
+      creatorInfo {
         _id
-        description
-        prepTime
-        cookTime
-        totalTime
-        recipeYield
-        recipeIngredients
-        recipeInstructions
-        recipeCuisines
-        url
-        discovery
-        favicon
-        averageRating
-        numberOfRating
-        ingredients {
-          ingredientId {
-            _id
-            ingredientName
+        displayName
+        email
+        firstName
+        image
+        lastName
+      }
+      description
+      image
+      name
+      slug
+      recipes {
+        addedToCompare
+        allRecipes
+        isMatch
+        myRecipes
+        notes
+        userCollections
+        versionCount
+        defaultVersion {
+          _id
+          description
+          postfixTitle
+          recipeId
+          recipeInstructions
+          servingSize
+          ingredients {
+            ingredientId {
+              ingredientName
+              _id
+              images
+              featuredImage
+            }
+
+            portions {
+              name
+              gram
+              default
+              quantity
+            }
+            weightInGram
+            selectedPortion {
+              name
+              quantity
+              gram
+            }
           }
         }
-        notes
-        addedToCompare
-        userCollections
-        defaultVersion {
-          postfixTitle
-        }
-        isMatch
-        userId {
+        recipeId {
           _id
-          displayName
-          image
+          name
+          image {
+            image
+            default
+          }
+          userId {
+            _id
+            displayName
+            image
+          }
+          brand {
+            _id
+            brandName
+            brandImage
+          }
+          averageRating
+          numberOfRating
+          servings
+          servingSize
+          totalRating
+          description
+          recipeBlendCategory {
+            _id
+            name
+          }
+          originalVersion {
+            _id
+            description
+            postfixTitle
+            servingSize
+            recipeInstructions
+            recipeId
+          }
         }
       }
     }
