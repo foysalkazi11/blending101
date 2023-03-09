@@ -40,30 +40,31 @@ const useForAddToCollection = () => {
     dispatch(setOpenCollectionsTary(false));
     const variablesData = {
       recipe: recipeId,
-      userEmail: dbUser?.email,
+      userId: dbUser?._id,
     };
 
     try {
-      await addNewRecipeToCollection({
+      const { data } = await addNewRecipeToCollection({
         variables: {
           data: variablesData,
         },
       });
 
-      const { data: lastModified } = await getLastModifiedCollection({
-        variables: {
-          userEmail: dbUser?.email,
-        },
-      });
+      // const { data: lastModified } = await getLastModifiedCollection({
+      //   variables: {
+      //     userEmail: dbUser?.email,
+      //   },
+      // });
+      const { _id = "", name = "" } = data?.addTolastModifiedCollection?.[0];
       dispatch(
         setLastModifiedCollection({
-          id: lastModified?.getLastModifieldCollection?._id,
-          name: lastModified?.getLastModifieldCollection?.name,
+          id: _id,
+          name: name,
         }),
       );
 
       const obj = {
-        userCollections: [lastModified?.getLastModifieldCollection?._id],
+        userCollections: [data?.addTolastModifiedCollection?._id],
       };
       updateDataFunc(recipeId, obj);
       // updateRecipe(recipeId, obj);

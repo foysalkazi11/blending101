@@ -141,6 +141,8 @@ const CollectionRecipes = () => {
           collectionId: collectionId || "",
           token: token || "",
           singleRecipeCollectionId: singleRecipeCollectionId || "",
+          page: 1,
+          limit: dataLimit,
         },
       }).then((res: any) => {
         setTitle(res?.data?.getASingleCollection?.name);
