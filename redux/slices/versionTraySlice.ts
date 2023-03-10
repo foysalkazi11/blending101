@@ -4,12 +4,14 @@ type varsionState = {
   openVersionTray: boolean;
   openVersionTrayFormWhichPage: "details" | "edit" | "default";
   isNewVersionInfo: { [key: string]: any } | null;
+  shouldCloseVersionTrayWhenClickAVersion?: boolean;
 };
 
 const initialState: varsionState = {
   openVersionTray: false,
   openVersionTrayFormWhichPage: "default",
   isNewVersionInfo: null,
+  shouldCloseVersionTrayWhenClickAVersion: true,
 };
 
 export const versionTraySlice = createSlice({
@@ -31,6 +33,12 @@ export const versionTraySlice = createSlice({
     ) => {
       state.isNewVersionInfo = action?.payload;
     },
+    setShouldCloseVersionTrayWhenClickAVersion: (
+      state,
+      action: PayloadAction<boolean>,
+    ) => {
+      state.shouldCloseVersionTrayWhenClickAVersion = action.payload;
+    },
   },
 });
 
@@ -38,6 +46,7 @@ export const {
   setOpenVersionTray,
   setOpenVersionTrayFormWhichPage,
   setIsNewVersionInfo,
+  setShouldCloseVersionTrayWhenClickAVersion,
 } = versionTraySlice?.actions;
 
 export default versionTraySlice?.reducer;

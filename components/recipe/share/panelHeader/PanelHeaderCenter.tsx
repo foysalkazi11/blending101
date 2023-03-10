@@ -8,6 +8,7 @@ import Loader from "../../../../component/atoms/Loader/loader.component";
 import {
   setOpenVersionTray,
   setOpenVersionTrayFormWhichPage,
+  setShouldCloseVersionTrayWhenClickAVersion,
 } from "../../../../redux/slices/versionTraySlice";
 import IconWraper from "../../../../theme/iconWarper/IconWarper";
 import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
@@ -44,6 +45,7 @@ const PanelHeaderCenter = ({
             onClick={() => {
               dispatch(setOpenVersionTray(true));
               dispatch(setOpenVersionTrayFormWhichPage("edit"));
+              dispatch(setShouldCloseVersionTrayWhenClickAVersion(true));
             }}
           >
             <FontAwesomeIcon

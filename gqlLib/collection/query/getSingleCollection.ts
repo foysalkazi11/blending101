@@ -51,21 +51,6 @@ const GET_SINGLE_COLLECTION = gql`
             ingredientId {
               ingredientName
               _id
-              images
-              featuredImage
-            }
-
-            portions {
-              name
-              gram
-              default
-              quantity
-            }
-            weightInGram
-            selectedPortion {
-              name
-              quantity
-              gram
             }
           }
         }
@@ -80,6 +65,9 @@ const GET_SINGLE_COLLECTION = gql`
             _id
             displayName
             image
+            lastName
+            firstName
+            email
           }
           brand {
             _id
