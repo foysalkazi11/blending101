@@ -81,6 +81,7 @@ interface RecipeDetailsProps {
   customMenu?: any;
   showMoreMenuAtHover?: boolean;
   updateCompareList: ReferenceOfRecipeUpdateFuncType;
+  handleToOpenVersionTray?: (recipeId: string) => void;
 }
 
 const RecipeDetails = ({
@@ -98,6 +99,7 @@ const RecipeDetails = ({
   customMenu = null,
   showMoreMenuAtHover = false,
   updateCompareList = () => {},
+  handleToOpenVersionTray,
 }: RecipeDetailsProps) => {
   const [winReady, setwinReady] = useState(false);
   // const {
@@ -179,6 +181,7 @@ const RecipeDetails = ({
           defaultVersionId={recipe?.defaultVersion?._id}
           updateDataFunc={updateCompareList}
           userId={recipe?.recipeId?.userId}
+          versionHandler={handleToOpenVersionTray}
         />
         <div className={`${styles.dividerBox}`}>
           <SectionTitleWithIcon

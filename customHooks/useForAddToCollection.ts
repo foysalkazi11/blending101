@@ -55,7 +55,7 @@ const useForAddToCollection = () => {
       //     userEmail: dbUser?.email,
       //   },
       // });
-      const { _id = "", name = "" } = data?.addTolastModifiedCollection?.[0];
+      const { _id = "", name = "" } = data?.addTolastModifiedCollection;
       dispatch(
         setLastModifiedCollection({
           id: _id,

@@ -45,6 +45,12 @@ import {
 import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
 import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 import { CompareRecipeType } from "../../../type/compareRecipeType";
+import useToGetARecipe from "../../../customHooks/useToGetARecipe";
+import {
+  setOpenVersionTray,
+  setOpenVersionTrayFormWhichPage,
+  setShouldCloseVersionTrayWhenClickAVersion,
+} from "../../../redux/slices/versionTraySlice";
 
 const compareRecipeResponsiveSettings = {
   ...compareRecipeResponsiveSetting,
@@ -124,17 +130,19 @@ const CompareRecipe = () => {
     recipeBlendCategory: "61cafc34e1f3e015e7936587",
     ingredients: [],
   });
-
+  const isMounted = useRef(false);
   const [emptyCompareList] = useMutation(EMPTY_COMPARE_LIST);
   const { latest, popular, recommended } = useAppSelector(
     (state) => state?.recipe,
   );
   const changeCompare = useChangeCompare();
-
+  const { handleToGetARecipe } = useToGetARecipe();
   const [uploadNewImage, setUploadNewImage] = useState(false);
   const { lastModifiedCollection } = useAppSelector(
     (state) => state?.collections,
   );
+
+  const { detailsARecipe } = useAppSelector((state) => state?.recipe);
   // filter recipe
   const filterRecipe = (arr: CompareRecipeType[], id: string): any[] => {
     if (!arr?.length) return arr;
@@ -479,6 +487,34 @@ const CompareRecipe = () => {
     }
   };
 
+  // handle to open version tray
+  const handleToOpenVersionTray = useCallback(async (recipeId: string) => {
+    if (detailsARecipe?.recipeId?._id !== recipeId) {
+      await handleToGetARecipe(recipeId, dbUser?._id);
+    }
+
+    dispatch(setOpenVersionTray(true));
+    dispatch(setOpenVersionTrayFormWhichPage("details"));
+    dispatch(setShouldCloseVersionTrayWhenClickAVersion(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // change compare recipe data based on version data
+
+  useEffect(() => {
+    if (isMounted?.current && detailsARecipe?.defaultVersion) {
+      const { _id, ...rest } = detailsARecipe.defaultVersion;
+      setCompareRecipeList((state) =>
+        state.map((item) =>
+          item?.recipeId?._id === detailsARecipe?.recipeId?._id
+            ? { ...item, defaultVersion: { ...item?.defaultVersion, ...rest } }
+            : item,
+        ),
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [detailsARecipe.defaultVersion]);
+
   useEffect(() => {
     if (!loading && data?.getCompareList2) {
       if (!compareRecipeList?.length) {
@@ -506,6 +542,14 @@ const CompareRecipe = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
   return (
     <>
       <AContainer
@@ -518,6 +562,11 @@ const CompareRecipe = () => {
           showTagByDeafult: false,
         }}
         showCommentsTray={{
+          show: true,
+          showPanle: "right",
+          showTagByDeafult: false,
+        }}
+        showVersionTray={{
           show: true,
           showPanle: "right",
           showTagByDeafult: false,
@@ -602,6 +651,9 @@ const CompareRecipe = () => {
                                 setOpenCollectionModal={setOpenCollectionModal}
                                 setCopyImage={setCopyImage}
                                 updateCompareList={updateCompareList}
+                                handleToOpenVersionTray={
+                                  handleToOpenVersionTray
+                                }
                               />
                             );
                           })}
@@ -621,6 +673,7 @@ const CompareRecipe = () => {
                           setcompareRecipeList={setCompareRecipeList}
                           setOpenCollectionModal={setOpenCollectionModal}
                           updateCompareList={updateCompareList}
+                          handleToOpenVersionTray={handleToOpenVersionTray}
                         />
                       );
                     })}
