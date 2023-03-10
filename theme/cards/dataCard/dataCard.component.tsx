@@ -62,6 +62,7 @@ interface dataCardInterface {
   defaultVersionId?: string;
   token?: string;
   updateDataFunc?: ReferenceOfRecipeUpdateFuncType;
+  versionHandler?: (recipeId: string) => void;
 }
 
 export default function DatacardComponent({
@@ -96,6 +97,7 @@ export default function DatacardComponent({
   defaultVersionId = "",
   token = "",
   updateDataFunc = () => {},
+  versionHandler,
 }: dataCardInterface) {
   ratings = Math.ceil(ratings);
   const router = useRouter();
@@ -313,7 +315,11 @@ export default function DatacardComponent({
                     <FontAwesomeIcon
                       icon={faRectangleVerticalHistory}
                       color="#7cbc39"
-                      onClick={() => router.push(`/versionCompare/${recipeId}`)}
+                      onClick={() =>
+                        versionHandler
+                          ? versionHandler(recipeId)
+                          : router.push(`/versionCompare/${recipeId}`)
+                      }
                     />
                   </Tooltip>
                 ) : null}

@@ -3,42 +3,65 @@ import { gql } from "@apollo/client";
 const GET_ALL_MY_CREATED_RECIPES = gql`
   query GetAllMyCreatedRecipes($userId: String!) {
     getAllMyCreatedRecipes(userId: $userId) {
-      image {
-        default
-        image
-      }
-      name
-      _id
-      description
-      prepTime
-      cookTime
-      totalTime
-      recipeYield
-      recipeIngredients
-      recipeInstructions
-      recipeCuisines
-      url
-      discovery
-      favicon
-      averageRating
-      numberOfRating
-      ingredients {
-        ingredientId {
-          _id
-          ingredientName
+      addedToCompare
+      allRecipes
+      isMatch
+      myRecipes
+      notes
+      userCollections
+      versionCount
+      defaultVersion {
+        _id
+        description
+        postfixTitle
+        recipeId
+        recipeInstructions
+        servingSize
+        ingredients {
+          ingredientId {
+            ingredientName
+            _id
+          }
         }
       }
-      notes
-      addedToCompare
-      userCollections
-      defaultVersion {
-        postfixTitle
-      }
-      isMatch
-      userId {
+      recipeId {
         _id
-        displayName
-        image
+        name
+        image {
+          image
+          default
+        }
+        userId {
+          _id
+          displayName
+          image
+          lastName
+          firstName
+          email
+        }
+        brand {
+          _id
+          brandName
+          brandImage
+        }
+        averageRating
+        numberOfRating
+        servings
+        servingSize
+        totalRating
+        description
+        recipeBlendCategory {
+          _id
+          name
+        }
+        originalVersion {
+          _id
+          description
+          postfixTitle
+          servingSize
+          recipeInstructions
+          recipeId
+        }
       }
     }
   }

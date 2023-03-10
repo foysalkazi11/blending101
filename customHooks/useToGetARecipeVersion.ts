@@ -9,6 +9,9 @@ import { RecipeVersionType } from "../type/recipeVersionType";
 const useToGetARecipeVersion = () => {
   const dispatch = useAppDispatch();
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
+  const { shouldCloseVersionTrayWhenClickAVersion } = useAppSelector(
+    (state) => state?.versionTray,
+  );
   const [getARecipeVersion, { ...rest }] = useLazyQuery(GET_A_RECIPE_VERSION, {
     fetchPolicy: "network-only",
   });
@@ -39,7 +42,9 @@ const useToGetARecipeVersion = () => {
           },
         }),
       );
-      dispatch(setOpenVersionTray(false));
+      if (shouldCloseVersionTrayWhenClickAVersion) {
+        dispatch(setOpenVersionTray(false));
+      }
     } catch (error) {
       console.log(error);
     }

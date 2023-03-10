@@ -20,6 +20,7 @@ import useForSelectCommentsAndNotesIcon from "../../../../customHooks/useForSele
 import {
   setOpenVersionTray,
   setOpenVersionTrayFormWhichPage,
+  setShouldCloseVersionTrayWhenClickAVersion,
 } from "../../../../redux/slices/versionTraySlice";
 import { VscVersions } from "react-icons/vsc";
 import IngredientDetails from "../../../../component/module/Recipe/Ingredient-Details.module";
@@ -194,6 +195,7 @@ const Center = ({
                 handleClick={(e) => {
                   dispatch(setOpenVersionTray(true));
                   dispatch(setOpenVersionTrayFormWhichPage("details"));
+                  dispatch(setShouldCloseVersionTrayWhenClickAVersion(true));
                 }}
                 icon={<VscVersions color={"#7cbc39"} />}
                 text={`Versions(${recipeData?.versionsCount})`}
