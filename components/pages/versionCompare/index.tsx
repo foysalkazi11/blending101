@@ -23,6 +23,19 @@ import {
 } from "@fortawesome/pro-light-svg-icons";
 import { useDispatch } from "react-redux";
 import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
+import {
+  RecipeDetailsType,
+  VersionDataType,
+} from "../../../type/recipeDetailsType";
+import { CompareRecipeType } from "../../../type/compareRecipeType";
+import useToEditOfARecipeVersion from "../../../customHooks/useToEditOfARecipeVersion";
+import ConfirmationModal from "../../../theme/confirmationModal/ConfirmationModal";
+import {
+  setIsNewVersionInfo,
+  setOpenVersionTray,
+} from "../../../redux/slices/versionTraySlice";
+import useToGetARecipeVersion from "../../../customHooks/useToGetARecipeVersion";
+import { setDetailsARecipe } from "../../../redux/slices/recipeSlice";
 
 const compareRecipeResponsiveSettings = {
   ...compareRecipeResponsiveSetting,
@@ -30,6 +43,11 @@ const compareRecipeResponsiveSettings = {
 };
 
 const VersionCompare = () => {
+  const [newVersionInfo, setNewVersionInfo] = useState<{ [key: string]: any }>(
+    {},
+  );
+  const [openModal, setOpenModal] = useState(false);
+  const [normalizeData, setNormalizeData] = useState<CompareRecipeType[]>([]);
   const [singleVersionsEditMode, setSingleVersionsEditMode] = useState(null);
   const [allVersionsEditMode, setAllVersionsEditMode] = useState(false);
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
@@ -44,28 +62,96 @@ const VersionCompare = () => {
   });
   const router = useRouter();
   const dispatch = useDispatch();
-  const recipeId = router.query?.recipeId;
+  const recipeId = router.query?.recipeId as string;
   const { dbUser } = useAppSelector((state) => state.user);
   const { data, loading, error } = useQuery(GET_ALL_RECIPE_VERSION, {
     variables: { recipeId, userId: dbUser._id },
   });
-  const [
-    editAVersionOfRecipe,
-    { loading: versionUpdateLoading, error: versionUpdateError },
-  ] = useMutation(EDIT_A_VERSION_OF_RECIPE);
   const sliderRef = useRef(null);
+  const { handleToEditARecipeVersion, loading: versionUpdateLoading } =
+    useToEditOfARecipeVersion();
+  const { handleToGetARecipeVersion, loading: getARecipeVersionLoading } =
+    useToGetARecipeVersion();
+
+  // open confirmation modal
+  const openConfirmationModal = (data: { [key: string]: any }) => {
+    setOpenModal(true);
+    setNewVersionInfo(data);
+  };
+
+  // open version tray
+  const handleOpenVersionTray = () => {
+    dispatch(setDetailsARecipe(data?.getAllVersions));
+    dispatch(setOpenVersionTray(true));
+    dispatch(setIsNewVersionInfo(newVersionInfo));
+    setOpenModal(false);
+  };
 
   // arrange array for working
-  const handleNormalizeData = (data: any): any[] => {
-    const normalizeData = data?.recipeVersion?.map(
-      ({ _id, postfixTitle, description, ...rest }) => ({
-        ...data,
-        name: postfixTitle ? postfixTitle : data?.name,
-        description: description ? description : data?.description,
-        versionId: _id,
-        ...rest,
-      }),
-    );
+  const handleNormalizeData = (
+    data: RecipeDetailsType,
+  ): CompareRecipeType[] => {
+    const {
+      recipeId,
+      defaultVersion,
+      turnedOffVersions,
+      turnedOnVersions,
+      isMatch,
+      addedToCompare,
+      allRecipes,
+      myRecipes,
+      notes,
+      userCollections,
+      versionsCount,
+      tempVersionInfo,
+    } = data;
+    let mapVersionToRecipe = (
+      version: VersionDataType[],
+    ): CompareRecipeType[] => {
+      return version?.map((item) => ({
+        addedToCompare,
+        allRecipes,
+        defaultVersion: { ...item },
+        isMatch,
+        myRecipes,
+        notes,
+        recipeId,
+        userCollections,
+        versionCount: 0,
+      }));
+    };
+    let normalizeData: CompareRecipeType[] = [
+      {
+        addedToCompare,
+        allRecipes,
+        defaultVersion,
+        isMatch,
+        myRecipes,
+        notes,
+        recipeId,
+        userCollections,
+        versionCount: 0,
+      },
+      ...mapVersionToRecipe(turnedOnVersions),
+      ...mapVersionToRecipe(turnedOffVersions),
+    ];
+
+    if (!isMatch) {
+      normalizeData = [
+        {
+          addedToCompare,
+          allRecipes,
+          defaultVersion: recipeId?.originalVersion,
+          isMatch,
+          myRecipes,
+          notes,
+          recipeId,
+          userCollections,
+          versionCount: 0,
+        },
+        ...normalizeData,
+      ];
+    }
 
     return normalizeData;
   };
@@ -94,8 +180,8 @@ const VersionCompare = () => {
 
   // find version by id
   const findVersion = (id: string) => {
-    const findOne = data?.getAllVersions?.recipeVersion?.find(
-      (version) => version?._id === id,
+    const findOne = normalizeData?.find(
+      (version) => version?.defaultVersion?._id === id,
     );
     return findOne;
   };
@@ -110,7 +196,7 @@ const VersionCompare = () => {
     const findRecipe = findVersion(id);
 
     if (findRecipe) {
-      const findIngredient = findRecipe?.ingredients[index];
+      const findIngredient = findRecipe?.defaultVersion?.ingredients?.[index];
       const ingredientId = findIngredient?.ingredientId?._id;
       const selectedPortionName = findIngredient?.selectedPortion?.name;
       const selectedPortionGram = findIngredient?.selectedPortion?.gram;
@@ -137,14 +223,14 @@ const VersionCompare = () => {
   };
 
   // click to version edit
-  const editVersionClick = (recipe: any, editMode: boolean, index: number) => {
+  const editVersionClick = (
+    recipe: CompareRecipeType,
+    editMode: boolean,
+    index: number,
+  ) => {
     const {
-      name = "",
-      description = "",
-      ingredients = [],
-      image = [],
-      recipeBlendCategory = {},
-      versionId = "",
+      defaultVersion: { ingredients, description, postfixTitle, _id },
+      recipeId: { image, recipeBlendCategory },
     } = recipe;
     let ingredientsArr = [];
 
@@ -166,8 +252,8 @@ const VersionCompare = () => {
       image?.find((img) => img?.default)?.image || image[0]?.image || "";
     setNewRecipe((state) => ({
       ...state,
-      versionId,
-      name,
+      versionId: _id,
+      name: postfixTitle,
       description,
       image: [defaultImage],
       recipeBlendCategory: recipeBlendCategory?._id,
@@ -205,7 +291,11 @@ const VersionCompare = () => {
     }
   };
 
-  const handleSubmitEditedVersion = async () => {
+  const handleSubmitEditedVersion = async (
+    recipeId: string,
+    versionId: string,
+    isOriginalVersion: boolean,
+  ) => {
     //  dispatch(setLoading(true));
     let ingArr = [];
     newRecipe.ingredients?.forEach((item) => {
@@ -216,33 +306,74 @@ const VersionCompare = () => {
       });
     });
 
-    try {
-      let obj = {
-        editId: newRecipe?.versionId,
-        editableObject: {
-          postfixTitle: newRecipe?.name,
-          description: newRecipe?.description,
-          ingredients: ingArr,
-        },
-      };
+    let obj = {
+      editId: newRecipe?.versionId,
+      recipeId: recipeId,
+      turnedOn: null,
+      userId: dbUser?._id,
+      editableObject: {
+        postfixTitle: newRecipe?.name,
+        description: newRecipe?.description,
+        ingredients: ingArr,
+      },
+    };
 
-      await editAVersionOfRecipe({
-        variables: { data: obj },
-        refetchQueries: [
-          {
-            query: GET_ALL_RECIPE_VERSION,
-            variables: { recipeId, userId: dbUser._id },
-          }, // DocumentNode object parsed with gql
-          "GetAllVersions", // Query name
-        ],
-      });
+    const findRecipe = findVersion(versionId);
+    if (
+      findRecipe?.defaultVersion?._id ===
+      findRecipe?.recipeId?.originalVersion?._id
+    ) {
+      openConfirmationModal(obj);
+    } else {
+      try {
+        const returnObj = await handleToEditARecipeVersion(
+          dbUser._id,
+          recipeId,
+          versionId,
+          true,
+          obj.editableObject,
+          isOriginalVersion,
+        );
+        const { isNew, status } = returnObj;
+        const updateRecipeVersionObj = isNew
+          ? {
+              _id: status,
+              postfixTitle: obj.editableObject.postfixTitle,
+              description: obj.editableObject.description,
+            }
+          : {
+              postfixTitle: obj.editableObject.postfixTitle,
+              description: obj.editableObject.description,
+            };
 
-      handleEditMode(false, null);
-      notification("info", "Version updated successfully");
-    } catch (error) {
-      notification("error", "Version updated failed");
+        setNormalizeData((data) =>
+          data?.map((item) =>
+            item?.defaultVersion?._id === versionId
+              ? {
+                  ...item,
+                  defaultVersion: {
+                    ...item?.defaultVersion,
+                    ...updateRecipeVersionObj,
+                  },
+                }
+              : item,
+          ),
+        );
+
+        handleEditMode(false, null);
+        notification("info", "Version updated successfully");
+      } catch (error) {
+        notification("error", "Version updated failed");
+      }
     }
   };
+
+  useEffect(() => {
+    if (!loading) {
+      setNormalizeData(handleNormalizeData(data?.getAllVersions));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data?.getAllVersions]);
 
   useEffect(() => {
     dispatch(
@@ -289,12 +420,17 @@ const VersionCompare = () => {
         </div>
         <DragDropContext onDragEnd={onDragEnd}>
           <Slider {...compareRecipeResponsiveSettings} ref={sliderRef}>
-            {handleNormalizeData(data?.getAllVersions)?.map((recipe, index) => {
+            {normalizeData?.map((recipe, index) => {
               return (
                 <VersionDetailsIndex
                   key={index}
                   recipe={recipe}
-                  id={recipe?.versionId}
+                  recipeId={recipe?.recipeId?._id}
+                  isOriginalVersion={
+                    recipe?.recipeId?.originalVersion?._id ===
+                    recipe?.defaultVersion?._id
+                  }
+                  id={recipe?.defaultVersion?._id}
                   setOpenCollectionModal={setOpenCollectionModal}
                   dragAndDrop={allVersionsEditMode}
                   newRecipe={newRecipe}
@@ -314,6 +450,18 @@ const VersionCompare = () => {
           </Slider>
         </DragDropContext>
       </LayoutComponent>
+      <ConfirmationModal
+        text="You can't edit original recipe but you can make a new version like original one !!!"
+        cancleFunc={() => {
+          setOpenModal(false);
+          dispatch(setIsNewVersionInfo(null));
+        }}
+        submitFunc={handleOpenVersionTray}
+        // loading={removeARecipeVersionLoading}
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        submitButText="Proceed"
+      />
     </>
   );
 };
@@ -336,6 +484,11 @@ const LayoutComponent: FC = ({ children }) => {
         showTagByDeafult: false,
       }}
       showCommentsTray={{
+        show: true,
+        showPanle: "right",
+        showTagByDeafult: false,
+      }}
+      showVersionTray={{
         show: true,
         showPanle: "right",
         showTagByDeafult: false,
