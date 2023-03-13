@@ -29,6 +29,13 @@ import {
 } from "../../../type/recipeDetailsType";
 import { CompareRecipeType } from "../../../type/compareRecipeType";
 import useToEditOfARecipeVersion from "../../../customHooks/useToEditOfARecipeVersion";
+import ConfirmationModal from "../../../theme/confirmationModal/ConfirmationModal";
+import {
+  setIsNewVersionInfo,
+  setOpenVersionTray,
+} from "../../../redux/slices/versionTraySlice";
+import useToGetARecipeVersion from "../../../customHooks/useToGetARecipeVersion";
+import { setDetailsARecipe } from "../../../redux/slices/recipeSlice";
 
 const compareRecipeResponsiveSettings = {
   ...compareRecipeResponsiveSetting,
@@ -36,6 +43,10 @@ const compareRecipeResponsiveSettings = {
 };
 
 const VersionCompare = () => {
+  const [newVersionInfo, setNewVersionInfo] = useState<{ [key: string]: any }>(
+    {},
+  );
+  const [openModal, setOpenModal] = useState(false);
   const [normalizeData, setNormalizeData] = useState<CompareRecipeType[]>([]);
   const [singleVersionsEditMode, setSingleVersionsEditMode] = useState(null);
   const [allVersionsEditMode, setAllVersionsEditMode] = useState(false);
@@ -59,6 +70,22 @@ const VersionCompare = () => {
   const sliderRef = useRef(null);
   const { handleToEditARecipeVersion, loading: versionUpdateLoading } =
     useToEditOfARecipeVersion();
+  const { handleToGetARecipeVersion, loading: getARecipeVersionLoading } =
+    useToGetARecipeVersion();
+
+  // open confirmation modal
+  const openConfirmationModal = (data: { [key: string]: any }) => {
+    setOpenModal(true);
+    setNewVersionInfo(data);
+  };
+
+  // open version tray
+  const handleOpenVersionTray = () => {
+    dispatch(setDetailsARecipe(data?.getAllVersions));
+    dispatch(setOpenVersionTray(true));
+    dispatch(setIsNewVersionInfo(newVersionInfo));
+    setOpenModal(false);
+  };
 
   // arrange array for working
   const handleNormalizeData = (
@@ -279,53 +306,65 @@ const VersionCompare = () => {
       });
     });
 
-    try {
-      let obj = {
-        editId: newRecipe?.versionId,
-        editableObject: {
-          postfixTitle: newRecipe?.name,
-          description: newRecipe?.description,
-          ingredients: ingArr,
-        },
-      };
-      const returnObj = await handleToEditARecipeVersion(
-        dbUser._id,
-        recipeId,
-        versionId,
-        true,
-        obj.editableObject,
-        isOriginalVersion,
-      );
-      const { isNew, status } = returnObj;
-      const updateRecipeVersionObj = isNew
-        ? {
-            _id: status,
-            postfixTitle: obj.editableObject.postfixTitle,
-            description: obj.editableObject.description,
-          }
-        : {
-            postfixTitle: obj.editableObject.postfixTitle,
-            description: obj.editableObject.description,
-          };
+    let obj = {
+      editId: newRecipe?.versionId,
+      recipeId: recipeId,
+      turnedOn: null,
+      userId: dbUser?._id,
+      editableObject: {
+        postfixTitle: newRecipe?.name,
+        description: newRecipe?.description,
+        ingredients: ingArr,
+      },
+    };
 
-      setNormalizeData((data) =>
-        data?.map((item) =>
-          item?.defaultVersion?._id === versionId
-            ? {
-                ...item,
-                defaultVersion: {
-                  ...item?.defaultVersion,
-                  ...updateRecipeVersionObj,
-                },
-              }
-            : item,
-        ),
-      );
+    const findRecipe = findVersion(versionId);
+    if (
+      findRecipe?.defaultVersion?._id ===
+      findRecipe?.recipeId?.originalVersion?._id
+    ) {
+      openConfirmationModal(obj);
+    } else {
+      try {
+        const returnObj = await handleToEditARecipeVersion(
+          dbUser._id,
+          recipeId,
+          versionId,
+          true,
+          obj.editableObject,
+          isOriginalVersion,
+        );
+        const { isNew, status } = returnObj;
+        const updateRecipeVersionObj = isNew
+          ? {
+              _id: status,
+              postfixTitle: obj.editableObject.postfixTitle,
+              description: obj.editableObject.description,
+            }
+          : {
+              postfixTitle: obj.editableObject.postfixTitle,
+              description: obj.editableObject.description,
+            };
 
-      handleEditMode(false, null);
-      notification("info", "Version updated successfully");
-    } catch (error) {
-      notification("error", "Version updated failed");
+        setNormalizeData((data) =>
+          data?.map((item) =>
+            item?.defaultVersion?._id === versionId
+              ? {
+                  ...item,
+                  defaultVersion: {
+                    ...item?.defaultVersion,
+                    ...updateRecipeVersionObj,
+                  },
+                }
+              : item,
+          ),
+        );
+
+        handleEditMode(false, null);
+        notification("info", "Version updated successfully");
+      } catch (error) {
+        notification("error", "Version updated failed");
+      }
     }
   };
 
@@ -411,6 +450,18 @@ const VersionCompare = () => {
           </Slider>
         </DragDropContext>
       </LayoutComponent>
+      <ConfirmationModal
+        text="You can't edit original recipe but you can make a new version like original one !!!"
+        cancleFunc={() => {
+          setOpenModal(false);
+          dispatch(setIsNewVersionInfo(null));
+        }}
+        submitFunc={handleOpenVersionTray}
+        // loading={removeARecipeVersionLoading}
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        submitButText="Proceed"
+      />
     </>
   );
 };
@@ -433,6 +484,11 @@ const LayoutComponent: FC = ({ children }) => {
         showTagByDeafult: false,
       }}
       showCommentsTray={{
+        show: true,
+        showPanle: "right",
+        showTagByDeafult: false,
+      }}
+      showVersionTray={{
         show: true,
         showPanle: "right",
         showTagByDeafult: false,

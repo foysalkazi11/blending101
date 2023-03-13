@@ -82,11 +82,13 @@ const EditRecipeComponent = () => {
       },
     });
 
+  // open confirmation modal
   const openConfirmationModal = (data: { [key: string]: any }) => {
     setOpenModal(true);
     setNewVersionInfo(data);
   };
 
+  // open version tray
   const handleOpenVersionTray = () => {
     dispatch(setOpenVersionTray(true));
     dispatch(setIsNewVersionInfo(newVersionInfo));
