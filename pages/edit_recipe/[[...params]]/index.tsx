@@ -34,6 +34,7 @@ import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/
 import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 import useToEditOfARecipeVersion from "../../../customHooks/useToEditOfARecipeVersion";
 import ConfirmationModal from "../../../theme/confirmationModal/ConfirmationModal";
+import useToUpdateAfterEditVersion from "../../../customHooks/useToUpdateAfterEditVersion";
 
 const EditRecipeComponent = () => {
   const router = useRouter();
@@ -64,6 +65,7 @@ const EditRecipeComponent = () => {
   } = useGetBlendNutritionBasedOnRecipexxx();
   const { handleToEditARecipeVersion, loading: editOrCreateVersionLoading } =
     useToEditOfARecipeVersion();
+  const handleToUpdateARecipeVersionAfterEdit = useToUpdateAfterEditVersion();
   const recipeInstruction = useAppSelector(
     (state) => state?.editRecipeReducer?.recipeInstruction,
   );
@@ -80,11 +82,13 @@ const EditRecipeComponent = () => {
       },
     });
 
+  // open confirmation modal
   const openConfirmationModal = (data: { [key: string]: any }) => {
     setOpenModal(true);
     setNewVersionInfo(data);
   };
 
+  // open version tray
   const handleOpenVersionTray = () => {
     dispatch(setOpenVersionTray(true));
     dispatch(setIsNewVersionInfo(newVersionInfo));
@@ -208,7 +212,7 @@ const EditRecipeComponent = () => {
           // };
 
           // await updateOrginalRecipe(orginalRecipeObj);
-          handleToEditARecipeVersion(
+          const returnObj = await handleToEditARecipeVersion(
             versionUpdateObj?.userId,
             versionUpdateObj?.recipeId,
             versionUpdateObj?.editId,
@@ -216,6 +220,14 @@ const EditRecipeComponent = () => {
             versionUpdateObj?.editableObject,
             versionUpdateObj?.isOriginalVersion,
           );
+          handleToUpdateARecipeVersionAfterEdit(
+            versionUpdateObj?.editId,
+            versionUpdateObj?.turnedOn,
+            versionUpdateObj?.editableObject,
+            returnObj,
+            versionUpdateObj?.isOriginalVersion,
+          );
+
           // dispatch(setLoading(false));
           // notification("info", "Version updated sucessfully");
         }
@@ -242,12 +254,20 @@ const EditRecipeComponent = () => {
         ) {
           openConfirmationModal(versionUpdateObj);
         } else {
-          handleToEditARecipeVersion(
+          const returnObj = await handleToEditARecipeVersion(
             versionUpdateObj?.userId,
             versionUpdateObj?.recipeId,
             versionUpdateObj?.editId,
             versionUpdateObj?.turnedOn,
             versionUpdateObj?.editableObject,
+            versionUpdateObj?.isOriginalVersion,
+          );
+
+          handleToUpdateARecipeVersionAfterEdit(
+            versionUpdateObj?.editId,
+            versionUpdateObj?.turnedOn,
+            versionUpdateObj?.editableObject,
+            returnObj,
             versionUpdateObj?.isOriginalVersion,
           );
         }

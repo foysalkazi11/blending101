@@ -47,6 +47,7 @@ const useToAddARecipeVersion = () => {
         }),
       );
       notification("success", `Recipe version create successfully`);
+      return data?.addVersion;
     } catch (error) {
       notification("error", `Recipe version create failed`);
     }
