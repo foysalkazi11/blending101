@@ -24,6 +24,7 @@ import useToEditOfARecipeVersion from "../../../customHooks/useToEditOfARecipeVe
 import useToRemoveARecipeVersion from "../../../customHooks/useToRemoveARecipeVersion";
 import notification from "../../utility/reactToastifyNotification";
 import ConfirmationModal from "../../../theme/confirmationModal/ConfirmationModal";
+import useToUpdateAfterEditVersion from "../../../customHooks/useToUpdateAfterEditVersion";
 
 interface VersionTrayProps {
   showTagByDefaut?: boolean;
@@ -52,6 +53,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     useToAddARecipeVersion();
   const { handleToEditARecipeVersion, loading: editOrCreateVersionLoading } =
     useToEditOfARecipeVersion();
+  const handleToUpdateARecipeVersionAfterEdit = useToUpdateAfterEditVersion();
   const { handleToRemoveARecipeVersion, loading: removeARecipeVersionLoading } =
     useToRemoveARecipeVersion();
   const dispatch = useAppDispatch();
@@ -79,7 +81,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   const createOrUpdateVarsion = async () => {
     try {
       if (updateVersion) {
-        await handleToEditARecipeVersion(
+        const returnObj = await handleToEditARecipeVersion(
           dbUser?._id,
           detailsARecipe?.recipeId?._id,
           updateVersionId,
@@ -88,6 +90,15 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
             postfixTitle: formState?.title,
             description: formState?.body,
           },
+        );
+        handleToUpdateARecipeVersionAfterEdit(
+          updateVersionId,
+          isVersionSharable,
+          {
+            postfixTitle: formState?.title,
+            description: formState?.body,
+          },
+          returnObj,
         );
         toggleForm();
       } else {

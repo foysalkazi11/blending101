@@ -12,6 +12,8 @@ const VersionDetailsIndex = (props) => {
     handleSubmitEditedVersion,
     handleEditMode,
     versionUpdateLoading,
+    recipeId,
+    isOriginalVersion,
     ...rest
   } = props;
 
@@ -25,7 +27,9 @@ const VersionDetailsIndex = (props) => {
           closeCreateNewRecipeInterface={() => handleEditMode(false, null)}
           disableCategory={true}
           disableImageUpload={true}
-          handleCreateNewRecipe={(e) => handleSubmitEditedVersion()}
+          handleCreateNewRecipe={(e) =>
+            handleSubmitEditedVersion(recipeId, props?.id, isOriginalVersion)
+          }
           recipeSaveLoading={versionUpdateLoading}
         />
       ) : (
