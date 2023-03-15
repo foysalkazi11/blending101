@@ -82,6 +82,8 @@ interface RecipeDetailsProps {
   showMoreMenuAtHover?: boolean;
   updateCompareList: ReferenceOfRecipeUpdateFuncType;
   handleToOpenVersionTray?: (recipeId: string) => void;
+  footerMenuType?: "allIcons" | "OnlyStar";
+  updateDataAfterChangeDefaultVersion?: (versionId: string) => void;
 }
 
 const RecipeDetails = ({
@@ -100,33 +102,10 @@ const RecipeDetails = ({
   showMoreMenuAtHover = false,
   updateCompareList = () => {},
   handleToOpenVersionTray,
+  footerMenuType = "allIcons",
+  updateDataAfterChangeDefaultVersion = () => {},
 }: RecipeDetailsProps) => {
   const [winReady, setwinReady] = useState(false);
-  // const {
-  //   recipeId: {
-  //     _id = "",
-  //     name = "",
-  //     image,
-  //     originalVersion = "",
-  //     numberOfRating = 0,
-  //     averageRating = 0,
-  //     recipeBlendCategory,
-  //     userId,
-  //   },
-  //   defaultVersion: {
-  //     _id: defaultVersionId = "",
-  //     postfixTitle = "",
-  //     ingredients,
-  //     description = "",
-  //   },
-  //   isMatch = false,
-  //   allRecipes = false,
-  //   myRecipes = false,
-  //   notes = 0,
-  //   addedToCompare = false,
-  //   userCollections = [],
-  //   versionCount = 0,
-  // } = recipe;
 
   const { loading: nutritionDataLoading, data: nutritionData } = useQuery(
     GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS,
@@ -182,6 +161,11 @@ const RecipeDetails = ({
           updateDataFunc={updateCompareList}
           userId={recipe?.recipeId?.userId}
           versionHandler={handleToOpenVersionTray}
+          footerMenuType={footerMenuType}
+          updateDataAfterChangeDefaultVersion={
+            updateDataAfterChangeDefaultVersion
+          }
+          isVersionSharable={recipe?.defaultVersion?.isVersionSharable}
         />
         <div className={`${styles.dividerBox}`}>
           <SectionTitleWithIcon

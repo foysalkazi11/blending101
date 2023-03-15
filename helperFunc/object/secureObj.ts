@@ -1,5 +1,5 @@
 //First of all, we need to determine whether the current object is a valid object
-export const isVaildObject = (obj) => {
+export const isValidObject = (obj) => {
   return (
     typeof obj === "object" && !Array.isArray(obj) && Object.keys(obj).length
   );

@@ -36,6 +36,7 @@ import {
 } from "../../../redux/slices/versionTraySlice";
 import useToGetARecipeVersion from "../../../customHooks/useToGetARecipeVersion";
 import { setDetailsARecipe } from "../../../redux/slices/recipeSlice";
+import useToGetARecipe from "../../../customHooks/useToGetARecipe";
 
 const compareRecipeResponsiveSettings = {
   ...compareRecipeResponsiveSetting,
@@ -70,8 +71,9 @@ const VersionCompare = () => {
   const sliderRef = useRef(null);
   const { handleToEditARecipeVersion, loading: versionUpdateLoading } =
     useToEditOfARecipeVersion();
-  const { handleToGetARecipeVersion, loading: getARecipeVersionLoading } =
-    useToGetARecipeVersion();
+  const { handleToGetARecipe, loading: getARecipeLoading } = useToGetARecipe();
+  const isMounted = useRef(false);
+  const { detailsARecipe } = useAppSelector((state) => state?.recipe);
 
   // open confirmation modal
   const openConfirmationModal = (data: { [key: string]: any }) => {
@@ -80,8 +82,9 @@ const VersionCompare = () => {
   };
 
   // open version tray
-  const handleOpenVersionTray = () => {
-    dispatch(setDetailsARecipe(data?.getAllVersions));
+  const handleOpenVersionTray = async () => {
+    await handleToGetARecipe(recipeId, dbUser?._id);
+    // dispatch(setDetailsARecipe(data?.getAllVersions));
     dispatch(setOpenVersionTray(true));
     dispatch(setIsNewVersionInfo(newVersionInfo));
     setOpenModal(false);
@@ -105,14 +108,17 @@ const VersionCompare = () => {
       versionsCount,
       tempVersionInfo,
     } = data;
+
+    // map version to recipe
     let mapVersionToRecipe = (
       version: VersionDataType[],
+      isVersionSharable: boolean,
     ): CompareRecipeType[] => {
       return version?.map((item) => ({
         addedToCompare,
         allRecipes,
-        defaultVersion: { ...item },
-        isMatch,
+        defaultVersion: { ...item, isVersionSharable },
+        isMatch: false,
         myRecipes,
         notes,
         recipeId,
@@ -120,20 +126,21 @@ const VersionCompare = () => {
         versionCount: 0,
       }));
     };
+
     let normalizeData: CompareRecipeType[] = [
       {
         addedToCompare,
         allRecipes,
-        defaultVersion,
-        isMatch,
+        defaultVersion: { ...defaultVersion, isVersionSharable: true },
+        isMatch: true,
         myRecipes,
         notes,
         recipeId,
         userCollections,
         versionCount: 0,
       },
-      ...mapVersionToRecipe(turnedOnVersions),
-      ...mapVersionToRecipe(turnedOffVersions),
+      ...mapVersionToRecipe(turnedOnVersions, true),
+      ...mapVersionToRecipe(turnedOffVersions, false),
     ];
 
     if (!isMatch) {
@@ -141,8 +148,11 @@ const VersionCompare = () => {
         {
           addedToCompare,
           allRecipes,
-          defaultVersion: recipeId?.originalVersion,
-          isMatch,
+          defaultVersion: {
+            ...recipeId?.originalVersion,
+            isVersionSharable: true,
+          },
+          isMatch: false,
           myRecipes,
           notes,
           recipeId,
@@ -368,6 +378,36 @@ const VersionCompare = () => {
     }
   };
 
+  const handleToUpdateDataAfterChangeDefaultVersion = (versionId: string) => {
+    setNormalizeData((recipes) =>
+      recipes?.map((recipe) =>
+        recipe?.defaultVersion?._id === versionId
+          ? {
+              ...recipe,
+              isMatch: true,
+            }
+          : {
+              ...recipe,
+              isMatch: false,
+            },
+      ),
+    );
+  };
+
+  //  useEffect(() => {
+  //    if (isMounted?.current ) {
+  //      const { _id, ...rest } = detailsARecipe.defaultVersion;
+  //      setCompareRecipeList((state) =>
+  //        state.map((item) =>
+  //          item?.recipeId?._id === detailsARecipe?.recipeId?._id
+  //            ? { ...item, defaultVersion: { ...item?.defaultVersion, ...rest } }
+  //            : item,
+  //        ),
+  //      );
+  //    }
+  //    // eslint-disable-next-line react-hooks/exhaustive-deps
+  //  }, [detailsARecipe.turnedOnVersions]);
+
   useEffect(() => {
     if (!loading) {
       setNormalizeData(handleNormalizeData(data?.getAllVersions));
@@ -383,6 +423,14 @@ const VersionCompare = () => {
       }),
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    };
   }, []);
 
   const customEditIcon = (recipe: any, isEditMode: boolean, index: number) => (
@@ -444,6 +492,10 @@ const VersionCompare = () => {
                   customMenu={customEditIcon(recipe, true, index)}
                   versionUpdateLoading={versionUpdateLoading}
                   showMoreMenuAtHover={true}
+                  footerMenuType="OnlyStar"
+                  updateDataAfterChangeDefaultVersion={
+                    handleToUpdateDataAfterChangeDefaultVersion
+                  }
                 />
               );
             })}
@@ -457,7 +509,7 @@ const VersionCompare = () => {
           dispatch(setIsNewVersionInfo(null));
         }}
         submitFunc={handleOpenVersionTray}
-        // loading={removeARecipeVersionLoading}
+        loading={getARecipeLoading}
         openModal={openModal}
         setOpenModal={setOpenModal}
         submitButText="Proceed"
