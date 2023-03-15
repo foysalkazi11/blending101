@@ -53,6 +53,7 @@ export interface VersionDataType {
   postfixTitle: string;
   description: string;
   ingredients: Ingredient[];
+  isVersionSharable?: boolean;
 }
 
 export interface RecipeBlendCategory {

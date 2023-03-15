@@ -25,6 +25,7 @@ import useToRemoveARecipeVersion from "../../../customHooks/useToRemoveARecipeVe
 import notification from "../../utility/reactToastifyNotification";
 import ConfirmationModal from "../../../theme/confirmationModal/ConfirmationModal";
 import useToUpdateAfterEditVersion from "../../../customHooks/useToUpdateAfterEditVersion";
+import { setDetailsARecipe } from "../../../redux/slices/recipeSlice";
 
 interface VersionTrayProps {
   showTagByDefaut?: boolean;
@@ -187,6 +188,28 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     detailsARecipe?.turnedOnVersions,
   ]);
 
+  const changeDefaultVersionAndUpdateValue = async (
+    userId: string,
+    recipeId: string,
+    versionId: string,
+    isOriginalVersion: boolean,
+  ) => {
+    await handleToUpdateDefaultVersion(
+      userId,
+      recipeId,
+      versionId,
+      isOriginalVersion,
+    );
+
+    dispatch(
+      setDetailsARecipe({
+        ...detailsARecipe,
+        isMatch: isOriginalVersion,
+        defaultVersion: { ...detailsARecipe.defaultVersion, _id: versionId },
+      }),
+    );
+  };
+
   useEffect(() => {
     if (isNewVersionInfo) {
       const {
@@ -312,7 +335,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
                 onClick={() =>
                   !detailsARecipe?.isMatch &&
                   openVersionTrayFormWhichPage === "edit" &&
-                  handleToUpdateDefaultVersion(
+                  changeDefaultVersionAndUpdateValue(
                     dbUser?._id,
                     detailsARecipe?.recipeId?._id,
                     detailsARecipe?.recipeId?.originalVersion?._id,
@@ -351,7 +374,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
             versionId,
             isOriginalVersion = false,
           ) =>
-            handleToUpdateDefaultVersion(
+            changeDefaultVersionAndUpdateValue(
               dbUser?._id,
               detailsARecipe?.recipeId?._id,
               versionId,
