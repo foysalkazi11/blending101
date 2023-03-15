@@ -39,6 +39,4 @@ const VersionDetailsIndex = (props) => {
   );
 };
 
-const SingleVersionRecipe = (versions: any[]) => {};
-
 export default VersionDetailsIndex;

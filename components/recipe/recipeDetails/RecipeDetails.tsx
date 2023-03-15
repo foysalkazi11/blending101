@@ -30,7 +30,6 @@ const RecipeDetails = ({
 }: Props) => {
   const [counter, setCounter] = useState(1);
   const { width } = useWindowSize();
-
   const { openVersionTray } = useAppSelector((state) => state?.versionTray);
 
   return (

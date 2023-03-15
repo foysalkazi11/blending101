@@ -17,6 +17,7 @@ const useToChangeDefaultVersion = () => {
     recipeId: string,
     versionId: string,
     isOriginalVersion: boolean = false,
+    isTurnedOff: boolean = false,
   ) => {
     try {
       await changeDefaultVersion({
@@ -24,6 +25,7 @@ const useToChangeDefaultVersion = () => {
           userId,
           recipeId,
           versionId,
+          isTurnedOff,
         },
       });
 
@@ -42,13 +44,7 @@ const useToChangeDefaultVersion = () => {
       //       ...data?.changeDefaultVersion?.defaultVersion,
       //       tempVersionInfo: {},
       //     };
-      dispatch(
-        setDetailsARecipe({
-          ...detailsARecipe,
-          isMatch: isOriginalVersion,
-          defaultVersion: { ...detailsARecipe.defaultVersion, _id: versionId },
-        }),
-      );
+
       notification("success", "Default version change successfully");
     } catch (error) {
       notification("error", error?.message || "Something went wrong");
