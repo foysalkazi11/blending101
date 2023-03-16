@@ -24,6 +24,8 @@ import CreateRecipeSkeleton from "../../../../theme/skeletons/createRecipeSkelet
 import IconWraper from "../../../../theme/iconWarper/IconWarper";
 import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
 import InputComponent from "../../../../theme/input/input.component";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRectangleVerticalHistory } from "@fortawesome/pro-light-svg-icons";
 
 const CreateNewRecipe = ({
   newRecipe = {},
@@ -38,6 +40,8 @@ const CreateNewRecipe = ({
   disableCategory = false,
   disableImageUpload = false,
   recipeSaveLoading = false,
+  handleToOpenVersionTray = () => {},
+  recipe = {},
 }: any) => {
   const [winReady, setWinReady] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -340,7 +344,6 @@ const CreateNewRecipe = ({
             </div>
           </div>
         </div>
-
         <div className={styles.datacard__body__belt}>
           <div className={styles.datacard__body__belt__child}>
             Net Carbs <span>00</span>
@@ -351,6 +354,29 @@ const CreateNewRecipe = ({
           <div className={styles.datacard__body__belt__child}>
             Calorie <span>00</span>
           </div>
+        </div>
+        <div
+          style={{
+            marginTop: "10px",
+            marginRight: "10px",
+            display: "flex",
+            justifyContent: "flex-end",
+            cursor: "pointer",
+          }}
+        >
+          <Tooltip content={`Version`} direction="left">
+            <FontAwesomeIcon
+              icon={faRectangleVerticalHistory}
+              color="#7cbc39"
+              onClick={() =>
+                handleToOpenVersionTray(
+                  recipe?.recipeId?._id,
+                  recipe?.defaultVersion,
+                  true,
+                )
+              }
+            />
+          </Tooltip>
         </div>
       </div>
       <div className={styles.dividerBox}>

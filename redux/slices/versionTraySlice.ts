@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { VersionAddDataType } from "../../type/versionAddDataType";
 
 type varsionState = {
   openVersionTray: boolean;
   openVersionTrayFormWhichPage: "details" | "edit" | "default";
-  isNewVersionInfo: { [key: string]: any } | null;
+  isNewVersionInfo: VersionAddDataType | null;
   shouldCloseVersionTrayWhenClickAVersion?: boolean;
 };
 
@@ -29,7 +30,7 @@ export const versionTraySlice = createSlice({
     },
     setIsNewVersionInfo: (
       state,
-      action: PayloadAction<{ [key: string]: any } | null>,
+      action: PayloadAction<VersionAddDataType | null>,
     ) => {
       state.isNewVersionInfo = action?.payload;
     },

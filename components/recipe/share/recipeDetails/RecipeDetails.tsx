@@ -15,6 +15,7 @@ import { CompareRecipeType } from "../../../../type/compareRecipeType";
 import joniIngredients from "../../../../helperFunc/joinIngredients";
 import DatacardComponent from "../../../../theme/cards/dataCard/dataCard.component";
 import { ReferenceOfRecipeUpdateFuncType } from "../../../../type/recipeType";
+import { VersionDataType } from "../../../../type/recipeDetailsType";
 
 function Copyable(props) {
   const { items, addItem, droppableId } = props;
@@ -81,7 +82,10 @@ interface RecipeDetailsProps {
   customMenu?: any;
   showMoreMenuAtHover?: boolean;
   updateCompareList: ReferenceOfRecipeUpdateFuncType;
-  handleToOpenVersionTray?: (recipeId: string) => void;
+  handleToOpenVersionTray?: (
+    recipeId: string,
+    version?: VersionDataType,
+  ) => void;
   footerMenuType?: "allIcons" | "OnlyStar";
   updateDataAfterChangeDefaultVersion?: (versionId: string) => void;
 }
@@ -166,6 +170,7 @@ const RecipeDetails = ({
             updateDataAfterChangeDefaultVersion
           }
           isVersionSharable={recipe?.defaultVersion?.isVersionSharable}
+          defaultVersion={recipe?.defaultVersion}
         />
         <div className={`${styles.dividerBox}`}>
           <SectionTitleWithIcon
