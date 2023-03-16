@@ -35,6 +35,7 @@ import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 import useToEditOfARecipeVersion from "../../../customHooks/useToEditOfARecipeVersion";
 import ConfirmationModal from "../../../theme/confirmationModal/ConfirmationModal";
 import useToUpdateAfterEditVersion from "../../../customHooks/useToUpdateAfterEditVersion";
+import { VersionAddDataType } from "../../../type/versionAddDataType";
 
 const EditRecipeComponent = () => {
   const router = useRouter();
@@ -42,8 +43,8 @@ const EditRecipeComponent = () => {
   const recipeId = params?.[0] || "";
   const versionId = params?.[1] || "";
   const dispatch = useAppDispatch();
-  const [newVersionInfo, setNewVersionInfo] = useState<{ [key: string]: any }>(
-    {},
+  const [newVersionInfo, setNewVersionInfo] = useState<VersionAddDataType>(
+    {} as VersionAddDataType,
   );
   const [openModal, setOpenModal] = useState(false);
   const [calculateIngOz, SetcalculateIngOz] = useState(null);
@@ -83,7 +84,7 @@ const EditRecipeComponent = () => {
     });
 
   // open confirmation modal
-  const openConfirmationModal = (data: { [key: string]: any }) => {
+  const openConfirmationModal = (data: VersionAddDataType) => {
     setOpenModal(true);
     setNewVersionInfo(data);
   };
@@ -194,11 +195,21 @@ const EditRecipeComponent = () => {
           isOriginalVersion: detailsARecipe?.tempVersionInfo?.isOriginalVersion,
         };
 
+        const objForCreateNewVersion: VersionAddDataType = {
+          postfixTitle: copyDetailsRecipe?.defaultVersion.postfixTitle,
+          recipeId: detailsARecipe?.recipeId?._id,
+          userId: dbUser?._id,
+          description: copyDetailsRecipe?.defaultVersion.description,
+          ingredients: ingArr,
+          recipeInstructions: howToArr,
+          servingSize: calculateIngOz,
+        };
+
         if (
           detailsARecipe?.tempVersionInfo?.isOriginalVersion &&
           detailsARecipe?.recipeId?.userId?._id !== dbUser?._id
         ) {
-          openConfirmationModal(versionUpdateObj);
+          openConfirmationModal(objForCreateNewVersion);
         } else {
           // let orginalRecipeObj = {
           //   editId: recipeId,
@@ -247,12 +258,22 @@ const EditRecipeComponent = () => {
           isOriginalVersion: detailsARecipe?.isMatch,
         };
 
+        const objForCreateNewVersion: VersionAddDataType = {
+          postfixTitle: copyDetailsRecipe?.defaultVersion.postfixTitle,
+          recipeId: detailsARecipe?.recipeId?._id,
+          userId: dbUser?._id,
+          description: copyDetailsRecipe?.defaultVersion.description,
+          ingredients: ingArr,
+          recipeInstructions: howToArr,
+          servingSize: calculateIngOz,
+        };
+
         if (
           detailsARecipe?.defaultVersion?._id ===
             detailsARecipe?.recipeId?.originalVersion?._id &&
           detailsARecipe?.recipeId?.userId?._id !== dbUser?._id
         ) {
-          openConfirmationModal(versionUpdateObj);
+          openConfirmationModal(objForCreateNewVersion);
         } else {
           const returnObj = await handleToEditARecipeVersion(
             versionUpdateObj?.userId,

@@ -25,14 +25,9 @@ const useToGetARecipe = () => {
       });
       const recipe: RecipeDetailsType = data?.getARecipe2;
       let defaultVersion = recipe?.isMatch
-        ? {
-            ...recipe?.defaultVersion,
-            postfixTitle: recipe?.recipeId?.name || "",
-            description: recipe?.recipeId?.description || "",
-          }
-        : {
-            ...recipe?.defaultVersion,
-          };
+        ? recipe?.recipeId?.originalVersion
+        : recipe?.defaultVersion;
+
       let turnedOnVersions = recipe?.isMatch
         ? [...recipe?.turnedOnVersions]
         : [recipe?.defaultVersion, ...recipe?.turnedOnVersions];
@@ -40,8 +35,8 @@ const useToGetARecipe = () => {
       dispatch(
         setDetailsARecipe({
           ...recipe,
-          defaultVersion,
-          turnedOnVersions,
+          // defaultVersion,
+          // turnedOnVersions,
           tempVersionInfo: null,
         }),
       );

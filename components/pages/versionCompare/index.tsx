@@ -33,10 +33,12 @@ import ConfirmationModal from "../../../theme/confirmationModal/ConfirmationModa
 import {
   setIsNewVersionInfo,
   setOpenVersionTray,
+  setOpenVersionTrayFormWhichPage,
 } from "../../../redux/slices/versionTraySlice";
 import useToGetARecipeVersion from "../../../customHooks/useToGetARecipeVersion";
 import { setDetailsARecipe } from "../../../redux/slices/recipeSlice";
 import useToGetARecipe from "../../../customHooks/useToGetARecipe";
+import { VersionAddDataType } from "../../../type/versionAddDataType";
 
 const compareRecipeResponsiveSettings = {
   ...compareRecipeResponsiveSetting,
@@ -44,8 +46,8 @@ const compareRecipeResponsiveSettings = {
 };
 
 const VersionCompare = () => {
-  const [newVersionInfo, setNewVersionInfo] = useState<{ [key: string]: any }>(
-    {},
+  const [newVersionInfo, setNewVersionInfo] = useState<VersionAddDataType>(
+    {} as VersionAddDataType,
   );
   const [openModal, setOpenModal] = useState(false);
   const [normalizeData, setNormalizeData] = useState<CompareRecipeType[]>([]);
@@ -76,18 +78,52 @@ const VersionCompare = () => {
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
 
   // open confirmation modal
-  const openConfirmationModal = (data: { [key: string]: any }) => {
+  const openConfirmationModal = (data: VersionAddDataType) => {
     setOpenModal(true);
     setNewVersionInfo(data);
   };
 
   // open version tray
   const handleOpenVersionTray = async () => {
-    await handleToGetARecipe(recipeId, dbUser?._id);
-    // dispatch(setDetailsARecipe(data?.getAllVersions));
+    // await handleToGetARecipe(recipeId, dbUser?._id);
+    dispatch(setDetailsARecipe(data?.getAllVersions));
     dispatch(setOpenVersionTray(true));
+    dispatch(setOpenVersionTrayFormWhichPage("edit"));
     dispatch(setIsNewVersionInfo(newVersionInfo));
     setOpenModal(false);
+  };
+
+  const versionHandler = (
+    recipeId: string,
+    versionInfo?: VersionDataType,
+    isVersionEditMode: boolean = false,
+  ) => {
+    dispatch(setDetailsARecipe(data?.getAllVersions));
+    dispatch(setOpenVersionTray(true));
+    dispatch(setOpenVersionTrayFormWhichPage("edit"));
+    let ingredientsArr = [];
+
+    versionInfo?.ingredients?.forEach((ing) => {
+      const ingredientId = ing?.ingredientId?._id;
+      const selectedPortionName = ing?.selectedPortion?.name;
+      const selectedPortionGram = ing?.selectedPortion?.gram;
+      ingredientsArr.push({
+        ingredientId: ingredientId,
+        selectedPortionName: selectedPortionName,
+        weightInGram: selectedPortionGram,
+      });
+    });
+
+    let obj: VersionAddDataType = {
+      postfixTitle: versionInfo?.postfixTitle,
+      recipeId: versionInfo?.recipeId || recipeId,
+      userId: dbUser?._id,
+      description: versionInfo?.description,
+      ingredients: ingredientsArr,
+      recipeInstructions: versionInfo?.recipeInstructions,
+      servingSize: versionInfo?.servingSize,
+    };
+    dispatch(setIsNewVersionInfo(isVersionEditMode ? obj : null));
   };
 
   // arrange array for working
@@ -316,7 +352,7 @@ const VersionCompare = () => {
       });
     });
 
-    let obj = {
+    let objForEditARecipe = {
       editId: newRecipe?.versionId,
       recipeId: recipeId,
       turnedOn: null,
@@ -328,12 +364,22 @@ const VersionCompare = () => {
       },
     };
 
+    const objForCreateNewVersion: VersionAddDataType = {
+      postfixTitle: newRecipe?.name,
+      recipeId: recipeId,
+      userId: dbUser?._id,
+      description: newRecipe?.description,
+      ingredients: ingArr,
+      recipeInstructions: [],
+      servingSize: 0,
+    };
+
     const findRecipe = findVersion(versionId);
     if (
       findRecipe?.defaultVersion?._id ===
       findRecipe?.recipeId?.originalVersion?._id
     ) {
-      openConfirmationModal(obj);
+      openConfirmationModal(objForCreateNewVersion);
     } else {
       try {
         const returnObj = await handleToEditARecipeVersion(
@@ -341,19 +387,19 @@ const VersionCompare = () => {
           recipeId,
           versionId,
           true,
-          obj.editableObject,
+          objForEditARecipe?.editableObject,
           isOriginalVersion,
         );
         const { isNew, status } = returnObj;
         const updateRecipeVersionObj = isNew
           ? {
               _id: status,
-              postfixTitle: obj.editableObject.postfixTitle,
-              description: obj.editableObject.description,
+              postfixTitle: objForEditARecipe?.editableObject.postfixTitle,
+              description: objForEditARecipe?.editableObject.description,
             }
           : {
-              postfixTitle: obj.editableObject.postfixTitle,
-              description: obj.editableObject.description,
+              postfixTitle: objForEditARecipe?.editableObject.postfixTitle,
+              description: objForEditARecipe?.editableObject.description,
             };
 
         setNormalizeData((data) =>
@@ -394,26 +440,43 @@ const VersionCompare = () => {
     );
   };
 
-  //  useEffect(() => {
-  //    if (isMounted?.current ) {
-  //      const { _id, ...rest } = detailsARecipe.defaultVersion;
-  //      setCompareRecipeList((state) =>
-  //        state.map((item) =>
-  //          item?.recipeId?._id === detailsARecipe?.recipeId?._id
-  //            ? { ...item, defaultVersion: { ...item?.defaultVersion, ...rest } }
-  //            : item,
-  //        ),
-  //      );
-  //    }
-  //    // eslint-disable-next-line react-hooks/exhaustive-deps
-  //  }, [detailsARecipe.turnedOnVersions]);
-
   useEffect(() => {
-    if (!loading) {
-      setNormalizeData(handleNormalizeData(data?.getAllVersions));
+    if (isMounted?.current) {
+      const newCreatedVersion = detailsARecipe?.turnedOnVersions?.[0];
+      if (newCreatedVersion && !findVersion(newCreatedVersion?._id)) {
+        const {
+          recipeId,
+          addedToCompare,
+          allRecipes,
+          myRecipes,
+          notes,
+          userCollections,
+        } = data?.getAllVersions;
+        setNormalizeData((versions) => [
+          ...versions,
+          {
+            addedToCompare,
+            allRecipes,
+            defaultVersion: { ...newCreatedVersion, isVersionSharable: true },
+            isMatch: true,
+            myRecipes,
+            notes,
+            recipeId,
+            userCollections,
+            versionCount: 0,
+          },
+        ]);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data?.getAllVersions]);
+  }, [detailsARecipe.turnedOnVersions]);
+
+  useEffect(() => {
+    if (!loading && data?.getAllVersions) {
+      console.log("call two", loading, data?.getAllVersions);
+      setNormalizeData(handleNormalizeData(data?.getAllVersions));
+    }
+  }, [data?.getAllVersions, loading]);
 
   useEffect(() => {
     dispatch(
@@ -496,6 +559,7 @@ const VersionCompare = () => {
                   updateDataAfterChangeDefaultVersion={
                     handleToUpdateDataAfterChangeDefaultVersion
                   }
+                  handleToOpenVersionTray={versionHandler}
                 />
               );
             })}

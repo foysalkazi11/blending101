@@ -31,6 +31,8 @@ const VersionDetailsIndex = (props) => {
             handleSubmitEditedVersion(recipeId, props?.id, isOriginalVersion)
           }
           recipeSaveLoading={versionUpdateLoading}
+          handleToOpenVersionTray={props?.handleToOpenVersionTray}
+          recipe={props?.recipe}
         />
       ) : (
         <RecipeDetails {...rest} />
