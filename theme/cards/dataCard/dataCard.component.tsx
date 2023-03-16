@@ -26,6 +26,7 @@ import useHover from "../../../components/utility/useHover";
 import { faRectangleVerticalHistory } from "@fortawesome/pro-light-svg-icons";
 import useToChangeDefaultVersion from "../../../customHooks/useToChangeDefaultVersion";
 import { useAppSelector } from "../../../redux/hooks";
+import { VersionDataType } from "../../../type/recipeDetailsType";
 
 interface dataCardInterface {
   title: string;
@@ -67,10 +68,11 @@ interface dataCardInterface {
   defaultVersionId?: string;
   token?: string;
   updateDataFunc?: ReferenceOfRecipeUpdateFuncType;
-  versionHandler?: (recipeId: string) => void;
+  versionHandler?: (recipeId: string, version?: VersionDataType) => void;
   footerMenuType?: "allIcons" | "OnlyStar";
   updateDataAfterChangeDefaultVersion?: (versionId: string) => void;
   isVersionSharable?: boolean;
+  defaultVersion?: VersionDataType;
 }
 
 export default function DatacardComponent({
@@ -109,6 +111,7 @@ export default function DatacardComponent({
   footerMenuType = "allIcons",
   updateDataAfterChangeDefaultVersion = () => {},
   isVersionSharable = true,
+  defaultVersion = {} as VersionDataType,
 }: dataCardInterface) {
   ratings = Math.ceil(ratings);
   const router = useRouter();
@@ -277,27 +280,42 @@ export default function DatacardComponent({
   );
 
   const footerOnlyStarIcon = (
-    <li>
-      <Tooltip
-        content={`${isMatch ? "Default" : "Make default"}`}
-        direction="left"
-      >
-        <FontAwesomeIcon
-          onClick={async () => {
-            await handleToUpdateDefaultVersion(
-              dbUser?._id,
-              recipeId,
-              defaultVersionId,
-              isMatch ? true : false,
-              isVersionSharable ? false : true,
-            );
-            updateDataAfterChangeDefaultVersion(defaultVersionId);
-          }}
-          icon={faStarSharp}
-          className={`${styles.star} ${isMatch ? styles.on : styles.off}`}
-        />
-      </Tooltip>
-    </li>
+    <>
+      <li>
+        <Tooltip
+          content={`${isMatch ? "Default" : "Make default"}`}
+          direction="left"
+        >
+          <FontAwesomeIcon
+            onClick={async () => {
+              await handleToUpdateDefaultVersion(
+                dbUser?._id,
+                recipeId,
+                defaultVersionId,
+                isMatch ? true : false,
+                isVersionSharable ? false : true,
+              );
+              updateDataAfterChangeDefaultVersion(defaultVersionId);
+            }}
+            icon={faStarSharp}
+            className={`${styles.star} ${isMatch ? styles.on : styles.off}`}
+          />
+        </Tooltip>
+      </li>
+      <li>
+        <Tooltip content={`Version`} direction="left">
+          <FontAwesomeIcon
+            icon={faRectangleVerticalHistory}
+            color="#7cbc39"
+            onClick={() =>
+              versionHandler
+                ? versionHandler(recipeId, defaultVersion)
+                : router.push(`/versionCompare/${recipeId}`)
+            }
+          />
+        </Tooltip>
+      </li>
+    </>
   );
 
   const handleToShowFooterMenu = useCallback(() => {

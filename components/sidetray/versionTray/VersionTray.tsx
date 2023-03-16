@@ -26,6 +26,7 @@ import notification from "../../utility/reactToastifyNotification";
 import ConfirmationModal from "../../../theme/confirmationModal/ConfirmationModal";
 import useToUpdateAfterEditVersion from "../../../customHooks/useToUpdateAfterEditVersion";
 import { setDetailsARecipe } from "../../../redux/slices/recipeSlice";
+import { VersionAddDataType } from "../../../type/versionAddDataType";
 
 interface VersionTrayProps {
   showTagByDefaut?: boolean;
@@ -103,15 +104,26 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
         );
         toggleForm();
       } else {
-        const obj = {
+        const obj: VersionAddDataType = {
           description: formState?.body,
           postfixTitle: formState?.title,
+          recipeId: detailsARecipe?.recipeId?._id,
+          userId: dbUser?._id,
+          ingredients: isNewVersionInfo?.ingredients || [],
+          recipeInstructions: isNewVersionInfo?.recipeInstructions || [],
+          servingSize: isNewVersionInfo?.servingSize || 0,
         };
-        await handleToAddRecipeVersion(
-          dbUser?._id,
-          detailsARecipe?.recipeId?._id,
-          obj,
-        );
+        const version = await handleToAddRecipeVersion(obj);
+        if (version) {
+          dispatch(
+            setDetailsARecipe({
+              ...detailsARecipe,
+              turnedOnVersions: [version, ...detailsARecipe?.turnedOnVersions],
+              versionsCount: detailsARecipe?.versionsCount + 1,
+            }),
+          );
+          notification("success", `Recipe version create successfully`);
+        }
         toggleForm();
         if (isNewVersionInfo) {
           dispatch(setIsNewVersionInfo(null));
@@ -161,28 +173,30 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     let versions = [];
 
     versions = [
-      ...(detailsARecipe?.turnedOnVersions?.map((version) =>
-        !detailsARecipe?.isMatch &&
-        version?._id === detailsARecipe.defaultVersion._id
-          ? {
-              ...version,
-              isVersionSharable: true,
-              isDefault: true,
-            }
-          : {
-              ...version,
-              isVersionSharable: true,
-              isDefault: false,
-            },
-      ) || []),
+      ...(detailsARecipe?.turnedOnVersions?.map((version) => ({
+        ...version,
+        isVersionSharable: true,
+        isDefault: false,
+      })) || []),
       ...(detailsARecipe?.turnedOffVersions?.map((version) => ({
         ...version,
         isVersionSharable: false,
       })) || []),
     ];
+
+    if (!detailsARecipe?.isMatch) {
+      versions = [
+        {
+          ...detailsARecipe?.defaultVersion,
+          isVersionSharable: true,
+          isDefault: true,
+        },
+        ...versions,
+      ];
+    }
     return versions;
   }, [
-    detailsARecipe.defaultVersion?._id,
+    detailsARecipe?.defaultVersion,
     detailsARecipe?.isMatch,
     detailsARecipe?.turnedOffVersions,
     detailsARecipe?.turnedOnVersions,
@@ -213,7 +227,13 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   useEffect(() => {
     if (isNewVersionInfo) {
       const {
-        editableObject: { postfixTitle = "", description = "" },
+        postfixTitle = "",
+        description = "",
+        recipeId = "",
+        userId = "",
+        ingredients = [],
+        recipeInstructions = [],
+        servingSize = 0,
       } = isNewVersionInfo;
       setFormState((pre) => ({
         ...pre,
