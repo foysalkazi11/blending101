@@ -16,8 +16,10 @@ const useToAddARecipeVersion = () => {
       ingredients = [],
       recipeInstructions = [],
       servingSize = 0,
-      userId,
+      userId = "",
+      selectedImage = "",
     } = versionAddData;
+
     if (!postfixTitle) {
       notification("info", `Please enter a title`);
       return;
@@ -28,12 +30,13 @@ const useToAddARecipeVersion = () => {
         variables: {
           data: {
             recipeId,
-            postfixTitle: postfixTitle,
-            description: description,
+            postfixTitle,
+            description,
             userId,
             ingredients,
             recipeInstructions,
             servingSize,
+            selectedImage,
           },
         },
       });

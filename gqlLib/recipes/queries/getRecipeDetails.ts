@@ -10,11 +10,6 @@ const GET_A_RECIPE = gql`
           image
           default
         }
-        originalVersion {
-          _id
-          description
-          postfixTitle
-        }
         userId {
           _id
           displayName
@@ -35,6 +30,12 @@ const GET_A_RECIPE = gql`
         recipeBlendCategory {
           _id
           name
+        }
+        originalVersion {
+          _id
+          description
+          postfixTitle
+          selectedImage
         }
       }
       defaultVersion {
@@ -65,6 +66,7 @@ const GET_A_RECIPE = gql`
             gram
           }
         }
+        selectedImage
       }
       turnedOnVersions {
         _id
@@ -94,6 +96,7 @@ const GET_A_RECIPE = gql`
             gram
           }
         }
+        selectedImage
       }
 
       turnedOffVersions {
@@ -124,6 +127,7 @@ const GET_A_RECIPE = gql`
             gram
           }
         }
+        selectedImage
       }
       addedToCompare
       allRecipes

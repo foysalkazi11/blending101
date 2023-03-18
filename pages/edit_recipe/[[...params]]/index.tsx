@@ -164,20 +164,6 @@ const EditRecipeComponent = () => {
         : { image: img, default: false },
     );
 
-    // let orginalRecipeObj = {
-    //   editId: recipeId,
-    //   editableObject: {
-    //     name: copyDetailsRecipe?.recipeId?.name,
-    //     description: copyDetailsRecipe?.recipeId?.description,
-    //     image: imgArr,
-    //     ingredients: ingArr,
-    //     recipeBlendCategory: selectedBLendCategory,
-    //     servingSize: calculateIngOz,
-    //     servings: servingCounter,
-    //     recipeInstructions: howToArr,
-    //   },
-    // };
-
     try {
       if (detailsARecipe?.tempVersionInfo) {
         let versionUpdateObj = {
@@ -211,18 +197,6 @@ const EditRecipeComponent = () => {
         ) {
           openConfirmationModal(objForCreateNewVersion);
         } else {
-          // let orginalRecipeObj = {
-          //   editId: recipeId,
-          //   editableObject: {
-          //     name: copyDetailsRecipe?.recipeId?.name,
-          //     description: copyDetailsRecipe?.recipeId?.description,
-          //     image: imgArr,
-          //     recipeBlendCategory: selectedBLendCategory,
-          //     servings: servingCounter,
-          //   },
-          // };
-
-          // await updateOrginalRecipe(orginalRecipeObj);
           const returnObj = await handleToEditARecipeVersion(
             versionUpdateObj?.userId,
             versionUpdateObj?.recipeId,
@@ -238,9 +212,6 @@ const EditRecipeComponent = () => {
             returnObj,
             versionUpdateObj?.isOriginalVersion,
           );
-
-          // dispatch(setLoading(false));
-          // notification("info", "Version updated sucessfully");
         }
       } else {
         let versionUpdateObj = {
@@ -293,10 +264,6 @@ const EditRecipeComponent = () => {
           );
         }
       }
-
-      // await updateOrginalRecipe(orginalRecipeObj);
-      // dispatch(setLoading(false));
-      // reactToastifyNotification("info", "Recipe Updateded successfully ");
     } catch (error) {
       dispatch(setLoading(false));
       reactToastifyNotification("error", "Error while saving Recipe");

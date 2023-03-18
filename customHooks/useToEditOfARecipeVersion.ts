@@ -12,6 +12,7 @@ export interface VersionEditAbleData {
     selectedPortionName: string;
     weightInGram: number;
   }[];
+  selectedImage?: string;
 }
 
 const useToEditOfARecipeVersion = () => {
@@ -24,7 +25,14 @@ const useToEditOfARecipeVersion = () => {
     recipeId: string,
     versionId: string,
     turnedOn: boolean,
-    editableObject: VersionEditAbleData,
+    editableObject: VersionEditAbleData = {
+      description: "",
+      postfixTitle: "",
+      ingredients: [],
+      recipeInstructions: [],
+      selectedImage: "",
+      servingSize: 0,
+    },
     isOriginalVersion: boolean = false,
   ) => {
     try {
