@@ -4,12 +4,24 @@ import AddIcon from "../../../../public/icons/add_black_36dp.svg";
 import Image from "next/image";
 import { MdClose } from "react-icons/md";
 import IconWraper from "../../../../theme/iconWarper/IconWarper";
+import CustomCheckbox from "../../../../theme/checkbox/CustomCheckbox";
+
+interface CheckBoxProps {
+  value?: string | number;
+  name?: string;
+  handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  checked?: boolean;
+  disable?: boolean;
+  id?: string;
+  showCheckBox?: boolean;
+}
 
 interface AddRecipeCardProps {
   existingImage?: string[];
   setExistingImage?: Dispatch<SetStateAction<string[]>>;
   setImages?: Dispatch<SetStateAction<any[]>>;
   images?: any[];
+  checkBoxProps?: CheckBoxProps;
 }
 
 const HandleImageShow = ({
@@ -17,8 +29,18 @@ const HandleImageShow = ({
   setExistingImage = () => {},
   setImages = () => {},
   images = [],
+  checkBoxProps = {
+    checked: false,
+    disable: false,
+    handleChange: () => {},
+    id: "",
+    name: "",
+    showCheckBox: false,
+    value: "",
+  },
 }: AddRecipeCardProps) => {
   const inputRef = useRef(null);
+  const { showCheckBox, ...rest } = checkBoxProps;
 
   const handleClick = () => {
     const elem = inputRef?.current;
@@ -47,6 +69,20 @@ const HandleImageShow = ({
       {existingImage?.map((photo, index) => {
         return (
           <div className={styles.image__div} key={photo}>
+            {showCheckBox && (
+              <div className={styles.icon}>
+                <CustomCheckbox
+                  style={{
+                    position: "absolute",
+                    top: "12px",
+                    left: "3px",
+                    zIndex: 1,
+                  }}
+                  {...rest}
+                />
+              </div>
+            )}
+
             <div className={styles.icon}>
               <IconWraper
                 style={{

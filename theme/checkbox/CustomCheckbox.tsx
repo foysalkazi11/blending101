@@ -8,6 +8,7 @@ type CustomCheckboxProps = {
   checked?: boolean;
   disable?: boolean;
   id?: string;
+  style?: React.CSSProperties;
 };
 
 const CustomCheckbox = ({
@@ -17,9 +18,10 @@ const CustomCheckbox = ({
   value = "",
   disable = false,
   id = "checkBox",
+  style = {},
 }: CustomCheckboxProps) => {
   return (
-    <label className={styles.checkbxWrap}>
+    <label className={styles.checkbxWrap} style={style}>
       <input
         type="checkbox"
         value={value}

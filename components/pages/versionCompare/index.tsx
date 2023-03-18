@@ -39,6 +39,7 @@ import useToGetARecipeVersion from "../../../customHooks/useToGetARecipeVersion"
 import { setDetailsARecipe } from "../../../redux/slices/recipeSlice";
 import useToGetARecipe from "../../../customHooks/useToGetARecipe";
 import { VersionAddDataType } from "../../../type/versionAddDataType";
+import client from "../../../gqlLib/client";
 
 const compareRecipeResponsiveSettings = {
   ...compareRecipeResponsiveSetting,
@@ -83,10 +84,16 @@ const VersionCompare = () => {
     setNewVersionInfo(data);
   };
 
+  // convert to recipe
+  const convertToRecipe = (recipe: RecipeDetailsType) => {
+    recipe = { ...recipe };
+    return recipe;
+  };
   // open version tray
   const handleOpenVersionTray = async () => {
     // await handleToGetARecipe(recipeId, dbUser?._id);
-    dispatch(setDetailsARecipe(data?.getAllVersions));
+
+    dispatch(setDetailsARecipe(convertToRecipe(data?.getAllVersions)));
     dispatch(setOpenVersionTray(true));
     dispatch(setOpenVersionTrayFormWhichPage("edit"));
     dispatch(setIsNewVersionInfo(newVersionInfo));
@@ -342,7 +349,7 @@ const VersionCompare = () => {
     versionId: string,
     isOriginalVersion: boolean,
   ) => {
-    //  dispatch(setLoading(true));
+    const version = findVersion(versionId);
     let ingArr = [];
     newRecipe.ingredients?.forEach((item) => {
       ingArr?.push({
@@ -355,7 +362,7 @@ const VersionCompare = () => {
     let objForEditARecipe = {
       editId: newRecipe?.versionId,
       recipeId: recipeId,
-      turnedOn: null,
+      turnedOn: version?.defaultVersion?.isVersionSharable || null,
       userId: dbUser?._id,
       editableObject: {
         postfixTitle: newRecipe?.name,
@@ -401,6 +408,18 @@ const VersionCompare = () => {
               postfixTitle: objForEditARecipe?.editableObject.postfixTitle,
               description: objForEditARecipe?.editableObject.description,
             };
+
+        const recipe: RecipeDetailsType = data?.getAllVersions;
+        // client.writeQuery({
+        //   query: GET_ALL_RECIPE_VERSION,
+        //   variables: { recipeId, userId: dbUser._id },
+        //   data: {
+        //     getAllVersions: {
+        //       ...recipe,
+        //       defaultVersion:
+        //     },
+        //   },
+        // });
 
         setNormalizeData((data) =>
           data?.map((item) =>
