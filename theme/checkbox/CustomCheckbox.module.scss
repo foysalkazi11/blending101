@@ -20,13 +20,13 @@
 
 /* Create a custom checkbox */
 .checkbxWrap .checkmark {
-  border: 1px solid #e9ecef;
+  border: 1px solid #dbdbdb;
   position: absolute;
   top: -10px;
   left: 0;
   height: 20px;
   width: 20px;
-  background-color: #fff;
+  background-color: #dbdbdb;
   right: 0;
   border-radius: 4px;
 }
@@ -34,6 +34,7 @@
 /* On mouse-over, add a grey background color */
 .checkbxWrap:hover input ~ .checkmark {
   background-color: #ccc;
+  border-color: #ccc;
 }
 
 /* When the checkbox is checked, add a #f95d2b background */
@@ -46,7 +47,7 @@
 .checkbxWrap .checkmark:after {
   content: "";
   position: absolute;
-  display: none;
+  // display: none;
 }
 
 /* Show the checkmark when checked */

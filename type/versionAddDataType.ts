@@ -12,4 +12,5 @@ export interface VersionAddDataType {
   recipeInstructions?: string[];
   servingSize?: number;
   userId: string;
+  selectedImage?: string;
 }

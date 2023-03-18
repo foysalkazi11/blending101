@@ -135,9 +135,15 @@ const Center_Elements = ({
         <div className={styles.addImagediv}>
           <HandleImageShow
             existingImage={existingImage}
-            images={images}
             setExistingImage={setExistingImage}
+            images={images}
             setImages={setImages}
+            checkBoxProps={{
+              showCheckBox: true,
+              checked: existingImage?.includes(
+                copyDetailsRecipe?.defaultVersion?.selectedImage,
+              ),
+            }}
           />
         </div>
         <div className={styles.scoreTraydiv}>

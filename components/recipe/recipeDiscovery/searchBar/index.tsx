@@ -77,6 +77,25 @@ const DiscoveryPageSearchBar = ({
           />
         </Tooltip>
       </div>
+      {/* <div
+        style={{ marginLeft: "30px" }}
+        // className={styles.buttonContainer}
+      >
+        <Tooltip content="My Collections" direction="bottom">
+          <RecipeDiscoverButton
+            icon={
+              <FontAwesomeIcon
+                icon={faCirclePlus}
+                color="#fe5d1f"
+                fontSize={20}
+                style={{ marginRight: "5px" }}
+              />
+            }
+            text="Recipe"
+            handleClick={() => router.push(`/add_recipe`)}
+          />
+        </Tooltip>
+      </div> */}
     </div>
   );
 };
