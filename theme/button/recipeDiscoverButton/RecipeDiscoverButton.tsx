@@ -29,7 +29,7 @@ const RecipeDiscoverButton = ({
       ) : (
         icon
       )}
-      {text}
+      <p className={styles.text}>{text}</p>
     </button>
   );
 };

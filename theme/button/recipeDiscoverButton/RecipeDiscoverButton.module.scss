@@ -4,7 +4,6 @@
   align-items: center;
   height: 49px;
   font-size: 14px;
-  font-weight: 500;
   color: #000;
   border-radius: 15px;
   padding: 20px 22px;
@@ -20,9 +19,12 @@
     color: #fe5d1f;
     transform: scale(0.75);
   }
-  .img {
-    width: 30px;
-    padding-right: 10px;
-    color: #fe5d1f;
+  // .img {
+  //   margin-right: 10px;
+  //   color: #fe5d1f;
+  // }
+  .text {
+    margin-left: 5px;
+    font-weight: 500;
   }
 }
