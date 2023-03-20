@@ -9,6 +9,7 @@ const ADD_VERSION = gql`
       recipeId
       recipeInstructions
       servingSize
+      selectedImage
       ingredients {
         ingredientId {
           ingredientName

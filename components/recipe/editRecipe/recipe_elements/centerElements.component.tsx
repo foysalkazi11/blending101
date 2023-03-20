@@ -140,9 +140,9 @@ const Center_Elements = ({
             setImages={setImages}
             checkBoxProps={{
               showCheckBox: true,
-              checked: existingImage?.includes(
-                copyDetailsRecipe?.defaultVersion?.selectedImage,
-              ),
+              selectedImage: copyDetailsRecipe?.defaultVersion?.selectedImage,
+              handleChange: (e) =>
+                updateEditRecipe("selectedImage", e?.target?.value),
             }}
           />
         </div>

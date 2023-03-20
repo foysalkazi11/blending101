@@ -14,6 +14,7 @@ interface CheckBoxProps {
   disable?: boolean;
   id?: string;
   showCheckBox?: boolean;
+  selectedImage?: string;
 }
 
 interface AddRecipeCardProps {
@@ -40,7 +41,7 @@ const HandleImageShow = ({
   },
 }: AddRecipeCardProps) => {
   const inputRef = useRef(null);
-  const { showCheckBox, ...rest } = checkBoxProps;
+  const { showCheckBox, selectedImage, ...rest } = checkBoxProps;
 
   const handleClick = () => {
     const elem = inputRef?.current;
@@ -79,6 +80,8 @@ const HandleImageShow = ({
                     zIndex: 1,
                   }}
                   {...rest}
+                  value={photo}
+                  checked={photo === selectedImage}
                 />
               </div>
             )}

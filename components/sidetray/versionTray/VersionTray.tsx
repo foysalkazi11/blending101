@@ -27,6 +27,9 @@ import ConfirmationModal from "../../../theme/confirmationModal/ConfirmationModa
 import useToUpdateAfterEditVersion from "../../../customHooks/useToUpdateAfterEditVersion";
 import { setDetailsARecipe } from "../../../redux/slices/recipeSlice";
 import { VersionAddDataType } from "../../../type/versionAddDataType";
+import updateName from "../../../helperFunc/string/updateName";
+import { CompareRecipeType } from "../../../type/compareRecipeType";
+import { VersionDataType } from "../../../type/recipeDetailsType";
 
 interface VersionTrayProps {
   showTagByDefaut?: boolean;
@@ -61,6 +64,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
 
+  // toggle form and if new version info exist remove
   const toggleForm = () => {
     setShowForm((pre) => !pre);
 
@@ -69,6 +73,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     }
   };
 
+  // update form function
   const updateForm = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -76,10 +81,12 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     setFormState((pre) => ({ ...pre, [name]: value }));
   };
 
+  // close version tray
   const closeTray = () => {
     dispatch(setOpenVersionTray(false));
   };
 
+  // create or update a recipe version
   const createOrUpdateVarsion = async () => {
     try {
       if (updateVersion) {
@@ -112,6 +119,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           ingredients: isNewVersionInfo?.ingredients || [],
           recipeInstructions: isNewVersionInfo?.recipeInstructions || [],
           servingSize: isNewVersionInfo?.servingSize || 0,
+          selectedImage: isNewVersionInfo?.selectedImage || "",
         };
         const version = await handleToAddRecipeVersion(obj);
         if (version) {
@@ -136,11 +144,13 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     }
   };
 
+  // open confirmation modal when delete a version
   const openConfirmationModal = (versionId: string, isTurnedOn?: boolean) => {
     setRemoveVersionInfo({ versionId, isTurnedOn });
     setOpenModal(true);
   };
 
+  // version delete function
   const deleteRecipeVersion = async () => {
     await handleToRemoveARecipeVersion(
       dbUser?._id,
@@ -157,6 +167,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     toggleForm();
   };
 
+  // update version value before edit
   const updateVersionValue = (val: any) => {
     const title = val?.postfixTitle;
     const id = val?._id;
@@ -169,7 +180,9 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     toggleForm();
   };
 
-  const allVersions = useMemo(() => {
+  // normalize version to show default and turn on/off indicator
+
+  const allVersions: VersionDataType[] = useMemo(() => {
     let versions = [];
 
     versions = [
@@ -202,6 +215,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     detailsARecipe?.turnedOnVersions,
   ]);
 
+  // change default version function
   const changeDefaultVersionAndUpdateValue = async (
     userId: string,
     recipeId: string,
@@ -224,6 +238,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     );
   };
 
+  // if new version info update state
   useEffect(() => {
     if (isNewVersionInfo) {
       const {
@@ -237,7 +252,10 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
       } = isNewVersionInfo;
       setFormState((pre) => ({
         ...pre,
-        title: postfixTitle,
+        title: updateName(postfixTitle, [
+          postfixTitle,
+          ...allVersions?.map((version) => version?.postfixTitle),
+        ]),
         body: description,
       }));
       setShowForm(true);
