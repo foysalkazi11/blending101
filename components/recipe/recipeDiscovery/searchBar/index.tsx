@@ -1,4 +1,5 @@
 import { faCirclePlus } from "@fortawesome/pro-light-svg-icons";
+import { faBookmark } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import React from "react";
@@ -77,7 +78,7 @@ const DiscoveryPageSearchBar = ({
           />
         </Tooltip>
       </div>
-      {/* <div
+      <div
         style={{ marginLeft: "30px" }}
         // className={styles.buttonContainer}
       >
@@ -85,17 +86,19 @@ const DiscoveryPageSearchBar = ({
           <RecipeDiscoverButton
             icon={
               <FontAwesomeIcon
-                icon={faCirclePlus}
+                icon={faBookmark}
                 color="#fe5d1f"
                 fontSize={20}
                 style={{ marginRight: "5px" }}
               />
             }
-            text="Recipe"
-            handleClick={() => router.push(`/add_recipe`)}
+            text="Collections"
+            handleClick={() =>
+              router.push(`/collection/recipeCollection/my_collections`)
+            }
           />
         </Tooltip>
-      </div> */}
+      </div>
     </div>
   );
 };
