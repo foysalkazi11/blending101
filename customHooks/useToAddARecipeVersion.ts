@@ -8,6 +8,7 @@ const useToAddARecipeVersion = () => {
 
   const handleToAddRecipeVersion = async (
     versionAddData: VersionAddDataType,
+    namesList: string[] = [],
   ) => {
     const {
       description = "",
@@ -22,6 +23,10 @@ const useToAddARecipeVersion = () => {
 
     if (!postfixTitle) {
       notification("info", `Please enter a title`);
+      return;
+    }
+    if (namesList?.includes(postfixTitle)) {
+      notification("info", `This name is already exist !!!`);
       return;
     }
 

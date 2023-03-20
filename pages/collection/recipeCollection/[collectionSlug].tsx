@@ -35,6 +35,7 @@ import GET_SHARE_WITH_ME_COLLECTIONS from "../../../gqlLib/collection/query/getS
 import { ShowRecipes } from "../../../components/recipe/recipeDiscovery/regularRecipes";
 import Tooltip from "../../../theme/toolTip/CustomToolTip";
 import RecipeDiscoverButton from "../../../theme/button/recipeDiscoverButton/RecipeDiscoverButton";
+import GET_MY_RECENT_RECIPES from "../../../gqlLib/collection/query/getMyRecientRecipes";
 
 let dataLimit = 12;
 
@@ -68,6 +69,8 @@ const CollectionRecipes = () => {
   const [getMyRecipes, { loading: getMyRecipesLoading }] = useLazyQuery(
     GET_ALL_MY_CREATED_RECIPES,
   );
+  const [getMyRecentRecipes, { loading: getRecentRecipesLoading }] =
+    useLazyQuery(GET_MY_RECENT_RECIPES);
   const [
     getCustomRecipes,
     { loading: getCustomRecipesLoading, error: getCollectionRecipeError },
@@ -121,17 +124,22 @@ const CollectionRecipes = () => {
     if (!slug) return;
     setShareWithMeCollection(false);
     if (slug == "all-recipes") {
+      setTitle("All Recipes");
       getAllRecipes({ variables: { userId } }).then((res: any) => {
-        setTitle("All Recipes");
         setRecipes(res?.data?.getAllRecipesFromCollection);
       });
     } else if (slug === "shared_with_me") {
       setShareWithMeCollection(true);
       getShareWithMeCollection();
     } else if (slug === "my-recipes") {
+      setTitle("My Recipes");
       getMyRecipes({ variables: { userId } }).then((res: any) => {
-        setTitle("My Recipes");
         setRecipes(res?.data?.getAllMyCreatedRecipes);
+      });
+    } else if (slug === "recent-recipes") {
+      setTitle("Recent Recipes");
+      getMyRecentRecipes({ variables: { userId } }).then((res: any) => {
+        setRecipes(res?.data?.getMyRecentRecipes);
       });
     } else {
       getCustomRecipes({
@@ -239,7 +247,8 @@ const CollectionRecipes = () => {
           loading={
             getAllRecipesLoading ||
             getMyRecipesLoading ||
-            getCustomRecipesLoading
+            getCustomRecipesLoading ||
+            getRecentRecipesLoading
           }
           headerLeftSide={
             <div className="flex ai-center">

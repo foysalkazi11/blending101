@@ -34,7 +34,13 @@ const useToEditOfARecipeVersion = () => {
       servingSize: 0,
     },
     isOriginalVersion: boolean = false,
+    namesList: string[] = [],
   ) => {
+    if (namesList?.includes(editableObject?.postfixTitle)) {
+      notification("info", `This name is already exist !!!`);
+      return;
+    }
+
     try {
       const { data } = await editAVersionOfRecipe({
         variables: {
