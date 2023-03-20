@@ -177,6 +177,7 @@ const EditRecipeComponent = () => {
             description: copyDetailsRecipe?.defaultVersion.description,
             ingredients: ingArr,
             servingSize: calculateIngOz,
+            selectedImage: copyDetailsRecipe?.defaultVersion.selectedImage,
           },
           isOriginalVersion: detailsARecipe?.tempVersionInfo?.isOriginalVersion,
         };
@@ -189,6 +190,7 @@ const EditRecipeComponent = () => {
           ingredients: ingArr,
           recipeInstructions: howToArr,
           servingSize: calculateIngOz,
+          selectedImage: copyDetailsRecipe?.defaultVersion.selectedImage,
         };
 
         if (

@@ -38,6 +38,7 @@ const GET_ALL_RECIPE_VERSION = gql`
           servingSize
           recipeInstructions
           recipeId
+          selectedImage
           ingredients {
             ingredientId {
               ingredientName
@@ -68,6 +69,7 @@ const GET_ALL_RECIPE_VERSION = gql`
         recipeId
         recipeInstructions
         servingSize
+        selectedImage
         ingredients {
           ingredientId {
             ingredientName
@@ -97,6 +99,7 @@ const GET_ALL_RECIPE_VERSION = gql`
         recipeId
         recipeInstructions
         servingSize
+        selectedImage
         ingredients {
           ingredientId {
             ingredientName
@@ -133,6 +136,7 @@ const GET_ALL_RECIPE_VERSION = gql`
         recipeId
         recipeInstructions
         servingSize
+        selectedImage
         ingredients {
           ingredientId {
             ingredientName

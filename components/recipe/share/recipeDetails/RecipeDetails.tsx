@@ -145,7 +145,11 @@ const RecipeDetails = ({
           ratings={recipe?.recipeId?.averageRating}
           noOfRatings={recipe?.recipeId?.numberOfRating}
           noOfComments={recipe?.recipeId?.numberOfRating}
-          image={recipe?.recipeId?.image?.[0]?.image || ""}
+          image={
+            recipe?.defaultVersion?.selectedImage ||
+            recipe?.recipeId?.image?.[0]?.image ||
+            ""
+          }
           recipeId={recipe?.recipeId?._id}
           notes={recipe?.notes}
           addedToCompare={recipe?.addedToCompare}
