@@ -81,7 +81,7 @@ const RecipeDetails = ({
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}
             nutritionDataLoading={nutritionDataLoading}
-            servingSize={recipeData.defaultVersion?.servingSize}
+            servingSize={recipeData.tempVersionInfo?.version?.servingSize}
             servings={recipeData?.recipeId?.servings}
           />
         </div>

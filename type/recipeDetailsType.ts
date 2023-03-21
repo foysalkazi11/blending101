@@ -39,10 +39,11 @@ export interface RecipeDetailsType {
   turnedOnVersions: VersionDataType[];
   turnedOffVersions: VersionDataType[];
   tempVersionInfo?: {
-    id: string;
+    // id: string;
     isShareAble: boolean;
     isOriginalVersion: boolean;
-  } | null;
+    version: VersionDataType;
+  };
 }
 
 export interface VersionDataType {
@@ -55,6 +56,7 @@ export interface VersionDataType {
   ingredients: Ingredient[];
   selectedImage: string;
   isVersionSharable?: boolean;
+  isDefault?: boolean;
 }
 
 export interface RecipeBlendCategory {

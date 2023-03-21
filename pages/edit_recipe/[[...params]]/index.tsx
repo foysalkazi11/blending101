@@ -99,12 +99,15 @@ const EditRecipeComponent = () => {
   const updateEditRecipe = (key: string, value: any) => {
     setCopyDetailsRecipe((prev) => ({
       ...prev,
-      defaultVersion: { ...prev?.defaultVersion, [key]: value },
+      tempVersionInfo: {
+        ...prev?.tempVersionInfo,
+        version: { ...prev?.tempVersionInfo?.version, [key]: value },
+      },
     }));
   };
 
   const findIngredient = (id) =>
-    detailsARecipe?.defaultVersion?.ingredients?.find(
+    detailsARecipe?.tempVersionInfo?.version?.ingredients?.find(
       (item) => item?.ingredientId?._id === id,
     );
 
@@ -167,30 +170,35 @@ const EditRecipeComponent = () => {
     try {
       if (detailsARecipe?.tempVersionInfo) {
         let versionUpdateObj = {
-          editId: detailsARecipe?.tempVersionInfo?.id,
+          editId: detailsARecipe?.tempVersionInfo?.version?._id,
           recipeId: detailsARecipe?.recipeId?._id,
           turnedOn: detailsARecipe?.tempVersionInfo?.isShareAble,
           userId: dbUser?._id,
           editableObject: {
             recipeInstructions: howToArr,
-            postfixTitle: copyDetailsRecipe?.defaultVersion.postfixTitle,
-            description: copyDetailsRecipe?.defaultVersion.description,
+            postfixTitle:
+              copyDetailsRecipe?.tempVersionInfo?.version?.postfixTitle,
+            description:
+              copyDetailsRecipe?.tempVersionInfo?.version?.description,
             ingredients: ingArr,
             servingSize: calculateIngOz,
-            selectedImage: copyDetailsRecipe?.defaultVersion.selectedImage,
+            selectedImage:
+              copyDetailsRecipe?.tempVersionInfo?.version?.selectedImage,
           },
           isOriginalVersion: detailsARecipe?.tempVersionInfo?.isOriginalVersion,
         };
 
         const objForCreateNewVersion: VersionAddDataType = {
-          postfixTitle: copyDetailsRecipe?.defaultVersion.postfixTitle,
+          postfixTitle:
+            copyDetailsRecipe?.tempVersionInfo?.version?.postfixTitle,
           recipeId: detailsARecipe?.recipeId?._id,
           userId: dbUser?._id,
-          description: copyDetailsRecipe?.defaultVersion.description,
+          description: copyDetailsRecipe?.tempVersionInfo?.version?.description,
           ingredients: ingArr,
           recipeInstructions: howToArr,
           servingSize: calculateIngOz,
-          selectedImage: copyDetailsRecipe?.defaultVersion.selectedImage,
+          selectedImage:
+            copyDetailsRecipe?.tempVersionInfo?.version?.selectedImage,
         };
 
         if (
@@ -217,14 +225,16 @@ const EditRecipeComponent = () => {
         }
       } else {
         let versionUpdateObj = {
-          editId: detailsARecipe?.defaultVersion?._id,
+          editId: detailsARecipe?.tempVersionInfo?.version?._id,
           recipeId: detailsARecipe?.recipeId?._id,
           turnedOn: null,
           userId: dbUser?._id,
           editableObject: {
             recipeInstructions: howToArr,
-            postfixTitle: copyDetailsRecipe?.defaultVersion.postfixTitle,
-            description: copyDetailsRecipe?.defaultVersion.description,
+            postfixTitle:
+              copyDetailsRecipe?.tempVersionInfo?.version?.postfixTitle,
+            description:
+              copyDetailsRecipe?.tempVersionInfo?.version?.description,
             ingredients: ingArr,
             servingSize: calculateIngOz,
           },
@@ -232,17 +242,18 @@ const EditRecipeComponent = () => {
         };
 
         const objForCreateNewVersion: VersionAddDataType = {
-          postfixTitle: copyDetailsRecipe?.defaultVersion.postfixTitle,
+          postfixTitle:
+            copyDetailsRecipe?.tempVersionInfo?.version?.postfixTitle,
           recipeId: detailsARecipe?.recipeId?._id,
           userId: dbUser?._id,
-          description: copyDetailsRecipe?.defaultVersion.description,
+          description: copyDetailsRecipe?.tempVersionInfo?.version?.description,
           ingredients: ingArr,
           recipeInstructions: howToArr,
           servingSize: calculateIngOz,
         };
 
         if (
-          detailsARecipe?.defaultVersion?._id ===
+          detailsARecipe?.tempVersionInfo?.version?._id ===
             detailsARecipe?.recipeId?.originalVersion?._id &&
           detailsARecipe?.recipeId?.userId?._id !== dbUser?._id
         ) {
@@ -274,7 +285,7 @@ const EditRecipeComponent = () => {
   useEffect(() => {
     if (!ingredientCategoryData?.filterIngredientByCategoryAndClass) return;
     const defaultIngredientIds =
-      detailsARecipe?.defaultVersion?.ingredients?.map(
+      detailsARecipe?.tempVersionInfo?.version?.ingredients?.map(
         (ing) => ing?.ingredientId?._id,
       );
     const presentIngredient = [];
@@ -289,18 +300,18 @@ const EditRecipeComponent = () => {
     dispatch(setSelectedIngredientsList(presentIngredient));
   }, [
     ingredientCategoryData?.filterIngredientByCategoryAndClass,
-    detailsARecipe?.defaultVersion?.ingredients,
+    detailsARecipe?.tempVersionInfo?.version?.ingredients,
   ]);
 
   useEffect(() => {
     if (!detailsARecipe) return;
     setCopyDetailsRecipe({ ...detailsARecipe });
     dispatch(setServingCounter(detailsARecipe?.recipeId?.servings || 1));
-    SetcalculateIngOz(detailsARecipe?.defaultVersion?.servingSize);
+    SetcalculateIngOz(detailsARecipe?.tempVersionInfo?.version?.servingSize);
     setExistingImages(
       detailsARecipe?.recipeId?.image?.map((item) => `${item?.image}`),
     );
-  }, [detailsARecipe?.defaultVersion]);
+  }, [detailsARecipe?.tempVersionInfo?.version]);
 
   useEffect(() => {
     dispatch(setOpenVersionTray(false));
@@ -362,7 +373,7 @@ const EditRecipeComponent = () => {
         }
         nutritionTrayData={nutritionList ? JSON.parse(nutritionList) : []}
         recipeInstructions={
-          copyDetailsRecipe?.defaultVersion?.recipeInstructions || []
+          copyDetailsRecipe?.tempVersionInfo?.version?.recipeInstructions || []
         }
         allBlendCategories={allBlendCategory?.getAllCategories}
         selectedBLendCategory={
