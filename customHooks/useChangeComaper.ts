@@ -35,7 +35,6 @@ const useChangeCompare = () => {
     try {
       const { data } = await changeCompare({
         variables: {
-          versionId,
           userId: dbUser?._id,
           recipeId: id,
         },

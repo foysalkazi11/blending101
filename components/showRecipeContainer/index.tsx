@@ -98,7 +98,7 @@ const ShowRecipeContainer = ({
     (id: string, updateObj: { [key: string]: any }) => {
       setContainerData((prev) =>
         prev.map((item) =>
-          item?._id === id ? { ...item, ...updateObj } : item,
+          item?.recipeId?._id === id ? { ...item, ...updateObj } : item,
         ),
       );
     },
@@ -109,14 +109,6 @@ const ShowRecipeContainer = ({
     setContainerData(data);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
-
-  // if (loading) {
-  //   return (
-  //     <div className={styles.showRecipeCollectionsContainer}>
-  //       <SkeletonCollectionRecipe />
-  //     </div>
-  //   );
-  // }
 
   return (
     <>
@@ -285,19 +277,6 @@ const ShowRecipeContainer = ({
             )}
           </>
         }
-
-        {/* <CustomModal
-        setOpen={setOpenCreateCollectionModal}
-        open={openCreateCollectionModal}
-        >
-        <AddCollectionModal
-        input={input}
-        setInput={setInput}
-        setOpenModal={setOpenCreateCollectionModal}
-        handleToAddOrUpdateCollection={() => {}}
-          isAddOrUpdateCollectionLoading={false}
-        />
-      </CustomModal> */}
       </div>
       <ShareItems
         heading="Share search results"

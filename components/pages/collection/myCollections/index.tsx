@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { faClock, faStar } from "@fortawesome/pro-light-svg-icons";
 import { faBookmark } from "@fortawesome/pro-solid-svg-icons";
@@ -23,6 +23,7 @@ import {
 } from "../../../../redux/slices/collectionSlice";
 import { setOpenCollectionsTary } from "../../../../redux/slices/sideTraySlice";
 import ShareRecipe from "../../../recipe/recipeDetails/center/shareRecipe";
+import client from "../../../../gqlLib/client";
 
 const MyCollections = () => {
   const { dbUser } = useAppSelector((state) => state?.user);
@@ -49,6 +50,32 @@ const MyCollections = () => {
     dispatch(setChangeRecipeWithinCollection(true));
     setOpenCollectionModal(false);
   };
+
+  // update data after any interaction
+  const updateContainerData = useCallback(
+    (objectId: string, recipeId: string, updateObj: { [key: string]: any }) => {
+      client.writeQuery({
+        query: GET_ALL_COLLECTIONS_WITH_RECIPES,
+        variables: { userId: dbUser?._id },
+        data: {
+          getAllCollectionsWithRecipes: data?.getAllCollectionsWithRecipes?.map(
+            (item) =>
+              item?._id === objectId
+                ? {
+                    ...item,
+                    recipes: item?.recipes?.map((recipe) =>
+                      recipe?.recipeId?._id === recipeId
+                        ? { ...recipe, ...updateObj }
+                        : recipe,
+                    ),
+                  }
+                : item,
+          ),
+        },
+      });
+    },
+    [data?.getAllCollectionsWithRecipes, dbUser?._id],
+  );
 
   if (loading) {
     return (
@@ -103,7 +130,9 @@ const MyCollections = () => {
             setOpenCollectionModal={setOpenCollectionModal}
             setOpenShareModal={setOpenShareModal}
             setShareRecipeData={setShareRecipeData}
-            //   updateDataFunc={updateRecipe}
+            updateDataFunc={(recipeId, updateObj) =>
+              updateContainerData(_id, recipeId, updateObj)
+            }
           />
         );
       })}

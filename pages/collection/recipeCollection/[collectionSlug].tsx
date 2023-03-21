@@ -264,7 +264,7 @@ const CollectionRecipes = () => {
               <h2 className={classes.head__title}>{title}</h2>
             </div>
           }
-          closeHandler={() => router.push("/discovery")}
+          closeHandler={() => router.back()}
           showItems="recipe"
           showDefaultRightHeader
           setOpenCollectionModal={setOpenCollectionModal}
@@ -383,7 +383,7 @@ const SharedWithMe = ({
             ? {
                 ...item,
                 recipes: item?.recipes?.map((recipe) =>
-                  recipe?._id === recipeId
+                  recipe?.recipeId?._id === recipeId
                     ? { ...recipe, ...updateObj }
                     : recipe,
                 ),
