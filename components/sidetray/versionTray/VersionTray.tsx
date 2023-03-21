@@ -180,10 +180,13 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     toggleForm();
   };
 
-  // normalize version to show default and turn on/off indicator
+  const findVersionWithinVersion = (versionId) => {
+    return allVersions?.find((version) => version?._id === versionId);
+  };
 
+  // normalize version to show default and turn on/off indicator
   const allVersions: VersionDataType[] = useMemo(() => {
-    let versions = [];
+    let versions: VersionDataType[] = [];
 
     versions = [
       ...(detailsARecipe?.turnedOnVersions?.map((version) => ({
@@ -198,16 +201,25 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     ];
 
     if (!detailsARecipe?.isMatch) {
-      versions = [
-        {
-          ...detailsARecipe?.defaultVersion,
-          isVersionSharable: true,
-          isDefault: true,
-        },
-        ...versions,
-      ];
+      if (findVersionWithinVersion(detailsARecipe?.defaultVersion?._id)) {
+        versions = versions?.map((version) =>
+          version?._id === detailsARecipe?.defaultVersion?._id
+            ? { ...version, isDefault: true }
+            : version,
+        );
+      } else {
+        versions = [
+          {
+            ...detailsARecipe?.defaultVersion,
+            isVersionSharable: true,
+            isDefault: true,
+          },
+          ...versions,
+        ];
+      }
     }
     return versions;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     detailsARecipe?.defaultVersion,
     detailsARecipe?.isMatch,
@@ -233,7 +245,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
       setDetailsARecipe({
         ...detailsARecipe,
         isMatch: isOriginalVersion,
-        defaultVersion: { ...detailsARecipe.defaultVersion, _id: versionId },
+        defaultVersion: findVersionWithinVersion(versionId),
       }),
     );
   };

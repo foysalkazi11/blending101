@@ -69,7 +69,7 @@ const NoteBody = ({
                       ? styles.headingHover
                       : null
                   } ${
-                    detailsARecipe?.tempVersionInfo?.id === item?._id
+                    detailsARecipe?.tempVersionInfo?.version?._id === item?._id
                       ? styles.active
                       : ""
                   }`}

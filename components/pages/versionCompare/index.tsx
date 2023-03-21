@@ -40,6 +40,7 @@ import { setDetailsARecipe } from "../../../redux/slices/recipeSlice";
 import useToGetARecipe from "../../../customHooks/useToGetARecipe";
 import { VersionAddDataType } from "../../../type/versionAddDataType";
 import client from "../../../gqlLib/client";
+import useToUpdateAfterEditVersion from "../../../customHooks/useToUpdateAfterEditVersion";
 
 const compareRecipeResponsiveSettings = {
   ...compareRecipeResponsiveSetting,
@@ -77,6 +78,7 @@ const VersionCompare = () => {
   const { handleToGetARecipe, loading: getARecipeLoading } = useToGetARecipe();
   const isMounted = useRef(false);
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
+  const handleToUpdateARecipeVersionAfterEdit = useToUpdateAfterEditVersion();
 
   // open confirmation modal
   const openConfirmationModal = (data: VersionAddDataType) => {
@@ -84,16 +86,8 @@ const VersionCompare = () => {
     setNewVersionInfo(data);
   };
 
-  // convert to recipe
-  const convertToRecipe = (recipe: RecipeDetailsType) => {
-    recipe = { ...recipe };
-    return recipe;
-  };
   // open version tray
   const handleOpenVersionTray = async () => {
-    // await handleToGetARecipe(recipeId, dbUser?._id);
-
-    dispatch(setDetailsARecipe(convertToRecipe(data?.getAllVersions)));
     dispatch(setOpenVersionTray(true));
     dispatch(setOpenVersionTrayFormWhichPage("edit"));
     dispatch(setIsNewVersionInfo(newVersionInfo));
@@ -105,7 +99,6 @@ const VersionCompare = () => {
     versionInfo?: VersionDataType,
     isVersionEditMode: boolean = false,
   ) => {
-    dispatch(setDetailsARecipe(data?.getAllVersions));
     dispatch(setOpenVersionTray(true));
     dispatch(setOpenVersionTrayFormWhichPage("edit"));
     let ingredientsArr = [];
@@ -409,17 +402,15 @@ const VersionCompare = () => {
               description: objForEditARecipe?.editableObject.description,
             };
 
-        const recipe: RecipeDetailsType = data?.getAllVersions;
-        // client.writeQuery({
-        //   query: GET_ALL_RECIPE_VERSION,
-        //   variables: { recipeId, userId: dbUser._id },
-        //   data: {
-        //     getAllVersions: {
-        //       ...recipe,
-        //       defaultVersion:
-        //     },
+        // handleToUpdateARecipeVersionAfterEdit(
+        //   updateVersionId,
+        //   isVersionSharable,
+        //   {
+        //     postfixTitle: formState?.title,
+        //     description: formState?.body,
         //   },
-        // });
+        //   returnObj,
+        // );
 
         setNormalizeData((data) =>
           data?.map((item) =>
@@ -444,6 +435,14 @@ const VersionCompare = () => {
   };
 
   const handleToUpdateDataAfterChangeDefaultVersion = (versionId: string) => {
+    //  dispatch(
+    //    setDetailsARecipe({
+    //      ...detailsARecipe,
+    //      isMatch: isOriginalVersion,
+    //      defaultVersion: findVersionWithinVersion(versionId),
+    //    }),
+    //  );
+
     setNormalizeData((recipes) =>
       recipes?.map((recipe) =>
         recipe?.defaultVersion?._id === versionId
@@ -460,41 +459,14 @@ const VersionCompare = () => {
   };
 
   useEffect(() => {
-    if (isMounted?.current) {
-      const newCreatedVersion = detailsARecipe?.turnedOnVersions?.[0];
-      if (newCreatedVersion && !findVersion(newCreatedVersion?._id)) {
-        const {
-          recipeId,
-          addedToCompare,
-          allRecipes,
-          myRecipes,
-          notes,
-          userCollections,
-        } = data?.getAllVersions;
-        setNormalizeData((versions) => [
-          ...versions,
-          {
-            addedToCompare,
-            allRecipes,
-            defaultVersion: { ...newCreatedVersion, isVersionSharable: true },
-            isMatch: true,
-            myRecipes,
-            notes,
-            recipeId,
-            userCollections,
-            versionCount: 0,
-          },
-        ]);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [detailsARecipe.turnedOnVersions]);
+    setNormalizeData(handleNormalizeData(detailsARecipe));
+  }, [detailsARecipe]);
 
   useEffect(() => {
     if (!loading && data?.getAllVersions) {
-      console.log("call two", loading, data?.getAllVersions);
-      setNormalizeData(handleNormalizeData(data?.getAllVersions));
+      dispatch(setDetailsARecipe(data?.getAllVersions));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.getAllVersions, loading]);
 
   useEffect(() => {

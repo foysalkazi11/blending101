@@ -110,22 +110,10 @@ const Center_Elements = ({
     <>
       <div className={styles.main}>
         <div className={styles.topSection}>
-          {/* {copyDetailsRecipe?.isMatch ? (
-            <h3 className={styles.title}>
-              {copyDetailsRecipe?.recipeId.name}
-              <span>
-                {copyDetailsRecipe?.isMatch
-                  ? ""
-                  : copyDetailsRecipe?.defaultVersion?.postfixTitle}
-              </span>
-            </h3>
-          ) : (
-           
-          )} */}
           <InputComponent
             borderSecondary={true}
             style={{ fontWeight: "bold", color: "#000000", fontSize: "16px" }}
-            value={copyDetailsRecipe?.defaultVersion?.postfixTitle}
+            value={copyDetailsRecipe?.tempVersionInfo?.version?.postfixTitle}
             name={"postfixTitle"}
             onChange={(e) =>
               updateEditRecipe(e?.target?.name, e?.target?.value)
@@ -140,21 +128,18 @@ const Center_Elements = ({
             setImages={setImages}
             checkBoxProps={{
               showCheckBox: true,
-              selectedImage: copyDetailsRecipe?.defaultVersion?.selectedImage,
+              selectedImage:
+                copyDetailsRecipe?.tempVersionInfo?.version?.selectedImage,
               handleChange: (e) =>
                 updateEditRecipe("selectedImage", e?.target?.value),
             }}
           />
         </div>
         <div className={styles.scoreTraydiv}>
-          {/* <p className={styles.discripation}>
-            {copyDetailsRecipe?.defaultVersion?.description}
-          </p> */}
-
           <TextArea
             name="description"
             borderSecondary={true}
-            value={copyDetailsRecipe?.defaultVersion?.description}
+            value={copyDetailsRecipe?.tempVersionInfo?.version?.description}
             onChange={(e) =>
               updateEditRecipe(e?.target?.name, e?.target?.value)
             }

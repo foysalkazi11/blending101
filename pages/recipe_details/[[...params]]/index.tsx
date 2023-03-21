@@ -70,13 +70,13 @@ const Index = () => {
 
   useEffect(() => {
     handleFetchIngrdients(
-      detailsARecipe?.defaultVersion?.ingredients,
+      detailsARecipe?.tempVersionInfo?.version?.ingredients,
       nutritionState,
       () => {},
       true,
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [detailsARecipe?.defaultVersion?.ingredients, nutritionState]);
+  }, [detailsARecipe?.tempVersionInfo?.version?.ingredients, nutritionState]);
 
   //@ts-ignore
   const recipeBasedNutrition =

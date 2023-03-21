@@ -37,7 +37,12 @@ const useToGetARecipe = () => {
           ...recipe,
           // defaultVersion,
           // turnedOnVersions,
-          tempVersionInfo: null,
+          tempVersionInfo: {
+            // id: recipe?.defaultVersion?._id,
+            isShareAble: true,
+            isOriginalVersion: recipe?.isMatch,
+            version: recipe?.defaultVersion,
+          },
         }),
       );
 
