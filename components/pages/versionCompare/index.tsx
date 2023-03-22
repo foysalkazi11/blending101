@@ -341,6 +341,7 @@ const VersionCompare = () => {
     recipeId: string,
     versionId: string,
     isOriginalVersion: boolean,
+    isVersionSharable: boolean,
   ) => {
     const version = findVersion(versionId);
     let ingArr = [];
@@ -386,48 +387,23 @@ const VersionCompare = () => {
           dbUser._id,
           recipeId,
           versionId,
-          true,
+          isVersionSharable,
           objForEditARecipe?.editableObject,
           isOriginalVersion,
         );
-        const { isNew, status } = returnObj;
-        const updateRecipeVersionObj = isNew
-          ? {
-              _id: status,
-              postfixTitle: objForEditARecipe?.editableObject.postfixTitle,
-              description: objForEditARecipe?.editableObject.description,
-            }
-          : {
-              postfixTitle: objForEditARecipe?.editableObject.postfixTitle,
-              description: objForEditARecipe?.editableObject.description,
-            };
 
-        // handleToUpdateARecipeVersionAfterEdit(
-        //   updateVersionId,
-        //   isVersionSharable,
-        //   {
-        //     postfixTitle: formState?.title,
-        //     description: formState?.body,
-        //   },
-        //   returnObj,
-        // );
-
-        setNormalizeData((data) =>
-          data?.map((item) =>
-            item?.defaultVersion?._id === versionId
-              ? {
-                  ...item,
-                  defaultVersion: {
-                    ...item?.defaultVersion,
-                    ...updateRecipeVersionObj,
-                  },
-                }
-              : item,
-          ),
+        handleToUpdateARecipeVersionAfterEdit(
+          versionId,
+          isVersionSharable,
+          {
+            postfixTitle: objForEditARecipe?.editableObject.postfixTitle,
+            description: objForEditARecipe?.editableObject.description,
+          },
+          returnObj,
         );
 
         handleEditMode(false, null);
-        notification("info", "Version updated successfully");
+        // notification("info", "Version updated successfully");
       } catch (error) {
         notification("error", "Version updated failed");
       }
@@ -562,6 +538,7 @@ const VersionCompare = () => {
                   }
                   handleToOpenVersionTray={versionHandler}
                   showTopCancelButton={false}
+                  isVersionSharable={recipe?.defaultVersion?.isVersionSharable}
                 />
               );
             })}
