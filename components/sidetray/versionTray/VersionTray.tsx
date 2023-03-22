@@ -116,12 +116,15 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           postfixTitle: formState?.title,
           recipeId: detailsARecipe?.recipeId?._id,
           userId: dbUser?._id,
-          ingredients: isNewVersionInfo?.ingredients || [],
-          recipeInstructions: isNewVersionInfo?.recipeInstructions || [],
-          servingSize: isNewVersionInfo?.servingSize || 0,
+          ingredients: isNewVersionInfo?.ingredients || null,
+          recipeInstructions: isNewVersionInfo?.recipeInstructions || null,
+          servingSize: isNewVersionInfo?.servingSize || null,
           selectedImage: isNewVersionInfo?.selectedImage || "",
         };
-        const version = await handleToAddRecipeVersion(obj);
+        const version = await handleToAddRecipeVersion(
+          obj,
+          allVersions?.map((version) => version?.postfixTitle),
+        );
         if (version) {
           dispatch(
             setDetailsARecipe({
@@ -201,7 +204,11 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     ];
 
     if (!detailsARecipe?.isMatch) {
-      if (findVersionWithinVersion(detailsARecipe?.defaultVersion?._id)) {
+      if (
+        versions?.find(
+          (version) => version?._id === detailsARecipe?.defaultVersion?._id,
+        )
+      ) {
         versions = versions?.map((version) =>
           version?._id === detailsARecipe?.defaultVersion?._id
             ? { ...version, isDefault: true }
@@ -245,9 +252,57 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
       setDetailsARecipe({
         ...detailsARecipe,
         isMatch: isOriginalVersion,
-        defaultVersion: findVersionWithinVersion(versionId),
+        turnedOnVersions: isOriginalVersion
+          ? [
+              detailsARecipe?.defaultVersion,
+              ...detailsARecipe?.turnedOnVersions,
+            ]
+          : detailsARecipe?.turnedOnVersions?.filter(
+              (version) => version?._id !== versionId,
+            ),
+        defaultVersion: isOriginalVersion
+          ? detailsARecipe?.recipeId?.originalVersion
+          : findVersionWithinVersion(versionId) ||
+            detailsARecipe?.turnedOnVersions?.find(
+              (version) => version?._id === versionId,
+            ),
       }),
     );
+  };
+
+  // handle turn of and off version
+
+  const handleToTurnOnOrOffVersion = (turnedOn: boolean, versionId: string) => {
+    if (turnedOn && versionId === detailsARecipe?.defaultVersion?._id) {
+      notification(
+        "warning",
+        "Not allow to turn off as it's default version !!!",
+      );
+    } else {
+      handleTurnOnOrOffVersion(
+        !turnedOn,
+        dbUser?._id,
+        detailsARecipe?.recipeId?._id,
+        versionId,
+      );
+    }
+  };
+  // handle turn of and off version
+
+  const handleToChangeDefault = (versionId: string, isShareAble: boolean) => {
+    if (!isShareAble) {
+      notification(
+        "warning",
+        "Not allow to make default as it's turn off version !!!",
+      );
+    } else {
+      changeDefaultVersionAndUpdateValue(
+        dbUser?._id,
+        detailsARecipe?.recipeId?._id,
+        versionId,
+        versionId === detailsARecipe?.defaultVersion?._id,
+      );
+    }
   };
 
   // if new version info update state
@@ -275,6 +330,29 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isNewVersionInfo]);
+
+  useEffect(() => {
+    const newName = updateName(
+      detailsARecipe?.recipeId?.originalVersion?.postfixTitle,
+      [
+        detailsARecipe?.recipeId?.originalVersion?.postfixTitle,
+        ...allVersions?.map((version) => version?.postfixTitle),
+      ],
+    );
+    if (showForm && !formState?.title) {
+      setFormState((pre) => ({
+        ...pre,
+        title: newName,
+      }));
+    }
+    if (showForm && !formState?.body) {
+      setFormState((pre) => ({
+        ...pre,
+        body: `${newName} description`,
+      }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showForm]);
 
   useEffect(() => {
     isMounted.current = true;
@@ -420,25 +498,8 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           // loading={addNewVersionLoading}
           isFromRecipePage={openVersionTrayFormWhichPage}
           handleToGetARecipeVersion={handleToGetARecipeVersion}
-          handleToChangeDefaultVersion={(
-            versionId,
-            isOriginalVersion = false,
-          ) =>
-            changeDefaultVersionAndUpdateValue(
-              dbUser?._id,
-              detailsARecipe?.recipeId?._id,
-              versionId,
-              isOriginalVersion,
-            )
-          }
-          handleTurnOnOrOffVersion={(turnedOn, versionId) =>
-            handleTurnOnOrOffVersion(
-              turnedOn,
-              dbUser?._id,
-              detailsARecipe?.recipeId?._id,
-              versionId,
-            )
-          }
+          handleToChangeDefaultVersion={handleToChangeDefault}
+          handleTurnOnOrOffVersion={handleToTurnOnOrOffVersion}
           // deleteItemLoading={removeARecipeVersionLoading}
         />
       </div>
