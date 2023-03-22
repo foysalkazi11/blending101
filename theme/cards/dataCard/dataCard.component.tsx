@@ -303,7 +303,7 @@ export default function DatacardComponent({
 
   const footerOnlyStarIcon = (
     <>
-      <li>
+      {/* <li>
         <Tooltip
           content={`${isVersionSharable ? "Share on" : "Share off"}`}
           direction="left"
@@ -323,7 +323,7 @@ export default function DatacardComponent({
             }`}
           />
         </Tooltip>
-      </li>
+      </li> */}
       <li>
         <Tooltip
           content={`${isMatch ? "Default" : "Make default"}`}
