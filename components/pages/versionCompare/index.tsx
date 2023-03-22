@@ -175,8 +175,8 @@ const VersionCompare = () => {
         userCollections,
         versionCount: 0,
       },
-      ...mapVersionToRecipe(turnedOnVersions, true),
-      ...mapVersionToRecipe(turnedOffVersions, false),
+      ...(mapVersionToRecipe(turnedOnVersions, true) || []),
+      ...(mapVersionToRecipe(turnedOffVersions, false) || []),
     ];
 
     if (!isMatch) {
@@ -435,26 +435,26 @@ const VersionCompare = () => {
   };
 
   const handleToUpdateDataAfterChangeDefaultVersion = (versionId: string) => {
-    //  dispatch(
-    //    setDetailsARecipe({
-    //      ...detailsARecipe,
-    //      isMatch: isOriginalVersion,
-    //      defaultVersion: findVersionWithinVersion(versionId),
-    //    }),
-    //  );
-
-    setNormalizeData((recipes) =>
-      recipes?.map((recipe) =>
-        recipe?.defaultVersion?._id === versionId
-          ? {
-              ...recipe,
-              isMatch: true,
-            }
-          : {
-              ...recipe,
-              isMatch: false,
-            },
-      ),
+    const isOriginalVersion =
+      detailsARecipe?.recipeId?.originalVersion?._id === versionId;
+    dispatch(
+      setDetailsARecipe({
+        ...detailsARecipe,
+        isMatch: isOriginalVersion,
+        turnedOnVersions: isOriginalVersion
+          ? [
+              detailsARecipe?.defaultVersion,
+              ...detailsARecipe?.turnedOnVersions,
+            ]
+          : detailsARecipe?.turnedOnVersions?.filter(
+              (version) => version?._id !== versionId,
+            ),
+        defaultVersion: isOriginalVersion
+          ? detailsARecipe?.recipeId?.originalVersion
+          : detailsARecipe?.turnedOnVersions?.find(
+              (version) => version?._id === versionId,
+            ),
+      }),
     );
   };
 
@@ -464,7 +464,17 @@ const VersionCompare = () => {
 
   useEffect(() => {
     if (!loading && data?.getAllVersions) {
-      dispatch(setDetailsARecipe(data?.getAllVersions));
+      const recipe = data?.getAllVersions;
+      dispatch(
+        setDetailsARecipe({
+          ...recipe,
+          tempVersionInfo: {
+            isOriginalVersion: recipe?.isMatch,
+            isShareAble: true,
+            version: recipe?.defaultVersion,
+          },
+        }),
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.getAllVersions, loading]);
@@ -551,6 +561,7 @@ const VersionCompare = () => {
                     handleToUpdateDataAfterChangeDefaultVersion
                   }
                   handleToOpenVersionTray={versionHandler}
+                  showTopCancelButton={false}
                 />
               );
             })}

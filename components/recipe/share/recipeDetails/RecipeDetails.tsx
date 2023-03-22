@@ -88,6 +88,7 @@ interface RecipeDetailsProps {
   ) => void;
   footerMenuType?: "allIcons" | "OnlyStar";
   updateDataAfterChangeDefaultVersion?: (versionId: string) => void;
+  showTopCancelButton?: boolean;
 }
 
 const RecipeDetails = ({
@@ -108,6 +109,7 @@ const RecipeDetails = ({
   handleToOpenVersionTray,
   footerMenuType = "allIcons",
   updateDataAfterChangeDefaultVersion = () => {},
+  showTopCancelButton = true,
 }: RecipeDetailsProps) => {
   const [winReady, setwinReady] = useState(false);
 
@@ -130,14 +132,17 @@ const RecipeDetails = ({
   return (
     <div className={styles.recipeDetailsFirstContainer}>
       <div className={styles.recipeDetailsContainer}>
-        <div className={styles.cancleIcon}>
-          <IconWraper
-            defaultBg="gray"
-            handleClick={(e) => removeCompareRecipe(recipe?.recipeId?._id, e)}
-          >
-            <IoClose />
-          </IconWraper>
-        </div>
+        {showTopCancelButton && (
+          <div className={styles.cancleIcon}>
+            <IconWraper
+              defaultBg="gray"
+              handleClick={(e) => removeCompareRecipe(recipe?.recipeId?._id, e)}
+            >
+              <IoClose />
+            </IconWraper>
+          </div>
+        )}
+
         <DatacardComponent
           title={recipe?.recipeId?.name}
           ingredients={joniIngredients(recipe?.defaultVersion?.ingredients)}
@@ -163,7 +168,7 @@ const RecipeDetails = ({
           imageOverlayFunc={(image) => setCopyImage(image)}
           customMenu={customMenu}
           showMoreMenuAtHover={showMoreMenuAtHover}
-          description={recipe?.recipeId?.description}
+          description={recipe?.defaultVersion?.description}
           recipeVersion={recipe?.versionCount}
           defaultVersionId={recipe?.defaultVersion?._id}
           updateDataFunc={updateCompareList}
