@@ -14,6 +14,7 @@ const VersionDetailsIndex = (props) => {
     versionUpdateLoading,
     recipeId,
     isOriginalVersion,
+    showTopCancelButton,
     ...rest
   } = props;
 
@@ -33,9 +34,10 @@ const VersionDetailsIndex = (props) => {
           recipeSaveLoading={versionUpdateLoading}
           handleToOpenVersionTray={props?.handleToOpenVersionTray}
           recipe={props?.recipe}
+          showTopCancelButton={showTopCancelButton}
         />
       ) : (
-        <RecipeDetails {...rest} />
+        <RecipeDetails {...rest} showTopCancelButton={showTopCancelButton} />
       )}
     </>
   );
