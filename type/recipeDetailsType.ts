@@ -47,14 +47,14 @@ export interface RecipeDetailsType {
 }
 
 export interface VersionDataType {
-  _id: string;
-  servingSize: number;
-  recipeId: string;
-  recipeInstructions: any[];
+  _id?: string;
+  servingSize?: number;
+  recipeId?: string;
+  recipeInstructions?: any[];
   postfixTitle: string;
-  description: string;
-  ingredients: Ingredient[];
-  selectedImage: string;
+  description?: string;
+  ingredients?: Ingredient[];
+  selectedImage?: string;
   isVersionSharable?: boolean;
   isDefault?: boolean;
 }
