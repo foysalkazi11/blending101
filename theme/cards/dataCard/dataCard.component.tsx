@@ -27,6 +27,9 @@ import { faRectangleVerticalHistory } from "@fortawesome/pro-light-svg-icons";
 import useToChangeDefaultVersion from "../../../customHooks/useToChangeDefaultVersion";
 import { useAppSelector } from "../../../redux/hooks";
 import { VersionDataType } from "../../../type/recipeDetailsType";
+import notification from "../../../components/utility/reactToastifyNotification";
+import { faShareNodes } from "@fortawesome/pro-regular-svg-icons";
+import useTurnedOnOrOffVersion from "../../../customHooks/useTurnedOnOrOffVersion";
 
 interface dataCardInterface {
   title: string;
@@ -124,6 +127,7 @@ export default function DatacardComponent({
   const [hoverRefMoreMenu, isHoverMoreMenu] = useHover();
   const { handleToUpdateDefaultVersion } = useToChangeDefaultVersion();
   const { dbUser } = useAppSelector((state) => state?.user);
+  const { handleTurnOnOrOffVersion } = useTurnedOnOrOffVersion();
 
   const handleOpenShareRecipeModal = (id, name, image, versionId) => {
     setShareRecipeData({ id, image, name, versionId });
@@ -279,24 +283,54 @@ export default function DatacardComponent({
     </>
   );
 
+  const handleToMakeDefaultVersion = async () => {
+    if (isVersionSharable) {
+      await handleToUpdateDefaultVersion(
+        dbUser?._id,
+        recipeId,
+        defaultVersionId,
+        isMatch ? true : false,
+        isVersionSharable ? false : true,
+      );
+      updateDataAfterChangeDefaultVersion(defaultVersionId);
+    } else {
+      notification(
+        "warning",
+        "Not allow to make default version as shearing is off !!!",
+      );
+    }
+  };
+
   const footerOnlyStarIcon = (
     <>
+      {/* <li>
+        <Tooltip
+          content={`${isVersionSharable ? "Share on" : "Share off"}`}
+          direction="left"
+        >
+          <FontAwesomeIcon
+            // onClick={() =>
+            //   handleTurnOnOrOffVersion(
+            //     isVersionSharable,
+            //     dbUser?._id,
+            //     recipeId,
+            //     defaultVersionId,
+            //   )
+            // }
+            icon={faShareNodes}
+            className={`${styles.star} ${
+              isVersionSharable ? styles.on : styles.off
+            }`}
+          />
+        </Tooltip>
+      </li> */}
       <li>
         <Tooltip
           content={`${isMatch ? "Default" : "Make default"}`}
           direction="left"
         >
           <FontAwesomeIcon
-            onClick={async () => {
-              await handleToUpdateDefaultVersion(
-                dbUser?._id,
-                recipeId,
-                defaultVersionId,
-                isMatch ? true : false,
-                isVersionSharable ? false : true,
-              );
-              updateDataAfterChangeDefaultVersion(defaultVersionId);
-            }}
+            onClick={handleToMakeDefaultVersion}
             icon={faStarSharp}
             className={`${styles.star} ${isMatch ? styles.on : styles.off}`}
           />

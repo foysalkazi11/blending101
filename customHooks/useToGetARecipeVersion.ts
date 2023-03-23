@@ -31,14 +31,12 @@ const useToGetARecipeVersion = () => {
       dispatch(
         setDetailsARecipe({
           ...detailsARecipe,
-          defaultVersion: {
-            ...detailsARecipe?.defaultVersion,
-            ...rest,
-          },
+
           tempVersionInfo: {
-            id: versionId,
+            // id: versionId,
             isShareAble,
             isOriginalVersion,
+            version: data?.getARecipeVersion,
           },
         }),
       );

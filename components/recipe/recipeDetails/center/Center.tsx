@@ -146,7 +146,7 @@ const Center = ({
           router.push(
             recipeData?.isMatch
               ? `/edit_recipe/${recipeData?.recipeId?._id}`
-              : `/edit_recipe/${recipeData?.recipeId?._id}/${recipeData?.defaultVersion?._id}`,
+              : `/edit_recipe/${recipeData?.recipeId?._id}/${recipeData?.tempVersionInfo?.version?._id}`,
           )
         }
         editOrSavebtnText="Edit"
@@ -155,7 +155,7 @@ const Center = ({
       <div className={styles.contentBox}>
         <div className={styles.heading}>
           <h3>
-            {recipeData?.defaultVersion?.postfixTitle}
+            {recipeData?.tempVersionInfo?.version?.postfixTitle}
             {/* <span>
               {recipeData?.isMatch
                 ? ""
@@ -274,7 +274,9 @@ const Center = ({
           )}
         </div>
         <div>
-          <ReadMore>{recipeData?.defaultVersion?.description}</ReadMore>
+          <ReadMore>
+            {recipeData?.tempVersionInfo?.version?.description}
+          </ReadMore>
         </div>
         <div className={styles.infoContainer}>
           <div className={styles.infoBox}>
@@ -301,7 +303,9 @@ const Center = ({
         setNutritionState={setNutritionState}
       />
       <HowTo
-        recipeInstructions={recipeData?.defaultVersion?.recipeInstructions}
+        recipeInstructions={
+          recipeData?.tempVersionInfo?.version?.recipeInstructions
+        }
       />
       <Modal open={openModal} setOpen={setOpenModal}>
         {showCollectionModal ? (
@@ -322,7 +326,7 @@ const Center = ({
       </Modal>
       <ShareRecipe
         id={recipeData?.recipeId?._id}
-        versionId={recipeData.defaultVersion?._id}
+        versionId={recipeData.tempVersionInfo?.version?._id}
         title={recipeData?.recipeId?.name}
         image={
           recipeData?.recipeId?.image?.length > 0

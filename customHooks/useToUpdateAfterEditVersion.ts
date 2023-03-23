@@ -1,7 +1,7 @@
 import notification from "../components/utility/reactToastifyNotification";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setDetailsARecipe } from "../redux/slices/recipeSlice";
-import { VersionEditAbleData } from "./useToEditOfARecipeVersion";
+import { VersionDataType } from "../type/recipeDetailsType";
 
 const useToUpdateAfterEditVersion = () => {
   const dispatch = useAppDispatch();
@@ -9,21 +9,17 @@ const useToUpdateAfterEditVersion = () => {
   const handleToUpdateARecipeVersionAfterEdit = (
     versionId: string,
     turnedOn: boolean,
-    editableObject: VersionEditAbleData,
+    updatedVersionData: VersionDataType,
     returnObj: { isNew: boolean; status: string },
     isOriginalVersion: boolean = false,
   ) => {
     const { isNew, status } = returnObj;
     const updateRecipeVersionObj = isNew
       ? {
+          ...updatedVersionData,
           _id: status,
-          postfixTitle: editableObject.postfixTitle,
-          description: editableObject?.description,
         }
-      : {
-          postfixTitle: editableObject.postfixTitle,
-          description: editableObject?.description,
-        };
+      : updatedVersionData;
 
     dispatch(
       setDetailsARecipe({
@@ -48,8 +44,7 @@ const useToUpdateAfterEditVersion = () => {
           originalVersion: isOriginalVersion
             ? {
                 ...detailsARecipe?.recipeId?.originalVersion,
-                postfixTitle: editableObject.postfixTitle,
-                description: editableObject?.description,
+                ...updateRecipeVersionObj,
               }
             : detailsARecipe?.recipeId?.originalVersion,
         },
@@ -57,8 +52,7 @@ const useToUpdateAfterEditVersion = () => {
           detailsARecipe?.defaultVersion?._id === versionId
             ? {
                 ...detailsARecipe?.defaultVersion,
-                postfixTitle: editableObject.postfixTitle,
-                description: editableObject?.description,
+                ...updateRecipeVersionObj,
               }
             : detailsARecipe?.defaultVersion,
       }),

@@ -14,6 +14,8 @@ const VersionDetailsIndex = (props) => {
     versionUpdateLoading,
     recipeId,
     isOriginalVersion,
+    showTopCancelButton,
+    isVersionSharable,
     ...rest
   } = props;
 
@@ -28,14 +30,20 @@ const VersionDetailsIndex = (props) => {
           disableCategory={true}
           disableImageUpload={true}
           handleCreateNewRecipe={(e) =>
-            handleSubmitEditedVersion(recipeId, props?.id, isOriginalVersion)
+            handleSubmitEditedVersion(
+              recipeId,
+              props?.id,
+              isOriginalVersion,
+              isVersionSharable,
+            )
           }
           recipeSaveLoading={versionUpdateLoading}
           handleToOpenVersionTray={props?.handleToOpenVersionTray}
           recipe={props?.recipe}
+          showTopCancelButton={showTopCancelButton}
         />
       ) : (
-        <RecipeDetails {...rest} />
+        <RecipeDetails {...rest} showTopCancelButton={showTopCancelButton} />
       )}
     </>
   );

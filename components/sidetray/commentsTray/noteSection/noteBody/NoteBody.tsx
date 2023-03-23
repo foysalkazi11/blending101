@@ -69,7 +69,7 @@ const NoteBody = ({
                       ? styles.headingHover
                       : null
                   } ${
-                    detailsARecipe?.tempVersionInfo?.id === item?._id
+                    detailsARecipe?.tempVersionInfo?.version?._id === item?._id
                       ? styles.active
                       : ""
                   }`}
@@ -192,18 +192,18 @@ const FloodingMenuTwo = ({
   return (
     <div className={styles.leftSide}>
       <Tooltip
-        content={`Share ${item?.isVersionSharable ? "On" : "Off"}`}
+        content={`Make share ${item?.isVersionSharable ? "off" : "On"}`}
         direction="left"
       >
         <FontAwesomeIcon
           icon={faShareNodes}
-          className={`${styles.star} ${
-            isFromRecipePage !== "edit" && styles.pointerEventNone
-          } ${item?.isVersionSharable ? styles.on : styles.off}`}
+          className={`${styles.star}  ${
+            item?.isVersionSharable ? styles.on : styles.off
+          }`}
           onClick={() =>
             isFromRecipePage === "edit" &&
             handleTurnOnOrOffVersion(
-              item?.isVersionSharable ? false : true,
+              item?.isVersionSharable ? true : false,
               item?._id,
             )
           }
@@ -211,26 +211,20 @@ const FloodingMenuTwo = ({
       </Tooltip>
 
       <Tooltip
-        content={
-          item?.isVersionSharable
-            ? item?.isDefault
-              ? "Default"
-              : "Make default"
-            : "Make default off"
-        }
+        content={item?.isDefault ? "Default" : "Make default"}
         direction="left"
       >
         <FontAwesomeIcon
           onClick={() =>
-            isFromRecipePage === "edit" && item?.isVersionSharable
-              ? handleToChangeDefaultVersion(item?._id, false)
-              : () => {}
+            isFromRecipePage === "edit" &&
+            handleToChangeDefaultVersion(
+              item?._id,
+              item?.isVersionSharable ? true : false,
+            )
           }
-          className={`${styles.star} ${
-            isFromRecipePage === "edit" && item?.isVersionSharable
-              ? ""
-              : styles.pointerEventNone
-          } ${item?.isDefault ? styles.on : styles.off}`}
+          className={`${styles.star}  ${
+            item?.isDefault ? styles.on : styles.off
+          }`}
           icon={faStarSharp}
         />
       </Tooltip>

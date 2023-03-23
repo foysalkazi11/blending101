@@ -26,6 +26,7 @@ import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoa
 import InputComponent from "../../../../theme/input/input.component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRectangleVerticalHistory } from "@fortawesome/pro-light-svg-icons";
+import { faXmark } from "@fortawesome/pro-solid-svg-icons";
 
 const CreateNewRecipe = ({
   newRecipe = {},
@@ -42,6 +43,7 @@ const CreateNewRecipe = ({
   recipeSaveLoading = false,
   handleToOpenVersionTray = () => {},
   recipe = {},
+  showTopCancelButton = true,
 }: any) => {
   const [winReady, setWinReady] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -115,6 +117,8 @@ const CreateNewRecipe = ({
           obj["selectedPortionName"] = item?.measurement;
           obj["weightInGram"] = Number(item?.meausermentWeight);
           obj["label"] = `${1} ${item?.measurement} ${ele?.ingredientName}`;
+          obj["ingredientName"] = `${ele?.ingredientName}`;
+          obj["selectedPortionQuantity"] = 1;
         }
       });
       setNewRecipe((state) => ({
@@ -243,6 +247,15 @@ const CreateNewRecipe = ({
             )}
           </li>
         </Tooltip>
+        <Tooltip content={"Cancel"} direction="top">
+          <li>
+            <FontAwesomeIcon
+              icon={faXmark}
+              className={styles.icon}
+              onClick={closeCreateNewRecipeInterface}
+            />
+          </li>
+        </Tooltip>
       </ul>
     </div>
   );
@@ -253,14 +266,17 @@ const CreateNewRecipe = ({
 
   return (
     <div className={styles.createNewRecipeContainer}>
-      <div className={styles.closeNewRecipeIcon}>
-        <IconWraper
-          defaultBg="gray"
-          handleClick={closeCreateNewRecipeInterface}
-        >
-          <IoClose />
-        </IconWraper>
-      </div>
+      {showTopCancelButton && (
+        <div className={styles.closeNewRecipeIcon}>
+          <IconWraper
+            defaultBg="gray"
+            handleClick={closeCreateNewRecipeInterface}
+          >
+            <IoClose />
+          </IconWraper>
+        </div>
+      )}
+
       <div className={styles.firstContainer}>
         <div className={styles.firstContainer__firstSection}>
           <div className={styles.addRecipeTitle}>
