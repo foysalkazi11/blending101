@@ -55,9 +55,12 @@ const EditRecipeComponent = () => {
     useState<RecipeDetailsType>(null);
   const { dbUser } = useAppSelector((state) => state?.user);
   const isMounted = useRef(false);
-  const selectedIngredientsList = useAppSelector(
-    (state) => state?.editRecipeReducer?.selectedIngredientsList,
-  );
+  const {
+    selectedIngredientsList,
+    recipeInstruction,
+    servingCounter,
+    selectedBlendCategory,
+  } = useAppSelector((state) => state?.editRecipeReducer);
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
   const {
     handleFetchIngrdients,
@@ -67,11 +70,9 @@ const EditRecipeComponent = () => {
   const { handleToEditARecipeVersion, loading: editOrCreateVersionLoading } =
     useToEditOfARecipeVersion();
   const handleToUpdateARecipeVersionAfterEdit = useToUpdateAfterEditVersion();
-  const recipeInstruction = useAppSelector(
-    (state) => state?.editRecipeReducer?.recipeInstruction,
-  );
   const { data: allBlendCategory } = useQuery(BLEND_CATEGORY);
-  const [editRecipe] = useMutation(EDIT_A_RECIPE);
+  const [editRecipe, { loading: editARecipeLoading }] =
+    useMutation(EDIT_A_RECIPE);
   const { handleToGetARecipe } = useToGetARecipe();
   const { data: ingredientCategoryData, loading: ingredientCategoryLoading } =
     useQuery(FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS, {
@@ -111,7 +112,14 @@ const EditRecipeComponent = () => {
       (item) => item?.ingredientId?._id === id,
     );
 
-  const updateOrginalRecipe = async (obj: any) => {
+  const updateOriginalRecipe = async (obj: {
+    recipeBlendCategory?: string;
+    servings?: number;
+    image?: {
+      default: boolean;
+      image: string;
+    }[];
+  }) => {
     if (images?.length) {
       //@ts-ignore
       let imageArr: string[] = await imageUploadS3(images);
@@ -124,11 +132,15 @@ const EditRecipeComponent = () => {
 
       obj = {
         ...obj,
-        editableObject: { ...obj?.editableObject, image: finalImaArr },
+        image: finalImaArr,
       };
       await editRecipe({
         variables: {
-          data: obj,
+          userId: dbUser?._id,
+          data: {
+            editId: detailsARecipe?.recipeId?._id,
+            editableObject: obj,
+          },
         },
       });
 
@@ -139,7 +151,11 @@ const EditRecipeComponent = () => {
 
     await editRecipe({
       variables: {
-        data: obj,
+        userId: dbUser?._id,
+        data: {
+          editId: detailsARecipe?.recipeId?._id,
+          editableObject: obj,
+        },
       },
     });
     return;
@@ -168,45 +184,57 @@ const EditRecipeComponent = () => {
     );
 
     try {
-      if (detailsARecipe?.tempVersionInfo) {
-        let versionUpdateObj = {
-          editId: detailsARecipe?.tempVersionInfo?.version?._id,
-          recipeId: detailsARecipe?.recipeId?._id,
-          turnedOn: detailsARecipe?.tempVersionInfo?.isShareAble,
-          userId: dbUser?._id,
-          editableObject: {
-            recipeInstructions: howToArr,
-            postfixTitle:
-              copyDetailsRecipe?.tempVersionInfo?.version?.postfixTitle,
-            description:
-              copyDetailsRecipe?.tempVersionInfo?.version?.description,
-            ingredients: ingArr,
-            servingSize: calculateIngOz,
-            selectedImage:
-              copyDetailsRecipe?.tempVersionInfo?.version?.selectedImage,
-          },
-          isOriginalVersion: detailsARecipe?.tempVersionInfo?.isOriginalVersion,
-        };
-
-        const objForCreateNewVersion: VersionAddDataType = {
+      const isReallyOriginalVersion =
+        detailsARecipe?.tempVersionInfo?.version?._id ===
+        detailsARecipe?.recipeId?.originalVersion?._id;
+      // update version obj data
+      let versionUpdateObj = {
+        editId: detailsARecipe?.tempVersionInfo?.version?._id,
+        recipeId: detailsARecipe?.recipeId?._id,
+        turnedOn: isReallyOriginalVersion
+          ? null
+          : detailsARecipe?.tempVersionInfo?.isShareAble,
+        userId: dbUser?._id,
+        editableObject: {
+          recipeInstructions: howToArr,
           postfixTitle:
             copyDetailsRecipe?.tempVersionInfo?.version?.postfixTitle,
-          recipeId: detailsARecipe?.recipeId?._id,
-          userId: dbUser?._id,
           description: copyDetailsRecipe?.tempVersionInfo?.version?.description,
           ingredients: ingArr,
-          recipeInstructions: howToArr,
           servingSize: calculateIngOz,
           selectedImage:
             copyDetailsRecipe?.tempVersionInfo?.version?.selectedImage,
-        };
+        },
+        isOriginalVersion: isReallyOriginalVersion,
+      };
 
+      // create new version of a recipe
+      const objForCreateNewVersion: VersionAddDataType = {
+        postfixTitle: copyDetailsRecipe?.tempVersionInfo?.version?.postfixTitle,
+        recipeId: detailsARecipe?.recipeId?._id,
+        userId: dbUser?._id,
+        description: copyDetailsRecipe?.tempVersionInfo?.version?.description,
+        ingredients: ingArr,
+        recipeInstructions: howToArr,
+        servingSize: calculateIngOz,
+        selectedImage:
+          copyDetailsRecipe?.tempVersionInfo?.version?.selectedImage,
+      };
+
+      if (
+        isReallyOriginalVersion &&
+        detailsARecipe?.recipeId?.userId?._id !== dbUser?._id
+      ) {
+        openConfirmationModal(objForCreateNewVersion);
+      } else {
         if (
-          detailsARecipe?.tempVersionInfo?.isOriginalVersion &&
-          detailsARecipe?.recipeId?.userId?._id !== dbUser?._id
+          isReallyOriginalVersion &&
+          detailsARecipe?.recipeId?.userId?._id === dbUser?._id
         ) {
-          openConfirmationModal(objForCreateNewVersion);
-        } else {
+          await updateOriginalRecipe({
+            servings: servingCounter,
+            recipeBlendCategory: selectedBlendCategory,
+          });
           const returnObj = await handleToEditARecipeVersion(
             versionUpdateObj?.userId,
             versionUpdateObj?.recipeId,
@@ -222,42 +250,6 @@ const EditRecipeComponent = () => {
             returnObj,
             versionUpdateObj?.isOriginalVersion,
           );
-        }
-      } else {
-        let versionUpdateObj = {
-          editId: detailsARecipe?.tempVersionInfo?.version?._id,
-          recipeId: detailsARecipe?.recipeId?._id,
-          turnedOn: null,
-          userId: dbUser?._id,
-          editableObject: {
-            recipeInstructions: howToArr,
-            postfixTitle:
-              copyDetailsRecipe?.tempVersionInfo?.version?.postfixTitle,
-            description:
-              copyDetailsRecipe?.tempVersionInfo?.version?.description,
-            ingredients: ingArr,
-            servingSize: calculateIngOz,
-          },
-          isOriginalVersion: detailsARecipe?.isMatch,
-        };
-
-        const objForCreateNewVersion: VersionAddDataType = {
-          postfixTitle:
-            copyDetailsRecipe?.tempVersionInfo?.version?.postfixTitle,
-          recipeId: detailsARecipe?.recipeId?._id,
-          userId: dbUser?._id,
-          description: copyDetailsRecipe?.tempVersionInfo?.version?.description,
-          ingredients: ingArr,
-          recipeInstructions: howToArr,
-          servingSize: calculateIngOz,
-        };
-
-        if (
-          detailsARecipe?.tempVersionInfo?.version?._id ===
-            detailsARecipe?.recipeId?.originalVersion?._id &&
-          detailsARecipe?.recipeId?.userId?._id !== dbUser?._id
-        ) {
-          openConfirmationModal(objForCreateNewVersion);
         } else {
           const returnObj = await handleToEditARecipeVersion(
             versionUpdateObj?.userId,
@@ -267,7 +259,6 @@ const EditRecipeComponent = () => {
             versionUpdateObj?.editableObject,
             versionUpdateObj?.isOriginalVersion,
           );
-
           handleToUpdateARecipeVersionAfterEdit(
             versionUpdateObj?.editId,
             versionUpdateObj?.turnedOn,
@@ -390,7 +381,9 @@ const EditRecipeComponent = () => {
         setNutritionState={setNutritionState}
         recipeId={recipeId}
         giGl={giGl}
-        recipeEditOrVersionEditLoading={editOrCreateVersionLoading}
+        recipeEditOrVersionEditLoading={
+          editOrCreateVersionLoading || editARecipeLoading
+        }
         versionsCount={detailsARecipe?.versionsCount}
       />
       <ConfirmationModal
