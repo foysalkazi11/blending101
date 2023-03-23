@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 const EDIT_A_RECIPE = gql`
-  mutation EditARecipe($data: EditRecipe!) {
-    editARecipe(data: $data)
+  mutation EditARecipe($data: EditRecipe!, $userId: String!) {
+    editARecipe(data: $data, userId: $userId)
   }
 `;
 
