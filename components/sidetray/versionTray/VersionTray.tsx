@@ -28,7 +28,6 @@ import useToUpdateAfterEditVersion from "../../../customHooks/useToUpdateAfterEd
 import { setDetailsARecipe } from "../../../redux/slices/recipeSlice";
 import { VersionAddDataType } from "../../../type/versionAddDataType";
 import updateName from "../../../helperFunc/string/updateName";
-import { CompareRecipeType } from "../../../type/compareRecipeType";
 import { VersionDataType } from "../../../type/recipeDetailsType";
 
 interface VersionTrayProps {

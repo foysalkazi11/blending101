@@ -117,6 +117,8 @@ const CreateNewRecipe = ({
           obj["selectedPortionName"] = item?.measurement;
           obj["weightInGram"] = Number(item?.meausermentWeight);
           obj["label"] = `${1} ${item?.measurement} ${ele?.ingredientName}`;
+          obj["ingredientName"] = `${ele?.ingredientName}`;
+          obj["selectedPortionQuantity"] = 1;
         }
       });
       setNewRecipe((state) => ({
