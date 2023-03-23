@@ -14,7 +14,7 @@
   display: flex;
   align-items: center;
   margin-top: 5px;
-  padding-left: 20px;
+  padding-left: 30px;
 }
 
 .filterIconContainer {
@@ -27,9 +27,19 @@
     font-size: 20px;
     color: #495057;
     cursor: pointer;
+    transition: 0.3s;
+    &:hover {
+      color: #fe5d1f;
+    }
   }
   .filterIcon.active {
     color: #fe5d1f;
+  }
+  .filterIconNotVisible {
+    visibility: hidden;
+  }
+  .filterIconVisible {
+    visibility: visible;
   }
 }
 
@@ -67,6 +77,10 @@
     font-size: 22px;
     color: #495057;
     cursor: pointer;
+    transition: 0.3s;
+    &:hover {
+      color: #fe5d1f;
+    }
   }
   .mic.active {
     color: #fe5d1f;

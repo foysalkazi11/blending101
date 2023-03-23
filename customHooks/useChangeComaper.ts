@@ -23,12 +23,14 @@ const useChangeCompare = () => {
   const handleChangeCompare = async (
     e: React.SyntheticEvent,
     id: string,
+    versionId: string,
     compared: boolean,
-    compareRecipeList: any[],
-    setcompareRecipeList: (state: any) => void,
+    updateDataFunc: (
+      id: string,
+      obj: { [key: string]: any },
+    ) => void = () => {},
   ) => {
     e.stopPropagation();
-    let alredyCompared = compared;
 
     try {
       const { data } = await changeCompare({
@@ -37,45 +39,55 @@ const useChangeCompare = () => {
           recipeId: id,
         },
       });
-      notification(
-        "success",
-        ` ${!alredyCompared ? "Removed from" : "Added to"} compare list`,
+      dispatch(
+        setDbUser({
+          ...dbUser,
+          compareLength: Number(data?.changeCompare),
+        }),
       );
 
-      if (!alredyCompared) {
-        dispatch(setCompareList(filterRecipe(compareList, id)));
-        setcompareRecipeList((state) => filterRecipe(state, id));
-      }
-      updateRecipeCompare(id, alredyCompared);
+      updateDataFunc(id, { addedToCompare: compared });
 
-      if (Number(data?.changeCompare) !== Number(dbUser?.compareLength)) {
-        dispatch(
-          setDbUser({
-            ...dbUser,
-            compareLength: Number(data?.changeCompare),
-          }),
-        );
-      }
+      notification(
+        "success",
+        ` ${!compared ? "Removed from" : "Added to"} compare list`,
+      );
+
+      // if (!compared) {
+      //   dispatch(setCompareList(filterRecipe(compareList, id)));
+      //   setcompareRecipeList((state) => filterRecipe(state, id));
+      // }
+      // updateRecipeCompare(id, compared);
+      // updateDataFunc(id, { addedToCompare: compared });
+
+      // if (Number(data?.changeCompare) !== Number(dbUser?.compareLength)) {
+      //   dispatch(
+      //     setDbUser({
+      //       ...dbUser,
+      //       compareLength: Number(data?.changeCompare),
+      //     }),
+      //   );
+      // }
     } catch (error) {
       notification(
         "error",
-        ` Unable to ${alredyCompared ? "remove" : "add"} from compare list`,
+        ` Unable to ${compared ? "remove" : "add"} from compare list`,
       );
       // updateRecipeCompare(id, !alredyCompared);
     }
   };
 
-  const updateRecipeCompare = (id: string, addedToCompare: boolean) => {
-    dispatch(
-      setDbUser({
-        ...dbUser,
-        compareLength: addedToCompare
-          ? dbUser?.compareLength + 1
-          : dbUser?.compareLength - 1,
-      }),
-    );
-    updateRecipe(id, { addedToCompare: addedToCompare });
-  };
+  // const updateRecipeCompare = (id: string, addedToCompare: boolean) => {
+  //   dispatch(
+  //     setDbUser({
+  //       ...dbUser,
+  //       compareLength: addedToCompare
+  //         ? dbUser?.compareLength + 1
+  //         : dbUser?.compareLength - 1,
+  //     }),
+  //   );
+  //   updateRecipe(id, { addedToCompare: addedToCompare });
+  // };
 
   return handleChangeCompare;
 };

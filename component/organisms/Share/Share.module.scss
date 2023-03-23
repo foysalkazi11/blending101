@@ -6,14 +6,19 @@
     margin-bottom: 2.5rem;
     display: flex;
     align-items: center;
-    & svg {
-      color: $primaryColor;
-    }
-    & h3 {
-      margin-left: 1.5rem;
-      font-size: 1.6rem;
-      color: #444;
-      font-weight: 600;
+    justify-content: space-between;
+    .leftSide {
+      display: flex;
+      align-items: center;
+      & svg {
+        color: $primaryColor;
+      }
+      & h3 {
+        margin-left: 1.5rem;
+        font-size: 1.6rem;
+        color: #444;
+        font-weight: 600;
+      }
     }
   }
   &__title {
@@ -154,6 +159,7 @@
   flex-wrap: wrap;
   position: relative;
   transition: all 0.3s;
+
   &__address {
     font-size: 1.2rem;
     line-height: 2.4rem;
@@ -164,6 +170,7 @@
     margin-bottom: 1rem;
     color: #a5a5a5;
     position: relative;
+
     &:hover .closeBtn {
       display: block;
     }
@@ -180,6 +187,7 @@
     font-size: 1.2rem;
     height: 36px;
     color: #a5a5a5;
+    font-family: "Segoe UI", sans-serif;
     &:focus {
       outline: none;
     }
@@ -234,5 +242,39 @@
         text-transform: uppercase;
       }
     }
+    .disableEmail {
+      cursor: not-allowed;
+      background-color: #f6f6f6;
+      pointer-events: none;
+    }
   }
+}
+
+.activeEmailInfoContainer {
+  display: none;
+  transition: all 0.3s;
+}
+.checkBoxContainer {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+
+  .label {
+    margin-left: 10px;
+    font-weight: 500;
+    color: #a5a5a5;
+  }
+}
+.showInfo {
+  display: block;
+  padding: 10px 0;
+  transition: all 0.3s;
+}
+
+.activeEmail {
+  border-color: #fe5d1f;
+}
+.collaborationAccessEmail {
+  background-color: #ffd7c8;
+  color: rgb(0, 0, 0);
 }

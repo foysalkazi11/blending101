@@ -29,6 +29,7 @@ const defaultBlendImg =
 
 const Home = () => {
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const { allFilters } = useAppSelector((state) => state?.filterRecipe);
   const displayName = useAppSelector(
     (state) => state.user?.dbUser?.displayName || "",
   );
@@ -45,14 +46,18 @@ const Home = () => {
   const router = useRouter();
 
   const handleToShowBlendTypes = (value: any) => {
-    dispatch(
-      updateFilterCriteriaItem({
-        updateStatus: "add",
-        value: value,
-        filterCriteria: value.filterCategory,
-      }),
-    );
-    dispatch(updateSidebarActiveMenuName("Home"));
+    const findFilter = allFilters?.find((filter) => filter?.id === value?.id);
+    if (!findFilter) {
+      dispatch(
+        updateFilterCriteriaItem({
+          updateStatus: "add",
+          value: value,
+          filterCriteria: value.filterCategory,
+        }),
+      );
+    }
+
+    dispatch(updateSidebarActiveMenuName("Blends"));
     router.push("/discovery");
   };
 
@@ -168,22 +173,33 @@ const Home = () => {
                 image="/images/clock-light.svg"
                 allUrl="/discovery"
               >
-                {recipes?.getAllLatestRecipes?.map((recipe) => (
-                  <div key={recipe?._id}>
-                    <div style={{ paddingRight: "1rem" }}>
-                      <Link href={`/recipe_details/${recipe?._id}/`}>
-                        <a style={{ color: "initial" }}>
-                          <CardComponent
-                            title={recipe?.name}
-                            img={recipe?.image[0]?.image || null}
-                            rating={recipe?.averageRating}
-                            noOfRating={recipe?.numberOfRating}
-                          />
-                        </a>
-                      </Link>
+                {recipes?.getAllLatestRecipes2?.map((recipe) => {
+                  const {
+                    recipeId: {
+                      _id = "",
+                      name = "",
+                      image = "",
+                      numberOfRating = 0,
+                      averageRating = 0,
+                    },
+                  } = recipe;
+                  return (
+                    <div key={_id}>
+                      <div style={{ paddingRight: "1rem" }}>
+                        <Link href={`/recipe_details/${_id}/`}>
+                          <a style={{ color: "initial" }}>
+                            <CardComponent
+                              title={name}
+                              img={image?.[0]?.image}
+                              rating={averageRating}
+                              noOfRating={numberOfRating}
+                            />
+                          </a>
+                        </Link>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </ContentTray>
             </div>
 

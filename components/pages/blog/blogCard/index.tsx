@@ -23,6 +23,7 @@ import {
   setIsActiveBlogForCollection,
 } from "../../../../redux/slices/blogSlice";
 import useToAddBlogCollection from "../../../../customHooks/blog/useToAddBlogCollection";
+import toHoursAndMinutes from "../../../../helperFunc/others/toHoursAndMinutes";
 
 interface Props {
   blogData: BlogListType;
@@ -44,14 +45,22 @@ const BlogCard = ({
     _id,
     commentsCount,
     blogCollections,
+    mediaLength,
   } = blogData;
-
   const [play, setPlay] = useState(false);
   const titleWidth = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const handleToAddBlogAtCollection = useToAddBlogCollection();
   const memberId = useAppSelector((state) => state?.user?.dbUser?._id || "");
+
+  // const videoEl = useRef(null);
+  // const handleLoadedMetadata = () => {
+  //   const video = videoEl.current;
+  //   if (!video) return;
+  //   const timestamp = toHoursAndMinutes(Math.floor(video.duration));
+  //   console.log(`The video is ${timestamp} seconds long.`);
+  // };
 
   const togglePlay = (status: boolean = false) => {
     setPlay(status);
@@ -61,6 +70,28 @@ const BlogCard = ({
     dispatch(setIsActiveBlogForCollection({ id, collectionIds }));
     dispatch(setIsOpenBlogCollectionTray(true));
   };
+
+  const arrangeTimeLength = (sec: string) => {
+    const { h, m, s }: { h: number; m: number; s: number } = toHoursAndMinutes(
+      parseInt(sec) || 0,
+    );
+    let time;
+    const addZero = (sec: number) => {
+      return sec > 9 ? sec : `0${sec}`;
+    };
+    if (s) {
+      time = `0:${addZero(s)}`;
+    }
+    if (m) {
+      time = `${m}:${addZero(s)}`;
+    }
+    if (h) {
+      time = `${h}:${m}:${addZero(s)}`;
+    }
+
+    return time;
+  };
+
   return (
     <div className={styles.cardContainer}>
       <div
@@ -99,7 +130,13 @@ const BlogCard = ({
             className={styles.playButton}
             style={{ top: `${titleWidth?.current?.clientHeight || 34}px` }}
           >
-            <audio controls autoPlay muted>
+            <audio
+              controls
+              autoPlay
+              muted
+              // ref={videoEl}
+              // onLoadedMetadata={handleLoadedMetadata}
+            >
               <source src={mediaUrl} />
               Your browser does not support the video tag.
             </audio>
@@ -114,6 +151,8 @@ const BlogCard = ({
             controls
             autoPlay
             muted
+            // ref={videoEl}
+            // onLoadedMetadata={handleLoadedMetadata}
             // onMouseLeave={() => setPlay(false)}
           >
             <source src={mediaUrl} />
@@ -123,7 +162,14 @@ const BlogCard = ({
       </div>
       <div className={styles.authorAndDate}>
         <p>{createdBy}</p>
-        <p>{time_ago(publishDate)}</p>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          {mediaLength ? (
+            <p className={styles.timeDuration}>
+              {`${arrangeTimeLength(mediaLength)}`}
+            </p>
+          ) : null}
+          <p>{time_ago(publishDate)}</p>
+        </div>
       </div>
       <div className={styles.authorAndDate}>
         <div className={styles.brandBox}>

@@ -185,6 +185,10 @@ const ChallengePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const canUpload =
+    !viewOnly &&
+    data?.getMyThirtyDaysChallenge?.challengeInfo?.daysRemaining > 0;
+
   return (
     <AContainer
       headerIcon="/icons/whistle.svg"
@@ -251,7 +255,7 @@ const ChallengePage = () => {
                   />
                   <span>Settings</span>
                 </div>
-                {!viewOnly && (
+                {canUpload && (
                   <div
                     className={`${styles.uploadDiv} ml-10`}
                     onClick={() => {
@@ -274,6 +278,7 @@ const ChallengePage = () => {
                 toolbox
               ) : (
                 <Challenge
+                  canUpload={canUpload}
                   progressRef={challengeProgress}
                   activities={data?.getMyThirtyDaysChallenge?.challenge}
                   statistics={data?.getMyThirtyDaysChallenge?.challengeInfo}

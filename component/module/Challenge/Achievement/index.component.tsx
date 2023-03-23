@@ -8,13 +8,14 @@ import Dialer from "./_Dialer.component";
 import useChallengeLayout from "../../../../hooks/modules/useChallengeLayout";
 
 interface ChallengeProps {
+  canUpload: boolean;
   activities: any[];
   statistics: any;
   progressRef: any;
 }
 
 const Challenge: React.FC<ChallengeProps> = (props) => {
-  const { activities, statistics, progressRef } = props;
+  const { canUpload, activities, statistics, progressRef } = props;
   useChallengeLayout();
 
   return (
@@ -27,7 +28,11 @@ const Challenge: React.FC<ChallengeProps> = (props) => {
           </div>
           <RecipeCategory />
           <div ref={progressRef}>
-            <Dialer activities={activities} statistics={statistics} />
+            <Dialer
+              canUpload={canUpload}
+              activities={activities}
+              statistics={statistics}
+            />
           </div>
           <Streakbar activities={activities} statistics={statistics} />
         </div>

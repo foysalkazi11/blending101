@@ -6,8 +6,9 @@ import InputComponent from "../../../../theme/input/input.component";
 import slugStringGenerator from "../../../utility/slugStringGenerator";
 import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
 import TextArea from "../../../../theme/textArea/TextArea";
+import CustomModal from "../../../../theme/modal/customModal/CustomModal";
 
-interface InputValueType {
+export interface InputValueType {
   name: string;
   slug: string;
   description: string;
@@ -17,9 +18,10 @@ interface InputValueType {
 type AddCollectionModalProps = {
   input: InputValueType;
   setInput: Dispatch<SetStateAction<InputValueType>>;
-  setOpenModal?: Dispatch<SetStateAction<boolean>>;
+  setOpenModal: Dispatch<SetStateAction<boolean>>;
   handleToAddOrUpdateCollection?: () => void;
   isAddOrUpdateCollectionLoading?: boolean;
+  openModal: boolean;
 };
 
 const AddCollectionModal = ({
@@ -28,6 +30,7 @@ const AddCollectionModal = ({
   setOpenModal = () => {},
   handleToAddOrUpdateCollection = () => {},
   isAddOrUpdateCollectionLoading = false,
+  openModal = false,
 }: AddCollectionModalProps) => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -84,8 +87,9 @@ const AddCollectionModal = ({
   // };
 
   return (
-    <div className={styles.addCollectionContainer}>
-      {/* <div className={styles.fileUpload}>
+    <CustomModal open={openModal} setOpen={setOpenModal}>
+      <div className={styles.addCollectionContainer}>
+        {/* <div className={styles.fileUpload}>
         <input type="file" accept="image/*" onChange={handleChange} />
         <img
           src={
@@ -101,44 +105,45 @@ const AddCollectionModal = ({
           }}
         />
       </div> */}
-      <div className={styles.rightSide}>
-        <InputComponent
-          borderSecondary={true}
-          placeholder="Collection Name"
-          value={input?.name}
-          name="name"
-          onChange={handleChange}
-        />
-        <TextArea
-          style={{ marginTop: "10px" }}
-          borderSecondary={true}
-          placeholder="Description"
-          value={input?.description}
-          name="description"
-          onChange={handleChange}
-        />
+        <div className={styles.rightSide}>
+          <InputComponent
+            borderSecondary={true}
+            placeholder="Collection Name"
+            value={input?.name}
+            name="name"
+            onChange={handleChange}
+          />
+          <TextArea
+            style={{ marginTop: "10px" }}
+            borderSecondary={true}
+            placeholder="Description"
+            value={input?.description}
+            name="description"
+            onChange={handleChange}
+          />
 
-        <div className={styles.buttonGroup}>
-          <CommentAndNoteButton
-            type="submitBtn"
-            style={{ marginRight: "30px" }}
-            handleClick={handleToAddOrUpdateCollection}
-            text={
-              isAddOrUpdateCollectionLoading ? (
-                <CircularRotatingLoader color="white" />
-              ) : (
-                "Submit"
-              )
-            }
-          />
-          <CommentAndNoteButton
-            type="cancleBtn"
-            handleClick={() => setOpenModal(false)}
-            text="Cancel"
-          />
+          <div className={styles.buttonGroup}>
+            <CommentAndNoteButton
+              type="submitBtn"
+              style={{ marginRight: "30px" }}
+              handleClick={handleToAddOrUpdateCollection}
+              text={
+                isAddOrUpdateCollectionLoading ? (
+                  <CircularRotatingLoader color="white" />
+                ) : (
+                  "Submit"
+                )
+              }
+            />
+            <CommentAndNoteButton
+              type="cancleBtn"
+              handleClick={() => setOpenModal(false)}
+              text="Cancel"
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </CustomModal>
   );
 };
 

@@ -1,9 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
-import { faTimes } from "@fortawesome/pro-solid-svg-icons";
-import IconButton from "../../component/atoms/Button/IconButton.component";
 import Icon from "../../component/atoms/Icon/Icon.component";
-import FooterRecipeFilter from "../../components/footer/footerRecipeFilter.component";
 import AContainer from "../../containers/A.container";
 import useLocalStorage from "../../customHooks/useLocalStorage";
 import useViewAll, { QUERY_DICTIONARY } from "../../hooks/modules/useViewAll";
@@ -25,7 +22,7 @@ const ViewAll = () => {
   const featured = router.query?.featured as string;
   const page = featured && QUERY_DICTIONARY[featured];
 
-  const data = useViewAll(featured);
+  const { data, loading } = useViewAll(featured);
   const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
     "compareList",
     [],
@@ -42,8 +39,8 @@ const ViewAll = () => {
     >
       <div className={styles.main__div}>
         <ShowRecipeContainer
-          data={data || []}
-          loading={data.length ? false : true}
+          data={data?.[page?.query] || []}
+          loading={loading}
           headerLeftSide={
             <div className="flex ai-center">
               <Icon
@@ -55,26 +52,27 @@ const ViewAll = () => {
               <h2 className={classes.head__title}>{page?.title}</h2>
             </div>
           }
-          headerMiddle={
-            <div style={{ display: "flex" }}>
-              <IconWarper
-                iconColor="iconColorPrimary"
-                defaultBg="slightGray"
-                hover="bgPrimary"
-                style={{ width: "28px", height: "28px", marginRight: "10px" }}
-              >
-                <FontAwesomeIcon icon={faBookmark} />
-              </IconWarper>
-              <IconWarper
-                iconColor="iconColorPrimary"
-                defaultBg="slightGray"
-                hover="bgPrimary"
-                style={{ width: "28px", height: "28px" }}
-              >
-                <FontAwesomeIcon icon={faShareNodes} />
-              </IconWarper>
-            </div>
-          }
+          // headerMiddle={
+          //   <div style={{ display: "flex" }}>
+          //     <IconWarper
+          //       iconColor="iconColorPrimary"
+          //       defaultBg="slightGray"
+          //       hover="bgPrimary"
+          //       style={{ width: "28px", height: "28px", marginRight: "10px" }}
+          //     >
+          //       <FontAwesomeIcon icon={faBookmark} />
+          //     </IconWarper>
+          //     <IconWarper
+          //       iconColor="iconColorPrimary"
+          //       defaultBg="slightGray"
+          //       hover="bgPrimary"
+          //       style={{ width: "28px", height: "28px" }}
+          //     >
+          //       <FontAwesomeIcon icon={faShareNodes} />
+          //     </IconWarper>
+          //   </div>
+          // }
+          // showDefaultMiddleHeader={true}
           headerRightSide={
             <IconWarper
               handleClick={() => router.back()}
@@ -88,9 +86,6 @@ const ViewAll = () => {
           }
           showItems="recipe"
         />
-      </div>
-      <div className={styles.footerMainDiv}>
-        <FooterRecipeFilter />
       </div>
     </AContainer>
   );

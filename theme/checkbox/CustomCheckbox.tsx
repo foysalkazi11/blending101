@@ -7,6 +7,8 @@ type CustomCheckboxProps = {
   handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   checked?: boolean;
   disable?: boolean;
+  id?: string;
+  style?: React.CSSProperties;
 };
 
 const CustomCheckbox = ({
@@ -15,9 +17,11 @@ const CustomCheckbox = ({
   name = "",
   value = "",
   disable = false,
+  id = "checkBox",
+  style = {},
 }: CustomCheckboxProps) => {
   return (
-    <label className={styles.checkbxWrap}>
+    <label className={styles.checkbxWrap} style={style}>
       <input
         type="checkbox"
         value={value}
@@ -25,6 +29,7 @@ const CustomCheckbox = ({
         onChange={(e) => handleChange(e)}
         checked={checked}
         disabled={disable}
+        id={id}
       />{" "}
       <span className={styles.checkmark}></span>
     </label>

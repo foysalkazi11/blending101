@@ -1,7 +1,7 @@
 import { useLazyQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import RecipeDetails from "../../../components/recipe/recipeDetails/RecipeDetails";
-import { GET_RECIPE } from "../../../gqlLib/recipes/queries/getRecipeDetails";
+import GET_A_RECIPE from "../../../gqlLib/recipes/queries/getRecipeDetails";
 import { useRouter } from "next/router";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import useGetBlendNutritionBasedOnRecipexxx from "../../../customHooks/useGetBlendNutritionBasedOnRecipexxx";
@@ -16,6 +16,7 @@ import AContainer from "../../../containers/A.container";
 import ErrorPage from "../../../components/pages/404Page";
 import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 import { updateSidebarActiveMenuName } from "../../../redux/slices/utilitySlice";
+import { RecipeDetailsType } from "../../../type/recipeDetailsType";
 
 const Index = () => {
   const router = useRouter();
@@ -27,18 +28,17 @@ const Index = () => {
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
   const dispatch = useAppDispatch();
 
-  const [getARecipe, { loading: recipeLoading, error: getARecipeError }] =
-    useLazyQuery(GET_RECIPE, {
-      fetchPolicy: "cache-and-network",
-    });
-  const handleToGetARecipe = useToGetARecipe();
-  const { loading: nutritionDataLoading, data: nutritionData } =
-    useGetBlendNutritionBasedOnRecipexxx(
-      detailsARecipe?.ingredients,
-      nutritionState,
-      () => {},
-      true,
-    );
+  const {
+    handleToGetARecipe,
+    data: getARecipeData,
+    loading: getARecipeLoading,
+    error: getARecipeError,
+  } = useToGetARecipe();
+  const {
+    handleFetchIngrdients,
+    loading: nutritionDataLoading,
+    data: nutritionData,
+  } = useGetBlendNutritionBasedOnRecipexxx();
 
   useEffect(() => {
     dispatch(setOpenVersionTray(false));
@@ -49,9 +49,9 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
-    if (detailsARecipe?._id !== recipe__Id) {
+    if (detailsARecipe?.recipeId?._id !== recipe__Id) {
       if (dbUser?._id && recipe__Id) {
-        handleToGetARecipe(recipe__Id, dbUser?._id, getARecipe, token);
+        handleToGetARecipe(recipe__Id, dbUser?._id, token);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -60,20 +60,30 @@ const Index = () => {
   useEffect(() => {
     dispatch(
       updateHeadTagInfo({
-        title: "Details a recipe",
-        description: "details a recipe",
+        title: "Recipe Details",
+        description: "recipe Details",
       }),
     );
-    dispatch(updateSidebarActiveMenuName("Home"));
+    dispatch(updateSidebarActiveMenuName("Blends"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    handleFetchIngrdients(
+      detailsARecipe?.tempVersionInfo?.version?.ingredients,
+      nutritionState,
+      () => {},
+      true,
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [detailsARecipe?.tempVersionInfo?.version?.ingredients, nutritionState]);
 
   //@ts-ignore
   const recipeBasedNutrition =
     nutritionData?.getNutrientsListAndGiGlByIngredients?.nutrients;
   const giGl: GiGl = nutritionData?.getNutrientsListAndGiGlByIngredients?.giGl;
 
-  if (recipeLoading) {
+  if (getARecipeLoading) {
     return (
       <AContainer showHeader={true} logo={true}>
         <SkeletonRecipeDetails />;
@@ -86,7 +96,9 @@ const Index = () => {
 
   return (
     <RecipeDetails
-      recipeData={recipeLoading ? {} : detailsARecipe}
+      recipeData={
+        getARecipeLoading ? ({} as RecipeDetailsType) : detailsARecipe
+      }
       nutritionData={
         recipeBasedNutrition ? JSON.parse(recipeBasedNutrition) : []
       }

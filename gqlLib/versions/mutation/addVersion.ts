@@ -4,12 +4,33 @@ const ADD_VERSION = gql`
   mutation AddVersion($data: AddVersion!) {
     addVersion(data: $data) {
       _id
-      postfixTitle
       description
-      createdAt
-      editedAt
-      isDefault
-      isOriginal
+      postfixTitle
+      recipeId
+      recipeInstructions
+      servingSize
+      selectedImage
+      ingredients {
+        ingredientId {
+          ingredientName
+          _id
+          images
+          featuredImage
+        }
+
+        portions {
+          name
+          gram
+          default
+          quantity
+        }
+        weightInGram
+        selectedPortion {
+          name
+          quantity
+          gram
+        }
+      }
     }
   }
 `;

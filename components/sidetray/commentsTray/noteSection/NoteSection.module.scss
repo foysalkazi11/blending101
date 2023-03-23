@@ -35,6 +35,9 @@
         color: #000000;
         transition: all 0.3s linear;
       }
+      .active {
+        color: #fe5d1f;
+      }
       .rightSide {
         position: absolute;
         top: 0;
@@ -112,8 +115,18 @@
     color: #c1c1c1;
   }
 
-  .star {
-    font-size: 20px;
-    cursor: pointer;
+  .leftSide {
+    display: flex;
+    align-items: center;
+
+    .star {
+      margin-left: 10px;
+      // font-size: 20px;
+      cursor: pointer;
+    }
+  }
+
+  .pointerEventNone {
+    pointer-events: none;
   }
 }

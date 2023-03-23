@@ -4,11 +4,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import React from "react";
 import { useDispatch } from "react-redux";
+import Loader from "../../../../component/atoms/Loader/loader.component";
 import {
   setOpenVersionTray,
   setOpenVersionTrayFormWhichPage,
+  setShouldCloseVersionTrayWhenClickAVersion,
 } from "../../../../redux/slices/versionTraySlice";
 import IconWraper from "../../../../theme/iconWarper/IconWarper";
+import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
 import Tooltip from "../../../../theme/toolTip/CustomToolTip";
 import PanelHeader from "./PanelHeader";
 import styles from "./PanelHeader.module.scss";
@@ -19,6 +22,7 @@ interface PanelHeaderCenterProps {
   backLink?: string;
   pageComeFrom?: "edit" | "details";
   recipeVersionLength?: number;
+  loading?: boolean;
 }
 
 const PanelHeaderCenter = ({
@@ -27,6 +31,7 @@ const PanelHeaderCenter = ({
   editOrSavebtnText = "",
   pageComeFrom,
   recipeVersionLength = 0,
+  loading = false,
 }: PanelHeaderCenterProps) => {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -40,6 +45,7 @@ const PanelHeaderCenter = ({
             onClick={() => {
               dispatch(setOpenVersionTray(true));
               dispatch(setOpenVersionTrayFormWhichPage("edit"));
+              dispatch(setShouldCloseVersionTrayWhenClickAVersion(true));
             }}
           >
             <FontAwesomeIcon
@@ -47,7 +53,7 @@ const PanelHeaderCenter = ({
               style={{ marginRight: "5px" }}
             />
             Version
-            {recipeVersionLength === 1 ? "" : `(${recipeVersionLength - 1})`}
+            {recipeVersionLength ? `(${recipeVersionLength})` : ""}
           </button>
         </Tooltip>
       )}
@@ -55,8 +61,16 @@ const PanelHeaderCenter = ({
         <button
           className={`${styles.headerTextBtn} hvr-pop`}
           onClick={editOrSavebtnFunc}
+          style={{ minWidth: "45px" }}
         >
-          {editOrSavebtnText}
+          {loading ? (
+            <CircularRotatingLoader
+              color="white"
+              style={{ fontSize: "16px" }}
+            />
+          ) : (
+            editOrSavebtnText
+          )}
         </button>
       </Tooltip>
 

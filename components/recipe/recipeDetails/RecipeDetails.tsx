@@ -5,10 +5,20 @@ import Center from "./center/Center";
 import NutritionPanel from "../share/nutritionPanel/NutritionPanel";
 import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
 import useWindowSize from "../../utility/useWindowSize";
-import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
 import { useAppSelector } from "../../../redux/hooks";
 import ShowRelatedItems from "../../showRelatedItems";
 import { recommendedList } from "../fackData/recipeDetails";
+import { RecipeDetailsType } from "../../../type/recipeDetailsType";
+import { GiGl } from "../../../type/nutrationType";
+
+interface Props {
+  recipeData: RecipeDetailsType;
+  nutritionData: any;
+  nutritionState: any;
+  setNutritionState: any;
+  nutritionDataLoading: boolean;
+  giGl: GiGl;
+}
 
 const RecipeDetails = ({
   recipeData,
@@ -17,10 +27,9 @@ const RecipeDetails = ({
   setNutritionState,
   nutritionDataLoading = false,
   giGl,
-}) => {
+}: Props) => {
   const [counter, setCounter] = useState(1);
   const { width } = useWindowSize();
-
   const { openVersionTray } = useAppSelector((state) => state?.versionTray);
 
   return (
@@ -28,7 +37,7 @@ const RecipeDetails = ({
       showHeader={true}
       logo={true}
       headerIcon="/icons/juicer.svg"
-      headerTitle="Recipe details"
+      headerTitle="Recipe Details"
       showCommentsTray={{
         show: true,
         showPanle: "right",
@@ -72,8 +81,8 @@ const RecipeDetails = ({
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}
             nutritionDataLoading={nutritionDataLoading}
-            servingSize={parseInt(recipeData?.servingSize || 0)}
-            servings={recipeData?.servings}
+            servingSize={recipeData.tempVersionInfo?.version?.servingSize}
+            servings={recipeData?.recipeId?.servings}
           />
         </div>
       </div>
@@ -84,7 +93,6 @@ const RecipeDetails = ({
           itemsList={recommendedList}
         />
       ) : null}
-      <FooterRecipeFilter />
     </AContainer>
   );
 };

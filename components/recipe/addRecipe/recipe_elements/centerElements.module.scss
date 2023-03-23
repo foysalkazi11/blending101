@@ -4,49 +4,6 @@
   }
 }
 
-@mixin searchbar {
-  min-height: 90px;
-  border-radius: 8px;
-  display: flex;
-  // justify-content: center;
-  align-items: center;
-  width: 100%;
-
-  span {
-    width: 100%;
-    min-height: 40px;
-    display: flex;
-    justify-content: center;
-
-    input {
-      border: 1px solid #e2dcdcd3;
-      border-radius: 7px;
-      min-height: 36px;
-      padding: 0 15px;
-      color: #bcbcbc;
-      line-height: 36px;
-      font-size: 14px;
-      width: 100%;
-      font-weight: 600;
-
-      &:focus {
-        outline: none;
-        border: 1px solid #7cbc39;
-        color: #000;
-      }
-    }
-  }
-}
-
-.recipeHeadig {
-  @include searchbar();
-  min-height: 50px;
-  background-color: #fbfbfb;
-  padding: 20px;
-  border: 2px solid #f2f2f8;
-  border-radius: 7px;
-}
-
 .main {
   padding: 25px 20px;
   padding-bottom: 25px;
@@ -115,23 +72,6 @@
       border-radius: 7px;
       background-color: #fbfbfb;
       border: 2px solid #f2f2f8;
-
-      textarea {
-        display: flex;
-        border: 1px solid #e2dcdcd3;
-        border-radius: 7px;
-        min-height: 76px;
-        padding: 0 15px;
-        line-height: 30px;
-        color: #bcbcbc;
-        font-size: 14px;
-        min-width: 100%;
-        max-width: 100%;
-
-        &:focus {
-          outline: none;
-        }
-      }
     }
     p {
       margin-top: 28px;
@@ -216,7 +156,7 @@
           width: 100px;
           border-radius: 5px;
           overflow: hidden;
-          background-color: #fbfbfb;
+          background-color: #f1f1f1;
           border-radius: 6px;
         }
 

@@ -4,7 +4,6 @@ import AContainer from "../../../containers/A.container";
 import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
 import Center_Elements from "./recipe_elements/centerElements.component";
 import IngredientList from "./recipe_elements/ingredientList/ingredientList&Howto.component";
-import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
   setSelectedIngredientsList,
@@ -14,7 +13,7 @@ import IngredientPanel from "../share/ingredientPanel/IngredientPanel";
 import useWindowSize from "../../utility/useWindowSize";
 import NutritionPanel from "../share/nutritionPanel/NutritionPanel";
 import PanelHeaderCenter from "../share/panelHeader/PanelHeaderCenter";
-import { RecipeDetailsType } from "../../../type/recipeDetails";
+import { RecipeDetailsType } from "../../../type/recipeDetailsType";
 import { GiGl } from "../../../type/nutrationType";
 import FloatingLeftPanel from "./floatingLeftPanel/FloatingLeftPanel";
 
@@ -25,7 +24,7 @@ interface editRecipe {
   recipeInstructions: string[];
   allBlendCategories: [];
   selectedBLendCategory: string;
-  editARecipeFunction: any;
+  editARecipeFunction: () => void;
   calculatedIngOz?: number;
   nutritionDataLoading: boolean;
   existingImage?: string[];
@@ -37,6 +36,8 @@ interface editRecipe {
   recipeId?: string | string[];
   updateEditRecipe?: (key: string, value: any) => void;
   giGl?: GiGl;
+  recipeEditOrVersionEditLoading?: boolean;
+  versionsCount?: number;
 }
 
 const EditRecipePage = ({
@@ -46,7 +47,7 @@ const EditRecipePage = ({
   recipeInstructions,
   allBlendCategories,
   selectedBLendCategory,
-  editARecipeFunction,
+  editARecipeFunction = () => {},
   calculatedIngOz = 0,
   nutritionDataLoading,
   images = [],
@@ -62,6 +63,8 @@ const EditRecipePage = ({
     totalGi: 0,
     totalGL: 0,
   },
+  recipeEditOrVersionEditLoading = false,
+  versionsCount = 0,
 }: editRecipe) => {
   const dispatch = useAppDispatch();
   const { width } = useWindowSize();
@@ -73,8 +76,6 @@ const EditRecipePage = ({
   );
 
   const handleIngredientClick = (ingredient: any, present: boolean) => {
-    console.log(ingredient, present);
-
     let blendz = [];
     if (!present) {
       blendz = [...selectedIngredientsList, ingredient];
@@ -108,7 +109,7 @@ const EditRecipePage = ({
   return (
     <AContainer
       headerIcon="/icons/juicer.svg"
-      headerTitle="Recipe edit"
+      headerTitle="Recipe Edit"
       showVersionTray={{
         show: true,
         showPanle: "right",
@@ -120,6 +121,8 @@ const EditRecipePage = ({
           <IngredientPanel
             handleIngredientClick={handleIngredientClick}
             checkActive={checkActive}
+            showHeader={true}
+            showTopHeader={false}
           />
         </FloatingLeftPanel>
       )}
@@ -129,6 +132,7 @@ const EditRecipePage = ({
           <IngredientPanel
             handleIngredientClick={handleIngredientClick}
             checkActive={checkActive}
+            showHeader={false}
           />
         </div>
         <div className={styles.center}>
@@ -137,7 +141,8 @@ const EditRecipePage = ({
             editOrSavebtnFunc={editARecipeFunction}
             editOrSavebtnText="Save"
             pageComeFrom="edit"
-            recipeVersionLength={copyDetailsRecipe?.recipeVersion?.length}
+            recipeVersionLength={versionsCount}
+            loading={recipeEditOrVersionEditLoading}
           />
           <Center_Elements
             copyDetailsRecipe={copyDetailsRecipe}
@@ -171,9 +176,6 @@ const EditRecipePage = ({
             adjusterFunc={adjusterFunc}
           />
         </div>
-      </div>
-      <div>
-        <FooterRecipeFilter />
       </div>
     </AContainer>
   );

@@ -30,6 +30,7 @@ const GET_A_RECIPE_VERSION = gql`
         }
       }
       servingSize
+      selectedImage
     }
   }
 `;

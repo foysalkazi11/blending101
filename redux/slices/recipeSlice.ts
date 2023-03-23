@@ -1,16 +1,21 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RecipeDetailsType } from "../../type/recipeDetails";
-import { RecipeType } from "../../type/recipeType";
+import { CompareRecipeType } from "../../type/compareRecipeType";
+import { RecipeDetailsType } from "../../type/recipeDetailsType";
+import {
+  RecipeType,
+  ReferenceOfRecipeUpdateFuncType,
+} from "../../type/recipeType";
 
 type recipeSliceState = {
   recommended: RecipeType[];
   popular: RecipeType[];
   latest: RecipeType[];
   currentRecipeInfo: { name: string; image: string };
-  compareList: any[];
+  compareList: CompareRecipeType[];
   detailsARecipe: RecipeDetailsType;
   allFilterRecipe: RecipeType[];
   searchRecipeResults: RecipeType[];
+  referenceOfRecipeUpdateFunc: ReferenceOfRecipeUpdateFuncType;
 };
 
 const initialState: recipeSliceState = {
@@ -22,6 +27,7 @@ const initialState: recipeSliceState = {
   detailsARecipe: {} as RecipeDetailsType,
   allFilterRecipe: [] as RecipeType[],
   searchRecipeResults: [],
+  referenceOfRecipeUpdateFunc: () => {},
 };
 
 export const recipeSlice = createSlice({
@@ -43,7 +49,7 @@ export const recipeSlice = createSlice({
     ) => {
       state.currentRecipeInfo = action?.payload;
     },
-    setCompareList: (state, action: PayloadAction<any[]>) => {
+    setCompareList: (state, action: PayloadAction<CompareRecipeType[]>) => {
       state.compareList = action?.payload;
     },
     setDetailsARecipe: (state, action: PayloadAction<RecipeDetailsType>) => {
@@ -54,6 +60,12 @@ export const recipeSlice = createSlice({
     },
     updateSearchRecipeResult: (state, action: PayloadAction<RecipeType[]>) => {
       state.searchRecipeResults = [...action.payload];
+    },
+    setReferenceOfRecipeUpdateFunc: (
+      state,
+      action: PayloadAction<ReferenceOfRecipeUpdateFuncType>,
+    ) => {
+      state.referenceOfRecipeUpdateFunc = action.payload;
     },
   },
 });
@@ -67,6 +79,7 @@ export const {
   setDetailsARecipe,
   setAllFilterRecipe,
   updateSearchRecipeResult,
+  setReferenceOfRecipeUpdateFunc,
 } = recipeSlice?.actions;
 
 export default recipeSlice?.reducer;

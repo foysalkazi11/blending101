@@ -14,16 +14,9 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { setSelectedBlendCategory } from "../../../../redux/edit_recipe/editRecipeStates";
 import RecipeDropDown from "../../../../theme/dropDown/recipeDropDown.component";
 import HandleImageShow from "../../share/handleImageShow/HandleImageShow";
-import {
-  setOpenVersionTray,
-  setOpenVersionTrayFormWhichPage,
-} from "../../../../redux/slices/versionTraySlice";
-import { VscVersions } from "react-icons/vsc";
 import InputComponent from "../../../../theme/input/input.component";
 import TextArea from "../../../../theme/textArea/TextArea";
-import { MdMoreVert, MdDeleteOutline } from "react-icons/md";
-import IconWraper from "../../../../theme/iconWarper/IconWarper";
-import { RecipeDetailsType } from "../../../../type/recipeDetails";
+import { RecipeDetailsType } from "../../../../type/recipeDetailsType";
 import useOnClickOutside from "../../../utility/useOnClickOutside";
 import { useMutation } from "@apollo/client";
 import DELETE_A_RECIPE from "../../../../gqlLib/recipes/mutations/deleteARecipe";
@@ -72,14 +65,23 @@ const Center_Elements = ({
   const { dbUser } = useAppSelector((state) => state?.user);
   const [deleteARecipe, { loading }] = useMutation(DELETE_A_RECIPE);
   const router = useRouter();
-  let BlendtecItem = [{ name: `Blentec` }, { name: `Blentec` }];
-  let OzItem = [{ name: "64oz" }, { name: "64oz" }];
+  let BlendtecItem = [
+    { name: `Blentec`, value: `Blentec` },
+    { value: `Blentec`, name: `Blentec` },
+  ];
+  let OzItem = [
+    { name: "64oz", value: "64oz" },
+    { value: "64oz", name: "64oz" },
+  ];
 
   // delete one recipe
   const deleteOneRecipe = async () => {
     try {
       await deleteARecipe({
-        variables: { userId: dbUser?._id, recipeId: copyDetailsRecipe?._id },
+        variables: {
+          userId: dbUser?._id,
+          recipeId: copyDetailsRecipe?.recipeId._id,
+        },
       });
       setOpenModal(false);
       router?.push("/");
@@ -87,11 +89,6 @@ const Center_Elements = ({
       notification("error", "Unable to delete recipe");
     }
   };
-
-  // check version of recipe
-  const checkVersion = copyDetailsRecipe?.recipeVersion?.find(
-    (version) => version?._id === copyDetailsRecipe?.versionId,
-  );
 
   useEffect(() => {
     if (!selectedBLendCategory) return;
@@ -113,83 +110,36 @@ const Center_Elements = ({
     <>
       <div className={styles.main}>
         <div className={styles.topSection}>
-          {copyDetailsRecipe?.isVersionActive ? (
-            <h3 className={styles.title}>
-              {copyDetailsRecipe?.name}
-              <span>
-                {checkVersion?.isOrginal
-                  ? ""
-                  : `${
-                      copyDetailsRecipe?.postfixTitle
-                        ? `(${copyDetailsRecipe?.postfixTitle})`
-                        : ""
-                    }`}
-              </span>
-            </h3>
-          ) : (
-            <InputComponent
-              borderSecondary={true}
-              style={{ fontWeight: "bold", color: "#000000", fontSize: "16px" }}
-              value={copyDetailsRecipe?.name}
-              name={
-                copyDetailsRecipe?.isVersionActive ? "postfixTitle" : "name"
-              }
-              onChange={(e) =>
-                updateEditRecipe(e?.target?.name, e?.target?.value)
-              }
-            />
-          )}
-          {/* <div className={styles.reightSight} ref={outsideClickRef}>
-            <IconWraper
-              hover="bgSlightGray"
-              style={{ width: "36px", height: "36px" }}
-              handleClick={() => setOpenMenu((prev) => !prev)}
-            >
-              <MdMoreVert fontSize={24} />
-            </IconWraper>
-            {openMenu ? (
-              <div className={`${styles.menu} `}>
-                <div
-                  className={styles.singleMenu}
-                  onClick={() => {
-                    dispatch(setOpenVersionTray(true));
-                    dispatch(setOpenVersionTrayFormWhichPage("edit"));
-                  }}
-                >
-                  <VscVersions className={styles.icon} />
-                  <p className={styles.text}>Versions</p>
-                </div>
-
-                {copyDetailsRecipe?.userId?._id === dbUser?._id ? (
-                  <div
-                    className={styles.singleMenu}
-                    onClick={() => setOpenModal(true)}
-                  >
-                    <MdDeleteOutline className={styles.icon} />
-                    <p className={styles.text}>Delete</p>
-                  </div>
-                ) : null}
-              </div>
-            ) : null}
-          </div> */}
+          <InputComponent
+            borderSecondary={true}
+            style={{ fontWeight: "bold", color: "#000000", fontSize: "16px" }}
+            value={copyDetailsRecipe?.tempVersionInfo?.version?.postfixTitle}
+            name={"postfixTitle"}
+            onChange={(e) =>
+              updateEditRecipe(e?.target?.name, e?.target?.value)
+            }
+          />
         </div>
         <div className={styles.addImagediv}>
           <HandleImageShow
             existingImage={existingImage}
-            images={images}
             setExistingImage={setExistingImage}
+            images={images}
             setImages={setImages}
+            checkBoxProps={{
+              showCheckBox: true,
+              selectedImage:
+                copyDetailsRecipe?.tempVersionInfo?.version?.selectedImage,
+              handleChange: (e) =>
+                updateEditRecipe("selectedImage", e?.target?.value),
+            }}
           />
         </div>
         <div className={styles.scoreTraydiv}>
-          <p className={styles.discripation}>
-            {copyDetailsRecipe?.versionDiscription}
-          </p>
-
           <TextArea
             name="description"
             borderSecondary={true}
-            value={copyDetailsRecipe?.description}
+            value={copyDetailsRecipe?.tempVersionInfo?.version?.description}
             onChange={(e) =>
               updateEditRecipe(e?.target?.name, e?.target?.value)
             }
@@ -203,7 +153,7 @@ const Center_Elements = ({
                 <li>
                   <div className={styles.left__options}>
                     <RecipeDropDown
-                      ElemList={allBlendCategories}
+                      elemList={allBlendCategories}
                       selectedValue={blendCategoryState}
                       setSelectedValue={setBlendCategoryState}
                     />
@@ -211,12 +161,12 @@ const Center_Elements = ({
                 </li>
                 <li>
                   <div className={styles.left__options}>
-                    <RecipeDropDown ElemList={BlendtecItem} />
+                    <RecipeDropDown elemList={BlendtecItem} />
                   </div>
                 </li>
                 <li>
                   <div className={styles.left__options}>
-                    <RecipeDropDown ElemList={OzItem} />
+                    <RecipeDropDown elemList={OzItem} />
                   </div>
                 </li>
               </ul>
@@ -265,14 +215,15 @@ const Center_Elements = ({
           </div>
         </div>
       </div>
-      <CustomModal open={openModal} setOpen={setOpenModal}>
-        <ConfirmationModal
-          text="All the related entities will be removed along with this recipe !!!"
-          cancleFunc={() => setOpenModal(false)}
-          submitFunc={deleteOneRecipe}
-          loading={loading}
-        />
-      </CustomModal>
+
+      <ConfirmationModal
+        text="All the related entities will be removed along with this recipe !!!"
+        cancleFunc={() => setOpenModal(false)}
+        submitFunc={deleteOneRecipe}
+        loading={loading}
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+      />
     </>
   );
 };

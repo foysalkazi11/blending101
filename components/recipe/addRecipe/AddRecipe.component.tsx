@@ -4,9 +4,7 @@ import AContainer from "../../../containers/A.container";
 import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
 import Center_Elements from "./recipe_elements/centerElements.component";
 import IngredientList from "./recipe_elements/ingredientList/ingredientList&Howto.component";
-import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setLoading } from "../../../redux/slices/utilitySlice";
 import imageUploadS3 from "../../utility/imageUploadS3";
 import { BLEND_CATEGORY } from "../../../gqlLib/recipes/queries/getEditRecipe";
 import { useMutation, useQuery } from "@apollo/client";
@@ -46,13 +44,13 @@ const AddRecipePage = () => {
   const router = useRouter();
   const { width } = useWindowSize();
   const [openTray, setOpenTray] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const { loading: nutritionDataLoading, data: nutritionData } =
-    useGetBlendNutritionBasedOnRecipexxx(
-      selectedIngredientsList,
-      nutritionState,
-      SetcalculateIngOz,
-    );
+  const {
+    handleFetchIngrdients,
+    loading: nutritionDataLoading,
+    data: nutritionData,
+  } = useGetBlendNutritionBasedOnRecipexxx();
 
   const { loading: blendCategoriesInProgress, data: blendCategoriesData } =
     useQuery(BLEND_CATEGORY);
@@ -71,7 +69,7 @@ const AddRecipePage = () => {
 
   const handleSubmitData = async () => {
     if (recipeHeading && selectedIngredientsList?.length) {
-      dispatch(setLoading(true));
+      setLoading(true);
       let ingArr = [];
       selectedIngredientsList?.forEach((item) => {
         let value = item?.portions?.find((item) => item.default);
@@ -116,7 +114,7 @@ const AddRecipePage = () => {
               data: obj,
             },
           });
-          dispatch(setLoading(false));
+          setLoading(false);
           notification("success", "recipe create successfully");
           if (data?.addRecipeFromUser?._id) {
             router?.push(`/recipe_details/${data?.addRecipeFromUser?._id}`);
@@ -127,14 +125,14 @@ const AddRecipePage = () => {
               data: obj,
             },
           });
-          dispatch(setLoading(false));
+          setLoading(false);
           notification("success", "recipe create successfully");
           if (data?.addRecipeFromUser?._id) {
             router?.push(`/recipe_details/${data?.addRecipeFromUser?._id}`);
           }
         }
       } catch (error) {
-        dispatch(setLoading(false));
+        setLoading(false);
         notification("error", error?.message || "Something went wrong");
       }
     } else {
@@ -175,12 +173,20 @@ const AddRecipePage = () => {
   useEffect(() => {
     dispatch(
       updateHeadTagInfo({
-        title: "Add new recipe",
-        description: "add new recipe",
+        title: "Add New Blend",
+        description: "add new blend",
       }),
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    handleFetchIngrdients(
+      selectedIngredientsList,
+      nutritionState,
+      SetcalculateIngOz,
+    );
+  }, [selectedIngredientsList, nutritionState]);
 
   useEffect(() => {
     isMounted.current = true;
@@ -195,7 +201,7 @@ const AddRecipePage = () => {
   const giGl: GiGl = nutritionData?.getNutrientsListAndGiGlByIngredients?.giGl;
 
   return (
-    <AContainer headerIcon="/icons/juicer.svg" headerTitle="Add new blend">
+    <AContainer headerIcon="/icons/juicer.svg" headerTitle="Add New Blend">
       {width < 1280 ? (
         <>
           <TrayWrapper
@@ -238,6 +244,7 @@ const AddRecipePage = () => {
             backLink="/"
             editOrSavebtnFunc={handleSubmitData}
             editOrSavebtnText="Save"
+            loading={loading}
           />
           <Center_Elements
             blendCategoryList={
@@ -287,9 +294,6 @@ const AddRecipePage = () => {
             adjusterFunc={adjusterFunc}
           />
         </div>
-      </div>
-      <div className={styles.footerMainDiv}>
-        <FooterRecipeFilter />
       </div>
     </AContainer>
   );

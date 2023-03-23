@@ -3,28 +3,48 @@ import React from "react";
 import styles from "./smallcard.module.scss";
 import { IoClose } from "react-icons/io5";
 import IconWarper from "../../iconWarper/IconWarper";
+import { CompareRecipeType } from "../../../type/compareRecipeType";
 
-export default function SmallcardComponent({
-  img,
-  text,
-  fnc,
-  recipe,
-  findCompareRecipe,
-  fucUnCheck,
-  compareLength,
-  handleRemoveFromCompare = (id: string, e: React.SyntheticEvent) => {},
-}) {
+interface SmallCardComponentProps {
+  img?: string;
+  text?: string;
+  fnc?: (recipe: any) => void;
+  recipe?: any;
+  findCompareRecipe?: (id: string) => any;
+  fucUnCheck?: (id: string, e: React.SyntheticEvent) => void;
+  compareLength: number;
+  handleRemoveFromCompare?: (
+    id: string,
+    e: React.SyntheticEvent,
+    versionId: string,
+  ) => void;
+  id?: string;
+  defaultVersionId?: string;
+}
+
+export default function SmallCardComponent({
+  img = "",
+  text = "",
+  fnc = () => {},
+  findCompareRecipe = () => {},
+  fucUnCheck = () => {},
+  compareLength = 0,
+  handleRemoveFromCompare = () => {},
+  id = "",
+  defaultVersionId = "",
+  recipe = {},
+}: SmallCardComponentProps) {
   text = text || "Chocolate Avocado Smoothie";
   img = img || "/cards/coriander.png";
 
-  const findRecipe = findCompareRecipe && findCompareRecipe(recipe?._id);
+  const findRecipe = findCompareRecipe && findCompareRecipe(id);
 
   const handleClick = () => {
     fnc && fnc(recipe);
   };
 
   const handleUnCheck = (e: React.SyntheticEvent) => {
-    fucUnCheck && fucUnCheck(recipe?._id, e);
+    fucUnCheck && fucUnCheck(id, e);
   };
 
   return (
@@ -38,6 +58,7 @@ export default function SmallcardComponent({
             <IconWarper
               defaultBg="primary"
               style={{ width: "20px", height: "20px", marginRight: "10px" }}
+              iconColor="iconColorWhite"
             >
               <IoClose fontSize={16} />
             </IconWarper>
@@ -59,7 +80,9 @@ export default function SmallcardComponent({
           <IconWarper
             hover="bgPrimary"
             defaultBg="gray"
-            handleClick={(e) => handleRemoveFromCompare(recipe?._id, e)}
+            handleClick={(e) =>
+              handleRemoveFromCompare(id, e, defaultVersionId)
+            }
           >
             <IoClose />
           </IconWarper>

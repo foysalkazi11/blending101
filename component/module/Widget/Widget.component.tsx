@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_WIDGET_TYPE } from "../../../graphql/Widget";
 import GridWidget from "./GridWidget.component";
@@ -22,4 +22,4 @@ const Widget = (props: WidgetProps) => {
   else return <SliderWidget name={slug} column={column} />;
 };
 
-export default Widget;
+export default memo(Widget);

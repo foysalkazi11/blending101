@@ -1,20 +1,16 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useCallback } from "react";
+import { faPlus, faTimes } from "@fortawesome/pro-light-svg-icons";
 import { useDropzone } from "react-dropzone";
-import S3_CONFIG from "../../../configs/s3";
-import Checkbox from "../Forms/Checkbox.component";
-import Icon from "../../atoms/Icon/Icon.component";
 import styles from "./Upload.module.scss";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { removeAllImages, addImage } from "../../../redux/slices/Ui.slice";
-import { faPlus, faTimes } from "@fortawesome/pro-solid-svg-icons";
-import axios from "axios";
+import Icon from "../../atoms/Icon/Icon.component";
+import Checkbox from "../Forms/Checkbox.component";
 
 interface UploadProps {
   label?: string;
   multiple?: boolean;
   required?: boolean;
   className?: string;
-  imageState: [string[], any];
+  imageState: [any[], any];
   featuredState?: [string, any];
   imagesLimit?: number;
   size?: "medium" | "large";
@@ -39,59 +35,15 @@ const Upload = (props: UploadProps) => {
     setFeaturedImage = featuredState[1];
   }
 
-  const [tempImages, setTempImages] = useState<string[]>([]);
-
-  const dispatch = useAppDispatch();
-  const uploadedImages = useAppSelector((state) => state.ui.images);
-
-  useEffect(() => {
-    if (
-      tempImages.length > 0 &&
-      uploadedImages.length > 0 &&
-      tempImages.length === uploadedImages.length
-    ) {
-      setImages([...images, ...uploadedImages]);
-      setTempImages([]);
-      dispatch(removeAllImages());
-    }
-  }, [dispatch, images, setImages, tempImages.length, uploadedImages]);
-
   const addImageHandler = useCallback(
     (e: any) => {
       const files = e.target.files;
-      if (files && files.length === 0) return;
-
-      const temporaryImages: string[] = [];
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-
-        const src = URL.createObjectURL(file);
-        if (file["type"].split("/")[0] === "image") {
-          temporaryImages.push(src);
-        }
-        temporaryImages.length > 0 &&
-          setTempImages([...temporaryImages, ...tempImages]);
-
-        const formdata = new FormData();
-        for (let i = 0; i < files?.length; i++) {
-          const fileName = files[i].name;
-
-          formdata.append("images[]", files[i], fileName);
-        }
-        axios({
-          method: "post",
-          url: S3_CONFIG.objectURL,
-          data: formdata,
-          headers: { "Content-Type": "multipart/form-data" },
-        }).then((response) => {
-          const resp = response?.data;
-          const data = resp?.images;
-
-          dispatch(addImage({ urls: data }));
-        });
+        setImages((images) => images.concat(file));
       }
     },
-    [dispatch, tempImages],
+    [setImages],
   );
 
   const onDrop = useCallback(
@@ -102,7 +54,9 @@ const Upload = (props: UploadProps) => {
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: "image/*",
+    // accept: {
+    //   "image/jpeg": [".jpeg", ".png", ".jpg", ".webp"],
+    // },
     noClick: true,
     onDrop,
   });
@@ -138,62 +92,41 @@ const Upload = (props: UploadProps) => {
           background: isDragActive ? "#f7f7f7" : "inherit",
         }}
       >
-        {images.map((img) => (
-          <figure key="img">
-            <button
-              type="button"
-              className={styles["remove-image"]}
-              onClick={(e) => {
-                setImages(images.filter((image) => image !== img));
-                e.stopPropagation();
-              }}
-            >
-              <Icon fontName={faTimes} />
-            </button>
-            <img src={img} alt="" />
-            {featuredState && (
-              <Checkbox
-                name={img}
-                checked={img === featuredImage}
-                className={styles["featured-image"]}
-                onChange={(e) => setFeaturedImage(img)}
-              />
-            )}
-          </figure>
-        ))}
-        {tempImages.map((img) => (
-          <figure key="img">
-            <button
-              type="button"
-              className={styles["remove-image"]}
-              onClick={() => {
-                setTempImages(tempImages.filter((image) => image !== img));
-              }}
-            >
-              <Icon fontName={faTimes} />
-            </button>
-            <img src={img} alt="" />
-            {featuredState && (
-              <Checkbox
-                name={img}
-                checked={img === featuredImage}
-                className={styles["featured-image"]}
-                onChange={(e) => setFeaturedImage(img)}
-              />
-            )}
-          </figure>
-        ))}
+        {images.map((img, idx) => {
+          const src = typeof img === "string" ? img : URL.createObjectURL(img);
+          return (
+            <figure key={src + idx}>
+              <button
+                type="button"
+                className={styles["remove-image"]}
+                onClick={(e) => {
+                  setImages(images.filter((image) => image !== img));
+                  e.stopPropagation();
+                }}
+              >
+                <Icon fontName={faTimes} />
+              </button>
+              <img src={src} alt="" />
+              {featuredState && (
+                <Checkbox
+                  name={img}
+                  checked={img === featuredImage}
+                  className={styles["featured-image"]}
+                  onChange={(e) => setFeaturedImage(img)}
+                />
+              )}
+            </figure>
+          );
+        })}
         {
           // If multiple images are allowed and there is no limit
           ((multiple && !imagesLimit) ||
             // If the Upload component is multiple & there is limit for number of Image Upload
-            (multiple &&
-              imagesLimit &&
-              images.length + tempImages.length < imagesLimit) ||
+            (multiple && imagesLimit && images.length < imagesLimit) ||
             // If the Upload component is not multiple & No Image is Uploaded Yet
-            (!multiple && images.length + tempImages.length === 0)) && (
+            (!multiple && images.length === 0)) && (
             <label className={styles["add-new-image"]}>
-              <Icon fontName={faPlus} size="30px" />
+              <Icon fontName={faPlus} size="3.5rem" />
               <input
                 type="file"
                 onChange={(e) => {

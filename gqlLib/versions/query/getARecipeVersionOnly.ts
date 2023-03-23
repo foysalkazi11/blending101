@@ -1,16 +1,34 @@
 import { gql } from "@apollo/client";
 
 const GET_A_RECIPE_VERSION_ONLY = gql`
-  query GetARecipeVersionOnly($recipeId: String!, $userId: String) {
-    getARecipe(recipeId: $recipeId, userId: $userId) {
-      recipeVersion {
-        _id
-        postfixTitle
-        description
-        createdAt
-        editedAt
-        isDefault
-        isOriginal
+  query GetARecipeVersion($versionId: String!) {
+    getARecipeVersion(versionId: $versionId) {
+      _id
+      servingSize
+      recipeId
+      recipeInstructions
+      postfixTitle
+      description
+      ingredients {
+        ingredientId {
+          ingredientName
+          _id
+          images
+          featuredImage
+        }
+
+        portions {
+          name
+          gram
+          default
+          quantity
+        }
+        weightInGram
+        selectedPortion {
+          name
+          quantity
+          gram
+        }
       }
     }
   }

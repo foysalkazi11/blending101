@@ -25,6 +25,11 @@ export interface RecipeType {
   calorie: number;
   userId: null | RecipeCreatorInfo;
   recipeVersion: RecipeSmallVersionType[];
+  token?: string;
+  recipeId?: { [key: string]: any };
+  allRecipes?: boolean;
+  myRecipes?: boolean;
+  versionCount: number;
 }
 
 export interface RecipeSmallVersionType {
@@ -45,6 +50,9 @@ export interface RecipeCreatorInfo {
 }
 export interface DefaultVersion {
   postfixTitle: string;
+  _id: string;
+  ingredients?: Ingredient[];
+  description?: string;
 }
 
 export interface Ingredient {
@@ -59,3 +67,8 @@ export interface IngredientID {
 export interface RecipeBlendCategory {
   name: string;
 }
+
+export type ReferenceOfRecipeUpdateFuncType = (
+  id: string,
+  obj: { [key: string]: any },
+) => void;

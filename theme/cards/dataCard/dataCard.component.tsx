@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { Dispatch, SetStateAction, useRef, useState } from "react";
+import React, { Dispatch, SetStateAction, useCallback, useMemo } from "react";
 import styles from "./dataCard.module.scss";
 import MoreVertIcon from "../../../public/icons/more_vert_black_36dp.svg";
 import { useRouter } from "next/router";
@@ -11,15 +11,25 @@ import useForOpenCommentsTray from "../../../customHooks/useForOpenCommentsTray"
 import useForSelectCommentsAndNotesIcon from "../../../customHooks/useForSelectCommentsAndNotesIcon";
 import IconWarper from "../../iconWarper/IconWarper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsisVertical } from "@fortawesome/pro-solid-svg-icons";
+import {
+  faEllipsisVertical,
+  faStarSharp,
+} from "@fortawesome/pro-solid-svg-icons";
 import { faUser } from "@fortawesome/pro-light-svg-icons";
 import Tooltip from "../../toolTip/CustomToolTip";
 import {
   RecipeCreatorInfo,
   RecipeSmallVersionType,
+  ReferenceOfRecipeUpdateFuncType,
 } from "../../../type/recipeType";
 import useHover from "../../../components/utility/useHover";
 import { faRectangleVerticalHistory } from "@fortawesome/pro-light-svg-icons";
+import useToChangeDefaultVersion from "../../../customHooks/useToChangeDefaultVersion";
+import { useAppSelector } from "../../../redux/hooks";
+import { VersionDataType } from "../../../type/recipeDetailsType";
+import notification from "../../../components/utility/reactToastifyNotification";
+import { faShareNodes } from "@fortawesome/pro-regular-svg-icons";
+import useTurnedOnOrOffVersion from "../../../customHooks/useTurnedOnOrOffVersion";
 
 interface dataCardInterface {
   title: string;
@@ -27,16 +37,14 @@ interface dataCardInterface {
   category: string;
   ratings: number;
   noOfRatings: number;
-  carbs: number;
-  score: number;
-  calorie: number;
+  carbs?: number;
+  score?: number;
+  calorie?: number;
   noOfComments: number;
   image: string;
   recipeId?: string;
   notes?: number;
   addedToCompare?: boolean;
-  compareRecipeList?: any[];
-  setcompareRecipeList?: (state: any) => void;
   showMoreMenu?: boolean;
   showOptionalEditIcon?: boolean;
   changeToFormulateRecipe?: () => void;
@@ -50,29 +58,40 @@ interface dataCardInterface {
   customMenu?: React.ReactNode | null;
   showMoreMenuAtHover?: boolean;
   description?: string;
-  recipeVersion?: RecipeSmallVersionType[];
+  recipeVersion?: number;
   setOpenShareModal?: React.Dispatch<React.SetStateAction<boolean>>;
   setShareRecipeData?: React.Dispatch<
-    React.SetStateAction<{ id: string; image: string; name: string }>
+    React.SetStateAction<{
+      id: string;
+      image: string;
+      name: string;
+      versionId: string;
+    }>
   >;
+  defaultVersionId?: string;
+  token?: string;
+  updateDataFunc?: ReferenceOfRecipeUpdateFuncType;
+  versionHandler?: (recipeId: string, version?: VersionDataType) => void;
+  footerMenuType?: "allIcons" | "OnlyStar";
+  updateDataAfterChangeDefaultVersion?: (versionId: string) => void;
+  isVersionSharable?: boolean;
+  defaultVersion?: VersionDataType;
 }
 
 export default function DatacardComponent({
-  title,
+  title = "Triple Berry Smoothie",
   ingredients,
-  category,
+  category = "Smoothie",
   ratings,
-  noOfRatings,
-  carbs,
-  score,
-  calorie,
-  noOfComments,
-  image,
+  noOfRatings = 0,
+  carbs = 23,
+  score = 701,
+  calorie = 270,
+  noOfComments = 0,
+  image = "/cards/juice.png",
   recipeId = "",
   notes = 0,
   addedToCompare = false,
-  compareRecipeList = [],
-  setcompareRecipeList = () => {},
   showMoreMenu = true,
   showOptionalEditIcon = false,
   changeToFormulateRecipe = () => {},
@@ -85,21 +104,19 @@ export default function DatacardComponent({
   userId = null,
   customMenu = null,
   description = "",
-  recipeVersion = [],
+  recipeVersion = 0,
   setOpenShareModal = () => {},
   setShareRecipeData = () => {},
+  defaultVersionId = "",
+  token = "",
+  updateDataFunc = () => {},
+  versionHandler,
+  footerMenuType = "allIcons",
+  updateDataAfterChangeDefaultVersion = () => {},
+  isVersionSharable = true,
+  defaultVersion = {} as VersionDataType,
 }: dataCardInterface) {
-  title = title || "Triple Berry Smoothie";
-  ingredients = ingredients;
-  category = category || "Smoothie";
-  noOfRatings = noOfRatings || 0;
-  carbs = carbs || 23;
-  calorie = calorie || 270;
-  score = score || 701;
-  noOfComments = noOfComments || 0;
-  image = image || "/cards/juice.png";
   ratings = Math.ceil(ratings);
-  const menu = useRef<any>();
   const router = useRouter();
   const handleChangeCompare = useChangeCompare();
   const handleAddToCollection = useForAddToCollection();
@@ -108,9 +125,12 @@ export default function DatacardComponent({
   const selectCommentsAndNotesIcon = useForSelectCommentsAndNotesIcon();
   const [hoverRef, isHover] = useHover();
   const [hoverRefMoreMenu, isHoverMoreMenu] = useHover();
+  const { handleToUpdateDefaultVersion } = useToChangeDefaultVersion();
+  const { dbUser } = useAppSelector((state) => state?.user);
+  const { handleTurnOnOrOffVersion } = useTurnedOnOrOffVersion();
 
-  const handleOpenShareRecipeModal = (id, name, image) => {
-    setShareRecipeData({ id, image, name });
+  const handleOpenShareRecipeModal = (id, name, image, versionId) => {
+    setShareRecipeData({ id, image, name, versionId });
     setOpenShareModal(true);
   };
 
@@ -152,7 +172,11 @@ export default function DatacardComponent({
   const showFloatingMenu = (id: string, name: string, image: string) => (
     <div className={styles.floating__menu}>
       <ul>
-        <li onClick={() => handleOpenShareRecipeModal(id, name, image)}>
+        <li
+          onClick={() =>
+            handleOpenShareRecipeModal(id, name, image, defaultVersionId)
+          }
+        >
           <img src="/icons/share.png" alt="square" />
         </li>
         <li onClick={() => router.push(`/edit_recipe/${recipeId}`)}>
@@ -168,7 +192,11 @@ export default function DatacardComponent({
     </div>
   );
 
-  const handleShowCommentsAndNotesIcon = (comments: number, notes: number) => {
+  const handleShowCommentsAndNotesIcon = (
+    comments: number,
+    notes: number,
+    updateDataFunc?: ReferenceOfRecipeUpdateFuncType,
+  ) => {
     const res = selectCommentsAndNotesIcon(comments, notes);
     return (
       <Tooltip direction="left" content="Comments & Notes">
@@ -176,7 +204,9 @@ export default function DatacardComponent({
           <img
             src={`/icons/${res?.icon}.svg`}
             alt="icon"
-            onClick={(e) => handleOpenCommentsTray(recipeId, title, image, e)}
+            onClick={(e) =>
+              handleOpenCommentsTray(recipeId, title, image, e, updateDataFunc)
+            }
           />{" "}
           <span style={{ color: res?.amount ? "#7cbc39" : "#c4c4c4" }}>
             {res?.amount}
@@ -186,6 +216,156 @@ export default function DatacardComponent({
     );
   };
 
+  const footerAllIconMenu = (
+    <>
+      <li>
+        {recipeVersion ? (
+          <Tooltip direction="top" content={`Versions(${recipeVersion})`}>
+            <FontAwesomeIcon
+              icon={faRectangleVerticalHistory}
+              color="#7cbc39"
+              onClick={() =>
+                versionHandler
+                  ? versionHandler(recipeId)
+                  : router.push(`/versionCompare/${recipeId}`)
+              }
+            />
+          </Tooltip>
+        ) : null}
+      </li>
+      <li>
+        <Tooltip direction="top" content="Compare">
+          <img
+            src={addedToCompare ? "/icons/compare-1.svg" : "/icons/eclipse.svg"}
+            alt="icon"
+            onClick={(e) =>
+              handleChangeCompare(
+                e,
+                recipeId,
+                defaultVersionId,
+                addedToCompare ? false : true,
+                updateDataFunc,
+              )
+            }
+          />
+        </Tooltip>
+      </li>
+      <li>
+        <Tooltip direction="top" content="Collection">
+          <img
+            src={
+              isCollectionIds?.length
+                ? "/icons/compare.svg"
+                : "/images/BookmarksStar.svg"
+            }
+            alt="compare"
+            onClick={(e) =>
+              isCollectionIds?.length
+                ? handleOpenCollectionTray(
+                    recipeId,
+                    isCollectionIds,
+                    e,
+                    updateDataFunc,
+                  )
+                : handleAddToCollection(
+                    recipeId,
+                    setOpenCollectionModal,
+                    e,
+                    updateDataFunc,
+                  )
+            }
+          />
+        </Tooltip>
+      </li>
+      <li>
+        {handleShowCommentsAndNotesIcon(noOfComments, notes, updateDataFunc)}
+      </li>
+    </>
+  );
+
+  const handleToMakeDefaultVersion = async () => {
+    if (isVersionSharable) {
+      await handleToUpdateDefaultVersion(
+        dbUser?._id,
+        recipeId,
+        defaultVersionId,
+        isMatch ? true : false,
+        isVersionSharable ? false : true,
+      );
+      updateDataAfterChangeDefaultVersion(defaultVersionId);
+    } else {
+      notification(
+        "warning",
+        "Not allow to make default version as shearing is off !!!",
+      );
+    }
+  };
+
+  const footerOnlyStarIcon = (
+    <>
+      {/* <li>
+        <Tooltip
+          content={`${isVersionSharable ? "Share on" : "Share off"}`}
+          direction="left"
+        >
+          <FontAwesomeIcon
+            // onClick={() =>
+            //   handleTurnOnOrOffVersion(
+            //     isVersionSharable,
+            //     dbUser?._id,
+            //     recipeId,
+            //     defaultVersionId,
+            //   )
+            // }
+            icon={faShareNodes}
+            className={`${styles.star} ${
+              isVersionSharable ? styles.on : styles.off
+            }`}
+          />
+        </Tooltip>
+      </li> */}
+      <li>
+        <Tooltip
+          content={`${isMatch ? "Default" : "Make default"}`}
+          direction="left"
+        >
+          <FontAwesomeIcon
+            onClick={handleToMakeDefaultVersion}
+            icon={faStarSharp}
+            className={`${styles.star} ${isMatch ? styles.on : styles.off}`}
+          />
+        </Tooltip>
+      </li>
+      <li>
+        <Tooltip content={`Version`} direction="left">
+          <FontAwesomeIcon
+            icon={faRectangleVerticalHistory}
+            color="#7cbc39"
+            onClick={() =>
+              versionHandler
+                ? versionHandler(recipeId, defaultVersion)
+                : router.push(`/versionCompare/${recipeId}`)
+            }
+          />
+        </Tooltip>
+      </li>
+    </>
+  );
+
+  const handleToShowFooterMenu = useCallback(() => {
+    switch (footerMenuType) {
+      case "allIcons":
+        return footerAllIconMenu;
+      case "OnlyStar":
+        return footerOnlyStarIcon;
+
+      default:
+        return footerAllIconMenu;
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [footerAllIconMenu, isMatch]);
+
   return (
     <div className={styles.datacard} ref={hoverRef}>
       <div className={styles.datacard__inner}>
@@ -194,11 +374,15 @@ export default function DatacardComponent({
             <h2
               onClick={(e) => {
                 e?.stopPropagation();
-                router.push(`/recipe_details/${recipeId}`);
+                router.push(
+                  `/recipe_details/${recipeId}/${
+                    token ? "?token=" + token : ""
+                  } `,
+                );
               }}
             >
-              {title}
-              {isMatch ? "" : <span>{` (${postfixTitle})`}</span>}
+              {postfixTitle || title}
+              {/* {isMatch ? "" : <span>{` (${postfixTitle})`}</span>} */}
             </h2>
           </div>
           <div className={styles.menu}>
@@ -291,66 +475,7 @@ export default function DatacardComponent({
             )}
           </div>
           <div className={styles.datacard__body__bottom__right}>
-            <ul>
-              <li>
-                {recipeVersion?.length >= 2 ? (
-                  <Tooltip
-                    direction="top"
-                    content={`Versions(${recipeVersion?.length - 1})`}
-                  >
-                    <FontAwesomeIcon
-                      icon={faRectangleVerticalHistory}
-                      color="#7cbc39"
-                      onClick={() => router.push(`/versionCompare/${recipeId}`)}
-                    />
-                  </Tooltip>
-                ) : null}
-              </li>
-              <li>
-                <Tooltip direction="top" content="Compare">
-                  <img
-                    src={
-                      addedToCompare
-                        ? "/icons/compare-1.svg"
-                        : "/icons/eclipse.svg"
-                    }
-                    alt="icon"
-                    onClick={(e) =>
-                      handleChangeCompare(
-                        e,
-                        recipeId,
-                        addedToCompare ? false : true,
-                        compareRecipeList,
-                        setcompareRecipeList,
-                      )
-                    }
-                  />
-                </Tooltip>
-              </li>
-              <li>
-                <Tooltip direction="top" content="Collection">
-                  <img
-                    src={
-                      isCollectionIds?.length
-                        ? "/icons/compare.svg"
-                        : "/images/BookmarksStar.svg"
-                    }
-                    alt="compare"
-                    onClick={(e) =>
-                      isCollectionIds?.length
-                        ? handleOpenCollectionTray(recipeId, isCollectionIds, e)
-                        : handleAddToCollection(
-                            recipeId,
-                            setOpenCollectionModal,
-                            e,
-                            setcompareRecipeList,
-                          )
-                    }
-                  />
-                </Tooltip>
-              </li>
-              <li>{handleShowCommentsAndNotesIcon(noOfComments, notes)}</li>
-            </ul>
+            <ul>{handleToShowFooterMenu()}</ul>
           </div>
         </div>
       </div>

@@ -1,53 +1,50 @@
 import { gql } from "@apollo/client";
 
 const GET_ALL_POPULAR_RECIPES = gql`
-  query GetAllpopularRecipes($userId: String!) {
-    getAllpopularRecipes(userId: $userId) {
-      datePublished
-      name
-      recipeIngredients
-      recipeBlendCategory {
+  query GetAllpopularRecipes2($userId: String!) {
+    getAllpopularRecipes2(userId: $userId) {
+      recipeId {
+        _id
         name
-      }
-
-      image {
-        image
-        default
-      }
-      description
-      prepTime
-      cookTime
-      totalTime
-      _id
-      url
-      favicon
-      averageRating
-      numberOfRating
-      ingredients {
-        ingredientId {
-          _id
-          ingredientName
+        image {
+          image
+          default
         }
+        originalVersion {
+          _id
+          postfixTitle
+        }
+        userId {
+          _id
+          displayName
+          image
+        }
+        brand {
+          _id
+          brandName
+          brandImage
+        }
+        averageRating
+        numberOfRating
       }
+      defaultVersion {
+        _id
+        postfixTitle
+        ingredients {
+          ingredientId {
+            _id
+            ingredientName
+          }
+        }
+        description
+      }
+      isMatch
+      allRecipes
+      myRecipes
       notes
       addedToCompare
       userCollections
-      defaultVersion {
-        postfixTitle
-      }
-      isMatch
-      userId {
-        _id
-        displayName
-        image
-      }
-      recipeVersion {
-        _id
-        isDefault
-        isOriginal
-        postfixTitle
-        description
-      }
+      versionCount
     }
   }
 `;

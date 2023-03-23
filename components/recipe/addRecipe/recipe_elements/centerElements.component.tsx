@@ -6,11 +6,14 @@ import Image from "next/image";
 import DropDown from "../../../../theme/dropDown/DropDown.component";
 import HandleImageShow from "../../share/handleImageShow/HandleImageShow";
 import { GiGl } from "../../../../type/nutrationType";
+import InputComponent from "../../../../theme/input/input.component";
+import TextArea from "../../../../theme/textArea/TextArea";
+import RecipeDropDown from "../../../../theme/dropDown/recipeDropDown.component";
 type CenterElementsProps = {
   images?: any[];
   setImages?: Dispatch<SetStateAction<any[]>>;
   setRecipeHeading?: Dispatch<SetStateAction<string>>;
-  setDropDownState?: any;
+  setDropDownState?: Dispatch<SetStateAction<string>>;
   blendCategoryList: any;
   recipeTitle?: string;
   selectedBlendValueState: string;
@@ -26,7 +29,7 @@ const Center_Elements = ({
   setImages = () => {},
   recipeTitle = "",
   setRecipeHeading = () => {},
-  setDropDownState,
+  setDropDownState = () => {},
   blendCategoryList,
   selectedBlendValueState,
   recipeDescription = "",
@@ -62,69 +65,59 @@ const Center_Elements = ({
 
   return (
     <div className={styles.main}>
-      <div className={styles.recipeHeadig}>
-        <span>
-          <input
-            value={recipeTitle}
-            onChange={(e) => setRecipeHeading(e?.target?.value)}
-            type="text"
-            name="heading"
-            placeholder="Recipe Heading"
-          />
-        </span>
-      </div>
-      <div className={styles.addImagediv}>
-        <HandleImageShow setImages={setImages} images={images} />
-      </div>
+      <InputComponent
+        borderSecondary={true}
+        style={{ fontWeight: "bold", color: "#000000", fontSize: "16px" }}
+        value={recipeTitle}
+        onChange={(e) => setRecipeHeading(e?.target?.value)}
+        type="text"
+        name="heading"
+        placeholder="Recipe Title"
+      />
+
+      <HandleImageShow setImages={setImages} images={images} />
+
       <div className={styles.scoreTraydiv}>
-        <div className={styles.scoreTraydiv__description}>
-          <textarea
-            value={recipeDescription}
-            onChange={(e) => setRecipeDescription(e?.target?.value)}
-            placeholder="Recipe descripation"
-          />
-        </div>
+        <TextArea
+          borderSecondary={true}
+          name="description"
+          value={recipeDescription}
+          onChange={(e) => setRecipeDescription(e?.target?.value)}
+          placeholder="Recipe descripation"
+          style={{ color: "#484848", resize: "vertical", marginTop: "10px" }}
+        />
+
         <ScoreTray giGl={giGl} />
 
         <div className={styles.blendingOptions}>
           <div className={styles.blendingOptions__left}>
             <ul>
               <li>
-                <div
-                  className={styles.left__options}
-                  style={{ minWidth: "125px" }}
-                >
-                  <DropDown
-                    handleChange={(e) => setDropDownState(e?.target?.value)}
-                    listElem={blendCategoryList?.map((item) => ({
+                <div className={styles.left__options}>
+                  <RecipeDropDown
+                    elemList={blendCategoryList?.map((item) => ({
                       name: item?.name,
                       value: item?._id,
                     }))}
-                    value={selectedBlendValueState}
+                    selectedValue={selectedBlendValueState}
+                    setSelectedValue={setDropDownState}
                   />
                 </div>
               </li>
               <li>
-                <div
-                  className={styles.left__options}
-                  style={{ minWidth: "115px" }}
-                >
-                  <DropDown
-                    listElem={BlendtecItem}
-                    value={BlendtecItem?.[0]?.value}
-                    style={dropDownStyle}
+                <div className={styles.left__options}>
+                  <RecipeDropDown
+                    elemList={BlendtecItem}
+                    selectedValue={BlendtecItem?.[0]?.value}
+                    setSelectedValue={() => {}}
                   />
                 </div>
               </li>
               <li>
-                <div
-                  className={styles.left__options}
-                  style={{ minWidth: "35px" }}
-                >
-                  <DropDown
-                    listElem={OzItem}
-                    value={OzItem?.[0]?.value}
-                    style={dropDownStyle}
+                <div className={styles.left__options}>
+                  <RecipeDropDown
+                    elemList={OzItem}
+                    setSelectedValue={() => {}}
                   />
                 </div>
               </li>

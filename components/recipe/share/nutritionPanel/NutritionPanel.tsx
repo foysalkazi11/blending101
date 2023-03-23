@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { faChartColumn, faUser } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import { DropDownType } from "../../../../theme/dropDown/DropDown.component";
 import PanelHeader from "../panelHeader/PanelHeader";
 import styles from "./NutritionPanel.module.scss";
@@ -90,4 +90,4 @@ const NutritionPanel = (props: NutritionPanelInterface) => {
   );
 };
 
-export default NutritionPanel;
+export default memo(NutritionPanel);

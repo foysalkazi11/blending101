@@ -37,6 +37,7 @@ interface Props {
   ) => void;
   ingredientCategoryData?: any[];
   ingredientCategoryLoading?: boolean;
+  showHeader?: boolean;
 }
 
 export default function FilterbottomComponent({
@@ -45,6 +46,7 @@ export default function FilterbottomComponent({
   scrollAreaMaxHeight = { maxHeight: "350px" },
   ingredientCategoryData = [],
   ingredientCategoryLoading = false,
+  showHeader = true,
 }: Props) {
   const [toggle, setToggle] = useState(0);
   const [dpd, setDpd] = useState("All");
@@ -125,7 +127,12 @@ export default function FilterbottomComponent({
 
   return (
     <div className={styles.filter__top}>
-      <h3>Ingredients</h3>
+      {showHeader && (
+        <div className={styles.header}>
+          <h3 className={styles.title}>Ingredients</h3>
+        </div>
+      )}
+
       <div className={styles.filter__bottom}>
         <ToggleMenu
           setToggle={setToggle}

@@ -4,7 +4,6 @@ import AContainer from "../../../containers/A.container";
 import styles from "./recipeDiscovery.module.scss";
 import SearchTagsComponent from "../../searchtags/searchtags.component";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import FooterRecipeFilter from "../../footer/footerRecipeFilter.component";
 import ShowLastModifiedCollection from "../../showLastModifiedCollection/ShowLastModifiedCollection";
 import RegularRecipes from "./regularRecipes";
 import SEARCH_RECIPE from "../../../gqlLib/recipes/queries/searchRecipe";
@@ -34,6 +33,7 @@ const RecipeDiscovery = () => {
     id: "",
     image: "",
     name: "",
+    versionId: "",
   });
   const [openShareModal, setOpenShareModal] = useState(false);
   const [pageNum, setPageNum] = useState(1);
@@ -53,14 +53,14 @@ const RecipeDiscovery = () => {
       fetchPolicy: "cache-and-network",
     },
   );
-  const [filterRecipe, { loading: filterRecipesLoading }] = useLazyQuery(
-    FILTER_RECIPE,
-    {
-      fetchPolicy: "cache-and-network",
-    },
-  );
+
   const debounceSearchTerm = useDebounce(recipeSearchInput, 500);
-  const handleFilterRecipes = useFetchGetRecipesByBlendAndIngredients();
+  const {
+    handleFilterRecipes,
+    loading: filterRecipesLoading,
+    error,
+    data,
+  } = useFetchGetRecipesByBlendAndIngredients();
   const handleSearchRecipes = useHandleSearchRecipe();
   const { lastModifiedCollection } = useAppSelector(
     (state) => state?.collections,
@@ -78,13 +78,7 @@ const RecipeDiscovery = () => {
   const handleNextPage = () => {
     setPageNum((page) => page + 1);
     if (searchRecipeType === "filter") {
-      handleFilterRecipes(
-        allFilters,
-        filterRecipe,
-        pageNum + 1,
-        dataLimit,
-        false,
-      );
+      handleFilterRecipes(allFilters, pageNum + 1, dataLimit, false);
     }
     if (searchRecipeType === "search") {
       handleSearchRecipes(
@@ -116,7 +110,7 @@ const RecipeDiscovery = () => {
     if (allFilters.length) {
       setSearchRecipeType("filter");
       setPageNum(1);
-      handleFilterRecipes(allFilters, filterRecipe, 1, dataLimit, true);
+      handleFilterRecipes(allFilters, 1, dataLimit, true);
     } else {
       if (recipeSearchInput.length) {
         setSearchRecipeType("search");
@@ -163,7 +157,7 @@ const RecipeDiscovery = () => {
         if (allFilters.length) {
           setSearchRecipeType("filter");
           setPageNum(1);
-          handleFilterRecipes(allFilters, filterRecipe, 1, dataLimit, true);
+          handleFilterRecipes(allFilters, 1, dataLimit, true);
         } else {
           dispatch(updateShowFilterOrSearchRecipes(false));
           dispatch(
@@ -210,14 +204,8 @@ const RecipeDiscovery = () => {
           showTagByDeafult: false,
         }}
       >
-        <div
-          className={styles.main__div}
-          style={{
-            marginLeft: openFilterTray ? "310px" : "0px",
-            transition: "all 0.3s",
-          }}
-        >
-          <div>
+        <div className={styles.main__div}>
+          <div className={openFilterTray ? styles.move : styles.back}>
             <DiscoveryPageSearchBar
               input={recipeSearchInput}
               handleOnChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -228,35 +216,33 @@ const RecipeDiscovery = () => {
             {allFilters?.length ? (
               <SearchTagsComponent allFilters={allFilters} />
             ) : null}
+
+            {showFilterOrSearchRecipes ? (
+              <ShowRecipeContainer
+                data={allFilterRecipes.filterRecipes}
+                loading={filterRecipesLoading || searchRecipeLoading}
+                closeHandler={closeFilterRecipes}
+                showItems="recipe"
+                showDefaultLeftHeader
+                showDefaultMiddleHeader={
+                  allFilterRecipes.filterRecipes.length ? true : false
+                }
+                showDefaultRightHeader
+                hasMore={allFilterRecipes?.totalItems > dataLimit * pageNum}
+                totalDataCount={allFilterRecipes?.totalItems}
+                nextPage={handleNextPage}
+                setOpenCollectionModal={setOpenCollectionModal}
+                setOpenShareModal={setOpenShareModal}
+                setShareRecipeData={setShareRecipeData}
+              />
+            ) : (
+              <RegularRecipes
+                setOpenCollectionModal={setOpenCollectionModal}
+                setOpenShareModal={setOpenShareModal}
+                setShareRecipeData={setShareRecipeData}
+              />
+            )}
           </div>
-          {showFilterOrSearchRecipes ? (
-            <ShowRecipeContainer
-              data={allFilterRecipes.filterRecipes}
-              loading={filterRecipesLoading || searchRecipeLoading}
-              closeHandler={closeFilterRecipes}
-              showItems="recipe"
-              showDefaultLeftHeader
-              showDefaultMiddleHeader={
-                allFilterRecipes.filterRecipes.length ? true : false
-              }
-              showDefaultRightHeader
-              hasMore={allFilterRecipes?.totalItems > dataLimit * pageNum}
-              totalDataCount={allFilterRecipes?.totalItems}
-              nextPage={handleNextPage}
-              setOpenCollectionModal={setOpenCollectionModal}
-              setOpenShareModal={setOpenShareModal}
-              setShareRecipeData={setShareRecipeData}
-            />
-          ) : (
-            <RegularRecipes
-              setOpenCollectionModal={setOpenCollectionModal}
-              setOpenShareModal={setOpenShareModal}
-              setShareRecipeData={setShareRecipeData}
-            />
-          )}
-        </div>
-        <div className={styles.footerMainDiv}>
-          <FooterRecipeFilter />
         </div>
       </AContainer>
       <ShowLastModifiedCollection
@@ -268,6 +254,7 @@ const RecipeDiscovery = () => {
       />
       <ShareRecipe
         id={shareRecipeData?.id}
+        versionId={shareRecipeData.versionId}
         title={shareRecipeData?.name}
         image={shareRecipeData?.image}
         show={openShareModal}

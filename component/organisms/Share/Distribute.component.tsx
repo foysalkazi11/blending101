@@ -1,13 +1,16 @@
-import React, { useEffect } from "react";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
 import {
   faFacebook,
   faPinterest,
+  faSquareTwitter,
   faTwitter,
 } from "@fortawesome/free-brands-svg-icons";
 import {
+  faEnvelope,
   faLinkSimple,
   faShareNodes,
   faUserGroup,
+  faXmark,
 } from "@fortawesome/pro-regular-svg-icons";
 import {
   FacebookShareButton,
@@ -19,10 +22,20 @@ import styles from "./Share.module.scss";
 import CustomModal from "../../../theme/modal/customModal/CustomModal";
 import InviteUserForm from "./InviteUserForm";
 import CircularRotatingLoader from "../../../theme/loader/circularRotatingLoader.component";
+import { InputValueType } from "../../../components/sidetray/common/addCollectionModal/AddCollectionModal";
+import IconWarper from "../../../theme/iconWarper/IconWarper";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import CustomCheckbox from "../../../theme/checkbox/CustomCheckbox";
+
+export interface SharedUserInfoType {
+  email: string;
+  canCollaborate?: boolean;
+  active?: boolean;
+}
 
 interface ShareProps {
   title?: string;
-  type?: "recipe";
+  type?: string;
   image?: string;
   show: boolean;
   setShow: any;
@@ -30,14 +43,26 @@ interface ShareProps {
   generatedLink?: string;
   showMsgField?: boolean;
   setShowMsgField?: React.Dispatch<React.SetStateAction<boolean>>;
-  emails?: string[];
-  setEmails?: React.Dispatch<React.SetStateAction<string[]>>;
+  emails?: SharedUserInfoType[];
+  setEmails?: React.Dispatch<React.SetStateAction<SharedUserInfoType[]>>;
   copyLinkHandler?: (args?: boolean) => Promise<void>;
   onCancel?: () => void;
-  generateShareLink?: (isGlobalShare?: boolean) => void | Promise<string>;
+  generateShareLink?: (
+    isGlobalShare?: boolean,
+    copyLinkAtClipboard?: boolean,
+  ) => void;
   createLinkLoading?: boolean;
   hasCopied?: boolean;
   submitBtnText?: string;
+  isAdditionInfoNeedForPersonalShare?: boolean;
+  createCollectionProps?: {
+    input: InputValueType;
+    setInput: Dispatch<SetStateAction<InputValueType>>;
+    showCreateCollectionComponents: boolean;
+  };
+  message?: string;
+  setMessage?: Dispatch<SetStateAction<string>>;
+  sharedUserEmail?: string;
 }
 
 const Share = (props: ShareProps) => {
@@ -59,6 +84,11 @@ const Share = (props: ShareProps) => {
     hasCopied = false,
     onCancel = () => {},
     submitBtnText = "Share",
+    isAdditionInfoNeedForPersonalShare = false,
+    createCollectionProps,
+    message = "",
+    setMessage = () => {},
+    sharedUserEmail = "",
   } = props;
 
   useEffect(() => {
@@ -70,13 +100,26 @@ const Share = (props: ShareProps) => {
     <CustomModal open={show} setOpen={setShow}>
       <div className={styles.share}>
         <div className={styles.share__header}>
-          <Icon fontName={faShareNodes} size="2.5rem" />
-          <h3>{heading}</h3>
+          <div className={styles.leftSide}>
+            <Icon fontName={faShareNodes} size="2.5rem" />
+            <h3>{heading}</h3>
+          </div>
+          <IconWarper
+            iconColor="iconColorWhite"
+            defaultBg="primary"
+            hover="bgPrimary"
+            style={{ width: "24px", height: "24px" }}
+            handleClick={() => setShow(false)}
+          >
+            <FontAwesomeIcon icon={faXmark} />
+          </IconWarper>
         </div>
-        <div className={styles.share__title}>
-          <img src={image || "/cards/coriander.png"} alt="" />
-          <h3>{title}</h3>
-        </div>
+        {!image && !title ? null : (
+          <div className={styles.share__title}>
+            {image && <img src={image} alt="" />}
+            <h3>{title}</h3>
+          </div>
+        )}
         {showMsgField ? (
           <InviteUserForm
             emails={emails}
@@ -85,6 +128,13 @@ const Share = (props: ShareProps) => {
             handleInvitation={() => copyLinkHandler(false)}
             submitBtnText={submitBtnText}
             loading={createLinkLoading}
+            isAdditionInfoNeedForPersonalShare={
+              isAdditionInfoNeedForPersonalShare
+            }
+            createCollectionProps={createCollectionProps}
+            message={message}
+            setMessage={setMessage}
+            sharedUserEmail={sharedUserEmail}
           />
         ) : (
           <div className="d-flex">
@@ -93,8 +143,8 @@ const Share = (props: ShareProps) => {
               className={styles.share__link_btn}
               onClick={() => setShowMsgField(true)}
             >
-              <Icon fontName={faUserGroup} size="2rem" className="mr-10" />
-              <p style={{ flexShrink: 0 }}>Find users</p>
+              <Icon fontName={faEnvelope} size="2rem" className="mr-10" />
+              <p style={{ flexShrink: 0 }}>Email Link</p>
             </button>
             <SharePanel
               link={generatedLink}
@@ -105,6 +155,22 @@ const Share = (props: ShareProps) => {
             />
           </div>
         )}
+
+        <div className={styles.checkBoxContainer} style={{ marginTop: "20px" }}>
+          <CustomCheckbox
+            // checked={activeEmailInfo?.canCollaborate}
+            // handleChange={(e) =>
+            //   toggleActiveEmail({
+            //     ...activeEmailInfo,
+            //     canCollaborate: !activeEmailInfo?.canCollaborate,
+            //   })
+            // }
+            id="shareOtherVersions"
+          />
+          <label className={styles.label} htmlFor="shareOtherVersions">
+            Share Other Versions
+          </label>
+        </div>
       </div>
     </CustomModal>
   );
@@ -113,7 +179,7 @@ const Share = (props: ShareProps) => {
 interface SharePanelProps {
   link?: string;
   copyLinkHandler?: (value?: boolean) => Promise<void>;
-  generateShareLink?: (value?: boolean) => any;
+  generateShareLink?: (value?: boolean, copyLinkAtClipboard?: boolean) => any;
   hasCopied?: boolean;
   loading?: boolean;
 }
@@ -126,7 +192,7 @@ const SharePanel = (props: SharePanelProps) => {
       <button
         // disabled={hasCopied}
         className={styles.share__link_btn}
-        onClick={() => copyLinkHandler()}
+        onClick={() => copyLinkHandler(true)}
       >
         {loading ? (
           <CircularRotatingLoader
@@ -145,7 +211,7 @@ const SharePanel = (props: SharePanelProps) => {
           url={link || "http://blending101.com/"}
           quote={"This is quote"}
           hashtag="#Branding"
-          beforeOnClick={generateShareLink}
+          beforeOnClick={() => generateShareLink(true, false)}
           className={styles["share__social--facebook"]}
         >
           <Icon fontName={faFacebook} size="3.5rem" className="mr-10" />
@@ -156,16 +222,16 @@ const SharePanel = (props: SharePanelProps) => {
           hashtags={["Branding"]}
           via="http://blending101.com/"
           className={styles["share__social--twitter"]}
-          beforeOnClick={() => generateShareLink()}
+          beforeOnClick={() => generateShareLink(true, false)}
         >
-          <Icon fontName={faTwitter} size="3.5rem" className="mr-10" />
+          <Icon fontName={faSquareTwitter} size="3.5rem" className="mr-10" />
         </TwitterShareButton>
         <PinterestShareButton
           media="https://blending101.com/Blend_Formula.png"
           url={link || "http://blending101.com/"}
           description="Hello World"
           className={styles["share__social--pinterest"]}
-          beforeOnClick={() => generateShareLink()}
+          beforeOnClick={() => generateShareLink(true, false)}
         >
           <Icon fontName={faPinterest} size="3.5rem" className="mr-10" />
         </PinterestShareButton>

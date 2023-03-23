@@ -30,45 +30,50 @@ const useForAddToCollection = () => {
     recipeId: string,
     setOpenCollectionModal: Dispatch<SetStateAction<boolean>>,
     e: React.SyntheticEvent,
-    setcompareRecipeList?: (state: any) => void,
+    updateDataFunc: (
+      id: string,
+      obj: { [key: string]: any },
+    ) => void = () => {},
   ) => {
     e.stopPropagation();
     dispatch(setActiveRecipeId(recipeId));
     dispatch(setOpenCollectionsTary(false));
     const variablesData = {
       recipe: recipeId,
-      userEmail: dbUser?.email,
+      userId: dbUser?._id,
     };
 
     try {
-      await addNewRecipeToCollection({
+      const { data } = await addNewRecipeToCollection({
         variables: {
           data: variablesData,
         },
       });
 
-      const { data: lastModified } = await getLastModifiedCollection({
-        variables: {
-          userEmail: dbUser?.email,
-        },
-      });
+      // const { data: lastModified } = await getLastModifiedCollection({
+      //   variables: {
+      //     userEmail: dbUser?.email,
+      //   },
+      // });
+      const { _id = "", name = "" } = data?.addTolastModifiedCollection;
       dispatch(
         setLastModifiedCollection({
-          id: lastModified?.getLastModifieldCollection?._id,
-          name: lastModified?.getLastModifieldCollection?.name,
+          id: _id,
+          name: name,
         }),
       );
 
       const obj = {
-        userCollections: [lastModified?.getLastModifieldCollection?._id],
+        userCollections: [data?.addTolastModifiedCollection?._id],
       };
-      updateRecipe(recipeId, obj);
-      dispatch(setCompareList(updateRecipeFunc(compareList, obj, recipeId)));
-      if (typeof setcompareRecipeList === "function") {
-        setcompareRecipeList((state = []) =>
-          updateRecipeFunc(state, obj, recipeId),
-        );
-      }
+      updateDataFunc(recipeId, obj);
+      // updateRecipe(recipeId, obj);
+      // dispatch(setCompareList(updateRecipeFunc(compareList, obj, recipeId)));
+      // if (typeof setcompareRecipeList === "function") {
+      //   setcompareRecipeList((state = []) =>
+      //     updateRecipeFunc(state, obj, recipeId),
+      //   );
+      // }
 
       setOpenCollectionModal(true);
       timeOut = setTimeout(() => {
@@ -77,8 +82,7 @@ const useForAddToCollection = () => {
       // reactToastifyNotification("info", `Successfully added to new collection`);
     } catch (error) {
       // updateRecipe(recipeId, { userCollections: null });
-      notification("error", error?.message);
-      console.log(error);
+      notification("error", error?.message || "Added to collection failed");
     }
   };
 

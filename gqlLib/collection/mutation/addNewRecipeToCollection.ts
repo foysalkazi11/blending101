@@ -7,15 +7,6 @@ const ADD_NEW_RECIPE_TO_COLLECTION = gql`
     addTolastModifiedCollection(data: $data) {
       _id
       name
-      image
-      recipes {
-        image {
-          default
-          image
-        }
-        name
-        _id
-      }
     }
   }
 `;

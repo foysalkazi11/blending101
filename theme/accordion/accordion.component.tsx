@@ -4,23 +4,35 @@ import { IoIosArrowForward } from "react-icons/io";
 import styles from "./accordion.module.scss";
 
 type CustomAccordionProps = {
-  title: string;
-  children: React.ReactNode;
+  title?: string;
   iconRight?: boolean;
   style?: React.CSSProperties;
+  customHeader?: (
+    arg: boolean,
+    setExpanded: (arg: boolean) => void,
+  ) => React.ReactNode | string;
+  expandByDefault?: boolean;
 };
 
-const CustomAccordion = ({
+const CustomAccordion: React.FC<CustomAccordionProps> = ({
   title,
   children,
   iconRight = false,
   style = {},
-}: CustomAccordionProps) => {
+  customHeader = () => {},
+  expandByDefault = false,
+}) => {
   const [expanded, setExpanded] = useState<boolean>(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState<number | undefined>(
     expanded ? undefined : 0,
   );
+
+  useEffect(() => {
+    if (expandByDefault) {
+      setExpanded(expandByDefault);
+    }
+  }, [expandByDefault]);
 
   // useEffect(() => {
   //   if (contentRef.current) {
@@ -63,24 +75,25 @@ const CustomAccordion = ({
           </div>
         </div>
       ) : (
-        <div className={`${styles.accordionSummary}`}>
-          {expanded ? (
-            <FiMinusSquare
-              className={styles.icon}
-              onClick={() => {
-                setExpanded(!expanded);
-              }}
-            />
-          ) : (
-            <FiPlusSquare
-              className={styles.icon}
-              onClick={() => {
-                setExpanded(!expanded);
-              }}
-            />
-          )}
-          <h5 className={styles.title}>{title}</h5>
-        </div>
+        // <div className={`${styles.accordionSummary}`}>
+        //   <h5 className={styles.title}>{title}</h5>
+        //   {expanded ? (
+        //     <FiMinusSquare
+        //       className={styles.icon}
+        //       onClick={() => {
+        //         setExpanded(!expanded);
+        //       }}
+        //     />
+        //   ) : (
+        //     <FiPlusSquare
+        //       className={styles.icon}
+        //       onClick={() => {
+        //         setExpanded(!expanded);
+        //       }}
+        //     />
+        //   )}
+        // </div>
+        customHeader(expanded, (arg: boolean) => setExpanded(!arg))
       )}
       <div className={styles.contentParent} style={{ height }}>
         <div ref={contentRef as React.RefObject<HTMLDivElement>}>

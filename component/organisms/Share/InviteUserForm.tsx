@@ -9,19 +9,38 @@ import React, {
   Dispatch,
   useEffect,
 } from "react";
+import AddCollectionModal, {
+  InputValueType,
+} from "../../../components/sidetray/common/addCollectionModal/AddCollectionModal";
+import slugStringGenerator from "../../../components/utility/slugStringGenerator";
 import { GET_ALL_USER_LIST } from "../../../graphql/User";
+import formatDate from "../../../helperFunc/date/formatDate";
+import CustomAccordion from "../../../theme/accordion/accordion.component";
+import CustomCheckbox from "../../../theme/checkbox/CustomCheckbox";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
+import InputComponent from "../../../theme/input/input.component";
 import CircularRotatingLoader from "../../../theme/loader/circularRotatingLoader.component";
+import TextArea from "../../../theme/textArea/TextArea";
 import Textarea from "../Forms/Textarea.component";
+import { SharedUserInfoType } from "./Distribute.component";
 import styles from "./Share.module.scss";
 
 interface Props {
   handleInvitation?: () => void;
   handleCancel?: () => void;
-  emails?: string[];
-  setEmails?: Dispatch<SetStateAction<string[]>>;
+  emails?: SharedUserInfoType[];
+  setEmails?: Dispatch<SetStateAction<SharedUserInfoType[]>>;
   submitBtnText?: string;
   loading?: boolean;
+  isAdditionInfoNeedForPersonalShare?: boolean;
+  createCollectionProps?: {
+    input: InputValueType;
+    setInput: Dispatch<SetStateAction<InputValueType>>;
+    showCreateCollectionComponents: boolean;
+  };
+  message?: string;
+  setMessage?: Dispatch<SetStateAction<string>>;
+  sharedUserEmail?: string;
 }
 
 const InviteUserForm = ({
@@ -31,12 +50,51 @@ const InviteUserForm = ({
   setEmails = () => {},
   submitBtnText = "Invite",
   loading = false,
+  isAdditionInfoNeedForPersonalShare = false,
+  createCollectionProps = {
+    input: {
+      description: "",
+      name: "",
+      slug: "",
+      image: "",
+    },
+    setInput: () => {},
+    showCreateCollectionComponents: false,
+  },
+  message = "",
+  setMessage = () => {},
+  sharedUserEmail = "",
 }: Props) => {
   const { data } = useQuery(GET_ALL_USER_LIST);
   const inputRef = useRef<HTMLInputElement>(null);
+  const collectionNameInputRef = useRef<HTMLInputElement>(null);
   const [showSuggestion, setShowSuggestion] = useState(false);
   const [input, setInput] = useState("");
   const hasEmails = emails.length > 0;
+  const {
+    showCreateCollectionComponents = false,
+    input: createCollectionInput,
+    setInput: setCreateCollectionInput,
+  } = createCollectionProps;
+
+  // create collection input change
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value, type } = e?.target;
+
+    if (name === "name") {
+      const convertToSlug = slugStringGenerator(value);
+      setCreateCollectionInput((pre) => ({
+        ...pre,
+        name: value,
+        slug: convertToSlug,
+      }));
+    } else {
+      setCreateCollectionInput((pre) => ({ ...pre, [name]: value }));
+    }
+  };
 
   const onInputFocus = () => {
     if (inputRef.current) {
@@ -68,7 +126,10 @@ const InviteUserForm = ({
         )
       )
         return;
-      setEmails([...emails, email]);
+      setEmails((prevEmails) => [
+        ...prevEmails?.map((info) => ({ ...info, active: false })),
+        { email, canCollaborate: false, canShareAgain: false, active: true },
+      ]);
       setInput("");
     }
   };
@@ -79,7 +140,7 @@ const InviteUserForm = ({
       users =
         data?.getAllusers.filter(
           (user) =>
-            !emails.includes(user.email) &&
+            !emails?.map((el) => el?.email).includes(user.email) &&
             (user.displayName as string)
               ?.toLowerCase()
               .startsWith(input.toLowerCase()),
@@ -90,18 +151,56 @@ const InviteUserForm = ({
     return users;
   }, [data?.getAllusers, emails, input]);
 
+  const activeEmailInfo = useMemo(() => {
+    return emails.find((info) => info.active);
+  }, [emails]);
+
   const handleFilterEmail = (emailProps: string) => {
-    setEmails((emails) => emails.filter((email) => email !== emailProps));
+    setEmails((emails) => emails.filter((email) => email.email !== emailProps));
+  };
+
+  const handleAddNewEmail = (info: SharedUserInfoType) => {
+    setEmails((prevEmails) => [
+      ...prevEmails?.map((info) => ({ ...info, active: false })),
+      info,
+    ]);
+    setShowSuggestion(false);
+    setInput("");
+  };
+
+  const toggleActiveEmail = (sharedPersonInfo: SharedUserInfoType) => {
+    setEmails((prevEmails) => [
+      ...prevEmails?.map((info) =>
+        info?.email === sharedPersonInfo.email
+          ? { ...info, ...sharedPersonInfo }
+          : { ...info, active: false },
+      ),
+    ]);
   };
 
   useEffect(() => {
     setEmails([]);
-    setInput;
+    setInput("");
+    collectionNameInputRef?.current && collectionNameInputRef.current.focus();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
+      {showCreateCollectionComponents && (
+        <div style={{ margin: "10px 0" }}>
+          <InputComponent
+            borderSecondary={true}
+            placeholder="Collection Name"
+            value={createCollectionInput?.name}
+            name="name"
+            onChange={handleChange}
+            style={{ fontSize: "12px" }}
+            ref={collectionNameInputRef}
+          />
+        </div>
+      )}
       <div
         ref={inputRef}
         className={styles.email}
@@ -110,8 +209,22 @@ const InviteUserForm = ({
         onBlur={onInputBlur}
       >
         {emails.map((email) => (
-          <span className={styles.email__address} key={email}>
-            {email}
+          <span
+            className={`${styles.email__address} ${
+              isAdditionInfoNeedForPersonalShare && email?.active
+                ? styles.activeEmail
+                : ""
+            } ${
+              isAdditionInfoNeedForPersonalShare && email.canCollaborate
+                ? styles.collaborationAccessEmail
+                : ""
+            }`}
+            key={email?.email}
+            onClick={() =>
+              toggleActiveEmail({ ...email, active: !email?.active })
+            }
+          >
+            {email?.email}
             <div className={styles.closeBtn}>
               <IconWarper
                 defaultBg="primary"
@@ -120,22 +233,24 @@ const InviteUserForm = ({
                   height: "16px",
                 }}
                 iconColor="iconColorWhite"
-                handleClick={() => handleFilterEmail(email)}
+                handleClick={() => handleFilterEmail(email?.email)}
               >
                 <FontAwesomeIcon icon={faXmark} fontSize="10px" />
               </IconWarper>
             </div>
           </span>
         ))}
+
         <input
           type="email"
           value={input}
-          placeholder={!hasEmails ? "Enter Name or Email" : ""}
+          placeholder={!hasEmails ? "Search or enter email" : ""}
           className={styles.email__input}
           onFocus={onInputFocus}
           onChange={onInputChange}
           onKeyDown={onAddEmail}
         />
+
         {showSuggestion && (
           <div className={styles.email__suggestion}>
             <h6>Select a Person</h6>
@@ -144,11 +259,16 @@ const InviteUserForm = ({
                 return (
                   <li
                     key={user?.email}
-                    onClick={() => {
-                      setEmails([...emails, user?.email]);
-                      setShowSuggestion(false);
-                      setInput("");
-                    }}
+                    onClick={() =>
+                      handleAddNewEmail({
+                        email: user?.email,
+                        canCollaborate: false,
+                        active: true,
+                      })
+                    }
+                    className={
+                      user?.email === sharedUserEmail ? styles.disableEmail : ""
+                    }
                   >
                     <span>{user?.displayName?.charAt(0)}</span>
                     {user?.displayName}
@@ -159,11 +279,39 @@ const InviteUserForm = ({
           </div>
         )}
       </div>
+
+      <div
+        className={`${styles.activeEmailInfoContainer} ${
+          isAdditionInfoNeedForPersonalShare && activeEmailInfo?.active
+            ? styles.showInfo
+            : ""
+        }`}
+      >
+        <div className={styles.checkBoxContainer}>
+          <CustomCheckbox
+            checked={activeEmailInfo?.canCollaborate}
+            handleChange={(e) =>
+              toggleActiveEmail({
+                ...activeEmailInfo,
+                canCollaborate: !activeEmailInfo?.canCollaborate,
+              })
+            }
+            id="canCollaborate"
+          />
+          <label className={styles.label} htmlFor="canCollaborate">
+            Collaborate
+          </label>
+        </div>
+      </div>
+
       <Textarea
         name="message"
         placeholder="Enter Message"
         className={styles.share__message}
+        value={message}
+        onChange={(e) => setMessage(e?.target?.value)}
       />
+
       <div className={styles.share__button_wraper}>
         <button
           className={`${styles.share__button} ${styles["share__button--save"]} mr-30`}
