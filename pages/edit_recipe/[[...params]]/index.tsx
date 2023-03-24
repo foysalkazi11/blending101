@@ -281,7 +281,10 @@ const EditRecipeComponent = () => {
       },
     );
     dispatch(setSelectedIngredientsList(presentIngredient));
-  }, [ingredientCategoryData?.filterIngredientByCategoryAndClass]);
+  }, [
+    ingredientCategoryData?.filterIngredientByCategoryAndClass,
+    detailsARecipe?.tempVersionInfo?.version,
+  ]);
 
   useEffect(() => {
     if (!detailsARecipe) return;
@@ -291,7 +294,7 @@ const EditRecipeComponent = () => {
     setExistingImages(
       detailsARecipe?.recipeId?.image?.map((item) => `${item?.image}`),
     );
-  }, []);
+  }, [detailsARecipe?.tempVersionInfo?.version]);
 
   useEffect(() => {
     dispatch(setOpenVersionTray(false));

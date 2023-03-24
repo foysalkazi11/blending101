@@ -137,7 +137,8 @@ const IngredientDetails = (props: IngredientDetailsProps) => {
           <p>Volume : </p>
           <span>
             {Math.round(
-              parseInt(`${recipeData?.defaultVersion?.servingSize}`) * counter,
+              parseInt(`${recipeData?.tempVersionInfo?.version?.servingSize}`) *
+                counter,
             )}{" "}
             0z
           </span>
@@ -148,114 +149,117 @@ const IngredientDetails = (props: IngredientDetailsProps) => {
         </div>
       </div>
       <div className={styles.ingredentDisContainer}>
-        {recipeData?.defaultVersion?.ingredients?.map((ingredient, index) => {
-          const addedToCart = groceries.some(
-            (grocery) =>
-              grocery?.ingredientId?._id === ingredient?.ingredientId?._id,
-          );
-          return (
-            <div
-              className={styles.singleIngredent}
-              key={ingredient?.ingredientId?._id || index}
-            >
-              <div className={styles.leftSide}>
-                {ingredient?.ingredientId?.featuredImage ||
-                ingredient?.ingredientId?.images?.length ? (
-                  <img
-                    src={
-                      ingredient?.ingredientId?.featuredImage ||
-                      ingredient?.ingredientId?.images[0]
-                    }
-                    alt="icon"
-                  />
-                ) : (
-                  <img src="/images/5-2-avocado-png-hd.png" alt="icon" />
-                )}
+        {recipeData?.tempVersionInfo?.version?.ingredients?.map(
+          (ingredient, index) => {
+            const addedToCart = groceries.some(
+              (grocery) =>
+                grocery?.ingredientId?._id === ingredient?.ingredientId?._id,
+            );
+            return (
+              <div
+                className={styles.singleIngredent}
+                key={ingredient?.ingredientId?._id || index}
+              >
+                <div className={styles.leftSide}>
+                  {ingredient?.ingredientId?.featuredImage ||
+                  ingredient?.ingredientId?.images?.length ? (
+                    <img
+                      src={
+                        ingredient?.ingredientId?.featuredImage ||
+                        ingredient?.ingredientId?.images[0]
+                      }
+                      alt="icon"
+                    />
+                  ) : (
+                    <img src="/images/5-2-avocado-png-hd.png" alt="icon" />
+                  )}
 
-                <div>
-                  {`${
-                    Math?.round(ingredient?.selectedPortion?.quantity) * counter
-                  }
+                  <div>
+                    {`${
+                      Math?.round(ingredient?.selectedPortion?.quantity) *
+                      counter
+                    }
                   ${ingredient.selectedPortion?.name} `}
-                  {ingredient?.ingredientId?._id ===
-                  nutritionState?.ingredientId?._id ? (
-                    <span
-                      className={styles.leftSide__highlighted}
+                    {ingredient?.ingredientId?._id ===
+                    nutritionState?.ingredientId?._id ? (
+                      <span
+                        className={styles.leftSide__highlighted}
+                        style={{ color: "#fe5d1f" }}
+                        onClick={() => {
+                          window.scrollBy(0, 0);
+                          setNutritionState({});
+                        }}
+                      >
+                        {ingredient?.ingredientId?.ingredientName}
+                      </span>
+                    ) : (
+                      <span
+                        className={styles.leftSide__highlighted}
+                        onClick={() => {
+                          window.scrollBy(0, 0);
+                          setNutritionState(ingredient);
+                        }}
+                      >
+                        {ingredient?.ingredientId?.ingredientName}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                {ingredient?.ingredientId?._id ===
+                nutritionState?.ingredientId?._id ? (
+                  <div className={styles.iconGroup} style={{ display: "flex" }}>
+                    <MdOutlineInfo
+                      className={styles.icon}
+                      onClick={() =>
+                        setIngredientId(ingredient?.ingredientId?._id)
+                      }
+                    />
+
+                    <BiBarChart
                       style={{ color: "#fe5d1f" }}
+                      className={styles.icon}
                       onClick={() => {
-                        window.scrollBy(0, 0);
                         setNutritionState({});
                       }}
-                    >
-                      {ingredient?.ingredientId?.ingredientName}
-                    </span>
-                  ) : (
-                    <span
-                      className={styles.leftSide__highlighted}
+                    />
+                    <BsCartPlus
+                      className={styles.icon}
+                      onClick={() => addToCartHandler(ingredient)}
+                    />
+                  </div>
+                ) : (
+                  <div className={styles.iconGroup}>
+                    <MdOutlineInfo
+                      className={styles.icon}
+                      onClick={() =>
+                        setIngredientId(ingredient?.ingredientId?._id)
+                      }
+                    />
+
+                    <BiBarChart
+                      className={styles.icon}
                       onClick={() => {
                         window.scrollBy(0, 0);
                         setNutritionState(ingredient);
                       }}
-                    >
-                      {ingredient?.ingredientId?.ingredientName}
-                    </span>
-                  )}
-                </div>
+                    />
+
+                    <BsCartPlus
+                      className={`${styles.icon} ${
+                        addedToCart ? styles["icon--active"] : ""
+                      }`}
+                      onClick={() =>
+                        addedToCart
+                          ? removeFromCartHandler(ingredient)
+                          : addToCartHandler(ingredient)
+                      }
+                    />
+                  </div>
+                )}
               </div>
-              {ingredient?.ingredientId?._id ===
-              nutritionState?.ingredientId?._id ? (
-                <div className={styles.iconGroup} style={{ display: "flex" }}>
-                  <MdOutlineInfo
-                    className={styles.icon}
-                    onClick={() =>
-                      setIngredientId(ingredient?.ingredientId?._id)
-                    }
-                  />
-
-                  <BiBarChart
-                    style={{ color: "#fe5d1f" }}
-                    className={styles.icon}
-                    onClick={() => {
-                      setNutritionState({});
-                    }}
-                  />
-                  <BsCartPlus
-                    className={styles.icon}
-                    onClick={() => addToCartHandler(ingredient)}
-                  />
-                </div>
-              ) : (
-                <div className={styles.iconGroup}>
-                  <MdOutlineInfo
-                    className={styles.icon}
-                    onClick={() =>
-                      setIngredientId(ingredient?.ingredientId?._id)
-                    }
-                  />
-
-                  <BiBarChart
-                    className={styles.icon}
-                    onClick={() => {
-                      window.scrollBy(0, 0);
-                      setNutritionState(ingredient);
-                    }}
-                  />
-
-                  <BsCartPlus
-                    className={`${styles.icon} ${
-                      addedToCart ? styles["icon--active"] : ""
-                    }`}
-                    onClick={() =>
-                      addedToCart
-                        ? removeFromCartHandler(ingredient)
-                        : addToCartHandler(ingredient)
-                    }
-                  />
-                </div>
-              )}
-            </div>
-          );
-        })}
+            );
+          },
+        )}
       </div>
     </div>
   );
