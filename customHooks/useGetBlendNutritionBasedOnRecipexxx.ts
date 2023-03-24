@@ -1,5 +1,5 @@
 import { useLazyQuery } from "@apollo/client";
-import { Dispatch, SetStateAction, useEffect, useCallback } from "react";
+import { Dispatch, SetStateAction } from "react";
 import notification from "../components/utility/reactToastifyNotification";
 import GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS from "../gqlLib/nutrition/query/getNutrientsListAndGiGlByIngredients";
 
@@ -45,8 +45,8 @@ const useGetBlendNutritionBasedOnRecipexxx = () => {
       } else {
         const data = [
           ...selectedIngredientsList?.map((item) => ({
-            ingredientId: item.ingredientId._id,
-            value: item?.selectedPortion?.gram,
+            ingredientId: item?.ingredientId?._id,
+            value: parseFloat(item?.selectedPortion?.gram),
           })),
         ];
         fetchData(data);

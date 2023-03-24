@@ -57,18 +57,6 @@ const IngredientList = ({
     dispatch(setSelectedIngredientsList(updated_list));
   };
 
-  const recipeIngredientsOnInput = (e) => {
-    setInputIngredientValue(e.target.value);
-    const foundIngredient = allIngredients?.filter((elem) => {
-      return elem?.ingredientName
-        ?.toLowerCase()
-        ?.includes(inputIngredientValue?.toLowerCase());
-    });
-    setSuggestedIngredients(foundIngredient);
-    if (e.target.value.length === 0) {
-      setSuggestedIngredients([]);
-    }
-  };
   const recipeIngredientsOnKeyDown = (e) => {
     let modifiedArray = [];
 
@@ -84,14 +72,6 @@ const IngredientList = ({
       setInputIngredientValue("");
       setSuggestedIngredients([]);
     }
-  };
-
-  const selectIngredientOnClick = (elem) => {
-    let modifiedArray = [];
-    modifiedArray = Array.from(new Set([...selectedIngredientsList, elem]));
-    dispatch(setSelectedIngredientsList([...modifiedArray]));
-    setInputIngredientValue("");
-    setSuggestedIngredients([]);
   };
 
   const howToState = useAppSelector(

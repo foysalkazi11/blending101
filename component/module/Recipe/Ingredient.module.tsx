@@ -383,6 +383,12 @@ const AddToCartForm = (props) => {
         quantity: data?.quantity,
         gram: parseInt(portion?.meausermentWeight),
       },
+      ingredientId: {
+        _id: ingredient?._id,
+        ingredientName: ingredient?.ingredientName,
+        featuredImage: ingredient?.featuredImage,
+        images: ingredient?.images,
+      },
     };
     dispatch(setRecipeIngredients(value));
     onReset();
