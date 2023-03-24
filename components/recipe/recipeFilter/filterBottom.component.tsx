@@ -174,6 +174,7 @@ function FilterPageBottom({ allFilters = [] }: Props) {
             nutrientFilters: nutrientFiltersMap,
             nutrientMatrix: nutrientMatrixMap,
           },
+          userId: dbUser?._id,
         },
       });
 
