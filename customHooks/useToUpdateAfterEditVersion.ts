@@ -12,6 +12,7 @@ const useToUpdateAfterEditVersion = () => {
     updatedVersionData: VersionDataType,
     returnObj: { isNew: boolean; status: string },
     isOriginalVersion: boolean = false,
+    originalRecipeUpdatedData = {},
   ) => {
     const { isNew, status } = returnObj;
     const updateRecipeVersionObj = isNew
@@ -41,6 +42,7 @@ const useToUpdateAfterEditVersion = () => {
             ),
         recipeId: {
           ...detailsARecipe?.recipeId,
+          ...originalRecipeUpdatedData,
           originalVersion: isOriginalVersion
             ? {
                 ...detailsARecipe?.recipeId?.originalVersion,
@@ -55,6 +57,18 @@ const useToUpdateAfterEditVersion = () => {
                 ...updateRecipeVersionObj,
               }
             : detailsARecipe?.defaultVersion,
+        tempVersionInfo:
+          detailsARecipe?.tempVersionInfo?.version?._id === versionId
+            ? {
+                ...detailsARecipe?.tempVersionInfo,
+                isOriginalVersion,
+                isShareAble: turnedOn,
+                version: {
+                  ...detailsARecipe?.tempVersionInfo?.version,
+                  ...updateRecipeVersionObj,
+                },
+              }
+            : detailsARecipe?.tempVersionInfo,
       }),
     );
 

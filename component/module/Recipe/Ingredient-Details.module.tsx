@@ -148,15 +148,15 @@ const IngredientDetails = (props: IngredientDetailsProps) => {
         </div>
       </div>
       <div className={styles.ingredentDisContainer}>
-        {recipeData?.defaultVersion?.ingredients?.map((ingredient) => {
+        {recipeData?.defaultVersion?.ingredients?.map((ingredient, index) => {
           const addedToCart = groceries.some(
             (grocery) =>
-              grocery.ingredientId._id === ingredient?.ingredientId._id,
+              grocery?.ingredientId?._id === ingredient?.ingredientId?._id,
           );
           return (
             <div
               className={styles.singleIngredent}
-              key={ingredient?.ingredientId._id}
+              key={ingredient?.ingredientId?._id || index}
             >
               <div className={styles.leftSide}>
                 {ingredient?.ingredientId?.featuredImage ||
@@ -176,7 +176,7 @@ const IngredientDetails = (props: IngredientDetailsProps) => {
                   {`${
                     Math?.round(ingredient?.selectedPortion?.quantity) * counter
                   }
-                  ${ingredient.selectedPortion.name} `}
+                  ${ingredient.selectedPortion?.name} `}
                   {ingredient?.ingredientId?._id ===
                   nutritionState?.ingredientId?._id ? (
                     <span
