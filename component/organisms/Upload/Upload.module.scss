@@ -1,12 +1,12 @@
-@import '../../../styles/variables';
-@import '../../../styles/mixins';
+@import "../../../styles/variables";
+@import "../../../styles/mixins";
 
 .label {
   margin-top: 1.2rem;
   margin-bottom: 1rem;
   display: block;
   &.required:after {
-    content: '*';
+    content: "*";
     color: $red;
     margin-left: 0.3rem;
   }
@@ -33,7 +33,7 @@
   figure {
     position: relative;
     &::before {
-      content: '';
+      content: "";
       display: table;
       width: 100%;
       padding-top: 100%;

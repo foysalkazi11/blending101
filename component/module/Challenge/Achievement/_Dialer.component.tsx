@@ -18,13 +18,14 @@ import "react-datepicker/dist/react-datepicker.css";
 import Tooltip from "../../../../theme/toolTip/CustomToolTip";
 
 interface MainInterface {
+  canUpload: boolean;
   statistics: any;
   activities: any[];
 }
 
 type ILabel = "Total Days" | "Days Completed" | "Days Remaining";
 
-function Main({ activities, statistics }: MainInterface) {
+function Main({ canUpload, activities, statistics }: MainInterface) {
   const [label, setLabel] = useState<ILabel>("Days Completed");
 
   const dispatch = useAppDispatch();
@@ -35,6 +36,7 @@ function Main({ activities, statistics }: MainInterface) {
   const hasChallengeEnded = isAfter(today, end);
 
   const onDateDblClick = (date) => {
+    if (!canUpload) return;
     dispatch(setShowPostForm(true));
     dispatch(
       setChallengePost({

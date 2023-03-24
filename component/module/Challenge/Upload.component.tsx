@@ -1,11 +1,7 @@
-import React, { useState, useMemo, useEffect } from "react";
-import { ApolloCache, useMutation, useQuery } from "@apollo/client";
-import {
-  faPlus,
-  faTimes,
-  faChartSimple,
-} from "@fortawesome/pro-solid-svg-icons";
-import { FormProvider, useForm } from "react-hook-form";
+import React, { useState, useMemo } from "react";
+import { useQuery } from "@apollo/client";
+import { faTimes, faChartSimple } from "@fortawesome/pro-solid-svg-icons";
+import { FormProvider } from "react-hook-form";
 
 import { GET_INGREDIENTS } from "../../../graphql/Ingredients";
 import { GET_BLEND_CATEGORY } from "../../../graphql/Recipe";
@@ -17,14 +13,8 @@ import Textarea from "../../organisms/Forms/Textarea.component";
 import Textfield from "../../organisms/Forms/Textfield.component";
 import Upload from "../../organisms/Upload/Upload.component";
 import styles from "./Upload.module.scss";
-import {
-  CREATE_CHALLENGE_POST,
-  EDIT_CHALLENGE_POST,
-  GET_30DAYS_CHALLENGE,
-} from "../../../graphql/Challenge";
 import Publish from "../../../helpers/Publish";
 import { ActionButton } from "../../atoms/Button/Button.component";
-import { format } from "date-fns";
 import {
   addIngredient,
   deleteIngredient,
@@ -32,86 +22,34 @@ import {
   resetForm,
 } from "../../../redux/slices/Challenge.slice";
 import { setShowPanel } from "../../../redux/slices/Ui.slice";
-import client from "../../../gqlLib/client";
-
-const defaultValues = {
-  category: "",
-  assignDate: format(new Date(), "yyyy-MM-dd"),
-  recipeTitle: "",
-  note: "",
-};
+import useImage from "../../../hooks/useImage";
+import {
+  useAddChallengePost,
+  useChallengeForm,
+} from "../../../hooks/modules/Challenge";
 
 const UploadCard = () => {
-  const [images, setImages] = useState([]);
+  const { images, setImages, postImages: uploadImages } = useImage([]);
   const [serving, setServing] = useState(1);
 
-  const methods = useForm({
-    defaultValues: useMemo(() => defaultValues, []),
-  });
+  console.log(images);
 
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
-  const {
-    isEditMode,
-    id,
-    docId,
-    title,
-    images: postImages,
-    ingredients,
-    category,
-    startDate,
-    notes,
-  } = useAppSelector((state) => state.challenge.post);
   const panelList = useAppSelector((state) => state.ui.panel);
   const panel = panelList.find((panel) => panel.name === "RXPanel");
+  const { isEditMode, id, docId, title, ingredients } = useAppSelector(
+    (state) => state.challenge.post,
+  );
 
   const { data } = useQuery(GET_BLEND_CATEGORY);
-  const [addPost, addState] = useMutation(CREATE_CHALLENGE_POST, {
-    update(cache, { data: { createChallengePost } }) {
-      update30DaysChallenge(cache, createChallengePost);
-    },
-  });
-  const [editPost, editState] = useMutation(EDIT_CHALLENGE_POST, {
-    update(cache, { data: { editAChallengePost } }) {
-      update30DaysChallenge(cache, editAChallengePost);
-    },
-  });
-
-  const update30DaysChallenge = (cache: ApolloCache<any>, mutated) => {
-    const definition = {
-      query: GET_30DAYS_CHALLENGE,
-      variables: {
-        userId,
-        startDate: "",
-      },
-    };
-    const { getMyThirtyDaysChallenge } = cache.readQuery<any>(definition);
-    const data = {
-      challenge: getMyThirtyDaysChallenge.challenge.map((day) =>
-        day.date === mutated?.challenge?.date ? mutated?.challenge : day,
-      ),
-      challengeInfo: mutated?.challengeInfo,
-    };
-    cache.writeQuery({
-      ...definition,
-      data: { getMyThirtyDaysChallenge: data },
-    });
-  };
-
-  useEffect(() => {
-    methods.reset({
-      recipeTitle: title,
-      category,
-      assignDate: startDate,
-      note: notes,
-    });
-    setImages(postImages);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [title, category, startDate, notes]);
+  const { methods, onReset } = useChallengeForm(setImages);
+  const [addPost, addState] = useAddChallengePost(userId);
+  const [editPost, editState] = useAddChallengePost(userId);
 
   const closeForm = () => {
     dispatch(setShowPostForm(false));
-    methods.reset(defaultValues);
+    onReset();
     dispatch(resetForm());
     setImages([]);
     setServing(1);
@@ -119,11 +57,12 @@ const UploadCard = () => {
   };
 
   const handleSubmit = async (data) => {
+    const images = await uploadImages();
     const post: any = {
       memberId: userId,
       assignDate: data.assignDate,
       post: {
-        images,
+        images: images.map((image) => image.url),
         name: data.recipeTitle,
         recipeBlendCategory: data.category,
         note: data.note,
@@ -148,25 +87,6 @@ const UploadCard = () => {
       state: isEditMode ? editState : addState,
       success: "Submitted Post Successfully",
       onSuccess: closeForm,
-      // onUpdate: (cache, { data: { createChallengePost } }) => {
-      //   const { getMyThirtyDaysChallenge } = cache.readQuery<any>({
-      //     query: GET_30DAYS_CHALLENGE,
-      //   });
-      //   const data = {
-      //     challenge: getMyThirtyDaysChallenge.challenge.map((day) => {
-      //       if (day.date === createChallengePost?.challenge?.date) {
-      //         return createChallengePost?.challenge;
-      //       }
-      //       return day;
-      //     }),
-      //     challengeInfo: createChallengePost?.challengeInfo,
-      //   };
-      //   console.log(data);
-      //   cache.writeQuery({
-      //     query: GET_30DAYS_CHALLENGE,
-      //     data: getMyThirtyDaysChallenge,
-      //   });
-      // },
     });
   };
 
@@ -332,10 +252,6 @@ const AddIngredient = ({ ingredients }) => {
         (item) => item?.ingredientId._id === ing?.value,
       );
       if (ingredient) {
-        console.log(
-          !isAlreadySelected &&
-            ing?.label.toLowerCase().startsWith(ingredient.toLowerCase()),
-        );
         return (
           !isAlreadySelected &&
           ing?.label.toLowerCase().startsWith(ingredient.toLowerCase())
