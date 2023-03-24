@@ -157,6 +157,7 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
           },
           page,
           limit,
+          userId: dbUser?._id,
         },
       });
       dispatch(

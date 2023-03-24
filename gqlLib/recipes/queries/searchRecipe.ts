@@ -13,55 +13,51 @@ const SEARCH_RECIPE = gql`
       page: $page
       limit: $limit
     ) {
+      totalRecipes
       recipes {
-        datePublished
-        name
-        recipeIngredients
-        recipeBlendCategory {
+        recipeId {
+          _id
           name
-        }
-
-        image {
-          image
-          default
-        }
-        description
-        prepTime
-        cookTime
-        totalTime
-        _id
-        url
-        favicon
-        averageRating
-        numberOfRating
-        ingredients {
-          ingredientId {
-            _id
-            ingredientName
+          image {
+            image
+            default
           }
+          originalVersion {
+            _id
+            postfixTitle
+          }
+          userId {
+            _id
+            displayName
+            image
+          }
+          brand {
+            _id
+            brandName
+            brandImage
+          }
+          averageRating
+          numberOfRating
         }
-        notes
-        addedToCompare
-        userCollections
         defaultVersion {
           _id
           postfixTitle
-        }
-        isMatch
-        userId {
-          _id
-          displayName
-          image
-        }
-        recipeVersion {
-          _id
-          isDefault
-          isOriginal
-          postfixTitle
+          ingredients {
+            ingredientId {
+              _id
+              ingredientName
+            }
+          }
           description
         }
+        isMatch
+        allRecipes
+        myRecipes
+        notes
+        addedToCompare
+        userCollections
+        versionCount
       }
-      totalRecipes
     }
   }
 `;
