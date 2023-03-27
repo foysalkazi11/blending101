@@ -267,7 +267,6 @@ $slider-height: 220px;
     span {
       background: #fafbf9;
       display: inline-block;
-      min-width: 74px;
       min-height: 33px;
       line-height: 33px;
       text-align: center;
@@ -275,6 +274,7 @@ $slider-height: 220px;
       font-size: 13px;
       color: #fe5d1f;
       margin-bottom: 15px;
+      font-weight: 600;
     }
 
     p {
