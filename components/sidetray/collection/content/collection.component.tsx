@@ -1,13 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import { useAppSelector } from "../../../../redux/hooks";
 import { useMutation } from "@apollo/client";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
 import ADD_OR_REMOVE_RECIPE_FORM_COLLECTION from "../../../../gqlLib/collection/mutation/addOrRemoveRecipeFromCollection";
 import SkeletonCollections from "../../../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollections";
-import useUpdateRecipeField from "../../../../customHooks/useUpdateRecipeFirld";
-import useLocalStorage from "../../../../customHooks/useLocalStorage";
-import { setCompareList } from "../../../../redux/slices/recipeSlice";
-import updateRecipeFunc from "../../../utility/updateRecipeFunc";
 import SingleCollection from "../../common/singleCollection/SingleCollection";
 import CREATE_SHARE_COLLECTION_LINK from "../../../../gqlLib/collection/mutation/createShareCollectionLink";
 import notification from "../../../../components/utility/reactToastifyNotification";
@@ -34,7 +30,6 @@ export default function CollectionComponent({
   handleDeleteCollection = () => {},
   handleEditCollection = () => {},
 }: CollectionComponentProps) {
-  const dispatch = useAppDispatch();
   const [addOrRemoveRecipeFromCollection] = useMutation(
     ADD_OR_REMOVE_RECIPE_FORM_COLLECTION,
   );
@@ -56,12 +51,7 @@ export default function CollectionComponent({
   const [link, setLink] = useState("");
 
   const isMounted = useRef(null);
-  const updateRecipe = useUpdateRecipeField();
-  const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
-    "compareList",
-    [],
-  );
-  const { compareList, referenceOfRecipeUpdateFunc } = useAppSelector(
+  const { referenceOfRecipeUpdateFunc } = useAppSelector(
     (state) => state?.recipe,
   );
   const { bulkRecipeIdsForAddedInCollection } = useAppSelector(
@@ -151,11 +141,6 @@ export default function CollectionComponent({
     setShowMsgField(false);
   };
 
-  const updateCompareRecipe = (id: string, obj: object) => {
-    dispatch(setCompareList(updateRecipeFunc(compareList, obj, id)));
-    setcompareRecipeList((state) => updateRecipeFunc(state || [], obj, id));
-  };
-
   const handleAddOrRemoveRecipeFormCollection = async () => {
     try {
       await addOrRemoveRecipeFromCollection({
@@ -170,23 +155,14 @@ export default function CollectionComponent({
           },
         },
       });
-      // updateRecipe(activeRecipeId, {
-      //   userCollections: collectionHasRecipe?.length
-      //     ? singleRecipeWithinCollections
-      //     : null,
-      // });
+
       referenceOfRecipeUpdateFunc(activeRecipeId, {
         userCollections: collectionHasRecipe?.length
           ? singleRecipeWithinCollections
-          : null,
+          : [],
       });
-      // updateCompareRecipe(activeRecipeId, {
-      //   userCollections: collectionHasRecipe?.length
-      //     ? singleRecipeWithinCollections
-      //     : null,
-      // });
 
-      reactToastifyNotification("info", `Collection update successfully`);
+      reactToastifyNotification("success", `Collection update successfully`);
       setIsCollectionUpdate(false);
     } catch (error) {
       reactToastifyNotification("error", error?.message);
