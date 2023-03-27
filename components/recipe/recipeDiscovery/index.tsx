@@ -14,7 +14,6 @@ import {
   updateAllFilterRecipes,
   updateShowFilterOrSearchRecipes,
 } from "../../../redux/slices/filterRecipeSlice";
-import FILTER_RECIPE from "../../../gqlLib/recipes/queries/filterRecipe";
 import useFetchGetRecipesByBlendAndIngredients from "./helperFunc/useFetchGetRecipesByBlendAndIngredients";
 import useHandleSearchRecipe from "./helperFunc/useSearchRecipes";
 import DiscoveryPageSearchBar from "./searchBar";
