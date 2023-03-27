@@ -17,7 +17,10 @@ const CHALLENGE_FIELDS = gql`
         name
       }
       name
-      images
+      images {
+        hash
+        url
+      }
       note
       ingredients {
         ingredientId {

@@ -1,14 +1,14 @@
 import { faMagnifyingGlassPlus } from "@fortawesome/pro-regular-svg-icons";
-import Image from "next/image";
 import React, { Fragment, useState } from "react";
 import IconButton from "../../../component/atoms/Button/IconButton.component";
 import Modal from "../../../component/molecules/Modal/Modal.component";
+import Picture from "../../../component/molecules/Picture/Picture.component";
 import Gallery from "../../../component/organisms/Gallery/Gallery.component";
 import styles from "./splitImage.module.scss";
 
 interface SplitImageCardInterface {
   date: Date;
-  images: string[];
+  images: any[];
   challengeImages: any[];
 }
 const SplitImageCard = ({
@@ -27,14 +27,15 @@ const SplitImageCard = ({
         <Gallery date={date} galleries={challengeImages} />
       </Modal>
       <div className={styles.mainContainer}>
-        {images?.slice(0, 2).map((image) => (
-          <div className={styles.mainContainer__Image} key={image}>
-            <Image
-              src={image || "/images/no-image.png"}
+        {images?.slice(0, 2).map((image, idx) => (
+          <div className={styles.mainContainer__Image} key={image?.url}>
+            <Picture hash={image?.hash} url={image?.url} />
+            {/* <Image
+              src={image?.url || "/images/no-image.png"}
               alt={""}
               layout={"fill"}
               objectFit={"cover"}
-            />
+            /> */}
           </div>
         ))}
         <IconButton

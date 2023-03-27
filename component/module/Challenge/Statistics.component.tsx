@@ -47,7 +47,6 @@ const useStatistics = (statistics) => {
 
 const Statistics = ({ statistics }) => {
   const { leaderboard, rxScore, topIngredients } = useStatistics(statistics);
-  console.log(topIngredients);
   return (
     <div className={styles.statistics}>
       <IconHeading icon={faLightbulbOn} title={"Challenge Stats"} />
