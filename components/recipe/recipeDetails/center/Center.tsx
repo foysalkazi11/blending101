@@ -59,7 +59,7 @@ const Center = ({
   const [ingredientId, setIngredientId] = useState("");
   const [openModal, setOpenModal] = useState(false);
   useGetDefaultPortionOfnutration(ingredientId);
-  const handleAddToCollection = useForAddToCollection();
+  const { addToCollection: handleAddToCollection } = useForAddToCollection();
   const handleOpenCollectionTray = useForOpenCollectionTray();
   const handleOpenCommentsTray = useForOpenCommentsTray();
   const handleSelectCommentsAndNotesIcon = useForSelectCommentsAndNotesIcon();
@@ -101,9 +101,9 @@ const Center = ({
     );
   };
 
-  const addToCollection = (id: string, e: React.SyntheticEvent) => {
+  const addToCollection = async (id: string, e: React.SyntheticEvent) => {
     setShowCollectionModal(true);
-    handleAddToCollection(id, setOpenModal, e, updateCollection);
+    await handleAddToCollection(id, setOpenModal, e, updateCollection);
   };
 
   // open comments tray

@@ -135,7 +135,7 @@ const CompareRecipe = () => {
   const { latest, popular, recommended } = useAppSelector(
     (state) => state?.recipe,
   );
-  const changeCompare = useChangeCompare();
+  const { handleChangeCompare } = useChangeCompare();
   const { handleToGetARecipe } = useToGetARecipe();
   const [uploadNewImage, setUploadNewImage] = useState(false);
   const { lastModifiedCollection } = useAppSelector(
@@ -204,12 +204,12 @@ const CompareRecipe = () => {
     return compareRecipeList?.find((item) => item?.recipeId?._id === id);
   };
 
-  const handleRemoveFromCompareList = (
+  const handleRemoveFromCompareList = async (
     id: string,
     e: React.SyntheticEvent,
     versionId: string,
   ) => {
-    changeCompare(e, id, versionId, false, updateCompareList);
+    await handleChangeCompare(e, id, versionId, false, updateCompareList);
   };
 
   const handleCompare = (recipe) => {

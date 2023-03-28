@@ -18,7 +18,6 @@ import { faRectangleVerticalHistory } from "@fortawesome/pro-regular-svg-icons";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { faStarSharp } from "@fortawesome/pro-solid-svg-icons";
-import useTurnedOnOrOffVersion from "../../../customHooks/useTurnedOnOrOffVersion";
 import useToAddARecipeVersion from "../../../customHooks/useToAddARecipeVersion";
 import useToEditOfARecipeVersion from "../../../customHooks/useToEditOfARecipeVersion";
 import useToRemoveARecipeVersion from "../../../customHooks/useToRemoveARecipeVersion";
@@ -29,6 +28,7 @@ import { setDetailsARecipe } from "../../../redux/slices/recipeSlice";
 import { VersionAddDataType } from "../../../type/versionAddDataType";
 import updateName from "../../../helperFunc/string/updateName";
 import { VersionDataType } from "../../../type/recipeDetailsType";
+import CircularRotatingLoader from "../../../theme/loader/circularRotatingLoader.component";
 
 interface VersionTrayProps {
   showTagByDefaut?: boolean;
@@ -51,8 +51,8 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
   const { handleToGetARecipeVersion } = useToGetARecipeVersion();
   const router = useRouter();
-  const { handleToUpdateDefaultVersion } = useToChangeDefaultVersion();
-  const { handleTurnOnOrOffVersion } = useTurnedOnOrOffVersion();
+  const { handleToUpdateDefaultVersion, loading: changeDefaultVersionLoading } =
+    useToChangeDefaultVersion();
   const { handleToAddRecipeVersion, loading: addNewVersionLoading } =
     useToAddARecipeVersion();
   const { handleToEditARecipeVersion, loading: editOrCreateVersionLoading } =
@@ -182,10 +182,6 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     toggleForm();
   };
 
-  const findVersionWithinVersion = (versionId) => {
-    return allVersions?.find((version) => version?._id === versionId);
-  };
-
   // normalize version to show default and turn on/off indicator
   const allVersions: VersionDataType[] = useMemo(() => {
     let versions: VersionDataType[] = [];
@@ -239,67 +235,16 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     recipeId: string,
     versionId: string,
     isOriginalVersion: boolean,
+    isDefault: boolean,
   ) => {
-    await handleToUpdateDefaultVersion(
-      userId,
-      recipeId,
-      versionId,
-      isOriginalVersion,
-    );
-
-    dispatch(
-      setDetailsARecipe({
-        ...detailsARecipe,
-        isMatch: isOriginalVersion,
-        turnedOnVersions: isOriginalVersion
-          ? [
-              detailsARecipe?.defaultVersion,
-              ...detailsARecipe?.turnedOnVersions,
-            ]
-          : detailsARecipe?.turnedOnVersions?.filter(
-              (version) => version?._id !== versionId,
-            ),
-        defaultVersion: isOriginalVersion
-          ? detailsARecipe?.recipeId?.originalVersion
-          : findVersionWithinVersion(versionId) ||
-            detailsARecipe?.turnedOnVersions?.find(
-              (version) => version?._id === versionId,
-            ),
-      }),
-    );
-  };
-
-  // handle turn of and off version
-
-  const handleToTurnOnOrOffVersion = (turnedOn: boolean, versionId: string) => {
-    if (turnedOn && versionId === detailsARecipe?.defaultVersion?._id) {
-      notification(
-        "warning",
-        "Not allow to turn off as it's default version !!!",
-      );
+    if (isDefault) {
+      notification("info", "This version is already default version !!!");
     } else {
-      handleTurnOnOrOffVersion(
-        !turnedOn,
-        dbUser?._id,
-        detailsARecipe?.recipeId?._id,
+      await handleToUpdateDefaultVersion(
+        userId,
+        recipeId,
         versionId,
-      );
-    }
-  };
-  // handle turn of and off version
-
-  const handleToChangeDefault = (versionId: string, isShareAble: boolean) => {
-    if (!isShareAble) {
-      notification(
-        "warning",
-        "Not allow to make default as it's turn off version !!!",
-      );
-    } else {
-      changeDefaultVersionAndUpdateValue(
-        dbUser?._id,
-        detailsARecipe?.recipeId?._id,
-        versionId,
-        versionId === detailsARecipe?.defaultVersion?._id,
+        isOriginalVersion,
       );
     }
   };
@@ -458,23 +403,27 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
               }`}
               direction="left"
             >
-              <FontAwesomeIcon
-                onClick={() =>
-                  !detailsARecipe?.isMatch &&
-                  openVersionTrayFormWhichPage === "edit" &&
-                  changeDefaultVersionAndUpdateValue(
-                    dbUser?._id,
-                    detailsARecipe?.recipeId?._id,
-                    detailsARecipe?.recipeId?.originalVersion?._id,
-                    true,
-                  )
-                }
-                icon={faStarSharp}
-                className={`${styles.star} ${
-                  openVersionTrayFormWhichPage !== "edit" &&
-                  styles.pointerEventNone
-                } ${detailsARecipe?.isMatch ? styles.on : styles.off}`}
-              />
+              {changeDefaultVersionLoading ? (
+                <CircularRotatingLoader color="primary" />
+              ) : (
+                <FontAwesomeIcon
+                  onClick={() =>
+                    openVersionTrayFormWhichPage === "edit" &&
+                    changeDefaultVersionAndUpdateValue(
+                      dbUser?._id,
+                      detailsARecipe?.recipeId?._id,
+                      detailsARecipe?.recipeId?.originalVersion?._id,
+                      true,
+                      detailsARecipe?.isMatch,
+                    )
+                  }
+                  icon={faStarSharp}
+                  className={`${styles.star} ${
+                    openVersionTrayFormWhichPage !== "edit" &&
+                    styles.pointerEventNone
+                  } ${detailsARecipe?.isMatch ? styles.on : styles.off}`}
+                />
+              )}
             </Tooltip>
           </div>
         </div>
@@ -497,9 +446,6 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           // loading={addNewVersionLoading}
           isFromRecipePage={openVersionTrayFormWhichPage}
           handleToGetARecipeVersion={handleToGetARecipeVersion}
-          handleToChangeDefaultVersion={handleToChangeDefault}
-          handleTurnOnOrOffVersion={handleToTurnOnOrOffVersion}
-          // deleteItemLoading={removeARecipeVersionLoading}
         />
       </div>
       <ConfirmationModal
