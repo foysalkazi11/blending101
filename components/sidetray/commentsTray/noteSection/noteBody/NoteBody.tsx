@@ -11,6 +11,9 @@ import { faShareNodes, faTrash } from "@fortawesome/pro-regular-svg-icons";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { faStarSharp } from "@fortawesome/pro-solid-svg-icons";
 import { useAppSelector } from "../../../../../redux/hooks";
+import notification from "../../../../utility/reactToastifyNotification";
+import useTurnedOnOrOffVersion from "../../../../../customHooks/useTurnedOnOrOffVersion";
+import useToChangeDefaultVersion from "../../../../../customHooks/useToChangeDefaultVersion";
 
 type isFromRecipePageType = "details" | "edit" | "default";
 
@@ -185,48 +188,112 @@ interface FloodingMenuTwoProps {
 
 const FloodingMenuTwo = ({
   item = {},
-  handleToChangeDefaultVersion = () => {},
   isFromRecipePage = "default",
-  handleTurnOnOrOffVersion = () => {},
 }: FloodingMenuTwoProps) => {
+  const detailsARecipe = useAppSelector(
+    (state) => state?.recipe?.detailsARecipe,
+  );
+  const userId = useAppSelector((state) => state?.user?.dbUser?._id);
+  const { handleTurnOnOrOffVersion, loading: versionTurnOnOrOffLoading } =
+    useTurnedOnOrOffVersion();
+  const { handleToUpdateDefaultVersion, loading: changeDefaultVersionLoading } =
+    useToChangeDefaultVersion();
+
+  // handle turn of and off version
+  const handleToTurnOnOrOffVersion = (turnedOn: boolean, versionId: string) => {
+    if (turnedOn && versionId === detailsARecipe?.defaultVersion?._id) {
+      notification(
+        "warning",
+        "Not allow to turn off as it's default version !!!",
+      );
+    } else {
+      handleTurnOnOrOffVersion(
+        !turnedOn,
+        userId,
+        detailsARecipe?.recipeId?._id,
+        versionId,
+      );
+    }
+  };
+  // handle turn of and off version
+
+  const handleToChangeDefault = (
+    versionId: string,
+    isShareAble: boolean,
+    isDefault: boolean,
+  ) => {
+    if (isDefault) {
+      notification("info", "This version is already default version !!!");
+    } else {
+      if (!isShareAble) {
+        notification(
+          "warning",
+          "Not allow to make default as it's turn off version !!!",
+        );
+      } else {
+        handleToUpdateDefaultVersion(
+          userId,
+          detailsARecipe?.recipeId?._id,
+          versionId,
+          versionId === detailsARecipe?.defaultVersion?._id,
+        );
+      }
+    }
+  };
+
   return (
     <div className={styles.leftSide}>
       <Tooltip
         content={`Make share ${item?.isVersionSharable ? "off" : "On"}`}
         direction="left"
       >
-        <FontAwesomeIcon
-          icon={faShareNodes}
-          className={`${styles.star}  ${
-            item?.isVersionSharable ? styles.on : styles.off
-          }`}
-          onClick={() =>
-            isFromRecipePage === "edit" &&
-            handleTurnOnOrOffVersion(
-              item?.isVersionSharable ? true : false,
-              item?._id,
-            )
-          }
-        />
+        {versionTurnOnOrOffLoading ? (
+          <CircularRotatingLoader
+            color="primary"
+            style={{ marginLeft: "12px" }}
+          />
+        ) : (
+          <FontAwesomeIcon
+            icon={faShareNodes}
+            className={`${styles.star}  ${
+              item?.isVersionSharable ? styles.on : styles.off
+            }`}
+            onClick={() =>
+              isFromRecipePage === "edit" &&
+              handleToTurnOnOrOffVersion(
+                item?.isVersionSharable ? true : false,
+                item?._id,
+              )
+            }
+          />
+        )}
       </Tooltip>
 
       <Tooltip
         content={item?.isDefault ? "Default" : "Make default"}
         direction="left"
       >
-        <FontAwesomeIcon
-          onClick={() =>
-            isFromRecipePage === "edit" &&
-            handleToChangeDefaultVersion(
-              item?._id,
-              item?.isVersionSharable ? true : false,
-            )
-          }
-          className={`${styles.star}  ${
-            item?.isDefault ? styles.on : styles.off
-          }`}
-          icon={faStarSharp}
-        />
+        {changeDefaultVersionLoading ? (
+          <CircularRotatingLoader
+            color="primary"
+            style={{ marginLeft: "12px" }}
+          />
+        ) : (
+          <FontAwesomeIcon
+            onClick={() =>
+              isFromRecipePage === "edit" &&
+              handleToChangeDefault(
+                item?._id,
+                item?.isVersionSharable ? true : false,
+                item?.isDefault,
+              )
+            }
+            className={`${styles.star}  ${
+              item?.isDefault ? styles.on : styles.off
+            }`}
+            icon={faStarSharp}
+          />
+        )}
       </Tooltip>
     </div>
   );

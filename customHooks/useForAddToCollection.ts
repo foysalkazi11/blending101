@@ -13,7 +13,10 @@ import { setOpenCollectionsTary } from "../redux/slices/sideTraySlice";
 const useForAddToCollection = () => {
   const { dbUser } = useAppSelector((state) => state?.user);
   const dispatch = useAppDispatch();
-  const [addNewRecipeToCollection] = useMutation(ADD_NEW_RECIPE_TO_COLLECTION);
+  const [
+    addNewRecipeToCollection,
+    { called, client, loading, reset, data, error },
+  ] = useMutation(ADD_NEW_RECIPE_TO_COLLECTION);
 
   let timeOut;
 
@@ -72,7 +75,7 @@ const useForAddToCollection = () => {
     };
   }, [timeOut]);
 
-  return addToCollection;
+  return { addToCollection, called, client, loading, reset, data, error };
 };
 
 export default useForAddToCollection;

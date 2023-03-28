@@ -30,6 +30,7 @@ import { VersionDataType } from "../../../type/recipeDetailsType";
 import notification from "../../../components/utility/reactToastifyNotification";
 import { faShareNodes } from "@fortawesome/pro-regular-svg-icons";
 import useTurnedOnOrOffVersion from "../../../customHooks/useTurnedOnOrOffVersion";
+import CircularRotatingLoader from "../../loader/circularRotatingLoader.component";
 
 interface dataCardInterface {
   title: string;
@@ -73,7 +74,10 @@ interface dataCardInterface {
   updateDataFunc?: ReferenceOfRecipeUpdateFuncType;
   versionHandler?: (recipeId: string, version?: VersionDataType) => void;
   footerMenuType?: "allIcons" | "OnlyStar";
-  updateDataAfterChangeDefaultVersion?: (versionId: string) => void;
+  updateDataAfterChangeDefaultVersion?: (
+    versionId: string,
+    returnObj: { [key: string]: any },
+  ) => void;
   isVersionSharable?: boolean;
   defaultVersion?: VersionDataType;
 }
@@ -118,14 +122,20 @@ export default function DatacardComponent({
 }: dataCardInterface) {
   ratings = Math.ceil(ratings);
   const router = useRouter();
-  const handleChangeCompare = useChangeCompare();
-  const handleAddToCollection = useForAddToCollection();
+  const { handleChangeCompare, loading: changeCompareLoading } =
+    useChangeCompare();
+  const { addToCollection, loading: addToCollectionLoading } =
+    useForAddToCollection();
   const handleOpenCollectionTray = useForOpenCollectionTray();
   const handleOpenCommentsTray = useForOpenCommentsTray();
   const selectCommentsAndNotesIcon = useForSelectCommentsAndNotesIcon();
   const [hoverRef, isHover] = useHover();
   const [hoverRefMoreMenu, isHoverMoreMenu] = useHover();
-  const { handleToUpdateDefaultVersion } = useToChangeDefaultVersion();
+  const {
+    handleToUpdateDefaultVersion,
+    data: changeDefaultVersionReturnObj,
+    loading: changeDefaultVersionLoading,
+  } = useToChangeDefaultVersion();
   const { dbUser } = useAppSelector((state) => state?.user);
   const { handleTurnOnOrOffVersion } = useTurnedOnOrOffVersion();
 
@@ -235,46 +245,56 @@ export default function DatacardComponent({
       </li>
       <li>
         <Tooltip direction="top" content="Compare">
-          <img
-            src={addedToCompare ? "/icons/compare-1.svg" : "/icons/eclipse.svg"}
-            alt="icon"
-            onClick={(e) =>
-              handleChangeCompare(
-                e,
-                recipeId,
-                defaultVersionId,
-                addedToCompare ? false : true,
-                updateDataFunc,
-              )
-            }
-          />
+          {changeCompareLoading ? (
+            <CircularRotatingLoader color="secondary" />
+          ) : (
+            <img
+              src={
+                addedToCompare ? "/icons/compare-1.svg" : "/icons/eclipse.svg"
+              }
+              alt="icon"
+              onClick={(e) =>
+                handleChangeCompare(
+                  e,
+                  recipeId,
+                  defaultVersionId,
+                  addedToCompare ? false : true,
+                  updateDataFunc,
+                )
+              }
+            />
+          )}
         </Tooltip>
       </li>
       <li>
         <Tooltip direction="top" content="Collection">
-          <img
-            src={
-              isCollectionIds?.length
-                ? "/icons/compare.svg"
-                : "/images/BookmarksStar.svg"
-            }
-            alt="compare"
-            onClick={(e) =>
-              isCollectionIds?.length
-                ? handleOpenCollectionTray(
-                    recipeId,
-                    isCollectionIds,
-                    e,
-                    updateDataFunc,
-                  )
-                : handleAddToCollection(
-                    recipeId,
-                    setOpenCollectionModal,
-                    e,
-                    updateDataFunc,
-                  )
-            }
-          />
+          {addToCollectionLoading ? (
+            <CircularRotatingLoader color="primary" />
+          ) : (
+            <img
+              src={
+                isCollectionIds?.length
+                  ? "/icons/compare.svg"
+                  : "/images/BookmarksStar.svg"
+              }
+              alt="compare"
+              onClick={(e) =>
+                isCollectionIds?.length
+                  ? handleOpenCollectionTray(
+                      recipeId,
+                      isCollectionIds,
+                      e,
+                      updateDataFunc,
+                    )
+                  : addToCollection(
+                      recipeId,
+                      setOpenCollectionModal,
+                      e,
+                      updateDataFunc,
+                    )
+              }
+            />
+          )}
         </Tooltip>
       </li>
       <li>
@@ -292,7 +312,10 @@ export default function DatacardComponent({
         isMatch ? true : false,
         isVersionSharable ? false : true,
       );
-      updateDataAfterChangeDefaultVersion(defaultVersionId);
+      updateDataAfterChangeDefaultVersion(
+        defaultVersionId,
+        changeDefaultVersionReturnObj,
+      );
     } else {
       notification(
         "warning",
@@ -329,11 +352,15 @@ export default function DatacardComponent({
           content={`${isMatch ? "Default" : "Make default"}`}
           direction="left"
         >
-          <FontAwesomeIcon
-            onClick={handleToMakeDefaultVersion}
-            icon={faStarSharp}
-            className={`${styles.star} ${isMatch ? styles.on : styles.off}`}
-          />
+          {changeDefaultVersionLoading ? (
+            <CircularRotatingLoader color="primary" />
+          ) : (
+            <FontAwesomeIcon
+              onClick={handleToMakeDefaultVersion}
+              icon={faStarSharp}
+              className={`${styles.star} ${isMatch ? styles.on : styles.off}`}
+            />
+          )}
         </Tooltip>
       </li>
       <li>
