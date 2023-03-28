@@ -52,7 +52,7 @@ interface IPost {
     name: string;
   };
   ingredients: IPostIngredient[];
-  images: string[];
+  images: Image[];
   rxScore: number;
   calories: number;
   gl: number;
@@ -127,27 +127,6 @@ const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
       );
     },
     [dispatch],
-  );
-
-  const nutrientPanelHandler = useCallback(
-    (ingredients, id) => {
-      if (panel && panel?.show && lastPostChartId.current === id) {
-        dispatch(setShowPanel({ name: "RXPanel", show: false }));
-      } else {
-        dispatch(
-          setShowPanel({
-            name: "RXPanel",
-            show: true,
-            payload: ingredients.map((ing) => ({
-              ingredientId: ing?.ingredientId?._id,
-              value: ing?.selectedPortion?.gram,
-            })),
-          }),
-        );
-        lastPostChartId.current = id;
-      }
-    },
-    [dispatch, panel],
   );
 
   const challengePosts = useMemo(() => {

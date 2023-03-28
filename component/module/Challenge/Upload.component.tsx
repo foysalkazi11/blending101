@@ -26,7 +26,8 @@ import useImage from "../../../hooks/useImage";
 import {
   useAddChallengePost,
   useChallengeForm,
-} from "../../../hooks/modules/Challenge";
+  useEditChallengePost,
+} from "../../../hooks/modules/Challenge/useChallengePost";
 
 const UploadCard = () => {
   const { images, setImages, postImages: uploadImages } = useImage([]);
@@ -43,7 +44,7 @@ const UploadCard = () => {
   const { data } = useQuery(GET_BLEND_CATEGORY);
   const { methods, onReset } = useChallengeForm(setImages);
   const [addPost, addState] = useAddChallengePost(userId);
-  const [editPost, editState] = useAddChallengePost(userId);
+  const [editPost, editState] = useEditChallengePost(userId);
 
   const closeForm = () => {
     dispatch(setShowPostForm(false));
@@ -73,6 +74,7 @@ const UploadCard = () => {
         })),
       },
     };
+    console.log(isEditMode);
     if (isEditMode) {
       post.post._id = id;
       post.post.docId = docId;
