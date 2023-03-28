@@ -1,10 +1,10 @@
 // @ts-nocheck
 import { useEffect } from "react";
 
-import styles from "../../component/module/Challenge/Achievement/index.module.scss";
-import foodStyles from "../../component/module/Challenge/Achievement/_RecipeCategory.module.scss";
-import mainStyles from "../../component/module/Challenge/Achievement/_Dialer.module.scss";
-import graphStyles from "../../component/module/Challenge/Achievement/_Streakbar.module.scss";
+import styles from "../../../component/module/Challenge/Achievement/index.module.scss";
+import foodStyles from "../../../component/module/Challenge/Achievement/_RecipeCategory.module.scss";
+import mainStyles from "../../../component/module/Challenge/Achievement/_Dialer.module.scss";
+import graphStyles from "../../../component/module/Challenge/Achievement/_Streakbar.module.scss";
 
 const useChallengeLayout = () => {
   useEffect(() => {
@@ -22,25 +22,13 @@ const useChallengeLayout = () => {
       let challengeCircleFoodBoxList = document.querySelectorAll(
         `.${foodStyles.challenge_circle_food_box}`,
       );
-
-      // challengeCircleFood.style.width =
-      //   challengeCircleBox.clientWidth * insideWidth + "px";
-      // challengeCircleFood.style.marginBottom =
-      //   challengeCircleBox.clientWidth * 0.02 + "px";
       challengeCircleFoodBoxList.forEach((challengeCircleFoodBox) => {
         let challengeCircleFoodColorRepresent =
           challengeCircleFoodBox?.querySelector(
             `.${foodStyles.challenge_circle_food_color_represent}`,
           );
-        let challengeCircleFoodName = challengeCircleFoodBox?.querySelector(
-          `.${foodStyles.challenge_circle_food_name}`,
-        );
         challengeCircleFoodColorRepresent.style.width =
           challengeCircleFood.clientWidth / 13 + "px";
-        // challengeCircleFoodName.style.fontSize =
-        //   challengeCircleFood.clientWidth / 35 + "px";
-        // challengeCircleFoodName.style.marginTop =
-        //   challengeCircleFood.clientWidth / 60 + "px";
       });
 
       // For Circle
@@ -55,51 +43,17 @@ const useChallengeLayout = () => {
       let challengeCircleInsideCircle = document.querySelector(
         `.${mainStyles.challenge_circle_inside_circle}`,
       );
-      // let challengeCircleProfile = document.querySelector(
-      //   `.${mainStyles.challenge_circle_profile}`,
-      // );
       let challengeCircleInsideDate = document.querySelector(
         `.${mainStyles.challenge_circle_inside_date}`,
       );
-      // let challengeCircleDayChallenge = document.querySelector(
-      //   `.${mainStyles.challenge_circle_day_challenge}`,
-      // );
-      let challengeCircleRemainingDay = document.querySelector(
-        `.${mainStyles.challenge_circle_remaining_day}`,
-      );
-      // let challengeCircleRemainingPercentage = document.querySelector(
-      //   `.${mainStyles.challenge_circle_remaining_percentage}`,
-      // );
-      // let challengeCircleRemainingPercentageParagraph = document.querySelector(
-      //   `.${mainStyles.challenge_circle_remaining_percentage_paragraph}`,
-      // );
-
-      // if (!challengeCircleMainCircleOuter) return;
       challengeCircleMainCircleOuter.style.width =
         challengeCircleBox.clientWidth * insideWidth + "px";
       const cCMCOWidth = challengeCircleMainCircleOuter.clientWidth;
 
       challengeCircleMainCircle.style.width = cCMCOWidth * 0.85 + "px";
       challengeCircleInsideCircle.style.width = cCMCOWidth * 0.7 + "px";
-      // challengeCircleProfile.style.width = cCMCOWidth * 0.1 + "px";
       challengeCircleInsideDate.style.fontSize = cCMCOWidth * 0.035 + "px";
       challengeCircleInsideDate.style.marginTop = cCMCOWidth * 0.01 + "px";
-      // challengeCircleDayChallenge.style.fontSize = cCMCOWidth * 0.07 + "px";
-      // challengeCircleDayChallenge.style.marginTop = cCMCOWidth * 0.03 + "px";
-      // challengeCircleRemainingDay.style.fontSize = cCMCOWidth * 0.035 + "px";
-      // challengeCircleRemainingDay.style.borderRadius = cCMCOWidth * 0.1 + "px";
-      // challengeCircleRemainingDay.style.padding = `${cCMCOWidth * 0.01}px ${
-      //   cCMCOWidth * 0.05
-      // }px`;
-      // challengeCircleRemainingDay.style.marginTop = cCMCOWidth * 0.03 + "px";
-      // challengeCircleRemainingPercentage.style.fontSize =
-      //   cCMCOWidth * 0.06 + "px";
-      // challengeCircleRemainingPercentage.style.marginTop =
-      //   cCMCOWidth * 0.01 + "px";
-      // challengeCircleRemainingPercentageParagraph.style.fontSize =
-      //   cCMCOWidth * 0.038 + "px";
-      // challengeCircleRemainingPercentageParagraph.style.marginTop =
-      //   cCMCOWidth * 0.005 + "px";
 
       // Ring Logic
       let circles = document.querySelectorAll(`.${mainStyles.wheel__button}`);

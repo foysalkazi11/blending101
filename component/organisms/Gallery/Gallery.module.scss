@@ -8,7 +8,7 @@
     & img {
       height: 50rem;
       width: 100%;
-      object-fit: cover;
+      object-fit: contain;
     }
   }
   &__previews {

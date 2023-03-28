@@ -247,7 +247,10 @@ const Recipes = (props: RecipesProps) => {
       setRecipeInfo({
         _id,
         name,
-        image: image?.find((img) => img.default)?.image || image[0]?.image,
+        image: {
+          url: image?.find((img) => img.default)?.image || image[0]?.image,
+          hash: "",
+        },
         category,
         ingredients,
       }),
