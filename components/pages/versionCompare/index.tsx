@@ -442,28 +442,16 @@ const VersionCompare = () => {
     }
   };
 
-  const handleToUpdateDataAfterChangeDefaultVersion = (versionId: string) => {
-    const isOriginalVersion =
-      detailsARecipe?.recipeId?.originalVersion?._id === versionId;
-    dispatch(
-      setDetailsARecipe({
-        ...detailsARecipe,
-        isMatch: isOriginalVersion,
-        turnedOnVersions: isOriginalVersion
-          ? [
-              detailsARecipe?.defaultVersion,
-              ...detailsARecipe?.turnedOnVersions,
-            ]
-          : detailsARecipe?.turnedOnVersions?.filter(
-              (version) => version?._id !== versionId,
-            ),
-        defaultVersion: isOriginalVersion
-          ? detailsARecipe?.recipeId?.originalVersion
-          : detailsARecipe?.turnedOnVersions?.find(
-              (version) => version?._id === versionId,
-            ),
-      }),
-    );
+  const handleToUpdateDataAfterChangeDefaultVersion = (
+    versionId: string,
+    returnObj: { [key: string]: any } = {},
+  ) => {
+    // dispatch(
+    //   setDetailsARecipe({
+    //     ...detailsARecipe,
+    //     ...returnObj,
+    //   }),
+    // );
   };
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 import { useLazyQuery } from "@apollo/client";
-import { Dispatch, SetStateAction, useEffect, useCallback } from "react";
+import { Dispatch, SetStateAction } from "react";
 import notification from "../components/utility/reactToastifyNotification";
 import GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS from "../gqlLib/nutrition/query/getNutrientsListAndGiGlByIngredients";
 
@@ -34,32 +34,34 @@ const useGetBlendNutritionBasedOnRecipexxx = () => {
     if (isRecipeDetailsPage) {
       if (nutritionState?.ingredientId?._id) {
         // Single Ingredient Details
-
+        const value = nutritionState?.selectedPortion?.gram;
+        const quantity = nutritionState?.selectedPortion?.quantity;
         const data = [
           {
             ingredientId: nutritionState?.ingredientId?._id,
-            value: parseFloat(nutritionState?.selectedPortion?.gram),
+            value: parseFloat(value) * parseFloat(quantity),
           },
         ];
         fetchData(data);
       } else {
-        const data = [
-          ...selectedIngredientsList?.map((item) => ({
-            ingredientId: item.ingredientId._id,
-            value: item?.selectedPortion?.gram,
-          })),
-        ];
+        const data = selectedIngredientsList?.map((item) => ({
+          ingredientId: item?.ingredientId?._id,
+          value:
+            parseFloat(item?.selectedPortion?.gram) *
+            parseFloat(item?.selectedPortion?.quantity),
+        }));
         fetchData(data);
       }
     } else {
       // Single Ingredient Details
       if (nutritionState?._id) {
         const value = nutritionState?.selectedPortion?.gram;
+        const quantity = nutritionState?.selectedPortion?.quantity;
         if (value) {
           const data = [
             {
               ingredientId: nutritionState?._id,
-              value: parseFloat(value),
+              value: parseFloat(value) * parseFloat(quantity),
             },
           ];
           fetchData(data);
@@ -68,13 +70,14 @@ const useGetBlendNutritionBasedOnRecipexxx = () => {
         let ingArr = [];
         let ozArr = 0;
         selectedIngredientsList?.forEach((item) => {
+          const defaultPortion = item?.portions?.find((item) => item.default);
           let value: any = 0;
           if (item.hasOwnProperty("selectedPortion")) {
-            value = item?.weightInGram;
+            value =
+              parseFloat(item?.selectedPortion?.gram) *
+              parseFloat(item?.selectedPortion?.quantity);
           } else {
-            value = item?.portions?.find(
-              (item) => item.default,
-            )?.meausermentWeight;
+            value = defaultPortion?.meausermentWeight;
           }
           ozArr += value && parseInt(value);
           if (value) {

@@ -7,6 +7,9 @@ import {
   faToolbox,
 } from "@fortawesome/pro-light-svg-icons";
 import { isWithinInterval } from "date-fns";
+import { useRouter } from "next/router";
+import axios from "axios";
+import html2canvas from "html2canvas";
 
 import RXPanel from "../../component/templates/Panel/RXFacts/RXPanel.component";
 import Statistics from "../../component/module/Challenge/Statistics.component";
@@ -36,11 +39,7 @@ import Icon from "../../component/atoms/Icon/Icon.component";
 
 import { theme } from "../../configs/themes";
 import ShareModal from "../../component/organisms/Share/Share.component";
-import { useRouter } from "next/router";
-import axios from "axios";
-import html2canvas from "html2canvas";
 import { dataURLtoFile } from "../../helpers/File";
-import client from "../../gqlLib/client";
 import { updateHeadTagInfo } from "../../redux/slices/headDataSlice";
 
 const ChallengePage = () => {

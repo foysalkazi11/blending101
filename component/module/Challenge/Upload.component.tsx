@@ -32,8 +32,6 @@ const UploadCard = () => {
   const { images, setImages, postImages: uploadImages } = useImage([]);
   const [serving, setServing] = useState(1);
 
-  console.log(images);
-
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
   const panelList = useAppSelector((state) => state.ui.panel);
@@ -62,7 +60,7 @@ const UploadCard = () => {
       memberId: userId,
       assignDate: data.assignDate,
       post: {
-        images: images.map((image) => image.url),
+        images,
         name: data.recipeTitle,
         recipeBlendCategory: data.category,
         note: data.note,

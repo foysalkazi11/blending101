@@ -3,49 +3,35 @@ import styles from "./NumberField.module.scss";
 
 interface NumberFieldProps {
   minValue?: number;
-  value?: any;
+  valueState?: [number, any];
   label?: string;
   className?: string;
   onChange?: (value: any) => any;
 }
 const NumberField = (props: NumberFieldProps) => {
-  let { minValue, value, label, className, onChange } = props;
-  const hasInitialNumberSet = useRef(false);
-  const [number, setNumber] = useState<number>(value);
+  let { minValue, valueState, label, className, onChange } = props;
+  const [value, setvalue] = valueState;
 
   const adjusterFunc = (task: "+" | "-") => {
-    let ammount = number;
-    if (number <= minValue && task === "-") {
-      ammount = minValue;
+    if (value <= minValue && task === "-") return;
+    if (task === "+") {
+      setvalue((value) => value + 1);
     } else {
-      if (task === "+") {
-        ammount += 1;
-      } else {
-        ammount -= 1;
-      }
+      setvalue((value) => value - 1);
     }
-    value = ammount;
-    onChange && onChange({ target: { value: ammount } });
-    setNumber(ammount);
+    onChange &&
+      onChange({ target: { value: task === "+" ? value + 1 : value - 1 } });
   };
 
   const changeNumber = (e) => {
     const ammount = +e.target.value;
-    console.log(ammount, e.target.value);
     if (typeof ammount === "number" && isFinite(ammount)) {
-      value = ammount;
+      setvalue(ammount);
       onChange && onChange({ target: { value: ammount } });
-      setNumber(ammount);
     } else {
-      setNumber(0);
+      setvalue(0);
     }
   };
-
-  // useEffect(() => {
-  //   if (value !== 0 && value !== number && !hasInitialNumberSet.current) {
-  //     setNumber(value);
-  //   }
-  // }, [number, value]);
 
   return (
     <Fragment>
@@ -55,7 +41,7 @@ const NumberField = (props: NumberFieldProps) => {
           <input
             className={styles.text}
             type="text"
-            value={number}
+            value={value}
             onChange={changeNumber}
           />
           <div className={styles.arrow}>

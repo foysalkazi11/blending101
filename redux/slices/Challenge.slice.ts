@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
 export interface IPostIngredient {
   ingredientId: { _id: string; ingredientName: string };
   selectedPortion: {

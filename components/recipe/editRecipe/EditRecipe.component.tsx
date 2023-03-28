@@ -78,7 +78,26 @@ const EditRecipePage = ({
   const handleIngredientClick = (ingredient: any, present: boolean) => {
     let blendz = [];
     if (!present) {
-      blendz = [...selectedIngredientsList, ingredient];
+      const defaultPortion =
+        ingredient?.portions?.find((ing) => ing?.default) ||
+        ingredient?.portions?.[0];
+
+      const newIngredient = {
+        ...ingredient,
+        ingredientId: {
+          _id: ingredient?._id,
+          ingredientName: ingredient?.ingredientName,
+          featuredImage: ingredient?.featuredImage,
+          images: ingredient?.images,
+        },
+        selectedPortion: {
+          gram: parseFloat(defaultPortion?.meausermentWeight),
+          name: defaultPortion?.measurement,
+          quantity: 1,
+        },
+        weightInGram: parseFloat(defaultPortion?.meausermentWeight),
+      };
+      blendz = [...selectedIngredientsList, newIngredient];
     } else {
       blendz = selectedIngredientsList?.filter((blen) => {
         return blen?._id !== ingredient?._id;

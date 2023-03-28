@@ -12,7 +12,36 @@ const CHANGE_DEFAULT_VERSION = gql`
       recipeId: $recipeId
       versionID: $versionId
       isTurnedOff: $isTurnedOff
-    )
+    ) {
+      isMatch
+      defaultVersion {
+        _id
+        description
+        postfixTitle
+        recipeId
+        recipeInstructions
+        servingSize
+        selectedImage
+      }
+      turnedOnVersions {
+        _id
+        description
+        postfixTitle
+        recipeId
+        recipeInstructions
+        servingSize
+        selectedImage
+      }
+      turnedOffVersions {
+        _id
+        description
+        postfixTitle
+        recipeId
+        recipeInstructions
+        servingSize
+        selectedImage
+      }
+    }
   }
 `;
 

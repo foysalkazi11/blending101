@@ -1,15 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
-import {
-  ResponsiveContainer,
-  Tooltip,
-  AreaChart,
-  Area,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  LabelList,
-} from "recharts";
+import React, { useMemo, useState } from "react";
 import { faLightbulbOn } from "@fortawesome/pro-light-svg-icons";
 import IconHeading from "../../../theme/iconHeading/iconHeading.component";
 
@@ -47,7 +36,6 @@ const useStatistics = (statistics) => {
 
 const Statistics = ({ statistics }) => {
   const { leaderboard, rxScore, topIngredients } = useStatistics(statistics);
-  console.log(topIngredients);
   return (
     <div className={styles.statistics}>
       <IconHeading icon={faLightbulbOn} title={"Challenge Stats"} />
