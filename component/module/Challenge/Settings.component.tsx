@@ -44,6 +44,12 @@ import RadioButton from "../../organisms/Forms/RadioButton.component";
 import { setChallengeDate } from "../../../redux/slices/Challenge.slice";
 import Invite from "../../organisms/Share/Invite.component";
 import { SharedUserInfoType } from "../../organisms/Share/Distribute.component";
+import {
+  useActivateChallenge,
+  useAddChallenge,
+  useDeleteChallenge,
+  useEditChallenge,
+} from "../../../hooks/modules/Challenge/useChallengeList";
 
 interface SettingsProps {
   currentChallenge: string;
@@ -133,15 +139,11 @@ const ChallengeList = ({
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
-  const [activateChallenge, activateState] = useMutation(ACTIVATE_CHALLENGE, {
-    refetchQueries: ["Get30DaysChallenge", "GetAllChallenges"],
-  });
-  const [deleteChallenge, deleteState] = useMutation(DELETE_CHALLENGE, {
-    refetchQueries: ["GetAllChallenges"],
-  });
-
+  const [activateChallenge, activateState] = useActivateChallenge(userId);
+  const [deleteChallenge, deleteState] = useDeleteChallenge(userId);
   const [inviteChallenge, { loading: inviteChallengeLoading }] =
     useMutation(INVITE_CHALLENGE);
+
   const [emails, setEmails] = useState<SharedUserInfoType[]>([]);
 
   const handleInvitation = () => {
@@ -179,7 +181,7 @@ const ChallengeList = ({
       onSuccess: () => {
         dispatch(setChallengeDate(""));
         setActiveId(challengeId);
-        hideSettings();
+        // hideSettings();
       },
     });
   };
@@ -304,14 +306,11 @@ const ChallengeForm = ({ setShowForm, challenge }) => {
   const methods = useForm({
     defaultValues: useMemo(() => defaultValues, []),
   });
+
   const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
-  const [addChallenge, addState] = useMutation(CREATE_CHALLENGE, {
-    refetchQueries: ["GetAllChallenges"],
-  });
-  const [editChallenge, editState] = useMutation(EDIT_CHALLENGE, {
-    refetchQueries: ["GetAllChallenges", "Get30DaysChallenge"],
-  });
+  const [addChallenge, addState] = useAddChallenge(memberId);
+  const [editChallenge, editState] = useEditChallenge(memberId);
 
   useEffect(() => {
     if (challenge) {

@@ -1,15 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
-import {
-  ResponsiveContainer,
-  Tooltip,
-  AreaChart,
-  Area,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  LabelList,
-} from "recharts";
+import React, { useMemo, useState } from "react";
 import { faLightbulbOn } from "@fortawesome/pro-light-svg-icons";
 import IconHeading from "../../../theme/iconHeading/iconHeading.component";
 

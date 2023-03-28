@@ -6,7 +6,7 @@ import { gql } from "@apollo/client";
  * -------------------------------------------------*
  */
 const CHALLENGE_FIELDS = gql`
-  fragment ChallengeFields on Challenge {
+  fragment ChallengePostFields on Challenge {
     _id
     date: formattedDate
     disabled
@@ -70,32 +70,45 @@ const CHALLENGE_INFO_FIELDS = gql`
   }
 `;
 
+const CHALLENGE_LIST_FIELDS = gql`
+  fragment ChallengeFields on UserChallenge {
+    _id
+    challengeName
+    days
+    isActive
+    startingDate
+    startDate: startDateString
+    endDate: endDateString
+    description
+    notification
+  }
+`;
+
 export const GET_CHALLENGES = gql`
   query GetAllChallenges($memberId: String!) {
     getMyChallengeList(memberId: $memberId) {
-      _id
-      challengeName
-      days
-      isActive
-      startingDate
-      startDate: startDateString
-      endDate: endDateString
-      description
-      notification
+      ...ChallengeFields
     }
   }
+  ${CHALLENGE_LIST_FIELDS}
 `;
 
 export const CREATE_CHALLENGE = gql`
   mutation CreateChallenge($data: CreateUserChallenge!) {
-    createUserChallenge(data: $data)
+    createUserChallenge(data: $data) {
+      ...ChallengeFields
+    }
   }
+  ${CHALLENGE_LIST_FIELDS}
 `;
 
 export const EDIT_CHALLENGE = gql`
   mutation EditChallenge($data: CreateEditUserChallenge!) {
-    editUserChallenge(data: $data)
+    editUserChallenge(data: $data) {
+      ...ChallengeFields
+    }
   }
+  ${CHALLENGE_LIST_FIELDS}
 `;
 
 export const DELETE_CHALLENGE = gql`
@@ -106,7 +119,7 @@ export const DELETE_CHALLENGE = gql`
 
 export const ACTIVATE_CHALLENGE = gql`
   mutation ActivateChallenge(
-    $prevChallenge: String!
+    $prevChallenge: String
     $newChallenge: String!
     $memberId: String!
   ) {
@@ -132,7 +145,7 @@ export const GET_30DAYS_CHALLENGE = gql`
       token: $token
     ) {
       challenge {
-        ...ChallengeFields
+        ...ChallengePostFields
       }
       challengeInfo {
         ...ChallengeInfoFields
@@ -147,7 +160,7 @@ export const CREATE_CHALLENGE_POST = gql`
   mutation CreateChallengePost($data: CreateChallengePost!) {
     createChallengePost(data: $data) {
       challenge {
-        ...ChallengeFields
+        ...ChallengePostFields
       }
       challengeInfo {
         ...ChallengeInfoFields
@@ -162,7 +175,7 @@ export const EDIT_CHALLENGE_POST = gql`
   mutation EditChallengePost($data: EditChallengePost!) {
     editAChallengePost(data: $data) {
       challenge {
-        ...ChallengeFields
+        ...ChallengePostFields
       }
       challengeInfo {
         ...ChallengeInfoFields
