@@ -3,11 +3,10 @@ import notification from "../components/utility/reactToastifyNotification";
 import CHANGE_DEFAULT_VERSION from "../gqlLib/versions/mutation/changelDefaultVersion";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setDetailsARecipe } from "../redux/slices/recipeSlice";
-import { RecipeVersionType } from "../type/recipeVersionType";
 
 const useToChangeDefaultVersion = () => {
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
-  const [changeDefaultVersion, { ...rest }] = useMutation(
+  const [changeDefaultVersion, { data, ...rest }] = useMutation(
     CHANGE_DEFAULT_VERSION,
   );
   const dispatch = useAppDispatch();
@@ -20,7 +19,7 @@ const useToChangeDefaultVersion = () => {
     isTurnedOff: boolean = false,
   ) => {
     try {
-      await changeDefaultVersion({
+      const { data } = await changeDefaultVersion({
         variables: {
           userId,
           recipeId,
@@ -29,21 +28,12 @@ const useToChangeDefaultVersion = () => {
         },
       });
 
-      // let updateObj: RecipeVersionType = {} as RecipeVersionType;
-
-      // updateObj = isOriginalVersion
-      //   ? {
-      //       ...detailsARecipe.defaultVersion,
-      //       ...data?.changeDefaultVersion?.defaultVersion,
-      //       postfixTitle: detailsARecipe?.recipeId?.name || "",
-      //       description: detailsARecipe?.recipeId?.description || "",
-      //       tempVersionInfo: {},
-      //     }
-      //   : {
-      //       ...detailsARecipe.defaultVersion,
-      //       ...data?.changeDefaultVersion?.defaultVersion,
-      //       tempVersionInfo: {},
-      //     };
+      dispatch(
+        setDetailsARecipe({
+          ...detailsARecipe,
+          ...data?.changeDefaultVersion,
+        }),
+      );
 
       notification("success", "Default version change successfully");
     } catch (error) {
@@ -51,7 +41,11 @@ const useToChangeDefaultVersion = () => {
     }
   };
 
-  return { handleToUpdateDefaultVersion, ...rest };
+  return {
+    handleToUpdateDefaultVersion,
+    data: data?.changeDefaultVersion,
+    ...rest,
+  };
 };
 
 export default useToChangeDefaultVersion;
