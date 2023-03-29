@@ -26,7 +26,6 @@ import {
 import { RecipeDetailsType } from "../../../type/recipeDetailsType";
 import { GiGl } from "../../../type/nutrationType";
 import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
-import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 import useToEditOfARecipeVersion from "../../../customHooks/useToEditOfARecipeVersion";
 import ConfirmationModal from "../../../theme/confirmationModal/ConfirmationModal";
 import useToUpdateAfterEditVersion from "../../../customHooks/useToUpdateAfterEditVersion";
@@ -310,12 +309,6 @@ const EditRecipeComponent = () => {
   }, [recipeId, dbUser?._id]);
 
   useEffect(() => {
-    dispatch(
-      updateHeadTagInfo({
-        title: "Recipe Edit",
-        description: "recipe Edit",
-      }),
-    );
     dispatch(updateSidebarActiveMenuName("Blends"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

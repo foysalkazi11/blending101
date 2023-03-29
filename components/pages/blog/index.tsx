@@ -13,7 +13,6 @@ import GET_ALL_ADMIN from "../../../gqlLib/user/queries/getAllAdmin";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import ShowLastModifiedCollection from "../../showLastModifiedCollection/ShowLastModifiedCollection";
 import { setIsOpenBlogCollectionTray } from "../../../redux/slices/blogSlice";
-import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 
 const BlogList = () => {
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
@@ -39,16 +38,6 @@ const BlogList = () => {
     const admin = allAdminData?.getAllAdmin?.find((admin) => admin?._id === id);
     return admin ? `${admin?.firstName} ${admin?.lastName}` : "Gabriel Branu";
   };
-
-  useEffect(() => {
-    dispatch(
-      updateHeadTagInfo({
-        title: "Blog",
-        description: "blog",
-      }),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   if (generalBlogLoading) {
     return (
@@ -115,6 +104,10 @@ const Layout: FC<{
         show: true,
         showPanle: "left",
         showTagByDeafult: true,
+      }}
+      headTagInfo={{
+        title: "Blog",
+        description: "blog",
       }}
     >
       <div className={styles.blogPageLayout}>

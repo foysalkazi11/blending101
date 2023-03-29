@@ -1,12 +1,14 @@
 import Head from "next/head";
 import React from "react";
-import { useAppSelector } from "../../redux/hooks";
+export interface HeadTagInfoType {
+  description?: string;
+  title?: string;
+}
 
-const HeadTagInfo = () => {
-  const { description, title } = useAppSelector(
-    (state) => state.head.headTagInfo,
-  );
-
+const HeadTagInfo = ({
+  description = "description",
+  title = "title",
+}: HeadTagInfoType) => {
   return (
     <Head>
       <title>Blending101-{title}</title>

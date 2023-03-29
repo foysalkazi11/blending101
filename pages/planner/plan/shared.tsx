@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment } from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import {
@@ -10,18 +10,14 @@ import {
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
 import { faArrowRightLong } from "@fortawesome/pro-regular-svg-icons";
-
 import Icon from "../../../component/atoms/Icon/Icon.component";
 import { PLAN_SHARE_INFO } from "../../../graphql/Planner";
-
 import styles from "../../../styles/pages/planner.module.scss";
-import { useDispatch } from "react-redux";
-import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
+import HeadTagInfo from "../../../theme/headTagInfo";
 
 const Shared = () => {
   const router = useRouter();
   const token = router.query.token;
-  const dispatch = useDispatch();
   const { data } = useQuery(PLAN_SHARE_INFO, {
     variables: {
       token: token,
@@ -36,18 +32,14 @@ const Shared = () => {
     );
   };
 
-  useEffect(() => {
-    dispatch(
-      updateHeadTagInfo({
-        title: "Meal Plans share",
-        description: "meal plans share",
-      }),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <Fragment>
+      <HeadTagInfo
+        {...{
+          title: "Meal Plans share",
+          description: "meal plans share",
+        }}
+      />
       <header className={styles.shared__header}>
         <img src="/logo.png" alt="" />
       </header>

@@ -18,7 +18,6 @@ const FeedbackImport = dynamic(() => import("simple-screenshot-feedback"), {
   ssr: false,
 });
 import "@fortawesome/fontawesome-svg-core/styles.css";
-import HeadTagInfo from "../theme/headTagInfo";
 
 config.autoAddCss = false;
 Amplify.configure(awsconfig);
@@ -33,7 +32,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ApolloProvider client={client}>
         <Provider store={store}>
           <AuthProvider>
-            <HeadTagInfo />
             <Loader />
             <ToastContainer />
             {/* @ts-ignore */}

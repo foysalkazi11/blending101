@@ -21,7 +21,6 @@ import {
   faRectangleVerticalHistory,
 } from "@fortawesome/pro-light-svg-icons";
 import { useDispatch } from "react-redux";
-import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 import {
   RecipeDetailsType,
   VersionDataType,
@@ -476,16 +475,6 @@ const VersionCompare = () => {
   }, [data?.getAllVersions, loading]);
 
   useEffect(() => {
-    dispatch(
-      updateHeadTagInfo({
-        title: "Recipe version compare",
-        description: "recipe version compare",
-      }),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
     isMounted.current = true;
 
     return () => {
@@ -605,6 +594,10 @@ const LayoutComponent: FC = ({ children }) => {
         show: true,
         showPanle: "right",
         showTagByDeafult: false,
+      }}
+      headTagInfo={{
+        title: "Recipe version compare",
+        description: "recipe version compare",
       }}
     >
       <div className={styles.versionCompareContainer}>{children}</div>
