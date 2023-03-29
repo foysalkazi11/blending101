@@ -14,7 +14,6 @@ import WikiBanner from "../../../components/wiki/wikiBanner/WikiBanner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faStar } from "@fortawesome/pro-regular-svg-icons";
 import ErrorPage from "../../../components/pages/404Page";
-import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 import ShowLastModifiedCollection from "../../../components/showLastModifiedCollection/ShowLastModifiedCollection";
 import ShareRecipe from "../../../components/recipe/recipeDetails/center/shareRecipe";
 import {
@@ -187,16 +186,6 @@ const CollectionRecipes = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allFilters]);
 
-  useEffect(() => {
-    dispatch(
-      updateHeadTagInfo({
-        title: "Recipe collection",
-        description: "Recipe collection",
-      }),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   if (
     getCollectionRecipeError ||
     filterRecipesError ||
@@ -317,6 +306,10 @@ const Layout: FC<{ allFilters?: any[] }> = ({ children, allFilters = [] }) => {
         show: true,
         showPanle: "left",
         showTagByDeafult: false,
+      }}
+      headTagInfo={{
+        title: "Recipe collection",
+        description: "Recipe collection",
       }}
     >
       <div className={styles.main__div}>

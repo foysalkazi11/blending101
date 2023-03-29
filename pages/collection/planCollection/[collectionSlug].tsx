@@ -12,7 +12,6 @@ import { GET_ALL_PLANS_FOR_A_COLLECTION } from "../../../graphql/Planner";
 import slugToTitle from "../../../helperFunc/string/slugToTittle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faStar } from "@fortawesome/pro-regular-svg-icons";
-import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 
 const CollectionsOfPlan = () => {
   const router = useRouter();
@@ -32,16 +31,6 @@ const CollectionsOfPlan = () => {
     },
   );
 
-  useEffect(() => {
-    dispatch(
-      updateHeadTagInfo({
-        title: "Plan collection",
-        description: "plan collection",
-      }),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <AContainer
       headerIcon="/icons/calender__sidebar.svg"
@@ -50,6 +39,10 @@ const CollectionsOfPlan = () => {
         show: true,
         showPanle: "left",
         showTagByDeafult: true,
+      }}
+      headTagInfo={{
+        title: "Plan collection",
+        description: "plan collection",
       }}
     >
       <div className={styles.main__div}>

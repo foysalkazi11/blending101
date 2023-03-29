@@ -35,7 +35,6 @@ import styles from "../../../styles/pages/planner.module.scss";
 import ConfirmAlert from "../../../component/molecules/Alert/Confirm.component";
 import Publish from "../../../helpers/Publish";
 import { useDispatch } from "react-redux";
-import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 
 const MyPlan = () => {
   const router = useRouter();
@@ -155,16 +154,6 @@ const MyPlan = () => {
     });
   };
 
-  useEffect(() => {
-    dispatch(
-      updateHeadTagInfo({
-        title: "Meal plan",
-        description: "meal plan",
-      }),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <AContainer
       headerIcon="/icons/calender__sidebar.svg"
@@ -173,6 +162,10 @@ const MyPlan = () => {
         show: showGroceryTray,
         showPanle: "right",
         showTagByDeafult: showGroceryTray,
+      }}
+      headTagInfo={{
+        title: "Meal plan",
+        description: "meal plan",
       }}
     >
       <RXPanel />

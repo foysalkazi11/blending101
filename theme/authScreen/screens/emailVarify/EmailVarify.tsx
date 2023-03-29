@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ButtonComponent from "../../../button/buttonA/button.component";
 import styles from "./EmailVarify.module.scss";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
@@ -16,7 +16,7 @@ import { Auth } from "aws-amplify";
 import CREATE_NEW_USER from "./../../../../gqlLib/user/mutations/createNewUser";
 import { useMutation } from "@apollo/client";
 import InputComponent from "../../../input/input.component";
-import { updateHeadTagInfo } from "../../../../redux/slices/headDataSlice";
+import HeadTagInfo from "../../../headTagInfo";
 
 const EmailVerify = () => {
   const [code, setCode] = useState("");
@@ -68,51 +68,46 @@ const EmailVerify = () => {
     }
   };
 
-  useEffect(() => {
-    dispatch(
-      updateHeadTagInfo({
-        title: `Email verify`,
-        description: `email verify`,
-      }),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
-    <div className={styles.mainDiv}>
-      <div className={styles.varifyEmailContainer}>
-        <img src="/images/logo.png" alt="logo will soon load" />
+    <>
+      <HeadTagInfo title={`Email verify`} description={`email verify`} />
+      <div className={styles.mainDiv}>
+        <div className={styles.varifyEmailContainer}>
+          <img src="/images/logo.png" alt="logo will soon load" />
 
-        <h2>Verify Email</h2>
-        <p>A Verification code is sent to your mail. Please paste it below.</p>
-        <form onSubmit={handleSubmit}>
-          <InputComponent
-            type="text"
-            style={{ margin: "4px auto 15px auto" }}
-            value={code}
-            placeholder="Verify your account"
-            fullWidth={true}
-            onChange={(e) => setCode(e?.target?.value)}
-          />
-
-          <div className={styles.buttonContainer}>
-            <ButtonComponent
-              type="primary"
-              style={{ height: "60px", fontSize: "18px" }}
-              value="Verify"
-              fullWidth={false}
-              submit={true}
+          <h2>Verify Email</h2>
+          <p>
+            A Verification code is sent to your mail. Please paste it below.
+          </p>
+          <form onSubmit={handleSubmit}>
+            <InputComponent
+              type="text"
+              style={{ margin: "4px auto 15px auto" }}
+              value={code}
+              placeholder="Verify your account"
+              fullWidth={true}
+              onChange={(e) => setCode(e?.target?.value)}
             />
-          </div>
-          <div className={styles.link}>
-            <p onClick={resendSignUp}>Resend code</p>
-            <Link href="/signup" passHref>
-              Sign up
-            </Link>
-          </div>
-        </form>
+
+            <div className={styles.buttonContainer}>
+              <ButtonComponent
+                type="primary"
+                style={{ height: "60px", fontSize: "18px" }}
+                value="Verify"
+                fullWidth={false}
+                submit={true}
+              />
+            </div>
+            <div className={styles.link}>
+              <p onClick={resendSignUp}>Resend code</p>
+              <Link href="/signup" passHref>
+                Sign up
+              </Link>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

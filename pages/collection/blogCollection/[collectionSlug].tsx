@@ -12,7 +12,6 @@ import GET_ALL_ADMIN from "../../../gqlLib/user/queries/getAllAdmin";
 import GET_ALL_BLOGS_FOR_A_COLLECTION from "../../../gqlLib/blog/query/getAllBlogsForACollection";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faStar } from "@fortawesome/pro-regular-svg-icons";
-import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 
 const CollectionBlog = () => {
   const router = useRouter();
@@ -37,16 +36,6 @@ const CollectionBlog = () => {
     return admin ? `${admin?.firstName} ${admin?.lastName}` : "Gabriel Branu";
   };
 
-  useEffect(() => {
-    dispatch(
-      updateHeadTagInfo({
-        title: "Blog collection",
-        description: "blog collection",
-      }),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <AContainer
       headerIcon="/icons/book_light.svg"
@@ -60,6 +49,10 @@ const CollectionBlog = () => {
         show: true,
         showPanle: "right",
         showTagByDeafult: false,
+      }}
+      headTagInfo={{
+        title: "Blog collection",
+        description: "blog collection",
       }}
     >
       <div className={styles.main__div}>

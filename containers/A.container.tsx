@@ -15,6 +15,7 @@ import BlogCommentsTray from "../components/sidetray/blogCommentsTray";
 import BlogCollectionTray from "../components/sidetray/blogCollectionTray";
 import PlanCollectionTray from "../components/sidetray/planCollectionTray";
 import FooterRecipeFilter from "../components/footer/footerRecipeFilter.component";
+import HeadTagInfo, { HeadTagInfoType } from "../theme/headTagInfo";
 
 interface ShowTray {
   show: boolean;
@@ -42,6 +43,7 @@ type AContainerProps = {
   healthTray?: Boolean;
   ingredientTray?: Boolean;
   headerFullWidth?: Boolean;
+  headTagInfo?: HeadTagInfoType;
 };
 
 const AContainer: FC<AContainerProps> = (props) => {
@@ -100,10 +102,12 @@ const AContainer: FC<AContainerProps> = (props) => {
     healthTray = false,
     ingredientTray = false,
     headerFullWidth = false,
+    headTagInfo = { description: "", title: "" },
   } = props;
 
   return (
     <div className={styles.containerA}>
+      <HeadTagInfo {...headTagInfo} />
       {showSidebar ? (
         <div className={styles.sidebarA}>
           <SidebarComponent />
