@@ -5,7 +5,7 @@ import styles from "./index.module.scss";
 import RecipeCategory from "./_RecipeCategory.component";
 import Streakbar from "./_Streakbar.component";
 import Dialer from "./_Dialer.component";
-import useChallengeLayout from "../../../../hooks/modules/useChallengeLayout";
+import useChallengeLayout from "../../../../hooks/modules/Challenge/useChallengeLayout";
 
 interface ChallengeProps {
   canUpload: boolean;

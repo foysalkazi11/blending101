@@ -10,7 +10,7 @@ interface UploadProps {
   multiple?: boolean;
   required?: boolean;
   className?: string;
-  imageState: [any[], any];
+  imageState: [(Image | any)[], any];
   featuredState?: [string, any];
   imagesLimit?: number;
   size?: "medium" | "large";
@@ -93,7 +93,9 @@ const Upload = (props: UploadProps) => {
         }}
       >
         {images.map((img, idx) => {
-          const src = typeof img === "string" ? img : URL.createObjectURL(img);
+          const src = img.hasOwnProperty("url")
+            ? img?.url
+            : URL.createObjectURL(img);
           return (
             <figure key={src + idx}>
               <button

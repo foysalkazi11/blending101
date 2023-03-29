@@ -3,7 +3,7 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import S3_CONFIG from "../configs/s3";
 
 const useImage = (initState: any[]) => {
-  const [images, setImages] = useState(initState);
+  const [images, setImages] = useState<(Image | File)[]>(initState);
   const imageUrls = useRef([]);
 
   useEffect(() => {}, []);
@@ -11,13 +11,13 @@ const useImage = (initState: any[]) => {
   const postImages = useCallback(async () => {
     await Promise.all(
       images.map((image) => {
-        if (typeof image === "string") {
+        if (image.hasOwnProperty("url")) {
           imageUrls.current.push({
-            url: image,
+            url: (image as Image).url,
             hash: "",
           });
         } else {
-          const file = image;
+          const file = image as File;
           const fileName = file.name;
           const formdata = new FormData();
           formdata.append("folder_name", "online");

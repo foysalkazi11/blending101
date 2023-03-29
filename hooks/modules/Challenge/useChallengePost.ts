@@ -1,13 +1,13 @@
 import { ApolloCache, useMutation } from "@apollo/client";
 import { format } from "date-fns";
-import { useEffect, useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
   GET_30DAYS_CHALLENGE,
   CREATE_CHALLENGE_POST,
   EDIT_CHALLENGE_POST,
-} from "../../graphql/Challenge";
-import { useAppSelector } from "../../redux/hooks";
+} from "../../../graphql/Challenge";
+import { useAppSelector } from "../../../redux/hooks";
 
 const update30DaysChallenge = (
   userId: string,
@@ -47,6 +47,7 @@ const useEditChallengePost = (userId) => {
   const [editPost, editState] = useMutation(EDIT_CHALLENGE_POST, {
     update(cache, { data: { editAChallengePost } }) {
       update30DaysChallenge(userId, cache, editAChallengePost);
+      //! If date of the post is edited we need to remove the post from the previous date
     },
   });
   return [editPost, editState];

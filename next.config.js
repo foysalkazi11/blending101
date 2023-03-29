@@ -12,6 +12,7 @@ module.exports = {
       "www.fivehearthome.com",
       "www.inspiredtaste.net",
       "imagesvc.meredithcorp.io",
+      "blending101.com",
     ],
   },
   webpack: (config, { isServer }) => {

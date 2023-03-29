@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import {
@@ -22,7 +23,7 @@ import {
 import ButtonComponent from "../../../theme/button/button.component";
 import IconButton from "../../atoms/Button/IconButton.component";
 import Checkbox from "../../organisms/Forms/Checkbox.component";
-import NumberField from "../../organisms/Forms/NumberField.component";
+import NumberField from "../../organisms/Forms/NumericField.component";
 import Textarea from "../../organisms/Forms/Textarea.component";
 import Textfield from "../../organisms/Forms/Textfield.component";
 
@@ -40,10 +41,15 @@ import Publish from "../../../helpers/Publish";
 import styles from "./Settings.module.scss";
 import { addDays, differenceInDays, format, isBefore, isPast } from "date-fns";
 import RadioButton from "../../organisms/Forms/RadioButton.component";
-import { getDateISO } from "../../../helpers/Date";
 import { setChallengeDate } from "../../../redux/slices/Challenge.slice";
 import Invite from "../../organisms/Share/Invite.component";
 import { SharedUserInfoType } from "../../organisms/Share/Distribute.component";
+import {
+  useActivateChallenge,
+  useAddChallenge,
+  useDeleteChallenge,
+  useEditChallenge,
+} from "../../../hooks/modules/Challenge/useChallengeList";
 
 interface SettingsProps {
   currentChallenge: string;
@@ -131,19 +137,14 @@ const ChallengeList = ({
   const [challengeInfo, setChallengeInfo] = useState<any>({});
 
   const dispatch = useAppDispatch();
-  const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
-  const [activateChallenge, activateState] = useMutation(ACTIVATE_CHALLENGE, {
-    refetchQueries: ["Get30DaysChallenge", "GetAllChallenges"],
-  });
-  const [deleteChallenge, deleteState] = useMutation(DELETE_CHALLENGE, {
-    refetchQueries: ["GetAllChallenges"],
-  });
-
+  const [activateChallenge, activateState] = useActivateChallenge(userId);
+  const [deleteChallenge, deleteState] = useDeleteChallenge(userId);
   const [inviteChallenge, { loading: inviteChallengeLoading }] =
     useMutation(INVITE_CHALLENGE);
+
   const [emails, setEmails] = useState<SharedUserInfoType[]>([]);
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
   const handleInvitation = () => {
     if (emails.length === 0) return;
@@ -171,7 +172,7 @@ const ChallengeList = ({
     await Publish({
       mutate: activateChallenge,
       variables: {
-        memberId,
+        memberId: userId,
         newChallenge: challengeId,
         prevChallenge: currentChallenge,
       },
@@ -180,7 +181,7 @@ const ChallengeList = ({
       onSuccess: () => {
         dispatch(setChallengeDate(""));
         setActiveId(challengeId);
-        hideSettings();
+        // hideSettings();
       },
     });
   };
@@ -305,14 +306,11 @@ const ChallengeForm = ({ setShowForm, challenge }) => {
   const methods = useForm({
     defaultValues: useMemo(() => defaultValues, []),
   });
+
   const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
-  const [addChallenge, addState] = useMutation(CREATE_CHALLENGE, {
-    refetchQueries: ["GetAllChallenges"],
-  });
-  const [editChallenge, editState] = useMutation(EDIT_CHALLENGE, {
-    refetchQueries: ["GetAllChallenges", "Get30DaysChallenge"],
-  });
+  const [addChallenge, addState] = useAddChallenge(memberId);
+  const [editChallenge, editState] = useEditChallenge(memberId);
 
   useEffect(() => {
     if (challenge) {
@@ -335,8 +333,8 @@ const ChallengeForm = ({ setShowForm, challenge }) => {
         memberId,
         ...data,
         days: days,
-        startDate: getDateISO(new Date(data.startDate)).toISOString(),
-        endDate: getDateISO(new Date(data.endDate)).toISOString(),
+        startDate: data.startDate,
+        endDate: data.endDate,
       },
     };
     if (isEditMode) challengeData.data.challengeId = challenge._id;
@@ -393,6 +391,7 @@ const ChallengeForm = ({ setShowForm, challenge }) => {
 };
 
 const ChallengeDate = ({ dayState }) => {
+  const hasDaysBeenSet = useRef(false);
   const [days, setDays] = dayState;
   const { control, setValue } = useFormContext();
 
@@ -407,7 +406,6 @@ const ChallengeDate = ({ dayState }) => {
   });
 
   const endDays = (e) => {
-    setDays(e.target.value);
     if (startDate) {
       setValue(
         "endDate",
@@ -416,24 +414,32 @@ const ChallengeDate = ({ dayState }) => {
     }
   };
 
+  // Resetting days value
   useEffect(() => {
+    if (hasDaysBeenSet.current) return;
+    // No End Date selected
     if (!endDate) return setDays(0);
+    // End Date < Start Date
     if (isBefore(new Date(endDate), new Date(startDate))) {
       setValue("endDate", "");
       setDays(0);
       return;
     }
-    setDays(differenceInDays(new Date(endDate), new Date(startDate)) + 1);
+    setDays(differenceInDays(new Date(endDate), new Date(startDate)));
+    hasDaysBeenSet.current = true;
   }, [endDate, setDays, setValue, startDate]);
 
-  console.log(startDate);
   return (
     <div className="row mb-30">
       <div className="col-5">
         <Textfield label="Start Date" name="startDate" type="date" />
       </div>
       <div className="col-2">
-        <NumberField label="End Day" value={days} onChange={endDays} />
+        <NumberField
+          label="End Day"
+          valueState={[days, setDays]}
+          onChange={endDays}
+        />
       </div>
       <div className="col-5">
         <Textfield label="End Date" name="endDate" type="date" />

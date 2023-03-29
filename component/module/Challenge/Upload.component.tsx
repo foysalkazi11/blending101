@@ -26,13 +26,12 @@ import useImage from "../../../hooks/useImage";
 import {
   useAddChallengePost,
   useChallengeForm,
-} from "../../../hooks/modules/Challenge";
+  useEditChallengePost,
+} from "../../../hooks/modules/Challenge/useChallengePost";
 
 const UploadCard = () => {
   const { images, setImages, postImages: uploadImages } = useImage([]);
   const [serving, setServing] = useState(1);
-
-  console.log(images);
 
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
@@ -45,7 +44,7 @@ const UploadCard = () => {
   const { data } = useQuery(GET_BLEND_CATEGORY);
   const { methods, onReset } = useChallengeForm(setImages);
   const [addPost, addState] = useAddChallengePost(userId);
-  const [editPost, editState] = useAddChallengePost(userId);
+  const [editPost, editState] = useEditChallengePost(userId);
 
   const closeForm = () => {
     dispatch(setShowPostForm(false));
@@ -62,7 +61,7 @@ const UploadCard = () => {
       memberId: userId,
       assignDate: data.assignDate,
       post: {
-        images: images.map((image) => image.url),
+        images,
         name: data.recipeTitle,
         recipeBlendCategory: data.category,
         note: data.note,
@@ -75,6 +74,7 @@ const UploadCard = () => {
         })),
       },
     };
+    console.log(isEditMode);
     if (isEditMode) {
       post.post._id = id;
       post.post.docId = docId;

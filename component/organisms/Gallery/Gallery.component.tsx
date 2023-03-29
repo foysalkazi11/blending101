@@ -30,7 +30,7 @@ const Gallery = ({ date, galleries }) => {
       gallery.images.forEach((img) => {
         imageData.push({
           date: gallery.assignDate,
-          src: img,
+          src: img.url,
         });
       });
     });

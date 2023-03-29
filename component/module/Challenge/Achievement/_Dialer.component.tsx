@@ -229,6 +229,7 @@ function DateButton({
           style={{
             background: "white",
             color: "#333",
+            border: "1px solid #dddada",
           }}
         >
           <p>{day}</p>

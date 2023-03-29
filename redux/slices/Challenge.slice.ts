@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
 export interface IPostIngredient {
   ingredientId: { _id: string; ingredientName: string };
   selectedPortion: {
@@ -14,7 +13,7 @@ export interface IPost {
   isEditMode?: boolean;
   id: string;
   docId: string;
-  images: string[];
+  images: Image[];
   title: string;
   category: string;
   startDate: string;
@@ -83,7 +82,7 @@ export const ChallengeSlice = createSlice({
         payload: {
           _id: string;
           name: string;
-          image: string;
+          image: Image;
           category: string;
           ingredients: IPostIngredient[];
         };
