@@ -14,7 +14,6 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import ShowLastModifiedCollection from "../../components/showLastModifiedCollection/ShowLastModifiedCollection";
 import { setIsOpenPlanCollectionTray } from "../../redux/slices/Planner.slice";
 import CommonSearchBar from "../../components/searchBar/CommonSearchBar";
-import { updateHeadTagInfo } from "../../redux/slices/headDataSlice";
 
 const PlanDiscovery = ({
   input = "",
@@ -38,16 +37,6 @@ const PlanDiscovery = ({
   );
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    dispatch(
-      updateHeadTagInfo({
-        title: "Plans",
-        description: "plans",
-      }),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <AContainer
       headerIcon="/icons/calender__sidebar.svg"
@@ -56,6 +45,10 @@ const PlanDiscovery = ({
         show: true,
         showPanle: "left",
         showTagByDeafult: true,
+      }}
+      headTagInfo={{
+        title: "Plans",
+        description: "plans",
       }}
     >
       <div className={styles.discovery}>

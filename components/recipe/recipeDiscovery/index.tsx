@@ -23,7 +23,6 @@ import {
 } from "../../../redux/slices/collectionSlice";
 import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
 import ShowRecipeContainer from "../../showRecipeContainer";
-import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 import ShareRecipe from "../recipeDetails/center/shareRecipe";
 let dataLimit = 12;
 
@@ -175,10 +174,6 @@ const RecipeDiscovery = () => {
   }, [debounceSearchTerm]);
 
   useEffect(() => {
-    dispatch(updateHeadTagInfo({ description: "blends", title: "Blends" }));
-  }, []);
-
-  useEffect(() => {
     isMounted.current = true;
 
     return () => {
@@ -202,6 +197,7 @@ const RecipeDiscovery = () => {
           showPanle: "right",
           showTagByDeafult: false,
         }}
+        headTagInfo={{ description: "blends", title: "Blends" }}
       >
         <div className={styles.main__div}>
           <div className={openFilterTray ? styles.move : styles.back}>

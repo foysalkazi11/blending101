@@ -22,7 +22,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBasketShopping as faBasketShoppingRegular } from "@fortawesome/pro-regular-svg-icons";
 import { faBasketShopping as faBasketShoppingSolid } from "@fortawesome/pro-solid-svg-icons";
 import { GiGl } from "../../../type/nutrationType";
-import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 
 const AddRecipePage = () => {
   const [images, setImages] = useState<any[]>([]);
@@ -171,16 +170,6 @@ const AddRecipePage = () => {
   };
 
   useEffect(() => {
-    dispatch(
-      updateHeadTagInfo({
-        title: "Add New Blend",
-        description: "add new blend",
-      }),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
     handleFetchIngrdients(
       selectedIngredientsList,
       nutritionState,
@@ -201,7 +190,14 @@ const AddRecipePage = () => {
   const giGl: GiGl = nutritionData?.getNutrientsListAndGiGlByIngredients?.giGl;
 
   return (
-    <AContainer headerIcon="/icons/juicer.svg" headerTitle="Add New Blend">
+    <AContainer
+      headerIcon="/icons/juicer.svg"
+      headerTitle="Add New Blend"
+      headTagInfo={{
+        title: "Add New Blend",
+        description: "add new blend",
+      }}
+    >
       {width < 1280 ? (
         <>
           <TrayWrapper

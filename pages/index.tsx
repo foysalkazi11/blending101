@@ -18,7 +18,6 @@ import { GET_ALL_PLANS } from "../graphql/Planner";
 import { GET_BLEND_TYPES } from "../graphql/Recipe";
 import { useAppSelector } from "../redux/hooks";
 import { updateFilterCriteriaItem } from "../redux/slices/filterRecipeSlice";
-import { updateHeadTagInfo } from "../redux/slices/headDataSlice";
 import { updateSidebarActiveMenuName } from "../redux/slices/utilitySlice";
 
 import styles from "../styles/pages/home.module.scss";
@@ -69,19 +68,13 @@ const Home = () => {
     router.push(route);
   };
 
-  useEffect(() => {
-    dispatch(
-      updateHeadTagInfo({ description: "home page content", title: "Home" }),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <AContainer
       headerTitle="Home"
       headerFullWidth={true}
       showSidebar={false}
       headerIcon={"/icons/home.svg"}
+      headTagInfo={{ description: "home page content", title: "Home" }}
     >
       <div className={styles.container}>
         <div className="row">

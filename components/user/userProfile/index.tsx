@@ -14,7 +14,6 @@ import { setDbUser } from "../../../redux/slices/userSlice";
 import { setLoading } from "../../../redux/slices/utilitySlice";
 import reactToastifyNotification from "../../../components/utility/reactToastifyNotification";
 import { useRouter } from "next/router";
-import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/pro-regular-svg-icons";
 
@@ -245,16 +244,6 @@ const UserProfile = () => {
     }
   };
 
-  useEffect(() => {
-    dispatch(
-      updateHeadTagInfo({
-        title: `User onboarding`,
-        description: `user onboarding `,
-      }),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <AContainer
       headerIcon={
@@ -263,6 +252,10 @@ const UserProfile = () => {
       headerTitle="User onboarding"
       showSidebar={false}
       headerFullWidth={true}
+      headTagInfo={{
+        title: `User onboarding`,
+        description: `user onboarding `,
+      }}
     >
       <div className={styles.userProfileContainer}>
         <ProgessBar steps={steps} />

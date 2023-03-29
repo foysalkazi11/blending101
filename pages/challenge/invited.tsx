@@ -16,9 +16,9 @@ import {
   GET_INVITE_CHALLENGE_DETAILS,
 } from "../../graphql/Challenge";
 import { useAppSelector } from "../../redux/hooks";
-import { updateHeadTagInfo } from "../../redux/slices/headDataSlice";
 
 import styles from "../../styles/pages/challenge.module.scss";
+import HeadTagInfo from "../../theme/headTagInfo";
 
 const Invited = () => {
   const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
@@ -42,18 +42,14 @@ const Invited = () => {
     });
   };
 
-  useEffect(() => {
-    dispatch(
-      updateHeadTagInfo({
-        title: "Challenge invite",
-        description: "challenge invite",
-      }),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <Fragment>
+      <HeadTagInfo
+        {...{
+          title: "Challenge invite",
+          description: "challenge invite",
+        }}
+      />
       <header className={styles.invited__header}>
         <img src="/logo.png" alt="" />
       </header>

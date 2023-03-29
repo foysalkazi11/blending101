@@ -40,8 +40,6 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import html2canvas from "html2canvas";
 import { dataURLtoFile } from "../../helpers/File";
-import client from "../../gqlLib/client";
-import { updateHeadTagInfo } from "../../redux/slices/headDataSlice";
 
 const ChallengePage = () => {
   const router = useRouter();
@@ -175,16 +173,6 @@ const ChallengePage = () => {
       />
     );
 
-  useEffect(() => {
-    dispatch(
-      updateHeadTagInfo({
-        title: "Challenge",
-        description: "challenge",
-      }),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const canUpload =
     !viewOnly &&
     data?.getMyThirtyDaysChallenge?.challengeInfo?.daysRemaining > 0;
@@ -197,6 +185,10 @@ const ChallengePage = () => {
         show: showGroceryTray,
         showPanle: "right",
         showTagByDeafult: showGroceryTray,
+      }}
+      headTagInfo={{
+        title: "Challenge",
+        description: "challenge",
       }}
     >
       <RXPanel />

@@ -25,7 +25,6 @@ import { WikiType } from "../../../type/wikiListType";
 import useWindowSize from "../../utility/useWindowSize";
 import ShowRelatedItems from "../../showRelatedItems";
 import dummyData from "./dummyData";
-import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 export const placeHolderImage = "/images/no-image-available.webp";
 
 interface Props {
@@ -149,12 +148,6 @@ function WikiSingleItem() {
   }, []);
 
   useEffect(() => {
-    dispatch(
-      updateHeadTagInfo({
-        title: `Wiki ${type} details`,
-        description: `wiki ${type} details`,
-      }),
-    );
     dispatch(updateSidebarActiveMenuName("Wiki"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
@@ -181,6 +174,10 @@ function WikiSingleItem() {
         show: true,
         showPanle: "right",
         showTagByDeafult: false,
+      }}
+      headTagInfo={{
+        title: `Wiki ${type} details`,
+        description: `wiki ${type} details`,
       }}
     >
       <div className={styles.main}>
