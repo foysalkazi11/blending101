@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import React, { Fragment, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Icon from "../../component/atoms/Icon/Icon.component";
+import Loader from "../../component/atoms/Loader/loader.component";
 import {
   ACCEPT_CHALLENGE,
   GET_INVITE_CHALLENGE_DETAILS,
@@ -24,7 +25,7 @@ const Invited = () => {
   const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
   const dispatch = useDispatch();
   const router = useRouter();
-  const { data } = useQuery(GET_INVITE_CHALLENGE_DETAILS, {
+  const { data, loading } = useQuery(GET_INVITE_CHALLENGE_DETAILS, {
     variables: {
       id: router.query?.id,
     },
@@ -51,6 +52,8 @@ const Invited = () => {
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (loading) return <Loader />;
 
   return (
     <Fragment>

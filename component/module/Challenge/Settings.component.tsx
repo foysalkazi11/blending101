@@ -27,14 +27,7 @@ import NumberField from "../../organisms/Forms/NumericField.component";
 import Textarea from "../../organisms/Forms/Textarea.component";
 import Textfield from "../../organisms/Forms/Textfield.component";
 
-import {
-  ACTIVATE_CHALLENGE,
-  CREATE_CHALLENGE,
-  DELETE_CHALLENGE,
-  EDIT_CHALLENGE,
-  GET_CHALLENGES,
-  INVITE_CHALLENGE,
-} from "../../../graphql/Challenge";
+import { INVITE_CHALLENGE } from "../../../graphql/Challenge";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import Publish from "../../../helpers/Publish";
 
@@ -50,6 +43,7 @@ import {
   useDeleteChallenge,
   useEditChallenge,
 } from "../../../hooks/modules/Challenge/useChallengeList";
+import { useRouter } from "next/router";
 
 interface SettingsProps {
   currentChallenge: string;
@@ -132,6 +126,7 @@ const ChallengeList = ({
   editFormHandler,
   hideSettings,
 }) => {
+  const router = useRouter();
   const [show, setShow] = useState(false);
   const [activeId, setActiveId] = useState("");
   const [challengeInfo, setChallengeInfo] = useState<any>({});
@@ -181,6 +176,7 @@ const ChallengeList = ({
       onSuccess: () => {
         dispatch(setChallengeDate(""));
         setActiveId(challengeId);
+        router.replace("/challenge", undefined, { shallow: true });
         // hideSettings();
       },
     });

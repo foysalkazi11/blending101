@@ -22,6 +22,7 @@ const update30DaysChallenge = (
     },
   };
   const { getMyThirtyDaysChallenge } = cache.readQuery<any>(definition);
+  console.log(mutated);
   const data = {
     challenge: getMyThirtyDaysChallenge.challenge.map((day) =>
       day.date === mutated?.challenge?.date ? mutated?.challenge : day,

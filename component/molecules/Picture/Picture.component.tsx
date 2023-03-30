@@ -11,7 +11,6 @@ interface PictureProps {
 const Picture = (props: PictureProps) => {
   const { hash, url } = props;
   const [hasLoaded, setHasLoaded] = useState(false);
-  const [hasLoadStarted, setLoadStarted] = useState(false);
 
   const handleLoad = () => {
     setHasLoaded(true);
@@ -34,26 +33,11 @@ const Picture = (props: PictureProps) => {
         alt={""}
         layout={"fill"}
         objectFit={"cover"}
-        blurDataURL={DEFAULT_HASH}
-        onLoad={handleLoad}
+        onLoadingComplete={handleLoad}
       />
     </Fragment>
   );
 };
-
-// const Picture = (props: PictureProps) => {
-//   const { hash } = props;
-//   return (
-//     <Blurhash
-//       hash={hash || DEFAULT_HASH}
-//       width="100%"
-//       height="100%"
-//       resolutionX={32}
-//       resolutionY={32}
-//       punch={1}
-//     />
-//   );
-// };
 
 Picture.defaultProps = {
   hash: DEFAULT_HASH,
