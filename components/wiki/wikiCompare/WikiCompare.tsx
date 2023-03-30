@@ -22,7 +22,6 @@ import { setDbUser } from "../../../redux/slices/userSlice";
 import { useRouter } from "next/router";
 import EMPTY_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/mutation/emptyWikiCompareList";
 import ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/mutation/addOrRemoveToWikiCompareList";
-import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 
 const compareRecipeResponsiveSettings = {
   ...compareRecipeResponsiveSetting,
@@ -165,16 +164,6 @@ const WikiCompare = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wikiCompareData]);
 
-  useEffect(() => {
-    dispatch(
-      updateHeadTagInfo({
-        title: "Compare Ingredient",
-        description: "compare Ingredient",
-      }),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <AContainer
       headerIcon={"/icons/books.svg"}
@@ -183,6 +172,10 @@ const WikiCompare = () => {
         show: true,
         showPanle: "right",
         showTagByDeafult: false,
+      }}
+      headTagInfo={{
+        title: "Compare Ingredient",
+        description: "compare Ingredient",
       }}
     >
       <div className={s.wikiCompareContainer}>

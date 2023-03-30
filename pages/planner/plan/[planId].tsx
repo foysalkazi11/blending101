@@ -47,7 +47,6 @@ import CommentDrawer from "../../../component/templates/Drawer/Comment/Comment.c
 import { useAppSelector } from "../../../redux/hooks";
 import Publish from "../../../helpers/Publish";
 import { useDispatch } from "react-redux";
-import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 import { updateSidebarActiveMenuName } from "../../../redux/slices/utilitySlice";
 
 const MyPlan = () => {
@@ -174,12 +173,6 @@ const MyPlan = () => {
   }, [share]);
 
   useEffect(() => {
-    dispatch(
-      updateHeadTagInfo({
-        title: "Blending plan details",
-        description: "blending plans details",
-      }),
-    );
     dispatch(updateSidebarActiveMenuName("Plans"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -192,6 +185,10 @@ const MyPlan = () => {
       //   showPanle: "right",
       //   showTagByDeafult: false,
       // }}
+      headTagInfo={{
+        title: "Blending plan details",
+        description: "blending plans details",
+      }}
     >
       <CommentDrawer
         id={plan?._id}

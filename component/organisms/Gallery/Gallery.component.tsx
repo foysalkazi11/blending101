@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useMemo } from "react";
+import React, { useRef, useState, useEffect, useMemo, Fragment } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -25,19 +25,25 @@ const Gallery = ({ date, galleries }) => {
   const { nav1, nav2 } = state;
 
   const images = useMemo(() => {
-    const imageData = [];
+    let imageData = [];
     galleries?.forEach((gallery) => {
+      // console.log(gallery.assignDate, gallery.images, gallery.images.reverse());
+      const imagesOnEachDate = [];
       gallery.images.forEach((img) => {
-        imageData.push({
+        imagesOnEachDate.push({
           date: gallery.assignDate,
           src: img.url,
         });
       });
+      imageData = [...imageData, ...imagesOnEachDate.reverse()];
     });
-    return imageData;
+    return imageData.reverse();
   }, [galleries]);
 
-  const initialSlide = images.findIndex((img) => isSameDay(img.date, date));
+  const initialSlide = useMemo(
+    () => images.findIndex((img) => isSameDay(new Date(img.date), date)),
+    [date, images],
+  );
 
   return (
     <div className={styles.container}>
@@ -48,6 +54,7 @@ const Gallery = ({ date, galleries }) => {
           nextArrow={<MainNextArrow />}
           prevArrow={<MainPrevArrow />}
           initialSlide={initialSlide}
+          draggable
         >
           {images.map((item) => (
             <div
@@ -66,8 +73,7 @@ const Gallery = ({ date, galleries }) => {
           slidesToShow={4}
           swipeToSlide={true}
           focusOnSelect={true}
-          // centerMode={true}
-          infinite={true}
+          infinite={false}
           lazyLoad="progressive"
           centerPadding="0px"
           nextArrow={<PreviewNextArrow />}
@@ -80,6 +86,7 @@ const Gallery = ({ date, galleries }) => {
                 className={styles.gallery__preview__img}
                 src={item.src}
                 alt={item.date}
+                onDragStart={() => false}
               />
               <p className={styles.gallery__preview__caption}>
                 {format(new Date(item.date), "EEEE, MMM dd")}

@@ -7,7 +7,6 @@ import GET_A_GENERAL_BLOG_BY_SLUG from "../../../../gqlLib/blog/query/getAGenera
 import GET_ALL_GENERAL_BLOG_FOR_CLIENT from "../../../../gqlLib/blog/query/getAllGeneralBlogForClient";
 import GET_ALL_ADMIN from "../../../../gqlLib/user/queries/getAllAdmin";
 import { useAppSelector } from "../../../../redux/hooks";
-import { updateHeadTagInfo } from "../../../../redux/slices/headDataSlice";
 import { updateSidebarActiveMenuName } from "../../../../redux/slices/utilitySlice";
 import SkeletonBlogDetails from "../../../../theme/skeletons/skeletonBlogDetails";
 import ErrorPage from "../../404Page";
@@ -46,12 +45,6 @@ const BlogDetails = () => {
   };
 
   useEffect(() => {
-    dispatch(
-      updateHeadTagInfo({
-        title: "Blog details",
-        description: "blog details",
-      }),
-    );
     dispatch(updateSidebarActiveMenuName("Blogs"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -102,6 +95,10 @@ const Layout: FC = ({ children }) => {
         show: true,
         showPanle: "right",
         showTagByDeafult: false,
+      }}
+      headTagInfo={{
+        title: "Blog details",
+        description: "blog details",
       }}
     >
       {children}

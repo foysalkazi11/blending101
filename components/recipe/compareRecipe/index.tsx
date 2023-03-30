@@ -43,7 +43,6 @@ import {
   setSingleRecipeWithinCollecions,
 } from "../../../redux/slices/collectionSlice";
 import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
-import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 import { CompareRecipeType } from "../../../type/compareRecipeType";
 import useToGetARecipe from "../../../customHooks/useToGetARecipe";
 import {
@@ -533,16 +532,6 @@ const CompareRecipe = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(
-      updateHeadTagInfo({
-        title: "Recipe compare",
-        description: "recipe compare",
-      }),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
     isMounted.current = true;
 
     return () => {
@@ -570,6 +559,10 @@ const CompareRecipe = () => {
           show: true,
           showPanle: "right",
           showTagByDeafult: false,
+        }}
+        headTagInfo={{
+          title: "Recipe compare",
+          description: "recipe compare",
         }}
       >
         <div className={styles.mainContentDiv}>

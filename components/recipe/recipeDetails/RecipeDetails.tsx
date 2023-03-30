@@ -58,6 +58,10 @@ const RecipeDetails = ({
         showPanle: "right",
         showTagByDeafult: openVersionTray ? false : true,
       }}
+      headTagInfo={{
+        title: "Recipe Details",
+        description: "recipe Details",
+      }}
     >
       <div className={styles.main}>
         <div className={styles.left}>

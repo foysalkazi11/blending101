@@ -91,8 +91,9 @@ function Main({ canUpload, activities, statistics }: MainInterface) {
               }
               onClick={() => setLabel("Days Completed")}
             >
-              {differenceInDays(hasChallengeEnded ? end : today, begin) + 1 ||
-                0}
+              {statistics?.days === 0 && statistics?.daysRemaining === 0
+                ? 0
+                : differenceInDays(hasChallengeEnded ? end : today, begin) + 1}
             </span>
             <span
               className={

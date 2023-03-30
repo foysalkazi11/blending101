@@ -14,7 +14,6 @@ import useToGetARecipe from "../../../customHooks/useToGetARecipe";
 import SkeletonRecipeDetails from "../../../theme/skeletons/skeletonRecipeDetails";
 import AContainer from "../../../containers/A.container";
 import ErrorPage from "../../../components/pages/404Page";
-import { updateHeadTagInfo } from "../../../redux/slices/headDataSlice";
 import { updateSidebarActiveMenuName } from "../../../redux/slices/utilitySlice";
 import { RecipeDetailsType } from "../../../type/recipeDetailsType";
 
@@ -58,12 +57,6 @@ const Index = () => {
   }, [recipe__Id, dbUser?._id]);
 
   useEffect(() => {
-    dispatch(
-      updateHeadTagInfo({
-        title: "Recipe Details",
-        description: "recipe Details",
-      }),
-    );
     dispatch(updateSidebarActiveMenuName("Blends"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
