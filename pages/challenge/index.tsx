@@ -40,7 +40,6 @@ import Icon from "../../component/atoms/Icon/Icon.component";
 import { theme } from "../../configs/themes";
 import ShareModal from "../../component/organisms/Share/Share.component";
 import { dataURLtoFile } from "../../helpers/File";
-import { updateHeadTagInfo } from "../../redux/slices/headDataSlice";
 
 const ChallengePage = () => {
   const router = useRouter();
@@ -174,16 +173,6 @@ const ChallengePage = () => {
       />
     );
 
-  useEffect(() => {
-    dispatch(
-      updateHeadTagInfo({
-        title: "Challenge",
-        description: "challenge",
-      }),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const canUpload =
     !viewOnly &&
     data?.getMyThirtyDaysChallenge?.challengeInfo?.daysRemaining > 0;
@@ -196,6 +185,10 @@ const ChallengePage = () => {
         show: showGroceryTray,
         showPanle: "right",
         showTagByDeafult: showGroceryTray,
+      }}
+      headTagInfo={{
+        title: "Challenge",
+        description: "challenge",
       }}
     >
       <RXPanel />

@@ -134,6 +134,10 @@ const EditRecipePage = ({
         showPanle: "right",
         showTagByDeafult: false,
       }}
+      headTagInfo={{
+        title: "Recipe Edit",
+        description: "recipe Edit",
+      }}
     >
       {width < 1280 && (
         <FloatingLeftPanel>

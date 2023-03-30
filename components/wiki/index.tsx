@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import AContainer from "../../containers/A.container";
 import useLocalStorage from "../../customHooks/useLocalStorage";
-import { updateHeadTagInfo } from "../../redux/slices/headDataSlice";
 import { WikiType } from "../../type/wikiListType";
 import TrayTag from "../sidetray/TrayTag";
 import TrayWrapper from "../sidetray/TrayWrapper";
@@ -31,16 +30,6 @@ const WikiHome = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    dispatch(
-      updateHeadTagInfo({
-        title: type ? `Wiki ${type}` : "Wiki",
-        description: type ? `wiki ${type}` : "Wiki",
-      }),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type]);
-
   return (
     <AContainer
       headerTitle="Wiki Discovery"
@@ -49,6 +38,10 @@ const WikiHome = () => {
         show: true,
         showPanle: "right",
         showTagByDeafult: false,
+      }}
+      headTagInfo={{
+        title: type ? `Wiki ${type}` : "Wiki",
+        description: type ? `wiki ${type}` : "Wiki",
       }}
     >
       <div className={styles.main}>

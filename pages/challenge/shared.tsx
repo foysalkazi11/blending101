@@ -12,9 +12,8 @@ import React, { Fragment, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Icon from "../../component/atoms/Icon/Icon.component";
 import { GET_SHARED_CHALLENGE_DETAILS } from "../../graphql/Challenge";
-import { updateHeadTagInfo } from "../../redux/slices/headDataSlice";
-
 import styles from "../../styles/pages/challenge.module.scss";
+import HeadTagInfo from "../../theme/headTagInfo";
 
 const Shared = () => {
   const router = useRouter();
@@ -31,19 +30,15 @@ const Shared = () => {
     );
   };
 
-  useEffect(() => {
-    dispatch(
-      updateHeadTagInfo({
-        title: "Challenge share",
-        description: "challenge share",
-      }),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   // if (!router.query?.id || !router.query?.token) return <></>;
   return (
     <Fragment>
+      <HeadTagInfo
+        {...{
+          title: "Challenge share",
+          description: "challenge share",
+        }}
+      />
       <header className={styles.shared__header}>
         <img src="/logo.png" alt="" />
       </header>
