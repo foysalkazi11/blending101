@@ -18,19 +18,10 @@ import SkeletonElement from "../../../theme/skeletons/SkeletonElement";
 import RecipeCard from "../../molecules/Card/RecipeCard.component";
 import Icon from "../../atoms/Icon/Icon.component";
 
-import {
-  ADD_RECIPE_TO_PLANNER,
-  GET_ALL_PLANS,
-  GET_INGREDIENTS_BY_RECIPE,
-  GET_QUEUED_RECIPES_FOR_PLANNER,
-  GET_RECIPES_FOR_PLANNER,
-} from "../../../graphql/Planner";
+import { GET_ALL_PLANS } from "../../../graphql/Planner";
 import { GET_BLEND_CATEGORY } from "../../../graphql/Recipe";
 import { useAppSelector } from "../../../redux/hooks";
-import { addPlanner } from "../../../redux/slices/Planner.slice";
 import { setRecipeInfo } from "../../../redux/slices/Challenge.slice";
-
-import Publish from "../../../helpers/Publish";
 
 import styles from "./PlanDiscovery.module.scss";
 import PlanCard from "./PlanCard.component";

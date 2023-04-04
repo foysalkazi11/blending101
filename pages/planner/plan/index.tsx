@@ -35,88 +35,35 @@ import styles from "../../../styles/pages/planner.module.scss";
 import ConfirmAlert from "../../../component/molecules/Alert/Confirm.component";
 import Publish from "../../../helpers/Publish";
 import { useDispatch } from "react-redux";
+import { usePlanByWeek, useWeek } from "../../../hooks/modules/Plan/useMyPlan";
 
 const MyPlan = () => {
   const router = useRouter();
-  const dispatch = useDispatch();
   const methods = useForm({
     defaultValues: useMemo(() => defaultPlan, []),
   });
   const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
-  const fetchedFromUrl = useRef(false);
   const [showGroceryTray] = useState(true);
   const [showDuplicateAlert, setShowDuplicateAlert] = useState(false);
   const [showForm, setShowForm] = useState(false);
-  const [week, setWeek] = useState({
-    start: startOfWeek(new Date(), { weekStartsOn: 1 }),
-    end: endOfWeek(new Date(), { weekStartsOn: 1 }),
+
+  const { week, setWeek, isFetchingFromURL } = useWeek();
+  const { plans, topIngredients, recipeTypes } = usePlanByWeek({
+    week,
+    isFetchingFromURL,
+    setShowDuplicateAlert,
   });
 
-  const [getPlanByWeek, { data }] = useLazyQuery(GET_PLANNER_BY_WEEK);
   const [addToMyPlan, addToMyPlanState] = useMutation(ADD_TO_MY_PLAN, {
     refetchQueries: ["GetPlannerByWeek"],
   });
   const [createPlan] = useMutation(CREATE_PLAN);
 
-  useEffect(() => {
-    if (fetchedFromUrl.current || !router.query.start || !router.query.end)
-      return;
-    setWeek({
-      start: new Date(router.query.start as string),
-      end: new Date(router.query.end as string),
-    });
-  }, [router.query?.end, router.query?.start]);
-
-  useEffect(() => {
-    if (memberId === "") return;
-    const defaultFetch =
-      !fetchedFromUrl.current && router.query.start && router.query.end;
-    getPlanByWeek({
-      variables: {
-        userId: memberId,
-        startDate: !defaultFetch
-          ? format(week.start, "yyyy-MM-dd")
-          : router.query.start,
-        endDate: !defaultFetch
-          ? format(week.end, "yyyy-MM-dd")
-          : router.query.end,
-      },
-    }).then((response) => {
-      console.log(response);
-      if (
-        router.query?.plan &&
-        !fetchedFromUrl.current &&
-        response?.data?.getPlannerByDates?.planners.length > 0
-      ) {
-        setShowDuplicateAlert(true);
-      }
-      fetchedFromUrl.current = true;
-    });
-  }, [getPlanByWeek, memberId, router.query, week]);
-
   const startMonth = MONTH[week.start.getMonth()];
   const endMonth = MONTH[week.end.getMonth()];
   const startDay = week.start.getDate();
   const endDay = week.end.getDate();
-
-  const { plans } = useMemo(() => {
-    if (!data?.getPlannerByDates) return { plans: [] };
-    return {
-      plans: data?.getPlannerByDates.planners.map((planner) => ({
-        id: planner._id,
-        date: planner.formatedDate,
-        recipes: planner.recipes.map((recipe) => ({
-          _id: recipe?._id,
-          name: recipe?.name,
-          category: recipe?.recipeBlendCategory?.name,
-          rxScore: 786,
-          calorie: 250,
-          ingredients: recipe?.ingredients,
-        })),
-      })),
-    };
-  }, [data?.getPlannerByDates]);
 
   const handlePlanSave = (data) => {
     if (!showForm) return setShowForm(true);
@@ -195,7 +142,11 @@ const MyPlan = () => {
           </div>
           <div className="row">
             <div className="col-3">
-              <PlannerQueue panel="my-plan" />
+              <PlannerQueue
+                panel="my-plan"
+                week={week}
+                isWeekFromURL={isFetchingFromURL}
+              />
             </div>
             <div className="col-6" style={{ padding: "0 3.5rem" }}>
               <div className={styles.headingDiv}>
@@ -253,10 +204,7 @@ const MyPlan = () => {
               </div>
             </div>
             <div className="col-3">
-              <Insights
-                categories={data?.getPlannerByDates?.recipeCategoriesPercentage}
-                ingredients={data?.getPlannerByDates.topIngredients}
-              />
+              <Insights categories={recipeTypes} ingredients={topIngredients} />
             </div>
           </div>
         </div>
