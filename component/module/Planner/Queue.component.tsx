@@ -38,10 +38,12 @@ import {
 interface PlannerPanelProps {
   panel: "my-plan" | "plan" | "challenge";
   modifyPlan?: any;
+  week?: any;
+  isWeekFromURL?: boolean;
 }
 
 const PlannerQueue = (props: PlannerPanelProps) => {
-  const { panel, modifyPlan } = props;
+  const { panel, week, isWeekFromURL, modifyPlan } = props;
   const [toggler, setToggler] = useState(true);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
@@ -59,6 +61,8 @@ const PlannerQueue = (props: PlannerPanelProps) => {
     page,
     query,
     type: type === "all" ? "" : type,
+    week,
+    isWeekFromURL,
   });
 
   // When we toggle the tab between Discover and Queue

@@ -1,9 +1,11 @@
+import { useRouter } from "next/router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { format } from "date-fns";
 import {
   ADD_RECIPE_TO_PLANNER,
   GET_ALL_PLANNER_RECIPES,
+  GET_PLANNER_BY_WEEK,
   GET_QUEUED_PLANNER_RECIPES,
 } from "../../../graphql/Planner";
 import { useAppSelector } from "../../../redux/hooks";
@@ -116,10 +118,14 @@ interface IAddRecipeToPlanHook {
   limit: number;
   query: string;
   page: number;
+  week: any;
+  isWeekFromURL: boolean;
 }
 
 const useAddRecipeToMyPlan = (props: IAddRecipeToPlanHook) => {
-  const { query, page, limit, type } = props;
+  const { query, page, limit, type, week, isWeekFromURL } = props;
+
+  const router = useRouter();
   const [addRecipe, addState] = useMutation(ADD_RECIPE_TO_PLANNER, {
     refetchQueries: [GET_QUEUED_PLANNER_RECIPES],
   });
@@ -144,7 +150,7 @@ const useAddRecipeToMyPlan = (props: IAddRecipeToPlanHook) => {
         setShowCalenderId("");
       },
       onUpdate(cache) {
-        const definition = {
+        const GetQueuedRecipesForPlanner = {
           query: GET_QUEUED_PLANNER_RECIPES,
           variables: {
             currentDate: format(new Date(), "yyyy-MM-dd"),
@@ -155,15 +161,34 @@ const useAddRecipeToMyPlan = (props: IAddRecipeToPlanHook) => {
             type,
           },
         };
-        const { getQuedPlanner } = cache.readQuery<any>(definition);
+        const { getQuedPlanner } = cache.readQuery<any>(
+          GetQueuedRecipesForPlanner,
+        );
         cache.writeQuery({
-          ...definition,
+          ...GetQueuedRecipesForPlanner,
           data: {
             getQuedPlanner: {
               recipes: [...getQuedPlanner.recipes, recipe],
             },
           },
         });
+
+        const defaultFetch =
+          !isWeekFromURL && router.query.start && router.query.end;
+        const GetPlanByWeek = {
+          query: GET_PLANNER_BY_WEEK,
+          variables: {
+            userId: userId,
+            startDate: !defaultFetch
+              ? format(week.start, "yyyy-MM-dd")
+              : router.query.start,
+            endDate: !defaultFetch
+              ? format(week.end, "yyyy-MM-dd")
+              : router.query.end,
+          },
+        };
+        const { getPlannerByDates } = cache.readQuery<any>(GetPlanByWeek);
+        console.log(getPlannerByDates);
       },
     });
   };
