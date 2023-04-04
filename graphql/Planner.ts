@@ -1,6 +1,45 @@
 import { gql } from "@apollo/client";
 
-export const GET_RECIPES_FOR_PLANNER = gql`
+const PLANNER_RECIPE_LIST_FIELDS = gql`
+  fragment RecipeFields on PlannerRecipe {
+    recipes {
+      isMatch
+      recipeId {
+        _id
+        name
+        recipeBlendCategory {
+          name
+        }
+        averageRating
+        totalRating
+        brand {
+          brandName
+        }
+        image {
+          image
+          default
+        }
+      }
+      defaultVersion {
+        postfixTitle
+        ingredients {
+          ingredientId {
+            _id
+            ingredientName
+          }
+          selectedPortion {
+            name
+            quantity
+            gram
+          }
+        }
+      }
+    }
+    totalRecipe
+  }
+`;
+
+export const GET_ALL_PLANNER_RECIPES = gql`
   query GetRecipesForPlanner(
     $searchTerm: String!
     $page: Float!
@@ -15,44 +54,13 @@ export const GET_RECIPES_FOR_PLANNER = gql`
       searchTerm: $searchTerm
       recipeBlendCategory: $type
     ) {
-      recipes {
-        isMatch
-        _id
-        name
-        recipeBlendCategory {
-          _id
-          name
-        }
-        averageRating
-        totalRating
-        brand {
-          brandName
-        }
-        image {
-          image
-          default
-        }
-        defaultVersion {
-          postfixTitle
-          ingredients {
-            ingredientId {
-              _id
-              ingredientName
-            }
-            selectedPortion {
-              name
-              quantity
-              gram
-            }
-          }
-        }
-      }
-      totalRecipe
+      ...RecipeFields
     }
   }
+  ${PLANNER_RECIPE_LIST_FIELDS}
 `;
 
-export const GET_QUEUED_RECIPES_FOR_PLANNER = gql`
+export const GET_QUEUED_PLANNER_RECIPES = gql`
   query GetQueuedRecipesForPlanner(
     $currentDate: String!
     $searchTerm: String!
@@ -69,40 +77,10 @@ export const GET_QUEUED_RECIPES_FOR_PLANNER = gql`
       searchTerm: $searchTerm
       recipeBlendCategory: $type
     ) {
-      recipes {
-        isMatch
-        _id
-        name
-        recipeBlendCategory {
-          name
-        }
-        averageRating
-        totalRating
-        brand {
-          brandName
-        }
-        image {
-          image
-          default
-        }
-        defaultVersion {
-          postfixTitle
-          ingredients {
-            ingredientId {
-              _id
-              ingredientName
-            }
-            selectedPortion {
-              name
-              quantity
-              gram
-            }
-          }
-        }
-      }
-      totalRecipe
+      ...RecipeFields
     }
   }
+  ${PLANNER_RECIPE_LIST_FIELDS}
 `;
 
 export const GET_PLANNER_BY_WEEK = gql`
@@ -118,18 +96,20 @@ export const GET_PLANNER_BY_WEEK = gql`
     ) {
       planners {
         _id
-        recipes {
-          _id
-          name
-          recipeBlendCategory {
+        recipes: ProfileRecipes {
+          recipeId {
+            _id
             name
-          }
-          ingredients {
-            ingredientId {
-              _id
+            recipeBlendCategory {
+              name
             }
-            selectedPortion {
-              gram
+            ingredients {
+              ingredientId {
+                _id
+              }
+              selectedPortion {
+                gram
+              }
             }
           }
         }

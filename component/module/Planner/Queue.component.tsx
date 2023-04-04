@@ -18,9 +18,8 @@ import Icon from "../../atoms/Icon/Icon.component";
 
 import {
   ADD_RECIPE_TO_PLANNER,
-  GET_INGREDIENTS_BY_RECIPE,
-  GET_QUEUED_RECIPES_FOR_PLANNER,
-  GET_RECIPES_FOR_PLANNER,
+  GET_QUEUED_PLANNER_RECIPES,
+  GET_ALL_PLANNER_RECIPES,
 } from "../../../graphql/Planner";
 import { GET_BLEND_CATEGORY } from "../../../graphql/Recipe";
 import { useAppSelector } from "../../../redux/hooks";
@@ -30,6 +29,11 @@ import { setRecipeInfo } from "../../../redux/slices/Challenge.slice";
 import Publish from "../../../helpers/Publish";
 
 import styles from "./Queue.module.scss";
+import {
+  useAddRecipeToMyPlan,
+  useRecipeCategory,
+  useRecipeQueue,
+} from "../../../hooks/modules/Plan/useRecipeQueue";
 
 interface PlannerPanelProps {
   panel: "my-plan" | "plan" | "challenge";
@@ -41,82 +45,31 @@ const PlannerQueue = (props: PlannerPanelProps) => {
   const [toggler, setToggler] = useState(true);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
-  const [limit] = useState(3);
-  const [pageLength, setPageLength] = useState(1);
   const [type, setType] = useState("all");
-  const [recipes, setRecipes] = useState([]);
 
-  const blendTypeRef = useRef<HTMLDivElement>(null);
-
-  const { data: categories } = useQuery(GET_BLEND_CATEGORY);
-  const [getRecipes, { loading: discoverLoading, data: discoverData }] =
-    useLazyQuery(GET_RECIPES_FOR_PLANNER);
-  const [getQueuedRecipes, { loading, data: queuedData }] = useLazyQuery(
-    GET_QUEUED_RECIPES_FOR_PLANNER,
-  );
-
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
-
-  useEffect(() => {
-    const blendCategory = type === "all" ? "" : type;
-    if (userId !== "") {
-      getRecipes({
-        variables: {
-          user: userId,
-          searchTerm: query,
-          page,
-          limit,
-          type: blendCategory,
-        },
-      });
-      getQueuedRecipes({
-        variables: {
-          currentDate: format(new Date(), "yyyy-MM-dd"),
-          user: userId,
-          searchTerm: query,
-          page,
-          limit,
-          type: blendCategory,
-        },
-      });
-    }
-  }, [getQueuedRecipes, getRecipes, limit, page, query, type, userId]);
-
-  useEffect(() => {
-    if (toggler) {
-      setRecipes(discoverData?.getAllRecipesForPlanner?.recipes || []);
-      setPageLength(
-        Math.ceil(discoverData?.getAllRecipesForPlanner?.totalRecipe / limit) ||
-          1,
-      );
-    } else {
-      setRecipes(queuedData?.getQuedPlanner?.recipes || []);
-      setPageLength(
-        Math.ceil(queuedData?.getQuedPlanner?.totalRecipe / limit) || 1,
-      );
-    }
-  }, [
-    discoverData?.getAllRecipesForPlanner,
-    limit,
-    queuedData?.getQuedPlanner,
+  const { ref, categories, onHide, onShow } = useRecipeCategory();
+  const { recipes, pageLength, limit, isLoading } = useRecipeQueue({
+    type,
     toggler,
-  ]);
+    query,
+    page,
+  });
+  const addRecipeToPlanner = useAddRecipeToMyPlan({
+    limit,
+    page,
+    query,
+    type: type === "all" ? "" : type,
+  });
 
+  // When we toggle the tab between Discover and Queue
   useEffect(() => {
     setQuery("");
     setPage(1);
     setType("all");
   }, [toggler]);
 
-  // Handling the Blendtype Combobox, When the search is focused/hovered it should be hidden or vice-versa
-  const handleShow = () => {
-    blendTypeRef?.current.classList.add(styles["blendType--show"]);
-    blendTypeRef?.current.classList.remove(styles["blendType--hide"]);
-  };
-  const handleHide = () => {
-    blendTypeRef?.current.classList.remove(styles["blendType--show"]);
-    blendTypeRef?.current.classList.add(styles["blendType--hide"]);
-  };
+  console.log(pageLength);
+
   return (
     <Fragment>
       <IconHeading
@@ -138,16 +91,9 @@ const PlannerQueue = (props: PlannerPanelProps) => {
       {toggler && (
         <div className={styles.action}>
           {}
-          <div ref={blendTypeRef} style={{ width: "100%" }}>
+          <div ref={ref} style={{ width: "100%" }}>
             <Combobox
-              options={
-                categories?.getAllCategories
-                  ? [
-                      { label: "All", value: "all" },
-                      ...categories?.getAllCategories,
-                    ]
-                  : [{ label: "All", value: "all" }]
-              }
+              options={categories}
               className={styles.blendType}
               value={type}
               onChange={(e) => {
@@ -161,17 +107,17 @@ const PlannerQueue = (props: PlannerPanelProps) => {
             onChange={(e) => setQuery(e.target.value)}
             onReset={() => {
               setQuery("");
-              handleHide();
+              onHide();
             }}
-            onFocus={handleHide}
-            onMouseEnter={handleHide}
-            onMouseLeave={handleShow}
-            onBlur={handleShow}
+            onFocus={onHide}
+            onMouseEnter={onHide}
+            onMouseLeave={onShow}
+            onBlur={onShow}
           />
         </div>
       )}
       <div className={styles.wrapper}>
-        {discoverLoading || loading ? (
+        {isLoading ? (
           [...Array(limit)]?.map((_, index) => (
             <SkeletonElement
               type="thumbnail"
@@ -180,10 +126,15 @@ const PlannerQueue = (props: PlannerPanelProps) => {
             />
           ))
         ) : (
-          <Recipes recipes={recipes} panel={panel} modifyPlan={modifyPlan} />
+          <Recipes
+            recipes={recipes}
+            panel={panel}
+            modifyPlan={modifyPlan}
+            addRecipeToPlanner={addRecipeToPlanner}
+          />
         )}
 
-        {pageLength > 3 && (
+        {pageLength > 1 && (
           <div className="flex ai-center jc-center mt-20">
             <Pagination
               limit={5}
@@ -201,47 +152,13 @@ interface RecipesProps {
   recipes: any[];
   panel: "my-plan" | "plan" | "challenge";
   modifyPlan?: any;
+  addRecipeToPlanner?: any;
 }
 const Recipes = (props: RecipesProps) => {
-  const { recipes, panel, modifyPlan } = props;
+  const { recipes, panel, modifyPlan, addRecipeToPlanner } = props;
   const [showCalenderId, setShowCalenderId] = useState("");
 
-  const [addRecipe, addState] = useMutation(ADD_RECIPE_TO_PLANNER, {
-    refetchQueries: [GET_QUEUED_RECIPES_FOR_PLANNER],
-  });
-
   const dispatch = useDispatch();
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
-
-  const dateHandler = async (recipe: any, date: string) => {
-    await Publish({
-      mutate: addRecipe,
-      variables: {
-        assignDate: date,
-        recipeId: recipe._id,
-        userId,
-      },
-      state: addState,
-      success: `Added Planner sucessfully`,
-      onSuccess: (data) => {
-        setShowCalenderId("");
-        dispatch(
-          addPlanner({
-            id: data?.createPlanner?._id,
-            date: date,
-            recipe: {
-              _id: recipe._id,
-              name: recipe.name,
-              category: recipe?.recipeBlendCategory?.name,
-              rxScore: 786,
-              calorie: 250,
-            },
-          }),
-        );
-      },
-    });
-  };
-
   const uploadRecipe = (_id, name, image, category, ingredients) => {
     dispatch(
       setRecipeInfo({
@@ -261,14 +178,17 @@ const Recipes = (props: RecipesProps) => {
     <Fragment>
       {recipes?.map((recipe) => {
         const {
-          _id,
-          name,
-          recipeBlendCategory,
-          averageRating,
-          totalRating,
-          image,
+          recipeId: {
+            _id,
+            name,
+            recipeBlendCategory,
+            averageRating,
+            totalRating,
+            image,
+          },
           defaultVersion,
         } = recipe;
+
         return (
           <RecipeCard
             key={_id}
@@ -282,18 +202,6 @@ const Recipes = (props: RecipesProps) => {
             ingredients={defaultVersion?.ingredients || []}
           >
             <div>
-              {panel === "my-plan" && (
-                <Icon
-                  fontName={faCalendarDay}
-                  style={{ color: "#fe5d1f" }}
-                  size="20px"
-                  onClick={() =>
-                    setShowCalenderId((prev) =>
-                      showCalenderId === _id ? "" : _id,
-                    )
-                  }
-                />
-              )}
               {panel === "challenge" && (
                 <Icon
                   fontName={faPlusCircle}
@@ -322,10 +230,25 @@ const Recipes = (props: RecipesProps) => {
                   <option value={7}>7</option>
                 </select>
               )}
-
+              {panel === "my-plan" && (
+                <Icon
+                  fontName={faCalendarDay}
+                  style={{ color: "#fe5d1f" }}
+                  size="20px"
+                  onClick={() =>
+                    setShowCalenderId((prev) =>
+                      showCalenderId === _id ? "" : _id,
+                    )
+                  }
+                />
+              )}
               {panel === "my-plan" && showCalenderId === _id && (
                 <div className={styles.calender__tray}>
-                  <CalendarTray handler={(date) => dateHandler(recipe, date)} />
+                  <CalendarTray
+                    handler={(date) =>
+                      addRecipeToPlanner(recipe, date, setShowCalenderId)
+                    }
+                  />
                 </div>
               )}
             </div>

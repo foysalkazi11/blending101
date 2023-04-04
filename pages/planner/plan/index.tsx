@@ -83,7 +83,6 @@ const MyPlan = () => {
           : router.query.end,
       },
     }).then((response) => {
-      console.log(response);
       if (
         router.query?.plan &&
         !fetchedFromUrl.current &&
@@ -107,12 +106,12 @@ const MyPlan = () => {
         id: planner._id,
         date: planner.formatedDate,
         recipes: planner.recipes.map((recipe) => ({
-          _id: recipe?._id,
-          name: recipe?.name,
-          category: recipe?.recipeBlendCategory?.name,
+          _id: recipe?.recipeId?._id,
+          name: recipe?.recipeId?.name,
+          category: recipe?.recipeId?.recipeBlendCategory?.name,
           rxScore: 786,
           calorie: 250,
-          ingredients: recipe?.ingredients,
+          ingredients: recipe?.recipeId?.ingredients,
         })),
       })),
     };
