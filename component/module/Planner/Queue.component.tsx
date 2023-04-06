@@ -1,10 +1,8 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { useDispatch } from "react-redux";
 import { faPlusCircle } from "@fortawesome/pro-solid-svg-icons";
 import { faCalendarAlt } from "@fortawesome/pro-light-svg-icons";
 import { faCalendarDay } from "@fortawesome/pro-regular-svg-icons";
-import { format } from "date-fns";
 
 import Pagination from "../../molecules/Pagination/ServerPagination.component";
 import Combobox from "../../organisms/Forms/Combobox.component";
@@ -16,21 +14,12 @@ import SkeletonElement from "../../../theme/skeletons/SkeletonElement";
 import RecipeCard from "../../molecules/Card/RecipeCard.component";
 import Icon from "../../atoms/Icon/Icon.component";
 
-import {
-  ADD_RECIPE_TO_PLANNER,
-  GET_QUEUED_PLANNER_RECIPES,
-  GET_ALL_PLANNER_RECIPES,
-} from "../../../graphql/Planner";
-import { GET_BLEND_CATEGORY } from "../../../graphql/Recipe";
-import { useAppSelector } from "../../../redux/hooks";
-import { addPlanner } from "../../../redux/slices/Planner.slice";
 import { setRecipeInfo } from "../../../redux/slices/Challenge.slice";
-
-import Publish from "../../../helpers/Publish";
 
 import styles from "./Queue.module.scss";
 import {
   useAddRecipeToMyPlan,
+  useFindQueuedRecipe,
   useRecipeCategory,
   useRecipeQueue,
 } from "../../../hooks/modules/Plan/useRecipeQueue";
@@ -44,11 +33,13 @@ interface PlannerPanelProps {
 
 const PlannerQueue = (props: PlannerPanelProps) => {
   const { panel, week, isWeekFromURL, modifyPlan } = props;
+
   const [toggler, setToggler] = useState(true);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [type, setType] = useState("all");
 
+  const { parentRef, recipeRef } = useFindQueuedRecipe([toggler, setToggler]);
   const { ref, categories, onHide, onShow } = useRecipeCategory();
   const { recipes, pageLength, limit, isLoading } = useRecipeQueue({
     type,
@@ -71,8 +62,6 @@ const PlannerQueue = (props: PlannerPanelProps) => {
     setPage(1);
     setType("all");
   }, [toggler]);
-
-  console.log(pageLength);
 
   return (
     <Fragment>
@@ -120,7 +109,7 @@ const PlannerQueue = (props: PlannerPanelProps) => {
           />
         </div>
       )}
-      <div className={styles.wrapper}>
+      <div className={styles.wrapper} ref={parentRef}>
         {isLoading ? (
           [...Array(limit)]?.map((_, index) => (
             <SkeletonElement
@@ -135,10 +124,11 @@ const PlannerQueue = (props: PlannerPanelProps) => {
             panel={panel}
             modifyPlan={modifyPlan}
             addRecipeToPlanner={addRecipeToPlanner}
+            addToRecipesRef={recipeRef}
           />
         )}
 
-        {pageLength > 1 && (
+        {pageLength > 1 && toggler && (
           <div className="flex ai-center jc-center mt-20">
             <Pagination
               limit={5}
@@ -157,9 +147,11 @@ interface RecipesProps {
   panel: "my-plan" | "plan" | "challenge";
   modifyPlan?: any;
   addRecipeToPlanner?: any;
+  addToRecipesRef?: any;
 }
 const Recipes = (props: RecipesProps) => {
-  const { recipes, panel, modifyPlan, addRecipeToPlanner } = props;
+  const { recipes, panel, modifyPlan, addRecipeToPlanner, addToRecipesRef } =
+    props;
   const [showCalenderId, setShowCalenderId] = useState("");
 
   const dispatch = useDispatch();
@@ -194,69 +186,70 @@ const Recipes = (props: RecipesProps) => {
         } = recipe;
 
         return (
-          <RecipeCard
-            key={_id}
-            className="mt-10"
-            title={name}
-            category={recipeBlendCategory?.name}
-            ratings={averageRating}
-            noOfRatings={totalRating}
-            image={image.find((img) => img.default === true)?.image}
-            recipeId={_id}
-            ingredients={defaultVersion?.ingredients || []}
-          >
-            <div>
-              {panel === "challenge" && (
-                <Icon
-                  fontName={faPlusCircle}
-                  style={{ color: "#fe5d1f" }}
-                  size="20px"
-                  onClick={() =>
-                    uploadRecipe(
-                      _id,
-                      name,
-                      image,
-                      recipeBlendCategory?._id,
-                      defaultVersion?.ingredients,
-                    )
-                  }
-                />
-              )}
-              {panel === "plan" && (
-                <select onChange={(e) => modifyPlan(e.target.value, recipe)}>
-                  <option value={""}></option>
-                  <option value={1}>1</option>
-                  <option value={2}>2</option>
-                  <option value={3}>3</option>
-                  <option value={4}>4</option>
-                  <option value={5}>5</option>
-                  <option value={6}>6</option>
-                  <option value={7}>7</option>
-                </select>
-              )}
-              {panel === "my-plan" && (
-                <Icon
-                  fontName={faCalendarDay}
-                  style={{ color: "#fe5d1f" }}
-                  size="20px"
-                  onClick={() =>
-                    setShowCalenderId((prev) =>
-                      showCalenderId === _id ? "" : _id,
-                    )
-                  }
-                />
-              )}
-              {panel === "my-plan" && showCalenderId === _id && (
-                <div className={styles.calender__tray}>
-                  <CalendarTray
-                    handler={(date) =>
-                      addRecipeToPlanner(recipe, date, setShowCalenderId)
+          <div ref={addToRecipesRef} key={_id} data-recipe={_id}>
+            <RecipeCard
+              className="mt-10"
+              title={name}
+              category={recipeBlendCategory?.name}
+              ratings={averageRating}
+              noOfRatings={totalRating}
+              image={image.find((img) => img.default === true)?.image}
+              recipeId={_id}
+              ingredients={defaultVersion?.ingredients || []}
+            >
+              <div>
+                {panel === "challenge" && (
+                  <Icon
+                    fontName={faPlusCircle}
+                    style={{ color: "#fe5d1f" }}
+                    size="20px"
+                    onClick={() =>
+                      uploadRecipe(
+                        _id,
+                        name,
+                        image,
+                        recipeBlendCategory?._id,
+                        defaultVersion?.ingredients,
+                      )
                     }
                   />
-                </div>
-              )}
-            </div>
-          </RecipeCard>
+                )}
+                {panel === "plan" && (
+                  <select onChange={(e) => modifyPlan(e.target.value, recipe)}>
+                    <option value={""}></option>
+                    <option value={1}>1</option>
+                    <option value={2}>2</option>
+                    <option value={3}>3</option>
+                    <option value={4}>4</option>
+                    <option value={5}>5</option>
+                    <option value={6}>6</option>
+                    <option value={7}>7</option>
+                  </select>
+                )}
+                {panel === "my-plan" && (
+                  <Icon
+                    fontName={faCalendarDay}
+                    style={{ color: "#fe5d1f" }}
+                    size="20px"
+                    onClick={() =>
+                      setShowCalenderId((prev) =>
+                        showCalenderId === _id ? "" : _id,
+                      )
+                    }
+                  />
+                )}
+                {panel === "my-plan" && showCalenderId === _id && (
+                  <div className={styles.calender__tray}>
+                    <CalendarTray
+                      handler={(date) =>
+                        addRecipeToPlanner(recipe, date, setShowCalenderId)
+                      }
+                    />
+                  </div>
+                )}
+              </div>
+            </RecipeCard>
+          </div>
         );
       })}
     </Fragment>

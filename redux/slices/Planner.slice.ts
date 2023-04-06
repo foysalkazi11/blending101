@@ -22,18 +22,22 @@ type IPlanner = {
   date: string;
   recipes: IPlannerRecipe[];
 };
+
 interface LastModifiedPlanCollectionType {
   _id: string;
   name: string;
 }
+
 interface ActivePlanForCollectionType {
   id: string;
   collectionIds: string[];
 }
+
 interface PlannerState {
   start: Date;
   end: Date;
   plans: IPlanner[];
+  selectedDayRecipe: "";
   isOpenPlanCollectionTray: boolean;
   lastModifiedPlanCollection: LastModifiedPlanCollectionType;
   activePlanForCollection: ActivePlanForCollectionType;
@@ -43,6 +47,7 @@ const initialState: PlannerState = {
   start: startOfWeek(new Date(), { weekStartsOn: 1 }),
   end: endOfWeek(new Date(), { weekStartsOn: 1 }),
   plans: [],
+  selectedDayRecipe: "",
   isOpenPlanCollectionTray: false,
   lastModifiedPlanCollection: {
     _id: "",
@@ -149,6 +154,9 @@ export const PlannerSlice = createSlice({
     ) => {
       state.activePlanForCollection = action.payload;
     },
+    setDayRecipe: (state, action) => {
+      state.selectedDayRecipe = action.payload;
+    },
   },
 });
 
@@ -162,6 +170,7 @@ export const {
   setIsActivePlanForCollection,
   setIsOpenPlanCollectionTray,
   updateLastModifiedPlanCollection,
+  setDayRecipe,
 } = PlannerSlice.actions;
 
 export default PlannerSlice.reducer;

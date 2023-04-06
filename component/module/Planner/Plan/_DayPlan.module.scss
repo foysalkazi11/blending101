@@ -21,7 +21,7 @@ $sharedBackgroundColor: white;
     min-height: $sharedHeight;
     width: 50px;
     height: inherit;
-
+    cursor: pointer;
     &__day {
       @extend %sharedFlex;
       color: #9d9799;

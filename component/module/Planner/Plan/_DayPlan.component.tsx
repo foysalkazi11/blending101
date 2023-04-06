@@ -14,6 +14,7 @@ import {
   addPlanner,
   deleteRecipeFromPlan,
   IPlannerRecipe,
+  setDayRecipe,
 } from "../../../../redux/slices/Planner.slice";
 
 import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
@@ -118,6 +119,7 @@ const DayPlan = (props: PlanProps) => {
       <div
         className={styles.plan__dateDiv}
         style={indexValue % 2 == 0 ? { backgroundColor: "#eeeeee" } : {}}
+        onClick={() => dispatch(setDayRecipe(recipeList[0]?._id))}
       >
         <div className={styles.plan__dateDiv__day}>{day}</div>
         <div className={styles.plan__dateDiv__date}>{date}</div>
@@ -185,7 +187,6 @@ const PlanItem = ({
       },
       state: addState,
       success: `Added Ingredients to the Grocery List`,
-      onSuccess: (data) => {},
     });
   };
 

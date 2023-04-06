@@ -8,11 +8,12 @@ import {
   GET_PLANNER_BY_WEEK,
   GET_QUEUED_PLANNER_RECIPES,
 } from "../../../graphql/Planner";
-import { useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { GET_BLEND_CATEGORY } from "../../../graphql/Recipe";
 
 import styles from "../../../component/module/Planner/Queue.module.scss";
 import Publish from "../../../helpers/Publish";
+import { setDayRecipe } from "../../../redux/slices/Planner.slice";
 
 // FOR FETCHING BOTH RECIPE DISCOVERY & QUEUED RECIPE
 interface IRecipeQueueHook {
@@ -54,7 +55,7 @@ const useRecipeQueue = (props: IRecipeQueueHook) => {
           user: userId,
           searchTerm: query,
           page,
-          limit,
+          limit: 30,
           type: blendCategory,
         },
       });
@@ -161,17 +162,17 @@ const useAddRecipeToMyPlan = (props: IAddRecipeToPlanHook) => {
             type,
           },
         };
-        const { getQuedPlanner } = cache.readQuery<any>(
-          GetQueuedRecipesForPlanner,
-        );
-        cache.writeQuery({
-          ...GetQueuedRecipesForPlanner,
-          data: {
-            getQuedPlanner: {
-              recipes: [...getQuedPlanner.recipes, recipe],
-            },
-          },
-        });
+        // const { getQuedPlanner } = cache.readQuery<any>(
+        //   GetQueuedRecipesForPlanner,
+        // );
+        // cache.writeQuery({
+        //   ...GetQueuedRecipesForPlanner,
+        //   data: {
+        //     getQuedPlanner: {
+        //       recipes: [...getQuedPlanner.recipes, recipe],
+        //     },
+        //   },
+        // });
 
         const defaultFetch =
           !isWeekFromURL && router.query.start && router.query.end;
@@ -188,11 +189,110 @@ const useAddRecipeToMyPlan = (props: IAddRecipeToPlanHook) => {
           },
         };
         const { getPlannerByDates } = cache.readQuery<any>(GetPlanByWeek);
-        console.log(getPlannerByDates);
+        // console.log({
+        //   ...getPlannerByDates,
+        //   planners: getPlannerByDates?.planners?.map((plan) => {
+        //     if (plan.formatedDate === date) {
+        //       return {
+        //         ...plan,
+        //         recipes: [
+        //           ...plan.recipes,
+        //           {
+        //             __typename: recipe.__typename,
+        //             recipeId: recipe.recipeId,
+        //             defaultVersion: {
+        //               ingredients: recipe.defaultVersion.ingredients,
+        //             },
+        //           },
+        //         ],
+        //       };
+        //     }
+        //     return plan;
+        //   }),
+        // });
+        cache.writeQuery({
+          ...GetPlanByWeek,
+          data: {
+            getPlannerByDates: {
+              ...getPlannerByDates,
+              planners: getPlannerByDates?.planners?.map((plan) => {
+                if (plan.formatedDate === date) {
+                  return {
+                    ...plan,
+                    recipes: [
+                      ...plan.recipes,
+                      {
+                        __typename: recipe.__typename,
+                        recipeId: recipe.recipeId,
+                        defaultVersion: {
+                          ingredients: recipe.defaultVersion.ingredients,
+                        },
+                      },
+                    ],
+                  };
+                }
+                return plan;
+              }),
+            },
+          },
+        });
       },
     });
   };
   return addRecipeToPlanner;
 };
 
-export { useRecipeQueue, useRecipeCategory, useAddRecipeToMyPlan };
+const useFindQueuedRecipe = ([toggler, setToggler]) => {
+  const parentWrapper = useRef(null);
+  const queuedRecipes = useRef([]);
+
+  const dispatch = useAppDispatch();
+  const activeRecipe = useAppSelector(
+    (state) => state.planner.selectedDayRecipe,
+  );
+
+  const addToRecipesRef = (element: HTMLDivElement) => {
+    if (!toggler && element && !queuedRecipes.current.includes(element)) {
+      queuedRecipes.current.push(element);
+    }
+  };
+
+  useEffect(() => {
+    const element = parentWrapper.current;
+    function handleQueueScroll() {
+      if (activeRecipe !== "") {
+        dispatch(setDayRecipe(""));
+      }
+    }
+    element.addEventListener("scroll", handleQueueScroll);
+    return () => {
+      element.removeEventListener("scroll", handleQueueScroll);
+    };
+  }, [activeRecipe, dispatch]);
+
+  useEffect(() => {
+    if (!activeRecipe || toggler || queuedRecipes.current.length === 0) return;
+    queuedRecipes.current.forEach((element: HTMLDivElement) => {
+      if (element && activeRecipe === element?.dataset?.recipe) {
+        const top = element.offsetTop - element.offsetHeight;
+        if (top > 1000) {
+          window.scrollTo({ top: parentWrapper.current.offsetTop });
+        }
+        parentWrapper.current.scrollTo({
+          top: element.offsetTop - element.offsetHeight,
+          behavior: "smooth",
+        });
+      }
+    });
+    return;
+  }, [activeRecipe, toggler]);
+
+  return { parentRef: parentWrapper, recipeRef: addToRecipesRef };
+};
+
+export {
+  useRecipeQueue,
+  useRecipeCategory,
+  useAddRecipeToMyPlan,
+  useFindQueuedRecipe,
+};
