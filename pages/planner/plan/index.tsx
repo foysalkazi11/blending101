@@ -23,18 +23,13 @@ import Icon from "../../../component/atoms/Icon/Icon.component";
 import IconButton from "../../../component/atoms/Button/IconButton.component";
 
 import { useAppSelector } from "../../../redux/hooks";
-import { format, endOfWeek, startOfWeek, addWeeks, subWeeks } from "date-fns";
-import {
-  ADD_TO_MY_PLAN,
-  CREATE_PLAN,
-  GET_PLANNER_BY_WEEK,
-} from "../../../graphql/Planner";
+import { addWeeks, subWeeks } from "date-fns";
+import { ADD_TO_MY_PLAN, CREATE_PLAN } from "../../../graphql/Planner";
 import { MONTH } from "../../../data/Date";
 
 import styles from "../../../styles/pages/planner.module.scss";
 import ConfirmAlert from "../../../component/molecules/Alert/Confirm.component";
 import Publish from "../../../helpers/Publish";
-import { useDispatch } from "react-redux";
 import { usePlanByWeek, useWeek } from "../../../hooks/modules/Plan/useMyPlan";
 
 const MyPlan = () => {

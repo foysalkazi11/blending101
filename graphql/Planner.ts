@@ -103,6 +103,8 @@ export const GET_PLANNER_BY_WEEK = gql`
             recipeBlendCategory {
               name
             }
+          }
+          defaultVersion {
             ingredients {
               ingredientId {
                 _id

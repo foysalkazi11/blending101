@@ -297,8 +297,8 @@ const AddIngredient = ({ ingredients }) => {
           >
             <div>
               <span>
-                {ingredient.selectedPortion.quantity}{" "}
-                {ingredient.selectedPortion.name}
+                {ingredient?.selectedPortion?.quantity}{" "}
+                {ingredient?.selectedPortion?.name}
               </span>
               <span>{ingredient.ingredientId.ingredientName}</span>
             </div>

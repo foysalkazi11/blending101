@@ -57,7 +57,7 @@ const BlendType = ({ categories }) => {
     [categories],
   );
   return (
-    <div className="mt-50 mb-50">
+    <div>
       <div className={styles.insights__graph}>
         <h3>Blend Type</h3>
         <div className={styles.challenge_circle}>

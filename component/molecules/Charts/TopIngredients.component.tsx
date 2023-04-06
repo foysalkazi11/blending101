@@ -17,7 +17,7 @@ interface IngredientsProps {
 const TopIngredients = (props: IngredientsProps) => {
   const { ingredients } = props;
   return (
-    <div className="mb-50">
+    <div>
       <div className={styles.insights__graph}>
         <h3>Top Ingredients</h3>
         <h5>Servings</h5>

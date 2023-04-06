@@ -59,7 +59,7 @@ const usePlanByWeek = (props: IPlanByWeekHook) => {
           category: recipe?.recipeId?.recipeBlendCategory?.name,
           rxScore: 786,
           calorie: 250,
-          ingredients: recipe?.recipeId?.ingredients,
+          ingredients: recipe?.defaultVersion?.ingredients,
         })),
       })),
     };
