@@ -7,8 +7,10 @@ import styles from "./index.module.scss";
 
 interface PlanListProps {
   data?: any[];
+  week?: any;
+  isWeekFromURL?: boolean;
 }
-const PlanList = ({ data }: PlanListProps) => {
+const PlanList = ({ data, week, isWeekFromURL }: PlanListProps) => {
   const [toggleOptionCard, setToggleOptionCard] = useState({});
   return (
     <div className={styles.wrapper}>
@@ -29,7 +31,9 @@ const PlanList = ({ data }: PlanListProps) => {
             indexValue={index}
             day={dayName}
             date={day}
+            week={week}
             recipeList={planner.recipes}
+            isWeekFromURL={isWeekFromURL}
             setToggleOptionCard={setToggleOptionCard}
             toggleOptionCard={toggleOptionCard}
           />

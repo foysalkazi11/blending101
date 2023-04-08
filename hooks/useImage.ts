@@ -25,7 +25,7 @@ const useImage = (initState: any[]) => {
           formdata.append("image_file", file, fileName);
           return axios({
             method: "post",
-            url: S3_CONFIG.uploadURL,
+            url: "https://j88wgcjqa6.execute-api.us-east-1.amazonaws.com/prod/image_processing/upload",
             data: formdata,
             headers: { "Content-Type": "multipart/form-data" },
           });

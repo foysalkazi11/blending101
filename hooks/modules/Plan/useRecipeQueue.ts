@@ -189,27 +189,6 @@ const useAddRecipeToMyPlan = (props: IAddRecipeToPlanHook) => {
           },
         };
         const { getPlannerByDates } = cache.readQuery<any>(GetPlanByWeek);
-        // console.log({
-        //   ...getPlannerByDates,
-        //   planners: getPlannerByDates?.planners?.map((plan) => {
-        //     if (plan.formatedDate === date) {
-        //       return {
-        //         ...plan,
-        //         recipes: [
-        //           ...plan.recipes,
-        //           {
-        //             __typename: recipe.__typename,
-        //             recipeId: recipe.recipeId,
-        //             defaultVersion: {
-        //               ingredients: recipe.defaultVersion.ingredients,
-        //             },
-        //           },
-        //         ],
-        //       };
-        //     }
-        //     return plan;
-        //   }),
-        // });
         cache.writeQuery({
           ...GetPlanByWeek,
           data: {

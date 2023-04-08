@@ -53,13 +53,13 @@ const Upload = (props: UploadProps) => {
     [addImageHandler],
   );
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    // accept: {
-    //   "image/jpeg": [".jpeg", ".png", ".jpg", ".webp"],
-    // },
-    noClick: true,
-    onDrop,
-  });
+  // const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  //   // accept: {
+  //   //   "image/jpeg": [".jpeg", ".png", ".jpg", ".webp"],
+  //   // },
+  //   noClick: true,
+  //   onDrop,
+  // });
 
   let sizeClass = "";
   switch (size) {
@@ -73,7 +73,7 @@ const Upload = (props: UploadProps) => {
       sizeClass = "";
       break;
   }
-
+  console.log(images);
   return (
     <div className={className ? className : ""}>
       {label && (
@@ -86,23 +86,34 @@ const Upload = (props: UploadProps) => {
       )}
       <div
         className={`${styles["product-images"]} ${sizeClass}`}
-        {...getRootProps()}
+        // {...getRootProps()}
         style={{
           padding: "1rem 0",
-          background: isDragActive ? "#f7f7f7" : "inherit",
+          // background: isDragActive ? "#f7f7f7" : "inherit",
         }}
       >
         {images.map((img, idx) => {
-          const src = img.hasOwnProperty("url")
-            ? img?.url
-            : URL.createObjectURL(img);
+          const isFileType = !img.hasOwnProperty("url");
+          const src = isFileType ? URL.createObjectURL(img) : img?.url;
+
           return (
             <figure key={src + idx}>
               <button
                 type="button"
                 className={styles["remove-image"]}
                 onClick={(e) => {
-                  setImages(images.filter((image) => image !== img));
+                  const newImages = images.filter((image) => {
+                    if (image.hasOwnProperty("url")) {
+                      console.log(image, img?.url);
+                      return image?.url !== img?.url;
+                    } else {
+                      return (
+                        image.name + image.lastModified !==
+                        img?.name + img?.lastModified
+                      );
+                    }
+                  });
+                  setImages(newImages);
                   e.stopPropagation();
                 }}
               >
@@ -137,7 +148,7 @@ const Upload = (props: UploadProps) => {
                 }}
                 style={{ display: "none" }}
                 multiple
-                {...getInputProps()}
+                // {...getInputProps()}
               />
             </label>
           )

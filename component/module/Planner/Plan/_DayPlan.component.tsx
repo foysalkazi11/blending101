@@ -32,6 +32,11 @@ import { setShowPanel } from "../../../../redux/slices/Ui.slice";
 import Icon from "../../../atoms/Icon/Icon.component";
 
 import styles from "./_DayPlan.module.scss";
+import {
+  useCopyPlanRecipe,
+  useDeletePlanRecipe,
+  useMovePlanRecipe,
+} from "../../../../hooks/modules/Plan/useMyPlan";
 
 interface PlanProps {
   plannerId?: string;
@@ -41,78 +46,18 @@ interface PlanProps {
   setToggleOptionCard?: any;
   toggleOptionCard?: object;
   recipeList?: IPlannerRecipe[];
+  isWeekFromURL?: boolean;
+  week?: any;
 }
 
 const DayPlan = (props: PlanProps) => {
-  const { plannerId, day, date, indexValue, recipeList } = props;
+  const { plannerId, day, date, indexValue, recipeList, week, isWeekFromURL } =
+    props;
   const dispatch = useAppDispatch();
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
-  const [copyRecipes, copyState] = useMutation(ADD_RECIPE_TO_PLANNER);
-  const [moveRecipes, moveState] = useMutation(MOVE_PLANNER, {
-    refetchQueries: ["GetPlannerByWeek"],
-  });
-  const [deleteRecipes, deleteState] = useMutation(DELETE_RECIPE_FROM_PLANNER);
-
-  // if (!day && !date) return null;
-
-  const deleteHandler = async (id) => {
-    await Publish({
-      mutate: deleteRecipes,
-      variables: {
-        plannerId,
-        recipeId: id,
-      },
-      state: deleteState,
-      success: `Deleted Planner sucessfully`,
-      onSuccess: () => {
-        dispatch(deleteRecipeFromPlan({ recipeId: id, plannerId }));
-      },
-    });
-  };
-
-  const copyHandler = async (date, recipe) => {
-    await Publish({
-      mutate: copyRecipes,
-      variables: {
-        assignDate: date,
-        recipeId: recipe._id,
-        userId,
-      },
-      state: copyState,
-      success: `Copied Planner sucessfully`,
-      onSuccess: (data) => {
-        dispatch(
-          addPlanner({
-            id: data?.createPlanner?._id,
-            date: date,
-            recipe: {
-              _id: recipe._id,
-              name: recipe.name,
-              category: recipe?.category,
-              rxScore: 786,
-              calorie: 250,
-            },
-          }),
-        );
-      },
-    });
-  };
-
-  const moveHandler = async (date, recipe) => {
-    await Publish({
-      mutate: moveRecipes,
-      variables: {
-        data: {
-          plannerId,
-          assignDate: date,
-          recipeId: recipe._id,
-        },
-      },
-      state: moveState,
-      success: `Moved Planner sucessfully`,
-    });
-  };
+  const copyRecipe = useCopyPlanRecipe(week, isWeekFromURL);
+  const moveRecipe = useMovePlanRecipe(plannerId);
+  const deleteRecipe = useDeletePlanRecipe(plannerId, week, isWeekFromURL);
 
   return (
     <div className={styles.plan}>
@@ -129,9 +74,9 @@ const DayPlan = (props: PlanProps) => {
           <PlanItem
             key={recipe?._id}
             recipe={recipe}
-            onDelete={deleteHandler}
-            onCopy={copyHandler}
-            onMove={moveHandler}
+            onDelete={deleteRecipe}
+            onCopy={copyRecipe}
+            onMove={moveRecipe}
           />
         ))}
       </div>
@@ -153,7 +98,6 @@ const PlanItem = ({
   onMove,
   onDelete,
 }: RecipeColorIndicatorInterface) => {
-  // console.log(recipe);
   let {
     _id,
     name: recipeName,
