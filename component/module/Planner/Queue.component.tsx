@@ -109,7 +109,12 @@ const PlannerQueue = (props: PlannerPanelProps) => {
           />
         </div>
       )}
-      <div className={styles.wrapper} ref={parentRef}>
+      <div
+        className={`${styles.wrapper} ${
+          styles[toggler ? "wrapper--discover" : "wrapper--queue"]
+        }`}
+        ref={parentRef}
+      >
         {isLoading ? (
           [...Array(limit)]?.map((_, index) => (
             <SkeletonElement

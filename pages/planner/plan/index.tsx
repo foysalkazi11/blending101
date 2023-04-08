@@ -195,7 +195,15 @@ const MyPlan = () => {
                     </div>
                   </div>
                 )}
-                <PlanList data={plans} />
+                <PlanList
+                  data={plans}
+                  week={week}
+                  isWeekFromURL={Boolean(
+                    !isFetchingFromURL &&
+                      router.query.start &&
+                      router.query.end,
+                  )}
+                />
               </div>
             </div>
             <div className="col-3">

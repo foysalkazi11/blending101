@@ -91,8 +91,12 @@
   padding: 1rem;
   border-bottom-left-radius: 9px;
   border-bottom-right-radius: 9px;
-  height: 88.9rem;
-  max-height: 88.9rem;
   overflow: auto;
   scroll-padding-bottom: 50px;
+  &--discover {
+    height: 88.9rem;
+  }
+  &--queue {
+    height: 94.9rem;
+  }
 }
