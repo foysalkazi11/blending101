@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface IPostIngredient {
-  ingredientId: { _id: string; ingredientName: string };
+  ingredientId: { _id: string; ingredientName: string; featuredImage: string };
   selectedPortion: {
     name: string;
     quantity: number;
@@ -110,6 +110,7 @@ export const ChallengeSlice = createSlice({
         ingredientId: {
           _id: ingredientItem.value,
           ingredientName: ingredientItem.label,
+          featuredImage: ingredientItem?.featuredImage,
         },
         selectedPortion: {
           gram: qty * weight,

@@ -1,20 +1,26 @@
-import React, { useState, useMemo } from "react";
-import { useQuery } from "@apollo/client";
-import { faTimes, faChartSimple } from "@fortawesome/pro-solid-svg-icons";
+import React, {
+  forwardRef,
+  useState,
+  useMemo,
+  useImperativeHandle,
+  Fragment,
+  useEffect,
+} from "react";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { FormProvider } from "react-hook-form";
 
-import { GET_INGREDIENTS } from "../../../graphql/Ingredients";
+import {
+  GET_INGREDIENTS,
+  GET_INGREDIENTS_RXFACT,
+} from "../../../graphql/Ingredients";
 import { GET_BLEND_CATEGORY } from "../../../graphql/Recipe";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import IconButton from "../../atoms/Button/IconButton.component";
 import Combobox from "../../organisms/Forms/Combobox.component";
-import NumberField from "../../organisms/Forms/NumberField.component";
 import Textarea from "../../organisms/Forms/Textarea.component";
 import Textfield from "../../organisms/Forms/Textfield.component";
 import Upload from "../../organisms/Upload/Upload.component";
 import styles from "./Upload.module.scss";
 import Publish from "../../../helpers/Publish";
-import { ActionButton } from "../../atoms/Button/Button.component";
 import {
   addIngredient,
   deleteIngredient,
@@ -28,15 +34,24 @@ import {
   useChallengeForm,
   useEditChallengePost,
 } from "../../../hooks/modules/Challenge/useChallengePost";
+import Icon from "../../atoms/Icon/Icon.component";
+import {
+  faBasketShopping,
+  faNotebook,
+} from "@fortawesome/pro-regular-svg-icons";
+import {
+  faCircleInfo,
+  faPen,
+  faTrash,
+  faChartSimple,
+} from "@fortawesome/pro-light-svg-icons";
 
-const UploadCard = () => {
+const UploadCard = forwardRef((_, ref) => {
   const { images, setImages, postImages: uploadImages } = useImage([]);
   const [serving, setServing] = useState(1);
 
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
-  const panelList = useAppSelector((state) => state.ui.panel);
-  const panel = panelList.find((panel) => panel.name === "RXPanel");
   const { isEditMode, id, docId, title, ingredients } = useAppSelector(
     (state) => state.challenge.post,
   );
@@ -45,6 +60,12 @@ const UploadCard = () => {
   const { methods, onReset } = useChallengeForm(setImages);
   const [addPost, addState] = useAddChallengePost(userId);
   const [editPost, editState] = useEditChallengePost(userId);
+
+  useImperativeHandle(ref, () => ({
+    onChallengePost() {
+      methods.handleSubmit(handleSubmit)();
+    },
+  }));
 
   const closeForm = () => {
     dispatch(setShowPostForm(false));
@@ -74,7 +95,6 @@ const UploadCard = () => {
         })),
       },
     };
-    console.log(isEditMode);
     if (isEditMode) {
       post.post._id = id;
       post.post.docId = docId;
@@ -90,141 +110,105 @@ const UploadCard = () => {
     });
   };
 
-  const showNutrientInfo = () => {
-    if (panel && panel?.show) {
-      dispatch(setShowPanel({ name: "RXPanel", show: false }));
-    } else {
-      dispatch(
-        setShowPanel({
-          name: "RXPanel",
-          show: true,
-          payload: ingredients.map((ing) => ({
-            ingredientId: ing?.ingredientId?._id,
-            value: ing?.selectedPortion?.gram,
-          })),
-        }),
-      );
-    }
-  };
-
   return (
     <div className={styles.mainContainer}>
       <FormProvider {...methods}>
-        <div className="flex ai-center jc-between">
-          <h5 className={styles.mainContainer__mainHeading}>
-            Upload Challanges Post
-          </h5>
-          <div className="flex ai-center">
-            <ActionButton onClick={methods.handleSubmit(handleSubmit)}>
-              Post
-            </ActionButton>
-            <IconButton
-              size="small"
-              variant="secondary"
-              fontName={faTimes}
-              style={{ marginLeft: 5 }}
-              onClick={closeForm}
+        <div className="row mt-20">
+          <div className="col-4">
+            <Textfield type="date" name="assignDate" required />
+          </div>
+          <div className="col-8">
+            <Textfield
+              placeholder="Description"
+              name="recipeTitle"
+              defaultValue={title}
+              className={styles.recipe__title}
             />
           </div>
         </div>
         <div className="mt-20">
           <Upload multiple imageState={[images, setImages]} />
         </div>
-        <div className="row mt-40">
-          <div className="col-6">
-            <Textfield
-              placeholder="Recipe Title"
-              name="recipeTitle"
-              defaultValue={title}
-              className={styles.recipe__title}
-            />
+        <Summary ingredients={ingredients} />
+        <div className="row mt-30">
+          <div className="col-12">
+            <h5 className={styles.headingText}>
+              <Icon size="2.5rem" fontName={faBasketShopping} /> Ingredients
+            </h5>
+            <div className={styles.ingredient__summary}>
+              <div>
+                Volume: <span>16 oz</span>
+              </div>
+              <div>
+                Consumed: <span>All</span>
+              </div>
+            </div>
           </div>
-          <div className="col-3">
-            <Combobox
-              options={data?.getAllCategories}
-              name="category"
-              placeholder="Blend Category"
-              required
-            />
-          </div>
-          <div className="col-3">
-            <Textfield type="date" name="assignDate" required />
-          </div>
-        </div>
-        <h5 className={styles.headingText}>My Recipe</h5>
-        <div className="row">
-          <div className="col-6">
-            <AddIngredient ingredients={ingredients} />
-          </div>
-          <div className="col-6">
-            <Servings
-              servingState={[serving, setServing]}
-              showNutrientInfo={showNutrientInfo}
+          <div className="col-12">
+            <AddIngredient
+              ingredients={ingredients}
+              categories={data?.getAllCategories}
             />
           </div>
         </div>
-        <h5 className={styles.headingText}>My Notes</h5>
+        <h5 className={styles.headingText}>
+          <Icon size="2.5rem" fontName={faNotebook} /> Notes
+        </h5>
         <Textarea name="note" placeholder="Write down your notes..." />
       </FormProvider>
     </div>
   );
-};
+});
 
-const SERVINGS = {
-  size: 16,
-  nutriScore: 234,
-  calories: 120,
-  carbs: 32,
-  netCarbs: 12,
-  glycemic: 23,
-};
+UploadCard.displayName = "Challenge Post Form";
 
-const Servings = (props) => {
-  const [serving, setServing] = props.servingState;
-  const servingHandler = (e) => {
-    setServing(e.target.value);
-  };
+const Summary = ({ ingredients }) => {
+  const [getIngredientsFact, { data }] = useLazyQuery(GET_INGREDIENTS_RXFACT);
+
+  useEffect(() => {
+    getIngredientsFact({
+      variables: {
+        ingredients: ingredients.map((ing) => ({
+          ingredientId: ing?.ingredientId?._id,
+          value: ing?.selectedPortion?.gram,
+        })),
+      },
+    });
+  }, [getIngredientsFact, ingredients]);
+
+  const { netCarbs, glycemicLoad, calories } = useMemo(() => {
+    const fact = data?.getIngredientsFact;
+    return {
+      netCarbs: fact?.giGl?.netCarbs.toFixed(1) || 0,
+      glycemicLoad: fact?.giGl?.totalGL.toFixed(1) || 0,
+      calories:
+        fact?.nutrients
+          ?.find((nutrient) => nutrient.name === "Calorie")
+          ?.value.toFixed(1) || 0,
+    };
+  }, [data]);
+
   return (
-    <div className={styles.notesTray__servings}>
-      <div className="flex jc-between" style={{ width: "100%" }}>
-        <div className="flex ai-center" style={{ marginBottom: 4 }}>
-          <NumberField
-            minValue={1}
-            value={serving}
-            onChange={servingHandler}
-            className={styles.notesTray__input}
-          />
-          <div className="ml-20">
-            <h3 className="mr-10">Servings</h3>
-            <h5>{SERVINGS.size * serving} oz serving size</h5>
-          </div>
+    <div className={styles.summary__wrapper}>
+      <div className="row">
+        <div className={`col-4 ${styles.summary}`}>
+          <h5>{netCarbs}</h5>
+          <p>Net Carbs</p>
         </div>
-        <IconButton
-          size="medium"
-          variant="white"
-          className="mr-20"
-          fontName={faChartSimple}
-          onClick={props.showNutrientInfo}
-        />
-      </div>
-      <div className={styles.notesTray__servings__scoreCard}>
-        <TextScoreDiv
-          text="Nutri-Score"
-          score={SERVINGS.nutriScore * serving}
-        />
-        <TextScoreDiv text="Calories" score={SERVINGS.calories * serving} />
-        <TextScoreDiv text="Carbs" score={SERVINGS.carbs * serving} />
-        <TextScoreDiv text="Net Carbs" score={SERVINGS.netCarbs * serving} />
-        <TextScoreDiv
-          text="Glycemic Load"
-          score={SERVINGS.glycemic * serving}
-        />
+        <div className={`col-4 ${styles.summary}`}>
+          <h5>{glycemicLoad}</h5>
+          <p>Glycemic Load</p>
+        </div>
+        <div className={`col-4 ${styles.summary}`}>
+          <h5>{calories}</h5>
+          <p>Calories</p>
+        </div>
       </div>
     </div>
   );
 };
 
-const AddIngredient = ({ ingredients }) => {
+const AddIngredient = ({ ingredients, categories }) => {
   const dispatch = useAppDispatch();
   const [ingredient, setIngredient] = useState("");
   const [showSuggestion, setShowSuggestion] = useState(false);
@@ -232,6 +216,21 @@ const AddIngredient = ({ ingredients }) => {
   const { data } = useQuery(GET_INGREDIENTS, {
     variables: { classType: "All" },
   });
+
+  const showNutrientInfo = (ingredient) => {
+    dispatch(
+      setShowPanel({
+        name: "RXPanel",
+        show: true,
+        payload: [
+          {
+            ingredientId: ingredient.ingredientId._id,
+            value: ingredient?.selectedPortion?.gram,
+          },
+        ],
+      }),
+    );
+  };
 
   const addIngredintHandler = (id: string) => {
     const ingredientItem = ingredientList.find((ing) => ing.value === id);
@@ -262,74 +261,105 @@ const AddIngredient = ({ ingredients }) => {
   }, [data?.filterIngredientByCategoryAndClass, ingredient, ingredients]);
 
   return (
-    <div className={styles.ingredient}>
-      <div className={styles.ingredient__field}>
-        <Textfield
-          placeholder="Type your ingredients..."
-          value={ingredient}
-          onChange={(e) => setIngredient(e.target.value)}
-          onFocus={() => {
-            setShowSuggestion(true);
-          }}
-          // onBlur={(e) => {
-          //   console.log(e.target);
-          //   setShowSuggestion(false);
-          // }}
-        />
-        {showSuggestion && (
-          <ul>
-            {ingredientList.map((ing) => (
-              <li
-                key={ing.value}
-                onClick={() => addIngredintHandler(ing.value)}
+    <Fragment>
+      <div className="row">
+        <div className={`col-8 ${styles.ingredient__field}`}>
+          <Textfield
+            placeholder="Type your ingredients..."
+            value={ingredient}
+            onChange={(e) => setIngredient(e.target.value)}
+            onFocus={() => {
+              setShowSuggestion(true);
+            }}
+          />
+          {showSuggestion && (
+            <ul>
+              {ingredientList.map((ing) => (
+                <li
+                  key={ing.value}
+                  onClick={() => addIngredintHandler(ing.value)}
+                >
+                  {ing.label}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <div className="col-4">
+          <Combobox
+            options={categories}
+            name="category"
+            placeholder="Blend Category"
+            required
+          />
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-12">
+          <div className={styles.ingredient__card}>
+            {ingredients.map((ingredient) => (
+              <div
+                className={styles.ingredient__content}
+                key={ingredient.ingredientId._id}
               >
-                {ing.label}
-              </li>
+                <div className={styles.ingredient__item}>
+                  <div>
+                    {ingredient?.ingredientId?.featuredImage ? (
+                      <img
+                        src={ingredient?.ingredientId?.featuredImage}
+                        alt={ingredient.ingredientId.ingredientName}
+                      />
+                    ) : (
+                      <span />
+                    )}
+                  </div>
+                  <span>
+                    {ingredient?.selectedPortion?.quantity || 1}{" "}
+                    {ingredient?.selectedPortion?.name}
+                  </span>
+                  <span>{ingredient.ingredientId.ingredientName}</span>
+                </div>
+                <div className={styles.ingredient__actions}>
+                  <a
+                    href={`/wiki/Ingredient/${ingredient.ingredientId._id}/${ingredient?.selectedPortion?.gram}/`}
+                  >
+                    <Icon
+                      size="small"
+                      color="primary"
+                      fontName={faCircleInfo}
+                      className={styles.ingredient__button}
+                    />
+                  </a>
+                  <Icon
+                    size="small"
+                    color="primary"
+                    fontName={faChartSimple}
+                    className={styles.ingredient__button}
+                    onClick={() => showNutrientInfo(ingredient)}
+                  />
+                  <Icon
+                    size="small"
+                    color="primary"
+                    fontName={faPen}
+                    className={styles.ingredient__button}
+                  />
+                  <Icon
+                    size="small"
+                    color="primary"
+                    fontName={faTrash}
+                    className={styles.ingredient__button}
+                    onClick={() =>
+                      deleteIngredientHandler(ingredient.ingredientId._id)
+                    }
+                  />
+                </div>
+              </div>
             ))}
-          </ul>
-        )}
-      </div>
-      <div className={styles.ingredient__card}>
-        {ingredients.map((ingredient) => (
-          <div
-            className={styles.ingredient__content}
-            key={ingredient.ingredientId._id}
-          >
-            <div>
-              <span>
-                {ingredient?.selectedPortion?.quantity}{" "}
-                {ingredient?.selectedPortion?.name}
-              </span>
-              <span>{ingredient.ingredientId.ingredientName}</span>
-            </div>
-            <IconButton
-              size="small"
-              variant="primary"
-              fontName={faTimes}
-              className={styles.ingredient__button}
-              onClick={() =>
-                deleteIngredientHandler(ingredient.ingredientId._id)
-              }
-            />
           </div>
-        ))}
+        </div>
       </div>
-    </div>
+    </Fragment>
   );
 };
 
 export default UploadCard;
-
-interface textScoreInterface {
-  text?: string;
-  score?: any;
-}
-
-const TextScoreDiv = ({ text, score }: textScoreInterface) => {
-  return (
-    <div className={styles.textScoreDiv}>
-      <span className={styles.textScoreDiv__text}>{text}</span>
-      <span className={styles.textScoreDiv__score}>{score}</span>
-    </div>
-  );
-};

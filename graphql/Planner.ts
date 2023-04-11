@@ -26,6 +26,7 @@ const PLANNER_RECIPE_LIST_FIELDS = gql`
           ingredientId {
             _id
             ingredientName
+            featuredImage
           }
           selectedPortion {
             name
