@@ -70,13 +70,17 @@ const Invited = () => {
         <div className="row">
           <div className="col-9">
             <h1>
-              {data?.getInviteChallengeInfo?.invitedBy?.displayName} has invited
-              you to join a Poily Challenge!
+              {data?.getInviteChallengeInfo?.invite?.invitedBy?.displayName} has
+              invited you to join a Poily Challenge!
             </h1>
             <p>
               Join the{" "}
               <span>
-                &quot;{data?.getInviteChallengeInfo?.challengeId?.challengeName}
+                &quot;
+                {
+                  data?.getInviteChallengeInfo?.invite?.challengeId
+                    ?.challengeName
+                }
                 &quot;
               </span>
               . Track and visualize your daily blending habit with ease.

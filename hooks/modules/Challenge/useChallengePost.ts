@@ -1,13 +1,85 @@
-import { ApolloCache, useMutation } from "@apollo/client";
-import { format } from "date-fns";
+import {
+  ApolloCache,
+  useLazyQuery,
+  useMutation,
+  useQuery,
+} from "@apollo/client";
+import { format, isWithinInterval } from "date-fns";
 import { useMemo, useEffect } from "react";
 import { useForm } from "react-hook-form";
+
 import {
   GET_30DAYS_CHALLENGE,
   CREATE_CHALLENGE_POST,
   EDIT_CHALLENGE_POST,
+  GET_CHALLENGES,
 } from "../../../graphql/Challenge";
-import { useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { useRouter } from "next/router";
+import {
+  setChallengeView,
+  setChallengeInterval,
+} from "../../../redux/slices/Challenge.slice";
+
+const useThirtyDayChallenge = () => {
+  const router = useRouter();
+
+  const dispatch = useAppDispatch();
+  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const {
+    activeDate,
+    startDate,
+    endDate,
+    showPostForm: showUpload,
+  } = useAppSelector((state) => state.challenge);
+
+  const [getChallenges, { data }] = useLazyQuery(GET_30DAYS_CHALLENGE);
+
+  const viewOnly = data?.getMyThirtyDaysChallenge?.challengeInfo?.viewOnly;
+
+  useEffect(() => {
+    if (
+      userId === "" ||
+      (![activeDate, startDate, endDate].includes("") &&
+        isWithinInterval(new Date(activeDate), {
+          start: new Date(startDate),
+          end: new Date(endDate),
+        }))
+    )
+      return;
+    getChallenges({
+      variables: {
+        userId,
+        startDate: activeDate,
+        challengeId: router.query?.id,
+        token: router.query?.token,
+      },
+    });
+  }, [
+    activeDate,
+    endDate,
+    getChallenges,
+    router.query?.id,
+    router.query?.token,
+    startDate,
+    userId,
+  ]);
+
+  useEffect(() => {
+    const challenges = data?.getMyThirtyDaysChallenge?.challenge || [];
+    if (challenges.length === 0) return;
+
+    dispatch(setChallengeView(viewOnly));
+    dispatch(
+      setChallengeInterval({
+        startDate: challenges[0]?.date,
+        endDate: challenges[challenges.length - 1]?.date,
+      }),
+    );
+  }, [data, dispatch, viewOnly]);
+
+  return { challenge: data?.getMyThirtyDaysChallenge || [], viewOnly };
+};
 
 const update30DaysChallenge = (
   userId: string,
@@ -91,4 +163,9 @@ const useChallengeForm = (setImages) => {
   return { methods, onReset };
 };
 
-export { useAddChallengePost, useEditChallengePost, useChallengeForm };
+export {
+  useThirtyDayChallenge,
+  useAddChallengePost,
+  useEditChallengePost,
+  useChallengeForm,
+};

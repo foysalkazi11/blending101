@@ -110,20 +110,16 @@ const UploadCard = () => {
   return (
     <div className={styles.mainContainer}>
       <FormProvider {...methods}>
-        <div className="flex ai-center jc-between">
-          <h5 className={styles.mainContainer__mainHeading}>
-            Upload Challanges Post
-          </h5>
-          <div className="flex ai-center">
-            <ActionButton onClick={methods.handleSubmit(handleSubmit)}>
-              Post
-            </ActionButton>
-            <IconButton
-              size="small"
-              variant="secondary"
-              fontName={faTimes}
-              style={{ marginLeft: 5 }}
-              onClick={closeForm}
+        <div className="row mt-20">
+          <div className="col-4">
+            <Textfield type="date" name="assignDate" required />
+          </div>
+          <div className="col-8">
+            <Textfield
+              placeholder="Description"
+              name="recipeTitle"
+              defaultValue={title}
+              className={styles.recipe__title}
             />
           </div>
         </div>
@@ -131,14 +127,6 @@ const UploadCard = () => {
           <Upload multiple imageState={[images, setImages]} />
         </div>
         <div className="row mt-40">
-          <div className="col-6">
-            <Textfield
-              placeholder="Recipe Title"
-              name="recipeTitle"
-              defaultValue={title}
-              className={styles.recipe__title}
-            />
-          </div>
           <div className="col-3">
             <Combobox
               options={data?.getAllCategories}
@@ -147,9 +135,7 @@ const UploadCard = () => {
               required
             />
           </div>
-          <div className="col-3">
-            <Textfield type="date" name="assignDate" required />
-          </div>
+          <div className="col-3"></div>
         </div>
         <h5 className={styles.headingText}>My Recipe</h5>
         <div className="row">

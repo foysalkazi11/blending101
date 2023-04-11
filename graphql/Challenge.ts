@@ -240,11 +240,21 @@ export const SHARE_CHALLENGE = gql`
 `;
 
 export const GET_SHARED_CHALLENGE_DETAILS = gql`
-  query GetSharedChallengeInfo($challengeId: String!) {
-    getChallengeInfoById(challengeId: $challengeId, token: "") {
+  query GetSharedChallengeInfo(
+    $memberId: String!
+    $challengeId: String!
+    $token: String!
+  ) {
+    getChallengeInfoById(
+      token: $token
+      memberId: $memberId
+      challengeId: $challengeId
+    ) {
       challengeName
       memberInfo {
+        _id
         displayName
+        firstName
       }
     }
   }
@@ -275,12 +285,28 @@ export const ACCEPT_CHALLENGE = gql`
 export const GET_INVITE_CHALLENGE_DETAILS = gql`
   query GetInviteChallenge($id: String!) {
     getInviteChallengeInfo(inviteId: $id) {
-      invitedBy {
-        displayName
+      invite {
+        invitedBy {
+          displayName
+        }
+        challengeId {
+          challengeName
+        }
       }
-      challengeId {
-        challengeName
-        challengeId
+      sharedWith {
+        memberId {
+          _id
+          displayName
+        }
+        canInviteWithOthers
+        blendScore
+      }
+      topIngredients {
+        ingredientId {
+          _id
+          ingredientName
+        }
+        count
       }
     }
   }
