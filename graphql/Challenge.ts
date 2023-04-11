@@ -26,6 +26,7 @@ const CHALLENGE_FIELDS = gql`
         ingredientId {
           _id
           ingredientName
+          featuredImage
         }
         selectedPortion {
           name

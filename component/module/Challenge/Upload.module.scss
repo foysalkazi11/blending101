@@ -33,8 +33,17 @@ $sharedBorder: 1px #efefef solid;
 
 .headingText {
   @extend %sharedFontCss;
-  margin-top: 30px;
-  margin-bottom: 10px;
+  font-size: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px;
+  svg {
+    margin-right: 10px;
+    transform: translateY(2px);
+  }
+  // margin-top: 30px;
+  // margin-bottom: 10px;
 }
 
 .notesText {
@@ -114,24 +123,6 @@ $sharedBorder: 1px #efefef solid;
   }
 }
 
-.textScoreDiv {
-  // padding: 0px 10px;
-  margin: 5px 0px;
-  font-size: 12px;
-  // min-width: max-content;
-
-  &__text {
-    color: #525252;
-    font-weight: 400;
-  }
-
-  &__score {
-    margin-left: 14px;
-    color: #fd5610;
-    font-weight: 600;
-  }
-}
-
 // ADD INGREDIENT
 .ingredient {
   color: #888888;
@@ -142,6 +133,15 @@ $sharedBorder: 1px #efefef solid;
   span {
     margin-right: 4px;
     font-size: 1.2rem;
+  }
+  &__summary {
+    display: flex;
+    justify-content: space-evenly;
+    max-width: 40%;
+    margin: 0 auto 1rem;
+    span {
+      font-weight: 600;
+    }
   }
   &__field {
     position: relative;
@@ -191,11 +191,35 @@ $sharedBorder: 1px #efefef solid;
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
-    &:hover button {
+    &:hover svg {
       display: block;
     }
     &:not(:last-of-type) {
       margin-bottom: 5px;
+    }
+  }
+  &__item {
+    display: flex;
+    align-items: center;
+    & > div {
+      height: 30px;
+      width: 30px;
+      display: flex;
+      justify-content: center;
+      margin-right: 15px;
+      img {
+        height: 100%;
+        max-width: 100%;
+      }
+      span {
+        height: 90%;
+        width: 90%;
+        background-color: #ccc;
+        border-radius: 50%;
+      }
+    }
+    & > span {
+      margin-right: 5px;
     }
   }
   &__card {
@@ -204,9 +228,15 @@ $sharedBorder: 1px #efefef solid;
     border-top-left-radius: 0;
     // border-top-right-radius: 0;
     padding: 5px 10px;
-    min-height: 13.9rem;
-    height: 13.9rem;
+    min-height: 15.5rem;
+    height: 15.5rem;
     overflow: auto;
+  }
+  &__actions {
+    display: flex;
+    a {
+      color: black;
+    }
   }
   &__button {
     height: 1.6rem;
@@ -216,6 +246,10 @@ $sharedBorder: 1px #efefef solid;
     font-weight: 900;
     transform: translateY(5px);
     display: none;
+    margin-right: 8px;
+    &:hover {
+      color: #fd5610;
+    }
   }
 }
 
@@ -245,4 +279,21 @@ $sharedBorder: 1px #efefef solid;
 .imageContainer {
   position: relative;
   height: 80%;
+}
+
+.summary {
+  text-align: center;
+  &:not(:last-child) {
+    border-right: 1px solid #ececec;
+  }
+  h5 {
+    font-size: 32px;
+    font-weight: 200;
+    padding: 10px;
+    color: #fd5610;
+  }
+  &__wrapper {
+    width: 50%;
+    margin: auto;
+  }
 }

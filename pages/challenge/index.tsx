@@ -34,6 +34,7 @@ import { theme } from "../../configs/themes";
 import styles from "../../styles/pages/planner.module.scss";
 
 const ChallengePage = () => {
+  const upload = useRef<{ onChallengePost: any }>();
   const settings = useRef<{ onChallengeSave: any }>();
   const [showGroceryTray] = useState(true);
   const [showShare, setShowShare] = useState(false);
@@ -56,7 +57,7 @@ const ChallengePage = () => {
   const { url, progress, onShare } = useChallengeShare(challenge);
 
   let toolbox = null;
-  if (showUpload) toolbox = <UploadCard />;
+  if (showUpload) toolbox = <UploadCard ref={upload} />;
   else if (showSettings)
     toolbox = (
       <Settings
@@ -164,8 +165,22 @@ const ChallengePage = () => {
                 // CHALLENGE UPLOAD PAGE OR SETTINGS PAGE
                 (showUpload || showSettings) && (
                   <div className="flex ai-center mr-20">
+                    {!showSettings && showUpload && (
+                      // UPLOAD PAGE
+                      <div
+                        className={`${styles.uploadDiv} mr-20`}
+                        onClick={() => upload.current.onChallengePost()}
+                      >
+                        <Icon
+                          fontName={faPlusCircle}
+                          size="1.6rem"
+                          color={theme.color.primary}
+                        />
+                        <span>Post</span>
+                      </div>
+                    )}
                     {
-                      //SETTINGS PAGE
+                      // SETTINGS PAGE
                       !showUpload && showSettings && showForm ? (
                         // SETTINGS PAGE -> FORM
                         <div

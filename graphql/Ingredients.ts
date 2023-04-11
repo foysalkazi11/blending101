@@ -7,10 +7,29 @@ export const GET_INGREDIENTS = gql`
     ) {
       value: _id
       label: ingredientName
+      featuredImage
       portions {
         measurement
         meausermentWeight
         default
+      }
+    }
+  }
+`;
+
+export const GET_INGREDIENTS_RXFACT = gql`
+  query GetIngredientsFact($ingredients: [BlendIngredientInfo!]!) {
+    getIngredientsFact: getNutrientsListAndGiGlByIngredientsForScrappingPanel(
+      ingredientsInfo: $ingredients
+    ) {
+      nutrients {
+        name
+        units
+        value
+      }
+      giGl {
+        totalGL
+        netCarbs
       }
     }
   }
