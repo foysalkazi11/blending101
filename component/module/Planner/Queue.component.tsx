@@ -19,10 +19,11 @@ import { setRecipeInfo } from "../../../redux/slices/Challenge.slice";
 import styles from "./Queue.module.scss";
 import {
   useAddRecipeToMyPlan,
+  useDiscoveryQueue,
   useFindQueuedRecipe,
+  useQueuedRecipe,
   useRecipeCategory,
-  useRecipeQueue,
-} from "../../../hooks/modules/Plan/useRecipeQueue";
+} from "../../../hooks/modules/Plan/usePlanRecipes";
 
 interface PlannerPanelProps {
   panel: "my-plan" | "plan" | "challenge";
@@ -41,14 +42,17 @@ const PlannerQueue = (props: PlannerPanelProps) => {
 
   const { parentRef, recipeRef } = useFindQueuedRecipe([toggler, setToggler]);
   const { ref, categories, onHide, onShow } = useRecipeCategory();
-  const { recipes, pageLength, limit, isLoading } = useDiscoveryQueue({
+  const { observer, loading, recipes } = useDiscoveryQueue({
     type,
-    toggler,
     query,
     page,
+    setPage,
   });
+
+  const { loading: qLoading, recipes: qRecipes } = useQueuedRecipe();
+
   const addRecipeToPlanner = useAddRecipeToMyPlan({
-    limit,
+    limit: 10,
     page,
     query,
     type: type === "all" ? "" : type,
@@ -115,33 +119,22 @@ const PlannerQueue = (props: PlannerPanelProps) => {
         }`}
         ref={parentRef}
       >
-        {isLoading ? (
-          [...Array(limit)]?.map((_, index) => (
+        <Recipes
+          recipes={toggler ? recipes : qRecipes}
+          panel={panel}
+          modifyPlan={modifyPlan}
+          addRecipeToPlanner={addRecipeToPlanner}
+          panelType={toggler ? "QUEUE" : "DISCOVERY"}
+          wrapperRef={toggler ? observer : recipeRef}
+        />
+        {(toggler ? loading : qLoading) &&
+          [...Array(page === 1 ? 3 : 1)]?.map((_, index) => (
             <SkeletonElement
               type="thumbnail"
               key={index}
               style={{ width: "100%", height: "277px" }}
             />
-          ))
-        ) : (
-          <Recipes
-            recipes={recipes}
-            panel={panel}
-            modifyPlan={modifyPlan}
-            addRecipeToPlanner={addRecipeToPlanner}
-            addToRecipesRef={recipeRef}
-          />
-        )}
-
-        {pageLength > 1 && toggler && (
-          <div className="flex ai-center jc-center mt-20">
-            <Pagination
-              limit={5}
-              pageState={[page, setPage]}
-              totalPage={pageLength}
-            />
-          </div>
-        )}
+          ))}
       </div>
     </Fragment>
   );
@@ -150,35 +143,25 @@ const PlannerQueue = (props: PlannerPanelProps) => {
 interface RecipesProps {
   recipes: any[];
   panel: "my-plan" | "plan" | "challenge";
+  panelType: "QUEUE" | "DISCOVERY";
   modifyPlan?: any;
   addRecipeToPlanner?: any;
-  addToRecipesRef?: any;
+  wrapperRef?: any;
 }
 const Recipes = (props: RecipesProps) => {
-  const { recipes, panel, modifyPlan, addRecipeToPlanner, addToRecipesRef } =
-    props;
+  const {
+    recipes,
+    panel,
+    panelType,
+    modifyPlan,
+    addRecipeToPlanner,
+    wrapperRef,
+  } = props;
   const [showCalenderId, setShowCalenderId] = useState("");
 
-  const dispatch = useDispatch();
-  const uploadRecipe = (_id, name, image, category, ingredients) => {
-    console.log(category);
-    dispatch(
-      setRecipeInfo({
-        _id,
-        name,
-        image: {
-          url: image?.find((img) => img.default)?.image || image[0]?.image,
-          hash: "",
-        },
-        category,
-        ingredients,
-      }),
-    );
-  };
-  console.log(recipes);
   return (
     <Fragment>
-      {recipes?.map((recipe) => {
+      {recipes?.map((recipe, index) => {
         const {
           recipeId: {
             _id,
@@ -192,7 +175,17 @@ const Recipes = (props: RecipesProps) => {
         } = recipe;
 
         return (
-          <div ref={addToRecipesRef} key={_id} data-recipe={_id}>
+          <div
+            ref={
+              panelType === "DISCOVERY"
+                ? recipes.length === index + 1
+                  ? wrapperRef
+                  : null
+                : wrapperRef
+            }
+            key={_id}
+            data-recipe={_id}
+          >
             <RecipeCard
               className="mt-10"
               title={name}
@@ -204,22 +197,6 @@ const Recipes = (props: RecipesProps) => {
               ingredients={defaultVersion?.ingredients || []}
             >
               <div>
-                {panel === "challenge" && (
-                  <Icon
-                    fontName={faPlusCircle}
-                    style={{ color: "#fe5d1f" }}
-                    size="20px"
-                    onClick={() =>
-                      uploadRecipe(
-                        _id,
-                        name,
-                        image,
-                        recipeBlendCategory?._id,
-                        defaultVersion?.ingredients,
-                      )
-                    }
-                  />
-                )}
                 {panel === "plan" && (
                   <select onChange={(e) => modifyPlan(e.target.value, recipe)}>
                     <option value={""}></option>

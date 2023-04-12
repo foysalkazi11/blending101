@@ -19,7 +19,7 @@ import {
   useRecipeCategory,
   useDiscoveryQueue,
   useQueuedRecipe,
-} from "../../../hooks/modules/Plan/useRecipeQueue";
+} from "../../../hooks/modules/Challenge/useChallengeRecipes";
 
 interface ChallengeQueueProps {
   challenges: any;
