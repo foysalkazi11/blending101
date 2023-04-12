@@ -10,8 +10,8 @@ import {
 
 import RXPanel from "../../component/templates/Panel/RXFacts/RXPanel.component";
 import Statistics from "../../component/module/Challenge/Statistics.component";
-import ChallengeQueue from "../../component/module/Challenge/Post.component";
-import PlannerQueue from "../../component/module/Planner/Queue.component";
+import ChallengePost from "../../component/module/Challenge/Post.component";
+import ChallengeQueue from "../../component/module/Challenge/Queue.component";
 import UploadCard from "../../component/module/Challenge/Upload.component";
 import Challenge from "../../component/module/Challenge/Achievement/index.component";
 import Settings from "../../component/module/Challenge/Settings.component";
@@ -63,7 +63,14 @@ const ChallengePage = () => {
   const { url, progress, onShare } = useChallengeShare(challenge);
 
   let toolbox = null;
-  if (showUpload) toolbox = <UploadCard ref={upload} />;
+  if (showUpload)
+    toolbox = (
+      <UploadCard
+        ref={upload}
+        startDate={challenge?.challengeInfo?.startDate}
+        endDate={challenge?.challengeInfo?.endDate}
+      />
+    );
   else if (showSettings)
     toolbox = (
       <Settings
@@ -103,9 +110,9 @@ const ChallengePage = () => {
         <div className="row mt-20">
           <div className="col-3">
             {showUpload ? (
-              <PlannerQueue panel="challenge" />
-            ) : (
               <ChallengeQueue challenges={challenge?.challenge} />
+            ) : (
+              <ChallengePost challenges={challenge?.challenge} />
             )}
           </div>
           <div className="col-6">

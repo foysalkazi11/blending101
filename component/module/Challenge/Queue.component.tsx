@@ -1,15 +1,12 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { faPlusCircle } from "@fortawesome/pro-solid-svg-icons";
 import { faCalendarAlt } from "@fortawesome/pro-light-svg-icons";
-import { faCalendarDay } from "@fortawesome/pro-regular-svg-icons";
 
-import Pagination from "../../molecules/Pagination/ServerPagination.component";
 import Combobox from "../../organisms/Forms/Combobox.component";
 import Searchbox from "../../molecules/Searchbox/Searchbox.component";
 import ToggleCard from "../../../theme/toggleCard/toggleCard.component";
 import IconHeading from "../../../theme/iconHeading/iconHeading.component";
-import CalendarTray from "../../../theme/calendar/calendarTray.component";
 import SkeletonElement from "../../../theme/skeletons/SkeletonElement";
 import RecipeCard from "../../molecules/Card/RecipeCard.component";
 import Icon from "../../atoms/Icon/Icon.component";
@@ -18,22 +15,17 @@ import { setRecipeInfo } from "../../../redux/slices/Challenge.slice";
 
 import styles from "./Queue.module.scss";
 import {
-  useAddRecipeToMyPlan,
   useFindQueuedRecipe,
   useRecipeCategory,
-  useRecipeQueue,
+  useDiscoveryQueue,
+  useQueuedRecipe,
 } from "../../../hooks/modules/Plan/useRecipeQueue";
 
-interface PlannerPanelProps {
-  panel: "my-plan" | "plan" | "challenge";
-  modifyPlan?: any;
-  week?: any;
-  isWeekFromURL?: boolean;
+interface ChallengeQueueProps {
+  challenges: any;
 }
-
-const PlannerQueue = (props: PlannerPanelProps) => {
-  const { panel, week, isWeekFromURL, modifyPlan } = props;
-
+const ChallengeQueue = (props: ChallengeQueueProps) => {
+  console.log(props);
   const [toggler, setToggler] = useState(true);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
@@ -41,20 +33,15 @@ const PlannerQueue = (props: PlannerPanelProps) => {
 
   const { parentRef, recipeRef } = useFindQueuedRecipe([toggler, setToggler]);
   const { ref, categories, onHide, onShow } = useRecipeCategory();
-  const { recipes, pageLength, limit, isLoading } = useDiscoveryQueue({
+
+  const { observer, loading, recipes } = useDiscoveryQueue({
     type,
-    toggler,
     query,
     page,
+    setPage,
   });
-  const addRecipeToPlanner = useAddRecipeToMyPlan({
-    limit,
-    page,
-    query,
-    type: type === "all" ? "" : type,
-    week,
-    isWeekFromURL,
-  });
+  const queuedRecipes = useQueuedRecipe(props.challenges);
+  console.log(queuedRecipes);
 
   // When we toggle the tab between Discover and Queue
   useEffect(() => {
@@ -115,33 +102,19 @@ const PlannerQueue = (props: PlannerPanelProps) => {
         }`}
         ref={parentRef}
       >
-        {isLoading ? (
-          [...Array(limit)]?.map((_, index) => (
+        {toggler ? (
+          <DiscoverRecipes recipes={recipes} lastRecipes={observer} />
+        ) : (
+          <QueuedRecipes recipes={queuedRecipes} />
+        )}
+        {loading &&
+          [...Array(page === 1 ? 3 : 1)]?.map((_, index) => (
             <SkeletonElement
               type="thumbnail"
               key={index}
               style={{ width: "100%", height: "277px" }}
             />
-          ))
-        ) : (
-          <Recipes
-            recipes={recipes}
-            panel={panel}
-            modifyPlan={modifyPlan}
-            addRecipeToPlanner={addRecipeToPlanner}
-            addToRecipesRef={recipeRef}
-          />
-        )}
-
-        {pageLength > 1 && toggler && (
-          <div className="flex ai-center jc-center mt-20">
-            <Pagination
-              limit={5}
-              pageState={[page, setPage]}
-              totalPage={pageLength}
-            />
-          </div>
-        )}
+          ))}
       </div>
     </Fragment>
   );
@@ -149,19 +122,12 @@ const PlannerQueue = (props: PlannerPanelProps) => {
 
 interface RecipesProps {
   recipes: any[];
-  panel: "my-plan" | "plan" | "challenge";
-  modifyPlan?: any;
-  addRecipeToPlanner?: any;
-  addToRecipesRef?: any;
+  lastRecipes?: any;
 }
-const Recipes = (props: RecipesProps) => {
-  const { recipes, panel, modifyPlan, addRecipeToPlanner, addToRecipesRef } =
-    props;
-  const [showCalenderId, setShowCalenderId] = useState("");
-
+const DiscoverRecipes = (props: RecipesProps) => {
+  const { recipes, lastRecipes } = props;
   const dispatch = useDispatch();
   const uploadRecipe = (_id, name, image, category, ingredients) => {
-    console.log(category);
     dispatch(
       setRecipeInfo({
         _id,
@@ -175,10 +141,9 @@ const Recipes = (props: RecipesProps) => {
       }),
     );
   };
-  console.log(recipes);
   return (
     <Fragment>
-      {recipes?.map((recipe) => {
+      {recipes?.map((recipe, index) => {
         const {
           recipeId: {
             _id,
@@ -192,7 +157,11 @@ const Recipes = (props: RecipesProps) => {
         } = recipe;
 
         return (
-          <div ref={addToRecipesRef} key={_id} data-recipe={_id}>
+          <div
+            ref={recipes.length === index + 1 ? lastRecipes : null}
+            key={_id}
+            data-recipe={_id}
+          >
             <RecipeCard
               className="mt-10"
               title={name}
@@ -204,55 +173,20 @@ const Recipes = (props: RecipesProps) => {
               ingredients={defaultVersion?.ingredients || []}
             >
               <div>
-                {panel === "challenge" && (
-                  <Icon
-                    fontName={faPlusCircle}
-                    style={{ color: "#fe5d1f" }}
-                    size="20px"
-                    onClick={() =>
-                      uploadRecipe(
-                        _id,
-                        name,
-                        image,
-                        recipeBlendCategory?._id,
-                        defaultVersion?.ingredients,
-                      )
-                    }
-                  />
-                )}
-                {panel === "plan" && (
-                  <select onChange={(e) => modifyPlan(e.target.value, recipe)}>
-                    <option value={""}></option>
-                    <option value={1}>1</option>
-                    <option value={2}>2</option>
-                    <option value={3}>3</option>
-                    <option value={4}>4</option>
-                    <option value={5}>5</option>
-                    <option value={6}>6</option>
-                    <option value={7}>7</option>
-                  </select>
-                )}
-                {panel === "my-plan" && (
-                  <Icon
-                    fontName={faCalendarDay}
-                    style={{ color: "#fe5d1f" }}
-                    size="20px"
-                    onClick={() =>
-                      setShowCalenderId((prev) =>
-                        showCalenderId === _id ? "" : _id,
-                      )
-                    }
-                  />
-                )}
-                {panel === "my-plan" && showCalenderId === _id && (
-                  <div className={styles.calender__tray}>
-                    <CalendarTray
-                      handler={(date) =>
-                        addRecipeToPlanner(recipe, date, setShowCalenderId)
-                      }
-                    />
-                  </div>
-                )}
+                <Icon
+                  fontName={faPlusCircle}
+                  style={{ color: "#fe5d1f" }}
+                  size="20px"
+                  onClick={() =>
+                    uploadRecipe(
+                      _id,
+                      name,
+                      image,
+                      recipeBlendCategory?._id,
+                      defaultVersion?.ingredients,
+                    )
+                  }
+                />
               </div>
             </RecipeCard>
           </div>
@@ -261,4 +195,44 @@ const Recipes = (props: RecipesProps) => {
     </Fragment>
   );
 };
-export default PlannerQueue;
+
+const QueuedRecipes = (props: RecipesProps) => {
+  const { recipes } = props;
+  const dispatch = useDispatch();
+  const uploadRecipe = (recipe) => {
+    dispatch(setRecipeInfo(recipe));
+  };
+  return (
+    <Fragment>
+      {recipes?.map((recipe) => {
+        const { _id, name, image, category, ingredients } = recipe;
+
+        return (
+          <div key={_id} data-recipe={_id}>
+            <RecipeCard
+              className="mt-10"
+              title={name}
+              category={category?.name}
+              ratings={0}
+              noOfRatings={0}
+              image={image.url}
+              recipeId={_id}
+              ingredients={ingredients}
+            >
+              <div>
+                <Icon
+                  fontName={faPlusCircle}
+                  style={{ color: "#fe5d1f" }}
+                  size="20px"
+                  onClick={() => uploadRecipe(recipe)}
+                />
+              </div>
+            </RecipeCard>
+          </div>
+        );
+      })}
+    </Fragment>
+  );
+};
+
+export default ChallengeQueue;

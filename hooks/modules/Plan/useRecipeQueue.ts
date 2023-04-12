@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { format } from "date-fns";
 import {
@@ -15,74 +15,87 @@ import styles from "../../../component/module/Planner/Queue.module.scss";
 import Publish from "../../../helpers/Publish";
 import { setDayRecipe } from "../../../redux/slices/Planner.slice";
 
-// FOR FETCHING BOTH RECIPE DISCOVERY & QUEUED RECIPE
-interface IRecipeQueueHook {
+interface IDiscoverRecipe {
   type: string;
-  toggler: boolean;
   query: string;
   page: number;
+  setPage: any;
 }
 
-const useRecipeQueue = (props: IRecipeQueueHook) => {
-  const { type, toggler, query, page } = props;
+const useDiscoveryQueue = (props: IDiscoverRecipe) => {
+  const { type, query, page, setPage } = props;
   const [recipes, setRecipes] = useState([]);
-  const [pageLength, setPageLength] = useState(1);
-  const [limit] = useState(3);
+  const [hasMore, setHasMore] = useState(false);
+  const [limit] = useState(10);
 
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
-  const [getRecipes, { loading: discoverLoading, data: discoverData }] =
-    useLazyQuery(GET_ALL_PLANNER_RECIPES);
-  const [getQueuedRecipes, { loading, data: queuedData }] = useLazyQuery(
-    GET_QUEUED_PLANNER_RECIPES,
+  const [getRecipes, { loading }] = useLazyQuery(GET_ALL_PLANNER_RECIPES);
+
+  // OBSERVING THE LAST RECIPE POSITION OF THE LIST TO TRY TO FETCH MORE RECIPES
+  const observer = useRef<any>();
+  const lastRecipeRef = useCallback(
+    (node) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPage((prevPageNumber) => prevPageNumber + 1);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore, setPage],
   );
 
+  // RESETTING RECIPES ON QUERY OR CATEGORY CHANGE
+  useEffect(() => {
+    setRecipes([]);
+  }, [query, type]);
+
+  // STORING THE FORMATTED DATA IN THE STATE
   useEffect(() => {
     const blendCategory = type === "all" ? "" : type;
     if (userId !== "") {
       getRecipes({
         variables: {
           user: userId,
-          searchTerm: query,
-          page,
           limit,
           type: blendCategory,
-        },
-      });
-      getQueuedRecipes({
-        variables: {
-          currentDate: format(new Date(), "yyyy-MM-dd"),
-          user: userId,
           searchTerm: query,
           page,
-          limit: 30,
-          type: blendCategory,
         },
+      }).then((response) => {
+        const data = response.data?.getAllRecipesForPlanner;
+        setRecipes((prevRecipes) => [...prevRecipes, ...data?.recipes]);
+        setHasMore(data?.recipes?.length > 0);
       });
     }
-  }, [getQueuedRecipes, getRecipes, limit, page, query, type, userId]);
+  }, [getRecipes, limit, page, query, type, userId]);
 
-  useEffect(() => {
-    if (toggler) {
-      setRecipes(discoverData?.getAllRecipesForPlanner?.recipes || []);
-      setPageLength(
-        Math.ceil(discoverData?.getAllRecipesForPlanner?.totalRecipe / limit) ||
-          1,
-      );
-    } else {
-      setRecipes(queuedData?.getQuedPlanner?.recipes || []);
-      setPageLength(
-        Math.ceil(queuedData?.getQuedPlanner?.totalRecipe / limit) || 1,
-      );
-    }
-  }, [
-    discoverData?.getAllRecipesForPlanner,
-    limit,
-    queuedData?.getQuedPlanner,
-    toggler,
-  ]);
+  return { loading, recipes, observer: lastRecipeRef };
+};
 
-  return { isLoading: discoverLoading || loading, recipes, pageLength, limit };
+const useQueuedRecipe = (days: any[]) => {
+  const recipes = useMemo(() => {
+    const recipes = [];
+    days?.forEach((day) => {
+      day?.posts.forEach((post) => {
+        const image =
+          post.images.length > 0 ? post.images[0] : { url: "", hash: "" };
+        recipes.push({
+          _id: post?._id,
+          name: post?.name,
+          image,
+          category: post?.recipeBlendCategory,
+          ingredients: post?.ingredients || [],
+        });
+      });
+    });
+    return recipes;
+  }, [days]);
+
+  return recipes;
 };
 
 // FOR FILTERING BY RECIPE CATEGORY
@@ -116,7 +129,7 @@ const useRecipeCategory = () => {
 
 interface IAddRecipeToPlanHook {
   type: string;
-  limit: number;
+  limit?: number;
   query: string;
   page: number;
   week: any;
@@ -270,7 +283,8 @@ const useFindQueuedRecipe = ([toggler, setToggler]) => {
 };
 
 export {
-  useRecipeQueue,
+  useDiscoveryQueue,
+  useQueuedRecipe,
   useRecipeCategory,
   useAddRecipeToMyPlan,
   useFindQueuedRecipe,
