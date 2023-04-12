@@ -297,3 +297,18 @@ $sharedBorder: 1px #efefef solid;
     margin: auto;
   }
 }
+
+.date {
+  position: relative;
+  cursor: pointer;
+  & input {
+    cursor: pointer;
+  }
+  &__icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+  }
+}

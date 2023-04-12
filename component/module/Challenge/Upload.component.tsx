@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { FormProvider } from "react-hook-form";
+import DatePicker from "react-datepicker";
 
 import {
   GET_INGREDIENTS,
@@ -26,6 +27,7 @@ import {
   deleteIngredient,
   setShowPostForm,
   resetForm,
+  setPostDate,
 } from "../../../redux/slices/Challenge.slice";
 import { setShowPanel } from "../../../redux/slices/Ui.slice";
 import useImage from "../../../hooks/useImage";
@@ -37,6 +39,7 @@ import {
 import Icon from "../../atoms/Icon/Icon.component";
 import {
   faBasketShopping,
+  faCalendar,
   faNotebook,
 } from "@fortawesome/pro-regular-svg-icons";
 import {
@@ -45,16 +48,24 @@ import {
   faTrash,
   faChartSimple,
 } from "@fortawesome/pro-light-svg-icons";
+import { addDays, format, isToday, isTomorrow, isYesterday } from "date-fns";
 
-const UploadCard = forwardRef((_, ref) => {
+const UploadCard = forwardRef((props: any, ref) => {
+  const { startDate, endDate } = props;
   const { images, setImages, postImages: uploadImages } = useImage([]);
   const [serving, setServing] = useState(1);
 
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
-  const { isEditMode, id, docId, title, ingredients } = useAppSelector(
-    (state) => state.challenge.post,
-  );
+
+  const {
+    isEditMode,
+    id,
+    docId,
+    title,
+    ingredients,
+    startDate: postDate,
+  } = useAppSelector((state) => state.challenge.post);
 
   const { data } = useQuery(GET_BLEND_CATEGORY);
   const { methods, onReset } = useChallengeForm(setImages);
@@ -115,7 +126,11 @@ const UploadCard = forwardRef((_, ref) => {
       <FormProvider {...methods}>
         <div className="row mt-20">
           <div className="col-4">
-            <Textfield type="date" name="assignDate" required />
+            <DateSelector
+              activeDate={postDate}
+              startDate={startDate}
+              endDate={endDate}
+            />
           </div>
           <div className="col-8">
             <Textfield
@@ -363,3 +378,46 @@ const AddIngredient = ({ ingredients, categories }) => {
 };
 
 export default UploadCard;
+
+const DatePickerButton = forwardRef(({ value, onClick }: any, ref: any) => {
+  const label = useMemo(() => {
+    const date = new Date(value);
+    if (isToday(date)) return "Today";
+    else if (isYesterday(date)) return "Yesterday";
+    else if (isTomorrow(date)) return "Tomorrow";
+    else return format(date, "do MMMM, yyyy");
+  }, [value]);
+
+  return (
+    <div className={styles.date} onClick={onClick}>
+      <Textfield ref={ref} required value={label} disabled />
+      <Icon fontName={faCalendar} size={"2rem"} className={styles.date__icon} />
+    </div>
+  );
+});
+DatePickerButton.displayName = "DatePickerButton";
+
+interface DateSelectorProps {
+  activeDate: string;
+  startDate: string;
+  endDate: string;
+}
+const DateSelector = (props: DateSelectorProps) => {
+  const dispatch = useAppDispatch();
+  const { activeDate, startDate, endDate } = props;
+
+  const dateHandler = (date) => {
+    dispatch(setPostDate(format(new Date(date), "yyyy-MM-dd")));
+  };
+
+  return (
+    <DatePicker
+      selected={activeDate ? new Date(activeDate) : new Date()}
+      minDate={startDate ? new Date(startDate) : new Date()}
+      maxDate={addDays(new Date(), 1)}
+      onChange={dateHandler}
+      fixedHeight
+      customInput={<DatePickerButton />}
+    />
+  );
+};
