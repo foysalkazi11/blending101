@@ -161,6 +161,7 @@ const Recipes = (props: RecipesProps) => {
 
   const dispatch = useDispatch();
   const uploadRecipe = (_id, name, image, category, ingredients) => {
+    console.log(category);
     dispatch(
       setRecipeInfo({
         _id,
@@ -174,7 +175,7 @@ const Recipes = (props: RecipesProps) => {
       }),
     );
   };
-
+  console.log(recipes);
   return (
     <Fragment>
       {recipes?.map((recipe) => {

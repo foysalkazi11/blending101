@@ -128,7 +128,7 @@ const useEditChallengePost = (userId) => {
 
 const defaultValues = {
   category: "",
-  assignDate: format(new Date(), "yyyy-MM-dd"),
+  assignDate: "",
   recipeTitle: "",
   note: "",
 };
