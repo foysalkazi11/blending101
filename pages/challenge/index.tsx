@@ -27,11 +27,17 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import useChallengeShare from "../../hooks/modules/Challenge/useChallengeShare";
 import { useThirtyDayChallenge } from "../../hooks/modules/Challenge/useChallengePost";
 
-import { setShowPostForm } from "../../redux/slices/Challenge.slice";
+import {
+  resetForm,
+  setChallengeDate,
+  setPostDate,
+  setShowPostForm,
+} from "../../redux/slices/Challenge.slice";
 
 import { theme } from "../../configs/themes";
 
 import styles from "../../styles/pages/planner.module.scss";
+import { format } from "date-fns";
 
 const ChallengePage = () => {
   const upload = useRef<{ onChallengePost: any }>();
@@ -147,6 +153,9 @@ const ChallengePage = () => {
                         className={`${styles.uploadDiv} ml-10`}
                         onClick={() => {
                           dispatch(setShowPostForm(true));
+                          dispatch(
+                            setPostDate(format(new Date(), "yyyy-MM-dd")),
+                          );
                           setShowSettings(false);
                         }}
                       >
@@ -155,7 +164,7 @@ const ChallengePage = () => {
                           size="1.6rem"
                           color={theme.color.primary}
                         />
-                        <span>Upload</span>
+                        <span>Post</span>
                       </div>
                     )}
                   </div>
@@ -176,7 +185,7 @@ const ChallengePage = () => {
                           size="1.6rem"
                           color={theme.color.primary}
                         />
-                        <span>Post</span>
+                        <span>Save</span>
                       </div>
                     )}
                     {
@@ -220,6 +229,7 @@ const ChallengePage = () => {
                       onClick={() => {
                         setShowSettings(false);
                         dispatch(setShowPostForm(false));
+                        dispatch(resetForm());
                       }}
                     />
                   </div>

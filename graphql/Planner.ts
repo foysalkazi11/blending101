@@ -9,6 +9,7 @@ const PLANNER_RECIPE_LIST_FIELDS = gql`
         name
         recipeBlendCategory {
           name
+          _id
         }
         averageRating
         totalRating
