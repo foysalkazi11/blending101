@@ -5,9 +5,7 @@ const GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS = gql`
     $ingredientsInfo: [BlendIngredientInfo!]!
   ) {
     getNutrientsListAndGiGlByIngredients(ingredientsInfo: $ingredientsInfo) {
-      nutrients {
-        name
-      }
+      nutrients
       giGl {
         totalGi
         netCarbs

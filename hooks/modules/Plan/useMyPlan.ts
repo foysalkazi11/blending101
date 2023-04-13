@@ -43,7 +43,9 @@ const usePlanByWeek = (props: IPlanByWeekHook) => {
       if (
         router.query?.plan &&
         !isFetchingFromURL &&
-        response?.data?.getPlannerByDates?.planners.length > 0
+        response?.data?.getPlannerByDates?.planners.some(
+          (planner) => planner?.recipes.length > 0,
+        )
       ) {
         setShowDuplicateAlert(true);
       }

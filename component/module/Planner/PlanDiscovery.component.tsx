@@ -1,19 +1,17 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { useDispatch } from "react-redux";
 import {
   faCalendarDay,
   faTelescope,
   faPlusCircle,
 } from "@fortawesome/pro-regular-svg-icons";
-import { format } from "date-fns";
 
 import Pagination from "../../molecules/Pagination/ServerPagination.component";
 import Combobox from "../../organisms/Forms/Combobox.component";
 import Searchbox from "../../molecules/Searchbox/Searchbox.component";
 import ToggleCard from "../../../theme/toggleCard/toggleCard.component";
 import IconHeading from "../../../theme/iconHeading/iconHeading.component";
-import CalendarTray from "../../../theme/calendar/calendarTray.component";
 import SkeletonElement from "../../../theme/skeletons/SkeletonElement";
 import RecipeCard from "../../molecules/Card/RecipeCard.component";
 import Icon from "../../atoms/Icon/Icon.component";
@@ -25,6 +23,8 @@ import { setRecipeInfo } from "../../../redux/slices/Challenge.slice";
 
 import styles from "./PlanDiscovery.module.scss";
 import PlanCard from "./PlanCard.component";
+import { useAllPlan } from "../../../hooks/modules/Plan/usePlanDiscovery";
+import { useRecipeCategory } from "../../../hooks/modules/Plan/usePlanRecipes";
 
 interface PlannerPanelProps {
   recipes: any[];
@@ -35,45 +35,17 @@ const PlanDiscovery = (props: PlannerPanelProps) => {
   const { recipes, isUpload } = props;
   const [toggler, setToggler] = useState(true);
   const [query, setQuery] = useState("");
-  const [page, setPage] = useState(1);
-  const [limit] = useState(3);
-  const [pageLength, setPageLength] = useState(1);
   const [type, setType] = useState("all");
+  const [page, setPage] = useState(1);
 
-  const blendTypeRef = useRef<HTMLDivElement>(null);
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
-
-  const [getAllPlan, { data, loading }] = useLazyQuery(GET_ALL_PLANS);
-  const { data: categories } = useQuery(GET_BLEND_CATEGORY);
-
-  useEffect(() => {
-    getAllPlan({
-      variables: {
-        limit,
-        page,
-        memberId: userId,
-      },
-    }).then((response) => {
-      setPageLength(
-        Math.ceil(response.data.getAllGlobalPlans.totalPlans / limit),
-      );
-    });
-  }, [getAllPlan, limit, page, userId]);
+  const { plans, loading, observer } = useAllPlan({ page, setPage });
+  const { ref, categories, onHide, onShow } = useRecipeCategory();
   useEffect(() => {
     setQuery("");
     setPage(1);
     setType("all");
   }, [toggler]);
 
-  // Handling the Blendtype Combobox, When the search is focused/hovered it should be hidden or vice-versa
-  const handleShow = () => {
-    blendTypeRef?.current.classList.add(styles["blendType--show"]);
-    blendTypeRef?.current.classList.remove(styles["blendType--hide"]);
-  };
-  const handleHide = () => {
-    blendTypeRef?.current.classList.remove(styles["blendType--show"]);
-    blendTypeRef?.current.classList.add(styles["blendType--hide"]);
-  };
   return (
     <Fragment>
       <IconHeading
@@ -94,16 +66,9 @@ const PlanDiscovery = (props: PlannerPanelProps) => {
 
       {toggler && (
         <div className={styles.action}>
-          <div ref={blendTypeRef} style={{ width: "100%" }}>
+          <div ref={ref} style={{ width: "100%" }}>
             <Combobox
-              options={
-                categories?.getAllCategories
-                  ? [
-                      { label: "All", value: "all" },
-                      ...categories?.getAllCategories,
-                    ]
-                  : [{ label: "All", value: "all" }]
-              }
+              options={categories}
               className={styles.blendType}
               value={type}
               onChange={(e) => {
@@ -117,55 +82,41 @@ const PlanDiscovery = (props: PlannerPanelProps) => {
             onChange={(e) => setQuery(e.target.value)}
             onReset={() => {
               setQuery("");
-              handleHide();
+              onHide();
             }}
-            onFocus={handleHide}
-            onMouseEnter={handleHide}
-            onMouseLeave={handleShow}
-            onBlur={handleShow}
+            onFocus={onHide}
+            onMouseEnter={onHide}
+            onMouseLeave={onShow}
+            onBlur={onShow}
           />
         </div>
       )}
       <div className={styles.wrapper}>
-        {loading ? (
-          [...Array(limit)]?.map((_, index) => (
+        {toggler ? (
+          <Plans plans={plans} isUpload={isUpload} observer={observer} />
+        ) : (
+          <Recipes recipes={recipes || []} isUpload={isUpload} />
+        )}
+        {toggler &&
+          loading &&
+          [...Array(page === 1 ? 3 : 1)]?.map((_, index) => (
             <SkeletonElement
               type="thumbnail"
               key={index}
               style={{ width: "100%", height: "277px" }}
             />
-          ))
-        ) : toggler ? (
-          <Plans
-            plans={data?.getAllGlobalPlans?.plans || []}
-            isUpload={isUpload}
-          />
-        ) : (
-          <Recipes recipes={recipes || []} isUpload={isUpload} />
-        )}
-        {pageLength > 1 && (
-          <div className="flex ai-center jc-center mt-20">
-            <Pagination
-              limit={3}
-              pageState={[page, setPage]}
-              totalPage={pageLength}
-            />
-          </div>
-        )}
+          ))}
       </div>
     </Fragment>
   );
 };
 
 const Plans = (props) => {
-  const { plans } = props;
+  const { plans, observer } = props;
   return plans?.map((plan) => (
-    <PlanCard
-      key={plan?._id}
-      className="mt-10"
-      planId={plan?._id}
-      title={plan.planName}
-    />
+    <div key={plan?._id} ref={observer} className="mt-10">
+      <PlanCard planId={plan?._id} title={plan.planName} />
+    </div>
   ));
 };
 
