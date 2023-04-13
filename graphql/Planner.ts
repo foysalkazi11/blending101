@@ -63,22 +63,8 @@ export const GET_ALL_PLANNER_RECIPES = gql`
 `;
 
 export const GET_QUEUED_PLANNER_RECIPES = gql`
-  query GetQueuedRecipesForPlanner(
-    $currentDate: String!
-    $searchTerm: String!
-    $page: Float!
-    $limit: Float!
-    $type: String!
-    $user: String!
-  ) {
-    getQuedPlanner(
-      currentDate: $currentDate
-      page: $page
-      limit: $limit
-      userId: $user
-      searchTerm: $searchTerm
-      recipeBlendCategory: $type
-    ) {
+  query GetQueuedRecipesForPlanner($currentDate: String!, $user: String!) {
+    getQuedPlanner(currentDate: $currentDate, userId: $user) {
       ...RecipeFields
     }
   }

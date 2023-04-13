@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import {
   faChevronLeft,
   faChevronRight,
@@ -75,10 +75,11 @@ const MyPlan = () => {
       },
     }).then(() => {
       setShowForm(false);
+      router.push("/planner");
     });
   };
 
-  const handleMergeOrReplace = async (type: "MERGE" | "REPLACE") => {
+  const handleMergeOrReplace = async (type: "MERGE" | "REMOVE") => {
     await Publish({
       mutate: addToMyPlan,
       state: addToMyPlanState,

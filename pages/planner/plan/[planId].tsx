@@ -15,7 +15,7 @@ import { faCalendarDays } from "@fortawesome/pro-solid-svg-icons";
 
 import RXPanel from "../../../component/templates/Panel/RXFacts/RXPanel.component";
 import PlanDiscovery from "../../../component/module/Planner/PlanDiscovery.component";
-import PlanList from "../../../component/module/Planner/Plan/index.component";
+import PlanList from "../../../component/module/Planner/PlanByDay.component";
 
 import AContainer from "../../../containers/A.container";
 import IconHeading from "../../../theme/iconHeading/iconHeading.component";

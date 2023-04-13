@@ -90,10 +90,6 @@ const useQueuedRecipe = () => {
         variables: {
           currentDate: format(new Date(), "yyyy-MM-dd"),
           user: userId,
-          searchTerm: "",
-          page: 1,
-          limit: 100,
-          type: "",
         },
       }).then((response) => {
         const data = response.data?.getQuedPlanner;
