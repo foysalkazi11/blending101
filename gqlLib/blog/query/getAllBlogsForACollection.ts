@@ -21,7 +21,6 @@ const GET_ALL_BLOGS_FOR_A_COLLECTION = gql`
       blogs {
         _id
         coverImage
-        createdBy
         mediaLength
         mediaUrl
         publishDate
@@ -31,6 +30,13 @@ const GET_ALL_BLOGS_FOR_A_COLLECTION = gql`
         type
         commentsCount
         blogCollections
+        createdBy {
+          _id
+          displayName
+          firstName
+          image
+          lastName
+        }
       }
     }
   }

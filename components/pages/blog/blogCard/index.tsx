@@ -161,7 +161,10 @@ const BlogCard = ({
         )}
       </div>
       <div className={styles.authorAndDate}>
-        <p>{createdBy}</p>
+        <p>
+          {createdBy?.displayName ||
+            `${createdBy?.firstName} ${createdBy?.lastName}`}
+        </p>
         <div style={{ display: "flex", alignItems: "center" }}>
           {mediaLength ? (
             <p className={styles.timeDuration}>

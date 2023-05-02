@@ -17,8 +17,14 @@ const GET_A_GENERAL_BLOG_BY_SLUG = gql`
       keywords
       hasInCollection
       description
-      createdBy
       category
+      createdBy {
+        _id
+        displayName
+        firstName
+        image
+        lastName
+      }
     }
   }
 `;

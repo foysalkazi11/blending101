@@ -1,7 +1,7 @@
 export interface BlogListType {
   _id: string;
   coverImage: string;
-  createdBy: string;
+  createdBy: Admin;
   blogCollections: string[];
   mediaLength: string;
   mediaUrl: string;
@@ -28,6 +28,14 @@ export interface BlogDetailsType {
   keywords: string[];
   hasInCollection: boolean;
   description: string;
-  createdBy: string;
+  createdBy: Admin;
   category: string;
+}
+
+export interface Admin {
+  _id: string;
+  displayName: string;
+  firstName: string;
+  image: string;
+  lastName: string;
 }
