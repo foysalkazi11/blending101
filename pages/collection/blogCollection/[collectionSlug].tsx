@@ -1,25 +1,22 @@
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import AContainer from "../../../containers/A.container";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { useAppSelector } from "../../../redux/hooks";
 import styles from "../../../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";
 import classes from "../../../styles/pages/viewAll.module.scss";
 import { useQuery } from "@apollo/client";
 import ShowRecipeContainer from "../../../components/showRecipeContainer";
 import CommonSearchBar from "../../../components/searchBar/CommonSearchBar";
 import WikiBanner from "../../../components/wiki/wikiBanner/WikiBanner";
-import GET_ALL_ADMIN from "../../../gqlLib/user/queries/getAllAdmin";
 import GET_ALL_BLOGS_FOR_A_COLLECTION from "../../../gqlLib/blog/query/getAllBlogsForACollection";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faStar } from "@fortawesome/pro-regular-svg-icons";
 
 const CollectionBlog = () => {
   const router = useRouter();
-  const dispatch = useAppDispatch();
   const slug = router.query?.collectionSlug as string;
   const [input, setInput] = useState("");
   const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
-  const { data: allAdminData } = useQuery(GET_ALL_ADMIN);
   const { data: allBlogs, loading: allBlogsLoading } = useQuery(
     GET_ALL_BLOGS_FOR_A_COLLECTION,
     {
@@ -31,10 +28,6 @@ const CollectionBlog = () => {
       },
     },
   );
-  const findAmin = (id: string) => {
-    const admin = allAdminData?.getAllAdmin?.find((admin) => admin?._id === id);
-    return admin ? `${admin?.firstName} ${admin?.lastName}` : "Gabriel Branu";
-  };
 
   return (
     <AContainer
@@ -85,7 +78,6 @@ const CollectionBlog = () => {
           }
           closeHandler={() => router.push("/blog")}
           showItems="blog"
-          findAmin={findAmin}
         />
       </div>
     </AContainer>

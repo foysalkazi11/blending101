@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import React, { FC, useState, useEffect } from "react";
+import React, { FC, useState } from "react";
 import AContainer from "../../../containers/A.container";
 import GET_ALL_GENERAL_BLOG_FOR_CLIENT from "../../../gqlLib/blog/query/getAllGeneralBlogForClient";
 import BlogCard from "./blogCard";
@@ -9,7 +9,6 @@ import styles from "./BlogList.module.scss";
 import CommonSearchBar from "../../searchBar/CommonSearchBar";
 import WikiBanner from "../../wiki/wikiBanner/WikiBanner";
 import ErrorPage from "../404Page";
-import GET_ALL_ADMIN from "../../../gqlLib/user/queries/getAllAdmin";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import ShowLastModifiedCollection from "../../showLastModifiedCollection/ShowLastModifiedCollection";
 import { setIsOpenBlogCollectionTray } from "../../../redux/slices/blogSlice";
@@ -31,13 +30,6 @@ const BlogList = () => {
     },
     fetchPolicy: "cache-and-network",
   });
-
-  const { data: allAdminData } = useQuery(GET_ALL_ADMIN);
-
-  const findAmin = (id: string) => {
-    const admin = allAdminData?.getAllAdmin?.find((admin) => admin?._id === id);
-    return admin ? `${admin?.firstName} ${admin?.lastName}` : "Gabriel Branu";
-  };
 
   if (generalBlogLoading) {
     return (
@@ -71,7 +63,7 @@ const BlogList = () => {
             return (
               <BlogCard
                 key={blog?._id}
-                blogData={{ ...blog, createdBy: findAmin(blog?.createdBy) }}
+                blogData={blog}
                 setOpenLastModifiedCollectionModal={setOpenCollectionModal}
               />
             );

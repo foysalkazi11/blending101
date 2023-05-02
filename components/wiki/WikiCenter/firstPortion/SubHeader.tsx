@@ -8,14 +8,8 @@ import {
 } from "@fortawesome/pro-solid-svg-icons";
 import { faMessageDots as faMessageDotsLight } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Image from "next/image";
 import React, { Dispatch, SetStateAction } from "react";
 import styles from "../wikiCenter.module.scss";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import {
-  setIsOpenWikiCommentsTray,
-  setWikiCommentsCurrentIngredient,
-} from "../../../../redux/slices/wikiSlice";
 
 interface Props {
   id: string;
