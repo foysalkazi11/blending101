@@ -5,7 +5,7 @@ import {
   updateCurrentBlogForShowComments,
 } from "../../../../redux/slices/blogSlice";
 import ReadMore from "../../../../theme/readMore";
-import { BlogDetailsType } from "../../../../type/blog";
+import { Admin, BlogDetailsType } from "../../../../type/blog";
 import { BlockType } from "../../../../type/editorjsBlockType";
 import { CoverImageType } from "../../../wiki/WikiCenter";
 import ImageSlider from "../../../wiki/WikiCenter/firstPortion/ImageSlider";
@@ -15,9 +15,8 @@ import RenderJsonToHtml from "../../../wiki/WikiCenter/jsonToHtml";
 import styles from "./BlogDetails.module.scss";
 interface Props {
   blogDetails: BlogDetailsType;
-  findAmin: (id: string) => string;
 }
-const BlogDetailsCenter = ({ blogDetails, findAmin }: Props) => {
+const BlogDetailsCenter = ({ blogDetails }: Props) => {
   const {
     _id,
     title,
@@ -87,7 +86,10 @@ const BlogDetailsCenter = ({ blogDetails, findAmin }: Props) => {
         </div>
         <SubHeader
           id={_id}
-          author={findAmin(createdBy)}
+          author={((): string => {
+            const admin = createdBy;
+            return admin.displayName || `${admin.firstName} ${admin.lastName}`;
+          })()}
           categroy={type}
           commentsCount={commentsCount}
           expandAllCollapse={expandAllCollapse}
