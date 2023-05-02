@@ -1,5 +1,7 @@
+import { faChartColumn } from "@fortawesome/pro-light-svg-icons";
 import Image from "next/image";
 import React from "react";
+import Icon from "../../../../component/atoms/Icon/Icon.component";
 import styles from "./PanelHeader.module.scss";
 
 interface PanelHeaderProps {
@@ -31,7 +33,7 @@ const PanelHeader = ({
       >
         <div className={styles.icon}>
           {typeof icon === "string" ? (
-            <img src={icon} alt="Picture will load soon" />
+            <Icon fontName={faChartColumn} size="2.5rem" />
           ) : (
             icon
           )}

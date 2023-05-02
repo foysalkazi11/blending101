@@ -1,181 +1,88 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import React, { useState, useRef } from "react";
+import { useQuery } from "@apollo/client";
 import {
   faGear,
-  faPlusCircle,
   faShare,
   faToolbox,
+  faPlusCircle,
+  faTimes,
 } from "@fortawesome/pro-light-svg-icons";
-import { isWithinInterval } from "date-fns";
-import { useRouter } from "next/router";
-import axios from "axios";
-import html2canvas from "html2canvas";
 
 import RXPanel from "../../component/templates/Panel/RXFacts/RXPanel.component";
 import Statistics from "../../component/module/Challenge/Statistics.component";
-import ChallengeQueue from "../../component/module/Challenge/Post.component";
-import PlannerQueue from "../../component/module/Planner/Queue.component";
+import ChallengePost from "../../component/module/Challenge/Post.component";
+import ChallengeQueue from "../../component/module/Challenge/Queue.component";
 import UploadCard from "../../component/module/Challenge/Upload.component";
 import Challenge from "../../component/module/Challenge/Achievement/index.component";
 import Settings from "../../component/module/Challenge/Settings.component";
+import IconButton from "../../component/atoms/Button/IconButton.component";
+import Icon from "../../component/atoms/Icon/Icon.component";
+import ShareModal from "../../component/organisms/Share/Share.component";
 
 import AContainer from "../../containers/A.container";
 import IconHeading from "../../theme/iconHeading/iconHeading.component";
 
-import {
-  GET_30DAYS_CHALLENGE,
-  GET_CHALLENGES,
-  SHARE_CHALLENGE,
-} from "../../graphql/Challenge";
+import { GET_CHALLENGES } from "../../graphql/Challenge";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import useChallengeShare from "../../hooks/modules/Challenge/useChallengeShare";
+import { useThirtyDayChallenge } from "../../hooks/modules/Challenge/useChallengePost";
+
 import {
-  setChallengeInterval,
+  resetForm,
+  setChallengeDate,
+  setPostDate,
   setShowPostForm,
-  setChallengeView,
 } from "../../redux/slices/Challenge.slice";
 
-import styles from "../../styles/pages/planner.module.scss";
-import Icon from "../../component/atoms/Icon/Icon.component";
-
 import { theme } from "../../configs/themes";
-import ShareModal from "../../component/organisms/Share/Share.component";
-import { dataURLtoFile } from "../../helpers/File";
+
+import styles from "../../styles/pages/planner.module.scss";
+import { format } from "date-fns";
 
 const ChallengePage = () => {
-  const router = useRouter();
-  const challengeProgress = useRef<HTMLDivElement>(null);
-
-  const [showSettings, setShowSettings] = useState(false);
+  const upload = useRef<{ onChallengePost: any }>();
+  const settings = useRef<{ onChallengeSave: any }>();
   const [showGroceryTray] = useState(true);
-
-  const [link, setLink] = useState("");
   const [showShare, setShowShare] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
-  const {
-    activeDate,
-    startDate,
-    endDate,
-    showPostForm: showUpload,
-  } = useAppSelector((state) => state.challenge);
+  const { showPostForm: showUpload } = useAppSelector(
+    (state) => state.challenge,
+  );
 
-  const [getChallenges, { data }] = useLazyQuery(GET_30DAYS_CHALLENGE);
   const { data: challenges } = useQuery(GET_CHALLENGES, {
     variables: {
       memberId: userId,
     },
   });
-  const [shareChallenge] = useMutation(SHARE_CHALLENGE);
 
-  const viewOnly = data?.getMyThirtyDaysChallenge?.challengeInfo?.viewOnly;
-
-  useEffect(() => {
-    if (
-      userId === "" ||
-      (![activeDate, startDate, endDate].includes("") &&
-        isWithinInterval(new Date(activeDate), {
-          start: new Date(startDate),
-          end: new Date(endDate),
-        }))
-    )
-      return;
-    getChallenges({
-      variables: {
-        userId,
-        startDate: activeDate,
-        challengeId: router.query?.id,
-        token: router.query?.token,
-      },
-    });
-  }, [
-    activeDate,
-    endDate,
-    getChallenges,
-    router.query?.id,
-    router.query?.token,
-    startDate,
-    userId,
-  ]);
-
-  useEffect(() => {
-    const challenges = data?.getMyThirtyDaysChallenge?.challenge || [];
-    if (challenges.length === 0) return;
-
-    dispatch(setChallengeView(viewOnly));
-    dispatch(
-      setChallengeInterval({
-        startDate: challenges[0]?.date,
-        endDate: challenges[challenges.length - 1]?.date,
-      }),
-    );
-  }, [data, dispatch, viewOnly]);
-
-  const shareChallengeHandler = useCallback(() => {
-    const id = data?.getMyThirtyDaysChallenge?.challengeInfo?.challengeId;
-
-    shareChallenge({
-      variables: {
-        userId,
-        challengeId: id,
-      },
-    }).then((res) => {
-      setLink(
-        `${process.env.NEXT_PUBLIC_HOSTING_DOMAIN}/challenge?id=${id}&token=${res.data?.shareGlobalChallenge}`,
-      );
-
-      navigator.clipboard.writeText(
-        `${process.env.NEXT_PUBLIC_HOSTING_DOMAIN}/challenge/shared?id=${id}&token=${res.data?.shareGlobalChallenge}`,
-      );
-
-      html2canvas(challengeProgress.current).then((canvas) => {
-        const data = canvas.toDataURL("image/jpg");
-        const file = dataURLtoFile(data, "challenge.png");
-
-        // STORING THE DIALER IMAGE
-        const formdata = new FormData();
-        formdata.append("image", file, `${id}.jpg`);
-
-        axios.post(
-          "https://om7h45qezg.execute-api.us-east-1.amazonaws.com/prod//file-processing/images/single",
-          formdata,
-        );
-
-        const link = document.createElement("a");
-        if (typeof link.download === "string") {
-          link.href = data;
-          link.download = "image.jpg";
-
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        } else {
-          window.open(data);
-        }
-      });
-    });
-  }, [
-    data?.getMyThirtyDaysChallenge?.challengeInfo?.challengeId,
-    shareChallenge,
-    userId,
-  ]);
+  const { challenge, viewOnly } = useThirtyDayChallenge();
+  const { url, progress, onShare } = useChallengeShare(challenge);
 
   let toolbox = null;
-  if (showUpload) toolbox = <UploadCard />;
+  if (showUpload)
+    toolbox = (
+      <UploadCard
+        ref={upload}
+        startDate={challenge?.challengeInfo?.startDate}
+        endDate={challenge?.challengeInfo?.endDate}
+      />
+    );
   else if (showSettings)
     toolbox = (
       <Settings
-        currentChallenge={
-          data?.getMyThirtyDaysChallenge?.challengeInfo?.challengeId
-        }
+        ref={settings}
+        showFormState={[showForm, setShowForm]}
+        currentChallenge={challenge?.challengeInfo?.challengeId}
         challenges={challenges}
         hideSettings={() => setShowSettings(false)}
       />
     );
 
-  const canUpload =
-    !viewOnly &&
-    data?.getMyThirtyDaysChallenge?.challengeInfo?.daysRemaining > 0;
+  const canUpload = !viewOnly && challenge?.challengeInfo?.daysRemaining > 0;
 
   return (
     <AContainer
@@ -193,77 +100,148 @@ const ChallengePage = () => {
     >
       <RXPanel />
       <ShareModal
-        name={data?.getMyThirtyDaysChallenge?.challengeInfo?.challengeName}
+        name={challenge?.challengeInfo?.challengeName}
         show={showShare}
         setShow={setShowShare}
-        link={link}
-        onShare={shareChallengeHandler}
+        link={url}
+        onShare={onShare}
       />
       <div className={styles.planner}>
         <div className="row mt-20">
           <div className="col-3">
             {showUpload ? (
-              <PlannerQueue panel="challenge" />
+              <ChallengeQueue challenges={challenge?.challenge} />
             ) : (
-              <ChallengeQueue
-                challenges={data?.getMyThirtyDaysChallenge?.challenge}
-              />
+              <ChallengePost challenges={challenge?.challenge} />
             )}
           </div>
           <div className="col-6">
             <div className={styles.headingDiv}>
               <IconHeading
-                title="Challenge"
+                title={showUpload ? "Challenge Post" : "Challenge"}
                 icon={faToolbox}
                 iconStyle={{ marginLeft: 20 }}
               />
-              <div className="flex ai-center mr-20">
-                {!viewOnly && (
-                  <div
-                    className={styles.uploadDiv}
-                    onClick={() => {
-                      setShowShare(true);
-                    }}
-                  >
-                    <Icon
-                      fontName={faShare}
-                      size="1.6rem"
-                      color={theme.color.primary}
-                    />
-                    <span>Share</span>
+              {
+                //CHALLENGE HOME PAGE
+                !showUpload && !showSettings && (
+                  <div className="flex ai-center mr-20">
+                    {!viewOnly && (
+                      <div
+                        className={styles.uploadDiv}
+                        onClick={() => {
+                          setShowShare(true);
+                        }}
+                      >
+                        <Icon
+                          fontName={faShare}
+                          size="1.6rem"
+                          color={theme.color.primary}
+                        />
+                        <span>Share</span>
+                      </div>
+                    )}
+                    <div
+                      className={`${styles.uploadDiv} ml-10`}
+                      onClick={() => {
+                        dispatch(setShowPostForm(false));
+                        setShowSettings(true);
+                      }}
+                    >
+                      <Icon
+                        fontName={faGear}
+                        size="1.6rem"
+                        color={theme.color.primary}
+                      />
+                      <span>Settings</span>
+                    </div>
+                    {canUpload && (
+                      <div
+                        className={`${styles.uploadDiv} ml-10`}
+                        onClick={() => {
+                          dispatch(setShowPostForm(true));
+                          dispatch(
+                            setPostDate(format(new Date(), "yyyy-MM-dd")),
+                          );
+                          setShowSettings(false);
+                        }}
+                      >
+                        <Icon
+                          fontName={faPlusCircle}
+                          size="1.6rem"
+                          color={theme.color.primary}
+                        />
+                        <span>Post</span>
+                      </div>
+                    )}
                   </div>
-                )}
-                <div
-                  className={`${styles.uploadDiv} ml-10`}
-                  onClick={() => {
-                    dispatch(setShowPostForm(false));
-                    setShowSettings(true);
-                  }}
-                >
-                  <Icon
-                    fontName={faGear}
-                    size="1.6rem"
-                    color={theme.color.primary}
-                  />
-                  <span>Settings</span>
-                </div>
-                {canUpload && (
-                  <div
-                    className={`${styles.uploadDiv} ml-10`}
-                    onClick={() => {
-                      dispatch(setShowPostForm(true));
-                      setShowSettings(false);
-                    }}
-                  >
-                    <Icon
-                      fontName={faPlusCircle}
-                      size="1.6rem"
-                      color={theme.color.primary}
+                )
+              }
+              {
+                // CHALLENGE UPLOAD PAGE OR SETTINGS PAGE
+                (showUpload || showSettings) && (
+                  <div className="flex ai-center mr-20">
+                    {!showSettings && showUpload && (
+                      // UPLOAD PAGE
+                      <div
+                        className={`${styles.uploadDiv} mr-20`}
+                        onClick={() => upload.current.onChallengePost()}
+                      >
+                        <Icon
+                          fontName={faPlusCircle}
+                          size="1.6rem"
+                          color={theme.color.primary}
+                        />
+                        <span>Save</span>
+                      </div>
+                    )}
+                    {
+                      // SETTINGS PAGE
+                      !showUpload && showSettings && showForm ? (
+                        // SETTINGS PAGE -> FORM
+                        <div
+                          className={`${styles.uploadDiv} mr-20`}
+                          onClick={() => settings.current.onChallengeSave()}
+                        >
+                          <Icon
+                            fontName={faPlusCircle}
+                            size="1.6rem"
+                            color={theme.color.primary}
+                          />
+                          <span>Save</span>
+                        </div>
+                      ) : (
+                        showSettings && (
+                          // SETTINGS PAGE -> LIST
+                          <div
+                            className={`${styles.uploadDiv} mr-20`}
+                            onClick={() => {
+                              setShowForm(true);
+                            }}
+                          >
+                            <Icon
+                              fontName={faPlusCircle}
+                              size="1.6rem"
+                              color={theme.color.primary}
+                            />
+                            <span>Add</span>
+                          </div>
+                        )
+                      )
+                    }
+                    <IconButton
+                      size="small"
+                      variant="secondary"
+                      fontName={faTimes}
+                      onClick={() => {
+                        setShowSettings(false);
+                        dispatch(setShowPostForm(false));
+                        dispatch(resetForm());
+                      }}
                     />
-                    <span>Upload</span>
                   </div>
-                )}
-              </div>
+                )
+              }
             </div>
             <div className={styles.plan}>
               {toolbox && toolbox !== null ? (
@@ -271,17 +249,15 @@ const ChallengePage = () => {
               ) : (
                 <Challenge
                   canUpload={canUpload}
-                  progressRef={challengeProgress}
-                  activities={data?.getMyThirtyDaysChallenge?.challenge}
-                  statistics={data?.getMyThirtyDaysChallenge?.challengeInfo}
+                  progressRef={progress}
+                  activities={challenge?.challenge}
+                  statistics={challenge?.challengeInfo}
                 />
               )}
             </div>
           </div>
           <div className="col-3">
-            <Statistics
-              statistics={data?.getMyThirtyDaysChallenge?.challengeInfo}
-            />
+            <Statistics statistics={challenge?.challengeInfo} />
           </div>
         </div>
       </div>

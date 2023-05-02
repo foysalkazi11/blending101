@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { format } from "date-fns";
 
 export interface IPostIngredient {
-  ingredientId: { _id: string; ingredientName: string };
+  ingredientId: { _id: string; ingredientName: string; featuredImage: string };
   selectedPortion: {
     name: string;
     quantity: number;
@@ -38,7 +39,7 @@ const initialPost = {
   images: [],
   title: "",
   category: "",
-  startDate: "",
+  startDate: format(new Date(), "yyyy-MM-dd"),
   serving: 0,
   notes: "",
   ingredients: [],
@@ -76,6 +77,9 @@ export const ChallengeSlice = createSlice({
     resetForm: (state) => {
       state.post = initialPost;
     },
+    setPostDate: (state, action) => {
+      state.post.startDate = action.payload;
+    },
     setRecipeInfo: (
       state,
       action: {
@@ -110,6 +114,7 @@ export const ChallengeSlice = createSlice({
         ingredientId: {
           _id: ingredientItem.value,
           ingredientName: ingredientItem.label,
+          featuredImage: ingredientItem?.featuredImage,
         },
         selectedPortion: {
           gram: qty * weight,
@@ -136,6 +141,7 @@ export const {
   setChallengePost,
   setShowPostForm,
   resetForm,
+  setPostDate,
   setRecipeInfo,
   addIngredient,
   deleteIngredient,

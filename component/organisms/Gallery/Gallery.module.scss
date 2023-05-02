@@ -18,11 +18,15 @@
   &__preview {
     height: 15rem;
     width: 80%;
+    cursor: pointer;
     &__img {
       height: 100%;
       width: 97%;
       object-fit: cover;
       margin: auto;
+      border: 1px solid #fd5109;
+      border-radius: 5px;
+      object-fit: contain;
     }
     &__caption {
       font-size: 12px;

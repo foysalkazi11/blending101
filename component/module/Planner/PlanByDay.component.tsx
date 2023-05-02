@@ -2,34 +2,65 @@ import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
 import {
   faChartSimple,
-  faClone,
+  faCartShopping,
   faEllipsisVertical,
   faTrash,
+  faClone,
   faUpDownLeftRight,
-  faCartShopping,
-} from "@fortawesome/pro-regular-svg-icons";
+} from "@fortawesome/pro-light-svg-icons";
 
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import CalendarTray from "../../../theme/calendar/calendarTray.component";
+import IconButton from "../../atoms/Button/IconButton.component";
+import Icon from "../../atoms/Icon/Icon.component";
+
+import Publish from "../../../helpers/Publish";
+import { ADD_TO_GROCERY_LIST } from "../../../graphql/Planner";
+import { RECIPE_CATEGORY_COLOR } from "../../../data/Recipe";
+import {
+  useCopyPlanRecipe,
+  useMovePlanRecipe,
+  useDeletePlanRecipe,
+} from "../../../hooks/modules/Plan/useMyPlan";
+
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
   IPlannerRecipe,
   setDayRecipe,
-} from "../../../../redux/slices/Planner.slice";
+} from "../../../redux/slices/Planner.slice";
+import { setShowPanel } from "../../../redux/slices/Ui.slice";
 
-import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
-import CalendarTray from "../../../../theme/calendar/calendarTray.component";
+import styles from "./PlanByDay.module.scss";
 
-import { ADD_TO_GROCERY_LIST } from "../../../../graphql/Planner";
-import Publish from "../../../../helpers/Publish";
-import IconButton from "../../../atoms/Button/IconButton.component";
-import { setShowPanel } from "../../../../redux/slices/Ui.slice";
-import Icon from "../../../atoms/Icon/Icon.component";
+interface PlanListProps {
+  data?: any[];
+  week?: any;
+  isWeekFromURL?: boolean;
+}
+const PlanList = ({ data, week, isWeekFromURL }: PlanListProps) => {
+  const [toggleOptionCard, setToggleOptionCard] = useState({});
+  return (
+    <div className={styles.wrapper}>
+      {data?.map((planner, index) => {
+        return (
+          <DayPlan
+            key={planner.id}
+            plannerId={planner.id}
+            indexValue={index}
+            day={"Day"}
+            date={`${index + 1}`}
+            week={week}
+            recipeList={planner.recipes}
+            isWeekFromURL={isWeekFromURL}
+            setToggleOptionCard={setToggleOptionCard}
+            toggleOptionCard={toggleOptionCard}
+          />
+        );
+      })}
+    </div>
+  );
+};
 
-import styles from "./_DayPlan.module.scss";
-import {
-  useCopyPlanRecipe,
-  useDeletePlanRecipe,
-  useMovePlanRecipe,
-} from "../../../../hooks/modules/Plan/useMyPlan";
+export default PlanList;
 
 interface PlanProps {
   plannerId?: string;
@@ -77,10 +108,8 @@ const DayPlan = (props: PlanProps) => {
   );
 };
 
-export default DayPlan;
-
 interface RecipeColorIndicatorInterface {
-  recipe: IPlannerRecipe;
+  recipe: any;
   onCopy?: any;
   onMove?: any;
   onDelete?: any;
@@ -98,8 +127,8 @@ const PlanItem = ({
     category,
     recipeBlendCategory,
     rxScore,
-    ingredients,
   } = recipe;
+  const ingredients = recipe?.defaultVersion?.ingredients || [];
   category = recipeBlendCategory?.name || category;
   const [showMenu, setShowMenu] = useState(false);
   const [showCalender, setShowCalender] = useState<"move" | "copy" | "">("");

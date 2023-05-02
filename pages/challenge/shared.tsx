@@ -14,13 +14,16 @@ import Icon from "../../component/atoms/Icon/Icon.component";
 import { GET_SHARED_CHALLENGE_DETAILS } from "../../graphql/Challenge";
 import styles from "../../styles/pages/challenge.module.scss";
 import HeadTagInfo from "../../theme/headTagInfo";
+import { useAppSelector } from "../../redux/hooks";
 
 const Shared = () => {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
   const { data } = useQuery(GET_SHARED_CHALLENGE_DETAILS, {
     variables: {
       challengeId: router.query?.id,
+      memberId,
+      token: router.query?.token,
     },
   });
 

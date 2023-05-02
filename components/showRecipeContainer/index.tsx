@@ -79,7 +79,6 @@ const ShowRecipeContainer = ({
     if (entry.isIntersecting && hasMore) {
       nextPage();
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entry]);
 

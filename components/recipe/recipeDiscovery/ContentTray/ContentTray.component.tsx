@@ -14,7 +14,6 @@ const ContentTray = (props) => {
     slidesToShow: 4,
     slidesToScroll: 1,
     initialSlide: 0,
-
     responsive: [
       {
         breakpoint: 1380,
@@ -52,7 +51,6 @@ const ContentTray = (props) => {
               objectFit={"contain"}
               height={30}
               width={30}
-              style={{ borderRadius: "50px" }}
             />
           ) : (
             props?.image

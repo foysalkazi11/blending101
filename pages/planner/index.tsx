@@ -15,16 +15,7 @@ import ShowLastModifiedCollection from "../../components/showLastModifiedCollect
 import { setIsOpenPlanCollectionTray } from "../../redux/slices/Planner.slice";
 import CommonSearchBar from "../../components/searchBar/CommonSearchBar";
 
-const PlanDiscovery = ({
-  input = "",
-  setInput = () => {},
-  handleSubmitFunc = () => {},
-  handleSearchTagCleanFunc = () => {},
-  openPanel = () => {},
-  isOpenPanel = false,
-  isSearchTag = false,
-  handleOnChange = () => {},
-}) => {
+const PlanDiscovery = ({ input = "", setInput = () => {} }) => {
   const router = useRouter();
   const userId = useAppSelector((state) => state.user.dbUser._id || "");
   const { data } = useQuery(GET_FEATURED_PLANS, {
