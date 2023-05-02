@@ -44,15 +44,13 @@ const MyPlan = () => {
   const [showForm, setShowForm] = useState(false);
 
   const { week, setWeek, isFetchingFromURL } = useWeek();
-  const { plans, topIngredients, recipeTypes } = usePlanByWeek({
-    week,
-    isFetchingFromURL,
-    setShowDuplicateAlert,
-  });
+  const { plans, topIngredients, recipeTypes, onMergeOrReplace } =
+    usePlanByWeek({
+      week,
+      isFetchingFromURL,
+      setShowDuplicateAlert,
+    });
 
-  const [addToMyPlan, addToMyPlanState] = useMutation(ADD_TO_MY_PLAN, {
-    refetchQueries: ["GetPlannerByWeek"],
-  });
   const [createPlan] = useMutation(CREATE_PLAN);
 
   const startMonth = MONTH[week.start.getMonth()];
@@ -79,24 +77,6 @@ const MyPlan = () => {
     });
   };
 
-  const handleMergeOrReplace = async (type: "MERGE" | "REMOVE") => {
-    await Publish({
-      mutate: addToMyPlan,
-      state: addToMyPlanState,
-      variables: {
-        type,
-        planId: router.query?.plan,
-        memberId,
-        startDate: router.query?.start,
-        endDate: router.query?.end,
-      },
-      success: "Added to My Plan successfully",
-      onSuccess: () => {
-        setShowDuplicateAlert(false);
-      },
-    });
-  };
-
   return (
     <AContainer
       headerIcon="/icons/calender__sidebar.svg"
@@ -115,7 +95,7 @@ const MyPlan = () => {
       <ConfirmAlert
         show={showDuplicateAlert}
         setShow={setShowDuplicateAlert}
-        onConfirm={handleMergeOrReplace}
+        onConfirm={onMergeOrReplace}
         message="There are already plans listed in this week."
       />
       <div className={styles.windowContainer}>
@@ -167,6 +147,9 @@ const MyPlan = () => {
                           size="small"
                           fontName={faChevronLeft}
                           onClick={() => {
+                            router.replace("/planner/plan", undefined, {
+                              shallow: true,
+                            });
                             setWeek((week) => ({
                               start: subWeeks(week.start, 1),
                               end: subWeeks(week.end, 1),
@@ -181,6 +164,9 @@ const MyPlan = () => {
                           size="small"
                           fontName={faChevronRight}
                           onClick={() => {
+                            router.replace("/planner/plan", undefined, {
+                              shallow: true,
+                            });
                             setWeek((week) => ({
                               start: addWeeks(week.start, 1),
                               end: addWeeks(week.end, 1),

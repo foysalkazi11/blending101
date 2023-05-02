@@ -17,7 +17,7 @@ import RXPanel from "../../../component/templates/Panel/RXFacts/RXPanel.componen
 import PlanDiscovery from "../../../component/module/Planner/PlanDiscovery.component";
 import PlanList from "../../../component/module/Planner/PlanByDay.component";
 
-import AContainer from "../../../containers/A.container";
+import Container from "../../../containers/A.container";
 import IconHeading from "../../../theme/iconHeading/iconHeading.component";
 
 import Insights from "../../../component/module/Planner/Insights.component";
@@ -84,7 +84,7 @@ const MyPlan = () => {
       `/planner/plan/?plan=${router.query.planId}&start=${format(
         new Date(start),
         "yyyy-MM-dd",
-      )}&end=${format(new Date(end), "yyyy-MM-dd")}`,
+      )}&end=${format(new Date(end), "yyyy-MM-dd")}&alert=true`,
     );
   };
 
@@ -177,19 +177,20 @@ const MyPlan = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <AContainer
+    <Container
       headerIcon="/icons/calender__sidebar.svg"
       headerTitle="BLENDING PLAN DETAILS"
-      // showCommentsTray={{
-      //   show: true,
-      //   showPanle: "right",
-      //   showTagByDeafult: false,
-      // }}
+      showCommentsTray={{
+        show: true,
+        showPanle: "right",
+        showTagByDeafult: false,
+      }}
       headTagInfo={{
         title: "Blending plan details",
         description: "blending plans details",
       }}
     >
+      {/* <div> */}
       <CommentDrawer
         id={plan?._id}
         title={plan?.planName}
@@ -315,7 +316,7 @@ const MyPlan = () => {
           </div>
         </div>
       </div>
-    </AContainer>
+    </Container>
   );
 };
 

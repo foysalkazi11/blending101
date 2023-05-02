@@ -5,6 +5,7 @@ type IProperties = {
   mutate: any;
   variables: any;
   state: any;
+  load?: string;
   success?: string;
   onSuccess?: any;
   error?: string;
@@ -22,6 +23,7 @@ const Publish = async (properties: IProperties) => {
   const {
     mutate,
     variables,
+    load,
     state,
     success,
     onSuccess,
@@ -30,7 +32,7 @@ const Publish = async (properties: IProperties) => {
     onError,
   } = properties;
 
-  const loading = toast.loading("Info Notification !", {
+  const loading = toast.loading(load || "Loading !", {
     position: toast.POSITION.TOP_RIGHT,
   });
   try {

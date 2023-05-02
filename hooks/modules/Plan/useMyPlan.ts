@@ -1,13 +1,14 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
 import {
   ADD_RECIPE_TO_PLANNER,
+  ADD_TO_MY_PLAN,
   DELETE_RECIPE_FROM_PLANNER,
   GET_PLANNER_BY_WEEK,
   MOVE_PLANNER,
 } from "../../../graphql/Planner";
 import { endOfWeek, format, startOfWeek } from "date-fns";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAppSelector } from "../../../redux/hooks";
 import Publish from "../../../helpers/Publish";
 
@@ -25,6 +26,10 @@ const usePlanByWeek = (props: IPlanByWeekHook) => {
 
   const [getPlanByWeek, { data }] = useLazyQuery(GET_PLANNER_BY_WEEK);
 
+  const [addToMyPlan, addToMyPlanState] = useMutation(ADD_TO_MY_PLAN, {
+    refetchQueries: ["GetPlannerByWeek"],
+  });
+
   useEffect(() => {
     if (memberId === "") return;
     const defaultFetch =
@@ -40,6 +45,10 @@ const usePlanByWeek = (props: IPlanByWeekHook) => {
           : router.query.end,
       },
     }).then((response) => {
+      // No merge/replace if it is already done
+      if (router.query?.alert === "false") return;
+
+      // Showing alert or automatically adding recipe to that week if empty
       if (
         router.query?.plan &&
         !isFetchingFromURL &&
@@ -48,6 +57,8 @@ const usePlanByWeek = (props: IPlanByWeekHook) => {
         )
       ) {
         setShowDuplicateAlert(true);
+      } else {
+        handleMergeOrReplace("MERGE");
       }
       //! HERE SOME BUGS MIGHT OCCUR
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -73,10 +84,32 @@ const usePlanByWeek = (props: IPlanByWeekHook) => {
     };
   }, [data?.getPlannerByDates]);
 
+  const handleMergeOrReplace = useCallback(
+    async (type: "MERGE" | "REMOVE") => {
+      if (!router.query?.plan || !router.query?.start || !router.query?.end)
+        return;
+      addToMyPlan({
+        variables: {
+          type,
+          planId: router.query?.plan,
+          memberId,
+          startDate: router.query?.start,
+          endDate: router.query?.end,
+        },
+      }).then(() => {
+        router.query.alert = "false";
+        router.push(router);
+        setShowDuplicateAlert(false);
+      });
+    },
+    [addToMyPlan, memberId, router, setShowDuplicateAlert],
+  );
+
   return {
     plans: plan,
     topIngredients: data?.getPlannerByDates.topIngredients,
     recipeTypes: data?.getPlannerByDates?.recipeCategoriesPercentage,
+    onMergeOrReplace: handleMergeOrReplace,
   };
 };
 
@@ -84,18 +117,21 @@ const useWeek = () => {
   const router = useRouter();
   const fetchedFromUrl = useRef(false);
   const [week, setWeek] = useState({
-    start: startOfWeek(new Date(), { weekStartsOn: 1 }),
-    end: endOfWeek(new Date(), { weekStartsOn: 1 }),
+    start: startOfWeek(new Date(), { weekStartsOn: 0 }),
+    end: endOfWeek(new Date(), { weekStartsOn: 0 }),
   });
 
   useEffect(() => {
-    if (fetchedFromUrl.current || !router.query.start || !router.query.end)
-      return;
-    setWeek({
-      start: new Date(router.query.start as string),
-      end: new Date(router.query.end as string),
-    });
-  }, [router.query.end, router.query.start]);
+    if (fetchedFromUrl.current || !router.query.start || !router.query.end) {
+      router.push("/planner/plan/", undefined, { shallow: true });
+    } else {
+      setWeek({
+        start: new Date(router.query.start as string),
+        end: new Date(router.query.end as string),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.query.start, router.query.end]);
 
   return { week, setWeek, isFetchingFromURL: fetchedFromUrl.current };
 };
