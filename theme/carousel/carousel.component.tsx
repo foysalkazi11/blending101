@@ -9,31 +9,30 @@ type SlickSliderProps = {
   moreSetting?: object;
   children: React.ReactNode;
 };
+const SmiplePrevArrow = (props) => {
+  const { className, onClick } = props;
+
+  return (
+    <div onClick={onClick} className={className}>
+      <ChevronLeftIcon />
+    </div>
+  );
+};
+
+const SmipleNextArrow = (props) => {
+  const { className, onClick } = props;
+
+  return (
+    <div onClick={onClick} className={className}>
+      <ChevronRightIcon />
+    </div>
+  );
+};
 
 const CustomSlider = (
   { moreSetting = {}, children }: SlickSliderProps,
   ref,
 ) => {
-  const SmiplePrevArrow = (props) => {
-    const { className, onClick } = props;
-
-    return (
-      <div onClick={onClick} className={className}>
-        <ChevronLeftIcon />
-      </div>
-    );
-  };
-
-  const SmipleNextArrow = (props) => {
-    const { className, onClick } = props;
-
-    return (
-      <div onClick={onClick} className={className}>
-        <ChevronRightIcon />
-      </div>
-    );
-  };
-
   const settings = {
     infinite: false,
     speed: 500,

@@ -5,7 +5,6 @@ const GET_ALL_GENERAL_BLOG_FOR_CLIENT = gql`
     getAllGeneralBlogForClient(memberId: $memberId, currentDate: $currentDate) {
       _id
       coverImage
-      createdBy
       mediaLength
       mediaUrl
       publishDate
@@ -15,6 +14,13 @@ const GET_ALL_GENERAL_BLOG_FOR_CLIENT = gql`
       type
       commentsCount
       blogCollections
+      createdBy {
+        _id
+        displayName
+        firstName
+        image
+        lastName
+      }
     }
   }
 `;

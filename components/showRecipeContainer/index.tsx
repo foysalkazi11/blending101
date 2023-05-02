@@ -235,10 +235,7 @@ const ShowRecipeContainer = ({
                   return (
                     <BlogCard
                       key={blog?._id}
-                      blogData={{
-                        ...blog,
-                        createdBy: findAmin(blog?.createdBy),
-                      }}
+                      blogData={blog}
                       setOpenLastModifiedCollectionModal={
                         setOpenCollectionModal
                       }

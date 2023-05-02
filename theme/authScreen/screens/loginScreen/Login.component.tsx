@@ -98,7 +98,7 @@ const LoginScreen = () => {
               name="email"
               defaultValue=""
               required={{
-                required: "Email requried",
+                required: "Email required",
                 pattern: {
                   value:
                     /^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/,
@@ -119,7 +119,7 @@ const LoginScreen = () => {
               name="password"
               defaultValue=""
               required={{
-                required: "password requried",
+                required: "password required",
               }}
               error={{
                 isError: errors?.password ? true : false,
