@@ -173,14 +173,7 @@ function PlanCard({
         <div className={styles.datacard__inner}>
           <div className={styles.heading}>
             <div className={styles.title}>
-              <h2
-                onClick={(e) => {
-                  e?.stopPropagation();
-                  router.push(`/planner/plan/${planId}`);
-                }}
-              >
-                {title}
-              </h2>
+              <h2>{title}</h2>
             </div>
             <div className={styles.menu}>
               {showMoreMenu &&
