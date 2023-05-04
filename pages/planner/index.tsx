@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment, useCallback } from "react";
 import { faUserCircle } from "@fortawesome/pro-light-svg-icons";
 import PlanCard from "../../component/module/Planner/PlanCard.component";
 import AppdownLoadCard from "../../components/recipe/recipeDiscovery/AppdownLoadCard/AppdownLoadCard.component";
@@ -9,24 +9,43 @@ import Icon from "../../component/atoms/Icon/Icon.component";
 import styles from "../../styles/pages/planner.module.scss";
 import "react-datepicker/dist/react-datepicker.css";
 import { useQuery } from "@apollo/client";
-import { GET_ALL_PLANS, GET_FEATURED_PLANS } from "../../graphql/Planner";
+import { GET_FEATURED_PLANS } from "../../graphql/Planner";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import ShowLastModifiedCollection from "../../components/showLastModifiedCollection/ShowLastModifiedCollection";
 import { setIsOpenPlanCollectionTray } from "../../redux/slices/Planner.slice";
 import CommonSearchBar from "../../components/searchBar/CommonSearchBar";
+import { useAllPlan } from "../../hooks/modules/Plan/usePlanDiscovery";
+import debounce from "../../helperFunc/debounce";
+import { Debounce } from "../../helpers/Utilities";
 
-const PlanDiscovery = ({ input = "", setInput = () => {} }) => {
+const PlanDiscovery = () => {
   const router = useRouter();
-  const userId = useAppSelector((state) => state.user.dbUser._id || "");
-  const { data } = useQuery(GET_FEATURED_PLANS, {
-    variables: { limit: 8, memberId: userId },
-  });
+  const query = router.query.query;
+
+  console.log(query);
+
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
 
+  const dispatch = useAppDispatch();
   const { lastModifiedPlanCollection } = useAppSelector(
     (state) => state?.planner,
   );
-  const dispatch = useAppDispatch();
+
+  const onPlanSearch = (value) => {
+    console.log(value);
+    if (value === "") {
+      router.push(`/planner`, undefined, {
+        shallow: true,
+      });
+    } else {
+      router.push(`/planner?query=${value}`, undefined, {
+        shallow: true,
+      });
+    }
+  };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const optimizedFn = useCallback(Debounce(onPlanSearch), []);
 
   return (
     <AContainer
@@ -44,10 +63,16 @@ const PlanDiscovery = ({ input = "", setInput = () => {} }) => {
     >
       <div className={styles.discovery}>
         <div className={styles.searchBarContainer}>
+          {/* <input
+            type="text"
+            className="search"
+            placeholder="Enter something here..."
+            onChange={(e) => optimizedFn(e.target.value)}
+          /> */}
           <CommonSearchBar
-            input={input}
-            setInput={setInput}
+            input={router.query.query as string}
             isSearchTag={false}
+            handleOnChange={(e) => onPlanSearch(e.target.value)}
           />
           <button
             className={styles.discovery__myplan}
@@ -57,71 +82,14 @@ const PlanDiscovery = ({ input = "", setInput = () => {} }) => {
             My Plans
           </button>
         </div>
-
-        <AppdownLoadCard />
-        <div className="mt-40">
-          <ContentTray
-            heading="Recommended"
-            image="/images/thumbs-up.svg"
-            allUrl="planner/recommended"
-          >
-            {data?.getAllRecommendedPlans?.map((item) => (
-              <div key={item?._id}>
-                <div className="mr-10">
-                  <PlanCard
-                    planId={item?._id}
-                    title={item.planName}
-                    isCollectionIds={item?.planCollections}
-                    noOfComments={item?.commentsCount}
-                    setOpenCollectionModal={setOpenCollectionModal}
-                  />
-                </div>
-              </div>
-            ))}
-          </ContentTray>
-        </div>
-        <div className="mt-40">
-          <ContentTray
-            heading="Recent"
-            image="/images/clock-light.svg"
-            allUrl="planner/recommended"
-          >
-            {data?.getAllRecentPlans?.map((item) => (
-              <div key={item?._id}>
-                <div className="mr-10">
-                  <PlanCard
-                    planId={item?._id}
-                    title={item.planName}
-                    isCollectionIds={item?.planCollections}
-                    noOfComments={item?.commentsCount}
-                    setOpenCollectionModal={setOpenCollectionModal}
-                  />
-                </div>
-              </div>
-            ))}
-          </ContentTray>
-        </div>
-        <div className="mt-40">
-          <ContentTray
-            heading="Popular"
-            image="/images/fire-alt-light.svg"
-            allUrl="planner/recommended"
-          >
-            {data?.getAllPopularPlans?.map((item) => (
-              <div key={item?._id}>
-                <div className="mr-10">
-                  <PlanCard
-                    planId={item?._id}
-                    title={item.planName}
-                    isCollectionIds={item?.planCollections}
-                    noOfComments={item?.commentsCount}
-                    setOpenCollectionModal={setOpenCollectionModal}
-                  />
-                </div>
-              </div>
-            ))}
-          </ContentTray>
-        </div>
+        {query && query !== "" ? (
+          <SearchedPlan
+            query={query}
+            setOpenCollectionModal={setOpenCollectionModal}
+          />
+        ) : (
+          <FeaturedPlan setOpenCollectionModal={setOpenCollectionModal} />
+        )}
       </div>
       <ShowLastModifiedCollection
         open={openCollectionModal}
@@ -134,6 +102,109 @@ const PlanDiscovery = ({ input = "", setInput = () => {} }) => {
         }}
       />
     </AContainer>
+  );
+};
+
+const SearchedPlan = ({ query, setOpenCollectionModal }) => {
+  const [page, setPage] = useState(1);
+  const { plans, loading, observer } = useAllPlan({
+    page,
+    setPage,
+    limit: 16,
+    query,
+  });
+
+  return (
+    <div className="row mt-40 mb-20">
+      {plans?.map((item) => (
+        <div key={item?._id} className="col-3" ref={observer}>
+          <PlanCard
+            planId={item?._id}
+            title={item.planName}
+            isCollectionIds={item?.planCollections}
+            noOfComments={item?.commentsCount}
+            setOpenCollectionModal={setOpenCollectionModal}
+          />
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const FeaturedPlan = ({ setOpenCollectionModal }) => {
+  const userId = useAppSelector((state) => state.user.dbUser._id || "");
+
+  const { data } = useQuery(GET_FEATURED_PLANS, {
+    variables: { limit: 8, memberId: userId },
+  });
+
+  return (
+    <Fragment>
+      <AppdownLoadCard />
+      <div className="mt-40">
+        <ContentTray
+          heading="Recommended"
+          image="/images/thumbs-up.svg"
+          allUrl="planner/recommended"
+        >
+          {data?.getAllRecommendedPlans?.plans?.map((item) => (
+            <div key={item?._id}>
+              <div className="mr-10">
+                <PlanCard
+                  planId={item?._id}
+                  title={item.planName}
+                  isCollectionIds={item?.planCollections}
+                  noOfComments={item?.commentsCount}
+                  setOpenCollectionModal={setOpenCollectionModal}
+                />
+              </div>
+            </div>
+          ))}
+        </ContentTray>
+      </div>
+      <div className="mt-40">
+        <ContentTray
+          heading="Recent"
+          image="/images/clock-light.svg"
+          allUrl="planner/recent"
+        >
+          {data?.getAllRecentPlans?.plans?.map((item) => (
+            <div key={item?._id}>
+              <div className="mr-10">
+                <PlanCard
+                  planId={item?._id}
+                  title={item.planName}
+                  isCollectionIds={item?.planCollections}
+                  noOfComments={item?.commentsCount}
+                  setOpenCollectionModal={setOpenCollectionModal}
+                />
+              </div>
+            </div>
+          ))}
+        </ContentTray>
+      </div>
+      <div className="mt-40">
+        <ContentTray
+          heading="Popular"
+          image="/images/fire-alt-light.svg"
+          allUrl="planner/popular"
+        >
+          {data?.getAllPopularPlans?.plans?.map((item) => (
+            <div key={item?._id}>
+              <div className="mr-10">
+                <PlanCard
+                  planId={item?._id}
+                  title={item.planName}
+                  isCollectionIds={item?.planCollections}
+                  noOfComments={item?.commentsCount}
+                  setOpenCollectionModal={setOpenCollectionModal}
+                />
+              </div>
+            </div>
+          ))}
+        </ContentTray>
+      </div>
+    </Fragment>
   );
 };
 
