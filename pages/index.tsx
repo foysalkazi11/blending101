@@ -36,7 +36,7 @@ const Home = () => {
     variables: { userId },
   });
   const { data: plans } = useQuery(GET_ALL_PLANS, {
-    variables: { limit: 8, page: 1, memberId: userId },
+    variables: { limit: 8, page: 1, memberId: userId, query: "" },
   });
   const { data: wikis } = useQuery(GET_WIKI_HIGHLIGHTS);
   const { data: blendTypes } = useQuery(GET_BLEND_TYPES);

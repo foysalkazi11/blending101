@@ -85,7 +85,6 @@ const PlannerQueue = (props: PlannerPanelProps) => {
 
       {toggler && (
         <div className={styles.action}>
-          {}
           <div ref={ref} style={{ width: "100%" }}>
             <Combobox
               options={categories}

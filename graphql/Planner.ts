@@ -51,6 +51,10 @@ const PLAN_FIELDS = gql`
       endDateString
       planCollections
       commentsCount
+      # image {
+      #   url
+      #   hash
+      # }
     }
     totalPlans
   }
@@ -105,6 +109,9 @@ export const GET_PLANNER_BY_WEEK = gql`
             name
             recipeBlendCategory {
               name
+            }
+            image {
+              image
             }
           }
           defaultVersion {
@@ -208,6 +215,10 @@ export const GET_ALL_PLANS = gql`
         _id
         planName
         description
+        # image {
+        #   url
+        #   hash
+        # }
       }
       totalPlans
     }

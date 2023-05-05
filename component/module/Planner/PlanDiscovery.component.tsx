@@ -28,17 +28,16 @@ import { useRecipeCategory } from "../../../hooks/modules/Plan/usePlanRecipes";
 
 interface PlannerPanelProps {
   recipes: any[];
-  isUpload: boolean;
 }
 
 const PlanDiscovery = (props: PlannerPanelProps) => {
-  const { recipes, isUpload } = props;
+  const { recipes } = props;
   const [toggler, setToggler] = useState(true);
   const [query, setQuery] = useState("");
   const [type, setType] = useState("all");
   const [page, setPage] = useState(1);
 
-  const { plans, loading, observer } = useAllPlan({ page, setPage });
+  const { plans, loading, observer } = useAllPlan({ page, setPage, query });
   const { ref, categories, onHide, onShow } = useRecipeCategory();
   useEffect(() => {
     setQuery("");
@@ -93,9 +92,9 @@ const PlanDiscovery = (props: PlannerPanelProps) => {
       )}
       <div className={styles.wrapper}>
         {toggler ? (
-          <Plans plans={plans} isUpload={isUpload} observer={observer} />
+          <Plans plans={plans} observer={observer} />
         ) : (
-          <Recipes recipes={recipes || []} isUpload={isUpload} />
+          <Recipes recipes={recipes || []} />
         )}
         {toggler &&
           loading &&
@@ -121,24 +120,7 @@ const Plans = (props) => {
 };
 
 const Recipes = (props) => {
-  const { recipes, isUpload } = props;
-  const [showCalenderId, setShowCalenderId] = useState("");
-
-  const dispatch = useDispatch();
-
-  const uploadRecipe = (_id, name, image, category, ingredients) => {
-    console.log(ingredients);
-    dispatch(
-      setRecipeInfo({
-        _id,
-        name,
-        image: image?.find((img) => img.default)?.image || image[0]?.image,
-        category,
-        ingredients,
-      }),
-    );
-  };
-
+  const { recipes } = props;
   return recipes?.map((recipe) => {
     const {
       _id,
@@ -160,35 +142,7 @@ const Recipes = (props) => {
         image={image.find((img) => img.default === true)?.image}
         recipeId={_id}
         ingredients={defaultVersion?.ingredients || []}
-      >
-        <div>
-          {isUpload ? (
-            <Icon
-              fontName={faPlusCircle}
-              style={{ color: "#fe5d1f" }}
-              size="20px"
-              onClick={() =>
-                uploadRecipe(
-                  _id,
-                  name,
-                  image,
-                  recipeBlendCategory?._id,
-                  defaultVersion?.ingredients,
-                )
-              }
-            />
-          ) : (
-            <Icon
-              fontName={faCalendarDay}
-              style={{ color: "#fe5d1f" }}
-              size="20px"
-              onClick={() =>
-                setShowCalenderId((prev) => (showCalenderId === _id ? "" : _id))
-              }
-            />
-          )}
-        </div>
-      </RecipeCard>
+      />
     );
   });
 };

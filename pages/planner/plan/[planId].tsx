@@ -33,6 +33,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import {
   CREATE_PLAN,
   GET_ALL_PLAN_COMMENTS,
+  GET_FEATURED_PLANS,
   GET_PLAN,
   SHARE_PLAN,
 } from "../../../graphql/Planner";
@@ -65,7 +66,9 @@ const MyPlan = () => {
     skip: router.query.planId === "",
   });
 
-  const [createPlan, createState] = useMutation(CREATE_PLAN);
+  const [createPlan, createState] = useMutation(CREATE_PLAN, {
+    refetchQueries: [GET_FEATURED_PLANS],
+  });
   const [sharePlan, { data: share }] = useMutation(SHARE_PLAN);
   const [link, setLink] = useState("");
   const [showShare, setShowShare] = useState(false);
@@ -119,9 +122,28 @@ const MyPlan = () => {
           else {
             return {
               ...plan,
-              recipes: [...plan.recipes, recipe],
+              recipes: [...plan.recipes, { ...recipe, ...recipe?.recipeId }],
             };
           }
+        } else {
+          return plan;
+        }
+      }),
+    );
+  };
+
+  const deleteRecipeFromPlan = (day, recipeId) => {
+    setPlanlist((list) =>
+      list.map((plan) => {
+        if (+day === plan?.day) {
+          console.log(plan, {
+            ...plan,
+            recipes: plan?.recipes.filter((recipe) => recipe?._id !== recipe),
+          });
+          return {
+            ...plan,
+            recipes: plan?.recipes.filter((recipe) => recipe?._id !== recipeId),
+          };
         } else {
           return plan;
         }
@@ -146,11 +168,12 @@ const MyPlan = () => {
       success: "Created a new version of the Plan",
       onSuccess: () => {
         setIsEditMode(false);
+        setPlanlist(plan?.planData);
       },
     });
-    if (plan?.memberId === userId) {
-    } else {
-    }
+    // if (plan?.memberId === userId) {
+    // } else {
+    // }
   };
 
   const shareHandler = useCallback(async () => {
@@ -230,7 +253,7 @@ const MyPlan = () => {
               {isEditMode ? (
                 <PlannerQueue panel="plan" modifyPlan={modifyPlan} />
               ) : (
-                <PlanDiscovery isUpload={false} recipes={allPlannedRecipes} />
+                <PlanDiscovery recipes={allPlannedRecipes} />
               )}
             </div>
             <div className="col-6" style={{ padding: "0 1.5rem" }}>
@@ -248,7 +271,13 @@ const MyPlan = () => {
                     size="small"
                     variant="secondary"
                     className="ml-10"
-                    onClick={() => router.push("/planner/plan")}
+                    onClick={() => {
+                      if (isEditMode) {
+                        setIsEditMode(false);
+                      } else {
+                        router.push("/planner/plan");
+                      }
+                    }}
                   />
                 </div>
               </div>
@@ -304,7 +333,12 @@ const MyPlan = () => {
                 </div>
               )}
               <div className={`${styles.plan} ${styles["plan--details"]}`}>
-                <PlanList data={planlist} />
+                <PlanList
+                  data={planlist}
+                  cart={false}
+                  action={false}
+                  onRemove={isEditMode && deleteRecipeFromPlan}
+                />
               </div>
             </div>
             <div className="col-3">

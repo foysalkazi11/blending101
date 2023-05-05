@@ -12,13 +12,13 @@
   padding: 10px;
   border-radius: 12px;
   // overflow: hidden;
-  cursor: pointer;
+  // cursor: pointer;
   transition: all;
   transition-duration: 0.5s;
   color: #000;
-  &:hover .title {
-    color: #fe5d1f;
-  }
+  // &:hover .title {
+  //   color: #fe5d1f;
+  // }
 }
 .datacard * {
   transition: all;
@@ -37,6 +37,11 @@
   .title {
     flex: 1;
     min-width: 0; /* or some value */
+    color: #333;
+    &:hover {
+      color: #fe5d1f;
+    }
+
     h2 {
       white-space: pre-wrap;
       // overflow: hidden;

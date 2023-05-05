@@ -14,11 +14,12 @@ import Icon from "../../../component/atoms/Icon/Icon.component";
 import { PLAN_SHARE_INFO } from "../../../graphql/Planner";
 import styles from "../../../styles/pages/planner.module.scss";
 import HeadTagInfo from "../../../theme/headTagInfo";
+import Loader from "../../../component/atoms/Loader/loader.component";
 
 const Shared = () => {
   const router = useRouter();
   const token = router.query.token;
-  const { data } = useQuery(PLAN_SHARE_INFO, {
+  const { data, loading } = useQuery(PLAN_SHARE_INFO, {
     variables: {
       token: token,
     },
@@ -31,6 +32,10 @@ const Shared = () => {
       `${process.env.NEXT_PUBLIC_HOSTING_DOMAIN}/planner/plan/${share?.plan?._id}?token=${token}`,
     );
   };
+
+  if (loading && !share?.invitedBy?.displayName) {
+    <Loader />;
+  }
 
   return (
     <Fragment>
