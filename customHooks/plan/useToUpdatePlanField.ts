@@ -17,13 +17,13 @@ const useToUpdatePlanField = () => {
       query: GET_FEATURED_PLANS,
       variables: { limit: 8, memberId },
       data: {
-        getAllPopularPlans: getAllPopularPlans?.map((plan) =>
+        getAllPopularPlans: getAllPopularPlans?.plans?.map((plan) =>
           plan?._id === id ? { ...plan, ...obj } : plan,
         ),
-        getAllRecentPlans: getAllRecentPlans?.map((plan) =>
+        getAllRecentPlans: getAllRecentPlans?.plans?.map((plan) =>
           plan?._id === id ? { ...plan, ...obj } : plan,
         ),
-        getAllRecommendedPlans: getAllRecommendedPlans?.map((plan) =>
+        getAllRecommendedPlans: getAllRecommendedPlans?.plans?.map((plan) =>
           plan?._id === id ? { ...plan, ...obj } : plan,
         ),
       },

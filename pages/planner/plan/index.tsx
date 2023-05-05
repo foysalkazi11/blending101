@@ -31,6 +31,7 @@ import styles from "../../../styles/pages/planner.module.scss";
 import ConfirmAlert from "../../../component/molecules/Alert/Confirm.component";
 import Publish from "../../../helpers/Publish";
 import { usePlanByWeek, useWeek } from "../../../hooks/modules/Plan/useMyPlan";
+import axios from "axios";
 
 const MyPlan = () => {
   const router = useRouter();
@@ -60,21 +61,48 @@ const MyPlan = () => {
 
   const handlePlanSave = (data) => {
     if (!showForm) return setShowForm(true);
-    createPlan({
-      variables: {
-        data: {
-          memberId,
-          ...data,
-          planData: plans.map((plan, idx) => ({
-            day: idx + 1,
-            recipes: plan.recipes.map((recipe) => recipe._id),
-          })),
-        },
-      },
-    }).then(() => {
-      setShowForm(false);
-      router.push("/planner");
+    const planData = [];
+    const images = [];
+    plans.forEach((plan, index) => {
+      const recipes = [];
+      plan.recipes?.forEach((recipe) => {
+        recipe.image?.length > 0 && images.push(recipe.image[0]?.image);
+        recipes.push(recipe?._id);
+      });
+      planData.push({ day: index + 1, recipes });
     });
+    // var raw = JSON.stringify({ images });
+    // fetch(
+    //   "https://om7h45qezg.execute-api.us-east-1.amazonaws.com/prod/file-processing/images/merge",
+    //   {
+    //     redirect: "follow",
+    //     body: raw,
+    //     method: "POST",
+    //   },
+    // )
+    //   .then((response) => response.text())
+    //   .then((result) => console.log(result))
+    //   .catch((error) => console.log("error", error));
+    axios
+      .post(
+        "https://om7h45qezg.execute-api.us-east-1.amazonaws.com/prod/file-processing/images/merge",
+        { images },
+      )
+      .then((res) => {
+        createPlan({
+          variables: {
+            data: {
+              memberId,
+              ...data,
+              planData,
+              image: { url: res.data?.data?.image, hash: "" },
+            },
+          },
+        }).then(() => {
+          setShowForm(false);
+          router.push("/planner");
+        });
+      });
   };
 
   return (

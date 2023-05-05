@@ -4,6 +4,7 @@ import {
   ADD_TO_MY_PLAN,
   DELETE_RECIPE_FROM_PLANNER,
   GET_PLANNER_BY_WEEK,
+  GET_QUEUED_PLANNER_RECIPES,
   MOVE_PLANNER,
 } from "../../../graphql/Planner";
 import { endOfWeek, format, startOfWeek } from "date-fns";
@@ -26,8 +27,8 @@ const usePlanByWeek = (props: IPlanByWeekHook) => {
 
   const [getPlanByWeek, { data }] = useLazyQuery(GET_PLANNER_BY_WEEK);
 
-  const [addToMyPlan, addToMyPlanState] = useMutation(ADD_TO_MY_PLAN, {
-    refetchQueries: ["GetPlannerByWeek"],
+  const [addToMyPlan] = useMutation(ADD_TO_MY_PLAN, {
+    refetchQueries: [GET_PLANNER_BY_WEEK, GET_QUEUED_PLANNER_RECIPES],
   });
 
   useEffect(() => {
@@ -75,6 +76,7 @@ const usePlanByWeek = (props: IPlanByWeekHook) => {
         recipes: planner.recipes.map((recipe) => ({
           _id: recipe?.recipeId?._id,
           name: recipe?.recipeId?.name,
+          image: recipe?.recipeId?.image,
           category: recipe?.recipeId?.recipeBlendCategory?.name,
           rxScore: 786,
           calorie: 250,
@@ -144,7 +146,9 @@ const useDeletePlanRecipe = (
   const router = useRouter();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
-  const [deleteRecipes, deleteState] = useMutation(DELETE_RECIPE_FROM_PLANNER);
+  const [deleteRecipes, deleteState] = useMutation(DELETE_RECIPE_FROM_PLANNER, {
+    refetchQueries: [GET_QUEUED_PLANNER_RECIPES],
+  });
 
   const deleteHandler = async (id) => {
     await Publish({
