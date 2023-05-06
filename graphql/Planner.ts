@@ -282,6 +282,9 @@ export const GET_PLAN = gql`
         planName
         description
         memberId
+        image {
+          url
+        }
         planData {
           id: _id
           day

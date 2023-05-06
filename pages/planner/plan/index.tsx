@@ -71,18 +71,6 @@ const MyPlan = () => {
       });
       planData.push({ day: index + 1, recipes });
     });
-    // var raw = JSON.stringify({ images });
-    // fetch(
-    //   "https://om7h45qezg.execute-api.us-east-1.amazonaws.com/prod/file-processing/images/merge",
-    //   {
-    //     redirect: "follow",
-    //     body: raw,
-    //     method: "POST",
-    //   },
-    // )
-    //   .then((response) => response.text())
-    //   .then((result) => console.log(result))
-    //   .catch((error) => console.log("error", error));
     axios
       .post(
         "https://om7h45qezg.execute-api.us-east-1.amazonaws.com/prod/file-processing/images/merge",

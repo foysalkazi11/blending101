@@ -32,6 +32,7 @@ import { startOfWeek, endOfWeek, format } from "date-fns";
 import { useMutation, useQuery } from "@apollo/client";
 import {
   CREATE_PLAN,
+  GET_ALL_PLANS,
   GET_ALL_PLAN_COMMENTS,
   GET_FEATURED_PLANS,
   GET_PLAN,
@@ -67,8 +68,9 @@ const MyPlan = () => {
   });
 
   const [createPlan, createState] = useMutation(CREATE_PLAN, {
-    refetchQueries: [GET_FEATURED_PLANS],
+    refetchQueries: [GET_FEATURED_PLANS, GET_ALL_PLANS],
   });
+
   const [sharePlan, { data: share }] = useMutation(SHARE_PLAN);
   const [link, setLink] = useState("");
   const [showShare, setShowShare] = useState(false);
@@ -169,6 +171,7 @@ const MyPlan = () => {
       onSuccess: () => {
         setIsEditMode(false);
         setPlanlist(plan?.planData);
+        methods.reset(defaultPlan);
       },
     });
     // if (plan?.memberId === userId) {
@@ -217,6 +220,7 @@ const MyPlan = () => {
       <CommentDrawer
         id={plan?._id}
         title={plan?.planName}
+        cover={plan?.image?.url}
         comments={comments?.getAllCommentsForAPlan}
         show={showComments}
         onClose={() => setShowComments(false)}
@@ -274,6 +278,8 @@ const MyPlan = () => {
                     onClick={() => {
                       if (isEditMode) {
                         setIsEditMode(false);
+                        setPlanlist(plan?.planData);
+                        methods.reset(defaultPlan);
                       } else {
                         router.push("/planner/plan");
                       }

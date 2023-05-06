@@ -209,7 +209,11 @@ const Home = () => {
                 {plans?.getAllGlobalPlans?.plans?.map((plan) => (
                   <div className={styles.slider__card} key={plan?._id}>
                     <div style={{ paddingRight: "1rem" }}>
-                      <PlanCard planId={plan?._id} title={plan?.planName} />
+                      <PlanCard
+                        planId={plan?._id}
+                        title={plan?.planName}
+                        image={plan?.image?.url}
+                      />
                     </div>
                   </div>
                 ))}
