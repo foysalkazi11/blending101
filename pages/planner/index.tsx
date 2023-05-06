@@ -154,6 +154,7 @@ const FeaturedPlan = ({ setOpenCollectionModal }) => {
                 <PlanCard
                   planId={item?._id}
                   title={item.planName}
+                  image={item?.image?.url}
                   isCollectionIds={item?.planCollections}
                   noOfComments={item?.commentsCount}
                   setOpenCollectionModal={setOpenCollectionModal}
@@ -175,6 +176,7 @@ const FeaturedPlan = ({ setOpenCollectionModal }) => {
                 <PlanCard
                   planId={item?._id}
                   title={item.planName}
+                  image={item?.image?.url}
                   isCollectionIds={item?.planCollections}
                   noOfComments={item?.commentsCount}
                   setOpenCollectionModal={setOpenCollectionModal}
@@ -196,6 +198,7 @@ const FeaturedPlan = ({ setOpenCollectionModal }) => {
                 <PlanCard
                   planId={item?._id}
                   title={item.planName}
+                  image={item?.image?.url}
                   isCollectionIds={item?.planCollections}
                   noOfComments={item?.commentsCount}
                   setOpenCollectionModal={setOpenCollectionModal}
