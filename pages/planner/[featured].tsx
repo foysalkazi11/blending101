@@ -81,6 +81,7 @@ const ViewAll = () => {
               <PlanCard
                 planId={item?._id}
                 title={item.planName}
+                image={item?.image?.url}
                 isCollectionIds={item?.planCollections}
                 noOfComments={item?.commentsCount}
                 setOpenCollectionModal={setOpenCollectionModal}
@@ -98,46 +99,6 @@ const ViewAll = () => {
             setOpenCollectionModal(false);
           }}
         />
-
-        {/* <ShowRecipeContainer
-          data={data?.[page?.query] || []}
-          loading={loading}
-          headerLeftSide={
-          }
-          // headerMiddle={
-          //   <div style={{ display: "flex" }}>
-          //     <IconWarper
-          //       iconColor="iconColorPrimary"
-          //       defaultBg="slightGray"
-          //       hover="bgPrimary"
-          //       style={{ width: "28px", height: "28px", marginRight: "10px" }}
-          //     >
-          //       <FontAwesomeIcon icon={faBookmark} />
-          //     </IconWarper>
-          //     <IconWarper
-          //       iconColor="iconColorPrimary"
-          //       defaultBg="slightGray"
-          //       hover="bgPrimary"
-          //       style={{ width: "28px", height: "28px" }}
-          //     >
-          //       <FontAwesomeIcon icon={faShareNodes} />
-          //     </IconWarper>
-          //   </div>
-          // }
-          // showDefaultMiddleHeader={true}
-          headerRightSide={
-            <IconWarper
-              handleClick={() => router.back()}
-              iconColor="iconColorWhite"
-              defaultBg="secondary"
-              hover="bgSecondary"
-              style={{ width: "28px", height: "28px" }}
-            >
-              <FontAwesomeIcon icon={faXmark} />
-            </IconWarper>
-          }
-          showItems="recipe"
-        /> */}
       </div>
     </AContainer>
   );

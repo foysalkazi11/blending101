@@ -114,7 +114,11 @@ const Plans = (props) => {
   const { plans, observer } = props;
   return plans?.map((plan) => (
     <div key={plan?._id} ref={observer} className="mt-10">
-      <PlanCard planId={plan?._id} title={plan.planName} />
+      <PlanCard
+        planId={plan?._id}
+        title={plan.planName}
+        image={plan?.image?.url}
+      />
     </div>
   ));
 };
