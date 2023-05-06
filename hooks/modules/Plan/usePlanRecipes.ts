@@ -167,35 +167,35 @@ const useAddRecipeToMyPlan = (props: IAddRecipeToPlanHook) => {
         setShowCalenderId("");
       },
       onUpdate(cache, { data: { createPlanner } }) {
-        const GetQueuedRecipesForPlanner = {
-          query: GET_QUEUED_PLANNER_RECIPES,
-          variables: {
-            currentDate: format(new Date(), "yyyy-MM-dd"),
-            user: userId,
-          },
-        };
-        const { getQuedPlanner } = cache.readQuery<any>(
-          GetQueuedRecipesForPlanner,
-        );
-        const isRecipeAlreadyExist = getQuedPlanner.recipes.some(
-          (r) => r?.recipeId?._id === recipe?.recipeId?._id,
-        );
-        const recipes = {
-          ...getQuedPlanner,
-          totalRecipe: getQuedPlanner.totalRecipe + 1,
-          recipes: [
-            ...getQuedPlanner.recipes,
-            ...(isRecipeAlreadyExist ? [] : [recipe]),
-          ],
-        };
-        console.log(getQuedPlanner, recipes);
+        // const GetQueuedRecipesForPlanner = {
+        //   query: GET_QUEUED_PLANNER_RECIPES,
+        //   variables: {
+        //     currentDate: format(new Date(), "yyyy-MM-dd"),
+        //     user: userId,
+        //   },
+        // };
+        // const { getQuedPlanner } = cache.readQuery<any>(
+        //   GetQueuedRecipesForPlanner,
+        // );
+        // const isRecipeAlreadyExist = getQuedPlanner.recipes.some(
+        //   (r) => r?.recipeId?._id === recipe?.recipeId?._id,
+        // );
+        // const recipes = {
+        //   ...getQuedPlanner,
+        //   totalRecipe: getQuedPlanner.totalRecipe + 1,
+        //   recipes: [
+        //     ...getQuedPlanner.recipes,
+        //     ...(isRecipeAlreadyExist ? [] : [recipe]),
+        //   ],
+        // };
+        // console.log(getQuedPlanner, recipes);
 
-        cache.writeQuery({
-          ...GetQueuedRecipesForPlanner,
-          data: {
-            getQuedPlanner: recipes,
-          },
-        });
+        // cache.writeQuery({
+        //   ...GetQueuedRecipesForPlanner,
+        //   data: {
+        //     getQuedPlanner: recipes,
+        //   },
+        // });
 
         const defaultFetch =
           !isWeekFromURL && router.query.start && router.query.end;

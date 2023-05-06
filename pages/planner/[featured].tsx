@@ -22,6 +22,7 @@ import PlanCard from "../../component/module/Planner/PlanCard.component";
 import ShowLastModifiedCollection from "../../components/showLastModifiedCollection/ShowLastModifiedCollection";
 import { setIsOpenPlanCollectionTray } from "../../redux/slices/Planner.slice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import Loader from "../../theme/loader/Loader";
 
 const ViewAll = () => {
   const router = useRouter();
@@ -44,6 +45,10 @@ const ViewAll = () => {
     "compareList",
     [],
   );
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <AContainer
