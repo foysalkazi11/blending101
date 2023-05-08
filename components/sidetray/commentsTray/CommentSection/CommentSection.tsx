@@ -255,26 +255,39 @@ const CommentSection = () => {
 
   return (
     <>
-      {!showCommentBox && (
-        <IconForAddComment handleIconClick={toggleCommentBox} />
-      )}
+      <UserRating
+        rating={rating}
+        setRating={setRating}
+        userImage={dbUser?.image}
+        userName={
+          dbUser?.displayName ||
+          dbUser?.lastName ||
+          dbUser?.firstName ||
+          dbUser?.email
+        }
+      />
+      <div className="flex ai-center jc-between mt-20 mb-30">
+        {commentData?.getAllCommentsForARecipe?.comments?.length ? (
+          <span className={styles.commentsLength}>{`${
+            commentData?.getAllCommentsForARecipe?.comments?.length
+          } ${
+            commentData?.getAllCommentsForARecipe?.comments?.length >= 1
+              ? "comments"
+              : "comment"
+          }`}</span>
+        ) : null}
+
+        {!showCommentBox && (
+          <IconForAddComment handleIconClick={toggleCommentBox} />
+        )}
+      </div>
+
       {(createCommentLoading || editCommentLoading) && (
         <SkeletonComment singleComment={true} />
       )}
 
       {showCommentBox && (
         <>
-          <UserRating
-            rating={rating}
-            setRating={setRating}
-            userImage={dbUser?.image}
-            userName={
-              dbUser?.displayName ||
-              dbUser?.lastName ||
-              dbUser?.firstName ||
-              dbUser?.email
-            }
-          />
           <CommentBox
             toggleCommentBox={toggleCommentBox}
             comment={comment}
@@ -285,15 +298,6 @@ const CommentSection = () => {
           />
         </>
       )}
-      {commentData?.getAllCommentsForARecipe?.comments?.length ? (
-        <span className={styles.commentsLength}>{`${
-          commentData?.getAllCommentsForARecipe?.comments?.length
-        } ${
-          commentData?.getAllCommentsForARecipe?.comments?.length >= 1
-            ? "comments"
-            : "comment"
-        }`}</span>
-      ) : null}
 
       {commentLoading ? (
         <SkeletonComment />
@@ -309,6 +313,11 @@ const CommentSection = () => {
                       isAbleToSetRating={false}
                       user={comment?.userId}
                       page="recipe"
+                      isCurrentUser={comment?.userId?._id === dbUser?._id}
+                      updateCommentValue={updateCommentValue}
+                      removeComment={removeComment}
+                      deleteCommentLoading={deleteCommentsLoading}
+                      userComments={comment}
                     />
                     <CommentsBottomSection
                       userComments={comment}
