@@ -257,11 +257,14 @@ function FilterPageBottom({ allFilters = [] }: Props) {
                             category={item.recipeBlendCategory?.name}
                             ratings={item?.averageRating}
                             noOfRatings={item?.numberOfRating}
-                            carbs={item.carbs}
-                            score={item.score}
+                            carbs={item.netCarbs}
+                            score={item.rxScore}
                             calorie={item.calorie}
                             noOfComments={item?.numberOfRating}
-                            image={item.image[0]?.image}
+                            image={
+                              item.image?.find((img) => img?.default)?.image ||
+                              ""
+                            }
                             recipeId={item?._id}
                             notes={item?.notes}
                             addedToCompare={item?.addedToCompare}

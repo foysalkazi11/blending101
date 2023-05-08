@@ -174,7 +174,12 @@ const Home = () => {
                       image = "",
                       numberOfRating = 0,
                       averageRating = 0,
+                      brand = {},
+                      userId = {},
                     },
+                    calorie,
+                    netCarbs,
+                    rxScore,
                   } = recipe;
                   return (
                     <div key={_id}>
@@ -186,6 +191,7 @@ const Home = () => {
                               img={image?.[0]?.image}
                               rating={averageRating}
                               noOfRating={numberOfRating}
+                              rx={rxScore}
                             />
                           </a>
                         </Link>

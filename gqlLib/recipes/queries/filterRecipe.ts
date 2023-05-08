@@ -25,6 +25,8 @@ const FILTER_RECIPE = gql`
             _id
             displayName
             image
+            firstName
+            lastName
           }
           brand {
             _id
@@ -52,6 +54,9 @@ const FILTER_RECIPE = gql`
         addedToCompare
         userCollections
         versionCount
+        calorie
+        netCarbs
+        rxScore
       }
     }
   }

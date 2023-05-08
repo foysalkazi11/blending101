@@ -197,9 +197,6 @@ $tooltip-arrow-size: 6px;
   sup {
     @extend %sup;
   }
-  i:is([data-icon_name]) {
-    color: $secondaryColor;
-  }
 }
 
 .toggle {

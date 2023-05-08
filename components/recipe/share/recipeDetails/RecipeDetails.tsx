@@ -152,7 +152,7 @@ const RecipeDetails = ({
           noOfComments={recipe?.recipeId?.numberOfRating}
           image={
             recipe?.defaultVersion?.selectedImage ||
-            recipe?.recipeId?.image?.[0]?.image ||
+            recipe?.recipeId?.image?.find((img) => img?.default)?.image ||
             ""
           }
           recipeId={recipe?.recipeId?._id}
