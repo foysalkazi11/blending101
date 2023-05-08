@@ -18,6 +18,8 @@ const GET_ALL_RECOMMENDED_RECIPES = gql`
           _id
           displayName
           image
+          firstName
+          lastName
         }
         brand {
           _id
@@ -45,6 +47,9 @@ const GET_ALL_RECOMMENDED_RECIPES = gql`
       addedToCompare
       userCollections
       versionCount
+      calorie
+      netCarbs
+      rxScore
     }
   }
 `;

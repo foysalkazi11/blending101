@@ -14,6 +14,8 @@ const GET_ALL_RECIPE_VERSION = gql`
           _id
           displayName
           image
+          firstName
+          lastName
         }
         brand {
           _id

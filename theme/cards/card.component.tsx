@@ -29,7 +29,7 @@ export default function CardComponent({
 }: cardInterface) {
   // STEP 1: HANDLE VARIABLES FALLBACK VALUE TO AVOID UI FAILURE
   style = style || {};
-  rx = rx || 500;
+  rx = Math.round(rx || 500);
   img = img || "/cards/banana.png";
   price = price || 16.95;
   discountPrice = discountPrice || 12.95;
