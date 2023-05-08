@@ -39,7 +39,7 @@ const CommentsBottomSection = ({
         )}
       </span>
 
-      {isCurrentUser && (
+      {/* {isCurrentUser && (
         <div className={s.rightSide}>
           <div className={s.content}>
             <IconWarper
@@ -73,7 +73,7 @@ const CommentsBottomSection = ({
             </IconWarper>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

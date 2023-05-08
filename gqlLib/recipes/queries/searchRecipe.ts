@@ -30,6 +30,8 @@ const SEARCH_RECIPE = gql`
             _id
             displayName
             image
+            firstName
+            lastName
           }
           brand {
             _id
@@ -57,6 +59,9 @@ const SEARCH_RECIPE = gql`
         addedToCompare
         userCollections
         versionCount
+        calorie
+        netCarbs
+        rxScore
       }
     }
   }

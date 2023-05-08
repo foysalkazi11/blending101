@@ -89,12 +89,13 @@
       align-items: center;
 
       .brand {
-        height: 100%;
+        width: 3rem;
+        height: auto;
         object-fit: contain;
-        max-width: 50px;
       }
       .user {
-        height: 30px;
+        height: auto;
+        width: 3rem;
         aspect-ratio: 1;
         object-fit: cover;
         border-radius: 50%;

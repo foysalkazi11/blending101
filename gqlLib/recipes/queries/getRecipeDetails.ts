@@ -14,6 +14,8 @@ const GET_A_RECIPE = gql`
           _id
           displayName
           image
+          firstName
+          lastName
         }
         brand {
           _id

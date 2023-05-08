@@ -203,6 +203,7 @@ export const ShowRecipes = ({
                 averageRating = 0,
                 recipeBlendCategory,
                 userId,
+                brand,
               },
               defaultVersion: {
                 _id: defaultVersionId = "",
@@ -217,6 +218,9 @@ export const ShowRecipes = ({
               addedToCompare = false,
               userCollections = [],
               versionCount = 0,
+              calorie,
+              netCarbs,
+              rxScore,
             } = item;
             const ing = joniIngredients(ingredients);
             return (
@@ -230,11 +234,11 @@ export const ShowRecipes = ({
                   category={recipeBlendCategory?.name}
                   ratings={averageRating}
                   noOfRatings={numberOfRating}
-                  carbs={item?.carbs}
-                  score={item?.score}
-                  calorie={item?.calorie}
+                  carbs={netCarbs}
+                  score={rxScore}
+                  calorie={calorie}
                   noOfComments={numberOfRating}
-                  image={image?.[0]?.image}
+                  image={image.find((img) => img?.default)?.image || ""}
                   recipeId={_id}
                   notes={notes}
                   addedToCompare={addedToCompare}
@@ -250,6 +254,7 @@ export const ShowRecipes = ({
                   setOpenShareModal={setOpenShareModal}
                   token={item?.token}
                   updateDataFunc={updateDataFunc}
+                  brand={brand}
                 />
               </div>
             );

@@ -8,6 +8,9 @@ const GET_COMPARE_LIST = gql`
       notes
       userCollections
       versionCount
+      calorie
+      netCarbs
+      rxScore
       defaultVersion {
         _id
         description
@@ -48,6 +51,8 @@ const GET_COMPARE_LIST = gql`
           _id
           displayName
           image
+          firstName
+          lastName
         }
         brand {
           _id

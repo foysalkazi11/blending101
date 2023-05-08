@@ -183,6 +183,7 @@ const ShowRecipeContainer = ({
                       averageRating = 0,
                       recipeBlendCategory,
                       userId,
+                      brand = {},
                     },
                     defaultVersion: {
                       _id: defaultVersionId = "",
@@ -197,6 +198,9 @@ const ShowRecipeContainer = ({
                     addedToCompare = false,
                     userCollections = [],
                     versionCount = 0,
+                    calorie = 0,
+                    netCarbs = 0,
+                    rxScore = 0,
                   } = item;
                   const ing = joniIngredients(ingredients);
                   return (
@@ -207,11 +211,11 @@ const ShowRecipeContainer = ({
                       category={recipeBlendCategory?.name}
                       ratings={averageRating}
                       noOfRatings={numberOfRating}
-                      carbs={item?.carbs}
-                      score={item?.score}
-                      calorie={item?.calorie}
+                      carbs={netCarbs}
+                      score={rxScore}
+                      calorie={calorie}
                       noOfComments={numberOfRating}
-                      image={image?.[0]?.image}
+                      image={image?.find((img) => img?.default)?.image || ""}
                       recipeId={_id}
                       notes={notes}
                       addedToCompare={addedToCompare}
@@ -227,6 +231,7 @@ const ShowRecipeContainer = ({
                       setOpenShareModal={setOpenShareModal}
                       token={item?.token}
                       updateDataFunc={updateContainerData}
+                      brand={brand}
                     />
                   );
                 })}
