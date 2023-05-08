@@ -1,11 +1,15 @@
 .userImage {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  // display: flex;
+  // align-items: center;
+  // justify-content: space-between;
   position: relative;
   // &:hover .rightSide {
   //   display: block;
   // }
+  &:hover .rightSide {
+    transform: translateX(0);
+  }
+
   .imageBox {
     width: 28px;
     height: 28px;
@@ -35,26 +39,34 @@
   }
 
   .rightSide {
-    display: flex;
-    align-items: center;
-    .editIconBox {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      padding: 0;
-      border: 0;
-      background: #fbfbfb;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(120%);
+    transition: all 0.3s;
+    .content {
       display: flex;
       align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      &:hover {
-        box-shadow: 0 10px 10px -10px rgb(0 0 0 / 50%);
-        background: #e0e0e047;
-      }
-      .icon {
-        font-size: 14px;
-        color: #646464;
+
+      .editIconBox {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        padding: 0;
+        border: 0;
+        background: #fbfbfb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        &:hover {
+          box-shadow: 0 10px 10px -10px rgb(0 0 0 / 50%);
+          color: #e0e0e047;
+        }
+        .icon {
+          font-size: 14px;
+          color: #646464;
+        }
       }
     }
   }
