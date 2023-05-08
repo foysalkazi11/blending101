@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import {
   faGear,
@@ -46,6 +46,16 @@ const ChallengePage = () => {
   const [showShare, setShowShare] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+
+  const left = useRef<HTMLDivElement>(null);
+  const center = useRef<HTMLDivElement>(null);
+  const right = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (center.current) {
+      console.log(center.current.offsetHeight);
+    }
+  }, []);
 
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
@@ -248,8 +258,9 @@ const ChallengePage = () => {
                 toolbox
               ) : (
                 <Challenge
-                  canUpload={canUpload}
+                  elementRef={center}
                   progressRef={progress}
+                  canUpload={canUpload}
                   activities={challenge?.challenge}
                   statistics={challenge?.challengeInfo}
                 />

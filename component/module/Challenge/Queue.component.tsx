@@ -41,7 +41,6 @@ const ChallengeQueue = (props: ChallengeQueueProps) => {
     setPage,
   });
   const queuedRecipes = useQueuedRecipe(props.challenges);
-  console.log(queuedRecipes);
 
   // When we toggle the tab between Discover and Queue
   useEffect(() => {

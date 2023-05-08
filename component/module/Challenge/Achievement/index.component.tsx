@@ -8,18 +8,22 @@ import Dialer from "./_Dialer.component";
 import useChallengeLayout from "../../../../hooks/modules/Challenge/useChallengeLayout";
 
 interface ChallengeProps {
+  elementRef: any;
+  progressRef: any;
   canUpload: boolean;
   activities: any[];
   statistics: any;
-  progressRef: any;
 }
 
 const Challenge: React.FC<ChallengeProps> = (props) => {
-  const { canUpload, activities, statistics, progressRef } = props;
+  const { canUpload, activities, statistics, elementRef, progressRef } = props;
   useChallengeLayout();
 
   return (
-    <div className={styles.mainContainer__contentDiv__innerDiv}>
+    <div
+      ref={elementRef}
+      className={styles.mainContainer__contentDiv__innerDiv}
+    >
       <div className={styles.mainContainer__contentDiv__innerDiv__challengeDiv}>
         <div className={styles.challenge_circle_box}>
           <div className={styles.title}>

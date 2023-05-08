@@ -21,7 +21,7 @@ const PlanList = ({ data, week, isWeekFromURL }: PlanListProps) => {
           day = index + 1;
         } else if (planner?.date) {
           const days = new Date(planner?.date);
-          dayName = format(days, "E") || "UND";
+          dayName = format(days, "eee") || "UND";
           day = format(days, "d") || "0";
         }
         return (
