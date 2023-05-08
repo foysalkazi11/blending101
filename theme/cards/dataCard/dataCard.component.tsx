@@ -18,6 +18,7 @@ import {
 import { faUser } from "@fortawesome/pro-light-svg-icons";
 import Tooltip from "../../toolTip/CustomToolTip";
 import {
+  RecipeBrandType,
   RecipeCreatorInfo,
   RecipeSmallVersionType,
   ReferenceOfRecipeUpdateFuncType,
@@ -31,6 +32,7 @@ import notification from "../../../components/utility/reactToastifyNotification"
 import { faShareNodes } from "@fortawesome/pro-regular-svg-icons";
 import useTurnedOnOrOffVersion from "../../../customHooks/useTurnedOnOrOffVersion";
 import CircularRotatingLoader from "../../loader/circularRotatingLoader.component";
+import isEmptyObj from "../../../helperFunc/object/isEmptyObj";
 
 interface dataCardInterface {
   title: string;
@@ -80,6 +82,7 @@ interface dataCardInterface {
   ) => void;
   isVersionSharable?: boolean;
   defaultVersion?: VersionDataType;
+  brand?: RecipeBrandType;
 }
 
 export default function DatacardComponent({
@@ -88,9 +91,9 @@ export default function DatacardComponent({
   category = "Smoothie",
   ratings,
   noOfRatings = 0,
-  carbs = 23,
-  score = 701,
-  calorie = 270,
+  carbs = 0,
+  score = 0,
+  calorie = 0,
   noOfComments = 0,
   image = "/cards/juice.png",
   recipeId = "",
@@ -119,7 +122,11 @@ export default function DatacardComponent({
   updateDataAfterChangeDefaultVersion = () => {},
   isVersionSharable = true,
   defaultVersion = {} as VersionDataType,
+  brand,
 }: dataCardInterface) {
+  carbs = Math.round(carbs);
+  score = Math.round(score);
+  calorie = Math.round(calorie);
   ratings = Math.ceil(ratings);
   const router = useRouter();
   const { handleChangeCompare, loading: changeCompareLoading } =
@@ -470,36 +477,31 @@ export default function DatacardComponent({
         </div>
         <div className={styles.datacard__body__bottom}>
           <div className={styles.datacard__body__bottom__left}>
-            {userId ? (
-              <Tooltip
-                content={
-                  userId?.displayName ||
-                  userId?.firstName ||
-                  userId?.lastName ||
-                  userId?.email ||
-                  "User name"
-                }
-                direction="right"
-              >
-                {userId?.image ? (
-                  <img
-                    className={styles.user}
-                    src={userId?.image}
-                    alt="brand"
-                  />
-                ) : (
-                  <div className={styles.userIcon}>
-                    <FontAwesomeIcon icon={faUser} />
-                  </div>
-                )}
-              </Tooltip>
-            ) : (
-              <img
-                className={styles.brand}
-                src="/icons/delish.png"
-                alt="brand"
-              />
-            )}
+            <Tooltip
+              content={
+                !isEmptyObj(brand || {})
+                  ? brand?.brandName || "Brand"
+                  : userId?.displayName ||
+                    `${userId?.lastName}` ||
+                    `${userId?.firstName}` ||
+                    "User name"
+              }
+              direction="right"
+            >
+              {!isEmptyObj(brand || {}) ? (
+                <img
+                  className={styles.brand}
+                  src={`${brand?.brandImage}` || "/icons/delish.png"}
+                  alt="brand"
+                />
+              ) : userId?.image ? (
+                <img className={styles.user} src={userId?.image} alt="brand" />
+              ) : (
+                <div className={styles.userIcon}>
+                  <FontAwesomeIcon icon={faUser} />
+                </div>
+              )}
+            </Tooltip>
           </div>
           <div className={styles.datacard__body__bottom__right}>
             <ul>{handleToShowFooterMenu()}</ul>

@@ -10,6 +10,9 @@ const GET_ALL_MY_CREATED_RECIPES = gql`
       notes
       userCollections
       versionCount
+      calorie
+      netCarbs
+      rxScore
       defaultVersion {
         _id
         description

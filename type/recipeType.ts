@@ -20,16 +20,26 @@ export interface RecipeType {
   userCollections: string[];
   defaultVersion: DefaultVersion;
   isMatch: boolean;
-  carbs: number;
-  score: number;
-  calorie: number;
-  userId: null | RecipeCreatorInfo;
+
   recipeVersion: RecipeSmallVersionType[];
   token?: string;
-  recipeId?: { [key: string]: any };
+  recipeId?: {
+    brand?: RecipeBrandType;
+    userId: null | RecipeCreatorInfo;
+    [key: string]: any;
+  };
   allRecipes?: boolean;
   myRecipes?: boolean;
   versionCount: number;
+  calorie: number;
+  netCarbs: number;
+  rxScore: number;
+}
+
+export interface RecipeBrandType {
+  _id: string;
+  brandImage: string;
+  brandName: string;
 }
 
 export interface RecipeSmallVersionType {
