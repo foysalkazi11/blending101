@@ -25,13 +25,14 @@ interface CommentsTrayProps {
   id: string;
   show: boolean;
   title?: string;
+  cover?: string;
   comments?: any[];
   icon?: string;
   onClose?: () => void;
 }
 
 function CommentDrawer(props: CommentsTrayProps) {
-  const { show, id, title, icon, onClose, comments } = props;
+  const { show, id, title, cover, icon, onClose, comments } = props;
 
   const ref = useRef<any>();
   const [toggle, setToggle] = useState(1);
@@ -170,7 +171,11 @@ function CommentDrawer(props: CommentsTrayProps) {
         {icon && <img src={icon} alt="img" />}
         <h3>{title}</h3>
       </div>
-      <img src="/images/plan.png" alt="" className={styles.recipeImage} />
+      <img
+        src={cover || "/images/plan.png"}
+        alt=""
+        className={styles.recipeImage}
+      />
 
       <div className={styles.userImage}>
         <div style={{ display: "flex", alignItems: "center" }}>

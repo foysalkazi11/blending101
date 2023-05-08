@@ -31,6 +31,7 @@ import styles from "../../../styles/pages/planner.module.scss";
 import ConfirmAlert from "../../../component/molecules/Alert/Confirm.component";
 import Publish from "../../../helpers/Publish";
 import { usePlanByWeek, useWeek } from "../../../hooks/modules/Plan/useMyPlan";
+import axios from "axios";
 
 const MyPlan = () => {
   const router = useRouter();
@@ -44,15 +45,13 @@ const MyPlan = () => {
   const [showForm, setShowForm] = useState(false);
 
   const { week, setWeek, isFetchingFromURL } = useWeek();
-  const { plans, topIngredients, recipeTypes } = usePlanByWeek({
-    week,
-    isFetchingFromURL,
-    setShowDuplicateAlert,
-  });
+  const { plans, topIngredients, recipeTypes, onMergeOrReplace } =
+    usePlanByWeek({
+      week,
+      isFetchingFromURL,
+      setShowDuplicateAlert,
+    });
 
-  const [addToMyPlan, addToMyPlanState] = useMutation(ADD_TO_MY_PLAN, {
-    refetchQueries: ["GetPlannerByWeek"],
-  });
   const [createPlan] = useMutation(CREATE_PLAN);
 
   const startMonth = MONTH[week.start.getMonth()];
@@ -62,39 +61,36 @@ const MyPlan = () => {
 
   const handlePlanSave = (data) => {
     if (!showForm) return setShowForm(true);
-    createPlan({
-      variables: {
-        data: {
-          memberId,
-          ...data,
-          planData: plans.map((plan, idx) => ({
-            day: idx + 1,
-            recipes: plan.recipes.map((recipe) => recipe._id),
-          })),
-        },
-      },
-    }).then(() => {
-      setShowForm(false);
-      router.push("/planner");
+    const planData = [];
+    const images = [];
+    plans.forEach((plan, index) => {
+      const recipes = [];
+      plan.recipes?.forEach((recipe) => {
+        recipe.image?.length > 0 && images.push(recipe.image[0]?.image);
+        recipes.push(recipe?._id);
+      });
+      planData.push({ day: index + 1, recipes });
     });
-  };
-
-  const handleMergeOrReplace = async (type: "MERGE" | "REMOVE") => {
-    await Publish({
-      mutate: addToMyPlan,
-      state: addToMyPlanState,
-      variables: {
-        type,
-        planId: router.query?.plan,
-        memberId,
-        startDate: router.query?.start,
-        endDate: router.query?.end,
-      },
-      success: "Added to My Plan successfully",
-      onSuccess: () => {
-        setShowDuplicateAlert(false);
-      },
-    });
+    axios
+      .post(
+        "https://om7h45qezg.execute-api.us-east-1.amazonaws.com/prod/file-processing/images/merge",
+        { images },
+      )
+      .then((res) => {
+        createPlan({
+          variables: {
+            data: {
+              memberId,
+              ...data,
+              planData,
+              image: { url: res.data?.data?.image, hash: "" },
+            },
+          },
+        }).then(() => {
+          setShowForm(false);
+          router.push("/planner");
+        });
+      });
   };
 
   return (
@@ -115,7 +111,7 @@ const MyPlan = () => {
       <ConfirmAlert
         show={showDuplicateAlert}
         setShow={setShowDuplicateAlert}
-        onConfirm={handleMergeOrReplace}
+        onConfirm={onMergeOrReplace}
         message="There are already plans listed in this week."
       />
       <div className={styles.windowContainer}>
@@ -167,6 +163,9 @@ const MyPlan = () => {
                           size="small"
                           fontName={faChevronLeft}
                           onClick={() => {
+                            router.replace("/planner/plan", undefined, {
+                              shallow: true,
+                            });
                             setWeek((week) => ({
                               start: subWeeks(week.start, 1),
                               end: subWeeks(week.end, 1),
@@ -181,6 +180,9 @@ const MyPlan = () => {
                           size="small"
                           fontName={faChevronRight}
                           onClick={() => {
+                            router.replace("/planner/plan", undefined, {
+                              shallow: true,
+                            });
                             setWeek((week) => ({
                               start: addWeeks(week.start, 1),
                               end: addWeeks(week.end, 1),

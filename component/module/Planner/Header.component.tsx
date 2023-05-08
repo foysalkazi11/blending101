@@ -1,18 +1,14 @@
-import React, { useEffect } from "react";
-import { useQuery } from "@apollo/client";
+import React from "react";
 import {
   faChevronLeft,
   faChevronRight,
 } from "@fortawesome/pro-solid-svg-icons";
 import { faEllipsisV } from "@fortawesome/pro-regular-svg-icons";
-import { format } from "date-fns";
 
 import { MONTH } from "../../../data/Date";
-import { GET_PLANNER_BY_WEEK } from "../../../graphql/Planner";
 
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
-  setPlanners,
   gotoPreviousWeek,
   gotoNextWeek,
 } from "../../../redux/slices/Planner.slice";

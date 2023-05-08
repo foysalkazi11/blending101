@@ -93,7 +93,7 @@ function PlanCard({
   calorie = calorie || 270;
   score = score || 701;
   noOfComments = noOfComments || 0;
-  image = image || "/cards/juice.png";
+  image = image || "/images/plan.png";
   ratings = Math.ceil(ratings);
   const menu = useRef<any>();
   const router = useRouter();
@@ -168,88 +168,84 @@ function PlanCard({
   };
 
   return (
-    <Link href={`/planner/plan/${planId}`}>
-      <a className={`${styles.datacard} ${className || ""}`} ref={hoverRef}>
-        <div className={styles.datacard__inner}>
-          <div className={styles.heading}>
-            <div className={styles.title}>
-              <h2
-                onClick={(e) => {
-                  e?.stopPropagation();
-                  router.push(`/planner/plan/${planId}`);
-                }}
-              >
-                {title}
-              </h2>
-            </div>
-            <div className={styles.menu}>
-              {showMoreMenu &&
-                (showMoreMenuAtHover ? (
-                  <div style={{ visibility: isHover ? "visible" : "hidden" }}>
-                    {customMenu ? customMenu : showFloatingMenu}
-                  </div>
-                ) : (
-                  <>{customMenu ? customMenu : showFloatingMenu}</>
-                ))}
-            </div>
+    <div className={`${styles.datacard} ${className || ""}`} ref={hoverRef}>
+      <div className={styles.datacard__inner}>
+        <div className={styles.heading}>
+          <div className={styles.title}>
+            <Link href={`/planner/plan/${planId}`}>
+              <a className={styles.title}>
+                <h2>{title}</h2>
+              </a>
+            </Link>
           </div>
-          <div className={styles.datacard__body__middle}>
-            <img src="/images/plan.png" alt="" />
-          </div>
-          <div className={styles.datacard__body__belt}>
-            <div className={styles.datacard__body__belt__child}>
-              Net Carbs <span>{carbs}</span>
-            </div>
-            <div className={styles.datacard__body__belt__child}>
-              Rx Score <span>{score}</span>
-            </div>
-            <div className={styles.datacard__body__belt__child}>
-              Calorie <span>{calorie}</span>
-            </div>
-          </div>
-          <div className={styles.datacard__body__bottom}>
-            <div className={styles.datacard__body__bottom__left}>
-              <div className={styles.databody__top__info}>
-                <img src="/icons/star.svg" alt="star" />
-                <span>{ratings || 0}</span>&nbsp;
-                <span>({noOfRatings || 0})</span>
-              </div>
-            </div>
-            <div className={styles.datacard__body__bottom__right}>
-              <ul>
-                <li>
-                  <WeekPicker
-                    element={<DatePickerButton />}
-                    week={week}
-                    onWeekChange={weekChangeHandler}
-                  />
-                </li>
-                <li>
-                  <img
-                    src={
-                      isCollectionIds?.length
-                        ? "/icons/compare.svg"
-                        : "/images/BookmarksStar.svg"
-                    }
-                    alt="compare"
-                    onClick={(e) =>
-                      isCollectionIds?.length
-                        ? handleOpenCollectionTray(planId, isCollectionIds)
-                        : handleAddToCollection(
-                            planId,
-                            memberId,
-                            setOpenCollectionModal,
-                          )
-                    }
-                  />
-                </li>
-                <li>{hangleShowCommentsAndNotesIcon(noOfComments, notes)}</li>
-              </ul>
-            </div>
+          <div className={styles.menu}>
+            {showMoreMenu &&
+              (showMoreMenuAtHover ? (
+                <div style={{ visibility: isHover ? "visible" : "hidden" }}>
+                  {customMenu ? customMenu : showFloatingMenu}
+                </div>
+              ) : (
+                <>{customMenu ? customMenu : showFloatingMenu}</>
+              ))}
           </div>
         </div>
-      </a>
-    </Link>
+        <div className={styles.datacard__body__middle}>
+          <img src={image} alt="" />
+        </div>
+        <div className={styles.datacard__body__belt}>
+          <div className={styles.datacard__body__belt__child}>
+            Net Carbs <span>{carbs}</span>
+          </div>
+          <div className={styles.datacard__body__belt__child}>
+            Rx Score <span>{score}</span>
+          </div>
+          <div className={styles.datacard__body__belt__child}>
+            Calorie <span>{calorie}</span>
+          </div>
+        </div>
+        <div className={styles.datacard__body__bottom}>
+          <div className={styles.datacard__body__bottom__left}>
+            <div className={styles.databody__top__info}>
+              <img src="/icons/star.svg" alt="star" />
+              <span>{ratings || 0}</span>&nbsp;
+              <span>({noOfRatings || 0})</span>
+            </div>
+          </div>
+          <div className={styles.datacard__body__bottom__right}>
+            <ul>
+              <li>
+                <WeekPicker
+                  element={<DatePickerButton />}
+                  week={week}
+                  onWeekChange={weekChangeHandler}
+                />
+              </li>
+              <li>
+                <img
+                  src={
+                    isCollectionIds?.length
+                      ? "/icons/compare.svg"
+                      : "/images/BookmarksStar.svg"
+                  }
+                  alt="compare"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    isCollectionIds?.length
+                      ? handleOpenCollectionTray(planId, isCollectionIds)
+                      : handleAddToCollection(
+                          planId,
+                          memberId,
+                          setOpenCollectionModal,
+                        );
+                  }}
+                />
+              </li>
+              <li>{hangleShowCommentsAndNotesIcon(noOfComments, notes)}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 

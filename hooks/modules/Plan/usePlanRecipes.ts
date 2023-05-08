@@ -163,30 +163,37 @@ const useAddRecipeToMyPlan = (props: IAddRecipeToPlanHook) => {
       },
       state: addState,
       success: `Added Planner sucessfully`,
-      onSuccess: (data) => {
+      onSuccess: () => {
         setShowCalenderId("");
       },
-      onUpdate(cache) {
-        const GetQueuedRecipesForPlanner = {
-          query: GET_QUEUED_PLANNER_RECIPES,
-          variables: {
-            currentDate: format(new Date(), "yyyy-MM-dd"),
-            user: userId,
-            searchTerm: query,
-            page,
-            limit,
-            type,
-          },
-        };
+      onUpdate(cache, { data: { createPlanner } }) {
+        // const GetQueuedRecipesForPlanner = {
+        //   query: GET_QUEUED_PLANNER_RECIPES,
+        //   variables: {
+        //     currentDate: format(new Date(), "yyyy-MM-dd"),
+        //     user: userId,
+        //   },
+        // };
         // const { getQuedPlanner } = cache.readQuery<any>(
         //   GetQueuedRecipesForPlanner,
         // );
+        // const isRecipeAlreadyExist = getQuedPlanner.recipes.some(
+        //   (r) => r?.recipeId?._id === recipe?.recipeId?._id,
+        // );
+        // const recipes = {
+        //   ...getQuedPlanner,
+        //   totalRecipe: getQuedPlanner.totalRecipe + 1,
+        //   recipes: [
+        //     ...getQuedPlanner.recipes,
+        //     ...(isRecipeAlreadyExist ? [] : [recipe]),
+        //   ],
+        // };
+        // console.log(getQuedPlanner, recipes);
+
         // cache.writeQuery({
         //   ...GetQueuedRecipesForPlanner,
         //   data: {
-        //     getQuedPlanner: {
-        //       recipes: [...getQuedPlanner.recipes, recipe],
-        //     },
+        //     getQuedPlanner: recipes,
         //   },
         // });
 
@@ -205,29 +212,32 @@ const useAddRecipeToMyPlan = (props: IAddRecipeToPlanHook) => {
           },
         };
         const { getPlannerByDates } = cache.readQuery<any>(GetPlanByWeek);
+        const planners = getPlannerByDates?.planners?.map((plan) => {
+          if (plan.formatedDate === date) {
+            const hasRecipes = plan.recipes.length > 0;
+            return {
+              ...plan,
+              ...(hasRecipes ? {} : { _id: createPlanner?._id }),
+              recipes: [
+                ...plan.recipes,
+                {
+                  __typename: recipe.__typename,
+                  recipeId: recipe.recipeId,
+                  defaultVersion: {
+                    ingredients: recipe.defaultVersion.ingredients,
+                  },
+                },
+              ],
+            };
+          }
+          return plan;
+        });
         cache.writeQuery({
           ...GetPlanByWeek,
           data: {
             getPlannerByDates: {
               ...getPlannerByDates,
-              planners: getPlannerByDates?.planners?.map((plan) => {
-                if (plan.formatedDate === date) {
-                  return {
-                    ...plan,
-                    recipes: [
-                      ...plan.recipes,
-                      {
-                        __typename: recipe.__typename,
-                        recipeId: recipe.recipeId,
-                        defaultVersion: {
-                          ingredients: recipe.defaultVersion.ingredients,
-                        },
-                      },
-                    ],
-                  };
-                }
-                return plan;
-              }),
+              planners,
             },
           },
         });

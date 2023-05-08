@@ -14,8 +14,6 @@ import SkeletonElement from "../../../theme/skeletons/SkeletonElement";
 import RecipeCard from "../../molecules/Card/RecipeCard.component";
 import Icon from "../../atoms/Icon/Icon.component";
 
-import { setRecipeInfo } from "../../../redux/slices/Challenge.slice";
-
 import styles from "./Queue.module.scss";
 import {
   useAddRecipeToMyPlan,
@@ -87,7 +85,6 @@ const PlannerQueue = (props: PlannerPanelProps) => {
 
       {toggler && (
         <div className={styles.action}>
-          {}
           <div ref={ref} style={{ width: "100%" }}>
             <Combobox
               options={categories}

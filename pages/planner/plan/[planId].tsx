@@ -17,7 +17,7 @@ import RXPanel from "../../../component/templates/Panel/RXFacts/RXPanel.componen
 import PlanDiscovery from "../../../component/module/Planner/PlanDiscovery.component";
 import PlanList from "../../../component/module/Planner/PlanByDay.component";
 
-import AContainer from "../../../containers/A.container";
+import Container from "../../../containers/A.container";
 import IconHeading from "../../../theme/iconHeading/iconHeading.component";
 
 import Insights from "../../../component/module/Planner/Insights.component";
@@ -32,7 +32,9 @@ import { startOfWeek, endOfWeek, format } from "date-fns";
 import { useMutation, useQuery } from "@apollo/client";
 import {
   CREATE_PLAN,
+  GET_ALL_PLANS,
   GET_ALL_PLAN_COMMENTS,
+  GET_FEATURED_PLANS,
   GET_PLAN,
   SHARE_PLAN,
 } from "../../../graphql/Planner";
@@ -65,7 +67,10 @@ const MyPlan = () => {
     skip: router.query.planId === "",
   });
 
-  const [createPlan, createState] = useMutation(CREATE_PLAN);
+  const [createPlan, createState] = useMutation(CREATE_PLAN, {
+    refetchQueries: [GET_FEATURED_PLANS, GET_ALL_PLANS],
+  });
+
   const [sharePlan, { data: share }] = useMutation(SHARE_PLAN);
   const [link, setLink] = useState("");
   const [showShare, setShowShare] = useState(false);
@@ -84,7 +89,7 @@ const MyPlan = () => {
       `/planner/plan/?plan=${router.query.planId}&start=${format(
         new Date(start),
         "yyyy-MM-dd",
-      )}&end=${format(new Date(end), "yyyy-MM-dd")}`,
+      )}&end=${format(new Date(end), "yyyy-MM-dd")}&alert=true`,
     );
   };
 
@@ -119,9 +124,28 @@ const MyPlan = () => {
           else {
             return {
               ...plan,
-              recipes: [...plan.recipes, recipe],
+              recipes: [...plan.recipes, { ...recipe, ...recipe?.recipeId }],
             };
           }
+        } else {
+          return plan;
+        }
+      }),
+    );
+  };
+
+  const deleteRecipeFromPlan = (day, recipeId) => {
+    setPlanlist((list) =>
+      list.map((plan) => {
+        if (+day === plan?.day) {
+          console.log(plan, {
+            ...plan,
+            recipes: plan?.recipes.filter((recipe) => recipe?._id !== recipe),
+          });
+          return {
+            ...plan,
+            recipes: plan?.recipes.filter((recipe) => recipe?._id !== recipeId),
+          };
         } else {
           return plan;
         }
@@ -146,11 +170,13 @@ const MyPlan = () => {
       success: "Created a new version of the Plan",
       onSuccess: () => {
         setIsEditMode(false);
+        setPlanlist(plan?.planData);
+        methods.reset(defaultPlan);
       },
     });
-    if (plan?.memberId === userId) {
-    } else {
-    }
+    // if (plan?.memberId === userId) {
+    // } else {
+    // }
   };
 
   const shareHandler = useCallback(async () => {
@@ -177,22 +203,24 @@ const MyPlan = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <AContainer
+    <Container
       headerIcon="/icons/calender__sidebar.svg"
       headerTitle="BLENDING PLAN DETAILS"
-      // showCommentsTray={{
-      //   show: true,
-      //   showPanle: "right",
-      //   showTagByDeafult: false,
-      // }}
+      showCommentsTray={{
+        show: true,
+        showPanle: "right",
+        showTagByDeafult: false,
+      }}
       headTagInfo={{
         title: "Blending plan details",
         description: "blending plans details",
       }}
     >
+      {/* <div> */}
       <CommentDrawer
         id={plan?._id}
         title={plan?.planName}
+        cover={plan?.image?.url}
         comments={comments?.getAllCommentsForAPlan}
         show={showComments}
         onClose={() => setShowComments(false)}
@@ -229,7 +257,7 @@ const MyPlan = () => {
               {isEditMode ? (
                 <PlannerQueue panel="plan" modifyPlan={modifyPlan} />
               ) : (
-                <PlanDiscovery isUpload={false} recipes={allPlannedRecipes} />
+                <PlanDiscovery recipes={allPlannedRecipes} />
               )}
             </div>
             <div className="col-6" style={{ padding: "0 1.5rem" }}>
@@ -247,7 +275,15 @@ const MyPlan = () => {
                     size="small"
                     variant="secondary"
                     className="ml-10"
-                    onClick={() => router.push("/planner/plan")}
+                    onClick={() => {
+                      if (isEditMode) {
+                        setIsEditMode(false);
+                        setPlanlist(plan?.planData);
+                        methods.reset(defaultPlan);
+                      } else {
+                        router.push("/planner/plan");
+                      }
+                    }}
                   />
                 </div>
               </div>
@@ -303,7 +339,12 @@ const MyPlan = () => {
                 </div>
               )}
               <div className={`${styles.plan} ${styles["plan--details"]}`}>
-                <PlanList data={planlist} />
+                <PlanList
+                  data={planlist}
+                  cart={false}
+                  action={false}
+                  onRemove={isEditMode && deleteRecipeFromPlan}
+                />
               </div>
             </div>
             <div className="col-3">
@@ -315,7 +356,7 @@ const MyPlan = () => {
           </div>
         </div>
       </div>
-    </AContainer>
+    </Container>
   );
 };
 

@@ -66,6 +66,8 @@ $sharedBackgroundColor: white;
   &:hover {
     .recipe__tray {
       display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
 

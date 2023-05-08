@@ -41,6 +41,25 @@ const PLANNER_RECIPE_LIST_FIELDS = gql`
   }
 `;
 
+const PLAN_FIELDS = gql`
+  fragment PlanFields on PlansWithTotal {
+    plans {
+      _id
+      planName
+      description
+      startDateString
+      endDateString
+      planCollections
+      commentsCount
+      image {
+        url
+        hash
+      }
+    }
+    totalPlans
+  }
+`;
+
 export const GET_ALL_PLANNER_RECIPES = gql`
   query GetRecipesForPlanner(
     $searchTerm: String!
@@ -90,6 +109,9 @@ export const GET_PLANNER_BY_WEEK = gql`
             name
             recipeBlendCategory {
               name
+            }
+            image {
+              image
             }
           }
           defaultVersion {
@@ -176,49 +198,80 @@ export const CREATE_PLAN = gql`
   }
 `;
 
-export const GET_FEATURED_PLANS = gql`
-  query GetFeaturedPlans($memberId: String!, $limit: Float!) {
-    getAllRecentPlans(limit: $limit, memberId: $memberId) {
-      _id
-      planName
-      description
-      startDateString
-      endDateString
-      planCollections
-      commentsCount
-    }
-    getAllRecommendedPlans(memberId: $memberId, limit: $limit) {
-      _id
-      planName
-      description
-      startDateString
-      endDateString
-      planCollections
-      commentsCount
-    }
-    getAllPopularPlans(memberId: $memberId, limit: $limit) {
-      _id
-      planName
-      description
-      startDateString
-      endDateString
-      planCollections
-      commentsCount
-    }
-  }
-`;
-
 export const GET_ALL_PLANS = gql`
-  query GetAllGlobalPlans($page: Float, $limit: Float, $memberId: String) {
-    getAllGlobalPlans(page: $page, limit: $limit, memberId: $memberId) {
+  query GetAllGlobalPlans(
+    $page: Float
+    $limit: Float
+    $memberId: String
+    $query: String!
+  ) {
+    getAllGlobalPlans(
+      page: $page
+      limit: $limit
+      memberId: $memberId
+      searchTerm: $query
+    ) {
       plans {
         _id
         planName
         description
+        image {
+          url
+          hash
+        }
       }
       totalPlans
     }
   }
+`;
+
+export const GET_FEATURED_PLANS = gql`
+  query GetFeaturedPlans($memberId: String!, $limit: Float!) {
+    getAllRecentPlans(limit: $limit, memberId: $memberId, page: 1) {
+      ...PlanFields
+    }
+    getAllRecommendedPlans(memberId: $memberId, limit: $limit, page: 1) {
+      ...PlanFields
+    }
+    getAllPopularPlans(memberId: $memberId, limit: $limit, page: 1) {
+      ...PlanFields
+    }
+  }
+  ${PLAN_FIELDS}
+`;
+
+export const GET_RECENT_PLANS = gql`
+  query GetRecentPlans($memberId: String!, $limit: Float!, $page: Float!) {
+    result: getAllRecentPlans(limit: $limit, memberId: $memberId, page: $page) {
+      ...PlanFields
+    }
+  }
+  ${PLAN_FIELDS}
+`;
+export const GET_RECCOMENDED_PLANS = gql`
+  query GetReccomendedPlans($memberId: String!, $limit: Float!, $page: Float!) {
+    result: getAllRecommendedPlans(
+      memberId: $memberId
+      limit: $limit
+      page: $page
+    ) {
+      ...PlanFields
+    }
+  }
+  ${PLAN_FIELDS}
+`;
+
+export const GET_POPULAR_PLANS = gql`
+  query GetPopularPlans($memberId: String!, $limit: Float!, $page: Float!) {
+    result: getAllPopularPlans(
+      memberId: $memberId
+      limit: $limit
+      page: $page
+    ) {
+      ...PlanFields
+    }
+  }
+  ${PLAN_FIELDS}
 `;
 
 export const GET_PLAN = gql`
@@ -229,6 +282,9 @@ export const GET_PLAN = gql`
         planName
         description
         memberId
+        image {
+          url
+        }
         planData {
           id: _id
           day

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import { useMutation } from "@apollo/client";
 import {
   faChartSimple,
@@ -35,8 +35,13 @@ interface PlanListProps {
   data?: any[];
   week?: any;
   isWeekFromURL?: boolean;
+  cart?: boolean;
+  action?: boolean;
+  onRemove?: any;
 }
-const PlanList = ({ data, week, isWeekFromURL }: PlanListProps) => {
+
+const PlanList = (props: PlanListProps) => {
+  const { data, week, isWeekFromURL, cart, action, onRemove } = props;
   const [toggleOptionCard, setToggleOptionCard] = useState({});
   return (
     <div className={styles.wrapper}>
@@ -49,10 +54,13 @@ const PlanList = ({ data, week, isWeekFromURL }: PlanListProps) => {
             day={"Day"}
             date={`${index + 1}`}
             week={week}
+            cart={cart}
+            action={action}
             recipeList={planner.recipes}
             isWeekFromURL={isWeekFromURL}
             setToggleOptionCard={setToggleOptionCard}
             toggleOptionCard={toggleOptionCard}
+            onRemove={onRemove}
           />
         );
       })}
@@ -72,11 +80,24 @@ interface PlanProps {
   recipeList?: IPlannerRecipe[];
   isWeekFromURL?: boolean;
   week?: any;
+  cart?: boolean;
+  action?: boolean;
+  onRemove?: any;
 }
 
 const DayPlan = (props: PlanProps) => {
-  const { plannerId, day, date, indexValue, recipeList, week, isWeekFromURL } =
-    props;
+  const {
+    plannerId,
+    day,
+    date,
+    indexValue,
+    recipeList,
+    week,
+    isWeekFromURL,
+    cart,
+    action,
+    onRemove,
+  } = props;
   const dispatch = useAppDispatch();
 
   const copyRecipe = useCopyPlanRecipe(week, isWeekFromURL);
@@ -97,7 +118,11 @@ const DayPlan = (props: PlanProps) => {
         {recipeList?.map((recipe) => (
           <PlanItem
             key={recipe?._id}
+            plannerId={date}
+            cart={cart}
+            action={action}
             recipe={recipe}
+            onRemove={onRemove}
             onDelete={deleteRecipe}
             onCopy={copyRecipe}
             onMove={moveRecipe}
@@ -110,16 +135,25 @@ const DayPlan = (props: PlanProps) => {
 
 interface RecipeColorIndicatorInterface {
   recipe: any;
+  plannerId: string;
   onCopy?: any;
   onMove?: any;
   onDelete?: any;
+  cart?: boolean;
+  action?: boolean;
+  onRemove?: any;
 }
-const PlanItem = ({
-  recipe,
-  onCopy,
-  onMove,
-  onDelete,
-}: RecipeColorIndicatorInterface) => {
+const PlanItem = (props: RecipeColorIndicatorInterface) => {
+  const {
+    recipe,
+    plannerId,
+    onCopy,
+    onMove,
+    onDelete,
+    cart,
+    action,
+    onRemove,
+  } = props;
   let {
     _id,
     name: recipeName,
@@ -165,9 +199,8 @@ const PlanItem = ({
         />
         {recipeName}
       </div>
-
-      <div className={styles.recipe__rxScore}>{rxScore}</div>
-      <div className={styles.recipe__calories}>{calorie}</div>
+      <div className={styles.recipe__rxScore}>{rxScore || 786}</div>
+      <div className={styles.recipe__calories}>{calorie || 54}</div>
       <div className={styles.recipe__tray}>
         <IconButton
           size="medium"
@@ -187,69 +220,87 @@ const PlanItem = ({
             )
           }
         />
-        <IconButton
-          size="medium"
-          variant="hover"
-          fontName={faCartShopping}
-          color="primary"
-          onClick={addToGroceryList}
-        />
-        <IconButton
-          size="medium"
-          variant="hover"
-          fontName={faEllipsisVertical}
-          color="primary"
-          onClick={() => setShowMenu((prev) => !prev)}
-        />
-      </div>
-
-      <div
-        className={styles.recipe__optionTray}
-        style={showMenu ? { display: "block", zIndex: "1" } : { zIndex: "-1" }}
-      >
-        <div className={styles.recipe__optionTray__pointingDiv} />
-        <div className={styles.option} onClick={() => onDelete(_id)}>
-          <span>Remove</span>
-          <span className={styles.option__icon}>
-            <Icon fontName={faTrash} size="1.5rem" />
-          </span>
-        </div>
-        <div
-          className={styles.option}
-          onClick={() => {
-            setShowCalender("copy");
-            setShowMenu(false);
-          }}
-        >
-          <span>Copy</span>
-          <span className={styles.option__icon}>
-            <Icon fontName={faClone} size="1.5rem" />
-          </span>
-        </div>
-        <div
-          className={styles.option}
-          onClick={() => {
-            setShowCalender("move");
-            setShowMenu(false);
-          }}
-        >
-          <span>Move</span>
-          <span className={styles.option__icon}>
-            <Icon fontName={faUpDownLeftRight} size="1.5rem" />
-          </span>
-        </div>
-      </div>
-      {showCalender !== "" && (
-        <div className={styles.calender}>
-          <CalendarTray
-            handler={(date) => {
-              showCalender === "copy"
-                ? onCopy(date, recipe)
-                : onMove(date, recipe);
-              setShowCalender("");
-            }}
+        {cart && (
+          <IconButton
+            size="medium"
+            variant="hover"
+            fontName={faCartShopping}
+            color="primary"
+            onClick={addToGroceryList}
           />
-        </div>
+        )}
+        {onRemove && (
+          <IconButton
+            size="medium"
+            variant="hover"
+            fontName={faTrash}
+            color="primary"
+            onClick={() => onRemove(plannerId, _id)}
+          />
+        )}
+        {action && (
+          <IconButton
+            size="medium"
+            variant="hover"
+            fontName={faEllipsisVertical}
+            color="primary"
+            onClick={() => setShowMenu((prev) => !prev)}
+          />
+        )}
+      </div>
+      {action && (
+        <Fragment>
+          <div
+            className={styles.recipe__optionTray}
+            style={
+              showMenu ? { display: "block", zIndex: "1" } : { zIndex: "-1" }
+            }
+          >
+            <div className={styles.recipe__optionTray__pointingDiv} />
+            <div className={styles.option} onClick={() => onDelete(_id)}>
+              <span>Remove</span>
+              <span className={styles.option__icon}>
+                <Icon fontName={faTrash} size="1.5rem" />
+              </span>
+            </div>
+            <div
+              className={styles.option}
+              onClick={() => {
+                setShowCalender("copy");
+                setShowMenu(false);
+              }}
+            >
+              <span>Copy</span>
+              <span className={styles.option__icon}>
+                <Icon fontName={faClone} size="1.5rem" />
+              </span>
+            </div>
+            <div
+              className={styles.option}
+              onClick={() => {
+                setShowCalender("move");
+                setShowMenu(false);
+              }}
+            >
+              <span>Move</span>
+              <span className={styles.option__icon}>
+                <Icon fontName={faUpDownLeftRight} size="1.5rem" />
+              </span>
+            </div>
+          </div>
+          {showCalender !== "" && (
+            <div className={styles.calender}>
+              <CalendarTray
+                handler={(date) => {
+                  showCalender === "copy"
+                    ? onCopy(date, recipe)
+                    : onMove(date, recipe);
+                  setShowCalender("");
+                }}
+              />
+            </div>
+          )}
+        </Fragment>
       )}
     </div>
   );
