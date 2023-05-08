@@ -23,6 +23,12 @@ const PlanList = ({ data, week, isWeekFromURL }: PlanListProps) => {
           const days = new Date(planner?.date);
           dayName = format(days, "eee") || "UND";
           day = format(days, "d") || "0";
+          console.log({
+            "Day of week (formatting)": format(days, "E"),
+            "ISO day of week (formatting)": format(days, "iii"),
+            "Local day of week (formatting)": format(days, "eee"),
+            "Local day of week (stand-alone)": format(days, "ccc"),
+          });
         }
         return (
           <MealCalendarDatePlan
