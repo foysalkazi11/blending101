@@ -31,9 +31,6 @@ export interface RecipeType {
   allRecipes?: boolean;
   myRecipes?: boolean;
   versionCount: number;
-  calorie: number;
-  netCarbs: number;
-  rxScore: number;
 }
 
 export interface RecipeBrandType {
@@ -63,6 +60,12 @@ export interface DefaultVersion {
   _id: string;
   ingredients?: Ingredient[];
   description?: string;
+  calorie?: {
+    value: number;
+  };
+  gigl?: {
+    netCarbs: number;
+  };
 }
 
 export interface Ingredient {

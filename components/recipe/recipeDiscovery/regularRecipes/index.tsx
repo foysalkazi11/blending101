@@ -210,6 +210,8 @@ export const ShowRecipes = ({
                 postfixTitle = "",
                 ingredients,
                 description = "",
+                calorie: { value: calorieValue },
+                gigl: { netCarbs },
               },
               isMatch = false,
               allRecipes = false,
@@ -218,9 +220,6 @@ export const ShowRecipes = ({
               addedToCompare = false,
               userCollections = [],
               versionCount = 0,
-              calorie,
-              netCarbs,
-              rxScore,
             } = item;
             const ing = joniIngredients(ingredients);
             return (
@@ -235,10 +234,14 @@ export const ShowRecipes = ({
                   ratings={averageRating}
                   noOfRatings={numberOfRating}
                   carbs={netCarbs}
-                  score={rxScore}
-                  calorie={calorie}
+                  // score={rxScore}
+                  calorie={calorieValue}
                   noOfComments={numberOfRating}
-                  image={image.find((img) => img?.default)?.image || ""}
+                  image={
+                    image.find((img) => img?.default)?.image ||
+                    image?.[0]?.image ||
+                    ""
+                  }
                   recipeId={_id}
                   notes={notes}
                   addedToCompare={addedToCompare}

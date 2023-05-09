@@ -7,7 +7,6 @@ const GET_ALL_COMMENTS_FOR_A_RECIPE = gql`
         _id
         comment
         createdAt
-        rating
         updatedAt
         userId {
           _id

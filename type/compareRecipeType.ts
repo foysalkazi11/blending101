@@ -4,7 +4,7 @@ import {
   VersionDataType,
   Image,
 } from "./recipeDetailsType";
-import { RecipeCreatorInfo } from "./recipeType";
+import { RecipeBrandType, RecipeCreatorInfo } from "./recipeType";
 
 export interface CompareRecipeType {
   addedToCompare: boolean;
@@ -35,5 +35,6 @@ export interface CompareRecipeType {
     servings: number;
     originalVersion: VersionDataType;
     token: string;
+    brand?: RecipeBrandType;
   };
 }

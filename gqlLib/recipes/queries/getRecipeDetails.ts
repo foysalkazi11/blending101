@@ -138,6 +138,7 @@ const GET_A_RECIPE = gql`
       notes
       userCollections
       versionsCount
+      personalRating
     }
   }
 `;
