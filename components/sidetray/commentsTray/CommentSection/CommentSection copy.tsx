@@ -117,7 +117,7 @@ const CommentSection = ({
           variables: {
             data: {
               comment: comment,
-              rating: rating || 1,
+              // rating: rating || 1,
               recipeId: activeRecipeId,
               userId: dbUser?._id,
             },
@@ -136,7 +136,7 @@ const CommentSection = ({
               recipeId: activeRecipeId,
               userId: dbUser?._id,
               editableObject: {
-                rating: rating,
+                // rating: rating,
                 comment: comment,
               },
             },

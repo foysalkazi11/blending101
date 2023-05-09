@@ -6,7 +6,6 @@ const EDIT_COMMENT = gql`
       comments {
         _id
         comment
-        rating
         createdAt
         updatedAt
         userId {
