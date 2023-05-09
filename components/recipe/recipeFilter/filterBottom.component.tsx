@@ -239,6 +239,12 @@ function FilterPageBottom({ allFilters = [] }: Props) {
             <ul className={styles.mainDiv__results__body__ul}>
               {allFilterRecipe?.length
                 ? allFilterRecipe?.map((item, index) => {
+                    const {
+                      defaultVersion: {
+                        calorie: { value: calorieValue },
+                        gigl: { netCarbs },
+                      },
+                    } = item;
                     let ingredients = [];
                     item?.ingredients?.forEach((ing) => {
                       const ingredient = ing?.ingredientId?.ingredientName;
@@ -257,12 +263,13 @@ function FilterPageBottom({ allFilters = [] }: Props) {
                             category={item.recipeBlendCategory?.name}
                             ratings={item?.averageRating}
                             noOfRatings={item?.numberOfRating}
-                            carbs={item.netCarbs}
-                            score={item.rxScore}
-                            calorie={item.calorie}
+                            carbs={netCarbs}
+                            // score={item.rxScore}
+                            calorie={calorieValue}
                             noOfComments={item?.numberOfRating}
                             image={
                               item.image?.find((img) => img?.default)?.image ||
+                              item?.image?.[0]?.image ||
                               ""
                             }
                             recipeId={item?._id}

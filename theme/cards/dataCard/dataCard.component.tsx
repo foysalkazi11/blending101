@@ -92,7 +92,7 @@ export default function DatacardComponent({
   ratings,
   noOfRatings = 0,
   carbs = 0,
-  score = 0,
+  score = 100,
   calorie = 0,
   noOfComments = 0,
   image = "/cards/juice.png",

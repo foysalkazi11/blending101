@@ -47,6 +47,12 @@ const GET_SINGLE_COLLECTION = gql`
           recipeId
           recipeInstructions
           servingSize
+          calorie {
+            value
+          }
+          gigl {
+            netCarbs
+          }
           ingredients {
             ingredientId {
               ingredientName
