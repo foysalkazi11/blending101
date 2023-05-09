@@ -1,8 +1,6 @@
 import router from "next/router";
 import React, { useEffect, useRef, useState } from "react";
-import DatacardComponent from "../../../../theme/cards/dataCard/dataCard.component";
 import ContentTray from "../ContentTray/ContentTray.component";
-
 import styles from "../recipeDiscovery.module.scss";
 import HTML from "./html";
 

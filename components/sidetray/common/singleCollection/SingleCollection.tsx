@@ -16,6 +16,7 @@ import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoa
 import Tooltip from "../../../../theme/toolTip/CustomToolTip";
 import useHover from "../../../utility/useHover";
 import styles from "./SingleMenu.module.scss";
+import Image from "next/image";
 
 interface IndividualCollectionType {
   name?: string;
@@ -100,6 +101,8 @@ const SingleCollection = ({
   canContribute,
   route = "",
 }: IndividualCollectionType) => {
+  console.log(image);
+
   const [hoverRef, isHovered] = useHover();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -135,12 +138,19 @@ const SingleCollection = ({
           }
         >
           <div className={styles.img}>
-            <div
+            <img
+              className={styles.abs}
+              src={image}
+              alt="col_img"
+              width={47}
+              height={47}
+            />
+            {/* <div
               className={styles.abs}
               style={{
                 backgroundImage: `url(${image})`,
               }}
-            ></div>
+            ></div> */}
           </div>
           <p>{name}</p>
           {isShared && (

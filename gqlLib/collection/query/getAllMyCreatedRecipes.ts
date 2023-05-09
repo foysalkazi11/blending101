@@ -10,9 +10,6 @@ const GET_ALL_MY_CREATED_RECIPES = gql`
       notes
       userCollections
       versionCount
-      calorie
-      netCarbs
-      rxScore
       defaultVersion {
         _id
         description
@@ -20,6 +17,12 @@ const GET_ALL_MY_CREATED_RECIPES = gql`
         recipeId
         recipeInstructions
         servingSize
+        calorie {
+          value
+        }
+        gigl {
+          netCarbs
+        }
         ingredients {
           ingredientId {
             ingredientName

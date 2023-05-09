@@ -190,6 +190,8 @@ const ShowRecipeContainer = ({
                       postfixTitle = "",
                       ingredients,
                       description = "",
+                      calorie: { value: calorieValue = 0 },
+                      gigl: { netCarbs = 0 },
                     },
                     isMatch = false,
                     allRecipes = false,
@@ -198,9 +200,6 @@ const ShowRecipeContainer = ({
                     addedToCompare = false,
                     userCollections = [],
                     versionCount = 0,
-                    calorie = 0,
-                    netCarbs = 0,
-                    rxScore = 0,
                   } = item;
                   const ing = joniIngredients(ingredients);
                   return (
@@ -212,8 +211,8 @@ const ShowRecipeContainer = ({
                       ratings={averageRating}
                       noOfRatings={numberOfRating}
                       carbs={netCarbs}
-                      score={rxScore}
-                      calorie={calorie}
+                      // score={rxScore}
+                      calorie={calorieValue}
                       noOfComments={numberOfRating}
                       image={image?.find((img) => img?.default)?.image || ""}
                       recipeId={_id}
