@@ -6,7 +6,6 @@ const DELETE_COMMENT = gql`
       comments {
         _id
         comment
-        rating
         createdAt
         updatedAt
         userId {

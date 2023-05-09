@@ -280,6 +280,7 @@ function FilterPageBottom({ allFilters = [] }: Props) {
                             isMatch={item?.isMatch}
                             postfixTitle={item?.defaultVersion?.postfixTitle}
                             recipeVersion={item?.versionCount}
+                            personalRating={item?.personalRating}
                           />
                         </div>
                       </li>

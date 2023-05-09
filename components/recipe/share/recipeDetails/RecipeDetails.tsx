@@ -184,6 +184,7 @@ const RecipeDetails = ({
           brand={recipe?.recipeId?.brand}
           calorie={recipe?.defaultVersion?.calorie?.value}
           carbs={recipe?.defaultVersion?.gigl?.netCarbs}
+          personalRating={recipe?.personalRating}
         />
         <div className={`${styles.dividerBox}`}>
           <SectionTitleWithIcon
