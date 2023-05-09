@@ -445,9 +445,11 @@ export default function DatacardComponent({
         </div>
         <div className={styles.datacard__body__middle}>
           <div className={styles.datacard__body__middle__left}>
-            <div
+            <img
               className={styles.image}
-              style={{ backgroundImage: `url(${image})` }}
+              // style={{ backgroundImage: `url(${image})` }}
+              src={image || "/cards/coriander.png"}
+              alt="recipe_img"
             >
               {isImageOverlay ? (
                 <div className={styles.imageOverlay}>
@@ -458,7 +460,7 @@ export default function DatacardComponent({
                   />
                 </div>
               ) : null}
-            </div>
+            </img>
           </div>
           <div className={styles.datacard__body__middle__right}>
             <DataBody />
