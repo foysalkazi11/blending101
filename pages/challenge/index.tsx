@@ -40,22 +40,14 @@ import styles from "../../styles/pages/planner.module.scss";
 import { format } from "date-fns";
 
 const ChallengePage = () => {
-  const upload = useRef<{ onChallengePost: any }>();
+  const upload = useRef<any>();
+  const center = useRef<HTMLDivElement>(null);
   const settings = useRef<{ onChallengeSave: any }>();
   const [showGroceryTray] = useState(true);
   const [showShare, setShowShare] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-
-  const left = useRef<HTMLDivElement>(null);
-  const center = useRef<HTMLDivElement>(null);
-  const right = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (center.current) {
-      console.log(center.current.offsetHeight);
-    }
-  }, []);
+  const [panelHeight, setPanelHeight] = useState("100%");
 
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
@@ -72,11 +64,22 @@ const ChallengePage = () => {
   const { challenge, viewOnly } = useThirtyDayChallenge();
   const { url, progress, onShare } = useChallengeShare(challenge);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (!showSettings) {
+      const height = center.current.offsetHeight;
+      setPanelHeight(`${height}px`);
+    } else {
+      setPanelHeight("900px");
+    }
+  });
+
   let toolbox = null;
   if (showUpload)
     toolbox = (
       <UploadCard
         ref={upload}
+        elementRef={center}
         startDate={challenge?.challengeInfo?.startDate}
         endDate={challenge?.challengeInfo?.endDate}
       />
@@ -85,6 +88,8 @@ const ChallengePage = () => {
     toolbox = (
       <Settings
         ref={settings}
+        elementRef={center}
+        height={panelHeight}
         showFormState={[showForm, setShowForm]}
         currentChallenge={challenge?.challengeInfo?.challengeId}
         challenges={challenges}
@@ -120,9 +125,15 @@ const ChallengePage = () => {
         <div className="row mt-20">
           <div className="col-3">
             {showUpload ? (
-              <ChallengeQueue challenges={challenge?.challenge} />
+              <ChallengeQueue
+                height={panelHeight}
+                challenges={challenge?.challenge}
+              />
             ) : (
-              <ChallengePost challenges={challenge?.challenge} />
+              <ChallengePost
+                height={panelHeight}
+                challenges={challenge?.challenge}
+              />
             )}
           </div>
           <div className="col-6">
@@ -268,7 +279,10 @@ const ChallengePage = () => {
             </div>
           </div>
           <div className="col-3">
-            <Statistics statistics={challenge?.challengeInfo} />
+            <Statistics
+              height={panelHeight}
+              statistics={challenge?.challengeInfo}
+            />
           </div>
         </div>
       </div>

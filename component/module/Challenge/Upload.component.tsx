@@ -51,7 +51,7 @@ import {
 import { addDays, format, isToday, isTomorrow, isYesterday } from "date-fns";
 
 const UploadCard = forwardRef((props: any, ref) => {
-  const { startDate, endDate } = props;
+  const { startDate, endDate, elementRef } = props;
   const { images, setImages, postImages: uploadImages } = useImage([]);
   const [serving, setServing] = useState(1);
 
@@ -122,7 +122,7 @@ const UploadCard = forwardRef((props: any, ref) => {
   };
 
   return (
-    <div className={styles.mainContainer}>
+    <div className={styles.mainContainer} ref={elementRef}>
       <FormProvider {...methods}>
         <div className="row mt-20">
           <div className="col-4">

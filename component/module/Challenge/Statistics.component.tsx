@@ -34,12 +34,12 @@ const useStatistics = (statistics) => {
   return { leaderboard, rxScore, topIngredients };
 };
 
-const Statistics = ({ statistics }) => {
+const Statistics = ({ statistics, height }) => {
   const { leaderboard, rxScore, topIngredients } = useStatistics(statistics);
   return (
     <div className={styles.statistics}>
       <IconHeading icon={faLightbulbOn} title={"Challenge Stats"} />
-      <div className={styles.statistics__body}>
+      <div className={styles.statistics__body} style={{ height }}>
         <Leaderboard
           leaderboard={leaderboard}
           myScore={statistics?.blendScore}
@@ -59,7 +59,7 @@ const Leaderboard = ({ leaderboard, myScore }) => {
     return leaderboard.some((leader) => leader.id === userId);
   }, [leaderboard, userId]);
   return (
-    <div className="mb-50">
+    <div>
       <div className={styles.statistics__graph}>
         <h3>Leaderboard</h3>
         <ul className={styles.leaderboard}>

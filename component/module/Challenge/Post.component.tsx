@@ -66,18 +66,18 @@ interface IChallengePosts {
 }
 
 interface ChallengePanelProps {
+  height?: string;
   challenges: any[];
 }
 
 const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
-  const { challenges } = props;
+  const { height, challenges } = props;
 
   const dispatch = useAppDispatch();
   const activeDate = useAppSelector((state) => state.challenge.activeDate);
   const panelList = useAppSelector((state) => state.ui.panel);
   const panel = panelList.find((panel) => panel.name === "RXPanel");
 
-  const blendContainer = useRef<HTMLDivElement>(null);
   const blends = useRef<HTMLDivElement[]>([]);
   const lastPostChartId = useRef("");
   const [showChart, setShowChart] = useState("");
@@ -248,7 +248,7 @@ const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
         title={"Challenge Post"}
         iconStyle={{ fontSize: "18px" }}
       />
-      <div className={styles.card__wrapper} ref={blendContainer}>
+      <div style={{ maxHeight: height }} className={styles.card__wrapper}>
         {challengePosts.reverse()}
       </div>
     </Fragment>

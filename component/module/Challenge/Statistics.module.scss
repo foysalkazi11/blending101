@@ -8,6 +8,9 @@
     padding: 3rem 2rem;
     background-color: white;
     border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
   }
 
   &__graph {

@@ -50,11 +50,20 @@ interface SettingsProps {
   showFormState: [boolean, any];
   currentChallenge: string;
   challenges: any;
+  elementRef?: any;
+  height?: string;
   hideSettings: () => void;
 }
 
 const Settings = forwardRef((props: SettingsProps, ref) => {
-  const { showFormState, currentChallenge, hideSettings, challenges } = props;
+  const {
+    showFormState,
+    currentChallenge,
+    hideSettings,
+    challenges,
+    elementRef,
+    height,
+  } = props;
   const [showForm, setShowForm] = showFormState;
   const [challenge, setChallenge] = useState<any>(null);
 
@@ -67,7 +76,7 @@ const Settings = forwardRef((props: SettingsProps, ref) => {
   );
 
   return (
-    <div className={styles.settings}>
+    <div ref={elementRef} className={styles.settings} style={{ height }}>
       <div>
         {showForm ? (
           <ChallengeForm

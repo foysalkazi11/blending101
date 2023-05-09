@@ -19,7 +19,7 @@ interface RxScoreProps {
 const RxScore = (props: RxScoreProps) => {
   const [type, setType] = useState<"Weekly" | "Monthly">("Weekly");
   return (
-    <div className="mb-50">
+    <div>
       <div className={styles.insights__graph}>
         <h3 className="mb-20">RX Score</h3>
         <div className={styles.stacked__outline}>

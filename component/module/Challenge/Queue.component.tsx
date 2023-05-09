@@ -23,9 +23,9 @@ import {
 
 interface ChallengeQueueProps {
   challenges: any;
+  height: string;
 }
 const ChallengeQueue = (props: ChallengeQueueProps) => {
-  console.log(props);
   const [toggler, setToggler] = useState(true);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
@@ -99,6 +99,11 @@ const ChallengeQueue = (props: ChallengeQueueProps) => {
         className={`${styles.wrapper} ${
           styles[toggler ? "wrapper--discover" : "wrapper--queue"]
         }`}
+        style={{
+          maxHeight: toggler
+            ? `calc(${props.height} - 111px)`
+            : `calc(${props.height} - 51px)`,
+        }}
         ref={parentRef}
       >
         {toggler ? (
