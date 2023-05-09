@@ -15,6 +15,7 @@ export interface CompareRecipeType {
   isMatch: boolean;
   myRecipes: boolean;
   versionCount: number;
+  personalRating?: number;
   recipeId: {
     _id: string;
     userId: RecipeCreatorInfo;

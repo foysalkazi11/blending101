@@ -68,7 +68,11 @@ export default function RecipeCommentsTray({
         image={currentRecipeInfo?.image}
         title={currentRecipeInfo?.name}
       />
-      {toggle === 0 ? <CommentSection /> : <NoteSection />}
+      {toggle === 0 ? (
+        <CommentSection personalRating={currentRecipeInfo?.personalRating} />
+      ) : (
+        <NoteSection />
+      )}
     </TrayWrapper>
   );
 }

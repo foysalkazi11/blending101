@@ -24,6 +24,7 @@ import ErrorPage from "../pages/404Page";
 import BlogCard from "../pages/blog/blogCard";
 import styles from "./index.module.scss";
 import ShareItems from "./ShareItems";
+import { RecipeType } from "../../type/recipeType";
 
 interface Props {
   data: any[];
@@ -172,7 +173,7 @@ const ShowRecipeContainer = ({
           <>
             <div className={styles.showRecipes}>
               {showItems === "recipe" &&
-                containerData?.map((item, index) => {
+                containerData?.map((item: RecipeType, index) => {
                   const {
                     recipeId: {
                       _id = "",
@@ -183,7 +184,7 @@ const ShowRecipeContainer = ({
                       averageRating = 0,
                       recipeBlendCategory,
                       userId,
-                      brand = {},
+                      brand,
                     },
                     defaultVersion: {
                       _id: defaultVersionId = "",
@@ -200,6 +201,7 @@ const ShowRecipeContainer = ({
                     addedToCompare = false,
                     userCollections = [],
                     versionCount = 0,
+                    personalRating,
                   } = item;
                   const ing = joniIngredients(ingredients);
                   return (
@@ -231,6 +233,7 @@ const ShowRecipeContainer = ({
                       token={item?.token}
                       updateDataFunc={updateContainerData}
                       brand={brand}
+                      personalRating={personalRating}
                     />
                   );
                 })}
