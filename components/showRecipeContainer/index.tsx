@@ -24,7 +24,10 @@ import ErrorPage from "../pages/404Page";
 import BlogCard from "../pages/blog/blogCard";
 import styles from "./index.module.scss";
 import ShareItems from "./ShareItems";
-import { RecipeType } from "../../type/recipeType";
+import {
+  RecipeType,
+  ReferenceOfRecipeUpdateFuncType,
+} from "../../type/recipeType";
 
 interface Props {
   data: any[];
@@ -94,11 +97,17 @@ const ShowRecipeContainer = ({
     }
   };
 
-  const updateContainerData = useCallback(
-    (id: string, updateObj: { [key: string]: any }) => {
+  const updateContainerData = useCallback<ReferenceOfRecipeUpdateFuncType>(
+    (id, updateObj, innerLabel) => {
       setContainerData((prev) =>
         prev.map((item) =>
-          item?.recipeId?._id === id ? { ...item, ...updateObj } : item,
+          item?.recipeId?._id === id
+            ? {
+                ...item,
+                ...updateObj,
+                [innerLabel]: { ...item[innerLabel], ...updateObj },
+              }
+            : item,
         ),
       );
     },

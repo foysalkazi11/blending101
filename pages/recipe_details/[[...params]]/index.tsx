@@ -29,7 +29,6 @@ const Index = () => {
 
   const {
     handleToGetARecipe,
-    data: getARecipeData,
     loading: getARecipeLoading,
     error: getARecipeError,
   } = useToGetARecipe();

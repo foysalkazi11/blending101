@@ -1,15 +1,12 @@
 import { useLazyQuery } from "@apollo/client";
-import { useRouter } from "next/router";
 import notification from "../components/utility/reactToastifyNotification";
 import GET_A_RECIPE from "../gqlLib/recipes/queries/getRecipeDetails";
 import { useAppDispatch } from "../redux/hooks";
 import { setDetailsARecipe } from "../redux/slices/recipeSlice";
 import { setOpenVersionTray } from "../redux/slices/versionTraySlice";
 import { RecipeDetailsType } from "../type/recipeDetailsType";
-import { RecipeVersionType } from "../type/recipeVersionType";
 
 const useToGetARecipe = () => {
-  const router = useRouter();
   const dispatch = useAppDispatch();
   const [getARecipe, { ...rest }] = useLazyQuery(GET_A_RECIPE, {
     fetchPolicy: "cache-and-network",
