@@ -217,7 +217,7 @@ const FloodingMenuTwo = ({
   };
   // handle turn of and off version
 
-  const handleToChangeDefault = (
+  const handleToChangeDefault = async (
     versionId: string,
     isShareAble: boolean,
     isDefault: boolean,
@@ -231,7 +231,7 @@ const FloodingMenuTwo = ({
           "Not allow to make default as it's turn off version !!!",
         );
       } else {
-        handleToUpdateDefaultVersion(
+        await handleToUpdateDefaultVersion(
           userId,
           detailsARecipe?.recipeId?._id,
           versionId,
