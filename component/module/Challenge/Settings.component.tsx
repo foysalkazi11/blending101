@@ -90,6 +90,7 @@ const Settings = forwardRef((props: SettingsProps, ref) => {
           <ChallengeForm
             ref={ref}
             challenge={challenge}
+            setChallenge={setChallenge}
             setShowForm={setShowForm}
           />
         ) : (
@@ -277,127 +278,130 @@ const ChallengeList = ({ currentChallenge, challenges, editFormHandler }) => {
 const defaultValues = {
   challengeName: "",
   startDate: format(new Date(), "yyyy-MM-dd"),
-  endDate: "",
+  endDate: format(new Date(), "yyyy-MM-dd"),
   description: "",
   notification: false,
 };
 
-const ChallengeForm = forwardRef(({ setShowForm, challenge }: any, ref) => {
-  const [days, setDays] = useState(1);
-  const [isEditMode, setIsEditMode] = useState(false);
-  const methods = useForm({
-    defaultValues: useMemo(() => defaultValues, []),
-  });
-
-  const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
-
-  const [addChallenge, addState] = useAddChallenge(memberId);
-  const [editChallenge, editState] = useEditChallenge(memberId);
-
-  useEffect(() => {
-    if (challenge) {
-      const { challengeName, description, endDate, startDate, notification } =
-        challenge;
-      methods.reset({
-        challengeName,
-        startDate,
-        endDate,
-        description,
-        notification,
-      });
-      setIsEditMode(true);
-    }
-  }, [challenge, methods]);
-
-  const handleSubmit = async (data) => {
-    const challengeData = {
-      data: {
-        memberId,
-        ...data,
-        days: days,
-        startDate: data.startDate,
-        endDate: data.endDate,
-      },
-    };
-    if (isEditMode) challengeData.data.challengeId = challenge._id;
-
-    await Publish({
-      mutate: isEditMode ? editChallenge : addChallenge,
-      variables: challengeData,
-      state: isEditMode ? editState : addState,
-      success: `${isEditMode ? "Edited" : "Created"} Challenge Successfully`,
-      onSuccess: () => {
-        methods.reset(defaultValues);
-        setShowForm(false);
-        setDays(0);
-      },
+const ChallengeForm = forwardRef(
+  ({ setShowForm, challenge, setChallenge }: any, ref) => {
+    const [days, setDays] = useState(1);
+    const [isEditMode, setIsEditMode] = useState(false);
+    const methods = useForm({
+      defaultValues: useMemo(() => defaultValues, []),
     });
-  };
 
-  useImperativeHandle(ref, () => ({
-    onChallengeSave() {
-      methods.handleSubmit(handleSubmit)();
-    },
-  }));
+    const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
-  return (
-    <div className={styles.settings}>
-      <div className={styles.settings__header}>
-        <h2 className={styles.settings__title}>
-          <IconButton
-            size="medium"
-            variant="white"
-            className="mr-20"
-            fontName={faChevronLeft}
-            onClick={() => {
-              setShowForm(false);
-              methods.reset(defaultValues);
-            }}
-          />
-          Add Challenge
-        </h2>
+    const [addChallenge, addState] = useAddChallenge(memberId);
+    const [editChallenge, editState] = useEditChallenge(memberId);
+
+    useEffect(() => {
+      if (challenge) {
+        const {
+          challengeName,
+          description,
+          endDate,
+          startDate,
+          notification,
+          days,
+        } = challenge;
+        methods.reset({
+          challengeName,
+          startDate,
+          endDate,
+          description,
+          notification,
+        });
+        setDays(days);
+        setIsEditMode(true);
+      }
+    }, [challenge, methods]);
+
+    const resetForm = () => {
+      methods.reset(defaultValues);
+      setShowForm(false);
+      setDays(1);
+      setChallenge(null);
+    };
+
+    const handleSubmit = async (data) => {
+      const challengeData = {
+        data: {
+          memberId,
+          ...data,
+          days: days,
+          startDate: data.startDate,
+          endDate: data.endDate,
+        },
+      };
+      if (isEditMode) challengeData.data.challengeId = challenge._id;
+
+      await Publish({
+        mutate: isEditMode ? editChallenge : addChallenge,
+        variables: challengeData,
+        state: isEditMode ? editState : addState,
+        success: `${isEditMode ? "Edited" : "Created"} Challenge Successfully`,
+        onSuccess: () => {
+          resetForm();
+        },
+      });
+    };
+
+    useImperativeHandle(ref, () => ({
+      onChallengeSave() {
+        methods.handleSubmit(handleSubmit)();
+      },
+      onSettingsClose() {
+        resetForm();
+      },
+    }));
+
+    return (
+      <div className={styles.settings}>
+        <div className={styles.settings__header}>
+          <h2 className={styles.settings__title}>
+            <IconButton
+              size="medium"
+              variant="white"
+              className="mr-20"
+              fontName={faChevronLeft}
+              onClick={resetForm}
+            />
+            {challenge ? "Edit" : "Add"} Challenge
+          </h2>
+        </div>
+        <div>
+          <FormProvider {...methods}>
+            <div className="row">
+              <div className="col-12 mb-30">
+                <Textfield label="Challenge Name" name="challengeName" />
+              </div>
+            </div>
+            <ChallengeDate dayState={[days, setDays]} />
+            <div className="row mb-10">
+              <div className="col-12">
+                <Textarea
+                  name="description"
+                  label="Description"
+                  className={styles.textarea}
+                />
+              </div>
+            </div>
+            <div className="row mb-20">
+              <div className="col-12">
+                <Checkbox label="Receive Notifications" name="notification" />
+              </div>
+            </div>
+          </FormProvider>
+        </div>
       </div>
-      <div>
-        <FormProvider {...methods}>
-          <div className="row">
-            <div className="col-12 mb-30">
-              <Textfield label="Challenge Name" name="challengeName" />
-            </div>
-          </div>
-          <ChallengeDate dayState={[days, setDays]} />
-          <div className="row mb-10">
-            <div className="col-12">
-              <Textarea
-                name="description"
-                label="Description"
-                className={styles.textarea}
-              />
-            </div>
-          </div>
-          <div className="row mb-20">
-            <div className="col-12">
-              <Checkbox label="Receive Notifications" name="notification" />
-            </div>
-          </div>
-          {/* <div className="row">
-            <div className="col-12">
-              <ButtonComponent
-                value="Save"
-                type="primary"
-                style={{ height: "45px", margin: "auto" }}
-                onClick={methods.handleSubmit(handleSubmit)}
-              />
-            </div>
-          </div> */}
-        </FormProvider>
-      </div>
-    </div>
-  );
-});
+    );
+  },
+);
 ChallengeForm.displayName = "Challenge Form";
 
 const ChallengeDate = ({ dayState }) => {
-  const hasDaysBeenSet = useRef(false);
   const [days, setDays] = dayState;
   const { control, setValue } = useFormContext();
 

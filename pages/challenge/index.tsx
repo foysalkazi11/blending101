@@ -42,7 +42,7 @@ import { format } from "date-fns";
 const ChallengePage = () => {
   const upload = useRef<any>();
   const center = useRef<HTMLDivElement>(null);
-  const settings = useRef<{ onChallengeSave: any }>();
+  const settings = useRef<{ onChallengeSave: any; onSettingsClose: any }>();
   const [showGroceryTray] = useState(true);
   const [showShare, setShowShare] = useState(false);
   const [showForm, setShowForm] = useState(false);
@@ -255,9 +255,14 @@ const ChallengePage = () => {
                       variant="secondary"
                       fontName={faTimes}
                       onClick={() => {
-                        setShowSettings(false);
-                        dispatch(setShowPostForm(false));
-                        dispatch(resetForm());
+                        if (showUpload) {
+                          dispatch(setShowPostForm(false));
+                          dispatch(resetForm());
+                        }
+                        if (showSettings) {
+                          setShowSettings(false);
+                          settings.current?.onSettingsClose();
+                        }
                       }}
                     />
                   </div>
