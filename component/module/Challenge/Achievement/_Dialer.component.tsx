@@ -16,6 +16,7 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import styles from "./_Dialer.module.scss";
 import "react-datepicker/dist/react-datepicker.css";
 import Tooltip from "../../../../theme/toolTip/CustomToolTip";
+import { UTCDate } from "../../../../helpers/Date";
 
 interface MainInterface {
   canUpload: boolean;
@@ -30,9 +31,9 @@ function Main({ canUpload, activities, statistics }: MainInterface) {
 
   const dispatch = useAppDispatch();
   const activeDate = useAppSelector((state) => state.challenge.activeDate);
-  const today = new Date(activeDate !== "" ? activeDate : new Date());
-  const begin = statistics?.startDate ? new Date(statistics?.startDate) : today;
-  const end = statistics?.endDate ? new Date(statistics?.endDate) : today;
+  const today = activeDate !== "" ? UTCDate(activeDate) : new Date();
+  const begin = statistics?.startDate ? UTCDate(statistics?.startDate) : today;
+  const end = statistics?.endDate ? UTCDate(statistics?.endDate) : today;
   const hasChallengeEnded = isAfter(today, end);
 
   const onDateDblClick = (date) => {
@@ -141,7 +142,7 @@ function Main({ canUpload, activities, statistics }: MainInterface) {
               isActive={
                 activeDate !== ""
                   ? activity?.date === activeDate
-                  : isToday(new Date(activity?.date))
+                  : isToday(UTCDate(activity?.date))
               }
               onDateDblClick={onDateDblClick}
             />
@@ -180,7 +181,7 @@ const DateSelector = (props: DateSelectorProps) => {
 
   return (
     <DatePicker
-      selected={activeDate ? new Date(activeDate) : new Date()}
+      selected={activeDate ? UTCDate(activeDate) : new Date()}
       minDate={startDate}
       maxDate={endDate}
       onChange={dateHandler}
@@ -197,7 +198,7 @@ function DateButton({
   disabled,
   onDateDblClick,
 }: any) {
-  const days = new Date(date);
+  const days = UTCDate(date);
   const day = format(days, "d");
   const dayOfWeek = format(days, "eeee");
   const dayName = format(days, "MMM");

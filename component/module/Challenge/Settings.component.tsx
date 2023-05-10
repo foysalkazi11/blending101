@@ -33,7 +33,14 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import Publish from "../../../helpers/Publish";
 
 import styles from "./Settings.module.scss";
-import { addDays, differenceInDays, format, isBefore, isPast } from "date-fns";
+import {
+  addDays,
+  differenceInDays,
+  format,
+  isBefore,
+  isPast,
+  subDays,
+} from "date-fns";
 import RadioButton from "../../organisms/Forms/RadioButton.component";
 import { setChallengeDate } from "../../../redux/slices/Challenge.slice";
 import Invite from "../../organisms/Share/Invite.component";
@@ -45,6 +52,7 @@ import {
   useEditChallenge,
 } from "../../../hooks/modules/Challenge/useChallengeList";
 import { useRouter } from "next/router";
+import { UTCDate } from "../../../helpers/Date";
 
 interface SettingsProps {
   showFormState: [boolean, any];
@@ -89,7 +97,6 @@ const Settings = forwardRef((props: SettingsProps, ref) => {
             currentChallenge={currentChallenge}
             challenges={challenges}
             editFormHandler={editFormHandler}
-            hideSettings={hideSettings}
           />
         )}
       </div>
@@ -99,12 +106,7 @@ const Settings = forwardRef((props: SettingsProps, ref) => {
 
 Settings.displayName = "Settings";
 
-const ChallengeList = ({
-  currentChallenge,
-  challenges,
-  editFormHandler,
-  hideSettings,
-}) => {
+const ChallengeList = ({ currentChallenge, challenges, editFormHandler }) => {
   const router = useRouter();
   const [show, setShow] = useState(false);
   const [activeId, setActiveId] = useState("");
@@ -202,7 +204,7 @@ const ChallengeList = ({
           <div className="col-2">&nbsp;</div>
         </div>
         {challenges?.getMyChallengeList?.map((challenge) => {
-          const canShareWithOthers = isPast(new Date(challenge.startDate));
+          const canShareWithOthers = isPast(UTCDate(challenge.startDate));
           return (
             <div className={`row ${styles.challenge}`} key={challenge._id}>
               <div className="col-1">
@@ -225,7 +227,7 @@ const ChallengeList = ({
                 <div
                   className={styles.challenge__name}
                   style={
-                    isPast(new Date(challenge.endDate))
+                    isPast(UTCDate(challenge.endDate))
                       ? { backgroundColor: "#eee", color: "#333" }
                       : {}
                   }
@@ -281,7 +283,7 @@ const defaultValues = {
 };
 
 const ChallengeForm = forwardRef(({ setShowForm, challenge }: any, ref) => {
-  const [days, setDays] = useState(0);
+  const [days, setDays] = useState(1);
   const [isEditMode, setIsEditMode] = useState(false);
   const methods = useForm({
     defaultValues: useMemo(() => defaultValues, []),
@@ -342,7 +344,6 @@ const ChallengeForm = forwardRef(({ setShowForm, challenge }: any, ref) => {
     <div className={styles.settings}>
       <div className={styles.settings__header}>
         <h2 className={styles.settings__title}>
-          {" "}
           <IconButton
             size="medium"
             variant="white"
@@ -350,6 +351,7 @@ const ChallengeForm = forwardRef(({ setShowForm, challenge }: any, ref) => {
             fontName={faChevronLeft}
             onClick={() => {
               setShowForm(false);
+              methods.reset(defaultValues);
             }}
           />
           Add Challenge
@@ -409,44 +411,80 @@ const ChallengeDate = ({ dayState }) => {
     name: "endDate",
   });
 
-  const endDays = (e) => {
+  const daysHandler = (e) => {
     if (startDate) {
       setValue(
         "endDate",
-        format(addDays(new Date(startDate), e.target.value), "yyyy-MM-dd"),
+        format(addDays(UTCDate(startDate), +e.target.value - 1), "yyyy-MM-dd"),
       );
     }
   };
 
-  // Resetting days value
-  useEffect(() => {
-    if (hasDaysBeenSet.current) return;
-    // No End Date selected
-    if (!endDate) return setDays(0);
-    // End Date < Start Date
-    if (isBefore(new Date(endDate), new Date(startDate))) {
-      setValue("endDate", "");
-      setDays(0);
-      return;
+  const startDateHandler = (e) => {
+    const difference = differenceInDays(
+      UTCDate(endDate),
+      UTCDate(e.target.value),
+    );
+    if (difference < 0) return;
+    setValue("startDate", e.target.value);
+    if (endDate) {
+      // If enddate is given on change of startDate only day needs to be changed even if day already exists
+      setDays(difference + 1);
+    } else if (days && !endDate) {
+      // If only days is given, endDate is not provided
+      setValue(
+        "endDate",
+        format(addDays(UTCDate(e.target.value), days), "yyyy-MM-dd"),
+      );
     }
-    setDays(differenceInDays(new Date(endDate), new Date(startDate)));
-    hasDaysBeenSet.current = true;
-  }, [endDate, setDays, setValue, startDate]);
+  };
+
+  const endDateHandler = (e) => {
+    const difference = differenceInDays(
+      UTCDate(e.target.value),
+      UTCDate(startDate),
+    );
+    if (difference < 0) return;
+    setValue("endDate", e.target.value);
+    if (startDate) {
+      // If startDate is given on change of endDate only day needs to be changed even if day already exists
+      setDays(difference + 1);
+    } else if (days && !startDate) {
+      // If only days is given, startDate is not provided
+      setValue(
+        "startDate",
+        format(subDays(UTCDate(e.target.value), days), "yyyy-MM-dd"),
+      );
+    }
+  };
 
   return (
     <div className="row mb-30">
       <div className="col-5">
-        <Textfield label="Start Date" name="startDate" type="date" />
+        <Textfield
+          label="Start Date"
+          name="startDate"
+          type="date"
+          value={startDate}
+          onChange={startDateHandler}
+        />
       </div>
       <div className="col-2">
         <NumberField
           label="End Day"
+          minValue={1}
           valueState={[days, setDays]}
-          onChange={endDays}
+          onChange={daysHandler}
         />
       </div>
       <div className="col-5">
-        <Textfield label="End Date" name="endDate" type="date" />
+        <Textfield
+          label="End Date"
+          name="endDate"
+          type="date"
+          value={endDate}
+          onChange={endDateHandler}
+        />
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import MealCalendarDatePlan from "./_DayPlan.component";
 
 import styles from "./index.module.scss";
+import { UTCDate } from "../../../../helpers/Date";
 
 interface PlanListProps {
   data?: any[];
@@ -20,15 +21,9 @@ const PlanList = ({ data, week, isWeekFromURL }: PlanListProps) => {
           dayName = "Day";
           day = index + 1;
         } else if (planner?.date) {
-          const days = new Date(planner?.date);
+          const days = UTCDate(planner?.date);
           dayName = format(days, "eee") || "UND";
           day = format(days, "d") || "0";
-          console.log({
-            "Day of week (formatting)": format(days, "E"),
-            "ISO day of week (formatting)": format(days, "iii"),
-            "Local day of week (formatting)": format(days, "eee"),
-            "Local day of week (stand-alone)": format(days, "ccc"),
-          });
         }
         return (
           <MealCalendarDatePlan

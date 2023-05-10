@@ -1,3 +1,8 @@
+export const UTCDate = (date) => {
+  const parts = date.split("-");
+  return new Date(parts[0], parts[1] - 1, parts[2]);
+};
+
 export const getDateOnly = (date: Date) => {
   const d = new Date();
   let diff = d.getTimezoneOffset();
