@@ -12,8 +12,8 @@ export interface RecipeType {
   _id: string;
   url: null;
   favicon: null;
-  averageRating: number;
-  numberOfRating: number;
+  averageRating?: number;
+  numberOfRating?: number;
   ingredients: Ingredient[];
   notes: number;
   addedToCompare: boolean;
@@ -31,9 +31,7 @@ export interface RecipeType {
   allRecipes?: boolean;
   myRecipes?: boolean;
   versionCount: number;
-  calorie: number;
-  netCarbs: number;
-  rxScore: number;
+  personalRating?: number;
 }
 
 export interface RecipeBrandType {
@@ -63,6 +61,12 @@ export interface DefaultVersion {
   _id: string;
   ingredients?: Ingredient[];
   description?: string;
+  calorie?: {
+    value: number;
+  };
+  gigl?: {
+    netCarbs: number;
+  };
 }
 
 export interface Ingredient {
@@ -81,4 +85,5 @@ export interface RecipeBlendCategory {
 export type ReferenceOfRecipeUpdateFuncType = (
   id: string,
   obj: { [key: string]: any },
+  innerLabel?: "defaultVersion" | "recipeId",
 ) => void;

@@ -16,7 +16,11 @@ import AppdownLoadCard from "../AppdownLoadCard/AppdownLoadCard.component";
 import ContentTray from "../ContentTray/ContentTray.component";
 import styles from "../recipeDiscovery.module.scss";
 
-type UpdateRecipeFunc = (id: string, obj: object) => void;
+type UpdateRecipeFunc = (
+  id: string,
+  obj: object,
+  innerLabel?: "defaultVersion" | "recipeId",
+) => void;
 const defaultHeadingContent = {
   heading: "Recommended",
   image: "/images/thumbs-up.svg",
@@ -62,7 +66,7 @@ const RegularRecipes = ({
   });
 
   const updateRecipe: UpdateRecipeFunc = useCallback(
-    (id = "", obj = {}) => {
+    (id = "", obj = {}, innerLabel) => {
       // update apollo client cache
 
       client.writeQuery({
@@ -71,7 +75,13 @@ const RegularRecipes = ({
         data: {
           getAllrecomendedRecipes2:
             recommendedRecipesData?.getAllrecomendedRecipes2?.map((recipe) =>
-              recipe?.recipeId?._id === id ? { ...recipe, ...obj } : recipe,
+              recipe?.recipeId?._id === id
+                ? {
+                    ...recipe,
+                    ...obj,
+                    [innerLabel]: { ...recipe[innerLabel], ...obj },
+                  }
+                : recipe,
             ),
         },
       });
@@ -81,7 +91,13 @@ const RegularRecipes = ({
         data: {
           getAllpopularRecipes2: popularRecipesData?.getAllpopularRecipes2?.map(
             (recipe) =>
-              recipe?.recipeId?._id === id ? { ...recipe, ...obj } : recipe,
+              recipe?.recipeId?._id === id
+                ? {
+                    ...recipe,
+                    ...obj,
+                    [innerLabel]: { ...recipe[innerLabel], ...obj },
+                  }
+                : recipe,
           ),
         },
       });
@@ -91,7 +107,13 @@ const RegularRecipes = ({
         data: {
           getAllLatestRecipes2: latestRecipesData?.getAllLatestRecipes2?.map(
             (recipe) =>
-              recipe?.recipeId?._id === id ? { ...recipe, ...obj } : recipe,
+              recipe?.recipeId?._id === id
+                ? {
+                    ...recipe,
+                    ...obj,
+                    [innerLabel]: { ...recipe[innerLabel], ...obj },
+                  }
+                : recipe,
           ),
         },
       });
@@ -210,6 +232,8 @@ export const ShowRecipes = ({
                 postfixTitle = "",
                 ingredients,
                 description = "",
+                calorie: { value: calorieValue },
+                gigl: { netCarbs },
               },
               isMatch = false,
               allRecipes = false,
@@ -218,9 +242,7 @@ export const ShowRecipes = ({
               addedToCompare = false,
               userCollections = [],
               versionCount = 0,
-              calorie,
-              netCarbs,
-              rxScore,
+              personalRating = 0,
             } = item;
             const ing = joniIngredients(ingredients);
             return (
@@ -235,10 +257,14 @@ export const ShowRecipes = ({
                   ratings={averageRating}
                   noOfRatings={numberOfRating}
                   carbs={netCarbs}
-                  score={rxScore}
-                  calorie={calorie}
+                  // score={rxScore}
+                  calorie={calorieValue}
                   noOfComments={numberOfRating}
-                  image={image.find((img) => img?.default)?.image || ""}
+                  image={
+                    image.find((img) => img?.default)?.image ||
+                    image?.[0]?.image ||
+                    ""
+                  }
                   recipeId={_id}
                   notes={notes}
                   addedToCompare={addedToCompare}
@@ -255,6 +281,7 @@ export const ShowRecipes = ({
                   token={item?.token}
                   updateDataFunc={updateDataFunc}
                   brand={brand}
+                  personalRating={personalRating}
                 />
               </div>
             );

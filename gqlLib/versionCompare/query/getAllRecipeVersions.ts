@@ -41,6 +41,12 @@ const GET_ALL_RECIPE_VERSION = gql`
           recipeInstructions
           recipeId
           selectedImage
+          calorie {
+            value
+          }
+          gigl {
+            netCarbs
+          }
           ingredients {
             ingredientId {
               ingredientName
@@ -72,6 +78,12 @@ const GET_ALL_RECIPE_VERSION = gql`
         recipeInstructions
         servingSize
         selectedImage
+        calorie {
+          value
+        }
+        gigl {
+          netCarbs
+        }
         ingredients {
           ingredientId {
             ingredientName
@@ -102,6 +114,12 @@ const GET_ALL_RECIPE_VERSION = gql`
         recipeInstructions
         servingSize
         selectedImage
+        calorie {
+          value
+        }
+        gigl {
+          netCarbs
+        }
         ingredients {
           ingredientId {
             ingredientName
@@ -131,6 +149,7 @@ const GET_ALL_RECIPE_VERSION = gql`
       notes
       userCollections
       versionsCount
+      personalRating
       turnedOnVersions {
         _id
         description
@@ -139,6 +158,12 @@ const GET_ALL_RECIPE_VERSION = gql`
         recipeInstructions
         servingSize
         selectedImage
+        calorie {
+          value
+        }
+        gigl {
+          netCarbs
+        }
         ingredients {
           ingredientId {
             ingredientName

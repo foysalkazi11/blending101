@@ -46,6 +46,12 @@ const FILTER_RECIPE = gql`
             }
           }
           description
+          calorie {
+            value
+          }
+          gigl {
+            netCarbs
+          }
         }
         isMatch
         allRecipes
@@ -54,9 +60,7 @@ const FILTER_RECIPE = gql`
         addedToCompare
         userCollections
         versionCount
-        calorie
-        netCarbs
-        rxScore
+        personalRating
       }
     }
   }

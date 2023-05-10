@@ -24,6 +24,7 @@ import ErrorPage from "../pages/404Page";
 import BlogCard from "../pages/blog/blogCard";
 import styles from "./index.module.scss";
 import ShareItems from "./ShareItems";
+import { RecipeType } from "../../type/recipeType";
 
 interface Props {
   data: any[];
@@ -172,7 +173,7 @@ const ShowRecipeContainer = ({
           <>
             <div className={styles.showRecipes}>
               {showItems === "recipe" &&
-                containerData?.map((item, index) => {
+                containerData?.map((item: RecipeType, index) => {
                   const {
                     recipeId: {
                       _id = "",
@@ -183,13 +184,15 @@ const ShowRecipeContainer = ({
                       averageRating = 0,
                       recipeBlendCategory,
                       userId,
-                      brand = {},
+                      brand,
                     },
                     defaultVersion: {
                       _id: defaultVersionId = "",
                       postfixTitle = "",
                       ingredients,
                       description = "",
+                      calorie: { value: calorieValue = 0 },
+                      gigl: { netCarbs = 0 },
                     },
                     isMatch = false,
                     allRecipes = false,
@@ -198,9 +201,7 @@ const ShowRecipeContainer = ({
                     addedToCompare = false,
                     userCollections = [],
                     versionCount = 0,
-                    calorie = 0,
-                    netCarbs = 0,
-                    rxScore = 0,
+                    personalRating,
                   } = item;
                   const ing = joniIngredients(ingredients);
                   return (
@@ -212,8 +213,8 @@ const ShowRecipeContainer = ({
                       ratings={averageRating}
                       noOfRatings={numberOfRating}
                       carbs={netCarbs}
-                      score={rxScore}
-                      calorie={calorie}
+                      // score={rxScore}
+                      calorie={calorieValue}
                       noOfComments={numberOfRating}
                       image={image?.find((img) => img?.default)?.image || ""}
                       recipeId={_id}
@@ -232,6 +233,7 @@ const ShowRecipeContainer = ({
                       token={item?.token}
                       updateDataFunc={updateContainerData}
                       brand={brand}
+                      personalRating={personalRating}
                     />
                   );
                 })}

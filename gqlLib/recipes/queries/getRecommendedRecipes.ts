@@ -39,6 +39,12 @@ const GET_ALL_RECOMMENDED_RECIPES = gql`
           }
         }
         description
+        calorie {
+          value
+        }
+        gigl {
+          netCarbs
+        }
       }
       isMatch
       allRecipes
@@ -47,9 +53,7 @@ const GET_ALL_RECOMMENDED_RECIPES = gql`
       addedToCompare
       userCollections
       versionCount
-      calorie
-      netCarbs
-      rxScore
+      personalRating
     }
   }
 `;

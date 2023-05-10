@@ -153,6 +153,7 @@ const RecipeDetails = ({
           image={
             recipe?.defaultVersion?.selectedImage ||
             recipe?.recipeId?.image?.find((img) => img?.default)?.image ||
+            recipe?.recipeId?.image?.[0]?.image ||
             ""
           }
           recipeId={recipe?.recipeId?._id}
@@ -180,6 +181,10 @@ const RecipeDetails = ({
           }
           isVersionSharable={recipe?.defaultVersion?.isVersionSharable}
           defaultVersion={recipe?.defaultVersion}
+          brand={recipe?.recipeId?.brand}
+          calorie={recipe?.defaultVersion?.calorie?.value}
+          carbs={recipe?.defaultVersion?.gigl?.netCarbs}
+          personalRating={recipe?.personalRating}
         />
         <div className={`${styles.dividerBox}`}>
           <SectionTitleWithIcon

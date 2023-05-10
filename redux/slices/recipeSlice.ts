@@ -6,11 +6,17 @@ import {
   ReferenceOfRecipeUpdateFuncType,
 } from "../../type/recipeType";
 
+interface CurrentRecipeInfo {
+  name: string;
+  image: string;
+  personalRating: number;
+}
+
 type recipeSliceState = {
   recommended: RecipeType[];
   popular: RecipeType[];
   latest: RecipeType[];
-  currentRecipeInfo: { name: string; image: string };
+  currentRecipeInfo: CurrentRecipeInfo;
   compareList: CompareRecipeType[];
   detailsARecipe: RecipeDetailsType;
   allFilterRecipe: RecipeType[];
@@ -22,7 +28,7 @@ const initialState: recipeSliceState = {
   latest: [] as RecipeType[],
   popular: [] as RecipeType[],
   recommended: [] as RecipeType[],
-  currentRecipeInfo: { name: "", image: "" },
+  currentRecipeInfo: { name: "", image: "", personalRating: 0 },
   compareList: [],
   detailsARecipe: {} as RecipeDetailsType,
   allFilterRecipe: [] as RecipeType[],
@@ -43,10 +49,7 @@ export const recipeSlice = createSlice({
     setLatest: (state, action: PayloadAction<RecipeType[]>) => {
       state.latest = action?.payload;
     },
-    setCurrentRecipeInfo: (
-      state,
-      action: PayloadAction<{ name: string; image: string }>,
-    ) => {
+    setCurrentRecipeInfo: (state, action: PayloadAction<CurrentRecipeInfo>) => {
       state.currentRecipeInfo = action?.payload;
     },
     setCompareList: (state, action: PayloadAction<CompareRecipeType[]>) => {

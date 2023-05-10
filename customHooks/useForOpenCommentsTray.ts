@@ -19,12 +19,13 @@ const useForOpenCommentsTray = () => {
     image: string,
     e: React.SyntheticEvent,
     updateDataFunc: ReferenceOfRecipeUpdateFuncType = () => {},
+    personalRating: number = 0,
   ) => {
     // HANDLE COMMENTS CLICK
     e?.stopPropagation();
     dispatch(setActiveRecipeId(id));
     dispatch(setOpenCommentsTray(true));
-    dispatch(setCurrentRecipeInfo({ name: title, image }));
+    dispatch(setCurrentRecipeInfo({ name: title, image, personalRating }));
     dispatch(setOpenCollectionsTary(false));
     dispatch(setReferenceOfRecipeUpdateFunc(updateDataFunc));
   };

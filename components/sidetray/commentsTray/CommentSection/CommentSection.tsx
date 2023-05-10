@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { useLazyQuery, useMutation } from "@apollo/client";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import CREATE_NET_COMMENT from "../../../../gqlLib/comments/mutation/createNewComment";
 import DELETE_COMMENT from "../../../../gqlLib/comments/mutation/deleteComment";
 import EDIT_COMMENT from "../../../../gqlLib/comments/mutation/edtiComment";
@@ -20,15 +20,17 @@ import UserRating from "../../common/userRating/UserRating";
 import GET_ALL_COMMENTS_FOR_A_RECIPE from "../../../../gqlLib/comments/query/getAllCommentsForARecipe";
 import CommentsTopSection from "../../common/commentsTopSection/CommentsTopSection";
 import CommentsBottomSection from "../../common/commentsButtomSection/CommentsBottomSection";
+import CHANGE_RECIPE_RATING from "../../../../gqlLib/recipeRating/mutation/changeRecipeRating";
 
 type CommentSectionProps = {
-  allComments: any[];
-  setComments: Dispatch<SetStateAction<any[]>>;
-  userComments: {};
-  setUserComments: Dispatch<SetStateAction<{}>>;
+  // allComments: any[];
+  // setComments: Dispatch<SetStateAction<any[]>>;
+  // userComments: {};
+  // setUserComments: Dispatch<SetStateAction<{}>>;
+  personalRating?: number;
 };
 
-const CommentSection = () => {
+const CommentSection = ({ personalRating }: CommentSectionProps) => {
   const [showCommentBox, setShowCommentBox] = useState(false);
   const [rating, setRating] = useState(0);
   const { dbUser } = useAppSelector((state) => state?.user);
@@ -46,6 +48,7 @@ const CommentSection = () => {
     useAppSelector((state) => state?.recipe);
   const dispatch = useAppDispatch();
   const { openCommentsTray } = useAppSelector((state) => state?.sideTray);
+  const [changeRecipeRating] = useMutation(CHANGE_RECIPE_RATING);
 
   const [
     getAllCommentsForARecipe,
@@ -158,7 +161,7 @@ const CommentSection = () => {
           variables: {
             data: {
               comment: comment,
-              rating: rating || 1,
+              // rating: rating || 1,
               recipeId: activeRecipeId,
               userId: dbUser?._id,
             },
@@ -196,7 +199,7 @@ const CommentSection = () => {
               recipeId: activeRecipeId,
               userId: dbUser?._id,
               editableObject: {
-                rating: rating,
+                // rating: rating,
                 comment: comment,
               },
             },
@@ -246,6 +249,35 @@ const CommentSection = () => {
     setShowCommentBox((pre) => !pre);
   };
 
+  const updatedRating = useCallback(
+    async (newRating: number) => {
+      setRating(newRating);
+      const { data } = await changeRecipeRating({
+        variables: {
+          rating: newRating,
+          recipeId: activeRecipeId,
+          userId: dbUser?._id,
+        },
+      });
+
+      const { averageRating, numberOfRating } = data?.changeRecipeRating;
+      referenceOfRecipeUpdateFunc(
+        activeRecipeId,
+        { averageRating, numberOfRating },
+        "recipeId",
+      );
+    },
+    [
+      activeRecipeId,
+      changeRecipeRating,
+      dbUser?._id,
+      referenceOfRecipeUpdateFunc,
+    ],
+  );
+  useEffect(() => {
+    setRating(personalRating);
+  }, [personalRating]);
+
   useEffect(() => {
     if (openCommentsTray && activeRecipeId) {
       fetchComments();
@@ -257,7 +289,7 @@ const CommentSection = () => {
     <>
       <UserRating
         rating={rating}
-        setRating={setRating}
+        setRating={updatedRating}
         userImage={dbUser?.image}
         userName={
           dbUser?.displayName ||

@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { Dispatch, SetStateAction, useCallback, useMemo } from "react";
 import styles from "./dataCard.module.scss";
-import MoreVertIcon from "../../../public/icons/more_vert_black_36dp.svg";
 import { useRouter } from "next/router";
 import useChangeCompare from "../../../customHooks/useChangeComaper";
 import { MdOutlineEdit } from "react-icons/md";
@@ -83,6 +82,7 @@ interface dataCardInterface {
   isVersionSharable?: boolean;
   defaultVersion?: VersionDataType;
   brand?: RecipeBrandType;
+  personalRating?: number;
 }
 
 export default function DatacardComponent({
@@ -92,7 +92,7 @@ export default function DatacardComponent({
   ratings,
   noOfRatings = 0,
   carbs = 0,
-  score = 0,
+  score = 100,
   calorie = 0,
   noOfComments = 0,
   image = "/cards/juice.png",
@@ -123,6 +123,7 @@ export default function DatacardComponent({
   isVersionSharable = true,
   defaultVersion = {} as VersionDataType,
   brand,
+  personalRating = 0,
 }: dataCardInterface) {
   carbs = Math.round(carbs);
   score = Math.round(score);
@@ -222,7 +223,14 @@ export default function DatacardComponent({
             src={`/icons/${res?.icon}.svg`}
             alt="icon"
             onClick={(e) =>
-              handleOpenCommentsTray(recipeId, title, image, e, updateDataFunc)
+              handleOpenCommentsTray(
+                recipeId,
+                title,
+                image,
+                e,
+                updateDataFunc,
+                personalRating,
+              )
             }
           />{" "}
           <span style={{ color: res?.amount ? "#7cbc39" : "#c4c4c4" }}>
@@ -445,20 +453,23 @@ export default function DatacardComponent({
         </div>
         <div className={styles.datacard__body__middle}>
           <div className={styles.datacard__body__middle__left}>
-            <div
+            <img
               className={styles.image}
-              style={{ backgroundImage: `url(${image})` }}
-            >
-              {isImageOverlay ? (
-                <div className={styles.imageOverlay}>
-                  <img
-                    src="/images/black-add.svg"
-                    alt="add icon"
-                    onClick={() => imageOverlayFunc(image)}
-                  />
-                </div>
-              ) : null}
-            </div>
+              // style={{
+              //   backgroundImage: `url(${image || "/cards/coriander.png"})`,
+              // }}
+              src={image || "/cards/coriander.png"}
+              alt="recipe_img"
+            />
+            {isImageOverlay ? (
+              <div className={styles.imageOverlay}>
+                <img
+                  src="/images/black-add.svg"
+                  alt="add icon"
+                  onClick={() => imageOverlayFunc(image)}
+                />
+              </div>
+            ) : null}
           </div>
           <div className={styles.datacard__body__middle__right}>
             <DataBody />

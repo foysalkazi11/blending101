@@ -57,6 +57,12 @@ export interface VersionDataType {
   selectedImage?: string;
   isVersionSharable?: boolean;
   isDefault?: boolean;
+  calorie?: {
+    value: number;
+  };
+  gigl?: {
+    netCarbs: number;
+  };
 }
 
 export interface RecipeBlendCategory {

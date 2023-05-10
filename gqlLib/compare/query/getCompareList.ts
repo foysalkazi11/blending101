@@ -8,9 +8,7 @@ const GET_COMPARE_LIST = gql`
       notes
       userCollections
       versionCount
-      calorie
-      netCarbs
-      rxScore
+      personalRating
       defaultVersion {
         _id
         description
@@ -18,6 +16,12 @@ const GET_COMPARE_LIST = gql`
         recipeId
         recipeInstructions
         servingSize
+        calorie {
+          value
+        }
+        gigl {
+          netCarbs
+        }
         ingredients {
           ingredientId {
             ingredientName

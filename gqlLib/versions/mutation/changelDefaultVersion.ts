@@ -22,6 +22,33 @@ const CHANGE_DEFAULT_VERSION = gql`
         recipeInstructions
         servingSize
         selectedImage
+        calorie {
+          value
+        }
+        gigl {
+          netCarbs
+        }
+        ingredients {
+          ingredientId {
+            ingredientName
+            _id
+            images
+            featuredImage
+          }
+
+          portions {
+            name
+            gram
+            default
+            quantity
+          }
+          weightInGram
+          selectedPortion {
+            name
+            quantity
+            gram
+          }
+        }
       }
       turnedOnVersions {
         _id
@@ -31,6 +58,33 @@ const CHANGE_DEFAULT_VERSION = gql`
         recipeInstructions
         servingSize
         selectedImage
+        calorie {
+          value
+        }
+        gigl {
+          netCarbs
+        }
+        ingredients {
+          ingredientId {
+            ingredientName
+            _id
+            images
+            featuredImage
+          }
+
+          portions {
+            name
+            gram
+            default
+            quantity
+          }
+          weightInGram
+          selectedPortion {
+            name
+            quantity
+            gram
+          }
+        }
       }
       turnedOffVersions {
         _id
@@ -40,6 +94,33 @@ const CHANGE_DEFAULT_VERSION = gql`
         recipeInstructions
         servingSize
         selectedImage
+        calorie {
+          value
+        }
+        gigl {
+          netCarbs
+        }
+        ingredients {
+          ingredientId {
+            ingredientName
+            _id
+            images
+            featuredImage
+          }
+
+          portions {
+            name
+            gram
+            default
+            quantity
+          }
+          weightInGram
+          selectedPortion {
+            name
+            quantity
+            gram
+          }
+        }
       }
     }
   }
