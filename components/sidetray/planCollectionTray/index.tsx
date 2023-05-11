@@ -26,6 +26,7 @@ import SingleCollection from "../common/singleCollection/SingleCollection";
 import TrayTag from "../TrayTag";
 import TrayWrapper from "../TrayWrapper";
 import styles from "./PlanCollectionTray.module.scss";
+import useToUpdatePlanDetailsField from "../../../customHooks/plan/useToUpdatePlanDetailsField";
 
 interface Props {
   showTagByDefaut?: boolean;
@@ -70,6 +71,7 @@ const PlanCollectionTray = ({ showPanle, showTagByDefaut }: Props) => {
   );
   const dispatch = useAppDispatch();
   const handleUpdatePlanField = useToUpdatePlanField();
+  const handleUpdatePlanDetailsField = useToUpdatePlanDetailsField();
 
   const handleAddOrRemoveBlogFormCollection = async () => {
     try {
@@ -80,12 +82,20 @@ const PlanCollectionTray = ({ showPanle, showTagByDefaut }: Props) => {
           planId: activePlanForCollection.id,
         },
       });
-
-      handleUpdatePlanField(activePlanForCollection.id, {
+      const updateObj = {
         planCollections: activePlanForCollection.collectionIds,
-      });
+      };
+      activePlanForCollection.typeOfPlan === "list"
+        ? handleUpdatePlanField(activePlanForCollection.id, updateObj)
+        : handleUpdatePlanDetailsField(activePlanForCollection.id, updateObj);
 
-      dispatch(setIsActivePlanForCollection({ id: "", collectionIds: [] }));
+      dispatch(
+        setIsActivePlanForCollection({
+          id: "",
+          collectionIds: [],
+          typeOfPlan: "list",
+        }),
+      );
       notification("info", `Collection update successfully`);
       setIsCollectionUpdate(false);
     } catch (error) {
@@ -298,7 +308,13 @@ const PlanCollectionTray = ({ showPanle, showTagByDefaut }: Props) => {
       showTagByDefaut={showTagByDefaut}
       closeTray={() => {
         !isCollectionUpdate &&
-          dispatch(setIsActivePlanForCollection({ id: "", collectionIds: [] }));
+          dispatch(
+            setIsActivePlanForCollection({
+              id: "",
+              collectionIds: [],
+              typeOfPlan: "list",
+            }),
+          );
         dispatch(setIsOpenPlanCollectionTray(!isOpenPlanCollectionTray));
       }}
       openTray={isOpenPlanCollectionTray}

@@ -7,7 +7,6 @@ import React, {
   useState,
 } from "react";
 import styles from "./PlanCard.module.scss";
-import { useRouter } from "next/router";
 import useForOpenCommentsTray from "../../../customHooks/useForOpenCommentsTray";
 import useForSelectCommentsAndNotesIcon from "../../../customHooks/useForSelectCommentsAndNotesIcon";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -19,13 +18,10 @@ import IconWarper from "../../../theme/iconWarper/IconWarper";
 import Icon from "../../atoms/Icon/Icon.component";
 import WeekPicker from "../../molecules/DatePicker/Week.component";
 import { startOfWeek, endOfWeek } from "date-fns";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import {
-  setIsActivePlanForCollection,
-  setIsOpenPlanCollectionTray,
-} from "../../../redux/slices/Planner.slice";
+import { useAppSelector } from "../../../redux/hooks";
 import useToAddPlanToCollection from "../../../customHooks/plan/useToAddPlanToCollection";
 import Link from "next/link";
+import useToOpenPlanCollectionTray from "../../../customHooks/plan/useToOpenPlanCollectionTray";
 
 interface dataCardInterface {
   title?: string;
@@ -96,13 +92,12 @@ function PlanCard({
   image = image || "/images/plan.png";
   ratings = Math.ceil(ratings);
   const menu = useRef<any>();
-  const router = useRouter();
   const handleAddToCollection = useToAddPlanToCollection();
   const handleOpenCommentsTray = useForOpenCommentsTray();
   const selectCommentsAndNotesIcon = useForSelectCommentsAndNotesIcon();
+  const handleOpenCollectionTray = useToOpenPlanCollectionTray();
   const [hoverRef, isHover] = useHover();
   const [week, setWeek] = useState(weekRange);
-  const dispatch = useAppDispatch();
   const memberId = useAppSelector((state) => state?.user?.dbUser?._id || "");
   const handleClick = () => {
     const elem = menu.current;
@@ -161,11 +156,6 @@ function PlanCard({
   };
 
   const weekChangeHandler = (start, end) => {};
-
-  const handleOpenCollectionTray = (id: string, collectionIds: string[]) => {
-    dispatch(setIsActivePlanForCollection({ id, collectionIds }));
-    dispatch(setIsOpenPlanCollectionTray(true));
-  };
 
   return (
     <div className={`${styles.datacard} ${className || ""}`} ref={hoverRef}>
@@ -231,7 +221,11 @@ function PlanCard({
                   onClick={(e) => {
                     e.stopPropagation();
                     isCollectionIds?.length
-                      ? handleOpenCollectionTray(planId, isCollectionIds)
+                      ? handleOpenCollectionTray(
+                          planId,
+                          isCollectionIds,
+                          "list",
+                        )
                       : handleAddToCollection(
                           planId,
                           memberId,
