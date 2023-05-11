@@ -21,11 +21,7 @@ import { Debounce } from "../../helpers/Utilities";
 const PlanDiscovery = () => {
   const router = useRouter();
   const query = router.query.query;
-
-  console.log(query);
-
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
-
   const dispatch = useAppDispatch();
   const { lastModifiedPlanCollection } = useAppSelector(
     (state) => state?.planner,
