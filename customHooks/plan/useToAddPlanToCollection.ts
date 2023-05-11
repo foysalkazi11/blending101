@@ -7,10 +7,12 @@ import {
   updateLastModifiedPlanCollection,
 } from "../../redux/slices/Planner.slice";
 import useToUpdatePlanField from "./useToUpdatePlanField";
+import useToUpdatePlanDetailsField from "./useToUpdatePlanDetailsField";
 
 const useToAddPlanToCollection = () => {
   const dispatch = useAppDispatch();
   const handleUpdatePlanField = useToUpdatePlanField();
+  const handleUpdatePlanDetailsField = useToUpdatePlanDetailsField();
   let timeOut;
   const [addToBlogCollection] = useMutation(
     ADD_TO_LAST_MODIFIED_PLAN_COLLECTION,
@@ -20,6 +22,7 @@ const useToAddPlanToCollection = () => {
     planId: string = "",
     memberId: string = "",
     setOpenLastModifiedBlogCollectionModal: (arg: boolean) => void = () => {},
+    typeOfPlan: "list" | "details" = "list",
   ) => {
     try {
       const {
@@ -38,11 +41,15 @@ const useToAddPlanToCollection = () => {
         setIsActivePlanForCollection({
           id: planId,
           collectionIds: [addToLastModifiedPlanCollection?._id],
+          typeOfPlan,
         }),
       );
-      handleUpdatePlanField(planId, {
+      const updateObj = {
         planCollections: [addToLastModifiedPlanCollection?._id],
-      });
+      };
+      typeOfPlan === "list"
+        ? handleUpdatePlanField(planId, updateObj)
+        : handleUpdatePlanDetailsField(planId, updateObj);
       setOpenLastModifiedBlogCollectionModal(true);
       timeOut = setTimeout(() => {
         setOpenLastModifiedBlogCollectionModal(false);
