@@ -34,8 +34,9 @@ import { VersionAddDataType } from "../../../type/versionAddDataType";
 const EditRecipeComponent = () => {
   const router = useRouter();
   const { params = [] } = router.query;
-  const recipeId = params?.[0] || "";
+  const recipeId = params?.[0] || (router.query?.recipeId as string);
   const versionId = params?.[1] || "";
+  console.log("index page", params, router.query);
   const dispatch = useAppDispatch();
   const [newVersionInfo, setNewVersionInfo] = useState<VersionAddDataType>(
     {} as VersionAddDataType,
@@ -275,7 +276,11 @@ const EditRecipeComponent = () => {
     ingredientCategoryData?.filterIngredientByCategoryAndClass?.forEach(
       (elem) => {
         if (defaultIngredientIds?.includes(elem._id)) {
-          presentIngredient.push({ ...elem, ...findIngredient(elem._id) });
+          presentIngredient.push({
+            ...elem,
+            ...findIngredient(elem._id),
+            ingredientStatus: "ok",
+          });
         }
       },
     );
@@ -318,6 +323,7 @@ const EditRecipeComponent = () => {
       selectedIngredientsList,
       nutritionState,
       SetcalculateIngOz,
+      false,
     );
   }, [selectedIngredientsList, nutritionState]);
 

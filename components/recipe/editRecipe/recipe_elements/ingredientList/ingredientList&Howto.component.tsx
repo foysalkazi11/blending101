@@ -19,6 +19,7 @@ import { MdOutlineDelete, MdOutlineInfo } from "react-icons/md";
 import { BiBarChart } from "react-icons/bi";
 import useGetDefaultPortionOfnutration from "../../../../../customHooks/useGetDefaultPortionOfNutration";
 import IngredientSection from "../../../../../component/module/Recipe/Ingredient.module";
+import { IngredientAddingType } from "../../../../../type/recipeEditType";
 
 type IngredientListPorps = {
   recipeInstructions?: string[];
@@ -27,6 +28,7 @@ type IngredientListPorps = {
   nutritionState: object;
   setNutritionState: any;
   calculatedIngOz?: number;
+  ingredientAddingType?: IngredientAddingType;
 };
 
 const IngredientList = ({
@@ -36,6 +38,7 @@ const IngredientList = ({
   nutritionState,
   setNutritionState,
   calculatedIngOz = 0,
+  ingredientAddingType = "parsing",
 }: IngredientListPorps) => {
   const dispatch = useAppDispatch();
 
@@ -171,6 +174,7 @@ const IngredientList = ({
         setIngredientId={setIngredientId}
         removeIngredient={removeIngredient}
         recipeIngredientsOnKeyDown={recipeIngredientsOnKeyDown}
+        ingredientAddingType={ingredientAddingType}
       />
       <div className={styles.how__to}>
         <h4 className={styles.how__to__heading}>
