@@ -163,20 +163,31 @@ const MyPlan = () => {
         recipes: plan.recipes.map((recipe) => recipe._id),
       })),
     };
-    await Publish({
-      mutate: createPlan,
-      state: createState,
-      variables: { data: planData },
-      success: "Created a new version of the Plan",
-      onSuccess: () => {
-        setIsEditMode(false);
-        setPlanlist(plan?.planData);
-        methods.reset(defaultPlan);
-      },
-    });
-    // if (plan?.memberId === userId) {
-    // } else {
-    // }
+    if (plan?.memberId === userId) {
+      await Publish({
+        mutate: createPlan,
+        state: createState,
+        variables: { data: planData },
+        success: "Edited the Plan",
+        onSuccess: () => {
+          setIsEditMode(false);
+          setPlanlist(plan?.planData);
+          methods.reset(defaultPlan);
+        },
+      });
+    } else {
+      await Publish({
+        mutate: createPlan,
+        state: createState,
+        variables: { data: planData },
+        success: "Created a new version of the Plan",
+        onSuccess: () => {
+          setIsEditMode(false);
+          setPlanlist(plan?.planData);
+          methods.reset(defaultPlan);
+        },
+      });
+    }
   };
 
   const shareHandler = useCallback(async () => {
@@ -262,7 +273,10 @@ const MyPlan = () => {
             </div>
             <div className="col-6" style={{ padding: "0 1.5rem" }}>
               <div className={styles.headingDiv}>
-                <IconHeading title="My Plan" icon={faCalendarDays} />
+                <IconHeading
+                  title={isEditMode ? "Edit Plan" : "Plan"}
+                  icon={faCalendarDays}
+                />
                 <div className="flex ai-center">
                   <div
                     className={`${styles.uploadDiv} ${styles.uploadDiv__save}`}

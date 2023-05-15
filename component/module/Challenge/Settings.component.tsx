@@ -64,14 +64,8 @@ interface SettingsProps {
 }
 
 const Settings = forwardRef((props: SettingsProps, ref) => {
-  const {
-    showFormState,
-    currentChallenge,
-    hideSettings,
-    challenges,
-    elementRef,
-    height,
-  } = props;
+  const { showFormState, currentChallenge, challenges, elementRef, height } =
+    props;
   const [showForm, setShowForm] = showFormState;
   const [challenge, setChallenge] = useState<any>(null);
 
