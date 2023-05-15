@@ -32,7 +32,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Provider store={store}>
           <AuthProvider>
             <Loader />
-            <ToastContainer />
+            <ToastContainer limit={3}/>
             {/* @ts-ignore */}
             <FeedbackImport
               //@ts-ignore

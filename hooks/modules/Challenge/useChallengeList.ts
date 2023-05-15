@@ -39,10 +39,17 @@ const useEditChallenge = (userId) => {
         },
       };
       const { getMyChallengeList } = cache.readQuery<any>(definition);
+      console.log(editUserChallenge, getMyChallengeList);
       cache.writeQuery({
         ...definition,
         data: {
-          getMyChallengeList: getMyChallengeList.concat(editUserChallenge),
+          getMyChallengeList: getMyChallengeList.map((challenge) => {
+            if (challenge?._id === editUserChallenge?._id) {
+              return editUserChallenge;
+            } else {
+              return challenge;
+            }
+          }),
         },
       });
     },

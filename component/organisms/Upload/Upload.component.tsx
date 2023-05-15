@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useRef } from "react";
 import { faPlus, faTimes } from "@fortawesome/pro-light-svg-icons";
 import { useDropzone } from "react-dropzone";
 import styles from "./Upload.module.scss";
@@ -28,6 +28,7 @@ const Upload = (props: UploadProps) => {
     size,
   } = props;
 
+  const fileInput = useRef<HTMLInputElement>(null);
   const [images, setImages] = imageState;
   let featuredImage: string, setFeaturedImage: any;
   if (featuredState) {
@@ -42,6 +43,7 @@ const Upload = (props: UploadProps) => {
         const file = files[i];
         setImages((images) => images.concat(file));
       }
+      fileInput.current.value = "";
     },
     [setImages],
   );
@@ -73,7 +75,6 @@ const Upload = (props: UploadProps) => {
       sizeClass = "";
       break;
   }
-  console.log(images);
   return (
     <div className={className ? className : ""}>
       {label && (
@@ -95,18 +96,17 @@ const Upload = (props: UploadProps) => {
         {images.map((img, idx) => {
           const isFileType = !img.hasOwnProperty("url");
           const src = isFileType ? URL.createObjectURL(img) : img?.url;
-
           return (
-            <figure key={src + idx}>
+            <figure key={idx}>
               <button
                 type="button"
                 className={styles["remove-image"]}
                 onClick={(e) => {
                   const newImages = images.filter((image) => {
                     if (image.hasOwnProperty("url")) {
-                      console.log(image, img?.url);
                       return image?.url !== img?.url;
                     } else {
+                      URL.revokeObjectURL(src);
                       return (
                         image.name + image.lastModified !==
                         img?.name + img?.lastModified
@@ -141,6 +141,7 @@ const Upload = (props: UploadProps) => {
             <label className={styles["add-new-image"]}>
               <Icon fontName={faPlus} size="3.5rem" />
               <input
+                ref={fileInput}
                 type="file"
                 onChange={(e) => {
                   addImageHandler(e);

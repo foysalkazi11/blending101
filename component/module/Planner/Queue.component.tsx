@@ -69,7 +69,7 @@ const PlannerQueue = (props: PlannerPanelProps) => {
     <Fragment>
       <IconHeading
         icon={faCalendarAlt}
-        title="Recipe Queue"
+        title={`Recipe ${toggler ? "Discovery" : "Queue"}`}
         iconStyle={{ fontSize: "18px" }}
       />
       <ToggleCard
