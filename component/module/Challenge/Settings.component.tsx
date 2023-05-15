@@ -399,6 +399,7 @@ const ChallengeDate = ({ dayState }) => {
   const [days, setDays] = dayState;
   const { control, setValue } = useFormContext();
 
+  //@ts-ignore
   const startDate = useWatch({
     control,
     name: "startDate",
