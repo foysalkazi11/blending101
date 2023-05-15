@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import SlickSlider from "../../../../theme/carousel/carousel.component";
 import styles from "./Center.module.scss";
 import { MdOutlineInfo } from "react-icons/md";
@@ -30,6 +30,7 @@ import Share from "../../../../component/organisms/Share/Distribute.component";
 import ShareRecipe from "./shareRecipe";
 import { setDetailsARecipe } from "../../../../redux/slices/recipeSlice";
 import HowTo from "./howTo/HowTo";
+import { ReferenceOfRecipeUpdateFuncType } from "../../../../type/recipeType";
 
 interface center {
   recipeData: RecipeDetailsType;
@@ -92,14 +93,18 @@ const Center = ({
     }
   };
 
-  const updateCollection = (id, obj) => {
-    dispatch(
-      setDetailsARecipe({
-        ...detailsARecipe,
-        ...obj,
-      }),
-    );
-  };
+  const updateCollection = useCallback<ReferenceOfRecipeUpdateFuncType>(
+    (id, obj, innerLabel) => {
+      dispatch(
+        setDetailsARecipe({
+          ...detailsARecipe,
+          ...obj,
+          [innerLabel]: { ...detailsARecipe[innerLabel], ...obj },
+        }),
+      );
+    },
+    [detailsARecipe, dispatch],
+  );
 
   const addToCollection = async (id: string, e: React.SyntheticEvent) => {
     setShowCollectionModal(true);
@@ -113,7 +118,15 @@ const Center = ({
     const defaultImage = recipeData?.recipeId?.image?.find(
       (img) => img?.default,
     )?.image;
-    handleOpenCommentsTray(recipeId, title, defaultImage, e, updateCollection);
+
+    handleOpenCommentsTray(
+      recipeId,
+      title,
+      defaultImage,
+      e,
+      updateCollection,
+      detailsARecipe?.personalRating,
+    );
   };
 
   const hangleShowCommentsAndNotesIcon = () => {
@@ -129,7 +142,14 @@ const Center = ({
       <IconWithText
         wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
         handleClick={(e) =>
-          handleOpenCommentsTray(recipeId, title, defaultImage, e)
+          handleOpenCommentsTray(
+            recipeId,
+            title,
+            defaultImage,
+            e,
+            updateCollection,
+            detailsARecipe?.personalRating,
+          )
         }
         icon={`/icons/${commentsAndNotes?.icon}.svg`}
         text={commentsAndNotes?.amount}
@@ -168,7 +188,7 @@ const Center = ({
               onClick={(e) => openCommentsTray(e)}
             >
               <img src="/images/rating.svg" alt="" />
-              {recipeData.recipeId?.averageRating} (
+              {Math.round(recipeData.recipeId?.averageRating)} (
               {recipeData?.recipeId?.numberOfRating})
             </span>
           ) : null}
