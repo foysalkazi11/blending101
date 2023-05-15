@@ -181,11 +181,11 @@ const IngredientSection = (props) => {
                               <li
                                 {...provided.draggableProps}
                                 ref={provided.innerRef}
-                                className={`${
-                                  (elem?.ingredientStatus === "partial_ok" ||
-                                    elem?.ingredientStatus === "not_ok") &&
-                                  classes.ingredients__partial_ok
-                                }`}
+                                // className={`${
+                                //   (elem?.ingredientStatus === "partial_ok" ||
+                                //     elem?.ingredientStatus === "not_ok") &&
+                                //   classes.ingredients__partial_ok
+                                // }`}
                               >
                                 <div className={classes.ingredients__item}>
                                   <div
@@ -269,14 +269,20 @@ const ParseIngredient = (props) => {
 
   // add new ingredient to ingredient list
   const addNewIngredientToIngredientList = (ing) => {
-    const isIngredientExist = selectedIngredientsList?.find(
-      (item) => item?._id === ing?._id,
-    );
-    if (isIngredientExist) {
-      notification("warning", "Ingredient already exist !!!");
-      return;
+    let isIngredientExistIndex = 0;
+    const isIngredientExist = selectedIngredientsList?.find((item, index) => {
+      if (item?._id === ing?._id) {
+        isIngredientExistIndex = index;
+        return item?._id === ing?._id;
+      }
+    });
+    if (isIngredientExist && isIngredientExistIndex) {
+      const items = [...selectedIngredientsList];
+      items.splice(isIngredientExistIndex, 1, ing);
+      dispatch(setSelectedIngredientsList(items));
+    } else {
+      dispatch(setSelectedIngredientsList([ing, ...selectedIngredientsList]));
     }
-    dispatch(setSelectedIngredientsList([ing, ...selectedIngredientsList]));
   };
 
   // submit data
@@ -628,6 +634,9 @@ const SingleIngredient = ({
           className={`${classes.ingredients__text} ${
             elem?.ingredientStatus === "not_ok" &&
             classes["ingredients__text--not_ok"]
+          } ${
+            elem?.ingredientStatus === "partial_ok" &&
+            classes["ingredients__text--partial_ok"]
           }`}
         >
           {elem?.errorString}
@@ -667,11 +676,13 @@ const SingleIngredient = ({
         <Tooltip direction="top" content="Edit">
           <FontAwesomeIcon
             icon={faPen}
-            className={`${classes.ingredients__iconTray__icons} ${
-              (elem?.ingredientStatus === "not_ok" ||
-                elem?.ingredientStatus === "partial_ok") &&
-              "activeColorPrimary"
-            }`}
+            className={`${classes.ingredients__iconTray__icons}
+             ${
+               (elem?.ingredientStatus === "not_ok" ||
+                 elem?.ingredientStatus === "partial_ok") &&
+               "activeColorPrimary"
+             }
+            `}
             onClick={() => editIngredient(elem)}
           />
         </Tooltip>
