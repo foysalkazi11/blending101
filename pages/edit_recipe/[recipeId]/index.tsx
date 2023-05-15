@@ -36,7 +36,6 @@ const EditRecipeComponent = () => {
   const { params = [] } = router.query;
   const recipeId = params?.[0] || (router.query?.recipeId as string);
   const versionId = params?.[1] || "";
-  console.log("index page", params, router.query);
   const dispatch = useAppDispatch();
   const [newVersionInfo, setNewVersionInfo] = useState<VersionAddDataType>(
     {} as VersionAddDataType,

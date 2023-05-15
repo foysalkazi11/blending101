@@ -1,20 +1,15 @@
-import React, { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { BiBarChart } from "react-icons/bi";
-import { BsCartPlus } from "react-icons/bs";
-import { MdOutlineDelete, MdOutlineEdit, MdOutlineInfo } from "react-icons/md";
 import CircularRotatingLoader from "../../../theme/loader/circularRotatingLoader.component";
-
 import AddSharpIcon from "../../../public/icons/add_black_36dp.svg";
 import RemoveSharpIcon from "../../../public/icons/remove_black_36dp.svg";
 import DragIndicatorIcon from "../../../public/icons/drag_indicator_black_36dp.svg";
-
 import classes from "../../../components/recipe/editRecipe/recipe_elements/ingredientList/ingredientList&Howto.module.scss";
 import styles from "./Ingredient.module.scss";
 import Combobox from "../../organisms/Forms/Combobox.component";
 import Textfield from "../../organisms/Forms/Textfield.component";
 import IconButton from "../../atoms/Button/IconButton.component";
-import { FaPen, FaPlus, FaSave, FaTimes } from "react-icons/fa";
+import { FaSave, FaTimes } from "react-icons/fa";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Icon from "../../atoms/Icon/Icon.component";
 import ButtonComponent from "../../../theme/button/button.component";
@@ -25,11 +20,20 @@ import {
   setSelectedIngredientsList,
 } from "../../../redux/edit_recipe/editRecipeStates";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClose } from "@fortawesome/pro-light-svg-icons";
+import {
+  faBasketShoppingSimple,
+  faChartSimple,
+  faCircleInfo,
+  faClose,
+  faPen,
+  faTimes,
+  faTrash,
+} from "@fortawesome/pro-light-svg-icons";
 import { useMutation } from "@apollo/client";
 import SEARCH_IN_SCRAPPED_RECIPE_FROM_USER from "../../../gqlLib/parsing/mutation/searchInScrappedRecipeFromUser";
 import notification from "../../../components/utility/reactToastifyNotification";
 import { useDispatch } from "react-redux";
+import Tooltip from "../../../theme/toolTip/CustomToolTip";
 
 const defaultValues = {
   ingredientId: "",
@@ -120,7 +124,7 @@ const IngredientSection = (props) => {
       {ingredientAddingType === "parsing" ? (
         <ParseIngredient
           methods={methods}
-          onReset={onReset}
+          onReset={() => methods.reset(defaultValues)}
           inputName="parsingText"
         />
       ) : showAddIngredient ? (
@@ -177,6 +181,11 @@ const IngredientSection = (props) => {
                               <li
                                 {...provided.draggableProps}
                                 ref={provided.innerRef}
+                                className={`${
+                                  (elem?.ingredientStatus === "partial_ok" ||
+                                    elem?.ingredientStatus === "not_ok") &&
+                                  classes.ingredients__partial_ok
+                                }`}
                               >
                                 <div className={classes.ingredients__item}>
                                   <div
@@ -247,19 +256,30 @@ const ParseIngredient = (props) => {
   const { selectedIngredientsList } = useAppSelector(
     (state) => state?.editRecipeReducer,
   );
-  const [handleSearchInScrappedRecipeFromUser] = useMutation(
+  const [handleSearchInScrappedRecipeFromUser, { loading }] = useMutation(
     SEARCH_IN_SCRAPPED_RECIPE_FROM_USER,
   );
 
+  // Enter key was pressed
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       methods.handleSubmit(onSubmit)();
-      // Enter key was pressed
-      // Perform your desired action here
-      console.log("Enter key was pressed");
     }
   };
 
+  // add new ingredient to ingredient list
+  const addNewIngredientToIngredientList = (ing) => {
+    const isIngredientExist = selectedIngredientsList?.find(
+      (item) => item?._id === ing?._id,
+    );
+    if (isIngredientExist) {
+      notification("warning", "Ingredient already exist !!!");
+      return;
+    }
+    dispatch(setSelectedIngredientsList([ing, ...selectedIngredientsList]));
+  };
+
+  // submit data
   const onSubmit = async (data) => {
     const { parsingText = "", parsingTextEdit = "" } = data;
     const recipeIngredients = isEditMode ? parsingTextEdit : parsingText;
@@ -286,19 +306,13 @@ const ParseIngredient = (props) => {
 
         if (isEditMode && index !== undefined) {
           const items = [...selectedIngredientsList];
-          const [reOrderedItem] = items?.splice(index, 1);
-          items.splice(index, 0, partialError);
+          items.splice(index, 1, partialError);
           dispatch(setSelectedIngredientsList(items));
         } else {
-          dispatch(
-            setSelectedIngredientsList([
-              ...selectedIngredientsList,
-              partialError,
-            ]),
-          );
+          addNewIngredientToIngredientList(partialError);
         }
-        onReset();
 
+        onReset();
         notification("warning", "data not found at database");
         return;
       }
@@ -336,13 +350,10 @@ const ParseIngredient = (props) => {
 
         if (isEditMode && index !== undefined) {
           const items = [...selectedIngredientsList];
-          const [reOrderedItem] = items?.splice(index, 1);
-          items.splice(index, 0, value);
+          items.splice(index, 1, value);
           dispatch(setSelectedIngredientsList(items));
         } else {
-          dispatch(
-            setSelectedIngredientsList([...selectedIngredientsList, value]),
-          );
+          addNewIngredientToIngredientList(value);
         }
         onReset();
       }
@@ -356,11 +367,10 @@ const ParseIngredient = (props) => {
       };
       if (isEditMode && index !== undefined) {
         const items = [...selectedIngredientsList];
-        const [reOrderedItem] = items?.splice(index, 1);
-        items.splice(index, 0, obj);
+        items.splice(index, 1, obj);
         dispatch(setSelectedIngredientsList(items));
       } else {
-        dispatch(setSelectedIngredientsList([...selectedIngredientsList, obj]));
+        addNewIngredientToIngredientList(obj);
       }
       onReset();
     }
@@ -381,32 +391,26 @@ const ParseIngredient = (props) => {
       }`}
     >
       <FormProvider {...methods}>
-        <Textfield
-          name={inputName}
-          placeholder={isEditMode ? "Edit ingredient" : "Add ingredient"}
-          onKeyDown={(e) => handleKeyPress(e)}
-        />
-      </FormProvider>
-      {isEditMode && (
-        <div className={styles.addToCart__buttons}>
-          {/* <IconButton
-            variant="white"
-            size="small"
-            className="mr-10"
-            onClick={methods.handleSubmit(onSubmit)}
-          >
-            <FaSave />
-          </IconButton> */}
-          <IconButton
-            variant="white"
-            size="small"
-            onClick={onReset}
-            style={{ marginLeft: "1rem" }}
-          >
-            <FaTimes />
-          </IconButton>
+        <div className={`${styles.inputWrapper} d-flex ai-center jc-center`}>
+          <Textfield
+            name={inputName}
+            placeholder={isEditMode ? "Edit ingredient" : "Add ingredient"}
+            onKeyDown={(e) => handleKeyPress(e)}
+          />
+          {loading ? (
+            <CircularRotatingLoader
+              color="gray"
+              style={{ margin: "auto 1rem" }}
+            />
+          ) : (
+            <FontAwesomeIcon
+              icon={faTimes}
+              className={`${styles.icon} ml-10 mr-10 pointer`}
+              onClick={onReset}
+            />
+          )}
         </div>
-      )}
+      </FormProvider>
     </div>
   );
 };
@@ -456,6 +460,7 @@ const AddToCartForm = (props) => {
         featuredImage: ingredient?.featuredImage,
         images: ingredient?.images,
       },
+      ingredientStatus: "ok",
     };
     //setSelectedIngredientsList
     dispatch(setRecipeIngredients(value));
@@ -534,23 +539,62 @@ const SingleIngredient = ({
   allIngredients,
   nutritionState,
 }) => {
+  const windowScrollToZero = (elem = {}) => {
+    window.scrollBy(0, 0);
+    setNutritionState(elem);
+  };
+
+  const editIngredient = (elem) => {
+    setEditIngredientId(elem?._id);
+    setShowAddIngredient(false);
+    let resetIngredient;
+    if (elem.hasOwnProperty("selectedPortion")) {
+      //! Preparation needs to be handled here
+      resetIngredient = {
+        units: elem?.selectedPortion?.name,
+        quantity: elem?.selectedPortion?.quantity,
+        preparation: 0,
+        parsingTextEdit: `${Math?.round(elem.selectedPortion?.quantity || 1)} ${
+          elem.selectedPortion?.name ||
+          elem?.portions?.[0]?.measurement ||
+          "cup"
+        } ${elem.ingredientName}`,
+      };
+    } else {
+      const value = elem?.portions?.find((item) => item.default);
+
+      resetIngredient = {
+        ...resetIngredient,
+        units: value?.measurement || elem?.portions?.[0]?.measurement || "cup",
+        quantity: 1,
+        preparation: 0,
+        parsingTextEdit: elem?.errorString,
+      };
+    }
+
+    methods.reset({
+      ingredientId: elem?._id,
+      ...resetIngredient,
+    });
+  };
   return (
     <>
-      <div className={classes.ingredients__icons}>
-        {elem.featuredImage || elem.images?.length ? (
-          <Image
-            src={elem.featuredImage || elem.images[0]}
-            alt="Picture will load soon"
-            objectFit="contain"
-            layout="fill"
-          />
+      <div className={`${classes.ingredients__icons}`}>
+        {elem?.ingredientStatus === "ok" ? (
+          elem.featuredImage || elem.images?.[0] ? (
+            <Image
+              src={
+                elem.featuredImage || elem.images?.[0] || "/food/Dandelion.png"
+              }
+              alt="Picture will load soon"
+              objectFit="contain"
+              layout="fill"
+            />
+          ) : (
+            <FontAwesomeIcon icon={faBasketShoppingSimple} />
+          )
         ) : (
-          <Image
-            src={"/food/Dandelion.png"}
-            alt="Picture will load soon"
-            objectFit="contain"
-            layout="fill"
-          />
+          <FontAwesomeIcon icon={faBasketShoppingSimple} />
         )}
       </div>
       {/* to create ingredients lists  */}
@@ -562,127 +606,87 @@ const SingleIngredient = ({
               &nbsp;
             </span>
             <span>
-              {/* {elem.portions[0].measurement ===
-                                  "Quantity not specified"
-                                    ? ""
-                                    : elem.portions[0].measurement} */}
-              {/* {elem.units ||
-                                    orgIngredient.selectedPortion?.name ||
-                                    elem?.portions[0]?.measurement ||
-                                    "cup"} */}
               {elem.selectedPortion?.name ||
                 elem?.portions?.[0]?.measurement ||
                 "cup"}
               &nbsp;
             </span>
-            {elem._id === nutritionState?._id ? (
-              <span
-                className={classes.ingredients__text__highlighted}
-                onClick={() => {
-                  window.scrollBy(0, 0);
-                  setNutritionState({});
-                }}
-                style={{ color: "#fe5d1f" }}
-              >
-                {elem.ingredientName}
-              </span>
-            ) : (
-              <span
-                className={classes.ingredients__text__highlighted}
-                onClick={() => {
-                  window.scrollBy(0, 0);
-                  setNutritionState(elem);
-                }}
-              >
-                {elem.ingredientName}
-              </span>
-            )}
-          </div>
-          <div
-            className={classes.ingredients__iconTray}
-            style={
-              // @ts-ignore
-              elem._id === nutritionState?._id ? { display: "flex" } : {}
-            }
-          >
-            <MdOutlineInfo
-              className={classes.ingredients__iconTray__icons}
-              onClick={() => setIngredientId(elem._id)}
-            />
-
-            {
-              //@ts-ignore
-              elem._id === nutritionState?._id ? (
-                <BiBarChart
-                  style={{ color: "#fe5d1f" }}
-                  className={classes.ingredients__iconTray__icons}
-                  onClick={() => {
-                    window.scrollBy(0, 0);
-                    setNutritionState({});
-                  }}
-                />
-              ) : (
-                <BiBarChart
-                  className={classes.ingredients__iconTray__icons}
-                  onClick={() => {
-                    window.scrollBy(0, 0);
-                    setNutritionState(elem);
-                  }}
-                />
-              )
-            }
-            <MdOutlineEdit
-              className={classes.ingredients__iconTray__icons}
-              onClick={() => {
-                setEditIngredientId(elem?._id);
-                setShowAddIngredient(false);
-                let resetIngredient;
-                if (elem.hasOwnProperty("selectedPortion")) {
-                  //! Preparation needs to be handled here
-                  resetIngredient = {
-                    units: elem?.selectedPortion?.name,
-                    quantity: elem?.selectedPortion?.quantity,
-                    preparation: 0,
-                    parsingTextEdit: `${Math?.round(
-                      elem.selectedPortion?.quantity || 1,
-                    )} ${
-                      elem.selectedPortion?.name ||
-                      elem?.portions?.[0]?.measurement ||
-                      "cup"
-                    } ${elem.ingredientName}`,
-                  };
-                } else {
-                  const value = elem?.portions?.find((item) => item.default);
-
-                  resetIngredient = {
-                    ...resetIngredient,
-                    units:
-                      value?.measurement ||
-                      elem?.portions?.[0]?.measurement ||
-                      "cup",
-                    quantity: 1,
-                    preparation: 0,
-                  };
-                }
-
-                methods.reset({
-                  ingredientId: elem?._id,
-                  ...resetIngredient,
-                });
-              }}
-            />
-            <MdOutlineDelete
-              className={classes.ingredients__iconTray__icons}
-              onClick={() => removeIngredient(elem?._id)}
-            />
+            <span
+              className={`${classes.ingredients__text__highlighted} ${
+                elem._id === nutritionState?._id && "activeColorPrimary"
+              }`}
+              onClick={() =>
+                windowScrollToZero(elem._id === nutritionState?._id ? {} : elem)
+              }
+            >
+              {elem.ingredientName}
+            </span>
           </div>
         </>
       ) : (
-        <span>
+        <span
+          className={`${classes.ingredients__text} ${
+            elem?.ingredientStatus === "not_ok" &&
+            classes["ingredients__text--not_ok"]
+          }`}
+        >
           {elem?.errorString}
           &nbsp;
         </span>
       )}
+
+      <div
+        className={`${classes.ingredients__iconTray} ${
+          elem._id === nutritionState?._id && "flex"
+        }`}
+      >
+        {elem?.ingredientStatus === "ok" && (
+          <>
+            <Tooltip direction="top" content="Wiki">
+              <FontAwesomeIcon
+                icon={faCircleInfo}
+                className={classes.ingredients__iconTray__icons}
+                onClick={() => setIngredientId(elem._id)}
+              />
+            </Tooltip>
+            <Tooltip direction="top" content="Nutation">
+              <FontAwesomeIcon
+                icon={faChartSimple}
+                className={`${classes.ingredients__iconTray__icons} ${
+                  elem._id === nutritionState?._id && "activeColorPrimary"
+                }`}
+                onClick={() =>
+                  windowScrollToZero(
+                    elem._id === nutritionState?._id ? {} : elem,
+                  )
+                }
+              />
+            </Tooltip>
+          </>
+        )}
+        <Tooltip direction="top" content="Edit">
+          <FontAwesomeIcon
+            icon={faPen}
+            className={`${classes.ingredients__iconTray__icons} ${
+              (elem?.ingredientStatus === "not_ok" ||
+                elem?.ingredientStatus === "partial_ok") &&
+              "activeColorPrimary"
+            }`}
+            onClick={() => editIngredient(elem)}
+          />
+        </Tooltip>
+        <Tooltip direction="top" content="Remove">
+          <FontAwesomeIcon
+            icon={faTrash}
+            className={`${classes.ingredients__iconTray__icons} ${
+              (elem?.ingredientStatus === "not_ok" ||
+                elem?.ingredientStatus === "partial_ok") &&
+              "activeColorPrimary"
+            }`}
+            onClick={() => removeIngredient(elem?._id)}
+          />
+        </Tooltip>
+      </div>
     </>
   );
 };
