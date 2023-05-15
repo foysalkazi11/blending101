@@ -18,6 +18,7 @@ interface Props {
   setNutritionState: any;
   nutritionDataLoading: boolean;
   giGl: GiGl;
+  pageComeFrom?: "edit" | "details";
 }
 
 const RecipeDetails = ({
@@ -27,6 +28,7 @@ const RecipeDetails = ({
   setNutritionState,
   nutritionDataLoading = false,
   giGl,
+  pageComeFrom,
 }: Props) => {
   const [counter, setCounter] = useState(1);
   const { width } = useWindowSize();
@@ -76,6 +78,7 @@ const RecipeDetails = ({
             setNutritionState={setNutritionState}
             nutritionState={nutritionState}
             giGl={giGl}
+            pageComeFrom={pageComeFrom}
           />
         </div>
         <div className={styles.right}>

@@ -19,7 +19,6 @@ import { GET_BLEND_TYPES } from "../graphql/Recipe";
 import { useAppSelector } from "../redux/hooks";
 import { updateFilterCriteriaItem } from "../redux/slices/filterRecipeSlice";
 import { updateSidebarActiveMenuName } from "../redux/slices/utilitySlice";
-
 import styles from "../styles/pages/home.module.scss";
 import CardComponent from "../theme/cards/card.component";
 import SpecialcardComponent from "../theme/cards/specialCard.component";
