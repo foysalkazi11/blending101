@@ -283,8 +283,13 @@ $sharedHeightForIcons: 20px;
       font-size: 16px;
     }
   }
+  &__text--partial_ok {
+    color: #c4c4c4;
+    font-style: italic;
+  }
   &__text--not_ok {
     color: #c62727;
+    font-style: italic;
   }
 
   &__edit {
