@@ -9,6 +9,7 @@ export interface RecipeDetailsType {
   isMatch: boolean;
   myRecipes: boolean;
   versionsCount: number;
+  personalRating?: number;
   // recipeVersion: any[];
   // postfixTitle?: string;
   // versionId?: string;

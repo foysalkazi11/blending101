@@ -11,6 +11,7 @@ import {
   faMessageDots,
   faShareNodes,
 } from "@fortawesome/pro-light-svg-icons";
+import { faBookmark as faBookmarkSolid } from "@fortawesome/pro-solid-svg-icons";
 import { faCalendarDays } from "@fortawesome/pro-solid-svg-icons";
 
 import RXPanel from "../../../component/templates/Panel/RXFacts/RXPanel.component";
@@ -50,6 +51,10 @@ import { useAppSelector } from "../../../redux/hooks";
 import Publish from "../../../helpers/Publish";
 import { useDispatch } from "react-redux";
 import { updateSidebarActiveMenuName } from "../../../redux/slices/utilitySlice";
+import ShowLastModifiedCollection from "../../../components/showLastModifiedCollection/ShowLastModifiedCollection";
+import { setIsOpenPlanCollectionTray } from "../../../redux/slices/Planner.slice";
+import useToOpenPlanCollectionTray from "../../../customHooks/plan/useToOpenPlanCollectionTray";
+import useToAddPlanToCollection from "../../../customHooks/plan/useToAddPlanToCollection";
 
 const MyPlan = () => {
   const router = useRouter();
@@ -57,6 +62,13 @@ const MyPlan = () => {
   const methods = useForm({
     defaultValues: useMemo(() => defaultPlan, []),
   });
+  const handleOpenCollectionTray = useToOpenPlanCollectionTray();
+  const handleAddToCollection = useToAddPlanToCollection();
+  const [openCollectionModal, setOpenCollectionModal] = useState(false);
+  const { lastModifiedPlanCollection } = useAppSelector(
+    (state) => state?.planner,
+  );
+  const memberId = useAppSelector((state) => state?.user?.dbUser?._id || "");
 
   const { data } = useQuery(GET_PLAN, {
     variables: { planId: router.query.planId },
@@ -163,20 +175,31 @@ const MyPlan = () => {
         recipes: plan.recipes.map((recipe) => recipe._id),
       })),
     };
-    await Publish({
-      mutate: createPlan,
-      state: createState,
-      variables: { data: planData },
-      success: "Created a new version of the Plan",
-      onSuccess: () => {
-        setIsEditMode(false);
-        setPlanlist(plan?.planData);
-        methods.reset(defaultPlan);
-      },
-    });
-    // if (plan?.memberId === userId) {
-    // } else {
-    // }
+    if (plan?.memberId === userId) {
+      await Publish({
+        mutate: createPlan,
+        state: createState,
+        variables: { data: planData },
+        success: "Edited the Plan",
+        onSuccess: () => {
+          setIsEditMode(false);
+          setPlanlist(plan?.planData);
+          methods.reset(defaultPlan);
+        },
+      });
+    } else {
+      await Publish({
+        mutate: createPlan,
+        state: createState,
+        variables: { data: planData },
+        success: "Created a new version of the Plan",
+        onSuccess: () => {
+          setIsEditMode(false);
+          setPlanlist(plan?.planData);
+          methods.reset(defaultPlan);
+        },
+      });
+    }
   };
 
   const shareHandler = useCallback(async () => {
@@ -214,6 +237,11 @@ const MyPlan = () => {
       headTagInfo={{
         title: "Blending plan details",
         description: "blending plans details",
+      }}
+      showPlanCollectionTray={{
+        show: true,
+        showPanle: "left",
+        showTagByDeafult: true,
       }}
     >
       {/* <div> */}
@@ -262,7 +290,10 @@ const MyPlan = () => {
             </div>
             <div className="col-6" style={{ padding: "0 1.5rem" }}>
               <div className={styles.headingDiv}>
-                <IconHeading title="My Plan" icon={faCalendarDays} />
+                <IconHeading
+                  title={isEditMode ? "Edit Plan" : "Plan"}
+                  icon={faCalendarDays}
+                />
                 <div className="flex ai-center">
                   <div
                     className={`${styles.uploadDiv} ${styles.uploadDiv__save}`}
@@ -308,11 +339,32 @@ const MyPlan = () => {
                         week={week}
                         onWeekChange={weekChangeHandler}
                       />
-                      <span>
+                      <span
+                        onClick={() =>
+                          plan?.planCollections?.length
+                            ? handleOpenCollectionTray(
+                                plan?._id,
+                                plan?.planCollections,
+                                "details",
+                              )
+                            : handleAddToCollection(
+                                plan?._id,
+                                memberId,
+                                setOpenCollectionModal,
+                                "details",
+                              )
+                        }
+                      >
                         <Icon
-                          fontName={faBookmark}
+                          fontName={
+                            plan?.planCollections?.length
+                              ? faBookmarkSolid
+                              : faBookmark
+                          }
                           size="2rem"
                           className="mr-10"
+                          variant="bold"
+                          color={plan?.planCollections?.length && "#fe5d1f"}
                         />
                         Bookmark
                       </span>
@@ -356,6 +408,16 @@ const MyPlan = () => {
           </div>
         </div>
       </div>
+      <ShowLastModifiedCollection
+        open={openCollectionModal}
+        setOpen={setOpenCollectionModal}
+        shouldCloseOnOverlayClick={true}
+        lastModifiedCollectionName={lastModifiedPlanCollection?.name}
+        openCollectionPanel={() => {
+          dispatch(setIsOpenPlanCollectionTray(true));
+          setOpenCollectionModal(false);
+        }}
+      />
     </Container>
   );
 };

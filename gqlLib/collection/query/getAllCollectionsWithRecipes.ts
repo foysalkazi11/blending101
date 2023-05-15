@@ -39,6 +39,12 @@ const GET_ALL_COLLECTIONS_WITH_RECIPES = gql`
         defaultVersion {
           _id
           postfixTitle
+          calorie {
+            value
+          }
+          gigl {
+            netCarbs
+          }
           ingredients {
             ingredientId {
               _id
@@ -54,6 +60,7 @@ const GET_ALL_COLLECTIONS_WITH_RECIPES = gql`
         addedToCompare
         userCollections
         versionCount
+        personalRating
       }
       sharedBy {
         _id

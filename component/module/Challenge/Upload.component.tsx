@@ -116,6 +116,7 @@ const UploadCard = forwardRef((props: any, ref) => {
         data: post,
       },
       state: isEditMode ? editState : addState,
+      load: "Submitting post",
       success: "Submitted Post Successfully",
       onSuccess: closeForm,
     });

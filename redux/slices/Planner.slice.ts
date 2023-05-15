@@ -31,6 +31,7 @@ interface LastModifiedPlanCollectionType {
 interface ActivePlanForCollectionType {
   id: string;
   collectionIds: string[];
+  typeOfPlan: "list" | "details";
 }
 
 interface PlannerState {
@@ -56,6 +57,7 @@ const initialState: PlannerState = {
   activePlanForCollection: {
     id: "",
     collectionIds: [],
+    typeOfPlan: "list",
   },
 };
 
