@@ -69,24 +69,26 @@ const useGetBlendNutritionBasedOnRecipexxx = () => {
       } else {
         let ingArr = [];
         let ozArr = 0;
-        selectedIngredientsList?.forEach((item) => {
-          const defaultPortion = item?.portions?.find((item) => item.default);
-          let value: any = 0;
-          if (item.hasOwnProperty("selectedPortion")) {
-            value =
-              parseFloat(item?.selectedPortion?.gram) *
-              parseFloat(item?.selectedPortion?.quantity);
-          } else {
-            value = defaultPortion?.meausermentWeight;
-          }
-          ozArr += value && parseInt(value);
-          if (value) {
-            ingArr?.push({
-              ingredientId: item?._id,
-              value: parseFloat(value),
-            });
-          }
-        });
+        selectedIngredientsList
+          ?.filter((ing) => ing?.ingredientStatus === "ok")
+          ?.forEach((item) => {
+            const defaultPortion = item?.portions?.find((item) => item.default);
+            let value: any = 0;
+            if (item.hasOwnProperty("selectedPortion")) {
+              value =
+                parseFloat(item?.selectedPortion?.gram) *
+                parseFloat(item?.selectedPortion?.quantity);
+            } else {
+              value = defaultPortion?.meausermentWeight;
+            }
+            ozArr += value && parseInt(value);
+            if (value) {
+              ingArr?.push({
+                ingredientId: item?._id,
+                value: parseFloat(value),
+              });
+            }
+          });
         SetcalculateIngOz(Math?.round(ozArr * 0.033814));
         fetchData(ingArr);
       }

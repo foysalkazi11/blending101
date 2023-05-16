@@ -39,6 +39,7 @@ interface center {
   nutritionState: any;
   setNutritionState: any;
   giGl: GiGl;
+  pageComeFrom?: "edit" | "details";
 }
 
 const Center = ({
@@ -52,6 +53,7 @@ const Center = ({
     totalGi: 0,
     totalGL: 0,
   },
+  pageComeFrom,
 }: center) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -166,10 +168,11 @@ const Center = ({
           router.push(
             recipeData?.isMatch
               ? `/edit_recipe/${recipeData?.recipeId?._id}`
-              : `/edit_recipe/${recipeData?.recipeId?._id}/${recipeData?.tempVersionInfo?.version?._id}`,
+              : `/edit_recipe/${recipeData?.recipeId?._id}`, //`/edit_recipe/${recipeData?.recipeId?._id}/${recipeData?.tempVersionInfo?.version?._id}`,
           )
         }
         editOrSavebtnText="Edit"
+        pageComeFrom={pageComeFrom}
       />
 
       <div className={styles.contentBox}>

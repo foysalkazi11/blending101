@@ -16,6 +16,7 @@ import PanelHeaderCenter from "../share/panelHeader/PanelHeaderCenter";
 import { RecipeDetailsType } from "../../../type/recipeDetailsType";
 import { GiGl } from "../../../type/nutrationType";
 import FloatingLeftPanel from "./floatingLeftPanel/FloatingLeftPanel";
+import { IngredientAddingType } from "../../../type/recipeEditType";
 
 interface editRecipe {
   copyDetailsRecipe?: RecipeDetailsType;
@@ -38,6 +39,7 @@ interface editRecipe {
   giGl?: GiGl;
   recipeEditOrVersionEditLoading?: boolean;
   versionsCount?: number;
+  ingredientAddingType?: IngredientAddingType;
 }
 
 const EditRecipePage = ({
@@ -65,6 +67,7 @@ const EditRecipePage = ({
   },
   recipeEditOrVersionEditLoading = false,
   versionsCount = 0,
+  ingredientAddingType = "auto",
 }: editRecipe) => {
   const dispatch = useAppDispatch();
   const { width } = useWindowSize();
@@ -96,6 +99,7 @@ const EditRecipePage = ({
           quantity: 1,
         },
         weightInGram: parseFloat(defaultPortion?.meausermentWeight),
+        ingredientStatus: "ok",
       };
       blendz = [...selectedIngredientsList, newIngredient];
     } else {
@@ -185,6 +189,7 @@ const EditRecipePage = ({
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}
             calculatedIngOz={calculatedIngOz}
+            ingredientAddingType={ingredientAddingType}
           />
         </div>
         <div className={styles.right}>
