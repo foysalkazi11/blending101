@@ -98,6 +98,7 @@ const Index = () => {
       setNutritionState={setNutritionState}
       nutritionDataLoading={nutritionDataLoading}
       giGl={giGl}
+      pageComeFrom="details"
     />
   );
 };

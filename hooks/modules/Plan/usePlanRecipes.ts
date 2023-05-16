@@ -76,7 +76,8 @@ const useDiscoveryQueue = (props: IDiscoverRecipe) => {
   return { loading, recipes, observer: lastRecipeRef };
 };
 
-const useQueuedRecipe = () => {
+const useQueuedRecipe = (isWeekFromURL, week) => {
+  const router = useRouter();
   const [recipes, setRecipes] = useState([]);
 
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
@@ -88,7 +89,12 @@ const useQueuedRecipe = () => {
     if (userId !== "") {
       getQueuedRecipes({
         variables: {
-          currentDate: format(new Date(), "yyyy-MM-dd"),
+          startDate: !isWeekFromURL
+            ? format(week.start, "yyyy-MM-dd")
+            : router.query.start,
+          endDate: !isWeekFromURL
+            ? format(week.end, "yyyy-MM-dd")
+            : router.query.end,
           user: userId,
         },
       }).then((response) => {
@@ -96,7 +102,14 @@ const useQueuedRecipe = () => {
         setRecipes(data?.recipes);
       });
     }
-  }, [getQueuedRecipes, userId]);
+  }, [
+    getQueuedRecipes,
+    isWeekFromURL,
+    router.query.end,
+    router.query.start,
+    userId,
+    week,
+  ]);
 
   return { loading, recipes };
 };
@@ -140,7 +153,7 @@ interface IAddRecipeToPlanHook {
 }
 
 const useAddRecipeToMyPlan = (props: IAddRecipeToPlanHook) => {
-  const { query, page, limit, type, week, isWeekFromURL } = props;
+  const { week, isWeekFromURL } = props;
 
   const router = useRouter();
   const [addRecipe, addState] = useMutation(ADD_RECIPE_TO_PLANNER, {

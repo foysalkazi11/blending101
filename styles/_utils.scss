@@ -143,3 +143,10 @@
 .pointer {
   cursor: pointer;
 }
+
+.activeColorPrimary {
+  color: $primaryColor !important;
+}
+.activeColorSecondary {
+  color: $secondaryColor !important;
+}

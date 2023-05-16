@@ -85,12 +85,8 @@ interface RecipeColorIndicatorInterface {
   onMove?: any;
   onDelete?: any;
 }
-const PlanItem = ({
-  recipe,
-  onCopy,
-  onMove,
-  onDelete,
-}: RecipeColorIndicatorInterface) => {
+const PlanItem = (props: RecipeColorIndicatorInterface) => {
+  const { recipe, onCopy, onMove, onDelete } = props;
   let {
     _id,
     name: recipeName,

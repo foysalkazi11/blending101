@@ -15,6 +15,7 @@ import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoa
 import Tooltip from "../../../../theme/toolTip/CustomToolTip";
 import PanelHeader from "./PanelHeader";
 import styles from "./PanelHeader.module.scss";
+import { useAppSelector } from "../../../../redux/hooks";
 
 interface PanelHeaderCenterProps {
   editOrSavebtnText?: string;
@@ -35,6 +36,7 @@ const PanelHeaderCenter = ({
 }: PanelHeaderCenterProps) => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { detailsARecipe } = useAppSelector((state) => state?.recipe);
 
   const rightSide = (
     <div className={styles.centerRightBtnWraper}>
@@ -57,6 +59,19 @@ const PanelHeaderCenter = ({
           </button>
         </Tooltip>
       )}
+
+      {pageComeFrom === "details" && (
+        <button
+          className={`${styles.headerTextBtn} hvr-pop`}
+          onClick={() =>
+            router.push(`/edit_recipe/${detailsARecipe?.recipeId?._id}/parsing`)
+          }
+          style={{ minWidth: "45px" }}
+        >
+          parsing
+        </button>
+      )}
+
       <Tooltip content={`${editOrSavebtnText} recipe`} direction="bottom">
         <button
           className={`${styles.headerTextBtn} hvr-pop`}

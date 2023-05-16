@@ -1,44 +1,33 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
-import { faPlusCircle } from "@fortawesome/pro-solid-svg-icons";
+import React, { Fragment, useEffect, useState } from "react";
 import { faCalendarAlt } from "@fortawesome/pro-light-svg-icons";
 import { faCalendarDay } from "@fortawesome/pro-regular-svg-icons";
 
-import Pagination from "../../molecules/Pagination/ServerPagination.component";
-import Combobox from "../../organisms/Forms/Combobox.component";
-import Searchbox from "../../molecules/Searchbox/Searchbox.component";
-import ToggleCard from "../../../theme/toggleCard/toggleCard.component";
-import IconHeading from "../../../theme/iconHeading/iconHeading.component";
-import CalendarTray from "../../../theme/calendar/calendarTray.component";
-import SkeletonElement from "../../../theme/skeletons/SkeletonElement";
-import RecipeCard from "../../molecules/Card/RecipeCard.component";
-import Icon from "../../atoms/Icon/Icon.component";
-
-import styles from "./Queue.module.scss";
+import styles from "./RecipePanel.module.scss";
 import {
-  useAddRecipeToMyPlan,
-  useDiscoveryQueue,
   useFindQueuedRecipe,
-  useQueuedRecipe,
   useRecipeCategory,
-} from "../../../hooks/modules/Plan/usePlanRecipes";
+  useDiscoveryQueue,
+  useQueuedRecipe,
+  useAddRecipeToMyPlan,
+} from "../../../../hooks/modules/Challenge/useChallengeRecipes";
+import CalendarTray from "../../../../theme/calendar/calendarTray.component";
+import IconHeading from "../../../../theme/iconHeading/iconHeading.component";
+import SkeletonElement from "../../../../theme/skeletons/SkeletonElement";
+import ToggleCard from "../../../../theme/toggleCard/toggleCard.component";
+import Icon from "../../../atoms/Icon/Icon.component";
+import RecipeCard from "../../../molecules/Card/RecipeCard.component";
+import Searchbox from "../../../molecules/Searchbox/Searchbox.component";
+import Combobox from "../../../organisms/Forms/Combobox.component";
 
 interface PlannerPanelProps {
   panel: "my-plan" | "plan" | "challenge";
   modifyPlan?: any;
   week?: any;
-  recipes?: any[]; // Recipes for Queue Panels
   isWeekFromURL?: boolean;
 }
 
 const PlannerQueue = (props: PlannerPanelProps) => {
-  const {
-    panel,
-    week,
-    recipes: queuedRecipes,
-    isWeekFromURL,
-    modifyPlan,
-  } = props;
+  const { panel, week, isWeekFromURL, modifyPlan } = props;
 
   const [toggler, setToggler] = useState(true);
   const [query, setQuery] = useState("");
@@ -54,11 +43,9 @@ const PlannerQueue = (props: PlannerPanelProps) => {
     setPage,
   });
 
-  const { loading: qLoading, recipes: qRecipes } = useQueuedRecipe(
-    isWeekFromURL,
-    week,
-  );
-
+  // const { loading: qLoading, recipes: qRecipes } = useQueuedRecipe([]);
+  const qLoading = false,
+    qRecipes = [];
   const addRecipeToPlanner = useAddRecipeToMyPlan({
     limit: 10,
     page,
@@ -127,7 +114,7 @@ const PlannerQueue = (props: PlannerPanelProps) => {
         ref={parentRef}
       >
         <Recipes
-          recipes={toggler ? recipes : queuedRecipes || qRecipes}
+          recipes={toggler ? recipes : qRecipes}
           panel={panel}
           modifyPlan={modifyPlan}
           addRecipeToPlanner={addRecipeToPlanner}
