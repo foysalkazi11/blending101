@@ -1,27 +1,16 @@
-import React, { Fragment, useState } from "react";
+import React from "react";
 import { useMutation } from "@apollo/client";
 import {
   faChartSimple,
   faCartShopping,
-  faEllipsisVertical,
   faTrash,
-  faClone,
-  faUpDownLeftRight,
 } from "@fortawesome/pro-light-svg-icons";
 
-import CalendarTray from "../../../theme/calendar/calendarTray.component";
 import IconButton from "../../atoms/Button/IconButton.component";
-import Icon from "../../atoms/Icon/Icon.component";
 
 import Publish from "../../../helpers/Publish";
 import { ADD_TO_GROCERY_LIST } from "../../../graphql/Planner";
 import { RECIPE_CATEGORY_COLOR } from "../../../data/Recipe";
-import {
-  useCopyPlanRecipe,
-  useMovePlanRecipe,
-  useDeletePlanRecipe,
-} from "../../../hooks/modules/Plan/useMyPlan";
-
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
   IPlannerRecipe,
@@ -30,6 +19,7 @@ import {
 import { setShowPanel } from "../../../redux/slices/Ui.slice";
 
 import styles from "./PlanByDay.module.scss";
+import { useDrag, useDrop } from "react-dnd";
 
 interface PlanListProps {
   data?: any[];
@@ -37,12 +27,12 @@ interface PlanListProps {
   isWeekFromURL?: boolean;
   cart?: boolean;
   action?: boolean;
+  onMoveRecipe?: any;
   onRemove?: any;
 }
 
 const PlanList = (props: PlanListProps) => {
-  const { data, week, isWeekFromURL, cart, action, onRemove } = props;
-  const [toggleOptionCard, setToggleOptionCard] = useState({});
+  const { data, cart, onRemove, onMoveRecipe } = props;
   return (
     <div className={styles.wrapper}>
       {data?.map((planner, index) => {
@@ -51,16 +41,12 @@ const PlanList = (props: PlanListProps) => {
             key={planner.id}
             plannerId={planner.id}
             indexValue={index}
-            day={"Day"}
+            day="Day"
             date={`${index + 1}`}
-            week={week}
             cart={cart}
-            action={action}
             recipeList={planner.recipes}
-            isWeekFromURL={isWeekFromURL}
-            setToggleOptionCard={setToggleOptionCard}
-            toggleOptionCard={toggleOptionCard}
             onRemove={onRemove}
+            onMoveRecipe={onMoveRecipe}
           />
         );
       })}
@@ -75,14 +61,10 @@ interface PlanProps {
   day?: string;
   date?: string;
   indexValue: number;
-  setToggleOptionCard?: any;
-  toggleOptionCard?: object;
   recipeList?: IPlannerRecipe[];
-  isWeekFromURL?: boolean;
-  week?: any;
   cart?: boolean;
-  action?: boolean;
   onRemove?: any;
+  onMoveRecipe?: any;
 }
 
 const DayPlan = (props: PlanProps) => {
@@ -92,20 +74,25 @@ const DayPlan = (props: PlanProps) => {
     date,
     indexValue,
     recipeList,
-    week,
-    isWeekFromURL,
     cart,
-    action,
     onRemove,
+    onMoveRecipe,
   } = props;
   const dispatch = useAppDispatch();
 
-  const copyRecipe = useCopyPlanRecipe(week, isWeekFromURL);
-  const moveRecipe = useMovePlanRecipe(plannerId);
-  const deleteRecipe = useDeletePlanRecipe(plannerId, week, isWeekFromURL);
+  const [{}, dropRef] = useDrop({
+    accept: "PLAN_RECIPE",
+    drop: (item: any, monitor) => {
+      if (!onMoveRecipe || item?.plannerId === plannerId) return;
+      onMoveRecipe(plannerId, item);
+    },
+    collect: (monitor) => ({
+      isOver: !!monitor.isOver(),
+    }),
+  });
 
   return (
-    <div className={styles.plan}>
+    <div ref={dropRef} className={styles.plan}>
       <div
         className={styles.plan__dateDiv}
         style={indexValue % 2 == 0 ? { backgroundColor: "#eeeeee" } : {}}
@@ -118,14 +105,11 @@ const DayPlan = (props: PlanProps) => {
         {recipeList?.map((recipe) => (
           <PlanItem
             key={recipe?._id}
-            plannerId={date}
+            plannerId={plannerId}
+            isEditMode={onMoveRecipe}
             cart={cart}
-            action={action}
             recipe={recipe}
             onRemove={onRemove}
-            onDelete={deleteRecipe}
-            onCopy={copyRecipe}
-            onMove={moveRecipe}
           />
         ))}
       </div>
@@ -136,24 +120,12 @@ const DayPlan = (props: PlanProps) => {
 interface RecipeColorIndicatorInterface {
   recipe: any;
   plannerId: string;
-  onCopy?: any;
-  onMove?: any;
-  onDelete?: any;
+  isEditMode?: boolean;
   cart?: boolean;
-  action?: boolean;
   onRemove?: any;
 }
 const PlanItem = (props: RecipeColorIndicatorInterface) => {
-  const {
-    recipe,
-    plannerId,
-    onCopy,
-    onMove,
-    onDelete,
-    cart,
-    action,
-    onRemove,
-  } = props;
+  const { recipe, plannerId, isEditMode, cart, onRemove } = props;
   let {
     _id,
     name: recipeName,
@@ -164,9 +136,6 @@ const PlanItem = (props: RecipeColorIndicatorInterface) => {
   } = recipe;
   const ingredients = recipe?.defaultVersion?.ingredients || [];
   category = recipeBlendCategory?.name || category;
-  const [showMenu, setShowMenu] = useState(false);
-  const [showCalender, setShowCalender] = useState<"move" | "copy" | "">("");
-
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
@@ -175,6 +144,14 @@ const PlanItem = (props: RecipeColorIndicatorInterface) => {
   });
 
   const style = { backgroundColor: RECIPE_CATEGORY_COLOR[category] };
+
+  const [{ isDragging }, dragRef] = useDrag({
+    type: "PLAN_RECIPE",
+    item: { plannerId, recipe },
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  });
 
   if (!recipeName) return null;
 
@@ -191,7 +168,14 @@ const PlanItem = (props: RecipeColorIndicatorInterface) => {
   };
 
   return (
-    <div className={styles.recipe}>
+    <div
+      ref={dragRef}
+      style={{
+        opacity: isEditMode && isDragging ? "0.5" : "1",
+        cursor: isEditMode && isDragging ? "grabbing" : "grab",
+      }}
+      className={styles.recipe}
+    >
       <div className={styles.recipe__containerDiv}>
         <div
           className={styles.recipe__containerDiv__colorIndicator}
@@ -238,70 +222,7 @@ const PlanItem = (props: RecipeColorIndicatorInterface) => {
             onClick={() => onRemove(plannerId, _id)}
           />
         )}
-        {action && (
-          <IconButton
-            size="medium"
-            variant="hover"
-            fontName={faEllipsisVertical}
-            color="primary"
-            onClick={() => setShowMenu((prev) => !prev)}
-          />
-        )}
       </div>
-      {action && (
-        <Fragment>
-          <div
-            className={styles.recipe__optionTray}
-            style={
-              showMenu ? { display: "block", zIndex: "1" } : { zIndex: "-1" }
-            }
-          >
-            <div className={styles.recipe__optionTray__pointingDiv} />
-            <div className={styles.option} onClick={() => onDelete(_id)}>
-              <span>Remove</span>
-              <span className={styles.option__icon}>
-                <Icon fontName={faTrash} size="1.5rem" />
-              </span>
-            </div>
-            <div
-              className={styles.option}
-              onClick={() => {
-                setShowCalender("copy");
-                setShowMenu(false);
-              }}
-            >
-              <span>Copy</span>
-              <span className={styles.option__icon}>
-                <Icon fontName={faClone} size="1.5rem" />
-              </span>
-            </div>
-            <div
-              className={styles.option}
-              onClick={() => {
-                setShowCalender("move");
-                setShowMenu(false);
-              }}
-            >
-              <span>Move</span>
-              <span className={styles.option__icon}>
-                <Icon fontName={faUpDownLeftRight} size="1.5rem" />
-              </span>
-            </div>
-          </div>
-          {showCalender !== "" && (
-            <div className={styles.calender}>
-              <CalendarTray
-                handler={(date) => {
-                  showCalender === "copy"
-                    ? onCopy(date, recipe)
-                    : onMove(date, recipe);
-                  setShowCalender("");
-                }}
-              />
-            </div>
-          )}
-        </Fragment>
-      )}
     </div>
   );
 };

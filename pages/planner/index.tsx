@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useState, useEffect, Fragment, useCallback } from "react";
+import React, { useState, Fragment, useCallback } from "react";
 import { faUserCircle } from "@fortawesome/pro-light-svg-icons";
 import PlanCard from "../../component/module/Planner/PlanCard.component";
 import AppdownLoadCard from "../../components/recipe/recipeDiscovery/AppdownLoadCard/AppdownLoadCard.component";
@@ -15,7 +15,6 @@ import ShowLastModifiedCollection from "../../components/showLastModifiedCollect
 import { setIsOpenPlanCollectionTray } from "../../redux/slices/Planner.slice";
 import CommonSearchBar from "../../components/searchBar/CommonSearchBar";
 import { useAllPlan } from "../../hooks/modules/Plan/usePlanDiscovery";
-import debounce from "../../helperFunc/debounce";
 import { Debounce } from "../../helpers/Utilities";
 
 const PlanDiscovery = () => {

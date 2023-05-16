@@ -82,8 +82,12 @@ export const GET_ALL_PLANNER_RECIPES = gql`
 `;
 
 export const GET_QUEUED_PLANNER_RECIPES = gql`
-  query GetQueuedRecipesForPlanner($currentDate: String!, $user: String!) {
-    getQuedPlanner(currentDate: $currentDate, userId: $user) {
+  query GetQueuedRecipesForPlanner(
+    $startDate: String!
+    $endDate: String!
+    $user: String!
+  ) {
+    getQuedPlanner(startDate: $startDate, endDate: $endDate, userId: $user) {
       ...RecipeFields
     }
   }
