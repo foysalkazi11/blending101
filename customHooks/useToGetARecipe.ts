@@ -21,24 +21,27 @@ const useToGetARecipe = () => {
         variables: { recipeId: token ? "" : recipeId, userId, token },
       });
       const recipe: RecipeDetailsType = data?.getARecipe2;
-      let defaultVersion = recipe?.isMatch
-        ? recipe?.recipeId?.originalVersion
-        : recipe?.defaultVersion;
-
-      let turnedOnVersions = recipe?.isMatch
-        ? [...recipe?.turnedOnVersions]
-        : [recipe?.defaultVersion, ...recipe?.turnedOnVersions];
 
       dispatch(
         setDetailsARecipe({
           ...recipe,
-          // defaultVersion,
-          // turnedOnVersions,
+
           tempVersionInfo: {
-            // id: recipe?.defaultVersion?._id,
             isShareAble: true,
             isOriginalVersion: recipe?.isMatch,
-            version: recipe?.defaultVersion,
+            version: {
+              ...recipe?.defaultVersion,
+              ingredients: [
+                ...recipe?.defaultVersion?.ingredients?.map((ing) => ({
+                  ...ing,
+                  ingredientStatus: "ok",
+                })),
+                ...recipe?.defaultVersion?.errorIngredients?.map((ing) => ({
+                  ...ing,
+                  ingredientStatus: "partial_ok",
+                })),
+              ],
+            },
           },
         }),
       );

@@ -62,7 +62,9 @@ const Index = () => {
 
   useEffect(() => {
     handleFetchIngrdients(
-      detailsARecipe?.tempVersionInfo?.version?.ingredients,
+      detailsARecipe?.tempVersionInfo?.version?.ingredients.filter(
+        (ing) => ing?.ingredientStatus === "ok",
+      ),
       nutritionState,
       () => {},
       true,

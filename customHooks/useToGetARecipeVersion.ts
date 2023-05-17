@@ -26,17 +26,29 @@ const useToGetARecipeVersion = () => {
         variables: { versionId },
       });
 
-      const { _id, ...rest } = data?.getARecipeVersion;
+      const { _id, errorIngredients, ingredients, ...rest } =
+        data?.getARecipeVersion;
 
       dispatch(
         setDetailsARecipe({
           ...detailsARecipe,
 
           tempVersionInfo: {
-            // id: versionId,
             isShareAble,
             isOriginalVersion,
-            version: data?.getARecipeVersion,
+            version: {
+              ...data?.getARecipeVersion,
+              ingredients: [
+                ...ingredients?.map((ing) => ({
+                  ...ing,
+                  ingredientStatus: "ok",
+                })),
+                ...errorIngredients?.map((ing) => ({
+                  ...ing,
+                  ingredientStatus: "partial_ok",
+                })),
+              ],
+            },
           },
         }),
       );

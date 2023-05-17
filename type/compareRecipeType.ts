@@ -1,8 +1,8 @@
 import {
-  Ingredient,
   RecipeBlendCategory,
   VersionDataType,
   Image,
+  IngredientType,
 } from "./recipeDetailsType";
 import { RecipeBrandType, RecipeCreatorInfo } from "./recipeType";
 
@@ -30,7 +30,7 @@ export interface CompareRecipeType {
     averageRating: number;
     totalViews: number;
     recipeBlendCategory: RecipeBlendCategory;
-    ingredients: Ingredient[];
+    ingredients: IngredientType[];
     image: Image[];
     servingSize: string;
     servings: number;
