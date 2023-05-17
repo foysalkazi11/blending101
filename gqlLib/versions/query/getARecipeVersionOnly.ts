@@ -9,6 +9,11 @@ const GET_A_RECIPE_VERSION_ONLY = gql`
       recipeInstructions
       postfixTitle
       description
+      errorIngredients {
+        errorIngredientId: ingredientId
+        qaId
+        errorString
+      }
       ingredients {
         ingredientId {
           ingredientName

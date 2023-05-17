@@ -101,11 +101,6 @@ const EditRecipeComponent = () => {
     }));
   };
 
-  const findIngredient = (id) =>
-    detailsARecipe?.tempVersionInfo?.version?.ingredients?.find(
-      (item) => item?.ingredientId?._id === id,
-    );
-
   // update original recipe
   const updateOriginalRecipe = async (obj: {
     recipeBlendCategory?: string;
@@ -160,16 +155,30 @@ const EditRecipeComponent = () => {
 
   const editARecipeFunction = async () => {
     let ingArr = [];
-    selectedIngredientsList?.forEach((item) => {
-      let value = item?.portions?.find((item) => item.default);
-      ingArr?.push({
-        ingredientId: item?._id,
-        selectedPortionName: item?.selectedPortion?.name || value?.measurement,
-        weightInGram: item?.weightInGram
-          ? Number(item?.weightInGram)
-          : Number(value?.meausermentWeight),
+    let errorIngredients = [];
+    selectedIngredientsList
+      .filter((ing) => ing?.ingredientStatus !== "not_ok")
+      .forEach((item) => {
+        if (item?.ingredientStatus === "ok") {
+          let value = item?.portions?.find((item) => item.default);
+          ingArr?.push({
+            ingredientId: item?._id,
+            selectedPortionName:
+              item?.selectedPortion?.name || value?.measurement,
+            weightInGram: item?.weightInGram
+              ? Number(item?.weightInGram)
+              : Number(value?.meausermentWeight),
+          });
+        }
+        if (item?.ingredientStatus === "partial_ok") {
+          const { errorString, ingredientId, qaId } = item;
+          errorIngredients.push({
+            errorString,
+            ingredientId,
+            qaId,
+          });
+        }
       });
-    });
 
     const howToArr = recipeInstruction?.map((item) => `${item?.step}`);
     const isReallyOriginalVersion =
@@ -191,6 +200,7 @@ const EditRecipeComponent = () => {
             copyDetailsRecipe?.tempVersionInfo?.version?.postfixTitle,
           description: copyDetailsRecipe?.tempVersionInfo?.version?.description,
           ingredients: ingArr,
+          errorIngredients,
           servingSize: calculateIngOz,
           selectedImage:
             copyDetailsRecipe?.tempVersionInfo?.version?.selectedImage,
@@ -205,6 +215,7 @@ const EditRecipeComponent = () => {
         userId: dbUser?._id,
         description: copyDetailsRecipe?.tempVersionInfo?.version?.description,
         ingredients: ingArr,
+        errorIngredients,
         recipeInstructions: howToArr,
         servingSize: calculateIngOz,
         selectedImage:
@@ -267,23 +278,38 @@ const EditRecipeComponent = () => {
   };
   useEffect(() => {
     if (!ingredientCategoryData?.filterIngredientByCategoryAndClass) return;
-    const defaultIngredientIds =
-      detailsARecipe?.tempVersionInfo?.version?.ingredients?.map(
-        (ing) => ing?.ingredientId?._id,
-      );
+
+    console.log(detailsARecipe?.tempVersionInfo?.version?.ingredients);
+    let ingredientObj = {};
+    let ingredientPartialOk = [];
+
+    detailsARecipe?.tempVersionInfo?.version?.ingredients?.forEach((ing) => {
+      if (ing?.ingredientStatus === "ok") {
+        ingredientObj[ing?.ingredientId?._id] = ing;
+      }
+      if (ing?.ingredientStatus === "partial_ok") {
+        ingredientPartialOk.push(ing);
+      }
+    });
+
     const presentIngredient = [];
     ingredientCategoryData?.filterIngredientByCategoryAndClass?.forEach(
       (elem) => {
-        if (defaultIngredientIds?.includes(elem._id)) {
+        if (ingredientObj[elem._id]) {
           presentIngredient.push({
             ...elem,
-            ...findIngredient(elem._id),
+            ...ingredientObj[elem._id],
             ingredientStatus: "ok",
           });
         }
       },
     );
-    dispatch(setSelectedIngredientsList(presentIngredient));
+    dispatch(
+      setSelectedIngredientsList([
+        ...presentIngredient,
+        ...ingredientPartialOk,
+      ]),
+    );
   }, [
     ingredientCategoryData?.filterIngredientByCategoryAndClass,
     detailsARecipe?.tempVersionInfo?.version,
@@ -291,9 +317,13 @@ const EditRecipeComponent = () => {
 
   useEffect(() => {
     if (!detailsARecipe) return;
+    console.log(detailsARecipe?.tempVersionInfo?.version?.servingSize);
+
     setCopyDetailsRecipe({ ...detailsARecipe });
     dispatch(setServingCounter(detailsARecipe?.recipeId?.servings || 1));
-    SetcalculateIngOz(detailsARecipe?.tempVersionInfo?.version?.servingSize);
+    SetcalculateIngOz(
+      parseInt(`${detailsARecipe?.tempVersionInfo?.version?.servingSize}`) || 1,
+    );
     setExistingImages(
       detailsARecipe?.recipeId?.image?.map((item) => `${item?.image}`),
     );
@@ -319,7 +349,7 @@ const EditRecipeComponent = () => {
 
   useEffect(() => {
     handleFetchIngrdients(
-      selectedIngredientsList,
+      selectedIngredientsList.filter((ing) => ing?.ingredientStatus === "ok"),
       nutritionState,
       SetcalculateIngOz,
       false,
@@ -375,6 +405,7 @@ const EditRecipeComponent = () => {
           editOrCreateVersionLoading || editARecipeLoading
         }
         versionsCount={detailsARecipe?.versionsCount}
+        ingredientAddingType="parsing"
       />
       <ConfirmationModal
         text="You can't edit original recipe but you can make a new version like original one !!!"
