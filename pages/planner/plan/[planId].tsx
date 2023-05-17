@@ -120,7 +120,11 @@ const MyPlan = () => {
         .filter(
           (value, index, self) =>
             index === self.findIndex((t) => t._id === value._id),
-        ),
+        )
+        .map((recipe) => ({
+          recipeId: recipe,
+          defaultVersion: recipe?.defaultVersion,
+        })),
     [plan],
   );
 
@@ -201,6 +205,36 @@ const MyPlan = () => {
       });
     }
   };
+
+  const movePlanHandler = useCallback((dropId, draggedItem) => {
+    setPlanlist((plans) =>
+      plans.map((plan) => {
+        // When a plan is dropped to a new day we have to add plan
+        if (plan.id === dropId) {
+          return {
+            ...plan,
+            //Checking if the new recipe already exists
+            recipes: plan.recipes.find(
+              (recipe) => recipe._id === draggedItem.recipe._id,
+            )
+              ? plan.recipes
+              : plan.recipes.concat(draggedItem.recipe),
+          };
+        }
+        // Clearing the current days recipe as the recipe is moved to some different date
+        else if (plan.id === draggedItem.plannerId) {
+          return {
+            ...plan,
+            recipes: plan.recipes.filter(
+              (recipe) => recipe._id !== draggedItem.recipe._id,
+            ),
+          };
+        } else {
+          return plan;
+        }
+      }),
+    );
+  }, []);
 
   const shareHandler = useCallback(async () => {
     sharePlan({
@@ -283,7 +317,11 @@ const MyPlan = () => {
           <div className="row">
             <div className="col-3">
               {isEditMode ? (
-                <PlannerQueue panel="plan" modifyPlan={modifyPlan} />
+                <PlannerQueue
+                  panel="plan"
+                  recipes={allPlannedRecipes}
+                  modifyPlan={modifyPlan}
+                />
               ) : (
                 <PlanDiscovery recipes={allPlannedRecipes} />
               )}
@@ -395,6 +433,7 @@ const MyPlan = () => {
                   data={planlist}
                   cart={false}
                   action={false}
+                  onMoveRecipe={isEditMode && movePlanHandler}
                   onRemove={isEditMode && deleteRecipeFromPlan}
                 />
               </div>

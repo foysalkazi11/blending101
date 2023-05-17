@@ -17,6 +17,8 @@ const FeedbackImport = dynamic(() => import("simple-screenshot-feedback"), {
   ssr: false,
 });
 import "@fortawesome/fontawesome-svg-core/styles.css";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 config.autoAddCss = false;
 Amplify.configure(awsconfig);
@@ -27,12 +29,12 @@ function MyApp({ Component, pageProps }: AppProps) {
   };
 
   return (
-    <>
-      <ApolloProvider client={client}>
-        <Provider store={store}>
-          <AuthProvider>
+    <ApolloProvider client={client}>
+      <Provider store={store}>
+        <AuthProvider>
+          <DndProvider backend={HTML5Backend}>
             <Loader />
-            <ToastContainer limit={3}/>
+            <ToastContainer limit={3} />
             {/* @ts-ignore */}
             <FeedbackImport
               //@ts-ignore
@@ -43,10 +45,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 
             {/* @ts-ignore */}
             <Component {...pageProps} />
-          </AuthProvider>
-        </Provider>
-      </ApolloProvider>
-    </>
+          </DndProvider>
+        </AuthProvider>
+      </Provider>
+    </ApolloProvider>
   );
 }
 

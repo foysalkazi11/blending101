@@ -1,26 +1,12 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import { useLazyQuery, useQuery } from "@apollo/client";
-import { useDispatch } from "react-redux";
-import {
-  faCalendarDay,
-  faTelescope,
-  faPlusCircle,
-} from "@fortawesome/pro-regular-svg-icons";
+import { faTelescope } from "@fortawesome/pro-regular-svg-icons";
 
-import Pagination from "../../molecules/Pagination/ServerPagination.component";
 import Combobox from "../../organisms/Forms/Combobox.component";
 import Searchbox from "../../molecules/Searchbox/Searchbox.component";
 import ToggleCard from "../../../theme/toggleCard/toggleCard.component";
 import IconHeading from "../../../theme/iconHeading/iconHeading.component";
 import SkeletonElement from "../../../theme/skeletons/SkeletonElement";
 import RecipeCard from "../../molecules/Card/RecipeCard.component";
-import Icon from "../../atoms/Icon/Icon.component";
-
-import { GET_ALL_PLANS } from "../../../graphql/Planner";
-import { GET_BLEND_CATEGORY } from "../../../graphql/Recipe";
-import { useAppSelector } from "../../../redux/hooks";
-import { setRecipeInfo } from "../../../redux/slices/Challenge.slice";
-
 import styles from "./PlanDiscovery.module.scss";
 import PlanCard from "./PlanCard.component";
 import { useAllPlan } from "../../../hooks/modules/Plan/usePlanDiscovery";
@@ -127,14 +113,17 @@ const Recipes = (props) => {
   const { recipes } = props;
   return recipes?.map((recipe) => {
     const {
-      _id,
-      name,
-      recipeBlendCategory,
-      averageRating,
-      totalRating,
-      image,
+      recipeId: {
+        _id,
+        name,
+        recipeBlendCategory,
+        averageRating,
+        totalRating,
+        image,
+      },
       defaultVersion,
     } = recipe;
+
     return (
       <RecipeCard
         key={_id}

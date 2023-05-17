@@ -73,6 +73,7 @@ const useAllPlan = (props: IPlanDiscoveryHook) => {
 const useFeaturedPlan = (props: IPlanDiscoveryHook) => {
   const { param, page, setPage } = props;
 
+  const hasFetchedPlan = useRef(false);
   const [response, setResponse] = useState([]);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(false);
@@ -111,34 +112,40 @@ const useFeaturedPlan = (props: IPlanDiscoveryHook) => {
   const [getAllPopularRecipes] = useLazyQuery(GET_RECCOMENDED_PLANS);
   const [getAllLatestRecipes] = useLazyQuery(GET_POPULAR_PLANS);
 
-  async function fetchData(config) {
-    setLoading(true);
-    let response: any;
-    switch (param) {
-      case "recommended":
-        response = await getAllRecommendedRecipes(config);
-        break;
-      case "popular":
-        response = await getAllPopularRecipes(config);
-        break;
-      case "recent":
-        response = await getAllLatestRecipes(config);
-        break;
-      default:
-        return;
-    }
-    const data = response.data?.result;
-    setResponse((prevPlan) => [...prevPlan, ...data?.plans]);
-    setHasMore(data?.plans?.length > 0);
-    setLoading(false);
-  }
-
   useEffect(() => {
-    if (param !== "") {
-      fetchData(config);
+    async function fetchData(config) {
+      setLoading(true);
+      let response: any;
+      switch (param) {
+        case "recommended":
+          response = await getAllRecommendedRecipes(config);
+          break;
+        case "popular":
+          response = await getAllPopularRecipes(config);
+          break;
+        case "recent":
+          response = await getAllLatestRecipes(config);
+          break;
+        default:
+          return;
+      }
+      const data = response.data?.result;
+      setResponse((prevPlan) => [...prevPlan, ...data?.plans]);
+      setHasMore(data?.plans?.length > 0);
+      setLoading(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [param, config]);
+
+    if (param !== "" && !hasFetchedPlan.current) {
+      fetchData(config);
+      hasFetchedPlan.current = true;
+    }
+  }, [
+    param,
+    config,
+    getAllRecommendedRecipes,
+    getAllPopularRecipes,
+    getAllLatestRecipes,
+  ]);
 
   return { data: response, loading, observer: lastPlanRef };
 };
