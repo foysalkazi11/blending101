@@ -626,8 +626,9 @@ const SingleIngredient = ({
                 windowScrollToZero(elem._id === nutritionState?._id ? {} : elem)
               }
             >
-              {elem.ingredientName}
+              {elem?.ingredientName}
             </span>
+            {elem.comment && <span>{`, ${elem.comment}`}</span>}
           </div>
         </>
       ) : (

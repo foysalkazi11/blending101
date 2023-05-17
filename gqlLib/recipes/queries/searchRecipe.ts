@@ -50,6 +50,7 @@ const SEARCH_RECIPE = gql`
             qaId
           }
           ingredients {
+            comment
             ingredientId {
               _id
               ingredientName

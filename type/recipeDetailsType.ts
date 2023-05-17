@@ -75,6 +75,7 @@ export interface ErrorIngredientsType extends IngredientType {
 }
 
 export interface IngredientType {
+  comment?: string;
   ingredientId: IngredientId;
   portions: Portion[];
   weightInGram: number;
