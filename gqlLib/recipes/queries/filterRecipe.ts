@@ -39,6 +39,11 @@ const FILTER_RECIPE = gql`
         defaultVersion {
           _id
           postfixTitle
+          errorIngredients {
+            errorString
+            errorIngredientId: ingredientId
+            qaId
+          }
           ingredients {
             ingredientId {
               _id

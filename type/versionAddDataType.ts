@@ -1,12 +1,9 @@
-interface ingredientsType {
-  ingredientId: string;
-  selectedPortionName: string;
-  weightInGram: number;
-}
+import { ErrorIngredientsType, IngredientType } from "./recipeDetailsType";
 
 export interface VersionAddDataType {
   description?: string;
-  ingredients?: ingredientsType[];
+  ingredients?: IngredientType[] | ErrorIngredientsType[];
+  errorIngredients?: ErrorIngredientsType[];
   postfixTitle: string;
   recipeId: string;
   recipeInstructions?: string[];

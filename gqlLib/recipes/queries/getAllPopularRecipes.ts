@@ -32,6 +32,11 @@ const GET_ALL_POPULAR_RECIPES = gql`
       defaultVersion {
         _id
         postfixTitle
+        errorIngredients {
+          errorString
+          errorIngredientId: ingredientId
+          qaId
+        }
         ingredients {
           ingredientId {
             _id

@@ -47,6 +47,11 @@ const GET_A_RECIPE = gql`
         recipeId
         recipeInstructions
         servingSize
+        errorIngredients {
+          errorString
+          errorIngredientId: ingredientId
+          qaId
+        }
         ingredients {
           ingredientId {
             ingredientName

@@ -1,5 +1,7 @@
 import { RecipeCreatorInfo } from "./recipeType";
 
+export type IngredientStatusType = "ok" | "partial_ok" | "not_ok";
+
 export interface RecipeDetailsType {
   addedToCompare: boolean;
   notes: number;
@@ -10,11 +12,6 @@ export interface RecipeDetailsType {
   myRecipes: boolean;
   versionsCount: number;
   personalRating?: number;
-  // recipeVersion: any[];
-  // postfixTitle?: string;
-  // versionId?: string;
-  // originalVersion: VersionDataType;
-  //isVersionActive: boolean;
   recipeId: {
     _id: string;
     userId: RecipeCreatorInfo;
@@ -29,18 +26,16 @@ export interface RecipeDetailsType {
     averageRating: number;
     totalViews: number;
     recipeBlendCategory: RecipeBlendCategory;
-    ingredients: Ingredient[];
+    ingredients: IngredientType[];
     image: Image[];
     servingSize: string;
     servings: number;
     originalVersion: VersionDataType;
     token: string;
   };
-
   turnedOnVersions: VersionDataType[];
   turnedOffVersions: VersionDataType[];
   tempVersionInfo?: {
-    // id: string;
     isShareAble: boolean;
     isOriginalVersion: boolean;
     version: VersionDataType;
@@ -54,7 +49,8 @@ export interface VersionDataType {
   recipeInstructions?: any[];
   postfixTitle: string;
   description?: string;
-  ingredients?: Ingredient[];
+  ingredients?: IngredientType[] | ErrorIngredientsType[];
+  errorIngredients?: ErrorIngredientsType[];
   selectedImage?: string;
   isVersionSharable?: boolean;
   isDefault?: boolean;
@@ -71,11 +67,20 @@ export interface RecipeBlendCategory {
   _id: string;
 }
 
-export interface Ingredient {
+export interface ErrorIngredientsType extends IngredientType {
+  errorString: string;
+  errorIngredientId: string;
+  qaId: string;
+  ingredientStatus?: IngredientStatusType;
+}
+
+export interface IngredientType {
   ingredientId: IngredientId;
   portions: Portion[];
   weightInGram: number;
   selectedPortion: SelectedPortion;
+  ingredientStatus?: IngredientStatusType;
+  errorString?: string;
 }
 
 export interface IngredientId {
