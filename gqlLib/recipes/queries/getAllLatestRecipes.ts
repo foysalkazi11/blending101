@@ -38,6 +38,7 @@ const GET_ALL_LATEST_RECIPES = gql`
           qaId
         }
         ingredients {
+          comment
           ingredientId {
             _id
             ingredientName

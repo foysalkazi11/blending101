@@ -38,6 +38,7 @@ const GET_ALL_POPULAR_RECIPES = gql`
           qaId
         }
         ingredients {
+          comment
           ingredientId {
             _id
             ingredientName
