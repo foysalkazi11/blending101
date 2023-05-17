@@ -171,10 +171,15 @@ const EditRecipeComponent = () => {
           });
         }
         if (item?.ingredientStatus === "partial_ok") {
-          const { errorString, ingredientId, qaId } = item;
+          const {
+            errorString = "",
+            ingredientId = "",
+            errorIngredientId = "",
+            qaId = "",
+          } = item;
           errorIngredients.push({
             errorString,
-            ingredientId,
+            ingredientId: errorIngredientId || ingredientId,
             qaId,
           });
         }

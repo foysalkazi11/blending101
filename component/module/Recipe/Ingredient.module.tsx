@@ -305,6 +305,7 @@ const ParseIngredient = (props) => {
         let partialError = errorIngredients[notFoundIndexes?.length - 1 || 0];
         partialError = {
           ...partialError,
+          errorIngredientId: partialError?.ingredientId,
           ingredientStatus: "partial_ok",
           _id: partialError?.qaId,
           ingredientName: partialError?.errorString,
