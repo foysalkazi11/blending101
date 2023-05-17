@@ -156,34 +156,33 @@ const EditRecipeComponent = () => {
   const editARecipeFunction = async () => {
     let ingArr = [];
     let errorIngredients = [];
-    selectedIngredientsList
-      .filter((ing) => ing?.ingredientStatus !== "not_ok")
-      .forEach((item) => {
-        if (item?.ingredientStatus === "ok") {
-          let value = item?.portions?.find((item) => item.default);
-          ingArr?.push({
-            ingredientId: item?._id,
-            selectedPortionName:
-              item?.selectedPortion?.name || value?.measurement,
-            weightInGram: item?.weightInGram
-              ? Number(item?.weightInGram)
-              : Number(value?.meausermentWeight),
-          });
-        }
-        if (item?.ingredientStatus === "partial_ok") {
-          const {
-            errorString = "",
-            ingredientId = "",
-            errorIngredientId = "",
-            qaId = "",
-          } = item;
-          errorIngredients.push({
-            errorString,
-            ingredientId: errorIngredientId || ingredientId,
-            qaId,
-          });
-        }
-      });
+    selectedIngredientsList.forEach((item) => {
+      if (item?.ingredientStatus === "ok") {
+        let value = item?.portions?.find((item) => item.default);
+        ingArr?.push({
+          ingredientId: item?._id,
+          selectedPortionName:
+            item?.selectedPortion?.name || value?.measurement,
+          weightInGram: item?.weightInGram
+            ? Number(item?.weightInGram)
+            : Number(value?.meausermentWeight),
+          comment: item?.comment || null,
+        });
+      }
+      if (item?.ingredientStatus === "partial_ok") {
+        const {
+          errorString = "",
+          ingredientId = "",
+          errorIngredientId = "",
+          qaId = "",
+        } = item;
+        errorIngredients.push({
+          errorString,
+          ingredientId: errorIngredientId || ingredientId,
+          qaId,
+        });
+      }
+    });
 
     const howToArr = recipeInstruction?.map((item) => `${item?.step}`);
     const isReallyOriginalVersion =

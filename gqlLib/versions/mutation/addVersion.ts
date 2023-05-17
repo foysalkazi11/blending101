@@ -16,6 +16,7 @@ const ADD_VERSION = gql`
         qaId
       }
       ingredients {
+        comment
         ingredientId {
           ingredientName
           _id

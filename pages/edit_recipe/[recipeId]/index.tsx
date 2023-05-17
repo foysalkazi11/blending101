@@ -168,6 +168,7 @@ const EditRecipeComponent = () => {
             weightInGram: item?.weightInGram
               ? Number(item?.weightInGram)
               : Number(value?.meausermentWeight),
+            comment: item?.comment || null,
           });
         }
         if (item?.ingredientStatus === "partial_ok") {

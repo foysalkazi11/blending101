@@ -215,6 +215,9 @@ const IngredientDetails = (props: IngredientDetailsProps) => {
                       >
                         {ingredient?.ingredientId?.ingredientName}
                       </span>
+                      {ingredient?.comment && (
+                        <span>{`, ${ingredient?.comment}`}</span>
+                      )}
                     </div>
                   ) : (
                     <div

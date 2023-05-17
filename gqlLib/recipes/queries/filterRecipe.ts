@@ -45,6 +45,7 @@ const FILTER_RECIPE = gql`
             qaId
           }
           ingredients {
+            comment
             ingredientId {
               _id
               ingredientName

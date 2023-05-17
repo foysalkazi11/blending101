@@ -38,6 +38,7 @@ const GET_ALL_RECOMMENDED_RECIPES = gql`
           qaId
         }
         ingredients {
+          comment
           ingredientId {
             _id
             ingredientName
