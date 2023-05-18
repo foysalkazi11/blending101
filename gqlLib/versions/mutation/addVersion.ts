@@ -10,7 +10,13 @@ const ADD_VERSION = gql`
       recipeInstructions
       servingSize
       selectedImage
+      errorIngredients {
+        errorString
+        errorIngredientId: ingredientId
+        qaId
+      }
       ingredients {
+        comment
         ingredientId {
           ingredientName
           _id

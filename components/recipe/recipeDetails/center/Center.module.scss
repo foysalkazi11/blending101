@@ -429,15 +429,25 @@ $slider-height: 220px;
       max-width: 85%;
 
       img {
-        margin-right: 18px;
-        height: 25px;
+        width: 3rem;
         aspect-ratio: 1;
         object-fit: contain;
       }
 
       div {
+        margin-left: 18px;
         color: #000;
         font-size: 16px;
+      }
+      .imageBox {
+        width: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      &__ingredient_partial_ok {
+        color: #c4c4c4 !important;
+        font-style: italic;
       }
 
       &__highlighted {

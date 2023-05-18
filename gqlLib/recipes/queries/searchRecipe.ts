@@ -44,7 +44,13 @@ const SEARCH_RECIPE = gql`
         defaultVersion {
           _id
           postfixTitle
+          errorIngredients {
+            errorString
+            errorIngredientId: ingredientId
+            qaId
+          }
           ingredients {
+            comment
             ingredientId {
               _id
               ingredientName

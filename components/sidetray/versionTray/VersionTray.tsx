@@ -119,6 +119,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           recipeInstructions: isNewVersionInfo?.recipeInstructions || null,
           servingSize: isNewVersionInfo?.servingSize || null,
           selectedImage: isNewVersionInfo?.selectedImage || "",
+          errorIngredients: isNewVersionInfo?.errorIngredients || null,
         };
         const version = await handleToAddRecipeVersion(
           obj,

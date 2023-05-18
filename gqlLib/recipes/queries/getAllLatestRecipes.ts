@@ -32,7 +32,13 @@ const GET_ALL_LATEST_RECIPES = gql`
       defaultVersion {
         _id
         postfixTitle
+        errorIngredients {
+          errorString
+          errorIngredientId: ingredientId
+          qaId
+        }
         ingredients {
+          comment
           ingredientId {
             _id
             ingredientName
