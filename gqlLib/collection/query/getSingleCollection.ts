@@ -80,6 +80,7 @@ const GET_SINGLE_COLLECTION = gql`
             brandName
             brandImage
           }
+          url
           averageRating
           numberOfRating
           servings

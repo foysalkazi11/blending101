@@ -172,9 +172,9 @@ const IngredientSection = (props) => {
                         ) : (
                           <Draggable
                             key={elem?.ingredientName + elem?._id || index}
-                            draggableId={
+                            draggableId={`${
                               elem?.ingredientName + elem?._id || index
-                            }
+                            }`}
                             index={index}
                           >
                             {(provided) => (
@@ -305,6 +305,7 @@ const ParseIngredient = (props) => {
         let partialError = errorIngredients[notFoundIndexes?.length - 1 || 0];
         partialError = {
           ...partialError,
+          errorIngredientId: partialError?.ingredientId,
           ingredientStatus: "partial_ok",
           _id: partialError?.qaId,
           ingredientName: partialError?.errorString,
@@ -625,8 +626,9 @@ const SingleIngredient = ({
                 windowScrollToZero(elem._id === nutritionState?._id ? {} : elem)
               }
             >
-              {elem.ingredientName}
+              {elem?.ingredientName}
             </span>
+            {elem.comment && <span>{`, ${elem.comment}`}</span>}
           </div>
         </>
       ) : (
@@ -644,11 +646,7 @@ const SingleIngredient = ({
         </span>
       )}
 
-      <div
-        className={`${classes.ingredients__iconTray} ${
-          elem._id === nutritionState?._id && "flex"
-        }`}
-      >
+      <div className={`${classes.ingredients__iconTray}`}>
         {elem?.ingredientStatus === "ok" && (
           <>
             <Tooltip direction="top" content="Wiki">
@@ -677,11 +675,6 @@ const SingleIngredient = ({
           <FontAwesomeIcon
             icon={faPen}
             className={`${classes.ingredients__iconTray__icons}
-             ${
-               (elem?.ingredientStatus === "not_ok" ||
-                 elem?.ingredientStatus === "partial_ok") &&
-               "activeColorPrimary"
-             }
             `}
             onClick={() => editIngredient(elem)}
           />
@@ -689,11 +682,8 @@ const SingleIngredient = ({
         <Tooltip direction="top" content="Remove">
           <FontAwesomeIcon
             icon={faTrash}
-            className={`${classes.ingredients__iconTray__icons} ${
-              (elem?.ingredientStatus === "not_ok" ||
-                elem?.ingredientStatus === "partial_ok") &&
-              "activeColorPrimary"
-            }`}
+            className={`${classes.ingredients__iconTray__icons} 
+            `}
             onClick={() => removeIngredient(elem?._id)}
           />
         </Tooltip>

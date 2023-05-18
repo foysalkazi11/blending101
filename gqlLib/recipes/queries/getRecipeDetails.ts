@@ -47,7 +47,13 @@ const GET_A_RECIPE = gql`
         recipeId
         recipeInstructions
         servingSize
+        errorIngredients {
+          errorString
+          errorIngredientId: ingredientId
+          qaId
+        }
         ingredients {
+          comment
           ingredientId {
             ingredientName
             _id
@@ -78,6 +84,7 @@ const GET_A_RECIPE = gql`
         postfixTitle
         description
         ingredients {
+          comment
           ingredientId {
             ingredientName
             _id
@@ -109,6 +116,7 @@ const GET_A_RECIPE = gql`
         postfixTitle
         description
         ingredients {
+          comment
           ingredientId {
             ingredientName
             _id

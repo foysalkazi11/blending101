@@ -14,14 +14,18 @@ import MacroMakeup from "../../molecules/Charts/MacroMakeup.component";
 interface InsightsProps {
   categories: any[];
   ingredients: any[];
+  height?: string;
 }
 
 const Insights = (props: InsightsProps) => {
-  const { categories, ingredients } = props;
+  const { categories, height, ingredients } = props;
   return (
     <div className={styles.insights}>
       <IconHeading icon={faLightbulbOn} title="Plan Insights" />
-      <div className={styles.insights__body}>
+      <div
+        className={styles.insights__body}
+        style={{ height: height || "auto" }}
+      >
         <div className={`row ${styles.insights__summary}`}>
           <div className="col-4">
             <h4>786</h4>

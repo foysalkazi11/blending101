@@ -500,11 +500,13 @@ export default function DatacardComponent({
               direction="right"
             >
               {!isEmptyObj(brand || {}) ? (
-                <img
-                  className={styles.brand}
-                  src={`${brand?.brandImage}` || "/icons/delish.png"}
-                  alt="brand"
-                />
+                <a href="https://www.allrecipes.com/recipe/269881/saucy-sriracha-franks/">
+                  <img
+                    className={styles.brand}
+                    src={`${brand?.brandImage}` || "/icons/delish.png"}
+                    alt="brand"
+                  />
+                </a>
               ) : userId?.image ? (
                 <img className={styles.user} src={userId?.image} alt="brand" />
               ) : (

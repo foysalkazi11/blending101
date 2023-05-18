@@ -63,6 +63,7 @@ const VersionCompare = () => {
       selectedPortionQuantity: number;
       ingredientName: string;
       label: string; // `${selectedPortionQuantity} ${selectedPortionName} ${ingredientName}`;
+      comment?: string;
     }[];
   }>({
     versionId: "",
@@ -363,11 +364,13 @@ const VersionCompare = () => {
         weightInGram,
         ingredientName,
         selectedPortionQuantity,
+        comment = "",
       } = item;
       ingArr?.push({
         ingredientId: item?.ingredientId,
         selectedPortionName: item?.selectedPortionName,
         weightInGram: item?.weightInGram,
+        comment: comment || null,
       });
       newIngredientObj.push({
         ingredientId: {
