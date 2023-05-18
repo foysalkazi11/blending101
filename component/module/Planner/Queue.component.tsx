@@ -29,12 +29,14 @@ interface PlannerPanelProps {
   week?: any;
   recipes?: any[]; // Recipes for Queue Panels
   isWeekFromURL?: boolean;
+  height?: string;
 }
 
 const PlannerQueue = (props: PlannerPanelProps) => {
   const {
     panel,
     week,
+    height,
     recipes: queuedRecipes,
     isWeekFromURL,
     modifyPlan,
@@ -124,6 +126,13 @@ const PlannerQueue = (props: PlannerPanelProps) => {
         className={`${styles.wrapper} ${
           styles[toggler ? "wrapper--discover" : "wrapper--queue"]
         }`}
+        style={{
+          maxHeight: height
+            ? toggler
+              ? `calc(${height} - 111px)`
+              : `calc(${height} - 51px)`
+            : "auto",
+        }}
         ref={parentRef}
       >
         <Recipes

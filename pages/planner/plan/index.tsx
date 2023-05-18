@@ -43,6 +43,7 @@ const MyPlan = () => {
   const [showGroceryTray] = useState(true);
   const [showDuplicateAlert, setShowDuplicateAlert] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [panelHeight, setPanelHeight] = useState("1000px");
 
   const { week, setWeek, isFetchingFromURL } = useWeek();
   const { plans, topIngredients, recipeTypes, onMergeOrReplace } =
@@ -138,6 +139,7 @@ const MyPlan = () => {
                 panel="my-plan"
                 week={week}
                 isWeekFromURL={isFetchingFromURL}
+                height={panelHeight}
               />
             </div>
             <div className="col-6" style={{ padding: "0 3.5rem" }}>
@@ -152,7 +154,7 @@ const MyPlan = () => {
                   </div>
                 </div>
               </div>
-              <div className={styles.plan}>
+              <div className={styles.plan} style={{ height: panelHeight }}>
                 {showForm ? (
                   <PlanForm methods={methods} />
                 ) : (
@@ -210,7 +212,11 @@ const MyPlan = () => {
               </div>
             </div>
             <div className="col-3">
-              <Insights categories={recipeTypes} ingredients={topIngredients} />
+              <Insights
+                height={panelHeight}
+                categories={recipeTypes}
+                ingredients={topIngredients}
+              />
             </div>
           </div>
         </div>
