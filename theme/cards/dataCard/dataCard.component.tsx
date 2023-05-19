@@ -83,6 +83,7 @@ interface dataCardInterface {
   defaultVersion?: VersionDataType;
   brand?: RecipeBrandType;
   personalRating?: number;
+  origin?: string;
 }
 
 export default function DatacardComponent({
@@ -124,6 +125,7 @@ export default function DatacardComponent({
   defaultVersion = {} as VersionDataType,
   brand,
   personalRating = 0,
+  origin,
 }: dataCardInterface) {
   carbs = Math.round(carbs);
   score = Math.round(score);
@@ -500,7 +502,27 @@ export default function DatacardComponent({
               direction="right"
             >
               {!isEmptyObj(brand || {}) ? (
-                <a href="https://www.allrecipes.com/recipe/269881/saucy-sriracha-franks/">
+                <a
+                  href={origin}
+                  onClick={(e) => {
+                    const id = "aobndnikoflneifipokonjlgjobnpjbd";
+                    //@ts-ignore
+                    chrome.runtime.sendMessage(
+                      id,
+                      {
+                        action: "BRAND_NAVIGATE",
+                        payload: {
+                          id: recipeId,
+                          name: postfixTitle || title,
+                          image,
+                          origin,
+                        },
+                      },
+                      () => {},
+                    );
+                    window.location.href = "";
+                  }}
+                >
                   <img
                     className={styles.brand}
                     src={`${brand?.brandImage}` || "/icons/delish.png"}
