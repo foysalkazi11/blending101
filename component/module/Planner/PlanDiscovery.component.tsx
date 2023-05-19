@@ -14,10 +14,11 @@ import { useRecipeCategory } from "../../../hooks/modules/Plan/usePlanRecipes";
 
 interface PlannerPanelProps {
   recipes: any[];
+  setOpenCollectionModal: (arg: boolean) => void;
 }
 
 const PlanDiscovery = (props: PlannerPanelProps) => {
-  const { recipes } = props;
+  const { recipes, setOpenCollectionModal } = props;
   const [toggler, setToggler] = useState(true);
   const [query, setQuery] = useState("");
   const [type, setType] = useState("all");
@@ -78,7 +79,11 @@ const PlanDiscovery = (props: PlannerPanelProps) => {
       )}
       <div className={styles.wrapper}>
         {toggler ? (
-          <Plans plans={plans} observer={observer} />
+          <Plans
+            plans={plans}
+            observer={observer}
+            setOpenCollectionModal={setOpenCollectionModal}
+          />
         ) : (
           <Recipes recipes={recipes || []} />
         )}
@@ -97,13 +102,18 @@ const PlanDiscovery = (props: PlannerPanelProps) => {
 };
 
 const Plans = (props) => {
-  const { plans, observer } = props;
+  const { plans, observer, setOpenCollectionModal } = props;
+
   return plans?.map((plan) => (
     <div key={plan?._id} ref={observer} className="mt-10">
       <PlanCard
         planId={plan?._id}
         title={plan.planName}
         image={plan?.image?.url}
+        isCollectionIds={plan?.planCollections}
+        noOfComments={plan?.commentsCount}
+        setOpenCollectionModal={setOpenCollectionModal}
+        planComrFrom="globalPlans"
       />
     </div>
   ));

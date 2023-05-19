@@ -27,6 +27,7 @@ import TrayTag from "../TrayTag";
 import TrayWrapper from "../TrayWrapper";
 import styles from "./PlanCollectionTray.module.scss";
 import useToUpdatePlanDetailsField from "../../../customHooks/plan/useToUpdatePlanDetailsField";
+import useToUpdateGlobalPlans from "../../../customHooks/plan/useToUpdateGlobalPlans";
 
 interface Props {
   showTagByDefaut?: boolean;
@@ -48,7 +49,9 @@ const PlanCollectionTray = ({ showPanle, showTagByDefaut }: Props) => {
   const { isOpenPlanCollectionTray, activePlanForCollection } = useAppSelector(
     (state) => state?.planner,
   );
-  const memberId = useAppSelector((state) => state?.user?.dbUser?._id || "");
+  const memberId = useAppSelector(
+    (state) => state?.user?.dbUser?._id || "",
+  ) as string;
   const isMounted = useRef(null);
   const [
     getAllPlanCollection,
@@ -72,6 +75,7 @@ const PlanCollectionTray = ({ showPanle, showTagByDefaut }: Props) => {
   const dispatch = useAppDispatch();
   const handleUpdatePlanField = useToUpdatePlanField();
   const handleUpdatePlanDetailsField = useToUpdatePlanDetailsField();
+  const handleUpdateGlobalPlansField = useToUpdateGlobalPlans();
 
   const handleAddOrRemoveBlogFormCollection = async () => {
     try {
@@ -85,15 +89,33 @@ const PlanCollectionTray = ({ showPanle, showTagByDefaut }: Props) => {
       const updateObj = {
         planCollections: activePlanForCollection.collectionIds,
       };
-      activePlanForCollection.typeOfPlan === "list"
-        ? handleUpdatePlanField(activePlanForCollection.id, updateObj)
-        : handleUpdatePlanDetailsField(activePlanForCollection.id, updateObj);
+      switch (activePlanForCollection.planComeFrom) {
+        case "list":
+          handleUpdatePlanField(activePlanForCollection.id, updateObj);
+          break;
+        case "details":
+          handleUpdatePlanDetailsField(activePlanForCollection.id, updateObj);
+          break;
+        case "globalPlans":
+          handleUpdateGlobalPlansField(activePlanForCollection.id, updateObj);
+          break;
+        case "homePage":
+          handleUpdateGlobalPlansField(
+            activePlanForCollection.id,
+            updateObj,
+            8,
+          );
+          break;
+        default:
+          handleUpdatePlanField(activePlanForCollection.id, updateObj);
+          break;
+      }
 
       dispatch(
         setIsActivePlanForCollection({
           id: "",
           collectionIds: [],
-          typeOfPlan: "list",
+          planComeFrom: "list",
         }),
       );
       notification("info", `Collection update successfully`);
@@ -312,7 +334,7 @@ const PlanCollectionTray = ({ showPanle, showTagByDefaut }: Props) => {
             setIsActivePlanForCollection({
               id: "",
               collectionIds: [],
-              typeOfPlan: "list",
+              planComeFrom: "list",
             }),
           );
         dispatch(setIsOpenPlanCollectionTray(!isOpenPlanCollectionTray));

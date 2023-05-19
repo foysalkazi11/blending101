@@ -27,11 +27,11 @@ interface LastModifiedPlanCollectionType {
   _id: string;
   name: string;
 }
-
+export type PlanComeFromType = "list" | "details" | "globalPlans" | "homePage";
 interface ActivePlanForCollectionType {
   id: string;
   collectionIds: string[];
-  typeOfPlan: "list" | "details";
+  planComeFrom: PlanComeFromType;
 }
 
 interface PlannerState {
@@ -57,7 +57,7 @@ const initialState: PlannerState = {
   activePlanForCollection: {
     id: "",
     collectionIds: [],
-    typeOfPlan: "list",
+    planComeFrom: "list",
   },
 };
 

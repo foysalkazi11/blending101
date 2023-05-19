@@ -156,30 +156,33 @@ const EditRecipeComponent = () => {
   const editARecipeFunction = async () => {
     let ingArr = [];
     let errorIngredients = [];
-    selectedIngredientsList
-      .filter((ing) => ing?.ingredientStatus !== "not_ok")
-      .forEach((item) => {
-        if (item?.ingredientStatus === "ok") {
-          let value = item?.portions?.find((item) => item.default);
-          ingArr?.push({
-            ingredientId: item?._id,
-            selectedPortionName:
-              item?.selectedPortion?.name || value?.measurement,
-            weightInGram: item?.weightInGram
-              ? Number(item?.weightInGram)
-              : Number(value?.meausermentWeight),
-            comment: item?.comment || null,
-          });
-        }
-        if (item?.ingredientStatus === "partial_ok") {
-          const { errorString, ingredientId, qaId } = item;
-          errorIngredients.push({
-            errorString,
-            ingredientId,
-            qaId,
-          });
-        }
-      });
+    selectedIngredientsList.forEach((item) => {
+      if (item?.ingredientStatus === "ok") {
+        let value = item?.portions?.find((item) => item.default);
+        ingArr?.push({
+          ingredientId: item?._id,
+          selectedPortionName:
+            item?.selectedPortion?.name || value?.measurement,
+          weightInGram: item?.weightInGram
+            ? Number(item?.weightInGram)
+            : Number(value?.meausermentWeight),
+          comment: item?.comment || null,
+        });
+      }
+      if (item?.ingredientStatus === "partial_ok") {
+        const {
+          errorString = "",
+          ingredientId = "",
+          errorIngredientId = "",
+          qaId = "",
+        } = item;
+        errorIngredients.push({
+          errorString,
+          ingredientId: errorIngredientId || ingredientId,
+          qaId,
+        });
+      }
+    });
 
     const howToArr = recipeInstruction?.map((item) => `${item?.step}`);
     const isReallyOriginalVersion =
@@ -318,13 +321,9 @@ const EditRecipeComponent = () => {
 
   useEffect(() => {
     if (!detailsARecipe) return;
-    console.log(detailsARecipe?.tempVersionInfo?.version?.servingSize);
-
     setCopyDetailsRecipe({ ...detailsARecipe });
     dispatch(setServingCounter(detailsARecipe?.recipeId?.servings || 1));
-    SetcalculateIngOz(
-      parseInt(`${detailsARecipe?.tempVersionInfo?.version?.servingSize}`) || 1,
-    );
+    SetcalculateIngOz(detailsARecipe?.tempVersionInfo?.version?.servingSize);
     setExistingImages(
       detailsARecipe?.recipeId?.image?.map((item) => `${item?.image}`),
     );
@@ -350,7 +349,7 @@ const EditRecipeComponent = () => {
 
   useEffect(() => {
     handleFetchIngrdients(
-      selectedIngredientsList.filter((ing) => ing?.ingredientStatus === "ok"),
+      selectedIngredientsList,
       nutritionState,
       SetcalculateIngOz,
       false,
@@ -406,7 +405,7 @@ const EditRecipeComponent = () => {
           editOrCreateVersionLoading || editARecipeLoading
         }
         versionsCount={detailsARecipe?.versionsCount}
-        ingredientAddingType="parsing"
+        ingredientAddingType="auto"
       />
       <ConfirmationModal
         text="You can't edit original recipe but you can make a new version like original one !!!"
