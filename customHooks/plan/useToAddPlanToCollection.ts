@@ -3,16 +3,19 @@ import { useEffect } from "react";
 import { ADD_TO_LAST_MODIFIED_PLAN_COLLECTION } from "../../graphql/Planner";
 import { useAppDispatch } from "../../redux/hooks";
 import {
+  PlanComeFromType,
   setIsActivePlanForCollection,
   updateLastModifiedPlanCollection,
 } from "../../redux/slices/Planner.slice";
 import useToUpdatePlanField from "./useToUpdatePlanField";
 import useToUpdatePlanDetailsField from "./useToUpdatePlanDetailsField";
+import useToUpdateGlobalPlans from "./useToUpdateGlobalPlans";
 
 const useToAddPlanToCollection = () => {
   const dispatch = useAppDispatch();
   const handleUpdatePlanField = useToUpdatePlanField();
   const handleUpdatePlanDetailsField = useToUpdatePlanDetailsField();
+  const handleUpdateGlobalPlansField = useToUpdateGlobalPlans();
   let timeOut;
   const [addToBlogCollection] = useMutation(
     ADD_TO_LAST_MODIFIED_PLAN_COLLECTION,
@@ -22,7 +25,7 @@ const useToAddPlanToCollection = () => {
     planId: string = "",
     memberId: string = "",
     setOpenLastModifiedBlogCollectionModal: (arg: boolean) => void = () => {},
-    typeOfPlan: "list" | "details" = "list",
+    planComeFrom: PlanComeFromType = "list",
   ) => {
     try {
       const {
@@ -41,15 +44,30 @@ const useToAddPlanToCollection = () => {
         setIsActivePlanForCollection({
           id: planId,
           collectionIds: [addToLastModifiedPlanCollection?._id],
-          typeOfPlan,
+          planComeFrom,
         }),
       );
       const updateObj = {
         planCollections: [addToLastModifiedPlanCollection?._id],
       };
-      typeOfPlan === "list"
-        ? handleUpdatePlanField(planId, updateObj)
-        : handleUpdatePlanDetailsField(planId, updateObj);
+
+      switch (planComeFrom) {
+        case "list":
+          handleUpdatePlanField(planId, updateObj);
+          break;
+        case "details":
+          handleUpdatePlanDetailsField(planId, updateObj);
+          break;
+        case "globalPlans":
+          handleUpdateGlobalPlansField(planId, updateObj);
+          break;
+        case "homePage":
+          handleUpdateGlobalPlansField(planId, updateObj, 8);
+          break;
+        default:
+          handleUpdatePlanField(planId, updateObj);
+          break;
+      }
       setOpenLastModifiedBlogCollectionModal(true);
       timeOut = setTimeout(() => {
         setOpenLastModifiedBlogCollectionModal(false);

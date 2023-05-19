@@ -2,10 +2,12 @@ import { useQuery } from "@apollo/client";
 import router from "next/router";
 import { useMemo } from "react";
 import { GET_PLAN } from "../../../graphql/Planner";
+import { useAppSelector } from "../../../redux/hooks";
 
 const usePlan = () => {
+  const memberId = useAppSelector((state) => state?.user?.dbUser?._id || "");
   const { data, loading } = useQuery(GET_PLAN, {
-    variables: { planId: router.query.planId },
+    variables: { planId: router.query.planId, token: "", memberId },
     skip: router.query.planId === "",
   });
 

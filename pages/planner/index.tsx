@@ -153,6 +153,7 @@ const FeaturedPlan = ({ setOpenCollectionModal }) => {
                   isCollectionIds={item?.planCollections}
                   noOfComments={item?.commentsCount}
                   setOpenCollectionModal={setOpenCollectionModal}
+                  planComrFrom="list"
                 />
               </div>
             </div>
@@ -175,6 +176,7 @@ const FeaturedPlan = ({ setOpenCollectionModal }) => {
                   isCollectionIds={item?.planCollections}
                   noOfComments={item?.commentsCount}
                   setOpenCollectionModal={setOpenCollectionModal}
+                  planComrFrom="list"
                 />
               </div>
             </div>
@@ -197,6 +199,7 @@ const FeaturedPlan = ({ setOpenCollectionModal }) => {
                   isCollectionIds={item?.planCollections}
                   noOfComments={item?.commentsCount}
                   setOpenCollectionModal={setOpenCollectionModal}
+                  planComrFrom="list"
                 />
               </div>
             </div>

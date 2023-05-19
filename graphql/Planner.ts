@@ -219,6 +219,8 @@ export const GET_ALL_PLANS = gql`
         _id
         planName
         description
+        planCollections
+        commentsCount
         image {
           url
           hash
@@ -279,8 +281,8 @@ export const GET_POPULAR_PLANS = gql`
 `;
 
 export const GET_PLAN = gql`
-  query GetPlan($planId: String!) {
-    getAPlan(planId: $planId) {
+  query GetAPlan($planId: String!, $token: String, $memberId: String) {
+    getAPlan(planId: $planId, token: $token, memberId: $memberId) {
       plan {
         _id
         planName
