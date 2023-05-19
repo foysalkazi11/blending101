@@ -22,6 +22,7 @@ import { useAppSelector } from "../../../redux/hooks";
 import useToAddPlanToCollection from "../../../customHooks/plan/useToAddPlanToCollection";
 import Link from "next/link";
 import useToOpenPlanCollectionTray from "../../../customHooks/plan/useToOpenPlanCollectionTray";
+import { PlanComeFromType } from "../../../redux/slices/Planner.slice";
 
 interface dataCardInterface {
   title?: string;
@@ -57,6 +58,7 @@ interface dataCardInterface {
     start: Date;
     end: Date;
   };
+  planComrFrom?: PlanComeFromType;
 }
 
 function PlanCard({
@@ -80,6 +82,7 @@ function PlanCard({
   setOpenCollectionModal = () => {},
   customMenu = null,
   showMoreMenuAtHover = false,
+  planComrFrom = "list",
 }: dataCardInterface) {
   title = title || "Diabetes Friendly Meal Plan: Week 1";
   ingredients = ingredients;
@@ -224,12 +227,13 @@ function PlanCard({
                       ? handleOpenCollectionTray(
                           planId,
                           isCollectionIds,
-                          "list",
+                          planComrFrom,
                         )
                       : handleAddToCollection(
                           planId,
                           memberId,
                           setOpenCollectionModal,
+                          planComrFrom,
                         );
                   }}
                 />

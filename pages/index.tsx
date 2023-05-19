@@ -218,6 +218,9 @@ const Home = () => {
                         planId={plan?._id}
                         title={plan?.planName}
                         image={plan?.image?.url}
+                        noOfComments={plan?.commentsCount}
+                        isCollectionIds={plan?.planCollections}
+                        planComrFrom="homePage"
                       />
                     </div>
                   </div>

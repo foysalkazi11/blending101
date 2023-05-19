@@ -9,7 +9,7 @@ const useToUpdatePlanDetailsField = () => {
   const handleUpdatePlanDetailsField: Props = (id = "", obj = {}) => {
     const { getAPlan } = client.readQuery({
       query: GET_PLAN,
-      variables: { planId: id },
+      variables: { planId: id, token: "", memberId },
     });
 
     client.writeQuery({

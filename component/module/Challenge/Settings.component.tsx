@@ -464,6 +464,7 @@ const ChallengeDate = ({ dayState }) => {
           label="Start Date"
           name="startDate"
           type="date"
+          //@ts-ignore
           value={startDate}
           onChange={startDateHandler}
         />
