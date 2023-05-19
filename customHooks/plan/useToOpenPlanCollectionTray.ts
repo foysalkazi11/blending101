@@ -9,9 +9,15 @@ const useToOpenPlanCollectionTray = () => {
   const handleOpenCollectionTray = (
     id: string,
     collectionIds: string[],
-    typeOfPlan: "list" | "details",
+    planComeFrom: "list" | "details" | "globalPlans" | "homePage",
   ) => {
-    dispatch(setIsActivePlanForCollection({ id, collectionIds, typeOfPlan }));
+    dispatch(
+      setIsActivePlanForCollection({
+        id,
+        collectionIds,
+        planComeFrom,
+      }),
+    );
     dispatch(setIsOpenPlanCollectionTray(true));
   };
 

@@ -71,7 +71,7 @@ const MyPlan = () => {
   const memberId = useAppSelector((state) => state?.user?.dbUser?._id || "");
 
   const { data } = useQuery(GET_PLAN, {
-    variables: { planId: router.query.planId },
+    variables: { planId: router.query.planId, token: "", memberId },
     skip: router.query.planId === "",
   });
   const { data: comments } = useQuery(GET_ALL_PLAN_COMMENTS, {
@@ -263,11 +263,6 @@ const MyPlan = () => {
     <Container
       headerIcon="/icons/calender__sidebar.svg"
       headerTitle="BLENDING PLAN DETAILS"
-      showCommentsTray={{
-        show: true,
-        showPanle: "right",
-        showTagByDeafult: false,
-      }}
       headTagInfo={{
         title: "Blending plan details",
         description: "blending plans details",
@@ -323,7 +318,10 @@ const MyPlan = () => {
                   modifyPlan={modifyPlan}
                 />
               ) : (
-                <PlanDiscovery recipes={allPlannedRecipes} />
+                <PlanDiscovery
+                  recipes={allPlannedRecipes}
+                  setOpenCollectionModal={setOpenCollectionModal}
+                />
               )}
             </div>
             <div className="col-6" style={{ padding: "0 1.5rem" }}>
