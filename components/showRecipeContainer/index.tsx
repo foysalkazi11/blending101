@@ -194,6 +194,7 @@ const ShowRecipeContainer = ({
                       recipeBlendCategory,
                       userId,
                       brand,
+                      url,
                     },
                     defaultVersion: {
                       _id: defaultVersionId = "",
@@ -243,6 +244,7 @@ const ShowRecipeContainer = ({
                       updateDataFunc={updateContainerData}
                       brand={brand}
                       personalRating={personalRating}
+                      origin={url}
                     />
                   );
                 })}
