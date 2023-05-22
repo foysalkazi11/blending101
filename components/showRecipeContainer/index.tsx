@@ -201,8 +201,8 @@ const ShowRecipeContainer = ({
                       postfixTitle = "",
                       ingredients,
                       description = "",
-                      calorie: { value: calorieValue = 0 },
-                      gigl: { netCarbs = 0 },
+                      calorie,
+                      gigl,
                     },
                     isMatch = false,
                     allRecipes = false,
@@ -222,9 +222,9 @@ const ShowRecipeContainer = ({
                       category={recipeBlendCategory?.name}
                       ratings={averageRating}
                       noOfRatings={numberOfRating}
-                      carbs={netCarbs}
+                      carbs={gigl?.netCarbs || 0}
                       // score={rxScore}
-                      calorie={calorieValue}
+                      calorie={calorie?.value || 0}
                       noOfComments={numberOfRating}
                       image={image?.find((img) => img?.default)?.image || ""}
                       recipeId={_id}
