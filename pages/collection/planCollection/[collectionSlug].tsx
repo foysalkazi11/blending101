@@ -44,6 +44,11 @@ const CollectionsOfPlan = () => {
         title: "Plan collection",
         description: "plan collection",
       }}
+      showCommentsTrayForPlan={{
+        show: true,
+        showPanle: "right",
+        showTagByDeafult: false,
+      }}
     >
       <div className={styles.main__div}>
         <CommonSearchBar
