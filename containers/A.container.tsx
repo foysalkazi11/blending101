@@ -16,6 +16,7 @@ import BlogCollectionTray from "../components/sidetray/blogCollectionTray";
 import PlanCollectionTray from "../components/sidetray/planCollectionTray";
 import FooterRecipeFilter from "../components/footer/footerRecipeFilter.component";
 import HeadTagInfo, { HeadTagInfoType } from "../theme/headTagInfo";
+import PlanCommentsTray from "../components/sidetray/planCommentsTray";
 
 interface ShowTray {
   show: boolean;
@@ -30,6 +31,7 @@ type AContainerProps = {
   showVersionTray?: ShowTray;
   showGroceryTray?: ShowTray;
   showCommentsTray?: ShowTray;
+  showCommentsTrayForPlan?: ShowTray;
   showWikiCommentsTray?: ShowTray;
   showBlogCommentsTray?: ShowTray;
   showBlogCollectionTray?: ShowTray;
@@ -69,6 +71,11 @@ const AContainer: FC<AContainerProps> = (props) => {
     showCommentsTray = {
       show: false,
       showTagByDeafult: true,
+      showPanle: "right",
+    },
+    showCommentsTrayForPlan = {
+      show: false,
+      showTagByDeafult: false,
       showPanle: "right",
     },
     showWikiCommentsTray = {
@@ -154,6 +161,14 @@ const AContainer: FC<AContainerProps> = (props) => {
             <CommentsTray
               showTagByDefaut={showCommentsTray?.showTagByDeafult}
               showPanle={showCommentsTray?.showPanle}
+            />
+          </div>
+        )}
+        {showCommentsTrayForPlan?.show && (
+          <div className={styles.fixed__main__right}>
+            <PlanCommentsTray
+              showPanle={showCommentsTrayForPlan.showPanle}
+              showTagByDefaut={showCommentsTrayForPlan.showTagByDeafult}
             />
           </div>
         )}
