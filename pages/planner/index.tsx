@@ -55,6 +55,11 @@ const PlanDiscovery = () => {
         title: "Plans",
         description: "plans",
       }}
+      showCommentsTrayForPlan={{
+        show: true,
+        showPanle: "right",
+        showTagByDeafult: false,
+      }}
     >
       <div className={styles.discovery}>
         <div className={styles.searchBarContainer}>

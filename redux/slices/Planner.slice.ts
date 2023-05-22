@@ -7,6 +7,12 @@ import {
   isWithinInterval,
 } from "date-fns";
 
+export interface CurrentPlanInfoType {
+  id: string;
+  name: string;
+  image: string;
+}
+
 export type IPlannerRecipe = {
   _id: string;
   name: string;
@@ -42,6 +48,8 @@ interface PlannerState {
   isOpenPlanCollectionTray: boolean;
   lastModifiedPlanCollection: LastModifiedPlanCollectionType;
   activePlanForCollection: ActivePlanForCollectionType;
+  currentPlanInfoForComments: CurrentPlanInfoType;
+  isPlanCommentsTrayOpen: boolean;
 }
 
 const initialState: PlannerState = {
@@ -59,6 +67,12 @@ const initialState: PlannerState = {
     collectionIds: [],
     planComeFrom: "list",
   },
+  currentPlanInfoForComments: {
+    id: "",
+    image: "",
+    name: "",
+  },
+  isPlanCommentsTrayOpen: false,
 };
 
 export const PlannerSlice = createSlice({
@@ -159,6 +173,15 @@ export const PlannerSlice = createSlice({
     setDayRecipe: (state, action) => {
       state.selectedDayRecipe = action.payload;
     },
+    updateCurrentPlanInfoForComments: (
+      state,
+      action: PayloadAction<CurrentPlanInfoType>,
+    ) => {
+      state.currentPlanInfoForComments = action.payload;
+    },
+    setIsPlanCommentsTrayOpen: (state, action: PayloadAction<boolean>) => {
+      state.isPlanCommentsTrayOpen = action.payload;
+    },
   },
 });
 
@@ -173,6 +196,8 @@ export const {
   setIsOpenPlanCollectionTray,
   updateLastModifiedPlanCollection,
   setDayRecipe,
+  updateCurrentPlanInfoForComments,
+  setIsPlanCommentsTrayOpen,
 } = PlannerSlice.actions;
 
 export default PlannerSlice.reducer;
