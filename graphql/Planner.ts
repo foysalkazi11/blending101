@@ -289,6 +289,7 @@ export const GET_PLAN = gql`
         description
         memberId
         planCollections
+        commentsCount
         image {
           url
         }
