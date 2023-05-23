@@ -4,6 +4,7 @@ import React, {
   useEffect,
   useMemo,
   useState,
+  Fragment,
 } from "react";
 import {
   faBookmark,
@@ -93,6 +94,7 @@ const MyPlan = () => {
     start: startOfWeek(new Date()),
     end: endOfWeek(new Date()),
   });
+  const [panelHeight, setPanelHeight] = useState("1000px");
 
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
@@ -314,11 +316,13 @@ const MyPlan = () => {
               {isEditMode ? (
                 <PlannerQueue
                   panel="plan"
+                  height={panelHeight}
                   recipes={allPlannedRecipes}
                   modifyPlan={modifyPlan}
                 />
               ) : (
                 <PlanDiscovery
+                  height={panelHeight}
                   recipes={allPlannedRecipes}
                   setOpenCollectionModal={setOpenCollectionModal}
                 />
@@ -354,90 +358,101 @@ const MyPlan = () => {
                   />
                 </div>
               </div>
-              {isEditMode ? (
-                <PlanForm methods={methods} />
-              ) : (
-                <div className={styles.preview}>
-                  <h3 className={styles.preview__title}>{plan?.planName}</h3>
-                  <div className={styles.preview__actions}>
-                    <span>
-                      <img
-                        src="/logo_small.svg"
-                        alt=""
-                        height={30}
-                        className="mr-10"
-                      />
-                      Blending 101
-                    </span>
-                    <div>
-                      <WeekPicker
-                        element={<DatePickerButton />}
-                        week={week}
-                        onWeekChange={weekChangeHandler}
-                      />
-                      <span
-                        onClick={() =>
-                          plan?.planCollections?.length
-                            ? handleOpenCollectionTray(
-                                plan?._id,
-                                plan?.planCollections,
-                                "details",
-                              )
-                            : handleAddToCollection(
-                                plan?._id,
-                                memberId,
-                                setOpenCollectionModal,
-                                "details",
-                              )
-                        }
-                      >
-                        <Icon
-                          fontName={
-                            plan?.planCollections?.length
-                              ? faBookmarkSolid
-                              : faBookmark
-                          }
-                          size="2rem"
-                          className="mr-10"
-                          variant="bold"
-                          color={plan?.planCollections?.length && "#fe5d1f"}
-                        />
-                        Bookmark
-                      </span>
-                      <span onClick={() => setShowShare(true)}>
-                        <Icon
-                          fontName={faShareNodes}
-                          size="2rem"
-                          className="mr-10"
-                        />
-                        Share
-                      </span>
-                      <span onClick={() => setShowComments((prev) => !prev)}>
-                        <Icon
-                          fontName={faMessageDots}
-                          size="2rem"
-                          className="mr-10"
-                        />
-                        {comments?.getAllCommentsForAPlan?.length || 0}
-                      </span>
+              <div style={{ height: panelHeight, background: "#fff" }}>
+                {isEditMode ? (
+                  <PlanForm methods={methods} />
+                ) : (
+                  <Fragment>
+                    <div className={styles.preview}>
+                      <h3 className={styles.preview__title}>
+                        {plan?.planName}
+                      </h3>
+                      <div className={styles.preview__actions}>
+                        <span>
+                          <img
+                            src="/logo_small.svg"
+                            alt=""
+                            height={30}
+                            className="mr-10"
+                          />
+                          Blending 101
+                        </span>
+                        <div>
+                          <WeekPicker
+                            element={<DatePickerButton />}
+                            week={week}
+                            onWeekChange={weekChangeHandler}
+                          />
+                          <span
+                            onClick={() =>
+                              plan?.planCollections?.length
+                                ? handleOpenCollectionTray(
+                                    plan?._id,
+                                    plan?.planCollections,
+                                    "details",
+                                  )
+                                : handleAddToCollection(
+                                    plan?._id,
+                                    memberId,
+                                    setOpenCollectionModal,
+                                    "details",
+                                  )
+                            }
+                          >
+                            <Icon
+                              fontName={
+                                plan?.planCollections?.length
+                                  ? faBookmarkSolid
+                                  : faBookmark
+                              }
+                              size="2rem"
+                              className="mr-10"
+                              variant="bold"
+                              color={plan?.planCollections?.length && "#fe5d1f"}
+                            />
+                            Bookmark
+                          </span>
+                          <span onClick={() => setShowShare(true)}>
+                            <Icon
+                              fontName={faShareNodes}
+                              size="2rem"
+                              className="mr-10"
+                            />
+                            Share
+                          </span>
+                          <span
+                            onClick={() => setShowComments((prev) => !prev)}
+                          >
+                            <Icon
+                              fontName={faMessageDots}
+                              size="2rem"
+                              className="mr-10"
+                            />
+                            {comments?.getAllCommentsForAPlan?.length || 0}
+                          </span>
+                        </div>
+                      </div>
+                      <hr />
+                      <p>{plan?.description}</p>
                     </div>
-                  </div>
-                  <hr />
-                  <p>{plan?.description}</p>
+                    <div style={{ height: 10, backgroundColor: "#f8f8f8" }} />
+                  </Fragment>
+                )}
+
+                <div className={`${styles.plan} ${styles["plan--details"]}`}>
+                  <PlanList
+                    data={planlist}
+                    cart={false}
+                    action={false}
+                    onMoveRecipe={isEditMode && movePlanHandler}
+                    onRemove={isEditMode && deleteRecipeFromPlan}
+                  />
                 </div>
-              )}
-              <div className={`${styles.plan} ${styles["plan--details"]}`}>
-                <PlanList
-                  data={planlist}
-                  cart={false}
-                  action={false}
-                  onMoveRecipe={isEditMode && movePlanHandler}
-                  onRemove={isEditMode && deleteRecipeFromPlan}
-                />
               </div>
             </div>
             <div className="col-3">
               <Insights
+                height={panelHeight}
                 categories={data?.getAPlan?.recipeCategoriesPercentage}
                 ingredients={data?.getAPlan?.topIngredients}
               />

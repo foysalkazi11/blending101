@@ -8,7 +8,7 @@ import {
   faEllipsisV,
   faToolbox,
 } from "@fortawesome/pro-light-svg-icons";
-import { faSearch } from "@fortawesome/pro-regular-svg-icons";
+import { faSearch, faTimes } from "@fortawesome/pro-regular-svg-icons";
 
 import RXPanel from "../../../component/templates/Panel/RXFacts/RXPanel.component";
 import PlannerQueue from "../../../component/module/Planner/Queue.component";
@@ -146,6 +146,15 @@ const MyPlan = () => {
               <div className={styles.headingDiv}>
                 <IconHeading title="My Plan" icon={faToolbox} />
                 <div className="flex ai-center">
+                  {showForm && (
+                    <IconButton
+                      fontName={faTimes}
+                      size="small"
+                      className="mr-10"
+                      variant="white"
+                      onClick={() => setShowForm(false)}
+                    />
+                  )}
                   <div
                     className={`${styles.uploadDiv} ${styles.uploadDiv__save}`}
                     onClick={methods.handleSubmit(handlePlanSave)}
