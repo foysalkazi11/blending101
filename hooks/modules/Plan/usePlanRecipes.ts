@@ -76,7 +76,7 @@ const useDiscoveryQueue = (props: IDiscoverRecipe) => {
   return { loading, recipes, observer: lastRecipeRef };
 };
 
-const useQueuedRecipe = (isWeekFromURL, week) => {
+const useQueuedRecipe = (isWeekFromURL, week, queuedRecipes?: any) => {
   const router = useRouter();
   const [recipes, setRecipes] = useState([]);
 
@@ -86,6 +86,7 @@ const useQueuedRecipe = (isWeekFromURL, week) => {
   );
 
   useEffect(() => {
+    if (queuedRecipes) return;
     if (userId !== "") {
       getQueuedRecipes({
         variables: {
@@ -105,6 +106,7 @@ const useQueuedRecipe = (isWeekFromURL, week) => {
   }, [
     getQueuedRecipes,
     isWeekFromURL,
+    queuedRecipes,
     router.query.end,
     router.query.start,
     userId,

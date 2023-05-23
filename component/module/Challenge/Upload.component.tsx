@@ -386,7 +386,7 @@ const DatePickerButton = forwardRef(({ value, onClick }: any, ref: any) => {
     if (isToday(date)) return "Today";
     else if (isYesterday(date)) return "Yesterday";
     else if (isTomorrow(date)) return "Tomorrow";
-    else return format(date, "do MMMM, yyyy");
+    else return format(date, "MMMM do, yyyy");
   }, [value]);
 
   return (

@@ -13,12 +13,13 @@ import { useAllPlan } from "../../../hooks/modules/Plan/usePlanDiscovery";
 import { useRecipeCategory } from "../../../hooks/modules/Plan/usePlanRecipes";
 
 interface PlannerPanelProps {
+  height: string;
   recipes: any[];
   setOpenCollectionModal: (arg: boolean) => void;
 }
 
 const PlanDiscovery = (props: PlannerPanelProps) => {
-  const { recipes, setOpenCollectionModal } = props;
+  const { height, recipes, setOpenCollectionModal } = props;
   const [toggler, setToggler] = useState(true);
   const [query, setQuery] = useState("");
   const [type, setType] = useState("all");
@@ -77,7 +78,16 @@ const PlanDiscovery = (props: PlannerPanelProps) => {
           />
         </div>
       )}
-      <div className={styles.wrapper}>
+      <div
+        className={styles.wrapper}
+        style={{
+          maxHeight: height
+            ? toggler
+              ? `calc(${height} - 111px)`
+              : `calc(${height} - 51px)`
+            : "auto",
+        }}
+      >
         {toggler ? (
           <Plans
             plans={plans}

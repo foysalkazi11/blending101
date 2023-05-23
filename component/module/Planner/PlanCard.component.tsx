@@ -7,7 +7,6 @@ import React, {
   useState,
 } from "react";
 import styles from "./PlanCard.module.scss";
-import useForOpenCommentsTray from "../../../customHooks/useForOpenCommentsTray";
 import useForSelectCommentsAndNotesIcon from "../../../customHooks/useForSelectCommentsAndNotesIcon";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisVertical } from "@fortawesome/pro-solid-svg-icons";
@@ -23,6 +22,7 @@ import useToAddPlanToCollection from "../../../customHooks/plan/useToAddPlanToCo
 import Link from "next/link";
 import useToOpenPlanCollectionTray from "../../../customHooks/plan/useToOpenPlanCollectionTray";
 import { PlanComeFromType } from "../../../redux/slices/Planner.slice";
+import useToOpenPlanCommentsTray from "../../../customHooks/plan/useToOpenPlanCommentsTray";
 
 interface dataCardInterface {
   title?: string;
@@ -96,7 +96,7 @@ function PlanCard({
   ratings = Math.ceil(ratings);
   const menu = useRef<any>();
   const handleAddToCollection = useToAddPlanToCollection();
-  const handleOpenCommentsTray = useForOpenCommentsTray();
+  const handleOpenPlanCommentsTray = useToOpenPlanCommentsTray();
   const selectCommentsAndNotesIcon = useForSelectCommentsAndNotesIcon();
   const handleOpenCollectionTray = useToOpenPlanCollectionTray();
   const [hoverRef, isHover] = useHover();
@@ -149,7 +149,13 @@ function PlanCard({
         <img
           src={`/icons/${res?.icon}.svg`}
           alt="icon"
-          onClick={(e) => handleOpenCommentsTray(planId, title, image, e)}
+          onClick={(e) => {
+            handleOpenPlanCommentsTray({
+              id: planId,
+              name: title,
+              image,
+            });
+          }}
         />{" "}
         <span style={{ color: res?.amount ? "#7cbc39" : "#c4c4c4" }}>
           {res?.amount}
