@@ -12,21 +12,20 @@ import {
   faMessageDots,
   faShareNodes,
 } from "@fortawesome/pro-light-svg-icons";
-import { faBookmark as faBookmarkSolid } from "@fortawesome/pro-solid-svg-icons";
+import {
+  faBookmark as faBookmarkSolid,
+  faMessageDots as faMessageDotsSolid,
+} from "@fortawesome/pro-solid-svg-icons";
 import { faCalendarDays } from "@fortawesome/pro-solid-svg-icons";
-
 import RXPanel from "../../../component/templates/Panel/RXFacts/RXPanel.component";
 import PlanDiscovery from "../../../component/module/Planner/PlanDiscovery.component";
 import PlanList from "../../../component/module/Planner/PlanByDay.component";
-
 import Container from "../../../containers/A.container";
 import IconHeading from "../../../theme/iconHeading/iconHeading.component";
-
 import Insights from "../../../component/module/Planner/Insights.component";
 import Icon from "../../../component/atoms/Icon/Icon.component";
 import { faSearch, faTimes } from "@fortawesome/pro-regular-svg-icons";
 import { useRouter } from "next/router";
-
 import styles from "../../../styles/pages/planner.module.scss";
 import IconButton from "../../../component/atoms/Button/IconButton.component";
 import WeekPicker from "../../../component/molecules/DatePicker/Week.component";
@@ -56,6 +55,7 @@ import ShowLastModifiedCollection from "../../../components/showLastModifiedColl
 import { setIsOpenPlanCollectionTray } from "../../../redux/slices/Planner.slice";
 import useToOpenPlanCollectionTray from "../../../customHooks/plan/useToOpenPlanCollectionTray";
 import useToAddPlanToCollection from "../../../customHooks/plan/useToAddPlanToCollection";
+import useToOpenPlanCommentsTray from "../../../customHooks/plan/useToOpenPlanCommentsTray";
 
 const MyPlan = () => {
   const router = useRouter();
@@ -63,6 +63,7 @@ const MyPlan = () => {
   const methods = useForm({
     defaultValues: useMemo(() => defaultPlan, []),
   });
+  const handleOpenPlanCommentsTray = useToOpenPlanCommentsTray();
   const handleOpenCollectionTray = useToOpenPlanCollectionTray();
   const handleAddToCollection = useToAddPlanToCollection();
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
@@ -70,24 +71,16 @@ const MyPlan = () => {
     (state) => state?.planner,
   );
   const memberId = useAppSelector((state) => state?.user?.dbUser?._id || "");
-
   const { data } = useQuery(GET_PLAN, {
     variables: { planId: router.query.planId, token: "", memberId },
     skip: router.query.planId === "",
   });
-  const { data: comments } = useQuery(GET_ALL_PLAN_COMMENTS, {
-    variables: { id: router.query.planId },
-    skip: router.query.planId === "",
-  });
-
   const [createPlan, createState] = useMutation(CREATE_PLAN, {
     refetchQueries: [GET_FEATURED_PLANS, GET_ALL_PLANS],
   });
-
   const [sharePlan, { data: share }] = useMutation(SHARE_PLAN);
   const [link, setLink] = useState("");
   const [showShare, setShowShare] = useState(false);
-  const [showComments, setShowComments] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [planlist, setPlanlist] = useState([]);
   const [week, setWeek] = useState({
@@ -274,16 +267,21 @@ const MyPlan = () => {
         showPanle: "left",
         showTagByDeafult: true,
       }}
+      showCommentsTrayForPlan={{
+        show: true,
+        showPanle: "right",
+        showTagByDeafult: false,
+      }}
     >
       {/* <div> */}
-      <CommentDrawer
+      {/* <CommentDrawer
         id={plan?._id}
         title={plan?.planName}
         cover={plan?.image?.url}
         comments={comments?.getAllCommentsForAPlan}
         show={showComments}
         onClose={() => setShowComments(false)}
-      />
+      /> */}
       {/* <CollectionDrawer /> */}
       <RXPanel />
       <ShareModal

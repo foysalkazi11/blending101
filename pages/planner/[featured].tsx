@@ -2,20 +2,12 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Icon from "../../component/atoms/Icon/Icon.component";
 import AContainer from "../../containers/A.container";
-import useLocalStorage from "../../customHooks/useLocalStorage";
-import useViewAll, { QUERY_DICTIONARY } from "../../hooks/modules/useViewAll";
-
 import styles from "../../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";
 import classes from "../../styles/pages/viewAll.module.scss";
-import ShowRecipeContainer from "../../components/showRecipeContainer";
 import IconWarper from "../../theme/iconWarper/IconWarper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import {
-  faBookmark,
-  faShareNodes,
-  faXmark,
-} from "@fortawesome/pro-regular-svg-icons";
+import { faXmark } from "@fortawesome/pro-regular-svg-icons";
 import { FEATURED_DICTIONARY } from "../../data/Misc";
 import { useFeaturedPlan } from "../../hooks/modules/Plan/usePlanDiscovery";
 import PlanCard from "../../component/module/Planner/PlanCard.component";
@@ -28,7 +20,6 @@ const ViewAll = () => {
   const router = useRouter();
   const featured = router.query?.featured as string;
   const module = featured && FEATURED_DICTIONARY[featured];
-
   const [page, setPage] = useState(1);
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
   const { data, loading, observer } = useFeaturedPlan({
@@ -41,10 +32,6 @@ const ViewAll = () => {
   const { lastModifiedPlanCollection } = useAppSelector(
     (state) => state?.planner,
   );
-  const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
-    "compareList",
-    [],
-  );
 
   if (loading) {
     return <Loader />;
@@ -54,6 +41,11 @@ const ViewAll = () => {
     <AContainer
       showCollectionTray={{ show: true, showTagByDeafult: true }}
       showCommentsTray={{
+        show: true,
+        showPanle: "right",
+        showTagByDeafult: false,
+      }}
+      showCommentsTrayForPlan={{
         show: true,
         showPanle: "right",
         showTagByDeafult: false,
