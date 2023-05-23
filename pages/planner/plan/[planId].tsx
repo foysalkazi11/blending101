@@ -70,11 +70,17 @@ const MyPlan = () => {
   const { lastModifiedPlanCollection } = useAppSelector(
     (state) => state?.planner,
   );
+
   const memberId = useAppSelector((state) => state?.user?.dbUser?._id || "");
   const { data } = useQuery(GET_PLAN, {
     variables: { planId: router.query.planId, token: "", memberId },
     skip: router.query.planId === "",
   });
+  const { data: comments } = useQuery(GET_ALL_PLAN_COMMENTS, {
+    variables: { id: router.query.planId },
+    skip: router.query.planId === "",
+  });
+
   const [createPlan, createState] = useMutation(CREATE_PLAN, {
     refetchQueries: [GET_FEATURED_PLANS, GET_ALL_PLANS],
   });
@@ -83,6 +89,8 @@ const MyPlan = () => {
   const [showShare, setShowShare] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [planlist, setPlanlist] = useState([]);
+  const [showComments, setShowComments] = useState(false);
+  ``;
   const [week, setWeek] = useState({
     start: startOfWeek(new Date()),
     end: endOfWeek(new Date()),
