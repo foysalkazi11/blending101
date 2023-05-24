@@ -1,5 +1,8 @@
-export const UTCDate = (date) => {
-  const parts = date.split("-");
+export const UTCDate = (date, splitter: string = "-") => {
+  const parts = date.split(splitter);
+  if (splitter === "/") {
+    return new Date(parts[2], parts[0] - 1, parts[1]);
+  }
   return new Date(parts[0], parts[1] - 1, parts[2]);
 };
 

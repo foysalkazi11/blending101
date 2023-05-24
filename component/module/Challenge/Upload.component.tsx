@@ -65,6 +65,7 @@ const UploadCard = forwardRef((props: any, ref) => {
     title,
     ingredients,
     startDate: postDate,
+    images: stateImages,
   } = useAppSelector((state) => state.challenge.post);
 
   const { data } = useQuery(GET_BLEND_CATEGORY);
@@ -87,11 +88,15 @@ const UploadCard = forwardRef((props: any, ref) => {
     dispatch(setShowPanel({ name: "RXPanel", show: false }));
   };
 
+  useEffect(() => {
+    setImages(stateImages);
+  }, [setImages, stateImages]);
+
   const handleSubmit = async (data) => {
     const images = await uploadImages();
     const post: any = {
       memberId: userId,
-      assignDate: data.assignDate,
+      assignDate: postDate,
       post: {
         images,
         name: data.recipeTitle,
@@ -119,6 +124,9 @@ const UploadCard = forwardRef((props: any, ref) => {
       load: "Submitting post",
       success: "Submitted Post Successfully",
       onSuccess: closeForm,
+      onError: () => {
+        setImages([]);
+      },
     });
   };
 
