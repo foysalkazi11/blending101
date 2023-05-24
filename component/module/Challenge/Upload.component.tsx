@@ -49,6 +49,7 @@ import {
   faChartSimple,
 } from "@fortawesome/pro-light-svg-icons";
 import { addDays, format, isToday, isTomorrow, isYesterday } from "date-fns";
+import { UTCDate } from "../../../helpers/Date";
 
 const UploadCard = forwardRef((props: any, ref) => {
   const { startDate, endDate, elementRef } = props;
@@ -390,7 +391,7 @@ export default UploadCard;
 
 const DatePickerButton = forwardRef(({ value, onClick }: any, ref: any) => {
   const label = useMemo(() => {
-    const date = new Date(value);
+    const date = UTCDate(value, "/");
     if (isToday(date)) return "Today";
     else if (isYesterday(date)) return "Yesterday";
     else if (isTomorrow(date)) return "Tomorrow";
@@ -413,16 +414,16 @@ interface DateSelectorProps {
 }
 const DateSelector = (props: DateSelectorProps) => {
   const dispatch = useAppDispatch();
-  const { activeDate, startDate, endDate } = props;
+  const { activeDate, startDate } = props;
 
   const dateHandler = (date) => {
-    dispatch(setPostDate(format(new Date(date), "yyyy-MM-dd")));
+    dispatch(setPostDate(format(date, "yyyy-MM-dd")));
   };
 
   return (
     <DatePicker
-      selected={activeDate ? new Date(activeDate) : new Date()}
-      minDate={startDate ? new Date(startDate) : new Date()}
+      selected={activeDate ? UTCDate(activeDate) : new Date()}
+      minDate={startDate ? UTCDate(startDate) : new Date()}
       maxDate={addDays(new Date(), 1)}
       onChange={dateHandler}
       fixedHeight
