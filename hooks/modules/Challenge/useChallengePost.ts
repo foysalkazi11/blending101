@@ -5,7 +5,7 @@ import {
   useQuery,
 } from "@apollo/client";
 import { format, isWithinInterval } from "date-fns";
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 
 import {
@@ -133,10 +133,12 @@ const defaultValues = {
   note: "",
 };
 const useChallengeForm = (setImages) => {
+  const initValueSet = useRef(false);
   const methods = useForm({
     defaultValues: useMemo(() => defaultValues, []),
   });
   const {
+    isEditMode,
     title,
     images: postImages,
     category,
@@ -145,14 +147,16 @@ const useChallengeForm = (setImages) => {
   } = useAppSelector((state) => state.challenge.post);
 
   useEffect(() => {
-    methods.reset({
-      recipeTitle: title,
-      category,
-      assignDate: startDate,
-      note: notes,
-    });
-
-    setImages(postImages);
+    if (isEditMode && !initValueSet.current) {
+      methods.reset({
+        recipeTitle: title,
+        category,
+        assignDate: startDate,
+        note: notes,
+      });
+      setImages(postImages);
+      initValueSet.current = true;
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title, category, startDate, notes]);
 
