@@ -16,6 +16,7 @@ interface Props {
   show: boolean;
   setShow: any;
   heading: string;
+  turnedOnVersions: string[];
 }
 
 const ShareRecipe = ({
@@ -27,6 +28,7 @@ const ShareRecipe = ({
   title = "",
   type = "recipe",
   heading = "",
+  turnedOnVersions = [],
 }: Props) => {
   const [createShareLink, { data, loading: createLinkLoading }] =
     useMutation(CREATE_SHARE_LINK);
@@ -35,7 +37,7 @@ const ShareRecipe = ({
   const [link, setLink] = useState("");
   const [emails, setEmails] = useState<SharedUserInfoType[]>([]);
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
-  const { detailsARecipe } = useAppSelector((state) => state?.recipe);
+  const [isVersionSharable, setIsVersionShareable] = useState(false);
 
   const onCancel = () => {
     setShowMsgField(false);
@@ -49,9 +51,15 @@ const ShareRecipe = ({
     }
     const link = await generateShareLink(isGlobalShare);
     navigator.clipboard.writeText(link);
-    notification("success", "Link has been copied in clipboard");
+    notification(
+      "success",
+      isGlobalShare
+        ? "Link copied to your clipboard"
+        : "Recipe shared successfully and link copied to your clipboard",
+    );
     setHasCopied(true);
-    // setShow(false);
+    setShowMsgField(false);
+    setShow(false);
   };
 
   const generateShareLink = async (isGlobalShare: boolean = true) => {
@@ -62,6 +70,7 @@ const ShareRecipe = ({
             shareData: {
               recipeId: id,
               version: versionId,
+              turnedOnVersions,
             },
             shareTo: isGlobalShare ? [] : emails?.map((info) => info?.email),
             sharedBy: userId,
@@ -94,6 +103,9 @@ const ShareRecipe = ({
       setEmails={setEmails}
       setShowMsgField={setShowMsgField}
       showMsgField={showMsgField}
+      isVersionSharable={isVersionSharable}
+      setIsVersionShareable={setIsVersionShareable}
+      shareVersionsLength={turnedOnVersions?.length}
     />
   );
 };

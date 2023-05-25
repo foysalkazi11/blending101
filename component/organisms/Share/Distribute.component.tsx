@@ -63,6 +63,9 @@ interface ShareProps {
   message?: string;
   setMessage?: Dispatch<SetStateAction<string>>;
   sharedUserEmail?: string;
+  isVersionSharable?: boolean;
+  setIsVersionShareable?: Dispatch<SetStateAction<boolean>>;
+  shareVersionsLength?: number;
 }
 
 const Share = (props: ShareProps) => {
@@ -89,6 +92,9 @@ const Share = (props: ShareProps) => {
     message = "",
     setMessage = () => {},
     sharedUserEmail = "",
+    isVersionSharable = false,
+    setIsVersionShareable = () => {},
+    shareVersionsLength = 0,
   } = props;
 
   useEffect(() => {
@@ -158,17 +164,15 @@ const Share = (props: ShareProps) => {
 
         <div className={styles.checkBoxContainer} style={{ marginTop: "20px" }}>
           <CustomCheckbox
-            // checked={activeEmailInfo?.canCollaborate}
-            // handleChange={(e) =>
-            //   toggleActiveEmail({
-            //     ...activeEmailInfo,
-            //     canCollaborate: !activeEmailInfo?.canCollaborate,
-            //   })
-            // }
+            checked={isVersionSharable}
+            handleChange={(e) => setIsVersionShareable(e.target.checked)}
             id="shareOtherVersions"
+            disable={shareVersionsLength ? false : true}
           />
           <label className={styles.label} htmlFor="shareOtherVersions">
-            Share Other Versions
+            {`Share Other Versions ${
+              shareVersionsLength ? `(${shareVersionsLength})` : ""
+            }`}
           </label>
         </div>
       </div>
