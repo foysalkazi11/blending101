@@ -237,7 +237,9 @@ const AddRecipePage = () => {
         </div>
         <div className={styles.center}>
           <PanelHeaderCenter
-            backLink="/"
+            backBtnObj={{
+              function: () => router.push("/"),
+            }}
             editOrSavebtnFunc={handleSubmitData}
             editOrSavebtnText="Save"
             loading={loading}

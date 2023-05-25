@@ -55,6 +55,7 @@ const CollectionRecipes = () => {
     image: "",
     name: "",
     versionId: "",
+    turnedOnVersions: [],
   });
   const [openShareModal, setOpenShareModal] = useState(false);
   const [recipes, setRecipes] = useState([]);
@@ -274,6 +275,7 @@ const CollectionRecipes = () => {
         versionId={shareRecipeData.versionId}
         title={shareRecipeData?.name}
         image={shareRecipeData?.image}
+        turnedOnVersions={shareRecipeData?.turnedOnVersions}
         show={openShareModal}
         setShow={setOpenShareModal}
         type="recipe"

@@ -31,6 +31,8 @@ import ShareRecipe from "./shareRecipe";
 import { setDetailsARecipe } from "../../../../redux/slices/recipeSlice";
 import HowTo from "./howTo/HowTo";
 import { ReferenceOfRecipeUpdateFuncType } from "../../../../type/recipeType";
+import useToAcceptRecipeShare from "../../../../customHooks/notification/useToAcceptRecipeShare";
+import useToRejectRecipeShare from "../../../../customHooks/notification/useToRejectRecipeShare";
 
 interface center {
   recipeData: RecipeDetailsType;
@@ -56,6 +58,7 @@ const Center = ({
   pageComeFrom,
 }: center) => {
   const router = useRouter();
+  const { token = "" } = router.query;
   const dispatch = useAppDispatch();
   const [showShareModal, setShowShareModal] = useState(false);
   const [showCollectionModal, setShowCollectionModal] = useState(true);
@@ -70,6 +73,11 @@ const Center = ({
     (state) => state?.collections,
   );
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
+  const userId = useAppSelector((state) => state?.user?.dbUser?._id);
+  const { functionAcceptRecipeShare, acceptRecipeShareLoading } =
+    useToAcceptRecipeShare();
+  const { functionRejectRecipeShare, rejectRecipeShareLoading } =
+    useToRejectRecipeShare();
 
   const ReadMore = ({ children }) => {
     const text = children;
@@ -160,19 +168,54 @@ const Center = ({
     );
   };
 
+  // edit or accept btn function
+  const handleEditOrSavebtnFunc = async (variables) => {
+    if (variables?.token) {
+      await functionAcceptRecipeShare({
+        token: variables?.token,
+        userId: variables?.userId,
+      });
+      router?.push(`/recipe_details/${variables?.recipeId}`);
+    } else {
+      router?.push(`/edit_recipe/${variables?.recipeId}`);
+    }
+  };
+
+  // back or decline btn function
+  const handleBackOrDeclineBtnFunc = async (variables) => {
+    if (variables?.token) {
+      await functionRejectRecipeShare({
+        token: variables?.token,
+        userId: variables?.userId,
+      });
+      router?.push(`/recipe_details/${variables?.recipeId}`);
+    }
+    router?.push("/discovery");
+  };
+
   return (
-    <div style={{ width: "100%" }}>
+    <>
       <PanelHeaderCenter
-        backLink="/discovery"
         editOrSavebtnFunc={() =>
-          router.push(
-            recipeData?.isMatch
-              ? `/edit_recipe/${recipeData?.recipeId?._id}`
-              : `/edit_recipe/${recipeData?.recipeId?._id}`, //`/edit_recipe/${recipeData?.recipeId?._id}/${recipeData?.tempVersionInfo?.version?._id}`,
-          )
+          handleEditOrSavebtnFunc({
+            token,
+            userId,
+            recipeId: recipeData?.recipeId?._id,
+          })
         }
-        editOrSavebtnText="Edit"
+        editOrSavebtnText={token ? "Accept" : "Edit"}
         pageComeFrom={pageComeFrom}
+        loading={acceptRecipeShareLoading}
+        backBtnObj={{
+          function: () =>
+            handleBackOrDeclineBtnFunc({
+              token,
+              userId,
+              recipeId: recipeData?.recipeId?._id,
+            }),
+          loading: rejectRecipeShareLoading,
+          text: token ? "Decline" : "Back",
+        }}
       />
 
       <div className={styles.contentBox}>
@@ -212,56 +255,62 @@ const Center = ({
             </a>
           </div>
           <div className={styles.alignItems}>
-            {recipeData?.versionsCount ? (
-              <IconWithText
-                wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
-                handleClick={(e) => {
-                  dispatch(setOpenVersionTray(true));
-                  dispatch(setOpenVersionTrayFormWhichPage("details"));
-                  dispatch(setShouldCloseVersionTrayWhenClickAVersion(true));
-                }}
-                icon={<VscVersions color={"#7cbc39"} />}
-                text={`Versions(${recipeData?.versionsCount})`}
-              />
-            ) : null}
+            {!token && (
+              <>
+                {recipeData?.versionsCount ? (
+                  <IconWithText
+                    wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
+                    handleClick={(e) => {
+                      dispatch(setOpenVersionTray(true));
+                      dispatch(setOpenVersionTrayFormWhichPage("details"));
+                      dispatch(
+                        setShouldCloseVersionTrayWhenClickAVersion(true),
+                      );
+                    }}
+                    icon={<VscVersions color={"#7cbc39"} />}
+                    text={`Versions(${recipeData?.versionsCount})`}
+                  />
+                ) : null}
 
-            <IconWithText
-              wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
-              handleClick={() => {}}
-              icon="/images/calendar-alt-light.svg"
-              text="Planner"
-            />
+                <IconWithText
+                  wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
+                  handleClick={() => {}}
+                  icon="/images/calendar-alt-light.svg"
+                  text="Planner"
+                />
 
-            <IconWithText
-              wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
-              handleClick={(e) =>
-                recipeData?.userCollections?.length
-                  ? handleOpenCollectionTray(
-                      recipeData?.recipeId?._id,
-                      recipeData?.userCollections,
-                      e,
-                      updateCollection,
-                    )
-                  : addToCollection(recipeData?.recipeId?._id, e)
-              }
-              icon={
-                recipeData?.userCollections?.length
-                  ? "/icons/compare.svg"
-                  : "/images/BookmarksStar.svg" //"/images/BookmarksStar-orange.svg"
-              }
-              text="Saved"
-            />
+                <IconWithText
+                  wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
+                  handleClick={(e) =>
+                    recipeData?.userCollections?.length
+                      ? handleOpenCollectionTray(
+                          recipeData?.recipeId?._id,
+                          recipeData?.userCollections,
+                          e,
+                          updateCollection,
+                        )
+                      : addToCollection(recipeData?.recipeId?._id, e)
+                  }
+                  icon={
+                    recipeData?.userCollections?.length
+                      ? "/icons/compare.svg"
+                      : "/images/BookmarksStar.svg" //"/images/BookmarksStar-orange.svg"
+                  }
+                  text="Saved"
+                />
 
-            <IconWithText
-              wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
-              handleClick={() => {
-                setShowCollectionModal(false);
-                setShowShareModal(true);
-                // setOpenModal(true);
-              }}
-              icon="/images/share-alt-light-grey.svg"
-              text="Share"
-            />
+                <IconWithText
+                  wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
+                  handleClick={() => {
+                    setShowCollectionModal(false);
+                    setShowShareModal(true);
+                    // setOpenModal(true);
+                  }}
+                  icon="/images/share-alt-light-grey.svg"
+                  text="Share"
+                />
+              </>
+            )}
 
             {hangleShowCommentsAndNotesIcon()}
           </div>
@@ -350,18 +399,23 @@ const Center = ({
       <ShareRecipe
         id={recipeData?.recipeId?._id}
         versionId={recipeData.tempVersionInfo?.version?._id}
-        title={recipeData?.recipeId?.name}
+        title={
+          recipeData?.defaultVersion?.postfixTitle || recipeData?.recipeId?.name
+        }
         image={
           recipeData?.recipeId?.image?.length > 0
             ? recipeData?.recipeId?.image[0]?.image
             : ""
         }
+        turnedOnVersions={recipeData?.turnedOnVersions?.map(
+          (version) => version?._id,
+        )}
         show={showShareModal}
         setShow={setShowShareModal}
         type="recipe"
         heading="Share Recipe"
       />
-    </div>
+    </>
   );
 };
 

@@ -52,8 +52,9 @@ const Index = () => {
         handleToGetARecipe(recipe__Id, dbUser?._id, token);
       }
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [recipe__Id, dbUser?._id]);
+  }, [recipe__Id, dbUser?._id, token]);
 
   useEffect(() => {
     dispatch(updateSidebarActiveMenuName("Blends"));
@@ -85,7 +86,11 @@ const Index = () => {
     );
   }
   if (getARecipeError) {
-    return <ErrorPage errorMessage="Recipe not found" />;
+    return (
+      <AContainer showHeader={true} logo={true}>
+        <ErrorPage errorMessage="Recipe not found" />;
+      </AContainer>
+    );
   }
 
   return (

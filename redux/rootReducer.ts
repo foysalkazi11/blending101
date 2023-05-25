@@ -17,6 +17,7 @@ import editRecipeMainReducer from "./edit_recipe/editRecipeStates";
 import uiReducer from "./slices/Ui.slice";
 import wikiReducer from "./slices/wikiSlice";
 import blogReducer from "./slices/blogSlice";
+import notificationReducer from "./slices/notificationSlice";
 
 const rootReducer = combineReducers({
   ui: uiReducer,
@@ -36,6 +37,7 @@ const rootReducer = combineReducers({
   editRecipeReducer: editRecipeMainReducer,
   wiki: wikiReducer,
   blog: blogReducer,
+  notification: notificationReducer,
 });
 
 // export type RootState = ReturnType<typeof rootReducer>;

@@ -68,6 +68,7 @@ interface dataCardInterface {
       image: string;
       name: string;
       versionId: string;
+      turnedOnVersions: string[];
     }>
   >;
   defaultVersionId?: string;
@@ -84,6 +85,7 @@ interface dataCardInterface {
   brand?: RecipeBrandType;
   personalRating?: number;
   origin?: string;
+  turnedOnVersions?: VersionDataType[];
 }
 
 export default function DatacardComponent({
@@ -126,6 +128,7 @@ export default function DatacardComponent({
   brand,
   personalRating = 0,
   origin,
+  turnedOnVersions = [],
 }: dataCardInterface) {
   carbs = Math.round(carbs);
   score = Math.round(score);
@@ -149,8 +152,14 @@ export default function DatacardComponent({
   const { dbUser } = useAppSelector((state) => state?.user);
   const { handleTurnOnOrOffVersion } = useTurnedOnOrOffVersion();
 
-  const handleOpenShareRecipeModal = (id, name, image, versionId) => {
-    setShareRecipeData({ id, image, name, versionId });
+  const handleOpenShareRecipeModal = (
+    id,
+    name,
+    image,
+    versionId,
+    turnedOnVersions,
+  ) => {
+    setShareRecipeData({ id, image, name, versionId, turnedOnVersions });
     setOpenShareModal(true);
   };
 
@@ -189,12 +198,24 @@ export default function DatacardComponent({
     </div>
   );
 
-  const showFloatingMenu = (id: string, name: string, image: string) => (
+  const showFloatingMenu = (
+    id: string,
+    name: string,
+    image: string,
+    defaultVersionId: string,
+    turnedOnVersions: string[],
+  ) => (
     <div className={styles.floating__menu}>
       <ul>
         <li
           onClick={() =>
-            handleOpenShareRecipeModal(id, name, image, defaultVersionId)
+            handleOpenShareRecipeModal(
+              id,
+              name,
+              image,
+              defaultVersionId,
+              turnedOnVersions,
+            )
           }
         >
           <img src="/icons/share.png" alt="square" />
@@ -446,7 +467,13 @@ export default function DatacardComponent({
                       <FontAwesomeIcon icon={faEllipsisVertical} />
                     </IconWarper>
                     {isHoverMoreMenu &&
-                      showFloatingMenu(recipeId, title, image)}
+                      showFloatingMenu(
+                        recipeId,
+                        defaultVersion?.postfixTitle || title,
+                        image,
+                        defaultVersionId,
+                        turnedOnVersions?.map((version) => version?._id),
+                      )}
                   </div>
                 )}
               </div>
