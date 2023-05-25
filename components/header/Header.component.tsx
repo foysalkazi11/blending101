@@ -25,6 +25,13 @@ import { FaRegUser } from "react-icons/fa";
 import Image from "next/image";
 import useOnClickOutside from "../utility/useOnClickOutside";
 import { DbUserType } from "../../type/dbUserType";
+import NotificationBell from "../../theme/notificationBell";
+import NotificationPopup from "../../theme/notificationPopup";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBagShopping } from "@fortawesome/pro-solid-svg-icons";
+import { setIsNotificationTrayOpen } from "../../redux/slices/notificationSlice";
+import { useQuery } from "@apollo/client";
+import GET_SHARE_NOTIFICATION from "../../gqlLib/notification/query/getShareNotification";
 
 interface headerInterface {
   logo: Boolean;
@@ -45,6 +52,24 @@ export default function HeaderComponent({
   const userMenu = useRef(null);
   const userIcon = useRef(null);
   useOnClickOutside(userMenu, () => setOpenPopup(false));
+  const [showNotificationPopup, setShowNotificationPopup] = useState(false);
+  const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const { data, loading } = useQuery(GET_SHARE_NOTIFICATION, {
+    variables: { userId: dbUser?._id },
+    fetchPolicy: "cache-and-network",
+  });
+
+  const handleClick = (event) => {
+    const rect = event.target.getBoundingClientRect();
+    const position = {
+      x: rect.left + window.scrollX,
+      y: rect.bottom + window.scrollY,
+    };
+    setPosition(position);
+    setClickPosition({ x: event.clientX, y: event.clientY });
+    setShowNotificationPopup(!showNotificationPopup);
+  };
 
   const userSingOut = async () => {
     dispatch(setLoading(true));
@@ -62,6 +87,7 @@ export default function HeaderComponent({
   };
 
   const style = fullWidth ? { width: "100%" } : {};
+  const notificationLength = data?.getShareNotification?.totalNotification || 0;
 
   return (
     <div className={styles.wrapper}>
@@ -83,12 +109,18 @@ export default function HeaderComponent({
             <h2 className={styles.title}>{headerTitle}</h2>
           </div>
           <div className={styles.right + " " + styles.logo}>
-            <div>
-              <SocialComponent />
+            <SocialComponent />
+
+            <NotificationBell
+              count={notificationLength}
+              onClick={() => dispatch(setIsNotificationTrayOpen(true))}
+            />
+
+            <div className={styles.cart__icon}>
+              <FontAwesomeIcon icon={faBagShopping} />
             </div>
-            <div>
-              <LocalMallIcon className={styles.cart__icon} />
-            </div>
+            {/* <LocalMallIcon className={styles.cart__icon} /> */}
+
             <div className={styles.userPopupMenu} ref={userMenu}>
               <div className={styles.arrowWithText} ref={userIcon}>
                 {user ? (
@@ -99,7 +131,9 @@ export default function HeaderComponent({
                         alt="prfile.png"
                         objectFit="cover"
                         layout="fill"
-                        onClick={() => setOpenPopup((pre) => !pre)}
+                        onClick={(e) => {
+                          setOpenPopup((pre) => !pre);
+                        }}
                       />
                     ) : (
                       <FaRegUser

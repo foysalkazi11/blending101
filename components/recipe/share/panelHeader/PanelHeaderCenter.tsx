@@ -19,20 +19,24 @@ import { useAppSelector } from "../../../../redux/hooks";
 
 interface PanelHeaderCenterProps {
   editOrSavebtnText?: string;
-  editOrSavebtnFunc?: () => void;
-  backLink?: string;
+  editOrSavebtnFunc?: any;
   pageComeFrom?: "edit" | "details";
   recipeVersionLength?: number;
   loading?: boolean;
+  backBtnObj?: {
+    text?: string;
+    function: any;
+    loading?: boolean;
+  };
 }
 
 const PanelHeaderCenter = ({
-  backLink = "",
   editOrSavebtnFunc = () => {},
   editOrSavebtnText = "",
   pageComeFrom,
   recipeVersionLength = 0,
   loading = false,
+  backBtnObj = { loading: false, text: "Back", function: () => {} },
 }: PanelHeaderCenterProps) => {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -89,15 +93,22 @@ const PanelHeaderCenter = ({
         </button>
       </Tooltip>
 
-      <Tooltip content="Back" direction="bottom">
+      <Tooltip content={backBtnObj?.text || "Back"} direction="bottom">
         <IconWraper
-          handleClick={() => router?.push(backLink)}
+          handleClick={backBtnObj?.function}
           iconColor="iconColorWhite"
           defaultBg="secondary"
           hover="bgSecondary"
           style={{ width: "28px", height: "28px" }}
         >
-          <FontAwesomeIcon icon={faXmark} />
+          {backBtnObj?.loading ? (
+            <CircularRotatingLoader
+              color="white"
+              style={{ fontSize: "16px" }}
+            />
+          ) : (
+            <FontAwesomeIcon icon={faXmark} />
+          )}
         </IconWraper>
       </Tooltip>
     </div>

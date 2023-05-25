@@ -327,7 +327,7 @@ export default function RecipeCollectionAndThemeTray({
                 </div>,
               ]
         }
-        variant={"outlineSecondary"}
+        variant={"containSecondary"}
       />
 
       {toggle === 0 && (

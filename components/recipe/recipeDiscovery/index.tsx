@@ -32,6 +32,7 @@ const RecipeDiscovery = () => {
     image: "",
     name: "",
     versionId: "",
+    turnedOnVersions: [],
   });
   const [openShareModal, setOpenShareModal] = useState(false);
   const [pageNum, setPageNum] = useState(1);
@@ -198,6 +199,11 @@ const RecipeDiscovery = () => {
           showTagByDeafult: false,
         }}
         headTagInfo={{ description: "blends", title: "Blends" }}
+        showNotificationTray={{
+          show: true,
+          showPanle: "right",
+          showTagByDeafult: true,
+        }}
       >
         <div className={styles.main__div}>
           <div className={openFilterTray ? styles.move : styles.back}>
@@ -252,6 +258,7 @@ const RecipeDiscovery = () => {
         versionId={shareRecipeData.versionId}
         title={shareRecipeData?.name}
         image={shareRecipeData?.image}
+        turnedOnVersions={shareRecipeData?.turnedOnVersions}
         show={openShareModal}
         setShow={setOpenShareModal}
         type="recipe"

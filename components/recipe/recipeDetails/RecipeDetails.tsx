@@ -64,6 +64,11 @@ const RecipeDetails = ({
         title: "Recipe Details",
         description: "recipe Details",
       }}
+      showNotificationTray={{
+        show: true,
+        showPanle: "right",
+        showTagByDeafult: true,
+      }}
     >
       <div className={styles.main}>
         <div className={styles.left}>
