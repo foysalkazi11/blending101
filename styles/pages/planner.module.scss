@@ -10,15 +10,15 @@ $sharedColor: #fd5109;
 
 .plan {
   border-radius: 9px;
-  &--details {
-    min-height: 62.5rem;
-  }
+  // background-color: #fff;
+  // &--details {
+  //   min-height: 62.5rem;
+  // }
 }
 
 .preview {
   background-color: white;
   padding: 3rem 2rem;
-  margin-bottom: 2rem;
   border-radius: 9px;
   &__title {
     font-size: 21px;

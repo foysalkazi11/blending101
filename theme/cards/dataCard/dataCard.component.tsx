@@ -532,7 +532,7 @@ export default function DatacardComponent({
                 <a
                   href={origin}
                   onClick={(e) => {
-                    const id = "aobndnikoflneifipokonjlgjobnpjbd";
+                    const id = "ebbpnaajpojkhndmjmdjabgjmngjgmhm";
                     //@ts-ignore
                     chrome.runtime.sendMessage(
                       id,

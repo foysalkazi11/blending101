@@ -11,10 +11,11 @@ export const defaultPlan = {
 const PlanForm = ({ methods }) => {
   return (
     <FormProvider {...methods}>
-      <div style={{ background: "#fff", padding: 10, marginBottom: 10 }}>
+      <div style={{ background: "#fff", padding: "20px 10px 10px" }}>
         <Textfield name="planName" placeholder="Plan Name" className="mb-10" />
         <Textarea name="description" placeholder="Plan Description" />
       </div>
+      <div style={{ height: 10, backgroundColor: "#f8f8f8" }} />
     </FormProvider>
   );
 };

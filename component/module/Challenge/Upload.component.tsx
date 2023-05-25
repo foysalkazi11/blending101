@@ -49,6 +49,7 @@ import {
   faChartSimple,
 } from "@fortawesome/pro-light-svg-icons";
 import { addDays, format, isToday, isTomorrow, isYesterday } from "date-fns";
+import { UTCDate } from "../../../helpers/Date";
 
 const UploadCard = forwardRef((props: any, ref) => {
   const { startDate, endDate, elementRef } = props;
@@ -65,6 +66,7 @@ const UploadCard = forwardRef((props: any, ref) => {
     title,
     ingredients,
     startDate: postDate,
+    images: stateImages,
   } = useAppSelector((state) => state.challenge.post);
 
   const { data } = useQuery(GET_BLEND_CATEGORY);
@@ -87,11 +89,15 @@ const UploadCard = forwardRef((props: any, ref) => {
     dispatch(setShowPanel({ name: "RXPanel", show: false }));
   };
 
+  useEffect(() => {
+    setImages(stateImages);
+  }, [setImages, stateImages]);
+
   const handleSubmit = async (data) => {
     const images = await uploadImages();
     const post: any = {
       memberId: userId,
-      assignDate: data.assignDate,
+      assignDate: postDate,
       post: {
         images,
         name: data.recipeTitle,
@@ -119,6 +125,9 @@ const UploadCard = forwardRef((props: any, ref) => {
       load: "Submitting post",
       success: "Submitted Post Successfully",
       onSuccess: closeForm,
+      onError: () => {
+        setImages([]);
+      },
     });
   };
 
@@ -382,11 +391,11 @@ export default UploadCard;
 
 const DatePickerButton = forwardRef(({ value, onClick }: any, ref: any) => {
   const label = useMemo(() => {
-    const date = new Date(value);
+    const date = UTCDate(value, "/");
     if (isToday(date)) return "Today";
     else if (isYesterday(date)) return "Yesterday";
     else if (isTomorrow(date)) return "Tomorrow";
-    else return format(date, "do MMMM, yyyy");
+    else return format(date, "MMMM do, yyyy");
   }, [value]);
 
   return (
@@ -405,16 +414,16 @@ interface DateSelectorProps {
 }
 const DateSelector = (props: DateSelectorProps) => {
   const dispatch = useAppDispatch();
-  const { activeDate, startDate, endDate } = props;
+  const { activeDate, startDate } = props;
 
   const dateHandler = (date) => {
-    dispatch(setPostDate(format(new Date(date), "yyyy-MM-dd")));
+    dispatch(setPostDate(format(date, "yyyy-MM-dd")));
   };
 
   return (
     <DatePicker
-      selected={activeDate ? new Date(activeDate) : new Date()}
-      minDate={startDate ? new Date(startDate) : new Date()}
+      selected={activeDate ? UTCDate(activeDate) : new Date()}
+      minDate={startDate ? UTCDate(startDate) : new Date()}
       maxDate={addDays(new Date(), 1)}
       onChange={dateHandler}
       fixedHeight

@@ -59,6 +59,7 @@ const PlannerQueue = (props: PlannerPanelProps) => {
   const { loading: qLoading, recipes: qRecipes } = useQueuedRecipe(
     isWeekFromURL,
     week,
+    queuedRecipes,
   );
 
   const addRecipeToPlanner = useAddRecipeToMyPlan({
