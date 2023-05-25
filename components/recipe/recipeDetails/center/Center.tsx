@@ -188,7 +188,6 @@ const Center = ({
         token: variables?.token,
         userId: variables?.userId,
       });
-      router?.push(`/recipe_details/${variables?.recipeId}`);
     }
     router?.push("/discovery");
   };
