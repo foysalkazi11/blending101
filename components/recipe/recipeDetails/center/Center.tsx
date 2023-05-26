@@ -182,14 +182,48 @@ const Center = ({
   };
 
   // back or decline btn function
-  const handleBackOrDeclineBtnFunc = async (variables) => {
-    if (variables?.token) {
-      await functionRejectRecipeShare({
-        token: variables?.token,
-        userId: variables?.userId,
-      });
-    }
-    router?.push("/discovery");
+  // const handleBackOrDeclineBtnFunc = async (variables) => {
+  //   if (variables?.token) {
+  //     await functionRejectRecipeShare({
+  //       token: variables?.token,
+  //       userId: variables?.userId,
+  //     });
+  //   }
+  //   router?.push("/discovery");
+  // };
+
+  // handle to open version tray
+
+  const handleToOpenVersionTray = () => {
+    dispatch(setOpenVersionTray(true));
+    dispatch(setOpenVersionTrayFormWhichPage("details"));
+    dispatch(setShouldCloseVersionTrayWhenClickAVersion(true));
+  };
+
+  // handle open collection tray or added to collection
+  const handleOpenCollectionTrayOrAddToCollection = (
+    event,
+    recipeDataLength,
+    recipeId,
+    userCollections,
+    updateCollectionFunction,
+  ) => {
+    recipeDataLength
+      ? handleOpenCollectionTray(
+          recipeId,
+          userCollections,
+          event,
+          updateCollectionFunction,
+        )
+      : addToCollection(recipeId, event);
+  };
+
+  // handle open collection tray
+
+  const handleToOpenCollectionTray = () => {
+    setShowCollectionModal(false);
+    setShowShareModal(true);
+    // setOpenModal(true);
   };
 
   return (
@@ -202,18 +236,18 @@ const Center = ({
             recipeId: recipeData?.recipeId?._id,
           })
         }
-        editOrSavebtnText={token ? "Accept" : "Edit"}
+        editOrSavebtnText={
+          token
+            ? acceptRecipeShareLoading
+              ? "Loading..."
+              : "Add to Collection"
+            : "Edit"
+        }
         pageComeFrom={pageComeFrom}
-        loading={acceptRecipeShareLoading}
+        // loading={acceptRecipeShareLoading}
         backBtnObj={{
-          function: () =>
-            handleBackOrDeclineBtnFunc({
-              token,
-              userId,
-              recipeId: recipeData?.recipeId?._id,
-            }),
-          loading: rejectRecipeShareLoading,
-          text: token ? "Decline" : "Back",
+          function: () => router?.push("/discovery"),
+          text: "Back",
         }}
       />
 
@@ -254,62 +288,50 @@ const Center = ({
             </a>
           </div>
           <div className={styles.alignItems}>
-            {!token && (
-              <>
-                {recipeData?.versionsCount ? (
-                  <IconWithText
-                    wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
-                    handleClick={(e) => {
-                      dispatch(setOpenVersionTray(true));
-                      dispatch(setOpenVersionTrayFormWhichPage("details"));
-                      dispatch(
-                        setShouldCloseVersionTrayWhenClickAVersion(true),
-                      );
-                    }}
-                    icon={<VscVersions color={"#7cbc39"} />}
-                    text={`Versions(${recipeData?.versionsCount})`}
-                  />
-                ) : null}
-
+            <>
+              {recipeData?.versionsCount ? (
                 <IconWithText
                   wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
-                  handleClick={() => {}}
-                  icon="/images/calendar-alt-light.svg"
-                  text="Planner"
+                  handleClick={() => !token && handleToOpenVersionTray()}
+                  icon={<VscVersions color={"#7cbc39"} />}
+                  text={`Versions(${recipeData?.versionsCount})`}
                 />
+              ) : null}
 
-                <IconWithText
-                  wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
-                  handleClick={(e) =>
-                    recipeData?.userCollections?.length
-                      ? handleOpenCollectionTray(
-                          recipeData?.recipeId?._id,
-                          recipeData?.userCollections,
-                          e,
-                          updateCollection,
-                        )
-                      : addToCollection(recipeData?.recipeId?._id, e)
-                  }
-                  icon={
-                    recipeData?.userCollections?.length
-                      ? "/icons/compare.svg"
-                      : "/images/BookmarksStar.svg" //"/images/BookmarksStar-orange.svg"
-                  }
-                  text="Saved"
-                />
+              <IconWithText
+                wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
+                handleClick={() => {}}
+                icon="/images/calendar-alt-light.svg"
+                text="Planner"
+              />
 
-                <IconWithText
-                  wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
-                  handleClick={() => {
-                    setShowCollectionModal(false);
-                    setShowShareModal(true);
-                    // setOpenModal(true);
-                  }}
-                  icon="/images/share-alt-light-grey.svg"
-                  text="Share"
-                />
-              </>
-            )}
+              <IconWithText
+                wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
+                handleClick={(e) =>
+                  !token &&
+                  handleOpenCollectionTrayOrAddToCollection(
+                    e,
+                    recipeData?.userCollections?.length,
+                    recipeData?.recipeId?._id,
+                    recipeData?.userCollections,
+                    updateCollection,
+                  )
+                }
+                icon={
+                  recipeData?.userCollections?.length
+                    ? "/icons/compare.svg"
+                    : "/images/BookmarksStar.svg" //"/images/BookmarksStar-orange.svg"
+                }
+                text="Saved"
+              />
+
+              <IconWithText
+                wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
+                handleClick={() => !token && handleToOpenCollectionTray()}
+                icon="/images/share-alt-light-grey.svg"
+                text="Share"
+              />
+            </>
 
             {hangleShowCommentsAndNotesIcon()}
           </div>
