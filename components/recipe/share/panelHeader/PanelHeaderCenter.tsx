@@ -16,6 +16,7 @@ import Tooltip from "../../../../theme/toolTip/CustomToolTip";
 import PanelHeader from "./PanelHeader";
 import styles from "./PanelHeader.module.scss";
 import { useAppSelector } from "../../../../redux/hooks";
+import HeaderTextBtn from "./HeaderTextBtn";
 
 interface PanelHeaderCenterProps {
   editOrSavebtnText?: string;
@@ -46,8 +47,8 @@ const PanelHeaderCenter = ({
     <div className={styles.centerRightBtnWraper}>
       {pageComeFrom === "edit" && (
         <Tooltip content={`Open versions`} direction="bottom">
-          <button
-            className={`${styles.headerTextBtn} ${styles.headerTextBtnOutline} hvr-pop`}
+          <HeaderTextBtn
+            variant="outlineSecondary"
             onClick={() => {
               dispatch(setOpenVersionTray(true));
               dispatch(setOpenVersionTrayFormWhichPage("edit"));
@@ -60,28 +61,23 @@ const PanelHeaderCenter = ({
             />
             Version
             {recipeVersionLength ? `(${recipeVersionLength})` : ""}
-          </button>
+          </HeaderTextBtn>
         </Tooltip>
       )}
 
       {pageComeFrom === "details" && (
-        <button
-          className={`${styles.headerTextBtn} hvr-pop`}
+        <HeaderTextBtn
           onClick={() =>
             router.push(`/edit_recipe/${detailsARecipe?.recipeId?._id}/parsing`)
           }
           style={{ minWidth: "45px" }}
         >
           parsing
-        </button>
+        </HeaderTextBtn>
       )}
 
-      <Tooltip content={`${editOrSavebtnText} recipe`} direction="bottom">
-        <button
-          className={`${styles.headerTextBtn} hvr-pop`}
-          onClick={editOrSavebtnFunc}
-          style={{ minWidth: "45px" }}
-        >
+      <Tooltip content={`${editOrSavebtnText}`} direction="bottom">
+        <HeaderTextBtn onClick={editOrSavebtnFunc} style={{ minWidth: "45px" }}>
           {loading ? (
             <CircularRotatingLoader
               color="white"
@@ -90,7 +86,7 @@ const PanelHeaderCenter = ({
           ) : (
             editOrSavebtnText
           )}
-        </button>
+        </HeaderTextBtn>
       </Tooltip>
 
       <Tooltip content={backBtnObj?.text || "Back"} direction="bottom">

@@ -35,7 +35,10 @@ import { ShowRecipes } from "../../../components/recipe/recipeDiscovery/regularR
 import Tooltip from "../../../theme/toolTip/CustomToolTip";
 import RecipeDiscoverButton from "../../../theme/button/recipeDiscoverButton/RecipeDiscoverButton";
 import GET_MY_RECENT_RECIPES from "../../../gqlLib/collection/query/getMyRecientRecipes";
-
+import IconWarper from "../../../theme/iconWarper/IconWarper";
+import { faXmark } from "@fortawesome/pro-light-svg-icons";
+import HeaderTextBtn from "../../../components/recipe/share/panelHeader/HeaderTextBtn";
+import useToAcceptCollectionShare from "../../../customHooks/collection/useToAcceptCollectionShare";
 let dataLimit = 12;
 
 const CollectionRecipes = () => {
@@ -73,7 +76,11 @@ const CollectionRecipes = () => {
     useLazyQuery(GET_MY_RECENT_RECIPES);
   const [
     getCustomRecipes,
-    { loading: getCustomRecipesLoading, error: getCollectionRecipeError },
+    {
+      data: getCustomRecipesData,
+      loading: getCustomRecipesLoading,
+      error: getCollectionRecipeError,
+    },
   ] = useLazyQuery(GET_SINGLE_COLLECTION);
   const [
     getShareWithMeCollection,
@@ -93,6 +100,8 @@ const CollectionRecipes = () => {
   } = useFetchGetRecipesByBlendAndIngredients();
   const { allFilters, allFilterRecipes, showFilterOrSearchRecipes } =
     useAppSelector((state) => state?.filterRecipe);
+  const { functionAcceptCollectionShare, acceptCollectionShareLoading } =
+    useToAcceptCollectionShare();
 
   // handle next page
   const handleNextPage = () => {
@@ -254,9 +263,41 @@ const CollectionRecipes = () => {
               <h2 className={classes.head__title}>{title}</h2>
             </div>
           }
-          closeHandler={() => router.back()}
+          headerRightSide={
+            <div className="d-flex ai-center">
+              {getCustomRecipesData?.getASingleCollection?.hasOwnProperty(
+                "accepted",
+              ) && !getCustomRecipesData?.getASingleCollection?.accepted ? (
+                <HeaderTextBtn
+                  style={{ marginRight: "1rem" }}
+                  variant="containPrimary"
+                  onClick={() =>
+                    functionAcceptCollectionShare({
+                      token:
+                        token ||
+                        getCustomRecipesData?.getASingleCollection?._id,
+                      userId,
+                    })
+                  }
+                >
+                  {acceptCollectionShareLoading
+                    ? "Loading..."
+                    : "Add to collection"}
+                </HeaderTextBtn>
+              ) : null}
+
+              <IconWarper
+                iconColor="iconColorWhite"
+                defaultBg="primary"
+                hover="bgPrimary"
+                style={{ width: "28px", height: "28px" }}
+                handleClick={() => router.back()}
+              >
+                <FontAwesomeIcon icon={faXmark} />
+              </IconWarper>
+            </div>
+          }
           showItems="recipe"
-          showDefaultRightHeader
           setOpenCollectionModal={setOpenCollectionModal}
           setOpenShareModal={setOpenShareModal}
           setShareRecipeData={setShareRecipeData}
