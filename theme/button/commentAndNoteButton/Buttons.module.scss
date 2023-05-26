@@ -1,12 +1,11 @@
 @import "../../../styles/partials/variables";
-.submitBtn {
+
+.btn {
   border-radius: 23px;
-  color: #fff !important;
+  color: #fff;
   font-size: 12px;
   font-weight: 600;
   min-width: 95px;
-  height: 37px;
-  line-height: 37px;
   text-align: center;
   display: flex;
   justify-content: center;
@@ -14,6 +13,11 @@
   border: 0;
   cursor: pointer;
   font-family: "Segoe UI", sans-serif;
+  padding: 10px;
+  box-shadow: rgb(229, 230, 228) 5px 5px 15px;
+}
+.submitBtn {
+  color: #fff;
 }
 
 .primary {
@@ -24,19 +28,9 @@
 }
 
 .cancleBtn {
-  min-width: 95px;
-  height: 37px;
-  border: 0;
-  padding: 0;
   background: transparent;
-  font-size: 13px;
-  font-weight: 600;
   color: $primaryColor;
-  cursor: pointer;
-  font-family: "Segoe UI", sans-serif;
   &:hover {
-    background: transparent;
     box-shadow: 5px 5px 15px #fe5d1f38;
-    border-radius: 23px;
   }
 }

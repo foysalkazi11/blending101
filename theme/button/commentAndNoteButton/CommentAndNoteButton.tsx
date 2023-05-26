@@ -18,9 +18,7 @@ const CommentAndNoteButton = ({
 }: Props) => {
   return (
     <button
-      className={`${styles[type]} ${
-        type === "submitBtn" && styles[submitBtnVarient]
-      }`}
+      className={`${styles.btn} ${styles[submitBtnVarient]} ${styles[type]}`}
       style={style}
       onClick={handleClick}
     >

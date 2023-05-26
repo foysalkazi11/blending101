@@ -32,6 +32,8 @@ const GET_SINGLE_COLLECTION = gql`
       image
       name
       slug
+      accepted
+      totalRecipes
       recipes {
         addedToCompare
         allRecipes

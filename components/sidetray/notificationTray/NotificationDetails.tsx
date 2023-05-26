@@ -1,19 +1,17 @@
 import styles from "./NotificationTray.module.scss";
 import Image from "next/image";
-import { useMutation } from "@apollo/client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/pro-light-svg-icons";
 import CommentAndNoteButton from "../../../theme/button/commentAndNoteButton/CommentAndNoteButton";
 import CircularRotatingLoader from "../../../theme/loader/circularRotatingLoader.component";
-import ACCEPT_RECIPE_SHARE from "../../../gqlLib/notification/mutation/acceptRecipeShare";
-import REJECT_RECIPE_SHARE from "../../../gqlLib/notification/mutation/rejectRecipeShare";
-import notification from "../../utility/reactToastifyNotification";
-import useToUpdateShareNotification from "../../../customHooks/notification/useToUpdateShareNotification";
 import { useRouter } from "next/router";
 import { useAppDispatch } from "../../../redux/hooks";
 import { setIsNotificationTrayOpen } from "../../../redux/slices/notificationSlice";
 import useToAcceptRecipeShare from "../../../customHooks/notification/useToAcceptRecipeShare";
 import useToRejectRecipeShare from "../../../customHooks/notification/useToRejectRecipeShare";
+import { slugify } from "../../../helperFunc/string/slugToTittle";
+import useToAcceptCollectionShare from "../../../customHooks/collection/useToAcceptCollectionShare";
+import useToRejectCollectionShare from "../../../customHooks/collection/useToRejectCollectionShare";
 
 const NotificationDetails = ({
   shareData,
@@ -24,21 +22,32 @@ const NotificationDetails = ({
 }) => {
   const { entityId } = shareData;
   const { displayName, firstName, lastName } = sharedBy;
-
-  const handleUpdateShareNotification = useToUpdateShareNotification();
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { functionAcceptRecipeShare, acceptRecipeShareLoading } =
     useToAcceptRecipeShare();
+  const { functionAcceptCollectionShare, acceptCollectionShareLoading } =
+    useToAcceptCollectionShare();
   const { functionRejectRecipeShare, rejectRecipeShareLoading } =
     useToRejectRecipeShare();
+  const { functionRejectCollectionShare, rejectCollectionShareLoading } =
+    useToRejectCollectionShare();
 
   // show recipe
-  const showRecipe = (type, id, token) => {
+  const showRecipe = (type, entityId, token) => {
     if (type === "Recipe") {
-      router.push(`/recipe_details/${id}/${token ? "?token=" + token : ""} `);
-      dispatch(setIsNotificationTrayOpen(false));
+      router.push(
+        `/recipe_details/${entityId?._id}/${token ? "?token=" + token : ""} `,
+      );
     }
+    if (type === "Collection") {
+      router.push(
+        `/collection/recipeCollection/${slugify(entityId?.name)}${
+          "?collectionId=" + entityId?._id
+        }`,
+      );
+    }
+    dispatch(setIsNotificationTrayOpen(false));
   };
   return (
     <div className={styles.singleNotificationContainer}>
@@ -62,7 +71,7 @@ const NotificationDetails = ({
 
           <div>
             <h3
-              onClick={() => showRecipe(type, entityId?._id, variables?.token)}
+              onClick={() => showRecipe(type, entityId, variables?.token)}
               className={`${styles.heading}`}
             >
               {entityId?.name}
@@ -79,21 +88,28 @@ const NotificationDetails = ({
           submitBtnVarient="secondary"
           style={{ boxShadow: "5px 5px 15px #e5e6e4" }}
           text={
-            acceptRecipeShareLoading ? (
+            acceptRecipeShareLoading || acceptCollectionShareLoading ? (
               <CircularRotatingLoader
                 color="white"
                 style={{ fontSize: "16px" }}
               />
             ) : (
-              "Accept"
+              "Add to Collection"
             )
           }
-          handleClick={() => functionAcceptRecipeShare(variables)}
+          handleClick={() => {
+            if (type === "Recipe") {
+              functionAcceptRecipeShare(variables);
+            }
+            if (type === "Collection") {
+              functionAcceptCollectionShare(variables);
+            }
+          }}
         />
         <CommentAndNoteButton
           type="cancleBtn"
           text={
-            rejectRecipeShareLoading ? (
+            rejectRecipeShareLoading || rejectCollectionShareLoading ? (
               <CircularRotatingLoader
                 color="primary"
                 style={{ fontSize: "16px" }}
@@ -102,7 +118,14 @@ const NotificationDetails = ({
               "Decline"
             )
           }
-          handleClick={() => functionRejectRecipeShare(variables)}
+          handleClick={() => {
+            if (type === "Recipe") {
+              functionRejectRecipeShare(variables);
+            }
+            if (type === "Collection") {
+              functionRejectCollectionShare(variables);
+            }
+          }}
         />
       </div>
     </div>
