@@ -13,9 +13,10 @@
     border-radius: 18px;
     height: 37px;
     position: relative;
+
     .menu {
       color: #929292;
-      border-radius: 18px;
+
       height: 35px;
       font-size: 14px;
       padding: 0;
@@ -30,16 +31,24 @@
       font-weight: 500;
     }
     .containPrimary {
+      border-radius: 1.8rem;
       color: #fff;
     }
     .containSecondary {
+      border-radius: 1.8rem;
       color: #fff;
     }
     .outlinePrimary {
+      border-radius: 1.8rem;
       color: $primaryColor;
     }
     .outlineSecondary {
+      border-radius: 1.8rem;
       color: $secondaryColor;
+    }
+    .borderBottomPrimary,
+    .borderBottomSecondary {
+      border-bottom: 1px solid #dfdfdf;
     }
   }
 }
@@ -58,19 +67,29 @@
   top: 0;
   bottom: 0;
   left: 0px;
-  border-radius: 18px;
+
   transition: all 0.3s;
 }
 
 .containPrimary {
-  background-color: $primaryColor;
+  border-radius: 1.8rem;
+  background-color: $primaryColor !important;
 }
 .containSecondary {
-  background-color: $secondaryColor;
+  border-radius: 1.8rem;
+  background-color: $secondaryColor !important;
 }
 .outlinePrimary {
-  border: 2px solid $primaryColor;
+  border-radius: 1.8rem;
+  border: 2px solid $primaryColor !important;
 }
 .outlineSecondary {
-  border: 2px solid $secondaryColor;
+  border-radius: 1.8rem;
+  border: 2px solid $secondaryColor !important;
+}
+.borderBottomPrimary {
+  border-bottom: 2px solid $primaryColor !important;
+}
+.borderBottomSecondary {
+  border-bottom: 2px solid $secondaryColor !important;
 }

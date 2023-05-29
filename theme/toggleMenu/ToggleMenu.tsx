@@ -10,7 +10,9 @@ type ToggleMenuProps = {
     | "containPrimary"
     | "containSecondary"
     | "outlinePrimary"
-    | "outlineSecondary";
+    | "outlineSecondary"
+    | "borderBottomPrimary"
+    | "borderBottomSecondary";
 };
 
 const ToggleMenu = ({
