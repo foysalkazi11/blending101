@@ -2,9 +2,9 @@
 
 .btn {
   border-radius: 23px;
-  color: #fff;
-  font-size: 12px;
-  font-weight: 600;
+  color: $white;
+  font-size: 1.4rem;
+  font-weight: 500;
   min-width: 95px;
   text-align: center;
   display: flex;
@@ -13,18 +13,36 @@
   border: 0;
   cursor: pointer;
   font-family: "Segoe UI", sans-serif;
-  padding: 10px;
+  padding: 8px 10px;
   box-shadow: rgb(229, 230, 228) 5px 5px 15px;
+  transition: $transition;
+  background-color: $white;
 }
 .submitBtn {
-  color: #fff;
+  color: $white;
 }
 
-.primary {
+.solidPrimary {
   background: $primaryColor;
 }
-.secondary {
+.outlinePrimary {
+  border: 1px solid $primaryColor;
+  color: $primaryColor;
+  &:hover {
+    background: $primaryColor;
+    color: $white;
+  }
+}
+.solidSecondary {
   background: $secondaryColor;
+}
+.outlineSecondary {
+  border: 1px solid $secondaryColor;
+  color: $secondaryColor;
+  &:hover {
+    background: $secondaryColor;
+    color: $white;
+  }
 }
 
 .cancleBtn {

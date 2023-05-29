@@ -1,7 +1,13 @@
 import styles from "./NotificationTray.module.scss";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/pro-light-svg-icons";
+import {
+  faBlender,
+  faBookmark,
+  faCalendar,
+  faUser,
+  faWhistle,
+} from "@fortawesome/pro-light-svg-icons";
 import CommentAndNoteButton from "../../../theme/button/commentAndNoteButton/CommentAndNoteButton";
 import CircularRotatingLoader from "../../../theme/loader/circularRotatingLoader.component";
 import { useRouter } from "next/router";
@@ -12,6 +18,16 @@ import useToRejectRecipeShare from "../../../customHooks/notification/useToRejec
 import { slugify } from "../../../helperFunc/string/slugToTittle";
 import useToAcceptCollectionShare from "../../../customHooks/collection/useToAcceptCollectionShare";
 import useToRejectCollectionShare from "../../../customHooks/collection/useToRejectCollectionShare";
+import time_ago from "../../../helperFunc/date/time_ago";
+
+// selected icon for different type of notification
+
+const icons = {
+  Recipe: faBlender,
+  Collection: faBookmark,
+  Plan: faCalendar,
+  Challenge: faWhistle,
+};
 
 const NotificationDetails = ({
   shareData,
@@ -19,6 +35,7 @@ const NotificationDetails = ({
   variables,
   image,
   type,
+  createdAt,
 }) => {
   const { entityId } = shareData;
   const { displayName, firstName, lastName } = sharedBy;
@@ -49,35 +66,52 @@ const NotificationDetails = ({
     }
     dispatch(setIsNotificationTrayOpen(false));
   };
+
+  switch (type) {
+  }
   return (
     <div className={styles.singleNotificationContainer}>
       <div className={styles.recipeName}>
         <div className={styles.leftSide}>
-          {image ? (
-            <Image
-              src={image || ""}
-              alt="recipe_img"
-              width={45}
-              height={45}
-              objectFit="cover"
-              loading="lazy"
-              className={styles.image}
-            />
-          ) : (
-            <div className={styles.image}>
+          <div className={styles.imageBox}>
+            {image ? (
+              <Image
+                src={image || ""}
+                alt="recipe_img"
+                width={45}
+                height={45}
+                objectFit="cover"
+                loading="lazy"
+                className={styles.image}
+              />
+            ) : (
               <FontAwesomeIcon icon={faUser} color="gray" size="2x" />
+            )}
+            <div className={styles.iconBox}>
+              <FontAwesomeIcon icon={icons[type]} />
             </div>
-          )}
+          </div>
 
           <div>
-            <h3
+            {/* <h3
               onClick={() => showRecipe(type, entityId, variables?.token)}
               className={`${styles.heading}`}
             >
               {entityId?.name}
-            </h3>
+            </h3> */}
             <p className={styles.sharedBy}>
-              Shared by : {displayName || firstName || lastName}
+              <span className={styles.name}>
+                {displayName || firstName || lastName}
+              </span>{" "}
+              shared{" "}
+              <span
+                onClick={() => showRecipe(type, entityId, variables?.token)}
+                className={styles.item}
+              >
+                {entityId?.name}
+              </span>{" "}
+              <span className={styles.type}>{type?.toLowerCase()}</span> with
+              you on {time_ago(createdAt)}
             </p>
           </div>
         </div>
@@ -85,7 +119,7 @@ const NotificationDetails = ({
       <div className={styles.btnBox}>
         <CommentAndNoteButton
           type="submitBtn"
-          submitBtnVarient="secondary"
+          submitBtnVarient="outlineSecondary"
           style={{ boxShadow: "5px 5px 15px #e5e6e4" }}
           text={
             acceptRecipeShareLoading || acceptCollectionShareLoading ? (
@@ -93,8 +127,10 @@ const NotificationDetails = ({
                 color="white"
                 style={{ fontSize: "16px" }}
               />
+            ) : type === "Challenge" ? (
+              "Accept"
             ) : (
-              "Add to Collection"
+              "Save"
             )
           }
           handleClick={() => {
