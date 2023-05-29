@@ -6,7 +6,11 @@ type Props = {
   handleClick?: () => void;
   text?: string | ReactNode;
   type: "submitBtn" | "cancleBtn";
-  submitBtnVarient?: "primary" | "secondary";
+  submitBtnVarient?:
+    | "solidPrimary"
+    | "solidSecondary"
+    | "outlinePrimary"
+    | "outlineSecondary";
 };
 
 const CommentAndNoteButton = ({
@@ -14,7 +18,7 @@ const CommentAndNoteButton = ({
   handleClick = () => {},
   text = "Submit",
   type = "submitBtn",
-  submitBtnVarient = "primary",
+  submitBtnVarient = "solidPrimary",
 }: Props) => {
   return (
     <button

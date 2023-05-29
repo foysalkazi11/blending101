@@ -6,21 +6,26 @@ import NotificationDetails from "./NotificationDetails";
 import SkeletonComment from "../../../theme/skeletons/skeletonComment/SkeletonComment";
 import styles from "./NotificationTray.module.scss";
 
-const ShowNotificationData = () => {
+interface Props {
+  notificationData: any;
+  notificationDataLoading: boolean;
+}
+
+const ShowNotificationData = ({
+  notificationData: notification,
+  notificationDataLoading,
+}: Props) => {
   const userId = useAppSelector((state) => state?.user?.dbUser?._id);
-  const { data, loading } = useQuery(GET_SHARE_NOTIFICATION, {
-    variables: { userId },
-    fetchPolicy: "cache-and-network",
-  });
-  if (loading) {
+
+  if (notificationDataLoading) {
     return <SkeletonComment />;
   }
-  const notification = data?.getShareNotification;
+
   return (
     <>
       {notification?.totalNotification ? (
         notification?.shareNotifications?.map(
-          ({ _id, image, type, shareData, sharedBy }) => {
+          ({ _id, image, type, shareData, sharedBy, createdAt }) => {
             return (
               <NotificationDetails
                 key={_id}
@@ -29,13 +34,14 @@ const ShowNotificationData = () => {
                 sharedBy={sharedBy}
                 image={image}
                 type={type}
+                createdAt={createdAt}
               />
             );
           },
         )
       ) : (
         <div className={styles.noNotification}>
-          <p className={styles.text}>{"No comments"}</p>
+          <p className={styles.text}>{"No notifications"}</p>
         </div>
       )}
     </>

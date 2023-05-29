@@ -46,7 +46,7 @@ const NoteForm = ({
       <div className={styles.btnBox}>
         <CommentAndNoteButton
           type="submitBtn"
-          submitBtnVarient="secondary"
+          submitBtnVarient="solidSecondary"
           style={{ boxShadow: "5px 5px 15px #e5e6e4" }}
           text={
             addNewItemLoading ? (

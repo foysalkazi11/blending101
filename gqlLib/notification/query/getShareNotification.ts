@@ -22,6 +22,7 @@ const GET_SHARE_NOTIFICATION = gql`
           lastName
           image
         }
+        createdAt
       }
       totalNotification
     }
