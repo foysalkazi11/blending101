@@ -35,7 +35,7 @@ export interface SharedUserInfoType {
 
 interface ShareProps {
   title?: string;
-  type?: string;
+  type: "recipe" | "collection";
   image?: string;
   show: boolean;
   setShow: any;
@@ -161,20 +161,21 @@ const Share = (props: ShareProps) => {
             />
           </div>
         )}
-
-        <div className={styles.checkBoxContainer} style={{ marginTop: "20px" }}>
-          <CustomCheckbox
-            checked={isVersionSharable}
-            handleChange={(e) => setIsVersionShareable(e.target.checked)}
-            id="shareOtherVersions"
-            disable={shareVersionsLength ? false : true}
-          />
-          <label className={styles.label} htmlFor="shareOtherVersions">
-            {`Share Other Versions ${
-              shareVersionsLength ? `(${shareVersionsLength})` : ""
-            }`}
-          </label>
-        </div>
+        {type === "recipe" && (
+          <div className={styles.checkBoxContainer}>
+            <CustomCheckbox
+              checked={isVersionSharable}
+              handleChange={(e) => setIsVersionShareable(e.target.checked)}
+              id="shareOtherVersions"
+              disable={shareVersionsLength ? false : true}
+            />
+            <label className={styles.label} htmlFor="shareOtherVersions">
+              {`Share Other Versions ${
+                shareVersionsLength ? `(${shareVersionsLength})` : ""
+              }`}
+            </label>
+          </div>
+        )}
       </div>
     </CustomModal>
   );

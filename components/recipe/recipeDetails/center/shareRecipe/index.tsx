@@ -11,7 +11,7 @@ interface Props {
   id: string;
   versionId: string;
   title: string;
-  type: "recipe";
+  type: "recipe" | "collection";
   image: string;
   show: boolean;
   setShow: any;

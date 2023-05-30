@@ -11,16 +11,15 @@ import joniIngredients from "../../../../helperFunc/joinIngredients";
 import { useAppSelector } from "../../../../redux/hooks";
 import DataCardComponent from "../../../../theme/cards/dataCard/dataCard.component";
 import SkeletonRecipeDiscovery from "../../../../theme/skeletons/skeletonRecipeDiscovery/SkeletonRecipeDiscovery";
-import { Ingredient, RecipeType } from "../../../../type/recipeType";
+import {
+  Ingredient,
+  RecipeType,
+  ReferenceOfRecipeUpdateFuncType,
+} from "../../../../type/recipeType";
 import AppdownLoadCard from "../AppdownLoadCard/AppdownLoadCard.component";
 import ContentTray from "../ContentTray/ContentTray.component";
 import styles from "../recipeDiscovery.module.scss";
 
-type UpdateRecipeFunc = (
-  id: string,
-  obj: object,
-  innerLabel?: "defaultVersion" | "recipeId",
-) => void;
 const defaultHeadingContent = {
   heading: "Recommended",
   image: "/images/thumbs-up.svg",
@@ -65,7 +64,7 @@ const RegularRecipes = ({
     variables: { userId: dbUser?._id },
   });
 
-  const updateRecipe: UpdateRecipeFunc = useCallback(
+  const updateRecipe: ReferenceOfRecipeUpdateFuncType = useCallback(
     (id = "", obj = {}, innerLabel) => {
       // update apollo client cache
 

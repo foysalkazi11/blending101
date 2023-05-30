@@ -60,6 +60,7 @@ interface IndividualCollectionType {
     image?: string;
   };
   canContribute?: boolean;
+  canShareWithOther?: boolean;
   route?: string;
 }
 
@@ -99,10 +100,9 @@ const SingleCollection = ({
     lastName: "",
   },
   canContribute,
+  canShareWithOther,
   route = "",
 }: IndividualCollectionType) => {
-  console.log(image);
-
   const [hoverRef, isHovered] = useHover();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -173,7 +173,7 @@ const SingleCollection = ({
         </div>
 
         {showMoreMenu ? (
-          changeItemWithinCollection ? (
+          changeItemWithinCollection && canContribute && canShareWithOther ? (
             <div className={styles.checkBox}>
               <CustomCheckbox
                 checked={isRecipeWithinCollection}
@@ -181,7 +181,7 @@ const SingleCollection = ({
               />
             </div>
           ) : isHovered ? (
-            name === "My Favorite" ? (
+            name === "My Favorite" && !isShared ? (
               <p style={{ marginRight: "10px" }}>{collectionItemLength}</p>
             ) : (
               <div

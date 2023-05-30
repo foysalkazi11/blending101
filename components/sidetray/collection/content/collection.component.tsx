@@ -240,6 +240,7 @@ export default function CollectionComponent({
             sharedBy,
             personalizedName,
             canContribute,
+            canShareWithOther,
           } = collection;
 
           return !canContribute ? null : (
@@ -265,6 +266,7 @@ export default function CollectionComponent({
               isShared={isShared}
               sharedBy={sharedBy}
               canContribute={canContribute}
+              canShareWithOther={canShareWithOther}
             />
           );
         })
@@ -289,6 +291,7 @@ export default function CollectionComponent({
         submitBtnText="Share"
         isAdditionInfoNeedForPersonalShare={true}
         sharedUserEmail={collectionInfo?.sharedUserEmail}
+        type="collection"
       />
       {/* 
       <Invite
