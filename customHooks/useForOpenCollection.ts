@@ -6,6 +6,7 @@ import {
 } from "../redux/slices/collectionSlice";
 import { setReferenceOfRecipeUpdateFunc } from "../redux/slices/recipeSlice";
 import { setOpenCollectionsTary } from "../redux/slices/sideTraySlice";
+import { ReferenceOfRecipeUpdateFuncType } from "../type/recipeType";
 
 const useForOpenCollectionTray = () => {
   const dispatch = useAppDispatch();
@@ -14,10 +15,7 @@ const useForOpenCollectionTray = () => {
     id: string,
     collectionIds: string[],
     e: React.SyntheticEvent,
-    updateDataFunc: (
-      id: string,
-      obj: { [key: string]: any },
-    ) => void = () => {},
+    updateDataFunc: ReferenceOfRecipeUpdateFuncType = () => {},
   ) => {
     e?.stopPropagation();
     dispatch(setSingleRecipeWithinCollecions(collectionIds));

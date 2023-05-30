@@ -98,14 +98,14 @@ const ShowRecipeContainer = ({
   };
 
   const updateContainerData = useCallback<ReferenceOfRecipeUpdateFuncType>(
-    (id, updateObj, innerLabel) => {
+    (id, outerObj = {}, innerObj = {}, innerLabel) => {
       setContainerData((prev) =>
         prev.map((item) =>
           item?.recipeId?._id === id
             ? {
                 ...item,
-                ...updateObj,
-                [innerLabel]: { ...item[innerLabel], ...updateObj },
+                ...outerObj,
+                [innerLabel]: { ...item[innerLabel], ...innerObj },
               }
             : item,
         ),

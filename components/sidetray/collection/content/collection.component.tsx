@@ -122,7 +122,7 @@ export default function CollectionComponent({
       const generatedLink = `${
         process.env.NODE_ENV === "production"
           ? process.env.NEXT_PUBLIC_HOSTING_DOMAIN
-          : "http://localhost:3000"
+          : "http://localhost:4000"
       }/collection/recipeCollection/${collectionInfo?.slug}?${
         isGlobalShare
           ? "token=" + data.createShareCollectionLink
@@ -156,11 +156,13 @@ export default function CollectionComponent({
         },
       });
 
-      referenceOfRecipeUpdateFunc(activeRecipeId, {
-        userCollections: collectionHasRecipe?.length
-          ? singleRecipeWithinCollections
-          : [],
-      });
+      referenceOfRecipeUpdateFunc(
+        activeRecipeId,
+        {
+          userCollections: collectionHasRecipe,
+        },
+        {},
+      );
 
       reactToastifyNotification("success", `Collection update successfully`);
       setIsCollectionUpdate(false);

@@ -9,6 +9,7 @@ import {
 } from "../redux/slices/collectionSlice";
 import { setReferenceOfRecipeUpdateFunc } from "../redux/slices/recipeSlice";
 import { setOpenCollectionsTary } from "../redux/slices/sideTraySlice";
+import { ReferenceOfRecipeUpdateFuncType } from "../type/recipeType";
 
 const useForAddToCollection = () => {
   const { dbUser } = useAppSelector((state) => state?.user);
@@ -24,10 +25,7 @@ const useForAddToCollection = () => {
     recipeId: string,
     setOpenCollectionModal: Dispatch<SetStateAction<boolean>>,
     e: React.SyntheticEvent,
-    updateDataFunc: (
-      id: string,
-      obj: { [key: string]: any },
-    ) => void = () => {},
+    updateDataFunc: ReferenceOfRecipeUpdateFuncType = () => {},
   ) => {
     e.stopPropagation();
     dispatch(setActiveRecipeId(recipeId));
@@ -55,7 +53,7 @@ const useForAddToCollection = () => {
       const obj = {
         userCollections: [data?.addTolastModifiedCollection?._id],
       };
-      updateDataFunc(recipeId, obj);
+      updateDataFunc(recipeId, obj, {});
       dispatch(setReferenceOfRecipeUpdateFunc(updateDataFunc));
 
       setOpenCollectionModal(true);

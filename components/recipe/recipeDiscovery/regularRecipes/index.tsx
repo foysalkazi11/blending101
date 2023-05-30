@@ -65,7 +65,7 @@ const RegularRecipes = ({
   });
 
   const updateRecipe: ReferenceOfRecipeUpdateFuncType = useCallback(
-    (id = "", obj = {}, innerLabel) => {
+    (id = "", outerObj = {}, innerObj = {}, innerLabel) => {
       // update apollo client cache
 
       client.writeQuery({
@@ -77,8 +77,8 @@ const RegularRecipes = ({
               recipe?.recipeId?._id === id
                 ? {
                     ...recipe,
-                    ...obj,
-                    [innerLabel]: { ...recipe[innerLabel], ...obj },
+                    ...outerObj,
+                    [innerLabel]: { ...recipe[innerLabel], ...innerObj },
                   }
                 : recipe,
             ),
@@ -93,8 +93,8 @@ const RegularRecipes = ({
               recipe?.recipeId?._id === id
                 ? {
                     ...recipe,
-                    ...obj,
-                    [innerLabel]: { ...recipe[innerLabel], ...obj },
+                    ...outerObj,
+                    [innerLabel]: { ...recipe[innerLabel], ...innerObj },
                   }
                 : recipe,
           ),
@@ -109,8 +109,8 @@ const RegularRecipes = ({
               recipe?.recipeId?._id === id
                 ? {
                     ...recipe,
-                    ...obj,
-                    [innerLabel]: { ...recipe[innerLabel], ...obj },
+                    ...outerObj,
+                    [innerLabel]: { ...recipe[innerLabel], ...innerObj },
                   }
                 : recipe,
           ),
@@ -194,7 +194,7 @@ interface ShowRecipesType {
   setShareRecipeData?: React.Dispatch<
     React.SetStateAction<{ id: string; image: string; name: string }>
   >;
-  updateDataFunc?: (id: string, obj: { [key: string]: any }) => void;
+  updateDataFunc?: ReferenceOfRecipeUpdateFuncType;
 }
 
 export const ShowRecipes = ({
