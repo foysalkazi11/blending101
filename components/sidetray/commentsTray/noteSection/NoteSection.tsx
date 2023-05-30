@@ -94,9 +94,13 @@ const NoteSection = () => {
           });
         },
       });
-      referenceOfRecipeUpdateFunc(activeRecipeId, {
-        notes: data?.removeMyNote?.length ? data?.removeMyNote?.length : null,
-      });
+      referenceOfRecipeUpdateFunc(
+        activeRecipeId,
+        {
+          notes: data?.removeMyNote?.length ? data?.removeMyNote?.length : null,
+        },
+        {},
+      );
 
       reactToastifyNotification("info", "Delete successfully");
     } catch (error) {
@@ -153,11 +157,15 @@ const NoteSection = () => {
           },
         });
 
-        referenceOfRecipeUpdateFunc(activeRecipeId, {
-          notes: data?.createNewNote?.length
-            ? data?.createNewNote?.length
-            : null,
-        });
+        referenceOfRecipeUpdateFunc(
+          activeRecipeId,
+          {
+            notes: data?.createNewNote?.length
+              ? data?.createNewNote?.length
+              : null,
+          },
+          {},
+        );
       }
 
       reactToastifyNotification(
