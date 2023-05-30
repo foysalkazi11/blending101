@@ -9,7 +9,7 @@
     display: flex;
     flex-flow: nowrap;
     margin: 10px auto;
-    border: 1px solid #dfdfdf;
+    // border: 1px solid #dfdfdf;
     border-radius: 18px;
     height: 37px;
     position: relative;
@@ -46,10 +46,6 @@
       border-radius: 1.8rem;
       color: $secondaryColor;
     }
-    .borderBottomPrimary,
-    .borderBottomSecondary {
-      border-bottom: 1px solid #dfdfdf;
-    }
   }
 }
 
@@ -71,25 +67,25 @@
   transition: all 0.3s;
 }
 
-.containPrimary {
+.active.containPrimary {
   border-radius: 1.8rem;
-  background-color: $primaryColor !important;
+  background-color: $primaryColor;
 }
-.containSecondary {
+.active.containSecondary {
   border-radius: 1.8rem;
-  background-color: $secondaryColor !important;
+  background-color: $secondaryColor;
 }
-.outlinePrimary {
+.active.outlinePrimary {
   border-radius: 1.8rem;
-  border: 2px solid $primaryColor !important;
+  border: 2px solid $primaryColor;
 }
-.outlineSecondary {
+.active.outlineSecondary {
   border-radius: 1.8rem;
-  border: 2px solid $secondaryColor !important;
+  border: 2px solid $secondaryColor;
 }
-.borderBottomPrimary {
+.active.borderBottomPrimary {
   border-bottom: 2px solid $primaryColor !important;
 }
-.borderBottomSecondary {
+.active.borderBottomSecondary {
   border-bottom: 2px solid $secondaryColor !important;
 }
