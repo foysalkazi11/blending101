@@ -3,6 +3,7 @@ import notification from "../components/utility/reactToastifyNotification";
 import CHANGE_COMPARE from "../gqlLib/compare/mutation/changeCompare";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setDbUser } from "../redux/slices/userSlice";
+import { ReferenceOfRecipeUpdateFuncType } from "../type/recipeType";
 
 const useChangeCompare = () => {
   const dispatch = useAppDispatch();
@@ -17,10 +18,7 @@ const useChangeCompare = () => {
     id: string,
     versionId: string,
     compared: boolean,
-    updateDataFunc: (
-      id: string,
-      obj: { [key: string]: any },
-    ) => void = () => {},
+    updateDataFunc: ReferenceOfRecipeUpdateFuncType = () => {},
   ) => {
     e.stopPropagation();
 
@@ -38,7 +36,7 @@ const useChangeCompare = () => {
         }),
       );
 
-      updateDataFunc(id, { addedToCompare: compared });
+      updateDataFunc(id, { addedToCompare: compared }, {});
 
       notification(
         "success",

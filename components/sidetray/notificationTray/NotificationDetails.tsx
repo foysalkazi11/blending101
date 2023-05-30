@@ -120,7 +120,6 @@ const NotificationDetails = ({
         <CommentAndNoteButton
           type="submitBtn"
           submitBtnVarient="outlineSecondary"
-          style={{ boxShadow: "5px 5px 15px #e5e6e4" }}
           text={
             acceptRecipeShareLoading || acceptCollectionShareLoading ? (
               <CircularRotatingLoader

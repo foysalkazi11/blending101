@@ -84,6 +84,7 @@ export interface RecipeBlendCategory {
 
 export type ReferenceOfRecipeUpdateFuncType = (
   id: string,
-  obj: { [key: string]: any },
+  outerObj: { [key: string]: any },
+  innerObj: { [key: string]: any },
   innerLabel?: "defaultVersion" | "recipeId",
 ) => void;

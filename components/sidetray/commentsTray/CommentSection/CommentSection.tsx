@@ -140,11 +140,15 @@ const CommentSection = ({ personalRating }: CommentSectionProps) => {
         },
       });
 
-      referenceOfRecipeUpdateFunc(activeRecipeId, {
-        numberOfRating: data?.removeComment?.comments?.length
-          ? data?.removeComment?.comments?.length
-          : null,
-      });
+      referenceOfRecipeUpdateFunc(
+        activeRecipeId,
+        {
+          numberOfRating: data?.removeComment?.comments?.length
+            ? data?.removeComment?.comments?.length
+            : null,
+        },
+        {},
+      );
 
       setUpdateComment(false);
       reactToastifyNotification("info", "Delete comment successfully");
@@ -186,11 +190,15 @@ const CommentSection = ({ personalRating }: CommentSectionProps) => {
             });
           },
         });
-        referenceOfRecipeUpdateFunc(activeRecipeId, {
-          numberOfRating: data?.createComment?.comments?.length
-            ? data?.createComment?.comments?.length
-            : null,
-        });
+        referenceOfRecipeUpdateFunc(
+          activeRecipeId,
+          {
+            numberOfRating: data?.createComment?.comments?.length
+              ? data?.createComment?.comments?.length
+              : null,
+          },
+          {},
+        );
       } else {
         await editComment({
           variables: {
@@ -263,6 +271,7 @@ const CommentSection = ({ personalRating }: CommentSectionProps) => {
       const { averageRating, numberOfRating } = data?.changeRecipeRating;
       referenceOfRecipeUpdateFunc(
         activeRecipeId,
+        {},
         { averageRating, numberOfRating },
         "recipeId",
       );

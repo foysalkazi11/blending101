@@ -104,12 +104,12 @@ const Center = ({
   };
 
   const updateCollection = useCallback<ReferenceOfRecipeUpdateFuncType>(
-    (id, obj, innerLabel) => {
+    (id, outerObj = {}, innerObj = {}, innerLabel) => {
       dispatch(
         setDetailsARecipe({
           ...detailsARecipe,
-          ...obj,
-          [innerLabel]: { ...detailsARecipe[innerLabel], ...obj },
+          ...outerObj,
+          [innerLabel]: { ...detailsARecipe[innerLabel], ...innerObj },
         }),
       );
     },
