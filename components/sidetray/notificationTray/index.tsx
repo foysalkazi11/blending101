@@ -66,7 +66,7 @@ export default function NotificationTray({
           </div>,
           <p key={"key1"}>Others</p>,
         ]}
-        variant="outlineSecondary"
+        variant="borderBottomSecondary"
         toggle={toggleNotification}
         setToggle={(index) => setToggleNotification(index)}
       />
