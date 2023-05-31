@@ -67,25 +67,21 @@ const WikiSingleType = ({
   };
 
   const handleClose = () => {
-    if (selectedWikiItem[type]?.length) {
-      setSelectedWikiItem((wikiItem) => ({ ...wikiItem, [type]: [] }));
+    if (selectedWikiItem[type]) {
+      setSelectedWikiItem((wikiItem) => ({ ...wikiItem, [type]: "" }));
     } else {
       setType("");
     }
   };
 
-  const fetchList = async (
-    FetchFunc: any,
-    page: number,
-    ids: string[] = [],
-  ) => {
+  const fetchList = async (FetchFunc: any, page: number) => {
     try {
       const { data } = await FetchFunc({
         variables: {
           userId: dbUser?._id,
           page,
           limit,
-          ids,
+          ids: [],
         },
       });
 
@@ -97,13 +93,13 @@ const WikiSingleType = ({
     }
   };
 
-  const selectOptions = (type: WikiType, page: number, ids: string[] = []) => {
+  const selectOptions = (type: WikiType, page: number) => {
     switch (type) {
       case "Ingredient":
-        fetchList(getIngredientList, page, ids);
+        fetchList(getIngredientList, page);
         break;
       case "Nutrient":
-        fetchList(getNutrientList, page, ids);
+        fetchList(getNutrientList, page);
         break;
       case "Health":
         setPage(1);
@@ -162,7 +158,7 @@ const WikiSingleType = ({
 
   useEffect(() => {
     if (type && dbUser?._id) {
-      selectOptions(type, 1, selectedWikiItem[type]);
+      selectOptions(type, 1);
       setPage(1);
     }
 
@@ -171,7 +167,7 @@ const WikiSingleType = ({
 
   useEffect(() => {
     if (isMounted.current) {
-      selectOptions(type, page, selectedWikiItem[type]);
+      selectOptions(type, page);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

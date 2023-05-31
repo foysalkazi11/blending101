@@ -57,7 +57,7 @@ const WikiLandingContent = ({
   image = "",
   list = [],
   loading = false,
-  title = "",
+  title = "Ingredient",
   setShowAll = () => {},
 }: Props) => {
   const [addOrRemoveToWikiCompareList] = useMutation(
