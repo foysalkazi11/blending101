@@ -165,19 +165,7 @@ const WikiCompare = () => {
   }, [wikiCompareData]);
 
   return (
-    <AContainer
-      headerIcon={"/icons/books.svg"}
-      headerTitle="Compare Ingredient"
-      showWikiCommentsTray={{
-        show: true,
-        showPanle: "right",
-        showTagByDeafult: false,
-      }}
-      headTagInfo={{
-        title: "Compare Ingredient",
-        description: "compare Ingredient",
-      }}
-    >
+    <>
       <div className={s.wikiCompareContainer}>
         {wikiCompareDataLoading ? (
           <SkeletonComparePage />
@@ -236,7 +224,7 @@ const WikiCompare = () => {
           </Slider>
         </div>
       </div>
-    </AContainer>
+    </>
   );
 };
 

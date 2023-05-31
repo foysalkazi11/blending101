@@ -99,7 +99,7 @@ const WikiLanding = ({
   }, []);
 
   const handleSetType = (type: WikiType) => {
-    setSelectedWikiItem((wikiItem) => ({ ...wikiItem, [type]: [] }));
+    setSelectedWikiItem((wikiItem) => ({ ...wikiItem, [type]: "" }));
     setType(type);
   };
 

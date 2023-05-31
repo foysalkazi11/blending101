@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
 import styles from "./toggleMenu.module.scss";
+import { ToggleMenuType } from "../../type/toggleMenuType";
 
 let border = {
   border: "1px solid #c1c1c1",
@@ -13,13 +14,7 @@ type ToggleMenuProps = {
   setToggle?: (val: number) => void;
   toggleMenuList: string[] | ReactNode[];
   maxWidth?: React.CSSProperties;
-  variant?:
-    | "containPrimary"
-    | "containSecondary"
-    | "outlinePrimary"
-    | "outlineSecondary"
-    | "borderBottomPrimary"
-    | "borderBottomSecondary";
+  variant?: ToggleMenuType;
 };
 
 const ToggleMenu = ({
