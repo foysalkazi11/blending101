@@ -167,19 +167,7 @@ function WikiSingleItem() {
     nutritionPanelData?.getNutrientsListAndGiGlByIngredients?.giGl;
 
   return (
-    <AContainer
-      headerIcon={"/icons/books.svg"}
-      headerTitle="Wiki details"
-      showWikiCommentsTray={{
-        show: true,
-        showPanle: "right",
-        showTagByDeafult: false,
-      }}
-      headTagInfo={{
-        title: `Wiki ${type} details`,
-        description: `wiki ${type} details`,
-      }}
-    >
+    <>
       <div className={styles.main}>
         <div className={styles.left}>
           <RelatedWikiItem type={type} />
@@ -252,7 +240,7 @@ function WikiSingleItem() {
           }
         />
       ) : null}
-    </AContainer>
+    </>
   );
 }
 

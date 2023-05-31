@@ -14,6 +14,7 @@ import { categories } from "../../../../data/categories";
 import ToggleMenu from "../../../../theme/toggleMenu/ToggleMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage, faRankingStar } from "@fortawesome/pro-light-svg-icons";
+import { ToggleMenuType } from "../../../../type/toggleMenuType";
 export interface ingredientState {
   name: string;
   value: number;
@@ -38,6 +39,7 @@ interface Props {
   ingredientCategoryData?: any[];
   ingredientCategoryLoading?: boolean;
   showHeader?: boolean;
+  toggleMenuType?: ToggleMenuType;
 }
 
 export default function FilterbottomComponent({
@@ -47,6 +49,7 @@ export default function FilterbottomComponent({
   ingredientCategoryData = [],
   ingredientCategoryLoading = false,
   showHeader = true,
+  toggleMenuType = "outlineSecondary",
 }: Props) {
   const [toggle, setToggle] = useState(0);
   const [dpd, setDpd] = useState("All");
@@ -138,11 +141,11 @@ export default function FilterbottomComponent({
           setToggle={setToggle}
           toggle={toggle}
           toggleMenuList={[
-            <div key={"key0"} style={{ display: "flex", alignItems: "center" }}>
+            <div key={"key0"} className="d-flex ai-center">
               <FontAwesomeIcon icon={faImage} style={{ marginRight: "5px" }} />
               <p>Picture</p>
             </div>,
-            <div key={"key1"} style={{ display: "flex", alignItems: "center" }}>
+            <div key={"key1"} className="d-flex ai-center">
               <FontAwesomeIcon
                 icon={faRankingStar}
                 style={{ marginRight: "5px" }}
@@ -150,7 +153,7 @@ export default function FilterbottomComponent({
               <p>Ranking</p>
             </div>,
           ]}
-          variant={"outlineSecondary"}
+          variant={toggleMenuType}
         />
         <div className={styles.dropdown}>
           <Dropdown
