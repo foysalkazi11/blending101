@@ -92,7 +92,7 @@ const WikiCard = ({
     );
   };
   return (
-    <div className={styles.wikiCardContainer} style={style}>
+    <div className={styles.wikiCardContainer} style={{ ...style }}>
       <header className={styles.header}>
         <p
           className={styles.title}

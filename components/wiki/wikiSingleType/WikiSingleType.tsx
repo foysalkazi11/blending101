@@ -8,7 +8,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { MdOutlineStarOutline } from "react-icons/md";
 import Pagination from "../../../component/molecules/Pagination/ServerPagination.component";
 import GET_INGREDIENT_WIKI_LIST from "../../../gqlLib/wiki/query/getIngredientWikiList";
 import GET_NUTRIENT_WIKI_LIST from "../../../gqlLib/wiki/query/getNutrientWikiList";
@@ -24,6 +23,8 @@ import ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/mutation/ad
 import { setDbUser } from "../../../redux/slices/userSlice";
 import useLocalStorage from "../../../customHooks/useLocalStorage";
 import { WikiCompareList } from "../../../type/wikiCompareList";
+import PanelHeader from "../../recipe/share/panelHeader/PanelHeader";
+import { faInfoCircle } from "@fortawesome/pro-light-svg-icons";
 
 interface Props {
   type?: WikiType;
@@ -184,27 +185,46 @@ const WikiSingleType = ({
   if (ingredientListLoading || nutrientListLoading) {
     return (
       <>
+        <PanelHeader
+          title={`All ${type}`}
+          icon={<FontAwesomeIcon icon={faInfoCircle} fontSize={24} />}
+        />
         <div className={styles.showRecipeCollectionsContainer}>
           <SkeletonCollectionRecipe />
         </div>
-        <div className={styles.paginationWarper}>
+        {/* <div className={styles.paginationWarper}>
           <Pagination
             limit={limit}
             pageState={[page, setPage]}
             totalPage={Math?.ceil(pageLength / limit)}
             activeBgColor="primary"
           />
-        </div>
+        </div> */}
       </>
     );
   }
   return (
     <>
+      <PanelHeader
+        title={`All ${type}`}
+        icon={<FontAwesomeIcon icon={faInfoCircle} fontSize={24} />}
+        rightSide={
+          <IconWarper
+            iconColor="iconColorWhite"
+            defaultBg="secondary"
+            hover="bgSecondary"
+            style={{ width: "28px", height: "28px" }}
+            handleClick={handleClose}
+          >
+            <FontAwesomeIcon icon={faXmark} />
+          </IconWarper>
+        }
+      />
       <div className={styles.showRecipeCollectionsContainer}>
-        <div className={styles.showRecipeCollectionsHeader}>
+        {/* <div className={styles.showRecipeCollectionsHeader}>
           <div className={styles.heading}>
-            <MdOutlineStarOutline className={styles.favoriteIcon} />
-            <h2>{type}</h2>
+            <FontAwesomeIcon icon={faStar} className={styles.icon} />
+            <h2 className={styles.title}>{type}</h2>
           </div>
 
           <IconWarper
@@ -216,7 +236,7 @@ const WikiSingleType = ({
           >
             <FontAwesomeIcon icon={faXmark} />
           </IconWarper>
-        </div>
+        </div> */}
         <div className={styles.showRecipes}>
           {wikiList?.length
             ? wikiList?.map((wiki, index) => {

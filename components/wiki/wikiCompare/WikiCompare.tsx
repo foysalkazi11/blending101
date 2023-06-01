@@ -8,8 +8,8 @@ import SubNav from "../../recipe/share/subNav/SubNav";
 import s from "./WikiCompare.module.scss";
 import Carousel from "../../../theme/carousel/carousel.component";
 import {
-  compareRecipeResponsiveSetting,
-  responsiveSetting,
+  compareRecipeResponsiveSettingForWiki,
+  responsiveSettingForWikiSmallCard,
 } from "../../recipe/compareRecipe/utility";
 import SmallcardComponent from "../../../theme/cards/smallCard/SmallCard.component";
 import { WikiCompareList } from "../../../type/wikiCompareList";
@@ -22,9 +22,12 @@ import { setDbUser } from "../../../redux/slices/userSlice";
 import { useRouter } from "next/router";
 import EMPTY_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/mutation/emptyWikiCompareList";
 import ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/mutation/addOrRemoveToWikiCompareList";
+import PanelHeader from "../../recipe/share/panelHeader/PanelHeader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleInfo } from "@fortawesome/pro-light-svg-icons";
 
 const compareRecipeResponsiveSettings = {
-  ...compareRecipeResponsiveSetting,
+  ...compareRecipeResponsiveSettingForWiki,
   dotsClass: s.button__bar,
 };
 
@@ -166,6 +169,10 @@ const WikiCompare = () => {
 
   return (
     <>
+      <PanelHeader
+        title="Wiki Compare"
+        icon={<FontAwesomeIcon icon={faCircleInfo} fontSize={24} />}
+      />
       <div className={s.wikiCompareContainer}>
         {wikiCompareDataLoading ? (
           <SkeletonComparePage />
@@ -179,7 +186,7 @@ const WikiCompare = () => {
               closeCompare={handleEmptyWikiCompareList}
             />
 
-            <Carousel moreSetting={responsiveSetting}>
+            <Carousel moreSetting={responsiveSettingForWikiSmallCard}>
               {wikiCompareData?.getWikiCompareList?.map(
                 (item: WikiCompareList, index) => {
                   return (

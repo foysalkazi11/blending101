@@ -33,7 +33,7 @@ const PanelHeader = ({
       >
         <div className={styles.icon}>
           {typeof icon === "string" ? (
-            <Icon fontName={faChartColumn} size="2.5rem" />
+            <Icon fontName={faChartColumn} size="2.4rem" />
           ) : (
             icon
           )}

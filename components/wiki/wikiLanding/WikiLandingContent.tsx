@@ -1,6 +1,5 @@
 import React from "react";
 import styles from "./WikiLanding.module.scss";
-import Image from "next/image";
 import Carousel from "../../../theme/carousel/carousel.component";
 import { WikiListType, WikiType } from "../../../type/wikiListType";
 import WikiCard from "../wikiCard/WikiCard";
@@ -13,6 +12,8 @@ import { setDbUser } from "../../../redux/slices/userSlice";
 import useLocalStorage from "../../../customHooks/useLocalStorage";
 import { WikiCompareList } from "../../../type/wikiCompareList";
 import GET_INGREDIENT_WIKI_LIST from "../../../gqlLib/wiki/query/getIngredientWikiList";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/pro-light-svg-icons";
 const responsiveSetting = {
   infinite: false,
   speed: 500,
@@ -151,15 +152,7 @@ const WikiLandingContent = ({
     <div className={styles.main__slider}>
       <div className={styles.headingContainer}>
         <div className={styles.heading}>
-          <Image
-            src={image}
-            alt={"Icon"}
-            layout="fixed"
-            objectFit={"contain"}
-            quality={100}
-            height={24}
-            width={24}
-          />
+          <FontAwesomeIcon icon={faStar} className={styles.icon} />
           <h2 className={styles.title}>{title}</h2>
         </div>
         <div className={styles.viewAll} onClick={() => setShowAll(title)}>
