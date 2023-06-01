@@ -11,11 +11,15 @@ import WikiIngredientSection from "../wikiIngredientSection";
 import { useRouter } from "next/router";
 import WikiNutrientSection from "../wikiNutrientSection";
 import WikiHealthSection from "../wikiHealthSection";
+import PanelHeader from "../../recipe/share/panelHeader/PanelHeader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleInfo } from "@fortawesome/pro-light-svg-icons";
 interface Props {
   currentWikiType?: WikiType;
   currentWikiId?: string;
   selectedWikiItem?: SelectedWikiType;
   setSelectedWikiItem?: Dispatch<SetStateAction<SelectedWikiType>>;
+  showWikiTypeHeader?: boolean;
 }
 
 const WikiLeft = ({
@@ -23,6 +27,7 @@ const WikiLeft = ({
   currentWikiId = "",
   selectedWikiItem = {} as SelectedWikiType,
   setSelectedWikiItem = () => {},
+  showWikiTypeHeader = true,
 }: Props) => {
   const router = useRouter();
   const [type, setType] = useState<WikiType>("Ingredient");
@@ -118,10 +123,23 @@ const WikiLeft = ({
   };
 
   return (
-    <div className={s.wikiLeftContainer}>
-      <WikiTypes type={type} setType={setType} />
-      {renderUi(type)}
-    </div>
+    <>
+      {!showWikiTypeHeader && (
+        <PanelHeader
+          title="Wiki Type"
+          icon={<FontAwesomeIcon icon={faCircleInfo} fontSize={24} />}
+        />
+      )}
+
+      <div className={s.wikiLeftContainer}>
+        <WikiTypes
+          type={type}
+          setType={setType}
+          showHeader={showWikiTypeHeader}
+        />
+        {renderUi(type)}
+      </div>
+    </>
   );
 };
 

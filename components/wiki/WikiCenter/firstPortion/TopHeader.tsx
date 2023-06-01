@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import IconWarper from "../../../../theme/iconWarper/IconWarper";
 import PanelHeader from "../../../recipe/share/panelHeader/PanelHeader";
+import { faCircleInfo } from "@fortawesome/pro-light-svg-icons";
 
 interface Props {
   title: string;
@@ -14,10 +15,7 @@ const TopHeader = ({ title, backAddress }: Props) => {
   const router = useRouter();
   return (
     <PanelHeader
-      icon={
-        "/icons/information.svg"
-        // <FontAwesomeIcon icon={faChartColumn} fontSize="24" />
-      }
+      icon={<FontAwesomeIcon icon={faCircleInfo} fontSize="24" />}
       title={`About ${title}`}
       rightSide={
         <IconWarper
