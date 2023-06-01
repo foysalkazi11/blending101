@@ -1,14 +1,17 @@
 import { useLazyQuery } from "@apollo/client";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
 import GET_INGREDIENT_WIKI_LIST from "../../../gqlLib/wiki/query/getIngredientWikiList";
 import GET_NUTRIENT_WIKI_LIST from "../../../gqlLib/wiki/query/getNutrientWikiList";
 import { useAppSelector } from "../../../redux/hooks";
 import { WikiListType } from "../../../type/wikiListType";
 import notification from "../../utility/reactToastifyNotification";
-import s from "./WikiLanding.module.scss";
 import { WikiType } from "../../../type/wikiListType";
 import WikiLandingContent from "./WikiLandingContent";
 import { SelectedWikiType } from "..";
+import PanelHeader from "../../recipe/share/panelHeader/PanelHeader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleInfo } from "@fortawesome/pro-light-svg-icons";
+import styles from "./WikiLanding.module.scss";
 
 interface Props {
   setType?: Dispatch<SetStateAction<WikiType>>;
@@ -107,23 +110,30 @@ const WikiLanding = ({
   const nutrientWikiListList = nutrientListList?.getNutrientWikiList2?.wikiList;
 
   return (
-    <div style={{ margin: "20px 0" }}>
-      <WikiLandingContent
-        title="Ingredient"
-        image={"/images/thumbs-up.svg"}
-        list={ingredientWikiList}
-        loading={ingredientListLoading}
-        setShowAll={handleSetType}
+    <>
+      <PanelHeader
+        title="Wiki Discovery"
+        icon={<FontAwesomeIcon icon={faCircleInfo} fontSize={24} />}
       />
 
-      <WikiLandingContent
-        title="Nutrient"
-        image={"/images/thumbs-up.svg"}
-        list={nutrientWikiListList}
-        loading={nutrientListLoading}
-        setShowAll={handleSetType}
-      />
-    </div>
+      <div className={styles.wikiLandingPageContainer}>
+        <WikiLandingContent
+          title="Ingredient"
+          image={"/images/thumbs-up.svg"}
+          list={ingredientWikiList}
+          loading={ingredientListLoading}
+          setShowAll={handleSetType}
+        />
+
+        <WikiLandingContent
+          title="Nutrient"
+          image={"/images/thumbs-up.svg"}
+          list={nutrientWikiListList}
+          loading={nutrientListLoading}
+          setShowAll={handleSetType}
+        />
+      </div>
+    </>
   );
 };
 

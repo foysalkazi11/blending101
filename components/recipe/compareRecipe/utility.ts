@@ -83,6 +83,54 @@ export const compareRecipeResponsiveSetting = {
     },
   ],
 };
+export const compareRecipeResponsiveSettingForWiki = {
+  slidesToShow: 4,
+  slidesToScroll: 1,
+  swipeToSlide: false,
+  arrows: false,
+  infinite: false,
+  dots: true,
+  //dotsClass: styles.button__bar,
+
+  responsive: [
+    {
+      breakpoint: 1800,
+      settings: {
+        slidesToShow: 3,
+        slidesToScroll: 1,
+      },
+    },
+    {
+      breakpoint: 1450,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 1,
+      },
+    },
+    {
+      breakpoint: 1280,
+      settings: {
+        slidesToShow: 3,
+        slidesToScroll: 1,
+      },
+    },
+    {
+      breakpoint: 1050,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 1,
+      },
+    },
+
+    {
+      breakpoint: 750,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1,
+      },
+    },
+  ],
+};
 
 export const responsiveSetting = {
   slidesToShow: 7,
@@ -121,6 +169,76 @@ export const responsiveSetting = {
       breakpoint: 650,
       settings: {
         slidesToShow: 2,
+        slidesToScroll: 1,
+      },
+    },
+    {
+      breakpoint: 500,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 1,
+      },
+    },
+  ],
+};
+export const responsiveSettingForWikiSmallCard = {
+  slidesToShow: 7,
+  slidesToScroll: 1,
+
+  responsive: [
+    {
+      breakpoint: 1800,
+      settings: {
+        slidesToShow: 6,
+        slidesToScroll: 1,
+      },
+    },
+    {
+      breakpoint: 1550,
+      settings: {
+        slidesToShow: 5,
+        slidesToScroll: 1,
+      },
+    },
+    {
+      breakpoint: 1350,
+      settings: {
+        slidesToShow: 4,
+        slidesToScroll: 1,
+      },
+    },
+    {
+      breakpoint: 1280,
+      settings: {
+        slidesToShow: 5,
+        slidesToScroll: 1,
+      },
+    },
+    {
+      breakpoint: 1050,
+      settings: {
+        slidesToShow: 4,
+        slidesToScroll: 1,
+      },
+    },
+    {
+      breakpoint: 850,
+      settings: {
+        slidesToShow: 3,
+        slidesToScroll: 1,
+      },
+    },
+    {
+      breakpoint: 650,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 1,
+      },
+    },
+    {
+      breakpoint: 500,
+      settings: {
+        slidesToShow: 1,
         slidesToScroll: 1,
       },
     },

@@ -1,7 +1,6 @@
 import { faBooks } from "@fortawesome/pro-thin-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState } from "react";
 import AContainer from "../../containers/A.container";
 import useLocalStorage from "../../customHooks/useLocalStorage";
 import { WikiType } from "../../type/wikiListType";
@@ -16,6 +15,7 @@ import WikiSingleType from "./wikiSingleType/WikiSingleType";
 import { useRouter } from "next/router";
 import WikiSingleItem from "./wikiSingleItem/WikiSingleItem";
 import WikiCompare from "./wikiCompare/WikiCompare";
+import useWindowSize from "../utility/useWindowSize";
 
 export type SelectedWikiType = {
   [key in WikiType]: string;
@@ -30,6 +30,7 @@ const WikiHome = () => {
   const { params = [] } = router?.query;
   const wikiType: string = params?.[0] || "";
   const wikiId = params?.[1] || "";
+  const { width } = useWindowSize();
 
   // change title info
   const changeTitleInfo = (wikiType: string) => {
@@ -97,38 +98,50 @@ const WikiHome = () => {
       }}
       headTagInfo={changeTitleInfo(wikiType)}
     >
-      <div className={styles.main}>
+      <div className={styles.wikiPageContainer}>
         <WikiSearchBar
-          openTray={openTray}
-          setOpenTray={setOpenTray}
+          // openTray={openTray}
+          // setOpenTray={setOpenTray}
           type={type}
         />
-        {!wikiType && <WikiBanner />}
+        {/* <WikiBanner /> */}
 
-        {renderUI(wikiType, type)}
+        <div className={styles.wikiContentContainer}>
+          <div className={styles.left}>
+            <WikiLeft
+              currentWikiType={wikiType as WikiType}
+              currentWikiId={wikiId}
+              selectedWikiItem={selectedWikiItem}
+              setSelectedWikiItem={setSelectedWikiItem}
+              showWikiTypeHeader={false}
+            />
+          </div>
+          <div className={styles.center}>{renderUI(wikiType, type)}</div>
+        </div>
       </div>
-
-      <TrayWrapper
-        isolated={true}
-        showPanle="left"
-        showTagByDefaut={false}
-        openTray={openTray}
-        panleTag={(hover) => (
-          <TrayTag
-            hover={hover}
-            icon={<FontAwesomeIcon icon={faBooks} />}
-            placeMent="left"
-            handleTagClick={() => setOpenTray((prev) => !prev)}
+      {width < 1280 && (
+        <TrayWrapper
+          isolated={true}
+          showPanle="left"
+          showTagByDefaut={width < 1280 ? true : false}
+          openTray={openTray}
+          panleTag={(hover) => (
+            <TrayTag
+              hover={hover}
+              icon={<FontAwesomeIcon icon={faBooks} />}
+              placeMent="left"
+              handleTagClick={() => setOpenTray((prev) => !prev)}
+            />
+          )}
+        >
+          <WikiLeft
+            currentWikiType={wikiType as WikiType}
+            currentWikiId={wikiId}
+            selectedWikiItem={selectedWikiItem}
+            setSelectedWikiItem={setSelectedWikiItem}
           />
-        )}
-      >
-        <WikiLeft
-          currentWikiType={wikiType as WikiType}
-          currentWikiId={wikiId}
-          selectedWikiItem={selectedWikiItem}
-          setSelectedWikiItem={setSelectedWikiItem}
-        />
-      </TrayWrapper>
+        </TrayWrapper>
+      )}
     </AContainer>
   );
 };
