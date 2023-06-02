@@ -272,12 +272,15 @@ const CollectionRecipes = () => {
                   style={{ marginRight: "1rem" }}
                   variant="containPrimary"
                   onClick={() =>
-                    functionAcceptCollectionShare({
-                      token:
-                        token ||
-                        getCustomRecipesData?.getASingleCollection?._id,
-                      userId,
-                    })
+                    functionAcceptCollectionShare(
+                      {
+                        token:
+                          token ||
+                          getCustomRecipesData?.getASingleCollection?._id,
+                        userId,
+                      },
+                      true,
+                    )
                   }
                 >
                   {acceptCollectionShareLoading
