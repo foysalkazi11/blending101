@@ -23,7 +23,7 @@ const responsiveSetting = {
 
   responsive: [
     {
-      breakpoint: 1380,
+      breakpoint: 1600,
       settings: {
         slidesToShow: 3,
         slidesToScroll: 1,
@@ -181,21 +181,22 @@ const WikiLandingContent = ({
               wikiTitle,
             } = wikiList;
             return (
-              <WikiCard
-                key={_id}
-                author={publishedBy}
-                comments={commentsCount}
-                description={wikiDescription}
-                image={image}
-                title={wikiTitle}
-                type={type}
-                portions={portions}
-                id={_id}
-                hasInCompare={hasInCompare}
-                handleAddOrRemoveToWikiCompareList={
-                  handleAddOrRemoveToWikiCompareList
-                }
-              />
+              <div key={_id} className={styles.wikiCardGap}>
+                <WikiCard
+                  author={publishedBy}
+                  comments={commentsCount}
+                  description={wikiDescription}
+                  image={image}
+                  title={wikiTitle}
+                  type={type}
+                  portions={portions}
+                  id={_id}
+                  hasInCompare={hasInCompare}
+                  handleAddOrRemoveToWikiCompareList={
+                    handleAddOrRemoveToWikiCompareList
+                  }
+                />
+              </div>
             );
           })}
         </Carousel>

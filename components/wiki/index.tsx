@@ -14,7 +14,6 @@ import WikiSearchBar from "./wikiSearchBar/WikiSearchBar";
 import WikiSingleType from "./wikiSingleType/WikiSingleType";
 import { useRouter } from "next/router";
 import WikiSingleItem from "./wikiSingleItem/WikiSingleItem";
-import WikiCompare from "./wikiCompare/WikiCompare";
 import useWindowSize from "../utility/useWindowSize";
 
 export type SelectedWikiType = {
@@ -35,15 +34,10 @@ const WikiHome = () => {
   // change title info
   const changeTitleInfo = (wikiType: string) => {
     let obj = { title: "", description: "" };
-    if (wikiType && wikiType !== "compare") {
+    if (wikiType) {
       obj = {
         title: `Wiki Details`,
         description: `Wiki Details`,
-      };
-    } else if (wikiType && wikiType === "compare") {
-      obj = {
-        title: "Wiki Compare",
-        description: "Wiki compare with each others",
       };
     } else {
       obj = {
@@ -59,11 +53,7 @@ const WikiHome = () => {
   const renderUI = (wikiType, type) => {
     let component = null;
     if (wikiType) {
-      if (wikiType === "compare") {
-        component = <WikiCompare />;
-      } else {
-        component = <WikiSingleItem />;
-      }
+      component = <WikiSingleItem />;
     } else {
       if (type) {
         component = (
