@@ -86,6 +86,7 @@ interface dataCardInterface {
   personalRating?: number;
   origin?: string;
   turnedOnVersions?: VersionDataType[];
+  isAuthorizedRecipe?: boolean;
 }
 
 export default function DatacardComponent({
@@ -129,6 +130,7 @@ export default function DatacardComponent({
   personalRating = 0,
   origin,
   turnedOnVersions = [],
+  isAuthorizedRecipe = true,
 }: dataCardInterface) {
   carbs = Math.round(carbs);
   score = Math.round(score);
@@ -432,7 +434,10 @@ export default function DatacardComponent({
   }, [footerAllIconMenu, isMatch]);
 
   return (
-    <div className={styles.datacard} ref={hoverRef}>
+    <div
+      className={`${styles.datacard} ${!isAuthorizedRecipe && "disabled"}`}
+      ref={hoverRef}
+    >
       <div className={styles.datacard__inner}>
         <div className={styles.heading}>
           <div className={styles.title}>

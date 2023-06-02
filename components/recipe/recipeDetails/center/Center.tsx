@@ -251,7 +251,7 @@ const Center = ({
         }}
       />
 
-      <div className={styles.contentBox}>
+      <div className={`${styles.contentBox} ${token && "disabled"}`}>
         <div className={styles.heading}>
           <h3>
             {recipeData?.tempVersionInfo?.version?.postfixTitle}
@@ -292,7 +292,7 @@ const Center = ({
               {recipeData?.versionsCount ? (
                 <IconWithText
                   wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
-                  handleClick={() => !token && handleToOpenVersionTray()}
+                  handleClick={() => handleToOpenVersionTray()}
                   icon={<VscVersions color={"#7cbc39"} />}
                   text={`Versions(${recipeData?.versionsCount})`}
                 />
@@ -308,7 +308,6 @@ const Center = ({
               <IconWithText
                 wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
                 handleClick={(e) =>
-                  !token &&
                   handleOpenCollectionTrayOrAddToCollection(
                     e,
                     recipeData?.userCollections?.length,
@@ -327,7 +326,7 @@ const Center = ({
 
               <IconWithText
                 wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
-                handleClick={() => !token && handleToOpenCollectionTray()}
+                handleClick={() => handleToOpenCollectionTray()}
                 icon="/images/share-alt-light-grey.svg"
                 text="Share"
               />

@@ -242,6 +242,9 @@ const CollectionRecipes = () => {
         />
       ) : (
         <ShowRecipeContainer
+          isAuthorized={
+            getCustomRecipesData?.getASingleCollection?.accepted || true
+          }
           data={recipes}
           loading={
             getAllRecipesLoading ||
