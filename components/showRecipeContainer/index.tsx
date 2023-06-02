@@ -187,7 +187,7 @@ const ShowRecipeContainer = ({
                     recipeId: {
                       _id = "",
                       name = "",
-                      image = "",
+                      image = [],
                       originalVersion = "",
                       numberOfRating = 0,
                       averageRating = 0,
@@ -226,7 +226,10 @@ const ShowRecipeContainer = ({
                       // score={rxScore}
                       calorie={calorie?.value || 0}
                       noOfComments={numberOfRating}
-                      image={image?.find((img) => img?.default)?.image || ""}
+                      image={
+                        image?.find((img) => img?.default)?.image ||
+                        image?.[0]?.image
+                      }
                       recipeId={_id}
                       notes={notes}
                       addedToCompare={addedToCompare}

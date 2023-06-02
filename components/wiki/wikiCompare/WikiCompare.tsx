@@ -8,8 +8,8 @@ import SubNav from "../../recipe/share/subNav/SubNav";
 import s from "./WikiCompare.module.scss";
 import Carousel from "../../../theme/carousel/carousel.component";
 import {
-  compareRecipeResponsiveSettingForWiki,
-  responsiveSettingForWikiSmallCard,
+  compareRecipeResponsiveSetting,
+  responsiveSetting,
 } from "../../recipe/compareRecipe/utility";
 import SmallcardComponent from "../../../theme/cards/smallCard/SmallCard.component";
 import { WikiCompareList } from "../../../type/wikiCompareList";
@@ -22,12 +22,9 @@ import { setDbUser } from "../../../redux/slices/userSlice";
 import { useRouter } from "next/router";
 import EMPTY_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/mutation/emptyWikiCompareList";
 import ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/mutation/addOrRemoveToWikiCompareList";
-import PanelHeader from "../../recipe/share/panelHeader/PanelHeader";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleInfo } from "@fortawesome/pro-light-svg-icons";
 
 const compareRecipeResponsiveSettings = {
-  ...compareRecipeResponsiveSettingForWiki,
+  ...compareRecipeResponsiveSetting,
   dotsClass: s.button__bar,
 };
 
@@ -168,11 +165,19 @@ const WikiCompare = () => {
   }, [wikiCompareData]);
 
   return (
-    <>
-      <PanelHeader
-        title="Wiki Compare"
-        icon={<FontAwesomeIcon icon={faCircleInfo} fontSize={24} />}
-      />
+    <AContainer
+      headerIcon={"/icons/books.svg"}
+      headerTitle="Compare Ingredient"
+      showWikiCommentsTray={{
+        show: true,
+        showPanle: "right",
+        showTagByDeafult: false,
+      }}
+      headTagInfo={{
+        title: "Compare Ingredient",
+        description: "compare Ingredient",
+      }}
+    >
       <div className={s.wikiCompareContainer}>
         {wikiCompareDataLoading ? (
           <SkeletonComparePage />
@@ -186,7 +191,7 @@ const WikiCompare = () => {
               closeCompare={handleEmptyWikiCompareList}
             />
 
-            <Carousel moreSetting={responsiveSettingForWikiSmallCard}>
+            <Carousel moreSetting={responsiveSetting}>
               {wikiCompareData?.getWikiCompareList?.map(
                 (item: WikiCompareList, index) => {
                   return (
@@ -231,7 +236,7 @@ const WikiCompare = () => {
           </Slider>
         </div>
       </div>
-    </>
+    </AContainer>
   );
 };
 
