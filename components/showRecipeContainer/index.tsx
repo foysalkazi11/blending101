@@ -49,6 +49,7 @@ interface Props {
   setShareRecipeData?: React.Dispatch<
     React.SetStateAction<{ id: string; image: string; name: string }>
   >;
+  isAuthorized?: boolean;
 }
 
 const ShowRecipeContainer = ({
@@ -69,6 +70,7 @@ const ShowRecipeContainer = ({
   setOpenCollectionModal = () => {},
   setOpenShareModal = () => {},
   setShareRecipeData = () => {},
+  isAuthorized = true,
 }: Props) => {
   const [containerData, setContainerData] = useState([]);
   const [openCreateCollectionModal, setOpenCreateCollectionModal] =
@@ -248,6 +250,7 @@ const ShowRecipeContainer = ({
                       brand={brand}
                       personalRating={personalRating}
                       origin={url}
+                      isAuthorizedRecipe={isAuthorized}
                     />
                   );
                 })}
