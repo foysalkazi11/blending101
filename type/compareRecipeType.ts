@@ -7,6 +7,7 @@ import {
 import { RecipeBrandType, RecipeCreatorInfo } from "./recipeType";
 
 export interface CompareRecipeType {
+  isTemp?: boolean;
   addedToCompare: boolean;
   notes: number;
   userCollections: string[];

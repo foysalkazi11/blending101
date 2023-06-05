@@ -64,6 +64,9 @@ const NotificationDetails = ({
         }`,
       );
     }
+    if (type === "Challenge") {
+      router.push(`/challenge/invited/${"?id=" + entityId?._id}`);
+    }
     dispatch(setIsNotificationTrayOpen(false));
   };
 

@@ -1,8 +1,14 @@
 import { gql } from "@apollo/client";
 
 const CREATE_A_RECIPE_BY_USER = gql`
-  mutation AddRecipeFromUser($data: CreateRecipe!) {
-    addRecipeFromUser(data: $data) {
+  mutation AddRecipeFromUser(
+    $isAddToTemporaryCompareList: Boolean!
+    $data: xCreateRecipe!
+  ) {
+    addRecipeFromUser(
+      isAddToTemporaryCompareList: $isAddToTemporaryCompareList
+      data: $data
+    ) {
       datePublished
       name
       recipeIngredients
@@ -42,6 +48,24 @@ const CREATE_A_RECIPE_BY_USER = gql`
       }
       notes
       addedToCompare
+      defaultVersion {
+        _id
+        postfixTitle
+        ingredients {
+          ingredientId {
+            _id
+            ingredientName
+          }
+          comment
+        }
+        description
+        calorie {
+          value
+        }
+        gigl {
+          netCarbs
+        }
+      }
     }
   }
 `;

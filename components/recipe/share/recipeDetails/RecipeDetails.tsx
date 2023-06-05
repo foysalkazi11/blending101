@@ -166,11 +166,11 @@ const RecipeDetails = ({
           showMoreMenu={showMoreMenu}
           showOptionalEditIcon={showOptionalEditIcon}
           isImageOverlay={dragAndDrop}
-          imageOverlayFunc={(image) => setCopyImage(image)}
+          imageOverlayFunc={setCopyImage}
           customMenu={customMenu}
           showMoreMenuAtHover={showMoreMenuAtHover}
           description={recipe?.defaultVersion?.description}
-          recipeVersion={recipe?.versionCount}
+          recipeVersion={recipe?.versionCount > 1 ? recipe?.versionCount : 0}
           defaultVersionId={recipe?.defaultVersion?._id}
           updateDataFunc={updateCompareList}
           userId={recipe?.recipeId?.userId}
@@ -185,6 +185,7 @@ const RecipeDetails = ({
           calorie={recipe?.defaultVersion?.calorie?.value}
           carbs={recipe?.defaultVersion?.gigl?.netCarbs}
           personalRating={recipe?.personalRating}
+          isAuthorizedRecipe={!recipe?.isTemp}
         />
         <div className={`${styles.dividerBox}`}>
           <SectionTitleWithIcon
