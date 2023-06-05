@@ -182,12 +182,13 @@ const CreateNewRecipe = ({
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newRecipe?.ingredients]);
-  useEffect(() => {
-    if (copyImage) {
-      setNewRecipe((state) => ({ ...state, image: [copyImage] }));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [copyImage]);
+
+  // useEffect(() => {
+  //   if (copyImage) {
+  //     setNewRecipe((state) => ({ ...state, image: [copyImage] }));
+  //   }
+
+  // }, [copyImage]);
 
   useEffect(() => {
     setWinReady(true);
@@ -247,7 +248,7 @@ const CreateNewRecipe = ({
             )}
           </li>
         </Tooltip>
-        <Tooltip content={"Cancel"} direction="top">
+        {/* <Tooltip content={"Cancel"} direction="top">
           <li>
             <FontAwesomeIcon
               icon={faXmark}
@@ -255,7 +256,7 @@ const CreateNewRecipe = ({
               onClick={closeCreateNewRecipeInterface}
             />
           </li>
-        </Tooltip>
+        </Tooltip> */}
       </ul>
     </div>
   );
@@ -310,7 +311,7 @@ const CreateNewRecipe = ({
               )}
 
               <img
-                className={newRecipe?.image?.length ? styles.imageBox : null}
+                className={styles.imageBox}
                 src={
                   newRecipe?.image?.length
                     ? typeof newRecipe?.image[0] === "string"
@@ -360,18 +361,29 @@ const CreateNewRecipe = ({
             </div>
           </div>
         </div>
+
         <div className={styles.datacard__body__belt}>
           <div className={styles.datacard__body__belt__child}>
-            Net Carbs <span>00</span>
+            Net Carbs{" "}
+            <span>
+              {Math.round(
+                newlyCreatedRecipe?.defaultVersion?.gigl?.netCarbs || 0,
+              )}
+            </span>
           </div>
           <div className={styles.datacard__body__belt__child}>
-            Rx Score <span>00</span>
+            Rx Score <span>100</span>
           </div>
           <div className={styles.datacard__body__belt__child}>
-            Calorie <span>00</span>
+            Calorie{" "}
+            <span>
+              {Math.round(
+                newlyCreatedRecipe?.defaultVersion?.calorie?.value || 0,
+              )}
+            </span>
           </div>
         </div>
-        <div
+        {/* <div
           style={{
             marginTop: "10px",
             marginRight: "10px",
@@ -393,7 +405,7 @@ const CreateNewRecipe = ({
               }
             />
           </Tooltip>
-        </div>
+        </div> */}
       </div>
       <div className={styles.dividerBox}>
         <SectionTitleWithIcon
