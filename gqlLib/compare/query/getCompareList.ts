@@ -3,6 +3,7 @@ import { gql } from "@apollo/client";
 const GET_COMPARE_LIST = gql`
   query GetCompareList2($userId: String!) {
     getCompareList2(userId: $userId) {
+      isTemp
       addedToCompare
       isMatch
       notes
