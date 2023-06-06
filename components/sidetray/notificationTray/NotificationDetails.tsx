@@ -19,6 +19,8 @@ import { slugify } from "../../../helperFunc/string/slugToTittle";
 import useToAcceptCollectionShare from "../../../customHooks/collection/useToAcceptCollectionShare";
 import useToRejectCollectionShare from "../../../customHooks/collection/useToRejectCollectionShare";
 import time_ago from "../../../helperFunc/date/time_ago";
+import useToRejectChallengeInvite from "../../../customHooks/notification/useToRejectChallengeInvite";
+import useToAcceptChallengeInvite from "../../../customHooks/notification/useToAcceptChallengeInvite";
 
 // selected icon for different type of notification
 
@@ -43,12 +45,16 @@ const NotificationDetails = ({
   const dispatch = useAppDispatch();
   const { functionAcceptRecipeShare, acceptRecipeShareLoading } =
     useToAcceptRecipeShare();
+  const { functionAcceptChallengeInvite, acceptChallengeInviteLoading } =
+    useToAcceptChallengeInvite();
   const { functionAcceptCollectionShare, acceptCollectionShareLoading } =
     useToAcceptCollectionShare();
   const { functionRejectRecipeShare, rejectRecipeShareLoading } =
     useToRejectRecipeShare();
   const { functionRejectCollectionShare, rejectCollectionShareLoading } =
     useToRejectCollectionShare();
+  const { functionRejectChallengeInvite, rejectChallengeInviteLoading } =
+    useToRejectChallengeInvite();
 
   // show recipe
   const showRecipe = (type, entityId, token) => {
@@ -70,8 +76,31 @@ const NotificationDetails = ({
     dispatch(setIsNotificationTrayOpen(false));
   };
 
-  switch (type) {
-  }
+  // accept share
+  const handleAcceptShare = (type) => {
+    if (type === "Recipe") {
+      functionAcceptRecipeShare(variables);
+    }
+    if (type === "Collection") {
+      functionAcceptCollectionShare(variables);
+    }
+    if (type === "Challenge") {
+      functionAcceptChallengeInvite(variables);
+    }
+  };
+
+  // decline share
+  const handleDeclineShare = (type) => {
+    if (type === "Recipe") {
+      functionRejectRecipeShare(variables);
+    }
+    if (type === "Collection") {
+      functionRejectCollectionShare(variables);
+    }
+    if (type === "Challenge") {
+      functionRejectChallengeInvite(variables);
+    }
+  };
   return (
     <div className={styles.singleNotificationContainer}>
       <div className={styles.recipeName}>
@@ -124,7 +153,9 @@ const NotificationDetails = ({
           type="submitBtn"
           submitBtnVarient="outlineSecondary"
           text={
-            acceptRecipeShareLoading || acceptCollectionShareLoading ? (
+            acceptRecipeShareLoading ||
+            acceptCollectionShareLoading ||
+            acceptChallengeInviteLoading ? (
               <CircularRotatingLoader
                 color="white"
                 style={{ fontSize: "16px" }}
@@ -135,19 +166,14 @@ const NotificationDetails = ({
               "Save"
             )
           }
-          handleClick={() => {
-            if (type === "Recipe") {
-              functionAcceptRecipeShare(variables);
-            }
-            if (type === "Collection") {
-              functionAcceptCollectionShare(variables);
-            }
-          }}
+          handleClick={() => handleAcceptShare(type)}
         />
         <CommentAndNoteButton
           type="cancleBtn"
           text={
-            rejectRecipeShareLoading || rejectCollectionShareLoading ? (
+            rejectRecipeShareLoading ||
+            rejectCollectionShareLoading ||
+            rejectChallengeInviteLoading ? (
               <CircularRotatingLoader
                 color="primary"
                 style={{ fontSize: "16px" }}
@@ -156,14 +182,7 @@ const NotificationDetails = ({
               "Decline"
             )
           }
-          handleClick={() => {
-            if (type === "Recipe") {
-              functionRejectRecipeShare(variables);
-            }
-            if (type === "Collection") {
-              functionRejectCollectionShare(variables);
-            }
-          }}
+          handleClick={() => handleDeclineShare(type)}
         />
       </div>
     </div>
