@@ -29,6 +29,8 @@ import {
   ReferenceOfRecipeUpdateFuncType,
 } from "../../type/recipeType";
 
+const rootMargin = "100px";
+
 interface Props {
   data: any[];
   loading: boolean;
@@ -77,7 +79,7 @@ const ShowRecipeContainer = ({
     useState(false);
   const observer = useRef<any>();
   const dispatch = useAppDispatch();
-  const entry = useIntersectionObserver(observer, { rootMargin: "100px" });
+  const entry = useIntersectionObserver(observer, { rootMargin });
 
   // fetch next page
   useEffect(() => {
@@ -140,7 +142,7 @@ const ShowRecipeContainer = ({
           {headerMiddle ? (
             headerMiddle
           ) : showDefaultMiddleHeader ? (
-            <div style={{ display: "flex" }}>
+            <div className="d-flex">
               <IconWarper
                 iconColor="iconColorPrimary"
                 defaultBg="slightGray"
