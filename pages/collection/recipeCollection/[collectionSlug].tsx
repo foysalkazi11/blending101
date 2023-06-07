@@ -178,7 +178,7 @@ const CollectionRecipes = () => {
       handleToFetchCollectionRecipes(
         getMyRecentRecipes,
         { userId },
-        "getAllMyCreatedRecipes",
+        "getMyRecentRecipes",
         page,
       );
     } else {
