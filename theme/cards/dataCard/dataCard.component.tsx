@@ -32,6 +32,7 @@ import { faShareNodes } from "@fortawesome/pro-regular-svg-icons";
 import useTurnedOnOrOffVersion from "../../../customHooks/useTurnedOnOrOffVersion";
 import CircularRotatingLoader from "../../loader/circularRotatingLoader.component";
 import isEmptyObj from "../../../helperFunc/object/isEmptyObj";
+import { AccessPermission } from "../../../type/recipeCardType";
 
 interface dataCardInterface {
   title: string;
@@ -75,7 +76,7 @@ interface dataCardInterface {
   token?: string;
   updateDataFunc?: ReferenceOfRecipeUpdateFuncType;
   versionHandler?: (recipeId: string, version?: VersionDataType) => void;
-  footerMenuType?: "allIcons" | "OnlyStar";
+
   updateDataAfterChangeDefaultVersion?: (
     versionId: string,
     returnObj: { [key: string]: any },
@@ -86,7 +87,8 @@ interface dataCardInterface {
   personalRating?: number;
   origin?: string;
   turnedOnVersions?: VersionDataType[];
-  isAuthorizedRecipe?: boolean;
+  viewPermissions?: AccessPermission[];
+  interactionPermissions?: AccessPermission[];
 }
 
 export default function DatacardComponent({
@@ -122,7 +124,6 @@ export default function DatacardComponent({
   token = "",
   updateDataFunc = () => {},
   versionHandler,
-  footerMenuType = "allIcons",
   updateDataAfterChangeDefaultVersion = () => {},
   isVersionSharable = true,
   defaultVersion = {} as VersionDataType,
@@ -130,7 +131,16 @@ export default function DatacardComponent({
   personalRating = 0,
   origin,
   turnedOnVersions = [],
-  isAuthorizedRecipe = true,
+  interactionPermissions = ["all"],
+  viewPermissions = [
+    "title",
+    "moreMenu",
+    "brand",
+    "version",
+    "compare",
+    "collection",
+    "comments&Notes",
+  ],
 }: dataCardInterface) {
   carbs = Math.round(carbs);
   score = Math.round(score);
@@ -154,6 +164,28 @@ export default function DatacardComponent({
   const { dbUser } = useAppSelector((state) => state?.user);
   const { handleTurnOnOrOffVersion } = useTurnedOnOrOffVersion();
 
+  // view permission
+  const hasViewPermission = useCallback(
+    (permission: AccessPermission): boolean => {
+      return (
+        viewPermissions.includes(permission) || viewPermissions.includes("all")
+      );
+    },
+    [viewPermissions],
+  );
+
+  // interact permission
+  const hasInteractionPermission = useCallback(
+    (permission: AccessPermission): boolean => {
+      return (
+        interactionPermissions.includes(permission) ||
+        interactionPermissions.includes("all")
+      );
+    },
+    [interactionPermissions],
+  );
+
+  // open share recipe modal
   const handleOpenShareRecipeModal = (
     id,
     name,
@@ -165,24 +197,42 @@ export default function DatacardComponent({
     setOpenShareModal(true);
   };
 
-  const FloatingMenu2 = () => {
-    return (
-      <div className={styles.floating__menu2}>
-        <ul>
-          <li onClick={changeToFormulateRecipe}>
-            <MdOutlineEdit className={styles.icon} />
-          </li>
-        </ul>
-      </div>
-    );
+  // handle make default version
+  const handleToMakeDefaultVersion = async () => {
+    if (isVersionSharable) {
+      await handleToUpdateDefaultVersion(
+        dbUser?._id,
+        recipeId,
+        defaultVersionId,
+        isMatch ? true : false,
+        isVersionSharable ? false : true,
+      );
+      updateDataAfterChangeDefaultVersion(
+        defaultVersionId,
+        changeDefaultVersionReturnObj,
+      );
+    } else {
+      notification(
+        "warning",
+        "Not allow to make default version as shearing is off !!!",
+      );
+    }
   };
 
-  const DataBody = () => (
+  const dataBody = (
     <div className={styles.databody}>
       <div className={styles.databody__top}>
         <div className={styles.databody__top__label}>
           <div className={styles.category}>{category}</div>
-          {showOptionalEditIcon ? <FloatingMenu2 /> : false}
+          {showOptionalEditIcon ? (
+            <div className={styles.floating__menu2}>
+              <ul>
+                <li onClick={changeToFormulateRecipe}>
+                  <MdOutlineEdit className={styles.icon} />
+                </li>
+              </ul>
+            </div>
+          ) : null}
         </div>
         <div className={styles.databody__top__info}>
           {noOfRatings ? (
@@ -247,16 +297,18 @@ export default function DatacardComponent({
           <img
             src={`/icons/${res?.icon}.svg`}
             alt="icon"
-            onClick={(e) =>
-              handleOpenCommentsTray(
-                recipeId,
-                title,
-                image,
-                e,
-                updateDataFunc,
-                personalRating,
-              )
-            }
+            onClick={(e) => {
+              if (hasInteractionPermission("comments&Notes")) {
+                handleOpenCommentsTray(
+                  recipeId,
+                  title,
+                  image,
+                  e,
+                  updateDataFunc,
+                  personalRating,
+                );
+              }
+            }}
           />{" "}
           <span style={{ color: res?.amount ? "#7cbc39" : "#c4c4c4" }}>
             {res?.amount}
@@ -266,193 +318,24 @@ export default function DatacardComponent({
     );
   };
 
-  const footerAllIconMenu = (
-    <>
-      <li>
-        {recipeVersion ? (
-          <Tooltip direction="top" content={`Versions(${recipeVersion})`}>
-            <FontAwesomeIcon
-              icon={faRectangleVerticalHistory}
-              color="#7cbc39"
-              onClick={() =>
-                versionHandler
-                  ? versionHandler(recipeId)
-                  : router.push(`/versionCompare/${recipeId}`)
-              }
-            />
-          </Tooltip>
-        ) : null}
-      </li>
-      <li>
-        <Tooltip direction="top" content="Compare">
-          {changeCompareLoading ? (
-            <CircularRotatingLoader color="secondary" />
-          ) : (
-            <img
-              src={
-                addedToCompare ? "/icons/compare-1.svg" : "/icons/eclipse.svg"
-              }
-              alt="icon"
-              onClick={(e) =>
-                handleChangeCompare(
-                  e,
-                  recipeId,
-                  defaultVersionId,
-                  addedToCompare ? false : true,
-                  updateDataFunc,
-                )
-              }
-            />
-          )}
-        </Tooltip>
-      </li>
-      <li>
-        <Tooltip direction="top" content="Collection">
-          {addToCollectionLoading ? (
-            <CircularRotatingLoader color="primary" />
-          ) : (
-            <img
-              src={
-                isCollectionIds?.length
-                  ? "/icons/compare.svg"
-                  : "/images/BookmarksStar.svg"
-              }
-              alt="compare"
-              onClick={(e) =>
-                isCollectionIds?.length
-                  ? handleOpenCollectionTray(
-                      recipeId,
-                      isCollectionIds,
-                      e,
-                      updateDataFunc,
-                    )
-                  : addToCollection(
-                      recipeId,
-                      setOpenCollectionModal,
-                      e,
-                      updateDataFunc,
-                    )
-              }
-            />
-          )}
-        </Tooltip>
-      </li>
-      <li>
-        {handleShowCommentsAndNotesIcon(noOfComments, notes, updateDataFunc)}
-      </li>
-    </>
-  );
-
-  const handleToMakeDefaultVersion = async () => {
-    if (isVersionSharable) {
-      await handleToUpdateDefaultVersion(
-        dbUser?._id,
-        recipeId,
-        defaultVersionId,
-        isMatch ? true : false,
-        isVersionSharable ? false : true,
-      );
-      updateDataAfterChangeDefaultVersion(
-        defaultVersionId,
-        changeDefaultVersionReturnObj,
-      );
-    } else {
-      notification(
-        "warning",
-        "Not allow to make default version as shearing is off !!!",
-      );
-    }
-  };
-
-  const footerOnlyStarIcon = (
-    <>
-      {/* <li>
-        <Tooltip
-          content={`${isVersionSharable ? "Share on" : "Share off"}`}
-          direction="left"
-        >
-          <FontAwesomeIcon
-            // onClick={() =>
-            //   handleTurnOnOrOffVersion(
-            //     isVersionSharable,
-            //     dbUser?._id,
-            //     recipeId,
-            //     defaultVersionId,
-            //   )
-            // }
-            icon={faShareNodes}
-            className={`${styles.star} ${
-              isVersionSharable ? styles.on : styles.off
-            }`}
-          />
-        </Tooltip>
-      </li> */}
-      <li>
-        <Tooltip
-          content={`${isMatch ? "Default" : "Make default"}`}
-          direction="left"
-        >
-          {changeDefaultVersionLoading ? (
-            <CircularRotatingLoader color="primary" />
-          ) : (
-            <FontAwesomeIcon
-              onClick={handleToMakeDefaultVersion}
-              icon={faStarSharp}
-              className={`${styles.star} ${isMatch ? styles.on : styles.off}`}
-            />
-          )}
-        </Tooltip>
-      </li>
-      <li>
-        <Tooltip content={`Version`} direction="left">
-          <FontAwesomeIcon
-            icon={faRectangleVerticalHistory}
-            color="#7cbc39"
-            onClick={() =>
-              versionHandler
-                ? versionHandler(recipeId, defaultVersion)
-                : router.push(`/versionCompare/${recipeId}`)
-            }
-          />
-        </Tooltip>
-      </li>
-    </>
-  );
-
-  const handleToShowFooterMenu = useCallback(() => {
-    switch (footerMenuType) {
-      case "allIcons":
-        return footerAllIconMenu;
-      case "OnlyStar":
-        return footerOnlyStarIcon;
-
-      default:
-        return footerAllIconMenu;
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [footerAllIconMenu, isMatch]);
-
   return (
-    <div
-      className={`${styles.datacard} ${!isAuthorizedRecipe && "disabled"}`}
-      ref={hoverRef}
-    >
+    <div className={`${styles.datacard}`} ref={hoverRef}>
       <div className={styles.datacard__inner}>
         <div className={styles.heading}>
           <div className={styles.title}>
             <h2
               onClick={(e) => {
-                e?.stopPropagation();
-                router.push(
-                  `/recipe_details/${recipeId}/${
-                    token ? "?token=" + token : ""
-                  } `,
-                );
+                if (hasInteractionPermission("title")) {
+                  e?.stopPropagation();
+                  router.push(
+                    `/recipe_details/${recipeId}/${
+                      token ? "?token=" + token : ""
+                    } `,
+                  );
+                }
               }}
             >
               {postfixTitle || title}
-              {/* {isMatch ? "" : <span>{` (${postfixTitle})`}</span>} */}
             </h2>
           </div>
           <div className={styles.menu}>
@@ -461,26 +344,27 @@ export default function DatacardComponent({
                 style={{ visibility: isHover ? "visible" : "hidden" }}
                 ref={hoverRefMoreMenu}
               >
-                {customMenu ? (
-                  customMenu
-                ) : (
-                  <div style={{ position: "relative" }}>
-                    <IconWarper
-                      hover="bgSlightGray"
-                      style={{ width: "30px", height: "30px" }}
-                    >
-                      <FontAwesomeIcon icon={faEllipsisVertical} />
-                    </IconWarper>
-                    {isHoverMoreMenu &&
-                      showFloatingMenu(
-                        recipeId,
-                        defaultVersion?.postfixTitle || title,
-                        image,
-                        defaultVersionId,
-                        turnedOnVersions?.map((version) => version?._id),
-                      )}
-                  </div>
-                )}
+                {customMenu
+                  ? customMenu
+                  : hasViewPermission("moreMenu") && (
+                      <div style={{ position: "relative" }}>
+                        <IconWarper
+                          hover="bgSlightGray"
+                          style={{ width: "30px", height: "30px" }}
+                        >
+                          <FontAwesomeIcon icon={faEllipsisVertical} />
+                        </IconWarper>
+                        {hasInteractionPermission("moreMenu") &&
+                          isHoverMoreMenu &&
+                          showFloatingMenu(
+                            recipeId,
+                            defaultVersion?.postfixTitle || title,
+                            image,
+                            defaultVersionId,
+                            turnedOnVersions?.map((version) => version?._id),
+                          )}
+                      </div>
+                    )}
               </div>
             )}
           </div>
@@ -505,9 +389,7 @@ export default function DatacardComponent({
               </div>
             ) : null}
           </div>
-          <div className={styles.datacard__body__middle__right}>
-            <DataBody />
-          </div>
+          <div className={styles.datacard__body__middle__right}>{dataBody}</div>
         </div>
         <div className={styles.datacard__body__belt}>
           <div className={styles.datacard__body__belt__child}>
@@ -535,24 +417,26 @@ export default function DatacardComponent({
             >
               {!isEmptyObj(brand || {}) ? (
                 <a
-                  href={origin}
+                  href={hasInteractionPermission("brand") ? origin : "#"}
                   onClick={(e) => {
-                    const id = "ebbpnaajpojkhndmjmdjabgjmngjgmhm";
-                    //@ts-ignore
-                    chrome.runtime.sendMessage(
-                      id,
-                      {
-                        action: "BRAND_NAVIGATE",
-                        payload: {
-                          id: recipeId,
-                          name: postfixTitle || title,
-                          image,
-                          origin,
+                    if (hasInteractionPermission("brand")) {
+                      const id = "ebbpnaajpojkhndmjmdjabgjmngjgmhm";
+                      //@ts-ignore
+                      chrome.runtime.sendMessage(
+                        id,
+                        {
+                          action: "BRAND_NAVIGATE",
+                          payload: {
+                            id: recipeId,
+                            name: postfixTitle || title,
+                            image,
+                            origin,
+                          },
                         },
-                      },
-                      () => {},
-                    );
-                    window.location.href = "";
+                        () => {},
+                      );
+                      window.location.href = "";
+                    }
                   }}
                 >
                   <img
@@ -571,7 +455,128 @@ export default function DatacardComponent({
             </Tooltip>
           </div>
           <div className={styles.datacard__body__bottom__right}>
-            <ul>{handleToShowFooterMenu()}</ul>
+            <ul>
+              {hasViewPermission("version") && (
+                <li>
+                  {recipeVersion ? (
+                    <Tooltip
+                      direction="left"
+                      content={`Versions(${recipeVersion})`}
+                    >
+                      <FontAwesomeIcon
+                        icon={faRectangleVerticalHistory}
+                        color="#7cbc39"
+                        onClick={() => {
+                          if (hasInteractionPermission("version")) {
+                            versionHandler
+                              ? versionHandler(recipeId)
+                              : router.push(`/versionCompare/${recipeId}`);
+                          }
+                        }}
+                      />
+                    </Tooltip>
+                  ) : null}
+                </li>
+              )}
+              {hasViewPermission("compare") && (
+                <li>
+                  <Tooltip direction="left" content="Compare">
+                    {changeCompareLoading ? (
+                      <CircularRotatingLoader color="secondary" />
+                    ) : (
+                      <img
+                        src={
+                          addedToCompare
+                            ? "/icons/compare-1.svg"
+                            : "/icons/eclipse.svg"
+                        }
+                        alt="icon"
+                        onClick={(e) => {
+                          if (hasInteractionPermission("compare")) {
+                            handleChangeCompare(
+                              e,
+                              recipeId,
+                              defaultVersionId,
+                              addedToCompare ? false : true,
+                              updateDataFunc,
+                            );
+                          }
+                        }}
+                      />
+                    )}
+                  </Tooltip>
+                </li>
+              )}
+              {hasViewPermission("collection") && (
+                <li>
+                  <Tooltip direction="left" content="Collection">
+                    {addToCollectionLoading ? (
+                      <CircularRotatingLoader color="primary" />
+                    ) : (
+                      <img
+                        src={
+                          isCollectionIds?.length
+                            ? "/icons/compare.svg"
+                            : "/images/BookmarksStar.svg"
+                        }
+                        alt="compare"
+                        onClick={(e) => {
+                          if (hasInteractionPermission("collection")) {
+                            isCollectionIds?.length
+                              ? handleOpenCollectionTray(
+                                  recipeId,
+                                  isCollectionIds,
+                                  e,
+                                  updateDataFunc,
+                                )
+                              : addToCollection(
+                                  recipeId,
+                                  setOpenCollectionModal,
+                                  e,
+                                  updateDataFunc,
+                                );
+                          }
+                        }}
+                      />
+                    )}
+                  </Tooltip>
+                </li>
+              )}
+
+              {hasViewPermission("star") && (
+                <li>
+                  <Tooltip
+                    content={`${isMatch ? "Default" : "Make default"}`}
+                    direction="left"
+                  >
+                    {changeDefaultVersionLoading ? (
+                      <CircularRotatingLoader color="primary" />
+                    ) : (
+                      <FontAwesomeIcon
+                        onClick={() => {
+                          if (hasInteractionPermission("star")) {
+                            handleToMakeDefaultVersion();
+                          }
+                        }}
+                        icon={faStarSharp}
+                        className={`${styles.star} ${
+                          isMatch ? styles.on : styles.off
+                        }`}
+                      />
+                    )}
+                  </Tooltip>
+                </li>
+              )}
+              {hasViewPermission("comments&Notes") && (
+                <li>
+                  {handleShowCommentsAndNotesIcon(
+                    noOfComments,
+                    notes,
+                    updateDataFunc,
+                  )}
+                </li>
+              )}
+            </ul>
           </div>
         </div>
       </div>
