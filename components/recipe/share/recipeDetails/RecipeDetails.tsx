@@ -16,6 +16,7 @@ import joniIngredients from "../../../../helperFunc/joinIngredients";
 import DatacardComponent from "../../../../theme/cards/dataCard/dataCard.component";
 import { ReferenceOfRecipeUpdateFuncType } from "../../../../type/recipeType";
 import { VersionDataType } from "../../../../type/recipeDetailsType";
+import { AccessPermission } from "../../../../type/recipeCardType";
 
 function Copyable(props) {
   const { items, addItem, droppableId } = props;
@@ -86,9 +87,9 @@ interface RecipeDetailsProps {
     recipeId: string,
     version?: VersionDataType,
   ) => void;
-  footerMenuType?: "allIcons" | "OnlyStar";
   updateDataAfterChangeDefaultVersion?: (versionId: string) => void;
   showTopCancelButton?: boolean;
+  viewPermissions?: AccessPermission[];
 }
 
 const RecipeDetails = ({
@@ -107,11 +108,22 @@ const RecipeDetails = ({
   showMoreMenuAtHover = false,
   updateCompareList = () => {},
   handleToOpenVersionTray,
-  footerMenuType = "allIcons",
   updateDataAfterChangeDefaultVersion = () => {},
   showTopCancelButton = true,
+  viewPermissions = [
+    "title",
+    "moreMenu",
+    "brand",
+    "version",
+    "compare",
+    "collection",
+    "comments&Notes",
+  ],
 }: RecipeDetailsProps) => {
   const [winReady, setwinReady] = useState(false);
+  if (recipe?.isTemp) {
+    viewPermissions = ["collection"];
+  }
 
   const { loading: nutritionDataLoading, data: nutritionData } = useQuery(
     GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS,
@@ -175,7 +187,6 @@ const RecipeDetails = ({
           updateDataFunc={updateCompareList}
           userId={recipe?.recipeId?.userId}
           versionHandler={handleToOpenVersionTray}
-          footerMenuType={footerMenuType}
           updateDataAfterChangeDefaultVersion={
             updateDataAfterChangeDefaultVersion
           }
@@ -185,7 +196,7 @@ const RecipeDetails = ({
           calorie={recipe?.defaultVersion?.calorie?.value}
           carbs={recipe?.defaultVersion?.gigl?.netCarbs}
           personalRating={recipe?.personalRating}
-          isAuthorizedRecipe={!recipe?.isTemp}
+          viewPermissions={viewPermissions}
         />
         <div className={`${styles.dividerBox}`}>
           <SectionTitleWithIcon
