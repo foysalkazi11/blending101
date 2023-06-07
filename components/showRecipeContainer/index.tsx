@@ -28,6 +28,7 @@ import {
   RecipeType,
   ReferenceOfRecipeUpdateFuncType,
 } from "../../type/recipeType";
+import { AccessPermission } from "../../type/recipeCardType";
 
 const rootMargin = "100px";
 
@@ -52,6 +53,8 @@ interface Props {
     React.SetStateAction<{ id: string; image: string; name: string }>
   >;
   isAuthorized?: boolean;
+  viewPermissions?: AccessPermission[];
+  interactionPermissions?: AccessPermission[];
 }
 
 const ShowRecipeContainer = ({
@@ -72,7 +75,8 @@ const ShowRecipeContainer = ({
   setOpenCollectionModal = () => {},
   setOpenShareModal = () => {},
   setShareRecipeData = () => {},
-  isAuthorized = true,
+  viewPermissions,
+  interactionPermissions,
 }: Props) => {
   const [containerData, setContainerData] = useState([]);
   const [openCreateCollectionModal, setOpenCreateCollectionModal] =
@@ -252,7 +256,8 @@ const ShowRecipeContainer = ({
                       brand={brand}
                       personalRating={personalRating}
                       origin={url}
-                      isAuthorizedRecipe={isAuthorized}
+                      viewPermissions={viewPermissions}
+                      interactionPermissions={interactionPermissions}
                     />
                   );
                 })}
