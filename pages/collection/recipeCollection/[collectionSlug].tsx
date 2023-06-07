@@ -4,7 +4,7 @@ import AContainer from "../../../containers/A.container";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import styles from "../../../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";
 import classes from "../../../styles/pages/viewAll.module.scss";
-import { useLazyQuery } from "@apollo/client";
+import { QueryLazyOptions, QueryResult, useLazyQuery } from "@apollo/client";
 import GET_SINGLE_COLLECTION from "../../../gqlLib/collection/query/getSingleCollection";
 import GET_ALL_MY_CREATED_RECIPES from "../../../gqlLib/collection/query/getAllMyCreatedRecipes";
 import GET_ALL_RECIPES_WITHIN_COLLECTIONS from "../../../gqlLib/collection/query/getAllRecipesWhithiCollections";
@@ -39,7 +39,10 @@ import IconWarper from "../../../theme/iconWarper/IconWarper";
 import { faXmark } from "@fortawesome/pro-light-svg-icons";
 import HeaderTextBtn from "../../../components/recipe/share/panelHeader/HeaderTextBtn";
 import useToAcceptCollectionShare from "../../../customHooks/collection/useToAcceptCollectionShare";
+import notification from "../../../components/utility/reactToastifyNotification";
 let dataLimit = 12;
+
+type Variables = Record<string, any>;
 
 const CollectionRecipes = () => {
   const [pageNum, setPageNum] = useState(1);
@@ -62,6 +65,7 @@ const CollectionRecipes = () => {
   });
   const [openShareModal, setOpenShareModal] = useState(false);
   const [recipes, setRecipes] = useState([]);
+  const [totalRecipes, setTotalRecipes] = useState(0);
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
   const { lastModifiedCollection } = useAppSelector(
     (state) => state?.collections,
@@ -92,34 +96,34 @@ const CollectionRecipes = () => {
   ] = useLazyQuery(GET_SHARE_WITH_ME_COLLECTIONS, {
     variables: { userId },
   });
-  const {
-    handleFilterRecipes,
-    loading: filterRecipesLoading,
-    error: filterRecipesError,
-    data: filteredRecipes,
-  } = useFetchGetRecipesByBlendAndIngredients();
+  // const {
+  //   handleFilterRecipes,
+  //   loading: filterRecipesLoading,
+  //   error: filterRecipesError,
+  //   data: filteredRecipes,
+  // } = useFetchGetRecipesByBlendAndIngredients();
   const { allFilters, allFilterRecipes, showFilterOrSearchRecipes } =
     useAppSelector((state) => state?.filterRecipe);
   const { functionAcceptCollectionShare, acceptCollectionShareLoading } =
     useToAcceptCollectionShare();
 
-  // handle next page
-  const handleNextPage = () => {
-    setPageNum((page) => page + 1);
-    handleFilterRecipes(allFilters, pageNum + 1, dataLimit, false);
+  //handle next page
+  const handleNextPage = (slug, currentPage) => {
+    setPageNum(currentPage + 1);
+    handleToCallCollection(slug, currentPage + 1);
   };
 
-  const closeFilterRecipes = () => {
-    dispatch(
-      updateAllFilterRecipes({
-        filterRecipes: [],
-        isFiltering: false,
-        totalItems: 0,
-      }),
-    );
-    dispatch(resetAllFilters());
-    setPageNum(1);
-  };
+  // const closeFilterRecipes = () => {
+  //   dispatch(
+  //     updateAllFilterRecipes({
+  //       filterRecipes: [],
+  //       isFiltering: false,
+  //       totalItems: 0,
+  //     }),
+  //   );
+  //   dispatch(resetAllFilters());
+  //   setPageNum(1);
+  // };
 
   // open recipe collection panel after added a recipe to a collection
   const handleOpenCollectionTray = () => {
@@ -129,109 +133,112 @@ const CollectionRecipes = () => {
     setOpenCollectionModal(false);
   };
 
-  useEffect(() => {
+  // handle fetch collection recipe
+  const handleToFetchCollectionRecipes = async (
+    method: (options?: QueryLazyOptions<Variables>) => any,
+    variables: Variables,
+    accessCollectionName: string,
+    page: number = 1,
+    limit: number = 12,
+  ) => {
+    variables = { ...variables, page, limit };
+    try {
+      const { data } = await method({ variables });
+      const collectionData = data[accessCollectionName];
+      setTitle(collectionData?.name || "");
+      setRecipes((recipes) => [...recipes, ...(collectionData?.recipes || [])]);
+      setTotalRecipes(collectionData?.totalRecipes || 0);
+    } catch (error) {
+      notification("error", "Data fetching error");
+    }
+  };
+
+  // handle to call collection based of slug and page no
+  const handleToCallCollection = (slug, page = 1) => {
     if (!slug) return;
     setShareWithMeCollection(false);
     if (slug == "all-recipes") {
-      setTitle("All Recipes");
-      getAllRecipes({ variables: { userId } }).then((res: any) => {
-        setRecipes(res?.data?.getAllRecipesFromCollection);
-      });
+      handleToFetchCollectionRecipes(
+        getAllRecipes,
+        { userId },
+        "getAllRecipesFromCollection",
+        page,
+      );
     } else if (slug === "shared_with_me") {
       setShareWithMeCollection(true);
       getShareWithMeCollection();
     } else if (slug === "my-recipes") {
-      setTitle("My Recipes");
-      getMyRecipes({ variables: { userId } }).then((res: any) => {
-        setRecipes(res?.data?.getAllMyCreatedRecipes);
-      });
+      handleToFetchCollectionRecipes(
+        getMyRecipes,
+        { userId },
+        "getAllMyCreatedRecipes",
+        page,
+      );
     } else if (slug === "recent-recipes") {
-      setTitle("Recent Recipes");
-      getMyRecentRecipes({ variables: { userId } }).then((res: any) => {
-        setRecipes(res?.data?.getMyRecentRecipes);
-      });
+      handleToFetchCollectionRecipes(
+        getMyRecentRecipes,
+        { userId },
+        "getMyRecentRecipes",
+        page,
+      );
     } else {
-      getCustomRecipes({
-        variables: {
+      handleToFetchCollectionRecipes(
+        getCustomRecipes,
+        {
           userId,
           slug,
           collectionId: collectionId || "",
           token: token || "",
           singleRecipeCollectionId: singleRecipeCollectionId || "",
-          page: 1,
-          limit: dataLimit,
         },
-      }).then((res: any) => {
-        setTitle(res?.data?.getASingleCollection?.name);
-        setRecipes(res?.data?.getASingleCollection?.recipes);
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    getAllRecipes,
-    getCustomRecipes,
-    getMyRecipes,
-    collectionId,
-    token,
-    slug,
-    userId,
-    singleRecipeCollectionId,
-  ]);
-
-  useEffect(() => {
-    // filter recipe func
-    if (allFilters.length) {
-      setPageNum(1);
-      handleFilterRecipes(allFilters, 1, dataLimit, true);
-    } else {
-      dispatch(
-        updateAllFilterRecipes({
-          filterRecipes: [],
-          isFiltering: false,
-          totalItems: 0,
-        }),
+        "getASingleCollection",
+        page,
       );
-      setPageNum(1);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allFilters]);
+  };
 
-  if (
-    getCollectionRecipeError ||
-    filterRecipesError ||
-    shareWithMeCollectionError
-  ) {
-    return (
-      <Layout>
-        <ErrorPage
-          style={{ height: "50vh" }}
-          errorMessage="No collection recipe found"
-        />
-      </Layout>
-    );
-  }
+  // call collection when slug and others params change
+  useEffect(() => {
+    if (!slug) return;
+    setPageNum(1);
+    setTotalRecipes(0);
+    setRecipes([]);
+    handleToCallCollection(slug);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [collectionId, token, slug, singleRecipeCollectionId]);
+
+  // useEffect(() => {
+  //   // filter recipe func
+  //   if (allFilters.length) {
+  //     setPageNum(1);
+  //     handleFilterRecipes(allFilters, 1, dataLimit, true);
+  //   } else {
+  //     dispatch(
+  //       updateAllFilterRecipes({
+  //         filterRecipes: [],
+  //         isFiltering: false,
+  //         totalItems: 0,
+  //       }),
+  //     );
+  //     setPageNum(1);
+  //   }
+
+  // }, [allFilters]);
+
+  // if (getCollectionRecipeError || shareWithMeCollectionError) {
+  //   return (
+  //     <Layout>
+  //       <ErrorPage
+  //         style={{ height: "50vh" }}
+  //         errorMessage="No collection recipe found"
+  //       />
+  //     </Layout>
+  //   );
+  // }
 
   return (
     <Layout allFilters={allFilters}>
-      {allFilters.length ? (
-        <ShowRecipeContainer
-          data={allFilterRecipes.filterRecipes}
-          loading={filterRecipesLoading}
-          closeHandler={closeFilterRecipes}
-          showItems="recipe"
-          showDefaultLeftHeader
-          showDefaultMiddleHeader={
-            allFilterRecipes.filterRecipes.length ? true : false
-          }
-          showDefaultRightHeader
-          hasMore={allFilterRecipes?.totalItems > dataLimit * pageNum}
-          totalDataCount={allFilterRecipes?.totalItems}
-          nextPage={handleNextPage}
-          setOpenCollectionModal={setOpenCollectionModal}
-          setOpenShareModal={setOpenShareModal}
-          setShareRecipeData={setShareRecipeData}
-        />
-      ) : isSharedWithMeCollection ? (
+      {isSharedWithMeCollection ? (
         <SharedWithMe
           data={shareWithMeCollectionData?.getSharedWithMeCollections}
           loading={shareWithMeCollectionLoading}
@@ -242,6 +249,9 @@ const CollectionRecipes = () => {
         />
       ) : (
         <ShowRecipeContainer
+          nextPage={() => handleNextPage(slug, pageNum)}
+          hasMore={totalRecipes > dataLimit * pageNum}
+          totalDataCount={totalRecipes}
           isAuthorized={
             getCustomRecipesData?.getASingleCollection?.accepted || true
           }
@@ -297,7 +307,7 @@ const CollectionRecipes = () => {
                 defaultBg="primary"
                 hover="bgPrimary"
                 style={{ width: "28px", height: "28px" }}
-                handleClick={() => router.back()}
+                handleClick={() => router.push("/discovery")}
               >
                 <FontAwesomeIcon icon={faXmark} />
               </IconWarper>
@@ -351,11 +361,11 @@ const Layout: FC<{ allFilters?: any[] }> = ({ children, allFilters = [] }) => {
         showPanle: "right",
         showTagByDeafult: false,
       }}
-      showRecipeFilterTray={{
-        show: true,
-        showPanle: "left",
-        showTagByDeafult: false,
-      }}
+      // showRecipeFilterTray={{
+      //   show: true,
+      //   showPanle: "left",
+      //   showTagByDeafult: false,
+      // }}
       headTagInfo={{
         title: "Recipe collection",
         description: "Recipe collection",
@@ -366,9 +376,9 @@ const Layout: FC<{ allFilters?: any[] }> = ({ children, allFilters = [] }) => {
           <CommonSearchBar
             input={input}
             setInput={setInput}
-            isSearchTag={false}
-            openPanel={toggleFilterPanel}
-            isOpenPanel={openFilterTray}
+            // isSearchTag={false}
+            // openPanel={toggleFilterPanel}
+            // isOpenPanel={openFilterTray}
           />
           <div
             style={{ marginLeft: "40px" }}
@@ -482,3 +492,23 @@ const SharedWithMe = ({
 };
 
 export default CollectionRecipes;
+
+// allFilters.length ? (
+//   <ShowRecipeContainer
+//     data={allFilterRecipes.filterRecipes}
+//     loading={filterRecipesLoading}
+//     closeHandler={closeFilterRecipes}
+//     showItems="recipe"
+//     showDefaultLeftHeader
+//     showDefaultMiddleHeader={
+//       allFilterRecipes.filterRecipes.length ? true : false
+//     }
+//     showDefaultRightHeader
+//     hasMore={allFilterRecipes?.totalItems > dataLimit * pageNum}
+//     totalDataCount={allFilterRecipes?.totalItems}
+//     nextPage={handleNextPage}
+//     setOpenCollectionModal={setOpenCollectionModal}
+//     setOpenShareModal={setOpenShareModal}
+//     setShareRecipeData={setShareRecipeData}
+//   />
+// ) :
