@@ -87,9 +87,14 @@
 
 .singleIngredient {
   font-size: 14px;
-  color: #ababab;
+  color: #000000;
   margin-bottom: 10px;
   width: 100%;
+}
+
+.errorIngredientText {
+  font-style: italic;
+  color: #ababab; //#c0bebe;
 }
 
 .divStyle {

@@ -12,6 +12,7 @@ interface SingleIngredient {
   handleClose?: () => void;
   showPlusIcon?: boolean;
   showCloseIcon?: boolean;
+  isErrorIngredient?: boolean;
 }
 
 const SingleIngredient = ({
@@ -21,6 +22,7 @@ const SingleIngredient = ({
   showPlusIcon = true,
   label = "Label",
   showCloseIcon = false,
+  isErrorIngredient = false,
 }: SingleIngredient) => {
   return (
     <div className={styles.singleIngredientContainer}>
@@ -29,7 +31,13 @@ const SingleIngredient = ({
           <MdDragIndicator className={styles.dargIcon} />
         </div>
 
-        <p className={styles.text}>{label}</p>
+        <p
+          className={`${styles.text} ${
+            isErrorIngredient && styles.errorIngredientText
+          }`}
+        >
+          {label}
+        </p>
       </div>
       <div className={styles.rightSide}>
         {showPlusIcon ? (
