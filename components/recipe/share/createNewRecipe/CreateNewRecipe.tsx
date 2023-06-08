@@ -88,12 +88,19 @@ const CreateNewRecipe = ({
     }
   };
 
+  // remove by ingredientId
   const removeIngredient = (id) => {
     setNewRecipe((state) => ({
       ...state,
       ingredients: [
         ...state?.ingredients?.filter((item) => item?.ingredientId !== id),
       ],
+    }));
+  };
+  const removeByQaId = (id) => {
+    setNewRecipe((state) => ({
+      ...state,
+      ingredients: [...state?.ingredients?.filter((item) => item?.qaId !== id)],
     }));
   };
 
@@ -119,6 +126,7 @@ const CreateNewRecipe = ({
           obj["label"] = `${1} ${item?.measurement} ${ele?.ingredientName}`;
           obj["ingredientName"] = `${ele?.ingredientName}`;
           obj["selectedPortionQuantity"] = 1;
+          obj["ingredientStatus"] = "ok";
         }
       });
       setNewRecipe((state) => ({
@@ -173,10 +181,12 @@ const CreateNewRecipe = ({
     getBlendNutritionBasedOnRecipeXxx({
       variables: {
         ingredientsInfo: [
-          ...newRecipe?.ingredients?.map((item) => ({
-            ingredientId: item?.ingredientId,
-            value: item?.weightInGram,
-          })),
+          ...newRecipe?.ingredients
+            ?.filter((recipe) => recipe?.ingredientStatus === "ok")
+            ?.map((item) => ({
+              ingredientId: item?.ingredientId,
+              value: item?.weightInGram,
+            })),
         ],
       },
     });
@@ -205,14 +215,16 @@ const CreateNewRecipe = ({
   const floatingMenu = (
     <div className={styles.floating__menu}>
       <ul>
-        {newlyCreatedRecipe?._id ? (
+        {newlyCreatedRecipe?.recipeId?._id ? (
           <>
             <Tooltip content="Edit view" direction="top">
               <li>
                 <MdOutlineEdit
                   className={styles.icon}
                   onClick={() =>
-                    router?.push(`/edit_recipe/${newlyCreatedRecipe?._id}`)
+                    router?.push(
+                      `/edit_recipe/${newlyCreatedRecipe?.recipeId?._id}`,
+                    )
                   }
                 />
               </li>
@@ -231,7 +243,9 @@ const CreateNewRecipe = ({
         ) : null}
 
         <Tooltip
-          content={newlyCreatedRecipe?._id ? "Update recipe" : "Save recipe"}
+          content={
+            newlyCreatedRecipe?.recipeId?._id ? "Update recipe" : "Save recipe"
+          }
           direction="top"
         >
           <li>
@@ -504,8 +518,11 @@ const CreateNewRecipe = ({
                             dargProps={provided.dragHandleProps}
                             showCloseIcon={true}
                             handleClose={() =>
-                              removeIngredient(item?.ingredientId)
+                              item?.ingredientStatus === "ok"
+                                ? removeIngredient(item?.ingredientId)
+                                : removeByQaId(item?.qaId)
                             }
+                            isErrorIngredient={item?.ingredientStatus !== "ok"}
                           />
                         </div>
                       )}
