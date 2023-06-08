@@ -30,17 +30,26 @@
     }
     .text {
       font-size: 14px;
-      color: #ababab;
-      margin-top: -6px;
+      color: #000000;
+      // margin-top: -6px;
+    }
+    .errorIngredientText {
+      font-style: italic;
+      color: #ababab; // #c0bebe;
     }
   }
 
   .rightSide {
+    position: absolute;
+    top: 5px;
+    right: 0px;
+    background-color: #fff;
+    z-index: 1;
     .plusIcon {
       color: #7cbc39;
       font-size: 20px;
       display: none;
-      margin-top: -6px;
+      // margin-top: -6px;
       cursor: pointer;
     }
 
@@ -48,7 +57,7 @@
       color: #c4c4c4;
       font-size: 20px;
       display: none;
-      margin-top: -6px;
+      // margin-top: -6px;
       cursor: pointer;
     }
   }

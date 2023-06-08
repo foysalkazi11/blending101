@@ -43,6 +43,12 @@ const GET_COMPARE_LIST = gql`
             quantity
             gram
           }
+          comment
+        }
+        errorIngredients {
+          errorString
+          ingredientId
+          qaId
         }
       }
       recipeId {
