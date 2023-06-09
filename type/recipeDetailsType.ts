@@ -32,6 +32,7 @@ export interface RecipeDetailsType {
     servings: number;
     originalVersion: VersionDataType;
     token: string;
+    brand: BrandType;
   };
   turnedOnVersions: VersionDataType[];
   turnedOffVersions: VersionDataType[];
@@ -40,6 +41,13 @@ export interface RecipeDetailsType {
     isOriginalVersion: boolean;
     version: VersionDataType;
   };
+}
+
+export interface BrandType {
+  _id: string;
+  brandName: string;
+  brandImage: string;
+  brandUrl: string;
 }
 
 export interface VersionDataType {

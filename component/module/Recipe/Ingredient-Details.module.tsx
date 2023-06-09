@@ -194,10 +194,9 @@ const IngredientDetails = (props: IngredientDetailsProps) => {
 
                   {isIngredientStatusOk ? (
                     <div>
-                      {`${
-                        Math?.round(ingredient?.selectedPortion?.quantity) *
-                        counter
-                      }
+                      {`${(ingredient?.selectedPortion?.quantity * counter)
+                        .toFixed(2)
+                        .replace(/\.?0+$/, "")}
                   ${ingredient.selectedPortion?.name} `}
 
                       <span

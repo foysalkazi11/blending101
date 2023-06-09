@@ -44,6 +44,45 @@ $slider-height: 220px;
   }
 }
 
+.recipeBrand {
+  display: flex;
+  justify-content: space-between;
+  height: 36px;
+  margin-top: 5px;
+
+  &__left {
+    height: 100%;
+    display: flex;
+    align-items: center;
+
+    .brand {
+      width: 3rem;
+      height: auto;
+      object-fit: contain;
+    }
+    .user {
+      height: auto;
+      width: 3rem;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .userIcon {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s linear;
+      color: #646464;
+      background-color: #d6d6d6;
+    }
+  }
+}
+
 .subMenu {
   display: flex;
   align-items: center;
@@ -68,6 +107,7 @@ $slider-height: 220px;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-right: 2rem;
   }
 
   .recipeLogo {
