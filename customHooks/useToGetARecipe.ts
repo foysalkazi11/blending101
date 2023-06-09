@@ -39,6 +39,8 @@ const useToGetARecipe = () => {
                 ...recipe?.defaultVersion?.errorIngredients?.map((ing) => ({
                   ...ing,
                   ingredientStatus: "partial_ok",
+                  _id: ing?.qaId,
+                  ingredientName: ing?.errorString,
                 })),
               ],
             },

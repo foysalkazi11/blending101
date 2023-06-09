@@ -31,6 +31,10 @@ import { setDetailsARecipe } from "../../../../redux/slices/recipeSlice";
 import HowTo from "./howTo/HowTo";
 import { ReferenceOfRecipeUpdateFuncType } from "../../../../type/recipeType";
 import useToAcceptRecipeShare from "../../../../customHooks/notification/useToAcceptRecipeShare";
+import Tooltip from "../../../../theme/toolTip/CustomToolTip";
+import isEmptyObj from "../../../../helperFunc/object/isEmptyObj";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/pro-light-svg-icons";
 
 interface center {
   recipeData: RecipeDetailsType;
@@ -274,7 +278,68 @@ const Center = ({
             <div className={styles.recipeType}>
               {recipeData?.recipeId?.recipeBlendCategory?.name}
             </div>
-            <a
+
+            <div className={styles.recipeBrand__left}>
+              <Tooltip
+                content={
+                  !isEmptyObj(recipeData?.recipeId?.brand || {})
+                    ? recipeData?.recipeId?.brand?.brandName || "Brand"
+                    : recipeData?.recipeId?.userId?.displayName ||
+                      `${recipeData?.recipeId?.userId?.lastName}` ||
+                      `${recipeData?.recipeId?.userId?.firstName}` ||
+                      "User name"
+                }
+                direction="right"
+              >
+                {!isEmptyObj(recipeData?.recipeId?.brand || {}) ? (
+                  <a
+                    href={recipeData?.recipeId?.brand?.brandUrl || "#"}
+
+                    // onClick={(e) => {
+                    //   const id = "ebbpnaajpojkhndmjmdjabgjmngjgmhm";
+                    //   //@ts-ignore
+                    //   chrome.runtime.sendMessage(
+                    //     id,
+                    //     {
+                    //       action: "BRAND_NAVIGATE",
+                    //       payload: {
+                    //         id: recipeData?.recipeId?._id,
+                    //         name:
+                    //           recipeData?.defaultVersion?.postfixTitle ||
+                    //           recipeData?.recipeId?.name,
+                    //         image: recipeData?.recipeId?.brand?.brandImage,
+                    //         origin: recipeData?.recipeId?.brand?.brandUrl,
+                    //       },
+                    //     },
+                    //     () => {},
+                    //   );
+                    //   window.location.href = "";
+                    // }}
+                  >
+                    <img
+                      className={styles.brand}
+                      src={
+                        `${recipeData?.recipeId?.brand?.brandImage}` ||
+                        "/icons/delish.png"
+                      }
+                      alt="brand"
+                    />
+                  </a>
+                ) : recipeData?.recipeId?.userId?.image ? (
+                  <img
+                    className={styles.user}
+                    src={recipeData?.recipeId?.userId?.image}
+                    alt="brand"
+                  />
+                ) : (
+                  <div className={styles.userIcon}>
+                    <FontAwesomeIcon icon={faUser} />
+                  </div>
+                )}
+              </Tooltip>
+            </div>
+
+            {/* <a
               href={`https://www.yummly.com/dish/981850/tomato-casserole-a-new-england-dish-thats-anything-but-common?blend-redirected=true&recipe=${recipeData?.recipeId?._id}`}
             >
               <img
@@ -282,7 +347,7 @@ const Center = ({
                 alt="recipe_logo"
                 className={styles.recipeLogo}
               />
-            </a>
+            </a> */}
           </div>
           <div className={styles.alignItems}>
             <>

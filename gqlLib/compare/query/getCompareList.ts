@@ -69,6 +69,7 @@ const GET_COMPARE_LIST = gql`
           _id
           brandName
           brandImage
+          brandUrl
         }
         averageRating
         numberOfRating
