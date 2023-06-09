@@ -436,7 +436,7 @@ const CompareRecipe = () => {
       }
     });
 
-    if (newlyCreatedRecipe?.recipeId._id) {
+    if (newlyCreatedRecipe?.recipeId?._id) {
       if (newRecipe?.name && newRecipe?.ingredients?.length) {
         try {
           let imgArr = [];
@@ -522,12 +522,11 @@ const CompareRecipe = () => {
               data: obj,
             },
           });
-          notification("success", "Recive saved successfully");
-          if (data?.addRecipeFromUser?._id) {
-            setNewlyCreatedRecipe(data?.addRecipeFromUser);
-            setUploadNewImage(false);
-            // router?.push(`/recipe_details/${data?.addRecipeFromUser?._id}`);
-          }
+
+          setNewlyCreatedRecipe(data?.addRecipeFromUser);
+          setUploadNewImage(false);
+          notification("success", "Recipe saved successfully");
+          // router?.push(`/recipe_details/${data?.addRecipeFromUser?._id}`);
         } catch (error) {
           notification("error", "Failed to saved new recipe");
         }

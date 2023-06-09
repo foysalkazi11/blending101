@@ -182,7 +182,9 @@ const IngredientDetails = (props: IngredientDetailsProps) => {
                         alt="icon"
                       />
                     ) : (
-                      <img src="/images/5-2-avocado-png-hd.png" alt="icon" />
+                      <span className={styles.imageBox}>
+                        <FontAwesomeIcon icon={faBasketShoppingSimple} />
+                      </span>
                     )
                   ) : (
                     <span className={styles.imageBox}>
