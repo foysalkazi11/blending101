@@ -31,7 +31,7 @@ import ConfirmationModal from "../../../theme/confirmationModal/ConfirmationModa
 import useToUpdateAfterEditVersion from "../../../customHooks/useToUpdateAfterEditVersion";
 import { VersionAddDataType } from "../../../type/versionAddDataType";
 
-const EditRecipeComponent = () => {
+const EditRecipeComponentParsing = () => {
   const router = useRouter();
   const { params = [] } = router.query;
   const recipeId = params?.[0] || (router.query?.recipeId as string);
@@ -280,16 +280,20 @@ const EditRecipeComponent = () => {
       reactToastifyNotification("error", "Error while saving Recipe");
     }
   };
+
+  // match recipe ingredients with database ingredients
   useEffect(() => {
     if (!ingredientCategoryData?.filterIngredientByCategoryAndClass) return;
-
-    console.log(detailsARecipe?.tempVersionInfo?.version?.ingredients);
     let ingredientObj = {};
     let ingredientPartialOk = [];
 
     detailsARecipe?.tempVersionInfo?.version?.ingredients?.forEach((ing) => {
       if (ing?.ingredientStatus === "ok") {
-        ingredientObj[ing?.ingredientId?._id] = ing;
+        ingredientObj[ing?.ingredientId?._id] = {
+          ...ing,
+          _id: ing?.ingredientId?._id,
+          ingredientName: ing?.ingredientId?.ingredientName,
+        };
       }
       if (ing?.ingredientStatus === "partial_ok") {
         ingredientPartialOk.push(ing);
@@ -305,12 +309,15 @@ const EditRecipeComponent = () => {
             ...ingredientObj[elem._id],
             ingredientStatus: "ok",
           });
+          delete ingredientObj[elem._id];
         }
       },
     );
+
     dispatch(
       setSelectedIngredientsList([
         ...presentIngredient,
+        ...Object.values(ingredientObj),
         ...ingredientPartialOk,
       ]),
     );
@@ -319,6 +326,7 @@ const EditRecipeComponent = () => {
     detailsARecipe?.tempVersionInfo?.version,
   ]);
 
+  // separate data into different state so that can work easily
   useEffect(() => {
     if (!detailsARecipe) return;
     setCopyDetailsRecipe({ ...detailsARecipe });
@@ -334,6 +342,7 @@ const EditRecipeComponent = () => {
     dispatch(setOpenVersionTrayFormWhichPage("edit"));
   }, []);
 
+  // fetch recipe if is their existing recipe or doesn't match with current user
   useEffect(() => {
     if (detailsARecipe?.recipeId?._id !== recipeId) {
       if (dbUser?._id && recipeId) {
@@ -342,11 +351,13 @@ const EditRecipeComponent = () => {
     }
   }, [recipeId, dbUser?._id]);
 
+  // active sidebar menu change
   useEffect(() => {
     dispatch(updateSidebarActiveMenuName("Blends"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // fetch nutrition value based on ingredient value change
   useEffect(() => {
     handleFetchIngrdients(
       selectedIngredientsList,
@@ -423,4 +434,4 @@ const EditRecipeComponent = () => {
   );
 };
 
-export default EditRecipeComponent;
+export default EditRecipeComponentParsing;

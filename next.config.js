@@ -14,6 +14,9 @@ module.exports = {
       "imagesvc.meredithcorp.io",
       "blending101.com",
       "www.simplyrecipes.com",
+      "www.allrecipes.com",
+      "food.fnr.sndimg.com",
+      "www.indianhealthyrecipes.com",
     ],
   },
   webpack: (config, { isServer }) => {
