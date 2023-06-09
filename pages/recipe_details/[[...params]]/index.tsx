@@ -46,6 +46,7 @@ const Index = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // fetch data if not exist or doesn't match with current user
   useEffect(() => {
     if (detailsARecipe?.recipeId?._id !== recipe__Id) {
       if (dbUser?._id && recipe__Id) {
@@ -61,6 +62,7 @@ const Index = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // fetch nutrition value based on current ingredient
   useEffect(() => {
     handleFetchIngrdients(
       detailsARecipe?.tempVersionInfo?.version?.ingredients.filter(
