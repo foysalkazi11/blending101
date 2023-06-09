@@ -26,13 +26,11 @@ import { VscVersions } from "react-icons/vsc";
 import IngredientDetails from "../../../../component/module/Recipe/Ingredient-Details.module";
 import { RecipeDetailsType } from "../../../../type/recipeDetailsType";
 import { GiGl } from "../../../../type/nutrationType";
-import Share from "../../../../component/organisms/Share/Distribute.component";
 import ShareRecipe from "./shareRecipe";
 import { setDetailsARecipe } from "../../../../redux/slices/recipeSlice";
 import HowTo from "./howTo/HowTo";
 import { ReferenceOfRecipeUpdateFuncType } from "../../../../type/recipeType";
 import useToAcceptRecipeShare from "../../../../customHooks/notification/useToAcceptRecipeShare";
-import useToRejectRecipeShare from "../../../../customHooks/notification/useToRejectRecipeShare";
 
 interface center {
   recipeData: RecipeDetailsType;
@@ -76,9 +74,8 @@ const Center = ({
   const userId = useAppSelector((state) => state?.user?.dbUser?._id);
   const { functionAcceptRecipeShare, acceptRecipeShareLoading } =
     useToAcceptRecipeShare();
-  const { functionRejectRecipeShare, rejectRecipeShareLoading } =
-    useToRejectRecipeShare();
 
+  // read more functionality
   const ReadMore = ({ children }) => {
     const text = children;
     const [isReadMore, setIsReadMore] = useState(true);

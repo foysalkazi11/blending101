@@ -13,6 +13,7 @@ module.exports = {
       "www.inspiredtaste.net",
       "imagesvc.meredithcorp.io",
       "blending101.com",
+      "www.simplyrecipes.com",
     ],
   },
   webpack: (config, { isServer }) => {

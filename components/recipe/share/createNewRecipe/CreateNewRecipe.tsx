@@ -64,13 +64,14 @@ const CreateNewRecipe = ({
   const { allCategories } = useAppSelector((state) => state?.categroy);
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
-
   const router = useRouter();
 
+  // find if existing item
   const findItem = (id) => {
     return newRecipe?.ingredients?.find((item) => item?.ingredientId === id);
   };
 
+  // fetch ingredient
   const fetchFilterIngredientByCategroyAndClass = async () => {
     try {
       const { data } = await filterIngredientByCategroyAndClass({
@@ -88,7 +89,7 @@ const CreateNewRecipe = ({
     }
   };
 
-  // remove by ingredientId
+  // remove ingredient by ingredientId
   const removeIngredient = (id) => {
     setNewRecipe((state) => ({
       ...state,
@@ -97,6 +98,8 @@ const CreateNewRecipe = ({
       ],
     }));
   };
+
+  // remove ingredient by qaid
   const removeByQaId = (id) => {
     setNewRecipe((state) => ({
       ...state,
@@ -104,6 +107,7 @@ const CreateNewRecipe = ({
     }));
   };
 
+  // fetch blend category
   const fetchAllBlendCategroy = async () => {
     try {
       const { data } = await getAllBlendCategory();
@@ -113,6 +117,7 @@ const CreateNewRecipe = ({
     }
   };
 
+  // collect ingredient value after clicking ingredient
   const selectIngredientOnClick = (ele) => {
     const item = findItem(ele?._id);
 
