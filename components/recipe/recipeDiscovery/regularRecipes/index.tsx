@@ -218,13 +218,14 @@ export const ShowRecipes = ({
               recipeId: {
                 _id = "",
                 name = "",
-                image = "",
+                image = [],
                 originalVersion = "",
                 numberOfRating = 0,
                 averageRating = 0,
                 recipeBlendCategory,
                 userId,
                 brand,
+                url,
               },
               defaultVersion: {
                 _id: defaultVersionId = "",
@@ -281,6 +282,7 @@ export const ShowRecipes = ({
                   updateDataFunc={updateDataFunc}
                   brand={brand}
                   personalRating={personalRating}
+                  origin={url}
                 />
               </div>
             );

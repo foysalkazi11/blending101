@@ -215,6 +215,7 @@ const RecipeDetails = ({
           carbs={recipe?.defaultVersion?.gigl?.netCarbs}
           personalRating={recipe?.personalRating}
           viewPermissions={viewPermissions}
+          origin={recipe?.recipeId?.url}
         />
         <div className={`${styles.dividerBox}`}>
           <SectionTitleWithIcon

@@ -129,7 +129,7 @@ export default function DatacardComponent({
   defaultVersion = {} as VersionDataType,
   brand,
   personalRating = 0,
-  origin,
+  origin = "#",
   turnedOnVersions = [],
   interactionPermissions = ["all"],
   viewPermissions = [

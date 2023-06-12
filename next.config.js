@@ -17,6 +17,7 @@ module.exports = {
       "www.allrecipes.com",
       "food.fnr.sndimg.com",
       "www.indianhealthyrecipes.com",
+      "images.immediate.co.uk",
     ],
   },
   webpack: (config, { isServer }) => {

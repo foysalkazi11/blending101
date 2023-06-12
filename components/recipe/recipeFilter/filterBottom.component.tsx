@@ -281,6 +281,7 @@ function FilterPageBottom({ allFilters = [] }: Props) {
                             postfixTitle={item?.defaultVersion?.postfixTitle}
                             recipeVersion={item?.versionCount}
                             personalRating={item?.personalRating}
+                            origin={item?.recipeId?.url}
                           />
                         </div>
                       </li>
