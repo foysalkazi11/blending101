@@ -1,3 +1,5 @@
+import { RecipeIdType } from "./recipeDetailsType";
+
 export interface RecipeType {
   datePublished: null;
   name: string;
@@ -23,11 +25,7 @@ export interface RecipeType {
 
   recipeVersion: RecipeSmallVersionType[];
   token?: string;
-  recipeId?: {
-    brand?: RecipeBrandType;
-    userId: null | RecipeCreatorInfo;
-    [key: string]: any;
-  };
+  recipeId?: RecipeIdType;
   allRecipes?: boolean;
   myRecipes?: boolean;
   versionCount: number;
