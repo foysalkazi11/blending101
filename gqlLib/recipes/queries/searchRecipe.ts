@@ -38,6 +38,7 @@ const SEARCH_RECIPE = gql`
             brandName
             brandImage
           }
+          url
           averageRating
           numberOfRating
         }

@@ -28,6 +28,7 @@ const FILTER_RECIPE = gql`
             firstName
             lastName
           }
+          url
           brand {
             _id
             brandName
