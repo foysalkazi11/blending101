@@ -38,6 +38,14 @@ const GET_BLEND_NUTRITION_BASED_IN_INGREDIENTS_WIKI = gql`
         active
         customBookmarkName
       }
+      author {
+        _id
+        displayName
+        email
+        firstName
+        lastName
+        profilePicture
+      }
     }
   }
 `;

@@ -1,11 +1,11 @@
 import { gql } from "@apollo/client";
 
 const GET_ONLY_INGREDIENTS_BASED_ON_NURTITION = gql`
-  query GetAllIngredientsBasedOnNutrition(
+  query GetAllIngredientsBasedOnNutrition2(
     $data: GetIngredientsFromNutrition!
     $userId: String
   ) {
-    getAllIngredientsBasedOnNutrition(data: $data, userId: $userId) {
+    getAllIngredientsBasedOnNutrition2(data: $data, userId: $userId) {
       ingredients {
         portion {
           measurement
