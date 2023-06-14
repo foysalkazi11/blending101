@@ -36,6 +36,14 @@ const GET_ALL_INGREDIENTS_BASED_ON_NURTITION = gql`
         link
         active
       }
+      author {
+        _id
+        displayName
+        firstName
+        lastName
+        profilePicture
+        email
+      }
     }
   }
 `;

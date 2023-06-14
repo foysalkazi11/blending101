@@ -12,6 +12,7 @@ import {
   faArrowDownShortWide,
 } from "@fortawesome/pro-solid-svg-icons";
 import { categories } from "../../../data/categories";
+import { useAppSelector } from "../../../redux/hooks";
 
 interface ingredientState {
   name: string;
@@ -35,24 +36,28 @@ function IngredientRxFacts({
   const [dpd, setDpd] = useState("All");
   const [ingredientData, setIngredientData] = useState([]);
   const [ascendingOrder, setAscendingOrder] = useState(true);
+  const userId = useAppSelector((state) => state.user.dbUser._id);
 
-  const [getAllIngredientsBasedOnNutrition, { data, loading, error }] =
-    useLazyQuery(GET_ONLY_INGREDIENTS_BASED_ON_NURTITION, {
+  const [getAllIngredientsBasedOnNutrition, { loading, error }] = useLazyQuery(
+    GET_ONLY_INGREDIENTS_BASED_ON_NURTITION,
+    {
       fetchPolicy: "cache-and-network",
-    });
+    },
+  );
   const isMounted = useRef(false);
 
-  const fetchData = async () => {
+  const fetchData = async (category, nutritionID) => {
     try {
       const { data } = await getAllIngredientsBasedOnNutrition({
         variables: {
           data: {
-            nutritionID: wikiId,
-            category: dpd,
+            nutritionID,
+            category,
           },
+          userId,
         },
       });
-      setIngredientData(data?.getAllIngredientsBasedOnNutrition?.ingredients);
+      setIngredientData(data?.getAllIngredientsBasedOnNutrition2?.ingredients);
     } catch (error) {
       console.log(error);
     }
@@ -66,11 +71,11 @@ function IngredientRxFacts({
 
   useEffect(() => {
     if (isMounted?.current) {
-      fetchData();
+      fetchData(dpd, wikiId);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dpd, wikiId]);
+  }, [dpd]);
 
   useEffect(() => {
     if (isMounted?.current) {

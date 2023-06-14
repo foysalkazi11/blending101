@@ -28,10 +28,17 @@ const GET_NUTRIENT_WIKI_LIST = gql`
         }
         publishDate
         description
-        publishedBy
         isPublished
         hasInCompare
         commentsCount
+        author {
+          _id
+          displayName
+          email
+          firstName
+          lastName
+          profilePicture
+        }
       }
     }
   }

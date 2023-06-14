@@ -173,7 +173,12 @@ function WikiSingleItem() {
             <RecipeDetailsMiddle />
           ) : (
             <WikiCenterComponent
-              author={data?.publishedBy}
+              author={
+                data?.author?.displayName ||
+                data?.author?.firstName ||
+                data?.author?.lastName ||
+                ""
+              }
               body={data?.bodies}
               categroy={data?.category}
               coverImages={data?.wikiCoverImages}
