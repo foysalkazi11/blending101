@@ -438,6 +438,8 @@ export default function DatacardComponent({
                       window.location.href = "";
                     }
                   }}
+                  target="_blank"
+                  rel="noreferrer"
                 >
                   <img
                     className={styles.brand}
