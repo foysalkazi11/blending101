@@ -64,13 +64,14 @@ const CreateNewRecipe = ({
   const { allCategories } = useAppSelector((state) => state?.categroy);
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
-
   const router = useRouter();
 
+  // find if existing item
   const findItem = (id) => {
     return newRecipe?.ingredients?.find((item) => item?.ingredientId === id);
   };
 
+  // fetch ingredient
   const fetchFilterIngredientByCategroyAndClass = async () => {
     try {
       const { data } = await filterIngredientByCategroyAndClass({
@@ -88,6 +89,7 @@ const CreateNewRecipe = ({
     }
   };
 
+  // remove ingredient by ingredientId
   const removeIngredient = (id) => {
     setNewRecipe((state) => ({
       ...state,
@@ -97,6 +99,15 @@ const CreateNewRecipe = ({
     }));
   };
 
+  // remove ingredient by qaid
+  const removeByQaId = (id) => {
+    setNewRecipe((state) => ({
+      ...state,
+      ingredients: [...state?.ingredients?.filter((item) => item?.qaId !== id)],
+    }));
+  };
+
+  // fetch blend category
   const fetchAllBlendCategroy = async () => {
     try {
       const { data } = await getAllBlendCategory();
@@ -106,6 +117,7 @@ const CreateNewRecipe = ({
     }
   };
 
+  // collect ingredient value after clicking ingredient
   const selectIngredientOnClick = (ele) => {
     const item = findItem(ele?._id);
 
@@ -119,6 +131,7 @@ const CreateNewRecipe = ({
           obj["label"] = `${1} ${item?.measurement} ${ele?.ingredientName}`;
           obj["ingredientName"] = `${ele?.ingredientName}`;
           obj["selectedPortionQuantity"] = 1;
+          obj["ingredientStatus"] = "ok";
         }
       });
       setNewRecipe((state) => ({
@@ -173,21 +186,24 @@ const CreateNewRecipe = ({
     getBlendNutritionBasedOnRecipeXxx({
       variables: {
         ingredientsInfo: [
-          ...newRecipe?.ingredients?.map((item) => ({
-            ingredientId: item?.ingredientId,
-            value: item?.weightInGram,
-          })),
+          ...newRecipe?.ingredients
+            ?.filter((recipe) => recipe?.ingredientStatus === "ok")
+            ?.map((item) => ({
+              ingredientId: item?.ingredientId,
+              value: item?.weightInGram,
+            })),
         ],
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newRecipe?.ingredients]);
-  useEffect(() => {
-    if (copyImage) {
-      setNewRecipe((state) => ({ ...state, image: [copyImage] }));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [copyImage]);
+
+  // useEffect(() => {
+  //   if (copyImage) {
+  //     setNewRecipe((state) => ({ ...state, image: [copyImage] }));
+  //   }
+
+  // }, [copyImage]);
 
   useEffect(() => {
     setWinReady(true);
@@ -204,14 +220,16 @@ const CreateNewRecipe = ({
   const floatingMenu = (
     <div className={styles.floating__menu}>
       <ul>
-        {newlyCreatedRecipe?._id ? (
+        {newlyCreatedRecipe?.recipeId?._id ? (
           <>
             <Tooltip content="Edit view" direction="top">
               <li>
                 <MdOutlineEdit
                   className={styles.icon}
                   onClick={() =>
-                    router?.push(`/edit_recipe/${newlyCreatedRecipe?._id}`)
+                    router?.push(
+                      `/edit_recipe/${newlyCreatedRecipe?.recipeId?._id}`,
+                    )
                   }
                 />
               </li>
@@ -230,7 +248,9 @@ const CreateNewRecipe = ({
         ) : null}
 
         <Tooltip
-          content={newlyCreatedRecipe?._id ? "Update recipe" : "Save recipe"}
+          content={
+            newlyCreatedRecipe?.recipeId?._id ? "Update recipe" : "Save recipe"
+          }
           direction="top"
         >
           <li>
@@ -247,7 +267,7 @@ const CreateNewRecipe = ({
             )}
           </li>
         </Tooltip>
-        <Tooltip content={"Cancel"} direction="top">
+        {/* <Tooltip content={"Cancel"} direction="top">
           <li>
             <FontAwesomeIcon
               icon={faXmark}
@@ -255,7 +275,7 @@ const CreateNewRecipe = ({
               onClick={closeCreateNewRecipeInterface}
             />
           </li>
-        </Tooltip>
+        </Tooltip> */}
       </ul>
     </div>
   );
@@ -310,7 +330,7 @@ const CreateNewRecipe = ({
               )}
 
               <img
-                className={newRecipe?.image?.length ? styles.imageBox : null}
+                className={styles.imageBox}
                 src={
                   newRecipe?.image?.length
                     ? typeof newRecipe?.image[0] === "string"
@@ -360,18 +380,29 @@ const CreateNewRecipe = ({
             </div>
           </div>
         </div>
+
         <div className={styles.datacard__body__belt}>
           <div className={styles.datacard__body__belt__child}>
-            Net Carbs <span>00</span>
+            Net Carbs{" "}
+            <span>
+              {Math.round(
+                newlyCreatedRecipe?.defaultVersion?.gigl?.netCarbs || 0,
+              )}
+            </span>
           </div>
           <div className={styles.datacard__body__belt__child}>
-            Rx Score <span>00</span>
+            Rx Score <span>100</span>
           </div>
           <div className={styles.datacard__body__belt__child}>
-            Calorie <span>00</span>
+            Calorie{" "}
+            <span>
+              {Math.round(
+                newlyCreatedRecipe?.defaultVersion?.calorie?.value || 0,
+              )}
+            </span>
           </div>
         </div>
-        <div
+        {/* <div
           style={{
             marginTop: "10px",
             marginRight: "10px",
@@ -393,7 +424,7 @@ const CreateNewRecipe = ({
               }
             />
           </Tooltip>
-        </div>
+        </div> */}
       </div>
       <div className={styles.dividerBox}>
         <SectionTitleWithIcon
@@ -492,8 +523,11 @@ const CreateNewRecipe = ({
                             dargProps={provided.dragHandleProps}
                             showCloseIcon={true}
                             handleClose={() =>
-                              removeIngredient(item?.ingredientId)
+                              item?.ingredientStatus === "ok"
+                                ? removeIngredient(item?.ingredientId)
+                                : removeByQaId(item?.qaId)
                             }
+                            isErrorIngredient={item?.ingredientStatus !== "ok"}
                           />
                         </div>
                       )}

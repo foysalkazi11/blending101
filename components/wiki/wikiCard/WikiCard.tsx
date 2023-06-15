@@ -10,14 +10,8 @@ import {
   setWikiCommentsCurrentIngredient,
 } from "../../../redux/slices/wikiSlice";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
-import { WikiListType, WikiType } from "../../../type/wikiListType";
+import { Portion, WikiListType, WikiType } from "../../../type/wikiListType";
 import styles from "./WikiCard.module.scss";
-
-interface PortionsType {
-  default: boolean;
-  measurement: string;
-  meausermentWeight: string;
-}
 
 interface WikiCardProps {
   style?: React.CSSProperties;
@@ -29,7 +23,7 @@ interface WikiCardProps {
   rxScore?: number;
   comments?: number;
   author?: string;
-  portions?: PortionsType[];
+  portions?: Portion[];
   id?: string;
   hasInCompare?: boolean;
   setWikiList?: Dispatch<SetStateAction<WikiListType[]>>;
@@ -62,7 +56,7 @@ const WikiCard = ({
   // click wiki item title
   const handleClickTitle = async (
     id: string,
-    portions: PortionsType[],
+    portions: Portion[],
     type: string,
   ) => {
     if (type === "Nutrient") {
@@ -98,7 +92,7 @@ const WikiCard = ({
     );
   };
   return (
-    <div className={styles.wikiCardContainer} style={style}>
+    <div className={styles.wikiCardContainer} style={{ ...style }}>
       <header className={styles.header}>
         <p
           className={styles.title}

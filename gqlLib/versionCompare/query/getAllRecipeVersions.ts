@@ -22,6 +22,7 @@ const GET_ALL_RECIPE_VERSION = gql`
           brandName
           brandImage
         }
+        url
         averageRating
         numberOfRating
         servings

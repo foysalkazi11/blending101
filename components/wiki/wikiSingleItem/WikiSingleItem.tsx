@@ -4,15 +4,12 @@ import AContainer from "../../../containers/A.container";
 import GET_ALL_INGREDIENTS_BASED_ON_NURTITION from "../../../gqlLib/wiki/query/getAllIngredientsBasedOnNutrition";
 import GET_BLEND_NUTRITION_BASED_IN_INGREDIENTS_WIKI from "../../../gqlLib/wiki/query/getBlendNutritionBasedIngredientsWiki";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import {
-  setLoading,
-  updateSidebarActiveMenuName,
-} from "../../../redux/slices/utilitySlice";
+import { updateSidebarActiveMenuName } from "../../../redux/slices/utilitySlice";
 import NutritionPanel from "../../recipe/share/nutritionPanel/NutritionPanel";
 import notification from "../../utility/reactToastifyNotification";
 import WikiCenterComponent from "../WikiCenter";
 import WikiRightComponent from "../WikiRight";
-import styles from "../../pageLayout/pageLayout.module.scss";
+import styles from "../wiki.module.scss";
 import { useRouter } from "next/router";
 import RelatedWikiItem from "./realtedWikiItem/RelatedWikiItem";
 import GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS from "../../../gqlLib/nutrition/query/getNutrientsListAndGiGlByIngredients";
@@ -25,6 +22,8 @@ import { WikiType } from "../../../type/wikiListType";
 import useWindowSize from "../../utility/useWindowSize";
 import ShowRelatedItems from "../../showRelatedItems";
 import dummyData from "./dummyData";
+import ErrorPage from "../../pages/404Page";
+import { RecipeDetailsMiddle } from "../../../theme/skeletons/skeletonRecipeDetails";
 export const placeHolderImage = "/images/no-image-available.webp";
 
 interface Props {
@@ -88,7 +87,6 @@ function WikiSingleItem() {
   };
 
   const fetchData = async (id?: string, measureMentWeight?: string) => {
-    dispatch(setLoading(true));
     try {
       if (type === "Nutrient") {
         await getAllIngredientsBasedOnNutrition({
@@ -100,7 +98,6 @@ function WikiSingleItem() {
             userId: dbUser?._id,
           },
         });
-        dispatch(setLoading(false));
       }
       if (type === "Ingredient") {
         const { data } = await getBlendNutritionBasedIngredientsWiki({
@@ -118,11 +115,9 @@ function WikiSingleItem() {
         const res: WikiDetailsIngredientType =
           data?.getBlendNutritionBasedIngredientsWiki2;
         setPortions(res?.portions);
-        dispatch(setLoading(false));
       }
     } catch (error) {
       console.log(error);
-      dispatch(setLoading(false));
       notification("error", error?.message);
     }
   };
@@ -153,7 +148,7 @@ function WikiSingleItem() {
   }, [type]);
 
   if (ingredientsData?.error || nutritionData?.error) {
-    return <div>Error</div>;
+    return <ErrorPage errorMessage={`Type not found !!!`} />;
   }
   const dataObj = {
     Nutrient: ingredientsData?.data?.getAllIngredientsBasedOnNutrition2,
@@ -167,46 +162,43 @@ function WikiSingleItem() {
     nutritionPanelData?.getNutrientsListAndGiGlByIngredients?.giGl;
 
   return (
-    <AContainer
-      headerIcon={"/icons/books.svg"}
-      headerTitle="Wiki details"
-      showWikiCommentsTray={{
-        show: true,
-        showPanle: "right",
-        showTagByDeafult: false,
-      }}
-      headTagInfo={{
-        title: `Wiki ${type} details`,
-        description: `wiki ${type} details`,
-      }}
-    >
-      <div className={styles.main}>
-        <div className={styles.left}>
+    <>
+      <div className={styles.singleWikiItemContainer}>
+        {/* <div className={styles.left}>
           <RelatedWikiItem type={type} />
-        </div>
+        </div> */}
 
         <div className={styles.center}>
-          <WikiCenterComponent
-            author={data?.publishedBy}
-            body={data?.bodies}
-            categroy={data?.category}
-            coverImages={data?.wikiCoverImages}
-            heading={`About ${data?.type}`}
-            name={data?.wikiTitle}
-            description={data?.wikiDescription}
-            giGl={giGl}
-            type={data?.type}
-            wikiId={wikiId}
-            commentsCount={data?.commentsCount}
-            scrollPoint={scrollPoint}
-            ingredientBookmarkList={data?.ingredientBookmarkList || []}
-            nutrientBookmarkList={data?.nutrientBookmarkList || []}
-            fetchNutritionPanelData={fetchNutritionPanelData}
-            setDefaultMeasureMentWeight={setDefaultMeasureMentWeight}
-            setCurrentWikiId={setCurrentWikiId}
-            setPortions={setPortions}
-            originalPortions={data?.portions}
-          />
+          {ingredientsData?.loading || nutritionData?.loading ? (
+            <RecipeDetailsMiddle />
+          ) : (
+            <WikiCenterComponent
+              author={
+                data?.author?.displayName ||
+                data?.author?.firstName ||
+                data?.author?.lastName ||
+                ""
+              }
+              body={data?.bodies}
+              categroy={data?.category}
+              coverImages={data?.wikiCoverImages}
+              heading={`About ${data?.type}`}
+              name={data?.wikiTitle}
+              description={data?.wikiDescription}
+              giGl={giGl}
+              type={data?.type}
+              wikiId={wikiId}
+              commentsCount={data?.commentsCount}
+              scrollPoint={scrollPoint}
+              ingredientBookmarkList={data?.ingredientBookmarkList || []}
+              nutrientBookmarkList={data?.nutrientBookmarkList || []}
+              fetchNutritionPanelData={fetchNutritionPanelData}
+              setDefaultMeasureMentWeight={setDefaultMeasureMentWeight}
+              setCurrentWikiId={setCurrentWikiId}
+              setPortions={setPortions}
+              originalPortions={data?.portions}
+            />
+          )}
         </div>
         <div className={styles.right}>
           {type === "Ingredient" && (
@@ -252,7 +244,7 @@ function WikiSingleItem() {
           }
         />
       ) : null}
-    </AContainer>
+    </>
   );
 }
 

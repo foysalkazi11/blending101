@@ -4,23 +4,23 @@
 .showRecipeCollectionsContainer {
   width: 100%;
   min-height: 80vh;
-  margin: 40px auto 20px auto;
+  // margin: 40px auto 20px auto;
 }
 .showRecipeCollectionsHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 20px;
 
   .heading {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
-    .favoriteIcon {
+    .icon {
       color: $primaryColor;
-      font-size: 24px;
+      font-size: 2.4rem;
       margin-right: 16px;
     }
-    h2 {
+    .title {
       font-weight: 500;
       font-size: 22px;
       color: $primaryColor;

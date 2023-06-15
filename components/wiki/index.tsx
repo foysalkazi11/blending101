@@ -1,7 +1,6 @@
 import { faBooks } from "@fortawesome/pro-thin-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState } from "react";
 import AContainer from "../../containers/A.container";
 import useLocalStorage from "../../customHooks/useLocalStorage";
 import { WikiType } from "../../type/wikiListType";
@@ -13,9 +12,12 @@ import WikiLanding from "./wikiLanding/WikiLanding";
 import WikiLeft from "./WikiLeft/WikiLeft";
 import WikiSearchBar from "./wikiSearchBar/WikiSearchBar";
 import WikiSingleType from "./wikiSingleType/WikiSingleType";
+import { useRouter } from "next/router";
+import WikiSingleItem from "./wikiSingleItem/WikiSingleItem";
+import useWindowSize from "../utility/useWindowSize";
 
 export type SelectedWikiType = {
-  [key in WikiType]: string[];
+  [key in WikiType]: string;
 };
 
 const WikiHome = () => {
@@ -23,70 +25,113 @@ const WikiHome = () => {
     useLocalStorage<SelectedWikiType>("selectedWikiItem", {});
   const [type, setType] = useLocalStorage<WikiType>("type", "");
   const [openTray, setOpenTray] = useState(false);
-  const dispatch = useDispatch();
+  const router = useRouter();
+  const { params = [] } = router?.query;
+  const wikiType: string = params?.[0] || "";
+  const wikiId = params?.[1] || "";
+  const { width } = useWindowSize();
 
-  useEffect(() => {
-    setType("");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // change title info
+  const changeTitleInfo = (wikiType: string) => {
+    let obj = { title: "", description: "" };
+    if (wikiType) {
+      obj = {
+        title: `Wiki Details`,
+        description: `Wiki Details`,
+      };
+    } else {
+      obj = {
+        title: `Wiki Discovery`,
+        description: `Wiki Discovery
+`,
+      };
+    }
+    return obj;
+  };
 
-  return (
-    <AContainer
-      headerTitle="Wiki Discovery"
-      headerIcon={"/icons/books.svg"}
-      showWikiCommentsTray={{
-        show: true,
-        showPanle: "right",
-        showTagByDeafult: false,
-      }}
-      headTagInfo={{
-        title: type ? `Wiki ${type}` : "Wiki",
-        description: type ? `wiki ${type}` : "Wiki",
-      }}
-    >
-      <div className={styles.main}>
-        <WikiSearchBar
-          openTray={openTray}
-          setOpenTray={setOpenTray}
-          type={type}
-        />
-        <WikiBanner />
-        {type ? (
+  // render ui
+  const renderUI = (wikiType, type) => {
+    let component = null;
+    if (wikiType) {
+      component = <WikiSingleItem />;
+    } else {
+      if (type) {
+        component = (
           <WikiSingleType
             type={type}
             setType={setType}
             selectedWikiItem={selectedWikiItem}
             setSelectedWikiItem={setSelectedWikiItem}
           />
-        ) : (
+        );
+      } else {
+        component = (
           <WikiLanding
             setType={setType}
             setSelectedWikiItem={setSelectedWikiItem}
           />
-        )}
-      </div>
+        );
+      }
+    }
 
-      <TrayWrapper
-        isolated={true}
-        showPanle="left"
-        showTagByDefaut={false}
-        openTray={openTray}
-        panleTag={(hover) => (
-          <TrayTag
-            hover={hover}
-            icon={<FontAwesomeIcon icon={faBooks} />}
-            placeMent="left"
-            handleTagClick={() => setOpenTray((prev) => !prev)}
-          />
-        )}
-      >
-        <WikiLeft
+    return component;
+  };
+
+  return (
+    <AContainer
+      headerTitle={changeTitleInfo(wikiType).title}
+      headerIcon={"/icons/books.svg"}
+      showWikiCommentsTray={{
+        show: true,
+        showPanle: "right",
+        showTagByDeafult: false,
+      }}
+      headTagInfo={changeTitleInfo(wikiType)}
+    >
+      <div className={styles.wikiPageContainer}>
+        <WikiSearchBar
+          // openTray={openTray}
+          // setOpenTray={setOpenTray}
           type={type}
-          setType={setType}
-          selectedWikiItem={selectedWikiItem}
-          setSelectedWikiItem={setSelectedWikiItem}
         />
-      </TrayWrapper>
+        {/* <WikiBanner /> */}
+
+        <div className={styles.wikiContentContainer}>
+          <div className={styles.left}>
+            <WikiLeft
+              currentWikiType={wikiType as WikiType}
+              currentWikiId={wikiId}
+              selectedWikiItem={selectedWikiItem}
+              setSelectedWikiItem={setSelectedWikiItem}
+              showWikiTypeHeader={false}
+            />
+          </div>
+          <div className={styles.center}>{renderUI(wikiType, type)}</div>
+        </div>
+      </div>
+      {width < 1280 && (
+        <TrayWrapper
+          isolated={true}
+          showPanle="left"
+          showTagByDefaut={width < 1280 ? true : false}
+          openTray={openTray}
+          panleTag={(hover) => (
+            <TrayTag
+              hover={hover}
+              icon={<FontAwesomeIcon icon={faBooks} />}
+              placeMent="left"
+              handleTagClick={() => setOpenTray((prev) => !prev)}
+            />
+          )}
+        >
+          <WikiLeft
+            currentWikiType={wikiType as WikiType}
+            currentWikiId={wikiId}
+            selectedWikiItem={selectedWikiItem}
+            setSelectedWikiItem={setSelectedWikiItem}
+          />
+        </TrayWrapper>
+      )}
     </AContainer>
   );
 };

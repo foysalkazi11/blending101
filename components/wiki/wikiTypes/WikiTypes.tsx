@@ -12,9 +12,14 @@ const typeList: { icon: string; title: Type }[] = [
 interface Props {
   type: Type;
   setType: Dispatch<SetStateAction<Type>>;
+  showHeader?: boolean;
 }
 
-const WikiTypes = ({ type = "Ingredient", setType = () => {} }: Props) => {
+const WikiTypes = ({
+  type = "Ingredient",
+  setType = () => {},
+  showHeader = true,
+}: Props) => {
   const changeWikiType = (title: Type) => {
     if (title !== type) {
       setType(title);
@@ -25,8 +30,13 @@ const WikiTypes = ({ type = "Ingredient", setType = () => {} }: Props) => {
 
   return (
     <div className={s.wikiTypeContainer}>
-      <h3 className={s.title}>Wiki type</h3>
-      <div className={s.borderBottom}></div>
+      {showHeader && (
+        <>
+          <h3 className={s.title}>Wiki type</h3>
+          <div className={s.borderBottom}></div>
+        </>
+      )}
+
       <div className={s.imageBox}>
         {typeList?.map((item) => {
           return (

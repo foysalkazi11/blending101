@@ -26,6 +26,7 @@ const GET_ALL_LATEST_RECIPES = gql`
           brandName
           brandImage
         }
+        url
         averageRating
         numberOfRating
       }

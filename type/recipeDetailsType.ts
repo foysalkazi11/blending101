@@ -12,27 +12,7 @@ export interface RecipeDetailsType {
   myRecipes: boolean;
   versionsCount: number;
   personalRating?: number;
-  recipeId: {
-    _id: string;
-    userId: RecipeCreatorInfo;
-    name: string;
-    prepTime: any;
-    description: string;
-    versionDiscription: string;
-    recipeIngredients: any[];
-    recipeInstructions: string[];
-    totalRating: number;
-    numberOfRating: number;
-    averageRating: number;
-    totalViews: number;
-    recipeBlendCategory: RecipeBlendCategory;
-    ingredients: IngredientType[];
-    image: Image[];
-    servingSize: string;
-    servings: number;
-    originalVersion: VersionDataType;
-    token: string;
-  };
+  recipeId: RecipeIdType;
   turnedOnVersions: VersionDataType[];
   turnedOffVersions: VersionDataType[];
   tempVersionInfo?: {
@@ -40,6 +20,37 @@ export interface RecipeDetailsType {
     isOriginalVersion: boolean;
     version: VersionDataType;
   };
+}
+
+export interface RecipeIdType {
+  _id: string;
+  userId: RecipeCreatorInfo;
+  name: string;
+  prepTime: any;
+  description: string;
+  versionDiscription: string;
+  recipeIngredients: any[];
+  recipeInstructions: string[];
+  totalRating: number;
+  numberOfRating: number;
+  averageRating: number;
+  totalViews: number;
+  recipeBlendCategory: RecipeBlendCategory;
+  ingredients: IngredientType[];
+  image: Image[];
+  servingSize: string;
+  servings: number;
+  originalVersion: VersionDataType;
+  token: string;
+  brand?: BrandType;
+  url?: string | null;
+}
+
+export interface BrandType {
+  _id: string;
+  brandName: string;
+  brandImage: string;
+  brandUrl: string;
 }
 
 export interface VersionDataType {

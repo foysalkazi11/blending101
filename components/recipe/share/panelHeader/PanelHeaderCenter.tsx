@@ -16,23 +16,28 @@ import Tooltip from "../../../../theme/toolTip/CustomToolTip";
 import PanelHeader from "./PanelHeader";
 import styles from "./PanelHeader.module.scss";
 import { useAppSelector } from "../../../../redux/hooks";
+import HeaderTextBtn from "./HeaderTextBtn";
 
 interface PanelHeaderCenterProps {
   editOrSavebtnText?: string;
-  editOrSavebtnFunc?: () => void;
-  backLink?: string;
+  editOrSavebtnFunc?: any;
   pageComeFrom?: "edit" | "details";
   recipeVersionLength?: number;
   loading?: boolean;
+  backBtnObj?: {
+    text?: string;
+    function: any;
+    loading?: boolean;
+  };
 }
 
 const PanelHeaderCenter = ({
-  backLink = "",
   editOrSavebtnFunc = () => {},
   editOrSavebtnText = "",
   pageComeFrom,
   recipeVersionLength = 0,
   loading = false,
+  backBtnObj = { loading: false, text: "Back", function: () => {} },
 }: PanelHeaderCenterProps) => {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -42,8 +47,8 @@ const PanelHeaderCenter = ({
     <div className={styles.centerRightBtnWraper}>
       {pageComeFrom === "edit" && (
         <Tooltip content={`Open versions`} direction="bottom">
-          <button
-            className={`${styles.headerTextBtn} ${styles.headerTextBtnOutline} hvr-pop`}
+          <HeaderTextBtn
+            variant="outlineSecondary"
             onClick={() => {
               dispatch(setOpenVersionTray(true));
               dispatch(setOpenVersionTrayFormWhichPage("edit"));
@@ -56,28 +61,23 @@ const PanelHeaderCenter = ({
             />
             Version
             {recipeVersionLength ? `(${recipeVersionLength})` : ""}
-          </button>
+          </HeaderTextBtn>
         </Tooltip>
       )}
 
       {pageComeFrom === "details" && (
-        <button
-          className={`${styles.headerTextBtn} hvr-pop`}
+        <HeaderTextBtn
           onClick={() =>
             router.push(`/edit_recipe/${detailsARecipe?.recipeId?._id}/parsing`)
           }
           style={{ minWidth: "45px" }}
         >
           parsing
-        </button>
+        </HeaderTextBtn>
       )}
 
-      <Tooltip content={`${editOrSavebtnText} recipe`} direction="bottom">
-        <button
-          className={`${styles.headerTextBtn} hvr-pop`}
-          onClick={editOrSavebtnFunc}
-          style={{ minWidth: "45px" }}
-        >
+      <Tooltip content={`${editOrSavebtnText}`} direction="bottom">
+        <HeaderTextBtn onClick={editOrSavebtnFunc} style={{ minWidth: "45px" }}>
           {loading ? (
             <CircularRotatingLoader
               color="white"
@@ -86,18 +86,25 @@ const PanelHeaderCenter = ({
           ) : (
             editOrSavebtnText
           )}
-        </button>
+        </HeaderTextBtn>
       </Tooltip>
 
-      <Tooltip content="Back" direction="bottom">
+      <Tooltip content={backBtnObj?.text || "Back"} direction="bottom">
         <IconWraper
-          handleClick={() => router?.push(backLink)}
+          handleClick={backBtnObj?.function}
           iconColor="iconColorWhite"
           defaultBg="secondary"
           hover="bgSecondary"
           style={{ width: "28px", height: "28px" }}
         >
-          <FontAwesomeIcon icon={faXmark} />
+          {backBtnObj?.loading ? (
+            <CircularRotatingLoader
+              color="white"
+              style={{ fontSize: "16px" }}
+            />
+          ) : (
+            <FontAwesomeIcon icon={faXmark} />
+          )}
         </IconWraper>
       </Tooltip>
     </div>

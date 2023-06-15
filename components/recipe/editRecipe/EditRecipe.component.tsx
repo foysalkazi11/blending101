@@ -17,6 +17,7 @@ import { RecipeDetailsType } from "../../../type/recipeDetailsType";
 import { GiGl } from "../../../type/nutrationType";
 import FloatingLeftPanel from "./floatingLeftPanel/FloatingLeftPanel";
 import { IngredientAddingType } from "../../../type/recipeEditType";
+import { useRouter } from "next/router";
 
 interface editRecipe {
   copyDetailsRecipe?: RecipeDetailsType;
@@ -69,6 +70,7 @@ const EditRecipePage = ({
   versionsCount = 0,
   ingredientAddingType = "auto",
 }: editRecipe) => {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const { width } = useWindowSize();
   const servingCounter = useAppSelector(
@@ -164,7 +166,9 @@ const EditRecipePage = ({
         </div>
         <div className={styles.center}>
           <PanelHeaderCenter
-            backLink={`/recipe_details/${recipeId}`}
+            backBtnObj={{
+              function: () => router.push(`/recipe_details/${recipeId}`),
+            }}
             editOrSavebtnFunc={editARecipeFunction}
             editOrSavebtnText="Save"
             pageComeFrom="edit"

@@ -1,50 +1,92 @@
 import { gql } from "@apollo/client";
 
 const GET_MY_RECENT_RECIPES = gql`
-  query GetMyRecentRecipes($userId: String!) {
-    getMyRecentRecipes(userId: $userId) {
-      recipeId {
+  query GetMyRecentRecipes($userId: String!, $limit: Float, $page: Float) {
+    getMyRecentRecipes(userId: $userId, limit: $limit, page: $page) {
+      _id
+      creatorInfo {
         _id
-        name
-        image {
-          image
-          default
-        }
-        originalVersion {
-          _id
-          postfixTitle
-        }
-        userId {
-          _id
-          displayName
-          image
-        }
-        brand {
-          _id
-          brandName
-          brandImage
-        }
-        averageRating
-        numberOfRating
+        displayName
+        email
+        firstName
+        image
+        lastName
       }
-      defaultVersion {
-        _id
-        postfixTitle
-        ingredients {
-          ingredientId {
-            _id
-            ingredientName
+      description
+      image
+      name
+      slug
+      accepted
+      totalRecipes
+      recipes {
+        addedToCompare
+        allRecipes
+        isMatch
+        myRecipes
+        notes
+        userCollections
+        versionCount
+        defaultVersion {
+          _id
+          description
+          postfixTitle
+          recipeId
+          recipeInstructions
+          servingSize
+          calorie {
+            value
+          }
+          gigl {
+            netCarbs
+          }
+          ingredients {
+            ingredientId {
+              ingredientName
+              _id
+            }
           }
         }
-        description
+        recipeId {
+          _id
+          name
+          image {
+            image
+            default
+          }
+          userId {
+            _id
+            displayName
+            image
+            lastName
+            firstName
+            email
+          }
+          brand {
+            _id
+            brandName
+            brandImage
+          }
+          url
+          averageRating
+          numberOfRating
+          servings
+          servingSize
+          totalRating
+          description
+          recipeBlendCategory {
+            _id
+            name
+          }
+          originalVersion {
+            _id
+            description
+            postfixTitle
+            servingSize
+            recipeInstructions
+            recipeId
+          }
+        }
       }
-      isMatch
-      allRecipes
-      myRecipes
-      notes
-      addedToCompare
-      userCollections
-      versionCount
     }
   }
 `;

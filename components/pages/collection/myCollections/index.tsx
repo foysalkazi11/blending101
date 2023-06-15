@@ -36,6 +36,7 @@ const MyCollections = () => {
     image: "",
     name: "",
     versionId: "",
+    turnedOnVersions: [],
   });
   const [openShareModal, setOpenShareModal] = useState(false);
   const { lastModifiedCollection } = useAppSelector(
@@ -117,12 +118,13 @@ const MyCollections = () => {
             key={collection?._id}
             headerData={{
               heading: name,
-              image:
-                name === "Recent Recipes" ? (
-                  <FontAwesomeIcon icon={faClock} color="#fe5d1f" size="2x" />
-                ) : (
-                  <FontAwesomeIcon icon={faStar} color="#fe5d1f" size="2x" />
-                ),
+              image: (
+                <FontAwesomeIcon
+                  icon={name === "Recent Recipes" ? faClock : faStar}
+                  color="#fe5d1f"
+                  size="2x"
+                />
+              ),
               allUrl: `/collection/recipeCollection/${slug}`,
             }}
             loading={false}
@@ -146,6 +148,7 @@ const MyCollections = () => {
       <ShareRecipe
         id={shareRecipeData?.id}
         versionId={shareRecipeData.versionId}
+        turnedOnVersions={shareRecipeData.turnedOnVersions}
         title={shareRecipeData?.name}
         image={shareRecipeData?.image}
         show={openShareModal}

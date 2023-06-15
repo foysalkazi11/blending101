@@ -39,7 +39,6 @@ export default function RecipeCollectionAndThemeTray({
 }: CollectionTrayProps) {
   const [toggle, setToggle] = useState(0);
   const [input, setInput] = useState({
-    image: null,
     name: "",
     slug: "",
     description: "",
@@ -101,7 +100,6 @@ export default function RecipeCollectionAndThemeTray({
     setIsDeleteCollection(false);
     setIsEditCollection(false);
     setInput({
-      image: null,
       name: "",
       slug: "",
       description: "",
@@ -149,7 +147,6 @@ export default function RecipeCollectionAndThemeTray({
           });
           setOpenModal(false);
           setInput({
-            image: null,
             name: "",
             description: "",
             slug: "",
@@ -187,7 +184,6 @@ export default function RecipeCollectionAndThemeTray({
         }
         setOpenModal(false);
         setInput({
-          image: null,
           name: "",
           description: "",
           slug: "",
@@ -327,7 +323,7 @@ export default function RecipeCollectionAndThemeTray({
                 </div>,
               ]
         }
-        variant={"outlineSecondary"}
+        variant={"containSecondary"}
       />
 
       {toggle === 0 && (

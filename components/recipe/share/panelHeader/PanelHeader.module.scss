@@ -71,7 +71,6 @@
 .headerTextBtn {
   cursor: pointer;
   margin-right: 10px;
-  background-color: $secondaryColor;
   color: $slightGray;
   border-radius: 5px;
   padding: 4px 5px;
@@ -80,7 +79,15 @@
   border: none;
   letter-spacing: 1px;
 }
-.headerTextBtnOutline {
+
+.containSecondary {
+  background-color: $secondaryColor;
+}
+.containPrimary {
+  background-color: $primaryColor;
+}
+
+.outlineSecondary {
   border: 1px solid $secondaryColor;
   background-color: $white;
   color: $secondaryColor;
@@ -88,5 +95,15 @@
     background-color: $secondaryColor;
     color: $slightGray;
     border: 0px solid $secondaryColor;
+  }
+}
+.outlinePrimary {
+  border: 1px solid $primaryColor;
+  background-color: $white;
+  color: $primaryColor;
+  &:hover {
+    background-color: $primaryColor;
+    color: $slightGray;
+    border: 0px solid $primaryColor;
   }
 }

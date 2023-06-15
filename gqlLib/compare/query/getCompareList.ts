@@ -3,6 +3,7 @@ import { gql } from "@apollo/client";
 const GET_COMPARE_LIST = gql`
   query GetCompareList2($userId: String!) {
     getCompareList2(userId: $userId) {
+      isTemp
       addedToCompare
       isMatch
       notes
@@ -42,6 +43,12 @@ const GET_COMPARE_LIST = gql`
             quantity
             gram
           }
+          comment
+        }
+        errorIngredients {
+          errorString
+          ingredientId
+          qaId
         }
       }
       recipeId {
@@ -62,7 +69,9 @@ const GET_COMPARE_LIST = gql`
           _id
           brandName
           brandImage
+          brandUrl
         }
+        url
         averageRating
         numberOfRating
         servings

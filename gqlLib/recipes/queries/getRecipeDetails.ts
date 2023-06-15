@@ -21,7 +21,9 @@ const GET_A_RECIPE = gql`
           _id
           brandName
           brandImage
+          brandUrl
         }
+        url
         averageRating
         numberOfRating
         servings

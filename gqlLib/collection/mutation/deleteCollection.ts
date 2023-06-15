@@ -1,19 +1,21 @@
 import { gql } from "@apollo/client";
 
 const DELETE_COLLECTION = gql`
-  mutation Mutation($data: RemoveACollectionInput!) {
+  mutation DeleteCollection($data: RemoveACollectionInput!) {
     deleteCollection(data: $data) {
       _id
       name
       image
       slug
       recipes {
-        image {
-          default
-          image
+        recipeId {
+          _id
+          name
+          image {
+            default
+            image
+          }
         }
-        name
-        _id
       }
     }
   }

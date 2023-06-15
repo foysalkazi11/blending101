@@ -26,11 +26,15 @@ import { VscVersions } from "react-icons/vsc";
 import IngredientDetails from "../../../../component/module/Recipe/Ingredient-Details.module";
 import { RecipeDetailsType } from "../../../../type/recipeDetailsType";
 import { GiGl } from "../../../../type/nutrationType";
-import Share from "../../../../component/organisms/Share/Distribute.component";
 import ShareRecipe from "./shareRecipe";
 import { setDetailsARecipe } from "../../../../redux/slices/recipeSlice";
 import HowTo from "./howTo/HowTo";
 import { ReferenceOfRecipeUpdateFuncType } from "../../../../type/recipeType";
+import useToAcceptRecipeShare from "../../../../customHooks/notification/useToAcceptRecipeShare";
+import Tooltip from "../../../../theme/toolTip/CustomToolTip";
+import isEmptyObj from "../../../../helperFunc/object/isEmptyObj";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/pro-light-svg-icons";
 
 interface center {
   recipeData: RecipeDetailsType;
@@ -56,6 +60,7 @@ const Center = ({
   pageComeFrom,
 }: center) => {
   const router = useRouter();
+  const { token = "" } = router.query;
   const dispatch = useAppDispatch();
   const [showShareModal, setShowShareModal] = useState(false);
   const [showCollectionModal, setShowCollectionModal] = useState(true);
@@ -70,7 +75,11 @@ const Center = ({
     (state) => state?.collections,
   );
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
+  const userId = useAppSelector((state) => state?.user?.dbUser?._id);
+  const { functionAcceptRecipeShare, acceptRecipeShareLoading } =
+    useToAcceptRecipeShare();
 
+  // read more functionality
   const ReadMore = ({ children }) => {
     const text = children;
     const [isReadMore, setIsReadMore] = useState(true);
@@ -96,12 +105,12 @@ const Center = ({
   };
 
   const updateCollection = useCallback<ReferenceOfRecipeUpdateFuncType>(
-    (id, obj, innerLabel) => {
+    (id, outerObj = {}, innerObj = {}, innerLabel) => {
       dispatch(
         setDetailsARecipe({
           ...detailsARecipe,
-          ...obj,
-          [innerLabel]: { ...detailsARecipe[innerLabel], ...obj },
+          ...outerObj,
+          [innerLabel]: { ...detailsARecipe[innerLabel], ...innerObj },
         }),
       );
     },
@@ -160,22 +169,90 @@ const Center = ({
     );
   };
 
+  // edit or accept btn function
+  const handleEditOrSavebtnFunc = async (variables) => {
+    if (variables?.token) {
+      await functionAcceptRecipeShare({
+        token: variables?.token,
+        userId: variables?.userId,
+      });
+      router?.push(`/recipe_details/${variables?.recipeId}`);
+    } else {
+      router?.push(`/edit_recipe/${variables?.recipeId}`);
+    }
+  };
+
+  // back or decline btn function
+  // const handleBackOrDeclineBtnFunc = async (variables) => {
+  //   if (variables?.token) {
+  //     await functionRejectRecipeShare({
+  //       token: variables?.token,
+  //       userId: variables?.userId,
+  //     });
+  //   }
+  //   router?.push("/discovery");
+  // };
+
+  // handle to open version tray
+
+  const handleToOpenVersionTray = () => {
+    dispatch(setOpenVersionTray(true));
+    dispatch(setOpenVersionTrayFormWhichPage("details"));
+    dispatch(setShouldCloseVersionTrayWhenClickAVersion(true));
+  };
+
+  // handle open collection tray or added to collection
+  const handleOpenCollectionTrayOrAddToCollection = (
+    event,
+    recipeDataLength,
+    recipeId,
+    userCollections,
+    updateCollectionFunction,
+  ) => {
+    recipeDataLength
+      ? handleOpenCollectionTray(
+          recipeId,
+          userCollections,
+          event,
+          updateCollectionFunction,
+        )
+      : addToCollection(recipeId, event);
+  };
+
+  // handle open collection tray
+
+  const handleToOpenCollectionTray = () => {
+    setShowCollectionModal(false);
+    setShowShareModal(true);
+    // setOpenModal(true);
+  };
+
   return (
-    <div style={{ width: "100%" }}>
+    <>
       <PanelHeaderCenter
-        backLink="/discovery"
         editOrSavebtnFunc={() =>
-          router.push(
-            recipeData?.isMatch
-              ? `/edit_recipe/${recipeData?.recipeId?._id}`
-              : `/edit_recipe/${recipeData?.recipeId?._id}`, //`/edit_recipe/${recipeData?.recipeId?._id}/${recipeData?.tempVersionInfo?.version?._id}`,
-          )
+          handleEditOrSavebtnFunc({
+            token,
+            userId,
+            recipeId: recipeData?.recipeId?._id,
+          })
         }
-        editOrSavebtnText="Edit"
+        editOrSavebtnText={
+          token
+            ? acceptRecipeShareLoading
+              ? "Loading..."
+              : "Add to Collection"
+            : "Edit"
+        }
         pageComeFrom={pageComeFrom}
+        // loading={acceptRecipeShareLoading}
+        backBtnObj={{
+          function: () => router?.push("/discovery"),
+          text: "Back",
+        }}
       />
 
-      <div className={styles.contentBox}>
+      <div className={`${styles.contentBox} ${token && "disabled"}`}>
         <div className={styles.heading}>
           <h3>
             {recipeData?.tempVersionInfo?.version?.postfixTitle}
@@ -201,7 +278,68 @@ const Center = ({
             <div className={styles.recipeType}>
               {recipeData?.recipeId?.recipeBlendCategory?.name}
             </div>
-            <a
+
+            <div className={styles.recipeBrand__left}>
+              <Tooltip
+                content={
+                  !isEmptyObj(recipeData?.recipeId?.brand || {})
+                    ? recipeData?.recipeId?.brand?.brandName || "Brand"
+                    : recipeData?.recipeId?.userId?.displayName ||
+                      `${recipeData?.recipeId?.userId?.lastName}` ||
+                      `${recipeData?.recipeId?.userId?.firstName}` ||
+                      "User name"
+                }
+                direction="right"
+              >
+                {!isEmptyObj(recipeData?.recipeId?.brand || {}) ? (
+                  <a
+                    href={recipeData?.recipeId?.brand?.brandUrl || "#"}
+
+                    // onClick={(e) => {
+                    //   const id = "ebbpnaajpojkhndmjmdjabgjmngjgmhm";
+                    //   //@ts-ignore
+                    //   chrome.runtime.sendMessage(
+                    //     id,
+                    //     {
+                    //       action: "BRAND_NAVIGATE",
+                    //       payload: {
+                    //         id: recipeData?.recipeId?._id,
+                    //         name:
+                    //           recipeData?.defaultVersion?.postfixTitle ||
+                    //           recipeData?.recipeId?.name,
+                    //         image: recipeData?.recipeId?.brand?.brandImage,
+                    //         origin: recipeData?.recipeId?.brand?.brandUrl,
+                    //       },
+                    //     },
+                    //     () => {},
+                    //   );
+                    //   window.location.href = "";
+                    // }}
+                  >
+                    <img
+                      className={styles.brand}
+                      src={
+                        `${recipeData?.recipeId?.brand?.brandImage}` ||
+                        "/icons/delish.png"
+                      }
+                      alt="brand"
+                    />
+                  </a>
+                ) : recipeData?.recipeId?.userId?.image ? (
+                  <img
+                    className={styles.user}
+                    src={recipeData?.recipeId?.userId?.image}
+                    alt="brand"
+                  />
+                ) : (
+                  <div className={styles.userIcon}>
+                    <FontAwesomeIcon icon={faUser} />
+                  </div>
+                )}
+              </Tooltip>
+            </div>
+
+            {/* <a
               href={`https://www.yummly.com/dish/981850/tomato-casserole-a-new-england-dish-thats-anything-but-common?blend-redirected=true&recipe=${recipeData?.recipeId?._id}`}
             >
               <img
@@ -209,59 +347,52 @@ const Center = ({
                 alt="recipe_logo"
                 className={styles.recipeLogo}
               />
-            </a>
+            </a> */}
           </div>
           <div className={styles.alignItems}>
-            {recipeData?.versionsCount ? (
+            <>
+              {recipeData?.versionsCount ? (
+                <IconWithText
+                  wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
+                  handleClick={() => handleToOpenVersionTray()}
+                  icon={<VscVersions color={"#7cbc39"} />}
+                  text={`Versions(${recipeData?.versionsCount})`}
+                />
+              ) : null}
+
               <IconWithText
                 wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
-                handleClick={(e) => {
-                  dispatch(setOpenVersionTray(true));
-                  dispatch(setOpenVersionTrayFormWhichPage("details"));
-                  dispatch(setShouldCloseVersionTrayWhenClickAVersion(true));
-                }}
-                icon={<VscVersions color={"#7cbc39"} />}
-                text={`Versions(${recipeData?.versionsCount})`}
+                handleClick={() => {}}
+                icon="/images/calendar-alt-light.svg"
+                text="Planner"
               />
-            ) : null}
 
-            <IconWithText
-              wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
-              handleClick={() => {}}
-              icon="/images/calendar-alt-light.svg"
-              text="Planner"
-            />
+              <IconWithText
+                wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
+                handleClick={(e) =>
+                  handleOpenCollectionTrayOrAddToCollection(
+                    e,
+                    recipeData?.userCollections?.length,
+                    recipeData?.recipeId?._id,
+                    recipeData?.userCollections,
+                    updateCollection,
+                  )
+                }
+                icon={
+                  recipeData?.userCollections?.length
+                    ? "/icons/compare.svg"
+                    : "/images/BookmarksStar.svg" //"/images/BookmarksStar-orange.svg"
+                }
+                text="Saved"
+              />
 
-            <IconWithText
-              wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
-              handleClick={(e) =>
-                recipeData?.userCollections?.length
-                  ? handleOpenCollectionTray(
-                      recipeData?.recipeId?._id,
-                      recipeData?.userCollections,
-                      e,
-                      updateCollection,
-                    )
-                  : addToCollection(recipeData?.recipeId?._id, e)
-              }
-              icon={
-                recipeData?.userCollections?.length
-                  ? "/icons/compare.svg"
-                  : "/images/BookmarksStar.svg" //"/images/BookmarksStar-orange.svg"
-              }
-              text="Saved"
-            />
-
-            <IconWithText
-              wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
-              handleClick={() => {
-                setShowCollectionModal(false);
-                setShowShareModal(true);
-                // setOpenModal(true);
-              }}
-              icon="/images/share-alt-light-grey.svg"
-              text="Share"
-            />
+              <IconWithText
+                wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
+                handleClick={() => handleToOpenCollectionTray()}
+                icon="/images/share-alt-light-grey.svg"
+                text="Share"
+              />
+            </>
 
             {hangleShowCommentsAndNotesIcon()}
           </div>
@@ -350,18 +481,23 @@ const Center = ({
       <ShareRecipe
         id={recipeData?.recipeId?._id}
         versionId={recipeData.tempVersionInfo?.version?._id}
-        title={recipeData?.recipeId?.name}
+        title={
+          recipeData?.defaultVersion?.postfixTitle || recipeData?.recipeId?.name
+        }
         image={
           recipeData?.recipeId?.image?.length > 0
             ? recipeData?.recipeId?.image[0]?.image
             : ""
         }
+        turnedOnVersions={recipeData?.turnedOnVersions?.map(
+          (version) => version?._id,
+        )}
         show={showShareModal}
         setShow={setShowShareModal}
         type="recipe"
         heading="Share Recipe"
       />
-    </div>
+    </>
   );
 };
 
