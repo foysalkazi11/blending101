@@ -50,6 +50,8 @@ import {
   setOpenVersionTrayFormWhichPage,
   setShouldCloseVersionTrayWhenClickAVersion,
 } from "../../../redux/slices/versionTraySlice";
+import EDIT_A_VERSION_OF_RECIPE from "../../../gqlLib/versions/mutation/editAVersionOfRecipe";
+import { RecipeDetailsType } from "../../../type/recipeDetailsType";
 
 const compareRecipeResponsiveSettings = {
   ...compareRecipeResponsiveSetting,
@@ -100,18 +102,21 @@ const formulateRecipeResponsiveSetting = (length: number) => {
 
 const CompareRecipe = () => {
   const [isFormulatePage, setIsFormulatePage] = useState(false);
-  const [copyImage, setCopyImage] = useState("");
+  // const [copyImage, setCopyImage] = useState("");
   const router = useRouter();
   const { compareList } = useAppSelector((state) => state.recipe);
   const [compareRecipeList, setCompareRecipeList] = useLocalStorage<
     CompareRecipeType[]
   >("compareList", []);
-  const [newlyCreatedRecipe, setNewlyCreatedRecipe] = useLocalStorage<any>(
-    "newlyCreatedRecipe",
-    {},
+  const [newlyCreatedRecipe, setNewlyCreatedRecipe] =
+    useLocalStorage<RecipeDetailsType>("newlyCreatedRecipe", {});
+  const [createNewRecipeByUser, createRecipeState] = useMutation(
+    CREATE_A_RECIPE_BY_USER,
   );
-  const [createNewRecipeByUser] = useMutation(CREATE_A_RECIPE_BY_USER);
-  const [editRecipe] = useMutation(EDIT_A_RECIPE);
+  const [editRecipe, EditRecipeState] = useMutation(EDIT_A_RECIPE);
+  const [editARecipeVersion, EditARecipeVersionState] = useMutation(
+    EDIT_A_VERSION_OF_RECIPE,
+  );
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
   const dispatch = useAppDispatch();
   const sliderRef = useRef(null);
@@ -154,8 +159,10 @@ const CompareRecipe = () => {
     updateObj: { [key: string]: any },
   ): any[] => {
     if (!arr?.length) return arr;
-    return arr?.map((item) =>
-      item?._id === id ? { ...item, ...updateObj } : item,
+    return arr?.map((item: CompareRecipeType) =>
+      item?.recipeId?._id === id
+        ? { ...item, ...updateObj, isTemp: false }
+        : item,
     );
   };
 
@@ -249,33 +256,55 @@ const CompareRecipe = () => {
     return obj;
   };
 
-  const findItem = (id) => {
-    return newRecipe?.ingredients?.find((item) => item?.ingredientId === id);
+  const findItemIngredientId = (id) => {
+    return newRecipe?.ingredients?.find(
+      (item) => item?.ingredientId === id || item?.qaId === id,
+    );
+  };
+  const findItemQaId = (id) => {
+    return newRecipe?.ingredients?.find((item) => item?.qaId === id);
   };
 
   const addIngredient = (id: string, index: number) => {
     const findRecipe = findCompareRecipe(id);
     const findIngredient = findRecipe?.defaultVersion.ingredients[index];
-    const ingredientId = findIngredient?.ingredientId?._id;
-    const selectedPortionName = findIngredient?.selectedPortion?.name;
-    const selectedPortionGram = findIngredient?.selectedPortion?.gram;
-    const ingredientName = findIngredient?.ingredientId?.ingredientName;
-    const selectedPortionQuantity = findIngredient?.selectedPortion?.quantity;
+    const isIngredientStatusOk = findIngredient?.ingredientStatus === "ok";
 
-    const item = findItem(ingredientId);
+    let ingredientId = "";
+    let newIngredient = {};
+    if (isIngredientStatusOk) {
+      ingredientId = findIngredient?.ingredientId?._id;
+      const selectedPortionName = findIngredient?.selectedPortion?.name;
+      const selectedPortionGram = findIngredient?.selectedPortion?.gram;
+      const ingredientName = findIngredient?.ingredientId?.ingredientName;
+      const selectedPortionQuantity = findIngredient?.selectedPortion?.quantity;
+      const comment = findIngredient?.comment;
+      let label = `${selectedPortionQuantity} ${selectedPortionName} ${ingredientName}`;
+      newIngredient = {
+        ingredientId,
+        selectedPortionName,
+        weightInGram: selectedPortionGram,
+        ingredientStatus: "ok",
+        label,
+        comment,
+      };
+    } else {
+      //@ts-ignore
+      ingredientId = findIngredient?.qaId;
+      newIngredient = {
+        ...findIngredient,
+        label: findIngredient?.errorString,
+      };
+    }
+    // is already exist
+    const item = isIngredientStatusOk
+      ? findItemIngredientId(ingredientId)
+      : findItemQaId(ingredientId);
 
     if (!item) {
       setNewRecipe((state) => ({
         ...state,
-        ingredients: [
-          ...state?.ingredients,
-          {
-            ingredientId: ingredientId,
-            selectedPortionName: selectedPortionName,
-            weightInGram: selectedPortionGram,
-            label: `${selectedPortionQuantity} ${selectedPortionName} ${ingredientName}`,
-          },
-        ],
+        ingredients: [...state?.ingredients, newIngredient],
       }));
     } else {
       return;
@@ -311,13 +340,12 @@ const CompareRecipe = () => {
   };
 
   const prepareForNewFormulateRecipe = () => {
-    setNewlyCreatedRecipe({});
+    setNewlyCreatedRecipe({} as RecipeDetailsType);
     setNewRecipe((state) => ({ ...state, ingredients: [] }));
   };
 
   const handleCompareButtonClick = () => {
-    //@ts-ignore
-    if (newlyCreatedRecipe?._id) {
+    if (newlyCreatedRecipe?.recipeId?._id) {
       prepareForNewFormulateRecipe();
       setIsFormulatePage((pre) => !pre);
     } else {
@@ -373,20 +401,42 @@ const CompareRecipe = () => {
   };
 
   const updateFormulateList = (compareList: CompareRecipeType[]) => {
-    if (compareList?.length === 1) {
-      setCompareRecipeList([{ ...compareList[0] }]);
-    }
-    if (compareList?.length === 2) {
-      setCompareRecipeList([...compareList?.slice(0, 2)]);
-    }
-    if (compareList?.length >= 3) {
-      setCompareRecipeList([...compareList?.slice(0, 3)]);
-    }
+    setCompareRecipeList([...compareList?.slice(0, 3)]);
   };
 
+  // handle create or update recipe
   const handleCreateNewRecipeByUser = async (e: React.SyntheticEvent) => {
     e.stopPropagation();
-    if (newlyCreatedRecipe?._id) {
+
+    let ingArr = [];
+    let errorIngredients = [];
+    newRecipe?.ingredients?.forEach((item) => {
+      const { ingredientId, selectedPortionName, weightInGram } = item;
+      if (item?.ingredientStatus === "ok") {
+        let value = item?.portions?.find((item) => item.default);
+        ingArr?.push({
+          ingredientId,
+          selectedPortionName,
+          weightInGram,
+          //  comment: item?.comment || null,
+        });
+      }
+      if (item?.ingredientStatus === "partial_ok") {
+        const {
+          errorString = "",
+          ingredientId = "",
+          errorIngredientId = "",
+          qaId = "",
+        } = item;
+        errorIngredients.push({
+          errorString,
+          ingredientId,
+          qaId,
+        });
+      }
+    });
+
+    if (newlyCreatedRecipe?.recipeId?._id) {
       if (newRecipe?.name && newRecipe?.ingredients?.length) {
         try {
           let imgArr = [];
@@ -397,30 +447,38 @@ const CompareRecipe = () => {
               default: true,
             });
           } else {
-            if (newlyCreatedRecipe?.image?.length) {
+            if (newlyCreatedRecipe.recipeId?.image?.length) {
               imgArr?.push({
-                image: `${newlyCreatedRecipe?.image[0]?.image}`,
-                default: newlyCreatedRecipe?.image[0]?.default,
+                image: `${newlyCreatedRecipe?.recipeId?.image[0]?.image}`,
+                default: newlyCreatedRecipe?.recipeId?.image[0]?.default,
               });
             }
           }
+
           await editRecipe({
             variables: {
+              userId: dbUser?._id,
               data: {
-                editId: newlyCreatedRecipe?._id,
+                editId: newlyCreatedRecipe?.recipeId?._id,
                 editableObject: {
-                  name: newRecipe?.name,
                   image: imgArr,
-                  description: newRecipe?.description,
-                  ingredients: newRecipe?.ingredients?.map(
-                    ({ ingredientId, selectedPortionName, weightInGram }) => ({
-                      ingredientId,
-                      selectedPortionName,
-                      weightInGram,
-                    }),
-                  ),
                   recipeBlendCategory: newRecipe?.recipeBlendCategory,
                 },
+              },
+            },
+          });
+          await editARecipeVersion({
+            variables: {
+              data: {
+                editId: newlyCreatedRecipe?.defaultVersion?._id,
+                editableObject: {
+                  postfixTitle: newRecipe?.name,
+                  description: newRecipe?.description,
+                  ingredients: ingArr,
+                  errorIngredients,
+                },
+                recipeId: newlyCreatedRecipe?.recipeId?._id,
+                userId: dbUser?._id,
               },
             },
           });
@@ -455,25 +513,20 @@ const CompareRecipe = () => {
             image: imgArr,
             description: newRecipe?.description,
             recipeBlendCategory: newRecipe?.recipeBlendCategory,
-            ingredients: newRecipe?.ingredients?.map(
-              ({ ingredientId, selectedPortionName, weightInGram }) => ({
-                ingredientId,
-                selectedPortionName,
-                weightInGram,
-              }),
-            ),
+            ingredients: ingArr,
+            errorIngredients,
           };
           const { data } = await createNewRecipeByUser({
             variables: {
+              isAddToTemporaryCompareList: false,
               data: obj,
             },
           });
-          notification("success", "Recive saved successfully");
-          if (data?.addRecipeFromUser?._id) {
-            setNewlyCreatedRecipe(data?.addRecipeFromUser);
-            setUploadNewImage(false);
-            // router?.push(`/recipe_details/${data?.addRecipeFromUser?._id}`);
-          }
+
+          setNewlyCreatedRecipe(data?.addRecipeFromUser);
+          setUploadNewImage(false);
+          notification("success", "Recipe saved successfully");
+          // router?.push(`/recipe_details/${data?.addRecipeFromUser?._id}`);
         } catch (error) {
           notification("error", "Failed to saved new recipe");
         }
@@ -516,20 +569,51 @@ const CompareRecipe = () => {
 
   useEffect(() => {
     if (!loading && data?.getCompareList2) {
+      const compareData = data?.getCompareList2.map((recipe) => ({
+        ...recipe,
+        defaultVersion: {
+          ...recipe?.defaultVersion,
+          ingredients: [
+            ...recipe?.defaultVersion?.ingredients?.map((ing) => ({
+              ...ing,
+              ingredientStatus: "ok",
+            })),
+            ...recipe?.defaultVersion?.errorIngredients?.map((ing) => ({
+              ...ing,
+              ingredientStatus: "partial_ok",
+            })),
+          ],
+        },
+      }));
+
       if (!compareRecipeList?.length) {
-        updateFormulateList(data?.getCompareList2);
+        updateFormulateList(compareData);
+      } else {
+        let getCompareListId = compareData?.map(
+          (recipe) => recipe?.recipeId?._id,
+        );
+
+        let checkCompareRecipeList = compareRecipeList.filter((recipe) =>
+          getCompareListId.includes(recipe?.recipeId?._id),
+        );
+
+        if (!checkCompareRecipeList?.length) {
+          updateFormulateList(compareData);
+        } else {
+          setCompareRecipeList(checkCompareRecipeList);
+        }
       }
-      dispatch(setCompareList([...data?.getCompareList2]));
+      dispatch(setCompareList([...compareData]));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
-  useEffect(() => {
-    if (!compareRecipeList?.length && compareList?.length) {
-      updateFormulateList(compareList);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   if (!compareRecipeList?.length && compareList?.length) {
+  //     updateFormulateList(compareList);
+  //   }
+
+  // }, []);
 
   useEffect(() => {
     isMounted.current = true;
@@ -576,7 +660,9 @@ const CompareRecipe = () => {
                 buttonText={isFormulatePage ? "Compare" : "Formulate"}
                 showButton={true}
                 buttonClick={handleCompareButtonClick}
-                compareAmout={dbUser?.compareLength}
+                compareAmout={
+                  data?.getCompareList2?.length || dbUser?.compareLength
+                }
                 closeCompare={handleEmptyCompareList}
               />
               <Carousel moreSetting={responsiveSetting}>
@@ -609,11 +695,15 @@ const CompareRecipe = () => {
                           setNewRecipe={setNewRecipe}
                           setNewlyCreatedRecipe={setNewlyCreatedRecipe}
                           newlyCreatedRecipe={newlyCreatedRecipe}
-                          copyImage={copyImage}
                           updateData={updateData}
                           handleCreateNewRecipe={handleCreateNewRecipeByUser}
                           closeCreateNewRecipeInterface={() =>
                             setIsFormulatePage(false)
+                          }
+                          recipeSaveLoading={
+                            createRecipeState?.loading ||
+                            EditRecipeState?.loading ||
+                            EditARecipeVersionState?.loading
                           }
                         />
                       </div>
@@ -642,7 +732,12 @@ const CompareRecipe = () => {
                                 compareRecipeList={compareRecipeList}
                                 setcompareRecipeList={setCompareRecipeList}
                                 setOpenCollectionModal={setOpenCollectionModal}
-                                setCopyImage={setCopyImage}
+                                setCopyImage={(image) =>
+                                  setNewRecipe((state) => ({
+                                    ...state,
+                                    image: [image],
+                                  }))
+                                }
                                 updateCompareList={updateCompareList}
                                 handleToOpenVersionTray={
                                   handleToOpenVersionTray

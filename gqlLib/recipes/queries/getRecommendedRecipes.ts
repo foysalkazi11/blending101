@@ -26,6 +26,7 @@ const GET_ALL_RECOMMENDED_RECIPES = gql`
           brandName
           brandImage
         }
+        url
         averageRating
         numberOfRating
       }

@@ -46,20 +46,23 @@ const Index = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // fetch data if not exist or doesn't match with current user
   useEffect(() => {
     if (detailsARecipe?.recipeId?._id !== recipe__Id) {
       if (dbUser?._id && recipe__Id) {
         handleToGetARecipe(recipe__Id, dbUser?._id, token);
       }
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [recipe__Id, dbUser?._id]);
+  }, [recipe__Id, dbUser?._id, token]);
 
   useEffect(() => {
     dispatch(updateSidebarActiveMenuName("Blends"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // fetch nutrition value based on current ingredient
   useEffect(() => {
     handleFetchIngrdients(
       detailsARecipe?.tempVersionInfo?.version?.ingredients.filter(
@@ -85,7 +88,11 @@ const Index = () => {
     );
   }
   if (getARecipeError) {
-    return <ErrorPage errorMessage="Recipe not found" />;
+    return (
+      <AContainer showHeader={true} logo={true}>
+        <ErrorPage errorMessage="Recipe not found" />;
+      </AContainer>
+    );
   }
 
   return (

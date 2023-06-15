@@ -28,6 +28,9 @@ import {
   RecipeType,
   ReferenceOfRecipeUpdateFuncType,
 } from "../../type/recipeType";
+import { AccessPermission } from "../../type/recipeCardType";
+
+const rootMargin = "100px";
 
 interface Props {
   data: any[];
@@ -49,6 +52,9 @@ interface Props {
   setShareRecipeData?: React.Dispatch<
     React.SetStateAction<{ id: string; image: string; name: string }>
   >;
+  isAuthorized?: boolean;
+  viewPermissions?: AccessPermission[];
+  interactionPermissions?: AccessPermission[];
 }
 
 const ShowRecipeContainer = ({
@@ -69,13 +75,15 @@ const ShowRecipeContainer = ({
   setOpenCollectionModal = () => {},
   setOpenShareModal = () => {},
   setShareRecipeData = () => {},
+  viewPermissions,
+  interactionPermissions,
 }: Props) => {
   const [containerData, setContainerData] = useState([]);
   const [openCreateCollectionModal, setOpenCreateCollectionModal] =
     useState(false);
   const observer = useRef<any>();
   const dispatch = useAppDispatch();
-  const entry = useIntersectionObserver(observer, { rootMargin: "100px" });
+  const entry = useIntersectionObserver(observer, { rootMargin });
 
   // fetch next page
   useEffect(() => {
@@ -98,14 +106,14 @@ const ShowRecipeContainer = ({
   };
 
   const updateContainerData = useCallback<ReferenceOfRecipeUpdateFuncType>(
-    (id, updateObj, innerLabel) => {
+    (id, outerObj = {}, innerObj = {}, innerLabel) => {
       setContainerData((prev) =>
         prev.map((item) =>
           item?.recipeId?._id === id
             ? {
                 ...item,
-                ...updateObj,
-                [innerLabel]: { ...item[innerLabel], ...updateObj },
+                ...outerObj,
+                [innerLabel]: { ...item[innerLabel], ...innerObj },
               }
             : item,
         ),
@@ -138,7 +146,7 @@ const ShowRecipeContainer = ({
           {headerMiddle ? (
             headerMiddle
           ) : showDefaultMiddleHeader ? (
-            <div style={{ display: "flex" }}>
+            <div className="d-flex">
               <IconWarper
                 iconColor="iconColorPrimary"
                 defaultBg="slightGray"
@@ -187,7 +195,7 @@ const ShowRecipeContainer = ({
                     recipeId: {
                       _id = "",
                       name = "",
-                      image = "",
+                      image = [],
                       originalVersion = "",
                       numberOfRating = 0,
                       averageRating = 0,
@@ -226,7 +234,10 @@ const ShowRecipeContainer = ({
                       // score={rxScore}
                       calorie={calorie?.value || 0}
                       noOfComments={numberOfRating}
-                      image={image?.find((img) => img?.default)?.image || ""}
+                      image={
+                        image?.find((img) => img?.default)?.image ||
+                        image?.[0]?.image
+                      }
                       recipeId={_id}
                       notes={notes}
                       addedToCompare={addedToCompare}
@@ -245,6 +256,8 @@ const ShowRecipeContainer = ({
                       brand={brand}
                       personalRating={personalRating}
                       origin={url}
+                      viewPermissions={viewPermissions}
+                      interactionPermissions={interactionPermissions}
                     />
                   );
                 })}

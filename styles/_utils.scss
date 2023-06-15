@@ -150,3 +150,10 @@
 .activeColorSecondary {
   color: $secondaryColor !important;
 }
+
+.disabled {
+  pointer-events: none;
+}
+.fontItalic {
+  font-style: italic;
+}

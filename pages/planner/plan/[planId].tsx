@@ -301,19 +301,23 @@ const MyPlan = () => {
       />
       <div className={styles.windowContainer}>
         <div className={styles.planner}>
-          <div className="row ai-center">
-            <div className="col-4">
-              <div className={styles.planner__pageTitle}>BLENDA COACH</div>
-            </div>
-            <div className="col-4 ta-center ">
+          <div className="ta-center mt-20 mb-10">
+            <div className={styles.linkBtn__wrapper}>
               <button
-                className={styles.discoveryBtn}
+                className={styles.linkBtn}
                 onClick={() => {
                   router.push("/planner");
                 }}
               >
-                <Icon fontName={faSearch} size="2rem" className="mr-10" />
-                Plan Discovery
+                Discovery
+              </button>
+              <button
+                className={styles.linkBtn}
+                onClick={() => {
+                  router.push("/planner/plan");
+                }}
+              >
+                My Plan
               </button>
             </div>
           </div>
@@ -347,21 +351,19 @@ const MyPlan = () => {
                   >
                     <span>{isEditMode ? "Save" : "Edit"}</span>
                   </div>
-                  <IconButton
-                    fontName={faTimes}
-                    size="small"
-                    variant="secondary"
-                    className="ml-10"
-                    onClick={() => {
-                      if (isEditMode) {
+                  {isEditMode && (
+                    <IconButton
+                      fontName={faTimes}
+                      size="small"
+                      variant="secondary"
+                      className="ml-10"
+                      onClick={() => {
                         setIsEditMode(false);
                         setPlanlist(plan?.planData);
                         methods.reset(defaultPlan);
-                      } else {
-                        router.push("/planner/plan");
-                      }
-                    }}
-                  />
+                      }}
+                    />
+                  )}
                 </div>
               </div>
               <div style={{ height: panelHeight, background: "#fff" }}>

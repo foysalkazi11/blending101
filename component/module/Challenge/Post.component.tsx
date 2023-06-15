@@ -43,6 +43,7 @@ import {
 
 import Publish from "../../../helpers/Publish";
 import styles from "./Post.module.scss";
+import { UTCDate } from "../../../helpers/Date";
 
 interface IPost {
   _id: string;
@@ -271,20 +272,18 @@ const BlendCard = forwardRef((props: BlendCardProps, ref: any) => {
   return (
     <div className={styles.card} data-date={date} ref={ref}>
       <div className={styles.card__headline}>
-        <h5>{format(date ? new Date(date) : new Date(), "EEEE, MMMM d")}</h5>
+        <h5>{format(date ? UTCDate(date) : new Date(), "EEEE, MMMM d")}</h5>
       </div>
-      <div className={styles.card__content}>
-        {images.length > 0 && (
-          <div className={styles.space}>
-            <SplitImageCard
-              challengeImages={challengeImages}
-              images={images}
-              date={date ? new Date(date) : new Date()}
-            />
-          </div>
-        )}
-        {postsEl}
-      </div>
+      {images.length > 0 && (
+        <div className={styles.splitImage}>
+          <SplitImageCard
+            challengeImages={challengeImages}
+            images={images}
+            date={date ? UTCDate(date) : new Date()}
+          />
+        </div>
+      )}
+      <div className={styles.card__content}>{postsEl}</div>
     </div>
   );
 });

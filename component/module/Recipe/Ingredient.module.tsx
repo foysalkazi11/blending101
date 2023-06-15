@@ -609,7 +609,9 @@ const SingleIngredient = ({
         <>
           <div className={classes.ingredients__text}>
             <span>
-              {Math?.round(elem.selectedPortion?.quantity || 1)}
+              {(elem.selectedPortion?.quantity || 1)
+                .toFixed(2)
+                .replace(/\.?0+$/, "")}
               &nbsp;
             </span>
             <span>

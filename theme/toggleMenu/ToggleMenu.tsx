@@ -1,16 +1,20 @@
 import React, { ReactNode } from "react";
 import styles from "./toggleMenu.module.scss";
+import { ToggleMenuType } from "../../type/toggleMenuType";
+
+let border = {
+  border: "1px solid #c1c1c1",
+};
+let borderBottom = {
+  borderBottom: "1px solid #c1c1c1",
+};
 
 type ToggleMenuProps = {
   toggle?: number;
   setToggle?: (val: number) => void;
   toggleMenuList: string[] | ReactNode[];
   maxWidth?: React.CSSProperties;
-  variant?:
-    | "containPrimary"
-    | "containSecondary"
-    | "outlinePrimary"
-    | "outlineSecondary";
+  variant?: ToggleMenuType;
 };
 
 const ToggleMenu = ({
@@ -20,12 +24,21 @@ const ToggleMenu = ({
   maxWidth = {},
   variant = "containPrimary",
 }: ToggleMenuProps) => {
+  let styleForTopMenu =
+    variant === "borderBottomPrimary" || variant === "borderBottomSecondary"
+      ? {}
+      : border;
+  let styleForMenu =
+    variant === "borderBottomPrimary" || variant === "borderBottomSecondary"
+      ? borderBottom
+      : {};
   return (
     <div className={styles.topMenuContainer}>
       <div
         className={styles.topMenu}
         style={{
           ...maxWidth,
+          ...styleForTopMenu,
         }}
       >
         <div
@@ -43,7 +56,10 @@ const ToggleMenu = ({
                 toggle === index ? styles[variant] : ""
               }`}
               onClick={() => setToggle(index)}
-              style={{ width: `${100 / toggleMenuList.length}%` }}
+              style={{
+                width: `${100 / toggleMenuList.length}%`,
+                ...styleForMenu,
+              }}
             >
               {menu}
             </div>

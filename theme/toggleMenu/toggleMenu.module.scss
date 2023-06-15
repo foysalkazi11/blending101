@@ -9,13 +9,14 @@
     display: flex;
     flex-flow: nowrap;
     margin: 10px auto;
-    border: 1px solid #dfdfdf;
+    // border: 1px solid #dfdfdf;
     border-radius: 18px;
     height: 37px;
     position: relative;
+
     .menu {
       color: #929292;
-      border-radius: 18px;
+
       height: 35px;
       font-size: 14px;
       padding: 0;
@@ -30,15 +31,25 @@
       font-weight: 500;
     }
     .containPrimary {
+      border-radius: 1.8rem;
       color: #fff;
     }
     .containSecondary {
+      border-radius: 1.8rem;
       color: #fff;
     }
     .outlinePrimary {
+      border-radius: 1.8rem;
       color: $primaryColor;
     }
     .outlineSecondary {
+      border-radius: 1.8rem;
+      color: $secondaryColor;
+    }
+    .borderBottomPrimary {
+      color: $primaryColor;
+    }
+    .borderBottomSecondary {
       color: $secondaryColor;
     }
   }
@@ -58,19 +69,29 @@
   top: 0;
   bottom: 0;
   left: 0px;
-  border-radius: 18px;
+
   transition: all 0.3s;
 }
 
-.containPrimary {
+.active.containPrimary {
+  border-radius: 1.8rem;
   background-color: $primaryColor;
 }
-.containSecondary {
+.active.containSecondary {
+  border-radius: 1.8rem;
   background-color: $secondaryColor;
 }
-.outlinePrimary {
+.active.outlinePrimary {
+  border-radius: 1.8rem;
   border: 2px solid $primaryColor;
 }
-.outlineSecondary {
+.active.outlineSecondary {
+  border-radius: 1.8rem;
   border: 2px solid $secondaryColor;
+}
+.active.borderBottomPrimary {
+  border-bottom: 2px solid $primaryColor;
+}
+.active.borderBottomSecondary {
+  border-bottom: 2px solid $secondaryColor;
 }

@@ -16,6 +16,8 @@ import joniIngredients from "../../../../helperFunc/joinIngredients";
 import DatacardComponent from "../../../../theme/cards/dataCard/dataCard.component";
 import { ReferenceOfRecipeUpdateFuncType } from "../../../../type/recipeType";
 import { VersionDataType } from "../../../../type/recipeDetailsType";
+import { AccessPermission } from "../../../../type/recipeCardType";
+import useGetBlendNutritionBasedOnRecipexxx from "../../../../customHooks/useGetBlendNutritionBasedOnRecipexxx";
 
 function Copyable(props) {
   const { items, addItem, droppableId } = props;
@@ -26,31 +28,42 @@ function Copyable(props) {
       {(provided, snapshot) => (
         <div ref={provided.innerRef} {...provided.droppableProps}>
           {items?.map((item, index) => {
+            const isIngredientStatusOk = item?.ingredientStatus === "ok";
             const ingredientName = item?.ingredientId?.ingredientName;
             const selectedPortionName = item?.selectedPortion?.name;
             const selectedPortionQuantity = item?.selectedPortion?.quantity;
+            let label = "";
+            if (isIngredientStatusOk) {
+              label = `${selectedPortionQuantity} ${selectedPortionName} ${ingredientName}`;
+            } else {
+              label = item?.errorString;
+            }
 
             return (
               <Draggable
-                draggableId={`${item?.ingredientId?._id}_${droppableId}`}
+                draggableId={`${
+                  item?.ingredientId?._id || item?.qaId
+                }_${droppableId}`}
                 index={index}
-                key={`${item?.ingredientId?._id}`}
+                key={`${item?.ingredientId?._id || item?.qaId}`}
               >
                 {renderDraggable((provided, snapshot) => (
                   <>
                     <div {...provided.draggableProps} ref={provided.innerRef}>
                       <SingleIngredient
-                        label={`${selectedPortionQuantity} ${selectedPortionName} ${ingredientName}`}
+                        label={label}
                         handleAdd={() => addItem(droppableId, index)}
                         dargProps={provided.dragHandleProps}
+                        isErrorIngredient={!isIngredientStatusOk}
                       />
                     </div>
 
                     {snapshot.isDragging && (
                       <SingleIngredient
-                        label={`${selectedPortionQuantity} ${selectedPortionName} ${ingredientName}`}
-                        handleAdd={addItem}
+                        label={label}
+                        handleAdd={() => addItem(droppableId, index)}
                         dargProps={provided.dragHandleProps}
+                        isErrorIngredient={!isIngredientStatusOk}
                       />
                     )}
                   </>
@@ -86,9 +99,9 @@ interface RecipeDetailsProps {
     recipeId: string,
     version?: VersionDataType,
   ) => void;
-  footerMenuType?: "allIcons" | "OnlyStar";
   updateDataAfterChangeDefaultVersion?: (versionId: string) => void;
   showTopCancelButton?: boolean;
+  viewPermissions?: AccessPermission[];
 }
 
 const RecipeDetails = ({
@@ -107,27 +120,44 @@ const RecipeDetails = ({
   showMoreMenuAtHover = false,
   updateCompareList = () => {},
   handleToOpenVersionTray,
-  footerMenuType = "allIcons",
   updateDataAfterChangeDefaultVersion = () => {},
   showTopCancelButton = true,
+  viewPermissions = [
+    "title",
+    "moreMenu",
+    "brand",
+    "version",
+    "compare",
+    "collection",
+    "comments&Notes",
+  ],
 }: RecipeDetailsProps) => {
   const [winReady, setwinReady] = useState(false);
+  if (recipe?.isTemp) {
+    viewPermissions = ["collection"];
+  }
 
-  const { loading: nutritionDataLoading, data: nutritionData } = useQuery(
-    GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS,
-    {
-      variables: {
-        ingredientsInfo: recipe?.defaultVersion?.ingredients?.map((item) => ({
-          ingredientId: item.ingredientId._id,
-          value: item?.selectedPortion?.gram,
-        })),
-      },
-    },
-  );
+  const {
+    handleFetchIngrdients,
+    loading: nutritionDataLoading,
+    data: nutritionData,
+  } = useGetBlendNutritionBasedOnRecipexxx();
 
   useEffect(() => {
     setwinReady(true);
   }, []);
+
+  useEffect(() => {
+    handleFetchIngrdients(
+      recipe?.defaultVersion?.ingredients.filter(
+        (ing) => ing?.ingredientStatus === "ok",
+      ),
+      {},
+      () => {},
+      true,
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recipe?.defaultVersion?.ingredients]);
 
   return (
     <div className={styles.recipeDetailsFirstContainer}>
@@ -166,16 +196,15 @@ const RecipeDetails = ({
           showMoreMenu={showMoreMenu}
           showOptionalEditIcon={showOptionalEditIcon}
           isImageOverlay={dragAndDrop}
-          imageOverlayFunc={(image) => setCopyImage(image)}
+          imageOverlayFunc={setCopyImage}
           customMenu={customMenu}
           showMoreMenuAtHover={showMoreMenuAtHover}
           description={recipe?.defaultVersion?.description}
-          recipeVersion={recipe?.versionCount}
+          recipeVersion={recipe?.versionCount > 1 ? recipe?.versionCount : 0}
           defaultVersionId={recipe?.defaultVersion?._id}
           updateDataFunc={updateCompareList}
           userId={recipe?.recipeId?.userId}
           versionHandler={handleToOpenVersionTray}
-          footerMenuType={footerMenuType}
           updateDataAfterChangeDefaultVersion={
             updateDataAfterChangeDefaultVersion
           }
@@ -185,6 +214,8 @@ const RecipeDetails = ({
           calorie={recipe?.defaultVersion?.calorie?.value}
           carbs={recipe?.defaultVersion?.gigl?.netCarbs}
           personalRating={recipe?.personalRating}
+          viewPermissions={viewPermissions}
+          origin={recipe?.recipeId?.url}
         />
         <div className={`${styles.dividerBox}`}>
           <SectionTitleWithIcon
@@ -202,12 +233,26 @@ const RecipeDetails = ({
               ) : null
             ) : (
               recipe?.defaultVersion?.ingredients?.map((item, index) => {
+                const isIngredientStatusOk = item?.ingredientStatus === "ok";
+
                 const ingredientName = item?.ingredientId?.ingredientName;
                 const selectedPortionName = item?.selectedPortion?.name;
                 const selectedPortionQuantity = item?.selectedPortion?.quantity;
+                let label = "";
+                if (isIngredientStatusOk) {
+                  label = `${selectedPortionQuantity} ${selectedPortionName} ${ingredientName}`;
+                } else {
+                  label = item?.errorString;
+                }
+
                 return (
-                  <p key={index} className={`${styles.singleIngredient}`}>
-                    {`${selectedPortionQuantity} ${selectedPortionName} ${ingredientName}`}
+                  <p
+                    key={index}
+                    className={`${styles.singleIngredient} ${
+                      !isIngredientStatusOk && styles.errorIngredientText
+                    }`}
+                  >
+                    {label}
                   </p>
                 );
               })

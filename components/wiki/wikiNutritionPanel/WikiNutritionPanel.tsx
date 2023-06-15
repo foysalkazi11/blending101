@@ -21,11 +21,13 @@ interface List {
 type Props = {
   handleNutritionClick?: (item: any, exist: boolean) => void;
   checkActiveNutrition?: (arg: any) => boolean;
+  showHeader?: boolean;
 };
 
 const WikiNutritionPanel = ({
   checkActiveNutrition = () => false,
   handleNutritionClick = () => {},
+  showHeader = true,
 }: Props) => {
   const [nutrientCategory, setNutrientCategory] = useState<
     { name: string; value: string }[]
@@ -111,8 +113,13 @@ const WikiNutritionPanel = ({
 
   return (
     <div className={s.wikiNutritionPanelContainer}>
-      <h3 className={s.title}>Nutrition List</h3>
-      <div className={s.borderBottom}></div>
+      {showHeader && (
+        <>
+          <h3 className={s.title}>Nutrition List</h3>
+          <div className={s.borderBottom}></div>
+        </>
+      )}
+
       <div className={s.dropdown}>
         <DropDown
           value={selectedNutrientCategory}

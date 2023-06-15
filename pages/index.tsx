@@ -74,6 +74,11 @@ const Home = () => {
       showSidebar={false}
       headerIcon={"/icons/home.svg"}
       headTagInfo={{ description: "home page content", title: "Home" }}
+      showNotificationTray={{
+        show: true,
+        showPanle: "right",
+        showTagByDeafult: false,
+      }}
     >
       <div className={styles.container}>
         <div className="row">

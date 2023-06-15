@@ -7,4 +7,14 @@ const slugToTitle = (str: string) => {
     });
 };
 
+export function slugify(text: string) {
+  // Convert to lowercase and replace non-alphanumeric characters with dashes
+  const slug = text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+  return slug;
+}
+
 export default slugToTitle;

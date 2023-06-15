@@ -1,85 +1,121 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import s from "./WikiLeft.module.scss";
-import FilterbottomComponent from "../../sidetray/filter/ingredients/Ingredients.component";
 import WikiTypes from "../wikiTypes/WikiTypes";
-import WikiNutritionPanel from "../wikiNutritionPanel/WikiNutritionPanel";
-import WikiHealthPanel from "../wikiHealthPanel/WikiHealthPanel";
 import { SelectedWikiType } from "..";
-import { WikiType as Type } from "../../../type/wikiListType";
-import { useQuery } from "@apollo/client";
-import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
+import {
+  Portion,
+  WikiType as Type,
+  WikiType,
+} from "../../../type/wikiListType";
+import WikiIngredientSection from "../wikiIngredientSection";
+import { useRouter } from "next/router";
+import WikiNutrientSection from "../wikiNutrientSection";
+import WikiHealthSection from "../wikiHealthSection";
+import PanelHeader from "../../recipe/share/panelHeader/PanelHeader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleInfo } from "@fortawesome/pro-light-svg-icons";
 interface Props {
-  type: Type;
-  setType: Dispatch<SetStateAction<Type>>;
+  currentWikiType?: WikiType;
+  currentWikiId?: string;
   selectedWikiItem?: SelectedWikiType;
   setSelectedWikiItem?: Dispatch<SetStateAction<SelectedWikiType>>;
+  showWikiTypeHeader?: boolean;
 }
 
 const WikiLeft = ({
-  type = "Ingredient",
+  currentWikiType = "",
+  currentWikiId = "",
   selectedWikiItem = {} as SelectedWikiType,
   setSelectedWikiItem = () => {},
-  setType = () => {},
+  showWikiTypeHeader = true,
 }: Props) => {
-  const { data: ingredientCategoryData, loading: ingredientCategoryLoading } =
-    useQuery(FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS, {
-      variables: {
-        data: {
-          ingredientCategory: "All",
-          IngredientClass: 1,
-        },
-      },
-    });
-
+  const router = useRouter();
+  const [type, setType] = useState<WikiType>("Ingredient");
   const checkActive = (id: string) => {
-    return selectedWikiItem[type]?.includes(id);
+    return currentWikiId === id;
+  };
+
+  // click wiki item title
+  const handleClickTitle = async (
+    type: string,
+    id: string,
+    portions?: Portion[],
+  ) => {
+    if (type === "Nutrient") {
+      router?.push(`/wiki/${type}/${id}`);
+    } else {
+      const measurementWeight = portions?.find(
+        (items) => items?.default,
+      )?.meausermentWeight;
+
+      if (measurementWeight) {
+        router?.push(`/wiki/${type}/${id}/${measurementWeight}`);
+      }
+    }
   };
 
   const handleItemClick = (item: any = {}, isExist) => {
-    const checkWikiList = (list: string[], id: string) => {
-      if (list?.length) {
-        return [...list, id];
-      } else {
-        return [id];
-      }
-    };
-    if (isExist) {
-      setSelectedWikiItem((wikiItem) => ({
-        ...wikiItem,
-        [type]: wikiItem[type]?.filter((items) => items !== item?._id) || [],
-      }));
-    } else {
-      setSelectedWikiItem((wikiItem) => ({
-        ...wikiItem,
-        [type]: [...checkWikiList(wikiItem[type], item?._id)],
-      }));
+    if (item?.hasOwnProperty("ingredientName")) {
+      handleClickTitle("Ingredient", item?._id, item?.portions);
     }
+    if (item?.hasOwnProperty("nutrientName")) {
+      handleClickTitle("Nutrient", item?._id);
+    }
+
+    // setSelectedWikiItem(item?._id);
+    // const checkWikiList = (list: string[], id: string) => {
+    //   if (list?.length) {
+    //     return [...list, id];
+    //   } else {
+    //     return [id];
+    //   }
+    // };
+    // if (isExist) {
+    //   setSelectedWikiItem((wikiItem) => ({
+    //     ...wikiItem,
+    //     [type]: wikiItem[type]?.filter((items) => items !== item?._id) || [],
+    //   }));
+    // } else {
+    //   setSelectedWikiItem((wikiItem) => ({
+    //     ...wikiItem,
+    //     [type]: [...checkWikiList(wikiItem[type], item?._id)],
+    //   }));
+    // }
   };
+
+  useEffect(() => {
+    //@ts-ignore
+    if (currentWikiType && currentWikiType !== "compare") {
+      setType(currentWikiType);
+    } else {
+      setType("Ingredient");
+    }
+  }, [currentWikiType]);
 
   const renderUi = (type: Type) => {
     switch (type) {
       case "Ingredient":
         return (
-          <FilterbottomComponent
-            checkActiveIngredient={checkActive}
-            handleIngredientClick={handleItemClick}
-            scrollAreaMaxHeight={{ maxHeight: "450px" }}
-            ingredientCategoryData={
-              ingredientCategoryData?.filterIngredientByCategoryAndClass
-            }
-            ingredientCategoryLoading={ingredientCategoryLoading}
+          <WikiIngredientSection
+            checkActive={checkActive}
+            handleItemClick={handleItemClick}
           />
         );
       case "Nutrient":
         return (
-          <WikiNutritionPanel
-            checkActiveNutrition={checkActive}
-            handleNutritionClick={handleItemClick}
+          <WikiNutrientSection
+            checkActive={checkActive}
+            handleItemClick={handleItemClick}
           />
         );
 
       case "Health":
-        return <WikiHealthPanel />;
+        return (
+          <WikiHealthSection
+            checkActive={checkActive}
+            handleItemClick={handleItemClick}
+          />
+        );
 
       default:
         break;
@@ -87,10 +123,23 @@ const WikiLeft = ({
   };
 
   return (
-    <div className={s.wikiLeftContainer}>
-      <WikiTypes type={type} setType={setType} />
-      {renderUi(type)}
-    </div>
+    <>
+      {!showWikiTypeHeader && (
+        <PanelHeader
+          title="Wiki Type"
+          icon={<FontAwesomeIcon icon={faCircleInfo} fontSize={24} />}
+        />
+      )}
+
+      <div className={s.wikiLeftContainer}>
+        <WikiTypes
+          type={type}
+          setType={setType}
+          showHeader={showWikiTypeHeader}
+        />
+        {renderUi(type)}
+      </div>
+    </>
   );
 };
 

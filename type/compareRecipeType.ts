@@ -3,10 +3,12 @@ import {
   VersionDataType,
   Image,
   IngredientType,
+  RecipeIdType,
 } from "./recipeDetailsType";
 import { RecipeBrandType, RecipeCreatorInfo } from "./recipeType";
 
 export interface CompareRecipeType {
+  isTemp?: boolean;
   addedToCompare: boolean;
   notes: number;
   userCollections: string[];
@@ -16,26 +18,5 @@ export interface CompareRecipeType {
   myRecipes: boolean;
   versionCount: number;
   personalRating?: number;
-  recipeId: {
-    _id: string;
-    userId: RecipeCreatorInfo;
-    name: string;
-    prepTime: any;
-    description: string;
-    versionDiscription: string;
-    recipeIngredients: any[];
-    recipeInstructions: string[];
-    totalRating: number;
-    numberOfRating: number;
-    averageRating: number;
-    totalViews: number;
-    recipeBlendCategory: RecipeBlendCategory;
-    ingredients: IngredientType[];
-    image: Image[];
-    servingSize: string;
-    servings: number;
-    originalVersion: VersionDataType;
-    token: string;
-    brand?: RecipeBrandType;
-  };
+  recipeId: RecipeIdType;
 }

@@ -17,6 +17,7 @@ import PlanCollectionTray from "../components/sidetray/planCollectionTray";
 import FooterRecipeFilter from "../components/footer/footerRecipeFilter.component";
 import HeadTagInfo, { HeadTagInfoType } from "../theme/headTagInfo";
 import PlanCommentsTray from "../components/sidetray/planCommentsTray";
+import NotificationTray from "../components/sidetray/notificationTray";
 
 interface ShowTray {
   show: boolean;
@@ -37,6 +38,7 @@ type AContainerProps = {
   showBlogCollectionTray?: ShowTray;
   showPlanCollectionTray?: ShowTray;
   showRecipeFilterTray?: ShowTray;
+  showNotificationTray?: ShowTray;
   logo?: boolean;
   headerTitle?: string;
   headerIcon?: string | React.ReactNode;
@@ -101,6 +103,11 @@ const AContainer: FC<AContainerProps> = (props) => {
     showRecipeFilterTray = {
       show: false,
       showPanle: "left",
+      showTagByDeafult: false,
+    },
+    showNotificationTray = {
+      show: true,
+      showPanle: "right",
       showTagByDeafult: false,
     },
     logo = true,
@@ -183,6 +190,14 @@ const AContainer: FC<AContainerProps> = (props) => {
         {showBlogCommentsTray?.show && (
           <div className={styles.fixed__main__right}>
             <BlogCommentsTray
+              showTagByDefaut={showBlogCommentsTray?.showTagByDeafult}
+              showPanle={showBlogCommentsTray?.showPanle}
+            />
+          </div>
+        )}
+        {showNotificationTray?.show && (
+          <div className={styles.fixed__main__right}>
+            <NotificationTray
               showTagByDefaut={showBlogCommentsTray?.showTagByDeafult}
               showPanle={showBlogCommentsTray?.showPanle}
             />

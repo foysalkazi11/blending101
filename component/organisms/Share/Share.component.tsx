@@ -67,7 +67,11 @@ const ShareModal: React.FC<ShareProps> = ({
 
             <PinterestShareButton
               media="https://blending101.com/Blend_Formula.png"
-              url="https://duacpw47bhqi1.cloudfront.net/recipe_details/621ccee8ede2edf391c431fe/"
+              url={`${
+                process.env.NODE_ENV === "production"
+                  ? process.env.NEXT_PUBLIC_HOSTING_DOMAIN
+                  : "http://localhost:4000"
+              }/recipe_details/621ccee8ede2edf391c431fe/`}
               description="Hello World"
               className="mr-20"
             >
@@ -77,7 +81,11 @@ const ShareModal: React.FC<ShareProps> = ({
             </PinterestShareButton>
 
             <TwitterShareButton
-              url="https://duacpw47bhqi1.cloudfront.net/recipe_details/621ccee8ede2edf391c431fe/"
+              url={`${
+                process.env.NODE_ENV === "production"
+                  ? process.env.NEXT_PUBLIC_HOSTING_DOMAIN
+                  : "http://localhost:4000"
+              }/recipe_details/621ccee8ede2edf391c431fe/`}
               title="Blending101"
               hashtags={["Branding"]}
               via="http://blending101.com/"
