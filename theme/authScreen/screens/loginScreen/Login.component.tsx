@@ -38,7 +38,6 @@ const LoginScreen = () => {
     setIsLoading(true);
     try {
       const cognitoData = await Auth.signIn(input?.email, input?.password);
-      console.log(cognitoData);
       const {
         attributes: { email },
       } = cognitoData;

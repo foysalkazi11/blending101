@@ -82,6 +82,7 @@ const CHALLENGE_LIST_FIELDS = gql`
     endDate: endDateString
     description
     notification
+    canInviteWithOthers
   }
 `;
 
@@ -177,6 +178,10 @@ export const EDIT_CHALLENGE_POST = gql`
     editAChallengePost(data: $data) {
       challenge {
         ...ChallengePostFields
+      }
+      prevPost {
+        postId
+        prevPostDate
       }
       challengeInfo {
         ...ChallengeInfoFields

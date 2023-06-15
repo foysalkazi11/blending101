@@ -117,21 +117,16 @@ const MyPlan = () => {
       />
       <div className={styles.windowContainer}>
         <div className={styles.planner}>
-          <div className="row ai-center">
-            <div className="col-4">
-              <div className={styles.planner__pageTitle}>BLENDA COACH</div>
-            </div>
-            <div className="col-4 ta-center ">
-              <button
-                className={styles.discoveryBtn}
-                onClick={() => {
-                  router.push("/planner");
-                }}
-              >
-                <Icon fontName={faSearch} size="2rem" className="mr-10" />
-                Plan Discovery
-              </button>
-            </div>
+          <div className="ta-center mt-20 mb-10">
+            <button
+              className={styles.discoveryBtn}
+              onClick={() => {
+                router.push("/planner");
+              }}
+            >
+              <Icon fontName={faSearch} size="2rem" className="mr-10" />
+              Plan Discovery
+            </button>
           </div>
           <div className="row">
             <div className="col-3">
@@ -163,7 +158,10 @@ const MyPlan = () => {
                   </div>
                 </div>
               </div>
-              <div className={styles.plan} style={{ height: panelHeight }}>
+              <div
+                className={styles.plan}
+                style={{ height: panelHeight, backgroundColor: "#fff" }}
+              >
                 {showForm ? (
                   <PlanForm methods={methods} />
                 ) : (

@@ -81,36 +81,29 @@ const useThirtyDayChallenge = () => {
   return { challenge: data?.getMyThirtyDaysChallenge || [], viewOnly };
 };
 
-const update30DaysChallenge = (
-  userId: string,
-  cache: ApolloCache<any>,
-  mutated,
-) => {
-  const definition = {
-    query: GET_30DAYS_CHALLENGE,
-    variables: {
-      userId,
-      startDate: "",
-    },
-  };
-  const { getMyThirtyDaysChallenge } = cache.readQuery<any>(definition);
-  console.log(mutated);
-  const data = {
-    challenge: getMyThirtyDaysChallenge.challenge.map((day) =>
-      day.date === mutated?.challenge?.date ? mutated?.challenge : day,
-    ),
-    challengeInfo: mutated?.challengeInfo,
-  };
-  cache.writeQuery({
-    ...definition,
-    data: { getMyThirtyDaysChallenge: data },
-  });
-};
-
 const useAddChallengePost = (userId) => {
   const [addPost, addState] = useMutation(CREATE_CHALLENGE_POST, {
     update(cache, { data: { createChallengePost } }) {
-      update30DaysChallenge(userId, cache, createChallengePost);
+      const definition = {
+        query: GET_30DAYS_CHALLENGE,
+        variables: {
+          userId,
+          startDate: "",
+        },
+      };
+      const { getMyThirtyDaysChallenge } = cache.readQuery<any>(definition);
+      const data = {
+        challenge: getMyThirtyDaysChallenge.challenge.map((day) =>
+          day.date === createChallengePost?.challenge?.date
+            ? createChallengePost?.challenge
+            : day,
+        ),
+        challengeInfo: createChallengePost?.challengeInfo,
+      };
+      cache.writeQuery({
+        ...definition,
+        data: { getMyThirtyDaysChallenge: data },
+      });
     },
   });
   return [addPost, addState];
@@ -118,9 +111,58 @@ const useAddChallengePost = (userId) => {
 
 const useEditChallengePost = (userId) => {
   const [editPost, editState] = useMutation(EDIT_CHALLENGE_POST, {
-    update(cache, { data: { editAChallengePost } }) {
-      update30DaysChallenge(userId, cache, editAChallengePost);
-      //! If date of the post is edited we need to remove the post from the previous date
+    update(cache, { data: { editAChallengePost: editedPost } }) {
+      const editedDate = editedPost?.challenge?.date;
+      const { prevPostDate, postId } = editedPost?.prevPost;
+      console.log({ editedDate, prevPostDate, postId });
+      const definition = {
+        query: GET_30DAYS_CHALLENGE,
+        variables: {
+          userId,
+          startDate: "",
+        },
+      };
+      const { getMyThirtyDaysChallenge } = cache.readQuery<any>(definition);
+
+      const challenges = [];
+      getMyThirtyDaysChallenge.challenge.forEach((day) => {
+        // ADDING POST TO THE NEW DATE
+        if (day.date === editedDate) {
+          challenges.push(editedPost?.challenge);
+        }
+        // REMOVING POST FROM THE PREVIOUS DATE
+        else if (prevPostDate !== editedDate && day.date === prevPostDate) {
+          console.log({
+            ...day,
+            posts: day.posts.filter((post) => post._id !== postId),
+          });
+          challenges.push({
+            ...day,
+            posts: day.posts.filter((post) => post._id !== postId),
+          });
+        }
+        // STORING THE DATA IN UNCHANGED WAY
+        else {
+          challenges.push(day);
+        }
+      });
+      console.log(challenges);
+      // const data = {
+      //   challenge: getMyThirtyDaysChallenge.challenge.map((day) =>
+      //     day.date === editedPost?.challenge?.date
+      //       ? editedPost?.challenge
+      //       : day,
+      //   ),
+      //   challengeInfo: editedPost?.challengeInfo,
+      // };
+      const data = {
+        challenge: challenges,
+        challengeInfo: editedPost?.challengeInfo,
+      };
+      cache.writeQuery({
+        ...definition,
+        data: { getMyThirtyDaysChallenge: data },
+      });
     },
   });
   return [editPost, editState];

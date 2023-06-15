@@ -44,8 +44,12 @@ const IngredientDetails = (props: IngredientDetailsProps) => {
     setNutritionState,
   } = props;
 
-  const [addGroceryList, groceryState] = useMutation(ADD_GROCERY_ITEM);
-  const [deleteCartItem, deleteState] = useMutation(DELETE_CART_ITEM);
+  const [addGroceryList, groceryState] = useMutation(ADD_GROCERY_ITEM, {
+    refetchQueries: ["GetCartData"],
+  });
+  const [deleteCartItem, deleteState] = useMutation(DELETE_CART_ITEM, {
+    refetchQueries: ["GetCartData"],
+  });
 
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.user.dbUser);
@@ -69,28 +73,8 @@ const IngredientDetails = (props: IngredientDetailsProps) => {
         ],
       },
     };
-
-    await Publish({
-      mutate: addGroceryList,
-      variables: variables,
-      state: groceryState,
-      success: `Added ingredient to grocery Successfully`,
-      onSuccess: () => {
-        dispatch(
-          addGrocery({
-            ingredientId: {
-              _id: ingredient?.ingredientId._id,
-              ingredientName: ingredient?.ingredientId?.ingredientName,
-              featuredImage:
-                ingredient?.ingredientId?.featuredImage ||
-                ingredient?.ingredientId?.images[0] ||
-                "",
-            },
-            selectedPortion: ingredient?.selectedPortion?.name,
-            quantity: parseFloat(ingredient?.selectedPortion?.quantity),
-          }),
-        );
-      },
+    await addGroceryList({
+      variables,
     });
   };
 
@@ -265,11 +249,12 @@ const IngredientDetails = (props: IngredientDetailsProps) => {
                           className={`${styles.icon} ${
                             addedToCart ? styles["icon--active"] : ""
                           }`}
-                          onClick={() =>
-                            addedToCart
-                              ? removeFromCartHandler(ingredient)
-                              : addToCartHandler(ingredient)
-                          }
+                          // onClick={() =>
+                          //   addedToCart
+                          //     ? removeFromCartHandler(ingredient)
+                          //     : addToCartHandler(ingredient)
+                          // }
+                          onClick={() => addToCartHandler(ingredient)}
                         />
                       </Tooltip>
                     </div>

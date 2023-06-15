@@ -6,7 +6,6 @@ import {
   ADD_RECIPE_TO_PLANNER,
   GET_ALL_PLANNER_RECIPES,
   GET_PLANNER_BY_WEEK,
-  GET_QUEUED_PLANNER_RECIPES,
 } from "../../../graphql/Planner";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { GET_BLEND_CATEGORY } from "../../../graphql/Recipe";
@@ -140,9 +139,7 @@ const useAddRecipeToMyPlan = (props: IAddRecipeToPlanHook) => {
   const { query, page, limit, type, week, isWeekFromURL } = props;
 
   const router = useRouter();
-  const [addRecipe, addState] = useMutation(ADD_RECIPE_TO_PLANNER, {
-    refetchQueries: [GET_QUEUED_PLANNER_RECIPES],
-  });
+  const [addRecipe, addState] = useMutation(ADD_RECIPE_TO_PLANNER);
 
   const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
 
@@ -164,29 +161,6 @@ const useAddRecipeToMyPlan = (props: IAddRecipeToPlanHook) => {
         setShowCalenderId("");
       },
       onUpdate(cache) {
-        const GetQueuedRecipesForPlanner = {
-          query: GET_QUEUED_PLANNER_RECIPES,
-          variables: {
-            currentDate: format(new Date(), "yyyy-MM-dd"),
-            user: userId,
-            searchTerm: query,
-            page,
-            limit,
-            type,
-          },
-        };
-        // const { getQuedPlanner } = cache.readQuery<any>(
-        //   GetQueuedRecipesForPlanner,
-        // );
-        // cache.writeQuery({
-        //   ...GetQueuedRecipesForPlanner,
-        //   data: {
-        //     getQuedPlanner: {
-        //       recipes: [...getQuedPlanner.recipes, recipe],
-        //     },
-        //   },
-        // });
-
         const defaultFetch =
           !isWeekFromURL && router.query.start && router.query.end;
         const GetPlanByWeek = {

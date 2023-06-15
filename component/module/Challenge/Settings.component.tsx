@@ -37,7 +37,7 @@ import {
   addDays,
   differenceInDays,
   format,
-  isBefore,
+  isFuture,
   isPast,
   subDays,
 } from "date-fns";
@@ -199,7 +199,15 @@ const ChallengeList = ({ currentChallenge, challenges, editFormHandler }) => {
           <div className="col-2">&nbsp;</div>
         </div>
         {challenges?.getMyChallengeList?.map((challenge) => {
-          const canShareWithOthers = isPast(UTCDate(challenge.startDate));
+          const canShareWithOthers =
+            isFuture(UTCDate(challenge.startDate)) &&
+            challenge.canInviteWithOthers;
+          console.log({
+            ...challenge,
+            canShareWithOthers,
+            date: UTCDate(challenge.startDate),
+            isPast: isPast(UTCDate(challenge.startDate)),
+          });
           return (
             <div className={`row ${styles.challenge}`} key={challenge._id}>
               <div className="col-1">
@@ -243,7 +251,7 @@ const ChallengeList = ({ currentChallenge, challenges, editFormHandler }) => {
                   fontName={faUserPlus}
                   variant="fade"
                   size="small"
-                  disabled={canShareWithOthers}
+                  disabled={!canShareWithOthers}
                   className={`${styles.challenge__action__trash} ml-30`}
                   onClick={() => {
                     setShow(true);
