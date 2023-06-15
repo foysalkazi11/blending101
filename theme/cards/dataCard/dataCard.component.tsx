@@ -417,29 +417,25 @@ export default function DatacardComponent({
             >
               {!isEmptyObj(brand || {}) ? (
                 <a
-                  href={hasInteractionPermission("brand") ? origin : "#"}
+                  href={origin}
                   onClick={(e) => {
-                    if (hasInteractionPermission("brand")) {
-                      const id = "ebbpnaajpojkhndmjmdjabgjmngjgmhm";
-                      //@ts-ignore
-                      chrome.runtime.sendMessage(
-                        id,
-                        {
-                          action: "BRAND_NAVIGATE",
-                          payload: {
-                            id: recipeId,
-                            name: postfixTitle || title,
-                            image,
-                            origin,
-                          },
+                    const id = "ebbpnaajpojkhndmjmdjabgjmngjgmhm";
+                    //@ts-ignore
+                    chrome.runtime.sendMessage(
+                      id,
+                      {
+                        action: "BRAND_NAVIGATE",
+                        payload: {
+                          id: recipeId,
+                          name: postfixTitle || title,
+                          image,
+                          origin,
                         },
-                        () => {},
-                      );
-                      window.location.href = "";
-                    }
+                      },
+                      () => {},
+                    );
+                    window.location.href = "";
                   }}
-                  target="_blank"
-                  rel="noreferrer"
                 >
                   <img
                     className={styles.brand}
