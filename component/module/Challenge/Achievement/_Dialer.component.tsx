@@ -55,6 +55,10 @@ function Main({ canUpload, activities, statistics }: MainInterface) {
     );
   };
 
+  const remainingDays = hasChallengeEnded
+    ? differenceInDays(end, begin)
+    : differenceInDays(today, begin) + 1;
+
   return (
     <div className={styles.challenge_circle_main_circle_outer}>
       <div className={styles.challenge_circle_main_circle}>
@@ -94,7 +98,9 @@ function Main({ canUpload, activities, statistics }: MainInterface) {
             >
               {statistics?.days === 0 && statistics?.daysRemaining === 0
                 ? 0
-                : differenceInDays(hasChallengeEnded ? end : today, begin) + 1}
+                : remainingDays < 0
+                ? 0
+                : remainingDays}
             </span>
             <span
               className={

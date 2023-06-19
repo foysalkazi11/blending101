@@ -28,6 +28,7 @@ const Invited = () => {
   const { data, loading } = useQuery(GET_INVITE_CHALLENGE_DETAILS, {
     variables: {
       id: router.query?.id,
+      memberId,
     },
   });
   const [acceptChallenge] = useMutation(ACCEPT_CHALLENGE);
@@ -43,15 +44,22 @@ const Invited = () => {
     });
   };
 
-  // useEffect(() => {
-  //   dispatch(
-  //     updateHeadTagInfo({
-  //       title: "Challenge invite",
-  //       description: "challenge invite",
-  //     }),
-  //   );
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+  useEffect(() => {
+    if (!data) return;
+    const info = data?.getInviteChallengeInfo;
+    const challengeId = info?.invite?.challengeId?._id;
+    if (info?.isOwner) {
+      //Redirct to Homepage
+      router.push(`/challenge/?id=${challengeId}`);
+    }
+    if (info?.hasAccepted) {
+      //Redirct to Homepage
+      router.push(`/challenge/?id=${challengeId}`);
+    }
+    if (!info?.wasInvited) {
+      //Hide join challenge button
+    }
+  }, [data, router]);
 
   if (loading) return <Loader />;
 

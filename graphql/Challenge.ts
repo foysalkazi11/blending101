@@ -289,14 +289,15 @@ export const ACCEPT_CHALLENGE = gql`
 `;
 
 export const GET_INVITE_CHALLENGE_DETAILS = gql`
-  query GetInviteChallenge($id: String!) {
-    getInviteChallengeInfo(inviteId: $id) {
+  query GetInviteChallenge($id: String!, $memberId: String!) {
+    getInviteChallengeInfo(inviteId: $id, memberId: $memberId) {
       invite {
         invitedBy {
           displayName
         }
         challengeId {
           challengeName
+          _id
         }
       }
       sharedWith {
@@ -314,6 +315,9 @@ export const GET_INVITE_CHALLENGE_DETAILS = gql`
         }
         count
       }
+      hasAccepted
+      wasInvited: hasInvited
+      isOwner
     }
   }
 `;
