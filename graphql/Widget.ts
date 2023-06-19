@@ -6,18 +6,6 @@ export const GET_WIDGET_TYPE = gql`
   }
 `;
 
-export const GET_GRID_WIDGET = gql`
-  query GetRecipeWidget($slug: String!) {
-    getWidgetsForClient(slug: $slug) {
-      widgetCollections {
-        slug
-        displayName
-        icon
-      }
-    }
-  }
-`;
-
 export const GET_SLIDER_WIDGET = gql`
   query GetRecipeWidget($slug: String!) {
     getWidgetsForClient(slug: $slug) {
@@ -66,6 +54,18 @@ export const GET_SLIDER_WIDGET = gql`
             addedToCompare
           }
         }
+      }
+    }
+  }
+`;
+
+export const GET_GRID_WIDGET = gql`
+  query GetRecipeWidget($slug: String!) {
+    getWidgetsForClient(slug: $slug) {
+      widgetCollections {
+        slug
+        displayName
+        icon
       }
     }
   }
