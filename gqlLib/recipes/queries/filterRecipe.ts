@@ -36,6 +36,10 @@ const FILTER_RECIPE = gql`
           }
           averageRating
           numberOfRating
+          recipeBlendCategory {
+            _id
+            name
+          }
         }
         defaultVersion {
           _id
