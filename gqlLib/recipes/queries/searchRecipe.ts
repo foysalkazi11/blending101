@@ -41,6 +41,10 @@ const SEARCH_RECIPE = gql`
           url
           averageRating
           numberOfRating
+          recipeBlendCategory {
+            _id
+            name
+          }
         }
         defaultVersion {
           _id

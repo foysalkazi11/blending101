@@ -29,6 +29,10 @@ const GET_ALL_LATEST_RECIPES = gql`
         url
         averageRating
         numberOfRating
+        recipeBlendCategory {
+          _id
+          name
+        }
       }
       defaultVersion {
         _id
