@@ -14,7 +14,6 @@ import { categories } from "../../../../data/categories";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import GET_BLEND_NUTRIENTS_BASED_ON_CATEGORY from "../../../../gqlLib/nutrition/query/getBlendNutrientsBasedOnCategoey";
 import Collapsible from "../../../../theme/collapsible";
-import GET_COLLECTIONS_AND_THEMES from "../../../../gqlLib/collection/query/getCollectionsAndThemes";
 import { INGREDIENTS_FILTER } from "../../filter/static/recipe";
 import OptionSelectHeader from "../../filter/optionSelect/OptionSelectHeader";
 import OptionSelect from "../../filter/optionSelect/OptionSelect";
@@ -22,6 +21,7 @@ import ExcludeFilter from "../../filter/excludeFilter";
 import NumericFilter from "../../filter/numericFilter/NumericFilter";
 import CheckboxOptions from "../../filter/checkboxOptions/CheckboxOptions";
 import Multiselect from "../../filter/multiSelect/MultiSelect";
+import { GET_ALL_PLAN_COLLECTION } from "../../../../graphql/Planner";
 const { INGREDIENTS_BY_CATEGORY, TYPE, ALLERGIES, DIET, EQUIPMENT, DRUGS } =
   INGREDIENTS_FILTER;
 
@@ -174,12 +174,15 @@ const TagSectionForPlan = ({
   ] = useLazyQuery(GET_BLEND_NUTRIENTS_BASED_ON_CATEGORY, {
     fetchPolicy: "cache-and-network",
   });
-  const {
-    data: collectionsData,
-    loading: collectionsLoading,
-    error: collectionsError,
-  } = useQuery(GET_COLLECTIONS_AND_THEMES, {
-    variables: { userId },
+  const [
+    getAllPlanCollection,
+    {
+      data: allCollectionData,
+      loading: allCollectionLoading,
+      error: allCollectionError,
+    },
+  ] = useLazyQuery(GET_ALL_PLAN_COLLECTION, {
+    fetchPolicy: "cache-and-network",
   });
   const { activeFilterTag, excludeFilterState, numericFilterState } =
     useAppSelector((state) => state?.filterRecipe);
@@ -580,12 +583,7 @@ const TagSectionForPlan = ({
                 })
               : null}
           </CustomAccordion>
-          <div
-            className={styles.singleItem}
-            // onClick={() => recipeFilterByCategory("Collection")}
-          >
-            <h5>Collection</h5>
-          </div>
+
           <div
             className={styles.singleItem}
             // onClick={() => recipeFilterByCategory("Teste")}

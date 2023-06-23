@@ -324,6 +324,7 @@ const ShowRecipeContainer = ({
           setShow={setOpenCreateCollectionModal}
           type={showItems}
           itemsIds={containerData?.map((item) => item?.recipeId?._id)}
+          showVersionShareCheckbox={false}
         />
       )}
     </>

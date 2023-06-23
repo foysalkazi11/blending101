@@ -19,6 +19,7 @@ interface Props {
   setShow?: any;
   heading?: string;
   itemsIds?: string[];
+  showVersionShareCheckbox?: boolean;
 }
 
 const ShareItems = ({
@@ -30,6 +31,7 @@ const ShareItems = ({
   type = "recipe",
   heading = "",
   itemsIds = [],
+  showVersionShareCheckbox = false,
 }: Props) => {
   const [
     createRecipeCollectionAndShare,
@@ -153,6 +155,7 @@ const ShareItems = ({
       message={message}
       setMessage={setMessage}
       isAdditionInfoNeedForPersonalShare={true}
+      showVersionShareCheckbox={showVersionShareCheckbox}
     />
   );
 };

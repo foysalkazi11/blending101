@@ -595,12 +595,7 @@ const TagSection = ({
                 })
               : null}
           </CustomAccordion>
-          <div
-            className={styles.singleItem}
-            // onClick={() => recipeFilterByCategory("Collection")}
-          >
-            <h5>Collection</h5>
-          </div>
+
           <div
             className={styles.singleItem}
             // onClick={() => recipeFilterByCategory("Teste")}

@@ -43,7 +43,11 @@ const VersionDetailsIndex = (props) => {
           showTopCancelButton={showTopCancelButton}
         />
       ) : (
-        <RecipeDetails {...rest} showTopCancelButton={showTopCancelButton} />
+        <RecipeDetails
+          {...rest}
+          showTopCancelButton={showTopCancelButton}
+          viewPermissions={["brand", "title", "star", "version"]}
+        />
       )}
     </>
   );
