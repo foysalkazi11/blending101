@@ -21,7 +21,10 @@ import {
   setChangeRecipeWithinCollection,
   setSingleRecipeWithinCollecions,
 } from "../../../redux/slices/collectionSlice";
-import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
+import {
+  setOpenCollectionsTary,
+  setOpenFilterTray,
+} from "../../../redux/slices/sideTraySlice";
 import ShowRecipeContainer from "../../showRecipeContainer";
 import ShareRecipe from "../recipeDetails/center/shareRecipe";
 let dataLimit = 12;
@@ -64,6 +67,9 @@ const RecipeDiscovery = () => {
   const { lastModifiedCollection } = useAppSelector(
     (state) => state?.collections,
   );
+  const toggleFilterPanel = () => {
+    dispatch(setOpenFilterTray(!openFilterTray));
+  };
 
   // open recipe collection panel after added a recipe to a collection
   const handleOpenCollectionTray = () => {
@@ -212,6 +218,8 @@ const RecipeDiscovery = () => {
               handleOnChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setRecipeSearchInput(e.target.value);
               }}
+              openFilterTray={openFilterTray}
+              toggleFilterPanel={toggleFilterPanel}
             />
 
             {allFilters?.length ? (
