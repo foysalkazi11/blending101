@@ -16,6 +16,7 @@ import { setIsOpenPlanCollectionTray } from "../../redux/slices/Planner.slice";
 import CommonSearchBar from "../../components/searchBar/CommonSearchBar";
 import { useAllPlan } from "../../hooks/modules/Plan/usePlanDiscovery";
 import { Debounce } from "../../helpers/Utilities";
+import { setIsPlanFilterOpen } from "../../redux/slices/planFilterSlice";
 
 const PlanDiscovery = () => {
   const router = useRouter();
@@ -25,6 +26,7 @@ const PlanDiscovery = () => {
   const { lastModifiedPlanCollection } = useAppSelector(
     (state) => state?.planner,
   );
+  const { isPlanFilterOpen } = useAppSelector((state) => state?.planFilter);
 
   const onPlanSearch = (value) => {
     console.log(value);
@@ -47,7 +49,7 @@ const PlanDiscovery = () => {
       headerIcon="/icons/calender__sidebar.svg"
       headerTitle="Plan Discovery"
       showPlanCollectionTray={{
-        show: true,
+        show: isPlanFilterOpen ? false : true,
         showPanle: "left",
         showTagByDeafult: true,
       }}
@@ -58,6 +60,11 @@ const PlanDiscovery = () => {
       showCommentsTrayForPlan={{
         show: true,
         showPanle: "right",
+        showTagByDeafult: false,
+      }}
+      showPlanFilterTray={{
+        show: true,
+        showPanle: "left",
         showTagByDeafult: false,
       }}
     >
@@ -73,6 +80,7 @@ const PlanDiscovery = () => {
             input={router.query.query as string}
             isSearchTag={false}
             handleOnChange={(e) => onPlanSearch(e.target.value)}
+            openPanel={() => dispatch(setIsPlanFilterOpen(!isPlanFilterOpen))}
           />
           <button
             className={styles.discovery__myplan}

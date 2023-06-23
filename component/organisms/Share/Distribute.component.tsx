@@ -66,6 +66,7 @@ interface ShareProps {
   isVersionSharable?: boolean;
   setIsVersionShareable?: Dispatch<SetStateAction<boolean>>;
   shareVersionsLength?: number;
+  showVersionShareCheckbox?: boolean;
 }
 
 const Share = (props: ShareProps) => {
@@ -95,6 +96,7 @@ const Share = (props: ShareProps) => {
     isVersionSharable = false,
     setIsVersionShareable = () => {},
     shareVersionsLength = 0,
+    showVersionShareCheckbox = true,
   } = props;
 
   useEffect(() => {
@@ -161,7 +163,7 @@ const Share = (props: ShareProps) => {
             />
           </div>
         )}
-        {type === "recipe" && (
+        {type === "recipe" && showVersionShareCheckbox && (
           <div className={styles.checkBoxContainer}>
             <CustomCheckbox
               checked={isVersionSharable}

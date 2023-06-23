@@ -1,26 +1,27 @@
 import React, { useEffect, useState } from "react";
 import CustomAccordion from "../../../../theme/accordion/accordion.component";
-import styles from "./TagSection.module.scss";
-import { INGREDIENTS_FILTER } from "../static/recipe";
+import styles from "../../filter/tag/TagSection.module.scss";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import OptionSelect from "../optionSelect/OptionSelect";
-import OptionSelectHeader from "../optionSelect/OptionSelectHeader";
-import NumericFilter from "../numericFilter/NumericFilter";
-import CheckboxOptions from "../checkboxOptions/CheckboxOptions";
+
 import {
   ActiveSectionType,
   FilterCriteriaOptions,
   FilterCriteriaValue,
   updateActiveFilterTag,
 } from "../../../../redux/slices/filterRecipeSlice";
-import Multiselect from "../multiSelect/MultiSelect";
 import { BlendCategoryType } from "../../../../type/blendCategoryType";
 import { categories } from "../../../../data/categories";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import GET_BLEND_NUTRIENTS_BASED_ON_CATEGORY from "../../../../gqlLib/nutrition/query/getBlendNutrientsBasedOnCategoey";
 import Collapsible from "../../../../theme/collapsible";
-import ExcludeFilter from "../excludeFilter";
-import GET_COLLECTIONS_AND_THEMES from "../../../../gqlLib/collection/query/getCollectionsAndThemes";
+import { INGREDIENTS_FILTER } from "../../filter/static/recipe";
+import OptionSelectHeader from "../../filter/optionSelect/OptionSelectHeader";
+import OptionSelect from "../../filter/optionSelect/OptionSelect";
+import ExcludeFilter from "../../filter/excludeFilter";
+import NumericFilter from "../../filter/numericFilter/NumericFilter";
+import CheckboxOptions from "../../filter/checkboxOptions/CheckboxOptions";
+import Multiselect from "../../filter/multiSelect/MultiSelect";
+import { GET_ALL_PLAN_COLLECTION } from "../../../../graphql/Planner";
 const { INGREDIENTS_BY_CATEGORY, TYPE, ALLERGIES, DIET, EQUIPMENT, DRUGS } =
   INGREDIENTS_FILTER;
 
@@ -155,7 +156,7 @@ interface Props {
   checkExcludeIngredientIds: (id: string) => boolean;
 }
 
-const TagSection = ({
+const TagSectionForPlan = ({
   checkActiveItem = () => false,
   blendCategoryData = [],
   blendCategoryLoading = false,
@@ -173,12 +174,15 @@ const TagSection = ({
   ] = useLazyQuery(GET_BLEND_NUTRIENTS_BASED_ON_CATEGORY, {
     fetchPolicy: "cache-and-network",
   });
-  const {
-    data: collectionsData,
-    loading: collectionsLoading,
-    error: collectionsError,
-  } = useQuery(GET_COLLECTIONS_AND_THEMES, {
-    variables: { userId },
+  const [
+    getAllPlanCollection,
+    {
+      data: allCollectionData,
+      loading: allCollectionLoading,
+      error: allCollectionError,
+    },
+  ] = useLazyQuery(GET_ALL_PLAN_COLLECTION, {
+    fetchPolicy: "cache-and-network",
   });
   const { activeFilterTag, excludeFilterState, numericFilterState } =
     useAppSelector((state) => state?.filterRecipe);
@@ -224,14 +228,16 @@ const TagSection = ({
     activeTab: string,
     childTab?: string,
   ) => {
-    dispatch(
-      updateActiveFilterTag({
-        activeSection,
-        filterCriteria,
-        activeTab,
-        childTab: childTab || activeTab,
-      }),
-    );
+    console.log(activeSection, filterCriteria, activeTab, childTab);
+
+    // dispatch(
+    //   updateActiveFilterTag({
+    //     activeSection,
+    //     filterCriteria,
+    //     activeTab,
+    //     childTab: childTab || activeTab,
+    //   }),
+    // );
   };
 
   const optionSelectorHandler = (chip: string) => {
@@ -255,57 +261,47 @@ const TagSection = ({
 
   useEffect(() => {
     if (activeTab === "Collections") {
-      if (childTab === "My Collections") {
-        let collections =
-          collectionsData?.getUserCollectionsAndThemes?.collections;
-        (collections = collections
-          ?.filter((collection) => !collection?.isShared)
-          ?.map((item) => ({
-            id: item?._id,
-            name: item?.personalizedName || item?.name,
-            image: item?.image,
-            tagLabel: `Own | ${item?.personalizedName || item?.name}`,
-            filterCriteria: "collectionIds",
-          }))),
-          setOptionSelectItems(collections);
-      }
-      if (childTab === "Shared With Me") {
-        let collections =
-          collectionsData?.getUserCollectionsAndThemes?.collections;
-        (collections = collections
-          ?.filter((collection) => collection?.isShared)
-          ?.map((item) => ({
-            id: item?._id,
-            name: item?.personalizedName || item?.name,
-            image: item?.image,
-            tagLabel: `Shared | ${item?.personalizedName || item?.name}`,
-            filterCriteria: "collectionIds",
-          }))),
-          setOptionSelectItems(collections);
-      }
-      if (childTab === "Global") {
-        let global = collections?.find((col) => col?.name === childTab);
-        let mapGlobal = global.child?.map((item, index) => ({
-          id: index,
-          name: item,
-          image: "",
-          tagLabel: item,
-          filterCriteria: "collectionIds",
-        }));
-        setOptionSelectItems(mapGlobal);
-      }
+      //   if (childTab === "My Collections") {
+      //     let collections =
+      //       collectionsData?.getUserCollectionsAndThemes?.collections;
+      //     (collections = collections
+      //       ?.filter((collection) => !collection?.isShared)
+      //       ?.map((item) => ({
+      //         id: item?._id,
+      //         name: item?.personalizedName || item?.name,
+      //         image: item?.image,
+      //         tagLabel: `Own | ${item?.personalizedName || item?.name}`,
+      //         filterCriteria: "collectionIds",
+      //       }))),
+      //       setOptionSelectItems(collections);
+      //   }
+      //   if (childTab === "Shared With Me") {
+      //     let collections =
+      //       collectionsData?.getUserCollectionsAndThemes?.collections;
+      //     (collections = collections
+      //       ?.filter((collection) => collection?.isShared)
+      //       ?.map((item) => ({
+      //         id: item?._id,
+      //         name: item?.personalizedName || item?.name,
+      //         image: item?.image,
+      //         tagLabel: `Shared | ${item?.personalizedName || item?.name}`,
+      //         filterCriteria: "collectionIds",
+      //       }))),
+      //       setOptionSelectItems(collections);
+      //   }
+      //   if (childTab === "Global") {
+      //     let global = collections?.find((col) => col?.name === childTab);
+      //     let mapGlobal = global.child?.map((item, index) => ({
+      //       id: index,
+      //       name: item,
+      //       image: "",
+      //       tagLabel: item,
+      //       filterCriteria: "collectionIds",
+      //     }));
+      //     setOptionSelectItems(mapGlobal);
+      //   }
     }
-    if (childTab === "Blend Type") {
-      setOptionSelectItems(
-        blendCategoryData?.map((item) => ({
-          id: item?._id,
-          name: item?.name,
-          image: item?.image,
-          tagLabel: "",
-          filterCriteria: "blendTypes",
-        })),
-      );
-    }
+
     if (activeTab === "Ingredient") {
       if (childTab !== "All") {
         setOptionSelectItems(
@@ -381,7 +377,7 @@ const TagSection = ({
             activeTab={childTab}
             filterCriteria={filterCriteria}
           />
-          {activeTab === "Blend Type" || activeTab === "Collections" ? (
+          {activeTab === "Collections" ? (
             <OptionSelect
               optionSelectItems={optionSelectItems}
               filterCriteria={filterCriteria}
@@ -437,14 +433,6 @@ const TagSection = ({
       ) : (
         <>
           <input className={styles.tagSectionInput} placeholder="Search" />
-          <div
-            className={styles.singleItem}
-            onClick={() =>
-              recipeFilterByCategory("tags", "blendTypes", "Blend Type")
-            }
-          >
-            <h5>Blend Type</h5>
-          </div>
 
           <CustomAccordion title="Ingredient" iconRight={true}>
             {categories?.length
@@ -620,4 +608,4 @@ const TagSection = ({
   );
 };
 
-export default TagSection;
+export default TagSectionForPlan;

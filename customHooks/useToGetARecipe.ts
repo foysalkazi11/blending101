@@ -5,6 +5,7 @@ import { useAppDispatch } from "../redux/hooks";
 import { setDetailsARecipe } from "../redux/slices/recipeSlice";
 import { setOpenVersionTray } from "../redux/slices/versionTraySlice";
 import { RecipeDetailsType } from "../type/recipeDetailsType";
+import mapIngredientStatus from "../helperFunc/mapIngredientStatus";
 
 const useToGetARecipe = () => {
   const dispatch = useAppDispatch();
@@ -31,18 +32,10 @@ const useToGetARecipe = () => {
             isOriginalVersion: recipe?.isMatch,
             version: {
               ...recipe?.defaultVersion,
-              ingredients: [
-                ...recipe?.defaultVersion?.ingredients?.map((ing) => ({
-                  ...ing,
-                  ingredientStatus: "ok",
-                })),
-                ...recipe?.defaultVersion?.errorIngredients?.map((ing) => ({
-                  ...ing,
-                  ingredientStatus: "partial_ok",
-                  _id: ing?.qaId,
-                  ingredientName: ing?.errorString,
-                })),
-              ],
+              ingredients: mapIngredientStatus(
+                recipe?.defaultVersion?.ingredients,
+                recipe?.defaultVersion?.errorIngredients,
+              ),
             },
           },
         }),
