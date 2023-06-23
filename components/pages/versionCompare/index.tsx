@@ -158,8 +158,8 @@ const VersionCompare = () => {
           ...item,
           isVersionSharable,
           ingredients: mapIngredientStatus(
-            item?.ingredients,
-            item?.errorIngredients,
+            item?.ingredients || [],
+            item?.errorIngredients || [],
           ),
         },
         isMatch: false,
