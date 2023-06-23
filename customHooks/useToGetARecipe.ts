@@ -10,7 +10,7 @@ import mapIngredientStatus from "../helperFunc/mapIngredientStatus";
 const useToGetARecipe = () => {
   const dispatch = useAppDispatch();
   const [getARecipe, { ...rest }] = useLazyQuery(GET_A_RECIPE, {
-    fetchPolicy: "cache-and-network",
+    // fetchPolicy: "cache-and-network",
   });
   const handleToGetARecipe = async (
     recipeId: string,
