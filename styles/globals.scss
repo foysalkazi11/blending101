@@ -27,8 +27,23 @@ label {
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 60px;
-  font-size: 10px;
   font-family: "Segoe UI", sans-serif;
+  font-size: 10px;
+  // font-size: 62.5%; //1 rem = 10px; 10px/16px = 62.5%
+
+  // @media screen and (min-width: 900px) {
+  //   // width < 900?
+  //   font-size: 50%; //1 rem = 8px, 8/16 = 50%
+  // }
+
+  // @media screen and (min-width: 1200px) {
+  //   // width < 1200?
+  //   font-size: 56.25%; //1 rem = 9px, 9/16 = 50%
+  // }
+
+  // @media screen and (min-width: 1800px) {
+  //   font-size: 75%; //1rem = 12, 12/16
+  // }
 }
 
 .show__hidden {
