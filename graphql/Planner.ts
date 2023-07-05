@@ -560,3 +560,41 @@ export const GET_ALL_PLANS_FOR_A_COLLECTION = gql`
     }
   }
 `;
+
+export const FILTER_PLAN = gql`
+  query FilterPlans(
+    $userId: String!
+    $data: FilterPlan!
+    $page: Float
+    $limit: Float
+  ) {
+    filterPlans(userId: $userId, data: $data, page: $page, limit: $limit) {
+      plans {
+        _id
+        planName
+        description
+        startDateString
+        endDateString
+        planCollections
+        commentsCount
+        image {
+          url
+          hash
+        }
+        averageRating
+        calorie {
+          value
+        }
+        gigl {
+          netCarbs
+          totalGL
+          totalGi
+        }
+        myRating
+        numberOfRating
+        totalRating
+      }
+      totalPlans
+    }
+  }
+`;

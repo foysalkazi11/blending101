@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useState, Fragment, useCallback } from "react";
+import React, { useState, Fragment, useCallback, useEffect } from "react";
 import { faUserCircle } from "@fortawesome/pro-light-svg-icons";
 import PlanCard from "../../component/module/Planner/PlanCard.component";
 import AppdownLoadCard from "../../components/recipe/recipeDiscovery/AppdownLoadCard/AppdownLoadCard.component";
@@ -17,6 +17,10 @@ import CommonSearchBar from "../../components/searchBar/CommonSearchBar";
 import { useAllPlan } from "../../hooks/modules/Plan/usePlanDiscovery";
 import { Debounce } from "../../helpers/Utilities";
 import { setIsPlanFilterOpen } from "../../redux/slices/planFilterSlice";
+import SearchtagsComponent from "../../components/searchtags/searchtags.component";
+import useToUpdateFilterCriteriaForPlan from "../../customHooks/planFilter/useToUpdateFilterCriteriaForPlan";
+import useToUpdateActiveFilterTagForPlan from "../../customHooks/planFilter/useToUpdateActiveFilterTagForPlan";
+import { useDispatch } from "react-redux";
 
 const PlanDiscovery = () => {
   const router = useRouter();
@@ -29,7 +33,6 @@ const PlanDiscovery = () => {
   const { isPlanFilterOpen } = useAppSelector((state) => state?.planFilter);
 
   const onPlanSearch = (value) => {
-    console.log(value);
     if (value === "") {
       router.push(`/planner`, undefined, {
         shallow: true,
@@ -142,14 +145,42 @@ const SearchedPlan = ({ query, setOpenCollectionModal }) => {
 
 const FeaturedPlan = ({ setOpenCollectionModal }) => {
   const userId = useAppSelector((state) => state.user.dbUser._id || "");
-
+  const { allFiltersForPlan } = useAppSelector((state) => state.planFilter);
   const { data } = useQuery(GET_FEATURED_PLANS, {
     variables: { limit: 8, memberId: userId },
   });
+  const dispatch = useDispatch();
+  const router = useRouter();
+  // handle update recipe filter criteria
+  const handleUpdateFilterCriteriaForPlan = useToUpdateFilterCriteriaForPlan();
+  // handle update recipe active filter tag
+  const handleUpdateActiveFilterTagForPlan =
+    useToUpdateActiveFilterTagForPlan();
 
   return (
     <Fragment>
-      <AppdownLoadCard />
+      {allFiltersForPlan?.length ? null : <AppdownLoadCard />}
+
+      {allFiltersForPlan?.length ? (
+        <SearchtagsComponent
+          allFilters={allFiltersForPlan}
+          handleUpdateActiveFilterTag={(
+            activeSection,
+            filterCriteria,
+            activeTab,
+            childTab,
+          ) => {
+            dispatch(setIsPlanFilterOpen(true));
+            handleUpdateActiveFilterTagForPlan(
+              activeSection,
+              filterCriteria,
+              activeTab,
+              childTab,
+            );
+          }}
+          handleUpdateFilterCriteria={handleUpdateFilterCriteriaForPlan}
+        />
+      ) : null}
       <div className="mt-40">
         <ContentTray
           heading="Recommended"

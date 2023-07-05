@@ -9,7 +9,10 @@ import {
   setChangeRecipeWithinCollection,
   setSingleRecipeWithinCollecions,
 } from "../../redux/slices/collectionSlice";
-import { setOpenCollectionsTary } from "../../redux/slices/sideTraySlice";
+import {
+  setOpenCollectionsTary,
+  setOpenFilterTray,
+} from "../../redux/slices/sideTraySlice";
 import { useLazyQuery } from "@apollo/client";
 import {
   resetAllFilters,
@@ -24,6 +27,8 @@ import ShowRecipeContainer from "../../components/showRecipeContainer";
 import ShowLastModifiedCollection from "../../components/showLastModifiedCollection/ShowLastModifiedCollection";
 import ShareRecipe from "../../components/recipe/recipeDetails/center/shareRecipe";
 import { useRouter } from "next/router";
+import useToUpdateFilterCriteria from "../../customHooks/recipeFilter/useToUpdateRecipeFilterCriteria";
+import useToUpdateActiveFilterTag from "../../customHooks/recipeFilter/useToUpdateActiveFilterTag";
 let dataLimit = 12;
 
 const RecipeFilter = () => {
@@ -65,6 +70,10 @@ const RecipeFilter = () => {
   const { lastModifiedCollection } = useAppSelector(
     (state) => state?.collections,
   );
+  // handle update recipe filter criteria
+  const handleUpdateFilterCriteria = useToUpdateFilterCriteria();
+  // handle update recipe active filter tag
+  const handleUpdateActiveFilterTag = useToUpdateActiveFilterTag();
 
   // open recipe collection panel after added a recipe to a collection
   const handleOpenCollectionTray = () => {
@@ -217,7 +226,24 @@ const RecipeFilter = () => {
             />
 
             {allFilters?.length ? (
-              <SearchtagsComponent allFilters={allFilters} />
+              <SearchtagsComponent
+                allFilters={allFilters}
+                handleUpdateActiveFilterTag={(
+                  activeSection,
+                  filterCriteria,
+                  activeTab,
+                  childTab,
+                ) => {
+                  dispatch(setOpenFilterTray(true));
+                  handleUpdateActiveFilterTag(
+                    activeSection,
+                    filterCriteria,
+                    activeTab,
+                    childTab,
+                  );
+                }}
+                handleUpdateFilterCriteria={handleUpdateFilterCriteria}
+              />
             ) : null}
 
             <ShowRecipeContainer

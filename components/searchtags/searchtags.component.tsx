@@ -2,24 +2,44 @@
 import React from "react";
 import Cancel from "../../public/icons/cancel_black_24dp.svg";
 import { useAppDispatch } from "../../redux/hooks";
-
 import styles from "./searchtag.module.scss";
 import {
-  ActiveFilterTagCriteriaType,
+  ActiveSectionType,
+  FilterCriteriaOptions,
   FilterCriteriaValue,
-  updateActiveFilterTag,
-  updateFilterCriteriaItem,
-} from "../../redux/slices/filterRecipeSlice";
-import { setOpenFilterTray } from "../../redux/slices/sideTraySlice";
+  FiltersUpdateCriteria,
+} from "../../type/filterType";
+
+type HandleUpdateActiveFilterTagType = (
+  activeSection: ActiveSectionType,
+  filterCriteria: FilterCriteriaOptions,
+  activeTab: string,
+  childTab?: string,
+) => void;
+interface HandleUpdateFilterCriteriaType {
+  filterCriteria?: FilterCriteriaOptions;
+  value?: FilterCriteriaValue;
+  updateStatus: FiltersUpdateCriteria;
+}
+
+interface TayType {
+  item: FilterCriteriaValue;
+  isIdExcluded: boolean;
+  handleUpdateActiveFilterTag: HandleUpdateActiveFilterTagType;
+  handleUpdateFilterCriteria: (obj: HandleUpdateFilterCriteriaType) => void;
+}
 
 interface searchtagsComponentProps {
   allFilters?: FilterCriteriaValue[];
+  handleUpdateActiveFilterTag: HandleUpdateActiveFilterTagType;
+  handleUpdateFilterCriteria: (obj: HandleUpdateFilterCriteriaType) => void;
 }
 
 export default function SearchtagsComponent({
   allFilters = [],
+  handleUpdateActiveFilterTag,
+  handleUpdateFilterCriteria,
 }: searchtagsComponentProps) {
-  const dispatch = useAppDispatch();
   //check active filter item
   const checkExcludeIngredientIds = (id: string) => {
     return allFilters.some(
@@ -29,13 +49,6 @@ export default function SearchtagsComponent({
         //@ts-ignore
         item?.excludeIngredientIds,
     );
-  };
-
-  const handleUpdateActiveFilterTag = (
-    activeFilterTag: ActiveFilterTagCriteriaType,
-  ) => {
-    dispatch(setOpenFilterTray(true));
-    dispatch(updateActiveFilterTag(activeFilterTag));
   };
   return (
     <div className={styles.searchtab}>
@@ -49,6 +62,7 @@ export default function SearchtagsComponent({
                 item={filterItem}
                 isIdExcluded={checkExcludeId}
                 handleUpdateActiveFilterTag={handleUpdateActiveFilterTag}
+                handleUpdateFilterCriteria={handleUpdateFilterCriteria}
               />
             ) : (
               <FilterByPicture
@@ -56,6 +70,7 @@ export default function SearchtagsComponent({
                 item={filterItem}
                 isIdExcluded={checkExcludeId}
                 handleUpdateActiveFilterTag={handleUpdateActiveFilterTag}
+                handleUpdateFilterCriteria={handleUpdateFilterCriteria}
               />
             );
           })
@@ -68,30 +83,33 @@ const FilterByPicture = ({
   item,
   isIdExcluded = false,
   handleUpdateActiveFilterTag,
-}: {
-  item: FilterCriteriaValue;
-  isIdExcluded: boolean;
-  handleUpdateActiveFilterTag: (args: ActiveFilterTagCriteriaType) => void;
-}) => {
+  handleUpdateFilterCriteria,
+}: TayType) => {
   const dispatch = useAppDispatch();
   return (
     <div
       className={`${styles.item} ${
         isIdExcluded ? styles.activeItemPrimary : ""
       }`}
-      onClick={() => handleUpdateActiveFilterTag(item?.origin)}
+      onClick={() =>
+        handleUpdateActiveFilterTag(
+          item?.origin.activeSection,
+          item?.origin?.filterCriteria,
+          item?.origin?.activeTab,
+          item?.origin?.childTab,
+        )
+      }
     >
       <div
         className={styles.cross}
         onClick={(e) => {
           e.stopPropagation();
-          dispatch(
-            updateFilterCriteriaItem({
-              updateStatus: "remove",
-              filterCriteria: item.filterCriteria,
-              value: item,
-            }),
-          );
+
+          handleUpdateFilterCriteria({
+            updateStatus: "remove",
+            filterCriteria: item.filterCriteria,
+            value: item,
+          });
         }}
       >
         <Cancel className={styles.cancel} />
@@ -110,11 +128,8 @@ const FilterByTag = ({
   item,
   isIdExcluded = false,
   handleUpdateActiveFilterTag,
-}: {
-  item: FilterCriteriaValue;
-  isIdExcluded: boolean;
-  handleUpdateActiveFilterTag: (args: ActiveFilterTagCriteriaType) => void;
-}) => {
+  handleUpdateFilterCriteria,
+}: TayType) => {
   const dispatch = useAppDispatch();
   return (
     <div
@@ -122,19 +137,25 @@ const FilterByTag = ({
         isIdExcluded ? styles.activeItemPrimary : ""
       }`}
       style={{ minHeight: "35px" }}
-      onClick={() => handleUpdateActiveFilterTag(item?.origin)}
+      onClick={() =>
+        handleUpdateActiveFilterTag(
+          item?.origin.activeSection,
+          item?.origin?.filterCriteria,
+          item?.origin?.activeTab,
+          item?.origin?.childTab,
+        )
+      }
     >
       <div
         className={styles.cross}
         onClick={(e) => {
           e.stopPropagation();
-          dispatch(
-            updateFilterCriteriaItem({
-              updateStatus: "remove",
-              filterCriteria: item.filterCriteria,
-              value: item,
-            }),
-          );
+
+          handleUpdateFilterCriteria({
+            updateStatus: "remove",
+            filterCriteria: item.filterCriteria,
+            value: item,
+          });
         }}
       >
         <Cancel className={styles.cancel} />
