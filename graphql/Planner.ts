@@ -51,6 +51,9 @@ const PLAN_FIELDS = gql`
       endDateString
       planCollections
       commentsCount
+      averageRating
+      numberOfRating
+      myRating
       image {
         url
         hash
@@ -391,6 +394,17 @@ export const EDIT_PLAN_COMMENT = gql`
 export const REMOVE_PLAN_COMMENT = gql`
   mutation RemovePlanComment($memberId: String!, $commentId: String!) {
     removeAPlanComment(memberId: $memberId, commentId: $commentId)
+  }
+`;
+
+// PLAN RATING
+export const UPDATE_PLAN_RATING = gql`
+  mutation UpdatePlanRating($data: CreateNewPlanRating!) {
+    updatePlanRating(data: $data) {
+      averageRating
+      myRating
+      numberOfRating
+    }
   }
 `;
 

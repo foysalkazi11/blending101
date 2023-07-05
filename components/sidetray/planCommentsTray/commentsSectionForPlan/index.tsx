@@ -4,6 +4,7 @@ import {
   EDIT_PLAN_COMMENT,
   GET_ALL_PLAN_COMMENTS,
   REMOVE_PLAN_COMMENT,
+  UPDATE_PLAN_RATING,
 } from "../../../../graphql/Planner";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import IconForAddComment from "../../common/iconForAddComment/IconForAddComment";
@@ -15,12 +16,19 @@ import { useAppSelector } from "../../../../redux/hooks";
 import CommentsTopSection from "../../common/commentsTopSection/CommentsTopSection";
 import CommentsBottomSection from "../../common/commentsButtomSection/CommentsBottomSection";
 import notification from "../../../utility/reactToastifyNotification";
+import UserRating from "../../common/userRating/UserRating";
+import useToUpdatePlanField from "../../../../customHooks/plan/useToUpdatePlanField";
 
 interface CommentsSectionForPlanType {
   id: string;
+  myRating: number;
 }
-const CommentsSectionForPlan = ({ id }: CommentsSectionForPlanType) => {
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+const CommentsSectionForPlan = ({
+  id,
+  myRating,
+}: CommentsSectionForPlanType) => {
+  const [rating, setRating] = useState(0);
+  const { dbUser } = useAppSelector((state) => state.user);
   const [showCommentBox, setShowCommentBox] = useState(false);
   const [comment, setComment] = useState("");
   const [updateComment, setUpdateComment] = useState(false);
@@ -37,6 +45,8 @@ const CommentsSectionForPlan = ({ id }: CommentsSectionForPlanType) => {
   const [deleteComment, deleteState] = useMutation(REMOVE_PLAN_COMMENT, {
     refetchQueries: ["GetPlanComments"],
   });
+  const [updatePlanRating] = useMutation(UPDATE_PLAN_RATING);
+  const handleUpdatePlanField = useToUpdatePlanField();
 
   const toggleCommentBox = () => {
     setComment("");
@@ -53,7 +63,7 @@ const CommentsSectionForPlan = ({ id }: CommentsSectionForPlanType) => {
         mutate: editComment,
         state: editState,
         variables: {
-          memberId: userId,
+          memberId: dbUser?._id,
           commentId: updateCommentId,
           comment,
         },
@@ -69,7 +79,7 @@ const CommentsSectionForPlan = ({ id }: CommentsSectionForPlanType) => {
         state: addState,
         variables: {
           planId: id,
-          memberId: userId,
+          memberId: dbUser?._id,
           comment,
         },
         success: "Added Comment",
@@ -86,7 +96,7 @@ const CommentsSectionForPlan = ({ id }: CommentsSectionForPlanType) => {
       mutate: deleteComment,
       state: deleteState,
       variables: {
-        memberId: userId,
+        memberId: dbUser?._id,
         commentId: id,
       },
       success: "Removed Comment",
@@ -104,6 +114,27 @@ const CommentsSectionForPlan = ({ id }: CommentsSectionForPlanType) => {
     setShowCommentBox(true);
   };
 
+  // update rating
+  const updateRating = async (newRating) => {
+    setRating(newRating);
+    try {
+      const { data } = await updatePlanRating({
+        variables: {
+          data: {
+            memberId: dbUser?._id,
+            planId: id,
+            rating: newRating,
+          },
+        },
+      });
+      const { averageRating, numberOfRating, myRating } =
+        data?.updatePlanRating;
+      handleUpdatePlanField(id, { averageRating, numberOfRating, myRating });
+    } catch (error) {
+      notification("error", "Failed to update rating");
+    }
+  };
+
   useEffect(() => {
     if (id) {
       getAllCommentsForAPlan({
@@ -115,11 +146,26 @@ const CommentsSectionForPlan = ({ id }: CommentsSectionForPlanType) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+  // update existing rating if any
+  useEffect(() => {
+    setRating(myRating);
+  }, [myRating]);
 
   let comments = data?.getAllCommentsForAPlan;
 
   return (
     <div>
+      <UserRating
+        rating={rating}
+        setRating={updateRating}
+        userImage={dbUser?.image}
+        userName={
+          dbUser?.displayName ||
+          dbUser?.lastName ||
+          dbUser?.firstName ||
+          dbUser?.email
+        }
+      />
       <div className="flex ai-center jc-between mt-20 mb-30">
         {comments?.length ? (
           <span className={styles.commentsLength}>{`${comments?.length} ${
@@ -163,7 +209,7 @@ const CommentsSectionForPlan = ({ id }: CommentsSectionForPlanType) => {
                     isAbleToSetRating={false}
                     user={comment?.memberId}
                     page="recipe"
-                    isCurrentUser={comment?.memberId?._id === userId}
+                    isCurrentUser={comment?.memberId?._id === dbUser?._id}
                     updateCommentValue={updateCommentValue}
                     removeComment={removeComment}
                     deleteCommentLoading={deleteState.loading}
@@ -171,7 +217,7 @@ const CommentsSectionForPlan = ({ id }: CommentsSectionForPlanType) => {
                   />
                   <CommentsBottomSection
                     userComments={comment}
-                    isCurrentUser={comment?.userId?._id === userId}
+                    isCurrentUser={comment?.userId?._id === dbUser?._id}
                     updateCommentValue={updateCommentValue}
                     removeComment={removeComment}
                     deleteCommentLoading={deleteState.loading}
