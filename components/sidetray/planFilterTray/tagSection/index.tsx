@@ -3,17 +3,19 @@ import CustomAccordion from "../../../../theme/accordion/accordion.component";
 import styles from "../../filter/tag/TagSection.module.scss";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 
-import {
-  ActiveSectionType,
-  FilterCriteriaOptions,
-  FilterCriteriaValue,
-  updateActiveFilterTag,
-} from "../../../../redux/slices/filterRecipeSlice";
 import { BlendCategoryType } from "../../../../type/blendCategoryType";
 import { categories } from "../../../../data/categories";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import GET_BLEND_NUTRIENTS_BASED_ON_CATEGORY from "../../../../gqlLib/nutrition/query/getBlendNutrientsBasedOnCategoey";
-import Collapsible from "../../../../theme/collapsible";
+import GET_COLLECTIONS_AND_THEMES from "../../../../gqlLib/collection/query/getCollectionsAndThemes";
+import {
+  ActiveSectionType,
+  FilterCriteriaOptions,
+  FilterCriteriaValue,
+  FiltersUpdateCriteria,
+  NutrientFiltersType,
+  NutrientMatrixType,
+} from "../../../../type/filterType";
 import { INGREDIENTS_FILTER } from "../../filter/static/recipe";
 import OptionSelectHeader from "../../filter/optionSelect/OptionSelectHeader";
 import OptionSelect from "../../filter/optionSelect/OptionSelect";
@@ -21,7 +23,7 @@ import ExcludeFilter from "../../filter/excludeFilter";
 import NumericFilter from "../../filter/numericFilter/NumericFilter";
 import CheckboxOptions from "../../filter/checkboxOptions/CheckboxOptions";
 import Multiselect from "../../filter/multiSelect/MultiSelect";
-import { GET_ALL_PLAN_COLLECTION } from "../../../../graphql/Planner";
+import { updateNumericFilterStateForPlan } from "../../../../redux/slices/planFilterSlice";
 const { INGREDIENTS_BY_CATEGORY, TYPE, ALLERGIES, DIET, EQUIPMENT, DRUGS } =
   INGREDIENTS_FILTER;
 
@@ -154,15 +156,28 @@ interface Props {
   ingredientCategoryData: any[];
   ingredientCategoryLoading: boolean;
   checkExcludeIngredientIds: (id: string) => boolean;
+  handleUpdateFilterCriteria: (obj: {
+    filterCriteria?: FilterCriteriaOptions;
+    value?: FilterCriteriaValue;
+    updateStatus: FiltersUpdateCriteria;
+  }) => void;
+  handleUpdateActiveFilterTag: (
+    activeSection: ActiveSectionType,
+    filterCriteria: FilterCriteriaOptions,
+    activeTab: string,
+    childTab?: string,
+  ) => void;
 }
 
-const TagSectionForPlan = ({
+const TagSection = ({
   checkActiveItem = () => false,
   blendCategoryData = [],
   blendCategoryLoading = false,
   ingredientCategoryData = [],
   ingredientCategoryLoading = false,
   checkExcludeIngredientIds = () => false,
+  handleUpdateFilterCriteria,
+  handleUpdateActiveFilterTag,
 }: Props) => {
   const [optionSelectItems, setOptionSelectItems] = useState<any[]>([]);
   const [childIngredient, setChailIngredient] = useState("");
@@ -174,23 +189,19 @@ const TagSectionForPlan = ({
   ] = useLazyQuery(GET_BLEND_NUTRIENTS_BASED_ON_CATEGORY, {
     fetchPolicy: "cache-and-network",
   });
-  const [
-    getAllPlanCollection,
-    {
-      data: allCollectionData,
-      loading: allCollectionLoading,
-      error: allCollectionError,
-    },
-  ] = useLazyQuery(GET_ALL_PLAN_COLLECTION, {
-    fetchPolicy: "cache-and-network",
+  const {
+    data: collectionsData,
+    loading: collectionsLoading,
+    error: collectionsError,
+  } = useQuery(GET_COLLECTIONS_AND_THEMES, {
+    variables: { userId },
   });
-  const { activeFilterTag, excludeFilterState, numericFilterState } =
-    useAppSelector((state) => state?.filterRecipe);
-  const { activeTab, childTab, filterCriteria } = activeFilterTag;
-
-  const { values } = useAppSelector(
-    (state) => state?.filterRecipe?.activeState,
-  );
+  const {
+    activeFilterTagForPlan,
+    excludeFilterStateForPlan,
+    numericFilterStateForPlan,
+  } = useAppSelector((state) => state?.planFilter);
+  const { activeTab, childTab, filterCriteria } = activeFilterTagForPlan;
 
   const handleGetBlendNutrition = async (
     nutrientCategoryId: string,
@@ -222,22 +233,10 @@ const TagSectionForPlan = ({
     }
   };
 
-  const recipeFilterByCategory = (
-    activeSection: ActiveSectionType,
-    filterCriteria: FilterCriteriaOptions,
-    activeTab: string,
-    childTab?: string,
+  const handleUpdateNumericFilterState = (
+    value: NutrientFiltersType | NutrientMatrixType,
   ) => {
-    console.log(activeSection, filterCriteria, activeTab, childTab);
-
-    // dispatch(
-    //   updateActiveFilterTag({
-    //     activeSection,
-    //     filterCriteria,
-    //     activeTab,
-    //     childTab: childTab || activeTab,
-    //   }),
-    // );
+    dispatch(updateNumericFilterStateForPlan(value));
   };
 
   const optionSelectorHandler = (chip: string) => {
@@ -261,47 +260,57 @@ const TagSectionForPlan = ({
 
   useEffect(() => {
     if (activeTab === "Collections") {
-      //   if (childTab === "My Collections") {
-      //     let collections =
-      //       collectionsData?.getUserCollectionsAndThemes?.collections;
-      //     (collections = collections
-      //       ?.filter((collection) => !collection?.isShared)
-      //       ?.map((item) => ({
-      //         id: item?._id,
-      //         name: item?.personalizedName || item?.name,
-      //         image: item?.image,
-      //         tagLabel: `Own | ${item?.personalizedName || item?.name}`,
-      //         filterCriteria: "collectionIds",
-      //       }))),
-      //       setOptionSelectItems(collections);
-      //   }
-      //   if (childTab === "Shared With Me") {
-      //     let collections =
-      //       collectionsData?.getUserCollectionsAndThemes?.collections;
-      //     (collections = collections
-      //       ?.filter((collection) => collection?.isShared)
-      //       ?.map((item) => ({
-      //         id: item?._id,
-      //         name: item?.personalizedName || item?.name,
-      //         image: item?.image,
-      //         tagLabel: `Shared | ${item?.personalizedName || item?.name}`,
-      //         filterCriteria: "collectionIds",
-      //       }))),
-      //       setOptionSelectItems(collections);
-      //   }
-      //   if (childTab === "Global") {
-      //     let global = collections?.find((col) => col?.name === childTab);
-      //     let mapGlobal = global.child?.map((item, index) => ({
-      //       id: index,
-      //       name: item,
-      //       image: "",
-      //       tagLabel: item,
-      //       filterCriteria: "collectionIds",
-      //     }));
-      //     setOptionSelectItems(mapGlobal);
-      //   }
+      if (childTab === "My Collections") {
+        let collections =
+          collectionsData?.getUserCollectionsAndThemes?.collections;
+        (collections = collections
+          ?.filter((collection) => !collection?.isShared)
+          ?.map((item) => ({
+            id: item?._id,
+            name: item?.personalizedName || item?.name,
+            image: item?.image,
+            tagLabel: `Own | ${item?.personalizedName || item?.name}`,
+            filterCriteria: "collectionIds",
+          }))),
+          setOptionSelectItems(collections);
+      }
+      if (childTab === "Shared With Me") {
+        let collections =
+          collectionsData?.getUserCollectionsAndThemes?.collections;
+        (collections = collections
+          ?.filter((collection) => collection?.isShared)
+          ?.map((item) => ({
+            id: item?._id,
+            name: item?.personalizedName || item?.name,
+            image: item?.image,
+            tagLabel: `Shared | ${item?.personalizedName || item?.name}`,
+            filterCriteria: "collectionIds",
+          }))),
+          setOptionSelectItems(collections);
+      }
+      if (childTab === "Global") {
+        let global = collections?.find((col) => col?.name === childTab);
+        let mapGlobal = global.child?.map((item, index) => ({
+          id: index,
+          name: item,
+          image: "",
+          tagLabel: item,
+          filterCriteria: "collectionIds",
+        }));
+        setOptionSelectItems(mapGlobal);
+      }
     }
-
+    if (childTab === "Blend Type") {
+      setOptionSelectItems(
+        blendCategoryData?.map((item) => ({
+          id: item?._id,
+          name: item?.name,
+          image: item?.image,
+          tagLabel: "",
+          filterCriteria: "blendTypes",
+        })),
+      );
+    }
     if (activeTab === "Ingredient") {
       if (childTab !== "All") {
         setOptionSelectItems(
@@ -376,26 +385,33 @@ const TagSectionForPlan = ({
           <OptionSelectHeader
             activeTab={childTab}
             filterCriteria={filterCriteria}
+            handleUpdateFilterCriteria={handleUpdateFilterCriteria}
+            handleUpdateActiveFilterTag={handleUpdateActiveFilterTag}
           />
-          {activeTab === "Collections" ? (
+          {activeTab === "Blend Type" || activeTab === "Collections" ? (
             <OptionSelect
               optionSelectItems={optionSelectItems}
               filterCriteria={filterCriteria}
               checkActiveItem={checkActiveItem}
               checkExcludeIngredientIds={checkExcludeIngredientIds}
-              activeFilterTag={activeFilterTag}
+              activeFilterTag={activeFilterTagForPlan}
+              handleUpdateFilterCriteria={handleUpdateFilterCriteria}
             />
           ) : null}
           {activeTab === "Ingredient" ? (
             <>
-              <ExcludeFilter excludeFilterState={excludeFilterState} />
+              <ExcludeFilter
+                excludeFilterState={excludeFilterStateForPlan}
+                handleUpdateFilterCriteria={handleUpdateFilterCriteria}
+              />
               <OptionSelect
                 optionSelectItems={optionSelectItems}
                 filterCriteria={filterCriteria}
                 checkActiveItem={checkActiveItem}
                 checkExcludeIngredientIds={checkExcludeIngredientIds}
-                focusOptionId={excludeFilterState.id}
-                activeFilterTag={activeFilterTag}
+                focusOptionId={excludeFilterStateForPlan.id}
+                activeFilterTag={activeFilterTagForPlan}
+                handleUpdateFilterCriteria={handleUpdateFilterCriteria}
               />
             </>
           ) : null}
@@ -406,18 +422,22 @@ const TagSectionForPlan = ({
                 childIngredient={childIngredient}
                 filterCriteria={filterCriteria}
                 activeTab={activeTab}
+                handleUpdateFilterCriteria={handleUpdateFilterCriteria}
+                handleUpdateNumericFilterState={handleUpdateNumericFilterState}
+                numericFilterUseFrom="plan"
               />
               <OptionSelect
                 optionSelectItems={optionSelectItems}
                 filterCriteria={filterCriteria}
                 checkActiveItem={checkActiveItem}
-                focusOptionId={numericFilterState.id}
-                activeFilterTag={activeFilterTag}
+                focusOptionId={numericFilterStateForPlan.id}
+                activeFilterTag={activeFilterTagForPlan}
                 optionsLoading={blendNutrientLoading}
+                handleUpdateFilterCriteria={handleUpdateFilterCriteria}
               />
             </>
           ) : null}
-          {activeTab === "Collection" || activeTab === "Dynamic" ? (
+          {/* {activeTab === "Collection" || activeTab === "Dynamic" ? (
             <CheckboxOptions values={values} onSelect={optionSelectorHandler} />
           ) : null}
           {activeTab === "Drugs" ? (
@@ -428,11 +448,19 @@ const TagSectionForPlan = ({
               onSelect={optionSelectorHandler}
               onDelete={optionSelectorHandler}
             />
-          ) : null}
+          ) : null} */}
         </>
       ) : (
         <>
           <input className={styles.tagSectionInput} placeholder="Search" />
+          <div
+            className={styles.singleItem}
+            onClick={() =>
+              handleUpdateActiveFilterTag("tags", "blendTypes", "Blend Type")
+            }
+          >
+            <h5>Blend Type</h5>
+          </div>
 
           <CustomAccordion title="Ingredient" iconRight={true}>
             {categories?.length
@@ -442,7 +470,7 @@ const TagSectionForPlan = ({
                       className={styles.singleItemInside}
                       key={index}
                       onClick={() =>
-                        recipeFilterByCategory(
+                        handleUpdateActiveFilterTag(
                           "tags",
                           "includeIngredientIds",
                           "Ingredient",
@@ -475,7 +503,7 @@ const TagSectionForPlan = ({
                                 className={styles.singleItemInside}
                                 key={index}
                                 onClick={() =>
-                                  recipeFilterByCategory(
+                                  handleUpdateActiveFilterTag(
                                     "tags",
                                     item.title === "Nutrition Metrics"
                                       ? "nutrientMatrix"
@@ -495,7 +523,7 @@ const TagSectionForPlan = ({
                           className={styles.singleItemInside}
                           key={index}
                           onClick={() =>
-                            recipeFilterByCategory(
+                            handleUpdateActiveFilterTag(
                               "tags",
                               item.title === "Nutrition Metrics"
                                 ? "nutrientMatrix"
@@ -522,7 +550,7 @@ const TagSectionForPlan = ({
                       className={styles.singleItemInside}
                       key={index}
                       onClick={() =>
-                        recipeFilterByCategory(
+                        handleUpdateActiveFilterTag(
                           "tags",
                           "collectionIds",
                           "Collections",
@@ -608,4 +636,4 @@ const TagSectionForPlan = ({
   );
 };
 
-export default TagSectionForPlan;
+export default TagSection;

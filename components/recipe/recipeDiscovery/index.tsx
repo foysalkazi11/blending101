@@ -27,6 +27,8 @@ import {
 } from "../../../redux/slices/sideTraySlice";
 import ShowRecipeContainer from "../../showRecipeContainer";
 import ShareRecipe from "../recipeDetails/center/shareRecipe";
+import useToUpdateFilterCriteria from "../../../customHooks/recipeFilter/useToUpdateRecipeFilterCriteria";
+import useToUpdateActiveFilterTag from "../../../customHooks/recipeFilter/useToUpdateActiveFilterTag";
 let dataLimit = 12;
 
 const RecipeDiscovery = () => {
@@ -67,6 +69,12 @@ const RecipeDiscovery = () => {
   const { lastModifiedCollection } = useAppSelector(
     (state) => state?.collections,
   );
+  // handle update recipe filter criteria
+  const handleUpdateFilterCriteria = useToUpdateFilterCriteria();
+  // handle update recipe active filter tag
+  const handleUpdateActiveFilterTag = useToUpdateActiveFilterTag();
+
+  // toggle filter panel
   const toggleFilterPanel = () => {
     dispatch(setOpenFilterTray(!openFilterTray));
   };
@@ -223,7 +231,24 @@ const RecipeDiscovery = () => {
             />
 
             {allFilters?.length ? (
-              <SearchTagsComponent allFilters={allFilters} />
+              <SearchTagsComponent
+                allFilters={allFilters}
+                handleUpdateActiveFilterTag={(
+                  activeSection,
+                  filterCriteria,
+                  activeTab,
+                  childTab,
+                ) => {
+                  dispatch(setOpenFilterTray(true));
+                  handleUpdateActiveFilterTag(
+                    activeSection,
+                    filterCriteria,
+                    activeTab,
+                    childTab,
+                  );
+                }}
+                handleUpdateFilterCriteria={handleUpdateFilterCriteria}
+              />
             ) : null}
 
             {showFilterOrSearchRecipes ? (

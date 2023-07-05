@@ -3,11 +3,8 @@ import React from "react";
 import styles from "../filter.module.scss";
 import Ingredients from "../ingredients/Ingredients.component";
 import BlendType from "../blendType/BlendType";
-import {
-  FilterCriteriaOptions,
-  FilterCriteriaValue,
-} from "../../../../redux/slices/filterRecipeSlice";
 import { BlendCategoryType } from "../../../../type/blendCategoryType";
+import { FilterCriteriaValue } from "../../../../type/filterType";
 
 interface Props {
   checkActiveItem: (id: string) => boolean;
