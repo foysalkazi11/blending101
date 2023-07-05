@@ -121,7 +121,7 @@ $tooltip-arrow-size: 6px;
 
 .h1 {
   @extend %block;
-  font-size: 3.6rem;
+  font-size: 3.2rem;
   font-weight: bold;
   color: $fontDeepGray;
   // @include media(md) {
@@ -137,7 +137,7 @@ $tooltip-arrow-size: 6px;
 
 .h2 {
   @extend %block;
-  font-size: 3.2rem;
+  font-size: 2.8rem;
   font-weight: bold;
   color: $fontDeepGray;
   // @include media(md) {
@@ -152,7 +152,7 @@ $tooltip-arrow-size: 6px;
 }
 .h3 {
   @extend %block;
-  font-size: 2.8rem;
+  font-size: 2.4rem;
   font-weight: bold;
   color: $fontDeepGray;
   // @include media(md) {
@@ -168,7 +168,7 @@ $tooltip-arrow-size: 6px;
 
 .h4 {
   @extend %block;
-  font-size: 2.4px;
+  font-size: 2rem;
   font-weight: bold;
   color: $fontDeepGray;
   // @include media(md) {
