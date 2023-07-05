@@ -136,6 +136,9 @@ const SearchedPlan = ({ query, setOpenCollectionModal }) => {
             isCollectionIds={item?.planCollections}
             noOfComments={item?.commentsCount}
             setOpenCollectionModal={setOpenCollectionModal}
+            noOfRatings={item?.numberOfRating}
+            ratings={item?.averageRating}
+            myRating={item?.myRating}
           />
         </div>
       ))}
@@ -198,6 +201,9 @@ const FeaturedPlan = ({ setOpenCollectionModal }) => {
                   noOfComments={item?.commentsCount}
                   setOpenCollectionModal={setOpenCollectionModal}
                   planComrFrom="list"
+                  noOfRatings={item?.numberOfRating}
+                  ratings={item?.averageRating}
+                  myRating={item?.myRating}
                 />
               </div>
             </div>
@@ -221,6 +227,9 @@ const FeaturedPlan = ({ setOpenCollectionModal }) => {
                   noOfComments={item?.commentsCount}
                   setOpenCollectionModal={setOpenCollectionModal}
                   planComrFrom="list"
+                  noOfRatings={item?.numberOfRating}
+                  ratings={item?.averageRating}
+                  myRating={item?.myRating}
                 />
               </div>
             </div>
@@ -244,6 +253,9 @@ const FeaturedPlan = ({ setOpenCollectionModal }) => {
                   noOfComments={item?.commentsCount}
                   setOpenCollectionModal={setOpenCollectionModal}
                   planComrFrom="list"
+                  noOfRatings={item?.numberOfRating}
+                  ratings={item?.averageRating}
+                  myRating={item?.myRating}
                 />
               </div>
             </div>

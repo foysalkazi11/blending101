@@ -59,6 +59,7 @@ interface dataCardInterface {
     end: Date;
   };
   planComrFrom?: PlanComeFromType;
+  myRating?: number;
 }
 
 function PlanCard({
@@ -83,6 +84,7 @@ function PlanCard({
   customMenu = null,
   showMoreMenuAtHover = false,
   planComrFrom = "list",
+  myRating = 0,
 }: dataCardInterface) {
   title = title || "Diabetes Friendly Meal Plan: Week 1";
   ingredients = ingredients;
@@ -142,7 +144,11 @@ function PlanCard({
     </>
   );
 
-  const hangleShowCommentsAndNotesIcon = (comments: number, notes: number) => {
+  const hangleShowCommentsAndNotesIcon = (
+    comments: number,
+    notes: number,
+    myRating: number,
+  ) => {
     const res = selectCommentsAndNotesIcon(comments, notes);
     return (
       <>
@@ -154,6 +160,7 @@ function PlanCard({
               id: planId,
               name: title,
               image,
+              myRating,
             });
           }}
         />{" "}
@@ -244,7 +251,9 @@ function PlanCard({
                   }}
                 />
               </li>
-              <li>{hangleShowCommentsAndNotesIcon(noOfComments, notes)}</li>
+              <li>
+                {hangleShowCommentsAndNotesIcon(noOfComments, notes, myRating)}
+              </li>
             </ul>
           </div>
         </div>
