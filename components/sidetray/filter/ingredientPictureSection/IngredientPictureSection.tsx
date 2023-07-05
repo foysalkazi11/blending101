@@ -5,11 +5,8 @@ import { faMagnifyingGlass } from "@fortawesome/pro-solid-svg-icons";
 import styles from "../filter.module.scss";
 import CheckCircle from "../../../../public/icons/check_circle_black_24dp.svg";
 import SkeletonBlendType from "../../../../theme/skeletons/skeletonBlendType/SkeletonBlendType";
-import {
-  FilterCriteriaOptions,
-  FilterCriteriaValue,
-} from "../../../../redux/slices/filterRecipeSlice";
 import useWindowSize from "../../../utility/useWindowSize";
+import { FilterCriteriaValue } from "../../../../type/filterType";
 
 interface Props {
   searchInput?: string;

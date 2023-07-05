@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import { useAppDispatch } from "../../../../redux/hooks";
 import styles from "./OptionSelect.module.scss";
-import {
-  ActiveFilterTagCriteriaType,
-  FilterCriteriaOptions,
-  FilterCriteriaValue,
-  updateFilterCriteriaItem,
-} from "../../../../redux/slices/filterRecipeSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircleXmark,
   faCircleCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import OptionSelectSkeleton from "../../../../theme/skeletons/optionSelectSkeleton/OptionSelectSkeleton";
+import {
+  ActiveFilterTagCriteriaType,
+  FilterCriteriaOptions,
+  FilterCriteriaValue,
+  FiltersUpdateCriteria,
+} from "../../../../type/filterType";
 
 type OptionSelectProps = {
   checkActiveItem: (id: string) => boolean;
@@ -26,6 +26,11 @@ type OptionSelectProps = {
   focusOptionId?: string;
   activeFilterTag: ActiveFilterTagCriteriaType;
   optionsLoading?: boolean;
+  handleUpdateFilterCriteria: (obj: {
+    filterCriteria?: FilterCriteriaOptions;
+    value?: FilterCriteriaValue;
+    updateStatus: FiltersUpdateCriteria;
+  }) => void;
 };
 
 const OptionSelect = ({
@@ -36,6 +41,7 @@ const OptionSelect = ({
   focusOptionId = "",
   activeFilterTag,
   optionsLoading = false,
+  handleUpdateFilterCriteria,
 }: OptionSelectProps) => {
   if (optionsLoading) {
     return <OptionSelectSkeleton />;
@@ -57,6 +63,7 @@ const OptionSelect = ({
                   isIdExcluded={isIdExcluded}
                   focusOptionId={focusOptionId}
                   activeFilterTag={activeFilterTag}
+                  handleUpdateFilterCriteria={handleUpdateFilterCriteria}
                 />
               );
             })
@@ -73,6 +80,7 @@ const Chip = ({
   isIdExcluded,
   focusOptionId = "",
   activeFilterTag = {},
+  handleUpdateFilterCriteria,
 }) => {
   const [isChipHovered, setIsChipHovered] = useState(false);
   const dispatch = useAppDispatch();
@@ -88,16 +96,15 @@ const Chip = ({
       }`}
       onClick={(e) => {
         e.stopPropagation();
-        dispatch(
-          updateFilterCriteriaItem({
-            updateStatus: isSelected ? "focus" : "add",
-            value: {
-              ...item,
-              origin: { ...activeFilterTag },
-            },
-            filterCriteria,
-          }),
-        );
+
+        handleUpdateFilterCriteria({
+          updateStatus: isSelected ? "focus" : "add",
+          value: {
+            ...item,
+            origin: { ...activeFilterTag },
+          },
+          filterCriteria,
+        });
       }}
       onMouseOver={() => setIsChipHovered(true)}
       onMouseOut={() => setIsChipHovered(false)}
@@ -121,16 +128,16 @@ const Chip = ({
               className={styles.ticked}
               onClick={(e) => {
                 e.stopPropagation();
-                dispatch(
-                  updateFilterCriteriaItem({
-                    updateStatus: "remove",
-                    value: {
-                      ...item,
-                      origin: { ...activeFilterTag },
-                    },
-                    filterCriteria,
-                  }),
-                );
+
+                handleUpdateFilterCriteria({
+                  updateStatus: "remove",
+                  value: {
+                    ...item,
+                    origin: { ...activeFilterTag },
+                  },
+                  filterCriteria,
+                });
+
                 // handleBlendAndIngredientUpdate(filterCriteria, item);
               }}
             />

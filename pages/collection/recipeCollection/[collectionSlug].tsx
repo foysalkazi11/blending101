@@ -40,6 +40,8 @@ import { faXmark } from "@fortawesome/pro-light-svg-icons";
 import HeaderTextBtn from "../../../components/recipe/share/panelHeader/HeaderTextBtn";
 import useToAcceptCollectionShare from "../../../customHooks/collection/useToAcceptCollectionShare";
 import notification from "../../../components/utility/reactToastifyNotification";
+import useToUpdateFilterCriteria from "../../../customHooks/recipeFilter/useToUpdateRecipeFilterCriteria";
+import useToUpdateActiveFilterTag from "../../../customHooks/recipeFilter/useToUpdateActiveFilterTag";
 let dataLimit = 12;
 
 type Variables = Record<string, any>;
@@ -351,6 +353,10 @@ const Layout: FC<{ allFilters?: any[] }> = ({ children, allFilters = [] }) => {
   };
   const { dbUser } = useAppSelector((state) => state?.user);
   const router = useRouter();
+  // handle update recipe filter criteria
+  const handleUpdateFilterCriteria = useToUpdateFilterCriteria();
+  // handle update recipe active filter tag
+  const handleUpdateActiveFilterTag = useToUpdateActiveFilterTag();
   return (
     <AContainer
       headerIcon="/icons/juicer.svg"
@@ -405,7 +411,24 @@ const Layout: FC<{ allFilters?: any[] }> = ({ children, allFilters = [] }) => {
         </div>
 
         {allFilters?.length ? (
-          <SearchtagsComponent allFilters={allFilters} />
+          <SearchtagsComponent
+            allFilters={allFilters}
+            handleUpdateActiveFilterTag={(
+              activeSection,
+              filterCriteria,
+              activeTab,
+              childTab,
+            ) => {
+              dispatch(setOpenFilterTray(true));
+              handleUpdateActiveFilterTag(
+                activeSection,
+                filterCriteria,
+                activeTab,
+                childTab,
+              );
+            }}
+            handleUpdateFilterCriteria={handleUpdateFilterCriteria}
+          />
         ) : null}
 
         <WikiBanner />

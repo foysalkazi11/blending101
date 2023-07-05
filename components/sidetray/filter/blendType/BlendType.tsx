@@ -2,10 +2,6 @@ import React, { useEffect, useRef } from "react";
 import styles from "../filter.module.scss";
 import CheckCircle from "../../../../public/icons/check_circle_black_24dp.svg";
 import SkeletonBlendType from "../../../../theme/skeletons/skeletonBlendType/SkeletonBlendType";
-import {
-  FilterCriteriaOptions,
-  FilterCriteriaValue,
-} from "../../../../redux/slices/filterRecipeSlice";
 import { BlendCategoryType } from "../../../../type/blendCategoryType";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -13,6 +9,7 @@ import {
   faSquarePlus,
 } from "@fortawesome/pro-regular-svg-icons";
 import CustomAccordion from "../../../../theme/accordion/accordion.component";
+import { FilterCriteriaValue } from "../../../../type/filterType";
 
 const defaultBlendImg =
   "https://blending.s3.us-east-1.amazonaws.com/3383678.jpg";

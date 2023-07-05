@@ -6,21 +6,21 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import OptionSelect from "../optionSelect/OptionSelect";
 import OptionSelectHeader from "../optionSelect/OptionSelectHeader";
 import NumericFilter from "../numericFilter/NumericFilter";
-import CheckboxOptions from "../checkboxOptions/CheckboxOptions";
-import {
-  ActiveSectionType,
-  FilterCriteriaOptions,
-  FilterCriteriaValue,
-  updateActiveFilterTag,
-} from "../../../../redux/slices/filterRecipeSlice";
-import Multiselect from "../multiSelect/MultiSelect";
+import { updateNumericFilterState } from "../../../../redux/slices/filterRecipeSlice";
 import { BlendCategoryType } from "../../../../type/blendCategoryType";
 import { categories } from "../../../../data/categories";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import GET_BLEND_NUTRIENTS_BASED_ON_CATEGORY from "../../../../gqlLib/nutrition/query/getBlendNutrientsBasedOnCategoey";
-import Collapsible from "../../../../theme/collapsible";
 import ExcludeFilter from "../excludeFilter";
 import GET_COLLECTIONS_AND_THEMES from "../../../../gqlLib/collection/query/getCollectionsAndThemes";
+import {
+  ActiveSectionType,
+  FilterCriteriaOptions,
+  FilterCriteriaValue,
+  FiltersUpdateCriteria,
+  NutrientFiltersType,
+  NutrientMatrixType,
+} from "../../../../type/filterType";
 const { INGREDIENTS_BY_CATEGORY, TYPE, ALLERGIES, DIET, EQUIPMENT, DRUGS } =
   INGREDIENTS_FILTER;
 
@@ -153,6 +153,17 @@ interface Props {
   ingredientCategoryData: any[];
   ingredientCategoryLoading: boolean;
   checkExcludeIngredientIds: (id: string) => boolean;
+  handleUpdateFilterCriteria: (obj: {
+    filterCriteria?: FilterCriteriaOptions;
+    value?: FilterCriteriaValue;
+    updateStatus: FiltersUpdateCriteria;
+  }) => void;
+  handleUpdateActiveFilterTag: (
+    activeSection: ActiveSectionType,
+    filterCriteria: FilterCriteriaOptions,
+    activeTab: string,
+    childTab?: string,
+  ) => void;
 }
 
 const TagSection = ({
@@ -162,6 +173,8 @@ const TagSection = ({
   ingredientCategoryData = [],
   ingredientCategoryLoading = false,
   checkExcludeIngredientIds = () => false,
+  handleUpdateFilterCriteria,
+  handleUpdateActiveFilterTag,
 }: Props) => {
   const [optionSelectItems, setOptionSelectItems] = useState<any[]>([]);
   const [childIngredient, setChailIngredient] = useState("");
@@ -183,10 +196,6 @@ const TagSection = ({
   const { activeFilterTag, excludeFilterState, numericFilterState } =
     useAppSelector((state) => state?.filterRecipe);
   const { activeTab, childTab, filterCriteria } = activeFilterTag;
-
-  const { values } = useAppSelector(
-    (state) => state?.filterRecipe?.activeState,
-  );
 
   const handleGetBlendNutrition = async (
     nutrientCategoryId: string,
@@ -218,20 +227,10 @@ const TagSection = ({
     }
   };
 
-  const recipeFilterByCategory = (
-    activeSection: ActiveSectionType,
-    filterCriteria: FilterCriteriaOptions,
-    activeTab: string,
-    childTab?: string,
+  const handleUpdateNumericFilterState = (
+    value: NutrientFiltersType | NutrientMatrixType,
   ) => {
-    dispatch(
-      updateActiveFilterTag({
-        activeSection,
-        filterCriteria,
-        activeTab,
-        childTab: childTab || activeTab,
-      }),
-    );
+    dispatch(updateNumericFilterState(value));
   };
 
   const optionSelectorHandler = (chip: string) => {
@@ -380,6 +379,8 @@ const TagSection = ({
           <OptionSelectHeader
             activeTab={childTab}
             filterCriteria={filterCriteria}
+            handleUpdateFilterCriteria={handleUpdateFilterCriteria}
+            handleUpdateActiveFilterTag={handleUpdateActiveFilterTag}
           />
           {activeTab === "Blend Type" || activeTab === "Collections" ? (
             <OptionSelect
@@ -388,11 +389,15 @@ const TagSection = ({
               checkActiveItem={checkActiveItem}
               checkExcludeIngredientIds={checkExcludeIngredientIds}
               activeFilterTag={activeFilterTag}
+              handleUpdateFilterCriteria={handleUpdateFilterCriteria}
             />
           ) : null}
           {activeTab === "Ingredient" ? (
             <>
-              <ExcludeFilter excludeFilterState={excludeFilterState} />
+              <ExcludeFilter
+                excludeFilterState={excludeFilterState}
+                handleUpdateFilterCriteria={handleUpdateFilterCriteria}
+              />
               <OptionSelect
                 optionSelectItems={optionSelectItems}
                 filterCriteria={filterCriteria}
@@ -400,6 +405,7 @@ const TagSection = ({
                 checkExcludeIngredientIds={checkExcludeIngredientIds}
                 focusOptionId={excludeFilterState.id}
                 activeFilterTag={activeFilterTag}
+                handleUpdateFilterCriteria={handleUpdateFilterCriteria}
               />
             </>
           ) : null}
@@ -410,6 +416,8 @@ const TagSection = ({
                 childIngredient={childIngredient}
                 filterCriteria={filterCriteria}
                 activeTab={activeTab}
+                handleUpdateFilterCriteria={handleUpdateFilterCriteria}
+                handleUpdateNumericFilterState={handleUpdateNumericFilterState}
               />
               <OptionSelect
                 optionSelectItems={optionSelectItems}
@@ -418,10 +426,11 @@ const TagSection = ({
                 focusOptionId={numericFilterState.id}
                 activeFilterTag={activeFilterTag}
                 optionsLoading={blendNutrientLoading}
+                handleUpdateFilterCriteria={handleUpdateFilterCriteria}
               />
             </>
           ) : null}
-          {activeTab === "Collection" || activeTab === "Dynamic" ? (
+          {/* {activeTab === "Collection" || activeTab === "Dynamic" ? (
             <CheckboxOptions values={values} onSelect={optionSelectorHandler} />
           ) : null}
           {activeTab === "Drugs" ? (
@@ -432,7 +441,7 @@ const TagSection = ({
               onSelect={optionSelectorHandler}
               onDelete={optionSelectorHandler}
             />
-          ) : null}
+          ) : null} */}
         </>
       ) : (
         <>
@@ -440,7 +449,7 @@ const TagSection = ({
           <div
             className={styles.singleItem}
             onClick={() =>
-              recipeFilterByCategory("tags", "blendTypes", "Blend Type")
+              handleUpdateActiveFilterTag("tags", "blendTypes", "Blend Type")
             }
           >
             <h5>Blend Type</h5>
@@ -454,7 +463,7 @@ const TagSection = ({
                       className={styles.singleItemInside}
                       key={index}
                       onClick={() =>
-                        recipeFilterByCategory(
+                        handleUpdateActiveFilterTag(
                           "tags",
                           "includeIngredientIds",
                           "Ingredient",
@@ -487,7 +496,7 @@ const TagSection = ({
                                 className={styles.singleItemInside}
                                 key={index}
                                 onClick={() =>
-                                  recipeFilterByCategory(
+                                  handleUpdateActiveFilterTag(
                                     "tags",
                                     item.title === "Nutrition Metrics"
                                       ? "nutrientMatrix"
@@ -507,7 +516,7 @@ const TagSection = ({
                           className={styles.singleItemInside}
                           key={index}
                           onClick={() =>
-                            recipeFilterByCategory(
+                            handleUpdateActiveFilterTag(
                               "tags",
                               item.title === "Nutrition Metrics"
                                 ? "nutrientMatrix"
@@ -534,7 +543,7 @@ const TagSection = ({
                       className={styles.singleItemInside}
                       key={index}
                       onClick={() =>
-                        recipeFilterByCategory(
+                        handleUpdateActiveFilterTag(
                           "tags",
                           "collectionIds",
                           "Collections",
