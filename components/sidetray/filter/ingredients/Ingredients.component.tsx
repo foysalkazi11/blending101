@@ -6,15 +6,12 @@ import useGetAllIngredientsDataBasedOnNutrition from "../../../../customHooks/us
 import IngredientPictureSection from "../ingredientPictureSection/IngredientPictureSection";
 import RankingSection from "../rankingSection/RankingSection";
 import { Portion } from "../../../../type/wikiCompareList";
-import {
-  FilterCriteriaOptions,
-  FilterCriteriaValue,
-} from "../../../../redux/slices/filterRecipeSlice";
 import { categories } from "../../../../data/categories";
 import ToggleMenu from "../../../../theme/toggleMenu/ToggleMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage, faRankingStar } from "@fortawesome/pro-light-svg-icons";
 import { ToggleMenuType } from "../../../../type/toggleMenuType";
+import { FilterCriteriaValue } from "../../../../type/filterType";
 export interface ingredientState {
   name: string;
   value: number;

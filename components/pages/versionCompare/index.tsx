@@ -36,6 +36,7 @@ import {
 import { setDetailsARecipe } from "../../../redux/slices/recipeSlice";
 import { VersionAddDataType } from "../../../type/versionAddDataType";
 import useToUpdateAfterEditVersion from "../../../customHooks/useToUpdateAfterEditVersion";
+import mapIngredientStatus from "../../../helperFunc/mapIngredientStatus";
 
 const compareRecipeResponsiveSettings = {
   ...compareRecipeResponsiveSetting,
@@ -56,15 +57,7 @@ const VersionCompare = () => {
     image: string[];
     description: string;
     recipeBlendCategory: string;
-    ingredients: {
-      ingredientId: string;
-      selectedPortionName: string;
-      weightInGram: number;
-      selectedPortionQuantity: number;
-      ingredientName: string;
-      label: string; // `${selectedPortionQuantity} ${selectedPortionName} ${ingredientName}`;
-      comment?: string;
-    }[];
+    ingredients: any;
   }>({
     versionId: "",
     name: "",
@@ -161,7 +154,14 @@ const VersionCompare = () => {
       return version?.map((item) => ({
         addedToCompare,
         allRecipes,
-        defaultVersion: { ...item, isVersionSharable },
+        defaultVersion: {
+          ...item,
+          isVersionSharable,
+          ingredients: mapIngredientStatus(
+            item?.ingredients || [],
+            item?.errorIngredients || [],
+          ),
+        },
         isMatch: false,
         myRecipes,
         notes,
@@ -175,7 +175,14 @@ const VersionCompare = () => {
       {
         addedToCompare,
         allRecipes,
-        defaultVersion: { ...defaultVersion, isVersionSharable: true },
+        defaultVersion: {
+          ...defaultVersion,
+          isVersionSharable: true,
+          ingredients: mapIngredientStatus(
+            defaultVersion?.ingredients,
+            defaultVersion?.errorIngredients,
+          ),
+        },
         isMatch: true,
         myRecipes,
         notes,
@@ -195,6 +202,10 @@ const VersionCompare = () => {
           defaultVersion: {
             ...recipeId?.originalVersion,
             isVersionSharable: true,
+            ingredients: mapIngredientStatus(
+              recipeId?.originalVersion?.ingredients,
+              recipeId?.originalVersion?.errorIngredients,
+            ),
           },
           isMatch: false,
           myRecipes,
@@ -244,36 +255,58 @@ const VersionCompare = () => {
     return newRecipe?.ingredients?.find((item) => item?.ingredientId === id);
   };
 
-  // click to add ingredient form others versions
+  const findItemIngredientId = (id) => {
+    return newRecipe?.ingredients?.find(
+      (item) => item?.ingredientId === id || item?.qaId === id,
+    );
+  };
+  const findItemQaId = (id) => {
+    return newRecipe?.ingredients?.find((item) => item?.qaId === id);
+  };
+
   const addIngredient = (id: string, index: number) => {
     const findRecipe = findVersion(id);
+    const findIngredient = findRecipe?.defaultVersion.ingredients[index];
+    const isIngredientStatusOk = findIngredient?.ingredientStatus === "ok";
 
-    if (findRecipe) {
-      const findIngredient = findRecipe?.defaultVersion?.ingredients?.[index];
-      const ingredientId = findIngredient?.ingredientId?._id;
+    let ingredientId = "";
+    let newIngredient = {};
+    if (isIngredientStatusOk) {
+      ingredientId = findIngredient?.ingredientId?._id;
       const selectedPortionName = findIngredient?.selectedPortion?.name;
       const selectedPortionGram = findIngredient?.selectedPortion?.gram;
       const ingredientName = findIngredient?.ingredientId?.ingredientName;
       const selectedPortionQuantity = findIngredient?.selectedPortion?.quantity;
-      const item = findItem(ingredientId);
+      const comment = findIngredient?.comment || "";
+      let label = `${selectedPortionQuantity} ${selectedPortionName} ${ingredientName}`;
+      newIngredient = {
+        ingredientId,
+        selectedPortionName,
+        weightInGram: selectedPortionGram,
+        ingredientStatus: "ok",
+        label,
+        comment,
+      };
+    } else {
+      //@ts-ignore
+      ingredientId = findIngredient?.qaId;
+      newIngredient = {
+        ...findIngredient,
+        label: findIngredient?.errorString,
+      };
+    }
+    // is already exist
+    const item = isIngredientStatusOk
+      ? findItemIngredientId(ingredientId)
+      : findItemQaId(ingredientId);
 
-      if (!item) {
-        const newIngredient = {
-          ingredientId: ingredientId,
-          selectedPortionName: selectedPortionName,
-          weightInGram: selectedPortionGram,
-          selectedPortionQuantity: selectedPortionQuantity,
-          ingredientName,
-          label: `${selectedPortionQuantity} ${selectedPortionName} ${ingredientName}`,
-        };
-
-        setNewRecipe((state) => ({
-          ...state,
-          ingredients: [...state?.ingredients, newIngredient],
-        }));
-      } else {
-        return;
-      }
+    if (!item) {
+      setNewRecipe((state) => ({
+        ...state,
+        ingredients: [...state?.ingredients, newIngredient],
+      }));
+    } else {
+      return;
     }
   };
 
@@ -290,19 +323,31 @@ const VersionCompare = () => {
     let ingredientsArr = [];
 
     ingredients?.forEach((ing) => {
-      const ingredientId = ing?.ingredientId?._id;
-      const selectedPortionName = ing?.selectedPortion?.name;
-      const selectedPortionGram = ing?.selectedPortion?.gram;
-      const ingredientName = ing?.ingredientId?.ingredientName;
-      const selectedPortionQuantity = ing?.selectedPortion?.quantity;
-      ingredientsArr.push({
-        ingredientId: ingredientId,
-        selectedPortionName: selectedPortionName,
-        weightInGram: selectedPortionGram,
-        selectedPortionQuantity,
-        ingredientName,
-        label: `${selectedPortionQuantity} ${selectedPortionName} ${ingredientName}`,
-      });
+      const isIngredientStatusOk = ing?.ingredientStatus === "ok";
+      if (isIngredientStatusOk) {
+        const ingredientId = ing?.ingredientId?._id;
+        const selectedPortionName = ing?.selectedPortion?.name;
+        const selectedPortionGram = ing?.selectedPortion?.gram;
+        const ingredientName = ing?.ingredientId?.ingredientName;
+        const selectedPortionQuantity = ing?.selectedPortion?.quantity;
+        const label = `${selectedPortionQuantity} ${selectedPortionName} ${ingredientName}`;
+        const comment = ing?.comment || "";
+        ingredientsArr.push({
+          ingredientId: ingredientId,
+          selectedPortionName: selectedPortionName,
+          weightInGram: selectedPortionGram,
+          selectedPortionQuantity,
+          ingredientName,
+          label,
+          comment,
+          ingredientStatus: "ok",
+        });
+      } else {
+        ingredientsArr.push({
+          ...ing,
+          label: ing?.errorString,
+        });
+      }
     });
 
     const defaultImage =
@@ -314,7 +359,7 @@ const VersionCompare = () => {
       description,
       image: [defaultImage],
       recipeBlendCategory: recipeBlendCategory?._id,
-      ingredients: [...ingredientsArr],
+      ingredients: ingredientsArr,
     }));
     handleEditMode(editMode, index);
   };
@@ -370,7 +415,7 @@ const VersionCompare = () => {
         ingredientId: item?.ingredientId,
         selectedPortionName: item?.selectedPortionName,
         weightInGram: item?.weightInGram,
-        comment: comment || null,
+        comment: comment || "",
       });
       newIngredientObj.push({
         ingredientId: {
@@ -548,7 +593,9 @@ const VersionCompare = () => {
                     handleToUpdateDataAfterChangeDefaultVersion
                   }
                   handleToOpenVersionTray={versionHandler}
-                  showTopCancelButton={false}
+                  showTopCancelButton={
+                    singleVersionsEditMode === index ? true : false
+                  }
                   isVersionSharable={recipe?.defaultVersion?.isVersionSharable}
                 />
               );

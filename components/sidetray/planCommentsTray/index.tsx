@@ -72,7 +72,10 @@ export default function PlanCommentsTray({
         className={styles.recipeImage}
       />
       {toggle === 0 ? (
-        <CommentsSectionForPlan id={currentPlanInfoForComments?.id} />
+        <CommentsSectionForPlan
+          id={currentPlanInfoForComments?.id}
+          myRating={currentPlanInfoForComments?.myRating}
+        />
       ) : (
         <NoteSection />
       )}

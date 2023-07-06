@@ -11,19 +11,19 @@ import CommonSearchBar from "../../../searchBar/CommonSearchBar";
 interface Props {
   input?: string;
   handleOnChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  openFilterTray?: boolean;
+  toggleFilterPanel?: () => void;
 }
 
 const DiscoveryPageSearchBar = ({
   handleOnChange = () => {},
   input = "",
+  openFilterTray,
+  toggleFilterPanel,
 }: Props) => {
   const router = useRouter();
   const { dbUser } = useAppSelector((state) => state?.user);
-  const { openFilterTray } = useAppSelector((state) => state?.sideTray);
   const dispatch = useAppDispatch();
-  const toggleFilterPanel = () => {
-    dispatch(setOpenFilterTray(!openFilterTray));
-  };
 
   const handleSubmit = () => {
     //

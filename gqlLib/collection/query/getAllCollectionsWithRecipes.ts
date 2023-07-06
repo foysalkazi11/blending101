@@ -35,6 +35,10 @@ const GET_ALL_COLLECTIONS_WITH_RECIPES = gql`
           }
           averageRating
           numberOfRating
+          recipeBlendCategory {
+            _id
+            name
+          }
         }
         defaultVersion {
           _id

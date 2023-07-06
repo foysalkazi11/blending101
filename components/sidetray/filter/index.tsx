@@ -10,15 +10,13 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setOpenFilterTray } from "../../../redux/slices/sideTraySlice";
 import TrayTag from "../TrayTag";
 import { FiFilter } from "react-icons/fi";
-import {
-  FilterCriteriaValue,
-  updateActiveFilterTag,
-  updateFilterCriteriaItem,
-} from "../../../redux/slices/filterRecipeSlice";
 import { useQuery } from "@apollo/client";
 import { FETCH_BLEND_CATEGORIES } from "../../../gqlLib/category/queries/fetchCategories";
 import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
 import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
+import { FilterCriteriaValue } from "../../../type/filterType";
+import useToUpdateFilterCriteria from "../../../customHooks/recipeFilter/useToUpdateRecipeFilterCriteria";
+import useToUpdateActiveFilterTag from "../../../customHooks/recipeFilter/useToUpdateActiveFilterTag";
 
 interface Props {
   showTagByDefaut?: boolean;
@@ -44,13 +42,16 @@ export default function Filtertray({ showPanle, showTagByDefaut }: Props) {
       },
     });
 
+  const handleUpdateFilterCriteria = useToUpdateFilterCriteria();
+  const handleUpdateActiveFilterTag = useToUpdateActiveFilterTag();
+
   // toggle tab
   const handleToggle = (no: number) => {
-    dispatch(
-      updateActiveFilterTag({
-        ...activeFilterTag,
-        activeSection: no === 0 ? "visual" : "tags",
-      }),
+    handleUpdateActiveFilterTag(
+      no === 0 ? "visual" : "tags",
+      activeFilterTag.filterCriteria,
+      activeFilterTag.activeTab,
+      activeFilterTag.childTab,
     );
   };
 
@@ -80,13 +81,12 @@ export default function Filtertray({ showPanle, showTagByDefaut }: Props) {
     extraInfo?: any,
   ) => {
     // const isItemExist = checkActiveItem(item?.id);
-    dispatch(
-      updateFilterCriteriaItem({
-        updateStatus: isItemExist ? "remove" : "add",
-        value: extraInfo,
-        filterCriteria: item.filterCategory,
-      }),
-    );
+
+    handleUpdateFilterCriteria({
+      filterCriteria: item.filterCategory,
+      value: extraInfo,
+      updateStatus: isItemExist ? "remove" : "add",
+    });
   };
 
   return (
@@ -137,6 +137,8 @@ export default function Filtertray({ showPanle, showTagByDefaut }: Props) {
           }
           ingredientCategoryLoading={ingredientCategoryLoading}
           checkExcludeIngredientIds={checkExcludeIngredientIds}
+          handleUpdateFilterCriteria={handleUpdateFilterCriteria}
+          handleUpdateActiveFilterTag={handleUpdateActiveFilterTag}
         />
       )}
     </TrayWrapper>

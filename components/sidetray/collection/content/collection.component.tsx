@@ -162,6 +162,8 @@ export default function CollectionComponent({
           userCollections: collectionHasRecipe,
         },
         {},
+        "",
+        activeRecipeId ? [] : bulkRecipeIdsForAddedInCollection,
       );
 
       reactToastifyNotification("success", `Collection update successfully`);

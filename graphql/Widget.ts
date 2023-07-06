@@ -111,3 +111,152 @@ export const GET_ALL_WIDGET_COLLECTION_DATA = gql`
     }
   }
 `;
+
+export const GET_WIDGET_COLLECTIONS = gql`
+  query GetWidgetCollections($widgetSlug: String!) {
+    getWidgetCollections(widgetSlug: $widgetSlug) {
+      _id
+      widgetName
+      widgetType
+      bannerId {
+        link
+      }
+      widgetCollections {
+        _id
+        displayName
+        icon
+        slug
+        collectionData {
+          _id
+          name
+          children
+          collectionType
+        }
+      }
+    }
+  }
+`;
+
+export const GET_RECIPE_WIDGET_COLLECTIONS = gql`
+  query GetRecipeCollection($widgetSlug: String!, $collectionSlug: String!) {
+    getRecipeCollection(
+      widgetSlug: $widgetSlug
+      collectionSlug: $collectionSlug
+    ) {
+      _id
+      displayName
+      icon
+      data {
+        collectionType
+        Recipes {
+          _id
+          name
+          image {
+            image
+          }
+        }
+      }
+      filter {
+        filterType
+        values {
+          label
+          value
+        }
+      }
+      themeLink
+      bannerLink
+    }
+  }
+`;
+
+export const GET_RECIPE_WIDGET = gql`
+  query GetRecipeWidget($widgetSlug: String!) {
+    getRecipeWidget(widgetSlug: $widgetSlug) {
+      _id
+      slug
+      widgetName
+      widgetType
+      bannerId {
+        _id
+        bannerName
+        description
+      }
+      widgetCollections {
+        _id
+        displayName
+        icon
+        data {
+          collectionType
+          Recipes {
+            _id
+            name
+            image {
+              image
+            }
+            recipeBlendCategory {
+              name
+            }
+            foodCategories
+          }
+        }
+        showTabMenu
+        filter {
+          filterType
+          values {
+            label
+            value
+          }
+        }
+        slug
+        themeLink
+        bannerLink
+      }
+    }
+  }
+`;
+
+export const GET_PLAN_WIDGET = gql`
+  query GetPlanWidget($widgetSlug: String!) {
+    getPlanWidget(widgetSlug: $widgetSlug) {
+      _id
+      slug
+      widgetName
+      widgetType
+      bannerId {
+        link
+      }
+      widgetCollections {
+        _id
+        displayName
+        icon
+        data {
+          collectionType
+          Plans {
+            _id
+            planName
+            description
+            startDateString
+            endDateString
+            planCollections
+            commentsCount
+            image {
+              url
+              hash
+            }
+          }
+        }
+        showTabMenu
+        filter {
+          filterType
+          values {
+            label
+            value
+          }
+        }
+        slug
+        themeLink
+        bannerLink
+      }
+    }
+  }
+`;

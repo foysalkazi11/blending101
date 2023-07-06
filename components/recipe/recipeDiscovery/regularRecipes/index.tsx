@@ -140,6 +140,7 @@ const RegularRecipes = ({
             allUrl: "recipes/recommended",
           }}
           loading={recommendedRecipesLoading}
+          filters={["Leafy", "Beatle", "Fruity"]}
           recipes={recommendedRecipesData?.getAllrecomendedRecipes2}
           setOpenCollectionModal={setOpenCollectionModal}
           setOpenShareModal={setOpenShareModal}
@@ -155,6 +156,7 @@ const RegularRecipes = ({
           }}
           loading={latestRecipesLoading}
           recipes={latestRecipesData?.getAllLatestRecipes2}
+          filters={["Wholefood", "Frozen", "Refreshing"]}
           setOpenCollectionModal={setOpenCollectionModal}
           setOpenShareModal={setOpenShareModal}
           setShareRecipeData={setShareRecipeData}
@@ -167,6 +169,7 @@ const RegularRecipes = ({
             image: <FontAwesomeIcon icon={faFire} color="#fe5d1f" size="2x" />,
             allUrl: "recipes/popular",
           }}
+          filters={["Leafy", "Beatle", "Fruity"]}
           loading={popularRecipesLoading}
           recipes={popularRecipesData?.getAllpopularRecipes2}
           setOpenCollectionModal={setOpenCollectionModal}
@@ -195,6 +198,7 @@ interface ShowRecipesType {
     React.SetStateAction<{ id: string; image: string; name: string }>
   >;
   updateDataFunc?: ReferenceOfRecipeUpdateFuncType;
+  filters?: any[];
 }
 
 export const ShowRecipes = ({

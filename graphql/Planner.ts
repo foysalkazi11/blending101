@@ -51,6 +51,9 @@ const PLAN_FIELDS = gql`
       endDateString
       planCollections
       commentsCount
+      averageRating
+      numberOfRating
+      myRating
       image {
         url
         hash
@@ -394,6 +397,17 @@ export const REMOVE_PLAN_COMMENT = gql`
   }
 `;
 
+// PLAN RATING
+export const UPDATE_PLAN_RATING = gql`
+  mutation UpdatePlanRating($data: CreateNewPlanRating!) {
+    updatePlanRating(data: $data) {
+      averageRating
+      myRating
+      numberOfRating
+    }
+  }
+`;
+
 export const ADD_TO_MY_PLAN = gql`
   mutation AddToMyPlan(
     $type: mergerOrRemove!
@@ -557,6 +571,44 @@ export const GET_ALL_PLANS_FOR_A_COLLECTION = gql`
         planCollections
         commentsCount
       }
+    }
+  }
+`;
+
+export const FILTER_PLAN = gql`
+  query FilterPlans(
+    $userId: String!
+    $data: FilterPlan!
+    $page: Float
+    $limit: Float
+  ) {
+    filterPlans(userId: $userId, data: $data, page: $page, limit: $limit) {
+      plans {
+        _id
+        planName
+        description
+        startDateString
+        endDateString
+        planCollections
+        commentsCount
+        image {
+          url
+          hash
+        }
+        averageRating
+        calorie {
+          value
+        }
+        gigl {
+          netCarbs
+          totalGL
+          totalGi
+        }
+        myRating
+        numberOfRating
+        totalRating
+      }
+      totalPlans
     }
   }
 `;

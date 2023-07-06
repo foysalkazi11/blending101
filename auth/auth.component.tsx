@@ -17,6 +17,7 @@ function AuthProvider({ children, activeUser }) {
   // INITIALIZE 2: DEFINE STATES
 
   const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState(null);
   // const [active, setActive] = useState(null);
   const { user } = useAppSelector((state) => state?.user);
   const [createNewUser, { loading: userLoading }] =
@@ -35,6 +36,7 @@ function AuthProvider({ children, activeUser }) {
       let userEmail = "";
       let provider = "";
       const user = await Auth.currentAuthenticatedUser();
+      setSession(user);
       if (user?.attributes) {
         const {
           attributes: { email },
@@ -96,10 +98,19 @@ function AuthProvider({ children, activeUser }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, session }}>
+      {children}
+    </AuthContext.Provider>
   );
 }
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const { user } = useContext(AuthContext);
+  return user;
+};
+export const useSession = () => {
+  const { session } = useContext(AuthContext);
+  return session;
+};
 
 const mapStateToProps = (state) => ({
   activeUser: state.user.user,

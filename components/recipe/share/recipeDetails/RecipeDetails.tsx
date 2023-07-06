@@ -102,6 +102,7 @@ interface RecipeDetailsProps {
   updateDataAfterChangeDefaultVersion?: (versionId: string) => void;
   showTopCancelButton?: boolean;
   viewPermissions?: AccessPermission[];
+  interactionPermissions?: AccessPermission[];
 }
 
 const RecipeDetails = ({
@@ -131,12 +132,13 @@ const RecipeDetails = ({
     "collection",
     "comments&Notes",
   ],
+  interactionPermissions = ["all"],
 }: RecipeDetailsProps) => {
   const [winReady, setwinReady] = useState(false);
   if (recipe?.isTemp) {
     viewPermissions = ["collection"];
+    interactionPermissions = ["brand", "collection"];
   }
-
   const {
     handleFetchIngrdients,
     loading: nutritionDataLoading,
@@ -149,7 +151,7 @@ const RecipeDetails = ({
 
   useEffect(() => {
     handleFetchIngrdients(
-      recipe?.defaultVersion?.ingredients.filter(
+      recipe?.defaultVersion?.ingredients?.filter(
         (ing) => ing?.ingredientStatus === "ok",
       ),
       {},
@@ -215,6 +217,7 @@ const RecipeDetails = ({
           carbs={recipe?.defaultVersion?.gigl?.netCarbs}
           personalRating={recipe?.personalRating}
           viewPermissions={viewPermissions}
+          interactionPermissions={interactionPermissions}
           origin={recipe?.recipeId?.url}
         />
         <div className={`${styles.dividerBox}`}>

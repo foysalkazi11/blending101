@@ -4,7 +4,7 @@ import { WikiType as Type } from "../../../type/wikiListType";
 import s from "./WikiType.module.scss";
 
 const typeList: { icon: string; title: Type }[] = [
-  { icon: "/icons/Ingredients.svg", title: "Ingredient" },
+  { icon: "/images/wiki_ingredient.png", title: "Ingredient" },
   { icon: "/icons/Nurtition.svg", title: "Nutrient" },
   { icon: "/icons/Heart_rate.svg", title: "Health" },
 ];

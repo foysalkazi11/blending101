@@ -29,6 +29,7 @@ import {
   ReferenceOfRecipeUpdateFuncType,
 } from "../../type/recipeType";
 import { AccessPermission } from "../../type/recipeCardType";
+import { setReferenceOfRecipeUpdateFunc } from "../../redux/slices/recipeSlice";
 
 const rootMargin = "100px";
 
@@ -95,21 +96,32 @@ const ShowRecipeContainer = ({
   }, [entry]);
 
   const handleToOpenCollectionTray = () => {
-    const dataIds = data?.map((item) => item?._id);
+    const dataIds = data?.map((item) => item?.recipeId._id);
     if (showItems === "recipe") {
       dispatch(setSingleRecipeWithinCollecions([]));
       dispatch(setOpenCollectionsTary(true));
       dispatch(setChangeRecipeWithinCollection(true));
       dispatch(setActiveRecipeId(""));
       dispatch(updateBulkRecipeIdsForAddedInCollection(dataIds));
+      dispatch(setReferenceOfRecipeUpdateFunc(updateContainerData));
     }
   };
 
   const updateContainerData = useCallback<ReferenceOfRecipeUpdateFuncType>(
-    (id, outerObj = {}, innerObj = {}, innerLabel) => {
+    (
+      id,
+      outerObj = {},
+      innerObj = {},
+      innerLabel,
+      bulkRecipeIdsForAddedInCollection,
+    ) => {
       setContainerData((prev) =>
         prev.map((item) =>
-          item?.recipeId?._id === id
+          (
+            bulkRecipeIdsForAddedInCollection.length
+              ? bulkRecipeIdsForAddedInCollection.includes(item?.recipeId?._id)
+              : item?.recipeId?._id === id
+          )
             ? {
                 ...item,
                 ...outerObj,
@@ -305,13 +317,16 @@ const ShowRecipeContainer = ({
           </>
         }
       </div>
-      <ShareItems
-        heading="Share search results"
-        show={openCreateCollectionModal}
-        setShow={setOpenCreateCollectionModal}
-        type={showItems}
-        itemsIds={containerData?.map((item) => item?._id)}
-      />
+      {showItems === "recipe" && (
+        <ShareItems
+          heading="Share search results"
+          show={openCreateCollectionModal}
+          setShow={setOpenCreateCollectionModal}
+          type={showItems}
+          itemsIds={containerData?.map((item) => item?.recipeId?._id)}
+          showVersionShareCheckbox={false}
+        />
+      )}
     </>
   );
 };
