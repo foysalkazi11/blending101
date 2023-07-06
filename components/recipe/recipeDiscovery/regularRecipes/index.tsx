@@ -198,7 +198,7 @@ interface ShowRecipesType {
     React.SetStateAction<{ id: string; image: string; name: string }>
   >;
   updateDataFunc?: ReferenceOfRecipeUpdateFuncType;
-  filters: any[];
+  filters?: any[];
 }
 
 export const ShowRecipes = ({

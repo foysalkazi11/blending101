@@ -10,9 +10,6 @@ const Extension = () => {
   );
 
   useEffect(() => {
-    //@ts-ignore
-    if (!chrome) return;
-
     const id = "ebbpnaajpojkhndmjmdjabgjmngjgmhm";
     const token = session?.signInUserSession?.accessToken;
     //@ts-ignore
