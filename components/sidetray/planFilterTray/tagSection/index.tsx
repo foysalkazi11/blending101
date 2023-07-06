@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from "react";
 import CustomAccordion from "../../../../theme/accordion/accordion.component";
-import styles from "./TagSection.module.scss";
-import { INGREDIENTS_FILTER } from "../static/recipe";
+import styles from "../../filter/tag/TagSection.module.scss";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import OptionSelect from "../optionSelect/OptionSelect";
-import OptionSelectHeader from "../optionSelect/OptionSelectHeader";
-import NumericFilter from "../numericFilter/NumericFilter";
-import { updateNumericFilterState } from "../../../../redux/slices/filterRecipeSlice";
+
 import { BlendCategoryType } from "../../../../type/blendCategoryType";
 import { categories } from "../../../../data/categories";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import GET_BLEND_NUTRIENTS_BASED_ON_CATEGORY from "../../../../gqlLib/nutrition/query/getBlendNutrientsBasedOnCategoey";
-import ExcludeFilter from "../excludeFilter";
 import GET_COLLECTIONS_AND_THEMES from "../../../../gqlLib/collection/query/getCollectionsAndThemes";
 import {
   ActiveSectionType,
@@ -21,6 +16,14 @@ import {
   NutrientFiltersType,
   NutrientMatrixType,
 } from "../../../../type/filterType";
+import { INGREDIENTS_FILTER } from "../../filter/static/recipe";
+import OptionSelectHeader from "../../filter/optionSelect/OptionSelectHeader";
+import OptionSelect from "../../filter/optionSelect/OptionSelect";
+import ExcludeFilter from "../../filter/excludeFilter";
+import NumericFilter from "../../filter/numericFilter/NumericFilter";
+import CheckboxOptions from "../../filter/checkboxOptions/CheckboxOptions";
+import Multiselect from "../../filter/multiSelect/MultiSelect";
+import { updateNumericFilterStateForPlan } from "../../../../redux/slices/planFilterSlice";
 const { INGREDIENTS_BY_CATEGORY, TYPE, ALLERGIES, DIET, EQUIPMENT, DRUGS } =
   INGREDIENTS_FILTER;
 
@@ -193,9 +196,12 @@ const TagSection = ({
   } = useQuery(GET_COLLECTIONS_AND_THEMES, {
     variables: { userId },
   });
-  const { activeFilterTag, excludeFilterState, numericFilterState } =
-    useAppSelector((state) => state?.filterRecipe);
-  const { activeTab, childTab, filterCriteria } = activeFilterTag;
+  const {
+    activeFilterTagForPlan,
+    excludeFilterStateForPlan,
+    numericFilterStateForPlan,
+  } = useAppSelector((state) => state?.planFilter);
+  const { activeTab, childTab, filterCriteria } = activeFilterTagForPlan;
 
   const handleGetBlendNutrition = async (
     nutrientCategoryId: string,
@@ -230,7 +236,7 @@ const TagSection = ({
   const handleUpdateNumericFilterState = (
     value: NutrientFiltersType | NutrientMatrixType,
   ) => {
-    dispatch(updateNumericFilterState(value));
+    dispatch(updateNumericFilterStateForPlan(value));
   };
 
   const optionSelectorHandler = (chip: string) => {
@@ -388,14 +394,14 @@ const TagSection = ({
               filterCriteria={filterCriteria}
               checkActiveItem={checkActiveItem}
               checkExcludeIngredientIds={checkExcludeIngredientIds}
-              activeFilterTag={activeFilterTag}
+              activeFilterTag={activeFilterTagForPlan}
               handleUpdateFilterCriteria={handleUpdateFilterCriteria}
             />
           ) : null}
           {activeTab === "Ingredient" ? (
             <>
               <ExcludeFilter
-                excludeFilterState={excludeFilterState}
+                excludeFilterState={excludeFilterStateForPlan}
                 handleUpdateFilterCriteria={handleUpdateFilterCriteria}
               />
               <OptionSelect
@@ -403,8 +409,8 @@ const TagSection = ({
                 filterCriteria={filterCriteria}
                 checkActiveItem={checkActiveItem}
                 checkExcludeIngredientIds={checkExcludeIngredientIds}
-                focusOptionId={excludeFilterState.id}
-                activeFilterTag={activeFilterTag}
+                focusOptionId={excludeFilterStateForPlan.id}
+                activeFilterTag={activeFilterTagForPlan}
                 handleUpdateFilterCriteria={handleUpdateFilterCriteria}
               />
             </>
@@ -418,13 +424,14 @@ const TagSection = ({
                 activeTab={activeTab}
                 handleUpdateFilterCriteria={handleUpdateFilterCriteria}
                 handleUpdateNumericFilterState={handleUpdateNumericFilterState}
+                numericFilterUseFrom="plan"
               />
               <OptionSelect
                 optionSelectItems={optionSelectItems}
                 filterCriteria={filterCriteria}
                 checkActiveItem={checkActiveItem}
-                focusOptionId={numericFilterState.id}
-                activeFilterTag={activeFilterTag}
+                focusOptionId={numericFilterStateForPlan.id}
+                activeFilterTag={activeFilterTagForPlan}
                 optionsLoading={blendNutrientLoading}
                 handleUpdateFilterCriteria={handleUpdateFilterCriteria}
               />

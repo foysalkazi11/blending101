@@ -1,47 +1,43 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import {
   ActiveFilterTagCriteriaType,
-  AllFilterRecipes,
   FilterCriteriaOptions,
   FilterCriteriaValue,
   FiltersUpdateCriteria,
+  IngredientType,
   NutrientFiltersType,
   NutrientMatrixType,
-  IngredientType,
 } from "../../type/filterType";
 
-interface FilterState {
-  allFilters: FilterCriteriaValue[];
-  activeFilterTag: ActiveFilterTagCriteriaType;
-  numericFilterState: NutrientFiltersType | NutrientMatrixType;
-  allFilterRecipes: AllFilterRecipes;
-  excludeFilterState: IngredientType;
-  showFilterOrSearchRecipes: boolean;
+interface InitialState {
+  isPlanFilterOpen: boolean;
+  allFiltersForPlan: FilterCriteriaValue[];
+  activeFilterTagForPlan: ActiveFilterTagCriteriaType;
+  numericFilterStateForPlan: NutrientFiltersType | NutrientMatrixType;
+  excludeFilterStateForPlan: IngredientType;
 }
 
-const initialState: FilterState = {
-  activeFilterTag: {
-    activeSection: "visual",
+const initialState: InitialState = {
+  isPlanFilterOpen: false,
+  activeFilterTagForPlan: {
+    activeSection: "tags",
     filterCriteria: null,
     activeTab: "",
     childTab: "",
   },
-  allFilters: [],
-  numericFilterState: {} as NutrientFiltersType | NutrientMatrixType,
-  allFilterRecipes: {
-    filterRecipes: [],
-    isFiltering: false,
-    totalItems: 0,
-  },
-  excludeFilterState: {} as IngredientType,
-  showFilterOrSearchRecipes: false,
+  allFiltersForPlan: [],
+  numericFilterStateForPlan: {} as NutrientFiltersType | NutrientMatrixType,
+  excludeFilterStateForPlan: {} as IngredientType,
 };
 
-export const filterRecipeSlice = createSlice({
-  name: "filterRecipe",
+export const planFilterSlice = createSlice({
   initialState,
+  name: "planFilter",
   reducers: {
-    updateFilterCriteriaItem: (
+    setIsPlanFilterOpen: (state, action: PayloadAction<boolean>) => {
+      state.isPlanFilterOpen = action.payload;
+    },
+    updateFilterCriteriaItemForPlan: (
       state,
       action: {
         payload: {
@@ -67,26 +63,26 @@ export const filterRecipeSlice = createSlice({
 
       // when update status add
       if (payload.updateStatus === "add") {
-        state.allFilters = [...state.allFilters, payload.value];
+        state.allFiltersForPlan = [...state.allFiltersForPlan, payload.value];
         if (
           payload.value.filterCriteria === "nutrientFilters" ||
           payload.value.filterCriteria === "nutrientMatrix"
         ) {
           // @ts-ignore
-          state.numericFilterState = {
+          state.numericFilterStateForPlan = {
             ...payload.value,
           };
         }
         if (payload.value.filterCriteria === "includeIngredientIds") {
           // @ts-ignore
-          state.excludeFilterState = {
+          state.excludeFilterStateForPlan = {
             ...payload.value,
           };
         }
       }
       // when update status remove
       if (payload.updateStatus === "remove") {
-        state.allFilters = state.allFilters.filter(
+        state.allFiltersForPlan = state.allFiltersForPlan.filter(
           (filter) => filter.id !== payload.value.id,
         );
 
@@ -94,48 +90,49 @@ export const filterRecipeSlice = createSlice({
           payload.value.filterCriteria === "nutrientFilters" ||
           payload.value.filterCriteria === "nutrientMatrix"
         ) {
-          if (state.numericFilterState.id === payload.value.id) {
+          if (state.numericFilterStateForPlan.id === payload.value.id) {
             // @ts-ignore
-            state.numericFilterState = {
+            state.numericFilterStateForPlan = {
               ...dummyObj,
             };
           }
         }
         if (payload.value.filterCriteria === "includeIngredientIds") {
-          if (state.excludeFilterState.id === payload.value.id) {
+          if (state.excludeFilterStateForPlan.id === payload.value.id) {
             // @ts-ignore
-            state.excludeFilterState = {};
+            state.excludeFilterStateForPlan = {};
           }
         }
       }
       if (payload.updateStatus === "update") {
-        state.allFilters = state.allFilters.map((filter) =>
+        state.allFiltersForPlan = state.allFiltersForPlan.map((filter) =>
           filter.id === payload.value.id ? payload.value : filter,
         );
         if (payload.value.filterCriteria === "includeIngredientIds") {
           // @ts-ignore
-          state.excludeFilterState = {
-            ...state.excludeFilterState,
+          state.excludeFilterStateForPlan = {
+            ...state.excludeFilterStateForPlan,
             ...payload.value,
           };
         }
       }
       // when update status removeAll
       if (payload.updateStatus === "removeAll") {
-        state.allFilters = state.allFilters.filter(
+        state.allFiltersForPlan = state.allFiltersForPlan.filter(
           (filter) =>
-            filter.filterCriteria !== state.activeFilterTag.filterCriteria,
+            filter.filterCriteria !==
+            state.activeFilterTagForPlan.filterCriteria,
         );
         // @ts-ignore
-        state.numericFilterState = {
+        state.numericFilterStateForPlan = {
           ...dummyObj,
         };
         // @ts-ignore
-        state.excludeFilterState = {};
+        state.excludeFilterStateForPlan = {};
       }
       // when update status focus
       if (payload.updateStatus === "focus") {
-        const findOneItem = state.allFilters.find(
+        const findOneItem = state.allFiltersForPlan.find(
           (item) => item.id === payload.value.id,
         );
         if (
@@ -143,7 +140,7 @@ export const filterRecipeSlice = createSlice({
           payload.value.filterCriteria === "nutrientMatrix"
         ) {
           // @ts-ignore
-          state.numericFilterState = {
+          state.numericFilterStateForPlan = {
             ...findOneItem,
           };
         }
@@ -152,45 +149,38 @@ export const filterRecipeSlice = createSlice({
           payload.value.filterCriteria === "includeIngredientIds"
         ) {
           // @ts-ignore
-          state.excludeFilterState = {
+          state.excludeFilterStateForPlan = {
             ...findOneItem,
           };
         }
       }
     },
-    updateActiveFilterTag: (
+    updateActiveFilterTagForPlan: (
       state,
       action: { payload: ActiveFilterTagCriteriaType },
     ) => {
-      state.activeFilterTag = action.payload;
+      state.activeFilterTagForPlan = action.payload;
     },
 
-    updateNumericFilterState: (
+    updateNumericFilterStateForPlan: (
       state,
       action: { payload: NutrientFiltersType | NutrientMatrixType },
     ) => {
-      state.numericFilterState = { ...action.payload };
-    },
-    updateAllFilterRecipes: (state, action: { payload: AllFilterRecipes }) => {
-      state.allFilterRecipes = { ...action.payload };
-    },
-    updateShowFilterOrSearchRecipes: (state, action: { payload: boolean }) => {
-      state.showFilterOrSearchRecipes = action.payload;
+      state.numericFilterStateForPlan = { ...action.payload };
     },
 
-    resetAllFilters: (state) => {
-      state.allFilters = [];
+    resetAllFiltersForPlan: (state) => {
+      state.allFiltersForPlan = [];
     },
   },
 });
 
 export const {
-  updateFilterCriteriaItem,
-  updateActiveFilterTag,
-  updateNumericFilterState,
-  resetAllFilters,
-  updateAllFilterRecipes,
-  updateShowFilterOrSearchRecipes,
-} = filterRecipeSlice.actions;
+  setIsPlanFilterOpen,
+  resetAllFiltersForPlan,
+  updateActiveFilterTagForPlan,
+  updateFilterCriteriaItemForPlan,
+  updateNumericFilterStateForPlan,
+} = planFilterSlice.actions;
 
-export default filterRecipeSlice.reducer;
+export default planFilterSlice.reducer;

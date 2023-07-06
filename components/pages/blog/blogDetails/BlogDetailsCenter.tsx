@@ -82,7 +82,7 @@ const BlogDetailsCenter = ({ blogDetails }: Props) => {
       <TopHeader backAddress="/blog" title="Blog" />
       <div className={styles.blogDetailsCenterContainer}>
         <div className={styles.topHeading}>
-          <h3>{title}</h3>
+          <h1>{title}</h1>
         </div>
         <SubHeader
           id={_id}

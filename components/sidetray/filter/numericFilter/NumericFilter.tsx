@@ -2,21 +2,30 @@ import React, { useCallback, useRef, useState, useEffect } from "react";
 import styles from "./NumericFilter.module.scss";
 import { BiPlus, BiMinus } from "react-icons/bi";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import {
-  FilterCriteriaOptions,
-  modifyFilter,
-  updateFilterCriteriaItem,
-  updateNumericFilterState,
-} from "../../../../redux/slices/filterRecipeSlice";
-import { parentPort } from "worker_threads";
 import useDebounce from "../../../../customHooks/useDebounce";
 import debounce from "../../../../helperFunc/debounce";
+import {
+  FilterCriteriaOptions,
+  FilterCriteriaValue,
+  FiltersUpdateCriteria,
+  NutrientFiltersType,
+  NutrientMatrixType,
+} from "../../../../type/filterType";
 
 type NumericFilterProps = {
   filterCriteria: FilterCriteriaOptions;
   childIngredient?: string;
   type?: "counter" | "currency" | "date";
   activeTab: string;
+  handleUpdateFilterCriteria: (obj: {
+    filterCriteria?: FilterCriteriaOptions;
+    value?: FilterCriteriaValue;
+    updateStatus: FiltersUpdateCriteria;
+  }) => void;
+  handleUpdateNumericFilterState: (
+    value: NutrientFiltersType | NutrientMatrixType,
+  ) => void;
+  numericFilterUseFrom?: "recipe" | "plan";
 };
 
 const NumericFilter = ({
@@ -24,6 +33,9 @@ const NumericFilter = ({
   type = "counter",
   filterCriteria,
   activeTab,
+  handleUpdateFilterCriteria,
+  handleUpdateNumericFilterState,
+  numericFilterUseFrom = "recipe",
 }: NumericFilterProps) => {
   const dispatch = useAppDispatch();
   const [debouncedTrigger, setDebouncedTrigger] = useState<any>(null);
@@ -31,6 +43,14 @@ const NumericFilter = ({
   const isMounted = useRef(false);
 
   const { numericFilterState } = useAppSelector((state) => state.filterRecipe);
+  const { numericFilterStateForPlan } = useAppSelector(
+    (state) => state.planFilter,
+  );
+
+  const numericFilterStateObj = {
+    recipe: numericFilterState,
+    plan: numericFilterStateForPlan,
+  };
   const {
     between,
     greaterThan,
@@ -40,13 +60,15 @@ const NumericFilter = ({
     greaterThanValue = 0,
     lessThanValue = 0,
     id = "",
-  } = numericFilterState;
+  } = numericFilterStateObj[numericFilterUseFrom];
 
   const debouncedSearchTerm: any = useDebounce<any>(debouncedTrigger, 800);
 
   const handleActiveTab = (tab: string) => {
     // setTabValue(value);
-    let newNumericFilterState = { ...numericFilterState };
+    let newNumericFilterState = {
+      ...numericFilterStateObj[numericFilterUseFrom],
+    };
     if (tab === "lessThan") {
       newNumericFilterState = {
         ...newNumericFilterState,
@@ -76,26 +98,15 @@ const NumericFilter = ({
     }
 
     if (newNumericFilterState.id) {
-      dispatch(updateNumericFilterState(newNumericFilterState));
-      dispatch(
-        updateFilterCriteriaItem({
-          updateStatus: "update",
-          value: newNumericFilterState,
-          filterCriteria,
-        }),
-      );
+      handleUpdateNumericFilterState(newNumericFilterState);
+
+      handleUpdateFilterCriteria({
+        updateStatus: "update",
+        value: newNumericFilterState,
+        filterCriteria,
+      });
     }
   };
-
-  const handleUpdateNumericFilterState = debounce((value) => {
-    dispatch(
-      updateFilterCriteriaItem({
-        updateStatus: "update",
-        value,
-        filterCriteria,
-      }),
-    );
-  }, 700);
 
   const counterHandler = (
     value: number = 0,
@@ -105,7 +116,9 @@ const NumericFilter = ({
       | "betweenEndValue"
       | "greaterThanValue",
   ) => {
-    let newNumericFilterState = { ...numericFilterState };
+    let newNumericFilterState = {
+      ...numericFilterStateObj[numericFilterUseFrom],
+    };
 
     // prettier-ignore
     if (title === "lessThanValue") {
@@ -137,7 +150,7 @@ const NumericFilter = ({
       };
     }
     if (newNumericFilterState.id) {
-      dispatch(updateNumericFilterState(newNumericFilterState));
+      handleUpdateNumericFilterState(newNumericFilterState);
       setDebouncedTrigger(newNumericFilterState);
     }
   };
@@ -145,13 +158,11 @@ const NumericFilter = ({
   useEffect(() => {
     if (!isMounted.current) return;
 
-    dispatch(
-      updateFilterCriteriaItem({
-        updateStatus: "update",
-        value: numericFilterState,
-        filterCriteria,
-      }),
-    );
+    handleUpdateFilterCriteria({
+      updateStatus: "update",
+      value: numericFilterState,
+      filterCriteria,
+    });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearchTerm]);

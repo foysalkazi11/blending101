@@ -18,6 +18,7 @@ import uiReducer from "./slices/Ui.slice";
 import wikiReducer from "./slices/wikiSlice";
 import blogReducer from "./slices/blogSlice";
 import notificationReducer from "./slices/notificationSlice";
+import planFilterSliceReducer from "./slices/planFilterSlice";
 
 const rootReducer = combineReducers({
   ui: uiReducer,
@@ -38,6 +39,7 @@ const rootReducer = combineReducers({
   wiki: wikiReducer,
   blog: blogReducer,
   notification: notificationReducer,
+  planFilter: planFilterSliceReducer,
 });
 
 // export type RootState = ReturnType<typeof rootReducer>;

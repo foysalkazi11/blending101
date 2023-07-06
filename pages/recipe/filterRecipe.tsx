@@ -1,37 +1,37 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
-import AContainer from "../../../containers/A.container";
-import styles from "./recipeDiscovery.module.scss";
-import SearchTagsComponent from "../../searchtags/searchtags.component";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import ShowLastModifiedCollection from "../../showLastModifiedCollection/ShowLastModifiedCollection";
-import RegularRecipes from "./regularRecipes";
-import SEARCH_RECIPE from "../../../gqlLib/recipes/queries/searchRecipe";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import SEARCH_RECIPE from "../../gqlLib/recipes/queries/searchRecipe";
+import useDebounce from "../../customHooks/useDebounce";
+import useFetchGetRecipesByBlendAndIngredients from "../../components/recipe/recipeDiscovery/helperFunc/useFetchGetRecipesByBlendAndIngredients";
+import useHandleSearchRecipe from "../../components/recipe/recipeDiscovery/helperFunc/useSearchRecipes";
+import {
+  setChangeRecipeWithinCollection,
+  setSingleRecipeWithinCollecions,
+} from "../../redux/slices/collectionSlice";
+import {
+  setOpenCollectionsTary,
+  setOpenFilterTray,
+} from "../../redux/slices/sideTraySlice";
 import { useLazyQuery } from "@apollo/client";
-import useDebounce from "../../../customHooks/useDebounce";
 import {
   resetAllFilters,
   updateAllFilterRecipes,
   updateShowFilterOrSearchRecipes,
-} from "../../../redux/slices/filterRecipeSlice";
-import useFetchGetRecipesByBlendAndIngredients from "./helperFunc/useFetchGetRecipesByBlendAndIngredients";
-import useHandleSearchRecipe from "./helperFunc/useSearchRecipes";
-import DiscoveryPageSearchBar from "./searchBar";
-import {
-  setChangeRecipeWithinCollection,
-  setSingleRecipeWithinCollecions,
-} from "../../../redux/slices/collectionSlice";
-import {
-  setOpenCollectionsTary,
-  setOpenFilterTray,
-} from "../../../redux/slices/sideTraySlice";
-import ShowRecipeContainer from "../../showRecipeContainer";
-import ShareRecipe from "../recipeDetails/center/shareRecipe";
-import useToUpdateFilterCriteria from "../../../customHooks/recipeFilter/useToUpdateRecipeFilterCriteria";
-import useToUpdateActiveFilterTag from "../../../customHooks/recipeFilter/useToUpdateActiveFilterTag";
+} from "../../redux/slices/filterRecipeSlice";
+import AContainer from "../../containers/A.container";
+import styles from "../../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";
+import DiscoveryPageSearchBar from "../../components/recipe/recipeDiscovery/searchBar";
+import SearchtagsComponent from "../../components/searchtags/searchtags.component";
+import ShowRecipeContainer from "../../components/showRecipeContainer";
+import ShowLastModifiedCollection from "../../components/showLastModifiedCollection/ShowLastModifiedCollection";
+import ShareRecipe from "../../components/recipe/recipeDetails/center/shareRecipe";
+import { useRouter } from "next/router";
+import useToUpdateFilterCriteria from "../../customHooks/recipeFilter/useToUpdateRecipeFilterCriteria";
+import useToUpdateActiveFilterTag from "../../customHooks/recipeFilter/useToUpdateActiveFilterTag";
 let dataLimit = 12;
 
-const RecipeDiscovery = () => {
+const RecipeFilter = () => {
   const [shareRecipeData, setShareRecipeData] = useState({
     id: "",
     image: "",
@@ -65,6 +65,7 @@ const RecipeDiscovery = () => {
     error,
     data,
   } = useFetchGetRecipesByBlendAndIngredients();
+  const router = useRouter();
   const handleSearchRecipes = useHandleSearchRecipe();
   const { lastModifiedCollection } = useAppSelector(
     (state) => state?.collections,
@@ -73,11 +74,6 @@ const RecipeDiscovery = () => {
   const handleUpdateFilterCriteria = useToUpdateFilterCriteria();
   // handle update recipe active filter tag
   const handleUpdateActiveFilterTag = useToUpdateActiveFilterTag();
-
-  // toggle filter panel
-  const toggleFilterPanel = () => {
-    dispatch(setOpenFilterTray(!openFilterTray));
-  };
 
   // open recipe collection panel after added a recipe to a collection
   const handleOpenCollectionTray = () => {
@@ -116,6 +112,7 @@ const RecipeDiscovery = () => {
     dispatch(resetAllFilters());
     dispatch(updateShowFilterOrSearchRecipes(false));
     setPageNum(1);
+    router.push("/discovery");
   };
 
   useEffect(() => {
@@ -226,12 +223,10 @@ const RecipeDiscovery = () => {
               handleOnChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setRecipeSearchInput(e.target.value);
               }}
-              openFilterTray={openFilterTray}
-              toggleFilterPanel={toggleFilterPanel}
             />
 
             {allFilters?.length ? (
-              <SearchTagsComponent
+              <SearchtagsComponent
                 allFilters={allFilters}
                 handleUpdateActiveFilterTag={(
                   activeSection,
@@ -251,31 +246,23 @@ const RecipeDiscovery = () => {
               />
             ) : null}
 
-            {showFilterOrSearchRecipes ? (
-              <ShowRecipeContainer
-                data={allFilterRecipes.filterRecipes}
-                loading={filterRecipesLoading || searchRecipeLoading}
-                closeHandler={closeFilterRecipes}
-                showItems="recipe"
-                showDefaultLeftHeader
-                showDefaultMiddleHeader={
-                  allFilterRecipes.filterRecipes.length ? true : false
-                }
-                showDefaultRightHeader
-                hasMore={allFilterRecipes?.totalItems > dataLimit * pageNum}
-                totalDataCount={allFilterRecipes?.totalItems}
-                nextPage={handleNextPage}
-                setOpenCollectionModal={setOpenCollectionModal}
-                setOpenShareModal={setOpenShareModal}
-                setShareRecipeData={setShareRecipeData}
-              />
-            ) : (
-              <RegularRecipes
-                setOpenCollectionModal={setOpenCollectionModal}
-                setOpenShareModal={setOpenShareModal}
-                setShareRecipeData={setShareRecipeData}
-              />
-            )}
+            <ShowRecipeContainer
+              data={allFilterRecipes.filterRecipes}
+              loading={filterRecipesLoading || searchRecipeLoading}
+              closeHandler={closeFilterRecipes}
+              showItems="recipe"
+              showDefaultLeftHeader
+              showDefaultMiddleHeader={
+                allFilterRecipes.filterRecipes.length ? true : false
+              }
+              showDefaultRightHeader
+              hasMore={allFilterRecipes?.totalItems > dataLimit * pageNum}
+              totalDataCount={allFilterRecipes?.totalItems}
+              nextPage={handleNextPage}
+              setOpenCollectionModal={setOpenCollectionModal}
+              setOpenShareModal={setOpenShareModal}
+              setShareRecipeData={setShareRecipeData}
+            />
           </div>
         </div>
       </AContainer>
@@ -301,4 +288,4 @@ const RecipeDiscovery = () => {
   );
 };
 
-export default RecipeDiscovery;
+export default RecipeFilter;

@@ -6,10 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import ShowCollectionModal from "../../showLastModifiedCollection/ShowLastModifiedCollection";
 import { setAllFilterRecipe } from "../../../redux/slices/recipeSlice";
 import FILTER_RECIPE from "../../../gqlLib/recipes/queries/filterRecipe";
-import {
-  FilterCriteriaValue,
-  resetAllFilters,
-} from "../../../redux/slices/filterRecipeSlice";
+import { resetAllFilters } from "../../../redux/slices/filterRecipeSlice";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -23,6 +20,7 @@ import {
   setSingleRecipeWithinCollecions,
 } from "../../../redux/slices/collectionSlice";
 import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
+import { FilterCriteriaValue } from "../../../type/filterType";
 
 interface Props {
   allFilters: FilterCriteriaValue[];

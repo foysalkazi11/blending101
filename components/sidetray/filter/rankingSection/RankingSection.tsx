@@ -4,11 +4,8 @@ import Linearcomponent from "../../../../theme/linearProgress/LinearProgress.com
 import IngredientPanelSkeleton from "../../../../theme/skeletons/ingredientPanelSleketon/IngredientPanelSkeleton";
 import { ingredientState, List } from "../ingredients/Ingredients.component";
 import styles from "../filter.module.scss";
-import {
-  FilterCriteriaOptions,
-  FilterCriteriaValue,
-} from "../../../../redux/slices/filterRecipeSlice";
 import useWindowSize from "../../../utility/useWindowSize";
+import { FilterCriteriaValue } from "../../../../type/filterType";
 
 interface Props {
   ascendingDescending?: boolean;

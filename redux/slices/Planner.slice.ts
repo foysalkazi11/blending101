@@ -11,6 +11,7 @@ export interface CurrentPlanInfoType {
   id: string;
   name: string;
   image: string;
+  myRating: number;
 }
 
 export type IPlannerRecipe = {
@@ -71,6 +72,7 @@ const initialState: PlannerState = {
     id: "",
     image: "",
     name: "",
+    myRating: 0,
   },
   isPlanCommentsTrayOpen: false,
 };

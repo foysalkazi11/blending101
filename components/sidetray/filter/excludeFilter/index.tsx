@@ -1,31 +1,36 @@
 import React from "react";
-import { useAppDispatch } from "../../../../redux/hooks";
-import {
-  IngredientType,
-  updateFilterCriteriaItem,
-} from "../../../../redux/slices/filterRecipeSlice";
 import styles from "./ExcludeFilter.module.scss";
+import {
+  FilterCriteriaOptions,
+  FilterCriteriaValue,
+  FiltersUpdateCriteria,
+  IngredientType,
+} from "../../../../type/filterType";
 
 interface Props {
   excludeFilterState: IngredientType;
+  handleUpdateFilterCriteria: (obj: {
+    filterCriteria?: FilterCriteriaOptions;
+    value?: FilterCriteriaValue;
+    updateStatus: FiltersUpdateCriteria;
+  }) => void;
 }
 
-const ExcludeFilter = ({ excludeFilterState }: Props) => {
+const ExcludeFilter = ({
+  excludeFilterState,
+  handleUpdateFilterCriteria,
+}: Props) => {
   const { excludeIngredientIds, id = "" } = excludeFilterState;
-
-  const dispatch = useAppDispatch();
   const handleIncludeExclude = (status: boolean) => {
     if (id) {
-      dispatch(
-        updateFilterCriteriaItem({
-          updateStatus: "update",
-          value: {
-            ...excludeFilterState,
-            excludeIngredientIds: status,
-          },
-          filterCriteria: "includeIngredientIds",
-        }),
-      );
+      handleUpdateFilterCriteria({
+        updateStatus: "update",
+        value: {
+          ...excludeFilterState,
+          excludeIngredientIds: status,
+        },
+        filterCriteria: "includeIngredientIds",
+      });
     }
   };
 

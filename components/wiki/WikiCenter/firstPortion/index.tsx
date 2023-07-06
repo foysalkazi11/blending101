@@ -83,7 +83,7 @@ const FirstPortion = ({
 
       <div className={styles.card}>
         <div className={styles.blendingRecipeHeading}>
-          <h3>{name}</h3>
+          <h1>{name}</h1>
         </div>
         <SubHeader
           id={wikiId}
@@ -101,7 +101,6 @@ const FirstPortion = ({
 
         {type === "Ingredient" && (
           <div className={styles.ingredientInfoContainer}>
-            <IngredientInfo borderRight={true} />
             <IngredientInfo
               borderRight={true}
               text="Glycemic Index"

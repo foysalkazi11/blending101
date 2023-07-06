@@ -84,5 +84,6 @@ export type ReferenceOfRecipeUpdateFuncType = (
   id: string,
   outerObj: { [key: string]: any },
   innerObj: { [key: string]: any },
-  innerLabel?: "defaultVersion" | "recipeId",
+  innerLabel?: "defaultVersion" | "recipeId" | "",
+  bulkRecipeIdsForAddedInCollection?: string[],
 ) => void;

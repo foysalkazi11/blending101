@@ -121,12 +121,12 @@ $tooltip-arrow-size: 6px;
 
 .h1 {
   @extend %block;
-  font-size: 40px;
+  font-size: 3.2rem;
   font-weight: bold;
   color: $fontDeepGray;
-  @include media(md) {
-    font-size: 40px;
-  }
+  // @include media(md) {
+  //   font-size: 40px;
+  // }
   sup {
     @extend %sup;
   }
@@ -137,12 +137,12 @@ $tooltip-arrow-size: 6px;
 
 .h2 {
   @extend %block;
-  font-size: 30px;
+  font-size: 2.8rem;
   font-weight: bold;
   color: $fontDeepGray;
-  @include media(md) {
-    font-size: 38px;
-  }
+  // @include media(md) {
+  //   font-size: 38px;
+  // }
   sup {
     @extend %sup;
   }
@@ -152,12 +152,12 @@ $tooltip-arrow-size: 6px;
 }
 .h3 {
   @extend %block;
-  font-size: 24px;
+  font-size: 2.4rem;
   font-weight: bold;
   color: $fontDeepGray;
-  @include media(md) {
-    font-size: 30px;
-  }
+  // @include media(md) {
+  //   font-size: 30px;
+  // }
   sup {
     @extend %sup;
   }
@@ -168,12 +168,12 @@ $tooltip-arrow-size: 6px;
 
 .h4 {
   @extend %block;
-  font-size: 20px;
+  font-size: 2rem;
   font-weight: bold;
   color: $fontDeepGray;
-  @include media(md) {
-    font-size: 24px;
-  }
+  // @include media(md) {
+  //   font-size: 24px;
+  // }
   sup {
     @extend %sup;
   }

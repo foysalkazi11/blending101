@@ -17,11 +17,11 @@ import { GET_WIKI_HIGHLIGHTS } from "../gqlLib/wiki/query/getWikiList";
 import { GET_ALL_PLANS } from "../graphql/Planner";
 import { GET_BLEND_TYPES } from "../graphql/Recipe";
 import { useAppSelector } from "../redux/hooks";
-import { updateFilterCriteriaItem } from "../redux/slices/filterRecipeSlice";
 import { updateSidebarActiveMenuName } from "../redux/slices/utilitySlice";
 import styles from "../styles/pages/home.module.scss";
 import CardComponent from "../theme/cards/card.component";
 import SpecialcardComponent from "../theme/cards/specialCard.component";
+import useToUpdateFilterCriteria from "../customHooks/recipeFilter/useToUpdateRecipeFilterCriteria";
 const defaultBlendImg =
   "https://blending.s3.us-east-1.amazonaws.com/3383678.jpg";
 
@@ -42,17 +42,16 @@ const Home = () => {
   const [wikiType, setWikiType] = useState("All");
   const dispatch = useDispatch();
   const router = useRouter();
+  const handleUpdateFilterCriteria = useToUpdateFilterCriteria();
 
   const handleToShowBlendTypes = (value: any) => {
     const findFilter = allFilters?.find((filter) => filter?.id === value?.id);
     if (!findFilter) {
-      dispatch(
-        updateFilterCriteriaItem({
-          updateStatus: "add",
-          value: value,
-          filterCriteria: value.filterCategory,
-        }),
-      );
+      handleUpdateFilterCriteria({
+        updateStatus: "add",
+        value: value,
+        filterCriteria: value.filterCategory,
+      });
     }
 
     dispatch(updateSidebarActiveMenuName("Blends"));

@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useState, Fragment, useCallback } from "react";
+import React, { useState, Fragment, useCallback, useEffect } from "react";
 import { faUserCircle } from "@fortawesome/pro-light-svg-icons";
 import PlanCard from "../../component/module/Planner/PlanCard.component";
 import AppdownLoadCard from "../../components/recipe/recipeDiscovery/AppdownLoadCard/AppdownLoadCard.component";
@@ -16,6 +16,11 @@ import { setIsOpenPlanCollectionTray } from "../../redux/slices/Planner.slice";
 import CommonSearchBar from "../../components/searchBar/CommonSearchBar";
 import { useAllPlan } from "../../hooks/modules/Plan/usePlanDiscovery";
 import { Debounce } from "../../helpers/Utilities";
+import { setIsPlanFilterOpen } from "../../redux/slices/planFilterSlice";
+import SearchtagsComponent from "../../components/searchtags/searchtags.component";
+import useToUpdateFilterCriteriaForPlan from "../../customHooks/planFilter/useToUpdateFilterCriteriaForPlan";
+import useToUpdateActiveFilterTagForPlan from "../../customHooks/planFilter/useToUpdateActiveFilterTagForPlan";
+import { useDispatch } from "react-redux";
 
 const PlanDiscovery = () => {
   const router = useRouter();
@@ -25,9 +30,9 @@ const PlanDiscovery = () => {
   const { lastModifiedPlanCollection } = useAppSelector(
     (state) => state?.planner,
   );
+  const { isPlanFilterOpen } = useAppSelector((state) => state?.planFilter);
 
   const onPlanSearch = (value) => {
-    console.log(value);
     if (value === "") {
       router.push(`/planner`, undefined, {
         shallow: true,
@@ -47,7 +52,7 @@ const PlanDiscovery = () => {
       headerIcon="/icons/calender__sidebar.svg"
       headerTitle="Plan Discovery"
       showPlanCollectionTray={{
-        show: true,
+        show: isPlanFilterOpen ? false : true,
         showPanle: "left",
         showTagByDeafult: true,
       }}
@@ -58,6 +63,11 @@ const PlanDiscovery = () => {
       showCommentsTrayForPlan={{
         show: true,
         showPanle: "right",
+        showTagByDeafult: false,
+      }}
+      showPlanFilterTray={{
+        show: true,
+        showPanle: "left",
         showTagByDeafult: false,
       }}
     >
@@ -73,6 +83,7 @@ const PlanDiscovery = () => {
             input={router.query.query as string}
             isSearchTag={false}
             handleOnChange={(e) => onPlanSearch(e.target.value)}
+            openPanel={() => dispatch(setIsPlanFilterOpen(!isPlanFilterOpen))}
           />
           <button
             className={styles.discovery__myplan}
@@ -125,6 +136,9 @@ const SearchedPlan = ({ query, setOpenCollectionModal }) => {
             isCollectionIds={item?.planCollections}
             noOfComments={item?.commentsCount}
             setOpenCollectionModal={setOpenCollectionModal}
+            noOfRatings={item?.numberOfRating}
+            ratings={item?.averageRating}
+            myRating={item?.myRating}
           />
         </div>
       ))}
@@ -134,14 +148,42 @@ const SearchedPlan = ({ query, setOpenCollectionModal }) => {
 
 const FeaturedPlan = ({ setOpenCollectionModal }) => {
   const userId = useAppSelector((state) => state.user.dbUser._id || "");
-
+  const { allFiltersForPlan } = useAppSelector((state) => state.planFilter);
   const { data } = useQuery(GET_FEATURED_PLANS, {
     variables: { limit: 8, memberId: userId },
   });
+  const dispatch = useDispatch();
+  const router = useRouter();
+  // handle update recipe filter criteria
+  const handleUpdateFilterCriteriaForPlan = useToUpdateFilterCriteriaForPlan();
+  // handle update recipe active filter tag
+  const handleUpdateActiveFilterTagForPlan =
+    useToUpdateActiveFilterTagForPlan();
 
   return (
     <Fragment>
-      <AppdownLoadCard />
+      {allFiltersForPlan?.length ? null : <AppdownLoadCard />}
+
+      {allFiltersForPlan?.length ? (
+        <SearchtagsComponent
+          allFilters={allFiltersForPlan}
+          handleUpdateActiveFilterTag={(
+            activeSection,
+            filterCriteria,
+            activeTab,
+            childTab,
+          ) => {
+            dispatch(setIsPlanFilterOpen(true));
+            handleUpdateActiveFilterTagForPlan(
+              activeSection,
+              filterCriteria,
+              activeTab,
+              childTab,
+            );
+          }}
+          handleUpdateFilterCriteria={handleUpdateFilterCriteriaForPlan}
+        />
+      ) : null}
       <div className="mt-40">
         <ContentTray
           heading="Recommended"
@@ -159,6 +201,9 @@ const FeaturedPlan = ({ setOpenCollectionModal }) => {
                   noOfComments={item?.commentsCount}
                   setOpenCollectionModal={setOpenCollectionModal}
                   planComrFrom="list"
+                  noOfRatings={item?.numberOfRating}
+                  ratings={item?.averageRating}
+                  myRating={item?.myRating}
                 />
               </div>
             </div>
@@ -182,6 +227,9 @@ const FeaturedPlan = ({ setOpenCollectionModal }) => {
                   noOfComments={item?.commentsCount}
                   setOpenCollectionModal={setOpenCollectionModal}
                   planComrFrom="list"
+                  noOfRatings={item?.numberOfRating}
+                  ratings={item?.averageRating}
+                  myRating={item?.myRating}
                 />
               </div>
             </div>
@@ -205,6 +253,9 @@ const FeaturedPlan = ({ setOpenCollectionModal }) => {
                   noOfComments={item?.commentsCount}
                   setOpenCollectionModal={setOpenCollectionModal}
                   planComrFrom="list"
+                  noOfRatings={item?.numberOfRating}
+                  ratings={item?.averageRating}
+                  myRating={item?.myRating}
                 />
               </div>
             </div>

@@ -24,6 +24,9 @@ import TextArea from "../../../theme/textArea/TextArea";
 import Textarea from "../Forms/Textarea.component";
 import { SharedUserInfoType } from "./Distribute.component";
 import styles from "./Share.module.scss";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import Nofification from "../../../components/user/user/notification/Notification";
+import notification from "../../../components/utility/reactToastifyNotification";
 
 interface Props {
   handleInvitation?: () => void;
@@ -65,6 +68,7 @@ const InviteUserForm = ({
   setMessage = () => {},
   sharedUserEmail = "",
 }: Props) => {
+  const userEmail = useAppSelector((state) => state?.user?.dbUser?.email);
   const { data } = useQuery(GET_ALL_USER_LIST);
   const inputRef = useRef<HTMLInputElement>(null);
   const collectionNameInputRef = useRef<HTMLInputElement>(null);
@@ -120,6 +124,10 @@ const InviteUserForm = ({
   const onAddEmail = (event) => {
     if (event.key === "Enter") {
       const email = event.target.value;
+      if (event.target.value === userEmail) {
+        notification("error", "This email is current user email");
+        return;
+      }
       if (
         !email.match(
           /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -140,7 +148,9 @@ const InviteUserForm = ({
       users =
         data?.getAllusers.filter(
           (user) =>
-            !emails?.map((el) => el?.email).includes(user.email) &&
+            ![...emails, { email: userEmail }]
+              .map((el) => el?.email)
+              .includes(user.email) &&
             (user.displayName as string)
               ?.toLowerCase()
               .startsWith(input.toLowerCase()),
@@ -149,7 +159,7 @@ const InviteUserForm = ({
     if (users.length !== 0) setShowSuggestion(true);
     else setShowSuggestion(false);
     return users;
-  }, [data?.getAllusers, emails, input]);
+  }, [data?.getAllusers, emails, input, userEmail]);
 
   const activeEmailInfo = useMemo(() => {
     return emails.find((info) => info.active);
