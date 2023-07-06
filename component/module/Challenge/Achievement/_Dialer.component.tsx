@@ -55,9 +55,12 @@ function Main({ canUpload, activities, statistics }: MainInterface) {
     );
   };
 
-  const remainingDays = hasChallengeEnded
-    ? differenceInDays(end, begin)
-    : differenceInDays(today, begin) + 1;
+  const totalDays = statistics?.days || 0;
+  const passedDays = differenceInDays(today, begin);
+  const completedDays =
+    passedDays > totalDays ? totalDays : passedDays < 0 ? 0 : passedDays;
+  const remainingDays =
+    passedDays > totalDays ? 0 : statistics?.daysRemaining + 1 || 0;
 
   return (
     <div className={styles.challenge_circle_main_circle_outer}>
@@ -88,7 +91,7 @@ function Main({ canUpload, activities, statistics }: MainInterface) {
               }
               onClick={() => setLabel("Total Days")}
             >
-              {statistics?.days || 0}
+              {totalDays}
             </span>
             <span
               className={
@@ -96,11 +99,7 @@ function Main({ canUpload, activities, statistics }: MainInterface) {
               }
               onClick={() => setLabel("Days Completed")}
             >
-              {statistics?.days === 0 && statistics?.daysRemaining === 0
-                ? 0
-                : remainingDays < 0
-                ? 0
-                : remainingDays}
+              {completedDays}
             </span>
             <span
               className={
@@ -108,7 +107,7 @@ function Main({ canUpload, activities, statistics }: MainInterface) {
               }
               onClick={() => setLabel("Days Remaining")}
             >
-              {statistics?.daysRemaining || 0}
+              {remainingDays}
             </span>
           </div>
           <div className={styles.dialer__timeline_wrapper}>

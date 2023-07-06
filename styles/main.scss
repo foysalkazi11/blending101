@@ -5,3 +5,17 @@
 @import "./mixins";
 @import "./override";
 @import "./fonts";
+
+.wc {
+  h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  &_card {
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #eee;
+  }
+}
