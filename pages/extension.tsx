@@ -10,15 +10,25 @@ const Extension = () => {
   );
 
   useEffect(() => {
-    window.addEventListener("message", (e) => {
-      console.log(e);
-      // const data = JSON.parse(e.data);
-      // if (typeof data.name !== "undefined") {
-      //   localStorage.setItem("name", data);
-      //   console.log("Name is set: ", data.name);
-      // }
-    });
+    console.log("message passing");
+    window.postMessage("Hello from Frontend", "*");
   }, []);
+
+  // useEffect(() => {
+  //   window.addEventListener("message", (e) => {
+  //     if (
+  //       e.origin !==
+  //       "chrome-extension://ebbpnaajpojkhndmjmdjabgjmngjgmhm/src/popup/popup.html"
+  //     )
+  //       return;
+  //     console.log(e);
+  //     // const data = JSON.parse(e.data);
+  //     // if (typeof data.name !== "undefined") {
+  //     //   localStorage.setItem("name", data);
+  //     //   console.log("Name is set: ", data.name);
+  //     // }
+  //   });
+  // }, []);
   // useEffect(() => {
   //   const id = "ebbpnaajpojkhndmjmdjabgjmngjgmhm";
   //   const token = session?.signInUserSession?.accessToken;
@@ -39,7 +49,7 @@ const Extension = () => {
   //   );
   // }, [displayName, session, userId]);
 
-  return <div>Extension</div>;
+  return <div>Extension Update</div>;
 };
 
 export default Extension;
