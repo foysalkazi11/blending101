@@ -150,12 +150,18 @@ const collections = [
 ];
 
 interface Props {
-  checkActiveItem: (id: string) => boolean;
+  checkActiveItem: (
+    id: string,
+    filterCriteria: FilterCriteriaOptions,
+  ) => boolean;
   blendCategoryData: BlendCategoryType[];
   blendCategoryLoading: boolean;
   ingredientCategoryData: any[];
   ingredientCategoryLoading: boolean;
-  checkExcludeIngredientIds: (id: string) => boolean;
+  checkExcludeIngredientIds: (
+    id: string,
+    filterCriteria: FilterCriteriaOptions,
+  ) => boolean;
   handleUpdateFilterCriteria: (obj: {
     filterCriteria?: FilterCriteriaOptions;
     value?: FilterCriteriaValue;
@@ -268,8 +274,10 @@ const TagSection = ({
           ?.map((item) => ({
             id: item?._id,
             name: item?.personalizedName || item?.name,
-            image: item?.image,
-            tagLabel: `Own | ${item?.personalizedName || item?.name}`,
+            // image: item?.image,
+            tagLabel: `Own collection | ${
+              item?.personalizedName || item?.name
+            }`,
             filterCriteria: "collectionIds",
           }))),
           setOptionSelectItems(collections);
@@ -282,8 +290,10 @@ const TagSection = ({
           ?.map((item) => ({
             id: item?._id,
             name: item?.personalizedName || item?.name,
-            image: item?.image,
-            tagLabel: `Shared | ${item?.personalizedName || item?.name}`,
+            // image: item?.image,
+            tagLabel: `Shared collection | ${
+              item?.personalizedName || item?.name
+            }`,
             filterCriteria: "collectionIds",
           }))),
           setOptionSelectItems(collections);
@@ -293,7 +303,7 @@ const TagSection = ({
         let mapGlobal = global.child?.map((item, index) => ({
           id: index,
           name: item,
-          image: "",
+          // image: "",
           tagLabel: item,
           filterCriteria: "collectionIds",
         }));
@@ -305,8 +315,8 @@ const TagSection = ({
         blendCategoryData?.map((item) => ({
           id: item?._id,
           name: item?.name,
-          image: item?.image,
-          tagLabel: "",
+          // image: item?.image,
+          tagLabel: `Blend Type | ${item?.name}`,
           filterCriteria: "blendTypes",
         })),
       );
@@ -318,9 +328,9 @@ const TagSection = ({
             ?.filter((item) => item?.category === childTab)
             .map((item) => ({
               id: item?._id,
-              image: item?.featuredImage || "/food/chard.png",
+              // image: item?.featuredImage || "/food/chard.png",
               name: item?.ingredientName,
-              tagLabel: "",
+              tagLabel: `Ingredient | ${item?.ingredientName}`,
               filterCriteria: "includeIngredientIds",
               excludeIngredientIds: false,
             })),
@@ -329,9 +339,9 @@ const TagSection = ({
         setOptionSelectItems(
           ingredientCategoryData.map((item) => ({
             id: item?._id,
-            image: item?.featuredImage || "/food/chard.png",
+            // image: item?.featuredImage || "/food/chard.png",
             name: item?.ingredientName,
-            tagLabel: "",
+            tagLabel: `Ingredient | ${item?.ingredientName}`,
             filterCriteria: "includeIngredientIds",
             excludeIngredientIds: false,
           })),
@@ -453,14 +463,14 @@ const TagSection = ({
       ) : (
         <>
           <input className={styles.tagSectionInput} placeholder="Search" />
-          <div
+          {/* <div
             className={styles.singleItem}
             onClick={() =>
               handleUpdateActiveFilterTag("tags", "blendTypes", "Blend Type")
             }
           >
             <h5>Blend Type</h5>
-          </div>
+          </div> */}
 
           <CustomAccordion title="Ingredient" iconRight={true}>
             {categories?.length

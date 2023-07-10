@@ -15,14 +15,20 @@ import {
 } from "../../../../type/filterType";
 
 type OptionSelectProps = {
-  checkActiveItem: (id: string) => boolean;
+  checkActiveItem: (
+    id: string,
+    filterCriteria: FilterCriteriaOptions,
+  ) => boolean;
   // handleBlendAndIngredientUpdate: (
   //   value: FilterCriteriaValue,
   //   present: boolean,
   // ) => void;
   optionSelectItems: any[];
   filterCriteria: FilterCriteriaOptions;
-  checkExcludeIngredientIds?: (id: string) => boolean;
+  checkExcludeIngredientIds?: (
+    id: string,
+    filterCriteria: FilterCriteriaOptions,
+  ) => boolean;
   focusOptionId?: string;
   activeFilterTag: ActiveFilterTagCriteriaType;
   optionsLoading?: boolean;
@@ -52,8 +58,11 @@ const OptionSelect = ({
       <div className={styles.options}>
         {optionSelectItems?.length
           ? optionSelectItems?.map((item, index) => {
-              const isSelected = checkActiveItem(item.id);
-              const isIdExcluded = checkExcludeIngredientIds(item.id);
+              const isSelected = checkActiveItem(item.id, filterCriteria);
+              const isIdExcluded = checkExcludeIngredientIds(
+                item.id,
+                filterCriteria,
+              );
               return (
                 <Chip
                   key={item?.id}

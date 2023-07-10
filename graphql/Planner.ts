@@ -51,12 +51,21 @@ const PLAN_FIELDS = gql`
       endDateString
       planCollections
       commentsCount
+      myRating
       averageRating
       numberOfRating
-      myRating
+      totalRating
       image {
         url
         hash
+      }
+      calorie {
+        value
+      }
+      gigl {
+        netCarbs
+        totalGL
+        totalGi
       }
     }
     totalPlans
@@ -561,18 +570,10 @@ export const GET_ALL_PLANS_FOR_A_COLLECTION = gql`
       limit: $limit
       page: $page
     ) {
-      totalPlans
-      plans {
-        _id
-        planName
-        description
-        startDateString
-        endDateString
-        planCollections
-        commentsCount
-      }
+      ...PlanFields
     }
   }
+  ${PLAN_FIELDS}
 `;
 
 export const FILTER_PLAN = gql`
@@ -583,32 +584,8 @@ export const FILTER_PLAN = gql`
     $limit: Float
   ) {
     filterPlans(userId: $userId, data: $data, page: $page, limit: $limit) {
-      plans {
-        _id
-        planName
-        description
-        startDateString
-        endDateString
-        planCollections
-        commentsCount
-        image {
-          url
-          hash
-        }
-        averageRating
-        calorie {
-          value
-        }
-        gigl {
-          netCarbs
-          totalGL
-          totalGi
-        }
-        myRating
-        numberOfRating
-        totalRating
-      }
-      totalPlans
+      ...PlanFields
     }
   }
+  ${PLAN_FIELDS}
 `;
