@@ -1,7 +1,7 @@
-import { useRouter } from "next/router";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { useAppDispatch } from "../../redux/hooks";
 import { updateFilterCriteriaItemForPlan } from "../../redux/slices/planFilterSlice";
 import {
+  AllFilterType,
   FilterCriteriaOptions,
   FilterCriteriaValue,
   FiltersUpdateCriteria,
@@ -9,22 +9,16 @@ import {
 
 const useToUpdateFilterCriteriaForPlan = () => {
   const dispatch = useAppDispatch();
-  const router = useRouter();
-  const { allFiltersForPlan } = useAppSelector((state) => state?.planFilter);
 
   const handleUpdateFilterCriteriaForPlan = (obj: {
     filterCriteria?: FilterCriteriaOptions;
     value?: FilterCriteriaValue;
     updateStatus: FiltersUpdateCriteria;
+    queryFilters?: AllFilterType;
   }) => {
     dispatch(updateFilterCriteriaItemForPlan(obj));
-    // router.push({
-    //   pathname: "/planner",
-    //   query: {
-    //     filterCriteria: JSON.stringify(allFiltersForPlan),
-    //   },
-    // });
   };
+
   return handleUpdateFilterCriteriaForPlan;
 };
 
