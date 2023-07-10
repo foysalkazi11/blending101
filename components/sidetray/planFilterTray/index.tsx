@@ -14,7 +14,10 @@ import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/
 import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
 import TagSectionForPlan from "./tagSection";
 import { setIsPlanFilterOpen } from "../../../redux/slices/planFilterSlice";
-import { FilterCriteriaValue } from "../../../type/filterType";
+import {
+  FilterCriteriaOptions,
+  FilterCriteriaValue,
+} from "../../../type/filterType";
 import useToUpdateActiveFilterTagForPlan from "../../../customHooks/planFilter/useToUpdateActiveFilterTagForPlan";
 import useToUpdateFilterCriteriaForPlan from "../../../customHooks/planFilter/useToUpdateFilterCriteriaForPlan";
 
@@ -52,12 +55,18 @@ function PlanFilterTray({ showPanle, showTagByDefaut }: Props) {
   };
 
   //check active filter item
-  const checkActiveItem = (id: string) => {
-    return allFiltersForPlan.some((item) => item?.id === id);
+  const checkActiveItem = (
+    id: string,
+    filterCriteria: FilterCriteriaOptions,
+  ) => {
+    return allFiltersForPlan[filterCriteria]?.some((item) => item?.id === id);
   };
   //check active filter item
-  const checkExcludeIngredientIds = (id: string) => {
-    return allFiltersForPlan.some(
+  const checkExcludeIngredientIds = (
+    id: string,
+    filterCriteria: FilterCriteriaOptions,
+  ) => {
+    return allFiltersForPlan[filterCriteria]?.some(
       (item) =>
         item?.filterCriteria === "includeIngredientIds" &&
         item?.id === id &&

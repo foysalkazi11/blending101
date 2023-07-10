@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import {
   ActiveFilterTagCriteriaType,
+  AllFilterType,
   FilterCriteriaOptions,
   FilterCriteriaValue,
   FiltersUpdateCriteria,
@@ -8,10 +9,9 @@ import {
   NutrientFiltersType,
   NutrientMatrixType,
 } from "../../type/filterType";
-
 interface InitialState {
   isPlanFilterOpen: boolean;
-  allFiltersForPlan: FilterCriteriaValue[];
+  allFiltersForPlan: AllFilterType;
   activeFilterTagForPlan: ActiveFilterTagCriteriaType;
   numericFilterStateForPlan: NutrientFiltersType | NutrientMatrixType;
   excludeFilterStateForPlan: IngredientType;
@@ -25,7 +25,7 @@ const initialState: InitialState = {
     activeTab: "",
     childTab: "",
   },
-  allFiltersForPlan: [],
+  allFiltersForPlan: {} as AllFilterType,
   numericFilterStateForPlan: {} as NutrientFiltersType | NutrientMatrixType,
   excludeFilterStateForPlan: {} as IngredientType,
 };
@@ -44,6 +44,7 @@ export const planFilterSlice = createSlice({
           filterCriteria?: FilterCriteriaOptions;
           value?: FilterCriteriaValue;
           updateStatus: FiltersUpdateCriteria;
+          queryFilters?: AllFilterType;
         };
       },
     ) => {
@@ -62,63 +63,76 @@ export const planFilterSlice = createSlice({
       };
 
       // when update status add
-      if (payload.updateStatus === "add") {
-        state.allFiltersForPlan = [...state.allFiltersForPlan, payload.value];
+      const { updateStatus, filterCriteria, value, queryFilters } = payload;
+
+      if (updateStatus === "bulkAdd") {
+        state.allFiltersForPlan = queryFilters;
+      }
+
+      if (updateStatus === "add") {
+        if (state.allFiltersForPlan[filterCriteria]) {
+          state.allFiltersForPlan[filterCriteria].push(value);
+        } else {
+          state.allFiltersForPlan[filterCriteria] = [value];
+        }
+        // state.allFiltersForPlan = [...state.allFiltersForPlan, value];
         if (
-          payload.value.filterCriteria === "nutrientFilters" ||
-          payload.value.filterCriteria === "nutrientMatrix"
+          value.filterCriteria === "nutrientFilters" ||
+          value.filterCriteria === "nutrientMatrix"
         ) {
           // @ts-ignore
           state.numericFilterStateForPlan = {
-            ...payload.value,
+            ...value,
           };
         }
-        if (payload.value.filterCriteria === "includeIngredientIds") {
+        if (value.filterCriteria === "includeIngredientIds") {
           // @ts-ignore
           state.excludeFilterStateForPlan = {
-            ...payload.value,
+            ...value,
           };
         }
       }
       // when update status remove
-      if (payload.updateStatus === "remove") {
-        state.allFiltersForPlan = state.allFiltersForPlan.filter(
-          (filter) => filter.id !== payload.value.id,
-        );
+      if (updateStatus === "remove") {
+        state.allFiltersForPlan[filterCriteria] = state.allFiltersForPlan[
+          filterCriteria
+        ].filter((filter) => filter.id !== value.id);
 
         if (
-          payload.value.filterCriteria === "nutrientFilters" ||
-          payload.value.filterCriteria === "nutrientMatrix"
+          value.filterCriteria === "nutrientFilters" ||
+          value.filterCriteria === "nutrientMatrix"
         ) {
-          if (state.numericFilterStateForPlan.id === payload.value.id) {
+          if (state.numericFilterStateForPlan.id === value.id) {
             // @ts-ignore
             state.numericFilterStateForPlan = {
               ...dummyObj,
             };
           }
         }
-        if (payload.value.filterCriteria === "includeIngredientIds") {
-          if (state.excludeFilterStateForPlan.id === payload.value.id) {
+        if (value.filterCriteria === "includeIngredientIds") {
+          if (state.excludeFilterStateForPlan.id === value.id) {
             // @ts-ignore
             state.excludeFilterStateForPlan = {};
           }
         }
       }
-      if (payload.updateStatus === "update") {
-        state.allFiltersForPlan = state.allFiltersForPlan.map((filter) =>
-          filter.id === payload.value.id ? payload.value : filter,
-        );
-        if (payload.value.filterCriteria === "includeIngredientIds") {
+      if (updateStatus === "update") {
+        state.allFiltersForPlan[filterCriteria] = state.allFiltersForPlan[
+          filterCriteria
+        ].map((filter) => (filter.id === value.id ? value : filter));
+        if (value.filterCriteria === "includeIngredientIds") {
           // @ts-ignore
           state.excludeFilterStateForPlan = {
             ...state.excludeFilterStateForPlan,
-            ...payload.value,
+            ...value,
           };
         }
       }
       // when update status removeAll
-      if (payload.updateStatus === "removeAll") {
-        state.allFiltersForPlan = state.allFiltersForPlan.filter(
+      if (updateStatus === "removeAll") {
+        state.allFiltersForPlan[filterCriteria] = state.allFiltersForPlan[
+          filterCriteria
+        ].filter(
           (filter) =>
             filter.filterCriteria !==
             state.activeFilterTagForPlan.filterCriteria,
@@ -131,23 +145,20 @@ export const planFilterSlice = createSlice({
         state.excludeFilterStateForPlan = {};
       }
       // when update status focus
-      if (payload.updateStatus === "focus") {
-        const findOneItem = state.allFiltersForPlan.find(
-          (item) => item.id === payload.value.id,
+      if (updateStatus === "focus") {
+        const findOneItem = state.allFiltersForPlan[filterCriteria].find(
+          (item) => item.id === value.id,
         );
         if (
-          (findOneItem && payload.value.filterCriteria === "nutrientFilters") ||
-          payload.value.filterCriteria === "nutrientMatrix"
+          (findOneItem && value.filterCriteria === "nutrientFilters") ||
+          value.filterCriteria === "nutrientMatrix"
         ) {
           // @ts-ignore
           state.numericFilterStateForPlan = {
             ...findOneItem,
           };
         }
-        if (
-          findOneItem &&
-          payload.value.filterCriteria === "includeIngredientIds"
-        ) {
+        if (findOneItem && value.filterCriteria === "includeIngredientIds") {
           // @ts-ignore
           state.excludeFilterStateForPlan = {
             ...findOneItem,
@@ -170,7 +181,9 @@ export const planFilterSlice = createSlice({
     },
 
     resetAllFiltersForPlan: (state) => {
-      state.allFiltersForPlan = [];
+      state.allFiltersForPlan = {} as {
+        [key in FilterCriteriaOptions]: FilterCriteriaValue[];
+      };
     },
   },
 });

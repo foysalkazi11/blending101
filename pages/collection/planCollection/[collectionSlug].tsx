@@ -77,6 +77,7 @@ const CollectionsOfPlan = () => {
           }
           closeHandler={() => router.push("/planner")}
           showItems="plan"
+          showDefaultRightHeader
         />
       </div>
     </AContainer>

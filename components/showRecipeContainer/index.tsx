@@ -146,11 +146,8 @@ const ShowRecipeContainer = ({
           {headerLeftSide ? (
             headerLeftSide
           ) : showDefaultLeftHeader ? (
-            <p style={{ color: "#ababab" }}>
-              <span style={{ fontWeight: "600" }}>
-                {totalDataCount || data?.length}
-              </span>{" "}
-              results
+            <p className={styles.resultCount}>
+              <span>{totalDataCount || data?.length}</span> results
             </p>
           ) : (
             <div></div>
@@ -286,17 +283,20 @@ const ShowRecipeContainer = ({
                   );
                 })}
               {showItems === "plan" &&
-                containerData?.map((plan) => {
-                  const { _id, planName, planCollections, commentsCount } =
-                    plan;
+                containerData?.map((item) => {
                   return (
                     <PlanCard
-                      key={_id}
-                      planId={_id}
-                      title={planName}
-                      isCollectionIds={planCollections}
-                      noOfComments={commentsCount}
+                      key={item?._id}
+                      planId={item?._id}
+                      title={item.planName}
+                      image={item?.image?.url}
+                      isCollectionIds={item?.planCollections}
+                      noOfComments={item?.commentsCount}
                       setOpenCollectionModal={setOpenCollectionModal}
+                      planComrFrom="list"
+                      noOfRatings={item?.numberOfRating}
+                      ratings={item?.averageRating}
+                      myRating={item?.myRating}
                     />
                   );
                 })}
@@ -311,7 +311,7 @@ const ShowRecipeContainer = ({
                 showHomeIcon={false}
                 imageHight={250}
                 imageWidth={250}
-                style={{ height: "70vh" }}
+                style={{ height: "50vh" }}
               />
             )}
           </>
