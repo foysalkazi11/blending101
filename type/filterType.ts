@@ -6,7 +6,8 @@ export type FiltersUpdateCriteria =
   | "remove"
   | "update"
   | "removeAll"
-  | "focus";
+  | "focus"
+  | "bulkAdd";
 export type FilterCriteriaOptions =
   | "blendTypes"
   | "includeIngredientIds"
@@ -94,3 +95,7 @@ export interface AllFilterRecipes {
   isFiltering: boolean;
   totalItems: number;
 }
+
+export type AllFilterType = {
+  [key in FilterCriteriaOptions]: FilterCriteriaValue[];
+};

@@ -1,5 +1,11 @@
 import { useRouter } from "next/router";
-import React, { useState, Fragment, useCallback, useEffect } from "react";
+import React, {
+  useState,
+  Fragment,
+  useCallback,
+  useEffect,
+  useRef,
+} from "react";
 import { faUserCircle } from "@fortawesome/pro-light-svg-icons";
 import PlanCard from "../../component/module/Planner/PlanCard.component";
 import AppdownLoadCard from "../../components/recipe/recipeDiscovery/AppdownLoadCard/AppdownLoadCard.component";
@@ -16,11 +22,28 @@ import { setIsOpenPlanCollectionTray } from "../../redux/slices/Planner.slice";
 import CommonSearchBar from "../../components/searchBar/CommonSearchBar";
 import { useAllPlan } from "../../hooks/modules/Plan/usePlanDiscovery";
 import { Debounce } from "../../helpers/Utilities";
-import { setIsPlanFilterOpen } from "../../redux/slices/planFilterSlice";
+import {
+  resetAllFiltersForPlan,
+  setIsPlanFilterOpen,
+} from "../../redux/slices/planFilterSlice";
 import SearchtagsComponent from "../../components/searchtags/searchtags.component";
 import useToUpdateFilterCriteriaForPlan from "../../customHooks/planFilter/useToUpdateFilterCriteriaForPlan";
 import useToUpdateActiveFilterTagForPlan from "../../customHooks/planFilter/useToUpdateActiveFilterTagForPlan";
 import { useDispatch } from "react-redux";
+import useToAddPlanFilterCriteriaWithUrl from "../../customHooks/planFilter/useToAddPlanFilterCriteriaWithUrl";
+import { AllFilterType } from "../../type/filterType";
+import useToGetPlanByFilterCriteria from "../../customHooks/planFilter/useToGetPlanByFilterCriteria";
+import ShowRecipeContainer from "../../components/showRecipeContainer";
+
+const normalizeQueryParams = (queryParams) => {
+  let queryParamObj = {} as AllFilterType;
+  // Access dynamically added query parameters
+  Object.entries(queryParams).forEach(([key, value]) => {
+    queryParamObj[key] = JSON.parse(value as string);
+  });
+
+  return queryParamObj;
+};
 
 const PlanDiscovery = () => {
   const router = useRouter();
@@ -30,7 +53,49 @@ const PlanDiscovery = () => {
   const { lastModifiedPlanCollection } = useAppSelector(
     (state) => state?.planner,
   );
+  const { allFiltersForPlan } = useAppSelector((state) => state.planFilter);
   const { isPlanFilterOpen } = useAppSelector((state) => state?.planFilter);
+  const queryParameters = router.query;
+  const isMounted = useRef(false);
+
+  // handle update recipe filter criteria
+  const handleUpdateFilterCriteriaForPlan = useToUpdateFilterCriteriaForPlan();
+  // handle update recipe active filter tag
+  const handleUpdateActiveFilterTagForPlan =
+    useToUpdateActiveFilterTagForPlan();
+  // handle add plan Filter with url
+  const handleAddFilterCriteriaWithUrl = useToAddPlanFilterCriteriaWithUrl();
+
+  // handle add plan Filter with url
+  const {
+    handleFilterPlan,
+    data: planFilterData,
+    loading: planFilterLoading,
+  } = useToGetPlanByFilterCriteria();
+
+  const handleRemoveFilters = () => {
+    router.push(`/planner`, undefined, {
+      shallow: true,
+    });
+    dispatch(resetAllFiltersForPlan());
+  };
+  useEffect(() => {
+    let queryParamObj = normalizeQueryParams(queryParameters);
+    handleUpdateFilterCriteriaForPlan({
+      updateStatus: "bulkAdd",
+      queryFilters: queryParamObj,
+    });
+    handleFilterPlan(queryParamObj);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (isMounted.current) {
+      handleAddFilterCriteriaWithUrl(allFiltersForPlan);
+      handleFilterPlan(allFiltersForPlan);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allFiltersForPlan]);
 
   const onPlanSearch = (value) => {
     if (value === "") {
@@ -44,8 +109,18 @@ const PlanDiscovery = () => {
     }
   };
 
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const optimizedFn = useCallback(Debounce(onPlanSearch), []);
+  // all plan filter concat together
+  const allFilters = [].concat(...Object.values(allFiltersForPlan));
 
   return (
     <AContainer
@@ -85,18 +160,49 @@ const PlanDiscovery = () => {
             handleOnChange={(e) => onPlanSearch(e.target.value)}
             openPanel={() => dispatch(setIsPlanFilterOpen(!isPlanFilterOpen))}
           />
-          <button
-            className={styles.discovery__myplan}
-            onClick={() => router.push("/planner/plan/")}
-          >
-            <Icon fontName={faUserCircle} className="mr-20" size="2rem" />
-            My Plans
-          </button>
+          <MyPlanButton router={router} />
         </div>
-        {query && query !== "" ? (
+
+        {allFilters?.length ? null : <AppdownLoadCard />}
+
+        {allFilters?.length ? (
+          <SearchtagsComponent
+            allFilters={allFilters}
+            handleUpdateActiveFilterTag={(
+              activeSection,
+              filterCriteria,
+              activeTab,
+              childTab,
+            ) => {
+              dispatch(setIsPlanFilterOpen(true));
+              handleUpdateActiveFilterTagForPlan(
+                activeSection,
+                filterCriteria,
+                activeTab,
+                childTab,
+              );
+            }}
+            handleUpdateFilterCriteria={handleUpdateFilterCriteriaForPlan}
+          />
+        ) : null}
+
+        {/* {query && query !== "" ? (
           <SearchedPlan
             query={query}
             setOpenCollectionModal={setOpenCollectionModal}
+          />
+        ) : (
+          <FeaturedPlan setOpenCollectionModal={setOpenCollectionModal} />
+        )} */}
+
+        {allFilters?.length ? (
+          <ShowRecipeContainer
+            data={planFilterData?.plans || []}
+            loading={planFilterLoading}
+            showDefaultLeftHeader
+            closeHandler={handleRemoveFilters}
+            showItems="plan"
+            showDefaultRightHeader
           />
         ) : (
           <FeaturedPlan setOpenCollectionModal={setOpenCollectionModal} />
@@ -113,6 +219,18 @@ const PlanDiscovery = () => {
         }}
       />
     </AContainer>
+  );
+};
+
+const MyPlanButton = ({ router }) => {
+  return (
+    <button
+      className={styles.discovery__myplan}
+      onClick={() => router.push("/planner/plan/")}
+    >
+      <Icon fontName={faUserCircle} className="mr-20" size="2rem" />
+      My Plans
+    </button>
   );
 };
 
@@ -148,42 +266,13 @@ const SearchedPlan = ({ query, setOpenCollectionModal }) => {
 
 const FeaturedPlan = ({ setOpenCollectionModal }) => {
   const userId = useAppSelector((state) => state.user.dbUser._id || "");
-  const { allFiltersForPlan } = useAppSelector((state) => state.planFilter);
+
   const { data } = useQuery(GET_FEATURED_PLANS, {
     variables: { limit: 8, memberId: userId },
   });
-  const dispatch = useDispatch();
-  const router = useRouter();
-  // handle update recipe filter criteria
-  const handleUpdateFilterCriteriaForPlan = useToUpdateFilterCriteriaForPlan();
-  // handle update recipe active filter tag
-  const handleUpdateActiveFilterTagForPlan =
-    useToUpdateActiveFilterTagForPlan();
 
   return (
     <Fragment>
-      {allFiltersForPlan?.length ? null : <AppdownLoadCard />}
-
-      {allFiltersForPlan?.length ? (
-        <SearchtagsComponent
-          allFilters={allFiltersForPlan}
-          handleUpdateActiveFilterTag={(
-            activeSection,
-            filterCriteria,
-            activeTab,
-            childTab,
-          ) => {
-            dispatch(setIsPlanFilterOpen(true));
-            handleUpdateActiveFilterTagForPlan(
-              activeSection,
-              filterCriteria,
-              activeTab,
-              childTab,
-            );
-          }}
-          handleUpdateFilterCriteria={handleUpdateFilterCriteriaForPlan}
-        />
-      ) : null}
       <div className="mt-40">
         <ContentTray
           heading="Recommended"
