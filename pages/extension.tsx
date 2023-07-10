@@ -1,6 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSession } from "../auth/auth.component";
 import { useAppSelector } from "../redux/hooks";
+
+const TEST_DOMAIN = "http://localhost:3000";
+const EXTENSION_DOMAIN =
+  "chrome-extension://ebbpnaajpojkhndmjmdjabgjmngjgmhm/src/popup/popup.html";
 
 const Extension = () => {
   const session = useSession();
@@ -9,47 +13,29 @@ const Extension = () => {
     (state) => state.user?.dbUser?.displayName || "",
   );
 
+  const [data, setData] = useState("");
   useEffect(() => {
-    console.log("message passing");
-    window.postMessage("Hello from Frontend", "*");
+    const token = session?.signInUserSession?.accessToken;
+    window.parent.postMessage(
+      JSON.stringify({
+        token: token?.jwtToken || "",
+        expiration_time: token?.exp || "",
+        email: session?.attributes?.email || "",
+        userId,
+        name: displayName || "Unknown",
+      }),
+      EXTENSION_DOMAIN,
+    );
+  });
+
+  useEffect(() => {
+    window.addEventListener("message", (e) => {
+      setData(JSON.stringify(e.data));
+      localStorage.setItem("extension", e.data);
+    });
   }, []);
 
-  // useEffect(() => {
-  //   window.addEventListener("message", (e) => {
-  //     if (
-  //       e.origin !==
-  //       "chrome-extension://ebbpnaajpojkhndmjmdjabgjmngjgmhm/src/popup/popup.html"
-  //     )
-  //       return;
-  //     console.log(e);
-  //     // const data = JSON.parse(e.data);
-  //     // if (typeof data.name !== "undefined") {
-  //     //   localStorage.setItem("name", data);
-  //     //   console.log("Name is set: ", data.name);
-  //     // }
-  //   });
-  // }, []);
-  // useEffect(() => {
-  //   const id = "ebbpnaajpojkhndmjmdjabgjmngjgmhm";
-  //   const token = session?.signInUserSession?.accessToken;
-  //   //@ts-ignore
-  //   chrome.runtime?.sendMessage(
-  //     id,
-  //     {
-  //       action: "AUTH_LOGIN",
-  //       payload: {
-  //         token: token?.jwtToken,
-  //         expiration_time: token?.exp,
-  //         email: session?.attributes?.email,
-  //         userId,
-  //         name: displayName,
-  //       },
-  //     },
-  //     () => {},
-  //   );
-  // }, [displayName, session, userId]);
-
-  return <div>Extension Update</div>;
+  return <div>Extension Data: {data}</div>;
 };
 
 export default Extension;
