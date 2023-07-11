@@ -361,11 +361,11 @@ const Layout: FC<{ allFilters?: any[] }> = ({ children, allFilters = [] }) => {
     <AContainer
       headerIcon="/icons/juicer.svg"
       headerTitle="Recipe collection"
-      showCollectionTray={{ show: true, showTagByDeafult: true }}
+      showCollectionTray={{ show: true, showTagByDefault: true }}
       showCommentsTray={{
         show: true,
-        showPanle: "right",
-        showTagByDeafult: false,
+        showPanel: "right",
+        showTagByDefault: false,
       }}
       // showRecipeFilterTray={{
       //   show: true,

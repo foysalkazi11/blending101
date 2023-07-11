@@ -35,13 +35,13 @@ const CollectionBlog = () => {
       headerTitle="Blog collection"
       showBlogCollectionTray={{
         show: true,
-        showPanle: "left",
-        showTagByDeafult: true,
+        showPanel: "left",
+        showTagByDefault: true,
       }}
       showBlogCommentsTray={{
         show: true,
-        showPanle: "right",
-        showTagByDeafult: false,
+        showPanel: "right",
+        showTagByDefault: false,
       }}
       headTagInfo={{
         title: "Blog collection",

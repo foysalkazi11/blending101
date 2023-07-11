@@ -137,8 +137,8 @@ const EditRecipePage = ({
       headerTitle="Recipe Edit"
       showVersionTray={{
         show: true,
-        showPanle: "right",
-        showTagByDeafult: false,
+        showPanel: "right",
+        showTagByDefault: false,
       }}
       headTagInfo={{
         title: "Recipe Edit",

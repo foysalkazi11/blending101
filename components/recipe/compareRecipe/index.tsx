@@ -631,18 +631,18 @@ const CompareRecipe = () => {
         headerTitle="Compare Recipe"
         showCollectionTray={{
           show: true,
-          showPanle: "left",
-          showTagByDeafult: false,
+          showPanel: "left",
+          showTagByDefault: false,
         }}
         showCommentsTray={{
           show: true,
-          showPanle: "right",
-          showTagByDeafult: false,
+          showPanel: "right",
+          showTagByDefault: false,
         }}
         showVersionTray={{
           show: true,
-          showPanle: "right",
-          showTagByDeafult: false,
+          showPanel: "right",
+          showTagByDefault: false,
         }}
         headTagInfo={{
           title: "Recipe compare",

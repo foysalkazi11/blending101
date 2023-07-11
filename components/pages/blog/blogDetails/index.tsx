@@ -82,8 +82,8 @@ const Layout: FC = ({ children }) => {
       logo={true}
       showBlogCommentsTray={{
         show: true,
-        showPanle: "right",
-        showTagByDeafult: false,
+        showPanel: "right",
+        showTagByDefault: false,
       }}
       headTagInfo={{
         title: "Blog details",

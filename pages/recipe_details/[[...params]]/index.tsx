@@ -16,6 +16,8 @@ import AContainer from "../../../containers/A.container";
 import ErrorPage from "../../../components/pages/404Page";
 import { updateSidebarActiveMenuName } from "../../../redux/slices/utilitySlice";
 import { RecipeDetailsType } from "../../../type/recipeDetailsType";
+import { FALSE } from "sass";
+import { setOpenFilterTray } from "../../../redux/slices/sideTraySlice";
 
 const Index = () => {
   const router = useRouter();
@@ -57,6 +59,7 @@ const Index = () => {
 
   useEffect(() => {
     dispatch(updateSidebarActiveMenuName("Blends"));
+    dispatch(setOpenFilterTray(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

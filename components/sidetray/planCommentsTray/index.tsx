@@ -32,13 +32,13 @@ export default function PlanCommentsTray({
 
   return (
     <TrayWrapper
-      showTagByDefaut={showTagByDefaut}
+      showTagByDefault={showTagByDefaut}
       closeTray={() =>
         dispatch(setIsPlanCommentsTrayOpen(!isPlanCommentsTrayOpen))
       }
       openTray={isPlanCommentsTrayOpen}
-      showPanle={showPanle}
-      panleTag={(hover) => (
+      showPanel={showPanle}
+      panelTag={(hover) => (
         <TrayTag
           icon={<FontAwesomeIcon icon={faMessageDots} />}
           placeMent="left"
