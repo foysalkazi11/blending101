@@ -62,11 +62,11 @@ function CartPanel({ showPanle, showTagByDefaut }: CartPanelProps) {
 
   return (
     <TrayWrapper
-      showTagByDefaut={showTagByDefaut}
+      showTagByDefault={showTagByDefaut}
       closeTray={handleClick}
       openTray={open}
-      showPanle={showPanle}
-      panleTag={(hover) => (
+      showPanel={showPanle}
+      panelTag={(hover) => (
         <TrayTag
           icon={<FontAwesomeIcon icon={faCartShopping} />}
           placeMent="left"

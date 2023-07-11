@@ -272,13 +272,13 @@ const MyPlan = () => {
       }}
       showPlanCollectionTray={{
         show: true,
-        showPanle: "left",
-        showTagByDeafult: true,
+        showPanel: "left",
+        showTagByDefault: true,
       }}
       showCommentsTrayForPlan={{
         show: true,
-        showPanle: "right",
-        showTagByDeafult: false,
+        showPanel: "right",
+        showTagByDefault: false,
       }}
     >
       {/* <div> */}

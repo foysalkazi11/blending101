@@ -34,11 +34,11 @@ export default function NotificationTray({
 
   return (
     <TrayWrapper
-      showTagByDefaut={showTagByDefaut}
+      showTagByDefault={showTagByDefaut}
       closeTray={() => dispatch(setIsNotificationTrayOpen(false))}
       openTray={isNotificationTrayOpen}
-      showPanle={showPanle}
-      panleTag={(hover) => (
+      showPanel={showPanle}
+      panelTag={(hover) => (
         <TrayTag
           icon={<FontAwesomeIcon icon={faBell} />}
           placeMent="left"

@@ -296,15 +296,15 @@ const PlanCollectionTray = ({
   }, []);
   return (
     <TrayWrapper
-      showTagByDefaut={showTagByDefaut}
+      showTagByDefault={showTagByDefaut}
       closeTray={() => {
         !isCollectionUpdate &&
           dispatch(setIsActiveBlogForCollection({ id: "", collectionIds: [] }));
         dispatch(setIsOpenBlogCollectionTray(!isOpenBlogCollectionTray));
       }}
       openTray={isOpenBlogCollectionTray}
-      showPanle={showPanle}
-      panleTag={(hover) => (
+      showPanel={showPanle}
+      panelTag={(hover) => (
         <TrayTag
           icon={<FontAwesomeIcon icon={faBookmark} />}
           placeMent="left"

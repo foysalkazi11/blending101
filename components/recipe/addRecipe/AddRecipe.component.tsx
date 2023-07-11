@@ -202,10 +202,10 @@ const AddRecipePage = () => {
         <>
           <TrayWrapper
             isolated={true}
-            showPanle="left"
-            showTagByDefaut={true}
+            showPanel="left"
+            showTagByDefault={true}
             openTray={openTray}
-            panleTag={(hover) => (
+            panelTag={(hover) => (
               <TrayTag
                 hover={hover}
                 icon={

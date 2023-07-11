@@ -5,6 +5,8 @@ import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/
 import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFerrisWheel, faList } from "@fortawesome/pro-light-svg-icons";
+import WikiThemeContainer from "../wikiTheme/wikiThemContainer";
+import generateDummyArray from "../../../helperFunc/array/generateDummyArray";
 
 interface Props {
   checkActive: (id: string) => boolean;
@@ -55,6 +57,14 @@ const WikiIngredientSection = ({ checkActive, handleItemClick }: Props) => {
           ingredientCategoryLoading={ingredientCategoryLoading}
           toggleMenuType="borderBottomSecondary"
           showHeader={false}
+        />
+      )}
+      {toggle === 1 && (
+        <WikiThemeContainer
+          data={generateDummyArray(10, {
+            title: "Apple",
+            image: "/images/img1.png",
+          })}
         />
       )}
     </>

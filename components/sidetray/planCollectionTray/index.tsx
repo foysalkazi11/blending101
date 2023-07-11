@@ -327,7 +327,7 @@ const PlanCollectionTray = ({ showPanle, showTagByDefaut }: Props) => {
   }, []);
   return (
     <TrayWrapper
-      showTagByDefaut={showTagByDefaut}
+      showTagByDefault={showTagByDefaut}
       closeTray={() => {
         !isCollectionUpdate &&
           dispatch(
@@ -340,8 +340,8 @@ const PlanCollectionTray = ({ showPanle, showTagByDefaut }: Props) => {
         dispatch(setIsOpenPlanCollectionTray(!isOpenPlanCollectionTray));
       }}
       openTray={isOpenPlanCollectionTray}
-      showPanle={showPanle}
-      panleTag={(hover) => (
+      showPanel={showPanle}
+      panelTag={(hover) => (
         <TrayTag
           icon={<FontAwesomeIcon icon={faBookmark} />}
           placeMent="left"

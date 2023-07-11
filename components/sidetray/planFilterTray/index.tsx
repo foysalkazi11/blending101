@@ -79,9 +79,9 @@ function PlanFilterTray({ showPanle, showTagByDefaut }: Props) {
     <TrayWrapper
       closeTray={toggleTray}
       openTray={isPlanFilterOpen}
-      showTagByDefaut={showTagByDefaut}
-      showPanle={showPanle}
-      panleTag={(hover) => (
+      showTagByDefault={showTagByDefaut}
+      showPanel={showPanle}
+      panelTag={(hover) => (
         <TrayTag icon={<FiFilter />} placeMent="left" hover={hover} />
       )}
     >

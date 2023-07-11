@@ -37,8 +37,8 @@ const CollectionsOfPlan = () => {
       headerTitle="Plan collection"
       showPlanCollectionTray={{
         show: true,
-        showPanle: "left",
-        showTagByDeafult: true,
+        showPanel: "left",
+        showTagByDefault: true,
       }}
       headTagInfo={{
         title: "Plan collection",
@@ -46,8 +46,8 @@ const CollectionsOfPlan = () => {
       }}
       showCommentsTrayForPlan={{
         show: true,
-        showPanle: "right",
-        showTagByDeafult: false,
+        showPanel: "right",
+        showTagByDefault: false,
       }}
     >
       <div className={styles.main__div}>

@@ -94,8 +94,8 @@ const Layout: FC<{
       headerTitle="Blog Discovery"
       showBlogCollectionTray={{
         show: true,
-        showPanle: "left",
-        showTagByDeafult: true,
+        showPanel: "left",
+        showTagByDefault: true,
       }}
       headTagInfo={{
         title: "Blog",

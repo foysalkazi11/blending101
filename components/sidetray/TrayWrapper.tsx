@@ -3,25 +3,25 @@ import React, { ReactNode } from "react";
 import styles from "./tray.module.scss";
 import useHover from "../utility/useHover";
 
-const panelWidth= '320px'
+const panelWidth = "320px";
 
 interface leftTrayInterface {
   children: ReactNode;
-  showTagByDefaut?: boolean;
-  showPanle?: "left" | "right";
+  showTagByDefault?: boolean;
+  showPanel?: "left" | "right";
   openTray?: boolean;
   closeTray?: () => void;
-  panleTag?: (hover: boolean) => ReactNode;
+  panelTag?: (hover: boolean) => ReactNode;
   isolated?: boolean;
 }
 
 export default function TrayWrapper({
   children,
-  showTagByDefaut = true,
-  showPanle = "left",
+  showTagByDefault: showTagByDefaut = true,
+  showPanel: showPanle = "left",
   closeTray = () => {},
   openTray = false,
-  panleTag = (hover: boolean) => (
+  panelTag: panleTag = (hover: boolean) => (
     <img
       src={
         hover ? "/icons/left__drawer__orange.svg" : "/icons/left__drawer.svg"
