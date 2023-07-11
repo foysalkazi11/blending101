@@ -309,11 +309,11 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
 
   return (
     <TrayWrapper
-      showTagByDefaut={showTagByDefaut}
+      showTagByDefault={showTagByDefaut}
       closeTray={closeTray}
       openTray={openVersionTray}
-      showPanle={showPanle}
-      panleTag={(hover) => (
+      showPanel={showPanle}
+      panelTag={(hover) => (
         <TrayTag icon={<VscVersions />} placeMent="left" hover={hover} />
       )}
     >

@@ -128,8 +128,8 @@ const PlanDiscovery = () => {
       headerTitle="Plan Discovery"
       showPlanCollectionTray={{
         show: isPlanFilterOpen ? false : true,
-        showPanle: "left",
-        showTagByDeafult: true,
+        showPanel: "left",
+        showTagByDefault: true,
       }}
       headTagInfo={{
         title: "Plans",
@@ -137,13 +137,13 @@ const PlanDiscovery = () => {
       }}
       showCommentsTrayForPlan={{
         show: true,
-        showPanle: "right",
-        showTagByDeafult: false,
+        showPanel: "right",
+        showTagByDefault: false,
       }}
       showPlanFilterTray={{
         show: true,
-        showPanle: "left",
-        showTagByDeafult: false,
+        showPanel: "left",
+        showTagByDefault: false,
       }}
     >
       <div className={styles.discovery}>
@@ -155,9 +155,9 @@ const PlanDiscovery = () => {
             onChange={(e) => optimizedFn(e.target.value)}
           /> */}
           <CommonSearchBar
-            input={router.query.query as string}
+            // input={router.query.query as string}
+            // handleOnChange={(e) => onPlanSearch(e.target.value)}
             isSearchTag={false}
-            handleOnChange={(e) => onPlanSearch(e.target.value)}
             openPanel={() => dispatch(setIsPlanFilterOpen(!isPlanFilterOpen))}
           />
           <MyPlanButton router={router} />

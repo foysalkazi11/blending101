@@ -202,9 +202,9 @@ const WikiCommentsTray = ({
   return (
     <TrayWrapper
       openTray={isOpenWikiCommentsTray}
-      showPanle={showPanle}
-      showTagByDefaut={showTagByDefaut}
-      panleTag={(hover) => (
+      showPanel={showPanle}
+      showTagByDefault={showTagByDefaut}
+      panelTag={(hover) => (
         <TrayTag
           icon={<FontAwesomeIcon icon={faMessageDots} />}
           placeMent="left"

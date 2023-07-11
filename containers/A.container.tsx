@@ -22,8 +22,8 @@ import PlanFilterTray from "../components/sidetray/planFilterTray";
 
 interface ShowTray {
   show: boolean;
-  showTagByDeafult?: boolean;
-  showPanle?: "left" | "right";
+  showTagByDefault?: boolean;
+  showPanel?: "left" | "right";
 }
 
 type AContainerProps = {
@@ -59,63 +59,63 @@ const AContainer: FC<AContainerProps> = (props) => {
     showSidebar = true,
     showCollectionTray = {
       show: false,
-      showTagByDeafult: true,
-      showPanle: "left",
+      showTagByDefault: true,
+      showPanel: "left",
     },
     showPlanFilterTray = {
       show: false,
-      showTagByDeafult: true,
-      showPanle: "left",
+      showTagByDefault: true,
+      showPanel: "left",
     },
     showVersionTray = {
       show: false,
-      showTagByDeafult: true,
-      showPanle: "right",
+      showTagByDefault: true,
+      showPanel: "right",
     },
     showGroceryTray = {
       show: false,
-      showTagByDeafult: true,
-      showPanle: "right",
+      showTagByDefault: true,
+      showPanel: "right",
     },
     showCommentsTray = {
       show: false,
-      showTagByDeafult: true,
-      showPanle: "right",
+      showTagByDefault: true,
+      showPanel: "right",
     },
     showCommentsTrayForPlan = {
       show: false,
-      showTagByDeafult: false,
-      showPanle: "right",
+      showTagByDefault: false,
+      showPanel: "right",
     },
     showWikiCommentsTray = {
       show: false,
-      showTagByDeafult: false,
-      showPanle: "right",
+      showTagByDefault: false,
+      showPanel: "right",
     },
     showBlogCommentsTray = {
       show: false,
-      showTagByDeafult: false,
-      showPanle: "right",
+      showTagByDefault: false,
+      showPanel: "right",
     },
     showBlogCollectionTray = {
       show: false,
-      showTagByDeafult: false,
-      showPanle: "left",
+      showTagByDefault: false,
+      showPanel: "left",
     },
     showPlanCollectionTray = {
       show: false,
-      showTagByDeafult: false,
-      showPanle: "left",
+      showTagByDefault: false,
+      showPanel: "left",
     },
     showRecipeFilterTray = {
       show: false,
-      showPanle: "left",
-      showTagByDeafult: false,
+      showPanel: "left",
+      showTagByDefault: false,
     },
     showNotificationTray = {
       show: true,
-      showPanle: "right",
-      showTagByDeafult: false,
+      showPanel: "right",
+      showTagByDefault: false,
     },
     logo = true,
     headerTitle = "",
@@ -149,88 +149,88 @@ const AContainer: FC<AContainerProps> = (props) => {
         {showCollectionTray?.show ? (
           <div className={`${styles.fixed__main__left}`}>
             <CollectionTray
-              showTagByDefaut={showCollectionTray?.showTagByDeafult}
-              showPanle={showCollectionTray?.showPanle}
+              showTagByDefaut={showCollectionTray?.showTagByDefault}
+              showPanle={showCollectionTray?.showPanel}
             />
           </div>
         ) : null}
         {showPlanFilterTray?.show ? (
           <div className={`${styles.fixed__main__left}`}>
             <PlanFilterTray
-              showTagByDefaut={showCollectionTray?.showTagByDeafult}
-              showPanle={showCollectionTray?.showPanle}
+              showTagByDefaut={showCollectionTray?.showTagByDefault}
+              showPanle={showCollectionTray?.showPanel}
             />
           </div>
         ) : null}
         {showVersionTray?.show ? (
           <div className={`${styles.fixed__main__right}`}>
             <VersionTray
-              showTagByDefaut={showVersionTray?.showTagByDeafult}
-              showPanle={showVersionTray?.showPanle}
+              showTagByDefaut={showVersionTray?.showTagByDefault}
+              showPanle={showVersionTray?.showPanel}
             />
           </div>
         ) : null}
         {showGroceryTray?.show ? (
           <div className={styles.fixed__main__right}>
             <CartPanel
-              showTagByDefaut={showGroceryTray?.showTagByDeafult}
-              showPanle={showGroceryTray?.showPanle}
+              showTagByDefaut={showGroceryTray?.showTagByDefault}
+              showPanle={showGroceryTray?.showPanel}
             />
           </div>
         ) : null}
         {showCommentsTray?.show && (
           <div className={styles.fixed__main__right}>
             <CommentsTray
-              showTagByDefaut={showCommentsTray?.showTagByDeafult}
-              showPanle={showCommentsTray?.showPanle}
+              showTagByDefaut={showCommentsTray?.showTagByDefault}
+              showPanle={showCommentsTray?.showPanel}
             />
           </div>
         )}
         {showCommentsTrayForPlan?.show && (
           <div className={styles.fixed__main__right}>
             <PlanCommentsTray
-              showPanle={showCommentsTrayForPlan.showPanle}
-              showTagByDefaut={showCommentsTrayForPlan.showTagByDeafult}
+              showPanle={showCommentsTrayForPlan.showPanel}
+              showTagByDefaut={showCommentsTrayForPlan.showTagByDefault}
             />
           </div>
         )}
         {showWikiCommentsTray?.show && (
           <div className={styles.fixed__main__right}>
             <WikiCommentsTray
-              showTagByDefaut={showWikiCommentsTray?.showTagByDeafult}
-              showPanle={showWikiCommentsTray?.showPanle}
+              showTagByDefaut={showWikiCommentsTray?.showTagByDefault}
+              showPanle={showWikiCommentsTray?.showPanel}
             />
           </div>
         )}
         {showBlogCommentsTray?.show && (
           <div className={styles.fixed__main__right}>
             <BlogCommentsTray
-              showTagByDefaut={showBlogCommentsTray?.showTagByDeafult}
-              showPanle={showBlogCommentsTray?.showPanle}
+              showTagByDefaut={showBlogCommentsTray?.showTagByDefault}
+              showPanle={showBlogCommentsTray?.showPanel}
             />
           </div>
         )}
         {showNotificationTray?.show && (
           <div className={styles.fixed__main__right}>
             <NotificationTray
-              showTagByDefaut={showBlogCommentsTray?.showTagByDeafult}
-              showPanle={showBlogCommentsTray?.showPanle}
+              showTagByDefaut={showBlogCommentsTray?.showTagByDefault}
+              showPanle={showBlogCommentsTray?.showPanel}
             />
           </div>
         )}
         {showBlogCollectionTray?.show && (
           <div className={styles.fixed__main__left}>
             <BlogCollectionTray
-              showTagByDefaut={showBlogCollectionTray?.showTagByDeafult}
-              showPanle={showBlogCollectionTray?.showPanle}
+              showTagByDefaut={showBlogCollectionTray?.showTagByDefault}
+              showPanle={showBlogCollectionTray?.showPanel}
             />
           </div>
         )}
         {showPlanCollectionTray?.show && (
           <div className={styles.fixed__main__left}>
             <PlanCollectionTray
-              showTagByDefaut={showPlanCollectionTray?.showTagByDeafult}
-              showPanle={showPlanCollectionTray?.showPanle}
+              showTagByDefaut={showPlanCollectionTray?.showTagByDefault}
+              showPanle={showPlanCollectionTray?.showPanel}
             />
           </div>
         )}
@@ -250,20 +250,10 @@ const AContainer: FC<AContainerProps> = (props) => {
           </div>
         )}
         {showRecipeFilterTray && (
-          // <Menu
-          //   pageWrapId={"page-wrap"}
-          //   outerContainerId={"outer-container"}
-          //   isOpen={openFilterTray}
-          //   customBurgerIcon={false}
-          //   itemListElement="div"
-          //   noOverlay
-          // >
-
-          // </Menu>
           <div className={styles.fixed__main__left}>
             <FilterTray
-              showTagByDefaut={showRecipeFilterTray?.showTagByDeafult}
-              showPanle={showRecipeFilterTray?.showPanle}
+              showTagByDefaut={showRecipeFilterTray?.showTagByDefault}
+              showPanle={showRecipeFilterTray?.showPanel}
             />
           </div>
         )}

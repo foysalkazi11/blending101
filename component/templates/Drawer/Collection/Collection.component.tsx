@@ -56,11 +56,11 @@ function CollectionDrawer({
 
   return (
     <TrayWrapper
-      showTagByDefaut={showTagByDefaut}
+      showTagByDefault={showTagByDefaut}
       closeTray={closeTray}
       openTray={openCollectionsTary}
-      showPanle={showPanle}
-      panleTag={(hover) => (
+      showPanel={showPanle}
+      panelTag={(hover) => (
         <TrayTag
           icon={<FontAwesomeIcon icon={faBookmark} />}
           placeMent="left"

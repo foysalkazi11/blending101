@@ -83,8 +83,8 @@ const WikiHome = () => {
       headerIcon={"/icons/books.svg"}
       showWikiCommentsTray={{
         show: true,
-        showPanle: "right",
-        showTagByDeafult: false,
+        showPanel: "right",
+        showTagByDefault: false,
       }}
       headTagInfo={changeTitleInfo(wikiType)}
     >
@@ -112,10 +112,10 @@ const WikiHome = () => {
       {width < 1280 && (
         <TrayWrapper
           isolated={true}
-          showPanle="left"
-          showTagByDefaut={width < 1280 ? true : false}
+          showPanel="left"
+          showTagByDefault={width < 1280 ? true : false}
           openTray={openTray}
-          panleTag={(hover) => (
+          panelTag={(hover) => (
             <TrayTag
               hover={hover}
               icon={<FontAwesomeIcon icon={faBooks} />}

@@ -3,6 +3,8 @@ import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFerrisWheel, faList } from "@fortawesome/pro-light-svg-icons";
 import WikiNutritionPanel from "../wikiNutritionPanel/WikiNutritionPanel";
+import WikiThemeContainer from "../wikiTheme/wikiThemContainer";
+import generateDummyArray from "../../../helperFunc/array/generateDummyArray";
 
 interface Props {
   checkActive: (id: string) => boolean;
@@ -37,6 +39,14 @@ const WikiNutrientSection = ({ checkActive, handleItemClick }: Props) => {
           checkActiveNutrition={checkActive}
           handleNutritionClick={handleItemClick}
           showHeader={false}
+        />
+      )}
+      {toggle === 1 && (
+        <WikiThemeContainer
+          data={generateDummyArray(10, {
+            title: "Apple",
+            image: "/images/img1.png",
+          })}
         />
       )}
     </>
