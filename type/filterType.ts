@@ -13,7 +13,8 @@ export type FilterCriteriaOptions =
   | "includeIngredientIds"
   | "nutrientFilters"
   | "nutrientMatrix"
-  | "collectionIds";
+  | "collectionIds"
+  | "searchTerm";
 
 export type FilterProps = {
   pageTitle: string;
@@ -34,6 +35,12 @@ export interface BlendType {
   tagLabel: string;
   filterCriteria: FilterCriteriaOptions;
   origin: ActiveFilterTagCriteriaType;
+}
+export interface SearchTermType {
+  searchTerm: string;
+  tagLabel: string;
+  filterCriteria: FilterCriteriaOptions;
+  id: string;
 }
 
 export interface IngredientType {
@@ -97,5 +104,7 @@ export interface AllFilterRecipes {
 }
 
 export type AllFilterType = {
-  [key in FilterCriteriaOptions]: FilterCriteriaValue[];
+  [key in FilterCriteriaOptions]: key extends "searchTerm"
+    ? string
+    : FilterCriteriaValue[];
 };
