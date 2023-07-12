@@ -82,26 +82,6 @@ const Home = () => {
       <div className={styles.container}>
         <div className="row">
           <div className="col-9">
-            <div className={styles.alert}>
-              <div className={styles.alert__content}>
-                <h3>Hello {displayName}!</h3>
-                <p>
-                  You have current blending score is{" "}
-                  <span className="bold text-green">85%</span>. Did you know
-                  people who log their meals daily lose twice as weight as those
-                  who don&apos;t? Check out &quot;
-                  <span className="text-orange bold">
-                    Food Logging like a Pro!
-                  </span>
-                  &quot;. It could help take your blending score to the next
-                  level.
-                </p>
-              </div>
-              <div className={styles.alert__image}>
-                <h3>Food logging like a Pro!</h3>
-                <img src="/images/smoothie.webp" alt="" />
-              </div>
-            </div>
             <div className={styles.quick}>
               <div className={styles.quick__site}>
                 <h3>Explore Site</h3>
@@ -159,6 +139,26 @@ const Home = () => {
                       </a>
                     ))}
                 </div>
+              </div>
+            </div>
+            <div className={styles.alert}>
+              <div className={styles.alert__content}>
+                <h3>Hello {displayName}!</h3>
+                <p>
+                  You have current blending score is{" "}
+                  <span className="bold text-green">85%</span>. Did you know
+                  people who log their meals daily lose twice as weight as those
+                  who don&apos;t? Check out &quot;
+                  <span className="text-orange bold">
+                    Food Logging like a Pro!
+                  </span>
+                  &quot;. It could help take your blending score to the next
+                  level.
+                </p>
+              </div>
+              <div className={styles.alert__image}>
+                <h3>Food logging like a Pro!</h3>
+                <img src="/images/smoothie.webp" alt="" />
               </div>
             </div>
 
