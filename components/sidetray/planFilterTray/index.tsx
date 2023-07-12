@@ -59,6 +59,9 @@ function PlanFilterTray({ showPanle, showTagByDefaut }: Props) {
     id: string,
     filterCriteria: FilterCriteriaOptions,
   ) => {
+    if (filterCriteria === "searchTerm") {
+      return false;
+    }
     return allFiltersForPlan[filterCriteria]?.some((item) => item?.id === id);
   };
   //check active filter item
@@ -66,6 +69,9 @@ function PlanFilterTray({ showPanle, showTagByDefaut }: Props) {
     id: string,
     filterCriteria: FilterCriteriaOptions,
   ) => {
+    if (filterCriteria === "searchTerm") {
+      return false;
+    }
     return allFiltersForPlan[filterCriteria]?.some(
       (item) =>
         item?.filterCriteria === "includeIngredientIds" &&

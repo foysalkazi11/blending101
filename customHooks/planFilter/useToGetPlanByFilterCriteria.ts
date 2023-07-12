@@ -19,118 +19,84 @@ const useToGetPlanByFilterCriteria = () => {
     page = 1,
     limit = 12,
   ) => {
-    let blendTypesArr: string[] = [];
-    let ingredientIds: string[] = [];
-    let collectionsIds: string[] = [];
-    let nutrientFiltersMap = [];
-    let nutrientMatrixMap = [];
-    let excludeIngredientIds = [];
-    Object.entries(allFilters).forEach(([key, value]) => {
-      if (key === "collectionIds") {
-        value.forEach((filter) => collectionsIds.push(filter.id));
-      }
-      if (key === "blendTypes") {
-        value.forEach((filter) => blendTypesArr.push(filter.id));
-      }
-      if (key === "includeIngredientIds") {
-        value.forEach((filter: any) => {
-          if (filter?.excludeIngredientIds) {
-            excludeIngredientIds.push(filter.id);
-          } else {
-            ingredientIds.push(filter.id);
-          }
-        });
-      }
-      if (key === "nutrientFilters") {
-        value?.forEach((filter: any) => {
-          const {
-            id,
-            name,
-            between,
-            category,
-            greaterThan,
-            lessThan,
-            lessThanValue,
-            greaterThanValue,
-            betweenStartValue,
-            betweenEndValue,
-          } = filter;
-          let arrangeValue = {
-            beetween: between,
-            category: category.toLowerCase(),
-            greaterThan,
-            lessThan,
-            nutrientId: id,
-            value: 0,
-            value1: 0,
-            value2: 0,
-          };
-          if (lessThan) {
-            arrangeValue = {
-              ...arrangeValue,
-              value: lessThanValue,
-            };
-          }
-          if (greaterThan) {
-            arrangeValue = {
-              ...arrangeValue,
-              value: greaterThanValue,
-            };
-          }
-          if (between) {
-            arrangeValue = {
-              ...arrangeValue,
-              value1: betweenStartValue,
-              value2: betweenEndValue,
-            };
-          }
-          nutrientFiltersMap.push(arrangeValue);
-        });
-      }
+    const blendTypesArr: string[] = [];
+    const ingredientIds: string[] = [];
+    const collectionsIds: string[] = [];
+    const nutrientFiltersMap: any[] = [];
+    const nutrientMatrixMap: any[] = [];
+    const excludeIngredientIds: string[] = [];
+    let searchTerm = "";
 
-      if (key === "nutrientMatrix") {
-        value?.forEach((filter: any) => {
-          const {
-            id,
-            name,
-            between,
-            greaterThan,
-            lessThan,
-            lessThanValue,
-            greaterThanValue,
-            betweenStartValue,
-            betweenEndValue,
-          } = filter;
-          let arrangeValue = {
-            matrixName: name.toLowerCase(),
-            beetween: between,
-            greaterThan,
-            lessThan,
-            value: 0,
-            value1: 0,
-            value2: 0,
-          };
-          if (lessThan) {
-            arrangeValue = {
-              ...arrangeValue,
-              value: lessThanValue,
-            };
-          }
-          if (greaterThan) {
-            arrangeValue = {
-              ...arrangeValue,
-              value: greaterThanValue,
-            };
-          }
-          if (between) {
-            arrangeValue = {
-              ...arrangeValue,
+    Object.entries(allFilters).forEach(([key, value]) => {
+      if (typeof value === "string" && key === "searchTerm") {
+        searchTerm = value;
+      } else if (Array.isArray(value) && value.length) {
+        if (key === "collectionIds") {
+          collectionsIds.push(...value.map((filter: any) => filter.id));
+        } else if (key === "blendTypes") {
+          blendTypesArr.push(...value.map((filter: any) => filter.id));
+        } else if (key === "includeIngredientIds") {
+          value.forEach((filter: any) => {
+            if (filter?.excludeIngredientIds) {
+              excludeIngredientIds.push(filter.id);
+            } else {
+              ingredientIds.push(filter.id);
+            }
+          });
+        } else if (key === "nutrientFilters") {
+          value.forEach((filter: any) => {
+            const {
+              id,
+              between,
+              category,
+              greaterThan,
+              lessThan,
+              lessThanValue,
+              greaterThanValue,
+              betweenStartValue,
+              betweenEndValue,
+            } = filter;
+
+            const arrangeValue = {
+              between,
+              category: category.toLowerCase(),
+              greaterThan,
+              lessThan,
+              nutrientId: id,
+              value: lessThan ? lessThanValue : greaterThanValue,
               value1: betweenStartValue,
               value2: betweenEndValue,
             };
-          }
-          nutrientMatrixMap.push(arrangeValue);
-        });
+
+            nutrientFiltersMap.push(arrangeValue);
+          });
+        } else if (key === "nutrientMatrix") {
+          value.forEach((filter: any) => {
+            const {
+              id,
+              name,
+              between,
+              greaterThan,
+              lessThan,
+              lessThanValue,
+              greaterThanValue,
+              betweenStartValue,
+              betweenEndValue,
+            } = filter;
+
+            const arrangeValue = {
+              matrixName: name.toLowerCase(),
+              between,
+              greaterThan,
+              lessThan,
+              value: lessThan ? lessThanValue : greaterThanValue,
+              value1: betweenStartValue,
+              value2: betweenEndValue,
+            };
+
+            nutrientMatrixMap.push(arrangeValue);
+          });
+        }
       }
     });
 
@@ -144,6 +110,7 @@ const useToGetPlanByFilterCriteria = () => {
             nutrientMatrix: nutrientMatrixMap,
             excludeIngredientIds,
             collectionsIds,
+            searchTerm,
           },
           page,
           limit,

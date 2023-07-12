@@ -21,12 +21,15 @@ import ShowLastModifiedCollection from "../../components/showLastModifiedCollect
 import { setIsOpenPlanCollectionTray } from "../../redux/slices/Planner.slice";
 import CommonSearchBar from "../../components/searchBar/CommonSearchBar";
 import { useAllPlan } from "../../hooks/modules/Plan/usePlanDiscovery";
-import { Debounce } from "../../helpers/Utilities";
 import {
   resetAllFiltersForPlan,
   setIsPlanFilterOpen,
+  updatePlanFilterSearchTerm,
 } from "../../redux/slices/planFilterSlice";
-import SearchtagsComponent from "../../components/searchtags/searchtags.component";
+import SearchtagsComponent, {
+  HandleUpdateActiveFilterTagType,
+  HandleUpdateFilterCriteriaType,
+} from "../../components/searchtags/searchtags.component";
 import useToUpdateFilterCriteriaForPlan from "../../customHooks/planFilter/useToUpdateFilterCriteriaForPlan";
 import useToUpdateActiveFilterTagForPlan from "../../customHooks/planFilter/useToUpdateActiveFilterTagForPlan";
 import { useDispatch } from "react-redux";
@@ -34,6 +37,7 @@ import useToAddPlanFilterCriteriaWithUrl from "../../customHooks/planFilter/useT
 import { AllFilterType } from "../../type/filterType";
 import useToGetPlanByFilterCriteria from "../../customHooks/planFilter/useToGetPlanByFilterCriteria";
 import ShowRecipeContainer from "../../components/showRecipeContainer";
+import useDebounce from "../../customHooks/useDebounce";
 
 const normalizeQueryParams = (queryParams) => {
   let queryParamObj = {} as AllFilterType;
@@ -46,6 +50,7 @@ const normalizeQueryParams = (queryParams) => {
 };
 
 const PlanDiscovery = () => {
+  const [searchTerm, setSearchTerm] = useState("");
   const router = useRouter();
   const query = router.query.query;
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
@@ -65,8 +70,9 @@ const PlanDiscovery = () => {
     useToUpdateActiveFilterTagForPlan();
   // handle add plan Filter with url
   const handleAddFilterCriteriaWithUrl = useToAddPlanFilterCriteriaWithUrl();
-
   // handle add plan Filter with url
+
+  const debounceValue = useDebounce(searchTerm, 500);
   const {
     handleFilterPlan,
     data: planFilterData,
@@ -78,6 +84,30 @@ const PlanDiscovery = () => {
       shallow: true,
     });
     dispatch(resetAllFiltersForPlan());
+  };
+  const handleUpdateFilterCriteriaForPlanFunc = (
+    obj: HandleUpdateFilterCriteriaType,
+  ) => {
+    if (obj.filterCriteria === "searchTerm") {
+      dispatch(updatePlanFilterSearchTerm(""));
+      setSearchTerm("");
+    } else {
+      handleUpdateFilterCriteriaForPlan(obj);
+    }
+  };
+  const handleUpdateActiveFilterTagFunc: HandleUpdateActiveFilterTagType = (
+    activeSection,
+    filterCriteria,
+    activeTab,
+    childTab,
+  ) => {
+    dispatch(setIsPlanFilterOpen(true));
+    handleUpdateActiveFilterTagForPlan(
+      activeSection,
+      filterCriteria,
+      activeTab,
+      childTab,
+    );
   };
   useEffect(() => {
     let queryParamObj = normalizeQueryParams(queryParameters);
@@ -97,18 +127,24 @@ const PlanDiscovery = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allFiltersForPlan]);
 
-  const onPlanSearch = (value) => {
-    if (value === "") {
-      router.push(`/planner`, undefined, {
-        shallow: true,
-      });
-    } else {
-      router.push(`/planner?query=${value}`, undefined, {
-        shallow: true,
-      });
-    }
-  };
+  const onPlanSearch = useCallback((value: string) => {
+    // if (value === "") {
+    //   router.push(`/planner`, undefined, {
+    //     shallow: true,
+    //   });
+    // } else {
+    //   router.push(`/planner?query=${value}`, undefined, {
+    //     shallow: true,
+    //   });
+    // }
+  }, []);
 
+  useEffect(() => {
+    if (isMounted.current) {
+      dispatch(updatePlanFilterSearchTerm(debounceValue));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debounceValue]);
   useEffect(() => {
     isMounted.current = true;
 
@@ -117,9 +153,6 @@ const PlanDiscovery = () => {
     };
   }, []);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const optimizedFn = useCallback(Debounce(onPlanSearch), []);
-  // all plan filter concat together
   const allFilters = [].concat(...Object.values(allFiltersForPlan));
 
   return (
@@ -148,15 +181,9 @@ const PlanDiscovery = () => {
     >
       <div className={styles.discovery}>
         <div className={styles.searchBarContainer}>
-          {/* <input
-            type="text"
-            className="search"
-            placeholder="Enter something here..."
-            onChange={(e) => optimizedFn(e.target.value)}
-          /> */}
           <CommonSearchBar
-            // input={router.query.query as string}
-            // handleOnChange={(e) => onPlanSearch(e.target.value)}
+            input={searchTerm}
+            handleOnChange={(e) => setSearchTerm(e.target.value)}
             isSearchTag={false}
             openPanel={() => dispatch(setIsPlanFilterOpen(!isPlanFilterOpen))}
           />
@@ -168,21 +195,8 @@ const PlanDiscovery = () => {
         {allFilters?.length ? (
           <SearchtagsComponent
             allFilters={allFilters}
-            handleUpdateActiveFilterTag={(
-              activeSection,
-              filterCriteria,
-              activeTab,
-              childTab,
-            ) => {
-              dispatch(setIsPlanFilterOpen(true));
-              handleUpdateActiveFilterTagForPlan(
-                activeSection,
-                filterCriteria,
-                activeTab,
-                childTab,
-              );
-            }}
-            handleUpdateFilterCriteria={handleUpdateFilterCriteriaForPlan}
+            handleUpdateActiveFilterTag={handleUpdateActiveFilterTagFunc}
+            handleUpdateFilterCriteria={handleUpdateFilterCriteriaForPlanFunc}
           />
         ) : null}
 
