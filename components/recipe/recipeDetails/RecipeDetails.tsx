@@ -36,29 +36,33 @@ const RecipeDetails = ({
 
   return (
     <AContainer
+      showRecipeFilterTray={{
+        show: false,
+        showTagByDefault: false,
+      }}
       showHeader={true}
       logo={true}
       headerIcon="/icons/juicer.svg"
       headerTitle="Recipe Details"
       showCommentsTray={{
         show: true,
-        showPanle: "right",
-        showTagByDeafult: false,
+        showPanel: "right",
+        showTagByDefault: false,
       }}
       showCollectionTray={{
         show: true,
-        showTagByDeafult: false,
-        showPanle: "left",
+        showTagByDefault: false,
+        showPanel: "left",
       }}
       showVersionTray={{
         show: true,
-        showPanle: "right",
-        showTagByDeafult: false,
+        showPanel: "right",
+        showTagByDefault: false,
       }}
       showGroceryTray={{
         show: openVersionTray ? false : true,
-        showPanle: "right",
-        showTagByDeafult: openVersionTray ? false : true,
+        showPanel: "right",
+        showTagByDefault: openVersionTray ? false : true,
       }}
       headTagInfo={{
         title: "Recipe Details",
@@ -66,8 +70,8 @@ const RecipeDetails = ({
       }}
       showNotificationTray={{
         show: true,
-        showPanle: "right",
-        showTagByDeafult: true,
+        showPanel: "right",
+        showTagByDefault: true,
       }}
     >
       <div className={styles.main}>

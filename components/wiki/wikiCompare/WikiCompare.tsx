@@ -170,8 +170,8 @@ const WikiCompare = () => {
       headerTitle="Compare Ingredient"
       showWikiCommentsTray={{
         show: true,
-        showPanle: "right",
-        showTagByDeafult: false,
+        showPanel: "right",
+        showTagByDefault: false,
       }}
       headTagInfo={{
         title: "Compare Ingredient",

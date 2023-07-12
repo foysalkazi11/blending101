@@ -200,23 +200,23 @@ const RecipeDiscovery = () => {
     <>
       <AContainer
         headerIcon="/icons/juicer.svg"
-        showCollectionTray={{ show: true, showTagByDeafult: true }}
+        showCollectionTray={{ show: true, showTagByDefault: true }}
         showRecipeFilterTray={{
           show: true,
-          showPanle: "left",
-          showTagByDeafult: false,
+          showPanel: "left",
+          showTagByDefault: false,
         }}
         headerTitle="Blend Discovery"
         showCommentsTray={{
           show: true,
-          showPanle: "right",
-          showTagByDeafult: false,
+          showPanel: "right",
+          showTagByDefault: false,
         }}
         headTagInfo={{ description: "blends", title: "Blends" }}
         showNotificationTray={{
           show: true,
-          showPanle: "right",
-          showTagByDeafult: true,
+          showPanel: "right",
+          showTagByDefault: true,
         }}
       >
         <div className={styles.main__div}>

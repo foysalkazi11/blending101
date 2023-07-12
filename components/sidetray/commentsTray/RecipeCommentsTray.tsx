@@ -36,11 +36,11 @@ export default function RecipeCommentsTray({
 
   return (
     <TrayWrapper
-      showTagByDefaut={showTagByDefaut}
+      showTagByDefault={showTagByDefaut}
       closeTray={handleClick}
       openTray={openCommentsTray}
-      showPanle={showPanle}
-      panleTag={(hover) => (
+      showPanel={showPanle}
+      panelTag={(hover) => (
         <TrayTag
           icon={<FontAwesomeIcon icon={faMessageDots} />}
           placeMent="left"

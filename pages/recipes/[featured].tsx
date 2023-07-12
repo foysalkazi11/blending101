@@ -30,11 +30,11 @@ const ViewAll = () => {
 
   return (
     <AContainer
-      showCollectionTray={{ show: true, showTagByDeafult: true }}
+      showCollectionTray={{ show: true, showTagByDefault: true }}
       showCommentsTray={{
         show: true,
-        showPanle: "right",
-        showTagByDeafult: false,
+        showPanel: "right",
+        showTagByDefault: false,
       }}
     >
       <div className={styles.main__div}>

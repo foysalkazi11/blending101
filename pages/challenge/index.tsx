@@ -105,8 +105,8 @@ const ChallengePage = () => {
       headerTitle="Challenges"
       showGroceryTray={{
         show: showGroceryTray,
-        showPanle: "right",
-        showTagByDeafult: showGroceryTray,
+        showPanel: "right",
+        showTagByDefault: showGroceryTray,
       }}
       headTagInfo={{
         title: "Challenge",

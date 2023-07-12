@@ -75,8 +75,8 @@ const Home = () => {
       headTagInfo={{ description: "home page content", title: "Home" }}
       showNotificationTray={{
         show: true,
-        showPanle: "right",
-        showTagByDeafult: false,
+        showPanel: "right",
+        showTagByDefault: false,
       }}
     >
       <div className={styles.container}>

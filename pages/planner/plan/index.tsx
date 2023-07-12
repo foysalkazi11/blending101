@@ -100,8 +100,8 @@ const MyPlan = () => {
       headerTitle="MEAL PLAN"
       showGroceryTray={{
         show: showGroceryTray,
-        showPanle: "right",
-        showTagByDeafult: showGroceryTray,
+        showPanel: "right",
+        showTagByDefault: showGroceryTray,
       }}
       headTagInfo={{
         title: "Meal plan",
