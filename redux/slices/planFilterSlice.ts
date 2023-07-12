@@ -68,103 +68,109 @@ export const planFilterSlice = createSlice({
       if (updateStatus === "bulkAdd") {
         state.allFiltersForPlan = queryFilters;
       }
-
-      if (updateStatus === "add") {
-        if (state.allFiltersForPlan[filterCriteria]) {
-          state.allFiltersForPlan[filterCriteria].push(value);
-        } else {
-          state.allFiltersForPlan[filterCriteria] = [value];
-        }
-        // state.allFiltersForPlan = [...state.allFiltersForPlan, value];
-        if (
-          value.filterCriteria === "nutrientFilters" ||
-          value.filterCriteria === "nutrientMatrix"
-        ) {
-          // @ts-ignore
-          state.numericFilterStateForPlan = {
-            ...value,
-          };
-        }
-        if (value.filterCriteria === "includeIngredientIds") {
-          // @ts-ignore
-          state.excludeFilterStateForPlan = {
-            ...value,
-          };
-        }
-      }
-      // when update status remove
-      if (updateStatus === "remove") {
-        state.allFiltersForPlan[filterCriteria] = state.allFiltersForPlan[
-          filterCriteria
-        ].filter((filter) => filter.id !== value.id);
-
-        if (
-          value.filterCriteria === "nutrientFilters" ||
-          value.filterCriteria === "nutrientMatrix"
-        ) {
-          if (state.numericFilterStateForPlan.id === value.id) {
+      if (filterCriteria !== "searchTerm") {
+        if (updateStatus === "add") {
+          if (state.allFiltersForPlan[filterCriteria]) {
+            state.allFiltersForPlan[filterCriteria].push(value);
+          } else {
+            state.allFiltersForPlan[filterCriteria] = [value];
+          }
+          // state.allFiltersForPlan = [...state.allFiltersForPlan, value];
+          if (
+            value.filterCriteria === "nutrientFilters" ||
+            value.filterCriteria === "nutrientMatrix"
+          ) {
             // @ts-ignore
             state.numericFilterStateForPlan = {
-              ...dummyObj,
+              ...value,
+            };
+          }
+          if (value.filterCriteria === "includeIngredientIds") {
+            // @ts-ignore
+            state.excludeFilterStateForPlan = {
+              ...value,
             };
           }
         }
-        if (value.filterCriteria === "includeIngredientIds") {
-          if (state.excludeFilterStateForPlan.id === value.id) {
+        // when update status remove
+        if (updateStatus === "remove") {
+          state.allFiltersForPlan[filterCriteria] = state.allFiltersForPlan[
+            filterCriteria
+          ].filter((filter) => filter.id !== value.id);
+
+          if (
+            value.filterCriteria === "nutrientFilters" ||
+            value.filterCriteria === "nutrientMatrix"
+          ) {
+            if (state.numericFilterStateForPlan.id === value.id) {
+              // @ts-ignore
+              state.numericFilterStateForPlan = {
+                ...dummyObj,
+              };
+            }
+          }
+          if (value.filterCriteria === "includeIngredientIds") {
+            if (state.excludeFilterStateForPlan.id === value.id) {
+              // @ts-ignore
+              state.excludeFilterStateForPlan = {};
+            }
+          }
+        }
+        if (updateStatus === "update") {
+          state.allFiltersForPlan[filterCriteria] = state.allFiltersForPlan[
+            filterCriteria
+          ].map((filter) => (filter.id === value.id ? value : filter));
+          if (value.filterCriteria === "includeIngredientIds") {
             // @ts-ignore
-            state.excludeFilterStateForPlan = {};
+            state.excludeFilterStateForPlan = {
+              ...state.excludeFilterStateForPlan,
+              ...value,
+            };
+          }
+        }
+        // when update status removeAll
+        if (updateStatus === "removeAll") {
+          state.allFiltersForPlan[filterCriteria] = state.allFiltersForPlan[
+            filterCriteria
+          ].filter(
+            (filter) =>
+              filter.filterCriteria !==
+              state.activeFilterTagForPlan.filterCriteria,
+          );
+          // @ts-ignore
+          state.numericFilterStateForPlan = {
+            ...dummyObj,
+          };
+          // @ts-ignore
+          state.excludeFilterStateForPlan = {};
+        }
+        // when update status focus
+        if (updateStatus === "focus") {
+          const findOneItem = state.allFiltersForPlan[filterCriteria].find(
+            (item) => item.id === value.id,
+          );
+          if (
+            (findOneItem && value.filterCriteria === "nutrientFilters") ||
+            value.filterCriteria === "nutrientMatrix"
+          ) {
+            // @ts-ignore
+            state.numericFilterStateForPlan = {
+              ...findOneItem,
+            };
+          }
+          if (findOneItem && value.filterCriteria === "includeIngredientIds") {
+            // @ts-ignore
+            state.excludeFilterStateForPlan = {
+              ...findOneItem,
+            };
           }
         }
       }
-      if (updateStatus === "update") {
-        state.allFiltersForPlan[filterCriteria] = state.allFiltersForPlan[
-          filterCriteria
-        ].map((filter) => (filter.id === value.id ? value : filter));
-        if (value.filterCriteria === "includeIngredientIds") {
-          // @ts-ignore
-          state.excludeFilterStateForPlan = {
-            ...state.excludeFilterStateForPlan,
-            ...value,
-          };
-        }
-      }
-      // when update status removeAll
-      if (updateStatus === "removeAll") {
-        state.allFiltersForPlan[filterCriteria] = state.allFiltersForPlan[
-          filterCriteria
-        ].filter(
-          (filter) =>
-            filter.filterCriteria !==
-            state.activeFilterTagForPlan.filterCriteria,
-        );
-        // @ts-ignore
-        state.numericFilterStateForPlan = {
-          ...dummyObj,
-        };
-        // @ts-ignore
-        state.excludeFilterStateForPlan = {};
-      }
-      // when update status focus
-      if (updateStatus === "focus") {
-        const findOneItem = state.allFiltersForPlan[filterCriteria].find(
-          (item) => item.id === value.id,
-        );
-        if (
-          (findOneItem && value.filterCriteria === "nutrientFilters") ||
-          value.filterCriteria === "nutrientMatrix"
-        ) {
-          // @ts-ignore
-          state.numericFilterStateForPlan = {
-            ...findOneItem,
-          };
-        }
-        if (findOneItem && value.filterCriteria === "includeIngredientIds") {
-          // @ts-ignore
-          state.excludeFilterStateForPlan = {
-            ...findOneItem,
-          };
-        }
-      }
+    },
+    updatePlanFilterSearchTerm(state, action: { payload: string }) {
+      action.payload
+        ? (state.allFiltersForPlan.searchTerm = action.payload)
+        : delete state.allFiltersForPlan?.searchTerm;
     },
     updateActiveFilterTagForPlan: (
       state,
@@ -181,9 +187,7 @@ export const planFilterSlice = createSlice({
     },
 
     resetAllFiltersForPlan: (state) => {
-      state.allFiltersForPlan = {} as {
-        [key in FilterCriteriaOptions]: FilterCriteriaValue[];
-      };
+      state.allFiltersForPlan = {} as AllFilterType;
     },
   },
 });
@@ -194,6 +198,7 @@ export const {
   updateActiveFilterTagForPlan,
   updateFilterCriteriaItemForPlan,
   updateNumericFilterStateForPlan,
+  updatePlanFilterSearchTerm,
 } = planFilterSlice.actions;
 
 export default planFilterSlice.reducer;

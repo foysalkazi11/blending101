@@ -1,4 +1,4 @@
-export default function debounce(callback, delay = 1000) {
+export default function debounce(callback, delay = 300) {
   let time;
   return (...args) => {
     clearTimeout(time);
