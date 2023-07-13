@@ -43,6 +43,18 @@ const compareRecipeResponsiveSettings = {
   dotsClass: styles.button__bar,
 };
 
+export interface CreateNewRecipeType {
+  versionId: string;
+  name: string;
+  image: string[];
+  description: string;
+  recipeBlendCategory: string;
+  ingredients: any;
+  netCarbs?: number;
+  RxScore?: number;
+  calorie?: number;
+}
+
 const VersionCompare = () => {
   const [newVersionInfo, setNewVersionInfo] = useState<VersionAddDataType>(
     {} as VersionAddDataType,
@@ -51,20 +63,16 @@ const VersionCompare = () => {
   const [normalizeData, setNormalizeData] = useState<CompareRecipeType[]>([]);
   const [singleVersionsEditMode, setSingleVersionsEditMode] = useState(null);
   const [allVersionsEditMode, setAllVersionsEditMode] = useState(false);
-  const [newRecipe, setNewRecipe] = useState<{
-    versionId: string;
-    name: string;
-    image: string[];
-    description: string;
-    recipeBlendCategory: string;
-    ingredients: any;
-  }>({
+  const [newRecipe, setNewRecipe] = useState<CreateNewRecipeType>({
     versionId: "",
     name: "",
     image: [],
     description: "",
     recipeBlendCategory: "",
     ingredients: [],
+    calorie: 0,
+    netCarbs: 0,
+    RxScore: 100,
   });
   const router = useRouter();
   const dispatch = useDispatch();
@@ -286,6 +294,8 @@ const VersionCompare = () => {
         ingredientStatus: "ok",
         label,
         comment,
+        selectedPortionQuantity,
+        ingredientName,
       };
     } else {
       //@ts-ignore
@@ -317,7 +327,14 @@ const VersionCompare = () => {
     index: number,
   ) => {
     const {
-      defaultVersion: { ingredients, description, postfixTitle, _id },
+      defaultVersion: {
+        ingredients,
+        description,
+        postfixTitle,
+        _id,
+        calorie,
+        gigl,
+      },
       recipeId: { image, recipeBlendCategory },
     } = recipe;
     let ingredientsArr = [];
@@ -360,6 +377,8 @@ const VersionCompare = () => {
       image: [defaultImage],
       recipeBlendCategory: recipeBlendCategory?._id,
       ingredients: ingredientsArr,
+      calorie: calorie?.value || 0,
+      netCarbs: gigl?.netCarbs || 0,
     }));
     handleEditMode(editMode, index);
   };
@@ -477,6 +496,8 @@ const VersionCompare = () => {
             postfixTitle: objForEditARecipe?.editableObject.postfixTitle,
             description: objForEditARecipe?.editableObject.description,
             ingredients: newIngredientObj,
+            calorie: { value: newRecipe?.calorie },
+            gigl: { netCarbs: newRecipe?.netCarbs },
           },
           returnObj,
         );
