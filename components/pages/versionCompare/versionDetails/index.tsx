@@ -1,6 +1,12 @@
 import React from "react";
 import CreateNewRecipe from "../../../recipe/share/createNewRecipe/CreateNewRecipe";
 import RecipeDetails from "../../../recipe/share/recipeDetails/RecipeDetails";
+import { CreateNewRecipeType } from "..";
+
+interface VersionDetailsIndexType {
+  [key: string]: any;
+  newRecipe: CreateNewRecipeType;
+}
 
 const VersionDetailsIndex = (props) => {
   const {

@@ -52,6 +52,7 @@ import {
 } from "../../../redux/slices/versionTraySlice";
 import EDIT_A_VERSION_OF_RECIPE from "../../../gqlLib/versions/mutation/editAVersionOfRecipe";
 import { RecipeDetailsType } from "../../../type/recipeDetailsType";
+import { CreateNewRecipeType } from "../../pages/versionCompare";
 
 const compareRecipeResponsiveSettings = {
   ...compareRecipeResponsiveSetting,
@@ -126,13 +127,16 @@ const CompareRecipe = () => {
     fetchPolicy: "network-only",
   });
   const windowSize = useWindowSize();
-  const [newRecipe, setNewRecipe] = useState({
-    userId: dbUser?._id,
+  const [newRecipe, setNewRecipe] = useState<CreateNewRecipeType>({
     name: "",
     image: [],
     description: "",
     recipeBlendCategory: "61cafc34e1f3e015e7936587",
     ingredients: [],
+    versionId: "",
+    calorie: 0,
+    netCarbs: 0,
+    RxScore: 0,
   });
   const isMounted = useRef(false);
   const [emptyCompareList] = useMutation(EMPTY_COMPARE_LIST);
