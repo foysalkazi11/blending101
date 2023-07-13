@@ -89,11 +89,11 @@ const WikiHome = () => {
       headTagInfo={changeTitleInfo(wikiType)}
     >
       <div className={styles.wikiPageContainer}>
-        <WikiSearchBar
-          // openTray={openTray}
-          // setOpenTray={setOpenTray}
+        {/* <WikiSearchBar
+          openTray={openTray}
+          setOpenTray={setOpenTray}
           type={type}
-        />
+        /> */}
         {/* <WikiBanner /> */}
 
         <div className={styles.wikiContentContainer}>

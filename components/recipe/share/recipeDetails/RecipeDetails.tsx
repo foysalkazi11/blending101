@@ -91,7 +91,7 @@ interface RecipeDetailsProps {
   showMoreMenu?: boolean;
   showOptionalEditIcon?: boolean;
   setOpenCollectionModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setCopyImage?: React.Dispatch<React.SetStateAction<string>>;
+  setCopyImage?: (arg: string) => void;
   customMenu?: any;
   showMoreMenuAtHover?: boolean;
   updateCompareList: ReferenceOfRecipeUpdateFuncType;

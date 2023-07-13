@@ -27,9 +27,24 @@ import InputComponent from "../../../../theme/input/input.component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRectangleVerticalHistory } from "@fortawesome/pro-light-svg-icons";
 import { faXmark } from "@fortawesome/pro-solid-svg-icons";
+import { CreateNewRecipeType } from "../../../pages/versionCompare";
+import useGetBlendNutritionBasedOnRecipexxx from "../../../../customHooks/useGetBlendNutritionBasedOnRecipexxx";
+import notification from "../../../utility/reactToastifyNotification";
+import GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS from "../../../../gqlLib/nutrition/query/getNutrientsListAndGiGlByIngredients";
+import { GiGl } from "../../../../type/nutrationType";
+
+interface CreateNewRecipeTypeComponentType {
+  [key: string]: any;
+  newRecipe: CreateNewRecipeType;
+}
+
+interface IngredientsInfo {
+  ingredientId: string;
+  value: number;
+}
 
 const CreateNewRecipe = ({
-  newRecipe = {},
+  newRecipe = {} as CreateNewRecipeType,
   setNewRecipe = () => {},
   setNewlyCreatedRecipe = () => {},
   newlyCreatedRecipe = {},
@@ -44,17 +59,15 @@ const CreateNewRecipe = ({
   handleToOpenVersionTray = () => {},
   recipe = {},
   showTopCancelButton = true,
-}: any) => {
+}: CreateNewRecipeTypeComponentType) => {
   const [winReady, setWinReady] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const { allIngredients } = useAppSelector((state) => state?.ingredients);
   const [searchIngredientData, setSearchIngredientData] = useState<any[]>([]);
   const [
-    getBlendNutritionBasedOnRecipeXxx,
-    { data, loading: nutritionLoading, error },
-  ] = useLazyQuery(GET_BLEND_NUTRITION_BASED_ON_RECIPE_XXX, {
-    // fetchPolicy: "network-only",
-  });
+    getNutrientsListAndGiGlByIngredients,
+    { data: nutritionData, loading: nutritionLoading },
+  ] = useLazyQuery(GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS);
   const [filterIngredientByCategroyAndClass] = useLazyQuery(
     FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS,
   );
@@ -182,28 +195,42 @@ const CreateNewRecipe = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    getBlendNutritionBasedOnRecipeXxx({
-      variables: {
-        ingredientsInfo: [
-          ...newRecipe?.ingredients
-            ?.filter((recipe) => recipe?.ingredientStatus === "ok")
-            ?.map((item) => ({
-              ingredientId: item?.ingredientId,
-              value: item?.weightInGram,
-            })),
-        ],
-      },
-    });
+  const fetchNutritionData = async (ingredientsInfo: IngredientsInfo[]) => {
+    try {
+      const { data } = await getNutrientsListAndGiGlByIngredients({
+        variables: {
+          ingredientsInfo,
+        },
+      });
+      const nutrition = data?.getNutrientsListAndGiGlByIngredients?.nutrients
+        ? JSON.parse(data?.getNutrientsListAndGiGlByIngredients?.nutrients)
+        : 0;
+      const giGl = data?.getNutrientsListAndGiGlByIngredients?.giGl;
+      const calorie = Math.round(nutrition?.Calories?.cals?.value || 0);
+      const netCarbs = Math.round(giGl?.netCarbs || 0);
+      updateData({ target: { name: "calorie", value: calorie } });
+      updateData({ target: { name: "netCarbs", value: netCarbs } });
+    } catch (error) {
+      notification("error", "failed to fetch nutrients list");
+    }
+  };
+
+  useEffect(
+    () => {
+      const ingredientsInfo = [
+        ...newRecipe?.ingredients
+          ?.filter((recipe) => recipe?.ingredientStatus === "ok")
+          ?.map((item) => ({
+            ingredientId: item?.ingredientId,
+            value: item?.weightInGram,
+          })),
+      ];
+
+      fetchNutritionData(ingredientsInfo);
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [newRecipe?.ingredients]);
-
-  // useEffect(() => {
-  //   if (copyImage) {
-  //     setNewRecipe((state) => ({ ...state, image: [copyImage] }));
-  //   }
-
-  // }, [copyImage]);
+    [newRecipe?.ingredients],
+  );
 
   useEffect(() => {
     setWinReady(true);
@@ -351,7 +378,7 @@ const CreateNewRecipe = ({
             </div>
 
             <div className={styles.dropDown}>
-              <div style={{ display: "flex" }}>
+              <div className="flex">
                 <select
                   id="cars"
                   name="recipeBlendCategory"
@@ -383,23 +410,13 @@ const CreateNewRecipe = ({
 
         <div className={styles.datacard__body__belt}>
           <div className={styles.datacard__body__belt__child}>
-            Net Carbs{" "}
-            <span>
-              {Math.round(
-                newlyCreatedRecipe?.defaultVersion?.gigl?.netCarbs || 0,
-              )}
-            </span>
+            Net Carbs <span>{Math.round(newRecipe?.netCarbs)}</span>
           </div>
           <div className={styles.datacard__body__belt__child}>
             Rx Score <span>100</span>
           </div>
           <div className={styles.datacard__body__belt__child}>
-            Calorie{" "}
-            <span>
-              {Math.round(
-                newlyCreatedRecipe?.defaultVersion?.calorie?.value || 0,
-              )}
-            </span>
+            Calorie <span>{Math.round(newRecipe?.calorie)}</span>
           </div>
         </div>
         {/* <div
@@ -553,11 +570,15 @@ const CreateNewRecipe = ({
         <div className={styles.ingredientsDetails}>
           {nutritionLoading ? (
             <NutrationPanelSkeleton />
-          ) : data?.getBlendNutritionBasedOnRecipexxx ? (
+          ) : nutritionData?.getNutrientsListAndGiGlByIngredients?.nutrients ? (
             <UpdatedRecursiveAccordian
               dataObject={
-                data?.getBlendNutritionBasedOnRecipexxx &&
-                JSON?.parse(data?.getBlendNutritionBasedOnRecipexxx)
+                nutritionData?.getNutrientsListAndGiGlByIngredients
+                  ?.nutrients &&
+                JSON?.parse(
+                  nutritionData?.getNutrientsListAndGiGlByIngredients
+                    ?.nutrients,
+                )
               }
               showUser={false}
               counter={1}
