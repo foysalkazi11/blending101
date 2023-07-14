@@ -32,6 +32,7 @@ import useGetBlendNutritionBasedOnRecipexxx from "../../../../customHooks/useGet
 import notification from "../../../utility/reactToastifyNotification";
 import GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS from "../../../../gqlLib/nutrition/query/getNutrientsListAndGiGlByIngredients";
 import { GiGl } from "../../../../type/nutrationType";
+import compareArrays from "../../../../helperFunc/array/compareArrays";
 
 interface CreateNewRecipeTypeComponentType {
   [key: string]: any;
@@ -78,6 +79,7 @@ const CreateNewRecipe = ({
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
   const router = useRouter();
+  const previousIngredient = useRef(null);
 
   // find if existing item
   const findItem = (id) => {
@@ -217,16 +219,17 @@ const CreateNewRecipe = ({
 
   useEffect(
     () => {
-      const ingredientsInfo = [
-        ...newRecipe?.ingredients
-          ?.filter((recipe) => recipe?.ingredientStatus === "ok")
-          ?.map((item) => ({
-            ingredientId: item?.ingredientId,
-            value: item?.weightInGram,
-          })),
-      ];
+      const ingredientsInfo = newRecipe?.ingredients
+        ?.filter((recipe) => recipe?.ingredientStatus === "ok")
+        ?.map((item) => ({
+          ingredientId: item?.ingredientId,
+          value: item?.weightInGram,
+        }));
 
-      fetchNutritionData(ingredientsInfo);
+      if (!compareArrays(previousIngredient.current || [], ingredientsInfo)) {
+        fetchNutritionData(ingredientsInfo);
+        previousIngredient.current = ingredientsInfo;
+      }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [newRecipe?.ingredients],
