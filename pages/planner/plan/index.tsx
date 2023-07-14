@@ -97,7 +97,7 @@ const MyPlan = () => {
   return (
     <AContainer
       headerIcon="/icons/calender__sidebar.svg"
-      headerTitle="MEAL PLAN"
+      headerTitle="My Meal Plan"
       showGroceryTray={{
         show: showGroceryTray,
         showPanel: "right",

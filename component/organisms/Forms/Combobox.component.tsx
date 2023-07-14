@@ -55,14 +55,18 @@ const Combobox = (props: ComboboxProps) => {
 
   const Options = (
     <>
-      {required ? (
-        <option disabled selected value="">
-          {placeholder}
-        </option>
+      {placeholder !== "" ? (
+        required ? (
+          <option disabled selected value="">
+            {placeholder}
+          </option>
+        ) : (
+          <option disabled value="">
+            {placeholder}
+          </option>
+        )
       ) : (
-        <option disabled value="">
-          {placeholder}
-        </option>
+        <></>
       )}
       {options &&
         options.map((option) => (

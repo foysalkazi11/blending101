@@ -27,6 +27,10 @@ const CHALLENGE_FIELDS = gql`
           _id
           ingredientName
           featuredImage
+          portions {
+            measurement
+            meausermentWeight
+          }
         }
         selectedPortion {
           name

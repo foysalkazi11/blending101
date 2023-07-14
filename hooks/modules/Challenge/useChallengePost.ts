@@ -114,7 +114,6 @@ const useEditChallengePost = (userId) => {
     update(cache, { data: { editAChallengePost: editedPost } }) {
       const editedDate = editedPost?.challenge?.date;
       const { prevPostDate, postId } = editedPost?.prevPost;
-      console.log({ editedDate, prevPostDate, postId });
       const definition = {
         query: GET_30DAYS_CHALLENGE,
         variables: {

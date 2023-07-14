@@ -29,7 +29,6 @@ import {
 import SearchtagsComponent from "../../components/searchtags/searchtags.component";
 import useToUpdateFilterCriteriaForPlan from "../../customHooks/planFilter/useToUpdateFilterCriteriaForPlan";
 import useToUpdateActiveFilterTagForPlan from "../../customHooks/planFilter/useToUpdateActiveFilterTagForPlan";
-import { useDispatch } from "react-redux";
 import useToAddPlanFilterCriteriaWithUrl from "../../customHooks/planFilter/useToAddPlanFilterCriteriaWithUrl";
 import { AllFilterType } from "../../type/filterType";
 import useToGetPlanByFilterCriteria from "../../customHooks/planFilter/useToGetPlanByFilterCriteria";
