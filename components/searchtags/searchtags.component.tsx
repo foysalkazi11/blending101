@@ -10,19 +10,19 @@ import {
   FiltersUpdateCriteria,
 } from "../../type/filterType";
 
-type HandleUpdateActiveFilterTagType = (
+export type HandleUpdateActiveFilterTagType = (
   activeSection: ActiveSectionType,
   filterCriteria: FilterCriteriaOptions,
   activeTab: string,
   childTab?: string,
 ) => void;
-interface HandleUpdateFilterCriteriaType {
+export interface HandleUpdateFilterCriteriaType {
   filterCriteria?: FilterCriteriaOptions;
   value?: FilterCriteriaValue;
   updateStatus: FiltersUpdateCriteria;
 }
 
-interface TayType {
+interface TagType {
   item: FilterCriteriaValue;
   isIdExcluded: boolean;
   handleUpdateActiveFilterTag: HandleUpdateActiveFilterTagType;
@@ -56,16 +56,8 @@ export default function SearchtagsComponent({
         ? allFilters.map((filterItem) => {
             const { tagLabel, id } = filterItem;
             const checkExcludeId = checkExcludeIngredientIds(id);
-            return tagLabel ? (
+            return (
               <FilterByTag
-                key={id}
-                item={filterItem}
-                isIdExcluded={checkExcludeId}
-                handleUpdateActiveFilterTag={handleUpdateActiveFilterTag}
-                handleUpdateFilterCriteria={handleUpdateFilterCriteria}
-              />
-            ) : (
-              <FilterByPicture
                 key={id}
                 item={filterItem}
                 isIdExcluded={checkExcludeId}
@@ -84,8 +76,9 @@ const FilterByPicture = ({
   isIdExcluded = false,
   handleUpdateActiveFilterTag,
   handleUpdateFilterCriteria,
-}: TayType) => {
+}: TagType) => {
   const dispatch = useAppDispatch();
+  const isItemString = typeof item === "string";
   return (
     <div
       className={`${styles.item} ${
@@ -107,7 +100,7 @@ const FilterByPicture = ({
 
           handleUpdateFilterCriteria({
             updateStatus: "remove",
-            filterCriteria: item.filterCriteria,
+            filterCriteria: isItemString ? "searchTerm" : item.filterCriteria,
             value: item,
           });
         }}
@@ -129,8 +122,8 @@ const FilterByTag = ({
   isIdExcluded = false,
   handleUpdateActiveFilterTag,
   handleUpdateFilterCriteria,
-}: TayType) => {
-  const dispatch = useAppDispatch();
+}: TagType) => {
+  const isItemString = typeof item === "string";
   return (
     <div
       className={`${styles.item} ${
@@ -153,7 +146,7 @@ const FilterByTag = ({
 
           handleUpdateFilterCriteria({
             updateStatus: "remove",
-            filterCriteria: item.filterCriteria,
+            filterCriteria: isItemString ? "searchTerm" : item.filterCriteria,
             value: item,
           });
         }}
@@ -161,7 +154,14 @@ const FilterByTag = ({
         <Cancel className={styles.cancel} />
       </div>
 
-      <p>{item.tagLabel}</p>
+      {/*  @ts-ignore */}
+      {item?.image && (
+        <div className={styles.image}>
+          {/*  @ts-ignore */}
+          <img src={item?.image} alt="img" />
+        </div>
+      )}
+      <p>{isItemString ? `Search | ${item}` : item.tagLabel}</p>
     </div>
   );
 };

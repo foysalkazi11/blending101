@@ -5,27 +5,23 @@ const useToAddPlanFilterCriteriaWithUrl = () => {
   const router = useRouter();
 
   const handleAddFilterCriteriaWithUrl = (allFiltersForPlan: AllFilterType) => {
-    let queryString = "";
-    let isFirstParam = true;
+    const queryStringParams = [];
 
-    if (Object.values(allFiltersForPlan).flat().length) {
-      Object.entries(allFiltersForPlan).forEach(([key, value]) => {
-        const newValue = value?.map(({ origin, ...rest }) => rest);
+    Object.entries(allFiltersForPlan).forEach(([key, value]) => {
+      if (value && value.length) {
+        const newValue =
+          typeof value === "string"
+            ? value
+            : value.map(({ origin, ...rest }) => rest);
+        queryStringParams.push(`${key}=${JSON.stringify(newValue)}`);
+      }
+    });
 
-        if (newValue && newValue.length) {
-          if (isFirstParam) {
-            queryString += `?${key}=${JSON.stringify(newValue)}`;
-            isFirstParam = false;
-          } else {
-            queryString += `&${key}=${JSON.stringify(newValue)}`;
-          }
-        }
-      });
+    const queryString = queryStringParams.length
+      ? `?${queryStringParams.join("&")}`
+      : "";
 
-      router.push(`/planner${queryString}`);
-    } else {
-      router.push(`/planner`);
-    }
+    router.push(`/planner${queryString}`);
   };
 
   return handleAddFilterCriteriaWithUrl;
