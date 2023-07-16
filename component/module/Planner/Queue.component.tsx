@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { faPlusCircle } from "@fortawesome/pro-solid-svg-icons";
-import { faCalendarAlt } from "@fortawesome/pro-light-svg-icons";
+import { faCalendarAlt, faTelescope } from "@fortawesome/pro-light-svg-icons";
 import { faCalendarDay } from "@fortawesome/pro-regular-svg-icons";
 
 import Pagination from "../../molecules/Pagination/ServerPagination.component";
@@ -81,9 +81,9 @@ const PlannerQueue = (props: PlannerPanelProps) => {
   return (
     <Fragment>
       <IconHeading
-        icon={faCalendarAlt}
-        title={`Recipe ${toggler ? "Discovery" : "Queue"}`}
-        iconStyle={{ fontSize: "18px" }}
+        icon={faTelescope}
+        title="Recipe"
+        iconStyle={{ fontSize: "24px" }}
       />
       <ToggleCard
         noRoute

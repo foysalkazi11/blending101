@@ -136,6 +136,7 @@ const PostIngredient = ({ ingredients, categories }) => {
                   return (
                     <div className="mt-20 mb-10" key={ingredientId}>
                       <IngredientForm
+                        isEditing
                         ingredients={ingredients}
                         defaultQuery={ingredient?.ingredientId?.ingredientName}
                         defaultIngredient={ingredient?.ingredientId}
@@ -182,9 +183,11 @@ interface IngredientFormProps {
   defaultPortion?: any;
   defaultQuantity?: number;
   onClose?: any;
+  isEditing?: boolean;
 }
 const IngredientForm: React.FC<IngredientFormProps> = (props) => {
   const {
+    isEditing,
     ingredients,
     defaultQuery,
     defaultIngredient,
@@ -192,8 +195,6 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
     defaultQuantity,
     onClose,
   } = props;
-
-  console.log(defaultIngredient);
 
   const method = useForm();
 
@@ -213,14 +214,9 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
   const addIngredintHandler = (id: string) => {
     const ingredientItem = ingredientList.find((ing) => ing._id === id);
     if (!ingredientItem) return;
-
-    console.log(ingredientItem);
-    // setPortions(ingredientItem.portions);
     setIngredient(ingredientItem);
     setQuery(ingredientItem.ingredientName);
     setShowSuggestion(false);
-    // dispatch(addIngredient({ ingredient: ingredientItem }));
-    // setIngredient("");
   };
 
   const ingredientList = useMemo(() => {
@@ -247,7 +243,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
   };
 
   const saveIngredientHandler = () => {
-    dispatch(addIngredient({ ingredient, portion, quantity }));
+    dispatch(addIngredient({ ingredient, portion, quantity, isEditing }));
 
     //Resetting Form
     setQuery("");
@@ -255,6 +251,8 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
     setIngredient(null);
     setPortion(null);
     setQuantity(0);
+
+    onClose();
   };
 
   return (
@@ -326,5 +324,6 @@ IngredientForm.defaultProps = {
   defaultPortion: null,
   defaultQuantity: 0,
   onClose: () => {},
+  isEditing: false,
 };
 export default PostIngredient;

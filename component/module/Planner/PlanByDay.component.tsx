@@ -4,6 +4,7 @@ import {
   faChartSimple,
   faCartShopping,
   faTrash,
+  faBlender,
 } from "@fortawesome/pro-light-svg-icons";
 
 import IconButton from "../../atoms/Button/IconButton.component";
@@ -185,7 +186,26 @@ const PlanItem = (props: RecipeColorIndicatorInterface) => {
       </div>
       <div className={styles.recipe__rxScore}>{rxScore || 786}</div>
       <div className={styles.recipe__calories}>{calorie || 54}</div>
+      <div className={styles.recipe__calories}>$6.78</div>
       <div className={styles.recipe__tray}>
+        <IconButton
+          size="medium"
+          variant="hover"
+          fontName={faBlender}
+          color="primary"
+          onClick={() =>
+            dispatch(
+              setShowPanel({
+                name: "RXPanel",
+                show: true,
+                payload: ingredients?.map((ing) => ({
+                  ingredientId: ing?.ingredientId?._id,
+                  value: ing?.selectedPortion?.gram,
+                })),
+              }),
+            )
+          }
+        />
         <IconButton
           size="medium"
           variant="hover"

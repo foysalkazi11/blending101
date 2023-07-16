@@ -58,9 +58,9 @@ $sharedBackgroundColor: white;
   position: relative;
   display: grid;
   grid-template-columns: minmax(60px, 44%) minmax(60px, auto) minmax(60px, auto) minmax(
-      100px,
+      60px,
       auto
-    );
+    ) minmax(100px, auto);
 
   &:hover {
     .recipe__tray {

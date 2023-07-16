@@ -6,7 +6,7 @@ import {
   faChevronLeft,
   faChevronRight,
   faEllipsisV,
-  faToolbox,
+  faCalendarWeek,
 } from "@fortawesome/pro-light-svg-icons";
 import { faSearch, faTimes } from "@fortawesome/pro-regular-svg-icons";
 
@@ -117,18 +117,7 @@ const MyPlan = () => {
       />
       <div className={styles.windowContainer}>
         <div className={styles.planner}>
-          <div className="ta-center mt-20 mb-10">
-            <button
-              className={styles.discoveryBtn}
-              onClick={() => {
-                router.push("/planner");
-              }}
-            >
-              <Icon fontName={faSearch} size="2rem" className="mr-10" />
-              Plan Discovery
-            </button>
-          </div>
-          <div className="row">
+          <div className="row mt-20">
             <div className="col-3">
               <PlannerQueue
                 panel="my-plan"
@@ -139,23 +128,27 @@ const MyPlan = () => {
             </div>
             <div className="col-6" style={{ padding: "0 3.5rem" }}>
               <div className={styles.headingDiv}>
-                <IconHeading title="My Plan" icon={faToolbox} />
+                <IconHeading title="My Plan" icon={faCalendarWeek} />
                 <div className="flex ai-center">
-                  {showForm && (
-                    <IconButton
-                      fontName={faTimes}
-                      size="small"
-                      className="mr-10"
-                      variant="white"
-                      onClick={() => setShowForm(false)}
-                    />
-                  )}
                   <div
                     className={`${styles.uploadDiv} ${styles.uploadDiv__save}`}
                     onClick={methods.handleSubmit(handlePlanSave)}
                   >
                     <span>{showForm ? "Save" : "Save As"}</span>
                   </div>
+                  <IconButton
+                    fontName={faTimes}
+                    size="small"
+                    className="ml-10"
+                    variant="secondary"
+                    onClick={() => {
+                      if (showForm) {
+                        setShowForm(false);
+                      } else {
+                        router.push("/planner");
+                      }
+                    }}
+                  />
                 </div>
               </div>
               <div
@@ -182,7 +175,6 @@ const MyPlan = () => {
                           }}
                         />
                         <h4 className={styles.textArrowTray__text}>
-                          Meal Plan,{" "}
                           {`${startMonth} ${startDay} - ${endMonth} ${endDay}`}
                         </h4>
                         <IconButton

@@ -37,7 +37,7 @@ const PlanDiscovery = (props: PlannerPanelProps) => {
     <Fragment>
       <IconHeading
         icon={faTelescope}
-        title={`Plan ${toggler ? "Discovery" : "Queue"}`}
+        title={`${toggler ? "Plan" : "Recipe"}`}
         iconStyle={{ fontSize: "18px" }}
       />
       <ToggleCard
