@@ -588,10 +588,12 @@ const SingleIngredient = ({
     <>
       <div className={`${classes.ingredients__icons}`}>
         {elem?.ingredientStatus === "ok" ? (
-          elem.featuredImage || elem.images?.[0] ? (
+          elem?.featuredImage || elem?.images?.[0] ? (
             <Image
               src={
-                elem.featuredImage || elem.images?.[0] || "/food/Dandelion.png"
+                elem?.featuredImage ||
+                elem?.images?.[0] ||
+                "/food/Dandelion.png"
               }
               alt="Picture will load soon"
               objectFit="contain"
@@ -609,7 +611,7 @@ const SingleIngredient = ({
         <>
           <div className={classes.ingredients__text}>
             <span>
-              {(elem.selectedPortion?.quantity || 1)
+              {parseInt(elem.selectedPortion?.quantity || 1)
                 .toFixed(2)
                 .replace(/\.?0+$/, "")}
               &nbsp;
