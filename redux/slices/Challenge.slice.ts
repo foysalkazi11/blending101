@@ -100,20 +100,47 @@ export const ChallengeSlice = createSlice({
     },
     addIngredient: (state, action) => {
       const ingredientItem = action.payload.ingredient;
-      const qty = Math.floor(Math.random() * 10);
-      const portion =
-        ingredientItem?.portions.find((portion) => portion.default)
-          ?.measurement || ingredientItem?.portions[0].measurement;
-      const unit =
-        portion?.measurement || ingredientItem?.portions[0].measurement;
-      const weight =
-        portion?.meausermentWeight ||
-        ingredientItem?.portions[0].meausermentWeight;
-
+      const ingredientId = ingredientItem._id;
+      const qty = action.payload.quantity;
+      const portion = action.payload.portion;
+      const unit = portion?.measurement;
+      const weight = +portion?.meausermentWeight;
       const ingredient = {
         ingredientId: {
-          _id: ingredientItem.value,
-          ingredientName: ingredientItem.label,
+          _id: ingredientItem._id,
+          ingredientName: ingredientItem.ingredientName,
+          featuredImage: ingredientItem?.featuredImage,
+          portions: ingredientItem?.portions,
+        },
+        selectedPortion: {
+          gram: qty * weight,
+          name: unit,
+          quantity: qty,
+        },
+      };
+      if (action.payload.isEditing) {
+        const ingredients = state.post.ingredients.map((ing) => {
+          if (ing.ingredientId._id === ingredientId) {
+            return ingredient;
+          } else {
+            return ing;
+          }
+        });
+        state.post.ingredients = ingredients;
+      } else {
+        state.post.ingredients.push(ingredient);
+      }
+    },
+    editIngredient: (state, action) => {
+      const ingredientItem = action.payload.ingredient;
+      const qty = action.payload.quantity;
+      const portion = action.payload.portion;
+      const unit = portion?.measurement;
+      const weight = +portion?.meausermentWeight;
+      const ingredient = {
+        ingredientId: {
+          _id: ingredientItem._id,
+          ingredientName: ingredientItem.ingredientName,
           featuredImage: ingredientItem?.featuredImage,
         },
         selectedPortion: {
@@ -122,10 +149,9 @@ export const ChallengeSlice = createSlice({
           quantity: qty,
         },
       };
-
+      console.log(ingredient);
       state.post.ingredients.push(ingredient);
     },
-
     deleteIngredient: (state, action) => {
       const id = action.payload.id;
       state.post.ingredients = state.post.ingredients.filter(

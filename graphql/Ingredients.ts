@@ -5,8 +5,8 @@ export const GET_INGREDIENTS = gql`
     filterIngredientByCategoryAndClass(
       data: { ingredientCategory: $classType, IngredientClass: 0 }
     ) {
-      value: _id
-      label: ingredientName
+      _id
+      ingredientName
       featuredImage
       portions {
         measurement

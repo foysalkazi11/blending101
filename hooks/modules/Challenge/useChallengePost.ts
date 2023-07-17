@@ -114,7 +114,6 @@ const useEditChallengePost = (userId) => {
     update(cache, { data: { editAChallengePost: editedPost } }) {
       const editedDate = editedPost?.challenge?.date;
       const { prevPostDate, postId } = editedPost?.prevPost;
-      console.log({ editedDate, prevPostDate, postId });
       const definition = {
         query: GET_30DAYS_CHALLENGE,
         variables: {
@@ -189,16 +188,16 @@ const useChallengeForm = (setImages) => {
   } = useAppSelector((state) => state.challenge.post);
 
   useEffect(() => {
-    if (isEditMode && !initValueSet.current) {
-      methods.reset({
-        recipeTitle: title,
-        category,
-        assignDate: startDate,
-        note: notes,
-      });
-      setImages(postImages);
-      initValueSet.current = true;
-    }
+    // if (isEditMode && !initValueSet.current) {
+    methods.reset({
+      recipeTitle: title,
+      category,
+      assignDate: startDate,
+      note: notes,
+    });
+    setImages(postImages);
+    initValueSet.current = true;
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title, category, startDate, notes]);
 

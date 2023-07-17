@@ -1,0 +1,16 @@
+.summary {
+  text-align: center;
+  &:not(:last-child) {
+    border-right: 1px solid #ececec;
+  }
+  h5 {
+    font-size: 32px;
+    font-weight: 200;
+    padding: 10px;
+    color: #fd5610;
+  }
+  &__wrapper {
+    width: 50%;
+    margin: auto;
+  }
+}

@@ -265,10 +265,10 @@ const MyPlan = () => {
   return (
     <Container
       headerIcon="/icons/calender__sidebar.svg"
-      headerTitle="BLENDING PLAN DETAILS"
+      headerTitle={`MEAL PLAN: ${plan?.planName}`}
       headTagInfo={{
-        title: "Blending plan details",
-        description: "blending plans details",
+        title: "Meal Plan Details",
+        description: "Meal Plan Details",
       }}
       showPlanCollectionTray={{
         show: true,
@@ -281,16 +281,6 @@ const MyPlan = () => {
         showTagByDefault: false,
       }}
     >
-      {/* <div> */}
-      {/* <CommentDrawer
-        id={plan?._id}
-        title={plan?.planName}
-        cover={plan?.image?.url}
-        comments={comments?.getAllCommentsForAPlan}
-        show={showComments}
-        onClose={() => setShowComments(false)}
-      /> */}
-      {/* <CollectionDrawer /> */}
       <RXPanel />
       <ShareModal
         name={plan?.planName}
@@ -301,27 +291,7 @@ const MyPlan = () => {
       />
       <div className={styles.windowContainer}>
         <div className={styles.planner}>
-          <div className="ta-center mt-20 mb-10">
-            <div className={styles.linkBtn__wrapper}>
-              <button
-                className={styles.linkBtn}
-                onClick={() => {
-                  router.push("/planner");
-                }}
-              >
-                Discovery
-              </button>
-              <button
-                className={styles.linkBtn}
-                onClick={() => {
-                  router.push("/planner/plan");
-                }}
-              >
-                My Plan
-              </button>
-            </div>
-          </div>
-          <div className="row">
+          <div className="row mt-20">
             <div className="col-3">
               {isEditMode ? (
                 <PlannerQueue
@@ -351,19 +321,21 @@ const MyPlan = () => {
                   >
                     <span>{isEditMode ? "Save" : "Edit"}</span>
                   </div>
-                  {isEditMode && (
-                    <IconButton
-                      fontName={faTimes}
-                      size="small"
-                      variant="secondary"
-                      className="ml-10"
-                      onClick={() => {
+                  <IconButton
+                    fontName={faTimes}
+                    size="small"
+                    variant="secondary"
+                    className="ml-10"
+                    onClick={() => {
+                      if (isEditMode) {
                         setIsEditMode(false);
                         setPlanlist(plan?.planData);
                         methods.reset(defaultPlan);
-                      }}
-                    />
-                  )}
+                      } else {
+                        router.push("/planner");
+                      }
+                    }}
+                  />
                 </div>
               </div>
               <div style={{ height: panelHeight, background: "#fff" }}>

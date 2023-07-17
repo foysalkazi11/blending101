@@ -7,6 +7,7 @@ import {
   faTrash,
   faUpDownLeftRight,
   faCartShopping,
+  faBlender,
 } from "@fortawesome/pro-regular-svg-icons";
 
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
@@ -135,7 +136,26 @@ const PlanItem = (props: RecipeColorIndicatorInterface) => {
 
       <div className={styles.recipe__rxScore}>{rxScore}</div>
       <div className={styles.recipe__calories}>{calorie}</div>
+      <div className={styles.recipe__rxScore}>$8.99</div>
       <div className={styles.recipe__tray}>
+        <IconButton
+          size="medium"
+          variant="hover"
+          fontName={faBlender}
+          color="primary"
+          onClick={() =>
+            dispatch(
+              setShowPanel({
+                name: "RXPanel",
+                show: true,
+                payload: ingredients?.map((ing) => ({
+                  ingredientId: ing?.ingredientId?._id,
+                  value: ing?.selectedPortion?.gram,
+                })),
+              }),
+            )
+          }
+        />
         <IconButton
           size="medium"
           variant="hover"
