@@ -172,7 +172,7 @@ const EditRecipeComponentParsing = () => {
       if (item?.ingredientStatus === "partial_ok") {
         const {
           errorString = "",
-          ingredientId = "",
+          ingredientId = null,
           errorIngredientId = "",
           qaId = "",
         } = item;
@@ -282,49 +282,49 @@ const EditRecipeComponentParsing = () => {
   };
 
   // match recipe ingredients with database ingredients
-  useEffect(() => {
-    if (!ingredientCategoryData?.filterIngredientByCategoryAndClass) return;
-    let ingredientObj = {};
-    let ingredientPartialOk = [];
+  // useEffect(() => {
+  //   if (!ingredientCategoryData?.filterIngredientByCategoryAndClass) return;
+  //   let ingredientObj = {};
+  //   let ingredientPartialOk = [];
 
-    detailsARecipe?.tempVersionInfo?.version?.ingredients?.forEach((ing) => {
-      if (ing?.ingredientStatus === "ok") {
-        ingredientObj[ing?.ingredientId?._id] = {
-          ...ing,
-          _id: ing?.ingredientId?._id,
-          ingredientName: ing?.ingredientId?.ingredientName,
-        };
-      }
-      if (ing?.ingredientStatus === "partial_ok") {
-        ingredientPartialOk.push(ing);
-      }
-    });
+  //   detailsARecipe?.tempVersionInfo?.version?.ingredients?.forEach((ing) => {
+  //     if (ing?.ingredientStatus === "ok") {
+  //       ingredientObj[ing?.ingredientId?._id] = {
+  //         ...ing,
+  //         _id: ing?.ingredientId?._id,
+  //         ingredientName: ing?.ingredientId?.ingredientName,
+  //       };
+  //     }
+  //     if (ing?.ingredientStatus === "partial_ok") {
+  //       ingredientPartialOk.push(ing);
+  //     }
+  //   });
 
-    const presentIngredient = [];
-    ingredientCategoryData?.filterIngredientByCategoryAndClass?.forEach(
-      (elem) => {
-        if (ingredientObj[elem._id]) {
-          presentIngredient.push({
-            ...elem,
-            ...ingredientObj[elem._id],
-            ingredientStatus: "ok",
-          });
-          delete ingredientObj[elem._id];
-        }
-      },
-    );
+  //   const presentIngredient = [];
+  //   ingredientCategoryData?.filterIngredientByCategoryAndClass?.forEach(
+  //     (elem) => {
+  //       if (ingredientObj[elem._id]) {
+  //         presentIngredient.push({
+  //           ...elem,
+  //           ...ingredientObj[elem._id],
+  //           ingredientStatus: "ok",
+  //         });
+  //         delete ingredientObj[elem._id];
+  //       }
+  //     },
+  //   );
 
-    dispatch(
-      setSelectedIngredientsList([
-        ...presentIngredient,
-        ...Object.values(ingredientObj),
-        ...ingredientPartialOk,
-      ]),
-    );
-  }, [
-    ingredientCategoryData?.filterIngredientByCategoryAndClass,
-    detailsARecipe?.tempVersionInfo?.version,
-  ]);
+  //   dispatch(
+  //     setSelectedIngredientsList([
+  //       ...presentIngredient,
+  //       ...Object.values(ingredientObj),
+  //       ...ingredientPartialOk,
+  //     ]),
+  //   );
+  // }, [
+  //   ingredientCategoryData?.filterIngredientByCategoryAndClass,
+  //   detailsARecipe?.tempVersionInfo?.version,
+  // ]);
 
   // separate data into different state so that can work easily
   useEffect(() => {
@@ -334,6 +334,22 @@ const EditRecipeComponentParsing = () => {
     SetcalculateIngOz(detailsARecipe?.tempVersionInfo?.version?.servingSize);
     setExistingImages(
       detailsARecipe?.recipeId?.image?.map((item) => `${item?.image}`),
+    );
+    dispatch(
+      setSelectedIngredientsList(
+        detailsARecipe?.tempVersionInfo?.version?.ingredients?.map(
+          (ingredient) => {
+            const ingredientId = ingredient?.ingredientId;
+            return {
+              ...ingredient,
+              featuredImage: ingredientId?.featuredImage,
+              image: ingredientId?.image,
+              ingredientName: ingredientId?.ingredientName,
+              _id: ingredientId?._id,
+            };
+          },
+        ),
+      ),
     );
   }, [detailsARecipe?.tempVersionInfo?.version]);
 
