@@ -24,6 +24,7 @@ import styles from "./Ingredients.module.scss";
 import IconButton from "../../../atoms/Button/IconButton.component";
 import { FormProvider, useForm } from "react-hook-form";
 import ButtonComponent from "../../../../theme/button/button.component";
+import fuzzySearch from "../../../../components/utility/fuzzySearch";
 
 const PostIngredient = ({ ingredients, categories }) => {
   const dispatch = useAppDispatch();
@@ -118,7 +119,10 @@ const PostIngredient = ({ ingredients, categories }) => {
                           color="primary"
                           fontName={faPen}
                           className={styles.ingredient__button}
-                          onClick={() => setEditingId(ingredientId)}
+                          onClick={() => {
+                            setEditingId(ingredientId);
+                            setShowAddForm(false);
+                          }}
                         />
                         <Icon
                           size="small"
@@ -205,7 +209,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
 
   const [ingredient, setIngredient] = useState(defaultIngredient);
   const [portion, setPortion] = useState(defaultPortion);
-  const [quantity, setQuantity] = useState(defaultQuantity);
+  const [quantity, setQuantity] = useState<number | string>(defaultQuantity);
 
   const { data } = useQuery(GET_INGREDIENTS, {
     variables: { classType: "All" },
@@ -221,16 +225,16 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
 
   const ingredientList = useMemo(() => {
     let results = [];
-    results = data?.filterIngredientByCategoryAndClass.filter((ing) => {
+    data?.filterIngredientByCategoryAndClass.forEach((ing) => {
       const isAlreadySelected = ingredients.some(
         (item) => item?.ingredientId._id === ing?.value,
       );
-      if (query) {
-        return (
-          !isAlreadySelected &&
-          ing?.ingredientName.toLowerCase().startsWith(query.toLowerCase())
-        );
-      } else return !isAlreadySelected;
+      if (isAlreadySelected) return;
+      const ingredient = fuzzySearch(ing?.ingredientName, query);
+      if (ingredient !== "") results.push({ ...ing, name: ingredient });
+      // if (query) {
+      //   return !isAlreadySelected && fuzzySearch(ing?.ingredientName, query);
+      // } else return !isAlreadySelected;
     });
     return results;
   }, [data?.filterIngredientByCategoryAndClass, query, ingredients]);
@@ -273,15 +277,20 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
                 <li
                   key={ing.value}
                   onClick={() => addIngredintHandler(ing._id)}
-                >
-                  {ing.ingredientName}
-                </li>
+                  dangerouslySetInnerHTML={{
+                    __html: ing?.ingredientName.replace(
+                      query,
+                      `<b>${query}</b>`,
+                    ),
+                  }}
+                ></li>
               ))}
             </ul>
           )}
         </div>
         <div className="col-4">
           <Combobox
+            placeholder="Unit"
             options={
               ingredient?.portions?.map((portion) => portion.measurement) || []
             }
@@ -322,7 +331,8 @@ IngredientForm.defaultProps = {
   defaultQuery: "",
   defaultIngredient: null,
   defaultPortion: null,
-  defaultQuantity: 0,
+  //@ts-ignore
+  defaultQuantity: "",
   onClose: () => {},
   isEditing: false,
 };

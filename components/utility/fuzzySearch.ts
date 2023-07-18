@@ -1,6 +1,6 @@
-function fuzzySearch(companyCode: string, searchInput: string) {
+function fuzzySearch(value: string, searchInput: string) {
   const search = searchInput.replace(/ /g, "").toLowerCase();
-  const tokens: any[] = companyCode?.split("");
+  const tokens: any[] = value?.split("");
 
   let searchPosition = 0;
 

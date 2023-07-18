@@ -338,7 +338,13 @@ const MyPlan = () => {
                   />
                 </div>
               </div>
-              <div style={{ height: panelHeight, background: "#fff" }}>
+              <div
+                style={{
+                  height: panelHeight,
+                  background: "#fff",
+                  borderRadius: 9,
+                }}
+              >
                 {isEditMode ? (
                   <PlanForm methods={methods} />
                 ) : (
