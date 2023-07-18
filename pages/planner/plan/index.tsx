@@ -11,6 +11,7 @@ import {
 import { faSearch, faTimes } from "@fortawesome/pro-regular-svg-icons";
 
 import RXPanel from "../../../component/templates/Panel/RXFacts/RXPanel.component";
+import IngredientPanel from "../../../component/templates/Panel/Ingredients/IngredientPanel.component";
 import PlannerQueue from "../../../component/module/Planner/Queue.component";
 import PlanList from "../../../component/module/Planner/Plan/index.component";
 import AContainer from "../../../containers/A.container";
@@ -109,6 +110,7 @@ const MyPlan = () => {
       }}
     >
       <RXPanel />
+      <IngredientPanel />
       <ConfirmAlert
         show={showDuplicateAlert}
         setShow={setShowDuplicateAlert}
