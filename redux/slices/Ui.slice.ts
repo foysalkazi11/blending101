@@ -1,6 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-type PanelType = { name: "RXPanel"; show: boolean; payload?: any };
+type PanelType = {
+  name: "RXPanel" | "Ingredient";
+  show: boolean;
+  payload?: any;
+};
 interface UiState {
   navigateToTop: {
     enabled: boolean;

@@ -138,8 +138,12 @@ export const GET_PLANNER_BY_WEEK = gql`
             ingredients {
               ingredientId {
                 _id
+                ingredientName
+                featuredImage
               }
               selectedPortion {
+                name
+                quantity
                 gram
               }
             }

@@ -428,7 +428,7 @@ const CompareRecipe = () => {
       if (item?.ingredientStatus === "partial_ok") {
         const {
           errorString = "",
-          ingredientId = "",
+          ingredientId = null,
           errorIngredientId = "",
           qaId = "",
         } = item;

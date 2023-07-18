@@ -169,6 +169,7 @@ const useAddRecipeToMyPlan = (props: IAddRecipeToPlanHook) => {
     date: string,
     setShowCalenderId: any,
   ) => {
+    console.log(recipe);
     await Publish({
       mutate: addRecipe,
       variables: {
