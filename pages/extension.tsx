@@ -30,6 +30,11 @@ const Extension = () => {
 
   useEffect(() => {
     window.addEventListener("message", (e) => {
+      if (!e.data) return;
+      const session = JSON.parse(e.data);
+      session?.forEach((item) => {
+        localStorage.setItem(item[0], item[1]);
+      });
       setData(JSON.stringify(e.data));
       localStorage.setItem("extension", e.data);
     });
