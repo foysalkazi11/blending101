@@ -57,11 +57,11 @@ const Combobox = (props: ComboboxProps) => {
     <>
       {placeholder !== "" ? (
         required ? (
-          <option disabled selected value="">
+          <option disabled hidden selected value="">
             {placeholder}
           </option>
         ) : (
-          <option disabled value="">
+          <option disabled hidden value="">
             {placeholder}
           </option>
         )
