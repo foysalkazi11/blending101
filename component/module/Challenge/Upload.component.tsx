@@ -21,6 +21,7 @@ import {
   setShowPostForm,
   resetForm,
   deleteIngredient,
+  addIngredient,
 } from "../../../redux/slices/Challenge.slice";
 import { setShowPanel } from "../../../redux/slices/Ui.slice";
 import useImage from "../../../hooks/useImage";
@@ -193,6 +194,7 @@ const UploadCard = forwardRef((props: any, ref) => {
             ingredients={ingredients}
             onDelete={deleteIngredientHandler}
             onNutrition={showNutrientInfo}
+            onSave={(props) => dispatch(addIngredient(props))}
           />
         </div>
         <h5 className={styles.headingText}>

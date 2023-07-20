@@ -163,3 +163,15 @@ $sharedBorder: 1px #efefef solid;
     color: #aaa;
   }
 }
+
+.ingredient {
+  &__summary {
+    display: flex;
+    justify-content: space-evenly;
+    max-width: 40%;
+    margin: 0 auto 1rem;
+    span {
+      font-weight: 600;
+    }
+  }
+}

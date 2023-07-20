@@ -8,7 +8,7 @@ import {
   faSave,
   faTimes,
 } from "@fortawesome/pro-regular-svg-icons";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 
 import fuzzySearch from "../../../components/utility/fuzzySearch";
@@ -179,8 +179,6 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
 
   const method = useForm();
 
-  const dispatch = useAppDispatch();
-
   const [query, setQuery] = useState(defaultQuery);
   const [showSuggestion, setShowSuggestion] = useState(false);
 
@@ -204,7 +202,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
     let results = [];
     data?.filterIngredientByCategoryAndClass.forEach((ing) => {
       const isAlreadySelected = ingredients.some(
-        (item) => item?.ingredientId._id === ing?.value,
+        (item) => item?.ingredientId?._id === ing?.value,
       );
       if (isAlreadySelected) return;
       const ingredient = fuzzySearch(ing?.ingredientName, query);
@@ -223,9 +221,15 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
     setPortion(portion);
   };
 
+  const saveOnEnterPress = (e) => {
+    if (e.key !== "Enter") return;
+    saveIngredientHandler();
+  };
+
   const saveIngredientHandler = () => {
+    if (!portion || !quantity || !ingredient) return;
     onSave({ ingredient, portion, quantity, isEditing });
-    // dispatch(addIngredient({ ingredient, portion, quantity, isEditing }));
+    //
 
     //Resetting Form
     setQuery("");
@@ -248,6 +252,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
             onFocus={() => {
               setShowSuggestion(true);
             }}
+            onKeyDown={saveOnEnterPress}
           />
           {showSuggestion && (
             <ul>
@@ -279,6 +284,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
             required
             disabled={ingredient === null}
             onChange={onPortionChange}
+            onKeyDown={saveOnEnterPress}
           />
         </div>
         <div className="col-3 flex ai-center">
@@ -292,6 +298,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
             onChange={(e) => {
               if (!isNaN(+e.target.value)) setQuantity(+e.target.value);
             }}
+            onKeyDown={saveOnEnterPress}
           />
           <IconButton
             className="ml-10 mr-10"

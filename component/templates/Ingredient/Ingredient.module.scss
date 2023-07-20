@@ -10,15 +10,6 @@ $sharedBorder: 1px #efefef solid;
     margin-right: 4px;
     font-size: 1.2rem;
   }
-  &__summary {
-    display: flex;
-    justify-content: space-evenly;
-    max-width: 40%;
-    margin: 0 auto 1rem;
-    span {
-      font-weight: 600;
-    }
-  }
   &__field {
     position: relative;
     display: flex;
