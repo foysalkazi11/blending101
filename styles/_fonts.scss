@@ -1,143 +1,28 @@
 @font-face {
-  font-family: "Proxima Nova";
-  src: url("/fonts/ProximaNovaExtraboldItalic.woff2") format("woff2"),
-    url("/fonts/ProximaNovaExtraboldItalic.woff") format("woff");
-  font-weight: bold;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Proxima Nova";
-  src: url("/fonts/ProximaNovaBold.woff2") format("woff2"),
-    url("/fonts/ProximaNovaBold.woff") format("woff");
-  font-weight: bold;
+  font-family: "Segoe UI";
   font-style: normal;
-  font-display: swap;
+  src: local("Segoe UI Regular"), url("/fonts/Segoe UI.woff") format("woff");
 }
 
 @font-face {
-  font-family: "Proxima Nova";
-  src: url("/fonts/ProximaNovaBlackRegular.woff2") format("woff2"),
-    url("/fonts/ProximaNovaBlackRegular.woff") format("woff");
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Proxima Nova";
-  src: url("/fonts/ProximaNovaBlackItalic.woff2") format("woff2"),
-    url("/fonts/ProximaNovaBlackItalic.woff") format("woff");
-  font-weight: 900;
+  font-family: "Segoe UI";
   font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Proxima Nova";
-  src: url("/fonts/ProximaNovaBoldItalic.woff2") format("woff2"),
-    url("/fonts/ProximaNovaBoldItalic.woff") format("woff");
-  font-weight: bold;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Proxima Nova";
-  src: url("/fonts/ProximaNovaExtraboldRegular.woff2") format("woff2"),
-    url("/fonts/ProximaNovaExtraboldRegular.woff") format("woff");
-  font-weight: bold;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Proxima Nova";
-  src: url("/fonts/ProximaNovaMediumItalic.woff2") format("woff2"),
-    url("/fonts/ProximaNovaMediumItalic.woff") format("woff");
-  font-weight: 500;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Proxima Nova";
-  src: url("/fonts/ProximaNovaRegular.woff2") format("woff2"),
-    url("/fonts/ProximaNovaRegular.woff") format("woff");
   font-weight: normal;
-  font-style: normal;
-  font-display: swap;
+  src: local("Segoe UI Italic"),
+    url("/fonts/Segoe UI Italic.woff") format("woff");
 }
 
 @font-face {
-  font-family: "Proxima Nova";
-  src: url("/fonts/ProximaNovaSemiboldRegular.woff2") format("woff2"),
-    url("/fonts/ProximaNovaSemiboldRegular.woff") format("woff");
-  font-weight: 600;
+  font-family: "Segoe UI";
   font-style: normal;
-  font-display: swap;
+  font-weight: bold;
+  src: local("Segoe UI Bold"), url("/fonts/Segoe UI Bold.woff") format("woff");
 }
 
 @font-face {
-  font-family: "Proxima Nova";
-  src: url("/fonts/ProximaNovaMediumRegular.woff2") format("woff2"),
-    url("/fonts/ProximaNovaMediumRegular.woff") format("woff");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Proxima Nova";
-  src: url("/fonts/ProximaNovaItalic.woff2") format("woff2"),
-    url("/fonts/ProximaNovaItalic.woff") format("woff");
-  font-weight: normal;
+  font-family: "Segoe UI Bold Italic";
   font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Proxima Nova";
-  src: url("/fonts/ProximaNovaLightItalic.woff2") format("woff2"),
-    url("/fonts/ProximaNovaLightItalic.woff") format("woff");
-  font-weight: 300;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Proxima Nova";
-  src: url("/fonts/ProximaNovaLightRegular.woff2") format("woff2"),
-    url("/fonts/ProximaNovaLightRegular.woff") format("woff");
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Proxima Nova";
-  src: url("/fonts/ProximaNovaThinRegular.woff2") format("woff2"),
-    url("/fonts/ProximaNovaThinRegular.woff") format("woff");
-  font-weight: 100;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Proxima Nova";
-  src: url("/fonts/ProximaNovaThinItalic.woff2") format("woff2"),
-    url("/fonts/ProximaNovaThinItalic.woff") format("woff");
-  font-weight: 100;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Proxima Nova";
-  src: url("/fonts/ProximaNovaSemiboldItalic.woff2") format("woff2"),
-    url("/fonts/ProximaNovaSemiboldItalic.woff") format("woff");
-  font-weight: 600;
-  font-style: italic;
-  font-display: swap;
+  font-weight: bold;
+  src: local("Segoe UI Bold Italic"),
+    url("/fonts/Segoe UI Bold Italic.woff") format("woff");
 }
