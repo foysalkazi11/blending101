@@ -34,6 +34,7 @@ import SEARCH_IN_SCRAPPED_RECIPE_FROM_USER from "../../../gqlLib/parsing/mutatio
 import notification from "../../../components/utility/reactToastifyNotification";
 import { useDispatch } from "react-redux";
 import Tooltip from "../../../theme/toolTip/CustomToolTip";
+import IngredientPanel from "../../templates/Ingredient/Ingredient.component";
 
 const defaultValues = {
   ingredientId: "",
@@ -64,6 +65,8 @@ const IngredientSection = (props) => {
   const methods = useForm({
     defaultValues: useMemo(() => defaultValues, []),
   });
+
+  const dispatch = useAppDispatch();
 
   const onReset = () => {
     setShowAddIngredient(false);
@@ -121,7 +124,29 @@ const IngredientSection = (props) => {
           </div>
         </div>
       </div>
-      {ingredientAddingType === "parsing" ? (
+      <div className={classes.ingredients__wrapper}>
+        <IngredientPanel
+          ingredients={ingredients}
+          onDelete={removeIngredient}
+          onSave={({ ingredient, portion, quantity }) => {
+            const weightInGram = quantity * +portion?.meausermentWeight;
+            const item = {
+              ...ingredient,
+              ingredientId: ingredient,
+              portion: ingredient.portions,
+              weightInGram,
+              selectedPortion: {
+                gram: weightInGram,
+                name: portion?.measurement,
+                quantity: quantity,
+              },
+            };
+
+            dispatch(setRecipeIngredients(item));
+          }}
+        />
+      </div>
+      {/* {ingredientAddingType === "parsing" ? (
         <ParseIngredient
           methods={methods}
           onReset={() => methods.reset(defaultValues)}
@@ -144,102 +169,7 @@ const IngredientSection = (props) => {
             }}
           />
         </div>
-      )}
-      <div className={classes.ingredients}>
-        <DragDropContext
-          onDragEnd={(result) => handleOnDragEnd(result, "ingredients")}
-        >
-          <Droppable droppableId="draggableIngredientList">
-            {(provided) => (
-              <ul {...provided.droppableProps} ref={provided.innerRef}>
-                {ingredients ? (
-                  ingredients?.map((elem, index) => {
-                    // const orgIngredient = orgIngredients.find(
-                    //   (ing) => ing.ingredientId._id === elem?._id,
-                    // );
-                    // if (!orgIngredient) return;
-                    return (
-                      <>
-                        {ingredientAddingType === "parsing" &&
-                        editIngredientId === elem._id ? (
-                          <ParseIngredient
-                            isEditMode
-                            methods={methods}
-                            onReset={onReset}
-                            inputName="parsingTextEdit"
-                            index={index}
-                          />
-                        ) : (
-                          <Draggable
-                            key={elem?.ingredientName + elem?._id || index}
-                            draggableId={`${
-                              elem?.ingredientName + elem?._id || index
-                            }`}
-                            index={index}
-                          >
-                            {(provided) => (
-                              <li
-                                {...provided.draggableProps}
-                                ref={provided.innerRef}
-                                // className={`${
-                                //   (elem?.ingredientStatus === "partial_ok" ||
-                                //     elem?.ingredientStatus === "not_ok") &&
-                                //   classes.ingredients__partial_ok
-                                // }`}
-                              >
-                                <div className={classes.ingredients__item}>
-                                  <div
-                                    className={classes.ingredients__drag}
-                                    {...provided.dragHandleProps}
-                                  >
-                                    <DragIndicatorIcon
-                                      className={classes.ingredients__drag}
-                                    />
-                                  </div>
-
-                                  <SingleIngredient
-                                    {...{
-                                      elem,
-                                      setNutritionState,
-                                      setIngredientId,
-                                      setEditIngredientId,
-                                      setShowAddIngredient,
-                                      methods,
-                                      removeIngredient,
-                                      editIngredientId,
-                                      onReset,
-                                      allIngredients,
-                                      nutritionState,
-                                    }}
-                                  />
-                                </div>
-                                {ingredientAddingType === "auto" &&
-                                  editIngredientId === elem._id && (
-                                    <AddToCartForm
-                                      isEditMode
-                                      methods={methods}
-                                      onReset={onReset}
-                                      allIngredients={allIngredients}
-                                    />
-                                  )}
-                              </li>
-                            )}
-                          </Draggable>
-                        )}
-                      </>
-                    );
-                  })
-                ) : (
-                  <div style={{ margin: "30px 0px" }}>
-                    <CircularRotatingLoader />
-                  </div>
-                )}
-                {provided.placeholder}
-              </ul>
-            )}
-          </Droppable>
-        </DragDropContext>
-      </div>
+      )} */}
     </div>
   );
 };

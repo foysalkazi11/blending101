@@ -53,7 +53,7 @@ const ChallengeQueue = (props: ChallengeQueueProps) => {
     <Fragment>
       <IconHeading
         icon={faCalendarAlt}
-        title="Recipe Queue"
+        title="Recipe"
         iconStyle={{ fontSize: "18px" }}
       />
       <ToggleCard

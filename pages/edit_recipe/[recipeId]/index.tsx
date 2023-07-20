@@ -342,6 +342,14 @@ const EditRecipeComponent = () => {
             const ingredientId = ingredient?.ingredientId;
             return {
               ...ingredient,
+              ingredientId: {
+                ...ingredientId,
+                portions: ingredient.portions.map((portion) => ({
+                  ...portion,
+                  measurement: portion.name,
+                  meausermentWeight: portion.gram,
+                })),
+              },
               featuredImage: ingredientId?.featuredImage,
               image: ingredientId?.image,
               ingredientName: ingredientId?.ingredientName,

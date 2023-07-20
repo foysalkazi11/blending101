@@ -28,7 +28,7 @@ import { faSearch, faTimes } from "@fortawesome/pro-regular-svg-icons";
 import { useRouter } from "next/router";
 import styles from "../../../styles/pages/planner.module.scss";
 import IconButton from "../../../component/atoms/Button/IconButton.component";
-import WeekPicker from "../../../component/molecules/DatePicker/Week.component";
+import WeekPicker from "../../../component/molecules/Date/Week.component";
 import { startOfWeek, endOfWeek, format } from "date-fns";
 import { useMutation, useQuery } from "@apollo/client";
 import {

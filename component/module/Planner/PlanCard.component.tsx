@@ -15,7 +15,7 @@ import { RecipeCreatorInfo } from "../../../type/recipeType";
 import useHover from "../../../components/utility/useHover";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
 import Icon from "../../atoms/Icon/Icon.component";
-import WeekPicker from "../../molecules/DatePicker/Week.component";
+import WeekPicker from "../../molecules/Date/Week.component";
 import { startOfWeek, endOfWeek } from "date-fns";
 import { useAppSelector } from "../../../redux/hooks";
 import useToAddPlanToCollection from "../../../customHooks/plan/useToAddPlanToCollection";

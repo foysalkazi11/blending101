@@ -214,7 +214,9 @@ $sharedHeightForIcons: 20px;
 
 .ingredients {
   padding: 0rem 2rem 2rem;
-
+  &__wrapper {
+    padding: 3rem 3rem 2rem;
+  }
   &__partial_ok {
     background-color: #f1f1f1;
     padding-right: 1rem;

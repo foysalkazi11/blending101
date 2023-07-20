@@ -20,7 +20,7 @@ import Publish from "../../../helpers/Publish";
 import {
   setShowPostForm,
   resetForm,
-  setPostDate,
+  deleteIngredient,
 } from "../../../redux/slices/Challenge.slice";
 import { setShowPanel } from "../../../redux/slices/Ui.slice";
 import useImage from "../../../hooks/useImage";
@@ -32,13 +32,13 @@ import {
 import Icon from "../../atoms/Icon/Icon.component";
 import {
   faBasketShopping,
-  faCalendar,
   faNotebook,
 } from "@fortawesome/pro-regular-svg-icons";
 import { addDays, format, isToday, isTomorrow, isYesterday } from "date-fns";
 import { UTCDate } from "../../../helpers/Date";
-import PostIngredient from "./Daily/Ingredients.component";
 import Summary from "./Daily/Summary.component";
+import IngredientPanel from "../../templates/Ingredient/Ingredient.component";
+import DayPicker from "../../molecules/Date/Day.component";
 
 const UploadCard = forwardRef((props: any, ref) => {
   const { startDate, endDate, elementRef } = props;
@@ -81,6 +81,25 @@ const UploadCard = forwardRef((props: any, ref) => {
   useEffect(() => {
     setImages(stateImages);
   }, [setImages, stateImages]);
+
+  const deleteIngredientHandler = (id) => {
+    dispatch(deleteIngredient({ id }));
+  };
+
+  const showNutrientInfo = (ingredient) => {
+    dispatch(
+      setShowPanel({
+        name: "RXPanel",
+        show: true,
+        payload: [
+          {
+            ingredientId: ingredient.ingredientId._id,
+            value: ingredient?.selectedPortion?.gram,
+          },
+        ],
+      }),
+    );
+  };
 
   const handleSubmit = async (data) => {
     const images = await uploadImages();
@@ -125,7 +144,7 @@ const UploadCard = forwardRef((props: any, ref) => {
       <FormProvider {...methods}>
         <div className="row mt-20 mb-20">
           <div className="col-6">
-            <DateSelector
+            <DayPicker
               activeDate={postDate}
               startDate={startDate}
               endDate={endDate}
@@ -156,10 +175,26 @@ const UploadCard = forwardRef((props: any, ref) => {
           </div>
         </div>
         <Summary ingredients={ingredients} />
-        <PostIngredient
-          ingredients={ingredients}
-          categories={data?.getAllCategories}
-        />
+        <div className="row mt-30">
+          <div className="col-12">
+            <h5 className={styles.headingText}>
+              <Icon size="2.5rem" fontName={faBasketShopping} /> Ingredients
+            </h5>
+            <div className={styles.ingredient__summary}>
+              <div>
+                Volume: <span>16 oz</span>
+              </div>
+              <div>
+                Consumed: <span>All</span>
+              </div>
+            </div>
+          </div>
+          <IngredientPanel
+            ingredients={ingredients}
+            onDelete={deleteIngredientHandler}
+            onNutrition={showNutrientInfo}
+          />
+        </div>
         <h5 className={styles.headingText}>
           <Icon size="2.5rem" fontName={faNotebook} /> Notes
         </h5>
@@ -172,46 +207,3 @@ const UploadCard = forwardRef((props: any, ref) => {
 UploadCard.displayName = "Challenge Post Form";
 
 export default UploadCard;
-
-const DatePickerButton = forwardRef(({ value, onClick }: any, ref: any) => {
-  const label = useMemo(() => {
-    const date = UTCDate(value, "/");
-    if (isToday(date)) return "Today";
-    else if (isYesterday(date)) return "Yesterday";
-    else if (isTomorrow(date)) return "Tomorrow";
-    else return format(date, "MMMM do, yyyy");
-  }, [value]);
-
-  return (
-    <div className={styles.date} onClick={onClick}>
-      <Textfield ref={ref} required value={label} disabled />
-      <Icon fontName={faCalendar} size={"2rem"} className={styles.date__icon} />
-    </div>
-  );
-});
-DatePickerButton.displayName = "DatePickerButton";
-
-interface DateSelectorProps {
-  activeDate: string;
-  startDate: string;
-  endDate: string;
-}
-const DateSelector = (props: DateSelectorProps) => {
-  const dispatch = useAppDispatch();
-  const { activeDate, startDate } = props;
-
-  const dateHandler = (date) => {
-    dispatch(setPostDate(format(date, "yyyy-MM-dd")));
-  };
-
-  return (
-    <DatePicker
-      selected={activeDate ? UTCDate(activeDate) : new Date()}
-      minDate={startDate ? UTCDate(startDate) : new Date()}
-      maxDate={addDays(new Date(), 1)}
-      onChange={dateHandler}
-      fixedHeight
-      customInput={<DatePickerButton />}
-    />
-  );
-};

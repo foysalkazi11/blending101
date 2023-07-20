@@ -20,6 +20,7 @@ import { BiBarChart } from "react-icons/bi";
 import useGetDefaultPortionOfnutration from "../../../../../customHooks/useGetDefaultPortionOfNutration";
 import IngredientSection from "../../../../../component/module/Recipe/Ingredient.module";
 import { IngredientAddingType } from "../../../../../type/recipeEditType";
+import IngredientPanel from "../../../../../component/templates/Ingredient/Ingredient.component";
 
 type IngredientListPorps = {
   recipeInstructions?: string[];

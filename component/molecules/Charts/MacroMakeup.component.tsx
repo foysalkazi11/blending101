@@ -21,7 +21,8 @@ const MacroMakeup = (props: MacroMakeupProps) => {
   const { data, showBar } = props;
   return (
     <div className={styles.insights__graph}>
-      <h3 className="mb-20">Macro Makeup</h3>
+      <h3>Macro Makeup</h3>
+      <h5 className="mb-20">Grams per day</h5>
       <ResponsiveContainer width={"100%"} height={200}>
         <PieChart margin={{ top: 120 }}>
           <Pie
