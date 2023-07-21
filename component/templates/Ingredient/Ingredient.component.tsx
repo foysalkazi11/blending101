@@ -242,6 +242,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
   };
 
   return (
+    //@ts-ignore
     <FormProvider {...method}>
       <div className="row">
         <div className={`col-5 ${styles.ingredient__field}`}>

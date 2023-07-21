@@ -11,7 +11,13 @@ export const defaultPlan = {
 const PlanForm = ({ methods }) => {
   return (
     <FormProvider {...methods}>
-      <div style={{ background: "#fff", padding: "20px 10px 10px" }}>
+      <div
+        style={{
+          background: "#fff",
+          padding: "20px 10px 10px",
+          borderRadius: 9,
+        }}
+      >
         <Textfield name="planName" placeholder="Plan Name" className="mb-10" />
         <Textarea name="description" placeholder="Plan Description" />
       </div>

@@ -9,16 +9,19 @@ import { useQuery } from "@apollo/client";
 import { GET_BLEND_CATEGORY } from "../../../graphql/Recipe";
 import { RECIPE_CATEGORY_COLOR } from "../../../data/Recipe";
 import TopIngredients from "../../molecules/Charts/TopIngredients.component";
-import MacroMakeup from "../../molecules/Charts/MacroMakeup.component";
+import MacroMakeup, {
+  IMacroData,
+} from "../../molecules/Charts/MacroMakeup.component";
 
 interface InsightsProps {
   categories: any[];
   ingredients: any[];
+  macros?: IMacroData;
   height?: string;
 }
 
 const Insights = (props: InsightsProps) => {
-  const { categories, height, ingredients } = props;
+  const { categories, height, ingredients, macros } = props;
   return (
     <div className={styles.insights}>
       <IconHeading icon={faLightbulbOn} title="Plan Insights" />
@@ -42,7 +45,7 @@ const Insights = (props: InsightsProps) => {
         </div>
         <BlendType categories={categories} />
         <TopIngredients ingredients={ingredients} />
-        <MacroMakeup showBar={false} />
+        <MacroMakeup showBar={false} macros={macros} />
       </div>
     </div>
   );
