@@ -15,6 +15,13 @@ const PlanList = ({ data, week, isWeekFromURL }: PlanListProps) => {
   const [toggleOptionCard, setToggleOptionCard] = useState({});
   return (
     <div className={styles.wrapper}>
+      <div className={styles.wrapper__header}>
+        <span></span>
+        <span>Calorie</span>
+        <span>Rx Facts</span>
+        <span>Price</span>
+      </div>
+
       {data?.map((planner, index) => {
         let dayName, day;
         if (planner?.day !== undefined) {

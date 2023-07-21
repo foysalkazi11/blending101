@@ -212,7 +212,11 @@ const QueuedRecipes = (props: RecipesProps) => {
         const { _id, name, image, category, ingredients } = recipe;
 
         return (
-          <div key={_id} data-recipe={_id}>
+          <div
+            key={_id}
+            data-recipe={_id}
+            style={{ border: "1px solid #ededed" }}
+          >
             <RecipeCard
               className="mt-10"
               title={name}

@@ -36,6 +36,12 @@ const PlanList = (props: PlanListProps) => {
   const { data, cart, onRemove, onMoveRecipe } = props;
   return (
     <div className={styles.wrapper}>
+      <div className={styles.wrapper__header}>
+        <span></span>
+        <span>Calorie</span>
+        <span>Rx Facts</span>
+        <span>Price</span>
+      </div>
       {data?.map((planner, index) => {
         return (
           <DayPlan

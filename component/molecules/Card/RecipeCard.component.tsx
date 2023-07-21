@@ -18,6 +18,7 @@ interface RecipeProps {
   notes?: number;
   className?: string;
   children?: React.ReactNode;
+  variant?: "border" | "shadow";
 }
 
 const RecipeCard: React.FC<RecipeProps> = (props) => {
@@ -34,12 +35,13 @@ const RecipeCard: React.FC<RecipeProps> = (props) => {
     recipeId,
     children,
     className,
+    variant,
   } = props;
   const menu = useRef<any>();
   const router = useRouter();
 
   return (
-    <div className={`${styles.datacard} ${className}`}>
+    <div className={`${styles.datacard} ${className} ${styles[variant]}`}>
       <div>
         <div>
           <div className={styles.datacard__body__top}>
@@ -129,5 +131,6 @@ RecipeCard.defaultProps = {
   noOfComments: 0,
   image: "/cards/juice.png",
   ratings: 4.5,
+  variant: "shadow",
 };
 export default RecipeCard;

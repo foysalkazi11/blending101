@@ -60,10 +60,12 @@ interface dataCardInterface {
   };
   planComrFrom?: PlanComeFromType;
   myRating?: number;
+  variant?: "border" | "shadow";
 }
 
 function PlanCard({
   className,
+  variant,
   title,
   ingredients,
   category,
@@ -174,7 +176,10 @@ function PlanCard({
   const weekChangeHandler = (start, end) => {};
 
   return (
-    <div className={`${styles.datacard} ${className || ""}`} ref={hoverRef}>
+    <div
+      className={`${styles.datacard} ${className || ""} ${styles[variant]}`}
+      ref={hoverRef}
+    >
       <div className={styles.datacard__inner}>
         <div className={styles.heading}>
           <div className={styles.title}>
@@ -271,5 +276,6 @@ DatePickerButton.displayName = "DatePickerButton";
 
 PlanCard.defaultProps = {
   weekRange: { start: startOfWeek(new Date()), end: endOfWeek(new Date()) },
+  variant: "shadow",
 };
 export default PlanCard;

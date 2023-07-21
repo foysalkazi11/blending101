@@ -124,6 +124,7 @@ const Plans = (props) => {
         noOfComments={plan?.commentsCount}
         setOpenCollectionModal={setOpenCollectionModal}
         planComrFrom="globalPlans"
+        variant="border"
       />
     </div>
   ));
@@ -155,6 +156,7 @@ const Recipes = (props) => {
         image={image.find((img) => img.default === true)?.image}
         recipeId={_id}
         ingredients={defaultVersion?.ingredients || []}
+        variant="border"
       />
     );
   });

@@ -204,6 +204,7 @@ const Recipes = (props: RecipesProps) => {
             data-recipe={_id}
           >
             <RecipeCard
+              variant="border"
               className="mt-10"
               title={name}
               category={recipeBlendCategory?.name}
