@@ -364,6 +364,8 @@ const EditRecipeComponent = () => {
   useEffect(() => {
     dispatch(setOpenVersionTray(false));
     dispatch(setOpenVersionTrayFormWhichPage("edit"));
+    // active sidebar menu change
+    dispatch(updateSidebarActiveMenuName("Blends"));
   }, []);
 
   // fetch recipe if is their existing recipe or doesn't match with current user
@@ -374,12 +376,6 @@ const EditRecipeComponent = () => {
       }
     }
   }, [recipeId, dbUser?._id]);
-
-  // active sidebar menu change
-  useEffect(() => {
-    dispatch(updateSidebarActiveMenuName("Blends"));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   // fetch nutrition value based on ingredient value change
   useEffect(() => {

@@ -3,7 +3,7 @@ import { gql } from "@apollo/client";
 const CREATE_A_RECIPE_BY_USER = gql`
   mutation AddRecipeFromUser(
     $isAddToTemporaryCompareList: Boolean!
-    $data: xCreateRecipe!
+    $data: CreateRecipe!
   ) {
     addRecipeFromUser(
       isAddToTemporaryCompareList: $isAddToTemporaryCompareList

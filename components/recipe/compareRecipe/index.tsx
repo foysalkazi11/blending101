@@ -422,7 +422,7 @@ const CompareRecipe = () => {
           ingredientId,
           selectedPortionName,
           weightInGram,
-          //  comment: item?.comment || null,
+          comment: item?.comment || null,
         });
       }
       if (item?.ingredientStatus === "partial_ok") {
