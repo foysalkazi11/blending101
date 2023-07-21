@@ -134,6 +134,7 @@ const IngredientSection = (props) => {
       <div className={classes.ingredients__wrapper}>
         <IngredientPanel
           ingredients={ingredients}
+          hasComment
           onDelete={removeIngredient}
           onSave={({ ingredient, portion, quantity }) => {
             const weightInGram = quantity * +portion?.meausermentWeight;
