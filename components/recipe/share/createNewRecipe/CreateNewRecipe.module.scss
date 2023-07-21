@@ -241,9 +241,9 @@
 .addRecipeIngredients {
   position: relative;
 
-  input {
-    @extend %input;
-  }
+  // input {
+  //   @extend %input;
+  // }
 
   .suggested {
     position: absolute;

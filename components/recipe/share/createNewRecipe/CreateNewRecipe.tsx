@@ -33,6 +33,7 @@ import notification from "../../../utility/reactToastifyNotification";
 import GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS from "../../../../gqlLib/nutrition/query/getNutrientsListAndGiGlByIngredients";
 import { GiGl } from "../../../../type/nutrationType";
 import compareArrays from "../../../../helperFunc/array/compareArrays";
+import IngredientAddingFormForCompare from "./ingredientAdddingFormForCompare";
 
 interface CreateNewRecipeTypeComponentType {
   [key: string]: any;
@@ -134,24 +135,36 @@ const CreateNewRecipe = ({
 
   // collect ingredient value after clicking ingredient
   const selectIngredientOnClick = (ele) => {
-    const item = findItem(ele?._id);
+    const item = findItem(ele?.ingredient._id);
 
     if (!item) {
-      let obj = {};
-      ele?.portions?.forEach((item) => {
-        if (item?.default) {
-          obj["ingredientId"] = ele?._id;
-          obj["selectedPortionName"] = item?.measurement;
-          obj["weightInGram"] = Number(item?.meausermentWeight);
-          obj["label"] = `${1} ${item?.measurement} ${ele?.ingredientName}`;
-          obj["ingredientName"] = `${ele?.ingredientName}`;
-          obj["selectedPortionQuantity"] = 1;
-          obj["ingredientStatus"] = "ok";
-        }
-      });
+      // let obj = {};
+      // ele?.portions?.forEach((item) => {
+      //   if (item?.default) {
+      //     obj["ingredientId"] = ele?._id;
+      //     obj["selectedPortionName"] = item?.measurement;
+      //     obj["weightInGram"] = Number(item?.meausermentWeight);
+      //     obj["label"] = `${1} ${item?.measurement} ${ele?.ingredientName}`;
+      //     obj["ingredientName"] = `${ele?.ingredientName}`;
+      //     obj["selectedPortionQuantity"] = 1;
+      //     obj["ingredientStatus"] = "ok";
+      //   }
+      // });
+
+      const newIngredient = {
+        ingredientId: ele?.ingredient._id,
+        selectedPortionName: ele?.portion?.measurement,
+        weightInGram: +ele?.portion?.meausermentWeight,
+        label: `${ele?.quantity} ${ele?.portion?.measurement} ${ele?.ingredient?.ingredientName}`,
+        ingredientName: `${ele?.ingredient?.ingredientName}`,
+        selectedPortionQuantity: ele?.quantity,
+        ingredientStatus: "ok",
+        comment: `${ele?.comment}`,
+      };
+
       setNewRecipe((state) => ({
         ...state,
-        ingredients: [...state?.ingredients, obj],
+        ingredients: [...state?.ingredients, newIngredient],
       }));
       setInputValue("");
     } else {
@@ -452,8 +465,11 @@ const CreateNewRecipe = ({
           icon="/images/right-blender.svg"
         />
 
-        <div className={styles.addRecipeIngredients}>
-          <form onSubmit={handleSubmit}>
+        <IngredientAddingFormForCompare
+          ingredients={newRecipe.ingredients}
+          onSave={selectIngredientOnClick}
+        />
+        {/* <form onSubmit={handleSubmit}>
             <input
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
@@ -507,8 +523,7 @@ const CreateNewRecipe = ({
                 );
               })}
             </ul>
-          </div>
-        </div>
+          </div> */}
 
         <div className={styles.dargAndDropArea}>
           {winReady ? (
