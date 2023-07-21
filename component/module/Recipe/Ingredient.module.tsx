@@ -124,13 +124,13 @@ const IngredientSection = (props) => {
           </div>
         </div>
       </div>
-      {ingredientAddingType === "parsing" && (
+      {/* {ingredientAddingType === "parsing" && (
         <ParseIngredient
           methods={methods}
           onReset={() => methods.reset(defaultValues)}
           inputName="parsingText"
         />
-      )}
+      )} */}
       <div className={classes.ingredients__wrapper}>
         <IngredientPanel
           ingredients={ingredients}
