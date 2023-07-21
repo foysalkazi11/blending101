@@ -148,6 +148,7 @@ const IngredientSection = (props) => {
                 name: portion?.measurement,
                 quantity: quantity,
               },
+              ingredientStatus: "ok",
             };
 
             dispatch(setRecipeIngredients(item));
