@@ -28,11 +28,12 @@ import { faSearch, faTimes } from "@fortawesome/pro-regular-svg-icons";
 import { useRouter } from "next/router";
 import styles from "../../../styles/pages/planner.module.scss";
 import IconButton from "../../../component/atoms/Button/IconButton.component";
-import WeekPicker from "../../../component/molecules/DatePicker/Week.component";
+import WeekPicker from "../../../component/molecules/Date/Week.component";
 import { startOfWeek, endOfWeek, format } from "date-fns";
 import { useMutation, useQuery } from "@apollo/client";
 import {
   CREATE_PLAN,
+  EDIT_PLAN,
   GET_ALL_PLANS,
   GET_ALL_PLAN_COMMENTS,
   GET_FEATURED_PLANS,
@@ -84,6 +85,10 @@ const MyPlan = () => {
   const [createPlan, createState] = useMutation(CREATE_PLAN, {
     refetchQueries: [GET_FEATURED_PLANS, GET_ALL_PLANS],
   });
+  const [editPlan, editState] = useMutation(EDIT_PLAN, {
+    refetchQueries: [GET_FEATURED_PLANS, GET_ALL_PLANS],
+  });
+
   const [sharePlan, { data: share }] = useMutation(SHARE_PLAN);
   const [link, setLink] = useState("");
   const [showShare, setShowShare] = useState(false);
@@ -112,9 +117,14 @@ const MyPlan = () => {
 
   useEffect(() => {
     if (data?.getAPlan) {
-      setPlanlist(data?.getAPlan?.plan?.planData || []);
+      const plan = data?.getAPlan?.plan;
+      setPlanlist(plan?.planData || []);
+      methods.reset({
+        planName: plan?.planName,
+        description: plan?.description,
+      });
     }
-  }, [data?.getAPlan]);
+  }, [data?.getAPlan, methods]);
 
   const allPlannedRecipes = useMemo(
     () =>
@@ -174,18 +184,21 @@ const MyPlan = () => {
 
   const editHandler = async (data) => {
     if (!isEditMode) return setIsEditMode(true);
-    const planData = {
-      memberId: plan?.memberId,
-      ...data,
-      planData: planlist.map((plan) => ({
-        day: plan.day,
-        recipes: plan.recipes.map((recipe) => recipe._id),
-      })),
-    };
     if (plan?.memberId === userId) {
+      const planData = {
+        memberId: plan?.memberId,
+        editId: router.query.planId,
+        editableObject: {
+          ...data,
+          planData: planlist.map((plan) => ({
+            day: plan.day,
+            recipes: plan.recipes.map((recipe) => recipe._id),
+          })),
+        },
+      };
       await Publish({
-        mutate: createPlan,
-        state: createState,
+        mutate: editPlan,
+        state: editState,
         variables: { data: planData },
         success: "Edited the Plan",
         onSuccess: () => {
@@ -195,6 +208,14 @@ const MyPlan = () => {
         },
       });
     } else {
+      const planData = {
+        memberId: plan?.memberId,
+        ...data,
+        planData: planlist.map((plan) => ({
+          day: plan.day,
+          recipes: plan.recipes.map((recipe) => recipe._id),
+        })),
+      };
       await Publish({
         mutate: createPlan,
         state: createState,
@@ -265,7 +286,7 @@ const MyPlan = () => {
   return (
     <Container
       headerIcon="/icons/calender__sidebar.svg"
-      headerTitle={`MEAL PLAN: ${plan?.planName}`}
+      headerTitle={`MEAL PLAN DETAILS`}
       headTagInfo={{
         title: "Meal Plan Details",
         description: "Meal Plan Details",
@@ -312,7 +333,7 @@ const MyPlan = () => {
               <div className={styles.headingDiv}>
                 <IconHeading
                   title={isEditMode ? "Edit Plan" : "Plan"}
-                  icon={faCalendarDays}
+                  icon={faCalendarWeek}
                 />
                 <div className="flex ai-center">
                   <div
@@ -330,7 +351,7 @@ const MyPlan = () => {
                       if (isEditMode) {
                         setIsEditMode(false);
                         setPlanlist(plan?.planData);
-                        methods.reset(defaultPlan);
+                        // methods.reset(defaultPlan);
                       } else {
                         router.push("/planner");
                       }
@@ -351,7 +372,8 @@ const MyPlan = () => {
                   <Fragment>
                     <div className={styles.preview}>
                       <h3 className={styles.preview__title}>
-                        {plan?.planName}
+                        {plan?.planName}{" "}
+                        {plan?.memberId === userId ? "Edit" : "Version"}
                       </h3>
                       <div className={styles.preview__actions}>
                         <span>
@@ -441,6 +463,7 @@ const MyPlan = () => {
                 height={panelHeight}
                 categories={data?.getAPlan?.recipeCategoriesPercentage}
                 ingredients={data?.getAPlan?.topIngredients}
+                macros={data?.getAPlan?.macroMakeup}
               />
             </div>
           </div>

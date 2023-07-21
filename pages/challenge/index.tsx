@@ -29,7 +29,6 @@ import { useThirtyDayChallenge } from "../../hooks/modules/Challenge/useChalleng
 
 import {
   resetForm,
-  setChallengeDate,
   setPostDate,
   setShowPostForm,
 } from "../../redux/slices/Challenge.slice";

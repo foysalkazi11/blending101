@@ -7,7 +7,7 @@ import IconButton from "../../../atoms/Button/IconButton.component";
 import classes from "./IngredientPanel.module.scss";
 import { faBlender } from "@fortawesome/pro-regular-svg-icons";
 
-const IngredientPanel = () => {
+const IngredientDrawer = () => {
   const dispatch = useAppDispatch();
   const panelList = useAppSelector((state) => state.ui.panel);
   const panel = panelList.find((panel) => panel.name === "Ingredient");
@@ -57,4 +57,4 @@ const IngredientPanel = () => {
   );
 };
 
-export default IngredientPanel;
+export default IngredientDrawer;

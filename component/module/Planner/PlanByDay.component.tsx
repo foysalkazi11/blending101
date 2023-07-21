@@ -130,11 +130,13 @@ const PlanItem = (props: RecipeColorIndicatorInterface) => {
   let {
     _id,
     name: recipeName,
-    calorie,
     category,
-    recipeBlendCategory,
     rxScore,
+    recipeBlendCategory,
+    defaultVersion,
   } = recipe;
+
+  const calorie = Math.round(defaultVersion?.calorie?.value);
   const ingredients = recipe?.defaultVersion?.ingredients || [];
   category = recipeBlendCategory?.name || category;
   const dispatch = useAppDispatch();

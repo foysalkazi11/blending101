@@ -73,7 +73,7 @@ const Combobox = (props: ComboboxProps) => {
           <option
             value={isObj ? (option as Option).value : (option as string)}
             key={isObj ? (option as Option).value : (option as string)}
-            selected={(option as Option).selected || false}
+            selected={(option as Option)?.selected || false}
           >
             {isObj ? (option as Option).label : option}
           </option>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
   ResponsiveContainer,
   PieChart,
@@ -13,19 +13,30 @@ import {
 
 import styles from "./_Charts.module.scss";
 
+export type IMacroData = { carbs: number; protein: number; fats: number };
 interface MacroMakeupProps {
-  data?: any[];
+  macros: IMacroData;
   showBar?: boolean;
 }
 const MacroMakeup = (props: MacroMakeupProps) => {
-  const { data, showBar } = props;
+  const { macros, showBar } = props;
+  const macroMakeup = useMemo(
+    () => [
+      { name: "Carbs", value: Math.round(macros.carbs) },
+      { name: "Fats", value: Math.round(macros.fats) },
+      { name: "Protein", value: Math.round(macros.protein) },
+    ],
+    [macros],
+  );
+
   return (
     <div className={styles.insights__graph}>
-      <h3 className="mb-20">Macro Makeup</h3>
+      <h3>Macro Makeup</h3>
+      <h5 className="mb-20">Grams per day</h5>
       <ResponsiveContainer width={"100%"} height={200}>
         <PieChart margin={{ top: 120 }}>
           <Pie
-            data={data}
+            data={macroMakeup}
             startAngle={180}
             endAngle={0}
             innerRadius={100}
@@ -118,16 +129,11 @@ const CustomLegend = (props) => {
   );
 };
 
-const macroMakeup = [
-  { name: "Carbs", value: 400 },
-  { name: "Fats", value: 300 },
-  { name: "Protein", value: 500 },
-];
-
 const COLORS = ["#B9EB84", "#66A7FF", "#FF8252"];
+const macroMakeup = { carbs: 34, protein: 33, fats: 33 };
 
 MacroMakeup.defaultProps = {
-  data: macroMakeup,
+  macros: macroMakeup,
   showBar: true,
 };
 export default MacroMakeup;

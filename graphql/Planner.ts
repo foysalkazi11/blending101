@@ -222,6 +222,12 @@ export const CREATE_PLAN = gql`
   }
 `;
 
+export const EDIT_PLAN = gql`
+  mutation EditPlan($data: EditPlan!) {
+    updateAPlan(input: $data)
+  }
+`;
+
 export const GET_ALL_PLANS = gql`
   query GetAllGlobalPlans(
     $page: Float
@@ -333,6 +339,9 @@ export const GET_PLAN = gql`
               default
             }
             defaultVersion {
+              calorie {
+                value
+              }
               postfixTitle
               ingredients {
                 ingredientId {
@@ -348,6 +357,11 @@ export const GET_PLAN = gql`
             }
           }
         }
+      }
+      macroMakeup {
+        carbs
+        protein
+        fats
       }
       topIngredients {
         icon: featuredImage
