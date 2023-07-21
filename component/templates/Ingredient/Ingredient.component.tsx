@@ -129,6 +129,7 @@ const IngredientPanel = (props: IngredientPanelProps) => {
                       onSave={onSave}
                       onClose={() => setEditingId("")}
                       hasComment={hasComment}
+                      setShowAddForm={setShowAddForm}
                     />
                   </div>
                 );
@@ -151,6 +152,7 @@ const IngredientPanel = (props: IngredientPanelProps) => {
             ingredients={ingredients}
             onSave={onSave}
             hasComment={hasComment}
+            setShowAddForm={setShowAddForm}
             onClose={() => setShowAddForm(false)}
           />
         )}
@@ -169,6 +171,7 @@ interface IngredientFormProps {
   onSave?: any;
   onClose?: any;
   isEditing?: boolean;
+  setShowAddForm?: any;
 }
 const IngredientForm: React.FC<IngredientFormProps> = (props) => {
   const {
@@ -181,6 +184,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
     onClose,
     onSave,
     hasComment,
+    setShowAddForm,
   } = props;
 
   const method = useForm();
@@ -230,6 +234,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
   const saveOnEnterPress = (e) => {
     if (e.key !== "Enter") return;
     saveIngredientHandler();
+    setShowAddForm(true);
   };
 
   const saveIngredientHandler = () => {

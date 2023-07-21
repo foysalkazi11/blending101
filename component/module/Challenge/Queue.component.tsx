@@ -175,6 +175,7 @@ const DiscoverRecipes = (props: RecipesProps) => {
               image={image.find((img) => img.default === true)?.image}
               recipeId={_id}
               ingredients={defaultVersion?.ingredients || []}
+              variant="border"
             >
               <div>
                 <Icon
@@ -226,6 +227,7 @@ const QueuedRecipes = (props: RecipesProps) => {
               image={image.url}
               recipeId={_id}
               ingredients={ingredients}
+              variant="border"
             >
               <div>
                 <Icon

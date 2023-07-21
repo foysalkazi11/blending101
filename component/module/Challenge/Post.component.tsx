@@ -283,7 +283,7 @@ const BlendCard = forwardRef((props: BlendCardProps, ref: any) => {
           />
         </div>
       )}
-      <div className={styles.card__content}>{postsEl}</div>
+      <div className={`${styles.card__content} mb-10`}>{postsEl}</div>
     </div>
   );
 });
@@ -332,7 +332,7 @@ const Post = (props: PostProps) => {
   // console.log({ showChart, id: post._id, showPanel });
 
   return (
-    <div className="mb-10">
+    <div>
       <div className={styles.recipe}>
         <div className={styles.space}>
           <h3

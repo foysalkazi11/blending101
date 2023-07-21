@@ -372,8 +372,7 @@ const MyPlan = () => {
                   <Fragment>
                     <div className={styles.preview}>
                       <h3 className={styles.preview__title}>
-                        {plan?.planName}{" "}
-                        {plan?.memberId === userId ? "Edit" : "Version"}
+                        {plan?.planName}
                       </h3>
                       <div className={styles.preview__actions}>
                         <span>
