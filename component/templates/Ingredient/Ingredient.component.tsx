@@ -26,16 +26,18 @@ import Combobox from "../../organisms/Forms/Combobox.component";
 import Textfield from "../../organisms/Forms/Textfield.component";
 
 import styles from "./Ingredient.module.scss";
+import Textarea from "../../organisms/Forms/Textarea.component";
 
 interface IngredientPanelProps {
   ingredients: any;
   onNutrition?: any;
   onDelete?: any;
   onSave?: any;
+  hasComment?: boolean;
 }
 
 const IngredientPanel = (props: IngredientPanelProps) => {
-  const { ingredients, onNutrition, onDelete, onSave } = props;
+  const { ingredients, onNutrition, onDelete, onSave, hasComment } = props;
 
   const [editingId, setEditingId] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
@@ -126,6 +128,7 @@ const IngredientPanel = (props: IngredientPanelProps) => {
                       defaultQuantity={ingredient?.selectedPortion?.quantity}
                       onSave={onSave}
                       onClose={() => setEditingId("")}
+                      hasComment={hasComment}
                     />
                   </div>
                 );
@@ -147,6 +150,7 @@ const IngredientPanel = (props: IngredientPanelProps) => {
           <IngredientForm
             ingredients={ingredients}
             onSave={onSave}
+            hasComment={hasComment}
             onClose={() => setShowAddForm(false)}
           />
         )}
@@ -156,6 +160,7 @@ const IngredientPanel = (props: IngredientPanelProps) => {
 };
 
 interface IngredientFormProps {
+  hasComment: boolean;
   defaultQuery?: string;
   ingredients: any[];
   defaultIngredient?: any;
@@ -175,6 +180,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
     defaultQuantity,
     onClose,
     onSave,
+    hasComment,
   } = props;
 
   const method = useForm();
@@ -241,11 +247,25 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
     onClose();
   };
 
+  const ActionButton = () => (
+    <>
+      <IconButton
+        className="ml-10 mr-10"
+        variant={quantity === 0 ? "disabled" : "secondary"}
+        fontName={faSave}
+        size="small"
+        onClick={saveIngredientHandler}
+      />
+      <IconButton fontName={faTimes} size="small" onClick={onClose} />
+    </>
+  );
   return (
     //@ts-ignore
     <FormProvider {...method}>
       <div className="row">
-        <div className={`col-5 ${styles.ingredient__field}`}>
+        <div
+          className={`col-${hasComment ? 4 : 5} ${styles.ingredient__field}`}
+        >
           <Textfield
             placeholder="Type your ingredients..."
             value={query}
@@ -272,7 +292,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
             </ul>
           )}
         </div>
-        <div className="col-4">
+        <div className={`col-${hasComment ? 2 : 4}`}>
           <Combobox
             placeholder="Unit"
             options={
@@ -288,7 +308,8 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
             onKeyDown={saveOnEnterPress}
           />
         </div>
-        <div className="col-3 flex ai-center">
+
+        <div className={hasComment ? "col-2" : "col-3 flex ai-center"}>
           <Textfield
             disabled={portion === null}
             placeholder="Quantity"
@@ -301,15 +322,14 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
             }}
             onKeyDown={saveOnEnterPress}
           />
-          <IconButton
-            className="ml-10 mr-10"
-            variant={quantity === 0 ? "disabled" : "secondary"}
-            fontName={faSave}
-            size="small"
-            onClick={saveIngredientHandler}
-          />
-          <IconButton fontName={faTimes} size="small" onClick={onClose} />
+          {!hasComment && <ActionButton />}
         </div>
+        {hasComment && (
+          <div className="col-4 flex ai-center">
+            <Textfield name="comment" placeholder="Comment" />
+            <ActionButton />
+          </div>
+        )}
       </div>
     </FormProvider>
   );
