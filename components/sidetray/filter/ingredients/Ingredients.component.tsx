@@ -26,7 +26,7 @@ export interface List {
 }
 
 interface Props {
-  scrollAreaMaxHeight?: React.CSSProperties;
+  scrollAreaMaxHeight?: number;
   checkActiveIngredient: (id: string) => boolean;
   handleIngredientClick: (
     value?: any | FilterCriteriaValue,
@@ -42,7 +42,7 @@ interface Props {
 export default function FilterbottomComponent({
   checkActiveIngredient = () => false,
   handleIngredientClick = () => {},
-  scrollAreaMaxHeight = { maxHeight: "350px" },
+  scrollAreaMaxHeight,
   ingredientCategoryData = [],
   ingredientCategoryLoading = false,
   showHeader = true,

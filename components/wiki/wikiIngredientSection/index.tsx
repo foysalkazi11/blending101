@@ -11,9 +11,14 @@ import generateDummyArray from "../../../helperFunc/array/generateDummyArray";
 interface Props {
   checkActive: (id: string) => boolean;
   handleItemClick: (item: any, isExist: any) => void;
+  scrollAreaMaxHeight?: number;
 }
 
-const WikiIngredientSection = ({ checkActive, handleItemClick }: Props) => {
+const WikiIngredientSection = ({
+  checkActive,
+  handleItemClick,
+  scrollAreaMaxHeight,
+}: Props) => {
   const [toggle, setToggle] = useState(0);
 
   const { data: ingredientCategoryData, loading: ingredientCategoryLoading } =
@@ -50,7 +55,7 @@ const WikiIngredientSection = ({ checkActive, handleItemClick }: Props) => {
         <FilterbottomComponent
           checkActiveIngredient={checkActive}
           handleIngredientClick={handleItemClick}
-          scrollAreaMaxHeight={{ maxHeight: "450px" }}
+          scrollAreaMaxHeight={scrollAreaMaxHeight}
           ingredientCategoryData={
             ingredientCategoryData?.filterIngredientByCategoryAndClass
           }
@@ -65,6 +70,7 @@ const WikiIngredientSection = ({ checkActive, handleItemClick }: Props) => {
             title: "Apple",
             image: "/images/img1.png",
           })}
+          scrollAreaMaxHeight={scrollAreaMaxHeight + 170}
         />
       )}
     </>
