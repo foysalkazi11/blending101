@@ -14,7 +14,7 @@ interface Props {
   ingredientCategory?: string;
   loading?: boolean;
   searchIngredientData?: any[];
-  scrollAreaMaxHeight?: React.CSSProperties;
+  scrollAreaMaxHeight?: number;
   checkActiveItem: (id: string) => boolean;
   handleBlendAndIngredientUpdate: (
     value?: any | FilterCriteriaValue,
@@ -31,9 +31,13 @@ const IngredientPictureSection = ({
   searchIngredientData = [],
   checkActiveItem = () => false,
   handleBlendAndIngredientUpdate = () => {},
-  scrollAreaMaxHeight = { maxHeight: "350px" },
+  scrollAreaMaxHeight,
 }: Props) => {
   const { height } = useWindowSize();
+  if (!scrollAreaMaxHeight) {
+    scrollAreaMaxHeight = height - 350;
+  }
+
   return (
     <div>
       {ingredientCategory === "All" && (
@@ -53,13 +57,16 @@ const IngredientPictureSection = ({
       )}
 
       {loading ? (
-        <SkeletonBlendType amount={16} />
+        <SkeletonBlendType
+          amount={16}
+          style={{ maxHeight: `${scrollAreaMaxHeight}px` }}
+        />
       ) : (
         <>
           {searchIngredientData.length ? (
             <div
               className={`${styles.ingredientContainer} y-scroll`}
-              style={{ maxHeight: `${height - 350}px` }}
+              style={{ maxHeight: `${scrollAreaMaxHeight}px` }}
             >
               {searchIngredientData?.map((item, i) => (
                 <div

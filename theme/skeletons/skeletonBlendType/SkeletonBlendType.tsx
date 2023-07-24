@@ -5,11 +5,15 @@ import styles from "./SkeletonBlendType.module.scss";
 
 interface Props {
   amount?: number;
+  style?: React.CSSProperties;
 }
 
-const SkeletonBlendType = ({ amount = 6 }: Props) => {
+const SkeletonBlendType = ({ amount = 6, style = {} }: Props) => {
   return (
-    <div className={styles.skeletonBlendType_wraper}>
+    <div
+      className={`${styles.skeletonBlendType_wraper} y-scroll`}
+      style={style}
+    >
       <SkeletonElement type="title" />
       <div className={styles.category_wraper}>
         {numberToArray(amount).map((item) => (

@@ -9,9 +9,14 @@ import generateDummyArray from "../../../helperFunc/array/generateDummyArray";
 interface Props {
   checkActive: (id: string) => boolean;
   handleItemClick: (item: any, isExist: any) => void;
+  scrollAreaMaxHeight?: number;
 }
 
-const WikiNutrientSection = ({ checkActive, handleItemClick }: Props) => {
+const WikiNutrientSection = ({
+  checkActive,
+  handleItemClick,
+  scrollAreaMaxHeight,
+}: Props) => {
   const [toggle, setToggle] = useState(0);
 
   return (
@@ -39,6 +44,7 @@ const WikiNutrientSection = ({ checkActive, handleItemClick }: Props) => {
           checkActiveNutrition={checkActive}
           handleNutritionClick={handleItemClick}
           showHeader={false}
+          scrollAreaMaxHeight={scrollAreaMaxHeight}
         />
       )}
       {toggle === 1 && (
@@ -47,6 +53,7 @@ const WikiNutrientSection = ({ checkActive, handleItemClick }: Props) => {
             title: "Apple",
             image: "/images/img1.png",
           })}
+          scrollAreaMaxHeight={scrollAreaMaxHeight + 110}
         />
       )}
     </>
