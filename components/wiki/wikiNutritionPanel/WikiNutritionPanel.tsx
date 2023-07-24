@@ -22,12 +22,14 @@ type Props = {
   handleNutritionClick?: (item: any, exist: boolean) => void;
   checkActiveNutrition?: (arg: any) => boolean;
   showHeader?: boolean;
+  scrollAreaMaxHeight?: number;
 };
 
 const WikiNutritionPanel = ({
   checkActiveNutrition = () => false,
   handleNutritionClick = () => {},
   showHeader = true,
+  scrollAreaMaxHeight = 500,
 }: Props) => {
   const [nutrientCategory, setNutrientCategory] = useState<
     { name: string; value: string }[]
@@ -138,7 +140,10 @@ const WikiNutritionPanel = ({
           onChange={(e) => setSearchInput(e?.target?.value)}
         />
       </div>
-      <div className={`${s.nutrientListWarper} y-scroll`}>
+      <div
+        className={`${s.nutrientListWarper} y-scroll`}
+        style={{ maxHeight: `${scrollAreaMaxHeight}px` }}
+      >
         {nutrientLoading ? (
           <NutritionListSkeleton />
         ) : (

@@ -38,7 +38,6 @@ const IngredientPanel = ({
         <FilterbottomComponent
           checkActiveIngredient={checkActive}
           handleIngredientClick={handleIngredientClick}
-          scrollAreaMaxHeight={{ maxHeight: "520px" }}
           ingredientCategoryData={
             ingredientCategoryData?.filterIngredientByCategoryAndClass
           }

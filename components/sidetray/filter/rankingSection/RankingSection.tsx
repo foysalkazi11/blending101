@@ -14,7 +14,7 @@ interface Props {
   setList?: Dispatch<SetStateAction<List[]>>;
   rankingDropDownState?: string;
   setRankingDropDownState?: Dispatch<SetStateAction<string>>;
-  scrollAreaMaxHeight?: React.CSSProperties;
+  scrollAreaMaxHeight?: number;
   checkActiveItem: (id: string) => boolean;
   handleBlendAndIngredientUpdate: (
     value?: any | FilterCriteriaValue,
@@ -35,12 +35,15 @@ const RankingSection = ({
   setascendingDescending = () => {},
   checkActiveItem = () => false,
   handleBlendAndIngredientUpdate = () => {},
-  scrollAreaMaxHeight = { maxHeight: "350px" },
+  scrollAreaMaxHeight,
   nutritionLoading = false,
   arrayOrderState = [],
   allIngredients = [],
 }: Props) => {
   const { height } = useWindowSize();
+  if (!scrollAreaMaxHeight) {
+    scrollAreaMaxHeight = height - 350;
+  }
   const handleIngredientClick = (item) => {
     handleBlendAndIngredientUpdate(item, checkActiveItem(item?._id), {
       id: item?._id,
@@ -68,7 +71,7 @@ const RankingSection = ({
       />
       <div
         className={`${styles.rankgingItemContainer} y-scroll`}
-        style={{ maxHeight: `${height - 350}px` }}
+        style={{ maxHeight: `${scrollAreaMaxHeight}px` }}
       >
         {nutritionLoading ? (
           <IngredientPanelSkeleton />

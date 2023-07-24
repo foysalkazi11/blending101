@@ -14,6 +14,7 @@ import WikiHealthSection from "../wikiHealthSection";
 import PanelHeader from "../../recipe/share/panelHeader/PanelHeader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo } from "@fortawesome/pro-light-svg-icons";
+import useWindowSize from "../../utility/useWindowSize";
 interface Props {
   currentWikiType?: WikiType;
   currentWikiId?: string;
@@ -34,6 +35,7 @@ const WikiLeft = ({
   const checkActive = (id: string) => {
     return currentWikiId === id;
   };
+  const { height } = useWindowSize();
 
   // click wiki item title
   const handleClickTitle = async (
@@ -99,6 +101,7 @@ const WikiLeft = ({
           <WikiIngredientSection
             checkActive={checkActive}
             handleItemClick={handleItemClick}
+            scrollAreaMaxHeight={height - 480}
           />
         );
       case "Nutrient":
@@ -106,6 +109,7 @@ const WikiLeft = ({
           <WikiNutrientSection
             checkActive={checkActive}
             handleItemClick={handleItemClick}
+            scrollAreaMaxHeight={height - 420}
           />
         );
 
