@@ -82,7 +82,7 @@ const BlendType = ({
                           name: blend?.name,
                           image: blend?.image || defaultBlendImg,
                           id: blend?._id,
-                          tagLabel: "",
+                          tagLabel: `Blend Type | ${blend?.name}`,
                           filterCriteria: "blendTypes",
                           origin: {
                             activeSection: "visual",
