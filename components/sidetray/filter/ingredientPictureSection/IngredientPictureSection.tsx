@@ -80,7 +80,7 @@ const IngredientPictureSection = ({
                         id: item?._id,
                         image: item?.featuredImage || "/food/chard.png",
                         name: item?.ingredientName,
-                        tagLabel: "",
+                        tagLabel: `Ingredient | ${item?.ingredientName}`,
                         filterCriteria: "includeIngredientIds",
                         origin: {
                           activeSection: "visual",
