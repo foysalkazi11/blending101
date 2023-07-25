@@ -3,7 +3,7 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 import AContainer from "../../../containers/A.container";
 import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
 import Center_Elements from "./recipe_elements/centerElements.component";
-import IngredientList from "./recipe_elements/ingredientList/ingredientList&Howto.component";
+import IngredientSection from "./recipe_elements/ingredientList/IngredientSection";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
   setSelectedIngredientsList,
@@ -18,6 +18,7 @@ import { GiGl } from "../../../type/nutrationType";
 import FloatingLeftPanel from "./floatingLeftPanel/FloatingLeftPanel";
 import { IngredientAddingType } from "../../../type/recipeEditType";
 import { useRouter } from "next/router";
+import InstructionsForMakingRecipe from "./howToSection";
 
 interface editRecipe {
   copyDetailsRecipe?: RecipeDetailsType;
@@ -186,14 +187,16 @@ const EditRecipePage = ({
             setExistingImage={setExistingImage}
             giGl={giGl}
           />
-          <IngredientList
+          <IngredientSection
             adjusterFunc={adjusterFunc}
             allIngredients={allIngredients}
-            recipeInstructions={recipeInstructions}
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}
             calculatedIngOz={calculatedIngOz}
             ingredientAddingType={ingredientAddingType}
+          />
+          <InstructionsForMakingRecipe
+            recipeInstructions={recipeInstructions}
           />
         </div>
         <div className={styles.right}>
