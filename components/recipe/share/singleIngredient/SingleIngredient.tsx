@@ -1,18 +1,23 @@
-import { FiPlusCircle } from "react-icons/fi";
-import { MdDragIndicator } from "react-icons/md";
 import styles from "./SingleIngredient.module.scss";
-import DragIndicatorIcon from "../../../../public/icons/drag_indicator_black_36dp.svg";
-import { IoCloseCircleOutline } from "react-icons/io5";
-import Tooltip from "../../../../theme/toolTip/CustomToolTip";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCirclePlus,
+  faCircleXmark,
+  faPenCircle,
+} from "@fortawesome/pro-light-svg-icons";
+import { faGripDotsVertical } from "@fortawesome/pro-solid-svg-icons";
 
 interface SingleIngredient {
   label?: string;
   dargProps?: any;
   handleAdd?: () => void;
   handleClose?: () => void;
+  handleEdit?: (id: string) => void;
   showPlusIcon?: boolean;
   showCloseIcon?: boolean;
+  showEditIcon?: boolean;
   isErrorIngredient?: boolean;
+  ingredientId?: string;
 }
 
 const SingleIngredient = ({
@@ -23,12 +28,18 @@ const SingleIngredient = ({
   label = "Label",
   showCloseIcon = false,
   isErrorIngredient = false,
+  showEditIcon = false,
+  handleEdit = () => {},
+  ingredientId = "",
 }: SingleIngredient) => {
   return (
     <div className={styles.singleIngredientContainer}>
       <div className={styles.leftSide}>
         <div {...dargProps}>
-          <MdDragIndicator className={styles.dargIcon} />
+          <FontAwesomeIcon
+            icon={faGripDotsVertical}
+            className={styles.dargIcon}
+          />
         </div>
 
         <p
@@ -41,11 +52,23 @@ const SingleIngredient = ({
       </div>
       <div className={styles.rightSide}>
         {showPlusIcon ? (
-          <FiPlusCircle className={styles.plusIcon} onClick={handleAdd} />
+          <FontAwesomeIcon
+            icon={faCirclePlus}
+            className={`${styles.icon} ${styles.icon_active}`}
+            onClick={handleAdd}
+          />
+        ) : null}
+        {showEditIcon && !isErrorIngredient ? (
+          <FontAwesomeIcon
+            icon={faPenCircle}
+            className={`${styles.icon} `}
+            onClick={() => handleEdit(ingredientId)}
+          />
         ) : null}
         {showCloseIcon ? (
-          <IoCloseCircleOutline
-            className={styles.closeIcon}
+          <FontAwesomeIcon
+            icon={faCircleXmark}
+            className={`${styles.icon} `}
             onClick={handleClose}
           />
         ) : null}
