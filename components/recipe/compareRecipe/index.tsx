@@ -291,6 +291,8 @@ const CompareRecipe = () => {
         ingredientStatus: "ok",
         label,
         comment,
+        selectedPortionQuantity,
+        ingredientName,
       };
     } else {
       //@ts-ignore

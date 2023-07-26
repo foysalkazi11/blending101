@@ -39,6 +39,8 @@ const Tr: FC<{
 );
 
 const Table = ({ block, addBlockPadding }: BlockProps) => {
+  console.log(block);
+
   const { data, tunes } = block;
   const handleBlockData = useBlock();
   const alignment = tunes?.alignmentTuneTool?.alignment;
@@ -48,26 +50,27 @@ const Table = ({ block, addBlockPadding }: BlockProps) => {
   const withRowHeadings = !!data?.header;
 
   return (
-    <table
-      {...handleBlockData(block)}
-      className={`${s.table} ${addBlockPadding ? "" : s.noBlockPadding}`}
-      style={{ textAlign: align }}
-    >
-      <>
-        {data?.caption && <caption>{HTMLReactParser(data.caption)}</caption>}
+    <div className="d-flex ai-center jc-center">
+      <table
+        {...handleBlockData(block)}
+        className={`${s.table} ${addBlockPadding ? "" : s.noBlockPadding}`}
+        style={{ textAlign: align }}
+      >
+        {/* {data?.caption && <caption>{HTMLReactParser(data.caption)}</caption>} */}
         {header && <THead row={header} />}
-      </>
-      <tbody>
-        {content?.map((row, i) => (
-          <Tr key={i} row={row} withHeadings={withRowHeadings} />
-        ))}
-      </tbody>
-      {data?.footer && (
-        <tfoot>
-          <Tr row={data?.footer} withHeadings={withRowHeadings} />
-        </tfoot>
-      )}
-    </table>
+
+        <tbody>
+          {content?.map((row, i) => (
+            <Tr key={i} row={row} withHeadings={withRowHeadings} />
+          ))}
+        </tbody>
+        {data?.footer && (
+          <tfoot>
+            <Tr row={data?.footer} withHeadings={withRowHeadings} />
+          </tfoot>
+        )}
+      </table>
+    </div>
   );
 };
 
