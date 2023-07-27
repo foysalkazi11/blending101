@@ -1,3 +1,4 @@
+import React from "react";
 import { useQuery } from "@apollo/client";
 import { useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -10,6 +11,13 @@ import { faSave, faTimes } from "@fortawesome/pro-regular-svg-icons";
 import styles from "./IngredientAddingFormForCompare.module.scss";
 import useHideOnClickOutside from "../../../../../hooks/useHideOnClickOutside";
 
+interface IngredientEditProps {
+  comment?: string;
+  ingredientId?: string;
+  ingredientName?: string;
+  selectedPortionName?: string;
+  selectedPortionQuantity?: string;
+}
 interface IngredientFormProps {
   defaultQuery?: string;
   ingredients: any[];
@@ -21,21 +29,21 @@ interface IngredientFormProps {
   onClose?: any;
   isEditing?: boolean;
 }
-const IngredientAddingFormForCompare: React.FC<IngredientFormProps> = (
-  props,
+const IngredientAddingFormForCompare = (
+  {
+    defaultQuery = "",
+    defaultIngredient = null,
+    defaultPortion = null,
+    //@ts-ignore
+    defaultQuantity = "",
+    onClose = () => {},
+    isEditing = false,
+    defaultComment = "",
+    onSave = () => {},
+    ingredients = [],
+  }: IngredientFormProps,
+  ref: any = {},
 ) => {
-  const {
-    isEditing,
-    ingredients,
-    defaultQuery,
-    defaultIngredient,
-    defaultPortion,
-    defaultQuantity,
-    defaultComment,
-    onClose,
-    onSave,
-  } = props;
-
   const method = useForm();
 
   const [query, setQuery] = useState(defaultQuery);
@@ -52,6 +60,24 @@ const IngredientAddingFormForCompare: React.FC<IngredientFormProps> = (
   const { data } = useQuery(GET_INGREDIENTS, {
     variables: { classType: "All" },
   });
+
+  const editIngredientValue = React.useCallback(
+    (info: IngredientEditProps) => {
+      const ingredientItem = data?.filterIngredientByCategoryAndClass.find(
+        (ing) => ing._id === info.ingredientId,
+      );
+
+      if (!ingredientItem) return;
+      setIngredient(ingredientItem);
+      setQuery(info.ingredientName || ingredientItem.ingredientName);
+      setQuantity(info?.selectedPortionQuantity || 1);
+      setPortion({ measurement: info?.selectedPortionName });
+      setComment(info?.comment);
+      setShowSuggestion(false);
+      setShowInputSuggestions(true);
+    },
+    [data?.filterIngredientByCategoryAndClass],
+  );
 
   const addIngredintHandler = (id: string) => {
     const ingredientItem = ingredientList.find((ing) => ing._id === id);
@@ -113,6 +139,11 @@ const IngredientAddingFormForCompare: React.FC<IngredientFormProps> = (
     //Resetting Form
     handleClose();
   };
+
+  // Expose the function through the ref
+  React.useImperativeHandle(ref, () => ({
+    editIngredientValue,
+  }));
 
   const inputSuggestionsBox = () => {
     return (
@@ -200,17 +231,18 @@ const IngredientAddingFormForCompare: React.FC<IngredientFormProps> = (
   );
 };
 
-IngredientAddingFormForCompare.defaultProps = {
-  defaultQuery: "",
-  defaultIngredient: null,
-  defaultPortion: null,
-  //@ts-ignore
-  defaultQuantity: "",
-  onClose: () => {},
-  isEditing: false,
-  defaultComment: "",
-  onSave: () => {},
-};
+// IngredientAddingFormForCompare.defaultProps = {
+//   defaultQuery: "",
+//   defaultIngredient: null,
+//   defaultPortion: null,
+//   //@ts-ignore
+//   defaultQuantity: "",
+//   onClose: () => {},
+//   isEditing: false,
+//   defaultComment: "",
+//   onSave: () => {},
+// };
+export default React.forwardRef(IngredientAddingFormForCompare);
 
 const IngredientSuggestionsBox = ({
   ingredientList,
@@ -233,5 +265,3 @@ const IngredientSuggestionsBox = ({
     </div>
   );
 };
-
-export default IngredientAddingFormForCompare;

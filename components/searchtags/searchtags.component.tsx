@@ -161,7 +161,7 @@ const FilterByTag = ({
           <img src={item?.image} alt="img" />
         </div>
       )}
-      <p>{isItemString ? `Search | ${item}` : item.tagLabel}</p>
+      <p>{isItemString ? `Search | ${item}` : item?.tagLabel}</p>
     </div>
   );
 };

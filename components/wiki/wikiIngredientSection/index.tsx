@@ -1,21 +1,23 @@
-import React, { useState } from "react";
+import React from "react";
 import FilterbottomComponent from "../../sidetray/filter/ingredients/Ingredients.component";
 import { useQuery } from "@apollo/client";
 import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
-import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFerrisWheel, faList } from "@fortawesome/pro-light-svg-icons";
 import WikiThemeContainer from "../wikiTheme/wikiThemContainer";
 import generateDummyArray from "../../../helperFunc/array/generateDummyArray";
 
 interface Props {
   checkActive: (id: string) => boolean;
   handleItemClick: (item: any, isExist: any) => void;
+  scrollAreaMaxHeight?: number;
+  toggle?: number;
 }
 
-const WikiIngredientSection = ({ checkActive, handleItemClick }: Props) => {
-  const [toggle, setToggle] = useState(0);
-
+const WikiIngredientSection = ({
+  checkActive,
+  handleItemClick,
+  scrollAreaMaxHeight,
+  toggle = 0,
+}: Props) => {
   const { data: ingredientCategoryData, loading: ingredientCategoryLoading } =
     useQuery(FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS, {
       variables: {
@@ -28,29 +30,11 @@ const WikiIngredientSection = ({ checkActive, handleItemClick }: Props) => {
 
   return (
     <>
-      <ToggleMenu
-        setToggle={setToggle}
-        toggle={toggle}
-        toggleMenuList={[
-          <div key={"key0"} className="d-flex ai-center">
-            <FontAwesomeIcon icon={faList} style={{ marginRight: "5px" }} />
-            <p>List</p>
-          </div>,
-          <div key={"key1"} className="d-flex ai-center">
-            <FontAwesomeIcon
-              icon={faFerrisWheel}
-              style={{ marginRight: "5px" }}
-            />
-            <p>Themes</p>
-          </div>,
-        ]}
-        variant={"outlineSecondary"}
-      />
       {toggle === 0 && (
         <FilterbottomComponent
           checkActiveIngredient={checkActive}
           handleIngredientClick={handleItemClick}
-          scrollAreaMaxHeight={{ maxHeight: "450px" }}
+          scrollAreaMaxHeight={scrollAreaMaxHeight}
           ingredientCategoryData={
             ingredientCategoryData?.filterIngredientByCategoryAndClass
           }
@@ -65,6 +49,7 @@ const WikiIngredientSection = ({ checkActive, handleItemClick }: Props) => {
             title: "Apple",
             image: "/images/img1.png",
           })}
+          scrollAreaMaxHeight={scrollAreaMaxHeight + 170}
         />
       )}
     </>

@@ -1,3 +1,4 @@
+@import "../../../../../styles/partials/variables";
 $sharedHeightForIcons: 20px;
 
 @mixin servings__name {
@@ -359,108 +360,6 @@ $sharedHeightForIcons: 20px;
   }
 }
 
-.how__to {
-  border-radius: 14px;
-  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
-  margin-top: 20px;
-  padding: 20px;
-  background-color: rgb(255, 255, 255);
-
-  &__heading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  &__icon {
-    position: relative;
-    height: 22px;
-    width: 22px;
-    margin-right: 20px;
-    margin-left: -10px;
-  }
-
-  &__headingText {
-    margin-left: -5px;
-    font-size: 20px;
-    color: #000;
-    font-weight: 400;
-  }
-
-  &__steps {
-    list-style: inside;
-    margin-top: 22px;
-    padding: 20px;
-    padding-left: 16px;
-    background-color: #fbfbfb;
-    border-radius: 10px;
-
-    &__drag {
-      color: #c4c4c4;
-      font-size: 20px;
-      position: absolute;
-      // display: none;
-      top: 50%;
-
-      svg {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%) scale(0.55);
-        left: -40px;
-        // cursor: pointer;
-      }
-    }
-
-    &__li {
-      position: relative;
-      margin-bottom: 20px;
-      font-size: 16px;
-      cursor: pointer;
-      word-wrap: break-word;
-      padding-right: 70px;
-
-      &:hover {
-        span {
-          display: block;
-        }
-      }
-
-      &:hover .how__to__steps__drag {
-        display: block;
-      }
-
-      &__edit {
-        right: 40px;
-        color: #dad8d8;
-        display: none;
-
-        svg {
-          @include edit_bin_icon();
-          transform: scale(1.4);
-          right: 40px;
-        }
-      }
-
-      &__bin {
-        @include edit_bin_icon();
-        right: 5px;
-        display: none;
-
-        &__imgDiv {
-          position: relative;
-          width: 100%;
-          height: 100%;
-        }
-      }
-    }
-  }
-
-  &__searchBar {
-    @include searchbar();
-    min-height: 50px;
-  }
-}
-
 .save__Recipe {
   min-height: 50px;
   display: flex;
@@ -503,5 +402,77 @@ $sharedHeightForIcons: 20px;
 
   &__div {
     margin-right: 20px;
+  }
+}
+
+// .ingredient {
+//   &__add {
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     height: 6rem;
+//     margin: 2rem 1.5rem;
+//     & > button {
+//       padding: 1rem;
+//       color: $secondaryColor !important;
+//       border: 1px solid $secondaryColor;
+//       transition: all 0.3s ease-in;
+//       &:hover {
+//         background-color: $secondaryColor !important;
+//         color: $white !important;
+//       }
+//     }
+//   }
+// }
+
+.addToCart {
+  display: flex;
+  align-items: center;
+  height: 6rem;
+  background-color: #fbfbfb;
+  border-radius: 8px;
+  &--top {
+    margin: 2rem 1.5rem;
+    padding: 0 1rem;
+  }
+  &--edit {
+    padding: 0 1rem !important;
+  }
+  &__form {
+    flex-grow: 1;
+    & > div > div {
+      padding-bottom: 0 !important;
+    }
+  }
+  &__buttons {
+    // width: 13rem;
+    display: flex;
+    justify-content: center;
+    // padding: 0.5rem 0 0.5rem 1rem;
+  }
+}
+
+.inputWrapper {
+  width: 100%;
+  border: 1px solid $slightGray;
+  border-radius: 10px;
+  transition: $transition;
+  &:hover,
+  &:focus {
+    border: 1px solid $secondaryColor;
+  }
+  input {
+    border-color: transparent;
+    &:hover,
+    &:focus {
+      border-color: transparent;
+    }
+  }
+  .icon {
+    color: $fontGray;
+    transition: $transition;
+    &:hover {
+      color: $black;
+    }
   }
 }

@@ -412,7 +412,8 @@ const IngredientList = ({
           </DragDropContext>
 
           <InputComponent
-            borderSecondary={true} // onKeyDown={(e) => {
+            borderSecondary={true}
+            // onKeyDown={(e) => {
             //   recipeIngredientsOnKeyDown(e);
             // }}
             value={inputValueIngredient}

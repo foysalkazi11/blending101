@@ -14,6 +14,9 @@ import WikiHealthSection from "../wikiHealthSection";
 import PanelHeader from "../../recipe/share/panelHeader/PanelHeader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo } from "@fortawesome/pro-light-svg-icons";
+import useWindowSize from "../../utility/useWindowSize";
+import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
+import { faFerrisWheel, faList } from "@fortawesome/pro-light-svg-icons";
 interface Props {
   currentWikiType?: WikiType;
   currentWikiId?: string;
@@ -29,11 +32,13 @@ const WikiLeft = ({
   setSelectedWikiItem = () => {},
   showWikiTypeHeader = true,
 }: Props) => {
+  const [toggle, setToggle] = useState(0);
   const router = useRouter();
   const [type, setType] = useState<WikiType>("Ingredient");
   const checkActive = (id: string) => {
     return currentWikiId === id;
   };
+  const { height } = useWindowSize();
 
   // click wiki item title
   const handleClickTitle = async (
@@ -84,6 +89,10 @@ const WikiLeft = ({
   };
 
   useEffect(() => {
+    setToggle(0);
+  }, [type]);
+
+  useEffect(() => {
     //@ts-ignore
     if (currentWikiType && currentWikiType !== "compare") {
       setType(currentWikiType);
@@ -99,6 +108,8 @@ const WikiLeft = ({
           <WikiIngredientSection
             checkActive={checkActive}
             handleItemClick={handleItemClick}
+            scrollAreaMaxHeight={height - 480}
+            toggle={toggle}
           />
         );
       case "Nutrient":
@@ -106,6 +117,8 @@ const WikiLeft = ({
           <WikiNutrientSection
             checkActive={checkActive}
             handleItemClick={handleItemClick}
+            scrollAreaMaxHeight={height - 420}
+            toggle={toggle}
           />
         );
 
@@ -114,6 +127,7 @@ const WikiLeft = ({
           <WikiHealthSection
             checkActive={checkActive}
             handleItemClick={handleItemClick}
+            toggle={toggle}
           />
         );
 
@@ -123,7 +137,7 @@ const WikiLeft = ({
   };
 
   return (
-    <>
+    <div className="sticky_top">
       {!showWikiTypeHeader && (
         <PanelHeader
           title="Wiki Type"
@@ -137,9 +151,27 @@ const WikiLeft = ({
           setType={setType}
           showHeader={showWikiTypeHeader}
         />
+        <ToggleMenu
+          setToggle={setToggle}
+          toggle={toggle}
+          toggleMenuList={[
+            <div key={"key0"} className="d-flex ai-center">
+              <FontAwesomeIcon icon={faList} style={{ marginRight: "5px" }} />
+              <p>List</p>
+            </div>,
+            <div key={"key1"} className="d-flex ai-center">
+              <FontAwesomeIcon
+                icon={faFerrisWheel}
+                style={{ marginRight: "5px" }}
+              />
+              <p>Themes</p>
+            </div>,
+          ]}
+          variant={"outlineSecondary"}
+        />
         {renderUi(type)}
       </div>
-    </>
+    </div>
   );
 };
 

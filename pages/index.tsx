@@ -118,7 +118,7 @@ const Home = () => {
                             name: type?.name,
                             image: type?.image || defaultBlendImg,
                             id: type?._id,
-                            tagLabel: "",
+                            tagLabel: `Blend Type | ${type?.name}`,
                             filterCriteria: "blendTypes",
                             origin: {
                               activeSection: "visual",

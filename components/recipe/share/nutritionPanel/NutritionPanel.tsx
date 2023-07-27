@@ -50,7 +50,7 @@ const NutritionPanel = (props: NutritionPanelInterface) => {
 
   return (
     <div className={styles.rightTaryContainer}>
-      <div style={{ display: "flex", alignItems: "center" }}>
+      <div className="d-flex ai-center">
         {isNutrientPanelHasMyFacts ? (
           panelHeaders?.map((header, index) => {
             return (

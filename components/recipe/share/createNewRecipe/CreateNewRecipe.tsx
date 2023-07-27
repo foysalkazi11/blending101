@@ -5,33 +5,24 @@ import { Droppable, Draggable } from "react-beautiful-dnd";
 import SectionTitleWithIcon from "../../../../theme/recipe/sectionTitleWithIcon/SectionTitleWithIcon.component";
 import SingleIngredient from "../singleIngredient/SingleIngredient";
 import { useLazyQuery } from "@apollo/client";
-import GET_BLEND_NUTRITION_BASED_ON_RECIPE_XXX from "../../../../gqlLib/recipes/queries/getBlendNutritionBasedOnRecipeXxx";
 import NutrationPanelSkeleton from "../../../../theme/skeletons/nutrationPanelSkeleton/NutrationPanelSkeleton";
 import UpdatedRecursiveAccordian from "../../../customRecursiveAccordian/updatedRecursiveAccordian.component";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
 import { setAllIngredients } from "../../../../redux/slices/ingredientsSlice";
-import Image from "next/image";
 import { FETCH_BLEND_CATEGORIES } from "../../../../gqlLib/category/queries/fetchCategories";
 import { setAllCategories } from "../../../../redux/slices/categroySlice";
 import { IoClose, IoCloseCircle } from "react-icons/io5";
 import { MdOutlineEdit } from "react-icons/md";
 import { AiOutlineSave } from "react-icons/ai";
-import useOnClickOutside from "../../../utility/useOnClickOutside";
 import { useRouter } from "next/router";
 import Tooltip from "../../../../theme/toolTip/CustomToolTip";
 import CreateRecipeSkeleton from "../../../../theme/skeletons/createRecipeSkeleton/CreateRecipeSkeleton";
 import IconWraper from "../../../../theme/iconWarper/IconWarper";
 import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
-import InputComponent from "../../../../theme/input/input.component";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRectangleVerticalHistory } from "@fortawesome/pro-light-svg-icons";
-import { faXmark } from "@fortawesome/pro-solid-svg-icons";
 import { CreateNewRecipeType } from "../../../pages/versionCompare";
-import useGetBlendNutritionBasedOnRecipexxx from "../../../../customHooks/useGetBlendNutritionBasedOnRecipexxx";
 import notification from "../../../utility/reactToastifyNotification";
 import GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS from "../../../../gqlLib/nutrition/query/getNutrientsListAndGiGlByIngredients";
-import { GiGl } from "../../../../type/nutrationType";
 import compareArrays from "../../../../helperFunc/array/compareArrays";
 import IngredientAddingFormForCompare from "./ingredientAdddingFormForCompare";
 
@@ -63,9 +54,7 @@ const CreateNewRecipe = ({
   showTopCancelButton = true,
 }: CreateNewRecipeTypeComponentType) => {
   const [winReady, setWinReady] = useState(false);
-  const [inputValue, setInputValue] = useState("");
   const { allIngredients } = useAppSelector((state) => state?.ingredients);
-  const [searchIngredientData, setSearchIngredientData] = useState<any[]>([]);
   const [
     getNutrientsListAndGiGlByIngredients,
     { data: nutritionData, loading: nutritionLoading },
@@ -81,6 +70,7 @@ const CreateNewRecipe = ({
   const isMounted = useRef(false);
   const router = useRouter();
   const previousIngredient = useRef(null);
+  const editIngredientRef = useRef(null);
 
   // find if existing item
   const findItem = (id) => {
@@ -115,6 +105,21 @@ const CreateNewRecipe = ({
     }));
   };
 
+  // edit ingredient by ingredientId
+
+  const editIngredient = (id) => {
+    if (editIngredientRef.current) {
+      const item = findItem(id);
+      editIngredientRef.current?.editIngredientValue({
+        ingredientId: item?.ingredientId,
+        ingredientName: item?.ingredientName,
+        selectedPortionQuantity: item?.selectedPortionQuantity,
+        selectedPortionName: item?.selectedPortionName,
+        comment: item?.comment,
+      });
+    }
+  };
+
   // remove ingredient by qaid
   const removeByQaId = (id) => {
     setNewRecipe((state) => ({
@@ -136,6 +141,16 @@ const CreateNewRecipe = ({
   // collect ingredient value after clicking ingredient
   const selectIngredientOnClick = (ele) => {
     const item = findItem(ele?.ingredient._id);
+    const newIngredient = {
+      ingredientId: ele?.ingredient._id,
+      selectedPortionName: ele?.portion?.measurement,
+      weightInGram: +ele?.portion?.meausermentWeight,
+      label: `${ele?.quantity} ${ele?.portion?.measurement} ${ele?.ingredient?.ingredientName}`,
+      ingredientName: `${ele?.ingredient?.ingredientName}`,
+      selectedPortionQuantity: ele?.quantity,
+      ingredientStatus: "ok",
+      comment: `${ele?.comment}`,
+    };
 
     if (!item) {
       // let obj = {};
@@ -151,24 +166,19 @@ const CreateNewRecipe = ({
       //   }
       // });
 
-      const newIngredient = {
-        ingredientId: ele?.ingredient._id,
-        selectedPortionName: ele?.portion?.measurement,
-        weightInGram: +ele?.portion?.meausermentWeight,
-        label: `${ele?.quantity} ${ele?.portion?.measurement} ${ele?.ingredient?.ingredientName}`,
-        ingredientName: `${ele?.ingredient?.ingredientName}`,
-        selectedPortionQuantity: ele?.quantity,
-        ingredientStatus: "ok",
-        comment: `${ele?.comment}`,
-      };
-
       setNewRecipe((state) => ({
         ...state,
         ingredients: [...state?.ingredients, newIngredient],
       }));
-      setInputValue("");
     } else {
-      setInputValue("");
+      setNewRecipe((state) => ({
+        ...state,
+        ingredients: state?.ingredients?.map((ingredient) =>
+          ingredient.ingredientId === newIngredient?.ingredientId
+            ? newIngredient
+            : ingredient,
+        ),
+      }));
     }
   };
 
@@ -183,24 +193,6 @@ const CreateNewRecipe = ({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    if (isMounted.current) {
-      if (inputValue === "") {
-        setSearchIngredientData([]);
-      } else {
-        const filter = allIngredients?.filter((item) =>
-          //@ts-ignore
-          item?.ingredientName
-            ?.toLowerCase()
-            ?.includes(inputValue?.toLowerCase()),
-        );
-        setSearchIngredientData(filter);
-      }
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inputValue]);
 
   useEffect(() => {
     if (!allIngredients?.length) {
@@ -435,29 +427,6 @@ const CreateNewRecipe = ({
             Calorie <span>{Math.round(newRecipe?.calorie)}</span>
           </div>
         </div>
-        {/* <div
-          style={{
-            marginTop: "10px",
-            marginRight: "10px",
-            display: "flex",
-            justifyContent: "flex-end",
-            cursor: "pointer",
-          }}
-        >
-          <Tooltip content={`Version`} direction="left">
-            <FontAwesomeIcon
-              icon={faRectangleVerticalHistory}
-              color="#7cbc39"
-              onClick={() =>
-                handleToOpenVersionTray(
-                  recipe?.recipeId?._id,
-                  recipe?.defaultVersion,
-                  true,
-                )
-              }
-            />
-          </Tooltip>
-        </div> */}
       </div>
       <div className={styles.dividerBox}>
         <SectionTitleWithIcon
@@ -468,62 +437,8 @@ const CreateNewRecipe = ({
         <IngredientAddingFormForCompare
           ingredients={newRecipe.ingredients}
           onSave={selectIngredientOnClick}
+          ref={editIngredientRef}
         />
-        {/* <form onSubmit={handleSubmit}>
-            <input
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              type="text"
-              placeholder="Search ingredients"
-            />
-          </form>
-          <div
-            className={styles.suggested}
-            style={
-              searchIngredientData.length === 0
-                ? { display: "none" }
-                : { display: "block" }
-            }
-          >
-            <ul className={styles.suggested__ul}>
-              {searchIngredientData?.map((elem) => {
-                return (
-                  <li
-                    key={elem?._id}
-                    className={styles.suggested__li}
-                    onClick={() => {
-                      selectIngredientOnClick(elem);
-                    }}
-                  >
-                    {elem.featuredImage !== null ? (
-                      <div className={styles.ingredientImg}>
-                        <Image
-                          src={elem.featuredImage}
-                          alt="Picture will load soon"
-                          objectFit="contain"
-                          width={20}
-                          height={20}
-                        />
-                      </div>
-                    ) : (
-                      <div className={styles.ingredientImg}>
-                        <Image
-                          src={"/food/Dandelion.png"}
-                          alt="Picture will load soon"
-                          objectFit="contain"
-                          width={20}
-                          height={20}
-                          className={styles.ingredientImg}
-                        />
-                      </div>
-                    )}
-
-                    {elem.ingredientName}
-                  </li>
-                );
-              })}
-            </ul>
-          </div> */}
 
         <div className={styles.dargAndDropArea}>
           {winReady ? (
@@ -563,6 +478,10 @@ const CreateNewRecipe = ({
                                 : removeByQaId(item?.qaId)
                             }
                             isErrorIngredient={item?.ingredientStatus !== "ok"}
+                            showEditIcon
+                            handleEdit={() =>
+                              editIngredient(item?.ingredientId)
+                            }
                           />
                         </div>
                       )}
