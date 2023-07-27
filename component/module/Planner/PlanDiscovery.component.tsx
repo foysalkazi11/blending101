@@ -157,6 +157,8 @@ const Recipes = (props) => {
         recipeId={_id}
         ingredients={defaultVersion?.ingredients || []}
         variant="border"
+        calorie={defaultVersion?.calorie?.value}
+        carbs={defaultVersion?.gigl?.netCarbs}
       />
     );
   });

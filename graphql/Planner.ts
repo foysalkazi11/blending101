@@ -23,6 +23,12 @@ const PLANNER_RECIPE_LIST_FIELDS = gql`
       }
       defaultVersion {
         postfixTitle
+        calorie {
+          value
+        }
+        gigl {
+          netCarbs
+        }
         ingredients {
           ingredientId {
             _id
@@ -341,6 +347,9 @@ export const GET_PLAN = gql`
             defaultVersion {
               calorie {
                 value
+              }
+              gigl {
+                netCarbs
               }
               postfixTitle
               ingredients {

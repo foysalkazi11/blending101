@@ -93,13 +93,13 @@ const RecipeCard: React.FC<RecipeProps> = (props) => {
           </div>
           <div className={styles.datacard__body__belt}>
             <div className={styles.datacard__body__belt__child}>
-              Net Carbs <span>{carbs}</span>
+              Net Carbs <span>{Math.round(carbs)}</span>
             </div>
             <div className={styles.datacard__body__belt__child}>
-              Rx Score <span>{score}</span>
+              Rx Score <span>{Math.round(score)}</span>
             </div>
             <div className={styles.datacard__body__belt__child}>
-              Calorie <span>{calorie}</span>
+              Calorie <span>{Math.round(calorie)}</span>
             </div>
           </div>
           <div className={styles.datacard__body__bottom}>

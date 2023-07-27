@@ -176,6 +176,8 @@ const DiscoverRecipes = (props: RecipesProps) => {
               recipeId={_id}
               ingredients={defaultVersion?.ingredients || []}
               variant="border"
+              calorie={defaultVersion?.calorie?.value}
+              carbs={defaultVersion?.gigl?.netCarbs}
             >
               <div>
                 <Icon

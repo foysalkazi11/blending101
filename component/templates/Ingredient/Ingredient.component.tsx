@@ -126,6 +126,7 @@ const IngredientPanel = (props: IngredientPanelProps) => {
                           ingredient?.selectedPortion?.name,
                       )}
                       defaultQuantity={ingredient?.selectedPortion?.quantity}
+                      defaultComment={ingredient?.comment}
                       onSave={onSave}
                       onClose={() => setEditingId("")}
                       hasComment={hasComment}
@@ -168,6 +169,7 @@ interface IngredientFormProps {
   defaultIngredient?: any;
   defaultPortion?: any;
   defaultQuantity?: number;
+  defaultComment?: string;
   onSave?: any;
   onClose?: any;
   isEditing?: boolean;
@@ -181,6 +183,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
     defaultIngredient,
     defaultPortion,
     defaultQuantity,
+    defaultComment,
     onClose,
     onSave,
     hasComment,
@@ -195,6 +198,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
   const [ingredient, setIngredient] = useState(defaultIngredient);
   const [portion, setPortion] = useState(defaultPortion);
   const [quantity, setQuantity] = useState<number | string>(defaultQuantity);
+  const [comment, setComment] = useState(defaultComment);
 
   const { data } = useQuery(GET_INGREDIENTS, {
     variables: { classType: "All" },
@@ -239,8 +243,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
 
   const saveIngredientHandler = () => {
     if (!portion || !quantity || !ingredient) return;
-    onSave({ ingredient, portion, quantity, isEditing });
-    //
+    onSave({ ingredient, portion, quantity, comment, isEditing });
 
     //Resetting Form
     setQuery("");
@@ -248,6 +251,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
     setIngredient(null);
     setPortion(null);
     setQuantity(0);
+    setComment("");
 
     onClose();
   };
@@ -331,7 +335,12 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
         </div>
         {hasComment && (
           <div className="col-4 flex ai-center">
-            <Textfield name="comment" placeholder="Comment" />
+            <Textfield
+              name="comment"
+              placeholder="Comment"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            />
             <ActionButton />
           </div>
         )}
@@ -346,6 +355,7 @@ IngredientForm.defaultProps = {
   defaultPortion: null,
   //@ts-ignore
   defaultQuantity: "",
+  defaultComment: "",
   onClose: () => {},
   isEditing: false,
 };

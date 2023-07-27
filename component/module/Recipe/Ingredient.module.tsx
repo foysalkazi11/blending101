@@ -136,7 +136,7 @@ const IngredientSection = (props) => {
           ingredients={ingredients}
           hasComment
           onDelete={removeIngredient}
-          onSave={({ ingredient, portion, quantity }) => {
+          onSave={({ ingredient, portion, quantity, comment }) => {
             const weightInGram = quantity * +portion?.meausermentWeight;
             const item = {
               ...ingredient,
@@ -149,6 +149,7 @@ const IngredientSection = (props) => {
                 quantity: quantity,
               },
               ingredientStatus: "ok",
+              comment,
             };
 
             dispatch(setRecipeIngredients(item));
