@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { faPlusCircle } from "@fortawesome/pro-solid-svg-icons";
+import { faPlus } from "@fortawesome/pro-solid-svg-icons";
 import { faCalendarAlt, faTelescope } from "@fortawesome/pro-light-svg-icons";
 import { faCalendarDay } from "@fortawesome/pro-regular-svg-icons";
 
@@ -55,6 +55,7 @@ const PlannerQueue = (props: PlannerPanelProps) => {
     page,
     setPage,
   });
+  console.log(recipes);
 
   const { loading: qLoading, recipes: qRecipes } = useQueuedRecipe(
     isWeekFromURL,
@@ -175,6 +176,7 @@ const Recipes = (props: RecipesProps) => {
     wrapperRef,
   } = props;
   const [showCalenderId, setShowCalenderId] = useState("");
+  const [shownDayId, setShownDayId] = useState("");
 
   return (
     <Fragment>
@@ -213,19 +215,36 @@ const Recipes = (props: RecipesProps) => {
               image={image.find((img) => img.default === true)?.image}
               recipeId={_id}
               ingredients={defaultVersion?.ingredients || []}
+              calorie={defaultVersion?.calorie?.value}
+              carbs={defaultVersion?.gigl?.netCarbs}
             >
               <div>
                 {panel === "plan" && (
-                  <select onChange={(e) => modifyPlan(e.target.value, recipe)}>
-                    <option value={""}></option>
-                    <option value={1}>1</option>
-                    <option value={2}>2</option>
-                    <option value={3}>3</option>
-                    <option value={4}>4</option>
-                    <option value={5}>5</option>
-                    <option value={6}>6</option>
-                    <option value={7}>7</option>
-                  </select>
+                  <div className={styles.daypicker}>
+                    <div
+                      className={styles.daypicker__field}
+                      onClick={() =>
+                        setShownDayId(shownDayId === _id ? "" : _id)
+                      }
+                    >
+                      <Icon fontName={faPlus} size={15} />
+                    </div>
+                    {shownDayId === _id && (
+                      <ul className={styles.daypicker__options}>
+                        {[1, 2, 3, 4, 5, 6, 7].map((day) => (
+                          <li
+                            key={day}
+                            onClick={() => {
+                              modifyPlan(day, recipe);
+                              setShownDayId("");
+                            }}
+                          >
+                            {day}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
                 )}
                 {panel === "my-plan" && (
                   <Icon
