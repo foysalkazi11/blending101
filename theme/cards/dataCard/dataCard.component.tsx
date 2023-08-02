@@ -421,6 +421,7 @@ export default function DatacardComponent({
                 <a
                   href={origin}
                   onClick={(e) => {
+                    router.reload();
                     const id = "ebbpnaajpojkhndmjmdjabgjmngjgmhm";
                     //@ts-ignore
                     chrome.runtime.sendMessage(

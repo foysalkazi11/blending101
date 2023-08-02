@@ -1,6 +1,8 @@
 import React from "react";
 import ejs from "ejs";
 
+import styles from "./Theme.module.scss";
+
 interface ThemeProps extends React.HTMLProps<HTMLDivElement> {
   template: string;
   data: any;
@@ -12,6 +14,7 @@ const Theme = (props: ThemeProps) => {
 
   return (
     <div
+      className={styles.theme}
       dangerouslySetInnerHTML={{
         __html: ejs.render(template, { data, methods: methods || {} }),
       }}
