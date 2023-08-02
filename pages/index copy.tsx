@@ -1,42 +1,47 @@
 import { useQuery } from "@apollo/client";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import Head from "next/head";
-
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Overview from "../component/module/Home/Overview.component";
+import PlanCard from "../component/module/Planner/PlanCard.component";
+import ContentTray from "../components/recipe/recipeDiscovery/ContentTray/ContentTray.component";
 import {
   PAGES,
   sidebarActiveMenuNameType,
 } from "../components/sidebar/Sidebar.component";
 import AContainer from "../containers/A.container";
 import { RECIPE_CATEGORY_COLOR } from "../data/Recipe";
+import GET_ALL_LATEST_RECIPES from "../gqlLib/recipes/queries/getAllLatestRecipes";
+import { GET_WIKI_HIGHLIGHTS } from "../gqlLib/wiki/query/getWikiList";
+import { GET_ALL_PLANS } from "../graphql/Planner";
 import { GET_BLEND_TYPES } from "../graphql/Recipe";
 import { useAppSelector } from "../redux/hooks";
 import { updateSidebarActiveMenuName } from "../redux/slices/utilitySlice";
 import styles from "../styles/pages/home.module.scss";
-import useToUpdateFilterCriteria from "../customHooks/recipeFilter/useToUpdateRecipeFilterCriteria";
-import { useWidget } from "../hooks/modules/useWidget";
-import ContentTray from "../components/recipe/recipeDiscovery/ContentTray/ContentTray.component";
-import Link from "next/link";
 import CardComponent from "../theme/cards/card.component";
-import Theme from "../component/molecules/Theme/Theme.component";
-import { useThemeTemplate } from "../hooks/modules/useThemeMethod";
 import SpecialcardComponent from "../theme/cards/specialCard.component";
+import useToUpdateFilterCriteria from "../customHooks/recipeFilter/useToUpdateRecipeFilterCriteria";
 const defaultBlendImg =
   "https://blending.s3.us-east-1.amazonaws.com/3383678.jpg";
 
 const Home = () => {
+  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
   const { allFilters } = useAppSelector((state) => state?.filterRecipe);
   const displayName = useAppSelector(
     (state) => state.user?.dbUser?.displayName || "",
   );
+  const { data: recipes } = useQuery(GET_ALL_LATEST_RECIPES, {
+    variables: { userId },
+  });
+  const { data: plans } = useQuery(GET_ALL_PLANS, {
+    variables: { limit: 8, page: 1, memberId: userId, query: "" },
+  });
+  const { data: wikis } = useQuery(GET_WIKI_HIGHLIGHTS);
   const { data: blendTypes } = useQuery(GET_BLEND_TYPES);
-
+  const [wikiType, setWikiType] = useState("All");
   const dispatch = useDispatch();
   const router = useRouter();
-
-  const widget = useWidget("home-collection");
   const handleUpdateFilterCriteria = useToUpdateFilterCriteria();
 
   const handleToShowBlendTypes = (value: any) => {
@@ -156,9 +161,115 @@ const Home = () => {
                 <img src="/images/smoothie.webp" alt="" />
               </div>
             </div>
-            {widget?.widgetCollections.map((collection) => (
-              <EntitySlider key={collection?.slug} collection={collection} />
-            ))}
+
+            {/* ******** RECENT RECIPE LIST ******** */}
+            <div className="mt-40">
+              <ContentTray
+                heading="Recent Recipes"
+                image="/images/clock-light.svg"
+                allUrl="/discovery"
+              >
+                {recipes?.getAllLatestRecipes2?.map((recipe) => {
+                  const {
+                    recipeId: {
+                      _id = "",
+                      name = "",
+                      image = "",
+                      numberOfRating = 0,
+                      averageRating = 0,
+                      brand = {},
+                      userId = {},
+                    },
+                    calorie,
+                    netCarbs,
+                    rxScore,
+                  } = recipe;
+                  return (
+                    <div key={_id}>
+                      <div style={{ paddingRight: "1rem" }}>
+                        <Link href={`/recipe_details/${_id}/`}>
+                          <a style={{ color: "initial" }}>
+                            <CardComponent
+                              title={name}
+                              img={image?.[0]?.image}
+                              rating={averageRating}
+                              noOfRating={numberOfRating}
+                              rx={rxScore}
+                            />
+                          </a>
+                        </Link>
+                      </div>
+                    </div>
+                  );
+                })}
+              </ContentTray>
+            </div>
+
+            {/* ******** POPULAR PLAN LIST ******** */}
+            <div className="mt-40">
+              <ContentTray
+                heading="Popular Plans"
+                image="/images/fire-alt-light.svg"
+                allUrl="/planner"
+                settings={{
+                  adaptiveHeight: true,
+                }}
+              >
+                {plans?.getAllGlobalPlans?.plans?.map((plan) => (
+                  <div className={styles.slider__card} key={plan?._id}>
+                    <div style={{ paddingRight: "1rem" }}>
+                      <PlanCard
+                        planId={plan?._id}
+                        title={plan?.planName}
+                        image={plan?.image?.url}
+                        noOfComments={plan?.commentsCount}
+                        isCollectionIds={plan?.planCollections}
+                        planComrFrom="homePage"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </ContentTray>
+            </div>
+
+            {/* ******** WIKI HIGHLIGHTS ******** */}
+            <div className="mt-40">
+              <ContentTray
+                hasFilter
+                filters={["All", "Ingredient", "Nutrient", "Health"]}
+                tabState={[wikiType, setWikiType]}
+                heading="Wiki Highlight"
+                image="/images/clock-light.svg"
+                allUrl="/discovery"
+              >
+                {wikis?.getWikiList
+                  ?.filter(
+                    (wiki) => wikiType === "All" || wikiType === wiki.type,
+                  )
+                  .slice(0, 9)
+                  .map((wiki) => {
+                    return (
+                      <div className={styles.slider__card} key={wiki._id}>
+                        <div style={{ paddingRight: "1rem" }}>
+                          <Link
+                            href={`/wiki/Ingredient/62534fde2816ed76999e521d/182/`}
+                          >
+                            <a style={{ color: "initial" }}>
+                              <SpecialcardComponent
+                                title={wiki?.wikiTitle}
+                                img={wiki?.image}
+                                category={wiki?.type}
+                                rx={45}
+                              />
+                            </a>
+                          </Link>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </ContentTray>
+            </div>
+
             {/* ******** BLOG TRENDING ******** */}
             <div className="mt-40">
               <ContentTray
@@ -186,6 +297,7 @@ const Home = () => {
               </ContentTray>
             </div>
           </div>
+
           <div className="col-3">
             <Overview />
           </div>
@@ -196,42 +308,3 @@ const Home = () => {
 };
 
 export default Home;
-
-const getDetailURL = (domain: string, id: string, payload?: any) => {
-  if (domain === "Recipe") return `recipe_details/${id}/`;
-  if (domain === "Plan") return `/planner/plan/${id}/`;
-  if (domain === "Wiki") return `/planner/plan/${id}/`;
-};
-
-const EntitySlider = ({ collection }) => {
-  const { displayName, slug, data, theme } = collection;
-  const { _id: themeId, link: file, style } = theme;
-  const template = useThemeTemplate(file);
-
-  return (
-    <div className="mt-40">
-      <Head>
-        <link crossOrigin="" rel="stylesheet" type="text/css" href={style} />
-      </Head>
-      <ContentTray
-        heading={displayName}
-        image="/images/clock-light.svg"
-        allUrl={`/${slug}`}
-      >
-        {data[data?.collectionType]?.map((item) => {
-          return (
-            <div id={`blend${themeId}`} key={item?._id}>
-              <div style={{ paddingRight: "1rem" }}>
-                <Link href={getDetailURL(data?.collectionType, item?._id)}>
-                  <a style={{ color: "initial" }}>
-                    <Theme template={template} data={item} />
-                  </a>
-                </Link>
-              </div>
-            </div>
-          );
-        })}
-      </ContentTray>
-    </div>
-  );
-};
