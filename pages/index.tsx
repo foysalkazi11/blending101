@@ -26,7 +26,7 @@ import SpecialcardComponent from "../theme/cards/specialCard.component";
 const defaultBlendImg =
   "https://blending.s3.us-east-1.amazonaws.com/3383678.jpg";
 
-const Home = () => {
+const Home = ({ data }) => {
   const { allFilters } = useAppSelector((state) => state?.filterRecipe);
   const displayName = useAppSelector(
     (state) => state.user?.dbUser?.displayName || "",
@@ -79,7 +79,7 @@ const Home = () => {
           <div className="col-9">
             <div className={styles.quick}>
               <div className={styles.quick__site}>
-                <h3>Explore Site</h3>
+                <h3>Explore Site: {data}</h3>
                 <div>
                   {PAGES &&
                     PAGES.map((page, idx) =>
@@ -236,3 +236,7 @@ const EntitySlider = ({ collection }) => {
     </div>
   );
 };
+
+export async function getServerSideProps() {
+  return { props: { data: "Hello World" } };
+}
