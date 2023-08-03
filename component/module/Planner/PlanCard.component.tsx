@@ -183,10 +183,8 @@ function PlanCard({
       <div className={styles.datacard__inner}>
         <div className={styles.heading}>
           <div className={styles.title}>
-            <Link href={`/planner/plan/${planId}`}>
-              <a className={styles.title}>
-                <h2>{title}</h2>
-              </a>
+            <Link href={`/planner/plan/${planId}`} className={styles.title}>
+              <h2>{title}</h2>
             </Link>
           </div>
           <div className={styles.menu}>

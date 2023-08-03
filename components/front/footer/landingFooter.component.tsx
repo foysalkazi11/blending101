@@ -12,51 +12,26 @@ const LandingFooter = () => {
             <Image
               src={"/images/logo.png"}
               alt="Picture will load soon"
-              height={"45px"}
-              width={"180px"}
+              height={45}
+              width={180}
             />
           </div>
           <div className={styles.footer__download__left__socialtray}>
             <ul>
               <li>
-                <Image
-                  src={"/icons/fire.svg"}
-                  alt=""
-                  height={"20px"}
-                  width={"20px"}
-                />
+                <Image src={"/icons/fire.svg"} alt="" height={20} width={20} />
               </li>
               <li>
-                <Image
-                  src={"/icons/fire.svg"}
-                  alt=""
-                  height={"20px"}
-                  width={"20px"}
-                />
+                <Image src={"/icons/fire.svg"} alt="" height={20} width={20} />
               </li>
               <li>
-                <Image
-                  src={"/icons/fire.svg"}
-                  alt=""
-                  height={"20px"}
-                  width={"20px"}
-                />
+                <Image src={"/icons/fire.svg"} alt="" height={20} width={20} />
               </li>
               <li>
-                <Image
-                  src={"/icons/fire.svg"}
-                  alt=""
-                  height={"20px"}
-                  width={"20px"}
-                />
+                <Image src={"/icons/fire.svg"} alt="" height={20} width={20} />
               </li>
               <li>
-                <Image
-                  src={"/icons/fire.svg"}
-                  alt=""
-                  height={"20px"}
-                  width={"20px"}
-                />
+                <Image src={"/icons/fire.svg"} alt="" height={20} width={20} />
               </li>
             </ul>
           </div>
@@ -69,14 +44,12 @@ const LandingFooter = () => {
                 <span>
                   <div className={styles.btn}>
                     <Link href={"#"}>
-                      <a>
-                        <Image
-                          src={"/images/app-store@2x.png"}
-                          alt="banner Icon"
-                          height={"66px"}
-                          width={"178px"}
-                        />
-                      </a>
+                      <Image
+                        src={"/images/app-store@2x.png"}
+                        alt="banner Icon"
+                        height={66}
+                        width={178}
+                      />
                     </Link>
                   </div>
                 </span>
@@ -85,14 +58,12 @@ const LandingFooter = () => {
                 <span>
                   <div className={styles.btn}>
                     <Link href={"#"}>
-                      <a>
-                        <Image
-                          src={"/images/app-store@2x.png"}
-                          alt="banner Icon"
-                          height={"66px"}
-                          width={"178px"}
-                        />
-                      </a>
+                      <Image
+                        src={"/images/app-store@2x.png"}
+                        alt="banner Icon"
+                        height={66}
+                        width={178}
+                      />
                     </Link>
                   </div>
                 </span>

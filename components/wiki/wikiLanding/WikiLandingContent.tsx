@@ -88,7 +88,7 @@ const WikiLandingContent = ({
       await addOrRemoveToWikiCompareList({
         variables: { ingredientId, userId: dbUser?._id },
         update(cache) {
-          const { getIngredientWikiList2 } = cache.readQuery({
+          const { getIngredientWikiList2 } = cache.readQuery<any>({
             query: GET_INGREDIENT_WIKI_LIST,
             variables: {
               userId: dbUser?._id,

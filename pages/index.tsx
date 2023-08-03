@@ -222,10 +222,11 @@ const EntitySlider = ({ collection }) => {
           return (
             <div id={`blend${themeId}`} key={item?._id}>
               <div style={{ paddingRight: "1rem" }}>
-                <Link href={getDetailURL(data?.collectionType, item?._id)}>
-                  <a style={{ color: "initial" }}>
-                    <Theme template={template} data={item} />
-                  </a>
+                <Link
+                  href={getDetailURL(data?.collectionType, item?._id)}
+                  style={{ color: "initial" }}
+                >
+                  <Theme template={template} data={item} />
                 </Link>
               </div>
             </div>

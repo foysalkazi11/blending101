@@ -62,7 +62,7 @@ export default function SidebarComponent(props) {
   return (
     <div className={styles.sidebar}>
       <div className={styles.logo}>
-        <Image src="/logo_small.svg" width={150} height={150} alt="logo" />
+        <Image src="/logo_small.svg" width={40} height={40} alt="logo" />
       </div>
       <ul className={styles.list}>
         {PAGES &&

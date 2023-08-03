@@ -187,16 +187,17 @@ const Home = () => {
                   return (
                     <div key={_id}>
                       <div style={{ paddingRight: "1rem" }}>
-                        <Link href={`/recipe_details/${_id}/`}>
-                          <a style={{ color: "initial" }}>
-                            <CardComponent
-                              title={name}
-                              img={image?.[0]?.image}
-                              rating={averageRating}
-                              noOfRating={numberOfRating}
-                              rx={rxScore}
-                            />
-                          </a>
+                        <Link
+                          href={`/recipe_details/${_id}/`}
+                          style={{ color: "initial" }}
+                        >
+                          <CardComponent
+                            title={name}
+                            img={image?.[0]?.image}
+                            rating={averageRating}
+                            noOfRating={numberOfRating}
+                            rx={rxScore}
+                          />
                         </Link>
                       </div>
                     </div>
