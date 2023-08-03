@@ -15,14 +15,12 @@ function Frontbanner() {
         </p>
         <div>
           <Link href="/login">
-            <a>
-              <ButtonComponent
-                type={"primary"}
-                value={"Get Started"}
-                style={{ height: "100%" }}
-                fullWidth
-              />
-            </a>
+            <ButtonComponent
+              type={"primary"}
+              value={"Get Started"}
+              style={{ height: "100%" }}
+              fullWidth
+            />
           </Link>
         </div>
       </div>

@@ -26,7 +26,7 @@ import SpecialcardComponent from "../theme/cards/specialCard.component";
 const defaultBlendImg =
   "https://blending.s3.us-east-1.amazonaws.com/3383678.jpg";
 
-const Home = () => {
+const Home = ({ data }) => {
   const { allFilters } = useAppSelector((state) => state?.filterRecipe);
   const displayName = useAppSelector(
     (state) => state.user?.dbUser?.displayName || "",
@@ -79,7 +79,7 @@ const Home = () => {
           <div className="col-9">
             <div className={styles.quick}>
               <div className={styles.quick__site}>
-                <h3>Explore Site</h3>
+                <h3>Explore Site: {data}</h3>
                 <div>
                   {PAGES &&
                     PAGES.map((page, idx) =>
@@ -222,10 +222,11 @@ const EntitySlider = ({ collection }) => {
           return (
             <div id={`blend${themeId}`} key={item?._id}>
               <div style={{ paddingRight: "1rem" }}>
-                <Link href={getDetailURL(data?.collectionType, item?._id)}>
-                  <a style={{ color: "initial" }}>
-                    <Theme template={template} data={item} />
-                  </a>
+                <Link
+                  href={getDetailURL(data?.collectionType, item?._id)}
+                  style={{ color: "initial" }}
+                >
+                  <Theme template={template} data={item} />
                 </Link>
               </div>
             </div>
@@ -235,3 +236,7 @@ const EntitySlider = ({ collection }) => {
     </div>
   );
 };
+
+export async function getServerSideProps() {
+  return { props: { data: "Hello World" } };
+}

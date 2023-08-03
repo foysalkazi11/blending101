@@ -64,15 +64,13 @@ const Login = () => {
         <div className={styles.login__form}>
           <div className={styles.login__logo}>
             <Link href="/">
-              <a href="">
-                <Image
-                  src="/images/logo.png"
-                  alt="logo will soon load"
-                  layout={"fill"}
-                  objectFit={"contain"}
-                  quality={100}
-                />
-              </a>
+              <Image
+                src="/images/logo.png"
+                alt="logo will soon load"
+                layout={"fill"}
+                objectFit={"contain"}
+                quality={100}
+              />
             </Link>
             {/* <div className={styles.cross}>
               <HighlightOffOutlinedIcon />
@@ -130,9 +128,7 @@ const Login = () => {
                 <input type="checkbox" />
                 <label>Keep me looged</label>
               </div>
-              <Link href="/forget_password">
-                <a>Forget Password?</a>
-              </Link>
+              <Link href="/forget_password">Forget Password?</Link>
             </div>
 
             {/* <div className={styles.buttonDiv}> */}

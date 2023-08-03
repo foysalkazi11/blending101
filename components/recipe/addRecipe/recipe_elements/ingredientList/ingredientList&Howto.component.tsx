@@ -217,8 +217,8 @@ const IngredientList = ({
             <Image
               src={"/icons/basket.svg"}
               alt="icon"
-              width={"17px"}
-              height={"15px"}
+              width={17}
+              height={15}
               className={styles.original_arrow}
             />
           </div>

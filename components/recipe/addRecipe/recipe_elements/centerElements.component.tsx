@@ -134,8 +134,8 @@ const Center_Elements = ({
                     }}
                     src={"/icons/dropdown.svg"}
                     alt="icon"
-                    width={"17px"}
-                    height={"15px"}
+                    width={17}
+                    height={15}
                     className={styles.reverse_arrow}
                   />
                   <Image
@@ -144,8 +144,8 @@ const Center_Elements = ({
                     }}
                     src={"/icons/dropdown.svg"}
                     alt="icon"
-                    width={"17px"}
-                    height={"15px"}
+                    width={17}
+                    height={15}
                     className={styles.original_arrow}
                   />
                 </div>
@@ -155,8 +155,8 @@ const Center_Elements = ({
               <Image
                 src={"/icons/time-icon.svg"}
                 alt="Picture will load soon"
-                height={"20px"}
-                width={"20px"}
+                height={20}
+                width={20}
               />
             </span>
           </div>

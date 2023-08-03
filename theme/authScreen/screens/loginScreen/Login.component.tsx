@@ -65,15 +65,13 @@ const LoginScreen = () => {
         <div className={styles.inputContentDiv}>
           <div className={styles.logo}>
             <Link href="/">
-              <a href="">
-                <Image
-                  src="/images/logo.png"
-                  alt="logo will soon load"
-                  layout={"fill"}
-                  objectFit={"contain"}
-                  quality={100}
-                />
-              </a>
+              <Image
+                src="/images/logo.png"
+                alt="logo will soon load"
+                layout={"fill"}
+                objectFit={"contain"}
+                quality={100}
+              />
             </Link>
             <div className={styles.cross}>
               <HighlightOffOutlinedIcon />
@@ -134,9 +132,7 @@ const LoginScreen = () => {
               {/* <Link href="/reset_password">
                 <a style={{ marginRight: "16px" }}>Change Password?</a>
               </Link> */}
-              <Link href="/forget_password">
-                <a>Forget Password?</a>
-              </Link>
+              <Link href="/forget_password">Forget Password?</Link>
             </div>
             <div className={styles.buttonDiv}>
               <ButtonComponent
@@ -179,14 +175,12 @@ const LoginScreen = () => {
             </p>
             <div className={styles.buttonRightDiv}>
               <Link href="/signup">
-                <a>
-                  <ButtonComponent
-                    type="text"
-                    style={{ height: "100%" }}
-                    value="Sign Up"
-                    fullWidth={true}
-                  />
-                </a>
+                <ButtonComponent
+                  type="text"
+                  style={{ height: "100%" }}
+                  value="Sign Up"
+                  fullWidth={true}
+                />
               </Link>
             </div>
           </div>
