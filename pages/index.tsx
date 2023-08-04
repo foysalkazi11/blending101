@@ -79,7 +79,7 @@ const Home = ({ data }) => {
           <div className="col-9">
             <div className={styles.quick}>
               <div className={styles.quick__site}>
-                <h3>Explore Site: {data}</h3>
+                <h3>Explore Site:SSG {data}</h3>
                 <div>
                   {PAGES &&
                     PAGES.map((page, idx) =>
