@@ -69,6 +69,18 @@ export const GET_WIDGET = gql`
             planName
             description
           }
+          GeneralBlog {
+            _id
+            title
+            type
+            slug
+            coverImage
+            createdBy {
+              displayName
+            }
+            publishDateString
+            commentsCount
+          }
         }
       }
     }

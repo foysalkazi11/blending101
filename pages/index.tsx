@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import Head from "next/head";
 
-import React from "react";
+import React, { useMemo } from "react";
 import { useDispatch } from "react-redux";
 import Overview from "../component/module/Home/Overview.component";
 import {
@@ -36,7 +36,35 @@ const Home = ({ data }) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const widget = useWidget("home-collection");
+  const widgetData = useWidget("home-collection");
+
+  const widget = useMemo(() => {
+    if (!widgetData) return;
+    return {
+      ...widgetData,
+      widgetCollections: widgetData?.widgetCollections?.map((collection) => {
+        const type = collection?.data?.collectionType;
+        if (type === "GeneralBlog") {
+          return {
+            ...collection,
+            data: {
+              ...collection.data,
+              [type]: collection?.data[type].map((item) => ({
+                ...item,
+                publishDateString: "8 months ago",
+                string: "hello",
+              })),
+            },
+          };
+        } else {
+          return collection;
+        }
+      }),
+    };
+  }, [widgetData]);
+
+  // console.log(widgets);
+
   const handleUpdateFilterCriteria = useToUpdateFilterCriteria();
 
   const handleToShowBlendTypes = (value: any) => {
@@ -157,10 +185,19 @@ const Home = ({ data }) => {
               </div>
             </div>
             {widget?.widgetCollections.map((collection) => (
-              <EntitySlider key={collection?.slug} collection={collection} />
+              <EntitySlider
+                key={collection?.slug}
+                collection={collection}
+                methods={{
+                  onComment: (e) => {
+                    e.preventDefault();
+                    console.log("Enabling COMMENT PANEL");
+                  },
+                }}
+              />
             ))}
             {/* ******** BLOG TRENDING ******** */}
-            <div className="mt-40">
+            {/* <div className="mt-40">
               <ContentTray
                 heading="Blog Trending"
                 image="/images/clock-light.svg"
@@ -184,7 +221,7 @@ const Home = ({ data }) => {
                   );
                 })}
               </ContentTray>
-            </div>
+            </div> */}
           </div>
           <div className="col-3">
             <Overview />
@@ -201,10 +238,12 @@ const getDetailURL = (domain: string, id: string, payload?: any) => {
   if (domain === "Recipe") return `recipe_details/${id}/`;
   if (domain === "Plan") return `/planner/plan/${id}/`;
   if (domain === "Wiki") return `/planner/plan/${id}/`;
+  if (domain === "GeneralBlog") return `/planner/plan/${id}/`;
 };
 
-const EntitySlider = ({ collection }) => {
+const EntitySlider = ({ collection, methods }) => {
   const { displayName, slug, data, theme } = collection;
+
   const { _id: themeId, link: file, style } = theme;
   const template = useThemeTemplate(file);
 
@@ -226,7 +265,7 @@ const EntitySlider = ({ collection }) => {
                   href={getDetailURL(data?.collectionType, item?._id)}
                   style={{ color: "initial" }}
                 >
-                  <Theme template={template} data={item} />
+                  <Theme template={template} data={item} methods={methods} />
                 </Link>
               </div>
             </div>
