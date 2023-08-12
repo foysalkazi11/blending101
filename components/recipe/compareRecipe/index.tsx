@@ -3,7 +3,7 @@ import AContainer from "../../../containers/A.container";
 import SubNav from "../share/subNav/SubNav";
 import styles from "./compareRecipe.module.scss";
 import { useRouter } from "next/router";
-import SmallcardComponent from "../../../theme/cards/smallCard/SmallCard.component";
+import SmallCardComponent from "../../../theme/cards/smallCard/SmallCard.component";
 import Carousel from "../../../theme/carousel/carousel.component";
 import Slider from "react-slick";
 import RecipeDetails from "../share/recipeDetails/RecipeDetails";
@@ -674,7 +674,7 @@ const CompareRecipe = () => {
               <Carousel moreSetting={responsiveSetting}>
                 {compareList?.map((recipe, index) => {
                   return (
-                    <SmallcardComponent
+                    <SmallCardComponent
                       key={index}
                       text={recipe?.recipeId?.name}
                       img={recipe?.recipeId?.image[0]?.image}
