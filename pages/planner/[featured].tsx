@@ -19,7 +19,7 @@ import Loader from "../../theme/loader/Loader";
 const ViewAll = () => {
   const router = useRouter();
   const featured = router.query?.featured as string;
-  const module = featured && FEATURED_DICTIONARY[featured];
+  const feature = featured && FEATURED_DICTIONARY[featured];
   const [page, setPage] = useState(1);
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
   const { data, loading, observer } = useFeaturedPlan({
@@ -56,11 +56,11 @@ const ViewAll = () => {
           <div className="flex ai-center">
             <Icon
               className={classes.head__icon}
-              fontName={module?.icon}
+              fontName={feature?.icon}
               size="3rem"
               color="#fe5d1f"
             />
-            <h2 className={classes.head__title}>{module?.title}</h2>
+            <h2 className={classes.head__title}>{feature?.title}</h2>
           </div>
           <IconWarper
             handleClick={() => router.push("/planner")}

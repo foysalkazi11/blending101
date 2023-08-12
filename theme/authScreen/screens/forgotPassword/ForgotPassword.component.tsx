@@ -164,14 +164,12 @@ const ForgotPassword = () => {
             </p>
             <div className={styles.buttonRightDiv}>
               <Link href="/login">
-                <a>
-                  <ButtonComponent
-                    type="text"
-                    style={{ height: "100%" }}
-                    value="Login"
-                    fullWidth={true}
-                  />
-                </a>
+                <ButtonComponent
+                  type="text"
+                  style={{ height: "100%" }}
+                  value="Login"
+                  fullWidth={true}
+                />
               </Link>
             </div>
           </div>

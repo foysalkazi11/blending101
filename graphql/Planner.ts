@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 const PLANNER_RECIPE_LIST_FIELDS = gql`
-  fragment RecipeFields on PlannerRecipe {
+  fragment PlanRecipeFields on PlannerRecipe {
     recipes {
       isMatch
       recipeId {
@@ -97,7 +97,7 @@ export const GET_ALL_PLANNER_RECIPES = gql`
       searchTerm: $searchTerm
       recipeBlendCategory: $type
     ) {
-      ...RecipeFields
+      ...PlanRecipeFields
     }
   }
   ${PLANNER_RECIPE_LIST_FIELDS}
@@ -110,7 +110,7 @@ export const GET_QUEUED_PLANNER_RECIPES = gql`
     $user: String!
   ) {
     getQuedPlanner(startDate: $startDate, endDate: $endDate, userId: $user) {
-      ...RecipeFields
+      ...PlanRecipeFields
     }
   }
   ${PLANNER_RECIPE_LIST_FIELDS}

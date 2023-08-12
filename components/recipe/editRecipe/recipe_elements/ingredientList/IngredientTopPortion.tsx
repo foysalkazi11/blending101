@@ -22,12 +22,7 @@ const IngredientTopPortion = ({
     <>
       <div className={classes.headingDiv}>
         <div className={classes.basket__icon}>
-          <Image
-            src={"/icons/basket.svg"}
-            alt="icon"
-            width={"17px"}
-            height={"15px"}
-          />
+          <Image src={"/icons/basket.svg"} alt="icon" width={17} height={15} />
         </div>
         <h5>Ingredient List</h5>
       </div>

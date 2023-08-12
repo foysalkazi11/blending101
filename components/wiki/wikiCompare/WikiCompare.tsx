@@ -85,7 +85,7 @@ const WikiCompare = () => {
       await addOrRemoveToWikiCompareList({
         variables: { ingredientId, userId: dbUser?._id },
         update(cache) {
-          const { getWikiCompareList } = cache.readQuery({
+          const { getWikiCompareList } = cache.readQuery<any>({
             query: GET_WIKI_COMPARE_LIST,
             variables: { userId: dbUser?._id },
           });

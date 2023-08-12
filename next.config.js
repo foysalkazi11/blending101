@@ -1,6 +1,5 @@
 module.exports = {
   reactStrictMode: true,
-  ignoreDuringBuilds: true,
   trailingSlash: true,
   staticPageGenerationTimeout: 1500,
   images: {

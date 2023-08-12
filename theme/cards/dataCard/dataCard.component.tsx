@@ -33,6 +33,7 @@ import useTurnedOnOrOffVersion from "../../../customHooks/useTurnedOnOrOffVersio
 import CircularRotatingLoader from "../../loader/circularRotatingLoader.component";
 import isEmptyObj from "../../../helperFunc/object/isEmptyObj";
 import { AccessPermission } from "../../../type/recipeCardType";
+import useExtension from "../../../hooks/useExtension";
 
 interface dataCardInterface {
   title: string;
@@ -164,6 +165,7 @@ export default function DatacardComponent({
   const { dbUser } = useAppSelector((state) => state?.user);
   const { handleTurnOnOrOffVersion } = useTurnedOnOrOffVersion();
 
+  const authData = useExtension();
   // view permission
   const hasViewPermission = useCallback(
     (permission: AccessPermission): boolean => {
@@ -419,6 +421,7 @@ export default function DatacardComponent({
                 <a
                   href={origin}
                   onClick={(e) => {
+                    router.reload();
                     const id = "ebbpnaajpojkhndmjmdjabgjmngjgmhm";
                     //@ts-ignore
                     chrome.runtime.sendMessage(
@@ -431,6 +434,15 @@ export default function DatacardComponent({
                           image,
                           origin,
                         },
+                      },
+                      () => {},
+                    );
+                    //@ts-ignore
+                    chrome.runtime.sendMessage(
+                      id,
+                      {
+                        action: "SYNC_AUTH",
+                        payload: authData,
                       },
                       () => {},
                     );

@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { type } from "os";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import ContentTray from "../../../components/recipe/recipeDiscovery/ContentTray/ContentTray.component";
-import { GET_SLIDER_WIDGET } from "../../../graphql/Widget";
+// import { GET_SLIDER_WIDGET } from "../../../graphql/Widget";
 import useThemeMethod from "../../../hooks/modules/useThemeMethod";
 import styles from "./SliderWidget.module.scss";
 
@@ -16,13 +16,13 @@ interface SliderWidgetProps {
 
 const SliderWidget = (props: SliderWidgetProps) => {
   const { name } = props;
-  const { data } = useQuery(GET_SLIDER_WIDGET, {
-    variables: {
-      slug: name,
-    },
-    skip: !name,
-  });
-
+  // const { data } = useQuery(GET_SLIDER_WIDGET, {
+  //   variables: {
+  //     slug: name,
+  //   },
+  //   skip: !name,
+  // });
+  const data: any = {};
   const widget = data?.getWidgetsForClient;
   return (
     <Fragment>

@@ -6,7 +6,7 @@ export const GET_WIDGET_TYPE = gql`
   }
 `;
 
-export const GET_SLIDER_WIDGET = gql`
+export const GET_WIDGET = gql`
   query GetRecipeWidget($slug: String!) {
     getWidgetsForClient(slug: $slug) {
       _id
@@ -14,7 +14,11 @@ export const GET_SLIDER_WIDGET = gql`
       widgetType
       widgetCollections {
         _id
-        themeLink
+        theme {
+          _id
+          link
+          style
+        }
         displayName
         icon
         banner
@@ -30,6 +34,7 @@ export const GET_SLIDER_WIDGET = gql`
         data {
           collectionType
           Recipe {
+            _id
             name
             recipeIngredients
             recipeBlendCategory {
@@ -44,7 +49,6 @@ export const GET_SLIDER_WIDGET = gql`
             prepTime
             cookTime
             totalTime
-            _id
             url
             favicon
             averageRating
@@ -52,6 +56,30 @@ export const GET_SLIDER_WIDGET = gql`
             foodCategories
             notes
             addedToCompare
+          }
+          Wiki {
+            _id
+            wikiTitle
+            wikiDescription
+            type
+            image
+          }
+          Plan {
+            _id
+            planName
+            description
+          }
+          GeneralBlog {
+            _id
+            title
+            type
+            slug
+            coverImage
+            createdBy {
+              displayName
+            }
+            publishDateString
+            commentsCount
           }
         }
       }

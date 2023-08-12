@@ -25,9 +25,7 @@ const Test = () => {
             {widget?.widgetCollections.map((collection) => (
               <div key={collection._id} className="col-3">
                 <Link href={`widget/grid/recipe-theme/${collection.slug}`}>
-                  <a>
                     <h1 className="wc_card">{collection.displayName}</h1>
-                  </a>
                 </Link>
               </div>
             ))}

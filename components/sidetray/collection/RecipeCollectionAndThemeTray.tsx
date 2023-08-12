@@ -348,17 +348,15 @@ export default function RecipeCollectionAndThemeTray({
           elements={(item) => (
             <div key={item.slug} className={"col-4"}>
               <Link href={`/recipe-editor/${item.slug}`}>
-                <a>
-                  <div className={styles.theme__child}>
-                    <div className={styles.theme__cover}>
-                      <div
-                        className={styles.theme__cover__abs}
-                        style={{ backgroundImage: `url(${item.icon})` }}
-                      />
-                    </div>
-                    <p>{item.displayName}</p>
+                <div className={styles.theme__child}>
+                  <div className={styles.theme__cover}>
+                    <div
+                      className={styles.theme__cover__abs}
+                      style={{ backgroundImage: `url(${item.icon})` }}
+                    />
                   </div>
-                </a>
+                  <p>{item.displayName}</p>
+                </div>
               </Link>
             </div>
           )}

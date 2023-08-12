@@ -20,26 +20,22 @@ const AppdownLoadCard = ({
         <div className={styles.orange__card__left__Buttons}>
           <div className={styles.btn}>
             <Link href={"#"}>
-              <a>
-                <Image
-                  src={"/images/app-store@2x.png"}
-                  alt="banner Icon"
-                  layout={"fill"}
-                  objectFit={"contain"}
-                ></Image>
-              </a>
+              <Image
+                src={"/images/app-store@2x.png"}
+                alt="banner Icon"
+                layout={"fill"}
+                objectFit={"contain"}
+              />
             </Link>
           </div>
           <div className={styles.btn}>
             <Link href={"#"}>
-              <a>
-                <Image
-                  src={"/images/google-play@2x.png"}
-                  alt="banner Icon"
-                  layout={"fill"}
-                  objectFit={"contain"}
-                ></Image>
-              </a>
+              <Image
+                src={"/images/google-play@2x.png"}
+                alt="banner Icon"
+                layout={"fill"}
+                objectFit={"contain"}
+              />
             </Link>
           </div>
         </div>
