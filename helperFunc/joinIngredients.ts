@@ -5,7 +5,7 @@ const joniIngredients = (ingredients: Ingredient[] = []) => {
   let ingredientsArr: string[] = [];
   ingredients?.forEach((ing) => {
     const ingredient = ing?.ingredientId?.ingredientName;
-    ingredientsArr.push(ingredient);
+    if (ingredient) ingredientsArr.push(ingredient);
   });
   return ingredientsArr.join(", ");
 };

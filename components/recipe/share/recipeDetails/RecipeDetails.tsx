@@ -9,8 +9,6 @@ import useDraggableInPortal from "../../../../customHooks/useDraggableInPortal";
 import SingleIngredient from "../singleIngredient/SingleIngredient";
 import { IoClose } from "react-icons/io5";
 import IconWraper from "../../../../theme/iconWarper/IconWarper";
-import { useQuery } from "@apollo/client";
-import GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS from "../../../../gqlLib/nutrition/query/getNutrientsListAndGiGlByIngredients";
 import { CompareRecipeType } from "../../../../type/compareRecipeType";
 import joniIngredients from "../../../../helperFunc/joinIngredients";
 import DatacardComponent from "../../../../theme/cards/dataCard/dataCard.component";
