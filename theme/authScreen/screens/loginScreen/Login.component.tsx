@@ -19,12 +19,13 @@ import CREATE_NEW_USER from "../../../../gqlLib/user/mutations/createNewUser";
 import { useForm } from "react-hook-form";
 import CircularRotatingLoader from "../../../loader/circularRotatingLoader.component";
 import notification from "../../../../components/utility/reactToastifyNotification";
+import { useUserHandler } from "../../../../context/AuthProvider";
 
 const LoginScreen = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [createNewUser] = useMutation(CREATE_NEW_USER);
-
+  const { signIn } = useUserHandler();
   const {
     register,
     handleSubmit,
@@ -36,27 +37,28 @@ const LoginScreen = () => {
 
   const onSubmit = async (input) => {
     setIsLoading(true);
-    try {
-      const cognitoData = await Auth.signIn(input?.email, input?.password);
-      const {
-        attributes: { email },
-      } = cognitoData;
-      const { data } = await createNewUser({
-        variables: {
-          data: { email: email, provider: "email" },
-        },
-      });
+    signIn(input?.email, input?.password);
+    // try {
+    //   const cognitoData = await Auth.signIn(input?.email, input?.password);
+    //   const {
+    //     attributes: { email },
+    //   } = cognitoData;
+    //   const { data } = await createNewUser({
+    //     variables: {
+    //       data: { email: email, provider: "email" },
+    //     },
+    //   });
 
-      dispatch(setUser(email));
-      dispatch(setDbUser(data?.createNewUser));
-      dispatch(setProvider("email"));
-      console.log(data);
-      if (!data?.createNewUser?.isCreated) router.push("/user/profile/");
-      else router.push("/");
-    } catch (error) {
-      setIsLoading(false);
-      notification("error", error?.message);
-    }
+    //   dispatch(setUser(email));
+    //   dispatch(setDbUser(data?.createNewUser));
+    //   dispatch(setProvider("email"));
+    //   console.log(data);
+    //   if (!data?.createNewUser?.isCreated) router.push("/user/profile/");
+    //   else router.push("/");
+    // } catch (error) {
+    //   setIsLoading(false);
+    //   notification("error", error?.message);
+    // }
   };
 
   return (
@@ -104,7 +106,6 @@ const LoginScreen = () => {
               }}
               error={{
                 isError: errors?.email ? true : false,
-                //@ts-ignore
                 message: errors?.email?.message,
               }}
             />
@@ -120,7 +121,6 @@ const LoginScreen = () => {
               }}
               error={{
                 isError: errors?.password ? true : false,
-                //@ts-ignore
                 message: errors?.password?.message,
               }}
             />

@@ -1,12 +1,20 @@
-import React, { useEffect, useState, useContext, createContext } from "react";
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useContext,
+  createContext,
+} from "react";
 import { useRouter } from "next/router";
 import { Auth, Amplify } from "aws-amplify";
-import { toast } from "react-toastify";
+import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth/lib/types";
 
 import AmplifyConfig from "../configs/aws";
 import { GET_USER } from "../gqlLib/user/mutations/createNewUser";
 import { useMutation } from "@apollo/client";
+import notification from "../components/utility/reactToastifyNotification";
 
+type TProvider = "Amazon" | "Google" | "Facebook" | "Apple" | "Cognito";
 Amplify.configure({ ...AmplifyConfig, ssr: true });
 
 const DEFAULT_USER = { id: "", name: "", email: "", image: "" };
@@ -15,6 +23,7 @@ interface IAuthContext {
   user: typeof DEFAULT_USER;
   session: any;
   signIn: (email: string, password: string) => void;
+  oAuthSignIn: (provider: TProvider) => void;
   signOut: () => void;
 }
 
@@ -23,6 +32,7 @@ const AuthContext = createContext<IAuthContext>({
   user: DEFAULT_USER,
   session: null,
   signIn: (email: string, password: string) => {},
+  oAuthSignIn: (provider: TProvider) => {},
   signOut: () => {},
 });
 
@@ -43,8 +53,8 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
   const [session, setSession] = useState<any>(null);
   const [getUser] = useMutation(GET_USER);
 
-  useEffect(() => {
-    Auth.currentAuthenticatedUser().then((user) => {
+  const sessionHandler = useCallback(
+    (user) => {
       setSession(user);
       let email, provider;
       if (user?.attributes?.email) {
@@ -66,37 +76,50 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
           email: profile?.email,
           image: profile?.image,
         });
+        if (!profile?.isCreated) router.push("/user/profile/");
+        return profile;
       });
-    });
-  }, [getUser]);
+    },
+    [getUser, router],
+  );
 
-  const signIn = async (email: string, password: string) => {
-    const loading = toast.loading("Logging In", {
-      position: toast.POSITION.TOP_RIGHT,
-    });
+  useEffect(() => {
+    Auth.currentAuthenticatedUser().then(sessionHandler);
+  }, [sessionHandler]);
 
+  const signIn = async (
+    email: string,
+    password: string,
+    onSuccess = (user) => {},
+    onError = (error) => {},
+  ) => {
     try {
-      const user = await Auth.signIn(email, password);
-      toast.update(loading, {
-        render: "Signed in Succesfully",
-        type: "success",
-        isLoading: false,
-        autoClose: 3000,
+      Auth.signIn(email, password)
+        .then(sessionHandler)
+        .then((user) => {
+          router.push("/");
+          onSuccess(user);
+        });
+    } catch (error) {}
+  };
+
+  const oAuthSignIn = async (
+    provider: TProvider,
+    onSuccess = (user) => {},
+    onError = (error) => {},
+  ) => {
+    Auth.federatedSignIn({
+      provider: CognitoHostedUIIdentityProvider[provider],
+    })
+      .then(sessionHandler)
+      .then((user) => {
+        router.push("/");
+        onSuccess(user);
+      })
+      .catch((error) => {
+        notification("error", error?.message);
+        onError(error);
       });
-      setUser(user);
-      localStorage.setItem(
-        "aws_token",
-        user?.signInUserSession?.idToken?.jwtToken,
-      );
-      router.push("/");
-    } catch (error) {
-      toast.update(loading, {
-        render: error.message,
-        type: "error",
-        isLoading: false,
-        autoClose: 3000,
-      });
-    }
   };
 
   const signOut = async () => {
@@ -105,7 +128,7 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
       setUser(DEFAULT_USER);
       router.push("/login");
     } catch (error) {
-      console.log("error signing out: ", error);
+      notification("error", error?.message);
     }
   };
 
@@ -115,6 +138,7 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
         session,
         user,
         signIn,
+        oAuthSignIn,
         signOut,
       }}
     >

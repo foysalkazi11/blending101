@@ -7,6 +7,7 @@ export const GET_USER = gql`
       displayName
       email
       image
+      isCreated
     }
   }
 `;
