@@ -1,9 +1,9 @@
-/* eslint-disable @next/next/no-img-element */
 import React from "react";
 import styles from "./smallcard.module.scss";
 import { IoClose } from "react-icons/io5";
 import IconWarper from "../../iconWarper/IconWarper";
 import { CompareRecipeType } from "../../../type/compareRecipeType";
+import Image from "next/image";
 
 interface SmallCardComponentProps {
   img?: string;
@@ -89,7 +89,7 @@ export default function SmallCardComponent({
         </div>
 
         <div className={styles.smallCard__top}>
-          <img src={img} alt="coriander" />
+          <img src={img} alt="recipe_image" />
         </div>
         <div
           className={styles.smallCard__bottom}
