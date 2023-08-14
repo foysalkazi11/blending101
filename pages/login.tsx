@@ -12,6 +12,7 @@ export default function Login(props) {
 
   return (
     <div>
+      <h1>Build Checking</h1>
       {/* {} */}
       <AuthScreen type={"login"} />
     </div>
