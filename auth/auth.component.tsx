@@ -107,10 +107,6 @@ export const useAuth = () => {
   const { user } = useContext(AuthContext);
   return user;
 };
-export const useSession = () => {
-  const { session } = useContext(AuthContext);
-  return session;
-};
 
 const mapStateToProps = (state) => ({
   activeUser: state.user.user,

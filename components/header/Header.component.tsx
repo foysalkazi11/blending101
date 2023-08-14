@@ -4,7 +4,7 @@ import styles from "./header.module.scss";
 import SocialComponent from "./social/Social.component";
 import notification from "../utility/reactToastifyNotification";
 import { Auth } from "aws-amplify";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { useAppDispatch } from "../../redux/hooks";
 import { setLoading } from "../../redux/slices/utilitySlice";
 import {
   setUser,
@@ -31,6 +31,7 @@ import { faBagShopping } from "@fortawesome/pro-solid-svg-icons";
 import { setIsNotificationTrayOpen } from "../../redux/slices/notificationSlice";
 import { useQuery } from "@apollo/client";
 import GET_SHARE_NOTIFICATION from "../../gqlLib/notification/query/getShareNotification";
+import { useUserHandler, useUser } from "../../context/AuthProvider";
 
 interface headerInterface {
   logo: Boolean;
@@ -47,7 +48,9 @@ export default function HeaderComponent({
 }: headerInterface) {
   const [openPopup, setOpenPopup] = useState(false);
   const dispatch = useAppDispatch();
-  const { user, dbUser } = useAppSelector((state) => state?.user);
+  const user = useUser();
+  const { signOut } = useUserHandler();
+  // const { user, dbUser } = useAppSelector((state) => state?.user);
   const userMenu = useRef(null);
   const userIcon = useRef(null);
   useOnClickOutside(userMenu, () => setOpenPopup(false));
@@ -55,7 +58,7 @@ export default function HeaderComponent({
   const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const { data, loading } = useQuery(GET_SHARE_NOTIFICATION, {
-    variables: { userId: dbUser?._id },
+    variables: { userId: user?.id },
     fetchPolicy: "cache-and-network",
   });
 
@@ -70,20 +73,20 @@ export default function HeaderComponent({
     setShowNotificationPopup(!showNotificationPopup);
   };
 
-  const userSingOut = async () => {
-    dispatch(setLoading(true));
-    try {
-      await Auth.signOut();
-      dispatch(setLoading(false));
-      notification("info", "Logout successfully");
-      dispatch(setUser(""));
-      dispatch(setNonConfirmedUser(""));
-      dispatch(setDbUser({} as DbUserType));
-    } catch (error) {
-      dispatch(setLoading(false));
-      notification("error", error?.message);
-    }
-  };
+  // const userSingOut = async () => {
+  //   dispatch(setLoading(true));
+  //   try {
+  //     await Auth.signOut();
+  //     dispatch(setLoading(false));
+  //     notification("info", "Logout successfully");
+  //     dispatch(setUser(""));
+  //     dispatch(setNonConfirmedUser(""));
+  //     dispatch(setDbUser({} as DbUserType));
+  //   } catch (error) {
+  //     dispatch(setLoading(false));
+  //     notification("error", error?.message);
+  //   }
+  // };
 
   const style = fullWidth ? { width: "100%" } : {};
   const notificationLength = data?.getShareNotification?.totalNotification || 0;
@@ -124,9 +127,9 @@ export default function HeaderComponent({
               <div className={styles.arrowWithText} ref={userIcon}>
                 {user ? (
                   <div className={styles.userName}>
-                    {dbUser?.image ? (
+                    {user?.image ? (
                       <Image
-                        src={dbUser?.image}
+                        src={user?.image}
                         alt="prfile.png"
                         objectFit="cover"
                         layout="fill"
@@ -168,7 +171,7 @@ export default function HeaderComponent({
                           <MdPublishedWithChanges className={styles.icon} />
                         </div>
                       </Link>
-                      <div className={styles.menu} onClick={userSingOut}>
+                      <div className={styles.menu} onClick={signOut}>
                         <p>Logout</p>
                         <MdOutlineLogout className={styles.icon} />
                       </div>

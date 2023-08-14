@@ -7,15 +7,16 @@ import { decodeProtectedHeader, importJWK, jwtVerify } from "jose";
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl.clone();
   const response = NextResponse.next();
-  console.log("****invoked");
   try {
     // Define paths that don't require authentication
     const unauthenticatedPaths = [
       "/login",
-      "/password-reset",
-      "/pricing",
+      "/verify_email",
       "/signup",
-      "/support",
+      "/reset_password",
+      "/forget_password",
+      "/extension",
+      "/404",
     ];
 
     // Allow users to continue for pages that don't require authentication
@@ -23,7 +24,6 @@ export async function middleware(req: NextRequest) {
       return response;
     } else {
       // Authenticate users for protected resources
-      // Cognito data
       const region = process.env.NEXT_PUBLIC_AWS_REGION;
       const poolId = process.env.NEXT_PUBLIC_AWS_COGNITO_POOL_ID;
       const clientId = process.env.NEXT_PUBLIC_AWS_APP_CLIENT_ID;
@@ -55,10 +55,7 @@ export async function middleware(req: NextRequest) {
 
           // Verify the users JWT
           const jwtVerified = await jwtVerify(token, jwtImport)
-            .then((res) => {
-              console.log(res);
-              return res.payload.email_verified;
-            })
+            .then((res) => res.payload.email_verified)
             .catch(() => {});
           // Allow verified users to continue
           if (jwtVerified) {
@@ -71,16 +68,20 @@ export async function middleware(req: NextRequest) {
   } catch (err) {
     console.log("err", err);
   }
-  // Send 401 when an unauthenticated user trys to access API endpoints
-  if (url.pathname.includes("api")) {
-    return new Response("Auth required", { status: 401 });
-  } else {
-    // Redirect unauthenticated users to the login page when they attempt to access protected pages
-    return NextResponse.redirect(`${url.origin}/login`);
-  }
+
+  // Redirect unauthenticated users to the login page when they attempt to access protected pages
+  return NextResponse.redirect(`${url.origin}/login`);
 }
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ["/"],
+  matcher: [
+    "/",
+    "/challenge",
+    "/challenge/invited",
+    "/challenge/shared",
+    "/planner",
+    "/planner/:path",
+    "/planner/plan/:path* ",
+  ],
 };

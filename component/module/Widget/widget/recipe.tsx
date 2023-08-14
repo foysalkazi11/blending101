@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import AContainer from "../../containers/A.container";
-import { useRecipeWidget } from "../../hooks/modules/useWidget";
-import Banner from "../../component/molecules/Banner/Banner.component";
+import AContainer from "../../../../containers/A.container";
+import { useRecipeWidget } from "../../../../hooks/modules/useWidget";
+import Banner from "../../../molecules/Banner/Banner.component";
 import Link from "next/link";
-import PlanCard from "../../component/module/Planner/PlanCard.component";
-import ContentTray from "../../components/recipe/recipeDiscovery/ContentTray/ContentTray.component";
-import { data } from "../../data/Temporary";
-import { useThemeTemplate } from "../../hooks/modules/useThemeMethod";
-import Theme from "../../component/molecules/Theme/Theme.component";
+import PlanCard from "../../Planner/PlanCard.component";
+import ContentTray from "../../../../components/recipe/recipeDiscovery/ContentTray/ContentTray.component";
+import { data } from "../../../../data/Temporary";
+import { useThemeTemplate } from "../../../../hooks/modules/useThemeMethod";
+import Theme from "../../../molecules/Theme/Theme.component";
 
 const Test = () => {
   const widget = useRecipeWidget("recipe-theme");

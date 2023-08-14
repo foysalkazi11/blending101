@@ -1,10 +1,8 @@
 import "../styles/globals.scss";
 import { store } from "../redux/store";
 import { Provider } from "react-redux";
-import AuthProvider from "../auth/auth.component";
+import AuthProvider from "../context/AuthProvider";
 import { AppProps } from "next/app";
-import Amplify from "aws-amplify";
-import awsconfig from "../configs/aws";
 import Loader from "../theme/loader/Loader";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -21,7 +19,6 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
 config.autoAddCss = false;
-Amplify.configure({ ...awsconfig, ssr: true });
 
 function MyApp({ Component, pageProps }: AppProps) {
   const handleSubmitError = (error: any) => {
