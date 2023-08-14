@@ -35,7 +35,7 @@ const WikiLeft = ({
   const [showWikiType, setShowWikiType] = useState(true);
   const [showTabMenu, setShowTabMenu] = useState(true);
   const [toggle, setToggle] = useState(0);
-  const [panelHeight, setPanelHeight] = useState(window.innerHeight);
+  const [panelHeight, setPanelHeight] = useState(0);
   const router = useRouter();
   const [type, setType] = useState<WikiType>("Ingredient");
   const checkActive = (id: string) => {
@@ -50,6 +50,10 @@ const WikiLeft = ({
 
     return rect?.top;
   };
+
+  useEffect(() => {
+    setPanelHeight(window?.innerHeight);
+  }, []);
 
   const listenToScroll = React.useCallback(() => {
     const WikiType = document.getElementById("wikiTypeContainer");

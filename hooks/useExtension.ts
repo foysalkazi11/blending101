@@ -1,5 +1,4 @@
-import React, { useMemo } from "react";
-import { useSession } from "../auth/auth.component";
+import { useSession } from "../context/AuthProvider";
 import { useAppSelector } from "../redux/hooks";
 
 const useExtension = () => {

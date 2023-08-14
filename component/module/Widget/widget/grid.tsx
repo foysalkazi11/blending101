@@ -1,8 +1,8 @@
 import React from "react";
-import AContainer from "../../containers/A.container";
-import Widget from "../../component/module/Widget/Widget.component";
-import { useWidgetCollections } from "../../hooks/modules/useWidget";
-import Banner from "../../component/molecules/Banner/Banner.component";
+import AContainer from "../../../../containers/A.container";
+import Widget from "../Widget.component";
+import { useWidgetCollections } from "../../../../hooks/modules/useWidget";
+import Banner from "../../../molecules/Banner/Banner.component";
 import Link from "next/link";
 
 const Test = () => {
@@ -25,7 +25,7 @@ const Test = () => {
             {widget?.widgetCollections.map((collection) => (
               <div key={collection._id} className="col-3">
                 <Link href={`widget/grid/recipe-theme/${collection.slug}`}>
-                    <h1 className="wc_card">{collection.displayName}</h1>
+                  <h1 className="wc_card">{collection.displayName}</h1>
                 </Link>
               </div>
             ))}

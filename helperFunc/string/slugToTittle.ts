@@ -1,6 +1,6 @@
 const slugToTitle = (str: string) => {
   return str
-    .split("-")
+    ?.split("-")
     .join(" ")
     .replace(/\w\S*/g, function (txt) {
       return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();

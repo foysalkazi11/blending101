@@ -204,32 +204,6 @@ const Home = ({ props }) => {
                 }}
               />
             ))}
-            {/* ******** BLOG TRENDING ******** */}
-            {/* <div className="mt-40">
-              <ContentTray
-                heading="Blog Trending"
-                image="/images/clock-light.svg"
-                allUrl="/discovery"
-              >
-                {[1, 2, 3, 4, 5, 6]?.map((item, index) => {
-                  return (
-                    <div className={styles.slider__card} key={`${index}`}>
-                      <div style={{ paddingRight: "1rem" }}>
-                        <SpecialcardComponent
-                          type="secondary"
-                          img="/cards/milk.png"
-                          title="Another Special Card With Secondary Attribute."
-                          style={undefined}
-                          imageHeight={undefined}
-                          color={undefined}
-                          rx={23}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-              </ContentTray>
-            </div> */}
           </div>
           <div className="col-3">
             <Overview />
@@ -283,42 +257,3 @@ const EntitySlider = ({ collection, methods }) => {
     </div>
   );
 };
-
-// export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
-//   const { Auth } = withSSRContext(context);
-//   try {
-//     const user = await Auth.currentAuthenticatedUser();
-//     let email, provider;
-//     if (user?.attributes?.email) {
-//       email = user?.attributes?.email;
-//       provider = "email";
-//     } else {
-//       email = user?.signInUserSession?.idToken?.payload?.email;
-//       provider = user?.signInUserSession?.idToken?.payload?.identities;
-//     }
-//     const { data } = await client.mutate({
-//       mutation: GET_USER,
-//       variables: {
-//         data: { email: email || user?.signInUserSession, provider },
-//       },
-//     });
-//     const profile = data?.createNewUser;
-//     return {
-//       props: {
-//         // data: JSON.stringify(context),
-//         isAuthenticated: true,
-//         id: profile?._id,
-//         name: profile?.displayName,
-//         email: profile?.email,
-//         image: profile?.image,
-//       },
-//     };
-//   } catch (err) {
-//     return {
-//       redirect: {
-//         destination: "/login",
-//         permanent: false,
-//       },
-//     };
-//   }
-// };

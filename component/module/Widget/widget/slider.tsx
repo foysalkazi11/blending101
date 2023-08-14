@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import AContainer from "../../containers/A.container";
-import { usePlanWidget } from "../../hooks/modules/useWidget";
-import Banner from "../../component/molecules/Banner/Banner.component";
+import AContainer from "../../../../containers/A.container";
+import { usePlanWidget } from "../../../../hooks/modules/useWidget";
+import Banner from "../../../molecules/Banner/Banner.component";
 import Link from "next/link";
-import PlanCard from "../../component/module/Planner/PlanCard.component";
-import ContentTray from "../../components/recipe/recipeDiscovery/ContentTray/ContentTray.component";
-import { data } from "../../data/Temporary";
+import PlanCard from "../../Planner/PlanCard.component";
+import ContentTray from "../../../../components/recipe/recipeDiscovery/ContentTray/ContentTray.component";
+import { data } from "../../../../data/Temporary";
 
 const Test = () => {
   const [tab, setTab] = useState("");

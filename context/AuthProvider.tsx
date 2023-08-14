@@ -1,27 +1,27 @@
 import React, { useEffect, useState, useContext, createContext } from "react";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { Auth, Amplify } from "aws-amplify";
 import { toast } from "react-toastify";
 
 import AmplifyConfig from "../configs/aws";
+import { GET_USER } from "../gqlLib/user/mutations/createNewUser";
+import { useMutation } from "@apollo/client";
 
-Amplify.configure(AmplifyConfig);
+Amplify.configure({ ...AmplifyConfig, ssr: true });
 
-const DEFAULT_ADMIN = { name: "", email: "", image: "" };
-
-const getValue = (user: any, key: string) => user?.attributes[key] === "true";
+const DEFAULT_USER = { id: "", name: "", email: "", image: "" };
 
 interface IAuthContext {
-  user: any;
-  admin: { name: string; email: string; image: string };
+  user: typeof DEFAULT_USER;
+  session: any;
   signIn: (email: string, password: string) => void;
   signOut: () => void;
 }
 
 // INITIALIZE 1: CREATE AUTH CONTEXT
 const AuthContext = createContext<IAuthContext>({
-  user: {},
-  admin: DEFAULT_ADMIN,
+  user: DEFAULT_USER,
+  session: null,
   signIn: (email: string, password: string) => {},
   signOut: () => {},
 });
@@ -38,10 +38,37 @@ interface AuthProviderProps {
 const AuthProvider: React.FC<AuthProviderProps> = (props) => {
   const { children } = props;
   const router = useRouter();
-  const asPath = router.asPath;
 
-  const [user, setUser] = useState<any>(null);
-  const [admin, setAdmin] = useState(DEFAULT_ADMIN);
+  const [user, setUser] = useState(DEFAULT_USER);
+  const [session, setSession] = useState<any>(null);
+  const [getUser] = useMutation(GET_USER);
+
+  useEffect(() => {
+    Auth.currentAuthenticatedUser().then((user) => {
+      setSession(user);
+      let email, provider;
+      if (user?.attributes?.email) {
+        email = user?.attributes?.email;
+        provider = "email";
+      } else {
+        email = user?.signInUserSession?.idToken?.payload?.email;
+        provider = user?.signInUserSession?.idToken?.payload?.identities;
+      }
+      getUser({
+        variables: {
+          data: { email: email || user?.signInUserSession, provider },
+        },
+      }).then((response) => {
+        const profile = response?.data?.createNewUser;
+        setUser({
+          id: profile?._id,
+          name: profile?.displayName,
+          email: profile?.email,
+          image: profile?.image,
+        });
+      });
+    });
+  }, [getUser]);
 
   const signIn = async (email: string, password: string) => {
     const loading = toast.loading("Logging In", {
@@ -75,9 +102,8 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
   const signOut = async () => {
     try {
       await Auth.signOut();
-      setUser({});
-      localStorage.removeItem("aws_token");
-      router.push("/auth/login");
+      setUser(DEFAULT_USER);
+      router.push("/login");
     } catch (error) {
       console.log("error signing out: ", error);
     }
@@ -86,8 +112,8 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
   return (
     <AuthContext.Provider
       value={{
+        session,
         user,
-        admin,
         signIn,
         signOut,
       }}
@@ -104,7 +130,12 @@ export const useUser = () => {
   return user;
 };
 
-export const useAdmin = () => {
-  const { admin } = useContext(AuthContext);
-  return admin;
+export const useUserHandler = () => {
+  const { user, session, ...methods } = useContext(AuthContext);
+  return methods;
+};
+
+export const useSession = () => {
+  const { session } = useContext(AuthContext);
+  return session;
 };
