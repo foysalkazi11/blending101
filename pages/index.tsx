@@ -1,5 +1,8 @@
+import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
+
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
+import { withSSRContext } from "aws-amplify";
 import Head from "next/head";
 
 import React, { useMemo } from "react";
@@ -23,10 +26,15 @@ import CardComponent from "../theme/cards/card.component";
 import Theme from "../component/molecules/Theme/Theme.component";
 import { useThemeTemplate } from "../hooks/modules/useThemeMethod";
 import SpecialcardComponent from "../theme/cards/specialCard.component";
+import client from "../gqlLib/client";
+import CREATE_NEW_USER, {
+  GET_USER,
+} from "../gqlLib/user/mutations/createNewUser";
+
 const defaultBlendImg =
   "https://blending.s3.us-east-1.amazonaws.com/3383678.jpg";
 
-const Home = ({ data }) => {
+const Home = ({ props }) => {
   const { allFilters } = useAppSelector((state) => state?.filterRecipe);
   const displayName = useAppSelector(
     (state) => state.user?.dbUser?.displayName || "",
@@ -107,7 +115,7 @@ const Home = ({ data }) => {
           <div className="col-9">
             <div className={styles.quick}>
               <div className={styles.quick__site}>
-                <h3>Explore Site:SSG {data}</h3>
+                <h3>Explore Site</h3>
                 <div>
                   {PAGES &&
                     PAGES.map((page, idx) =>
@@ -276,6 +284,41 @@ const EntitySlider = ({ collection, methods }) => {
   );
 };
 
-export async function getServerSideProps() {
-  return { props: { data: "Hello World" } };
-}
+// export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
+//   const { Auth } = withSSRContext(context);
+//   try {
+//     const user = await Auth.currentAuthenticatedUser();
+//     let email, provider;
+//     if (user?.attributes?.email) {
+//       email = user?.attributes?.email;
+//       provider = "email";
+//     } else {
+//       email = user?.signInUserSession?.idToken?.payload?.email;
+//       provider = user?.signInUserSession?.idToken?.payload?.identities;
+//     }
+//     const { data } = await client.mutate({
+//       mutation: GET_USER,
+//       variables: {
+//         data: { email: email || user?.signInUserSession, provider },
+//       },
+//     });
+//     const profile = data?.createNewUser;
+//     return {
+//       props: {
+//         // data: JSON.stringify(context),
+//         isAuthenticated: true,
+//         id: profile?._id,
+//         name: profile?.displayName,
+//         email: profile?.email,
+//         image: profile?.image,
+//       },
+//     };
+//   } catch (err) {
+//     return {
+//       redirect: {
+//         destination: "/login",
+//         permanent: false,
+//       },
+//     };
+//   }
+// };

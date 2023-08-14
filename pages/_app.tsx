@@ -21,7 +21,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
 config.autoAddCss = false;
-Amplify.configure(awsconfig);
+Amplify.configure({ ...awsconfig, ssr: true });
 
 function MyApp({ Component, pageProps }: AppProps) {
   const handleSubmitError = (error: any) => {
