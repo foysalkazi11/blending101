@@ -7,6 +7,20 @@ import { decodeProtectedHeader, importJWK, jwtVerify } from "jose";
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl.clone();
   const response = NextResponse.next();
+  // Authenticate users for protected resources
+  const region = process.env.NEXT_PUBLIC_AWS_REGION;
+  const poolId = process.env.NEXT_PUBLIC_AWS_COGNITO_POOL_ID;
+  const clientId = process.env.NEXT_PUBLIC_AWS_APP_CLIENT_ID;
+
+  // Get the user's token
+  const token = req.cookies
+    .getAll()
+    .find((cookie) =>
+      new RegExp(
+        `CognitoIdentityServiceProvider\\.${clientId}\\..+\\.idToken`,
+      ).test(cookie.name),
+    )?.value;
+
   try {
     // Define paths that don't require authentication
     const unauthenticatedPaths = [
@@ -23,20 +37,6 @@ export async function middleware(req: NextRequest) {
     if (unauthenticatedPaths.includes(url.pathname)) {
       return response;
     } else {
-      // Authenticate users for protected resources
-      const region = process.env.NEXT_PUBLIC_AWS_REGION;
-      const poolId = process.env.NEXT_PUBLIC_AWS_COGNITO_POOL_ID;
-      const clientId = process.env.NEXT_PUBLIC_AWS_APP_CLIENT_ID;
-
-      // Get the user's token
-      const token = req.cookies
-        .getAll()
-        .find((cookie) =>
-          new RegExp(
-            `CognitoIdentityServiceProvider\\.${clientId}\\..+\\.idToken`,
-          ).test(cookie.name),
-        )?.value;
-
       if (token) {
         // Get keys from AWS
         const { keys } = await fetch(
@@ -75,9 +75,11 @@ export async function middleware(req: NextRequest) {
   // console.log("**********************************");
 
   // const pattern = /\?code=[a-zA-Z0-9-]+&state=[a-zA-Z0-9]+/;
-  // if (url.pathname !== "/" && !pattern.test(url.search)) {
-  //   return NextResponse.redirect(`${url.origin}/login`);
+  // if (url.pathname === "/" && pattern.test(url.search) && token) {
+  //   return response;
   // }
+  // return NextResponse.redirect(`${url.origin}/loginss`);
+
   // Redirect unauthenticated users to the login page when they attempt to access protected pages
   // return NextResponse.redirect(`${url.origin}/login`);
 }

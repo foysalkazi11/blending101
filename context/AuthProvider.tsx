@@ -87,6 +87,7 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
   );
 
   useEffect(() => {
+    if (router.asPath.startsWith("/login/#access_token=")) router.push("/");
     if (
       [
         "/login",
@@ -97,6 +98,7 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
       ].includes(router.pathname)
     )
       return;
+
     Auth.currentAuthenticatedUser().then(sessionHandler);
   }, [router, sessionHandler]);
 
