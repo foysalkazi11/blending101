@@ -78,7 +78,7 @@ const Home = ({ data }) => {
     }
 
     dispatch(updateSidebarActiveMenuName("Blends"));
-    router.push("/discovery");
+    router.push("/recipe_discovery");
   };
 
   const handleToRoutePage = (
@@ -201,7 +201,7 @@ const Home = ({ data }) => {
               <ContentTray
                 heading="Blog Trending"
                 image="/images/clock-light.svg"
-                allUrl="/discovery"
+                allUrl="/recipe_discovery"
               >
                 {[1, 2, 3, 4, 5, 6]?.map((item, index) => {
                   return (
