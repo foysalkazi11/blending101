@@ -1,5 +1,8 @@
+import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
+
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
+import { withSSRContext } from "aws-amplify";
 import Head from "next/head";
 
 import React, { useMemo } from "react";
@@ -23,10 +26,15 @@ import CardComponent from "../theme/cards/card.component";
 import Theme from "../component/molecules/Theme/Theme.component";
 import { useThemeTemplate } from "../hooks/modules/useThemeMethod";
 import SpecialcardComponent from "../theme/cards/specialCard.component";
+import client from "../gqlLib/client";
+import CREATE_NEW_USER, {
+  GET_USER,
+} from "../gqlLib/user/mutations/createNewUser";
+
 const defaultBlendImg =
   "https://blending.s3.us-east-1.amazonaws.com/3383678.jpg";
 
-const Home = ({ data }) => {
+const Home = ({ props }) => {
   const { allFilters } = useAppSelector((state) => state?.filterRecipe);
   const displayName = useAppSelector(
     (state) => state.user?.dbUser?.displayName || "",
@@ -107,7 +115,7 @@ const Home = ({ data }) => {
           <div className="col-9">
             <div className={styles.quick}>
               <div className={styles.quick__site}>
-                <h3>Explore Site:SSG {data}</h3>
+                <h3>Explore Site</h3>
                 <div>
                   {PAGES &&
                     PAGES.map((page, idx) =>
@@ -196,32 +204,6 @@ const Home = ({ data }) => {
                 }}
               />
             ))}
-            {/* ******** BLOG TRENDING ******** */}
-            {/* <div className="mt-40">
-              <ContentTray
-                heading="Blog Trending"
-                image="/images/clock-light.svg"
-                allUrl="/recipe_discovery"
-              >
-                {[1, 2, 3, 4, 5, 6]?.map((item, index) => {
-                  return (
-                    <div className={styles.slider__card} key={`${index}`}>
-                      <div style={{ paddingRight: "1rem" }}>
-                        <SpecialcardComponent
-                          type="secondary"
-                          img="/cards/milk.png"
-                          title="Another Special Card With Secondary Attribute."
-                          style={undefined}
-                          imageHeight={undefined}
-                          color={undefined}
-                          rx={23}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-              </ContentTray>
-            </div> */}
           </div>
           <div className="col-3">
             <Overview />
@@ -275,7 +257,3 @@ const EntitySlider = ({ collection, methods }) => {
     </div>
   );
 };
-
-export async function getServerSideProps() {
-  return { props: { data: "Hello World" } };
-}

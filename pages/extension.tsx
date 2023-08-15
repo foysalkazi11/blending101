@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useSession } from "../auth/auth.component";
 import { useAppSelector } from "../redux/hooks";
+import { useSession, useUser } from "../context/AuthProvider";
 
 const TEST_DOMAIN = "http://localhost:3000";
 const EXTENSION_DOMAIN =
   "chrome-extension://ebbpnaajpojkhndmjmdjabgjmngjgmhm/src/popup/popup.html";
 
 const Extension = () => {
+  const user = useUser();
   const session = useSession();
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
-  const displayName = useAppSelector(
-    (state) => state.user?.dbUser?.displayName || "",
-  );
   const picture = useAppSelector((state) => state.user?.dbUser?.image || "");
 
   const [data, setData] = useState("");
@@ -22,8 +19,8 @@ const Extension = () => {
         token: token?.jwtToken || "",
         expiration_time: token?.exp || "",
         email: session?.attributes?.email || "",
-        userId,
-        name: displayName || "Unknown",
+        userId: user.id,
+        name: user.name || "Unknown",
         picture,
       }),
       EXTENSION_DOMAIN,
