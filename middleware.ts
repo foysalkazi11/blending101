@@ -61,10 +61,10 @@ export async function middleware(req: NextRequest) {
           if (jwtVerified) {
             response.cookies.set("bearer_token", token);
             return response;
-          } else {
-            return NextResponse.redirect(`${url.origin}/login`);
           }
         }
+      } else {
+        return NextResponse.redirect(`${url.origin}/login`);
       }
     }
   } catch (err) {
