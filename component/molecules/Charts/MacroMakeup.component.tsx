@@ -114,7 +114,6 @@ const CustomBar = (props) => {
 
 const CustomLegend = (props) => {
   const { payload } = props;
-  console.log(payload);
   return (
     <ul className={styles.insights__legend}>
       {payload.map((entry, index) => (
