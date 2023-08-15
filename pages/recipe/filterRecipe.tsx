@@ -112,7 +112,7 @@ const RecipeFilter = () => {
     dispatch(resetAllFilters());
     dispatch(updateShowFilterOrSearchRecipes(false));
     setPageNum(1);
-    router.push("/discovery");
+    router.push("/recipe_discovery");
   };
 
   useEffect(() => {
