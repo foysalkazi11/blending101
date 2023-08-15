@@ -43,7 +43,7 @@ const LoginScreen = () => {
               <HighlightOffOutlinedIcon />
             </div>
           </div>
-          <h2>Login</h2>
+          <h2>Login Build</h2>
           {/* <button onClick={logOut}>Log out</button> */}
           <div className={styles.quickLogin}>
             <span>Quick and easy social login</span>
