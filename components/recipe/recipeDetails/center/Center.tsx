@@ -190,7 +190,7 @@ const Center = ({
   //       userId: variables?.userId,
   //     });
   //   }
-  //   router?.push("/discovery");
+  //   router?.push("/recipe_discovery");
   // };
 
   // handle to open version tray

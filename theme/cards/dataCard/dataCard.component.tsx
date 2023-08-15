@@ -480,7 +480,9 @@ export default function DatacardComponent({
                           if (hasInteractionPermission("version")) {
                             versionHandler
                               ? versionHandler(recipeId)
-                              : router.push(`/versionCompare/${recipeId}`);
+                              : router.push(
+                                  `/recipe/versionCompare/${recipeId}`,
+                                );
                           }
                         }}
                       />
