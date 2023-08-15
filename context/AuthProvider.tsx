@@ -64,12 +64,13 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
         email = user?.signInUserSession?.idToken?.payload?.email;
         provider = user?.signInUserSession?.idToken?.payload?.identities;
       }
-      getUser({
+      return getUser({
         variables: {
           data: { email: email || user?.signInUserSession, provider },
         },
       }).then((response) => {
         const profile = response?.data?.createNewUser;
+        console.log(profile);
         setUser({
           id: profile?._id,
           name: profile?.displayName,
@@ -84,8 +85,19 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
   );
 
   useEffect(() => {
+    const page = router.pathname;
+    if (
+      [
+        "/login",
+        "/signup",
+        "/verify_email",
+        "/forget_password",
+        "/welcome_blending101_extension",
+      ].includes(page)
+    )
+      return;
     Auth.currentAuthenticatedUser().then(sessionHandler);
-  }, [sessionHandler]);
+  }, [router.pathname, sessionHandler]);
 
   const signIn = async (
     email: string,
@@ -131,7 +143,8 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
       notification("error", error?.message);
     }
   };
-
+  // console.log(user);
+  // if (user.id === "") return <></>;
   return (
     <AuthContext.Provider
       value={{
