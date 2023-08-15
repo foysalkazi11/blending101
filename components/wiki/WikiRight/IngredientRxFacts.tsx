@@ -13,6 +13,7 @@ import {
 } from "@fortawesome/pro-solid-svg-icons";
 import { categories } from "../../../data/categories";
 import { useAppSelector } from "../../../redux/hooks";
+import { useUser } from "../../../context/AuthProvider";
 
 interface ingredientState {
   name: string;
@@ -36,7 +37,7 @@ function IngredientRxFacts({
   const [dpd, setDpd] = useState("All");
   const [ingredientData, setIngredientData] = useState([]);
   const [ascendingOrder, setAscendingOrder] = useState(true);
-  const userId = useAppSelector((state) => state.user.dbUser._id);
+  const userId = useUser().id;
 
   const [getAllIngredientsBasedOnNutrition, { loading, error }] = useLazyQuery(
     GET_ONLY_INGREDIENTS_BASED_ON_NURTITION,

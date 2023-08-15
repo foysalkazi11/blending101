@@ -1,3 +1,4 @@
+import { useUser } from "../../../../context/AuthProvider";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import {
   updateAllFilterRecipes,
@@ -7,7 +8,7 @@ import notification from "../../../utility/reactToastifyNotification";
 
 const useHandleSearchRecipe = () => {
   const dispatch = useAppDispatch();
-  const { dbUser } = useAppSelector((state) => state.user);
+  const user = useUser();
   const { allFilterRecipes } = useAppSelector((state) => state?.filterRecipe);
 
   const handleSearchRecipes = async (
@@ -30,7 +31,7 @@ const useHandleSearchRecipe = () => {
       }
       const { data } = await searchRecipe({
         variables: {
-          userId: dbUser._id,
+          userId: user.id,
           searchTerm: value,
           page: pageNo,
           limit: limitParPage,

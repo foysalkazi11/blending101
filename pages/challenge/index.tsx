@@ -37,6 +37,7 @@ import { theme } from "../../configs/themes";
 
 import styles from "../../styles/pages/planner.module.scss";
 import { format } from "date-fns";
+import { useUser } from "../../context/AuthProvider";
 
 const ChallengePage = () => {
   const upload = useRef<any>();
@@ -49,7 +50,7 @@ const ChallengePage = () => {
   const [panelHeight, setPanelHeight] = useState("100%");
 
   const dispatch = useAppDispatch();
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const userId = useUser().id;
   const { showPostForm: showUpload } = useAppSelector(
     (state) => state.challenge,
   );

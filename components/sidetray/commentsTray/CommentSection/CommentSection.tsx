@@ -21,6 +21,7 @@ import GET_ALL_COMMENTS_FOR_A_RECIPE from "../../../../gqlLib/comments/query/get
 import CommentsTopSection from "../../common/commentsTopSection/CommentsTopSection";
 import CommentsBottomSection from "../../common/commentsButtomSection/CommentsBottomSection";
 import CHANGE_RECIPE_RATING from "../../../../gqlLib/recipeRating/mutation/changeRecipeRating";
+import { useUser } from "../../../../context/AuthProvider";
 
 type CommentSectionProps = {
   // allComments: any[];
@@ -33,6 +34,7 @@ type CommentSectionProps = {
 const CommentSection = ({ personalRating }: CommentSectionProps) => {
   const [showCommentBox, setShowCommentBox] = useState(false);
   const [rating, setRating] = useState(0);
+  const user = useUser();
   const { dbUser } = useAppSelector((state) => state?.user);
   const [updateComment, setUpdateComment] = useState(false);
   const [updateCommentId, setUpdateCommentId] = useState("");
@@ -64,7 +66,7 @@ const CommentSection = ({ personalRating }: CommentSectionProps) => {
         variables: {
           data: {
             recipeId: activeRecipeId,
-            userId: dbUser?._id,
+            userId: user.id,
           },
         },
       });
@@ -114,7 +116,7 @@ const CommentSection = ({ personalRating }: CommentSectionProps) => {
         variables: {
           data: {
             recipeId: activeRecipeId,
-            userId: dbUser?._id,
+            userId: user.id,
             commentId: id,
           },
         },
@@ -124,7 +126,7 @@ const CommentSection = ({ personalRating }: CommentSectionProps) => {
             variables: {
               data: {
                 recipeId: activeRecipeId,
-                userId: dbUser?._id,
+                userId: user.id,
               },
             },
             data: {
@@ -167,7 +169,7 @@ const CommentSection = ({ personalRating }: CommentSectionProps) => {
               comment: comment,
               // rating: rating || 1,
               recipeId: activeRecipeId,
-              userId: dbUser?._id,
+              userId: user.id,
             },
           },
           update(cache, { data: { createComment } }) {
@@ -176,7 +178,7 @@ const CommentSection = ({ personalRating }: CommentSectionProps) => {
               variables: {
                 data: {
                   recipeId: activeRecipeId,
-                  userId: dbUser?._id,
+                  userId: user.id,
                 },
               },
               data: {
@@ -205,7 +207,7 @@ const CommentSection = ({ personalRating }: CommentSectionProps) => {
             data: {
               editId: updateCommentId,
               recipeId: activeRecipeId,
-              userId: dbUser?._id,
+              userId: user.id,
               editableObject: {
                 // rating: rating,
                 comment: comment,
@@ -218,7 +220,7 @@ const CommentSection = ({ personalRating }: CommentSectionProps) => {
               variables: {
                 data: {
                   recipeId: activeRecipeId,
-                  userId: dbUser?._id,
+                  userId: user.id,
                 },
               },
               data: {
@@ -264,7 +266,7 @@ const CommentSection = ({ personalRating }: CommentSectionProps) => {
         variables: {
           rating: newRating,
           recipeId: activeRecipeId,
-          userId: dbUser?._id,
+          userId: user.id,
         },
       });
 
@@ -276,12 +278,7 @@ const CommentSection = ({ personalRating }: CommentSectionProps) => {
         "recipeId",
       );
     },
-    [
-      activeRecipeId,
-      changeRecipeRating,
-      dbUser?._id,
-      referenceOfRecipeUpdateFunc,
-    ],
+    [activeRecipeId, changeRecipeRating, user.id, referenceOfRecipeUpdateFunc],
   );
   useEffect(() => {
     setRating(personalRating);
@@ -354,7 +351,7 @@ const CommentSection = ({ personalRating }: CommentSectionProps) => {
                       isAbleToSetRating={false}
                       user={comment?.userId}
                       page="recipe"
-                      isCurrentUser={comment?.userId?._id === dbUser?._id}
+                      isCurrentUser={comment?.userId?._id === user.id}
                       updateCommentValue={updateCommentValue}
                       removeComment={removeComment}
                       deleteCommentLoading={deleteCommentsLoading}
@@ -362,7 +359,7 @@ const CommentSection = ({ personalRating }: CommentSectionProps) => {
                     />
                     <CommentsBottomSection
                       userComments={comment}
-                      isCurrentUser={comment?.userId?._id === dbUser?._id}
+                      isCurrentUser={comment?.userId?._id === user.id}
                       updateCommentValue={updateCommentValue}
                       removeComment={removeComment}
                       deleteCommentLoading={deleteCommentsLoading}

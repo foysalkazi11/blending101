@@ -5,12 +5,13 @@ import { useCallback, useRef, useState } from "react";
 import { SHARE_CHALLENGE } from "../../../graphql/Challenge";
 import { dataURLtoFile } from "../../../helpers/File";
 import { useAppSelector } from "../../../redux/hooks";
+import { useUser } from "../../../context/AuthProvider";
 
 const useChallengeShare = (challenge) => {
   const [link, setLink] = useState("");
   const challengeProgress = useRef<HTMLDivElement>(null);
 
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const userId = useUser().id;
 
   const [shareChallenge] = useMutation(SHARE_CHALLENGE);
 

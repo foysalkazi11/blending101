@@ -20,9 +20,10 @@ import { useAppSelector } from "../../redux/hooks";
 
 import styles from "../../styles/pages/challenge.module.scss";
 import HeadTagInfo from "../../theme/headTagInfo";
+import { useUser } from "../../context/AuthProvider";
 
 const Invited = () => {
-  const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const memberId = useUser().id;
   const dispatch = useDispatch();
   const router = useRouter();
   const { data, loading } = useQuery(GET_INVITE_CHALLENGE_DETAILS, {

@@ -26,6 +26,7 @@ import Textfield from "../../../organisms/Forms/Textfield.component";
 
 import styles from "./Panel.module.scss";
 import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
+import { useUser } from "../../../../context/AuthProvider";
 
 export const defaultGrocery = {
   ammount: "",
@@ -75,7 +76,7 @@ const SearchPanel = (props: SearchPanelProps) => {
   const hideOutsideClick = useHideOnClickOutside(resetPanel);
 
   const dispatch = useAppDispatch();
-  const userId = useAppSelector((state) => state.user.dbUser);
+  const user = useUser();
 
   const [searchIngredient, { loading: searching, data: filteredIngredints }] =
     useLazyQuery(SEARCH_INGREDIENTS_FOR_GROCERY);
@@ -86,7 +87,7 @@ const SearchPanel = (props: SearchPanelProps) => {
   const searchHandler = (e) => {
     if (e.target.value) {
       searchIngredient({
-        variables: { query: e.target.value, memberId: userId._id },
+        variables: { query: e.target.value, memberId: user.id },
       });
       setOpen(true);
     } else {
@@ -104,7 +105,7 @@ const SearchPanel = (props: SearchPanelProps) => {
   const onAdd = async (data) => {
     const variables: any = {
       data: {
-        memberId: userId._id,
+        memberId: user.id,
         ingredients: [
           {
             ingredientId: selectedIngredient._id,
@@ -177,7 +178,7 @@ const SearchPanel = (props: SearchPanelProps) => {
     await Publish({
       mutate: editCartItem,
       variables: {
-        memberId: userId._id,
+        memberId: user.id,
         list: listType,
         ingredient,
       },

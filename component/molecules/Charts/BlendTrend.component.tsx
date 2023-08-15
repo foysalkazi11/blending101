@@ -6,6 +6,7 @@ import { useAppSelector } from "../../../redux/hooks";
 import { getBackgroundColor } from "../../module/Challenge/Achievement/_Dialer.component";
 
 import styles from "./_Charts.module.scss";
+import { useUser } from "../../../context/AuthProvider";
 
 function DateButton({ date, categories, disabled }: any) {
   const days = new Date(date);
@@ -64,7 +65,7 @@ function DateButton({ date, categories, disabled }: any) {
 const BlendTrend = () => {
   const date = new Date();
   const today = format(date, "yyyy-MM-dd");
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const userId = useUser().id;
 
   const { data } = useQuery(GET_RECENT_CHALLENGES, {
     variables: {

@@ -18,6 +18,7 @@ import CommentsBottomSection from "../../common/commentsButtomSection/CommentsBo
 import notification from "../../../utility/reactToastifyNotification";
 import UserRating from "../../common/userRating/UserRating";
 import useToUpdatePlanField from "../../../../customHooks/plan/useToUpdatePlanField";
+import { useUser } from "../../../../context/AuthProvider";
 
 interface CommentsSectionForPlanType {
   id: string;
@@ -28,7 +29,7 @@ const CommentsSectionForPlan = ({
   myRating,
 }: CommentsSectionForPlanType) => {
   const [rating, setRating] = useState(0);
-  const { dbUser } = useAppSelector((state) => state.user);
+  const user = useUser();
   const [showCommentBox, setShowCommentBox] = useState(false);
   const [comment, setComment] = useState("");
   const [updateComment, setUpdateComment] = useState(false);
@@ -63,7 +64,7 @@ const CommentsSectionForPlan = ({
         mutate: editComment,
         state: editState,
         variables: {
-          memberId: dbUser?._id,
+          memberId: user.id,
           commentId: updateCommentId,
           comment,
         },
@@ -79,7 +80,7 @@ const CommentsSectionForPlan = ({
         state: addState,
         variables: {
           planId: id,
-          memberId: dbUser?._id,
+          memberId: user.id,
           comment,
         },
         success: "Added Comment",
@@ -96,7 +97,7 @@ const CommentsSectionForPlan = ({
       mutate: deleteComment,
       state: deleteState,
       variables: {
-        memberId: dbUser?._id,
+        memberId: user.id,
         commentId: id,
       },
       success: "Removed Comment",
@@ -121,7 +122,7 @@ const CommentsSectionForPlan = ({
       const { data } = await updatePlanRating({
         variables: {
           data: {
-            memberId: dbUser?._id,
+            memberId: user.id,
             planId: id,
             rating: newRating,
           },
@@ -158,13 +159,8 @@ const CommentsSectionForPlan = ({
       <UserRating
         rating={rating}
         setRating={updateRating}
-        userImage={dbUser?.image}
-        userName={
-          dbUser?.displayName ||
-          dbUser?.lastName ||
-          dbUser?.firstName ||
-          dbUser?.email
-        }
+        userImage={user?.image}
+        userName={user?.name || user?.email}
       />
       <div className="flex ai-center jc-between mt-20 mb-30">
         {comments?.length ? (
@@ -209,7 +205,7 @@ const CommentsSectionForPlan = ({
                     isAbleToSetRating={false}
                     user={comment?.memberId}
                     page="recipe"
-                    isCurrentUser={comment?.memberId?._id === dbUser?._id}
+                    isCurrentUser={comment?.memberId?._id === user.id}
                     updateCommentValue={updateCommentValue}
                     removeComment={removeComment}
                     deleteCommentLoading={deleteState.loading}
@@ -217,7 +213,7 @@ const CommentsSectionForPlan = ({
                   />
                   <CommentsBottomSection
                     userComments={comment}
-                    isCurrentUser={comment?.userId?._id === dbUser?._id}
+                    isCurrentUser={comment?.userId?._id === user.id}
                     updateCommentValue={updateCommentValue}
                     removeComment={removeComment}
                     deleteCommentLoading={deleteState.loading}

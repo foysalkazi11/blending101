@@ -23,6 +23,7 @@ import Link from "next/link";
 import useToOpenPlanCollectionTray from "../../../customHooks/plan/useToOpenPlanCollectionTray";
 import { PlanComeFromType } from "../../../redux/slices/Planner.slice";
 import useToOpenPlanCommentsTray from "../../../customHooks/plan/useToOpenPlanCommentsTray";
+import { useUser } from "../../../context/AuthProvider";
 
 interface dataCardInterface {
   title?: string;
@@ -105,7 +106,7 @@ function PlanCard({
   const handleOpenCollectionTray = useToOpenPlanCollectionTray();
   const [hoverRef, isHover] = useHover();
   const [week, setWeek] = useState(weekRange);
-  const memberId = useAppSelector((state) => state?.user?.dbUser?._id || "");
+  const memberId = useUser().id;
   const handleClick = () => {
     const elem = menu.current;
     elem.classList.toggle("show__hidden");

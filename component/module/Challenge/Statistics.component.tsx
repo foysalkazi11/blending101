@@ -6,6 +6,7 @@ import styles from "./Statistics.module.scss";
 import { useAppSelector } from "../../../redux/hooks";
 import RxScore from "../../molecules/Charts/RxScore.component";
 import TopIngredients from "../../molecules/Charts/TopIngredients.component";
+import { useUser } from "../../../context/AuthProvider";
 
 const useStatistics = (statistics) => {
   const [leaderboard, setLeaderboard] = useState([]);
@@ -54,17 +55,17 @@ const Statistics = ({ statistics, height }) => {
 export default Statistics;
 
 const Leaderboard = ({ leaderboard, myScore }) => {
-  const { _id: userId, image } = useAppSelector((state) => state.user?.dbUser);
+  const user = useUser();
   const meInLeaderboard = useMemo(() => {
-    return leaderboard.some((leader) => leader.id === userId);
-  }, [leaderboard, userId]);
+    return leaderboard.some((leader) => leader.id === user.id);
+  }, [leaderboard, user.id]);
   return (
     <div>
       <div className={styles.statistics__graph}>
         <h3>Leaderboard</h3>
         <ul className={styles.leaderboard}>
           {leaderboard?.map((leader) => {
-            const myself = leader.id === userId;
+            const myself = leader.id === user.id;
             return (
               <li className={styles.leaderboard__item} key={leader.id}>
                 <div className={styles.leaderboard__info}>
@@ -89,7 +90,10 @@ const Leaderboard = ({ leaderboard, myScore }) => {
             <li className={styles.leaderboard__item}>
               <div className={styles.leaderboard__info}>
                 <span>
-                  <img src={image || "/images/user-profile.png"} alt="User" />
+                  <img
+                    src={user.image || "/images/user-profile.png"}
+                    alt="User"
+                  />
                   <h6 style={{ fontWeight: 500 }}>You</h6>
                 </span>
                 <span>{Math.ceil(myScore) || 0}%</span>

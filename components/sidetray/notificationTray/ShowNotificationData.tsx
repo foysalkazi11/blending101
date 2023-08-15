@@ -5,6 +5,7 @@ import { useAppSelector } from "../../../redux/hooks";
 import NotificationDetails from "./NotificationDetails";
 import SkeletonComment from "../../../theme/skeletons/skeletonComment/SkeletonComment";
 import styles from "./NotificationTray.module.scss";
+import { useUser } from "../../../context/AuthProvider";
 
 interface Props {
   notificationData: any;
@@ -15,7 +16,7 @@ const ShowNotificationData = ({
   notificationData: notification,
   notificationDataLoading,
 }: Props) => {
-  const userId = useAppSelector((state) => state?.user?.dbUser?._id);
+  const userId = useUser().id;
 
   if (notificationDataLoading) {
     return <SkeletonComment />;

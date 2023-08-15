@@ -25,6 +25,7 @@ import useLocalStorage from "../../../customHooks/useLocalStorage";
 import { WikiCompareList } from "../../../type/wikiCompareList";
 import PanelHeader from "../../recipe/share/panelHeader/PanelHeader";
 import { faInfoCircle } from "@fortawesome/pro-light-svg-icons";
+import { useUser } from "../../../context/AuthProvider";
 
 interface Props {
   type?: WikiType;
@@ -45,6 +46,7 @@ const WikiSingleType = ({
   const [pageLength, setPageLength] = useState(12);
   const isMounted = useRef(null);
   const dispatch = useAppDispatch();
+  const user = useUser();
   const { dbUser } = useAppSelector((state) => state?.user);
   const [wikiCompareList, setWikiCompareList] = useLocalStorage<
     WikiCompareList[]
@@ -79,7 +81,7 @@ const WikiSingleType = ({
     try {
       const { data } = await FetchFunc({
         variables: {
-          userId: dbUser?._id,
+          userId: user.id,
           page,
           limit,
           ids: [],
@@ -119,7 +121,7 @@ const WikiSingleType = ({
   ) => {
     try {
       await addOrRemoveToWikiCompareList({
-        variables: { ingredientId, userId: dbUser?._id },
+        variables: { ingredientId, userId: user.id },
       });
 
       dispatch(
@@ -158,13 +160,13 @@ const WikiSingleType = ({
   };
 
   useEffect(() => {
-    if (type && dbUser?._id) {
+    if (type && user.id) {
       selectOptions(type, 1);
       setPage(1);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type, dbUser?._id]);
+  }, [type, user.id]);
 
   useEffect(() => {
     if (isMounted.current) {

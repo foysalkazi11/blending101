@@ -23,6 +23,7 @@ import TrayWrapper from "../TrayWrapper";
 import CommentsBottomSection from "../common/commentsButtomSection/CommentsBottomSection";
 import CommentsTopSection from "../common/commentsTopSection/CommentsTopSection";
 import styles from "./BlogCommentsTray.module.scss";
+import { useUser } from "../../../context/AuthProvider";
 
 interface Props {
   showTagByDefaut?: boolean;
@@ -55,7 +56,7 @@ const BlogCommentsTray = ({
     REMOVE_A_BLOG_COMMENT,
   );
   const dispatch = useAppDispatch();
-  const { dbUser } = useAppSelector((state) => state.user);
+  const user = useUser();
 
   // update Comment value
   const updateCommentValue = (comment: string, id?: string) => {
@@ -78,7 +79,7 @@ const BlogCommentsTray = ({
                 comment,
               },
               editId: updateCommentId,
-              memberId: dbUser?._id,
+              memberId: user.id,
             },
           },
           update(cache, { data: { editBlogComment } }) {
@@ -105,7 +106,7 @@ const BlogCommentsTray = ({
             data: {
               comment,
               blogId: id,
-              memberId: dbUser?._id,
+              memberId: user.id,
             },
           },
           update(cache, { data: { createBlogComment } }) {
@@ -138,7 +139,7 @@ const BlogCommentsTray = ({
       await removeABlogComment({
         variables: {
           commentId: id,
-          memberId: dbUser?._id,
+          memberId: user.id,
         },
         update(cache) {
           cache.writeQuery({
@@ -225,7 +226,7 @@ const BlogCommentsTray = ({
                   <CommentsTopSection user={comment?.memberId} page="wiki" />
                   <CommentsBottomSection
                     userComments={comment}
-                    isCurrentUser={comment?.memberId?._id === dbUser?._id}
+                    isCurrentUser={comment?.memberId?._id === user.id}
                     updateCommentValue={updateCommentValue}
                     removeComment={handleToRemoveBlogComment}
                     deleteCommentLoading={removeBlogLoading}

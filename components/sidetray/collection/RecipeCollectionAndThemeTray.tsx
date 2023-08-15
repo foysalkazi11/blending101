@@ -27,6 +27,7 @@ import notification from "../../utility/reactToastifyNotification";
 import ConfirmationModal from "../../../theme/confirmationModal/ConfirmationModal";
 import DELETE_COLLECTION from "../../../gqlLib/collection/mutation/deleteCollection";
 import useUpdateRecipeField from "../../../customHooks/useUpdateRecipeFirld";
+import { useUser } from "../../../context/AuthProvider";
 
 interface CollectionTrayProps {
   showTagByDefaut?: boolean;
@@ -37,6 +38,8 @@ export default function RecipeCollectionAndThemeTray({
   showTagByDefaut = true,
   showPanle = "left",
 }: CollectionTrayProps) {
+  const user = useUser();
+
   const [toggle, setToggle] = useState(0);
   const [input, setInput] = useState({
     name: "",
@@ -49,7 +52,7 @@ export default function RecipeCollectionAndThemeTray({
   const [isDeleteCollectionShared, setIsDeleteCollectionShared] =
     useState(false);
   const [collectionId, setCollectionId] = useState("");
-  const { dbUser } = useAppSelector((state) => state?.user);
+
   const { changeRecipeWithinCollection } = useAppSelector(
     (state) => state?.collections,
   );
@@ -84,7 +87,7 @@ export default function RecipeCollectionAndThemeTray({
 
   useEffect(() => {
     if (openCollectionsTary) {
-      getCollectionsAndThemes({ variables: { userId: dbUser?._id } });
+      getCollectionsAndThemes({ variables: { userId: user.id } });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openCollectionsTary]);
@@ -115,7 +118,7 @@ export default function RecipeCollectionAndThemeTray({
           await editCollection({
             variables: {
               data: {
-                userId: dbUser?._id,
+                userId: user.id,
                 collectionId: collectionId,
                 newName: input?.name,
                 isSharedCollection: input?.isSharedCollection,
@@ -124,7 +127,7 @@ export default function RecipeCollectionAndThemeTray({
             update(cache, { data: { editACollection } }) {
               cache.writeQuery({
                 query: GET_COLLECTIONS_AND_THEMES,
-                variables: { userId: dbUser?._id },
+                variables: { userId: user.id },
                 data: {
                   getUserCollectionsAndThemes: {
                     collections:
@@ -156,7 +159,7 @@ export default function RecipeCollectionAndThemeTray({
           await createNewCollection({
             variables: {
               data: {
-                userId: dbUser?._id,
+                userId: user.id,
                 collection: {
                   image: null,
                   name: input?.name,
@@ -168,7 +171,7 @@ export default function RecipeCollectionAndThemeTray({
             update(cache, { data: { createNewCollection } }) {
               cache.writeQuery({
                 query: GET_COLLECTIONS_AND_THEMES,
-                variables: { userId: dbUser?._id },
+                variables: { userId: user.id },
                 data: {
                   getUserCollectionsAndThemes: {
                     collections: [
@@ -244,14 +247,14 @@ export default function RecipeCollectionAndThemeTray({
         variables: {
           data: {
             collectionId: collectionId,
-            userId: dbUser?._id,
+            userId: user.id,
             isSharedCollection: isDeleteCollectionShared,
           },
         },
         update(cache, { data: { deleteCollection } }) {
           cache.writeQuery({
             query: GET_COLLECTIONS_AND_THEMES,
-            variables: { userId: dbUser?._id },
+            variables: { userId: user.id },
             data: {
               getUserCollectionsAndThemes: {
                 collections:

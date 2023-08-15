@@ -3,10 +3,10 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { FILTER_PLAN } from "../../graphql/Planner";
 import { AllFilterType } from "../../type/filterType";
 import notification from "../../components/utility/reactToastifyNotification";
+import { useUser } from "../../context/AuthProvider";
 
 const useToGetPlanByFilterCriteria = () => {
-  const dispatch = useAppDispatch();
-  const { dbUser } = useAppSelector((state) => state.user);
+  const user = useUser();
   const [filterPlan, { loading, data, error, ...rest }] = useLazyQuery(
     FILTER_PLAN,
     {
@@ -104,7 +104,7 @@ const useToGetPlanByFilterCriteria = () => {
       await filterPlan({
         variables: {
           data: {
-            userId: dbUser?._id,
+            userId: user.id,
             includeIngredientIds: ingredientIds,
             nutrientFilters: nutrientFiltersMap,
             nutrientMatrix: nutrientMatrixMap,
@@ -114,7 +114,7 @@ const useToGetPlanByFilterCriteria = () => {
           },
           page,
           limit,
-          userId: dbUser?._id,
+          userId: user.id,
         },
       });
     } catch (error) {

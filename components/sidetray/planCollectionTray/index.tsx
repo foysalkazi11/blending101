@@ -28,6 +28,7 @@ import TrayWrapper from "../TrayWrapper";
 import styles from "./PlanCollectionTray.module.scss";
 import useToUpdatePlanDetailsField from "../../../customHooks/plan/useToUpdatePlanDetailsField";
 import useToUpdateGlobalPlans from "../../../customHooks/plan/useToUpdateGlobalPlans";
+import { useUser } from "../../../context/AuthProvider";
 
 interface Props {
   showTagByDefaut?: boolean;
@@ -49,9 +50,7 @@ const PlanCollectionTray = ({ showPanle, showTagByDefaut }: Props) => {
   const { isOpenPlanCollectionTray, activePlanForCollection } = useAppSelector(
     (state) => state?.planner,
   );
-  const memberId = useAppSelector(
-    (state) => state?.user?.dbUser?._id || "",
-  ) as string;
+  const memberId = useUser().id;
   const isMounted = useRef(null);
   const [
     getAllPlanCollection,

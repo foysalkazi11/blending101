@@ -31,6 +31,7 @@ import {
   useDeletePlanRecipe,
   useMovePlanRecipe,
 } from "../../../../hooks/modules/Plan/useMyPlan";
+import { useUser } from "../../../../context/AuthProvider";
 
 interface PlanProps {
   plannerId?: string;
@@ -102,7 +103,7 @@ const PlanItem = (props: RecipeColorIndicatorInterface) => {
   const [showCalender, setShowCalender] = useState<"move" | "copy" | "">("");
 
   const dispatch = useAppDispatch();
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const userId = useUser().id;
 
   const [addToGrocery, addState] = useMutation(ADD_TO_GROCERY_LIST, {
     refetchQueries: ["GetCartData"],

@@ -12,12 +12,14 @@ import NoteHead from "./noteHead/NoteHead";
 import GET_ALL_NOTES_FOR_A_RECIPE from "../../../../gqlLib/notes/quries/getAllNotesForARecipe";
 import IconForAddComment from "../../common/iconForAddComment/IconForAddComment";
 import NoteForm from "./noteForm/NoteForm";
+import { useUser } from "../../../../context/AuthProvider";
 type NoteSectionProps = {
   allNotes: any[];
   setAllNotes: Dispatch<SetStateAction<any[]>>;
 };
 
 const NoteSection = () => {
+  const user = useUser();
   const [showNoteForm, setShowNoteForm] = useState(false);
   const [updateNote, setUpdateNote] = useState(false);
   const [updateNoteId, setUpdateNoteId] = useState("");
@@ -27,7 +29,6 @@ const NoteSection = () => {
   const [editNote, { loading: editNoteLoading }] = useMutation(EDIT_MY_NOTE);
   const [deleteNote, { loading: deleteNoteLoading }] =
     useMutation(DELETE_MY_NOTE);
-  const { dbUser } = useAppSelector((state) => state?.user);
   const { activeRecipeId } = useAppSelector((state) => state?.collections);
   const { openCommentsTray } = useAppSelector((state) => state?.sideTray);
   const { referenceOfRecipeUpdateFunc } = useAppSelector(
@@ -43,7 +44,7 @@ const NoteSection = () => {
   const fetchNotes = async () => {
     try {
       getAllNotesForARecipe({
-        variables: { data: { recipeId: activeRecipeId, userId: dbUser?._id } },
+        variables: { data: { recipeId: activeRecipeId, userId: user.id } },
       });
     } catch (error) {
       reactToastifyNotification(error?.message);
@@ -78,7 +79,7 @@ const NoteSection = () => {
         variables: {
           data: {
             recipeId: activeRecipeId,
-            userId: dbUser?._id,
+            userId: user.id,
             noteId: id,
           },
         },
@@ -86,7 +87,7 @@ const NoteSection = () => {
           cache.writeQuery({
             query: GET_ALL_NOTES_FOR_A_RECIPE,
             variables: {
-              data: { recipeId: activeRecipeId, userId: dbUser?._id },
+              data: { recipeId: activeRecipeId, userId: user.id },
             },
             data: {
               getMyNotesForARecipe: [...removeMyNote],
@@ -118,7 +119,7 @@ const NoteSection = () => {
             editMyNoteData2: {
               editableObject: { body: noteForm?.body, title: noteForm?.title },
               noteId: updateNoteId,
-              userId: dbUser?._id,
+              userId: user.id,
               recipeId: activeRecipeId,
             },
           },
@@ -126,7 +127,7 @@ const NoteSection = () => {
             cache.writeQuery({
               query: GET_ALL_NOTES_FOR_A_RECIPE,
               variables: {
-                data: { recipeId: activeRecipeId, userId: dbUser?._id },
+                data: { recipeId: activeRecipeId, userId: user.id },
               },
               data: {
                 getMyNotesForARecipe: [...editMyNote],
@@ -141,14 +142,14 @@ const NoteSection = () => {
               body: noteForm?.body,
               title: noteForm?.title,
               recipeId: activeRecipeId,
-              userId: dbUser?._id,
+              userId: user.id,
             },
           },
           update(cache, { data: { createNewNote } }) {
             cache.writeQuery({
               query: GET_ALL_NOTES_FOR_A_RECIPE,
               variables: {
-                data: { recipeId: activeRecipeId, userId: dbUser?._id },
+                data: { recipeId: activeRecipeId, userId: user.id },
               },
               data: {
                 getMyNotesForARecipe: [...createNewNote],

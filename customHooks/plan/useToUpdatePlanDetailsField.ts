@@ -1,11 +1,11 @@
+import { useUser } from "../../context/AuthProvider";
 import client from "../../gqlLib/client";
 import { GET_PLAN } from "../../graphql/Planner";
-import { useAppSelector } from "../../redux/hooks";
 
 type Props = (id: string, obj: object) => void;
 
 const useToUpdatePlanDetailsField = () => {
-  const memberId = useAppSelector((state) => state?.user?.dbUser?._id || "");
+  const memberId = useUser().id;
   const handleUpdatePlanDetailsField: Props = (id = "", obj = {}) => {
     const { getAPlan } = client.readQuery({
       query: GET_PLAN,

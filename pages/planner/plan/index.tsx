@@ -33,13 +33,14 @@ import ConfirmAlert from "../../../component/molecules/Alert/Confirm.component";
 import Publish from "../../../helpers/Publish";
 import { usePlanByWeek, useWeek } from "../../../hooks/modules/Plan/useMyPlan";
 import axios from "axios";
+import { useUser } from "../../../context/AuthProvider";
 
 const MyPlan = () => {
   const router = useRouter();
   const methods = useForm({
     defaultValues: useMemo(() => defaultPlan, []),
   });
-  const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const memberId = useUser().id;
 
   const [showGroceryTray] = useState(true);
   const [showDuplicateAlert, setShowDuplicateAlert] = useState(false);

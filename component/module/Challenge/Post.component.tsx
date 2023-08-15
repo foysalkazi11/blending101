@@ -44,6 +44,7 @@ import {
 import Publish from "../../../helpers/Publish";
 import styles from "./Post.module.scss";
 import { UTCDate } from "../../../helpers/Date";
+import { useUser } from "../../../context/AuthProvider";
 
 interface IPost {
   _id: string;
@@ -471,7 +472,7 @@ interface DateSelectorProps {
 const DateSelector = (props: DateSelectorProps) => {
   const { setShowMenu, type, postId, challengeId, dateHandler } = props;
   const startDate = useAppSelector((state) => state.challenge.startDate);
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const userId = useUser().id;
 
   return (
     <DatePicker

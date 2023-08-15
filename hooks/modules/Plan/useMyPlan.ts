@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAppSelector } from "../../../redux/hooks";
 import Publish from "../../../helpers/Publish";
+import { useUser } from "../../../context/AuthProvider";
 
 interface IPlanByWeekHook {
   week: any;
@@ -23,7 +24,7 @@ const usePlanByWeek = (props: IPlanByWeekHook) => {
   let { week, isFetchingFromURL, setShowDuplicateAlert } = props;
 
   const router = useRouter();
-  const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const memberId = useUser().id;
 
   const [getPlanByWeek, { data }] = useLazyQuery(GET_PLANNER_BY_WEEK);
 
@@ -144,7 +145,7 @@ const useDeletePlanRecipe = (
   isWeekFromURL: boolean,
 ) => {
   const router = useRouter();
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const userId = useUser().id;
 
   const [deleteRecipes, deleteState] = useMutation(DELETE_RECIPE_FROM_PLANNER, {
     refetchQueries: [GET_QUEUED_PLANNER_RECIPES],
@@ -199,8 +200,7 @@ const useDeletePlanRecipe = (
 };
 
 const useCopyPlanRecipe = (week, isWeekFromURL) => {
-  const router = useRouter();
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const userId = useUser().id;
 
   const [copyRecipes, copyState] = useMutation(ADD_RECIPE_TO_PLANNER, {
     refetchQueries: [GET_PLANNER_BY_WEEK],

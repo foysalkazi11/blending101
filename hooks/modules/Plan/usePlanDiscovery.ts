@@ -8,6 +8,7 @@ import {
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useAppSelector } from "../../../redux/hooks";
 import { FEATURED_DICTIONARY } from "../../../data/Misc";
+import { useUser } from "../../../context/AuthProvider";
 
 interface IPlanDiscoveryHook {
   page: number;
@@ -21,7 +22,7 @@ const useAllPlan = (props: IPlanDiscoveryHook) => {
   const { page, setPage, limit, query = "" } = props;
   const [plans, setPlans] = useState([]);
   const [hasMore, setHasMore] = useState(false);
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const userId = useUser().id;
 
   const [getAllPlan, { loading }] = useLazyQuery(GET_ALL_PLANS);
 
@@ -78,7 +79,7 @@ const useFeaturedPlan = (props: IPlanDiscoveryHook) => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(false);
 
-  const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const memberId = useUser().id;
 
   // OBSERVING THE LAST RECIPE POSITION OF THE LIST TO TRY TO FETCH MORE RECIPES
   const observer = useRef<any>();

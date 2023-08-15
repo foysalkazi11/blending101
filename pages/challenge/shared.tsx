@@ -15,10 +15,11 @@ import { GET_SHARED_CHALLENGE_DETAILS } from "../../graphql/Challenge";
 import styles from "../../styles/pages/challenge.module.scss";
 import HeadTagInfo from "../../theme/headTagInfo";
 import { useAppSelector } from "../../redux/hooks";
+import { useUser } from "../../context/AuthProvider";
 
 const Shared = () => {
   const router = useRouter();
-  const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const memberId = useUser().id;
   const { data } = useQuery(GET_SHARED_CHALLENGE_DETAILS, {
     variables: {
       challengeId: router.query?.id,

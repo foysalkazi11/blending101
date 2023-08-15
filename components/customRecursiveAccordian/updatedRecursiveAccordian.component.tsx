@@ -11,6 +11,7 @@ import DropDown, {
   DropDownType,
 } from "../../theme/dropDown/DropDown.component";
 import useWindowSize from "../utility/useWindowSize";
+import { useUser } from "../../context/AuthProvider";
 
 interface recursiveAccordianInterface {
   variant?: string;
@@ -40,11 +41,11 @@ const UpdatedRecursiveAccordian = ({
 }: recursiveAccordianInterface) => {
   const { height } = useWindowSize();
   const { showDropDown, ...rest } = measurementDropDownState;
-  const { user, dbUser } = useAppSelector((state) => state?.user);
   const router = useRouter();
+  const user = useUser();
   const { data: dailyData } = useQuery(GET_DAILY_GOALS, {
     fetchPolicy: "network-only",
-    variables: { memberId: dbUser?._id },
+    variables: { memberId: user?.id },
   });
 
   const goals = dailyData?.getDailyGoals?.goals;
@@ -75,9 +76,9 @@ const UpdatedRecursiveAccordian = ({
             <div className={styles.recursiveAccordianHeading__heading__3}>
               {user ? (
                 <div className={styles.userName}>
-                  {dbUser?.image ? (
+                  {user?.image ? (
                     <Image
-                      src={dbUser?.image}
+                      src={user?.image}
                       alt="prfile.png"
                       objectFit="cover"
                       layout="fill"

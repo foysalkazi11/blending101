@@ -1,3 +1,4 @@
+import { useUser } from "../../context/AuthProvider";
 import client from "../../gqlLib/client";
 import { GET_FEATURED_PLANS } from "../../graphql/Planner";
 import { useAppSelector } from "../../redux/hooks";
@@ -5,7 +6,8 @@ import { useAppSelector } from "../../redux/hooks";
 type Props = (id: string, obj: object) => void;
 
 const useToUpdatePlanField = () => {
-  const memberId = useAppSelector((state) => state?.user?.dbUser?._id || "");
+  const user = useUser();
+  const memberId = user.id;
   const handleUpdatePlanField: Props = (id = "", obj = {}) => {
     const { getAllPopularPlans, getAllRecentPlans, getAllRecommendedPlans } =
       client.readQuery({

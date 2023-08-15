@@ -25,6 +25,7 @@ import notification from "../../../utility/reactToastifyNotification";
 import CustomModal from "../../../../theme/modal/customModal/CustomModal";
 import ConfirmationModal from "../../../../theme/confirmationModal/ConfirmationModal";
 import { GiGl } from "../../../../type/nutrationType";
+import { useUser } from "../../../../context/AuthProvider";
 
 type CenterElementsProps = {
   copyDetailsRecipe?: RecipeDetailsType;
@@ -62,7 +63,7 @@ const Center_Elements = ({
   const quantity_number = useAppSelector(
     (state) => state?.quantityAdjuster?.quantityNum,
   );
-  const { dbUser } = useAppSelector((state) => state?.user);
+  const user = useUser();
   const [deleteARecipe, { loading }] = useMutation(DELETE_A_RECIPE);
   const router = useRouter();
   let BlendtecItem = [
@@ -79,7 +80,7 @@ const Center_Elements = ({
     try {
       await deleteARecipe({
         variables: {
-          userId: dbUser?._id,
+          userId: user.id,
           recipeId: copyDetailsRecipe?.recipeId._id,
         },
       });

@@ -20,12 +20,13 @@ import {
   setChallengeView,
   setChallengeInterval,
 } from "../../../redux/slices/Challenge.slice";
+import { useUser } from "../../../context/AuthProvider";
 
 const useThirtyDayChallenge = () => {
   const router = useRouter();
 
   const dispatch = useAppDispatch();
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const userId = useUser().id;
   const {
     activeDate,
     startDate,

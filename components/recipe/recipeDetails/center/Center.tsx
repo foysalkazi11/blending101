@@ -35,6 +35,7 @@ import Tooltip from "../../../../theme/toolTip/CustomToolTip";
 import isEmptyObj from "../../../../helperFunc/object/isEmptyObj";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/pro-light-svg-icons";
+import { useUser } from "../../../../context/AuthProvider";
 
 interface center {
   recipeData: RecipeDetailsType;
@@ -75,7 +76,7 @@ const Center = ({
     (state) => state?.collections,
   );
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
-  const userId = useAppSelector((state) => state?.user?.dbUser?._id);
+  const userId = useUser().id;
   const { functionAcceptRecipeShare, acceptRecipeShareLoading } =
     useToAcceptRecipeShare();
 

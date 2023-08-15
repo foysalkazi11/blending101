@@ -49,9 +49,7 @@ export default function HeaderComponent({
   const [openPopup, setOpenPopup] = useState(false);
   const dispatch = useAppDispatch();
   const user = useUser();
-  console.log(user);
   const { signOut } = useUserHandler();
-  // const { user, dbUser } = useAppSelector((state) => state?.user);
   const userMenu = useRef(null);
   const userIcon = useRef(null);
   useOnClickOutside(userMenu, () => setOpenPopup(false));

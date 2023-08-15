@@ -24,6 +24,7 @@ import {
 } from "../../../../redux/slices/blogSlice";
 import useToAddBlogCollection from "../../../../customHooks/blog/useToAddBlogCollection";
 import toHoursAndMinutes from "../../../../helperFunc/others/toHoursAndMinutes";
+import { useUser } from "../../../../context/AuthProvider";
 
 interface Props {
   blogData: BlogListType;
@@ -52,7 +53,7 @@ const BlogCard = ({
   const router = useRouter();
   const dispatch = useAppDispatch();
   const handleToAddBlogAtCollection = useToAddBlogCollection();
-  const memberId = useAppSelector((state) => state?.user?.dbUser?._id || "");
+  const memberId = useUser().id;
 
   // const videoEl = useRef(null);
   // const handleLoadedMetadata = () => {

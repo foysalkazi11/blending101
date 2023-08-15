@@ -6,9 +6,10 @@ import GET_ALL_LATEST_RECIPES from "../../gqlLib/recipes/queries/getAllLatestRec
 import GET_ALL_POPULAR_RECIPES from "../../gqlLib/recipes/queries/getAllPopularRecipes";
 import GET_ALL_RECOMMENDED_RECIPES from "../../gqlLib/recipes/queries/getRecommendedRecipes";
 import { useAppSelector } from "../../redux/hooks";
+import { useUser } from "../../context/AuthProvider";
 
 const useViewAll = (param: string) => {
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const userId = useUser().id;
   const [response, setResponse] = useState([]);
 
   const config = useMemo(

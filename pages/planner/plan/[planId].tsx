@@ -57,6 +57,7 @@ import { setIsOpenPlanCollectionTray } from "../../../redux/slices/Planner.slice
 import useToOpenPlanCollectionTray from "../../../customHooks/plan/useToOpenPlanCollectionTray";
 import useToAddPlanToCollection from "../../../customHooks/plan/useToAddPlanToCollection";
 import useToOpenPlanCommentsTray from "../../../customHooks/plan/useToOpenPlanCommentsTray";
+import { useUser } from "../../../context/AuthProvider";
 
 const MyPlan = () => {
   const router = useRouter();
@@ -72,7 +73,7 @@ const MyPlan = () => {
     (state) => state?.planner,
   );
 
-  const memberId = useAppSelector((state) => state?.user?.dbUser?._id || "");
+  const memberId = useUser().id;
   const { data } = useQuery(GET_PLAN, {
     variables: { planId: router.query.planId, token: "", memberId },
     skip: router.query.planId === "",
@@ -102,7 +103,7 @@ const MyPlan = () => {
   });
   const [panelHeight, setPanelHeight] = useState("1000px");
 
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const userId = useUser().id;
 
   const weekChangeHandler = (start, end) => {
     router.push(

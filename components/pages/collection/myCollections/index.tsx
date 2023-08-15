@@ -24,11 +24,12 @@ import {
 import { setOpenCollectionsTary } from "../../../../redux/slices/sideTraySlice";
 import ShareRecipe from "../../../recipe/recipeDetails/center/shareRecipe";
 import client from "../../../../gqlLib/client";
+import { useUser } from "../../../../context/AuthProvider";
 
 const MyCollections = () => {
-  const { dbUser } = useAppSelector((state) => state?.user);
+  const user = useUser();
   const { data, loading, error } = useQuery(GET_ALL_COLLECTIONS_WITH_RECIPES, {
-    variables: { userId: dbUser?._id },
+    variables: { userId: user?.id },
   });
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
   const [shareRecipeData, setShareRecipeData] = useState({
@@ -57,7 +58,7 @@ const MyCollections = () => {
     (objectId: string, recipeId: string, updateObj: { [key: string]: any }) => {
       client.writeQuery({
         query: GET_ALL_COLLECTIONS_WITH_RECIPES,
-        variables: { userId: dbUser?._id },
+        variables: { userId: user?.id },
         data: {
           getAllCollectionsWithRecipes: data?.getAllCollectionsWithRecipes?.map(
             (item) =>
@@ -75,12 +76,12 @@ const MyCollections = () => {
         },
       });
     },
-    [data?.getAllCollectionsWithRecipes, dbUser?._id],
+    [data?.getAllCollectionsWithRecipes, user.id],
   );
 
   if (loading) {
     return (
-      <Layout dbUser={dbUser}>
+      <Layout>
         <SkeletonRecipeDiscovery />
         <SkeletonRecipeDiscovery />
         <SkeletonRecipeDiscovery />
@@ -89,7 +90,7 @@ const MyCollections = () => {
   }
   if (error) {
     return (
-      <Layout dbUser={dbUser}>
+      <Layout>
         <ErrorPage
           style={{ height: "50vh" }}
           errorMessage="No collection recipe found"
@@ -98,7 +99,7 @@ const MyCollections = () => {
     );
   }
   return (
-    <Layout dbUser={dbUser}>
+    <Layout>
       {data?.getAllCollectionsWithRecipes?.map((collection) => {
         const {
           _id,
@@ -160,8 +161,9 @@ const MyCollections = () => {
   );
 };
 
-const Layout: React.FC<{ dbUser: DbUserType }> = ({ children }) => {
+const Layout = ({ children }) => {
   const { dbUser } = useAppSelector((state) => state?.user);
+  const user = useUser();
   const router = useRouter();
   return (
     <AContainer

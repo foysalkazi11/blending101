@@ -9,6 +9,7 @@ import { useAppSelector } from "../../redux/hooks";
 import { InputValueType } from "../sidetray/common/addCollectionModal/AddCollectionModal";
 import notification from "../utility/reactToastifyNotification";
 import slugStringGenerator from "../utility/slugStringGenerator";
+import { useUser } from "../../context/AuthProvider";
 
 interface Props {
   id?: string;
@@ -41,7 +42,7 @@ const ShareItems = ({
   const [showMsgField, setShowMsgField] = useState(false);
   const [link, setLink] = useState("");
   const [emails, setEmails] = useState<SharedUserInfoType[]>([]);
-  const { dbUser } = useAppSelector((state) => state.user);
+  const user = useUser();
   const [input, setInput] = useState<InputValueType>({
     image: null,
     name: "",
@@ -83,7 +84,7 @@ const ShareItems = ({
                     canContribute: info.canCollaborate,
                     canShareWithOthers: info.canCollaborate,
                   })),
-              sharedBy: dbUser._id,
+              sharedBy: user.id,
             },
           },
         });
@@ -114,12 +115,7 @@ const ShareItems = ({
     const currentDate = formatDate(newDate);
     const currentDateFormate = `${currentDate.day} ${currentDate.month} ${
       currentDate.year
-    }_${newDate.toLocaleTimeString().slice(0, 5)}_${
-      dbUser?.displayName ||
-      dbUser?.lastName ||
-      dbUser?.firstName ||
-      dbUser?.email
-    }`;
+    }_${newDate.toLocaleTimeString().slice(0, 5)}_${user?.name || user?.email}`;
     const convertToSlug = slugStringGenerator(currentDateFormate);
     setInput((pre) => ({
       ...pre,

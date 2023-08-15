@@ -14,6 +14,7 @@ import notification from "../../../../../utility/reactToastifyNotification";
 import styles from "./DailyIntake.module.scss";
 import HeadingBox from "./headingBox/headingBox.component";
 import InputGoal from "./inputGoal/inputGoal.component";
+import { useUser } from "../../../../../../context/AuthProvider";
 
 interface Goals {
   blendNutrientId: string;
@@ -34,10 +35,10 @@ interface InputValue {
 }
 
 const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
-  const { dbUser } = useAppSelector((state) => state?.user);
+  const user = useUser();
   const [loading, setLoading] = useState(false);
   const [inputValue, setInputValue] = useState<InputValue>({
-    memberId: dbUser?._id,
+    memberId: user.id,
     bmi: null,
     calories: {
       goal: null,
@@ -51,13 +52,13 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
     refetch,
   } = useQuery(GET_DAILY_BY_USER_ID, {
     fetchPolicy: "network-only",
-    variables: { userId: dbUser?._id },
+    variables: { userId: user.id },
   });
   const { data: dailyGoalData, loading: dailyGoalLoading } = useQuery(
     GET_DAILY_GOALS,
     {
       fetchPolicy: "network-only",
-      variables: { memberId: dbUser?._id },
+      variables: { memberId: user.id },
     },
   );
   const [updateDailyGoals] = useMutation(UPDATE_DAILY_GOALS);
@@ -176,7 +177,7 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
           variables: {
             data: {
               ...inputValue,
-              memberId: inputValue?.memberId || dbUser?._id,
+              memberId: inputValue?.memberId || user.id,
               goals: Object?.values(inputValue?.goals),
             },
           },

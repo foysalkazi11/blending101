@@ -14,6 +14,7 @@ import { WikiCompareList } from "../../../type/wikiCompareList";
 import GET_INGREDIENT_WIKI_LIST from "../../../gqlLib/wiki/query/getIngredientWikiList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/pro-light-svg-icons";
+import { useUser } from "../../../context/AuthProvider";
 const responsiveSetting = {
   infinite: false,
   speed: 500,
@@ -65,6 +66,7 @@ const WikiLandingContent = ({
     ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST,
   );
   const dispatch = useAppDispatch();
+  const user = useUser();
   const { dbUser } = useAppSelector((state) => state?.user);
   const [wikiCompareList, setWikiCompareList] = useLocalStorage<
     WikiCompareList[]
@@ -86,12 +88,12 @@ const WikiLandingContent = ({
   ) => {
     try {
       await addOrRemoveToWikiCompareList({
-        variables: { ingredientId, userId: dbUser?._id },
+        variables: { ingredientId, userId: user.id },
         update(cache) {
           const { getIngredientWikiList2 } = cache.readQuery<any>({
             query: GET_INGREDIENT_WIKI_LIST,
             variables: {
-              userId: dbUser?._id,
+              userId: user.id,
               page: 1,
               limit: 12,
               ids: [],
@@ -101,7 +103,7 @@ const WikiLandingContent = ({
           cache?.writeQuery({
             query: GET_INGREDIENT_WIKI_LIST,
             variables: {
-              userId: dbUser?._id,
+              userId: user.id,
               page: 1,
               limit: 12,
               ids: [],

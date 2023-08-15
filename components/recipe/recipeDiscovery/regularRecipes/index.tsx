@@ -19,6 +19,7 @@ import {
 import AppdownLoadCard from "../AppdownLoadCard/AppdownLoadCard.component";
 import ContentTray from "../ContentTray/ContentTray.component";
 import styles from "../recipeDiscovery.module.scss";
+import { useUser } from "../../../../context/AuthProvider";
 
 const defaultHeadingContent = {
   heading: "Recommended",
@@ -37,7 +38,7 @@ const RegularRecipes = ({
   setOpenShareModal,
   setShareRecipeData,
 }: RegularRecipesType) => {
-  const { dbUser } = useAppSelector((state) => state?.user);
+  const user = useUser();
   const {
     data: recommendedRecipesData,
     loading: recommendedRecipesLoading,
@@ -45,7 +46,7 @@ const RegularRecipes = ({
   } = useQuery(GET_ALL_RECOMMENDED_RECIPES, {
     // fetchPolicy: "cache-and-network",
 
-    variables: { userId: dbUser?._id },
+    variables: { userId: user.id },
   });
   const {
     data: popularRecipesData,
@@ -53,7 +54,7 @@ const RegularRecipes = ({
     error: popularRecipesError,
   } = useQuery(GET_ALL_POPULAR_RECIPES, {
     // fetchPolicy: "cache-and-network",
-    variables: { userId: dbUser?._id },
+    variables: { userId: user.id },
   });
   const {
     data: latestRecipesData,
@@ -61,7 +62,7 @@ const RegularRecipes = ({
     error: latestRecipesError,
   } = useQuery(GET_ALL_LATEST_RECIPES, {
     // fetchPolicy: "cache-and-network",
-    variables: { userId: dbUser?._id },
+    variables: { userId: user.id },
   });
 
   const updateRecipe: ReferenceOfRecipeUpdateFuncType = useCallback(
@@ -70,7 +71,7 @@ const RegularRecipes = ({
 
       client.writeQuery({
         query: GET_ALL_RECOMMENDED_RECIPES,
-        variables: { userId: dbUser?._id },
+        variables: { userId: user.id },
         data: {
           getAllrecomendedRecipes2:
             recommendedRecipesData?.getAllrecomendedRecipes2?.map((recipe) =>
@@ -86,7 +87,7 @@ const RegularRecipes = ({
       });
       client.writeQuery({
         query: GET_ALL_POPULAR_RECIPES,
-        variables: { userId: dbUser?._id },
+        variables: { userId: user.id },
         data: {
           getAllpopularRecipes2: popularRecipesData?.getAllpopularRecipes2?.map(
             (recipe) =>
@@ -102,7 +103,7 @@ const RegularRecipes = ({
       });
       client.writeQuery({
         query: GET_ALL_LATEST_RECIPES,
-        variables: { userId: dbUser?._id },
+        variables: { userId: user.id },
         data: {
           getAllLatestRecipes2: latestRecipesData?.getAllLatestRecipes2?.map(
             (recipe) =>
@@ -119,10 +120,10 @@ const RegularRecipes = ({
     },
 
     [
-      dbUser?._id,
       latestRecipesData?.getAllLatestRecipes2,
       popularRecipesData?.getAllpopularRecipes2,
       recommendedRecipesData?.getAllrecomendedRecipes2,
+      user.id,
     ],
   );
 

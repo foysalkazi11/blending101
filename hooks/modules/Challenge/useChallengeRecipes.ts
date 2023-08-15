@@ -13,6 +13,7 @@ import { GET_BLEND_CATEGORY } from "../../../graphql/Recipe";
 import styles from "../../../component/module/Planner/Queue.module.scss";
 import Publish from "../../../helpers/Publish";
 import { setDayRecipe } from "../../../redux/slices/Planner.slice";
+import { useUser } from "../../../context/AuthProvider";
 
 interface IDiscoverRecipe {
   type: string;
@@ -27,7 +28,7 @@ const useDiscoveryQueue = (props: IDiscoverRecipe) => {
   const [hasMore, setHasMore] = useState(false);
   const [limit] = useState(10);
 
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const userId = useUser().id;
 
   const [getRecipes, { loading }] = useLazyQuery(GET_ALL_PLANNER_RECIPES);
 
@@ -136,12 +137,12 @@ interface IAddRecipeToPlanHook {
 }
 
 const useAddRecipeToMyPlan = (props: IAddRecipeToPlanHook) => {
-  const { query, page, limit, type, week, isWeekFromURL } = props;
+  const { week, isWeekFromURL } = props;
 
   const router = useRouter();
   const [addRecipe, addState] = useMutation(ADD_RECIPE_TO_PLANNER);
 
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const userId = useUser().id;
 
   const addRecipeToPlanner = async (
     recipe: any,

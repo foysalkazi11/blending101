@@ -6,6 +6,7 @@ import Share, {
 import { CREATE_SHARE_LINK } from "../../../../../graphql/Share";
 import { useAppSelector } from "../../../../../redux/hooks";
 import notification from "../../../../utility/reactToastifyNotification";
+import { useUser } from "../../../../../context/AuthProvider";
 
 interface Props {
   id: string;
@@ -36,7 +37,7 @@ const ShareRecipe = ({
   const [showMsgField, setShowMsgField] = useState(false);
   const [link, setLink] = useState("");
   const [emails, setEmails] = useState<SharedUserInfoType[]>([]);
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const userId = useUser().id;
   const [isVersionSharable, setIsVersionShareable] = useState(false);
 
   const onCancel = () => {

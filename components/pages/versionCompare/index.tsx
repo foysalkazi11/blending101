@@ -37,6 +37,7 @@ import { setDetailsARecipe } from "../../../redux/slices/recipeSlice";
 import { VersionAddDataType } from "../../../type/versionAddDataType";
 import useToUpdateAfterEditVersion from "../../../customHooks/useToUpdateAfterEditVersion";
 import mapIngredientStatus from "../../../helperFunc/mapIngredientStatus";
+import { useUser } from "../../../context/AuthProvider";
 
 const compareRecipeResponsiveSettings = {
   ...compareRecipeResponsiveSetting,
@@ -77,13 +78,14 @@ const VersionCompare = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const recipeId = router.query?.recipeId as string;
-  const { dbUser } = useAppSelector((state) => state.user);
+  const user = useUser();
   const { data, loading, error } = useQuery(GET_ALL_RECIPE_VERSION, {
-    variables: { recipeId, userId: dbUser._id },
+    variables: { recipeId, userId: user.id },
   });
   const sliderRef = useRef(null);
   const { handleToEditARecipeVersion, loading: versionUpdateLoading } =
     useToEditOfARecipeVersion();
+
   const isMounted = useRef(false);
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
   const handleToUpdateARecipeVersionAfterEdit = useToUpdateAfterEditVersion();
@@ -126,7 +128,7 @@ const VersionCompare = () => {
     let obj: VersionAddDataType = {
       postfixTitle: versionInfo?.postfixTitle,
       recipeId: versionInfo?.recipeId || recipeId,
-      userId: dbUser?._id,
+      userId: user.id,
       description: versionInfo?.description,
       ingredients: ingredientsArr,
       recipeInstructions: versionInfo?.recipeInstructions,
@@ -454,7 +456,7 @@ const VersionCompare = () => {
       editId: newRecipe?.versionId,
       recipeId: recipeId,
       turnedOn: version?.defaultVersion?.isVersionSharable || null,
-      userId: dbUser?._id,
+      userId: user.id,
       editableObject: {
         postfixTitle: newRecipe?.name,
         description: newRecipe?.description,
@@ -465,7 +467,7 @@ const VersionCompare = () => {
     const objForCreateNewVersion: VersionAddDataType = {
       postfixTitle: newRecipe?.name,
       recipeId: recipeId,
-      userId: dbUser?._id,
+      userId: user.id,
       description: newRecipe?.description,
       ingredients: ingArr,
       recipeInstructions: [],
@@ -481,7 +483,7 @@ const VersionCompare = () => {
     } else {
       try {
         const returnObj = await handleToEditARecipeVersion(
-          dbUser._id,
+          user.id,
           recipeId,
           versionId,
           isVersionSharable,

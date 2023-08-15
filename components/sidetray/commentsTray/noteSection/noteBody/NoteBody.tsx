@@ -14,6 +14,7 @@ import { useAppSelector } from "../../../../../redux/hooks";
 import notification from "../../../../utility/reactToastifyNotification";
 import useTurnedOnOrOffVersion from "../../../../../customHooks/useTurnedOnOrOffVersion";
 import useToChangeDefaultVersion from "../../../../../customHooks/useToChangeDefaultVersion";
+import { useUser } from "../../../../../context/AuthProvider";
 
 type isFromRecipePageType = "details" | "edit" | "default";
 
@@ -193,7 +194,7 @@ const FloodingMenuTwo = ({
   const detailsARecipe = useAppSelector(
     (state) => state?.recipe?.detailsARecipe,
   );
-  const userId = useAppSelector((state) => state?.user?.dbUser?._id);
+  const userId = useUser().id;
   const { handleTurnOnOrOffVersion, loading: versionTurnOnOrOffLoading } =
     useTurnedOnOrOffVersion();
   const { handleToUpdateDefaultVersion, loading: changeDefaultVersionLoading } =

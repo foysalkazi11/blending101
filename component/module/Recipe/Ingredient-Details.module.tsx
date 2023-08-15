@@ -18,6 +18,7 @@ import {
   faCircleInfo,
 } from "@fortawesome/pro-light-svg-icons";
 import Tooltip from "../../../theme/toolTip/CustomToolTip";
+import { useUser } from "../../../context/AuthProvider";
 
 const scaleMenu = [
   { label: ".5x", value: 0.5 },
@@ -52,7 +53,7 @@ const IngredientDetails = (props: IngredientDetailsProps) => {
   });
 
   const dispatch = useAppDispatch();
-  const userId = useAppSelector((state) => state.user.dbUser);
+  const user = useUser();
   const groceries = useAppSelector((state) => state.cart.groceries);
 
   const windowScrollToZero = (elem = {}) => {
@@ -63,7 +64,7 @@ const IngredientDetails = (props: IngredientDetailsProps) => {
   const addToCartHandler = async (ingredient) => {
     const variables: any = {
       data: {
-        memberId: userId._id,
+        memberId: user.id,
         ingredients: [
           {
             ingredientId: ingredient?.ingredientId._id,
@@ -80,7 +81,7 @@ const IngredientDetails = (props: IngredientDetailsProps) => {
 
   const removeFromCartHandler = async (ingredient) => {
     const variables = {
-      userId: userId._id,
+      userId: user.id,
       groceries: [ingredient?.ingredientId._id],
       pantries: [],
       staples: [],

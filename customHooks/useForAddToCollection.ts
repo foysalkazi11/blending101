@@ -10,9 +10,10 @@ import {
 import { setReferenceOfRecipeUpdateFunc } from "../redux/slices/recipeSlice";
 import { setOpenCollectionsTary } from "../redux/slices/sideTraySlice";
 import { ReferenceOfRecipeUpdateFuncType } from "../type/recipeType";
+import { useUser } from "../context/AuthProvider";
 
 const useForAddToCollection = () => {
-  const { dbUser } = useAppSelector((state) => state?.user);
+  const user = useUser();
   const dispatch = useAppDispatch();
   const [
     addNewRecipeToCollection,
@@ -32,7 +33,7 @@ const useForAddToCollection = () => {
     dispatch(setOpenCollectionsTary(false));
     const variablesData = {
       recipe: recipeId,
-      userId: dbUser?._id,
+      userId: user.id,
     };
 
     try {

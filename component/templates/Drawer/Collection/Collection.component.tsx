@@ -12,6 +12,7 @@ import { setChangeRecipeWithinCollection } from "../../../../redux/slices/collec
 import { setOpenCollectionsTary } from "../../../../redux/slices/sideTraySlice";
 import CustomModal from "../../../../theme/modal/customModal/CustomModal";
 import styles from "./Collection.module.scss";
+import { useUser } from "../../../../context/AuthProvider";
 
 interface CollectionTrayProps {
   showTagByDefaut?: boolean;
@@ -26,7 +27,7 @@ function CollectionDrawer({
     image: null,
     name: "",
   });
-  const { dbUser } = useAppSelector((state) => state?.user);
+  const user = useUser();
   const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
   const [openModal, setOpenModal] = useState(false);
   const dispatch = useAppDispatch();
@@ -49,7 +50,7 @@ function CollectionDrawer({
 
   useEffect(() => {
     if (openCollectionsTary) {
-      getCollectionsAndThemes({ variables: { userId: dbUser?._id } });
+      getCollectionsAndThemes({ variables: { userId: user?.id } });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openCollectionsTary]);

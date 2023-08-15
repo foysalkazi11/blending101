@@ -1,3 +1,4 @@
+import { useUser } from "../../context/AuthProvider";
 import client from "../../gqlLib/client";
 import { GET_ALL_PLANS } from "../../graphql/Planner";
 import { useAppSelector } from "../../redux/hooks";
@@ -5,7 +6,7 @@ import { useAppSelector } from "../../redux/hooks";
 type Props = (id: string, obj: object, limit?: number, page?: number) => void;
 
 const useToUpdateGlobalPlans = () => {
-  const memberId = useAppSelector((state) => state?.user?.dbUser?._id || "");
+  const memberId = useUser().id;
   const handleUpdateGlobalPlansField: Props = (
     id = "",
     obj = {},

@@ -35,11 +35,10 @@ import {
   faBasketShopping,
   faNotebook,
 } from "@fortawesome/pro-regular-svg-icons";
-import { addDays, format, isToday, isTomorrow, isYesterday } from "date-fns";
-import { UTCDate } from "../../../helpers/Date";
 import Summary from "./Daily/Summary.component";
 import IngredientPanel from "../../templates/Ingredient/Ingredient.component";
 import DayPicker from "../../molecules/Date/Day.component";
+import { useUser } from "../../../context/AuthProvider";
 
 const UploadCard = forwardRef((props: any, ref) => {
   const { startDate, endDate, elementRef } = props;
@@ -47,7 +46,7 @@ const UploadCard = forwardRef((props: any, ref) => {
   const [serving, setServing] = useState(1);
 
   const dispatch = useAppDispatch();
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const userId = useUser().id;
 
   const {
     isEditMode,

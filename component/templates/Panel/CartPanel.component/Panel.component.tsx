@@ -46,6 +46,7 @@ import {
 import { faRefrigerator } from "@fortawesome/pro-solid-svg-icons";
 import TrayWrapper from "../../../../components/sidetray/TrayWrapper";
 import TrayTag from "../../../../components/sidetray/TrayTag";
+import { useUser } from "../../../../context/AuthProvider";
 
 interface CartPanelProps {
   showTagByDefaut?: boolean;
@@ -102,7 +103,7 @@ const GroceryPanel = () => {
   const [selectedIngredient, setSelectedIngredient] = useState<any>({});
 
   const dispatch = useAppDispatch();
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const userId = useUser().id;
   const { groceries, pantries, staples } = useAppSelector(
     (state) => state.cart,
   );

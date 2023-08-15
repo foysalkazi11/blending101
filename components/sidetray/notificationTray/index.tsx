@@ -10,6 +10,7 @@ import styles from "./NotificationTray.module.scss";
 import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
 import GET_SHARE_NOTIFICATION from "../../../gqlLib/notification/query/getShareNotification";
 import { useQuery } from "@apollo/client";
+import { useUser } from "../../../context/AuthProvider";
 interface CommentsTrayProps {
   showTagByDefaut?: boolean;
   showPanle?: "left" | "right";
@@ -24,7 +25,7 @@ export default function NotificationTray({
   const { isNotificationTrayOpen } = useAppSelector(
     (state) => state.notification,
   );
-  const userId = useAppSelector((state) => state?.user?.dbUser?._id);
+  const userId = useUser().id;
   const { data, loading } = useQuery(GET_SHARE_NOTIFICATION, {
     variables: { userId },
     fetchPolicy: "cache-and-network",

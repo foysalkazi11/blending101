@@ -12,6 +12,7 @@ import PanelHeader from "../../recipe/share/panelHeader/PanelHeader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo } from "@fortawesome/pro-light-svg-icons";
 import styles from "./WikiLanding.module.scss";
+import { useUser } from "../../../context/AuthProvider";
 
 interface Props {
   setType?: Dispatch<SetStateAction<WikiType>>;
@@ -27,7 +28,7 @@ const WikiLanding = ({
   setType = () => {},
   setSelectedWikiItem = () => {},
 }: Props) => {
-  const { dbUser } = useAppSelector((state) => state?.user);
+  const user = useUser();
   const [
     getIngredientList,
     {
@@ -67,7 +68,7 @@ const WikiLanding = ({
     try {
       await funcObj[type]({
         variables: {
-          userId: dbUser?._id,
+          userId: user.id,
           page,
           limit,
           ids,
@@ -82,7 +83,7 @@ const WikiLanding = ({
     Promise.all([
       funcObj["Ingredient"]({
         variables: {
-          userId: dbUser?._id,
+          userId: user.id,
           page: 1,
           limit: 12,
           ids: [],
@@ -90,7 +91,7 @@ const WikiLanding = ({
       }),
       funcObj["Nutrient"]({
         variables: {
-          userId: dbUser?._id,
+          userId: user.id,
           page: 1,
           limit: 12,
           ids: [],

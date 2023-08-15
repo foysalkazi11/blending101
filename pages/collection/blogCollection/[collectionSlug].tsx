@@ -11,12 +11,13 @@ import WikiBanner from "../../../components/wiki/wikiBanner/WikiBanner";
 import GET_ALL_BLOGS_FOR_A_COLLECTION from "../../../gqlLib/blog/query/getAllBlogsForACollection";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faStar } from "@fortawesome/pro-regular-svg-icons";
+import { useUser } from "../../../context/AuthProvider";
 
 const CollectionBlog = () => {
   const router = useRouter();
   const slug = router.query?.collectionSlug as string;
   const [input, setInput] = useState("");
-  const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const memberId = useUser().id;
   const { data: allBlogs, loading: allBlogsLoading } = useQuery(
     GET_ALL_BLOGS_FOR_A_COLLECTION,
     {

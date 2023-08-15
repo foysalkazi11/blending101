@@ -43,7 +43,7 @@ const SignupScreen = () => {
       dispatch(setLoading(false));
       reactToastifyNotification(
         "info",
-        "A varification code has been sent to your eamil",
+        "A varification code has been sent to your email",
       );
       //@ts-ignore
       dispatch(setNonConfirmedUser(user?.username));

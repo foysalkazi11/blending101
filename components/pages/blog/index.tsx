@@ -12,10 +12,11 @@ import ErrorPage from "../404Page";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import ShowLastModifiedCollection from "../../showLastModifiedCollection/ShowLastModifiedCollection";
 import { setIsOpenBlogCollectionTray } from "../../../redux/slices/blogSlice";
+import { useUser } from "../../../context/AuthProvider";
 
 const BlogList = () => {
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
-  const { dbUser } = useAppSelector((state) => state?.user);
+  const user = useUser();
   const { lastModifiedBlogCollection } = useAppSelector((state) => state?.blog);
   const [blogSearchInput, setBlogSearchInput] = useState("");
   const dispatch = useAppDispatch();
@@ -26,7 +27,7 @@ const BlogList = () => {
   } = useQuery(GET_ALL_GENERAL_BLOG_FOR_CLIENT, {
     variables: {
       currentDate: new Date().toISOString().slice(0, 10),
-      memberId: dbUser._id,
+      memberId: user.id,
     },
     fetchPolicy: "cache-and-network",
   });

@@ -10,6 +10,7 @@ import notification from "../../../../components/utility/reactToastifyNotificati
 import Share, {
   SharedUserInfoType,
 } from "../../../../component/organisms/Share/Distribute.component";
+import { useUser } from "../../../../context/AuthProvider";
 
 interface CollectionComponentProps {
   collections: {}[];
@@ -33,7 +34,7 @@ export default function CollectionComponent({
   const [addOrRemoveRecipeFromCollection] = useMutation(
     ADD_OR_REMOVE_RECIPE_FORM_COLLECTION,
   );
-  const { dbUser } = useAppSelector((state) => state?.user);
+  const user = useUser();
   const {
     changeRecipeWithinCollection,
     activeRecipeId,
@@ -61,7 +62,7 @@ export default function CollectionComponent({
     CREATE_SHARE_COLLECTION_LINK,
   );
 
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const userId = useUser().id;
 
   const handleOpenShareModal = (
     id: string,
@@ -146,7 +147,7 @@ export default function CollectionComponent({
       await addOrRemoveRecipeFromCollection({
         variables: {
           data: {
-            userId: dbUser?._id,
+            userId: user.id,
             addToTheseCollections: collectionHasRecipe,
             recipes: activeRecipeId
               ? [activeRecipeId]

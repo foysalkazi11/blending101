@@ -21,6 +21,7 @@ import {
   NutrientFiltersType,
   NutrientMatrixType,
 } from "../../../../type/filterType";
+import { useUser } from "../../../../context/AuthProvider";
 const { INGREDIENTS_BY_CATEGORY, TYPE, ALLERGIES, DIET, EQUIPMENT, DRUGS } =
   INGREDIENTS_FILTER;
 
@@ -179,7 +180,7 @@ const TagSection = ({
   const [optionSelectItems, setOptionSelectItems] = useState<any[]>([]);
   const [childIngredient, setChailIngredient] = useState("");
   const dispatch = useAppDispatch();
-  const userId = useAppSelector((state) => state?.user?.dbUser?._id);
+  const userId = useUser().id;
   const [
     getBlendNutrientsBasedOnCategoey,
     { data: blendNutrientData, loading: blendNutrientLoading },

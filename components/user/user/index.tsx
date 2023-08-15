@@ -6,6 +6,7 @@ import Main from "./main/Main";
 import { useAppSelector } from "../../../redux/hooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/pro-regular-svg-icons";
+import { useUser } from "../../../context/AuthProvider";
 
 const User = () => {
   const [userData, setUserData] = useState({
@@ -50,7 +51,7 @@ const User = () => {
       pregnantOrLactating: null,
     },
   });
-
+  const user = useUser();
   const { dbUser } = useAppSelector((state) => state?.user);
 
   useEffect(() => {
@@ -116,7 +117,7 @@ const User = () => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dbUser?._id]);
+  }, [user.id]);
 
   return (
     <AContainer

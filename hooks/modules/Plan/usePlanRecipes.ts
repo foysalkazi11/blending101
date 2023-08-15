@@ -14,6 +14,7 @@ import { GET_BLEND_CATEGORY } from "../../../graphql/Recipe";
 import styles from "../../../component/module/Planner/Queue.module.scss";
 import Publish from "../../../helpers/Publish";
 import { setDayRecipe } from "../../../redux/slices/Planner.slice";
+import { useUser } from "../../../context/AuthProvider";
 
 interface IDiscoverRecipe {
   type: string;
@@ -28,7 +29,7 @@ const useDiscoveryQueue = (props: IDiscoverRecipe) => {
   const [hasMore, setHasMore] = useState(false);
   const [limit] = useState(10);
 
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const userId = useUser().id;
 
   const [getRecipes, { loading }] = useLazyQuery(GET_ALL_PLANNER_RECIPES);
 
@@ -80,7 +81,7 @@ const useQueuedRecipe = (isWeekFromURL, week, queuedRecipes?: any) => {
   const router = useRouter();
   const [recipes, setRecipes] = useState([]);
 
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const userId = useUser().id;
   const [getQueuedRecipes, { loading }] = useLazyQuery(
     GET_QUEUED_PLANNER_RECIPES,
   );
@@ -162,7 +163,7 @@ const useAddRecipeToMyPlan = (props: IAddRecipeToPlanHook) => {
     refetchQueries: [GET_QUEUED_PLANNER_RECIPES],
   });
 
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const userId = useUser().id;
 
   const addRecipeToPlanner = async (
     recipe: any,

@@ -17,10 +17,11 @@ import CREATE_NEW_USER from "./../../../../gqlLib/user/mutations/createNewUser";
 import { useMutation } from "@apollo/client";
 import InputComponent from "../../../input/input.component";
 import HeadTagInfo from "../../../headTagInfo";
+import { useSession } from "../../../../context/AuthProvider";
 
 const EmailVerify = () => {
   const [code, setCode] = useState("");
-
+  const session = useSession();
   const { nonConfirmedUser } = useAppSelector((state) => state?.user);
   const dispatch = useAppDispatch();
   const history = useRouter();
@@ -38,6 +39,11 @@ const EmailVerify = () => {
             data: { email: nonConfirmedUser, provider: "email" },
           },
         });
+        const user = await Auth.currentAuthenticatedUser();
+        await Auth.updateUserAttributes(user, {
+          address: "105 Main St. New York, NY 10001",
+        });
+
         dispatch(setLoading(false));
         reactToastifyNotification("info", "Sign up successfully");
         dispatch(setUser(nonConfirmedUser));

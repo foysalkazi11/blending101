@@ -4,6 +4,7 @@ import CHANGE_COMPARE from "../gqlLib/compare/mutation/changeCompare";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setDbUser } from "../redux/slices/userSlice";
 import { ReferenceOfRecipeUpdateFuncType } from "../type/recipeType";
+import { useUser } from "../context/AuthProvider";
 
 const useChangeCompare = () => {
   const dispatch = useAppDispatch();
@@ -11,6 +12,7 @@ const useChangeCompare = () => {
     useMutation(CHANGE_COMPARE, {
       fetchPolicy: "network-only",
     });
+  const user = useUser();
   const { dbUser } = useAppSelector((state) => state?.user);
 
   const handleChangeCompare = async (
@@ -25,7 +27,7 @@ const useChangeCompare = () => {
     try {
       const { data } = await changeCompare({
         variables: {
-          userId: dbUser?._id,
+          userId: user.id,
           recipeId: id,
         },
       });

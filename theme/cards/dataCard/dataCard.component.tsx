@@ -34,6 +34,7 @@ import CircularRotatingLoader from "../../loader/circularRotatingLoader.componen
 import isEmptyObj from "../../../helperFunc/object/isEmptyObj";
 import { AccessPermission } from "../../../type/recipeCardType";
 import useExtension from "../../../hooks/useExtension";
+import { useUser } from "../../../context/AuthProvider";
 
 interface dataCardInterface {
   title: string;
@@ -162,9 +163,7 @@ export default function DatacardComponent({
     data: changeDefaultVersionReturnObj,
     loading: changeDefaultVersionLoading,
   } = useToChangeDefaultVersion();
-  const { dbUser } = useAppSelector((state) => state?.user);
-  const { handleTurnOnOrOffVersion } = useTurnedOnOrOffVersion();
-
+  const user = useUser();
   const authData = useExtension();
   // view permission
   const hasViewPermission = useCallback(
@@ -203,7 +202,7 @@ export default function DatacardComponent({
   const handleToMakeDefaultVersion = async () => {
     if (isVersionSharable) {
       await handleToUpdateDefaultVersion(
-        dbUser?._id,
+        user.id,
         recipeId,
         defaultVersionId,
         isMatch ? true : false,

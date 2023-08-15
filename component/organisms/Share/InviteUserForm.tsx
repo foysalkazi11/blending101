@@ -27,6 +27,7 @@ import styles from "./Share.module.scss";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import Nofification from "../../../components/user/user/notification/Notification";
 import notification from "../../../components/utility/reactToastifyNotification";
+import { useUser } from "../../../context/AuthProvider";
 
 interface Props {
   handleInvitation?: () => void;
@@ -68,7 +69,7 @@ const InviteUserForm = ({
   setMessage = () => {},
   sharedUserEmail = "",
 }: Props) => {
-  const userEmail = useAppSelector((state) => state?.user?.dbUser?.email);
+  const userEmail = useUser().email;
   const { data } = useQuery(GET_ALL_USER_LIST);
   const inputRef = useRef<HTMLInputElement>(null);
   const collectionNameInputRef = useRef<HTMLInputElement>(null);

@@ -30,6 +30,7 @@ import useToEditOfARecipeVersion from "../../../customHooks/useToEditOfARecipeVe
 import ConfirmationModal from "../../../theme/confirmationModal/ConfirmationModal";
 import useToUpdateAfterEditVersion from "../../../customHooks/useToUpdateAfterEditVersion";
 import { VersionAddDataType } from "../../../type/versionAddDataType";
+import { useUser } from "../../../context/AuthProvider";
 
 const EditRecipeComponent = () => {
   const router = useRouter();
@@ -47,7 +48,7 @@ const EditRecipeComponent = () => {
   const [nutritionState, setNutritionState] = useState(null);
   const [copyDetailsRecipe, setCopyDetailsRecipe] =
     useState<RecipeDetailsType>(null);
-  const { dbUser } = useAppSelector((state) => state?.user);
+  const user = useUser();
   const isMounted = useRef(false);
   const {
     selectedIngredientsList,
@@ -126,7 +127,7 @@ const EditRecipeComponent = () => {
       };
       await editRecipe({
         variables: {
-          userId: dbUser?._id,
+          userId: user.id,
           data: {
             editId: detailsARecipe?.recipeId?._id,
             editableObject: obj,
@@ -141,7 +142,7 @@ const EditRecipeComponent = () => {
 
     await editRecipe({
       variables: {
-        userId: dbUser?._id,
+        userId: user.id,
         data: {
           editId: detailsARecipe?.recipeId?._id,
           editableObject: obj,
@@ -197,7 +198,7 @@ const EditRecipeComponent = () => {
         turnedOn: isReallyOriginalVersion
           ? null
           : detailsARecipe?.tempVersionInfo?.isShareAble,
-        userId: dbUser?._id,
+        userId: user.id,
         editableObject: {
           recipeInstructions: howToArr,
           postfixTitle:
@@ -216,7 +217,7 @@ const EditRecipeComponent = () => {
       const objForCreateNewVersion: VersionAddDataType = {
         postfixTitle: copyDetailsRecipe?.tempVersionInfo?.version?.postfixTitle,
         recipeId: detailsARecipe?.recipeId?._id,
-        userId: dbUser?._id,
+        userId: user.id,
         description: copyDetailsRecipe?.tempVersionInfo?.version?.description,
         ingredients: ingArr,
         errorIngredients,
@@ -228,14 +229,14 @@ const EditRecipeComponent = () => {
 
       if (
         isReallyOriginalVersion &&
-        detailsARecipe?.recipeId?.userId?._id !== dbUser?._id
+        detailsARecipe?.recipeId?.userId?._id !== user.id
       ) {
         openConfirmationModal(objForCreateNewVersion);
       } else {
         let originalRecipeUpdatedData = {};
         if (
           isReallyOriginalVersion &&
-          detailsARecipe?.recipeId?.userId?._id === dbUser?._id
+          detailsARecipe?.recipeId?.userId?._id === user.id
         ) {
           const updatedObj = await updateOriginalRecipe({
             servings: servingCounter,
@@ -371,11 +372,11 @@ const EditRecipeComponent = () => {
   // fetch recipe if is their existing recipe or doesn't match with current user
   useEffect(() => {
     if (detailsARecipe?.recipeId?._id !== recipeId) {
-      if (dbUser?._id && recipeId) {
-        handleToGetARecipe(recipeId, dbUser?._id);
+      if (user.id && recipeId) {
+        handleToGetARecipe(recipeId, user.id);
       }
     }
-  }, [recipeId, dbUser?._id]);
+  }, [recipeId, user.id]);
 
   // fetch nutrition value based on ingredient value change
   useEffect(() => {

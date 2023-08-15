@@ -37,6 +37,7 @@ import { AllFilterType } from "../../type/filterType";
 import useToGetPlanByFilterCriteria from "../../customHooks/planFilter/useToGetPlanByFilterCriteria";
 import ShowRecipeContainer from "../../components/showRecipeContainer";
 import useDebounce from "../../customHooks/useDebounce";
+import { useUser } from "../../context/AuthProvider";
 
 const normalizeQueryParams = (queryParams) => {
   let queryParamObj = {} as AllFilterType;
@@ -278,7 +279,7 @@ const SearchedPlan = ({ query, setOpenCollectionModal }) => {
 };
 
 const FeaturedPlan = ({ setOpenCollectionModal }) => {
-  const userId = useAppSelector((state) => state.user.dbUser._id || "");
+  const userId = useUser().id;
 
   const { data } = useQuery(GET_FEATURED_PLANS, {
     variables: { limit: 8, memberId: userId },

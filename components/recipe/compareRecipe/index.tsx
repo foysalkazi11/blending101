@@ -53,6 +53,7 @@ import {
 import EDIT_A_VERSION_OF_RECIPE from "../../../gqlLib/versions/mutation/editAVersionOfRecipe";
 import { RecipeDetailsType } from "../../../type/recipeDetailsType";
 import { CreateNewRecipeType } from "../../pages/versionCompare";
+import { useUser } from "../../../context/AuthProvider";
 
 const compareRecipeResponsiveSettings = {
   ...compareRecipeResponsiveSetting,
@@ -121,9 +122,10 @@ const CompareRecipe = () => {
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
   const dispatch = useAppDispatch();
   const sliderRef = useRef(null);
+  const user = useUser();
   const { dbUser } = useAppSelector((state) => state?.user);
   const { data, loading, error, refetch } = useQuery(GET_COMPARE_LIST, {
-    variables: { userId: dbUser?._id },
+    variables: { userId: user.id },
     fetchPolicy: "network-only",
   });
   const windowSize = useWindowSize();
@@ -362,7 +364,7 @@ const CompareRecipe = () => {
   const handleEmptyCompareList = async () => {
     dispatch(setLoading(true));
     try {
-      await emptyCompareList({ variables: { userId: dbUser?._id } });
+      await emptyCompareList({ variables: { userId: user.id } });
       dispatch(
         setDbUser({
           ...dbUser,
@@ -463,7 +465,7 @@ const CompareRecipe = () => {
 
           await editRecipe({
             variables: {
-              userId: dbUser?._id,
+              userId: user.id,
               data: {
                 editId: newlyCreatedRecipe?.recipeId?._id,
                 editableObject: {
@@ -484,7 +486,7 @@ const CompareRecipe = () => {
                   errorIngredients,
                 },
                 recipeId: newlyCreatedRecipe?.recipeId?._id,
-                userId: dbUser?._id,
+                userId: user.id,
               },
             },
           });
@@ -514,7 +516,7 @@ const CompareRecipe = () => {
           }
 
           const obj = {
-            userId: dbUser?._id,
+            userId: user.id,
             name: newRecipe?.name,
             image: imgArr,
             description: newRecipe?.description,
@@ -548,7 +550,7 @@ const CompareRecipe = () => {
   // handle to open version tray
   const handleToOpenVersionTray = useCallback(async (recipeId: string) => {
     if (detailsARecipe?.recipeId?._id !== recipeId) {
-      await handleToGetARecipe(recipeId, dbUser?._id);
+      await handleToGetARecipe(recipeId, user.id);
     }
 
     dispatch(setOpenVersionTray(true));

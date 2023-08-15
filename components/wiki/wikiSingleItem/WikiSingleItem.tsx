@@ -24,6 +24,7 @@ import ShowRelatedItems from "../../showRelatedItems";
 import dummyData from "./dummyData";
 import ErrorPage from "../../pages/404Page";
 import { RecipeDetailsMiddle } from "../../../theme/skeletons/skeletonRecipeDetails";
+import { useUser } from "../../../context/AuthProvider";
 export const placeHolderImage = "/images/no-image-available.webp";
 
 interface Props {
@@ -43,7 +44,7 @@ function WikiSingleItem() {
   const type: string = params?.[0] || "Ingredient";
   const wikiId = params?.[1] || "";
   const params2 = params?.[2] || "0";
-  const { dbUser } = useAppSelector((state) => state?.user);
+  const user = useUser();
   const [getAllIngredientsBasedOnNutrition, ingredientsData] = useLazyQuery(
     GET_ALL_INGREDIENTS_BASED_ON_NURTITION,
     { fetchPolicy: "network-only" },
@@ -78,7 +79,7 @@ function WikiSingleItem() {
               ),
             },
           ],
-          userId: dbUser?._id,
+          userId: user.id,
         },
       });
     } catch (error) {
@@ -95,7 +96,7 @@ function WikiSingleItem() {
               nutritionID: id || wikiId,
               category: "All",
             },
-            userId: dbUser?._id,
+            userId: user.id,
           },
         });
       }
@@ -108,7 +109,7 @@ function WikiSingleItem() {
                 value: parseInt(measureMentWeight || params2),
               },
             ],
-            userId: dbUser?._id,
+            userId: user.id,
           },
         });
 

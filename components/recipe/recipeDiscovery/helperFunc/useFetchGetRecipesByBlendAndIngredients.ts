@@ -6,10 +6,11 @@ import {
   updateShowFilterOrSearchRecipes,
 } from "../../../../redux/slices/filterRecipeSlice";
 import notification from "../../../utility/reactToastifyNotification";
+import { useUser } from "../../../../context/AuthProvider";
 
 const useFetchGetRecipesByBlendAndIngredients = () => {
+  const user = useUser();
   const dispatch = useAppDispatch();
-  const { dbUser } = useAppSelector((state) => state.user);
   const { allFilterRecipes } = useAppSelector((state) => state?.filterRecipe);
   const [filterRecipe, { loading, data, error, ...rest }] = useLazyQuery(
     FILTER_RECIPE,
@@ -147,7 +148,7 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
       const { data } = await filterRecipe({
         variables: {
           data: {
-            userId: dbUser?._id,
+            userId: user.id,
             blendTypes: blendTypesArr,
             includeIngredientIds: ingredientIds,
             nutrientFilters: nutrientFiltersMap,
@@ -157,7 +158,7 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
           },
           page,
           limit,
-          userId: dbUser?._id,
+          userId: user.id,
         },
       });
       dispatch(

@@ -42,6 +42,7 @@ import useToAcceptCollectionShare from "../../../customHooks/collection/useToAcc
 import notification from "../../../components/utility/reactToastifyNotification";
 import useToUpdateFilterCriteria from "../../../customHooks/recipeFilter/useToUpdateRecipeFilterCriteria";
 import useToUpdateActiveFilterTag from "../../../customHooks/recipeFilter/useToUpdateActiveFilterTag";
+import { useUser } from "../../../context/AuthProvider";
 let dataLimit = 12;
 
 type Variables = Record<string, any>;
@@ -68,7 +69,8 @@ const CollectionRecipes = () => {
   const [openShareModal, setOpenShareModal] = useState(false);
   const [recipes, setRecipes] = useState([]);
   const [totalRecipes, setTotalRecipes] = useState(0);
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const userId = useUser().id;
+
   const { lastModifiedCollection } = useAppSelector(
     (state) => state?.collections,
   );

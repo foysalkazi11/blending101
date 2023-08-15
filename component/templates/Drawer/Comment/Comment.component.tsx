@@ -20,6 +20,7 @@ import {
 } from "../../../../graphql/Planner";
 
 import styles from "./Comment.module.scss";
+import { useUser } from "../../../../context/AuthProvider";
 
 interface CommentsTrayProps {
   id: string;
@@ -42,8 +43,8 @@ function CommentDrawer(props: CommentsTrayProps) {
   const [updateComment, setUpdateComment] = useState(false);
   const [updateCommentId, setUpdateCommentId] = useState("");
 
-  const { dbUser } = useAppSelector((state) => state?.user);
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const user = useUser();
+  const userId = user.id;
 
   const [addComment, addState] = useMutation(ADD_PLAN_COMMENT, {
     refetchQueries: ["GetPlanComments"],
@@ -180,18 +181,13 @@ function CommentDrawer(props: CommentsTrayProps) {
       <div className={styles.userImage}>
         <div style={{ display: "flex", alignItems: "center" }}>
           <div className={styles.imageBox}>
-            {dbUser?.image ? (
-              <img src={dbUser?.image} alt="user_img" />
+            {user?.image ? (
+              <img src={user?.image} alt="user_img" />
             ) : (
               <MdPersonOutline />
             )}
           </div>
-          <h6>
-            {dbUser?.displayName ||
-              dbUser?.lastName ||
-              dbUser?.firstName ||
-              dbUser?.email}
-          </h6>
+          <h6>{user?.name || user?.email}</h6>
         </div>
         <StarRating rating={rating} setRating={setRating} />
       </div>

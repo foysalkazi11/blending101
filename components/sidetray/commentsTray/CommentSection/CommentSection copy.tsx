@@ -19,6 +19,7 @@ import {
   setRecommended,
 } from "../../../../redux/slices/recipeSlice";
 import SkeletonComment from "../../../../theme/skeletons/skeletonComment/SkeletonComment";
+import { useUser } from "../../../../context/AuthProvider";
 
 type CommentSectionProps = {
   allComments: any[];
@@ -35,7 +36,7 @@ const CommentSection = ({
 }: CommentSectionProps) => {
   const [showCommentBox, setShowCommentBox] = useState(false);
   const [rating, setRating] = useState(0);
-  const { dbUser } = useAppSelector((state) => state?.user);
+  const user = useUser();
   const [updateComment, setUpdateComment] = useState(false);
   const [updateCommentId, setUpdateCommentId] = useState("");
   const [comment, setComment] = useState("");
@@ -90,7 +91,7 @@ const CommentSection = ({
         variables: {
           data: {
             recipeId: activeRecipeId,
-            userId: dbUser?._id,
+            userId: user.id,
             commentId: id,
           },
         },
@@ -119,7 +120,7 @@ const CommentSection = ({
               comment: comment,
               // rating: rating || 1,
               recipeId: activeRecipeId,
-              userId: dbUser?._id,
+              userId: user.id,
             },
           },
         });
@@ -134,7 +135,7 @@ const CommentSection = ({
             editCommentData2: {
               editId: updateCommentId,
               recipeId: activeRecipeId,
-              userId: dbUser?._id,
+              userId: user.id,
               editableObject: {
                 // rating: rating,
                 comment: comment,
@@ -182,18 +183,13 @@ const CommentSection = ({
         <div className={styles.userImage}>
           <div style={{ display: "flex", alignItems: "center" }}>
             <div className={styles.imageBox}>
-              {dbUser?.image ? (
-                <img src={dbUser?.image} alt="user_img" />
+              {user?.image ? (
+                <img src={user?.image} alt="user_img" />
               ) : (
                 <MdPersonOutline />
               )}
             </div>
-            <h6 className={styles.userName}>
-              {dbUser?.displayName ||
-                dbUser?.lastName ||
-                dbUser?.firstName ||
-                dbUser?.email}
-            </h6>
+            <h6 className={styles.userName}>{user.name || user.email}</h6>
           </div>
           <StarRating rating={rating} setRating={setRating} />
         </div>
@@ -204,18 +200,15 @@ const CommentSection = ({
             <div className={styles.header}>
               <div className={styles.leftSide}>
                 <div className={styles.userIcon}>
-                  {dbUser?.image ? (
-                    <img src={dbUser?.image} alt="user_img" />
+                  {user?.image ? (
+                    <img src={user?.image} alt="user_img" />
                   ) : (
                     <MdPersonOutline />
                   )}
                 </div>
                 <h6 className={styles.userName}>
                   {" "}
-                  {dbUser?.displayName ||
-                    dbUser?.lastName ||
-                    dbUser?.firstName ||
-                    dbUser?.email}
+                  {user?.name || user?.email}
                 </h6>
               </div>
 
@@ -275,18 +268,13 @@ const CommentSection = ({
         <div className={styles.userImage}>
           <div style={{ display: "flex", alignItems: "center" }}>
             <div className={styles.imageBox}>
-              {dbUser?.image ? (
-                <img src={dbUser?.image} alt="user_img" />
+              {user?.image ? (
+                <img src={user?.image} alt="user_img" />
               ) : (
                 <MdPersonOutline />
               )}
             </div>
-            <h6>
-              {dbUser?.displayName ||
-                dbUser?.lastName ||
-                dbUser?.firstName ||
-                dbUser?.email}
-            </h6>
+            <h6>{user?.name || user?.email}</h6>
           </div>
           <StarRating rating={rating} setRating={setRating} />
         </div>

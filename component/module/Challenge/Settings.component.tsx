@@ -53,6 +53,7 @@ import {
 } from "../../../hooks/modules/Challenge/useChallengeList";
 import { useRouter } from "next/router";
 import { UTCDate } from "../../../helpers/Date";
+import { useUser } from "../../../context/AuthProvider";
 
 interface SettingsProps {
   showFormState: [boolean, any];
@@ -108,7 +109,7 @@ const ChallengeList = ({ currentChallenge, challenges, editFormHandler }) => {
   const [challengeInfo, setChallengeInfo] = useState<any>({});
 
   const dispatch = useAppDispatch();
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const userId = useUser().id;
 
   const [activateChallenge, activateState] = useActivateChallenge(userId);
   const [deleteChallenge, deleteState] = useDeleteChallenge(userId);
@@ -293,7 +294,7 @@ const ChallengeForm = forwardRef(
       defaultValues: useMemo(() => defaultValues, []),
     });
 
-    const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
+    const memberId = useUser().id;
 
     const [addChallenge, addState] = useAddChallenge(memberId);
     const [editChallenge, editState] = useEditChallenge(memberId);

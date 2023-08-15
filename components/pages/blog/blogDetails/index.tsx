@@ -12,9 +12,10 @@ import ErrorPage from "../../404Page";
 import styles from "./BlogDetails.module.scss";
 import BlogDetailsCenter from "./BlogDetailsCenter";
 import RelatedBlog from "./RelatedBlog";
+import { useUser } from "../../../../context/AuthProvider";
 
 const BlogDetails = () => {
-  const { dbUser } = useAppSelector((state) => state?.user);
+  const user = useUser();
   const router = useRouter();
   const dispatch = useDispatch();
   const { blog_slug } = router.query;
@@ -23,7 +24,7 @@ const BlogDetails = () => {
     loading: blogLoading,
     error: blogError,
   } = useQuery(GET_A_GENERAL_BLOG_BY_SLUG, {
-    variables: { slug: blog_slug, memberId: dbUser._id },
+    variables: { slug: blog_slug, memberId: user.id },
   });
   const {
     data: generalBlogData,
@@ -32,7 +33,7 @@ const BlogDetails = () => {
   } = useQuery(GET_ALL_GENERAL_BLOG_FOR_CLIENT, {
     variables: {
       currentDate: new Date().toISOString().slice(0, 10),
-      memberId: dbUser._id,
+      memberId: user.id,
     },
     fetchPolicy: "cache-and-network",
   });

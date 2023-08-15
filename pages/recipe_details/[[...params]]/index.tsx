@@ -18,6 +18,7 @@ import { updateSidebarActiveMenuName } from "../../../redux/slices/utilitySlice"
 import { RecipeDetailsType } from "../../../type/recipeDetailsType";
 import { FALSE } from "sass";
 import { setOpenFilterTray } from "../../../redux/slices/sideTraySlice";
+import { useUser } from "../../../context/AuthProvider";
 
 const Index = () => {
   const router = useRouter();
@@ -25,7 +26,7 @@ const Index = () => {
   const recipe__Id = params?.[0] || "";
   const versionId = params?.[1] || "";
   const [nutritionState, setNutritionState] = useState(null);
-  const { dbUser } = useAppSelector((state) => state?.user);
+  const user = useUser();
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
   const dispatch = useAppDispatch();
 
@@ -50,12 +51,12 @@ const Index = () => {
 
   // fetch data if not exist or doesn't match with current user
   useEffect(() => {
-    if (dbUser?._id && recipe__Id) {
-      handleToGetARecipe(recipe__Id, dbUser?._id, token);
+    if (user.id && recipe__Id) {
+      handleToGetARecipe(recipe__Id, user.id, token);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [recipe__Id, dbUser?._id, token]);
+  }, [recipe__Id, user.id, token]);
 
   useEffect(() => {
     dispatch(updateSidebarActiveMenuName("Blends"));

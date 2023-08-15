@@ -21,6 +21,7 @@ import { setShowPanel } from "../../../redux/slices/Ui.slice";
 
 import styles from "./PlanByDay.module.scss";
 import { useDrag, useDrop } from "react-dnd";
+import { useUser } from "../../../context/AuthProvider";
 
 interface PlanListProps {
   data?: any[];
@@ -146,7 +147,7 @@ const PlanItem = (props: RecipeColorIndicatorInterface) => {
   const ingredients = recipe?.defaultVersion?.ingredients || [];
   category = recipeBlendCategory?.name || category;
   const dispatch = useAppDispatch();
-  const userId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const userId = useUser().id;
 
   const [addToGrocery, addState] = useMutation(ADD_TO_GROCERY_LIST, {
     refetchQueries: ["GetCartData"],

@@ -5,6 +5,7 @@ import RecipeDiscoverButton from "../../../theme/button/recipeDiscoverButton/Rec
 import Tooltip from "../../../theme/toolTip/CustomToolTip";
 import { WikiType } from "../../../type/wikiListType";
 import CommonSearchBar from "../../searchBar/CommonSearchBar";
+import { useUser } from "../../../context/AuthProvider";
 
 interface Props {
   openTray?: boolean;
@@ -19,6 +20,8 @@ const WikiSearchBar = ({
 }: Props) => {
   const router = useRouter();
   const [input, setInput] = useState("");
+  const user = useUser();
+
   const { dbUser } = useAppSelector((state) => state?.user);
 
   const toggleFilterPanel = () => {

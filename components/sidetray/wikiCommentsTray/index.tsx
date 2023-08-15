@@ -25,6 +25,7 @@ import TrayWrapper from "../TrayWrapper";
 import CommentsBottomSection from "../common/commentsButtomSection/CommentsBottomSection";
 import CommentsTopSection from "../common/commentsTopSection/CommentsTopSection";
 import s from "./WikiCommentsTray.module.scss";
+import { useUser } from "../../../context/AuthProvider";
 
 interface Props {
   showTagByDefaut?: boolean;
@@ -42,7 +43,7 @@ const WikiCommentsTray = ({
   const dispatch = useAppDispatch();
   const { isOpenWikiCommentsTray, wikiCommentsTrayCurrentWikiEntity } =
     useAppSelector((state) => state?.wiki);
-  const { dbUser } = useAppSelector((state) => state?.user);
+  const user = useUser();
   const [
     getAllWikiCommentsForAWikiEntity,
     { data: allWikiCommentsData, loading: getAllWikiCommentsLoading },
@@ -70,14 +71,14 @@ const WikiCommentsTray = ({
       await removeWikiComment({
         variables: {
           commentId,
-          userId: dbUser?._id,
+          userId: user.id,
         },
         update(cache) {
           cache.writeQuery({
             query: GET_ALL_WIKI_COMMENTS_FOR_A_WIKI_ENTITY,
             variables: {
               entityId: wikiCommentsTrayCurrentWikiEntity?.id,
-              userId: dbUser?._id,
+              userId: user.id,
             },
             data: {
               getAllWikiCommentsForAWikiEntity:
@@ -107,7 +108,7 @@ const WikiCommentsTray = ({
                 comment,
               },
               editId: updateCommentId,
-              userId: dbUser?._id,
+              userId: user.id,
             },
           },
           update(cache, { data: { editWikiComment } }) {
@@ -115,7 +116,7 @@ const WikiCommentsTray = ({
               query: GET_ALL_WIKI_COMMENTS_FOR_A_WIKI_ENTITY,
               variables: {
                 entityId: wikiCommentsTrayCurrentWikiEntity?.id,
-                userId: dbUser?._id,
+                userId: user.id,
               },
               data: {
                 getAllWikiCommentsForAWikiEntity:
@@ -139,7 +140,7 @@ const WikiCommentsTray = ({
               comment,
               type,
               entityId: id,
-              userId: dbUser?._id,
+              userId: user.id,
             },
           },
           update(cache, { data: { createWikiComment } }) {
@@ -147,7 +148,7 @@ const WikiCommentsTray = ({
               query: GET_ALL_WIKI_COMMENTS_FOR_A_WIKI_ENTITY,
               variables: {
                 entityId: wikiCommentsTrayCurrentWikiEntity?.id,
-                userId: dbUser?._id,
+                userId: user.id,
               },
               data: {
                 getAllWikiCommentsForAWikiEntity: [
@@ -181,7 +182,7 @@ const WikiCommentsTray = ({
       const { data } = await getAllWikiCommentsForAWikiEntity({
         variables: {
           entityId: wikiCommentsTrayCurrentWikiEntity?.id,
-          userId: dbUser?._id,
+          userId: user.id,
         },
       });
       const res: WikiCommentsType = data?.getAllWikiCommentsForAWikiEntity;
@@ -192,7 +193,7 @@ const WikiCommentsTray = ({
   };
 
   useEffect(() => {
-    if (wikiCommentsTrayCurrentWikiEntity?.id && dbUser?._id) {
+    if (wikiCommentsTrayCurrentWikiEntity?.id && user.id) {
       handleToGetAllWikiComments();
     }
 
@@ -250,7 +251,7 @@ const WikiCommentsTray = ({
                     <CommentsTopSection user={comment?.userId} page="wiki" />
                     <CommentsBottomSection
                       userComments={comment}
-                      isCurrentUser={comment?.userId?._id === dbUser?._id}
+                      isCurrentUser={comment?.userId?._id === user.id}
                       updateCommentValue={updateCommentValue}
                       removeComment={handleToRemoveWikiComment}
                       deleteCommentLoading={removeWikiCommentLoading}

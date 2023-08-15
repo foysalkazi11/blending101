@@ -5,6 +5,7 @@ import { useAppSelector } from "../../../../../redux/hooks";
 import BarChart from "./barChart";
 import s from "./index.module.scss";
 import LineChartIndex from "./lineChart";
+import { useUser } from "../../../../../context/AuthProvider";
 
 interface Props {
   wikiId: string;
@@ -15,7 +16,7 @@ const MyFacts = ({ wikiId }: Props) => {
     GET_INGREDIENT_STATS,
     { fetchPolicy: "cache-and-network" },
   );
-  const { dbUser } = useAppSelector((state) => state?.user);
+  const user = useUser();
 
   const fetchData = async (type?: string) => {
     const today = new Date().toISOString().slice(0, 10);
@@ -23,7 +24,7 @@ const MyFacts = ({ wikiId }: Props) => {
       const { data } = await getIngredientsStats({
         variables: {
           ingredientId: wikiId,
-          memberId: dbUser?._id,
+          memberId: user.id,
           currentDate: `${today}`,
           type: type || "M",
         },

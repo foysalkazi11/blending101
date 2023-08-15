@@ -22,6 +22,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBasketShopping as faBasketShoppingRegular } from "@fortawesome/pro-regular-svg-icons";
 import { faBasketShopping as faBasketShoppingSolid } from "@fortawesome/pro-solid-svg-icons";
 import { GiGl } from "../../../type/nutrationType";
+import { useUser } from "../../../context/AuthProvider";
 
 const AddRecipePage = () => {
   const [images, setImages] = useState<any[]>([]);
@@ -39,12 +40,11 @@ const AddRecipePage = () => {
   const [createNewRecipeByUser] = useMutation(CREATE_A_RECIPE_BY_USER);
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
-  const { dbUser } = useAppSelector((state) => state?.user);
   const router = useRouter();
   const { width } = useWindowSize();
   const [openTray, setOpenTray] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const user = useUser();
   const {
     handleFetchIngrdients,
     loading: nutritionDataLoading,
@@ -83,7 +83,7 @@ const AddRecipePage = () => {
       const howToArr = howToState?.map((item) => `${item?.step}`);
 
       let obj = {
-        userId: dbUser?._id,
+        userId: user.id,
         name: recipeHeading,
         description: recipeDescription,
         recipeBlendCategory: selectedBlendValueState,

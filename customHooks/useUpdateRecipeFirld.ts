@@ -13,6 +13,7 @@ import {
   setPopular,
   setRecommended,
 } from "../redux/slices/recipeSlice";
+import { useUser } from "../context/AuthProvider";
 
 type Props = (id: string, obj: object) => void;
 
@@ -23,27 +24,27 @@ const useUpdateRecipeField = () => {
   const { allRecipeWithinCollections } = useAppSelector(
     (state) => state?.collections,
   );
-  const { dbUser } = useAppSelector((state) => state?.user);
+  const user = useUser();
 
   const updateRecipe: Props = (id = "", obj = {}) => {
     // update apollo client cache
 
     const { getAllrecomendedRecipes } = client.readQuery({
       query: GET_ALL_RECOMMENDED_RECIPES,
-      variables: { userId: dbUser?._id },
+      variables: { userId: user.id },
     });
     const { getAllpopularRecipes } = client.readQuery({
       query: GET_ALL_POPULAR_RECIPES,
-      variables: { userId: dbUser?._id },
+      variables: { userId: user.id },
     });
     const { getAllLatestRecipes } = client.readQuery({
       query: GET_ALL_LATEST_RECIPES,
-      variables: { userId: dbUser?._id },
+      variables: { userId: user.id },
     });
 
     client.writeQuery({
       query: GET_ALL_RECOMMENDED_RECIPES,
-      variables: { userId: dbUser?._id },
+      variables: { userId: user.id },
       data: {
         getAllrecomendedRecipes: getAllrecomendedRecipes?.map((recipe) =>
           recipe?._id === id ? { ...recipe, ...obj } : recipe,
@@ -52,7 +53,7 @@ const useUpdateRecipeField = () => {
     });
     client.writeQuery({
       query: GET_ALL_POPULAR_RECIPES,
-      variables: { userId: dbUser?._id },
+      variables: { userId: user.id },
       data: {
         getAllpopularRecipes: getAllpopularRecipes?.map((recipe) =>
           recipe?._id === id ? { ...recipe, ...obj } : recipe,
@@ -61,7 +62,7 @@ const useUpdateRecipeField = () => {
     });
     client.writeQuery({
       query: GET_ALL_LATEST_RECIPES,
-      variables: { userId: dbUser?._id },
+      variables: { userId: user.id },
       data: {
         getAllLatestRecipes: getAllLatestRecipes?.map((recipe) =>
           recipe?._id === id ? { ...recipe, ...obj } : recipe,

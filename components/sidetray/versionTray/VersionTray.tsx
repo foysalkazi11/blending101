@@ -29,6 +29,7 @@ import { VersionAddDataType } from "../../../type/versionAddDataType";
 import updateName from "../../../helperFunc/string/updateName";
 import { VersionDataType } from "../../../type/recipeDetailsType";
 import CircularRotatingLoader from "../../../theme/loader/circularRotatingLoader.component";
+import { useUser } from "../../../context/AuthProvider";
 
 interface VersionTrayProps {
   showTagByDefaut?: boolean;
@@ -47,7 +48,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   const [isVersionSharable, setIsVersionSharable] = useState(false);
   const { openVersionTray, openVersionTrayFormWhichPage, isNewVersionInfo } =
     useAppSelector((state) => state?.versionTray);
-  const { dbUser } = useAppSelector((state) => state?.user);
+  const user = useUser();
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
   const { handleToGetARecipeVersion } = useToGetARecipeVersion();
   const router = useRouter();
@@ -90,7 +91,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
     try {
       if (updateVersion) {
         const returnObj = await handleToEditARecipeVersion(
-          dbUser?._id,
+          user.id,
           detailsARecipe?.recipeId?._id,
           updateVersionId,
           isVersionSharable,
@@ -114,7 +115,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           description: formState?.body,
           postfixTitle: formState?.title,
           recipeId: detailsARecipe?.recipeId?._id,
-          userId: dbUser?._id,
+          userId: user.id,
           ingredients: isNewVersionInfo?.ingredients || null,
           recipeInstructions: isNewVersionInfo?.recipeInstructions || null,
           servingSize: isNewVersionInfo?.servingSize || null,
@@ -156,7 +157,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
   // version delete function
   const deleteRecipeVersion = async () => {
     await handleToRemoveARecipeVersion(
-      dbUser?._id,
+      user.id,
       detailsARecipe?.recipeId?._id,
       removeVersionInfo?.versionId,
       removeVersionInfo?.isTurnedOn,
@@ -413,7 +414,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
                   onClick={() =>
                     openVersionTrayFormWhichPage === "edit" &&
                     changeDefaultVersionAndUpdateValue(
-                      dbUser?._id,
+                      user.id,
                       detailsARecipe?.recipeId?._id,
                       detailsARecipe?.recipeId?.originalVersion?._id,
                       true,

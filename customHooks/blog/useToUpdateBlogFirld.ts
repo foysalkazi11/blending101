@@ -1,3 +1,4 @@
+import { useUser } from "../../context/AuthProvider";
 import GET_ALL_GENERAL_BLOG_FOR_CLIENT from "../../gqlLib/blog/query/getAllGeneralBlogForClient";
 import client from "../../gqlLib/client";
 import { useAppSelector } from "../../redux/hooks";
@@ -5,7 +6,7 @@ import { useAppSelector } from "../../redux/hooks";
 type Props = (id: string, obj: object) => void;
 
 const useToUpdateBlogField = () => {
-  const memberId = useAppSelector((state) => state?.user?.dbUser?._id || "");
+  const memberId = useUser().id;
   const handleUpdateBlog: Props = (id = "", obj = {}) => {
     const { getAllGeneralBlogForClient } = client.readQuery({
       query: GET_ALL_GENERAL_BLOG_FOR_CLIENT,

@@ -24,6 +24,7 @@ import SingleCollection from "../common/singleCollection/SingleCollection";
 import TrayTag from "../TrayTag";
 import TrayWrapper from "../TrayWrapper";
 import styles from "./BlogCollectionTray.module.scss";
+import { useUser } from "../../../context/AuthProvider";
 
 interface BlogCollectionTrayProps {
   showTagByDefaut?: boolean;
@@ -48,7 +49,7 @@ const PlanCollectionTray = ({
   const { isOpenBlogCollectionTray, activeBlogForCollection } = useAppSelector(
     (state) => state?.blog,
   );
-  const memberId = useAppSelector((state) => state?.user?.dbUser?._id || "");
+  const memberId = useUser().id;
   const isMounted = useRef(null);
   const [
     getAllBlogCollections,

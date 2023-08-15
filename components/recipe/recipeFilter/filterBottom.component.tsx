@@ -21,6 +21,7 @@ import {
 } from "../../../redux/slices/collectionSlice";
 import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
 import { FilterCriteriaValue } from "../../../type/filterType";
+import { useUser } from "../../../context/AuthProvider";
 
 interface Props {
   allFilters: FilterCriteriaValue[];
@@ -30,7 +31,7 @@ function FilterPageBottom({ allFilters = [] }: Props) {
   const [filterRecipe, { data, loading }] = useLazyQuery(FILTER_RECIPE, {
     fetchPolicy: "network-only",
   });
-  const { dbUser } = useAppSelector((state) => state?.user);
+  const user = useUser();
   const { allFilterRecipe } = useAppSelector((state) => state?.recipe);
   const dispatch = useAppDispatch();
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
@@ -166,13 +167,13 @@ function FilterPageBottom({ allFilters = [] }: Props) {
       const { data } = await filterRecipe({
         variables: {
           data: {
-            userId: dbUser?._id,
+            userId: user.id,
             blendTypes: blendTypesArr,
             includeIngredientIds: ingredientIds,
             nutrientFilters: nutrientFiltersMap,
             nutrientMatrix: nutrientMatrixMap,
           },
-          userId: dbUser?._id,
+          userId: user.id,
         },
       });
 

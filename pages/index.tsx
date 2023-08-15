@@ -25,15 +25,14 @@ import Link from "next/link";
 import CardComponent from "../theme/cards/card.component";
 import Theme from "../component/molecules/Theme/Theme.component";
 import { useThemeTemplate } from "../hooks/modules/useThemeMethod";
+import { useUser } from "../context/AuthProvider";
 
 const defaultBlendImg =
   "https://blending.s3.us-east-1.amazonaws.com/3383678.jpg";
 
 const Home = ({ props }) => {
   const { allFilters } = useAppSelector((state) => state?.filterRecipe);
-  const displayName = useAppSelector(
-    (state) => state.user?.dbUser?.displayName || "",
-  );
+  const displayName = useUser().name;
   const { data: blendTypes } = useQuery(GET_BLEND_TYPES);
 
   const dispatch = useDispatch();

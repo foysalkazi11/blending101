@@ -12,13 +12,14 @@ import { GET_ALL_PLANS_FOR_A_COLLECTION } from "../../../graphql/Planner";
 import slugToTitle from "../../../helperFunc/string/slugToTittle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faStar } from "@fortawesome/pro-regular-svg-icons";
+import { useUser } from "../../../context/AuthProvider";
 
 const CollectionsOfPlan = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const slug = router.query?.collectionSlug as string;
   const [input, setInput] = useState("");
-  const memberId = useAppSelector((state) => state.user?.dbUser?._id || "");
+  const memberId = useUser().id;
   const { data: allPlans, loading: allPlansLoading } = useQuery(
     GET_ALL_PLANS_FOR_A_COLLECTION,
     {

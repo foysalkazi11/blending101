@@ -9,7 +9,6 @@ const EXTENSION_DOMAIN =
 const Extension = () => {
   const user = useUser();
   const session = useSession();
-  const picture = useAppSelector((state) => state.user?.dbUser?.image || "");
 
   const [data, setData] = useState("");
   useEffect(() => {
@@ -21,7 +20,7 @@ const Extension = () => {
         email: session?.attributes?.email || "",
         userId: user.id,
         name: user.name || "Unknown",
-        picture,
+        picture: user.image,
       }),
       EXTENSION_DOMAIN,
     );
