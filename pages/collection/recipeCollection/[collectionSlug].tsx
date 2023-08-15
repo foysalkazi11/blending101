@@ -309,7 +309,7 @@ const CollectionRecipes = () => {
                 defaultBg="primary"
                 hover="bgPrimary"
                 style={{ width: "28px", height: "28px" }}
-                handleClick={() => router.push("/discovery")}
+                handleClick={() => router.push("/recipe_discovery")}
               >
                 <FontAwesomeIcon icon={faXmark} />
               </IconWarper>

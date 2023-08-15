@@ -1,21 +1,19 @@
 import { useRouter } from "next/router";
 import React from "react";
-import Icon from "../../component/atoms/Icon/Icon.component";
-import AContainer from "../../containers/A.container";
-import useLocalStorage from "../../customHooks/useLocalStorage";
-import useViewAll, { QUERY_DICTIONARY } from "../../hooks/modules/useViewAll";
+import Icon from "../../../component/atoms/Icon/Icon.component";
+import AContainer from "../../../containers/A.container";
+import useLocalStorage from "../../../customHooks/useLocalStorage";
+import useViewAll, {
+  QUERY_DICTIONARY,
+} from "../../../hooks/modules/useViewAll";
 
-import styles from "../../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";
-import classes from "../../styles/pages/viewAll.module.scss";
-import ShowRecipeContainer from "../../components/showRecipeContainer";
-import IconWarper from "../../theme/iconWarper/IconWarper";
+import styles from "../../../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";
+import classes from "../../../styles/pages/viewAll.module.scss";
+import ShowRecipeContainer from "../../../components/showRecipeContainer";
+import IconWarper from "../../../theme/iconWarper/IconWarper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import {
-  faBookmark,
-  faShareNodes,
-  faXmark,
-} from "@fortawesome/pro-regular-svg-icons";
+import { faXmark } from "@fortawesome/pro-regular-svg-icons";
 
 const ViewAll = () => {
   const router = useRouter();

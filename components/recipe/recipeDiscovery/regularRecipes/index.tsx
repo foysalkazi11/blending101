@@ -23,7 +23,7 @@ import styles from "../recipeDiscovery.module.scss";
 const defaultHeadingContent = {
   heading: "Recommended",
   image: "/images/thumbs-up.svg",
-  allUrl: "recipes/recommended",
+  allUrl: "recipe/viewAll/recommended",
 };
 interface RegularRecipesType {
   setOpenCollectionModal?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -137,7 +137,7 @@ const RegularRecipes = ({
             image: (
               <FontAwesomeIcon icon={faThumbsUp} color="#fe5d1f" size="2x" />
             ),
-            allUrl: "recipes/recommended",
+            allUrl: "recipe/viewAll/recommended",
           }}
           loading={recommendedRecipesLoading}
           filters={["Leafy", "Beatle", "Fruity"]}
@@ -152,7 +152,7 @@ const RegularRecipes = ({
           headerData={{
             heading: "Recent",
             image: <FontAwesomeIcon icon={faClock} color="#fe5d1f" size="2x" />,
-            allUrl: "recipes/latest",
+            allUrl: "recipe/viewAll/latest",
           }}
           loading={latestRecipesLoading}
           recipes={latestRecipesData?.getAllLatestRecipes2}
@@ -167,7 +167,7 @@ const RegularRecipes = ({
           headerData={{
             heading: "Popular",
             image: <FontAwesomeIcon icon={faFire} color="#fe5d1f" size="2x" />,
-            allUrl: "recipes/popular",
+            allUrl: "recipe/viewAll/popular",
           }}
           filters={["Leafy", "Beatle", "Fruity"]}
           loading={popularRecipesLoading}

@@ -86,7 +86,7 @@ const Home = ({ props }) => {
     }
 
     dispatch(updateSidebarActiveMenuName("Blends"));
-    router.push("/discovery");
+    router.push("/recipe_discovery");
   };
 
   const handleToRoutePage = (
