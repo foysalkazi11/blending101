@@ -25,11 +25,6 @@ import Link from "next/link";
 import CardComponent from "../theme/cards/card.component";
 import Theme from "../component/molecules/Theme/Theme.component";
 import { useThemeTemplate } from "../hooks/modules/useThemeMethod";
-import SpecialcardComponent from "../theme/cards/specialCard.component";
-import client from "../gqlLib/client";
-import CREATE_NEW_USER, {
-  GET_USER,
-} from "../gqlLib/user/mutations/createNewUser";
 
 const defaultBlendImg =
   "https://blending.s3.us-east-1.amazonaws.com/3383678.jpg";

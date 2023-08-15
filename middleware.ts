@@ -61,6 +61,8 @@ export async function middleware(req: NextRequest) {
           if (jwtVerified) {
             response.cookies.set("bearer_token", token);
             return response;
+          } else {
+            return NextResponse.redirect(`${url.origin}/login`);
           }
         }
       }
@@ -68,9 +70,16 @@ export async function middleware(req: NextRequest) {
   } catch (err) {
     console.log("err", err);
   }
+  // console.log("**********************************");
+  // console.log(url);
+  // console.log("**********************************");
 
+  // const pattern = /\?code=[a-zA-Z0-9-]+&state=[a-zA-Z0-9]+/;
+  // if (url.pathname !== "/" && !pattern.test(url.search)) {
+  //   return NextResponse.redirect(`${url.origin}/login`);
+  // }
   // Redirect unauthenticated users to the login page when they attempt to access protected pages
-  return NextResponse.redirect(`${url.origin}/login`);
+  // return NextResponse.redirect(`${url.origin}/login`);
 }
 
 // See "Matching Paths" below to learn more

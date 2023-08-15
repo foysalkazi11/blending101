@@ -62,30 +62,43 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
         provider = "email";
       } else {
         email = user?.signInUserSession?.idToken?.payload?.email;
-        provider = user?.signInUserSession?.idToken?.payload?.identities;
+        provider =
+          user?.signInUserSession?.idToken?.payload?.identities?.[0]?.providerName?.toLowerCase();
+        console.log(provider);
       }
-      getUser({
-        variables: {
-          data: { email: email || user?.signInUserSession, provider },
-        },
-      }).then((response) => {
-        const profile = response?.data?.createNewUser;
-        setUser({
-          id: profile?._id,
-          name: profile?.displayName,
-          email: profile?.email,
-          image: profile?.image,
+      if (email && provider)
+        getUser({
+          variables: {
+            data: { email: email || user?.signInUserSession, provider },
+          },
+        }).then((response) => {
+          const profile = response?.data?.createNewUser;
+          setUser({
+            id: profile?._id,
+            name: profile?.displayName,
+            email: profile?.email,
+            image: profile?.image,
+          });
+          // if (!profile?.isCreated) router.push("/user/profile/");
+          return profile;
         });
-        if (!profile?.isCreated) router.push("/user/profile/");
-        return profile;
-      });
     },
-    [getUser, router],
+    [getUser],
   );
 
   useEffect(() => {
+    if (
+      [
+        "/login",
+        "/signup",
+        "/verify_email",
+        "/forget_password",
+        "/welcome_blending101_extension",
+      ].includes(router.pathname)
+    )
+      return;
     Auth.currentAuthenticatedUser().then(sessionHandler);
-  }, [sessionHandler]);
+  }, [router, sessionHandler]);
 
   const signIn = async (
     email: string,
@@ -100,7 +113,9 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
           router.push("/");
           onSuccess(user);
         });
-    } catch (error) {}
+    } catch (error) {
+      onError(error);
+    }
   };
 
   const oAuthSignIn = async (
@@ -108,12 +123,14 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
     onSuccess = (user) => {},
     onError = (error) => {},
   ) => {
+    console.log("Inovikg");
     Auth.federatedSignIn({
       provider: CognitoHostedUIIdentityProvider[provider],
     })
       .then(sessionHandler)
       .then((user) => {
-        router.push("/");
+        console.log(user);
+        // router.push("/");
         onSuccess(user);
       })
       .catch((error) => {
