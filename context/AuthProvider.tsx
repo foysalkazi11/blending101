@@ -67,7 +67,7 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
         console.log(provider);
       }
       if (email && provider)
-        getUser({
+        return getUser({
           variables: {
             data: { email: email || user?.signInUserSession, provider },
           },
@@ -112,10 +112,12 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
       Auth.signIn(email, password)
         .then(sessionHandler)
         .then((user) => {
+          console.log(user);
           router.push("/");
           onSuccess(user);
         });
     } catch (error) {
+      console.log(error);
       onError(error);
     }
   };
