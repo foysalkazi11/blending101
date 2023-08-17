@@ -79,11 +79,13 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
             email: profile?.email,
             image: profile?.image,
           });
+          router.push("/");
+
           // if (!profile?.isCreated) router.push("/user/profile/");
           return profile;
         });
     },
-    [getUser],
+    [getUser, router],
   );
 
   useEffect(() => {
@@ -112,7 +114,7 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
       Auth.signIn(email, password)
         .then(sessionHandler)
         .then((user) => {
-          router.push("/");
+          console.log(user);
           onSuccess(user);
         });
     } catch (error) {
