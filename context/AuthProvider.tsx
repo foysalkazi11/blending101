@@ -73,19 +73,19 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
           },
         }).then((response) => {
           const profile = response?.data?.createNewUser;
+          console.log(profile);
           setUser({
             id: profile?._id,
             name: profile?.displayName,
             email: profile?.email,
             image: profile?.image,
           });
-          router.push("/");
 
           // if (!profile?.isCreated) router.push("/user/profile/");
           return profile;
         });
     },
-    [getUser, router],
+    [getUser],
   );
 
   useEffect(() => {
