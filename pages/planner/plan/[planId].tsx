@@ -59,7 +59,7 @@ import useToAddPlanToCollection from "../../../customHooks/plan/useToAddPlanToCo
 import useToOpenPlanCommentsTray from "../../../customHooks/plan/useToOpenPlanCommentsTray";
 import { useUser } from "../../../context/AuthProvider";
 
-const MyPlan = () => {
+const PlanDetails = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const methods = useForm({
@@ -284,25 +284,9 @@ const MyPlan = () => {
     dispatch(updateSidebarActiveMenuName("Plans"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   return (
-    <Container
-      headerIcon="/icons/calender__sidebar.svg"
-      headerTitle={`MEAL PLAN DETAILS`}
-      headTagInfo={{
-        title: "Meal Plan Details",
-        description: "Meal Plan Details",
-      }}
-      showPlanCollectionTray={{
-        show: true,
-        showPanel: "left",
-        showTagByDefault: true,
-      }}
-      showCommentsTrayForPlan={{
-        show: true,
-        showPanel: "right",
-        showTagByDefault: false,
-      }}
-    >
+    <Fragment>
       <RXPanel />
       <ShareModal
         name={plan?.planName}
@@ -479,7 +463,7 @@ const MyPlan = () => {
           setOpenCollectionModal(false);
         }}
       />
-    </Container>
+    </Fragment>
   );
 };
 
@@ -491,4 +475,9 @@ const DatePickerButton = forwardRef(({ value, onClick }: any, ref: any) => (
 ));
 DatePickerButton.displayName = "DatePickerButton";
 
-export default MyPlan;
+export default PlanDetails;
+
+PlanDetails.meta = {
+  title: "Meal Plan Details",
+  icon: "/icons/calender__sidebar.svg",
+};

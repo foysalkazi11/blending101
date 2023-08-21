@@ -1,6 +1,6 @@
 import { faBooks } from "@fortawesome/pro-thin-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import AContainer from "../../containers/A.container";
 import useLocalStorage from "../../customHooks/useLocalStorage";
 import { WikiType } from "../../type/wikiListType";
@@ -15,6 +15,7 @@ import WikiSingleType from "./wikiSingleType/WikiSingleType";
 import { useRouter } from "next/router";
 import WikiSingleItem from "./wikiSingleItem/WikiSingleItem";
 import useWindowSize from "../utility/useWindowSize";
+import WikiCommentsTray from "../sidetray/wikiCommentsTray";
 
 export type SelectedWikiType = {
   [key in WikiType]: string;
@@ -78,16 +79,8 @@ const WikiHome = () => {
   };
 
   return (
-    <AContainer
-      headerTitle={changeTitleInfo(wikiType).title}
-      headerIcon={"/icons/books.svg"}
-      showWikiCommentsTray={{
-        show: true,
-        showPanel: "right",
-        showTagByDefault: false,
-      }}
-      headTagInfo={changeTitleInfo(wikiType)}
-    >
+    <Fragment>
+      <WikiCommentsTray showTagByDefaut={false} showPanle={"right"} />
       <div className={styles.wikiPageContainer}>
         {/* <WikiSearchBar
           openTray={openTray}
@@ -132,7 +125,7 @@ const WikiHome = () => {
           />
         </TrayWrapper>
       )}
-    </AContainer>
+    </Fragment>
   );
 };
 

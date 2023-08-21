@@ -5,3 +5,8 @@ const WikiPage = () => {
 };
 
 export default WikiPage;
+
+WikiPage.meta = {
+  title: "Wiki",
+  icon: "/icons/books.svg",
+};

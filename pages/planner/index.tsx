@@ -156,29 +156,7 @@ const PlanDiscovery = () => {
   const allFilters = [].concat(...Object.values(allFiltersForPlan));
 
   return (
-    <AContainer
-      headerIcon="/icons/calender__sidebar.svg"
-      headerTitle="Plan Discovery"
-      showPlanCollectionTray={{
-        show: isPlanFilterOpen ? false : true,
-        showPanel: "left",
-        showTagByDefault: true,
-      }}
-      headTagInfo={{
-        title: "Plans",
-        description: "plans",
-      }}
-      showCommentsTrayForPlan={{
-        show: true,
-        showPanel: "right",
-        showTagByDefault: false,
-      }}
-      showPlanFilterTray={{
-        show: true,
-        showPanel: "left",
-        showTagByDefault: false,
-      }}
-    >
+    <Fragment>
       <div className={styles.discovery}>
         <div className={styles.searchBarContainer}>
           <CommonSearchBar
@@ -232,7 +210,7 @@ const PlanDiscovery = () => {
           setOpenCollectionModal(false);
         }}
       />
-    </AContainer>
+    </Fragment>
   );
 };
 
@@ -370,3 +348,8 @@ const FeaturedPlan = ({ setOpenCollectionModal }) => {
 };
 
 export default PlanDiscovery;
+
+PlanDiscovery.meta = {
+  title: "Plan Discovery",
+  icon: "/icons/calender__sidebar.svg",
+};

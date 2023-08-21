@@ -1,16 +1,5 @@
-/* eslint-disable @next/next/no-img-element */
-import React, { useState, useRef } from "react";
-import styles from "./header.module.scss";
-import SocialComponent from "./social/Social.component";
-import notification from "../utility/reactToastifyNotification";
-import { Auth } from "aws-amplify";
-import { useAppDispatch } from "../../redux/hooks";
-import { setLoading } from "../../redux/slices/utilitySlice";
-import {
-  setUser,
-  setNonConfirmedUser,
-  setDbUser,
-} from "../../redux/slices/userSlice";
+import React, { useState, useRef, useEffect } from "react";
+import styles from "./_header.module.scss";
 import { HiOutlineUserCircle } from "react-icons/hi";
 import {
   MdOutlineAdminPanelSettings,
@@ -22,33 +11,37 @@ import {
 import Link from "next/link";
 import { FaRegUser } from "react-icons/fa";
 import Image from "next/image";
-import useOnClickOutside from "../utility/useOnClickOutside";
-import { DbUserType } from "../../type/dbUserType";
-import NotificationBell from "../../theme/notificationBell";
-import NotificationPopup from "../../theme/notificationPopup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBagShopping } from "@fortawesome/pro-solid-svg-icons";
-import { setIsNotificationTrayOpen } from "../../redux/slices/notificationSlice";
 import { useQuery } from "@apollo/client";
-import GET_SHARE_NOTIFICATION from "../../gqlLib/notification/query/getShareNotification";
-import { useUserHandler, useUser } from "../../context/AuthProvider";
 
-interface headerInterface {
-  logo: Boolean;
-  headerTitle: string;
+import SocialComponent from "../components/header/social/Social.component";
+import useOnClickOutside from "../components/utility/useOnClickOutside";
+import { useUser, useUserHandler } from "../context/AuthProvider";
+import GET_SHARE_NOTIFICATION from "../gqlLib/notification/query/getShareNotification";
+import { useAppDispatch } from "../redux/hooks";
+import { setIsNotificationTrayOpen } from "../redux/slices/notificationSlice";
+import NotificationBell from "../theme/notificationBell";
+
+interface IHeader {
+  logo?: Boolean;
+  title: string;
   fullWidth?: Boolean;
-  headerIcon?: string | React.ReactNode;
+  icon?: string | React.ReactNode;
+  mainRef: any;
 }
 
-export default function HeaderComponent({
+function Header({
   logo = true,
-  headerTitle = "Home",
+  title = "Home",
   fullWidth,
-  headerIcon = "",
-}: headerInterface) {
+  icon = "",
+  mainRef,
+}: IHeader) {
   const user = useUser();
   const { signOut } = useUserHandler();
 
+  const headerEl = useRef(null);
   const userMenu = useRef(null);
   const userIcon = useRef(null);
 
@@ -65,8 +58,37 @@ export default function HeaderComponent({
   const style = fullWidth ? { width: "100%" } : {};
   const notificationLength = data?.getShareNotification?.totalNotification || 0;
 
+  // useEffect(() => {
+  //   const main: HTMLDivElement = mainRef.current;
+  //   if (typeof window !== `undefined`) {
+  //     let prevScrollPosition = main.scrollTop;
+  //     main.addEventListener("scroll", (e: any) => {
+  //       const curScrollPosition = e.target.scrollTop;
+  //       const difference = prevScrollPosition - curScrollPosition;
+  //       console.log({
+  //         curr: curScrollPosition,
+  //         prev: prevScrollPosition,
+  //         difference,
+  //       });
+  //       const { current } = headerEl;
+  //       // setMobileNav(false);
+  //       if (curScrollPosition > 100) {
+  //         current.classList.add(styles.compaq);
+  //       } else {
+  //         current.classList.remove(styles.compaq);
+  //       }
+  //       if (difference < 0) {
+  //         current.classList.add(styles.hide);
+  //       } else {
+  //         current.classList.remove(styles.hide);
+  //       }
+  //       prevScrollPosition = curScrollPosition;
+  //     });
+  //   }
+  // }, []);
+
   return (
-    <div className={styles.wrapper}>
+    <header id="header" ref={headerEl}>
       <div className={styles.header} style={style}>
         <div className={styles.header__inner}>
           <Link href="/" passHref>
@@ -75,14 +97,14 @@ export default function HeaderComponent({
             </div>
           </Link>
           <div className={styles.center}>
-            {headerIcon ? (
-              typeof headerIcon === "string" ? (
-                <img src={headerIcon} alt="icon" />
+            {icon ? (
+              typeof icon === "string" ? (
+                <img src={icon} alt="icon" />
               ) : (
-                headerIcon
+                icon
               )
             ) : null}
-            <h2 className={styles.title}>{headerTitle}</h2>
+            <h2 className={styles.title}>{title}</h2>
           </div>
           <div className={styles.right + " " + styles.logo}>
             <SocialComponent />
@@ -164,6 +186,8 @@ export default function HeaderComponent({
           </div>
         </div>
       </div>
-    </div>
+    </header>
   );
 }
+
+export default Header;

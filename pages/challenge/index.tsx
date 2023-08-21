@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, Fragment } from "react";
 import { useQuery } from "@apollo/client";
 import {
   faGear,
@@ -100,19 +100,7 @@ const ChallengePage = () => {
   const canUpload = !viewOnly && challenge?.challengeInfo?.daysRemaining > 0;
 
   return (
-    <AContainer
-      headerIcon="/icons/whistle.svg"
-      headerTitle="Challenges"
-      showGroceryTray={{
-        show: showGroceryTray,
-        showPanel: "right",
-        showTagByDefault: showGroceryTray,
-      }}
-      headTagInfo={{
-        title: "Challenge",
-        description: "challenge",
-      }}
-    >
+    <Fragment>
       <RXPanel />
       <ShareModal
         name={challenge?.challengeInfo?.challengeName}
@@ -291,8 +279,13 @@ const ChallengePage = () => {
           </div>
         </div>
       </div>
-    </AContainer>
+    </Fragment>
   );
 };
 
 export default ChallengePage;
+
+ChallengePage.meta = {
+  title: "Challenge",
+  icon: "/icons/whistle.svg",
+};

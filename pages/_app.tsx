@@ -17,8 +17,13 @@ const FeedbackImport = dynamic(() => import("simple-screenshot-feedback"), {
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import Layout from "../layouts";
 
 config.autoAddCss = false;
+
+interface IComponent {
+  meta: { title: string; icon: string };
+}
 
 function MyApp({ Component, pageProps }: AppProps) {
   const handleSubmitError = (error: any) => {
@@ -30,18 +35,19 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Provider store={store}>
         <AuthProvider>
           <DndProvider backend={HTML5Backend}>
-            <Loader />
-            <ToastContainer limit={3} />
-            {/* @ts-ignore */}
-            <FeedbackImport
-              //@ts-ignore
-              slackToken={process.env.NEXT_PUBLIC_SLACK_API_KEY}
-              slackChannel={process.env.NEXT_PUBLIC_SLACK_CHANNEL}
-              handleSubmitError={handleSubmitError}
-            />
-
-            {/* @ts-ignore */}
-            <Component {...pageProps} />
+            <Layout {...(Component as unknown as IComponent).meta}>
+              <Loader />
+              <ToastContainer limit={3} />
+              {/* @ts-ignore */}
+              <FeedbackImport
+                //@ts-ignore
+                slackToken={process.env.NEXT_PUBLIC_SLACK_API_KEY}
+                slackChannel={process.env.NEXT_PUBLIC_SLACK_CHANNEL}
+                handleSubmitError={handleSubmitError}
+              />
+              {/* @ts-ignore */}
+              <Component {...pageProps} />
+            </Layout>
           </DndProvider>
         </AuthProvider>
       </Provider>

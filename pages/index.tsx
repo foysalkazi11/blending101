@@ -1,18 +1,11 @@
-import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
-
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import { withSSRContext } from "aws-amplify";
 import Head from "next/head";
 
-import React, { useMemo } from "react";
+import React, { Fragment, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import Overview from "../component/module/Home/Overview.component";
-import {
-  PAGES,
-  sidebarActiveMenuNameType,
-} from "../components/sidebar/Sidebar.component";
-import AContainer from "../containers/A.container";
+import { PAGES } from "../components/sidebar/Sidebar.component";
 import { RECIPE_CATEGORY_COLOR } from "../data/Recipe";
 import { GET_BLEND_TYPES } from "../graphql/Recipe";
 import { useAppSelector } from "../redux/hooks";
@@ -30,7 +23,7 @@ import { useUser } from "../context/AuthProvider";
 const defaultBlendImg =
   "https://blending.s3.us-east-1.amazonaws.com/3383678.jpg";
 
-const Home = ({ props }) => {
+const Home = () => {
   const { allFilters } = useAppSelector((state) => state?.filterRecipe);
   const displayName = useUser().name;
   const { data: blendTypes } = useQuery(GET_BLEND_TYPES);
@@ -65,8 +58,6 @@ const Home = ({ props }) => {
     };
   }, [widgetData]);
 
-  // console.log(widgets);
-
   const handleUpdateFilterCriteria = useToUpdateFilterCriteria();
 
   const handleToShowBlendTypes = (value: any) => {
@@ -83,27 +74,8 @@ const Home = ({ props }) => {
     router.push("/recipe_discovery");
   };
 
-  const handleToRoutePage = (
-    route: string,
-    menuName: sidebarActiveMenuNameType,
-  ) => {
-    dispatch(updateSidebarActiveMenuName(menuName));
-    router.push(route);
-  };
-
   return (
-    <AContainer
-      headerTitle="Home"
-      headerFullWidth={true}
-      showSidebar={false}
-      headerIcon={"/icons/home.svg"}
-      headTagInfo={{ description: "home page content", title: "Home" }}
-      showNotificationTray={{
-        show: true,
-        showPanel: "right",
-        showTagByDefault: false,
-      }}
-    >
+    <Fragment>
       <div className={styles.container}>
         <div className="row">
           <div className="col-9">
@@ -114,15 +86,10 @@ const Home = ({ props }) => {
                   {PAGES &&
                     PAGES.map((page, idx) =>
                       idx !== 0 ? (
-                        <a
-                          key={page.content}
-                          onClick={() =>
-                            handleToRoutePage(page.link, page.content)
-                          }
-                        >
+                        <Link key={page.content} href={page.link}>
                           <img src={page.logo} alt={page.content} />
                           <h6>{page.content}</h6>
-                        </a>
+                        </Link>
                       ) : (
                         <></>
                       ),
@@ -204,11 +171,17 @@ const Home = ({ props }) => {
           </div>
         </div>
       </div>
-    </AContainer>
+    </Fragment>
   );
 };
 
 export default Home;
+
+Home.meta = {
+  sidebar: false,
+  title: "Home",
+  icon: "/icons/home.svg",
+};
 
 const getDetailURL = (domain: string, id: string, payload?: any) => {
   if (domain === "Recipe") return `recipe_details/${id}/`;

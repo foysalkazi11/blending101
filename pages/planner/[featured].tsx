@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import Icon from "../../component/atoms/Icon/Icon.component";
 import AContainer from "../../containers/A.container";
 import styles from "../../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";
@@ -38,19 +38,7 @@ const ViewAll = () => {
   }
 
   return (
-    <AContainer
-      showCollectionTray={{ show: true, showTagByDefault: true }}
-      showCommentsTray={{
-        show: true,
-        showPanel: "right",
-        showTagByDefault: false,
-      }}
-      showCommentsTrayForPlan={{
-        show: true,
-        showPanel: "right",
-        showTagByDefault: false,
-      }}
-    >
+    <Fragment>
       <div className={styles.main__div}>
         <div className="flex jc-between mt-30">
           <div className="flex ai-center">
@@ -97,7 +85,7 @@ const ViewAll = () => {
           }}
         />
       </div>
-    </AContainer>
+    </Fragment>
   );
 };
 

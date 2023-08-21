@@ -1,4 +1,12 @@
 @import "../../../styles/partials/variables";
+
+.fixed__main__right {
+  position: fixed;
+  z-index: 999999;
+  right: 0;
+  top: 55px;
+}
+
 .singleNotificationContainer {
   border-bottom: 1px solid $slightGray;
   padding: 1rem;

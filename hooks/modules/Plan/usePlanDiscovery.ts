@@ -60,7 +60,7 @@ const useAllPlan = (props: IPlanDiscoveryHook) => {
         },
       }).then((response) => {
         const data = response.data?.getAllGlobalPlans;
-        // if (data) return;
+        if (!data?.plans) return;
         setPlans((prevPlan) => [...prevPlan, ...data?.plans]);
         setHasMore(data?.plans?.length > 0);
       });

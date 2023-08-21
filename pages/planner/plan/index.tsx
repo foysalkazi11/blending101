@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { Fragment, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@apollo/client";
@@ -97,19 +97,7 @@ const MyPlan = () => {
   };
 
   return (
-    <AContainer
-      headerIcon="/icons/calender__sidebar.svg"
-      headerTitle="My Meal Plan"
-      showGroceryTray={{
-        show: showGroceryTray,
-        showPanel: "right",
-        showTagByDefault: showGroceryTray,
-      }}
-      headTagInfo={{
-        title: "Meal plan",
-        description: "meal plan",
-      }}
-    >
+    <Fragment>
       <RXPanel />
       <IngredientPanel />
       <ConfirmAlert
@@ -223,8 +211,13 @@ const MyPlan = () => {
           </div>
         </div>
       </div>
-    </AContainer>
+    </Fragment>
   );
 };
 
 export default MyPlan;
+
+MyPlan.meta = {
+  title: "My Meal Plan",
+  icon: "/icons/calender__sidebar.svg",
+};
