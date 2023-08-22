@@ -7,6 +7,10 @@ import CheckCircle from "../../../../public/icons/check_circle_black_24dp.svg";
 import SkeletonBlendType from "../../../../theme/skeletons/skeletonBlendType/SkeletonBlendType";
 import useWindowSize from "../../../utility/useWindowSize";
 import { FilterCriteriaValue } from "../../../../type/filterType";
+import {
+  ImageWithFallback,
+  NextImageWithFallback,
+} from "../../../../theme/imageWithFallback";
 
 interface Props {
   searchInput?: string;
@@ -93,9 +97,13 @@ const IngredientPictureSection = ({
                   }
                 >
                   <div className={styles.image}>
-                    <img
+                    <NextImageWithFallback
                       src={item?.featuredImage || "/food/chard.png"}
                       alt={item?.ingredientName}
+                      fallbackSrc="/food/chard.png"
+                      width={60}
+                      height={50}
+                      loading="lazy"
                     />
                     {checkActiveItem(item?._id) && (
                       <div className={styles.tick}>

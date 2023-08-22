@@ -9,10 +9,8 @@ import HighlightOffOutlinedIcon from "../../../../public/icons/highlight_off_bla
 import { useForm } from "react-hook-form";
 import CircularRotatingLoader from "../../../loader/circularRotatingLoader.component";
 import { useUserHandler } from "../../../../context/AuthProvider";
-import { useRouter } from "next/router";
 
 const LoginScreen = () => {
-  const router = useRouter();
   const { signIn } = useUserHandler();
   const {
     register,
@@ -22,10 +20,15 @@ const LoginScreen = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const loginSuccess = (user: unknown) => {
+    setIsLoading(false);
+  };
+  const loginError = (error: unknown) => {
+    setIsLoading(false);
+  };
   const onSubmit = async (input) => {
     setIsLoading(true);
-    await signIn(input?.email, input?.password);
-    router.push("/");
+    signIn(input?.email, input?.password, loginSuccess, loginError);
   };
 
   return (
