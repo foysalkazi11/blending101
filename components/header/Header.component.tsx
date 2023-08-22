@@ -32,6 +32,7 @@ import { setIsNotificationTrayOpen } from "../../redux/slices/notificationSlice"
 import { useQuery } from "@apollo/client";
 import GET_SHARE_NOTIFICATION from "../../gqlLib/notification/query/getShareNotification";
 import { useUserHandler, useUser } from "../../context/AuthProvider";
+import { NextImageWithFallback } from "../../theme/imageWithFallback";
 
 interface headerInterface {
   logo: Boolean;
@@ -127,11 +128,12 @@ export default function HeaderComponent({
                 {user ? (
                   <div className={styles.userName}>
                     {user?.image ? (
-                      <Image
+                      <NextImageWithFallback
                         src={user?.image}
                         alt="prfile.png"
-                        objectFit="cover"
-                        layout="fill"
+                        fallbackSrc="/images/user-placeholder.png"
+                        style={{ objectFit: "cover" }}
+                        fill
                         onClick={(e) => {
                           setOpenPopup((pre) => !pre);
                         }}
