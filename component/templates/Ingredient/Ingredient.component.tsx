@@ -27,6 +27,7 @@ import Textfield from "../../organisms/Forms/Textfield.component";
 
 import styles from "./Ingredient.module.scss";
 import Textarea from "../../organisms/Forms/Textarea.component";
+import { NextImageWithFallback } from "../../../theme/imageWithFallback";
 
 interface IngredientPanelProps {
   ingredients: any;
@@ -58,9 +59,13 @@ const IngredientPanel = (props: IngredientPanelProps) => {
                     <div className={styles.ingredient__item}>
                       <div>
                         {ingredient?.ingredientId?.featuredImage ? (
-                          <img
+                          <NextImageWithFallback
                             src={ingredient?.ingredientId?.featuredImage}
                             alt={ingredient.ingredientId.ingredientName}
+                            fallbackSrc="/images/basket.svg"
+                            width={28}
+                            height={28}
+                            style={{ objectFit: "contain" }}
                           />
                         ) : (
                           <span />
