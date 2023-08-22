@@ -22,7 +22,12 @@ const DEFAULT_USER = { id: "", name: "", email: "", image: "" };
 interface IAuthContext {
   user: typeof DEFAULT_USER;
   session: any;
-  signIn: (email: string, password: string) => void;
+  signIn: (
+    email: string,
+    password: string,
+    onSuccess?: (user: any) => void,
+    onError?: (error: any) => void,
+  ) => void;
   oAuthSignIn: (provider: TProvider) => void;
   signOut: () => void;
 }
@@ -54,7 +59,7 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
   const [getUser] = useMutation(GET_USER);
 
   const sessionHandler = useCallback(
-    (user) => {
+    async (user) => {
       setSession(user);
       let email, provider;
       if (user?.attributes?.email) {
@@ -109,14 +114,12 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
     onError = (error) => {},
   ) => {
     try {
-      Auth.signIn(email, password)
-        .then(sessionHandler)
-        .then((user) => {
-          router.push("/");
-          onSuccess(user);
-        });
+      const user = await Auth.signIn(email, password);
+      const bdUser = await sessionHandler(user);
+      router.push("/");
+      onSuccess(bdUser);
     } catch (error) {
-      console.log(error);
+      notification("error", error.message);
       onError(error);
     }
   };

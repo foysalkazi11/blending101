@@ -20,9 +20,15 @@ const LoginScreen = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const loginSuccess = (user: unknown) => {
+    setIsLoading(false);
+  };
+  const loginError = (error: unknown) => {
+    setIsLoading(false);
+  };
   const onSubmit = async (input) => {
     setIsLoading(true);
-    signIn(input?.email, input?.password);
+    signIn(input?.email, input?.password, loginSuccess, loginError);
   };
 
   return (

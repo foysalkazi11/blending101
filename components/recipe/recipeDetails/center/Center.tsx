@@ -248,7 +248,7 @@ const Center = ({
         pageComeFrom={pageComeFrom}
         // loading={acceptRecipeShareLoading}
         backBtnObj={{
-          function: () => router?.push("/discovery"),
+          function: () => router?.push("/recipe_discovery"),
           text: "Back",
         }}
       />
@@ -411,7 +411,7 @@ const Center = ({
                         backgroundImage: `url(${img.image})`,
                       }}
                     />
-
+                    {/* <img src={img.image} alt="recipe_image" /> */}
                     <Image
                       src={img.image}
                       alt="recipe_image"
