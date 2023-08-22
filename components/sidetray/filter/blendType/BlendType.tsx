@@ -10,9 +10,7 @@ import {
 } from "@fortawesome/pro-regular-svg-icons";
 import CustomAccordion from "../../../../theme/accordion/accordion.component";
 import { FilterCriteriaValue } from "../../../../type/filterType";
-
-const defaultBlendImg =
-  "https://blending.s3.us-east-1.amazonaws.com/3383678.jpg";
+import { NextImageWithFallback } from "../../../../theme/imageWithFallback";
 
 interface Props {
   checkActiveItem: (id: string) => boolean;
@@ -80,7 +78,7 @@ const BlendType = ({
                         checkActiveItem(blend?._id),
                         {
                           name: blend?.name,
-                          image: blend?.image || defaultBlendImg,
+                          image: blend?.image,
                           id: blend?._id,
                           tagLabel: `Blend Type | ${blend?.name}`,
                           filterCriteria: "blendTypes",
@@ -95,10 +93,15 @@ const BlendType = ({
                     }
                   >
                     <div className={styles.image}>
-                      <img
-                        src={blend?.image || defaultBlendImg}
+                      <NextImageWithFallback
+                        src={blend?.image}
                         alt={blend?.name}
+                        fallbackSrc="/food/chard.png"
+                        width={60}
+                        height={50}
+                        loading="lazy"
                       />
+
                       {checkActiveItem(blend._id) && (
                         <div className={styles.tick}>
                           <CheckCircle className={styles.ticked} />
