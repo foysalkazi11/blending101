@@ -29,6 +29,7 @@ import Textfield from "../../../../../component/organisms/Forms/Textfield.compon
 import Combobox from "../../../../../component/organisms/Forms/Combobox.component";
 import IconButton from "../../../../../component/atoms/Button/IconButton.component";
 import Tooltip from "../../../../../theme/toolTip/CustomToolTip";
+import { NextImageWithFallback } from "../../../../../theme/imageWithFallback";
 
 const defaultValues = {
   ingredientId: "",
@@ -387,15 +388,16 @@ const SingleIngredient = ({
       <div className={`${classes.ingredients__icons}`}>
         {elem?.ingredientStatus === "ok" ? (
           elem?.featuredImage || elem?.images?.[0] ? (
-            <Image
+            <NextImageWithFallback
               src={
                 elem?.featuredImage ||
                 elem?.images?.[0] ||
                 "/food/Dandelion.png"
               }
+              fallbackSrc="/images/basket.svg"
               alt="Picture will load soon"
-              objectFit="contain"
-              layout="fill"
+              style={{ objectFit: "contain" }}
+              fill
             />
           ) : (
             <FontAwesomeIcon icon={faBasketShoppingSimple} />

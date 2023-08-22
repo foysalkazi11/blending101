@@ -19,6 +19,10 @@ import {
 } from "@fortawesome/pro-light-svg-icons";
 import Tooltip from "../../../theme/toolTip/CustomToolTip";
 import { useUser } from "../../../context/AuthProvider";
+import {
+  ImageWithFallback,
+  NextImageWithFallback,
+} from "../../../theme/imageWithFallback";
 
 const scaleMenu = [
   { label: ".5x", value: 0.5 },
@@ -159,12 +163,15 @@ const IngredientDetails = (props: IngredientDetailsProps) => {
                   {isIngredientStatusOk ? (
                     ingredient?.ingredientId?.featuredImage ||
                     ingredient?.ingredientId?.images?.length ? (
-                      <img
+                      <NextImageWithFallback
                         src={
                           ingredient?.ingredientId?.featuredImage ||
                           ingredient?.ingredientId?.images[0]
                         }
+                        fallbackSrc="/images/basket.svg"
                         alt="icon"
+                        width={28}
+                        height={28}
                       />
                     ) : (
                       <span className={styles.imageBox}>

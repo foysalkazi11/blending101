@@ -36,6 +36,7 @@ import isEmptyObj from "../../../../helperFunc/object/isEmptyObj";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/pro-light-svg-icons";
 import { useUser } from "../../../../context/AuthProvider";
+import { ImageWithFallback } from "../../../../theme/imageWithFallback";
 
 interface center {
   recipeData: RecipeDetailsType;
@@ -317,12 +318,13 @@ const Center = ({
                     //   window.location.href = "";
                     // }}
                   >
-                    <img
+                    <ImageWithFallback
                       className={styles.brand}
                       src={
                         `${recipeData?.recipeId?.brand?.brandImage}` ||
                         "/icons/delish.png"
                       }
+                      fallbackSrc="/logo_small.svg"
                       alt="brand"
                     />
                   </a>
