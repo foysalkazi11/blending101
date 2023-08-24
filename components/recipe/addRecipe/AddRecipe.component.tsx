@@ -3,8 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import AContainer from "../../../containers/A.container";
 import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
 import Center_Elements from "./recipe_elements/centerElements.component";
-import IngredientList from "./recipe_elements/ingredientList/ingredientList&Howto.component";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch } from "../../../redux/hooks";
 import imageUploadS3 from "../../utility/imageUploadS3";
 import { BLEND_CATEGORY } from "../../../gqlLib/recipes/queries/getEditRecipe";
 import { useMutation, useQuery } from "@apollo/client";
@@ -23,6 +22,7 @@ import { faBasketShopping as faBasketShoppingRegular } from "@fortawesome/pro-re
 import { faBasketShopping as faBasketShoppingSolid } from "@fortawesome/pro-solid-svg-icons";
 import { GiGl } from "../../../type/nutrationType";
 import { useUser } from "../../../context/AuthProvider";
+import IngredientSection from "../share/IngredientSection";
 
 const AddRecipePage = () => {
   const [images, setImages] = useState<any[]>([]);
@@ -144,16 +144,49 @@ const AddRecipePage = () => {
 
   //left panel
 
-  // add ingrediet
-  const handleIngredientClick = (ingredient: any, present: boolean) => {
+  // add ingredient
+  const handleIngredientClick = (
+    ingredient: any,
+    present: boolean,
+    edit?: boolean,
+  ) => {
+    let ingredientList = [];
+    const defaultPortion =
+      ingredient?.portions?.find((ing) => ing?.default) ||
+      ingredient?.portions?.[0];
+
+    const newIngredient = {
+      ...ingredient,
+      ingredientId: {
+        _id: ingredient?._id,
+        ingredientName: ingredient?.ingredientName,
+        featuredImage: ingredient?.featuredImage,
+        images: ingredient?.images,
+      },
+      selectedPortion: {
+        gram: parseFloat(defaultPortion?.meausermentWeight),
+        name: defaultPortion?.measurement,
+        quantity: ingredient?.selectedPortion?.quantity || 1,
+      },
+      weightInGram: parseFloat(defaultPortion?.meausermentWeight),
+      ingredientStatus: "ok",
+    };
+
     if (!present) {
-      setSelectedIngredientsList((pre) => [...pre, ingredient]);
+      ingredientList = [...selectedIngredientsList, newIngredient];
     } else {
-      setSelectedIngredientsList((pre) => [
-        //@ts-ignore
-        ...pre?.filter((blen) => blen?._id !== ingredient?._id),
-      ]);
+      if (edit) {
+        ingredientList = selectedIngredientsList?.map((ing) =>
+          ing?._id === ingredient?._id ? newIngredient : ing,
+        );
+      } else {
+        ingredientList = selectedIngredientsList?.filter(
+          (ing) => ing?._id !== ingredient?._id,
+        );
+      }
     }
+
+    setSelectedIngredientsList(ingredientList);
   };
 
   // check ingredinet it's alredy exist
@@ -167,6 +200,30 @@ const AddRecipePage = () => {
       }
     });
     return present;
+  };
+
+  const removeIngredient = (id) => {
+    setSelectedIngredientsList((pre) => [
+      ...pre?.filter((ele) => ele?._id !== id),
+    ]);
+  };
+
+  const handleOnDragEnd = (result, type) => {
+    if (!result) return;
+
+    if (type === "ingredients") {
+      const items = [...selectedIngredientsList];
+      const [reOrderedItem] = items?.splice(result.source.index, 1);
+      items.splice(result.destination.index, 0, reOrderedItem);
+      setSelectedIngredientsList(items);
+    }
+
+    if (type === "steps") {
+      const items = [...howToState];
+      const [reOrderedItem] = items?.splice(result.source.index, 1);
+      items.splice(result.destination.index, 0, reOrderedItem);
+      setHowToSteps(items);
+    }
   };
 
   useEffect(() => {
@@ -262,17 +319,19 @@ const AddRecipePage = () => {
             setRecipePrepareTime={setRecipePrepareTime}
             giGl={giGl}
           />
-          <IngredientList
+
+          <IngredientSection
             adjusterFunc={adjusterFunc}
-            counter={counter}
-            calculatedIngOz={calculateIngOz}
-            selectedIngredientsList={selectedIngredientsList}
-            setSelectedIngredientsList={setSelectedIngredientsList}
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}
-            checkActive={checkActive}
-            howToState={howToState}
-            setHowToSteps={setHowToSteps}
+            calculatedIngOz={calculateIngOz}
+            selectedIngredientsList={selectedIngredientsList}
+            handleOnDragEnd={handleOnDragEnd}
+            removeIngredient={removeIngredient}
+            setSelectedIngredientsList={(ing) => {
+              handleIngredientClick(ing, checkActive(ing?._id), true);
+            }}
+            ingredientAddingType="auto"
           />
         </div>
         <div className={styles.right}>

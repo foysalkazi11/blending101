@@ -3,12 +3,17 @@ import AContainer from "../../../containers/A.container";
 import styles from "./User.module.scss";
 import SideBar from "./sidebar/SideBar";
 import Main from "./main/Main";
-import { useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/pro-regular-svg-icons";
 import { useUser } from "../../../context/AuthProvider";
+import { useMutation } from "@apollo/client";
+import CREATE_NEW_USER from "../../../gqlLib/user/mutations/createNewUser";
+import notification from "../../utility/reactToastifyNotification";
+import { setDbUser } from "../../../redux/slices/userSlice";
 
 const User = () => {
+  const [getExistingUser] = useMutation(CREATE_NEW_USER);
   const [userData, setUserData] = useState({
     about: {
       bio: "",
@@ -52,72 +57,90 @@ const User = () => {
     },
   });
   const user = useUser();
-  const { dbUser } = useAppSelector((state) => state?.user);
+  const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (dbUser?.configuration) {
-      const {
-        bio,
-        displayName,
-        email,
-        firstName,
-        location,
-        yourBlender,
-        image,
-        lastName,
-        configuration,
-      } = dbUser;
+  // handle to get existing user
+  const handleToGetExistingUser = async (email) => {
+    try {
+      const { data } = await getExistingUser({
+        variables: {
+          data: { email },
+        },
+      });
+      const currentUser = data?.createNewUser;
 
-      const {
-        activity,
-        age,
-        allergies,
-        dieteryLifeStyle,
-        gender,
-        heightInCentimeters,
-        weightInKilograms,
-        meditcation,
-        preExistingMedicalConditions,
-        whyBlending,
-        pregnantOrLactating,
-      } = configuration;
-
-      setUserData({
-        ...userData,
-        about: {
-          ...userData?.about,
-          bio: bio || "",
-          image,
-          firstName,
-          lastName,
+      if (currentUser?.configuration) {
+        const {
+          bio,
           displayName,
           email,
+          firstName,
           location,
           yourBlender,
-        },
-        personalization: {
-          ...userData?.personalization,
+          image,
+          lastName,
+          configuration,
+        } = currentUser;
+
+        const {
           activity,
-          age: {
-            quantity: age?.quantity,
-            months: age?.months,
-            years: age?.years,
-          },
-          allergies: allergies || [],
+          age,
+          allergies,
           dieteryLifeStyle,
           gender,
           heightInCentimeters,
           weightInKilograms,
-          meditcation: meditcation || [],
-          preExistingMedicalConditions: preExistingMedicalConditions || [],
-          whyBlending: whyBlending || [],
+          meditcation,
+          preExistingMedicalConditions,
+          whyBlending,
           pregnantOrLactating,
-        },
-      });
-    }
+        } = configuration;
 
+        setUserData({
+          ...userData,
+          about: {
+            ...userData?.about,
+            bio: bio || "",
+            image,
+            firstName,
+            lastName,
+            displayName,
+            email,
+            location,
+            yourBlender,
+          },
+          personalization: {
+            ...userData?.personalization,
+            activity,
+            age: {
+              quantity: age?.quantity,
+              months: age?.months,
+              years: age?.years,
+            },
+            allergies: allergies || [],
+            dieteryLifeStyle,
+            gender,
+            heightInCentimeters,
+            weightInKilograms,
+            meditcation: meditcation || [],
+            preExistingMedicalConditions: preExistingMedicalConditions || [],
+            whyBlending: whyBlending || [],
+            pregnantOrLactating,
+          },
+        });
+      }
+      dispatch(setDbUser(currentUser));
+    } catch (error) {
+      notification("error", "Failed to get existing user data");
+    }
+  };
+
+  useEffect(() => {
+    if (user?.email) {
+      handleToGetExistingUser(user?.email);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user.id]);
+  }, []);
 
   return (
     <AContainer

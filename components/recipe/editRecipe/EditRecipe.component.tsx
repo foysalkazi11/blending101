@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import AContainer from "../../../containers/A.container";
 import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
 import Center_Elements from "./recipe_elements/centerElements.component";
-import IngredientSection from "./recipe_elements/ingredientList/IngredientSection";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
+  setRecipeIngredients,
   setSelectedIngredientsList,
   setServingCounter,
 } from "../../../redux/edit_recipe/editRecipeStates";
@@ -19,10 +19,10 @@ import FloatingLeftPanel from "./floatingLeftPanel/FloatingLeftPanel";
 import { IngredientAddingType } from "../../../type/recipeEditType";
 import { useRouter } from "next/router";
 import InstructionsForMakingRecipe from "./howToSection";
+import IngredientSection from "../share/IngredientSection";
 
 interface editRecipe {
   copyDetailsRecipe?: RecipeDetailsType;
-  allIngredients: [];
   nutritionTrayData: any;
   recipeInstructions: string[];
   allBlendCategories: [];
@@ -46,7 +46,6 @@ interface editRecipe {
 
 const EditRecipePage = ({
   copyDetailsRecipe = null,
-  allIngredients,
   nutritionTrayData,
   recipeInstructions,
   allBlendCategories,
@@ -80,6 +79,28 @@ const EditRecipePage = ({
   const selectedIngredientsList = useAppSelector(
     (state) => state.editRecipeReducer.selectedIngredientsList,
   );
+
+  const removeIngredient = (id) => {
+    let updated_list = selectedIngredientsList?.filter((elem) => {
+      return id !== elem?._id;
+    });
+    dispatch(setSelectedIngredientsList(updated_list));
+  };
+
+  const handleOnDragEnd = (result, type) => {
+    if (!result) return;
+
+    if (type === "ingredients") {
+      const items = [...selectedIngredientsList];
+      const [reOrderedItem] = items?.splice(result.source.index, 1);
+      items.splice(result.destination.index, 0, reOrderedItem);
+      dispatch(setSelectedIngredientsList(items));
+    }
+  };
+
+  const handleAddIngredient = (ing: { [key: string]: any }) => {
+    dispatch(setRecipeIngredients(ing));
+  };
 
   const handleIngredientClick = (ingredient: any, present: boolean) => {
     let blendz = [];
@@ -189,11 +210,14 @@ const EditRecipePage = ({
           />
           <IngredientSection
             adjusterFunc={adjusterFunc}
-            allIngredients={allIngredients}
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}
             calculatedIngOz={calculatedIngOz}
             ingredientAddingType={ingredientAddingType}
+            selectedIngredientsList={selectedIngredientsList}
+            handleOnDragEnd={handleOnDragEnd}
+            removeIngredient={removeIngredient}
+            setSelectedIngredientsList={handleAddIngredient}
           />
           <InstructionsForMakingRecipe
             recipeInstructions={recipeInstructions}

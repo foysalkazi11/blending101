@@ -69,15 +69,6 @@ const EditRecipeComponentParsing = () => {
   const [editRecipe, { loading: editARecipeLoading }] =
     useMutation(EDIT_A_RECIPE);
   const { handleToGetARecipe } = useToGetARecipe();
-  const { data: ingredientCategoryData, loading: ingredientCategoryLoading } =
-    useQuery(FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS, {
-      variables: {
-        data: {
-          ingredientCategory: "All",
-          IngredientClass: 1,
-        },
-      },
-    });
 
   // open confirmation modal
   const openConfirmationModal = (data: VersionAddDataType) => {
@@ -407,9 +398,6 @@ const EditRecipeComponentParsing = () => {
       <EditRecipePage
         copyDetailsRecipe={copyDetailsRecipe}
         updateEditRecipe={updateEditRecipe}
-        allIngredients={
-          ingredientCategoryData?.filterIngredientByCategoryAndClass
-        }
         nutritionTrayData={nutritionList ? JSON.parse(nutritionList) : []}
         recipeInstructions={
           copyDetailsRecipe?.tempVersionInfo?.version?.recipeInstructions || []
