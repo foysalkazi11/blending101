@@ -23,7 +23,7 @@ const RecipeDropDown = ({
         name={name}
         id="dropdown"
         className={styles.customSelectbx}
-        style={{ ...style }}
+        style={{ ...style, backgroundImage: `url(/icons/dropdown.svg)` }}
         onChange={(e) => {
           setSelectedValue(e.target.value);
         }}

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import AContainer from "../../../containers/A.container";
 import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
 import Center_Elements from "./recipe_elements/centerElements.component";
@@ -31,9 +31,9 @@ const AddRecipePage = () => {
   );
   const [recipeHeading, setRecipeHeading] = useState("");
   const [selectedIngredientsList, setSelectedIngredientsList] = useState([]);
-  const [calculateIngOz, SetcalculateIngOz] = useState(null);
+  const [calculateIngOz, SetCalculateIngOz] = useState(null);
   const [nutritionState, setNutritionState] = useState(null);
-  const [counter, setCounter] = useState(1);
+  const [servingSize, setServingSize] = useState(1);
   const [howToState, setHowToSteps] = useState([]);
   const [recipeDescription, setRecipeDescription] = useState("");
   const [recipePrepareTime, setRecipePrepareTime] = useState(1);
@@ -56,13 +56,13 @@ const AddRecipePage = () => {
 
   // center
 
-  const adjusterFunc = (value) => {
+  const adjusterServingSizeFunc = useCallback((value) => {
     if (value < 1) {
-      setCounter(1);
+      setServingSize(1);
     } else {
-      setCounter(value);
+      setServingSize(value);
     }
-  };
+  }, []);
 
   // submit data for add recipe
 
@@ -89,7 +89,7 @@ const AddRecipePage = () => {
         recipeBlendCategory: selectedBlendValueState,
         ingredients: ingArr,
         servingSize: calculateIngOz,
-        servings: counter,
+        servings: servingSize,
         recipeInstructions: howToArr,
       };
 
@@ -203,9 +203,7 @@ const AddRecipePage = () => {
   };
 
   const removeIngredient = (id) => {
-    setSelectedIngredientsList((pre) => [
-      ...pre?.filter((ele) => ele?._id !== id),
-    ]);
+    setSelectedIngredientsList((pre) => pre?.filter((ele) => ele?._id !== id));
   };
 
   const handleOnDragEnd = (result, type) => {
@@ -230,7 +228,7 @@ const AddRecipePage = () => {
     handleFetchIngrdients(
       selectedIngredientsList,
       nutritionState,
-      SetcalculateIngOz,
+      SetCalculateIngOz,
     );
   }, [selectedIngredientsList, nutritionState]);
 
@@ -241,9 +239,6 @@ const AddRecipePage = () => {
       isMounted.current = false;
     };
   }, []);
-
-  const nutritionListData =
-    nutritionData?.getNutrientsListAndGiGlByIngredients?.nutrients;
   const giGl: GiGl = nutritionData?.getNutrientsListAndGiGlByIngredients?.giGl;
 
   return (
@@ -321,7 +316,7 @@ const AddRecipePage = () => {
           />
 
           <IngredientSection
-            adjusterFunc={adjusterFunc}
+            adjusterFunc={adjusterServingSizeFunc}
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}
             calculatedIngOz={calculateIngOz}
@@ -332,11 +327,13 @@ const AddRecipePage = () => {
               handleIngredientClick(ing, checkActive(ing?._id), true);
             }}
             ingredientAddingType="auto"
+            servingSize={servingSize}
           />
         </div>
         <div className={styles.right}>
           <NutritionPanel
-            counter={counter}
+            counter={servingSize}
+            adjusterFunc={adjusterServingSizeFunc}
             nutritionTrayData={
               nutritionData &&
               JSON?.parse(
@@ -348,7 +345,6 @@ const AddRecipePage = () => {
             isComeFormRecipeEditPage={true}
             calculatedIngOz={calculateIngOz}
             nutritionDataLoading={nutritionDataLoading}
-            adjusterFunc={adjusterFunc}
           />
         </div>
       </div>
