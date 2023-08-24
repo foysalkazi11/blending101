@@ -42,6 +42,7 @@ const IngredientPanel = (props: IngredientPanelProps) => {
 
   const [editingId, setEditingId] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
+  console.log(ingredients);
 
   return (
     <div className="col-12">
@@ -50,6 +51,8 @@ const IngredientPanel = (props: IngredientPanelProps) => {
           <div className={styles.ingredient__card}>
             {ingredients?.map((ingredient) => {
               const ingredientId = ingredient.ingredientId?._id || "";
+              const portions =
+                ingredient?.ingredientId?.portions || ingredient?.portions;
               if (ingredientId !== editingId) {
                 return (
                   <div
@@ -124,8 +127,12 @@ const IngredientPanel = (props: IngredientPanelProps) => {
                       isEditing
                       ingredients={ingredients}
                       defaultQuery={ingredient?.ingredientId?.ingredientName}
-                      defaultIngredient={ingredient?.ingredientId}
-                      defaultPortion={ingredient?.ingredientId?.portions?.find(
+                      defaultIngredient={
+                        ingredient?.ingredientId?.portions
+                          ? ingredient?.ingredientId
+                          : ingredient
+                      }
+                      defaultPortion={portions?.find(
                         (portion) =>
                           portion.measurement ===
                           ingredient?.selectedPortion?.name,
@@ -194,6 +201,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
     hasComment,
     setShowAddForm,
   } = props;
+  console.log(defaultIngredient);
 
   const method = useForm();
 

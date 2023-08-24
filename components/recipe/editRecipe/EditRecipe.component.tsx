@@ -218,6 +218,7 @@ const EditRecipePage = ({
             handleOnDragEnd={handleOnDragEnd}
             removeIngredient={removeIngredient}
             setSelectedIngredientsList={handleAddIngredient}
+            servingSize={servingCounter}
           />
           <InstructionsForMakingRecipe
             recipeInstructions={recipeInstructions}
