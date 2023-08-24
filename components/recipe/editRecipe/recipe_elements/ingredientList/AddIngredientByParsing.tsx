@@ -30,6 +30,7 @@ import Combobox from "../../../../../component/organisms/Forms/Combobox.componen
 import IconButton from "../../../../../component/atoms/Button/IconButton.component";
 import Tooltip from "../../../../../theme/toolTip/CustomToolTip";
 import { NextImageWithFallback } from "../../../../../theme/imageWithFallback";
+import useGetDefaultPortionOfnutration from "../../../../../customHooks/useGetDefaultPortionOfNutration";
 
 const defaultValues = {
   ingredientId: "",
@@ -42,15 +43,15 @@ const defaultValues = {
 
 const AddIngredientByParsing = (props) => {
   const {
-    allIngredients,
     handleOnDragEnd,
     ingredients,
     nutritionState,
     setNutritionState,
-    setIngredientId,
     removeIngredient,
   } = props;
   const [editIngredientId, setEditIngredientId] = useState("");
+  const [ingredientId, setIngredientId] = useState("");
+  useGetDefaultPortionOfnutration(ingredientId);
 
   const methods = useForm({
     defaultValues: useMemo(() => defaultValues, []),
@@ -129,7 +130,6 @@ const AddIngredientByParsing = (props) => {
                                       removeIngredient,
                                       editIngredientId,
                                       onReset,
-                                      allIngredients,
                                       nutritionState,
                                     }}
                                   />
@@ -343,7 +343,6 @@ const SingleIngredient = ({
   removeIngredient,
   editIngredientId,
   onReset,
-  allIngredients,
   nutritionState,
 }) => {
   const windowScrollToZero = (elem = {}) => {
@@ -394,7 +393,7 @@ const SingleIngredient = ({
                 elem?.images?.[0] ||
                 "/food/Dandelion.png"
               }
-              fallbackSrc="/images/basket.svg"
+              fallbackSrc="/food/chard.png"
               alt="Picture will load soon"
               style={{ objectFit: "contain" }}
               fill

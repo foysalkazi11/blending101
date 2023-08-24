@@ -5,6 +5,7 @@ import { AiOutlineCamera } from "react-icons/ai";
 import { FiEdit2 } from "react-icons/fi";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { setIsNewUseImage } from "../../../../redux/slices/userSlice";
+import { NextImageWithFallback } from "../../../../theme/imageWithFallback";
 
 type SideBarProps = {
   userData: any;
@@ -66,13 +67,15 @@ const SideBar = ({ userData, setUserData }: SideBarProps) => {
   return (
     <div className={styles.sideBarContainer}>
       <div className={styles.imageBox}>
-        <img
+        <NextImageWithFallback
           src={
             isNewUseImage?.length
               ? URL.createObjectURL(isNewUseImage[0])
               : image || "/images/user-placeholder.png"
           }
           alt="userImag"
+          fallbackSrc="/images/user-placeholder.png"
+          fill
         />
         <div className={styles.cameraIconBox}>
           <AiOutlineCamera className={styles.cameraIcon} />

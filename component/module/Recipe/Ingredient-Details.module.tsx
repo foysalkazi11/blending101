@@ -168,7 +168,7 @@ const IngredientDetails = (props: IngredientDetailsProps) => {
                           ingredient?.ingredientId?.featuredImage ||
                           ingredient?.ingredientId?.images[0]
                         }
-                        fallbackSrc="/images/basket.svg"
+                        fallbackSrc="/food/chard.png"
                         alt="icon"
                         width={28}
                         height={28}
