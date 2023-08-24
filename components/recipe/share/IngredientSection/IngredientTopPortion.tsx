@@ -1,9 +1,9 @@
 import React from "react";
-import classes from "./ingredientList&Howto.module.scss";
+import classes from "./IngredientSection.module.scss";
 import Image from "next/image";
-import { useAppSelector } from "../../../../../redux/hooks";
-import AddSharpIcon from "../../../../../public/icons/add_black_36dp.svg";
-import RemoveSharpIcon from "../../../../../public/icons/remove_black_36dp.svg";
+import AddSharpIcon from "../../../../public/icons/add_black_36dp.svg";
+import RemoveSharpIcon from "../../../../public/icons/remove_black_36dp.svg";
+import { useAppSelector } from "../../../../redux/hooks";
 
 interface IngredientTopPortionProps {
   adjusterFunc?: (value: number) => void;

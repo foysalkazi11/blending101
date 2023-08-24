@@ -62,7 +62,7 @@ const IngredientPanel = (props: IngredientPanelProps) => {
                           <NextImageWithFallback
                             src={ingredient?.ingredientId?.featuredImage}
                             alt={ingredient.ingredientId.ingredientName}
-                            fallbackSrc="/images/basket.svg"
+                            fallbackSrc="/food/chard.png"
                             width={28}
                             height={28}
                             style={{ objectFit: "contain" }}
