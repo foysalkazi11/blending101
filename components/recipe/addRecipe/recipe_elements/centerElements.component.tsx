@@ -3,7 +3,6 @@ import React, { Dispatch, SetStateAction } from "react";
 import styles from "./centerElements.module.scss";
 import ScoreTray from "./scoreTray/scoreTray.component";
 import Image from "next/image";
-import DropDown from "../../../../theme/dropDown/DropDown.component";
 import HandleImageShow from "../../share/handleImageShow/HandleImageShow";
 import { GiGl } from "../../../../type/nutrationType";
 import InputComponent from "../../../../theme/input/input.component";

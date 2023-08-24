@@ -14,6 +14,7 @@ type IngredientListPorps = {
   removeIngredient?: (id: string) => void;
   setSelectedIngredientsList?: (obj: { [key: string]: any }) => void;
   handleOnDragEnd?: (result: { [key: string]: any }, type: string) => void;
+  servingSize?: number;
 };
 
 const IngredientSection = ({
@@ -26,12 +27,14 @@ const IngredientSection = ({
   removeIngredient = () => {},
   setSelectedIngredientsList = () => {},
   handleOnDragEnd = () => {},
+  servingSize = 1,
 }: IngredientListPorps) => {
   return (
     <div className={styles.ingredients__main__card}>
       <IngredientTopPortion
         adjusterFunc={adjusterFunc}
         calculatedIngOz={calculatedIngOz}
+        servingSize={servingSize}
       />
       <div className={styles.ingredientsWrapper}>
         {ingredientAddingType === "auto" ? (
