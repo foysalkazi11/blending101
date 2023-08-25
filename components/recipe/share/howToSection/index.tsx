@@ -1,64 +1,56 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./InstructionForMakingRecipe.module.scss";
 import Image from "next/image";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import {
-  setRecipeInstruction,
-  setSelectedIngredientsList,
-} from "../../../../redux/edit_recipe/editRecipeStates";
 import DragIndicatorIcon from "../../../../public/icons/drag_indicator_black_36dp.svg";
 import ModeEditOutlineOutlinedIcon from "../../../../public/icons/mode_edit_black_36dp.svg";
 import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
 
 interface Props {
-  recipeInstructions?: string[];
+  recipeInstructions?: { [key: string]: any }[];
+  setRecipeInstruction?: (arg: { [key: string]: any }[]) => void;
 }
 
-const InstructionsForMakingRecipe = ({ recipeInstructions }: Props) => {
+const InstructionsForMakingRecipe = ({
+  recipeInstructions = [],
+  setRecipeInstruction = () => {},
+}: Props) => {
   const [selectedElementId, setSelectedElementId] = useState(null);
   const [inputValue, setInputValue] = useState("");
-  const dispatch = useAppDispatch();
-  const selectedIngredientsList = useAppSelector(
-    (state) => state?.editRecipeReducer?.selectedIngredientsList,
-  );
-  const howToState = useAppSelector(
-    (state) => state?.editRecipeReducer?.recipeInstruction,
-  );
 
   const handleOnDragEnd = (result, type) => {
     if (!result) return;
 
     if (type === "steps") {
-      const items = [...howToState];
+      const items = [...recipeInstructions];
       const [reOrderedItem] = items?.splice(result.source.index, 1);
       items.splice(result.destination.index, 0, reOrderedItem);
-      dispatch(setRecipeInstruction(items));
+      setRecipeInstruction(items);
     }
   };
 
   const editStep = (id) => {
     document.getElementById("myTextField").focus();
     setSelectedElementId(id);
-    let newEditStep = howToState.find((elem) => {
+    let newEditStep = recipeInstructions.find((elem) => {
       return elem.id === id;
     });
     setInputValue(newEditStep.step);
   };
 
   const removeStep = (id) => {
-    let updated_list = howToState?.filter((elem) => {
+    let updated_list = recipeInstructions?.filter((elem) => {
       return id !== elem.id;
     });
-    dispatch(setRecipeInstruction(updated_list));
+    setRecipeInstruction(updated_list);
   };
 
-  const inputTagValueHandler = (e) => {
+  const inputValueHandler = (e) => {
     let tempValue = e.target.value;
     setInputValue(tempValue);
   };
 
-  const HowToSubmitHandler = (event) => {
+  const howToSubmitHandler = (event) => {
     let howList = [];
     if (event.key === "Enter") {
       if (!event.target.value || /^\s*$/.test(event.target.value)) {
@@ -66,34 +58,25 @@ const InstructionsForMakingRecipe = ({ recipeInstructions }: Props) => {
       }
 
       if (selectedElementId) {
-        let elemIndex = howToState.findIndex(
+        let elemIndex = recipeInstructions.findIndex(
           (elem) => elem.id === selectedElementId,
         );
-        howList = [...howToState];
+        howList = [...recipeInstructions];
         howList[elemIndex] = { id: selectedElementId, step: inputValue };
       } else {
         howList = [
-          ...howToState,
+          ...recipeInstructions,
           {
-            id: Date.now() + Math.floor(Math.random() * 100),
+            id: Date.now() + Math.floor(Math.random() * 1000),
             step: event.target.value,
           },
         ];
       }
-      dispatch(setRecipeInstruction(howList));
+      setRecipeInstruction(howList);
       setSelectedElementId(null);
       setInputValue("");
     }
   };
-
-  useEffect(() => {
-    let howList = [];
-    recipeInstructions?.forEach((elem, index) => {
-      howList = [...howList, { id: Date.now() + index + elem, step: elem }];
-    });
-    dispatch(setRecipeInstruction(howList));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [recipeInstructions]);
 
   return (
     <div className={styles.how__to}>
@@ -117,13 +100,13 @@ const InstructionsForMakingRecipe = ({ recipeInstructions }: Props) => {
           <Droppable droppableId="draggableIngredientList">
             {(provided) => (
               <ol {...provided.droppableProps} ref={provided.innerRef}>
-                {howToState ? (
-                  howToState?.map((elem, index) => {
+                {recipeInstructions ? (
+                  recipeInstructions?.map((elem, index) => {
                     return (
                       <Draggable
-                        key={elem.step}
-                        draggableId={elem.step}
-                        index={index}
+                        key={elem.id}
+                        draggableId={`${elem?.id}`}
+                        index={elem?.id}
                       >
                         {(provided) => (
                           <li
@@ -181,13 +164,9 @@ const InstructionsForMakingRecipe = ({ recipeInstructions }: Props) => {
         <div className={styles.how__to__searchBar}>
           <span>
             <input
-              onKeyDown={(e) => {
-                HowToSubmitHandler(e);
-              }}
+              onKeyDown={howToSubmitHandler}
               value={inputValue}
-              onChange={(e) => {
-                inputTagValueHandler(e);
-              }}
+              onChange={inputValueHandler}
               type="text"
               name="recipe elements"
               id="myTextField"
