@@ -23,6 +23,7 @@ import { faBasketShopping as faBasketShoppingSolid } from "@fortawesome/pro-soli
 import { GiGl } from "../../../type/nutrationType";
 import { useUser } from "../../../context/AuthProvider";
 import IngredientSection from "../share/IngredientSection";
+import InstructionsForMakingRecipe from "../share/howToSection";
 
 const AddRecipePage = () => {
   const [images, setImages] = useState<any[]>([]);
@@ -110,24 +111,30 @@ const AddRecipePage = () => {
 
           const { data } = await createNewRecipeByUser({
             variables: {
+              isAddToTemporaryCompareList: false,
               data: obj,
             },
           });
           setLoading(false);
           notification("success", "recipe create successfully");
-          if (data?.addRecipeFromUser?._id) {
-            router?.push(`/recipe_details/${data?.addRecipeFromUser?._id}`);
+          if (data?.addRecipeFromUser?.recipeId?._id) {
+            router?.push(
+              `/recipe_details/${data?.addRecipeFromUser?.recipeId?._id}`,
+            );
           }
         } else {
           const { data } = await createNewRecipeByUser({
             variables: {
+              isAddToTemporaryCompareList: false,
               data: obj,
             },
           });
           setLoading(false);
           notification("success", "recipe create successfully");
-          if (data?.addRecipeFromUser?._id) {
-            router?.push(`/recipe_details/${data?.addRecipeFromUser?._id}`);
+          if (data?.addRecipeFromUser?.recipeId?._id) {
+            router?.push(
+              `/recipe_details/${data?.addRecipeFromUser?.recipeId?._id}`,
+            );
           }
         }
       } catch (error) {
@@ -328,6 +335,10 @@ const AddRecipePage = () => {
             }}
             ingredientAddingType="auto"
             servingSize={servingSize}
+          />
+          <InstructionsForMakingRecipe
+            recipeInstructions={howToState}
+            setRecipeInstruction={(newList) => setHowToSteps(newList)}
           />
         </div>
         <div className={styles.right}>
