@@ -6,6 +6,7 @@ import Center_Elements from "./recipe_elements/centerElements.component";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
   setRecipeIngredients,
+  setRecipeInstruction,
   setSelectedIngredientsList,
   setServingCounter,
 } from "../../../redux/edit_recipe/editRecipeStates";
@@ -18,13 +19,12 @@ import { GiGl } from "../../../type/nutrationType";
 import FloatingLeftPanel from "./floatingLeftPanel/FloatingLeftPanel";
 import { IngredientAddingType } from "../../../type/recipeEditType";
 import { useRouter } from "next/router";
-import InstructionsForMakingRecipe from "./howToSection";
+import InstructionsForMakingRecipe from "../share/howToSection";
 import IngredientSection from "../share/IngredientSection";
 
 interface editRecipe {
   copyDetailsRecipe?: RecipeDetailsType;
   nutritionTrayData: any;
-  recipeInstructions: string[];
   allBlendCategories: [];
   selectedBLendCategory: string;
   editARecipeFunction: () => void;
@@ -47,7 +47,6 @@ interface editRecipe {
 const EditRecipePage = ({
   copyDetailsRecipe = null,
   nutritionTrayData,
-  recipeInstructions,
   allBlendCategories,
   selectedBLendCategory,
   editARecipeFunction = () => {},
@@ -79,6 +78,13 @@ const EditRecipePage = ({
   const selectedIngredientsList = useAppSelector(
     (state) => state.editRecipeReducer.selectedIngredientsList,
   );
+  const { recipeInstruction } = useAppSelector(
+    (state) => state?.editRecipeReducer,
+  );
+
+  const updateRecipeInstruction = (recipeInstruction) => {
+    dispatch(setRecipeInstruction(recipeInstruction));
+  };
 
   const removeIngredient = (id) => {
     let updated_list = selectedIngredientsList?.filter((elem) => {
@@ -221,7 +227,8 @@ const EditRecipePage = ({
             servingSize={servingCounter}
           />
           <InstructionsForMakingRecipe
-            recipeInstructions={recipeInstructions}
+            recipeInstructions={recipeInstruction}
+            setRecipeInstruction={updateRecipeInstruction}
           />
         </div>
         <div className={styles.right}>

@@ -6,6 +6,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { BLEND_CATEGORY } from "../../../gqlLib/recipes/queries/getEditRecipe";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
+  setRecipeInstruction,
   setSelectedIngredientsList,
   setServingCounter,
 } from "../../../redux/edit_recipe/editRecipeStates";
@@ -332,6 +333,16 @@ const EditRecipeComponent = () => {
     if (!detailsARecipe) return;
     setCopyDetailsRecipe({ ...detailsARecipe });
     dispatch(setServingCounter(detailsARecipe?.recipeId?.servings || 1));
+    dispatch(
+      setRecipeInstruction(
+        detailsARecipe?.tempVersionInfo?.version?.recipeInstructions?.map(
+          (elem: string, index: number) => ({
+            id: Date.now() + index,
+            step: elem,
+          }),
+        ) || [],
+      ),
+    );
     SetcalculateIngOz(detailsARecipe?.tempVersionInfo?.version?.servingSize);
     setExistingImages(
       detailsARecipe?.recipeId?.image?.map((item) => `${item?.image}`),
@@ -412,9 +423,6 @@ const EditRecipeComponent = () => {
         copyDetailsRecipe={copyDetailsRecipe}
         updateEditRecipe={updateEditRecipe}
         nutritionTrayData={nutritionList ? JSON.parse(nutritionList) : []}
-        recipeInstructions={
-          copyDetailsRecipe?.tempVersionInfo?.version?.recipeInstructions || []
-        }
         allBlendCategories={allBlendCategory?.getAllCategories}
         selectedBLendCategory={
           copyDetailsRecipe?.recipeId?.recipeBlendCategory?.name
