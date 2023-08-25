@@ -1,8 +1,13 @@
 @import "../../styles/partials/variables";
+@import "../../styles/mixins.scss";
+
 .topMenuContainer {
   display: flex;
   justify-content: center;
   align-items: center;
+  @include respond(md) {
+    margin: 1.5rem 0;
+  }
 
   .topMenu {
     width: 100%;
@@ -13,10 +18,11 @@
     border-radius: 18px;
     height: 37px;
     position: relative;
-
+    @include respond(md) {
+      width: 40%;
+    }
     .menu {
       color: #929292;
-
       height: 35px;
       font-size: 14px;
       padding: 0;

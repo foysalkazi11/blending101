@@ -6,7 +6,7 @@ import { useState } from "react";
 import CardComponent from "../theme/cards/card.component";
 import SpecialcardComponent from "../theme/cards/specialCard.component";
 import TitleComponent from "../theme/titles/title.component";
-import MenubarComponent from "../theme/menuBar/menuBar.component";
+import MenubarComponent from "../component/molecules/Menubar/Menubar.component";
 import DatacardComponent from "../theme/cards/dataCard/dataCard.component";
 import MembershipCardComponent from "../theme/cards/membership/membershipCard.component";
 import HomebannerComponent from "../theme/banners/homebanner.component";
@@ -124,11 +124,7 @@ export default function Home() {
 
         <div className={styles.theme__box}>
           <h3>MENUBAR</h3>
-          <MenubarComponent
-            childs={undefined}
-            setValue={undefined}
-            value={undefined}
-          />
+          <MenubarComponent items={[]} onChange={(selected) => {}} />
         </div>
 
         <br />

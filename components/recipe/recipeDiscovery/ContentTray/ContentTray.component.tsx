@@ -2,8 +2,8 @@ import React from "react";
 import styles from "./ContentTray.module.scss";
 import Image from "next/image";
 import Slider from "../../../../theme/carousel/carousel.component";
-import MenubarComponent from "../../../../theme/menuBar/menuBar.component";
 import Link from "next/link";
+import MenubarComponent from "../../../../component/molecules/Menubar/Menubar.component";
 
 const ContentTray = (props) => {
   const { id, hasFilter, filters, customHTML, tabState, allUrl, settings } =
@@ -60,10 +60,11 @@ const ContentTray = (props) => {
           {hasFilter && (
             <MenubarComponent
               className={styles.main__slider__tabmenu}
-              containerId={id}
-              childs={filters}
-              setValue={tabState[1]}
-              value={tabState[0]}
+              id={id}
+              items={filters}
+              onChange={(menu) => {
+                tabState[1](menu);
+              }}
             />
           )}
         </div>

@@ -1,9 +1,14 @@
+@import "../styles/mixins.scss";
+
 .sidebar {
   width: 61px;
   padding: 10px;
   box-shadow: 3px 1px 3px #ececec;
   z-index: 9999999999;
   background-color: #fff;
+  @include respond(md) {
+    display: none;
+  }
 }
 
 .logo {

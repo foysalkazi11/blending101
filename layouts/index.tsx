@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { Fragment, useRef } from "react";
 import Footer from "./_footer";
 import Header from "./_header";
 import Sidebar from "./_sidebar";
@@ -6,6 +6,8 @@ import Sidebar from "./_sidebar";
 import NotificationTray from "../components/sidetray/notificationTray";
 
 import styles from "./index.module.scss";
+import Navbar from "./_navbar";
+import MHeader from "./_mheader";
 
 interface ILayout {
   sidebar?: boolean;
@@ -16,16 +18,18 @@ const Layout: React.FC<ILayout> = (props) => {
   const { title, icon, sidebar, children } = props;
 
   const mainRef = useRef(null);
-
+  if (!title) return <Fragment>{children}</Fragment>;
   return (
     <div className={styles.body}>
       {sidebar && <Sidebar />}
       <NotificationTray showTagByDefaut={false} showPanle={"right"} />
       <main className={styles.main} ref={mainRef}>
+        <MHeader />
         <Header title={title} icon={icon} mainRef={mainRef} />
         <div className={styles.content}>{children}</div>
         <Footer />
       </main>
+      <Navbar />
     </div>
   );
 };

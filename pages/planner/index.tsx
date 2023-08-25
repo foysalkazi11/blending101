@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useEffect,
   useRef,
+  useMemo,
 } from "react";
 import { faUserCircle } from "@fortawesome/pro-light-svg-icons";
 import PlanCard from "../../component/module/Planner/PlanCard.component";
@@ -38,6 +39,12 @@ import useToGetPlanByFilterCriteria from "../../customHooks/planFilter/useToGetP
 import ShowRecipeContainer from "../../components/showRecipeContainer";
 import useDebounce from "../../customHooks/useDebounce";
 import { useUser } from "../../context/AuthProvider";
+import MenubarComponent from "../../component/molecules/Menubar/Menubar.component";
+import PlanFilterTray from "../../components/sidetray/planFilterTray";
+import {
+  HideOnDesktop,
+  HideOnMobile,
+} from "../../component/molecules/Responsive/Responsive.component";
 
 const normalizeQueryParams = (queryParams) => {
   let queryParamObj = {} as AllFilterType;
@@ -157,37 +164,40 @@ const PlanDiscovery = () => {
 
   return (
     <Fragment>
+      <PlanFilterTray showTagByDefaut={false} />
       <div className={styles.discovery}>
-        <div className={styles.searchBarContainer}>
-          <CommonSearchBar
-            input={searchTerm}
-            handleOnChange={(e) => setSearchTerm(e.target.value)}
-            isSearchTag={false}
-            openPanel={() => dispatch(setIsPlanFilterOpen(!isPlanFilterOpen))}
-          />
-          <MyPlanButton router={router} />
-        </div>
+        <HideOnMobile>
+          <div className={styles.searchBarContainer}>
+            <CommonSearchBar
+              input={searchTerm}
+              handleOnChange={(e) => setSearchTerm(e.target.value)}
+              isSearchTag={false}
+              openPanel={() => dispatch(setIsPlanFilterOpen(!isPlanFilterOpen))}
+            />
+            <MyPlanButton router={router} />
+          </div>
 
-        {allFilters?.length ? null : <AppdownLoadCard />}
+          {allFilters?.length ? null : <AppdownLoadCard />}
 
-        {allFilters?.length ? (
-          <SearchtagsComponent
-            allFilters={allFilters}
-            handleUpdateActiveFilterTag={handleUpdateActiveFilterTagFunc}
-            handleUpdateFilterCriteria={handleUpdateFilterCriteriaForPlanFunc}
-          />
-        ) : null}
+          {allFilters?.length ? (
+            <SearchtagsComponent
+              allFilters={allFilters}
+              handleUpdateActiveFilterTag={handleUpdateActiveFilterTagFunc}
+              handleUpdateFilterCriteria={handleUpdateFilterCriteriaForPlanFunc}
+            />
+          ) : null}
 
-        {/* {query && query !== "" ? (
-          <SearchedPlan
-            query={query}
-            setOpenCollectionModal={setOpenCollectionModal}
-          />
-        ) : (
-          <FeaturedPlan setOpenCollectionModal={setOpenCollectionModal} />
-        )} */}
+          {query && query !== "" ? (
+            <SearchedPlan
+              query={query}
+              setOpenCollectionModal={setOpenCollectionModal}
+            />
+          ) : (
+            <FeaturedPlan setOpenCollectionModal={setOpenCollectionModal} />
+          )}
+        </HideOnMobile>
 
-        {allFilters?.length ? (
+        {/* {allFilters?.length ? (
           <ShowRecipeContainer
             data={planFilterData?.plans || []}
             loading={planFilterLoading}
@@ -198,7 +208,10 @@ const PlanDiscovery = () => {
           />
         ) : (
           <FeaturedPlan setOpenCollectionModal={setOpenCollectionModal} />
-        )}
+        )} */}
+        <HideOnDesktop>
+          <ListPlans setOpenCollectionModal={setOpenCollectionModal} />
+        </HideOnDesktop>
       </div>
       <ShowLastModifiedCollection
         open={openCollectionModal}
@@ -352,4 +365,50 @@ export default PlanDiscovery;
 PlanDiscovery.meta = {
   title: "Plan Discovery",
   icon: "/icons/calender__sidebar.svg",
+};
+
+const ListPlans = ({ setOpenCollectionModal }) => {
+  const userId = useUser().id;
+  const { data } = useQuery(GET_FEATURED_PLANS, {
+    variables: { limit: 8, memberId: userId },
+  });
+
+  const [active, setActive] = useState("");
+  const plans = useMemo(() => {
+    if (active === "Recommended") {
+      return data?.getAllRecommendedPlans?.plans;
+    } else if (active === "Recent") {
+      return data?.getAllRecentPlans?.plans;
+    } else {
+      return data?.getAllPopularPlans?.plans;
+    }
+  }, [active, data]);
+
+  return (
+    <Fragment>
+      <MenubarComponent
+        className="mt-20 mb-20 ml-10"
+        items={["Recommended", "Recent", "Popular"]}
+        onChange={(menu) => setActive(menu)}
+      />
+      {plans?.map((item) => (
+        <div key={item?._id}>
+          <div className="mr-10">
+            <PlanCard
+              planId={item?._id}
+              title={item.planName}
+              image={item?.image?.url}
+              isCollectionIds={item?.planCollections}
+              noOfComments={item?.commentsCount}
+              setOpenCollectionModal={setOpenCollectionModal}
+              planComrFrom="list"
+              noOfRatings={item?.numberOfRating}
+              ratings={item?.averageRating}
+              myRating={item?.myRating}
+            />
+          </div>
+        </div>
+      ))}
+    </Fragment>
+  );
 };

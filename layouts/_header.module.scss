@@ -1,3 +1,5 @@
+@import "../styles/mixins.scss";
+
 .header {
   height: 55px;
   max-height: 55px;
@@ -7,6 +9,9 @@
   // top: 0;
   // width: calc(100% - 61px);
   background-color: #fff;
+  @include respond(md) {
+    display: none;
+  }
 }
 
 #header {
