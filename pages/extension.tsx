@@ -4,7 +4,7 @@ import { useSession, useUser } from "../context/AuthProvider";
 
 const TEST_DOMAIN = "http://localhost:3000";
 const EXTENSION_DOMAIN =
-  "chrome-extension://ebbpnaajpojkhndmjmdjabgjmngjgmhm/src/popup/popup.html";
+  "chrome-extension://lijpknkegggepjnhoiklomgfbldbmnef/src/popup/popup.html";
 
 const Extension = () => {
   const user = useUser();

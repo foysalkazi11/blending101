@@ -422,7 +422,7 @@ export default function DatacardComponent({
                   href={origin}
                   onClick={(e) => {
                     router.reload();
-                    const id = "ebbpnaajpojkhndmjmdjabgjmngjgmhm";
+                    const id = "lijpknkegggepjnhoiklomgfbldbmnef";
                     //@ts-ignore
                     chrome.runtime.sendMessage(
                       id,
