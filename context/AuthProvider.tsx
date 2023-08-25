@@ -84,7 +84,6 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
             email: profile?.email,
             image: profile?.image,
           });
-          // if (!profile?.isCreated) router.push("/user/profile/");
           return profile;
         });
     },
@@ -92,7 +91,9 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
   );
 
   useEffect(() => {
+    // Google Authentication
     if (router.asPath.startsWith("/login/#access_token=")) router.push("/");
+    // Redirects when it is directed to authentication related page
     if (
       [
         "/login",
@@ -103,7 +104,6 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
       ].includes(router.pathname)
     )
       return;
-
     Auth.currentAuthenticatedUser().then(sessionHandler);
   }, [router, sessionHandler]);
 
