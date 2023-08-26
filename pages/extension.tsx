@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useAppSelector } from "../redux/hooks";
 import { useSession, useUser } from "../context/AuthProvider";
 
-const TEST_DOMAIN = "http://localhost:3000";
-const EXTENSION_DOMAIN =
-  "chrome-extension://lijpknkegggepjnhoiklomgfbldbmnef/src/popup/popup.html";
+const EXTENSION_DOMAIN = `chrome-extension://${process.env.NEXT_PUBLIC_EXTENSION_URL}/src/popup/popup.html`;
 
 function setCookie(cname, cvalue, exdays) {
   const d = new Date();
@@ -41,7 +38,6 @@ const Extension = () => {
         const session = JSON.parse(e.data);
         session?.forEach((item) => {
           localStorage.setItem(item[0], item[1]);
-          setCookie(item[0], item[1], 30);
         });
         setData(e.data);
       } catch (error) {
@@ -50,7 +46,13 @@ const Extension = () => {
     });
   }, []);
 
-  return <div>Extension Data: {data}</div>;
+  return (
+    <div>
+      Extension{" "}
+      {process.env.NODE_ENV === "development" ? "Localhost" : "Production"}{" "}
+      Data: {data}
+    </div>
+  );
 };
 
 export default Extension;
