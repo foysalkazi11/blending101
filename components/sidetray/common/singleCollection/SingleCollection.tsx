@@ -16,7 +16,6 @@ import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoa
 import Tooltip from "../../../../theme/toolTip/CustomToolTip";
 import useHover from "../../../utility/useHover";
 import styles from "./SingleMenu.module.scss";
-import Image from "next/image";
 
 interface IndividualCollectionType {
   name?: string;
