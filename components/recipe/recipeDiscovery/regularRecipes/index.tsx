@@ -142,7 +142,7 @@ const RegularRecipes = ({
           }}
           loading={recommendedRecipesLoading}
           filters={["Leafy", "Beatle", "Fruity"]}
-          recipes={recommendedRecipesData?.getAllrecomendedRecipes2}
+          recipes={recommendedRecipesData?.getAllrecomendedRecipes2?.recipes}
           setOpenCollectionModal={setOpenCollectionModal}
           setOpenShareModal={setOpenShareModal}
           setShareRecipeData={setShareRecipeData}
@@ -156,7 +156,7 @@ const RegularRecipes = ({
             allUrl: "recipe/viewAll/latest",
           }}
           loading={latestRecipesLoading}
-          recipes={latestRecipesData?.getAllLatestRecipes2}
+          recipes={latestRecipesData?.getAllLatestRecipes2?.recipes}
           filters={["Wholefood", "Frozen", "Refreshing"]}
           setOpenCollectionModal={setOpenCollectionModal}
           setOpenShareModal={setOpenShareModal}
@@ -172,7 +172,7 @@ const RegularRecipes = ({
           }}
           filters={["Leafy", "Beatle", "Fruity"]}
           loading={popularRecipesLoading}
-          recipes={popularRecipesData?.getAllpopularRecipes2}
+          recipes={popularRecipesData?.getAllpopularRecipes2?.recipes}
           setOpenCollectionModal={setOpenCollectionModal}
           setOpenShareModal={setOpenShareModal}
           setShareRecipeData={setShareRecipeData}
@@ -232,14 +232,15 @@ export const ShowRecipes = ({
                 brand,
                 url,
               },
-              defaultVersion: {
-                _id: defaultVersionId = "",
-                postfixTitle = "",
-                ingredients,
-                description = "",
-                calorie: { value: calorieValue },
-                gigl: { netCarbs },
-              },
+              defaultVersion,
+              // defaultVersion: {
+              //   _id: defaultVersionId = "",
+              //   postfixTitle = "",
+              //   ingredients,
+              //   description = "",
+              //   calorie: { value: calorieValue },
+              //   gigl: { netCarbs },
+              // },
               isMatch = false,
               allRecipes = false,
               myRecipes = false,
@@ -249,7 +250,7 @@ export const ShowRecipes = ({
               versionCount = 0,
               personalRating = 0,
             } = item;
-            const ing = joniIngredients(ingredients);
+            const ing = joniIngredients(defaultVersion?.ingredients);
             return (
               <div
                 className={styles.slider__card}
@@ -261,9 +262,9 @@ export const ShowRecipes = ({
                   category={recipeBlendCategory?.name}
                   ratings={averageRating}
                   noOfRatings={numberOfRating}
-                  carbs={netCarbs}
+                  carbs={defaultVersion?.gigl?.netCarbs}
                   // score={rxScore}
-                  calorie={calorieValue}
+                  calorie={defaultVersion?.calorie?.value}
                   noOfComments={numberOfRating}
                   image={
                     image.find((img) => img?.default)?.image ||
@@ -276,8 +277,8 @@ export const ShowRecipes = ({
                   isCollectionIds={userCollections}
                   setOpenCollectionModal={setOpenCollectionModal}
                   isMatch={isMatch}
-                  postfixTitle={postfixTitle}
-                  defaultVersionId={defaultVersionId}
+                  postfixTitle={defaultVersion?.postfixTitle}
+                  defaultVersionId={defaultVersion?._id}
                   userId={userId}
                   recipeVersion={versionCount}
                   showMoreMenuAtHover={true}
