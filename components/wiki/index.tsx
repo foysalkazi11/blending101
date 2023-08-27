@@ -32,24 +32,6 @@ const WikiHome = () => {
   const wikiId = params?.[1] || "";
   const { width } = useWindowSize();
 
-  // change title info
-  const changeTitleInfo = (wikiType: string) => {
-    let obj = { title: "", description: "" };
-    if (wikiType) {
-      obj = {
-        title: `Wiki Details`,
-        description: `Wiki Details`,
-      };
-    } else {
-      obj = {
-        title: `Wiki Discovery`,
-        description: `Wiki Discovery
-`,
-      };
-    }
-    return obj;
-  };
-
   // render ui
   const renderUI = (wikiType, type) => {
     let component = null;

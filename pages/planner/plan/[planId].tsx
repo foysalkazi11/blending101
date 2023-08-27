@@ -12,15 +12,10 @@ import {
   faMessageDots,
   faShareNodes,
 } from "@fortawesome/pro-light-svg-icons";
-import {
-  faBookmark as faBookmarkSolid,
-  faMessageDots as faMessageDotsSolid,
-} from "@fortawesome/pro-solid-svg-icons";
-import { faCalendarDays } from "@fortawesome/pro-solid-svg-icons";
+import { faBookmark as faBookmarkSolid } from "@fortawesome/pro-solid-svg-icons";
 import RXPanel from "../../../component/templates/Panel/RXFacts/RXPanel.component";
 import PlanDiscovery from "../../../component/module/Planner/PlanDiscovery.component";
 import PlanList from "../../../component/module/Planner/PlanByDay.component";
-import Container from "../../../containers/A.container";
 import IconHeading from "../../../theme/iconHeading/iconHeading.component";
 import Insights from "../../../component/module/Planner/Insights.component";
 import Icon from "../../../component/atoms/Icon/Icon.component";
@@ -46,8 +41,6 @@ import PlanForm, {
 import { useForm } from "react-hook-form";
 import PlannerQueue from "../../../component/module/Planner/Queue.component";
 import ShareModal from "../../../component/organisms/Share/Share.component";
-import CollectionDrawer from "../../../component/templates/Drawer/Collection/Collection.component";
-import CommentDrawer from "../../../component/templates/Drawer/Comment/Comment.component";
 import { useAppSelector } from "../../../redux/hooks";
 import Publish from "../../../helpers/Publish";
 import { useDispatch } from "react-redux";
@@ -56,7 +49,6 @@ import ShowLastModifiedCollection from "../../../components/showLastModifiedColl
 import { setIsOpenPlanCollectionTray } from "../../../redux/slices/Planner.slice";
 import useToOpenPlanCollectionTray from "../../../customHooks/plan/useToOpenPlanCollectionTray";
 import useToAddPlanToCollection from "../../../customHooks/plan/useToAddPlanToCollection";
-import useToOpenPlanCommentsTray from "../../../customHooks/plan/useToOpenPlanCommentsTray";
 import { useUser } from "../../../context/AuthProvider";
 
 const PlanDetails = () => {
@@ -65,7 +57,6 @@ const PlanDetails = () => {
   const methods = useForm({
     defaultValues: useMemo(() => defaultPlan, []),
   });
-  const handleOpenPlanCommentsTray = useToOpenPlanCommentsTray();
   const handleOpenCollectionTray = useToOpenPlanCollectionTray();
   const handleAddToCollection = useToAddPlanToCollection();
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
@@ -105,27 +96,17 @@ const PlanDetails = () => {
 
   const userId = useUser().id;
 
-  const weekChangeHandler = (start, end) => {
-    router.push(
-      `/planner/plan/?plan=${router.query.planId}&start=${format(
-        new Date(start),
-        "yyyy-MM-dd",
-      )}&end=${format(new Date(end), "yyyy-MM-dd")}&alert=true`,
-    );
-  };
-
-  const plan = data?.getAPlan?.plan;
+  const plan = useMemo(() => data?.getAPlan?.plan, [data]);
 
   useEffect(() => {
-    if (data?.getAPlan) {
-      const plan = data?.getAPlan?.plan;
+    if (plan) {
       setPlanlist(plan?.planData || []);
       methods.reset({
         planName: plan?.planName,
         description: plan?.description,
       });
     }
-  }, [data?.getAPlan, methods]);
+  }, [plan, methods]);
 
   const allPlannedRecipes = useMemo(
     () =>
@@ -141,6 +122,15 @@ const PlanDetails = () => {
         })),
     [plan],
   );
+
+  const weekChangeHandler = (start, end) => {
+    router.push(
+      `/planner/plan/?plan=${router.query.planId}&start=${format(
+        new Date(start),
+        "yyyy-MM-dd",
+      )}&end=${format(new Date(end), "yyyy-MM-dd")}&alert=true`,
+    );
+  };
 
   const modifyPlan = (day, recipe) => {
     if (!day) return;

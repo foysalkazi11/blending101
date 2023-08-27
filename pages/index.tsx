@@ -194,7 +194,9 @@ const getDetailURL = (domain: string, id: string, payload?: any) => {
 const EntitySlider = ({ collection, methods }) => {
   const { displayName, slug, data, theme } = collection;
 
-  const { _id: themeId, link: file, style } = theme;
+  if (theme === null) return <Fragment />;
+  let { _id: themeId, link: file, style } = theme;
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const template = useThemeTemplate(file);
 
   return (

@@ -1,4 +1,5 @@
 import "../styles/globals.scss";
+import type { NextPage } from "next";
 import { store } from "../redux/store";
 import { Provider } from "react-redux";
 import AuthProvider from "../context/AuthProvider";
@@ -18,14 +19,15 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Layout from "../layouts";
+import { Fragment, ReactElement, ReactNode } from "react";
 
 config.autoAddCss = false;
 
-interface IComponent {
-  meta: { title: string; icon: string };
-}
+function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+  const getLayout =
+    Component.useLayout ||
+    ((page: ReactNode) => <Layout {...Component.meta}>{page} </Layout>);
 
-function MyApp({ Component, pageProps }: AppProps) {
   const handleSubmitError = (error: any) => {
     console.log(error);
   };
@@ -35,19 +37,21 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Provider store={store}>
         <AuthProvider>
           <DndProvider backend={HTML5Backend}>
-            <Layout {...(Component as unknown as IComponent).meta}>
-              <Loader />
-              <ToastContainer limit={3} />
-              {/* @ts-ignore */}
-              <FeedbackImport
-                //@ts-ignore
-                slackToken={process.env.NEXT_PUBLIC_SLACK_API_KEY}
-                slackChannel={process.env.NEXT_PUBLIC_SLACK_CHANNEL}
-                handleSubmitError={handleSubmitError}
-              />
-              {/* @ts-ignore */}
-              <Component {...pageProps} />
-            </Layout>
+            {getLayout(
+              <Fragment>
+                <Loader />
+                <ToastContainer limit={3} />
+                {/* @ts-ignore */}
+                <FeedbackImport
+                  //@ts-ignore
+                  slackToken={process.env.NEXT_PUBLIC_SLACK_API_KEY}
+                  slackChannel={process.env.NEXT_PUBLIC_SLACK_CHANNEL}
+                  handleSubmitError={handleSubmitError}
+                />
+                {/* @ts-ignore */}
+                <Component {...pageProps} />
+              </Fragment>,
+            )}
           </DndProvider>
         </AuthProvider>
       </Provider>
@@ -56,3 +60,12 @@ function MyApp({ Component, pageProps }: AppProps) {
 }
 
 export default MyApp;
+
+type AppPropsWithLayout = AppProps & {
+  Component: CustomLayout;
+};
+
+export type CustomLayout<P = {}, IP = P> = NextPage<P, IP> & {
+  meta?: { title: string; icon: string };
+  useLayout?: (page: ReactElement) => ReactNode;
+};

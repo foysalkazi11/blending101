@@ -9,15 +9,17 @@ import styles from "./index.module.scss";
 import Navbar from "./_navbar";
 import MHeader from "./_mheader";
 
-interface ILayout {
+interface LayoutProps {
   sidebar?: boolean;
-  title: string;
-  icon: string | React.ReactElement;
+  title?: string;
+  icon?: string | React.ReactElement;
 }
-const Layout: React.FC<ILayout> = (props) => {
-  const { title, icon, sidebar, children } = props;
 
+const Layout: React.FC<LayoutProps> = (props) => {
+  const { title, icon, sidebar, children } = props;
   const mainRef = useRef(null);
+
+  // const { title, icon, sidebar } = layout;
   if (!title) return <Fragment>{children}</Fragment>;
   return (
     <div className={styles.body}>

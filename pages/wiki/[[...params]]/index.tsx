@@ -1,29 +1,35 @@
 import React from "react";
 import WikiHome from "../../../components/wiki";
+import Layout from "../../../layouts";
+import { useRouter } from "next/router";
+
 const WikiPage = () => {
   return <WikiHome />;
 };
 
 export default WikiPage;
 
-WikiPage.meta = {
-  title: "Wiki",
-  icon: "/icons/books.svg",
-};
+WikiPage.useLayout = (page) => {
+  const router = useRouter();
+  const { params = [] } = router.query;
+  const wikiType: string = params?.[0] || "";
 
-const data = [
-  "foysalkazi11@gmail.com",
-  "mdfoysalkazi@gmail.com",
-  "azim35-1713@diu.edu.bd",
-  "gabriel@blending101.com",
-  "abdulrafay.ghani@gmail.com",
-  "badhonkhanbk007@gmail.com",
-  "wahidhoquee@gmail.com",
-  "braun.gabriel@gmail.com",
-  "wahidhauqee@gmail.com",
-  "jubel8180@gmail.com",
-  "gabriel@poily.com",
-  "jubel35-1648@diu.edu.bd",
-  "jubel@cloudly.io",
-  "bkbadhonkhan527@gmail.com",
-];
+  let obj = { title: "", description: "" };
+  if (wikiType) {
+    obj = {
+      title: `Wiki Details`,
+      description: `Wiki Details`,
+    };
+  } else {
+    obj = {
+      title: `Wiki Discovery`,
+      description: `Wiki Discovery
+`,
+    };
+  }
+  return (
+    <Layout title={obj.title} icon="/icons/books.svg">
+      {page}
+    </Layout>
+  );
+};
