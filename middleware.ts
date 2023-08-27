@@ -93,6 +93,8 @@ export const config = {
     "/challenge/shared",
     "/planner",
     "/planner/:path",
-    "/planner/plan/:path* ",
+    "/planner/plan/:path*",
+    "/wiki/[[...params]]",
+    "/wiki/compare",
   ],
 };

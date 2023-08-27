@@ -30,7 +30,7 @@ import { useUser } from "../context/AuthProvider";
 const defaultBlendImg =
   "https://blending.s3.us-east-1.amazonaws.com/3383678.jpg";
 
-const Home = ({ props }) => {
+const Home = () => {
   const { allFilters } = useAppSelector((state) => state?.filterRecipe);
   const displayName = useUser().name;
   const { data: blendTypes } = useQuery(GET_BLEND_TYPES);
