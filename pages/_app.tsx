@@ -1,16 +1,21 @@
 import "../styles/globals.scss";
-import type { NextPage } from "next";
-import { store } from "../redux/store";
-import { Provider } from "react-redux";
-import AuthProvider from "../context/AuthProvider";
+
+import dynamic from "next/dynamic";
 import { AppProps } from "next/app";
-import Loader from "../theme/loader/Loader";
+import type { NextPage } from "next";
+
+import { Provider } from "react-redux";
+import { ApolloProvider } from "@apollo/client";
+import { config } from "@fortawesome/fontawesome-svg-core";
+
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ApolloProvider } from "@apollo/client";
+
+import AuthProvider from "../context/AuthProvider";
+import Loader from "../theme/loader/Loader";
+
+import { store } from "../redux/store";
 import client from "../gqlLib/client";
-import { config } from "@fortawesome/fontawesome-svg-core";
-import dynamic from "next/dynamic";
 
 const FeedbackImport = dynamic(() => import("simple-screenshot-feedback"), {
   ssr: false,
