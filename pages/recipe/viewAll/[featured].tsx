@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
 import Icon from "../../../component/atoms/Icon/Icon.component";
 import AContainer from "../../../containers/A.container";
 import useLocalStorage from "../../../customHooks/useLocalStorage";
@@ -12,19 +12,15 @@ import classes from "../../../styles/pages/viewAll.module.scss";
 import ShowRecipeContainer from "../../../components/showRecipeContainer";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import { faXmark } from "@fortawesome/pro-regular-svg-icons";
+let dataLimit = 12;
 
 const ViewAll = () => {
+  const [pageNo, setPageNo] = useState(1);
   const router = useRouter();
   const featured = router.query?.featured as string;
   const page = featured && QUERY_DICTIONARY[featured];
-
-  const { data, loading } = useViewAll(featured);
-  const [compareRecipeList, setcompareRecipeList] = useLocalStorage<any>(
-    "compareList",
-    [],
-  );
+  const { data, loading } = useViewAll(featured, dataLimit, pageNo);
 
   return (
     <AContainer
@@ -37,7 +33,10 @@ const ViewAll = () => {
     >
       <div className={styles.main__div}>
         <ShowRecipeContainer
-          data={data?.[page?.query] || []}
+          data={data?.recipes || []}
+          nextPage={() => setPageNo((currentPage) => currentPage + 1)}
+          hasMore={data?.totalRecipes > dataLimit * pageNo}
+          totalDataCount={data?.totalRecipes}
           loading={loading}
           headerLeftSide={
             <div className="flex ai-center">
