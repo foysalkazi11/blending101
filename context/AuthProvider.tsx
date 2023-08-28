@@ -69,7 +69,6 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
         email = user?.signInUserSession?.idToken?.payload?.email;
         provider =
           user?.signInUserSession?.idToken?.payload?.identities?.[0]?.providerName?.toLowerCase();
-        console.log(provider);
       }
       if (email && provider)
         return getUser({
@@ -116,7 +115,7 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
     try {
       const user = await Auth.signIn(email, password);
       const bdUser = await sessionHandler(user);
-      router.push("/");
+      // router.push("/");
       onSuccess(bdUser);
     } catch (error) {
       notification("error", error.message);
