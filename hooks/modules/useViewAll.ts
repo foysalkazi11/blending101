@@ -8,18 +8,20 @@ import GET_ALL_RECOMMENDED_RECIPES from "../../gqlLib/recipes/queries/getRecomme
 import { useAppSelector } from "../../redux/hooks";
 import { useUser } from "../../context/AuthProvider";
 
-const useViewAll = (param: string) => {
+const useViewAll = (param: string, limit: number = 12, page: number = 1) => {
   const userId = useUser().id;
-  const [response, setResponse] = useState([]);
+  const [response, setResponse] = useState({ recipes: [], totalRecipes: 0 });
 
   const config = useMemo(
     () => ({
       variables: {
         userId,
+        limit,
+        page,
       },
       skip: userId === "",
     }),
-    [userId],
+    [limit, page, userId],
   );
 
   const [getAllRecommendedRecipes, getAllRecommendedRecipesData] = useLazyQuery(
@@ -61,7 +63,16 @@ const useViewAll = (param: string) => {
   );
 
   async function fetchData() {
-    await responseObj?.[param]?.method();
+    try {
+      let response = await responseObj?.[param]?.method();
+      response = response?.data[QUERY_DICTIONARY[param]?.query];
+      setResponse((previous) => ({
+        recipes: [...previous?.recipes, ...response?.recipes],
+        totalRecipes: response?.totalRecipes,
+      }));
+    } catch (error) {
+      console.log(error);
+    }
     // let response: any;
     // switch (param) {
     //   case "recommended":
@@ -80,13 +91,14 @@ const useViewAll = (param: string) => {
   }
 
   useEffect(() => {
-    if (param !== "") {
+    if (param && page) {
       fetchData();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [param]);
 
-  return { ...responseObj[param]?.data };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [param, page]);
+
+  return { ...responseObj[param]?.data, data: response };
 };
 
 export default useViewAll;

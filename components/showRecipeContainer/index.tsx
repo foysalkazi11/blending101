@@ -213,14 +213,15 @@ const ShowRecipeContainer = ({
                       brand,
                       url,
                     },
-                    defaultVersion: {
-                      _id: defaultVersionId = "",
-                      postfixTitle = "",
-                      ingredients,
-                      description = "",
-                      calorie,
-                      gigl,
-                    },
+                    defaultVersion,
+                    // defaultVersion: {
+                    //   _id: defaultVersionId = "",
+                    //   postfixTitle = "",
+                    //   ingredients,
+                    //   description = "",
+                    //   calorie,
+                    //   gigl,
+                    // },
                     isMatch = false,
                     allRecipes = false,
                     myRecipes = false,
@@ -230,7 +231,7 @@ const ShowRecipeContainer = ({
                     versionCount = 0,
                     personalRating,
                   } = item;
-                  const ing = joniIngredients(ingredients);
+                  const ing = joniIngredients(defaultVersion?.ingredients);
                   return (
                     <DatacardComponent
                       key={_id}
@@ -239,9 +240,9 @@ const ShowRecipeContainer = ({
                       category={recipeBlendCategory?.name}
                       ratings={averageRating}
                       noOfRatings={numberOfRating}
-                      carbs={gigl?.netCarbs || 0}
+                      carbs={defaultVersion?.gigl?.netCarbs || 0}
                       // score={rxScore}
-                      calorie={calorie?.value || 0}
+                      calorie={defaultVersion?.calorie?.value || 0}
                       noOfComments={numberOfRating}
                       image={
                         image?.find((img) => img?.default)?.image ||
@@ -253,8 +254,8 @@ const ShowRecipeContainer = ({
                       isCollectionIds={userCollections}
                       setOpenCollectionModal={setOpenCollectionModal}
                       isMatch={isMatch}
-                      postfixTitle={postfixTitle}
-                      defaultVersionId={defaultVersionId}
+                      postfixTitle={defaultVersion?.postfixTitle}
+                      defaultVersionId={defaultVersion?._id}
                       userId={userId}
                       recipeVersion={versionCount}
                       showMoreMenuAtHover={true}
