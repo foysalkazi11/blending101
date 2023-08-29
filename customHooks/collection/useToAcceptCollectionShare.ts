@@ -24,7 +24,7 @@ const useToAcceptCollectionShare = () => {
       handleUpdateShareNotification(variables, updateData);
       notification("success", "Collection added to shared with me collection");
       if (isComeFromDetailsView) {
-        router.push("/recipe_discovery");
+        router.push("/recipe/recipe_discovery");
       }
     } catch (error) {
       notification("error", "Failed accept Collection share");

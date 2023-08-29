@@ -74,7 +74,7 @@ const DiscoveryPageSearchBar = ({
               />
             }
             text="Recipe"
-            handleClick={() => router.push(`/add_recipe`)}
+            handleClick={() => router.push(`/recipe/add_recipe`)}
           />
         </Tooltip>
       </div>

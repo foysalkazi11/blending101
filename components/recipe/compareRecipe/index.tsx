@@ -534,7 +534,7 @@ const CompareRecipe = () => {
           setNewlyCreatedRecipe(data?.addRecipeFromUser);
           setUploadNewImage(false);
           notification("success", "Recipe saved successfully");
-          // router?.push(`/recipe_details/${data?.addRecipeFromUser?._id}`);
+          // router?.push(`/recipe/recipe_details/${data?.addRecipeFromUser?._id}`);
         } catch (error) {
           notification("error", "Failed to saved new recipe");
         }
@@ -663,7 +663,7 @@ const CompareRecipe = () => {
           ) : (
             <>
               <SubNav
-                backAddress="/recipe_discovery"
+                backAddress="/recipe/recipe_discovery"
                 backIconText="Recipe Discovery"
                 buttonText={isFormulatePage ? "Compare" : "Formulate"}
                 showButton={true}

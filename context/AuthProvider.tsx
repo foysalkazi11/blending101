@@ -22,7 +22,12 @@ const DEFAULT_USER = { id: "", name: "", email: "", image: "" };
 interface IAuthContext {
   user: typeof DEFAULT_USER;
   session: any;
-  signIn: (email: string, password: string) => void;
+  signIn: (
+    email: string,
+    password: string,
+    onSuccess?: (user: any) => void,
+    onError?: (error: any) => void,
+  ) => void;
   oAuthSignIn: (provider: TProvider) => void;
   signOut: () => void;
 }
@@ -54,7 +59,7 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
   const [getUser] = useMutation(GET_USER);
 
   const sessionHandler = useCallback(
-    (user) => {
+    async (user) => {
       setSession(user);
       let email, provider;
       if (user?.attributes?.email) {
@@ -64,7 +69,6 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
         email = user?.signInUserSession?.idToken?.payload?.email;
         provider =
           user?.signInUserSession?.idToken?.payload?.identities?.[0]?.providerName?.toLowerCase();
-        console.log(provider);
       }
       if (email && provider)
         return getUser({
@@ -73,15 +77,12 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
           },
         }).then((response) => {
           const profile = response?.data?.createNewUser;
-          console.log(profile);
           setUser({
             id: profile?._id,
             name: profile?.displayName,
             email: profile?.email,
             image: profile?.image,
           });
-
-          // if (!profile?.isCreated) router.push("/user/profile/");
           return profile;
         });
     },
@@ -89,7 +90,9 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
   );
 
   useEffect(() => {
+    // Google Authentication
     if (router.asPath.startsWith("/login/#access_token=")) router.push("/");
+    // Redirects when it is directed to authentication related page
     if (
       [
         "/login",
@@ -100,7 +103,6 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
       ].includes(router.pathname)
     )
       return;
-
     Auth.currentAuthenticatedUser().then(sessionHandler);
   }, [router, sessionHandler]);
 
@@ -111,14 +113,12 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
     onError = (error) => {},
   ) => {
     try {
-      Auth.signIn(email, password)
-        .then(sessionHandler)
-        .then((user) => {
-          console.log(user);
-          onSuccess(user);
-        });
+      const user = await Auth.signIn(email, password);
+      const bdUser = await sessionHandler(user);
+      // router.push("/");
+      onSuccess(bdUser);
     } catch (error) {
-      console.log(error);
+      notification("error", error.message);
       onError(error);
     }
   };

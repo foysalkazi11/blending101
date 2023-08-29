@@ -82,7 +82,7 @@ const ShareRecipe = ({
         process.env.NODE_ENV === "production"
           ? process.env.NEXT_PUBLIC_HOSTING_DOMAIN
           : "http://localhost:4000"
-      }/recipe_details/${id}?token=${response.data?.createShareLink}`;
+      }/recipe/recipe_details/${id}?token=${response.data?.createShareLink}`;
       setLink(link);
       return link;
     } catch (error) {

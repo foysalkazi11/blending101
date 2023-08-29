@@ -4,29 +4,20 @@ import {
   faChartSimple,
   faPen,
   faTrash,
-  faBasketShopping,
   faSave,
   faTimes,
 } from "@fortawesome/pro-regular-svg-icons";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { useForm, FormProvider } from "react-hook-form";
-
 import fuzzySearch from "../../../components/utility/fuzzySearch";
 import { GET_INGREDIENTS } from "../../../graphql/Ingredients";
-import { useAppDispatch } from "../../../redux/hooks";
-import {
-  deleteIngredient,
-  addIngredient,
-} from "../../../redux/slices/Challenge.slice";
-import { setShowPanel } from "../../../redux/slices/Ui.slice";
 import ButtonComponent from "../../../theme/button/button.component";
 import IconButton from "../../atoms/Button/IconButton.component";
 import Icon from "../../atoms/Icon/Icon.component";
 import Combobox from "../../organisms/Forms/Combobox.component";
 import Textfield from "../../organisms/Forms/Textfield.component";
-
 import styles from "./Ingredient.module.scss";
-import Textarea from "../../organisms/Forms/Textarea.component";
+import { NextImageWithFallback } from "../../../theme/imageWithFallback";
 
 interface IngredientPanelProps {
   ingredients: any;
@@ -41,7 +32,6 @@ const IngredientPanel = (props: IngredientPanelProps) => {
 
   const [editingId, setEditingId] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
-
   return (
     <div className="col-12">
       <div className="row">
@@ -49,6 +39,8 @@ const IngredientPanel = (props: IngredientPanelProps) => {
           <div className={styles.ingredient__card}>
             {ingredients?.map((ingredient) => {
               const ingredientId = ingredient.ingredientId?._id || "";
+              const portions =
+                ingredient?.ingredientId?.portions || ingredient?.portions;
               if (ingredientId !== editingId) {
                 return (
                   <div
@@ -58,9 +50,13 @@ const IngredientPanel = (props: IngredientPanelProps) => {
                     <div className={styles.ingredient__item}>
                       <div>
                         {ingredient?.ingredientId?.featuredImage ? (
-                          <img
+                          <NextImageWithFallback
                             src={ingredient?.ingredientId?.featuredImage}
                             alt={ingredient.ingredientId.ingredientName}
+                            fallbackSrc="/food/chard.png"
+                            width={28}
+                            height={28}
+                            style={{ objectFit: "contain" }}
                           />
                         ) : (
                           <span />
@@ -119,8 +115,12 @@ const IngredientPanel = (props: IngredientPanelProps) => {
                       isEditing
                       ingredients={ingredients}
                       defaultQuery={ingredient?.ingredientId?.ingredientName}
-                      defaultIngredient={ingredient?.ingredientId}
-                      defaultPortion={ingredient?.ingredientId?.portions?.find(
+                      defaultIngredient={
+                        ingredient?.ingredientId?.portions
+                          ? ingredient?.ingredientId
+                          : ingredient
+                      }
+                      defaultPortion={portions?.find(
                         (portion) =>
                           portion.measurement ===
                           ingredient?.selectedPortion?.name,
@@ -189,6 +189,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
     hasComment,
     setShowAddForm,
   } = props;
+  console.log(defaultIngredient);
 
   const method = useForm();
 

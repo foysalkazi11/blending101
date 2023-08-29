@@ -71,7 +71,7 @@ const ShareModal: React.FC<ShareProps> = ({
                 process.env.NODE_ENV === "production"
                   ? process.env.NEXT_PUBLIC_HOSTING_DOMAIN
                   : "http://localhost:4000"
-              }/recipe_details/621ccee8ede2edf391c431fe/`}
+              }/recipe/recipe_details/621ccee8ede2edf391c431fe/`}
               description="Hello World"
               className="mr-20"
             >
@@ -85,10 +85,10 @@ const ShareModal: React.FC<ShareProps> = ({
                 process.env.NODE_ENV === "production"
                   ? process.env.NEXT_PUBLIC_HOSTING_DOMAIN
                   : "http://localhost:4000"
-              }/recipe_details/621ccee8ede2edf391c431fe/`}
+              }/recipe/recipe_details/621ccee8ede2edf391c431fe/`}
               title="Blending101"
               hashtags={["Branding"]}
-              via="http://blending101.com/"
+              via="http://app.blending101.com/"
             >
               <a className={styles.twitterIcon} href="#">
                 <FaTwitter />

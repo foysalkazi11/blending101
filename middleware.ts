@@ -1,4 +1,3 @@
-import { withSSRContext } from "aws-amplify";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { decodeProtectedHeader, importJWK, jwtVerify } from "jose";
@@ -7,6 +6,7 @@ import { decodeProtectedHeader, importJWK, jwtVerify } from "jose";
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl.clone();
   const response = NextResponse.next();
+
   // Authenticate users for protected resources
   const region = process.env.NEXT_PUBLIC_AWS_REGION;
   const poolId = process.env.NEXT_PUBLIC_AWS_COGNITO_POOL_ID;
@@ -70,18 +70,6 @@ export async function middleware(req: NextRequest) {
   } catch (err) {
     console.log("err", err);
   }
-  // console.log("**********************************");
-  // console.log(url);
-  // console.log("**********************************");
-
-  // const pattern = /\?code=[a-zA-Z0-9-]+&state=[a-zA-Z0-9]+/;
-  // if (url.pathname === "/" && pattern.test(url.search) && token) {
-  //   return response;
-  // }
-  // return NextResponse.redirect(`${url.origin}/loginss`);
-
-  // Redirect unauthenticated users to the login page when they attempt to access protected pages
-  // return NextResponse.redirect(`${url.origin}/login`);
 }
 
 // See "Matching Paths" below to learn more
@@ -91,8 +79,14 @@ export const config = {
     "/challenge",
     "/challenge/invited",
     "/challenge/shared",
-    "/planner",
-    "/planner/:path",
-    "/planner/plan/:path* ",
+    "/planner/:path*",
+    "/wiki/:path*",
+    "/user",
+    "/user/profile",
+    "/collection/blogCollection/:path",
+    "/collection/planCollection/:path",
+    "/collection/recipeCollection/:path",
+    "/blog/:path?",
+    "/recipe/:path*",
   ],
 };

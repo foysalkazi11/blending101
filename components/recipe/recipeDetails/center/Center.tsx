@@ -36,6 +36,7 @@ import isEmptyObj from "../../../../helperFunc/object/isEmptyObj";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/pro-light-svg-icons";
 import { useUser } from "../../../../context/AuthProvider";
+import { ImageWithFallback } from "../../../../theme/imageWithFallback";
 
 interface center {
   recipeData: RecipeDetailsType;
@@ -177,9 +178,9 @@ const Center = ({
         token: variables?.token,
         userId: variables?.userId,
       });
-      router?.push(`/recipe_details/${variables?.recipeId}`);
+      router?.push(`/recipe/recipe_details/${variables?.recipeId}`);
     } else {
-      router?.push(`/edit_recipe/${variables?.recipeId}`);
+      router?.push(`/recipe/edit_recipe/${variables?.recipeId}`);
     }
   };
 
@@ -191,7 +192,7 @@ const Center = ({
   //       userId: variables?.userId,
   //     });
   //   }
-  //   router?.push("/recipe_discovery");
+  //   router?.push("/recipe/recipe_discovery");
   // };
 
   // handle to open version tray
@@ -248,7 +249,7 @@ const Center = ({
         pageComeFrom={pageComeFrom}
         // loading={acceptRecipeShareLoading}
         backBtnObj={{
-          function: () => router?.push("/discovery"),
+          function: () => router?.push("/recipe/recipe_discovery"),
           text: "Back",
         }}
       />
@@ -297,7 +298,7 @@ const Center = ({
                     href={recipeData?.recipeId?.brand?.brandUrl || "#"}
 
                     // onClick={(e) => {
-                    //   const id = "ebbpnaajpojkhndmjmdjabgjmngjgmhm";
+                    //   const id = "lijpknkegggepjnhoiklomgfbldbmnef";
                     //   //@ts-ignore
                     //   chrome.runtime.sendMessage(
                     //     id,
@@ -317,12 +318,13 @@ const Center = ({
                     //   window.location.href = "";
                     // }}
                   >
-                    <img
+                    <ImageWithFallback
                       className={styles.brand}
                       src={
                         `${recipeData?.recipeId?.brand?.brandImage}` ||
                         "/icons/delish.png"
                       }
+                      fallbackSrc="/logo_small.svg"
                       alt="brand"
                     />
                   </a>
@@ -411,7 +413,7 @@ const Center = ({
                         backgroundImage: `url(${img.image})`,
                       }}
                     />
-
+                    {/* <img src={img.image} alt="recipe_image" /> */}
                     <Image
                       src={img.image}
                       alt="recipe_image"

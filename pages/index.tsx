@@ -71,7 +71,7 @@ const Home = () => {
     }
 
     dispatch(updateSidebarActiveMenuName("Blends"));
-    router.push("/recipe_discovery");
+    router.push("/recipe/recipe_discovery");
   };
 
   return (
@@ -185,7 +185,7 @@ Home.meta = {
 };
 
 const getDetailURL = (domain: string, id: string, payload?: any) => {
-  if (domain === "Recipe") return `recipe_details/${id}/`;
+  if (domain === "Recipe") return `/recipe/recipe_details/${id}/`;
   if (domain === "Plan") return `/planner/plan/${id}/`;
   if (domain === "Wiki") return `/planner/plan/${id}/`;
   if (domain === "GeneralBlog") return `/planner/plan/${id}/`;
@@ -194,15 +194,18 @@ const getDetailURL = (domain: string, id: string, payload?: any) => {
 const EntitySlider = ({ collection, methods }) => {
   const { displayName, slug, data, theme } = collection;
 
-  if (theme === null) return <Fragment />;
-  let { _id: themeId, link: file, style } = theme;
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const template = useThemeTemplate(file);
+  // const { link: file, style } = theme;
+  const template = useThemeTemplate(theme?.link);
 
   return (
     <div className="mt-40">
       <Head>
-        <link crossOrigin="" rel="stylesheet" type="text/css" href={style} />
+        <link
+          crossOrigin=""
+          rel="stylesheet"
+          type="text/css"
+          href={theme?.style}
+        />
       </Head>
       <ContentTray
         heading={displayName}
@@ -211,7 +214,7 @@ const EntitySlider = ({ collection, methods }) => {
       >
         {data[data?.collectionType]?.map((item) => {
           return (
-            <div id={`blend${themeId}`} key={item?._id}>
+            <div id={`blend${theme?._id}`} key={item?._id}>
               <div style={{ paddingRight: "1rem" }}>
                 <Link
                   href={getDetailURL(data?.collectionType, item?._id)}

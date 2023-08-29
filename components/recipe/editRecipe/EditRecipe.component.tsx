@@ -1,11 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import AContainer from "../../../containers/A.container";
 import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
 import Center_Elements from "./recipe_elements/centerElements.component";
-import IngredientSection from "./recipe_elements/ingredientList/IngredientSection";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
+  setRecipeIngredients,
+  setRecipeInstruction,
   setSelectedIngredientsList,
   setServingCounter,
 } from "../../../redux/edit_recipe/editRecipeStates";
@@ -18,13 +19,12 @@ import { GiGl } from "../../../type/nutrationType";
 import FloatingLeftPanel from "./floatingLeftPanel/FloatingLeftPanel";
 import { IngredientAddingType } from "../../../type/recipeEditType";
 import { useRouter } from "next/router";
-import InstructionsForMakingRecipe from "./howToSection";
+import InstructionsForMakingRecipe from "../share/howToSection";
+import IngredientSection from "../share/IngredientSection";
 
 interface editRecipe {
   copyDetailsRecipe?: RecipeDetailsType;
-  allIngredients: [];
   nutritionTrayData: any;
-  recipeInstructions: string[];
   allBlendCategories: [];
   selectedBLendCategory: string;
   editARecipeFunction: () => void;
@@ -46,9 +46,7 @@ interface editRecipe {
 
 const EditRecipePage = ({
   copyDetailsRecipe = null,
-  allIngredients,
   nutritionTrayData,
-  recipeInstructions,
   allBlendCategories,
   selectedBLendCategory,
   editARecipeFunction = () => {},
@@ -80,6 +78,35 @@ const EditRecipePage = ({
   const selectedIngredientsList = useAppSelector(
     (state) => state.editRecipeReducer.selectedIngredientsList,
   );
+  const { recipeInstruction } = useAppSelector(
+    (state) => state?.editRecipeReducer,
+  );
+
+  const updateRecipeInstruction = (recipeInstruction) => {
+    dispatch(setRecipeInstruction(recipeInstruction));
+  };
+
+  const removeIngredient = (id) => {
+    let updated_list = selectedIngredientsList?.filter((elem) => {
+      return id !== elem?._id;
+    });
+    dispatch(setSelectedIngredientsList(updated_list));
+  };
+
+  const handleOnDragEnd = (result, type) => {
+    if (!result) return;
+
+    if (type === "ingredients") {
+      const items = [...selectedIngredientsList];
+      const [reOrderedItem] = items?.splice(result.source.index, 1);
+      items.splice(result.destination.index, 0, reOrderedItem);
+      dispatch(setSelectedIngredientsList(items));
+    }
+  };
+
+  const handleAddIngredient = (ing: { [key: string]: any }) => {
+    dispatch(setRecipeIngredients(ing));
+  };
 
   const handleIngredientClick = (ingredient: any, present: boolean) => {
     let blendz = [];
@@ -168,7 +195,7 @@ const EditRecipePage = ({
         <div className={styles.center}>
           <PanelHeaderCenter
             backBtnObj={{
-              function: () => router.push(`/recipe_details/${recipeId}`),
+              function: () => router.push(`/recipe/recipe_details/${recipeId}`),
             }}
             editOrSavebtnFunc={editARecipeFunction}
             editOrSavebtnText="Save"
@@ -189,14 +216,19 @@ const EditRecipePage = ({
           />
           <IngredientSection
             adjusterFunc={adjusterFunc}
-            allIngredients={allIngredients}
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}
             calculatedIngOz={calculatedIngOz}
             ingredientAddingType={ingredientAddingType}
+            selectedIngredientsList={selectedIngredientsList}
+            handleOnDragEnd={handleOnDragEnd}
+            removeIngredient={removeIngredient}
+            setSelectedIngredientsList={handleAddIngredient}
+            servingSize={servingCounter}
           />
           <InstructionsForMakingRecipe
-            recipeInstructions={recipeInstructions}
+            recipeInstructions={recipeInstruction}
+            setRecipeInstruction={updateRecipeInstruction}
           />
         </div>
         <div className={styles.right}>

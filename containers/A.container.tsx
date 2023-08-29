@@ -3,9 +3,6 @@ import HeaderComponent from "../components/header/Header.component";
 import SidebarComponent from "../components/sidebar/Sidebar.component";
 import styles from "./container.module.scss";
 import CollectionTray from "../components/sidetray/collection/RecipeCollectionAndThemeTray";
-import NutritionTrayComponent from "../components/sidetray/wiki/nutrition/nutrition.component";
-import HealthTrayComponent from "../components/sidetray/wiki/health/heath.component";
-import IngredientTrayComponent from "../components/sidetray/wiki/ingredient/ingredient.component";
 import FilterTray from "../components/sidetray/filter";
 import CommentsTray from "../components/sidetray/commentsTray/RecipeCommentsTray";
 import CartPanel from "../component/templates/Panel/CartPanel.component/Panel.component";
@@ -232,21 +229,6 @@ const AContainer: FC<AContainerProps> = (props) => {
               showTagByDefaut={showPlanCollectionTray?.showTagByDefault}
               showPanle={showPlanCollectionTray?.showPanel}
             />
-          </div>
-        )}
-        {nutritionTray && (
-          <div className={styles.fixed__main__left}>
-            <NutritionTrayComponent title="Nutrition Lists" />
-          </div>
-        )}
-        {healthTray && (
-          <div className={styles.fixed__main__left}>
-            <HealthTrayComponent title="Health Lists" />
-          </div>
-        )}
-        {ingredientTray && (
-          <div className={styles.fixed__main__left}>
-            <IngredientTrayComponent title="Ingredient Lists" />
           </div>
         )}
         {showRecipeFilterTray && (

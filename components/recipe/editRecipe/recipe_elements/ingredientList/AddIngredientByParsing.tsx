@@ -29,6 +29,8 @@ import Textfield from "../../../../../component/organisms/Forms/Textfield.compon
 import Combobox from "../../../../../component/organisms/Forms/Combobox.component";
 import IconButton from "../../../../../component/atoms/Button/IconButton.component";
 import Tooltip from "../../../../../theme/toolTip/CustomToolTip";
+import { NextImageWithFallback } from "../../../../../theme/imageWithFallback";
+import useGetDefaultPortionOfnutration from "../../../../../customHooks/useGetDefaultPortionOfNutration";
 
 const defaultValues = {
   ingredientId: "",
@@ -41,15 +43,15 @@ const defaultValues = {
 
 const AddIngredientByParsing = (props) => {
   const {
-    allIngredients,
     handleOnDragEnd,
     ingredients,
     nutritionState,
     setNutritionState,
-    setIngredientId,
     removeIngredient,
   } = props;
   const [editIngredientId, setEditIngredientId] = useState("");
+  const [ingredientId, setIngredientId] = useState("");
+  useGetDefaultPortionOfnutration(ingredientId);
 
   const methods = useForm({
     defaultValues: useMemo(() => defaultValues, []),
@@ -128,7 +130,6 @@ const AddIngredientByParsing = (props) => {
                                       removeIngredient,
                                       editIngredientId,
                                       onReset,
-                                      allIngredients,
                                       nutritionState,
                                     }}
                                   />
@@ -342,7 +343,6 @@ const SingleIngredient = ({
   removeIngredient,
   editIngredientId,
   onReset,
-  allIngredients,
   nutritionState,
 }) => {
   const windowScrollToZero = (elem = {}) => {
@@ -387,15 +387,16 @@ const SingleIngredient = ({
       <div className={`${classes.ingredients__icons}`}>
         {elem?.ingredientStatus === "ok" ? (
           elem?.featuredImage || elem?.images?.[0] ? (
-            <Image
+            <NextImageWithFallback
               src={
                 elem?.featuredImage ||
                 elem?.images?.[0] ||
                 "/food/Dandelion.png"
               }
+              fallbackSrc="/food/chard.png"
               alt="Picture will load soon"
-              objectFit="contain"
-              layout="fill"
+              style={{ objectFit: "contain" }}
+              fill
             />
           ) : (
             <FontAwesomeIcon icon={faBasketShoppingSimple} />

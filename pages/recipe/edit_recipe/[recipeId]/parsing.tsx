@@ -1,38 +1,39 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import EditRecipePage from "../../../components/recipe/editRecipe/EditRecipe.component";
+import EditRecipePage from "../../../../components/recipe/editRecipe/EditRecipe.component";
 import { useMutation, useQuery } from "@apollo/client";
-import { BLEND_CATEGORY } from "../../../gqlLib/recipes/queries/getEditRecipe";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { BLEND_CATEGORY } from "../../../../gqlLib/recipes/queries/getEditRecipe";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import {
+  setRecipeInstruction,
   setSelectedIngredientsList,
   setServingCounter,
-} from "../../../redux/edit_recipe/editRecipeStates";
-import EDIT_A_RECIPE from "../../../gqlLib/recipes/mutations/editARecipe";
+} from "../../../../redux/edit_recipe/editRecipeStates";
+import EDIT_A_RECIPE from "../../../../gqlLib/recipes/mutations/editARecipe";
 import {
   setLoading,
   updateSidebarActiveMenuName,
-} from "../../../redux/slices/utilitySlice";
-import imageUploadS3 from "../../../components/utility/imageUploadS3";
-import reactToastifyNotification from "../../../components/utility/reactToastifyNotification";
-import useGetBlendNutritionBasedOnRecipexxx from "../../../customHooks/useGetBlendNutritionBasedOnRecipexxx";
-import useToGetARecipe from "../../../customHooks/useToGetARecipe";
+} from "../../../../redux/slices/utilitySlice";
+import imageUploadS3 from "../../../../components/utility/imageUploadS3";
+import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
+import useGetBlendNutritionBasedOnRecipexxx from "../../../../customHooks/useGetBlendNutritionBasedOnRecipexxx";
+import useToGetARecipe from "../../../../customHooks/useToGetARecipe";
 import {
   setIsNewVersionInfo,
   setOpenVersionTray,
   setOpenVersionTrayFormWhichPage,
-} from "../../../redux/slices/versionTraySlice";
-import { RecipeDetailsType } from "../../../type/recipeDetailsType";
-import { GiGl } from "../../../type/nutrationType";
-import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
-import useToEditOfARecipeVersion from "../../../customHooks/useToEditOfARecipeVersion";
-import ConfirmationModal from "../../../theme/confirmationModal/ConfirmationModal";
-import useToUpdateAfterEditVersion from "../../../customHooks/useToUpdateAfterEditVersion";
-import { VersionAddDataType } from "../../../type/versionAddDataType";
-import { useUser } from "../../../context/AuthProvider";
+} from "../../../../redux/slices/versionTraySlice";
+import { RecipeDetailsType } from "../../../../type/recipeDetailsType";
+import { GiGl } from "../../../../type/nutrationType";
+import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
+import useToEditOfARecipeVersion from "../../../../customHooks/useToEditOfARecipeVersion";
+import ConfirmationModal from "../../../../theme/confirmationModal/ConfirmationModal";
+import useToUpdateAfterEditVersion from "../../../../customHooks/useToUpdateAfterEditVersion";
+import { VersionAddDataType } from "../../../../type/versionAddDataType";
+import { useUser } from "../../../../context/AuthProvider";
 
-const EditRecipeComponent = () => {
+const EditRecipeComponentParsing = () => {
   const router = useRouter();
   const { params = [] } = router.query;
   const recipeId = params?.[0] || (router.query?.recipeId as string);
@@ -69,15 +70,6 @@ const EditRecipeComponent = () => {
   const [editRecipe, { loading: editARecipeLoading }] =
     useMutation(EDIT_A_RECIPE);
   const { handleToGetARecipe } = useToGetARecipe();
-  const { data: ingredientCategoryData, loading: ingredientCategoryLoading } =
-    useQuery(FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS, {
-      variables: {
-        data: {
-          ingredientCategory: "All",
-          IngredientClass: 1,
-        },
-      },
-    });
 
   // open confirmation modal
   const openConfirmationModal = (data: VersionAddDataType) => {
@@ -332,6 +324,16 @@ const EditRecipeComponent = () => {
     if (!detailsARecipe) return;
     setCopyDetailsRecipe({ ...detailsARecipe });
     dispatch(setServingCounter(detailsARecipe?.recipeId?.servings || 1));
+    dispatch(
+      setRecipeInstruction(
+        detailsARecipe?.tempVersionInfo?.version?.recipeInstructions?.map(
+          (elem: string, index: number) => ({
+            id: Date.now() + index,
+            step: elem,
+          }),
+        ) || [],
+      ),
+    );
     SetcalculateIngOz(detailsARecipe?.tempVersionInfo?.version?.servingSize);
     setExistingImages(
       detailsARecipe?.recipeId?.image?.map((item) => `${item?.image}`),
@@ -343,14 +345,6 @@ const EditRecipeComponent = () => {
             const ingredientId = ingredient?.ingredientId;
             return {
               ...ingredient,
-              ingredientId: {
-                ...ingredientId,
-                portions: ingredient.portions.map((portion) => ({
-                  ...portion,
-                  measurement: portion.name,
-                  meausermentWeight: portion.gram,
-                })),
-              },
               featuredImage: ingredientId?.featuredImage,
               image: ingredientId?.image,
               ingredientName: ingredientId?.ingredientName,
@@ -365,8 +359,6 @@ const EditRecipeComponent = () => {
   useEffect(() => {
     dispatch(setOpenVersionTray(false));
     dispatch(setOpenVersionTrayFormWhichPage("edit"));
-    // active sidebar menu change
-    dispatch(updateSidebarActiveMenuName("Blends"));
   }, []);
 
   // fetch recipe if is their existing recipe or doesn't match with current user
@@ -377,6 +369,12 @@ const EditRecipeComponent = () => {
       }
     }
   }, [recipeId, user.id]);
+
+  // active sidebar menu change
+  useEffect(() => {
+    dispatch(updateSidebarActiveMenuName("Blends"));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // fetch nutrition value based on ingredient value change
   useEffect(() => {
@@ -411,13 +409,7 @@ const EditRecipeComponent = () => {
       <EditRecipePage
         copyDetailsRecipe={copyDetailsRecipe}
         updateEditRecipe={updateEditRecipe}
-        allIngredients={
-          ingredientCategoryData?.filterIngredientByCategoryAndClass
-        }
         nutritionTrayData={nutritionList ? JSON.parse(nutritionList) : []}
-        recipeInstructions={
-          copyDetailsRecipe?.tempVersionInfo?.version?.recipeInstructions || []
-        }
         allBlendCategories={allBlendCategory?.getAllCategories}
         selectedBLendCategory={
           copyDetailsRecipe?.recipeId?.recipeBlendCategory?.name
@@ -437,7 +429,7 @@ const EditRecipeComponent = () => {
           editOrCreateVersionLoading || editARecipeLoading
         }
         versionsCount={detailsARecipe?.versionsCount}
-        ingredientAddingType="auto"
+        ingredientAddingType="parsing"
       />
       <ConfirmationModal
         text="You can't edit original recipe but you can make a new version like original one !!!"
@@ -455,4 +447,4 @@ const EditRecipeComponent = () => {
   );
 };
 
-export default EditRecipeComponent;
+export default EditRecipeComponentParsing;

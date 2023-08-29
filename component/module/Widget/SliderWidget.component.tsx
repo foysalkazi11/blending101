@@ -98,7 +98,7 @@ const Slide = ({ item, html }) => {
     <div
       ref={ref}
       className={styles.slider__card}
-      onClick={() => router.push(`/recipe_details/${item?._id}`)}
+      onClick={() => router.push(`/recipe/recipe_details/${item?._id}`)}
       dangerouslySetInnerHTML={{
         __html: ejs.render(html, { data: item, methods: {} }),
       }}

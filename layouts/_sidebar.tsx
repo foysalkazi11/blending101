@@ -64,7 +64,11 @@ export const PAGES: {
   content: PageName;
 }[] = [
   { logo: "/icons/home.svg", link: "/", content: "Home" },
-  { logo: "/icons/juicer.svg", link: "/recipe_discovery", content: "Blends" },
+  {
+    logo: "/icons/juicer.svg",
+    link: "/recipe/recipe_discovery",
+    content: "Blends",
+  },
   {
     logo: "/icons/calender__sidebar.svg",
     link: "/planner",

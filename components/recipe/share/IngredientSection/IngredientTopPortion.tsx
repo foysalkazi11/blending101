@@ -1,23 +1,20 @@
 import React from "react";
-import classes from "./ingredientList&Howto.module.scss";
+import classes from "./IngredientSection.module.scss";
 import Image from "next/image";
-import { useAppSelector } from "../../../../../redux/hooks";
-import AddSharpIcon from "../../../../../public/icons/add_black_36dp.svg";
-import RemoveSharpIcon from "../../../../../public/icons/remove_black_36dp.svg";
+import AddSharpIcon from "../../../../public/icons/add_black_36dp.svg";
+import RemoveSharpIcon from "../../../../public/icons/remove_black_36dp.svg";
 
 interface IngredientTopPortionProps {
   adjusterFunc?: (value: number) => void;
   calculatedIngOz?: number;
+  servingSize?: number;
 }
 
 const IngredientTopPortion = ({
   adjusterFunc,
   calculatedIngOz,
+  servingSize = 1,
 }: IngredientTopPortionProps) => {
-  const servingCounter = useAppSelector(
-    (state) => state.editRecipeReducer.servingCounter,
-  );
-
   return (
     <>
       <div className={classes.headingDiv}>
@@ -33,18 +30,18 @@ const IngredientTopPortion = ({
             <div
               className={classes.servings__adjuster__icondiv}
               onClick={() => {
-                adjusterFunc(servingCounter - 1);
+                adjusterFunc(servingSize - 1);
               }}
             >
               <RemoveSharpIcon />
             </div>
             <span className={classes.servings__adjuster__score}>
-              {servingCounter}
+              {servingSize}
             </span>
             <div
               className={classes.servings__adjuster__icondiv}
               onClick={() => {
-                adjusterFunc(servingCounter + 1);
+                adjusterFunc(servingSize + 1);
               }}
             >
               <AddSharpIcon />

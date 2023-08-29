@@ -35,6 +35,7 @@ import isEmptyObj from "../../../helperFunc/object/isEmptyObj";
 import { AccessPermission } from "../../../type/recipeCardType";
 import useExtension from "../../../hooks/useExtension";
 import { useUser } from "../../../context/AuthProvider";
+import { ImageWithFallback } from "../../imageWithFallback";
 
 interface dataCardInterface {
   title: string;
@@ -273,7 +274,7 @@ export default function DatacardComponent({
         >
           <img src="/icons/share.png" alt="square" />
         </li>
-        <li onClick={() => router.push(`/edit_recipe/${recipeId}`)}>
+        <li onClick={() => router.push(`/recipe/edit_recipe/${recipeId}`)}>
           <img src="/icons/edit.png" alt="square" />
         </li>
         <li>
@@ -329,7 +330,7 @@ export default function DatacardComponent({
                 if (hasInteractionPermission("title")) {
                   e?.stopPropagation();
                   router.push(
-                    `/recipe_details/${recipeId}/${
+                    `/recipe/recipe_details/${recipeId}/${
                       token ? "?token=" + token : ""
                     } `,
                   );
@@ -372,12 +373,12 @@ export default function DatacardComponent({
         </div>
         <div className={styles.datacard__body__middle}>
           <div className={styles.datacard__body__middle__left}>
-            <img
+            <ImageWithFallback
               className={styles.image}
               // style={{
               //   backgroundImage: `url(${image || "/cards/coriander.png"})`,
               // }}
-              src={image || "/cards/coriander.png"}
+              src={image}
               alt="recipe_img"
             />
             {isImageOverlay ? (
@@ -421,7 +422,7 @@ export default function DatacardComponent({
                   href={origin}
                   onClick={(e) => {
                     router.reload();
-                    const id = "ebbpnaajpojkhndmjmdjabgjmngjgmhm";
+                    const id = process.env.NEXT_PUBLIC_EXTENSION_URL;
                     //@ts-ignore
                     chrome.runtime.sendMessage(
                       id,
@@ -448,10 +449,11 @@ export default function DatacardComponent({
                     window.location.href = "";
                   }}
                 >
-                  <img
+                  <ImageWithFallback
                     className={styles.brand}
-                    src={`${brand?.brandImage}` || "/icons/delish.png"}
+                    src={`${brand?.brandImage}`}
                     alt="brand"
+                    fallbackSrc="/logo_small.svg"
                   />
                 </a>
               ) : userId?.image ? (

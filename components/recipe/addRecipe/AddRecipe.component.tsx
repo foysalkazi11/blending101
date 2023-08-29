@@ -1,10 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import AContainer from "../../../containers/A.container";
 import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
 import Center_Elements from "./recipe_elements/centerElements.component";
-import IngredientList from "./recipe_elements/ingredientList/ingredientList&Howto.component";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch } from "../../../redux/hooks";
 import imageUploadS3 from "../../utility/imageUploadS3";
 import { BLEND_CATEGORY } from "../../../gqlLib/recipes/queries/getEditRecipe";
 import { useMutation, useQuery } from "@apollo/client";
@@ -23,6 +22,8 @@ import { faBasketShopping as faBasketShoppingRegular } from "@fortawesome/pro-re
 import { faBasketShopping as faBasketShoppingSolid } from "@fortawesome/pro-solid-svg-icons";
 import { GiGl } from "../../../type/nutrationType";
 import { useUser } from "../../../context/AuthProvider";
+import IngredientSection from "../share/IngredientSection";
+import InstructionsForMakingRecipe from "../share/howToSection";
 
 const AddRecipePage = () => {
   const [images, setImages] = useState<any[]>([]);
@@ -31,9 +32,9 @@ const AddRecipePage = () => {
   );
   const [recipeHeading, setRecipeHeading] = useState("");
   const [selectedIngredientsList, setSelectedIngredientsList] = useState([]);
-  const [calculateIngOz, SetcalculateIngOz] = useState(null);
+  const [calculateIngOz, SetCalculateIngOz] = useState(null);
   const [nutritionState, setNutritionState] = useState(null);
-  const [counter, setCounter] = useState(1);
+  const [servingSize, setServingSize] = useState(1);
   const [howToState, setHowToSteps] = useState([]);
   const [recipeDescription, setRecipeDescription] = useState("");
   const [recipePrepareTime, setRecipePrepareTime] = useState(1);
@@ -56,13 +57,13 @@ const AddRecipePage = () => {
 
   // center
 
-  const adjusterFunc = (value) => {
+  const adjusterServingSizeFunc = useCallback((value) => {
     if (value < 1) {
-      setCounter(1);
+      setServingSize(1);
     } else {
-      setCounter(value);
+      setServingSize(value);
     }
-  };
+  }, []);
 
   // submit data for add recipe
 
@@ -89,7 +90,7 @@ const AddRecipePage = () => {
         recipeBlendCategory: selectedBlendValueState,
         ingredients: ingArr,
         servingSize: calculateIngOz,
-        servings: counter,
+        servings: servingSize,
         recipeInstructions: howToArr,
       };
 
@@ -110,24 +111,30 @@ const AddRecipePage = () => {
 
           const { data } = await createNewRecipeByUser({
             variables: {
+              isAddToTemporaryCompareList: false,
               data: obj,
             },
           });
           setLoading(false);
           notification("success", "recipe create successfully");
-          if (data?.addRecipeFromUser?._id) {
-            router?.push(`/recipe_details/${data?.addRecipeFromUser?._id}`);
+          if (data?.addRecipeFromUser?.recipeId?._id) {
+            router?.push(
+              `/recipe/recipe_details/${data?.addRecipeFromUser?.recipeId?._id}`,
+            );
           }
         } else {
           const { data } = await createNewRecipeByUser({
             variables: {
+              isAddToTemporaryCompareList: false,
               data: obj,
             },
           });
           setLoading(false);
           notification("success", "recipe create successfully");
-          if (data?.addRecipeFromUser?._id) {
-            router?.push(`/recipe_details/${data?.addRecipeFromUser?._id}`);
+          if (data?.addRecipeFromUser?.recipeId?._id) {
+            router?.push(
+              `/recipe/recipe_details/${data?.addRecipeFromUser?.recipeId?._id}`,
+            );
           }
         }
       } catch (error) {
@@ -144,16 +151,49 @@ const AddRecipePage = () => {
 
   //left panel
 
-  // add ingrediet
-  const handleIngredientClick = (ingredient: any, present: boolean) => {
+  // add ingredient
+  const handleIngredientClick = (
+    ingredient: any,
+    present: boolean,
+    edit?: boolean,
+  ) => {
+    let ingredientList = [];
+    const defaultPortion =
+      ingredient?.portions?.find((ing) => ing?.default) ||
+      ingredient?.portions?.[0];
+
+    const newIngredient = {
+      ...ingredient,
+      ingredientId: {
+        _id: ingredient?._id,
+        ingredientName: ingredient?.ingredientName,
+        featuredImage: ingredient?.featuredImage,
+        images: ingredient?.images,
+      },
+      selectedPortion: {
+        gram: parseFloat(defaultPortion?.meausermentWeight),
+        name: defaultPortion?.measurement,
+        quantity: ingredient?.selectedPortion?.quantity || 1,
+      },
+      weightInGram: parseFloat(defaultPortion?.meausermentWeight),
+      ingredientStatus: "ok",
+    };
+
     if (!present) {
-      setSelectedIngredientsList((pre) => [...pre, ingredient]);
+      ingredientList = [...selectedIngredientsList, newIngredient];
     } else {
-      setSelectedIngredientsList((pre) => [
-        //@ts-ignore
-        ...pre?.filter((blen) => blen?._id !== ingredient?._id),
-      ]);
+      if (edit) {
+        ingredientList = selectedIngredientsList?.map((ing) =>
+          ing?._id === ingredient?._id ? newIngredient : ing,
+        );
+      } else {
+        ingredientList = selectedIngredientsList?.filter(
+          (ing) => ing?._id !== ingredient?._id,
+        );
+      }
     }
+
+    setSelectedIngredientsList(ingredientList);
   };
 
   // check ingredinet it's alredy exist
@@ -169,11 +209,33 @@ const AddRecipePage = () => {
     return present;
   };
 
+  const removeIngredient = (id) => {
+    setSelectedIngredientsList((pre) => pre?.filter((ele) => ele?._id !== id));
+  };
+
+  const handleOnDragEnd = (result, type) => {
+    if (!result) return;
+
+    if (type === "ingredients") {
+      const items = [...selectedIngredientsList];
+      const [reOrderedItem] = items?.splice(result.source.index, 1);
+      items.splice(result.destination.index, 0, reOrderedItem);
+      setSelectedIngredientsList(items);
+    }
+
+    if (type === "steps") {
+      const items = [...howToState];
+      const [reOrderedItem] = items?.splice(result.source.index, 1);
+      items.splice(result.destination.index, 0, reOrderedItem);
+      setHowToSteps(items);
+    }
+  };
+
   useEffect(() => {
     handleFetchIngrdients(
       selectedIngredientsList,
       nutritionState,
-      SetcalculateIngOz,
+      SetCalculateIngOz,
     );
   }, [selectedIngredientsList, nutritionState]);
 
@@ -184,9 +246,6 @@ const AddRecipePage = () => {
       isMounted.current = false;
     };
   }, []);
-
-  const nutritionListData =
-    nutritionData?.getNutrientsListAndGiGlByIngredients?.nutrients;
   const giGl: GiGl = nutritionData?.getNutrientsListAndGiGlByIngredients?.giGl;
 
   return (
@@ -262,22 +321,30 @@ const AddRecipePage = () => {
             setRecipePrepareTime={setRecipePrepareTime}
             giGl={giGl}
           />
-          <IngredientList
-            adjusterFunc={adjusterFunc}
-            counter={counter}
-            calculatedIngOz={calculateIngOz}
-            selectedIngredientsList={selectedIngredientsList}
-            setSelectedIngredientsList={setSelectedIngredientsList}
+
+          <IngredientSection
+            adjusterFunc={adjusterServingSizeFunc}
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}
-            checkActive={checkActive}
-            howToState={howToState}
-            setHowToSteps={setHowToSteps}
+            calculatedIngOz={calculateIngOz}
+            selectedIngredientsList={selectedIngredientsList}
+            handleOnDragEnd={handleOnDragEnd}
+            removeIngredient={removeIngredient}
+            setSelectedIngredientsList={(ing) => {
+              handleIngredientClick(ing, checkActive(ing?._id), true);
+            }}
+            ingredientAddingType="auto"
+            servingSize={servingSize}
+          />
+          <InstructionsForMakingRecipe
+            recipeInstructions={howToState}
+            setRecipeInstruction={(newList) => setHowToSteps(newList)}
           />
         </div>
         <div className={styles.right}>
           <NutritionPanel
-            counter={counter}
+            counter={servingSize}
+            adjusterFunc={adjusterServingSizeFunc}
             nutritionTrayData={
               nutritionData &&
               JSON?.parse(
@@ -289,7 +356,6 @@ const AddRecipePage = () => {
             isComeFormRecipeEditPage={true}
             calculatedIngOz={calculateIngOz}
             nutritionDataLoading={nutritionDataLoading}
-            adjusterFunc={adjusterFunc}
           />
         </div>
       </div>

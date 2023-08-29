@@ -22,7 +22,7 @@ const DropDown = ({
         name={name}
         id="dropdown"
         className={styles.customSelectbx}
-        style={{ ...style }}
+        style={{ ...style, backgroundImage: `url(/icons/dropdown.svg)` }}
         onChange={(e) => handleChange(e)}
         value={value}
       >

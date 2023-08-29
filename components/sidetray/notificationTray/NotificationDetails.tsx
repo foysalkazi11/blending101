@@ -60,7 +60,9 @@ const NotificationDetails = ({
   const showRecipe = (type, entityId, token) => {
     if (type === "Recipe") {
       router.push(
-        `/recipe_details/${entityId?._id}/${token ? "?token=" + token : ""} `,
+        `/recipe/recipe_details/${entityId?._id}/${
+          token ? "?token=" + token : ""
+        } `,
       );
     }
     if (type === "Collection") {

@@ -1,5 +1,5 @@
 import React from "react";
-import RecipeScreen from "../components/recipe/recipeDiscovery";
+import RecipeScreen from "../../components/recipe/recipeDiscovery";
 
 export default function Recipe_Discovery() {
   return <RecipeScreen />;
