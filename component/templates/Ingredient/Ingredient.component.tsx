@@ -40,10 +40,9 @@ const IngredientPanel = (props: IngredientPanelProps) => {
         <div className="col-12">
           <div className={styles.ingredient__card}>
             {ingredients?.map((ingredient, index) => {
-              const isIngredientStatusOk =
-                ingredient?.ingredientStatus === "ok";
+              const isIngredientStatusOk = ingredient?.errorString;
 
-              if (isIngredientStatusOk) {
+              if (!isIngredientStatusOk) {
                 const ingredientId = ingredient.ingredientId?._id || "";
                 const portions =
                   ingredient?.ingredientId?.portions || ingredient?.portions;
