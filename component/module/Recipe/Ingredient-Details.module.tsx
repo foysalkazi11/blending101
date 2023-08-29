@@ -138,7 +138,7 @@ const IngredientDetails = (props: IngredientDetailsProps) => {
               parseInt(`${recipeData?.tempVersionInfo?.version?.servingSize}`) *
                 counter,
             )}{" "}
-            0z
+            oz
           </span>
         </div>
         <div className={styles.usMatric}>
