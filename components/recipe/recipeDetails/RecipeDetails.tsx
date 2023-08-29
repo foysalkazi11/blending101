@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import AContainer from "../../../containers/A.container";
 import LeftSide from "./leftSide/LeftSide";
 import Center from "./center/Center";
 import NutritionPanel from "../share/nutritionPanel/NutritionPanel";
@@ -10,6 +9,12 @@ import ShowRelatedItems from "../../showRelatedItems";
 import { recommendedList } from "../fackData/recipeDetails";
 import { RecipeDetailsType } from "../../../type/recipeDetailsType";
 import { GiGl } from "../../../type/nutrationType";
+import Filtertray from "../../sidetray/filter";
+import RecipeCommentsTray from "../../sidetray/commentsTray/RecipeCommentsTray";
+import NotificationTray from "../../sidetray/notificationTray";
+import VersionTray from "../../sidetray/versionTray/VersionTray";
+import CartPanel from "../../../component/templates/Panel/CartPanel.component/Panel.component";
+import RecipeCollectionAndThemeTray from "../../sidetray/collection/RecipeCollectionAndThemeTray";
 
 interface Props {
   recipeData: RecipeDetailsType;
@@ -35,45 +40,13 @@ const RecipeDetails = ({
   const { openVersionTray } = useAppSelector((state) => state?.versionTray);
 
   return (
-    <AContainer
-      showRecipeFilterTray={{
-        show: false,
-        showTagByDefault: false,
-      }}
-      showHeader={true}
-      logo={true}
-      headerIcon="/icons/juicer.svg"
-      headerTitle="Recipe Details"
-      showCommentsTray={{
-        show: true,
-        showPanel: "right",
-        showTagByDefault: false,
-      }}
-      showCollectionTray={{
-        show: true,
-        showTagByDefault: false,
-        showPanel: "left",
-      }}
-      showVersionTray={{
-        show: true,
-        showPanel: "right",
-        showTagByDefault: false,
-      }}
-      showGroceryTray={{
-        show: openVersionTray ? false : true,
-        showPanel: "right",
-        showTagByDefault: openVersionTray ? false : true,
-      }}
-      headTagInfo={{
-        title: "Recipe Details",
-        description: "recipe Details",
-      }}
-      showNotificationTray={{
-        show: true,
-        showPanel: "right",
-        showTagByDefault: true,
-      }}
-    >
+    <React.Fragment>
+      <Filtertray showPanle="left" showTagByDefaut={false} />
+      <RecipeCommentsTray showPanle="right" showTagByDefaut={false} />
+      <NotificationTray showPanle="right" showTagByDefaut={false} />
+      <VersionTray showPanle="right" showTagByDefaut={false} />
+      <CartPanel showPanle="right" showTagByDefaut={false} />
+      <RecipeCollectionAndThemeTray showPanle="left" showTagByDefaut={false} />
       <div className={styles.main}>
         <div className={styles.left}>
           <LeftSide />
@@ -109,7 +82,7 @@ const RecipeDetails = ({
           itemsList={recommendedList}
         />
       ) : null}
-    </AContainer>
+    </React.Fragment>
   );
 };
 

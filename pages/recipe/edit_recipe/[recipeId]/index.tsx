@@ -356,7 +356,7 @@ const EditRecipeComponent = () => {
               ...ingredient,
               ingredientId: {
                 ...ingredientId,
-                portions: ingredient.portions.map((portion) => ({
+                portions: ingredient.portions?.map((portion) => ({
                   ...portion,
                   measurement: portion.name,
                   meausermentWeight: portion.gram,
@@ -458,6 +458,12 @@ const EditRecipeComponent = () => {
       />
     </>
   );
+};
+
+EditRecipeComponent.meta = {
+  title: "Edit A Recipe",
+  icon: "/icons/juicer.svg",
+  sidebar: true,
 };
 
 export default EditRecipeComponent;

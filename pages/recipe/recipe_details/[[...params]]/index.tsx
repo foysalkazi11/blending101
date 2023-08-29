@@ -11,7 +11,6 @@ import {
 import { updateSidebarActiveMenuName } from "../../../../redux/slices/utilitySlice";
 import { setOpenFilterTray } from "../../../../redux/slices/sideTraySlice";
 import { GiGl } from "../../../../type/nutrationType";
-import AContainer from "../../../../containers/A.container";
 import SkeletonRecipeDetails from "../../../../theme/skeletons/skeletonRecipeDetails";
 import ErrorPage from "../../../../components/pages/404Page";
 import RecipeDetails from "../../../../components/recipe/recipeDetails/RecipeDetails";
@@ -80,18 +79,10 @@ const Index = () => {
   const giGl: GiGl = nutritionData?.getNutrientsListAndGiGlByIngredients?.giGl;
 
   if (getARecipeLoading) {
-    return (
-      <AContainer showHeader={true} logo={true}>
-        <SkeletonRecipeDetails />;
-      </AContainer>
-    );
+    return <SkeletonRecipeDetails />;
   }
   if (getARecipeError) {
-    return (
-      <AContainer showHeader={true} logo={true}>
-        <ErrorPage errorMessage="Recipe not found" />;
-      </AContainer>
-    );
+    return <ErrorPage errorMessage="Recipe not found" />;
   }
 
   return (
@@ -109,6 +100,12 @@ const Index = () => {
       pageComeFrom="details"
     />
   );
+};
+
+Index.meta = {
+  icon: "/icons/juicer.svg",
+  title: "Details A Recipe",
+  sidebar: true,
 };
 
 export default Index;

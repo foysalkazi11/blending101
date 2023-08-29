@@ -159,7 +159,7 @@ $slider-height: 220px;
       background-position: center;
       background-repeat: no-repeat;
       filter: blur(5px);
-      // position: absolute;
+      position: absolute;
     }
 
     img {
@@ -168,6 +168,7 @@ $slider-height: 220px;
       object-fit: contain;
       border-radius: 15px;
       overflow: hidden;
+      z-index: 1;
     }
 
     &:focus {

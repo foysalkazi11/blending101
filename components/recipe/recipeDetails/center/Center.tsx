@@ -413,13 +413,13 @@ const Center = ({
                         backgroundImage: `url(${img.image})`,
                       }}
                     />
-                    {/* <img src={img.image} alt="recipe_image" /> */}
-                    <Image
+                    <img src={img.image} alt="recipe_image" />
+                    {/* <Image
                       src={img.image}
                       alt="recipe_image"
                       layout="fill"
                       objectFit="contain"
-                    />
+                    /> */}
                   </div>
                 );
               })}

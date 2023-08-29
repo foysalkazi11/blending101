@@ -447,4 +447,10 @@ const EditRecipeComponentParsing = () => {
   );
 };
 
+EditRecipeComponentParsing.meta = {
+  title: "Edit A Recipe",
+  icon: "/icons/juicer.svg",
+  sidebar: true,
+};
+
 export default EditRecipeComponentParsing;

@@ -23,8 +23,7 @@ WikiPage.useLayout = (page) => {
   } else {
     obj = {
       title: `Wiki Discovery`,
-      description: `Wiki Discovery
-`,
+      description: `Wiki Discovery`,
     };
   }
   return (

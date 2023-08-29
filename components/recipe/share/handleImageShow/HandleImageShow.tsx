@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useRef, useState, memo } from "react";
+import React, { Dispatch, SetStateAction, useRef, memo } from "react";
 import styles from "./HandleImageShow.module.scss";
 import AddIcon from "../../../../public/icons/add_black_36dp.svg";
 import Image from "next/image";
@@ -100,7 +100,7 @@ const HandleImageShow = ({
               </IconWraper>
             </div>
 
-            <Image src={photo} alt="img" layout="fill" objectFit="cover" />
+            <img src={photo} alt="img" />
           </div>
         );
       })}
@@ -123,7 +123,7 @@ const HandleImageShow = ({
 
             <Image
               src={URL.createObjectURL(photo)}
-              alt=""
+              alt="img"
               layout="fill"
               objectFit="cover"
             />

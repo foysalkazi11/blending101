@@ -128,7 +128,7 @@ const RegularRecipes = ({
   );
 
   return (
-    <>
+    <React.Fragment>
       <AppdownLoadCard />
       <div className={styles.main__tray}>
         {/* its for recommended */}
@@ -181,7 +181,7 @@ const RegularRecipes = ({
 
         {/* <Widget slug="recipe-editor" /> */}
       </div>
-    </>
+    </React.Fragment>
   );
 };
 
@@ -215,7 +215,7 @@ export const ShowRecipes = ({
     return <SkeletonRecipeDiscovery />;
   }
   return (
-    <>
+    <React.Fragment>
       {recipes.length ? (
         <ContentTray {...headerData}>
           {recipes?.map((item, index) => {
@@ -295,7 +295,7 @@ export const ShowRecipes = ({
           })}
         </ContentTray>
       ) : null}
-    </>
+    </React.Fragment>
   );
 };
 

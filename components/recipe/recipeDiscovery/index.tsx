@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
-import AContainer from "../../../containers/A.container";
 import styles from "./recipeDiscovery.module.scss";
 import SearchTagsComponent from "../../searchtags/searchtags.component";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
@@ -29,6 +28,10 @@ import ShowRecipeContainer from "../../showRecipeContainer";
 import ShareRecipe from "../recipeDetails/center/shareRecipe";
 import useToUpdateFilterCriteria from "../../../customHooks/recipeFilter/useToUpdateRecipeFilterCriteria";
 import useToUpdateActiveFilterTag from "../../../customHooks/recipeFilter/useToUpdateActiveFilterTag";
+import Filtertray from "../../sidetray/filter";
+import RecipeCommentsTray from "../../sidetray/commentsTray/RecipeCommentsTray";
+import NotificationTray from "../../sidetray/notificationTray";
+import RecipeCollectionAndThemeTray from "../../sidetray/collection/RecipeCollectionAndThemeTray";
 let dataLimit = 12;
 
 const RecipeDiscovery = () => {
@@ -197,88 +200,70 @@ const RecipeDiscovery = () => {
   }, []);
 
   return (
-    <>
-      <AContainer
-        headerIcon="/icons/juicer.svg"
-        showCollectionTray={{ show: true, showTagByDefault: true }}
-        showRecipeFilterTray={{
-          show: true,
-          showPanel: "left",
-          showTagByDefault: false,
-        }}
-        headerTitle="Blend Discovery"
-        showCommentsTray={{
-          show: true,
-          showPanel: "right",
-          showTagByDefault: false,
-        }}
-        headTagInfo={{ description: "blends", title: "Blends" }}
-        showNotificationTray={{
-          show: true,
-          showPanel: "right",
-          showTagByDefault: true,
-        }}
-      >
-        <div className={styles.main__div}>
-          <div className={openFilterTray ? styles.move : styles.back}>
-            <DiscoveryPageSearchBar
-              input={recipeSearchInput}
-              handleOnChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setRecipeSearchInput(e.target.value);
-              }}
-              openFilterTray={openFilterTray}
-              toggleFilterPanel={toggleFilterPanel}
-            />
+    <React.Fragment>
+      <Filtertray showPanle="left" showTagByDefaut={true} />
+      <RecipeCommentsTray showPanle="right" showTagByDefaut={false} />
+      <NotificationTray showPanle="right" showTagByDefaut={false} />
+      <RecipeCollectionAndThemeTray showPanle="left" showTagByDefaut={false} />
+      <div className={styles.main__div}>
+        <div className={openFilterTray ? styles.move : styles.back}>
+          <DiscoveryPageSearchBar
+            input={recipeSearchInput}
+            handleOnChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setRecipeSearchInput(e.target.value);
+            }}
+            openFilterTray={openFilterTray}
+            toggleFilterPanel={toggleFilterPanel}
+          />
 
-            {allFilters?.length ? (
-              <SearchTagsComponent
-                allFilters={allFilters}
-                handleUpdateActiveFilterTag={(
+          {allFilters?.length ? (
+            <SearchTagsComponent
+              allFilters={allFilters}
+              handleUpdateActiveFilterTag={(
+                activeSection,
+                filterCriteria,
+                activeTab,
+                childTab,
+              ) => {
+                dispatch(setOpenFilterTray(true));
+                handleUpdateActiveFilterTag(
                   activeSection,
                   filterCriteria,
                   activeTab,
                   childTab,
-                ) => {
-                  dispatch(setOpenFilterTray(true));
-                  handleUpdateActiveFilterTag(
-                    activeSection,
-                    filterCriteria,
-                    activeTab,
-                    childTab,
-                  );
-                }}
-                handleUpdateFilterCriteria={handleUpdateFilterCriteria}
-              />
-            ) : null}
+                );
+              }}
+              handleUpdateFilterCriteria={handleUpdateFilterCriteria}
+            />
+          ) : null}
 
-            {showFilterOrSearchRecipes ? (
-              <ShowRecipeContainer
-                data={allFilterRecipes.filterRecipes}
-                loading={filterRecipesLoading || searchRecipeLoading}
-                closeHandler={closeFilterRecipes}
-                showItems="recipe"
-                showDefaultLeftHeader
-                showDefaultMiddleHeader={
-                  allFilterRecipes.filterRecipes.length ? true : false
-                }
-                showDefaultRightHeader
-                hasMore={allFilterRecipes?.totalItems > dataLimit * pageNum}
-                totalDataCount={allFilterRecipes?.totalItems}
-                nextPage={handleNextPage}
-                setOpenCollectionModal={setOpenCollectionModal}
-                setOpenShareModal={setOpenShareModal}
-                setShareRecipeData={setShareRecipeData}
-              />
-            ) : (
-              <RegularRecipes
-                setOpenCollectionModal={setOpenCollectionModal}
-                setOpenShareModal={setOpenShareModal}
-                setShareRecipeData={setShareRecipeData}
-              />
-            )}
-          </div>
+          {showFilterOrSearchRecipes ? (
+            <ShowRecipeContainer
+              data={allFilterRecipes.filterRecipes}
+              loading={filterRecipesLoading || searchRecipeLoading}
+              closeHandler={closeFilterRecipes}
+              showItems="recipe"
+              showDefaultLeftHeader
+              showDefaultMiddleHeader={
+                allFilterRecipes.filterRecipes.length ? true : false
+              }
+              showDefaultRightHeader
+              hasMore={allFilterRecipes?.totalItems > dataLimit * pageNum}
+              totalDataCount={allFilterRecipes?.totalItems}
+              nextPage={handleNextPage}
+              setOpenCollectionModal={setOpenCollectionModal}
+              setOpenShareModal={setOpenShareModal}
+              setShareRecipeData={setShareRecipeData}
+            />
+          ) : (
+            <RegularRecipes
+              setOpenCollectionModal={setOpenCollectionModal}
+              setOpenShareModal={setOpenShareModal}
+              setShareRecipeData={setShareRecipeData}
+            />
+          )}
         </div>
-      </AContainer>
+      </div>
       <ShowLastModifiedCollection
         open={openCollectionModal}
         setOpen={setOpenCollectionModal}
@@ -297,7 +282,7 @@ const RecipeDiscovery = () => {
         type="recipe"
         heading="Share Recipe"
       />
-    </>
+    </React.Fragment>
   );
 };
 

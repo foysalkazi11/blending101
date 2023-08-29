@@ -34,7 +34,7 @@ export default function TrayWrapper({
   const [hoevrRef, hover] = useHover();
 
   return (
-    <div className={`${isolated ? styles[showPanle] : ""}`}>
+    <div className={`${styles[showPanle]}`}>
       <div
         className={`${styles.tray} `}
         ref={hoevrRef}
