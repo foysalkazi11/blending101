@@ -3,7 +3,7 @@ import { BlogListType } from "../../../../type/blog";
 import PanelHeader from "../../../recipe/share/panelHeader/PanelHeader";
 import useWindowSize from "../../../utility/useWindowSize";
 import BlogCard from "../blogCard";
-import CustomSlider from "../../../../theme/carousel/carousel.component";
+import CustomSlider from "../../../../theme/carousel/SlickSlider";
 const responsiveSetting = {
   slidesToShow: 4,
   slidesToScroll: 1,

@@ -1,7 +1,7 @@
 import React from "react";
 import CommentAndNoteButton from "../button/commentAndNoteButton/CommentAndNoteButton";
 import CircularRotatingLoader from "../loader/circularRotatingLoader.component";
-import CustomModal from "../modal/customModal/CustomModal";
+import CustomModal from "../modal/customModal";
 import styles from "./ConfirmationModal.module.scss";
 
 interface ConfirmationModalProps {

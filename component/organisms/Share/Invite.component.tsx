@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { faShareNodes } from "@fortawesome/pro-regular-svg-icons";
 import Icon from "../../atoms/Icon/Icon.component";
 import styles from "./Share.module.scss";
-import CustomModal from "../../../theme/modal/customModal/CustomModal";
+import CustomModal from "../../../theme/modal/customModal";
 import InviteUserForm from "./InviteUserForm";
 import { SharedUserInfoType } from "./Distribute.component";
 

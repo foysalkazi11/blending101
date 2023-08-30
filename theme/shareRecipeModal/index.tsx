@@ -15,7 +15,7 @@ interface Props {
   closeModal: () => void;
 }
 
-const ShareRecipeModal = ({ closeModal }: Props) => {
+const ShareRecipeModalContent = ({ closeModal }: Props) => {
   const [showMore, setShowMore] = useState(false);
   return (
     <div className={styles.shareRecipeModalContainer}>
@@ -59,4 +59,4 @@ const ShareRecipeModal = ({ closeModal }: Props) => {
   );
 };
 
-export default ShareRecipeModal;
+export default ShareRecipeModalContent;

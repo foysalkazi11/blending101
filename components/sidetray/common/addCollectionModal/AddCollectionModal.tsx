@@ -6,7 +6,7 @@ import InputComponent from "../../../../theme/input/input.component";
 import slugStringGenerator from "../../../utility/slugStringGenerator";
 import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
 import TextArea from "../../../../theme/textArea/TextArea";
-import CustomModal from "../../../../theme/modal/customModal/CustomModal";
+import CustomModal from "../../../../theme/modal/customModal";
 
 export interface InputValueType {
   name: string;

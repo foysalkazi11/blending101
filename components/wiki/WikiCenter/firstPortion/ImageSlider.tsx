@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import styles from "../wikiCenter.module.scss";
-import CustomSlider from "../../../../theme/carousel/carousel.component";
+import CustomSlider from "../../../../theme/carousel/SlickSlider";
 import Image from "next/image";
 import { placeHolderImage } from "../../wikiSingleItem/WikiSingleItem";
 import { CoverImageType } from "..";
