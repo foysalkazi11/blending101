@@ -4,7 +4,7 @@ import SubNav from "../share/subNav/SubNav";
 import styles from "./compareRecipe.module.scss";
 import { useRouter } from "next/router";
 import SmallCardComponent from "../../../theme/cards/smallCard/SmallCard.component";
-import Carousel from "../../../theme/carousel/carousel.component";
+import Carousel from "../../../theme/carousel/SlickSlider";
 import Slider from "react-slick";
 import RecipeDetails from "../share/recipeDetails/RecipeDetails";
 import { useMutation, useQuery } from "@apollo/client";
@@ -400,8 +400,8 @@ const CompareRecipe = () => {
           ),
         ),
       );
-      router?.push("/");
       dispatch(setLoading(false));
+      router?.push("/recipe/recipe_discovery");
     } catch (error) {
       dispatch(setLoading(false));
       notification("error", "Failed to empty compare list");

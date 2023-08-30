@@ -22,19 +22,32 @@ const SkeletonRecipeDetails = ({ style }: Props) => {
     </div>
   );
 };
+type RecipeCardSkeletonProps = {
+  style?: React.CSSProperties;
+};
+export const RecipeCardSkeleton = ({ style = {} }: RecipeCardSkeletonProps) => (
+  <SkeletonElement
+    type="thumbnail"
+    style={{ width: "100%", height: "237px", ...style }}
+  />
+);
 
-export const RecipeDetailsLeftSide = () => (
+type RecipeDetailsLeftSideProps = {
+  style?: React.CSSProperties;
+  recipeCardStyle?: React.CSSProperties;
+};
+export const RecipeDetailsLeftSide = ({
+  style = {},
+  recipeCardStyle = {},
+}: RecipeDetailsLeftSideProps) => (
   <div className={styles.sectionContainer}>
     <SkeletonElement type="title" />
-    <div className={`${styles.content} ${styles.containerBorder}`}>
+    <div
+      className={`${styles.content} ${styles.containerBorder}`}
+      style={style}
+    >
       {[...Array(4)]?.map((item, index) => {
-        return (
-          <SkeletonElement
-            type="thumbnail"
-            key={index}
-            style={{ width: "100%", height: "277px" }}
-          />
-        );
+        return <RecipeCardSkeleton key={index} style={recipeCardStyle} />;
       })}
     </div>
   </div>

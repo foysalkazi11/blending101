@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import SkeletonComparePage from "../../../theme/skeletons/skeletonComparePage/SkeletonComparePage";
 import SubNav from "../../recipe/share/subNav/SubNav";
 import s from "./WikiCompare.module.scss";
-import Carousel from "../../../theme/carousel/carousel.component";
+import Carousel from "../../../theme/carousel/SlickSlider";
 import {
   compareRecipeResponsiveSetting,
   responsiveSetting,

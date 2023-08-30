@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
-import CustomModal from "../../theme/modal/customModal/CustomModal";
-import LastModifiedCollectionModalContent from "../../theme/lastModifiedColletionModalContent/LastModifiedCollectionModalContent";
+import CustomModal from "../../theme/modal/customModal";
+import LastModifiedCollectionModalContent from "../../theme/lastModifiedColletionModalContent";
 
 interface Props {
   overlayStyle?: React.CSSProperties;

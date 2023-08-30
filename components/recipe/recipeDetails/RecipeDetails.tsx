@@ -4,9 +4,7 @@ import Center from "./center/Center";
 import NutritionPanel from "../share/nutritionPanel/NutritionPanel";
 import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
 import useWindowSize from "../../utility/useWindowSize";
-import { useAppSelector } from "../../../redux/hooks";
 import ShowRelatedItems from "../../showRelatedItems";
-import { recommendedList } from "../fackData/recipeDetails";
 import { RecipeDetailsType } from "../../../type/recipeDetailsType";
 import { GiGl } from "../../../type/nutrationType";
 import Filtertray from "../../sidetray/filter";
@@ -15,7 +13,6 @@ import NotificationTray from "../../sidetray/notificationTray";
 import VersionTray from "../../sidetray/versionTray/VersionTray";
 import CartPanel from "../../../component/templates/Panel/CartPanel.component/Panel.component";
 import RecipeCollectionAndThemeTray from "../../sidetray/collection/RecipeCollectionAndThemeTray";
-
 interface Props {
   recipeData: RecipeDetailsType;
   nutritionData: any;
@@ -37,7 +34,6 @@ const RecipeDetails = ({
 }: Props) => {
   const [counter, setCounter] = useState(1);
   const { width } = useWindowSize();
-  const { openVersionTray } = useAppSelector((state) => state?.versionTray);
 
   return (
     <React.Fragment>
@@ -48,8 +44,10 @@ const RecipeDetails = ({
       <CartPanel showPanle="right" showTagByDefaut={false} />
       <RecipeCollectionAndThemeTray showPanle="left" showTagByDefaut={false} />
       <div className={styles.main}>
-        <div className={styles.left}>
-          <LeftSide />
+        <div className={`${styles.left}`}>
+          <LeftSide
+            blendCategory={recipeData?.recipeId?.recipeBlendCategory?._id}
+          />
         </div>
 
         <div className={styles.center}>
@@ -75,13 +73,12 @@ const RecipeDetails = ({
           />
         </div>
       </div>
-      {width < 1280 ? (
-        <ShowRelatedItems
-          category="recipe"
-          title="Related Recipes"
-          itemsList={recommendedList}
+      <div className={`${width > 1280 ? "hidden" : "show_hidden"}`}>
+        <LeftSide
+          blendCategory={recipeData?.recipeId?.recipeBlendCategory?._id}
+          sliderView={true}
         />
-      ) : null}
+      </div>
     </React.Fragment>
   );
 };

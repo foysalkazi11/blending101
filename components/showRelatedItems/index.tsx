@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
 import PanelHeader from "../recipe/share/panelHeader/PanelHeader";
-import CustomSlider from "../../theme/carousel/carousel.component";
+import CustomSlider from "../../theme/carousel/SlickSlider";
 import DatacardComponent from "../../theme/cards/dataCard/dataCard.component";
 import WikiCard from "../wiki/wikiCard/WikiCard";
 
@@ -11,40 +11,40 @@ interface Porps {
   itemsList?: any[];
 }
 
+export const responsiveSetting = {
+  slidesToShow: 4,
+  slidesToScroll: 1,
+
+  responsive: [
+    {
+      breakpoint: 1280,
+      settings: {
+        slidesToShow: 3,
+        slidesToScroll: 1,
+      },
+    },
+    {
+      breakpoint: 1024,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 1,
+      },
+    },
+    {
+      breakpoint: 640,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1,
+      },
+    },
+  ],
+};
+
 const ShowRelatedItems = ({
   category = "recipe",
   title = "Related Recipes",
   itemsList = [],
 }: Porps) => {
-  const responsiveSetting = {
-    slidesToShow: 4,
-    slidesToScroll: 1,
-
-    responsive: [
-      {
-        breakpoint: 1280,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 640,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-  };
-
   return (
     <div style={{ margin: "16px 10px 20px 10px" }}>
       <PanelHeader icon="/images/telescope.svg" title={title} />

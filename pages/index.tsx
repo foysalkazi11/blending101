@@ -1,6 +1,7 @@
-import { useQuery } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import { GetServerSideProps } from "next";
 
 import React, { Fragment, useMemo } from "react";
 import { useDispatch } from "react-redux";
@@ -19,44 +20,24 @@ import CardComponent from "../theme/cards/card.component";
 import Theme from "../component/molecules/Theme/Theme.component";
 import { useThemeTemplate } from "../hooks/modules/useThemeMethod";
 import { useUser } from "../context/AuthProvider";
+import client from "../gqlLib/client";
+import { GET_WIDGET } from "../graphql/Widget";
 
 const defaultBlendImg =
   "https://blending.s3.us-east-1.amazonaws.com/3383678.jpg";
 
-const Home = () => {
+interface HomeProps {
+  widget: any;
+}
+
+const Home = (props: HomeProps) => {
+  const { widget } = props;
   const { allFilters } = useAppSelector((state) => state?.filterRecipe);
   const displayName = useUser().name;
   const { data: blendTypes } = useQuery(GET_BLEND_TYPES);
 
   const dispatch = useDispatch();
   const router = useRouter();
-
-  const widgetData = useWidget("home-collection");
-
-  const widget = useMemo(() => {
-    if (!widgetData) return;
-    return {
-      ...widgetData,
-      widgetCollections: widgetData?.widgetCollections?.map((collection) => {
-        const type = collection?.data?.collectionType;
-        if (type === "GeneralBlog") {
-          return {
-            ...collection,
-            data: {
-              ...collection.data,
-              [type]: collection?.data[type].map((item) => ({
-                ...item,
-                publishDateString: "8 months ago",
-                string: "hello",
-              })),
-            },
-          };
-        } else {
-          return collection;
-        }
-      }),
-    };
-  }, [widgetData]);
 
   const handleUpdateFilterCriteria = useToUpdateFilterCriteria();
 
@@ -229,4 +210,42 @@ const EntitySlider = ({ collection, methods }) => {
       </ContentTray>
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps<HomeProps> = async (
+  context,
+) => {
+  const { data } = await client.query({
+    query: GET_WIDGET,
+    variables: {
+      slug: "home-collection",
+    },
+  });
+
+  const widgetData = data.getWidgetsForClient;
+  return {
+    props: {
+      widget: {
+        ...widgetData,
+        widgetCollections: widgetData?.widgetCollections?.map((collection) => {
+          const type = collection?.data?.collectionType;
+          if (type === "GeneralBlog") {
+            return {
+              ...collection,
+              data: {
+                ...collection.data,
+                [type]: collection?.data[type].map((item) => ({
+                  ...item,
+                  publishDateString: "8 months ago",
+                  string: "hello",
+                })),
+              },
+            };
+          } else {
+            return collection;
+          }
+        }),
+      },
+    },
+  };
 };

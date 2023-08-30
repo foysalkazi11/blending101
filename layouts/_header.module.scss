@@ -1,5 +1,12 @@
 @import "../styles/mixins.scss";
 
+.sticky_header {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
 .header {
   height: 55px;
   max-height: 55px;

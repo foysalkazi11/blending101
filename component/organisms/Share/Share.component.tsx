@@ -8,7 +8,7 @@ import {
   EmailShareButton,
 } from "react-share";
 
-import CustomModal from "../../../theme/modal/customModal/CustomModal";
+import CustomModal from "../../../theme/modal/customModal";
 import styles from "../../../theme/shareRecipeModal/ShareRecipeModal.module.scss";
 
 interface ShareProps {

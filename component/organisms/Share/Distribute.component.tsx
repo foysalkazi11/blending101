@@ -19,7 +19,7 @@ import {
 } from "react-share";
 import Icon from "../../atoms/Icon/Icon.component";
 import styles from "./Share.module.scss";
-import CustomModal from "../../../theme/modal/customModal/CustomModal";
+import CustomModal from "../../../theme/modal/customModal";
 import InviteUserForm from "./InviteUserForm";
 import CircularRotatingLoader from "../../../theme/loader/circularRotatingLoader.component";
 import { InputValueType } from "../../../components/sidetray/common/addCollectionModal/AddCollectionModal";

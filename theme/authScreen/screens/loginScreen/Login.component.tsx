@@ -10,13 +10,10 @@ import { useForm } from "react-hook-form";
 import CircularRotatingLoader from "../../../loader/circularRotatingLoader.component";
 import { useUserHandler } from "../../../../context/AuthProvider";
 import { useRouter } from "next/router";
-import { useAppDispatch } from "../../../../redux/hooks";
-import { setDbUser } from "../../../../redux/slices/userSlice";
 import { DbUserType } from "../../../../type/dbUserType";
 
 const LoginScreen = () => {
   const { signIn } = useUserHandler();
-  const dispatch = useAppDispatch();
   const router = useRouter();
   const {
     register,
@@ -28,7 +25,7 @@ const LoginScreen = () => {
 
   const loginSuccess = (user: DbUserType) => {
     setIsLoading(false);
-    dispatch(setDbUser(user));
+    // dispatch(setDbUser(user));
     router.push("/");
   };
   const loginError = (error: unknown) => {

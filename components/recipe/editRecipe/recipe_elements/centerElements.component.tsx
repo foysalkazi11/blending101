@@ -22,7 +22,7 @@ import { useMutation } from "@apollo/client";
 import DELETE_A_RECIPE from "../../../../gqlLib/recipes/mutations/deleteARecipe";
 import { useRouter } from "next/router";
 import notification from "../../../utility/reactToastifyNotification";
-import CustomModal from "../../../../theme/modal/customModal/CustomModal";
+import CustomModal from "../../../../theme/modal/customModal";
 import ConfirmationModal from "../../../../theme/confirmationModal/ConfirmationModal";
 import { GiGl } from "../../../../type/nutrationType";
 import { useUser } from "../../../../context/AuthProvider";

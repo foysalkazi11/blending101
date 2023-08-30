@@ -1,12 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useCallback, useState } from "react";
-import SlickSlider from "../../../../theme/carousel/carousel.component";
+import SlickSlider from "../../../../theme/carousel/SlickSlider";
 import styles from "./Center.module.scss";
 import { MdOutlineInfo } from "react-icons/md";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import Modal from "../../../../theme/modal/customModal/CustomModal";
-import ShareRecipeModal from "../../../../theme/shareRecipeModal/ShareRecipeModal";
-import SaveRecipe from "../../../../theme/lastModifiedColletionModalContent/LastModifiedCollectionModalContent";
+import Modal from "../../../../theme/modal/customModal";
+import ShareRecipeModal from "../../../../theme/shareRecipeModal";
+import SaveRecipe from "../../../../theme/lastModifiedColletionModalContent";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
