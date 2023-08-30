@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./WikiLanding.module.scss";
-import Carousel from "../../../theme/carousel/carousel.component";
+import Carousel from "../../../theme/carousel/SlickSlider";
 import { WikiListType, WikiType } from "../../../type/wikiListType";
 import WikiCard from "../wikiCard/WikiCard";
 import SkeletonWikiDiscovery from "../../../theme/skeletons/skeletonWikiDicovery/SkeletonWikiDiscovery";

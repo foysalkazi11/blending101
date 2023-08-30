@@ -88,7 +88,7 @@ function Header({
   // }, []);
 
   return (
-    <header id="header" ref={headerEl}>
+    <header id="header" ref={headerEl} className={styles.sticky_header}>
       <div className={styles.header} style={style}>
         <div className={styles.header__inner}>
           <Link href="/" passHref>

@@ -10,7 +10,7 @@ import GET_COLLECTIONS_AND_THEMES from "../../../../gqlLib/collection/query/getC
 import { useAppSelector, useAppDispatch } from "../../../../redux/hooks";
 import { setChangeRecipeWithinCollection } from "../../../../redux/slices/collectionSlice";
 import { setOpenCollectionsTary } from "../../../../redux/slices/sideTraySlice";
-import CustomModal from "../../../../theme/modal/customModal/CustomModal";
+import CustomModal from "../../../../theme/modal/customModal";
 import styles from "./Collection.module.scss";
 import { useUser } from "../../../../context/AuthProvider";
 
