@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./ContentTray.module.scss";
 import Image from "next/image";
-import Slider from "../../../../theme/carousel/carousel.component";
+import Slider from "../../../../theme/carousel/SlickSlider";
 import Link from "next/link";
 import MenubarComponent from "../../../../component/molecules/Menubar/Menubar.component";
 
