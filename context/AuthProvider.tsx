@@ -13,6 +13,8 @@ import AmplifyConfig from "../configs/aws";
 import { GET_USER } from "../gqlLib/user/mutations/createNewUser";
 import { useMutation } from "@apollo/client";
 import notification from "../components/utility/reactToastifyNotification";
+import { setDbUser } from "../redux/slices/userSlice";
+import { useAppDispatch } from "../redux/hooks";
 
 type TProvider = "Amazon" | "Google" | "Facebook" | "Apple" | "Cognito";
 Amplify.configure({ ...AmplifyConfig, ssr: true });
@@ -53,7 +55,7 @@ interface AuthProviderProps {
 const AuthProvider: React.FC<AuthProviderProps> = (props) => {
   const { children } = props;
   const router = useRouter();
-
+  const dispatch = useAppDispatch();
   const [user, setUser] = useState(DEFAULT_USER);
   const [session, setSession] = useState<any>(null);
   const [getUser] = useMutation(GET_USER);
@@ -83,10 +85,11 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
             email: profile?.email,
             image: profile?.image,
           });
+          dispatch(setDbUser(profile));
           return profile;
         });
     },
-    [getUser],
+    [dispatch, getUser],
   );
 
   useEffect(() => {
