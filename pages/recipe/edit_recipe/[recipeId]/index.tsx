@@ -1,37 +1,37 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import EditRecipePage from "../../../components/recipe/editRecipe/EditRecipe.component";
+import EditRecipePage from "../../../../components/recipe/editRecipe/EditRecipe.component";
 import { useMutation, useQuery } from "@apollo/client";
-import { BLEND_CATEGORY } from "../../../gqlLib/recipes/queries/getEditRecipe";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { BLEND_CATEGORY } from "../../../../gqlLib/recipes/queries/getEditRecipe";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import {
   setRecipeInstruction,
   setSelectedIngredientsList,
   setServingCounter,
-} from "../../../redux/edit_recipe/editRecipeStates";
-import EDIT_A_RECIPE from "../../../gqlLib/recipes/mutations/editARecipe";
+} from "../../../../redux/edit_recipe/editRecipeStates";
+import EDIT_A_RECIPE from "../../../../gqlLib/recipes/mutations/editARecipe";
 import {
   setLoading,
   updateSidebarActiveMenuName,
-} from "../../../redux/slices/utilitySlice";
-import imageUploadS3 from "../../../components/utility/imageUploadS3";
-import reactToastifyNotification from "../../../components/utility/reactToastifyNotification";
-import useGetBlendNutritionBasedOnRecipexxx from "../../../customHooks/useGetBlendNutritionBasedOnRecipexxx";
-import useToGetARecipe from "../../../customHooks/useToGetARecipe";
+} from "../../../../redux/slices/utilitySlice";
+import imageUploadS3 from "../../../../components/utility/imageUploadS3";
+import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
+import useGetBlendNutritionBasedOnRecipexxx from "../../../../customHooks/useGetBlendNutritionBasedOnRecipexxx";
+import useToGetARecipe from "../../../../customHooks/useToGetARecipe";
 import {
   setIsNewVersionInfo,
   setOpenVersionTray,
   setOpenVersionTrayFormWhichPage,
-} from "../../../redux/slices/versionTraySlice";
-import { RecipeDetailsType } from "../../../type/recipeDetailsType";
-import { GiGl } from "../../../type/nutrationType";
-import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
-import useToEditOfARecipeVersion from "../../../customHooks/useToEditOfARecipeVersion";
-import ConfirmationModal from "../../../theme/confirmationModal/ConfirmationModal";
-import useToUpdateAfterEditVersion from "../../../customHooks/useToUpdateAfterEditVersion";
-import { VersionAddDataType } from "../../../type/versionAddDataType";
-import { useUser } from "../../../context/AuthProvider";
+} from "../../../../redux/slices/versionTraySlice";
+import { RecipeDetailsType } from "../../../../type/recipeDetailsType";
+import { GiGl } from "../../../../type/nutrationType";
+import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
+import useToEditOfARecipeVersion from "../../../../customHooks/useToEditOfARecipeVersion";
+import ConfirmationModal from "../../../../theme/confirmationModal/ConfirmationModal";
+import useToUpdateAfterEditVersion from "../../../../customHooks/useToUpdateAfterEditVersion";
+import { VersionAddDataType } from "../../../../type/versionAddDataType";
+import { useUser } from "../../../../context/AuthProvider";
 
 const EditRecipeComponent = () => {
   const router = useRouter();
@@ -356,7 +356,7 @@ const EditRecipeComponent = () => {
               ...ingredient,
               ingredientId: {
                 ...ingredientId,
-                portions: ingredient.portions.map((portion) => ({
+                portions: ingredient.portions?.map((portion) => ({
                   ...portion,
                   measurement: portion.name,
                   meausermentWeight: portion.gram,
@@ -458,6 +458,12 @@ const EditRecipeComponent = () => {
       />
     </>
   );
+};
+
+EditRecipeComponent.meta = {
+  title: "Edit A Recipe",
+  icon: "/icons/juicer.svg",
+  sidebar: true,
 };
 
 export default EditRecipeComponent;

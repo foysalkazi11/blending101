@@ -53,7 +53,9 @@ const WidgetCollection = (props: WidgetCollectionProps) => {
               <div
                 className={styles.slider__card}
                 key={"popular" + index}
-                onClick={() => router.push(`/recipe_details/${item?._id}`)}
+                onClick={() =>
+                  router.push(`/recipe/recipe_details/${item?._id}`)
+                }
               >
                 <Card item={item} />
               </div>

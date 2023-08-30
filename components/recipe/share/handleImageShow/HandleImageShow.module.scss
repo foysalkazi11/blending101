@@ -35,6 +35,12 @@ $file_upload_width_height: 100px;
       position: relative;
       display: none;
     }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   }
 }
 

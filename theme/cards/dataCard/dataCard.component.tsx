@@ -274,7 +274,7 @@ export default function DatacardComponent({
         >
           <img src="/icons/share.png" alt="square" />
         </li>
-        <li onClick={() => router.push(`/edit_recipe/${recipeId}`)}>
+        <li onClick={() => router.push(`/recipe/edit_recipe/${recipeId}`)}>
           <img src="/icons/edit.png" alt="square" />
         </li>
         <li>
@@ -330,7 +330,7 @@ export default function DatacardComponent({
                 if (hasInteractionPermission("title")) {
                   e?.stopPropagation();
                   router.push(
-                    `/recipe_details/${recipeId}/${
+                    `/recipe/recipe_details/${recipeId}/${
                       token ? "?token=" + token : ""
                     } `,
                   );

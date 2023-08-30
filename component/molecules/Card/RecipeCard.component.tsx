@@ -48,7 +48,9 @@ const RecipeCard: React.FC<RecipeProps> = (props) => {
             <div>
               <h2
                 className={styles.title}
-                onClick={() => router.push(`/recipe_details/${recipeId}`)}
+                onClick={() =>
+                  router.push(`/recipe/recipe_details/${recipeId}`)
+                }
               >
                 {title}
               </h2>

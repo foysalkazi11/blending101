@@ -68,7 +68,9 @@ const PanelHeaderCenter = ({
       {pageComeFrom === "details" && (
         <HeaderTextBtn
           onClick={() =>
-            router.push(`/edit_recipe/${detailsARecipe?.recipeId?._id}/parsing`)
+            router.push(
+              `/recipe/edit_recipe/${detailsARecipe?.recipeId?._id}/parsing`,
+            )
           }
           style={{ minWidth: "45px" }}
         >

@@ -119,7 +119,7 @@ const AddRecipePage = () => {
           notification("success", "recipe create successfully");
           if (data?.addRecipeFromUser?.recipeId?._id) {
             router?.push(
-              `/recipe_details/${data?.addRecipeFromUser?.recipeId?._id}`,
+              `/recipe/recipe_details/${data?.addRecipeFromUser?.recipeId?._id}`,
             );
           }
         } else {
@@ -133,7 +133,7 @@ const AddRecipePage = () => {
           notification("success", "recipe create successfully");
           if (data?.addRecipeFromUser?.recipeId?._id) {
             router?.push(
-              `/recipe_details/${data?.addRecipeFromUser?.recipeId?._id}`,
+              `/recipe/recipe_details/${data?.addRecipeFromUser?.recipeId?._id}`,
             );
           }
         }
@@ -249,42 +249,31 @@ const AddRecipePage = () => {
   const giGl: GiGl = nutritionData?.getNutrientsListAndGiGlByIngredients?.giGl;
 
   return (
-    <AContainer
-      headerIcon="/icons/juicer.svg"
-      headerTitle="Add New Blend"
-      headTagInfo={{
-        title: "Add New Blend",
-        description: "add new blend",
-      }}
-    >
+    <React.Fragment>
       {width < 1280 ? (
-        <>
-          <TrayWrapper
-            isolated={true}
-            showPanel="left"
-            showTagByDefault={true}
-            openTray={openTray}
-            panelTag={(hover) => (
-              <TrayTag
-                hover={hover}
-                icon={
-                  <FontAwesomeIcon
-                    icon={
-                      hover ? faBasketShoppingRegular : faBasketShoppingSolid
-                    }
-                  />
-                }
-                placeMent="left"
-                handleTagClick={() => setOpenTray((prev) => !prev)}
-              />
-            )}
-          >
-            <IngredientPanel
-              handleIngredientClick={handleIngredientClick}
-              checkActive={checkActive}
+        <TrayWrapper
+          isolated={true}
+          showPanel="left"
+          showTagByDefault={true}
+          openTray={openTray}
+          panelTag={(hover) => (
+            <TrayTag
+              hover={hover}
+              icon={
+                <FontAwesomeIcon
+                  icon={hover ? faBasketShoppingRegular : faBasketShoppingSolid}
+                />
+              }
+              placeMent="left"
+              handleTagClick={() => setOpenTray((prev) => !prev)}
             />
-          </TrayWrapper>
-        </>
+          )}
+        >
+          <IngredientPanel
+            handleIngredientClick={handleIngredientClick}
+            checkActive={checkActive}
+          />
+        </TrayWrapper>
       ) : null}
 
       <div className={styles.main}>
@@ -359,7 +348,7 @@ const AddRecipePage = () => {
           />
         </div>
       </div>
-    </AContainer>
+    </React.Fragment>
   );
 };
 export default AddRecipePage;

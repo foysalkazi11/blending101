@@ -133,3 +133,18 @@ $sharedBorder: 1px #efefef solid;
     transform: translateY(2px);
   }
 }
+
+.errorIngredient {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.6rem;
+  .icon {
+    font-size: 2rem;
+  }
+  .text {
+    color: #c4c4c4;
+    font-style: italic;
+    font-size: 1.6rem;
+    margin-left: 1.6rem;
+  }
+}

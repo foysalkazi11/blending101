@@ -1,11 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
+import React, { Fragment } from "react";
 import TrayWrapper from "../TrayWrapper";
 import styles from "../filter/filter.module.scss";
-import { FaEye } from "react-icons/fa";
 import { BsTagsFill } from "react-icons/bs";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setOpenFilterTray } from "../../../redux/slices/sideTraySlice";
 import TrayTag from "../TrayTag";
 import { FiFilter } from "react-icons/fi";
 import { useQuery } from "@apollo/client";
@@ -28,10 +26,31 @@ interface Props {
 
 function PlanFilterTray({ showPanle, showTagByDefaut }: Props) {
   const { isPlanFilterOpen } = useAppSelector((state) => state?.planFilter);
-  const { allFiltersForPlan, activeFilterTagForPlan } = useAppSelector(
-    (state) => state?.planFilter,
-  );
+
   const dispatch = useAppDispatch();
+  const toggleTray = () => {
+    dispatch(setIsPlanFilterOpen(!isPlanFilterOpen));
+  };
+
+  return (
+    <div className={`${styles.fixed__main__left}`}>
+      <TrayWrapper
+        closeTray={toggleTray}
+        openTray={isPlanFilterOpen}
+        showTagByDefault={showTagByDefaut}
+        showPanel={showPanle}
+        panelTag={(hover) => (
+          <TrayTag icon={<FiFilter />} placeMent="left" hover={hover} />
+        )}
+      >
+        <Filter />
+      </TrayWrapper>
+    </div>
+  );
+}
+
+export function Filter() {
+  const { allFiltersForPlan } = useAppSelector((state) => state?.planFilter);
   const { data: blendCategoryData, loading: blendCategoryLoading } = useQuery(
     FETCH_BLEND_CATEGORIES,
   );
@@ -49,10 +68,6 @@ function PlanFilterTray({ showPanle, showTagByDefaut }: Props) {
   // handle update recipe active filter tag
   const handleUpdateActiveFilterTagForPlan =
     useToUpdateActiveFilterTagForPlan();
-
-  const toggleTray = () => {
-    dispatch(setIsPlanFilterOpen(!isPlanFilterOpen));
-  };
 
   //check active filter item
   const checkActiveItem = (
@@ -82,15 +97,7 @@ function PlanFilterTray({ showPanle, showTagByDefaut }: Props) {
   };
 
   return (
-    <TrayWrapper
-      closeTray={toggleTray}
-      openTray={isPlanFilterOpen}
-      showTagByDefault={showTagByDefaut}
-      showPanel={showPanle}
-      panelTag={(hover) => (
-        <TrayTag icon={<FiFilter />} placeMent="left" hover={hover} />
-      )}
-    >
+    <Fragment>
       <ToggleMenu
         toggle={0}
         toggleMenuList={[
@@ -114,7 +121,7 @@ function PlanFilterTray({ showPanle, showTagByDefaut }: Props) {
         handleUpdateActiveFilterTag={handleUpdateActiveFilterTagForPlan}
         handleUpdateFilterCriteria={handleUpdateFilterCriteriaForPlan}
       />
-    </TrayWrapper>
+    </Fragment>
   );
 }
 

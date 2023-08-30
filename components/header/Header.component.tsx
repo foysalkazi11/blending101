@@ -47,46 +47,21 @@ export default function HeaderComponent({
   fullWidth,
   headerIcon = "",
 }: headerInterface) {
-  const [openPopup, setOpenPopup] = useState(false);
-  const dispatch = useAppDispatch();
   const user = useUser();
   const { signOut } = useUserHandler();
+
   const userMenu = useRef(null);
   const userIcon = useRef(null);
+
+  const [openPopup, setOpenPopup] = useState(false);
   useOnClickOutside(userMenu, () => setOpenPopup(false));
-  const [showNotificationPopup, setShowNotificationPopup] = useState(false);
-  const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const { data, loading } = useQuery(GET_SHARE_NOTIFICATION, {
+
+  const { data } = useQuery(GET_SHARE_NOTIFICATION, {
     variables: { userId: user?.id },
     fetchPolicy: "cache-and-network",
   });
 
-  const handleClick = (event) => {
-    const rect = event.target.getBoundingClientRect();
-    const position = {
-      x: rect.left + window.scrollX,
-      y: rect.bottom + window.scrollY,
-    };
-    setPosition(position);
-    setClickPosition({ x: event.clientX, y: event.clientY });
-    setShowNotificationPopup(!showNotificationPopup);
-  };
-
-  // const userSingOut = async () => {
-  //   dispatch(setLoading(true));
-  //   try {
-  //     await Auth.signOut();
-  //     dispatch(setLoading(false));
-  //     notification("info", "Logout successfully");
-  //     dispatch(setUser(""));
-  //     dispatch(setNonConfirmedUser(""));
-  //     dispatch(setDbUser({} as DbUserType));
-  //   } catch (error) {
-  //     dispatch(setLoading(false));
-  //     notification("error", error?.message);
-  //   }
-  // };
+  const dispatch = useAppDispatch();
 
   const style = fullWidth ? { width: "100%" } : {};
   const notificationLength = data?.getShareNotification?.totalNotification || 0;

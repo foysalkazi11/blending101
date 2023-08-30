@@ -13,13 +13,7 @@ const ItemHeading = ({
     <section className={styles.headingContainer}>
       <header className={styles.titleBox}>
         <div className={styles.imgBox}>
-          <Image
-            src={image}
-            alt="img"
-            width={45}
-            height={45}
-            objectFit="cover"
-          />
+          <img src={image} alt="img" width={45} height={45} />
         </div>
         <h3 className={styles.title}>{title}</h3>
       </header>

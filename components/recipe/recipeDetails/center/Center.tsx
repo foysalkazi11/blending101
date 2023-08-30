@@ -37,6 +37,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/pro-light-svg-icons";
 import { useUser } from "../../../../context/AuthProvider";
 import { ImageWithFallback } from "../../../../theme/imageWithFallback";
+import useExtension from "../../../../hooks/useExtension";
 
 interface center {
   recipeData: RecipeDetailsType;
@@ -80,6 +81,7 @@ const Center = ({
   const userId = useUser().id;
   const { functionAcceptRecipeShare, acceptRecipeShareLoading } =
     useToAcceptRecipeShare();
+  const authData = useExtension();
 
   // read more functionality
   const ReadMore = ({ children }) => {
@@ -178,9 +180,9 @@ const Center = ({
         token: variables?.token,
         userId: variables?.userId,
       });
-      router?.push(`/recipe_details/${variables?.recipeId}`);
+      router?.push(`/recipe/recipe_details/${variables?.recipeId}`);
     } else {
-      router?.push(`/edit_recipe/${variables?.recipeId}`);
+      router?.push(`/recipe/edit_recipe/${variables?.recipeId}`);
     }
   };
 
@@ -192,7 +194,7 @@ const Center = ({
   //       userId: variables?.userId,
   //     });
   //   }
-  //   router?.push("/recipe_discovery");
+  //   router?.push("/recipe/recipe_discovery");
   // };
 
   // handle to open version tray
@@ -249,7 +251,7 @@ const Center = ({
         pageComeFrom={pageComeFrom}
         // loading={acceptRecipeShareLoading}
         backBtnObj={{
-          function: () => router?.push("/recipe_discovery"),
+          function: () => router?.push("/recipe/recipe_discovery"),
           text: "Back",
         }}
       />
@@ -295,28 +297,41 @@ const Center = ({
               >
                 {!isEmptyObj(recipeData?.recipeId?.brand || {}) ? (
                   <a
-                    href={recipeData?.recipeId?.brand?.brandUrl || "#"}
-
-                    // onClick={(e) => {
-                    //   const id = "lijpknkegggepjnhoiklomgfbldbmnef";
-                    //   //@ts-ignore
-                    //   chrome.runtime.sendMessage(
-                    //     id,
-                    //     {
-                    //       action: "BRAND_NAVIGATE",
-                    //       payload: {
-                    //         id: recipeData?.recipeId?._id,
-                    //         name:
-                    //           recipeData?.defaultVersion?.postfixTitle ||
-                    //           recipeData?.recipeId?.name,
-                    //         image: recipeData?.recipeId?.brand?.brandImage,
-                    //         origin: recipeData?.recipeId?.brand?.brandUrl,
-                    //       },
-                    //     },
-                    //     () => {},
-                    //   );
-                    //   window.location.href = "";
-                    // }}
+                    href={recipeData?.recipeId?.url || "#"}
+                    onClick={(e) => {
+                      router.reload();
+                      const id = process.env.NEXT_PUBLIC_EXTENSION_URL;
+                      //@ts-ignore
+                      chrome.runtime.sendMessage(
+                        id,
+                        {
+                          action: "BRAND_NAVIGATE",
+                          payload: {
+                            id: recipeData?.recipeId?._id,
+                            name: recipeData?.recipeId?.name,
+                            image:
+                              recipeData?.recipeId?.originalVersion
+                                ?.selectedImage ||
+                              recipeData?.recipeId?.image?.find(
+                                (img) => img?.default,
+                              )?.image ||
+                              recipeData?.recipeId?.image?.[0]?.image,
+                            origin: recipeData?.recipeId?.url || "#",
+                          },
+                        },
+                        () => {},
+                      );
+                      //@ts-ignore
+                      chrome.runtime.sendMessage(
+                        id,
+                        {
+                          action: "SYNC_AUTH",
+                          payload: authData,
+                        },
+                        () => {},
+                      );
+                      window.location.href = "";
+                    }}
                   >
                     <ImageWithFallback
                       className={styles.brand}
@@ -413,13 +428,13 @@ const Center = ({
                         backgroundImage: `url(${img.image})`,
                       }}
                     />
-                    {/* <img src={img.image} alt="recipe_image" /> */}
-                    <Image
+                    <img src={img.image} alt="recipe_image" />
+                    {/* <Image
                       src={img.image}
                       alt="recipe_image"
                       layout="fill"
                       objectFit="contain"
-                    />
+                    /> */}
                   </div>
                 );
               })}

@@ -34,49 +34,51 @@ export default function NotificationTray({
   const notification = data?.getShareNotification;
 
   return (
-    <TrayWrapper
-      showTagByDefault={showTagByDefaut}
-      closeTray={() => dispatch(setIsNotificationTrayOpen(false))}
-      openTray={isNotificationTrayOpen}
-      showPanel={showPanle}
-      panelTag={(hover) => (
-        <TrayTag
-          icon={<FontAwesomeIcon icon={faBell} />}
-          placeMent="left"
-          hover={hover}
-        />
-      )}
-    >
-      <ToggleMenu
-        toggleMenuList={[
-          <div key={"key0"} className={styles.menu}>
-            <FontAwesomeIcon icon={faBell} className={styles.icon} />
+    <div className={showPanle === "right" ? styles.fixed__main__right : ""}>
+      <TrayWrapper
+        showTagByDefault={showTagByDefaut}
+        closeTray={() => dispatch(setIsNotificationTrayOpen(false))}
+        openTray={isNotificationTrayOpen}
+        showPanel={showPanle}
+        panelTag={(hover) => (
+          <TrayTag
+            icon={<FontAwesomeIcon icon={faBell} />}
+            placeMent="left"
+            hover={hover}
+          />
+        )}
+      >
+        <ToggleMenu
+          toggleMenuList={[
+            <div key={"key0"} className={styles.menu}>
+              <FontAwesomeIcon icon={faBell} className={styles.icon} />
 
-            <p>Notifications</p>
-          </div>,
-        ]}
-        variant={"outlineSecondary"}
-      />
-      <ToggleMenu
-        toggleMenuList={[
-          <div key={"key0"} className={styles.sharedNotificationBox}>
-            <p className={styles.text}>Shared </p>
-            <span className={styles.count}>
-              {notification?.totalNotification}
-            </span>{" "}
-          </div>,
-          <p key={"key1"}>Others</p>,
-        ]}
-        variant="borderBottomSecondary"
-        toggle={toggleNotification}
-        setToggle={(index) => setToggleNotification(index)}
-      />
-      {toggleNotification === 0 && (
-        <ShowNotificationData
-          notificationData={notification}
-          notificationDataLoading={loading}
+              <p>Notifications</p>
+            </div>,
+          ]}
+          variant={"outlineSecondary"}
         />
-      )}
-    </TrayWrapper>
+        <ToggleMenu
+          toggleMenuList={[
+            <div key={"key0"} className={styles.sharedNotificationBox}>
+              <p className={styles.text}>Shared </p>
+              <span className={styles.count}>
+                {notification?.totalNotification}
+              </span>{" "}
+            </div>,
+            <p key={"key1"}>Others</p>,
+          ]}
+          variant="borderBottomSecondary"
+          toggle={toggleNotification}
+          setToggle={(index) => setToggleNotification(index)}
+        />
+        {toggleNotification === 0 && (
+          <ShowNotificationData
+            notificationData={notification}
+            notificationDataLoading={loading}
+          />
+        )}
+      </TrayWrapper>
+    </div>
   );
 }

@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { Dispatch, SetStateAction } from "react";
-import AContainer from "../../../containers/A.container";
 import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
 import Center_Elements from "./recipe_elements/centerElements.component";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
@@ -21,6 +20,7 @@ import { IngredientAddingType } from "../../../type/recipeEditType";
 import { useRouter } from "next/router";
 import InstructionsForMakingRecipe from "../share/howToSection";
 import IngredientSection from "../share/IngredientSection";
+import VersionTray from "../../sidetray/versionTray/VersionTray";
 
 interface editRecipe {
   copyDetailsRecipe?: RecipeDetailsType;
@@ -160,19 +160,8 @@ const EditRecipePage = ({
   };
 
   return (
-    <AContainer
-      headerIcon="/icons/juicer.svg"
-      headerTitle="Recipe Edit"
-      showVersionTray={{
-        show: true,
-        showPanel: "right",
-        showTagByDefault: false,
-      }}
-      headTagInfo={{
-        title: "Recipe Edit",
-        description: "recipe Edit",
-      }}
-    >
+    <React.Fragment>
+      <VersionTray showPanle="right" showTagByDefaut={false} />
       {width < 1280 && (
         <FloatingLeftPanel>
           <IngredientPanel
@@ -195,7 +184,7 @@ const EditRecipePage = ({
         <div className={styles.center}>
           <PanelHeaderCenter
             backBtnObj={{
-              function: () => router.push(`/recipe_details/${recipeId}`),
+              function: () => router.push(`/recipe/recipe_details/${recipeId}`),
             }}
             editOrSavebtnFunc={editARecipeFunction}
             editOrSavebtnText="Save"
@@ -244,7 +233,7 @@ const EditRecipePage = ({
           />
         </div>
       </div>
-    </AContainer>
+    </React.Fragment>
   );
 };
 export default EditRecipePage;

@@ -27,7 +27,11 @@ export const PAGES: {
   content: sidebarActiveMenuNameType;
 }[] = [
   { logo: "/icons/home.svg", link: "/", content: "Home" },
-  { logo: "/icons/juicer.svg", link: "/recipe_discovery", content: "Blends" },
+  {
+    logo: "/icons/juicer.svg",
+    link: "/recipe/recipe_discovery",
+    content: "Blends",
+  },
 
   {
     logo: "/icons/calender__sidebar.svg",

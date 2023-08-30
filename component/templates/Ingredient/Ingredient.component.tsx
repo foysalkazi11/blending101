@@ -18,6 +18,8 @@ import Combobox from "../../organisms/Forms/Combobox.component";
 import Textfield from "../../organisms/Forms/Textfield.component";
 import styles from "./Ingredient.module.scss";
 import { NextImageWithFallback } from "../../../theme/imageWithFallback";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBasketShoppingSimple } from "@fortawesome/pro-light-svg-icons";
 
 interface IngredientPanelProps {
   ingredients: any;
@@ -37,101 +39,115 @@ const IngredientPanel = (props: IngredientPanelProps) => {
       <div className="row">
         <div className="col-12">
           <div className={styles.ingredient__card}>
-            {ingredients?.map((ingredient) => {
-              const ingredientId = ingredient.ingredientId?._id || "";
-              const portions =
-                ingredient?.ingredientId?.portions || ingredient?.portions;
-              if (ingredientId !== editingId) {
-                return (
-                  <div
-                    className={styles.ingredient__content}
-                    key={ingredientId}
-                  >
-                    <div className={styles.ingredient__item}>
-                      <div>
-                        {ingredient?.ingredientId?.featuredImage ? (
-                          <NextImageWithFallback
-                            src={ingredient?.ingredientId?.featuredImage}
-                            alt={ingredient.ingredientId.ingredientName}
-                            fallbackSrc="/food/chard.png"
-                            width={28}
-                            height={28}
-                            style={{ objectFit: "contain" }}
-                          />
-                        ) : (
-                          <span />
-                        )}
+            {ingredients?.map((ingredient, index) => {
+              const isIngredientStatusOk = ingredient?.errorString;
+
+              if (!isIngredientStatusOk) {
+                const ingredientId = ingredient.ingredientId?._id || "";
+                const portions =
+                  ingredient?.ingredientId?.portions || ingredient?.portions;
+                if (ingredientId !== editingId) {
+                  return (
+                    <div
+                      className={styles.ingredient__content}
+                      key={ingredientId}
+                    >
+                      <div className={styles.ingredient__item}>
+                        <div>
+                          {ingredient?.ingredientId?.featuredImage ? (
+                            <NextImageWithFallback
+                              src={ingredient?.ingredientId?.featuredImage}
+                              alt={ingredient.ingredientId.ingredientName}
+                              fallbackSrc="/food/chard.png"
+                              width={28}
+                              height={28}
+                              style={{ objectFit: "contain" }}
+                            />
+                          ) : (
+                            <span />
+                          )}
+                        </div>
+                        <span>
+                          {ingredient?.selectedPortion?.quantity || 1}{" "}
+                          {ingredient?.selectedPortion?.name}
+                        </span>
+                        <span>{ingredient.ingredientId.ingredientName}</span>
                       </div>
-                      <span>
-                        {ingredient?.selectedPortion?.quantity || 1}{" "}
-                        {ingredient?.selectedPortion?.name}
-                      </span>
-                      <span>{ingredient.ingredientId.ingredientName}</span>
-                    </div>
-                    <div className={styles.ingredient__actions}>
-                      <a
-                        href={`/wiki/Ingredient/${ingredient.ingredientId._id}/${ingredient?.selectedPortion?.gram}/`}
-                      >
+                      <div className={styles.ingredient__actions}>
+                        <a
+                          href={`/wiki/Ingredient/${ingredient.ingredientId._id}/${ingredient?.selectedPortion?.gram}/`}
+                        >
+                          <Icon
+                            size="small"
+                            color="primary"
+                            fontName={faCircleInfo}
+                            className={styles.ingredient__button}
+                          />
+                        </a>
                         <Icon
                           size="small"
                           color="primary"
-                          fontName={faCircleInfo}
+                          fontName={faChartSimple}
                           className={styles.ingredient__button}
+                          onClick={() => onNutrition(ingredient)}
                         />
-                      </a>
-                      <Icon
-                        size="small"
-                        color="primary"
-                        fontName={faChartSimple}
-                        className={styles.ingredient__button}
-                        onClick={() => onNutrition(ingredient)}
-                      />
-                      <Icon
-                        size="small"
-                        color="primary"
-                        fontName={faPen}
-                        className={styles.ingredient__button}
-                        onClick={() => {
-                          setEditingId(ingredientId);
-                          setShowAddForm(false);
-                        }}
-                      />
-                      <Icon
-                        size="small"
-                        color="primary"
-                        fontName={faTrash}
-                        className={styles.ingredient__button}
-                        onClick={() =>
-                          onDelete(ingredient.ingredientId._id, ingredient)
+                        <Icon
+                          size="small"
+                          color="primary"
+                          fontName={faPen}
+                          className={styles.ingredient__button}
+                          onClick={() => {
+                            setEditingId(ingredientId);
+                            setShowAddForm(false);
+                          }}
+                        />
+                        <Icon
+                          size="small"
+                          color="primary"
+                          fontName={faTrash}
+                          className={styles.ingredient__button}
+                          onClick={() =>
+                            onDelete(ingredient.ingredientId._id, ingredient)
+                          }
+                        />
+                      </div>
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div className="mt-20 mb-10" key={ingredientId}>
+                      <IngredientForm
+                        isEditing
+                        ingredients={ingredients}
+                        defaultQuery={ingredient?.ingredientId?.ingredientName}
+                        defaultIngredient={
+                          ingredient?.ingredientId?.portions
+                            ? ingredient?.ingredientId
+                            : ingredient
                         }
+                        defaultPortion={portions?.find(
+                          (portion) =>
+                            portion.measurement ===
+                            ingredient?.selectedPortion?.name,
+                        )}
+                        defaultQuantity={ingredient?.selectedPortion?.quantity}
+                        defaultComment={ingredient?.comment}
+                        onSave={onSave}
+                        onClose={() => setEditingId("")}
+                        hasComment={hasComment}
+                        setShowAddForm={setShowAddForm}
                       />
                     </div>
-                  </div>
-                );
+                  );
+                }
               } else {
                 return (
-                  <div className="mt-20 mb-10" key={ingredientId}>
-                    <IngredientForm
-                      isEditing
-                      ingredients={ingredients}
-                      defaultQuery={ingredient?.ingredientId?.ingredientName}
-                      defaultIngredient={
-                        ingredient?.ingredientId?.portions
-                          ? ingredient?.ingredientId
-                          : ingredient
-                      }
-                      defaultPortion={portions?.find(
-                        (portion) =>
-                          portion.measurement ===
-                          ingredient?.selectedPortion?.name,
-                      )}
-                      defaultQuantity={ingredient?.selectedPortion?.quantity}
-                      defaultComment={ingredient?.comment}
-                      onSave={onSave}
-                      onClose={() => setEditingId("")}
-                      hasComment={hasComment}
-                      setShowAddForm={setShowAddForm}
+                  <div key={index} className={styles.errorIngredient}>
+                    <FontAwesomeIcon
+                      icon={faBasketShoppingSimple}
+                      className={styles.icon}
                     />
+                    <p className={styles.text}>{ingredient?.errorString}</p>
                   </div>
                 );
               }
@@ -189,7 +205,6 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
     hasComment,
     setShowAddForm,
   } = props;
-  console.log(defaultIngredient);
 
   const method = useForm();
 

@@ -1,4 +1,8 @@
-module.exports = {
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
+});
+
+module.exports = withBundleAnalyzer({
   reactStrictMode: true,
   trailingSlash: true,
   staticPageGenerationTimeout: 1500,
@@ -29,4 +33,4 @@ module.exports = {
 
     return config;
   },
-};
+});

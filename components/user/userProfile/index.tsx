@@ -147,7 +147,7 @@ const UserProfile = () => {
           "info",
           "Congratulation! you updated profile successfully",
         );
-        history.push("/recipe_discovery");
+        history.push("/recipe/recipe_discovery");
       } catch (error) {
         dispatch(setLoading(false));
         reactToastifyNotification("error", error?.message);

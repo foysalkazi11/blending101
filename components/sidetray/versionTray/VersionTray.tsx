@@ -337,7 +337,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
             }
           >
             <Tooltip content="Compare versions" direction="left">
-              <Image
+              <img
                 src={
                   detailsARecipe?.versionsCount
                     ? "/images/compare-fill-icon.svg"
@@ -360,7 +360,7 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
 
         <div className={styles.recipeName}>
           <div className={styles.leftSide}>
-            <Image
+            <img
               src={
                 detailsARecipe?.recipeId?.image?.find((img) => img?.default)
                   ?.image
@@ -368,7 +368,6 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
               alt="recipe_img"
               width={45}
               height={45}
-              objectFit="cover"
               loading="lazy"
               className={styles.image}
             />

@@ -263,7 +263,7 @@ const CreateNewRecipe = ({
                   className={styles.icon}
                   onClick={() =>
                     router?.push(
-                      `/edit_recipe/${newlyCreatedRecipe?.recipeId?._id}`,
+                      `/recipe/edit_recipe/${newlyCreatedRecipe?.recipeId?._id}`,
                     )
                   }
                 />
@@ -274,7 +274,7 @@ const CreateNewRecipe = ({
                   <BiDetail
                     className={styles.icon}
                     onClick={() =>
-                      router?.push(`/recipe_details/${newlyCreatedRecipe?._id}`)
+                      router?.push(`/recipe/recipe_details/${newlyCreatedRecipe?._id}`)
                     }
                   />
                 </li>
