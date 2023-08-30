@@ -73,48 +73,58 @@ const RegularRecipes = ({
         query: GET_ALL_RECOMMENDED_RECIPES,
         variables: { userId: user.id },
         data: {
-          getAllrecomendedRecipes2:
-            recommendedRecipesData?.getAllrecomendedRecipes2?.map((recipe) =>
-              recipe?.recipeId?._id === id
-                ? {
-                    ...recipe,
-                    ...outerObj,
-                    [innerLabel]: { ...recipe[innerLabel], ...innerObj },
-                  }
-                : recipe,
-            ),
+          getAllrecomendedRecipes2: {
+            ...recommendedRecipesData?.getAllrecomendedRecipes2,
+            recipes:
+              recommendedRecipesData?.getAllrecomendedRecipes2?.recipes?.map(
+                (recipe) =>
+                  recipe?.recipeId?._id === id
+                    ? {
+                        ...recipe,
+                        ...outerObj,
+                        [innerLabel]: { ...recipe[innerLabel], ...innerObj },
+                      }
+                    : recipe,
+              ),
+          },
         },
       });
       client.writeQuery({
         query: GET_ALL_POPULAR_RECIPES,
         variables: { userId: user.id },
         data: {
-          getAllpopularRecipes2: popularRecipesData?.getAllpopularRecipes2?.map(
-            (recipe) =>
-              recipe?.recipeId?._id === id
-                ? {
-                    ...recipe,
-                    ...outerObj,
-                    [innerLabel]: { ...recipe[innerLabel], ...innerObj },
-                  }
-                : recipe,
-          ),
+          getAllpopularRecipes2: {
+            ...popularRecipesData?.getAllpopularRecipes2,
+            recipes: popularRecipesData?.getAllpopularRecipes2?.recipes?.map(
+              (recipe) =>
+                recipe?.recipeId?._id === id
+                  ? {
+                      ...recipe,
+                      ...outerObj,
+                      [innerLabel]: { ...recipe[innerLabel], ...innerObj },
+                    }
+                  : recipe,
+            ),
+          },
         },
       });
       client.writeQuery({
         query: GET_ALL_LATEST_RECIPES,
         variables: { userId: user.id },
         data: {
-          getAllLatestRecipes2: latestRecipesData?.getAllLatestRecipes2?.map(
-            (recipe) =>
-              recipe?.recipeId?._id === id
-                ? {
-                    ...recipe,
-                    ...outerObj,
-                    [innerLabel]: { ...recipe[innerLabel], ...innerObj },
-                  }
-                : recipe,
-          ),
+          getAllLatestRecipes2: {
+            ...latestRecipesData?.getAllLatestRecipes2,
+            recipes: latestRecipesData?.getAllLatestRecipes2?.recipes?.map(
+              (recipe) =>
+                recipe?.recipeId?._id === id
+                  ? {
+                      ...recipe,
+                      ...outerObj,
+                      [innerLabel]: { ...recipe[innerLabel], ...innerObj },
+                    }
+                  : recipe,
+            ),
+          },
         },
       });
     },
