@@ -80,11 +80,7 @@ const PlanDiscovery = () => {
   // handle add plan Filter with url
 
   const debounceValue = useDebounce(searchTerm, 500);
-  const {
-    handleFilterPlan,
-    data: planFilterData,
-    loading: planFilterLoading,
-  } = useToGetPlanByFilterCriteria();
+  const { handleFilterPlan } = useToGetPlanByFilterCriteria();
 
   const handleRemoveFilters = () => {
     router.push(`/planner`, undefined, {
@@ -92,6 +88,7 @@ const PlanDiscovery = () => {
     });
     dispatch(resetAllFiltersForPlan());
   };
+
   const handleUpdateFilterCriteriaForPlanFunc = (
     obj: HandleUpdateFilterCriteriaType,
   ) => {

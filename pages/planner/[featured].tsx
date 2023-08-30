@@ -90,3 +90,8 @@ const ViewAll = () => {
 };
 
 export default ViewAll;
+
+ViewAll.meta = {
+  title: "Featured Plans",
+  icon: "/icons/home.svg",
+};
