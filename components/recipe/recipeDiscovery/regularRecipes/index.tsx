@@ -148,7 +148,7 @@ const RegularRecipes = ({
             image: (
               <FontAwesomeIcon icon={faThumbsUp} color="#fe5d1f" size="2x" />
             ),
-            allUrl: "recipe/viewAll/recommended",
+            allUrl: "/recipe/viewAll/recommended",
           }}
           loading={recommendedRecipesLoading}
           filters={["Leafy", "Beatle", "Fruity"]}
@@ -163,7 +163,7 @@ const RegularRecipes = ({
           headerData={{
             heading: "Recent",
             image: <FontAwesomeIcon icon={faClock} color="#fe5d1f" size="2x" />,
-            allUrl: "recipe/viewAll/latest",
+            allUrl: "/recipe/viewAll/latest",
           }}
           loading={latestRecipesLoading}
           recipes={latestRecipesData?.getAllLatestRecipes2?.recipes}
@@ -178,7 +178,7 @@ const RegularRecipes = ({
           headerData={{
             heading: "Popular",
             image: <FontAwesomeIcon icon={faFire} color="#fe5d1f" size="2x" />,
-            allUrl: "recipe/viewAll/popular",
+            allUrl: "/recipe/viewAll/popular",
           }}
           filters={["Leafy", "Beatle", "Fruity"]}
           loading={popularRecipesLoading}

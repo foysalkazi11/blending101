@@ -19,7 +19,6 @@ import {
   updateAllFilterRecipes,
   updateShowFilterOrSearchRecipes,
 } from "../../redux/slices/filterRecipeSlice";
-import AContainer from "../../containers/A.container";
 import styles from "../../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";
 import DiscoveryPageSearchBar from "../../components/recipe/recipeDiscovery/searchBar";
 import SearchtagsComponent from "../../components/searchtags/searchtags.component";
@@ -29,9 +28,13 @@ import ShareRecipe from "../../components/recipe/recipeDetails/center/shareRecip
 import { useRouter } from "next/router";
 import useToUpdateFilterCriteria from "../../customHooks/recipeFilter/useToUpdateRecipeFilterCriteria";
 import useToUpdateActiveFilterTag from "../../customHooks/recipeFilter/useToUpdateActiveFilterTag";
+import Filtertray from "../../components/sidetray/filter";
+import RecipeCommentsTray from "../../components/sidetray/commentsTray/RecipeCommentsTray";
+import VersionTray from "../../components/sidetray/versionTray/VersionTray";
+import RecipeCollectionAndThemeTray from "../../components/sidetray/collection/RecipeCollectionAndThemeTray";
 let dataLimit = 12;
 
-const RecipeFilter = () => {
+const FilterRecipe = () => {
   const [shareRecipeData, setShareRecipeData] = useState({
     id: "",
     image: "",
@@ -194,78 +197,62 @@ const RecipeFilter = () => {
   }, []);
 
   return (
-    <>
-      <AContainer
-        headerIcon="/icons/juicer.svg"
-        showCollectionTray={{ show: true, showTagByDefault: true }}
-        showRecipeFilterTray={{
-          show: true,
-          showPanel: "left",
-          showTagByDefault: false,
-        }}
-        headerTitle="Blend Discovery"
-        showCommentsTray={{
-          show: true,
-          showPanel: "right",
-          showTagByDefault: false,
-        }}
-        headTagInfo={{ description: "blends", title: "Blends" }}
-        showNotificationTray={{
-          show: true,
-          showPanel: "right",
-          showTagByDefault: true,
-        }}
-      >
-        <div className={styles.main__div}>
-          <div className={openFilterTray ? styles.move : styles.back}>
-            <DiscoveryPageSearchBar
-              input={recipeSearchInput}
-              handleOnChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setRecipeSearchInput(e.target.value);
-              }}
-            />
+    <React.Fragment>
+      <Filtertray showPanle="left" showTagByDefaut={true} />
+      <RecipeCommentsTray showPanle="right" showTagByDefaut={false} />
+      <VersionTray showPanle="right" showTagByDefaut={false} />
+      <RecipeCollectionAndThemeTray showPanle="left" showTagByDefaut={false} />
 
-            {allFilters?.length ? (
-              <SearchtagsComponent
-                allFilters={allFilters}
-                handleUpdateActiveFilterTag={(
+      <div className={styles.main__div}>
+        <div className={openFilterTray ? styles.move : styles.back}>
+          <DiscoveryPageSearchBar
+            input={recipeSearchInput}
+            handleOnChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setRecipeSearchInput(e.target.value);
+            }}
+          />
+
+          {allFilters?.length ? (
+            <SearchtagsComponent
+              allFilters={allFilters}
+              handleUpdateActiveFilterTag={(
+                activeSection,
+                filterCriteria,
+                activeTab,
+                childTab,
+              ) => {
+                dispatch(setOpenFilterTray(true));
+                handleUpdateActiveFilterTag(
                   activeSection,
                   filterCriteria,
                   activeTab,
                   childTab,
-                ) => {
-                  dispatch(setOpenFilterTray(true));
-                  handleUpdateActiveFilterTag(
-                    activeSection,
-                    filterCriteria,
-                    activeTab,
-                    childTab,
-                  );
-                }}
-                handleUpdateFilterCriteria={handleUpdateFilterCriteria}
-              />
-            ) : null}
-
-            <ShowRecipeContainer
-              data={allFilterRecipes.filterRecipes}
-              loading={filterRecipesLoading || searchRecipeLoading}
-              closeHandler={closeFilterRecipes}
-              showItems="recipe"
-              showDefaultLeftHeader
-              showDefaultMiddleHeader={
-                allFilterRecipes.filterRecipes.length ? true : false
-              }
-              showDefaultRightHeader
-              hasMore={allFilterRecipes?.totalItems > dataLimit * pageNum}
-              totalDataCount={allFilterRecipes?.totalItems}
-              nextPage={handleNextPage}
-              setOpenCollectionModal={setOpenCollectionModal}
-              setOpenShareModal={setOpenShareModal}
-              setShareRecipeData={setShareRecipeData}
+                );
+              }}
+              handleUpdateFilterCriteria={handleUpdateFilterCriteria}
             />
-          </div>
+          ) : null}
+
+          <ShowRecipeContainer
+            data={allFilterRecipes.filterRecipes}
+            loading={filterRecipesLoading || searchRecipeLoading}
+            closeHandler={closeFilterRecipes}
+            showItems="recipe"
+            showDefaultLeftHeader
+            showDefaultMiddleHeader={
+              allFilterRecipes.filterRecipes.length ? true : false
+            }
+            showDefaultRightHeader
+            hasMore={allFilterRecipes?.totalItems > dataLimit * pageNum}
+            totalDataCount={allFilterRecipes?.totalItems}
+            nextPage={handleNextPage}
+            setOpenCollectionModal={setOpenCollectionModal}
+            setOpenShareModal={setOpenShareModal}
+            setShareRecipeData={setShareRecipeData}
+          />
         </div>
-      </AContainer>
+      </div>
+
       <ShowLastModifiedCollection
         open={openCollectionModal}
         setOpen={setOpenCollectionModal}
@@ -284,8 +271,12 @@ const RecipeFilter = () => {
         type="recipe"
         heading="Share Recipe"
       />
-    </>
+    </React.Fragment>
   );
 };
+FilterRecipe.meta = {
+  title: "Filter Recipe",
+  icon: "/icons/juicer.svg",
+};
 
-export default RecipeFilter;
+export default FilterRecipe;

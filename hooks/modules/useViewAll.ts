@@ -1,16 +1,15 @@
 import { useLazyQuery } from "@apollo/client";
 import { faClock, faFire, faThumbsUp } from "@fortawesome/pro-light-svg-icons";
 import { useState, useEffect, useMemo } from "react";
-
 import GET_ALL_LATEST_RECIPES from "../../gqlLib/recipes/queries/getAllLatestRecipes";
 import GET_ALL_POPULAR_RECIPES from "../../gqlLib/recipes/queries/getAllPopularRecipes";
 import GET_ALL_RECOMMENDED_RECIPES from "../../gqlLib/recipes/queries/getRecommendedRecipes";
-import { useAppSelector } from "../../redux/hooks";
 import { useUser } from "../../context/AuthProvider";
 
 const useViewAll = (param: string, limit: number = 12, page: number = 1) => {
   const userId = useUser().id;
   const [response, setResponse] = useState({ recipes: [], totalRecipes: 0 });
+  const [loading, setLoading] = useState(false);
 
   const config = useMemo(
     () => ({
@@ -63,6 +62,7 @@ const useViewAll = (param: string, limit: number = 12, page: number = 1) => {
   );
 
   async function fetchData() {
+    setLoading(true);
     try {
       let response = await responseObj?.[param]?.method();
       response = response?.data[QUERY_DICTIONARY[param]?.query];
@@ -72,6 +72,8 @@ const useViewAll = (param: string, limit: number = 12, page: number = 1) => {
       }));
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
     // let response: any;
     // switch (param) {
@@ -98,7 +100,7 @@ const useViewAll = (param: string, limit: number = 12, page: number = 1) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [param, page]);
 
-  return { ...responseObj[param]?.data, data: response };
+  return { ...responseObj[param]?.data, data: response, loading };
 };
 
 export default useViewAll;

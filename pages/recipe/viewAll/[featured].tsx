@@ -13,6 +13,9 @@ import ShowRecipeContainer from "../../../components/showRecipeContainer";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/pro-regular-svg-icons";
+import Layout from "../../../layouts";
+import RecipeCommentsTray from "../../../components/sidetray/commentsTray/RecipeCommentsTray";
+import RecipeCollectionAndThemeTray from "../../../components/sidetray/collection/RecipeCollectionAndThemeTray";
 let dataLimit = 12;
 
 const ViewAll = () => {
@@ -23,14 +26,9 @@ const ViewAll = () => {
   const { data, loading } = useViewAll(featured, dataLimit, pageNo);
 
   return (
-    <AContainer
-      showCollectionTray={{ show: true, showTagByDefault: true }}
-      showCommentsTray={{
-        show: true,
-        showPanel: "right",
-        showTagByDefault: false,
-      }}
-    >
+    <React.Fragment>
+      <RecipeCommentsTray showPanle="right" showTagByDefaut={false} />
+      <RecipeCollectionAndThemeTray showPanle="left" showTagByDefaut={false} />
       <div className={styles.main__div}>
         <ShowRecipeContainer
           data={data?.recipes || []}
@@ -84,7 +82,24 @@ const ViewAll = () => {
           showItems="recipe"
         />
       </div>
-    </AContainer>
+    </React.Fragment>
+  );
+};
+
+ViewAll.useLayout = (page) => {
+  const router = useRouter();
+  const featured = router.query?.featured as string;
+  const currentPage = featured && QUERY_DICTIONARY[featured];
+
+  let obj = {
+    title: `All ${currentPage.title} Recipes`,
+    description: `All ${currentPage.title} Recipes`,
+  };
+
+  return (
+    <Layout title={obj.title} icon="/icons/juicer.svg">
+      {page}
+    </Layout>
   );
 };
 

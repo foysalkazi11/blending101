@@ -2,7 +2,6 @@ import { useQuery } from "@apollo/client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import React, { FC, useRef, useState, useEffect } from "react";
-import AContainer from "../../../containers/A.container";
 import GET_ALL_RECIPE_VERSION from "../../../gqlLib/versionCompare/query/getAllRecipeVersions";
 import SkeletonComparePage from "../../../theme/skeletons/skeletonComparePage/SkeletonComparePage";
 import styles from "./index.module.scss";
@@ -38,6 +37,9 @@ import { VersionAddDataType } from "../../../type/versionAddDataType";
 import useToUpdateAfterEditVersion from "../../../customHooks/useToUpdateAfterEditVersion";
 import mapIngredientStatus from "../../../helperFunc/mapIngredientStatus";
 import { useUser } from "../../../context/AuthProvider";
+import RecipeCommentsTray from "../../sidetray/commentsTray/RecipeCommentsTray";
+import VersionTray from "../../sidetray/versionTray/VersionTray";
+import RecipeCollectionAndThemeTray from "../../sidetray/collection/RecipeCollectionAndThemeTray";
 
 const compareRecipeResponsiveSettings = {
   ...compareRecipeResponsiveSetting,
@@ -564,68 +566,62 @@ const VersionCompare = () => {
   );
 
   if (loading) {
-    return (
-      <LayoutComponent>
-        <SkeletonComparePage />
-      </LayoutComponent>
-    );
+    return <SkeletonComparePage />;
   }
 
   if (error) {
-    return (
-      <LayoutComponent>
-        <ErrorPage />
-      </LayoutComponent>
-    );
+    return <ErrorPage />;
   }
 
   return (
-    <>
-      <LayoutComponent>
-        <div className={styles.versionCompareNav} onClick={() => router.back()}>
-          <ArrowBackIcon className={styles.versionCompareNav__icon} />
-          <p>Back</p>
-        </div>
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Slider {...compareRecipeResponsiveSettings} ref={sliderRef}>
-            {normalizeData?.map((recipe, index) => {
-              return (
-                <VersionDetailsIndex
-                  key={index}
-                  recipe={recipe}
-                  recipeId={recipe?.recipeId?._id}
-                  isOriginalVersion={
-                    recipe?.recipeId?.originalVersion?._id ===
-                    recipe?.defaultVersion?._id
-                  }
-                  id={recipe?.defaultVersion?._id}
-                  dragAndDrop={allVersionsEditMode}
-                  newRecipe={newRecipe}
-                  setNewRecipe={setNewRecipe}
-                  addItem={addIngredient}
-                  handleUpdateData={handleUpdateData}
-                  index={index}
-                  singleVersionsEditMode={singleVersionsEditMode}
-                  handleSubmitEditedVersion={handleSubmitEditedVersion}
-                  handleEditMode={handleEditMode}
-                  customMenu={customEditIcon(recipe, true, index)}
-                  versionUpdateLoading={versionUpdateLoading}
-                  showMoreMenuAtHover={true}
-                  footerMenuType="OnlyStar"
-                  updateDataAfterChangeDefaultVersion={
-                    handleToUpdateDataAfterChangeDefaultVersion
-                  }
-                  handleToOpenVersionTray={versionHandler}
-                  showTopCancelButton={
-                    singleVersionsEditMode === index ? true : false
-                  }
-                  isVersionSharable={recipe?.defaultVersion?.isVersionSharable}
-                />
-              );
-            })}
-          </Slider>
-        </DragDropContext>
-      </LayoutComponent>
+    <div className={styles.versionCompareContainer}>
+      <RecipeCommentsTray showPanle="right" showTagByDefaut={false} />
+      <VersionTray showPanle="right" showTagByDefaut={false} />
+      <RecipeCollectionAndThemeTray showPanle="left" showTagByDefaut={false} />
+      <div className={styles.versionCompareNav} onClick={() => router.back()}>
+        <ArrowBackIcon className={styles.versionCompareNav__icon} />
+        <p>Back</p>
+      </div>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Slider {...compareRecipeResponsiveSettings} ref={sliderRef}>
+          {normalizeData?.map((recipe, index) => {
+            return (
+              <VersionDetailsIndex
+                key={index}
+                recipe={recipe}
+                recipeId={recipe?.recipeId?._id}
+                isOriginalVersion={
+                  recipe?.recipeId?.originalVersion?._id ===
+                  recipe?.defaultVersion?._id
+                }
+                id={recipe?.defaultVersion?._id}
+                dragAndDrop={allVersionsEditMode}
+                newRecipe={newRecipe}
+                setNewRecipe={setNewRecipe}
+                addItem={addIngredient}
+                handleUpdateData={handleUpdateData}
+                index={index}
+                singleVersionsEditMode={singleVersionsEditMode}
+                handleSubmitEditedVersion={handleSubmitEditedVersion}
+                handleEditMode={handleEditMode}
+                customMenu={customEditIcon(recipe, true, index)}
+                versionUpdateLoading={versionUpdateLoading}
+                showMoreMenuAtHover={true}
+                footerMenuType="OnlyStar"
+                updateDataAfterChangeDefaultVersion={
+                  handleToUpdateDataAfterChangeDefaultVersion
+                }
+                handleToOpenVersionTray={versionHandler}
+                showTopCancelButton={
+                  singleVersionsEditMode === index ? true : false
+                }
+                isVersionSharable={recipe?.defaultVersion?.isVersionSharable}
+              />
+            );
+          })}
+        </Slider>
+      </DragDropContext>
+
       <ConfirmationModal
         text="You can't edit original recipe but you can make a new version like original one !!!"
         cancleFunc={() => {
@@ -637,44 +633,7 @@ const VersionCompare = () => {
         setOpenModal={setOpenModal}
         submitButText="Proceed"
       />
-    </>
-  );
-};
-
-const LayoutComponent: FC = ({ children }) => {
-  return (
-    <AContainer
-      logo={false}
-      headerIcon={
-        <FontAwesomeIcon
-          icon={faRectangleVerticalHistory}
-          color="#7cbc39"
-          fontSize={20}
-        />
-      }
-      headerTitle="Compare versions"
-      showCollectionTray={{
-        show: true,
-        showPanel: "left",
-        showTagByDefault: false,
-      }}
-      showCommentsTray={{
-        show: true,
-        showPanel: "right",
-        showTagByDefault: false,
-      }}
-      showVersionTray={{
-        show: true,
-        showPanel: "right",
-        showTagByDefault: false,
-      }}
-      headTagInfo={{
-        title: "Recipe version compare",
-        description: "recipe version compare",
-      }}
-    >
-      <div className={styles.versionCompareContainer}>{children}</div>
-    </AContainer>
+    </div>
   );
 };
 
