@@ -135,8 +135,9 @@ const IngredientDetails = (props: IngredientDetailsProps) => {
           <p>Volume : </p>
           <span>
             {Math.round(
-              parseInt(`${recipeData?.tempVersionInfo?.version?.servingSize}`) *
-                counter,
+              parseInt(
+                `${recipeData?.tempVersionInfo?.version?.servingSize}`,
+              ) || 1 * counter,
             )}{" "}
             oz
           </span>
