@@ -232,7 +232,7 @@ const Center = ({
   };
 
   return (
-    <>
+    <React.Fragment>
       <PanelHeaderCenter
         editOrSavebtnFunc={() =>
           handleEditOrSavebtnFunc({
@@ -515,7 +515,7 @@ const Center = ({
         type="recipe"
         heading="Share Recipe"
       />
-    </>
+    </React.Fragment>
   );
 };
 
