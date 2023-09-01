@@ -92,12 +92,12 @@ ViewAll.useLayout = (page) => {
   const currentPage = featured && QUERY_DICTIONARY[featured];
 
   let obj = {
-    title: `All ${currentPage.title} Recipes`,
-    description: `All ${currentPage.title} Recipes`,
+    title: `All ${currentPage?.title || ""} Recipes`,
+    description: `All ${currentPage?.title || ""} Recipes`,
   };
 
   return (
-    <Layout title={obj.title} icon="/icons/juicer.svg">
+    <Layout title={obj?.title || ""} icon="/icons/juicer.svg">
       {page}
     </Layout>
   );
