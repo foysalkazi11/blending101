@@ -18,7 +18,12 @@ const PlanForm = ({ methods }) => {
           borderRadius: 9,
         }}
       >
-        <Textfield name="planName" placeholder="Plan Name" className="mb-10" />
+        <Textfield
+          required
+          name="planName"
+          placeholder="Plan Name"
+          className="mb-10"
+        />
         <Textarea name="description" placeholder="Plan Description" />
       </div>
       <div style={{ height: 10, backgroundColor: "#f8f8f8" }} />

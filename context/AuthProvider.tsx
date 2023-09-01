@@ -168,6 +168,7 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
         signOut,
       }}
     >
+      {/* {user.id ? children : null} */}
       {children}
     </AuthContext.Provider>
   );

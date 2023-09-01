@@ -340,15 +340,13 @@ const ChallengeForm = forwardRef(
       };
       if (isEditMode) challengeData.data.challengeId = challenge._id;
 
-      await Publish({
+      Publish({
         mutate: isEditMode ? editChallenge : addChallenge,
         variables: challengeData,
         state: isEditMode ? editState : addState,
         success: `${isEditMode ? "Edited" : "Created"} Challenge Successfully`,
-        onSuccess: () => {
-          resetForm();
-        },
       });
+      resetForm();
     };
 
     useImperativeHandle(ref, () => ({
