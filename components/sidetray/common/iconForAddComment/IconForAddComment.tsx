@@ -16,16 +16,18 @@ const IconForAddComment = ({
 }: Props) => {
   return (
     <div className={styles.addCommentsIcon}>
-      <p className={styles.text}>{label}</p>
-      <IconWarper
-        iconColor="iconColorWhite"
-        defaultBg="secondary"
-        hover="bgSecondary"
-        style={{ width: "28px", height: "28px" }}
-        handleClick={handleIconClick}
-      >
-        <FontAwesomeIcon icon={faPlus} />
-      </IconWarper>
+      {/* <p className={styles.text}>{label}</p> */}
+      <Tooltip content={label} direction="left">
+        <IconWarper
+          iconColor="iconColorWhite"
+          defaultBg="secondary"
+          hover="bgSecondary"
+          style={{ width: "28px", height: "28px" }}
+          handleClick={handleIconClick}
+        >
+          <FontAwesomeIcon icon={faPlus} />
+        </IconWarper>
+      </Tooltip>
     </div>
   );
 };

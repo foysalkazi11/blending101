@@ -78,7 +78,7 @@ const CommonSearchBar = ({
 
   return (
     <div className={classes.inputContainer} ref={inputRef} style={styles}>
-      {/* <div
+      <div
         className={classes.filterIconContainer}
         // style={isOpenPanel ? { marginRight: "10px", paddingRight: "20px" } : {}}
       >
@@ -90,7 +90,7 @@ const CommonSearchBar = ({
           } ${isOpenPanel ? classes.active : ""}`}
           onClick={openPanel}
         />
-      </div> */}
+      </div>
       <div className={classes.inputBox}>
         {isInputFocus ? null : isMicOn ? (
           <BsSoundwave className={classes.waveIcon} />
