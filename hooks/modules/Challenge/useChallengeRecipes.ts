@@ -135,7 +135,9 @@ interface IAddRecipeToPlanHook {
   week: any;
   isWeekFromURL: boolean;
 }
-
+/* 
+  - To add recipes to planner list. From the recipes list of the left we can select any recipe to the calendar
+*/
 const useAddRecipeToMyPlan = (props: IAddRecipeToPlanHook) => {
   const { week, isWeekFromURL } = props;
 

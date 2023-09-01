@@ -92,10 +92,10 @@ const useQueuedRecipe = (isWeekFromURL, week, queuedRecipes?: any) => {
       getQueuedRecipes({
         variables: {
           startDate: !isWeekFromURL
-            ? format(week.start, "yyyy-MM-dd")
+            ? format(week?.start, "yyyy-MM-dd")
             : router.query.start,
           endDate: !isWeekFromURL
-            ? format(week.end, "yyyy-MM-dd")
+            ? format(week?.end, "yyyy-MM-dd")
             : router.query.end,
           user: userId,
         },

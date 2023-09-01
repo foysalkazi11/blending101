@@ -103,11 +103,11 @@ export default function Filtertray({ showPanle, showTagByDefaut }: Props) {
         setToggle={handleToggle}
         toggle={activeFilterTag.activeSection === "visual" ? 0 : 1}
         toggleMenuList={[
-          <div key={"key0"} style={{ display: "flex", alignItems: "center" }}>
+          <div key={"key0"} className="flex ai-center">
             <FaEye className={styles.tag} />
             <p>Visual</p>
           </div>,
-          <div key={"key1"} style={{ display: "flex", alignItems: "center" }}>
+          <div key={"key1"} className="flex ai-center">
             <BsTagsFill className={styles.tag} />
             <p>Tags</p>
           </div>,
@@ -115,7 +115,7 @@ export default function Filtertray({ showPanle, showTagByDefaut }: Props) {
         variant={"containSecondary"}
       />
 
-      {activeFilterTag.activeSection === "visual" && (
+      {activeFilterTag.activeSection === "visual" ? (
         <VisualSection
           checkActiveItem={checkActiveItem}
           handleBlendAndIngredientUpdate={handleBlendAndIngredientUpdate}
@@ -126,8 +126,8 @@ export default function Filtertray({ showPanle, showTagByDefaut }: Props) {
           }
           ingredientCategoryLoading={ingredientCategoryLoading}
         />
-      )}
-      {activeFilterTag.activeSection === "tags" && (
+      ) : null}
+      {activeFilterTag.activeSection === "tags" ? (
         <TagSection
           checkActiveItem={checkActiveItem}
           blendCategoryData={blendCategoryData?.getAllCategories}
@@ -140,7 +140,7 @@ export default function Filtertray({ showPanle, showTagByDefaut }: Props) {
           handleUpdateFilterCriteria={handleUpdateFilterCriteria}
           handleUpdateActiveFilterTag={handleUpdateActiveFilterTag}
         />
-      )}
+      ) : null}
     </TrayWrapper>
   );
 }
