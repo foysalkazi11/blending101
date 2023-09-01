@@ -28,6 +28,8 @@ import ConfirmationModal from "../../../theme/confirmationModal/ConfirmationModa
 import DELETE_COLLECTION from "../../../gqlLib/collection/mutation/deleteCollection";
 import useUpdateRecipeField from "../../../customHooks/useUpdateRecipeFirld";
 import { useUser } from "../../../context/AuthProvider";
+import { useRouter } from "next/router";
+import CommentAndNoteButton from "../../../theme/button/commentAndNoteButton/CommentAndNoteButton";
 
 interface CollectionTrayProps {
   showTagByDefaut?: boolean;
@@ -66,7 +68,7 @@ export default function RecipeCollectionAndThemeTray({
     useMutation(EDIT_COLLECTION);
   const [deleteCollection, { loading: deleteCollectionLoading }] =
     useMutation(DELETE_COLLECTION);
-  const updateRecipe = useUpdateRecipeField();
+  const router = useRouter();
 
   // close recipe collection tray
   const closeTray = () => {
@@ -330,10 +332,30 @@ export default function RecipeCollectionAndThemeTray({
       />
 
       {toggle === 0 && (
-        <IconForAddComment
-          handleIconClick={addNewCollection}
-          label="Add collection"
-        />
+        <div className="flex ai-center jc-between mt-20 mb-20">
+          <CommentAndNoteButton
+            type="submitBtn"
+            submitBtnVarient="outlineSecondary"
+            text={
+              <div className="flex ai-center">
+                <FontAwesomeIcon
+                  icon={faBookmark}
+                  style={{ marginRight: "1rem" }}
+                />
+                <p>All Collections</p>
+              </div>
+            }
+            handleClick={() => {
+              closeTray();
+              router.push(`/collection/recipeCollection/my_collections`);
+            }}
+          />
+
+          <IconForAddComment
+            handleIconClick={addNewCollection}
+            label="Add collection"
+          />
+        </div>
       )}
 
       {toggle === 0 ? (

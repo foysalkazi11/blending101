@@ -1,7 +1,8 @@
 /* Custom properties */
 $tooltip-text-color: white;
-$tooltip-background-color: black;
+$tooltip-background-color: #7dbd3b;
 $tooltip-margin: 30px;
+$tooltip-left-right: 15px;
 $tooltip-arrow-size: 6px;
 
 // :root {
@@ -58,7 +59,7 @@ $tooltip-arrow-size: 6px;
 
 /* Absolute positioning */
 .Tooltip_Tip.right {
-  left: calc(100% + ($tooltip-margin));
+  left: calc(100% + ($tooltip-left-right));
   top: 50%;
   transform: translateX(0) translateY(-50%);
 }
@@ -83,7 +84,7 @@ $tooltip-arrow-size: 6px;
 /* Absolute positioning */
 .Tooltip_Tip.left {
   left: auto;
-  right: calc(100% + ($tooltip-margin));
+  right: calc(100% + ($tooltip-left-right));
   top: 50%;
   transform: translateX(0) translateY(-50%);
 }
