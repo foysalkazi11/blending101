@@ -1,10 +1,8 @@
 import { faCirclePlus } from "@fortawesome/pro-light-svg-icons";
-import { faBookmark } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import React from "react";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import { setOpenFilterTray } from "../../../../redux/slices/sideTraySlice";
+import { useAppSelector } from "../../../../redux/hooks";
 import RecipeDiscoverButton from "../../../../theme/button/recipeDiscoverButton/RecipeDiscoverButton";
 import Tooltip from "../../../../theme/toolTip/CustomToolTip";
 import CommonSearchBar from "../../../searchBar/CommonSearchBar";
@@ -23,13 +21,12 @@ const DiscoveryPageSearchBar = ({
 }: Props) => {
   const router = useRouter();
   const { dbUser } = useAppSelector((state) => state?.user);
-  const dispatch = useAppDispatch();
 
   const handleSubmit = () => {
     //
   };
   return (
-    <div style={{ display: "flex", alignItems: "center" }}>
+    <div className="flex ai-center">
       <CommonSearchBar
         input={input}
         handleOnChange={handleOnChange}
@@ -78,7 +75,7 @@ const DiscoveryPageSearchBar = ({
           />
         </Tooltip>
       </div>
-      <div
+      {/* <div
         style={{ marginLeft: "30px" }}
         // className={styles.buttonContainer}
       >
@@ -98,7 +95,7 @@ const DiscoveryPageSearchBar = ({
             }
           />
         </Tooltip>
-      </div>
+      </div> */}
     </div>
   );
 };
