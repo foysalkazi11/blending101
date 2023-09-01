@@ -85,7 +85,27 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
             email: profile?.email,
             image: profile?.image,
           });
-          dispatch(setDbUser(profile));
+          dispatch(
+            setDbUser({
+              _id: profile?._id,
+              displayName: profile?.displayName,
+              email: profile?.email,
+              image: profile?.image,
+              compareLength: profile?.compareLength,
+              bio: "",
+              yourBlender: "",
+              provider: "",
+              firstName: "",
+              orderHistoty: [],
+              lastName: "",
+              location: "",
+              myCart: [],
+              recentViewedProducts: [],
+              createdAt: "",
+              configuration: undefined,
+              wikiCompareCount: 0,
+            }),
+          );
           return profile;
         });
     },

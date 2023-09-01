@@ -4,12 +4,10 @@ import Center from "./center/Center";
 import NutritionPanel from "../share/nutritionPanel/NutritionPanel";
 import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
 import useWindowSize from "../../utility/useWindowSize";
-import ShowRelatedItems from "../../showRelatedItems";
 import { RecipeDetailsType } from "../../../type/recipeDetailsType";
 import { GiGl } from "../../../type/nutrationType";
 import Filtertray from "../../sidetray/filter";
 import RecipeCommentsTray from "../../sidetray/commentsTray/RecipeCommentsTray";
-import NotificationTray from "../../sidetray/notificationTray";
 import VersionTray from "../../sidetray/versionTray/VersionTray";
 import CartPanel from "../../../component/templates/Panel/CartPanel.component/Panel.component";
 import RecipeCollectionAndThemeTray from "../../sidetray/collection/RecipeCollectionAndThemeTray";
@@ -39,7 +37,6 @@ const RecipeDetails = ({
     <React.Fragment>
       <Filtertray showPanle="left" showTagByDefaut={false} />
       <RecipeCommentsTray showPanle="right" showTagByDefaut={false} />
-      <NotificationTray showPanle="right" showTagByDefaut={false} />
       <VersionTray showPanle="right" showTagByDefaut={false} />
       <CartPanel showPanle="right" showTagByDefaut={false} />
       <RecipeCollectionAndThemeTray showPanle="left" showTagByDefaut={false} />

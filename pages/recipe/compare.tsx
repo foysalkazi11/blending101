@@ -1,7 +1,12 @@
 import React from "react";
 import CompareRecipe from "../../components/recipe/compareRecipe";
-const Recipe = () => {
+const CompareRecipePage = () => {
   return <CompareRecipe />;
 };
 
-export default Recipe;
+CompareRecipePage.meta = {
+  title: "Compare Recipe",
+  icon: "/icons/juicer.svg",
+};
+
+export default CompareRecipePage;

@@ -1,19 +1,11 @@
 import React, { useCallback, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { faClock, faStar } from "@fortawesome/pro-light-svg-icons";
-import { faBookmark } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRouter } from "next/router";
-import AContainer from "../../../../containers/A.container";
 import GET_ALL_COLLECTIONS_WITH_RECIPES from "../../../../gqlLib/collection/query/getAllCollectionsWithRecipes";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import RecipeDiscoverButton from "../../../../theme/button/recipeDiscoverButton/RecipeDiscoverButton";
 import SkeletonRecipeDiscovery from "../../../../theme/skeletons/skeletonRecipeDiscovery/SkeletonRecipeDiscovery";
-import Tooltip from "../../../../theme/toolTip/CustomToolTip";
-import { DbUserType } from "../../../../type/dbUserType";
 import { ShowRecipes } from "../../../recipe/recipeDiscovery/regularRecipes";
-import CommonSearchBar from "../../../searchBar/CommonSearchBar";
-import WikiBanner from "../../../wiki/wikiBanner/WikiBanner";
 import ErrorPage from "../../404Page";
 import styles from "./myCollection.module.scss";
 import ShowLastModifiedCollection from "../../../showLastModifiedCollection/ShowLastModifiedCollection";
@@ -25,6 +17,9 @@ import { setOpenCollectionsTary } from "../../../../redux/slices/sideTraySlice";
 import ShareRecipe from "../../../recipe/recipeDetails/center/shareRecipe";
 import client from "../../../../gqlLib/client";
 import { useUser } from "../../../../context/AuthProvider";
+import RecipeCommentsTray from "../../../sidetray/commentsTray/RecipeCommentsTray";
+import VersionTray from "../../../sidetray/versionTray/VersionTray";
+import RecipeCollectionAndThemeTray from "../../../sidetray/collection/RecipeCollectionAndThemeTray";
 
 const MyCollections = () => {
   const user = useUser();
@@ -81,154 +76,86 @@ const MyCollections = () => {
 
   if (loading) {
     return (
-      <Layout>
+      <div className={styles.myCollectionsContainer}>
         <SkeletonRecipeDiscovery />
         <SkeletonRecipeDiscovery />
         <SkeletonRecipeDiscovery />
-      </Layout>
+      </div>
     );
   }
   if (error) {
     return (
-      <Layout>
-        <ErrorPage
-          style={{ height: "50vh" }}
-          errorMessage="No collection recipe found"
-        />
-      </Layout>
+      <ErrorPage
+        style={{ height: "50vh" }}
+        errorMessage="No collection recipe found"
+      />
     );
   }
   return (
-    <Layout>
-      {data?.getAllCollectionsWithRecipes?.map((collection) => {
-        const {
-          _id,
-          canContribute,
-          canShareWithOther,
-          description,
-          image,
-          isShared,
-          name,
-          personalizedName,
-          recipes,
-          sharedBy,
-          slug,
-        } = collection;
-        return (
-          <ShowRecipes
-            key={collection?._id}
-            headerData={{
-              heading: name,
-              image: (
-                <FontAwesomeIcon
-                  icon={name === "Recent Recipes" ? faClock : faStar}
-                  color="#fe5d1f"
-                  size="2x"
-                />
-              ),
-              allUrl: `/collection/recipeCollection/${slug}`,
-            }}
-            loading={false}
-            recipes={recipes}
-            setOpenCollectionModal={setOpenCollectionModal}
-            setOpenShareModal={setOpenShareModal}
-            setShareRecipeData={setShareRecipeData}
-            updateDataFunc={(recipeId, updateObj) =>
-              updateContainerData(_id, recipeId, updateObj)
-            }
-          />
-        );
-      })}
-      <ShowLastModifiedCollection
-        open={openCollectionModal}
-        setOpen={setOpenCollectionModal}
-        shouldCloseOnOverlayClick={true}
-        lastModifiedCollectionName={lastModifiedCollection?.name}
-        openCollectionPanel={handleOpenCollectionTray}
-      />
-      <ShareRecipe
-        id={shareRecipeData?.id}
-        versionId={shareRecipeData.versionId}
-        turnedOnVersions={shareRecipeData.turnedOnVersions}
-        title={shareRecipeData?.name}
-        image={shareRecipeData?.image}
-        show={openShareModal}
-        setShow={setOpenShareModal}
-        type="recipe"
-        heading="Share Recipe"
-      />
-    </Layout>
-  );
-};
-
-const Layout = ({ children }) => {
-  const { dbUser } = useAppSelector((state) => state?.user);
-  const user = useUser();
-  const router = useRouter();
-  return (
-    <AContainer
-      headerIcon={
-        <FontAwesomeIcon
-          icon={faBookmark}
-          color="#fe5d1f"
-          fontSize={20}
-          style={{ marginRight: "5px" }}
-        />
-      }
-      headerTitle="Recipe collection"
-      showCollectionTray={{ show: true, showTagByDefault: true }}
-      showCommentsTray={{
-        show: true,
-        showPanel: "right",
-        showTagByDefault: false,
-      }}
-      showRecipeFilterTray={{
-        show: true,
-        showPanel: "left",
-        showTagByDefault: false,
-      }}
-    >
+    <React.Fragment>
+      <RecipeCommentsTray showPanle="right" showTagByDefaut={false} />
+      <VersionTray showPanle="right" showTagByDefaut={false} />
+      <RecipeCollectionAndThemeTray showPanle="left" showTagByDefaut={false} />
       <div className={styles.myCollectionsContainer}>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <CommonSearchBar
-          // input={input}
-          // setInput={setInput}
-          // isSearchTag={false}
-          // openPanel={toggleFilterPanel}
-          // isOpenPanel={openFilterTray}
-          />
-          <div
-            style={{ marginLeft: "40px" }}
-            // className={styles.buttonContainer}
-          >
-            <Tooltip content="Compare recipe" direction="bottom">
-              <RecipeDiscoverButton
-                icon={
-                  dbUser?.compareLength
-                    ? "/images/compare-fill-icon.svg"
-                    : "/icons/eclipse.svg"
-                }
-                text={`Compare(${
-                  dbUser?.compareLength ? dbUser?.compareLength : 0
-                })`}
-                disable={dbUser?.compareLength ? false : true}
-                style={{
-                  backgroundColor: dbUser?.compareLength ? "#fff" : "#ececec",
-                }}
-                handleClick={() => router.push(`/recipe/compare`)}
-              />
-            </Tooltip>
-          </div>
-        </div>
-
-        {/* {allFilters?.length ? (
-          <SearchtagsComponent allFilters={allFilters} />
-        ) : null} */}
-
-        <WikiBanner />
-        <div className={styles.contentContainer}>{children}</div>
+        {data?.getAllCollectionsWithRecipes?.map((collection) => {
+          const {
+            _id,
+            canContribute,
+            canShareWithOther,
+            description,
+            image,
+            isShared,
+            name,
+            personalizedName,
+            recipes,
+            sharedBy,
+            slug,
+          } = collection;
+          return (
+            <ShowRecipes
+              key={collection?._id}
+              headerData={{
+                heading: name,
+                image: (
+                  <FontAwesomeIcon
+                    icon={name === "Recent Recipes" ? faClock : faStar}
+                    color="#fe5d1f"
+                    size="2x"
+                  />
+                ),
+                allUrl: `/collection/recipeCollection/${slug}`,
+              }}
+              loading={false}
+              recipes={recipes}
+              setOpenCollectionModal={setOpenCollectionModal}
+              setOpenShareModal={setOpenShareModal}
+              setShareRecipeData={setShareRecipeData}
+              updateDataFunc={(recipeId, updateObj) =>
+                updateContainerData(_id, recipeId, updateObj)
+              }
+            />
+          );
+        })}
+        <ShowLastModifiedCollection
+          open={openCollectionModal}
+          setOpen={setOpenCollectionModal}
+          shouldCloseOnOverlayClick={true}
+          lastModifiedCollectionName={lastModifiedCollection?.name}
+          openCollectionPanel={handleOpenCollectionTray}
+        />
+        <ShareRecipe
+          id={shareRecipeData?.id}
+          versionId={shareRecipeData.versionId}
+          turnedOnVersions={shareRecipeData.turnedOnVersions}
+          title={shareRecipeData?.name}
+          image={shareRecipeData?.image}
+          show={openShareModal}
+          setShow={setOpenShareModal}
+          type="recipe"
+          heading="Share Recipe"
+        />
       </div>
-    </AContainer>
+    </React.Fragment>
   );
 };
 

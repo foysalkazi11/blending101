@@ -201,10 +201,13 @@ const RecipeDiscovery = () => {
 
   return (
     <React.Fragment>
-      <Filtertray showPanle="left" showTagByDefaut={true} />
+      <Filtertray showPanle="left" showTagByDefaut={false} />
       <RecipeCommentsTray showPanle="right" showTagByDefaut={false} />
       <NotificationTray showPanle="right" showTagByDefaut={false} />
-      <RecipeCollectionAndThemeTray showPanle="left" showTagByDefaut={false} />
+      <RecipeCollectionAndThemeTray
+        showPanle="left"
+        showTagByDefaut={openFilterTray ? false : true}
+      />
       <div className={styles.main__div}>
         <div className={openFilterTray ? styles.move : styles.back}>
           <DiscoveryPageSearchBar

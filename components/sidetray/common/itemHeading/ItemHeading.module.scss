@@ -11,8 +11,10 @@
       height: 45px;
       border-radius: 8px;
       overflow: hidden;
-      object-fit: cover;
       flex-shrink: 0;
+      img {
+        object-fit: cover;
+      }
     }
     .title {
       font-size: 16px;
