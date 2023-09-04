@@ -31,8 +31,9 @@ const DiscoveryPageSearchBar = ({
         input={input}
         handleOnChange={handleOnChange}
         handleSubmitFunc={handleSubmit}
-        openPanel={toggleFilterPanel}
-        isOpenPanel={openFilterTray}
+        openFilterPanel={toggleFilterPanel}
+        isFilterPanelOpen={openFilterTray}
+        showFilterIcon={true}
       />
       <div
         style={{ marginLeft: "40px" }}

@@ -19,12 +19,13 @@ interface SearchBarProps {
   setInput?: Dispatch<SetStateAction<string>>;
   //handleCleanSearch?: () => void;
   handleSearchTagCleanFunc?: () => void;
-  openPanel?: () => void;
+  openFilterPanel?: () => void;
   handleSubmitFunc?: () => void;
   isSearchTag?: boolean;
-  isOpenPanel?: boolean;
+  isFilterPanelOpen?: boolean;
   handleOnChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   styles?: CSSProperties;
+  showFilterIcon?: boolean;
 }
 
 interface CompareButtonProps {
@@ -40,11 +41,12 @@ const CommonSearchBar = ({
   setInput = () => {},
   handleSubmitFunc = () => {},
   handleSearchTagCleanFunc = () => {},
-  openPanel = () => {},
-  isOpenPanel = false,
+  openFilterPanel = () => {},
+  isFilterPanelOpen = false,
   isSearchTag = false,
   handleOnChange = () => {},
   styles = {},
+  showFilterIcon = false,
 }: SearchBarProps) => {
   const [isInputFocus, setIsInputFocus] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
@@ -78,19 +80,22 @@ const CommonSearchBar = ({
 
   return (
     <div className={classes.inputContainer} ref={inputRef} style={styles}>
-      <div
-        className={classes.filterIconContainer}
-        // style={isOpenPanel ? { marginRight: "10px", paddingRight: "20px" } : {}}
-      >
-        <FiFilter
-          className={`${classes.filterIcon} ${
-            isOpenPanel
-              ? classes.filterIconNotVisible
-              : classes.filterIconVisible
-          } ${isOpenPanel ? classes.active : ""}`}
-          onClick={openPanel}
-        />
-      </div>
+      {showFilterIcon && (
+        <div
+          className={classes.filterIconContainer}
+          // style={isOpenPanel ? { marginRight: "10px", paddingRight: "20px" } : {}}
+        >
+          <FiFilter
+            className={`${classes.filterIcon} ${
+              isFilterPanelOpen
+                ? classes.filterIconNotVisible
+                : classes.filterIconVisible
+            } ${isFilterPanelOpen ? classes.active : ""}`}
+            onClick={openFilterPanel}
+          />
+        </div>
+      )}
+
       <div className={classes.inputBox}>
         {isInputFocus ? null : isMicOn ? (
           <BsSoundwave className={classes.waveIcon} />

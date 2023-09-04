@@ -36,9 +36,10 @@ const WikiSearchBar = ({
         setInput={setInput}
         handleSubmitFunc={handleSubmit}
         handleSearchTagCleanFunc={handleSearchTagClean}
-        openPanel={toggleFilterPanel}
-        isOpenPanel={openTray}
+        openFilterPanel={toggleFilterPanel}
+        isFilterPanelOpen={openTray}
         isSearchTag={false}
+        showFilterIcon={true}
       />
 
       <div

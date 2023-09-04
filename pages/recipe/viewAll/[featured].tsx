@@ -1,8 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Icon from "../../../component/atoms/Icon/Icon.component";
-import AContainer from "../../../containers/A.container";
-import useLocalStorage from "../../../customHooks/useLocalStorage";
 import useViewAll, {
   QUERY_DICTIONARY,
 } from "../../../hooks/modules/useViewAll";
