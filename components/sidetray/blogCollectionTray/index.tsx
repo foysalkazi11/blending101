@@ -30,7 +30,7 @@ interface BlogCollectionTrayProps {
   showTagByDefaut?: boolean;
   showPanle?: "left" | "right";
 }
-const PlanCollectionTray = ({
+const BlogCollectionTray = ({
   showPanle,
   showTagByDefaut,
 }: BlogCollectionTrayProps) => {
@@ -399,4 +399,4 @@ const PlanCollectionTray = ({
   );
 };
 
-export default PlanCollectionTray;
+export default BlogCollectionTray;

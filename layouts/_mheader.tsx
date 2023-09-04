@@ -95,7 +95,9 @@ const MHeader = () => {
               input={searchTerm}
               handleOnChange={(e) => setSearchTerm(e.target.value)}
               isSearchTag={false}
-              openPanel={() => dispatch(setIsPlanFilterOpen(!isPlanFilterOpen))}
+              openFilterPanel={() =>
+                dispatch(setIsPlanFilterOpen(!isPlanFilterOpen))
+              }
             />
             {allFilters?.length ? (
               <SearchtagsComponent
