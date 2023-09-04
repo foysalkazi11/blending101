@@ -21,8 +21,8 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/components/*": ["components/*"],
-      "@/*": ["modules/*"]
+      "@/*": ["modules/*"],
+      "@pages/*": ["styles/pages/*"]
     }
   },
   "include": [

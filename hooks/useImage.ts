@@ -2,7 +2,6 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useEffect, useState, useCallback, useRef } from "react";
 import imageCompression from "browser-image-compression";
-import S3_CONFIG from "../configs/s3";
 
 const useImage = (initState: any[]) => {
   const [images, setImages] = useState<(Image | File)[]>(initState);

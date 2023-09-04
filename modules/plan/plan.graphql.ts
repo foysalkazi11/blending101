@@ -643,15 +643,19 @@ export const FILTER_PLAN = gql`
 */
 
 export const GET_PLAN_INSIGHTS = gql`
-  query GetPlanInsights($recipes: [String!]!, $userId: String!) {
-    getPlannerInsights(recipeIds: $recipes, userId: $userId) {
+  query GetPlanInsights($recipes: [String!]!, $userId: String!, $days: Float!) {
+    getPlannerInsights(
+      recipeIds: $recipes
+      userId: $userId
+      numberOfDays: $days
+    ) {
       topIngredients {
         ...TopIngredients
       }
       recipeCategoriesPercentage {
         ...CategoryPercentage
       }
-      macroInfo {
+      macroMakeup {
         ...MacroMakeup
       }
     }
