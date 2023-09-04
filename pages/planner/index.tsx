@@ -45,6 +45,7 @@ import {
   HideOnDesktop,
   HideOnMobile,
 } from "../../component/molecules/Responsive/Responsive.component";
+import { faPlusCircle } from "@fortawesome/pro-regular-svg-icons";
 
 const normalizeQueryParams = (queryParams) => {
   let queryParamObj = {} as AllFilterType;
@@ -174,7 +175,20 @@ const PlanDiscovery = () => {
               }
               showFilterIcon={true}
             />
-            <MyPlanButton router={router} />
+            <button
+              className={styles.discovery__myplan}
+              onClick={() => router.push("/planner/plan/add-plan")}
+            >
+              <Icon fontName={faPlusCircle} className="mr-20" size="2rem" />
+              Add Plan
+            </button>
+            <button
+              className={styles.discovery__myplan}
+              onClick={() => router.push("/planner/plan/")}
+            >
+              <Icon fontName={faUserCircle} className="mr-20" size="2rem" />
+              My Plans
+            </button>
           </div>
 
           {allFilters?.length ? null : <AppdownLoadCard />}

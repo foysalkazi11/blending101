@@ -339,11 +339,10 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
             disabled={portion === null}
             placeholder="Quantity"
             name="recipeTitle"
-            accept="number"
             autoComplete="off"
             value={quantity}
             onChange={(e) => {
-              if (!isNaN(+e.target.value)) setQuantity(+e.target.value);
+              if (!isNaN(+e.target.value)) setQuantity(e.target.value);
             }}
             onKeyDown={saveOnEnterPress}
           />

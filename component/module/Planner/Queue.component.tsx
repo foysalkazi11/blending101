@@ -1,10 +1,8 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
 import { faPlus } from "@fortawesome/pro-solid-svg-icons";
 import { faCalendarAlt, faTelescope } from "@fortawesome/pro-light-svg-icons";
 import { faCalendarDay } from "@fortawesome/pro-regular-svg-icons";
 
-import Pagination from "../../molecules/Pagination/ServerPagination.component";
 import Combobox from "../../organisms/Forms/Combobox.component";
 import Searchbox from "../../molecules/Searchbox/Searchbox.component";
 import ToggleCard from "../../../theme/toggleCard/toggleCard.component";

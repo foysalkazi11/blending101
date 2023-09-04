@@ -18,7 +18,12 @@
       }
     ],
     "jsx": "preserve",
-    "incremental": true
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["modules/*"],
+      "@pages/*": ["styles/pages/*"]
+    }
   },
   "include": [
     "next-env.d.ts",

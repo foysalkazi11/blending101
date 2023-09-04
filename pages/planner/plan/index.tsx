@@ -13,7 +13,7 @@ import { faSearch, faTimes } from "@fortawesome/pro-regular-svg-icons";
 import RXPanel from "../../../component/templates/Panel/RXFacts/RXPanel.component";
 import IngredientPanel from "../../../component/templates/Panel/Ingredients/IngredientPanel.component";
 import PlannerQueue from "../../../component/module/Planner/Queue.component";
-import PlanList from "../../../component/module/Planner/Plan/index.component";
+import PlanList from "../../../modules/plan/partials/Plan/index.component";
 import AContainer from "../../../containers/A.container";
 import IconHeading from "../../../theme/iconHeading/iconHeading.component";
 import Insights from "../../../component/module/Planner/Insights.component";
@@ -34,6 +34,7 @@ import Publish from "../../../helpers/Publish";
 import { usePlanByWeek, useWeek } from "../../../hooks/modules/Plan/useMyPlan";
 import axios from "axios";
 import { useUser } from "../../../context/AuthProvider";
+import { getPlanImage } from "../../../helpers/Plan";
 
 const MyPlan = () => {
   const router = useRouter();
@@ -62,7 +63,7 @@ const MyPlan = () => {
   const startDay = week.start.getDate();
   const endDay = week.end.getDate();
 
-  const handlePlanSave = (data) => {
+  const handlePlanSave = async (data) => {
     if (!showForm) return setShowForm(true);
     const planData = [];
     const images = [];
@@ -74,26 +75,19 @@ const MyPlan = () => {
       });
       planData.push({ day: index + 1, recipes });
     });
-    axios
-      .post(
-        "https://om7h45qezg.execute-api.us-east-1.amazonaws.com/prod/file-processing/images/merge",
-        { images },
-      )
-      .then((res) => {
-        createPlan({
-          variables: {
-            data: {
-              memberId,
-              ...data,
-              planData,
-              image: { url: res.data?.data?.image, hash: "" },
-            },
-          },
-        }).then(() => {
-          setShowForm(false);
-          router.push("/planner");
-        });
-      });
+    const image = await getPlanImage(images);
+    await createPlan({
+      variables: {
+        data: {
+          memberId,
+          ...data,
+          planData,
+          image,
+        },
+      },
+    });
+    setShowForm(false);
+    router.push("/planner");
   };
 
   return (
