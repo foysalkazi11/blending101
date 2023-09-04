@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useRef } from "react";
-import AContainer from "../../../containers/A.container";
 import GET_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/query/getWikiCompareList";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import SkeletonComparePage from "../../../theme/skeletons/skeletonComparePage/SkeletonComparePage";
@@ -22,6 +21,7 @@ import { setDbUser } from "../../../redux/slices/userSlice";
 import { useRouter } from "next/router";
 import EMPTY_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/mutation/emptyWikiCompareList";
 import ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/mutation/addOrRemoveToWikiCompareList";
+import WikiCommentsTray from "../../sidetray/wikiCommentsTray";
 
 const compareRecipeResponsiveSettings = {
   ...compareRecipeResponsiveSetting,
@@ -165,19 +165,8 @@ const WikiCompare = () => {
   }, [wikiCompareData]);
 
   return (
-    <AContainer
-      headerIcon={"/icons/books.svg"}
-      headerTitle="Compare Ingredient"
-      showWikiCommentsTray={{
-        show: true,
-        showPanel: "right",
-        showTagByDefault: false,
-      }}
-      headTagInfo={{
-        title: "Compare Ingredient",
-        description: "compare Ingredient",
-      }}
-    >
+    <React.Fragment>
+      <WikiCommentsTray showPanle="left" showTagByDefaut={false} />
       <div className={s.wikiCompareContainer}>
         {wikiCompareDataLoading ? (
           <SkeletonComparePage />
@@ -236,7 +225,7 @@ const WikiCompare = () => {
           </Slider>
         </div>
       </div>
-    </AContainer>
+    </React.Fragment>
   );
 };
 

@@ -1,6 +1,5 @@
 import { useQuery } from "@apollo/client";
-import React, { FC, useState } from "react";
-import AContainer from "../../../containers/A.container";
+import React, { useState } from "react";
 import GET_ALL_GENERAL_BLOG_FOR_CLIENT from "../../../gqlLib/blog/query/getAllGeneralBlogForClient";
 import BlogCard from "./blogCard";
 import SkeletonCollectionRecipe from "../../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollectionRecipe";
@@ -13,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import ShowLastModifiedCollection from "../../showLastModifiedCollection/ShowLastModifiedCollection";
 import { setIsOpenBlogCollectionTray } from "../../../redux/slices/blogSlice";
 import { useUser } from "../../../context/AuthProvider";
+import BlogCollectionTray from "../../sidetray/blogCollectionTray";
 
 const BlogList = () => {
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
@@ -29,80 +29,18 @@ const BlogList = () => {
       currentDate: new Date().toISOString().slice(0, 10),
       memberId: user.id,
     },
-    fetchPolicy: "cache-and-network",
   });
 
   if (generalBlogLoading) {
-    return (
-      <Layout
-        blogSearchInput={blogSearchInput}
-        setBlogSearchInput={setBlogSearchInput}
-      >
-        <SkeletonCollectionRecipe style={{ marginTop: "20px" }} />;
-      </Layout>
-    );
+    return <SkeletonCollectionRecipe style={{ margin: "2rem" }} />;
   }
   if (generalBlogError) {
-    return (
-      <Layout
-        blogSearchInput={blogSearchInput}
-        setBlogSearchInput={setBlogSearchInput}
-      >
-        <ErrorPage />;
-      </Layout>
-    );
+    return <ErrorPage />;
   }
 
   return (
-    <Layout
-      blogSearchInput={blogSearchInput}
-      setBlogSearchInput={setBlogSearchInput}
-    >
-      <div className={styles.blogCardContainer}>
-        {generalBlogData?.getAllGeneralBlogForClient?.map(
-          (blog: BlogListType) => {
-            return (
-              <BlogCard
-                key={blog?._id}
-                blogData={blog}
-                setOpenLastModifiedCollectionModal={setOpenCollectionModal}
-              />
-            );
-          },
-        )}
-      </div>
-      <ShowLastModifiedCollection
-        open={openCollectionModal}
-        setOpen={setOpenCollectionModal}
-        shouldCloseOnOverlayClick={true}
-        lastModifiedCollectionName={lastModifiedBlogCollection?.name}
-        openCollectionPanel={() => {
-          dispatch(setIsOpenBlogCollectionTray(true));
-          setOpenCollectionModal(false);
-        }}
-      />
-    </Layout>
-  );
-};
-
-const Layout: FC<{
-  blogSearchInput?: string;
-  setBlogSearchInput?: (agr: string) => void;
-}> = ({ children, blogSearchInput, setBlogSearchInput }) => {
-  return (
-    <AContainer
-      headerIcon="/icons/book_light.svg"
-      headerTitle="Blog Discovery"
-      showBlogCollectionTray={{
-        show: true,
-        showPanel: "left",
-        showTagByDefault: true,
-      }}
-      headTagInfo={{
-        title: "Blog",
-        description: "blog",
-      }}
-    >
+    <>
+      <BlogCollectionTray showPanle="left" showTagByDefaut={true} />
       <div className={styles.blogPageLayout}>
         <CommonSearchBar
           input={blogSearchInput}
@@ -112,9 +50,31 @@ const Layout: FC<{
         />
 
         <WikiBanner />
-        {children}
+        <div className={styles.blogCardContainer}>
+          {generalBlogData?.getAllGeneralBlogForClient?.map(
+            (blog: BlogListType) => {
+              return (
+                <BlogCard
+                  key={blog?._id}
+                  blogData={blog}
+                  setOpenLastModifiedCollectionModal={setOpenCollectionModal}
+                />
+              );
+            },
+          )}
+        </div>
+        <ShowLastModifiedCollection
+          open={openCollectionModal}
+          setOpen={setOpenCollectionModal}
+          shouldCloseOnOverlayClick={true}
+          lastModifiedCollectionName={lastModifiedBlogCollection?.name}
+          openCollectionPanel={() => {
+            dispatch(setIsOpenBlogCollectionTray(true));
+            setOpenCollectionModal(false);
+          }}
+        />
       </div>
-    </AContainer>
+    </>
   );
 };
 

@@ -1,11 +1,9 @@
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import React, { FC, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import AContainer from "../../../../containers/A.container";
 import GET_A_GENERAL_BLOG_BY_SLUG from "../../../../gqlLib/blog/query/getAGeneralBlogBySlug";
 import GET_ALL_GENERAL_BLOG_FOR_CLIENT from "../../../../gqlLib/blog/query/getAllGeneralBlogForClient";
-import { useAppSelector } from "../../../../redux/hooks";
 import { updateSidebarActiveMenuName } from "../../../../redux/slices/utilitySlice";
 import SkeletonBlogDetails from "../../../../theme/skeletons/skeletonBlogDetails";
 import ErrorPage from "../../404Page";
@@ -13,6 +11,7 @@ import styles from "./BlogDetails.module.scss";
 import BlogDetailsCenter from "./BlogDetailsCenter";
 import RelatedBlog from "./RelatedBlog";
 import { useUser } from "../../../../context/AuthProvider";
+import BlogCommentsTray from "../../../sidetray/blogCommentsTray";
 
 const BlogDetails = () => {
   const user = useUser();
@@ -44,21 +43,14 @@ const BlogDetails = () => {
   }, []);
 
   if (blogLoading) {
-    return (
-      <Layout>
-        <SkeletonBlogDetails />
-      </Layout>
-    );
+    return <SkeletonBlogDetails />;
   }
   if (blogError) {
-    return (
-      <Layout>
-        <ErrorPage />
-      </Layout>
-    );
+    return <ErrorPage />;
   }
   return (
-    <Layout>
+    <React.Fragment>
+      <BlogCommentsTray showPanle="left" showTagByDefaut={false} />
       <div className={styles.blogDetailsContainer}>
         <div className={styles.left}>
           <RelatedBlog
@@ -71,28 +63,7 @@ const BlogDetails = () => {
           <BlogDetailsCenter blogDetails={blogData?.getAgeneralBlogBySlug} />
         </div>
       </div>
-    </Layout>
-  );
-};
-
-const Layout: FC = ({ children }) => {
-  return (
-    <AContainer
-      headerIcon="/icons/book_light.svg"
-      headerTitle="Blog details"
-      logo={true}
-      showBlogCommentsTray={{
-        show: true,
-        showPanel: "right",
-        showTagByDefault: false,
-      }}
-      headTagInfo={{
-        title: "Blog details",
-        description: "blog details",
-      }}
-    >
-      {children}
-    </AContainer>
+    </React.Fragment>
   );
 };
 
