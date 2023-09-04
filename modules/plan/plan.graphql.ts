@@ -83,6 +83,34 @@ const PLAN_FIELDS = gql`
   }
 `;
 
+const INSIGHTS_FIELDS = gql`
+  fragment TopIngredients on TopIngredientData {
+    icon: featuredImage
+    label: name
+    quantity: count
+  }
+  fragment MacroMakeup on MacroMakeup {
+    carbs
+    protein
+    fats
+  }
+  fragment CategoryPercentage on CategoryPercentage {
+    name
+    percentage
+  }
+`;
+
+const PLAN_COLLECTION_FIELDS = gql`
+  fragment PlanCollection on PlanCollection {
+    _id
+    plans
+    collectionDataCount
+    image
+    name
+    slug
+  }
+`;
+
 export const GET_ALL_PLANNER_RECIPES = gql`
   query GetRecipesForPlanner(
     $searchTerm: String!
@@ -159,18 +187,14 @@ export const GET_PLANNER_BY_WEEK = gql`
         formatedDate
       }
       topIngredients {
-        icon: featuredImage
-        label: name
-        quantity: count
+        ...TopIngredients
       }
       recipeCategoriesPercentage {
-        _id
-        name
-        count
-        percentage
+        ...CategoryPercentage
       }
     }
   }
+  ${INSIGHTS_FIELDS}
 `;
 
 export const ADD_RECIPE_TO_PLANNER = gql`
@@ -369,21 +393,17 @@ export const GET_PLAN = gql`
         }
       }
       macroMakeup {
-        carbs
-        protein
-        fats
+        ...MacroMakeup
       }
       topIngredients {
-        icon: featuredImage
-        label: name
-        quantity: count
+        ...TopIngredients
       }
       recipeCategoriesPercentage {
-        name
-        percentage
+        ...CategoryPercentage
       }
     }
   }
+  ${INSIGHTS_FIELDS}
 `;
 
 // PLANNER COMMENTS
@@ -438,7 +458,12 @@ export const REMOVE_PLAN_COMMENT = gql`
   }
 `;
 
-// PLAN RATING
+/*
+  <=========
+    <========= PLAN RATING =========>
+  <=========
+*/
+
 export const UPDATE_PLAN_RATING = gql`
   mutation UpdatePlanRating($data: CreateNewPlanRating!) {
     updatePlanRating(data: $data) {
@@ -467,7 +492,12 @@ export const ADD_TO_MY_PLAN = gql`
   }
 `;
 
-// PLAN SHARE
+/*
+  <=========
+    <========= PLAN SHARE =========>
+  <=========
+*/
+
 export const SHARE_PLAN = gql`
   mutation SharePlan($userId: String!, $planId: String!) {
     sharePlan(memberId: $userId, planId: $planId)
@@ -500,6 +530,7 @@ export const PLAN_SHARE_INFO = gql`
     }
   }
 `;
+
 // PLAN COLLECTION
 export const ADD_TO_LAST_MODIFIED_PLAN_COLLECTION = gql`
   mutation AddToLastModifiedPlanCollection(
@@ -517,53 +548,40 @@ export const GET_ALL_PLAN_COLLECTION = gql`
   query GetAllPlanCollection($memberId: String!) {
     getAllPlanCollection(memberId: $memberId) {
       planCollections {
-        plans
-        _id
-        collectionDataCount
-        image
-        name
-        slug
+        ...PlanCollection
       }
     }
   }
+  ${PLAN_COLLECTION_FIELDS}
 `;
+
 export const ADD_NEW_PLAN_COLLECTION = gql`
   mutation AddNewPlanCollection($data: CreateNewPlanCollection!) {
     addNewPlanCollection(data: $data) {
-      plans
-      _id
-      collectionDataCount
-      image
-      name
-      slug
+      ...PlanCollection
     }
   }
+  ${PLAN_COLLECTION_FIELDS}
 `;
+
 export const EDIT_PLAN_COLLECTION = gql`
   mutation EditAPlanCollection($data: EditPlanCollection!) {
     editAPlanCollection(data: $data) {
-      plans
-      _id
-      collectionDataCount
-      image
-      name
-      slug
+      ...PlanCollection
     }
   }
+  ${PLAN_COLLECTION_FIELDS}
 `;
+
 export const DELETE_PLAN_COLLECTION = gql`
   mutation DeletePlanCollection($memberId: String!, $collectionId: String!) {
     deletePlanCollection(memberId: $memberId, collectionId: $collectionId) {
       planCollections {
-        plans
-        _id
-        collectionDataCount
-        image
-        name
-        slug
+        ...PlanCollection
       }
     }
   }
+  ${PLAN_COLLECTION_FIELDS}
 `;
 
 export const ADD_OR_REMOVE_PLAN_COLLECTION = gql`
@@ -578,15 +596,11 @@ export const ADD_OR_REMOVE_PLAN_COLLECTION = gql`
       collectionIds: $collectionIds
     ) {
       planCollections {
-        plans
-        _id
-        collectionDataCount
-        image
-        name
-        slug
+        ...PlanCollection
       }
     }
   }
+  ${PLAN_COLLECTION_FIELDS}
 `;
 
 export const GET_ALL_PLANS_FOR_A_COLLECTION = gql`
@@ -620,4 +634,31 @@ export const FILTER_PLAN = gql`
     }
   }
   ${PLAN_FIELDS}
+`;
+
+/*
+  <=========
+    <========= ADD PLAN =========>
+  <=========
+*/
+
+export const GET_PLAN_INSIGHTS = gql`
+  query GetPlanInsights($recipes: [String!]!, $userId: String!, $days: Float!) {
+    getPlannerInsights(
+      recipeIds: $recipes
+      userId: $userId
+      numberOfDays: $days
+    ) {
+      topIngredients {
+        ...TopIngredients
+      }
+      recipeCategoriesPercentage {
+        ...CategoryPercentage
+      }
+      macroMakeup {
+        ...MacroMakeup
+      }
+    }
+  }
+  ${INSIGHTS_FIELDS}
 `;

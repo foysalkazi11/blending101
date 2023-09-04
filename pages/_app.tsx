@@ -2,6 +2,7 @@ import "../styles/globals.scss";
 
 import dynamic from "next/dynamic";
 import { AppProps } from "next/app";
+//@ts-ignore
 import type { NextPage } from "next";
 
 import { Provider } from "react-redux";

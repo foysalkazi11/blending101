@@ -1,6 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import Head from "next/head";
+//@ts-ignore
 import { GetServerSideProps } from "next";
 
 import React, { Fragment, useMemo } from "react";

@@ -5,14 +5,14 @@ import {
   faBlender,
 } from "@fortawesome/pro-light-svg-icons";
 
-import IconButton from "../../../atoms/Button/IconButton.component";
+import IconButton from "../../../../component/atoms/Button/IconButton.component";
 
 import { useAppDispatch } from "../../../../redux/hooks";
 import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
 
 import styles from "./PlanList.module.scss";
-import { Plan } from "../../../../modules/plan/plan.types";
-import { ProfileRecipe } from "../../../../modules/recipe/recipe.types";
+import { Plan } from "../../plan.types";
+import { ProfileRecipe } from "../../../recipe/recipe.types";
 import { setShowPanel } from "../../../../redux/slices/Ui.slice";
 
 interface PlanListProps {

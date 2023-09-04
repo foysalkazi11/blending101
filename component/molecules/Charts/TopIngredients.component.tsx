@@ -78,34 +78,34 @@ const renderCustomizedLabel = (props) => {
   return <image x={x - 40} y={y - 2} href={value} height="30" width="30" />;
 };
 
-const ingredients = [
-  {
-    icon: "https://freepngimg.com/thumb/orange/19-orange-png-image-download.png",
-    label: "Orange",
-    quantity: 22,
-  },
-  {
-    icon: "https://freepngimg.com/thumb/strawberry/1-strawberry-png-images.png",
-    label: "Strawberry",
-    quantity: 18,
-  },
-  {
-    icon: "https://freepngimg.com/thumb/apple/9-apple-png-image.png",
-    label: "Apple",
-    quantity: 15,
-  },
-  {
-    icon: "https://freepngimg.com/thumb/mango/1-2-mango-png.png",
-    label: "Mango",
-    quantity: 15,
-  },
-  {
-    icon: "https://freepngimg.com/thumb/pineapple/2-pineapple-png-image-download.png",
-    label: "Pineapple",
-    quantity: 15,
-  },
-];
+// const ingredients = [
+//   {
+//     icon: "https://freepngimg.com/thumb/orange/19-orange-png-image-download.png",
+//     label: "Orange",
+//     quantity: 22,
+//   },
+//   {
+//     icon: "https://freepngimg.com/thumb/strawberry/1-strawberry-png-images.png",
+//     label: "Strawberry",
+//     quantity: 18,
+//   },
+//   {
+//     icon: "https://freepngimg.com/thumb/apple/9-apple-png-image.png",
+//     label: "Apple",
+//     quantity: 15,
+//   },
+//   {
+//     icon: "https://freepngimg.com/thumb/mango/1-2-mango-png.png",
+//     label: "Mango",
+//     quantity: 15,
+//   },
+//   {
+//     icon: "https://freepngimg.com/thumb/pineapple/2-pineapple-png-image-download.png",
+//     label: "Pineapple",
+//     quantity: 15,
+//   },
+// ];
 
 TopIngredients.defaultProps = {
-  ingredients,
+  ingredients: [],
 };

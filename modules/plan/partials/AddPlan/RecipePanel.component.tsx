@@ -11,10 +11,10 @@ import {
 import IconHeading from "../../../../theme/iconHeading/iconHeading.component";
 import SkeletonElement from "../../../../theme/skeletons/SkeletonElement";
 import ToggleCard from "../../../../theme/toggleCard/toggleCard.component";
-import Icon from "../../../atoms/Icon/Icon.component";
-import RecipeCard from "../../../molecules/Card/RecipeCard.component";
-import Searchbox from "../../../molecules/Searchbox/Searchbox.component";
-import Combobox from "../../../organisms/Forms/Combobox.component";
+import Icon from "../../../../component/atoms/Icon/Icon.component";
+import RecipeCard from "../../../../component/molecules/Card/RecipeCard.component";
+import Searchbox from "../../../../component/molecules/Searchbox/Searchbox.component";
+import Combobox from "../../../../component/organisms/Forms/Combobox.component";
 
 import styles from "./RecipePanel.module.scss";
 
