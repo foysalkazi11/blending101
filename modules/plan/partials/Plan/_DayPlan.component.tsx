@@ -21,9 +21,9 @@ import CalendarTray from "../../../../theme/calendar/calendarTray.component";
 
 import { ADD_TO_GROCERY_LIST } from "../../../../graphql/Planner";
 import Publish from "../../../../helpers/Publish";
-import IconButton from "../../../atoms/Button/IconButton.component";
+import IconButton from "../../../../component/atoms/Button/IconButton.component";
 import { setShowPanel } from "../../../../redux/slices/Ui.slice";
-import Icon from "../../../atoms/Icon/Icon.component";
+import Icon from "../../../../component/atoms/Icon/Icon.component";
 
 import styles from "./_DayPlan.module.scss";
 import {

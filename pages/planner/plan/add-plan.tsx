@@ -4,7 +4,7 @@ import { faTimes } from "@fortawesome/pro-regular-svg-icons";
 import { useForm } from "react-hook-form";
 
 import RXPanel from "../../../component/templates/Panel/RXFacts/RXPanel.component";
-import Center from "../../../component/module/Planner/AddPlan/PlanList.component";
+import Center from "../../../modules/plan/partials/AddPlan/PlanList.component";
 import IconHeading from "../../../theme/iconHeading/iconHeading.component";
 import Insights from "../../../component/module/Planner/Insights.component";
 import Icon from "../../../component/atoms/Icon/Icon.component";
@@ -12,7 +12,7 @@ import IconButton from "component/atoms/Button/IconButton.component";
 import PlanForm, {
   defaultPlan,
 } from "../../../component/module/Planner/PlanForm.component";
-import LeftSection from "../../../component/module/Planner/AddPlan/RecipePanel.component";
+import LeftSection from "../../../modules/plan/partials/AddPlan/RecipePanel.component";
 
 import { Plan } from "../../../modules/plan/plan.types";
 

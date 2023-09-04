@@ -13,7 +13,7 @@ import { faSearch, faTimes } from "@fortawesome/pro-regular-svg-icons";
 import RXPanel from "../../../component/templates/Panel/RXFacts/RXPanel.component";
 import IngredientPanel from "../../../component/templates/Panel/Ingredients/IngredientPanel.component";
 import PlannerQueue from "../../../component/module/Planner/Queue.component";
-import PlanList from "../../../component/module/Planner/Plan/index.component";
+import PlanList from "../../../modules/plan/partials/Plan/index.component";
 import AContainer from "../../../containers/A.container";
 import IconHeading from "../../../theme/iconHeading/iconHeading.component";
 import Insights from "../../../component/module/Planner/Insights.component";
