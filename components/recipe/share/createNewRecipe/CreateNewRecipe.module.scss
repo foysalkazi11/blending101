@@ -190,7 +190,9 @@
     textarea {
       @extend %input;
       width: 100%;
-      resize: none;
+      color: #484848;
+      font-family: "Segoe UI", sans-serif;
+      resize: vertical;
     }
   }
 }

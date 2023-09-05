@@ -144,7 +144,6 @@ const Center_Elements = ({
             onChange={(e) =>
               updateEditRecipe(e?.target?.name, e?.target?.value)
             }
-            style={{ color: "#484848", resize: "vertical" }}
           />
 
           <ScoreTray giGl={giGl} />

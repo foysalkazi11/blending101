@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import useWindowSize from "../../../components/utility/useWindowSize";
 import SkeletonElement from "../SkeletonElement";
 import styles from "./SkeletonComparePage.module.scss";
-
-const SkeletonComparePage = () => {
+type SkeletonComparePageProps = React.ComponentPropsWithoutRef<"div">;
+const SkeletonComparePage = ({
+  className,
+  ...rest
+}: SkeletonComparePageProps) => {
   const [slideSize, setSlideSize] = useState(4);
   const [comparedRecipe, setComparedRecipe] = useState(10);
   const { height, width } = useWindowSize();
@@ -27,7 +30,7 @@ const SkeletonComparePage = () => {
   }, [width]);
   return (
     <>
-      <div className={styles.sectionContainer}>
+      <div className={`${styles.sectionContainer} ${className}`} {...rest}>
         <SkeletonElement type="title" style={{ marginBottom: "20px" }} />
         <div className={styles.contentCompare}>
           {[...Array(comparedRecipe)]?.map((item, index) => {
