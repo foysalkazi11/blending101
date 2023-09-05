@@ -1,6 +1,6 @@
 import { useUser } from "../../context/AuthProvider";
 import client from "../../gqlLib/client";
-import { GET_ALL_PLANS } from "../../graphql/Planner";
+import { GET_ALL_PLANS } from "../../modules/plan/plan.graphql";
 import { useAppSelector } from "../../redux/hooks";
 
 type Props = (id: string, obj: object, limit?: number, page?: number) => void;

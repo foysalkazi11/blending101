@@ -8,7 +8,7 @@ import { useQuery } from "@apollo/client";
 import ShowRecipeContainer from "../../../components/showRecipeContainer";
 import CommonSearchBar from "../../../components/searchBar/CommonSearchBar";
 import WikiBanner from "../../../components/wiki/wikiBanner/WikiBanner";
-import { GET_ALL_PLANS_FOR_A_COLLECTION } from "../../../graphql/Planner";
+import { GET_ALL_PLANS_FOR_A_COLLECTION } from "../../../modules/plan/plan.graphql";
 import slugToTitle from "../../../helperFunc/string/slugToTittle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faStar } from "@fortawesome/pro-regular-svg-icons";

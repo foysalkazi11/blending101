@@ -3,14 +3,13 @@ import {
   ADD_RECIPE_TO_PLANNER,
   ADD_TO_MY_PLAN,
   DELETE_RECIPE_FROM_PLANNER,
-  GET_PLANNER_BY_WEEK,
   GET_QUEUED_PLANNER_RECIPES,
   MOVE_PLANNER,
-} from "../../../graphql/Planner";
+  GET_PLANNER_BY_WEEK,
+} from "@/plan/plan.graphql";
 import { endOfWeek, format, startOfWeek } from "date-fns";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useAppSelector } from "../../../redux/hooks";
 import Publish from "../../../helpers/Publish";
 import { useUser } from "../../../context/AuthProvider";
 
@@ -79,8 +78,8 @@ const usePlanByWeek = (props: IPlanByWeekHook) => {
           name: recipe?.recipeId?.name,
           image: recipe?.recipeId?.image,
           category: recipe?.recipeId?.recipeBlendCategory?.name,
-          rxScore: 786,
-          calorie: 250,
+          rxScore: Math.round(recipe?.defaultVersion?.gigl?.rxScore) || 0,
+          calorie: Math.round(recipe?.defaultVersion?.calorie?.value) || 0,
           ingredients: recipe?.defaultVersion?.ingredients,
         })),
       })),

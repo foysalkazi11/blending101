@@ -1,4 +1,10 @@
-export const authRoutes = Object.freeze({
-  login: `/auth/login`,
+const routes = Object.freeze({
+  login: "/auth/login",
   signup: "/auth/signup",
+  plan: {
+    myPlan: "/planner/plan",
+    details: "",
+  },
 });
+
+export default routes;

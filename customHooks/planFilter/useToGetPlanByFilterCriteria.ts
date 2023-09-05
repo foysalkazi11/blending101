@@ -1,6 +1,6 @@
 import { useLazyQuery } from "@apollo/client";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { FILTER_PLAN } from "../../graphql/Planner";
+import { FILTER_PLAN } from "../../modules/plan/plan.graphql";
 import { AllFilterType } from "../../type/filterType";
 import notification from "../../components/utility/reactToastifyNotification";
 import { useUser } from "../../context/AuthProvider";

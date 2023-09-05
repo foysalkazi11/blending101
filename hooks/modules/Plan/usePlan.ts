@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import router from "next/router";
 import { useMemo } from "react";
-import { GET_PLAN } from "../../../graphql/Planner";
+import { GET_PLAN } from "../../../modules/plan/plan.graphql";
 import { useAppSelector } from "../../../redux/hooks";
 import { useUser } from "../../../context/AuthProvider";
 

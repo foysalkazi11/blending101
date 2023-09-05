@@ -20,6 +20,7 @@ import styles from "./Ingredient.module.scss";
 import { NextImageWithFallback } from "../../../theme/imageWithFallback";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBasketShoppingSimple } from "@fortawesome/pro-light-svg-icons";
+import { decimalToMixedNumber } from "helpers/Number";
 
 interface IngredientPanelProps {
   ingredients: any;
@@ -44,6 +45,9 @@ const IngredientPanel = (props: IngredientPanelProps) => {
 
               if (!isIngredientStatusOk) {
                 const ingredientId = ingredient.ingredientId?._id || "";
+                const [fullNumber, fractionNumber] = decimalToMixedNumber(
+                  ingredient?.selectedPortion?.quantity,
+                );
                 const portions =
                   ingredient?.ingredientId?.portions || ingredient?.portions;
                 if (ingredientId !== editingId) {
@@ -68,7 +72,8 @@ const IngredientPanel = (props: IngredientPanelProps) => {
                           )}
                         </div>
                         <span>
-                          {ingredient?.selectedPortion?.quantity || 1}{" "}
+                          {fullNumber === 0 ? fractionNumber : fullNumber}
+                          {fullNumber !== 0 && <sup>{fractionNumber}</sup>}{" "}
                           {ingredient?.selectedPortion?.name}
                         </span>
                         <span>{ingredient.ingredientId.ingredientName}</span>
@@ -284,6 +289,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
       <IconButton fontName={faTimes} size="small" onClick={onClose} />
     </>
   );
+
   return (
     //@ts-ignore
     <FormProvider {...method}>
@@ -312,7 +318,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
                       `<b>${query}</b>`,
                     ),
                   }}
-                ></li>
+                />
               ))}
             </ul>
           )}
@@ -342,7 +348,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
             autoComplete="off"
             value={quantity}
             onChange={(e) => {
-              if (!isNaN(+e.target.value)) setQuantity(e.target.value);
+              setQuantity(e.target.value);
             }}
             onKeyDown={saveOnEnterPress}
           />

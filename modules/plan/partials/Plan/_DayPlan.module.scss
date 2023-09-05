@@ -16,7 +16,8 @@ $sharedBackgroundColor: white;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 10px 18px;
+    height: 70px;
+    width: 70px;
     cursor: pointer;
     &__day {
       @extend %sharedFlex;
@@ -50,7 +51,7 @@ $sharedBackgroundColor: white;
   position: relative;
   display: grid;
   grid-template-columns:
-    minmax(60px, 40%) minmax(60px, auto) minmax(60px, auto) minmax(60px, auto)
+    minmax(60px, 45%) minmax(60px, auto) minmax(60px, auto) minmax(60px, auto)
     minmax(80px, auto);
 
   &:hover {

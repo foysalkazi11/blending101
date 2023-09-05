@@ -7,7 +7,7 @@ import styles from "./IconButton.module.scss";
 
 interface IconButtonProps {
   variant?: "hover" | "fade" | "white" | "primary" | "secondary" | "disabled";
-  color?: "primary" | "secondary";
+  color?: "primary" | "secondary" | "white";
   colorCode?: string;
   size?: "small" | "medium" | "large";
   fontName?: IconDefinition;

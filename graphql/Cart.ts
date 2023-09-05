@@ -97,3 +97,18 @@ export const DELETE_CART_ITEM = gql`
     )
   }
 `;
+
+export const ADD_TO_GROCERY_BY_RECIPE = gql`
+  mutation AddToGroceryByRecipe($recipeId: String!, $memberId: String!) {
+    addToGrocery: addToGroceryFromPlanner(
+      recipeId: $recipeId
+      memberId: $memberId
+    )
+  }
+`;
+
+export const ADD_TO_GROCERY_BY_PLAN = gql`
+  mutation AddToGroceryByPlan($planId: String!, $memberId: String!) {
+    addToGrocery: addGroceryByPlanId(planId: $planId, memberId: $memberId)
+  }
+`;

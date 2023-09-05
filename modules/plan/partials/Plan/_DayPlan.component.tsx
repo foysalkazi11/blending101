@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useMutation } from "@apollo/client";
 import {
   faChartSimple,
   faClone,
@@ -10,7 +9,7 @@ import {
   faBlender,
 } from "@fortawesome/pro-regular-svg-icons";
 
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import { useAppDispatch } from "../../../../redux/hooks";
 import {
   IPlannerRecipe,
   setDayRecipe,
@@ -18,9 +17,6 @@ import {
 
 import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
 import CalendarTray from "../../../../theme/calendar/calendarTray.component";
-
-import { ADD_TO_GROCERY_LIST } from "../../../../graphql/Planner";
-import Publish from "../../../../helpers/Publish";
 import IconButton from "../../../../component/atoms/Button/IconButton.component";
 import { setShowPanel } from "../../../../redux/slices/Ui.slice";
 import Icon from "../../../../component/atoms/Icon/Icon.component";
@@ -31,7 +27,7 @@ import {
   useDeletePlanRecipe,
   useMovePlanRecipe,
 } from "../../../../hooks/modules/Plan/useMyPlan";
-import { useUser } from "../../../../context/AuthProvider";
+import { useRecipeToGrocery } from "@/recipe/hooks";
 
 interface PlanProps {
   plannerId?: string;
@@ -99,31 +95,18 @@ const PlanItem = (props: RecipeColorIndicatorInterface) => {
     ingredients,
   } = recipe;
   category = recipeBlendCategory?.name || category;
+
+  console.log(recipe, category);
+
   const [showMenu, setShowMenu] = useState(false);
   const [showCalender, setShowCalender] = useState<"move" | "copy" | "">("");
 
   const dispatch = useAppDispatch();
-  const userId = useUser().id;
-
-  const [addToGrocery, addState] = useMutation(ADD_TO_GROCERY_LIST, {
-    refetchQueries: ["GetCartData"],
-  });
+  const addToGrocery = useRecipeToGrocery();
 
   const style = { backgroundColor: RECIPE_CATEGORY_COLOR[category] };
 
   if (!recipeName) return null;
-
-  const addToGroceryList = async () => {
-    await Publish({
-      mutate: addToGrocery,
-      variables: {
-        recipeId: _id,
-        memberId: userId,
-      },
-      state: addState,
-      success: `Added Ingredients to the Grocery List`,
-    });
-  };
 
   return (
     <div className={styles.recipe}>
@@ -137,7 +120,7 @@ const PlanItem = (props: RecipeColorIndicatorInterface) => {
 
       <div className={styles.recipe__rxScore}>{rxScore}</div>
       <div className={styles.recipe__calories}>{calorie}</div>
-      <div className={styles.recipe__rxScore}>$8.99</div>
+      <div className={styles.recipe__rxScore}>$0</div>
       <div className={styles.recipe__tray}>
         <IconButton
           size="medium"
@@ -177,7 +160,7 @@ const PlanItem = (props: RecipeColorIndicatorInterface) => {
           variant="hover"
           fontName={faCartShopping}
           color="primary"
-          onClick={addToGroceryList}
+          onClick={() => addToGrocery(_id)}
         />
         <IconButton
           size="medium"

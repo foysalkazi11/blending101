@@ -16,12 +16,14 @@ import MacroMakeup, {
 interface InsightsProps {
   categories: any[];
   ingredients: any[];
+  score?: number;
+  calories?: number;
   macros?: IMacroData;
   height?: string;
 }
 
 const Insights = (props: InsightsProps) => {
-  const { categories, height, ingredients, macros } = props;
+  const { categories, height, score, calories, ingredients, macros } = props;
   return (
     <div className={styles.insights}>
       <IconHeading icon={faLightbulbOn} title="Plan Insights" />
@@ -31,15 +33,15 @@ const Insights = (props: InsightsProps) => {
       >
         <div className={`row ${styles.insights__summary}`}>
           <div className="col-4">
-            <h4>786</h4>
+            <h4>{Math.round(score) || 0}</h4>
             <span>RX Score</span>
           </div>
           <div className="col-4">
-            <h4>73</h4>
+            <h4>{Math.round(calories) || 0}</h4>
             <span>Calories</span>
           </div>
           <div className="col-4">
-            <h4>$4.56</h4>
+            <h4>$0</h4>
             <span>Cost</span>
           </div>
         </div>
