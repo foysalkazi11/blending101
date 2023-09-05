@@ -10,7 +10,7 @@ import {
   ADD_NEW_PLAN_COLLECTION,
   DELETE_PLAN_COLLECTION,
   ADD_OR_REMOVE_PLAN_COLLECTION,
-} from "../../../graphql/Planner";
+} from "../../../modules/plan/plan.graphql";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
   setIsActivePlanForCollection,

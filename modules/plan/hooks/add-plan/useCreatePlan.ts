@@ -1,3 +1,5 @@
+// THIS HOOK CAN BE USED FOR BOTH CREATE AND CLONING PLAN
+
 import { useMutation } from "@apollo/client";
 import { useCallback } from "react";
 import { useRouter } from "next/router";
@@ -8,12 +10,13 @@ import {
   GET_FEATURED_PLANS,
   GET_ALL_PLANS,
 } from "../../plan.graphql";
+import Plan from "@/plan/plan.types";
 
-const useCreatePlan = (planlist) => {
+const useCreatePlan = (planlist: Plan[]) => {
   const { id } = useUser();
   const router = useRouter();
 
-  const [createPlan, createState] = useMutation(CREATE_PLAN, {
+  const [createPlan] = useMutation(CREATE_PLAN, {
     refetchQueries: [GET_FEATURED_PLANS, GET_ALL_PLANS],
   });
 

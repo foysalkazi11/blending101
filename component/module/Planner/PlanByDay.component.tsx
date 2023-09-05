@@ -10,7 +10,6 @@ import {
 import IconButton from "../../atoms/Button/IconButton.component";
 
 import Publish from "../../../helpers/Publish";
-import { ADD_TO_GROCERY_LIST } from "../../../graphql/Planner";
 import { RECIPE_CATEGORY_COLOR } from "../../../data/Recipe";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
@@ -22,6 +21,7 @@ import { setShowPanel } from "../../../redux/slices/Ui.slice";
 import styles from "./PlanByDay.module.scss";
 import { useDrag, useDrop } from "react-dnd";
 import { useUser } from "../../../context/AuthProvider";
+import { useRecipeToGrocery } from "@/recipe/hooks";
 
 interface PlanListProps {
   data?: any[];
@@ -138,20 +138,17 @@ const PlanItem = (props: RecipeColorIndicatorInterface) => {
     _id,
     name: recipeName,
     category,
-    rxScore,
     recipeBlendCategory,
     defaultVersion,
   } = recipe;
 
   const calorie = Math.round(defaultVersion?.calorie?.value);
+  const rxScore = Math.round(defaultVersion?.gigl?.rxScore);
   const ingredients = recipe?.defaultVersion?.ingredients || [];
   category = recipeBlendCategory?.name || category;
-  const dispatch = useAppDispatch();
-  const userId = useUser().id;
 
-  const [addToGrocery, addState] = useMutation(ADD_TO_GROCERY_LIST, {
-    refetchQueries: ["GetCartData"],
-  });
+  const dispatch = useAppDispatch();
+  const addToGrocery = useRecipeToGrocery();
 
   const style = { backgroundColor: RECIPE_CATEGORY_COLOR[category] };
 
@@ -164,18 +161,6 @@ const PlanItem = (props: RecipeColorIndicatorInterface) => {
   });
 
   if (!recipeName) return null;
-
-  const addToGroceryList = async () => {
-    await Publish({
-      mutate: addToGrocery,
-      variables: {
-        recipeId: _id,
-        memberId: userId,
-      },
-      state: addState,
-      success: `Added Ingredients to the Grocery List`,
-    });
-  };
 
   return (
     <div
@@ -193,9 +178,9 @@ const PlanItem = (props: RecipeColorIndicatorInterface) => {
         />
         {recipeName}
       </div>
-      <div className={styles.recipe__rxScore}>{rxScore || 786}</div>
-      <div className={styles.recipe__calories}>{calorie || 54}</div>
-      <div className={styles.recipe__calories}>$6.78</div>
+      <div className={styles.recipe__rxScore}>{calorie || 0}</div>
+      <div className={styles.recipe__calories}>{rxScore || 0}</div>
+      <div className={styles.recipe__calories}>$0</div>
       <div className={styles.recipe__tray}>
         <IconButton
           size="medium"
@@ -239,7 +224,7 @@ const PlanItem = (props: RecipeColorIndicatorInterface) => {
             variant="hover"
             fontName={faCartShopping}
             color="primary"
-            onClick={addToGroceryList}
+            onClick={() => addToGrocery(_id)}
           />
         )}
         {onRemove && (

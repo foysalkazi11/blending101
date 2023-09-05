@@ -1,6 +1,6 @@
 import { useUser } from "../../context/AuthProvider";
 import client from "../../gqlLib/client";
-import { GET_PLAN } from "../../graphql/Planner";
+import { GET_PLAN } from "../../modules/plan/plan.graphql";
 
 type Props = (id: string, obj: object) => void;
 

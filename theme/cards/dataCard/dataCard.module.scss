@@ -5,6 +5,7 @@
 }
 
 .datacard {
+  position: relative;
   display: block;
   background-color: #fff;
   // margin: 3px;
@@ -364,4 +365,22 @@
 }
 .off {
   color: #c1c1c1;
+}
+
+.calender {
+  color: #fd5109;
+  cursor: pointer;
+
+  &__tray {
+    background-color: white;
+    min-height: 200px;
+    min-width: max-content;
+    border-radius: 5px;
+    display: flex;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+  }
 }

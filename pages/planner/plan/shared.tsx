@@ -11,7 +11,7 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { faArrowRightLong } from "@fortawesome/pro-regular-svg-icons";
 import Icon from "../../../component/atoms/Icon/Icon.component";
-import { PLAN_SHARE_INFO } from "../../../graphql/Planner";
+import { PLAN_SHARE_INFO } from "../../../modules/plan/plan.graphql";
 import styles from "../../../styles/pages/planner.module.scss";
 import HeadTagInfo from "../../../theme/headTagInfo";
 import Loader from "../../../component/atoms/Loader/loader.component";

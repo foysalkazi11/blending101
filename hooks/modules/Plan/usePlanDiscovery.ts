@@ -4,10 +4,9 @@ import {
   GET_POPULAR_PLANS,
   GET_RECCOMENDED_PLANS,
   GET_RECENT_PLANS,
-} from "../../../graphql/Planner";
+} from "../../../modules/plan/plan.graphql";
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
-import { useAppSelector } from "../../../redux/hooks";
-import { FEATURED_DICTIONARY } from "../../../data/Misc";
+
 import { useUser } from "../../../context/AuthProvider";
 
 interface IPlanDiscoveryHook {

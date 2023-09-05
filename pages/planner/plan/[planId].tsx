@@ -13,267 +13,132 @@ import {
   faShareNodes,
 } from "@fortawesome/pro-light-svg-icons";
 import { faBookmark as faBookmarkSolid } from "@fortawesome/pro-solid-svg-icons";
-import RXPanel from "../../../component/templates/Panel/RXFacts/RXPanel.component";
-import PlanDiscovery from "../../../component/module/Planner/PlanDiscovery.component";
-import PlanList from "../../../component/module/Planner/PlanByDay.component";
-import IconHeading from "../../../theme/iconHeading/iconHeading.component";
-import Insights from "../../../component/module/Planner/Insights.component";
-import Icon from "../../../component/atoms/Icon/Icon.component";
-import { faSearch, faTimes } from "@fortawesome/pro-regular-svg-icons";
+import RXPanel from "component/templates/Panel/RXFacts/RXPanel.component";
+import PlanDiscovery from "component/module/Planner/PlanDiscovery.component";
+import PlanList from "component/module/Planner/PlanByDay.component";
+import IconHeading from "theme/iconHeading/iconHeading.component";
+import Insights from "component/module/Planner/Insights.component";
+import Icon from "component/atoms/Icon/Icon.component";
+import { faTimes } from "@fortawesome/pro-regular-svg-icons";
 import { useRouter } from "next/router";
-import styles from "../../../styles/pages/planner.module.scss";
-import IconButton from "../../../component/atoms/Button/IconButton.component";
-import WeekPicker from "../../../component/molecules/Date/Week.component";
+import styles from "styles/pages/planner.module.scss";
+import IconButton from "component/atoms/Button/IconButton.component";
+import WeekPicker from "component/molecules/Date/Week.component";
 import { startOfWeek, endOfWeek, format } from "date-fns";
-import { useMutation, useQuery } from "@apollo/client";
-import {
-  CREATE_PLAN,
-  EDIT_PLAN,
-  GET_ALL_PLANS,
-  GET_ALL_PLAN_COMMENTS,
-  GET_FEATURED_PLANS,
-  GET_PLAN,
-  SHARE_PLAN,
-} from "../../../graphql/Planner";
+import { useQuery } from "@apollo/client";
+import { GET_ALL_PLAN_COMMENTS } from "@/plan/plan.graphql";
 import PlanForm, {
   defaultPlan,
-} from "../../../component/module/Planner/PlanForm.component";
+} from "component/module/Planner/PlanForm.component";
 import { useForm } from "react-hook-form";
-import PlannerQueue from "../../../component/module/Planner/Queue.component";
-import ShareModal from "../../../component/organisms/Share/Share.component";
-import { useAppSelector } from "../../../redux/hooks";
-import Publish from "../../../helpers/Publish";
-import { useDispatch } from "react-redux";
-import { updateSidebarActiveMenuName } from "../../../redux/slices/utilitySlice";
-import ShowLastModifiedCollection from "../../../components/showLastModifiedCollection/ShowLastModifiedCollection";
-import { setIsOpenPlanCollectionTray } from "../../../redux/slices/Planner.slice";
-import useToOpenPlanCollectionTray from "../../../customHooks/plan/useToOpenPlanCollectionTray";
-import useToAddPlanToCollection from "../../../customHooks/plan/useToAddPlanToCollection";
-import { useUser } from "../../../context/AuthProvider";
+import PlannerQueue from "component/module/Planner/Queue.component";
+import ShareModal from "component/organisms/Share/Share.component";
+import { useAppDispatch, useAppSelector } from "redux/hooks";
+import ShowLastModifiedCollection from "components/showLastModifiedCollection/ShowLastModifiedCollection";
+import { setIsOpenPlanCollectionTray } from "redux/slices/Planner.slice";
+import useToOpenPlanCollectionTray from "customHooks/plan/useToOpenPlanCollectionTray";
+import useToAddPlanToCollection from "customHooks/plan/useToAddPlanToCollection";
+import { useUser } from "context/AuthProvider";
+import { useSharePlan } from "@/plan/hooks";
+import {
+  addRecipe,
+  deleteRecipe,
+  moveRecipe,
+} from "@/plan/services/plan-details.service";
+
+import useClonePlan from "@/plan/hooks/plan-details/useClonePlan";
+import useEditPlan from "@/plan/hooks/plan-details/useEditPlan";
+import usePlanDetails from "@/plan/hooks/plan-details/usePlanDetails";
+import routes from "routes";
 
 const PlanDetails = () => {
+  const { id } = useUser();
   const router = useRouter();
-  const dispatch = useDispatch();
-  const methods = useForm({
+  const planId = router.query.planId;
+
+  const dispatch = useAppDispatch();
+  const form = useForm({
     defaultValues: useMemo(() => defaultPlan, []),
   });
-  const handleOpenCollectionTray = useToOpenPlanCollectionTray();
-  const handleAddToCollection = useToAddPlanToCollection();
+
+  const { plan, insights, recipes } = usePlanDetails(planId);
+
+  const [planlist, setPlanlist] = useState([]);
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
-  const { lastModifiedPlanCollection } = useAppSelector(
-    (state) => state?.planner,
-  );
-
-  const memberId = useUser().id;
-  const { data } = useQuery(GET_PLAN, {
-    variables: { planId: router.query.planId, token: "", memberId },
-    skip: router.query.planId === "",
-  });
-  const { data: comments } = useQuery(GET_ALL_PLAN_COMMENTS, {
-    variables: { id: router.query.planId },
-    skip: router.query.planId === "",
-  });
-
-  const [createPlan, createState] = useMutation(CREATE_PLAN, {
-    refetchQueries: [GET_FEATURED_PLANS, GET_ALL_PLANS],
-  });
-  const [editPlan, editState] = useMutation(EDIT_PLAN, {
-    refetchQueries: [GET_FEATURED_PLANS, GET_ALL_PLANS],
-  });
-
-  const [sharePlan, { data: share }] = useMutation(SHARE_PLAN);
-  const [link, setLink] = useState("");
   const [showShare, setShowShare] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [planlist, setPlanlist] = useState([]);
   const [showComments, setShowComments] = useState(false);
-  ``;
-  const [week, setWeek] = useState({
+  const [week] = useState({
     start: startOfWeek(new Date()),
     end: endOfWeek(new Date()),
   });
-  const [panelHeight, setPanelHeight] = useState("1000px");
-
-  const userId = useUser().id;
-
-  const plan = useMemo(() => data?.getAPlan?.plan, [data]);
+  const [panelHeight] = useState("1000px");
 
   useEffect(() => {
     if (plan) {
       setPlanlist(plan?.planData || []);
-      methods.reset({
+      form.reset({
         planName: plan?.planName,
         description: plan?.description,
       });
     }
-  }, [plan, methods]);
+  }, [form, plan]);
 
-  const allPlannedRecipes = useMemo(
-    () =>
-      plan?.planData
-        .reduce((acc, cur) => acc.concat(cur.recipes), [])
-        .filter(
-          (value, index, self) =>
-            index === self.findIndex((t) => t._id === value._id),
-        )
-        .map((recipe) => ({
-          recipeId: recipe,
-          defaultVersion: recipe?.defaultVersion,
-        })),
-    [plan],
+  const { lastModifiedPlanCollection } = useAppSelector(
+    (state) => state?.planner,
   );
 
-  const weekChangeHandler = (start, end) => {
-    router.push(
-      `/planner/plan/?plan=${router.query.planId}&start=${format(
-        new Date(start),
-        "yyyy-MM-dd",
-      )}&end=${format(new Date(end), "yyyy-MM-dd")}&alert=true`,
-    );
-  };
+  const [link, getLink] = useSharePlan(planId);
 
-  const modifyPlan = (day, recipe) => {
-    if (!day) return;
-    setPlanlist((list) =>
-      list.map((plan, idx) => {
-        if (+day === idx + 1) {
-          const isDuplicateRecipe = plan.recipes.some(
-            (item) => item?._id === recipe?._id,
-          );
-          if (isDuplicateRecipe) return plan;
-          else {
-            return {
-              ...plan,
-              recipes: [...plan.recipes, { ...recipe, ...recipe?.recipeId }],
-            };
-          }
-        } else {
-          return plan;
-        }
-      }),
-    );
-  };
+  const { data: comments } = useQuery(GET_ALL_PLAN_COMMENTS, {
+    variables: { id: planId },
+    skip: planId === "",
+  });
 
-  const deleteRecipeFromPlan = (day, recipeId) => {
-    setPlanlist((list) =>
-      list.map((plan) => {
-        if (+day === plan?.day) {
-          console.log(plan, {
-            ...plan,
-            recipes: plan?.recipes.filter((recipe) => recipe?._id !== recipe),
-          });
-          return {
-            ...plan,
-            recipes: plan?.recipes.filter((recipe) => recipe?._id !== recipeId),
-          };
-        } else {
-          return plan;
-        }
-      }),
-    );
-  };
+  const editPlan = useEditPlan(planlist);
+  const clonePlan = useClonePlan(planlist);
+  const openCollection = useToOpenPlanCollectionTray();
+  const addToCollection = useToAddPlanToCollection();
 
-  const editHandler = async (data) => {
+  const saveHandler = async (data) => {
     if (!isEditMode) return setIsEditMode(true);
-    if (plan?.memberId === userId) {
-      const planData = {
-        memberId: plan?.memberId,
-        editId: router.query.planId,
-        editableObject: {
-          ...data,
-          planData: planlist.map((plan) => ({
-            day: plan.day,
-            recipes: plan.recipes.map((recipe) => recipe._id),
-          })),
-        },
-      };
-      await Publish({
-        mutate: editPlan,
-        state: editState,
-        variables: { data: planData },
-        success: "Edited the Plan",
-        onSuccess: () => {
-          setIsEditMode(false);
-          setPlanlist(plan?.planData);
-          methods.reset(defaultPlan);
-        },
-      });
+    if (plan?.memberId === id) {
+      // IF THE CREATOR OF THE PLAN TRIES TO EDIT THE PLAN
+      editPlan(planId, data);
     } else {
-      const planData = {
-        memberId: plan?.memberId,
-        ...data,
-        planData: planlist.map((plan) => ({
-          day: plan.day,
-          recipes: plan.recipes.map((recipe) => recipe._id),
-        })),
-      };
-      await Publish({
-        mutate: createPlan,
-        state: createState,
-        variables: { data: planData },
-        success: "Created a new version of the Plan",
-        onSuccess: () => {
-          setIsEditMode(false);
-          setPlanlist(plan?.planData);
-          methods.reset(defaultPlan);
-        },
-      });
+      // IF VISITOR TRIES TO EDIT THE PLAN
+      clonePlan(data);
     }
+    setIsEditMode(false);
+    setPlanlist(plan?.planData);
+    form.reset(defaultPlan);
   };
 
-  const movePlanHandler = useCallback((dropId, draggedItem) => {
-    setPlanlist((plans) =>
-      plans.map((plan) => {
-        // When a plan is dropped to a new day we have to add plan
-        if (plan.id === dropId) {
-          return {
-            ...plan,
-            //Checking if the new recipe already exists
-            recipes: plan.recipes.find(
-              (recipe) => recipe._id === draggedItem.recipe._id,
-            )
-              ? plan.recipes
-              : plan.recipes.concat(draggedItem.recipe),
-          };
-        }
-        // Clearing the current days recipe as the recipe is moved to some different date
-        else if (plan.id === draggedItem.plannerId) {
-          return {
-            ...plan,
-            recipes: plan.recipes.filter(
-              (recipe) => recipe._id !== draggedItem.recipe._id,
-            ),
-          };
-        } else {
-          return plan;
-        }
-      }),
-    );
+  // HANDLERS FOR MODIFYING PLAN
+  const addRecipeToPlan = useCallback((day, recipe) => {
+    if (!day) return;
+    setPlanlist((list) => addRecipe(list, day, recipe));
   }, []);
 
-  const shareHandler = useCallback(async () => {
-    sharePlan({
-      variables: {
-        userId,
-        planId: router.query.planId,
-      },
-    });
-  }, [router.query.planId, sharePlan, userId]);
-
-  useEffect(() => {
-    if (!share?.sharePlan) return;
-    setLink(
-      `${process.env.NEXT_PUBLIC_HOSTING_DOMAIN}/planner/plan/shared/?token=${share?.sharePlan}`,
-    );
-    navigator.clipboard.writeText(
-      `${process.env.NEXT_PUBLIC_HOSTING_DOMAIN}/planner/plan/shared/?token=${share?.sharePlan}`,
-    );
-  }, [share]);
-
-  useEffect(() => {
-    dispatch(updateSidebarActiveMenuName("Plans"));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  const moveRecipeFromPlan = useCallback((dropId, draggedItem) => {
+    setPlanlist((plans) => moveRecipe(plans, dropId, draggedItem));
   }, []);
+
+  const deleteRecipeFromPlan = useCallback((day, recipeId) => {
+    setPlanlist((list) => deleteRecipe(list, day, recipeId));
+  }, []);
+
+  // REDIRECTING TO MY PLAN TO ADD THIS PLAN IN MY PLAN LIST
+  const addToMyPlan = useCallback(
+    (start, end) => {
+      const startDate = format(new Date(start), "yyyy-MM-dd");
+      const endDate = format(new Date(end), "yyyy-MM-dd");
+      router.push(
+        `${routes.plan.myPlan}/?plan=${planId}&start=${startDate}&end=${endDate}&alert=true`,
+      );
+    },
+    [planId, router],
+  );
 
   return (
     <Fragment>
@@ -283,7 +148,7 @@ const PlanDetails = () => {
         show={showShare}
         setShow={setShowShare}
         link={link}
-        onShare={shareHandler}
+        onShare={getLink}
       />
       <div className={styles.windowContainer}>
         <div className={styles.planner}>
@@ -293,13 +158,13 @@ const PlanDetails = () => {
                 <PlannerQueue
                   panel="plan"
                   height={panelHeight}
-                  recipes={allPlannedRecipes}
-                  modifyPlan={modifyPlan}
+                  recipes={recipes}
+                  modifyPlan={addRecipeToPlan}
                 />
               ) : (
                 <PlanDiscovery
                   height={panelHeight}
-                  recipes={allPlannedRecipes}
+                  recipes={recipes}
                   setOpenCollectionModal={setOpenCollectionModal}
                 />
               )}
@@ -313,7 +178,7 @@ const PlanDetails = () => {
                 <div className="flex ai-center">
                   <div
                     className={`${styles.uploadDiv} ${styles.uploadDiv__save}`}
-                    onClick={methods.handleSubmit(editHandler)}
+                    onClick={form.handleSubmit(saveHandler)}
                   >
                     <span>{isEditMode ? "Save" : "Edit"}</span>
                   </div>
@@ -322,6 +187,7 @@ const PlanDetails = () => {
                     size="small"
                     variant="secondary"
                     className="ml-10"
+                    color="white"
                     onClick={() => {
                       if (isEditMode) {
                         setIsEditMode(false);
@@ -342,7 +208,7 @@ const PlanDetails = () => {
                 }}
               >
                 {isEditMode ? (
-                  <PlanForm methods={methods} />
+                  <PlanForm methods={form} />
                 ) : (
                   <Fragment>
                     <div className={styles.preview}>
@@ -363,19 +229,19 @@ const PlanDetails = () => {
                           <WeekPicker
                             element={<DatePickerButton />}
                             week={week}
-                            onWeekChange={weekChangeHandler}
+                            onWeekChange={addToMyPlan}
                           />
                           <span
                             onClick={() =>
                               plan?.planCollections?.length
-                                ? handleOpenCollectionTray(
+                                ? openCollection(
                                     plan?._id,
                                     plan?.planCollections,
                                     "details",
                                   )
-                                : handleAddToCollection(
+                                : addToCollection(
                                     plan?._id,
-                                    memberId,
+                                    id,
                                     setOpenCollectionModal,
                                     "details",
                                   )
@@ -426,7 +292,7 @@ const PlanDetails = () => {
                     data={planlist}
                     cart={false}
                     action={false}
-                    onMoveRecipe={isEditMode && movePlanHandler}
+                    onMoveRecipe={isEditMode && moveRecipeFromPlan}
                     onRemove={isEditMode && deleteRecipeFromPlan}
                   />
                 </div>
@@ -435,9 +301,9 @@ const PlanDetails = () => {
             <div className="col-3">
               <Insights
                 height={panelHeight}
-                categories={data?.getAPlan?.recipeCategoriesPercentage}
-                ingredients={data?.getAPlan?.topIngredients}
-                macros={data?.getAPlan?.macroMakeup}
+                score={plan?.gigl?.rxScore}
+                calories={plan?.calorie?.value}
+                {...insights}
               />
             </div>
           </div>

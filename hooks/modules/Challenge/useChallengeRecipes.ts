@@ -6,7 +6,7 @@ import {
   ADD_RECIPE_TO_PLANNER,
   GET_ALL_PLANNER_RECIPES,
   GET_PLANNER_BY_WEEK,
-} from "../../../graphql/Planner";
+} from "../../../modules/plan/plan.graphql";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { GET_BLEND_CATEGORY } from "../../../graphql/Recipe";
 

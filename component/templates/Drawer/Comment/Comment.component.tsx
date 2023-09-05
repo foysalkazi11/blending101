@@ -17,7 +17,7 @@ import {
   ADD_PLAN_COMMENT,
   EDIT_PLAN_COMMENT,
   REMOVE_PLAN_COMMENT,
-} from "../../../../graphql/Planner";
+} from "../../../../modules/plan/plan.graphql";
 
 import styles from "./Comment.module.scss";
 import { useUser } from "../../../../context/AuthProvider";
