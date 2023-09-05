@@ -48,6 +48,11 @@ const GET_ALL_RECIPE_VERSION = gql`
           gigl {
             netCarbs
           }
+          errorIngredients {
+            errorString
+            errorIngredientId: ingredientId
+            qaId
+          }
           ingredients {
             ingredientId {
               ingredientName
@@ -85,6 +90,11 @@ const GET_ALL_RECIPE_VERSION = gql`
         gigl {
           netCarbs
         }
+        errorIngredients {
+          errorString
+          errorIngredientId: ingredientId
+          qaId
+        }
         ingredients {
           ingredientId {
             ingredientName
@@ -120,6 +130,11 @@ const GET_ALL_RECIPE_VERSION = gql`
         }
         gigl {
           netCarbs
+        }
+        errorIngredients {
+          errorString
+          errorIngredientId: ingredientId
+          qaId
         }
         ingredients {
           ingredientId {
@@ -164,6 +179,11 @@ const GET_ALL_RECIPE_VERSION = gql`
         }
         gigl {
           netCarbs
+        }
+        errorIngredients {
+          errorString
+          errorIngredientId: ingredientId
+          qaId
         }
         ingredients {
           ingredientId {

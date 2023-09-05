@@ -180,7 +180,7 @@ const EditRecipeComponent = () => {
         } = item;
         errorIngredients.push({
           errorString,
-          ingredientId: errorIngredientId || ingredientId,
+          ingredientId: errorIngredientId,
           qaId,
         });
       }
