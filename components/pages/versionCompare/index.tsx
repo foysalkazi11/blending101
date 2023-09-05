@@ -566,7 +566,7 @@ const VersionCompare = () => {
   );
 
   if (loading) {
-    return <SkeletonComparePage />;
+    return <SkeletonComparePage style={{ margin: "2rem" }} />;
   }
 
   if (error) {
@@ -574,66 +574,68 @@ const VersionCompare = () => {
   }
 
   return (
-    <div className={styles.versionCompareContainer}>
+    <React.Fragment>
       <RecipeCommentsTray showPanle="right" showTagByDefaut={false} />
       <VersionTray showPanle="right" showTagByDefaut={false} />
       <RecipeCollectionAndThemeTray showPanle="left" showTagByDefaut={false} />
-      <div className={styles.versionCompareNav} onClick={() => router.back()}>
-        <ArrowBackIcon className={styles.versionCompareNav__icon} />
-        <p>Back</p>
-      </div>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Slider {...compareRecipeResponsiveSettings} ref={sliderRef}>
-          {normalizeData?.map((recipe, index) => {
-            return (
-              <VersionDetailsIndex
-                key={index}
-                recipe={recipe}
-                recipeId={recipe?.recipeId?._id}
-                isOriginalVersion={
-                  recipe?.recipeId?.originalVersion?._id ===
-                  recipe?.defaultVersion?._id
-                }
-                id={recipe?.defaultVersion?._id}
-                dragAndDrop={allVersionsEditMode}
-                newRecipe={newRecipe}
-                setNewRecipe={setNewRecipe}
-                addItem={addIngredient}
-                handleUpdateData={handleUpdateData}
-                index={index}
-                singleVersionsEditMode={singleVersionsEditMode}
-                handleSubmitEditedVersion={handleSubmitEditedVersion}
-                handleEditMode={handleEditMode}
-                customMenu={customEditIcon(recipe, true, index)}
-                versionUpdateLoading={versionUpdateLoading}
-                showMoreMenuAtHover={true}
-                footerMenuType="OnlyStar"
-                updateDataAfterChangeDefaultVersion={
-                  handleToUpdateDataAfterChangeDefaultVersion
-                }
-                handleToOpenVersionTray={versionHandler}
-                showTopCancelButton={
-                  singleVersionsEditMode === index ? true : false
-                }
-                isVersionSharable={recipe?.defaultVersion?.isVersionSharable}
-              />
-            );
-          })}
-        </Slider>
-      </DragDropContext>
+      <div className={styles.versionCompareContainer}>
+        <div className={styles.versionCompareNav} onClick={() => router.back()}>
+          <ArrowBackIcon className={styles.versionCompareNav__icon} />
+          <p>Back</p>
+        </div>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Slider {...compareRecipeResponsiveSettings} ref={sliderRef}>
+            {normalizeData?.map((recipe, index) => {
+              return (
+                <VersionDetailsIndex
+                  key={index}
+                  recipe={recipe}
+                  recipeId={recipe?.recipeId?._id}
+                  isOriginalVersion={
+                    recipe?.recipeId?.originalVersion?._id ===
+                    recipe?.defaultVersion?._id
+                  }
+                  id={recipe?.defaultVersion?._id}
+                  dragAndDrop={allVersionsEditMode}
+                  newRecipe={newRecipe}
+                  setNewRecipe={setNewRecipe}
+                  addItem={addIngredient}
+                  handleUpdateData={handleUpdateData}
+                  index={index}
+                  singleVersionsEditMode={singleVersionsEditMode}
+                  handleSubmitEditedVersion={handleSubmitEditedVersion}
+                  handleEditMode={handleEditMode}
+                  customMenu={customEditIcon(recipe, true, index)}
+                  versionUpdateLoading={versionUpdateLoading}
+                  showMoreMenuAtHover={true}
+                  footerMenuType="OnlyStar"
+                  updateDataAfterChangeDefaultVersion={
+                    handleToUpdateDataAfterChangeDefaultVersion
+                  }
+                  handleToOpenVersionTray={versionHandler}
+                  showTopCancelButton={
+                    singleVersionsEditMode === index ? true : false
+                  }
+                  isVersionSharable={recipe?.defaultVersion?.isVersionSharable}
+                />
+              );
+            })}
+          </Slider>
+        </DragDropContext>
 
-      <ConfirmationModal
-        text="You can't edit original recipe but you can make a new version like original one !!!"
-        cancleFunc={() => {
-          setOpenModal(false);
-          dispatch(setIsNewVersionInfo(null));
-        }}
-        submitFunc={handleOpenVersionTray}
-        openModal={openModal}
-        setOpenModal={setOpenModal}
-        submitButText="Proceed"
-      />
-    </div>
+        <ConfirmationModal
+          text="You can't edit original recipe but you can make a new version like original one !!!"
+          cancleFunc={() => {
+            setOpenModal(false);
+            dispatch(setIsNewVersionInfo(null));
+          }}
+          submitFunc={handleOpenVersionTray}
+          openModal={openModal}
+          setOpenModal={setOpenModal}
+          submitButText="Proceed"
+        />
+      </div>
+    </React.Fragment>
   );
 };
 

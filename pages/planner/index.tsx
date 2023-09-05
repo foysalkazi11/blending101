@@ -170,7 +170,10 @@ const PlanDiscovery = () => {
               input={searchTerm}
               handleOnChange={(e) => setSearchTerm(e.target.value)}
               isSearchTag={false}
-              openPanel={() => dispatch(setIsPlanFilterOpen(!isPlanFilterOpen))}
+              openFilterPanel={() =>
+                dispatch(setIsPlanFilterOpen(!isPlanFilterOpen))
+              }
+              showFilterIcon={true}
             />
             <button
               className={styles.discovery__myplan}
