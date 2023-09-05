@@ -26,7 +26,7 @@ const DiscoveryPageSearchBar = ({
     //
   };
   return (
-    <div className="flex ai-center">
+    <div className="flex ai-center wrap">
       <CommonSearchBar
         input={input}
         handleOnChange={handleOnChange}
@@ -35,47 +35,40 @@ const DiscoveryPageSearchBar = ({
         isFilterPanelOpen={openFilterTray}
         showFilterIcon={true}
       />
-      <div
-        style={{ marginLeft: "40px" }}
-        // className={styles.buttonContainer}
-      >
-        <Tooltip content="Compare recipe" direction="bottom">
-          <RecipeDiscoverButton
-            icon={
-              dbUser?.compareLength
-                ? "/images/compare-fill-icon.svg"
-                : "/icons/eclipse.svg"
-            }
-            text={`Compare(${
-              dbUser?.compareLength ? dbUser?.compareLength : 0
-            })`}
-            disable={dbUser?.compareLength ? false : true}
-            style={{
-              backgroundColor: dbUser?.compareLength ? "#fff" : "#ececec",
-            }}
-            handleClick={() => router.push(`/recipe/compare`)}
-          />
-        </Tooltip>
-      </div>
-      <div
-        style={{ marginLeft: "30px" }}
-        // className={styles.buttonContainer}
-      >
-        <Tooltip content="Add recipe" direction="bottom">
-          <RecipeDiscoverButton
-            icon={
-              <FontAwesomeIcon
-                icon={faCirclePlus}
-                color="#fe5d1f"
-                fontSize={20}
-                style={{ marginRight: "5px" }}
-              />
-            }
-            text="Recipe"
-            handleClick={() => router.push(`/recipe/add_recipe`)}
-          />
-        </Tooltip>
-      </div>
+
+      <Tooltip content="Compare recipe" direction="bottom">
+        <RecipeDiscoverButton
+          icon={
+            dbUser?.compareLength
+              ? "/images/compare-fill-icon.svg"
+              : "/icons/eclipse.svg"
+          }
+          text={`Compare(${dbUser?.compareLength ? dbUser?.compareLength : 0})`}
+          disable={dbUser?.compareLength ? false : true}
+          style={{
+            backgroundColor: dbUser?.compareLength ? "#fff" : "#ececec",
+            marginLeft: "2rem",
+          }}
+          handleClick={() => router.push(`/recipe/compare`)}
+        />
+      </Tooltip>
+
+      <Tooltip content="Add recipe" direction="bottom">
+        <RecipeDiscoverButton
+          icon={
+            <FontAwesomeIcon
+              icon={faCirclePlus}
+              color="#fe5d1f"
+              fontSize={20}
+              style={{ marginRight: "5px" }}
+            />
+          }
+          text="Recipe"
+          handleClick={() => router.push(`/recipe/add_recipe`)}
+          style={{ marginLeft: "2rem" }}
+        />
+      </Tooltip>
+
       {/* <div
         style={{ marginLeft: "30px" }}
         // className={styles.buttonContainer}

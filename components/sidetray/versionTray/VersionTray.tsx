@@ -329,12 +329,14 @@ const VersionTray = ({ showPanle, showTagByDefaut }: VersionTrayProps) => {
           </div>
           <div
             className={styles.headingRight}
-            onClick={() =>
-              detailsARecipe?.versionsCount &&
-              router.push(
-                `/recipe/versionCompare/${detailsARecipe?.recipeId?._id}`,
-              )
-            }
+            onClick={() => {
+              if (detailsARecipe?.versionsCount) {
+                closeTray();
+                router.push(
+                  `/recipe/versionCompare/${detailsARecipe?.recipeId?._id}`,
+                );
+              }
+            }}
           >
             <Tooltip content="Compare versions" direction="left">
               <img
