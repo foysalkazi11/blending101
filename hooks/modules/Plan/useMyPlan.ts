@@ -109,8 +109,11 @@ const usePlanByWeek = (props: IPlanByWeekHook) => {
 
   return {
     plans: plan,
-    topIngredients: data?.getPlannerByDates.topIngredients,
-    recipeTypes: data?.getPlannerByDates?.recipeCategoriesPercentage,
+    insights: {
+      macros: data?.getPlannerByDates.macroMakeup,
+      ingredients: data?.getPlannerByDates.topIngredients,
+      categories: data?.getPlannerByDates.recipeCategoriesPercentage,
+    },
     onMergeOrReplace: handleMergeOrReplace,
   };
 };

@@ -44,12 +44,11 @@ const MyPlan = () => {
   const [showDuplicateAlert, setShowDuplicateAlert] = useState(false);
 
   const { week, setWeek, isFetchingFromURL } = useWeek();
-  const { plans, topIngredients, recipeTypes, onMergeOrReplace } =
-    usePlanByWeek({
-      week,
-      isFetchingFromURL,
-      setShowDuplicateAlert,
-    });
+  const { plans, insights, onMergeOrReplace } = usePlanByWeek({
+    week,
+    isFetchingFromURL,
+    setShowDuplicateAlert,
+  });
 
   const [createPlan] = useMutation(CREATE_PLAN);
 
@@ -196,8 +195,7 @@ const MyPlan = () => {
                 height={panelHeight}
                 score={0}
                 calories={0}
-                categories={recipeTypes}
-                ingredients={topIngredients}
+                {...insights}
               />
             </div>
           </div>

@@ -192,8 +192,18 @@ export const GET_PLANNER_BY_WEEK = gql`
         }
         formatedDate
       }
+      macroMakeup {
+        ...MacroMakeup
+      }
+      topIngredients {
+        ...TopIngredients
+      }
+      recipeCategoriesPercentage {
+        ...CategoryPercentage
+      }
     }
   }
+  ${INSIGHTS_FIELDS}
 `;
 
 export const ADD_RECIPE_TO_PLANNER = gql`
@@ -666,6 +676,8 @@ export const GET_PLAN_INSIGHTS = gql`
       macroMakeup {
         ...MacroMakeup
       }
+      calorie
+      rxScore
     }
   }
   ${INSIGHTS_FIELDS}
