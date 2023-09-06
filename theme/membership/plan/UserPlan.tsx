@@ -49,7 +49,7 @@ const UserPlan = ({
       </strong>
       <div className={styles.btnContainer}>
         <ButtonComponent
-          type={value === plan ? "primary" : "transparent"}
+          variant={value === plan ? "primary" : "transparent"}
           value="Current Plan"
           style={{
             borderRadius: "20px",

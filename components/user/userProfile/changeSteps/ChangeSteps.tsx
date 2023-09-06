@@ -19,7 +19,7 @@ const ChangeSteps = ({ nextStep, prevStep, steps }: ChangeStepsProps) => {
         )}
 
         <ButtonComponent
-          type="primary"
+          variant="primary"
           value={steps === 4 ? "Finish" : "Next"}
           onClick={nextStep}
           style={{

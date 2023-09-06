@@ -164,7 +164,7 @@ const IngredientPanel = (props: IngredientPanelProps) => {
         {!showAddForm && (
           <ButtonComponent
             value="Add Ingredient"
-            type="transparentHover"
+            variant="transparentHover"
             style={{ padding: "10px 10px", margin: "auto", width: 200 }}
             onClick={() => setShowAddForm(true)}
           />

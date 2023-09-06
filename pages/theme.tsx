@@ -39,7 +39,7 @@ export default function Home() {
             <div className={styles.button__container}>
               <ButtonComponent
                 value="Primary"
-                type="primary"
+                variant="primary"
                 style={{ height: "45px" }}
                 fullWidth={undefined}
                 width={undefined}
@@ -50,7 +50,7 @@ export default function Home() {
               style={{ padding: "0 15px" }}
             >
               <ButtonComponent
-                type="buttonWithIcon"
+                variant="buttonWithIcon"
                 value="Icon Button"
                 icon="/images/formulate.svg"
                 style={{ height: "50px", width: "234px", borderRadius: "54px" }}
@@ -59,7 +59,7 @@ export default function Home() {
             <div className={styles.button__container}>
               <ButtonComponent
                 value="Transparent"
-                type="transparent"
+                variant="transparent"
                 style={{ height: "45px" }}
                 fullWidth={undefined}
                 width={undefined}
@@ -68,7 +68,7 @@ export default function Home() {
             <div className={styles.button__container}>
               <ButtonComponent
                 value="Default"
-                type="primary"
+                variant="primary"
                 style={{ height: "45px" }}
                 fullWidth={undefined}
                 width={undefined}
@@ -77,7 +77,7 @@ export default function Home() {
             <div className={styles.button__container}>
               <ButtonComponent
                 value="Hover Button"
-                type="transparentHover"
+                variant="transparentHover"
                 style={{ height: "45px" }}
                 fullWidth={undefined}
                 width={undefined}
@@ -86,7 +86,7 @@ export default function Home() {
             <div className={styles.button__container}>
               <ButtonComponent
                 value="order"
-                type="border"
+                variant="border"
                 style={{ height: "45px" }}
                 fullWidth={undefined}
                 width={undefined}

@@ -40,7 +40,7 @@ const sampleUser: DbUserType = {
       "loose weight",
     ],
   },
-  compareLength: 4,
+  // compareLength: 4,
   wikiCompareCount: 0,
 };
 

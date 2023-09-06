@@ -7,10 +7,8 @@ import Notification from "../notification/Notification";
 import Personalization from "../personalization/Personalization";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { useMutation } from "@apollo/client";
-import EDIT_CONFIGRATION_BY_ID from "../../../../gqlLib/user/mutations/editCofigrationById";
+import EDIT_CONFIGURATION_BY_ID from "../../../../gqlLib/user/mutations/editCofigrationById";
 import EDIT_USER_BY_ID from "../../../../gqlLib/user/mutations/editUserById";
-import { setLoading } from "../../../../redux/slices/utilitySlice";
-import imageUploadS3 from "../../../utility/imageUploadS3";
 import {
   setDbUser,
   setIsNewUseImage,
@@ -19,18 +17,33 @@ import notification from "../../../utility/reactToastifyNotification";
 import ButtonComponent from "../../../../theme/button/button.component";
 import { useRouter } from "next/router";
 import HeadTagInfo from "../../../../theme/headTagInfo";
+import { UserDataType } from "..";
+import useImage from "hooks/useImage";
+import useToDeleteImageFromS3 from "customHooks/image/useToDeleteImageFromS3";
+import CircularRotatingLoader from "theme/loader/circularRotatingLoader.component";
 
 const tab = ["About", "Membership", "Notification", "Personalization"];
 
 type MainProps = {
-  userData: any;
-  setUserData: any;
+  userData: UserDataType;
+  setUserData: React.Dispatch<React.SetStateAction<UserDataType>>;
 };
 
 const Main = ({ userData, setUserData }: MainProps) => {
   const router = useRouter();
   const { type } = router.query;
   const [activeTab, setActiveTab] = useState(type);
+  const { dbUser } = useAppSelector((state) => state?.user);
+  const dispatch = useAppDispatch();
+  const [editUserData] = useMutation(EDIT_CONFIGURATION_BY_ID);
+  const [editUserById] = useMutation(EDIT_USER_BY_ID);
+  const { isNewUseImage } = useAppSelector((state) => state?.user);
+  const [toggle, setToggle] = useState(0);
+  const [colorToggle, setColorToggle] = useState(false);
+  const [profileActiveTab, setProfileActiveTab] = useState(0);
+  const { postImages } = useImage();
+  const { deleteImage } = useToDeleteImageFromS3();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     tab?.forEach((itm) => {
@@ -50,23 +63,15 @@ const Main = ({ userData, setUserData }: MainProps) => {
     router.push(`user/?type=${activeTab}`);
   }, [activeTab]);
 
-  const { dbUser } = useAppSelector((state) => state?.user);
-  const dispatch = useAppDispatch();
-  const [editUserData] = useMutation(EDIT_CONFIGRATION_BY_ID);
-  const [editUserById] = useMutation(EDIT_USER_BY_ID);
-  const { configuration } = dbUser;
-  const { isNewUseImage } = useAppSelector((state) => state?.user);
-  const [toggle, setToggle] = useState(0);
-  const [colorToggle, setColorToggle] = useState(false);
-  const [profileActiveTab, setProfileActiveTab] = useState(0);
-
   const submitData = async () => {
-    dispatch(setLoading(true));
-
+    setLoading(true);
+    let imageURL = dbUser?.image;
+    let previousImage = "";
     try {
       if (isNewUseImage?.length) {
-        const res = await imageUploadS3(isNewUseImage);
-        const imageURL = res?.[0];
+        const res = await postImages(isNewUseImage);
+        imageURL = res?.[0]?.url;
+        previousImage = dbUser?.image;
         setUserData((pre) => {
           return {
             ...pre,
@@ -76,76 +81,46 @@ const Main = ({ userData, setUserData }: MainProps) => {
             },
           };
         });
-
-        await editUserById({
-          variables: {
-            data: {
-              editId: dbUser._id,
-              editableObject: { ...userData?.about, image: imageURL },
-            },
-          },
-        });
-
-        await editUserData({
-          variables: {
-            data: {
-              editId: configuration?._id,
-              editableObject: userData?.personalization,
-            },
-          },
-        });
-
-        dispatch(
-          setDbUser({
-            ...dbUser,
-            ...userData?.about,
-            image: imageURL,
-            configuration: {
-              ...dbUser?.configuration,
-              ...userData?.personalization,
-            },
-          }),
-        );
-        dispatch(setLoading(false));
-
         dispatch(setIsNewUseImage(null));
-
-        notification("info", "your profile updated successfully");
-      } else {
-        await editUserById({
-          variables: {
-            data: {
-              editId: dbUser._id,
-              editableObject: { ...userData?.about },
-            },
+      }
+      await editUserById({
+        variables: {
+          data: {
+            editId: dbUser._id,
+            editableObject: { ...userData?.about, image: imageURL },
           },
-        });
+        },
+      });
 
-        await editUserData({
-          variables: {
-            data: {
-              editId: configuration?._id,
-              editableObject: userData?.personalization,
-            },
+      await editUserData({
+        variables: {
+          data: {
+            editId: dbUser?.configuration?._id,
+            editableObject: userData?.personalization,
           },
-        });
+        },
+      });
 
-        dispatch(
-          setDbUser({
-            ...dbUser,
-            ...userData?.about,
-            configuration: {
-              ...dbUser?.configuration,
-              ...userData?.personalization,
-            },
-          }),
-        );
-        dispatch(setLoading(false));
-        notification("info", "Updated successfully");
-        setColorToggle(true);
+      dispatch(
+        setDbUser({
+          ...dbUser,
+          ...userData?.about,
+          image: imageURL,
+          configuration: {
+            ...dbUser?.configuration,
+            ...userData?.personalization,
+          },
+        }),
+      );
+      setLoading(false);
+      notification("info", "your profile updated successfully");
+
+      setColorToggle(true);
+      if (previousImage) {
+        await deleteImage(previousImage);
       }
     } catch (error) {
-      dispatch(setLoading(false));
+      setLoading(false);
       notification("error", error?.message);
     }
   };
@@ -218,15 +193,21 @@ const Main = ({ userData, setUserData }: MainProps) => {
           }}
         >
           <ButtonComponent
-            type="primary"
-            value="Update Profile"
+            disabled={loading}
+            variant="primary"
             style={{
               borderRadius: "30px",
               height: "48px",
               width: "180px",
             }}
             onClick={submitData}
-          />
+          >
+            {loading ? (
+              <CircularRotatingLoader color="white" />
+            ) : (
+              "Update Profile"
+            )}
+          </ButtonComponent>
         </div>
       )}
     </div>

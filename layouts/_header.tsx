@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import styles from "./_header.module.scss";
 import { HiOutlineUserCircle } from "react-icons/hi";
 import {
