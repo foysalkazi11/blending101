@@ -1,20 +1,60 @@
-import React, { useState, useEffect } from "react";
-import AContainer from "../../../containers/A.container";
+import React, { useEffect } from "react";
 import styles from "./User.module.scss";
 import SideBar from "./sidebar/SideBar";
 import Main from "./main/Main";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/pro-regular-svg-icons";
 import { useUser } from "../../../context/AuthProvider";
 import { useMutation } from "@apollo/client";
 import CREATE_NEW_USER from "../../../gqlLib/user/mutations/createNewUser";
 import notification from "../../utility/reactToastifyNotification";
 import { setDbUser } from "../../../redux/slices/userSlice";
+import useLocalStorage from "customHooks/useLocalStorage";
 
+export type UserDataType = {
+  about: {
+    bio: string;
+    image: string;
+    firstName: string;
+    lastName: string;
+    displayName: string;
+    yourBlender: string;
+    email: string;
+    location: string;
+  };
+  membership: {
+    plan: string;
+  };
+  notification: {
+    platform: {
+      newsAndEvents: any[];
+      blending101Offers: any[];
+    };
+    topicDigest: {
+      recommendations: any[];
+      sharedwithYou: any[];
+    };
+  };
+  personalization: {
+    activity: string;
+    age: {
+      months: any;
+      quantity: any;
+      years: any;
+    };
+    allergies: any[];
+    dieteryLifeStyle: string;
+    gender: string;
+    heightInCentimeters: any;
+    weightInKilograms: any;
+    meditcation: any[];
+    preExistingMedicalConditions: any[];
+    whyBlending: any[];
+    pregnantOrLactating: any;
+  };
+};
 const User = () => {
   const [getExistingUser] = useMutation(CREATE_NEW_USER);
-  const [userData, setUserData] = useState({
+  const [userData, setUserData] = useLocalStorage<UserDataType>("userData", {
     about: {
       bio: "",
       image: "",
@@ -68,7 +108,6 @@ const User = () => {
         },
       });
       const currentUser = data?.createNewUser;
-
       if (currentUser?.configuration) {
         const {
           bio,
@@ -143,13 +182,7 @@ const User = () => {
   }, []);
 
   return (
-    <AContainer
-      headerTitle="My Profile"
-      logo={false}
-      headerIcon={
-        <FontAwesomeIcon icon={faUser} color="#7dbd3b" fontSize={20} />
-      }
-    >
+    <React.Fragment>
       <header className={styles.header}>
         <div className={styles.header__banner}>
           <h2>Blending 101</h2>
@@ -170,7 +203,7 @@ const User = () => {
           </div>
         </div>
       </div>
-    </AContainer>
+    </React.Fragment>
   );
 };
 

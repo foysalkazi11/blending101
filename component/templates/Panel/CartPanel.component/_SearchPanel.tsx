@@ -345,7 +345,7 @@ const SearchPanel = (props: SearchPanelProps) => {
                   <div className="col-12">
                     <ButtonComponent
                       value="Save"
-                      type="primary"
+                      variant="primary"
                       style={{ height: "45px", margin: " 0rem auto .5rem" }}
                       // fullWidth={undefined}
                       width={150}

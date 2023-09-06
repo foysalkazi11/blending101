@@ -8,7 +8,8 @@ type SideTrayState = {
   user: string | null;
   dbUser: DbUserType;
   provider: string;
-  isNewUseImage: any[];
+  isNewUseImage: File[];
+  userCompareLength?: number;
 };
 
 const initialState: SideTrayState = {
@@ -17,6 +18,7 @@ const initialState: SideTrayState = {
   dbUser: {} as DbUserType,
   provider: "email",
   isNewUseImage: [],
+  userCompareLength: 0,
 };
 
 export const userSlice = createSlice({
@@ -38,6 +40,9 @@ export const userSlice = createSlice({
     setIsNewUseImage: (state, action: PayloadAction<any>) => {
       state.isNewUseImage = action?.payload;
     },
+    updateUserCompareLength: (state, action: PayloadAction<number>) => {
+      state.userCompareLength = action?.payload;
+    },
   },
 });
 
@@ -47,6 +52,7 @@ export const {
   setDbUser,
   setProvider,
   setIsNewUseImage,
+  updateUserCompareLength,
 } = userSlice?.actions;
 
 export default userSlice?.reducer;
