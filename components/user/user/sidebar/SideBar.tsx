@@ -26,9 +26,12 @@ const SideBar = ({ userData, setUserData }: SideBarProps) => {
     location,
   } = userData?.about;
   const dispatch = useAppDispatch();
+  console.log(image);
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setIsNewUseImage([e?.target?.files[0]]));
+    if (e?.target?.files?.length) {
+      dispatch(setIsNewUseImage([e?.target?.files[0]]));
+    }
   };
 
   const handleChange = (e) => {
