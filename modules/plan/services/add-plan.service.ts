@@ -1,6 +1,6 @@
-import { ProfileRecipe } from "../../recipe/recipe.types";
+import { UserRecipe } from "../../recipe/recipe.types";
 
-export const addRecipeToPlan = (setPlanlist, day, recipe: ProfileRecipe) => {
+export const addRecipeToPlan = (setPlanlist, day, recipe: UserRecipe) => {
   if (!day) return;
 
   setPlanlist((list) =>

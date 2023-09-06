@@ -7,7 +7,7 @@ import {
   GET_ALL_PLANNER_RECIPES,
   GET_PLANNER_BY_WEEK,
   GET_QUEUED_PLANNER_RECIPES,
-} from "../../../graphql/Planner";
+} from "../../../modules/plan/plan.graphql";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { GET_BLEND_CATEGORY } from "../../../graphql/Recipe";
 
@@ -241,10 +241,8 @@ const useAddRecipeToMyPlan = (props: IAddRecipeToPlanHook) => {
             user: userId,
           },
         };
-        console.log(week, GetQueuedRecipesForPlanner);
 
         const response = cache.readQuery<any>(GetQueuedRecipesForPlanner);
-        console.log(response);
         if (response === null) return;
 
         const getQuedPlanner = response.getQuedPlanner;

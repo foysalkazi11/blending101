@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 import { useEffect } from "react";
-import { ADD_TO_LAST_MODIFIED_PLAN_COLLECTION } from "../../graphql/Planner";
+import { ADD_TO_LAST_MODIFIED_PLAN_COLLECTION } from "../../modules/plan/plan.graphql";
 import { useAppDispatch } from "../../redux/hooks";
 import {
   PlanComeFromType,

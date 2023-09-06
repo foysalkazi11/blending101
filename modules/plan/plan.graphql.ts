@@ -75,8 +75,7 @@ const PLAN_FIELDS = gql`
       }
       gigl {
         netCarbs
-        totalGL
-        totalGi
+        rxScore
       }
     }
     totalPlans
@@ -170,6 +169,13 @@ export const GET_PLANNER_BY_WEEK = gql`
             }
           }
           defaultVersion {
+            calorie {
+              value
+            }
+            gigl {
+              netCarbs
+              rxScore
+            }
             ingredients {
               ingredientId {
                 _id
@@ -185,6 +191,9 @@ export const GET_PLANNER_BY_WEEK = gql`
           }
         }
         formatedDate
+      }
+      macroMakeup {
+        ...MacroMakeup
       }
       topIngredients {
         ...TopIngredients
@@ -241,12 +250,6 @@ export const DELETE_RECIPE_FROM_PLANNER = gql`
   }
 `;
 
-export const ADD_TO_GROCERY_LIST = gql`
-  mutation AddToGroceryFromPlanner($recipeId: String!, $memberId: String!) {
-    addToGroceryFromPlanner(recipeId: $recipeId, memberId: $memberId)
-  }
-`;
-
 export const CREATE_PLAN = gql`
   mutation CreatePlan($data: CreateNewPlan!) {
     createAPlan(input: $data)
@@ -281,6 +284,13 @@ export const GET_ALL_PLANS = gql`
         image {
           url
           hash
+        }
+        calorie {
+          value
+        }
+        gigl {
+          netCarbs
+          rxScore
         }
       }
       totalPlans
@@ -350,6 +360,13 @@ export const GET_PLAN = gql`
         image {
           url
         }
+        calorie {
+          value
+        }
+        gigl {
+          netCarbs
+          rxScore
+        }
         planData {
           id: _id
           day
@@ -375,6 +392,7 @@ export const GET_PLAN = gql`
               }
               gigl {
                 netCarbs
+                rxScore
               }
               postfixTitle
               ingredients {
@@ -658,6 +676,8 @@ export const GET_PLAN_INSIGHTS = gql`
       macroMakeup {
         ...MacroMakeup
       }
+      calorie
+      rxScore
     }
   }
   ${INSIGHTS_FIELDS}

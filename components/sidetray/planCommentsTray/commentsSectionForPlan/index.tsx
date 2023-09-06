@@ -5,7 +5,7 @@ import {
   GET_ALL_PLAN_COMMENTS,
   REMOVE_PLAN_COMMENT,
   UPDATE_PLAN_RATING,
-} from "../../../../graphql/Planner";
+} from "../../../../modules/plan/plan.graphql";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import IconForAddComment from "../../common/iconForAddComment/IconForAddComment";
 import styles from "../PlanCommentsTray.module.scss";

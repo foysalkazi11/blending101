@@ -26,6 +26,8 @@ import useCreatePlan from "@/plan/hooks/add-plan/useCreatePlan";
 import usePlanInsights from "@/plan/hooks/add-plan/usePlanInsights";
 
 import styles from "@pages/planner.module.scss";
+import { useRouter } from "next/router";
+import routes from "routes";
 
 const DEFAULT_PLAN: Plan[] = [
   { day: 1, recipes: [] },
@@ -38,6 +40,7 @@ const DEFAULT_PLAN: Plan[] = [
 ];
 
 const PlanDetails = () => {
+  const router = useRouter();
   const methods = useForm({
     defaultValues: useMemo(() => defaultPlan, []),
   });
@@ -77,7 +80,10 @@ const PlanDetails = () => {
                     size="small"
                     variant="secondary"
                     className="ml-10"
-                    onClick={() => {}}
+                    color="white"
+                    onClick={() => {
+                      router.push(routes.plan.discovery);
+                    }}
                   />
                 </div>
               </div>
@@ -106,6 +112,8 @@ const PlanDetails = () => {
                 categories={insights?.recipeCategoriesPercentage}
                 ingredients={insights?.topIngredients}
                 macros={insights?.macroMakeup}
+                calories={insights?.calorie}
+                score={insights?.rxScore}
               />
             </div>
           </div>

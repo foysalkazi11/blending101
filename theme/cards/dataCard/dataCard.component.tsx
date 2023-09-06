@@ -1,5 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { Dispatch, SetStateAction, useCallback, useMemo } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  forwardRef,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import styles from "./dataCard.module.scss";
 import { useRouter } from "next/router";
 import useChangeCompare from "../../../customHooks/useChangeComaper";
@@ -36,6 +43,9 @@ import { AccessPermission } from "../../../type/recipeCardType";
 import useExtension from "../../../hooks/useExtension";
 import { useUser } from "../../../context/AuthProvider";
 import { ImageWithFallback } from "../../imageWithFallback";
+import { useRecipeToGrocery } from "@/recipe/hooks";
+import useAddRecipeToMyPlan from "@/plan/hooks/my-plan/useAddRecipe";
+import CalendarTray from "theme/calendar/calendarTray.component";
 
 interface dataCardInterface {
   title: string;
@@ -166,7 +176,14 @@ export default function DatacardComponent({
   } = useToChangeDefaultVersion();
   const user = useUser();
   const authData = useExtension();
-  // view permission
+  const addToGrocery = useRecipeToGrocery();
+  const addToMyPlan = useAddRecipeToMyPlan({
+    onSuccess: () => setShowCalendar(""),
+  });
+
+  const [showCalendar, setShowCalendar] = useState("");
+
+  // View Permission
   const hasViewPermission = useCallback(
     (permission: AccessPermission): boolean => {
       return (
@@ -277,10 +294,10 @@ export default function DatacardComponent({
         <li onClick={() => router.push(`/recipe/edit_recipe/${recipeId}`)}>
           <img src="/icons/edit.png" alt="square" />
         </li>
-        <li>
+        <li onClick={() => setShowCalendar(recipeId)}>
           <img src="/icons/calender.png" alt="square" />
         </li>
-        <li>
+        <li onClick={() => addToGrocery(recipeId)}>
           <img src="/icons/cart.png" alt="square" />
         </li>
       </ul>
@@ -591,8 +608,23 @@ export default function DatacardComponent({
               )}
             </ul>
           </div>
+          {showCalendar === recipeId && (
+            <div className={styles.calender__tray}>
+              <CalendarTray
+                handler={(date) => addToMyPlan(recipeId, date)}
+                onClose={() => setShowCalendar("")}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 }
+
+const DatePickerButton = forwardRef(({ value, onClick }: any, ref: any) => (
+  <li onClick={onClick} ref={ref}>
+    <img src="/icons/calender.png" alt="square" />
+  </li>
+));
+DatePickerButton.displayName = "DatePickerButton";

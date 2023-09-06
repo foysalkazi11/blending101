@@ -113,6 +113,7 @@ const PlanDiscovery = (props: PlannerPanelProps) => {
 
 const Plans = (props) => {
   const { plans, observer, setOpenCollectionModal } = props;
+  console.log(plans);
 
   return plans?.map((plan) => (
     <div key={plan?._id} ref={observer} className="mt-10">
@@ -120,6 +121,9 @@ const Plans = (props) => {
         planId={plan?._id}
         title={plan.planName}
         image={plan?.image?.url}
+        calorie={plan?.calorie?.value}
+        score={plan?.gigl?.rxScore}
+        carbs={plan?.gigl?.netCarbs}
         isCollectionIds={plan?.planCollections}
         noOfComments={plan?.commentsCount}
         setOpenCollectionModal={setOpenCollectionModal}
@@ -144,7 +148,6 @@ const Recipes = (props) => {
       },
       defaultVersion,
     } = recipe;
-
     return (
       <RecipeCard
         key={_id}

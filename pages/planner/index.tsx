@@ -16,7 +16,7 @@ import Icon from "../../component/atoms/Icon/Icon.component";
 import styles from "../../styles/pages/planner.module.scss";
 import "react-datepicker/dist/react-datepicker.css";
 import { useQuery } from "@apollo/client";
-import { GET_FEATURED_PLANS } from "../../graphql/Planner";
+import { GET_FEATURED_PLANS } from "../../modules/plan/plan.graphql";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import ShowLastModifiedCollection from "../../components/showLastModifiedCollection/ShowLastModifiedCollection";
 import { setIsOpenPlanCollectionTray } from "../../redux/slices/Planner.slice";
@@ -312,6 +312,9 @@ const FeaturedPlan = ({ setOpenCollectionModal }) => {
                   noOfRatings={item?.numberOfRating}
                   ratings={item?.averageRating}
                   myRating={item?.myRating}
+                  calorie={item?.calorie?.value}
+                  score={item?.gigl?.rxScore}
+                  carbs={item?.gigl?.netCarbs}
                 />
               </div>
             </div>
@@ -338,6 +341,9 @@ const FeaturedPlan = ({ setOpenCollectionModal }) => {
                   noOfRatings={item?.numberOfRating}
                   ratings={item?.averageRating}
                   myRating={item?.myRating}
+                  calorie={item?.calorie?.value}
+                  score={item?.gigl?.rxScore}
+                  carbs={item?.gigl?.netCarbs}
                 />
               </div>
             </div>
@@ -364,6 +370,9 @@ const FeaturedPlan = ({ setOpenCollectionModal }) => {
                   noOfRatings={item?.numberOfRating}
                   ratings={item?.averageRating}
                   myRating={item?.myRating}
+                  calorie={item?.calorie?.value}
+                  score={item?.gigl?.rxScore}
+                  carbs={item?.gigl?.netCarbs}
                 />
               </div>
             </div>
@@ -419,6 +428,9 @@ const ListPlans = ({ setOpenCollectionModal }) => {
               noOfRatings={item?.numberOfRating}
               ratings={item?.averageRating}
               myRating={item?.myRating}
+              calorie={item?.calorie?.value}
+              score={item?.gigl?.rxScore}
+              carbs={item?.gigl?.netCarbs}
             />
           </div>
         </div>

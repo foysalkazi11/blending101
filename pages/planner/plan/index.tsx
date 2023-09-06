@@ -8,53 +8,47 @@ import {
   faEllipsisV,
   faCalendarWeek,
 } from "@fortawesome/pro-light-svg-icons";
-import { faSearch, faTimes } from "@fortawesome/pro-regular-svg-icons";
+import { faTimes } from "@fortawesome/pro-regular-svg-icons";
 
-import RXPanel from "../../../component/templates/Panel/RXFacts/RXPanel.component";
-import IngredientPanel from "../../../component/templates/Panel/Ingredients/IngredientPanel.component";
-import PlannerQueue from "../../../component/module/Planner/Queue.component";
-import PlanList from "../../../modules/plan/partials/Plan/index.component";
-import AContainer from "../../../containers/A.container";
-import IconHeading from "../../../theme/iconHeading/iconHeading.component";
-import Insights from "../../../component/module/Planner/Insights.component";
+import RXPanel from "component/templates/Panel/RXFacts/RXPanel.component";
+import IngredientPanel from "component/templates/Panel/Ingredients/IngredientPanel.component";
+import PlannerQueue from "component/module/Planner/Queue.component";
+import PlanList from "modules/plan/partials/Plan/index.component";
+import IconHeading from "theme/iconHeading/iconHeading.component";
+import Insights from "component/module/Planner/Insights.component";
 import PlanForm, {
   defaultPlan,
-} from "../../../component/module/Planner/PlanForm.component";
-import Icon from "../../../component/atoms/Icon/Icon.component";
-import IconButton from "../../../component/atoms/Button/IconButton.component";
+} from "component/module/Planner/PlanForm.component";
+import IconButton from "component/atoms/Button/IconButton.component";
 
-import { useAppSelector } from "../../../redux/hooks";
 import { addWeeks, subWeeks } from "date-fns";
-import { ADD_TO_MY_PLAN, CREATE_PLAN } from "../../../graphql/Planner";
-import { MONTH } from "../../../data/Date";
+import { CREATE_PLAN } from "@/plan/plan.graphql";
+import { MONTH } from "data/Date";
 
-import styles from "../../../styles/pages/planner.module.scss";
-import ConfirmAlert from "../../../component/molecules/Alert/Confirm.component";
-import Publish from "../../../helpers/Publish";
-import { usePlanByWeek, useWeek } from "../../../hooks/modules/Plan/useMyPlan";
-import axios from "axios";
-import { useUser } from "../../../context/AuthProvider";
-import { getPlanImage } from "../../../helpers/Plan";
+import styles from "@pages/planner.module.scss";
+import ConfirmAlert from "component/molecules/Alert/Confirm.component";
+import { usePlanByWeek, useWeek } from "hooks/modules/Plan/useMyPlan";
+import { useUser } from "context/AuthProvider";
+import { getPlanImage } from "helpers/Plan";
 
 const MyPlan = () => {
   const router = useRouter();
   const methods = useForm({
     defaultValues: useMemo(() => defaultPlan, []),
   });
-  const memberId = useUser().id;
 
-  const [showGroceryTray] = useState(true);
-  const [showDuplicateAlert, setShowDuplicateAlert] = useState(false);
+  const { id: memberId } = useUser();
+
+  const [panelHeight] = useState("1000px");
   const [showForm, setShowForm] = useState(false);
-  const [panelHeight, setPanelHeight] = useState("1000px");
+  const [showDuplicateAlert, setShowDuplicateAlert] = useState(false);
 
   const { week, setWeek, isFetchingFromURL } = useWeek();
-  const { plans, topIngredients, recipeTypes, onMergeOrReplace } =
-    usePlanByWeek({
-      week,
-      isFetchingFromURL,
-      setShowDuplicateAlert,
-    });
+  const { plans, insights, onMergeOrReplace } = usePlanByWeek({
+    week,
+    isFetchingFromURL,
+    setShowDuplicateAlert,
+  });
 
   const [createPlan] = useMutation(CREATE_PLAN);
 
@@ -126,6 +120,7 @@ const MyPlan = () => {
                     size="small"
                     className="ml-10"
                     variant="secondary"
+                    color="white"
                     onClick={() => {
                       if (showForm) {
                         setShowForm(false);
@@ -198,8 +193,9 @@ const MyPlan = () => {
             <div className="col-3">
               <Insights
                 height={panelHeight}
-                categories={recipeTypes}
-                ingredients={topIngredients}
+                score={0}
+                calories={0}
+                {...insights}
               />
             </div>
           </div>
