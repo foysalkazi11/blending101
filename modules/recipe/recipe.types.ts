@@ -1,5 +1,5 @@
-import { IngredientWithPortion } from "@/app/types/Ingredient.types";
 import { Brand } from "@/app/types/brand.types";
+import { IngredientWithPortion } from "@/app/types/ingredient.types";
 
 // SCHEMA: ProfileRecipeDesc, ProfileRecipe
 export interface UserRecipe {
