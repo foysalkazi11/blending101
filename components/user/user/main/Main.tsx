@@ -21,6 +21,7 @@ import { UserDataType } from "..";
 import useImage from "hooks/useImage";
 import useToDeleteImageFromS3 from "customHooks/image/useToDeleteImageFromS3";
 import CircularRotatingLoader from "theme/loader/circularRotatingLoader.component";
+import { useUserHandler } from "context/AuthProvider";
 
 const tab = ["About", "Membership", "Notification", "Personalization"];
 
@@ -43,6 +44,7 @@ const Main = ({ userData, setUserData }: MainProps) => {
   const [profileActiveTab, setProfileActiveTab] = useState(0);
   const { postImages } = useImage();
   const { deleteImage } = useToDeleteImageFromS3();
+  const { setUser } = useUserHandler();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -81,6 +83,7 @@ const Main = ({ userData, setUserData }: MainProps) => {
             },
           };
         });
+        setUser((prev) => ({ ...prev, image: imageURL }));
         dispatch(setIsNewUseImage(null));
       }
       await editUserById({

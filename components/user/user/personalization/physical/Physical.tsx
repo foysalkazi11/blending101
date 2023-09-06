@@ -10,7 +10,6 @@ import {
   setDbUser,
   setIsNewUseImage,
 } from "../../../../../redux/slices/userSlice";
-import { setLoading } from "../../../../../redux/slices/utilitySlice";
 import ButtonComponent from "../../../../../theme/button/button.component";
 import Combobox from "../../../../../theme/dropDown/combobox/Combobox.component";
 import InputComponent from "../../../../../theme/input/registerInput/RegisterInput";
@@ -20,6 +19,7 @@ import notification from "../../../../utility/reactToastifyNotification";
 import DailyIntake from "./dailyIntake/DailyIntake";
 import styles from "./Physical.module.scss";
 import SectionGenderAndActivity from "./sectionGenderAndActivity/SectionGender&Activity";
+import CircularRotatingLoader from "theme/loader/circularRotatingLoader.component";
 
 const gender = [
   {
@@ -97,8 +97,7 @@ const Physical = ({
   const isMounted = useRef(null);
   const [colorToggle, setColorToggle] = useState(false);
   const [profileActiveTab, setProfileActiveTab] = useState(0);
-
-  console.log(userProfile);
+  const [loading, setLoading] = useState(false);
 
   const handleYearsAndMonths = (userProfile) => {
     let value = {
@@ -305,7 +304,7 @@ const Physical = ({
         ? Number(feet + inches)
         : Number(data?.centimeters);
 
-    dispatch(setLoading(true));
+    setLoading(true);
 
     try {
       if (isNewUseImage?.length) {
@@ -377,7 +376,7 @@ const Physical = ({
             },
           }),
         );
-        dispatch(setLoading(false));
+        setLoading(false);
         dispatch(setIsNewUseImage(null));
         notification("info", "your profile updated successfully");
       } else {
@@ -441,11 +440,11 @@ const Physical = ({
             },
           }),
         );
-        dispatch(setLoading(false));
+        setLoading(false);
         notification("info", "Updated successfully");
       }
     } catch (error) {
-      dispatch(setLoading(false));
+      setLoading(false);
       notification("error", error?.message);
     }
   };
@@ -819,15 +818,21 @@ const Physical = ({
               }}
             >
               <ButtonComponent
+                disabled={loading}
                 variant="primary"
-                value="Update Profile"
                 style={{
                   borderRadius: "30px",
                   height: "48px",
                   width: "180px",
                 }}
                 onClick={handleSubmit(submitData)}
-              />
+              >
+                {loading ? (
+                  <CircularRotatingLoader color="white" />
+                ) : (
+                  "Update Profile"
+                )}
+              </ButtonComponent>
             </div>
           </>
         ) : (
