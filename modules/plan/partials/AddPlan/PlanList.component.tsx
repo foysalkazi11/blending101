@@ -12,7 +12,7 @@ import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
 
 import styles from "./PlanList.module.scss";
 import { Plan } from "../../plan.types";
-import { ProfileRecipe } from "../../../recipe/recipe.types";
+import { UserRecipe } from "../../../recipe/recipe.types";
 import { setShowPanel } from "../../../../redux/slices/Ui.slice";
 
 interface PlanListProps {
@@ -54,7 +54,7 @@ interface PlanProps {
   day?: string;
   date?: string;
   indexValue: number;
-  recipeList?: ProfileRecipe[];
+  recipeList?: UserRecipe[];
   cart?: boolean;
   onRemove?: any;
 }
@@ -88,7 +88,7 @@ const DayPlan = (props: PlanProps) => {
 };
 
 interface RecipeColorIndicatorInterface {
-  recipe: ProfileRecipe;
+  recipe: UserRecipe;
   plannerId: number;
   isEditMode?: boolean;
   cart?: boolean;
@@ -99,7 +99,7 @@ const PlanItem = (props: RecipeColorIndicatorInterface) => {
   const { recipeId, defaultVersion } = recipe;
 
   const dispatch = useAppDispatch();
-
+  const rxScore = Math.round(defaultVersion.gigl.rxScore);
   const calorie = Math.round(defaultVersion?.calorie?.value);
   const ingredients = recipe?.defaultVersion?.ingredients || [];
   const category = recipeId?.recipeBlendCategory?.name;
@@ -117,11 +117,11 @@ const PlanItem = (props: RecipeColorIndicatorInterface) => {
         />
         {recipeId.name}
       </div>
-      <div className={styles.recipe__rxScore}>
+      <div className={styles.recipe__rxScore}>{calorie || 0}</div>
+      <div className={styles.recipe__calories}>
         {defaultVersion.gigl.rxScore || 0}
       </div>
-      <div className={styles.recipe__calories}>{calorie || 0}</div>
-      <div className={styles.recipe__calories}>${8}</div>
+      <div className={styles.recipe__calories}>${0}</div>
       <div className={styles.recipe__tray}>
         <IconButton
           size="medium"

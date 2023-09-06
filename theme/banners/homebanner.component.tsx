@@ -46,7 +46,7 @@ export default function HomebannerComponent(props) {
             </div>
             <div className={styles.card__three__bottom}>
               <ButtonComponent
-                type="border"
+                variant="border"
                 value="Download Now"
                 fullWidth={0}
                 width={0}
@@ -79,7 +79,7 @@ export default function HomebannerComponent(props) {
               </p>
               <div className={styles.card__three__bottom}>
                 <ButtonComponent
-                  type="border"
+                  variant="border"
                   value="Download Now"
                   fullWidth={0}
                   width={0}

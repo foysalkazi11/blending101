@@ -20,7 +20,7 @@ const DiscoveryPageSearchBar = ({
   toggleFilterPanel,
 }: Props) => {
   const router = useRouter();
-  const { dbUser } = useAppSelector((state) => state?.user);
+  const { userCompareLength } = useAppSelector((state) => state?.user);
 
   const handleSubmit = () => {
     //
@@ -39,14 +39,14 @@ const DiscoveryPageSearchBar = ({
       <Tooltip content="Compare recipe" direction="bottom">
         <RecipeDiscoverButton
           icon={
-            dbUser?.compareLength
+            userCompareLength
               ? "/images/compare-fill-icon.svg"
               : "/icons/eclipse.svg"
           }
-          text={`Compare(${dbUser?.compareLength ? dbUser?.compareLength : 0})`}
-          disable={dbUser?.compareLength ? false : true}
+          text={`Compare(${userCompareLength ? userCompareLength : 0})`}
+          disable={userCompareLength ? false : true}
           style={{
-            backgroundColor: dbUser?.compareLength ? "#fff" : "#ececec",
+            backgroundColor: userCompareLength ? "#fff" : "#ececec",
             marginLeft: "2rem",
           }}
           handleClick={() => router.push(`/recipe/compare`)}

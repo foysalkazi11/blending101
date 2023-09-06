@@ -30,7 +30,7 @@ import {
   setRecommended,
 } from "../../../redux/slices/recipeSlice";
 import EMPTY_COMPARE_LIST from "../../../gqlLib/compare/mutation/emptyCompareList";
-import { setDbUser } from "../../../redux/slices/userSlice";
+import { updateUserCompareLength } from "../../../redux/slices/userSlice";
 import { setLoading } from "../../../redux/slices/utilitySlice";
 import ShowCollectionModal from "../../showLastModifiedCollection/ShowLastModifiedCollection";
 import useChangeCompare from "../../../customHooks/useChangeComaper";
@@ -125,7 +125,7 @@ const CompareRecipe = () => {
   const dispatch = useAppDispatch();
   const sliderRef = useRef(null);
   const user = useUser();
-  const { dbUser } = useAppSelector((state) => state?.user);
+  const { userCompareLength } = useAppSelector((state) => state?.user);
   const { data, loading, error, refetch } = useQuery(GET_COMPARE_LIST, {
     variables: { userId: user.id },
     fetchPolicy: "network-only",
@@ -367,12 +367,7 @@ const CompareRecipe = () => {
     dispatch(setLoading(true));
     try {
       await emptyCompareList({ variables: { userId: user.id } });
-      dispatch(
-        setDbUser({
-          ...dbUser,
-          compareLength: 0,
-        }),
-      );
+      dispatch(updateUserCompareLength(0));
       setCompareRecipeList([]);
       dispatch(setCompareList([]));
       dispatch(
@@ -649,9 +644,7 @@ const CompareRecipe = () => {
               buttonText={isFormulatePage ? "Compare" : "Formulate"}
               showButton={true}
               buttonClick={handleCompareButtonClick}
-              compareAmout={
-                data?.getCompareList2?.length || dbUser?.compareLength
-              }
+              compareAmout={data?.getCompareList2?.length || userCompareLength}
               closeCompare={handleEmptyCompareList}
             />
             <Carousel moreSetting={responsiveSetting}>

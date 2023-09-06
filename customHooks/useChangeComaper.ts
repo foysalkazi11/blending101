@@ -2,7 +2,7 @@ import { useMutation } from "@apollo/client";
 import notification from "../components/utility/reactToastifyNotification";
 import CHANGE_COMPARE from "../gqlLib/compare/mutation/changeCompare";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { setDbUser } from "../redux/slices/userSlice";
+import { updateUserCompareLength } from "../redux/slices/userSlice";
 import { ReferenceOfRecipeUpdateFuncType } from "../type/recipeType";
 import { useUser } from "../context/AuthProvider";
 
@@ -13,7 +13,6 @@ const useChangeCompare = () => {
       fetchPolicy: "network-only",
     });
   const user = useUser();
-  const { dbUser } = useAppSelector((state) => state?.user);
 
   const handleChangeCompare = async (
     e: React.SyntheticEvent,
@@ -31,12 +30,7 @@ const useChangeCompare = () => {
           recipeId: id,
         },
       });
-      dispatch(
-        setDbUser({
-          ...dbUser,
-          compareLength: Number(data?.changeCompare),
-        }),
-      );
+      dispatch(updateUserCompareLength(Number(data?.changeCompare)));
 
       updateDataFunc(id, { addedToCompare: compared }, {});
 

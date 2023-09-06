@@ -13,7 +13,7 @@ import AmplifyConfig from "../configs/aws";
 import { GET_USER } from "../gqlLib/user/mutations/createNewUser";
 import { useMutation } from "@apollo/client";
 import notification from "../components/utility/reactToastifyNotification";
-import { setDbUser } from "../redux/slices/userSlice";
+import { updateUserCompareLength } from "../redux/slices/userSlice";
 import { useAppDispatch } from "../redux/hooks";
 
 type TProvider = "Amazon" | "Google" | "Facebook" | "Apple" | "Cognito";
@@ -85,27 +85,7 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
             email: profile?.email,
             image: profile?.image,
           });
-          dispatch(
-            setDbUser({
-              _id: profile?._id,
-              displayName: profile?.displayName,
-              email: profile?.email,
-              image: profile?.image,
-              compareLength: profile?.compareLength,
-              bio: "",
-              yourBlender: "",
-              provider: "",
-              firstName: "",
-              orderHistoty: [],
-              lastName: "",
-              location: "",
-              myCart: [],
-              recentViewedProducts: [],
-              createdAt: "",
-              configuration: undefined,
-              wikiCompareCount: 0,
-            }),
-          );
+          dispatch(updateUserCompareLength(profile?.compareLength));
           return profile;
         });
     },

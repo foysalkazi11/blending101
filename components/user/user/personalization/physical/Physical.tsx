@@ -3,7 +3,7 @@ import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import EDIT_CONFIGRATION_BY_ID from "../../../../../gqlLib/user/mutations/editCofigrationById";
+import EDIT_CONFIGURATION_BY_ID from "../../../../../gqlLib/user/mutations/editCofigrationById";
 import EDIT_USER_BY_ID from "../../../../../gqlLib/user/mutations/editUserById";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
 import {
@@ -87,7 +87,7 @@ const Physical = ({
   const router = useRouter();
   const { toggle } = router.query;
   const dispatch = useAppDispatch();
-  const [editConfigration] = useMutation(EDIT_CONFIGRATION_BY_ID);
+  const [editConfigration] = useMutation(EDIT_CONFIGURATION_BY_ID);
   const [editUserById] = useMutation(EDIT_USER_BY_ID);
   const { configuration } = dbUser;
   const { isNewUseImage } = useAppSelector((state) => state?.user);
@@ -819,7 +819,7 @@ const Physical = ({
               }}
             >
               <ButtonComponent
-                type="primary"
+                variant="primary"
                 value="Update Profile"
                 style={{
                   borderRadius: "30px",

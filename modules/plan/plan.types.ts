@@ -1,4 +1,4 @@
-import { ProfileRecipe } from "../recipe/recipe.types";
+import { UserRecipe } from "../recipe/recipe.types";
 
 // Signle Recipe under each plan day
 export interface PlanRecipe {
@@ -13,7 +13,7 @@ export interface PlanRecipe {
 // Single day of the plan list
 export interface Plan {
   day: number;
-  recipes: ProfileRecipe[];
+  recipes: UserRecipe[];
 }
 
 export default Plan;

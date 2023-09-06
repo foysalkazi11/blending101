@@ -7,6 +7,7 @@ import {
   EDIT_PLAN,
 } from "../../plan.graphql";
 import Publish from "helpers/Publish";
+import { getPlanImage } from "helpers/Plan";
 
 const useEditPlan = (planlist: any[]) => {
   const { id } = useUser();
@@ -16,6 +17,11 @@ const useEditPlan = (planlist: any[]) => {
 
   const editPlanHandler = useCallback(
     async (planId, data) => {
+      const recipeImages = [];
+      const recipeIds = [];
+
+      console.log(planlist);
+
       const planData = {
         memberId: id,
         editId: planId,
@@ -27,6 +33,9 @@ const useEditPlan = (planlist: any[]) => {
           })),
         },
       };
+
+      const image = await getPlanImage(recipeImages);
+
       await Publish({
         mutate: editPlan,
         state: editState,

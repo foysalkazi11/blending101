@@ -1,59 +1,65 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef } from "react";
 import imageCompression from "browser-image-compression";
 
-const useImage = (initState: any[]) => {
+const useImage = (initState: any[] = []) => {
   const [images, setImages] = useState<(Image | File)[]>(initState);
   const imageUrls = useRef([]);
 
-  useEffect(() => {}, []);
-
-  const postImages = useCallback(async () => {
-    const loading = toast.loading("Uploading Image", {
-      position: toast.POSITION.TOP_RIGHT,
-    });
-
-    await Promise.all(
-      images.map(async (image) => {
-        if (image.hasOwnProperty("url")) {
-          imageUrls.current.push({
-            url: (image as Image).url,
-            hash: "",
-          });
-        } else {
-          const file = image as File;
-          const fileName = file.name;
-          const options = {
-            maxSizeMB: 1,
-            maxWidthOrHeight: 1200,
-            useWebWorker: true,
-            initialQuality: 0.8,
-          };
-          return imageCompression(file, options).then((file) =>
-            axios({
-              method: "post",
-              url: `https://j88wgcjqa6.execute-api.us-east-1.amazonaws.com/prod/image_processing/upload?image_name=${fileName}&folder_name=first_folder`,
-              data: file,
-            }),
-          );
-        }
-      }),
-    ).then((responses) => {
-      responses.forEach((response) => {
-        const value = response?.data?.data;
-        if (!response) return;
-        else {
-          imageUrls.current.push({
-            url: value?.file_url,
-            hash: value?.blurhash_code,
-          });
-        }
+  const postImages = useCallback(
+    async (
+      newImages: (Image | File)[] = [],
+      folderName: string = "first_folder",
+    ): Promise<{ url: string; hash: string }[]> => {
+      const loading = toast.loading("Uploading Image", {
+        position: toast.POSITION.TOP_RIGHT,
       });
-      toast.dismiss(loading);
-    });
-    return imageUrls.current;
-  }, [images]);
+      if (!newImages.length) {
+        newImages = images;
+      }
+      await Promise.all(
+        newImages.map(async (image) => {
+          if (image.hasOwnProperty("url")) {
+            imageUrls.current.push({
+              url: (image as Image).url,
+              hash: "",
+            });
+          } else {
+            const file = image as File;
+            const fileName = file.name;
+            const options = {
+              maxSizeMB: 1,
+              maxWidthOrHeight: 1200,
+              useWebWorker: true,
+              initialQuality: 0.8,
+            };
+            return imageCompression(file, options).then((file) =>
+              axios({
+                method: "post",
+                url: `${process.env.NEXT_PUBLIC_S3_IMAGE_UPLOAD_HASH}?image_name=${fileName}&folder_name=${folderName}`,
+                data: file,
+              }),
+            );
+          }
+        }),
+      ).then((responses) => {
+        responses.forEach((response) => {
+          const value = response?.data?.data;
+          if (!response) return;
+          else {
+            imageUrls.current.push({
+              url: value?.file_url,
+              hash: value?.blurhash_code,
+            });
+          }
+        });
+        toast.dismiss(loading);
+      });
+      return imageUrls.current;
+    },
+    [images],
+  );
 
   return { images, setImages, loaded: true, postImages };
 };
