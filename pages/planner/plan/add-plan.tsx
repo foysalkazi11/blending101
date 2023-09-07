@@ -1,35 +1,30 @@
-import React, { forwardRef, useMemo, useState, Fragment } from "react";
 import { faCalendarWeek } from "@fortawesome/pro-light-svg-icons";
 import { faTimes } from "@fortawesome/pro-regular-svg-icons";
+import { useRouter } from "next/router";
+import { Fragment, forwardRef, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
+import routes from "routes";
 
+import IconButton from "component/atoms/Button/IconButton.component";
+import Icon from "component/atoms/Icon/Icon.component";
+import Insights from "component/module/Planner/Insights.component";
+import PlanForm, { defaultPlan } from "component/module/Planner/PlanForm.component";
 import RXPanel from "component/templates/Panel/RXFacts/RXPanel.component";
 import IconHeading from "theme/iconHeading/iconHeading.component";
-import Insights from "component/module/Planner/Insights.component";
-import Icon from "component/atoms/Icon/Icon.component";
-import IconButton from "component/atoms/Button/IconButton.component";
-import PlanForm, {
-  defaultPlan,
-} from "component/module/Planner/PlanForm.component";
 
-import LeftSection from "@/plan/partials/AddPlan/RecipePanel.component";
 import Center from "@/plan/partials/AddPlan/PlanList.component";
+import LeftSection from "@/plan/partials/AddPlan/RecipePanel.component";
 
-import { Plan } from "@/plan/plan.types";
+import { MyPlanItem } from "@/app/types/plan.types";
 
-import {
-  addRecipeToPlan,
-  deleteRecipeFromPlan,
-} from "@/plan/services/add-plan.service";
+import { addRecipeToPlan, deleteRecipeFromPlan } from "@/plan/services/add-plan.service";
 
 import useCreatePlan from "@/plan/hooks/add-plan/useCreatePlan";
 import usePlanInsights from "@/plan/hooks/add-plan/usePlanInsights";
 
 import styles from "@pages/planner.module.scss";
-import { useRouter } from "next/router";
-import routes from "routes";
 
-const DEFAULT_PLAN: Plan[] = [
+const DEFAULT_PLAN: MyPlanItem[] = [
   { day: 1, recipes: [] },
   { day: 2, recipes: [] },
   { day: 3, recipes: [] },
@@ -46,7 +41,7 @@ const PlanDetails = () => {
   });
 
   const [panelHeight] = useState("1000px");
-  const [planlist, setPlanlist] = useState<Plan[]>(DEFAULT_PLAN);
+  const [planlist, setPlanlist] = useState<MyPlanItem[]>(DEFAULT_PLAN);
 
   const createPlan = useCreatePlan(planlist);
   const insights = usePlanInsights(planlist);
@@ -60,9 +55,7 @@ const PlanDetails = () => {
             <div className="col-3">
               <LeftSection
                 height={panelHeight}
-                addRecipeToPlan={(day, recipe) =>
-                  addRecipeToPlan(setPlanlist, day, recipe)
-                }
+                addRecipeToPlan={(day, recipe) => addRecipeToPlan(setPlanlist, day, recipe)}
               />
             </div>
             <div className="col-6" style={{ padding: "0 1.5rem" }}>
@@ -99,9 +92,7 @@ const PlanDetails = () => {
                 <div className={`${styles.plan} ${styles["plan--details"]}`}>
                   <Center
                     data={planlist}
-                    onRemove={(day, recipeId) =>
-                      deleteRecipeFromPlan(setPlanlist, day, recipeId)
-                    }
+                    onRemove={(day, recipeId) => deleteRecipeFromPlan(setPlanlist, day, recipeId)}
                   />
                 </div>
               </div>

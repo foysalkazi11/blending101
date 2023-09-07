@@ -49,11 +49,7 @@ const PlannerQueue = (props: PlannerPanelProps) => {
 
   return (
     <Fragment>
-      <IconHeading
-        icon={faTelescope}
-        title="Recipe"
-        iconStyle={{ fontSize: "24px" }}
-      />
+      <IconHeading icon={faTelescope} title="Recipe" iconStyle={{ fontSize: "24px" }} />
       <ToggleCard
         noRoute
         toggler={toggler}
@@ -93,29 +89,16 @@ const PlannerQueue = (props: PlannerPanelProps) => {
         </div>
       )}
       <div
-        className={`${styles.wrapper} ${
-          styles[toggler ? "wrapper--discover" : "wrapper--queue"]
-        }`}
+        className={`${styles.wrapper} ${styles[toggler ? "wrapper--discover" : "wrapper--queue"]}`}
         style={{
-          maxHeight: height
-            ? toggler
-              ? `calc(${height} - 111px)`
-              : `calc(${height} - 51px)`
-            : "auto",
+          maxHeight: height ? (toggler ? `calc(${height} - 111px)` : `calc(${height} - 51px)`) : "auto",
         }}
         ref={parentRef}
       >
-        <Recipes
-          recipes={toggler ? recipes : queuedRecipes}
-          addRecipeToPlan={addRecipeToPlan}
-        />
+        <Recipes recipes={toggler ? recipes : queuedRecipes} addRecipeToPlan={addRecipeToPlan} />
         {loading &&
           [...Array(page === 1 ? 3 : 1)]?.map((_, index) => (
-            <SkeletonElement
-              type="thumbnail"
-              key={index}
-              style={{ width: "100%", height: "277px" }}
-            />
+            <SkeletonElement type="thumbnail" key={index} style={{ width: "100%", height: "277px" }} />
           ))}
       </div>
     </Fragment>
@@ -135,14 +118,7 @@ const Recipes = (props: RecipesProps) => {
     <Fragment>
       {recipes?.map((recipe) => {
         const {
-          recipeId: {
-            _id,
-            name,
-            recipeBlendCategory,
-            averageRating,
-            totalRating,
-            image,
-          },
+          recipeId: { _id, name, recipeBlendCategory, averageRating, totalRating, image },
           defaultVersion,
         } = recipe;
 
@@ -163,10 +139,7 @@ const Recipes = (props: RecipesProps) => {
             >
               <div>
                 <div className={styles.daypicker}>
-                  <div
-                    className={styles.daypicker__field}
-                    onClick={() => setShownDayId(shownDayId === _id ? "" : _id)}
-                  >
+                  <div className={styles.daypicker__field} onClick={() => setShownDayId(shownDayId === _id ? "" : _id)}>
                     <Icon fontName={faPlus} size={15} />
                   </div>
                   {shownDayId === _id && (

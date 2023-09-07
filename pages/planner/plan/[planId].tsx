@@ -1,51 +1,34 @@
-import React, {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  Fragment,
-} from "react";
-import {
-  faBookmark,
-  faCalendarWeek,
-  faMessageDots,
-  faShareNodes,
-} from "@fortawesome/pro-light-svg-icons";
-import { faBookmark as faBookmarkSolid } from "@fortawesome/pro-solid-svg-icons";
-import RXPanel from "component/templates/Panel/RXFacts/RXPanel.component";
-import PlanDiscovery from "component/module/Planner/PlanDiscovery.component";
-import PlanList from "component/module/Planner/PlanByDay.component";
-import IconHeading from "theme/iconHeading/iconHeading.component";
-import Insights from "component/module/Planner/Insights.component";
-import Icon from "component/atoms/Icon/Icon.component";
-import { faTimes } from "@fortawesome/pro-regular-svg-icons";
-import { useRouter } from "next/router";
-import styles from "styles/pages/planner.module.scss";
-import IconButton from "component/atoms/Button/IconButton.component";
-import WeekPicker from "component/molecules/Date/Week.component";
-import { startOfWeek, endOfWeek, format } from "date-fns";
-import { useQuery } from "@apollo/client";
-import { GET_ALL_PLAN_COMMENTS } from "@/plan/plan.graphql";
-import PlanForm, {
-  defaultPlan,
-} from "component/module/Planner/PlanForm.component";
-import { useForm } from "react-hook-form";
-import PlannerQueue from "component/module/Planner/Queue.component";
-import ShareModal from "component/organisms/Share/Share.component";
-import { useAppDispatch, useAppSelector } from "redux/hooks";
-import ShowLastModifiedCollection from "components/showLastModifiedCollection/ShowLastModifiedCollection";
-import { setIsOpenPlanCollectionTray } from "redux/slices/Planner.slice";
-import useToOpenPlanCollectionTray from "customHooks/plan/useToOpenPlanCollectionTray";
-import useToAddPlanToCollection from "customHooks/plan/useToAddPlanToCollection";
-import { useUser } from "context/AuthProvider";
 import { useSharePlan } from "@/plan/hooks";
-import {
-  addRecipe,
-  deleteRecipe,
-  moveRecipe,
-} from "@/plan/services/plan-details.service";
+import { GET_ALL_PLAN_COMMENTS } from "@/plan/plan.graphql";
+import { addRecipe, deleteRecipe, moveRecipe } from "@/plan/services/plan-details.service";
+import { useQuery } from "@apollo/client";
+import { faBookmark, faCalendarWeek, faMessageDots, faShareNodes } from "@fortawesome/pro-light-svg-icons";
+import { faTimes } from "@fortawesome/pro-regular-svg-icons";
+import { faBookmark as faBookmarkSolid } from "@fortawesome/pro-solid-svg-icons";
+import IconButton from "component/atoms/Button/IconButton.component";
+import Icon from "component/atoms/Icon/Icon.component";
+import Insights from "component/module/Planner/Insights.component";
+import PlanList from "component/module/Planner/PlanByDay.component";
+import PlanDiscovery from "component/module/Planner/PlanDiscovery.component";
+import PlanForm, { defaultPlan } from "component/module/Planner/PlanForm.component";
+import PlannerQueue from "component/module/Planner/Queue.component";
+import WeekPicker from "component/molecules/Date/Week.component";
+import ShareModal from "component/organisms/Share/Share.component";
+import RXPanel from "component/templates/Panel/RXFacts/RXPanel.component";
+import ShowLastModifiedCollection from "components/showLastModifiedCollection/ShowLastModifiedCollection";
+import { useUser } from "context/AuthProvider";
+import useToAddPlanToCollection from "customHooks/plan/useToAddPlanToCollection";
+import useToOpenPlanCollectionTray from "customHooks/plan/useToOpenPlanCollectionTray";
+import { endOfWeek, format, startOfWeek } from "date-fns";
+import { useRouter } from "next/router";
+import { Fragment, forwardRef, useCallback, useEffect, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useAppDispatch, useAppSelector } from "redux/hooks";
+import { setIsOpenPlanCollectionTray } from "redux/slices/Planner.slice";
+import styles from "styles/pages/planner.module.scss";
+import IconHeading from "theme/iconHeading/iconHeading.component";
 
+import { PlanItem } from "@/app/types/plan.types";
 import useClonePlan from "@/plan/hooks/plan-details/useClonePlan";
 import useEditPlan from "@/plan/hooks/plan-details/useEditPlan";
 import usePlanDetails from "@/plan/hooks/plan-details/usePlanDetails";
@@ -62,8 +45,8 @@ const PlanDetails = () => {
   });
 
   const { plan, insights, recipes } = usePlanDetails(planId);
-
-  const [planlist, setPlanlist] = useState([]);
+  console.log(plan);
+  const [planlist, setPlanlist] = useState<PlanItem[]>([]);
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -84,9 +67,7 @@ const PlanDetails = () => {
     }
   }, [form, plan]);
 
-  const { lastModifiedPlanCollection } = useAppSelector(
-    (state) => state?.planner,
-  );
+  const { lastModifiedPlanCollection } = useAppSelector((state) => state?.planner);
 
   const [link, getLink] = useSharePlan(planId);
 
@@ -104,10 +85,10 @@ const PlanDetails = () => {
     if (!isEditMode) return setIsEditMode(true);
     if (plan?.memberId === id) {
       // IF THE CREATOR OF THE PLAN TRIES TO EDIT THE PLAN
-      editPlan(planId, data);
+      await editPlan(planId, data);
     } else {
       // IF VISITOR TRIES TO EDIT THE PLAN
-      clonePlan(data);
+      await clonePlan(data);
     }
     setIsEditMode(false);
     setPlanlist(plan?.planData);
@@ -133,9 +114,7 @@ const PlanDetails = () => {
     (start, end) => {
       const startDate = format(new Date(start), "yyyy-MM-dd");
       const endDate = format(new Date(end), "yyyy-MM-dd");
-      router.push(
-        `${routes.plan.myPlan}/?plan=${planId}&start=${startDate}&end=${endDate}&alert=true`,
-      );
+      router.push(`${routes.plan.myPlan}/?plan=${planId}&start=${startDate}&end=${endDate}&alert=true`);
     },
     [planId, router],
   );
@@ -143,38 +122,20 @@ const PlanDetails = () => {
   return (
     <Fragment>
       <RXPanel />
-      <ShareModal
-        name={plan?.planName}
-        show={showShare}
-        setShow={setShowShare}
-        link={link}
-        onShare={getLink}
-      />
+      <ShareModal name={plan?.planName} show={showShare} setShow={setShowShare} link={link} onShare={getLink} />
       <div className={styles.windowContainer}>
         <div className={styles.planner}>
           <div className="row mt-20">
             <div className="col-3">
               {isEditMode ? (
-                <PlannerQueue
-                  panel="plan"
-                  height={panelHeight}
-                  recipes={recipes}
-                  modifyPlan={addRecipeToPlan}
-                />
+                <PlannerQueue panel="plan" height={panelHeight} recipes={recipes} modifyPlan={addRecipeToPlan} />
               ) : (
-                <PlanDiscovery
-                  height={panelHeight}
-                  recipes={recipes}
-                  setOpenCollectionModal={setOpenCollectionModal}
-                />
+                <PlanDiscovery height={panelHeight} recipes={recipes} setOpenCollectionModal={setOpenCollectionModal} />
               )}
             </div>
             <div className="col-6" style={{ padding: "0 1.5rem" }}>
               <div className={styles.headingDiv}>
-                <IconHeading
-                  title={isEditMode ? "Edit Plan" : "Plan"}
-                  icon={faCalendarWeek}
-                />
+                <IconHeading title={isEditMode ? "Edit Plan" : "Plan"} icon={faCalendarWeek} />
                 <div className="flex ai-center">
                   <div
                     className={`${styles.uploadDiv} ${styles.uploadDiv__save}`}
@@ -212,47 +173,23 @@ const PlanDetails = () => {
                 ) : (
                   <Fragment>
                     <div className={styles.preview}>
-                      <h3 className={styles.preview__title}>
-                        {plan?.planName}
-                      </h3>
+                      <h3 className={styles.preview__title}>{plan?.planName}</h3>
                       <div className={styles.preview__actions}>
                         <span>
-                          <img
-                            src="/logo_small.svg"
-                            alt=""
-                            height={30}
-                            className="mr-10"
-                          />
+                          <img src="/logo_small.svg" alt="" height={30} className="mr-10" />
                           Blending 101
                         </span>
                         <div>
-                          <WeekPicker
-                            element={<DatePickerButton />}
-                            week={week}
-                            onWeekChange={addToMyPlan}
-                          />
+                          <WeekPicker element={<DatePickerButton />} week={week} onWeekChange={addToMyPlan} />
                           <span
                             onClick={() =>
                               plan?.planCollections?.length
-                                ? openCollection(
-                                    plan?._id,
-                                    plan?.planCollections,
-                                    "details",
-                                  )
-                                : addToCollection(
-                                    plan?._id,
-                                    id,
-                                    setOpenCollectionModal,
-                                    "details",
-                                  )
+                                ? openCollection(plan?._id, plan?.planCollections, "details")
+                                : addToCollection(plan?._id, id, setOpenCollectionModal, "details")
                             }
                           >
                             <Icon
-                              fontName={
-                                plan?.planCollections?.length
-                                  ? faBookmarkSolid
-                                  : faBookmark
-                              }
+                              fontName={plan?.planCollections?.length ? faBookmarkSolid : faBookmark}
                               size="2rem"
                               className="mr-10"
                               variant="bold"
@@ -261,21 +198,11 @@ const PlanDetails = () => {
                             Bookmark
                           </span>
                           <span onClick={() => setShowShare(true)}>
-                            <Icon
-                              fontName={faShareNodes}
-                              size="2rem"
-                              className="mr-10"
-                            />
+                            <Icon fontName={faShareNodes} size="2rem" className="mr-10" />
                             Share
                           </span>
-                          <span
-                            onClick={() => setShowComments((prev) => !prev)}
-                          >
-                            <Icon
-                              fontName={faMessageDots}
-                              size="2rem"
-                              className="mr-10"
-                            />
+                          <span onClick={() => setShowComments((prev) => !prev)}>
+                            <Icon fontName={faMessageDots} size="2rem" className="mr-10" />
                             {comments?.getAllCommentsForAPlan?.length || 0}
                           </span>
                         </div>

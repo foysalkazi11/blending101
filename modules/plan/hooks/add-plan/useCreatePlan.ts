@@ -10,9 +10,9 @@ import {
   GET_FEATURED_PLANS,
   GET_ALL_PLANS,
 } from "../../plan.graphql";
-import Plan from "@/plan/plan.types";
+import { MyPlanItem } from "@/app/types/plan.types";
 
-const useCreatePlan = (planlist: Plan[]) => {
+const useCreatePlan = (planlist: MyPlanItem[]) => {
   const { id } = useUser();
   const router = useRouter();
 

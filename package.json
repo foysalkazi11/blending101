@@ -24,6 +24,7 @@
     "@fortawesome/react-fontawesome": "^0.1.18",
     "@next/bundle-analyzer": "^13.4.19",
     "@reduxjs/toolkit": "^1.7.0",
+    "antd": "^5.8.6",
     "aws-amplify": "^4.3.10",
     "axios": "^0.24.0",
     "babel-plugin-macros": "^3.1.0",
@@ -50,6 +51,7 @@
     "react-hook-form": "^7.22.1",
     "react-horizontal-stacked-bar-chart": "^8.15.2",
     "react-icons": "^4.3.1",
+    "react-overlays": "^5.2.1",
     "react-qr-code": "^2.0.12",
     "react-redux": "^7.2.6",
     "react-share": "^4.4.1",
@@ -63,6 +65,7 @@
   },
   "devDependencies": {
     "@svgr/webpack": "^6.1.2",
+    "@trivago/prettier-plugin-sort-imports": "^4.2.0",
     "@types/ejs": "^3.1.1",
     "@types/node": "^16.11.6",
     "@types/react": "^17.0.33",
