@@ -17,6 +17,12 @@ import Tooltip from "../../../../theme/toolTip/CustomToolTip";
 import useHover from "../../../utility/useHover";
 import styles from "./SingleMenu.module.scss";
 
+const separateCollectionRoutes = {
+  recipeCollection: "recipe",
+  blogCollection: "blog",
+  planCollection: "planner",
+};
+
 interface IndividualCollectionType {
   name?: string;
   image?: string;
@@ -130,7 +136,9 @@ const SingleCollection = ({
           onClick={() =>
             handleCollectionRoute(
               route ||
-                `/collection/${collectionRoute}/${slug}${
+                `/${
+                  separateCollectionRoutes[collectionRoute]
+                }/${collectionRoute}/${slug}${
                   isShared ? "?collectionId=" + id : ""
                 }`,
             )

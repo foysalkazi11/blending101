@@ -123,7 +123,7 @@ const MyCollections = () => {
                     size="2x"
                   />
                 ),
-                allUrl: `/collection/recipeCollection/${slug}`,
+                allUrl: `/recipe/recipeCollection/${slug}`,
               }}
               loading={false}
               recipes={recipes}

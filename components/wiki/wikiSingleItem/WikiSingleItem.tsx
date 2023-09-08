@@ -1,9 +1,8 @@
 import { useLazyQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
-import AContainer from "../../../containers/A.container";
 import GET_ALL_INGREDIENTS_BASED_ON_NURTITION from "../../../gqlLib/wiki/query/getAllIngredientsBasedOnNutrition";
 import GET_BLEND_NUTRITION_BASED_IN_INGREDIENTS_WIKI from "../../../gqlLib/wiki/query/getBlendNutritionBasedIngredientsWiki";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch } from "../../../redux/hooks";
 import { updateSidebarActiveMenuName } from "../../../redux/slices/utilitySlice";
 import NutritionPanel from "../../recipe/share/nutritionPanel/NutritionPanel";
 import notification from "../../utility/reactToastifyNotification";
@@ -11,14 +10,9 @@ import WikiCenterComponent from "../WikiCenter";
 import WikiRightComponent from "../WikiRight";
 import styles from "../wiki.module.scss";
 import { useRouter } from "next/router";
-import RelatedWikiItem from "./realtedWikiItem/RelatedWikiItem";
 import GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS from "../../../gqlLib/nutrition/query/getNutrientsListAndGiGlByIngredients";
 import { GiGl } from "../../../type/nutrationType";
-import {
-  WikiDetailsIngredientType,
-  WikiDetailsNutrientType,
-} from "../../../type/wikiDetailsType";
-import { WikiType } from "../../../type/wikiListType";
+import { WikiDetailsIngredientType } from "../../../type/wikiDetailsType";
 import useWindowSize from "../../utility/useWindowSize";
 import ShowRelatedItems from "../../showRelatedItems";
 import dummyData from "./dummyData";

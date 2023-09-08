@@ -1,7 +1,5 @@
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import AContainer from "../../../containers/A.container";
-import { useAppSelector } from "../../../redux/hooks";
 import styles from "../../../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";
 import classes from "../../../styles/pages/viewAll.module.scss";
 import { useQuery } from "@apollo/client";
@@ -12,6 +10,7 @@ import GET_ALL_BLOGS_FOR_A_COLLECTION from "../../../gqlLib/blog/query/getAllBlo
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faStar } from "@fortawesome/pro-regular-svg-icons";
 import { useUser } from "../../../context/AuthProvider";
+import BlogCollectionTray from "components/sidetray/blogCollectionTray";
 
 const CollectionBlog = () => {
   const router = useRouter();
@@ -31,24 +30,9 @@ const CollectionBlog = () => {
   );
 
   return (
-    <AContainer
-      headerIcon="/icons/book_light.svg"
-      headerTitle="Blog collection"
-      showBlogCollectionTray={{
-        show: true,
-        showPanel: "left",
-        showTagByDefault: true,
-      }}
-      showBlogCommentsTray={{
-        show: true,
-        showPanel: "right",
-        showTagByDefault: false,
-      }}
-      headTagInfo={{
-        title: "Blog collection",
-        description: "blog collection",
-      }}
-    >
+    <React.Fragment>
+      <BlogCollectionTray showPanle="left" showTagByDefaut={true} />
+      <BlogCollectionTray showPanle="right" showTagByDefaut={false} />
       <div className={styles.main__div}>
         <CommonSearchBar
           input={input}
@@ -81,8 +65,13 @@ const CollectionBlog = () => {
           showItems="blog"
         />
       </div>
-    </AContainer>
+    </React.Fragment>
   );
+};
+
+CollectionBlog.meta = {
+  icon: "/icons/book_light.svg",
+  title: "Blog collection",
 };
 
 export default CollectionBlog;

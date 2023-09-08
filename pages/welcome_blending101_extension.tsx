@@ -1,7 +1,6 @@
 import React from "react";
 import AppdownLoadCard from "../components/recipe/recipeDiscovery/AppdownLoadCard/AppdownLoadCard.component";
 import s from "../components/pageLayout/pageLayout.module.scss";
-import AContainer from "../containers/A.container";
 
 const Index = () => {
   return (
