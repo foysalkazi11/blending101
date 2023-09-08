@@ -26,7 +26,7 @@ const LoginScreen = () => {
   const loginSuccess = (user: DbUserType) => {
     setIsLoading(false);
     // dispatch(setDbUser(user));
-    router.push("/");
+    //router.push("/");
   };
   const loginError = (error: unknown) => {
     setIsLoading(false);

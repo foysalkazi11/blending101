@@ -124,7 +124,7 @@ export default function CollectionComponent({
         process.env.NODE_ENV === "production"
           ? process.env.NEXT_PUBLIC_HOSTING_DOMAIN
           : "http://localhost:4000"
-      }/collection/recipeCollection/${collectionInfo?.slug}?${
+      }/recipe/recipeCollection/${collectionInfo?.slug}?${
         isGlobalShare
           ? "token=" + data.createShareCollectionLink
           : "collectionId=" + collectionInfo?.id
@@ -226,7 +226,7 @@ export default function CollectionComponent({
           <SingleCollection
             name="Shared With Me"
             collectionRoute="recipeCollection"
-            route={`/collection/recipeCollection/shared_with_me`}
+            route={`/recipe/recipeCollection/shared_with_me`}
           />
         </>
       )}

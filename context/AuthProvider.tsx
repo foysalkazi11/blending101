@@ -9,7 +9,6 @@ import React, {
 import { useRouter } from "next/router";
 import { Auth, Amplify } from "aws-amplify";
 import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth/lib/types";
-
 import AmplifyConfig from "../configs/aws";
 import { GET_USER } from "../gqlLib/user/mutations/createNewUser";
 import { useMutation } from "@apollo/client";
@@ -127,8 +126,8 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
     try {
       const user = await Auth.signIn(email, password);
       const bdUser = await sessionHandler(user);
-      // router.push("/");
       onSuccess(bdUser);
+      router.push("/");
     } catch (error) {
       notification("error", error.message);
       onError(error);

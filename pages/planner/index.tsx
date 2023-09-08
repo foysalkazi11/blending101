@@ -11,7 +11,6 @@ import { faUserCircle } from "@fortawesome/pro-light-svg-icons";
 import PlanCard from "../../component/module/Planner/PlanCard.component";
 import AppdownLoadCard from "../../components/recipe/recipeDiscovery/AppdownLoadCard/AppdownLoadCard.component";
 import ContentTray from "../../components/recipe/recipeDiscovery/ContentTray/ContentTray.component";
-import AContainer from "../../containers/A.container";
 import Icon from "../../component/atoms/Icon/Icon.component";
 import styles from "../../styles/pages/planner.module.scss";
 import "react-datepicker/dist/react-datepicker.css";
@@ -36,7 +35,6 @@ import useToUpdateActiveFilterTagForPlan from "../../customHooks/planFilter/useT
 import useToAddPlanFilterCriteriaWithUrl from "../../customHooks/planFilter/useToAddPlanFilterCriteriaWithUrl";
 import { AllFilterType } from "../../type/filterType";
 import useToGetPlanByFilterCriteria from "../../customHooks/planFilter/useToGetPlanByFilterCriteria";
-import ShowRecipeContainer from "../../components/showRecipeContainer";
 import useDebounce from "../../customHooks/useDebounce";
 import { useUser } from "../../context/AuthProvider";
 import MenubarComponent from "../../component/molecules/Menubar/Menubar.component";

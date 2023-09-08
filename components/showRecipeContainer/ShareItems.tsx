@@ -92,7 +92,7 @@ const ShareItems = ({
           process.env.NODE_ENV === "production"
             ? process.env.NEXT_PUBLIC_HOSTING_DOMAIN
             : "http://localhost:3000"
-        }/collection/recipeCollection/${input.slug}?${
+        }/recipe/recipeCollection/${input.slug}?${
           isGlobalShare
             ? "token=" + data.createCollectionAndShare
             : "collectionId=" + data.createCollectionAndShare
