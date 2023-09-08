@@ -1,16 +1,13 @@
 import { faBooks } from "@fortawesome/pro-thin-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { Fragment, useState } from "react";
-import AContainer from "../../containers/A.container";
 import useLocalStorage from "../../customHooks/useLocalStorage";
 import { WikiType } from "../../type/wikiListType";
 import TrayTag from "../sidetray/TrayTag";
 import TrayWrapper from "../sidetray/TrayWrapper";
 import styles from "./wiki.module.scss";
-import WikiBanner from "./wikiBanner/WikiBanner";
 import WikiLanding from "./wikiLanding/WikiLanding";
 import WikiLeft from "./WikiLeft/WikiLeft";
-import WikiSearchBar from "./wikiSearchBar/WikiSearchBar";
 import WikiSingleType from "./wikiSingleType/WikiSingleType";
 import { useRouter } from "next/router";
 import WikiSingleItem from "./wikiSingleItem/WikiSingleItem";

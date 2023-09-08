@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import React, { Fragment, useState } from "react";
 import Icon from "../../component/atoms/Icon/Icon.component";
-import AContainer from "../../containers/A.container";
 import styles from "../../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";
 import classes from "../../styles/pages/viewAll.module.scss";
 import IconWarper from "../../theme/iconWarper/IconWarper";
