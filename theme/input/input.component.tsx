@@ -16,6 +16,7 @@ interface InputComponentProps extends InputHTMLAttributes<HTMLInputElement> {
   fieldName?: string;
   inputWithIcon?: boolean;
   icon?: ReactNode | string;
+  label?: string;
 }
 
 function InputComponent(
@@ -34,7 +35,7 @@ function InputComponent(
     fieldName = "",
     inputWithIcon = false,
     icon,
-
+    label = "",
     ...InputProps
   }: InputComponentProps,
   ref,
@@ -49,49 +50,55 @@ function InputComponent(
 
   if (inputWithIcon) {
     return (
-      <div
-        className={`${styles.inputWithIcon} ${
-          borderSecondary ? styles.borderSecondary : null
-        }`}
-      >
-        <input
-          name={name}
-          className={`${styles.input} `}
-          type={type}
-          style={style}
-          value={value}
-          onChange={handleChange}
-          placeholder={placeholder}
-          min={min}
-          max={max}
-          ref={ref}
-          {...InputProps}
-        />
-        {typeof icon === "string" ? (
-          <img className={styles.icon} src={icon} alt="icon" />
-        ) : (
-          <div className={styles.icon}>{icon}</div>
-        )}
-      </div>
+      <>
+        {label && <label className={styles.label}>{label}</label>}
+        <div
+          className={`${styles.inputWithIcon} ${
+            borderSecondary ? styles.borderSecondary : null
+          }`}
+        >
+          <input
+            name={name}
+            className={`${styles.input} `}
+            type={type}
+            style={style}
+            value={value}
+            onChange={handleChange}
+            placeholder={placeholder}
+            min={min}
+            max={max}
+            ref={ref}
+            {...InputProps}
+          />
+          {typeof icon === "string" ? (
+            <img className={styles.icon} src={icon} alt="icon" />
+          ) : (
+            <div className={styles.icon}>{icon}</div>
+          )}
+        </div>
+      </>
     );
   }
 
   return (
-    <input
-      name={name}
-      className={`${styles.input} ${
-        borderSecondary ? styles.borderSecondary : null
-      }`}
-      type={type}
-      style={style}
-      value={value}
-      onChange={handleChange}
-      placeholder={placeholder}
-      min={min}
-      max={max}
-      ref={ref}
-      {...InputProps}
-    />
+    <>
+      {label && <label className={styles.label}>{label}</label>}
+      <input
+        name={name}
+        className={`${styles.input} ${
+          borderSecondary ? styles.borderSecondary : null
+        }`}
+        type={type}
+        style={style}
+        value={value}
+        onChange={handleChange}
+        placeholder={placeholder}
+        min={min}
+        max={max}
+        ref={ref}
+        {...InputProps}
+      />
+    </>
   );
 }
 
