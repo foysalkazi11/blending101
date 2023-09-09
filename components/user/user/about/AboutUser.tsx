@@ -1,26 +1,32 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import styles from "./AboutUser.module.scss";
 import InputComponent from "../../../../theme/input/input.component";
 import { UserDataType } from "..";
 import ShowSuggestion from "theme/showSuggestion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faAngleDown,
-  faMagnifyingGlass,
-} from "@fortawesome/pro-light-svg-icons";
-import options from "./staticData/timezones.json";
+import { faAngleDown } from "@fortawesome/pro-light-svg-icons";
+import optionsForTimeZone from "./staticData/timezones.json";
+import optionsForBlender from "./staticData/blender.json";
 
-const optionsList = Object.entries(JSON.parse(JSON.stringify(options))).map(
-  ([timezone, offset]: [string, string]) => {
-    let timezoneDivide = timezone?.split("/");
-    let label = `${timezoneDivide[1]}, ${timezoneDivide[0]} ${offset.slice(
-      0,
-      11,
-    )}`;
+const optionsListForTimeZone = Object.entries(
+  JSON.parse(JSON.stringify(optionsForTimeZone)),
+).map(([timezone, offset]: [string, string]) => {
+  let timezoneDivide = timezone?.split("/");
+  let label = `${timezoneDivide[1]}, ${timezoneDivide[0]} ${offset.slice(
+    0,
+    11,
+  )}`;
+  return {
+    label,
+    value: label?.toLowerCase(),
+  };
+});
+const optionsListForBlender = JSON.parse(JSON.stringify(optionsForBlender)).map(
+  (blenderName: { [key: string]: string }) => {
     return {
-      label,
-      value: label.toLowerCase(),
+      label: blenderName?.["Blender Name"],
+      value: blenderName?.["Blender Name"]?.toLowerCase(),
     };
   },
 );
@@ -40,6 +46,10 @@ const About = ({ userData, setUserData }: AboutProps) => {
     userData?.about;
   const [showLocationSuggestionsBox, setShowLocationSuggestionsBox] =
     useState(false);
+  const [showBlenderSuggestionsBox, setShowBlenderSuggestionsBox] =
+    useState(false);
+  const timezoneRef = useRef<HTMLInputElement>(null);
+  const blendRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e) => {
     const { name, value } = e?.target;
@@ -82,7 +92,7 @@ const About = ({ userData, setUserData }: AboutProps) => {
               name="lastName"
               value={lastName}
               onChange={handleChange}
-              placeholder="Lirst name"
+              placeholder="Last name"
               label="Last name"
             />
           </div>
@@ -99,7 +109,10 @@ const About = ({ userData, setUserData }: AboutProps) => {
             />
           </div>
         </div>
-        <div className={styles.Container__item}>
+        <div
+          className={styles.Container__item}
+          style={{ position: "relative" }}
+        >
           <div className={styles.inputContainer}>
             <InputComponent
               inputWithIcon={true}
@@ -107,11 +120,28 @@ const About = ({ userData, setUserData }: AboutProps) => {
               name="yourBlender"
               value={yourBlender}
               onChange={handleChange}
-              placeholder="Yoru blender"
-              icon={<FontAwesomeIcon icon={faMagnifyingGlass} size="sm" />}
+              placeholder="Select blender"
+              icon={<FontAwesomeIcon icon={faAngleDown} size="sm" />}
               label="Your Blender"
+              onClick={() => {
+                showBlenderSuggestionsBox && blendRef?.current?.focus();
+                setShowBlenderSuggestionsBox(!showBlenderSuggestionsBox);
+              }}
+              readOnly
             />
           </div>
+          <ShowSuggestion
+            list={optionsListForBlender}
+            handleClickList={(list: Options) =>
+              handleChange({
+                target: { name: "yourBlender", value: list.label },
+              })
+            }
+            style={{ display: showBlenderSuggestionsBox ? "block" : "none" }}
+            placeholder="Search blender..."
+            closeSuggestionBox={() => setShowBlenderSuggestionsBox(false)}
+            ref={blendRef}
+          />
         </div>
 
         <div className={styles.Container__item}>
@@ -141,22 +171,23 @@ const About = ({ userData, setUserData }: AboutProps) => {
               handleChange={handleChange}
               icon={<FontAwesomeIcon icon={faAngleDown} size="sm" />}
               readOnly
-              onClick={() =>
-                setShowLocationSuggestionsBox(!showLocationSuggestionsBox)
-              }
+              onClick={() => {
+                showLocationSuggestionsBox && timezoneRef?.current?.focus();
+                setShowLocationSuggestionsBox(!showLocationSuggestionsBox);
+              }}
               label="Location"
             />
           </div>
 
           <ShowSuggestion
-            list={optionsList}
-            input={userData.about.location}
+            list={optionsListForTimeZone}
             handleClickList={(list: Options) =>
               handleChange({ target: { name: "location", value: list.label } })
             }
             style={{ display: showLocationSuggestionsBox ? "block" : "none" }}
             placeholder="Search timezone"
             closeSuggestionBox={() => setShowLocationSuggestionsBox(false)}
+            ref={timezoneRef}
           />
         </div>
       </div>
