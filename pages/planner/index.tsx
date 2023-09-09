@@ -44,6 +44,7 @@ import {
   HideOnMobile,
 } from "../../component/molecules/Responsive/Responsive.component";
 import { faPlusCircle } from "@fortawesome/pro-regular-svg-icons";
+import PlanCollectionTray from "components/sidetray/planCollectionTray";
 
 const normalizeQueryParams = (queryParams) => {
   let queryParamObj = {} as AllFilterType;
@@ -160,7 +161,8 @@ const PlanDiscovery = () => {
 
   return (
     <Fragment>
-      <PlanFilterTray showTagByDefaut={false} />
+      <PlanFilterTray showPanle="left" showTagByDefaut={false} />
+      <PlanCollectionTray showPanle="left" showTagByDefaut={true} />
       <div className={styles.discovery}>
         <HideOnMobile>
           <div className={styles.searchBarContainer}>
