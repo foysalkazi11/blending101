@@ -3,8 +3,8 @@ import React, { ReactNode, useState } from "react";
 import Icon from "../../component/atoms/Icon/Icon.component";
 import styles from "./button.module.scss";
 
-interface buttonInterface {
-  type?:
+type ButtonComponentProps = React.ComponentPropsWithoutRef<"button"> & {
+  variant?:
     | "text"
     | "primary"
     | "buttonWithIcon"
@@ -12,53 +12,58 @@ interface buttonInterface {
     | "transparentHover"
     | "border";
   fontName?: any;
-  value: string;
+  value?: string | ReactNode;
   fullWidth?: number;
   width?: number;
   style?: object;
   icon?: string | ReactNode;
   onClick?: () => void;
-}
+  children?: string | ReactNode;
+};
 
 export default function ButtonComponent({
-  type,
-  style,
-  value,
+  variant = "text",
+  style = {},
+  value = "button",
   fullWidth,
   width,
   icon,
   fontName,
   onClick,
-}: buttonInterface) {
+  children,
+  ...rest
+}: ButtonComponentProps) {
   // STEP 1: INITIALIZE PROPS TO AVOID UI FALL
-  type = type || "text";
-  style = style || {};
+  if (!children && typeof value === "string") {
+    children = value;
+  }
   if (fullWidth) style = { ...style, width: "100%" };
   if (width) style = { ...style, width: width };
-  value = value || type;
   icon = icon || "/images/formulate.svg";
 
   const clickHandler = () => {
     onClick && onClick();
   };
 
-  // CASE PRIMARY: IF TYPE IS PRIMARY RETURN PRIMARY BUTTON
-  if (type === "primary")
+  // CASE PRIMARY: IF variant IS PRIMARY RETURN PRIMARY BUTTON
+  if (variant === "primary")
     return (
       <button
         className={styles.button + " " + styles.primary}
         style={style}
         onClick={clickHandler}
+        {...rest}
       >
-        {value}
+        {children}
       </button>
     );
-  if (type === "buttonWithIcon")
+  if (variant === "buttonWithIcon")
     return (
       <button
         className={styles.button + " " + styles.primary}
         style={style}
         onClick={clickHandler}
+        {...rest}
       >
         {typeof icon === "string" ? (
           <img src={icon} alt="icon" className={styles.icon} />
@@ -66,7 +71,7 @@ export default function ButtonComponent({
           <div className={styles.icon}>{icon}</div>
         )}
 
-        {value}
+        {children}
       </button>
     );
 
@@ -76,50 +81,59 @@ export default function ButtonComponent({
         className={styles.button + " " + styles.primary}
         style={style}
         onClick={clickHandler}
+        {...rest}
       >
         <Icon fontName={fontName} size={"2rem"} />
-        <span className="ml-10">{value}</span>
+        <span className="ml-10">{children}</span>
       </button>
     );
 
   // CASE TRANSPARENT: RETURN TRANSPARENT BUTTON
-  if (type === "transparent")
+  if (variant === "transparent")
     return (
       <button
         className={styles.button + " " + styles.transparent}
         style={style}
         onClick={clickHandler}
+        {...rest}
       >
-        {value}
+        {children}
       </button>
     );
 
-  if (type === "transparentHover")
+  if (variant === "transparentHover")
     return (
       <button
         className={styles.button + " " + styles.transparent__hover}
         style={style}
         onClick={clickHandler}
+        {...rest}
       >
-        {value}
+        {children}
       </button>
     );
 
-  if (type === "border")
+  if (variant === "border")
     return (
       <button
         className={styles.border__button}
         style={style}
         onClick={clickHandler}
+        {...rest}
       >
-        {value}
+        {children}
       </button>
     );
 
   // CASE DEFAULT: RETURN WHITE BUTTON
   return (
-    <button className={styles.button} style={style} onClick={clickHandler}>
-      {value}
+    <button
+      className={styles.button}
+      style={style}
+      onClick={clickHandler}
+      {...rest}
+    >
+      {children}
     </button>
   );
 }

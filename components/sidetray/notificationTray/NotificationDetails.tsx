@@ -67,7 +67,7 @@ const NotificationDetails = ({
     }
     if (type === "Collection") {
       router.push(
-        `/collection/recipeCollection/${slugify(entityId?.name)}${
+        `/recipe/recipeCollection/${slugify(entityId?.name)}${
           "?collectionId=" + entityId?._id
         }`,
       );

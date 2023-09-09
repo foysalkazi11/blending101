@@ -20,9 +20,8 @@ const WikiSearchBar = ({
 }: Props) => {
   const router = useRouter();
   const [input, setInput] = useState("");
-  const user = useUser();
 
-  const { dbUser } = useAppSelector((state) => state?.user);
+  const { dbUser, userCompareLength } = useAppSelector((state) => state?.user);
 
   const toggleFilterPanel = () => {
     setOpenTray(true);
@@ -58,7 +57,7 @@ const WikiSearchBar = ({
             })`}
             disable={dbUser?.wikiCompareCount ? false : true}
             style={{
-              backgroundColor: dbUser?.compareLength ? "#fff" : "#ececec",
+              backgroundColor: userCompareLength ? "#fff" : "#ececec",
             }}
             handleClick={() => router.push(`/wiki/compare`)}
           />

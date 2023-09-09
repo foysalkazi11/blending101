@@ -1,7 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useState, useEffect } from "react";
-import AContainer from "../../../containers/A.container";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import React, { useState } from "react";
 import styles from "../../../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";
 import classes from "../../../styles/pages/viewAll.module.scss";
 import { useQuery } from "@apollo/client";
@@ -13,10 +11,11 @@ import slugToTitle from "../../../helperFunc/string/slugToTittle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faStar } from "@fortawesome/pro-regular-svg-icons";
 import { useUser } from "../../../context/AuthProvider";
+import PlanCollectionTray from "components/sidetray/planCollectionTray";
+import PlanCommentsTray from "components/sidetray/planCommentsTray";
 
 const CollectionsOfPlan = () => {
   const router = useRouter();
-  const dispatch = useAppDispatch();
   const slug = router.query?.collectionSlug as string;
   const [input, setInput] = useState("");
   const memberId = useUser().id;
@@ -33,24 +32,9 @@ const CollectionsOfPlan = () => {
   );
 
   return (
-    <AContainer
-      headerIcon="/icons/calender__sidebar.svg"
-      headerTitle="Plan collection"
-      showPlanCollectionTray={{
-        show: true,
-        showPanel: "left",
-        showTagByDefault: true,
-      }}
-      headTagInfo={{
-        title: "Plan collection",
-        description: "plan collection",
-      }}
-      showCommentsTrayForPlan={{
-        show: true,
-        showPanel: "right",
-        showTagByDefault: false,
-      }}
-    >
+    <React.Fragment>
+      <PlanCollectionTray showPanle="left" showTagByDefaut={true} />
+      <PlanCommentsTray showPanle="right" showTagByDefaut={false} />
       <div className={styles.main__div}>
         <CommonSearchBar
           input={input}
@@ -81,8 +65,13 @@ const CollectionsOfPlan = () => {
           showDefaultRightHeader
         />
       </div>
-    </AContainer>
+    </React.Fragment>
   );
+};
+
+CollectionsOfPlan.meta = {
+  icon: "/icons/calender__sidebar.svg",
+  title: "Plan collection",
 };
 
 export default CollectionsOfPlan;

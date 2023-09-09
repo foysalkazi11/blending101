@@ -1,16 +1,13 @@
 import { useRouter } from "next/router";
-import React, { FC, useCallback, useEffect, useState } from "react";
-import AContainer from "../../../containers/A.container";
+import React, { useCallback, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import styles from "../../../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";
 import classes from "../../../styles/pages/viewAll.module.scss";
-import { QueryLazyOptions, QueryResult, useLazyQuery } from "@apollo/client";
+import { QueryLazyOptions, useLazyQuery } from "@apollo/client";
 import GET_SINGLE_COLLECTION from "../../../gqlLib/collection/query/getSingleCollection";
 import GET_ALL_MY_CREATED_RECIPES from "../../../gqlLib/collection/query/getAllMyCreatedRecipes";
 import GET_ALL_RECIPES_WITHIN_COLLECTIONS from "../../../gqlLib/collection/query/getAllRecipesWhithiCollections";
 import ShowRecipeContainer from "../../../components/showRecipeContainer";
-import CommonSearchBar from "../../../components/searchBar/CommonSearchBar";
-import WikiBanner from "../../../components/wiki/wikiBanner/WikiBanner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faStar } from "@fortawesome/pro-regular-svg-icons";
 import ErrorPage from "../../../components/pages/404Page";
@@ -20,28 +17,15 @@ import {
   setChangeRecipeWithinCollection,
   setSingleRecipeWithinCollecions,
 } from "../../../redux/slices/collectionSlice";
-import {
-  setOpenCollectionsTary,
-  setOpenFilterTray,
-} from "../../../redux/slices/sideTraySlice";
-import useFetchGetRecipesByBlendAndIngredients from "../../../components/recipe/recipeDiscovery/helperFunc/useFetchGetRecipesByBlendAndIngredients";
-import SearchtagsComponent from "../../../components/searchtags/searchtags.component";
-import {
-  resetAllFilters,
-  updateAllFilterRecipes,
-} from "../../../redux/slices/filterRecipeSlice";
+import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
 import GET_SHARE_WITH_ME_COLLECTIONS from "../../../gqlLib/collection/query/getShareWithMeCollections";
 import { ShowRecipes } from "../../../components/recipe/recipeDiscovery/regularRecipes";
-import Tooltip from "../../../theme/toolTip/CustomToolTip";
-import RecipeDiscoverButton from "../../../theme/button/recipeDiscoverButton/RecipeDiscoverButton";
 import GET_MY_RECENT_RECIPES from "../../../gqlLib/collection/query/getMyRecientRecipes";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
 import { faXmark } from "@fortawesome/pro-light-svg-icons";
 import HeaderTextBtn from "../../../components/recipe/share/panelHeader/HeaderTextBtn";
 import useToAcceptCollectionShare from "../../../customHooks/collection/useToAcceptCollectionShare";
 import notification from "../../../components/utility/reactToastifyNotification";
-import useToUpdateFilterCriteria from "../../../customHooks/recipeFilter/useToUpdateRecipeFilterCriteria";
-import useToUpdateActiveFilterTag from "../../../customHooks/recipeFilter/useToUpdateActiveFilterTag";
 import { useUser } from "../../../context/AuthProvider";
 import Layout from "../../../layouts";
 import { faBookmark } from "@fortawesome/pro-solid-svg-icons";
@@ -212,45 +196,6 @@ const CollectionRecipes = () => {
           page,
         );
     }
-
-    // if (slug == "all-recipes") {
-    //   handleToFetchCollectionRecipes(
-    //     getAllRecipes,
-    //     { userId },
-    //     "getAllRecipesFromCollection",
-    //     page,
-    //   );
-    // } else if (slug === "shared_with_me") {
-    //   setShareWithMeCollection(true);
-    //   getShareWithMeCollection();
-    // } else if (slug === "my-recipes") {
-    //   handleToFetchCollectionRecipes(
-    //     getMyRecipes,
-    //     { userId },
-    //     "getAllMyCreatedRecipes",
-    //     page,
-    //   );
-    // } else if (slug === "recent-recipes") {
-    //   handleToFetchCollectionRecipes(
-    //     getMyRecentRecipes,
-    //     { userId },
-    //     "getMyRecentRecipes",
-    //     page,
-    //   );
-    // } else {
-    //   handleToFetchCollectionRecipes(
-    //     getCustomRecipes,
-    //     {
-    //       userId,
-    //       slug,
-    //       collectionId: collectionId || "",
-    //       token: token || "",
-    //       singleRecipeCollectionId: singleRecipeCollectionId || "",
-    //     },
-    //     "getASingleCollection",
-    //     page,
-    //   );
-    // }
   };
 
   // call collection when slug and others params change
@@ -262,35 +207,6 @@ const CollectionRecipes = () => {
     handleToCallCollection(slug);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // useEffect(() => {
-  //   // filter recipe func
-  //   if (allFilters.length) {
-  //     setPageNum(1);
-  //     handleFilterRecipes(allFilters, 1, dataLimit, true);
-  //   } else {
-  //     dispatch(
-  //       updateAllFilterRecipes({
-  //         filterRecipes: [],
-  //         isFiltering: false,
-  //         totalItems: 0,
-  //       }),
-  //     );
-  //     setPageNum(1);
-  //   }
-
-  // }, [allFilters]);
-
-  // if (getCollectionRecipeError || shareWithMeCollectionError) {
-  //   return (
-  //     <Layout>
-  //       <ErrorPage
-  //         style={{ height: "50vh" }}
-  //         errorMessage="No collection recipe found"
-  //       />
-  //     </Layout>
-  //   );
-  // }
 
   return (
     <React.Fragment>
@@ -407,100 +323,6 @@ const CollectionRecipes = () => {
   );
 };
 
-// const Layout: FC<{ allFilters?: any[] }> = ({ children, allFilters = [] }) => {
-//   const [input, setInput] = useState("");
-//   const { openFilterTray } = useAppSelector((state) => state?.sideTray);
-//   const dispatch = useAppDispatch();
-//   const toggleFilterPanel = () => {
-//     dispatch(setOpenFilterTray(!openFilterTray));
-//   };
-//   const { dbUser } = useAppSelector((state) => state?.user);
-//   const router = useRouter();
-//   // handle update recipe filter criteria
-//   const handleUpdateFilterCriteria = useToUpdateFilterCriteria();
-//   // handle update recipe active filter tag
-//   const handleUpdateActiveFilterTag = useToUpdateActiveFilterTag();
-//   return (
-//     <AContainer
-//       headerIcon="/icons/juicer.svg"
-//       headerTitle="Recipe collection"
-//       showCollectionTray={{ show: true, showTagByDefault: true }}
-//       showCommentsTray={{
-//         show: true,
-//         showPanel: "right",
-//         showTagByDefault: false,
-//       }}
-//       // showRecipeFilterTray={{
-//       //   show: true,
-//       //   showPanle: "left",
-//       //   showTagByDeafult: false,
-//       // }}
-//       headTagInfo={{
-//         title: "Recipe collection",
-//         description: "Recipe collection",
-//       }}
-//     >
-//       <div className={styles.main__div}>
-//         <div style={{ display: "flex", alignItems: "center" }}>
-//           <CommonSearchBar
-//             input={input}
-//             setInput={setInput}
-//             // isSearchTag={false}
-//             // openPanel={toggleFilterPanel}
-//             // isOpenPanel={openFilterTray}
-//           />
-//           <div
-//             style={{ marginLeft: "40px" }}
-//             // className={styles.buttonContainer}
-//           >
-//             <Tooltip content="Compare recipe" direction="bottom">
-//               <RecipeDiscoverButton
-//                 icon={
-//                   dbUser?.compareLength
-//                     ? "/images/compare-fill-icon.svg"
-//                     : "/icons/eclipse.svg"
-//                 }
-//                 text={`Compare(${
-//                   dbUser?.compareLength ? dbUser?.compareLength : 0
-//                 })`}
-//                 disable={dbUser?.compareLength ? false : true}
-//                 style={{
-//                   backgroundColor: dbUser?.compareLength ? "#fff" : "#ececec",
-//                 }}
-//                 handleClick={() => router.push(`/recipe/compare`)}
-//               />
-//             </Tooltip>
-//           </div>
-//         </div>
-
-//         {allFilters?.length ? (
-//           <SearchtagsComponent
-//             allFilters={allFilters}
-//             handleUpdateActiveFilterTag={(
-//               activeSection,
-//               filterCriteria,
-//               activeTab,
-//               childTab,
-//             ) => {
-//               dispatch(setOpenFilterTray(true));
-//               handleUpdateActiveFilterTag(
-//                 activeSection,
-//                 filterCriteria,
-//                 activeTab,
-//                 childTab,
-//               );
-//             }}
-//             handleUpdateFilterCriteria={handleUpdateFilterCriteria}
-//           />
-//         ) : null}
-
-//         <WikiBanner />
-//         {children}
-//       </div>
-//     </AContainer>
-//   );
-// };
-
 const SharedWithMe = ({
   data,
   loading,
@@ -549,7 +371,7 @@ const SharedWithMe = ({
               headerData={{
                 heading: name,
                 image: creatorInfo?.image || "/images/fire-alt-light.svg",
-                allUrl: `/collection/recipeCollection/${slug}?${
+                allUrl: `/recipe/recipeCollection/${slug}?${
                   name === "Single Recipes"
                     ? "singleRecipeCollectionId"
                     : "collectionId"
@@ -610,23 +432,3 @@ CollectionRecipes.useLayout = (page) => {
 };
 
 export default CollectionRecipes;
-
-// allFilters.length ? (
-//   <ShowRecipeContainer
-//     data={allFilterRecipes.filterRecipes}
-//     loading={filterRecipesLoading}
-//     closeHandler={closeFilterRecipes}
-//     showItems="recipe"
-//     showDefaultLeftHeader
-//     showDefaultMiddleHeader={
-//       allFilterRecipes.filterRecipes.length ? true : false
-//     }
-//     showDefaultRightHeader
-//     hasMore={allFilterRecipes?.totalItems > dataLimit * pageNum}
-//     totalDataCount={allFilterRecipes?.totalItems}
-//     nextPage={handleNextPage}
-//     setOpenCollectionModal={setOpenCollectionModal}
-//     setOpenShareModal={setOpenShareModal}
-//     setShareRecipeData={setShareRecipeData}
-//   />
-// ) :

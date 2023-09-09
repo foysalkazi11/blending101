@@ -43,7 +43,7 @@ const SubNav = (props: SubNavProps) => {
 
       {showButton ? (
         <ButtonComponent
-          type="buttonWithIcon"
+          variant="buttonWithIcon"
           value={buttonText}
           icon={
             buttonText === "Compare" ? (

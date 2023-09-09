@@ -4,21 +4,27 @@ import React, {
   useCallback,
   useContext,
   createContext,
+  Dispatch,
 } from "react";
 import { useRouter } from "next/router";
 import { Auth, Amplify } from "aws-amplify";
 import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth/lib/types";
-
 import AmplifyConfig from "../configs/aws";
 import { GET_USER } from "../gqlLib/user/mutations/createNewUser";
 import { useMutation } from "@apollo/client";
 import notification from "../components/utility/reactToastifyNotification";
-import { setDbUser } from "../redux/slices/userSlice";
+import { updateUserCompareLength } from "../redux/slices/userSlice";
 import { useAppDispatch } from "../redux/hooks";
 
 type TProvider = "Amazon" | "Google" | "Facebook" | "Apple" | "Cognito";
 Amplify.configure({ ...AmplifyConfig, ssr: true });
 
+type DEFAULT_USER_TYPE = {
+  id: string;
+  name: string;
+  email: string;
+  image: string;
+};
 const DEFAULT_USER = { id: "", name: "", email: "", image: "" };
 
 interface IAuthContext {
@@ -32,6 +38,7 @@ interface IAuthContext {
   ) => void;
   oAuthSignIn: (provider: TProvider) => void;
   signOut: () => void;
+  setUser: Dispatch<React.SetStateAction<DEFAULT_USER_TYPE>>;
 }
 
 // INITIALIZE 1: CREATE AUTH CONTEXT
@@ -41,6 +48,7 @@ const AuthContext = createContext<IAuthContext>({
   signIn: (email: string, password: string) => {},
   oAuthSignIn: (provider: TProvider) => {},
   signOut: () => {},
+  setUser: () => {},
 });
 
 // CONTEXT WRAPPER: PROVIDES AUTH
@@ -85,27 +93,7 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
             email: profile?.email,
             image: profile?.image,
           });
-          dispatch(
-            setDbUser({
-              _id: profile?._id,
-              displayName: profile?.displayName,
-              email: profile?.email,
-              image: profile?.image,
-              compareLength: profile?.compareLength,
-              bio: "",
-              yourBlender: "",
-              provider: "",
-              firstName: "",
-              orderHistoty: [],
-              lastName: "",
-              location: "",
-              myCart: [],
-              recentViewedProducts: [],
-              createdAt: "",
-              configuration: undefined,
-              wikiCompareCount: 0,
-            }),
-          );
+          dispatch(updateUserCompareLength(profile?.compareLength));
           return profile;
         });
     },
@@ -138,8 +126,8 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
     try {
       const user = await Auth.signIn(email, password);
       const bdUser = await sessionHandler(user);
-      // router.push("/");
       onSuccess(bdUser);
+      router.push("/");
     } catch (error) {
       notification("error", error.message);
       onError(error);
@@ -186,6 +174,7 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
         signIn,
         oAuthSignIn,
         signOut,
+        setUser,
       }}
     >
       {/* {user.id ? children : null} */}
