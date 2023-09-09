@@ -5,9 +5,10 @@ import MealCalendarDatePlan from "./_DayPlan.component";
 
 import styles from "./index.module.scss";
 import { UTCDate } from "../../../../helpers/Date";
+import { MyPlanItem } from "@/app/types/plan.types";
 
 interface PlanListProps {
-  data?: any[];
+  data?: MyPlanItem[];
   week?: any;
   isWeekFromURL?: boolean;
 }
@@ -27,15 +28,15 @@ const PlanList = ({ data, week, isWeekFromURL }: PlanListProps) => {
         if (planner?.day !== undefined) {
           dayName = "Day";
           day = index + 1;
-        } else if (planner?.date) {
-          const days = UTCDate(planner?.date);
+        } else if (planner?.formatedDate) {
+          const days = UTCDate(planner?.formatedDate);
           dayName = format(days, "eee") || "UND";
           day = format(days, "d") || "0";
         }
         return (
           <MealCalendarDatePlan
-            key={planner.id}
-            plannerId={planner.id}
+            key={planner._id}
+            plannerId={planner._id}
             indexValue={index}
             day={dayName}
             date={day}

@@ -1,12 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, {
-  Dispatch,
-  forwardRef,
-  Fragment,
-  SetStateAction,
-  useRef,
-  useState,
-} from "react";
+import React, { Dispatch, forwardRef, Fragment, SetStateAction, useRef, useState } from "react";
 import styles from "./PlanCard.module.scss";
 import useForSelectCommentsAndNotesIcon from "../../../customHooks/useForSelectCommentsAndNotesIcon";
 import { faEllipsisVertical } from "@fortawesome/pro-solid-svg-icons";
@@ -22,11 +15,7 @@ import useToOpenPlanCollectionTray from "../../../customHooks/plan/useToOpenPlan
 import { PlanComeFromType } from "../../../redux/slices/Planner.slice";
 import useToOpenPlanCommentsTray from "../../../customHooks/plan/useToOpenPlanCommentsTray";
 import { useUser } from "../../../context/AuthProvider";
-import {
-  faShareNodes,
-  faCartShopping,
-  faPen,
-} from "@fortawesome/pro-light-svg-icons";
+import { faShareNodes, faCartShopping, faPen } from "@fortawesome/pro-light-svg-icons";
 import IconButton from "component/atoms/Button/IconButton.component";
 import { useRouter } from "next/router";
 import ShareModal from "component/organisms/Share/Share.component";
@@ -101,11 +90,7 @@ function PlanCard(props: PlanCardProps) {
   const [link, getLink] = useSharePlan(planId);
   const addToGrocery = usePlanToGrocery();
 
-  const commentsHandler = (
-    comments: number,
-    notes: number,
-    myRating: number,
-  ) => {
+  const commentsHandler = (comments: number, notes: number, myRating: number) => {
     const res = selectCommentsAndNotesIcon(comments, notes);
     return (
       <>
@@ -121,26 +106,16 @@ function PlanCard(props: PlanCardProps) {
             });
           }}
         />{" "}
-        <span style={{ color: res?.amount ? "#7cbc39" : "#c4c4c4" }}>
-          {res?.amount}
-        </span>
+        <span style={{ color: res?.amount ? "#7cbc39" : "#c4c4c4" }}>{res?.amount}</span>
       </>
     );
   };
 
   return (
     <Fragment>
-      <ShareModal
-        name={title}
-        show={showShare}
-        setShow={setShowShare}
-        link={link}
-        onShare={getLink}
-      />
+      <ShareModal name={title} show={showShare} setShow={setShowShare} link={link} onShare={getLink} />
 
-      <div
-        className={`${styles.datacard} ${className || ""} ${styles[variant]}`}
-      >
+      <div className={`${styles.datacard} ${className || ""} ${styles[variant]}`}>
         <div className={styles.datacard__inner}>
           <div className={styles.heading}>
             <div className={styles.title}>
@@ -162,18 +137,10 @@ function PlanCard(props: PlanCardProps) {
                     <Icon fontName={faPen} size="1.6rem" color="#fe5d1f" />
                   </li>
                   <li onClick={() => addToGrocery(planId)}>
-                    <Icon
-                      fontName={faCartShopping}
-                      size="1.6rem"
-                      color="#fe5d1f"
-                    />
+                    <Icon fontName={faCartShopping} size="1.6rem" color="#fe5d1f" />
                   </li>
                   <li onClick={() => setShowShare(true)}>
-                    <Icon
-                      fontName={faShareNodes}
-                      size="1.6rem"
-                      color="#fe5d1f"
-                    />
+                    <Icon fontName={faShareNodes} size="1.6rem" color="#fe5d1f" />
                   </li>
                 </ul>
               </div>
@@ -204,34 +171,17 @@ function PlanCard(props: PlanCardProps) {
             <div className={styles.datacard__body__bottom__right}>
               <ul>
                 <li>
-                  <WeekPicker
-                    element={<DatePickerButton />}
-                    week={week}
-                    onWeekChange={() => {}}
-                  />
+                  <WeekPicker element={<DatePickerButton />} week={week} onWeekChange={() => {}} />
                 </li>
                 <li>
                   <img
-                    src={
-                      isCollectionIds?.length
-                        ? "/icons/compare.svg"
-                        : "/images/BookmarksStar.svg"
-                    }
+                    src={isCollectionIds?.length ? "/icons/compare.svg" : "/images/BookmarksStar.svg"}
                     alt="compare"
                     onClick={(e) => {
                       e.stopPropagation();
                       isCollectionIds?.length
-                        ? handleOpenCollectionTray(
-                            planId,
-                            isCollectionIds,
-                            planComrFrom,
-                          )
-                        : handleAddToCollection(
-                            planId,
-                            memberId,
-                            setOpenCollectionModal,
-                            planComrFrom,
-                          );
+                        ? handleOpenCollectionTray(planId, isCollectionIds, planComrFrom)
+                        : handleAddToCollection(planId, memberId, setOpenCollectionModal, planComrFrom);
                     }}
                   />
                 </li>

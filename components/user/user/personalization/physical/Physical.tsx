@@ -3,14 +3,13 @@ import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import EDIT_CONFIGRATION_BY_ID from "../../../../../gqlLib/user/mutations/editCofigrationById";
+import EDIT_CONFIGURATION_BY_ID from "../../../../../gqlLib/user/mutations/editCofigrationById";
 import EDIT_USER_BY_ID from "../../../../../gqlLib/user/mutations/editUserById";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
 import {
   setDbUser,
   setIsNewUseImage,
 } from "../../../../../redux/slices/userSlice";
-import { setLoading } from "../../../../../redux/slices/utilitySlice";
 import ButtonComponent from "../../../../../theme/button/button.component";
 import Combobox from "../../../../../theme/dropDown/combobox/Combobox.component";
 import InputComponent from "../../../../../theme/input/registerInput/RegisterInput";
@@ -20,6 +19,7 @@ import notification from "../../../../utility/reactToastifyNotification";
 import DailyIntake from "./dailyIntake/DailyIntake";
 import styles from "./Physical.module.scss";
 import SectionGenderAndActivity from "./sectionGenderAndActivity/SectionGender&Activity";
+import CircularRotatingLoader from "theme/loader/circularRotatingLoader.component";
 
 const gender = [
   {
@@ -87,7 +87,7 @@ const Physical = ({
   const router = useRouter();
   const { toggle } = router.query;
   const dispatch = useAppDispatch();
-  const [editConfigration] = useMutation(EDIT_CONFIGRATION_BY_ID);
+  const [editConfigration] = useMutation(EDIT_CONFIGURATION_BY_ID);
   const [editUserById] = useMutation(EDIT_USER_BY_ID);
   const { configuration } = dbUser;
   const { isNewUseImage } = useAppSelector((state) => state?.user);
@@ -97,8 +97,7 @@ const Physical = ({
   const isMounted = useRef(null);
   const [colorToggle, setColorToggle] = useState(false);
   const [profileActiveTab, setProfileActiveTab] = useState(0);
-
-  console.log(userProfile);
+  const [loading, setLoading] = useState(false);
 
   const handleYearsAndMonths = (userProfile) => {
     let value = {
@@ -305,7 +304,7 @@ const Physical = ({
         ? Number(feet + inches)
         : Number(data?.centimeters);
 
-    dispatch(setLoading(true));
+    setLoading(true);
 
     try {
       if (isNewUseImage?.length) {
@@ -377,7 +376,7 @@ const Physical = ({
             },
           }),
         );
-        dispatch(setLoading(false));
+        setLoading(false);
         dispatch(setIsNewUseImage(null));
         notification("info", "your profile updated successfully");
       } else {
@@ -441,11 +440,11 @@ const Physical = ({
             },
           }),
         );
-        dispatch(setLoading(false));
+        setLoading(false);
         notification("info", "Updated successfully");
       }
     } catch (error) {
-      dispatch(setLoading(false));
+      setLoading(false);
       notification("error", error?.message);
     }
   };
@@ -819,15 +818,21 @@ const Physical = ({
               }}
             >
               <ButtonComponent
-                type="primary"
-                value="Update Profile"
+                disabled={loading}
+                variant="primary"
                 style={{
                   borderRadius: "30px",
                   height: "48px",
                   width: "180px",
                 }}
                 onClick={handleSubmit(submitData)}
-              />
+              >
+                {loading ? (
+                  <CircularRotatingLoader color="white" />
+                ) : (
+                  "Update Profile"
+                )}
+              </ButtonComponent>
             </div>
           </>
         ) : (

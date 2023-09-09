@@ -8,9 +8,8 @@ import {
   GET_PLANNER_BY_WEEK,
 } from "../../../modules/plan/plan.graphql";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { GET_BLEND_CATEGORY } from "../../../graphql/Recipe";
+import { GET_CATEGORY_FOR_COMBOBOX } from "../../../graphql/Recipe";
 
-import styles from "../../../component/module/Planner/Queue.module.scss";
 import Publish from "../../../helpers/Publish";
 import { setDayRecipe } from "../../../redux/slices/Planner.slice";
 import { useUser } from "../../../context/AuthProvider";
@@ -81,8 +80,7 @@ const useQueuedRecipe = (days: any[]) => {
     const recipes = [];
     days?.forEach((day) => {
       day?.posts.forEach((post) => {
-        const image =
-          post.images.length > 0 ? post.images[0] : { url: "", hash: "" };
+        const image = post.images.length > 0 ? post.images[0] : { url: "", hash: "" };
         recipes.push({
           _id: post?._id,
           name: post?.name,
@@ -96,35 +94,6 @@ const useQueuedRecipe = (days: any[]) => {
   }, [days]);
 
   return recipes;
-};
-
-// FOR FILTERING BY RECIPE CATEGORY
-const useRecipeCategory = () => {
-  const { data } = useQuery(GET_BLEND_CATEGORY);
-
-  const blendTypeRef = useRef<HTMLDivElement>(null);
-  // Handling the Blendtype Combobox, When the search is focused/hovered it should be hidden or vice-versa
-  const handleShow = () => {
-    blendTypeRef?.current.classList.add(styles["blendType--show"]);
-    blendTypeRef?.current.classList.remove(styles["blendType--hide"]);
-  };
-  const handleHide = () => {
-    blendTypeRef?.current.classList.remove(styles["blendType--show"]);
-    blendTypeRef?.current.classList.add(styles["blendType--hide"]);
-  };
-
-  const categories = useMemo(() => {
-    return data?.getAllCategories
-      ? [{ label: "All", value: "all" }, ...data?.getAllCategories]
-      : [{ label: "All", value: "all" }];
-  }, [data?.getAllCategories]);
-
-  return {
-    ref: blendTypeRef,
-    categories,
-    onShow: handleShow,
-    onHide: handleHide,
-  };
 };
 
 interface IAddRecipeToPlanHook {
@@ -146,11 +115,7 @@ const useAddRecipeToMyPlan = (props: IAddRecipeToPlanHook) => {
 
   const userId = useUser().id;
 
-  const addRecipeToPlanner = async (
-    recipe: any,
-    date: string,
-    setShowCalenderId: any,
-  ) => {
+  const addRecipeToPlanner = async (recipe: any, date: string, setShowCalenderId: any) => {
     await Publish({
       mutate: addRecipe,
       variables: {
@@ -164,18 +129,13 @@ const useAddRecipeToMyPlan = (props: IAddRecipeToPlanHook) => {
         setShowCalenderId("");
       },
       onUpdate(cache) {
-        const defaultFetch =
-          !isWeekFromURL && router.query.start && router.query.end;
+        const defaultFetch = !isWeekFromURL && router.query.start && router.query.end;
         const GetPlanByWeek = {
           query: GET_PLANNER_BY_WEEK,
           variables: {
             userId: userId,
-            startDate: !defaultFetch
-              ? format(week.start, "yyyy-MM-dd")
-              : router.query.start,
-            endDate: !defaultFetch
-              ? format(week.end, "yyyy-MM-dd")
-              : router.query.end,
+            startDate: !defaultFetch ? format(week.start, "yyyy-MM-dd") : router.query.start,
+            endDate: !defaultFetch ? format(week.end, "yyyy-MM-dd") : router.query.end,
           },
         };
         const { getPlannerByDates } = cache.readQuery<any>(GetPlanByWeek);
@@ -216,9 +176,7 @@ const useFindQueuedRecipe = ([toggler, setToggler]) => {
   const queuedRecipes = useRef([]);
 
   const dispatch = useAppDispatch();
-  const activeRecipe = useAppSelector(
-    (state) => state.planner.selectedDayRecipe,
-  );
+  const activeRecipe = useAppSelector((state) => state.planner.selectedDayRecipe);
 
   const addToRecipesRef = (element: HTMLDivElement) => {
     if (!toggler && element && !queuedRecipes.current.includes(element)) {
@@ -259,10 +217,4 @@ const useFindQueuedRecipe = ([toggler, setToggler]) => {
   return { parentRef: parentWrapper, recipeRef: addToRecipesRef };
 };
 
-export {
-  useDiscoveryQueue,
-  useQueuedRecipe,
-  useRecipeCategory,
-  useAddRecipeToMyPlan,
-  useFindQueuedRecipe,
-};
+export { useDiscoveryQueue, useQueuedRecipe, useAddRecipeToMyPlan, useFindQueuedRecipe };

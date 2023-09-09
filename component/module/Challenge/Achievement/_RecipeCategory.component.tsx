@@ -1,11 +1,11 @@
 import { useQuery } from "@apollo/client";
 import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
-import { GET_BLEND_CATEGORY } from "../../../../graphql/Recipe";
+import { GET_CATEGORY_FOR_COMBOBOX } from "../../../../graphql/Recipe";
 
 import styles from "./_RecipeCategory.module.scss";
 
 function RecipeCategory() {
-  const { data } = useQuery(GET_BLEND_CATEGORY);
+  const { data } = useQuery(GET_CATEGORY_FOR_COMBOBOX);
   return (
     <div className={styles.challenge_circle_food}>
       {data?.getAllCategories?.map((category) => (

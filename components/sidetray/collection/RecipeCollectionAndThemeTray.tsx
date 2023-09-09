@@ -347,7 +347,7 @@ export default function RecipeCollectionAndThemeTray({
             }
             handleClick={() => {
               closeTray();
-              router.push(`/collection/recipeCollection/my_collections`);
+              router.push(`/recipe/recipeCollection/my_collections`);
             }}
           />
 

@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import EDIT_CONFIGRATION_BY_ID from "../../../../../gqlLib/user/mutations/editCofigrationById";
+import EDIT_CONFIGURATION_BY_ID from "../../../../../gqlLib/user/mutations/editCofigrationById";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
 import { setDbUser } from "../../../../../redux/slices/userSlice";
 import { setLoading } from "../../../../../redux/slices/utilitySlice";
@@ -80,7 +80,7 @@ const StepOne = ({
   const [pregnant, setPregnant] = useState("Not Pregnant or Lactation");
   const { dbUser, user, provider } = useAppSelector((state) => state?.user);
   const { configuration } = dbUser;
-  const [editUserData] = useMutation(EDIT_CONFIGRATION_BY_ID);
+  const [editUserData] = useMutation(EDIT_CONFIGURATION_BY_ID);
   const dispatch = useAppDispatch();
 
   const handleYearsAndMonths = (userProfile) => {
@@ -534,7 +534,7 @@ const StepOne = ({
       </div>
       <div className={styles.buttonContainer}>
         <ButtonComponent
-          type="primary"
+          variant="primary"
           value="Next"
           onClick={handleSubmit(onSubmit)}
           style={{

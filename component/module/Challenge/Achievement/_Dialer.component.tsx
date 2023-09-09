@@ -6,16 +6,11 @@ import { differenceInDays, format, isAfter, isToday } from "date-fns";
 
 import Icon from "../../../atoms/Icon/Icon.component";
 import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
-import {
-  setChallengeDate,
-  setChallengePost,
-  setShowPostForm,
-} from "../../../../redux/slices/Challenge.slice";
+import { setChallengeDate, setChallengePost, setShowPostForm } from "../../../../redux/slices/Challenge.slice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 
 import styles from "./_Dialer.module.scss";
 import "react-datepicker/dist/react-datepicker.css";
-import Tooltip from "../../../../theme/toolTip/CustomToolTip";
 import { UTCDate } from "../../../../helpers/Date";
 
 interface MainInterface {
@@ -57,10 +52,8 @@ function Main({ canUpload, activities, statistics }: MainInterface) {
 
   const totalDays = statistics?.days || 0;
   const passedDays = differenceInDays(today, begin);
-  const completedDays =
-    passedDays > totalDays ? totalDays : passedDays < 0 ? 0 : passedDays;
-  const remainingDays =
-    passedDays > totalDays ? 0 : statistics?.daysRemaining + 1 || 0;
+  const completedDays = passedDays > totalDays ? totalDays : passedDays < 0 ? 0 : passedDays;
+  const remainingDays = passedDays > totalDays ? 0 : statistics?.daysRemaining + 1 || 0;
 
   return (
     <div className={styles.challenge_circle_main_circle_outer}>
@@ -68,9 +61,7 @@ function Main({ canUpload, activities, statistics }: MainInterface) {
         <div className={styles.challenge_circle_inside_circle}>
           <div className={styles.wheel__profile}>
             <Image
-              src={
-                statistics?.memberInfo?.image || "/images/user-placeholder.png"
-              }
+              src={statistics?.memberInfo?.image || "/images/user-placeholder.png"}
               alt={""}
               layout={"fill"}
               objectFit={"fill"}
@@ -78,33 +69,23 @@ function Main({ canUpload, activities, statistics }: MainInterface) {
           </div>
           <div className={`${styles.challenge_circle_inside_date} mt-10`}>
             {format(today, "EEEE, MMM dd")}
-            <DateSelector
-              activeDate={activeDate}
-              startDate={begin}
-              endDate={end}
-            />
+            <DateSelector activeDate={activeDate} startDate={begin} endDate={end} />
           </div>
           <div className={styles.dialer__days}>
             <span
-              className={
-                label === "Total Days" ? styles["dialer__days--active"] : ""
-              }
+              className={label === "Total Days" ? styles["dialer__days--active"] : ""}
               onClick={() => setLabel("Total Days")}
             >
               {totalDays}
             </span>
             <span
-              className={
-                label === "Days Completed" ? styles["dialer__days--active"] : ""
-              }
+              className={label === "Days Completed" ? styles["dialer__days--active"] : ""}
               onClick={() => setLabel("Days Completed")}
             >
               {completedDays}
             </span>
             <span
-              className={
-                label === "Days Remaining" ? styles["dialer__days--active"] : ""
-              }
+              className={label === "Days Remaining" ? styles["dialer__days--active"] : ""}
               onClick={() => setLabel("Days Remaining")}
             >
               {remainingDays}
@@ -134,9 +115,7 @@ function Main({ canUpload, activities, statistics }: MainInterface) {
           </p> */}
         </div>
         {activities.map((activity, key) => {
-          const categories = activity?.posts.map(
-            (post) => post?.recipeBlendCategory?.name || "",
-          );
+          const categories = activity?.posts.map((post) => post?.recipeBlendCategory?.name || "");
           if (key > 30) return <div></div>;
           return (
             <DateButton
@@ -144,11 +123,7 @@ function Main({ canUpload, activities, statistics }: MainInterface) {
               date={activity?.date}
               categories={categories}
               disabled={activity?.disabled}
-              isActive={
-                activeDate !== ""
-                  ? activity?.date === activeDate
-                  : isToday(UTCDate(activity?.date))
-              }
+              isActive={activeDate !== "" ? activity?.date === activeDate : isToday(UTCDate(activity?.date))}
               onDateDblClick={onDateDblClick}
             />
           );
@@ -160,12 +135,7 @@ function Main({ canUpload, activities, statistics }: MainInterface) {
 }
 
 const DatePickerButton = forwardRef(({ value, onClick }: any, ref: any) => (
-  <span
-    className="ml-10"
-    style={{ cursor: "pointer", transform: "translateY(-1.5px)" }}
-    onClick={onClick}
-    ref={ref}
-  >
+  <span className="ml-10" style={{ cursor: "pointer", transform: "translateY(-1.5px)" }} onClick={onClick} ref={ref}>
     <Icon fontName={faCalendarDay} size="2rem" color="#fe5d1f" />
   </span>
 ));
@@ -196,13 +166,7 @@ const DateSelector = (props: DateSelectorProps) => {
   );
 };
 
-function DateButton({
-  date,
-  isActive,
-  categories,
-  disabled,
-  onDateDblClick,
-}: any) {
+function DateButton({ date, isActive, categories, disabled, onDateDblClick }: any) {
   const days = UTCDate(date);
   const day = format(days, "d");
   const dayOfWeek = format(days, "eeee");
@@ -252,9 +216,7 @@ function DateButton({
       return (
         <div
           title={dayOfWeek}
-          className={`${styles.wheel__button} ${
-            hasPosts ? "" : styles["wheel__button--disabled"]
-          }`}
+          className={`${styles.wheel__button} ${hasPosts ? "" : styles["wheel__button--disabled"]}`}
           onClick={hasPosts ? activateDate : null}
           onDoubleClick={() => onDateDblClick(date)}
           style={{
@@ -276,15 +238,15 @@ export function getBackgroundColor(categories: string[]) {
   if (length === 0) return "#D8D8D8";
   else if (length === 1) return RECIPE_CATEGORY_COLOR[categories[0]];
   else if (length === 2)
-    return `linear-gradient(to left, ${
-      RECIPE_CATEGORY_COLOR[categories[0]]
-    } 50%, ${RECIPE_CATEGORY_COLOR[categories[1]]} 50%)`;
+    return `linear-gradient(to left, ${RECIPE_CATEGORY_COLOR[categories[0]]} 50%, ${
+      RECIPE_CATEGORY_COLOR[categories[1]]
+    } 50%)`;
   else {
     const baseAngle = 360 / length;
     const result = categories.reduce((prev, curr, idx) => {
-      return (prev += `${RECIPE_CATEGORY_COLOR[curr]} ${idx * baseAngle}deg, ${
-        RECIPE_CATEGORY_COLOR[curr]
-      } ${(idx + 1) * baseAngle}deg, `);
+      return (prev += `${RECIPE_CATEGORY_COLOR[curr]} ${idx * baseAngle}deg, ${RECIPE_CATEGORY_COLOR[curr]} ${
+        (idx + 1) * baseAngle
+      }deg, `);
     }, "");
 
     return `conic-gradient(${result.slice(0, -2)})`;

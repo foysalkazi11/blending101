@@ -18,9 +18,7 @@ const RXPanel = () => {
   const panelList = useAppSelector((state) => state.ui.panel);
   const panel = panelList.find((panel) => panel.name === "RXPanel");
 
-  const [getNutrientFacts, { loading, data, error }] = useLazyQuery(
-    GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS,
-  );
+  const [getNutrientFacts, { loading, data, error }] = useLazyQuery(GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS);
 
   useEffect(() => {
     if (panel && panel?.show) {
@@ -40,13 +38,12 @@ const RXPanel = () => {
   return (
     <div
       // ref={hideOutsideClick}
-      className={`${classes["side-panel"]} ${
-        panel?.show ? classes.active : ""
-      }`}
+      className={`${classes["side-panel"]} ${panel?.show ? classes.active : ""}`}
     >
       <IconButton
         fontName={faChartSimple}
         variant="fade"
+        color="white"
         className={classes["side-panel__close"]}
         onClick={() => dispatch(setShowPanel({ name: "RXPanel", show: false }))}
       />
@@ -55,9 +52,7 @@ const RXPanel = () => {
           variant="panel"
           nutritionTrayData={
             data?.getNutrientsListAndGiGlByIngredients
-              ? JSON.parse(
-                  data?.getNutrientsListAndGiGlByIngredients?.nutrients,
-                )
+              ? JSON.parse(data?.getNutrientsListAndGiGlByIngredients?.nutrients)
               : []
           }
           nutritionDataLoading={loading}

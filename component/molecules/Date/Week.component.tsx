@@ -2,9 +2,16 @@ import React from "react";
 import DatePicker from "react-datepicker";
 import { isSameWeek, endOfWeek, startOfWeek } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
+import { Portal } from "react-overlays";
+
+const CalendarContainer = ({ children }) => {
+  const el = document.getElementById("calendar-portal");
+
+  return <Portal container={el}>{children}</Portal>;
+};
 
 interface WeekPickerProps {
-  element: React.ReactNode;
+  element: any;
   week: {
     start: Date;
     end: Date;
@@ -16,17 +23,18 @@ const WeekPicker = (props: WeekPickerProps) => {
   const { element, week, onWeekChange } = props;
 
   return (
-    <div id="week-picker">
+    <div>
       <DatePicker
+        id="week-picker"
+        portalId="root-portal"
         dayClassName={(date: Date) =>
-          isSameWeek(date, week?.start || new Date())
-            ? "react-datepicker__day--selected"
-            : ""
+          isSameWeek(date, week?.start || new Date()) ? "react-datepicker__day--selected" : ""
         }
         closeOnScroll={(e) => e.target === document}
         selected={new Date()}
         onChange={(date) => onWeekChange(startOfWeek(date), endOfWeek(date))}
         customInput={element}
+        // popperContainer={CalendarContainer}
       />
     </div>
   );

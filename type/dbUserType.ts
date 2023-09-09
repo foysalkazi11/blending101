@@ -14,7 +14,7 @@ export interface DbUserType {
   image: string;
   createdAt: string;
   configuration: Configuration;
-  compareLength: number;
+  // compareLength: number;
   wikiCompareCount: number;
 }
 

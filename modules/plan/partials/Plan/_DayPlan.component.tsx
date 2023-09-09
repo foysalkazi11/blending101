@@ -10,10 +10,7 @@ import {
 } from "@fortawesome/pro-regular-svg-icons";
 
 import { useAppDispatch } from "../../../../redux/hooks";
-import {
-  IPlannerRecipe,
-  setDayRecipe,
-} from "../../../../redux/slices/Planner.slice";
+import { IPlannerRecipe, setDayRecipe } from "../../../../redux/slices/Planner.slice";
 
 import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
 import CalendarTray from "../../../../theme/calendar/calendarTray.component";
@@ -22,12 +19,9 @@ import { setShowPanel } from "../../../../redux/slices/Ui.slice";
 import Icon from "../../../../component/atoms/Icon/Icon.component";
 
 import styles from "./_DayPlan.module.scss";
-import {
-  useCopyPlanRecipe,
-  useDeletePlanRecipe,
-  useMovePlanRecipe,
-} from "../../../../hooks/modules/Plan/useMyPlan";
+import { useCopyPlanRecipe, useDeletePlanRecipe, useMovePlanRecipe } from "../../../../hooks/modules/Plan/useMyPlan";
 import { useRecipeToGrocery } from "@/recipe/hooks";
+import { UserRecipe } from "@/recipe/recipe.types";
 
 interface PlanProps {
   plannerId?: string;
@@ -36,14 +30,13 @@ interface PlanProps {
   indexValue: number;
   setToggleOptionCard?: any;
   toggleOptionCard?: object;
-  recipeList?: IPlannerRecipe[];
+  recipeList?: UserRecipe[];
   isWeekFromURL?: boolean;
   week?: any;
 }
 
 const DayPlan = (props: PlanProps) => {
-  const { plannerId, day, date, indexValue, recipeList, week, isWeekFromURL } =
-    props;
+  const { plannerId, day, date, indexValue, recipeList, week, isWeekFromURL } = props;
   const dispatch = useAppDispatch();
 
   const copyRecipe = useCopyPlanRecipe(week, isWeekFromURL);
@@ -55,7 +48,7 @@ const DayPlan = (props: PlanProps) => {
       <div
         className={styles.plan__dateDiv}
         style={indexValue % 2 == 0 ? { backgroundColor: "#eeeeee" } : {}}
-        onClick={() => dispatch(setDayRecipe(recipeList[0]?._id))}
+        onClick={() => dispatch(setDayRecipe(recipeList[0]?.recipeId._id))}
       >
         <div className={styles.plan__dateDiv__day}>{day}</div>
         <div className={styles.plan__dateDiv__date}>{date}</div>
@@ -63,7 +56,7 @@ const DayPlan = (props: PlanProps) => {
       <div className={styles.plan__recipeDiv}>
         {recipeList?.map((recipe) => (
           <PlanItem
-            key={recipe?._id}
+            key={recipe?.recipeId?._id}
             recipe={recipe}
             onDelete={deleteRecipe}
             onCopy={copyRecipe}
@@ -78,25 +71,18 @@ const DayPlan = (props: PlanProps) => {
 export default DayPlan;
 
 interface RecipeColorIndicatorInterface {
-  recipe: IPlannerRecipe;
+  recipe: UserRecipe;
   onCopy?: any;
   onMove?: any;
   onDelete?: any;
 }
 const PlanItem = (props: RecipeColorIndicatorInterface) => {
   const { recipe, onCopy, onMove, onDelete } = props;
-  let {
-    _id,
-    name: recipeName,
-    calorie,
-    category,
-    recipeBlendCategory,
-    rxScore,
-    ingredients,
-  } = recipe;
-  category = recipeBlendCategory?.name || category;
+  let { _id, name: recipeName, recipeBlendCategory } = recipe.recipeId;
+  let { calorie, gigl, ingredients } = recipe.defaultVersion;
 
-  console.log(recipe, category);
+  const category = recipeBlendCategory?.name;
+  const rxScore = Math.round(gigl.rxScore);
 
   const [showMenu, setShowMenu] = useState(false);
   const [showCalender, setShowCalender] = useState<"move" | "copy" | "">("");
@@ -111,15 +97,12 @@ const PlanItem = (props: RecipeColorIndicatorInterface) => {
   return (
     <div className={styles.recipe}>
       <div className={styles.recipe__containerDiv}>
-        <div
-          className={styles.recipe__containerDiv__colorIndicator}
-          style={style}
-        />
+        <div className={styles.recipe__containerDiv__colorIndicator} style={style} />
         {recipeName}
       </div>
 
       <div className={styles.recipe__rxScore}>{rxScore}</div>
-      <div className={styles.recipe__calories}>{calorie}</div>
+      <div className={styles.recipe__calories}>{Math.round(calorie.value)}</div>
       <div className={styles.recipe__rxScore}>$0</div>
       <div className={styles.recipe__tray}>
         <IconButton
@@ -211,9 +194,7 @@ const PlanItem = (props: RecipeColorIndicatorInterface) => {
         <div className={styles.calender}>
           <CalendarTray
             handler={(date) => {
-              showCalender === "copy"
-                ? onCopy(date, recipe)
-                : onMove(date, recipe);
+              showCalender === "copy" ? onCopy(date, recipe) : onMove(date, recipe);
               setShowCalender("");
             }}
           />

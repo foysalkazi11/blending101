@@ -293,7 +293,7 @@ const DailyIntake = ({ colorToggle, setColorToggle, toggle }) => {
         }}
       >
         <ButtonComponent
-          type="primary"
+          variant="primary"
           value={loading ? "Updating ..." : "Update Goals"}
           style={{
             borderRadius: "30px",

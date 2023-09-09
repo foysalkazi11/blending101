@@ -18,10 +18,7 @@ import Settings from "../../component/module/Challenge/Settings.component";
 import IconButton from "../../component/atoms/Button/IconButton.component";
 import Icon from "../../component/atoms/Icon/Icon.component";
 import ShareModal from "../../component/organisms/Share/Share.component";
-
-import AContainer from "../../containers/A.container";
 import IconHeading from "../../theme/iconHeading/iconHeading.component";
-
 import { GET_CHALLENGES } from "../../graphql/Challenge";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import useChallengeShare from "../../hooks/modules/Challenge/useChallengeShare";

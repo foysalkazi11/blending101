@@ -1,22 +1,17 @@
-import React from "react";
-import {
-  faChartSimple,
-  faTrash,
-  faBlender,
-} from "@fortawesome/pro-light-svg-icons";
+import { faBlender, faChartSimple, faTrash } from "@fortawesome/pro-light-svg-icons";
 
-import IconButton from "../../../../component/atoms/Button/IconButton.component";
+import IconButton from "component/atoms/Button/IconButton.component";
 
-import { useAppDispatch } from "../../../../redux/hooks";
-import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
+import { UserRecipe } from "@/recipe/recipe.types";
+import { RECIPE_CATEGORY_COLOR } from "data/Recipe";
+import { useAppDispatch } from "redux/hooks";
+import { setShowPanel } from "redux/slices/Ui.slice";
 
+import { MyPlanItem } from "@/app/types/plan.types";
 import styles from "./PlanList.module.scss";
-import { Plan } from "../../plan.types";
-import { ProfileRecipe } from "../../../recipe/recipe.types";
-import { setShowPanel } from "../../../../redux/slices/Ui.slice";
 
 interface PlanListProps {
-  data?: Plan[];
+  data?: MyPlanItem[];
   onRemove?: any;
 }
 
@@ -54,33 +49,23 @@ interface PlanProps {
   day?: string;
   date?: string;
   indexValue: number;
-  recipeList?: ProfileRecipe[];
+  recipeList?: UserRecipe[];
   cart?: boolean;
   onRemove?: any;
 }
 
 const DayPlan = (props: PlanProps) => {
-  const { plannerId, day, date, indexValue, recipeList, cart, onRemove } =
-    props;
-
+  const { plannerId, day, date, indexValue, recipeList, cart, onRemove } = props;
+  console.log(recipeList);
   return (
     <div className={styles.plan}>
-      <div
-        className={styles.plan__dateDiv}
-        style={indexValue % 2 == 0 ? { backgroundColor: "#eeeeee" } : {}}
-      >
+      <div className={styles.plan__dateDiv} style={indexValue % 2 == 0 ? { backgroundColor: "#eeeeee" } : {}}>
         <div className={styles.plan__dateDiv__day}>{day}</div>
         <div className={styles.plan__dateDiv__date}>{date}</div>
       </div>
       <div className={styles.plan__recipeDiv}>
         {recipeList?.map((recipe) => (
-          <PlanItem
-            key={recipe?.recipeId?._id}
-            plannerId={plannerId}
-            cart={cart}
-            recipe={recipe}
-            onRemove={onRemove}
-          />
+          <PlanItem key={recipe?.recipeId?._id} plannerId={plannerId} cart={cart} recipe={recipe} onRemove={onRemove} />
         ))}
       </div>
     </div>
@@ -88,7 +73,7 @@ const DayPlan = (props: PlanProps) => {
 };
 
 interface RecipeColorIndicatorInterface {
-  recipe: ProfileRecipe;
+  recipe: UserRecipe;
   plannerId: number;
   isEditMode?: boolean;
   cart?: boolean;
@@ -99,7 +84,6 @@ const PlanItem = (props: RecipeColorIndicatorInterface) => {
   const { recipeId, defaultVersion } = recipe;
 
   const dispatch = useAppDispatch();
-
   const calorie = Math.round(defaultVersion?.calorie?.value);
   const ingredients = recipe?.defaultVersion?.ingredients || [];
   const category = recipeId?.recipeBlendCategory?.name;
@@ -111,17 +95,12 @@ const PlanItem = (props: RecipeColorIndicatorInterface) => {
   return (
     <div className={styles.recipe}>
       <div className={styles.recipe__containerDiv}>
-        <div
-          className={styles.recipe__containerDiv__colorIndicator}
-          style={style}
-        />
+        <div className={styles.recipe__containerDiv__colorIndicator} style={style} />
         {recipeId.name}
       </div>
-      <div className={styles.recipe__rxScore}>
-        {defaultVersion.gigl.rxScore || 0}
-      </div>
-      <div className={styles.recipe__calories}>{calorie || 0}</div>
-      <div className={styles.recipe__calories}>${8}</div>
+      <div className={styles.recipe__rxScore}>{calorie || 0}</div>
+      <div className={styles.recipe__calories}>{defaultVersion.gigl.rxScore || 0}</div>
+      <div className={styles.recipe__calories}>${0}</div>
       <div className={styles.recipe__tray}>
         <IconButton
           size="medium"
