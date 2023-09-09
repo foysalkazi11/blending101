@@ -1,8 +1,10 @@
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { useUser } from "context/AuthProvider";
 import { ADD_TO_GROCERY_BY_RECIPE } from "graphql/Cart";
+import { GET_CATEGORY_FOR_COMBOBOX } from "graphql/Recipe";
 import Publish from "helpers/Publish";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
+import { RecipeCategory } from "../recipe.types";
 
 /*
   ||||||||||||||||||||||||||||||||||||
@@ -33,4 +35,22 @@ export const useRecipeToGrocery = (): ((recipeId: string) => void) => {
   );
 
   return addToGrocery;
+};
+
+/*
+  ||||||||||||||||||||||||||||||||||||
+    GET RECIPE CATEGORY LIST 
+  ||||||||||||||||||||||||||||||||||||
+*/
+
+export const useRecipeCategory = (): { value: string; label: string }[] => {
+  const { data } = useQuery(GET_CATEGORY_FOR_COMBOBOX);
+
+  const categories = useMemo(() => {
+    return data?.getAllCategories
+      ? [{ label: "All", value: "all" }, ...data?.getAllCategories]
+      : [{ label: "All", value: "all" }];
+  }, [data?.getAllCategories]);
+
+  return categories;
 };

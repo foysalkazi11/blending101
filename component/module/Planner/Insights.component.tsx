@@ -6,12 +6,10 @@ import IconHeading from "../../../theme/iconHeading/iconHeading.component";
 
 import styles from "./Insights.module.scss";
 import { useQuery } from "@apollo/client";
-import { GET_BLEND_CATEGORY } from "../../../graphql/Recipe";
+import { GET_CATEGORY_FOR_COMBOBOX } from "../../../graphql/Recipe";
 import { RECIPE_CATEGORY_COLOR } from "../../../data/Recipe";
 import TopIngredients from "../../molecules/Charts/TopIngredients.component";
-import MacroMakeup, {
-  IMacroData,
-} from "../../molecules/Charts/MacroMakeup.component";
+import MacroMakeup, { IMacroData } from "../../molecules/Charts/MacroMakeup.component";
 
 interface InsightsProps {
   categories: any[];
@@ -27,10 +25,7 @@ const Insights = (props: InsightsProps) => {
   return (
     <div className={styles.insights}>
       <IconHeading icon={faLightbulbOn} title="Plan Insights" />
-      <div
-        className={styles.insights__body}
-        style={{ height: height || "auto" }}
-      >
+      <div className={styles.insights__body} style={{ height: height || "auto" }}>
         <div className={`row ${styles.insights__summary}`}>
           <div className="col-4">
             <h4>{Math.round(score) || 0}</h4>
@@ -56,7 +51,7 @@ const Insights = (props: InsightsProps) => {
 export default Insights;
 
 const BlendType = ({ categories }) => {
-  const { data } = useQuery(GET_BLEND_CATEGORY);
+  const { data } = useQuery(GET_CATEGORY_FOR_COMBOBOX);
   const types = useMemo(
     () =>
       categories?.map((category) => ({
@@ -71,28 +66,19 @@ const BlendType = ({ categories }) => {
         <h3>Blend Type</h3>
         <div className={styles.challenge_circle}>
           {data?.getAllCategories?.map((category) => (
-            <div
-              className={styles.challenge_circle_food_box}
-              key={category.value}
-            >
+            <div className={styles.challenge_circle_food_box} key={category.value}>
               <div
                 className={styles.challenge_circle_food_color_represent}
                 style={{
                   backgroundColor: RECIPE_CATEGORY_COLOR[category.label],
                 }}
               />
-              <p className={styles.challenge_circle_food_name}>
-                {category.label}
-              </p>
+              <p className={styles.challenge_circle_food_name}>{category.label}</p>
             </div>
           ))}
         </div>
         <div id={styles.insights__progress_wrapper}>
-          <HSBar
-            height="50px"
-            id={styles.insights__progress}
-            data={types || []}
-          />
+          <HSBar height="50px" id={styles.insights__progress} data={types || []} />
         </div>
       </div>
     </div>

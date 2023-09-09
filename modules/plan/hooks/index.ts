@@ -1,9 +1,9 @@
-import { useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import { useUser } from "context/AuthProvider";
 import { ADD_TO_GROCERY_BY_PLAN } from "graphql/Cart";
-import { SHARE_PLAN } from "@/plan/plan.graphql";
+import { GET_ALL_PLANNER_RECIPES, SHARE_PLAN } from "@/plan/plan.graphql";
 import Publish from "helpers/Publish";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 /*
   ||||||||||||||||||||||||||||||||||||
@@ -18,9 +18,7 @@ export const useSharePlan = (planId): [string, () => void] => {
 
   useEffect(() => {
     if (!share?.sharePlan) return;
-    setLink(
-      `${process.env.NEXT_PUBLIC_HOSTING_DOMAIN}/planner/plan/shared/?token=${share?.sharePlan}`,
-    );
+    setLink(`${process.env.NEXT_PUBLIC_HOSTING_DOMAIN}/planner/plan/shared/?token=${share?.sharePlan}`);
     navigator.clipboard.writeText(
       `${process.env.NEXT_PUBLIC_HOSTING_DOMAIN}/planner/plan/shared/?token=${share?.sharePlan}`,
     );
@@ -43,6 +41,7 @@ export const useSharePlan = (planId): [string, () => void] => {
     ADD PLAN DATA TO GROCERY CART 
   ||||||||||||||||||||||||||||||||||||
 */
+
 export const usePlanToGrocery = (): ((planId: string) => void) => {
   const { id: memberId } = useUser();
 

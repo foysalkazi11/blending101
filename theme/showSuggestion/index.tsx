@@ -4,11 +4,11 @@ import InputComponent from "theme/input/input.component";
 import fuzzySearch from "components/utility/fuzzySearch";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/pro-light-svg-icons";
+import useDebounce from "customHooks/useDebounce";
 type Option = { label: string; value: string };
 
-type showSuggestionProps = React.ComponentPropsWithoutRef<"div"> & {
+type showSuggestionProps = React.ComponentPropsWithRef<"div"> & {
   list?: Option[];
-  input?: string;
   handleClickList?: (value: Option) => void;
   placeholder?: string;
   closeSuggestionBox?: () => void;
@@ -18,19 +18,24 @@ const ShowSuggestion = ({
   handleClickList = () => {},
   placeholder = "Search...",
   closeSuggestionBox = () => {},
+  ref = null,
   ...rest
 }: showSuggestionProps) => {
   const [input, setInput] = useState("");
+  const inputDebounceValue = useDebounce(input, 300);
 
   const optionsList = useMemo(() => {
     let results: Option[] = [];
     list.filter((option) => {
-      const selected = fuzzySearch(option?.value, input.toLowerCase());
+      const selected = fuzzySearch(
+        option?.value?.toLowerCase(),
+        inputDebounceValue?.toLowerCase(),
+      );
       if (selected !== "") results.push(option);
     });
 
     return results;
-  }, [input, list]);
+  }, [inputDebounceValue, list]);
 
   return (
     <div className={styles.suggestionBox} {...rest}>
@@ -42,17 +47,21 @@ const ShowSuggestion = ({
         onChange={(e) => setInput(e.target.value)}
         placeholder={placeholder}
         icon={<FontAwesomeIcon icon={faMagnifyingGlass} size="sm" />}
+        ref={ref}
       />
-      <ul className="y-scroll">
-        {optionsList?.map((option) => (
+      <ul>
+        {optionsList?.map((option, index) => (
           <li
-            key={option.value}
+            key={option.value + index}
             onClick={() => {
               handleClickList(option);
               closeSuggestionBox();
             }}
             dangerouslySetInnerHTML={{
-              __html: option?.label?.replace(input, `<b>${input}</b>`),
+              __html: option?.label?.replace(
+                inputDebounceValue,
+                `<b>${inputDebounceValue}</b>`,
+              ),
             }}
           />
         ))}

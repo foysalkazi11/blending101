@@ -3,11 +3,11 @@ import { useQuery } from "@apollo/client";
 
 import { useUser } from "context/AuthProvider";
 
-import Plan from "@/plan/plan.types";
+import { MyPlanItem } from "@/app/types/plan.types";
 
 import { GET_PLAN_INSIGHTS } from "@/plan/plan.graphql";
 
-const usePlanInsights = (planList: Plan[]) => {
+const usePlanInsights = (planList: MyPlanItem[]) => {
   const { id } = useUser();
   const { days, recipes } = useMemo(() => {
     let numberOfDays = 0;

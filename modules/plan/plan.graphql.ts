@@ -111,13 +111,7 @@ const PLAN_COLLECTION_FIELDS = gql`
 `;
 
 export const GET_ALL_PLANNER_RECIPES = gql`
-  query GetRecipesForPlanner(
-    $searchTerm: String!
-    $page: Float!
-    $limit: Float!
-    $type: String!
-    $user: String!
-  ) {
+  query GetRecipesForPlanner($searchTerm: String!, $page: Float!, $limit: Float!, $type: String!, $user: String!) {
     getAllRecipesForPlanner(
       page: $page
       limit: $limit
@@ -132,11 +126,7 @@ export const GET_ALL_PLANNER_RECIPES = gql`
 `;
 
 export const GET_QUEUED_PLANNER_RECIPES = gql`
-  query GetQueuedRecipesForPlanner(
-    $startDate: String!
-    $endDate: String!
-    $user: String!
-  ) {
+  query GetQueuedRecipesForPlanner($startDate: String!, $endDate: String!, $user: String!) {
     getQuedPlanner(startDate: $startDate, endDate: $endDate, userId: $user) {
       ...PlanRecipeFields
     }
@@ -145,16 +135,8 @@ export const GET_QUEUED_PLANNER_RECIPES = gql`
 `;
 
 export const GET_PLANNER_BY_WEEK = gql`
-  query GetPlannerByWeek(
-    $userId: String!
-    $startDate: String!
-    $endDate: String!
-  ) {
-    getPlannerByDates(
-      userId: $userId
-      startDate: $startDate
-      endDate: $endDate
-    ) {
+  query GetPlannerByWeek($userId: String!, $startDate: String!, $endDate: String!) {
+    getPlannerByDates(userId: $userId, startDate: $startDate, endDate: $endDate) {
       planners {
         _id
         recipes: ProfileRecipes {
@@ -207,14 +189,8 @@ export const GET_PLANNER_BY_WEEK = gql`
 `;
 
 export const ADD_RECIPE_TO_PLANNER = gql`
-  mutation AddRecipeToPlanner(
-    $userId: ID!
-    $recipeId: ID!
-    $assignDate: String!
-  ) {
-    createPlanner(
-      data: { memberId: $userId, recipe: $recipeId, assignDate: $assignDate }
-    ) {
+  mutation AddRecipeToPlanner($userId: ID!, $recipeId: ID!, $assignDate: String!) {
+    createPlanner(data: { memberId: $userId, recipe: $recipeId, assignDate: $assignDate }) {
       _id
     }
   }
@@ -263,18 +239,8 @@ export const EDIT_PLAN = gql`
 `;
 
 export const GET_ALL_PLANS = gql`
-  query GetAllGlobalPlans(
-    $page: Float
-    $limit: Float
-    $memberId: String
-    $query: String!
-  ) {
-    getAllGlobalPlans(
-      page: $page
-      limit: $limit
-      memberId: $memberId
-      searchTerm: $query
-    ) {
+  query GetAllGlobalPlans($page: Float, $limit: Float, $memberId: String, $query: String!) {
+    getAllGlobalPlans(page: $page, limit: $limit, memberId: $memberId, searchTerm: $query) {
       plans {
         _id
         planName
@@ -323,11 +289,7 @@ export const GET_RECENT_PLANS = gql`
 `;
 export const GET_RECCOMENDED_PLANS = gql`
   query GetReccomendedPlans($memberId: String!, $limit: Float!, $page: Float!) {
-    result: getAllRecommendedPlans(
-      memberId: $memberId
-      limit: $limit
-      page: $page
-    ) {
+    result: getAllRecommendedPlans(memberId: $memberId, limit: $limit, page: $page) {
       ...PlanFields
     }
   }
@@ -336,11 +298,7 @@ export const GET_RECCOMENDED_PLANS = gql`
 
 export const GET_POPULAR_PLANS = gql`
   query GetPopularPlans($memberId: String!, $limit: Float!, $page: Float!) {
-    result: getAllPopularPlans(
-      memberId: $memberId
-      limit: $limit
-      page: $page
-    ) {
+    result: getAllPopularPlans(memberId: $memberId, limit: $limit, page: $page) {
       ...PlanFields
     }
   }
@@ -444,27 +402,15 @@ export const GET_ALL_PLAN_COMMENTS = gql`
 
 export const ADD_PLAN_COMMENT = gql`
   mutation AddPlanComment($planId: ID!, $memberId: ID!, $comment: String!) {
-    createPlanComment(
-      data: { planId: $planId, memberId: $memberId, comment: $comment }
-    ) {
+    createPlanComment(data: { planId: $planId, memberId: $memberId, comment: $comment }) {
       _id
     }
   }
 `;
 
 export const EDIT_PLAN_COMMENT = gql`
-  mutation EditPlanComment(
-    $memberId: ID!
-    $commentId: String!
-    $comment: String!
-  ) {
-    editPlanComment(
-      data: {
-        editId: $commentId
-        memberId: $memberId
-        editableObject: { comment: $comment }
-      }
-    ) {
+  mutation EditPlanComment($memberId: ID!, $commentId: String!, $comment: String!) {
+    editPlanComment(data: { editId: $commentId, memberId: $memberId, editableObject: { comment: $comment } }) {
       _id
     }
   }
@@ -551,10 +497,7 @@ export const PLAN_SHARE_INFO = gql`
 
 // PLAN COLLECTION
 export const ADD_TO_LAST_MODIFIED_PLAN_COLLECTION = gql`
-  mutation AddToLastModifiedPlanCollection(
-    $planId: String!
-    $memberId: String!
-  ) {
+  mutation AddToLastModifiedPlanCollection($planId: String!, $memberId: String!) {
     addToLastModifiedPlanCollection(planId: $planId, memberId: $memberId) {
       _id
       name
@@ -603,16 +546,8 @@ export const DELETE_PLAN_COLLECTION = gql`
 `;
 
 export const ADD_OR_REMOVE_PLAN_COLLECTION = gql`
-  mutation addOrRemovePlanCollection(
-    $planId: String!
-    $memberId: String!
-    $collectionIds: [String!]!
-  ) {
-    addOrRemovePlanCollection(
-      planId: $planId
-      memberId: $memberId
-      collectionIds: $collectionIds
-    ) {
+  mutation addOrRemovePlanCollection($planId: String!, $memberId: String!, $collectionIds: [String!]!) {
+    addOrRemovePlanCollection(planId: $planId, memberId: $memberId, collectionIds: $collectionIds) {
       planCollections {
         ...PlanCollection
       }
@@ -622,18 +557,8 @@ export const ADD_OR_REMOVE_PLAN_COLLECTION = gql`
 `;
 
 export const GET_ALL_PLANS_FOR_A_COLLECTION = gql`
-  query GetAllPlansForACollection(
-    $slug: String
-    $memberId: String
-    $limit: Float
-    $page: Float
-  ) {
-    getAllPlansForACollection(
-      slug: $slug
-      memberId: $memberId
-      limit: $limit
-      page: $page
-    ) {
+  query GetAllPlansForACollection($slug: String, $memberId: String, $limit: Float, $page: Float) {
+    getAllPlansForACollection(slug: $slug, memberId: $memberId, limit: $limit, page: $page) {
       ...PlanFields
     }
   }
@@ -641,12 +566,7 @@ export const GET_ALL_PLANS_FOR_A_COLLECTION = gql`
 `;
 
 export const FILTER_PLAN = gql`
-  query FilterPlans(
-    $userId: String!
-    $data: FilterPlan!
-    $page: Float
-    $limit: Float
-  ) {
+  query FilterPlans($userId: String!, $data: FilterPlan!, $page: Float, $limit: Float) {
     filterPlans(userId: $userId, data: $data, page: $page, limit: $limit) {
       ...PlanFields
     }
@@ -662,11 +582,7 @@ export const FILTER_PLAN = gql`
 
 export const GET_PLAN_INSIGHTS = gql`
   query GetPlanInsights($recipes: [String!]!, $userId: String!, $days: Float!) {
-    getPlannerInsights(
-      recipeIds: $recipes
-      userId: $userId
-      numberOfDays: $days
-    ) {
+    getPlannerInsights(recipeIds: $recipes, userId: $userId, numberOfDays: $days) {
       topIngredients {
         ...TopIngredients
       }
