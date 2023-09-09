@@ -1,7 +1,7 @@
 import { faCalendarWeek } from "@fortawesome/pro-light-svg-icons";
 import { faTimes } from "@fortawesome/pro-regular-svg-icons";
 import { useRouter } from "next/router";
-import { Fragment, forwardRef, useMemo, useState } from "react";
+import { Fragment, forwardRef, useCallback, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import routes from "routes";
 
@@ -13,16 +13,17 @@ import RXPanel from "component/templates/Panel/RXFacts/RXPanel.component";
 import IconHeading from "theme/iconHeading/iconHeading.component";
 
 import Center from "@/plan/partials/AddPlan/PlanList.component";
-import LeftSection from "@/plan/partials/AddPlan/RecipePanel.component";
+import RecipePanel from "@/plan/partials/Shared/RecipePanel.component";
 
 import { MyPlanItem } from "@/app/types/plan.types";
 
-import { addRecipeToPlan, deleteRecipeFromPlan } from "@/plan/services/add-plan.service";
+import { addRecipe, deleteRecipeFromPlan } from "@/plan/services/add-plan.service";
 
 import useCreatePlan from "@/plan/hooks/add-plan/useCreatePlan";
 import usePlanInsights from "@/plan/hooks/add-plan/usePlanInsights";
 
 import styles from "@pages/planner.module.scss";
+import DayPicker from "@/plan/partials/Shared/DayPicker.component";
 
 const DEFAULT_PLAN: MyPlanItem[] = [
   { day: 1, recipes: [] },
@@ -46,6 +47,12 @@ const PlanDetails = () => {
   const createPlan = useCreatePlan(planlist);
   const insights = usePlanInsights(planlist);
 
+  // HANDLERS FOR MODIFYING PLAN
+  const addRecipeToPlan = useCallback((day, recipe) => {
+    if (!day) return;
+    setPlanlist((list) => addRecipe(list, day, recipe));
+  }, []);
+
   return (
     <Fragment>
       <RXPanel />
@@ -53,10 +60,9 @@ const PlanDetails = () => {
         <div className={styles.planner}>
           <div className="row mt-20">
             <div className="col-3">
-              <LeftSection
-                height={panelHeight}
-                addRecipeToPlan={(day, recipe) => addRecipeToPlan(setPlanlist, day, recipe)}
-              />
+              <RecipePanel height={panelHeight} queuedRecipes={[]}>
+                <DayPicker addRecipeToPlan={addRecipeToPlan} />
+              </RecipePanel>
             </div>
             <div className="col-6" style={{ padding: "0 1.5rem" }}>
               <div className={styles.headingDiv}>

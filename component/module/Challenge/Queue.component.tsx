@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { faPlusCircle } from "@fortawesome/pro-solid-svg-icons";
 import { faCalendarAlt } from "@fortawesome/pro-light-svg-icons";
@@ -16,10 +16,10 @@ import { setRecipeInfo } from "../../../redux/slices/Challenge.slice";
 import styles from "./Queue.module.scss";
 import {
   useFindQueuedRecipe,
-  useRecipeCategory,
   useDiscoveryQueue,
   useQueuedRecipe,
 } from "../../../hooks/modules/Challenge/useChallengeRecipes";
+import { useRecipeCategory } from "@/recipe/hooks";
 
 interface ChallengeQueueProps {
   challenges: any;
@@ -32,7 +32,9 @@ const ChallengeQueue = (props: ChallengeQueueProps) => {
   const [type, setType] = useState("all");
 
   const { parentRef, recipeRef } = useFindQueuedRecipe([toggler, setToggler]);
-  const { ref, categories, onHide, onShow } = useRecipeCategory();
+
+  const filterRef = useRef<HTMLDivElement>(null);
+  const categories = useRecipeCategory();
 
   const { observer, loading, recipes } = useDiscoveryQueue({
     type,
@@ -51,11 +53,7 @@ const ChallengeQueue = (props: ChallengeQueueProps) => {
 
   return (
     <Fragment>
-      <IconHeading
-        icon={faCalendarAlt}
-        title="Recipe"
-        iconStyle={{ fontSize: "18px" }}
-      />
+      <IconHeading icon={faCalendarAlt} title="Recipe" iconStyle={{ fontSize: "18px" }} />
       <ToggleCard
         noRoute
         toggler={toggler}
@@ -70,7 +68,7 @@ const ChallengeQueue = (props: ChallengeQueueProps) => {
       {toggler && (
         <div className={styles.action}>
           {}
-          <div ref={ref} style={{ width: "100%" }}>
+          <div ref={filterRef} style={{ width: "100%" }}>
             <Combobox
               options={categories}
               className={styles.blendType}
@@ -82,27 +80,23 @@ const ChallengeQueue = (props: ChallengeQueueProps) => {
             />
           </div>
           <Searchbox
+            parentRef={null}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onReset={() => {
               setQuery("");
-              onHide();
             }}
-            onFocus={onHide}
-            onMouseEnter={onHide}
-            onMouseLeave={onShow}
-            onBlur={onShow}
+            // onFocus={onHide}
+            // onMouseEnter={onHide}
+            // onMouseLeave={onShow}
+            // onBlur={onShow}
           />
         </div>
       )}
       <div
-        className={`${styles.wrapper} ${
-          styles[toggler ? "wrapper--discover" : "wrapper--queue"]
-        }`}
+        className={`${styles.wrapper} ${styles[toggler ? "wrapper--discover" : "wrapper--queue"]}`}
         style={{
-          maxHeight: toggler
-            ? `calc(${props.height} - 111px)`
-            : `calc(${props.height} - 51px)`,
+          maxHeight: toggler ? `calc(${props.height} - 111px)` : `calc(${props.height} - 51px)`,
         }}
         ref={parentRef}
       >
@@ -113,11 +107,7 @@ const ChallengeQueue = (props: ChallengeQueueProps) => {
         )}
         {loading &&
           [...Array(page === 1 ? 3 : 1)]?.map((_, index) => (
-            <SkeletonElement
-              type="thumbnail"
-              key={index}
-              style={{ width: "100%", height: "277px" }}
-            />
+            <SkeletonElement type="thumbnail" key={index} style={{ width: "100%", height: "277px" }} />
           ))}
       </div>
     </Fragment>
@@ -149,23 +139,12 @@ const DiscoverRecipes = (props: RecipesProps) => {
     <Fragment>
       {recipes?.map((recipe, index) => {
         const {
-          recipeId: {
-            _id,
-            name,
-            recipeBlendCategory,
-            averageRating,
-            totalRating,
-            image,
-          },
+          recipeId: { _id, name, recipeBlendCategory, averageRating, totalRating, image },
           defaultVersion,
         } = recipe;
 
         return (
-          <div
-            ref={recipes.length === index + 1 ? lastRecipes : null}
-            key={_id}
-            data-recipe={_id}
-          >
+          <div ref={recipes.length === index + 1 ? lastRecipes : null} key={_id} data-recipe={_id}>
             <RecipeCard
               className="mt-10"
               title={name}
@@ -184,15 +163,7 @@ const DiscoverRecipes = (props: RecipesProps) => {
                   fontName={faPlusCircle}
                   style={{ color: "#fe5d1f" }}
                   size="20px"
-                  onClick={() =>
-                    uploadRecipe(
-                      _id,
-                      name,
-                      image,
-                      recipeBlendCategory?._id,
-                      defaultVersion?.ingredients,
-                    )
-                  }
+                  onClick={() => uploadRecipe(_id, name, image, recipeBlendCategory?._id, defaultVersion?.ingredients)}
                 />
               </div>
             </RecipeCard>
@@ -215,11 +186,7 @@ const QueuedRecipes = (props: RecipesProps) => {
         const { _id, name, image, category, ingredients } = recipe;
 
         return (
-          <div
-            key={_id}
-            data-recipe={_id}
-            style={{ border: "1px solid #ededed" }}
-          >
+          <div key={_id} data-recipe={_id} style={{ border: "1px solid #ededed" }}>
             <RecipeCard
               className="mt-10"
               title={name}

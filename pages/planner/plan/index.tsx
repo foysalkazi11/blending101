@@ -1,35 +1,32 @@
-import React, { Fragment, useMemo, useState } from "react";
+import React, { Fragment, forwardRef, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import { useMutation } from "@apollo/client";
-import {
-  faChevronLeft,
-  faChevronRight,
-  faEllipsisV,
-  faCalendarWeek,
-} from "@fortawesome/pro-light-svg-icons";
-import { faTimes } from "@fortawesome/pro-regular-svg-icons";
+import { faChevronLeft, faChevronRight, faEllipsisV, faCalendarWeek } from "@fortawesome/pro-light-svg-icons";
+import { faCalendarDay, faTimes } from "@fortawesome/pro-regular-svg-icons";
 
 import RXPanel from "component/templates/Panel/RXFacts/RXPanel.component";
 import IngredientPanel from "component/templates/Panel/Ingredients/IngredientPanel.component";
-import PlannerQueue from "component/module/Planner/Queue.component";
-import PlanList from "modules/plan/partials/Plan/index.component";
+import PlanList from "@/plan/partials/MyPlan/PlanListByDate.component";
+
 import IconHeading from "theme/iconHeading/iconHeading.component";
 import Insights from "component/module/Planner/Insights.component";
-import PlanForm, {
-  defaultPlan,
-} from "component/module/Planner/PlanForm.component";
+import PlanForm, { defaultPlan } from "component/module/Planner/PlanForm.component";
 import IconButton from "component/atoms/Button/IconButton.component";
 
-import { addWeeks, subWeeks } from "date-fns";
-import { CREATE_PLAN } from "@/plan/plan.graphql";
-import { MONTH } from "data/Date";
-
+import { addWeeks, format, subWeeks } from "date-fns";
 import styles from "@pages/planner.module.scss";
 import ConfirmAlert from "component/molecules/Alert/Confirm.component";
-import { usePlanByWeek, useWeek } from "hooks/modules/Plan/useMyPlan";
-import { useUser } from "context/AuthProvider";
-import { getPlanImage } from "helpers/Plan";
+import RecipePanel from "@/plan/partials/Shared/RecipePanel.component";
+import useCreatePlan from "@/plan/hooks/add-plan/useCreatePlan";
+import usePlanWeek from "@/plan/hooks/my-plan/usePlanWeek";
+import usePlanByWeek from "@/plan/hooks/my-plan/usePlanByWeek";
+import DatePicker from "component/molecules/Date/DatePicker.component";
+import Icon from "component/atoms/Icon/Icon.component";
+import { UTCDate } from "helpers/Date";
+import { useAppDispatch } from "redux/hooks";
+import { setChallengeDate } from "redux/slices/Challenge.slice";
+import useAddRecipeToMyPlan from "@/plan/hooks/my-plan/useAddRecipe";
+import { UserRecipe } from "@/recipe/recipe.types";
 
 const MyPlan = () => {
   const router = useRouter();
@@ -37,53 +34,22 @@ const MyPlan = () => {
     defaultValues: useMemo(() => defaultPlan, []),
   });
 
-  const { id: memberId } = useUser();
-
   const [panelHeight] = useState("1000px");
   const [showForm, setShowForm] = useState(false);
   const [showDuplicateAlert, setShowDuplicateAlert] = useState(false);
 
-  const { week, setWeek, isFetchingFromURL } = useWeek();
-  const { plans, insights, onMergeOrReplace } = usePlanByWeek({
-    week,
-    isFetchingFromURL,
-    setShowDuplicateAlert,
-  });
+  const [week, setWeek] = usePlanWeek();
+  const { plans, insights } = usePlanByWeek({ week });
 
-  const [createPlan] = useMutation(CREATE_PLAN);
+  const createPlan = useCreatePlan(plans);
+  const addToMyPlan = useAddRecipeToMyPlan();
 
-  const startMonth = MONTH[week.start.getMonth()];
-  const endMonth = MONTH[week.end.getMonth()];
-  const startDay = week.start.getDate();
-  const endDay = week.end.getDate();
-
-  const handlePlanSave = async (data) => {
+  const saveHandler = async (data) => {
     if (!showForm) return setShowForm(true);
-    const planData = [];
-    const images = [];
-    plans.forEach((plan, index) => {
-      const recipes = [];
-      plan.recipes?.forEach((recipe) => {
-        recipe.image?.length > 0 && images.push(recipe.image[0]?.image);
-        recipes.push(recipe?._id);
-      });
-      planData.push({ day: index + 1, recipes });
-    });
-    const image = await getPlanImage(images);
-    await createPlan({
-      variables: {
-        data: {
-          memberId,
-          ...data,
-          planData,
-          image,
-        },
-      },
-    });
-    setShowForm(false);
-    router.push("/planner");
+    await createPlan(data);
   };
 
+  const { monthStart, monthEnd, dayStart, dayEnd } = week;
   return (
     <Fragment>
       <RXPanel />
@@ -91,19 +57,16 @@ const MyPlan = () => {
       <ConfirmAlert
         show={showDuplicateAlert}
         setShow={setShowDuplicateAlert}
-        onConfirm={onMergeOrReplace}
+        onConfirm={() => {}}
         message="There are already plans listed in this week."
       />
       <div className={styles.windowContainer}>
         <div className={styles.planner}>
           <div className="row mt-20">
             <div className="col-3">
-              <PlannerQueue
-                panel="my-plan"
-                week={week}
-                isWeekFromURL={isFetchingFromURL}
-                height={panelHeight}
-              />
+              <RecipePanel height={panelHeight} queuedRecipes={[]}>
+                <RecipeDatePicker addToMyPlan={addToMyPlan} />
+              </RecipePanel>
             </div>
             <div className="col-6" style={{ padding: "0 3.5rem" }}>
               <div className={styles.headingDiv}>
@@ -111,7 +74,7 @@ const MyPlan = () => {
                 <div className="flex ai-center">
                   <div
                     className={`${styles.uploadDiv} ${styles.uploadDiv__save}`}
-                    onClick={methods.handleSubmit(handlePlanSave)}
+                    onClick={methods.handleSubmit(saveHandler)}
                   >
                     <span>{showForm ? "Save" : "Save As"}</span>
                   </div>
@@ -131,10 +94,7 @@ const MyPlan = () => {
                   />
                 </div>
               </div>
-              <div
-                className={styles.plan}
-                style={{ height: panelHeight, backgroundColor: "#fff" }}
-              >
+              <div className={styles.plan} style={{ height: panelHeight, backgroundColor: "#fff" }}>
                 {showForm ? (
                   <PlanForm methods={methods} />
                 ) : (
@@ -155,7 +115,7 @@ const MyPlan = () => {
                           }}
                         />
                         <h4 className={styles.textArrowTray__text}>
-                          {`${startMonth} ${startDay} - ${endMonth} ${endDay}`}
+                          {`${monthStart} ${dayStart} - ${monthEnd} ${dayEnd}`}
                         </h4>
                         <IconButton
                           size="small"
@@ -171,32 +131,15 @@ const MyPlan = () => {
                           }}
                         />
                       </div>
-                      <IconButton
-                        size="medium"
-                        fontName={faEllipsisV}
-                        className={styles.header__menu}
-                      />
+                      <IconButton size="medium" fontName={faEllipsisV} className={styles.header__menu} />
                     </div>
                   </div>
                 )}
-                <PlanList
-                  data={plans}
-                  week={week}
-                  isWeekFromURL={Boolean(
-                    !isFetchingFromURL &&
-                      router.query.start &&
-                      router.query.end,
-                  )}
-                />
+                <PlanList plan={plans} week={week} />
               </div>
             </div>
             <div className="col-3">
-              <Insights
-                height={panelHeight}
-                score={0}
-                calories={0}
-                {...insights}
-              />
+              <Insights height={panelHeight} score={0} calories={0} {...insights} />
             </div>
           </div>
         </div>
@@ -210,4 +153,23 @@ export default MyPlan;
 MyPlan.meta = {
   title: "My Meal Plan",
   icon: "/icons/calender__sidebar.svg",
+};
+
+interface DayPickerProps {
+  _id?: string;
+  recipe?: UserRecipe;
+  addToMyPlan: any;
+}
+const RecipeDatePicker = (props: DayPickerProps) => {
+  const { _id, addToMyPlan } = props;
+  return (
+    <DatePicker
+      onChange={(date) => {
+        const day = format(new Date(date), "yyyy-MM-dd");
+        addToMyPlan(_id, day);
+      }}
+    >
+      <Icon fontName={faCalendarDay} style={{ color: "#fe5d1f" }} size="20px" />
+    </DatePicker>
+  );
 };

@@ -1,73 +1,39 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
-import { faPlus } from "@fortawesome/pro-solid-svg-icons";
-import { faCalendarAlt, faTelescope } from "@fortawesome/pro-light-svg-icons";
-import { faCalendarDay } from "@fortawesome/pro-regular-svg-icons";
+import React, { Fragment, forwardRef, useRef, useState } from "react";
+import { faTelescope } from "@fortawesome/pro-light-svg-icons";
 
 import Combobox from "component/organisms/Forms/Combobox.component";
 import Searchbox from "component/molecules/Searchbox/Searchbox.component";
 import ToggleCard from "theme/toggleCard/toggleCard.component";
 import IconHeading from "theme/iconHeading/iconHeading.component";
-import CalendarTray from "theme/calendar/calendarTray.component";
 import SkeletonElement from "theme/skeletons/SkeletonElement";
 import RecipeCard from "component/molecules/Card/RecipeCard.component";
-import Icon from "component/atoms/Icon/Icon.component";
+import { UserRecipe } from "@/recipe/recipe.types";
+import { useRecipeCategory } from "@/recipe/hooks";
+import usePlanRecipes from "@/plan/hooks/usePlanRecipes";
+import useFindRecipe from "@/recipe/hooks/useFindRecipe";
 
-import styles from "./Queue.module.scss";
-import {
-  useAddRecipeToMyPlan,
-  useDiscoveryQueue,
-  useFindQueuedRecipe,
-  useQueuedRecipe,
-  useRecipeCategory,
-} from "hooks/modules/Plan/usePlanRecipes";
-import { PublicRecipe } from "@/recipe/recipe.types";
+import styles from "./RecipePanel.module.scss";
 
 interface PlannerPanelProps {
-  panel: "my-plan" | "plan" | "challenge";
-  modifyPlan?: any;
-  week?: any;
-  recipes?: any[]; // Recipes for Queue Panels
-  isWeekFromURL?: boolean;
   height?: string;
-
-  queuedRecipes: PublicRecipe[];
+  queuedRecipes: UserRecipe[];
 }
 
-const PlannerQueue = (props: PlannerPanelProps) => {
-  const { panel, week, height, recipes: queuedRecipes, isWeekFromURL, modifyPlan } = props;
+const PlannerQueue: React.FC<PlannerPanelProps> = (props) => {
+  const { children, height, queuedRecipes } = props;
 
   const [toggler, setToggler] = useState(true);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [type, setType] = useState("all");
 
-  const { parentRef, recipeRef } = useFindQueuedRecipe([toggler, setToggler]);
-  const { ref, categories, onHide, onShow } = useRecipeCategory();
-  const { observer, loading, recipes } = useDiscoveryQueue({
-    type,
-    query,
-    page,
-    setPage,
-  });
-  console.log(recipes);
+  const { parentRef, recipeRef } = useFindRecipe([toggler, setToggler]);
 
-  const { loading: qLoading, recipes: qRecipes } = useQueuedRecipe(isWeekFromURL, week, queuedRecipes);
+  const filterRef = useRef<HTMLDivElement>(null);
 
-  const addRecipeToPlanner = useAddRecipeToMyPlan({
-    limit: 10,
-    page,
-    query,
-    type: type === "all" ? "" : type,
-    week,
-    isWeekFromURL,
-  });
+  const categories = useRecipeCategory();
 
-  // When we toggle the tab between Discover and Queue
-  useEffect(() => {
-    setQuery("");
-    setPage(1);
-    setType("all");
-  }, [toggler]);
+  const { containerRef, recipes, loading } = usePlanRecipes({ type, query, page, setPage });
 
   return (
     <Fragment>
@@ -85,7 +51,7 @@ const PlannerQueue = (props: PlannerPanelProps) => {
 
       {toggler && (
         <div className={styles.action}>
-          <div ref={ref} style={{ width: "100%" }}>
+          <div ref={filterRef} style={{ width: "100%" }}>
             <Combobox
               options={categories}
               className={styles.blendType}
@@ -97,35 +63,26 @@ const PlannerQueue = (props: PlannerPanelProps) => {
             />
           </div>
           <Searchbox
+            parentRef={filterRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            onReset={() => {
-              setQuery("");
-              onHide();
-            }}
-            onFocus={onHide}
-            onMouseEnter={onHide}
-            onMouseLeave={onShow}
-            onBlur={onShow}
+            onReset={() => setQuery("")}
           />
         </div>
       )}
       <div
+        ref={parentRef}
         className={`${styles.wrapper} ${styles[toggler ? "wrapper--discover" : "wrapper--queue"]}`}
         style={{
           maxHeight: height ? (toggler ? `calc(${height} - 111px)` : `calc(${height} - 51px)`) : "auto",
         }}
-        ref={parentRef}
       >
-        <Recipes
-          recipes={toggler ? recipes : queuedRecipes || qRecipes}
-          panel={panel}
-          modifyPlan={modifyPlan}
-          addRecipeToPlanner={addRecipeToPlanner}
-          panelType={toggler ? "QUEUE" : "DISCOVERY"}
-          wrapperRef={toggler ? observer : recipeRef}
-        />
-        {(toggler ? loading : qLoading) &&
+        <Recipes ref={containerRef} showAction={toggler} recipes={toggler ? recipes : queuedRecipes}>
+          {children}
+        </Recipes>
+        {/* IF DISCOVER TAB IS OPEN & LAZY LOADING IS HAPPENING */}
+        {toggler &&
+          loading &&
           [...Array(page === 1 ? 3 : 1)]?.map((_, index) => (
             <SkeletonElement type="thumbnail" key={index} style={{ width: "100%", height: "277px" }} />
           ))}
@@ -135,21 +92,15 @@ const PlannerQueue = (props: PlannerPanelProps) => {
 };
 
 interface RecipesProps {
-  recipes: any[];
-  panel: "my-plan" | "plan" | "challenge";
-  panelType: "QUEUE" | "DISCOVERY";
-  modifyPlan?: any;
-  addRecipeToPlanner?: any;
-  wrapperRef?: any;
+  children: any;
+  showAction: boolean;
+  recipes: UserRecipe[];
 }
-const Recipes = (props: RecipesProps) => {
-  const { recipes, panel, panelType, modifyPlan, addRecipeToPlanner, wrapperRef } = props;
-  const [showCalenderId, setShowCalenderId] = useState("");
-  const [shownDayId, setShownDayId] = useState("");
-
+const Recipes = forwardRef((props: RecipesProps, ref: any) => {
+  const { recipes, showAction, children } = props;
   return (
     <Fragment>
-      {recipes?.map((recipe, index) => {
+      {recipes?.map((recipe) => {
         const {
           recipeId: { _id, name, recipeBlendCategory, averageRating, totalRating, image },
           defaultVersion,
@@ -157,7 +108,8 @@ const Recipes = (props: RecipesProps) => {
 
         return (
           <div
-            ref={panelType === "DISCOVERY" ? (recipes.length === index + 1 ? wrapperRef : null) : wrapperRef}
+            ref={ref}
+            // ref={panelType === "DISCOVERY" ? (recipes.length === index + 1 ? wrapperRef : null) : wrapperRef}
             key={_id}
             data-recipe={_id}
           >
@@ -174,51 +126,15 @@ const Recipes = (props: RecipesProps) => {
               calorie={defaultVersion?.calorie?.value}
               carbs={defaultVersion?.gigl?.netCarbs}
             >
-              <div>
-                {panel === "plan" && (
-                  <div className={styles.daypicker}>
-                    <div
-                      className={styles.daypicker__field}
-                      onClick={() => setShownDayId(shownDayId === _id ? "" : _id)}
-                    >
-                      <Icon fontName={faPlus} size={15} />
-                    </div>
-                    {shownDayId === _id && (
-                      <ul className={styles.daypicker__options}>
-                        {[1, 2, 3, 4, 5, 6, 7].map((day) => (
-                          <li
-                            key={day}
-                            onClick={() => {
-                              modifyPlan(day, recipe);
-                              setShownDayId("");
-                            }}
-                          >
-                            {day}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                )}
-                {panel === "my-plan" && (
-                  <Icon
-                    fontName={faCalendarDay}
-                    style={{ color: "#fe5d1f" }}
-                    size="20px"
-                    onClick={() => setShowCalenderId((prev) => (showCalenderId === _id ? "" : _id))}
-                  />
-                )}
-                {panel === "my-plan" && showCalenderId === _id && (
-                  <div className={styles.calender__tray}>
-                    <CalendarTray handler={(date) => addRecipeToPlanner(recipe, date, setShowCalenderId)} />
-                  </div>
-                )}
-              </div>
+              {children && showAction && React.cloneElement(children, { _id, recipe })}
             </RecipeCard>
           </div>
         );
       })}
     </Fragment>
   );
-};
+});
+
+Recipes.displayName = "Recipes Panel";
+
 export default PlannerQueue;

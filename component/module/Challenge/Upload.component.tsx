@@ -1,15 +1,9 @@
-import React, {
-  forwardRef,
-  useState,
-  useMemo,
-  useImperativeHandle,
-  useEffect,
-} from "react";
+import React, { forwardRef, useState, useMemo, useImperativeHandle, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { FormProvider } from "react-hook-form";
 import DatePicker from "react-datepicker";
 
-import { GET_BLEND_CATEGORY } from "../../../graphql/Recipe";
+import { GET_CATEGORY_FOR_COMBOBOX } from "../../../graphql/Recipe";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import Combobox from "../../organisms/Forms/Combobox.component";
 import Textarea from "../../organisms/Forms/Textarea.component";
@@ -17,12 +11,7 @@ import Textfield from "../../organisms/Forms/Textfield.component";
 import Upload from "../../organisms/Upload/Upload.component";
 import styles from "./Upload.module.scss";
 import Publish from "../../../helpers/Publish";
-import {
-  setShowPostForm,
-  resetForm,
-  deleteIngredient,
-  addIngredient,
-} from "../../../redux/slices/Challenge.slice";
+import { setShowPostForm, resetForm, deleteIngredient, addIngredient } from "../../../redux/slices/Challenge.slice";
 import { setShowPanel } from "../../../redux/slices/Ui.slice";
 import useImage from "../../../hooks/useImage";
 import {
@@ -31,10 +20,7 @@ import {
   useEditChallengePost,
 } from "../../../hooks/modules/Challenge/useChallengePost";
 import Icon from "../../atoms/Icon/Icon.component";
-import {
-  faBasketShopping,
-  faNotebook,
-} from "@fortawesome/pro-regular-svg-icons";
+import { faBasketShopping, faNotebook } from "@fortawesome/pro-regular-svg-icons";
 import Summary from "./Daily/Summary.component";
 import IngredientPanel from "../../templates/Ingredient/Ingredient.component";
 import DayPicker from "../../molecules/Date/Day.component";
@@ -58,7 +44,7 @@ const UploadCard = forwardRef((props: any, ref) => {
     images: stateImages,
   } = useAppSelector((state) => state.challenge.post);
 
-  const { data } = useQuery(GET_BLEND_CATEGORY);
+  const { data } = useQuery(GET_CATEGORY_FOR_COMBOBOX);
   const { methods, onReset } = useChallengeForm(setImages);
   const [addPost, addState] = useAddChallengePost(userId);
   const [editPost, editState] = useEditChallengePost(userId);
@@ -144,19 +130,10 @@ const UploadCard = forwardRef((props: any, ref) => {
       <FormProvider {...methods}>
         <div className="row mt-20 mb-20">
           <div className="col-6">
-            <DayPicker
-              activeDate={postDate}
-              startDate={startDate}
-              endDate={endDate}
-            />
+            <DayPicker activeDate={postDate} startDate={startDate} endDate={endDate} />
           </div>
           <div className="col-6">
-            <Combobox
-              options={data?.getAllCategories}
-              name="category"
-              placeholder="Blend Category"
-              required
-            />
+            <Combobox options={data?.getAllCategories} name="category" placeholder="Blend Category" required />
           </div>
         </div>
         <div className="row">

@@ -11,7 +11,7 @@ const CalendarContainer = ({ children }) => {
 };
 
 interface WeekPickerProps {
-  element: React.ReactNode;
+  element: any;
   week: {
     start: Date;
     end: Date;
@@ -23,8 +23,9 @@ const WeekPicker = (props: WeekPickerProps) => {
   const { element, week, onWeekChange } = props;
 
   return (
-    <div id="week-picker">
+    <div>
       <DatePicker
+        id="week-picker"
         portalId="root-portal"
         dayClassName={(date: Date) =>
           isSameWeek(date, week?.start || new Date()) ? "react-datepicker__day--selected" : ""

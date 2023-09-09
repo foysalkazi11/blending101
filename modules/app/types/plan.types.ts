@@ -26,6 +26,14 @@ export interface Plan {
   updatedAt: string;
 }
 
+export interface MyPlanItem {
+  _id?: string;
+  day?: number;
+  formatedDate?: string;
+  memberId?: string;
+  recipes: UserRecipe[];
+}
+
 export interface PlanItem {
   _id?: string;
   day: number;
@@ -68,15 +76,18 @@ interface MacroMakeup {
 // GET API TYPES
 export interface GetAPlan {
   getAPlan: {
-    macroMakeup: MacroMakeup;
     plan: Plan;
     recipeCategoriesPercentage: CategoryPercentage[];
     topIngredients: TopIngredientData[];
+    macroMakeup: MacroMakeup;
   };
 }
 
-export interface MyPlanItem {
-  _id?: string;
-  day: number;
-  recipes: UserRecipe[];
+export interface GetPlannerByWeek {
+  getPlannerByDates: {
+    planners: MyPlanItem[];
+    recipeCategoriesPercentage: CategoryPercentage[];
+    topIngredients: TopIngredientData[];
+    macroMakeup: MacroMakeup;
+  };
 }

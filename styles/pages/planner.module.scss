@@ -1,3 +1,5 @@
+@import "variables";
+
 @mixin responsive($min_width) {
   @media only screen and (min-width: $min_width) {
     @content;

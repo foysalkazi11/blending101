@@ -13,14 +13,11 @@ const IngredientDrawer = () => {
   const panel = panelList.find((panel) => panel.name === "Ingredient");
   console.log(panel?.payload);
   return (
-    <div
-      className={`${classes["side-panel"]} ${
-        panel?.show ? classes.active : ""
-      }`}
-    >
+    <div className={`${classes["side-panel"]} ${panel?.show ? classes.active : ""}`}>
       <IconButton
         fontName={faBlender}
         variant="fade"
+        color="white"
         className={classes["side-panel__close"]}
         onClick={() => dispatch(setShowPanel({ name: "RXPanel", show: false }))}
       />
@@ -28,24 +25,17 @@ const IngredientDrawer = () => {
         <div className={classes.ingredient}>
           <h3 className={classes.ingredient__title}>Ingredients</h3>
           {panel?.payload.map((ingredient) => (
-            <div
-              className={classes.ingredient__content}
-              key={ingredient.ingredientId._id}
-            >
+            <div className={classes.ingredient__content} key={ingredient.ingredientId._id}>
               <div className={classes.ingredient__item}>
                 <div>
                   {ingredient?.ingredientId?.featuredImage ? (
-                    <img
-                      src={ingredient?.ingredientId?.featuredImage}
-                      alt={ingredient.ingredientId.ingredientName}
-                    />
+                    <img src={ingredient?.ingredientId?.featuredImage} alt={ingredient.ingredientId.ingredientName} />
                   ) : (
                     <span />
                   )}
                 </div>
                 <span>
-                  {ingredient?.selectedPortion?.quantity || 1}{" "}
-                  {ingredient?.selectedPortion?.name}
+                  {ingredient?.selectedPortion?.quantity || 1} {ingredient?.selectedPortion?.name}
                 </span>
                 <span>{ingredient.ingredientId.ingredientName}</span>
               </div>

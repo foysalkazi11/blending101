@@ -10,7 +10,7 @@ import RecipeCard from "../../molecules/Card/RecipeCard.component";
 import styles from "./PlanDiscovery.module.scss";
 import PlanCard from "./PlanCard.component";
 import { useAllPlan } from "../../../hooks/modules/Plan/usePlanDiscovery";
-import { useRecipeCategory } from "../../../hooks/modules/Plan/usePlanRecipes";
+import { useRecipeCategory } from "@/recipe/hooks";
 
 interface PlannerPanelProps {
   height: string;
@@ -26,20 +26,20 @@ const PlanDiscovery = (props: PlannerPanelProps) => {
   const [page, setPage] = useState(1);
 
   const { plans, loading, observer } = useAllPlan({ page, setPage, query });
-  const { ref, categories, onHide, onShow } = useRecipeCategory();
+  // const { ref, categories, onHide, onShow } = useRecipeCategory();
   useEffect(() => {
     setQuery("");
     setPage(1);
     setType("all");
   }, [toggler]);
 
+  const filterRef = useRef<HTMLDivElement>(null);
+
+  const categories = useRecipeCategory();
+
   return (
     <Fragment>
-      <IconHeading
-        icon={faTelescope}
-        title={`${toggler ? "Plan" : "Recipe"}`}
-        iconStyle={{ fontSize: "18px" }}
-      />
+      <IconHeading icon={faTelescope} title={`${toggler ? "Plan" : "Recipe"}`} iconStyle={{ fontSize: "18px" }} />
       <ToggleCard
         noRoute
         toggler={toggler}
@@ -53,7 +53,7 @@ const PlanDiscovery = (props: PlannerPanelProps) => {
 
       {toggler && (
         <div className={styles.action}>
-          <div ref={ref} style={{ width: "100%" }}>
+          <div ref={filterRef} style={{ width: "100%" }}>
             <Combobox
               options={categories}
               className={styles.blendType}
@@ -65,46 +65,28 @@ const PlanDiscovery = (props: PlannerPanelProps) => {
             />
           </div>
           <Searchbox
+            parentRef={filterRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            onReset={() => {
-              setQuery("");
-              onHide();
-            }}
-            onFocus={onHide}
-            onMouseEnter={onHide}
-            onMouseLeave={onShow}
-            onBlur={onShow}
+            onReset={() => setQuery("")}
           />
         </div>
       )}
       <div
         className={styles.wrapper}
         style={{
-          maxHeight: height
-            ? toggler
-              ? `calc(${height} - 111px)`
-              : `calc(${height} - 51px)`
-            : "auto",
+          maxHeight: height ? (toggler ? `calc(${height} - 111px)` : `calc(${height} - 51px)`) : "auto",
         }}
       >
         {toggler ? (
-          <Plans
-            plans={plans}
-            observer={observer}
-            setOpenCollectionModal={setOpenCollectionModal}
-          />
+          <Plans plans={plans} observer={observer} setOpenCollectionModal={setOpenCollectionModal} />
         ) : (
           <Recipes recipes={recipes || []} />
         )}
         {toggler &&
           loading &&
           [...Array(page === 1 ? 3 : 1)]?.map((_, index) => (
-            <SkeletonElement
-              type="thumbnail"
-              key={index}
-              style={{ width: "100%", height: "277px" }}
-            />
+            <SkeletonElement type="thumbnail" key={index} style={{ width: "100%", height: "277px" }} />
           ))}
       </div>
     </Fragment>
@@ -138,14 +120,7 @@ const Recipes = (props) => {
   const { recipes } = props;
   return recipes?.map((recipe) => {
     const {
-      recipeId: {
-        _id,
-        name,
-        recipeBlendCategory,
-        averageRating,
-        totalRating,
-        image,
-      },
+      recipeId: { _id, name, recipeBlendCategory, averageRating, totalRating, image },
       defaultVersion,
     } = recipe;
     return (

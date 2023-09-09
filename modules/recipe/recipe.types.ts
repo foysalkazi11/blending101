@@ -52,20 +52,20 @@ export interface PublicRecipe {
 
 // SCHEMA: ProfileRecipeDesc, ProfileRecipe
 export interface UserRecipe {
-  addedToCompare: boolean;
-  allRecipes: boolean;
-  defaultVersion: Version;
-  isMatch: boolean;
-  myRecipes: boolean;
-  notes: number;
-  personalRating: number;
-  recipeId: Recipe;
-  sharedBy: ShareBy;
-  tags: string[];
-  turnedOffVersions: Version[];
-  turnedOnVersions: Version[];
-  userCollections: string[];
-  versionsCount: number;
+  addedToCompare?: boolean;
+  allRecipes?: boolean;
+  defaultVersion?: Version;
+  isMatch?: boolean;
+  myRecipes?: boolean;
+  notes?: number;
+  personalRating?: number;
+  recipeId?: Recipe;
+  sharedBy?: ShareBy;
+  tags?: string[];
+  turnedOffVersions?: Version[];
+  turnedOnVersions?: Version[];
+  userCollections?: string[];
+  versionsCount?: number;
 }
 
 interface Recipe {
@@ -128,7 +128,7 @@ interface Version {
   servingSize?: number;
 }
 
-interface RecipeCategory {
+export interface RecipeCategory {
   _id: string;
   canonicalURL: string;
   description: string;

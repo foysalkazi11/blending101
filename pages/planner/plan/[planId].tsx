@@ -3,7 +3,7 @@ import { GET_ALL_PLAN_COMMENTS } from "@/plan/plan.graphql";
 import { addRecipe, deleteRecipe, moveRecipe } from "@/plan/services/plan-details.service";
 import { useQuery } from "@apollo/client";
 import { faBookmark, faCalendarWeek, faMessageDots, faShareNodes } from "@fortawesome/pro-light-svg-icons";
-import { faTimes } from "@fortawesome/pro-regular-svg-icons";
+import { faPlus, faTimes } from "@fortawesome/pro-regular-svg-icons";
 import { faBookmark as faBookmarkSolid } from "@fortawesome/pro-solid-svg-icons";
 import IconButton from "component/atoms/Button/IconButton.component";
 import Icon from "component/atoms/Icon/Icon.component";
@@ -11,7 +11,7 @@ import Insights from "component/module/Planner/Insights.component";
 import PlanList from "component/module/Planner/PlanByDay.component";
 import PlanDiscovery from "component/module/Planner/PlanDiscovery.component";
 import PlanForm, { defaultPlan } from "component/module/Planner/PlanForm.component";
-import PlannerQueue from "component/module/Planner/Queue.component";
+import RecipePanel from "@/plan/partials/Shared/RecipePanel.component";
 import WeekPicker from "component/molecules/Date/Week.component";
 import ShareModal from "component/organisms/Share/Share.component";
 import RXPanel from "component/templates/Panel/RXFacts/RXPanel.component";
@@ -33,6 +33,8 @@ import useClonePlan from "@/plan/hooks/plan-details/useClonePlan";
 import useEditPlan from "@/plan/hooks/plan-details/useEditPlan";
 import usePlanDetails from "@/plan/hooks/plan-details/usePlanDetails";
 import routes from "routes";
+import { UserRecipe } from "@/recipe/recipe.types";
+import DayPicker from "@/plan/partials/Shared/DayPicker.component";
 
 const PlanDetails = () => {
   const { id } = useUser();
@@ -45,7 +47,7 @@ const PlanDetails = () => {
   });
 
   const { plan, insights, recipes } = usePlanDetails(planId);
-  console.log(plan);
+
   const [planlist, setPlanlist] = useState<PlanItem[]>([]);
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
   const [showShare, setShowShare] = useState(false);
@@ -128,7 +130,9 @@ const PlanDetails = () => {
           <div className="row mt-20">
             <div className="col-3">
               {isEditMode ? (
-                <PlannerQueue panel="plan" height={panelHeight} recipes={recipes} modifyPlan={addRecipeToPlan} />
+                <RecipePanel height={panelHeight} queuedRecipes={recipes}>
+                  <DayPicker addRecipeToPlan={addRecipeToPlan} />
+                </RecipePanel>
               ) : (
                 <PlanDiscovery height={panelHeight} recipes={recipes} setOpenCollectionModal={setOpenCollectionModal} />
               )}
