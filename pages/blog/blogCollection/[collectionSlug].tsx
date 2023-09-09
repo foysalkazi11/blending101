@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faStar } from "@fortawesome/pro-regular-svg-icons";
 import { useUser } from "../../../context/AuthProvider";
 import BlogCollectionTray from "components/sidetray/blogCollectionTray";
+import BlogCommentsTray from "components/sidetray/blogCommentsTray";
 
 const CollectionBlog = () => {
   const router = useRouter();
@@ -32,7 +33,7 @@ const CollectionBlog = () => {
   return (
     <React.Fragment>
       <BlogCollectionTray showPanle="left" showTagByDefaut={true} />
-      <BlogCollectionTray showPanle="right" showTagByDefaut={false} />
+      <BlogCommentsTray showPanle="right" showTagByDefaut={false} />
       <div className={styles.main__div}>
         <CommonSearchBar
           input={input}
@@ -63,6 +64,7 @@ const CollectionBlog = () => {
           }
           closeHandler={() => router.push("/blog")}
           showItems="blog"
+          showDefaultRightHeader
         />
       </div>
     </React.Fragment>

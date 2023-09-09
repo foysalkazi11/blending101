@@ -16,6 +16,8 @@ import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoa
 import Tooltip from "../../../../theme/toolTip/CustomToolTip";
 import useHover from "../../../utility/useHover";
 import styles from "./SingleMenu.module.scss";
+import { setIsOpenBlogCollectionTray } from "redux/slices/blogSlice";
+import { setIsOpenPlanCollectionTray } from "redux/slices/Planner.slice";
 
 const separateCollectionRoutes = {
   recipeCollection: "recipe",
@@ -121,11 +123,17 @@ const SingleCollection = ({
 
   // close recipe collection tray
   const handleCollectionRoute = (route: string) => {
-    router.push(route);
     if (collectionRoute === "recipeCollection") {
       dispatch(setOpenCollectionsTary(false));
       dispatch(setChangeRecipeWithinCollection(false));
     }
+    if (collectionRoute === "blogCollection") {
+      dispatch(setIsOpenBlogCollectionTray(false));
+    }
+    if (collectionRoute === "planCollection") {
+      dispatch(setIsOpenPlanCollectionTray(false));
+    }
+    router.push(route);
   };
 
   return (
