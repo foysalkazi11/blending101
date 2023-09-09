@@ -1,11 +1,7 @@
-import {
-  faBookmark,
-  faShareNodes,
-  faXmark,
-} from "@fortawesome/pro-regular-svg-icons";
+import { faBookmark, faShareNodes, faXmark } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import PlanCard from "../../component/module/Planner/PlanCard.component";
+import PlanCard from "../../modules/plan/partials/Shared/PlanCard.component";
 import useIntersectionObserver from "../../customHooks/useIntersectionObserver";
 import joniIngredients from "../../helperFunc/joinIngredients";
 import { useAppDispatch } from "../../redux/hooks";
@@ -24,10 +20,7 @@ import ErrorPage from "../pages/404Page";
 import BlogCard from "../pages/blog/blogCard";
 import styles from "./index.module.scss";
 import ShareItems from "./ShareItems";
-import {
-  RecipeType,
-  ReferenceOfRecipeUpdateFuncType,
-} from "../../type/recipeType";
+import { RecipeType, ReferenceOfRecipeUpdateFuncType } from "../../type/recipeType";
 import { AccessPermission } from "../../type/recipeCardType";
 import { setReferenceOfRecipeUpdateFunc } from "../../redux/slices/recipeSlice";
 
@@ -50,9 +43,7 @@ interface Props {
   nextPage?: () => void;
   setOpenCollectionModal?: React.Dispatch<React.SetStateAction<boolean>>;
   setOpenShareModal?: React.Dispatch<React.SetStateAction<boolean>>;
-  setShareRecipeData?: React.Dispatch<
-    React.SetStateAction<{ id: string; image: string; name: string }>
-  >;
+  setShareRecipeData?: React.Dispatch<React.SetStateAction<{ id: string; image: string; name: string }>>;
   isAuthorized?: boolean;
   viewPermissions?: AccessPermission[];
   interactionPermissions?: AccessPermission[];
@@ -80,8 +71,7 @@ const ShowRecipeContainer = ({
   interactionPermissions,
 }: Props) => {
   const [containerData, setContainerData] = useState([]);
-  const [openCreateCollectionModal, setOpenCreateCollectionModal] =
-    useState(false);
+  const [openCreateCollectionModal, setOpenCreateCollectionModal] = useState(false);
   const observer = useRef<any>();
   const dispatch = useAppDispatch();
   const entry = useIntersectionObserver(observer, { rootMargin });
@@ -108,13 +98,7 @@ const ShowRecipeContainer = ({
   };
 
   const updateContainerData = useCallback<ReferenceOfRecipeUpdateFuncType>(
-    (
-      id,
-      outerObj = {},
-      innerObj = {},
-      innerLabel,
-      bulkRecipeIdsForAddedInCollection,
-    ) => {
+    (id, outerObj = {}, innerObj = {}, innerLabel, bulkRecipeIdsForAddedInCollection) => {
       setContainerData((prev) =>
         prev.map((item) =>
           (
@@ -244,10 +228,7 @@ const ShowRecipeContainer = ({
                       // score={rxScore}
                       calorie={defaultVersion?.calorie?.value || 0}
                       noOfComments={numberOfRating}
-                      image={
-                        image?.find((img) => img?.default)?.image ||
-                        image?.[0]?.image
-                      }
+                      image={image?.find((img) => img?.default)?.image || image?.[0]?.image}
                       recipeId={_id}
                       notes={notes}
                       addedToCompare={addedToCompare}
@@ -277,9 +258,7 @@ const ShowRecipeContainer = ({
                     <BlogCard
                       key={blog?._id}
                       blogData={blog}
-                      setOpenLastModifiedCollectionModal={
-                        setOpenCollectionModal
-                      }
+                      setOpenLastModifiedCollectionModal={setOpenCollectionModal}
                     />
                   );
                 })}

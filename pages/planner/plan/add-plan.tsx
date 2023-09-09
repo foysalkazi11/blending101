@@ -7,8 +7,8 @@ import routes from "routes";
 
 import IconButton from "component/atoms/Button/IconButton.component";
 import Icon from "component/atoms/Icon/Icon.component";
-import Insights from "component/module/Planner/Insights.component";
-import PlanForm, { defaultPlan } from "component/module/Planner/PlanForm.component";
+import Insights from "@/plan/partials/Shared/Insights.component";
+import PlanForm, { defaultPlan } from "@/plan/partials/Shared/PlanForm.component";
 import RXPanel from "component/templates/Panel/RXFacts/RXPanel.component";
 import IconHeading from "theme/iconHeading/iconHeading.component";
 

@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/pro-regular-svg-icons";
 import { FEATURED_DICTIONARY } from "../../data/Misc";
 import { useFeaturedPlan } from "../../hooks/modules/Plan/usePlanDiscovery";
-import PlanCard from "../../component/module/Planner/PlanCard.component";
+import PlanCard from "../../modules/plan/partials/Shared/PlanCard.component";
 import ShowLastModifiedCollection from "../../components/showLastModifiedCollection/ShowLastModifiedCollection";
 import { setIsOpenPlanCollectionTray } from "../../redux/slices/Planner.slice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -28,9 +28,7 @@ const ViewAll = () => {
   });
 
   const dispatch = useAppDispatch();
-  const { lastModifiedPlanCollection } = useAppSelector(
-    (state) => state?.planner,
-  );
+  const { lastModifiedPlanCollection } = useAppSelector((state) => state?.planner);
 
   if (loading) {
     return <Loader />;
@@ -41,12 +39,7 @@ const ViewAll = () => {
       <div className={styles.main__div}>
         <div className="flex jc-between mt-30">
           <div className="flex ai-center">
-            <Icon
-              className={classes.head__icon}
-              fontName={feature?.icon}
-              size="3rem"
-              color="#fe5d1f"
-            />
+            <Icon className={classes.head__icon} fontName={feature?.icon} size="3rem" color="#fe5d1f" />
             <h2 className={classes.head__title}>{feature?.title}</h2>
           </div>
           <IconWarper

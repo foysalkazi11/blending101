@@ -7,10 +7,10 @@ import { faPlus, faTimes } from "@fortawesome/pro-regular-svg-icons";
 import { faBookmark as faBookmarkSolid } from "@fortawesome/pro-solid-svg-icons";
 import IconButton from "component/atoms/Button/IconButton.component";
 import Icon from "component/atoms/Icon/Icon.component";
-import Insights from "component/module/Planner/Insights.component";
-import PlanList from "component/module/Planner/PlanByDay.component";
-import PlanDiscovery from "component/module/Planner/PlanDiscovery.component";
-import PlanForm, { defaultPlan } from "component/module/Planner/PlanForm.component";
+import Insights from "@/plan/partials/Shared/Insights.component";
+import PlanList from "@/plan/partials/Details/PlanListByDay.component";
+import PlanDiscovery from "@/plan/partials/Details/PlanDiscovery.component";
+import PlanForm, { defaultPlan } from "@/plan/partials/Shared/PlanForm.component";
 import RecipePanel from "@/plan/partials/Shared/RecipePanel.component";
 import WeekPicker from "component/molecules/Date/Week.component";
 import ShareModal from "component/organisms/Share/Share.component";
@@ -33,7 +33,6 @@ import useClonePlan from "@/plan/hooks/plan-details/useClonePlan";
 import useEditPlan from "@/plan/hooks/plan-details/useEditPlan";
 import usePlanDetails from "@/plan/hooks/plan-details/usePlanDetails";
 import routes from "routes";
-import { UserRecipe } from "@/recipe/recipe.types";
 import DayPicker from "@/plan/partials/Shared/DayPicker.component";
 
 const PlanDetails = () => {

@@ -1,31 +1,32 @@
-import React, { Fragment, forwardRef, useMemo, useState } from "react";
+import React, { Fragment, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { faChevronLeft, faChevronRight, faEllipsisV, faCalendarWeek } from "@fortawesome/pro-light-svg-icons";
 import { faCalendarDay, faTimes } from "@fortawesome/pro-regular-svg-icons";
+import { addWeeks, format, subWeeks } from "date-fns";
 
-import RXPanel from "component/templates/Panel/RXFacts/RXPanel.component";
 import IngredientPanel from "component/templates/Panel/Ingredients/IngredientPanel.component";
+import RXPanel from "component/templates/Panel/RXFacts/RXPanel.component";
 import PlanList from "@/plan/partials/MyPlan/PlanListByDate.component";
 
 import IconHeading from "theme/iconHeading/iconHeading.component";
-import Insights from "component/module/Planner/Insights.component";
-import PlanForm, { defaultPlan } from "component/module/Planner/PlanForm.component";
+import Insights from "@/plan/partials/Shared/Insights.component";
+import PlanForm, { defaultPlan } from "@/plan/partials/Shared/PlanForm.component";
 import IconButton from "component/atoms/Button/IconButton.component";
 
-import { addWeeks, format, subWeeks } from "date-fns";
-import styles from "@pages/planner.module.scss";
-import ConfirmAlert from "component/molecules/Alert/Confirm.component";
 import RecipePanel from "@/plan/partials/Shared/RecipePanel.component";
+
+import ConfirmAlert from "component/molecules/Alert/Confirm.component";
+import DatePicker from "component/molecules/Date/DatePicker.component";
+import Icon from "component/atoms/Icon/Icon.component";
+
+import useAddRecipeToMyPlan from "@/plan/hooks/my-plan/useAddRecipe";
 import useCreatePlan from "@/plan/hooks/add-plan/useCreatePlan";
 import usePlanWeek from "@/plan/hooks/my-plan/usePlanWeek";
 import usePlanByWeek from "@/plan/hooks/my-plan/usePlanByWeek";
-import DatePicker from "component/molecules/Date/DatePicker.component";
-import Icon from "component/atoms/Icon/Icon.component";
-import { UTCDate } from "helpers/Date";
-import { useAppDispatch } from "redux/hooks";
-import { setChallengeDate } from "redux/slices/Challenge.slice";
-import useAddRecipeToMyPlan from "@/plan/hooks/my-plan/useAddRecipe";
+
+import styles from "@pages/planner.module.scss";
+
 import { UserRecipe } from "@/recipe/recipe.types";
 
 const MyPlan = () => {

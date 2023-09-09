@@ -1,27 +1,17 @@
 import React from "react";
 import { useMutation } from "@apollo/client";
-import {
-  faChartSimple,
-  faCartShopping,
-  faTrash,
-  faBlender,
-} from "@fortawesome/pro-light-svg-icons";
+import { faChartSimple, faCartShopping, faTrash, faBlender } from "@fortawesome/pro-light-svg-icons";
 
-import IconButton from "../../atoms/Button/IconButton.component";
+import IconButton from "../../../../component/atoms/Button/IconButton.component";
 
-import Publish from "../../../helpers/Publish";
-import { RECIPE_CATEGORY_COLOR } from "../../../data/Recipe";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import {
-  IPlannerRecipe,
-  setDayRecipe,
-} from "../../../redux/slices/Planner.slice";
-import { setShowPanel } from "../../../redux/slices/Ui.slice";
+import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import { IPlannerRecipe, setDayRecipe } from "../../../../redux/slices/Planner.slice";
+import { setShowPanel } from "../../../../redux/slices/Ui.slice";
 
-import styles from "./PlanByDay.module.scss";
 import { useDrag, useDrop } from "react-dnd";
-import { useUser } from "../../../context/AuthProvider";
 import { useRecipeToGrocery } from "@/recipe/hooks";
+import styles from "./PlanListByDay.module.scss";
 
 interface PlanListProps {
   data?: any[];
@@ -76,16 +66,7 @@ interface PlanProps {
 }
 
 const DayPlan = (props: PlanProps) => {
-  const {
-    plannerId,
-    day,
-    date,
-    indexValue,
-    recipeList,
-    cart,
-    onRemove,
-    onMoveRecipe,
-  } = props;
+  const { plannerId, day, date, indexValue, recipeList, cart, onRemove, onMoveRecipe } = props;
   const dispatch = useAppDispatch();
 
   const [{}, dropRef] = useDrop({
@@ -134,13 +115,7 @@ interface RecipeColorIndicatorInterface {
 }
 const PlanItem = (props: RecipeColorIndicatorInterface) => {
   const { recipe, plannerId, isEditMode, cart, onRemove } = props;
-  let {
-    _id,
-    name: recipeName,
-    category,
-    recipeBlendCategory,
-    defaultVersion,
-  } = recipe;
+  let { _id, name: recipeName, category, recipeBlendCategory, defaultVersion } = recipe;
 
   const calorie = Math.round(defaultVersion?.calorie?.value);
   const rxScore = Math.round(defaultVersion?.gigl?.rxScore);
@@ -172,10 +147,7 @@ const PlanItem = (props: RecipeColorIndicatorInterface) => {
       className={styles.recipe}
     >
       <div className={styles.recipe__containerDiv}>
-        <div
-          className={styles.recipe__containerDiv__colorIndicator}
-          style={style}
-        />
+        <div className={styles.recipe__containerDiv__colorIndicator} style={style} />
         {recipeName}
       </div>
       <div className={styles.recipe__rxScore}>{calorie || 0}</div>

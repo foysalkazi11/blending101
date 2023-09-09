@@ -1,15 +1,15 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { faTelescope } from "@fortawesome/pro-regular-svg-icons";
 
-import Combobox from "../../organisms/Forms/Combobox.component";
-import Searchbox from "../../molecules/Searchbox/Searchbox.component";
-import ToggleCard from "../../../theme/toggleCard/toggleCard.component";
-import IconHeading from "../../../theme/iconHeading/iconHeading.component";
-import SkeletonElement from "../../../theme/skeletons/SkeletonElement";
-import RecipeCard from "../../molecules/Card/RecipeCard.component";
+import Combobox from "../../../../component/organisms/Forms/Combobox.component";
+import Searchbox from "../../../../component/molecules/Searchbox/Searchbox.component";
+import ToggleCard from "../../../../theme/toggleCard/toggleCard.component";
+import IconHeading from "../../../../theme/iconHeading/iconHeading.component";
+import SkeletonElement from "../../../../theme/skeletons/SkeletonElement";
+import RecipeCard from "../../../../component/molecules/Card/RecipeCard.component";
 import styles from "./PlanDiscovery.module.scss";
-import PlanCard from "./PlanCard.component";
-import { useAllPlan } from "../../../hooks/modules/Plan/usePlanDiscovery";
+import PlanCard from "../Shared/PlanCard.component";
+import { useAllPlan } from "../../../../hooks/modules/Plan/usePlanDiscovery";
 import { useRecipeCategory } from "@/recipe/hooks";
 
 interface PlannerPanelProps {

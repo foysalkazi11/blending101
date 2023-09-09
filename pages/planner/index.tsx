@@ -1,14 +1,7 @@
 import { useRouter } from "next/router";
-import React, {
-  useState,
-  Fragment,
-  useCallback,
-  useEffect,
-  useRef,
-  useMemo,
-} from "react";
+import React, { useState, Fragment, useCallback, useEffect, useRef, useMemo } from "react";
 import { faUserCircle } from "@fortawesome/pro-light-svg-icons";
-import PlanCard from "../../component/module/Planner/PlanCard.component";
+import PlanCard from "../../modules/plan/partials/Shared/PlanCard.component";
 import AppdownLoadCard from "../../components/recipe/recipeDiscovery/AppdownLoadCard/AppdownLoadCard.component";
 import ContentTray from "../../components/recipe/recipeDiscovery/ContentTray/ContentTray.component";
 import Icon from "../../component/atoms/Icon/Icon.component";
@@ -39,10 +32,7 @@ import useDebounce from "../../customHooks/useDebounce";
 import { useUser } from "../../context/AuthProvider";
 import MenubarComponent from "../../component/molecules/Menubar/Menubar.component";
 import PlanFilterTray from "../../components/sidetray/planFilterTray";
-import {
-  HideOnDesktop,
-  HideOnMobile,
-} from "../../component/molecules/Responsive/Responsive.component";
+import { HideOnDesktop, HideOnMobile } from "../../component/molecules/Responsive/Responsive.component";
 import { faPlusCircle } from "@fortawesome/pro-regular-svg-icons";
 import PlanCollectionTray from "components/sidetray/planCollectionTray";
 
@@ -62,9 +52,7 @@ const PlanDiscovery = () => {
   const query = router.query.query;
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
   const dispatch = useAppDispatch();
-  const { lastModifiedPlanCollection } = useAppSelector(
-    (state) => state?.planner,
-  );
+  const { lastModifiedPlanCollection } = useAppSelector((state) => state?.planner);
   const { allFiltersForPlan } = useAppSelector((state) => state.planFilter);
   const { isPlanFilterOpen } = useAppSelector((state) => state?.planFilter);
   const queryParameters = router.query;
@@ -73,8 +61,7 @@ const PlanDiscovery = () => {
   // handle update recipe filter criteria
   const handleUpdateFilterCriteriaForPlan = useToUpdateFilterCriteriaForPlan();
   // handle update recipe active filter tag
-  const handleUpdateActiveFilterTagForPlan =
-    useToUpdateActiveFilterTagForPlan();
+  const handleUpdateActiveFilterTagForPlan = useToUpdateActiveFilterTagForPlan();
   // handle add plan Filter with url
   const handleAddFilterCriteriaWithUrl = useToAddPlanFilterCriteriaWithUrl();
   // handle add plan Filter with url
@@ -89,9 +76,7 @@ const PlanDiscovery = () => {
     dispatch(resetAllFiltersForPlan());
   };
 
-  const handleUpdateFilterCriteriaForPlanFunc = (
-    obj: HandleUpdateFilterCriteriaType,
-  ) => {
+  const handleUpdateFilterCriteriaForPlanFunc = (obj: HandleUpdateFilterCriteriaType) => {
     if (obj.filterCriteria === "searchTerm") {
       dispatch(updatePlanFilterSearchTerm(""));
       setSearchTerm("");
@@ -106,12 +91,7 @@ const PlanDiscovery = () => {
     childTab,
   ) => {
     dispatch(setIsPlanFilterOpen(true));
-    handleUpdateActiveFilterTagForPlan(
-      activeSection,
-      filterCriteria,
-      activeTab,
-      childTab,
-    );
+    handleUpdateActiveFilterTagForPlan(activeSection, filterCriteria, activeTab, childTab);
   };
   useEffect(() => {
     let queryParamObj = normalizeQueryParams(queryParameters);
@@ -170,22 +150,14 @@ const PlanDiscovery = () => {
               input={searchTerm}
               handleOnChange={(e) => setSearchTerm(e.target.value)}
               isSearchTag={false}
-              openFilterPanel={() =>
-                dispatch(setIsPlanFilterOpen(!isPlanFilterOpen))
-              }
+              openFilterPanel={() => dispatch(setIsPlanFilterOpen(!isPlanFilterOpen))}
               showFilterIcon={true}
             />
-            <button
-              className={styles.discovery__myplan}
-              onClick={() => router.push("/planner/plan/add-plan")}
-            >
+            <button className={styles.discovery__myplan} onClick={() => router.push("/planner/plan/add-plan")}>
               <Icon fontName={faPlusCircle} className="mr-20" size="2rem" />
               Add Plan
             </button>
-            <button
-              className={styles.discovery__myplan}
-              onClick={() => router.push("/planner/plan/")}
-            >
+            <button className={styles.discovery__myplan} onClick={() => router.push("/planner/plan/")}>
               <Icon fontName={faUserCircle} className="mr-20" size="2rem" />
               My Plans
             </button>
@@ -202,10 +174,7 @@ const PlanDiscovery = () => {
           ) : null}
 
           {query && query !== "" ? (
-            <SearchedPlan
-              query={query}
-              setOpenCollectionModal={setOpenCollectionModal}
-            />
+            <SearchedPlan query={query} setOpenCollectionModal={setOpenCollectionModal} />
           ) : (
             <FeaturedPlan setOpenCollectionModal={setOpenCollectionModal} />
           )}
@@ -243,10 +212,7 @@ const PlanDiscovery = () => {
 
 const MyPlanButton = ({ router }) => {
   return (
-    <button
-      className={styles.discovery__myplan}
-      onClick={() => router.push("/planner/plan/")}
-    >
+    <button className={styles.discovery__myplan} onClick={() => router.push("/planner/plan/")}>
       <Icon fontName={faUserCircle} className="mr-20" size="2rem" />
       My Plans
     </button>
@@ -293,11 +259,7 @@ const FeaturedPlan = ({ setOpenCollectionModal }) => {
   return (
     <Fragment>
       <div className="mt-40">
-        <ContentTray
-          heading="Recommended"
-          image="/images/thumbs-up.svg"
-          allUrl="planner/recommended"
-        >
+        <ContentTray heading="Recommended" image="/images/thumbs-up.svg" allUrl="planner/recommended">
           {data?.getAllRecommendedPlans?.plans?.map((item) => (
             <div key={item?._id}>
               <div className="mr-10">
@@ -322,11 +284,7 @@ const FeaturedPlan = ({ setOpenCollectionModal }) => {
         </ContentTray>
       </div>
       <div className="mt-40">
-        <ContentTray
-          heading="Recent"
-          image="/images/clock-light.svg"
-          allUrl="planner/recent"
-        >
+        <ContentTray heading="Recent" image="/images/clock-light.svg" allUrl="planner/recent">
           {data?.getAllRecentPlans?.plans?.map((item) => (
             <div key={item?._id}>
               <div className="mr-10">
@@ -351,11 +309,7 @@ const FeaturedPlan = ({ setOpenCollectionModal }) => {
         </ContentTray>
       </div>
       <div className="mt-40">
-        <ContentTray
-          heading="Popular"
-          image="/images/fire-alt-light.svg"
-          allUrl="planner/popular"
-        >
+        <ContentTray heading="Popular" image="/images/fire-alt-light.svg" allUrl="planner/popular">
           {data?.getAllPopularPlans?.plans?.map((item) => (
             <div key={item?._id}>
               <div className="mr-10">
