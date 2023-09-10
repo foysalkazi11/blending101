@@ -18,9 +18,10 @@ import { faShareNodes, faCartShopping, faPen } from "@fortawesome/pro-light-svg-
 import IconButton from "component/atoms/Button/IconButton.component";
 import { useRouter } from "next/router";
 import ShareModal from "component/organisms/Share/Share.component";
-import { usePlanToGrocery, useSharePlan } from "@/plan/hooks";
 import routes from "routes";
 import { faTrash } from "@fortawesome/pro-regular-svg-icons";
+import usePlanToGrocery from "@/plan/hooks/usePlanToGrocery";
+import useSharePlan from "@/plan/hooks/useSharePlan";
 
 interface PlanCardProps {
   title?: string;

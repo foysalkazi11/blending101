@@ -1,4 +1,3 @@
-import { useSharePlan } from "@/plan/hooks";
 import { GET_ALL_PLAN_COMMENTS } from "@/plan/plan.graphql";
 import { addRecipe, deleteRecipe, moveRecipe } from "@/plan/services/plan-details.service";
 import { useQuery } from "@apollo/client";
@@ -36,6 +35,7 @@ import routes from "routes";
 import DayPicker from "@/plan/partials/Shared/DayPicker.component";
 import IngredientDrawer from "component/templates/Panel/Ingredients/IngredientPanel.component";
 import useQueuedRecipes from "@/plan/hooks/plan-details/useQueuedRecipes";
+import useSharePlan from "@/plan/hooks/useSharePlan";
 
 const PlanDetails = () => {
   const { id } = useUser();
