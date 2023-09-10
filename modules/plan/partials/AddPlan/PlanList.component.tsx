@@ -109,12 +109,9 @@ const PlanItem = (props: RecipeColorIndicatorInterface) => {
           onClick={() =>
             dispatch(
               setShowPanel({
-                name: "RXPanel",
+                name: "Ingredient",
                 show: true,
-                payload: ingredients?.map((ing) => ({
-                  ingredientId: ing?.ingredientId?._id,
-                  value: ing?.selectedPortion?.gram,
-                })),
+                payload: ingredients,
               }),
             )
           }

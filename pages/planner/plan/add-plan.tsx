@@ -25,6 +25,7 @@ import usePlanInsights from "@/plan/hooks/add-plan/usePlanInsights";
 import styles from "@pages/planner.module.scss";
 import DayPicker from "@/plan/partials/Shared/DayPicker.component";
 import useQueuedRecipes from "@/plan/hooks/add-plan/useQueuedRecipes";
+import IngredientDrawer from "component/templates/Panel/Ingredients/IngredientPanel.component";
 
 const DEFAULT_PLAN: MyPlanItem[] = [
   { day: 1, recipes: [] },
@@ -59,6 +60,7 @@ const PlanDetails = () => {
   return (
     <Fragment>
       <RXPanel />
+      <IngredientDrawer />
       <div className={styles.windowContainer}>
         <div className={styles.planner}>
           <div className="row mt-20">
