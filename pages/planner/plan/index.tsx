@@ -28,6 +28,7 @@ import usePlanByWeek from "@/plan/hooks/my-plan/usePlanByWeek";
 import styles from "@pages/planner.module.scss";
 
 import { UserRecipe } from "@/recipe/recipe.types";
+import usePlanMerge from "@/plan/hooks/my-plan/usePlanMerge";
 
 const MyPlan = () => {
   const router = useRouter();
@@ -37,10 +38,13 @@ const MyPlan = () => {
 
   const [panelHeight] = useState("1000px");
   const [showForm, setShowForm] = useState(false);
-  const [showDuplicateAlert, setShowDuplicateAlert] = useState(false);
 
   const [week, setWeek] = usePlanWeek();
-  const { plans, insights } = usePlanByWeek({ week });
+
+  const { addExistingPlan, duplicateState } = usePlanMerge();
+  const [isDuplicate, setIsDuplicate] = duplicateState;
+
+  const { plans, recipes, insights } = usePlanByWeek(week, addExistingPlan);
 
   const createPlan = useCreatePlan(plans);
   const addToMyPlan = useAddRecipeToMyPlan();
@@ -56,16 +60,16 @@ const MyPlan = () => {
       <RXPanel />
       <IngredientPanel />
       <ConfirmAlert
-        show={showDuplicateAlert}
-        setShow={setShowDuplicateAlert}
-        onConfirm={() => {}}
+        show={isDuplicate}
+        setShow={setIsDuplicate}
+        onConfirm={addExistingPlan}
         message="There are already plans listed in this week."
       />
       <div className={styles.windowContainer}>
         <div className={styles.planner}>
           <div className="row mt-20">
             <div className="col-3">
-              <RecipePanel height={panelHeight} queuedRecipes={[]}>
+              <RecipePanel height={panelHeight} queuedRecipes={recipes}>
                 <RecipeDatePicker addToMyPlan={addToMyPlan} />
               </RecipePanel>
             </div>
@@ -140,7 +144,7 @@ const MyPlan = () => {
               </div>
             </div>
             <div className="col-3">
-              <Insights height={panelHeight} score={0} calories={0} {...insights} />
+              <Insights height={panelHeight} {...insights} />
             </div>
           </div>
         </div>

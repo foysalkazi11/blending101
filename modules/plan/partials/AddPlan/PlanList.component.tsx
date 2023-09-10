@@ -56,7 +56,6 @@ interface PlanProps {
 
 const DayPlan = (props: PlanProps) => {
   const { plannerId, day, date, indexValue, recipeList, cart, onRemove } = props;
-  console.log(recipeList);
   return (
     <div className={styles.plan}>
       <div className={styles.plan__dateDiv} style={indexValue % 2 == 0 ? { backgroundColor: "#eeeeee" } : {}}>

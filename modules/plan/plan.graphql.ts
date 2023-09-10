@@ -183,6 +183,8 @@ export const GET_PLANNER_BY_WEEK = gql`
       recipeCategoriesPercentage {
         ...CategoryPercentage
       }
+      calorie
+      rxScore
     }
   }
   ${INSIGHTS_FIELDS}

@@ -3,7 +3,7 @@ import { GET_ALL_PLAN_COMMENTS } from "@/plan/plan.graphql";
 import { addRecipe, deleteRecipe, moveRecipe } from "@/plan/services/plan-details.service";
 import { useQuery } from "@apollo/client";
 import { faBookmark, faCalendarWeek, faMessageDots, faShareNodes } from "@fortawesome/pro-light-svg-icons";
-import { faPlus, faTimes } from "@fortawesome/pro-regular-svg-icons";
+import { faTimes } from "@fortawesome/pro-regular-svg-icons";
 import { faBookmark as faBookmarkSolid } from "@fortawesome/pro-solid-svg-icons";
 import IconButton from "component/atoms/Button/IconButton.component";
 import Icon from "component/atoms/Icon/Icon.component";
@@ -34,30 +34,29 @@ import useEditPlan from "@/plan/hooks/plan-details/useEditPlan";
 import usePlanDetails from "@/plan/hooks/plan-details/usePlanDetails";
 import routes from "routes";
 import DayPicker from "@/plan/partials/Shared/DayPicker.component";
+import IngredientDrawer from "component/templates/Panel/Ingredients/IngredientPanel.component";
+import useQueuedRecipes from "@/plan/hooks/plan-details/useQueuedRecipes";
 
 const PlanDetails = () => {
   const { id } = useUser();
   const router = useRouter();
   const planId = router.query.planId;
+  const { plan, insights } = usePlanDetails(planId);
+  const [link, getLink] = useSharePlan(planId);
 
-  const dispatch = useAppDispatch();
   const form = useForm({
     defaultValues: useMemo(() => defaultPlan, []),
   });
-
-  const { plan, insights, recipes } = usePlanDetails(planId);
+  const dispatch = useAppDispatch();
 
   const [planlist, setPlanlist] = useState<PlanItem[]>([]);
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [showComments, setShowComments] = useState(false);
-  const [week] = useState({
-    start: startOfWeek(new Date()),
-    end: endOfWeek(new Date()),
-  });
   const [panelHeight] = useState("1000px");
 
+  const recipes = useQueuedRecipes(planlist);
   useEffect(() => {
     if (plan) {
       setPlanlist(plan?.planData || []);
@@ -69,8 +68,6 @@ const PlanDetails = () => {
   }, [form, plan]);
 
   const { lastModifiedPlanCollection } = useAppSelector((state) => state?.planner);
-
-  const [link, getLink] = useSharePlan(planId);
 
   const { data: comments } = useQuery(GET_ALL_PLAN_COMMENTS, {
     variables: { id: planId },
@@ -106,8 +103,8 @@ const PlanDetails = () => {
     setPlanlist((plans) => moveRecipe(plans, dropId, draggedItem));
   }, []);
 
-  const deleteRecipeFromPlan = useCallback((day, recipeId) => {
-    setPlanlist((list) => deleteRecipe(list, day, recipeId));
+  const deleteRecipeFromPlan = useCallback((planId, recipeId) => {
+    setPlanlist((list) => deleteRecipe(list, planId, recipeId));
   }, []);
 
   // REDIRECTING TO MY PLAN TO ADD THIS PLAN IN MY PLAN LIST
@@ -123,18 +120,25 @@ const PlanDetails = () => {
   return (
     <Fragment>
       <RXPanel />
+      <IngredientDrawer />
       <ShareModal name={plan?.planName} show={showShare} setShow={setShowShare} link={link} onShare={getLink} />
       <div className={styles.windowContainer}>
         <div className={styles.planner}>
           <div className="row mt-20">
             <div className="col-3">
-              {isEditMode ? (
-                <RecipePanel height={panelHeight} queuedRecipes={recipes}>
-                  <DayPicker addRecipeToPlan={addRecipeToPlan} />
-                </RecipePanel>
-              ) : (
-                <PlanDiscovery height={panelHeight} recipes={recipes} setOpenCollectionModal={setOpenCollectionModal} />
-              )}
+              <RecipePanel
+                style={{ display: isEditMode ? "unset" : "none" }}
+                height={panelHeight}
+                queuedRecipes={recipes}
+              >
+                <DayPicker addRecipeToPlan={addRecipeToPlan} />
+              </RecipePanel>
+              <PlanDiscovery
+                style={{ display: isEditMode ? "none" : "unset" }}
+                height={panelHeight}
+                recipes={recipes}
+                setOpenCollectionModal={setOpenCollectionModal}
+              />
             </div>
             <div className="col-6" style={{ padding: "0 1.5rem" }}>
               <div className={styles.headingDiv}>
@@ -183,7 +187,7 @@ const PlanDetails = () => {
                           Blending 101
                         </span>
                         <div>
-                          <WeekPicker element={<DatePickerButton />} week={week} onWeekChange={addToMyPlan} />
+                          <WeekPicker element={<DatePickerButton />} onWeekChange={addToMyPlan} />
                           <span
                             onClick={() =>
                               plan?.planCollections?.length

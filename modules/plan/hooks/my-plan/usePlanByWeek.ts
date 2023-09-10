@@ -1,37 +1,67 @@
-import { GetPlannerByWeek, MyPlanItem } from "@/app/types/plan.types";
-import { GET_PLANNER_BY_WEEK, ADD_TO_MY_PLAN, GET_QUEUED_PLANNER_RECIPES } from "@/plan/plan.graphql";
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { GetPlannerByWeek } from "@/app/types/plan.types";
+import { GET_PLANNER_BY_WEEK } from "@/plan/plan.graphql";
+import { useLazyQuery } from "@apollo/client";
 import { useUser } from "context/AuthProvider";
 import { format } from "date-fns";
-import { useRouter } from "next/router";
-import { useEffect, useMemo, useCallback } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { IWeek } from "./usePlanWeek";
+import { PublicRecipe, UserRecipe } from "@/recipe/recipe.types";
 
-interface IPlanByWeekHook {
-  week: any;
-}
-
-const usePlanByWeek = (props: IPlanByWeekHook) => {
-  let { week } = props;
-
+const usePlanByWeek = (week: IWeek, addExistingPlan: (type: "WARNING" | "MERGE" | "REMOVE") => Promise<void>) => {
   const { id } = useUser();
+
   const [getPlanByWeek, { data }] = useLazyQuery<GetPlannerByWeek>(GET_PLANNER_BY_WEEK);
 
+  const myPlan = data?.getPlannerByDates;
+
   useEffect(() => {
+    if (!id) return;
     getPlanByWeek({
       variables: {
         userId: id,
         startDate: format(week.start, "yyyy-MM-dd"),
         endDate: format(week.end, "yyyy-MM-dd"),
       },
+    }).then((response) => {
+      // MERGE OR REPLACE CHECKING
+
+      // IF THERE ARE NO QUERYPARAMS OR MERGE/REPLACE IS ALREADY DONE
+      if (!week.isWeekFromUrl || week.url.alert === "false") return;
+
+      //CHECKING IF THE MENTIONED WEEK HAS ANY RECIPES ON IT
+      const hasRecipes = response?.data?.getPlannerByDates?.planners.some((planner) => planner?.recipes.length > 0);
+
+      // IF THERE ARE RECIPES SHOW WARNING POPUP
+      if (hasRecipes) addExistingPlan("WARNING");
+      // ADDING IT TO THE LIST IF THERE IS NO RECIPES ON THAT WEEK
+      else addExistingPlan("MERGE");
     });
-  }, [getPlanByWeek, id, week]);
+  }, [addExistingPlan, getPlanByWeek, id, week]);
+
+  // LISTING OUT ALL THE RECIPES FROM THAT WEEK
+  const recipes = useMemo(() => {
+    let ids = [];
+    let allRecipes: UserRecipe[] = [];
+    myPlan?.planners?.forEach((plan) => {
+      plan.recipes.forEach((recipe) => {
+        if (ids.includes(recipe.recipeId._id)) return;
+
+        ids.push(recipe.recipeId._id);
+        allRecipes.push(recipe);
+      });
+    });
+    return allRecipes;
+  }, [myPlan]);
 
   return {
-    plans: data?.getPlannerByDates.planners,
+    plans: myPlan?.planners || [],
+    recipes,
     insights: {
-      macros: data?.getPlannerByDates.macroMakeup,
-      ingredients: data?.getPlannerByDates.topIngredients,
-      categories: data?.getPlannerByDates.recipeCategoriesPercentage,
+      macros: myPlan?.macroMakeup,
+      ingredients: myPlan?.topIngredients,
+      categories: myPlan?.recipeCategoriesPercentage,
+      calories: myPlan?.calorie,
+      score: myPlan?.rxScore,
     },
   };
 };

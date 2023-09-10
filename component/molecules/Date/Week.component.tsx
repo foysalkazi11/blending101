@@ -12,7 +12,7 @@ const CalendarContainer = ({ children }) => {
 
 interface WeekPickerProps {
   element: any;
-  week: {
+  week?: {
     start: Date;
     end: Date;
   };
@@ -38,6 +38,13 @@ const WeekPicker = (props: WeekPickerProps) => {
       />
     </div>
   );
+};
+
+WeekPicker.defaultProps = {
+  week: {
+    start: startOfWeek(new Date()),
+    end: endOfWeek(new Date()),
+  },
 };
 
 export default WeekPicker;

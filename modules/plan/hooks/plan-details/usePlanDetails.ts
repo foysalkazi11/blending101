@@ -25,19 +25,7 @@ const usePlanDetails = (planId) => {
     [data],
   );
 
-  const recipes: UserRecipe[] = useMemo(
-    () =>
-      plan?.planData
-        .reduce((acc, cur) => acc.concat(cur.recipes), [])
-        .filter((value, index, self) => index === self.findIndex((t) => t._id === value._id))
-        .map((recipe: PublicRecipe) => ({
-          recipeId: recipe,
-          defaultVersion: recipe?.defaultVersion,
-        })),
-    [plan],
-  );
-
-  return { plan, insights, recipes };
+  return { plan, insights };
 };
 
 export default usePlanDetails;

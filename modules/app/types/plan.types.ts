@@ -89,5 +89,8 @@ export interface GetPlannerByWeek {
     recipeCategoriesPercentage: CategoryPercentage[];
     topIngredients: TopIngredientData[];
     macroMakeup: MacroMakeup;
+    calorie: number;
+    rxScore: number;
+    netCarbs: number;
   };
 }

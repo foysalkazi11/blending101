@@ -1,9 +1,7 @@
 export const addRecipe = (plans, day, recipe) => {
   return plans.map((plan, idx) => {
     if (+day === idx + 1) {
-      const isDuplicateRecipe = plan.recipes.some(
-        (item) => item?._id === recipe?._id,
-      );
+      const isDuplicateRecipe = plan.recipes.some((item) => item?._id === recipe?._id);
       if (isDuplicateRecipe) return plan;
       else {
         return {
@@ -17,9 +15,9 @@ export const addRecipe = (plans, day, recipe) => {
   });
 };
 
-export const deleteRecipe = (plans, day, recipeId) => {
+export const deleteRecipe = (plans, planId, recipeId) => {
   return plans.map((plan) => {
-    if (+day === plan?.day) {
+    if (planId === plan?.id) {
       return {
         ...plan,
         recipes: plan?.recipes.filter((recipe) => recipe?._id !== recipeId),
@@ -37,9 +35,7 @@ export const moveRecipe = (plans, dropId, draggedItem) => {
       return {
         ...plan,
         //Checking if the new recipe already exists
-        recipes: plan.recipes.find(
-          (recipe) => recipe._id === draggedItem.recipe._id,
-        )
+        recipes: plan.recipes.find((recipe) => recipe._id === draggedItem.recipe._id)
           ? plan.recipes
           : plan.recipes.concat(draggedItem.recipe),
       };
@@ -48,9 +44,7 @@ export const moveRecipe = (plans, dropId, draggedItem) => {
     else if (plan.id === draggedItem.plannerId) {
       return {
         ...plan,
-        recipes: plan.recipes.filter(
-          (recipe) => recipe._id !== draggedItem.recipe._id,
-        ),
+        recipes: plan.recipes.filter((recipe) => recipe._id !== draggedItem.recipe._id),
       };
     } else {
       return plan;

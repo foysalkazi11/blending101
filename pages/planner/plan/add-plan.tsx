@@ -24,6 +24,7 @@ import usePlanInsights from "@/plan/hooks/add-plan/usePlanInsights";
 
 import styles from "@pages/planner.module.scss";
 import DayPicker from "@/plan/partials/Shared/DayPicker.component";
+import useQueuedRecipes from "@/plan/hooks/add-plan/useQueuedRecipes";
 
 const DEFAULT_PLAN: MyPlanItem[] = [
   { day: 1, recipes: [] },
@@ -44,8 +45,10 @@ const PlanDetails = () => {
   const [panelHeight] = useState("1000px");
   const [planlist, setPlanlist] = useState<MyPlanItem[]>(DEFAULT_PLAN);
 
-  const createPlan = useCreatePlan(planlist);
+  const recipes = useQueuedRecipes(planlist);
   const insights = usePlanInsights(planlist);
+
+  const createPlan = useCreatePlan(planlist);
 
   // HANDLERS FOR MODIFYING PLAN
   const addRecipeToPlan = useCallback((day, recipe) => {
@@ -60,7 +63,7 @@ const PlanDetails = () => {
         <div className={styles.planner}>
           <div className="row mt-20">
             <div className="col-3">
-              <RecipePanel height={panelHeight} queuedRecipes={[]}>
+              <RecipePanel height={panelHeight} queuedRecipes={recipes}>
                 <DayPicker addRecipeToPlan={addRecipeToPlan} />
               </RecipePanel>
             </div>
