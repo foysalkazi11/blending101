@@ -2,14 +2,14 @@ import React, { useMemo } from "react";
 import { faLightbulbOn } from "@fortawesome/pro-light-svg-icons";
 import HSBar from "react-horizontal-stacked-bar-chart";
 
-import IconHeading from "../../../theme/iconHeading/iconHeading.component";
+import IconHeading from "theme/iconHeading/iconHeading.component";
 
 import styles from "./Insights.module.scss";
 import { useQuery } from "@apollo/client";
-import { GET_CATEGORY_FOR_COMBOBOX } from "../../../graphql/Recipe";
-import { RECIPE_CATEGORY_COLOR } from "../../../data/Recipe";
-import TopIngredients from "../../molecules/Charts/TopIngredients.component";
-import MacroMakeup, { IMacroData } from "../../molecules/Charts/MacroMakeup.component";
+import { GET_CATEGORY_FOR_COMBOBOX } from "graphql/Recipe";
+import { RECIPE_CATEGORY_COLOR } from "data/Recipe";
+import TopIngredients from "component/molecules/Charts/TopIngredients.component";
+import MacroMakeup, { IMacroData } from "component/molecules/Charts/MacroMakeup.component";
 
 interface InsightsProps {
   categories: any[];

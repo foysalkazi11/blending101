@@ -1,12 +1,7 @@
 import React, { useEffect } from "react";
 import { FaFacebookF, FaPinterestP, FaTwitter } from "react-icons/fa";
 import { MdClose, MdMail } from "react-icons/md";
-import {
-  FacebookShareButton,
-  PinterestShareButton,
-  TwitterShareButton,
-  EmailShareButton,
-} from "react-share";
+import { FacebookShareButton, PinterestShareButton, TwitterShareButton, EmailShareButton } from "react-share";
 
 import CustomModal from "../../../theme/modal/customModal";
 import styles from "./Confirm.module.scss";
@@ -16,7 +11,7 @@ interface ShareProps {
   show: boolean;
   setShow: any;
   message: string;
-  onConfirm: (type: "MERGE" | "REMOVE") => void;
+  onConfirm: (type: "WARNING" | "MERGE" | "REMOVE") => Promise<void>;
 }
 
 const ConfirmAlert: React.FC<ShareProps> = (props) => {
@@ -38,10 +33,7 @@ const ConfirmAlert: React.FC<ShareProps> = (props) => {
           >
             Merge Plans
           </button>
-          <button
-            className={styles.cancelBtn}
-            onClick={() => onConfirm("REMOVE")}
-          >
+          <button className={styles.cancelBtn} onClick={() => onConfirm("REMOVE")}>
             Replace Plans
           </button>
         </div>

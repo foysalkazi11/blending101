@@ -46,12 +46,7 @@ const RecipeCard: React.FC<RecipeProps> = (props) => {
         <div>
           <div className={styles.datacard__body__top}>
             <div>
-              <h2
-                className={styles.title}
-                onClick={() =>
-                  router.push(`/recipe/recipe_details/${recipeId}`)
-                }
-              >
+              <h2 className={styles.title} onClick={() => router.push(`/recipe/recipe_details/${recipeId}`)}>
                 {title}
               </h2>
             </div>
@@ -59,10 +54,7 @@ const RecipeCard: React.FC<RecipeProps> = (props) => {
           </div>
           <div className={styles.datacard__body__middle}>
             <div className={styles.datacard__body__middle__left}>
-              <div
-                className={styles.image}
-                style={{ backgroundImage: `url(${image})` }}
-              />
+              <div className={styles.image} style={{ backgroundImage: `url(${image})` }} />
             </div>
             <div className={styles.datacard__body__middle__right}>
               <div>
@@ -83,10 +75,7 @@ const RecipeCard: React.FC<RecipeProps> = (props) => {
                 <div className={styles.databody__bottom}>
                   <p>
                     {ingredients?.map(
-                      (ing, idx) =>
-                        `${ing?.ingredientId?.ingredientName}${
-                          idx + 1 == ingredients.length ? "" : ", "
-                        }`,
+                      (ing, idx) => `${ing?.ingredientId?.ingredientName}${idx + 1 == ingredients.length ? "" : ", "}`,
                     )}
                   </p>
                 </div>

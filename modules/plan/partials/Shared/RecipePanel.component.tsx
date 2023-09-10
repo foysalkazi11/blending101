@@ -14,29 +14,30 @@ import useFindRecipe from "@/recipe/hooks/useFindRecipe";
 
 import styles from "./RecipePanel.module.scss";
 
-interface PlannerPanelProps {
+interface RecipePanelProps {
   height?: string;
+  style?: React.CSSProperties;
   queuedRecipes: UserRecipe[];
 }
 
-const PlannerQueue: React.FC<PlannerPanelProps> = (props) => {
-  const { children, height, queuedRecipes } = props;
+const RecipePanel: React.FC<RecipePanelProps> = (props) => {
+  const { children, style, height, queuedRecipes } = props;
 
   const [toggler, setToggler] = useState(true);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [type, setType] = useState("all");
 
-  const { parentRef, recipeRef } = useFindRecipe([toggler, setToggler]);
+  // NEED TO WORK IN THE FOLLOWING HOOK
+  const { parentRef } = useFindRecipe([toggler, setToggler]);
 
   const filterRef = useRef<HTMLDivElement>(null);
 
   const categories = useRecipeCategory();
-
   const { containerRef, recipes, loading } = usePlanRecipes({ type, query, page, setPage });
 
   return (
-    <Fragment>
+    <div style={style}>
       <IconHeading icon={faTelescope} title="Recipe" iconStyle={{ fontSize: "24px" }} />
       <ToggleCard
         noRoute
@@ -87,7 +88,7 @@ const PlannerQueue: React.FC<PlannerPanelProps> = (props) => {
             <SkeletonElement type="thumbnail" key={index} style={{ width: "100%", height: "277px" }} />
           ))}
       </div>
-    </Fragment>
+    </div>
   );
 };
 
@@ -110,7 +111,7 @@ const Recipes = forwardRef((props: RecipesProps, ref: any) => {
           <div
             ref={ref}
             // ref={panelType === "DISCOVERY" ? (recipes.length === index + 1 ? wrapperRef : null) : wrapperRef}
-            key={_id}
+            key={_id + showAction ? "Discover" : "Queue"}
             data-recipe={_id}
           >
             <RecipeCard
@@ -137,4 +138,4 @@ const Recipes = forwardRef((props: RecipesProps, ref: any) => {
 
 Recipes.displayName = "Recipes Panel";
 
-export default PlannerQueue;
+export default RecipePanel;

@@ -1,25 +1,27 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { Dispatch, forwardRef, Fragment, SetStateAction, useRef, useState } from "react";
 import styles from "./PlanCard.module.scss";
-import useForSelectCommentsAndNotesIcon from "../../../customHooks/useForSelectCommentsAndNotesIcon";
+import useForSelectCommentsAndNotesIcon from "customHooks/useForSelectCommentsAndNotesIcon";
 import { faEllipsisVertical } from "@fortawesome/pro-solid-svg-icons";
 import { faCalendarWeek } from "@fortawesome/pro-light-svg-icons";
-import { RecipeCreatorInfo } from "../../../type/recipeType";
-import useHover from "../../../components/utility/useHover";
-import Icon from "../../atoms/Icon/Icon.component";
-import WeekPicker from "../../molecules/Date/Week.component";
-import { startOfWeek, endOfWeek } from "date-fns";
-import useToAddPlanToCollection from "../../../customHooks/plan/useToAddPlanToCollection";
+import { RecipeCreatorInfo } from "type/recipeType";
+import Icon from "component/atoms/Icon/Icon.component";
+import WeekPicker from "component/molecules/Date/Week.component";
+import { startOfWeek, endOfWeek, format } from "date-fns";
+import useToAddPlanToCollection from "customHooks/plan/useToAddPlanToCollection";
 import Link from "next/link";
-import useToOpenPlanCollectionTray from "../../../customHooks/plan/useToOpenPlanCollectionTray";
-import { PlanComeFromType } from "../../../redux/slices/Planner.slice";
-import useToOpenPlanCommentsTray from "../../../customHooks/plan/useToOpenPlanCommentsTray";
-import { useUser } from "../../../context/AuthProvider";
+import useToOpenPlanCollectionTray from "customHooks/plan/useToOpenPlanCollectionTray";
+import { PlanComeFromType } from "redux/slices/Planner.slice";
+import useToOpenPlanCommentsTray from "customHooks/plan/useToOpenPlanCommentsTray";
+import { useUser } from "context/AuthProvider";
 import { faShareNodes, faCartShopping, faPen } from "@fortawesome/pro-light-svg-icons";
 import IconButton from "component/atoms/Button/IconButton.component";
 import { useRouter } from "next/router";
 import ShareModal from "component/organisms/Share/Share.component";
-import { usePlanToGrocery, useSharePlan } from "@/plan/hooks";
+import routes from "routes";
+import { faTrash } from "@fortawesome/pro-regular-svg-icons";
+import usePlanToGrocery from "@/plan/hooks/usePlanToGrocery";
+import useSharePlan from "@/plan/hooks/useSharePlan";
 
 interface PlanCardProps {
   title?: string;
@@ -136,6 +138,9 @@ function PlanCard(props: PlanCardProps) {
                   <li onClick={() => router.push(`/planner/plan/${planId}`)}>
                     <Icon fontName={faPen} size="1.6rem" color="#fe5d1f" />
                   </li>
+                  <li onClick={() => router.push(`/planner/plan/${planId}`)}>
+                    <Icon fontName={faTrash} size="1.6rem" color="#fe5d1f" />
+                  </li>
                   <li onClick={() => addToGrocery(planId)}>
                     <Icon fontName={faCartShopping} size="1.6rem" color="#fe5d1f" />
                   </li>
@@ -171,7 +176,15 @@ function PlanCard(props: PlanCardProps) {
             <div className={styles.datacard__body__bottom__right}>
               <ul>
                 <li>
-                  <WeekPicker element={<DatePickerButton />} week={week} onWeekChange={() => {}} />
+                  <WeekPicker
+                    element={<DatePickerButton />}
+                    week={week}
+                    onWeekChange={(start, end) => {
+                      const startDate = format(new Date(start), "yyyy-MM-dd");
+                      const endDate = format(new Date(end), "yyyy-MM-dd");
+                      router.push(`${routes.plan.myPlan}/?plan=${planId}&start=${startDate}&end=${endDate}&alert=true`);
+                    }}
+                  />
                 </li>
                 <li>
                   <img

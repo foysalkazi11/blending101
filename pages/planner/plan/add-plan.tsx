@@ -7,8 +7,8 @@ import routes from "routes";
 
 import IconButton from "component/atoms/Button/IconButton.component";
 import Icon from "component/atoms/Icon/Icon.component";
-import Insights from "component/module/Planner/Insights.component";
-import PlanForm, { defaultPlan } from "component/module/Planner/PlanForm.component";
+import Insights from "@/plan/partials/Shared/Insights.component";
+import PlanForm, { defaultPlan } from "@/plan/partials/Shared/PlanForm.component";
 import RXPanel from "component/templates/Panel/RXFacts/RXPanel.component";
 import IconHeading from "theme/iconHeading/iconHeading.component";
 
@@ -24,6 +24,8 @@ import usePlanInsights from "@/plan/hooks/add-plan/usePlanInsights";
 
 import styles from "@pages/planner.module.scss";
 import DayPicker from "@/plan/partials/Shared/DayPicker.component";
+import useQueuedRecipes from "@/plan/hooks/add-plan/useQueuedRecipes";
+import IngredientDrawer from "component/templates/Panel/Ingredients/IngredientPanel.component";
 
 const DEFAULT_PLAN: MyPlanItem[] = [
   { day: 1, recipes: [] },
@@ -44,8 +46,10 @@ const PlanDetails = () => {
   const [panelHeight] = useState("1000px");
   const [planlist, setPlanlist] = useState<MyPlanItem[]>(DEFAULT_PLAN);
 
-  const createPlan = useCreatePlan(planlist);
+  const recipes = useQueuedRecipes(planlist);
   const insights = usePlanInsights(planlist);
+
+  const createPlan = useCreatePlan(planlist);
 
   // HANDLERS FOR MODIFYING PLAN
   const addRecipeToPlan = useCallback((day, recipe) => {
@@ -56,11 +60,12 @@ const PlanDetails = () => {
   return (
     <Fragment>
       <RXPanel />
+      <IngredientDrawer />
       <div className={styles.windowContainer}>
         <div className={styles.planner}>
           <div className="row mt-20">
             <div className="col-3">
-              <RecipePanel height={panelHeight} queuedRecipes={[]}>
+              <RecipePanel height={panelHeight} queuedRecipes={recipes}>
                 <DayPicker addRecipeToPlan={addRecipeToPlan} />
               </RecipePanel>
             </div>

@@ -1,25 +1,27 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { faTelescope } from "@fortawesome/pro-regular-svg-icons";
 
-import Combobox from "../../organisms/Forms/Combobox.component";
-import Searchbox from "../../molecules/Searchbox/Searchbox.component";
-import ToggleCard from "../../../theme/toggleCard/toggleCard.component";
-import IconHeading from "../../../theme/iconHeading/iconHeading.component";
-import SkeletonElement from "../../../theme/skeletons/SkeletonElement";
-import RecipeCard from "../../molecules/Card/RecipeCard.component";
+import Combobox from "../../../../component/organisms/Forms/Combobox.component";
+import Searchbox from "../../../../component/molecules/Searchbox/Searchbox.component";
+import ToggleCard from "../../../../theme/toggleCard/toggleCard.component";
+import IconHeading from "../../../../theme/iconHeading/iconHeading.component";
+import SkeletonElement from "../../../../theme/skeletons/SkeletonElement";
+import RecipeCard from "../../../../component/molecules/Card/RecipeCard.component";
 import styles from "./PlanDiscovery.module.scss";
-import PlanCard from "./PlanCard.component";
-import { useAllPlan } from "../../../hooks/modules/Plan/usePlanDiscovery";
+import PlanCard from "../Shared/PlanCard.component";
+import { useAllPlan } from "../../../../hooks/modules/Plan/usePlanDiscovery";
 import { useRecipeCategory } from "@/recipe/hooks";
+import { UserRecipe } from "@/recipe/recipe.types";
 
 interface PlannerPanelProps {
   height: string;
-  recipes: any[];
+  recipes: UserRecipe[];
+  style?: React.CSSProperties;
   setOpenCollectionModal: (arg: boolean) => void;
 }
 
 const PlanDiscovery = (props: PlannerPanelProps) => {
-  const { height, recipes, setOpenCollectionModal } = props;
+  const { style, height, recipes, setOpenCollectionModal } = props;
   const [toggler, setToggler] = useState(true);
   const [query, setQuery] = useState("");
   const [type, setType] = useState("all");
@@ -38,7 +40,7 @@ const PlanDiscovery = (props: PlannerPanelProps) => {
   const categories = useRecipeCategory();
 
   return (
-    <Fragment>
+    <div style={style}>
       <IconHeading icon={faTelescope} title={`${toggler ? "Plan" : "Recipe"}`} iconStyle={{ fontSize: "18px" }} />
       <ToggleCard
         noRoute
@@ -89,14 +91,12 @@ const PlanDiscovery = (props: PlannerPanelProps) => {
             <SkeletonElement type="thumbnail" key={index} style={{ width: "100%", height: "277px" }} />
           ))}
       </div>
-    </Fragment>
+    </div>
   );
 };
 
 const Plans = (props) => {
   const { plans, observer, setOpenCollectionModal } = props;
-  console.log(plans);
-
   return plans?.map((plan) => (
     <div key={plan?._id} ref={observer} className="mt-10">
       <PlanCard

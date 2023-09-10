@@ -1,7 +1,8 @@
 import React from "react";
 import { FormProvider } from "react-hook-form";
-import Textarea from "../../organisms/Forms/Textarea.component";
-import Textfield from "../../organisms/Forms/Textfield.component";
+
+import Textarea from "component/organisms/Forms/Textarea.component";
+import Textfield from "component/organisms/Forms/Textfield.component";
 
 export const defaultPlan = {
   planName: "",
@@ -18,12 +19,7 @@ const PlanForm = ({ methods }) => {
           borderRadius: 9,
         }}
       >
-        <Textfield
-          required
-          name="planName"
-          placeholder="Plan Name"
-          className="mb-10"
-        />
+        <Textfield required name="planName" placeholder="Plan Name" className="mb-10" />
         <Textarea name="description" placeholder="Plan Description" />
       </div>
       <div style={{ height: 10, backgroundColor: "#f8f8f8" }} />

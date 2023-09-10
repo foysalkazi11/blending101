@@ -11,7 +11,7 @@ const IngredientDrawer = () => {
   const dispatch = useAppDispatch();
   const panelList = useAppSelector((state) => state.ui.panel);
   const panel = panelList.find((panel) => panel.name === "Ingredient");
-  console.log(panel?.payload);
+
   return (
     <div className={`${classes["side-panel"]} ${panel?.show ? classes.active : ""}`}>
       <IconButton
@@ -34,10 +34,10 @@ const IngredientDrawer = () => {
                     <span />
                   )}
                 </div>
-                <span>
-                  {ingredient?.selectedPortion?.quantity || 1} {ingredient?.selectedPortion?.name}
-                </span>
-                <span>{ingredient.ingredientId.ingredientName}</span>
+                <p>
+                  {Number(ingredient?.selectedPortion?.quantity).toFixed(1) || 1} {ingredient?.selectedPortion?.name}{" "}
+                  {ingredient.ingredientId.ingredientName}
+                </p>
               </div>
             </div>
           ))}

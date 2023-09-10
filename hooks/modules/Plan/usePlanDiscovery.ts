@@ -79,6 +79,7 @@ const useFeaturedPlan = (props: IPlanDiscoveryHook) => {
   const [hasMore, setHasMore] = useState(false);
 
   const memberId = useUser().id;
+  console.log({ ...hasFetchedPlan, param });
 
   // OBSERVING THE LAST RECIPE POSITION OF THE LIST TO TRY TO FETCH MORE RECIPES
   const observer = useRef<any>();
@@ -135,17 +136,12 @@ const useFeaturedPlan = (props: IPlanDiscoveryHook) => {
       setLoading(false);
     }
 
-    if (param !== "" && !hasFetchedPlan.current) {
-      fetchData(config);
-      hasFetchedPlan.current = true;
+    if (param && param !== "" && !hasFetchedPlan.current) {
+      fetchData(config).then(() => {
+        hasFetchedPlan.current = true;
+      });
     }
-  }, [
-    param,
-    config,
-    getAllRecommendedRecipes,
-    getAllPopularRecipes,
-    getAllLatestRecipes,
-  ]);
+  }, [param, config, getAllRecommendedRecipes, getAllPopularRecipes, getAllLatestRecipes]);
 
   return { data: response, loading, observer: lastPlanRef };
 };

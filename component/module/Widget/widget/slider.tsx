@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import AContainer from "../../../../containers/A.container";
 import { usePlanWidget } from "../../../../hooks/modules/useWidget";
 import Banner from "../../../molecules/Banner/Banner.component";
-import PlanCard from "../../Planner/PlanCard.component";
+import PlanCard from "../../../../modules/plan/partials/Shared/PlanCard.component";
 import ContentTray from "../../../../components/recipe/recipeDiscovery/ContentTray/ContentTray.component";
 
 const Test = () => {

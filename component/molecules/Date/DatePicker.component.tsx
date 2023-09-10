@@ -13,7 +13,7 @@ const DatePicker = (props: DatePickerProps) => {
   const { children, ...datePickerProps } = props;
   return (
     <ReactDatePicker
-      portalId="root-portal"
+      // portalId="root-portal"
       {...datePickerProps}
       customInput={<DatePickerButton>{children}</DatePickerButton>}
     />
