@@ -5,6 +5,7 @@ import {
   GET_RECCOMENDED_PLANS,
   GET_RECENT_PLANS,
 } from "../../../modules/plan/plan.graphql";
+
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 
 import { useUser } from "../../../context/AuthProvider";
@@ -19,9 +20,11 @@ interface IPlanDiscoveryHook {
 
 const useAllPlan = (props: IPlanDiscoveryHook) => {
   const { page, setPage, limit, query = "" } = props;
+
   const [plans, setPlans] = useState([]);
   const [hasMore, setHasMore] = useState(false);
-  const userId = useUser().id;
+
+  const { id: userId } = useUser();
 
   const [getAllPlan, { loading }] = useLazyQuery(GET_ALL_PLANS);
 

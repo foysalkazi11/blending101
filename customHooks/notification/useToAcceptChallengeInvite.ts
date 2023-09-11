@@ -1,18 +1,12 @@
 import { useMutation } from "@apollo/client";
 import notification from "../../components/utility/reactToastifyNotification";
-import { ACCEPT_CHALLENGE } from "../../graphql/Challenge";
+import { ACCEPT_CHALLENGE } from "../../modules/challenge/challenge.graphql";
 import client from "../../gqlLib/client";
 import GET_SHARE_NOTIFICATION from "../../gqlLib/notification/query/getShareNotification";
 
 const useToAcceptChallengeInvite = () => {
-  const [
-    handleAcceptChallengeInvite,
-    { loading: acceptChallengeInviteLoading },
-  ] = useMutation(ACCEPT_CHALLENGE);
-  const functionAcceptChallengeInvite = async (variables: {
-    userId: string;
-    token: string;
-  }) => {
+  const [handleAcceptChallengeInvite, { loading: acceptChallengeInviteLoading }] = useMutation(ACCEPT_CHALLENGE);
+  const functionAcceptChallengeInvite = async (variables: { userId: string; token: string }) => {
     try {
       const { data } = await handleAcceptChallengeInvite({
         variables: { ...variables, user: variables.userId },
@@ -30,10 +24,9 @@ const useToAcceptChallengeInvite = () => {
         data: {
           getShareNotification: {
             ...getShareNotification,
-            shareNotifications:
-              getShareNotification?.shareNotifications?.filter(
-                (notification) => notification?.shareData?.entityId._id !== id,
-              ),
+            shareNotifications: getShareNotification?.shareNotifications?.filter(
+              (notification) => notification?.shareData?.entityId._id !== id,
+            ),
             totalNotification: getShareNotification?.totalNotification - 1,
           },
         },

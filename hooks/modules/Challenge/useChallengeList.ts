@@ -5,7 +5,7 @@ import {
   DELETE_CHALLENGE,
   EDIT_CHALLENGE,
   GET_CHALLENGES,
-} from "../../../graphql/Challenge";
+} from "../../../modules/challenge/challenge.graphql";
 
 const useAddChallenge = (userId) => {
   const [addPost, addState] = useMutation(CREATE_CHALLENGE, {
@@ -70,9 +70,7 @@ const useDeleteChallenge = (userId) => {
       cache.writeQuery({
         ...definition,
         data: {
-          getMyChallengeList: getMyChallengeList.filter(
-            (challenge) => challenge?._id !== deleteUserChallenge,
-          ),
+          getMyChallengeList: getMyChallengeList.filter((challenge) => challenge?._id !== deleteUserChallenge),
         },
       });
     },
@@ -92,17 +90,13 @@ const useActivateChallenge = (userId) => {
       };
       const { getMyChallengeList } = cache.readQuery<any>(definition);
       const value = getMyChallengeList.map((challenge) =>
-        challenge?._id === activateChallenge
-          ? { ...challenge, isActive: true }
-          : { ...challenge, isActive: false },
+        challenge?._id === activateChallenge ? { ...challenge, isActive: true } : { ...challenge, isActive: false },
       );
       cache.writeQuery({
         ...definition,
         data: {
           getMyChallengeList: getMyChallengeList.map((challenge) =>
-            challenge?._id === activateChallenge
-              ? { ...challenge, isActive: true }
-              : { ...challenge, isActive: false },
+            challenge?._id === activateChallenge ? { ...challenge, isActive: true } : { ...challenge, isActive: false },
           ),
         },
       });
@@ -111,9 +105,4 @@ const useActivateChallenge = (userId) => {
   return [activateChallenge, activateState];
 };
 
-export {
-  useAddChallenge,
-  useEditChallenge,
-  useDeleteChallenge,
-  useActivateChallenge,
-};
+export { useAddChallenge, useEditChallenge, useDeleteChallenge, useActivateChallenge };

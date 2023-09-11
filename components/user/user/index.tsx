@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import styles from "./User.module.scss";
 import SideBar from "./sidebar/SideBar";
 import Main from "./main/Main";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch } from "../../../redux/hooks";
 import { useUser } from "../../../context/AuthProvider";
 import { useMutation } from "@apollo/client";
 import CREATE_NEW_USER from "../../../gqlLib/user/mutations/createNewUser";
@@ -20,6 +20,7 @@ export type UserDataType = {
     yourBlender: string;
     email: string;
     location: string;
+    blenderManufacturer: string;
   };
   membership: {
     plan: string;
@@ -64,6 +65,7 @@ const User = () => {
       yourBlender: "",
       email: "",
       location: "",
+      blenderManufacturer: "",
     },
     membership: {
       plan: "free",
@@ -119,6 +121,7 @@ const User = () => {
           image,
           lastName,
           configuration,
+          blenderManufacturer,
         } = currentUser;
 
         const {
@@ -147,6 +150,7 @@ const User = () => {
             email,
             location,
             yourBlender,
+            blenderManufacturer,
           },
           personalization: {
             ...userData?.personalization,
