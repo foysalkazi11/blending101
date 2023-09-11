@@ -10,7 +10,6 @@ import { isPast, format } from "date-fns";
 import { INVITE_CHALLENGE } from "@/challenge/challenge.graphql";
 import { UTCDate } from "helpers/Date";
 import Publish from "helpers/Publish";
-import { useActivateChallenge, useDeleteChallenge } from "hooks/modules/Challenge/useChallengeList";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import Tooltip from "theme/toolTip/CustomToolTip";
@@ -19,6 +18,8 @@ import { setChallengeDate } from "redux/slices/Challenge.slice";
 
 import styles from "./index.module.scss";
 import { Challenge } from "@/app/types/challenge.types";
+import useChallengeActivate from "@/challenge/hooks/settings/useActivate";
+import useChallengeDelete from "@/challenge/hooks/settings/useDelete";
 
 interface ChallengeListProps {
   currentChallenge: string;
@@ -35,8 +36,8 @@ const ChallengeList = (props: ChallengeListProps) => {
   const dispatch = useAppDispatch();
   const userId = useUser().id;
 
-  const [activateChallenge, activateState] = useActivateChallenge(userId);
-  const [deleteChallenge, deleteState] = useDeleteChallenge(userId);
+  const [activateChallenge, activateState] = useChallengeActivate(userId);
+  const [deleteChallenge, deleteState] = useChallengeDelete(userId);
   const [inviteChallenge, { loading: inviteChallengeLoading }] = useMutation(INVITE_CHALLENGE);
 
   const [emails, setEmails] = useState<SharedUserInfoType[]>([]);
