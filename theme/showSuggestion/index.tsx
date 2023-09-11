@@ -5,7 +5,8 @@ import fuzzySearch from "components/utility/fuzzySearch";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/pro-light-svg-icons";
 import useDebounce from "customHooks/useDebounce";
-type Option = { label: string; value: string };
+import useHideOnClickOutside from "hooks/useHideOnClickOutside";
+type Option = { label: string; value: string; [key: string]: string };
 
 type showSuggestionProps = React.ComponentPropsWithRef<"div"> & {
   list?: Option[];
@@ -23,6 +24,7 @@ const ShowSuggestion = ({
 }: showSuggestionProps) => {
   const [input, setInput] = useState("");
   const inputDebounceValue = useDebounce(input, 300);
+  const suggestionBoxRef = useHideOnClickOutside(closeSuggestionBox);
 
   const optionsList = useMemo(() => {
     let results: Option[] = [];
@@ -38,7 +40,7 @@ const ShowSuggestion = ({
   }, [inputDebounceValue, list]);
 
   return (
-    <div className={styles.suggestionBox} {...rest}>
+    <div className={styles.suggestionBox} ref={suggestionBoxRef} {...rest}>
       <InputComponent
         inputWithIcon={true}
         type="text"
