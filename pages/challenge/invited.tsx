@@ -12,10 +12,7 @@ import React, { Fragment, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Icon from "../../component/atoms/Icon/Icon.component";
 import Loader from "../../component/atoms/Loader/loader.component";
-import {
-  ACCEPT_CHALLENGE,
-  GET_INVITE_CHALLENGE_DETAILS,
-} from "../../graphql/Challenge";
+import { ACCEPT_CHALLENGE, GET_INVITE_CHALLENGE_DETAILS } from "../../modules/challenge/challenge.graphql";
 import { useAppSelector } from "../../redux/hooks";
 
 import styles from "../../styles/pages/challenge.module.scss";
@@ -79,17 +76,13 @@ const Invited = () => {
         <div className="row">
           <div className="col-9">
             <h1>
-              {data?.getInviteChallengeInfo?.invite?.invitedBy?.displayName} has
-              invited you to join a Poily Challenge!
+              {data?.getInviteChallengeInfo?.invite?.invitedBy?.displayName} has invited you to join a Poily Challenge!
             </h1>
             <p>
               Join the{" "}
               <span>
                 &quot;
-                {
-                  data?.getInviteChallengeInfo?.invite?.challengeId
-                    ?.challengeName
-                }
+                {data?.getInviteChallengeInfo?.invite?.challengeId?.challengeName}
                 &quot;
               </span>
               . Track and visualize your daily blending habit with ease.
@@ -107,16 +100,11 @@ const Invited = () => {
                       <li>Log blend ingredients by typing or speaking</li>
                       <li>Generate pantry aware grocery list</li>
                       <li>Share your challenge progress on social media</li>
-                      <li>
-                        Quickly add recipes from your plan or recipe discovery
-                      </li>
-                      <li>
-                        See how you rank with other Challenge participants
-                      </li>
+                      <li>Quickly add recipes from your plan or recipe discovery</li>
+                      <li>See how you rank with other Challenge participants</li>
                       <li>Track your medicinal performance over time</li>
                       <li>
-                        Get analytics on what you consume i.e. ingredients,
-                        processed foods, macros, nutrients, etc.
+                        Get analytics on what you consume i.e. ingredients, processed foods, macros, nutrients, etc.
                       </li>
                     </ul>
                   </div>
@@ -125,21 +113,9 @@ const Invited = () => {
             </div>
           </div>
           <div className="col-3" style={{ position: "relative" }}>
-            <img
-              src="/images/top-ingredients.png"
-              alt=""
-              className={styles.invited__main_ing}
-            />
-            <img
-              src="/images/scnd_phone.png"
-              alt=""
-              className={styles.invited__main_mockup}
-            />
-            <img
-              src="/images/leaderboard.svg"
-              alt=""
-              className={styles.invited__main_leader}
-            />
+            <img src="/images/top-ingredients.png" alt="" className={styles.invited__main_ing} />
+            <img src="/images/scnd_phone.png" alt="" className={styles.invited__main_mockup} />
+            <img src="/images/leaderboard.svg" alt="" className={styles.invited__main_leader} />
           </div>
         </div>
       </main>

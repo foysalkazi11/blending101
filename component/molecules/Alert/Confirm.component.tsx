@@ -11,7 +11,7 @@ interface ShareProps {
   show: boolean;
   setShow: any;
   message: string;
-  onConfirm: (type: "WARNING" | "MERGE" | "REMOVE") => Promise<void>;
+  onConfirm: (type: "WARNING" | "MERGE" | "REPLACE") => Promise<void>;
 }
 
 const ConfirmAlert: React.FC<ShareProps> = (props) => {
@@ -33,7 +33,7 @@ const ConfirmAlert: React.FC<ShareProps> = (props) => {
           >
             Merge Plans
           </button>
-          <button className={styles.cancelBtn} onClick={() => onConfirm("REMOVE")}>
+          <button className={styles.cancelBtn} onClick={() => onConfirm("REPLACE")}>
             Replace Plans
           </button>
         </div>

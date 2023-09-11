@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { format, isAfter, subDays, isToday } from "date-fns";
 import React from "react";
-import { GET_RECENT_CHALLENGES } from "../../../graphql/Challenge";
+import { GET_RECENT_CHALLENGES } from "../../../modules/challenge/challenge.graphql";
 import { useAppSelector } from "../../../redux/hooks";
 import { getBackgroundColor } from "../../module/Challenge/Achievement/_Dialer.component";
 
@@ -46,9 +46,7 @@ function DateButton({ date, categories, disabled }: any) {
       const hasPosts = categories.length !== 0;
       return (
         <div
-          className={`${styles.wheel__button} ${
-            hasPosts ? "" : styles["wheel__button--disabled"]
-          }`}
+          className={`${styles.wheel__button} ${hasPosts ? "" : styles["wheel__button--disabled"]}`}
           style={{
             background: getBackgroundColor(categories),
             color: "white",
@@ -80,20 +78,14 @@ const BlendTrend = () => {
         <h3>Blending Trend</h3>
         <div className={styles.wheel}>
           {data?.getLastSevenDaysChallenge?.challenge?.map((activity, key) => {
-            const categories = activity?.posts.map(
-              (post) => post?.recipeBlendCategory?.name || "",
-            );
+            const categories = activity?.posts.map((post) => post?.recipeBlendCategory?.name || "");
             return (
               <DateButton
                 key={activity?._id}
                 date={activity?.date}
                 categories={categories}
                 disabled={activity?.disabled}
-                isActive={
-                  today !== ""
-                    ? activity?.date === today
-                    : isToday(new Date(activity?.date))
-                }
+                isActive={today !== "" ? activity?.date === today : isToday(new Date(activity?.date))}
               />
             );
           })}

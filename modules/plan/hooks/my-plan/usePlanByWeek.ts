@@ -5,9 +5,9 @@ import { useUser } from "context/AuthProvider";
 import { format } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { IWeek } from "./usePlanWeek";
-import { PublicRecipe, UserRecipe } from "@/recipe/recipe.types";
+import { UserRecipe } from "@/recipe/recipe.types";
 
-const usePlanByWeek = (week: IWeek, addExistingPlan: (type: "WARNING" | "MERGE" | "REMOVE") => Promise<void>) => {
+const usePlanByWeek = (week: IWeek, addExistingPlan: (type: "WARNING" | "MERGE" | "REPLACE") => Promise<void>) => {
   const { id } = useUser();
 
   const [getPlanByWeek, { data }] = useLazyQuery<GetPlannerByWeek>(GET_PLANNER_BY_WEEK);

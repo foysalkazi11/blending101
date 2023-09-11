@@ -1,21 +1,7 @@
-import React, {
-  forwardRef,
-  Fragment,
-  useRef,
-  useEffect,
-  useMemo,
-  useCallback,
-  useState,
-} from "react";
+import React, { forwardRef, Fragment, useRef, useEffect, useMemo, useCallback, useState } from "react";
 import { format } from "date-fns";
 import { faCircle, faEllipsisVertical } from "@fortawesome/pro-solid-svg-icons";
-import {
-  faClone,
-  faTrash,
-  faTrophy,
-  faUpDownLeftRight,
-  faChartSimple,
-} from "@fortawesome/pro-light-svg-icons";
+import { faClone, faTrash, faTrophy, faUpDownLeftRight, faChartSimple } from "@fortawesome/pro-light-svg-icons";
 import DatePicker from "react-datepicker";
 import { useMutation } from "@apollo/client";
 
@@ -25,11 +11,7 @@ import IconButton from "../../atoms/Button/IconButton.component";
 import Icon from "../../atoms/Icon/Icon.component";
 
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import {
-  IPostIngredient,
-  setChallengePost,
-  setShowPostForm,
-} from "../../../redux/slices/Challenge.slice";
+import { IPostIngredient, setChallengePost, setShowPostForm } from "../../../redux/slices/Challenge.slice";
 
 import { RECIPE_CATEGORY_COLOR } from "../../../data/Recipe";
 import { setShowPanel } from "../../../redux/slices/Ui.slice";
@@ -39,7 +21,7 @@ import {
   COPY_CHALLENGE_POST,
   DELETE_CHALLENGE_POST,
   MOVE_CHALLENGE_POST,
-} from "../../../graphql/Challenge";
+} from "../../../modules/challenge/challenge.graphql";
 
 import Publish from "../../../helpers/Publish";
 import styles from "./Post.module.scss";
@@ -245,11 +227,7 @@ const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
 
   return (
     <Fragment>
-      <IconHeading
-        icon={faTrophy}
-        title={"Challenge Post"}
-        iconStyle={{ fontSize: "18px" }}
-      />
+      <IconHeading icon={faTrophy} title={"Challenge Post"} iconStyle={{ fontSize: "18px" }} />
       <div style={{ maxHeight: height }} className={styles.card__wrapper}>
         {challengePosts.reverse()}
       </div>
@@ -277,11 +255,7 @@ const BlendCard = forwardRef((props: BlendCardProps, ref: any) => {
       </div>
       {images.length > 0 && (
         <div className={styles.splitImage}>
-          <SplitImageCard
-            challengeImages={challengeImages}
-            images={images}
-            date={date ? UTCDate(date) : new Date()}
-          />
+          <SplitImageCard challengeImages={challengeImages} images={images} date={date ? UTCDate(date) : new Date()} />
         </div>
       )}
       <div className={`${styles.card__content} mb-10`}>{postsEl}</div>
@@ -304,18 +278,7 @@ interface PostProps {
 }
 
 const Post = (props: PostProps) => {
-  const {
-    id,
-    date,
-    showPanel,
-    showChartState,
-    post,
-    onEdit,
-    onCopy,
-    onMove,
-    onDelete,
-    onShowNutrient,
-  } = props;
+  const { id, date, showPanel, showChartState, post, onEdit, onCopy, onMove, onDelete, onShowNutrient } = props;
 
   const [showChart, setShowChart] = showChartState;
   const [showMenu, setShowMenu] = useState(false);
@@ -324,9 +287,7 @@ const Post = (props: PostProps) => {
 
   let ingredients = "";
   post.ingredients.forEach((ingredient, index) => {
-    ingredients +=
-      ingredient?.ingredientId?.ingredientName +
-      `${index + 1 !== post.ingredients.length ? ", " : ""}`;
+    ingredients += ingredient?.ingredientId?.ingredientName + `${index + 1 !== post.ingredients.length ? ", " : ""}`;
   });
 
   const menuRef = useHideOnClickOutside(() => setShowMenu(false));
@@ -336,10 +297,7 @@ const Post = (props: PostProps) => {
     <div>
       <div className={styles.recipe}>
         <div className={styles.space}>
-          <h3
-            className={styles.recipe__title}
-            onClick={() => onEdit(id, date, post)}
-          >
+          <h3 className={styles.recipe__title} onClick={() => onEdit(id, date, post)}>
             <Icon
               fontName={faCircle}
               size="2rem"
@@ -350,9 +308,7 @@ const Post = (props: PostProps) => {
             {post.name}
           </h3>
           <div className={styles.recipe__buttons}>
-            <span className={styles.recipe__category}>
-              {post?.recipeBlendCategory?.name}
-            </span>
+            <span className={styles.recipe__category}>{post?.recipeBlendCategory?.name}</span>
             <div className="flex ai-center">
               <IconButton
                 fontName={faChartSimple}
@@ -376,11 +332,7 @@ const Post = (props: PostProps) => {
                   />
                   <div
                     className={styles.recipe__optionTray}
-                    style={
-                      showMenu
-                        ? { display: "block", zIndex: "1" }
-                        : { zIndex: "-1" }
-                    }
+                    style={showMenu ? { display: "block", zIndex: "1" } : { zIndex: "-1" }}
                   >
                     <div className={styles.recipe__optionTray__pointingDiv} />
                     {/* <div
@@ -452,10 +404,7 @@ const DatePickerButton = forwardRef(({ type, onClick }: any, ref: any) => {
     <div className={styles.option} onClick={onClick} ref={ref}>
       <span>{type}</span>
       <span className={styles.option__icon}>
-        <Icon
-          fontName={type === "Move" ? faUpDownLeftRight : faClone}
-          size="1.5rem"
-        />
+        <Icon fontName={type === "Move" ? faUpDownLeftRight : faClone} size="1.5rem" />
       </span>
     </div>
   );
