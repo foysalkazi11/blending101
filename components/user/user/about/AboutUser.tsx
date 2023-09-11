@@ -22,18 +22,25 @@ const optionsListForTimeZone = Object.entries(
     value: label?.toLowerCase(),
   };
 });
+let manufacturer = "";
 const optionsListForBlender = JSON.parse(JSON.stringify(optionsForBlender)).map(
   (blenderName: { [key: string]: string }) => {
+    if (blenderName?.["Manufacturer"]) {
+      manufacturer = blenderName["Manufacturer"];
+    }
+
     return {
       label: blenderName?.["Blender Name"],
       value: blenderName?.["Blender Name"]?.toLowerCase(),
+      manufacturer,
     };
   },
 );
 
-type Options = {
+type Option = {
   label: string;
   value: string;
+  [key: string]: string;
 };
 
 type AboutProps = {
@@ -124,7 +131,9 @@ const About = ({ userData, setUserData }: AboutProps) => {
               icon={<FontAwesomeIcon icon={faAngleDown} size="sm" />}
               label="Your Blender"
               onClick={() => {
-                showBlenderSuggestionsBox && blendRef?.current?.focus();
+                if (showBlenderSuggestionsBox && blendRef?.current) {
+                  blendRef?.current?.focus();
+                }
                 setShowBlenderSuggestionsBox(!showBlenderSuggestionsBox);
               }}
               readOnly
@@ -132,11 +141,18 @@ const About = ({ userData, setUserData }: AboutProps) => {
           </div>
           <ShowSuggestion
             list={optionsListForBlender}
-            handleClickList={(list: Options) =>
-              handleChange({
-                target: { name: "yourBlender", value: list.label },
-              })
-            }
+            handleClickList={(list: Option) => {
+              setUserData((pre) => {
+                return {
+                  ...pre,
+                  about: {
+                    ...pre.about,
+                    yourBlender: list.label,
+                    blenderManufacturer: list.manufacturer,
+                  },
+                };
+              });
+            }}
             style={{ display: showBlenderSuggestionsBox ? "block" : "none" }}
             placeholder="Search blender..."
             closeSuggestionBox={() => setShowBlenderSuggestionsBox(false)}
@@ -172,7 +188,9 @@ const About = ({ userData, setUserData }: AboutProps) => {
               icon={<FontAwesomeIcon icon={faAngleDown} size="sm" />}
               readOnly
               onClick={() => {
-                showLocationSuggestionsBox && timezoneRef?.current?.focus();
+                if (showLocationSuggestionsBox && timezoneRef?.current) {
+                  timezoneRef?.current?.focus();
+                }
                 setShowLocationSuggestionsBox(!showLocationSuggestionsBox);
               }}
               label="Location"
@@ -181,7 +199,7 @@ const About = ({ userData, setUserData }: AboutProps) => {
 
           <ShowSuggestion
             list={optionsListForTimeZone}
-            handleClickList={(list: Options) =>
+            handleClickList={(list: Option) =>
               handleChange({ target: { name: "location", value: list.label } })
             }
             style={{ display: showLocationSuggestionsBox ? "block" : "none" }}
