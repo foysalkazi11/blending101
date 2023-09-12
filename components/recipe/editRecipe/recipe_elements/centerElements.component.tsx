@@ -1,11 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import styles from "./centerElements.module.scss";
 import ScoreTray from "./scoreTray/scoreTray.component";
 import Image from "next/image";
@@ -26,24 +20,24 @@ import CustomModal from "../../../../theme/modal/customModal";
 import ConfirmationModal from "../../../../theme/confirmationModal/ConfirmationModal";
 import { GiGl } from "../../../../type/nutrationType";
 import { useUser } from "../../../../context/AuthProvider";
+import DropDown from "theme/dropDown/DropDown.component";
 
 type CenterElementsProps = {
-  copyDetailsRecipe?: RecipeDetailsType;
   updateEditRecipe?: (key: string, value: any) => void;
   allBlendCategories?: [];
-  selectedBLendCategory?: string;
   existingImage?: string[];
   setExistingImage?: Dispatch<SetStateAction<string[]>>;
   setImages?: Dispatch<SetStateAction<any[]>>;
   images?: any[];
   giGl?: GiGl;
+  recipeId?: string;
+  selectedImage?: string;
 };
 
 const Center_Elements = ({
-  copyDetailsRecipe = null,
+  // copyDetailsRecipe = null,
   updateEditRecipe = () => {},
   allBlendCategories,
-  selectedBLendCategory,
   images = [],
   setImages = () => {},
   existingImage = [],
@@ -53,16 +47,15 @@ const Center_Elements = ({
     totalGi: 0,
     totalGL: 0,
   },
+  recipeId = "",
+  selectedImage = "",
 }: CenterElementsProps) => {
   const [openModal, setOpenModal] = useState(false);
   const dispatch = useAppDispatch();
-  const [blendCategoryState, setBlendCategoryState] = useState(null);
   const [openMenu, setOpenMenu] = useState(false);
   const outsideClickRef = useRef<HTMLDivElement>(null);
   useOnClickOutside(outsideClickRef, () => setOpenMenu(false));
-  const quantity_number = useAppSelector(
-    (state) => state?.quantityAdjuster?.quantityNum,
-  );
+  const quantity_number = useAppSelector((state) => state?.quantityAdjuster?.quantityNum);
   const user = useUser();
   const [deleteARecipe, { loading }] = useMutation(DELETE_A_RECIPE);
   const router = useRouter();
@@ -81,7 +74,7 @@ const Center_Elements = ({
       await deleteARecipe({
         variables: {
           userId: user.id,
-          recipeId: copyDetailsRecipe?.recipeId._id,
+          recipeId,
         },
       });
       setOpenModal(false);
@@ -91,22 +84,6 @@ const Center_Elements = ({
     }
   };
 
-  useEffect(() => {
-    if (!selectedBLendCategory) return;
-    setBlendCategoryState(selectedBLendCategory);
-  }, [selectedBLendCategory]);
-
-  useEffect(() => {
-    let blendCategoryId = allBlendCategories?.filter((elem) => {
-      //@ts-ignore
-      return elem?.name === blendCategoryState;
-    });
-
-    blendCategoryId &&
-      // @ts-ignore
-      dispatch(setSelectedBlendCategory(blendCategoryId[0]?._id));
-  }, [blendCategoryState]);
-
   return (
     <>
       <div className={styles.main}>
@@ -114,11 +91,13 @@ const Center_Elements = ({
           <InputComponent
             borderSecondary={true}
             style={{ fontWeight: "bold", color: "#000000", fontSize: "16px" }}
-            value={copyDetailsRecipe?.tempVersionInfo?.version?.postfixTitle}
-            name={"postfixTitle"}
-            onChange={(e) =>
-              updateEditRecipe(e?.target?.name, e?.target?.value)
-            }
+            // value={copyDetailsRecipe?.tempVersionInfo?.version?.postfixTitle}
+            // name={"postfixTitle"}
+            // onChange={(e) =>
+            //   updateEditRecipe(e?.target?.name, e?.target?.value)
+            // }
+            name="recipeTitle"
+            validationObj={{ required: "Recipe title required" }}
           />
         </div>
         <div className={styles.addImagediv}>
@@ -129,21 +108,19 @@ const Center_Elements = ({
             setImages={setImages}
             checkBoxProps={{
               showCheckBox: true,
-              selectedImage:
-                copyDetailsRecipe?.tempVersionInfo?.version?.selectedImage,
-              handleChange: (e) =>
-                updateEditRecipe("selectedImage", e?.target?.value),
+              selectedImage: selectedImage,
+              handleChange: (e) => updateEditRecipe("selectedImage", e?.target?.value),
             }}
           />
         </div>
         <div className={styles.scoreTraydiv}>
           <TextArea
-            name="description"
+            name="recipeDescription"
             borderSecondary={true}
-            value={copyDetailsRecipe?.tempVersionInfo?.version?.description}
-            onChange={(e) =>
-              updateEditRecipe(e?.target?.name, e?.target?.value)
-            }
+            // value={copyDetailsRecipe?.tempVersionInfo?.version?.description}
+            // onChange={(e) =>
+            //   updateEditRecipe(e?.target?.name, e?.target?.value)
+            // }
           />
 
           <ScoreTray giGl={giGl} />
@@ -152,21 +129,24 @@ const Center_Elements = ({
               <ul>
                 <li>
                   <div className={styles.left__options}>
-                    <RecipeDropDown
-                      elemList={allBlendCategories}
-                      selectedValue={blendCategoryState}
-                      setSelectedValue={setBlendCategoryState}
+                    <DropDown
+                      listElem={allBlendCategories}
+                      name="blendType"
+                      border="borderSecondary"
+                      validationObj={{ required: "select Blend Type" }}
+                      // value={blendCategoryState}
+                      // onChange={setBlendCategoryState}
                     />
                   </div>
                 </li>
                 <li>
                   <div className={styles.left__options}>
-                    <RecipeDropDown elemList={BlendtecItem} />
+                    <DropDown listElem={BlendtecItem} name="blenderName" border="borderSecondary" />
                   </div>
                 </li>
                 <li>
                   <div className={styles.left__options}>
-                    <RecipeDropDown elemList={OzItem} />
+                    <DropDown listElem={OzItem} name="oz" border="borderSecondary" />
                   </div>
                 </li>
               </ul>
@@ -178,11 +158,7 @@ const Center_Elements = ({
                   <div className={styles.arrow_div}>
                     <Image
                       onClick={() => {
-                        dispatch(
-                          setQuantity(
-                            quantity_number < 1 ? 1 : quantity_number - 1,
-                          ),
-                        );
+                        dispatch(setQuantity(quantity_number < 1 ? 1 : quantity_number - 1));
                       }}
                       src={"/icons/dropdown.svg"}
                       alt="icon"
@@ -204,12 +180,7 @@ const Center_Elements = ({
                 </div>
               </div>
               <span className={styles.timer_icon}>
-                <Image
-                  src={"/icons/time-icon.svg"}
-                  alt="Picture will load soon"
-                  width={20}
-                  height={20}
-                />
+                <Image src={"/icons/time-icon.svg"} alt="Picture will load soon" width={20} height={20} />
               </span>
             </div>
           </div>

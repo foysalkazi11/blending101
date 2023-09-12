@@ -4,29 +4,21 @@ import { faCircle, faEllipsisVertical } from "@fortawesome/pro-solid-svg-icons";
 import { faClone, faTrash, faTrophy, faUpDownLeftRight, faChartSimple } from "@fortawesome/pro-light-svg-icons";
 import DatePicker from "react-datepicker";
 import { useMutation } from "@apollo/client";
+import { DELETE_CHALLENGE_POST, COPY_CHALLENGE_POST, MOVE_CHALLENGE_POST } from "@/challenge/challenge.graphql";
+import IconButton from "component/atoms/Button/IconButton.component";
+import Icon from "component/atoms/Icon/Icon.component";
+import { useUser } from "context/AuthProvider";
+import { RECIPE_CATEGORY_COLOR } from "data/Recipe";
+import { UTCDate } from "helpers/Date";
+import Publish from "helpers/Publish";
+import useHideOnClickOutside from "hooks/useHideOnClickOutside";
+import { useAppDispatch, useAppSelector } from "redux/hooks";
+import { IPostIngredient, setShowPostForm, setChallengePost } from "redux/slices/Challenge.slice";
+import { setShowPanel } from "redux/slices/Ui.slice";
+import SplitImageCard from "theme/card/splitImageCard/splitImageCard.component";
+import IconHeading from "theme/iconHeading/iconHeading.component";
 
-import SplitImageCard from "../../../theme/card/splitImageCard/splitImageCard.component";
-import IconHeading from "../../../theme/iconHeading/iconHeading.component";
-import IconButton from "../../atoms/Button/IconButton.component";
-import Icon from "../../atoms/Icon/Icon.component";
-
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { IPostIngredient, setChallengePost, setShowPostForm } from "../../../redux/slices/Challenge.slice";
-
-import { RECIPE_CATEGORY_COLOR } from "../../../data/Recipe";
-import { setShowPanel } from "../../../redux/slices/Ui.slice";
-
-import useHideOnClickOutside from "../../../hooks/useHideOnClickOutside";
-import {
-  COPY_CHALLENGE_POST,
-  DELETE_CHALLENGE_POST,
-  MOVE_CHALLENGE_POST,
-} from "../../../modules/challenge/challenge.graphql";
-
-import Publish from "../../../helpers/Publish";
-import styles from "./Post.module.scss";
-import { UTCDate } from "../../../helpers/Date";
-import { useUser } from "../../../context/AuthProvider";
+import styles from "./List.module.scss";
 
 interface IPost {
   _id: string;

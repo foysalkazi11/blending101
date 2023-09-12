@@ -30,3 +30,16 @@
     outline: none;
   }
 }
+.label {
+  display: block;
+  padding-bottom: 0.5rem;
+  color: #c8c8c8;
+}
+.errorMessage {
+  display: block;
+  position: absolute;
+  top: 100%;
+  padding-top: 0.5rem;
+  color: $errorColor;
+  font-size: 1.4rem;
+}

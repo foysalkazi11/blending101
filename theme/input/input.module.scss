@@ -12,14 +12,14 @@
   transition: border 0.3s linear;
   font-weight: normal;
   font-family: "Segoe UI", sans-serif;
+  outline: none;
   // margin-bottom: 16px;
+  &::placeholder {
+    color: #c8c8c8;
+  }
   &:focus,
   &:hover {
     border: 1px solid $primaryColor;
-    outline: none;
-  }
-  &::placeholder {
-    color: #c8c8c8;
   }
 }
 
@@ -30,8 +30,7 @@
 .borderSecondary {
   &:focus,
   &:hover {
-    border: 1px solid $secondaryColor !important;
-    outline: none;
+    border: 1px solid $secondaryColor;
   }
 }
 
@@ -42,9 +41,10 @@
   border: 1px solid #dddddd;
   border-radius: 10px;
   transition: border 0.3s linear;
+  position: relative;
   &:focus,
   &:hover {
-    border: 1px solid #fe5d1f;
+    border: 1px solid $primaryColor;
   }
 
   .input {
@@ -66,6 +66,15 @@
 }
 
 .label {
+  display: block;
   padding-bottom: 0.5rem;
   color: #c8c8c8;
+}
+.errorMessage {
+  display: block;
+  position: absolute;
+  top: 100%;
+  padding-top: 0.5rem;
+  color: $errorColor;
+  font-size: 1.4rem;
 }

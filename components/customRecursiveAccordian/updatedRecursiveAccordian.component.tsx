@@ -7,9 +7,7 @@ import { FaRegUser } from "react-icons/fa";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import GET_DAILY_GOALS from "../../gqlLib/dri/query/getDailyGoals";
-import DropDown, {
-  DropDownType,
-} from "../../theme/dropDown/DropDown.component";
+import DropDown, { DropDownType } from "../../theme/dropDown/DropDown.component";
 import useWindowSize from "../utility/useWindowSize";
 import { useUser } from "../../context/AuthProvider";
 
@@ -35,7 +33,7 @@ const UpdatedRecursiveAccordian = ({
     style: {},
     value: "",
     name: "",
-    handleChange: () => {},
+    onChange: () => {},
     showDropDown: false,
   },
 }: recursiveAccordianInterface) => {
@@ -59,9 +57,7 @@ const UpdatedRecursiveAccordian = ({
       )}
       <div className={styles.nutritionHeader}>
         <div className={styles.recursiveAccordianHeading__heading}>
-          <div className={styles.recursiveAccordianHeading__heading__1}>
-            Calories
-          </div>
+          <div className={styles.recursiveAccordianHeading__heading__1}>Calories</div>
           <div className={styles.recursiveAccordianHeading__heading__2}>
             {
               //@ts-ignore
@@ -82,16 +78,12 @@ const UpdatedRecursiveAccordian = ({
                       alt="prfile.png"
                       objectFit="cover"
                       layout="fill"
-                      onClick={() =>
-                        router?.push("/user/?type=personalization&toggle=1")
-                      }
+                      onClick={() => router?.push("/user/?type=personalization&toggle=1")}
                     />
                   ) : (
                     <FaRegUser
                       className={styles.userName__image}
-                      onClick={() =>
-                        router?.push("/user/?type=personalization&toggle=1")
-                      }
+                      onClick={() => router?.push("/user/?type=personalization&toggle=1")}
                     />
                   )}
                 </div>
@@ -101,20 +93,12 @@ const UpdatedRecursiveAccordian = ({
         </div>
       </div>
       <div className={styles.recursiveAccordianHeading__subheading}>
-        <div className={styles.recursiveAccordianHeading__subheading__3}>
-          Value
-        </div>
-        <div className={styles.recursiveAccordianHeading__subheading__4}>
-          Daily%
-        </div>
+        <div className={styles.recursiveAccordianHeading__subheading__3}>Value</div>
+        <div className={styles.recursiveAccordianHeading__subheading__4}>Daily%</div>
       </div>
       <div
         className={`${styles.recursiveAccordianBody} y-scroll`}
-        style={
-          variant === "panel"
-            ? { maxHeight: 680 }
-            : { maxHeight: `${height - 350}px` }
-        }
+        style={variant === "panel" ? { maxHeight: 680 } : { maxHeight: `${height - 350}px` }}
       >
         {Object?.entries(dataObject)?.map((elem) => {
           if (elem[0] !== "Calories") {

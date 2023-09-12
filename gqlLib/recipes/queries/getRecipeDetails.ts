@@ -55,6 +55,8 @@ const GET_A_RECIPE = gql`
           qaId
         }
         ingredients {
+          originalIngredientName
+          quantityString
           comment
           ingredientId {
             ingredientName
@@ -86,6 +88,8 @@ const GET_A_RECIPE = gql`
         postfixTitle
         description
         ingredients {
+          originalIngredientName
+          quantityString
           comment
           ingredientId {
             ingredientName
@@ -118,6 +122,8 @@ const GET_A_RECIPE = gql`
         postfixTitle
         description
         ingredients {
+          originalIngredientName
+          quantityString
           comment
           ingredientId {
             ingredientName

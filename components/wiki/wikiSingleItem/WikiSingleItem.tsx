@@ -39,10 +39,9 @@ function WikiSingleItem() {
   const wikiId = params?.[1] || "";
   const params2 = params?.[2] || "0";
   const user = useUser();
-  const [getAllIngredientsBasedOnNutrition, ingredientsData] = useLazyQuery(
-    GET_ALL_INGREDIENTS_BASED_ON_NURTITION,
-    { fetchPolicy: "network-only" },
-  );
+  const [getAllIngredientsBasedOnNutrition, ingredientsData] = useLazyQuery(GET_ALL_INGREDIENTS_BASED_ON_NURTITION, {
+    fetchPolicy: "network-only",
+  });
   const [getBlendNutritionBasedIngredientsWiki, nutritionData] = useLazyQuery(
     GET_BLEND_NUTRITION_BASED_IN_INGREDIENTS_WIKI,
     { fetchPolicy: "network-only" },
@@ -51,26 +50,17 @@ function WikiSingleItem() {
 
   const [
     getNutrientsListAndGiGlByIngredients,
-    {
-      data: nutritionPanelData,
-      loading: nutritionPanelDataLoading,
-      error: nutritionPanelError,
-    },
+    { data: nutritionPanelData, loading: nutritionPanelDataLoading, error: nutritionPanelError },
   ] = useLazyQuery(GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS);
 
-  const fetchNutritionPanelData = async (
-    measureMentWeight: string,
-    id?: string,
-  ) => {
+  const fetchNutritionPanelData = async (measureMentWeight: string, id?: string) => {
     try {
       await getNutrientsListAndGiGlByIngredients({
         variables: {
           ingredientsInfo: [
             {
               ingredientId: id || currentWikiId,
-              value: parseInt(
-                measureMentWeight || params2 || defaultMeasureMentWeight,
-              ),
+              value: parseInt(measureMentWeight || params2 || defaultMeasureMentWeight),
             },
           ],
           userId: user.id,
@@ -107,8 +97,7 @@ function WikiSingleItem() {
           },
         });
 
-        const res: WikiDetailsIngredientType =
-          data?.getBlendNutritionBasedIngredientsWiki2;
+        const res: WikiDetailsIngredientType = data?.getBlendNutritionBasedIngredientsWiki2;
         setPortions(res?.portions);
       }
     } catch (error) {
@@ -151,10 +140,8 @@ function WikiSingleItem() {
   };
 
   const data = dataObj[type];
-  const nutrients =
-    nutritionPanelData?.getNutrientsListAndGiGlByIngredients?.nutrients;
-  const giGl: GiGl =
-    nutritionPanelData?.getNutrientsListAndGiGlByIngredients?.giGl;
+  const nutrients = nutritionPanelData?.getNutrientsListAndGiGlByIngredients?.nutrients;
+  const giGl: GiGl = nutritionPanelData?.getNutrientsListAndGiGlByIngredients?.giGl;
 
   return (
     <>
@@ -168,12 +155,7 @@ function WikiSingleItem() {
             <RecipeDetailsMiddle />
           ) : (
             <WikiCenterComponent
-              author={
-                data?.author?.displayName ||
-                data?.author?.firstName ||
-                data?.author?.lastName ||
-                ""
-              }
+              author={data?.author?.displayName || data?.author?.firstName || data?.author?.lastName || ""}
               body={data?.bodies}
               categroy={data?.category}
               coverImages={data?.wikiCoverImages}
@@ -206,7 +188,7 @@ function WikiSingleItem() {
               measurementDropDownState={{
                 showDropDown: true,
                 value: defaultMeasureMentWeight,
-                handleChange: (e) => {
+                onChange: (e) => {
                   setDefaultMeasureMentWeight(e?.target?.value);
                   fetchNutritionPanelData(e?.target?.value);
                 },
@@ -234,9 +216,7 @@ function WikiSingleItem() {
         <ShowRelatedItems
           category="wiki"
           title={`Related ${type}`}
-          itemsList={
-            type === "Ingredient" ? dummyData?.Ingredient : dummyData?.Nutrient
-          }
+          itemsList={type === "Ingredient" ? dummyData?.Ingredient : dummyData?.Nutrient}
         />
       ) : null}
     </>
