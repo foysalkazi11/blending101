@@ -1,5 +1,5 @@
 import React from "react";
-import AddRecipePage from "../../components/recipe/addRecipe/AddRecipe.component";
+import AddRecipePage from "../../components/recipe/addRecipe";
 
 const EditRecipe = () => {
   return <AddRecipePage />;
