@@ -58,12 +58,11 @@ export default function FilterbottomComponent({
   const [list, setList] = useState<Array<List>>([]);
   const [rankingDropDownState, setRankingDropDownState] = useState("");
 
-  const { data: ingredientData, loading: nutritionLoading } =
-    useGetAllIngredientsDataBasedOnNutrition(
-      rankingDropDownState,
-      dpd,
-      toggle === 1 ? true : false,
-    );
+  const { data: ingredientData, loading: nutritionLoading } = useGetAllIngredientsDataBasedOnNutrition(
+    rankingDropDownState,
+    dpd,
+    toggle === 1 ? true : false,
+  );
 
   useEffect(() => {
     if (ingredientCategoryData?.length) {
@@ -76,9 +75,7 @@ export default function FilterbottomComponent({
   useEffect(() => {
     if (isMounted.current) {
       if (dpd !== "All") {
-        setSearchIngredientData(
-          ingredientCategoryData?.filter((item) => item?.category === dpd),
-        );
+        setSearchIngredientData(ingredientCategoryData?.filter((item) => item?.category === dpd));
       } else {
         setSearchIngredientData(ingredientCategoryData);
       }
@@ -94,9 +91,7 @@ export default function FilterbottomComponent({
       } else {
         const filter = ingredientCategoryData?.filter((item) =>
           //@ts-ignore
-          item?.ingredientName
-            ?.toLowerCase()
-            ?.includes(searchInput?.toLowerCase()),
+          item?.ingredientName?.toLowerCase()?.includes(searchInput?.toLowerCase()),
         );
         setSearchIngredientData(filter);
       }
@@ -113,10 +108,7 @@ export default function FilterbottomComponent({
       setArrayOrderState(tempArray);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    ascendingDescending,
-    ingredientData?.getAllIngredientsDataBasedOnNutrition,
-  ]);
+  }, [ascendingDescending, ingredientData?.getAllIngredientsDataBasedOnNutrition]);
 
   useEffect(() => {
     isMounted.current = true;
@@ -143,10 +135,7 @@ export default function FilterbottomComponent({
               <p>Picture</p>
             </div>,
             <div key={"key1"} className="d-flex ai-center">
-              <FontAwesomeIcon
-                icon={faRankingStar}
-                style={{ marginRight: "5px" }}
-              />
+              <FontAwesomeIcon icon={faRankingStar} style={{ marginRight: "5px" }} />
               <p>Ranking</p>
             </div>,
           ]}
@@ -159,7 +148,7 @@ export default function FilterbottomComponent({
               name: cat.label,
               value: cat.value,
             }))}
-            handleChange={(e) => setDpd(e?.target?.value)}
+            onChange={(e) => setDpd(e?.target?.value)}
           />
         </div>
         {toggle === 0 ? (

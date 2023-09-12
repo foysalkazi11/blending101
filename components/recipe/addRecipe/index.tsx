@@ -26,9 +26,7 @@ import InstructionsForMakingRecipe from "../share/howToSection";
 
 const AddRecipePage = () => {
   const [images, setImages] = useState<any[]>([]);
-  const [selectedBlendValueState, setSelectedBlendValueState] = useState(
-    "61cafc34e1f3e015e7936587",
-  );
+  const [selectedBlendValueState, setSelectedBlendValueState] = useState("61cafc34e1f3e015e7936587");
   const [recipeHeading, setRecipeHeading] = useState("");
   const [selectedIngredientsList, setSelectedIngredientsList] = useState([]);
   const [calculateIngOz, SetCalculateIngOz] = useState(null);
@@ -38,7 +36,6 @@ const AddRecipePage = () => {
   const [recipeDescription, setRecipeDescription] = useState("");
   const [recipePrepareTime, setRecipePrepareTime] = useState(1);
   const [createNewRecipeByUser] = useMutation(CREATE_A_RECIPE_BY_USER);
-  const dispatch = useAppDispatch();
   const isMounted = useRef(false);
   const router = useRouter();
   const { width } = useWindowSize();
@@ -51,8 +48,7 @@ const AddRecipePage = () => {
     data: nutritionData,
   } = useGetBlendNutritionBasedOnRecipexxx();
 
-  const { loading: blendCategoriesInProgress, data: blendCategoriesData } =
-    useQuery(BLEND_CATEGORY);
+  const { loading: blendCategoriesInProgress, data: blendCategoriesData } = useQuery(BLEND_CATEGORY);
 
   // center
 
@@ -98,9 +94,7 @@ const AddRecipePage = () => {
           let imageArr = await imageUploadS3(images);
           //@ts-ignore
           (imageArr = imageArr?.map((img, index) =>
-            index === 0
-              ? { image: img, default: true }
-              : { image: img, default: false },
+            index === 0 ? { image: img, default: true } : { image: img, default: false },
           )),
             (obj = {
               ...obj,
@@ -117,9 +111,7 @@ const AddRecipePage = () => {
           setLoading(false);
           notification("success", "recipe create successfully");
           if (data?.addRecipeFromUser?.recipeId?._id) {
-            router?.push(
-              `/recipe/recipe_details/${data?.addRecipeFromUser?.recipeId?._id}`,
-            );
+            router?.push(`/recipe/recipe_details/${data?.addRecipeFromUser?.recipeId?._id}`);
           }
         } else {
           const { data } = await createNewRecipeByUser({
@@ -131,9 +123,7 @@ const AddRecipePage = () => {
           setLoading(false);
           notification("success", "recipe create successfully");
           if (data?.addRecipeFromUser?.recipeId?._id) {
-            router?.push(
-              `/recipe/recipe_details/${data?.addRecipeFromUser?.recipeId?._id}`,
-            );
+            router?.push(`/recipe/recipe_details/${data?.addRecipeFromUser?.recipeId?._id}`);
           }
         }
       } catch (error) {
@@ -141,25 +131,16 @@ const AddRecipePage = () => {
         notification("error", error?.message || "Something went wrong");
       }
     } else {
-      notification(
-        "warning",
-        "You can't save recipe without name and ingredients",
-      );
+      notification("warning", "You can't save recipe without name and ingredients");
     }
   };
 
   //left panel
 
   // add ingredient
-  const handleIngredientClick = (
-    ingredient: any,
-    present: boolean,
-    edit?: boolean,
-  ) => {
+  const handleIngredientClick = (ingredient: any, present: boolean, edit?: boolean) => {
     let ingredientList = [];
-    const defaultPortion =
-      ingredient?.portions?.find((ing) => ing?.default) ||
-      ingredient?.portions?.[0];
+    const defaultPortion = ingredient?.portions?.find((ing) => ing?.default) || ingredient?.portions?.[0];
 
     const newIngredient = {
       ...ingredient,
@@ -182,13 +163,9 @@ const AddRecipePage = () => {
       ingredientList = [...selectedIngredientsList, newIngredient];
     } else {
       if (edit) {
-        ingredientList = selectedIngredientsList?.map((ing) =>
-          ing?._id === ingredient?._id ? newIngredient : ing,
-        );
+        ingredientList = selectedIngredientsList?.map((ing) => (ing?._id === ingredient?._id ? newIngredient : ing));
       } else {
-        ingredientList = selectedIngredientsList?.filter(
-          (ing) => ing?._id !== ingredient?._id,
-        );
+        ingredientList = selectedIngredientsList?.filter((ing) => ing?._id !== ingredient?._id);
       }
     }
 
@@ -231,11 +208,7 @@ const AddRecipePage = () => {
   };
 
   useEffect(() => {
-    handleFetchIngrdients(
-      selectedIngredientsList,
-      nutritionState,
-      SetCalculateIngOz,
-    );
+    handleFetchIngrdients(selectedIngredientsList, nutritionState, SetCalculateIngOz);
   }, [selectedIngredientsList, nutritionState]);
 
   useEffect(() => {
@@ -258,29 +231,19 @@ const AddRecipePage = () => {
           panelTag={(hover) => (
             <TrayTag
               hover={hover}
-              icon={
-                <FontAwesomeIcon
-                  icon={hover ? faBasketShoppingRegular : faBasketShoppingSolid}
-                />
-              }
+              icon={<FontAwesomeIcon icon={hover ? faBasketShoppingRegular : faBasketShoppingSolid} />}
               placeMent="left"
               handleTagClick={() => setOpenTray((prev) => !prev)}
             />
           )}
         >
-          <IngredientPanel
-            handleIngredientClick={handleIngredientClick}
-            checkActive={checkActive}
-          />
+          <IngredientPanel handleIngredientClick={handleIngredientClick} checkActive={checkActive} />
         </TrayWrapper>
       ) : null}
 
       <div className={styles.main}>
         <div className={styles.left}>
-          <IngredientPanel
-            handleIngredientClick={handleIngredientClick}
-            checkActive={checkActive}
-          />
+          <IngredientPanel handleIngredientClick={handleIngredientClick} checkActive={checkActive} />
         </div>
         <div className={styles.center}>
           <PanelHeaderCenter
@@ -292,11 +255,7 @@ const AddRecipePage = () => {
             loading={loading}
           />
           <Center_Elements
-            blendCategoryList={
-              blendCategoriesData?.getAllCategories
-                ? blendCategoriesData?.getAllCategories
-                : []
-            }
+            blendCategoryList={blendCategoriesData?.getAllCategories ? blendCategoriesData?.getAllCategories : []}
             setDropDownState={setSelectedBlendValueState}
             selectedBlendValueState={selectedBlendValueState}
             setImages={setImages}
@@ -334,10 +293,7 @@ const AddRecipePage = () => {
             counter={servingSize}
             adjusterFunc={adjusterServingSizeFunc}
             nutritionTrayData={
-              nutritionData &&
-              JSON?.parse(
-                nutritionData?.getNutrientsListAndGiGlByIngredients?.nutrients,
-              )
+              nutritionData && JSON?.parse(nutritionData?.getNutrientsListAndGiGlByIngredients?.nutrients)
             }
             nutritionState={nutritionState}
             setNutritionState={setNutritionState}

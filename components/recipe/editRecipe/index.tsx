@@ -23,10 +23,9 @@ import IngredientSection from "../share/IngredientSection";
 import VersionTray from "../../sidetray/versionTray/VersionTray";
 
 interface editRecipe {
-  copyDetailsRecipe?: RecipeDetailsType;
+  detailsARecipe?: RecipeDetailsType;
   nutritionTrayData: any;
   allBlendCategories: [];
-  selectedBLendCategory: string;
   editARecipeFunction: () => void;
   calculatedIngOz?: number;
   nutritionDataLoading: boolean;
@@ -45,10 +44,9 @@ interface editRecipe {
 }
 
 const EditRecipePage = ({
-  copyDetailsRecipe = null,
+  detailsARecipe = null,
   nutritionTrayData,
   allBlendCategories,
-  selectedBLendCategory,
   editARecipeFunction = () => {},
   calculatedIngOz = 0,
   nutritionDataLoading,
@@ -72,15 +70,9 @@ const EditRecipePage = ({
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { width } = useWindowSize();
-  const servingCounter = useAppSelector(
-    (state) => state.editRecipeReducer.servingCounter,
-  );
-  const selectedIngredientsList = useAppSelector(
-    (state) => state.editRecipeReducer.selectedIngredientsList,
-  );
-  const { recipeInstruction } = useAppSelector(
-    (state) => state?.editRecipeReducer,
-  );
+  const servingCounter = useAppSelector((state) => state.editRecipeReducer.servingCounter);
+  const selectedIngredientsList = useAppSelector((state) => state.editRecipeReducer.selectedIngredientsList);
+  const { recipeInstruction } = useAppSelector((state) => state?.editRecipeReducer);
 
   const updateRecipeInstruction = (recipeInstruction) => {
     dispatch(setRecipeInstruction(recipeInstruction));
@@ -111,9 +103,7 @@ const EditRecipePage = ({
   const handleIngredientClick = (ingredient: any, present: boolean) => {
     let blendz = [];
     if (!present) {
-      const defaultPortion =
-        ingredient?.portions?.find((ing) => ing?.default) ||
-        ingredient?.portions?.[0];
+      const defaultPortion = ingredient?.portions?.find((ing) => ing?.default) || ingredient?.portions?.[0];
 
       const newIngredient = {
         ...ingredient,
@@ -175,11 +165,7 @@ const EditRecipePage = ({
 
       <div className={styles.main}>
         <div className={styles.left}>
-          <IngredientPanel
-            handleIngredientClick={handleIngredientClick}
-            checkActive={checkActive}
-            showHeader={false}
-          />
+          <IngredientPanel handleIngredientClick={handleIngredientClick} checkActive={checkActive} showHeader={false} />
         </div>
         <div className={styles.center}>
           <PanelHeaderCenter
@@ -193,15 +179,15 @@ const EditRecipePage = ({
             loading={recipeEditOrVersionEditLoading}
           />
           <Center_Elements
-            copyDetailsRecipe={copyDetailsRecipe}
             updateEditRecipe={updateEditRecipe}
             allBlendCategories={allBlendCategories}
-            selectedBLendCategory={selectedBLendCategory}
             images={images}
             setImages={setImages}
             existingImage={existingImage}
             setExistingImage={setExistingImage}
             giGl={giGl}
+            recipeId={detailsARecipe?.recipeId?._id}
+            selectedImage={detailsARecipe?.tempVersionInfo?.version?.selectedImage}
           />
           <IngredientSection
             adjusterFunc={adjusterFunc}

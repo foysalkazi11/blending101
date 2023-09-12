@@ -1,46 +1,57 @@
+@import "../../styles/partials/variables";
 .formGroup {
   width: 100%;
-
-  & select {
-    // background-image: linear-gradient(45deg, transparent 50%, #a5a5a5 50%),
-    //   linear-gradient(135deg, #a5a5a5 50%, transparent 50%);
-
-    background-position: calc(100% - 15px) calc(1em + -3px),
-      calc(100% - 15px) calc(1em + 2px), calc(100% - 2.5em) 0.5em;
-    // background-size: 5px 5px, 5px 5px, 1px 1.5em;
-    background-repeat: no-repeat;
-    -webkit-appearance: none !important; /* Remove default styling on Safari */
-    -moz-appearance: none !important; /* Remove default styling on Firefox */
-    appearance: none !important; /* Remove default styling on other browsers */
-  }
+  position: relative;
 }
 
 .customSelectbx {
-  // width: 100%;
-  // padding: 10px;
-  // border-radius: 5px;
-  // color: #b6b6b6;
-  // font-size: 14px;
-  // padding-left: 10px;
-  // border-color: transparent;
   border: 0px;
   outline: 0px;
   box-shadow: none;
-  background-color: #f1f1f1;
   color: #b6b6b6;
   border-radius: 8px;
   display: inline-block;
   font: inherit;
   line-height: 1.5em;
-  padding: 0.5em 3.5em 0.5em 1em;
+  padding: 0.5em 2.5em 0.5em 1em;
   width: 100%;
+  border: 1px solid #dddddd;
+  outline: none;
+  &::placeholder {
+    color: #c8c8c8;
+  }
   /* reset */
-
-  margin: 0;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+  background-position: calc(100% - 15px) calc(1em + -3px), calc(100% - 15px) calc(1em + 2px), calc(100% - 2.5em) 0.5em;
+  // background-size: 5px 5px, 5px 5px, 1px 1.5em;
+  background-repeat: no-repeat;
   -webkit-appearance: none !important; /* Remove default styling on Safari */
   -moz-appearance: none !important; /* Remove default styling on Firefox */
   appearance: none !important; /* Remove default styling on other browsers */
+}
+
+.borderPrimary {
+  &:focus,
+  &:hover {
+    border: 1px solid $primaryColor;
+  }
+}
+.borderSecondary {
+  &:focus,
+  &:hover {
+    border: 1px solid $secondaryColor;
+  }
+}
+
+.label {
+  display: block;
+  padding-bottom: 0.5rem;
+  color: #c8c8c8;
+}
+.errorMessage {
+  display: block;
+  position: absolute;
+  top: 100%;
+  padding-top: 0.5rem;
+  color: $errorColor;
+  font-size: 1.4rem;
 }
