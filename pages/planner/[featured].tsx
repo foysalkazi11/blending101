@@ -8,12 +8,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { faXmark } from "@fortawesome/pro-regular-svg-icons";
 import { FEATURED_DICTIONARY } from "../../data/Misc";
-import { useFeaturedPlan } from "../../hooks/modules/Plan/usePlanDiscovery";
+
 import PlanCard from "../../modules/plan/partials/Shared/PlanCard.component";
 import ShowLastModifiedCollection from "../../components/showLastModifiedCollection/ShowLastModifiedCollection";
 import { setIsOpenPlanCollectionTray } from "../../redux/slices/Planner.slice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import Loader from "../../theme/loader/Loader";
+import useFeaturedPlan from "@/plan/hooks/plan/useFeaturedPlans";
 
 const ViewAll = () => {
   const router = useRouter();

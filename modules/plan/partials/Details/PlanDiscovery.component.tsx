@@ -9,9 +9,9 @@ import SkeletonElement from "../../../../theme/skeletons/SkeletonElement";
 import RecipeCard from "../../../../component/molecules/Card/RecipeCard.component";
 import styles from "./PlanDiscovery.module.scss";
 import PlanCard from "../Shared/PlanCard.component";
-import { useAllPlan } from "../../../../hooks/modules/Plan/usePlanDiscovery";
 import { useRecipeCategory } from "@/recipe/hooks";
 import { UserRecipe } from "@/recipe/recipe.types";
+import useAllPlan from "@/plan/hooks/plan/useAllPlan";
 
 interface PlannerPanelProps {
   height: string;

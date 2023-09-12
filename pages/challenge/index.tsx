@@ -1,40 +1,30 @@
 import React, { useState, useRef, useEffect, Fragment } from "react";
 import { useQuery } from "@apollo/client";
-import {
-  faGear,
-  faShare,
-  faToolbox,
-  faPlusCircle,
-  faTimes,
-} from "@fortawesome/pro-light-svg-icons";
+import { faGear, faShare, faToolbox, faPlusCircle, faTimes } from "@fortawesome/pro-light-svg-icons";
 
 import RXPanel from "../../component/templates/Panel/RXFacts/RXPanel.component";
 import Statistics from "../../component/module/Challenge/Statistics.component";
-import ChallengePost from "../../component/module/Challenge/Post.component";
-import ChallengeQueue from "../../component/module/Challenge/Queue.component";
-import UploadCard from "../../component/module/Challenge/Upload.component";
+import PostList from "@/challenge/partials/Post/List.component";
+import PostForm from "@/challenge/partials/Post/Form.component";
 import Challenge from "../../component/module/Challenge/Achievement/index.component";
-import Settings from "../../component/module/Challenge/Settings.component";
+import Settings from "@/challenge/partials/Settings";
 import IconButton from "../../component/atoms/Button/IconButton.component";
 import Icon from "../../component/atoms/Icon/Icon.component";
 import ShareModal from "../../component/organisms/Share/Share.component";
 import IconHeading from "../../theme/iconHeading/iconHeading.component";
-import { GET_CHALLENGES } from "../../graphql/Challenge";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import useChallengeShare from "../../hooks/modules/Challenge/useChallengeShare";
-import { useThirtyDayChallenge } from "../../hooks/modules/Challenge/useChallengePost";
+import useChallengeShare from "../../modules/challenge/hooks/useShare";
 
-import {
-  resetForm,
-  setPostDate,
-  setShowPostForm,
-} from "../../redux/slices/Challenge.slice";
+import { resetForm, setPostDate, setRecipeInfo, setShowPostForm } from "../../redux/slices/Challenge.slice";
 
 import { theme } from "../../configs/themes";
 
 import styles from "../../styles/pages/planner.module.scss";
 import { format } from "date-fns";
-import { useUser } from "../../context/AuthProvider";
+import useChallenges from "@/challenge/hooks/settings/useList";
+import RecipePanel from "@/plan/partials/Shared/RecipePanel.component";
+import useChallenge from "@/challenge/hooks/useChallenge";
+import { UserRecipe } from "@/recipe/recipe.types";
 
 const ChallengePage = () => {
   const upload = useRef<any>();
@@ -47,18 +37,12 @@ const ChallengePage = () => {
   const [panelHeight, setPanelHeight] = useState("100%");
 
   const dispatch = useAppDispatch();
-  const userId = useUser().id;
-  const { showPostForm: showUpload } = useAppSelector(
-    (state) => state.challenge,
-  );
 
-  const { data: challenges } = useQuery(GET_CHALLENGES, {
-    variables: {
-      memberId: userId,
-    },
-  });
+  const { showPostForm: showUpload } = useAppSelector((state) => state.challenge);
+  const viewOnly = useAppSelector((state) => state.challenge.viewOnly);
 
-  const { challenge, viewOnly } = useThirtyDayChallenge();
+  const challenges = useChallenges();
+  const { challenge, recipes } = useChallenge();
   const { url, progress, onShare } = useChallengeShare(challenge);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,7 +58,7 @@ const ChallengePage = () => {
   let toolbox = null;
   if (showUpload)
     toolbox = (
-      <UploadCard
+      <PostForm
         ref={upload}
         elementRef={center}
         startDate={challenge?.challengeInfo?.startDate}
@@ -110,15 +94,11 @@ const ChallengePage = () => {
         <div className="row mt-20">
           <div className="col-3">
             {showUpload ? (
-              <ChallengeQueue
-                height={panelHeight}
-                challenges={challenge?.challenge}
-              />
+              <RecipePanel height={panelHeight} queuedRecipes={recipes}>
+                <RecipeAction />
+              </RecipePanel>
             ) : (
-              <ChallengePost
-                height={panelHeight}
-                challenges={challenge?.challenge}
-              />
+              <PostList height={panelHeight} challenges={challenge?.challenge} />
             )}
           </div>
           <div className="col-6">
@@ -139,11 +119,7 @@ const ChallengePage = () => {
                           setShowShare(true);
                         }}
                       >
-                        <Icon
-                          fontName={faShare}
-                          size="1.6rem"
-                          color={theme.color.primary}
-                        />
+                        <Icon fontName={faShare} size="1.6rem" color={theme.color.primary} />
                         <span>Share</span>
                       </div>
                     )}
@@ -154,11 +130,7 @@ const ChallengePage = () => {
                         setShowSettings(true);
                       }}
                     >
-                      <Icon
-                        fontName={faGear}
-                        size="1.6rem"
-                        color={theme.color.primary}
-                      />
+                      <Icon fontName={faGear} size="1.6rem" color={theme.color.primary} />
                       <span>Settings</span>
                     </div>
                     {canUpload && (
@@ -166,17 +138,11 @@ const ChallengePage = () => {
                         className={`${styles.uploadDiv} ml-10`}
                         onClick={() => {
                           dispatch(setShowPostForm(true));
-                          dispatch(
-                            setPostDate(format(new Date(), "yyyy-MM-dd")),
-                          );
+                          dispatch(setPostDate(format(new Date(), "yyyy-MM-dd")));
                           setShowSettings(false);
                         }}
                       >
-                        <Icon
-                          fontName={faPlusCircle}
-                          size="1.6rem"
-                          color={theme.color.primary}
-                        />
+                        <Icon fontName={faPlusCircle} size="1.6rem" color={theme.color.primary} />
                         <span>Post</span>
                       </div>
                     )}
@@ -189,15 +155,8 @@ const ChallengePage = () => {
                   <div className="flex ai-center mr-20">
                     {!showSettings && showUpload && (
                       // UPLOAD PAGE
-                      <div
-                        className={`${styles.uploadDiv} mr-20`}
-                        onClick={() => upload.current.onChallengePost()}
-                      >
-                        <Icon
-                          fontName={faPlusCircle}
-                          size="1.6rem"
-                          color={theme.color.primary}
-                        />
+                      <div className={`${styles.uploadDiv} mr-20`} onClick={() => upload.current.onChallengePost()}>
+                        <Icon fontName={faPlusCircle} size="1.6rem" color={theme.color.primary} />
                         <span>Save</span>
                       </div>
                     )}
@@ -205,15 +164,8 @@ const ChallengePage = () => {
                       // SETTINGS PAGE
                       !showUpload && showSettings && showForm ? (
                         // SETTINGS PAGE -> FORM
-                        <div
-                          className={`${styles.uploadDiv} mr-20`}
-                          onClick={() => settings.current.onChallengeSave()}
-                        >
-                          <Icon
-                            fontName={faPlusCircle}
-                            size="1.6rem"
-                            color={theme.color.primary}
-                          />
+                        <div className={`${styles.uploadDiv} mr-20`} onClick={() => settings.current.onChallengeSave()}>
+                          <Icon fontName={faPlusCircle} size="1.6rem" color={theme.color.primary} />
                           <span>Save</span>
                         </div>
                       ) : (
@@ -225,11 +177,7 @@ const ChallengePage = () => {
                               setShowForm(true);
                             }}
                           >
-                            <Icon
-                              fontName={faPlusCircle}
-                              size="1.6rem"
-                              color={theme.color.primary}
-                            />
+                            <Icon fontName={faPlusCircle} size="1.6rem" color={theme.color.primary} />
                             <span>Add</span>
                           </div>
                         )
@@ -269,10 +217,7 @@ const ChallengePage = () => {
             </div>
           </div>
           <div className="col-3">
-            <Statistics
-              height={panelHeight}
-              statistics={challenge?.challengeInfo}
-            />
+            <Statistics height={panelHeight} statistics={challenge?.challengeInfo} />
           </div>
         </div>
       </div>
@@ -285,4 +230,20 @@ export default ChallengePage;
 ChallengePage.meta = {
   title: "Challenge",
   icon: "/icons/whistle.svg",
+};
+
+interface RecipeActionProps {
+  recipe?: UserRecipe;
+}
+const RecipeAction = ({ recipe }: RecipeActionProps) => {
+  const dispatch = useAppDispatch();
+  console.log(recipe);
+  return (
+    <Icon
+      fontName={faPlusCircle}
+      style={{ color: "#fe5d1f" }}
+      size="20px"
+      onClick={() => dispatch(setRecipeInfo(recipe))}
+    />
+  );
 };

@@ -10,13 +10,7 @@ type ToolTipProps = {
   // style?: React.CSSProperties;
 };
 
-const Tooltip = ({
-  children,
-  content,
-  delay = 300,
-  direction = "",
-  bgColor = "bgBlack",
-}: ToolTipProps) => {
+const Tooltip = ({ children, content, delay = 300, direction = "", bgColor = "bgBlack" }: ToolTipProps) => {
   let timeout;
   const [active, setActive] = useState(false);
 
@@ -130,17 +124,11 @@ const Tooltip = ({
   };
 
   return (
-    <div
-      className={styles.Tooltip_Wrapper}
-      onMouseEnter={showTip}
-      onMouseLeave={hideTip}
-    >
+    <div className={styles.Tooltip_Wrapper} onMouseEnter={showTip} onMouseLeave={hideTip}>
       {children}
-      {active && (
+      {active && content !== "" && (
         <div
-          className={`${styles.Tooltip_Tip} ${
-            direction ? styles[direction] : styles[info?.type]
-          }`}
+          className={`${styles.Tooltip_Tip} ${direction ? styles[direction] : styles[info?.type]}`}
           // style={style}
         >
           {content}

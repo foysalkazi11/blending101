@@ -15,7 +15,7 @@ const usePlanMerge = () => {
 
   const addExistingPlan = useCallback(
     //REMOVE => REPLACE
-    async (type: "WARNING" | "MERGE" | "REMOVE") => {
+    async (type: "WARNING" | "MERGE" | "REPLACE") => {
       if (type === "WARNING") return setIsDuplicate(true);
       await addToMyPlan({
         variables: {

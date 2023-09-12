@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 import React, { Fragment, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Icon from "../../component/atoms/Icon/Icon.component";
-import { GET_SHARED_CHALLENGE_DETAILS } from "../../graphql/Challenge";
+import { GET_SHARED_CHALLENGE_DETAILS } from "../../modules/challenge/challenge.graphql";
 import styles from "../../styles/pages/challenge.module.scss";
 import HeadTagInfo from "../../theme/headTagInfo";
 import { useAppSelector } from "../../redux/hooks";
@@ -29,9 +29,7 @@ const Shared = () => {
   });
 
   const onViewChallenge = (e) => {
-    router.push(
-      `/challenge?id=${router.query?.id}&token=${router.query?.token}`,
-    );
+    router.push(`/challenge?id=${router.query?.id}&token=${router.query?.token}`);
   };
 
   // if (!router.query?.id || !router.query?.token) return <></>;
@@ -49,14 +47,8 @@ const Shared = () => {
       <main className={styles.shared__main}>
         <div className="row">
           <div className="col-8">
-            <h1>
-              {data?.getChallengeInfoById?.memberInfo?.displayName} has shared a
-              Poily Challenge with you!
-            </h1>
-            <p>
-              Follow along has Gabriel&apos;s daily blending builds a habitual
-              practice of blending.
-            </p>
+            <h1>{data?.getChallengeInfoById?.memberInfo?.displayName} has shared a Poily Challenge with you!</h1>
+            <p>Follow along has Gabriel&apos;s daily blending builds a habitual practice of blending.</p>
             <button onClick={onViewChallenge}>Join Challenge</button>
             <div style={{ textAlign: "center" }}>
               <h3>{data?.getChallengeInfoById?.challengeName}</h3>
@@ -69,11 +61,7 @@ const Shared = () => {
             </div>
           </div>
           <div className="col-4">
-            <img
-              src="/images/scnd_phone.png"
-              alt=""
-              className={styles.shared__main_mockup}
-            />
+            <img src="/images/scnd_phone.png" alt="" className={styles.shared__main_mockup} />
           </div>
         </div>
       </main>

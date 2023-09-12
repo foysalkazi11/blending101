@@ -13,7 +13,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import ShowLastModifiedCollection from "../../components/showLastModifiedCollection/ShowLastModifiedCollection";
 import { setIsOpenPlanCollectionTray } from "../../redux/slices/Planner.slice";
 import CommonSearchBar from "../../components/searchBar/CommonSearchBar";
-import { useAllPlan } from "../../hooks/modules/Plan/usePlanDiscovery";
+
 import {
   resetAllFiltersForPlan,
   setIsPlanFilterOpen,
@@ -35,6 +35,7 @@ import PlanFilterTray from "../../components/sidetray/planFilterTray";
 import { HideOnDesktop, HideOnMobile } from "../../component/molecules/Responsive/Responsive.component";
 import { faPlusCircle } from "@fortawesome/pro-regular-svg-icons";
 import PlanCollectionTray from "components/sidetray/planCollectionTray";
+import useAllPlan from "@/plan/hooks/plan/useAllPlan";
 
 const normalizeQueryParams = (queryParams) => {
   let queryParamObj = {} as AllFilterType;

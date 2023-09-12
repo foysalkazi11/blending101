@@ -1,9 +1,4 @@
-import {
-  ApolloCache,
-  useLazyQuery,
-  useMutation,
-  useQuery,
-} from "@apollo/client";
+import { ApolloCache, useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { format, isWithinInterval } from "date-fns";
 import { useMemo, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -13,13 +8,10 @@ import {
   CREATE_CHALLENGE_POST,
   EDIT_CHALLENGE_POST,
   GET_CHALLENGES,
-} from "../../../graphql/Challenge";
+} from "../../../modules/challenge/challenge.graphql";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { useRouter } from "next/router";
-import {
-  setChallengeView,
-  setChallengeInterval,
-} from "../../../redux/slices/Challenge.slice";
+import { setChallengeView, setChallengeInterval } from "../../../redux/slices/Challenge.slice";
 import { useUser } from "../../../context/AuthProvider";
 
 const useThirtyDayChallenge = () => {
@@ -27,12 +19,7 @@ const useThirtyDayChallenge = () => {
 
   const dispatch = useAppDispatch();
   const userId = useUser().id;
-  const {
-    activeDate,
-    startDate,
-    endDate,
-    showPostForm: showUpload,
-  } = useAppSelector((state) => state.challenge);
+  const { activeDate, startDate, endDate, showPostForm: showUpload } = useAppSelector((state) => state.challenge);
 
   const [getChallenges, { data }] = useLazyQuery(GET_30DAYS_CHALLENGE);
 
@@ -56,15 +43,7 @@ const useThirtyDayChallenge = () => {
         token: router.query?.token,
       },
     });
-  }, [
-    activeDate,
-    endDate,
-    getChallenges,
-    router.query?.id,
-    router.query?.token,
-    startDate,
-    userId,
-  ]);
+  }, [activeDate, endDate, getChallenges, router.query?.id, router.query?.token, startDate, userId]);
 
   useEffect(() => {
     const challenges = data?.getMyThirtyDaysChallenge?.challenge || [];
@@ -95,9 +74,7 @@ const useAddChallengePost = (userId) => {
       const { getMyThirtyDaysChallenge } = cache.readQuery<any>(definition);
       const data = {
         challenge: getMyThirtyDaysChallenge.challenge.map((day) =>
-          day.date === createChallengePost?.challenge?.date
-            ? createChallengePost?.challenge
-            : day,
+          day.date === createChallengePost?.challenge?.date ? createChallengePost?.challenge : day,
         ),
         challengeInfo: createChallengePost?.challengeInfo,
       };
@@ -209,9 +186,4 @@ const useChallengeForm = (setImages) => {
   return { methods, onReset };
 };
 
-export {
-  useThirtyDayChallenge,
-  useAddChallengePost,
-  useEditChallengePost,
-  useChallengeForm,
-};
+export { useThirtyDayChallenge, useAddChallengePost, useEditChallengePost, useChallengeForm };

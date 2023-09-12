@@ -1,32 +1,29 @@
-import React, { forwardRef, useState, useMemo, useImperativeHandle, useEffect } from "react";
+import React, { forwardRef, useState, useImperativeHandle, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { FormProvider } from "react-hook-form";
-import DatePicker from "react-datepicker";
-
-import { GET_CATEGORY_FOR_COMBOBOX } from "../../../graphql/Recipe";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import Combobox from "../../organisms/Forms/Combobox.component";
-import Textarea from "../../organisms/Forms/Textarea.component";
-import Textfield from "../../organisms/Forms/Textfield.component";
-import Upload from "../../organisms/Upload/Upload.component";
-import styles from "./Upload.module.scss";
-import Publish from "../../../helpers/Publish";
-import { setShowPostForm, resetForm, deleteIngredient, addIngredient } from "../../../redux/slices/Challenge.slice";
-import { setShowPanel } from "../../../redux/slices/Ui.slice";
-import useImage from "../../../hooks/useImage";
-import {
-  useAddChallengePost,
-  useChallengeForm,
-  useEditChallengePost,
-} from "../../../hooks/modules/Challenge/useChallengePost";
-import Icon from "../../atoms/Icon/Icon.component";
 import { faBasketShopping, faNotebook } from "@fortawesome/pro-regular-svg-icons";
-import Summary from "./Daily/Summary.component";
-import IngredientPanel from "../../templates/Ingredient/Ingredient.component";
-import DayPicker from "../../molecules/Date/Day.component";
-import { useUser } from "../../../context/AuthProvider";
 
-const UploadCard = forwardRef((props: any, ref) => {
+import Icon from "component/atoms/Icon/Icon.component";
+import Summary from "component/module/Challenge/Daily/Summary.component";
+import DayPicker from "component/molecules/Date/Day.component";
+import Combobox from "component/organisms/Forms/Combobox.component";
+import Textarea from "component/organisms/Forms/Textarea.component";
+import Textfield from "component/organisms/Forms/Textfield.component";
+import IngredientPanel from "component/templates/Ingredient/Ingredient.component";
+import { useUser } from "context/AuthProvider";
+import { GET_CATEGORY_FOR_COMBOBOX } from "graphql/Recipe";
+import Publish from "helpers/Publish";
+import { useChallengeForm, useAddChallengePost, useEditChallengePost } from "hooks/modules/Challenge/useChallengePost";
+import { useAppDispatch, useAppSelector } from "redux/hooks";
+import { setShowPostForm, resetForm, deleteIngredient, addIngredient } from "redux/slices/Challenge.slice";
+import { setShowPanel } from "redux/slices/Ui.slice";
+import Upload from "component/organisms/Upload/Upload.component";
+
+import useImage from "hooks/useImage";
+
+import styles from "./Form.module.scss";
+
+const PostForm = forwardRef((props: any, ref) => {
   const { startDate, endDate, elementRef } = props;
   const { images, setImages, postImages: uploadImages } = useImage([]);
 
@@ -34,7 +31,7 @@ const UploadCard = forwardRef((props: any, ref) => {
   const [serving, setServing] = useState(1);
 
   const dispatch = useAppDispatch();
-  const userId = useUser().id;
+  const { id: userId } = useUser();
 
   const {
     isEditMode,
@@ -184,6 +181,6 @@ const UploadCard = forwardRef((props: any, ref) => {
   );
 });
 
-UploadCard.displayName = "Challenge Post Form";
+PostForm.displayName = "Challenge Post Form";
 
-export default UploadCard;
+export default PostForm;

@@ -2,7 +2,7 @@ import { useMutation } from "@apollo/client";
 import axios from "axios";
 import html2canvas from "html2canvas";
 import { useCallback, useRef, useState } from "react";
-import { SHARE_CHALLENGE } from "../../../graphql/Challenge";
+import { SHARE_CHALLENGE } from "../challenge.graphql";
 import { dataURLtoFile } from "../../../helpers/File";
 import { useAppSelector } from "../../../redux/hooks";
 import { useUser } from "../../../context/AuthProvider";
@@ -24,9 +24,7 @@ const useChallengeShare = (challenge) => {
         challengeId: id,
       },
     }).then((res) => {
-      setLink(
-        `${process.env.NEXT_PUBLIC_HOSTING_DOMAIN}/challenge?id=${id}&token=${res.data?.shareGlobalChallenge}`,
-      );
+      setLink(`${process.env.NEXT_PUBLIC_HOSTING_DOMAIN}/challenge?id=${id}&token=${res.data?.shareGlobalChallenge}`);
 
       navigator.clipboard.writeText(
         `${process.env.NEXT_PUBLIC_HOSTING_DOMAIN}/challenge/shared?id=${id}&token=${res.data?.shareGlobalChallenge}`,

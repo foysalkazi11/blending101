@@ -5,7 +5,7 @@ import styles from "./index.module.scss";
 import RecipeCategory from "./_RecipeCategory.component";
 import Streakbar from "./_Streakbar.component";
 import Dialer from "./_Dialer.component";
-import useChallengeLayout from "../../../../hooks/modules/Challenge/useChallengeLayout";
+import useChallengeLayout from "@/challenge/hooks/useLayout";
 
 interface ChallengeProps {
   elementRef: any;
@@ -20,10 +20,7 @@ const Challenge: React.FC<ChallengeProps> = (props) => {
   useChallengeLayout();
 
   return (
-    <div
-      ref={elementRef}
-      className={styles.mainContainer__contentDiv__innerDiv}
-    >
+    <div ref={elementRef} className={styles.mainContainer__contentDiv__innerDiv}>
       <div className={styles.mainContainer__contentDiv__innerDiv__challengeDiv}>
         <div className={styles.challenge_circle_box}>
           <div className={styles.title}>
@@ -32,11 +29,7 @@ const Challenge: React.FC<ChallengeProps> = (props) => {
           </div>
           <RecipeCategory />
           <div ref={progressRef}>
-            <Dialer
-              canUpload={canUpload}
-              activities={activities}
-              statistics={statistics}
-            />
+            <Dialer canUpload={canUpload} activities={activities} statistics={statistics} />
           </div>
           <Streakbar activities={activities} statistics={statistics} />
         </div>
