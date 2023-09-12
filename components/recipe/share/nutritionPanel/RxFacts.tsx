@@ -46,24 +46,18 @@ const NutritionPanelRxFacts = ({
     style: {},
     value: "",
     name: "",
-    handleChange: () => {},
+    onChange: () => {},
     showDropDown: false,
   },
   showTitle = true,
 }: NutritionPanelInterface) => {
   const [servingSizeCounter, setServingSizeCounter] = useState(1);
-  const selectedIngredientsList = useAppSelector(
-    (state) => state?.editRecipeReducer?.selectedIngredientsList,
-  );
+  const selectedIngredientsList = useAppSelector((state) => state?.editRecipeReducer?.selectedIngredientsList);
   const dispatch = useAppDispatch();
   const measurement =
-    nutritionState?.portions?.find((itm) => itm?.default)?.measurement ||
-    nutritionState?.selectedPortion?.name;
-  const nutrientName =
-    nutritionState?.ingredientName ||
-    nutritionState?.ingredientId?.ingredientName;
-  const singleIngQuantity =
-    parseFloat(nutritionState?.selectedPortion?.quantity) || 1;
+    nutritionState?.portions?.find((itm) => itm?.default)?.measurement || nutritionState?.selectedPortion?.name;
+  const nutrientName = nutritionState?.ingredientName || nutritionState?.ingredientId?.ingredientName;
+  const singleIngQuantity = parseFloat(nutritionState?.selectedPortion?.quantity) || 1;
 
   useEffect(() => {
     if (servings) {
@@ -72,10 +66,7 @@ const NutritionPanelRxFacts = ({
   }, [servings]);
 
   return (
-    <div
-      className={styles.right}
-      style={variant === "panel" ? { boxShadow: "none" } : {}}
-    >
+    <div className={styles.right} style={variant === "panel" ? { boxShadow: "none" } : {}}>
       <div>
         {showTitle && <div className={styles.right__title}>Nutrition</div>}
 
@@ -96,14 +87,10 @@ const NutritionPanelRxFacts = ({
                     className={styles.content__closeBox}
                     onClick={() => {
                       setNutritionState({});
-                      dispatch(
-                        setIngredientArrayForNutrition(selectedIngredientsList),
-                      );
+                      dispatch(setIngredientArrayForNutrition(selectedIngredientsList));
                     }}
                   >
-                    <MdOutlineClose
-                      className={styles.content__closeBox__closeIcon}
-                    />
+                    <MdOutlineClose className={styles.content__closeBox__closeIcon} />
                   </div>
                 </>
               </div>
@@ -116,9 +103,7 @@ const NutritionPanelRxFacts = ({
                 <input
                   className={styles.right__counterTray__counter__input}
                   type="number"
-                  value={
-                    isComeFormRecipeEditPage ? counter : servingSizeCounter
-                  }
+                  value={isComeFormRecipeEditPage ? counter : servingSizeCounter}
                   min={1}
                   onChange={(e) => {
                     isComeFormRecipeEditPage
@@ -155,9 +140,7 @@ const NutritionPanelRxFacts = ({
             variant={variant}
             dataObject={nutritionTrayData}
             counter={isComeFormRecipeEditPage ? 1 : counter}
-            servingSize={
-              isComeFormRecipeEditPage ? counter : servingSizeCounter
-            }
+            servingSize={isComeFormRecipeEditPage ? counter : servingSizeCounter}
             showUser={showUser}
             sinngleIngQuintity={singleIngQuantity}
             measurementDropDownState={measurementDropDownState}

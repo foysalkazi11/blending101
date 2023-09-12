@@ -1,79 +1,74 @@
-import React, { forwardRef, InputHTMLAttributes, ReactNode } from "react";
+import React, { forwardRef, ReactNode } from "react";
 import styles from "./input.module.scss";
+import { useFormContext } from "react-hook-form";
+import { InputValidationObjType } from "type/inputValidationObjType";
 
-interface InputComponentProps extends InputHTMLAttributes<HTMLInputElement> {
+type InputComponentProps = React.ComponentPropsWithRef<"input"> & {
   type?: string;
   style?: React.CSSProperties;
-  value?: string | number;
   placeholder?: string;
-  fullWidth?: boolean;
-  maxWidth?: string;
   handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   name?: string;
   min?: number;
   max?: number;
   borderSecondary?: boolean;
-  fieldName?: string;
   inputWithIcon?: boolean;
   icon?: ReactNode | string;
   label?: string;
-}
+  validationObj?: InputValidationObjType;
+};
 
 function InputComponent(
   {
-    type,
+    type = "text",
     style = {},
-    value,
-    placeholder,
-    fullWidth,
-    maxWidth,
+    placeholder = "Add your text here",
     handleChange = () => {},
-    name,
+    name = "",
     min = 0,
     max,
     borderSecondary = false,
-    fieldName = "",
     inputWithIcon = false,
     icon,
     label = "",
+    validationObj = {},
     ...InputProps
   }: InputComponentProps,
   ref,
 ) {
-  // STEP 1: INITIALIZE PROPS TO AVOID UI FALL
-  type = type || "text";
-  style = style || {};
-  if (fullWidth) style = { ...style, width: "100%" };
-  if (maxWidth) style = { ...style, maxWidth: maxWidth };
-  value = value || "";
-  placeholder = placeholder || "Add your text here";
+  const formContext = useFormContext();
+  let register: any = () => {};
+  if (formContext && name) {
+    register = formContext.register;
+  }
 
-  if (inputWithIcon) {
+  if (icon) {
     return (
       <>
         {label && <label className={styles.label}>{label}</label>}
-        <div
-          className={`${styles.inputWithIcon} ${
-            borderSecondary ? styles.borderSecondary : null
-          }`}
-        >
+        <div className={`${styles.inputWithIcon} ${borderSecondary ? styles.borderSecondary : null}`}>
           <input
             name={name}
             className={`${styles.input} `}
             type={type}
             style={style}
-            value={value}
-            onChange={handleChange}
+            onChange={(e) => handleChange}
             placeholder={placeholder}
             min={min}
             max={max}
             ref={ref}
             {...InputProps}
+            {...register(name, validationObj)}
           />
           {typeof icon === "string" ? (
             <img className={styles.icon} src={icon} alt="icon" />
           ) : (
             <div className={styles.icon}>{icon}</div>
+          )}
+          {formContext?.formState?.errors?.[name] && (
+            <span className={styles.errorMessage}>
+              {formContext?.formState?.errors?.[name]?.message || "Required*"}
+            </span>
           )}
         </div>
       </>
@@ -83,21 +78,24 @@ function InputComponent(
   return (
     <>
       {label && <label className={styles.label}>{label}</label>}
-      <input
-        name={name}
-        className={`${styles.input} ${
-          borderSecondary ? styles.borderSecondary : null
-        }`}
-        type={type}
-        style={style}
-        value={value}
-        onChange={handleChange}
-        placeholder={placeholder}
-        min={min}
-        max={max}
-        ref={ref}
-        {...InputProps}
-      />
+      <div style={{ position: "relative" }}>
+        <input
+          name={name}
+          className={`${styles.input} ${borderSecondary ? styles.borderSecondary : null}`}
+          type={type}
+          style={style}
+          onChange={handleChange}
+          placeholder={placeholder}
+          min={min}
+          max={max}
+          ref={ref}
+          {...InputProps}
+          {...register(name, validationObj)}
+        />
+        {formContext?.formState?.errors?.[name] && (
+          <span className={styles.errorMessage}>{formContext?.formState?.errors?.[name]?.message || "Required*"}</span>
+        )}
+      </div>
     </>
   );
 }

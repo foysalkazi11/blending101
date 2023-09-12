@@ -15,6 +15,8 @@ const GET_A_RECIPE_VERSION_ONLY = gql`
         errorString
       }
       ingredients {
+        originalIngredientName
+        quantityString
         comment
         ingredientId {
           ingredientName
