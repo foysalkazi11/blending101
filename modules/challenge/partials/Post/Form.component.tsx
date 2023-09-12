@@ -13,7 +13,6 @@ import IngredientPanel from "component/templates/Ingredient/Ingredient.component
 import { useUser } from "context/AuthProvider";
 import { GET_CATEGORY_FOR_COMBOBOX } from "graphql/Recipe";
 import Publish from "helpers/Publish";
-import { useChallengeForm, useAddChallengePost, useEditChallengePost } from "hooks/modules/Challenge/useChallengePost";
 import { useAppDispatch, useAppSelector } from "redux/hooks";
 import { setShowPostForm, resetForm, deleteIngredient, addIngredient } from "redux/slices/Challenge.slice";
 import { setShowPanel } from "redux/slices/Ui.slice";
@@ -22,6 +21,9 @@ import Upload from "component/organisms/Upload/Upload.component";
 import useImage from "hooks/useImage";
 
 import styles from "./Form.module.scss";
+import useAddChallengePost from "@/challenge/hooks/posts/useAdd";
+import useEditChallengePost from "@/challenge/hooks/posts/useEdit";
+import useChallengeForm from "@/challenge/hooks/posts/useForm";
 
 const PostForm = forwardRef((props: any, ref) => {
   const { startDate, endDate, elementRef } = props;
@@ -35,9 +37,9 @@ const PostForm = forwardRef((props: any, ref) => {
 
   const {
     isEditMode,
-    id,
+    _id,
     docId,
-    title,
+    name,
     ingredients,
     startDate: postDate,
     images: stateImages,
@@ -100,13 +102,15 @@ const PostForm = forwardRef((props: any, ref) => {
         servingSize: 16,
         ingredients: ingredients.map((ing) => ({
           ingredientId: ing?.ingredientId?._id,
+          originalIngredientName: ing?.ingredientId?.ingredientName,
+          quantityString: `${ing?.selectedPortion?.quantity}`,
           selectedPortionName: ing?.selectedPortion?.name,
           weightInGram: ing?.selectedPortion?.gram,
         })),
       },
     };
     if (isEditMode) {
-      post.post._id = id;
+      post.post._id = _id;
       post.post.docId = docId;
     }
     await Publish({
@@ -140,7 +144,7 @@ const PostForm = forwardRef((props: any, ref) => {
             <Textfield
               placeholder="Description"
               name="recipeTitle"
-              defaultValue={title}
+              defaultValue={name}
               className={styles.recipe__title}
             />
           </div>

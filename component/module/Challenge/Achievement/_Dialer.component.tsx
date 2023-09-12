@@ -37,15 +37,15 @@ function Main({ canUpload, activities, statistics }: MainInterface) {
     dispatch(
       setChallengePost({
         isEditMode: false,
-        id: "",
+        _id: "",
         docId: statistics?.challengeId,
         startDate: date,
-        title: "",
+        name: "",
         category: "",
         images: [],
         ingredients: [],
-        notes: "",
-        serving: 0,
+        note: "",
+        servings: 0,
       }),
     );
   };

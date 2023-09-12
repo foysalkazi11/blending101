@@ -13,37 +13,18 @@ import { UTCDate } from "helpers/Date";
 import Publish from "helpers/Publish";
 import useHideOnClickOutside from "hooks/useHideOnClickOutside";
 import { useAppDispatch, useAppSelector } from "redux/hooks";
-import { IPostIngredient, setShowPostForm, setChallengePost } from "redux/slices/Challenge.slice";
+import { setShowPostForm, setChallengePost } from "redux/slices/Challenge.slice";
 import { setShowPanel } from "redux/slices/Ui.slice";
 import SplitImageCard from "theme/card/splitImageCard/splitImageCard.component";
 import IconHeading from "theme/iconHeading/iconHeading.component";
 
 import styles from "./List.module.scss";
 
-interface IPost {
-  _id: string;
-  name: string;
-  recipeBlendCategory: {
-    _id: string;
-    name: string;
-  };
-  ingredients: IPostIngredient[];
-  images: Image[];
-  rxScore: number;
-  calories: number;
-  gl: number;
-  note: string;
-}
-
-interface IChallengePosts {
-  _id: string;
-  date: string;
-  posts: IPost[];
-}
+import { ChallengeDay, ChallengePost } from "@/app/types/challenge.types";
 
 interface ChallengePanelProps {
   height?: string;
-  challenges: any[];
+  challenges: ChallengeDay[];
 }
 
 const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
@@ -85,20 +66,20 @@ const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
   }, [activeDate]);
 
   const editHandler = useCallback(
-    (challengeId, date, post: IPost) => {
+    (challengeId, date, post: ChallengePost) => {
       dispatch(setShowPostForm(true));
       dispatch(
         setChallengePost({
           isEditMode: true,
-          id: post._id,
+          _id: post._id,
           docId: challengeId,
           startDate: date,
-          title: post.name,
+          name: post.name,
           category: post?.recipeBlendCategory?._id,
           images: post.images,
           ingredients: post.ingredients,
-          notes: post.note,
-          serving: 0,
+          note: post.note,
+          servings: 0,
         }),
       );
     },
@@ -167,7 +148,7 @@ const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
     };
 
     //Handling Each Challenge
-    challenges?.forEach((challenge: IChallengePosts) => {
+    challenges?.forEach((challenge) => {
       if (challenge.posts.length === 0) return;
       let images = [];
       const postsEl = [];
@@ -259,7 +240,7 @@ BlendCard.displayName = "BlendCard";
 interface PostProps {
   id: string;
   date: string;
-  post: IPost;
+  post: ChallengePost;
   showPanel: boolean;
   showChartState: any;
   onEdit: any;
