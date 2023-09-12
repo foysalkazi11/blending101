@@ -1,0 +1,177 @@
+$sharedFontWeight: 400;
+$sharedColor: #5a5a5a;
+$sharedBorder: 1px #efefef solid;
+
+%sharedFontCss {
+  color: #7cbc39;
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 3rem;
+  background-color: white;
+  &__cancelDiv {
+    margin-left: auto;
+    font-size: 30px;
+    cursor: pointer;
+    color: #626262;
+    border-radius: 50%;
+
+    &:hover {
+      background-color: #eeeeee;
+    }
+  }
+
+  &__mainHeading {
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
+
+.headingText {
+  @extend %sharedFontCss;
+  font-size: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px;
+  svg {
+    margin-right: 10px;
+    transform: translateY(2px);
+  }
+}
+
+.notesText {
+  padding: 10px 15px;
+  font-size: 14px;
+  color: #707070;
+  background-color: #fbfbfb;
+  border-radius: 4px;
+
+  &__heading {
+    font-weight: 500;
+  }
+
+  &__content {
+    font-weight: 500;
+    margin-top: 10px;
+  }
+}
+
+.notesTray {
+  display: flex;
+  &__input {
+    height: 3.3rem;
+    width: 7rem;
+    transform: translateY(-0.5rem);
+    img {
+      margin-bottom: -1px !important;
+      margin-top: -1px !important;
+    }
+  }
+  &__servings {
+    // padding: 14px 10px;
+    min-width: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    h3 {
+      font-size: 13px;
+      font-weight: $sharedFontWeight;
+      margin-bottom: 10px;
+      color: $sharedColor;
+      min-width: max-content;
+    }
+
+    h5 {
+      font-size: 12px;
+      font-weight: $sharedFontWeight;
+      margin-bottom: 10px;
+      color: $sharedColor;
+      min-width: max-content;
+    }
+
+    &__scoreCard {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background-color: #f9f9f9;
+      width: 100%;
+      padding: 5px;
+    }
+  }
+
+  &__imageCard {
+    // width: 36%;
+    height: 180px;
+  }
+}
+
+.dropDownTray {
+  display: flex;
+  margin: 20px 0px;
+
+  &__elem {
+    min-width: 200px;
+    margin-left: 10px;
+  }
+}
+
+// RECIPE CARD
+
+.recipe {
+  aspect-ratio: 1;
+  height: 100%;
+  width: 100%;
+  border: 1px solid rgb(235, 233, 233);
+  overflow: hidden;
+  border-radius: 6px;
+  &__title {
+    position: relative;
+    & input {
+      border-bottom-left-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+      border-top-left-radius: 6px !important;
+      border-top-right-radius: 6px !important;
+      &:focus {
+        outline: none !important;
+      }
+    }
+  }
+}
+
+.imageContainer {
+  position: relative;
+  height: 80%;
+}
+
+.date {
+  position: relative;
+  cursor: pointer;
+  & input {
+    cursor: pointer;
+  }
+  &__icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+  }
+}
+
+.ingredient {
+  &__summary {
+    display: flex;
+    justify-content: space-evenly;
+    max-width: 40%;
+    margin: 0 auto 1rem;
+    span {
+      font-weight: 600;
+    }
+  }
+}

@@ -17,16 +17,7 @@ interface UploadProps {
 }
 
 const Upload = (props: UploadProps) => {
-  const {
-    label,
-    multiple,
-    required,
-    className,
-    imageState,
-    featuredState,
-    imagesLimit,
-    size,
-  } = props;
+  const { label, multiple, required, className, imageState, featuredState, imagesLimit, size } = props;
 
   const fileInput = useRef<HTMLInputElement>(null);
   const [images, setImages] = imageState;
@@ -78,10 +69,7 @@ const Upload = (props: UploadProps) => {
   return (
     <div className={className ? className : ""}>
       {label && (
-        <label
-          htmlFor={label}
-          className={`${styles.label} ${required ? styles.required : ""}`}
-        >
+        <label htmlFor={label} className={`${styles.label} ${required ? styles.required : ""}`}>
           {label}
         </label>
       )}
@@ -94,7 +82,7 @@ const Upload = (props: UploadProps) => {
         }}
       >
         {images.map((img, idx) => {
-          const isFileType = !img.hasOwnProperty("url");
+          const isFileType = !img?.hasOwnProperty("url");
           const src = isFileType ? URL.createObjectURL(img) : img?.url;
           return (
             <figure key={idx}>
@@ -107,10 +95,7 @@ const Upload = (props: UploadProps) => {
                       return image?.url !== img?.url;
                     } else {
                       URL.revokeObjectURL(src);
-                      return (
-                        image.name + image.lastModified !==
-                        img?.name + img?.lastModified
-                      );
+                      return image.name + image.lastModified !== img?.name + img?.lastModified;
                     }
                   });
                   setImages(newImages);

@@ -1,3 +1,4 @@
+import { UserRecipe } from "@/recipe/recipe.types";
 import { createSlice } from "@reduxjs/toolkit";
 import { format } from "date-fns";
 
@@ -83,20 +84,16 @@ export const ChallengeSlice = createSlice({
     setRecipeInfo: (
       state,
       action: {
-        payload: {
-          _id: string;
-          name: string;
-          image: Image;
-          category: string;
-          ingredients: IPostIngredient[];
-        };
+        payload: UserRecipe;
       },
     ) => {
-      state.post.id = action.payload._id;
-      state.post.title = action.payload.name;
-      state.post.images = [action.payload.image];
-      state.post.category = action.payload.category;
-      state.post.ingredients = action.payload.ingredients || [];
+      const image = action.payload.recipeId.image[0];
+
+      state.post.id = action.payload.recipeId._id;
+      state.post.title = action.payload.recipeId.name;
+      state.post.images = [{ hash: "", url: image.image }];
+      state.post.category = action.payload.recipeId.recipeBlendCategory._id;
+      state.post.ingredients = action.payload.defaultVersion.ingredients || [];
     },
     addIngredient: (state, action) => {
       const ingredientItem = action.payload.ingredient;
@@ -154,9 +151,7 @@ export const ChallengeSlice = createSlice({
     },
     deleteIngredient: (state, action) => {
       const id = action.payload.id;
-      state.post.ingredients = state.post.ingredients.filter(
-        (i) => i.ingredientId._id !== id,
-      );
+      state.post.ingredients = state.post.ingredients.filter((i) => i.ingredientId._id !== id);
     },
   },
 });

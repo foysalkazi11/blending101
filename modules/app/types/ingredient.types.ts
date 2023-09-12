@@ -29,7 +29,8 @@ interface SourceIngredient {
   sourceId: string;
 }
 
-interface Ingredient {
+// SCHEMA: BlendIngredientData
+export interface Ingredient {
   _id: string;
   ingredientName: string;
   category: string;

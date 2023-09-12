@@ -9,6 +9,8 @@ declare global {
   interface ImageType {
     image: string;
     default: boolean;
+    hash?: string;
+    url?: string;
   }
 }
 
