@@ -26,8 +26,8 @@
     }
   },
   "include": [
-    "types/next-env.d.ts",
-    "types/global.d.ts",
+    "modules/app/types/global/next-env.d.ts",
+    "modules/app/types/global/global.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "components/utility/reactToastifyNotification.ts"

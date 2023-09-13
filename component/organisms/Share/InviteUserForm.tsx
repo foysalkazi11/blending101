@@ -6,7 +6,7 @@ import AddCollectionModal, {
   InputValueType,
 } from "../../../components/sidetray/common/addCollectionModal/AddCollectionModal";
 import slugStringGenerator from "../../../components/utility/slugStringGenerator";
-import { GET_ALL_USER_LIST } from "../../../graphql/User";
+import { GET_ALL_USER_LIST } from "../../../modules/app/graphql/User";
 import formatDate from "../../../helperFunc/date/formatDate";
 import CustomAccordion from "../../../theme/accordion/accordion.component";
 import CustomCheckbox from "../../../theme/checkbox/CustomCheckbox";

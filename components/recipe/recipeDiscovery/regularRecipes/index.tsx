@@ -2,7 +2,6 @@ import { useQuery } from "@apollo/client";
 import { faClock, faFire, faThumbsUp } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useCallback } from "react";
-import Widget from "../../../../component/module/Widget/Widget.component";
 import client from "../../../../gqlLib/client";
 import GET_ALL_LATEST_RECIPES from "../../../../gqlLib/recipes/queries/getAllLatestRecipes";
 import GET_ALL_POPULAR_RECIPES from "../../../../gqlLib/recipes/queries/getAllPopularRecipes";
@@ -11,11 +10,7 @@ import joniIngredients from "../../../../helperFunc/joinIngredients";
 import { useAppSelector } from "../../../../redux/hooks";
 import DataCardComponent from "../../../../theme/cards/dataCard/dataCard.component";
 import SkeletonRecipeDiscovery from "../../../../theme/skeletons/skeletonRecipeDiscovery/SkeletonRecipeDiscovery";
-import {
-  Ingredient,
-  RecipeType,
-  ReferenceOfRecipeUpdateFuncType,
-} from "../../../../type/recipeType";
+import { Ingredient, RecipeType, ReferenceOfRecipeUpdateFuncType } from "../../../../type/recipeType";
 import AppdownLoadCard from "../AppdownLoadCard/AppdownLoadCard.component";
 import ContentTray from "../ContentTray/ContentTray.component";
 import styles from "../recipeDiscovery.module.scss";
@@ -29,15 +24,9 @@ const defaultHeadingContent = {
 interface RegularRecipesType {
   setOpenCollectionModal?: React.Dispatch<React.SetStateAction<boolean>>;
   setOpenShareModal?: React.Dispatch<React.SetStateAction<boolean>>;
-  setShareRecipeData?: React.Dispatch<
-    React.SetStateAction<{ id: string; image: string; name: string }>
-  >;
+  setShareRecipeData?: React.Dispatch<React.SetStateAction<{ id: string; image: string; name: string }>>;
 }
-const RegularRecipes = ({
-  setOpenCollectionModal,
-  setOpenShareModal,
-  setShareRecipeData,
-}: RegularRecipesType) => {
+const RegularRecipes = ({ setOpenCollectionModal, setOpenShareModal, setShareRecipeData }: RegularRecipesType) => {
   const user = useUser();
   const {
     data: recommendedRecipesData,
@@ -75,17 +64,15 @@ const RegularRecipes = ({
         data: {
           getAllrecomendedRecipes2: {
             ...recommendedRecipesData?.getAllrecomendedRecipes2,
-            recipes:
-              recommendedRecipesData?.getAllrecomendedRecipes2?.recipes?.map(
-                (recipe) =>
-                  recipe?.recipeId?._id === id
-                    ? {
-                        ...recipe,
-                        ...outerObj,
-                        [innerLabel]: { ...recipe[innerLabel], ...innerObj },
-                      }
-                    : recipe,
-              ),
+            recipes: recommendedRecipesData?.getAllrecomendedRecipes2?.recipes?.map((recipe) =>
+              recipe?.recipeId?._id === id
+                ? {
+                    ...recipe,
+                    ...outerObj,
+                    [innerLabel]: { ...recipe[innerLabel], ...innerObj },
+                  }
+                : recipe,
+            ),
           },
         },
       });
@@ -95,15 +82,14 @@ const RegularRecipes = ({
         data: {
           getAllpopularRecipes2: {
             ...popularRecipesData?.getAllpopularRecipes2,
-            recipes: popularRecipesData?.getAllpopularRecipes2?.recipes?.map(
-              (recipe) =>
-                recipe?.recipeId?._id === id
-                  ? {
-                      ...recipe,
-                      ...outerObj,
-                      [innerLabel]: { ...recipe[innerLabel], ...innerObj },
-                    }
-                  : recipe,
+            recipes: popularRecipesData?.getAllpopularRecipes2?.recipes?.map((recipe) =>
+              recipe?.recipeId?._id === id
+                ? {
+                    ...recipe,
+                    ...outerObj,
+                    [innerLabel]: { ...recipe[innerLabel], ...innerObj },
+                  }
+                : recipe,
             ),
           },
         },
@@ -114,15 +100,14 @@ const RegularRecipes = ({
         data: {
           getAllLatestRecipes2: {
             ...latestRecipesData?.getAllLatestRecipes2,
-            recipes: latestRecipesData?.getAllLatestRecipes2?.recipes?.map(
-              (recipe) =>
-                recipe?.recipeId?._id === id
-                  ? {
-                      ...recipe,
-                      ...outerObj,
-                      [innerLabel]: { ...recipe[innerLabel], ...innerObj },
-                    }
-                  : recipe,
+            recipes: latestRecipesData?.getAllLatestRecipes2?.recipes?.map((recipe) =>
+              recipe?.recipeId?._id === id
+                ? {
+                    ...recipe,
+                    ...outerObj,
+                    [innerLabel]: { ...recipe[innerLabel], ...innerObj },
+                  }
+                : recipe,
             ),
           },
         },
@@ -145,9 +130,7 @@ const RegularRecipes = ({
         <ShowRecipes
           headerData={{
             heading: "Recommended",
-            image: (
-              <FontAwesomeIcon icon={faThumbsUp} color="#fe5d1f" size="2x" />
-            ),
+            image: <FontAwesomeIcon icon={faThumbsUp} color="#fe5d1f" size="2x" />,
             allUrl: "/recipe/viewAll/recommended",
           }}
           loading={recommendedRecipesLoading}
@@ -205,9 +188,7 @@ interface ShowRecipesType {
   };
   setOpenCollectionModal?: React.Dispatch<React.SetStateAction<boolean>>;
   setOpenShareModal?: React.Dispatch<React.SetStateAction<boolean>>;
-  setShareRecipeData?: React.Dispatch<
-    React.SetStateAction<{ id: string; image: string; name: string }>
-  >;
+  setShareRecipeData?: React.Dispatch<React.SetStateAction<{ id: string; image: string; name: string }>>;
   updateDataFunc?: ReferenceOfRecipeUpdateFuncType;
   filters?: any[];
 }
@@ -262,10 +243,7 @@ export const ShowRecipes = ({
             } = item;
             const ing = joniIngredients(defaultVersion?.ingredients);
             return (
-              <div
-                className={styles.slider__card}
-                key={`${headerData.heading}${index}`}
-              >
+              <div className={styles.slider__card} key={`${headerData.heading}${index}`}>
                 <DataCardComponent
                   title={name}
                   ingredients={ing}
@@ -276,11 +254,7 @@ export const ShowRecipes = ({
                   // score={rxScore}
                   calorie={defaultVersion?.calorie?.value}
                   noOfComments={numberOfRating}
-                  image={
-                    image.find((img) => img?.default)?.image ||
-                    image?.[0]?.image ||
-                    ""
-                  }
+                  image={image.find((img) => img?.default)?.image || image?.[0]?.image || ""}
                   recipeId={_id}
                   notes={notes}
                   addedToCompare={addedToCompare}

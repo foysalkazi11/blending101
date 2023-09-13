@@ -32,6 +32,7 @@ const CHALLENGE_FIELDS = gql`
             meausermentWeight
           }
         }
+        quantityString
         selectedPortion {
           name
           quantity
@@ -124,32 +125,14 @@ export const DELETE_CHALLENGE = gql`
 `;
 
 export const ACTIVATE_CHALLENGE = gql`
-  mutation ActivateChallenge(
-    $prevChallenge: String
-    $newChallenge: String!
-    $memberId: String!
-  ) {
-    activateChallenge(
-      previousDefaultChallengeId: $prevChallenge
-      challengeId: $newChallenge
-      memberId: $memberId
-    )
+  mutation ActivateChallenge($prevChallenge: String, $newChallenge: String!, $memberId: String!) {
+    activateChallenge(previousDefaultChallengeId: $prevChallenge, challengeId: $newChallenge, memberId: $memberId)
   }
 `;
 
 export const GET_30DAYS_CHALLENGE = gql`
-  query Get30DaysChallenge(
-    $userId: String!
-    $startDate: String
-    $challengeId: String
-    $token: String
-  ) {
-    getMyThirtyDaysChallenge(
-      memberId: $userId
-      startDate: $startDate
-      challengeId: $challengeId
-      token: $token
-    ) {
+  query Get30DaysChallenge($userId: String!, $startDate: String, $challengeId: String, $token: String) {
+    getMyThirtyDaysChallenge(memberId: $userId, startDate: $startDate, challengeId: $challengeId, token: $token) {
       challenge {
         ...ChallengePostFields
       }
@@ -203,34 +186,14 @@ export const DELETE_CHALLENGE_POST = gql`
 `;
 
 export const COPY_CHALLENGE_POST = gql`
-  mutation DuplicateChallenge(
-    $memberId: String!
-    $date: String!
-    $postId: String!
-    $challengeId: String!
-  ) {
-    copyAChallengePost(
-      memberId: $memberId
-      assignDate: $date
-      postId: $postId
-      docId: $challengeId
-    )
+  mutation DuplicateChallenge($memberId: String!, $date: String!, $postId: String!, $challengeId: String!) {
+    copyAChallengePost(memberId: $memberId, assignDate: $date, postId: $postId, docId: $challengeId)
   }
 `;
 
 export const MOVE_CHALLENGE_POST = gql`
-  mutation DuplicateChallenge(
-    $memberId: String!
-    $date: String!
-    $postId: String!
-    $challengeId: String!
-  ) {
-    moveAChallengePost(
-      memberId: $memberId
-      assignDate: $date
-      postId: $postId
-      docId: $challengeId
-    )
+  mutation DuplicateChallenge($memberId: String!, $date: String!, $postId: String!, $challengeId: String!) {
+    moveAChallengePost(memberId: $memberId, assignDate: $date, postId: $postId, docId: $challengeId)
   }
 `;
 
@@ -250,16 +213,8 @@ export const SHARE_CHALLENGE = gql`
 `;
 
 export const GET_SHARED_CHALLENGE_DETAILS = gql`
-  query GetSharedChallengeInfo(
-    $memberId: String!
-    $challengeId: String!
-    $token: String!
-  ) {
-    getChallengeInfoById(
-      token: $token
-      memberId: $memberId
-      challengeId: $challengeId
-    ) {
+  query GetSharedChallengeInfo($memberId: String!, $challengeId: String!, $token: String!) {
+    getChallengeInfoById(token: $token, memberId: $memberId, challengeId: $challengeId) {
       challengeName
       memberInfo {
         _id
@@ -271,12 +226,7 @@ export const GET_SHARED_CHALLENGE_DETAILS = gql`
 `;
 
 export const INVITE_CHALLENGE = gql`
-  mutation InviteChallenge(
-    $shareWithOther: Boolean!
-    $emails: [String!]!
-    $user: String!
-    $challengeId: String!
-  ) {
+  mutation InviteChallenge($shareWithOther: Boolean!, $emails: [String!]!, $user: String!, $challengeId: String!) {
     inviteToChallenge(
       canInviteWithOthers: $shareWithOther
       invitedWith: $emails

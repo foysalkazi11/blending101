@@ -1,27 +1,14 @@
+import { ChallengePost } from "@/app/types/challenge.types";
+import { IngredientWithPortion } from "@/app/types/ingredient.types";
 import { UserRecipe } from "@/recipe/recipe.types";
 import { createSlice } from "@reduxjs/toolkit";
 import { format } from "date-fns";
+import { mixedNumberToDecimal } from "helpers/Number";
 
-export interface IPostIngredient {
-  ingredientId: { _id: string; ingredientName: string; featuredImage: string };
-  selectedPortion: {
-    name: string;
-    quantity: number;
-    gram: number;
-  };
-}
-
-export interface IPost {
-  isEditMode?: boolean;
-  id: string;
-  docId: string;
-  images: Image[];
-  title: string;
-  category: string;
+interface Post extends ChallengePost {
+  isEditMode: boolean;
   startDate: string;
-  serving: number;
-  notes: string;
-  ingredients: IPostIngredient[];
+  category: string;
 }
 
 interface ChallengeState {
@@ -30,19 +17,19 @@ interface ChallengeState {
   startDate: string;
   endDate: string;
   showPostForm: boolean;
-  post: IPost;
+  post: Post;
 }
 
-const initialPost = {
+const initialPost: Post = {
   isEditMode: false,
-  id: "",
+  _id: "",
   docId: "",
   images: [],
-  title: "",
+  name: "",
   category: "",
   startDate: format(new Date(), "yyyy-MM-dd"),
-  serving: 0,
-  notes: "",
+  servings: 0,
+  note: "",
   ingredients: [],
 };
 
@@ -69,7 +56,7 @@ export const ChallengeSlice = createSlice({
       state.startDate = action.payload.startDate;
       state.endDate = action.payload.endDate;
     },
-    setChallengePost: (state, action: { payload: IPost }) => {
+    setChallengePost: (state, action: { payload: Post }) => {
       state.post = action.payload;
     },
     setShowPostForm: (state, action) => {
@@ -89,8 +76,8 @@ export const ChallengeSlice = createSlice({
     ) => {
       const image = action.payload.recipeId.image[0];
 
-      state.post.id = action.payload.recipeId._id;
-      state.post.title = action.payload.recipeId.name;
+      state.post._id = action.payload.recipeId._id;
+      state.post.name = action.payload.recipeId.name;
       state.post.images = [{ hash: "", url: image.image }];
       state.post.category = action.payload.recipeId.recipeBlendCategory._id;
       state.post.ingredients = action.payload.defaultVersion.ingredients || [];
@@ -102,15 +89,19 @@ export const ChallengeSlice = createSlice({
       const portion = action.payload.portion;
       const unit = portion?.measurement;
       const weight = +portion?.meausermentWeight;
-      const ingredient = {
+
+      const quantity = qty.split(" ").length > 1 ? mixedNumberToDecimal(qty) : qty;
+
+      const ingredient: IngredientWithPortion = {
         ingredientId: {
           _id: ingredientItem._id,
           ingredientName: ingredientItem.ingredientName,
           featuredImage: ingredientItem?.featuredImage,
           portions: ingredientItem?.portions,
         },
+        quantityString: qty,
         selectedPortion: {
-          gram: qty * weight,
+          gram: quantity * weight,
           name: unit,
           quantity: qty,
         },
@@ -146,7 +137,6 @@ export const ChallengeSlice = createSlice({
           quantity: qty,
         },
       };
-      console.log(ingredient);
       state.post.ingredients.push(ingredient);
     },
     deleteIngredient: (state, action) => {

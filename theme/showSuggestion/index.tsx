@@ -5,7 +5,7 @@ import fuzzySearch from "components/utility/fuzzySearch";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/pro-light-svg-icons";
 import useDebounce from "customHooks/useDebounce";
-import useHideOnClickOutside from "hooks/useHideOnClickOutside";
+import useHideOnClickOutside from "@/app/hooks/interface/useHideOnClickOutside";
 type Option = { label: string; value: string; [key: string]: string };
 
 type showSuggestionProps = React.ComponentPropsWithRef<"div"> & {

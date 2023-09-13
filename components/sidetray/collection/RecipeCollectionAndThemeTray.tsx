@@ -8,15 +8,12 @@ import AddCollectionModal from "../common/addCollectionModal/AddCollectionModal"
 import GET_COLLECTIONS_AND_THEMES from "../../../gqlLib/collection/query/getCollectionsAndThemes";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
-import {
-  setChangeRecipeWithinCollection,
-  setCurrentCollectionInfo,
-} from "../../../redux/slices/collectionSlice";
+import { setChangeRecipeWithinCollection, setCurrentCollectionInfo } from "../../../redux/slices/collectionSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TrayTag from "../TrayTag";
 import { faRectangleHistory } from "@fortawesome/pro-regular-svg-icons";
 import styles from "./collectionTray.module.scss";
-import Widget from "../../../component/module/Widget/Widget.component";
+import Widget from "../../../component/templates/Widget/Widget.component";
 import { faBookmark } from "@fortawesome/pro-solid-svg-icons";
 import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
 import { faFerrisWheel } from "@fortawesome/pro-light-svg-icons";
@@ -51,23 +48,16 @@ export default function RecipeCollectionAndThemeTray({
   });
   const [isEditCollection, setIsEditCollection] = useState(false);
   const [isDeleteCollection, setIsDeleteCollection] = useState(false);
-  const [isDeleteCollectionShared, setIsDeleteCollectionShared] =
-    useState(false);
+  const [isDeleteCollectionShared, setIsDeleteCollectionShared] = useState(false);
   const [collectionId, setCollectionId] = useState("");
 
-  const { changeRecipeWithinCollection } = useAppSelector(
-    (state) => state?.collections,
-  );
+  const { changeRecipeWithinCollection } = useAppSelector((state) => state?.collections);
   const { openCollectionsTary } = useAppSelector((state) => state?.sideTray);
   const [openModal, setOpenModal] = useState(false);
   const dispatch = useAppDispatch();
-  const [createNewCollection, { loading: addCollectionLoading }] = useMutation(
-    CREATE_NEW_COLLECTION,
-  );
-  const [editCollection, { loading: editCollectionLoading }] =
-    useMutation(EDIT_COLLECTION);
-  const [deleteCollection, { loading: deleteCollectionLoading }] =
-    useMutation(DELETE_COLLECTION);
+  const [createNewCollection, { loading: addCollectionLoading }] = useMutation(CREATE_NEW_COLLECTION);
+  const [editCollection, { loading: editCollectionLoading }] = useMutation(EDIT_COLLECTION);
+  const [deleteCollection, { loading: deleteCollectionLoading }] = useMutation(DELETE_COLLECTION);
   const router = useRouter();
 
   // close recipe collection tray
@@ -76,16 +66,10 @@ export default function RecipeCollectionAndThemeTray({
     dispatch(setChangeRecipeWithinCollection(false));
   };
 
-  const [
-    getCollectionsAndThemes,
-    {
-      data: collectionsData,
-      loading: collectionsLoading,
-      error: collectionsError,
-    },
-  ] = useLazyQuery(GET_COLLECTIONS_AND_THEMES, {
-    // fetchPolicy: "cache-and-network",
-  });
+  const [getCollectionsAndThemes, { data: collectionsData, loading: collectionsLoading, error: collectionsError }] =
+    useLazyQuery(GET_COLLECTIONS_AND_THEMES, {
+      // fetchPolicy: "cache-and-network",
+    });
 
   useEffect(() => {
     if (openCollectionsTary) {
@@ -132,19 +116,15 @@ export default function RecipeCollectionAndThemeTray({
                 variables: { userId: user.id },
                 data: {
                   getUserCollectionsAndThemes: {
-                    collections:
-                      collectionsData?.getUserCollectionsAndThemes?.collections?.map(
-                        (collection) =>
-                          collection?._id === collectionId
-                            ? {
-                                ...collection,
-                                ...input,
-                                personalizedName: input?.isSharedCollection
-                                  ? input.name
-                                  : "",
-                              }
-                            : collection,
-                      ),
+                    collections: collectionsData?.getUserCollectionsAndThemes?.collections?.map((collection) =>
+                      collection?._id === collectionId
+                        ? {
+                            ...collection,
+                            ...input,
+                            personalizedName: input?.isSharedCollection ? input.name : "",
+                          }
+                        : collection,
+                    ),
                   },
                 },
               });
@@ -176,11 +156,7 @@ export default function RecipeCollectionAndThemeTray({
                 variables: { userId: user.id },
                 data: {
                   getUserCollectionsAndThemes: {
-                    collections: [
-                      ...collectionsData?.getUserCollectionsAndThemes
-                        ?.collections,
-                      createNewCollection,
-                    ],
+                    collections: [...collectionsData?.getUserCollectionsAndThemes?.collections, createNewCollection],
                   },
                 },
               });
@@ -233,10 +209,7 @@ export default function RecipeCollectionAndThemeTray({
   };
 
   // delete collection
-  const handleOpenConfirmationModal = (
-    collectionId: string,
-    isSharedCollection: boolean = false,
-  ) => {
+  const handleOpenConfirmationModal = (collectionId: string, isSharedCollection: boolean = false) => {
     setIsDeleteCollectionShared(isSharedCollection);
     setIsDeleteCollection(true);
     setCollectionId(collectionId);
@@ -259,10 +232,9 @@ export default function RecipeCollectionAndThemeTray({
             variables: { userId: user.id },
             data: {
               getUserCollectionsAndThemes: {
-                collections:
-                  collectionsData?.getUserCollectionsAndThemes?.collections?.filter(
-                    (collection) => collection?._id !== collectionId,
-                  ),
+                collections: collectionsData?.getUserCollectionsAndThemes?.collections?.filter(
+                  (collection) => collection?._id !== collectionId,
+                ),
               },
             },
           });
@@ -287,13 +259,7 @@ export default function RecipeCollectionAndThemeTray({
       closeTray={closeTray}
       openTray={openCollectionsTary}
       showPanel={showPanle}
-      panelTag={(hover) => (
-        <TrayTag
-          icon={<FontAwesomeIcon icon={faBookmark} />}
-          placeMent="left"
-          hover={hover}
-        />
-      )}
+      panelTag={(hover) => <TrayTag icon={<FontAwesomeIcon icon={faBookmark} />} placeMent="left" hover={hover} />}
     >
       <ToggleMenu
         setToggle={handleToggle}
@@ -302,28 +268,19 @@ export default function RecipeCollectionAndThemeTray({
           changeRecipeWithinCollection
             ? [
                 <div key={"key0"} className={styles.menu}>
-                  <FontAwesomeIcon
-                    icon={faRectangleHistory}
-                    className={styles.icon}
-                  />
+                  <FontAwesomeIcon icon={faRectangleHistory} className={styles.icon} />
 
                   <p>Collections</p>
                 </div>,
               ]
             : [
                 <div key={"key0"} className={styles.menu}>
-                  <FontAwesomeIcon
-                    icon={faRectangleHistory}
-                    className={styles.icon}
-                  />
+                  <FontAwesomeIcon icon={faRectangleHistory} className={styles.icon} />
 
                   <p>Collections</p>
                 </div>,
                 <div key={"key1"} className={styles.menu}>
-                  <FontAwesomeIcon
-                    icon={faFerrisWheel}
-                    className={styles.icon}
-                  />
+                  <FontAwesomeIcon icon={faFerrisWheel} className={styles.icon} />
                   <p>Themes</p>
                 </div>,
               ]
@@ -338,10 +295,7 @@ export default function RecipeCollectionAndThemeTray({
             submitBtnVarient="outlineSecondary"
             text={
               <div className="flex ai-center">
-                <FontAwesomeIcon
-                  icon={faBookmark}
-                  style={{ marginRight: "1rem" }}
-                />
+                <FontAwesomeIcon icon={faBookmark} style={{ marginRight: "1rem" }} />
                 <p>All Collections</p>
               </div>
             }
@@ -351,18 +305,13 @@ export default function RecipeCollectionAndThemeTray({
             }}
           />
 
-          <IconForAddComment
-            handleIconClick={addNewCollection}
-            label="Add collection"
-          />
+          <IconForAddComment handleIconClick={addNewCollection} label="Add collection" />
         </div>
       )}
 
       {toggle === 0 ? (
         <CollectionComponent
-          collections={
-            collectionsData?.getUserCollectionsAndThemes?.collections || []
-          }
+          collections={collectionsData?.getUserCollectionsAndThemes?.collections || []}
           collectionsLoading={collectionsLoading}
           handleDeleteCollection={handleOpenConfirmationModal}
           handleEditCollection={handleEditCollection}
@@ -375,10 +324,7 @@ export default function RecipeCollectionAndThemeTray({
               <Link href={`/recipe-editor/${item.slug}`}>
                 <div className={styles.theme__child}>
                   <div className={styles.theme__cover}>
-                    <div
-                      className={styles.theme__cover__abs}
-                      style={{ backgroundImage: `url(${item.icon})` }}
-                    />
+                    <div className={styles.theme__cover__abs} style={{ backgroundImage: `url(${item.icon})` }} />
                   </div>
                   <p>{item.displayName}</p>
                 </div>
@@ -403,9 +349,7 @@ export default function RecipeCollectionAndThemeTray({
           setInput={setInput}
           setOpenModal={setOpenModal}
           handleToAddOrUpdateCollection={saveToDb}
-          isAddOrUpdateCollectionLoading={
-            addCollectionLoading || editCollectionLoading
-          }
+          isAddOrUpdateCollectionLoading={addCollectionLoading || editCollectionLoading}
           openModal={openModal}
         />
       )}
