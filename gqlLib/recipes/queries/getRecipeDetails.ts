@@ -31,6 +31,7 @@ const GET_A_RECIPE = gql`
         token
         totalRating
         description
+        totalTime
         recipeBlendCategory {
           _id
           name

@@ -13,6 +13,7 @@ type showSuggestionProps = React.ComponentPropsWithRef<"div"> & {
   handleClickList?: (value: Option) => void;
   placeholder?: string;
   closeSuggestionBox?: () => void;
+  border?: "borderPrimary" | "borderSecondary";
 };
 const ShowSuggestion = ({
   list = [],
@@ -20,6 +21,7 @@ const ShowSuggestion = ({
   placeholder = "Search...",
   closeSuggestionBox = () => {},
   ref = null,
+  border = "borderPrimary",
   ...rest
 }: showSuggestionProps) => {
   const [input, setInput] = useState("");
@@ -29,10 +31,7 @@ const ShowSuggestion = ({
   const optionsList = useMemo(() => {
     let results: Option[] = [];
     list.filter((option) => {
-      const selected = fuzzySearch(
-        option?.value?.toLowerCase(),
-        inputDebounceValue?.toLowerCase(),
-      );
+      const selected = fuzzySearch(option?.value?.toLowerCase(), inputDebounceValue?.toLowerCase());
       if (selected !== "") results.push(option);
     });
 
@@ -50,6 +49,7 @@ const ShowSuggestion = ({
         placeholder={placeholder}
         icon={<FontAwesomeIcon icon={faMagnifyingGlass} size="sm" />}
         ref={ref}
+        border={border}
       />
       <ul>
         {optionsList?.map((option, index) => (
@@ -60,10 +60,7 @@ const ShowSuggestion = ({
               closeSuggestionBox();
             }}
             dangerouslySetInnerHTML={{
-              __html: option?.label?.replace(
-                inputDebounceValue,
-                `<b>${inputDebounceValue}</b>`,
-              ),
+              __html: option?.label?.replace(inputDebounceValue, `<b>${inputDebounceValue}</b>`),
             }}
           />
         ))}

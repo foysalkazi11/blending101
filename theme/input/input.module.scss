@@ -17,10 +17,6 @@
   &::placeholder {
     color: #c8c8c8;
   }
-  &:focus,
-  &:hover {
-    border: 1px solid $primaryColor;
-  }
 }
 
 .input {
@@ -33,6 +29,12 @@
     border: 1px solid $secondaryColor;
   }
 }
+.borderPrimary {
+  &:focus,
+  &:hover {
+    border: 1px solid $primaryColor;
+  }
+}
 
 .inputWithIcon {
   display: flex;
@@ -42,10 +44,6 @@
   border-radius: 10px;
   transition: border 0.3s linear;
   position: relative;
-  &:focus,
-  &:hover {
-    border: 1px solid $primaryColor;
-  }
 
   .input {
     @extend %input;
@@ -59,7 +57,7 @@
   }
 
   .icon {
-    color: #dcdbdb;
+    color: #c8c8c8;
     margin-right: 10px;
     font-size: 24px;
   }

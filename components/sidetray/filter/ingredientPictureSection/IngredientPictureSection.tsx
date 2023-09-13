@@ -7,10 +7,7 @@ import CheckCircle from "../../../../public/icons/check_circle_black_24dp.svg";
 import SkeletonBlendType from "../../../../theme/skeletons/skeletonBlendType/SkeletonBlendType";
 import useWindowSize from "../../../utility/useWindowSize";
 import { FilterCriteriaValue } from "../../../../type/filterType";
-import {
-  ImageWithFallback,
-  NextImageWithFallback,
-} from "../../../../theme/imageWithFallback";
+import { ImageWithFallback, NextImageWithFallback } from "../../../../theme/imageWithFallback";
 
 interface Props {
   searchInput?: string;
@@ -46,7 +43,7 @@ const IngredientPictureSection = ({
     <div>
       {ingredientCategory === "All" && (
         <InputComponent
-          borderSecondary={true}
+          border="borderSecondary"
           style={{
             padding: "10px",
             fontSize: "12px",
@@ -61,39 +58,29 @@ const IngredientPictureSection = ({
       )}
 
       {loading ? (
-        <SkeletonBlendType
-          amount={16}
-          style={{ maxHeight: `${scrollAreaMaxHeight}px` }}
-        />
+        <SkeletonBlendType amount={16} style={{ maxHeight: `${scrollAreaMaxHeight}px` }} />
       ) : (
         <>
           {searchIngredientData.length ? (
-            <div
-              className={`${styles.ingredientContainer} y-scroll`}
-              style={{ maxHeight: `${scrollAreaMaxHeight}px` }}
-            >
+            <div className={`${styles.ingredientContainer} y-scroll`} style={{ maxHeight: `${scrollAreaMaxHeight}px` }}>
               {searchIngredientData?.map((item, i) => (
                 <div
                   key={item?.ingredientName + i}
                   className={styles.item}
                   onClick={() =>
-                    handleBlendAndIngredientUpdate(
-                      item,
-                      checkActiveItem(item?._id),
-                      {
-                        id: item?._id,
-                        image: item?.featuredImage || "/food/chard.png",
-                        name: item?.ingredientName,
-                        tagLabel: `Ingredient | ${item?.ingredientName}`,
+                    handleBlendAndIngredientUpdate(item, checkActiveItem(item?._id), {
+                      id: item?._id,
+                      image: item?.featuredImage || "/food/chard.png",
+                      name: item?.ingredientName,
+                      tagLabel: `Ingredient | ${item?.ingredientName}`,
+                      filterCriteria: "includeIngredientIds",
+                      origin: {
+                        activeSection: "visual",
                         filterCriteria: "includeIngredientIds",
-                        origin: {
-                          activeSection: "visual",
-                          filterCriteria: "includeIngredientIds",
-                          activeTab: "Ingredients",
-                          childTab: item?.ingredientName || "",
-                        },
+                        activeTab: "Ingredients",
+                        childTab: item?.ingredientName || "",
                       },
-                    )
+                    })
                   }
                 >
                   <div className={styles.image}>

@@ -29,24 +29,16 @@ import useToUpdateAfterEditVersion from "../../../../customHooks/useToUpdateAfte
 import { VersionAddDataType } from "../../../../type/versionAddDataType";
 import { useUser } from "../../../../context/AuthProvider";
 import { FormProvider, useForm } from "react-hook-form";
-type DefaultValuesType = {
-  recipeTitle: string;
-  recipeDescription: string;
-  blendType: string;
-  blenderName: string;
-  blendManufacturer: string;
-  oz: string;
-  cookTime: number;
-  servings: number;
-};
-const defaultValues: DefaultValuesType = {
+import { RecipeEditDefaultValuesType } from "type/recipeEditType";
+
+const defaultValues: RecipeEditDefaultValuesType = {
   recipeTitle: "",
   recipeDescription: "",
   blendType: "",
   blenderName: "",
   blendManufacturer: "",
   oz: "",
-  cookTime: 0,
+  cookTime: "",
   servings: 0,
 };
 
@@ -165,7 +157,7 @@ const EditRecipeComponent = () => {
 
   // edit a recipe version including original version and original recipe
 
-  const editARecipeFunction = async (data: DefaultValuesType) => {
+  const editARecipeFunction = async (data: RecipeEditDefaultValuesType) => {
     let ingArr = [];
     let errorIngredients = [];
     selectedIngredientsList.forEach((item) => {
@@ -318,6 +310,7 @@ const EditRecipeComponent = () => {
       recipeTitle: detailsARecipe?.tempVersionInfo?.version.postfixTitle,
       recipeDescription: detailsARecipe?.tempVersionInfo?.version.description,
       blendType: detailsARecipe?.recipeId?.recipeBlendCategory?._id,
+      cookTime: detailsARecipe?.recipeId?.totalTime,
     });
   }, [detailsARecipe?.tempVersionInfo?.version]);
 
