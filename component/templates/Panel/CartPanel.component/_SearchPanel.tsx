@@ -10,14 +10,9 @@ import {
   EDIT_CART_ITEM,
 } from "../../../../graphql/Cart";
 import Publish from "../../../../helpers/Publish";
-import useHideOnClickOutside from "../../../../hooks/useHideOnClickOutside";
+import useHideOnClickOutside from "../../../../modules/app/hooks/interface/useHideOnClickOutside";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import {
-  addGrocery,
-  addStaple,
-  addPantry,
-  editCartIngredients,
-} from "../../../../redux/slices/Cart.slice";
+import { addGrocery, addStaple, addPantry, editCartIngredients } from "../../../../redux/slices/Cart.slice";
 import ButtonComponent from "../../../../theme/button/button.component";
 import IconButton from "../../../atoms/Button/IconButton.component";
 import Checkbox from "../../../organisms/Forms/Checkbox.component";
@@ -44,15 +39,7 @@ interface SearchPanelProps {
 }
 
 const SearchPanel = (props: SearchPanelProps) => {
-  const {
-    toggle,
-    openState,
-    modeState,
-    isStapleState,
-    methods,
-    isEditModeState,
-    selectedIngredientState,
-  } = props;
+  const { toggle, openState, modeState, isStapleState, methods, isEditModeState, selectedIngredientState } = props;
 
   const [open, setOpen] = openState;
   const [mode, setMode] = modeState;
@@ -216,9 +203,7 @@ const SearchPanel = (props: SearchPanelProps) => {
       <div className={styles.search__box}>
         <Textfield
           placeholder="Enter a Ingredient"
-          className={`${styles.search__input} ${
-            open ? styles["search__input--active"] : ""
-          }`}
+          className={`${styles.search__input} ${open ? styles["search__input--active"] : ""}`}
           value={query}
           onChange={searchHandler}
         />
@@ -239,37 +224,26 @@ const SearchPanel = (props: SearchPanelProps) => {
         )}
       </div>
       {open && (
-        <div
-          className={styles.search__panel}
-          style={{ overflow: mode === "quantity" ? "hidden" : "auto" }}
-        >
+        <div className={styles.search__panel} style={{ overflow: mode === "quantity" ? "hidden" : "auto" }}>
           {mode === "query" &&
             (searching ? (
-              <div
-                className="flex ai-center jc-center"
-                style={{ height: "19rem", overflow: "hidden" }}
-              >
+              <div className="flex ai-center jc-center" style={{ height: "19rem", overflow: "hidden" }}>
                 <CircularRotatingLoader />
               </div>
             ) : (
               <ul className={styles.search__list}>
-                {filteredIngredints?.searchBlendIngredientsForGrocery.map(
-                  (item) => (
-                    <li
-                      key={item.ingredientName}
-                      onClick={() => ingredientHandler(item)}
-                    >
-                      <Image
-                        src={item.featuredImage || "/food/Dandelion.png"}
-                        alt={item.ingredientName}
-                        layout="fixed"
-                        height={25}
-                        width={25}
-                      />
-                      <span className="ml-10">{item.ingredientName}</span>
-                    </li>
-                  ),
-                )}
+                {filteredIngredints?.searchBlendIngredientsForGrocery.map((item) => (
+                  <li key={item.ingredientName} onClick={() => ingredientHandler(item)}>
+                    <Image
+                      src={item.featuredImage || "/food/Dandelion.png"}
+                      alt={item.ingredientName}
+                      layout="fixed"
+                      height={25}
+                      width={25}
+                    />
+                    <span className="ml-10">{item.ingredientName}</span>
+                  </li>
+                ))}
               </ul>
             ))}
           {mode === "quantity" && (
@@ -278,18 +252,13 @@ const SearchPanel = (props: SearchPanelProps) => {
                 <div className="col-10">
                   <div className="flex ai-center mb-10">
                     <Image
-                      src={
-                        selectedIngredient.featuredImage ||
-                        "/food/Dandelion.png"
-                      }
+                      src={selectedIngredient.featuredImage || "/food/Dandelion.png"}
                       alt="Dandelion"
                       layout="fixed"
                       height={25}
                       width={25}
                     />
-                    <span className="ml-10">
-                      {selectedIngredient.ingredientName}
-                    </span>
+                    <span className="ml-10">{selectedIngredient.ingredientName}</span>
                   </div>
                 </div>
                 {!isEditMode && (
@@ -323,21 +292,13 @@ const SearchPanel = (props: SearchPanelProps) => {
               <FormProvider {...methods}>
                 <div className="row ai-center">
                   <div className="col-8">
-                    <Textfield
-                      placeholder="Ammount"
-                      name="ammount"
-                      disabled={isStaple}
-                    />
+                    <Textfield placeholder="Ammount" name="ammount" disabled={isStaple} />
                   </div>
                   <div className="col-4 ta-center">Quantity</div>
                 </div>
                 <div className="row ai-center">
                   <div className="col-8">
-                    <Combobox
-                      options={portionOptions}
-                      name="units"
-                      disabled={isStaple}
-                    />
+                    <Combobox options={portionOptions} name="units" disabled={isStaple} />
                   </div>
                   <div className="col-4 ta-center">Units</div>
                 </div>

@@ -5,7 +5,7 @@ import fuzzySearch from "components/utility/fuzzySearch";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/pro-light-svg-icons";
 import useDebounce from "customHooks/useDebounce";
-import useHideOnClickOutside from "hooks/useHideOnClickOutside";
+import useHideOnClickOutside from "@/app/hooks/interface/useHideOnClickOutside";
 type Option = { label: string; value: string; [key: string]: string };
 
 type showSuggestionProps = React.ComponentPropsWithRef<"div"> & {
@@ -29,10 +29,7 @@ const ShowSuggestion = ({
   const optionsList = useMemo(() => {
     let results: Option[] = [];
     list.filter((option) => {
-      const selected = fuzzySearch(
-        option?.value?.toLowerCase(),
-        inputDebounceValue?.toLowerCase(),
-      );
+      const selected = fuzzySearch(option?.value?.toLowerCase(), inputDebounceValue?.toLowerCase());
       if (selected !== "") results.push(option);
     });
 
@@ -60,10 +57,7 @@ const ShowSuggestion = ({
               closeSuggestionBox();
             }}
             dangerouslySetInnerHTML={{
-              __html: option?.label?.replace(
-                inputDebounceValue,
-                `<b>${inputDebounceValue}</b>`,
-              ),
+              __html: option?.label?.replace(inputDebounceValue, `<b>${inputDebounceValue}</b>`),
             }}
           />
         ))}

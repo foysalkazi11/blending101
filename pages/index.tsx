@@ -14,12 +14,13 @@ import { useAppSelector } from "../redux/hooks";
 import { updateSidebarActiveMenuName } from "../redux/slices/utilitySlice";
 import styles from "../styles/pages/home.module.scss";
 import useToUpdateFilterCriteria from "../customHooks/recipeFilter/useToUpdateRecipeFilterCriteria";
-import { useWidget } from "../hooks/modules/useWidget";
+import { useWidget } from "@/app/hooks/api/useWidget";
+
 import ContentTray from "../components/recipe/recipeDiscovery/ContentTray/ContentTray.component";
 import Link from "next/link";
 import CardComponent from "../theme/cards/card.component";
 import Theme from "../component/molecules/Theme/Theme.component";
-import { useThemeTemplate } from "../hooks/modules/useThemeMethod";
+import { useThemeTemplate } from "../modules/app/hooks/utils/useThemeMethod";
 import { useUser } from "../context/AuthProvider";
 import client from "../gqlLib/client";
 import { GET_WIDGET } from "../graphql/Widget";
@@ -149,7 +150,6 @@ const Home = (props: HomeProps) => {
       </div>
     </Fragment>
   );
-  ``;
 };
 
 export default Home;

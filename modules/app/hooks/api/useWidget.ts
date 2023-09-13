@@ -5,7 +5,7 @@ import {
   GET_RECIPE_WIDGET_COLLECTIONS,
   GET_WIDGET_COLLECTIONS,
   GET_WIDGET,
-} from "../../graphql/Widget";
+} from "graphql/Widget";
 
 export const useWidget = (widgetSlug: string) => {
   const { data } = useQuery(GET_WIDGET, {
@@ -27,10 +27,7 @@ export const useWidgetCollections = (widgetSlug: string) => {
   return data?.getWidgetCollections;
 };
 
-export const useRecipeCollections = (
-  widgetSlug: string,
-  collectionSlug: string,
-) => {
+export const useRecipeCollections = (widgetSlug: string, collectionSlug: string) => {
   const { data } = useQuery(GET_RECIPE_WIDGET_COLLECTIONS, {
     variables: {
       widgetSlug,

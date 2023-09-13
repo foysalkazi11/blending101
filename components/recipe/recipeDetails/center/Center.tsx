@@ -37,7 +37,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/pro-light-svg-icons";
 import { useUser } from "../../../../context/AuthProvider";
 import { ImageWithFallback } from "../../../../theme/imageWithFallback";
-import useExtension from "../../../../hooks/useExtension";
+import useExtension from "../../../../modules/app/hooks/utils/useExtension";
 
 interface center {
   recipeData: RecipeDetailsType;

@@ -18,7 +18,7 @@ import { setShowPostForm, resetForm, deleteIngredient, addIngredient } from "red
 import { setShowPanel } from "redux/slices/Ui.slice";
 import Upload from "component/organisms/Upload/Upload.component";
 
-import useImage from "hooks/useImage";
+import useImage from "@/app/hooks/utils/useImage";
 
 import useAddChallengePost from "@/challenge/hooks/posts/useAdd";
 import useEditChallengePost from "@/challenge/hooks/posts/useEdit";

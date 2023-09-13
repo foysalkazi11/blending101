@@ -6,7 +6,7 @@ import { type } from "os";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import ContentTray from "../../../components/recipe/recipeDiscovery/ContentTray/ContentTray.component";
 // import { GET_SLIDER_WIDGET } from "../../../graphql/Widget";
-import useThemeMethod from "../../../hooks/modules/useThemeMethod";
+import useThemeMethod from "../../../modules/app/hooks/utils/useThemeMethod";
 import styles from "./SliderWidget.module.scss";
 
 interface SliderWidgetProps {
@@ -28,19 +28,14 @@ const SliderWidget = (props: SliderWidgetProps) => {
     <Fragment>
       {widget &&
         widget?.widgetCollections?.map((collection: any) => (
-          <WidgetCollection
-            key={collection?._id}
-            widget={name}
-            collection={collection}
-          />
+          <WidgetCollection key={collection?._id} widget={name} collection={collection} />
         ))}
     </Fragment>
   );
 };
 
 const WidgetCollection = ({ widget, collection }) => {
-  const { data, filter, icon, themeLink, displayName, showTabMenu, slug } =
-    collection;
+  const { data, filter, icon, themeLink, displayName, showTabMenu, slug } = collection;
 
   const [tab, setTab] = useState("");
   const [html, setHtml] = useState("");

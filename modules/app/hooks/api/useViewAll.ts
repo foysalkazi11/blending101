@@ -1,10 +1,10 @@
 import { useLazyQuery } from "@apollo/client";
 import { faClock, faFire, faThumbsUp } from "@fortawesome/pro-light-svg-icons";
 import { useState, useEffect, useMemo } from "react";
-import GET_ALL_LATEST_RECIPES from "../../gqlLib/recipes/queries/getAllLatestRecipes";
-import GET_ALL_POPULAR_RECIPES from "../../gqlLib/recipes/queries/getAllPopularRecipes";
-import GET_ALL_RECOMMENDED_RECIPES from "../../gqlLib/recipes/queries/getRecommendedRecipes";
-import { useUser } from "../../context/AuthProvider";
+import GET_ALL_LATEST_RECIPES from "gqlLib/recipes/queries/getAllLatestRecipes";
+import GET_ALL_POPULAR_RECIPES from "gqlLib/recipes/queries/getAllPopularRecipes";
+import GET_ALL_RECOMMENDED_RECIPES from "gqlLib/recipes/queries/getRecommendedRecipes";
+import { useUser } from "context/AuthProvider";
 
 const useViewAll = (param: string, limit: number = 12, page: number = 1) => {
   const userId = useUser().id;
@@ -23,18 +23,9 @@ const useViewAll = (param: string, limit: number = 12, page: number = 1) => {
     [limit, page, userId],
   );
 
-  const [getAllRecommendedRecipes, getAllRecommendedRecipesData] = useLazyQuery(
-    GET_ALL_RECOMMENDED_RECIPES,
-    config,
-  );
-  const [getAllPopularRecipes, getAllPopularRecipesData] = useLazyQuery(
-    GET_ALL_POPULAR_RECIPES,
-    config,
-  );
-  const [getAllLatestRecipes, getAllLatestRecipesData] = useLazyQuery(
-    GET_ALL_LATEST_RECIPES,
-    config,
-  );
+  const [getAllRecommendedRecipes, getAllRecommendedRecipesData] = useLazyQuery(GET_ALL_RECOMMENDED_RECIPES, config);
+  const [getAllPopularRecipes, getAllPopularRecipesData] = useLazyQuery(GET_ALL_POPULAR_RECIPES, config);
+  const [getAllLatestRecipes, getAllLatestRecipesData] = useLazyQuery(GET_ALL_LATEST_RECIPES, config);
 
   const responseObj = useMemo(
     () => ({

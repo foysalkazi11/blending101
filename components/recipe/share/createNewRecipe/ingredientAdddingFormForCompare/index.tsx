@@ -9,7 +9,7 @@ import Combobox from "../../../../../component/organisms/Forms/Combobox.componen
 import IconButton from "../../../../../component/atoms/Button/IconButton.component";
 import { faSave, faTimes } from "@fortawesome/pro-regular-svg-icons";
 import styles from "./IngredientAddingFormForCompare.module.scss";
-import useHideOnClickOutside from "../../../../../hooks/useHideOnClickOutside";
+import useHideOnClickOutside from "../../../../../modules/app/hooks/interface/useHideOnClickOutside";
 
 interface IngredientEditProps {
   comment?: string;
@@ -53,9 +53,7 @@ const IngredientAddingFormForCompare = (
   const [portion, setPortion] = useState(defaultPortion);
   const [quantity, setQuantity] = useState<number | string>(defaultQuantity);
   const [showInputSuggestions, setShowInputSuggestions] = useState(false);
-  const hideOnClickOutsideRef = useHideOnClickOutside(() =>
-    setShowSuggestion(false),
-  );
+  const hideOnClickOutsideRef = useHideOnClickOutside(() => setShowSuggestion(false));
 
   const { data } = useQuery(GET_INGREDIENTS, {
     variables: { classType: "All" },
@@ -63,9 +61,7 @@ const IngredientAddingFormForCompare = (
 
   const editIngredientValue = React.useCallback(
     (info: IngredientEditProps) => {
-      const ingredientItem = data?.filterIngredientByCategoryAndClass.find(
-        (ing) => ing._id === info.ingredientId,
-      );
+      const ingredientItem = data?.filterIngredientByCategoryAndClass.find((ing) => ing._id === info.ingredientId);
 
       if (!ingredientItem) return;
       setIngredient(ingredientItem);
@@ -96,9 +92,7 @@ const IngredientAddingFormForCompare = (
   const ingredientList = useMemo(() => {
     let results = [];
     data?.filterIngredientByCategoryAndClass.forEach((ing) => {
-      const isAlreadySelected = ingredients.some(
-        (item) => item?.ingredientId === ing?._id,
-      );
+      const isAlreadySelected = ingredients.some((item) => item?.ingredientId === ing?._id);
       if (isAlreadySelected) return;
       const ingredient = fuzzySearch(ing?.ingredientName, query);
       if (ingredient !== "") results.push({ ...ing, name: ingredient });
@@ -110,9 +104,7 @@ const IngredientAddingFormForCompare = (
   }, [data?.filterIngredientByCategoryAndClass, query, ingredients]);
 
   const onPortionChange = (e) => {
-    const portion = ingredient.portions.find(
-      (portion) => portion.measurement === e.target.value,
-    );
+    const portion = ingredient.portions.find((portion) => portion.measurement === e.target.value);
     setPortion(portion);
   };
 
@@ -153,11 +145,7 @@ const IngredientAddingFormForCompare = (
             <div style={{ width: "100%", marginRight: "1rem" }}>
               <Combobox
                 placeholder="Unit"
-                options={
-                  ingredient?.portions?.map(
-                    (portion) => portion.measurement || portion.name,
-                  ) || []
-                }
+                options={ingredient?.portions?.map((portion) => portion.measurement || portion.name) || []}
                 name="Unit"
                 value={portion?.measurement}
                 required
@@ -244,11 +232,7 @@ const IngredientAddingFormForCompare = (
 // };
 export default React.forwardRef(IngredientAddingFormForCompare);
 
-const IngredientSuggestionsBox = ({
-  ingredientList,
-  addIngredintHandler,
-  query,
-}) => {
+const IngredientSuggestionsBox = ({ ingredientList, addIngredintHandler, query }) => {
   return (
     <div className={styles.ingredientSuggestionsBox}>
       <ul>

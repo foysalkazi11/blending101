@@ -11,7 +11,7 @@ import { useUser } from "context/AuthProvider";
 import { RECIPE_CATEGORY_COLOR } from "data/Recipe";
 import { UTCDate } from "helpers/Date";
 import Publish from "helpers/Publish";
-import useHideOnClickOutside from "hooks/useHideOnClickOutside";
+import useHideOnClickOutside from "@/app/hooks/interface/useHideOnClickOutside";
 import { useAppDispatch, useAppSelector } from "redux/hooks";
 import { setShowPostForm, setChallengePost } from "redux/slices/Challenge.slice";
 import { setShowPanel } from "redux/slices/Ui.slice";

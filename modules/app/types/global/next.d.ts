@@ -1,4 +1,4 @@
-import { NextPage } from "types/next";
+import { NextPage } from "@/app/types/global/next";
 import { ComponentType, ReactElement, ReactNode } from "react";
 
 export type Page<P = {}> = NextPage<P> & {

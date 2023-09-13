@@ -1,5 +1,5 @@
-import { useSession, useUser } from "../context/AuthProvider";
-import { useAppSelector } from "../redux/hooks";
+import { useSession, useUser } from "../../../../context/AuthProvider";
+import { useAppSelector } from "../../../../redux/hooks";
 
 const useExtension = () => {
   const session = useSession();
