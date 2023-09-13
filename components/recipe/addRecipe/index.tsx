@@ -176,6 +176,8 @@ const AddRecipePage = () => {
       },
       weightInGram: parseFloat(defaultPortion?.meausermentWeight),
       ingredientStatus: "ok",
+      originalIngredientName: ingredient?.originalIngredientName || ingredient?.ingredientName,
+      quantityString: ingredient?.quantityString || "1",
     };
 
     if (!present) {
@@ -283,21 +285,6 @@ const AddRecipePage = () => {
             setImages={setImages}
             giGl={giGl}
           />
-
-          {/* <Center_Elements
-            blendCategoryList={blendCategoriesData?.getAllCategories ? blendCategoriesData?.getAllCategories : []}
-            setDropDownState={setSelectedBlendValueState}
-            selectedBlendValueState={selectedBlendValueState}
-            setImages={setImages}
-            images={images}
-            setRecipeHeading={setRecipeHeading}
-            recipeDescription={recipeDescription}
-            setRecipeDescription={setRecipeDescription}
-            recipeTitle={recipeHeading}
-            recipePrepareTime={recipePrepareTime}
-            setRecipePrepareTime={setRecipePrepareTime}
-            giGl={giGl}
-          /> */}
 
           <IngredientSection
             adjusterFunc={adjusterServingSizeFunc}
