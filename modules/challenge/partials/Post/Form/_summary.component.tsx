@@ -1,7 +1,8 @@
 import { useLazyQuery } from "@apollo/client";
 import { useEffect, useMemo } from "react";
-import { GET_INGREDIENTS_RXFACT } from "../../../../graphql/Ingredients";
-import styles from "./Summary.module.scss";
+import { GET_INGREDIENTS_RXFACT } from "graphql/Ingredients";
+
+import styles from "./_summary.module.scss";
 
 const Summary = ({ ingredients }) => {
   const [getIngredientsFact, { data }] = useLazyQuery(GET_INGREDIENTS_RXFACT);
@@ -22,10 +23,7 @@ const Summary = ({ ingredients }) => {
     return {
       netCarbs: fact?.giGl?.netCarbs.toFixed(1) || 0,
       glycemicLoad: fact?.giGl?.totalGL.toFixed(1) || 0,
-      calories:
-        fact?.nutrients
-          ?.find((nutrient) => nutrient.name === "Calorie")
-          ?.value.toFixed(1) || 0,
+      calories: fact?.nutrients?.find((nutrient) => nutrient.name === "Calorie")?.value.toFixed(1) || 0,
     };
   }, [data]);
 

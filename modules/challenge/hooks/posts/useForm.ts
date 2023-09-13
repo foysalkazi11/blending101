@@ -15,26 +15,26 @@ const useChallengeForm = (setImages) => {
   });
   const {
     isEditMode,
-    title,
+    name,
     images: postImages,
     category,
     startDate,
-    notes,
+    note,
   } = useAppSelector((state) => state.challenge.post);
 
   useEffect(() => {
     // if (isEditMode && !initValueSet.current) {
     methods.reset({
-      recipeTitle: title,
+      recipeTitle: name,
       category,
       assignDate: startDate,
-      note: notes,
+      note: note,
     });
     setImages(postImages);
     initValueSet.current = true;
-    // }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [title, category, startDate, notes]);
+  }, [name, category, startDate, note]);
 
   const onReset = () => {
     methods.reset(defaultValues);

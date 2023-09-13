@@ -4,7 +4,7 @@ import { FormProvider } from "react-hook-form";
 import { faBasketShopping, faNotebook } from "@fortawesome/pro-regular-svg-icons";
 
 import Icon from "component/atoms/Icon/Icon.component";
-import Summary from "component/module/Challenge/Daily/Summary.component";
+import Summary from "@/challenge/partials/Post/Form/_summary.component";
 import DayPicker from "component/molecules/Date/Day.component";
 import Combobox from "component/organisms/Forms/Combobox.component";
 import Textarea from "component/organisms/Forms/Textarea.component";
@@ -20,10 +20,11 @@ import Upload from "component/organisms/Upload/Upload.component";
 
 import useImage from "hooks/useImage";
 
-import styles from "./Form.module.scss";
 import useAddChallengePost from "@/challenge/hooks/posts/useAdd";
 import useEditChallengePost from "@/challenge/hooks/posts/useEdit";
 import useChallengeForm from "@/challenge/hooks/posts/useForm";
+
+import styles from "./index.module.scss";
 
 const PostForm = forwardRef((props: any, ref) => {
   const { startDate, endDate, elementRef } = props;

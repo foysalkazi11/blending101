@@ -41,8 +41,7 @@ const IngredientPanel = (props: IngredientPanelProps) => {
                 const ingredientId = ingredient.ingredientId?._id || "";
                 const [fullNumber, fractionNumber] = ingredient?.quantityString?.split(" ") || ["", ""];
                 // const [fullNumber, fractionNumber] = decimalToMixedNumber(ingredient?.selectedPortion?.quantity);
-                const portions: IngredientPortion[] | Portions[] =
-                  ingredient?.ingredientId?.portions || ingredient?.portions;
+                const portions: IngredientPortion[] = ingredient?.ingredientId?.portions || ingredient?.portions;
                 if (ingredientId !== editingId) {
                   return (
                     <div className={styles.ingredient__content} key={ingredientId}>
@@ -116,7 +115,7 @@ const IngredientPanel = (props: IngredientPanelProps) => {
                         defaultQuery={ingredient?.ingredientId?.ingredientName}
                         defaultIngredient={ingredient?.ingredientId?.portions ? ingredient?.ingredientId : ingredient}
                         defaultPortion={portions?.find(
-                          (portion) => (portion as Portions)?.measurement === ingredient?.selectedPortion?.name,
+                          (portion: Portions) => portion?.measurement === ingredient?.selectedPortion?.name,
                         )}
                         defaultQuantity={ingredient?.selectedPortion?.quantity}
                         defaultComment={ingredient?.comment}

@@ -6,7 +6,7 @@ import { GetServerSideProps } from "next";
 
 import React, { Fragment, useMemo } from "react";
 import { useDispatch } from "react-redux";
-import Overview from "../component/module/Home/Overview.component";
+import Overview from "../modules/home/partials/Overview.component";
 import { PAGES } from "../components/sidebar/Sidebar.component";
 import { RECIPE_CATEGORY_COLOR } from "../data/Recipe";
 import { GET_BLEND_TYPES } from "../graphql/Recipe";
@@ -24,8 +24,7 @@ import { useUser } from "../context/AuthProvider";
 import client from "../gqlLib/client";
 import { GET_WIDGET } from "../graphql/Widget";
 
-const defaultBlendImg =
-  "https://blending.s3.us-east-1.amazonaws.com/3383678.jpg";
+const defaultBlendImg = "https://blending.s3.us-east-1.amazonaws.com/3383678.jpg";
 
 interface HomeProps {
   widget: any;
@@ -119,15 +118,10 @@ const Home = (props: HomeProps) => {
               <div className={styles.alert__content}>
                 <h3>Hello {displayName}!</h3>
                 <p>
-                  You have current blending score is{" "}
-                  <span className="bold text-green">85%</span>. Did you know
-                  people who log their meals daily lose twice as weight as those
-                  who don&apos;t? Check out &quot;
-                  <span className="text-orange bold">
-                    Food Logging like a Pro!
-                  </span>
-                  &quot;. It could help take your blending score to the next
-                  level.
+                  You have current blending score is <span className="bold text-green">85%</span>. Did you know people
+                  who log their meals daily lose twice as weight as those who don&apos;t? Check out &quot;
+                  <span className="text-orange bold">Food Logging like a Pro!</span>
+                  &quot;. It could help take your blending score to the next level.
                 </p>
               </div>
               <div className={styles.alert__image}>
@@ -182,26 +176,14 @@ const EntitySlider = ({ collection, methods }) => {
   return (
     <div className="mt-40">
       <Head>
-        <link
-          crossOrigin=""
-          rel="stylesheet"
-          type="text/css"
-          href={theme?.style}
-        />
+        <link crossOrigin="" rel="stylesheet" type="text/css" href={theme?.style} />
       </Head>
-      <ContentTray
-        heading={displayName}
-        image="/images/clock-light.svg"
-        allUrl={`/${slug}`}
-      >
+      <ContentTray heading={displayName} image="/images/clock-light.svg" allUrl={`/${slug}`}>
         {data[data?.collectionType]?.map((item) => {
           return (
             <div id={`blend${theme?._id}`} key={item?._id}>
               <div style={{ paddingRight: "1rem" }}>
-                <Link
-                  href={getDetailURL(data?.collectionType, item?._id)}
-                  style={{ color: "initial" }}
-                >
+                <Link href={getDetailURL(data?.collectionType, item?._id)} style={{ color: "initial" }}>
                   <Theme template={template} data={item} methods={methods} />
                 </Link>
               </div>
@@ -213,9 +195,7 @@ const EntitySlider = ({ collection, methods }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps<HomeProps> = async (
-  context,
-) => {
+export const getServerSideProps: GetServerSideProps<HomeProps> = async (context) => {
   const { data } = await client.query({
     query: GET_WIDGET,
     variables: {

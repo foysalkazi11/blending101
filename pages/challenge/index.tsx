@@ -4,9 +4,9 @@ import { faGear, faShare, faToolbox, faPlusCircle, faTimes } from "@fortawesome/
 
 import RXPanel from "../../component/templates/Panel/RXFacts/RXPanel.component";
 import Statistics from "../../modules/challenge/partials/Statistics/Statistics.component";
-import PostList from "@/challenge/partials/Post/List.component";
-import PostForm from "@/challenge/partials/Post/Form.component";
-import Challenge from "../../component/module/Challenge/Achievement/index.component";
+import PostList from "@/challenge/partials/Post/List";
+import PostForm from "@/challenge/partials/Post/Form";
+import Challenge from "../../modules/challenge/partials/Progress";
 import Settings from "@/challenge/partials/Settings";
 import IconButton from "../../component/atoms/Button/IconButton.component";
 import Icon from "../../component/atoms/Icon/Icon.component";

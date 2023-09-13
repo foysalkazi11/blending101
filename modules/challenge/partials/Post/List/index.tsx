@@ -18,7 +18,7 @@ import { setShowPanel } from "redux/slices/Ui.slice";
 import SplitImageCard from "theme/card/splitImageCard/splitImageCard.component";
 import IconHeading from "theme/iconHeading/iconHeading.component";
 
-import styles from "./List.module.scss";
+import styles from "./index.module.scss";
 
 import { ChallengeDay, ChallengePost } from "@/app/types/challenge.types";
 

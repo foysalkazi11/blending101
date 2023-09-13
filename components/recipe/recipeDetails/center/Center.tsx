@@ -23,7 +23,7 @@ import {
   setShouldCloseVersionTrayWhenClickAVersion,
 } from "../../../../redux/slices/versionTraySlice";
 import { VscVersions } from "react-icons/vsc";
-import IngredientDetails from "../../../../component/module/Recipe/Ingredient-Details.module";
+import IngredientDetails from "@/recipe/partials/Details/Ingredient.component";
 import { RecipeDetailsType } from "../../../../type/recipeDetailsType";
 import { GiGl } from "../../../../type/nutrationType";
 import ShareRecipe from "./shareRecipe";
@@ -74,13 +74,10 @@ const Center = ({
   const handleOpenCollectionTray = useForOpenCollectionTray();
   const handleOpenCommentsTray = useForOpenCommentsTray();
   const handleSelectCommentsAndNotesIcon = useForSelectCommentsAndNotesIcon();
-  const { lastModifiedCollection } = useAppSelector(
-    (state) => state?.collections,
-  );
+  const { lastModifiedCollection } = useAppSelector((state) => state?.collections);
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
   const userId = useUser().id;
-  const { functionAcceptRecipeShare, acceptRecipeShareLoading } =
-    useToAcceptRecipeShare();
+  const { functionAcceptRecipeShare, acceptRecipeShareLoading } = useToAcceptRecipeShare();
   const authData = useExtension();
 
   // read more functionality
@@ -95,11 +92,7 @@ const Center = ({
         <p className={styles.text}>
           {isReadMore ? text.slice(0, 300) : text},
           <span onClick={toggleReadMore} className={styles.read_or_hide}>
-            {isReadMore ? (
-              <span>&nbsp; {"Read More"}</span>
-            ) : (
-              <span>&nbsp; {"Read Less"}</span>
-            )}
+            {isReadMore ? <span>&nbsp; {"Read More"}</span> : <span>&nbsp; {"Read Less"}</span>}
           </span>
         </p>
       );
@@ -130,18 +123,9 @@ const Center = ({
   const openCommentsTray = (e) => {
     const title = recipeData?.recipeId?.name;
     const recipeId = recipeData?.recipeId?._id;
-    const defaultImage = recipeData?.recipeId?.image?.find(
-      (img) => img?.default,
-    )?.image;
+    const defaultImage = recipeData?.recipeId?.image?.find((img) => img?.default)?.image;
 
-    handleOpenCommentsTray(
-      recipeId,
-      title,
-      defaultImage,
-      e,
-      updateCollection,
-      detailsARecipe?.personalRating,
-    );
+    handleOpenCommentsTray(recipeId, title, defaultImage, e, updateCollection, detailsARecipe?.personalRating);
   };
 
   const hangleShowCommentsAndNotesIcon = () => {
@@ -149,22 +133,13 @@ const Center = ({
     const comments = recipeData?.recipeId?.numberOfRating;
     const title = recipeData?.recipeId?.name;
     const recipeId = recipeData?.recipeId?._id;
-    const defaultImage = recipeData?.recipeId?.image?.find(
-      (img) => img?.default,
-    )?.image;
+    const defaultImage = recipeData?.recipeId?.image?.find((img) => img?.default)?.image;
     const commentsAndNotes = handleSelectCommentsAndNotesIcon(comments, notes);
     return (
       <IconWithText
         wraperStyle={{ marginRight: "16px", cursor: "pointer" }}
         handleClick={(e) =>
-          handleOpenCommentsTray(
-            recipeId,
-            title,
-            defaultImage,
-            e,
-            updateCollection,
-            detailsARecipe?.personalRating,
-          )
+          handleOpenCommentsTray(recipeId, title, defaultImage, e, updateCollection, detailsARecipe?.personalRating)
         }
         icon={`/icons/${commentsAndNotes?.icon}.svg`}
         text={commentsAndNotes?.amount}
@@ -214,12 +189,7 @@ const Center = ({
     updateCollectionFunction,
   ) => {
     recipeDataLength
-      ? handleOpenCollectionTray(
-          recipeId,
-          userCollections,
-          event,
-          updateCollectionFunction,
-        )
+      ? handleOpenCollectionTray(recipeId, userCollections, event, updateCollectionFunction)
       : addToCollection(recipeId, event);
   };
 
@@ -241,13 +211,7 @@ const Center = ({
             recipeId: recipeData?.recipeId?._id,
           })
         }
-        editOrSavebtnText={
-          token
-            ? acceptRecipeShareLoading
-              ? "Loading..."
-              : "Add to Collection"
-            : "Edit"
-        }
+        editOrSavebtnText={token ? (acceptRecipeShareLoading ? "Loading..." : "Add to Collection") : "Edit"}
         pageComeFrom={pageComeFrom}
         // loading={acceptRecipeShareLoading}
         backBtnObj={{
@@ -267,21 +231,15 @@ const Center = ({
             </span> */}
           </h3>
           {recipeData?.recipeId?.averageRating ? (
-            <span
-              className={styles.ratingBox}
-              onClick={(e) => openCommentsTray(e)}
-            >
+            <span className={styles.ratingBox} onClick={(e) => openCommentsTray(e)}>
               <img src="/images/rating.svg" alt="" />
-              {Math.round(recipeData.recipeId?.averageRating)} (
-              {recipeData?.recipeId?.numberOfRating})
+              {Math.round(recipeData.recipeId?.averageRating)} ({recipeData?.recipeId?.numberOfRating})
             </span>
           ) : null}
         </div>
         <div className={styles.subMenu}>
           <div className={styles.alignItems}>
-            <div className={styles.recipeType}>
-              {recipeData?.recipeId?.recipeBlendCategory?.name}
-            </div>
+            <div className={styles.recipeType}>{recipeData?.recipeId?.recipeBlendCategory?.name}</div>
 
             <div className={styles.recipeBrand__left}>
               <Tooltip
@@ -310,11 +268,8 @@ const Center = ({
                             id: recipeData?.recipeId?._id,
                             name: recipeData?.recipeId?.name,
                             image:
-                              recipeData?.recipeId?.originalVersion
-                                ?.selectedImage ||
-                              recipeData?.recipeId?.image?.find(
-                                (img) => img?.default,
-                              )?.image ||
+                              recipeData?.recipeId?.originalVersion?.selectedImage ||
+                              recipeData?.recipeId?.image?.find((img) => img?.default)?.image ||
                               recipeData?.recipeId?.image?.[0]?.image,
                             origin: recipeData?.recipeId?.url || "#",
                           },
@@ -335,20 +290,13 @@ const Center = ({
                   >
                     <ImageWithFallback
                       className={styles.brand}
-                      src={
-                        `${recipeData?.recipeId?.brand?.brandImage}` ||
-                        "/icons/delish.png"
-                      }
+                      src={`${recipeData?.recipeId?.brand?.brandImage}` || "/icons/delish.png"}
                       fallbackSrc="/logo_small.svg"
                       alt="brand"
                     />
                   </a>
                 ) : recipeData?.recipeId?.userId?.image ? (
-                  <img
-                    className={styles.user}
-                    src={recipeData?.recipeId?.userId?.image}
-                    alt="brand"
-                  />
+                  <img className={styles.user} src={recipeData?.recipeId?.userId?.image} alt="brand" />
                 ) : (
                   <div className={styles.userIcon}>
                     <FontAwesomeIcon icon={faUser} />
@@ -397,9 +345,7 @@ const Center = ({
                   )
                 }
                 icon={
-                  recipeData?.userCollections?.length
-                    ? "/icons/compare.svg"
-                    : "/images/BookmarksStar.svg" //"/images/BookmarksStar-orange.svg"
+                  recipeData?.userCollections?.length ? "/icons/compare.svg" : "/images/BookmarksStar.svg" //"/images/BookmarksStar-orange.svg"
                 }
                 text="Saved"
               />
@@ -446,9 +392,7 @@ const Center = ({
           )}
         </div>
         <div>
-          <ReadMore>
-            {recipeData?.tempVersionInfo?.version?.description}
-          </ReadMore>
+          <ReadMore>{recipeData?.tempVersionInfo?.version?.description}</ReadMore>
         </div>
         <div className={styles.infoContainer}>
           <div className={styles.infoBox}>
@@ -474,22 +418,13 @@ const Center = ({
         setIngredientId={setIngredientId}
         setNutritionState={setNutritionState}
       />
-      <HowTo
-        recipeInstructions={
-          recipeData?.tempVersionInfo?.version?.recipeInstructions
-        }
-      />
+      <HowTo recipeInstructions={recipeData?.tempVersionInfo?.version?.recipeInstructions} />
       <Modal open={openModal} setOpen={setOpenModal}>
         {showCollectionModal ? (
           <SaveRecipe
             title={lastModifiedCollection?.name}
             handleChange={(e) =>
-              handleOpenCollectionTray(
-                recipeData?.recipeId?._id,
-                recipeData?.userCollections,
-                e,
-                updateCollection,
-              )
+              handleOpenCollectionTray(recipeData?.recipeId?._id, recipeData?.userCollections, e, updateCollection)
             }
           />
         ) : (
@@ -499,17 +434,9 @@ const Center = ({
       <ShareRecipe
         id={recipeData?.recipeId?._id}
         versionId={recipeData.tempVersionInfo?.version?._id}
-        title={
-          recipeData?.defaultVersion?.postfixTitle || recipeData?.recipeId?.name
-        }
-        image={
-          recipeData?.recipeId?.image?.length > 0
-            ? recipeData?.recipeId?.image[0]?.image
-            : ""
-        }
-        turnedOnVersions={recipeData?.turnedOnVersions?.map(
-          (version) => version?._id,
-        )}
+        title={recipeData?.defaultVersion?.postfixTitle || recipeData?.recipeId?.name}
+        image={recipeData?.recipeId?.image?.length > 0 ? recipeData?.recipeId?.image[0]?.image : ""}
+        turnedOnVersions={recipeData?.turnedOnVersions?.map((version) => version?._id)}
         show={showShareModal}
         setShow={setShowShareModal}
         type="recipe"

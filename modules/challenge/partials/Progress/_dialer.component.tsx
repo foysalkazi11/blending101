@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import { faCalendarDay } from "@fortawesome/pro-light-svg-icons";
 import { differenceInDays, format, isAfter, isToday } from "date-fns";
 
-import Icon from "../../../atoms/Icon/Icon.component";
+import Icon from "../../../../component/atoms/Icon/Icon.component";
 import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
 import { setChallengeDate, setChallengePost, setShowPostForm } from "../../../../redux/slices/Challenge.slice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
