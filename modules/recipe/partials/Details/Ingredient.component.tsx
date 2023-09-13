@@ -149,9 +149,12 @@ const IngredientDetails = (props: IngredientDetailsProps) => {
 
                 {isIngredientStatusOk ? (
                   <div>
-                    {`${(ingredient?.selectedPortion?.quantity * counter).toFixed(2).replace(/\.?0+$/, "")}
-                  ${ingredient.selectedPortion?.name} `}
+                    {`${ingredient?.quantityString} ${ingredient.selectedPortion?.name} `}
+                    {/* {`${(ingredient?.selectedPortion?.quantity * counter).toFixed(2).replace(/\.?0+$/, "")}
+                  ${ingredient.selectedPortion?.name} `} */}
 
+                    {/* <Tooltip direction="top" content={ingredient?.originalIngredientName || "Ingredient name"}>
+                      </Tooltip> */}
                     <span
                       className={`${styles.leftSide__highlighted} ${
                         ingredient?.ingredientId?._id === nutritionState?.ingredientId?._id && "activeColorPrimary"
@@ -162,7 +165,7 @@ const IngredientDetails = (props: IngredientDetailsProps) => {
                         );
                       }}
                     >
-                      {ingredient?.ingredientId?.ingredientName}
+                      {ingredient?.originalIngredientName || ingredient?.ingredientId?.ingredientName}
                     </span>
                     {ingredient?.comment && <span>{`, ${ingredient?.comment}`}</span>}
                   </div>
