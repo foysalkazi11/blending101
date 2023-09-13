@@ -1,6 +1,6 @@
 import React from "react";
 import { useMutation } from "@apollo/client";
-import { ADD_GROCERY_ITEM, DELETE_CART_ITEM } from "graphql/Cart";
+import { ADD_GROCERY_ITEM, DELETE_CART_ITEM } from "@/app/graphql/Cart";
 import { useAppDispatch, useAppSelector } from "redux/hooks";
 import { deleteCartIngredients } from "redux/slices/Cart.slice";
 import Publish from "helpers/Publish";

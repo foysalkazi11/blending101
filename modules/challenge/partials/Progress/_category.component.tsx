@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { RECIPE_CATEGORY_COLOR } from "data/Recipe";
-import { GET_CATEGORY_FOR_COMBOBOX } from "graphql/Recipe";
+import { GET_CATEGORY_FOR_COMBOBOX } from "@/app/graphql/Recipe";
 
 import styles from "./_category.module.scss";
 

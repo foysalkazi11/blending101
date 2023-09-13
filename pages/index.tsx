@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 import Overview from "../modules/home/partials/Overview.component";
 import { PAGES } from "../components/sidebar/Sidebar.component";
 import { RECIPE_CATEGORY_COLOR } from "../data/Recipe";
-import { GET_BLEND_TYPES } from "../graphql/Recipe";
+import { GET_BLEND_TYPES } from "../modules/app/graphql/Recipe";
 import { useAppSelector } from "../redux/hooks";
 import { updateSidebarActiveMenuName } from "../redux/slices/utilitySlice";
 import styles from "../styles/pages/home.module.scss";
@@ -23,7 +23,7 @@ import Theme from "../component/molecules/Theme/Theme.component";
 import { useThemeTemplate } from "../modules/app/hooks/utils/useThemeMethod";
 import { useUser } from "../context/AuthProvider";
 import client from "../gqlLib/client";
-import { GET_WIDGET } from "../graphql/Widget";
+import { GET_WIDGET } from "../modules/app/graphql/Widget";
 
 const defaultBlendImg = "https://blending.s3.us-east-1.amazonaws.com/3383678.jpg";
 

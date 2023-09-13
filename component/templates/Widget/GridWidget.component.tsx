@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import React from "react";
-import { GET_GRID_WIDGET } from "../../../graphql/Widget";
+import { GET_GRID_WIDGET } from "../../../modules/app/graphql/Widget";
 import styles from "./GridWidget.module.scss";
 
 interface GridWidgetProps {
@@ -22,11 +22,7 @@ const GridWidget: React.FC<GridWidgetProps> = (props) => {
     <div className="row">
       {widget &&
         widget?.widgetCollections?.map((item) =>
-          elements ? (
-            elements(item)
-          ) : (
-            <p>WIDGET - NO FRONTEND THEME - {item.displayName}</p>
-          ),
+          elements ? elements(item) : <p>WIDGET - NO FRONTEND THEME - {item.displayName}</p>,
         )}
     </div>
   );

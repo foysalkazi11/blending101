@@ -11,7 +11,7 @@ import Textarea from "component/organisms/Forms/Textarea.component";
 import Textfield from "component/organisms/Forms/Textfield.component";
 import IngredientPanel from "component/templates/Ingredient/Ingredient.component";
 import { useUser } from "context/AuthProvider";
-import { GET_CATEGORY_FOR_COMBOBOX } from "graphql/Recipe";
+import { GET_CATEGORY_FOR_COMBOBOX } from "@/app/graphql/Recipe";
 import Publish from "helpers/Publish";
 import { useAppDispatch, useAppSelector } from "redux/hooks";
 import { setShowPostForm, resetForm, deleteIngredient, addIngredient } from "redux/slices/Challenge.slice";

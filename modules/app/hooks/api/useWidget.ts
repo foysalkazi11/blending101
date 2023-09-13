@@ -5,7 +5,7 @@ import {
   GET_RECIPE_WIDGET_COLLECTIONS,
   GET_WIDGET_COLLECTIONS,
   GET_WIDGET,
-} from "graphql/Widget";
+} from "@/app/graphql/Widget";
 
 export const useWidget = (widgetSlug: string) => {
   const { data } = useQuery(GET_WIDGET, {

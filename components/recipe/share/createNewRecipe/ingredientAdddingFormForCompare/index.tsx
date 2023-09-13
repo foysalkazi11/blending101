@@ -2,7 +2,7 @@ import React from "react";
 import { useQuery } from "@apollo/client";
 import { useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { GET_INGREDIENTS } from "../../../../../graphql/Ingredients";
+import { GET_INGREDIENTS } from "../../../../../modules/app/graphql/Ingredients";
 import fuzzySearch from "../../../../utility/fuzzySearch";
 import Textfield from "../../../../../component/organisms/Forms/Textfield.component";
 import Combobox from "../../../../../component/organisms/Forms/Combobox.component";

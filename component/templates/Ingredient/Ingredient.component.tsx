@@ -3,7 +3,7 @@ import { faCircleInfo, faChartSimple, faPen, faTrash, faSave, faTimes } from "@f
 import { useState, useMemo } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import fuzzySearch from "../../../components/utility/fuzzySearch";
-import { GET_INGREDIENTS } from "../../../graphql/Ingredients";
+import { GET_INGREDIENTS } from "../../../modules/app/graphql/Ingredients";
 import ButtonComponent from "../../../theme/button/button.component";
 import IconButton from "../../atoms/Button/IconButton.component";
 import Icon from "../../atoms/Icon/Icon.component";

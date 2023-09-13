@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { useUser } from "context/AuthProvider";
-import { ADD_TO_GROCERY_BY_RECIPE } from "graphql/Cart";
-import { GET_CATEGORY_FOR_COMBOBOX } from "graphql/Recipe";
+import { ADD_TO_GROCERY_BY_RECIPE } from "@/app/graphql/Cart";
+import { GET_CATEGORY_FOR_COMBOBOX } from "@/app/graphql/Recipe";
 import Publish from "helpers/Publish";
 import { useCallback, useMemo } from "react";
 import { RecipeCategory } from "../recipe.types";

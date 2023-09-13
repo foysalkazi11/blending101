@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import { useQuery } from "@apollo/client";
-import { GET_WIDGET_TYPE } from "../../../graphql/Widget";
+import { GET_WIDGET_TYPE } from "../../../modules/app/graphql/Widget";
 import GridWidget from "./GridWidget.component";
 import SliderWidget from "./SliderWidget.component";
 
@@ -17,8 +17,7 @@ const Widget = (props: WidgetProps) => {
     },
     skip: !slug,
   });
-  if (data?.getWidgetTypeBySlug === "Grid")
-    return <GridWidget name={slug} elements={elements} />;
+  if (data?.getWidgetTypeBySlug === "Grid") return <GridWidget name={slug} elements={elements} />;
   else return <SliderWidget name={slug} column={column} />;
 };
 

@@ -1,6 +1,6 @@
 import { useLazyQuery } from "@apollo/client";
 import { useEffect, useMemo } from "react";
-import { GET_INGREDIENTS_RXFACT } from "graphql/Ingredients";
+import { GET_INGREDIENTS_RXFACT } from "@/app/graphql/Ingredients";
 
 import styles from "./_summary.module.scss";
 
