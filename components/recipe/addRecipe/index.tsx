@@ -1,8 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import styles from "../share/recipePageLayout/recipePageLayout.module.scss";
-import Center_Elements from "./recipe_elements/centerElements.component";
-import { useAppDispatch } from "../../../redux/hooks";
 import imageUploadS3 from "../../utility/imageUploadS3";
 import { BLEND_CATEGORY } from "../../../gqlLib/recipes/queries/getEditRecipe";
 import { useMutation, useQuery } from "@apollo/client";
@@ -23,18 +21,32 @@ import { GiGl } from "../../../type/nutrationType";
 import { useUser } from "../../../context/AuthProvider";
 import IngredientSection from "../share/IngredientSection";
 import InstructionsForMakingRecipe from "../share/howToSection";
+import CenterSection from "../share/centerSection";
+import { FormProvider, useForm } from "react-hook-form";
+import { RecipeEditDefaultValuesType } from "type/recipeEditType";
+
+const defaultValues: RecipeEditDefaultValuesType = {
+  recipeTitle: "",
+  recipeDescription: "",
+  blendType: "",
+  blenderName: "",
+  blendManufacturer: "",
+  oz: "",
+  cookTime: "",
+  servings: 0,
+};
 
 const AddRecipePage = () => {
   const [images, setImages] = useState<any[]>([]);
-  const [selectedBlendValueState, setSelectedBlendValueState] = useState("61cafc34e1f3e015e7936587");
-  const [recipeHeading, setRecipeHeading] = useState("");
+  // const [selectedBlendValueState, setSelectedBlendValueState] = useState("61cafc34e1f3e015e7936587");
+  // const [recipeHeading, setRecipeHeading] = useState("");
   const [selectedIngredientsList, setSelectedIngredientsList] = useState([]);
   const [calculateIngOz, SetCalculateIngOz] = useState(null);
   const [nutritionState, setNutritionState] = useState(null);
   const [servingSize, setServingSize] = useState(1);
   const [howToState, setHowToSteps] = useState([]);
-  const [recipeDescription, setRecipeDescription] = useState("");
-  const [recipePrepareTime, setRecipePrepareTime] = useState(1);
+  // const [recipeDescription, setRecipeDescription] = useState("");
+  // const [recipePrepareTime, setRecipePrepareTime] = useState(1);
   const [createNewRecipeByUser] = useMutation(CREATE_A_RECIPE_BY_USER);
   const isMounted = useRef(false);
   const router = useRouter();
@@ -47,8 +59,11 @@ const AddRecipePage = () => {
     loading: nutritionDataLoading,
     data: nutritionData,
   } = useGetBlendNutritionBasedOnRecipexxx();
+  const { data: blendCategoriesData } = useQuery(BLEND_CATEGORY);
 
-  const { loading: blendCategoriesInProgress, data: blendCategoriesData } = useQuery(BLEND_CATEGORY);
+  const methods = useForm({
+    defaultValues,
+  });
 
   // center
 
@@ -62,8 +77,8 @@ const AddRecipePage = () => {
 
   // submit data for add recipe
 
-  const handleSubmitData = async () => {
-    if (recipeHeading && selectedIngredientsList?.length) {
+  const handleSubmitData = async (data: RecipeEditDefaultValuesType) => {
+    if (selectedIngredientsList?.length) {
       setLoading(true);
       let ingArr = [];
       selectedIngredientsList?.forEach((item) => {
@@ -73,6 +88,9 @@ const AddRecipePage = () => {
             ingredientId: item?._id,
             selectedPortionName: value?.measurement,
             weightInGram: Number(value?.meausermentWeight),
+            originalIngredientName: item?.originalIngredientName,
+            quantityString: item?.quantityString,
+            comment: item?.comment || null,
           });
         }
       });
@@ -80,13 +98,14 @@ const AddRecipePage = () => {
 
       let obj = {
         userId: user.id,
-        name: recipeHeading,
-        description: recipeDescription,
-        recipeBlendCategory: selectedBlendValueState,
+        name: data?.recipeTitle,
+        description: data?.recipeDescription,
+        recipeBlendCategory: data?.blendType,
         ingredients: ingArr,
         servingSize: calculateIngOz,
         servings: servingSize,
         recipeInstructions: howToArr,
+        totalTime: data?.cookTime,
       };
 
       try {
@@ -221,7 +240,7 @@ const AddRecipePage = () => {
   const giGl: GiGl = nutritionData?.getNutrientsListAndGiGlByIngredients?.giGl;
 
   return (
-    <React.Fragment>
+    <FormProvider {...methods}>
       {width < 1280 ? (
         <TrayWrapper
           isolated={true}
@@ -250,11 +269,22 @@ const AddRecipePage = () => {
             backBtnObj={{
               function: () => router.push("/"),
             }}
-            editOrSavebtnFunc={handleSubmitData}
+            editOrSavebtnFunc={methods.handleSubmit(handleSubmitData)}
             editOrSavebtnText="Save"
             loading={loading}
           />
-          <Center_Elements
+
+          <CenterSection
+            allBlendCategories={blendCategoriesData?.getAllCategories?.map((category) => ({
+              name: category?.name,
+              value: category?._id,
+            }))}
+            images={images}
+            setImages={setImages}
+            giGl={giGl}
+          />
+
+          {/* <Center_Elements
             blendCategoryList={blendCategoriesData?.getAllCategories ? blendCategoriesData?.getAllCategories : []}
             setDropDownState={setSelectedBlendValueState}
             selectedBlendValueState={selectedBlendValueState}
@@ -267,7 +297,7 @@ const AddRecipePage = () => {
             recipePrepareTime={recipePrepareTime}
             setRecipePrepareTime={setRecipePrepareTime}
             giGl={giGl}
-          />
+          /> */}
 
           <IngredientSection
             adjusterFunc={adjusterServingSizeFunc}
@@ -303,7 +333,7 @@ const AddRecipePage = () => {
           />
         </div>
       </div>
-    </React.Fragment>
+    </FormProvider>
   );
 };
 export default AddRecipePage;

@@ -149,6 +149,7 @@ export default function FilterbottomComponent({
               value: cat.value,
             }))}
             onChange={(e) => setDpd(e?.target?.value)}
+            border="borderSecondary"
           />
         </div>
         {toggle === 0 ? (

@@ -8,9 +8,7 @@ import styles from "./NoteForm.module.scss";
 type NoteFormProps = {
   toggleNoteForm: () => void;
   noteForm: { title: string; body: string };
-  updateNoteForm: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => void;
+  updateNoteForm: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   createOrUpdateNote: () => void;
   variant?: "notes" | "versions";
   addNewItemLoading?: boolean;
@@ -32,7 +30,7 @@ const NoteForm = ({
         value={noteForm?.title}
         onChange={updateNoteForm}
         placeholder={`${variant} title`}
-        borderSecondary={true}
+        border="borderSecondary"
         style={{ fontSize: "12px", marginBottom: "10px", borderRadius: "10px" }}
       />
       <TextArea
@@ -48,23 +46,10 @@ const NoteForm = ({
           type="submitBtn"
           submitBtnVarient="solidSecondary"
           style={{ boxShadow: "5px 5px 15px #e5e6e4" }}
-          text={
-            addNewItemLoading ? (
-              <CircularRotatingLoader
-                color="white"
-                style={{ fontSize: "16px" }}
-              />
-            ) : (
-              "Save"
-            )
-          }
+          text={addNewItemLoading ? <CircularRotatingLoader color="white" style={{ fontSize: "16px" }} /> : "Save"}
           handleClick={createOrUpdateNote}
         />
-        <CommentAndNoteButton
-          type="cancleBtn"
-          text="Cancel"
-          handleClick={toggleNoteForm}
-        />
+        <CommentAndNoteButton type="cancleBtn" text="Cancel" handleClick={toggleNoteForm} />
       </div>
     </div>
   );
