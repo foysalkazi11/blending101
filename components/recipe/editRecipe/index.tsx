@@ -105,7 +105,6 @@ const EditRecipePage = ({
     let blendz = [];
     if (!present) {
       const defaultPortion = ingredient?.portions?.find((ing) => ing?.default) || ingredient?.portions?.[0];
-
       const newIngredient = {
         ...ingredient,
         ingredientId: {
@@ -121,6 +120,8 @@ const EditRecipePage = ({
         },
         weightInGram: parseFloat(defaultPortion?.meausermentWeight),
         ingredientStatus: "ok",
+        originalIngredientName: ingredient?.ingredientName,
+        quantityString: "1",
       };
       blendz = [...selectedIngredientsList, newIngredient];
     } else {
