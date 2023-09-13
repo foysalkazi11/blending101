@@ -31,7 +31,7 @@ export function decimalToMixedNumber(decimal) {
   }
 }
 
-function mixedNumberToDecimal(mixedNumber) {
+export function mixedNumberToDecimal(mixedNumber) {
   // Split the mixed number into its parts (integer, numerator, denominator)
   const parts = mixedNumber.split(" ");
 

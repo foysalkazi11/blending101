@@ -6,8 +6,8 @@ import { UserDataType } from "..";
 import ShowSuggestion from "theme/showSuggestion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/pro-light-svg-icons";
-import optionsForTimeZone from "./staticData/timezones.json";
-import optionsForBlender from "./staticData/blender.json";
+import optionsForTimeZone from "../../../../data/timezones.json";
+import optionsForBlender from "../../../../data/blender.json";
 
 const optionsListForTimeZone = Object.entries(JSON.parse(JSON.stringify(optionsForTimeZone))).map(
   ([timezone, offset]: [string, string]) => {

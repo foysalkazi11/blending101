@@ -6,7 +6,7 @@
 
 import { useMutation } from "@apollo/client";
 import { useUser } from "context/AuthProvider";
-import { ADD_TO_GROCERY_BY_PLAN } from "graphql/Cart";
+import { ADD_TO_GROCERY_BY_PLAN } from "@/app/graphql/Cart";
 import Publish from "helpers/Publish";
 import { useCallback } from "react";
 

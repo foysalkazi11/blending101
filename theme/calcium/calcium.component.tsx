@@ -62,7 +62,12 @@ const CalciumSearchElem = ({
 
   return (
     <div className={styles.calciumMg}>
-      <Dropdown value={dropDownState} listElem={list} onChange={(e) => setDropDownState(e?.target?.value)} />
+      <Dropdown
+        value={dropDownState}
+        listElem={list}
+        onChange={(e) => setDropDownState(e?.target?.value)}
+        border="borderSecondary"
+      />
 
       <div className={styles.calciumIcon}>
         <div>

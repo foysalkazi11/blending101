@@ -3,10 +3,10 @@ import { useQuery } from "@apollo/client";
 import { faGear, faShare, faToolbox, faPlusCircle, faTimes } from "@fortawesome/pro-light-svg-icons";
 
 import RXPanel from "../../component/templates/Panel/RXFacts/RXPanel.component";
-import Statistics from "../../component/module/Challenge/Statistics.component";
-import PostList from "@/challenge/partials/Post/List.component";
-import PostForm from "@/challenge/partials/Post/Form.component";
-import Challenge from "../../component/module/Challenge/Achievement/index.component";
+import Statistics from "../../modules/challenge/partials/Statistics/Statistics.component";
+import PostList from "@/challenge/partials/Post/List";
+import PostForm from "@/challenge/partials/Post/Form";
+import Challenge from "../../modules/challenge/partials/Progress";
 import Settings from "@/challenge/partials/Settings";
 import IconButton from "../../component/atoms/Button/IconButton.component";
 import Icon from "../../component/atoms/Icon/Icon.component";
@@ -237,7 +237,6 @@ interface RecipeActionProps {
 }
 const RecipeAction = ({ recipe }: RecipeActionProps) => {
   const dispatch = useAppDispatch();
-  console.log(recipe);
   return (
     <Icon
       fontName={faPlusCircle}

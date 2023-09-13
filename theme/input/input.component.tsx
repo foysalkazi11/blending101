@@ -11,11 +11,11 @@ type InputComponentProps = React.ComponentPropsWithRef<"input"> & {
   name?: string;
   min?: number;
   max?: number;
-  borderSecondary?: boolean;
   inputWithIcon?: boolean;
   icon?: ReactNode | string;
   label?: string;
   validationObj?: InputValidationObjType;
+  border?: "borderPrimary" | "borderSecondary";
 };
 
 function InputComponent(
@@ -27,11 +27,11 @@ function InputComponent(
     name = "",
     min = 0,
     max,
-    borderSecondary = false,
     inputWithIcon = false,
     icon,
     label = "",
     validationObj = {},
+    border = "borderPrimary",
     ...InputProps
   }: InputComponentProps,
   ref,
@@ -46,7 +46,7 @@ function InputComponent(
     return (
       <>
         {label && <label className={styles.label}>{label}</label>}
-        <div className={`${styles.inputWithIcon} ${borderSecondary ? styles.borderSecondary : null}`}>
+        <div className={`${styles.inputWithIcon} ${styles[border]}`}>
           <input
             name={name}
             className={`${styles.input} `}
@@ -81,7 +81,7 @@ function InputComponent(
       <div style={{ position: "relative" }}>
         <input
           name={name}
-          className={`${styles.input} ${borderSecondary ? styles.borderSecondary : null}`}
+          className={`${styles.input} ${styles[border]}`}
           type={type}
           style={style}
           onChange={handleChange}

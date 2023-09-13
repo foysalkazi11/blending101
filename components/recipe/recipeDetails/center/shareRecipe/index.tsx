@@ -1,9 +1,7 @@
 import { useMutation } from "@apollo/client";
 import React, { useState } from "react";
-import Share, {
-  SharedUserInfoType,
-} from "../../../../../component/organisms/Share/Distribute.component";
-import { CREATE_SHARE_LINK } from "../../../../../graphql/Share";
+import Share, { SharedUserInfoType } from "../../../../../component/organisms/Share/Distribute.component";
+import { CREATE_SHARE_LINK } from "../../../../../modules/app/graphql/Share";
 import { useAppSelector } from "../../../../../redux/hooks";
 import notification from "../../../../utility/reactToastifyNotification";
 import { useUser } from "../../../../../context/AuthProvider";
@@ -31,8 +29,7 @@ const ShareRecipe = ({
   heading = "",
   turnedOnVersions = [],
 }: Props) => {
-  const [createShareLink, { data, loading: createLinkLoading }] =
-    useMutation(CREATE_SHARE_LINK);
+  const [createShareLink, { data, loading: createLinkLoading }] = useMutation(CREATE_SHARE_LINK);
   const [hasCopied, setHasCopied] = useState(false);
   const [showMsgField, setShowMsgField] = useState(false);
   const [link, setLink] = useState("");
@@ -54,9 +51,7 @@ const ShareRecipe = ({
     navigator.clipboard.writeText(link);
     notification(
       "success",
-      isGlobalShare
-        ? "Link copied to your clipboard"
-        : "Recipe shared successfully and link copied to your clipboard",
+      isGlobalShare ? "Link copied to your clipboard" : "Recipe shared successfully and link copied to your clipboard",
     );
     setHasCopied(true);
     setShowMsgField(false);
@@ -79,9 +74,7 @@ const ShareRecipe = ({
         },
       });
       let link = `${
-        process.env.NODE_ENV === "production"
-          ? process.env.NEXT_PUBLIC_HOSTING_DOMAIN
-          : "http://localhost:4000"
+        process.env.NODE_ENV === "production" ? process.env.NEXT_PUBLIC_HOSTING_DOMAIN : "http://localhost:4000"
       }/recipe/recipe_details/${id}?token=${response.data?.createShareLink}`;
       setLink(link);
       return link;

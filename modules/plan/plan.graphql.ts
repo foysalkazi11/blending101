@@ -40,6 +40,7 @@ const PLANNER_RECIPE_LIST_FIELDS = gql`
               meausermentWeight
             }
           }
+          quantityString
           selectedPortion {
             name
             quantity

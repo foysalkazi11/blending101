@@ -6,7 +6,7 @@ import IconHeading from "theme/iconHeading/iconHeading.component";
 
 import styles from "./Insights.module.scss";
 import { useQuery } from "@apollo/client";
-import { GET_CATEGORY_FOR_COMBOBOX } from "graphql/Recipe";
+import { GET_CATEGORY_FOR_COMBOBOX } from "@/app/graphql/Recipe";
 import { RECIPE_CATEGORY_COLOR } from "data/Recipe";
 import TopIngredients from "component/molecules/Charts/TopIngredients.component";
 import MacroMakeup, { IMacroData } from "component/molecules/Charts/MacroMakeup.component";

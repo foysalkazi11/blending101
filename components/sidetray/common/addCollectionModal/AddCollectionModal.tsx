@@ -32,9 +32,7 @@ const AddCollectionModal = ({
   isAddOrUpdateCollectionLoading = false,
   openModal = false,
 }: AddCollectionModalProps) => {
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e?.target;
     if (type === "file") {
       // @ts-ignore
@@ -107,7 +105,7 @@ const AddCollectionModal = ({
       </div> */}
         <div className={styles.rightSide}>
           <InputComponent
-            borderSecondary={true}
+            border="borderSecondary"
             placeholder="Collection Name"
             value={input?.name}
             name="name"
@@ -127,19 +125,9 @@ const AddCollectionModal = ({
               type="submitBtn"
               style={{ marginRight: "30px" }}
               handleClick={handleToAddOrUpdateCollection}
-              text={
-                isAddOrUpdateCollectionLoading ? (
-                  <CircularRotatingLoader color="white" />
-                ) : (
-                  "Submit"
-                )
-              }
+              text={isAddOrUpdateCollectionLoading ? <CircularRotatingLoader color="white" /> : "Submit"}
             />
-            <CommentAndNoteButton
-              type="cancleBtn"
-              handleClick={() => setOpenModal(false)}
-              text="Cancel"
-            />
+            <CommentAndNoteButton type="cancleBtn" handleClick={() => setOpenModal(false)} text="Cancel" />
           </div>
         </div>
       </div>

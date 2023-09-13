@@ -1,13 +1,6 @@
 import React, { useRef, useEffect, useState, Fragment, useMemo } from "react";
 import Image from "next/image";
-import {
-  FaChevronLeft,
-  FaEdit,
-  FaEllipsisH,
-  FaPen,
-  FaPlus,
-  FaRegTrashAlt,
-} from "react-icons/fa";
+import { FaChevronLeft, FaEdit, FaEllipsisH, FaPen, FaPlus, FaRegTrashAlt } from "react-icons/fa";
 import IconButton from "../../../atoms/Button/IconButton.component";
 import Textfield from "../../../organisms/Forms/Textfield.component";
 import ToggleMenu from "../../../organisms/Tabmenu/ToggleMenu.component";
@@ -23,7 +16,7 @@ import {
   DELETE_CART_ITEM,
   GET_CART_DATA,
   SEARCH_INGREDIENTS_FOR_GROCERY,
-} from "../../../../graphql/Cart";
+} from "../../../../modules/app/graphql/Cart";
 import {
   addGroceries,
   addGrocery,
@@ -37,12 +30,7 @@ import SearchPanel, { defaultGrocery } from "./_SearchPanel";
 import ItemList from "./_ItemList";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faListCheck,
-  faBagShopping,
-  faCartShopping,
-  faTrashCan,
-} from "@fortawesome/free-solid-svg-icons";
+import { faListCheck, faBagShopping, faCartShopping, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { faRefrigerator } from "@fortawesome/pro-solid-svg-icons";
 import TrayWrapper from "../../../../components/sidetray/TrayWrapper";
 import TrayTag from "../../../../components/sidetray/TrayTag";
@@ -67,13 +55,7 @@ function CartPanel({ showPanle, showTagByDefaut }: CartPanelProps) {
       closeTray={handleClick}
       openTray={open}
       showPanel={showPanle}
-      panelTag={(hover) => (
-        <TrayTag
-          icon={<FontAwesomeIcon icon={faCartShopping} />}
-          placeMent="left"
-          hover={hover}
-        />
-      )}
+      panelTag={(hover) => <TrayTag icon={<FontAwesomeIcon icon={faCartShopping} />} placeMent="left" hover={hover} />}
     >
       <div>
         <ToggleMenu
@@ -104,9 +86,7 @@ const GroceryPanel = () => {
 
   const dispatch = useAppDispatch();
   const userId = useUser().id;
-  const { groceries, pantries, staples } = useAppSelector(
-    (state) => state.cart,
-  );
+  const { groceries, pantries, staples } = useAppSelector((state) => state.cart);
 
   const methods = useForm({
     defaultValues: useMemo(() => defaultGrocery, []),
@@ -199,19 +179,11 @@ const GroceryPanel = () => {
   }, [data, dispatch]);
 
   const items = useMemo(
-    () =>
-      toggle === 1
-        ? Array.isArray(groceries)
-          ? groceries
-          : []
-        : Array.isArray(pantries)
-        ? pantries
-        : [],
+    () => (toggle === 1 ? (Array.isArray(groceries) ? groceries : []) : Array.isArray(pantries) ? pantries : []),
     [groceries, pantries, toggle],
   );
 
-  const hasBatchDelete =
-    toggle === 1 ? checkedGroceries.length > 0 : checkedPantries.length > 0;
+  const hasBatchDelete = toggle === 1 ? checkedGroceries.length > 0 : checkedPantries.length > 0;
 
   return (
     <Fragment>

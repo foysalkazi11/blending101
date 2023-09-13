@@ -1,12 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, {
-  Dispatch,
-  SetStateAction,
-  forwardRef,
-  useCallback,
-  useMemo,
-  useState,
-} from "react";
+import React, { Dispatch, SetStateAction, forwardRef, useCallback, useMemo, useState } from "react";
 import styles from "./dataCard.module.scss";
 import { useRouter } from "next/router";
 import useChangeCompare from "../../../customHooks/useChangeComaper";
@@ -17,10 +10,7 @@ import useForOpenCommentsTray from "../../../customHooks/useForOpenCommentsTray"
 import useForSelectCommentsAndNotesIcon from "../../../customHooks/useForSelectCommentsAndNotesIcon";
 import IconWarper from "../../iconWarper/IconWarper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faEllipsisVertical,
-  faStarSharp,
-} from "@fortawesome/pro-solid-svg-icons";
+import { faEllipsisVertical, faStarSharp } from "@fortawesome/pro-solid-svg-icons";
 import { faUser } from "@fortawesome/pro-light-svg-icons";
 import Tooltip from "../../toolTip/CustomToolTip";
 import {
@@ -40,7 +30,7 @@ import useTurnedOnOrOffVersion from "../../../customHooks/useTurnedOnOrOffVersio
 import CircularRotatingLoader from "../../loader/circularRotatingLoader.component";
 import isEmptyObj from "../../../helperFunc/object/isEmptyObj";
 import { AccessPermission } from "../../../type/recipeCardType";
-import useExtension from "../../../hooks/useExtension";
+import useExtension from "../../../modules/app/hooks/utils/useExtension";
 import { useUser } from "../../../context/AuthProvider";
 import { ImageWithFallback } from "../../imageWithFallback";
 import { useRecipeToGrocery } from "@/recipe/hooks";
@@ -90,10 +80,7 @@ interface dataCardInterface {
   updateDataFunc?: ReferenceOfRecipeUpdateFuncType;
   versionHandler?: (recipeId: string, version?: VersionDataType) => void;
 
-  updateDataAfterChangeDefaultVersion?: (
-    versionId: string,
-    returnObj: { [key: string]: any },
-  ) => void;
+  updateDataAfterChangeDefaultVersion?: (versionId: string, returnObj: { [key: string]: any }) => void;
   isVersionSharable?: boolean;
   defaultVersion?: VersionDataType;
   brand?: RecipeBrandType;
@@ -145,25 +132,15 @@ export default function DatacardComponent({
   origin = "#",
   turnedOnVersions = [],
   interactionPermissions = ["all"],
-  viewPermissions = [
-    "title",
-    "moreMenu",
-    "brand",
-    "version",
-    "compare",
-    "collection",
-    "comments&Notes",
-  ],
+  viewPermissions = ["title", "moreMenu", "brand", "version", "compare", "collection", "comments&Notes"],
 }: dataCardInterface) {
   carbs = Math.round(carbs);
   score = Math.round(score);
   calorie = Math.round(calorie);
   ratings = Math.ceil(ratings);
   const router = useRouter();
-  const { handleChangeCompare, loading: changeCompareLoading } =
-    useChangeCompare();
-  const { addToCollection, loading: addToCollectionLoading } =
-    useForAddToCollection();
+  const { handleChangeCompare, loading: changeCompareLoading } = useChangeCompare();
+  const { addToCollection, loading: addToCollectionLoading } = useForAddToCollection();
   const handleOpenCollectionTray = useForOpenCollectionTray();
   const handleOpenCommentsTray = useForOpenCommentsTray();
   const selectCommentsAndNotesIcon = useForSelectCommentsAndNotesIcon();
@@ -186,9 +163,7 @@ export default function DatacardComponent({
   // View Permission
   const hasViewPermission = useCallback(
     (permission: AccessPermission): boolean => {
-      return (
-        viewPermissions.includes(permission) || viewPermissions.includes("all")
-      );
+      return viewPermissions.includes(permission) || viewPermissions.includes("all");
     },
     [viewPermissions],
   );
@@ -196,22 +171,13 @@ export default function DatacardComponent({
   // interact permission
   const hasInteractionPermission = useCallback(
     (permission: AccessPermission): boolean => {
-      return (
-        interactionPermissions.includes(permission) ||
-        interactionPermissions.includes("all")
-      );
+      return interactionPermissions.includes(permission) || interactionPermissions.includes("all");
     },
     [interactionPermissions],
   );
 
   // open share recipe modal
-  const handleOpenShareRecipeModal = (
-    id,
-    name,
-    image,
-    versionId,
-    turnedOnVersions,
-  ) => {
+  const handleOpenShareRecipeModal = (id, name, image, versionId, turnedOnVersions) => {
     setShareRecipeData({ id, image, name, versionId, turnedOnVersions });
     setOpenShareModal(true);
   };
@@ -226,15 +192,9 @@ export default function DatacardComponent({
         isMatch ? true : false,
         isVersionSharable ? false : true,
       );
-      updateDataAfterChangeDefaultVersion(
-        defaultVersionId,
-        changeDefaultVersionReturnObj,
-      );
+      updateDataAfterChangeDefaultVersion(defaultVersionId, changeDefaultVersionReturnObj);
     } else {
-      notification(
-        "warning",
-        "Not allow to make default version as shearing is off !!!",
-      );
+      notification("warning", "Not allow to make default version as shearing is off !!!");
     }
   };
 
@@ -278,17 +238,7 @@ export default function DatacardComponent({
   ) => (
     <div className={styles.floating__menu}>
       <ul>
-        <li
-          onClick={() =>
-            handleOpenShareRecipeModal(
-              id,
-              name,
-              image,
-              defaultVersionId,
-              turnedOnVersions,
-            )
-          }
-        >
+        <li onClick={() => handleOpenShareRecipeModal(id, name, image, defaultVersionId, turnedOnVersions)}>
           <img src="/icons/share.png" alt="square" />
         </li>
         <li onClick={() => router.push(`/recipe/edit_recipe/${recipeId}`)}>
@@ -318,20 +268,11 @@ export default function DatacardComponent({
             alt="icon"
             onClick={(e) => {
               if (hasInteractionPermission("comments&Notes")) {
-                handleOpenCommentsTray(
-                  recipeId,
-                  title,
-                  image,
-                  e,
-                  updateDataFunc,
-                  personalRating,
-                );
+                handleOpenCommentsTray(recipeId, title, image, e, updateDataFunc, personalRating);
               }
             }}
           />{" "}
-          <span style={{ color: res?.amount ? "#7cbc39" : "#c4c4c4" }}>
-            {res?.amount}
-          </span>
+          <span style={{ color: res?.amount ? "#7cbc39" : "#c4c4c4" }}>{res?.amount}</span>
         </div>
       </Tooltip>
     );
@@ -346,11 +287,7 @@ export default function DatacardComponent({
               onClick={(e) => {
                 if (hasInteractionPermission("title")) {
                   e?.stopPropagation();
-                  router.push(
-                    `/recipe/recipe_details/${recipeId}/${
-                      token ? "?token=" + token : ""
-                    } `,
-                  );
+                  router.push(`/recipe/recipe_details/${recipeId}/${token ? "?token=" + token : ""} `);
                 }
               }}
             >
@@ -359,18 +296,12 @@ export default function DatacardComponent({
           </div>
           <div className={styles.menu}>
             {showMoreMenu && (
-              <div
-                style={{ visibility: isHover ? "visible" : "hidden" }}
-                ref={hoverRefMoreMenu}
-              >
+              <div style={{ visibility: isHover ? "visible" : "hidden" }} ref={hoverRefMoreMenu}>
                 {customMenu
                   ? customMenu
                   : hasViewPermission("moreMenu") && (
                       <div style={{ position: "relative" }}>
-                        <IconWarper
-                          hover="bgSlightGray"
-                          style={{ width: "30px", height: "30px" }}
-                        >
+                        <IconWarper hover="bgSlightGray" style={{ width: "30px", height: "30px" }}>
                           <FontAwesomeIcon icon={faEllipsisVertical} />
                         </IconWarper>
                         {hasInteractionPermission("moreMenu") &&
@@ -400,11 +331,7 @@ export default function DatacardComponent({
             />
             {isImageOverlay ? (
               <div className={styles.imageOverlay}>
-                <img
-                  src="/images/black-add.svg"
-                  alt="add icon"
-                  onClick={() => imageOverlayFunc(image)}
-                />
+                <img src="/images/black-add.svg" alt="add icon" onClick={() => imageOverlayFunc(image)} />
               </div>
             ) : null}
           </div>
@@ -427,10 +354,7 @@ export default function DatacardComponent({
               content={
                 !isEmptyObj(brand || {})
                   ? brand?.brandName || "Brand"
-                  : userId?.displayName ||
-                    `${userId?.lastName}` ||
-                    `${userId?.firstName}` ||
-                    "User name"
+                  : userId?.displayName || `${userId?.lastName}` || `${userId?.firstName}` || "User name"
               }
               direction="right"
             >
@@ -487,10 +411,7 @@ export default function DatacardComponent({
               {hasViewPermission("version") && (
                 <li>
                   {recipeVersion ? (
-                    <Tooltip
-                      direction="left"
-                      content={`Versions(${recipeVersion})`}
-                    >
+                    <Tooltip direction="left" content={`Versions(${recipeVersion})`}>
                       <FontAwesomeIcon
                         icon={faRectangleVerticalHistory}
                         color="#7cbc39"
@@ -498,9 +419,7 @@ export default function DatacardComponent({
                           if (hasInteractionPermission("version")) {
                             versionHandler
                               ? versionHandler(recipeId)
-                              : router.push(
-                                  `/recipe/versionCompare/${recipeId}`,
-                                );
+                              : router.push(`/recipe/versionCompare/${recipeId}`);
                           }
                         }}
                       />
@@ -515,11 +434,7 @@ export default function DatacardComponent({
                       <CircularRotatingLoader color="secondary" />
                     ) : (
                       <img
-                        src={
-                          addedToCompare
-                            ? "/icons/compare-1.svg"
-                            : "/icons/eclipse.svg"
-                        }
+                        src={addedToCompare ? "/icons/compare-1.svg" : "/icons/eclipse.svg"}
                         alt="icon"
                         onClick={(e) => {
                           if (hasInteractionPermission("compare")) {
@@ -544,27 +459,13 @@ export default function DatacardComponent({
                       <CircularRotatingLoader color="primary" />
                     ) : (
                       <img
-                        src={
-                          isCollectionIds?.length
-                            ? "/icons/compare.svg"
-                            : "/images/BookmarksStar.svg"
-                        }
+                        src={isCollectionIds?.length ? "/icons/compare.svg" : "/images/BookmarksStar.svg"}
                         alt="compare"
                         onClick={(e) => {
                           if (hasInteractionPermission("collection")) {
                             isCollectionIds?.length
-                              ? handleOpenCollectionTray(
-                                  recipeId,
-                                  isCollectionIds,
-                                  e,
-                                  updateDataFunc,
-                                )
-                              : addToCollection(
-                                  recipeId,
-                                  setOpenCollectionModal,
-                                  e,
-                                  updateDataFunc,
-                                );
+                              ? handleOpenCollectionTray(recipeId, isCollectionIds, e, updateDataFunc)
+                              : addToCollection(recipeId, setOpenCollectionModal, e, updateDataFunc);
                           }
                         }}
                       />
@@ -575,10 +476,7 @@ export default function DatacardComponent({
 
               {hasViewPermission("star") && (
                 <li>
-                  <Tooltip
-                    content={`${isMatch ? "Default" : "Make default"}`}
-                    direction="left"
-                  >
+                  <Tooltip content={`${isMatch ? "Default" : "Make default"}`} direction="left">
                     {changeDefaultVersionLoading ? (
                       <CircularRotatingLoader color="primary" />
                     ) : (
@@ -589,31 +487,20 @@ export default function DatacardComponent({
                           }
                         }}
                         icon={faStarSharp}
-                        className={`${styles.star} ${
-                          isMatch ? styles.on : styles.off
-                        }`}
+                        className={`${styles.star} ${isMatch ? styles.on : styles.off}`}
                       />
                     )}
                   </Tooltip>
                 </li>
               )}
               {hasViewPermission("comments&Notes") && (
-                <li>
-                  {handleShowCommentsAndNotesIcon(
-                    noOfComments,
-                    notes,
-                    updateDataFunc,
-                  )}
-                </li>
+                <li>{handleShowCommentsAndNotesIcon(noOfComments, notes, updateDataFunc)}</li>
               )}
             </ul>
           </div>
           {showCalendar === recipeId && (
             <div className={styles.calender__tray}>
-              <CalendarTray
-                handler={(date) => addToMyPlan(recipeId, date)}
-                onClose={() => setShowCalendar("")}
-              />
+              <CalendarTray handler={(date) => addToMyPlan(recipeId, date)} onClose={() => setShowCalendar("")} />
             </div>
           )}
         </div>

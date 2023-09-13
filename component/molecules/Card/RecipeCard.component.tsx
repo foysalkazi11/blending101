@@ -1,11 +1,11 @@
 import React, { Children, useRef } from "react";
 import { useRouter } from "next/router";
 import styles from "./RecipeCard.module.scss";
-import { IPostIngredient } from "../../../redux/slices/Challenge.slice";
+import { IngredientWithPortion } from "@/app/types/ingredient.types";
 
 interface RecipeProps {
   title?: string;
-  ingredients?: IPostIngredient[];
+  ingredients?: IngredientWithPortion[];
   category?: string;
   ratings?: number;
   noOfRatings?: number;
