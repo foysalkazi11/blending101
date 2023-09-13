@@ -88,6 +88,9 @@ const AddRecipePage = () => {
             ingredientId: item?._id,
             selectedPortionName: value?.measurement,
             weightInGram: Number(value?.meausermentWeight),
+            originalIngredientName: item?.originalIngredientName,
+            quantityString: item?.quantityString,
+            comment: item?.comment || null,
           });
         }
       });

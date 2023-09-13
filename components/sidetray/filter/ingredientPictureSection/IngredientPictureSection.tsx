@@ -1,13 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { Dispatch, SetStateAction } from "react";
 import InputComponent from "../../../../theme/input/input.component";
-import { faMagnifyingGlass } from "@fortawesome/pro-solid-svg-icons";
 import styles from "../filter.module.scss";
 import CheckCircle from "../../../../public/icons/check_circle_black_24dp.svg";
 import SkeletonBlendType from "../../../../theme/skeletons/skeletonBlendType/SkeletonBlendType";
 import useWindowSize from "../../../utility/useWindowSize";
 import { FilterCriteriaValue } from "../../../../type/filterType";
-import { ImageWithFallback, NextImageWithFallback } from "../../../../theme/imageWithFallback";
+import { NextImageWithFallback } from "../../../../theme/imageWithFallback";
+import { faMagnifyingGlass } from "@fortawesome/pro-light-svg-icons";
 
 interface Props {
   searchInput?: string;
@@ -44,13 +44,8 @@ const IngredientPictureSection = ({
       {ingredientCategory === "All" && (
         <InputComponent
           border="borderSecondary"
-          style={{
-            padding: "10px",
-            fontSize: "12px",
-            borderRadius: "10px",
-          }}
           inputWithIcon={true}
-          icon={<FontAwesomeIcon icon={faMagnifyingGlass} fontSize="16" />}
+          icon={<FontAwesomeIcon icon={faMagnifyingGlass} size="sm" />}
           placeholder="Search ingredient"
           value={searchInput}
           onChange={(e) => setSearchInput(e?.target?.value)}
