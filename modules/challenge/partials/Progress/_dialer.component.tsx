@@ -9,7 +9,7 @@ import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
 import { setChallengeDate, setChallengePost, setShowPostForm } from "../../../../redux/slices/Challenge.slice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 
-import styles from "./_Dialer.module.scss";
+import styles from "./_dialer.module.scss";
 import "react-datepicker/dist/react-datepicker.css";
 import { UTCDate } from "../../../../helpers/Date";
 
