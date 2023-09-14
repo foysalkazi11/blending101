@@ -13,6 +13,7 @@ type showSuggestionProps = React.ComponentPropsWithRef<"div"> & {
   handleClickList?: (value: Option) => void;
   placeholder?: string;
   closeSuggestionBox?: () => void;
+  border?: "borderPrimary" | "borderSecondary";
 };
 const ShowSuggestion = ({
   list = [],
@@ -20,6 +21,7 @@ const ShowSuggestion = ({
   placeholder = "Search...",
   closeSuggestionBox = () => {},
   ref = null,
+  border = "borderPrimary",
   ...rest
 }: showSuggestionProps) => {
   const [input, setInput] = useState("");
@@ -47,6 +49,7 @@ const ShowSuggestion = ({
         placeholder={placeholder}
         icon={<FontAwesomeIcon icon={faMagnifyingGlass} size="sm" />}
         ref={ref}
+        border={border}
       />
       <ul>
         {optionsList?.map((option, index) => (

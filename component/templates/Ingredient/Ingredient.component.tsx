@@ -66,7 +66,7 @@ const IngredientPanel = (props: IngredientPanelProps) => {
                           {/* {fullNumber === 0 ? fractionNumber : fullNumber}
                           {fullNumber !== 0 && <sup>{fractionNumber}</sup>} {ingredient?.selectedPortion?.name} */}
                         </span>
-                        <span>{ingredient.ingredientId.ingredientName}</span>
+                        <span>{ingredient?.originalIngredientName || ingredient.ingredientId.ingredientName}</span>
                       </div>
                       <div className={styles.ingredient__actions}>
                         <a
@@ -117,7 +117,7 @@ const IngredientPanel = (props: IngredientPanelProps) => {
                         defaultPortion={portions?.find(
                           (portion: Portions) => portion?.measurement === ingredient?.selectedPortion?.name,
                         )}
-                        defaultQuantity={ingredient?.selectedPortion?.quantity}
+                        defaultQuantity={ingredient?.quantityString || ingredient?.selectedPortion?.quantity}
                         defaultComment={ingredient?.comment}
                         onSave={onSave}
                         onClose={() => setEditingId("")}
@@ -168,7 +168,7 @@ interface IngredientFormProps {
   ingredients: any[];
   defaultIngredient?: any;
   defaultPortion?: any;
-  defaultQuantity?: number;
+  defaultQuantity?: number | string;
   defaultComment?: string;
   onSave?: any;
   onClose?: any;

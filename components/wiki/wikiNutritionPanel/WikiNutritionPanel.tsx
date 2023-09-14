@@ -118,7 +118,7 @@ const WikiNutritionPanel = ({
       </div>
       <div className={s.dropdown}>
         <InputComponent
-          borderSecondary={true}
+          border="borderSecondary"
           style={{ padding: "10px", fontSize: "12px", borderRadius: "10px" }}
           inputWithIcon={true}
           icon={<FontAwesomeIcon icon={faMagnifyingGlass} fontSize="16" />}

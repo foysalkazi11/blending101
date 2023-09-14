@@ -76,4 +76,5 @@ export interface IngredientWithPortion {
   portions?: IngredientPortion[];
   comment?: string;
   errorString?: string;
+  originalIngredientName?: string;
 }

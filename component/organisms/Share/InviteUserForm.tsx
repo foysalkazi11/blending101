@@ -184,7 +184,7 @@ const InviteUserForm = ({
       {showCreateCollectionComponents && (
         <div style={{ margin: "10px 0" }}>
           <InputComponent
-            borderSecondary={true}
+            border="borderSecondary"
             placeholder="Collection Name"
             value={createCollectionInput?.name}
             name="name"

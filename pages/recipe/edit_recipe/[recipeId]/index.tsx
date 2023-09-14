@@ -29,24 +29,17 @@ import useToUpdateAfterEditVersion from "../../../../customHooks/useToUpdateAfte
 import { VersionAddDataType } from "../../../../type/versionAddDataType";
 import { useUser } from "../../../../context/AuthProvider";
 import { FormProvider, useForm } from "react-hook-form";
-type DefaultValuesType = {
-  recipeTitle: string;
-  recipeDescription: string;
-  blendType: string;
-  blenderName: string;
-  blendManufacturer: string;
-  oz: string;
-  cookTime: number;
-  servings: number;
-};
-const defaultValues: DefaultValuesType = {
+import { RecipeEditDefaultValuesType } from "type/recipeEditType";
+import { useToArrangeIngredientBeforeSave } from "components/recipe/share/useToArrangeIngredient";
+
+const defaultValues: RecipeEditDefaultValuesType = {
   recipeTitle: "",
   recipeDescription: "",
   blendType: "",
   blenderName: "",
   blendManufacturer: "",
   oz: "",
-  cookTime: 0,
+  cookTime: "",
   servings: 0,
 };
 
@@ -79,6 +72,7 @@ const EditRecipeComponent = () => {
   const { data: allBlendCategory } = useQuery(BLEND_CATEGORY);
   const [editRecipe, { loading: editARecipeLoading }] = useMutation(EDIT_A_RECIPE);
   const { handleToGetARecipe } = useToGetARecipe();
+  const arrangeIngredientBeforeSave = useToArrangeIngredientBeforeSave();
   const methods = useForm({
     defaultValues,
   });
@@ -165,21 +159,10 @@ const EditRecipeComponent = () => {
 
   // edit a recipe version including original version and original recipe
 
-  const editARecipeFunction = async (data: DefaultValuesType) => {
-    let ingArr = [];
+  const editARecipeFunction = async (data: RecipeEditDefaultValuesType) => {
+    let ingArr = arrangeIngredientBeforeSave(selectedIngredientsList);
     let errorIngredients = [];
     selectedIngredientsList.forEach((item) => {
-      if (item?.ingredientStatus === "ok") {
-        let value = item?.portions?.find((item) => item.default);
-        ingArr?.push({
-          ingredientId: item?._id,
-          selectedPortionName: item?.selectedPortion?.name || value?.measurement,
-          weightInGram: item?.weightInGram ? Number(item?.weightInGram) : Number(value?.meausermentWeight),
-          comment: item?.comment || null,
-          originalIngredientName: item?.originalIngredientName,
-          quantityString: item?.quantityString,
-        });
-      }
       if (item?.ingredientStatus === "partial_ok") {
         const { errorString = "", ingredientId = null, errorIngredientId = "", qaId = "" } = item;
         errorIngredients.push({
@@ -318,6 +301,7 @@ const EditRecipeComponent = () => {
       recipeTitle: detailsARecipe?.tempVersionInfo?.version.postfixTitle,
       recipeDescription: detailsARecipe?.tempVersionInfo?.version.description,
       blendType: detailsARecipe?.recipeId?.recipeBlendCategory?._id,
+      cookTime: detailsARecipe?.recipeId?.totalTime,
     });
   }, [detailsARecipe?.tempVersionInfo?.version]);
 
