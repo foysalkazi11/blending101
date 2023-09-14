@@ -9,16 +9,13 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { useMutation } from "@apollo/client";
 import EDIT_CONFIGURATION_BY_ID from "../../../../gqlLib/user/mutations/editCofigrationById";
 import EDIT_USER_BY_ID from "../../../../gqlLib/user/mutations/editUserById";
-import {
-  setDbUser,
-  setIsNewUseImage,
-} from "../../../../redux/slices/userSlice";
+import { setDbUser, setIsNewUseImage } from "../../../../redux/slices/userSlice";
 import notification from "../../../utility/reactToastifyNotification";
 import ButtonComponent from "../../../../theme/button/button.component";
 import { useRouter } from "next/router";
 import HeadTagInfo from "../../../../theme/headTagInfo";
 import { UserDataType } from "..";
-import useImage from "hooks/useImage";
+import useImage from "@/app/hooks/utils/useImage";
 import useToDeleteImageFromS3 from "customHooks/image/useToDeleteImageFromS3";
 import CircularRotatingLoader from "theme/loader/circularRotatingLoader.component";
 import { useUserHandler } from "context/AuthProvider";
@@ -166,19 +163,14 @@ const Main = ({ userData, setUserData }: MainProps) => {
 
   return (
     <div className={styles.mainContainer}>
-      <HeadTagInfo
-        description={`user profile (${activeTab})`}
-        title={`User profile (${activeTab})`}
-      />
+      <HeadTagInfo description={`user profile (${activeTab})`} title={`User profile (${activeTab})`} />
       <header className={styles.header}>
         {tab?.map((item, index) => {
           return (
             <p
               key={index}
               onClick={() => setActiveTab(item.toLowerCase())}
-              className={`${styles.text} ${
-                activeTab === item.toLowerCase() ? styles.active : ""
-              }`}
+              className={`${styles.text} ${activeTab === item.toLowerCase() ? styles.active : ""}`}
             >
               {item}
             </p>
@@ -205,11 +197,7 @@ const Main = ({ userData, setUserData }: MainProps) => {
             }}
             onClick={submitData}
           >
-            {loading ? (
-              <CircularRotatingLoader color="white" />
-            ) : (
-              "Update Profile"
-            )}
+            {loading ? <CircularRotatingLoader color="white" /> : "Update Profile"}
           </ButtonComponent>
         </div>
       )}

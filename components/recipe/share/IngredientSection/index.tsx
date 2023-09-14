@@ -4,6 +4,7 @@ import IngredientPanel from "../../../../component/templates/Ingredient/Ingredie
 import AddIngredientByParsing from "../../editRecipe/recipe_elements/ingredientList/AddIngredientByParsing";
 import styles from "./IngredientSection.module.scss";
 import IngredientTopPortion from "./IngredientTopPortion";
+import { mixedNumberToDecimal } from "helpers/Number";
 type IngredientListPorps = {
   adjusterFunc: any;
   nutritionState: object;
@@ -31,11 +32,7 @@ const IngredientSection = ({
 }: IngredientListPorps) => {
   return (
     <div className={styles.ingredients__main__card}>
-      <IngredientTopPortion
-        adjusterFunc={adjusterFunc}
-        calculatedIngOz={calculatedIngOz}
-        servingSize={servingSize}
-      />
+      <IngredientTopPortion adjusterFunc={adjusterFunc} calculatedIngOz={calculatedIngOz} servingSize={servingSize} />
       <div className={styles.ingredientsWrapper}>
         {ingredientAddingType === "auto" ? (
           <IngredientPanel
@@ -43,7 +40,9 @@ const IngredientSection = ({
             hasComment
             onDelete={removeIngredient}
             onSave={({ ingredient, portion, quantity }) => {
-              const weightInGram = quantity * +portion?.meausermentWeight;
+              const qty = mixedNumberToDecimal(quantity);
+              const weightInGram = qty * +portion?.meausermentWeight;
+
               const item = {
                 ...ingredient,
                 ingredientId: ingredient,
@@ -52,9 +51,11 @@ const IngredientSection = ({
                 selectedPortion: {
                   gram: weightInGram,
                   name: portion?.measurement,
-                  quantity: quantity,
+                  quantity: qty,
                 },
                 ingredientStatus: "ok",
+                originalIngredientName: ingredient?.ingredientName,
+                quantityString: quantity,
               };
               setSelectedIngredientsList(item);
             }}

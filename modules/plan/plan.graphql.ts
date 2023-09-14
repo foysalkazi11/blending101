@@ -40,6 +40,7 @@ const PLANNER_RECIPE_LIST_FIELDS = gql`
               meausermentWeight
             }
           }
+          quantityString
           selectedPortion {
             name
             quantity
@@ -237,6 +238,12 @@ export const CREATE_PLAN = gql`
 export const EDIT_PLAN = gql`
   mutation EditPlan($data: EditPlan!) {
     updateAPlan(input: $data)
+  }
+`;
+
+export const DELETE_PLAN = gql`
+  mutation DeletePlan($memberId: String!, $planId: String!) {
+    deletePlan(memberId: $memberId, planId: $planId)
   }
 `;
 

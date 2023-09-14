@@ -1,16 +1,9 @@
 import { useQuery } from "@apollo/client";
-import {
-  faCircleInfo,
-  faChartSimple,
-  faPen,
-  faTrash,
-  faSave,
-  faTimes,
-} from "@fortawesome/pro-regular-svg-icons";
+import { faCircleInfo, faChartSimple, faPen, faTrash, faSave, faTimes } from "@fortawesome/pro-regular-svg-icons";
 import { useState, useMemo } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import fuzzySearch from "../../../components/utility/fuzzySearch";
-import { GET_INGREDIENTS } from "../../../graphql/Ingredients";
+import { GET_INGREDIENTS } from "../../../modules/app/graphql/Ingredients";
 import ButtonComponent from "../../../theme/button/button.component";
 import IconButton from "../../atoms/Button/IconButton.component";
 import Icon from "../../atoms/Icon/Icon.component";
@@ -21,9 +14,10 @@ import { NextImageWithFallback } from "../../../theme/imageWithFallback";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBasketShoppingSimple } from "@fortawesome/pro-light-svg-icons";
 import { decimalToMixedNumber } from "helpers/Number";
+import { IngredientPortion, IngredientWithPortion, Portions } from "@/app/types/ingredient.types";
 
 interface IngredientPanelProps {
-  ingredients: any;
+  ingredients: IngredientWithPortion[];
   onNutrition?: any;
   onDelete?: any;
   onSave?: any;
@@ -45,17 +39,12 @@ const IngredientPanel = (props: IngredientPanelProps) => {
 
               if (!isIngredientStatusOk) {
                 const ingredientId = ingredient.ingredientId?._id || "";
-                const [fullNumber, fractionNumber] = decimalToMixedNumber(
-                  ingredient?.selectedPortion?.quantity,
-                );
-                const portions =
-                  ingredient?.ingredientId?.portions || ingredient?.portions;
+                const [fullNumber, fractionNumber] = ingredient?.quantityString?.split(" ") || ["", ""];
+                // const [fullNumber, fractionNumber] = decimalToMixedNumber(ingredient?.selectedPortion?.quantity);
+                const portions: IngredientPortion[] = ingredient?.ingredientId?.portions || ingredient?.portions;
                 if (ingredientId !== editingId) {
                   return (
-                    <div
-                      className={styles.ingredient__content}
-                      key={ingredientId}
-                    >
+                    <div className={styles.ingredient__content} key={ingredientId}>
                       <div className={styles.ingredient__item}>
                         <div>
                           {ingredient?.ingredientId?.featuredImage ? (
@@ -72,11 +61,12 @@ const IngredientPanel = (props: IngredientPanelProps) => {
                           )}
                         </div>
                         <span>
-                          {fullNumber === 0 ? fractionNumber : fullNumber}
-                          {fullNumber !== 0 && <sup>{fractionNumber}</sup>}{" "}
-                          {ingredient?.selectedPortion?.name}
+                          {fullNumber}
+                          <sup>{fractionNumber}</sup> {ingredient?.selectedPortion?.name}
+                          {/* {fullNumber === 0 ? fractionNumber : fullNumber}
+                          {fullNumber !== 0 && <sup>{fractionNumber}</sup>} {ingredient?.selectedPortion?.name} */}
                         </span>
-                        <span>{ingredient.ingredientId.ingredientName}</span>
+                        <span>{ingredient?.originalIngredientName || ingredient.ingredientId.ingredientName}</span>
                       </div>
                       <div className={styles.ingredient__actions}>
                         <a
@@ -111,9 +101,7 @@ const IngredientPanel = (props: IngredientPanelProps) => {
                           color="primary"
                           fontName={faTrash}
                           className={styles.ingredient__button}
-                          onClick={() =>
-                            onDelete(ingredient.ingredientId._id, ingredient)
-                          }
+                          onClick={() => onDelete(ingredient.ingredientId._id, ingredient)}
                         />
                       </div>
                     </div>
@@ -125,17 +113,11 @@ const IngredientPanel = (props: IngredientPanelProps) => {
                         isEditing
                         ingredients={ingredients}
                         defaultQuery={ingredient?.ingredientId?.ingredientName}
-                        defaultIngredient={
-                          ingredient?.ingredientId?.portions
-                            ? ingredient?.ingredientId
-                            : ingredient
-                        }
+                        defaultIngredient={ingredient?.ingredientId?.portions ? ingredient?.ingredientId : ingredient}
                         defaultPortion={portions?.find(
-                          (portion) =>
-                            portion.measurement ===
-                            ingredient?.selectedPortion?.name,
+                          (portion: Portions) => portion?.measurement === ingredient?.selectedPortion?.name,
                         )}
-                        defaultQuantity={ingredient?.selectedPortion?.quantity}
+                        defaultQuantity={ingredient?.quantityString || ingredient?.selectedPortion?.quantity}
                         defaultComment={ingredient?.comment}
                         onSave={onSave}
                         onClose={() => setEditingId("")}
@@ -148,10 +130,7 @@ const IngredientPanel = (props: IngredientPanelProps) => {
               } else {
                 return (
                   <div key={index} className={styles.errorIngredient}>
-                    <FontAwesomeIcon
-                      icon={faBasketShoppingSimple}
-                      className={styles.icon}
-                    />
+                    <FontAwesomeIcon icon={faBasketShoppingSimple} className={styles.icon} />
                     <p className={styles.text}>{ingredient?.errorString}</p>
                   </div>
                 );
@@ -189,7 +168,7 @@ interface IngredientFormProps {
   ingredients: any[];
   defaultIngredient?: any;
   defaultPortion?: any;
-  defaultQuantity?: number;
+  defaultQuantity?: number | string;
   defaultComment?: string;
   onSave?: any;
   onClose?: any;
@@ -236,9 +215,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
   const ingredientList = useMemo(() => {
     let results = [];
     data?.filterIngredientByCategoryAndClass.forEach((ing) => {
-      const isAlreadySelected = ingredients.some(
-        (item) => item?.ingredientId?._id === ing?.value,
-      );
+      const isAlreadySelected = ingredients.some((item) => item?.ingredientId?._id === ing?.value);
       if (isAlreadySelected) return;
       const ingredient = fuzzySearch(ing?.ingredientName, query);
       if (ingredient !== "") results.push({ ...ing, name: ingredient });
@@ -250,9 +227,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
   }, [data?.filterIngredientByCategoryAndClass, query, ingredients]);
 
   const onPortionChange = (e) => {
-    const portion = ingredient.portions.find(
-      (portion) => portion.measurement === e.target.value,
-    );
+    const portion = ingredient.portions.find((portion) => portion.measurement === e.target.value);
     setPortion(portion);
   };
 
@@ -280,6 +255,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
   const ActionButton = () => (
     <>
       <IconButton
+        color="white"
         className="ml-10 mr-10"
         variant={quantity === 0 ? "disabled" : "secondary"}
         fontName={faSave}
@@ -291,12 +267,9 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
   );
 
   return (
-    //@ts-ignore
     <FormProvider {...method}>
       <div className="row">
-        <div
-          className={`col-${hasComment ? 4 : 5} ${styles.ingredient__field}`}
-        >
+        <div className={`col-${hasComment ? 4 : 5} ${styles.ingredient__field}`}>
           <Textfield
             placeholder="Type your ingredients..."
             value={query}
@@ -313,10 +286,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
                   key={ing.value}
                   onClick={() => addIngredintHandler(ing._id)}
                   dangerouslySetInnerHTML={{
-                    __html: ing?.ingredientName.replace(
-                      query,
-                      `<b>${query}</b>`,
-                    ),
+                    __html: ing?.ingredientName.replace(query, `<b>${query}</b>`),
                   }}
                 />
               ))}
@@ -326,11 +296,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
         <div className={`col-${hasComment ? 2 : 4}`}>
           <Combobox
             placeholder="Unit"
-            options={
-              ingredient?.portions?.map(
-                (portion) => portion.measurement || portion.name,
-              ) || []
-            }
+            options={ingredient?.portions?.map((portion) => portion.measurement || portion.name) || []}
             name="Unit"
             value={portion?.measurement}
             required

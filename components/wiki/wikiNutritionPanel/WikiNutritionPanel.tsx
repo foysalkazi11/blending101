@@ -31,19 +31,14 @@ const WikiNutritionPanel = ({
   showHeader = true,
   scrollAreaMaxHeight = 500,
 }: Props) => {
-  const [nutrientCategory, setNutrientCategory] = useState<
-    { name: string; value: string }[]
-  >([{ name: "All", value: "all" }]);
-  const [selectedNutrientCategory, setSelectedNutrientCategory] =
-    useState<string>("all");
+  const [nutrientCategory, setNutrientCategory] = useState<{ name: string; value: string }[]>([
+    { name: "All", value: "all" },
+  ]);
+  const [selectedNutrientCategory, setSelectedNutrientCategory] = useState<string>("all");
   const [searchInput, setSearchInput] = useState("");
   const [nutrientList, setNutrientList] = useState<List[]>([]);
   const isMounted = useRef(false);
-  const {
-    data: nutrientData,
-    loading: nutrientLoading,
-    error: nutrientError,
-  } = useQuery(GET_ALL_BLEND_NUTRIENTS);
+  const { data: nutrientData, loading: nutrientLoading, error: nutrientError } = useQuery(GET_ALL_BLEND_NUTRIENTS);
   const {
     data: nutrientCategoryData,
     loading: nutrientCategoryLoading,
@@ -51,20 +46,15 @@ const WikiNutritionPanel = ({
   } = useQuery(GET_ALL_BLEND_NUTRIENTS_CATEGORIES);
 
   useEffect(() => {
-    if (
-      !nutrientCategoryLoading &&
-      nutrientCategoryData?.getAllBlendNutrientCategories
-    ) {
-      const data = nutrientCategoryData?.getAllBlendNutrientCategories?.map(
-        (item) => ({ name: item?.categoryName, value: item?._id }),
-      );
+    if (!nutrientCategoryLoading && nutrientCategoryData?.getAllBlendNutrientCategories) {
+      const data = nutrientCategoryData?.getAllBlendNutrientCategories?.map((item) => ({
+        name: item?.categoryName,
+        value: item?._id,
+      }));
       setNutrientCategory((pre) => [...pre, ...data]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    nutrientCategoryData?.getAllBlendNutrientCategories,
-    nutrientCategoryLoading,
-  ]);
+  }, [nutrientCategoryData?.getAllBlendNutrientCategories, nutrientCategoryLoading]);
 
   useEffect(() => {
     if (!nutrientLoading && nutrientData?.getAllBlendNutrients) {
@@ -79,11 +69,8 @@ const WikiNutritionPanel = ({
       if (searchInput === "") {
         setNutrientList(nutrientData?.getAllBlendNutrients);
       } else {
-        const filter = nutrientData?.getAllBlendNutrients?.filter(
-          (item: List) =>
-            item?.nutrientName
-              ?.toLowerCase()
-              ?.includes(searchInput?.toLowerCase()),
+        const filter = nutrientData?.getAllBlendNutrients?.filter((item: List) =>
+          item?.nutrientName?.toLowerCase()?.includes(searchInput?.toLowerCase()),
         );
         setNutrientList(filter);
       }
@@ -126,12 +113,12 @@ const WikiNutritionPanel = ({
         <DropDown
           value={selectedNutrientCategory}
           listElem={nutrientCategory}
-          handleChange={(e) => setSelectedNutrientCategory(e?.target?.value)}
+          onChange={(e) => setSelectedNutrientCategory(e?.target?.value)}
         />
       </div>
       <div className={s.dropdown}>
         <InputComponent
-          borderSecondary={true}
+          border="borderSecondary"
           style={{ padding: "10px", fontSize: "12px", borderRadius: "10px" }}
           inputWithIcon={true}
           icon={<FontAwesomeIcon icon={faMagnifyingGlass} fontSize="16" />}
@@ -140,10 +127,7 @@ const WikiNutritionPanel = ({
           onChange={(e) => setSearchInput(e?.target?.value)}
         />
       </div>
-      <div
-        className={`${s.nutrientListWarper} y-scroll`}
-        style={{ maxHeight: `${scrollAreaMaxHeight}px` }}
-      >
+      <div className={`${s.nutrientListWarper} y-scroll`} style={{ maxHeight: `${scrollAreaMaxHeight}px` }}>
         {nutrientLoading ? (
           <NutritionListSkeleton />
         ) : (
@@ -152,15 +136,11 @@ const WikiNutritionPanel = ({
               <p
                 key={index}
                 className={s.text}
-                onClick={() =>
-                  handleNutritionClick(item, checkActiveNutrition(item?._id))
-                }
+                onClick={() => handleNutritionClick(item, checkActiveNutrition(item?._id))}
               >
                 {item?.nutrientName}
                 {checkActiveNutrition(item?._id) && (
-                  <CheckIcon
-                    style={{ position: "absolute", top: "0px", right: "5px" }}
-                  />
+                  <CheckIcon style={{ position: "absolute", top: "0px", right: "5px" }} />
                 )}
               </p>
             );

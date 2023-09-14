@@ -4,11 +4,7 @@ import React, { useState } from "react";
 import ButtonComponent from "../../../button/buttonA/button.component";
 import styles from "./EmailVarify.module.scss";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import {
-  setUser,
-  setDbUser,
-  setProvider,
-} from "../../../../redux/slices/userSlice";
+import { setUser, setDbUser, setProvider } from "../../../../redux/slices/userSlice";
 import { setLoading } from "../../../../redux/slices/utilitySlice";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
 import { useRouter } from "next/router";
@@ -64,10 +60,7 @@ const EmailVerify = () => {
     try {
       const code = await Auth.resendSignUp(nonConfirmedUser);
       dispatch(setLoading(false));
-      reactToastifyNotification(
-        "info",
-        "A new verification code has been send to you email.",
-      );
+      reactToastifyNotification("info", "A new verification code has been send to you email.");
     } catch (error) {
       dispatch(setLoading(false));
       reactToastifyNotification("error", error?.message);
@@ -82,16 +75,13 @@ const EmailVerify = () => {
           <img src="/images/logo.png" alt="logo will soon load" />
 
           <h2>Verify Email</h2>
-          <p>
-            A Verification code is sent to your mail. Please paste it below.
-          </p>
+          <p>A Verification code is sent to your mail. Please paste it below.</p>
           <form onSubmit={handleSubmit}>
             <InputComponent
               type="text"
-              style={{ margin: "4px auto 15px auto" }}
+              style={{ margin: "4px auto 15px auto", width: "100%" }}
               value={code}
               placeholder="Verify your account"
-              fullWidth={true}
               onChange={(e) => setCode(e?.target?.value)}
             />
 

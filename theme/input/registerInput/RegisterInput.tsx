@@ -53,11 +53,11 @@ export default function InputField({
             className={styles.input}
             type={passVisibility ? "text" : type}
             placeholder={placeholder}
-            {...otherProps}
             {...register(name, {
               onChange: handleChange,
               ...required,
             })}
+            {...otherProps}
           />
 
           <span className={styles.visiIconDiv} onClick={visiToggle}>

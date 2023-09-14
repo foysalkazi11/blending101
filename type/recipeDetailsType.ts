@@ -44,6 +44,7 @@ export interface RecipeIdType {
   token: string;
   brand?: BrandType;
   url?: string | null;
+  totalTime?: string;
 }
 
 export interface BrandType {

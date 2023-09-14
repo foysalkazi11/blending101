@@ -1,10 +1,10 @@
 // @ts-nocheck
 import { useEffect } from "react";
 
-import styles from "../../../component/module/Challenge/Achievement/index.module.scss";
-import foodStyles from "../../../component/module/Challenge/Achievement/_RecipeCategory.module.scss";
-import mainStyles from "../../../component/module/Challenge/Achievement/_Dialer.module.scss";
-import graphStyles from "../../../component/module/Challenge/Achievement/_Streakbar.module.scss";
+import styles from "@/challenge/partials/Progress/index.module.scss";
+import foodStyles from "@/challenge/partials/Progress/_category.module.scss";
+import mainStyles from "@/challenge/partials/Progress/_dial.module.scss";
+import graphStyles from "@/challenge/partials/Progress/_streak.module.scss";
 
 const useChallengeLayout = () => {
   useEffect(() => {
@@ -25,6 +25,7 @@ const useChallengeLayout = () => {
 
       // For Circle
       let challengeCircleMainCircleOuter = document.querySelector(`.${mainStyles.challenge_circle_main_circle_outer}`);
+      if (!challengeCircleMainCircleOuter) return;
 
       let challengeCircleMainCircle = document.querySelector(`.${mainStyles.challenge_circle_main_circle}`);
 

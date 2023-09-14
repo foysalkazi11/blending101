@@ -1,9 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Icon from "../../../component/atoms/Icon/Icon.component";
-import useViewAll, {
-  QUERY_DICTIONARY,
-} from "../../../hooks/modules/useViewAll";
+import useViewAll, { QUERY_DICTIONARY } from "@/app/hooks/api/useViewAll";
 
 import styles from "../../../components/recipe/recipeDiscovery/recipeDiscovery.module.scss";
 import classes from "../../../styles/pages/viewAll.module.scss";
@@ -36,12 +34,7 @@ const ViewAll = () => {
           loading={loading}
           headerLeftSide={
             <div className="flex ai-center">
-              <Icon
-                className={classes.head__icon}
-                fontName={page?.icon}
-                size="3rem"
-                color="#fe5d1f"
-              />
+              <Icon className={classes.head__icon} fontName={page?.icon} size="3rem" color="#fe5d1f" />
               <h2 className={classes.head__title}>{page?.title}</h2>
             </div>
           }

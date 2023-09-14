@@ -13,10 +13,7 @@ import GET_BLEND_NUTRITION_BASED_ON_RECIPEXXX from "../../../gqlLib/nutrition/qu
 interface Props {
   removeCompareRecipe?: (id: string, e?: React.SyntheticEvent) => void;
   ingredient?: WikiCompareList;
-  handleAddOrRemoveToWikiCompareList?: (
-    id: string,
-    isCompared?: boolean,
-  ) => void;
+  handleAddOrRemoveToWikiCompareList?: (id: string, isCompared?: boolean) => void;
 }
 
 const WikiIngredientDetails = ({
@@ -24,23 +21,13 @@ const WikiIngredientDetails = ({
   ingredient = {} as WikiCompareList,
   handleAddOrRemoveToWikiCompareList = () => {},
 }: Props) => {
-  const [defaultMeasureMentWeight, setDefaultMeasureMentWeight] =
-    useState(null);
-  const {
-    _id,
-    category,
-    commentsCount,
-    hasInCompare,
-    image,
-    portions,
-    publishedBy,
-    type,
-    wikiDescription,
-    wikiTitle,
-  } = ingredient;
+  const [defaultMeasureMentWeight, setDefaultMeasureMentWeight] = useState(null);
+  const { _id, category, commentsCount, hasInCompare, image, portions, publishedBy, type, wikiDescription, wikiTitle } =
+    ingredient;
   const [winReady, setWinReady] = useState(false);
-  const [getBlendNutritionBasedOnRecipexxx, { loading, error, data }] =
-    useLazyQuery(GET_BLEND_NUTRITION_BASED_ON_RECIPEXXX);
+  const [getBlendNutritionBasedOnRecipexxx, { loading, error, data }] = useLazyQuery(
+    GET_BLEND_NUTRITION_BASED_ON_RECIPEXXX,
+  );
 
   const fetchNutritionPanelData = () => {
     try {
@@ -61,9 +48,7 @@ const WikiIngredientDetails = ({
 
   useEffect(() => {
     setWinReady(true);
-    setDefaultMeasureMentWeight(
-      portions?.find((item) => item?.default)?.meausermentWeight,
-    );
+    setDefaultMeasureMentWeight(portions?.find((item) => item?.default)?.meausermentWeight);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -78,10 +63,7 @@ const WikiIngredientDetails = ({
     <div className={styles.recipeDetailsFirstContainer}>
       <div className={styles.recipeDetailsContainer}>
         <div className={styles.cancelIcon}>
-          <IconWarper
-            defaultBg="gray"
-            handleClick={(e) => removeCompareRecipe(ingredient?._id, e)}
-          >
+          <IconWarper defaultBg="gray" handleClick={(e) => removeCompareRecipe(ingredient?._id, e)}>
             <IoClose />
           </IconWarper>
         </div>
@@ -94,17 +76,12 @@ const WikiIngredientDetails = ({
           id={_id}
           hasInCompare={hasInCompare}
           type={type}
-          handleAddOrRemoveToWikiCompareList={
-            handleAddOrRemoveToWikiCompareList
-          }
+          handleAddOrRemoveToWikiCompareList={handleAddOrRemoveToWikiCompareList}
           portions={portions}
         />
 
         <div className={styles.dividerBox}>
-          <SectionTitleWithIcon
-            title="Nutrition"
-            icon="/icons/chart-bar-light-green.svg"
-          />
+          <SectionTitleWithIcon title="Nutrition" icon="/icons/chart-bar-light-green.svg" />
 
           <div className={`${styles.ingredientsDetails} `}>
             {winReady ? (
@@ -114,16 +91,14 @@ const WikiIngredientDetails = ({
                 <>
                   <UpdatedRecursiveAccordion
                     dataObject={
-                      data?.getBlendNutritionBasedOnRecipexxx &&
-                      JSON?.parse(data?.getBlendNutritionBasedOnRecipexxx)
+                      data?.getBlendNutritionBasedOnRecipexxx && JSON?.parse(data?.getBlendNutritionBasedOnRecipexxx)
                     }
                     showUser={false}
                     counter={1}
                     measurementDropDownState={{
                       showDropDown: true,
                       value: defaultMeasureMentWeight,
-                      handleChange: (e) =>
-                        setDefaultMeasureMentWeight(e?.target?.value),
+                      onChange: (e) => setDefaultMeasureMentWeight(e?.target?.value),
                       listElem: portions?.map((item) => ({
                         name: `1 ${item?.measurement} (${item?.meausermentWeight}g)`,
                         value: item?.meausermentWeight,

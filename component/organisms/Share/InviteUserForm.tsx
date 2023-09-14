@@ -1,19 +1,12 @@
 import { useQuery } from "@apollo/client";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, {
-  useState,
-  useRef,
-  useMemo,
-  SetStateAction,
-  Dispatch,
-  useEffect,
-} from "react";
+import React, { useState, useRef, useMemo, SetStateAction, Dispatch, useEffect } from "react";
 import AddCollectionModal, {
   InputValueType,
 } from "../../../components/sidetray/common/addCollectionModal/AddCollectionModal";
 import slugStringGenerator from "../../../components/utility/slugStringGenerator";
-import { GET_ALL_USER_LIST } from "../../../graphql/User";
+import { GET_ALL_USER_LIST } from "../../../modules/app/graphql/User";
 import formatDate from "../../../helperFunc/date/formatDate";
 import CustomAccordion from "../../../theme/accordion/accordion.component";
 import CustomCheckbox from "../../../theme/checkbox/CustomCheckbox";
@@ -84,9 +77,7 @@ const InviteUserForm = ({
 
   // create collection input change
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e?.target;
 
     if (name === "name") {
@@ -149,12 +140,8 @@ const InviteUserForm = ({
       users =
         data?.getAllusers.filter(
           (user) =>
-            ![...emails, { email: userEmail }]
-              .map((el) => el?.email)
-              .includes(user.email) &&
-            (user.displayName as string)
-              ?.toLowerCase()
-              .startsWith(input.toLowerCase()),
+            ![...emails, { email: userEmail }].map((el) => el?.email).includes(user.email) &&
+            (user.displayName as string)?.toLowerCase().startsWith(input.toLowerCase()),
         ) || [];
     }
     if (users.length !== 0) setShowSuggestion(true);
@@ -171,10 +158,7 @@ const InviteUserForm = ({
   };
 
   const handleAddNewEmail = (info: SharedUserInfoType) => {
-    setEmails((prevEmails) => [
-      ...prevEmails?.map((info) => ({ ...info, active: false })),
-      info,
-    ]);
+    setEmails((prevEmails) => [...prevEmails?.map((info) => ({ ...info, active: false })), info]);
     setShowSuggestion(false);
     setInput("");
   };
@@ -182,9 +166,7 @@ const InviteUserForm = ({
   const toggleActiveEmail = (sharedPersonInfo: SharedUserInfoType) => {
     setEmails((prevEmails) => [
       ...prevEmails?.map((info) =>
-        info?.email === sharedPersonInfo.email
-          ? { ...info, ...sharedPersonInfo }
-          : { ...info, active: false },
+        info?.email === sharedPersonInfo.email ? { ...info, ...sharedPersonInfo } : { ...info, active: false },
       ),
     ]);
   };
@@ -202,7 +184,7 @@ const InviteUserForm = ({
       {showCreateCollectionComponents && (
         <div style={{ margin: "10px 0" }}>
           <InputComponent
-            borderSecondary={true}
+            border="borderSecondary"
             placeholder="Collection Name"
             value={createCollectionInput?.name}
             name="name"
@@ -222,18 +204,10 @@ const InviteUserForm = ({
         {emails.map((email) => (
           <span
             className={`${styles.email__address} ${
-              isAdditionInfoNeedForPersonalShare && email?.active
-                ? styles.activeEmail
-                : ""
-            } ${
-              isAdditionInfoNeedForPersonalShare && email.canCollaborate
-                ? styles.collaborationAccessEmail
-                : ""
-            }`}
+              isAdditionInfoNeedForPersonalShare && email?.active ? styles.activeEmail : ""
+            } ${isAdditionInfoNeedForPersonalShare && email.canCollaborate ? styles.collaborationAccessEmail : ""}`}
             key={email?.email}
-            onClick={() =>
-              toggleActiveEmail({ ...email, active: !email?.active })
-            }
+            onClick={() => toggleActiveEmail({ ...email, active: !email?.active })}
           >
             {email?.email}
             <div className={styles.closeBtn}>
@@ -277,9 +251,7 @@ const InviteUserForm = ({
                         active: true,
                       })
                     }
-                    className={
-                      user?.email === sharedUserEmail ? styles.disableEmail : ""
-                    }
+                    className={user?.email === sharedUserEmail ? styles.disableEmail : ""}
                   >
                     <span>{user?.displayName?.charAt(0)}</span>
                     {user?.displayName}
@@ -293,9 +265,7 @@ const InviteUserForm = ({
 
       <div
         className={`${styles.activeEmailInfoContainer} ${
-          isAdditionInfoNeedForPersonalShare && activeEmailInfo?.active
-            ? styles.showInfo
-            : ""
+          isAdditionInfoNeedForPersonalShare && activeEmailInfo?.active ? styles.showInfo : ""
         }`}
       >
         <div className={styles.checkBoxContainer}>
@@ -324,15 +294,9 @@ const InviteUserForm = ({
       />
 
       <div className={styles.share__button_wraper}>
-        <button
-          className={`${styles.share__button} ${styles["share__button--save"]} mr-30`}
-          onClick={handleInvitation}
-        >
+        <button className={`${styles.share__button} ${styles["share__button--save"]} mr-30`} onClick={handleInvitation}>
           {loading ? (
-            <CircularRotatingLoader
-              color="white"
-              style={{ width: "20px", height: "20px", margin: "0 10px" }}
-            />
+            <CircularRotatingLoader color="white" style={{ width: "20px", height: "20px", margin: "0 10px" }} />
           ) : (
             submitBtnText
           )}

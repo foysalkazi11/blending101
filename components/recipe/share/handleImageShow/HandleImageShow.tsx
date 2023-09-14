@@ -5,6 +5,9 @@ import Image from "next/image";
 import { MdClose } from "react-icons/md";
 import IconWraper from "../../../../theme/iconWarper/IconWarper";
 import CustomCheckbox from "../../../../theme/checkbox/CustomCheckbox";
+import notification from "components/utility/reactToastifyNotification";
+import useToDeleteImageFromS3 from "customHooks/image/useToDeleteImageFromS3";
+import CircularRotatingLoader from "theme/loader/circularRotatingLoader.component";
 
 interface CheckBoxProps {
   value?: string | number;
@@ -42,6 +45,7 @@ const HandleImageShow = ({
 }: AddRecipeCardProps) => {
   const inputRef = useRef(null);
   const { showCheckBox, selectedImage, ...rest } = checkBoxProps;
+  const { deleteImage, loading: imageDeleteLoading } = useToDeleteImageFromS3();
 
   const handleClick = () => {
     const elem = inputRef?.current;
@@ -55,14 +59,15 @@ const HandleImageShow = ({
   };
 
   const removeImage = (index_value: number) => {
-    setImages((pre) => [
-      ...pre?.filter((value, index) => index !== index_value),
-    ]);
+    setImages((pre) => pre?.filter((value, index) => index !== index_value));
   };
-  const removeExistingImage = (image: string) => {
-    setExistingImage((pre) => [
-      ...pre?.filter((item, index) => item !== image),
-    ]);
+  const removeExistingImage = async (image: string) => {
+    try {
+      await deleteImage(image);
+      setExistingImage((pre) => pre?.filter((item, index) => item !== image));
+    } catch (error) {
+      notification("error", "Failed to remove image");
+    }
   };
 
   return (
@@ -95,8 +100,9 @@ const HandleImageShow = ({
                 }}
                 defaultBg="gray"
                 handleClick={() => removeExistingImage(photo)}
+                disabled={imageDeleteLoading}
               >
-                <MdClose color="#f4f4f4" />
+                {imageDeleteLoading ? <CircularRotatingLoader color="white" /> : <MdClose color="#f4f4f4" />}
               </IconWraper>
             </div>
 
@@ -121,12 +127,7 @@ const HandleImageShow = ({
               </IconWraper>
             </div>
 
-            <Image
-              src={URL.createObjectURL(photo)}
-              alt="img"
-              layout="fill"
-              objectFit="cover"
-            />
+            <Image src={URL.createObjectURL(photo)} alt="img" layout="fill" objectFit="cover" />
           </div>
         );
       })}

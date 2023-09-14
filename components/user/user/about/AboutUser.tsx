@@ -6,22 +6,19 @@ import { UserDataType } from "..";
 import ShowSuggestion from "theme/showSuggestion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/pro-light-svg-icons";
-import optionsForTimeZone from "./staticData/timezones.json";
-import optionsForBlender from "./staticData/blender.json";
+import optionsForTimeZone from "../../../../data/timezones.json";
+import optionsForBlender from "../../../../data/blender.json";
 
-const optionsListForTimeZone = Object.entries(
-  JSON.parse(JSON.stringify(optionsForTimeZone)),
-).map(([timezone, offset]: [string, string]) => {
-  let timezoneDivide = timezone?.split("/");
-  let label = `${timezoneDivide[1]}, ${timezoneDivide[0]} ${offset.slice(
-    0,
-    11,
-  )}`;
-  return {
-    label,
-    value: label?.toLowerCase(),
-  };
-});
+const optionsListForTimeZone = Object.entries(JSON.parse(JSON.stringify(optionsForTimeZone))).map(
+  ([timezone, offset]: [string, string]) => {
+    let timezoneDivide = timezone?.split("/");
+    let label = `${timezoneDivide[1]}, ${timezoneDivide[0]} ${offset.slice(0, 11)}`;
+    return {
+      label,
+      value: label?.toLowerCase(),
+    };
+  },
+);
 let manufacturer = "";
 const optionsListForBlender = JSON.parse(JSON.stringify(optionsForBlender)).map(
   (blenderName: { [key: string]: string }) => {
@@ -49,12 +46,9 @@ type AboutProps = {
 };
 
 const About = ({ userData, setUserData }: AboutProps) => {
-  const { firstName, lastName, displayName, yourBlender, email, location } =
-    userData?.about;
-  const [showLocationSuggestionsBox, setShowLocationSuggestionsBox] =
-    useState(false);
-  const [showBlenderSuggestionsBox, setShowBlenderSuggestionsBox] =
-    useState(false);
+  const { firstName, lastName, displayName, yourBlender, email, location } = userData?.about;
+  const [showLocationSuggestionsBox, setShowLocationSuggestionsBox] = useState(false);
+  const [showBlenderSuggestionsBox, setShowBlenderSuggestionsBox] = useState(false);
   const timezoneRef = useRef<HTMLInputElement>(null);
   const blendRef = useRef<HTMLInputElement>(null);
 
@@ -86,7 +80,7 @@ const About = ({ userData, setUserData }: AboutProps) => {
               name="firstName"
               value={firstName}
               onChange={handleChange}
-              fullWidth={true}
+              style={{ width: "100%" }}
               placeholder="First name"
               label="First name"
             />
@@ -116,10 +110,7 @@ const About = ({ userData, setUserData }: AboutProps) => {
             />
           </div>
         </div>
-        <div
-          className={styles.Container__item}
-          style={{ position: "relative" }}
-        >
+        <div className={styles.Container__item} style={{ position: "relative" }}>
           <div className={styles.inputContainer}>
             <InputComponent
               inputWithIcon={true}
@@ -174,10 +165,7 @@ const About = ({ userData, setUserData }: AboutProps) => {
           </div>
         </div>
 
-        <div
-          className={styles.Container__item}
-          style={{ position: "relative" }}
-        >
+        <div className={styles.Container__item} style={{ position: "relative" }}>
           <div className={styles.inputContainer}>
             <InputComponent
               inputWithIcon={true}
@@ -199,9 +187,7 @@ const About = ({ userData, setUserData }: AboutProps) => {
 
           <ShowSuggestion
             list={optionsListForTimeZone}
-            handleClickList={(list: Option) =>
-              handleChange({ target: { name: "location", value: list.label } })
-            }
+            handleClickList={(list: Option) => handleChange({ target: { name: "location", value: list.label } })}
             style={{ display: showLocationSuggestionsBox ? "block" : "none" }}
             placeholder="Search timezone"
             closeSuggestionBox={() => setShowLocationSuggestionsBox(false)}
