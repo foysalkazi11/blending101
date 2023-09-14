@@ -241,6 +241,12 @@ export const EDIT_PLAN = gql`
   }
 `;
 
+export const DELETE_PLAN = gql`
+  mutation DeletePlan($memberId: String!, $planId: String!) {
+    deletePlan(memberId: $memberId, planId: $planId)
+  }
+`;
+
 export const GET_ALL_PLANS = gql`
   query GetAllGlobalPlans($page: Float, $limit: Float, $memberId: String, $query: String!) {
     getAllGlobalPlans(page: $page, limit: $limit, memberId: $memberId, searchTerm: $query) {

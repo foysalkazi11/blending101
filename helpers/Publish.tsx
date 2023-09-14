@@ -1,6 +1,11 @@
 import { ApolloCache, FetchResult } from "@apollo/client";
 import { toast } from "react-toastify";
 
+export type OnUpdate = (
+  cache: ApolloCache<any>,
+  data: Omit<FetchResult<any, Record<string, any>, Record<string, any>>, "context">,
+) => void;
+
 type IProperties = {
   mutate: any;
   variables: any;
@@ -12,25 +17,12 @@ type IProperties = {
   onError?: any;
   onUpdate?: (
     cache: ApolloCache<any>,
-    data: Omit<
-      FetchResult<any, Record<string, any>, Record<string, any>>,
-      "context"
-    >,
+    data: Omit<FetchResult<any, Record<string, any>, Record<string, any>>, "context">,
   ) => void;
 };
 
 const Publish = async (properties: IProperties) => {
-  const {
-    mutate,
-    variables,
-    load,
-    state,
-    success,
-    onSuccess,
-    error,
-    onUpdate,
-    onError,
-  } = properties;
+  const { mutate, variables, load, state, success, onSuccess, error, onUpdate, onError } = properties;
 
   const loading = toast.loading(load || "Loading !", {
     position: toast.POSITION.TOP_RIGHT,
@@ -75,9 +67,7 @@ const Publish = async (properties: IProperties) => {
         errorMessages = ["Sorry, Can't post. Your browser is offline."];
       } else {
         errorMessages =
-          error?.networkError?.result?.errors.map(
-            (netError: any) => `StatusCode - 400 | ${netError?.message}`,
-          ) || [];
+          error?.networkError?.result?.errors.map((netError: any) => `StatusCode - 400 | ${netError?.message}`) || [];
       }
     } else {
       /* 
@@ -85,10 +75,7 @@ const Publish = async (properties: IProperties) => {
         1. If error was thrown from the Apollo Server
         2. If error happen while resolving graphQL schema
       */
-      errorMessages =
-        error?.graphQLErrors?.map(
-          (gqlError: any) => `StatusCode - 400 | ${gqlError?.message}`,
-        ) || [];
+      errorMessages = error?.graphQLErrors?.map((gqlError: any) => `StatusCode - 400 | ${gqlError?.message}`) || [];
     }
     errorMessages.forEach((msg: string, idx: number) => {
       if (idx === 0) {

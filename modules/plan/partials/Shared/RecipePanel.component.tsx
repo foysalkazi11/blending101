@@ -106,7 +106,6 @@ const Recipes = forwardRef((props: RecipesProps, ref: any) => {
           recipeId: { _id, name, recipeBlendCategory, averageRating, totalRating, image },
           defaultVersion,
         } = recipe;
-
         return (
           <div
             ref={ref}
@@ -121,7 +120,7 @@ const Recipes = forwardRef((props: RecipesProps, ref: any) => {
               category={recipeBlendCategory?.name}
               ratings={averageRating}
               noOfRatings={totalRating}
-              image={image?.find((img) => img.default === true)?.image}
+              image={image?.find((img) => img.default === true)?.image || image[0]?.image}
               recipeId={_id}
               ingredients={defaultVersion?.ingredients || []}
               calorie={defaultVersion?.calorie?.value}

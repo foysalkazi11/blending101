@@ -36,6 +36,8 @@ import { HideOnDesktop, HideOnMobile } from "../../component/molecules/Responsiv
 import { faPlusCircle } from "@fortawesome/pro-regular-svg-icons";
 import PlanCollectionTray from "components/sidetray/planCollectionTray";
 import useAllPlan from "@/plan/hooks/plan/useAllPlan";
+import useDeletePlan from "@/plan/hooks/plan-details/useDeletePlan";
+import { updateOnDelete } from "@/plan/services/plan-discovery.service";
 
 const normalizeQueryParams = (queryParams) => {
   let queryParamObj = {} as AllFilterType;
@@ -58,6 +60,8 @@ const PlanDiscovery = () => {
   const { isPlanFilterOpen } = useAppSelector((state) => state?.planFilter);
   const queryParameters = router.query;
   const isMounted = useRef(false);
+
+  const deletePlan = useDeletePlan();
 
   // handle update recipe filter criteria
   const handleUpdateFilterCriteriaForPlan = useToUpdateFilterCriteriaForPlan();
@@ -256,6 +260,8 @@ const FeaturedPlan = ({ setOpenCollectionModal }) => {
   const { data } = useQuery(GET_FEATURED_PLANS, {
     variables: { limit: 8, memberId: userId },
   });
+
+  const deletePlan = useDeletePlan(updateOnDelete);
 
   return (
     <Fragment>

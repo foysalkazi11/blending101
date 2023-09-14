@@ -3,8 +3,8 @@ import { useEffect } from "react";
 
 import styles from "@/challenge/partials/Progress/index.module.scss";
 import foodStyles from "@/challenge/partials/Progress/_category.module.scss";
-import mainStyles from "@/challenge/partials/Progress/_dialer.module.scss";
-import graphStyles from "@/challenge/partials/Progress/_streakbar.module.scss";
+import mainStyles from "@/challenge/partials/Progress/_dial.module.scss";
+import graphStyles from "@/challenge/partials/Progress/_streak.module.scss";
 
 const useChallengeLayout = () => {
   useEffect(() => {
@@ -25,6 +25,7 @@ const useChallengeLayout = () => {
 
       // For Circle
       let challengeCircleMainCircleOuter = document.querySelector(`.${mainStyles.challenge_circle_main_circle_outer}`);
+      if (!challengeCircleMainCircleOuter) return;
 
       let challengeCircleMainCircle = document.querySelector(`.${mainStyles.challenge_circle_main_circle}`);
 

@@ -9,7 +9,7 @@ import { RECIPE_CATEGORY_COLOR } from "../../../../data/Recipe";
 import { setChallengeDate, setChallengePost, setShowPostForm } from "../../../../redux/slices/Challenge.slice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 
-import styles from "./_Dialer.module.scss";
+import styles from "./_dial.module.scss";
 import "react-datepicker/dist/react-datepicker.css";
 import { UTCDate } from "../../../../helpers/Date";
 
@@ -51,9 +51,9 @@ function Main({ canUpload, activities, statistics }: MainInterface) {
   };
 
   const totalDays = statistics?.days || 0;
-  const passedDays = differenceInDays(today, begin);
+  const passedDays = differenceInDays(today, begin) + 1;
   const completedDays = passedDays > totalDays ? totalDays : passedDays < 0 ? 0 : passedDays;
-  const remainingDays = passedDays > totalDays ? 0 : statistics?.daysRemaining + 1 || 0;
+  const remainingDays = passedDays > totalDays ? 0 : statistics?.daysRemaining || 0;
 
   return (
     <div className={styles.challenge_circle_main_circle_outer}>

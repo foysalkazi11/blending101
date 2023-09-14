@@ -90,8 +90,7 @@ export const ChallengeSlice = createSlice({
       const unit = portion?.measurement;
       const weight = +portion?.meausermentWeight;
 
-      const quantity = qty.split(" ").length > 1 ? mixedNumberToDecimal(qty) : qty;
-
+      const quantity = mixedNumberToDecimal(qty);
       const ingredient: IngredientWithPortion = {
         ingredientId: {
           _id: ingredientItem._id,
