@@ -148,25 +148,32 @@ const IngredientDetails = (props: IngredientDetailsProps) => {
                 )}
 
                 {isIngredientStatusOk ? (
-                  <div>
+                  <div className={styles.description}>
                     {`${ingredient?.quantityString} ${ingredient.selectedPortion?.name} `}
                     {/* {`${(ingredient?.selectedPortion?.quantity * counter).toFixed(2).replace(/\.?0+$/, "")}
                   ${ingredient.selectedPortion?.name} `} */}
 
-                    {/* <Tooltip direction="top" content={ingredient?.originalIngredientName || "Ingredient name"}>
-                      </Tooltip> */}
-                    <span
-                      className={`${styles.leftSide__highlighted} ${
-                        ingredient?.ingredientId?._id === nutritionState?.ingredientId?._id && "activeColorPrimary"
-                      }`}
-                      onClick={() => {
-                        windowScrollToZero(
-                          ingredient?.ingredientId?._id === nutritionState?.ingredientId?._id ? {} : ingredient,
-                        );
-                      }}
+                    <Tooltip
+                      direction="top"
+                      content={
+                        ingredient?.ingredientId?.ingredientName ||
+                        ingredient?.originalIngredientName ||
+                        "Ingredient name"
+                      }
                     >
-                      {ingredient?.originalIngredientName || ingredient?.ingredientId?.ingredientName}
-                    </span>
+                      <span
+                        className={`${styles.leftSide__highlighted} ${
+                          ingredient?.ingredientId?._id === nutritionState?.ingredientId?._id && "activeColorPrimary"
+                        }`}
+                        onClick={() => {
+                          windowScrollToZero(
+                            ingredient?.ingredientId?._id === nutritionState?.ingredientId?._id ? {} : ingredient,
+                          );
+                        }}
+                      >
+                        {ingredient?.originalIngredientName || ingredient?.ingredientId?.ingredientName}
+                      </span>
+                    </Tooltip>
                     {ingredient?.comment && <span>{`, ${ingredient?.comment}`}</span>}
                   </div>
                 ) : (

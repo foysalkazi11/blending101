@@ -34,18 +34,15 @@ const ItemList = (props: ItemListProps) => {
 
   const selectHandler = (id: string, checked: boolean) => {
     if (isStaples) {
-      if (!checked)
-        setCheckedStaples(checkedStaples.filter((item) => item !== id));
+      if (!checked) setCheckedStaples(checkedStaples.filter((item) => item !== id));
       else setCheckedStaples([...checkedStaples, id]);
       return;
     }
     if (toggle === 1) {
-      if (!checked)
-        setCheckedGroceries(checkedGroceries.filter((item) => item !== id));
+      if (!checked) setCheckedGroceries(checkedGroceries.filter((item) => item !== id));
       else setCheckedGroceries([...checkedGroceries, id]);
     } else {
-      if (!checked)
-        setCheckedPantries(checkedPantries.filter((item) => item !== id));
+      if (!checked) setCheckedPantries(checkedPantries.filter((item) => item !== id));
       else setCheckedPantries([...checkedPantries, id]);
     }
   };
@@ -53,9 +50,7 @@ const ItemList = (props: ItemListProps) => {
   const isChecked = useCallback(
     (item) => {
       const id = item.ingredientId._id;
-      return toggle === 1
-        ? checkedGroceries.includes(id)
-        : checkedPantries.includes(id) || checkedStaples.includes(id);
+      return toggle === 1 ? checkedGroceries.includes(id) : checkedPantries.includes(id) || checkedStaples.includes(id);
     },
     [checkedGroceries, checkedPantries, checkedStaples, toggle],
   );
@@ -67,23 +62,18 @@ const ItemList = (props: ItemListProps) => {
           <div className={styles.ingredients__content}>
             <Checkbox
               checked={isChecked(item)}
-              onChange={(e) =>
-                selectHandler(item.ingredientId._id, e.target.checked)
-              }
+              onChange={(e) => selectHandler(item.ingredientId._id, e.target.checked)}
             />
             <div className={styles.ingredients__image}>
               <figure className="mr-10">
-                <img
-                  src={item.ingredientId.featuredImage || "/food/frozen.png"}
-                  alt="img"
-                />
+                <img src={item.ingredientId.featuredImage || "/food/frozen.png"} alt="img" />
               </figure>
             </div>
 
             <div>
               <div className={styles.ingredients__title}>
                 <div className="blending-item-title flex ai-center jc-between">
-                  <p>{item.ingredientId.ingredientName}</p>
+                  <p>{item?.originalIngredientName || item.ingredientId.ingredientName}</p>
                 </div>
               </div>
               <p className={styles.ingredients__quantity}>

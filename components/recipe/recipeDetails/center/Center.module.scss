@@ -465,7 +465,7 @@ $slider-height: 220px;
 
     .leftSide {
       display: flex;
-      align-self: center;
+      align-items: center;
       padding: 16px;
       max-width: 85%;
 
@@ -475,8 +475,8 @@ $slider-height: 220px;
         object-fit: contain;
       }
 
-      div {
-        margin-left: 18px;
+      .description {
+        margin-left: 1.5rem;
         color: #000;
         font-size: 16px;
       }
