@@ -177,13 +177,13 @@ const IngredientDetails = (props: IngredientDetailsProps) => {
                     {ingredient?.comment && <span>{`, ${ingredient?.comment}`}</span>}
                   </div>
                 ) : (
-                  <div className={`${styles.leftSide__ingredient_partial_ok}`}>{ingredient?.errorString}</div>
+                  <span className={`${styles.leftSide__ingredient_partial_ok}`}>{ingredient?.errorString}</span>
                 )}
               </div>
 
               {isIngredientStatusOk && (
                 <div className={`${styles.iconGroup}`}>
-                  <div className={`${"flex"}`}>
+                  <div className={"flex"}>
                     <Tooltip direction="top" content="Wiki">
                       <FontAwesomeIcon
                         icon={faCircleInfo}
