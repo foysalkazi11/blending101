@@ -158,12 +158,13 @@ const CenterSection = ({
                     listElem={allBlendCategories}
                     name="blendType"
                     border="borderSecondary"
-                    validationObj={{ required: "select Blend Type" }}
+                    placeholder="Blend Type"
+                    validationObj={{ required: "Select Blend Type" }}
                     // value={blendCategoryState}
                     // onChange={setBlendCategoryState}
                   />
                 </li>
-                <li className={styles.list} style={{ position: "relative" }}>
+                {/* <li className={styles.list} style={{ position: "relative" }}>
                   <InputComponent
                     inputWithIcon={true}
                     type="text"
@@ -188,8 +189,8 @@ const CenterSection = ({
                     border="borderSecondary"
                   />
 
-                  {/* <DropDown listElem={BlendtecItem} name="blenderName" border="borderSecondary" /> */}
-                </li>
+                  <DropDown listElem={BlendtecItem} name="blenderName" border="borderSecondary" />
+                </li> */}
                 {/* <li>
                   <div className={styles.left__options}>
                     <DropDown listElem={OzItem} name="oz" border="borderSecondary" />
@@ -199,7 +200,13 @@ const CenterSection = ({
             </div>
             <div className={styles.blendingOptions__right}>
               {componentUsedFrom === "addRecipe" ? (
-                <InputComponent type="number" border="borderSecondary" name="cookTime" placeholder="Cook Time" />
+                <InputComponent
+                  type="number"
+                  border="borderSecondary"
+                  name="cookTime"
+                  placeholder="Total time"
+                  style={{ width: "100px", textAlign: "center" }}
+                />
               ) : (
                 <span className={styles.text}>{recipePrepareTime}</span>
               )}

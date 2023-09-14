@@ -30,6 +30,7 @@ import { VersionAddDataType } from "../../../../type/versionAddDataType";
 import { useUser } from "../../../../context/AuthProvider";
 import { FormProvider, useForm } from "react-hook-form";
 import { RecipeEditDefaultValuesType } from "type/recipeEditType";
+import { useToArrangeIngredientBeforeSave } from "components/recipe/share/useToArrangeIngredient";
 
 const defaultValues: RecipeEditDefaultValuesType = {
   recipeTitle: "",
@@ -71,6 +72,7 @@ const EditRecipeComponent = () => {
   const { data: allBlendCategory } = useQuery(BLEND_CATEGORY);
   const [editRecipe, { loading: editARecipeLoading }] = useMutation(EDIT_A_RECIPE);
   const { handleToGetARecipe } = useToGetARecipe();
+  const arrangeIngredientBeforeSave = useToArrangeIngredientBeforeSave();
   const methods = useForm({
     defaultValues,
   });
@@ -158,20 +160,9 @@ const EditRecipeComponent = () => {
   // edit a recipe version including original version and original recipe
 
   const editARecipeFunction = async (data: RecipeEditDefaultValuesType) => {
-    let ingArr = [];
+    let ingArr = arrangeIngredientBeforeSave(selectedIngredientsList);
     let errorIngredients = [];
     selectedIngredientsList.forEach((item) => {
-      if (item?.ingredientStatus === "ok") {
-        let value = item?.portions?.find((item) => item.default);
-        ingArr?.push({
-          ingredientId: item?._id,
-          selectedPortionName: item?.selectedPortion?.name || value?.measurement,
-          weightInGram: item?.weightInGram ? Number(item?.weightInGram) : Number(value?.meausermentWeight),
-          comment: item?.comment || null,
-          originalIngredientName: item?.originalIngredientName,
-          quantityString: item?.quantityString,
-        });
-      }
       if (item?.ingredientStatus === "partial_ok") {
         const { errorString = "", ingredientId = null, errorIngredientId = "", qaId = "" } = item;
         errorIngredients.push({

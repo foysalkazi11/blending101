@@ -24,6 +24,7 @@ import InstructionsForMakingRecipe from "../share/howToSection";
 import CenterSection from "../share/centerSection";
 import { FormProvider, useForm } from "react-hook-form";
 import { RecipeEditDefaultValuesType } from "type/recipeEditType";
+import { useToArrangeIngredient, useToArrangeIngredientBeforeSave } from "../share/useToArrangeIngredient";
 
 const defaultValues: RecipeEditDefaultValuesType = {
   recipeTitle: "",
@@ -60,6 +61,8 @@ const AddRecipePage = () => {
     data: nutritionData,
   } = useGetBlendNutritionBasedOnRecipexxx();
   const { data: blendCategoriesData } = useQuery(BLEND_CATEGORY);
+  const arrangeIngredient = useToArrangeIngredient();
+  const arrangeIngredientBeforeSave = useToArrangeIngredientBeforeSave();
 
   const methods = useForm({
     defaultValues,
@@ -80,20 +83,7 @@ const AddRecipePage = () => {
   const handleSubmitData = async (data: RecipeEditDefaultValuesType) => {
     if (selectedIngredientsList?.length) {
       setLoading(true);
-      let ingArr = [];
-      selectedIngredientsList?.forEach((item) => {
-        let value = item?.portions?.find((item) => item.default);
-        if (value) {
-          ingArr?.push({
-            ingredientId: item?._id,
-            selectedPortionName: value?.measurement,
-            weightInGram: Number(value?.meausermentWeight),
-            originalIngredientName: item?.originalIngredientName,
-            quantityString: item?.quantityString,
-            comment: item?.comment || null,
-          });
-        }
-      });
+      let ingArr = arrangeIngredientBeforeSave(selectedIngredientsList);
       const howToArr = howToState?.map((item) => `${item?.step}`);
 
       let obj = {
@@ -159,26 +149,7 @@ const AddRecipePage = () => {
   // add ingredient
   const handleIngredientClick = (ingredient: any, present: boolean, edit?: boolean) => {
     let ingredientList = [];
-    const defaultPortion = ingredient?.portions?.find((ing) => ing?.default) || ingredient?.portions?.[0];
-
-    const newIngredient = {
-      ...ingredient,
-      ingredientId: {
-        _id: ingredient?._id,
-        ingredientName: ingredient?.ingredientName,
-        featuredImage: ingredient?.featuredImage,
-        images: ingredient?.images,
-      },
-      selectedPortion: {
-        gram: parseFloat(defaultPortion?.meausermentWeight),
-        name: defaultPortion?.measurement,
-        quantity: ingredient?.selectedPortion?.quantity || 1,
-      },
-      weightInGram: parseFloat(defaultPortion?.meausermentWeight),
-      ingredientStatus: "ok",
-      originalIngredientName: ingredient?.originalIngredientName || ingredient?.ingredientName,
-      quantityString: ingredient?.quantityString || "1",
-    };
+    const newIngredient = arrangeIngredient(ingredient);
 
     if (!present) {
       ingredientList = [...selectedIngredientsList, newIngredient];

@@ -9,7 +9,7 @@
   outline: 0px;
   box-shadow: none;
   color: #b6b6b6;
-  border-radius: 8px;
+  border-radius: 10px;
   display: inline-block;
   font: inherit;
   line-height: 1.5em;
@@ -18,6 +18,7 @@
   border: 1px solid #dddddd;
   outline: none;
   font-family: "Segoe UI", sans-serif;
+  transition: border-color 0.3s;
   &::placeholder {
     color: #c8c8c8;
   }
@@ -33,13 +34,13 @@
 .borderPrimary {
   &:focus,
   &:hover {
-    border: 1px solid $primaryColor;
+    border-color: $primaryColor;
   }
 }
 .borderSecondary {
   &:focus,
   &:hover {
-    border: 1px solid $secondaryColor;
+    border-color: $secondaryColor;
   }
 }
 
@@ -55,4 +56,5 @@
   padding-top: 0.5rem;
   color: $errorColor;
   font-size: 1.4rem;
+  margin-left: 0.5rem;
 }
