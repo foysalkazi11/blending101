@@ -55,6 +55,7 @@ const MyPlan = () => {
   };
 
   const { monthStart, monthEnd, dayStart, dayEnd } = week;
+  console.log(recipes);
   return (
     <Fragment>
       <RXPanel />

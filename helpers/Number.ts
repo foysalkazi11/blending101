@@ -34,10 +34,12 @@ export function decimalToMixedNumber(decimal) {
 export function mixedNumberToDecimal(mixedNumber) {
   // Split the mixed number into its parts (integer, numerator, denominator)
   const parts = mixedNumber.split(" ");
-
+  console.log(parts);
   if (parts.length === 1) {
-    // If there's no space, it's just an integer
-    return parseFloat(parts[0]);
+    const [numerator, denominator] = parts[0].split("/");
+
+    // If there is fraction then we calculate otherwise the number only
+    return denominator ? +numerator / +denominator : numerator;
   } else if (parts.length === 2) {
     // If there's a space, it's a mixed number
     const integerPart = parseFloat(parts[0]);
@@ -62,8 +64,3 @@ function parseFraction(fraction) {
   // Calculate and return the decimal value of the fraction
   return numerator / denominator;
 }
-
-// Example usage:
-const mixedNumber = "3 1/4";
-const decimalValue = mixedNumberToDecimal(mixedNumber);
-console.log(decimalValue); // Output: 3.25

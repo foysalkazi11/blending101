@@ -37,7 +37,7 @@ const useImage = (initState: any[] = []) => {
             return imageCompression(file, options).then((file) =>
               axios({
                 method: "post",
-                url: `${process.env.NEXT_PUBLIC_S3_IMAGE_UPLOAD_HASH}?image_name=${fileName}&folder_name=${folderName}`,
+                url: `https://j88wgcjqa6.execute-api.us-east-1.amazonaws.com/prod/image_processing/upload?image_name=${fileName}&folder_name=${folderName}`,
                 data: file,
               }),
             );

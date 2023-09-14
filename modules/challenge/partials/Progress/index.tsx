@@ -3,8 +3,8 @@ import React from "react";
 import styles from "./index.module.scss";
 
 import RecipeCategory from "./_category.component";
-import Streakbar from "./_streakbar.component";
-import Dialer from "./_dialer.component";
+import Streakbar from "./_streak.component";
+import Dialer from "./_dial.component";
 import useChallengeLayout from "@/challenge/hooks/useLayout";
 
 interface ChallengeProps {

@@ -3,7 +3,7 @@ import HSBar from "react-horizontal-stacked-bar-chart";
 
 import { RECIPE_CATEGORY_COLOR } from "data/Recipe";
 
-import styles from "./_streakbar.module.scss";
+import styles from "./_streak.module.scss";
 
 interface GraphDetailContainerInterface {
   activities?: any[];

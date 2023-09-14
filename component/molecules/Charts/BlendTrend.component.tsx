@@ -3,7 +3,7 @@ import { format, isAfter, subDays, isToday } from "date-fns";
 import React from "react";
 import { GET_RECENT_CHALLENGES } from "../../../modules/challenge/challenge.graphql";
 import { useAppSelector } from "../../../redux/hooks";
-import { getBackgroundColor } from "../../../modules/challenge/partials/Progress/_dialer.component";
+import { getBackgroundColor } from "../../../modules/challenge/partials/Progress/_dial.component";
 
 import styles from "./_Charts.module.scss";
 import { useUser } from "../../../context/AuthProvider";

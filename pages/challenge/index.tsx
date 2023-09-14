@@ -185,6 +185,7 @@ const ChallengePage = () => {
                     }
                     <IconButton
                       size="small"
+                      color="white"
                       variant="secondary"
                       fontName={faTimes}
                       onClick={() => {

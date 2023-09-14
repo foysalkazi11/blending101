@@ -22,6 +22,7 @@ import routes from "routes";
 import { faTrash } from "@fortawesome/pro-regular-svg-icons";
 import usePlanToGrocery from "@/plan/hooks/usePlanToGrocery";
 import useSharePlan from "@/plan/hooks/useSharePlan";
+import useDeletePlan from "@/plan/hooks/plan-details/useDeletePlan";
 
 interface PlanCardProps {
   title?: string;
@@ -90,6 +91,8 @@ function PlanCard(props: PlanCardProps) {
   const router = useRouter();
   const { id: memberId } = useUser();
   const [link, getLink] = useSharePlan(planId);
+
+  const deletePlan = useDeletePlan();
   const addToGrocery = usePlanToGrocery();
 
   const commentsHandler = (comments: number, notes: number, myRating: number) => {
@@ -138,7 +141,7 @@ function PlanCard(props: PlanCardProps) {
                   <li onClick={() => router.push(`/planner/plan/${planId}`)}>
                     <Icon fontName={faPen} size="1.6rem" color="#fe5d1f" />
                   </li>
-                  <li onClick={() => router.push(`/planner/plan/${planId}`)}>
+                  <li onClick={() => deletePlan(planId)}>
                     <Icon fontName={faTrash} size="1.6rem" color="#fe5d1f" />
                   </li>
                   <li onClick={() => addToGrocery(planId)}>

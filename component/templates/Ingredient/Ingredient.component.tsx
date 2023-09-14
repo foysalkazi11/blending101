@@ -280,6 +280,7 @@ const IngredientForm: React.FC<IngredientFormProps> = (props) => {
   const ActionButton = () => (
     <>
       <IconButton
+        color="white"
         className="ml-10 mr-10"
         variant={quantity === 0 ? "disabled" : "secondary"}
         fontName={faSave}
