@@ -22,6 +22,7 @@ import InstructionsForMakingRecipe from "../share/howToSection";
 import IngredientSection from "../share/IngredientSection";
 import VersionTray from "../../sidetray/versionTray/VersionTray";
 import { setQuantity } from "redux/edit_recipe/quantity";
+import { useToArrangeIngredient } from "../share/useToArrangeIngredient";
 
 interface editRecipe {
   detailsARecipe?: RecipeDetailsType;
@@ -78,6 +79,7 @@ const EditRecipePage = ({
   const updateRecipeInstruction = (recipeInstruction) => {
     dispatch(setRecipeInstruction(recipeInstruction));
   };
+  const arrangeIngredient = useToArrangeIngredient();
 
   const removeIngredient = (id) => {
     let updated_list = selectedIngredientsList?.filter((elem) => {
@@ -98,31 +100,13 @@ const EditRecipePage = ({
   };
 
   const handleAddIngredient = (ing: { [key: string]: any }) => {
-    dispatch(setRecipeIngredients(ing));
+    dispatch(setRecipeIngredients(arrangeIngredient(ing)));
   };
 
   const handleIngredientClick = (ingredient: any, present: boolean) => {
     let blendz = [];
     if (!present) {
-      const defaultPortion = ingredient?.portions?.find((ing) => ing?.default) || ingredient?.portions?.[0];
-      const newIngredient = {
-        ...ingredient,
-        ingredientId: {
-          _id: ingredient?._id,
-          ingredientName: ingredient?.ingredientName,
-          featuredImage: ingredient?.featuredImage,
-          images: ingredient?.images,
-        },
-        selectedPortion: {
-          gram: parseFloat(defaultPortion?.meausermentWeight),
-          name: defaultPortion?.measurement,
-          quantity: 1,
-        },
-        weightInGram: parseFloat(defaultPortion?.meausermentWeight),
-        ingredientStatus: "ok",
-        originalIngredientName: ingredient?.ingredientName,
-        quantityString: "1",
-      };
+      const newIngredient = arrangeIngredient(ingredient);
       blendz = [...selectedIngredientsList, newIngredient];
     } else {
       blendz = selectedIngredientsList?.filter((blen) => {
