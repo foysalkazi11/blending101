@@ -39,6 +39,8 @@ const IngredientSection = ({
             ingredients={selectedIngredientsList}
             hasComment
             onDelete={removeIngredient}
+            onNutrition={setNutritionState}
+            singleIngredient={nutritionState}
             onSave={({ ingredient, portion, quantity }) => {
               const qty = mixedNumberToDecimal(quantity);
               const weightInGram = qty * +portion?.meausermentWeight;
