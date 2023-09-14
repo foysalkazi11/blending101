@@ -55,9 +55,13 @@ const NutritionPanelRxFacts = ({
   const selectedIngredientsList = useAppSelector((state) => state?.editRecipeReducer?.selectedIngredientsList);
   const dispatch = useAppDispatch();
   const measurement =
-    nutritionState?.portions?.find((itm) => itm?.default)?.measurement || nutritionState?.selectedPortion?.name;
-  const nutrientName = nutritionState?.ingredientName || nutritionState?.ingredientId?.ingredientName;
+    nutritionState?.selectedPortion?.name || nutritionState?.portions?.find((itm) => itm?.default)?.measurement;
+  const nutrientName =
+    nutritionState?.originalIngredientName ||
+    nutritionState?.ingredientName ||
+    nutritionState?.ingredientId?.ingredientName;
   const singleIngQuantity = parseFloat(nutritionState?.selectedPortion?.quantity) || 1;
+  const quantityString = nutritionState?.quantityString || parseFloat(nutritionState?.selectedPortion?.quantity) || 1;
 
   useEffect(() => {
     if (servings) {
@@ -77,7 +81,7 @@ const NutritionPanelRxFacts = ({
                 <>
                   <div>
                     <h3 className={styles.content__name}>
-                      {singleIngQuantity}&nbsp;
+                      {quantityString}&nbsp;
                       {measurement}
                       &nbsp;
                       {nutrientName}
