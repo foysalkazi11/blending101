@@ -102,8 +102,8 @@ const ShowRecipeContainer = ({
       setContainerData((prev) =>
         prev.map((item) =>
           (
-            bulkRecipeIdsForAddedInCollection.length
-              ? bulkRecipeIdsForAddedInCollection.includes(item?.recipeId?._id)
+            bulkRecipeIdsForAddedInCollection?.length
+              ? bulkRecipeIdsForAddedInCollection?.includes(item?.recipeId?._id)
               : item?.recipeId?._id === id
           )
             ? {
