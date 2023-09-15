@@ -1,10 +1,7 @@
 import { useLazyQuery } from "@apollo/client";
 import FILTER_RECIPE from "../../../../gqlLib/recipes/queries/filterRecipe";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import {
-  updateAllFilterRecipes,
-  updateShowFilterOrSearchRecipes,
-} from "../../../../redux/slices/filterRecipeSlice";
+import { updateAllFilterRecipes, updateShowFilterOrSearchRecipes } from "../../../../redux/slices/filterRecipeSlice";
 import notification from "../../../utility/reactToastifyNotification";
 import { useUser } from "../../../../context/AuthProvider";
 
@@ -12,19 +9,11 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
   const user = useUser();
   const dispatch = useAppDispatch();
   const { allFilterRecipes } = useAppSelector((state) => state?.filterRecipe);
-  const [filterRecipe, { loading, data, error, ...rest }] = useLazyQuery(
-    FILTER_RECIPE,
-    {
-      fetchPolicy: "cache-and-network",
-    },
-  );
+  const [filterRecipe, { loading, data, error, ...rest }] = useLazyQuery(FILTER_RECIPE, {
+    fetchPolicy: "cache-and-network",
+  });
 
-  const handleFilterRecipes = async (
-    allFilters,
-    page = 1,
-    limit = 12,
-    isNewItems: boolean = true,
-  ) => {
+  const handleFilterRecipes = async (allFilters, page = 1, limit = 12, isNewItems: boolean = true) => {
     let blendTypesArr: string[] = [];
     let ingredientIds: string[] = [];
     let collectionsIds: string[] = [];
@@ -164,11 +153,8 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
       dispatch(
         updateAllFilterRecipes({
           filterRecipes: isNewItems
-            ? [...data?.filterRecipe?.recipes]
-            : [
-                ...allFilterRecipes.filterRecipes,
-                ...data?.filterRecipe?.recipes,
-              ],
+            ? data?.filterRecipe?.recipes
+            : [...allFilterRecipes.filterRecipes, ...data?.filterRecipe?.recipes],
           isFiltering: false,
           totalItems: data?.filterRecipe?.totalRecipes,
         }),

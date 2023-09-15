@@ -8,16 +8,18 @@
   border-radius: 90px;
   display: flex;
   align-items: center;
-  padding: 10px;
-  flex-wrap: wrap;
-  @include respond(md) {
-    width: auto;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  }
+  padding: 0.5rem;
+  overflow-y: hidden;
+  // flex-wrap: wrap;
+  margin: 0 0 0 1.5rem;
+  // @include respond(md) {
+  //   width: auto;
+  //   flex-wrap: nowrap;
+  //   overflow-x: auto;
+  //   &::-webkit-scrollbar {
+  //     display: none;
+  //   }
+  // }
 
   .item {
     height: calc(100% - 20px);
@@ -31,6 +33,7 @@
     position: relative;
     cursor: pointer;
     margin: 10px;
+    flex-shrink: 0;
 
     .image {
       width: 35px;

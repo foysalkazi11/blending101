@@ -53,7 +53,7 @@ const Home = (props: HomeProps) => {
     }
 
     dispatch(updateSidebarActiveMenuName("Blends"));
-    router.push("/recipe/recipe_discovery");
+    router.push("/recipe/filterRecipe");
   };
 
   return (

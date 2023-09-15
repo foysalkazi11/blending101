@@ -1,13 +1,7 @@
 import { RecipeType } from "./recipeType";
 
 export type ActiveSectionType = "visual" | "tags";
-export type FiltersUpdateCriteria =
-  | "add"
-  | "remove"
-  | "update"
-  | "removeAll"
-  | "focus"
-  | "bulkAdd";
+export type FiltersUpdateCriteria = "add" | "remove" | "update" | "removeAll" | "focus" | "bulkAdd";
 export type FilterCriteriaOptions =
   | "blendTypes"
   | "includeIngredientIds"
@@ -66,6 +60,7 @@ export interface NutrientFiltersType {
   name: string;
   filterCriteria: FilterCriteriaOptions;
   origin: ActiveFilterTagCriteriaType;
+  image?: string;
 }
 
 export interface NutrientMatrixType {
@@ -82,6 +77,7 @@ export interface NutrientMatrixType {
   name: string;
   filterCriteria: FilterCriteriaOptions;
   origin: ActiveFilterTagCriteriaType;
+  image?: string;
 }
 
 export interface ActiveFilterTagCriteriaType {
@@ -91,11 +87,7 @@ export interface ActiveFilterTagCriteriaType {
   childTab: string;
 }
 
-export type FilterCriteriaValue =
-  | BlendType
-  | IngredientType
-  | NutrientFiltersType
-  | NutrientMatrixType;
+export type FilterCriteriaValue = BlendType | IngredientType | NutrientFiltersType | NutrientMatrixType;
 
 export interface AllFilterRecipes {
   filterRecipes: RecipeType[];
@@ -104,7 +96,5 @@ export interface AllFilterRecipes {
 }
 
 export type AllFilterType = {
-  [key in FilterCriteriaOptions]: key extends "searchTerm"
-    ? string
-    : FilterCriteriaValue[];
+  [key in FilterCriteriaOptions]: key extends "searchTerm" ? string : FilterCriteriaValue[];
 };

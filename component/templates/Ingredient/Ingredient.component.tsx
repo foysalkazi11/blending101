@@ -165,21 +165,20 @@ const IngredientPanel = (props: IngredientPanelProps) => {
         </div>
       </div>
       <div className="mt-10 mb-10">
-        {!showAddForm && (
-          <ButtonComponent
-            value="Add Ingredient"
-            variant="transparentHover"
-            style={{ padding: "10px 10px", margin: "auto", width: 200 }}
-            onClick={() => setShowAddForm(true)}
-          />
-        )}
-        {showAddForm && (
+        {showAddForm ? (
           <IngredientForm
             ingredients={ingredients}
             onSave={onSave}
             hasComment={hasComment}
             setShowAddForm={setShowAddForm}
             onClose={() => setShowAddForm(false)}
+          />
+        ) : (
+          <ButtonComponent
+            value="Add Ingredient"
+            variant="transparentHover"
+            style={{ padding: "10px 10px", margin: "auto", width: 200 }}
+            onClick={() => setShowAddForm(true)}
           />
         )}
       </div>
