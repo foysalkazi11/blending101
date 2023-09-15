@@ -36,6 +36,9 @@ import DayPicker from "@/plan/partials/Shared/DayPicker.component";
 import IngredientDrawer from "component/templates/Panel/Ingredients/IngredientPanel.component";
 import useQueuedRecipes from "@/plan/hooks/plan-details/useQueuedRecipes";
 import useSharePlan from "@/plan/hooks/useSharePlan";
+import PlanCollectionTray from "components/sidetray/planCollectionTray";
+import PlanCommentsTray from "components/sidetray/planCommentsTray";
+import useToOpenPlanCommentsTray from "customHooks/plan/useToOpenPlanCommentsTray";
 
 const PlanDetails = () => {
   const { id } = useUser();
@@ -43,11 +46,11 @@ const PlanDetails = () => {
   const planId = router.query.planId;
   const { plan, insights } = usePlanDetails(planId);
   const [link, getLink] = useSharePlan(planId);
-
   const form = useForm({
     defaultValues: useMemo(() => defaultPlan, []),
   });
   const dispatch = useAppDispatch();
+  const handleOpenPlanCommentsTray = useToOpenPlanCommentsTray();
 
   const [planlist, setPlanlist] = useState<PlanItem[]>([]);
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
@@ -119,6 +122,8 @@ const PlanDetails = () => {
 
   return (
     <Fragment>
+      <PlanCollectionTray showPanle="left" showTagByDefaut={false} />
+      <PlanCommentsTray showPanle="right" showTagByDefaut={false} />
       <RXPanel />
       <IngredientDrawer />
       <ShareModal name={plan?.planName} show={showShare} setShow={setShowShare} link={link} onShare={getLink} />
@@ -208,7 +213,16 @@ const PlanDetails = () => {
                             <Icon fontName={faShareNodes} size="2rem" className="mr-10" />
                             Share
                           </span>
-                          <span onClick={() => setShowComments((prev) => !prev)}>
+                          <span
+                            onClick={() => {
+                              handleOpenPlanCommentsTray({
+                                id: plan?._id,
+                                name: plan?.planName,
+                                image: plan?.image?.url,
+                                myRating: 0,
+                              });
+                            }}
+                          >
                             <Icon fontName={faMessageDots} size="2rem" className="mr-10" />
                             {comments?.getAllCommentsForAPlan?.length || 0}
                           </span>

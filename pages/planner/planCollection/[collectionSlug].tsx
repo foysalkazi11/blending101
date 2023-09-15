@@ -19,30 +19,27 @@ const CollectionsOfPlan = () => {
   const slug = router.query?.collectionSlug as string;
   const [input, setInput] = useState("");
   const memberId = useUser().id;
-  const { data: allPlans, loading: allPlansLoading } = useQuery(
-    GET_ALL_PLANS_FOR_A_COLLECTION,
-    {
-      variables: {
-        slug,
-        memberId,
-        page: 1,
-        limit: 12,
-      },
+  const { data: allPlans, loading: allPlansLoading } = useQuery(GET_ALL_PLANS_FOR_A_COLLECTION, {
+    variables: {
+      slug,
+      memberId,
+      page: 1,
+      limit: 12,
     },
-  );
+  });
 
   return (
     <React.Fragment>
       <PlanCollectionTray showPanle="left" showTagByDefaut={true} />
       <PlanCommentsTray showPanle="right" showTagByDefaut={false} />
       <div className={styles.main__div}>
-        <CommonSearchBar
+        {/* <CommonSearchBar
           input={input}
           setInput={setInput}
           isSearchTag={false}
           styles={{ marginLeft: "16px" }}
         />
-        <WikiBanner />
+        <WikiBanner /> */}
 
         <ShowRecipeContainer
           data={allPlans?.getAllPlansForACollection?.plans}
@@ -50,10 +47,7 @@ const CollectionsOfPlan = () => {
           headerLeftSide={
             <div className="flex ai-center">
               {slug === "my-favorite" ? (
-                <FontAwesomeIcon
-                  icon={faHeart}
-                  className={classes.head__icon}
-                />
+                <FontAwesomeIcon icon={faHeart} className={classes.head__icon} />
               ) : (
                 <FontAwesomeIcon icon={faStar} className={classes.head__icon} />
               )}
