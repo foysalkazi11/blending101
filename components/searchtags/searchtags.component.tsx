@@ -9,6 +9,7 @@ import {
   FilterCriteriaValue,
   FiltersUpdateCriteria,
 } from "../../type/filterType";
+import { NextImageWithFallback } from "theme/imageWithFallback";
 
 export type HandleUpdateActiveFilterTagType = (
   activeSection: ActiveSectionType,
@@ -51,7 +52,7 @@ export default function SearchtagsComponent({
     );
   };
   return (
-    <div className={styles.searchtab}>
+    <div className={`${styles.searchtab} x-scroll`}>
       {allFilters?.length
         ? allFilters.map((filterItem) => {
             const { tagLabel, id } = filterItem;
@@ -81,9 +82,7 @@ const FilterByPicture = ({
   const isItemString = typeof item === "string";
   return (
     <div
-      className={`${styles.item} ${
-        isIdExcluded ? styles.activeItemPrimary : ""
-      }`}
+      className={`${styles.item} ${isIdExcluded ? styles.activeItemPrimary : ""}`}
       onClick={() =>
         handleUpdateActiveFilterTag(
           item?.origin.activeSection,
@@ -126,9 +125,7 @@ const FilterByTag = ({
   const isItemString = typeof item === "string";
   return (
     <div
-      className={`${styles.item} ${
-        isIdExcluded ? styles.activeItemPrimary : ""
-      }`}
+      className={`${styles.item} ${isIdExcluded ? styles.activeItemPrimary : ""}`}
       style={{ minHeight: "35px" }}
       onClick={() =>
         handleUpdateActiveFilterTag(
@@ -158,7 +155,15 @@ const FilterByTag = ({
       {item?.image && (
         <div className={styles.image}>
           {/*  @ts-ignore */}
-          <img src={item?.image} alt="img" />
+          <NextImageWithFallback
+            src={item?.image}
+            alt={"img"}
+            fallbackSrc="/food/chard.png"
+            width={35}
+            height={35}
+            style={{ objectFit: "contain" }}
+          />
+          {/* <img src={item?.image} alt="img" /> */}
         </div>
       )}
       <p>{isItemString ? `Search | ${item}` : item?.tagLabel}</p>
