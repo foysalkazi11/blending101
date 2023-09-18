@@ -5,8 +5,6 @@ import SearchTagsComponent from "../../searchtags/searchtags.component";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import ShowLastModifiedCollection from "../../showLastModifiedCollection/ShowLastModifiedCollection";
 import RegularRecipes from "./regularRecipes";
-import SEARCH_RECIPE from "../../../gqlLib/recipes/queries/searchRecipe";
-import { useLazyQuery } from "@apollo/client";
 import useDebounce from "../../../customHooks/useDebounce";
 import {
   resetAllFilters,
@@ -20,10 +18,7 @@ import {
   setChangeRecipeWithinCollection,
   setSingleRecipeWithinCollecions,
 } from "../../../redux/slices/collectionSlice";
-import {
-  setOpenCollectionsTary,
-  setOpenFilterTray,
-} from "../../../redux/slices/sideTraySlice";
+import { setOpenCollectionsTary, setOpenFilterTray } from "../../../redux/slices/sideTraySlice";
 import ShowRecipeContainer from "../../showRecipeContainer";
 import ShareRecipe from "../recipeDetails/center/shareRecipe";
 import useToUpdateFilterCriteria from "../../../customHooks/recipeFilter/useToUpdateRecipeFilterCriteria";
@@ -44,34 +39,18 @@ const RecipeDiscovery = () => {
   });
   const [openShareModal, setOpenShareModal] = useState(false);
   const [pageNum, setPageNum] = useState(1);
-  const [searchRecipeType, setSearchRecipeType] = useState<"filter" | "search">(
-    "filter",
-  );
+  const [searchRecipeType, setSearchRecipeType] = useState<"filter" | "search">("filter");
   const [recipeSearchInput, setRecipeSearchInput] = useState("");
   const { openFilterTray } = useAppSelector((state) => state.sideTray);
-  const { allFilters, allFilterRecipes, showFilterOrSearchRecipes } =
-    useAppSelector((state) => state?.filterRecipe);
+  const { allFilters, allFilterRecipes, showFilterOrSearchRecipes } = useAppSelector((state) => state?.filterRecipe);
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
   const isMounted = useRef(false);
   const dispatch = useAppDispatch();
-  const [searchRecipe, { loading: searchRecipeLoading }] = useLazyQuery(
-    SEARCH_RECIPE,
-    {
-      fetchPolicy: "cache-and-network",
-    },
-  );
 
   const debounceSearchTerm = useDebounce(recipeSearchInput, 500);
-  const {
-    handleFilterRecipes,
-    loading: filterRecipesLoading,
-    error,
-    data,
-  } = useFetchGetRecipesByBlendAndIngredients();
-  const handleSearchRecipes = useHandleSearchRecipe();
-  const { lastModifiedCollection } = useAppSelector(
-    (state) => state?.collections,
-  );
+  const { handleFilterRecipes, loading: filterRecipesLoading } = useFetchGetRecipesByBlendAndIngredients();
+  const { handleSearchRecipes, loading: searchRecipeLoading } = useHandleSearchRecipe();
+  const { lastModifiedCollection } = useAppSelector((state) => state?.collections);
   // handle update recipe filter criteria
   const handleUpdateFilterCriteria = useToUpdateFilterCriteria();
   // handle update recipe active filter tag
@@ -97,13 +76,7 @@ const RecipeDiscovery = () => {
       handleFilterRecipes(allFilters, pageNum + 1, dataLimit, false);
     }
     if (searchRecipeType === "search") {
-      handleSearchRecipes(
-        recipeSearchInput,
-        searchRecipe,
-        pageNum + 1,
-        dataLimit,
-        false,
-      );
+      handleSearchRecipes(recipeSearchInput, pageNum + 1, dataLimit, false);
     }
   };
 
@@ -127,17 +100,12 @@ const RecipeDiscovery = () => {
       setSearchRecipeType("filter");
       setPageNum(1);
       handleFilterRecipes(allFilters, 1, dataLimit, true);
+      setRecipeSearchInput("");
     } else {
       if (recipeSearchInput.length) {
         setSearchRecipeType("search");
         setPageNum(1);
-        handleSearchRecipes(
-          recipeSearchInput,
-          searchRecipe,
-          1,
-          dataLimit,
-          true,
-        );
+        handleSearchRecipes(recipeSearchInput, 1, dataLimit, true);
       } else {
         dispatch(updateShowFilterOrSearchRecipes(false));
         dispatch(
@@ -162,13 +130,8 @@ const RecipeDiscovery = () => {
       if (recipeSearchInput.length) {
         setSearchRecipeType("search");
         setPageNum(1);
-        handleSearchRecipes(
-          recipeSearchInput,
-          searchRecipe,
-          1,
-          dataLimit,
-          true,
-        );
+        handleSearchRecipes(recipeSearchInput, 1, dataLimit, true);
+        dispatch(resetAllFilters());
       } else {
         if (allFilters.length) {
           setSearchRecipeType("filter");
@@ -204,10 +167,7 @@ const RecipeDiscovery = () => {
       <Filtertray showPanle="left" showTagByDefaut={false} />
       <RecipeCommentsTray showPanle="right" showTagByDefaut={false} />
       <NotificationTray showPanle="right" showTagByDefaut={false} />
-      <RecipeCollectionAndThemeTray
-        showPanle="left"
-        showTagByDefaut={openFilterTray ? false : true}
-      />
+      <RecipeCollectionAndThemeTray showPanle="left" showTagByDefaut={openFilterTray ? false : true} />
       <div className={styles.main__div}>
         <div className={openFilterTray ? styles.move : styles.back}>
           <DiscoveryPageSearchBar
@@ -222,19 +182,9 @@ const RecipeDiscovery = () => {
           {allFilters?.length ? (
             <SearchTagsComponent
               allFilters={allFilters}
-              handleUpdateActiveFilterTag={(
-                activeSection,
-                filterCriteria,
-                activeTab,
-                childTab,
-              ) => {
+              handleUpdateActiveFilterTag={(activeSection, filterCriteria, activeTab, childTab) => {
                 dispatch(setOpenFilterTray(true));
-                handleUpdateActiveFilterTag(
-                  activeSection,
-                  filterCriteria,
-                  activeTab,
-                  childTab,
-                );
+                handleUpdateActiveFilterTag(activeSection, filterCriteria, activeTab, childTab);
               }}
               handleUpdateFilterCriteria={handleUpdateFilterCriteria}
             />
@@ -247,9 +197,7 @@ const RecipeDiscovery = () => {
               closeHandler={closeFilterRecipes}
               showItems="recipe"
               showDefaultLeftHeader
-              showDefaultMiddleHeader={
-                allFilterRecipes.filterRecipes.length ? true : false
-              }
+              showDefaultMiddleHeader={allFilterRecipes.filterRecipes.length ? true : false}
               showDefaultRightHeader
               hasMore={allFilterRecipes?.totalItems > dataLimit * pageNum}
               totalDataCount={allFilterRecipes?.totalItems}

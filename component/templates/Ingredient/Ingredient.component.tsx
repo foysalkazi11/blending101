@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBasketShoppingSimple } from "@fortawesome/pro-light-svg-icons";
 import { decimalToMixedNumber } from "helpers/Number";
 import { IngredientPortion, IngredientWithPortion, Portions } from "@/app/types/ingredient.types";
+import Tooltip from "theme/toolTip/CustomToolTip";
 
 interface IngredientPanelProps {
   ingredients: IngredientWithPortion[];
@@ -22,13 +23,19 @@ interface IngredientPanelProps {
   onDelete?: any;
   onSave?: any;
   hasComment?: boolean;
+  singleIngredient?: { [key: string]: any };
 }
 
 const IngredientPanel = (props: IngredientPanelProps) => {
-  const { ingredients, onNutrition, onDelete, onSave, hasComment } = props;
+  const { ingredients, onNutrition = () => {}, onDelete, onSave, hasComment, singleIngredient = {} } = props;
 
   const [editingId, setEditingId] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
+  const handleSetSingleIngredient = (ingredient: IngredientWithPortion = {}) => {
+    window.scrollBy(0, 0);
+    onNutrition(ingredient?.ingredientId?._id === singleIngredient?.ingredientId?._id ? {} : ingredient);
+  };
+
   return (
     <div className="col-12">
       <div className="row">
@@ -46,7 +53,7 @@ const IngredientPanel = (props: IngredientPanelProps) => {
                   return (
                     <div className={styles.ingredient__content} key={ingredientId}>
                       <div className={styles.ingredient__item}>
-                        <div>
+                        <div className={styles.description}>
                           {ingredient?.ingredientId?.featuredImage ? (
                             <NextImageWithFallback
                               src={ingredient?.ingredientId?.featuredImage}
@@ -57,7 +64,7 @@ const IngredientPanel = (props: IngredientPanelProps) => {
                               style={{ objectFit: "contain" }}
                             />
                           ) : (
-                            <span />
+                            <FontAwesomeIcon icon={faBasketShoppingSimple} size="lg" />
                           )}
                         </div>
                         <span>
@@ -66,7 +73,25 @@ const IngredientPanel = (props: IngredientPanelProps) => {
                           {/* {fullNumber === 0 ? fractionNumber : fullNumber}
                           {fullNumber !== 0 && <sup>{fractionNumber}</sup>} {ingredient?.selectedPortion?.name} */}
                         </span>
-                        <span>{ingredient?.originalIngredientName || ingredient.ingredientId.ingredientName}</span>
+                        <Tooltip
+                          direction="top"
+                          content={
+                            ingredient.ingredientId.ingredientName ||
+                            ingredient?.originalIngredientName ||
+                            "Ingredient Name"
+                          }
+                        >
+                          <span
+                            // onClick={() => onNutrition(ingredient)}
+                            className={`${styles.highlighted} ${
+                              ingredient?.ingredientId?._id === singleIngredient?.ingredientId?._id &&
+                              "activeColorPrimary"
+                            }`}
+                            onClick={() => handleSetSingleIngredient(ingredient)}
+                          >
+                            {ingredient?.originalIngredientName || ingredient.ingredientId.ingredientName}
+                          </span>
+                        </Tooltip>
                       </div>
                       <div className={styles.ingredient__actions}>
                         <a
@@ -84,7 +109,7 @@ const IngredientPanel = (props: IngredientPanelProps) => {
                           color="primary"
                           fontName={faChartSimple}
                           className={styles.ingredient__button}
-                          onClick={() => onNutrition(ingredient)}
+                          onClick={() => handleSetSingleIngredient(ingredient)}
                         />
                         <Icon
                           size="small"
@@ -130,7 +155,7 @@ const IngredientPanel = (props: IngredientPanelProps) => {
               } else {
                 return (
                   <div key={index} className={styles.errorIngredient}>
-                    <FontAwesomeIcon icon={faBasketShoppingSimple} className={styles.icon} />
+                    <FontAwesomeIcon icon={faBasketShoppingSimple} size="lg" />
                     <p className={styles.text}>{ingredient?.errorString}</p>
                   </div>
                 );
@@ -140,21 +165,20 @@ const IngredientPanel = (props: IngredientPanelProps) => {
         </div>
       </div>
       <div className="mt-10 mb-10">
-        {!showAddForm && (
-          <ButtonComponent
-            value="Add Ingredient"
-            variant="transparentHover"
-            style={{ padding: "10px 10px", margin: "auto", width: 200 }}
-            onClick={() => setShowAddForm(true)}
-          />
-        )}
-        {showAddForm && (
+        {showAddForm ? (
           <IngredientForm
             ingredients={ingredients}
             onSave={onSave}
             hasComment={hasComment}
             setShowAddForm={setShowAddForm}
             onClose={() => setShowAddForm(false)}
+          />
+        ) : (
+          <ButtonComponent
+            value="Add Ingredient"
+            variant="transparentHover"
+            style={{ padding: "10px 10px", margin: "auto", width: 200 }}
+            onClick={() => setShowAddForm(true)}
           />
         )}
       </div>

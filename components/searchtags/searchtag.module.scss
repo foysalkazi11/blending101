@@ -2,22 +2,30 @@
 
 .searchtab {
   width: 100%;
+  max-width: 95%;
   background-color: #e0e0e05a;
   height: auto;
-  margin-top: 25px;
+  margin-top: 2.5rem;
   border-radius: 90px;
   display: flex;
   align-items: center;
-  padding: 10px;
-  flex-wrap: wrap;
-  @include respond(md) {
-    width: auto;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  }
+  padding: 0.5rem;
+  overflow-y: hidden;
+  // flex-wrap: wrap;
+  margin: 2.5rem auto 0 auto;
+
+  // &::-webkit-scrollbar {
+  //   display: none;
+  // }
+
+  // @include respond(md) {
+  //   width: auto;
+  //   flex-wrap: nowrap;
+  //   overflow-x: auto;
+  //   &::-webkit-scrollbar {
+  //     display: none;
+  //   }
+  // }
 
   .item {
     height: calc(100% - 20px);
@@ -31,6 +39,7 @@
     position: relative;
     cursor: pointer;
     margin: 10px;
+    flex-shrink: 0;
 
     .image {
       width: 35px;

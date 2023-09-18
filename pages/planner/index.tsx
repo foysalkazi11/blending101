@@ -38,6 +38,7 @@ import PlanCollectionTray from "components/sidetray/planCollectionTray";
 import useAllPlan from "@/plan/hooks/plan/useAllPlan";
 import useDeletePlan from "@/plan/hooks/plan-details/useDeletePlan";
 import { updateOnDelete } from "@/plan/services/plan-discovery.service";
+import PlanCommentsTray from "components/sidetray/planCommentsTray";
 
 const normalizeQueryParams = (queryParams) => {
   let queryParamObj = {} as AllFilterType;
@@ -148,6 +149,7 @@ const PlanDiscovery = () => {
     <Fragment>
       <PlanFilterTray showPanle="left" showTagByDefaut={false} />
       <PlanCollectionTray showPanle="left" showTagByDefaut={true} />
+      <PlanCommentsTray showPanle="right" showTagByDefaut={false} />
       <div className={styles.discovery}>
         <HideOnMobile>
           <div className={styles.searchBarContainer}>
