@@ -14,12 +14,12 @@ const useToUpdateFilterCriteria = () => {
     updateStatus: FiltersUpdateCriteria;
   }) => {
     dispatch(updateFilterCriteriaItem(obj));
-    const path = router.asPath;
+    // const path = router.asPath;
 
-    if (path !== "/recipe/filterRecipe/") {
-      dispatch(setOpenFilterTray(false));
-      router.push("/recipe/filterRecipe");
-    }
+    // if (path !== "/recipe/filterRecipe/") {
+    //   dispatch(setOpenFilterTray(false));
+    //   router.push("/recipe/filterRecipe");
+    // }
   };
   return handleUpdateFilterCriteria;
 };
