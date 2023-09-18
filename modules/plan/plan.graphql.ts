@@ -254,8 +254,14 @@ export const GET_ALL_PLANS = gql`
         _id
         planName
         description
+        startDateString
+        endDateString
         planCollections
         commentsCount
+        myRating
+        averageRating
+        numberOfRating
+        totalRating
         image {
           url
           hash
@@ -473,6 +479,16 @@ export const ADD_PLAN_COMMENT = gql`
   mutation AddPlanComment($planId: ID!, $memberId: ID!, $comment: String!) {
     createPlanComment(data: { planId: $planId, memberId: $memberId, comment: $comment }) {
       _id
+      comment
+      memberId {
+        _id
+        image
+        displayName
+        firstName
+        lastName
+      }
+      createdAt
+      commentsCount
     }
   }
 `;
