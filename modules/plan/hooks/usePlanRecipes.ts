@@ -15,6 +15,7 @@ interface usePlanRecipesTypes {
   page: number;
   setPage: any;
 }
+
 const usePlanRecipes = (props: usePlanRecipesTypes) => {
   const { type, query, page, setPage } = props;
   const [recipes, setRecipes] = useState([]);
@@ -26,7 +27,7 @@ const usePlanRecipes = (props: usePlanRecipesTypes) => {
   const [getRecipes, { loading }] = useLazyQuery(GET_ALL_PLANNER_RECIPES);
 
   // OBSERVING THE LAST RECIPE POSITION OF THE LIST TO TRY TO FETCH MORE RECIPES
-  const observer = useRef<any>();
+  const observer = useRef(null);
   const lastRecipeRef = useCallback(
     (node) => {
       if (loading) return;
@@ -38,7 +39,7 @@ const usePlanRecipes = (props: usePlanRecipesTypes) => {
       });
       if (node) observer.current.observe(node);
     },
-    [loading, hasMore, setPage],
+    [loading, observer, hasMore, setPage],
   );
 
   // RESETTING RECIPES ON QUERY OR CATEGORY CHANGE
@@ -66,7 +67,7 @@ const usePlanRecipes = (props: usePlanRecipesTypes) => {
     }
   }, [getRecipes, limit, page, query, type, userId]);
 
-  return { loading, recipes, containerRef: lastRecipeRef };
+  return { loading, recipes, discoverRef: lastRecipeRef };
 };
 
 export default usePlanRecipes;

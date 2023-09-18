@@ -28,14 +28,12 @@ const RecipePanel: React.FC<RecipePanelProps> = (props) => {
   const [page, setPage] = useState(1);
   const [type, setType] = useState("all");
 
-  // NEED TO WORK IN THE FOLLOWING HOOK
-  const { parentRef } = useFindRecipe([toggler, setToggler]);
+  const categories = useRecipeCategory();
+  const { parentRef, queueRef } = useFindRecipe(toggler);
+  const { discoverRef, recipes, loading } = usePlanRecipes({ type, query, page, setPage });
 
   const filterRef = useRef<HTMLDivElement>(null);
-
-  const categories = useRecipeCategory();
-  const { containerRef, recipes, loading } = usePlanRecipes({ type, query, page, setPage });
-
+  const recipeRef = toggler ? discoverRef : queueRef;
   return (
     <div style={style}>
       <IconHeading icon={faTelescope} title="Recipe" iconStyle={{ fontSize: "24px" }} />
@@ -78,7 +76,7 @@ const RecipePanel: React.FC<RecipePanelProps> = (props) => {
           maxHeight: height ? (toggler ? `calc(${height} - 111px)` : `calc(${height} - 51px)`) : "auto",
         }}
       >
-        <Recipes ref={containerRef} showAction={toggler} recipes={toggler ? recipes : queuedRecipes}>
+        <Recipes ref={recipeRef} showAction={toggler} recipes={toggler ? recipes : queuedRecipes}>
           {children}
         </Recipes>
         {/* IF DISCOVER TAB IS OPEN & LAZY LOADING IS HAPPENING */}
@@ -107,12 +105,7 @@ const Recipes = forwardRef((props: RecipesProps, ref: any) => {
           defaultVersion,
         } = recipe;
         return (
-          <div
-            ref={ref}
-            // ref={panelType === "DISCOVERY" ? (recipes.length === index + 1 ? wrapperRef : null) : wrapperRef}
-            key={_id + showAction ? "Discover" : "Queue"}
-            data-recipe={_id}
-          >
+          <div ref={ref} key={_id + showAction ? "Discover" : "Queue"} data-recipe={_id}>
             <RecipeCard
               variant="border"
               className="mt-10"

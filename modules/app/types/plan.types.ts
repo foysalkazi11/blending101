@@ -94,3 +94,13 @@ export interface GetPlannerByWeek {
     netCarbs: number;
   };
 }
+
+export interface GetPlanInsights {
+  getPlannerInsights: {
+    calorie: number;
+    macroMakeup: MacroMakeup;
+    netCarbs: number;
+    recipeCategoriesPercentage: CategoryPercentage[];
+    topIngredients: TopIngredientData[];
+  };
+}

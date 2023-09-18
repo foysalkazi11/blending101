@@ -55,7 +55,7 @@ interface PlanCardProps {
     start: Date;
     end: Date;
   };
-  planComrFrom?: PlanComeFromType;
+  planComeFrom?: PlanComeFromType;
   myRating?: number;
   variant?: "border" | "shadow";
 }
@@ -77,7 +77,7 @@ function PlanCard(props: PlanCardProps) {
     notes = 0,
     isCollectionIds = [] || null,
     setOpenCollectionModal = () => {},
-    planComrFrom = "list",
+    planComeFrom = "list",
     myRating = 0,
   } = props;
   const menu = useRef<any>();
@@ -108,6 +108,8 @@ function PlanCard(props: PlanCardProps) {
               name: title,
               image,
               myRating,
+              commentsCount: comments,
+              planComeFrom,
             });
           }}
         />{" "}
@@ -196,8 +198,8 @@ function PlanCard(props: PlanCardProps) {
                     onClick={(e) => {
                       e.stopPropagation();
                       isCollectionIds?.length
-                        ? handleOpenCollectionTray(planId, isCollectionIds, planComrFrom)
-                        : handleAddToCollection(planId, memberId, setOpenCollectionModal, planComrFrom);
+                        ? handleOpenCollectionTray(planId, isCollectionIds, planComeFrom)
+                        : handleAddToCollection(planId, memberId, setOpenCollectionModal, planComeFrom);
                     }}
                   />
                 </li>

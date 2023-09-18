@@ -3,7 +3,7 @@ import { faRectangleHistory } from "@fortawesome/pro-regular-svg-icons";
 import { faBookmark } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
-import useToUpdatePlanField from "../../../customHooks/plan/useToUpdatePlanField";
+import useToUpdatePlanField from "../../../customHooks/plan/useToUpdatePlanFieldFeaturedPlans";
 import {
   EDIT_PLAN_COLLECTION,
   GET_ALL_PLAN_COLLECTION,
@@ -12,10 +12,7 @@ import {
   ADD_OR_REMOVE_PLAN_COLLECTION,
 } from "../../../modules/plan/plan.graphql";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import {
-  setIsActivePlanForCollection,
-  setIsOpenPlanCollectionTray,
-} from "../../../redux/slices/Planner.slice";
+import { setIsActivePlanForCollection, setIsOpenPlanCollectionTray } from "../../../redux/slices/Planner.slice";
 import ConfirmationModal from "../../../theme/confirmationModal/ConfirmationModal";
 import SkeletonCollections from "../../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollections";
 import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
@@ -47,30 +44,17 @@ const PlanCollectionTray = ({ showPanle, showTagByDefaut }: Props) => {
   const [isDeleteCollection, setIsDeleteCollection] = useState(false);
   const [collectionId, setCollectionId] = useState("");
   const [isCollectionUpdate, setIsCollectionUpdate] = useState(false);
-  const { isOpenPlanCollectionTray, activePlanForCollection } = useAppSelector(
-    (state) => state?.planner,
-  );
+  const { isOpenPlanCollectionTray, activePlanForCollection } = useAppSelector((state) => state?.planner);
   const memberId = useUser().id;
   const isMounted = useRef(null);
-  const [
-    getAllPlanCollection,
-    {
-      data: allCollectionData,
-      loading: allCollectionLoading,
-      error: allCollectionError,
-    },
-  ] = useLazyQuery(GET_ALL_PLAN_COLLECTION, {
-    fetchPolicy: "cache-and-network",
-  });
-  const [editPlanCollection, { loading: editPlanCollectionLoading }] =
-    useMutation(EDIT_PLAN_COLLECTION);
-  const [addNewPlanCollection, { loading: addNewPlanCollectionLoading }] =
-    useMutation(ADD_NEW_PLAN_COLLECTION);
-  const [deletePlanCollection, { loading: deletePlanCollectionLoading }] =
-    useMutation(DELETE_PLAN_COLLECTION);
-  const [addOrRemovePlanFromCollection] = useMutation(
-    ADD_OR_REMOVE_PLAN_COLLECTION,
-  );
+  const [getAllPlanCollection, { data: allCollectionData, loading: allCollectionLoading, error: allCollectionError }] =
+    useLazyQuery(GET_ALL_PLAN_COLLECTION, {
+      fetchPolicy: "cache-and-network",
+    });
+  const [editPlanCollection, { loading: editPlanCollectionLoading }] = useMutation(EDIT_PLAN_COLLECTION);
+  const [addNewPlanCollection, { loading: addNewPlanCollectionLoading }] = useMutation(ADD_NEW_PLAN_COLLECTION);
+  const [deletePlanCollection, { loading: deletePlanCollectionLoading }] = useMutation(DELETE_PLAN_COLLECTION);
+  const [addOrRemovePlanFromCollection] = useMutation(ADD_OR_REMOVE_PLAN_COLLECTION);
   const dispatch = useAppDispatch();
   const handleUpdatePlanField = useToUpdatePlanField();
   const handleUpdatePlanDetailsField = useToUpdatePlanDetailsField();
@@ -99,11 +83,7 @@ const PlanCollectionTray = ({ showPanle, showTagByDefaut }: Props) => {
           handleUpdateGlobalPlansField(activePlanForCollection.id, updateObj);
           break;
         case "homePage":
-          handleUpdateGlobalPlansField(
-            activePlanForCollection.id,
-            updateObj,
-            8,
-          );
+          handleUpdateGlobalPlansField(activePlanForCollection.id, updateObj, 8);
           break;
         default:
           handleUpdatePlanField(activePlanForCollection.id, updateObj);
@@ -148,13 +128,11 @@ const PlanCollectionTray = ({ showPanle, showTagByDefaut }: Props) => {
                 variables: { memberId },
                 data: {
                   getAllPlanCollection: {
-                    planCollections:
-                      allCollectionData?.getAllPlanCollection?.planCollections.map(
-                        (collection) =>
-                          collection?._id === editAPlanCollection?._id
-                            ? { ...collection, ...editAPlanCollection }
-                            : collection,
-                      ),
+                    planCollections: allCollectionData?.getAllPlanCollection?.planCollections.map((collection) =>
+                      collection?._id === editAPlanCollection?._id
+                        ? { ...collection, ...editAPlanCollection }
+                        : collection,
+                    ),
                   },
                 },
               });
@@ -181,8 +159,7 @@ const PlanCollectionTray = ({ showPanle, showTagByDefaut }: Props) => {
                 data: {
                   getAllPlanCollection: {
                     planCollections: [
-                      ...allCollectionData?.getAllPlanCollection
-                        ?.planCollections,
+                      ...allCollectionData?.getAllPlanCollection?.planCollections,
                       addNewPlanCollection,
                     ],
                   },
@@ -256,12 +233,7 @@ const PlanCollectionTray = ({ showPanle, showTagByDefaut }: Props) => {
   };
 
   // edit a collection
-  const handleEditCollection = (
-    id: string,
-    name: string,
-    slug: string,
-    description: string,
-  ) => {
+  const handleEditCollection = (id: string, name: string, slug: string, description: string) => {
     setIsDeleteCollection(false);
     setInput((pre) => ({
       ...pre,
@@ -281,19 +253,14 @@ const PlanCollectionTray = ({ showPanle, showTagByDefaut }: Props) => {
       dispatch(
         setIsActivePlanForCollection({
           ...activePlanForCollection,
-          collectionIds: [
-            ...activePlanForCollection.collectionIds,
-            collectionId,
-          ],
+          collectionIds: [...activePlanForCollection.collectionIds, collectionId],
         }),
       );
     } else {
       dispatch(
         setIsActivePlanForCollection({
           ...activePlanForCollection,
-          collectionIds: activePlanForCollection.collectionIds.filter(
-            (id) => id !== collectionId,
-          ),
+          collectionIds: activePlanForCollection.collectionIds.filter((id) => id !== collectionId),
         }),
       );
     }
@@ -340,73 +307,49 @@ const PlanCollectionTray = ({ showPanle, showTagByDefaut }: Props) => {
       }}
       openTray={isOpenPlanCollectionTray}
       showPanel={showPanle}
-      panelTag={(hover) => (
-        <TrayTag
-          icon={<FontAwesomeIcon icon={faBookmark} />}
-          placeMent="left"
-          hover={hover}
-        />
-      )}
+      panelTag={(hover) => <TrayTag icon={<FontAwesomeIcon icon={faBookmark} />} placeMent="left" hover={hover} />}
     >
       <ToggleMenu
         toggleMenuList={[
           <div key={"key0"} className={styles.menu}>
-            <FontAwesomeIcon
-              icon={faRectangleHistory}
-              className={styles.icon}
-            />
+            <FontAwesomeIcon icon={faRectangleHistory} className={styles.icon} />
             <p>Collections</p>
           </div>,
         ]}
         variant={"outlineSecondary"}
       />
-      <IconForAddComment
-        handleIconClick={addNewCollection}
-        label="Add collection"
-      />
+      <IconForAddComment handleIconClick={addNewCollection} label="Add collection" />
       {allCollectionLoading ? (
         <SkeletonCollections />
       ) : (
-        allCollectionData?.getAllPlanCollection?.planCollections?.map(
-          (collection, i) => {
-            const {
-              _id,
-              name,
-              slug,
-              collectionDataCount,
-              image,
-              blogs,
-              description,
-            } = collection;
+        allCollectionData?.getAllPlanCollection?.planCollections?.map((collection, i) => {
+          const { _id, name, slug, collectionDataCount, image, blogs, description } = collection;
 
-            return (
-              <SingleCollection
-                key={_id}
-                id={_id}
-                name={name}
-                description={description}
-                slug={slug}
-                image={image || "/cards/food.png"}
-                collectionItemLength={collectionDataCount}
-                showMoreMenu={true}
-                handleDeleteCollection={handleOpenConfirmationModal}
-                handleEditCollection={handleEditCollection}
-                index={i}
-                menuIndex={menuIndex}
-                setMenuIndex={setMenuIndex}
-                changeItemWithinCollection={
-                  activePlanForCollection.id ? true : false
-                }
-                isRecipeWithinCollection={activePlanForCollection.collectionIds?.includes(
-                  _id,
-                )}
-                deleteCollectionLoading={deletePlanCollectionLoading}
-                handleClickCheckBox={handleChange}
-                collectionRoute="planCollection"
-              />
-            );
-          },
-        )
+          return (
+            <SingleCollection
+              key={_id}
+              id={_id}
+              name={name}
+              description={description}
+              slug={slug}
+              image={image || "/cards/food.png"}
+              collectionItemLength={collectionDataCount}
+              showMoreMenu={true}
+              handleDeleteCollection={handleOpenConfirmationModal}
+              handleEditCollection={handleEditCollection}
+              index={i}
+              menuIndex={menuIndex}
+              setMenuIndex={setMenuIndex}
+              changeItemWithinCollection={activePlanForCollection.id ? true : false}
+              isRecipeWithinCollection={activePlanForCollection.collectionIds?.includes(_id)}
+              deleteCollectionLoading={deletePlanCollectionLoading}
+              handleClickCheckBox={handleChange}
+              collectionRoute="planCollection"
+              canContribute={activePlanForCollection.id ? true : false}
+              canShareWithOther={activePlanForCollection.id ? true : false}
+            />
+          );
+        })
       )}
       {isDeleteCollection && (
         <ConfirmationModal
@@ -424,9 +367,7 @@ const PlanCollectionTray = ({ showPanle, showTagByDefaut }: Props) => {
           setInput={setInput}
           setOpenModal={setOpenModal}
           handleToAddOrUpdateCollection={handleAddOrEditCollection}
-          isAddOrUpdateCollectionLoading={
-            addNewPlanCollectionLoading || editPlanCollectionLoading
-          }
+          isAddOrUpdateCollectionLoading={addNewPlanCollectionLoading || editPlanCollectionLoading}
           openModal={openModal}
         />
       )}

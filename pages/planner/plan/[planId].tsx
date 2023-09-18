@@ -18,7 +18,7 @@ import ShowLastModifiedCollection from "components/showLastModifiedCollection/Sh
 import { useUser } from "context/AuthProvider";
 import useToAddPlanToCollection from "customHooks/plan/useToAddPlanToCollection";
 import useToOpenPlanCollectionTray from "customHooks/plan/useToOpenPlanCollectionTray";
-import { endOfWeek, format, startOfWeek } from "date-fns";
+import { format } from "date-fns";
 import { useRouter } from "next/router";
 import { Fragment, forwardRef, useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -36,6 +36,7 @@ import DayPicker from "@/plan/partials/Shared/DayPicker.component";
 import IngredientDrawer from "component/templates/Panel/Ingredients/IngredientPanel.component";
 import useQueuedRecipes from "@/plan/hooks/plan-details/useQueuedRecipes";
 import useSharePlan from "@/plan/hooks/useSharePlan";
+import useInsights from "@/plan/hooks/plan-details/useInsights";
 import PlanCollectionTray from "components/sidetray/planCollectionTray";
 import PlanCommentsTray from "components/sidetray/planCommentsTray";
 import useToOpenPlanCommentsTray from "customHooks/plan/useToOpenPlanCommentsTray";
@@ -43,14 +44,11 @@ import useToOpenPlanCommentsTray from "customHooks/plan/useToOpenPlanCommentsTra
 const PlanDetails = () => {
   const { id } = useUser();
   const router = useRouter();
-  const planId = router.query.planId;
-  const { plan, insights } = usePlanDetails(planId);
-  const [link, getLink] = useSharePlan(planId);
+  const planId = router.query.planId as string;
+
   const form = useForm({
     defaultValues: useMemo(() => defaultPlan, []),
   });
-  const dispatch = useAppDispatch();
-  const handleOpenPlanCommentsTray = useToOpenPlanCommentsTray();
 
   const [planlist, setPlanlist] = useState<PlanItem[]>([]);
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
@@ -59,7 +57,13 @@ const PlanDetails = () => {
   const [showComments, setShowComments] = useState(false);
   const [panelHeight] = useState("1000px");
 
+  const plan = usePlanDetails(planId);
+  const insights = useInsights(planId, planlist);
+
+  const [link, getLink] = useSharePlan(planId);
   const recipes = useQueuedRecipes(planlist);
+
+  const dispatch = useAppDispatch();
   useEffect(() => {
     if (plan) {
       setPlanlist(plan?.planData || []);
@@ -81,6 +85,7 @@ const PlanDetails = () => {
   const clonePlan = useClonePlan(planlist);
   const openCollection = useToOpenPlanCollectionTray();
   const addToCollection = useToAddPlanToCollection();
+  const handleOpenPlanCommentsTray = useToOpenPlanCommentsTray();
 
   const saveHandler = async (data) => {
     if (!isEditMode) return setIsEditMode(true);
@@ -89,11 +94,11 @@ const PlanDetails = () => {
       await editPlan(planId, data);
     } else {
       // IF VISITOR TRIES TO EDIT THE PLAN
-      await clonePlan(data);
+      clonePlan(data);
+      setPlanlist(plan?.planData);
+      form.reset(defaultPlan);
     }
     setIsEditMode(false);
-    setPlanlist(plan?.planData);
-    form.reset(defaultPlan);
   };
 
   // HANDLERS FOR MODIFYING PLAN
@@ -220,6 +225,7 @@ const PlanDetails = () => {
                                 name: plan?.planName,
                                 image: plan?.image?.url,
                                 myRating: 0,
+                                planComeFrom: "details",
                               });
                             }}
                           >
@@ -247,12 +253,7 @@ const PlanDetails = () => {
               </div>
             </div>
             <div className="col-3">
-              <Insights
-                height={panelHeight}
-                score={plan?.gigl?.rxScore}
-                calories={plan?.calorie?.value}
-                {...insights}
-              />
+              <Insights height={panelHeight} {...insights} />
             </div>
           </div>
         </div>

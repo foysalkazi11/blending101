@@ -254,8 +254,14 @@ export const GET_ALL_PLANS = gql`
         _id
         planName
         description
+        startDateString
+        endDateString
         planCollections
         commentsCount
+        myRating
+        averageRating
+        numberOfRating
+        totalRating
         image {
           url
           hash
@@ -391,6 +397,66 @@ export const GET_PLAN = gql`
   ${INSIGHTS_FIELDS}
 `;
 
+export const GET_PLAN_DETAILS = gql`
+  query GetAPlan($planId: String!, $token: String, $memberId: String) {
+    getAPlan(planId: $planId, token: $token, memberId: $memberId) {
+      plan {
+        _id
+        planName
+        description
+        memberId
+        planCollections
+        commentsCount
+        image {
+          url
+        }
+        planData {
+          id: _id
+          day
+          recipes {
+            isMatch
+            _id
+            name
+            recipeBlendCategory {
+              name
+            }
+            averageRating
+            totalRating
+            brand {
+              brandName
+            }
+            image {
+              image
+              default
+            }
+            defaultVersion {
+              calorie {
+                value
+              }
+              gigl {
+                netCarbs
+                rxScore
+              }
+              postfixTitle
+              ingredients {
+                ingredientId {
+                  _id
+                  ingredientName
+                }
+                selectedPortion {
+                  name
+                  quantity
+                  gram
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 // PLANNER COMMENTS
 export const GET_ALL_PLAN_COMMENTS = gql`
   query GetPlanComments($id: String!) {
@@ -413,6 +479,16 @@ export const ADD_PLAN_COMMENT = gql`
   mutation AddPlanComment($planId: ID!, $memberId: ID!, $comment: String!) {
     createPlanComment(data: { planId: $planId, memberId: $memberId, comment: $comment }) {
       _id
+      comment
+      memberId {
+        _id
+        image
+        displayName
+        firstName
+        lastName
+      }
+      createdAt
+      commentsCount
     }
   }
 `;
