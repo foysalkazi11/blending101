@@ -9,8 +9,8 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
   const user = useUser();
   const dispatch = useAppDispatch();
   const { allFilterRecipes } = useAppSelector((state) => state?.filterRecipe);
-  const [filterRecipe, { loading, data, error, ...rest }] = useLazyQuery(FILTER_RECIPE, {
-    fetchPolicy: "cache-and-network",
+  const [filterRecipe, restState] = useLazyQuery(FILTER_RECIPE, {
+    // fetchPolicy: "cache-and-network",
   });
 
   const handleFilterRecipes = async (allFilters, page = 1, limit = 12, isNewItems: boolean = true) => {
@@ -174,10 +174,7 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
 
   return {
     handleFilterRecipes,
-    loading,
-    data: data?.filterRecipe,
-    error,
-    ...rest,
+    ...restState,
   };
 };
 
