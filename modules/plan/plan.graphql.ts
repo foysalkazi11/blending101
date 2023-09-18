@@ -391,6 +391,66 @@ export const GET_PLAN = gql`
   ${INSIGHTS_FIELDS}
 `;
 
+export const GET_PLAN_DETAILS = gql`
+  query GetAPlan($planId: String!, $token: String, $memberId: String) {
+    getAPlan(planId: $planId, token: $token, memberId: $memberId) {
+      plan {
+        _id
+        planName
+        description
+        memberId
+        planCollections
+        commentsCount
+        image {
+          url
+        }
+        planData {
+          id: _id
+          day
+          recipes {
+            isMatch
+            _id
+            name
+            recipeBlendCategory {
+              name
+            }
+            averageRating
+            totalRating
+            brand {
+              brandName
+            }
+            image {
+              image
+              default
+            }
+            defaultVersion {
+              calorie {
+                value
+              }
+              gigl {
+                netCarbs
+                rxScore
+              }
+              postfixTitle
+              ingredients {
+                ingredientId {
+                  _id
+                  ingredientName
+                }
+                selectedPortion {
+                  name
+                  quantity
+                  gram
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 // PLANNER COMMENTS
 export const GET_ALL_PLAN_COMMENTS = gql`
   query GetPlanComments($id: String!) {

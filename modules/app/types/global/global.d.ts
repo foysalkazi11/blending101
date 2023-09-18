@@ -2,6 +2,7 @@ import { SetStateAction, Dispatch as SetState } from "react";
 
 declare global {
   type Dispatch<T> = SetState<SetStateAction<T>>;
+  type Ref<T> = React.MutableRefObject<T>;
   interface Image {
     hash: string;
     url: string;
