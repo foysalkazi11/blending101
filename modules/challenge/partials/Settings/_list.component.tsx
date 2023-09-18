@@ -12,7 +12,7 @@ import { UTCDate } from "helpers/Date";
 import Publish from "helpers/Publish";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import Tooltip from "theme/toolTip/CustomToolTip";
+import Tooltip from "component/molecules/Tooltip/Tooltip.component";
 import { useAppDispatch } from "redux/hooks";
 import { setChallengeDate } from "redux/slices/Challenge.slice";
 
@@ -183,7 +183,7 @@ const ChallengeList = (props: ChallengeListProps) => {
                     }}
                   />
                 </Tooltip>
-                <Tooltip content={isChallengeActive === "" ? "Activated" : ""}>
+                <Tooltip content={isChallengeActive === "" ? "You can't delete activated challenge" : ""}>
                   <IconButton
                     fontName={faTrash}
                     variant="fade"
