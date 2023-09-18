@@ -220,6 +220,7 @@ const PlanDetails = () => {
                                 name: plan?.planName,
                                 image: plan?.image?.url,
                                 myRating: 0,
+                                planComeFrom: "details",
                               });
                             }}
                           >

@@ -17,16 +17,24 @@ import CommentsTopSection from "../../common/commentsTopSection/CommentsTopSecti
 import CommentsBottomSection from "../../common/commentsButtomSection/CommentsBottomSection";
 import notification from "../../../utility/reactToastifyNotification";
 import UserRating from "../../common/userRating/UserRating";
-import useToUpdatePlanField from "../../../../customHooks/plan/useToUpdatePlanField";
+import useToUpdatePlanField from "../../../../customHooks/plan/useToUpdatePlanFieldFeaturedPlans";
 import { useUser } from "../../../../context/AuthProvider";
+import useToUpdatePlanDetailsField from "customHooks/plan/useToUpdatePlanDetailsField";
+import useToUpdateGlobalPlans from "customHooks/plan/useToUpdateGlobalPlans";
+import useToUpdatePlanFields from "customHooks/plan/useToUpdatePlanFields";
 
+type PlanComeFromType = "list" | "details" | "globalPlans" | "homePage";
 interface CommentsSectionForPlanType {
   id: string;
   myRating: number;
+  commentsCount: number;
+  planComeFrom: PlanComeFromType;
 }
 const CommentsSectionForPlan = ({
-  id,
-  myRating,
+  id = "",
+  myRating = 0,
+  commentsCount = 0,
+  planComeFrom,
 }: CommentsSectionForPlanType) => {
   const [rating, setRating] = useState(0);
   const user = useUser();
@@ -34,8 +42,7 @@ const CommentsSectionForPlan = ({
   const [comment, setComment] = useState("");
   const [updateComment, setUpdateComment] = useState(false);
   const [updateCommentId, setUpdateCommentId] = useState("");
-  const [getAllCommentsForAPlan, { data, loading: getCommentsLoading }] =
-    useLazyQuery(GET_ALL_PLAN_COMMENTS);
+  const [getAllCommentsForAPlan, { data, loading: getCommentsLoading }] = useLazyQuery(GET_ALL_PLAN_COMMENTS);
 
   const [addComment, addState] = useMutation(ADD_PLAN_COMMENT, {
     refetchQueries: ["GetPlanComments"],
@@ -47,7 +54,7 @@ const CommentsSectionForPlan = ({
     refetchQueries: ["GetPlanComments"],
   });
   const [updatePlanRating] = useMutation(UPDATE_PLAN_RATING);
-  const handleUpdatePlanField = useToUpdatePlanField();
+  const handleToUpdatePlanFields = useToUpdatePlanFields();
 
   const toggleCommentBox = () => {
     setComment("");
@@ -75,6 +82,7 @@ const CommentsSectionForPlan = ({
         },
       });
     } else {
+      //commentsCount
       await Publish({
         mutate: addComment,
         state: addState,
@@ -84,7 +92,8 @@ const CommentsSectionForPlan = ({
           comment,
         },
         success: "Added Comment",
-        onSuccess: () => {
+        onSuccess: (data) => {
+          handleToUpdatePlanFields(id, { commentsCount: data?.createPlanComment?.commentsCount }, planComeFrom);
           setComment("");
           setShowCommentBox(false);
         },
@@ -101,7 +110,8 @@ const CommentsSectionForPlan = ({
         commentId: id,
       },
       success: "Removed Comment",
-      onSuccess: () => {
+      onSuccess: (data) => {
+        handleToUpdatePlanFields(id, { commentsCount: data?.removeAPlanComment }, planComeFrom);
         setComment("");
         setShowCommentBox(false);
       },
@@ -128,9 +138,8 @@ const CommentsSectionForPlan = ({
           },
         },
       });
-      const { averageRating, numberOfRating, myRating } =
-        data?.updatePlanRating;
-      handleUpdatePlanField(id, { averageRating, numberOfRating, myRating });
+      const { averageRating, numberOfRating, myRating } = data?.updatePlanRating;
+      handleToUpdatePlanFields(id, { averageRating, numberOfRating, myRating }, planComeFrom);
     } catch (error) {
       notification("error", "Failed to update rating");
     }
@@ -171,13 +180,10 @@ const CommentsSectionForPlan = ({
           <span></span>
         )}
 
-        {!showCommentBox && (
-          <IconForAddComment handleIconClick={toggleCommentBox} />
-        )}
+        {!showCommentBox && <IconForAddComment handleIconClick={toggleCommentBox} />}
       </div>
 
-      {addState.loading ||
-        (editState.loading && <SkeletonComment singleComment={true} />)}
+      {addState.loading || (editState.loading && <SkeletonComment singleComment={true} />)}
 
       {showCommentBox && (
         <>

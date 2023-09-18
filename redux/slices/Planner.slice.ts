@@ -1,17 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
-  startOfWeek,
-  endOfWeek,
-  addWeeks,
-  subWeeks,
-  isWithinInterval,
-} from "date-fns";
+import { startOfWeek, endOfWeek, addWeeks, subWeeks, isWithinInterval } from "date-fns";
 
 export interface CurrentPlanInfoType {
   id: string;
   name: string;
   image: string;
   myRating: number;
+  planComeFrom: PlanComeFromType;
+  commentsCount?: number;
 }
 
 export type IPlannerRecipe = {
@@ -73,6 +69,8 @@ const initialState: PlannerState = {
     image: "",
     name: "",
     myRating: 0,
+    commentsCount: 0,
+    planComeFrom: "list",
   },
   isPlanCommentsTrayOpen: false,
 };
@@ -111,10 +109,7 @@ export const PlannerSlice = createSlice({
       }));
     },
 
-    addPlanner: (
-      state,
-      action: { payload: { id: string; date: string; recipe: IPlannerRecipe } },
-    ) => {
+    addPlanner: (state, action: { payload: { id: string; date: string; recipe: IPlannerRecipe } }) => {
       const withinInterval = isWithinInterval(new Date(action.payload.date), {
         start: state.start,
         end: state.end,
@@ -138,16 +133,9 @@ export const PlannerSlice = createSlice({
       }
     },
 
-    deleteRecipeFromPlan: (
-      state,
-      action: { payload: { recipeId: string; plannerId: string } },
-    ) => {
-      const plannerIdx = state.plans.findIndex(
-        (p) => p.id === action.payload.plannerId,
-      );
-      const recipe = state.plans[plannerIdx].recipes.filter(
-        (recipe) => recipe._id !== action.payload.recipeId,
-      );
+    deleteRecipeFromPlan: (state, action: { payload: { recipeId: string; plannerId: string } }) => {
+      const plannerIdx = state.plans.findIndex((p) => p.id === action.payload.plannerId);
+      const recipe = state.plans[plannerIdx].recipes.filter((recipe) => recipe._id !== action.payload.recipeId);
       if (recipe.length === 0) {
         state.plans.splice(plannerIdx, 1);
       } else {
@@ -160,25 +148,16 @@ export const PlannerSlice = createSlice({
     setIsOpenPlanCollectionTray: (state, action: PayloadAction<boolean>) => {
       state.isOpenPlanCollectionTray = action.payload;
     },
-    updateLastModifiedPlanCollection: (
-      state,
-      action: PayloadAction<LastModifiedPlanCollectionType>,
-    ) => {
+    updateLastModifiedPlanCollection: (state, action: PayloadAction<LastModifiedPlanCollectionType>) => {
       state.lastModifiedPlanCollection = { ...action.payload };
     },
-    setIsActivePlanForCollection: (
-      state,
-      action: PayloadAction<ActivePlanForCollectionType>,
-    ) => {
+    setIsActivePlanForCollection: (state, action: PayloadAction<ActivePlanForCollectionType>) => {
       state.activePlanForCollection = action.payload;
     },
     setDayRecipe: (state, action) => {
       state.selectedDayRecipe = action.payload;
     },
-    updateCurrentPlanInfoForComments: (
-      state,
-      action: PayloadAction<CurrentPlanInfoType>,
-    ) => {
+    updateCurrentPlanInfoForComments: (state, action: PayloadAction<CurrentPlanInfoType>) => {
       state.currentPlanInfoForComments = action.payload;
     },
     setIsPlanCommentsTrayOpen: (state, action: PayloadAction<boolean>) => {
