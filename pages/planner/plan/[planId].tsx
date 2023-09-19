@@ -224,7 +224,7 @@ const PlanDetails = () => {
                                 id: plan?._id,
                                 name: plan?.planName,
                                 image: plan?.image?.url,
-                                myRating: 0,
+                                myRating: plan?.myRating,
                                 planComeFrom: "details",
                               });
                             }}
