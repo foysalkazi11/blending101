@@ -7,7 +7,7 @@ type Props = (id: string, obj: object) => void;
 const useToUpdateFeaturedPlanField = () => {
   const user = useUser();
   const memberId = user.id;
-  const handleUpdateFeaturedPlanPlanField: Props = (id = "", obj = {}) => {
+  const handleUpdateFeaturedPlanPlanField: Props = async (id = "", obj = {}) => {
     const { getAllPopularPlans, getAllRecentPlans, getAllRecommendedPlans } = client.readQuery({
       query: GET_FEATURED_PLANS,
       variables: { limit: 8, memberId },

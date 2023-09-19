@@ -330,6 +330,7 @@ export const GET_PLAN = gql`
         memberId
         planCollections
         commentsCount
+        myRating
         image {
           url
         }
@@ -407,6 +408,7 @@ export const GET_PLAN_DETAILS = gql`
         memberId
         planCollections
         commentsCount
+        myRating
         image {
           url
         }
