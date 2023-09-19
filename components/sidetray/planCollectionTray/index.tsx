@@ -3,7 +3,6 @@ import { faRectangleHistory } from "@fortawesome/pro-regular-svg-icons";
 import { faBookmark } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
-import useToUpdatePlanField from "../../../customHooks/plan/useToUpdatePlanFieldFeaturedPlans";
 import {
   EDIT_PLAN_COLLECTION,
   GET_ALL_PLAN_COLLECTION,
@@ -23,9 +22,8 @@ import SingleCollection from "../common/singleCollection/SingleCollection";
 import TrayTag from "../TrayTag";
 import TrayWrapper from "../TrayWrapper";
 import styles from "./PlanCollectionTray.module.scss";
-import useToUpdatePlanDetailsField from "../../../customHooks/plan/useToUpdatePlanDetailsField";
-import useToUpdateGlobalPlans from "../../../customHooks/plan/useToUpdateGlobalPlans";
 import { useUser } from "../../../context/AuthProvider";
+import useToUpdatePlanFields from "customHooks/plan/useToUpdatePlanFields";
 
 interface Props {
   showTagByDefaut?: boolean;
@@ -56,9 +54,7 @@ const PlanCollectionTray = ({ showPanle, showTagByDefaut }: Props) => {
   const [deletePlanCollection, { loading: deletePlanCollectionLoading }] = useMutation(DELETE_PLAN_COLLECTION);
   const [addOrRemovePlanFromCollection] = useMutation(ADD_OR_REMOVE_PLAN_COLLECTION);
   const dispatch = useAppDispatch();
-  const handleUpdatePlanField = useToUpdatePlanField();
-  const handleUpdatePlanDetailsField = useToUpdatePlanDetailsField();
-  const handleUpdateGlobalPlansField = useToUpdateGlobalPlans();
+  const handleToUpdatePlanFields = useToUpdatePlanFields();
 
   const handleAddOrRemoveBlogFormCollection = async () => {
     try {
@@ -72,23 +68,8 @@ const PlanCollectionTray = ({ showPanle, showTagByDefaut }: Props) => {
       const updateObj = {
         planCollections: activePlanForCollection.collectionIds,
       };
-      switch (activePlanForCollection.planComeFrom) {
-        case "list":
-          handleUpdatePlanField(activePlanForCollection.id, updateObj);
-          break;
-        case "details":
-          handleUpdatePlanDetailsField(activePlanForCollection.id, updateObj);
-          break;
-        case "globalPlans":
-          handleUpdateGlobalPlansField(activePlanForCollection.id, updateObj);
-          break;
-        case "homePage":
-          handleUpdateGlobalPlansField(activePlanForCollection.id, updateObj, 8);
-          break;
-        default:
-          handleUpdatePlanField(activePlanForCollection.id, updateObj);
-          break;
-      }
+
+      await handleToUpdatePlanFields(activePlanForCollection?.id, updateObj, activePlanForCollection?.planComeFrom);
 
       dispatch(
         setIsActivePlanForCollection({

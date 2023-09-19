@@ -6,18 +6,19 @@ type Props = (id: string, obj: object, limit?: number, page?: number) => void;
 
 const useToUpdateGlobalPlans = () => {
   const memberId = useUser().id;
-  const handleUpdateGlobalPlansField: Props = (id = "", obj = {}, limit = 10, page = 1) => {
-    const { getAllGlobalPlans } = client.readQuery({
+  const handleUpdateGlobalPlansField: Props = async (id = "", obj = {}, limit = 10, page = 1) => {
+    const data = client.readQuery({
       query: GET_ALL_PLANS,
       variables: { query: "", memberId, limit, page },
     });
+
     client.writeQuery({
       query: GET_ALL_PLANS,
       variables: { query: "", memberId, limit, page },
       data: {
         getAllGlobalPlans: {
-          ...getAllGlobalPlans,
-          plans: getAllGlobalPlans?.plans?.map((plan) => (plan?._id === id ? { ...plan, ...obj } : plan)),
+          ...data?.getAllGlobalPlans,
+          plans: data?.getAllGlobalPlans?.plans?.map((plan) => (plan?._id === id ? { ...plan, ...obj } : plan)),
         },
       },
     });

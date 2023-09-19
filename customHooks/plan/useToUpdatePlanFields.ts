@@ -15,19 +15,19 @@ const useToUpdatePlanFields = () => {
     try {
       switch (planComeFrom) {
         case "list":
-          handleUpdateFeaturedPlanPlanField(planId, updateObj);
+          await handleUpdateFeaturedPlanPlanField(planId, updateObj);
           break;
         case "details":
-          handleUpdatePlanDetailsField(planId, updateObj);
+          await handleUpdatePlanDetailsField(planId, updateObj);
           break;
         case "globalPlans":
-          handleUpdateGlobalPlansField(planId, updateObj);
+          await handleUpdateGlobalPlansField(planId, updateObj);
           break;
         case "homePage":
-          handleUpdateGlobalPlansField(planId, updateObj, 8);
+          await handleUpdateGlobalPlansField(planId, updateObj, 8);
           break;
         default:
-          handleUpdateFeaturedPlanPlanField(planId, updateObj);
+          await handleUpdateFeaturedPlanPlanField(planId, updateObj);
           break;
       }
     } catch (error) {

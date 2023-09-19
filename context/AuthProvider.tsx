@@ -1,11 +1,4 @@
-import React, {
-  useEffect,
-  useState,
-  useCallback,
-  useContext,
-  createContext,
-  Dispatch,
-} from "react";
+import React, { useEffect, useState, useCallback, useContext, createContext, Dispatch } from "react";
 import { useRouter } from "next/router";
 import { Auth, Amplify } from "aws-amplify";
 import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth/lib/types";
@@ -30,12 +23,7 @@ const DEFAULT_USER = { id: "", name: "", email: "", image: "" };
 interface IAuthContext {
   user: typeof DEFAULT_USER;
   session: any;
-  signIn: (
-    email: string,
-    password: string,
-    onSuccess?: (user: any) => void,
-    onError?: (error: any) => void,
-  ) => void;
+  signIn: (email: string, password: string, onSuccess?: (user: any) => void, onError?: (error: any) => void) => void;
   oAuthSignIn: (provider: TProvider) => void;
   signOut: () => void;
   setUser: Dispatch<React.SetStateAction<DEFAULT_USER_TYPE>>;
@@ -77,16 +65,16 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
         provider = "email";
       } else {
         email = user?.signInUserSession?.idToken?.payload?.email;
-        provider =
-          user?.signInUserSession?.idToken?.payload?.identities?.[0]?.providerName?.toLowerCase();
+        provider = user?.signInUserSession?.idToken?.payload?.identities?.[0]?.providerName?.toLowerCase();
       }
-      if (email && provider)
-        return getUser({
-          variables: {
-            data: { email: email || user?.signInUserSession, provider },
-          },
-        }).then((response) => {
-          const profile = response?.data?.createNewUser;
+      if (email && provider) {
+        try {
+          const { data } = await getUser({
+            variables: {
+              data: { email: email || user?.signInUserSession, provider },
+            },
+          });
+          const profile = data?.createNewUser;
           setUser({
             id: profile?._id,
             name: profile?.displayName,
@@ -95,7 +83,12 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
           });
           dispatch(updateUserCompareLength(profile?.compareLength));
           return profile;
-        });
+        } catch (error) {
+          throw new Error("Failed to login");
+        }
+      } else {
+        throw new Error("Email or provider not found");
+      }
     },
     [dispatch, getUser],
   );
@@ -105,24 +98,19 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
     if (router.asPath.startsWith("/login/#access_token=")) router.push("/");
     // Redirects when it is directed to authentication related page
     if (
-      [
-        "/login",
-        "/signup",
-        "/verify_email",
-        "/forget_password",
-        "/welcome_blending101_extension",
-      ].includes(router.pathname)
+      ["/login", "/signup", "/verify_email", "/forget_password", "/welcome_blending101_extension"].includes(
+        router.pathname,
+      )
     )
       return;
-    Auth.currentAuthenticatedUser().then(sessionHandler);
+    Auth.currentAuthenticatedUser()
+      .then(sessionHandler)
+      .catch((error) => {
+        console.log(error);
+      });
   }, [router, sessionHandler]);
 
-  const signIn = async (
-    email: string,
-    password: string,
-    onSuccess = (user) => {},
-    onError = (error) => {},
-  ) => {
+  const signIn = async (email: string, password: string, onSuccess = (user) => {}, onError = (error) => {}) => {
     try {
       const user = await Auth.signIn(email, password);
       const bdUser = await sessionHandler(user);
@@ -134,11 +122,7 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
     }
   };
 
-  const oAuthSignIn = async (
-    provider: TProvider,
-    onSuccess = (user) => {},
-    onError = (error) => {},
-  ) => {
+  const oAuthSignIn = async (provider: TProvider, onSuccess = (user) => {}, onError = (error) => {}) => {
     console.log("Inovikg");
     Auth.federatedSignIn({
       provider: CognitoHostedUIIdentityProvider[provider],
