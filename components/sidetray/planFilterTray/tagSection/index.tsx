@@ -25,8 +25,7 @@ import CheckboxOptions from "../../filter/checkboxOptions/CheckboxOptions";
 import Multiselect from "../../filter/multiSelect/MultiSelect";
 import { updateNumericFilterStateForPlan } from "../../../../redux/slices/planFilterSlice";
 import { useUser } from "../../../../context/AuthProvider";
-const { INGREDIENTS_BY_CATEGORY, TYPE, ALLERGIES, DIET, EQUIPMENT, DRUGS } =
-  INGREDIENTS_FILTER;
+const { INGREDIENTS_BY_CATEGORY, TYPE, ALLERGIES, DIET, EQUIPMENT, DRUGS } = INGREDIENTS_FILTER;
 
 const nutritionList = [
   {
@@ -55,13 +54,7 @@ const nutritionList = [
     child: [],
   },
 ];
-const recipeList = [
-  "Review Rating",
-  "Review Count",
-  "Source",
-  "Author",
-  "Publish Date",
-];
+const recipeList = ["Review Rating", "Review Count", "Source", "Author", "Publish Date"];
 
 const nutrientMatrix = [
   {
@@ -75,7 +68,7 @@ const nutrientMatrix = [
     greaterThanValue: 20,
     betweenStartValue: 20,
     betweenEndValue: 30,
-    tagLabel: `Nutrition | GI < ${20}`,
+    tagLabel: `GI < ${20}`,
     filterCriteria: "nutrientMatrix",
   },
   {
@@ -89,7 +82,7 @@ const nutrientMatrix = [
     greaterThanValue: 20,
     betweenStartValue: 20,
     betweenEndValue: 30,
-    tagLabel: `Nutrition | GL < ${20}`,
+    tagLabel: `GL < ${20}`,
     filterCriteria: "nutrientMatrix",
   },
   {
@@ -103,7 +96,7 @@ const nutrientMatrix = [
     greaterThanValue: 20,
     betweenStartValue: 20,
     betweenEndValue: 30,
-    tagLabel: `Nutrition | Calorie < ${20}`,
+    tagLabel: `Calorie < ${20}`,
     filterCriteria: "nutrientMatrix",
   },
   {
@@ -117,7 +110,7 @@ const nutrientMatrix = [
     greaterThanValue: 20,
     betweenStartValue: 20,
     betweenEndValue: 30,
-    tagLabel: `Nutrition | NetCarbs < ${20}`,
+    tagLabel: `NetCarbs < ${20}`,
     filterCriteria: "nutrientMatrix",
   },
 ];
@@ -151,18 +144,12 @@ const collections = [
 ];
 
 interface Props {
-  checkActiveItem: (
-    id: string,
-    filterCriteria: FilterCriteriaOptions,
-  ) => boolean;
+  checkActiveItem: (id: string, filterCriteria: FilterCriteriaOptions) => boolean;
   blendCategoryData: BlendCategoryType[];
   blendCategoryLoading: boolean;
   ingredientCategoryData: any[];
   ingredientCategoryLoading: boolean;
-  checkExcludeIngredientIds: (
-    id: string,
-    filterCriteria: FilterCriteriaOptions,
-  ) => boolean;
+  checkExcludeIngredientIds: (id: string, filterCriteria: FilterCriteriaOptions) => boolean;
   handleUpdateFilterCriteria: (obj: {
     filterCriteria?: FilterCriteriaOptions;
     value?: FilterCriteriaValue;
@@ -190,12 +177,12 @@ const TagSection = ({
   const [childIngredient, setChailIngredient] = useState("");
   const dispatch = useAppDispatch();
   const userId = useUser().id;
-  const [
-    getBlendNutrientsBasedOnCategoey,
-    { data: blendNutrientData, loading: blendNutrientLoading },
-  ] = useLazyQuery(GET_BLEND_NUTRIENTS_BASED_ON_CATEGORY, {
-    fetchPolicy: "cache-and-network",
-  });
+  const [getBlendNutrientsBasedOnCategoey, { data: blendNutrientData, loading: blendNutrientLoading }] = useLazyQuery(
+    GET_BLEND_NUTRIENTS_BASED_ON_CATEGORY,
+    {
+      fetchPolicy: "cache-and-network",
+    },
+  );
   const {
     data: collectionsData,
     loading: collectionsLoading,
@@ -203,17 +190,12 @@ const TagSection = ({
   } = useQuery(GET_COLLECTIONS_AND_THEMES, {
     variables: { userId },
   });
-  const {
-    activeFilterTagForPlan,
-    excludeFilterStateForPlan,
-    numericFilterStateForPlan,
-  } = useAppSelector((state) => state?.planFilter);
+  const { activeFilterTagForPlan, excludeFilterStateForPlan, numericFilterStateForPlan } = useAppSelector(
+    (state) => state?.planFilter,
+  );
   const { activeTab, childTab, filterCriteria } = activeFilterTagForPlan;
 
-  const handleGetBlendNutrition = async (
-    nutrientCategoryId: string,
-    category: string,
-  ) => {
+  const handleGetBlendNutrition = async (nutrientCategoryId: string, category: string) => {
     try {
       const { data } = await getBlendNutrientsBasedOnCategoey({
         variables: { nutrientCategoryId },
@@ -231,7 +213,7 @@ const TagSection = ({
           greaterThanValue: 200,
           betweenStartValue: 200,
           betweenEndValue: 201,
-          tagLabel: `${activeTab} | ${item?.nutrientName} < ${200}`,
+          tagLabel: `${item?.nutrientName} < ${200}`,
           filterCriteria: "nutrientFilters",
         })),
       ]);
@@ -240,9 +222,7 @@ const TagSection = ({
     }
   };
 
-  const handleUpdateNumericFilterState = (
-    value: NutrientFiltersType | NutrientMatrixType,
-  ) => {
+  const handleUpdateNumericFilterState = (value: NutrientFiltersType | NutrientMatrixType) => {
     dispatch(updateNumericFilterStateForPlan(value));
   };
 
@@ -268,33 +248,27 @@ const TagSection = ({
   useEffect(() => {
     if (activeTab === "Collections") {
       if (childTab === "My Collections") {
-        let collections =
-          collectionsData?.getUserCollectionsAndThemes?.collections;
+        let collections = collectionsData?.getUserCollectionsAndThemes?.collections;
         (collections = collections
           ?.filter((collection) => !collection?.isShared)
           ?.map((item) => ({
             id: item?._id,
             name: item?.personalizedName || item?.name,
             // image: item?.image,
-            tagLabel: `Own collection | ${
-              item?.personalizedName || item?.name
-            }`,
+            tagLabel: `${item?.personalizedName || item?.name}`,
             filterCriteria: "collectionIds",
           }))),
           setOptionSelectItems(collections);
       }
       if (childTab === "Shared With Me") {
-        let collections =
-          collectionsData?.getUserCollectionsAndThemes?.collections;
+        let collections = collectionsData?.getUserCollectionsAndThemes?.collections;
         (collections = collections
           ?.filter((collection) => collection?.isShared)
           ?.map((item) => ({
             id: item?._id,
             name: item?.personalizedName || item?.name,
             // image: item?.image,
-            tagLabel: `Shared collection | ${
-              item?.personalizedName || item?.name
-            }`,
+            tagLabel: `${item?.personalizedName || item?.name}`,
             filterCriteria: "collectionIds",
           }))),
           setOptionSelectItems(collections);
@@ -317,7 +291,7 @@ const TagSection = ({
           id: item?._id,
           name: item?.name,
           // image: item?.image,
-          tagLabel: `Blend Type | ${item?.name}`,
+          tagLabel: `${item?.name}`,
           filterCriteria: "blendTypes",
         })),
       );
@@ -331,7 +305,7 @@ const TagSection = ({
               id: item?._id,
               // image: item?.featuredImage || "/food/chard.png",
               name: item?.ingredientName,
-              tagLabel: `Ingredient | ${item?.ingredientName}`,
+              tagLabel: `${item?.ingredientName}`,
               filterCriteria: "includeIngredientIds",
               excludeIngredientIds: false,
             })),
@@ -342,7 +316,7 @@ const TagSection = ({
             id: item?._id,
             // image: item?.featuredImage || "/food/chard.png",
             name: item?.ingredientName,
-            tagLabel: `Ingredient | ${item?.ingredientName}`,
+            tagLabel: `${item?.ingredientName}`,
             filterCriteria: "includeIngredientIds",
             excludeIngredientIds: false,
           })),
@@ -359,27 +333,20 @@ const TagSection = ({
       }
       if (childTab === "Macronutrients (Energy)") {
         const findOneNutrient = findNutrient("Energy");
-        handleGetBlendNutrition(
-          findOneNutrient.id,
-          findOneNutrient.name.toLowerCase(),
-        );
+        handleGetBlendNutrition(findOneNutrient.id, findOneNutrient.name.toLowerCase());
       }
       if (childTab === "Vitamins") {
         const findOneNutrient = findNutrient(childTab);
         handleGetBlendNutrition(
           findOneNutrient.id,
-          findOneNutrient.name
-            .toLowerCase()
-            .slice(0, findOneNutrient.name.length - 1),
+          findOneNutrient.name.toLowerCase().slice(0, findOneNutrient.name.length - 1),
         );
       }
       if (childTab === "Minerals") {
         const findOneNutrient = findNutrient(childTab);
         handleGetBlendNutrition(
           findOneNutrient.id,
-          findOneNutrient.name
-            .toLowerCase()
-            .slice(0, findOneNutrient.name.length - 1),
+          findOneNutrient.name.toLowerCase().slice(0, findOneNutrient.name.length - 1),
         );
       }
       if (childTab === "Phytonutrients") {
@@ -481,12 +448,7 @@ const TagSection = ({
                       className={styles.singleItemInside}
                       key={index}
                       onClick={() =>
-                        handleUpdateActiveFilterTag(
-                          "tags",
-                          "includeIngredientIds",
-                          "Ingredient",
-                          item?.value,
-                        )
+                        handleUpdateActiveFilterTag("tags", "includeIngredientIds", "Ingredient", item?.value)
                       }
                     >
                       <h5>{item?.label}</h5>
@@ -503,11 +465,7 @@ const TagSection = ({
                   return (
                     <>
                       {isChildLength ? (
-                        <CustomAccordion
-                          title={item.title}
-                          iconRight={true}
-                          style={{ paddingLeft: "10px" }}
-                        >
+                        <CustomAccordion title={item.title} iconRight={true} style={{ paddingLeft: "10px" }}>
                           {item.child?.map((child, index) => {
                             return (
                               <div
@@ -516,9 +474,7 @@ const TagSection = ({
                                 onClick={() =>
                                   handleUpdateActiveFilterTag(
                                     "tags",
-                                    item.title === "Nutrition Metrics"
-                                      ? "nutrientMatrix"
-                                      : "nutrientFilters",
+                                    item.title === "Nutrition Metrics" ? "nutrientMatrix" : "nutrientFilters",
                                     "Nutrition",
                                     child.name,
                                   )
@@ -536,9 +492,7 @@ const TagSection = ({
                           onClick={() =>
                             handleUpdateActiveFilterTag(
                               "tags",
-                              item.title === "Nutrition Metrics"
-                                ? "nutrientMatrix"
-                                : "nutrientFilters",
+                              item.title === "Nutrition Metrics" ? "nutrientMatrix" : "nutrientFilters",
                               "Nutrition",
                               item.title,
                             )
@@ -560,14 +514,7 @@ const TagSection = ({
                     <div
                       className={styles.singleItemInside}
                       key={index}
-                      onClick={() =>
-                        handleUpdateActiveFilterTag(
-                          "tags",
-                          "collectionIds",
-                          "Collections",
-                          item.name,
-                        )
-                      }
+                      onClick={() => handleUpdateActiveFilterTag("tags", "collectionIds", "Collections", item.name)}
                     >
                       <h5>{item.name}</h5>
                     </div>

@@ -8,39 +8,34 @@ import ChevronRightIcon from "../../public/icons/chevron_right_black_36dp.svg";
 type SlickSliderProps = {
   moreSetting?: object;
   children: React.ReactNode;
+  nextArrow?: React.ReactNode;
+  prevArrow?: React.ReactNode;
 };
-const SmiplePrevArrow = (props) => {
-  const { className, onClick } = props;
-
+export const SmiplePrevArrow = (props) => {
   return (
-    <div onClick={onClick} className={className}>
+    <div {...props}>
       <ChevronLeftIcon />
     </div>
   );
 };
 
-const SmipleNextArrow = (props) => {
-  const { className, onClick } = props;
-
+export const SmipleNextArrow = (props) => {
   return (
-    <div onClick={onClick} className={className}>
+    <div {...props}>
       <ChevronRightIcon />
     </div>
   );
 };
 
-const CustomSlider = (
-  { moreSetting = {}, children }: SlickSliderProps,
-  ref,
-) => {
+const CustomSlider = ({ moreSetting = {}, children, nextArrow, prevArrow }: SlickSliderProps, ref) => {
   const settings = {
     infinite: false,
     speed: 500,
+    swipeToSlide: true,
 
-    // @ts-ignore
-    nextArrow: <SmipleNextArrow />,
-    // @ts-ignore
-    prevArrow: <SmiplePrevArrow />,
+    nextArrow: nextArrow || <SmipleNextArrow />,
+
+    prevArrow: prevArrow || <SmiplePrevArrow />,
   };
 
   // responsive setting exemple
