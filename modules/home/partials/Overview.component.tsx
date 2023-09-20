@@ -1,4 +1,5 @@
 import React from "react";
+import StickyBox from "react-sticky-box";
 
 import RxScore from "component/molecules/Charts/RxScore.component";
 import TopIngredients from "component/molecules/Charts/TopIngredients.component";
@@ -11,15 +12,17 @@ import styles from "./Overview.module.scss";
 
 const Overview = () => {
   return (
-    <div className={styles.insights}>
-      <div className={styles.insights__body}>
-        <BlendTrend />
-        <RxScore />
-        <TopIngredients />
-        <MacroMakeup />
-        <Calories />
+    <StickyBox offsetTop={0} offsetBottom={5}>
+      <div className={styles.insights}>
+        <div className={styles.insights__body}>
+          <BlendTrend />
+          <RxScore />
+          <TopIngredients />
+          <MacroMakeup />
+          <Calories />
+        </div>
       </div>
-    </div>
+    </StickyBox>
   );
 };
 

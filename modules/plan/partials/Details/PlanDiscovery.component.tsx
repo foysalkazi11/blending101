@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { faTelescope } from "@fortawesome/pro-regular-svg-icons";
 
 import Combobox from "../../../../component/organisms/Forms/Combobox.component";
@@ -12,6 +12,7 @@ import PlanCard from "../Shared/PlanCard.component";
 import { useRecipeCategory } from "@/recipe/hooks";
 import { UserRecipe } from "@/recipe/recipe.types";
 import useAllPlan from "@/plan/hooks/plan/useAllPlan";
+import useFindRecipe from "@/recipe/hooks/useFindRecipe";
 
 interface PlannerPanelProps {
   height: string;
@@ -27,6 +28,7 @@ const PlanDiscovery = (props: PlannerPanelProps) => {
   const [type, setType] = useState("all");
   const [page, setPage] = useState(1);
 
+  const { parentRef, queueRef } = useFindRecipe(toggler);
   const { plans, loading, observer } = useAllPlan({ page, setPage, query });
   // const { ref, categories, onHide, onShow } = useRecipeCategory();
   useEffect(() => {
@@ -75,6 +77,7 @@ const PlanDiscovery = (props: PlannerPanelProps) => {
         </div>
       )}
       <div
+        ref={parentRef}
         className={styles.wrapper}
         style={{
           maxHeight: height ? (toggler ? `calc(${height} - 111px)` : `calc(${height} - 51px)`) : "auto",
@@ -83,7 +86,7 @@ const PlanDiscovery = (props: PlannerPanelProps) => {
         {toggler ? (
           <Plans plans={plans} observer={observer} setOpenCollectionModal={setOpenCollectionModal} />
         ) : (
-          <Recipes recipes={recipes || []} />
+          <Recipes recipeRef={queueRef} recipes={recipes || []} />
         )}
         {toggler &&
           loading &&
@@ -103,13 +106,16 @@ const Plans = (props) => {
         planId={plan?._id}
         title={plan.planName}
         image={plan?.image?.url}
-        calorie={plan?.calorie?.value}
-        score={plan?.gigl?.rxScore}
-        carbs={plan?.gigl?.netCarbs}
         isCollectionIds={plan?.planCollections}
         noOfComments={plan?.commentsCount}
         setOpenCollectionModal={setOpenCollectionModal}
-        planComrFrom="globalPlans"
+        planComeFrom="globalPlans"
+        noOfRatings={plan?.numberOfRating}
+        ratings={plan?.averageRating}
+        myRating={plan?.myRating}
+        calorie={plan?.calorie?.value}
+        score={plan?.gigl?.rxScore}
+        carbs={plan?.gigl?.netCarbs}
         variant="border"
       />
     </div>
@@ -117,27 +123,28 @@ const Plans = (props) => {
 };
 
 const Recipes = (props) => {
-  const { recipes } = props;
+  const { recipeRef, recipes } = props;
   return recipes?.map((recipe) => {
     const {
       recipeId: { _id, name, recipeBlendCategory, averageRating, totalRating, image },
       defaultVersion,
     } = recipe;
     return (
-      <RecipeCard
-        key={_id}
-        className="mt-10"
-        title={name}
-        category={recipeBlendCategory?.name}
-        ratings={averageRating}
-        noOfRatings={totalRating}
-        image={image.find((img) => img.default === true)?.image}
-        recipeId={_id}
-        ingredients={defaultVersion?.ingredients || []}
-        variant="border"
-        calorie={defaultVersion?.calorie?.value}
-        carbs={defaultVersion?.gigl?.netCarbs}
-      />
+      <div ref={recipeRef} key={`PQueue-${_id}`} data-recipe={_id}>
+        <RecipeCard
+          className="mt-10"
+          title={name}
+          category={recipeBlendCategory?.name}
+          ratings={averageRating}
+          noOfRatings={totalRating}
+          image={image.find((img) => img.default === true)?.image}
+          recipeId={_id}
+          ingredients={defaultVersion?.ingredients || []}
+          variant="border"
+          calorie={defaultVersion?.calorie?.value}
+          carbs={defaultVersion?.gigl?.netCarbs}
+        />
+      </div>
     );
   });
 };

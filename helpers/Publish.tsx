@@ -1,5 +1,7 @@
 import { ApolloCache, FetchResult } from "@apollo/client";
-import { toast } from "react-toastify";
+import error from "next/error";
+import React from "react";
+import { ToastContent, ToastOptions, toast } from "react-toastify";
 
 export type OnUpdate = (
   cache: ApolloCache<any>,
@@ -7,6 +9,7 @@ export type OnUpdate = (
 ) => void;
 
 type IProperties = {
+  message?: any;
   mutate: any;
   variables: any;
   state: any;
@@ -22,11 +25,14 @@ type IProperties = {
 };
 
 const Publish = async (properties: IProperties) => {
-  const { mutate, variables, load, state, success, onSuccess, error, onUpdate, onError } = properties;
+  const { mutate, variables, load, state, success, onSuccess, message, onUpdate, onError } = properties;
 
-  const loading = toast.loading(load || "Loading !", {
-    position: toast.POSITION.TOP_RIGHT,
-  });
+  const loading =
+    properties.message ||
+    toast.loading(load || "Loading !", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+
   try {
     const data = await mutate({
       variables: {

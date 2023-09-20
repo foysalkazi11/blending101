@@ -102,8 +102,8 @@ const ShowRecipeContainer = ({
       setContainerData((prev) =>
         prev.map((item) =>
           (
-            bulkRecipeIdsForAddedInCollection.length
-              ? bulkRecipeIdsForAddedInCollection.includes(item?.recipeId?._id)
+            bulkRecipeIdsForAddedInCollection?.length
+              ? bulkRecipeIdsForAddedInCollection?.includes(item?.recipeId?._id)
               : item?.recipeId?._id === id
           )
             ? {
@@ -273,7 +273,7 @@ const ShowRecipeContainer = ({
                       isCollectionIds={item?.planCollections}
                       noOfComments={item?.commentsCount}
                       setOpenCollectionModal={setOpenCollectionModal}
-                      planComrFrom="list"
+                      planComeFrom="list"
                       noOfRatings={item?.numberOfRating}
                       ratings={item?.averageRating}
                       myRating={item?.myRating}

@@ -6,7 +6,7 @@ type Props = (id: string, obj: object) => void;
 
 const useToUpdatePlanDetailsField = () => {
   const memberId = useUser().id;
-  const handleUpdatePlanDetailsField: Props = (id = "", obj = {}) => {
+  const handleUpdatePlanDetailsField: Props = async (id = "", obj = {}) => {
     const { getAPlan } = client.readQuery({
       query: GET_PLAN,
       variables: { planId: id, token: "", memberId },

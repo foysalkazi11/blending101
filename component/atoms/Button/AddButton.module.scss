@@ -1,0 +1,26 @@
+@import "variables";
+@import "mixins";
+
+.button {
+  outline: 0;
+  border: 0;
+  appearance: none;
+  font-family: inherit;
+  height: 5.5rem;
+  width: 5.5rem;
+  border-radius: 50%;
+  font-size: 16px;
+  display: none;
+  cursor: pointer;
+  background-color: $secondaryColor;
+  color: white;
+  position: fixed;
+  bottom: 90px;
+  right: 10px;
+  box-shadow: 0px 8px 10px #00000036;
+  @include respond(md) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

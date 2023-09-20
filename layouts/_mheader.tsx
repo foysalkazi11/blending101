@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import IconButton from "../component/atoms/Button/IconButton.component";
-import {
-  faArrowLeft,
-  faBarsSort,
-  faSearch,
-} from "@fortawesome/pro-regular-svg-icons";
+import { faArrowLeft, faBarsSort, faSearch } from "@fortawesome/pro-regular-svg-icons";
 import styles from "./_mheader.module.scss";
 import SideDrawer from "../component/molecules/Drawer/SideDrawer.component";
 import { Filter } from "../components/sidetray/planFilterTray";
@@ -16,10 +12,7 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import useToAddPlanFilterCriteriaWithUrl from "../customHooks/planFilter/useToAddPlanFilterCriteriaWithUrl";
 import useToUpdateActiveFilterTagForPlan from "../customHooks/planFilter/useToUpdateActiveFilterTagForPlan";
 import useToUpdateFilterCriteriaForPlan from "../customHooks/planFilter/useToUpdateFilterCriteriaForPlan";
-import {
-  updatePlanFilterSearchTerm,
-  setIsPlanFilterOpen,
-} from "../redux/slices/planFilterSlice";
+import { updatePlanFilterSearchTerm, setIsPlanFilterOpen } from "../redux/slices/planFilterSlice";
 import CommonSearchBar from "../components/searchBar/CommonSearchBar";
 
 const MHeader = () => {
@@ -35,14 +28,11 @@ const MHeader = () => {
   // handle update recipe filter criteria
   const handleUpdateFilterCriteriaForPlan = useToUpdateFilterCriteriaForPlan();
   // handle update recipe active filter tag
-  const handleUpdateActiveFilterTagForPlan =
-    useToUpdateActiveFilterTagForPlan();
+  const handleUpdateActiveFilterTagForPlan = useToUpdateActiveFilterTagForPlan();
   // handle add plan Filter with url
   const handleAddFilterCriteriaWithUrl = useToAddPlanFilterCriteriaWithUrl();
 
-  const handleUpdateFilterCriteriaForPlanFunc = (
-    obj: HandleUpdateFilterCriteriaType,
-  ) => {
+  const handleUpdateFilterCriteriaForPlanFunc = (obj: HandleUpdateFilterCriteriaType) => {
     if (obj.filterCriteria === "searchTerm") {
       dispatch(updatePlanFilterSearchTerm(""));
       setSearchTerm("");
@@ -57,15 +47,10 @@ const MHeader = () => {
     childTab,
   ) => {
     dispatch(setIsPlanFilterOpen(true));
-    handleUpdateActiveFilterTagForPlan(
-      activeSection,
-      filterCriteria,
-      activeTab,
-      childTab,
-    );
+    handleUpdateActiveFilterTagForPlan(activeSection, filterCriteria, activeTab, childTab);
   };
 
-  const [showFilter, setShowFilter] = useState(true);
+  const [showFilter, setShowFilter] = useState(false);
   return (
     <div className={styles.header}>
       <IconButton fontName={faBarsSort} className={styles.header__menu} />
@@ -83,10 +68,7 @@ const MHeader = () => {
       >
         <div className={styles.search}>
           <div className={styles.search__header}>
-            <IconButton
-              fontName={faArrowLeft}
-              onClick={() => setShowFilter(false)}
-            />
+            <IconButton fontName={faArrowLeft} onClick={() => setShowFilter(false)} />
             <h3>Search</h3>
             <div></div>
           </div>
@@ -95,17 +77,13 @@ const MHeader = () => {
               input={searchTerm}
               handleOnChange={(e) => setSearchTerm(e.target.value)}
               isSearchTag={false}
-              openFilterPanel={() =>
-                dispatch(setIsPlanFilterOpen(!isPlanFilterOpen))
-              }
+              openFilterPanel={() => dispatch(setIsPlanFilterOpen(!isPlanFilterOpen))}
             />
             {allFilters?.length ? (
               <SearchtagsComponent
                 allFilters={allFilters}
                 handleUpdateActiveFilterTag={handleUpdateActiveFilterTagFunc}
-                handleUpdateFilterCriteria={
-                  handleUpdateFilterCriteriaForPlanFunc
-                }
+                handleUpdateFilterCriteria={handleUpdateFilterCriteriaForPlanFunc}
               />
             ) : null}
             <Filter />

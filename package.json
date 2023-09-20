@@ -56,12 +56,14 @@
     "react-redux": "^7.2.6",
     "react-share": "^4.4.1",
     "react-slick": "0.27.1",
+    "react-sticky-box": "^2.0.4",
     "react-table": "^7.7.0",
     "react-toastify": "^8.1.0",
     "recharts": "^2.1.14",
     "sass": "^1.43.4",
     "simple-screenshot-feedback": "^1.0.9",
-    "slick-carousel": "^1.8.1"
+    "slick-carousel": "^1.8.1",
+    "sticky-sidebar": "^3.3.1"
   },
   "devDependencies": {
     "@svgr/webpack": "^6.1.2",

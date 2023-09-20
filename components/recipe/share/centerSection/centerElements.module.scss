@@ -122,14 +122,12 @@
       }
 
       &__right {
-        margin-left: 16px;
         display: flex;
         flex-shrink: 0;
         span {
-          margin-right: 14px;
+          margin-right: 1rem;
           display: flex;
           align-items: center;
-          padding: 0px 16px;
         }
 
         &__options {

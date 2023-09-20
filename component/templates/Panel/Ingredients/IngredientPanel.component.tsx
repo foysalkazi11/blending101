@@ -35,8 +35,9 @@ const IngredientDrawer = () => {
                   )}
                 </div>
                 <p>
-                  {Number(ingredient?.selectedPortion?.quantity).toFixed(1) || 1} {ingredient?.selectedPortion?.name}{" "}
-                  {ingredient.ingredientId.ingredientName}
+                  {ingredient?.quantityString || Number(ingredient?.selectedPortion?.quantity).toFixed(1) || 1}{" "}
+                  {ingredient?.selectedPortion?.name}{" "}
+                  {ingredient?.originalIngredientName || ingredient.ingredientId.ingredientName}
                 </p>
               </div>
             </div>
