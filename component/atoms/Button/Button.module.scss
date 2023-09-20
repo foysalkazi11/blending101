@@ -1,15 +1,14 @@
-.action {
+.button {
   cursor: pointer;
-  margin-right: 10px;
   background-color: #7dbd3b;
   color: #ececec;
   border-radius: 5px;
-  padding: 1px 5px;
-  font-size: 16px;
+  padding: 5px 10px;
+  font-size: 1.4rem;
   outline: none;
   border: none;
-  display: inline-block;
-  vertical-align: middle;
+  display: flex;
+  align-items: center;
   transform: perspective(1px) translateZ(0);
   box-shadow: 0 0 1px rgb(0 0 0 / 0%);
   &:hover {
@@ -29,4 +28,10 @@
     -webkit-transform: scale(1.2);
     transform: scale(1.2);
   }
+}
+
+.outline {
+  background-color: #fff;
+  border: 1px solid #dfdfdf;
+  color: #000000;
 }

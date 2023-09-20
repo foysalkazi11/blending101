@@ -1,16 +1,21 @@
 import React from "react";
 import styles from "./Button.module.scss";
 
-interface ActionButtonProps {
-  children?: React.ReactNode;
-  onClick: (e) => any;
+interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
+  variant?: "outline" | "fill";
 }
 
-export const ActionButton: React.FC<ActionButtonProps> = (props) => {
-  const { children, onClick } = props;
+const Button: React.FC<ButtonProps> = (props) => {
+  const { children, className, variant, onClick, ...others } = props;
   return (
-    <button className={styles.action} onClick={onClick}>
+    <button className={`${styles.button} ${styles[variant]} ${className}`} onClick={onClick} {...others}>
       {children}
     </button>
   );
 };
+
+Button.defaultProps = {
+  variant: "outline",
+};
+
+export default Button;

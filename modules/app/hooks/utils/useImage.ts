@@ -37,7 +37,10 @@ const useImage = (initState: any[] = []) => {
             return imageCompression(file, options).then((file) =>
               axios({
                 method: "post",
-                url: `https://j88wgcjqa6.execute-api.us-east-1.amazonaws.com/prod/image_processing/upload?image_name=${fileName}&folder_name=${folderName}`,
+                headers: {
+                  "content-type": "image/png",
+                },
+                url: `https://eqcdhpo7l3.execute-api.us-east-1.amazonaws.com/prod/api/v1/image/convert-webp?image_name=${fileName}&folder_name=${folderName}`,
                 data: file,
               }),
             );
