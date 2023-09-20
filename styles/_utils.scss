@@ -175,3 +175,26 @@
 .fontItalic {
   font-style: italic;
 }
+
+.truncate {
+  display: -webkit-box; /* set the display type to a webkit box */
+  -webkit-box-orient: vertical; /* set the orientation of the box to vertical */
+  overflow: hidden; /* hide any overflow content */
+  text-overflow: ellipsis; /* add dots to the end of the truncated text */
+}
+
+.line-clamp-one {
+  -webkit-line-clamp: 1; /* set the maximum number of lines to 2 */
+}
+
+.line-clamp-two {
+  -webkit-line-clamp: 2; /* set the maximum number of lines to 2 */
+}
+
+.line-clamp-three {
+  -webkit-line-clamp: 3; /* set the maximum number of lines to 3 */
+}
+
+.line-clamp-four {
+  -webkit-line-clamp: 4; /* set the maximum number of lines to 4 */
+}
