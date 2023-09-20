@@ -22,9 +22,7 @@ type NumericFilterProps = {
     value?: FilterCriteriaValue;
     updateStatus: FiltersUpdateCriteria;
   }) => void;
-  handleUpdateNumericFilterState: (
-    value: NutrientFiltersType | NutrientMatrixType,
-  ) => void;
+  handleUpdateNumericFilterState: (value: NutrientFiltersType | NutrientMatrixType) => void;
   numericFilterUseFrom?: "recipe" | "plan";
 };
 
@@ -43,9 +41,7 @@ const NumericFilter = ({
   const isMounted = useRef(false);
 
   const { numericFilterState } = useAppSelector((state) => state.filterRecipe);
-  const { numericFilterStateForPlan } = useAppSelector(
-    (state) => state.planFilter,
-  );
+  const { numericFilterStateForPlan } = useAppSelector((state) => state.planFilter);
 
   const numericFilterStateObj = {
     recipe: numericFilterState,
@@ -75,7 +71,7 @@ const NumericFilter = ({
         between: false,
         greaterThan: false,
         lessThan: true,
-        tagLabel: `${activeTab} | ${newNumericFilterState.name} < ${newNumericFilterState.lessThanValue}`,
+        tagLabel: `${newNumericFilterState.name} < ${newNumericFilterState.lessThanValue}`,
       };
     }
     if (tab === "greaterThan") {
@@ -84,7 +80,7 @@ const NumericFilter = ({
         between: false,
         greaterThan: true,
         lessThan: false,
-        tagLabel: `${activeTab} | ${newNumericFilterState.greaterThanValue} >  ${newNumericFilterState.name} `,
+        tagLabel: `${newNumericFilterState.greaterThanValue} >  ${newNumericFilterState.name} `,
       };
     }
     if (tab === "between") {
@@ -93,7 +89,7 @@ const NumericFilter = ({
         between: true,
         greaterThan: false,
         lessThan: false,
-        tagLabel: `${activeTab} | ${newNumericFilterState.betweenStartValue} <  ${newNumericFilterState.name} < ${newNumericFilterState.betweenEndValue}`,
+        tagLabel: `${newNumericFilterState.betweenStartValue} >  ${newNumericFilterState.name} < ${newNumericFilterState.betweenEndValue}`,
       };
     }
 
@@ -110,11 +106,7 @@ const NumericFilter = ({
 
   const counterHandler = (
     value: number = 0,
-    title:
-      | "lessThanValue"
-      | "betweenStartValue"
-      | "betweenEndValue"
-      | "greaterThanValue",
+    title: "lessThanValue" | "betweenStartValue" | "betweenEndValue" | "greaterThanValue",
   ) => {
     let newNumericFilterState = {
       ...numericFilterStateObj[numericFilterUseFrom],
@@ -125,21 +117,21 @@ const NumericFilter = ({
         newNumericFilterState = {
           ...newNumericFilterState,
           lessThanValue:value,
-          tagLabel:`${activeTab} | ${newNumericFilterState.name} < ${value}`
+          tagLabel:`${newNumericFilterState.name} < ${value}`
         };
 
     } else if (title === "greaterThanValue") {
        newNumericFilterState = {
          ...newNumericFilterState,
          greaterThanValue: value,
-         tagLabel: `${activeTab} | ${value} >  ${newNumericFilterState.name} `,
+         tagLabel: `${value} >  ${newNumericFilterState.name} `,
        };
       
     } else if (title === "betweenStartValue") {
        newNumericFilterState = {
          ...newNumericFilterState,
          betweenStartValue: value,
-         tagLabel: `${activeTab} | ${value} <  ${newNumericFilterState.name} < ${newNumericFilterState.betweenEndValue}`,
+         tagLabel: `${value} >  ${newNumericFilterState.name} < ${newNumericFilterState.betweenEndValue}`,
        };
       
     } else if (title === "betweenEndValue") {
@@ -177,11 +169,7 @@ const NumericFilter = ({
 
   return (
     <div className={styles.numericFilterContainer}>
-      <div
-        className={`${styles.tabContainer} ${
-          id ? styles.activeTabTabContainer : ""
-        }`}
-      >
+      <div className={`${styles.tabContainer} ${id ? styles.activeTabTabContainer : ""}`}>
         <div
           className={`${styles.firstChild} ${lessThan ? styles.active : ""}`}
           onClick={() => handleActiveTab("lessThan")}
@@ -218,14 +206,9 @@ const NumericFilter = ({
             min={0}
             type="number"
             value={lessThanValue}
-            onChange={(e) =>
-              counterHandler(parseFloat(e?.target?.value), "lessThanValue")
-            }
+            onChange={(e) => counterHandler(parseFloat(e?.target?.value), "lessThanValue")}
           />
-          <div
-            className={styles.counterButton}
-            onClick={() => counterHandler(lessThanValue + 1, "lessThanValue")}
-          >
+          <div className={styles.counterButton} onClick={() => counterHandler(lessThanValue + 1, "lessThanValue")}>
             <BiPlus />
           </div>
         </div>
@@ -248,19 +231,12 @@ const NumericFilter = ({
               min={0}
               type="number"
               value={betweenStartValue}
-              onChange={(e) =>
-                counterHandler(
-                  parseFloat(e?.target?.value),
-                  "betweenStartValue",
-                )
-              }
+              onChange={(e) => counterHandler(parseFloat(e?.target?.value), "betweenStartValue")}
               style={{ width: "50px" }}
             />
             <div
               className={styles.counterButton}
-              onClick={() =>
-                counterHandler(betweenStartValue + 1, "betweenStartValue")
-              }
+              onClick={() => counterHandler(betweenStartValue + 1, "betweenStartValue")}
             >
               <BiPlus />
             </div>
@@ -281,16 +257,12 @@ const NumericFilter = ({
               min={0}
               type="number"
               value={betweenEndValue}
-              onChange={(e) =>
-                counterHandler(parseFloat(e?.target?.value), "betweenEndValue")
-              }
+              onChange={(e) => counterHandler(parseFloat(e?.target?.value), "betweenEndValue")}
               style={{ width: "50px" }}
             />
             <div
               className={styles.counterButton}
-              onClick={() =>
-                counterHandler(betweenEndValue + 1, "betweenEndValue")
-              }
+              onClick={() => counterHandler(betweenEndValue + 1, "betweenEndValue")}
             >
               <BiPlus />
             </div>
@@ -315,15 +287,11 @@ const NumericFilter = ({
             min={0}
             type="number"
             value={greaterThanValue}
-            onChange={(e) =>
-              counterHandler(parseFloat(e?.target?.value), "greaterThanValue")
-            }
+            onChange={(e) => counterHandler(parseFloat(e?.target?.value), "greaterThanValue")}
           />
           <div
             className={styles.counterButton}
-            onClick={() =>
-              counterHandler(greaterThanValue + 1, "greaterThanValue")
-            }
+            onClick={() => counterHandler(greaterThanValue + 1, "greaterThanValue")}
           >
             <BiPlus />
           </div>

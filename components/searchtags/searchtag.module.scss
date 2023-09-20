@@ -1,4 +1,5 @@
-@import "../../styles/mixins.scss";
+@import "mixins";
+@import "../../styles/fragments/variables.scss";
 
 .searchtab {
   width: 100%;
@@ -7,16 +8,20 @@
   height: auto;
   margin-top: 2.5rem;
   border-radius: 90px;
-  display: flex;
-  align-items: center;
+  // display: flex;
+  // align-items: center;
   padding: 0.5rem;
-  overflow-y: hidden;
+  // overflow: hidden;
   // flex-wrap: wrap;
   margin: 2.5rem auto 0 auto;
 
   // &::-webkit-scrollbar {
   //   display: none;
   // }
+
+  @include respond(md) {
+    background-color: $secondaryLight;
+  }
 
   // @include respond(md) {
   //   width: auto;
@@ -38,8 +43,12 @@
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     position: relative;
     cursor: pointer;
-    margin: 10px;
-    flex-shrink: 0;
+    margin: 1rem 0.5rem;
+    @include respond(md) {
+      flex-direction: column;
+      background-color: $secondaryLight;
+      box-shadow: none;
+    }
 
     .image {
       width: 35px;
@@ -51,35 +60,67 @@
       justify-content: center;
 
       img {
-        height: 100%;
-        width: 100%;
+        width: 35px;
+        height: 35px;
         border-radius: 50%;
         object-fit: contain;
       }
+
+      @include respond(md) {
+        width: 45px;
+        height: 45px;
+        background-color: #fff;
+      }
     }
 
-    p {
+    .text {
       margin-left: 10px;
       padding-right: 10px;
+      // text-wrap: nowrap;
       @include respond(md) {
-        text-wrap: nowrap;
+        padding-top: 0.5rem;
+        text-align: center;
+        .preText {
+          display: none;
+        }
+      }
+    }
+
+    .noImageTextHight {
+      height: 35px;
+      display: flex;
+      align-items: center;
+      @include respond(md) {
+        height: 0;
       }
     }
   }
-  .activeItemPrimary {
-    border: 1px solid #fe5d1f;
+  .activeItemPrimaryDesktop {
+    border: 1px solid $primaryColor;
+    @include respond(md) {
+      border-color: transparent;
+    }
+  }
+  .activeItemPrimaryMobile {
+    border-color: 1px solid transparent;
+    @include respond(md) {
+      border: 1px solid $primaryColor;
+    }
   }
 }
 
 .cross {
   position: absolute;
-  right: 0px;
-  top: 4px;
-  transform: translateY(-50%);
+  right: 0.5rem;
+  top: -1rem;
+
   cursor: pointer;
   display: none;
   width: 18px;
   height: 18px;
+  @include respond(md) {
+    right: 30%;
+  }
 
   .cancel {
     color: rgba(128, 128, 128, 0.53);
