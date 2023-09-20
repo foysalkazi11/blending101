@@ -16,15 +16,10 @@ interface CommentsTrayProps {
   showPanle?: "left" | "right";
 }
 
-export default function PlanCommentsTray({
-  showPanle,
-  showTagByDefaut,
-}: CommentsTrayProps) {
+export default function PlanCommentsTray({ showPanle, showTagByDefaut }: CommentsTrayProps) {
   const [toggle, setToggle] = useState(0);
   const dispatch = useAppDispatch();
-  const { currentPlanInfoForComments, isPlanCommentsTrayOpen } = useAppSelector(
-    (state) => state?.planner,
-  );
+  const { currentPlanInfoForComments, isPlanCommentsTrayOpen } = useAppSelector((state) => state?.planner);
 
   const handleToggle = (no: number) => {
     setToggle(no);
@@ -33,18 +28,10 @@ export default function PlanCommentsTray({
   return (
     <TrayWrapper
       showTagByDefault={showTagByDefaut}
-      closeTray={() =>
-        dispatch(setIsPlanCommentsTrayOpen(!isPlanCommentsTrayOpen))
-      }
+      closeTray={() => dispatch(setIsPlanCommentsTrayOpen(!isPlanCommentsTrayOpen))}
       openTray={isPlanCommentsTrayOpen}
       showPanel={showPanle}
-      panelTag={(hover) => (
-        <TrayTag
-          icon={<FontAwesomeIcon icon={faMessageDots} />}
-          placeMent="left"
-          hover={hover}
-        />
-      )}
+      panelTag={(hover) => <TrayTag icon={<FontAwesomeIcon icon={faMessageDots} />} placeMent="left" hover={hover} />}
     >
       <ToggleMenu
         setToggle={handleToggle}
@@ -66,15 +53,13 @@ export default function PlanCommentsTray({
         {/* {icon && <img src={icon} alt="img" />} */}
         <h3>{currentPlanInfoForComments?.name}</h3>
       </div>
-      <img
-        src={currentPlanInfoForComments?.image || "/images/plan.png"}
-        alt=""
-        className={styles.recipeImage}
-      />
+      <img src={currentPlanInfoForComments?.image || "/images/plan.png"} alt="" className={styles.recipeImage} />
       {toggle === 0 ? (
         <CommentsSectionForPlan
           id={currentPlanInfoForComments?.id}
           myRating={currentPlanInfoForComments?.myRating}
+          commentsCount={currentPlanInfoForComments?.commentsCount}
+          planComeFrom={currentPlanInfoForComments?.planComeFrom}
         />
       ) : (
         <NoteSection />

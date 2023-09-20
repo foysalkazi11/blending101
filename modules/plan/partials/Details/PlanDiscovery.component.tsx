@@ -106,13 +106,16 @@ const Plans = (props) => {
         planId={plan?._id}
         title={plan.planName}
         image={plan?.image?.url}
-        calorie={plan?.calorie?.value}
-        score={plan?.gigl?.rxScore}
-        carbs={plan?.gigl?.netCarbs}
         isCollectionIds={plan?.planCollections}
         noOfComments={plan?.commentsCount}
         setOpenCollectionModal={setOpenCollectionModal}
-        planComrFrom="globalPlans"
+        planComeFrom="globalPlans"
+        noOfRatings={plan?.numberOfRating}
+        ratings={plan?.averageRating}
+        myRating={plan?.myRating}
+        calorie={plan?.calorie?.value}
+        score={plan?.gigl?.rxScore}
+        carbs={plan?.gigl?.netCarbs}
         variant="border"
       />
     </div>

@@ -291,7 +291,7 @@ const FeaturedPlan = ({ setOpenCollectionModal }) => {
                   isCollectionIds={item?.planCollections}
                   noOfComments={item?.commentsCount}
                   setOpenCollectionModal={setOpenCollectionModal}
-                  planComrFrom="list"
+                  planComeFrom="list"
                   noOfRatings={item?.numberOfRating}
                   ratings={item?.averageRating}
                   myRating={item?.myRating}
@@ -316,7 +316,7 @@ const FeaturedPlan = ({ setOpenCollectionModal }) => {
                   isCollectionIds={item?.planCollections}
                   noOfComments={item?.commentsCount}
                   setOpenCollectionModal={setOpenCollectionModal}
-                  planComrFrom="list"
+                  planComeFrom="list"
                   noOfRatings={item?.numberOfRating}
                   ratings={item?.averageRating}
                   myRating={item?.myRating}
@@ -341,7 +341,7 @@ const FeaturedPlan = ({ setOpenCollectionModal }) => {
                   isCollectionIds={item?.planCollections}
                   noOfComments={item?.commentsCount}
                   setOpenCollectionModal={setOpenCollectionModal}
-                  planComrFrom="list"
+                  planComeFrom="list"
                   noOfRatings={item?.numberOfRating}
                   ratings={item?.averageRating}
                   myRating={item?.myRating}
@@ -399,7 +399,7 @@ const ListPlans = ({ setOpenCollectionModal }) => {
               isCollectionIds={item?.planCollections}
               noOfComments={item?.commentsCount}
               setOpenCollectionModal={setOpenCollectionModal}
-              planComrFrom="list"
+              planComeFrom="list"
               noOfRatings={item?.numberOfRating}
               ratings={item?.averageRating}
               myRating={item?.myRating}

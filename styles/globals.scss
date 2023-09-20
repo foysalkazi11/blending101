@@ -74,12 +74,27 @@ html {
   }
 }
 
+.slickArrowSize_md {
+  width: 30px !important;
+  height: 30px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+.slickArrowSize_sm {
+  width: 24px !important;
+  height: 24px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
 .slick-next {
-  right: 0px !important;
+  right: -1rem !important;
 }
 
 .slick-prev {
-  left: 0px !important;
+  left: -1rem !important;
 }
 .slick-next:before,
 .slick-prev:before {

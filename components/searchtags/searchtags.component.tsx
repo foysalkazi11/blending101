@@ -10,6 +10,54 @@ import {
   FiltersUpdateCriteria,
 } from "../../type/filterType";
 import { NextImageWithFallback } from "theme/imageWithFallback";
+import SlickSlider, { SmipleNextArrow, SmiplePrevArrow } from "theme/carousel/SlickSlider";
+
+const responsiveSetting = {
+  infinite: false,
+  speed: 500,
+  slidesToShow: 6,
+  slidesToScroll: 1,
+  initialSlide: 0,
+  responsive: [
+    {
+      breakpoint: 1400,
+      settings: {
+        slidesToShow: 5,
+        slidesToScroll: 1,
+      },
+    },
+    {
+      breakpoint: 1200,
+      settings: {
+        slidesToShow: 4,
+        slidesToScroll: 1,
+      },
+    },
+    {
+      breakpoint: 1050,
+      settings: {
+        slidesToShow: 3,
+        slidesToScroll: 1,
+      },
+    },
+    {
+      breakpoint: 768,
+      settings: {
+        slidesToShow: 5,
+        slidesToScroll: 1,
+        arrows: false,
+      },
+    },
+    {
+      breakpoint: 576,
+      settings: {
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        arrows: false,
+      },
+    },
+  ],
+};
 
 export type HandleUpdateActiveFilterTagType = (
   activeSection: ActiveSectionType,
@@ -25,7 +73,7 @@ export interface HandleUpdateFilterCriteriaType {
 
 interface TagType {
   item: FilterCriteriaValue;
-  isIdExcluded: boolean;
+  isIdExcluded?: boolean;
   handleUpdateActiveFilterTag: HandleUpdateActiveFilterTagType;
   handleUpdateFilterCriteria: (obj: HandleUpdateFilterCriteriaType) => void;
 }
@@ -35,6 +83,21 @@ interface searchtagsComponentProps {
   handleUpdateActiveFilterTag: HandleUpdateActiveFilterTagType;
   handleUpdateFilterCriteria: (obj: HandleUpdateFilterCriteriaType) => void;
 }
+
+const ModifySliderPrevArrow = (props) => {
+  const { style, className, ...rest } = props;
+
+  return (
+    <SmiplePrevArrow {...rest} style={{ ...style, left: "-2.5rem" }} className={`${className} slickArrowSize_md`} />
+  );
+};
+const ModifySliderNestArrow = (props) => {
+  const { style, className, ...rest } = props;
+
+  return (
+    <SmipleNextArrow {...rest} style={{ ...style, right: "-2.5rem" }} className={`${className} slickArrowSize_md`} />
+  );
+};
 
 export default function SearchtagsComponent({
   allFilters = [],
@@ -52,22 +115,29 @@ export default function SearchtagsComponent({
     );
   };
   return (
-    <div className={`${styles.searchtab} x-scroll`}>
-      {allFilters?.length
-        ? allFilters.map((filterItem) => {
+    <div className={`${styles.searchtab}`}>
+      {allFilters?.length ? (
+        <SlickSlider
+          moreSetting={responsiveSetting}
+          nextArrow={<ModifySliderNestArrow />}
+          prevArrow={<ModifySliderPrevArrow />}
+        >
+          {allFilters.map((filterItem) => {
             const { tagLabel, id } = filterItem;
-            const checkExcludeId = checkExcludeIngredientIds(id);
+            //@ts-ignore
+
+            //checkExcludeIngredientIds(id);
             return (
               <FilterByTag
                 key={id}
                 item={filterItem}
-                isIdExcluded={checkExcludeId}
                 handleUpdateActiveFilterTag={handleUpdateActiveFilterTag}
                 handleUpdateFilterCriteria={handleUpdateFilterCriteria}
               />
             );
-          })
-        : null}
+          })}
+        </SlickSlider>
+      ) : null}
     </div>
   );
 }
@@ -116,17 +186,13 @@ const FilterByPicture = ({
   );
 };
 
-const FilterByTag = ({
-  item,
-  isIdExcluded = false,
-  handleUpdateActiveFilterTag,
-  handleUpdateFilterCriteria,
-}: TagType) => {
+const FilterByTag = ({ item, handleUpdateActiveFilterTag, handleUpdateFilterCriteria }: TagType) => {
+  //@ts-ignore
+  const checkExcludeId = item?.excludeIngredientIds;
   const isItemString = typeof item === "string";
   return (
     <div
-      className={`${styles.item} ${isIdExcluded ? styles.activeItemPrimary : ""}`}
-      style={{ minHeight: "35px" }}
+      className={`${styles.item} ${checkExcludeId && styles.activeItemPrimaryDesktop}`}
       onClick={() =>
         handleUpdateActiveFilterTag(
           item?.origin.activeSection,
@@ -137,7 +203,7 @@ const FilterByTag = ({
       }
     >
       <div
-        className={styles.cross}
+        className={`${styles.cross} `}
         onClick={(e) => {
           e.stopPropagation();
 
@@ -153,7 +219,7 @@ const FilterByTag = ({
 
       {/*  @ts-ignore */}
       {item?.image && (
-        <div className={styles.image}>
+        <div className={`${styles.image} ${checkExcludeId && styles.activeItemPrimaryMobile}`}>
           {/*  @ts-ignore */}
           <NextImageWithFallback
             src={item?.image}
@@ -166,7 +232,10 @@ const FilterByTag = ({
           {/* <img src={item?.image} alt="img" /> */}
         </div>
       )}
-      <p>{isItemString ? `Search | ${item}` : item?.tagLabel}</p>
+      <p className={`${styles.text} truncate line-clamp-two ${!item?.image && styles?.noImageTextHight}`}>
+        <span className={styles.preText}>{`${item?.origin?.activeTab} | `}</span>
+        {isItemString ? `Search | ${item}` : item?.tagLabel}
+      </p>
     </div>
   );
 };
