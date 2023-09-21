@@ -50,6 +50,7 @@
       flex-direction: column;
       background-color: $secondaryLight;
       box-shadow: none;
+      margin: 0;
     }
 
     .image {
@@ -147,7 +148,7 @@
 .cross {
   position: absolute;
   right: 0.5rem;
-  top: -1rem;
+  top: -0.5rem;
 
   cursor: pointer;
   display: none;
