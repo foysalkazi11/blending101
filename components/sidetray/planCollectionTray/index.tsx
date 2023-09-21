@@ -1,5 +1,5 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
-import { faRectangleHistory } from "@fortawesome/pro-regular-svg-icons";
+import { faGrid2, faRectangleHistory, faSearch, faSquare } from "@fortawesome/pro-light-svg-icons";
 import { faBookmark } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
@@ -23,6 +23,10 @@ import TrayTag from "../TrayTag";
 import TrayWrapper from "../TrayWrapper";
 import styles from "./PlanCollectionTray.module.scss";
 import { useUser } from "../../../context/AuthProvider";
+import SideDrawer from "component/molecules/Drawer/SideDrawer.component";
+import Button from "component/atoms/Button/Button.component";
+import Icon from "component/atoms/Icon/Icon.component";
+import { useMediaQuery } from "@/app/hooks/interface/useMediaQuery";
 import useToUpdatePlanFields from "customHooks/plan/useToUpdatePlanFields";
 
 interface Props {
@@ -272,8 +276,23 @@ const PlanCollectionTray = ({ showPanle, showTagByDefaut }: Props) => {
       isMounted.current = false;
     };
   }, []);
+
+  const isMobile = useMediaQuery("md");
+  const Wrapper = isMobile ? SideDrawer : TrayWrapper;
+
   return (
-    <TrayWrapper
+    <Wrapper
+      show={isOpenPlanCollectionTray}
+      title="Blends Collection"
+      button={
+        <Button className="ml-20" onClick={() => dispatch(setIsOpenPlanCollectionTray(true))}>
+          <Icon fontName={faGrid2} color="#7DBD3B" size={20} className="mr-5" />
+          Collections
+        </Button>
+      }
+      onClose={() => {
+        dispatch(setIsOpenPlanCollectionTray(!isOpenPlanCollectionTray));
+      }}
       showTagByDefault={showTagByDefaut}
       closeTray={() => {
         !isCollectionUpdate &&
@@ -290,48 +309,57 @@ const PlanCollectionTray = ({ showPanle, showTagByDefaut }: Props) => {
       showPanel={showPanle}
       panelTag={(hover) => <TrayTag icon={<FontAwesomeIcon icon={faBookmark} />} placeMent="left" hover={hover} />}
     >
-      <ToggleMenu
-        toggleMenuList={[
-          <div key={"key0"} className={styles.menu}>
-            <FontAwesomeIcon icon={faRectangleHistory} className={styles.icon} />
-            <p>Collections</p>
-          </div>,
-        ]}
-        variant={"outlineSecondary"}
-      />
-      <IconForAddComment handleIconClick={addNewCollection} label="Add collection" />
-      {allCollectionLoading ? (
-        <SkeletonCollections />
-      ) : (
-        allCollectionData?.getAllPlanCollection?.planCollections?.map((collection, i) => {
-          const { _id, name, slug, collectionDataCount, image, blogs, description } = collection;
-
-          return (
-            <SingleCollection
-              key={_id}
-              id={_id}
-              name={name}
-              description={description}
-              slug={slug}
-              image={image || "/cards/food.png"}
-              collectionItemLength={collectionDataCount}
-              showMoreMenu={true}
-              handleDeleteCollection={handleOpenConfirmationModal}
-              handleEditCollection={handleEditCollection}
-              index={i}
-              menuIndex={menuIndex}
-              setMenuIndex={setMenuIndex}
-              changeItemWithinCollection={activePlanForCollection.id ? true : false}
-              isRecipeWithinCollection={activePlanForCollection.collectionIds?.includes(_id)}
-              deleteCollectionLoading={deletePlanCollectionLoading}
-              handleClickCheckBox={handleChange}
-              collectionRoute="planCollection"
-              canContribute={activePlanForCollection.id ? true : false}
-              canShareWithOther={activePlanForCollection.id ? true : false}
-            />
-          );
-        })
+      {!isMobile && (
+        <ToggleMenu
+          toggleMenuList={[
+            <div key={"key0"} className={styles.menu}>
+              <FontAwesomeIcon icon={faRectangleHistory} className={styles.icon} />
+              <p>Collections</p>
+            </div>,
+          ]}
+          variant={"outlineSecondary"}
+        />
       )}
+      <div className="ml-10 mr-10">
+        <div className="flex jc-between mb-20">
+          <Button onClick={() => dispatch(setIsOpenPlanCollectionTray(true))}>
+            <Icon fontName={faGrid2} color="#7DBD3B" size={20} className="mr-5" />
+            Collections
+          </Button>
+
+          <IconForAddComment handleIconClick={addNewCollection} label="Add collection" />
+        </div>
+        {allCollectionLoading ? (
+          <SkeletonCollections />
+        ) : (
+          allCollectionData?.getAllPlanCollection?.planCollections?.map((collection, i) => {
+            const { _id, name, slug, collectionDataCount, image, blogs, description } = collection;
+
+            return (
+              <SingleCollection
+                key={_id}
+                id={_id}
+                name={name}
+                description={description}
+                slug={slug}
+                image={image || "/cards/food.png"}
+                collectionItemLength={collectionDataCount}
+                showMoreMenu={true}
+                handleDeleteCollection={handleOpenConfirmationModal}
+                handleEditCollection={handleEditCollection}
+                index={i}
+                menuIndex={menuIndex}
+                setMenuIndex={setMenuIndex}
+                changeItemWithinCollection={activePlanForCollection.id ? true : false}
+                isRecipeWithinCollection={activePlanForCollection.collectionIds?.includes(_id)}
+                deleteCollectionLoading={deletePlanCollectionLoading}
+                handleClickCheckBox={handleChange}
+                collectionRoute="planCollection"
+              />
+            );
+          })
+        )}
+      </div>
       {isDeleteCollection && (
         <ConfirmationModal
           text="All the related entities will be removed along with this collection !!!"
@@ -352,7 +380,7 @@ const PlanCollectionTray = ({ showPanle, showTagByDefaut }: Props) => {
           openModal={openModal}
         />
       )}
-    </TrayWrapper>
+    </Wrapper>
   );
 };
 

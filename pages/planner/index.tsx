@@ -39,6 +39,8 @@ import useAllPlan from "@/plan/hooks/plan/useAllPlan";
 import useDeletePlan from "@/plan/hooks/plan-details/useDeletePlan";
 import { updateOnDelete } from "@/plan/services/plan-discovery.service";
 import PlanCommentsTray from "components/sidetray/planCommentsTray";
+import Button from "component/atoms/Button/Button.component";
+import AddButton from "component/atoms/Button/AddButton.component";
 
 const normalizeQueryParams = (queryParams) => {
   let queryParamObj = {} as AllFilterType;
@@ -148,8 +150,17 @@ const PlanDiscovery = () => {
   return (
     <Fragment>
       <PlanFilterTray showPanle="left" showTagByDefaut={false} />
-      <PlanCollectionTray showPanle="left" showTagByDefaut={true} />
       <PlanCommentsTray showPanle="right" showTagByDefaut={false} />
+
+      <div className="flex pl-20">
+        <PlanCollectionTray showPanle="left" showTagByDefaut={true} />
+        <HideOnDesktop>
+          <Button className="ml-10" onClick={() => router.push("/planner/plan/")}>
+            <Icon fontName={faUserCircle} className="mr-10" size="2rem" color="#7DBD3B" />
+            My Plans
+          </Button>
+        </HideOnDesktop>
+      </div>
       <div className={styles.discovery}>
         <HideOnMobile>
           <div className={styles.searchBarContainer}>
@@ -213,6 +224,7 @@ const PlanDiscovery = () => {
           setOpenCollectionModal(false);
         }}
       />
+      <AddButton onClick={() => router.push("/planner/plan/add-plan")} />
     </Fragment>
   );
 };
