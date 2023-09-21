@@ -68,7 +68,7 @@ const nutrientMatrix = [
     greaterThanValue: 20,
     betweenStartValue: 20,
     betweenEndValue: 30,
-    tagLabel: `GI < ${20}`,
+    tagLabel: ` GI `,
     filterCriteria: "nutrientMatrix",
   },
   {
@@ -82,7 +82,7 @@ const nutrientMatrix = [
     greaterThanValue: 20,
     betweenStartValue: 20,
     betweenEndValue: 30,
-    tagLabel: `GL < ${20}`,
+    tagLabel: ` GL `,
     filterCriteria: "nutrientMatrix",
   },
   {
@@ -96,7 +96,7 @@ const nutrientMatrix = [
     greaterThanValue: 20,
     betweenStartValue: 20,
     betweenEndValue: 30,
-    tagLabel: `Calorie < ${20}`,
+    tagLabel: ` Calorie `,
     filterCriteria: "nutrientMatrix",
   },
   {
@@ -110,7 +110,7 @@ const nutrientMatrix = [
     greaterThanValue: 20,
     betweenStartValue: 20,
     betweenEndValue: 30,
-    tagLabel: `NetCarbs < ${20}`,
+    tagLabel: ` NetCarbs `,
     filterCriteria: "nutrientMatrix",
   },
 ];
@@ -213,7 +213,7 @@ const TagSection = ({
           greaterThanValue: 200,
           betweenStartValue: 200,
           betweenEndValue: 201,
-          tagLabel: `${item?.nutrientName} < ${200}`,
+          tagLabel: ` ${item?.nutrientName}`,
           filterCriteria: "nutrientFilters",
         })),
       ]);
@@ -255,7 +255,7 @@ const TagSection = ({
             id: item?._id,
             name: item?.personalizedName || item?.name,
             // image: item?.image,
-            tagLabel: `${item?.personalizedName || item?.name}`,
+            tagLabel: ` ${item?.personalizedName || item?.name}`,
             filterCriteria: "collectionIds",
           }))),
           setOptionSelectItems(collections);
@@ -268,7 +268,7 @@ const TagSection = ({
             id: item?._id,
             name: item?.personalizedName || item?.name,
             // image: item?.image,
-            tagLabel: `${item?.personalizedName || item?.name}`,
+            tagLabel: ` ${item?.personalizedName || item?.name}`,
             filterCriteria: "collectionIds",
           }))),
           setOptionSelectItems(collections);
@@ -291,7 +291,7 @@ const TagSection = ({
           id: item?._id,
           name: item?.name,
           // image: item?.image,
-          tagLabel: `${item?.name}`,
+          tagLabel: ` ${item?.name}`,
           filterCriteria: "blendTypes",
         })),
       );
@@ -305,7 +305,7 @@ const TagSection = ({
               id: item?._id,
               // image: item?.featuredImage || "/food/chard.png",
               name: item?.ingredientName,
-              tagLabel: `${item?.ingredientName}`,
+              tagLabel: ` ${item?.ingredientName}`,
               filterCriteria: "includeIngredientIds",
               excludeIngredientIds: false,
             })),
@@ -316,7 +316,7 @@ const TagSection = ({
             id: item?._id,
             // image: item?.featuredImage || "/food/chard.png",
             name: item?.ingredientName,
-            tagLabel: `${item?.ingredientName}`,
+            tagLabel: ` ${item?.ingredientName}`,
             filterCriteria: "includeIngredientIds",
             excludeIngredientIds: false,
           })),
