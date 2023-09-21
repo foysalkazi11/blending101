@@ -192,12 +192,12 @@ const RecipeDiscovery = () => {
 
           {showFilterOrSearchRecipes ? (
             <ShowRecipeContainer
-              data={allFilterRecipes.filterRecipes}
+              data={allFilterRecipes?.filterRecipes}
               loading={filterRecipesLoading || searchRecipeLoading}
               closeHandler={closeFilterRecipes}
               showItems="recipe"
               showDefaultLeftHeader
-              showDefaultMiddleHeader={allFilterRecipes.filterRecipes.length ? true : false}
+              showDefaultMiddleHeader={allFilterRecipes?.filterRecipes?.length ? true : false}
               showDefaultRightHeader
               hasMore={allFilterRecipes?.totalItems > dataLimit * pageNum}
               totalDataCount={allFilterRecipes?.totalItems}
