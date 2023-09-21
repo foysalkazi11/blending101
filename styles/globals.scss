@@ -52,7 +52,7 @@ html {
   display: block !important;
 }
 
-// react-slick
+// react-slick start
 
 .slick-slider {
   margin: 0 !important;
@@ -105,10 +105,16 @@ html {
   display: none !important;
   pointer-events: none !important;
 }
+.slick-track {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
 // .slick-slider .slick-track {
 //   -webkit-transform: translate3d(0px, 0px, 0px);
 //   transform: translate3d(0px, 0px, 0px) !important;
 // }
+
+// slick-slider end
 
 .Toastify {
   font-size: 15px !important;
