@@ -46,6 +46,7 @@ const responsiveSetting = {
         slidesToShow: 5,
         slidesToScroll: 1,
         arrows: false,
+        adaptiveHeight: true,
       },
     },
     {
@@ -217,7 +218,7 @@ const createTag = (item: FilterCriteriaValue) => {
     post: "",
     mobileTag: "",
   };
-  switch (item?.origin.activeTab) {
+  switch (item?.origin?.activeTab) {
     case "Nutrition":
       let pre = item?.lessThan ? `${item?.lessThanValue} > ` : item?.between ? `${item?.betweenStartValue} >` : " ";
       let post = item?.greaterThan

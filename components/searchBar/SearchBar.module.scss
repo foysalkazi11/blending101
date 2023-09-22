@@ -59,6 +59,9 @@
     border-bottom: none;
     border: 2px solid #ececec;
     border-radius: 15px;
+    form {
+      width: 100%;
+    }
   }
 
   .seachIcon {
@@ -96,6 +99,10 @@
     transition: 0.3s;
     &:hover {
       color: #fe5d1f;
+    }
+    @include respond(md) {
+      margin-left: 0px;
+      margin-right: 10px;
     }
   }
   .mic.active {

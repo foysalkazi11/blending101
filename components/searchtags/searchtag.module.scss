@@ -1,5 +1,5 @@
 @import "mixins";
-@import "../../styles/fragments/variables.scss";
+@import "variables";
 
 .searchtab {
   width: 100%;
@@ -8,19 +8,13 @@
   height: auto;
   margin-top: 2.5rem;
   border-radius: 90px;
-  // display: flex;
-  // align-items: center;
   padding: 0.5rem;
-  // overflow: hidden;
-  // flex-wrap: wrap;
-  margin: 2.5rem auto 0 auto;
-
-  // &::-webkit-scrollbar {
-  //   display: none;
-  // }
-
+  margin: 2.5rem auto 0;
   @include respond(md) {
     background-color: $secondaryLight;
+    border-radius: 0px;
+    padding: 1rem;
+    max-width: 100%;
   }
 
   // @include respond(md) {

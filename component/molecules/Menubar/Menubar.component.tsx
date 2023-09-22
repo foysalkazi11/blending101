@@ -9,7 +9,7 @@ interface MenubarProps {
   onChange: (selected: string) => void;
 }
 
-function MenubarComponent(props: MenubarProps) {
+function Menubar(props: MenubarProps) {
   const { id, items, className, onChange } = props;
 
   const lineRef = useRef<any>();
@@ -61,9 +61,9 @@ function MenubarComponent(props: MenubarProps) {
   );
 }
 
-export default MenubarComponent;
+export default Menubar;
 
-MenubarComponent.defaultProps = {
+Menubar.defaultProps = {
   items: ["All", "Wholefood", "Smoothie", "Refreshing", "Teas & Tonics"],
   id: "",
 };

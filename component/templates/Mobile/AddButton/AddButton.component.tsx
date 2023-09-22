@@ -3,7 +3,7 @@
 import React from "react";
 import { faPlus } from "@fortawesome/pro-regular-svg-icons";
 
-import Icon from "../Icon/Icon.component";
+import Icon from "../../../atoms/Icon/Icon.component";
 import styles from "./AddButton.module.scss";
 
 const AddButton = (props: React.HTMLAttributes<HTMLButtonElement>) => {

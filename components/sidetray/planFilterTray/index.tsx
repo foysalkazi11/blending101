@@ -12,19 +12,17 @@ import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/
 import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
 import TagSectionForPlan from "./tagSection";
 import { setIsPlanFilterOpen } from "../../../redux/slices/planFilterSlice";
-import {
-  FilterCriteriaOptions,
-  FilterCriteriaValue,
-} from "../../../type/filterType";
+import { FilterCriteriaOptions, FilterCriteriaValue } from "../../../type/filterType";
 import useToUpdateActiveFilterTagForPlan from "../../../customHooks/planFilter/useToUpdateActiveFilterTagForPlan";
 import useToUpdateFilterCriteriaForPlan from "../../../customHooks/planFilter/useToUpdateFilterCriteriaForPlan";
 
 interface Props {
   showTagByDefaut?: boolean;
   showPanle?: "left" | "right";
+  children?: React.ReactNode;
 }
 
-function PlanFilterTray({ showPanle, showTagByDefaut }: Props) {
+function PlanFilterTray({ showPanle, showTagByDefaut, children }: Props) {
   const { isPlanFilterOpen } = useAppSelector((state) => state?.planFilter);
 
   const dispatch = useAppDispatch();
@@ -39,11 +37,9 @@ function PlanFilterTray({ showPanle, showTagByDefaut }: Props) {
         openTray={isPlanFilterOpen}
         showTagByDefault={showTagByDefaut}
         showPanel={showPanle}
-        panelTag={(hover) => (
-          <TrayTag icon={<FiFilter />} placeMent="left" hover={hover} />
-        )}
+        panelTag={(hover) => <TrayTag icon={<FiFilter />} placeMent="left" hover={hover} />}
       >
-        <Filter />
+        {children}
       </TrayWrapper>
     </div>
   );
@@ -51,39 +47,32 @@ function PlanFilterTray({ showPanle, showTagByDefaut }: Props) {
 
 export function Filter() {
   const { allFiltersForPlan } = useAppSelector((state) => state?.planFilter);
-  const { data: blendCategoryData, loading: blendCategoryLoading } = useQuery(
-    FETCH_BLEND_CATEGORIES,
-  );
-  const { data: ingredientCategoryData, loading: ingredientCategoryLoading } =
-    useQuery(FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS, {
+  const { data: blendCategoryData, loading: blendCategoryLoading } = useQuery(FETCH_BLEND_CATEGORIES);
+  const { data: ingredientCategoryData, loading: ingredientCategoryLoading } = useQuery(
+    FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS,
+    {
       variables: {
         data: {
           ingredientCategory: "All",
           IngredientClass: 1,
         },
       },
-    });
+    },
+  );
   // handle update recipe filter criteria
   const handleUpdateFilterCriteriaForPlan = useToUpdateFilterCriteriaForPlan();
   // handle update recipe active filter tag
-  const handleUpdateActiveFilterTagForPlan =
-    useToUpdateActiveFilterTagForPlan();
+  const handleUpdateActiveFilterTagForPlan = useToUpdateActiveFilterTagForPlan();
 
   //check active filter item
-  const checkActiveItem = (
-    id: string,
-    filterCriteria: FilterCriteriaOptions,
-  ) => {
+  const checkActiveItem = (id: string, filterCriteria: FilterCriteriaOptions) => {
     if (filterCriteria === "searchTerm") {
       return false;
     }
     return allFiltersForPlan[filterCriteria]?.some((item) => item?.id === id);
   };
   //check active filter item
-  const checkExcludeIngredientIds = (
-    id: string,
-    filterCriteria: FilterCriteriaOptions,
-  ) => {
+  const checkExcludeIngredientIds = (id: string, filterCriteria: FilterCriteriaOptions) => {
     if (filterCriteria === "searchTerm") {
       return false;
     }
@@ -113,9 +102,7 @@ export function Filter() {
         checkActiveItem={checkActiveItem}
         blendCategoryData={blendCategoryData?.getAllCategories}
         blendCategoryLoading={blendCategoryLoading}
-        ingredientCategoryData={
-          ingredientCategoryData?.filterIngredientByCategoryAndClass
-        }
+        ingredientCategoryData={ingredientCategoryData?.filterIngredientByCategoryAndClass}
         ingredientCategoryLoading={ingredientCategoryLoading}
         checkExcludeIngredientIds={checkExcludeIngredientIds}
         handleUpdateActiveFilterTag={handleUpdateActiveFilterTagForPlan}

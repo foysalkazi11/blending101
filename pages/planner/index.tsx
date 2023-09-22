@@ -5,7 +5,6 @@ import PlanCard from "../../modules/plan/partials/Shared/PlanCard.component";
 import AppdownLoadCard from "../../components/recipe/recipeDiscovery/AppdownLoadCard/AppdownLoadCard.component";
 import ContentTray from "../../components/recipe/recipeDiscovery/ContentTray/ContentTray.component";
 import Icon from "../../component/atoms/Icon/Icon.component";
-import styles from "../../styles/pages/planner.module.scss";
 import "react-datepicker/dist/react-datepicker.css";
 import { useQuery } from "@apollo/client";
 import { GET_FEATURED_PLANS } from "../../modules/plan/plan.graphql";
@@ -31,16 +30,22 @@ import useToGetPlanByFilterCriteria from "../../customHooks/planFilter/useToGetP
 import useDebounce from "../../customHooks/useDebounce";
 import { useUser } from "../../context/AuthProvider";
 import MenubarComponent from "../../component/molecules/Menubar/Menubar.component";
-import PlanFilterTray from "../../components/sidetray/planFilterTray";
-import { HideOnDesktop, HideOnMobile } from "../../component/molecules/Responsive/Responsive.component";
-import { faPlusCircle } from "@fortawesome/pro-regular-svg-icons";
+import PlanFilterTray, { Filter } from "../../components/sidetray/planFilterTray";
+import { HideOnDesktop } from "../../component/molecules/Responsive/Responsive.component";
+import { faArrowLeft, faPlusCircle, faSearch } from "@fortawesome/pro-regular-svg-icons";
 import PlanCollectionTray from "components/sidetray/planCollectionTray";
 import useAllPlan from "@/plan/hooks/plan/useAllPlan";
 import useDeletePlan from "@/plan/hooks/plan-details/useDeletePlan";
 import { updateOnDelete } from "@/plan/services/plan-discovery.service";
 import PlanCommentsTray from "components/sidetray/planCommentsTray";
 import Button from "component/atoms/Button/Button.component";
-import AddButton from "component/atoms/Button/AddButton.component";
+import AddButton from "component/templates/Mobile/AddButton/AddButton.component";
+import IconButton from "component/atoms/Button/IconButton.component";
+import SideDrawer from "component/molecules/Drawer/SideDrawer.component";
+import Header from "component/templates/Mobile/Header/Header.component";
+
+import styles from "@pages/plan/discovery.module.scss";
+import { useMediaQuery } from "@/app/hooks/interface/useMediaQuery";
 
 const normalizeQueryParams = (queryParams) => {
   let queryParamObj = {} as AllFilterType;
@@ -53,10 +58,13 @@ const normalizeQueryParams = (queryParams) => {
 };
 
 const PlanDiscovery = () => {
-  const [searchTerm, setSearchTerm] = useState("");
   const router = useRouter();
   const query = router.query.query;
+
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showFilter, setShowFilter] = useState(false);
+
   const dispatch = useAppDispatch();
   const { lastModifiedPlanCollection } = useAppSelector((state) => state?.planner);
   const { allFiltersForPlan } = useAppSelector((state) => state.planFilter);
@@ -147,11 +155,55 @@ const PlanDiscovery = () => {
 
   const allFilters = [].concat(...Object.values(allFiltersForPlan));
 
+  const isMobile = useMediaQuery("md");
+
   return (
     <Fragment>
-      <PlanFilterTray showPanle="left" showTagByDefaut={false} />
+      <PlanFilterTray showPanle="left" showTagByDefaut={false}>
+        <Filter />
+      </PlanFilterTray>
       <PlanCommentsTray showPanle="right" showTagByDefaut={false} />
-
+      <Header title="Plan Discovery">
+        <SideDrawer
+          show={showFilter}
+          button={
+            <IconButton
+              fontName={faSearch}
+              size="small"
+              className={styles.search__button}
+              onClick={() => setShowFilter(true)}
+            />
+          }
+        >
+          <div className={styles.search}>
+            <div className={styles.search__header}>
+              <IconButton fontName={faArrowLeft} onClick={() => setShowFilter(false)} />
+              <h3>Search</h3>
+              <div></div>
+            </div>
+            <div className={styles.search__content}>
+              <div className="ml-10 mr-10">
+                <CommonSearchBar
+                  input={searchTerm}
+                  handleOnChange={(e) => setSearchTerm(e.target.value)}
+                  isSearchTag={false}
+                  openFilterPanel={() => dispatch(setIsPlanFilterOpen(!isPlanFilterOpen))}
+                />
+              </div>
+              {allFilters?.length ? (
+                <SearchtagsComponent
+                  allFilters={allFilters}
+                  handleUpdateActiveFilterTag={handleUpdateActiveFilterTagFunc}
+                  handleUpdateFilterCriteria={handleUpdateFilterCriteriaForPlanFunc}
+                />
+              ) : null}
+              <div className="ml-10 mr-10">
+                <Filter />
+              </div>
+            </div>
+          </div>
+        </SideDrawer>
+      </Header>
       <div className="flex pl-20">
         <PlanCollectionTray showPanle="left" showTagByDefaut={true} />
         <HideOnDesktop>
@@ -162,42 +214,43 @@ const PlanDiscovery = () => {
         </HideOnDesktop>
       </div>
       <div className={styles.discovery}>
-        <HideOnMobile>
-          <div className={styles.searchBarContainer}>
-            <CommonSearchBar
-              input={searchTerm}
-              handleOnChange={(e) => setSearchTerm(e.target.value)}
-              isSearchTag={false}
-              openFilterPanel={() => dispatch(setIsPlanFilterOpen(!isPlanFilterOpen))}
-              showFilterIcon={true}
-            />
-            <button className={styles.discovery__myplan} onClick={() => router.push("/planner/plan/add-plan")}>
-              <Icon fontName={faPlusCircle} className="mr-20" size="2rem" />
-              Add Plan
-            </button>
-            <button className={styles.discovery__myplan} onClick={() => router.push("/planner/plan/")}>
-              <Icon fontName={faUserCircle} className="mr-20" size="2rem" />
-              My Plans
-            </button>
-          </div>
+        {!isMobile && (
+          <>
+            <div className={styles.header__search}>
+              <CommonSearchBar
+                input={searchTerm}
+                handleOnChange={(e) => setSearchTerm(e.target.value)}
+                isSearchTag={false}
+                openFilterPanel={() => dispatch(setIsPlanFilterOpen(!isPlanFilterOpen))}
+                showFilterIcon={true}
+              />
+              <button className={styles.header__button} onClick={() => router.push("/planner/plan/add-plan")}>
+                <Icon fontName={faPlusCircle} className="mr-20" size="2rem" />
+                Add Plan
+              </button>
+              <button className={styles.header__button} onClick={() => router.push("/planner/plan/")}>
+                <Icon fontName={faUserCircle} className="mr-20" size="2rem" />
+                My Plans
+              </button>
+            </div>
 
-          {allFilters?.length ? null : <AppdownLoadCard />}
+            {allFilters?.length ? null : <AppdownLoadCard />}
 
-          {allFilters?.length ? (
-            <SearchtagsComponent
-              allFilters={allFilters}
-              handleUpdateActiveFilterTag={handleUpdateActiveFilterTagFunc}
-              handleUpdateFilterCriteria={handleUpdateFilterCriteriaForPlanFunc}
-            />
-          ) : null}
+            {allFilters?.length ? (
+              <SearchtagsComponent
+                allFilters={allFilters}
+                handleUpdateActiveFilterTag={handleUpdateActiveFilterTagFunc}
+                handleUpdateFilterCriteria={handleUpdateFilterCriteriaForPlanFunc}
+              />
+            ) : null}
 
-          {query && query !== "" ? (
-            <SearchedPlan query={query} setOpenCollectionModal={setOpenCollectionModal} />
-          ) : (
-            <FeaturedPlan setOpenCollectionModal={setOpenCollectionModal} />
-          )}
-        </HideOnMobile>
-
+            {query && query !== "" ? (
+              <SearchedPlan query={query} setOpenCollectionModal={setOpenCollectionModal} />
+            ) : (
+              <FeaturedPlan setOpenCollectionModal={setOpenCollectionModal} />
+            )}
+          </>
+        )}
         {/* {allFilters?.length ? (
           <ShowRecipeContainer
             data={planFilterData?.plans || []}
@@ -360,11 +413,6 @@ const FeaturedPlan = ({ setOpenCollectionModal }) => {
 
 export default PlanDiscovery;
 
-PlanDiscovery.meta = {
-  title: "Plan Discovery",
-  icon: "/icons/calender__sidebar.svg",
-};
-
 const ListPlans = ({ setOpenCollectionModal }) => {
   const userId = useUser().id;
   const { data } = useQuery(GET_FEATURED_PLANS, {
@@ -412,4 +460,9 @@ const ListPlans = ({ setOpenCollectionModal }) => {
       ))}
     </Fragment>
   );
+};
+
+PlanDiscovery.meta = {
+  title: "Plan Discovery",
+  icon: "/icons/calender__sidebar.svg",
 };

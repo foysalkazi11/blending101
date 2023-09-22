@@ -285,7 +285,7 @@ const PlanCollectionTray = ({ showPanle, showTagByDefaut }: Props) => {
       show={isOpenPlanCollectionTray}
       title="Blends Collection"
       button={
-        <Button className="ml-20" onClick={() => dispatch(setIsOpenPlanCollectionTray(true))}>
+        <Button onClick={() => dispatch(setIsOpenPlanCollectionTray(true))}>
           <Icon fontName={faGrid2} color="#7DBD3B" size={20} className="mr-5" />
           Collections
         </Button>
