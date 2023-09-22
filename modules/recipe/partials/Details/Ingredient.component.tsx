@@ -160,6 +160,7 @@ const IngredientDetails = (props: IngredientDetailsProps) => {
                         ingredient?.originalIngredientName ||
                         "Ingredient name"
                       }
+                      style={{ display: "inline-block" }}
                     >
                       <span
                         className={`${styles.leftSide__highlighted} ${
