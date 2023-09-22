@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./CustomToolTip.module.scss";
 
-type ToolTipProps = {
+type ToolTipProps = React.ComponentPropsWithoutRef<"div"> & {
   children: React.ReactNode;
   content: string;
   delay?: number;
@@ -10,7 +10,7 @@ type ToolTipProps = {
   // style?: React.CSSProperties;
 };
 
-const Tooltip = ({ children, content, delay = 300, direction = "", bgColor = "bgBlack" }: ToolTipProps) => {
+const Tooltip = ({ children, content, delay = 300, direction = "", bgColor = "bgBlack", ...rest }: ToolTipProps) => {
   let timeout;
   const [active, setActive] = useState(false);
 
@@ -124,7 +124,7 @@ const Tooltip = ({ children, content, delay = 300, direction = "", bgColor = "bg
   };
 
   return (
-    <div className={styles.Tooltip_Wrapper} onMouseEnter={showTip} onMouseLeave={hideTip}>
+    <div className={styles.Tooltip_Wrapper} onMouseEnter={showTip} onMouseLeave={hideTip} {...rest}>
       {children}
       {active && content !== "" && (
         <div

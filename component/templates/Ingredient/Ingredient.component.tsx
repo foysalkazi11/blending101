@@ -80,6 +80,7 @@ const IngredientPanel = (props: IngredientPanelProps) => {
                             ingredient?.originalIngredientName ||
                             "Ingredient Name"
                           }
+                          style={{ display: "inline-block" }}
                         >
                           <span
                             // onClick={() => onNutrition(ingredient)}
