@@ -49,7 +49,7 @@ const RankingSection = ({
       id: item?._id,
       image: item?.featuredImage || "/food/chard.png",
       name: item?.ingredientName,
-      tagLabel: `Ingredient | ${item?.ingredientName}`,
+      tagLabel: ` ${item?.ingredientName}`,
       filterCriteria: "includeIngredientIds",
       origin: {
         activeSection: "visual",
@@ -69,44 +69,30 @@ const RankingSection = ({
         dropDownState={rankingDropDownState}
         setDropDownState={setRankingDropDownState}
       />
-      <div
-        className={`${styles.rankgingItemContainer} y-scroll`}
-        style={{ maxHeight: `${scrollAreaMaxHeight}px` }}
-      >
+      <div className={`${styles.rankgingItemContainer} y-scroll`} style={{ maxHeight: `${scrollAreaMaxHeight}px` }}>
         {nutritionLoading ? (
           <IngredientPanelSkeleton />
         ) : arrayOrderState?.length ? (
-          arrayOrderState?.map(
-            (
-              { name, value, units, ingredientId, portion }: ingredientState,
-              index,
-            ) => {
-              return (
-                <Linearcomponent
-                  name={name}
-                  percent={Number(value?.toFixed(2))}
-                  key={index}
-                  units={units}
-                  //@ts-ignore
-                  highestValue={
-                    ascendingDescending
-                      ? arrayOrderState[0]?.value
-                      : arrayOrderState[arrayOrderState?.length - 1]?.value
-                  }
-                  checkbox={true}
-                  checkedState={checkActiveItem(ingredientId)}
-                  handleOnChange={() =>
-                    handleIngredientClick(
-                      allIngredients?.find(
-                        (item) => item?._id === ingredientId,
-                      ) || {},
-                    )
-                  }
-                  portion={portion}
-                />
-              );
-            },
-          )
+          arrayOrderState?.map(({ name, value, units, ingredientId, portion }: ingredientState, index) => {
+            return (
+              <Linearcomponent
+                name={name}
+                percent={Number(value?.toFixed(2))}
+                key={index}
+                units={units}
+                //@ts-ignore
+                highestValue={
+                  ascendingDescending ? arrayOrderState[0]?.value : arrayOrderState[arrayOrderState?.length - 1]?.value
+                }
+                checkbox={true}
+                checkedState={checkActiveItem(ingredientId)}
+                handleOnChange={() =>
+                  handleIngredientClick(allIngredients?.find((item) => item?._id === ingredientId) || {})
+                }
+                portion={portion}
+              />
+            );
+          })
         ) : (
           <div className={styles.noResult}>
             <p>No Ingredients</p>

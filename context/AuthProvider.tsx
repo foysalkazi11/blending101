@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useContext, createContext, Dispatch } from "react";
+import React, { useEffect, useState, useCallback, useContext, createContext, Dispatch, Fragment } from "react";
 import { useRouter } from "next/router";
 import { Auth, Amplify } from "aws-amplify";
 import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth/lib/types";
@@ -8,6 +8,8 @@ import { useMutation } from "@apollo/client";
 import notification from "../components/utility/reactToastifyNotification";
 import { updateUserCompareLength } from "../redux/slices/userSlice";
 import { useAppDispatch } from "../redux/hooks";
+import Loader from "component/atoms/Loader/loader.component";
+import routes from "routes";
 
 type TProvider = "Amazon" | "Google" | "Facebook" | "Apple" | "Cognito";
 Amplify.configure({ ...AmplifyConfig, ssr: true });
@@ -19,6 +21,7 @@ type DEFAULT_USER_TYPE = {
   image: string;
 };
 const DEFAULT_USER = { id: "", name: "", email: "", image: "" };
+const DEFAULT_LOGIN_STATE = { isChecking: true, isLogin: false };
 
 interface IAuthContext {
   user: typeof DEFAULT_USER;
@@ -52,6 +55,8 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
   const { children } = props;
   const router = useRouter();
   const dispatch = useAppDispatch();
+
+  const [state, setState] = useState(DEFAULT_LOGIN_STATE);
   const [user, setUser] = useState(DEFAULT_USER);
   const [session, setSession] = useState<any>(null);
   const [getUser] = useMutation(GET_USER);
@@ -81,6 +86,10 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
             email: profile?.email,
             image: profile?.image,
           });
+          setState({
+            isChecking: false,
+            isLogin: true,
+          });
           dispatch(updateUserCompareLength(profile?.compareLength));
           return profile;
         } catch (error) {
@@ -93,22 +102,32 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
     [dispatch, getUser],
   );
 
+  const isPublicRoute = [
+    "/login",
+    "/signup",
+    "/verify_email",
+    "/forget_password",
+    "/welcome_blending101_extension",
+  ].includes(router.pathname);
+
   useEffect(() => {
-    // Google Authentication
-    if (router.asPath.startsWith("/login/#access_token=")) router.push("/");
     // Redirects when it is directed to authentication related page
-    if (
-      ["/login", "/signup", "/verify_email", "/forget_password", "/welcome_blending101_extension"].includes(
-        router.pathname,
-      )
-    )
-      return;
+    if (isPublicRoute) {
+      return setState({
+        isChecking: false,
+        isLogin: true,
+      });
+    }
     Auth.currentAuthenticatedUser()
       .then(sessionHandler)
       .catch((error) => {
-        console.log(error);
+        setState({
+          isChecking: false,
+          isLogin: false,
+        });
+        router.push(routes.login);
       });
-  }, [router, sessionHandler]);
+  }, [isPublicRoute, router, sessionHandler]);
 
   const signIn = async (email: string, password: string, onSuccess = (user) => {}, onError = (error) => {}) => {
     try {
@@ -149,7 +168,9 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
     }
   };
   // console.log(user);
-  // if (user.id === "") return <></>;
+  if (!isPublicRoute && state.isChecking) return <Loader />;
+  if (!state.isChecking && !state.isLogin) return <Fragment />;
+
   return (
     <AuthContext.Provider
       value={{

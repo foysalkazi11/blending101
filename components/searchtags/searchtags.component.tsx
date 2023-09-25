@@ -34,7 +34,7 @@ const responsiveSetting = {
       },
     },
     {
-      breakpoint: 1050,
+      breakpoint: 1000,
       settings: {
         slidesToShow: 3,
         slidesToScroll: 1,
@@ -46,12 +46,21 @@ const responsiveSetting = {
         slidesToShow: 5,
         slidesToScroll: 1,
         arrows: false,
+        adaptiveHeight: true,
       },
     },
     {
       breakpoint: 576,
       settings: {
         slidesToShow: 4,
+        slidesToScroll: 1,
+        arrows: false,
+      },
+    },
+    {
+      breakpoint: 400,
+      settings: {
+        slidesToShow: 3,
         slidesToScroll: 1,
         arrows: false,
       },
@@ -150,6 +159,7 @@ const FilterByPicture = ({
 }: TagType) => {
   const dispatch = useAppDispatch();
   const isItemString = typeof item === "string";
+
   return (
     <div
       className={`${styles.item} ${isIdExcluded ? styles.activeItemPrimary : ""}`}
@@ -186,10 +196,62 @@ const FilterByPicture = ({
   );
 };
 
+const createMobileTag = (item: FilterCriteriaValue) => {
+  let mobileTag: string = "";
+  if (item?.lessThan) {
+    mobileTag = `${item?.lessThanValue} > `;
+  }
+  if (item?.greaterThan) {
+    mobileTag = ` < ${item?.greaterThanValue}`;
+  }
+
+  if (item?.between) {
+    mobileTag = `${item?.betweenStartValue} > ` + ` < ${item?.betweenEndValue}`;
+  }
+  return mobileTag;
+};
+
+const createTag = (item: FilterCriteriaValue) => {
+  let tagObj = {
+    pre: "",
+    center: "",
+    post: "",
+    mobileTag: "",
+  };
+  switch (item?.origin?.activeTab) {
+    case "Nutrition":
+      let pre = item?.lessThan ? `${item?.lessThanValue} > ` : item?.between ? `${item?.betweenStartValue} >` : " ";
+      let post = item?.greaterThan
+        ? ` < ${item?.greaterThanValue}`
+        : item?.between
+        ? `< ${item?.betweenEndValue} `
+        : " ";
+      let mobileTag = createMobileTag(item);
+      tagObj = {
+        pre: `${item?.origin?.activeTab} | ${pre}`,
+        center: item.tagLabel,
+        post,
+        mobileTag,
+      };
+      break;
+
+    default:
+      tagObj = {
+        pre: `${item?.origin?.activeTab} | `,
+        center: item.tagLabel,
+        post: "",
+        mobileTag: "",
+      };
+      break;
+  }
+  return tagObj;
+};
+
 const FilterByTag = ({ item, handleUpdateActiveFilterTag, handleUpdateFilterCriteria }: TagType) => {
   //@ts-ignore
   const checkExcludeId = item?.excludeIngredientIds;
   const isItemString = typeof item === "string";
+  const tag = createTag(item);
   return (
     <div
       className={`${styles.item} ${checkExcludeId && styles.activeItemPrimaryDesktop}`}
@@ -218,7 +280,7 @@ const FilterByTag = ({ item, handleUpdateActiveFilterTag, handleUpdateFilterCrit
       </div>
 
       {/*  @ts-ignore */}
-      {item?.image && (
+      {item?.image ? (
         <div className={`${styles.image} ${checkExcludeId && styles.activeItemPrimaryMobile}`}>
           {/*  @ts-ignore */}
           <NextImageWithFallback
@@ -231,10 +293,15 @@ const FilterByTag = ({ item, handleUpdateActiveFilterTag, handleUpdateFilterCrit
           />
           {/* <img src={item?.image} alt="img" /> */}
         </div>
+      ) : (
+        <div className={`${styles.mobileCircle}`}>
+          <span>{tag?.mobileTag}</span>
+        </div>
       )}
-      <p className={`${styles.text} truncate line-clamp-two ${!item?.image && styles?.noImageTextHight}`}>
-        <span className={styles.preText}>{`${item?.origin?.activeTab} | `}</span>
-        {isItemString ? `Search | ${item}` : item?.tagLabel}
+      <p className={`${styles.text}  ${!item?.image && styles?.noImageTextHight}`}>
+        <span className={styles.preText}>{tag?.pre}</span>
+        {isItemString ? ` Search | ${item} ` : ` ${item?.tagLabel} `}
+        <span className={styles.postText}>{tag?.post}</span>
       </p>
     </div>
   );

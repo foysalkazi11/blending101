@@ -21,15 +21,33 @@ export type FilterProps = {
   range?: [number, number];
   value?: number;
 };
-
-export interface BlendType {
+type CommonProperties = {
   name: string;
   id: string;
-  image?: string;
   tagLabel: string;
   filterCriteria: FilterCriteriaOptions;
   origin: ActiveFilterTagCriteriaType;
-}
+  image?: string;
+  excludeIngredientIds?: boolean;
+  between?: boolean;
+  category?: "energy" | "mineral" | "vitamin";
+  matrixName?: "gi" | "gl" | "calorie" | "netCarbs";
+  greaterThan?: boolean;
+  lessThan?: boolean;
+  lessThanValue?: number;
+  greaterThanValue?: number;
+  betweenStartValue?: number;
+  betweenEndValue?: number;
+};
+
+export type BlendType = {
+  name: string;
+  id: string;
+  tagLabel: string;
+  filterCriteria: FilterCriteriaOptions;
+  origin: ActiveFilterTagCriteriaType;
+  image?: string;
+};
 export interface SearchTermType {
   searchTerm: string;
   tagLabel: string;
@@ -37,25 +55,25 @@ export interface SearchTermType {
   id: string;
 }
 
-export interface IngredientType {
+export type IngredientType = {
   name: string;
   id: string;
-  image?: string;
   tagLabel: string;
   filterCriteria: FilterCriteriaOptions;
-  excludeIngredientIds: boolean;
   origin: ActiveFilterTagCriteriaType;
-}
+  image?: string;
+  excludeIngredientIds?: boolean;
+};
 export interface NutrientFiltersType {
   between: boolean;
   category: "energy" | "mineral" | "vitamin";
   greaterThan: boolean;
   lessThan: boolean;
-  id: string;
   lessThanValue: number;
   greaterThanValue: number;
   betweenStartValue: number;
   betweenEndValue: number;
+  id: string;
   tagLabel: string;
   name: string;
   filterCriteria: FilterCriteriaOptions;
@@ -68,11 +86,11 @@ export interface NutrientMatrixType {
   greaterThan: boolean;
   lessThan: boolean;
   matrixName: "gi" | "gl" | "calorie" | "netCarbs";
-  id: string;
   lessThanValue: number;
   greaterThanValue: number;
   betweenStartValue: number;
   betweenEndValue: number;
+  id: string;
   tagLabel: string;
   name: string;
   filterCriteria: FilterCriteriaOptions;
@@ -87,7 +105,7 @@ export interface ActiveFilterTagCriteriaType {
   childTab: string;
 }
 
-export type FilterCriteriaValue = BlendType | IngredientType | NutrientFiltersType | NutrientMatrixType;
+export type FilterCriteriaValue = CommonProperties;
 
 export interface AllFilterRecipes {
   filterRecipes: RecipeType[];

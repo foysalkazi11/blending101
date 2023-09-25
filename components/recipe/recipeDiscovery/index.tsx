@@ -27,6 +27,7 @@ import Filtertray from "../../sidetray/filter";
 import RecipeCommentsTray from "../../sidetray/commentsTray/RecipeCommentsTray";
 import NotificationTray from "../../sidetray/notificationTray";
 import RecipeCollectionAndThemeTray from "../../sidetray/collection/RecipeCollectionAndThemeTray";
+import { HideOnMobile } from "component/molecules/Responsive/Responsive.component";
 let dataLimit = 12;
 
 const RecipeDiscovery = () => {
@@ -169,35 +170,39 @@ const RecipeDiscovery = () => {
       <NotificationTray showPanle="right" showTagByDefaut={false} />
       <RecipeCollectionAndThemeTray showPanle="left" showTagByDefaut={openFilterTray ? false : true} />
       <div className={styles.main__div}>
-        <div className={openFilterTray ? styles.move : styles.back}>
-          <DiscoveryPageSearchBar
-            input={recipeSearchInput}
-            handleOnChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setRecipeSearchInput(e.target.value);
-            }}
-            openFilterTray={openFilterTray}
-            toggleFilterPanel={toggleFilterPanel}
-          />
-
-          {allFilters?.length ? (
-            <SearchTagsComponent
-              allFilters={allFilters}
-              handleUpdateActiveFilterTag={(activeSection, filterCriteria, activeTab, childTab) => {
-                dispatch(setOpenFilterTray(true));
-                handleUpdateActiveFilterTag(activeSection, filterCriteria, activeTab, childTab);
+        <div
+        // className={openFilterTray ? styles.move : styles.back}
+        >
+          <HideOnMobile>
+            <DiscoveryPageSearchBar
+              input={recipeSearchInput}
+              handleOnChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setRecipeSearchInput(e.target.value);
               }}
-              handleUpdateFilterCriteria={handleUpdateFilterCriteria}
+              openFilterTray={openFilterTray}
+              toggleFilterPanel={toggleFilterPanel}
             />
-          ) : null}
+
+            {allFilters?.length ? (
+              <SearchTagsComponent
+                allFilters={allFilters}
+                handleUpdateActiveFilterTag={(activeSection, filterCriteria, activeTab, childTab) => {
+                  dispatch(setOpenFilterTray(true));
+                  handleUpdateActiveFilterTag(activeSection, filterCriteria, activeTab, childTab);
+                }}
+                handleUpdateFilterCriteria={handleUpdateFilterCriteria}
+              />
+            ) : null}
+          </HideOnMobile>
 
           {showFilterOrSearchRecipes ? (
             <ShowRecipeContainer
-              data={allFilterRecipes.filterRecipes}
+              data={allFilterRecipes?.filterRecipes}
               loading={filterRecipesLoading || searchRecipeLoading}
               closeHandler={closeFilterRecipes}
               showItems="recipe"
               showDefaultLeftHeader
-              showDefaultMiddleHeader={allFilterRecipes.filterRecipes.length ? true : false}
+              showDefaultMiddleHeader={allFilterRecipes?.filterRecipes?.length ? true : false}
               showDefaultRightHeader
               hasMore={allFilterRecipes?.totalItems > dataLimit * pageNum}
               totalDataCount={allFilterRecipes?.totalItems}

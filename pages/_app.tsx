@@ -32,7 +32,11 @@ config.autoAddCss = false;
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout =
     Component.useLayout ||
-    ((page: ReactNode) => <Layout {...Component.meta}>{page} </Layout>);
+    ((page: ReactNode) => (
+      <Layout header={Component.useHeader} {...Component.meta}>
+        {page}
+      </Layout>
+    ));
 
   const handleSubmitError = (error: any) => {
     console.log(error);
@@ -74,4 +78,5 @@ type AppPropsWithLayout = AppProps & {
 export type CustomLayout<P = {}, IP = P> = NextPage<P, IP> & {
   meta?: { title: string; icon: string };
   useLayout?: (page: ReactElement) => ReactNode;
+  useHeader?: () => ReactNode;
 };

@@ -1,12 +1,9 @@
-import { useQuery } from "@apollo/client";
-import { format, isAfter, subDays, isToday } from "date-fns";
+import { format, isAfter, isToday } from "date-fns";
 import React from "react";
-import { GET_RECENT_CHALLENGES } from "../../../modules/challenge/challenge.graphql";
-import { useAppSelector } from "../../../redux/hooks";
 import { getBackgroundColor } from "../../../modules/challenge/partials/Progress/_dial.component";
 
 import styles from "./_Charts.module.scss";
-import { useUser } from "../../../context/AuthProvider";
+import { ChallengeDay } from "@/app/types/challenge.types";
 
 function DateButton({ date, categories, disabled }: any) {
   const days = new Date(date);
@@ -60,24 +57,19 @@ function DateButton({ date, categories, disabled }: any) {
   }
 }
 
-const BlendTrend = () => {
-  const date = new Date();
-  const today = format(date, "yyyy-MM-dd");
-  const userId = useUser().id;
+interface BlendTrend {
+  today: string;
+  days: ChallengeDay[];
+}
 
-  const { data } = useQuery(GET_RECENT_CHALLENGES, {
-    variables: {
-      startDate: format(subDays(date, 6), "yyyy-MM-dd"),
-      userId,
-    },
-  });
-
+const BlendTrend = (props: BlendTrend) => {
+  const { today, days } = props;
   return (
     <div className="mb-50">
       <div className={styles.insights__graph}>
         <h3>Blending Trend</h3>
         <div className={styles.wheel}>
-          {data?.getLastSevenDaysChallenge?.challenge?.map((activity, key) => {
+          {days?.map((activity, key) => {
             const categories = activity?.posts.map((post) => post?.recipeBlendCategory?.name || "");
             return (
               <DateButton

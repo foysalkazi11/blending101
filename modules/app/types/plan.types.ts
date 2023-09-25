@@ -60,7 +60,8 @@ interface CategoryPercentage {
   percentage: number;
 }
 
-interface TopIngredientData {
+// SCHEMA: TopIngredientData
+export interface TopIngredient {
   _id: string;
   count: number;
   featuredImage: string;
@@ -78,7 +79,7 @@ export interface GetAPlan {
   getAPlan: {
     plan: Plan;
     recipeCategoriesPercentage: CategoryPercentage[];
-    topIngredients: TopIngredientData[];
+    topIngredients: TopIngredient[];
     macroMakeup: MacroMakeup;
   };
 }
@@ -87,7 +88,7 @@ export interface GetPlannerByWeek {
   getPlannerByDates: {
     planners: MyPlanItem[];
     recipeCategoriesPercentage: CategoryPercentage[];
-    topIngredients: TopIngredientData[];
+    topIngredients: TopIngredient[];
     macroMakeup: MacroMakeup;
     calorie: number;
     rxScore: number;
@@ -101,6 +102,6 @@ export interface GetPlanInsights {
     macroMakeup: MacroMakeup;
     netCarbs: number;
     recipeCategoriesPercentage: CategoryPercentage[];
-    topIngredients: TopIngredientData[];
+    topIngredients: TopIngredient[];
   };
 }

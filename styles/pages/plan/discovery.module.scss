@@ -1,0 +1,61 @@
+@import "variables";
+@import "mixins";
+
+// Mobile Filter
+.search {
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem 0;
+    h3 {
+      font-size: 2rem;
+      font-weight: 600;
+      transform: translateX(-20px);
+    }
+  }
+  &__content {
+    // padding: 0 2rem;
+  }
+  &__button {
+    border: 1px solid #dfdfdf;
+    color: $secondaryColor;
+  }
+}
+
+.discovery {
+  max-width: 170rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+  min-height: 85vh;
+}
+
+.header {
+  &__button {
+    background-color: white;
+    border: none;
+    padding: 1rem 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 1px 1px 3px #d8d8d8;
+    border-radius: 8px;
+    margin-left: 3rem;
+    cursor: pointer;
+    font-family: "Segoe UI", sans-serif;
+    svg {
+      color: #fe5d1f;
+    }
+  }
+  &__search {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    width: 100%;
+    margin-left: 3rem;
+    .buttonContainer {
+      margin-top: 20px;
+    }
+  }
+}

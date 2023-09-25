@@ -71,7 +71,7 @@ const NumericFilter = ({
         between: false,
         greaterThan: false,
         lessThan: true,
-        tagLabel: `${newNumericFilterState.name} < ${newNumericFilterState.lessThanValue}`,
+        tagLabel: ` ${newNumericFilterState.name} `,
       };
     }
     if (tab === "greaterThan") {
@@ -80,7 +80,7 @@ const NumericFilter = ({
         between: false,
         greaterThan: true,
         lessThan: false,
-        tagLabel: `${newNumericFilterState.greaterThanValue} >  ${newNumericFilterState.name} `,
+        tagLabel: ` ${newNumericFilterState.name} `,
       };
     }
     if (tab === "between") {
@@ -89,7 +89,7 @@ const NumericFilter = ({
         between: true,
         greaterThan: false,
         lessThan: false,
-        tagLabel: `${newNumericFilterState.betweenStartValue} >  ${newNumericFilterState.name} < ${newNumericFilterState.betweenEndValue}`,
+        tagLabel: ` ${newNumericFilterState.name} `,
       };
     }
 
@@ -117,28 +117,28 @@ const NumericFilter = ({
         newNumericFilterState = {
           ...newNumericFilterState,
           lessThanValue:value,
-          tagLabel:`${newNumericFilterState.name} < ${value}`
+          tagLabel:` ${newNumericFilterState.name} `
         };
 
     } else if (title === "greaterThanValue") {
        newNumericFilterState = {
          ...newNumericFilterState,
          greaterThanValue: value,
-         tagLabel: `${value} >  ${newNumericFilterState.name} `,
+         tagLabel: ` ${newNumericFilterState.name} `,
        };
       
     } else if (title === "betweenStartValue") {
        newNumericFilterState = {
          ...newNumericFilterState,
          betweenStartValue: value,
-         tagLabel: `${value} >  ${newNumericFilterState.name} < ${newNumericFilterState.betweenEndValue}`,
+         tagLabel: ` ${newNumericFilterState.name} `,
        };
       
     } else if (title === "betweenEndValue") {
       newNumericFilterState = {
         ...newNumericFilterState,
         betweenEndValue: value,
-        tagLabel: `${activeTab} | ${newNumericFilterState.betweenStartValue} <  ${newNumericFilterState.name} < ${value}`,
+        tagLabel: ` ${newNumericFilterState.name} `,
       };
     }
     if (newNumericFilterState.id) {

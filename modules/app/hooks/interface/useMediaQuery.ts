@@ -5,7 +5,10 @@ type IUnit = "rem" | "px" | "em";
 type IQuery = "xsm" | "sm" | "md" | "lg" | "xl" | "xxl" | { [key in IMedia]?: `${number}${IUnit}` };
 
 const getQuery = (query: IQuery) => {
-  if (typeof query === "object") return `(${Object.keys(query)[0]}-width: 22.5em)`;
+  if (typeof query === "object") {
+    const [key, value] = Object.entries(query)[0];
+    return `(${key}-width: ${value})`;
+  }
   if (query === "xsm") return "(max-width: 22.5em)";
   if (query === "sm") return "(max-width: 36em)";
   if (query === "md") return "(max-width: 48em)";
@@ -44,5 +47,5 @@ export function useMediaQuery(media: IQuery): boolean {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 
-  return matches;
+  return matches || false;
 }
