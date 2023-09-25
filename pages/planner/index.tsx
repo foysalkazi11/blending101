@@ -204,7 +204,7 @@ const PlanDiscovery = () => {
           </div>
         </SideDrawer>
       </Header>
-      <div className="flex pl-20">
+      <div className="flex">
         <PlanCollectionTray showPanle="left" showTagByDefaut={true} />
         <HideOnDesktop>
           <Button className="ml-10" onClick={() => router.push("/planner/plan/")}>

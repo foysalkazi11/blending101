@@ -15,6 +15,7 @@ const useImage = (initState: any[] = []) => {
       const loading = toast.loading("Uploading Image", {
         position: toast.POSITION.TOP_RIGHT,
       });
+
       if (!newImages.length) {
         newImages = images;
       }

@@ -1,5 +1,5 @@
 const routes = Object.freeze({
-  login: "/auth/login",
+  login: "/login",
   signup: "/auth/signup",
   plan: {
     discovery: "/planner",
