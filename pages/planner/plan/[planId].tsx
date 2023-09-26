@@ -94,7 +94,7 @@ const PlanDetails = () => {
       await editPlan(planId, data);
     } else {
       // IF VISITOR TRIES TO EDIT THE PLAN
-      clonePlan(data);
+      await clonePlan(data);
       setPlanlist(plan?.planData);
       form.reset(defaultPlan);
     }

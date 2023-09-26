@@ -79,14 +79,14 @@ const MyPlan = () => {
       <div className={styles.windowContainer}>
         <div className={styles.planner}>
           <div className={isMobile ? "pl-20 pr-20" : "row mt-20"}>
-            {active === "Recipe" && (
+            {(!isMobile || active === "Recipe") && (
               <div className={isMobile ? "" : "col-3"}>
                 <RecipePanel height={panelHeight} queuedRecipes={recipes}>
                   <RecipeDatePicker addToMyPlan={addToMyPlan} />
                 </RecipePanel>
               </div>
             )}
-            {active === "My Plan" && (
+            {(!isMobile || active === "My Plan") && (
               <div className={isMobile ? "" : "col-6"} style={{ padding: "0 3.5rem" }}>
                 <div className={styles.headingDiv}>
                   <IconHeading title="My Plan" icon={faCalendarWeek} />
@@ -158,7 +158,7 @@ const MyPlan = () => {
                 </div>
               </div>
             )}
-            {active === "Plan Insights" && (
+            {(!isMobile || active === "Plan Insights") && (
               <div className={isMobile ? "" : "col-3"}>
                 <Insights height={panelHeight} {...insights} />
               </div>
