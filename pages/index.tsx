@@ -141,42 +141,6 @@ const Home = (props: HomeProps) => {
                 }}
               />
             ))}
-            {widget?.widgetCollections.map((collection) => (
-              <EntitySlider
-                key={collection?.slug}
-                collection={collection}
-                methods={{
-                  onComment: (e) => {
-                    e.preventDefault();
-                    console.log("Enabling COMMENT PANEL");
-                  },
-                }}
-              />
-            ))}
-            {widget?.widgetCollections.map((collection) => (
-              <EntitySlider
-                key={collection?.slug}
-                collection={collection}
-                methods={{
-                  onComment: (e) => {
-                    e.preventDefault();
-                    console.log("Enabling COMMENT PANEL");
-                  },
-                }}
-              />
-            ))}
-            {widget?.widgetCollections.map((collection) => (
-              <EntitySlider
-                key={collection?.slug}
-                collection={collection}
-                methods={{
-                  onComment: (e) => {
-                    e.preventDefault();
-                    console.log("Enabling COMMENT PANEL");
-                  },
-                }}
-              />
-            ))}
           </div>
           <div className="col-3">
             <Overview />
