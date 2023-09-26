@@ -25,12 +25,12 @@ const LoginScreen = () => {
 
   const loginSuccess = (user: DbUserType) => {
     setIsLoading(false);
-    // dispatch(setDbUser(user));
-    //router.push("/");
   };
+
   const loginError = (error: unknown) => {
     setIsLoading(false);
   };
+
   const onSubmit = async (input) => {
     setIsLoading(true);
     signIn(input?.email, input?.password, loginSuccess, loginError);
@@ -74,8 +74,7 @@ const LoginScreen = () => {
               required={{
                 required: "Email required",
                 pattern: {
-                  value:
-                    /^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/,
+                  value: /^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/,
                   message: "Enter valid email",
                 },
               }}
@@ -137,25 +136,14 @@ const LoginScreen = () => {
           </div>
         </div>
       </div>
-      <div
-        className={styles.imgMainDiv}
-        style={{ backgroundImage: `url("/images/new-user-bg.png")` }}
-      >
+      <div className={styles.imgMainDiv} style={{ backgroundImage: `url("/images/new-user-bg.png")` }}>
         <div className={styles.imgContentDiv}>
           <div className={styles.contentCard}>
             <h2>New User</h2>
-            <p>
-              Aliquam vestibulum nunc quis blandit rutrum. Curabitur vel
-              scelerisque leo.
-            </p>
+            <p>Aliquam vestibulum nunc quis blandit rutrum. Curabitur vel scelerisque leo.</p>
             <div className={styles.buttonRightDiv}>
               <Link href="/signup">
-                <ButtonComponent
-                  type="text"
-                  style={{ height: "100%" }}
-                  value="Sign Up"
-                  fullWidth={true}
-                />
+                <ButtonComponent type="text" style={{ height: "100%" }} value="Sign Up" fullWidth={true} />
               </Link>
             </div>
           </div>

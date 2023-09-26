@@ -91,6 +91,18 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
             isLogin: true,
           });
           dispatch(updateUserCompareLength(profile?.compareLength));
+
+          console.log(profile?.isCreated);
+          // Getting the pageUrl from which redirection happened
+          const redirectURL = profile?.isCreated ? sessionStorage.getItem("prevURL") || "/" : "/user/profile";
+          console.log(redirectURL, router.asPath, router.asPath.includes(redirectURL));
+
+          // Clearing the session
+          sessionStorage.removeItem("prevURL");
+
+          // Redirect should happen only for login page
+          if (router.asPath.includes("/login")) router.push(redirectURL);
+
           return profile;
         } catch (error) {
           throw new Error("Failed to login");
@@ -99,7 +111,7 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
         throw new Error("Email or provider not found");
       }
     },
-    [dispatch, getUser],
+    [dispatch, getUser, router],
   );
 
   const isPublicRoute = [
@@ -111,47 +123,49 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
   ].includes(router.pathname);
 
   useEffect(() => {
-    // Redirects when it is directed to authentication related page
+    // Skipping auth checking if the URL is public
     if (isPublicRoute) {
       return setState({
         isChecking: false,
-        isLogin: true,
+        isLogin: true, // To stop showing loader
       });
     }
+
     Auth.currentAuthenticatedUser()
       .then(sessionHandler)
       .catch((error) => {
-        setState({
-          isChecking: false,
-          isLogin: false,
-        });
-        router.push(routes.login);
+        // Persisting the previous URL to redirect back to it after auth success
+        sessionStorage.setItem("prevURL", router.asPath);
+        // To show loader for some extra time
+        setTimeout(() => {
+          setState({
+            isChecking: false,
+            isLogin: false,
+          });
+          router.push(routes.login);
+        }, 2000);
       });
-  }, [isPublicRoute, router, sessionHandler]);
+
+    // Skipping router property
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPublicRoute, sessionHandler]);
 
   const signIn = async (email: string, password: string, onSuccess = (user) => {}, onError = (error) => {}) => {
-    try {
-      const user = await Auth.signIn(email, password);
-      const bdUser = await sessionHandler(user);
-      onSuccess(bdUser);
-      router.push("/");
-    } catch (error) {
-      notification("error", error.message);
-      onError(error);
-    }
+    Auth.signIn(email, password)
+      .then(async (user) => await sessionHandler(user))
+      .then(async (user) => await onSuccess(user))
+      .catch((error) => {
+        notification("error", error?.message);
+        onError(error);
+      });
   };
 
   const oAuthSignIn = async (provider: TProvider, onSuccess = (user) => {}, onError = (error) => {}) => {
-    console.log("Inovikg");
     Auth.federatedSignIn({
       provider: CognitoHostedUIIdentityProvider[provider],
     })
       .then(sessionHandler)
-      .then((user) => {
-        console.log(user);
-        // router.push("/");
-        onSuccess(user);
-      })
+      .then((user) => onSuccess(user))
       .catch((error) => {
         notification("error", error?.message);
         onError(error);
@@ -167,7 +181,7 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
       notification("error", error?.message);
     }
   };
-  // console.log(user);
+
   if (!isPublicRoute && state.isChecking) return <Loader />;
   if (!state.isChecking && !state.isLogin) return <Fragment />;
 

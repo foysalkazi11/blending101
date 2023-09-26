@@ -294,11 +294,9 @@ export const GET_RECENT_CHALLENGES = gql`
       challengeInfo {
         blendScore
         topIngredients {
-          ingredientId {
-            ingredientName
-            featuredImage
-          }
-          count
+          icon: featuredImage
+          label: name
+          quantity: count
         }
       }
     }
