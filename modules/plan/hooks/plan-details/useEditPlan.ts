@@ -70,12 +70,6 @@ const useEditPlan = (planlist: PlanItem[]) => {
           });
         },
       });
-      // toast.update(loading, {
-      //   render: "Edited the Plan",
-      //   type: "success",
-      //   isLoading: false,
-      //   autoClose: 3000,
-      // });
     },
     [editPlan, editState, id, planlist],
   );
