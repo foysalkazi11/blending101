@@ -156,30 +156,32 @@ const WikiHome = () => {
         </div>
       </div>
 
-      <TrayWrapper
-        isolated={true}
-        showPanel="left"
-        showTagByDefault={width < 1280 && openFilterTray ? true : false}
-        openTray={openFilterTray}
-        panelTag={(hover) => (
-          <TrayTag
-            hover={hover}
-            icon={<FontAwesomeIcon icon={faBooks} />}
-            placeMent="left"
-            handleTagClick={() => setOpenFilterTray((prev) => !prev)}
+      <div className={width < 1280 ? "show" : "hide"}>
+        <TrayWrapper
+          isolated={true}
+          showPanel="left"
+          showTagByDefault={width < 1280 && openFilterTray ? true : false}
+          openTray={openFilterTray}
+          panelTag={(hover) => (
+            <TrayTag
+              hover={hover}
+              icon={<FontAwesomeIcon icon={faBooks} />}
+              placeMent="left"
+              handleTagClick={() => setOpenFilterTray((prev) => !prev)}
+            />
+          )}
+        >
+          <WikiLeft
+            currentWikiType={wikiType as WikiType}
+            currentWikiId={wikiId}
+            showWikiTypeHeader={false}
+            selectedWikiType={selectedWikiType}
+            SetSelectedWikiType={SetSelectedWikiType}
+            toggle={toggleMenu}
+            setToggle={setToggleMenu}
           />
-        )}
-      >
-        <WikiLeft
-          currentWikiType={wikiType as WikiType}
-          currentWikiId={wikiId}
-          showWikiTypeHeader={false}
-          selectedWikiType={selectedWikiType}
-          SetSelectedWikiType={SetSelectedWikiType}
-          toggle={toggleMenu}
-          setToggle={setToggleMenu}
-        />
-      </TrayWrapper>
+        </TrayWrapper>
+      </div>
     </Fragment>
   );
 };
