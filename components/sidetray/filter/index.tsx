@@ -9,7 +9,6 @@ import VisualSection from "./visaul/VisualSection";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setOpenFilterTray } from "../../../redux/slices/sideTraySlice";
 import TrayTag from "../TrayTag";
-import { FiFilter } from "react-icons/fi";
 import { useQuery } from "@apollo/client";
 import { FETCH_BLEND_CATEGORIES } from "../../../gqlLib/category/queries/fetchCategories";
 import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
@@ -17,6 +16,8 @@ import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
 import { FilterCriteriaValue } from "../../../type/filterType";
 import useToUpdateFilterCriteria from "../../../customHooks/recipeFilter/useToUpdateRecipeFilterCriteria";
 import useToUpdateActiveFilterTag from "../../../customHooks/recipeFilter/useToUpdateActiveFilterTag";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFilter } from "@fortawesome/pro-regular-svg-icons";
 
 interface Props {
   showTagByDefaut?: boolean;
@@ -25,22 +26,20 @@ interface Props {
 
 export default function Filtertray({ showPanle, showTagByDefaut }: Props) {
   const { openFilterTray } = useAppSelector((state) => state?.sideTray);
-  const { allFilters, activeFilterTag } = useAppSelector(
-    (state) => state?.filterRecipe,
-  );
+  const { allFilters, activeFilterTag } = useAppSelector((state) => state?.filterRecipe);
   const dispatch = useAppDispatch();
-  const { data: blendCategoryData, loading: blendCategoryLoading } = useQuery(
-    FETCH_BLEND_CATEGORIES,
-  );
-  const { data: ingredientCategoryData, loading: ingredientCategoryLoading } =
-    useQuery(FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS, {
+  const { data: blendCategoryData, loading: blendCategoryLoading } = useQuery(FETCH_BLEND_CATEGORIES);
+  const { data: ingredientCategoryData, loading: ingredientCategoryLoading } = useQuery(
+    FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS,
+    {
       variables: {
         data: {
           ingredientCategory: "All",
           IngredientClass: 1,
         },
       },
-    });
+    },
+  );
 
   const handleUpdateFilterCriteria = useToUpdateFilterCriteria();
   const handleUpdateActiveFilterTag = useToUpdateActiveFilterTag();
@@ -75,11 +74,7 @@ export default function Filtertray({ showPanle, showTagByDefaut }: Props) {
   };
 
   // blend and ingredient update function
-  const handleBlendAndIngredientUpdate = (
-    item: any | FilterCriteriaValue,
-    isItemExist: boolean,
-    extraInfo?: any,
-  ) => {
+  const handleBlendAndIngredientUpdate = (item: any | FilterCriteriaValue, isItemExist: boolean, extraInfo?: any) => {
     // const isItemExist = checkActiveItem(item?.id);
 
     handleUpdateFilterCriteria({
@@ -95,9 +90,7 @@ export default function Filtertray({ showPanle, showTagByDefaut }: Props) {
       openTray={openFilterTray}
       showTagByDefault={showTagByDefaut}
       showPanel={showPanle}
-      panelTag={(hover) => (
-        <TrayTag icon={<FiFilter />} placeMent="left" hover={hover} />
-      )}
+      panelTag={(hover) => <TrayTag icon={<FontAwesomeIcon icon={faFilter} />} placeMent="left" hover={hover} />}
     >
       <ToggleMenu
         setToggle={handleToggle}
@@ -121,9 +114,7 @@ export default function Filtertray({ showPanle, showTagByDefaut }: Props) {
           handleBlendAndIngredientUpdate={handleBlendAndIngredientUpdate}
           blendCategoryData={blendCategoryData?.getAllCategories}
           blendCategoryLoading={blendCategoryLoading}
-          ingredientCategoryData={
-            ingredientCategoryData?.filterIngredientByCategoryAndClass
-          }
+          ingredientCategoryData={ingredientCategoryData?.filterIngredientByCategoryAndClass}
           ingredientCategoryLoading={ingredientCategoryLoading}
         />
       ) : null}
@@ -132,9 +123,7 @@ export default function Filtertray({ showPanle, showTagByDefaut }: Props) {
           checkActiveItem={checkActiveItem}
           blendCategoryData={blendCategoryData?.getAllCategories}
           blendCategoryLoading={blendCategoryLoading}
-          ingredientCategoryData={
-            ingredientCategoryData?.filterIngredientByCategoryAndClass
-          }
+          ingredientCategoryData={ingredientCategoryData?.filterIngredientByCategoryAndClass}
           ingredientCategoryLoading={ingredientCategoryLoading}
           checkExcludeIngredientIds={checkExcludeIngredientIds}
           handleUpdateFilterCriteria={handleUpdateFilterCriteria}

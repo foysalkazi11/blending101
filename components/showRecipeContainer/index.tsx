@@ -72,8 +72,8 @@ const ShowRecipeContainer = ({
 }: Props) => {
   const [containerData, setContainerData] = useState([]);
   const [openCreateCollectionModal, setOpenCreateCollectionModal] = useState(false);
-  const observer = useRef<any>();
   const dispatch = useAppDispatch();
+  const observer = useRef<any>();
   const entry = useIntersectionObserver(observer, { rootMargin });
 
   // fetch next page

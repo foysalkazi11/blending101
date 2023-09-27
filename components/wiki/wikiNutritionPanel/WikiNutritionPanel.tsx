@@ -19,7 +19,7 @@ interface List {
 }
 
 type Props = {
-  handleNutritionClick?: (item: any, exist: boolean) => void;
+  handleNutritionClick?: (item: any, exist: boolean, extraInfo?: any) => void;
   checkActiveNutrition?: (arg: any) => boolean;
   showHeader?: boolean;
   scrollAreaMaxHeight?: number;
@@ -51,7 +51,7 @@ const WikiNutritionPanel = ({
         name: item?.categoryName,
         value: item?._id,
       }));
-      setNutrientCategory((pre) => [...pre, ...data]);
+      setNutrientCategory(data);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nutrientCategoryData?.getAllBlendNutrientCategories, nutrientCategoryLoading]);
@@ -79,19 +79,35 @@ const WikiNutritionPanel = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchInput]);
 
-  useEffect(() => {
-    if (isMounted.current) {
-      if (selectedNutrientCategory === "all") {
-        setNutrientList(nutrientData?.getAllBlendNutrients);
-      } else {
-        const filter = nutrientData?.getAllBlendNutrients?.filter(
-          (item: List) => item?.category?._id === selectedNutrientCategory,
-        );
-        setNutrientList(filter);
-      }
+  const UpdateNutritionCategory = (selectedNutrientCategory) => {
+    setSelectedNutrientCategory(selectedNutrientCategory);
+    if (!selectedNutrientCategory) {
+      setNutrientList(nutrientData?.getAllBlendNutrients);
+    } else {
+      const filter = nutrientData?.getAllBlendNutrients?.filter(
+        (item: List) => item?.category?._id === selectedNutrientCategory,
+      );
+      setNutrientList(filter);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedNutrientCategory]);
+    handleNutritionClick("", false, {
+      category: nutrientCategory?.find((cat) => cat?.value === selectedNutrientCategory)?.name,
+    });
+  };
+
+  // useEffect(() => {
+  //   if (isMounted.current) {
+  //     if (!selectedNutrientCategory ) {
+  //       setNutrientList(nutrientData?.getAllBlendNutrients);
+  //     } else {
+  //       const filter = nutrientData?.getAllBlendNutrients?.filter(
+  //         (item: List) => item?.category?._id === selectedNutrientCategory,
+  //       );
+  //       setNutrientList(filter);
+  //     }
+  //     handleNutritionClick("", false, { category: selectedNutrientCategory });
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [selectedNutrientCategory]);
 
   useEffect(() => {
     isMounted.current = true;
@@ -113,7 +129,8 @@ const WikiNutritionPanel = ({
         <DropDown
           value={selectedNutrientCategory}
           listElem={nutrientCategory}
-          onChange={(e) => setSelectedNutrientCategory(e?.target?.value)}
+          onChange={(e) => UpdateNutritionCategory(e?.target?.value)}
+          border="borderSecondary"
         />
       </div>
       <div className={s.dropdown}>
