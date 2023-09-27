@@ -13,6 +13,7 @@ import usePlanRecipes from "@/plan/hooks/usePlanRecipes";
 import useFindRecipe from "@/recipe/hooks/useFindRecipe";
 
 import styles from "./RecipePanel.module.scss";
+import { useMediaQuery } from "@/app/hooks/interface/useMediaQuery";
 
 interface RecipePanelProps {
   height?: string;
@@ -34,9 +35,11 @@ const RecipePanel: React.FC<RecipePanelProps> = (props) => {
 
   const filterRef = useRef<HTMLDivElement>(null);
   const recipeRef = toggler ? discoverRef : queueRef;
+
+  const isMobile = useMediaQuery("md");
   return (
     <div style={style}>
-      <IconHeading icon={faTelescope} title="Recipe" iconStyle={{ fontSize: "24px" }} />
+      {!isMobile && <IconHeading icon={faTelescope} title="Recipe" iconStyle={{ fontSize: "24px" }} />}
       <ToggleCard
         noRoute
         toggler={toggler}

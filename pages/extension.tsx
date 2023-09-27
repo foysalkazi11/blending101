@@ -3,13 +3,6 @@ import { useSession, useUser } from "../context/AuthProvider";
 
 const EXTENSION_DOMAIN = `chrome-extension://${process.env.NEXT_PUBLIC_EXTENSION_URL}/src/popup/popup.html`;
 
-function setCookie(cname, cvalue, exdays) {
-  const d = new Date();
-  d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-  let expires = "expires=" + d.toUTCString();
-  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
-
 const Extension = () => {
   const user = useUser();
   const session = useSession();
@@ -48,9 +41,7 @@ const Extension = () => {
 
   return (
     <div>
-      Extension{" "}
-      {process.env.NODE_ENV === "development" ? "Localhost" : "Production"}{" "}
-      Data: {data}
+      Extension {process.env.NODE_ENV === "development" ? "Localhost" : "Production"} Data: {data}
     </div>
   );
 };

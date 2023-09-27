@@ -29,6 +29,12 @@ import styles from "@pages/planner.module.scss";
 
 import { UserRecipe } from "@/recipe/recipe.types";
 import usePlanMerge from "@/plan/hooks/my-plan/usePlanMerge";
+import Menubar from "component/molecules/Menubar/Menubar.component";
+import { HideOnDesktop } from "component/molecules/Responsive/Responsive.component";
+import { useMediaQuery } from "@/app/hooks/interface/useMediaQuery";
+
+type IMenuType = "Recipe" | "My Plan" | "Plan Insights";
+const MENU = ["Recipe", "My Plan", "Plan Insights"];
 
 const MyPlan = () => {
   const router = useRouter();
@@ -38,6 +44,7 @@ const MyPlan = () => {
 
   const [panelHeight] = useState("1000px");
   const [showForm, setShowForm] = useState(false);
+  const [active, setActive] = useState<IMenuType>("My Plan");
 
   const [week, setWeek] = usePlanWeek();
 
@@ -54,6 +61,7 @@ const MyPlan = () => {
     await createPlan(data);
   };
 
+  const isMobile = useMediaQuery({ max: "768px" });
   const { monthStart, monthEnd, dayStart, dayEnd } = week;
   return (
     <Fragment>
@@ -65,87 +73,96 @@ const MyPlan = () => {
         onConfirm={addExistingPlan}
         message="There are already plans listed in this week."
       />
+      <HideOnDesktop>
+        <Menubar className="mt-20 mb-20 ml-10" items={MENU} onChange={(menu: IMenuType) => setActive(menu)} />
+      </HideOnDesktop>
       <div className={styles.windowContainer}>
         <div className={styles.planner}>
-          <div className="row mt-20">
-            <div className="col-3">
-              <RecipePanel height={panelHeight} queuedRecipes={recipes}>
-                <RecipeDatePicker addToMyPlan={addToMyPlan} />
-              </RecipePanel>
-            </div>
-            <div className="col-6" style={{ padding: "0 3.5rem" }}>
-              <div className={styles.headingDiv}>
-                <IconHeading title="My Plan" icon={faCalendarWeek} />
-                <div className="flex ai-center">
-                  <div
-                    className={`${styles.uploadDiv} ${styles.uploadDiv__save}`}
-                    onClick={methods.handleSubmit(saveHandler)}
-                  >
-                    <span>{showForm ? "Save" : "Save As"}</span>
+          <div className={isMobile ? "pl-20 pr-20" : "row mt-20"}>
+            {(!isMobile || active === "Recipe") && (
+              <div className={isMobile ? "" : "col-3"}>
+                <RecipePanel height={panelHeight} queuedRecipes={recipes}>
+                  <RecipeDatePicker addToMyPlan={addToMyPlan} />
+                </RecipePanel>
+              </div>
+            )}
+            {(!isMobile || active === "My Plan") && (
+              <div className={isMobile ? "" : "col-6"} style={{ padding: "0 3.5rem" }}>
+                <div className={styles.headingDiv}>
+                  <IconHeading title="My Plan" icon={faCalendarWeek} />
+                  <div className="flex ai-center">
+                    <div
+                      className={`${styles.uploadDiv} ${styles.uploadDiv__save}`}
+                      onClick={methods.handleSubmit(saveHandler)}
+                    >
+                      <span>{showForm ? "Save" : "Save As"}</span>
+                    </div>
+                    <IconButton
+                      fontName={faTimes}
+                      size="small"
+                      className="ml-10"
+                      variant="secondary"
+                      color="white"
+                      onClick={() => {
+                        if (showForm) {
+                          setShowForm(false);
+                        } else {
+                          router.push("/planner");
+                        }
+                      }}
+                    />
                   </div>
-                  <IconButton
-                    fontName={faTimes}
-                    size="small"
-                    className="ml-10"
-                    variant="secondary"
-                    color="white"
-                    onClick={() => {
-                      if (showForm) {
-                        setShowForm(false);
-                      } else {
-                        router.push("/planner");
-                      }
-                    }}
-                  />
+                </div>
+                <div className={styles.plan} style={{ height: panelHeight, backgroundColor: "#fff" }}>
+                  {showForm ? (
+                    <PlanForm methods={methods} />
+                  ) : (
+                    <div className={styles.header}>
+                      <div className={styles.header__wrapper}>
+                        <div className={styles.textArrowTray}>
+                          <IconButton
+                            size="small"
+                            fontName={faChevronLeft}
+                            onClick={() => {
+                              router.replace("/planner/plan", undefined, {
+                                shallow: true,
+                              });
+                              setWeek((week) => ({
+                                start: subWeeks(week.start, 1),
+                                end: subWeeks(week.end, 1),
+                              }));
+                            }}
+                          />
+                          <h4 className={styles.textArrowTray__text}>
+                            {`${monthStart} ${dayStart} - ${monthEnd} ${dayEnd}`}
+                          </h4>
+                          <IconButton
+                            size="small"
+                            fontName={faChevronRight}
+                            onClick={() => {
+                              router.replace("/planner/plan", undefined, {
+                                shallow: true,
+                              });
+                              setWeek((week) => ({
+                                start: addWeeks(week.start, 1),
+                                end: addWeeks(week.end, 1),
+                              }));
+                            }}
+                          />
+                        </div>
+                        <IconButton size="medium" fontName={faEllipsisV} className={styles.header__menu} />
+                      </div>
+                    </div>
+                  )}
+                  <PlanList plan={plans} week={week} />
                 </div>
               </div>
-              <div className={styles.plan} style={{ height: panelHeight, backgroundColor: "#fff" }}>
-                {showForm ? (
-                  <PlanForm methods={methods} />
-                ) : (
-                  <div className={styles.header}>
-                    <div className={styles.header__wrapper}>
-                      <div className={styles.textArrowTray}>
-                        <IconButton
-                          size="small"
-                          fontName={faChevronLeft}
-                          onClick={() => {
-                            router.replace("/planner/plan", undefined, {
-                              shallow: true,
-                            });
-                            setWeek((week) => ({
-                              start: subWeeks(week.start, 1),
-                              end: subWeeks(week.end, 1),
-                            }));
-                          }}
-                        />
-                        <h4 className={styles.textArrowTray__text}>
-                          {`${monthStart} ${dayStart} - ${monthEnd} ${dayEnd}`}
-                        </h4>
-                        <IconButton
-                          size="small"
-                          fontName={faChevronRight}
-                          onClick={() => {
-                            router.replace("/planner/plan", undefined, {
-                              shallow: true,
-                            });
-                            setWeek((week) => ({
-                              start: addWeeks(week.start, 1),
-                              end: addWeeks(week.end, 1),
-                            }));
-                          }}
-                        />
-                      </div>
-                      <IconButton size="medium" fontName={faEllipsisV} className={styles.header__menu} />
-                    </div>
-                  </div>
-                )}
-                <PlanList plan={plans} week={week} />
+            )}
+            {(!isMobile || active === "Plan Insights") && (
+              <div className={isMobile ? "" : "col-3"}>
+                <Insights height={panelHeight} {...insights} />
               </div>
-            </div>
-            <div className="col-3">
-              <Insights height={panelHeight} {...insights} />
-            </div>
+            )}
           </div>
         </div>
       </div>

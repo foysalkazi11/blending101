@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useContext, createContext, Dispatch } from "react";
+import React, { useEffect, useState, useCallback, useContext, createContext, Dispatch, Fragment } from "react";
 import { useRouter } from "next/router";
 import { Auth, Amplify } from "aws-amplify";
 import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth/lib/types";
@@ -8,6 +8,8 @@ import { useMutation } from "@apollo/client";
 import notification from "../components/utility/reactToastifyNotification";
 import { updateUserCompareLength } from "../redux/slices/userSlice";
 import { useAppDispatch } from "../redux/hooks";
+import Loader from "component/atoms/Loader/loader.component";
+import routes from "routes";
 
 type TProvider = "Amazon" | "Google" | "Facebook" | "Apple" | "Cognito";
 Amplify.configure({ ...AmplifyConfig, ssr: true });
@@ -19,6 +21,7 @@ type DEFAULT_USER_TYPE = {
   image: string;
 };
 const DEFAULT_USER = { id: "", name: "", email: "", image: "" };
+const DEFAULT_LOGIN_STATE = { isChecking: true, isLogin: false };
 
 interface IAuthContext {
   user: typeof DEFAULT_USER;
@@ -52,6 +55,8 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
   const { children } = props;
   const router = useRouter();
   const dispatch = useAppDispatch();
+
+  const [state, setState] = useState(DEFAULT_LOGIN_STATE);
   const [user, setUser] = useState(DEFAULT_USER);
   const [session, setSession] = useState<any>(null);
   const [getUser] = useMutation(GET_USER);
@@ -81,7 +86,23 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
             email: profile?.email,
             image: profile?.image,
           });
+          setState({
+            isChecking: false,
+            isLogin: true,
+          });
           dispatch(updateUserCompareLength(profile?.compareLength));
+
+          console.log(profile?.isCreated);
+          // Getting the pageUrl from which redirection happened
+          const redirectURL = profile?.isCreated ? sessionStorage.getItem("prevURL") || "/" : "/user/profile";
+          console.log(redirectURL, router.asPath, router.asPath.includes(redirectURL));
+
+          // Clearing the session
+          sessionStorage.removeItem("prevURL");
+
+          // Redirect should happen only for login page
+          if (router.asPath.includes("/login")) router.push(redirectURL);
+
           return profile;
         } catch (error) {
           throw new Error("Failed to login");
@@ -90,49 +111,61 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
         throw new Error("Email or provider not found");
       }
     },
-    [dispatch, getUser],
+    [dispatch, getUser, router],
   );
 
+  const isPublicRoute = [
+    "/login",
+    "/signup",
+    "/verify_email",
+    "/forget_password",
+    "/welcome_blending101_extension",
+  ].includes(router.pathname);
+
   useEffect(() => {
-    // Google Authentication
-    if (router.asPath.startsWith("/login/#access_token=")) router.push("/");
-    // Redirects when it is directed to authentication related page
-    if (
-      ["/login", "/signup", "/verify_email", "/forget_password", "/welcome_blending101_extension"].includes(
-        router.pathname,
-      )
-    )
-      return;
+    // Skipping auth checking if the URL is public
+    if (isPublicRoute) {
+      return setState({
+        isChecking: false,
+        isLogin: true, // To stop showing loader
+      });
+    }
+
     Auth.currentAuthenticatedUser()
       .then(sessionHandler)
       .catch((error) => {
-        console.log(error);
+        // Persisting the previous URL to redirect back to it after auth success
+        sessionStorage.setItem("prevURL", router.asPath);
+        // To show loader for some extra time
+        setTimeout(() => {
+          setState({
+            isChecking: false,
+            isLogin: false,
+          });
+          router.push(routes.login);
+        }, 2000);
       });
-  }, [router, sessionHandler]);
+
+    // Skipping router property
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPublicRoute, sessionHandler]);
 
   const signIn = async (email: string, password: string, onSuccess = (user) => {}, onError = (error) => {}) => {
-    try {
-      const user = await Auth.signIn(email, password);
-      const bdUser = await sessionHandler(user);
-      onSuccess(bdUser);
-      router.push("/");
-    } catch (error) {
-      notification("error", error.message);
-      onError(error);
-    }
+    Auth.signIn(email, password)
+      .then(async (user) => await sessionHandler(user))
+      .then(async (user) => await onSuccess(user))
+      .catch((error) => {
+        notification("error", error?.message);
+        onError(error);
+      });
   };
 
   const oAuthSignIn = async (provider: TProvider, onSuccess = (user) => {}, onError = (error) => {}) => {
-    console.log("Inovikg");
     Auth.federatedSignIn({
       provider: CognitoHostedUIIdentityProvider[provider],
     })
       .then(sessionHandler)
-      .then((user) => {
-        console.log(user);
-        // router.push("/");
-        onSuccess(user);
-      })
+      .then((user) => onSuccess(user))
       .catch((error) => {
         notification("error", error?.message);
         onError(error);
@@ -148,8 +181,10 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
       notification("error", error?.message);
     }
   };
-  // console.log(user);
-  // if (user.id === "") return <></>;
+
+  if (!isPublicRoute && state.isChecking) return <Loader />;
+  if (!state.isChecking && !state.isLogin) return <Fragment />;
+
   return (
     <AuthContext.Provider
       value={{

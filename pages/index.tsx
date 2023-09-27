@@ -18,12 +18,11 @@ import { useWidget } from "@/app/hooks/api/useWidget";
 
 import ContentTray from "../components/recipe/recipeDiscovery/ContentTray/ContentTray.component";
 import Link from "next/link";
-import CardComponent from "../theme/cards/card.component";
-import Theme from "../component/molecules/Theme/Theme.component";
-import { useThemeTemplate } from "../modules/app/hooks/utils/useThemeMethod";
-import { useUser } from "../context/AuthProvider";
-import client from "../gqlLib/client";
-import { GET_WIDGET } from "../modules/app/graphql/Widget";
+import Theme from "component/molecules/Theme/Theme.component";
+import { useThemeTemplate } from "modules/app/hooks/utils/useThemeMethod";
+import { useUser } from "context/AuthProvider";
+import client from "gqlLib/client";
+import { GET_WIDGET } from "modules/app/graphql/Widget";
 
 const defaultBlendImg = "https://blending.s3.us-east-1.amazonaws.com/3383678.jpg";
 
@@ -130,42 +129,6 @@ const Home = (props: HomeProps) => {
                 <img src="/images/smoothie.webp" alt="" />
               </div>
             </div>
-            {widget?.widgetCollections.map((collection) => (
-              <EntitySlider
-                key={collection?.slug}
-                collection={collection}
-                methods={{
-                  onComment: (e) => {
-                    e.preventDefault();
-                    console.log("Enabling COMMENT PANEL");
-                  },
-                }}
-              />
-            ))}
-            {widget?.widgetCollections.map((collection) => (
-              <EntitySlider
-                key={collection?.slug}
-                collection={collection}
-                methods={{
-                  onComment: (e) => {
-                    e.preventDefault();
-                    console.log("Enabling COMMENT PANEL");
-                  },
-                }}
-              />
-            ))}
-            {widget?.widgetCollections.map((collection) => (
-              <EntitySlider
-                key={collection?.slug}
-                collection={collection}
-                methods={{
-                  onComment: (e) => {
-                    e.preventDefault();
-                    console.log("Enabling COMMENT PANEL");
-                  },
-                }}
-              />
-            ))}
             {widget?.widgetCollections.map((collection) => (
               <EntitySlider
                 key={collection?.slug}

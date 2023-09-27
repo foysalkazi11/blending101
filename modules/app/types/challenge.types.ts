@@ -2,6 +2,17 @@ import { RecipeCategory } from "@/recipe/recipe.types";
 import { Ingredient, IngredientWithPortion } from "./ingredient.types";
 import { Member } from "./misc.types";
 
+interface TopIngredient {
+  count?: number;
+  ingredientId?: Ingredient;
+}
+
+interface SharedWith {
+  blendScore?: number;
+  canInviteWithOthers?: boolean;
+  memberId?: Member;
+}
+
 // SCHEMA?: UserChallenge
 export interface Challenge {
   _id?: string;
@@ -59,17 +70,6 @@ export interface ChallengeInfo {
   viewOnly?: boolean;
 }
 
-interface TopIngredient {
-  count?: number;
-  ingredientId?: Ingredient;
-}
-
-interface SharedWith {
-  blendScore?: number;
-  canInviteWithOthers?: boolean;
-  memberId?: Member;
-}
-
 // You may need to define the 'Member' type as appropriate for your schema
 
 // API TYPES
@@ -80,6 +80,13 @@ export interface GetAllChallenges {
 
 export interface Get30DaysChallenge {
   getMyThirtyDaysChallenge?: {
+    challenge?: ChallengeDay[];
+    challengeInfo?: ChallengeInfo;
+  };
+}
+
+export interface Get7DaysChallenge {
+  getLastSevenDaysChallenge?: {
     challenge?: ChallengeDay[];
     challengeInfo?: ChallengeInfo;
   };
