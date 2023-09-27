@@ -1,18 +1,11 @@
-import React, {
-  useRef,
-  useState,
-  Dispatch,
-  SetStateAction,
-  FormEvent,
-  ReactNode,
-  CSSProperties,
-} from "react";
+import React, { useRef, useState, Dispatch, SetStateAction, FormEvent, ReactNode, CSSProperties } from "react";
 import classes from "./SearchBar.module.scss";
 import { FiFilter } from "react-icons/fi";
 import { BsMic, BsSoundwave, BsSearch } from "react-icons/bs";
 import { AiOutlineClose } from "react-icons/ai";
 import useOnClickOutside from "../utility/useOnClickOutside";
 import Tooltip from "../../theme/toolTip/CustomToolTip";
+import IconWarper from "theme/iconWarper/IconWarper";
 
 interface SearchBarProps {
   input?: string;
@@ -87,9 +80,7 @@ const CommonSearchBar = ({
         >
           <FiFilter
             className={`${classes.filterIcon} ${
-              isFilterPanelOpen
-                ? classes.filterIconNotVisible
-                : classes.filterIconVisible
+              isFilterPanelOpen ? classes.filterIconNotVisible : classes.filterIconVisible
             } ${isFilterPanelOpen ? classes.active : ""}`}
             onClick={openFilterPanel}
           />
@@ -114,10 +105,7 @@ const CommonSearchBar = ({
         </form>
 
         {isSubmit ? (
-          <AiOutlineClose
-            className={classes.seachIconActive}
-            onClick={handleClean}
-          />
+          <AiOutlineClose className={classes.seachIconActive} onClick={handleClean} />
         ) : isInputFocus ? (
           <BsSearch
             className={`${classes.seachIconActive}`}
@@ -131,10 +119,7 @@ const CommonSearchBar = ({
         ) : (
           <>
             {isSearchTag ? (
-              <AiOutlineClose
-                className={classes.seachIconActive}
-                onClick={handleSearchTagClean}
-              />
+              <AiOutlineClose className={classes.seachIconActive} onClick={handleSearchTagClean} />
             ) : (
               <Tooltip direction="bottom" content="Voice search">
                 <BsMic

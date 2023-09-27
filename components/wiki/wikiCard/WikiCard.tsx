@@ -5,10 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import React, { Dispatch, SetStateAction } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import {
-  setIsOpenWikiCommentsTray,
-  setWikiCommentsCurrentIngredient,
-} from "../../../redux/slices/wikiSlice";
+import { setIsOpenWikiCommentsTray, setWikiCommentsCurrentIngredient } from "../../../redux/slices/wikiSlice";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
 import { Portion, WikiListType, WikiType } from "../../../type/wikiListType";
 import styles from "./WikiCard.module.scss";
@@ -27,10 +24,7 @@ interface WikiCardProps {
   id?: string;
   hasInCompare?: boolean;
   setWikiList?: Dispatch<SetStateAction<WikiListType[]>>;
-  handleAddOrRemoveToWikiCompareList?: (
-    ingredientId: string,
-    isCompared: boolean,
-  ) => void;
+  handleAddOrRemoveToWikiCompareList?: (ingredientId: string, isCompared: boolean) => void;
 }
 
 const WikiCard = ({
@@ -54,30 +48,19 @@ const WikiCard = ({
   const { isOpenWikiCommentsTray } = useAppSelector((state) => state?.wiki);
 
   // click wiki item title
-  const handleClickTitle = async (
-    id: string,
-    portions: Portion[],
-    type: string,
-  ) => {
+  const handleClickTitle = async (id: string, portions: Portion[], type: string) => {
     if (type === "Nutrient") {
-      router?.push(`/wiki/${type}/${id}`);
+      router?.push(`/wiki/details/${type}/${id}`);
     } else {
-      const measurementWeight = portions?.find(
-        (items) => items?.default,
-      )?.meausermentWeight;
+      const measurementWeight = portions?.find((items) => items?.default)?.meausermentWeight;
 
       if (measurementWeight) {
-        router?.push(`/wiki/${type}/${id}/${measurementWeight}`);
+        router?.push(`/wiki/details/${type}/${id}/${measurementWeight}`);
       }
     }
   };
 
-  const openWikiCommentsTray = (
-    e: React.SyntheticEvent,
-    id: string,
-    title: string,
-    image: string,
-  ) => {
+  const openWikiCommentsTray = (e: React.SyntheticEvent, id: string, title: string, image: string) => {
     e?.stopPropagation;
     if (!isOpenWikiCommentsTray) {
       dispatch(setIsOpenWikiCommentsTray(true));
@@ -110,9 +93,11 @@ const WikiCard = ({
         >
           {title}
         </p>
-        <IconWarper hover="bgSlightGray">
-          <FontAwesomeIcon icon={faEllipsisVertical} />
-        </IconWarper>
+        <div className={styles.moreMenu}>
+          <IconWarper hover="bgSlightGray">
+            <FontAwesomeIcon icon={faEllipsisVertical} />
+          </IconWarper>
+        </div>
       </header>
       <body className={styles.body}>
         <div className={styles.bodyMain}>
@@ -143,35 +128,22 @@ const WikiCard = ({
           {type === "Ingredient" ? (
             <div className={styles.icon}>
               <img
-                src={
-                  hasInCompare ? "/icons/compare-1.svg" : "/icons/eclipse.svg"
-                }
+                src={hasInCompare ? "/icons/compare-1.svg" : "/icons/eclipse.svg"}
                 alt="icon"
-                onClick={() =>
-                  handleAddOrRemoveToWikiCompareList(
-                    id,
-                    hasInCompare ? true : false,
-                  )
-                }
+                onClick={() => handleAddOrRemoveToWikiCompareList(id, hasInCompare ? true : false)}
               />
             </div>
           ) : null}
 
           <div
             className={styles.commentsIconBox}
-            onClick={(e) =>
-              openWikiCommentsTray(e, id, title, image || "/images/imgbig4.png")
-            }
+            onClick={(e) => openWikiCommentsTray(e, id, title, image || "/images/imgbig4.png")}
           >
             <FontAwesomeIcon
               icon={comments ? faMessageDotsSolid : faMessageDotsLight}
               className={`${comments ? styles.activeIcon : ""}`}
             />
-            <p
-              className={`${styles.text} ${comments ? styles.activeIcon : ""}`}
-            >
-              {comments}
-            </p>
+            <p className={`${styles.text} ${comments ? styles.activeIcon : ""}`}>{comments}</p>
           </div>
         </div>
       </div>

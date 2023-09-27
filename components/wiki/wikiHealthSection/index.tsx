@@ -3,7 +3,7 @@ import WikiHealthPanel from "../wikiHealthPanel/WikiHealthPanel";
 
 interface Props {
   checkActive: (id: string) => boolean;
-  handleItemClick: (item: any, isExist: any) => void;
+  handleItemClick: (item: any, isExist: boolean, extraInfo?: any) => void;
   toggle?: number;
 }
 

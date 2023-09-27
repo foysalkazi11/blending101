@@ -2,20 +2,16 @@ import React from "react";
 import WikiNutritionPanel from "../wikiNutritionPanel/WikiNutritionPanel";
 import WikiThemeContainer from "../wikiTheme/wikiThemContainer";
 import generateDummyArray from "../../../helperFunc/array/generateDummyArray";
+import { WikiType } from "type/wikiListType";
 
 interface Props {
   checkActive: (id: string) => boolean;
-  handleItemClick: (item: any, isExist: any) => void;
+  handleItemClick: (item: WikiType, isExist: boolean, extraInfo?: any) => void;
   scrollAreaMaxHeight?: number;
   toggle?: number;
 }
 
-const WikiNutrientSection = ({
-  checkActive,
-  handleItemClick,
-  scrollAreaMaxHeight,
-  toggle = 0,
-}: Props) => {
+const WikiNutrientSection = ({ checkActive, handleItemClick = () => {}, scrollAreaMaxHeight, toggle = 0 }: Props) => {
   return (
     <>
       {toggle === 0 && (

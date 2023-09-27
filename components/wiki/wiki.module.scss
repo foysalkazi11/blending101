@@ -22,17 +22,17 @@
     @include media(xl) {
       grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
     }
-  }
-  .left {
-    width: 100%;
-    display: none;
-    @include media(xl) {
-      display: block !important;
+    .left {
+      width: 100%;
+      display: none;
+      @include media(xl) {
+        display: block !important;
+      }
     }
-  }
 
-  .center {
-    width: 100%;
+    .center {
+      width: 100%;
+    }
   }
 }
 

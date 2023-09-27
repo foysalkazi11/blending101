@@ -24,47 +24,27 @@ interface NormalizeWikiList {
   data: WikiListType[];
 }
 
-const WikiLanding = ({
-  setType = () => {},
-  setSelectedWikiItem = () => {},
-}: Props) => {
+const WikiLanding = ({ setType = () => {}, setSelectedWikiItem = () => {} }: Props) => {
   const user = useUser();
-  const [
-    getIngredientList,
-    {
-      loading: ingredientListLoading,
-      data: ingredientList,
-      error: ingredientListError,
-    },
-  ] = useLazyQuery(GET_INGREDIENT_WIKI_LIST, {
-    fetchPolicy: "cache-and-network",
-  });
-  const [
-    getNutrientList,
-    {
-      loading: nutrientListLoading,
-      data: nutrientListList,
-      error: nutrientListListError,
-    },
-  ] = useLazyQuery(GET_NUTRIENT_WIKI_LIST, {
-    fetchPolicy: "cache-and-network",
-  });
+  const [getIngredientList, { loading: ingredientListLoading, data: ingredientList, error: ingredientListError }] =
+    useLazyQuery(GET_INGREDIENT_WIKI_LIST, {
+      // fetchPolicy: "cache-and-network",
+    });
+  const [getNutrientList, { loading: nutrientListLoading, data: nutrientListList, error: nutrientListListError }] =
+    useLazyQuery(GET_NUTRIENT_WIKI_LIST, {
+      // fetchPolicy: "cache-and-network",
+    });
 
   const funcObj = {
     Ingredient: getIngredientList,
     Nutrient: getNutrientList,
     Health: () =>
       new Promise((resolve, reject) => {
-        setTimeout(resolve, 1000, "foo");
+        setTimeout(resolve, 300, "foo");
       }),
   };
 
-  const fetchList = async (
-    type: WikiType = "Ingredient",
-    page: number = 1,
-    limit: number = 12,
-    ids: string[] = [],
-  ) => {
+  const fetchList = async (type: WikiType = "Ingredient", page: number = 1, limit: number = 12, ids: string[] = []) => {
     try {
       await funcObj[type]({
         variables: {
@@ -112,10 +92,7 @@ const WikiLanding = ({
 
   return (
     <>
-      <PanelHeader
-        title="Wiki Discovery"
-        icon={<FontAwesomeIcon icon={faCircleInfo} fontSize={24} />}
-      />
+      <PanelHeader title="Wiki Discovery" icon={<FontAwesomeIcon icon={faCircleInfo} fontSize={24} />} />
 
       <div className={styles.wikiLandingPageContainer}>
         <WikiLandingContent
