@@ -40,11 +40,7 @@ export const responsiveSetting = {
   ],
 };
 
-const ShowRelatedItems = ({
-  category = "recipe",
-  title = "Related Recipes",
-  itemsList = [],
-}: Porps) => {
+const ShowRelatedItems = ({ category = "recipe", title = "Related Recipes", itemsList = [] }: Porps) => {
   return (
     <div style={{ margin: "16px 10px 20px 10px" }}>
       <PanelHeader icon="/images/telescope.svg" title={title} />
