@@ -150,7 +150,7 @@ function WikiSingleItem() {
       <WikiCommentsTray showTagByDefaut={false} showPanle={"right"} />
       <div className={styles.singleWikiItemContainer}>
         <div className={styles.left}>
-          <RelatedWikiItem type={type} />
+          <RelatedWikiItem type={type} wikiList={data?.relatedWikis?.wikiList} total={data?.relatedWikis?.total} />
         </div>
 
         <div className={styles.center}>
@@ -216,11 +216,7 @@ function WikiSingleItem() {
         </div>
       </div>
       {width < 1280 ? (
-        <ShowRelatedItems
-          category="wiki"
-          title={`Related ${type}`}
-          itemsList={type === "Ingredient" ? dummyData?.Ingredient : dummyData?.Nutrient}
-        />
+        <ShowRelatedItems category="wiki" title={`Related ${type}`} itemsList={data?.relatedWikis?.wikiList} />
       ) : null}
     </>
   );
