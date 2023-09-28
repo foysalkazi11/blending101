@@ -1,11 +1,8 @@
 import { gql } from "@apollo/client";
 
 const GET_ALL_INGREDIENTS_BASED_ON_NURTITION = gql`
-  query GetAllIngredientsBasedOnNutrition2(
-    $data: GetIngredientsFromNutrition!
-    $userId: String
-  ) {
-    getAllIngredientsBasedOnNutrition2(data: $data, userId: $userId) {
+  query GetAllIngredientsBasedOnNutrition2($userId: String!, $data: GetIngredientsFromNutrition!) {
+    getAllIngredientsBasedOnNutrition2(userId: $userId, data: $data) {
       wikiTitle
       wikiDescription
       wikiCoverImages
@@ -43,6 +40,28 @@ const GET_ALL_INGREDIENTS_BASED_ON_NURTITION = gql`
         lastName
         profilePicture
         email
+      }
+      relatedWikis {
+        wikiList {
+          _id
+          category
+          collections
+          commentsCount
+          description
+          hasInCompare
+          image
+          isPublished
+          portions {
+            measurement
+            meausermentWeight
+            default
+          }
+          status
+          type
+          wikiDescription
+          wikiTitle
+        }
+        total
       }
     }
   }

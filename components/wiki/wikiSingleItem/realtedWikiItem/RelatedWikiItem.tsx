@@ -2,12 +2,15 @@ import React from "react";
 import PanelHeader from "../../../recipe/share/panelHeader/PanelHeader";
 import WikiCard from "../../wikiCard/WikiCard";
 import dummyData from "../dummyData";
+import { WikiListType } from "type/wikiListType";
 
 interface Props {
   type?: string;
+  wikiList?: WikiListType[];
+  total?: number;
 }
 
-const RelatedWikiItem = ({ type = "Ingredient" }: Props) => {
+const RelatedWikiItem = ({ type = "Ingredient", total = 0, wikiList = [] }: Props) => {
   return (
     <div style={{ width: "100%" }}>
       <PanelHeader
@@ -17,7 +20,7 @@ const RelatedWikiItem = ({ type = "Ingredient" }: Props) => {
         }
         title={`Related ${type}`}
       />
-      {dummyData[type]?.map((wikiItem) => {
+      {wikiList?.map((wikiItem) => {
         const {
           _id,
           category,
@@ -44,6 +47,7 @@ const RelatedWikiItem = ({ type = "Ingredient" }: Props) => {
               type={type}
               portions={portions}
               id={_id}
+              hasInCompare={hasInCompare}
             />
           </div>
         );
