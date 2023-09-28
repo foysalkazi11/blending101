@@ -48,7 +48,7 @@ const WikiHome = () => {
   const wikiType: string = params?.[0] || "";
   const wikiId = params?.[1] || "";
   const { width } = useWindowSize();
-  const [toggleMenu, setToggleMenu] = useState(1);
+  const [toggleMenu, setToggleMenu] = useState(0);
   const [wikiList, setWikiList] = useState<{ total: number; wikiList: WikiListType[] }>({ total: 0, wikiList: [] });
   const { handleWikiFilter, loading } = useToWikiFilter();
   const deBoundValue = useDebounce(searchTerm, 300);
@@ -60,7 +60,7 @@ const WikiHome = () => {
       const data = await handleWikiFilter(selectedWikiType, page, limit);
       setWikiList((prev) => ({
         total: data?.total,
-        wikiList: page === 1 ? data?.wikiList : [...prev?.wikiList, ...data?.wikiList],
+        wikiList: page > 1 ? [...prev?.wikiList, ...data?.wikiList] : data?.wikiList,
       }));
     } catch (error) {
       notification("error", error?.message || "Failed to filter wiki");
@@ -68,22 +68,28 @@ const WikiHome = () => {
   };
 
   const handleNextPage = () => {
-    setPageNum((pre) => pre + 1);
     handleWikiFilterFunc(selectedWikiType, pageNum + 1, dataLimit);
+    setPageNum((pre) => pre + 1);
   };
 
-  const handleUpdateWikiSection = (type?: WikiType) => {
+  const handleUpdateWikiSection = (type?: WikiType, changeTab?: true) => {
     SetSelectedWikiType({ wikiType: type || "", category: "", selectedItems: [], searchTerm: "" });
     setSearchTerm("");
+    if (changeTab) {
+      setToggleMenu(0);
+    }
   };
 
   useEffect(() => {
-    if (isMounted) handleWikiFilterFunc(selectedWikiType, 1, dataLimit);
+    if (isMounted) {
+      handleWikiFilterFunc(selectedWikiType, 1, dataLimit);
+      setPageNum(1);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedWikiType]);
 
   useEffect(() => {
-    handleUpdateWikiSection("");
+    if (!selectedWikiType?.wikiType) setToggleMenu(1);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -114,7 +120,7 @@ const WikiHome = () => {
           loading={loading}
           handleCloseFilterOrSearchResult={handleUpdateWikiSection}
           title={`All ${selectedWikiType?.wikiType || "Results"} (${wikiList?.total}) `}
-          hasMore={wikiList?.total > dataLimit * pageNum}
+          hasMore={wikiList?.total ? wikiList?.total > dataLimit * pageNum : false}
           nextPage={handleNextPage}
         />
       );
