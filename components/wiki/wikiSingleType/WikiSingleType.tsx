@@ -35,7 +35,7 @@ interface Props {
   wikiList?: WikiListType[];
   setWikiList?: React.Dispatch<React.SetStateAction<WikiListType[]>>;
   loading?: boolean;
-  handleCloseFilterOrSearchResult?: () => void;
+  handleCloseFilterOrSearchResult?: (wikiType?: WikiType, changeTab?: boolean) => void;
   title?: string;
   hasMore?: boolean;
   nextPage?: () => void;
@@ -71,17 +71,16 @@ const WikiSingleType = ({
     fetchPolicy: "cache-and-network",
   });
   const [addOrRemoveToWikiCompareList] = useMutation(ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST);
-  const observer = useRef<any>();
+  const observer = useRef(null);
   const entry = useIntersectionObserver(observer, { rootMargin });
 
   // fetch next page
   useEffect(() => {
     if (!entry) return;
-    if (entry.isIntersecting && hasMore) {
+    if (entry?.isIntersecting && hasMore) {
       nextPage();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [entry]);
+  }, [entry, hasMore, nextPage]);
 
   // find single wiki items
   const findCompareWikiEntity = (id: string) => {

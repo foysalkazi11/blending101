@@ -15,7 +15,7 @@ import styles from "./WikiLanding.module.scss";
 import { useUser } from "../../../context/AuthProvider";
 
 interface Props {
-  setType?: Dispatch<SetStateAction<WikiType>>;
+  setType?: (wikiType?: WikiType, changeTab?: boolean) => void;
   setSelectedWikiItem?: Dispatch<SetStateAction<SelectedWikiType>>;
 }
 
@@ -83,8 +83,8 @@ const WikiLanding = ({ setType = () => {}, setSelectedWikiItem = () => {} }: Pro
   }, []);
 
   const handleSetType = (type: WikiType) => {
-    setSelectedWikiItem((wikiItem) => ({ ...wikiItem, [type]: "" }));
-    setType(type);
+    // setSelectedWikiItem((wikiItem) => ({ ...wikiItem, [type]: "" }));
+    setType(type, true);
   };
 
   const ingredientWikiList = ingredientList?.getIngredientWikiList2?.wikiList;

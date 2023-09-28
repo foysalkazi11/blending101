@@ -19,6 +19,8 @@ import dummyData from "./dummyData";
 import ErrorPage from "../../pages/404Page";
 import { RecipeDetailsMiddle } from "../../../theme/skeletons/skeletonRecipeDetails";
 import { useUser } from "../../../context/AuthProvider";
+import RelatedWikiItem from "./realtedWikiItem/RelatedWikiItem";
+import WikiCommentsTray from "components/sidetray/wikiCommentsTray";
 export const placeHolderImage = "/images/no-image-available.webp";
 
 interface Props {
@@ -40,11 +42,11 @@ function WikiSingleItem() {
   const params2 = params?.[2] || "0";
   const user = useUser();
   const [getAllIngredientsBasedOnNutrition, ingredientsData] = useLazyQuery(GET_ALL_INGREDIENTS_BASED_ON_NURTITION, {
-    fetchPolicy: "network-only",
+    // fetchPolicy: "network-only",
   });
   const [getBlendNutritionBasedIngredientsWiki, nutritionData] = useLazyQuery(
     GET_BLEND_NUTRITION_BASED_IN_INGREDIENTS_WIKI,
-    { fetchPolicy: "network-only" },
+    // { fetchPolicy: "network-only" },
   );
   const { width } = useWindowSize();
 
@@ -145,10 +147,11 @@ function WikiSingleItem() {
 
   return (
     <>
+      <WikiCommentsTray showTagByDefaut={false} showPanle={"right"} />
       <div className={styles.singleWikiItemContainer}>
-        {/* <div className={styles.left}>
+        <div className={styles.left}>
           <RelatedWikiItem type={type} />
-        </div> */}
+        </div>
 
         <div className={styles.center}>
           {ingredientsData?.loading || nutritionData?.loading ? (

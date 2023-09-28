@@ -1,6 +1,6 @@
 import React from "react";
-import WikiHome from "../../../components/wiki";
-import Layout from "../../../layouts";
+import WikiHome from "../../components/wiki";
+import Layout from "../../layouts";
 import { useRouter } from "next/router";
 
 const WikiPage = () => {
