@@ -97,7 +97,7 @@ const RecipeDiscovery = () => {
 
   useEffect(() => {
     // filter recipe func
-    if (allFilters.length) {
+    if (allFilters?.length) {
       setSearchRecipeType("filter");
       setPageNum(1);
       handleFilterRecipes(allFilters, 1, dataLimit, true);

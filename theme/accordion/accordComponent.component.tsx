@@ -49,20 +49,18 @@ const AccordComponent = ({
   const contentRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  const finalNutritionValue = Math?.round(
-    ((value ?? 0) * counter * sinngleIngQuintity) / servingSize,
-  );
+  const finalNutritionValue = Math?.round(((value ?? 0) * counter * sinngleIngQuintity) / servingSize);
   const handleClickNutration = (
     id: string,
     disabled: undefined | boolean = undefined,
     link: undefined | null | string = undefined,
   ) => {
     if (!disabled) {
-      router?.push(`/wiki/Nutrient/${id}`);
+      router?.push(`/wiki/details/Nutrient/${id}`);
     } else if (disabled && link) {
       const splitted = link?.split("Nutrient");
       const second = splitted[1];
-      router?.push(`/wiki/Nutrient/${second}`);
+      router?.push(`/wiki/details/Nutrient/${second}`);
     }
   };
 
@@ -109,12 +107,8 @@ const AccordComponent = ({
                   }
                 >
                   <h5
-                    className={`${styles.titleCopy} ${
-                      disabled && !link ? "" : styles.active
-                    }`}
-                    onClick={() =>
-                      handleClickNutration(nutritionId, disabled, link)
-                    }
+                    className={`${styles.titleCopy} ${disabled && !link ? "" : styles.active}`}
+                    onClick={() => handleClickNutration(nutritionId, disabled, link)}
                   >
                     {title}
                   </h5>
@@ -125,9 +119,7 @@ const AccordComponent = ({
                   )}
                 </div>
 
-                <p className={styles.valueUnit + " " + styles.percentage}>
-                  {percentage || ""}
-                </p>
+                <p className={styles.valueUnit + " " + styles.percentage}>{percentage || ""}</p>
               </div>
             </div>
           )}
@@ -156,9 +148,7 @@ const AccordComponent = ({
                   {/* {parseFloat(value).toFixed(1)} &nbsp; {unit} */}
                 </p>
               )}
-              <p className={styles.valueUnit + " " + styles.percentage}>
-                {percentage || ""}
-              </p>
+              <p className={styles.valueUnit + " " + styles.percentage}>{percentage || ""}</p>
             </div>
           </div>
         </div>
@@ -232,11 +222,11 @@ export default AccordComponent;
 //     link: undefined | null | string = undefined,
 //   ) => {
 //     if (!disabled) {
-//       router?.push(`/wiki/Nutrient/${id}`);
+//       router?.push(`/wiki/details/Nutrient/${id}`);
 //     } else if (disabled && link) {
 //       const splitted = link?.split("Nutrient");
 //       const second = splitted[1];
-//       router?.push(`/wiki/Nutrient/${second}`);
+//       router?.push(`/wiki/details/Nutrient/${second}`);
 //     }
 //   };
 

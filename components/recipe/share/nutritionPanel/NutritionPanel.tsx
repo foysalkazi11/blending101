@@ -8,6 +8,7 @@ import PanelHeader from "../panelHeader/PanelHeader";
 import styles from "./NutritionPanel.module.scss";
 import NutritionPanelMyFacts from "./myFacts";
 import NutritionPanelRxFacts from "./RxFacts";
+import StickyBox from "react-sticky-box";
 
 interface NutritionPanelInterface {
   variant?: "panel" | "main";
@@ -49,7 +50,11 @@ const NutritionPanel = (props: NutritionPanelInterface) => {
   };
 
   return (
-    <div className={styles.rightTaryContainer}>
+    <StickyBox
+      offsetTop={0}
+      offsetBottom={20}
+      // className={styles.rightTaryContainer}
+    >
       <div className="d-flex ai-center">
         {isNutrientPanelHasMyFacts ? (
           panelHeaders?.map((header, index) => {
@@ -59,13 +64,7 @@ const NutritionPanel = (props: NutritionPanelInterface) => {
                 activeHeader={index === toggle}
                 index={index}
                 handleClick={handleHeaderClick}
-                icon={
-                  variant === "panel" ? (
-                    ""
-                  ) : (
-                    <FontAwesomeIcon icon={header.icon} fontSize="24" />
-                  )
-                }
+                icon={variant === "panel" ? "" : <FontAwesomeIcon icon={header.icon} fontSize="24" />}
                 title={header?.title}
                 panelHeaderVariant="headerBorderBottom"
               />
@@ -81,12 +80,8 @@ const NutritionPanel = (props: NutritionPanelInterface) => {
           />
         )}
       </div>
-      {toggle === 0 ? (
-        <NutritionPanelRxFacts {...props} />
-      ) : (
-        <NutritionPanelMyFacts wikiId={wikiId} />
-      )}
-    </div>
+      {toggle === 0 ? <NutritionPanelRxFacts {...props} /> : <NutritionPanelMyFacts wikiId={wikiId} />}
+    </StickyBox>
   );
 };
 

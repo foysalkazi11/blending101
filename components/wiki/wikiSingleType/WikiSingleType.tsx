@@ -231,40 +231,43 @@ const WikiSingleType = ({
           </IconWarper>
         </div> */}
         {wikiList?.length ? (
-          <div ref={observer} className={styles.showRecipes}>
-            {wikiList?.map((wiki, index) => {
-              const {
-                _id,
-                category,
-                commentsCount,
-                description,
-                hasInCompare,
-                image,
-                isPublished,
-                portions,
-                publishedBy,
-                status,
-                type,
-                wikiDescription,
-                wikiTitle,
-              } = wiki;
-              return (
-                <WikiCard
-                  key={_id}
-                  author={publishedBy}
-                  comments={commentsCount}
-                  description={wikiDescription}
-                  image={image}
-                  title={wikiTitle}
-                  type={type}
-                  portions={portions}
-                  id={_id}
-                  hasInCompare={hasInCompare}
-                  handleAddOrRemoveToWikiCompareList={handleAddOrRemoveToWikiCompareList}
-                />
-              );
-            })}
-          </div>
+          <>
+            <div className={styles.showRecipes}>
+              {wikiList?.map((wiki, index) => {
+                const {
+                  _id,
+                  category,
+                  commentsCount,
+                  description,
+                  hasInCompare,
+                  image,
+                  isPublished,
+                  portions,
+                  publishedBy,
+                  status,
+                  type,
+                  wikiDescription,
+                  wikiTitle,
+                } = wiki;
+                return (
+                  <WikiCard
+                    key={_id}
+                    author={publishedBy}
+                    comments={commentsCount}
+                    description={wikiDescription}
+                    image={image}
+                    title={wikiTitle}
+                    type={type}
+                    portions={portions}
+                    id={_id}
+                    hasInCompare={hasInCompare}
+                    handleAddOrRemoveToWikiCompareList={handleAddOrRemoveToWikiCompareList}
+                  />
+                );
+              })}
+            </div>
+            <div ref={observer}></div>
+          </>
         ) : (
           <ErrorPage errorMessage="No Data found!!!" style={{ maxHeight: "75vh" }} />
         )}
