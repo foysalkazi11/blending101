@@ -96,7 +96,7 @@ const IngredientPanel = (props: IngredientPanelProps) => {
                       </div>
                       <div className={styles.ingredient__actions}>
                         <a
-                          href={`/wiki/Ingredient/${ingredient.ingredientId._id}/${ingredient?.selectedPortion?.gram}/`}
+                          href={`/wiki/details/Ingredient/${ingredient.ingredientId._id}/${ingredient?.selectedPortion?.gram}/`}
                         >
                           <Icon
                             size="small"

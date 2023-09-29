@@ -97,12 +97,12 @@ const WikiLeft = ({
   // click wiki item title
   const handleClickTitle = async (type: string, id: string, portions?: Portion[]) => {
     if (type === "Nutrient") {
-      router?.push(`/wiki/${type}/${id}`);
+      router?.push(`/wiki/details/${type}/${id}`);
     } else {
       const measurementWeight = portions?.find((items) => items?.default)?.meausermentWeight;
 
       if (measurementWeight) {
-        router?.push(`/wiki/${type}/${id}/${measurementWeight}`);
+        router?.push(`/wiki/details/${type}/${id}/${measurementWeight}`);
       }
     }
   };

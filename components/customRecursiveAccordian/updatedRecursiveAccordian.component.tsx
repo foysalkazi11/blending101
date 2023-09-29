@@ -42,7 +42,7 @@ const UpdatedRecursiveAccordian = ({
   const router = useRouter();
   const user = useUser();
   const { data: dailyData } = useQuery(GET_DAILY_GOALS, {
-    fetchPolicy: "network-only",
+    // fetchPolicy: "network-only",
     variables: { memberId: user?.id },
   });
 
@@ -52,7 +52,7 @@ const UpdatedRecursiveAccordian = ({
       {showDropDown && (
         <div className={styles.unitDropDownBox}>
           <p className={styles.title}>Portion</p>
-          <DropDown {...rest} />
+          <DropDown {...rest} border="borderSecondary" />
         </div>
       )}
       <div className={styles.nutritionHeader}>
@@ -97,8 +97,8 @@ const UpdatedRecursiveAccordian = ({
         <div className={styles.recursiveAccordianHeading__subheading__4}>Daily%</div>
       </div>
       <div
-        className={`${styles.recursiveAccordianBody} y-scroll`}
-        style={variant === "panel" ? { maxHeight: 680 } : { maxHeight: `${height - 350}px` }}
+      // className={`${styles.recursiveAccordianBody}`}
+      // style={variant === "panel" ? { maxHeight: 680 } : { maxHeight: `${height - 350}px` }}
       >
         {Object?.entries(dataObject)?.map((elem) => {
           if (elem[0] !== "Calories") {
