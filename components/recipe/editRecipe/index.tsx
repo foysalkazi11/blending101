@@ -23,6 +23,7 @@ import IngredientSection from "../share/IngredientSection";
 import VersionTray from "../../sidetray/versionTray/VersionTray";
 import { setQuantity } from "redux/edit_recipe/quantity";
 import { useToArrangeIngredient } from "../share/useToArrangeIngredient";
+import useDimensions from "customHooks/useDimensions";
 
 interface editRecipe {
   detailsARecipe?: RecipeDetailsType;
@@ -80,6 +81,7 @@ const EditRecipePage = ({
     dispatch(setRecipeInstruction(recipeInstruction));
   };
   const arrangeIngredient = useToArrangeIngredient();
+  const [dimensionRef, dimension] = useDimensions();
 
   const removeIngredient = (id) => {
     let updated_list = selectedIngredientsList?.filter((elem) => {
@@ -151,7 +153,12 @@ const EditRecipePage = ({
 
       <div className={styles.main}>
         <div className={styles.left}>
-          <IngredientPanel handleIngredientClick={handleIngredientClick} checkActive={checkActive} showHeader={false} />
+          <IngredientPanel
+            scrollAreaMaxHeight={dimension?.height - 220}
+            handleIngredientClick={handleIngredientClick}
+            checkActive={checkActive}
+            showHeader={false}
+          />
         </div>
         <div className={styles.center}>
           <PanelHeaderCenter
@@ -164,35 +171,37 @@ const EditRecipePage = ({
             recipeVersionLength={versionsCount}
             loading={recipeEditOrVersionEditLoading}
           />
-          <Center_Elements
-            updateEditRecipe={updateEditRecipe}
-            allBlendCategories={allBlendCategories}
-            images={images}
-            setImages={setImages}
-            existingImage={existingImage}
-            setExistingImage={setExistingImage}
-            giGl={giGl}
-            recipeId={detailsARecipe?.recipeId?._id}
-            selectedImage={detailsARecipe?.tempVersionInfo?.version?.selectedImage}
-            recipePrepareTime={detailsARecipe?.recipeId?.totalTime}
-            componentUsedFrom="editRecipe"
-          />
-          <IngredientSection
-            adjusterFunc={adjusterFunc}
-            nutritionState={nutritionState}
-            setNutritionState={setNutritionState}
-            calculatedIngOz={calculatedIngOz}
-            ingredientAddingType={ingredientAddingType}
-            selectedIngredientsList={selectedIngredientsList}
-            handleOnDragEnd={handleOnDragEnd}
-            removeIngredient={removeIngredient}
-            setSelectedIngredientsList={handleAddIngredient}
-            servingSize={servingCounter}
-          />
-          <InstructionsForMakingRecipe
-            recipeInstructions={recipeInstruction}
-            setRecipeInstruction={updateRecipeInstruction}
-          />
+          <div ref={dimensionRef}>
+            <Center_Elements
+              updateEditRecipe={updateEditRecipe}
+              allBlendCategories={allBlendCategories}
+              images={images}
+              setImages={setImages}
+              existingImage={existingImage}
+              setExistingImage={setExistingImage}
+              giGl={giGl}
+              recipeId={detailsARecipe?.recipeId?._id}
+              selectedImage={detailsARecipe?.tempVersionInfo?.version?.selectedImage}
+              recipePrepareTime={detailsARecipe?.recipeId?.totalTime}
+              componentUsedFrom="editRecipe"
+            />
+            <IngredientSection
+              adjusterFunc={adjusterFunc}
+              nutritionState={nutritionState}
+              setNutritionState={setNutritionState}
+              calculatedIngOz={calculatedIngOz}
+              ingredientAddingType={ingredientAddingType}
+              selectedIngredientsList={selectedIngredientsList}
+              handleOnDragEnd={handleOnDragEnd}
+              removeIngredient={removeIngredient}
+              setSelectedIngredientsList={handleAddIngredient}
+              servingSize={servingCounter}
+            />
+            <InstructionsForMakingRecipe
+              recipeInstructions={recipeInstruction}
+              setRecipeInstruction={updateRecipeInstruction}
+            />
+          </div>
         </div>
         <div className={styles.right}>
           <NutritionPanel
