@@ -6,33 +6,34 @@
   width: 100%;
   max-width: $_3xl;
   padding: 0 10px;
-  margin: 40px auto 20px auto;
+  margin: 40px auto;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   grid-auto-rows: auto;
-  grid-gap: 16px;
-
+  grid-gap: 2rem;
+  grid-template-areas:
+    "center"
+    "right"
+    "left";
   @include media(lg) {
     grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-    padding: 0 16px;
+    grid-template-areas:
+      "center right"
+      "left left";
   }
+
   @include media(xl) {
     grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr);
+    grid-template-areas: "left center right";
   }
-}
 
-.left {
-  width: 100%;
-  display: none;
-  @include media(xl) {
-    display: block !important;
+  .left {
+    grid-area: left;
   }
-}
-
-.center {
-  width: 100%;
-}
-
-.right {
-  width: 100%;
+  .center {
+    grid-area: center;
+  }
+  .right {
+    grid-area: right;
+  }
 }

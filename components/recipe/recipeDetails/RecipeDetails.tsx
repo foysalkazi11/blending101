@@ -44,6 +44,7 @@ const RecipeDetails = ({
         <div className={`${styles.left}`}>
           <LeftSide
             blendCategory={recipeData?.recipeId?.recipeBlendCategory?._id}
+            sliderView={width ? (width > 1280 ? false : true) : false}
           />
         </div>
 
@@ -70,12 +71,12 @@ const RecipeDetails = ({
           />
         </div>
       </div>
-      <div className={`${width > 1280 ? "hidden" : "show_hidden"}`}>
+      {/* <div className={`${width > 1280 ? "hidden" : "show_hidden"}`}>
         <LeftSide
           blendCategory={recipeData?.recipeId?.recipeBlendCategory?._id}
           sliderView={true}
         />
-      </div>
+      </div> */}
     </React.Fragment>
   );
 };

@@ -20,14 +20,12 @@ import { RecipeDetailsLeftSide } from "../../../../theme/skeletons/skeletonRecip
 import SlickSlider from "../../../../theme/carousel/SlickSlider";
 import { responsiveSetting } from "../../../showRelatedItems";
 import styles from "./LeftSide.module.scss";
+import StickyBox from "react-sticky-box";
 type RelatedCategoryRecipesProps = {
   blendCategory: string;
   sliderView?: boolean;
 };
-const RelatedCategoryRecipes = ({
-  blendCategory = "",
-  sliderView = false,
-}: RelatedCategoryRecipesProps) => {
+const RelatedCategoryRecipes = ({ blendCategory = "", sliderView = false }: RelatedCategoryRecipesProps) => {
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
   const [shareRecipeData, setShareRecipeData] = useState({
     id: "",
@@ -36,9 +34,7 @@ const RelatedCategoryRecipes = ({
     versionId: "",
     turnedOnVersions: [],
   });
-  const { lastModifiedCollection } = useAppSelector(
-    (state) => state?.collections,
-  );
+  const { lastModifiedCollection } = useAppSelector((state) => state?.collections);
   const [openShareModal, setOpenShareModal] = useState(false);
   const user = useUser();
   const { data, loading, error } = useQuery(GET_ALL_RELATED_CATEGORY_RECIPES, {
@@ -74,15 +70,14 @@ const RelatedCategoryRecipes = ({
         data: {
           getAllRelatedCategoryRecipes: {
             ...data?.getAllRelatedCategoryRecipes,
-            recipes: data?.getAllRelatedCategoryRecipes?.recipes?.map(
-              (recipe) =>
-                recipe?.recipeId?._id === id
-                  ? {
-                      ...recipe,
-                      ...outerObj,
-                      [innerLabel]: { ...recipe[innerLabel], ...innerObj },
-                    }
-                  : recipe,
+            recipes: data?.getAllRelatedCategoryRecipes?.recipes?.map((recipe) =>
+              recipe?.recipeId?._id === id
+                ? {
+                    ...recipe,
+                    ...outerObj,
+                    [innerLabel]: { ...recipe[innerLabel], ...innerObj },
+                  }
+                : recipe,
             ),
           },
         },
@@ -102,7 +97,7 @@ const RelatedCategoryRecipes = ({
   }
 
   return (
-    <div className="sticky_top">
+    <StickyBox offsetBottom={20}>
       <PanelHeader icon="/images/telescope.svg" title="Related Recipes" />
 
       {!sliderView ? (
@@ -151,11 +146,7 @@ const RelatedCategoryRecipes = ({
                 // score={rxScore}
                 calorie={defaultVersion?.calorie?.value}
                 noOfComments={numberOfRating}
-                image={
-                  image.find((img) => img?.default)?.image ||
-                  image?.[0]?.image ||
-                  ""
-                }
+                image={image.find((img) => img?.default)?.image || image?.[0]?.image || ""}
                 recipeId={_id}
                 notes={notes}
                 addedToCompare={addedToCompare}
@@ -214,10 +205,7 @@ const RelatedCategoryRecipes = ({
             } = item;
             const ing = joniIngredients(defaultVersion?.ingredients);
             return (
-              <div
-                key={`${_id}${index}`}
-                className={styles.recipeCardGapWithinSlider}
-              >
+              <div key={`${_id}${index}`} className={styles.recipeCardGapWithinSlider}>
                 <DataCardComponent
                   title={name}
                   ingredients={ing}
@@ -228,11 +216,7 @@ const RelatedCategoryRecipes = ({
                   // score={rxScore}
                   calorie={defaultVersion?.calorie?.value}
                   noOfComments={numberOfRating}
-                  image={
-                    image.find((img) => img?.default)?.image ||
-                    image?.[0]?.image ||
-                    ""
-                  }
+                  image={image.find((img) => img?.default)?.image || image?.[0]?.image || ""}
                   recipeId={_id}
                   notes={notes}
                   addedToCompare={addedToCompare}
@@ -275,7 +259,7 @@ const RelatedCategoryRecipes = ({
         type="recipe"
         heading="Share Recipe"
       />
-    </div>
+    </StickyBox>
   );
 };
 

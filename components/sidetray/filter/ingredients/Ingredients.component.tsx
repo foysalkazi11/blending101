@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage, faRankingStar } from "@fortawesome/pro-light-svg-icons";
 import { ToggleMenuType } from "../../../../type/toggleMenuType";
 import { FilterCriteriaValue } from "../../../../type/filterType";
+import { WikiType } from "type/wikiListType";
 export interface ingredientState {
   name: string;
   value: number;
@@ -29,7 +30,7 @@ interface Props {
   scrollAreaMaxHeight?: number;
   checkActiveIngredient: (id: string) => boolean;
   handleIngredientClick: (
-    value?: any | FilterCriteriaValue,
+    value?: WikiType | FilterCriteriaValue,
     present?: boolean,
     extraInfo?: any | FilterCriteriaValue,
   ) => void;
@@ -39,7 +40,7 @@ interface Props {
   toggleMenuType?: ToggleMenuType;
 }
 
-export default function FilterbottomComponent({
+export default function FilterBottomComponent({
   checkActiveIngredient = () => false,
   handleIngredientClick = () => {},
   scrollAreaMaxHeight,
@@ -79,6 +80,7 @@ export default function FilterbottomComponent({
       } else {
         setSearchIngredientData(ingredientCategoryData);
       }
+      handleIngredientClick("Ingredient", false, { category: dpd });
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

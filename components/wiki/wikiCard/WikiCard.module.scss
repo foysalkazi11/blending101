@@ -15,6 +15,9 @@
   &:hover .title {
     color: $primaryColor;
   }
+  &:hover .header .moreMenu {
+    visibility: visible !important;
+  }
   &:hover .imageWarper {
     transform: scale(1.05);
   }
@@ -28,7 +31,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 10px;
+  padding: 10px;
 
   .title {
     font-size: 16px;
@@ -40,6 +43,9 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+  .moreMenu {
+    visibility: hidden;
+  }
 }
 
 .body {
@@ -47,7 +53,7 @@
 
   .bodyMain {
     display: flex;
-    margin: 0 10px;
+    padding: 0 10px;
     height: 100px;
 
     .imageWarper {

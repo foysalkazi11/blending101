@@ -1,12 +1,8 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import s from "./WikiLeft.module.scss";
 import WikiTypes from "../wikiTypes/WikiTypes";
-import { SelectedWikiType } from "..";
-import {
-  Portion,
-  WikiType as Type,
-  WikiType,
-} from "../../../type/wikiListType";
+import { SelectedWikiType, SelectedWikiTypeProps } from "..";
+import { Portion, WikiType as Type, WikiType } from "../../../type/wikiListType";
 import WikiIngredientSection from "../wikiIngredientSection";
 import { useRouter } from "next/router";
 import WikiNutrientSection from "../wikiNutrientSection";
@@ -17,29 +13,39 @@ import { faCircleInfo } from "@fortawesome/pro-light-svg-icons";
 import useWindowSize from "../../utility/useWindowSize";
 import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
 import { faFerrisWheel, faList } from "@fortawesome/pro-light-svg-icons";
+import WikiThemeContainer from "../wikiTheme/wikiThemContainer";
+import generateDummyArray from "helperFunc/array/generateDummyArray";
 interface Props {
   currentWikiType?: WikiType;
   currentWikiId?: string;
-  selectedWikiItem?: SelectedWikiType;
-  setSelectedWikiItem?: Dispatch<SetStateAction<SelectedWikiType>>;
+  selectedWikiType?: SelectedWikiTypeProps;
+  SetSelectedWikiType?: (
+    value: SelectedWikiTypeProps | ((val: SelectedWikiTypeProps) => SelectedWikiTypeProps),
+  ) => void;
   showWikiTypeHeader?: boolean;
+  toggle?: number;
+  setToggle?: React.Dispatch<React.SetStateAction<number>>;
+  setInput?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const WikiLeft = ({
   currentWikiType = "",
   currentWikiId = "",
-  selectedWikiItem = {} as SelectedWikiType,
-  setSelectedWikiItem = () => {},
+  selectedWikiType = {} as SelectedWikiTypeProps,
+  SetSelectedWikiType = () => {},
   showWikiTypeHeader = true,
+  toggle = 1,
+  setToggle = () => {},
+  setInput = () => {},
 }: Props) => {
   const [showWikiType, setShowWikiType] = useState(true);
   const [showTabMenu, setShowTabMenu] = useState(true);
-  const [toggle, setToggle] = useState(0);
+  // const [toggle, setToggle] = useState(1);
   const [panelHeight, setPanelHeight] = useState(0);
   const router = useRouter();
-  const [type, setType] = useState<WikiType>("Ingredient");
+  // const [type, setType] = useState<WikiType>("Ingredient");
   const checkActive = (id: string) => {
-    return currentWikiId === id;
+    return selectedWikiType?.selectedItems?.includes(id);
   };
   const { height } = useWindowSize();
 
@@ -68,8 +74,7 @@ const WikiLeft = ({
 
     const TabMenuOffset = TabMenu?.getBoundingClientRect().top;
     const TabMenuComponentHeight = TabMenu?.clientHeight || 57;
-    const heightToHideTabMenu =
-      heightToHideWikiType + TabMenuOffset + TabMenuComponentHeight;
+    const heightToHideTabMenu = heightToHideWikiType + TabMenuOffset + TabMenuComponentHeight;
 
     if (scrollPosition > heightToHideWikiType) {
       showWikiType && setPanelHeight((pre) => pre + WikiTypeComponentHeight);
@@ -85,37 +90,51 @@ const WikiLeft = ({
         setShowTabMenu(false);
     } else {
       !showTabMenu && setShowTabMenu(true);
-      !showTabMenu &&
-        setPanelHeight(window.innerHeight + WikiTypeComponentHeight);
+      !showTabMenu && setPanelHeight(window.innerHeight + WikiTypeComponentHeight);
     }
   }, [showTabMenu, showWikiType]);
 
   // click wiki item title
-  const handleClickTitle = async (
-    type: string,
-    id: string,
-    portions?: Portion[],
-  ) => {
+  const handleClickTitle = async (type: string, id: string, portions?: Portion[]) => {
     if (type === "Nutrient") {
-      router?.push(`/wiki/${type}/${id}`);
+      router?.push(`/wiki/details/${type}/${id}`);
     } else {
-      const measurementWeight = portions?.find(
-        (items) => items?.default,
-      )?.meausermentWeight;
+      const measurementWeight = portions?.find((items) => items?.default)?.meausermentWeight;
 
       if (measurementWeight) {
-        router?.push(`/wiki/${type}/${id}/${measurementWeight}`);
+        router?.push(`/wiki/details/${type}/${id}/${measurementWeight}`);
       }
     }
   };
 
-  const handleItemClick = (item: any = {}, isExist) => {
-    if (item?.hasOwnProperty("ingredientName")) {
-      handleClickTitle("Ingredient", item?._id, item?.portions);
+  const handleItemClick = (type: WikiType, item: any = {}, isExist: boolean, extraInfo?: any) => {
+    if (selectedWikiType?.wikiType === type) {
+      if (extraInfo?.hasOwnProperty("category")) {
+        SetSelectedWikiType({
+          ...selectedWikiType,
+          category: extraInfo.category,
+          selectedItems: [],
+          searchTerm: "",
+        });
+      } else {
+        SetSelectedWikiType({
+          ...selectedWikiType,
+          selectedItems: selectedWikiType?.selectedItems?.includes(item?._id)
+            ? selectedWikiType?.selectedItems?.filter((id) => id !== item?._id)
+            : [...selectedWikiType?.selectedItems, item?._id],
+          searchTerm: "",
+        });
+      }
+    } else {
+      SetSelectedWikiType({ wikiType: type, category: "", selectedItems: [], searchTerm: "" });
     }
-    if (item?.hasOwnProperty("nutrientName")) {
-      handleClickTitle("Nutrient", item?._id);
-    }
+    setInput("");
+    // if (item?.hasOwnProperty("ingredientName")) {
+    //   handleClickTitle("Ingredient", item?._id, item?.portions);
+    // }
+    // if (item?.hasOwnProperty("nutrientName")) {
+    //   handleClickTitle("Nutrient", item?._id);
+    // }
 
     // setSelectedWikiItem(item?._id);
     // const checkWikiList = (list: string[], id: string) => {
@@ -138,18 +157,18 @@ const WikiLeft = ({
     // }
   };
 
-  useEffect(() => {
-    setToggle(0);
-  }, [type]);
+  // useEffect(() => {
+  //   setToggle(0);
+  // }, [type]);
 
-  useEffect(() => {
-    //@ts-ignore
-    if (currentWikiType && currentWikiType !== "compare") {
-      setType(currentWikiType);
-    } else {
-      setType("Ingredient");
-    }
-  }, [currentWikiType]);
+  // useEffect(() => {
+  //   //@ts-ignore
+  //   if (currentWikiType && currentWikiType !== "compare") {
+  //     setType(currentWikiType);
+  //   } else {
+  //     setType("Ingredient");
+  //   }
+  // }, [currentWikiType]);
 
   useEffect(() => {
     window.addEventListener("scroll", listenToScroll);
@@ -167,8 +186,8 @@ const WikiLeft = ({
         return (
           <WikiIngredientSection
             checkActive={checkActive}
-            handleItemClick={handleItemClick}
-            scrollAreaMaxHeight={panelHeight - 480}
+            handleItemClick={(item, isExist, extraInfo) => handleItemClick(type, item, isExist, extraInfo)}
+            scrollAreaMaxHeight={window?.innerHeight - 480}
             toggle={toggle}
           />
         );
@@ -176,8 +195,8 @@ const WikiLeft = ({
         return (
           <WikiNutrientSection
             checkActive={checkActive}
-            handleItemClick={handleItemClick}
-            scrollAreaMaxHeight={panelHeight - 420}
+            handleItemClick={(item, isExist, extraInfo) => handleItemClick(type, item, isExist, extraInfo)}
+            scrollAreaMaxHeight={window?.innerHeight - 420}
             toggle={toggle}
           />
         );
@@ -186,7 +205,7 @@ const WikiLeft = ({
         return (
           <WikiHealthSection
             checkActive={checkActive}
-            handleItemClick={handleItemClick}
+            handleItemClick={(item, isExist, extraInfo) => handleItemClick(type, item, isExist, extraInfo)}
             toggle={toggle}
           />
         );
@@ -196,43 +215,50 @@ const WikiLeft = ({
     }
   };
 
+  const handleUpdateWikiSection = (type: WikiType) => {
+    if (selectedWikiType?.wikiType !== type) {
+      SetSelectedWikiType({ wikiType: type, category: "", selectedItems: [], searchTerm: "" });
+    }
+    setInput("");
+    // SetSelectedWikiType((pre) => (pre?.wikiType === type ? pre : { wikiType: type, category: "", selectedItems: [] }));
+  };
+
+  const handleToggleMenu = (value: number) => {
+    if (value === 0) {
+      SetSelectedWikiType((type) => {
+        if (type?.wikiType) {
+          return type;
+        } else {
+          return { wikiType: "Ingredient", category: "", selectedItems: [], searchTerm: "" };
+        }
+      });
+    } else {
+      SetSelectedWikiType({ wikiType: "", category: "", selectedItems: [], searchTerm: "" });
+    }
+
+    setToggle(value);
+    setInput("");
+  };
+
   return (
     <div className="sticky_top">
       {!showWikiTypeHeader && (
-        <PanelHeader
-          title="Wiki Type"
-          icon={<FontAwesomeIcon icon={faCircleInfo} fontSize={24} />}
-        />
+        <PanelHeader title="Wiki Type" icon={<FontAwesomeIcon icon={faCircleInfo} fontSize={24} />} />
       )}
 
       <div className={s.wikiLeftContainer}>
-        <div id="wikiTypeContainer">
-          {showWikiType && (
-            <WikiTypes
-              type={type}
-              setType={setType}
-              showHeader={showWikiTypeHeader}
-            />
-          )}
-        </div>
         <div id="toggleTabContainer">
           {showTabMenu && (
             <ToggleMenu
-              setToggle={setToggle}
+              setToggle={handleToggleMenu}
               toggle={toggle}
               toggleMenuList={[
                 <div key={"key0"} className="d-flex ai-center">
-                  <FontAwesomeIcon
-                    icon={faList}
-                    style={{ marginRight: "5px" }}
-                  />
+                  <FontAwesomeIcon icon={faList} style={{ marginRight: "5px" }} />
                   <p>List</p>
                 </div>,
                 <div key={"key1"} className="d-flex ai-center">
-                  <FontAwesomeIcon
-                    icon={faFerrisWheel}
-                    style={{ marginRight: "5px" }}
-                  />
+                  <FontAwesomeIcon icon={faFerrisWheel} style={{ marginRight: "5px" }} />
                   <p>Themes</p>
                 </div>,
               ]}
@@ -240,7 +266,29 @@ const WikiLeft = ({
             />
           )}
         </div>
-        {renderUi(type)}
+
+        {toggle === 0 ? (
+          <>
+            <div id="wikiTypeContainer">
+              {showWikiType && (
+                <WikiTypes
+                  type={selectedWikiType.wikiType}
+                  setType={handleUpdateWikiSection}
+                  showHeader={showWikiTypeHeader}
+                />
+              )}
+            </div>
+            {renderUi(selectedWikiType.wikiType)}
+          </>
+        ) : (
+          <WikiThemeContainer
+            data={generateDummyArray(10, {
+              title: "Apple",
+              image: "/images/img1.png",
+            })}
+            scrollAreaMaxHeight={panelHeight - 310}
+          />
+        )}
       </div>
     </div>
   );

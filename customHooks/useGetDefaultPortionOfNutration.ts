@@ -6,15 +6,12 @@ import GET_DEFAULT_PORTION from "../gqlLib/wiki/query/getDefaultPortion";
 import { useAppDispatch } from "../redux/hooks";
 import { setLoading } from "../redux/slices/utilitySlice";
 
-const useGetDefaultPortionOfnutration = async (id: string) => {
+const useGetDefaultPortionOfnutration = (id: string) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const [getDefaultPortion, { loading, error }] = useLazyQuery(
-    GET_DEFAULT_PORTION,
-    {
-      fetchPolicy: "network-only",
-    },
-  );
+  const [getDefaultPortion, { loading, error }] = useLazyQuery(GET_DEFAULT_PORTION, {
+    // fetchPolicy: "network-only",
+  });
 
   const handleIngredientWiki = async (id: string) => {
     dispatch(setLoading(true));
@@ -25,7 +22,7 @@ const useGetDefaultPortionOfnutration = async (id: string) => {
       if (!loading && !error) {
         dispatch(setLoading(false));
         const meausermentWeight = data?.getDefaultPortion;
-        router?.push(`/wiki/Ingredient/${id}/${meausermentWeight}`);
+        router?.push(`/wiki/details/Ingredient/${id}/${meausermentWeight}`);
       }
     } catch (error) {
       dispatch(setLoading(false));
