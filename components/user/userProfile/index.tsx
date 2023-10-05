@@ -13,6 +13,9 @@ import { setDbUser } from "../../../redux/slices/userSlice";
 import { setLoading } from "../../../redux/slices/utilitySlice";
 import reactToastifyNotification from "../../../components/utility/reactToastifyNotification";
 import { useRouter } from "next/router";
+import { useUser } from "context/AuthProvider";
+import useToGetExistingUserInfo from "customHooks/user/useToGetExistingUserInfo";
+import notification from "../../../components/utility/reactToastifyNotification";
 
 const UserProfile = () => {
   const [userProfile, setUserProfile] = useState<any>({
@@ -33,42 +36,55 @@ const UserProfile = () => {
     pregnantOrLactating: "",
   });
   const [steps, setSteps] = useState(1);
-  const { dbUser, user, provider } = useAppSelector((state) => state?.user);
+  const { dbUser } = useAppSelector((state) => state?.user);
   const { configuration } = dbUser;
   const [editUserData] = useMutation(EDIT_CONFIGURATION_BY_ID);
   const dispatch = useAppDispatch();
   const history = useRouter();
+  const user = useUser();
+  const handleToGetExistingUserInfo = useToGetExistingUserInfo();
+
+  const handleToGetExistingUser = async (email) => {
+    try {
+      const currentUser = await handleToGetExistingUserInfo(email);
+      if (currentUser?.configuration) {
+        const {
+          activity,
+          age,
+          allergies,
+          dieteryLifeStyle,
+          gender,
+          heightInCentimeters,
+          weightInKilograms,
+          meditcation,
+          preExistingMedicalConditions,
+          whyBlending,
+          pregnantOrLactating,
+        } = currentUser?.configuration;
+
+        setUserProfile((pre) => ({
+          ...pre,
+          gender,
+          activity,
+          age,
+          heightInCentimeters,
+          weightInKilograms,
+          dieteryLifeStyle,
+          allergies: allergies || [],
+          preExistingMedicalConditions: preExistingMedicalConditions || [],
+          meditcation: meditcation || [],
+          whyBlending: whyBlending || [],
+          pregnantOrLactating,
+        }));
+      }
+    } catch (error) {
+      notification("error", error?.message || "Failed to get existing user information");
+    }
+  };
 
   useEffect(() => {
-    if (configuration) {
-      const {
-        activity,
-        age,
-        allergies,
-        dieteryLifeStyle,
-        gender,
-        heightInCentimeters,
-        weightInKilograms,
-        meditcation,
-        preExistingMedicalConditions,
-        whyBlending,
-        pregnantOrLactating,
-      } = configuration;
-
-      setUserProfile((pre) => ({
-        ...pre,
-        gender,
-        activity,
-        age,
-        heightInCentimeters,
-        weightInKilograms,
-        dieteryLifeStyle,
-        allergies: allergies || [],
-        preExistingMedicalConditions: preExistingMedicalConditions || [],
-        meditcation: meditcation || [],
-        whyBlending: whyBlending || [],
-        pregnantOrLactating,
-      }));
+    if (!dbUser?._id && user?.email) {
+      handleToGetExistingUser(user?.email);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -140,10 +156,7 @@ const UserProfile = () => {
           }),
         );
         dispatch(setLoading(false));
-        reactToastifyNotification(
-          "info",
-          "Congratulation! you updated profile successfully",
-        );
+        reactToastifyNotification("info", "Congratulation! you updated profile successfully");
         history.push("/recipe/recipe_discovery");
       } catch (error) {
         dispatch(setLoading(false));
@@ -181,7 +194,7 @@ const UserProfile = () => {
       }
       return;
     } else {
-      if (user) {
+      if (dbUser?.email) {
         updateUserData();
       }
     }
@@ -206,28 +219,11 @@ const UserProfile = () => {
           />
         );
       case 2:
-        return (
-          <StepTwo
-            userProfile={userProfile}
-            updateUserProfile={updateUserProfile}
-            alredyExist={checkGoals}
-          />
-        );
+        return <StepTwo userProfile={userProfile} updateUserProfile={updateUserProfile} alredyExist={checkGoals} />;
       case 3:
-        return (
-          <StepThree
-            userProfile={userProfile}
-            updateUserProfile={updateUserProfile}
-            removeInput={removeInput}
-          />
-        );
+        return <StepThree userProfile={userProfile} updateUserProfile={updateUserProfile} removeInput={removeInput} />;
       case 4:
-        return (
-          <StepFour
-            updateUserProfile={updateUserProfile}
-            checkGoals={checkGoals}
-          />
-        );
+        return <StepFour updateUserProfile={updateUserProfile} checkGoals={checkGoals} />;
 
       default:
         return (
@@ -248,9 +244,7 @@ const UserProfile = () => {
 
         {renderUI()}
 
-        {steps === 1 ? null : (
-          <ChangeSteps nextStep={nextStep} prevStep={prevStep} steps={steps} />
-        )}
+        {steps === 1 ? null : <ChangeSteps nextStep={nextStep} prevStep={prevStep} steps={steps} />}
       </div>
     </React.Fragment>
   );

@@ -8,7 +8,7 @@ import IconWarper from "../../../theme/iconWarper/IconWarper";
 import { WikiCompareList } from "../../../type/wikiCompareList";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import UpdatedRecursiveAccordion from "../../customRecursiveAccordian/updatedRecursiveAccordian.component";
-import GET_BLEND_NUTRITION_BASED_ON_RECIPEXXX from "../../../gqlLib/nutrition/query/getBlendNutritionBasedOnRecipexxx";
+import GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS from "gqlLib/nutrition/query/getNutrientsListAndGiGlByIngredients";
 
 interface Props {
   removeCompareRecipe?: (id: string, e?: React.SyntheticEvent) => void;
@@ -25,13 +25,13 @@ const WikiIngredientDetails = ({
   const { _id, category, commentsCount, hasInCompare, image, portions, publishedBy, type, wikiDescription, wikiTitle } =
     ingredient;
   const [winReady, setWinReady] = useState(false);
-  const [getBlendNutritionBasedOnRecipexxx, { loading, error, data }] = useLazyQuery(
-    GET_BLEND_NUTRITION_BASED_ON_RECIPEXXX,
+  const [getNutrientsListAndGiGlByIngredients, { loading: nutritionDataLoading, data: nutritionData }] = useLazyQuery(
+    GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS,
   );
 
   const fetchNutritionPanelData = () => {
     try {
-      getBlendNutritionBasedOnRecipexxx({
+      getNutrientsListAndGiGlByIngredients({
         variables: {
           ingredientsInfo: [
             {
@@ -85,13 +85,14 @@ const WikiIngredientDetails = ({
 
           <div className={`${styles.ingredientsDetails} `}>
             {winReady ? (
-              loading ? (
+              nutritionDataLoading ? (
                 <NutritionPanelSkeleton />
               ) : (
                 <>
                   <UpdatedRecursiveAccordion
                     dataObject={
-                      data?.getBlendNutritionBasedOnRecipexxx && JSON?.parse(data?.getBlendNutritionBasedOnRecipexxx)
+                      nutritionData?.getNutrientsListAndGiGlByIngredients?.nutrients &&
+                      JSON?.parse(nutritionData?.getNutrientsListAndGiGlByIngredients?.nutrients)
                     }
                     showUser={false}
                     counter={1}

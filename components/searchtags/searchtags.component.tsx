@@ -298,7 +298,7 @@ const FilterByTag = ({ item, handleUpdateActiveFilterTag, handleUpdateFilterCrit
           <span>{tag?.mobileTag}</span>
         </div>
       )}
-      <p className={`${styles.text}  ${!item?.image && styles?.noImageTextHight}`}>
+      <p className={`${styles.text} truncate line-clamp-one  ${!item?.image && styles?.noImageTextHight}`}>
         <span className={styles.preText}>{tag?.pre}</span>
         {isItemString ? ` Search | ${item} ` : ` ${item?.tagLabel} `}
         <span className={styles.postText}>{tag?.post}</span>

@@ -130,7 +130,7 @@ const WikiCard = ({
               <img
                 src={hasInCompare ? "/icons/compare-1.svg" : "/icons/eclipse.svg"}
                 alt="icon"
-                onClick={() => handleAddOrRemoveToWikiCompareList(id, hasInCompare ? true : false)}
+                onClick={() => handleAddOrRemoveToWikiCompareList(id, hasInCompare)}
               />
             </div>
           ) : null}

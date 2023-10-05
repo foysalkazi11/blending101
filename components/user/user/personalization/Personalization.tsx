@@ -25,9 +25,7 @@ const Personalization = ({
   const { personalization } = userData;
 
   const checkGoals = (value, fieldName) => {
-    const goal = userData?.personalization?.[fieldName]?.find(
-      (item) => item === value,
-    );
+    const goal = userData?.personalization?.[fieldName]?.find((item) => item?.toLowerCase() === value);
     if (goal) {
       return true;
     } else {
@@ -43,9 +41,7 @@ const Personalization = ({
 
           personalization: {
             ...pre?.personalization,
-            [name]: [
-              ...pre?.personalization[name]?.filter((item) => item !== value),
-            ],
+            [name]: [...pre?.personalization[name]?.filter((item) => item !== value)],
           },
         }));
       } else {
@@ -58,10 +54,7 @@ const Personalization = ({
           },
         }));
       }
-    } else if (
-      name === "preExistingMedicalConditions" ||
-      name === "meditcation"
-    ) {
+    } else if (name === "preExistingMedicalConditions" || name === "meditcation") {
       if (value) {
         setUserData((pre) => ({
           ...pre,
@@ -88,9 +81,7 @@ const Personalization = ({
 
           personalization: {
             ...pre?.personalization,
-            [name]: [
-              ...pre?.personalization[name]?.filter((item) => item !== value),
-            ],
+            [name]: [...pre?.personalization[name]?.filter((item) => item !== value)],
           },
         }));
       }
@@ -110,27 +101,12 @@ const Personalization = ({
         );
       case 1:
         return (
-          <Medical
-            userProfile={personalization}
-            updateUserProfile={updateUserProfile}
-            removeInput={removeInput}
-          />
+          <Medical userProfile={personalization} updateUserProfile={updateUserProfile} removeInput={removeInput} />
         );
       case 2:
-        return (
-          <Dietary
-            userProfile={personalization}
-            updateUserProfile={updateUserProfile}
-            alredyExist={checkGoals}
-          />
-        );
+        return <Dietary userProfile={personalization} updateUserProfile={updateUserProfile} alredyExist={checkGoals} />;
       case 3:
-        return (
-          <AchiveGoals
-            updateUserProfile={updateUserProfile}
-            checkGoals={checkGoals}
-          />
-        );
+        return <AchiveGoals updateUserProfile={updateUserProfile} checkGoals={checkGoals} />;
 
       default:
         return (

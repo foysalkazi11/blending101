@@ -2,13 +2,10 @@ import React, { useEffect } from "react";
 import styles from "./User.module.scss";
 import SideBar from "./sidebar/SideBar";
 import Main from "./main/Main";
-import { useAppDispatch } from "../../../redux/hooks";
 import { useUser } from "../../../context/AuthProvider";
-import { useMutation } from "@apollo/client";
-import CREATE_NEW_USER from "../../../gqlLib/user/mutations/createNewUser";
 import notification from "../../utility/reactToastifyNotification";
-import { setDbUser } from "../../../redux/slices/userSlice";
 import useLocalStorage from "customHooks/useLocalStorage";
+import useToGetExistingUserInfo from "customHooks/user/useToGetExistingUserInfo";
 
 export type UserDataType = {
   about: {
@@ -54,7 +51,7 @@ export type UserDataType = {
   };
 };
 const User = () => {
-  const [getExistingUser] = useMutation(CREATE_NEW_USER);
+  const handleToGetExistingUserInfo = useToGetExistingUserInfo();
   const [userData, setUserData] = useLocalStorage<UserDataType>("userData", {
     about: {
       bio: "",
@@ -99,17 +96,12 @@ const User = () => {
     },
   });
   const user = useUser();
-  const dispatch = useAppDispatch();
 
   // handle to get existing user
   const handleToGetExistingUser = async (email) => {
     try {
-      const { data } = await getExistingUser({
-        variables: {
-          data: { email },
-        },
-      });
-      const currentUser = data?.createNewUser;
+      const currentUser = await handleToGetExistingUserInfo(email);
+
       if (currentUser?.configuration) {
         const {
           bio,
@@ -172,7 +164,6 @@ const User = () => {
           },
         });
       }
-      dispatch(setDbUser(currentUser));
     } catch (error) {
       notification("error", "Failed to get existing user data");
     }

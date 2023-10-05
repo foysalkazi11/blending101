@@ -71,25 +71,23 @@ const Dietary = ({ updateUserProfile, userProfile, alredyExist }: DietaryProps) 
           />
         </div>
       </div>
-      <div>
-        <DietarySection
-          body={dietary}
-          fieldName="dieteryLifeStyle"
-          title="Which dietary lifestyle applies to you ?"
-          updateUserProfile={updateUserProfile}
-          userProfile={userProfile}
-        />
-      </div>
-      <div>
-        <DietarySection
-          body={allergies}
-          fieldName="allergies"
-          title="Which allergies do you have ?"
-          updateUserProfile={updateUserProfile}
-          userProfile={userProfile}
-          alredyExist={alredyExist}
-        />
-      </div>
+
+      <DietarySection
+        body={dietary}
+        fieldName="dieteryLifeStyle"
+        title="Which dietary lifestyle applies to you ?"
+        updateUserProfile={updateUserProfile}
+        userProfile={userProfile}
+      />
+
+      <DietarySection
+        body={allergies}
+        fieldName="allergies"
+        title="Which allergies do you have ?"
+        updateUserProfile={updateUserProfile}
+        userProfile={userProfile}
+        alredyExist={alredyExist}
+      />
     </div>
   );
 };

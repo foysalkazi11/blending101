@@ -69,12 +69,7 @@ type StepOneProps = {
   setSteps: Function;
 };
 
-const StepOne = ({
-  userProfile,
-  updateUserProfile,
-  setUserProfile,
-  setSteps,
-}: StepOneProps) => {
+const StepOne = ({ userProfile, updateUserProfile, setUserProfile, setSteps }: StepOneProps) => {
   const [measurementType, setMeasurementType] = useState("US");
   const [ageType, setAgeType] = useState("years");
   const [pregnant, setPregnant] = useState("Not Pregnant or Lactation");
@@ -82,6 +77,7 @@ const StepOne = ({
   const { configuration } = dbUser;
   const [editUserData] = useMutation(EDIT_CONFIGURATION_BY_ID);
   const dispatch = useAppDispatch();
+  console.log(dbUser);
 
   const handleYearsAndMonths = (userProfile) => {
     let value = {
@@ -91,17 +87,13 @@ const StepOne = ({
     if (userProfile?.age?.years) {
       value = {
         years: userProfile?.age?.quantity || 0,
-        months: userProfile?.age?.quantity
-          ? Number(userProfile?.age?.quantity) * 12
-          : 0,
+        months: userProfile?.age?.quantity ? Number(userProfile?.age?.quantity) * 12 : 0,
       };
     }
 
     if (userProfile?.age?.months) {
       value = {
-        years: userProfile?.age?.quantity
-          ? Number(Math?.trunc(userProfile?.age?.quantity / 12))
-          : 0,
+        years: userProfile?.age?.quantity ? Number(Math?.trunc(userProfile?.age?.quantity / 12)) : 0,
         months: userProfile?.age?.quantity || 0,
       };
     }
@@ -116,28 +108,16 @@ const StepOne = ({
     formState: { errors },
   } = useForm({
     defaultValues: {
-      centimeters: userProfile?.heightInCentimeters
-        ? Number(userProfile?.heightInCentimeters).toFixed(2)
-        : "",
-      feets: userProfile?.heightInCentimeters
-        ? Number(Math?.trunc(userProfile?.heightInCentimeters / 30.48))
-        : "",
+      centimeters: userProfile?.heightInCentimeters ? Number(userProfile?.heightInCentimeters).toFixed(2) : "",
+      feets: userProfile?.heightInCentimeters ? Number(Math?.trunc(userProfile?.heightInCentimeters / 30.48)) : "",
       inches: userProfile?.heightInCentimeters
-        ? Number(
-            ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0),
-          ) === 12
+        ? Number(((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0)) === 12
           ? ""
-          : Number(
-              ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0),
-            )
+          : Number(((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0))
         : "",
-      kilograms: userProfile?.weightInKilograms
-        ? Number(userProfile?.weightInKilograms?.toFixed(2))
-        : "",
+      kilograms: userProfile?.weightInKilograms ? Number(userProfile?.weightInKilograms?.toFixed(2)) : "",
       months: handleYearsAndMonths(userProfile)?.months || "",
-      pounds: userProfile?.weightInKilograms
-        ? Number((userProfile?.weightInKilograms * 2.205)?.toFixed(0))
-        : "",
+      pounds: userProfile?.weightInKilograms ? Number((userProfile?.weightInKilograms * 2.205)?.toFixed(0)) : "",
       years: handleYearsAndMonths(userProfile)?.years || "",
     },
   });
@@ -189,9 +169,7 @@ const StepOne = ({
     }
   };
 
-  const handlePregnantOrLactating = (
-    e: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
+  const handlePregnantOrLactating = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e?.target;
     setPregnant(value);
     updateUserProfile("pregnantOrLactating", value);
@@ -199,23 +177,16 @@ const StepOne = ({
 
   const onSubmit = async (data) => {
     let arrageAge = {
-      quantity:
-        ageType === "years" ? Number(data?.years) : Number(data?.months),
+      quantity: ageType === "years" ? Number(data?.years) : Number(data?.months),
       months: ageType === "months" ? true : false,
       years: ageType === "years" ? true : false,
     };
 
-    let arrangWeight =
-      measurementType === "US"
-        ? Number(data?.pounds / 2.205)
-        : Number(data?.kilograms);
+    let arrangWeight = measurementType === "US" ? Number(data?.pounds / 2.205) : Number(data?.kilograms);
 
     let feet = +data?.feets * 30.48;
     let inches = +data?.inches ? +data?.inches * 2.54 : 0;
-    let arrangHight =
-      measurementType === "US"
-        ? Number(feet + inches)
-        : Number(data?.centimeters);
+    let arrangHight = measurementType === "US" ? Number(feet + inches) : Number(data?.centimeters);
 
     const arrangData = {
       ...userProfile,
@@ -270,10 +241,7 @@ const StepOne = ({
             name="measurementType"
           />
         </div>
-        <p className={styles.infoText}>
-          This information is used to customize daily recommended nutrition
-          targets
-        </p>
+        <p className={styles.infoText}>This information is used to customize daily recommended nutrition targets</p>
       </div>
       <div className={styles.stepOneContainer}>
         <SectionWithIcon
