@@ -21,6 +21,8 @@ import { useIsMounted } from "customHooks/useIsMounted";
 
 const dataLimit = 12;
 
+export type WikiListTypeWithTotal = { total: number; wikiList: WikiListType[] };
+
 export type SelectedWikiType = {
   [key in WikiType]: string;
 };
@@ -49,7 +51,7 @@ const WikiHome = () => {
   const wikiId = params?.[1] || "";
   const { width } = useWindowSize();
   const [toggleMenu, setToggleMenu] = useState(0);
-  const [wikiList, setWikiList] = useState<{ total: number; wikiList: WikiListType[] }>({ total: 0, wikiList: [] });
+  const [wikiList, setWikiList] = useState<WikiListTypeWithTotal>({ total: 0, wikiList: [] });
   const { handleWikiFilter, loading } = useToWikiFilter();
   const deBoundValue = useDebounce(searchTerm, 300);
   const isMounted = useIsMounted();
@@ -122,6 +124,7 @@ const WikiHome = () => {
           title={`All ${selectedWikiType?.wikiType || "Results"} (${wikiList?.total}) `}
           hasMore={wikiList?.total ? wikiList?.total > dataLimit * pageNum : false}
           nextPage={handleNextPage}
+          setWikiList={setWikiList}
         />
       );
     } else {

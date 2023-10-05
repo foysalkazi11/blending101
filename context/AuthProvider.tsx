@@ -10,9 +10,10 @@ import { updateUserCompareLength } from "../redux/slices/userSlice";
 import { useAppDispatch } from "../redux/hooks";
 import Loader from "component/atoms/Loader/loader.component";
 import routes from "routes";
+import { updateWikiCompareCount } from "redux/slices/wikiSlice";
 
 type TProvider = "Amazon" | "Google" | "Facebook" | "Apple" | "Cognito";
-Amplify.configure({ ...AmplifyConfig, ssr: true });
+Amplify.configure(AmplifyConfig);
 
 type DEFAULT_USER_TYPE = {
   id: string;
@@ -63,6 +64,7 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
 
   const sessionHandler = useCallback(
     async (user) => {
+      console.log(user);
       setSession(user);
       let email, provider;
       if (user?.attributes?.email) {
@@ -91,11 +93,9 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
             isLogin: true,
           });
           dispatch(updateUserCompareLength(profile?.compareLength));
-
-          console.log(profile?.isCreated);
+          dispatch(updateWikiCompareCount(profile?.wikiCompareCount));
           // Getting the pageUrl from which redirection happened
           const redirectURL = profile?.isCreated ? sessionStorage.getItem("prevURL") || "/" : "/user/profile";
-          console.log(redirectURL, router.asPath, router.asPath.includes(redirectURL));
 
           // Clearing the session
           sessionStorage.removeItem("prevURL");
@@ -114,13 +114,7 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
     [dispatch, getUser, router],
   );
 
-  const isPublicRoute = [
-    "/login",
-    "/signup",
-    "/verify_email",
-    "/forget_password",
-    "/welcome_blending101_extension",
-  ].includes(router.pathname);
+  const isPublicRoute = ["/login", "/signup", "/verify_email", "/forget_password"].includes(router.pathname);
 
   useEffect(() => {
     // Skipping auth checking if the URL is public
@@ -138,11 +132,18 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
         sessionStorage.setItem("prevURL", router.asPath);
         // To show loader for some extra time
         setTimeout(() => {
-          setState({
-            isChecking: false,
-            isLogin: false,
-          });
-          router.push(routes.login);
+          if (router.pathname.includes("/extension")) {
+            setState({
+              isChecking: false,
+              isLogin: true,
+            });
+          } else {
+            setState({
+              isChecking: false,
+              isLogin: false,
+            });
+            router.push(routes.login);
+          }
         }, 2000);
       });
 

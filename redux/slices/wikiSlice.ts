@@ -5,6 +5,7 @@ interface wikiSliceProps {
   wikiCommentsTrayCurrentWikiEntity: WikiCommentsTrayCurrentWikiEntity;
   isOpenWikiCommentsTray: boolean;
   isOpenWikiFilterTray: boolean;
+  wikiCompareCount: number;
 }
 interface WikiCommentsTrayCurrentWikiEntity {
   type: WikiType;
@@ -22,6 +23,7 @@ const initialState: wikiSliceProps = {
     title: "",
     type: "Ingredient",
   },
+  wikiCompareCount: 0,
 };
 
 export const wikiSlice = createSlice({
@@ -37,10 +39,17 @@ export const wikiSlice = createSlice({
     setIsOpenWikiFilterTray: (state, action: PayloadAction<boolean>) => {
       state.isOpenWikiFilterTray = action?.payload;
     },
+    updateWikiCompareCount: (state, action: PayloadAction<number>) => {
+      state.wikiCompareCount = action.payload;
+    },
   },
 });
 
-export const { setIsOpenWikiCommentsTray, setWikiCommentsCurrentIngredient, setIsOpenWikiFilterTray } =
-  wikiSlice?.actions;
+export const {
+  setIsOpenWikiCommentsTray,
+  setWikiCommentsCurrentIngredient,
+  setIsOpenWikiFilterTray,
+  updateWikiCompareCount,
+} = wikiSlice?.actions;
 
 export default wikiSlice?.reducer;
