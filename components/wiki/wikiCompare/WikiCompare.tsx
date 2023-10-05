@@ -6,10 +6,7 @@ import SkeletonComparePage from "../../../theme/skeletons/skeletonComparePage/Sk
 import SubNav from "../../recipe/share/subNav/SubNav";
 import s from "./WikiCompare.module.scss";
 import Carousel from "../../../theme/carousel/SlickSlider";
-import {
-  compareRecipeResponsiveSetting,
-  responsiveSetting,
-} from "../../recipe/compareRecipe/utility";
+import { compareRecipeResponsiveSetting, responsiveSetting } from "../../recipe/compareRecipe/utility";
 import SmallcardComponent from "../../../theme/cards/smallCard/SmallCard.component";
 import { WikiCompareList } from "../../../type/wikiCompareList";
 import useLocalStorage from "../../../customHooks/useLocalStorage";
@@ -22,6 +19,8 @@ import { useRouter } from "next/router";
 import EMPTY_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/mutation/emptyWikiCompareList";
 import ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/mutation/addOrRemoveToWikiCompareList";
 import WikiCommentsTray from "../../sidetray/wikiCommentsTray";
+import { useUser } from "context/AuthProvider";
+import { updateWikiCompareCount } from "redux/slices/wikiSlice";
 
 const compareRecipeResponsiveSettings = {
   ...compareRecipeResponsiveSetting,
@@ -29,22 +28,19 @@ const compareRecipeResponsiveSettings = {
 };
 
 const WikiCompare = () => {
-  const { dbUser } = useAppSelector((state) => state?.user);
-  const [wikiCompareList, setWikiCompareList] = useLocalStorage<
-    WikiCompareList[]
-  >("wikiCompareList", []);
+  const wikiCompareCount = useAppSelector((state) => state?.wiki.wikiCompareCount);
+  const user = useUser();
+  const [wikiCompareList, setWikiCompareList] = useLocalStorage<WikiCompareList[]>("wikiCompareList", []);
   const {
     data: wikiCompareData,
     loading: wikiCompareDataLoading,
     error: wikiCompareDataError,
   } = useQuery(GET_WIKI_COMPARE_LIST, {
-    variables: { userId: dbUser?._id },
-    fetchPolicy: "cache-and-network",
+    variables: { userId: user.id },
+    // fetchPolicy: "cache-and-network",
   });
   const [emptyWikiCompareList] = useMutation(EMPTY_WIKI_COMPARE_LIST);
-  const [addOrRemoveToWikiCompareList] = useMutation(
-    ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST,
-  );
+  const [addOrRemoveToWikiCompareList] = useMutation(ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST);
   const sliderRef = useRef(null);
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -71,43 +67,31 @@ const WikiCompare = () => {
   // remove compare wiki entity
   const removeCompareWikiEntity = (id: string, e?: any) => {
     e?.stopPropagation();
-    setWikiCompareList((state) => [
-      ...state.filter((item) => item?._id !== id),
-    ]);
+    setWikiCompareList((state) => [...state.filter((item) => item?._id !== id)]);
   };
 
   // add Or Remove from WikiCompare List
-  const handleAddOrRemoveToWikiCompareList = async (
-    ingredientId: string,
-    isCompared?: boolean,
-  ) => {
+  const handleAddOrRemoveToWikiCompareList = async (ingredientId: string, isCompared?: boolean) => {
     try {
       await addOrRemoveToWikiCompareList({
-        variables: { ingredientId, userId: dbUser?._id },
+        variables: { ingredientId, userId: user.id },
         update(cache) {
           const { getWikiCompareList } = cache.readQuery<any>({
             query: GET_WIKI_COMPARE_LIST,
-            variables: { userId: dbUser?._id },
+            variables: { userId: user.id },
           });
 
           cache?.writeQuery({
             query: GET_WIKI_COMPARE_LIST,
-            variables: { userId: dbUser?._id },
+            variables: { userId: user.id },
             data: {
-              getWikiCompareList: getWikiCompareList?.filter(
-                (item) => item?._id !== ingredientId,
-              ),
+              getWikiCompareList: getWikiCompareList?.filter((item) => item?._id !== ingredientId),
             },
           });
         },
       });
 
-      dispatch(
-        setDbUser({
-          ...dbUser,
-          wikiCompareCount: dbUser?.wikiCompareCount - 1,
-        }),
-      );
+      dispatch(updateWikiCompareCount(wikiCompareCount - 1));
 
       const isInCompareList = findCompareRecipe(ingredientId);
       if (isInCompareList) {
@@ -124,13 +108,8 @@ const WikiCompare = () => {
   const handleEmptyWikiCompareList = async () => {
     dispatch(setLoading(true));
     try {
-      await emptyWikiCompareList({ variables: { userId: dbUser?._id } });
-      dispatch(
-        setDbUser({
-          ...dbUser,
-          wikiCompareCount: 0,
-        }),
-      );
+      await emptyWikiCompareList({ variables: { userId: user.id } });
+      dispatch(updateWikiCompareCount(0));
       setWikiCompareList([]);
       router?.push("/wiki");
       dispatch(setLoading(false));
@@ -153,10 +132,7 @@ const WikiCompare = () => {
   };
 
   useEffect(() => {
-    if (
-      !wikiCompareDataLoading &&
-      wikiCompareData?.getWikiCompareList?.length
-    ) {
+    if (!wikiCompareDataLoading && wikiCompareData?.getWikiCompareList?.length) {
       if (!wikiCompareList?.length) {
         updateCompareList(wikiCompareData?.getWikiCompareList);
       }
@@ -176,35 +152,29 @@ const WikiCompare = () => {
               backAddress="/wiki"
               backIconText="Wiki Discovery"
               showButton={false}
-              compareAmout={dbUser?.wikiCompareCount}
+              compareAmout={wikiCompareCount}
               closeCompare={handleEmptyWikiCompareList}
             />
 
             <Carousel moreSetting={responsiveSetting}>
-              {wikiCompareData?.getWikiCompareList?.map(
-                (item: WikiCompareList, index) => {
-                  return (
-                    <SmallcardComponent
-                      key={index}
-                      text={item.wikiTitle}
-                      img={
-                        item?.featuredImage ||
-                        item?.image ||
-                        "https://blending.s3.us-east-1.amazonaws.com/7826404.png"
-                      }
-                      fnc={handleCompare}
-                      recipe={item}
-                      findCompareRecipe={findCompareRecipe}
-                      fucUnCheck={removeCompareWikiEntity}
-                      compareLength={wikiCompareList?.length}
-                      handleRemoveFromCompare={(id) =>
-                        handleAddOrRemoveToWikiCompareList(id)
-                      }
-                      id={item?._id}
-                    />
-                  );
-                },
-              )}
+              {wikiCompareData?.getWikiCompareList?.map((item: WikiCompareList, index) => {
+                return (
+                  <SmallcardComponent
+                    key={index}
+                    text={item.wikiTitle}
+                    img={
+                      item?.featuredImage || item?.image || "https://blending.s3.us-east-1.amazonaws.com/7826404.png"
+                    }
+                    fnc={handleCompare}
+                    recipe={item}
+                    findCompareRecipe={findCompareRecipe}
+                    fucUnCheck={removeCompareWikiEntity}
+                    compareLength={wikiCompareList?.length}
+                    handleRemoveFromCompare={(id) => handleAddOrRemoveToWikiCompareList(id)}
+                    id={item?._id}
+                  />
+                );
+              })}
             </Carousel>
           </>
         )}
@@ -216,9 +186,7 @@ const WikiCompare = () => {
                   key={index}
                   ingredient={item}
                   removeCompareRecipe={removeCompareWikiEntity}
-                  handleAddOrRemoveToWikiCompareList={
-                    handleAddOrRemoveToWikiCompareList
-                  }
+                  handleAddOrRemoveToWikiCompareList={handleAddOrRemoveToWikiCompareList}
                 />
               );
             })}

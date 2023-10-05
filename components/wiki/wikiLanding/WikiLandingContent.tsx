@@ -15,6 +15,7 @@ import GET_INGREDIENT_WIKI_LIST from "../../../gqlLib/wiki/query/getIngredientWi
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/pro-light-svg-icons";
 import { useUser } from "../../../context/AuthProvider";
+import { updateWikiCompareCount } from "redux/slices/wikiSlice";
 const responsiveSetting = {
   infinite: false,
   speed: 500,
@@ -62,15 +63,11 @@ const WikiLandingContent = ({
   title = "Ingredient",
   setShowAll = () => {},
 }: Props) => {
-  const [addOrRemoveToWikiCompareList] = useMutation(
-    ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST,
-  );
+  const [addOrRemoveToWikiCompareList] = useMutation(ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST);
   const dispatch = useAppDispatch();
   const user = useUser();
-  const { dbUser } = useAppSelector((state) => state?.user);
-  const [wikiCompareList, setWikiCompareList] = useLocalStorage<
-    WikiCompareList[]
-  >("wikiCompareList", []);
+  const wikiCompareCount = useAppSelector((state) => state?.wiki?.wikiCompareCount);
+  const [wikiCompareList, setWikiCompareList] = useLocalStorage<WikiCompareList[]>("wikiCompareList", []);
 
   const setting = {
     ...responsiveSetting,
@@ -82,10 +79,7 @@ const WikiLandingContent = ({
   };
 
   // add Or Remove from WikiCompare List
-  const handleAddOrRemoveToWikiCompareList = async (
-    ingredientId: string,
-    isCompared: boolean,
-  ) => {
+  const handleAddOrRemoveToWikiCompareList = async (ingredientId: string, isCompared: boolean) => {
     try {
       await addOrRemoveToWikiCompareList({
         variables: { ingredientId, userId: user.id },
@@ -112,9 +106,7 @@ const WikiLandingContent = ({
               getIngredientWikiList2: {
                 ...getIngredientWikiList2,
                 wikiList: getIngredientWikiList2?.wikiList?.map((item) =>
-                  item?._id === ingredientId
-                    ? { ...item, hasInCompare: isCompared ? false : true }
-                    : item,
+                  item?._id === ingredientId ? { ...item, hasInCompare: isCompared ? false : true } : item,
                 ),
               },
             },
@@ -122,31 +114,16 @@ const WikiLandingContent = ({
         },
       });
 
-      dispatch(
-        setDbUser({
-          ...dbUser,
-          wikiCompareCount: isCompared
-            ? dbUser?.wikiCompareCount - 1
-            : dbUser?.wikiCompareCount + 1,
-        }),
-      );
+      dispatch(updateWikiCompareCount(isCompared ? wikiCompareCount - 1 : wikiCompareCount + 1));
 
       const findCompareItem = findCompareWikiEntity(ingredientId);
       if (findCompareItem) {
-        setWikiCompareList((state) => [
-          ...state.filter((item) => item?._id !== ingredientId),
-        ]);
+        setWikiCompareList((state) => [...state.filter((item) => item?._id !== ingredientId)]);
       }
 
-      notification(
-        "info",
-        `${isCompared ? "Remove form" : "Added"} compare list successfully`,
-      );
+      notification("info", `${isCompared ? "Remove form" : "Added"} compare list successfully`);
     } catch (error) {
-      notification(
-        "error",
-        `Failed to ${isCompared ? "Remove form" : "Added"} compare list`,
-      );
+      notification("error", `Failed to ${isCompared ? "Remove form" : "Added"} compare list`);
     }
   };
 
@@ -194,9 +171,7 @@ const WikiLandingContent = ({
                   portions={portions}
                   id={_id}
                   hasInCompare={hasInCompare}
-                  handleAddOrRemoveToWikiCompareList={
-                    handleAddOrRemoveToWikiCompareList
-                  }
+                  handleAddOrRemoveToWikiCompareList={handleAddOrRemoveToWikiCompareList}
                 />
               </div>
             );

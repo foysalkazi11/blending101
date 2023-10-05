@@ -38,7 +38,7 @@
     position: relative;
     cursor: pointer;
     margin: 1rem 0.5rem;
-    overflow: hidden;
+    // overflow: hidden;
 
     @include respond(md) {
       flex-direction: column;
