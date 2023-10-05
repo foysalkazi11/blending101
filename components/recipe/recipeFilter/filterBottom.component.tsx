@@ -1,135 +1,304 @@
 import React, { useEffect, useState } from "react";
 import styles from "./recipe.module.scss";
-import Image from "next/image";
 import DatacardComponent from "../../../theme/cards/dataCard/dataCard.component";
 import { useLazyQuery } from "@apollo/client";
-import GET_RECIPES_BY_BLEND_AND_INGREDIENTS from "../../../gqlLib/recipes/queries/getRecipesByBlaendAndIngredients";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setLoading } from "../../../redux/slices/utilitySlice";
+import ShowCollectionModal from "../../showLastModifiedCollection/ShowLastModifiedCollection";
+import { setAllFilterRecipe } from "../../../redux/slices/recipeSlice";
+import FILTER_RECIPE from "../../../gqlLib/recipes/queries/filterRecipe";
+import { resetAllFilters } from "../../../redux/slices/filterRecipeSlice";
+import IconWarper from "../../../theme/iconWarper/IconWarper";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChartTreeMap,
+  faShareNodes,
+  faXmark,
+} from "@fortawesome/pro-regular-svg-icons";
+import SkeletonCollectionRecipe from "../../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollectionRecipe";
+import {
+  setChangeRecipeWithinCollection,
+  setSingleRecipeWithinCollecions,
+} from "../../../redux/slices/collectionSlice";
+import { setOpenCollectionsTary } from "../../../redux/slices/sideTraySlice";
+import { FilterCriteriaValue } from "../../../type/filterType";
+import { useUser } from "../../../context/AuthProvider";
 
-function FilterPageBottom({ blends, ingredients, filters }) {
-  const [recommended, setRecommended] = useState([]);
-  const [getRecipesByBlendAndIngredients, { data, loading }] = useLazyQuery(
-    GET_RECIPES_BY_BLEND_AND_INGREDIENTS,
-    { fetchPolicy: "network-only" }
-  );
-  const { dbUser } = useAppSelector((state) => state?.user);
+interface Props {
+  allFilters: FilterCriteriaValue[];
+}
+
+function FilterPageBottom({ allFilters = [] }: Props) {
+  const [filterRecipe, { data, loading }] = useLazyQuery(FILTER_RECIPE, {
+    fetchPolicy: "network-only",
+  });
+  const user = useUser();
+  const { allFilterRecipe } = useAppSelector((state) => state?.recipe);
   const dispatch = useAppDispatch();
+  const [openCollectionModal, setOpenCollectionModal] = useState(false);
+  const { lastModifiedCollection } = useAppSelector(
+    (state) => state?.collections,
+  );
 
-  const fetchGetRecipesByBlendAndIngredients = () => {
-    let arr = [];
-    blends?.forEach((blend) => {
-      arr?.push(`${blend?.id}`);
-    });
+  // open recipe collection panel after added a recipe to a collection
+  const handleOpenCollectionTray = () => {
+    dispatch(setSingleRecipeWithinCollecions([lastModifiedCollection?.id]));
+    dispatch(setOpenCollectionsTary(true));
+    dispatch(setChangeRecipeWithinCollection(true));
+    setOpenCollectionModal(false);
+  };
+
+  const fetchGetRecipesByBlendAndIngredients = async () => {
+    let blendTypesArr: string[] = [];
     let ingredientIds: string[] = [];
-    ingredients?.forEach((blend) => {
-      ingredientIds?.push(blend?.id);
+    let nutrientFiltersMap = [];
+    let nutrientMatrixMap = [];
+    allFilters.forEach((filter) => {
+      if (filter.filterCriteria === "blendTypes") {
+        blendTypesArr.push(filter.id);
+      }
+      if (filter.filterCriteria === "includeIngredientIds") {
+        ingredientIds.push(filter.id);
+      }
+      if (filter.filterCriteria === "nutrientFilters") {
+        const {
+          id,
+          name,
+          //@ts-ignore
+          between,
+          //@ts-ignore
+          category,
+          //@ts-ignore
+          greaterThan,
+          //@ts-ignore
+          lessThan,
+          //@ts-ignore
+          lessThanValue,
+          //@ts-ignore
+          greaterThanValue,
+          //@ts-ignore
+          betweenStartValue,
+          //@ts-ignore
+          betweenEndValue,
+        } = filter;
+        let arrangeValue = {
+          beetween: between,
+          category: category.toLowerCase(),
+          greaterThan,
+          lessThan,
+          nutrientId: id,
+          value: 0,
+          value1: 0,
+          value2: 0,
+        };
+        if (lessThan) {
+          arrangeValue = {
+            ...arrangeValue,
+            value: lessThanValue,
+          };
+        }
+        if (greaterThan) {
+          arrangeValue = {
+            ...arrangeValue,
+            value: greaterThanValue,
+          };
+        }
+        if (between) {
+          arrangeValue = {
+            ...arrangeValue,
+            value1: betweenStartValue,
+            value2: betweenEndValue,
+          };
+        }
+        nutrientFiltersMap.push(arrangeValue);
+      }
+
+      if (filter.filterCriteria === "nutrientMatrix") {
+        const {
+          id,
+          name,
+          //@ts-ignore
+          between,
+          //@ts-ignore
+          greaterThan,
+          //@ts-ignore
+          lessThan,
+          //@ts-ignore
+          lessThanValue,
+          //@ts-ignore
+          greaterThanValue,
+          //@ts-ignore
+          betweenStartValue,
+          //@ts-ignore
+          betweenEndValue,
+        } = filter;
+        let arrangeValue = {
+          matrixName: name.toLowerCase(),
+          beetween: between,
+          greaterThan,
+          lessThan,
+          value: 0,
+          value1: 0,
+          value2: 0,
+        };
+        if (lessThan) {
+          arrangeValue = {
+            ...arrangeValue,
+            value: lessThanValue,
+          };
+        }
+        if (greaterThan) {
+          arrangeValue = {
+            ...arrangeValue,
+            value: greaterThanValue,
+          };
+        }
+        if (between) {
+          arrangeValue = {
+            ...arrangeValue,
+            value1: betweenStartValue,
+            value2: betweenEndValue,
+          };
+        }
+        nutrientMatrixMap.push(arrangeValue);
+      }
     });
+
     try {
-      getRecipesByBlendAndIngredients({
+      const { data } = await filterRecipe({
         variables: {
           data: {
-            userId: dbUser?._id,
-            blendTypes: arr,
-            includeIngredientIds: ingredientIds?.length ? ingredientIds : [],
+            userId: user.id,
+            blendTypes: blendTypesArr,
+            includeIngredientIds: ingredientIds,
+            nutrientFilters: nutrientFiltersMap,
+            nutrientMatrix: nutrientMatrixMap,
           },
+          userId: user.id,
         },
       });
+
+      dispatch(setAllFilterRecipe(data?.filterRecipe || []));
     } catch (error) {
       console.log(error?.message);
     }
   };
 
   useEffect(() => {
-    if (loading) {
-      dispatch(setLoading(true));
-    } else {
-      dispatch(setLoading(false));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading]);
-
-  useEffect(() => {
     fetchGetRecipesByBlendAndIngredients();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blends, ingredients]);
+  }, [allFilters]);
 
-  useEffect(() => {
-    if (!loading) {
-      setRecommended(data?.getAllRecipesByBlendCategory || []);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  if (loading) {
+    return (
+      <div style={{ marginTop: "30px" }}>
+        <SkeletonCollectionRecipe />;
+      </div>
+    );
+  }
 
   return (
-    <div className={styles.mainDiv}>
-      <div className={styles.mainDiv__results}>
-        <div className={styles.mainDiv__results__heading}>
-          <div className={styles.mainDiv__results__heading__left}>
-            {recommended.length} results
-          </div>
-          <div className={styles.mainDiv__results__heading__right}>
-            <div className={styles.mainDiv__results__heading__right__image}>
-              <div>
-                <Image
-                  src={"/icons/dash-icon.svg"}
-                  alt=""
-                  layout="fill"
-                  objectFit="contain"
-                />
-              </div>
+    <>
+      <div className={styles.mainDiv}>
+        <div className={styles.mainDiv__results}>
+          <div className={styles.mainDiv__results__heading}>
+            <div>
+              <p>
+                {allFilterRecipe.length} <span>results</span>
+              </p>
             </div>
-            <div className={styles.mainDiv__results__heading__right__image}>
-              <div>
-                {" "}
-                <Image
-                  src={"/icons/share-orange.png"}
-                  alt=""
-                  layout="fill"
-                  objectFit="contain"
-                />
-              </div>
+
+            <div style={{ display: "flex" }}>
+              <IconWarper
+                defaultBg="slightGray"
+                hover="bgPrimary"
+                style={{ width: "28px", height: "28px", marginRight: "10px" }}
+              >
+                <FontAwesomeIcon icon={faChartTreeMap} />
+              </IconWarper>
+              <IconWarper
+                defaultBg="slightGray"
+                hover="bgPrimary"
+                style={{ width: "28px", height: "28px" }}
+              >
+                <FontAwesomeIcon icon={faShareNodes} />
+              </IconWarper>
+            </div>
+            <div>
+              <IconWarper
+                defaultBg="slightGray"
+                hover="bgPrimary"
+                style={{ width: "28px", height: "28px" }}
+                handleClick={() => dispatch(resetAllFilters())}
+              >
+                <FontAwesomeIcon icon={faXmark} />
+              </IconWarper>
             </div>
           </div>
-        </div>
-        <div className={styles.mainDiv__results__body}>
-          <ul className={styles.mainDiv__results__body__ul}>
-            {recommended?.length
-              ? recommended?.map((item, index) => {
-                  let ingredients = [];
-                  item?.ingredients?.forEach((ing) => {
-                    const ingredient = ing?.ingredientId?.ingredientName;
-                    ingredients.push(ingredient);
-                  });
-                  const ing = ingredients.toString();
-                  return (
-                    <li
-                      className={styles.mainDiv__results__body__ul__li}
-                      key={"recommended" + index}
-                    >
-                      <div className={styles.slider__card}>
-                        <DatacardComponent
-                          title={item.name}
-                          ingredients={ing}
-                          category={item.recipeBlendCategory?.name}
-                          ratings={item?.averageRating}
-                          noOfRatings={item?.numberOfRating}
-                          carbs={item.carbs}
-                          score={item.score}
-                          calorie={item.calorie}
-                          noOfComments={item?.numberOfRating}
-                          image={item.image[0]?.image}
-                          recipeId={item?._id}
-                        />
-                      </div>
-                    </li>
-                  );
-                })
-              : null}
-          </ul>
+          <div className={styles.mainDiv__results__body}>
+            <ul className={styles.mainDiv__results__body__ul}>
+              {allFilterRecipe?.length
+                ? allFilterRecipe?.map((item, index) => {
+                    const {
+                      defaultVersion: {
+                        calorie: { value: calorieValue },
+                        gigl: { netCarbs },
+                      },
+                    } = item;
+                    let ingredients = [];
+                    item?.ingredients?.forEach((ing) => {
+                      const ingredient = ing?.ingredientId?.ingredientName;
+                      ingredients.push(ingredient);
+                    });
+                    const ing = ingredients.toString();
+                    return (
+                      <li
+                        className={styles.mainDiv__results__body__ul__li}
+                        key={"recommended" + index}
+                      >
+                        <div className={styles.slider__card}>
+                          <DatacardComponent
+                            title={item.name}
+                            ingredients={ing}
+                            category={item.recipeBlendCategory?.name}
+                            ratings={item?.averageRating}
+                            noOfRatings={item?.numberOfRating}
+                            carbs={netCarbs}
+                            // score={item.rxScore}
+                            calorie={calorieValue}
+                            noOfComments={item?.numberOfRating}
+                            image={
+                              item.image?.find((img) => img?.default)?.image ||
+                              item?.image?.[0]?.image ||
+                              ""
+                            }
+                            recipeId={item?._id}
+                            notes={item?.notes}
+                            addedToCompare={item?.addedToCompare}
+                            isCollectionIds={item?.userCollections}
+                            setOpenCollectionModal={setOpenCollectionModal}
+                            isMatch={item?.isMatch}
+                            postfixTitle={item?.defaultVersion?.postfixTitle}
+                            recipeVersion={item?.versionCount}
+                            personalRating={item?.personalRating}
+                            origin={item?.recipeId?.url}
+                          />
+                        </div>
+                      </li>
+                    );
+                  })
+                : null}
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
+      <ShowCollectionModal
+        open={openCollectionModal}
+        setOpen={setOpenCollectionModal}
+        shouldCloseOnOverlayClick={true}
+        lastModifiedCollectionName={lastModifiedCollection?.name}
+        openCollectionPanel={handleOpenCollectionTray}
+      />
+    </>
   );
 }
 

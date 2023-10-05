@@ -1,0 +1,69 @@
+.singleIngredientContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 10px;
+  transition: all 1000s linear;
+  position: relative;
+  &:hover {
+    .leftSide .dargIcon {
+      visibility: visible;
+    }
+    .rightSide .icon {
+      display: block;
+    }
+  }
+
+  .leftSide {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    .dargIcon {
+      color: #c4c4c4;
+      font-size: 2rem;
+      outline: none;
+      visibility: hidden;
+      margin: 0 0.5rem;
+    }
+    .text {
+      font-size: 14px;
+      color: #000000;
+      // margin-top: -6px;
+    }
+    .errorIngredientText {
+      font-style: italic;
+      color: #ababab; // #c0bebe;
+    }
+  }
+
+  .rightSide {
+    position: absolute;
+    top: 5px;
+    right: 0px;
+    // background-color: #fff;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+
+    .icon {
+      color: #c4c4c4;
+      font-size: 1.8rem;
+      display: none;
+      cursor: pointer;
+      background-color: #fff;
+      transition: 0.3s linear;
+      margin-right: 0.5rem;
+      &:last-child {
+        margin-right: 0px;
+      }
+
+      &:hover {
+        color: #7cbc39;
+      }
+    }
+    .icon_active {
+      color: #7cbc39;
+    }
+  }
+}

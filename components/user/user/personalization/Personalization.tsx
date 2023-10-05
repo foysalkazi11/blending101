@@ -1,9 +1,7 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
-import { useAppSelector } from "../../../../redux/hooks";
+import React, { Dispatch, SetStateAction } from "react";
 import ToggleMenu from "../../../../theme/toggleMenu/ToggleMenu";
 import Dietary from "./dietary/Dietary";
 import Physical from "./physical/Physical";
-
 import Medical from "./medical/Medical";
 import AchiveGoals from "./achiveGoals/AchiveGoals";
 
@@ -12,6 +10,8 @@ type PersonalizationProps = {
   setUserData: any;
   toggle?: number;
   setToggle?: Dispatch<SetStateAction<number>>;
+  setProfileActiveTab?: any;
+  profileActiveTab?: any;
 };
 
 const Personalization = ({
@@ -19,13 +19,14 @@ const Personalization = ({
   setUserData,
   toggle = 0,
   setToggle = () => {},
+  setProfileActiveTab,
+  profileActiveTab,
 }: PersonalizationProps) => {
   const { personalization } = userData;
-  // const [toggle, setToggle] = useState(0);
 
   const checkGoals = (value, fieldName) => {
     const goal = userData?.personalization?.[fieldName]?.find(
-      (item) => item === value
+      (item) => item === value,
     );
     if (goal) {
       return true;
@@ -42,10 +43,9 @@ const Personalization = ({
 
           personalization: {
             ...pre?.personalization,
-            [name]:
-              [
-                ...pre?.personalization[name]?.filter((item) => item !== value),
-              ] || "tempName",
+            [name]: [
+              ...pre?.personalization[name]?.filter((item) => item !== value),
+            ],
           },
         }));
       } else {

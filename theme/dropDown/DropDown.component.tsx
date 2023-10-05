@@ -1,49 +1,59 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "./DropDown.module.scss";
+import { useFormContext } from "react-hook-form";
+import { InputValidationObjType } from "type/inputValidationObjType";
 
-interface dropDown {
-  listElem?: string[];
-  ElemList?: object[];
-  value?: string;
-  handleChange?: (name: any, value: any) => void;
+export type DropDownType = React.ComponentPropsWithoutRef<"select"> & {
+  listElem?: { name: string; value: string | number }[];
+  style?: React.CSSProperties;
   name?: string;
-  style?: object;
-  valueState?: any;
-  selectedBlendValueState?: any;
-  mode?: string;
-}
+  validationObj?: InputValidationObjType;
+  border?: "borderPrimary" | "borderSecondary" | "default";
+  label?: string;
+};
 const DropDown = ({
-  listElem,
+  listElem = [],
   style = {},
-  value = "",
-  ElemList,
-  handleChange = () => {},
-  name = "dropdown",
-  valueState = () => {},
-  selectedBlendValueState,
-}: dropDown) => {
+  name = "",
+  validationObj,
+  border = "borderPrimary",
+  placeholder = "Select",
+  label = "",
+  ...rest
+}: DropDownType) => {
+  const formContext = useFormContext();
+  let register: any = () => {};
+  if (formContext && name) {
+    register = formContext.register;
+  }
+
   return (
-    <div className={styles.formGroup}>
-      <select
-        name={name}
-        id="dropdown"
-        className={styles.customSelectbx}
-        style={{ backgroundImage: `url(/icons/dropdown.svg)`, ...style }}
-        onChange={(e) => {
-          valueState(e.target.value);
-        }}
-        value={selectedBlendValueState?.toLowerCase()}
-      >
-        {listElem?.map((item, index) => {
-          return (
-            <option value={item.toLowerCase()} key={index}>
-              {item}
-            </option>
-          );
-        })}
-      </select>
-    </div>
+    <>
+      {label && <label className={styles.label}>{label}</label>}
+      <div className={styles.formGroup}>
+        <select
+          name={name}
+          id="dropdown"
+          className={`${styles.customSelectbx} ${styles[border]}`}
+          style={{ ...style, backgroundImage: `url(/icons/dropdown.svg)` }}
+          {...register(name, validationObj)}
+          {...rest}
+        >
+          <option value={""}>{placeholder}</option>
+          {listElem?.map((item, index) => {
+            return (
+              <option value={item?.value} key={index}>
+                {item?.name}
+              </option>
+            );
+          })}
+        </select>
+        {formContext?.formState?.errors?.[name] && (
+          <span className={styles.errorMessage}>{formContext?.formState?.errors?.[name]?.message || "Required*"}</span>
+        )}
+      </div>
+    </>
   );
 };
 

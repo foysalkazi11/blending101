@@ -1,34 +1,55 @@
 import React from "react";
 import { BsArrowRepeat, BsChevronLeft } from "react-icons/bs";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import { resetFilterValue } from "../../../../redux/slices/filterRecipeSlice";
-import { setRecipeFilterByIngredientCategory } from "../../../../redux/slices/ingredientsSlice";
 import styles from "./OptionSelect.module.scss";
+import {
+  ActiveSectionType,
+  FilterCriteriaOptions,
+  FilterCriteriaValue,
+  FiltersUpdateCriteria,
+} from "../../../../type/filterType";
 
 type OptionSelectHeaderProps = {
-  pageTitle?: string;
+  activeTab: string;
+  filterCriteria: any;
+  handleUpdateFilterCriteria: (obj: {
+    filterCriteria?: FilterCriteriaOptions;
+    value?: FilterCriteriaValue;
+    updateStatus: FiltersUpdateCriteria;
+  }) => void;
+  handleUpdateActiveFilterTag: (
+    activeSection: ActiveSectionType,
+    filterCriteria: FilterCriteriaOptions,
+    activeTab: string,
+    childTab?: string,
+  ) => void;
 };
 
-const OptionSelectHeader = ({ pageTitle }: OptionSelectHeaderProps) => {
-  const dispatch = useAppDispatch();
-  const { recipeFilterByIngredientCategory } = useAppSelector(
-    (state) => state.ingredients
-  );
+const OptionSelectHeader = ({
+  activeTab,
+  filterCriteria,
+  handleUpdateFilterCriteria,
+  handleUpdateActiveFilterTag,
+}: OptionSelectHeaderProps) => {
   return (
     <div className={styles.optionSelectHeaderContainer}>
       <div className={styles.header}>
         <div className={styles.leftSide}>
           <div
             className={styles.icon}
-            onClick={() => dispatch(setRecipeFilterByIngredientCategory(""))}
+            onClick={() => handleUpdateActiveFilterTag("tags", null, "", "")}
           >
             <BsChevronLeft />
           </div>
-          <h3>{pageTitle}</h3>
+          <h3>{activeTab}</h3>
         </div>
         <div
           className={styles.rightSide}
-          onClick={() => dispatch(resetFilterValue({ pageTitle }))}
+          onClick={() =>
+            handleUpdateFilterCriteria({
+              filterCriteria,
+              updateStatus: "removeAll",
+            })
+          }
         >
           <BsArrowRepeat />
         </div>

@@ -62,11 +62,11 @@
 }
 
 .cart__icon {
-  margin-left: 30px;
-  margin-top: 3px;
+  margin-left: 2rem;
+  margin-right: 1rem;
   cursor: pointer;
   color: #7dbd3b;
-  transform: scale(0.78);
+  font-size: 2rem;
 }
 
 .profile {
@@ -91,6 +91,14 @@
   position: absolute;
   left: calc(50% - 61px);
   transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+
+  .title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-left: 10px;
+  }
 }
 
 .userPopupMenu {

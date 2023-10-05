@@ -3,19 +3,19 @@ import React from "react";
 import styles from "./DropDown.module.scss";
 
 interface dropDown {
-  ElemList?: object[];
+  elemList?: { name: string; value: string }[];
   name?: string;
   style?: object;
   mode?: string;
-  selectedValue?:string;
+  selectedValue?: string;
   setSelectedValue?: any;
 }
 const RecipeDropDown = ({
   style = {},
-  ElemList,
+  elemList,
   name = "dropdown",
-  selectedValue,
-  setSelectedValue,
+  selectedValue = "",
+  setSelectedValue = () => {},
 }: dropDown): JSX.Element => {
   return (
     <div className={styles.formGroup}>
@@ -23,17 +23,15 @@ const RecipeDropDown = ({
         name={name}
         id="dropdown"
         className={styles.customSelectbx}
-        style={{ backgroundImage: `url(/icons/dropdown.svg)`, ...style }}
+        style={{ ...style, backgroundImage: `url(/icons/dropdown.svg)` }}
         onChange={(e) => {
           setSelectedValue(e.target.value);
         }}
         value={selectedValue}
       >
-        {ElemList?.map((item, index) => {
+        {elemList?.map((item, index) => {
           return (
-            // @ts-ignore
-            <option value={item?.name} key={index}>
-              {/* @ts-ignore */}
+            <option value={item?.value} key={index}>
               {item?.name}
             </option>
           );
@@ -44,3 +42,5 @@ const RecipeDropDown = ({
 };
 
 export default RecipeDropDown;
+
+//backgroundImage: `url(/icons/dropdown.svg)`

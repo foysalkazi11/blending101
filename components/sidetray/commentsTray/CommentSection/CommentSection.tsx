@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-import { useMutation } from "@apollo/client";
-import React, { Dispatch, SetStateAction, useState } from "react";
-import { MdDeleteOutline, MdPersonOutline } from "react-icons/md";
+import { useLazyQuery, useMutation } from "@apollo/client";
+import React, { useCallback, useEffect, useState } from "react";
 import CREATE_NET_COMMENT from "../../../../gqlLib/comments/mutation/createNewComment";
 import DELETE_COMMENT from "../../../../gqlLib/comments/mutation/deleteComment";
 import EDIT_COMMENT from "../../../../gqlLib/comments/mutation/edtiComment";
@@ -10,158 +9,244 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import CommentBox from "../commentBox/CommentBox";
 import styles from "./CommentSection.module.scss";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
-import StarRating from "../../../../theme/starRating/StarRating";
-import { format } from "date-fns";
-import { FiEdit2 } from "react-icons/fi";
 import {
   setLatest,
   setPopular,
   setRecommended,
 } from "../../../../redux/slices/recipeSlice";
 import SkeletonComment from "../../../../theme/skeletons/skeletonComment/SkeletonComment";
+import IconForAddComment from "../../common/iconForAddComment/IconForAddComment";
+import UserRating from "../../common/userRating/UserRating";
+import GET_ALL_COMMENTS_FOR_A_RECIPE from "../../../../gqlLib/comments/query/getAllCommentsForARecipe";
+import CommentsTopSection from "../../common/commentsTopSection/CommentsTopSection";
+import CommentsBottomSection from "../../common/commentsButtomSection/CommentsBottomSection";
+import CHANGE_RECIPE_RATING from "../../../../gqlLib/recipeRating/mutation/changeRecipeRating";
+import { useUser } from "../../../../context/AuthProvider";
 
 type CommentSectionProps = {
-  allComments: any[];
-  setComments: Dispatch<SetStateAction<any[]>>;
-  userComments: {};
-  setUserComments: Dispatch<SetStateAction<{}>>;
+  // allComments: any[];
+  // setComments: Dispatch<SetStateAction<any[]>>;
+  // userComments: {};
+  // setUserComments: Dispatch<SetStateAction<{}>>;
+  personalRating?: number;
 };
 
-const CommentSection = ({
-  allComments,
-  setComments,
-  setUserComments,
-  userComments,
-}: CommentSectionProps) => {
+const CommentSection = ({ personalRating }: CommentSectionProps) => {
   const [showCommentBox, setShowCommentBox] = useState(false);
   const [rating, setRating] = useState(0);
-  const { user, dbUser } = useAppSelector((state) => state?.user);
+  const user = useUser();
+  const { dbUser } = useAppSelector((state) => state?.user);
   const [updateComment, setUpdateComment] = useState(false);
   const [updateCommentId, setUpdateCommentId] = useState("");
   const [comment, setComment] = useState("");
-  const [createComment] = useMutation(CREATE_NET_COMMENT);
-  const [editComment] = useMutation(EDIT_COMMENT);
-  const [deleteComment] = useMutation(DELETE_COMMENT);
+  const [createComment, { loading: createCommentLoading }] =
+    useMutation(CREATE_NET_COMMENT);
+  const [editComment, { loading: editCommentLoading }] =
+    useMutation(EDIT_COMMENT);
+  const [deleteComment, { loading: deleteCommentsLoading }] =
+    useMutation(DELETE_COMMENT);
   const { activeRecipeId } = useAppSelector((state) => state?.collections);
-  const { latest, popular, recommended } = useAppSelector(
-    (state) => state?.recipe
-  );
-  const [loading, setLoading] = useState(false);
+  const { latest, popular, recommended, referenceOfRecipeUpdateFunc } =
+    useAppSelector((state) => state?.recipe);
   const dispatch = useAppDispatch();
+  const { openCommentsTray } = useAppSelector((state) => state?.sideTray);
+  const [changeRecipeRating] = useMutation(CHANGE_RECIPE_RATING);
+
+  const [
+    getAllCommentsForARecipe,
+    { data: commentData, loading: commentLoading },
+  ] = useLazyQuery(GET_ALL_COMMENTS_FOR_A_RECIPE, {
+    fetchPolicy: "cache-and-network",
+  });
+
+  // fetch comments
+  const fetchComments = async () => {
+    try {
+      getAllCommentsForARecipe({
+        variables: {
+          data: {
+            recipeId: activeRecipeId,
+            userId: user.id,
+          },
+        },
+      });
+    } catch (error) {
+      reactToastifyNotification(error?.message);
+    }
+  };
 
   const updateRecipeRating = (
     id: string,
     averageRating: number,
-    numberOfRating: number
+    numberOfRating: number,
   ) => {
     dispatch(
       setRecommended(
         recommended?.map((recipe) =>
           recipe?._id === id
             ? { ...recipe, averageRating, numberOfRating }
-            : recipe
-        )
-      )
+            : recipe,
+        ),
+      ),
     );
     dispatch(
       setLatest(
         latest?.map((recipe) =>
           recipe?._id === id
             ? { ...recipe, averageRating, numberOfRating }
-            : recipe
-        )
-      )
+            : recipe,
+        ),
+      ),
     );
     dispatch(
       setPopular(
         popular?.map((recipe) =>
           recipe?._id === id
             ? { ...recipe, averageRating, numberOfRating }
-            : recipe
-        )
-      )
+            : recipe,
+        ),
+      ),
     );
   };
 
+  // delete or remove comment
   const removeComment = async (id: string) => {
-    setLoading(true);
     try {
       const { data } = await deleteComment({
         variables: {
           data: {
             recipeId: activeRecipeId,
-            userId: dbUser?._id,
+            userId: user.id,
             commentId: id,
           },
         },
+        update(cache, { data: { removeComment } }) {
+          cache.writeQuery({
+            query: GET_ALL_COMMENTS_FOR_A_RECIPE,
+            variables: {
+              data: {
+                recipeId: activeRecipeId,
+                userId: user.id,
+              },
+            },
+            data: {
+              getAllCommentsForARecipe: {
+                comments: [...removeComment?.comments],
+
+                recipe: {
+                  ...removeComment?.recipe,
+                },
+              },
+            },
+          });
+        },
       });
 
-      setUserComments(data?.removeComment?.userComment || {});
-      const { averageRating, numberOfRating, _id } =
-        data?.removeComment?.recipe;
-      updateRecipeRating(_id, averageRating, numberOfRating);
-      setLoading(false);
+      referenceOfRecipeUpdateFunc(
+        activeRecipeId,
+        {
+          numberOfRating: data?.removeComment?.comments?.length
+            ? data?.removeComment?.comments?.length
+            : null,
+        },
+        {},
+      );
+
       setUpdateComment(false);
       reactToastifyNotification("info", "Delete comment successfully");
     } catch (error) {
-      setLoading(false);
       reactToastifyNotification("error", error?.message);
     }
   };
 
   const createOrUpdateComment = async () => {
-    setLoading(true);
+    setShowCommentBox(false);
     try {
       if (!updateComment) {
         const { data } = await createComment({
           variables: {
             data: {
               comment: comment,
-              rating: rating || 1,
+              // rating: rating || 1,
               recipeId: activeRecipeId,
-              userId: dbUser?._id,
+              userId: user.id,
             },
           },
+          update(cache, { data: { createComment } }) {
+            cache.writeQuery({
+              query: GET_ALL_COMMENTS_FOR_A_RECIPE,
+              variables: {
+                data: {
+                  recipeId: activeRecipeId,
+                  userId: user.id,
+                },
+              },
+              data: {
+                getAllCommentsForARecipe: {
+                  comments: [...createComment?.comments],
+                  recipe: {
+                    ...createComment?.recipe,
+                  },
+                },
+              },
+            });
+          },
         });
-        setComments(data?.createComment?.comments || []);
-        setUserComments(data?.createComment?.userComment || {});
-        const { averageRating, numberOfRating, _id } =
-          data?.createComment?.recipe;
-        updateRecipeRating(_id, averageRating, numberOfRating);
+        referenceOfRecipeUpdateFunc(
+          activeRecipeId,
+          {
+            numberOfRating: data?.createComment?.comments?.length
+              ? data?.createComment?.comments?.length
+              : null,
+          },
+          {},
+        );
       } else {
-        const { data: editData } = await editComment({
+        await editComment({
           variables: {
-            editCommentData2: {
+            data: {
               editId: updateCommentId,
               recipeId: activeRecipeId,
-              userId: dbUser?._id,
+              userId: user.id,
               editableObject: {
-                rating: rating,
+                // rating: rating,
                 comment: comment,
               },
             },
           },
+          update(cache, { data: { editComment } }) {
+            cache.writeQuery({
+              query: GET_ALL_COMMENTS_FOR_A_RECIPE,
+              variables: {
+                data: {
+                  recipeId: activeRecipeId,
+                  userId: user.id,
+                },
+              },
+              data: {
+                getAllCommentsForARecipe: {
+                  comments: [...editComment?.comments],
+                  recipe: {
+                    ...editComment?.recipe,
+                  },
+                },
+              },
+            });
+          },
         });
-        setUserComments(editData?.editComment?.userComment || {});
-        const { averageRating, numberOfRating, _id } =
-          editData?.editComment?.recipe;
-        updateRecipeRating(_id, averageRating, numberOfRating);
         setUpdateComment(false);
       }
 
-      setLoading(false);
       reactToastifyNotification(
         "info",
-        `Comment ${updateComment ? "update" : "create"} successfully`
+        `Comment ${updateComment ? "update" : "create"} successfully`,
       );
-      toggleCommentBox();
     } catch (error) {
-      setLoading(false);
       reactToastifyNotification("error", error?.message);
     }
   };
 
-  const updateCommentValue = (id: string, body: string, rating: number) => {
+  const updateCommentValue = (body: string, id?: string, rating?: number) => {
     setUpdateComment(true);
     setComment(body);
     setUpdateCommentId(id);
@@ -170,248 +255,126 @@ const CommentSection = ({
   };
 
   const toggleCommentBox = () => {
+    setComment("");
     setShowCommentBox((pre) => !pre);
   };
 
-  if (loading) {
-    return <SkeletonComment />;
-  }
+  const updatedRating = useCallback(
+    async (newRating: number) => {
+      setRating(newRating);
+      const { data } = await changeRecipeRating({
+        variables: {
+          rating: newRating,
+          recipeId: activeRecipeId,
+          userId: user.id,
+        },
+      });
+
+      const { averageRating, numberOfRating } = data?.changeRecipeRating;
+      referenceOfRecipeUpdateFunc(
+        activeRecipeId,
+        {},
+        { averageRating, numberOfRating },
+        "recipeId",
+      );
+    },
+    [activeRecipeId, changeRecipeRating, user.id, referenceOfRecipeUpdateFunc],
+  );
+  useEffect(() => {
+    setRating(personalRating);
+  }, [personalRating]);
+
+  useEffect(() => {
+    if (openCommentsTray && activeRecipeId) {
+      fetchComments();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openCommentsTray, activeRecipeId]);
+
   return (
-    <div>
-      {updateComment ? (
-        <div className={styles.userImage}>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <div className={styles.imageBox}>
-              {dbUser?.image ? (
-                <img src={dbUser?.image} alt="user_img" />
-              ) : (
-                <MdPersonOutline />
-              )}
-            </div>
-            <h6 className={styles.userName}>
-              {dbUser?.displayName ||
-                dbUser?.lastName ||
-                dbUser?.firstName ||
-                dbUser?.email}
-            </h6>
-          </div>
-          <StarRating rating={rating} setRating={setRating} />
-        </div>
-      ) : /* @ts-ignore */
-      userComments?.comment ? (
-        <div style={{ padding: "10px" }}>
-          <div className={styles.singleComment}>
-            <div className={styles.header}>
-              <div className={styles.leftSide}>
-                <div className={styles.userIcon}>
-                  {dbUser?.image ? (
-                    <img src={dbUser?.image} alt="user_img" />
-                  ) : (
-                    <MdPersonOutline />
-                  )}
-                </div>
-                <h6 className={styles.userName}>
-                  {" "}
-                  {dbUser?.displayName ||
-                    dbUser?.lastName ||
-                    dbUser?.firstName ||
-                    dbUser?.email}
-                </h6>
-              </div>
-              <div>
-                {[...Array(5)].map((star, index) => {
-                  return (
-                    <span
-                      key={index}
-                      className={`${styles.star} ${
-                        //@ts-ignore
-                        index <= userComments?.rating - 1
-                          ? styles.on
-                          : styles.off
-                      }`}
-                    >
-                      &#9733;
-                    </span>
-                  );
-                })}
-              </div>
-            </div>
-            {/* @ts-ignore */}
-            <p>{userComments?.comment}</p>
-            <div className={styles.buttomSection} style={{ margin: "0px" }}>
-              <span>
-                {/* @ts-ignore */}
-                {userComments?.updatedAt ? (
-                  <>
-                    {format(
-                      /* @ts-ignore */
-                      new Date(userComments?.updatedAt),
-                      "dd/MM/yyyy"
-                    )}{" "}
-                    (edited)
-                  </>
-                ) : (
-                  /* @ts-ignore */
-                  format(new Date(userComments?.createdAt), "dd/MM/yyyy")
-                )}
-              </span>
-              <div className={styles.rightSide}>
-                <div
-                  className={styles.editIconBox}
-                  onClick={() =>
-                    updateCommentValue(
-                      /* @ts-ignore */
-                      userComments?._id,
-                      /* @ts-ignore */
-                      userComments?.comment,
-                      /* @ts-ignore */
-                      userComments?.rating
-                    )
-                  }
-                >
-                  <FiEdit2 className={styles.icon} />
-                </div>
-                <div
-                  className={styles.editIconBox}
-                  /* @ts-ignore */
-                  onClick={() => removeComment(userComments?._id)}
-                >
-                  <MdDeleteOutline className={styles.icon} />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className={styles.userImage}>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <div className={styles.imageBox}>
-              {dbUser?.image ? (
-                <img src={dbUser?.image} alt="user_img" />
-              ) : (
-                <MdPersonOutline />
-              )}
-            </div>
-            <h6>
-              {dbUser?.displayName ||
-                dbUser?.lastName ||
-                dbUser?.firstName ||
-                dbUser?.email}
-            </h6>
-          </div>
-          <StarRating rating={rating} setRating={setRating} />
-        </div>
+    <>
+      <UserRating
+        rating={rating}
+        setRating={updatedRating}
+        userImage={dbUser?.image}
+        userName={
+          dbUser?.displayName ||
+          dbUser?.lastName ||
+          dbUser?.firstName ||
+          dbUser?.email
+        }
+      />
+      <div className="flex ai-center jc-between mt-20 mb-30">
+        {commentData?.getAllCommentsForARecipe?.comments?.length ? (
+          <span className={styles.commentsLength}>{`${
+            commentData?.getAllCommentsForARecipe?.comments?.length
+          } ${
+            commentData?.getAllCommentsForARecipe?.comments?.length >= 1
+              ? "comments"
+              : "comment"
+          }`}</span>
+        ) : null}
+
+        {!showCommentBox && (
+          <IconForAddComment handleIconClick={toggleCommentBox} />
+        )}
+      </div>
+
+      {(createCommentLoading || editCommentLoading) && (
+        <SkeletonComment singleComment={true} />
       )}
 
-      {showCommentBox ? (
-        <CommentBox
-          toggleCommentBox={toggleCommentBox}
-          comment={comment}
-          setComment={setComment}
-          createOrUpdateComment={createOrUpdateComment}
-          setUpdateComment={setUpdateComment}
-          updateComment={updateComment}
-        />
-      ) : /* @ts-ignore */
-      userComments?.comment ? null : showCommentBox ? (
-        <CommentBox
-          toggleCommentBox={toggleCommentBox}
-          comment={comment}
-          setComment={setComment}
-          createOrUpdateComment={createOrUpdateComment}
-          setUpdateComment={setUpdateComment}
-          updateComment={updateComment}
-        />
-      ) : null}
+      {showCommentBox && (
+        <>
+          <CommentBox
+            toggleCommentBox={toggleCommentBox}
+            comment={comment}
+            setComment={setComment}
+            createOrUpdateComment={createOrUpdateComment}
+            setUpdateComment={setUpdateComment}
+            updateComment={updateComment}
+          />
+        </>
+      )}
 
-      <div className={styles.commentsIconBox}>
-        <span>
-          {`${
-            /* @ts-ignore */
-            (allComments?.length || 0) + (userComments?.comment ? 1 : 0)
-          } comments`}
-        </span>
-        {/* @ts-ignore */}
-        {userComments?.comment ? null : showCommentBox ? null : (
-          <button
-            onClick={() => {
-              toggleCommentBox();
-              setUpdateComment(false);
-              setComment("");
-              setRating(0);
-            }}
-          >
-            <img src="/images/plus-white-icon.svg" alt="add-icon" />
-            <span>Add</span>
-          </button>
-        )}
-      </div>
-      <div className={`${styles.commentsShowContainer} y-scroll`}>
-        {allComments.length ? (
-          allComments?.map((comment, index) => {
-            return (
-              <div className={styles.singleComment} key={index}>
-                <div className={styles.header}>
-                  <div className={styles.leftSide}>
-                    <div className={styles.userIcon}>
-                      {comment?.userId?.image ? (
-                        <img src={comment?.userId?.image} alt="user" />
-                      ) : (
-                        <MdPersonOutline />
-                      )}
-                    </div>
-                    <h6>
-                      {" "}
-                      {comment?.userId?.displayName ||
-                        comment?.userId?.lastName ||
-                        comment?.userId?.firstName ||
-                        comment?.userId?.email}
-                    </h6>
+      {commentLoading ? (
+        <SkeletonComment />
+      ) : (
+        <div className={`${styles.commentsShowContainer} y-scroll`}>
+          {commentData?.getAllCommentsForARecipe?.comments?.length ? (
+            commentData?.getAllCommentsForARecipe?.comments?.map(
+              (comment, index) => {
+                return (
+                  <div className={styles.singleComment} key={index}>
+                    <CommentsTopSection
+                      userRating={comment?.rating}
+                      isAbleToSetRating={false}
+                      user={comment?.userId}
+                      page="recipe"
+                      isCurrentUser={comment?.userId?._id === user.id}
+                      updateCommentValue={updateCommentValue}
+                      removeComment={removeComment}
+                      deleteCommentLoading={deleteCommentsLoading}
+                      userComments={comment}
+                    />
+                    <CommentsBottomSection
+                      userComments={comment}
+                      isCurrentUser={comment?.userId?._id === user.id}
+                      updateCommentValue={updateCommentValue}
+                      removeComment={removeComment}
+                      deleteCommentLoading={deleteCommentsLoading}
+                      rating={comment?.rating}
+                    />
                   </div>
-                  <div>
-                    {[...Array(5)].map((star, index) => {
-                      return (
-                        <span
-                          key={index}
-                          className={`${styles.star} ${
-                            //@ts-ignore
-                            index <= comment?.rating - 1
-                              ? styles.on
-                              : styles.off
-                          }`}
-                        >
-                          &#9733;
-                        </span>
-                      );
-                    })}
-                  </div>
-                </div>
-                <p>{comment?.comment}</p>
-                <div className={styles.buttomSection}>
-                  <span>
-                    {/* @ts-ignore */}
-                    {comment?.updatedAt ? (
-                      <>
-                        {format(new Date(comment?.updatedAt), "dd/MM/yyyy")}{" "}
-                        (edited)
-                      </>
-                    ) : (
-                      format(new Date(comment?.createdAt), "dd/MM/yyyy")
-                    )}
-                  </span>
-                  <div></div>
-                </div>
-              </div>
-            );
-          })
-        ) : (
-          <p className={styles.noComments}>
-            {/* @ts-ignore */}
-            {userComments?.comment ? "No other comments " : "No comments"}
-          </p>
-        )}
-      </div>
-    </div>
+                );
+              },
+            )
+          ) : (
+            <p className={styles.noComments}>{"No comments"}</p>
+          )}
+        </div>
+      )}
+    </>
   );
 };
 

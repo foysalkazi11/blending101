@@ -1,20 +1,16 @@
 import React, { useState } from "react";
 import styles from "./CustomToolTip.module.scss";
 
-type ToolTipProps = {
+type ToolTipProps = React.ComponentPropsWithoutRef<"div"> & {
   children: React.ReactNode;
   content: string;
   delay?: number;
   direction?: "top" | "bottom" | "left" | "right" | "";
+  bgColor?: "bgBlack" | "bgPrimary" | "bgSecondary";
   // style?: React.CSSProperties;
 };
 
-const Tooltip = ({
-  children,
-  content,
-  delay = 300,
-  direction = "",
-}: ToolTipProps) => {
+const Tooltip = ({ children, content, delay = 300, direction = "", bgColor = "bgBlack", ...rest }: ToolTipProps) => {
   let timeout;
   const [active, setActive] = useState(false);
 
@@ -128,17 +124,11 @@ const Tooltip = ({
   };
 
   return (
-    <div
-      className={styles.Tooltip_Wrapper}
-      onMouseEnter={showTip}
-      onMouseLeave={hideTip}
-    >
+    <div className={styles.Tooltip_Wrapper} onMouseEnter={showTip} onMouseLeave={hideTip} {...rest}>
       {children}
-      {active && (
+      {active && content !== "" && (
         <div
-          className={`${styles.Tooltip_Tip} ${
-            direction ? styles[direction] : styles[info?.type]
-          }`}
+          className={`${styles.Tooltip_Tip} ${direction ? styles[direction] : styles[info?.type]}`}
           // style={style}
         >
           {content}

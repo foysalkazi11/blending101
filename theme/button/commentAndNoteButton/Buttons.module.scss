@@ -1,0 +1,55 @@
+@import "../../../styles/partials/variables";
+
+.btn {
+  border-radius: 23px;
+  color: $white;
+  font-size: 1.4rem;
+  font-weight: 500;
+  min-width: 95px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border: 0;
+  cursor: pointer;
+  font-family: "Segoe UI", sans-serif;
+  padding: 8px 10px;
+  box-shadow: rgb(229, 230, 228) 5px 5px 15px;
+  transition: $transition;
+  background-color: $white;
+}
+.submitBtn {
+  color: $white;
+}
+
+.solidPrimary {
+  background: $primaryColor;
+}
+.outlinePrimary {
+  border: 1px solid $primaryColor;
+  color: $primaryColor;
+  &:hover {
+    background: $primaryColor;
+    color: $white;
+  }
+}
+.solidSecondary {
+  background: $secondaryColor;
+}
+.outlineSecondary {
+  border: 1px solid $secondaryColor;
+  color: $secondaryColor;
+  &:hover {
+    background: $secondaryColor;
+    color: $white;
+  }
+}
+
+.cancleBtn {
+  background: transparent;
+  color: $primaryColor;
+  &:hover {
+    box-shadow: 5px 5px 15px #fe5d1f38;
+  }
+}

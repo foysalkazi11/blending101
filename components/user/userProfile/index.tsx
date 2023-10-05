@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import AContainer from "../../../containers/A.container";
 import ProgessBar from "./progessBar/ProgessBar";
 import styles from "./UserProfile.module.scss";
 import StepOne from "./steps/stepOne/StepOne";
@@ -7,10 +6,9 @@ import StepTwo from "./steps/stepTwo/StepTwo";
 import ChangeSteps from "./changeSteps/ChangeSteps";
 import StepThree from "./steps/stepThree/StepThree";
 import StepFour from "./steps/stepFour/StepFour";
-import uniqueId from "../../utility/uniqueId";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
 import { useMutation } from "@apollo/client";
-import EDIT_CONFIGRATION_BY_ID from "../../../gqlLib/user/mutations/editCofigrationById";
+import EDIT_CONFIGURATION_BY_ID from "../../../gqlLib/user/mutations/editCofigrationById";
 import { setDbUser } from "../../../redux/slices/userSlice";
 import { setLoading } from "../../../redux/slices/utilitySlice";
 import reactToastifyNotification from "../../../components/utility/reactToastifyNotification";
@@ -37,7 +35,7 @@ const UserProfile = () => {
   const [steps, setSteps] = useState(1);
   const { dbUser, user, provider } = useAppSelector((state) => state?.user);
   const { configuration } = dbUser;
-  const [editUserData] = useMutation(EDIT_CONFIGRATION_BY_ID);
+  const [editUserData] = useMutation(EDIT_CONFIGURATION_BY_ID);
   const dispatch = useAppDispatch();
   const history = useRouter();
 
@@ -139,14 +137,14 @@ const UserProfile = () => {
           setDbUser({
             ...dbUser,
             configuration: { ...dbUser?.configuration, ...arrangData },
-          })
+          }),
         );
         dispatch(setLoading(false));
         reactToastifyNotification(
           "info",
-          "Congratulation! you updated profile successfully"
+          "Congratulation! you updated profile successfully",
         );
-        history.push("/recipe_discovery");
+        history.push("/recipe/recipe_discovery");
       } catch (error) {
         dispatch(setLoading(false));
         reactToastifyNotification("error", error?.message);
@@ -164,7 +162,7 @@ const UserProfile = () => {
           setDbUser({
             ...dbUser,
             configuration: { ...dbUser?.configuration, ...arrangData },
-          })
+          }),
         );
         dispatch(setLoading(false));
         reactToastifyNotification("info", "Updated successfully");
@@ -242,14 +240,9 @@ const UserProfile = () => {
         );
     }
   };
+
   return (
-    <AContainer
-      headerTitle="Profile"
-      showLeftTray={false}
-      showRighTray={false}
-      showSidebar={false}
-      headerFullWidth={true}
-    >
+    <React.Fragment>
       <div className={styles.userProfileContainer}>
         <ProgessBar steps={steps} />
 
@@ -259,7 +252,7 @@ const UserProfile = () => {
           <ChangeSteps nextStep={nextStep} prevStep={prevStep} steps={steps} />
         )}
       </div>
-    </AContainer>
+    </React.Fragment>
   );
 };
 

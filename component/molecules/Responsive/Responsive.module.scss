@@ -1,0 +1,15 @@
+@import "../../../styles/mixins.scss";
+
+.mwrapper {
+  display: none;
+  @include respond(md) {
+    display: block;
+  }
+}
+
+.dwrapper {
+  display: block;
+  @include respond(md) {
+    display: none;
+  }
+}

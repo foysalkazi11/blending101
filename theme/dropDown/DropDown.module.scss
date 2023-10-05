@@ -1,41 +1,60 @@
+@import "../../styles/partials/variables";
 .formGroup {
-    // background-color: green;
-    // padding-left: 10px;
-    padding-right: 10px;
-    width: 100%;
-
-
-    & select {
-        // background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
-        -moz-appearance: none;
-        // /* Firefox */
-        -webkit-appearance: none;
-        // /* Safari asnd Chrome */
-        appearance: none;
-        background-repeat: no-repeat;
-        background-position-x: 94%;
-        background-position-y: 15px;
-    }
+  width: 100%;
+  position: relative;
 }
 
-
 .customSelectbx {
-    // background-color: #3d7505;
-    width: 100%;
-    height: 45px;
-    border-radius: 5px;
-    border-color: transparent;
-    color: #525252;
-    font-size: 14px;
-    padding-left: 20px;
-    border-right: 20px solid #fafbf9;
-    border-color: transparent;
-    border: 0px;
-    outline: 0px;
-    box-shadow: none;
+  border: 0px;
+  outline: 0px;
+  box-shadow: none;
+  color: #b6b6b6;
+  border-radius: 10px;
+  display: inline-block;
+  font: inherit;
+  line-height: 1.5em;
+  padding: 0.5em 2.5em 0.5em 1em;
+  width: 100%;
+  border: 1px solid #dddddd;
+  outline: none;
+  font-family: "Segoe UI", sans-serif;
+  transition: border-color 0.3s;
+  &::placeholder {
+    color: #c8c8c8;
+  }
+  /* reset */
+  background-position: calc(100% - 15px) calc(1em + -3px), calc(100% - 15px) calc(1em + 2px), calc(100% - 2.5em) 0.5em;
+  // background-size: 5px 5px, 5px 5px, 1px 1.5em;
+  background-repeat: no-repeat;
+  -webkit-appearance: none !important; /* Remove default styling on Safari */
+  -moz-appearance: none !important; /* Remove default styling on Firefox */
+  appearance: none !important; /* Remove default styling on other browsers */
+}
 
-    // border: none;
-    // box-shadow: 2px;
-    // margin-right: 20px;
-    // space
+.borderPrimary {
+  &:focus,
+  &:hover {
+    border-color: $primaryColor;
+  }
+}
+.borderSecondary {
+  &:focus,
+  &:hover {
+    border-color: $secondaryColor;
+  }
+}
+
+.label {
+  display: block;
+  padding-bottom: 0.5rem;
+  color: #c8c8c8;
+}
+.errorMessage {
+  display: block;
+  position: absolute;
+  top: 100%;
+  padding-top: 0.5rem;
+  color: $errorColor;
+  font-size: 1.4rem;
+  margin-left: 0.5rem;
 }

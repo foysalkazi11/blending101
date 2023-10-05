@@ -1,10 +1,9 @@
 @mixin responsive($min-Width, $max-width) {
-  @media screen and (min-width: $min-Width) and(max-width:$max-width) {
+  @media screen and (min-width: $min-Width) and (max-width: $max-width) {
     @content;
   }
 }
 .mainDiv {
-  // background-color: red;
   width: 100%;
   margin: 0 auto;
   min-height: 83vh;
@@ -13,17 +12,14 @@
   margin-top: 30px;
 
   &__header {
-    // background-color: rgb(128, 87, 0);
     min-height: 100px;
   }
 
   &__filterCardTray {
     min-height: 20px;
-    // background-color: pink;
   }
 
   &__results {
-    // background-color: green;
     width: 100%;
     min-height: 350px;
     display: flex;
@@ -31,16 +27,17 @@
 
     &__heading {
       width: 96%;
-      // background-color: greenyellow;
-      padding: 0 40px;
       font-size: 16px;
       height: 36px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
+      .center {
+        display: flex;
+        align-self: center;
+      }
 
       &__right {
-        // background-color: green;
         width: 100px;
         position: relative;
         display: flex;
@@ -53,7 +50,6 @@
           width: 35px;
           height: 35px;
           border-radius: 50%;
-          // background-color: white;
 
           div {
             position: relative;
@@ -66,7 +62,6 @@
     }
 
     &__body {
-      // background-color: yellow;
       padding: 10px 20px;
 
       &__ul {

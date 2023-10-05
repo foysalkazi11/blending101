@@ -1,20 +1,24 @@
 // import type { RootState } from "../store";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import sampleUser from "../../data/sampleUser";
+import { DbUserType } from "../../type/dbUserType";
 
 type SideTrayState = {
   nonConfirmedUser: string;
   user: string | null;
-  dbUser: any;
+  dbUser: DbUserType;
   provider: string;
-  isNewUseImage: any[];
+  isNewUseImage: File[];
+  userCompareLength?: number;
 };
 
 const initialState: SideTrayState = {
   nonConfirmedUser: "",
-  user: null,
-  dbUser: {},
+  user: "",
+  dbUser: {} as DbUserType,
   provider: "email",
   isNewUseImage: [],
+  userCompareLength: 0,
 };
 
 export const userSlice = createSlice({
@@ -27,7 +31,7 @@ export const userSlice = createSlice({
     setNonConfirmedUser: (state, action: PayloadAction<string>) => {
       state.nonConfirmedUser = action?.payload;
     },
-    setDbUser: (state, action: PayloadAction<any>) => {
+    setDbUser: (state, action: PayloadAction<DbUserType>) => {
       state.dbUser = action?.payload;
     },
     setProvider: (state, action: PayloadAction<string>) => {
@@ -35,6 +39,9 @@ export const userSlice = createSlice({
     },
     setIsNewUseImage: (state, action: PayloadAction<any>) => {
       state.isNewUseImage = action?.payload;
+    },
+    updateUserCompareLength: (state, action: PayloadAction<number>) => {
+      state.userCompareLength = action?.payload;
     },
   },
 });
@@ -45,6 +52,7 @@ export const {
   setDbUser,
   setProvider,
   setIsNewUseImage,
+  updateUserCompareLength,
 } = userSlice?.actions;
 
 export default userSlice?.reducer;

@@ -4,29 +4,63 @@ import { IoIosArrowForward } from "react-icons/io";
 import styles from "./accordion.module.scss";
 
 type CustomAccordionProps = {
-  title: string;
-  children: React.ReactNode;
+  title?: string;
   iconRight?: boolean;
+  style?: React.CSSProperties;
+  customHeader?: (
+    arg: boolean,
+    setExpanded: (arg: boolean) => void,
+  ) => React.ReactNode | string;
+  expandByDefault?: boolean;
 };
 
-const CustomAccordion = ({
+const CustomAccordion: React.FC<CustomAccordionProps> = ({
   title,
   children,
   iconRight = false,
-}: CustomAccordionProps) => {
+  style = {},
+  customHeader = () => {},
+  expandByDefault = false,
+}) => {
   const [expanded, setExpanded] = useState<boolean>(false);
   const contentRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState<number | undefined>(
+    expanded ? undefined : 0,
+  );
 
   useEffect(() => {
-    if (contentRef.current) {
-      contentRef.current.style.maxHeight = expanded
-        ? `${contentRef.current.scrollHeight}px`
-        : "0px";
+    if (expandByDefault) {
+      setExpanded(expandByDefault);
     }
-  }, [expanded, contentRef]);
+  }, [expandByDefault]);
+
+  // useEffect(() => {
+  //   if (contentRef.current) {
+  //     contentRef.current.style.maxHeight = expanded
+  //       ? `${contentRef.current.scrollHeight}px`
+  //       : "0px";
+  //   }
+  // }, [expanded, contentRef]);
+
+  useEffect(() => {
+    if (!height || !expanded || !contentRef.current) return undefined;
+    // @ts-ignore
+    const resizeObserver = new ResizeObserver((el) => {
+      setHeight(el[0].contentRect.height);
+    });
+    resizeObserver.observe(contentRef.current);
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [height, expanded]);
+
+  useEffect(() => {
+    if (expanded) setHeight(contentRef.current?.getBoundingClientRect().height);
+    else setHeight(0);
+  }, [expanded]);
 
   return (
-    <div className={styles.accordion}>
+    <div className={styles.accordion} style={style}>
       {iconRight ? (
         <div className={`${styles.accordionSummaryForRightIcon}`}>
           <div
@@ -41,30 +75,30 @@ const CustomAccordion = ({
           </div>
         </div>
       ) : (
-        <div className={`${styles.accordionSummary}`}>
-          {expanded ? (
-            <FiMinusSquare
-              className={styles.icon}
-              onClick={() => {
-                setExpanded(!expanded);
-              }}
-            />
-          ) : (
-            <FiPlusSquare
-              className={styles.icon}
-              onClick={() => {
-                setExpanded(!expanded);
-              }}
-            />
-          )}
-          <h5 className={styles.title}>{title}</h5>
-        </div>
+        // <div className={`${styles.accordionSummary}`}>
+        //   <h5 className={styles.title}>{title}</h5>
+        //   {expanded ? (
+        //     <FiMinusSquare
+        //       className={styles.icon}
+        //       onClick={() => {
+        //         setExpanded(!expanded);
+        //       }}
+        //     />
+        //   ) : (
+        //     <FiPlusSquare
+        //       className={styles.icon}
+        //       onClick={() => {
+        //         setExpanded(!expanded);
+        //       }}
+        //     />
+        //   )}
+        // </div>
+        customHeader(expanded, (arg: boolean) => setExpanded(!arg))
       )}
-      <div
-        className={styles.accordianDetails}
-        ref={contentRef as React.RefObject<HTMLDivElement>}
-      >
-        {children}
+      <div className={styles.contentParent} style={{ height }}>
+        <div ref={contentRef as React.RefObject<HTMLDivElement>}>
+          <div className={styles.accordianDetails}>{children}</div>
+        </div>
       </div>
     </div>
   );

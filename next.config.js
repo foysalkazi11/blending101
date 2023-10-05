@@ -1,17 +1,26 @@
-module.exports = {
+const path = require("path");
+
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
+});
+
+module.exports = withBundleAnalyzer({
   reactStrictMode: true,
-  ignoreDuringBuilds: true,
   trailingSlash: true,
   staticPageGenerationTimeout: 1500,
   images: {
-    domains: [
-      "source.unsplash.com",
-      "./theme/wiki/WikiCenter/Assets/cardiogram.svg",
-      "blending.s3.us-east-1.amazonaws.com",
-      "www.fivehearthome.com"
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
     ],
   },
-  webpack(config) {
+  sassOptions: {
+    includePaths: [path.join(__dirname, "styles/fragments")],
+  },
+  webpack: (config, { isServer }) => {
+    if (!isServer) config.resolve.fallback.fs = false;
     config.module.rules.push({
       test: /\.svg$/i,
       issuer: /\.[jt]sx?$/,
@@ -20,4 +29,4 @@ module.exports = {
 
     return config;
   },
-};
+});

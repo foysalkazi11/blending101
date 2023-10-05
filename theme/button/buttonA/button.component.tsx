@@ -3,8 +3,9 @@ import styles from "./button.module.scss";
 
 interface buttonInterface {
   type: "text" | "primary" | "transparent" | "transparentHover" | "border";
-  value: string;
+  value: string | React.ReactNode;
   fullWidth: boolean;
+  disabled?: boolean;
   width?: number;
   style: object;
   handleClick?: () => void;
@@ -17,6 +18,7 @@ export default function ButtonComponent({
   value,
   fullWidth,
   width,
+  disabled,
   handleClick = () => {},
   submit = false,
 }: buttonInterface) {
@@ -34,8 +36,10 @@ export default function ButtonComponent({
         className={styles.button + " " + styles.primary}
         style={style}
         onClick={handleClick}
+        disabled={disabled}
       >
         {value}
+        {/* {typeof value === 'string' ? value : React.createElement(value as any)} */}
       </button>
     );
 

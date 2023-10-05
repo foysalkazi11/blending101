@@ -1,14 +1,21 @@
 import { gql } from "@apollo/client";
 
 const EDIT_COMMENT = gql`
-  mutation EditComment($editCommentData2: EditComment!) {
-    editComment(data: $editCommentData2) {
-      userComment {
+  mutation EditComment($data: EditComment!) {
+    editComment(data: $data) {
+      comments {
+        _id
         comment
-        rating
         createdAt
         updatedAt
-        _id
+        userId {
+          _id
+          email
+          displayName
+          firstName
+          image
+          lastName
+        }
       }
       recipe {
         _id

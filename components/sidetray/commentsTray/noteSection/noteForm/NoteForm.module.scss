@@ -9,37 +9,6 @@
     margin-bottom: 25px;
     color: #000000;
   }
-  input {
-    border: 1px solid #ececec;
-    border-radius: 10px;
-    padding: 0 15px;
-    font-size: 10px;
-    color: #929292;
-    line-height: 36px;
-    font-size: 12px;
-    margin-bottom: 10px;
-    width: 100%;
-    outline: none;
-    &:focus {
-      border: 1px solid #7dbd3b;
-    }
-  }
-  textarea {
-    border: 1px solid #ececec;
-    border-radius: 10px;
-    padding: 0 15px;
-    font-size: 10px;
-    color: #929292;
-    line-height: 36px;
-    font-size: 12px;
-    margin-bottom: 10px;
-    width: 100%;
-    resize: none;
-    outline: none;
-    &:focus {
-      border: 1px solid #7dbd3b;
-    }
-  }
   .btnBox {
     display: flex;
     justify-content: space-between;

@@ -35,7 +35,6 @@
   }
 }
 
-
 .accordionSummaryForRightIcon {
   // padding: 16px 0;
   // background-color: rebeccapurple;
@@ -63,7 +62,6 @@
 }
 
 .accordianDetails {
-
   overflow: hidden;
   transition: max-height 0.5s ease-out;
   background-color: #ffffff;
@@ -75,8 +73,6 @@
     padding-bottom: 10px;
   }
 }
-
-
 
 .accordionSummary {
   display: flex;
@@ -114,7 +110,6 @@
   display: grid;
   grid-template-columns: 1fr 80px;
   gap: 10px;
-  border: none;
   border-bottom: 1px solid #dbdbdb;
 
   @include responsive(0px, 990px) {
@@ -130,7 +125,6 @@
     }
   }
 }
-
 
 .valueUnit {
   color: #000000;
@@ -170,4 +164,12 @@
   display: flex;
   align-items: center;
   padding: 6px 0px;
+
+  transition: color 0.3s linear;
+}
+.titleCopy.active {
+  cursor: pointer;
+  &:hover {
+    color: #fe5d1f;
+  }
 }

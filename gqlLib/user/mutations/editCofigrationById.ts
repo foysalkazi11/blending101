@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
-const EDIT_CONFIGRATION_BY_ID = gql`
-  mutation Mutation($data: EditConfiguiration!) {
-    editConfifuirationById(data: $data)
+const EDIT_CONFIGURATION_BY_ID = gql`
+  mutation EditConfigurationById($data: EditConfiguration!) {
+    editConfigurationById(data: $data)
   }
 `;
-export default EDIT_CONFIGRATION_BY_ID;
+export default EDIT_CONFIGURATION_BY_ID;

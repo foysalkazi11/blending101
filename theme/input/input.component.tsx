@@ -1,66 +1,103 @@
-import React, { InputHTMLAttributes, useState } from "react";
+import React, { forwardRef, ReactNode } from "react";
 import styles from "./input.module.scss";
+import { useFormContext } from "react-hook-form";
+import { InputValidationObjType } from "type/inputValidationObjType";
 
-interface InputComponentProps extends InputHTMLAttributes<HTMLInputElement> {
+type InputComponentProps = React.ComponentPropsWithRef<"input"> & {
   type?: string;
   style?: React.CSSProperties;
-  value?: string | number;
   placeholder?: string;
-  textarea?: any;
-  fullWidth?: boolean;
-  maxWidth?: string;
-  fieldName?: string;
   handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   name?: string;
   min?: number;
   max?: number;
-}
+  inputWithIcon?: boolean;
+  icon?: ReactNode | string;
+  label?: string;
+  validationObj?: InputValidationObjType;
+  border?: "borderPrimary" | "borderSecondary";
+};
 
-export default function InputComponent({
-  type,
-  style = {},
-  value,
-  placeholder,
-  textarea,
-  fullWidth,
-  maxWidth,
-  fieldName,
-  handleChange = () => {},
-  name,
-  min = 0,
-  max,
-  ...InputProps
-}: InputComponentProps) {
-  const [focused, setFocused] = useState(false);
-  // STEP 1: INITIALIZE PROPS TO AVOID UI FALL
-  type = type || "text";
-  style = style || {};
-  if (fullWidth) style = { ...style, width: "100%" };
-  if (maxWidth) style = { ...style, maxWidth: maxWidth };
-  value = value || "";
-  placeholder = placeholder || "Add your text here";
+function InputComponent(
+  {
+    type = "text",
+    style = {},
+    placeholder = "Add your text here",
+    handleChange = () => {},
+    name = "",
+    min = 0,
+    max,
+    inputWithIcon = false,
+    icon,
+    label = "",
+    validationObj = {},
+    border = "borderPrimary",
+    ...InputProps
+  }: InputComponentProps,
+  ref,
+) {
+  const formContext = useFormContext();
+  let register: any = () => {};
+  if (formContext && name) {
+    register = formContext.register;
+  }
 
-  // CASE 1: IF TEXTAREA RETURN TEXTAREA COMPONENT
-  if (textarea) return <textarea className={styles.textarea} />;
+  if (icon) {
+    return (
+      <>
+        {label && <label className={styles.label}>{label}</label>}
+        <div className={`${styles.inputWithIcon} ${styles[border]}`}>
+          <input
+            name={name}
+            className={`${styles.input} `}
+            type={type}
+            style={style}
+            onChange={(e) => handleChange}
+            placeholder={placeholder}
+            min={min}
+            max={max}
+            ref={ref}
+            {...InputProps}
+            {...register(name, validationObj)}
+          />
+          {typeof icon === "string" ? (
+            <img className={styles.icon} src={icon} alt="icon" />
+          ) : (
+            <div className={styles.icon}>{icon}</div>
+          )}
+          {formContext?.formState?.errors?.[name] && (
+            <span className={styles.errorMessage}>
+              {formContext?.formState?.errors?.[name]?.message || "Required*"}
+            </span>
+          )}
+        </div>
+      </>
+    );
+  }
 
-  // CASE: DEFAULT RETURN INPUT COMPONENT
-
-  const handleFocus = () => {
-    setFocused(true);
-  };
   return (
-    <input
-      name={name}
-      className={styles.input}
-      type={type}
-      style={style}
-      value={value}
-      onChange={handleChange}
-      placeholder={placeholder}
-      min={min}
-      max={max}
-      onBlur={handleFocus}
-      {...InputProps}
-    />
+    <>
+      {label && <label className={styles.label}>{label}</label>}
+      <div style={{ position: "relative" }}>
+        <input
+          name={name}
+          className={`${styles.input} ${styles[border]}`}
+          type={type}
+          style={style}
+          onChange={handleChange}
+          placeholder={placeholder}
+          min={min}
+          max={max}
+          ref={ref}
+          {...InputProps}
+          {...register(name, validationObj)}
+        />
+        {formContext?.formState?.errors?.[name] && (
+          <span className={styles.errorMessage}>{formContext?.formState?.errors?.[name]?.message || "Required*"}</span>
+        )}
+      </div>
+    </>
   );
 }
+
+export default forwardRef(InputComponent);

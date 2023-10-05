@@ -1,14 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useMutation } from "@apollo/client";
-import React, { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/router";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import EDIT_CONFIGRATION_BY_ID from "../../../../../gqlLib/user/mutations/editCofigrationById";
+import EDIT_CONFIGURATION_BY_ID from "../../../../../gqlLib/user/mutations/editCofigrationById";
 import EDIT_USER_BY_ID from "../../../../../gqlLib/user/mutations/editUserById";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
 import {
   setDbUser,
   setIsNewUseImage,
 } from "../../../../../redux/slices/userSlice";
-import { setLoading } from "../../../../../redux/slices/utilitySlice";
 import ButtonComponent from "../../../../../theme/button/button.component";
 import Combobox from "../../../../../theme/dropDown/combobox/Combobox.component";
 import InputComponent from "../../../../../theme/input/registerInput/RegisterInput";
@@ -18,6 +19,7 @@ import notification from "../../../../utility/reactToastifyNotification";
 import DailyIntake from "./dailyIntake/DailyIntake";
 import styles from "./Physical.module.scss";
 import SectionGenderAndActivity from "./sectionGenderAndActivity/SectionGender&Activity";
+import CircularRotatingLoader from "theme/loader/circularRotatingLoader.component";
 
 const gender = [
   {
@@ -82,16 +84,20 @@ const Physical = ({
   userData,
 }: PhysicalProps) => {
   const { dbUser } = useAppSelector((state) => state?.user);
+  const router = useRouter();
+  const { toggle } = router.query;
   const dispatch = useAppDispatch();
-  const [editConfigration] = useMutation(EDIT_CONFIGRATION_BY_ID);
+  const [editConfigration] = useMutation(EDIT_CONFIGURATION_BY_ID);
   const [editUserById] = useMutation(EDIT_USER_BY_ID);
   const { configuration } = dbUser;
   const { isNewUseImage } = useAppSelector((state) => state?.user);
   const [measurementType, setMeasurementType] = useState("US");
   const [ageType, setAgeType] = useState("years");
-  const [profileActiveTab, setProfileActiveTab] = useState(0);
-  const [pregnant, setPregnant] = useState("");
+  const [pregnant, setPregnant] = useState("Not Pregnant or Lactation");
   const isMounted = useRef(null);
+  const [colorToggle, setColorToggle] = useState(false);
+  const [profileActiveTab, setProfileActiveTab] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const handleYearsAndMonths = (userProfile) => {
     let value = {
@@ -117,7 +123,6 @@ const Physical = ({
     }
     return value;
   };
-
   const {
     register,
     handleSubmit,
@@ -125,32 +130,78 @@ const Physical = ({
     setValue,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-      centimeters: userProfile?.heightInCentimeters
-        ? Number(userProfile?.heightInCentimeters)
-        : "",
-      feets: userProfile?.heightInCentimeters
-        ? Number(Math?.trunc(userProfile?.heightInCentimeters / 30.48))
-        : "",
-      inches: userProfile?.heightInCentimeters
-        ? Number(
-            ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0)
-          ) === 12
-          ? ""
-          : Number(
-              ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0)
-            )
-        : "",
-      kilograms: userProfile?.weightInKilograms
-        ? Number(userProfile?.weightInKilograms?.toFixed(2))
-        : "",
-      months: handleYearsAndMonths(userProfile)?.months || "",
-      pounds: userProfile?.weightInKilograms
-        ? Number((userProfile?.weightInKilograms * 2.205)?.toFixed(0))
-        : "",
-      years: handleYearsAndMonths(userProfile)?.years || "",
-    },
+    defaultValues: useMemo(
+      () => ({
+        centimeters: userProfile?.heightInCentimeters
+          ? Number(userProfile?.heightInCentimeters)?.toFixed(2)
+          : "",
+        feets: userProfile?.heightInCentimeters
+          ? Number(Math?.trunc(userProfile?.heightInCentimeters / 30.48))
+          : "",
+        inches: userProfile?.heightInCentimeters
+          ? Number(
+              ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0),
+            ) === 12
+            ? ""
+            : Number(
+                ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0),
+              )
+          : "",
+        kilograms: userProfile?.weightInKilograms
+          ? Number(userProfile?.weightInKilograms?.toFixed(2))
+          : "",
+        months: handleYearsAndMonths(userProfile)?.months || "",
+        pounds: userProfile?.weightInKilograms
+          ? Number((userProfile?.weightInKilograms * 2.205)?.toFixed(0))
+          : "",
+        years: handleYearsAndMonths(userProfile)?.years || "",
+      }),
+      [userProfile],
+    ),
   });
+
+  useEffect(() => {
+    if (userProfile) {
+      setValue(
+        "centimeters",
+        userProfile?.heightInCentimeters
+          ? Number(userProfile?.heightInCentimeters)?.toFixed(2)
+          : "",
+      );
+      setValue(
+        "feets",
+        userProfile?.heightInCentimeters
+          ? Number(Math?.trunc(userProfile?.heightInCentimeters / 30.48))
+          : "",
+      );
+      setValue(
+        "inches",
+        userProfile?.heightInCentimeters
+          ? Number(
+              ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0),
+            ) === 12
+            ? ""
+            : Number(
+                ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0),
+              )
+          : "",
+      );
+      setValue(
+        "kilograms",
+        userProfile?.weightInKilograms
+          ? Number(userProfile?.weightInKilograms?.toFixed(2))
+          : "",
+      );
+      setValue("months", handleYearsAndMonths(userProfile)?.months || "");
+      setValue(
+        "pounds",
+        userProfile?.weightInKilograms
+          ? Number((userProfile?.weightInKilograms * 2.205)?.toFixed(0))
+          : "",
+      );
+      setValue("years", handleYearsAndMonths(userProfile)?.years || "");
+    }
+  }, [userProfile]);
 
   const watchValue = watch();
 
@@ -168,9 +219,20 @@ const Physical = ({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    if (!toggle) return;
+    if (toggle) {
+      setProfileActiveTab(Number(toggle));
+    }
+  }, [toggle]);
+
+  useEffect(() => {
+    if (!profileActiveTab) return;
+    router?.push(`/user/?type=personalization&toggle=${profileActiveTab}`);
+  }, [profileActiveTab]);
 
   const handlePregnantOrLactating = (
-    e: React.ChangeEvent<HTMLSelectElement>
+    e: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     const { value } = e?.target;
     setPregnant(value);
@@ -242,7 +304,7 @@ const Physical = ({
         ? Number(feet + inches)
         : Number(data?.centimeters);
 
-    dispatch(setLoading(true));
+    setLoading(true);
 
     try {
       if (isNewUseImage?.length) {
@@ -267,6 +329,10 @@ const Physical = ({
                 weightInKilograms: arrangWeight,
                 heightInCentimeters: arrangHight,
                 age: arrageAge,
+                pregnantOrLactating:
+                  userData?.personalization?.gender === "Female"
+                    ? pregnant
+                    : null,
               },
             },
           },
@@ -284,6 +350,10 @@ const Physical = ({
               weightInKilograms: arrangWeight,
               heightInCentimeters: arrangHight,
               age: arrageAge,
+              pregnantOrLactating:
+                userData?.personalization?.gender === "Female"
+                  ? pregnant
+                  : null,
             },
           };
         });
@@ -299,10 +369,14 @@ const Physical = ({
               weightInKilograms: arrangWeight,
               heightInCentimeters: arrangHight,
               age: arrageAge,
+              pregnantOrLactating:
+                userData?.personalization?.gender === "Female"
+                  ? pregnant
+                  : null,
             },
-          })
+          }),
         );
-        dispatch(setLoading(false));
+        setLoading(false);
         dispatch(setIsNewUseImage(null));
         notification("info", "your profile updated successfully");
       } else {
@@ -324,6 +398,10 @@ const Physical = ({
                 weightInKilograms: arrangWeight,
                 heightInCentimeters: arrangHight,
                 age: arrageAge,
+                pregnantOrLactating:
+                  userData?.personalization?.gender === "Female"
+                    ? pregnant
+                    : null,
               },
             },
           },
@@ -337,6 +415,10 @@ const Physical = ({
               weightInKilograms: arrangWeight,
               heightInCentimeters: arrangHight,
               age: arrageAge,
+              pregnantOrLactating:
+                userData?.personalization?.gender === "Female"
+                  ? pregnant
+                  : null,
             },
           };
         });
@@ -351,14 +433,18 @@ const Physical = ({
               weightInKilograms: arrangWeight,
               heightInCentimeters: arrangHight,
               age: arrageAge,
+              pregnantOrLactating:
+                userData?.personalization?.gender === "Female"
+                  ? pregnant
+                  : null,
             },
-          })
+          }),
         );
-        dispatch(setLoading(false));
+        setLoading(false);
         notification("info", "Updated successfully");
       }
     } catch (error) {
-      dispatch(setLoading(false));
+      setLoading(false);
       notification("error", error?.message);
     }
   };
@@ -370,6 +456,9 @@ const Physical = ({
       isMounted.current = false;
     };
   }, []);
+  useEffect(() => {
+    setColorToggle(false);
+  }, [profileActiveTab]);
 
   return (
     <>
@@ -380,7 +469,10 @@ const Physical = ({
               className={`${
                 profileActiveTab === 0 ? styles.active_border : ""
               }`}
-              onClick={() => setProfileActiveTab(0)}
+              onClick={() => {
+                setProfileActiveTab(0);
+                router?.push(`/user/?type=personalization&toggle=0`);
+              }}
             >
               Profile
             </p>
@@ -388,7 +480,10 @@ const Physical = ({
               className={`${
                 profileActiveTab === 1 ? styles.active_border : ""
               }`}
-              onClick={() => setProfileActiveTab(1)}
+              onClick={() => {
+                setProfileActiveTab(1);
+                router?.push(`/user/?type=personalization&toggle=1`);
+              }}
             >
               Daily Intake
             </p>
@@ -472,7 +567,7 @@ const Physical = ({
                     ) : null}
                     {ageType === "months" ? (
                       <InputComponent
-                        width="25%%"
+                        width="25%"
                         style={{ marginRight: "1rem" }}
                         placeholder="Age in months"
                         type="number"
@@ -698,12 +793,22 @@ const Physical = ({
                         style={{ width: "100%" }}
                         value={pregnant}
                         handleChange={handlePregnantOrLactating}
+                        disabled={
+                          //@ts-ignore
+                          parseFloat(watchValue?.years) >= 14 ||
+                          //@ts-ignore
+                          parseFloat(watchValue?.months) >= 168
+                            ? false
+                            : true
+                        }
                       />
                     </div>
                   </>
                 ) : null}
               </div>
             </div>
+            {/* @ts-ignore */}
+
             <div
               style={{
                 width: "100%",
@@ -713,19 +818,29 @@ const Physical = ({
               }}
             >
               <ButtonComponent
-                type="primary"
-                value="Update Profile"
+                disabled={loading}
+                variant="primary"
                 style={{
                   borderRadius: "30px",
                   height: "48px",
                   width: "180px",
                 }}
                 onClick={handleSubmit(submitData)}
-              />
+              >
+                {loading ? (
+                  <CircularRotatingLoader color="white" />
+                ) : (
+                  "Update Profile"
+                )}
+              </ButtonComponent>
             </div>
           </>
         ) : (
-          <DailyIntake />
+          <DailyIntake
+            colorToggle={colorToggle}
+            setColorToggle={setColorToggle}
+            toggle={toggle}
+          />
         )}
       </div>
     </>

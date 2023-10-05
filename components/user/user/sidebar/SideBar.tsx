@@ -5,10 +5,11 @@ import { AiOutlineCamera } from "react-icons/ai";
 import { FiEdit2 } from "react-icons/fi";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { setIsNewUseImage } from "../../../../redux/slices/userSlice";
+import { UserDataType } from "..";
 
 type SideBarProps = {
-  userData: any;
-  setUserData: any;
+  userData: UserDataType;
+  setUserData: React.Dispatch<React.SetStateAction<UserDataType>>;
 };
 
 const SideBar = ({ userData, setUserData }: SideBarProps) => {
@@ -25,9 +26,12 @@ const SideBar = ({ userData, setUserData }: SideBarProps) => {
     location,
   } = userData?.about;
   const dispatch = useAppDispatch();
+  console.log(image);
 
-  const handleFile = (e: any) => {
-    dispatch(setIsNewUseImage([e?.target?.files[0]]));
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e?.target?.files?.length) {
+      dispatch(setIsNewUseImage([e?.target?.files[0]]));
+    }
   };
 
   const handleChange = (e) => {
@@ -73,10 +77,11 @@ const SideBar = ({ userData, setUserData }: SideBarProps) => {
               : image || "/images/user-placeholder.png"
           }
           alt="userImag"
+          // fallbackSrc="/images/user-placeholder.png"
         />
         <div className={styles.cameraIconBox}>
           <AiOutlineCamera className={styles.cameraIcon} />
-          <input type="file" accept="image/*" onChange={(e) => handleFile(e)} />
+          <input type="file" accept="image/*" onChange={handleFile} />
         </div>
       </div>
       <h2 className={styles.name}>

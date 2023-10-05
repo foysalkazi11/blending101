@@ -1,139 +1,266 @@
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
-import DatacardComponent from "../../../../theme/cards/dataCard/dataCard.component";
-import { recommendedList } from "../../fackData/recipeDetails";
-import ChevronRightIcon from "../../../../public/icons/chevron_right_black_36dp.svg";
-import ChevronLeftIcon from "../../../../public/icons/chevron_left_black_36dp.svg";
+import React, { useCallback, useState } from "react";
+import PanelHeader from "../../share/panelHeader/PanelHeader";
+import { useQuery } from "@apollo/client";
+import GET_ALL_RELATED_CATEGORY_RECIPES from "../../../../gqlLib/recipes/queries/gatAllRelatedCategoryRecipes";
+import joniIngredients from "../../../../helperFunc/joinIngredients";
+import DataCardComponent from "../../../../theme/cards/dataCard/dataCard.component";
+import { useUser } from "../../../../context/AuthProvider";
+import client from "../../../../gqlLib/client";
+import { ReferenceOfRecipeUpdateFuncType } from "../../../../type/recipeType";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import ShowLastModifiedCollection from "../../../showLastModifiedCollection/ShowLastModifiedCollection";
+import ShareRecipe from "../center/shareRecipe";
+import {
+  setChangeRecipeWithinCollection,
+  setSingleRecipeWithinCollecions,
+} from "../../../../redux/slices/collectionSlice";
+import { setOpenCollectionsTary } from "../../../../redux/slices/sideTraySlice";
+import { RecipeDetailsLeftSide } from "../../../../theme/skeletons/skeletonRecipeDetails";
+import SlickSlider from "../../../../theme/carousel/SlickSlider";
+import { responsiveSetting } from "../../../showRelatedItems";
 import styles from "./LeftSide.module.scss";
-import SlickSlider from "../../../../theme/carousel/carousel.component";
-import useWindowSize from "../../../utility/useWindowSize";
-import CircularRotatingLoader from "../../../../theme/loader/circularRotatingLoader.component";
+import StickyBox from "react-sticky-box";
+type RelatedCategoryRecipesProps = {
+  blendCategory: string;
+  sliderView?: boolean;
+};
+const RelatedCategoryRecipes = ({ blendCategory = "", sliderView = false }: RelatedCategoryRecipesProps) => {
+  const [openCollectionModal, setOpenCollectionModal] = useState(false);
+  const [shareRecipeData, setShareRecipeData] = useState({
+    id: "",
+    image: "",
+    name: "",
+    versionId: "",
+    turnedOnVersions: [],
+  });
+  const { lastModifiedCollection } = useAppSelector((state) => state?.collections);
+  const [openShareModal, setOpenShareModal] = useState(false);
+  const user = useUser();
+  const { data, loading, error } = useQuery(GET_ALL_RELATED_CATEGORY_RECIPES, {
+    variables: {
+      blendCategory,
+      userId: user.id,
+      limit: 5,
+      page: 1,
+    },
+  });
+  const dispatch = useAppDispatch();
 
-const LeftSide = () => {
-  const windowSize = useWindowSize();
+  // open recipe collection panel after added a recipe to a collection
+  const handleOpenCollectionTray = () => {
+    dispatch(setSingleRecipeWithinCollecions([lastModifiedCollection?.id]));
+    dispatch(setOpenCollectionsTary(true));
+    dispatch(setChangeRecipeWithinCollection(true));
+    setOpenCollectionModal(false);
+  };
 
-  const PreviousButton = (prop) => {
-    const { className, onClick } = prop;
+  const updateRecipe: ReferenceOfRecipeUpdateFuncType = useCallback(
+    (id = "", outerObj = {}, innerObj = {}, innerLabel) => {
+      // update apollo client cache
+
+      client.writeQuery({
+        query: GET_ALL_RELATED_CATEGORY_RECIPES,
+        variables: {
+          blendCategory,
+          userId: user.id,
+          limit: 5,
+          page: 1,
+        },
+        data: {
+          getAllRelatedCategoryRecipes: {
+            ...data?.getAllRelatedCategoryRecipes,
+            recipes: data?.getAllRelatedCategoryRecipes?.recipes?.map((recipe) =>
+              recipe?.recipeId?._id === id
+                ? {
+                    ...recipe,
+                    ...outerObj,
+                    [innerLabel]: { ...recipe[innerLabel], ...innerObj },
+                  }
+                : recipe,
+            ),
+          },
+        },
+      });
+    },
+
+    [blendCategory, data?.getAllRelatedCategoryRecipes, user.id],
+  );
+
+  if (loading) {
     return (
-      <div className={className + " " + styles.prevBtn} onClick={onClick}>
-        <ChevronLeftIcon />
-      </div>
+      <RecipeDetailsLeftSide
+        style={sliderView ? { display: "flex", gap: "2rem" } : {}}
+        recipeCardStyle={sliderView ? { maxWidth: "377px" } : {}}
+      />
     );
-  };
-  const NextButton = (prop) => {
-    const { className, onClick } = prop;
-    return (
-      <div className={className + " " + styles.nextBtn} onClick={onClick}>
-        <ChevronRightIcon />
-      </div>
-    );
-  };
-  const responsiveSetting = {
-    slidesToShow: 5,
-    slidesToScroll: 1,
-    nextArrow: <NextButton />,
-    prevArrow: <PreviousButton />,
-
-    responsive: [
-      {
-        breakpoint: 1536,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 1250,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 980,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-  };
+  }
 
   return (
-    <div>
-      <div className={styles.header}>
-        <img src="/images/telescope.svg" alt="bar icon" />
-        <h3>Related</h3>
-      </div>
+    <StickyBox offsetBottom={20}>
+      <PanelHeader icon="/images/telescope.svg" title="Related Recipes" />
 
-      {recommendedList ? (
-        windowSize?.width >= 1400 ? (
-          recommendedList.slice(0, 4).map((cardData, index) => {
+      {!sliderView ? (
+        data?.getAllRelatedCategoryRecipes?.recipes?.map((item, index) => {
+          const {
+            recipeId: {
+              _id = "",
+              name = "",
+              image = [],
+              originalVersion = "",
+              numberOfRating = 0,
+              averageRating = 0,
+              recipeBlendCategory,
+              userId,
+              brand,
+              url,
+            },
+            defaultVersion,
+            // defaultVersion: {
+            //   _id: defaultVersionId = "",
+            //   postfixTitle = "",
+            //   ingredients,
+            //   description = "",
+            //   calorie: { value: calorieValue },
+            //   gigl: { netCarbs },
+            // },
+            isMatch = false,
+            allRecipes = false,
+            myRecipes = false,
+            notes = 0,
+            addedToCompare = false,
+            userCollections = [],
+            versionCount = 0,
+            personalRating = 0,
+          } = item;
+          const ing = joniIngredients(defaultVersion?.ingredients);
+          return (
+            <div key={`${_id}${index}`} className={styles.recipeCardGap}>
+              <DataCardComponent
+                title={name}
+                ingredients={ing}
+                category={recipeBlendCategory?.name}
+                ratings={averageRating}
+                noOfRatings={numberOfRating}
+                carbs={defaultVersion?.gigl?.netCarbs}
+                // score={rxScore}
+                calorie={defaultVersion?.calorie?.value}
+                noOfComments={numberOfRating}
+                image={image.find((img) => img?.default)?.image || image?.[0]?.image || ""}
+                recipeId={_id}
+                notes={notes}
+                addedToCompare={addedToCompare}
+                isCollectionIds={userCollections}
+                setOpenCollectionModal={setOpenCollectionModal}
+                isMatch={isMatch}
+                postfixTitle={defaultVersion?.postfixTitle}
+                defaultVersionId={defaultVersion?._id}
+                userId={userId}
+                recipeVersion={versionCount}
+                showMoreMenuAtHover={true}
+                setShareRecipeData={setShareRecipeData}
+                setOpenShareModal={setOpenShareModal}
+                token={item?.token}
+                updateDataFunc={updateRecipe}
+                brand={brand}
+                personalRating={personalRating}
+                origin={url}
+              />
+            </div>
+          );
+        })
+      ) : (
+        <SlickSlider moreSetting={responsiveSetting}>
+          {data?.getAllRelatedCategoryRecipes?.recipes?.map((item, index) => {
+            const {
+              recipeId: {
+                _id = "",
+                name = "",
+                image = [],
+                originalVersion = "",
+                numberOfRating = 0,
+                averageRating = 0,
+                recipeBlendCategory,
+                userId,
+                brand,
+                url,
+              },
+              defaultVersion,
+              // defaultVersion: {
+              //   _id: defaultVersionId = "",
+              //   postfixTitle = "",
+              //   ingredients,
+              //   description = "",
+              //   calorie: { value: calorieValue },
+              //   gigl: { netCarbs },
+              // },
+              isMatch = false,
+              allRecipes = false,
+              myRecipes = false,
+              notes = 0,
+              addedToCompare = false,
+              userCollections = [],
+              versionCount = 0,
+              personalRating = 0,
+            } = item;
+            const ing = joniIngredients(defaultVersion?.ingredients);
             return (
-              <div key={index} style={{ paddingBottom: "10px" }}>
-                {cardData ? (
-                  <div key={index}>
-                    <DatacardComponent
-                      title={cardData.title}
-                      ingredients={cardData.ingredients}
-                      category={cardData.category}
-                      ratings={cardData.ratings}
-                      noOfRatings={cardData.noOfRatings}
-                      carbs={cardData.carbs}
-                      score={cardData.score}
-                      calorie={cardData.calorie}
-                      noOfComments={cardData.noOfComments}
-                      image={cardData.image}
-                    />
-                  </div>
-                ) : (
-                  <div>
-                    <CircularRotatingLoader />
-                  </div>
-                )}
+              <div key={`${_id}${index}`} className={styles.recipeCardGapWithinSlider}>
+                <DataCardComponent
+                  title={name}
+                  ingredients={ing}
+                  category={recipeBlendCategory?.name}
+                  ratings={averageRating}
+                  noOfRatings={numberOfRating}
+                  carbs={defaultVersion?.gigl?.netCarbs}
+                  // score={rxScore}
+                  calorie={defaultVersion?.calorie?.value}
+                  noOfComments={numberOfRating}
+                  image={image.find((img) => img?.default)?.image || image?.[0]?.image || ""}
+                  recipeId={_id}
+                  notes={notes}
+                  addedToCompare={addedToCompare}
+                  isCollectionIds={userCollections}
+                  setOpenCollectionModal={setOpenCollectionModal}
+                  isMatch={isMatch}
+                  postfixTitle={defaultVersion?.postfixTitle}
+                  defaultVersionId={defaultVersion?._id}
+                  userId={userId}
+                  recipeVersion={versionCount}
+                  showMoreMenuAtHover={true}
+                  setShareRecipeData={setShareRecipeData}
+                  setOpenShareModal={setOpenShareModal}
+                  token={item?.token}
+                  updateDataFunc={updateRecipe}
+                  brand={brand}
+                  personalRating={personalRating}
+                  origin={url}
+                />
               </div>
             );
-          })
-        ) : (
-          <SlickSlider moreSetting={responsiveSetting}>
-            {recommendedList?.map((cardData, index) => {
-              return cardData ? (
-                <div key={index}>
-                  <DatacardComponent
-                    title={cardData.title}
-                    ingredients={cardData.ingredients}
-                    category={cardData.category}
-                    ratings={cardData.ratings}
-                    noOfRatings={cardData.noOfRatings}
-                    carbs={cardData.carbs}
-                    score={cardData.score}
-                    calorie={cardData.calorie}
-                    noOfComments={cardData.noOfComments}
-                    image={cardData.image}
-                  />
-                </div>
-              ) : (
-                <div>
-                  <CircularRotatingLoader />
-                </div>
-              );
-            })}
-          </SlickSlider>
-        )
-      ) : (
-        <div style={{ marginTop: "30px" }}>
-          <CircularRotatingLoader />
-        </div>
+          })}
+        </SlickSlider>
       )}
-    </div>
+      <ShowLastModifiedCollection
+        open={openCollectionModal}
+        setOpen={setOpenCollectionModal}
+        shouldCloseOnOverlayClick={true}
+        lastModifiedCollectionName={lastModifiedCollection?.name}
+        openCollectionPanel={handleOpenCollectionTray}
+      />
+      <ShareRecipe
+        id={shareRecipeData?.id}
+        versionId={shareRecipeData.versionId}
+        title={shareRecipeData?.name}
+        image={shareRecipeData?.image}
+        turnedOnVersions={shareRecipeData?.turnedOnVersions}
+        show={openShareModal}
+        setShow={setOpenShareModal}
+        type="recipe"
+        heading="Share Recipe"
+      />
+    </StickyBox>
   );
 };
 
-export default LeftSide;
+export default RelatedCategoryRecipes;

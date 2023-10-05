@@ -1,23 +1,37 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RecipeType } from "../../type/recipeType";
+
+interface CurrentCollectionInfo {
+  id: string;
+  name: "All Recipes" | "My Recipes" | string;
+}
 
 type collectionsSliceState = {
   allRecipeWithinCollectionsId: string[];
   changeRecipeWithinCollection: boolean;
   activeRecipeId: string;
-  lastModifiedCollection: string;
+  lastModifiedCollection: { id: string; name: string };
   collectionDetailsId: string;
   showAllRecipes: boolean;
-  allRecipeWithinCollections: {}[];
+  allRecipeWithinCollections: RecipeType[];
+  allCollections: {}[];
+  singleRecipeWithinCollections: string[];
+  currentCollectionInfo: CurrentCollectionInfo;
+  bulkRecipeIdsForAddedInCollection: string[];
 };
 
 const initialState: collectionsSliceState = {
   allRecipeWithinCollectionsId: [],
   changeRecipeWithinCollection: false,
   activeRecipeId: "",
-  lastModifiedCollection: "Default",
+  lastModifiedCollection: { id: "", name: "" },
   collectionDetailsId: "",
   showAllRecipes: false,
   allRecipeWithinCollections: [],
+  allCollections: [],
+  singleRecipeWithinCollections: [],
+  currentCollectionInfo: { id: "", name: "" },
+  bulkRecipeIdsForAddedInCollection: [],
 };
 
 export const collectionsSlice = createSlice({
@@ -26,20 +40,29 @@ export const collectionsSlice = createSlice({
   reducers: {
     setAllRecipeWithinCollectionsId: (
       state,
-      action: PayloadAction<string[]>
+      action: PayloadAction<string[]>,
     ) => {
       state.allRecipeWithinCollectionsId = action?.payload;
     },
     setChangeRecipeWithinCollection: (
       state,
-      action: PayloadAction<boolean>
+      action: PayloadAction<boolean>,
     ) => {
       state.changeRecipeWithinCollection = action?.payload;
     },
     setActiveRecipeId: (state, action: PayloadAction<string>) => {
       state.activeRecipeId = action?.payload;
     },
-    setLastModifiedCollection: (state, action: PayloadAction<string>) => {
+    setSingleRecipeWithinCollecions: (
+      state,
+      action: PayloadAction<string[]>,
+    ) => {
+      state.singleRecipeWithinCollections = action?.payload;
+    },
+    setLastModifiedCollection: (
+      state,
+      action: PayloadAction<{ id: string; name: string }>,
+    ) => {
       state.lastModifiedCollection = action?.payload;
     },
     setCollectionDetailsId: (state, action: PayloadAction<string>) => {
@@ -48,8 +71,24 @@ export const collectionsSlice = createSlice({
     setShowAllRecipes: (state, action: PayloadAction<boolean>) => {
       state.showAllRecipes = action?.payload;
     },
-    setAllRecipeWithinCollections: (state, action: PayloadAction<{}[]>) => {
+    setAllRecipeWithinCollections: (state, action: PayloadAction<any[]>) => {
       state.allRecipeWithinCollections = action?.payload;
+    },
+    setAllCollections: (state, action: PayloadAction<{}[]>) => {
+      state.allCollections = action?.payload;
+    },
+
+    setCurrentCollectionInfo: (
+      state,
+      action: PayloadAction<CurrentCollectionInfo>,
+    ) => {
+      state.currentCollectionInfo = action?.payload;
+    },
+    updateBulkRecipeIdsForAddedInCollection: (
+      state,
+      action: PayloadAction<string[]>,
+    ) => {
+      state.bulkRecipeIdsForAddedInCollection = action?.payload;
     },
   },
 });
@@ -62,6 +101,10 @@ export const {
   setCollectionDetailsId,
   setShowAllRecipes,
   setAllRecipeWithinCollections,
+  setAllCollections,
+  setSingleRecipeWithinCollecions,
+  updateBulkRecipeIdsForAddedInCollection,
+  setCurrentCollectionInfo,
 } = collectionsSlice?.actions;
 
 export default collectionsSlice?.reducer;

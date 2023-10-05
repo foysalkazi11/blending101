@@ -75,6 +75,7 @@ const ResetPassword = () => {
               required={{ required: "Enter Previous password" }}
               error={{
                 isError: errors?.oldPassword ? true : false,
+                //@ts-ignore
                 message: errors?.oldPassword?.message,
               }}
             />
@@ -96,6 +97,7 @@ const ResetPassword = () => {
               }}
               error={{
                 isError: errors?.newPassword ? true : false,
+                //@ts-ignore
                 message: errors?.newPassword?.message,
               }}
             />
@@ -125,14 +127,12 @@ const ResetPassword = () => {
             </p>
             <div className={styles.buttonRightDiv}>
               <Link href="/login">
-                <a>
-                  <ButtonComponent
-                    type="text"
-                    style={{ height: "100%" }}
-                    value="Login"
-                    fullWidth={true}
-                  />
-                </a>
+                <ButtonComponent
+                  type="text"
+                  style={{ height: "100%" }}
+                  value="Login"
+                  fullWidth={true}
+                />
               </Link>
             </div>
           </div>

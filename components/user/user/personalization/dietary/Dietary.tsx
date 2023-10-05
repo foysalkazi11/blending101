@@ -3,7 +3,10 @@ import DropDown from "../../../../../theme/dropDown/DropDown.component";
 import styles from "./Dietary.module.scss";
 import DietarySection from "./dietarySection/DietarySection";
 
-let dropdownItem = ["Warning", "Hiding"];
+let dropdownItem = [
+  { name: "Warning", value: "Warning" },
+  { name: "Hiding", value: "Hiding" },
+];
 
 const dietary = [
   {
@@ -52,28 +55,19 @@ type DietaryProps = {
   alredyExist?: (value: string, fieldName: string) => boolean;
 };
 
-const Dietary = ({
-  updateUserProfile,
-  userProfile,
-  alredyExist,
-}: DietaryProps) => {
-  const [dropDownValue, setDropDownValue] = useState("warning");
+const Dietary = ({ updateUserProfile, userProfile, alredyExist }: DietaryProps) => {
+  const [dropDownValue, setDropDownValue] = useState("Warning");
   return (
     <div className={styles.dietaryContainer}>
-      <p className={styles.infoText}>
-        This information is used to customize daily recommended nutrition
-        targets
-      </p>
+      <p className={styles.infoText}>This information is used to customize daily recommended nutrition targets</p>
       <div className={styles.dietrySelect}>
-        <p className={styles.text}>
-          How should dietary or allergy conflicts be handled?
-        </p>
+        <p className={styles.text}>How should dietary or allergy conflicts be handled?</p>
         <div style={{ flex: "auto" }}>
           <DropDown
             listElem={dropdownItem}
             style={{ maxWidth: "200px" }}
             value={dropDownValue}
-            valueState={setDropDownValue}
+            onChange={(e) => setDropDownValue(e?.target?.value)}
           />
         </div>
       </div>

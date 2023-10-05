@@ -1,0 +1,8 @@
+.wikiThemeContainer {
+  padding: 2rem 0.5rem 2rem 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Example grid layout */
+  grid-gap: 2rem; /* Example gap between grid items */
+  text-align: center;
+}

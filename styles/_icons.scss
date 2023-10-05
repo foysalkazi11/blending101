@@ -1,0 +1,44 @@
+%f-icon {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+
+  &:before {
+    content: "";
+    display: inline-block;
+    font-family: "Font-Awesome";
+    font-weight: 300 !important;
+    font-style: normal !important;
+    font-size: inherit;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "liga";
+  }
+}
+
+.bookmark-icon {
+  @extend %f-icon;
+  &:before {
+    content: "\f02e";
+  }
+}
+.compare-icon {
+  @extend %f-icon;
+  &:before {
+    content: "\e13a";
+  }
+}
+
+.comment-icon {
+  @extend %f-icon;
+  &:before {
+    content: "\f27a";
+  }
+}

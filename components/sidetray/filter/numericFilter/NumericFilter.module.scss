@@ -7,18 +7,20 @@
   background-color: white;
   box-shadow: 1px 2px 4px #ececec;
   border: 1px solid #f6f6f6;
-  padding: 5px;
+  padding: 8px;
   border-radius: 35rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  font-weight: 400;
+  letter-spacing: 1px;
 
   .firstChild {
     border-top-left-radius: 3.5rem;
     border-bottom-left-radius: 3.5rem;
     border-top-right-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
-    padding: 5px;
+    padding: 8px;
     font-size: 12px;
     text-align: center;
     cursor: pointer;
@@ -27,7 +29,7 @@
     }
   }
   .middleChild {
-    padding: 5px;
+    padding: 8px;
     font-size: 12px;
     text-align: center;
     border-radius: 5px;
@@ -41,7 +43,7 @@
     border-bottom-right-radius: 3.5rem;
     border-top-left-radius: 0 !important;
     border-bottom-left-radius: 0 !important;
-    padding: 5px;
+    padding: 8px;
     font-size: 12px;
     text-align: center;
     cursor: pointer;
@@ -58,12 +60,15 @@
     }
   }
 }
+.activeTabTabContainer {
+  border-color: #7dbd3b;
+}
 
 .counterContainer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 20px 0px;
+  margin-top: 20px;
   border: 1px solid #dbdbdb;
   box-shadow: 1px 2px 4px #ececec;
   padding: 5px 10px;
@@ -96,6 +101,7 @@
 }
 
 .counterBetween {
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;

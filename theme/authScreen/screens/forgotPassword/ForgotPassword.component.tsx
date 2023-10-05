@@ -41,7 +41,7 @@ const ForgotPassword = () => {
         dispatch(setLoading(false));
         reactToastifyNotification(
           "info",
-          "A confirmation code has been sent to your email"
+          "A confirmation code has been sent to your email",
         );
         setSendCode(true);
       }
@@ -69,7 +69,6 @@ const ForgotPassword = () => {
                 // height={400}
                 // width={400}
                 objectFit={"contain"}
-                className={styles.logoImage}
                 quality={100}
               />
             </div>
@@ -96,6 +95,7 @@ const ForgotPassword = () => {
               }}
               error={{
                 isError: errors?.email ? true : false,
+                //@ts-ignore
                 message: errors?.email?.message,
               }}
             />
@@ -111,6 +111,7 @@ const ForgotPassword = () => {
                   required={{ required: "Enter confirmation code" }}
                   error={{
                     isError: errors?.code ? true : false,
+                    //@ts-ignore
                     message: errors?.code?.message,
                   }}
                 />
@@ -132,6 +133,7 @@ const ForgotPassword = () => {
                   }}
                   error={{
                     isError: errors?.newPassword ? true : false,
+                    //@ts-ignore
                     message: errors?.newPassword?.message,
                   }}
                 />
@@ -162,14 +164,12 @@ const ForgotPassword = () => {
             </p>
             <div className={styles.buttonRightDiv}>
               <Link href="/login">
-                <a>
-                  <ButtonComponent
-                    type="text"
-                    style={{ height: "100%" }}
-                    value="Login"
-                    fullWidth={true}
-                  />
-                </a>
+                <ButtonComponent
+                  type="text"
+                  style={{ height: "100%" }}
+                  value="Login"
+                  fullWidth={true}
+                />
               </Link>
             </div>
           </div>

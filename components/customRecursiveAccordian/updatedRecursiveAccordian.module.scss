@@ -18,9 +18,6 @@
   }
 }
 
-
-
-
 .header {
   display: flex;
   align-items: center;
@@ -58,7 +55,6 @@
   }
 }
 
-
 .recursiveAccordianHeading__heading {
   display: grid;
   grid-template-columns: 1fr 80px 80px;
@@ -81,13 +77,17 @@
   &__3 {
     @extend %headingAccordian;
 
-    div {
+    .userName {
       @extend %headingAccordian;
       aspect-ratio: 1;
-      width: 45px;
+      width: 32px;
       border-radius: 50%;
       background-color: #f1f1f1;
       position: relative;
+      cursor: pointer;
+      img {
+        border-radius: 50%;
+      }
     }
   }
 }
@@ -107,9 +107,31 @@
   }
 
   &__4 {
-    width: 80px;
+    width: 85px;
     padding: 10px 0px;
     background-color: #f1f1f1;
+  }
+}
+.recursiveAccordianBody {
+  height: 100%;
+  max-height: 550px;
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+    background-color: #f1f1f1;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -ms-border-radius: 8px;
+    -o-border-radius: 8px;
+    background-color: #f1f1f1;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #ececec;
   }
 }
 
@@ -139,6 +161,17 @@
     background-color: #bd643b;
     height: 100%;
     margin-left: auto;
+  }
+}
 
+.unitDropDownBox {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  .title {
+    font-size: 14px;
+    color: #8b8a8a;
+    margin-right: 10px;
+    font-weight: bold;
   }
 }

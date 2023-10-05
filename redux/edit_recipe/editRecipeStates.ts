@@ -4,6 +4,7 @@ const initialState = {
   recipeName: "",
   descriptionRecipe: "",
   recipeImagesArray: [],
+  recipeFileImagesArray: [],
   selectedBlendCategory: null,
   allBlendCategories: [],
   allIngredientListBasedOnClass: [],
@@ -28,7 +29,9 @@ export const editRecipeStateSlice = createSlice({
     setRecipeImagesArray: (state, action) => {
       state.recipeImagesArray = action?.payload;
     },
-
+    setRecipeFileImagesArray: (state, action) => {
+      state.recipeFileImagesArray = action?.payload;
+    },
     setSelectedBlendCategory: (state, action) => {
       state.selectedBlendCategory = action?.payload;
     },
@@ -56,6 +59,19 @@ export const editRecipeStateSlice = createSlice({
     setSelectedIngredientBool: (state, action) => {
       state.selectedIngredientBool = action?.payload;
     },
+    setRecipeIngredients: (state, action) => {
+      const idxIngredient = state.selectedIngredientsList.findIndex(
+        (ing) => ing._id === action?.payload._id,
+      );
+      if (idxIngredient !== -1) {
+        state.selectedIngredientsList[idxIngredient] = action?.payload;
+      } else {
+        state.selectedIngredientsList = [
+          ...state.selectedIngredientsList,
+          action?.payload,
+        ];
+      }
+    },
   },
 });
 
@@ -63,6 +79,7 @@ export const {
   setEditRecipeName,
   setDescriptionRecipe,
   setRecipeImagesArray,
+  setRecipeFileImagesArray,
   setSelectedBlendCategory,
   setAllIngredientListBasedOnClass,
   setSelectedIngredientsList,
@@ -72,6 +89,7 @@ export const {
   setIngredientArrayForNutrition,
   setArrayOfSingleSelectedIngredientForNutrition,
   setSelectedIngredientBool,
+  setRecipeIngredients,
 } = editRecipeStateSlice.actions;
 
 export default editRecipeStateSlice?.reducer;

@@ -1,7 +1,21 @@
 import { gql } from "@apollo/client";
 
+export const GET_USER = gql`
+  mutation GetUser($data: NewUserInput!) {
+    createNewUser(data: $data) {
+      _id
+      displayName
+      email
+      image
+      isCreated
+      compareLength
+      wikiCompareCount
+    }
+  }
+`;
+
 const CREATE_NEW_USER = gql`
-  mutation Mutation($data: NewUserInput!) {
+  mutation CreateNewUser($data: NewUserInput!) {
     createNewUser(data: $data) {
       _id
       bio
@@ -35,39 +49,9 @@ const CREATE_NEW_USER = gql`
         meditcation
         whyBlending
       }
-      collections {
-        _id
-        name
-        image
-        recipes {
-          image {
-            default
-            image
-          }
-          name
-          _id
-          description
-          prepTime
-          cookTime
-          totalTime
-          recipeYield
-          recipeIngredients
-          recipeInstructions
-          recipeCuisines
-
-          url
-          discovery
-          favicon
-          averageRating
-          numberOfRating
-          ingredients {
-            ingredientId {
-              _id
-              ingredientName
-            }
-          }
-        }
-      }
+      compareLength
+      wikiCompareCount
+      isCreated
     }
   }
 `;

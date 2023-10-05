@@ -1,13 +1,21 @@
 import { gql } from "@apollo/client";
 
 const FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS = gql`
-  query Query($data: IngredientFilter!) {
+  query FilterIngredientByCategoryAndClass($data: IngredientFilter!) {
     filterIngredientByCategoryAndClass(data: $data) {
       _id
       ingredientName
-      featuredImage
-      images
       category
+      blendStatus
+      classType
+      description
+      images
+      featuredImage
+      portions {
+        measurement
+        meausermentWeight
+        default
+      }
     }
   }
 `;

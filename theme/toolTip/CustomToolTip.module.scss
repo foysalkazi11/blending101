@@ -1,7 +1,8 @@
 /* Custom properties */
 $tooltip-text-color: white;
-$tooltip-background-color: black;
+$tooltip-background-color: #7dbd3b;
 $tooltip-margin: 30px;
+$tooltip-left-right: 15px;
 $tooltip-arrow-size: 6px;
 
 // :root {
@@ -13,7 +14,7 @@ $tooltip-arrow-size: 6px;
 
 /* Wrapping */
 .Tooltip_Wrapper {
-  display: inline-block;
+  display: block;
   position: relative;
 }
 
@@ -24,10 +25,10 @@ $tooltip-arrow-size: 6px;
   left: 50%;
   transform: translateX(-50%);
   padding: 6px;
-  color: $tooltip-text-color;
+  color: $tooltip-text-color !important;
   background: $tooltip-background-color;
   font-size: 14px;
-  font-family: "Poppins", sans-serif;
+  font-family: "Segoe UI", sans-serif;
   line-height: 1;
   z-index: 100;
   white-space: nowrap;
@@ -58,7 +59,7 @@ $tooltip-arrow-size: 6px;
 
 /* Absolute positioning */
 .Tooltip_Tip.right {
-  left: calc(100% + ($tooltip-margin));
+  left: calc(100% + ($tooltip-left-right));
   top: 50%;
   transform: translateX(0) translateY(-50%);
 }
@@ -83,7 +84,7 @@ $tooltip-arrow-size: 6px;
 /* Absolute positioning */
 .Tooltip_Tip.left {
   left: auto;
-  right: calc(100% + ($tooltip-margin));
+  right: calc(100% + ($tooltip-left-right));
   top: 50%;
   transform: translateX(0) translateY(-50%);
 }

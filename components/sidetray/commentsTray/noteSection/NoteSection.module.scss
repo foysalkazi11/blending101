@@ -1,61 +1,8 @@
 .commentsIconBox {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   padding-top: 20px;
-  span {
-    font-size: 10px;
-    color: #7e7c7c;
-    display: block;
-  }
-  button {
-    background-color: #7cbc39;
-    border: none;
-    border-radius: 50%;
-    width: 28px;
-    height: 28px;
-    position: relative;
-    cursor: pointer;
-    transition: 0.5s;
-    &:hover span {
-      visibility: visible;
-    }
-    img {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      margin: auto;
-    }
-    span {
-      left: -48px;
-      padding: 0 5px;
-      position: absolute;
-      visibility: hidden;
-      background-color: #7cbc39;
-      color: #fff;
-      text-align: center;
-      z-index: 1;
-      min-width: 24px;
-      border-radius: 2px;
-      top: 4px;
-      font-size: 14px;
-      &::before {
-        content: "";
-        position: absolute;
-        width: 0px;
-        height: 0px;
-        border-top: 5px solid transparent;
-        border-bottom: 5px solid transparent;
-        border-left: 8px solid #7cbc39;
-        right: -7px;
-        top: 0;
-        bottom: 0;
-        margin: auto;
-      }
-    }
-  }
 }
 
 .noteEditBox {
@@ -64,63 +11,82 @@
   padding: 10px;
   max-height: calc(100vh - 210px);
   margin-top: 20px;
+  overflow-x: hidden;
   .singleNoteEdit {
     border-bottom: 1px solid #ececec;
     padding-bottom: 15px;
     margin-bottom: 20px;
+    &:hover .header .rightSide {
+      transform: translateX(0);
+    }
+    &:last-child {
+      border-bottom: none;
+      margin-bottom: 0px;
+    }
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      &:hover .rightSide {
-        visibility: visible;
-      }
+      position: relative;
+
       h3 {
         font-size: 14px;
         font-weight: 600;
-
         color: #000000;
+        transition: all 0.3s linear;
+      }
+      .active {
+        color: #fe5d1f;
       }
       .rightSide {
-        display: flex;
-        align-items: center;
-        visibility: hidden;
-        .editIconBox {
-          width: 28px;
-          height: 28px;
-          border-radius: 50%;
-          padding: 0;
-          border: 0;
-          background: #fbfbfb;
+        position: absolute;
+        top: 0;
+        right: 0;
+        transform: translateX(120%);
+        transition: all 0.3s;
+        .content {
           display: flex;
           align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          &:hover {
-            box-shadow: 0 10px 10px -10px rgb(0 0 0 / 50%);
-            background: #e0e0e047;
-          }
-          .icon {
-            font-size: 16px;
-            color: #646464;
+
+          .editIconBox {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            padding: 0;
+            border: 0;
+            background: #fbfbfb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            &:hover {
+              box-shadow: 0 10px 10px -10px rgb(0 0 0 / 50%);
+              color: #e0e0e047;
+            }
+            .icon {
+              font-size: 14px;
+              color: #646464;
+            }
           }
         }
       }
     }
 
     .noteDis {
-      margin-top: 16px;
+      margin-top: 10px;
       p {
         color: #646464;
         font-size: 12px;
         margin: 0;
       }
-      span {
-        font-size: 10px;
-        color: #c1c1c1;
-        font-weight: 300;
-      }
     }
+  }
+}
+
+.headingHover {
+  cursor: pointer;
+  &:hover {
+    color: #fe5d1f !important;
   }
 }
 
@@ -128,4 +94,39 @@
   text-align: center;
   color: #c1c1c1;
   font-size: 16px;
+}
+
+.buttomDis {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 5px;
+
+  span {
+    font-size: 10px;
+    color: #c1c1c1;
+    font-weight: 300;
+  }
+
+  .on {
+    color: #fe5d1f;
+  }
+  .off {
+    color: #c1c1c1;
+  }
+
+  .leftSide {
+    display: flex;
+    align-items: center;
+
+    .star {
+      margin-left: 10px;
+      // font-size: 20px;
+      cursor: pointer;
+    }
+  }
+
+  .pointerEventNone {
+    pointer-events: none;
+  }
 }

@@ -1,0 +1,9 @@
+{
+  "singleQuote": false,
+  "trailingComma": "all",
+  "semi": true,
+  "importOrder": ["<THIRD_PARTY_MODULES>", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
+  "printWidth": 120
+}

@@ -1,101 +1,163 @@
 import { gql } from "@apollo/client";
 
-export const GET_RECIPE = gql`
-  query GetARecipe($recipeId: String!) {
-    getARecipe(recipeId: $recipeId) {
-      _id
-      name
-      prepTime
-      description
-      recipeIngredients
-      recipeInstructions
-      totalRating
-      numberOfRating
-      averageRating
-      numberOfRating
-      totalViews
-      recipeBlendCategory {
+const GET_A_RECIPE = gql`
+  query GetARecipe2($userId: String!, $token: String, $recipeId: String) {
+    getARecipe2(userId: $userId, token: $token, recipeId: $recipeId) {
+      recipeId {
+        _id
         name
-      }
-      ingredients {
-        ingredientId {
-          ingredientName
-          _id
-        }
-        selectedPortion {
-          name
-          quantity
-          gram
-        }
-        portions {
-          name
-          gram
+        image {
+          image
           default
         }
+        userId {
+          _id
+          displayName
+          image
+          firstName
+          lastName
+        }
+        brand {
+          _id
+          brandName
+          brandImage
+          brandUrl
+        }
+        url
+        averageRating
+        numberOfRating
+        servings
+        servingSize
+        token
+        totalRating
+        description
+        totalTime
+        recipeBlendCategory {
+          _id
+          name
+        }
+        originalVersion {
+          _id
+          description
+          postfixTitle
+          selectedImage
+        }
       }
-      image {
-        image
-        default
+      defaultVersion {
+        _id
+        description
+        postfixTitle
+        recipeId
+        recipeInstructions
+        servingSize
+        errorIngredients {
+          errorString
+          errorIngredientId: ingredientId
+          qaId
+        }
+        ingredients {
+          originalIngredientName
+          quantityString
+          comment
+          ingredientId {
+            ingredientName
+            _id
+            images
+            featuredImage
+          }
+
+          portions {
+            name
+            gram
+            default
+            quantity
+          }
+          weightInGram
+          selectedPortion {
+            name
+            quantity
+            gram
+          }
+        }
+        selectedImage
       }
+      turnedOnVersions {
+        _id
+        servingSize
+        recipeId
+        recipeInstructions
+        postfixTitle
+        description
+        ingredients {
+          originalIngredientName
+          quantityString
+          comment
+          ingredientId {
+            ingredientName
+            _id
+            images
+            featuredImage
+          }
+
+          portions {
+            name
+            gram
+            default
+            quantity
+          }
+          weightInGram
+          selectedPortion {
+            name
+            quantity
+            gram
+          }
+        }
+        selectedImage
+      }
+
+      turnedOffVersions {
+        _id
+        servingSize
+        recipeId
+        recipeInstructions
+        postfixTitle
+        description
+        ingredients {
+          originalIngredientName
+          quantityString
+          comment
+          ingredientId {
+            ingredientName
+            _id
+            images
+            featuredImage
+          }
+
+          portions {
+            name
+            gram
+            default
+            quantity
+          }
+          weightInGram
+          selectedPortion {
+            name
+            quantity
+            gram
+          }
+        }
+        selectedImage
+      }
+      addedToCompare
+      allRecipes
+      isMatch
+      myRecipes
+      notes
+      userCollections
+      versionsCount
+      personalRating
     }
   }
 `;
 
-export const GET_A_RECIPE_FOR_EDIT_RECIPE = gql`
-  query GetARecipe($recipeId: String!) {
-    getARecipe(recipeId: $recipeId) {
-      _id
-      name
-      prepTime
-      description
-      recipeIngredients
-      recipeInstructions
-      totalRating
-      numberOfRating
-      averageRating
-      numberOfRating
-      totalViews
-      recipeBlendCategory {
-        name
-      }
-      ingredients {
-        ingredientId {
-          ingredientName
-          _id
-        }
-
-        portions {
-          name
-          gram
-          default
-        }
-      }
-      image {
-        image
-        default
-      }
-    }
-  }
-`;
-
-export const GET_NUTRITION = (ingredients) => {
-  const convertArrToString = (arr) => {
-    arr = arr?.map((itm) => {
-      return `
-            {
-              ingredientId: "${itm.ingredientId._id}",
-              value: ${itm.selectedPortion.gram}
-            }
-          `;
-    });
-    arr = `[${arr?.toString()}]`;
-    return arr;
-  };
-  return gql`
-    query {
-      getBlendNutritionBasedOnRecipexxx(
-        ingredientsInfo: ${convertArrToString(ingredients)}
-      )
-    }
-  `;
-};
+export default GET_A_RECIPE;

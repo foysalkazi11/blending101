@@ -2,24 +2,22 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import ButtonComponent from "../../../button/buttonA/button.component";
-import InputField from "../../../input/inputField.component";
 import styles from "./EmailVarify.module.scss";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import {
-  setUser,
-  setDbUser,
-  setProvider,
-} from "../../../../redux/slices/userSlice";
+import { setUser, setDbUser, setProvider } from "../../../../redux/slices/userSlice";
 import { setLoading } from "../../../../redux/slices/utilitySlice";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
 import { useRouter } from "next/router";
 import { Auth } from "aws-amplify";
 import CREATE_NEW_USER from "./../../../../gqlLib/user/mutations/createNewUser";
 import { useMutation } from "@apollo/client";
+import InputComponent from "../../../input/input.component";
+import HeadTagInfo from "../../../headTagInfo";
+import { useSession } from "../../../../context/AuthProvider";
 
-const ForgotPassword = () => {
+const EmailVerify = () => {
   const [code, setCode] = useState("");
-
+  const session = useSession();
   const { nonConfirmedUser } = useAppSelector((state) => state?.user);
   const dispatch = useAppDispatch();
   const history = useRouter();
@@ -37,6 +35,11 @@ const ForgotPassword = () => {
             data: { email: nonConfirmedUser, provider: "email" },
           },
         });
+        const user = await Auth.currentAuthenticatedUser();
+        await Auth.updateUserAttributes(user, {
+          address: "105 Main St. New York, NY 10001",
+        });
+
         dispatch(setLoading(false));
         reactToastifyNotification("info", "Sign up successfully");
         dispatch(setUser(nonConfirmedUser));
@@ -57,51 +60,51 @@ const ForgotPassword = () => {
     try {
       const code = await Auth.resendSignUp(nonConfirmedUser);
       dispatch(setLoading(false));
-      reactToastifyNotification(
-        "info",
-        "A new verification code has been send to you email."
-      );
+      reactToastifyNotification("info", "A new verification code has been send to you email.");
     } catch (error) {
       dispatch(setLoading(false));
       reactToastifyNotification("error", error?.message);
     }
   };
+
   return (
-    <div className={styles.mainDiv}>
-      <div className={styles.varifyEmailContainer}>
-        <img src="/images/logo.png" alt="logo will soon load" />
+    <>
+      <HeadTagInfo title={`Email verify`} description={`email verify`} />
+      <div className={styles.mainDiv}>
+        <div className={styles.varifyEmailContainer}>
+          <img src="/images/logo.png" alt="logo will soon load" />
 
-        <h2>Verify Email</h2>
-        <p>A Verification code is sent to your mail. Please paste it below.</p>
-        <form onSubmit={handleSubmit}>
-          <InputField
-            type="text"
-            style={{ margin: "4px auto 15px auto" }}
-            value={code}
-            placeholder="Verify your account"
-            fullWidth={true}
-            setValue={setCode}
-          />
-
-          <div className={styles.buttonContainer}>
-            <ButtonComponent
-              type="primary"
-              style={{ height: "60px", fontSize: "18px" }}
-              value="Verify"
-              fullWidth={false}
-              submit={true}
+          <h2>Verify Email</h2>
+          <p>A Verification code is sent to your mail. Please paste it below.</p>
+          <form onSubmit={handleSubmit}>
+            <InputComponent
+              type="text"
+              style={{ margin: "4px auto 15px auto", width: "100%" }}
+              value={code}
+              placeholder="Verify your account"
+              onChange={(e) => setCode(e?.target?.value)}
             />
-          </div>
-          <div className={styles.link}>
-            <p onClick={resendSignUp}>Resend code</p>
-            <Link href="/signup" passHref>
-              Sign up
-            </Link>
-          </div>
-        </form>
+
+            <div className={styles.buttonContainer}>
+              <ButtonComponent
+                type="primary"
+                style={{ height: "60px", fontSize: "18px" }}
+                value="Verify"
+                fullWidth={false}
+                submit={true}
+              />
+            </div>
+            <div className={styles.link}>
+              <p onClick={resendSignUp}>Resend code</p>
+              <Link href="/signup" passHref>
+                Sign up
+              </Link>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
-export default ForgotPassword;
+export default EmailVerify;

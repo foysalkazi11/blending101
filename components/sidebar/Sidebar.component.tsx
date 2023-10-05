@@ -1,53 +1,82 @@
 /* eslint-disable @next/next/no-img-element */
+import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
-import index from "../../pages/component";
-import { useAppDispatch } from "../../redux/hooks";
+import React from "react";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
   setCollectionDetailsId,
   setShowAllRecipes,
 } from "../../redux/slices/collectionSlice";
 import { setOpenCollectionsTary } from "../../redux/slices/sideTraySlice";
+import { updateSidebarActiveMenuName } from "../../redux/slices/utilitySlice";
 import Tooltip from "../../theme/toolTip/CustomToolTip";
 import styles from "./sidebar.module.scss";
 
+export type sidebarActiveMenuNameType =
+  | "Home"
+  | "Blends"
+  | "Plans"
+  | "Challenges"
+  | "Wiki"
+  | "Blogs"
+  | "Shop";
+
+export const PAGES: {
+  logo: string;
+  link: string;
+  content: sidebarActiveMenuNameType;
+}[] = [
+  { logo: "/icons/home.svg", link: "/", content: "Home" },
+  {
+    logo: "/icons/juicer.svg",
+    link: "/recipe/recipe_discovery",
+    content: "Blends",
+  },
+
+  {
+    logo: "/icons/calender__sidebar.svg",
+    link: "/planner",
+    content: "Plans",
+  },
+  {
+    logo: "/icons/whistle.svg",
+    link: "/challenge",
+    content: "Challenges",
+  },
+  { logo: "/icons/books.svg", link: "/wiki", content: "Wiki" },
+  { logo: "/icons/book_light.svg", link: "/blog", content: "Blogs" },
+  { logo: "/icons/store.svg", link: "/", content: "Shop" },
+];
+
 export default function SidebarComponent(props) {
-  const [active, setActive] = useState(0);
+  const { sidebarActiveMenuName } = useAppSelector((state) => state.utility);
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const pages = [
-    { logo: "/icons/home.svg", link: "/", content: "Home" },
-    { logo: "/icons/juicer.svg", link: "/", content: "Discovery" },
-    { logo: "/icons/books.svg", link: "/", content: "Wiki" },
-    { logo: "/icons/calender__sidebar.svg", link: "/", content: "Planner" },
-    { logo: "/icons/book_light.svg", link: "/", content: "News" },
-    { logo: "/icons/whistle.svg", link: "/", content: "Coach" },
-    { logo: "/icons/store.svg", link: "/", content: "Shop" },
-  ];
-
-  const handleClick = (link: string, i: number) => {
-    setActive(i);
-    if (i === 1) {
+  const handleClick = (link: string, menuName: sidebarActiveMenuNameType) => {
+    if (menuName === "Home") {
       dispatch(setCollectionDetailsId(""));
       dispatch(setOpenCollectionsTary(false));
       dispatch(setShowAllRecipes(false));
     }
+    dispatch(updateSidebarActiveMenuName(menuName));
     router?.push(link);
   };
 
   return (
     <div className={styles.sidebar}>
       <div className={styles.logo}>
-        <img src="/logo_small.svg" alt="logo small" />
+        <Image src="/logo_small.svg" width={40} height={40} alt="logo" />
       </div>
       <ul className={styles.list}>
-        {pages &&
-          pages.map((page, i) => (
+        {PAGES &&
+          PAGES.map((page, i) => (
             <Tooltip key={"sidebaritem" + i} content={page?.content}>
               <li
-                className={active === i ? styles.active : "null"}
-                onClick={() => handleClick(page.link, i)}
+                className={
+                  sidebarActiveMenuName === page.content ? styles.active : ""
+                }
+                onClick={() => handleClick(page?.link, page?.content)}
               >
                 <span>
                   {" "}

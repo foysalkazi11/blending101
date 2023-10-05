@@ -1,19 +1,22 @@
 import { gql } from "@apollo/client";
 
 const CREATE_NEW_COLLECTION = gql`
-  mutation Mutation($data: CreateNewCollection!) {
+  mutation CreateNewCollection($data: CreateNewCollection!) {
     createNewCollection(data: $data) {
       _id
       name
       recipes {
-        image {
-          default
-          image
+        recipeId {
+          image {
+            default
+            image
+          }
+          name
+          _id
         }
-        name
-        _id
       }
       image
+      slug
     }
   }
 `;

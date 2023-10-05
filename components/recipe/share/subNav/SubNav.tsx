@@ -5,6 +5,8 @@ import HighlightOffIcon from "../../../../public/icons/highlight_off_black_36dp.
 import ButtonComponent from "../../../../theme/button/button.component";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faScaleBalanced } from "@fortawesome/pro-light-svg-icons";
 
 type SubNavProps = {
   showButton?: boolean;
@@ -23,13 +25,16 @@ const SubNav = (props: SubNavProps) => {
     buttonText = "Button",
     buttonClick = () => {},
     backIconText = "Back",
-    backAddress = "#",
+    backAddress = "/",
     compareAmout = 0,
     closeCompare = () => {},
   } = props;
   return (
     <div className={styles.subNav}>
-      <div className={styles.subNav__discover}>
+      <div
+        className={styles.subNav__discover}
+        onClick={() => router.push(backAddress)}
+      >
         <Link href={backAddress} passHref>
           <ArrowBackIcon className={styles.subNav__discover__icon} />
         </Link>
@@ -38,15 +43,21 @@ const SubNav = (props: SubNavProps) => {
 
       {showButton ? (
         <ButtonComponent
-          type="buttonWithIcon"
+          variant="buttonWithIcon"
           value={buttonText}
-          icon="/images/formulate.svg"
+          icon={
+            buttonText === "Compare" ? (
+              <FontAwesomeIcon fontSize={20} icon={faScaleBalanced} />
+            ) : (
+              "/images/formulate.svg"
+            )
+          }
           style={{ height: "50px", width: "234px", borderRadius: "14px" }}
           onClick={buttonClick}
         />
       ) : null}
 
-      <div className={styles.subNav__compare} onClick={() => router.push('/recipe/formulate')}>
+      <div className={styles.subNav__compare} onClick={closeCompare}>
         <p>{compareAmout} compare</p>
         <HighlightOffIcon
           className={styles.subNav__compare__icon}

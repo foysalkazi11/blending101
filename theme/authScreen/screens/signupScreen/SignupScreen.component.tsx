@@ -43,11 +43,11 @@ const SignupScreen = () => {
       dispatch(setLoading(false));
       reactToastifyNotification(
         "info",
-        "A varification code has been sent to your eamil"
+        "A varification code has been sent to your email",
       );
       //@ts-ignore
       dispatch(setNonConfirmedUser(user?.username));
-      history?.push("/varify_email");
+      history?.push("/verify_email");
     } catch (error) {
       dispatch(setLoading(false));
       reactToastifyNotification("error", error?.message);
@@ -70,7 +70,6 @@ const SignupScreen = () => {
                 // height={400}
                 // width={400}
                 objectFit={"contain"}
-                className={styles.logoImage}
                 quality={100}
               />
             </div>
@@ -114,7 +113,6 @@ const SignupScreen = () => {
                 // height={400}
                 // width={400}
                 objectFit={"contain"}
-                className={styles.logoImage}
                 quality={100}
               />
             </div>

@@ -5,32 +5,62 @@
 }
 
 .datacard {
+  position: relative;
   display: block;
   background-color: #fff;
-  margin: 3px;
-  padding: 14px;
+  // margin: 3px;
+  // border: 1.5px solid #eeeaeaa8;
+  padding: 10px;
   border-radius: 12px;
   overflow: hidden;
-  border: 1.5px solid #eeeaeaa8;
   cursor: pointer;
   transition: all;
-  transition-duration: .2s;
+  transition-duration: 0.5s;
+  &:hover .title {
+    color: #fe5d1f;
+  }
 }
-.datacard *{
+.datacard * {
   transition: all;
-  transition-duration: .2s;
+  transition-duration: 0.3s;
 }
-.datacard:hover{
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+.datacard:hover {
+  box-shadow: 0px 2px 3px #0000001a;
   border-color: #fff;
-  transition: all;
-  transition-duration: .2s;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  line-height: 20px;
+  .title {
+    flex: 1;
+    min-width: 0; /* or some value */
+    h2 {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 17px;
+      font-weight: bold;
+      padding-right: 0.5rem;
+      padding-bottom: 0.5rem;
+      span {
+        font-size: 16px;
+        font-weight: normal;
+      }
+    }
+  }
+  .menu {
+    position: relative;
+  }
 }
 
 .datacard__body {
   &__top {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 
     &__menu {
       cursor: pointer;
@@ -52,19 +82,43 @@
   &__bottom {
     display: flex;
     justify-content: space-between;
+    height: 36px;
+    margin-top: 5px;
 
     &__left {
-      height: 40px;
+      height: 100%;
       display: flex;
       align-items: center;
 
-      img {
-        max-width: 50px;
+      .brand {
+        width: 3rem;
+        height: auto;
+        object-fit: contain;
+      }
+      .user {
+        height: auto;
+        width: 3rem;
+        aspect-ratio: 1;
+        object-fit: cover;
+        border-radius: 50%;
+      }
+
+      .userIcon {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s linear;
+        color: #646464;
+        background-color: #d6d6d6;
       }
     }
 
     &__right {
-      height: 40px;
+      height: 100%;
       display: flex;
       align-items: center;
 
@@ -92,7 +146,7 @@
 
 .floating__menu {
   position: absolute;
-  top: 35px;
+  top: 30px;
   right: 10px;
   z-index: 6;
   border: 1px solid #eeeeee;
@@ -101,7 +155,6 @@
   padding: 5px 10px;
   display: flex;
   align-items: center;
-  display: none;
 
   ul {
     display: flex;
@@ -132,21 +185,38 @@
     height: 105px;
     overflow: hidden;
     border-radius: 10px;
+    position: relative;
+
+    &:hover .image {
+      transform: scale(1.1);
+    }
+    &:hover .imageOverlay {
+      transform: translateY(0px);
+    }
 
     .image {
-      // background-color: steelblue;
       position: relative;
-      background-size: contain;
       width: 100%;
       height: 100%;
+      background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
+      object-fit: cover;
       transition: all;
       transition-duration: 0.5s;
-
-      &:hover {
-        transform: scale(1.1);
-      }
+    }
+    .imageOverlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      object-fit: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.3);
+      transform: translateY(100%);
     }
   }
 
@@ -161,7 +231,7 @@
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
-      min-height: 64px;
+      // min-height: 64px;
       line-height: 1.3;
       margin-top: 10px;
     }
@@ -188,13 +258,18 @@
     }
 
     &__label {
-      display: inline-block;
-      border: 1.2px solid #dddddd;
-      border-radius: 4px;
-      color: #c4c4c4 !important;
-      font-size: 13px;
-      padding: 4px 15px;
-      font-weight: 500;
+      display: flex;
+      align-items: center;
+      .category {
+        display: inline-block;
+        border: 1.2px solid #dddddd;
+        border-radius: 4px;
+        color: #c4c4c4 !important;
+        font-size: 13px;
+        padding: 4px 15px;
+        font-weight: 500;
+        margin-right: 10px;
+      }
     }
   }
 
@@ -203,9 +278,9 @@
       font-size: 13px;
       color: #abababf3;
       line-height: 1.4;
-      font-weight: 400;
+      font-weight: 600;
       word-spacing: 3px;
-      margin-top: 15px;
+      margin-top: 5px;
     }
   }
 }
@@ -232,18 +307,81 @@
   }
 }
 
-.title {
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  font-size: 17px;
-  font-weight: bold;
-  padding-right: 33px;
-  margin-bottom: 10px;
-}
+// .title {
+//   display: -webkit-box;
+//   -webkit-line-clamp: 1;
+//   -webkit-box-orient: vertical;
+//   overflow: hidden;
+//   font-size: 17px;
+//   font-weight: bold;
+//   margin-bottom: 10px;
+//   span {
+//     font-size: 16px;
+//     font-weight: normal;
+//   }
+// }
 
 .inActiveImg {
   filter: grayscale(100%);
   -webkit-filter: grayscale(100%);
+}
+
+.floating__menu2 {
+  // position: absolute;
+  // top: 35px;
+  // right: 10px;
+  // z-index: 6;
+
+  ul {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    padding: 8px 10px;
+    border: 1px solid #eeeeee;
+    background: #eeeeeef2;
+    border-radius: 5px;
+
+    li {
+      display: flex;
+      align-items: center;
+
+      &:hover .icon {
+        color: #fe5d1f;
+      }
+      .icon {
+        color: #737373;
+        cursor: pointer;
+        font-size: 16px;
+      }
+    }
+
+    li:not(:last-child) {
+      margin-right: 10px;
+    }
+  }
+}
+
+.on {
+  color: #fe5d1f;
+}
+.off {
+  color: #c1c1c1;
+}
+
+.calender {
+  color: #fd5109;
+  cursor: pointer;
+
+  &__tray {
+    background-color: white;
+    min-height: 200px;
+    min-width: max-content;
+    border-radius: 5px;
+    display: flex;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+  }
 }

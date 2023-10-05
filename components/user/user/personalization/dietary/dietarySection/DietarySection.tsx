@@ -31,14 +31,17 @@ const DietarySection = ({
                   key={index}
                   className={`${styles.singleImage} ${
                     alredyExist
-                      ? alredyExist(item?.label, "allergies")
+                      ? alredyExist(item?.label?.toLowerCase(), "allergies")
                         ? styles.active
                         : ""
-                      : item?.label === userProfile[fieldName]
+                      : item?.label?.toLowerCase() ===
+                        userProfile[fieldName]?.toLowerCase()
                       ? styles.active
                       : ""
                   }`}
-                  onClick={() => updateUserProfile(fieldName, item?.label)}
+                  onClick={() =>
+                    updateUserProfile(fieldName, item?.label?.toLowerCase())
+                  }
                 >
                   <div className={styles.imageBox}>
                     <img src={item?.icon} alt="icon" />

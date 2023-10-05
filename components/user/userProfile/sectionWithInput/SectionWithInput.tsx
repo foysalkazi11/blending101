@@ -51,37 +51,21 @@ const SectionWithInput = ({
       <div className={styles.inputContainer}>
         <form onSubmit={handleSubmit}>
           <InputComponent
-            maxWidth={maxWidth}
-            style={style}
+            style={{ ...style, maxWidth, width: "100%" }}
             type={type}
             value={inputValue}
             placeholder={placeholder}
-            textarea={textarea}
-            fullWidth={fullWidth}
-            fieldName={fieldName}
+            name={fieldName}
             handleChange={handleChange}
           />
         </form>
         <div className={styles.inputContainer__inputValueContainer}>
           {value?.map((item, index) => {
             return (
-              <div
-                key={index}
-                className={
-                  styles.inputContainer__inputValueContainer__inputValue
-                }
-              >
-                <span
-                  className={
-                    styles.inputContainer__inputValueContainer__inputValue__label
-                  }
-                >
-                  {item}
-                </span>
+              <div key={index} className={styles.inputContainer__inputValueContainer__inputValue}>
+                <span className={styles.inputContainer__inputValueContainer__inputValue__label}>{item}</span>
                 <CancelIcon
-                  className={
-                    styles.inputContainer__inputValueContainer__inputValue__closeIcon
-                  }
+                  className={styles.inputContainer__inputValueContainer__inputValue__closeIcon}
                   onClick={() => removeInput(fieldName, item)}
                 />
               </div>

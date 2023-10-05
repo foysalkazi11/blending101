@@ -1,39 +1,62 @@
+@import "../../styles/partials/variables";
+@import "../../styles/mixins.scss";
+
 .topMenuContainer {
   display: flex;
   justify-content: center;
   align-items: center;
+  @include respond(md) {
+    margin: 1.5rem 0;
+  }
 
   .topMenu {
     width: 100%;
     display: flex;
     flex-flow: nowrap;
-    margin-top: 20px;
-    margin-bottom: 25px;
-    padding-bottom: 20px;
-    border: 1px solid #dfdfdf !important;
+    margin: 10px auto;
+    // border: 1px solid #dfdfdf;
     border-radius: 18px;
     height: 37px;
     position: relative;
+    @include respond(md) {
+      width: 40%;
+    }
     .menu {
-      border: 1px solid #929292;
-      border-radius: 18px;
+      color: #929292;
       height: 35px;
       font-size: 14px;
-      color: #929292;
       padding: 0;
       text-align: center;
       display: block;
-      border: 0 !important;
       position: relative;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: all 0.3s;
+      font-weight: 500;
     }
-    .menu.activeMenu {
-      color: #fff !important;
-      transition: all;
-      transition-duration: 0.4s;
+    .containPrimary {
+      border-radius: 1.8rem;
+      color: #fff;
+    }
+    .containSecondary {
+      border-radius: 1.8rem;
+      color: #fff;
+    }
+    .outlinePrimary {
+      border-radius: 1.8rem;
+      color: $primaryColor;
+    }
+    .outlineSecondary {
+      border-radius: 1.8rem;
+      color: $secondaryColor;
+    }
+    .borderBottomPrimary {
+      color: $primaryColor;
+    }
+    .borderBottomSecondary {
+      color: $secondaryColor;
     }
   }
 }
@@ -47,16 +70,34 @@
 }
 
 .active {
-  background-color: #fe5d1f;
-  width: 50%;
-  height: 36px;
+  height: 35px;
   position: absolute;
-  top: -1.1%;
+  top: 0;
   bottom: 0;
-  content: "";
   left: 0px;
-  border-radius: 18px;
 
-  transition: all;
-  transition-duration: 0.4s;
+  transition: all 0.3s;
+}
+
+.active.containPrimary {
+  border-radius: 1.8rem;
+  background-color: $primaryColor;
+}
+.active.containSecondary {
+  border-radius: 1.8rem;
+  background-color: $secondaryColor;
+}
+.active.outlinePrimary {
+  border-radius: 1.8rem;
+  border: 2px solid $primaryColor;
+}
+.active.outlineSecondary {
+  border-radius: 1.8rem;
+  border: 2px solid $secondaryColor;
+}
+.active.borderBottomPrimary {
+  border-bottom: 2px solid $primaryColor;
+}
+.active.borderBottomSecondary {
+  border-bottom: 2px solid $secondaryColor;
 }

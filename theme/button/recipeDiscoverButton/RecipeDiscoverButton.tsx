@@ -1,25 +1,35 @@
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
+import React, { ReactNode } from "react";
 import styles from "./RecipeDiscoverButton.module.scss";
 
 type RecipeDiscoverButtonProps = {
-  text?: string;
-  image?: string;
+  text?: string | number;
   handleClick?: () => void;
-  Icon?: any;
+  icon?: string | ReactNode;
+  disable?: boolean;
+  style?: React.CSSProperties;
 };
 
 const RecipeDiscoverButton = ({
   handleClick = () => {},
-  Icon,
-  image = "",
+  icon = "",
   text = "Recipe",
+  disable = false,
+  style = {},
 }: RecipeDiscoverButtonProps) => {
   return (
-    <button className={styles.button} onClick={handleClick}>
-      {image ? <img src={image} alt="img" className={styles.img} /> : null}
-      {Icon ? <Icon className={styles.icon} /> : null}
-      {text}
+    <button
+      className={styles.button}
+      onClick={handleClick}
+      style={style}
+      disabled={disable ? true : false}
+    >
+      {typeof icon === "string" ? (
+        <img src={icon} alt="icon" className={styles.img} />
+      ) : (
+        icon
+      )}
+      <p className={styles.text}>{text}</p>
     </button>
   );
 };

@@ -1,68 +1,39 @@
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import ButtonComponent from "../../../button/buttonA/button.component";
 import InputField from "../../../input/registerInput/RegisterInput";
 import SocialTray from "../../authComponents/socialTray/socialTray.component";
 import styles from "./Login.module.scss";
 import Image from "next/image";
 import HighlightOffOutlinedIcon from "../../../../public/icons/highlight_off_black_36dp.svg";
-import { Auth } from "aws-amplify";
-import { setLoading } from "../../../../redux/slices/utilitySlice";
-import { useAppDispatch } from "../../../../redux/hooks";
-import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
-import {
-  setDbUser,
-  setProvider,
-  setUser,
-} from "../../../../redux/slices/userSlice";
-import { useRouter } from "next/router";
-import { useMutation } from "@apollo/client";
-import CREATE_NEW_USER from "../../../../gqlLib/user/mutations/createNewUser";
-import { setAllRecipeWithinCollectionsId } from "../../../../redux/slices/collectionSlice";
 import { useForm } from "react-hook-form";
+import CircularRotatingLoader from "../../../loader/circularRotatingLoader.component";
+import { useUserHandler } from "../../../../context/AuthProvider";
+import { useRouter } from "next/router";
+import { DbUserType } from "../../../../type/dbUserType";
 
 const LoginScreen = () => {
-  const dispatch = useAppDispatch();
-  const histroy = useRouter();
-  const [createNewUser] = useMutation(CREATE_NEW_USER);
-
+  const { signIn } = useUserHandler();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = async (input) => {
-    dispatch(setLoading(true));
-    try {
-      const {
-        attributes: { email },
-      } = await Auth.signIn(input?.email, input?.password);
-      const { data } = await createNewUser({
-        variables: {
-          data: { email: email, provider: "email" },
-        },
-      });
+  const [isLoading, setIsLoading] = useState(false);
 
-      dispatch(setLoading(false));
-      reactToastifyNotification("info", "Login successfully");
-      let recipesId = [];
-      data?.createNewUser?.collections?.forEach((col) => {
-        const recipes = col?.recipes;
-        recipes?.forEach((recipe) => {
-          recipesId?.push(recipe?._id);
-        });
-      });
-      dispatch(setAllRecipeWithinCollectionsId(recipesId));
-      dispatch(setUser(email));
-      dispatch(setDbUser(data?.createNewUser));
-      dispatch(setProvider("email"));
-      histroy.push("/");
-    } catch (error) {
-      dispatch(setLoading(false));
-      reactToastifyNotification("error", error?.message);
-    }
+  const loginSuccess = (user: DbUserType) => {
+    setIsLoading(false);
+  };
+
+  const loginError = (error: unknown) => {
+    setIsLoading(false);
+  };
+
+  const onSubmit = async (input) => {
+    setIsLoading(true);
+    signIn(input?.email, input?.password, loginSuccess, loginError);
   };
 
   return (
@@ -71,15 +42,13 @@ const LoginScreen = () => {
         <div className={styles.inputContentDiv}>
           <div className={styles.logo}>
             <Link href="/">
-              <a href="">
-                <Image
-                  src="/images/logo.png"
-                  alt="logo will soon load"
-                  layout={"fill"}
-                  objectFit={"contain"}
-                  quality={100}
-                />
-              </a>
+              <Image
+                src="/images/logo.png"
+                alt="logo will soon load"
+                layout={"fill"}
+                objectFit={"contain"}
+                quality={100}
+              />
             </Link>
             <div className={styles.cross}>
               <HighlightOffOutlinedIcon />
@@ -92,7 +61,7 @@ const LoginScreen = () => {
             <SocialTray />
             <div className={styles.seperator} />
           </div>
-          <p className={styles.loginPara}>Enter email and password</p>
+          <p>Enter email and password</p>
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <InputField
@@ -101,11 +70,11 @@ const LoginScreen = () => {
               placeholder="Email"
               register={register}
               name="email"
+              defaultValue=""
               required={{
-                required: "Email requried",
+                required: "Email required",
                 pattern: {
-                  value:
-                    /^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/,
+                  value: /^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/,
                   message: "Enter valid email",
                 },
               }}
@@ -120,8 +89,9 @@ const LoginScreen = () => {
               placeholder="Password"
               register={register}
               name="password"
+              defaultValue=""
               required={{
-                required: "password requried",
+                required: "password required",
               }}
               error={{
                 isError: errors?.password ? true : false,
@@ -136,17 +106,27 @@ const LoginScreen = () => {
               {/* <Link href="/reset_password">
                 <a style={{ marginRight: "16px" }}>Change Password?</a>
               </Link> */}
-              <Link href="/forget_password">
-                <a>Forget Password?</a>
-              </Link>
+              <Link href="/forget_password">Forget Password?</Link>
             </div>
             <div className={styles.buttonDiv}>
               <ButtonComponent
                 type="primary"
                 style={{ height: "100%" }}
-                value="Login"
+                value={
+                  !isLoading ? (
+                    "Login"
+                  ) : (
+                    <div className={styles.loggingInBtn}>
+                      <span>
+                        <CircularRotatingLoader />
+                      </span>
+                      Logging In
+                    </div>
+                  )
+                }
                 fullWidth={true}
                 submit={true}
+                disabled={isLoading}
               />
             </div>
           </form>
@@ -156,27 +136,14 @@ const LoginScreen = () => {
           </div>
         </div>
       </div>
-      <div
-        className={styles.imgMainDiv}
-        style={{ backgroundImage: `url("/images/new-user-bg.png")` }}
-      >
+      <div className={styles.imgMainDiv} style={{ backgroundImage: `url("/images/new-user-bg.png")` }}>
         <div className={styles.imgContentDiv}>
           <div className={styles.contentCard}>
             <h2>New User</h2>
-            <p>
-              Aliquam vestibulum nunc quis blandit rutrum. Curabitur vel
-              scelerisque leo.
-            </p>
+            <p>Aliquam vestibulum nunc quis blandit rutrum. Curabitur vel scelerisque leo.</p>
             <div className={styles.buttonRightDiv}>
               <Link href="/signup">
-                <a>
-                  <ButtonComponent
-                    type="text"
-                    style={{ height: "100%" }}
-                    value="Sign Up"
-                    fullWidth={true}
-                  />
-                </a>
+                <ButtonComponent type="text" style={{ height: "100%" }} value="Sign Up" fullWidth={true} />
               </Link>
             </div>
           </div>
