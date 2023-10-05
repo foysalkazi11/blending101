@@ -4,16 +4,14 @@ import React, { useState } from "react";
 import ButtonComponent from "../../../button/buttonA/button.component";
 import styles from "./EmailVarify.module.scss";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import { setUser, setDbUser, setProvider } from "../../../../redux/slices/userSlice";
 import { setLoading } from "../../../../redux/slices/utilitySlice";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
 import { useRouter } from "next/router";
 import { Auth } from "aws-amplify";
-import CREATE_NEW_USER from "./../../../../gqlLib/user/mutations/createNewUser";
-import { useMutation } from "@apollo/client";
 import InputComponent from "../../../input/input.component";
 import HeadTagInfo from "../../../headTagInfo";
 import { useSession } from "../../../../context/AuthProvider";
+import useToGetExistingUserInfo from "customHooks/user/useToGetExistingUserInfo";
 
 const EmailVerify = () => {
   const [code, setCode] = useState("");
@@ -21,7 +19,7 @@ const EmailVerify = () => {
   const { nonConfirmedUser } = useAppSelector((state) => state?.user);
   const dispatch = useAppDispatch();
   const history = useRouter();
-  const [createNewUser] = useMutation(CREATE_NEW_USER);
+  const handleToGetExistingUserInfo = useToGetExistingUserInfo();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,25 +28,28 @@ const EmailVerify = () => {
 
       try {
         await Auth.confirmSignUp(nonConfirmedUser, code);
-        const { data } = await createNewUser({
-          variables: {
-            data: { email: nonConfirmedUser, provider: "email" },
-          },
-        });
-        const user = await Auth.currentAuthenticatedUser();
-        await Auth.updateUserAttributes(user, {
-          address: "105 Main St. New York, NY 10001",
-        });
+        const currentUser = await handleToGetExistingUserInfo(nonConfirmedUser, "email");
+
+        // const { data } = await createNewUser({
+        //   variables: {
+        //     data: { email: nonConfirmedUser, provider: "email" },
+        //   },
+        // });
+        // const user = await Auth.currentAuthenticatedUser();
+        // await Auth.updateUserAttributes(user, {
+        //   address: "105 Main St. New York, NY 10001",
+        // });
+        // console.log(currentUser);
 
         dispatch(setLoading(false));
         reactToastifyNotification("info", "Sign up successfully");
-        dispatch(setUser(nonConfirmedUser));
-        dispatch(setDbUser(data?.createNewUser));
-        dispatch(setProvider("email"));
+        // dispatch(setUser(nonConfirmedUser));
+        // dispatch(setDbUser(data?.createNewUser));
+        // dispatch(setProvider("email"));
         history.push("/user/profile");
       } catch (error) {
         dispatch(setLoading(false));
-        reactToastifyNotification("error", error?.message);
+        reactToastifyNotification("error", error?.message || "Failed to verify email");
       }
     } else {
       reactToastifyNotification("warning", "Please enter code");

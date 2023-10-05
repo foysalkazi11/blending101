@@ -41,10 +41,7 @@ const SignupScreen = () => {
         },
       });
       dispatch(setLoading(false));
-      reactToastifyNotification(
-        "info",
-        "A varification code has been sent to your email",
-      );
+      reactToastifyNotification("info", "A verification code has been sent to your email");
       //@ts-ignore
       dispatch(setNonConfirmedUser(user?.username));
       history?.push("/verify_email");
@@ -56,10 +53,7 @@ const SignupScreen = () => {
 
   return (
     <>
-      <div
-        className={styles.imgMainDiv}
-        style={{ backgroundImage: `url("/images/signup.png")` }}
-      >
+      <div className={styles.imgMainDiv} style={{ backgroundImage: `url("/images/signup.png")` }}>
         <div className={styles.imgContentDiv}>
           <div className={styles.logo}>
             <div>
@@ -77,8 +71,8 @@ const SignupScreen = () => {
           <div className={styles.contentCard}>
             <h2>Already have an Account</h2>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat,
-              sit a voluptas eligendi adribus placeat minus maiores amet earum.
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, sit a voluptas eligendi adribus placeat
+              minus maiores amet earum.
             </p>
             <div className={styles.buttonRightDiv}>
               <ButtonComponent
@@ -123,8 +117,7 @@ const SignupScreen = () => {
           <h2>Sign Up</h2>
           <p className={styles.hookline}>Quick and easy social login</p>
           <p className={styles.inputPara}>
-            Aliquam vestibulum nunc quis blandit rutrum. Curabitur vel
-            scelerisque leo.
+            Aliquam vestibulum nunc quis blandit rutrum. Curabitur vel scelerisque leo.
           </p>
           <div className={styles.lineTrayA}>
             <SocialTray />
@@ -141,8 +134,7 @@ const SignupScreen = () => {
               required={{
                 required: "Email requried",
                 pattern: {
-                  value:
-                    /^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/,
+                  value: /^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/,
                   message: "Enter valid email",
                 },
               }}
@@ -162,8 +154,7 @@ const SignupScreen = () => {
               required={{
                 required: "password requried",
                 pattern: {
-                  value:
-                    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/,
+                  value: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/,
                   message:
                     "Minimum 6 characters, at least one uppercase letter, one lowercase letter, one number and one special character (#?!@$%^&*-)",
                 },
@@ -183,8 +174,7 @@ const SignupScreen = () => {
               name="comfirmPassword"
               required={{
                 required: "Comfirm password requried",
-                validate: (value) =>
-                  value === password || "Password doesn't match",
+                validate: (value) => value === password || "Password doesn't match",
               }}
               error={{
                 isError: errors?.comfirmPassword ? true : false,
