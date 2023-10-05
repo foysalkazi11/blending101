@@ -6,10 +6,7 @@ import { useForm } from "react-hook-form";
 import EDIT_CONFIGURATION_BY_ID from "../../../../../gqlLib/user/mutations/editCofigrationById";
 import EDIT_USER_BY_ID from "../../../../../gqlLib/user/mutations/editUserById";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
-import {
-  setDbUser,
-  setIsNewUseImage,
-} from "../../../../../redux/slices/userSlice";
+import { setDbUser, setIsNewUseImage } from "../../../../../redux/slices/userSlice";
 import ButtonComponent from "../../../../../theme/button/button.component";
 import Combobox from "../../../../../theme/dropDown/combobox/Combobox.component";
 import InputComponent from "../../../../../theme/input/registerInput/RegisterInput";
@@ -77,12 +74,7 @@ type PhysicalProps = {
   userData: any;
 };
 
-const Physical = ({
-  userProfile,
-  updateUserProfile,
-  setUserData,
-  userData,
-}: PhysicalProps) => {
+const Physical = ({ userProfile, updateUserProfile, setUserData, userData }: PhysicalProps) => {
   const { dbUser } = useAppSelector((state) => state?.user);
   const router = useRouter();
   const { toggle } = router.query;
@@ -107,17 +99,13 @@ const Physical = ({
     if (userProfile?.age?.years) {
       value = {
         years: userProfile?.age?.quantity || 0,
-        months: userProfile?.age?.quantity
-          ? Number(userProfile?.age?.quantity) * 12
-          : 0,
+        months: userProfile?.age?.quantity ? Number(userProfile?.age?.quantity) * 12 : 0,
       };
     }
 
     if (userProfile?.age?.months) {
       value = {
-        years: userProfile?.age?.quantity
-          ? Number(Math?.trunc(userProfile?.age?.quantity / 12))
-          : 0,
+        years: userProfile?.age?.quantity ? Number(Math?.trunc(userProfile?.age?.quantity / 12)) : 0,
         months: userProfile?.age?.quantity || 0,
       };
     }
@@ -132,76 +120,64 @@ const Physical = ({
   } = useForm({
     defaultValues: useMemo(
       () => ({
-        centimeters: userProfile?.heightInCentimeters
-          ? Number(userProfile?.heightInCentimeters)?.toFixed(2)
-          : "",
-        feets: userProfile?.heightInCentimeters
-          ? Number(Math?.trunc(userProfile?.heightInCentimeters / 30.48))
-          : "",
+        centimeters: userProfile?.heightInCentimeters ? Number(userProfile?.heightInCentimeters)?.toFixed(2) : "",
+        feets: userProfile?.heightInCentimeters ? Number(Math?.trunc(userProfile?.heightInCentimeters / 30.48)) : "",
         inches: userProfile?.heightInCentimeters
-          ? Number(
-              ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0),
-            ) === 12
+          ? Number(((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0)) === 12
             ? ""
-            : Number(
-                ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0),
-              )
+            : Number(((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0))
           : "",
-        kilograms: userProfile?.weightInKilograms
-          ? Number(userProfile?.weightInKilograms?.toFixed(2))
-          : "",
+        kilograms: userProfile?.weightInKilograms ? Number(userProfile?.weightInKilograms?.toFixed(2)) : "",
         months: handleYearsAndMonths(userProfile)?.months || "",
-        pounds: userProfile?.weightInKilograms
-          ? Number((userProfile?.weightInKilograms * 2.205)?.toFixed(0))
-          : "",
+        pounds: userProfile?.weightInKilograms ? Number((userProfile?.weightInKilograms * 2.205)?.toFixed(0)) : "",
         years: handleYearsAndMonths(userProfile)?.years || "",
       }),
       [userProfile],
     ),
   });
 
-  useEffect(() => {
-    if (userProfile) {
-      setValue(
-        "centimeters",
-        userProfile?.heightInCentimeters
-          ? Number(userProfile?.heightInCentimeters)?.toFixed(2)
-          : "",
-      );
-      setValue(
-        "feets",
-        userProfile?.heightInCentimeters
-          ? Number(Math?.trunc(userProfile?.heightInCentimeters / 30.48))
-          : "",
-      );
-      setValue(
-        "inches",
-        userProfile?.heightInCentimeters
-          ? Number(
-              ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0),
-            ) === 12
-            ? ""
-            : Number(
-                ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0),
-              )
-          : "",
-      );
-      setValue(
-        "kilograms",
-        userProfile?.weightInKilograms
-          ? Number(userProfile?.weightInKilograms?.toFixed(2))
-          : "",
-      );
-      setValue("months", handleYearsAndMonths(userProfile)?.months || "");
-      setValue(
-        "pounds",
-        userProfile?.weightInKilograms
-          ? Number((userProfile?.weightInKilograms * 2.205)?.toFixed(0))
-          : "",
-      );
-      setValue("years", handleYearsAndMonths(userProfile)?.years || "");
-    }
-  }, [userProfile]);
+  // useEffect(() => {
+  //   if (userProfile) {
+  //     setValue(
+  //       "centimeters",
+  //       userProfile?.heightInCentimeters
+  //         ? Number(userProfile?.heightInCentimeters)?.toFixed(2)
+  //         : "",
+  //     );
+  //     setValue(
+  //       "feets",
+  //       userProfile?.heightInCentimeters
+  //         ? Number(Math?.trunc(userProfile?.heightInCentimeters / 30.48))
+  //         : "",
+  //     );
+  //     setValue(
+  //       "inches",
+  //       userProfile?.heightInCentimeters
+  //         ? Number(
+  //             ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0),
+  //           ) === 12
+  //           ? ""
+  //           : Number(
+  //               ((userProfile?.heightInCentimeters % 30.48) / 2.54)?.toFixed(0),
+  //             )
+  //         : "",
+  //     );
+  //     setValue(
+  //       "kilograms",
+  //       userProfile?.weightInKilograms
+  //         ? Number(userProfile?.weightInKilograms?.toFixed(2))
+  //         : "",
+  //     );
+  //     setValue("months", handleYearsAndMonths(userProfile)?.months || "");
+  //     setValue(
+  //       "pounds",
+  //       userProfile?.weightInKilograms
+  //         ? Number((userProfile?.weightInKilograms * 2.205)?.toFixed(0))
+  //         : "",
+  //     );
+  //     setValue("years", handleYearsAndMonths(userProfile)?.years || "");
+  //   }
+  // }, [userProfile]);
 
   const watchValue = watch();
 
@@ -231,9 +207,7 @@ const Physical = ({
     router?.push(`/user/?type=personalization&toggle=${profileActiveTab}`);
   }, [profileActiveTab]);
 
-  const handlePregnantOrLactating = (
-    e: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
+  const handlePregnantOrLactating = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e?.target;
     setPregnant(value);
     updateUserProfile("pregnantOrLactating", value);
@@ -287,22 +261,15 @@ const Physical = ({
 
   const submitData = async (data) => {
     let arrageAge = {
-      quantity:
-        ageType === "years" ? Number(data?.years) : Number(data?.months),
+      quantity: ageType === "years" ? Number(data?.years) : Number(data?.months),
       months: ageType === "months" ? true : false,
       years: ageType === "years" ? true : false,
     };
 
-    let arrangWeight =
-      measurementType === "US"
-        ? Number(data?.pounds / 2.205)
-        : Number(data?.kilograms);
+    let arrangWeight = measurementType === "US" ? Number(data?.pounds / 2.205) : Number(data?.kilograms);
     let feet = +data?.feets * 30.48;
     let inches = +data?.inches ? +data?.inches * 2.54 : 0;
-    let arrangHight =
-      measurementType === "US"
-        ? Number(feet + inches)
-        : Number(data?.centimeters);
+    let arrangHight = measurementType === "US" ? Number(feet + inches) : Number(data?.centimeters);
 
     setLoading(true);
 
@@ -329,10 +296,7 @@ const Physical = ({
                 weightInKilograms: arrangWeight,
                 heightInCentimeters: arrangHight,
                 age: arrageAge,
-                pregnantOrLactating:
-                  userData?.personalization?.gender === "Female"
-                    ? pregnant
-                    : null,
+                pregnantOrLactating: userData?.personalization?.gender === "Female" ? pregnant : null,
               },
             },
           },
@@ -350,10 +314,7 @@ const Physical = ({
               weightInKilograms: arrangWeight,
               heightInCentimeters: arrangHight,
               age: arrageAge,
-              pregnantOrLactating:
-                userData?.personalization?.gender === "Female"
-                  ? pregnant
-                  : null,
+              pregnantOrLactating: userData?.personalization?.gender === "Female" ? pregnant : null,
             },
           };
         });
@@ -369,10 +330,7 @@ const Physical = ({
               weightInKilograms: arrangWeight,
               heightInCentimeters: arrangHight,
               age: arrageAge,
-              pregnantOrLactating:
-                userData?.personalization?.gender === "Female"
-                  ? pregnant
-                  : null,
+              pregnantOrLactating: userData?.personalization?.gender === "Female" ? pregnant : null,
             },
           }),
         );
@@ -398,10 +356,7 @@ const Physical = ({
                 weightInKilograms: arrangWeight,
                 heightInCentimeters: arrangHight,
                 age: arrageAge,
-                pregnantOrLactating:
-                  userData?.personalization?.gender === "Female"
-                    ? pregnant
-                    : null,
+                pregnantOrLactating: userData?.personalization?.gender === "Female" ? pregnant : null,
               },
             },
           },
@@ -415,10 +370,7 @@ const Physical = ({
               weightInKilograms: arrangWeight,
               heightInCentimeters: arrangHight,
               age: arrageAge,
-              pregnantOrLactating:
-                userData?.personalization?.gender === "Female"
-                  ? pregnant
-                  : null,
+              pregnantOrLactating: userData?.personalization?.gender === "Female" ? pregnant : null,
             },
           };
         });
@@ -433,10 +385,7 @@ const Physical = ({
               weightInKilograms: arrangWeight,
               heightInCentimeters: arrangHight,
               age: arrageAge,
-              pregnantOrLactating:
-                userData?.personalization?.gender === "Female"
-                  ? pregnant
-                  : null,
+              pregnantOrLactating: userData?.personalization?.gender === "Female" ? pregnant : null,
             },
           }),
         );
@@ -466,9 +415,7 @@ const Physical = ({
         <div className={styles.profile_tab_wraper}>
           <div className={styles.profile_tab}>
             <p
-              className={`${
-                profileActiveTab === 0 ? styles.active_border : ""
-              }`}
+              className={`${profileActiveTab === 0 ? styles.active_border : ""}`}
               onClick={() => {
                 setProfileActiveTab(0);
                 router?.push(`/user/?type=personalization&toggle=0`);
@@ -477,9 +424,7 @@ const Physical = ({
               Profile
             </p>
             <p
-              className={`${
-                profileActiveTab === 1 ? styles.active_border : ""
-              }`}
+              className={`${profileActiveTab === 1 ? styles.active_border : ""}`}
               onClick={() => {
                 setProfileActiveTab(1);
                 router?.push(`/user/?type=personalization&toggle=1`);
@@ -509,8 +454,7 @@ const Physical = ({
                 />
               </div>
               <p className={styles.infoText}>
-                This information is used to customize daily recommended
-                nutrition targets
+                This information is used to customize daily recommended nutrition targets
               </p>
             </div>
 
@@ -677,10 +621,7 @@ const Physical = ({
                 <div className={styles.contentContainer__elementDiv__heading}>
                   <p className={styles?.label}>Your Height</p>
                 </div>
-                <div
-                  className={`${styles.contentContainer__elementDiv__objects}`}
-                  style={{ display: "flex" }}
-                >
+                <div className={`${styles.contentContainer__elementDiv__objects}`} style={{ display: "flex" }}>
                   {measurementType === "US" ? (
                     <>
                       <InputComponent
@@ -779,14 +720,10 @@ const Physical = ({
 
                 {userProfile?.gender === "Female" ? (
                   <>
-                    <div
-                      className={styles.contentContainer__elementDiv__heading}
-                    >
+                    <div className={styles.contentContainer__elementDiv__heading}>
                       <p className={styles?.label}>Pregnant or Lactating?</p>
                     </div>
-                    <div
-                      className={styles.contentContainer__elementDiv__objects}
-                    >
+                    <div className={styles.contentContainer__elementDiv__objects}>
                       <Combobox
                         options={pregnantOrLactating}
                         placeholder="Select"
@@ -827,20 +764,12 @@ const Physical = ({
                 }}
                 onClick={handleSubmit(submitData)}
               >
-                {loading ? (
-                  <CircularRotatingLoader color="white" />
-                ) : (
-                  "Update Profile"
-                )}
+                {loading ? <CircularRotatingLoader color="white" /> : "Update Profile"}
               </ButtonComponent>
             </div>
           </>
         ) : (
-          <DailyIntake
-            colorToggle={colorToggle}
-            setColorToggle={setColorToggle}
-            toggle={toggle}
-          />
+          <DailyIntake colorToggle={colorToggle} setColorToggle={setColorToggle} toggle={toggle} />
         )}
       </div>
     </>
