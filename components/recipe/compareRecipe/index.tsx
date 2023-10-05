@@ -23,12 +23,7 @@ import {
   compareRecipeResponsiveSetting,
 } from "./utility";
 import useWindowSize from "../../utility/useWindowSize";
-import {
-  setCompareList,
-  setLatest,
-  setPopular,
-  setRecommended,
-} from "../../../redux/slices/recipeSlice";
+import { setCompareList, setLatest, setPopular, setRecommended } from "../../../redux/slices/recipeSlice";
 import EMPTY_COMPARE_LIST from "../../../gqlLib/compare/mutation/emptyCompareList";
 import { updateUserCompareLength } from "../../../redux/slices/userSlice";
 import { setLoading } from "../../../redux/slices/utilitySlice";
@@ -109,18 +104,11 @@ const CompareRecipe = () => {
   // const [copyImage, setCopyImage] = useState("");
   const router = useRouter();
   const { compareList } = useAppSelector((state) => state.recipe);
-  const [compareRecipeList, setCompareRecipeList] = useLocalStorage<
-    CompareRecipeType[]
-  >("compareList", []);
-  const [newlyCreatedRecipe, setNewlyCreatedRecipe] =
-    useLocalStorage<RecipeDetailsType>("newlyCreatedRecipe", {});
-  const [createNewRecipeByUser, createRecipeState] = useMutation(
-    CREATE_A_RECIPE_BY_USER,
-  );
+  const [compareRecipeList, setCompareRecipeList] = useLocalStorage<CompareRecipeType[]>("compareList", []);
+  const [newlyCreatedRecipe, setNewlyCreatedRecipe] = useLocalStorage<RecipeDetailsType>("newlyCreatedRecipe", {});
+  const [createNewRecipeByUser, createRecipeState] = useMutation(CREATE_A_RECIPE_BY_USER);
   const [editRecipe, EditRecipeState] = useMutation(EDIT_A_RECIPE);
-  const [editARecipeVersion, EditARecipeVersionState] = useMutation(
-    EDIT_A_VERSION_OF_RECIPE,
-  );
+  const [editARecipeVersion, EditARecipeVersionState] = useMutation(EDIT_A_VERSION_OF_RECIPE);
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
   const dispatch = useAppDispatch();
   const sliderRef = useRef(null);
@@ -128,7 +116,7 @@ const CompareRecipe = () => {
   const { userCompareLength } = useAppSelector((state) => state?.user);
   const { data, loading, error, refetch } = useQuery(GET_COMPARE_LIST, {
     variables: { userId: user.id },
-    fetchPolicy: "network-only",
+    // fetchPolicy: "network-only",
   });
   const windowSize = useWindowSize();
   const [newRecipe, setNewRecipe] = useState<CreateNewRecipeType>({
@@ -144,15 +132,11 @@ const CompareRecipe = () => {
   });
   const isMounted = useRef(false);
   const [emptyCompareList] = useMutation(EMPTY_COMPARE_LIST);
-  const { latest, popular, recommended } = useAppSelector(
-    (state) => state?.recipe,
-  );
+  const { latest, popular, recommended } = useAppSelector((state) => state?.recipe);
   const { handleChangeCompare } = useChangeCompare();
   const { handleToGetARecipe } = useToGetARecipe();
   const [uploadNewImage, setUploadNewImage] = useState(false);
-  const { lastModifiedCollection } = useAppSelector(
-    (state) => state?.collections,
-  );
+  const { lastModifiedCollection } = useAppSelector((state) => state?.collections);
 
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
   // filter recipe
@@ -161,16 +145,10 @@ const CompareRecipe = () => {
     return arr?.filter((item) => item?.recipeId._id !== id);
   };
   // mapped recipe
-  const mapped = (
-    arr: any[],
-    id: string,
-    updateObj: { [key: string]: any },
-  ): any[] => {
+  const mapped = (arr: any[], id: string, updateObj: { [key: string]: any }): any[] => {
     if (!arr?.length) return arr;
     return arr?.map((item: CompareRecipeType) =>
-      item?.recipeId?._id === id
-        ? { ...item, ...updateObj, isTemp: false }
-        : item,
+      item?.recipeId?._id === id ? { ...item, ...updateObj, isTemp: false } : item,
     );
   };
 
@@ -199,11 +177,7 @@ const CompareRecipe = () => {
     setOpenCollectionModal(false);
   };
 
-  const updateData = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | any
-    >,
-  ) => {
+  const updateData = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | any>) => {
     const target = e?.target;
     const { name, value } = target;
     if (target?.files) {
@@ -218,11 +192,7 @@ const CompareRecipe = () => {
     return compareRecipeList?.find((item) => item?.recipeId?._id === id);
   };
 
-  const handleRemoveFromCompareList = async (
-    id: string,
-    e: React.SyntheticEvent,
-    versionId: string,
-  ) => {
+  const handleRemoveFromCompareList = async (id: string, e: React.SyntheticEvent, versionId: string) => {
     await handleChangeCompare(e, id, versionId, false, updateCompareList);
   };
 
@@ -241,9 +211,7 @@ const CompareRecipe = () => {
 
   const removeCompareRecipe = (id, e) => {
     e?.stopPropagation();
-    setCompareRecipeList((state) => [
-      ...state.filter((item) => item?.recipeId?._id !== id),
-    ]);
+    setCompareRecipeList((state) => [...state.filter((item) => item?.recipeId?._id !== id)]);
   };
 
   const responsiveColumn = () => {
@@ -265,9 +233,7 @@ const CompareRecipe = () => {
   };
 
   const findItemIngredientId = (id) => {
-    return newRecipe?.ingredients?.find(
-      (item) => item?.ingredientId === id || item?.qaId === id,
-    );
+    return newRecipe?.ingredients?.find((item) => item?.ingredientId === id || item?.qaId === id);
   };
   const findItemQaId = (id) => {
     return newRecipe?.ingredients?.find((item) => item?.qaId === id);
@@ -307,9 +273,7 @@ const CompareRecipe = () => {
       };
     }
     // is already exist
-    const item = isIngredientStatusOk
-      ? findItemIngredientId(ingredientId)
-      : findItemQaId(ingredientId);
+    const item = isIngredientStatusOk ? findItemIngredientId(ingredientId) : findItemQaId(ingredientId);
 
     if (!item) {
       setNewRecipe((state) => ({
@@ -339,9 +303,7 @@ const CompareRecipe = () => {
       if (source.droppableId === destination.droppableId) {
         setNewRecipe((state) => ({
           ...state,
-          ingredients: [
-            ...reorder(state?.ingredients, source.index, destination.index),
-          ],
+          ingredients: [...reorder(state?.ingredients, source.index, destination.index)],
         }));
       } else {
         return;
@@ -372,30 +334,14 @@ const CompareRecipe = () => {
       dispatch(setCompareList([]));
       dispatch(
         setRecommended(
-          recommended?.map((recipe) =>
-            recipe?.addedToCompare
-              ? { ...recipe, addedToCompare: false }
-              : recipe,
-          ),
+          recommended?.map((recipe) => (recipe?.addedToCompare ? { ...recipe, addedToCompare: false } : recipe)),
         ),
       );
       dispatch(
-        setLatest(
-          latest?.map((recipe) =>
-            recipe?.addedToCompare
-              ? { ...recipe, addedToCompare: false }
-              : recipe,
-          ),
-        ),
+        setLatest(latest?.map((recipe) => (recipe?.addedToCompare ? { ...recipe, addedToCompare: false } : recipe))),
       );
       dispatch(
-        setPopular(
-          popular?.map((recipe) =>
-            recipe?.addedToCompare
-              ? { ...recipe, addedToCompare: false }
-              : recipe,
-          ),
-        ),
+        setPopular(popular?.map((recipe) => (recipe?.addedToCompare ? { ...recipe, addedToCompare: false } : recipe))),
       );
       dispatch(setLoading(false));
       router?.push("/recipe/recipe_discovery");
@@ -427,12 +373,7 @@ const CompareRecipe = () => {
         });
       }
       if (item?.ingredientStatus === "partial_ok") {
-        const {
-          errorString = "",
-          ingredientId = null,
-          errorIngredientId = "",
-          qaId = "",
-        } = item;
+        const { errorString = "", ingredientId = null, errorIngredientId = "", qaId = "" } = item;
         errorIngredients.push({
           errorString,
           ingredientId,
@@ -492,10 +433,7 @@ const CompareRecipe = () => {
           notification("error", "Failed to updated recipe");
         }
       } else {
-        notification(
-          "warning",
-          "You can't save recipe without name and ingredients",
-        );
+        notification("warning", "You can't save recipe without name and ingredients");
       }
     } else {
       if (newRecipe?.name && newRecipe?.ingredients?.length) {
@@ -503,9 +441,7 @@ const CompareRecipe = () => {
           let imgArr = [];
           if (newRecipe?.image?.length) {
             const url =
-              typeof newRecipe?.image[0] === "string"
-                ? newRecipe?.image[0]
-                : await imageUploadS3(newRecipe?.image);
+              typeof newRecipe?.image[0] === "string" ? newRecipe?.image[0] : await imageUploadS3(newRecipe?.image);
             imgArr?.push({
               image: `${url}`,
               default: true,
@@ -536,10 +472,7 @@ const CompareRecipe = () => {
           notification("error", "Failed to saved new recipe");
         }
       } else {
-        notification(
-          "warning",
-          "You can't save recipe without name and ingredients",
-        );
+        notification("warning", "You can't save recipe without name and ingredients");
       }
     }
   };
@@ -594,9 +527,7 @@ const CompareRecipe = () => {
       if (!compareRecipeList?.length) {
         updateFormulateList(compareData);
       } else {
-        let getCompareListId = compareData?.map(
-          (recipe) => recipe?.recipeId?._id,
-        );
+        let getCompareListId = compareData?.map((recipe) => recipe?.recipeId?._id);
 
         let checkCompareRecipeList = compareRecipeList.filter((recipe) =>
           getCompareListId.includes(recipe?.recipeId?._id),
@@ -679,13 +610,9 @@ const CompareRecipe = () => {
                         newlyCreatedRecipe={newlyCreatedRecipe}
                         updateData={updateData}
                         handleCreateNewRecipe={handleCreateNewRecipeByUser}
-                        closeCreateNewRecipeInterface={() =>
-                          setIsFormulatePage(false)
-                        }
+                        closeCreateNewRecipeInterface={() => setIsFormulatePage(false)}
                         recipeSaveLoading={
-                          createRecipeState?.loading ||
-                          EditRecipeState?.loading ||
-                          EditARecipeVersionState?.loading
+                          createRecipeState?.loading || EditRecipeState?.loading || EditARecipeVersionState?.loading
                         }
                       />
                     </div>
@@ -696,12 +623,7 @@ const CompareRecipe = () => {
                         ...responsiveColumn(),
                       }}
                     >
-                      <Slider
-                        {...formulateRecipeResponsiveSetting(
-                          compareRecipeList?.length,
-                        )}
-                        ref={sliderRef}
-                      >
+                      <Slider {...formulateRecipeResponsiveSetting(compareRecipeList?.length)} ref={sliderRef}>
                         {compareRecipeList?.map((recipe, index) => {
                           return (
                             <RecipeDetails
