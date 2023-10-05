@@ -12,7 +12,7 @@ import { WikiListType, WikiType } from "../../../type/wikiListType";
 import notification from "../../utility/reactToastifyNotification";
 import WikiCard from "../wikiCard/WikiCard";
 import styles from "./WikiSingleType.module.scss";
-import { SelectedWikiType, SelectedWikiTypeProps } from "..";
+import { SelectedWikiType, SelectedWikiTypeProps, WikiListTypeWithTotal } from "..";
 import ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/mutation/addOrRemoveToWikiCompareList";
 import { setDbUser } from "../../../redux/slices/userSlice";
 import useLocalStorage from "../../../customHooks/useLocalStorage";
@@ -23,6 +23,7 @@ import { useUser } from "../../../context/AuthProvider";
 import ErrorPage from "components/pages/404Page";
 import useIntersectionObserver from "customHooks/useIntersectionObserver";
 import { useIsMounted } from "customHooks/useIsMounted";
+import { updateWikiCompareCount } from "redux/slices/wikiSlice";
 
 const rootMargin = "100px";
 
@@ -33,7 +34,7 @@ interface Props {
   // setType?: Dispatch<SetStateAction<WikiType>>;
 
   wikiList?: WikiListType[];
-  setWikiList?: React.Dispatch<React.SetStateAction<WikiListType[]>>;
+  setWikiList?: React.Dispatch<React.SetStateAction<WikiListTypeWithTotal>>;
   loading?: boolean;
   handleCloseFilterOrSearchResult?: (wikiType?: WikiType, changeTab?: boolean) => void;
   title?: string;
@@ -61,7 +62,7 @@ const WikiSingleType = ({
   const isMounted = useIsMounted();
   const dispatch = useAppDispatch();
   const user = useUser();
-  const { dbUser } = useAppSelector((state) => state?.user);
+  const wikiCompareCount = useAppSelector((state) => state?.wiki.wikiCompareCount);
   const [wikiCompareList, setWikiCompareList] = useLocalStorage<WikiCompareList[]>("wikiCompareList", []);
 
   const [getIngredientList, { loading: ingredientListLoading }] = useLazyQuery(GET_INGREDIENT_WIKI_LIST, {
@@ -140,15 +141,14 @@ const WikiSingleType = ({
         variables: { ingredientId, userId: user.id },
       });
 
-      dispatch(
-        setDbUser({
-          ...dbUser,
-          wikiCompareCount: isCompared ? dbUser?.wikiCompareCount - 1 : dbUser?.wikiCompareCount + 1,
-        }),
-      );
-      setWikiList((list) =>
-        list?.map((item) => (item?._id === ingredientId ? { ...item, hasInCompare: isCompared ? false : true } : item)),
-      );
+      setWikiList((state) => ({
+        ...state,
+        wikiList: state.wikiList?.map((item) =>
+          item?._id === ingredientId ? { ...item, hasInCompare: !isCompared } : item,
+        ),
+      }));
+
+      dispatch(updateWikiCompareCount(isCompared ? wikiCompareCount - 1 : wikiCompareCount + 1));
 
       const findCompareItem = findCompareWikiEntity(ingredientId);
       if (findCompareItem) {
@@ -266,7 +266,7 @@ const WikiSingleType = ({
                 );
               })}
             </div>
-            <div ref={observer}></div>
+            {/* <div ref={observer}></div> */}
           </>
         ) : (
           <ErrorPage errorMessage="No Data found!!!" style={{ maxHeight: "75vh" }} />

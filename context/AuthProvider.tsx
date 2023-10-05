@@ -10,6 +10,7 @@ import { updateUserCompareLength } from "../redux/slices/userSlice";
 import { useAppDispatch } from "../redux/hooks";
 import Loader from "component/atoms/Loader/loader.component";
 import routes from "routes";
+import { updateWikiCompareCount } from "redux/slices/wikiSlice";
 
 type TProvider = "Amazon" | "Google" | "Facebook" | "Apple" | "Cognito";
 Amplify.configure({ ...AmplifyConfig, ssr: true });
@@ -91,11 +92,9 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
             isLogin: true,
           });
           dispatch(updateUserCompareLength(profile?.compareLength));
-
-          console.log(profile?.isCreated);
+          dispatch(updateWikiCompareCount(profile?.wikiCompareCount));
           // Getting the pageUrl from which redirection happened
           const redirectURL = profile?.isCreated ? sessionStorage.getItem("prevURL") || "/" : "/user/profile";
-          console.log(redirectURL, router.asPath, router.asPath.includes(redirectURL));
 
           // Clearing the session
           sessionStorage.removeItem("prevURL");

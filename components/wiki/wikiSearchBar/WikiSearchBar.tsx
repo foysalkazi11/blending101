@@ -23,9 +23,9 @@ const WikiSearchBar = ({
   setOpenTray = () => {},
 }: WikiSearchBarProps) => {
   const dispatch = useAppDispatch();
-  const isOpenWikiFilterTray = useAppSelector((state) => state.wiki.isOpenWikiFilterTray);
+  const wikiCompareCount = useAppSelector((state) => state.wiki.wikiCompareCount);
   const router = useRouter();
-  const { dbUser, userCompareLength } = useAppSelector((state) => state?.user);
+  // const { dbUser, userCompareLength } = useAppSelector((state) => state?.user);
 
   const toggleTray = () => {
     // dispatch(setIsOpenWikiFilterTray(!isOpenWikiFilterTray));
@@ -52,11 +52,11 @@ const WikiSearchBar = ({
 
       <Tooltip content="Compare wiki" direction="bottom">
         <RecipeDiscoverButton
-          icon={dbUser?.wikiCompareCount ? "/images/compare-fill-icon.svg" : "/icons/eclipse.svg"}
-          text={`Compare(${dbUser?.wikiCompareCount ? dbUser?.wikiCompareCount : 0})`}
-          disable={dbUser?.wikiCompareCount ? false : true}
+          icon={wikiCompareCount ? "/images/compare-fill-icon.svg" : "/icons/eclipse.svg"}
+          text={`Compare(${wikiCompareCount})`}
+          disable={wikiCompareCount ? false : true}
           style={{
-            backgroundColor: userCompareLength ? "#fff" : "#ececec",
+            backgroundColor: wikiCompareCount ? "#fff" : "#ececec",
             marginLeft: "2rem",
           }}
           handleClick={() => router.push(`/wiki/compare`)}
