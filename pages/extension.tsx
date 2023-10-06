@@ -1,27 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useSession, useUser } from "../context/AuthProvider";
+import useExtSession from "@/app/hooks/utils/useExtension";
 
 const EXTENSION_DOMAIN = `chrome-extension://${process.env.NEXT_PUBLIC_EXTENSION_URL}/src/popup/popup.html`;
 
 const Extension = () => {
-  const user = useUser();
-  const session = useSession();
-
+  const session = useExtSession();
   const [data, setData] = useState("");
 
   useEffect(() => {
-    const token = session?.signInUserSession?.accessToken;
-    window.parent.postMessage(
-      JSON.stringify({
-        token: token?.jwtToken || "",
-        expiration_time: token?.exp || "",
-        email: session?.attributes?.email || "",
-        userId: user.id,
-        name: user.name || "Unknown",
-        picture: user.image,
-      }),
-      EXTENSION_DOMAIN,
-    );
+    window.parent.postMessage(JSON.stringify(session), EXTENSION_DOMAIN);
   });
 
   useEffect(() => {
