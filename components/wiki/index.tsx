@@ -56,6 +56,7 @@ const WikiHome = () => {
   const deBoundValue = useDebounce(searchTerm, 300);
   const isMounted = useIsMounted();
   const [pageNum, setPageNum] = useState(1);
+  const [activeTheme, setActiveTheme] = useState<{ [key: string]: any }>({});
 
   const handleWikiFilterFunc = async (selectedWikiType: SelectedWikiTypeProps, page = 1, limit = 12) => {
     try {
@@ -82,6 +83,17 @@ const WikiHome = () => {
     }
   };
 
+  const checkActiveWiki = (id: string) => {
+    return activeTheme?._id === id;
+  };
+  const wikiThemeOnClick = (wikiThemeData: { [key: string]: any }) => {
+    if (checkActiveWiki(wikiThemeData?._id)) {
+      setActiveTheme({});
+    } else {
+      setActiveTheme(wikiThemeData);
+    }
+  };
+
   useEffect(() => {
     if (isMounted) {
       handleWikiFilterFunc(selectedWikiType, 1, dataLimit);
@@ -104,7 +116,7 @@ const WikiHome = () => {
   }, [deBoundValue]);
 
   // render ui
-  const renderUI = (wikiType, type: WikiType, searchTerm: string) => {
+  const renderUI = (activeTheme: { [key: string]: any }, type: WikiType, searchTerm: string) => {
     let component: React.ReactChild = null;
     // if (wikiType) {
     //   component = <WikiSingleItem />;
@@ -128,7 +140,17 @@ const WikiHome = () => {
         />
       );
     } else {
-      component = <WikiLanding setType={handleUpdateWikiSection} />;
+      if (activeTheme?._id) {
+        component = (
+          <WikiSingleType
+            wikiList={activeTheme?.data?.Wiki}
+            handleCloseFilterOrSearchResult={() => setActiveTheme({})}
+            title={`${activeTheme?.displayName} (${activeTheme?.data?.Wiki?.length}) `}
+          />
+        );
+      } else {
+        component = <WikiLanding setType={handleUpdateWikiSection} />;
+      }
     }
 
     return component;
@@ -157,10 +179,12 @@ const WikiHome = () => {
               toggle={toggleMenu}
               setToggle={setToggleMenu}
               setInput={setSearchTerm}
+              wikiThemeOnClick={wikiThemeOnClick}
+              checkActiveWiki={checkActiveWiki}
             />
           </div>
           <div className={styles.center}>
-            {renderUI(wikiType, selectedWikiType?.wikiType, selectedWikiType?.searchTerm)}
+            {renderUI(activeTheme, selectedWikiType?.wikiType, selectedWikiType?.searchTerm)}
           </div>
         </div>
       </div>
@@ -188,6 +212,8 @@ const WikiHome = () => {
             SetSelectedWikiType={SetSelectedWikiType}
             toggle={toggleMenu}
             setToggle={setToggleMenu}
+            wikiThemeOnClick={wikiThemeOnClick}
+            checkActiveWiki={checkActiveWiki}
           />
         </TrayWrapper>
       </div>
