@@ -1,7 +1,13 @@
+.wikiCardContainer {
+  position: relative;
+  cursor: pointer;
+}
+
 .wikiThemeCardImage {
   max-width: 100%;
-  height: auto;
+  height: 150px;
   border-radius: 10px;
+  object-fit: contain;
 }
 .wikiThemeCardTitle {
   padding: 1rem 0;
