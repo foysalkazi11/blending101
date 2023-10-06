@@ -30,7 +30,7 @@ import useTurnedOnOrOffVersion from "../../../customHooks/useTurnedOnOrOffVersio
 import CircularRotatingLoader from "../../loader/circularRotatingLoader.component";
 import isEmptyObj from "../../../helperFunc/object/isEmptyObj";
 import { AccessPermission } from "../../../type/recipeCardType";
-import useExtension from "../../../modules/app/hooks/utils/useExtension";
+import useExtension, { useRecipeSource } from "../../../modules/app/hooks/utils/useExtension";
 import { useUser } from "../../../context/AuthProvider";
 import { ImageWithFallback } from "../../imageWithFallback";
 import { useRecipeToGrocery } from "@/recipe/hooks";
@@ -152,7 +152,8 @@ export default function DatacardComponent({
     loading: changeDefaultVersionLoading,
   } = useToChangeDefaultVersion();
   const user = useUser();
-  const authData = useExtension();
+
+  const navigateSource = useRecipeSource();
   const addToGrocery = useRecipeToGrocery();
   const addToMyPlan = useAddRecipeToMyPlan({
     onSuccess: () => setShowCalendar(""),
@@ -361,34 +362,7 @@ export default function DatacardComponent({
               {!isEmptyObj(brand || {}) ? (
                 <a
                   href={origin}
-                  onClick={(e) => {
-                    router.reload();
-                    const id = process.env.NEXT_PUBLIC_EXTENSION_URL;
-                    //@ts-ignore
-                    chrome.runtime.sendMessage(
-                      id,
-                      {
-                        action: "BRAND_NAVIGATE",
-                        payload: {
-                          id: recipeId,
-                          name: postfixTitle || title,
-                          image,
-                          origin,
-                        },
-                      },
-                      () => {},
-                    );
-                    //@ts-ignore
-                    chrome.runtime.sendMessage(
-                      id,
-                      {
-                        action: "SYNC_AUTH",
-                        payload: authData,
-                      },
-                      () => {},
-                    );
-                    window.location.href = "";
-                  }}
+                  onClick={() => navigateSource({ id: recipeId, name: postfixTitle || title, image, origin })}
                 >
                   <ImageWithFallback
                     className={styles.brand}

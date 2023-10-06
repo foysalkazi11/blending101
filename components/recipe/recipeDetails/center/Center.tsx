@@ -37,7 +37,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/pro-light-svg-icons";
 import { useUser } from "../../../../context/AuthProvider";
 import { ImageWithFallback } from "../../../../theme/imageWithFallback";
-import useExtension from "../../../../modules/app/hooks/utils/useExtension";
+import useExtension, { useRecipeSource } from "@/app/hooks/utils/useExtension";
 
 interface center {
   recipeData: RecipeDetailsType;
@@ -78,7 +78,7 @@ const Center = ({
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
   const userId = useUser().id;
   const { functionAcceptRecipeShare, acceptRecipeShareLoading } = useToAcceptRecipeShare();
-  const authData = useExtension();
+  const navigateSource = useRecipeSource();
 
   // read more functionality
   const ReadMore = ({ children }) => {
@@ -256,37 +256,17 @@ const Center = ({
                 {!isEmptyObj(recipeData?.recipeId?.brand || {}) ? (
                   <a
                     href={recipeData?.recipeId?.url || "#"}
-                    onClick={(e) => {
-                      router.reload();
-                      const id = process.env.NEXT_PUBLIC_EXTENSION_URL;
-                      //@ts-ignore
-                      chrome.runtime.sendMessage(
-                        id,
-                        {
-                          action: "BRAND_NAVIGATE",
-                          payload: {
-                            id: recipeData?.recipeId?._id,
-                            name: recipeData?.recipeId?.name,
-                            image:
-                              recipeData?.recipeId?.originalVersion?.selectedImage ||
-                              recipeData?.recipeId?.image?.find((img) => img?.default)?.image ||
-                              recipeData?.recipeId?.image?.[0]?.image,
-                            origin: recipeData?.recipeId?.url || "#",
-                          },
-                        },
-                        () => {},
-                      );
-                      //@ts-ignore
-                      chrome.runtime.sendMessage(
-                        id,
-                        {
-                          action: "SYNC_AUTH",
-                          payload: authData,
-                        },
-                        () => {},
-                      );
-                      window.location.href = "";
-                    }}
+                    onClick={() =>
+                      navigateSource({
+                        id: recipeData?.recipeId?._id,
+                        name: recipeData?.recipeId?.name,
+                        image:
+                          recipeData?.recipeId?.originalVersion?.selectedImage ||
+                          recipeData?.recipeId?.image?.find((img) => img?.default)?.image ||
+                          recipeData?.recipeId?.image?.[0]?.image,
+                        origin: recipeData?.recipeId?.url || "#",
+                      })
+                    }
                   >
                     <ImageWithFallback
                       className={styles.brand}
