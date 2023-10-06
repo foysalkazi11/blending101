@@ -26,6 +26,8 @@ interface Props {
   toggle?: number;
   setToggle?: React.Dispatch<React.SetStateAction<number>>;
   setInput?: React.Dispatch<React.SetStateAction<string>>;
+  wikiThemeOnClick?: (data: { [key: string]: any }) => void;
+  checkActiveWiki?: (id: string) => boolean;
 }
 
 const WikiLeft = ({
@@ -37,6 +39,8 @@ const WikiLeft = ({
   toggle = 1,
   setToggle = () => {},
   setInput = () => {},
+  wikiThemeOnClick = () => {},
+  checkActiveWiki = () => false,
 }: Props) => {
   const [showWikiType, setShowWikiType] = useState(true);
   const [showTabMenu, setShowTabMenu] = useState(true);
@@ -282,10 +286,8 @@ const WikiLeft = ({
           </>
         ) : (
           <WikiThemeContainer
-            data={generateDummyArray(10, {
-              title: "Apple",
-              image: "/images/img1.png",
-            })}
+            wikiThemeOnClick={wikiThemeOnClick}
+            checkActiveWiki={checkActiveWiki}
             scrollAreaMaxHeight={panelHeight - 310}
           />
         )}
