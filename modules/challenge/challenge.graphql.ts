@@ -1,3 +1,4 @@
+import { TOP_INGREDIENT_FIELDS } from "@/app/graphql/Ingredients";
 import { gql } from "@apollo/client";
 /*
  * -------------------------------------------------*
@@ -67,13 +68,10 @@ const CHALLENGE_INFO_FIELDS = gql`
       blendScore
     }
     topIngredients {
-      ingredientId {
-        ingredientName
-        featuredImage
-      }
-      count
+      ...TopIngredientFields
     }
   }
+  ${TOP_INGREDIENT_FIELDS}
 `;
 
 const CHALLENGE_LIST_FIELDS = gql`
@@ -263,17 +261,14 @@ export const GET_INVITE_CHALLENGE_DETAILS = gql`
         blendScore
       }
       topIngredients {
-        ingredientId {
-          _id
-          ingredientName
-        }
-        count
+        ...TopIngredientFields
       }
       hasAccepted
       wasInvited: hasInvited
       isOwner
     }
   }
+  ${TOP_INGREDIENT_FIELDS}
 `;
 
 export const GET_RECENT_CHALLENGES = gql`
@@ -294,11 +289,10 @@ export const GET_RECENT_CHALLENGES = gql`
       challengeInfo {
         blendScore
         topIngredients {
-          icon: featuredImage
-          label: name
-          quantity: count
+          ...TopIngredientFields
         }
       }
     }
   }
+  ${TOP_INGREDIENT_FIELDS}
 `;

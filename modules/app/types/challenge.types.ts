@@ -2,11 +2,6 @@ import { RecipeCategory } from "@/recipe/recipe.types";
 import { Ingredient, IngredientWithPortion } from "./ingredient.types";
 import { Member } from "./misc.types";
 
-interface TopIngredient {
-  count?: number;
-  ingredientId?: Ingredient;
-}
-
 interface SharedWith {
   blendScore?: number;
   canInviteWithOthers?: boolean;

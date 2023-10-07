@@ -2,7 +2,6 @@ import React from "react";
 import { ResponsiveContainer, BarChart, XAxis, YAxis, Bar, LabelList } from "recharts";
 
 import styles from "./_Charts.module.scss";
-import { TopIngredient } from "@/app/types/plan.types";
 
 interface IngredientsProps {
   ingredients: TopIngredient[];

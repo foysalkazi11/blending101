@@ -9,16 +9,22 @@ import useStatistics from "@/challenge/hooks/useStatistics";
 import { useUser } from "context/AuthProvider";
 
 import styles from "./Statistics.module.scss";
+import { ChallengeInfo } from "@/app/types/challenge.types";
 
-const Statistics = ({ statistics, height }) => {
-  const { leaderboard, rxScore, topIngredients } = useStatistics(statistics);
+interface StatisticsProps {
+  statistics: ChallengeInfo;
+  height: string;
+}
+const Statistics = (props: StatisticsProps) => {
+  const { statistics, height } = props;
+  const { leaderboard } = useStatistics(statistics);
   return (
     <div className={styles.statistics}>
       <IconHeading icon={faLightbulbOn} title={"Challenge Stats"} />
       <div className={styles.statistics__body} style={{ height }}>
         <Leaderboard leaderboard={leaderboard} myScore={statistics?.blendScore} />
         <RxScore />
-        <TopIngredients ingredients={topIngredients} />
+        <TopIngredients ingredients={statistics?.topIngredients} />
       </div>
     </div>
   );
