@@ -51,6 +51,7 @@ export default function Filtertray({ showPanle, showTagByDefaut }: Props) {
       activeFilterTag.filterCriteria,
       activeFilterTag.activeTab,
       activeFilterTag.childTab,
+      "",
     );
   };
 
@@ -59,9 +60,14 @@ export default function Filtertray({ showPanle, showTagByDefaut }: Props) {
   };
 
   //check active filter item
-  const checkActiveItem = (id: string) => {
-    return allFilters.some((item) => item?.id === id);
+  const checkFocusItem = (id: string) => {
+    return activeFilterTag?.id === id;
   };
+  //check active filter item
+  const checkActiveItem = (id: string) => {
+    return allFilters.some((item) => item?.origin?.id === id);
+  };
+
   //check active filter item
   const checkExcludeIngredientIds = (id: string) => {
     return allFilters.some(
@@ -128,6 +134,7 @@ export default function Filtertray({ showPanle, showTagByDefaut }: Props) {
           checkExcludeIngredientIds={checkExcludeIngredientIds}
           handleUpdateFilterCriteria={handleUpdateFilterCriteria}
           handleUpdateActiveFilterTag={handleUpdateActiveFilterTag}
+          checkFocusItem={checkFocusItem}
         />
       ) : null}
     </TrayWrapper>

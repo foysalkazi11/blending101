@@ -2,10 +2,7 @@ import React, { useState } from "react";
 import { useAppDispatch } from "../../../../redux/hooks";
 import styles from "./OptionSelect.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCircleXmark,
-  faCircleCheck,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCircleXmark, faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 import OptionSelectSkeleton from "../../../../theme/skeletons/optionSelectSkeleton/OptionSelectSkeleton";
 import {
   ActiveFilterTagCriteriaType,
@@ -15,20 +12,15 @@ import {
 } from "../../../../type/filterType";
 
 type OptionSelectProps = {
-  checkActiveItem: (
-    id: string,
-    filterCriteria: FilterCriteriaOptions,
-  ) => boolean;
+  checkActiveItem: (id: string, filterCriteria: FilterCriteriaOptions) => boolean;
+  checkFocusItem: (id: string) => boolean;
   // handleBlendAndIngredientUpdate: (
   //   value: FilterCriteriaValue,
   //   present: boolean,
   // ) => void;
   optionSelectItems: any[];
   filterCriteria: FilterCriteriaOptions;
-  checkExcludeIngredientIds?: (
-    id: string,
-    filterCriteria: FilterCriteriaOptions,
-  ) => boolean;
+  checkExcludeIngredientIds?: (id: string, filterCriteria: FilterCriteriaOptions) => boolean;
   focusOptionId?: string;
   activeFilterTag: ActiveFilterTagCriteriaType;
   optionsLoading?: boolean;
@@ -41,6 +33,7 @@ type OptionSelectProps = {
 
 const OptionSelect = ({
   checkActiveItem = () => false,
+  checkFocusItem = () => false,
   filterCriteria,
   optionSelectItems = [],
   checkExcludeIngredientIds = () => false,
@@ -59,16 +52,15 @@ const OptionSelect = ({
         {optionSelectItems?.length
           ? optionSelectItems?.map((item, index) => {
               const isSelected = checkActiveItem(item.id, filterCriteria);
-              const isIdExcluded = checkExcludeIngredientIds(
-                item.id,
-                filterCriteria,
-              );
+              const isFocused = checkFocusItem(item.id);
+              const isIdExcluded = checkExcludeIngredientIds(item.id, filterCriteria);
               return (
                 <Chip
                   key={item?.id}
                   item={item}
                   filterCriteria={filterCriteria}
                   isSelected={isSelected}
+                  isFocused={isFocused}
                   isIdExcluded={isIdExcluded}
                   focusOptionId={focusOptionId}
                   activeFilterTag={activeFilterTag}
@@ -85,6 +77,7 @@ const OptionSelect = ({
 const Chip = ({
   item,
   isSelected,
+  isFocused,
   filterCriteria,
   isIdExcluded,
   focusOptionId = "",
@@ -93,16 +86,21 @@ const Chip = ({
 }) => {
   const [isChipHovered, setIsChipHovered] = useState(false);
   const dispatch = useAppDispatch();
+  let conditionalStyles: string = "";
+  if (isSelected) {
+    conditionalStyles = `${styles.selectedSecondary}`;
+
+    if (isFocused) {
+      conditionalStyles = `${styles.focusedSecondary}`;
+    }
+    if (isIdExcluded) {
+      conditionalStyles = `${styles.focusedPrimary}`;
+    }
+  }
 
   return (
     <div
-      className={`${styles.signleItem} ${
-        isSelected
-          ? isIdExcluded
-            ? styles.selectedPrimary
-            : styles.selectedSecondary
-          : ""
-      }`}
+      className={`${styles.signleItem} ${conditionalStyles}`}
       onClick={(e) => {
         e.stopPropagation();
 
@@ -110,7 +108,7 @@ const Chip = ({
           updateStatus: isSelected ? "focus" : "add",
           value: {
             ...item,
-            origin: { ...activeFilterTag },
+            origin: { ...activeFilterTag, id: item?.id || item?._id || "" },
           },
           filterCriteria,
         });
@@ -120,11 +118,7 @@ const Chip = ({
     >
       <span
         className={`${
-          item.id === focusOptionId
-            ? isIdExcluded
-              ? styles.activeColorPrimary
-              : styles.activeColorSecondary
-            : ""
+          item.id === focusOptionId ? (isIdExcluded ? styles.activeColorPrimary : styles.activeColorSecondary) : ""
         }`}
       >
         {item?.name}

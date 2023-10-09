@@ -160,6 +160,7 @@ interface Props {
     filterCriteria: FilterCriteriaOptions,
     activeTab: string,
     childTab?: string,
+    id?: string,
   ) => void;
 }
 
@@ -371,6 +372,7 @@ const TagSection = ({
               optionSelectItems={optionSelectItems}
               filterCriteria={filterCriteria}
               checkActiveItem={checkActiveItem}
+              checkFocusItem={() => false}
               checkExcludeIngredientIds={checkExcludeIngredientIds}
               activeFilterTag={activeFilterTagForPlan}
               handleUpdateFilterCriteria={handleUpdateFilterCriteria}
@@ -386,6 +388,7 @@ const TagSection = ({
                 optionSelectItems={optionSelectItems}
                 filterCriteria={filterCriteria}
                 checkActiveItem={checkActiveItem}
+                checkFocusItem={() => false}
                 checkExcludeIngredientIds={checkExcludeIngredientIds}
                 focusOptionId={excludeFilterStateForPlan.id}
                 activeFilterTag={activeFilterTagForPlan}
@@ -408,6 +411,7 @@ const TagSection = ({
                 optionSelectItems={optionSelectItems}
                 filterCriteria={filterCriteria}
                 checkActiveItem={checkActiveItem}
+                checkFocusItem={() => false}
                 focusOptionId={numericFilterStateForPlan.id}
                 activeFilterTag={activeFilterTagForPlan}
                 optionsLoading={blendNutrientLoading}
