@@ -84,6 +84,7 @@ const BlendType = ({
                         filterCriteria: "blendTypes",
                         activeTab: "Blend Type",
                         childTab: blend?.name || "",
+                        id: blend?._id,
                       },
                     })
                   }

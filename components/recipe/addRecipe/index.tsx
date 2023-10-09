@@ -25,6 +25,7 @@ import CenterSection from "../share/centerSection";
 import { FormProvider, useForm } from "react-hook-form";
 import { RecipeEditDefaultValuesType } from "type/recipeEditType";
 import { useToArrangeIngredient, useToArrangeIngredientBeforeSave } from "../share/useToArrangeIngredient";
+import useImage from "@/app/hooks/utils/useImage";
 
 const defaultValues: RecipeEditDefaultValuesType = {
   recipeTitle: "",
@@ -63,6 +64,7 @@ const AddRecipePage = () => {
   const { data: blendCategoriesData } = useQuery(BLEND_CATEGORY);
   const arrangeIngredient = useToArrangeIngredient();
   const arrangeIngredientBeforeSave = useToArrangeIngredientBeforeSave();
+  const { postImages } = useImage();
 
   const methods = useForm({
     defaultValues,
@@ -96,14 +98,15 @@ const AddRecipePage = () => {
         servings: servingSize,
         recipeInstructions: howToArr,
         totalTime: data?.cookTime,
+        image: [],
       };
 
       try {
         if (images?.length) {
-          let imageArr = await imageUploadS3(images);
+          let imageArr = await postImages(images);
           //@ts-ignore
           (imageArr = imageArr?.map((img, index) =>
-            index === 0 ? { image: img, default: true } : { image: img, default: false },
+            index === 0 ? { image: img?.url, default: true } : { image: img?.url, default: false },
           )),
             (obj = {
               ...obj,
@@ -111,29 +114,28 @@ const AddRecipePage = () => {
               image: imageArr,
             });
 
-          const { data } = await createNewRecipeByUser({
-            variables: {
-              isAddToTemporaryCompareList: false,
-              data: obj,
-            },
-          });
-          setLoading(false);
-          notification("success", "recipe create successfully");
-          if (data?.addRecipeFromUser?.recipeId?._id) {
-            router?.push(`/recipe/recipe_details/${data?.addRecipeFromUser?.recipeId?._id}`);
-          }
-        } else {
-          const { data } = await createNewRecipeByUser({
-            variables: {
-              isAddToTemporaryCompareList: false,
-              data: obj,
-            },
-          });
-          setLoading(false);
-          notification("success", "recipe create successfully");
-          if (data?.addRecipeFromUser?.recipeId?._id) {
-            router?.push(`/recipe/recipe_details/${data?.addRecipeFromUser?.recipeId?._id}`);
-          }
+          // const { data } = await createNewRecipeByUser({
+          //   variables: {
+          //     isAddToTemporaryCompareList: false,
+          //     data: obj,
+          //   },
+          // });
+          // setLoading(false);
+          // notification("success", "recipe create successfully");
+          // if (data?.addRecipeFromUser?.recipeId?._id) {
+          //   router?.push(`/recipe/recipe_details/${data?.addRecipeFromUser?.recipeId?._id}`);
+          // }
+        }
+        const { data } = await createNewRecipeByUser({
+          variables: {
+            isAddToTemporaryCompareList: false,
+            data: obj,
+          },
+        });
+        setLoading(false);
+        notification("success", "recipe create successfully");
+        if (data?.addRecipeFromUser?.recipeId?._id) {
+          router?.push(`/recipe/recipe_details/${data?.addRecipeFromUser?.recipeId?._id}`);
         }
       } catch (error) {
         setLoading(false);

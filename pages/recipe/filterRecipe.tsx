@@ -180,9 +180,9 @@ const FilterRecipe = () => {
           {allFilters?.length ? (
             <SearchtagsComponent
               allFilters={allFilters}
-              handleUpdateActiveFilterTag={(activeSection, filterCriteria, activeTab, childTab) => {
+              handleUpdateActiveFilterTag={(activeSection, filterCriteria, activeTab, childTab, id) => {
                 dispatch(setOpenFilterTray(true));
-                handleUpdateActiveFilterTag(activeSection, filterCriteria, activeTab, childTab);
+                handleUpdateActiveFilterTag(activeSection, filterCriteria, activeTab, childTab, id);
               }}
               handleUpdateFilterCriteria={handleUpdateFilterCriteria}
             />

@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { Dispatch, SetStateAction, forwardRef, useCallback, useMemo, useState } from "react";
+import React, { Dispatch, SetStateAction, forwardRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./dataCard.module.scss";
 import { useRouter } from "next/router";
 import useChangeCompare from "../../../customHooks/useChangeComaper";
@@ -160,6 +160,8 @@ export default function DatacardComponent({
   });
 
   const [showCalendar, setShowCalendar] = useState("");
+  const headingRef = useRef(null);
+  const [isTruncatedHeading, setIsTruncatedHeading] = useState(false);
 
   // View Permission
   const hasViewPermission = useCallback(
@@ -198,6 +200,14 @@ export default function DatacardComponent({
       notification("warning", "Not allow to make default version as shearing is off !!!");
     }
   };
+
+  // useEffect(() => {
+  //   const element = headingRef?.current;
+
+  //   if (headingRef?.current) {
+  //     setIsTruncatedHeading(element.scrollWidth > element.clientWidth);
+  //   }
+  // }, []);
 
   const dataBody = (
     <div className={styles.databody}>
@@ -285,6 +295,7 @@ export default function DatacardComponent({
         <div className={styles.heading}>
           <div className={styles.title}>
             <h2
+              ref={headingRef}
               onClick={(e) => {
                 if (hasInteractionPermission("title")) {
                   e?.stopPropagation();
@@ -295,6 +306,7 @@ export default function DatacardComponent({
               {postfixTitle || title}
             </h2>
           </div>
+
           <div className={styles.menu}>
             {showMoreMenu && (
               <div style={{ visibility: isHover ? "visible" : "hidden" }} ref={hoverRefMoreMenu}>
