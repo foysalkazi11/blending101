@@ -142,6 +142,7 @@ const collections = [
 
 interface Props {
   checkActiveItem: (id: string) => boolean;
+  checkFocusItem: (id: string) => boolean;
   blendCategoryData: BlendCategoryType[];
   blendCategoryLoading: boolean;
   ingredientCategoryData: any[];
@@ -156,12 +157,14 @@ interface Props {
     activeSection: ActiveSectionType,
     filterCriteria: FilterCriteriaOptions,
     activeTab: string,
-    childTab?: string,
+    childTab: string,
+    id: string,
   ) => void;
 }
 
 const TagSection = ({
   checkActiveItem = () => false,
+  checkFocusItem = () => false,
   blendCategoryData = [],
   blendCategoryLoading = false,
   ingredientCategoryData = [],
@@ -177,7 +180,7 @@ const TagSection = ({
   const [getBlendNutrientsBasedOnCategoey, { data: blendNutrientData, loading: blendNutrientLoading }] = useLazyQuery(
     GET_BLEND_NUTRIENTS_BASED_ON_CATEGORY,
     {
-      fetchPolicy: "cache-and-network",
+      // fetchPolicy: "cache-and-network",
     },
   );
   const {
@@ -366,6 +369,7 @@ const TagSection = ({
               optionSelectItems={optionSelectItems}
               filterCriteria={filterCriteria}
               checkActiveItem={checkActiveItem}
+              checkFocusItem={checkFocusItem}
               checkExcludeIngredientIds={checkExcludeIngredientIds}
               activeFilterTag={activeFilterTag}
               handleUpdateFilterCriteria={handleUpdateFilterCriteria}
@@ -381,6 +385,7 @@ const TagSection = ({
                 optionSelectItems={optionSelectItems}
                 filterCriteria={filterCriteria}
                 checkActiveItem={checkActiveItem}
+                checkFocusItem={checkFocusItem}
                 checkExcludeIngredientIds={checkExcludeIngredientIds}
                 focusOptionId={excludeFilterState.id}
                 activeFilterTag={activeFilterTag}
@@ -402,6 +407,7 @@ const TagSection = ({
                 optionSelectItems={optionSelectItems}
                 filterCriteria={filterCriteria}
                 checkActiveItem={checkActiveItem}
+                checkFocusItem={checkFocusItem}
                 focusOptionId={numericFilterState.id}
                 activeFilterTag={activeFilterTag}
                 optionsLoading={blendNutrientLoading}
@@ -427,7 +433,7 @@ const TagSection = ({
           <input className={styles.tagSectionInput} placeholder="Search" />
           <div
             className={styles.singleItem}
-            onClick={() => handleUpdateActiveFilterTag("tags", "blendTypes", "Blend Type")}
+            onClick={() => handleUpdateActiveFilterTag("tags", "blendTypes", "Blend Type", "Blend Type", "")}
           >
             <h5>Blend Type</h5>
           </div>
@@ -440,7 +446,7 @@ const TagSection = ({
                       className={styles.singleItemInside}
                       key={index}
                       onClick={() =>
-                        handleUpdateActiveFilterTag("tags", "includeIngredientIds", "Ingredient", item?.value)
+                        handleUpdateActiveFilterTag("tags", "includeIngredientIds", "Ingredient", item?.value, "")
                       }
                     >
                       <h5>{item?.label}</h5>
@@ -469,6 +475,7 @@ const TagSection = ({
                                     item.title === "Nutrition Metrics" ? "nutrientMatrix" : "nutrientFilters",
                                     "Nutrition",
                                     child.name,
+                                    "",
                                   )
                                 }
                               >
@@ -487,6 +494,7 @@ const TagSection = ({
                               item.title === "Nutrition Metrics" ? "nutrientMatrix" : "nutrientFilters",
                               "Nutrition",
                               item.title,
+                              "",
                             )
                           }
                         >
@@ -506,7 +514,7 @@ const TagSection = ({
                     <div
                       className={styles.singleItemInside}
                       key={index}
-                      onClick={() => handleUpdateActiveFilterTag("tags", "collectionIds", "Collections", item.name)}
+                      onClick={() => handleUpdateActiveFilterTag("tags", "collectionIds", "Collections", item.name, "")}
                     >
                       <h5>{item.name}</h5>
                     </div>

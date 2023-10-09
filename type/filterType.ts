@@ -103,6 +103,7 @@ export interface ActiveFilterTagCriteriaType {
   filterCriteria: FilterCriteriaOptions;
   activeTab: string;
   childTab: string;
+  id: string;
 }
 
 export type FilterCriteriaValue = CommonProperties;

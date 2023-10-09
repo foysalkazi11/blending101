@@ -74,9 +74,10 @@ const MainFilter = () => {
     filterCriteria,
     activeTab,
     childTab,
+    id,
   ) => {
     dispatch(setIsPlanFilterOpen(true));
-    handleUpdateActiveFilterTagForPlan(activeSection, filterCriteria, activeTab, childTab);
+    handleUpdateActiveFilterTagForPlan(activeSection, filterCriteria, activeTab, childTab, id);
   };
 
   useEffect(() => {

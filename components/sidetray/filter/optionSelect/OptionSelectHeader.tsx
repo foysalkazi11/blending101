@@ -20,7 +20,8 @@ type OptionSelectHeaderProps = {
     activeSection: ActiveSectionType,
     filterCriteria: FilterCriteriaOptions,
     activeTab: string,
-    childTab?: string,
+    childTab: string,
+    id: string,
   ) => void;
 };
 
@@ -34,10 +35,7 @@ const OptionSelectHeader = ({
     <div className={styles.optionSelectHeaderContainer}>
       <div className={styles.header}>
         <div className={styles.leftSide}>
-          <div
-            className={styles.icon}
-            onClick={() => handleUpdateActiveFilterTag("tags", null, "", "")}
-          >
+          <div className={styles.icon} onClick={() => handleUpdateActiveFilterTag("tags", null, "", "", "")}>
             <BsChevronLeft />
           </div>
           <h3>{activeTab}</h3>
