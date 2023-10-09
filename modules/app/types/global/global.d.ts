@@ -13,6 +13,11 @@ declare global {
     hash?: string;
     url?: string;
   }
+  interface TopIngredient {
+    quantity?: number;
+    label?: string;
+    icon?: string;
+  }
 }
 
 export {};

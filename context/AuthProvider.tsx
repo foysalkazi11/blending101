@@ -118,7 +118,7 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
 
   useEffect(() => {
     // Skipping auth checking if the URL is public
-    if (isPublicRoute) {
+    if (router.asPath.startsWith("/login/#access_token=") || isPublicRoute) {
       return setState({
         isChecking: false,
         isLogin: true, // To stop showing loader
@@ -142,7 +142,7 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
               isChecking: false,
               isLogin: false,
             });
-            router.push(routes.login);
+            // router.push(routes.login);
           }
         }, 2000);
       });
