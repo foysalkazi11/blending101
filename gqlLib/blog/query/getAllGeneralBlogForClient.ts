@@ -1,26 +1,29 @@
 import { gql } from "@apollo/client";
 
 const GET_ALL_GENERAL_BLOG_FOR_CLIENT = gql`
-  query GetAllGeneralBlogForClient($memberId: String!, $currentDate: String!) {
-    getAllGeneralBlogForClient(memberId: $memberId, currentDate: $currentDate) {
-      _id
-      coverImage
-      mediaLength
-      mediaUrl
-      publishDate
-      slug
-      title
-      publishDateString
-      type
-      commentsCount
-      blogCollections
-      createdBy {
+  query GetAllGeneralBlogForClient($memberId: String!, $currentDate: String!, $page: Float, $limit: Float) {
+    getAllGeneralBlogForClient(memberId: $memberId, currentDate: $currentDate, page: $page, limit: $limit) {
+      blogs {
         _id
-        displayName
-        firstName
-        image
-        lastName
+        coverImage
+        mediaLength
+        mediaUrl
+        publishDate
+        slug
+        title
+        publishDateString
+        type
+        commentsCount
+        blogCollections
+        createdBy {
+          _id
+          displayName
+          firstName
+          image
+          lastName
+        }
       }
+      totalBlogs
     }
   }
 `;

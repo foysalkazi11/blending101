@@ -143,6 +143,7 @@ const CenterSection = ({
           <TextArea
             name="recipeDescription"
             borderSecondary={true}
+            placeholder="Description"
             // value={copyDetailsRecipe?.tempVersionInfo?.version?.description}
             // onChange={(e) =>
             //   updateEditRecipe(e?.target?.name, e?.target?.value)
@@ -204,8 +205,8 @@ const CenterSection = ({
                   type="number"
                   border="borderSecondary"
                   name="cookTime"
-                  placeholder="Total time"
-                  style={{ width: "100px", textAlign: "center" }}
+                  placeholder="Total Minutes"
+                  style={{ width: "100px", textAlign: "center", marginRight: "1rem" }}
                 />
               ) : (
                 <span className={styles.text}>{recipePrepareTime}</span>

@@ -21,13 +21,22 @@ interface IngredientPanelProps {
   ingredients: IngredientWithPortion[];
   onNutrition?: any;
   onDelete?: any;
+  onDeleteErrorIngredient?: (qaIa: string) => void;
   onSave?: any;
   hasComment?: boolean;
   singleIngredient?: { [key: string]: any };
 }
 
 const IngredientPanel = (props: IngredientPanelProps) => {
-  const { ingredients, onNutrition = () => {}, onDelete, onSave, hasComment, singleIngredient = {} } = props;
+  const {
+    ingredients,
+    onNutrition = () => {},
+    onDelete,
+    onDeleteErrorIngredient = () => {},
+    onSave,
+    hasComment,
+    singleIngredient = {},
+  } = props;
 
   const [editingId, setEditingId] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
@@ -156,8 +165,19 @@ const IngredientPanel = (props: IngredientPanelProps) => {
               } else {
                 return (
                   <div key={index} className={styles.errorIngredient}>
-                    <FontAwesomeIcon icon={faBasketShoppingSimple} size="lg" />
-                    <p className={styles.text}>{ingredient?.errorString}</p>
+                    <div className={styles.leftSide}>
+                      <FontAwesomeIcon icon={faBasketShoppingSimple} size="lg" />
+                      <p className={styles.text}>{ingredient?.errorString}</p>
+                    </div>
+
+                    <Icon
+                      size="small"
+                      color="primary"
+                      fontName={faTrash}
+                      className={styles.button}
+                      //@ts-ignore
+                      onClick={() => onDeleteErrorIngredient(ingredient?.qaId)}
+                    />
                   </div>
                 );
               }

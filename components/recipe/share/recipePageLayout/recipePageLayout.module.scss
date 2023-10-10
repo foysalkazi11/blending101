@@ -36,4 +36,11 @@
   .right {
     grid-area: right;
   }
+  .leftXLShow {
+    grid-area: left;
+    display: none;
+    @include media(xl) {
+      display: block;
+    }
+  }
 }

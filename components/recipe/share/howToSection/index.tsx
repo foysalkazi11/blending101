@@ -11,10 +11,7 @@ interface Props {
   setRecipeInstruction?: (arg: { [key: string]: any }[]) => void;
 }
 
-const InstructionsForMakingRecipe = ({
-  recipeInstructions = [],
-  setRecipeInstruction = () => {},
-}: Props) => {
+const InstructionsForMakingRecipe = ({ recipeInstructions = [], setRecipeInstruction = () => {} }: Props) => {
   const [selectedElementId, setSelectedElementId] = useState(null);
   const [inputValue, setInputValue] = useState("");
 
@@ -58,9 +55,7 @@ const InstructionsForMakingRecipe = ({
       }
 
       if (selectedElementId) {
-        let elemIndex = recipeInstructions.findIndex(
-          (elem) => elem.id === selectedElementId,
-        );
+        let elemIndex = recipeInstructions.findIndex((elem) => elem.id === selectedElementId);
         howList = [...recipeInstructions];
         howList[elemIndex] = { id: selectedElementId, step: inputValue };
       } else {
@@ -82,12 +77,7 @@ const InstructionsForMakingRecipe = ({
     <div className={styles.how__to}>
       <h4 className={styles.how__to__heading}>
         <div className={styles.how__to__icon}>
-          <Image
-            src={"/icons/chef.svg"}
-            alt="Picture will load soon"
-            objectFit="contain"
-            layout="fill"
-          />
+          <Image src={"/icons/chef.svg"} alt="Picture will load soon" objectFit="contain" layout="fill" />
         </div>
         <span className={styles.how__to__headingText}>How to</span>
       </h4>
@@ -103,40 +93,23 @@ const InstructionsForMakingRecipe = ({
                 {recipeInstructions ? (
                   recipeInstructions?.map((elem, index) => {
                     return (
-                      <Draggable
-                        key={elem.id}
-                        draggableId={`${elem?.id}`}
-                        index={elem?.id}
-                      >
+                      <Draggable key={elem.id} draggableId={`${elem?.id}`} index={elem?.id}>
                         {(provided) => (
                           <li
                             className={styles.how__to__steps__li}
                             key={elem.id}
                             {...provided.draggableProps}
                             ref={provided.innerRef}
-                            {...provided.dragHandleProps}
                           >
-                            <div className={styles.how__to__steps__drag}>
-                              <DragIndicatorIcon
-                                className={styles.how__to__steps__drag}
-                              />
+                            <div className={styles.how__to__steps__drag} {...provided.dragHandleProps}>
+                              <DragIndicatorIcon className={styles.how__to__steps__drag} />
                             </div>
                             {elem.step}
-                            <span
-                              className={styles.how__to__steps__li__edit}
-                              onClick={() => editStep(elem.id)}
-                            >
+                            <span className={styles.how__to__steps__li__edit} onClick={() => editStep(elem.id)}>
                               <ModeEditOutlineOutlinedIcon />
                             </span>
-                            <span
-                              className={styles.how__to__steps__li__bin}
-                              onClick={() => removeStep(elem.id)}
-                            >
-                              <div
-                                className={
-                                  styles.how__to__steps__li__bin__imgDiv
-                                }
-                              >
+                            <span className={styles.how__to__steps__li__bin} onClick={() => removeStep(elem.id)}>
+                              <div className={styles.how__to__steps__li__bin__imgDiv}>
                                 <Image
                                   src={"/icons/noun_Delete_1447966.svg"}
                                   alt=""
