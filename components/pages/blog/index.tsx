@@ -51,17 +51,11 @@ const BlogList = () => {
 
         <WikiBanner />
         <div className={styles.blogCardContainer}>
-          {generalBlogData?.getAllGeneralBlogForClient?.map(
-            (blog: BlogListType) => {
-              return (
-                <BlogCard
-                  key={blog?._id}
-                  blogData={blog}
-                  setOpenLastModifiedCollectionModal={setOpenCollectionModal}
-                />
-              );
-            },
-          )}
+          {generalBlogData?.getAllGeneralBlogForClient?.blogs?.map((blog: BlogListType) => {
+            return (
+              <BlogCard key={blog?._id} blogData={blog} setOpenLastModifiedCollectionModal={setOpenCollectionModal} />
+            );
+          })}
         </div>
         <ShowLastModifiedCollection
           open={openCollectionModal}

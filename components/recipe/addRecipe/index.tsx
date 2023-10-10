@@ -26,6 +26,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { RecipeEditDefaultValuesType } from "type/recipeEditType";
 import { useToArrangeIngredient, useToArrangeIngredientBeforeSave } from "../share/useToArrangeIngredient";
 import useImage from "@/app/hooks/utils/useImage";
+import useDimensions from "customHooks/useDimensions";
 
 const defaultValues: RecipeEditDefaultValuesType = {
   recipeTitle: "",
@@ -65,6 +66,7 @@ const AddRecipePage = () => {
   const arrangeIngredient = useToArrangeIngredient();
   const arrangeIngredientBeforeSave = useToArrangeIngredientBeforeSave();
   const { postImages } = useImage();
+  const [dimensionRef, dimension] = useDimensions();
 
   const methods = useForm({
     defaultValues,
@@ -231,13 +233,21 @@ const AddRecipePage = () => {
             />
           )}
         >
-          <IngredientPanel handleIngredientClick={handleIngredientClick} checkActive={checkActive} />
+          <IngredientPanel
+            handleIngredientClick={handleIngredientClick}
+            checkActive={checkActive}
+            showTopHeader={false}
+          />
         </TrayWrapper>
       ) : null}
 
       <div className={styles.main}>
-        <div className={styles.left}>
-          <IngredientPanel handleIngredientClick={handleIngredientClick} checkActive={checkActive} />
+        <div className={styles.leftXLShow}>
+          <IngredientPanel
+            handleIngredientClick={handleIngredientClick}
+            checkActive={checkActive}
+            scrollAreaMaxHeight={dimension?.height - 220}
+          />
         </div>
         <div className={styles.center}>
           <PanelHeaderCenter
@@ -248,35 +258,36 @@ const AddRecipePage = () => {
             editOrSavebtnText="Save"
             loading={loading}
           />
+          <div ref={dimensionRef}>
+            <CenterSection
+              allBlendCategories={blendCategoriesData?.getAllCategories?.map((category) => ({
+                name: category?.name,
+                value: category?._id,
+              }))}
+              images={images}
+              setImages={setImages}
+              giGl={giGl}
+            />
 
-          <CenterSection
-            allBlendCategories={blendCategoriesData?.getAllCategories?.map((category) => ({
-              name: category?.name,
-              value: category?._id,
-            }))}
-            images={images}
-            setImages={setImages}
-            giGl={giGl}
-          />
-
-          <IngredientSection
-            adjusterFunc={adjusterServingSizeFunc}
-            nutritionState={nutritionState}
-            setNutritionState={setNutritionState}
-            calculatedIngOz={calculateIngOz}
-            selectedIngredientsList={selectedIngredientsList}
-            handleOnDragEnd={handleOnDragEnd}
-            removeIngredient={removeIngredient}
-            setSelectedIngredientsList={(ing) => {
-              handleIngredientClick(ing, checkActive(ing?._id), true);
-            }}
-            ingredientAddingType="auto"
-            servingSize={servingSize}
-          />
-          <InstructionsForMakingRecipe
-            recipeInstructions={howToState}
-            setRecipeInstruction={(newList) => setHowToSteps(newList)}
-          />
+            <IngredientSection
+              adjusterFunc={adjusterServingSizeFunc}
+              nutritionState={nutritionState}
+              setNutritionState={setNutritionState}
+              calculatedIngOz={calculateIngOz}
+              selectedIngredientsList={selectedIngredientsList}
+              handleOnDragEnd={handleOnDragEnd}
+              removeIngredient={removeIngredient}
+              setSelectedIngredientsList={(ing) => {
+                handleIngredientClick(ing, checkActive(ing?._id), true);
+              }}
+              ingredientAddingType="auto"
+              servingSize={servingSize}
+            />
+            <InstructionsForMakingRecipe
+              recipeInstructions={howToState}
+              setRecipeInstruction={(newList) => setHowToSteps(newList)}
+            />
+          </div>
         </div>
         <div className={styles.right}>
           <NutritionPanel

@@ -18,13 +18,15 @@ const useToUpdateBlogField = () => {
 
     client.writeQuery({
       query: GET_ALL_GENERAL_BLOG_FOR_CLIENT,
-      variables: { userId: memberId },
+      variables: {
+        memberId,
+        currentDate: new Date().toISOString().slice(0, 10),
+      },
       data: {
-        getAllGeneralBlogForClient: [
-          getAllGeneralBlogForClient?.map((blog) =>
-            blog?._id === id ? { ...blog, ...obj } : blog,
-          ),
-        ],
+        getAllGeneralBlogForClient: {
+          ...getAllGeneralBlogForClient,
+          blogs: [getAllGeneralBlogForClient?.blogs?.map((blog) => (blog?._id === id ? { ...blog, ...obj } : blog))],
+        },
       },
     });
   };

@@ -53,11 +53,7 @@ const BlogDetails = () => {
       <BlogCommentsTray showPanle="left" showTagByDefaut={false} />
       <div className={styles.blogDetailsContainer}>
         <div className={styles.left}>
-          <RelatedBlog
-            relatedBlogs={
-              generalBlogData?.getAllGeneralBlogForClient?.slice(0, 4) || []
-            }
-          />
+          <RelatedBlog relatedBlogs={generalBlogData?.getAllGeneralBlogForClient?.blogs?.slice(0, 4) || []} />
         </div>
         <div className={styles.center}>
           <BlogDetailsCenter blogDetails={blogData?.getAgeneralBlogBySlug} />
