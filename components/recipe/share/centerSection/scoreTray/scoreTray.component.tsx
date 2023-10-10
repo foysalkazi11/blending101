@@ -26,7 +26,7 @@ const ScoreTray = ({
         </div>
         <div className={styles.scoreCards__right}>
           <h3>
-            805
+            0
             <div className={styles.scoreCards__right__infoIcon}>
               <InfoIcon />
             </div>

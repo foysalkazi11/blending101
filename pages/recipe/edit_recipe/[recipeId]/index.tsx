@@ -31,6 +31,7 @@ import { useUser } from "../../../../context/AuthProvider";
 import { FormProvider, useForm } from "react-hook-form";
 import { RecipeEditDefaultValuesType } from "type/recipeEditType";
 import { useToArrangeIngredientBeforeSave } from "components/recipe/share/useToArrangeIngredient";
+import useImage from "@/app/hooks/utils/useImage";
 
 const defaultValues: RecipeEditDefaultValuesType = {
   recipeTitle: "",
@@ -53,7 +54,7 @@ const EditRecipeComponent = () => {
   const [openModal, setOpenModal] = useState(false);
   const [calculateIngOz, SetcalculateIngOz] = useState(null);
   const [images, setImages] = useState<any[]>([]);
-  const [existingimages, setExistingImages] = useState<string[]>([]);
+  const [existingImages, setExistingImages] = useState<string[]>([]);
   const [nutritionState, setNutritionState] = useState(null);
   const [copyDetailsRecipe, setCopyDetailsRecipe] = useState<RecipeDetailsType>(null);
   const user = useUser();
@@ -76,6 +77,7 @@ const EditRecipeComponent = () => {
   const methods = useForm({
     defaultValues,
   });
+  const { postImages } = useImage();
   // const { data: ingredientCategoryData, loading: ingredientCategoryLoading } =
   //   useQuery(FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS, {
   //     variables: {
@@ -119,16 +121,15 @@ const EditRecipeComponent = () => {
     }[];
   }) => {
     if (images?.length) {
-      //@ts-ignore
-      let imageArr: string[] = await imageUploadS3(images);
-      imageArr = [...existingimages, ...imageArr];
-      const finalImaArr = imageArr?.map((img, index) =>
+      let imageArr: { url: string; hash: string }[] = await postImages(images);
+      let combineImageArr: string[] = existingImages.concat(imageArr?.map((img) => img?.url));
+      let finalImageArr = combineImageArr?.map((img, index) =>
         index === 0 ? { image: img, default: true } : { image: img, default: false },
       );
 
       obj = {
         ...obj,
-        image: finalImaArr,
+        image: finalImageArr,
       };
       await editRecipe({
         variables: {
@@ -140,7 +141,7 @@ const EditRecipeComponent = () => {
         },
       });
 
-      setExistingImages(imageArr);
+      setExistingImages(combineImageArr);
       setImages([]);
       return obj;
     }
@@ -360,7 +361,7 @@ const EditRecipeComponent = () => {
           nutritionDataLoading={nutritionDataLoading}
           images={images}
           setImages={setImages}
-          existingImage={existingimages}
+          existingImage={existingImages}
           setExistingImage={setExistingImages}
           nutritionState={nutritionState}
           setNutritionState={setNutritionState}
