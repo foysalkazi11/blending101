@@ -46,6 +46,7 @@ import Header from "component/templates/Mobile/Header/Header.component";
 
 import styles from "@pages/plan/discovery.module.scss";
 import { useMediaQuery } from "@/app/hooks/interface/useMediaQuery";
+import ShowRecipeContainer from "components/showRecipeContainer";
 
 const normalizeQueryParams = (queryParams) => {
   let queryParamObj = {} as AllFilterType;
@@ -81,9 +82,9 @@ const PlanDiscovery = () => {
   // handle add plan Filter with url
   const handleAddFilterCriteriaWithUrl = useToAddPlanFilterCriteriaWithUrl();
   // handle add plan Filter with url
-
-  const debounceValue = useDebounce(searchTerm, 500);
-  const { handleFilterPlan } = useToGetPlanByFilterCriteria();
+  const debounceValue = useDebounce(searchTerm, 300);
+  const { handleFilterPlan, data: planFilterData, loading: planFilterLoading } = useToGetPlanByFilterCriteria();
+  const allFilters = [].concat(...Object.values(allFiltersForPlan));
 
   const handleRemoveFilters = () => {
     router.push(`/planner`, undefined, {
@@ -105,27 +106,46 @@ const PlanDiscovery = () => {
     filterCriteria,
     activeTab,
     childTab,
+    id,
   ) => {
     dispatch(setIsPlanFilterOpen(true));
-    handleUpdateActiveFilterTagForPlan(activeSection, filterCriteria, activeTab, childTab);
+    handleUpdateActiveFilterTagForPlan(activeSection, filterCriteria, activeTab, childTab, id);
   };
-  useEffect(() => {
-    let queryParamObj = normalizeQueryParams(queryParameters);
-    handleUpdateFilterCriteriaForPlan({
-      updateStatus: "bulkAdd",
-      queryFilters: queryParamObj,
-    });
-    handleFilterPlan(queryParamObj);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   let queryParamObj = normalizeQueryParams(queryParameters);
+  //   handleUpdateFilterCriteriaForPlan({
+  //     updateStatus: "bulkAdd",
+  //     queryFilters: queryParamObj,
+  //   });
+  //   handleFilterPlan(queryParamObj);
+  // }, []);
 
   useEffect(() => {
     if (isMounted.current) {
-      handleAddFilterCriteriaWithUrl(allFiltersForPlan);
-      handleFilterPlan(allFiltersForPlan);
+      // handleAddFilterCriteriaWithUrl(allFiltersForPlan);
+      if (allFilters?.length) {
+        if (debounceValue) {
+          handleFilterPlan({ ...allFiltersForPlan, searchTerm: "" });
+          setSearchTerm("");
+        } else {
+          handleFilterPlan(allFiltersForPlan);
+        }
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allFiltersForPlan]);
+
+  useEffect(() => {
+    if (isMounted.current) {
+      if (debounceValue) {
+        handleFilterPlan({ searchTerm: debounceValue });
+        if (allFilters?.length) {
+          dispatch(updatePlanFilterSearchTerm(debounceValue));
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debounceValue]);
 
   const onPlanSearch = useCallback((value: string) => {
     // if (value === "") {
@@ -140,21 +160,12 @@ const PlanDiscovery = () => {
   }, []);
 
   useEffect(() => {
-    if (isMounted.current) {
-      dispatch(updatePlanFilterSearchTerm(debounceValue));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debounceValue]);
-  useEffect(() => {
     isMounted.current = true;
 
     return () => {
       isMounted.current = false;
     };
   }, []);
-
-  const allFilters = [].concat(...Object.values(allFiltersForPlan));
-
   const isMobile = useMediaQuery("md");
 
   return (
@@ -188,6 +199,7 @@ const PlanDiscovery = () => {
                   handleOnChange={(e) => setSearchTerm(e.target.value)}
                   isSearchTag={false}
                   openFilterPanel={() => dispatch(setIsPlanFilterOpen(!isPlanFilterOpen))}
+                  showFilterIcon={isPlanFilterOpen ? false : true}
                 />
               </div>
               {allFilters?.length ? (
@@ -205,7 +217,7 @@ const PlanDiscovery = () => {
         </SideDrawer>
       </Header>
       <div className="flex">
-        <PlanCollectionTray showPanle="left" showTagByDefaut={true} />
+        <PlanCollectionTray showPanle="left" showTagByDefaut={isPlanFilterOpen ? false : true} />
         <HideOnDesktop>
           <Button className="ml-10" onClick={() => router.push("/planner/plan/")}>
             <Icon fontName={faUserCircle} className="mr-10" size="2rem" color="#7DBD3B" />
@@ -234,7 +246,7 @@ const PlanDiscovery = () => {
               </button>
             </div>
 
-            {allFilters?.length ? null : <AppdownLoadCard />}
+            {allFilters?.length || debounceValue ? null : <AppdownLoadCard />}
 
             {allFilters?.length ? (
               <SearchtagsComponent
@@ -244,14 +256,14 @@ const PlanDiscovery = () => {
               />
             ) : null}
 
-            {query && query !== "" ? (
+            {/* {query && query !== "" ? (
               <SearchedPlan query={query} setOpenCollectionModal={setOpenCollectionModal} />
             ) : (
               <FeaturedPlan setOpenCollectionModal={setOpenCollectionModal} />
-            )}
+            )} */}
           </>
         )}
-        {/* {allFilters?.length ? (
+        {allFilters?.length || debounceValue ? (
           <ShowRecipeContainer
             data={planFilterData?.plans || []}
             loading={planFilterLoading}
@@ -262,7 +274,7 @@ const PlanDiscovery = () => {
           />
         ) : (
           <FeaturedPlan setOpenCollectionModal={setOpenCollectionModal} />
-        )} */}
+        )}
         <HideOnDesktop>
           <ListPlans setOpenCollectionModal={setOpenCollectionModal} />
         </HideOnDesktop>
