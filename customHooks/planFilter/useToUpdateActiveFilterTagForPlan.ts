@@ -8,8 +8,8 @@ const useToUpdateActiveFilterTagForPlan = () => {
     activeSection: ActiveSectionType,
     filterCriteria: FilterCriteriaOptions,
     activeTab: string,
-    childTab?: string,
-    id?: string,
+    childTab: string,
+    id: string,
   ) => {
     dispatch(
       updateActiveFilterTagForPlan({

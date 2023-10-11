@@ -9,11 +9,7 @@ import FILTER_RECIPE from "../../../gqlLib/recipes/queries/filterRecipe";
 import { resetAllFilters } from "../../../redux/slices/filterRecipeSlice";
 import IconWarper from "../../../theme/iconWarper/IconWarper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChartTreeMap,
-  faShareNodes,
-  faXmark,
-} from "@fortawesome/pro-regular-svg-icons";
+import { faChartTreeMap, faShareNodes, faXmark } from "@fortawesome/pro-regular-svg-icons";
 import SkeletonCollectionRecipe from "../../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollectionRecipe";
 import {
   setChangeRecipeWithinCollection,
@@ -29,15 +25,13 @@ interface Props {
 
 function FilterPageBottom({ allFilters = [] }: Props) {
   const [filterRecipe, { data, loading }] = useLazyQuery(FILTER_RECIPE, {
-    fetchPolicy: "network-only",
+    // fetchPolicy: "cache-and-network",
   });
   const user = useUser();
   const { allFilterRecipe } = useAppSelector((state) => state?.recipe);
   const dispatch = useAppDispatch();
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
-  const { lastModifiedCollection } = useAppSelector(
-    (state) => state?.collections,
-  );
+  const { lastModifiedCollection } = useAppSelector((state) => state?.collections);
 
   // open recipe collection panel after added a recipe to a collection
   const handleOpenCollectionTray = () => {
@@ -81,7 +75,7 @@ function FilterPageBottom({ allFilters = [] }: Props) {
           betweenEndValue,
         } = filter;
         let arrangeValue = {
-          beetween: between,
+          between,
           category: category.toLowerCase(),
           greaterThan,
           lessThan,
@@ -133,7 +127,7 @@ function FilterPageBottom({ allFilters = [] }: Props) {
         } = filter;
         let arrangeValue = {
           matrixName: name.toLowerCase(),
-          beetween: between,
+          between,
           greaterThan,
           lessThan,
           value: 0,
@@ -215,11 +209,7 @@ function FilterPageBottom({ allFilters = [] }: Props) {
               >
                 <FontAwesomeIcon icon={faChartTreeMap} />
               </IconWarper>
-              <IconWarper
-                defaultBg="slightGray"
-                hover="bgPrimary"
-                style={{ width: "28px", height: "28px" }}
-              >
+              <IconWarper defaultBg="slightGray" hover="bgPrimary" style={{ width: "28px", height: "28px" }}>
                 <FontAwesomeIcon icon={faShareNodes} />
               </IconWarper>
             </div>
@@ -251,10 +241,7 @@ function FilterPageBottom({ allFilters = [] }: Props) {
                     });
                     const ing = ingredients.toString();
                     return (
-                      <li
-                        className={styles.mainDiv__results__body__ul__li}
-                        key={"recommended" + index}
-                      >
+                      <li className={styles.mainDiv__results__body__ul__li} key={"recommended" + index}>
                         <div className={styles.slider__card}>
                           <DatacardComponent
                             title={item.name}
@@ -266,11 +253,7 @@ function FilterPageBottom({ allFilters = [] }: Props) {
                             // score={item.rxScore}
                             calorie={calorieValue}
                             noOfComments={item?.numberOfRating}
-                            image={
-                              item.image?.find((img) => img?.default)?.image ||
-                              item?.image?.[0]?.image ||
-                              ""
-                            }
+                            image={item.image?.find((img) => img?.default)?.image || item?.image?.[0]?.image || ""}
                             recipeId={item?._id}
                             notes={item?.notes}
                             addedToCompare={item?.addedToCompare}

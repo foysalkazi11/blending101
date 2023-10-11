@@ -89,6 +89,7 @@ export const planFilterSlice = createSlice({
               ...value,
             };
           }
+          state.activeFilterTagForPlan = payload.value.origin;
         }
         // when update status remove
         if (updateStatus === "remove") {
@@ -154,12 +155,14 @@ export const planFilterSlice = createSlice({
             };
           }
         }
+        state.activeFilterTagForPlan = payload.value.origin;
       }
     },
     updatePlanFilterSearchTerm(state, action: { payload: string }) {
-      action.payload
-        ? (state.allFiltersForPlan.searchTerm = action.payload)
-        : delete state.allFiltersForPlan?.searchTerm;
+      // action.payload
+      //   ? (state.allFiltersForPlan.searchTerm = action.payload)
+      //   : delete state.allFiltersForPlan?.searchTerm;
+      state.allFiltersForPlan = {};
     },
     updateActiveFilterTagForPlan: (state, action: { payload: ActiveFilterTagCriteriaType }) => {
       state.activeFilterTagForPlan = action.payload;

@@ -40,8 +40,9 @@ export default function Filtertray({ showPanle, showTagByDefaut }: Props) {
       },
     },
   );
-
+  // update recipe filter Criteria
   const handleUpdateFilterCriteria = useToUpdateFilterCriteria();
+  // update active filter
   const handleUpdateActiveFilterTag = useToUpdateActiveFilterTag();
 
   // toggle tab
