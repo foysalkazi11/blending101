@@ -103,6 +103,7 @@ export interface ActiveFilterTagCriteriaType {
   filterCriteria: FilterCriteriaOptions;
   activeTab: string;
   childTab: string;
+  id: string;
 }
 
 export type FilterCriteriaValue = CommonProperties;
@@ -114,5 +115,5 @@ export interface AllFilterRecipes {
 }
 
 export type AllFilterType = {
-  [key in FilterCriteriaOptions]: key extends "searchTerm" ? string : FilterCriteriaValue[];
+  [key in FilterCriteriaOptions]?: key extends "searchTerm" ? string : FilterCriteriaValue[];
 };

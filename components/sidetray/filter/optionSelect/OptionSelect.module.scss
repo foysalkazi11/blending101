@@ -30,8 +30,16 @@
     .selectedSecondary {
       border-color: $secondaryColor;
     }
+    .focusedSecondary {
+      background-color: $secondaryColor;
+      color: $white;
+    }
     .selectedPrimary {
       border-color: $primaryColor;
+    }
+    .focusedPrimary {
+      background-color: $primaryColor;
+      color: $white;
     }
   }
 }
@@ -41,14 +49,16 @@
   right: 0px;
   overflow: hidden;
   top: -8px;
+  outline: none;
+  border-radius: 50%;
 }
 
 .ticked {
-  // border-radius: 50%;
+  border-radius: 50%;
   // width: 100%;
   //  transform: scale(0.7);
   // aspect-ratio: 1;
-  color: #f95d2b;
+  color: $primaryColor;
   background-color: white;
 }
 

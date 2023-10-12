@@ -13,6 +13,7 @@ type IngredientListPorps = {
   ingredientAddingType?: IngredientAddingType;
   selectedIngredientsList?: { [key: string]: any }[];
   removeIngredient?: (id: string) => void;
+  removeErrorIngredient?: (id: string) => void;
   setSelectedIngredientsList?: (obj: { [key: string]: any }) => void;
   handleOnDragEnd?: (result: { [key: string]: any }, type: string) => void;
   servingSize?: number;
@@ -26,6 +27,7 @@ const IngredientSection = ({
   ingredientAddingType = "parsing",
   selectedIngredientsList = [],
   removeIngredient = () => {},
+  removeErrorIngredient = () => {},
   setSelectedIngredientsList = () => {},
   handleOnDragEnd = () => {},
   servingSize = 1,
@@ -39,6 +41,7 @@ const IngredientSection = ({
             ingredients={selectedIngredientsList}
             hasComment
             onDelete={removeIngredient}
+            onDeleteErrorIngredient={removeErrorIngredient}
             onNutrition={setNutritionState}
             singleIngredient={nutritionState}
             onSave={({ ingredient, portion, quantity }) => {

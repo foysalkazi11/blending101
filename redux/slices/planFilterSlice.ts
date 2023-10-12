@@ -24,6 +24,7 @@ const initialState: InitialState = {
     filterCriteria: null,
     activeTab: "",
     childTab: "",
+    id: "",
   },
   allFiltersForPlan: {} as AllFilterType,
   numericFilterStateForPlan: {} as NutrientFiltersType | NutrientMatrixType,
@@ -76,10 +77,7 @@ export const planFilterSlice = createSlice({
             state.allFiltersForPlan[filterCriteria] = [value];
           }
           // state.allFiltersForPlan = [...state.allFiltersForPlan, value];
-          if (
-            value.filterCriteria === "nutrientFilters" ||
-            value.filterCriteria === "nutrientMatrix"
-          ) {
+          if (value.filterCriteria === "nutrientFilters" || value.filterCriteria === "nutrientMatrix") {
             // @ts-ignore
             state.numericFilterStateForPlan = {
               ...value,
@@ -91,17 +89,15 @@ export const planFilterSlice = createSlice({
               ...value,
             };
           }
+          state.activeFilterTagForPlan = payload.value.origin;
         }
         // when update status remove
         if (updateStatus === "remove") {
-          state.allFiltersForPlan[filterCriteria] = state.allFiltersForPlan[
-            filterCriteria
-          ].filter((filter) => filter.id !== value.id);
+          state.allFiltersForPlan[filterCriteria] = state.allFiltersForPlan[filterCriteria].filter(
+            (filter) => filter.id !== value.id,
+          );
 
-          if (
-            value.filterCriteria === "nutrientFilters" ||
-            value.filterCriteria === "nutrientMatrix"
-          ) {
+          if (value.filterCriteria === "nutrientFilters" || value.filterCriteria === "nutrientMatrix") {
             if (state.numericFilterStateForPlan.id === value.id) {
               // @ts-ignore
               state.numericFilterStateForPlan = {
@@ -117,9 +113,9 @@ export const planFilterSlice = createSlice({
           }
         }
         if (updateStatus === "update") {
-          state.allFiltersForPlan[filterCriteria] = state.allFiltersForPlan[
-            filterCriteria
-          ].map((filter) => (filter.id === value.id ? value : filter));
+          state.allFiltersForPlan[filterCriteria] = state.allFiltersForPlan[filterCriteria].map((filter) =>
+            filter.id === value.id ? value : filter,
+          );
           if (value.filterCriteria === "includeIngredientIds") {
             // @ts-ignore
             state.excludeFilterStateForPlan = {
@@ -130,12 +126,8 @@ export const planFilterSlice = createSlice({
         }
         // when update status removeAll
         if (updateStatus === "removeAll") {
-          state.allFiltersForPlan[filterCriteria] = state.allFiltersForPlan[
-            filterCriteria
-          ].filter(
-            (filter) =>
-              filter.filterCriteria !==
-              state.activeFilterTagForPlan.filterCriteria,
+          state.allFiltersForPlan[filterCriteria] = state.allFiltersForPlan[filterCriteria].filter(
+            (filter) => filter.filterCriteria !== state.activeFilterTagForPlan.filterCriteria,
           );
           // @ts-ignore
           state.numericFilterStateForPlan = {
@@ -146,9 +138,7 @@ export const planFilterSlice = createSlice({
         }
         // when update status focus
         if (updateStatus === "focus") {
-          const findOneItem = state.allFiltersForPlan[filterCriteria].find(
-            (item) => item.id === value.id,
-          );
+          const findOneItem = state.allFiltersForPlan[filterCriteria].find((item) => item.id === value.id);
           if (
             (findOneItem && value.filterCriteria === "nutrientFilters") ||
             value.filterCriteria === "nutrientMatrix"
@@ -165,24 +155,20 @@ export const planFilterSlice = createSlice({
             };
           }
         }
+        state.activeFilterTagForPlan = payload.value.origin;
       }
     },
     updatePlanFilterSearchTerm(state, action: { payload: string }) {
-      action.payload
-        ? (state.allFiltersForPlan.searchTerm = action.payload)
-        : delete state.allFiltersForPlan?.searchTerm;
+      // action.payload
+      //   ? (state.allFiltersForPlan.searchTerm = action.payload)
+      //   : delete state.allFiltersForPlan?.searchTerm;
+      state.allFiltersForPlan = {};
     },
-    updateActiveFilterTagForPlan: (
-      state,
-      action: { payload: ActiveFilterTagCriteriaType },
-    ) => {
+    updateActiveFilterTagForPlan: (state, action: { payload: ActiveFilterTagCriteriaType }) => {
       state.activeFilterTagForPlan = action.payload;
     },
 
-    updateNumericFilterStateForPlan: (
-      state,
-      action: { payload: NutrientFiltersType | NutrientMatrixType },
-    ) => {
+    updateNumericFilterStateForPlan: (state, action: { payload: NutrientFiltersType | NutrientMatrixType }) => {
       state.numericFilterStateForPlan = { ...action.payload };
     },
 

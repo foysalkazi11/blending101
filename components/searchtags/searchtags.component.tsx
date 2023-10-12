@@ -72,7 +72,8 @@ export type HandleUpdateActiveFilterTagType = (
   activeSection: ActiveSectionType,
   filterCriteria: FilterCriteriaOptions,
   activeTab: string,
-  childTab?: string,
+  childTab: string,
+  id: string,
 ) => void;
 export interface HandleUpdateFilterCriteriaType {
   filterCriteria?: FilterCriteriaOptions;
@@ -169,6 +170,7 @@ const FilterByPicture = ({
           item?.origin?.filterCriteria,
           item?.origin?.activeTab,
           item?.origin?.childTab,
+          item?.origin?.id,
         )
       }
     >
@@ -261,6 +263,7 @@ const FilterByTag = ({ item, handleUpdateActiveFilterTag, handleUpdateFilterCrit
           item?.origin?.filterCriteria,
           item?.origin?.activeTab,
           item?.origin?.childTab,
+          item?.origin?.id || item?.id,
         )
       }
     >

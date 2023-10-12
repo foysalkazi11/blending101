@@ -165,9 +165,10 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
     Auth.federatedSignIn({
       provider: CognitoHostedUIIdentityProvider[provider],
     })
-      .then(sessionHandler)
-      .then((user) => onSuccess(user))
+      .then(async (user) => await sessionHandler(user))
+      .then(async (user) => await onSuccess(user))
       .catch((error) => {
+        console.log(error);
         notification("error", error?.message);
         onError(error);
       });

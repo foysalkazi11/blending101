@@ -7,23 +7,19 @@ import { useUser } from "../../context/AuthProvider";
 
 const useToGetPlanByFilterCriteria = () => {
   const user = useUser();
-  const [filterPlan, { loading, data, error, ...rest }] = useLazyQuery(
+  const [filterPlan, { data, ...rest }] = useLazyQuery(
     FILTER_PLAN,
-    {
-      fetchPolicy: "cache-and-network",
-    },
+    // {
+    //   fetchPolicy: "cache-and-network",
+    // },
   );
 
-  const handleFilterPlan = async (
-    allFilters: AllFilterType,
-    page = 1,
-    limit = 12,
-  ) => {
+  const handleFilterPlan = async (allFilters: AllFilterType, page = 1, limit = 12) => {
     const blendTypesArr: string[] = [];
-    const ingredientIds: string[] = [];
+    const includeIngredientIds: string[] = [];
     const collectionsIds: string[] = [];
-    const nutrientFiltersMap: any[] = [];
-    const nutrientMatrixMap: any[] = [];
+    const nutrientFilters: any[] = [];
+    const nutrientMatrix: any[] = [];
     const excludeIngredientIds: string[] = [];
     let searchTerm = "";
 
@@ -40,7 +36,7 @@ const useToGetPlanByFilterCriteria = () => {
             if (filter?.excludeIngredientIds) {
               excludeIngredientIds.push(filter.id);
             } else {
-              ingredientIds.push(filter.id);
+              includeIngredientIds.push(filter.id);
             }
           });
         } else if (key === "nutrientFilters") {
@@ -68,7 +64,7 @@ const useToGetPlanByFilterCriteria = () => {
               value2: betweenEndValue,
             };
 
-            nutrientFiltersMap.push(arrangeValue);
+            nutrientFilters.push(arrangeValue);
           });
         } else if (key === "nutrientMatrix") {
           value.forEach((filter: any) => {
@@ -94,7 +90,7 @@ const useToGetPlanByFilterCriteria = () => {
               value2: betweenEndValue,
             };
 
-            nutrientMatrixMap.push(arrangeValue);
+            nutrientMatrix.push(arrangeValue);
           });
         }
       }
@@ -105,9 +101,9 @@ const useToGetPlanByFilterCriteria = () => {
         variables: {
           data: {
             userId: user.id,
-            includeIngredientIds: ingredientIds,
-            nutrientFilters: nutrientFiltersMap,
-            nutrientMatrix: nutrientMatrixMap,
+            includeIngredientIds,
+            nutrientFilters,
+            nutrientMatrix,
             excludeIngredientIds,
             collectionsIds,
             searchTerm,
@@ -125,9 +121,7 @@ const useToGetPlanByFilterCriteria = () => {
 
   return {
     handleFilterPlan,
-    loading,
     data: data?.filterPlans,
-    error,
     ...rest,
   };
 };

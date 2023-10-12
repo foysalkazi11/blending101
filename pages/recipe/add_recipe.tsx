@@ -7,7 +7,7 @@ const EditRecipe = () => {
 
 EditRecipe.meta = {
   icon: "/icons/juicer.svg",
-  title: "Add A Discovery",
+  title: "Add A Recipe",
   sidebar: true,
 };
 

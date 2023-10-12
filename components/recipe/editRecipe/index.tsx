@@ -83,10 +83,16 @@ const EditRecipePage = ({
   const arrangeIngredient = useToArrangeIngredient();
   const [dimensionRef, dimension] = useDimensions();
 
+  // remove Ingredient
+  const removeErrorIngredient = (qaId: string) => {
+    if (qaId) {
+      let updated_list = selectedIngredientsList?.filter((elem) => elem?.qaId !== qaId);
+      dispatch(setSelectedIngredientsList(updated_list));
+    }
+  };
+  // remove Ingredient
   const removeIngredient = (id) => {
-    let updated_list = selectedIngredientsList?.filter((elem) => {
-      return id !== elem?._id;
-    });
+    let updated_list = selectedIngredientsList?.filter((elem) => id !== elem?._id);
     dispatch(setSelectedIngredientsList(updated_list));
   };
 
@@ -145,14 +151,14 @@ const EditRecipePage = ({
           <IngredientPanel
             handleIngredientClick={handleIngredientClick}
             checkActive={checkActive}
-            showHeader={true}
+            showHeader={false}
             showTopHeader={false}
           />
         </FloatingLeftPanel>
       )}
 
       <div className={styles.main}>
-        <div className={styles.left}>
+        <div className={styles.leftXLShow}>
           <IngredientPanel
             scrollAreaMaxHeight={dimension?.height - 220}
             handleIngredientClick={handleIngredientClick}
@@ -194,6 +200,7 @@ const EditRecipePage = ({
               selectedIngredientsList={selectedIngredientsList}
               handleOnDragEnd={handleOnDragEnd}
               removeIngredient={removeIngredient}
+              removeErrorIngredient={removeErrorIngredient}
               setSelectedIngredientsList={handleAddIngredient}
               servingSize={servingCounter}
             />
