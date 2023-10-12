@@ -101,13 +101,13 @@ const PostForm = forwardRef((props: any, ref) => {
         note: data.note,
         servings: serving,
         servingSize: 16,
-        ingredients: ingredients.map((ing) => ({
-          ingredientId: ing?.ingredientId?._id,
-          originalIngredientName: ing?.ingredientId?.ingredientName,
-          quantityString: `${ing?.selectedPortion?.quantity}`,
-          selectedPortionName: ing?.selectedPortion?.name,
-          weightInGram: ing?.selectedPortion?.gram,
-        })),
+        // ingredients: ingredients.map((ing) => ({
+        //   ingredientId: ing?.ingredientId?._id,
+        //   originalIngredientName: ing?.ingredientId?.ingredientName,
+        //   quantityString: `${ing?.selectedPortion?.quantity}`,
+        //   selectedPortionName: ing?.selectedPortion?.name,
+        //   weightInGram: ing?.selectedPortion?.gram,
+        // })),
       },
     };
     if (isEditMode) {
