@@ -64,7 +64,8 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
 
   const sessionHandler = useCallback(
     async (user) => {
-      console.log(user);
+      if (!user) return;
+
       setSession(user);
       let email, provider;
       if (user?.attributes?.email) {
