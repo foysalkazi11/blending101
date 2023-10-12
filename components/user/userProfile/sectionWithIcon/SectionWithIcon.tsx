@@ -26,19 +26,12 @@ const SectionWithIcon = ({
       <div className={styles.imageContainer}>
         <div
           className={styles.imageContainer__div}
-          style={
-            body.length <= 3
-              ? { justifyContent: "center" }
-              : { justifyContent: "flex-start" }
-          }
+          style={body.length <= 3 ? { justifyContent: "center" } : { justifyContent: "flex-start" }}
         >
           {body.length
             ? body?.map((item, index) => {
                 return (
-                  <div
-                    className={styles.imageContainer__div__element}
-                    key={index}
-                  >
+                  <div className={styles.imageContainer__div__element} key={index}>
                     <div
                       className={`${styles.singleImage} ${
                         alredyExist

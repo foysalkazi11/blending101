@@ -254,7 +254,7 @@ const StepOne = ({ userProfile, updateUserProfile, setUserProfile, setSteps }: S
         <div className={styles.singleSection}>
           <h2>Your age?</h2>
           <div className={styles.contentContainer}>
-            <div style={{ paddingBottom: "1rem", display: "flex" }}>
+            {/* <div style={{ paddingBottom: "1rem", display: "flex" }}>
               <RadioButton
                 value="years"
                 handleChange={handleAgeType}
@@ -269,7 +269,7 @@ const StepOne = ({ userProfile, updateUserProfile, setUserProfile, setSteps }: S
                 label="Months"
                 name="ageInYearsOrMonths"
               />
-            </div>
+            </div> */}
             {ageType === "years" ? (
               <InputComponent
                 placeholder="Age in years"
@@ -298,7 +298,7 @@ const StepOne = ({ userProfile, updateUserProfile, setUserProfile, setSteps }: S
             ) : null}
             {ageType === "months" ? (
               <InputComponent
-                width="25%%"
+                width="25%"
                 placeholder="Age in months"
                 type="number"
                 name="months"

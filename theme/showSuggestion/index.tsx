@@ -15,15 +15,17 @@ type showSuggestionProps = React.ComponentPropsWithRef<"div"> & {
   closeSuggestionBox?: () => void;
   border?: "borderPrimary" | "borderSecondary";
 };
-const ShowSuggestion = ({
-  list = [],
-  handleClickList = () => {},
-  placeholder = "Search...",
-  closeSuggestionBox = () => {},
+const ShowSuggestion = (
+  {
+    list = [],
+    handleClickList = () => {},
+    placeholder = "Search...",
+    closeSuggestionBox = () => {},
+    border = "borderPrimary",
+    ...rest
+  }: showSuggestionProps,
   ref = null,
-  border = "borderPrimary",
-  ...rest
-}: showSuggestionProps) => {
+) => {
   const [input, setInput] = useState("");
   const inputDebounceValue = useDebounce(input, 300);
   const suggestionBoxRef = useHideOnClickOutside(closeSuggestionBox);
@@ -69,4 +71,4 @@ const ShowSuggestion = ({
   );
 };
 
-export default ShowSuggestion;
+export default React.forwardRef(ShowSuggestion);

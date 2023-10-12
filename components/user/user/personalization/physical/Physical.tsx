@@ -475,16 +475,11 @@ const Physical = ({ userProfile, updateUserProfile, setUserData, userData }: Phy
                   <p className={styles?.label}>Your age</p>
                 </div>
                 <div className={styles.contentContainer__elementDiv__objects}>
-                  <div
-                    style={{
-                      display: "flex",
-                      width: "100%",
-                    }}
-                  >
+                  <div className="flex ai-center">
                     {ageType === "years" ? (
                       <InputComponent
                         width="25%"
-                        style={{ marginRight: "1rem" }}
+                        // style={{ marginRight: "1rem" }}
                         placeholder="Age in years"
                         type="number"
                         name="years"
@@ -512,7 +507,7 @@ const Physical = ({ userProfile, updateUserProfile, setUserData, userData }: Phy
                     {ageType === "months" ? (
                       <InputComponent
                         width="25%"
-                        style={{ marginRight: "1rem" }}
+                        // style={{ marginRight: "1rem" }}
                         placeholder="Age in months"
                         type="number"
                         name="months"
@@ -538,8 +533,9 @@ const Physical = ({ userProfile, updateUserProfile, setUserData, userData }: Phy
                       />
                     ) : null}
 
-                    <div style={{ paddingTop: "14px", display: "flex" }}>
-                      <RadioButton
+                    <div className="flex">
+                      <sub className={styles.subLabel}>Years</sub>
+                      {/* <RadioButton
                         value="years"
                         handleChange={handleAgeType}
                         checked={ageType === "years"}
@@ -552,7 +548,7 @@ const Physical = ({ userProfile, updateUserProfile, setUserData, userData }: Phy
                         checked={ageType === "months"}
                         label="Months"
                         name="ageInYearsOrMonths"
-                      />
+                      /> */}
                     </div>
                   </div>
                 </div>
@@ -621,12 +617,12 @@ const Physical = ({ userProfile, updateUserProfile, setUserData, userData }: Phy
                 <div className={styles.contentContainer__elementDiv__heading}>
                   <p className={styles?.label}>Your Height</p>
                 </div>
-                <div className={`${styles.contentContainer__elementDiv__objects}`} style={{ display: "flex" }}>
+                <div className={`${styles.contentContainer__elementDiv__objects} flex ai-center`}>
                   {measurementType === "US" ? (
                     <>
                       <InputComponent
                         width="25%"
-                        style={{ marginRight: "16px" }}
+                        // style={{ marginRight: "16px" }}
                         placeholder="feet"
                         type="number"
                         name="feets"
@@ -650,6 +646,7 @@ const Physical = ({ userProfile, updateUserProfile, setUserData, userData }: Phy
                           message: errors?.feets?.message,
                         }}
                       />
+                      <sub className={styles.subLabel}>ft.</sub>
                       <InputComponent
                         width="25%"
                         placeholder="Inches"
@@ -674,35 +671,39 @@ const Physical = ({ userProfile, updateUserProfile, setUserData, userData }: Phy
                           message: errors?.inches?.message,
                         }}
                       />
+                      <sub className={styles.subLabel}>in.</sub>
                     </>
                   ) : null}
 
                   {measurementType === "Metric" ? (
-                    <InputComponent
-                      width="25%"
-                      placeholder="Centimeters"
-                      type="number"
-                      min={1}
-                      max={272}
-                      handleChange={changeInputValue}
-                      register={register}
-                      name="centimeters"
-                      required={{
-                        required: "Please enter height in centimeters",
-                        min: {
-                          value: 1,
-                          message: "Please enter valid centimeters",
-                        },
-                        max: {
-                          value: 272,
-                          message: "Max 272 centimeters",
-                        },
-                      }}
-                      error={{
-                        isError: errors?.centimeters ? true : false,
-                        message: errors?.centimeters?.message,
-                      }}
-                    />
+                    <>
+                      <InputComponent
+                        width="25%"
+                        placeholder="Centimeters"
+                        type="number"
+                        min={1}
+                        max={272}
+                        handleChange={changeInputValue}
+                        register={register}
+                        name="centimeters"
+                        required={{
+                          required: "Please enter height in centimeters",
+                          min: {
+                            value: 1,
+                            message: "Please enter valid centimeters",
+                          },
+                          max: {
+                            value: 272,
+                            message: "Max 272 centimeters",
+                          },
+                        }}
+                        error={{
+                          isError: errors?.centimeters ? true : false,
+                          message: errors?.centimeters?.message,
+                        }}
+                      />
+                      <sub className={styles.subLabel}>cm</sub>
+                    </>
                   ) : null}
                 </div>
 

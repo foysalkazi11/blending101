@@ -59,12 +59,17 @@
   border-top: none;
 
   .label {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 400;
     margin: 0;
     min-width: 110px;
     line-height: 1.3125rem;
     color: #000;
+  }
+  .subLabel {
+    font-size: 14px;
+    color: #929292;
+    margin: 0 1rem;
   }
 
   .showValue {
