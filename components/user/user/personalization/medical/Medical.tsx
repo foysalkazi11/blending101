@@ -1,5 +1,7 @@
 import React from "react";
 import SectionWithInput from "../../../userProfile/sectionWithInput/SectionWithInput";
+import medications from "data/medications";
+import healthConditions from "data/healthConditions";
 
 type StepThreeProps = {
   userProfile: any;
@@ -7,11 +9,7 @@ type StepThreeProps = {
   removeInput: (name: string, value: any) => void;
 };
 
-const Medical = ({
-  userProfile,
-  updateUserProfile,
-  removeInput,
-}: StepThreeProps) => {
+const Medical = ({ userProfile, updateUserProfile, removeInput }: StepThreeProps) => {
   return (
     <>
       <p
@@ -25,8 +23,7 @@ const Medical = ({
           padding: "30px 0",
         }}
       >
-        This information is used to customize daily recommended nutrition
-        targets
+        This information is used to customize daily recommended nutrition targets
       </p>
       <SectionWithInput
         title="What are your pre-existing medical conditions?"
@@ -34,10 +31,12 @@ const Medical = ({
         maxWidth={"600px"}
         value={userProfile?.preExistingMedicalConditions}
         setValue={updateUserProfile}
-        placeholder="Enter Conditions..."
+        placeholder="Medical Conditions..."
         removeInput={removeInput}
         headingStyle={{ fontSize: "22px" }}
-        style={{ marginBottom: "20px" }}
+        withSuggestions={true}
+        suggestions={healthConditions}
+        border="borderSecondary"
       />
       <SectionWithInput
         title="What medications are you currently taking?"
@@ -45,10 +44,12 @@ const Medical = ({
         maxWidth={"600px"}
         value={userProfile?.meditcation}
         setValue={updateUserProfile}
-        placeholder="Enter Medications..."
+        placeholder="Medications..."
         removeInput={removeInput}
         headingStyle={{ fontSize: "22px" }}
-        style={{ marginBottom: "20px" }}
+        withSuggestions={true}
+        suggestions={medications}
+        border="borderSecondary"
       />
     </>
   );

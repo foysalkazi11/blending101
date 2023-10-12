@@ -39,11 +39,12 @@
     width: 141px;
     height: 141px;
     border-radius: 50%;
-    margin: 50px auto 30px;
+    margin: 50px 5px 30px 5px;
     display: flex;
     align-items: center;
     justify-content: center;
     object-fit: contain;
+    flex-direction: column;
 
     img {
       filter: grayscale(100%);
@@ -60,16 +61,16 @@
     @media screen and (max-width: 900px) {
       width: 121px;
       height: 121px;
-      margin: 30px auto 30px;
+      margin: 30px 5px 30px 5px;
     }
   }
 
   h2 {
     font-size: 18px;
     color: #c4c4c4;
-    margin: 0;
+
     text-align: center;
-    min-height: 55px;
+
     line-height: 1.5;
     font-weight: 400;
   }

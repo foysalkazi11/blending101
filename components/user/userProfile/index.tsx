@@ -98,12 +98,14 @@ const UserProfile = () => {
     }
   };
 
+  const isAlreadyExisting = (list: string[], value: string) => list.includes(value);
+
   const updateUserProfile = (name: string, value: any) => {
     if (name === "preExistingMedicalConditions" || name === "meditcation") {
       if (value) {
         setUserProfile((pre) => ({
           ...pre,
-          [name]: [...pre[name], value],
+          [name]: isAlreadyExisting(pre[name], value) ? pre[name] : [...pre[name], value],
           // [name]: [...pre[name], { id: uniqueId(), label: value }],
         }));
       }

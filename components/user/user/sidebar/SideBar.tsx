@@ -6,6 +6,7 @@ import { FiEdit2 } from "react-icons/fi";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { setIsNewUseImage } from "../../../../redux/slices/userSlice";
 import { UserDataType } from "..";
+import TextArea from "theme/textArea/TextArea";
 
 type SideBarProps = {
   userData: UserDataType;
@@ -15,18 +16,8 @@ type SideBarProps = {
 const SideBar = ({ userData, setUserData }: SideBarProps) => {
   const [disableTextarea, setDisableTextarea] = useState(true);
   const { isNewUseImage } = useAppSelector((state) => state?.user);
-  const {
-    bio,
-    image,
-    firstName,
-    lastName,
-    displayName,
-    yourBlender,
-    email,
-    location,
-  } = userData?.about;
+  const { bio, image, firstName, lastName, displayName, yourBlender, email, location } = userData?.about;
   const dispatch = useAppDispatch();
-  console.log(image);
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e?.target?.files?.length) {
@@ -63,7 +54,7 @@ const SideBar = ({ userData, setUserData }: SideBarProps) => {
 
   useEffect(() => {
     if (!disableTextarea) {
-      textareaRef.current.focus();
+      textareaRef?.current?.focus();
     }
   }, [disableTextarea]);
 
@@ -71,11 +62,7 @@ const SideBar = ({ userData, setUserData }: SideBarProps) => {
     <div className={styles.sideBarContainer}>
       <div className={styles.imageBox}>
         <img
-          src={
-            isNewUseImage?.length
-              ? URL.createObjectURL(isNewUseImage[0])
-              : image || "/images/user-placeholder.png"
-          }
+          src={isNewUseImage?.length ? URL.createObjectURL(isNewUseImage[0]) : image || "/images/user-placeholder.png"}
           alt="userImag"
           // fallbackSrc="/images/user-placeholder.png"
         />
@@ -98,7 +85,16 @@ const SideBar = ({ userData, setUserData }: SideBarProps) => {
       </div>
       <div className={styles.textAreaBox}>
         <form onSubmit={handleSubmit}>
-          <textarea
+          <TextArea
+            ref={textareaRef}
+            name="bio"
+            id=""
+            value={bio}
+            onChange={(e) => handleChange(e)}
+            disabled={disableTextarea}
+            cols={50}
+          />
+          {/* <textarea
             ref={textareaRef}
             className={styles.textArea}
             name="bio"
@@ -109,7 +105,7 @@ const SideBar = ({ userData, setUserData }: SideBarProps) => {
             onChange={(e) => handleChange(e)}
             disabled={disableTextarea}
             // onKeyPress={handleSubmit}
-          />
+          /> */}
         </form>
       </div>
     </div>
