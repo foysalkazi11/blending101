@@ -26,12 +26,10 @@ const Personalization = ({
 
   const checkGoals = (value, fieldName) => {
     const goal = userData?.personalization?.[fieldName]?.find((item) => item?.toLowerCase() === value);
-    if (goal) {
-      return true;
-    } else {
-      return false;
-    }
+    return goal ? true : false;
   };
+
+  const isAlreadyExisting = (list: string[], value: string) => list.includes(value);
 
   const updateUserProfile = (name: string, value: any) => {
     if (name === "whyBlending" || name === "allergies") {
@@ -61,7 +59,9 @@ const Personalization = ({
 
           personalization: {
             ...pre?.personalization,
-            [name]: [...pre?.personalization[name], value],
+            [name]: isAlreadyExisting(pre?.personalization[name], value)
+              ? pre?.personalization[name]
+              : [...pre?.personalization[name], value],
           },
         }));
       }
@@ -78,7 +78,6 @@ const Personalization = ({
       if (value) {
         setUserData((pre) => ({
           ...pre,
-
           personalization: {
             ...pre?.personalization,
             [name]: [...pre?.personalization[name]?.filter((item) => item !== value)],

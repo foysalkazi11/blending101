@@ -18,27 +18,31 @@ const dietary = [
     icon: "/images/vegetarian.png",
     label: "Vegetarian no dairy",
   },
-  // {
-  //   icon: "/images/milk.png",
-  //   label: "vegetarian dairy",
-  // },
-  // {
-  //   icon: "/images/milk.png",
-  //   label: "vegetarian dairy",
-  // },
+  {
+    icon: "/images/milk.png",
+    label: "vegan",
+  },
+  {
+    icon: "/images/milk.png",
+    label: "Paleo",
+  },
 ];
 const allergies = [
   {
     icon: "/images/milk-bottle.png",
-    label: "Low",
+    label: "Milk",
   },
   {
     icon: "/images/peanut.png",
-    label: "Moderate",
+    label: "Peanut",
   },
   {
     icon: "/images/almond.png",
-    label: "High",
+    label: "Tree Nut",
+  },
+  {
+    icon: "/images/almond.png",
+    label: "Soy",
   },
 ];
 
@@ -47,11 +51,7 @@ type StepTwoProps = {
   updateUserProfile: Function;
   alredyExist?: (value: string, fieldName: string) => boolean;
 };
-const StepTwo = ({
-  userProfile,
-  updateUserProfile,
-  alredyExist,
-}: StepTwoProps) => {
+const StepTwo = ({ userProfile, updateUserProfile, alredyExist }: StepTwoProps) => {
   return (
     <>
       <SectionWithIcon
