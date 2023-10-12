@@ -76,13 +76,13 @@ const EmailVerify = () => {
           <img src="/images/logo.png" alt="logo will soon load" />
 
           <h2>Verify Email</h2>
-          <p>A Verification code is sent to your mail. Please paste it below.</p>
+          <p>We&apos;ve sent a verification code to your email. Please enter it below.</p>
           <form onSubmit={handleSubmit}>
             <InputComponent
               type="text"
               style={{ margin: "4px auto 15px auto", width: "100%" }}
               value={code}
-              placeholder="Verify your account"
+              placeholder="Enter OTP code here"
               onChange={(e) => setCode(e?.target?.value)}
             />
 
@@ -90,7 +90,7 @@ const EmailVerify = () => {
               <ButtonComponent
                 type="primary"
                 style={{ height: "60px", fontSize: "18px" }}
-                value="Verify"
+                value="Submit"
                 fullWidth={false}
                 submit={true}
               />

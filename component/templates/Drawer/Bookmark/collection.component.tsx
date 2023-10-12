@@ -4,7 +4,7 @@ import { useMutation } from "@apollo/client";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
 import ADD_OR_REMOVE_RECIPE_FORM_COLLECTION from "../../../../gqlLib/collection/mutation/addOrRemoveRecipeFromCollection";
 import SkeletonCollections from "../../../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollections";
-import SingleCollection from "../../common/singleCollection/SingleCollection";
+import SingleCollection from "./singleCollection/SingleCollection";
 import CREATE_SHARE_COLLECTION_LINK from "../../../../gqlLib/collection/mutation/createShareCollectionLink";
 import notification from "../../../../components/utility/reactToastifyNotification";
 import Share, { SharedUserInfoType } from "../../../../component/organisms/Share/Distribute.component";

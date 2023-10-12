@@ -64,7 +64,8 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
 
   const sessionHandler = useCallback(
     async (user) => {
-      console.log(user);
+      if (!user) return;
+
       setSession(user);
       let email, provider;
       if (user?.attributes?.email) {
@@ -118,7 +119,7 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
 
   useEffect(() => {
     // Skipping auth checking if the URL is public
-    if (router.asPath.startsWith("/login/#access_token=") || isPublicRoute) {
+    if (isPublicRoute) {
       return setState({
         isChecking: false,
         isLogin: true, // To stop showing loader
@@ -142,7 +143,7 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
               isChecking: false,
               isLogin: false,
             });
-            // router.push(routes.login);
+            router.push(routes.login);
           }
         }, 2000);
       });
@@ -165,9 +166,10 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
     Auth.federatedSignIn({
       provider: CognitoHostedUIIdentityProvider[provider],
     })
-      .then(sessionHandler)
-      .then((user) => onSuccess(user))
+      .then(async (user) => await sessionHandler(user))
+      .then(async (user) => await onSuccess(user))
       .catch((error) => {
+        console.log(error);
         notification("error", error?.message);
         onError(error);
       });
