@@ -38,13 +38,16 @@
     flex: 1;
     min-width: 0; /* or some value */
     h2 {
+      display: inline-block;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      max-width: 100%;
       font-size: 17px;
       font-weight: bold;
       padding-right: 0.5rem;
       padding-bottom: 0.5rem;
+
       span {
         font-size: 16px;
         font-weight: normal;

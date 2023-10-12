@@ -74,6 +74,7 @@ const IngredientPictureSection = ({
                         filterCriteria: "includeIngredientIds",
                         activeTab: "Ingredients",
                         childTab: item?.ingredientName || "",
+                        id: item?._id,
                       },
                     })
                   }

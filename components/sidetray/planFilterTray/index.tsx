@@ -46,7 +46,7 @@ function PlanFilterTray({ showPanle, showTagByDefaut, children }: Props) {
 }
 
 export function Filter() {
-  const { allFiltersForPlan } = useAppSelector((state) => state?.planFilter);
+  const { allFiltersForPlan, activeFilterTagForPlan } = useAppSelector((state) => state?.planFilter);
   const { data: blendCategoryData, loading: blendCategoryLoading } = useQuery(FETCH_BLEND_CATEGORIES);
   const { data: ingredientCategoryData, loading: ingredientCategoryLoading } = useQuery(
     FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS,
@@ -63,6 +63,12 @@ export function Filter() {
   const handleUpdateFilterCriteriaForPlan = useToUpdateFilterCriteriaForPlan();
   // handle update recipe active filter tag
   const handleUpdateActiveFilterTagForPlan = useToUpdateActiveFilterTagForPlan();
+
+  //check active filter item
+  const checkFocusItem = (id: string) => {
+    activeFilterTagForPlan?.id;
+    return activeFilterTagForPlan?.id === id;
+  };
 
   //check active filter item
   const checkActiveItem = (id: string, filterCriteria: FilterCriteriaOptions) => {
@@ -107,6 +113,7 @@ export function Filter() {
         checkExcludeIngredientIds={checkExcludeIngredientIds}
         handleUpdateActiveFilterTag={handleUpdateActiveFilterTagForPlan}
         handleUpdateFilterCriteria={handleUpdateFilterCriteriaForPlan}
+        checkFocusItem={checkFocusItem}
       />
     </Fragment>
   );

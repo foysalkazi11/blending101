@@ -145,6 +145,7 @@ const collections = [
 
 interface Props {
   checkActiveItem: (id: string, filterCriteria: FilterCriteriaOptions) => boolean;
+  checkFocusItem: (id: string) => boolean;
   blendCategoryData: BlendCategoryType[];
   blendCategoryLoading: boolean;
   ingredientCategoryData: any[];
@@ -160,11 +161,13 @@ interface Props {
     filterCriteria: FilterCriteriaOptions,
     activeTab: string,
     childTab?: string,
+    id?: string,
   ) => void;
 }
 
 const TagSection = ({
   checkActiveItem = () => false,
+  checkFocusItem = () => false,
   blendCategoryData = [],
   blendCategoryLoading = false,
   ingredientCategoryData = [],
@@ -180,7 +183,7 @@ const TagSection = ({
   const [getBlendNutrientsBasedOnCategoey, { data: blendNutrientData, loading: blendNutrientLoading }] = useLazyQuery(
     GET_BLEND_NUTRIENTS_BASED_ON_CATEGORY,
     {
-      fetchPolicy: "cache-and-network",
+      // fetchPolicy: "cache-and-network",
     },
   );
   const {
@@ -371,6 +374,7 @@ const TagSection = ({
               optionSelectItems={optionSelectItems}
               filterCriteria={filterCriteria}
               checkActiveItem={checkActiveItem}
+              checkFocusItem={checkFocusItem}
               checkExcludeIngredientIds={checkExcludeIngredientIds}
               activeFilterTag={activeFilterTagForPlan}
               handleUpdateFilterCriteria={handleUpdateFilterCriteria}
@@ -386,6 +390,7 @@ const TagSection = ({
                 optionSelectItems={optionSelectItems}
                 filterCriteria={filterCriteria}
                 checkActiveItem={checkActiveItem}
+                checkFocusItem={checkFocusItem}
                 checkExcludeIngredientIds={checkExcludeIngredientIds}
                 focusOptionId={excludeFilterStateForPlan.id}
                 activeFilterTag={activeFilterTagForPlan}
@@ -408,6 +413,7 @@ const TagSection = ({
                 optionSelectItems={optionSelectItems}
                 filterCriteria={filterCriteria}
                 checkActiveItem={checkActiveItem}
+                checkFocusItem={checkFocusItem}
                 focusOptionId={numericFilterStateForPlan.id}
                 activeFilterTag={activeFilterTagForPlan}
                 optionsLoading={blendNutrientLoading}

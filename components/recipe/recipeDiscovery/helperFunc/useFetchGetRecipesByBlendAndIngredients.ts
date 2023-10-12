@@ -48,7 +48,7 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
           betweenEndValue,
         } = filter;
         let arrangeValue = {
-          beetween: between,
+          between,
           category: category.toLowerCase(),
           greaterThan,
           lessThan,
@@ -93,7 +93,7 @@ const useFetchGetRecipesByBlendAndIngredients = () => {
         } = filter;
         let arrangeValue = {
           matrixName: name.toLowerCase(),
-          beetween: between,
+          between,
           greaterThan,
           lessThan,
           value: 0,
