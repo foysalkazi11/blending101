@@ -13,6 +13,7 @@ import ShowLastModifiedCollection from "../../showLastModifiedCollection/ShowLas
 import { setIsOpenBlogCollectionTray } from "../../../redux/slices/blogSlice";
 import { useUser } from "../../../context/AuthProvider";
 import BlogCollectionTray from "../../sidetray/blogCollectionTray";
+import BlogCommentsTray from "components/sidetray/blogCommentsTray";
 
 const BlogList = () => {
   const [openCollectionModal, setOpenCollectionModal] = useState(false);
@@ -41,6 +42,7 @@ const BlogList = () => {
   return (
     <>
       <BlogCollectionTray showPanle="left" showTagByDefaut={true} />
+      <BlogCommentsTray showPanle="right" showTagByDefaut={false} />
       <div className={styles.blogPageLayout}>
         <CommonSearchBar
           input={blogSearchInput}

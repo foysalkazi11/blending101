@@ -230,7 +230,7 @@ export default function CollectionComponent({
               isRecipeWithinCollection={collectionHasRecipe?.includes(_id)}
               index={i}
               collectionItemLength={recipes?.length}
-              changeItemWithinCollection={changeRecipeWithinCollection}
+              changeItemWithinCollection={changeRecipeWithinCollection && canContribute && canShareWithOther}
               handleClickCheckBox={handleChange}
               showMoreMenu={true}
               menuIndex={menuIndex}

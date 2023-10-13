@@ -163,7 +163,7 @@ const SingleCollection = ({
         </div>
 
         {showMoreMenu ? (
-          changeItemWithinCollection && canContribute && canShareWithOther ? (
+          changeItemWithinCollection ? (
             <div className={styles.checkBox}>
               <CustomCheckbox checked={isRecipeWithinCollection} handleChange={(e) => handleClickCheckBox(e, id)} />
             </div>

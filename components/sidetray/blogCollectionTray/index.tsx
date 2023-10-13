@@ -10,10 +10,7 @@ import DELETE_BLOG_COLLECTION from "../../../gqlLib/blog/mutation/deleteBlogColl
 import EDIT_BLOG_COLLECTION from "../../../gqlLib/blog/mutation/editBlogCollection";
 import GET_ALL_BLOG_COLLECTIONS from "../../../gqlLib/blog/query/getAllBlogCollections";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import {
-  setIsActiveBlogForCollection,
-  setIsOpenBlogCollectionTray,
-} from "../../../redux/slices/blogSlice";
+import { setIsActiveBlogForCollection, setIsOpenBlogCollectionTray } from "../../../redux/slices/blogSlice";
 import ConfirmationModal from "../../../theme/confirmationModal/ConfirmationModal";
 import SkeletonCollections from "../../../theme/skeletons/skeletonCollectionRecipe/SkeletonCollections";
 import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
@@ -30,10 +27,7 @@ interface BlogCollectionTrayProps {
   showTagByDefaut?: boolean;
   showPanle?: "left" | "right";
 }
-const BlogCollectionTray = ({
-  showPanle,
-  showTagByDefaut,
-}: BlogCollectionTrayProps) => {
+const BlogCollectionTray = ({ showPanle, showTagByDefaut }: BlogCollectionTrayProps) => {
   const [openModal, setOpenModal] = useState(false);
   const [input, setInput] = useState({
     image: null,
@@ -46,31 +40,17 @@ const BlogCollectionTray = ({
   const [isDeleteCollection, setIsDeleteCollection] = useState(false);
   const [collectionId, setCollectionId] = useState("");
   const [isCollectionUpdate, setIsCollectionUpdate] = useState(false);
-  const { isOpenBlogCollectionTray, activeBlogForCollection } = useAppSelector(
-    (state) => state?.blog,
-  );
+  const { isOpenBlogCollectionTray, activeBlogForCollection } = useAppSelector((state) => state?.blog);
   const memberId = useUser().id;
   const isMounted = useRef(null);
-  const [
-    getAllBlogCollections,
-    {
-      data: allCollectionData,
-      loading: allCollectionLoading,
-      error: allCollectionError,
-    },
-  ] = useLazyQuery(GET_ALL_BLOG_COLLECTIONS, {
-    fetchPolicy: "cache-and-network",
-  });
-  const [editBlogCollection, { loading: editBlogCollectionLoading }] =
-    useMutation(EDIT_BLOG_COLLECTION);
-  const [addNewBlogCollection, { loading: addNewBlogCollectionLoading }] =
-    useMutation(ADD_NEW_BLOG_COLLECTION);
-  const [deleteCollection, { loading: deleteCollectionLoading }] = useMutation(
-    DELETE_BLOG_COLLECTION,
-  );
-  const [addOrRemoveBlogFromCollection] = useMutation(
-    ADD_OR_REMOVE_TO_BLOG_COLLECTION,
-  );
+  const [getAllBlogCollections, { data: allCollectionData, loading: allCollectionLoading, error: allCollectionError }] =
+    useLazyQuery(GET_ALL_BLOG_COLLECTIONS, {
+      fetchPolicy: "cache-and-network",
+    });
+  const [editBlogCollection, { loading: editBlogCollectionLoading }] = useMutation(EDIT_BLOG_COLLECTION);
+  const [addNewBlogCollection, { loading: addNewBlogCollectionLoading }] = useMutation(ADD_NEW_BLOG_COLLECTION);
+  const [deleteCollection, { loading: deleteCollectionLoading }] = useMutation(DELETE_BLOG_COLLECTION);
+  const [addOrRemoveBlogFromCollection] = useMutation(ADD_OR_REMOVE_TO_BLOG_COLLECTION);
   const dispatch = useAppDispatch();
   const handleToUpdateBlog = useToUpdateBlogField();
 
@@ -120,13 +100,11 @@ const BlogCollectionTray = ({
                 variables: { memberId },
                 data: {
                   getAllBlogCollections: {
-                    blogCollections:
-                      allCollectionData?.getAllBlogCollections?.blogCollections.map(
-                        (collection) =>
-                          collection?._id === editABlogCollection?._id
-                            ? { ...collection, ...editABlogCollection }
-                            : collection,
-                      ),
+                    blogCollections: allCollectionData?.getAllBlogCollections?.blogCollections.map((collection) =>
+                      collection?._id === editABlogCollection?._id
+                        ? { ...collection, ...editABlogCollection }
+                        : collection,
+                    ),
                   },
                 },
               });
@@ -152,8 +130,7 @@ const BlogCollectionTray = ({
                 data: {
                   getAllBlogCollections: {
                     blogCollections: [
-                      ...allCollectionData?.getAllBlogCollections
-                        ?.blogCollections,
+                      ...allCollectionData?.getAllBlogCollections?.blogCollections,
                       addNewBlogCollection,
                     ],
                   },
@@ -227,12 +204,7 @@ const BlogCollectionTray = ({
   };
 
   // edit a collection
-  const handleEditCollection = (
-    id: string,
-    name: string,
-    slug: string,
-    description: string,
-  ) => {
+  const handleEditCollection = (id: string, name: string, slug: string, description: string) => {
     setIsDeleteCollection(false);
     setInput((pre) => ({
       ...pre,
@@ -252,19 +224,14 @@ const BlogCollectionTray = ({
       dispatch(
         setIsActiveBlogForCollection({
           ...activeBlogForCollection,
-          collectionIds: [
-            ...activeBlogForCollection.collectionIds,
-            collectionId,
-          ],
+          collectionIds: [...activeBlogForCollection.collectionIds, collectionId],
         }),
       );
     } else {
       dispatch(
         setIsActiveBlogForCollection({
           ...activeBlogForCollection,
-          collectionIds: activeBlogForCollection.collectionIds.filter(
-            (id) => id !== collectionId,
-          ),
+          collectionIds: activeBlogForCollection.collectionIds.filter((id) => id !== collectionId),
         }),
       );
     }
@@ -299,79 +266,52 @@ const BlogCollectionTray = ({
     <TrayWrapper
       showTagByDefault={showTagByDefaut}
       closeTray={() => {
-        !isCollectionUpdate &&
-          dispatch(setIsActiveBlogForCollection({ id: "", collectionIds: [] }));
+        !isCollectionUpdate && dispatch(setIsActiveBlogForCollection({ id: "", collectionIds: [] }));
         dispatch(setIsOpenBlogCollectionTray(!isOpenBlogCollectionTray));
       }}
       openTray={isOpenBlogCollectionTray}
       showPanel={showPanle}
-      panelTag={(hover) => (
-        <TrayTag
-          icon={<FontAwesomeIcon icon={faBookmark} />}
-          placeMent="left"
-          hover={hover}
-        />
-      )}
+      panelTag={(hover) => <TrayTag icon={<FontAwesomeIcon icon={faBookmark} />} placeMent="left" hover={hover} />}
     >
       <ToggleMenu
         toggleMenuList={[
           <div key={"key0"} className={styles.menu}>
-            <FontAwesomeIcon
-              icon={faRectangleHistory}
-              className={styles.icon}
-            />
+            <FontAwesomeIcon icon={faRectangleHistory} className={styles.icon} />
             <p>Collections</p>
           </div>,
         ]}
         variant={"outlineSecondary"}
       />
-      <IconForAddComment
-        handleIconClick={addNewCollection}
-        label="Add collection"
-      />
+      <IconForAddComment handleIconClick={addNewCollection} label="Add collection" />
       {allCollectionLoading ? (
         <SkeletonCollections />
       ) : (
-        allCollectionData?.getAllBlogCollections?.blogCollections?.map(
-          (collection, i) => {
-            const {
-              _id,
-              name,
-              slug,
-              collectionDataCount,
-              image,
-              blogs,
-              description,
-            } = collection;
+        allCollectionData?.getAllBlogCollections?.blogCollections?.map((collection, i) => {
+          const { _id, name, slug, collectionDataCount, image, blogs, description } = collection;
 
-            return (
-              <SingleCollection
-                key={_id}
-                id={_id}
-                name={name}
-                description={description}
-                slug={slug}
-                image={image || "/cards/food.png"}
-                collectionItemLength={collectionDataCount}
-                showMoreMenu={true}
-                handleDeleteCollection={handleOpenConfirmationModal}
-                handleEditCollection={handleEditCollection}
-                index={i}
-                menuIndex={menuIndex}
-                setMenuIndex={setMenuIndex}
-                changeItemWithinCollection={
-                  activeBlogForCollection.id ? true : false
-                }
-                isRecipeWithinCollection={activeBlogForCollection.collectionIds?.includes(
-                  _id,
-                )}
-                deleteCollectionLoading={deleteCollectionLoading}
-                handleClickCheckBox={handleChange}
-                collectionRoute="blogCollection"
-              />
-            );
-          },
-        )
+          return (
+            <SingleCollection
+              key={_id}
+              id={_id}
+              name={name}
+              description={description}
+              slug={slug}
+              image={image || "/cards/food.png"}
+              collectionItemLength={collectionDataCount}
+              showMoreMenu={true}
+              handleDeleteCollection={handleOpenConfirmationModal}
+              handleEditCollection={handleEditCollection}
+              index={i}
+              menuIndex={menuIndex}
+              setMenuIndex={setMenuIndex}
+              changeItemWithinCollection={activeBlogForCollection.id ? true : false}
+              isRecipeWithinCollection={activeBlogForCollection.collectionIds?.includes(_id)}
+              deleteCollectionLoading={deleteCollectionLoading}
+              handleClickCheckBox={handleChange}
+              collectionRoute="blogCollection"
+            />
+          );
+        })
       )}
       {isDeleteCollection && (
         <ConfirmationModal
@@ -389,9 +329,7 @@ const BlogCollectionTray = ({
           setInput={setInput}
           setOpenModal={setOpenModal}
           handleToAddOrUpdateCollection={handleAddOrEditCollection}
-          isAddOrUpdateCollectionLoading={
-            addNewBlogCollectionLoading || editBlogCollectionLoading
-          }
+          isAddOrUpdateCollectionLoading={addNewBlogCollectionLoading || editBlogCollectionLoading}
           openModal={openModal}
         />
       )}
