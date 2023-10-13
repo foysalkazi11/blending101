@@ -289,7 +289,7 @@ export default function RecipeCollectionAndThemeTray({
       />
 
       {toggle === 0 && (
-        <div className="flex ai-center jc-between mt-20 mb-20">
+        <div className="flex ai-center jc-between ">
           <CommentAndNoteButton
             type="submitBtn"
             submitBtnVarient="outlineSecondary"
