@@ -1,9 +1,5 @@
 import { faHandHolding } from "@fortawesome/free-solid-svg-icons";
-import {
-  faPencil,
-  faShareNodes,
-  faTrash,
-} from "@fortawesome/pro-regular-svg-icons";
+import { faPencil, faShareNodes, faTrash } from "@fortawesome/pro-regular-svg-icons";
 import { faEllipsisVertical } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
@@ -48,15 +44,9 @@ interface IndividualCollectionType {
     isSharedCollection?: boolean,
     sharedUserEmail?: string,
   ) => void;
-  handleEditCollection?: (
-    id: string,
-    name: string,
-    slug: string,
-    description: string,
-    isShared?: boolean,
-  ) => void;
+  handleEditCollection?: (id: string, name: string, slug: string, description: string, isShared?: boolean) => void;
   deleteCollectionLoading?: boolean;
-  collectionRoute: "recipeCollection" | "blogCollection" | "planCollection";
+  collectionRoute?: "recipeCollection" | "blogCollection" | "planCollection";
   isShared?: boolean;
   sharedBy?: {
     _id?: string;
@@ -144,22 +134,14 @@ const SingleCollection = ({
           onClick={() =>
             handleCollectionRoute(
               route ||
-                `/${
-                  separateCollectionRoutes[collectionRoute]
-                }/${collectionRoute}/${slug}${
+                `/${separateCollectionRoutes[collectionRoute]}/${collectionRoute}/${slug}${
                   isShared ? "?collectionId=" + id : ""
                 }`,
             )
           }
         >
           <div className={styles.img}>
-            <img
-              className={styles.abs}
-              src={image}
-              alt="col_img"
-              width={47}
-              height={47}
-            />
+            <img className={styles.abs} src={image} alt="col_img" width={47} height={47} />
             {/* <div
               className={styles.abs}
               style={{
@@ -171,18 +153,11 @@ const SingleCollection = ({
           {isShared && (
             <Tooltip
               content={`Shared by : ${
-                sharedBy.displayName ||
-                sharedBy.firstName ||
-                sharedBy.lastName ||
-                sharedBy.email ||
-                ""
+                sharedBy.displayName || sharedBy.firstName || sharedBy.lastName || sharedBy.email || ""
               }`}
               direction="top"
             >
-              <FontAwesomeIcon
-                icon={faHandHolding}
-                className={styles.handIcon}
-              />
+              <FontAwesomeIcon icon={faHandHolding} className={styles.handIcon} />
             </Tooltip>
           )}
         </div>
@@ -190,10 +165,7 @@ const SingleCollection = ({
         {showMoreMenu ? (
           changeItemWithinCollection && canContribute && canShareWithOther ? (
             <div className={styles.checkBox}>
-              <CustomCheckbox
-                checked={isRecipeWithinCollection}
-                handleChange={(e) => handleClickCheckBox(e, id)}
-              />
+              <CustomCheckbox checked={isRecipeWithinCollection} handleChange={(e) => handleClickCheckBox(e, id)} />
             </div>
           ) : isHovered ? (
             name === "My Favorite" && !isShared ? (
@@ -208,35 +180,20 @@ const SingleCollection = ({
               >
                 <FontAwesomeIcon icon={faEllipsisVertical} />
 
-                <div
-                  className={`${styles.menu} ${
-                    menuIndex === index ? styles.showMenu : ""
-                  }`}
-                >
+                <div className={`${styles.menu} ${menuIndex === index ? styles.showMenu : ""}`}>
                   <div className={styles.iconBox}>
                     <Tooltip content="Edit" direction="top">
                       <FontAwesomeIcon
                         icon={faPencil}
                         className={styles.icon}
-                        onClick={() =>
-                          handleEditCollection(
-                            id,
-                            name,
-                            slug,
-                            description,
-                            isShared,
-                          )
-                        }
+                        onClick={() => handleEditCollection(id, name, slug, description, isShared)}
                       />
                     </Tooltip>
                   </div>
 
                   {deleteCollectionLoading ? (
                     <div className={styles.iconBox}>
-                      <CircularRotatingLoader
-                        color="primary"
-                        style={{ fontSize: "16px" }}
-                      />
+                      <CircularRotatingLoader color="primary" style={{ fontSize: "16px" }} />
                     </div>
                   ) : (
                     <div className={styles.iconBox}>
@@ -255,16 +212,7 @@ const SingleCollection = ({
                         <FontAwesomeIcon
                           icon={faShareNodes}
                           className={styles.icon}
-                          onClick={() =>
-                            handleShareCollection(
-                              id,
-                              name,
-                              image,
-                              slug,
-                              isShared,
-                              sharedBy?.email || "",
-                            )
-                          }
+                          onClick={() => handleShareCollection(id, name, image, slug, isShared, sharedBy?.email || "")}
                         />
                       </Tooltip>
                     </div>
