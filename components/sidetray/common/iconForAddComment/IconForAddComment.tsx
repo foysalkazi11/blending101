@@ -5,17 +5,14 @@ import IconWarper from "../../../../theme/iconWarper/IconWarper";
 import Tooltip from "../../../../theme/toolTip/CustomToolTip";
 import styles from "./IconForAddComment.module.scss";
 
-interface Props {
+type IconForAddCommentProps = React.ComponentPropsWithRef<"div"> & {
   handleIconClick: () => void;
   label?: string;
-}
+};
 
-const IconForAddComment = ({
-  handleIconClick,
-  label = "Add Comments",
-}: Props) => {
+const IconForAddComment = ({ handleIconClick, label = "Add Comments", ...props }: IconForAddCommentProps) => {
   return (
-    <div className={styles.addCommentsIcon}>
+    <div className={styles.addCommentsIcon} {...props}>
       {/* <p className={styles.text}>{label}</p> */}
       <Tooltip content={label} direction="left">
         <IconWarper
