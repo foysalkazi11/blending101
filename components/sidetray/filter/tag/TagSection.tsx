@@ -402,6 +402,7 @@ const TagSection = ({
                 activeTab={activeTab}
                 handleUpdateFilterCriteria={handleUpdateFilterCriteria}
                 handleUpdateNumericFilterState={handleUpdateNumericFilterState}
+                numericFilterUseFrom="plan"
               />
               <OptionSelect
                 optionSelectItems={optionSelectItems}

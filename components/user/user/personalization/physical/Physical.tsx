@@ -558,59 +558,65 @@ const Physical = ({ userProfile, updateUserProfile, setUserData, userData }: Phy
                 </div>
                 <div className={styles.contentContainer__elementDiv__objects}>
                   {measurementType === "US" ? (
-                    <InputComponent
-                      width="25%"
-                      placeholder={"Pounds"}
-                      type="number"
-                      name="pounds"
-                      min={1}
-                      max={400}
-                      handleChange={changeInputValue}
-                      register={register}
-                      required={{
-                        required: "Please enter weight in pounds",
-                        min: {
-                          value: 1,
-                          message: "Please valid weight",
-                        },
-                        max: {
-                          value: 400,
-                          message: "Max 400 pounds",
-                        },
-                      }}
-                      error={{
-                        isError: errors?.pounds ? true : false,
-                        message: errors?.pounds?.message,
-                      }}
-                    />
+                    <div className="flex ai-center">
+                      <InputComponent
+                        width="25%"
+                        placeholder={"Pounds"}
+                        type="number"
+                        name="pounds"
+                        min={1}
+                        max={400}
+                        handleChange={changeInputValue}
+                        register={register}
+                        required={{
+                          required: "Please enter weight in pounds",
+                          min: {
+                            value: 1,
+                            message: "Please valid weight",
+                          },
+                          max: {
+                            value: 400,
+                            message: "Max 400 pounds",
+                          },
+                        }}
+                        error={{
+                          isError: errors?.pounds ? true : false,
+                          message: errors?.pounds?.message,
+                        }}
+                      />
+                      <sub className={styles.subLabel}>Ibs.</sub>
+                    </div>
                   ) : null}
 
                   {measurementType === "Metric" ? (
-                    <InputComponent
-                      width="25%"
-                      placeholder="Kilograms"
-                      type="number"
-                      name="kilograms"
-                      min={1}
-                      max={880}
-                      handleChange={changeInputValue}
-                      register={register}
-                      required={{
-                        required: "Please enter weight in kilograms",
-                        min: {
-                          value: 1,
-                          message: "Please valid weight",
-                        },
-                        max: {
-                          value: 880,
-                          message: "Max 880 kilograms",
-                        },
-                      }}
-                      error={{
-                        isError: errors?.kilograms ? true : false,
-                        message: errors?.kilograms?.message,
-                      }}
-                    />
+                    <div className="flex ai-center">
+                      <InputComponent
+                        width="25%"
+                        placeholder="Kilograms"
+                        type="number"
+                        name="kilograms"
+                        min={1}
+                        max={880}
+                        handleChange={changeInputValue}
+                        register={register}
+                        required={{
+                          required: "Please enter weight in kilograms",
+                          min: {
+                            value: 1,
+                            message: "Please valid weight",
+                          },
+                          max: {
+                            value: 880,
+                            message: "Max 880 kilograms",
+                          },
+                        }}
+                        error={{
+                          isError: errors?.kilograms ? true : false,
+                          message: errors?.kilograms?.message,
+                        }}
+                      />
+                      <sub className={styles.subLabel}>kg.</sub>
+                    </div>
                   ) : null}
                 </div>
 
