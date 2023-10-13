@@ -26,11 +26,11 @@ const dietary = [
     label: "Vegetarian no dairy",
   },
   {
-    icon: "/images/milk.png",
+    icon: "/images/leaf.png",
     label: "vegan",
   },
   {
-    icon: "/images/milk.png",
+    icon: "/images/chicken.png",
     label: "Paleo",
   },
 ];
@@ -48,7 +48,7 @@ const allergies = [
     label: "Tree Nut",
   },
   {
-    icon: "/images/almond.png",
+    icon: "/images/soy-1.png",
     label: "Soy",
   },
 ];

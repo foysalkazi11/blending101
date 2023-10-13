@@ -257,7 +257,7 @@ const TagSection = ({
           ?.map((item) => ({
             id: item?._id,
             name: item?.personalizedName || item?.name,
-            // image: item?.image,
+            image: item?.image,
             tagLabel: ` ${item?.personalizedName || item?.name}`,
             filterCriteria: "collectionIds",
           }))),
@@ -270,7 +270,7 @@ const TagSection = ({
           ?.map((item) => ({
             id: item?._id,
             name: item?.personalizedName || item?.name,
-            // image: item?.image,
+            image: item?.image,
             tagLabel: ` ${item?.personalizedName || item?.name}`,
             filterCriteria: "collectionIds",
           }))),
@@ -281,7 +281,7 @@ const TagSection = ({
         let mapGlobal = global.child?.map((item, index) => ({
           id: index,
           name: item,
-          // image: "",
+          image: "",
           tagLabel: item,
           filterCriteria: "collectionIds",
         }));
@@ -293,7 +293,7 @@ const TagSection = ({
         blendCategoryData?.map((item) => ({
           id: item?._id,
           name: item?.name,
-          // image: item?.image,
+          image: item?.image,
           tagLabel: ` ${item?.name}`,
           filterCriteria: "blendTypes",
         })),
@@ -306,7 +306,7 @@ const TagSection = ({
             ?.filter((item) => item?.category === childTab)
             .map((item) => ({
               id: item?._id,
-              // image: item?.featuredImage || "/food/chard.png",
+              image: item?.featuredImage || "/food/chard.png",
               name: item?.ingredientName,
               tagLabel: ` ${item?.ingredientName}`,
               filterCriteria: "includeIngredientIds",
@@ -317,7 +317,7 @@ const TagSection = ({
         setOptionSelectItems(
           ingredientCategoryData.map((item) => ({
             id: item?._id,
-            // image: item?.featuredImage || "/food/chard.png",
+            image: item?.featuredImage || "/food/chard.png",
             name: item?.ingredientName,
             tagLabel: ` ${item?.ingredientName}`,
             filterCriteria: "includeIngredientIds",
