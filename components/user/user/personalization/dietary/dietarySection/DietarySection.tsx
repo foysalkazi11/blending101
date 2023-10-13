@@ -34,17 +34,15 @@ const DietarySection = ({
                       ? alredyExist(item?.label?.toLowerCase(), "allergies")
                         ? styles.active
                         : ""
-                      : item?.label?.toLowerCase() ===
-                        userProfile[fieldName]?.toLowerCase()
+                      : item?.label?.toLowerCase() === userProfile[fieldName]?.toLowerCase()
                       ? styles.active
                       : ""
                   }`}
-                  onClick={() =>
-                    updateUserProfile(fieldName, item?.label?.toLowerCase())
-                  }
+                  onClick={() => updateUserProfile(fieldName, item?.label?.toLowerCase())}
                 >
                   <div className={styles.imageBox}>
-                    <img src={item?.icon} alt="icon" />
+                    {typeof item?.icon !== "string" ? item?.icon : <img src={item?.icon} alt="icon" />}
+
                     <p> {capitalizeFirstLetter(item?.label)}</p>
                   </div>
                 </div>

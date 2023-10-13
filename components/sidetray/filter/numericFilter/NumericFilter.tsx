@@ -152,7 +152,7 @@ const NumericFilter = ({
 
     handleUpdateFilterCriteria({
       updateStatus: "update",
-      value: numericFilterState,
+      value: numericFilterStateObj[numericFilterUseFrom],
       filterCriteria,
     });
 
