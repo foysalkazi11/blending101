@@ -25,7 +25,7 @@ type IProperties = {
 };
 
 const Publish = async (properties: IProperties) => {
-  const { mutate, variables, load, state, success, onSuccess, message, onUpdate, onError } = properties;
+  const { mutate, variables, load, success, onSuccess, onUpdate, onError } = properties;
 
   const loading =
     properties.message ||

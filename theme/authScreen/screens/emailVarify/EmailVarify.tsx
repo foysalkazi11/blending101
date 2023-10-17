@@ -1,70 +1,53 @@
-/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import React, { useState } from "react";
 import ButtonComponent from "../../../button/buttonA/button.component";
 import styles from "./EmailVarify.module.scss";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import { setLoading } from "../../../../redux/slices/utilitySlice";
-import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
-import { useRouter } from "next/router";
+import { useAppSelector } from "../../../../redux/hooks";
 import { Auth } from "aws-amplify";
 import InputComponent from "../../../input/input.component";
 import HeadTagInfo from "../../../headTagInfo";
-import { useSession } from "../../../../context/AuthProvider";
-import useToGetExistingUserInfo from "customHooks/user/useToGetExistingUserInfo";
+import { toast } from "react-toastify";
 
 const EmailVerify = () => {
   const [code, setCode] = useState("");
-  const session = useSession();
   const { nonConfirmedUser } = useAppSelector((state) => state?.user);
-  const dispatch = useAppDispatch();
-  const history = useRouter();
-  const handleToGetExistingUserInfo = useToGetExistingUserInfo();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (code) {
-      dispatch(setLoading(true));
+    const notification = toast.loading("Verifying the OTP code", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
 
+    if (code) {
       try {
         await Auth.confirmSignUp(nonConfirmedUser, code);
-        const currentUser = await handleToGetExistingUserInfo(nonConfirmedUser, "email");
-
-        // const { data } = await createNewUser({
-        //   variables: {
-        //     data: { email: nonConfirmedUser, provider: "email" },
-        //   },
-        // });
-        // const user = await Auth.currentAuthenticatedUser();
-        // await Auth.updateUserAttributes(user, {
-        //   address: "105 Main St. New York, NY 10001",
-        // });
-        // console.log(currentUser);
-
-        dispatch(setLoading(false));
-        reactToastifyNotification("info", "Sign up successfully");
-        // dispatch(setUser(nonConfirmedUser));
-        // dispatch(setDbUser(data?.createNewUser));
-        // dispatch(setProvider("email"));
-        history.push("/user/profile");
+        toast.update(notification, {
+          render: "Verification completed successfully",
+          type: "success",
+          isLoading: false,
+          autoClose: 3000,
+        });
       } catch (error) {
-        dispatch(setLoading(false));
-        reactToastifyNotification("error", error?.message || "Failed to verify email");
+        toast.update(notification, {
+          render: error?.message || "Failed to verify email",
+          type: "error",
+          isLoading: false,
+          autoClose: 3000,
+        });
       }
-    } else {
-      reactToastifyNotification("warning", "Please enter code");
     }
   };
 
   const resendSignUp = async () => {
-    dispatch(setLoading(true));
     try {
-      const code = await Auth.resendSignUp(nonConfirmedUser);
-      dispatch(setLoading(false));
-      reactToastifyNotification("info", "A new verification code has been send to you email.");
+      await Auth.resendSignUp(nonConfirmedUser);
+      toast.info("A new verification code has been send to you email", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
     } catch (error) {
-      dispatch(setLoading(false));
-      reactToastifyNotification("error", error?.message);
+      toast.error(error?.message, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
     }
   };
 
@@ -80,6 +63,7 @@ const EmailVerify = () => {
           <form onSubmit={handleSubmit}>
             <InputComponent
               type="text"
+              required
               style={{ margin: "4px auto 15px auto", width: "100%" }}
               value={code}
               placeholder="Enter OTP code here"

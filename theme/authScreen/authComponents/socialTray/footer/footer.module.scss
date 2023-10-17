@@ -190,9 +190,9 @@
 }
 
 .footerDiv {
-  // margin-top: auto;
-  // position: absolute;
-  // bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 5vh;
   width: 100%;
   background-color: #ececec;

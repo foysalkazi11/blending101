@@ -104,6 +104,10 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
           // Redirect should happen only for login page
           if (router.asPath.includes("/login")) router.push(redirectURL);
 
+          // Storing in the cookies to make it accessible in the landing page
+          const oneMonthInSeconds = 30 * 24 * 60 * 60;
+          document.cookie = `isLoggedIn=true; domain=.blending101.com; max-age=${oneMonthInSeconds}; SameSite=Strict; path=/`;
+
           return profile;
         } catch (error) {
           throw new Error("Failed to login");
@@ -115,7 +119,7 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
     [dispatch, getUser, router],
   );
 
-  const isPublicRoute = ["/login", "/signup", "/verify_email", "/forget_password"].includes(router.pathname);
+  const isPublicRoute = ["/login", "/signup", routes.auth.verification, "/forget_password"].includes(router.pathname);
 
   useEffect(() => {
     // Skipping auth checking if the URL is public
@@ -180,6 +184,9 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
       await Auth.signOut();
       setUser(DEFAULT_USER);
       router.push("/login");
+
+      // We should remove the cookie when the user logs out
+      // document.cookie = "";
     } catch (error) {
       notification("error", error?.message);
     }
