@@ -15,6 +15,9 @@ import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
 import { faFerrisWheel, faList } from "@fortawesome/pro-light-svg-icons";
 import WikiThemeContainer from "../wikiTheme/wikiThemContainer";
 import generateDummyArray from "helperFunc/array/generateDummyArray";
+import { useUser } from "context/AuthProvider";
+import GET_WIKI_THEME from "gqlLib/wiki/query/getWikiTheme";
+import { useQuery } from "@apollo/client";
 interface Props {
   currentWikiType?: WikiType;
   currentWikiId?: string;
@@ -48,6 +51,11 @@ const WikiLeft = ({
   const [panelHeight, setPanelHeight] = useState(0);
   const router = useRouter();
   // const [type, setType] = useState<WikiType>("Ingredient");
+  const user = useUser();
+  const { data, loading } = useQuery(GET_WIKI_THEME, {
+    variables: { widgetSlug: "wiki-summer", userId: user?.id, currentDate: new Date().toISOString().slice(0, 10) },
+  });
+
   const checkActive = (id: string) => {
     return selectedWikiType?.selectedItems?.includes(id);
   };
@@ -289,6 +297,8 @@ const WikiLeft = ({
             wikiThemeOnClick={wikiThemeOnClick}
             checkActiveWiki={checkActiveWiki}
             scrollAreaMaxHeight={panelHeight - 310}
+            loading={loading}
+            data={data?.getEntityWidget?.widgetCollections}
           />
         )}
       </div>

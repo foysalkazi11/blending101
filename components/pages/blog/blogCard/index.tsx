@@ -6,14 +6,8 @@ import styles from "./BlogCard.module.scss";
 import IconWarper from "../../../../theme/iconWarper/IconWarper";
 import time_ago from "../../../../helperFunc/date/time_ago";
 import Image from "next/image";
-import {
-  faMessageDots as faMessageDotsSolid,
-  faBookmark as faBookmarkSolid,
-} from "@fortawesome/pro-solid-svg-icons";
-import {
-  faMessageDots as faMessageDotsLight,
-  faBookmark as faBookmarkLight,
-} from "@fortawesome/pro-light-svg-icons";
+import { faMessageDots as faMessageDotsSolid, faBookmark as faBookmarkSolid } from "@fortawesome/pro-solid-svg-icons";
+import { faMessageDots as faMessageDotsLight, faBookmark as faBookmarkLight } from "@fortawesome/pro-light-svg-icons";
 import { useRouter } from "next/router";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import {
@@ -29,11 +23,13 @@ import { useUser } from "../../../../context/AuthProvider";
 interface Props {
   blogData: BlogListType;
   setOpenLastModifiedCollectionModal?: (arg: boolean) => void;
+  blogFieldUpdateFunction?: (id: string, updateObj: { [key: string]: any }) => void;
 }
 
 const BlogCard = ({
   blogData,
   setOpenLastModifiedCollectionModal = () => {},
+  blogFieldUpdateFunction = () => {},
 }: Props) => {
   const {
     coverImage,
@@ -67,15 +63,17 @@ const BlogCard = ({
     setPlay(status);
   };
 
-  const handleOpenCollectionTray = (id: string, collectionIds: string[]) => {
-    dispatch(setIsActiveBlogForCollection({ id, collectionIds }));
+  const handleOpenCollectionTray = (
+    id: string,
+    collectionIds: string[],
+    blogFieldUpdateFunction?: (id: string, updateObj: { [key: string]: any }) => void,
+  ) => {
+    dispatch(setIsActiveBlogForCollection({ id, collectionIds, blogFieldUpdateFunction }));
     dispatch(setIsOpenBlogCollectionTray(true));
   };
 
   const arrangeTimeLength = (sec: string) => {
-    const { h, m, s }: { h: number; m: number; s: number } = toHoursAndMinutes(
-      parseInt(sec) || 0,
-    );
+    const { h, m, s }: { h: number; m: number; s: number } = toHoursAndMinutes(parseInt(sec) || 0);
     let time;
     const addZero = (sec: number) => {
       return sec > 9 ? sec : `0${sec}`;
@@ -98,18 +96,11 @@ const BlogCard = ({
       <div
         className={styles.coverImage}
         style={{ backgroundImage: `url(${coverImage})` }}
-        onMouseEnter={() =>
-          (type === "audio" || type === "video") && togglePlay(true)
-        }
-        onMouseLeave={() =>
-          (type === "audio" || type === "video") && togglePlay(false)
-        }
+        onMouseEnter={() => (type === "audio" || type === "video") && togglePlay(true)}
+        onMouseLeave={() => (type === "audio" || type === "video") && togglePlay(false)}
       >
         <div className={styles.titleBox} ref={titleWidth}>
-          <p
-            className={styles.title}
-            onClick={() => router.push(`/blog/${slug}`)}
-          >
+          <p className={styles.title} onClick={() => router.push(`/blog/${slug}`)}>
             {title}
           </p>
         </div>
@@ -127,10 +118,7 @@ const BlogCard = ({
           </div>
         )}
         {type === "audio" && play && (
-          <div
-            className={styles.playButton}
-            style={{ top: `${titleWidth?.current?.clientHeight || 34}px` }}
-          >
+          <div className={styles.playButton} style={{ top: `${titleWidth?.current?.clientHeight || 34}px` }}>
             <audio
               controls
               autoPlay
@@ -162,16 +150,9 @@ const BlogCard = ({
         )}
       </div>
       <div className={styles.authorAndDate}>
-        <p>
-          {createdBy?.displayName ||
-            `${createdBy?.firstName} ${createdBy?.lastName}`}
-        </p>
+        <p>{createdBy?.displayName || `${createdBy?.firstName} ${createdBy?.lastName}`}</p>
         <div style={{ display: "flex", alignItems: "center" }}>
-          {mediaLength ? (
-            <p className={styles.timeDuration}>
-              {`${arrangeTimeLength(mediaLength)}`}
-            </p>
-          ) : null}
+          {mediaLength ? <p className={styles.timeDuration}>{`${arrangeTimeLength(mediaLength)}`}</p> : null}
           <p>{time_ago(publishDate)}</p>
         </div>
       </div>
@@ -183,24 +164,21 @@ const BlogCard = ({
         <div className={styles.brandBox}>
           <FontAwesomeIcon
             icon={blogCollections?.length ? faBookmarkSolid : faBookmarkLight}
-            className={`${styles.icon} ${
-              blogCollections?.length ? styles.activeIconPrimary : ""
-            }`}
+            className={`${styles.icon} ${blogCollections?.length ? styles.activeIconPrimary : ""}`}
             onClick={() => {
               blogCollections?.length
-                ? handleOpenCollectionTray(_id, blogCollections)
+                ? handleOpenCollectionTray(_id, blogCollections, blogFieldUpdateFunction)
                 : handleToAddBlogAtCollection(
                     _id,
                     memberId,
                     setOpenLastModifiedCollectionModal,
+                    blogFieldUpdateFunction,
                   );
             }}
           />
           <FontAwesomeIcon
             icon={commentsCount ? faMessageDotsSolid : faMessageDotsLight}
-            className={`${styles.icon} ${
-              commentsCount ? styles.activeIconSecondary : ""
-            }`}
+            className={`${styles.icon} ${commentsCount ? styles.activeIconSecondary : ""}`}
             onClick={() => {
               dispatch(
                 updateCurrentBlogForShowComments({
@@ -213,13 +191,7 @@ const BlogCard = ({
             }}
           />
           {commentsCount ? (
-            <p
-              className={`${styles.text} ${
-                commentsCount ? styles.activeIcon : ""
-              }`}
-            >
-              {commentsCount}
-            </p>
+            <p className={`${styles.text} ${commentsCount ? styles.activeIcon : ""}`}>{commentsCount}</p>
           ) : null}
         </div>
       </div>
