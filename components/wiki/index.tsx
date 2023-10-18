@@ -18,6 +18,7 @@ import notification from "components/utility/reactToastifyNotification";
 import useToWikiFilter from "customHooks/wiki/useToWikiFilter";
 import useDebounce from "customHooks/useDebounce";
 import { useIsMounted } from "customHooks/useIsMounted";
+import WikiBanner from "./wikiBanner/WikiBanner";
 
 const dataLimit = 12;
 
@@ -166,7 +167,7 @@ const WikiHome = () => {
           openTray={width > 1280 ? true : openFilterTray}
           setOpenTray={setOpenFilterTray}
         />
-        {/* <WikiBanner /> */}
+        <WikiBanner />
 
         <div className={styles.wikiContentContainer}>
           <div className={styles.left}>
