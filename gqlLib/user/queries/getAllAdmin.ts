@@ -6,6 +6,7 @@ const GET_ALL_ADMIN = gql`
       _id
       firstName
       lastName
+      displayName
     }
   }
 `;

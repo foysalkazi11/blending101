@@ -12,6 +12,7 @@ interface LastModifiedBlogCollectionType {
 interface ActiveBlogForCollectionType {
   id: string;
   collectionIds: string[];
+  blogFieldUpdateFunction: (id: string, obj: { [key: string]: any }) => void;
 }
 
 interface BlogSliceState {
@@ -37,6 +38,7 @@ const initialState: BlogSliceState = {
   activeBlogForCollection: {
     id: "",
     collectionIds: [],
+    blogFieldUpdateFunction: () => {},
   },
 };
 
@@ -44,10 +46,7 @@ export const blogSlice = createSlice({
   name: "blog",
   initialState,
   reducers: {
-    updateCurrentBlogForShowComments: (
-      state,
-      action: PayloadAction<CurrentBlogForShowComments>,
-    ) => {
+    updateCurrentBlogForShowComments: (state, action: PayloadAction<CurrentBlogForShowComments>) => {
       state.currentBlogForShowComments = { ...action.payload };
     },
     setIsOpenBlogCommentsTray: (state, action: PayloadAction<boolean>) => {
@@ -56,16 +55,10 @@ export const blogSlice = createSlice({
     setIsOpenBlogCollectionTray: (state, action: PayloadAction<boolean>) => {
       state.isOpenBlogCollectionTray = action.payload;
     },
-    updateLastModifiedBlogCollection: (
-      state,
-      action: PayloadAction<LastModifiedBlogCollectionType>,
-    ) => {
+    updateLastModifiedBlogCollection: (state, action: PayloadAction<LastModifiedBlogCollectionType>) => {
       state.lastModifiedBlogCollection = { ...action.payload };
     },
-    setIsActiveBlogForCollection: (
-      state,
-      action: PayloadAction<ActiveBlogForCollectionType>,
-    ) => {
+    setIsActiveBlogForCollection: (state, action: PayloadAction<ActiveBlogForCollectionType>) => {
       state.activeBlogForCollection = action.payload;
     },
   },
