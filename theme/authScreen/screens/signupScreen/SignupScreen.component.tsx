@@ -13,6 +13,7 @@ import { setNonConfirmedUser } from "../../../../redux/slices/userSlice";
 import { setLoading } from "../../../../redux/slices/utilitySlice";
 import { useAppDispatch } from "../../../../redux/hooks";
 import reactToastifyNotification from "../../../../components/utility/reactToastifyNotification";
+import routes from "routes";
 
 // const emailRegex2 = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 // const emailRegex3 = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
@@ -44,7 +45,7 @@ const SignupScreen = () => {
       reactToastifyNotification("info", "A verification code has been sent to your email");
       //@ts-ignore
       dispatch(setNonConfirmedUser(user?.username));
-      history?.push("/verify_email");
+      history?.push(routes.auth.verification);
     } catch (error) {
       dispatch(setLoading(false));
       reactToastifyNotification("error", error?.message);
