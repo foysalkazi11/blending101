@@ -1,7 +1,7 @@
 import React, { forwardRef, Fragment, useRef, useEffect, useMemo, useCallback, useState } from "react";
 import { format } from "date-fns";
 import { faCircle, faEllipsisVertical } from "@fortawesome/pro-solid-svg-icons";
-import { faClone, faTrash, faTrophy, faUpDownLeftRight, faChartSimple } from "@fortawesome/pro-light-svg-icons";
+import { faClone, faTrash, faUpDownLeftRight, faChartSimple, faThumbTack } from "@fortawesome/pro-light-svg-icons";
 import DatePicker from "react-datepicker";
 import { useMutation } from "@apollo/client";
 import { DELETE_CHALLENGE_POST, COPY_CHALLENGE_POST, MOVE_CHALLENGE_POST } from "@/challenge/challenge.graphql";
@@ -200,7 +200,7 @@ const ChallengePanel: React.FC<ChallengePanelProps> = (props) => {
 
   return (
     <Fragment>
-      <IconHeading icon={faTrophy} title={"Challenge Post"} iconStyle={{ fontSize: "18px" }} />
+      <IconHeading icon={faThumbTack} title={"Challenge Post"} iconStyle={{ fontSize: "18px" }} />
       <div style={{ maxHeight: height }} className={styles.card__wrapper}>
         {challengePosts.reverse()}
       </div>
