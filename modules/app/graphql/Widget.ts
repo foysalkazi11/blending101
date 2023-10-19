@@ -53,7 +53,7 @@ export const GET_WIDGET = gql`
             favicon
             averageRating
             numberOfRating
-            foodCategories
+
             notes
             addedToCompare
           }
@@ -101,10 +101,7 @@ export const GET_GRID_WIDGET = gql`
 
 export const GET_ALL_WIDGET_COLLECTION_DATA = gql`
   query GetGridWidgetData($widgetSlug: String!, $collectionSlug: String!) {
-    getWidgetCollectionbySlugForClient(
-      widgetSlug: $widgetSlug
-      slug: $collectionSlug
-    ) {
+    getWidgetCollectionbySlugForClient(widgetSlug: $widgetSlug, slug: $collectionSlug) {
       displayName
       icon
       themeLink
@@ -131,7 +128,7 @@ export const GET_ALL_WIDGET_COLLECTION_DATA = gql`
           favicon
           averageRating
           numberOfRating
-          foodCategories
+
           notes
           addedToCompare
         }
@@ -167,10 +164,7 @@ export const GET_WIDGET_COLLECTIONS = gql`
 
 export const GET_RECIPE_WIDGET_COLLECTIONS = gql`
   query GetRecipeCollection($widgetSlug: String!, $collectionSlug: String!) {
-    getRecipeCollection(
-      widgetSlug: $widgetSlug
-      collectionSlug: $collectionSlug
-    ) {
+    getRecipeCollection(widgetSlug: $widgetSlug, collectionSlug: $collectionSlug) {
       _id
       displayName
       icon
@@ -224,7 +218,6 @@ export const GET_RECIPE_WIDGET = gql`
             recipeBlendCategory {
               name
             }
-            foodCategories
           }
         }
         showTabMenu
