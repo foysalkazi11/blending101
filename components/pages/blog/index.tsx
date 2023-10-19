@@ -119,7 +119,7 @@ const BlogList = () => {
     <>
       <BlogCollectionTray showPanle="left" showTagByDefaut={true} />
       <BlogCommentsTray showPanle="right" showTagByDefaut={false} />
-      {/* <BlogFilterTray showPanel="left" showTagByDefault={false} /> */}
+
       <div className={styles.blogPageLayout}>
         <CommonSearchBar
           input={searchTerm}

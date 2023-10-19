@@ -4,10 +4,7 @@ import { useUser } from "../../../../context/AuthProvider";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import useToGetARecipe from "../../../../customHooks/useToGetARecipe";
 import useGetBlendNutritionBasedOnRecipexxx from "../../../../customHooks/useGetBlendNutritionBasedOnRecipexxx";
-import {
-  setOpenVersionTray,
-  setOpenVersionTrayFormWhichPage,
-} from "../../../../redux/slices/versionTraySlice";
+import { setOpenVersionTray, setOpenVersionTrayFormWhichPage } from "../../../../redux/slices/versionTraySlice";
 import { updateSidebarActiveMenuName } from "../../../../redux/slices/utilitySlice";
 import { setOpenFilterTray } from "../../../../redux/slices/sideTraySlice";
 import { GiGl } from "../../../../type/nutrationType";
@@ -15,6 +12,7 @@ import SkeletonRecipeDetails from "../../../../theme/skeletons/skeletonRecipeDet
 import ErrorPage from "../../../../components/pages/404Page";
 import RecipeDetails from "../../../../components/recipe/recipeDetails/RecipeDetails";
 import { RecipeDetailsType } from "../../../../type/recipeDetailsType";
+import Meta from "theme/meta";
 
 const Index = () => {
   const router = useRouter();
@@ -26,11 +24,7 @@ const Index = () => {
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
   const dispatch = useAppDispatch();
 
-  const {
-    handleToGetARecipe,
-    loading: getARecipeLoading,
-    error: getARecipeError,
-  } = useToGetARecipe();
+  const { handleToGetARecipe, loading: getARecipeLoading, error: getARecipeError } = useToGetARecipe();
   const {
     handleFetchIngrdients,
     loading: nutritionDataLoading,
@@ -55,7 +49,7 @@ const Index = () => {
   }, [recipe__Id, user.id, token]);
 
   useEffect(() => {
-    dispatch(updateSidebarActiveMenuName("Blends"));
+    // dispatch(updateSidebarActiveMenuName("Blends"));
     dispatch(setOpenFilterTray(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -63,9 +57,7 @@ const Index = () => {
   // fetch nutrition value based on current ingredient
   useEffect(() => {
     handleFetchIngrdients(
-      detailsARecipe?.tempVersionInfo?.version?.ingredients.filter(
-        (ing) => ing?.ingredientStatus === "ok",
-      ),
+      detailsARecipe?.tempVersionInfo?.version?.ingredients.filter((ing) => ing?.ingredientStatus === "ok"),
       nutritionState,
       () => {},
       true,
@@ -74,8 +66,7 @@ const Index = () => {
   }, [detailsARecipe?.tempVersionInfo?.version?.ingredients, nutritionState]);
 
   //@ts-ignore
-  const recipeBasedNutrition =
-    nutritionData?.getNutrientsListAndGiGlByIngredients?.nutrients;
+  const recipeBasedNutrition = nutritionData?.getNutrientsListAndGiGlByIngredients?.nutrients;
   const giGl: GiGl = nutritionData?.getNutrientsListAndGiGlByIngredients?.giGl;
 
   if (getARecipeLoading) {
@@ -86,19 +77,22 @@ const Index = () => {
   }
 
   return (
-    <RecipeDetails
-      recipeData={
-        getARecipeLoading ? ({} as RecipeDetailsType) : detailsARecipe
-      }
-      nutritionData={
-        recipeBasedNutrition ? JSON.parse(recipeBasedNutrition) : []
-      }
-      nutritionState={nutritionState}
-      setNutritionState={setNutritionState}
-      nutritionDataLoading={nutritionDataLoading}
-      giGl={giGl}
-      pageComeFrom="details"
-    />
+    <>
+      <Meta
+        title={detailsARecipe?.recipeId?.name}
+        description={detailsARecipe?.recipeId?.description}
+        ogImage={detailsARecipe?.recipeId?.originalVersion?.selectedImage}
+      />
+      <RecipeDetails
+        recipeData={getARecipeLoading ? ({} as RecipeDetailsType) : detailsARecipe}
+        nutritionData={recipeBasedNutrition ? JSON.parse(recipeBasedNutrition) : []}
+        nutritionState={nutritionState}
+        setNutritionState={setNutritionState}
+        nutritionDataLoading={nutritionDataLoading}
+        giGl={giGl}
+        pageComeFrom="details"
+      />
+    </>
   );
 };
 
