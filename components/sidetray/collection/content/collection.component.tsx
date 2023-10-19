@@ -253,11 +253,11 @@ export default function CollectionComponent({
         setShow={setShowInviteModal}
         show={showInviteModal}
         title={collectionInfo?.title}
-        copyLinkHandler={copyLinkHandler}
+        copyLinkHandlerFunc={copyLinkHandler}
         createLinkLoading={shareCollectionLoading}
         emails={emails}
         generatedLink={link}
-        generateShareLink={generateShareLink}
+        generateShareLinkFunc={generateShareLink}
         hasCopied={hasCopied}
         heading={"Share Collection"}
         onCancel={resetModal}

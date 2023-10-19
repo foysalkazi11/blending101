@@ -1,8 +1,6 @@
 import { useMutation } from "@apollo/client";
 import React, { useState, useEffect } from "react";
-import Share, {
-  SharedUserInfoType,
-} from "../../component/organisms/Share/Distribute.component";
+import Share, { SharedUserInfoType } from "../../component/organisms/Share/Distribute.component";
 import CREATE_COLLECTION_AND_SHARE from "../../gqlLib/share/mutation/createCollectionAndShare";
 import formatDate from "../../helperFunc/date/formatDate";
 import { useAppSelector } from "../../redux/hooks";
@@ -34,10 +32,8 @@ const ShareItems = ({
   itemsIds = [],
   showVersionShareCheckbox = false,
 }: Props) => {
-  const [
-    createRecipeCollectionAndShare,
-    { data, loading: createRecipeCollectionAndShareLoading },
-  ] = useMutation(CREATE_COLLECTION_AND_SHARE);
+  const [createRecipeCollectionAndShare, { data, loading: createRecipeCollectionAndShareLoading }] =
+    useMutation(CREATE_COLLECTION_AND_SHARE);
   const [hasCopied, setHasCopied] = useState(false);
   const [showMsgField, setShowMsgField] = useState(false);
   const [link, setLink] = useState("");
@@ -56,10 +52,7 @@ const ShareItems = ({
     setEmails([]);
   };
 
-  const generateShareLink = async (
-    isGlobalShare: boolean = true,
-    copyLinkAtClipboard: boolean = true,
-  ) => {
+  const generateShareLink = async (isGlobalShare: boolean = true, copyLinkAtClipboard: boolean = true) => {
     if (!isGlobalShare && !emails.length) {
       notification("warning", "Please enter email");
       return;
@@ -89,13 +82,9 @@ const ShareItems = ({
           },
         });
         const generatedLink = `${
-          process.env.NODE_ENV === "production"
-            ? process.env.NEXT_PUBLIC_HOSTING_DOMAIN
-            : "http://localhost:3000"
+          process.env.NODE_ENV === "production" ? process.env.NEXT_PUBLIC_HOSTING_DOMAIN : "http://localhost:3000"
         }/recipe/recipeCollection/${input.slug}?${
-          isGlobalShare
-            ? "token=" + data.createCollectionAndShare
-            : "collectionId=" + data.createCollectionAndShare
+          isGlobalShare ? "token=" + data.createCollectionAndShare : "collectionId=" + data.createCollectionAndShare
         }`;
         setLink(generatedLink);
         if (copyLinkAtClipboard) {
@@ -113,9 +102,9 @@ const ShareItems = ({
   useEffect(() => {
     const newDate = new Date();
     const currentDate = formatDate(newDate);
-    const currentDateFormate = `${currentDate.day} ${currentDate.month} ${
-      currentDate.year
-    }_${newDate.toLocaleTimeString().slice(0, 5)}_${user?.name || user?.email}`;
+    const currentDateFormate = `${currentDate.day} ${currentDate.month} ${currentDate.year}_${newDate
+      .toLocaleTimeString()
+      .slice(0, 5)}_${user?.name || user?.email}`;
     const convertToSlug = slugStringGenerator(currentDateFormate);
     setInput((pre) => ({
       ...pre,
@@ -132,11 +121,11 @@ const ShareItems = ({
       show={show}
       title={title}
       type={"recipe"}
-      copyLinkHandler={generateShareLink}
+      copyLinkHandlerFunc={generateShareLink}
       createLinkLoading={createRecipeCollectionAndShareLoading}
       emails={emails}
       generatedLink={link}
-      generateShareLink={generateShareLink}
+      generateShareLinkFunc={generateShareLink}
       hasCopied={hasCopied}
       heading={heading}
       onCancel={onCancel}
