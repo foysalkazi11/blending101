@@ -1,0 +1,35 @@
+.challenge {
+  max-width: 1800px;
+  margin: auto;
+  &__pageTitle {
+    font-weight: 600;
+    margin-bottom: 16px;
+    margin-top: 30px;
+  }
+  &__center {
+    border-radius: 9px;
+  }
+}
+
+.headingDiv {
+  display: flex;
+  justify-content: space-between;
+  height: fit-content;
+  margin: 0 2rem 1rem;
+}
+
+.uploadDiv {
+  background-color: white;
+  display: flex;
+  border-radius: 7px;
+  height: fit-content;
+  align-items: center;
+  padding: 6px 15px;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  span {
+    margin-left: 6px;
+    font-size: 14px;
+  }
+}

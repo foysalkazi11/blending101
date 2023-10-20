@@ -40,54 +40,55 @@ const RecipePanel: React.FC<RecipePanelProps> = (props) => {
   return (
     <div style={style}>
       {!isMobile && <IconHeading icon={faTelescope} title="Recipe" iconStyle={{ fontSize: "24px" }} />}
-      <ToggleCard
-        noRoute
-        toggler={toggler}
-        setTogglerFunc={setToggler}
-        leftToggleHeading="Discover"
-        rightToggleHeading="Queue"
-        headingStyle={{
-          padding: "15px 5px",
-        }}
-      />
-
-      {toggler && (
-        <div className={styles.action}>
-          <div ref={filterRef} style={{ width: "100%" }}>
-            <Combobox
-              options={categories}
-              className={styles.blendType}
-              value={type}
-              onChange={(e) => {
-                setPage(1);
-                setType(e.target.value);
-              }}
+      <div className={styles.panel}>
+        <ToggleCard
+          noRoute
+          toggler={toggler}
+          setTogglerFunc={setToggler}
+          leftToggleHeading="Discover"
+          rightToggleHeading="Queue"
+          headingStyle={{
+            padding: "15px 5px",
+          }}
+        />
+        {toggler && (
+          <div className={styles.action}>
+            <div ref={filterRef} style={{ width: "100%" }}>
+              <Combobox
+                options={categories}
+                className={styles.blendType}
+                value={type}
+                onChange={(e) => {
+                  setPage(1);
+                  setType(e.target.value);
+                }}
+              />
+            </div>
+            <Searchbox
+              parentRef={filterRef}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onReset={() => setQuery("")}
             />
           </div>
-          <Searchbox
-            parentRef={filterRef}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onReset={() => setQuery("")}
-          />
+        )}
+        <div
+          ref={parentRef}
+          className={`${styles.wrapper} ${styles[toggler ? "wrapper--discover" : "wrapper--queue"]}`}
+          style={{
+            maxHeight: height ? (toggler ? `calc(${height} - 111px)` : `calc(${height} - 51px)`) : "auto",
+          }}
+        >
+          <Recipes ref={recipeRef} showAction={toggler} recipes={toggler ? recipes : queuedRecipes}>
+            {children}
+          </Recipes>
+          {/* IF DISCOVER TAB IS OPEN & LAZY LOADING IS HAPPENING */}
+          {toggler &&
+            loading &&
+            [...Array(page === 1 ? 3 : 1)]?.map((_, index) => (
+              <SkeletonElement type="thumbnail" key={index} style={{ width: "100%", height: "277px" }} />
+            ))}
         </div>
-      )}
-      <div
-        ref={parentRef}
-        className={`${styles.wrapper} ${styles[toggler ? "wrapper--discover" : "wrapper--queue"]}`}
-        style={{
-          maxHeight: height ? (toggler ? `calc(${height} - 111px)` : `calc(${height} - 51px)`) : "auto",
-        }}
-      >
-        <Recipes ref={recipeRef} showAction={toggler} recipes={toggler ? recipes : queuedRecipes}>
-          {children}
-        </Recipes>
-        {/* IF DISCOVER TAB IS OPEN & LAZY LOADING IS HAPPENING */}
-        {toggler &&
-          loading &&
-          [...Array(page === 1 ? 3 : 1)]?.map((_, index) => (
-            <SkeletonElement type="thumbnail" key={index} style={{ width: "100%", height: "277px" }} />
-          ))}
       </div>
     </div>
   );

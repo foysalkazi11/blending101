@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { faChartSimple } from "@fortawesome/pro-solid-svg-icons";
+import { faChartColumn } from "@fortawesome/pro-regular-svg-icons";
 
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { setShowPanel } from "../../../../redux/slices/Ui.slice";
@@ -9,7 +9,6 @@ import classes from "./RXPanel.module.scss";
 import NutritionPanel from "../../../../components/recipe/share/nutritionPanel/NutritionPanel";
 import { useLazyQuery } from "@apollo/client";
 import GET_NUTRIENT_lIST_ADN_GI_GL_BY_INGREDIENTS from "../../../../gqlLib/nutrition/query/getNutrientsListAndGiGlByIngredients";
-import useHideOnClickOutside from "../../../../modules/app/hooks/interface/useHideOnClickOutside";
 
 const RXPanel = () => {
   const [nutritionState, setNutritionState] = useState(null);
@@ -41,7 +40,7 @@ const RXPanel = () => {
       className={`${classes["side-panel"]} ${panel?.show ? classes.active : ""}`}
     >
       <IconButton
-        fontName={faChartSimple}
+        fontName={faChartColumn}
         variant="fade"
         color="white"
         className={classes["side-panel__close"]}

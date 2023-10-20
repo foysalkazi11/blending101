@@ -1,8 +1,12 @@
+@import "variables";
+
 .settings {
   padding: 1rem 2rem 4rem;
   width: 95%;
   margin: auto;
-  background-color: #ffffff;
+  background-color: white;
+  box-shadow: $card-shadow;
+
   border-radius: 9px;
   overflow: auto;
   &__header {
@@ -13,9 +17,13 @@
   &__title {
     font-size: 2.5rem;
     font-weight: 600;
-    margin: 3rem 0 4rem;
+    margin: 3rem 0rem 4rem;
     display: flex;
     align-items: center;
+  }
+  &__body {
+    width: 95%;
+    margin: auto;
   }
 }
 .textarea {

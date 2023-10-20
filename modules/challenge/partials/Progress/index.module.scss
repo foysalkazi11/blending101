@@ -1,3 +1,5 @@
+@import "variables";
+
 .mainContainer {
   position: relative;
 
@@ -25,6 +27,7 @@
   align-items: center;
   padding-bottom: 4rem;
   border-radius: 9px;
+  box-shadow: $card-shadow;
 }
 
 .title {

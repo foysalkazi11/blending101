@@ -3,7 +3,6 @@
 .statistics {
   width: 100%;
   height: 100%;
-
   &__body {
     padding: 3rem 2rem;
     background-color: white;
@@ -11,6 +10,8 @@
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    box-shadow: $card-shadow;
+    margin-top: 20px;
   }
 
   &__graph {

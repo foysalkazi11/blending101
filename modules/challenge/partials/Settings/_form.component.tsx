@@ -4,7 +4,7 @@ import IconButton from "component/atoms/Button/IconButton.component";
 import Textarea from "component/organisms/Forms/Textarea.component";
 import Textfield from "component/organisms/Forms/Textfield.component";
 import { addDays, differenceInDays, format, subDays } from "date-fns";
-import { forwardRef, useState, useMemo, useEffect, useImperativeHandle } from "react";
+import { forwardRef, useState, useMemo, useEffect, useImperativeHandle, Fragment } from "react";
 import { useForm, FormProvider, useFormContext, useWatch } from "react-hook-form";
 
 import styles from "./index.module.scss";
@@ -79,7 +79,7 @@ const ChallengeForm = forwardRef((props: ChallengeFormProps, ref) => {
   }));
 
   return (
-    <div className={styles.settings}>
+    <div className={styles.settings__body}>
       <div className={styles.settings__header}>
         <h2 className={styles.settings__title}>
           <IconButton size="medium" variant="white" className="mr-20" fontName={faChevronLeft} onClick={resetForm} />

@@ -12,10 +12,10 @@ import React, { Fragment, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Icon from "../../component/atoms/Icon/Icon.component";
 import { GET_SHARED_CHALLENGE_DETAILS } from "../../modules/challenge/challenge.graphql";
-import styles from "../../styles/pages/challenge.module.scss";
 import HeadTagInfo from "../../theme/headTagInfo";
-import { useAppSelector } from "../../redux/hooks";
 import { useUser } from "../../context/AuthProvider";
+
+import styles from "@pages/challenge/shared.module.scss";
 
 const Shared = () => {
   const router = useRouter();

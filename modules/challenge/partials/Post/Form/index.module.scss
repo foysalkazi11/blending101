@@ -8,11 +8,17 @@ $sharedBorder: 1px #efefef solid;
   font-weight: 300;
 }
 
+.wrapper {
+  padding: 20px 3rem;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  margin-bottom: 2rem;
+  border-radius: 9px;
+}
+
 .mainContainer {
   display: flex;
   flex-direction: column;
-  padding: 20px 3rem;
-  background-color: white;
   &__cancelDiv {
     margin-left: auto;
     font-size: 30px;
@@ -168,10 +174,26 @@ $sharedBorder: 1px #efefef solid;
   &__summary {
     display: flex;
     justify-content: space-evenly;
+    align-items: center;
     max-width: 40%;
     margin: 0 auto 1rem;
     span {
       font-weight: 600;
+    }
+  }
+  &__consumed {
+    display: flex;
+    align-items: center;
+    input {
+      margin: 0 5px;
+      width: 45px;
+      padding: 2px 3px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      text-align: center;
+      &:focus {
+        outline: none;
+      }
     }
   }
 }
