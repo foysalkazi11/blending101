@@ -21,6 +21,8 @@ import SlickSlider from "../../../../theme/carousel/SlickSlider";
 import { responsiveSetting } from "../../../showRelatedItems";
 import styles from "./LeftSide.module.scss";
 import StickyBox from "react-sticky-box";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTelescope } from "@fortawesome/pro-light-svg-icons";
 type RelatedCategoryRecipesProps = {
   blendCategory: string;
   sliderView?: boolean;
@@ -98,7 +100,7 @@ const RelatedCategoryRecipes = ({ blendCategory = "", sliderView = false }: Rela
 
   return (
     <StickyBox offsetBottom={20}>
-      <PanelHeader icon="/images/telescope.svg" title="Related Recipes" />
+      <PanelHeader icon={<FontAwesomeIcon icon={faTelescope} size="xl" />} title="Related Recipes" />
 
       {!sliderView ? (
         data?.getAllRelatedCategoryRecipes?.recipes?.map((item, index) => {

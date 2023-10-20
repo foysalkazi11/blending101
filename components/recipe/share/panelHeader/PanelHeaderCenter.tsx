@@ -29,6 +29,9 @@ interface PanelHeaderCenterProps {
     function: any;
     loading?: boolean;
   };
+
+  icon?: string | React.ReactNode;
+  title?: string;
 }
 
 const PanelHeaderCenter = ({
@@ -38,6 +41,8 @@ const PanelHeaderCenter = ({
   recipeVersionLength = 0,
   loading = false,
   backBtnObj = { loading: false, text: "Back", function: () => {} },
+  icon = "",
+  title = "Recipe",
 }: PanelHeaderCenterProps) => {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -55,10 +60,7 @@ const PanelHeaderCenter = ({
               dispatch(setShouldCloseVersionTrayWhenClickAVersion(true));
             }}
           >
-            <FontAwesomeIcon
-              icon={faRectangleVerticalHistory}
-              style={{ marginRight: "5px" }}
-            />
+            <FontAwesomeIcon icon={faRectangleVerticalHistory} style={{ marginRight: "5px" }} />
             Version
             {recipeVersionLength ? `(${recipeVersionLength})` : ""}
           </HeaderTextBtn>
@@ -67,11 +69,7 @@ const PanelHeaderCenter = ({
 
       {pageComeFrom === "details" && (
         <HeaderTextBtn
-          onClick={() =>
-            router.push(
-              `/recipe/edit_recipe/${detailsARecipe?.recipeId?._id}/parsing`,
-            )
-          }
+          onClick={() => router.push(`/recipe/edit_recipe/${detailsARecipe?.recipeId?._id}/parsing`)}
           style={{ minWidth: "45px" }}
         >
           parsing
@@ -80,14 +78,7 @@ const PanelHeaderCenter = ({
 
       <Tooltip content={`${editOrSavebtnText}`} direction="bottom">
         <HeaderTextBtn onClick={editOrSavebtnFunc} style={{ minWidth: "45px" }}>
-          {loading ? (
-            <CircularRotatingLoader
-              color="white"
-              style={{ fontSize: "16px" }}
-            />
-          ) : (
-            editOrSavebtnText
-          )}
+          {loading ? <CircularRotatingLoader color="white" style={{ fontSize: "16px" }} /> : editOrSavebtnText}
         </HeaderTextBtn>
       </Tooltip>
 
@@ -100,10 +91,7 @@ const PanelHeaderCenter = ({
           style={{ width: "28px", height: "28px" }}
         >
           {backBtnObj?.loading ? (
-            <CircularRotatingLoader
-              color="white"
-              style={{ fontSize: "16px" }}
-            />
+            <CircularRotatingLoader color="white" style={{ fontSize: "16px" }} />
           ) : (
             <FontAwesomeIcon icon={faXmark} />
           )}
@@ -112,13 +100,7 @@ const PanelHeaderCenter = ({
     </div>
   );
 
-  return (
-    <PanelHeader
-      icon="/icons/recipe-icon.svg"
-      title="Recipe"
-      rightSide={rightSide}
-    />
-  );
+  return <PanelHeader icon={icon} title={title} rightSide={rightSide} />;
 };
 
 export default PanelHeaderCenter;
