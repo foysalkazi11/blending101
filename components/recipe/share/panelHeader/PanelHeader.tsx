@@ -26,17 +26,11 @@ const PanelHeader = ({
   return (
     <div className={styles.headingContainer}>
       <div
-        className={`${styles[panelHeaderVariant]} ${
-          activeHeader ? styles.activeTab : ""
-        }`}
+        className={`${styles[panelHeaderVariant]} ${activeHeader ? styles.activeTab : ""}`}
         onClick={() => handleClick(index)}
       >
         <div className={styles.icon}>
-          {typeof icon === "string" ? (
-            <Icon fontName={faChartColumn} size="2.4rem" />
-          ) : (
-            icon
-          )}
+          {typeof icon === "string" ? <Icon fontName={faChartColumn} size="2.4rem" /> : icon}
         </div>
 
         <h3 className={styles.title}>{title}</h3>
