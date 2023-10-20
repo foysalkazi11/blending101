@@ -64,11 +64,15 @@ const BlogCollectionTray = ({ showPanle, showTagByDefaut }: BlogCollectionTrayPr
         },
       });
 
-      handleToUpdateBlog(activeBlogForCollection.id, {
+      // handleToUpdateBlog(activeBlogForCollection.id, {
+      //   blogCollections: activeBlogForCollection.collectionIds,
+      // });
+
+      activeBlogForCollection.blogFieldUpdateFunction(activeBlogForCollection.id, {
         blogCollections: activeBlogForCollection.collectionIds,
       });
 
-      dispatch(setIsActiveBlogForCollection({ id: "", collectionIds: [] }));
+      dispatch(setIsActiveBlogForCollection({ id: "", collectionIds: [], blogFieldUpdateFunction: () => {} }));
       notification("info", `Collection update successfully`);
       setIsCollectionUpdate(false);
     } catch (error) {
@@ -266,7 +270,8 @@ const BlogCollectionTray = ({ showPanle, showTagByDefaut }: BlogCollectionTrayPr
     <TrayWrapper
       showTagByDefault={showTagByDefaut}
       closeTray={() => {
-        !isCollectionUpdate && dispatch(setIsActiveBlogForCollection({ id: "", collectionIds: [] }));
+        !isCollectionUpdate &&
+          dispatch(setIsActiveBlogForCollection({ id: "", collectionIds: [], blogFieldUpdateFunction: () => {} }));
         dispatch(setIsOpenBlogCollectionTray(!isOpenBlogCollectionTray));
       }}
       openTray={isOpenBlogCollectionTray}

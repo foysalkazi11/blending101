@@ -11,20 +11,20 @@ import {
   FiltersUpdateCriteria,
 } from "../../../../type/filterType";
 
-type OptionSelectProps = {
-  checkActiveItem: (id: string, filterCriteria: FilterCriteriaOptions) => boolean;
-  checkFocusItem: (id: string) => boolean;
+type OptionSelectProps = React.ComponentPropsWithoutRef<"div"> & {
+  checkActiveItem?: (id: string, filterCriteria: FilterCriteriaOptions) => boolean;
+  checkFocusItem?: (id: string) => boolean;
   // handleBlendAndIngredientUpdate: (
   //   value: FilterCriteriaValue,
   //   present: boolean,
   // ) => void;
   optionSelectItems: any[];
-  filterCriteria: FilterCriteriaOptions;
+  filterCriteria?: FilterCriteriaOptions;
   checkExcludeIngredientIds?: (id: string, filterCriteria: FilterCriteriaOptions) => boolean;
   focusOptionId?: string;
-  activeFilterTag: ActiveFilterTagCriteriaType;
+  activeFilterTag?: ActiveFilterTagCriteriaType;
   optionsLoading?: boolean;
-  handleUpdateFilterCriteria: (obj: {
+  handleUpdateFilterCriteria?: (obj: {
     filterCriteria?: FilterCriteriaOptions;
     value?: FilterCriteriaValue;
     updateStatus: FiltersUpdateCriteria;
@@ -41,13 +41,14 @@ const OptionSelect = ({
   activeFilterTag,
   optionsLoading = false,
   handleUpdateFilterCriteria,
+  ...props
 }: OptionSelectProps) => {
   if (optionsLoading) {
     return <OptionSelectSkeleton />;
   }
 
   return (
-    <div className={styles.optionSelectContainer}>
+    <div className={styles.optionSelectContainer} {...props}>
       <div className={styles.options}>
         {optionSelectItems?.length
           ? optionSelectItems?.map((item, index) => {

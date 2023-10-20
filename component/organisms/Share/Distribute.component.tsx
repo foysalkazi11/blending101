@@ -1,22 +1,7 @@
-import React, { Dispatch, SetStateAction, useEffect } from "react";
-import {
-  faFacebook,
-  faPinterest,
-  faSquareTwitter,
-  faTwitter,
-} from "@fortawesome/free-brands-svg-icons";
-import {
-  faEnvelope,
-  faLinkSimple,
-  faShareNodes,
-  faUserGroup,
-  faXmark,
-} from "@fortawesome/pro-regular-svg-icons";
-import {
-  FacebookShareButton,
-  PinterestShareButton,
-  TwitterShareButton,
-} from "react-share";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { faFacebook, faPinterest, faSquareTwitter, faTwitter } from "@fortawesome/free-brands-svg-icons";
+import { faEnvelope, faLinkSimple, faShareNodes, faUserGroup, faXmark } from "@fortawesome/pro-regular-svg-icons";
+import { FacebookShareButton, PinterestShareButton, TwitterShareButton } from "react-share";
 import Icon from "../../atoms/Icon/Icon.component";
 import styles from "./Share.module.scss";
 import CustomModal from "../../../theme/modal/customModal";
@@ -45,12 +30,9 @@ interface ShareProps {
   setShowMsgField?: React.Dispatch<React.SetStateAction<boolean>>;
   emails?: SharedUserInfoType[];
   setEmails?: React.Dispatch<React.SetStateAction<SharedUserInfoType[]>>;
-  copyLinkHandler?: (args?: boolean) => Promise<void>;
+  copyLinkHandlerFunc?: (args?: boolean) => Promise<void>;
   onCancel?: () => void;
-  generateShareLink?: (
-    isGlobalShare?: boolean,
-    copyLinkAtClipboard?: boolean,
-  ) => void;
+  generateShareLinkFunc?: (isGlobalShare?: boolean, copyLinkAtClipboard?: boolean) => void;
   createLinkLoading?: boolean;
   hasCopied?: boolean;
   submitBtnText?: string;
@@ -82,9 +64,9 @@ const Share = (props: ShareProps) => {
     showMsgField = false,
     emails = [],
     setEmails = () => {},
-    copyLinkHandler,
+    copyLinkHandlerFunc,
     createLinkLoading = false,
-    generateShareLink,
+    generateShareLinkFunc,
     hasCopied = false,
     onCancel = () => {},
     submitBtnText = "Share",
@@ -133,12 +115,10 @@ const Share = (props: ShareProps) => {
             emails={emails}
             setEmails={setEmails}
             handleCancel={onCancel}
-            handleInvitation={() => copyLinkHandler(false)}
+            handleInvitation={() => copyLinkHandlerFunc(false)}
             submitBtnText={submitBtnText}
             loading={createLinkLoading}
-            isAdditionInfoNeedForPersonalShare={
-              isAdditionInfoNeedForPersonalShare
-            }
+            isAdditionInfoNeedForPersonalShare={isAdditionInfoNeedForPersonalShare}
             createCollectionProps={createCollectionProps}
             message={message}
             setMessage={setMessage}
@@ -156,8 +136,8 @@ const Share = (props: ShareProps) => {
             </button>
             <SharePanel
               link={generatedLink}
-              copyLinkHandler={copyLinkHandler}
-              generateShareLink={generateShareLink}
+              copyLinkHandler={copyLinkHandlerFunc}
+              generateShareLink={generateShareLinkFunc}
               hasCopied={hasCopied}
               loading={createLinkLoading}
             />
@@ -172,9 +152,7 @@ const Share = (props: ShareProps) => {
               disable={shareVersionsLength ? false : true}
             />
             <label className={styles.label} htmlFor="shareOtherVersions">
-              {`Share Other Versions ${
-                shareVersionsLength ? `(${shareVersionsLength})` : ""
-              }`}
+              {`Share Other Versions ${shareVersionsLength ? `(${shareVersionsLength})` : ""}`}
             </label>
           </div>
         )}
@@ -191,9 +169,9 @@ interface SharePanelProps {
   loading?: boolean;
 }
 
-const SharePanel = (props: SharePanelProps) => {
-  const { link, copyLinkHandler, generateShareLink, hasCopied, loading } =
-    props;
+export const SharePanel = (props: SharePanelProps) => {
+  const { link, copyLinkHandler, generateShareLink, hasCopied, loading } = props;
+
   return (
     <div className={styles.share__social}>
       <button
@@ -202,43 +180,44 @@ const SharePanel = (props: SharePanelProps) => {
         onClick={() => copyLinkHandler(true)}
       >
         {loading ? (
-          <CircularRotatingLoader
-            color="primary"
-            style={{ width: "20px", height: "20px", marginRight: "10px" }}
-          />
+          <CircularRotatingLoader color="primary" style={{ width: "20px", height: "20px", marginRight: "10px" }} />
         ) : (
           <Icon fontName={faLinkSimple} size="2rem" className="mr-10" />
         )}
-        <p style={{ flexShrink: 0 }}>
-          {hasCopied ? "Copied Link" : "Copy Link"}
-        </p>
+        <p style={{ flexShrink: 0 }}>{hasCopied ? "Copied Link" : "Copy Link"}</p>
       </button>
       <div className={styles.share__social_icons}>
         <FacebookShareButton
-          url={link || "http://blending101.com/"}
+          url={link || "https://blending101.com"}
           quote={"This is quote"}
           hashtag="#Branding"
-          beforeOnClick={() => generateShareLink(true, false)}
+          // beforeOnClick={async () =>
+          //   new Promise(async (resolve, reject) => {
+          //     const newLink = await generateShareLink(true, false);
+          //     console.log(newLink);
+          //     resolve(newLink);
+          //   })
+          // }
           className={styles["share__social--facebook"]}
         >
           <Icon fontName={faFacebook} size="3.5rem" className="mr-10" />
         </FacebookShareButton>
         <TwitterShareButton
-          url={link || "http://blending101.com/"}
+          url={link || "https://blending101.com"}
           title="Blending101"
           hashtags={["Branding"]}
-          via="http://blending101.com/"
+          via={link}
           className={styles["share__social--twitter"]}
-          beforeOnClick={() => generateShareLink(true, false)}
+          // beforeOnClick={() => generateShareLink(true, false)}
         >
           <Icon fontName={faSquareTwitter} size="3.5rem" className="mr-10" />
         </TwitterShareButton>
         <PinterestShareButton
           media="https://blending101.com/Blend_Formula.png"
-          url={link || "http://blending101.com/"}
+          url={link || "https://blending101.com"}
           description="Hello World"
           className={styles["share__social--pinterest"]}
-          beforeOnClick={() => generateShareLink(true, false)}
+          // beforeOnClick={() => generateShareLink(true, false)}
         >
           <Icon fontName={faPinterest} size="3.5rem" className="mr-10" />
         </PinterestShareButton>
