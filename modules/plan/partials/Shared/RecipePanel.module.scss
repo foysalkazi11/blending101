@@ -1,5 +1,5 @@
-@import "../../../../styles/mixins";
-@import "../../../../styles/variables";
+@import "mixins";
+@import "variables";
 
 .plannerIcon {
   position: relative;
@@ -116,4 +116,11 @@
   &--queue {
     height: 94.9rem;
   }
+}
+
+.panel {
+  background-color: white;
+  box-shadow: $card-shadow;
+  border-radius: 9px;
+  margin-top: 20px;
 }

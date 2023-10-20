@@ -13,9 +13,8 @@ import { useDispatch } from "react-redux";
 import Icon from "../../component/atoms/Icon/Icon.component";
 import Loader from "../../component/atoms/Loader/loader.component";
 import { ACCEPT_CHALLENGE, GET_INVITE_CHALLENGE_DETAILS } from "../../modules/challenge/challenge.graphql";
-import { useAppSelector } from "../../redux/hooks";
 
-import styles from "../../styles/pages/challenge.module.scss";
+import styles from "@pages/challenge/invited.module.scss";
 import HeadTagInfo from "../../theme/headTagInfo";
 import { useUser } from "../../context/AuthProvider";
 

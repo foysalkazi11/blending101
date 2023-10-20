@@ -11,7 +11,7 @@ import { INVITE_CHALLENGE } from "@/challenge/challenge.graphql";
 import { UTCDate } from "helpers/Date";
 import Publish from "helpers/Publish";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import Tooltip from "component/molecules/Tooltip/Tooltip.component";
 import { useAppDispatch } from "redux/hooks";
 import { setChallengeDate } from "redux/slices/Challenge.slice";
@@ -65,6 +65,7 @@ const ChallengeList = (props: ChallengeListProps) => {
   };
 
   const activeHandler = async (challengeId) => {
+    if (challengeId === currentChallenge) return;
     await Publish({
       mutate: activateChallenge,
       variables: {
@@ -95,7 +96,7 @@ const ChallengeList = (props: ChallengeListProps) => {
   };
 
   return (
-    <div className={styles.settings}>
+    <div className={styles.settings__body}>
       <div className={styles.settings__header}>
         <h2 className={styles.settings__title}>My Challenges</h2>
       </div>

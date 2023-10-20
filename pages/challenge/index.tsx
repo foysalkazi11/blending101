@@ -19,12 +19,13 @@ import { resetForm, setPostDate, setRecipeInfo, setShowPostForm } from "../../re
 
 import { theme } from "../../configs/themes";
 
-import styles from "../../styles/pages/planner.module.scss";
 import { format } from "date-fns";
 import useChallenges from "@/challenge/hooks/settings/useList";
 import RecipePanel from "@/plan/partials/Shared/RecipePanel.component";
 import useChallenge from "@/challenge/hooks/useChallenge";
 import { UserRecipe } from "@/recipe/recipe.types";
+
+import styles from "@pages/challenge/challenge.module.scss";
 
 const ChallengePage = () => {
   const upload = useRef<any>();
@@ -90,7 +91,7 @@ const ChallengePage = () => {
         link={url}
         onShare={onShare}
       />
-      <div className={styles.planner}>
+      <div className={styles.challenge}>
         <div className="row mt-20">
           <div className="col-3">
             {showUpload ? (
@@ -203,7 +204,7 @@ const ChallengePage = () => {
                 )
               }
             </div>
-            <div className={showUpload ? "" : styles.plan}>
+            <div className={showUpload ? "" : styles.challenge__center}>
               {toolbox && toolbox !== null ? (
                 toolbox
               ) : (

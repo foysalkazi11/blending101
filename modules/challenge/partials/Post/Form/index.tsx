@@ -34,6 +34,7 @@ const PostForm = forwardRef((props: any, ref) => {
 
   const [serving, setServing] = useState(1);
   const [volume, setVolume] = useState(0);
+  const [consumed, setConsumed] = useState(0);
 
   const dispatch = useAppDispatch();
   const { id: userId } = useUser();
@@ -82,7 +83,6 @@ const PostForm = forwardRef((props: any, ref) => {
       volume += +ingredient.selectedPortion.quantity * +ingredient.selectedPortion.gram;
     });
     setVolume(Math.round(VACCUM_VALUE * volume));
-    console.log(volume);
   }, [ingredients]);
 
   const showNutrientInfo = (ingredient) => {
@@ -112,13 +112,13 @@ const PostForm = forwardRef((props: any, ref) => {
         note: data.note,
         servings: serving,
         servingSize: 16,
-        // ingredients: ingredients.map((ing) => ({
-        //   ingredientId: ing?.ingredientId?._id,
-        //   originalIngredientName: ing?.ingredientId?.ingredientName,
-        //   quantityString: `${ing?.selectedPortion?.quantity}`,
-        //   selectedPortionName: ing?.selectedPortion?.name,
-        //   weightInGram: ing?.selectedPortion?.gram,
-        // })),
+        ingredients: ingredients.map((ing) => ({
+          ingredientId: ing?.ingredientId?._id,
+          originalIngredientName: ing?.ingredientId?.ingredientName,
+          quantityString: `${ing?.selectedPortion?.quantity}`,
+          selectedPortionName: ing?.selectedPortion?.name,
+          weightInGram: ing?.selectedPortion?.gram,
+        })),
       },
     };
     if (isEditMode) {
@@ -179,8 +179,21 @@ const PostForm = forwardRef((props: any, ref) => {
                 <div>
                   Volume: <span>{volume} oz</span>
                 </div>
-                <div>
-                  Consumed: <span>All</span>
+                <div className={styles.ingredient__consumed}>
+                  Consumed:
+                  <span>
+                    <input
+                      type="text"
+                      value={consumed}
+                      onChange={(e) => {
+                        const value = +e.target.value;
+                        if (!isNaN(value)) {
+                          setConsumed(value);
+                        }
+                      }}
+                    />
+                    oz
+                  </span>
                 </div>
               </div>
             </div>
