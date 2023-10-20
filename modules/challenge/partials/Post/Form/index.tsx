@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, useImperativeHandle, useEffect } from "react";
+import React, { forwardRef, useState, useImperativeHandle, useEffect, useMemo } from "react";
 import { useQuery } from "@apollo/client";
 import { FormProvider } from "react-hook-form";
 import { faBasketShopping, faNotebook } from "@fortawesome/pro-regular-svg-icons";
@@ -26,11 +26,14 @@ import useChallengeForm from "@/challenge/hooks/posts/useForm";
 
 import styles from "./index.module.scss";
 
+const VACCUM_VALUE = 0.033814;
+
 const PostForm = forwardRef((props: any, ref) => {
   const { startDate, endDate, elementRef } = props;
   const { images, setImages, postImages: uploadImages } = useImage([]);
 
   const [serving, setServing] = useState(1);
+  const [volume, setVolume] = useState(0);
 
   const dispatch = useAppDispatch();
   const { id: userId } = useUser();
@@ -72,6 +75,15 @@ const PostForm = forwardRef((props: any, ref) => {
   const deleteIngredientHandler = (id) => {
     dispatch(deleteIngredient({ id }));
   };
+
+  useMemo(() => {
+    let volume = 0;
+    ingredients.forEach((ingredient) => {
+      volume += +ingredient.selectedPortion.quantity * +ingredient.selectedPortion.gram;
+    });
+    setVolume(Math.round(VACCUM_VALUE * volume));
+    console.log(volume);
+  }, [ingredients]);
 
   const showNutrientInfo = (ingredient) => {
     dispatch(
@@ -129,57 +141,63 @@ const PostForm = forwardRef((props: any, ref) => {
   };
 
   return (
-    <div className={styles.mainContainer} ref={elementRef}>
+    <div className={styles.mainContainer}>
       <FormProvider {...methods}>
-        <div className="row mt-20 mb-20">
-          <div className="col-6">
-            <DayPicker activeDate={postDate} startDate={startDate} endDate={endDate} />
+        <div className={styles.wrapper}>
+          <div className="row mt-20 mb-20">
+            <div className="col-6">
+              <DayPicker activeDate={postDate} startDate={startDate} endDate={endDate} />
+            </div>
+            <div className="col-6">
+              <Combobox options={data?.getAllCategories} name="category" placeholder="Blend Category" required />
+            </div>
           </div>
-          <div className="col-6">
-            <Combobox options={data?.getAllCategories} name="category" placeholder="Blend Category" required />
+          <div className="row">
+            <div className="col-12">
+              <Textfield
+                placeholder="Description"
+                name="recipeTitle"
+                defaultValue={name}
+                className={styles.recipe__title}
+              />
+            </div>
           </div>
+          <div className="row mt-20 ai-center jc-between">
+            <div className="col-8">
+              <Upload multiple imageState={[images, setImages]} />
+            </div>
+          </div>
+          <Summary ingredients={ingredients} />
         </div>
-        <div className="row">
-          <div className="col-12">
-            <Textfield
-              placeholder="Description"
-              name="recipeTitle"
-              defaultValue={name}
-              className={styles.recipe__title}
+        <div className={styles.wrapper}>
+          <div className="row mt-30">
+            <div className="col-12">
+              <h5 className={styles.headingText}>
+                <Icon size="2.5rem" fontName={faBasketShopping} /> Ingredients
+              </h5>
+              <div className={styles.ingredient__summary}>
+                <div>
+                  Volume: <span>{volume} oz</span>
+                </div>
+                <div>
+                  Consumed: <span>All</span>
+                </div>
+              </div>
+            </div>
+            <IngredientPanel
+              ingredients={ingredients}
+              onDelete={deleteIngredientHandler}
+              onNutrition={showNutrientInfo}
+              onSave={(props) => dispatch(addIngredient(props))}
             />
           </div>
         </div>
-        <div className="row mt-20 ai-center jc-between">
-          <div className="col-8">
-            <Upload multiple imageState={[images, setImages]} />
-          </div>
+        <div className={styles.wrapper}>
+          <h5 className={styles.headingText}>
+            <Icon size="2.5rem" fontName={faNotebook} /> Notes
+          </h5>
+          <Textarea name="note" placeholder="Write down your notes..." />
         </div>
-        <Summary ingredients={ingredients} />
-        <div className="row mt-30">
-          <div className="col-12">
-            <h5 className={styles.headingText}>
-              <Icon size="2.5rem" fontName={faBasketShopping} /> Ingredients
-            </h5>
-            <div className={styles.ingredient__summary}>
-              <div>
-                Volume: <span>16 oz</span>
-              </div>
-              <div>
-                Consumed: <span>All</span>
-              </div>
-            </div>
-          </div>
-          <IngredientPanel
-            ingredients={ingredients}
-            onDelete={deleteIngredientHandler}
-            onNutrition={showNutrientInfo}
-            onSave={(props) => dispatch(addIngredient(props))}
-          />
-        </div>
-        <h5 className={styles.headingText}>
-          <Icon size="2.5rem" fontName={faNotebook} /> Notes
-        </h5>
-        <Textarea name="note" placeholder="Write down your notes..." />
       </FormProvider>
     </div>
   );

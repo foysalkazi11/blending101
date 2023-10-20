@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, Fragment } from "react";
 import { useQuery } from "@apollo/client";
-import { faGear, faShare, faToolbox, faPlusCircle, faTimes } from "@fortawesome/pro-light-svg-icons";
+import { faGear, faShare, faToolbox, faPlusCircle, faTimes, faUser } from "@fortawesome/pro-light-svg-icons";
 
 import RXPanel from "../../component/templates/Panel/RXFacts/RXPanel.component";
 import Statistics from "../../modules/challenge/partials/Statistics/Statistics.component";
@@ -48,7 +48,7 @@ const ChallengePage = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!showSettings) {
-      const height = center.current.offsetHeight;
+      const height = center?.current?.offsetHeight;
       setPanelHeight(`${height}px`);
     } else {
       setPanelHeight("900px");
@@ -105,7 +105,7 @@ const ChallengePage = () => {
             <div className={styles.headingDiv}>
               <IconHeading
                 title={showUpload ? "Challenge Post" : "Challenge"}
-                icon={faToolbox}
+                icon={showSettings ? faUser : faToolbox}
                 iconStyle={{ marginLeft: 20 }}
               />
               {
@@ -133,19 +133,19 @@ const ChallengePage = () => {
                       <Icon fontName={faGear} size="1.6rem" color={theme.color.primary} />
                       <span>Settings</span>
                     </div>
-                    {canUpload && (
-                      <div
-                        className={`${styles.uploadDiv} ml-10`}
-                        onClick={() => {
+                    <div
+                      className={`${styles.uploadDiv} ${canUpload ? "" : "disabled"} ml-10`}
+                      onClick={() => {
+                        if (canUpload) {
                           dispatch(setShowPostForm(true));
                           dispatch(setPostDate(format(new Date(), "yyyy-MM-dd")));
                           setShowSettings(false);
-                        }}
-                      >
-                        <Icon fontName={faPlusCircle} size="1.6rem" color={theme.color.primary} />
-                        <span>Post</span>
-                      </div>
-                    )}
+                        }
+                      }}
+                    >
+                      <Icon fontName={faPlusCircle} size="1.6rem" color={theme.color.primary} />
+                      <span>Post</span>
+                    </div>
                   </div>
                 )
               }
@@ -203,7 +203,7 @@ const ChallengePage = () => {
                 )
               }
             </div>
-            <div className={styles.plan}>
+            <div className={showUpload ? "" : styles.plan}>
               {toolbox && toolbox !== null ? (
                 toolbox
               ) : (
