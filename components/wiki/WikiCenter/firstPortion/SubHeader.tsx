@@ -1,15 +1,11 @@
-import {
-  faShareNodes,
-  faSquareCaretUp,
-} from "@fortawesome/pro-regular-svg-icons";
-import {
-  faCircle,
-  faMessageDots as faMessageDotsSolid,
-} from "@fortawesome/pro-solid-svg-icons";
+import { faShareNodes, faSquareCaretUp } from "@fortawesome/pro-regular-svg-icons";
+import { faCircle, faMessageDots as faMessageDotsSolid } from "@fortawesome/pro-solid-svg-icons";
 import { faMessageDots as faMessageDotsLight } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { Dispatch, SetStateAction } from "react";
 import styles from "../wikiCenter.module.scss";
+import { useAppDispatch } from "redux/hooks";
+import { setIsOpenWikiShareModal } from "redux/slices/wikiSlice";
 
 interface Props {
   id: string;
@@ -30,6 +26,7 @@ const SubHeader = ({
   setExpandAllCollapse = () => {},
   handleToOpenCommentTray = () => {},
 }: Props) => {
+  const dispatch = useAppDispatch();
   return (
     <div className={styles.blendingRecipeTopOptions}>
       <div className={styles.blendingTopLeft}>
@@ -46,28 +43,23 @@ const SubHeader = ({
       </div>
 
       <ul className={styles.subHeadingIconBoxRight}>
-        <li>
-          <FontAwesomeIcon
-            className={`${styles.innerIcon}`}
-            icon={faShareNodes}
-          />
+        <li onClick={() => dispatch(setIsOpenWikiShareModal(true))}>
+          <FontAwesomeIcon className={`${styles.innerIcon}`} icon={faShareNodes} />
           <span className={styles.innerText}>Share</span>
         </li>
         <li onClick={() => setExpandAllCollapse((prev) => !prev)}>
           <FontAwesomeIcon
             icon={faSquareCaretUp}
-            className={`${styles.innerIcon} ${
-              expandAllCollapse && styles.rotatedIcon180Deg
-            } ${expandAllCollapse && styles.activeIcon}`}
+            className={`${styles.innerIcon} ${expandAllCollapse && styles.rotatedIcon180Deg} ${
+              expandAllCollapse && styles.activeIcon
+            }`}
           />
           <span className={`${styles.innerText} `}>Expand All</span>
         </li>
         <li onClick={() => handleToOpenCommentTray(id)}>
           <FontAwesomeIcon
             icon={commentsCount ? faMessageDotsSolid : faMessageDotsLight}
-            className={`${styles.innerIcon} ${
-              commentsCount && styles.activeIcon
-            }`}
+            className={`${styles.innerIcon} ${commentsCount && styles.activeIcon}`}
           />
           <span className={`${styles.innerText} `}>{commentsCount}</span>
         </li>

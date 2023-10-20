@@ -11,7 +11,7 @@ import { InputValueType } from "../../../components/sidetray/common/addCollectio
 import IconWarper from "../../../theme/iconWarper/IconWarper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CustomCheckbox from "../../../theme/checkbox/CustomCheckbox";
-
+import Image from "next/image";
 export interface SharedUserInfoType {
   email: string;
   canCollaborate?: boolean;
@@ -89,27 +89,8 @@ const Share = (props: ShareProps) => {
   return (
     <CustomModal open={show} setOpen={setShow}>
       <div className={styles.share}>
-        <div className={styles.share__header}>
-          <div className={styles.leftSide}>
-            <Icon fontName={faShareNodes} size="2.5rem" />
-            <h3>{heading}</h3>
-          </div>
-          <IconWarper
-            iconColor="iconColorWhite"
-            defaultBg="primary"
-            hover="bgPrimary"
-            style={{ width: "24px", height: "24px" }}
-            handleClick={() => setShow(false)}
-          >
-            <FontAwesomeIcon icon={faXmark} />
-          </IconWarper>
-        </div>
-        {!image && !title ? null : (
-          <div className={styles.share__title}>
-            {image && <img src={image} alt="" />}
-            <h3>{title}</h3>
-          </div>
-        )}
+        <ShareItemInfo heading={heading} image={image} setOpenModal={setShow} title={title} />
+
         {showMsgField ? (
           <InviteUserForm
             emails={emails}
@@ -128,7 +109,7 @@ const Share = (props: ShareProps) => {
           <div className="d-flex">
             <button
               // disabled={hasCopied}
-              className={styles.share__link_btn}
+              className={styles.link_btn}
               onClick={() => setShowMsgField(true)}
             >
               <Icon fontName={faEnvelope} size="2rem" className="mr-10" />
@@ -163,7 +144,7 @@ const Share = (props: ShareProps) => {
 
 interface SharePanelProps {
   link?: string;
-  copyLinkHandler?: (value?: boolean) => Promise<void>;
+  copyLinkHandler?: (value?: boolean) => Promise<void> | void;
   generateShareLink?: (value?: boolean, copyLinkAtClipboard?: boolean) => any;
   hasCopied?: boolean;
   loading?: boolean;
@@ -173,10 +154,10 @@ export const SharePanel = (props: SharePanelProps) => {
   const { link, copyLinkHandler, generateShareLink, hasCopied, loading } = props;
 
   return (
-    <div className={styles.share__social}>
+    <div className={styles.social}>
       <button
         // disabled={hasCopied}
-        className={styles.share__link_btn}
+        className={styles.link_btn}
         onClick={() => copyLinkHandler(true)}
       >
         {loading ? (
@@ -186,7 +167,7 @@ export const SharePanel = (props: SharePanelProps) => {
         )}
         <p style={{ flexShrink: 0 }}>{hasCopied ? "Copied Link" : "Copy Link"}</p>
       </button>
-      <div className={styles.share__social_icons}>
+      <div className={styles.social_icons}>
         <FacebookShareButton
           url={link || "https://blending101.com"}
           quote={"This is quote"}
@@ -198,7 +179,7 @@ export const SharePanel = (props: SharePanelProps) => {
           //     resolve(newLink);
           //   })
           // }
-          className={styles["share__social--facebook"]}
+          className={styles["social--facebook"]}
         >
           <Icon fontName={faFacebook} size="3.5rem" className="mr-10" />
         </FacebookShareButton>
@@ -207,7 +188,7 @@ export const SharePanel = (props: SharePanelProps) => {
           title="Blending101"
           hashtags={["Branding"]}
           via={link}
-          className={styles["share__social--twitter"]}
+          className={styles["social--twitter"]}
           // beforeOnClick={() => generateShareLink(true, false)}
         >
           <Icon fontName={faSquareTwitter} size="3.5rem" className="mr-10" />
@@ -216,13 +197,66 @@ export const SharePanel = (props: SharePanelProps) => {
           media="https://blending101.com/Blend_Formula.png"
           url={link || "https://blending101.com"}
           description="Hello World"
-          className={styles["share__social--pinterest"]}
+          className={styles["social--pinterest"]}
           // beforeOnClick={() => generateShareLink(true, false)}
         >
           <Icon fontName={faPinterest} size="3.5rem" className="mr-10" />
         </PinterestShareButton>
       </div>
     </div>
+  );
+};
+
+type ShareItemInfoProps = {
+  setOpenModal?: (value: boolean) => void;
+  heading?: string;
+  title?: string;
+  image?: string;
+};
+
+export const ShareItemInfo = ({
+  heading = "Share",
+  image = "",
+  setOpenModal = () => {},
+  title = "Item name",
+}: ShareItemInfoProps) => {
+  return (
+    <>
+      <div className={styles.header}>
+        <div className={styles.leftSide}>
+          <Icon fontName={faShareNodes} size="2.5rem" />
+          <h3>{heading}</h3>
+        </div>
+        <IconWarper
+          iconColor="iconColorWhite"
+          defaultBg="secondary"
+          hover="bgSecondary"
+          style={{ width: "24px", height: "24px" }}
+          handleClick={() => setOpenModal(false)}
+        >
+          <FontAwesomeIcon icon={faXmark} />
+        </IconWarper>
+      </div>
+
+      {!image && !title ? null : (
+        <div className={styles.title}>
+          {image && (
+            <Image
+              src={image}
+              alt="img"
+              width={50}
+              height={50}
+              style={{
+                objectFit: "contain",
+                maxWidth: "100%",
+                maxHeight: "100%",
+              }}
+            />
+          )}
+          {title && <h3>{title}</h3>}
+        </div>
+      )}
+    </>
   );
 };
 

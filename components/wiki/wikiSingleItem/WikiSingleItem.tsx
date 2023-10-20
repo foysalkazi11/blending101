@@ -2,7 +2,7 @@ import { useLazyQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import GET_ALL_INGREDIENTS_BASED_ON_NURTITION from "../../../gqlLib/wiki/query/getAllIngredientsBasedOnNutrition";
 import GET_BLEND_NUTRITION_BASED_IN_INGREDIENTS_WIKI from "../../../gqlLib/wiki/query/getBlendNutritionBasedIngredientsWiki";
-import { useAppDispatch } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { updateSidebarActiveMenuName } from "../../../redux/slices/utilitySlice";
 import NutritionPanel from "../../recipe/share/nutritionPanel/NutritionPanel";
 import notification from "../../utility/reactToastifyNotification";
@@ -21,6 +21,10 @@ import { RecipeDetailsMiddle } from "../../../theme/skeletons/skeletonRecipeDeta
 import { useUser } from "../../../context/AuthProvider";
 import RelatedWikiItem from "./realtedWikiItem/RelatedWikiItem";
 import WikiCommentsTray from "components/sidetray/wikiCommentsTray";
+import WikiShareModal from "../wikiShareModal";
+import { useSelector } from "react-redux";
+import { setIsOpenWikiShareModal } from "redux/slices/wikiSlice";
+import Meta from "theme/meta";
 export const placeHolderImage = "/images/no-image-available.webp";
 
 interface Props {
@@ -41,6 +45,7 @@ function WikiSingleItem() {
   const wikiId = params?.[1] || "";
   const params2 = params?.[2] || "0";
   const user = useUser();
+  const isOpenWikiShareModal = useAppSelector((state) => state.wiki.isOpenWikiShareModal);
   const [getAllIngredientsBasedOnNutrition, ingredientsData] = useLazyQuery(GET_ALL_INGREDIENTS_BASED_ON_NURTITION, {
     // fetchPolicy: "network-only",
   });
@@ -147,6 +152,7 @@ function WikiSingleItem() {
 
   return (
     <>
+      <Meta title={data?.wikiTitle} description={data?.wikiDescription} ogImage={data?.wikiCoverImages?.[0]} />
       <WikiCommentsTray showTagByDefaut={false} showPanle={"right"} />
       <div className={styles.singleWikiItemContainer}>
         <div className={styles.left}>
@@ -231,6 +237,14 @@ function WikiSingleItem() {
         />
       ) : // <ShowRelatedItems category="wiki" title={`Related ${type}`} itemsList={data?.relatedWikis?.wikiList} />
       null} */}
+
+      <WikiShareModal
+        heading="Share Wiki"
+        title={data?.wikiTitle}
+        image={data?.wikiCoverImages?.[0]}
+        openModal={isOpenWikiShareModal}
+        setOpenModal={(value) => dispatch(setIsOpenWikiShareModal(value))}
+      />
     </>
   );
 }
