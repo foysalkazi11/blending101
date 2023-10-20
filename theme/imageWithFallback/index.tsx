@@ -34,6 +34,7 @@ export const NextImageWithFallback: React.FC<ExtendedImageProps> = ({
   alt,
   src,
   fallbackSrc = "/cards/coriander.png",
+  style,
   ...props
 }) => {
   const [imageSrc, setImageSrc] = useState(src);
@@ -47,6 +48,17 @@ export const NextImageWithFallback: React.FC<ExtendedImageProps> = ({
   };
 
   return (
-    <Image src={imageSrc} onError={handleImageError} alt={alt} {...props} />
+    <Image
+      src={imageSrc}
+      onError={handleImageError}
+      alt={alt}
+      style={{
+        objectFit: "contain",
+        maxWidth: "100%",
+        height: "auto",
+        ...style,
+      }}
+      {...props}
+    />
   );
 };
