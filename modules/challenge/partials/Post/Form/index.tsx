@@ -30,7 +30,6 @@ const PostForm = forwardRef((props: any, ref) => {
   const { startDate, endDate, elementRef } = props;
   const { images, setImages, postImages: uploadImages } = useImage([]);
 
-  console.log(images);
   const [serving, setServing] = useState(1);
 
   const dispatch = useAppDispatch();
