@@ -12,11 +12,7 @@ const useToGetARecipe = () => {
   const [getARecipe, { ...rest }] = useLazyQuery(GET_A_RECIPE, {
     // fetchPolicy: "cache-and-network",
   });
-  const handleToGetARecipe = async (
-    recipeId: string,
-    userId: string,
-    token: any = "",
-  ) => {
+  const handleToGetARecipe = async (recipeId: string, userId: string, token: string = "") => {
     try {
       const { data } = await getARecipe({
         variables: { recipeId: token ? "" : recipeId, userId, token },
