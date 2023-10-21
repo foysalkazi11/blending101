@@ -13,8 +13,41 @@ import ErrorPage from "../../../../components/pages/404Page";
 import RecipeDetails from "../../../../components/recipe/recipeDetails/RecipeDetails";
 import { RecipeDetailsType } from "../../../../type/recipeDetailsType";
 import Meta from "theme/meta";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import client from "gqlLib/client";
+import GET_A_RECIPE from "gqlLib/recipes/queries/getRecipeDetails";
+import mapIngredientStatus from "helperFunc/mapIngredientStatus";
+import { setDetailsARecipe } from "redux/slices/recipeSlice";
 
-const Index = () => {
+export const getServerSideProps = (async (context) => {
+  const { params = [], token = "" } = context.query;
+  const recipeId = params?.[0] || "";
+  const userId = params?.[1] || "6527bba6cd8816f57ca1df59";
+
+  const { data } = await client.query({
+    query: GET_A_RECIPE,
+    variables: { recipeId: token ? "" : recipeId, userId, token },
+  });
+
+  let recipe: RecipeDetailsType = data?.getARecipe2;
+
+  recipe = {
+    ...recipe,
+
+    tempVersionInfo: {
+      isShareAble: true,
+      isOriginalVersion: recipe?.isMatch,
+      version: {
+        ...recipe?.defaultVersion,
+        ingredients: mapIngredientStatus(recipe?.defaultVersion?.ingredients, recipe?.defaultVersion?.errorIngredients),
+      },
+    },
+  };
+
+  return { props: { recipe } };
+}) satisfies GetServerSideProps<{}>;
+
+const Index = ({ recipe }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
   const { params = [], token = "" } = router.query;
   const recipe__Id = params?.[0] || "";
@@ -24,7 +57,7 @@ const Index = () => {
   const { detailsARecipe } = useAppSelector((state) => state?.recipe);
   const dispatch = useAppDispatch();
 
-  const { handleToGetARecipe, loading: getARecipeLoading, error: getARecipeError } = useToGetARecipe();
+  // const { handleToGetARecipe, loading: getARecipeLoading, error: getARecipeError } = useToGetARecipe();
   const {
     handleFetchIngrdients,
     loading: nutritionDataLoading,
@@ -40,17 +73,19 @@ const Index = () => {
   }, []);
 
   // fetch data if not exist or doesn't match with current user
-  useEffect(() => {
-    if (user.id && recipe__Id) {
-      handleToGetARecipe(recipe__Id, user.id, token);
-    }
+  // useEffect(() => {
+  //   if (user.id && recipe__Id) {
+  //     handleToGetARecipe(recipe__Id, user.id, token);
+  //   }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [recipe__Id, user.id, token]);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [recipe__Id, user.id, token]);
 
   useEffect(() => {
     // dispatch(updateSidebarActiveMenuName("Blends"));
+    dispatch(setDetailsARecipe(recipe));
     dispatch(setOpenFilterTray(false));
+    dispatch(setOpenVersionTray(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -69,22 +104,23 @@ const Index = () => {
   const recipeBasedNutrition = nutritionData?.getNutrientsListAndGiGlByIngredients?.nutrients;
   const giGl: GiGl = nutritionData?.getNutrientsListAndGiGlByIngredients?.giGl;
 
-  if (getARecipeLoading) {
-    return <SkeletonRecipeDetails />;
-  }
-  if (getARecipeError) {
-    return <ErrorPage errorMessage="Recipe not found" />;
-  }
+  // if (getARecipeLoading) {
+  //   return <SkeletonRecipeDetails />;
+  // }
+  // if (getARecipeError) {
+  //   return <ErrorPage errorMessage="Recipe not found" />;
+  // }
 
   return (
     <>
       <Meta
-        title={detailsARecipe?.recipeId?.name}
-        description={detailsARecipe?.recipeId?.description}
-        ogImage={detailsARecipe?.recipeId?.originalVersion?.selectedImage}
+        title={recipe?.recipeId?.name}
+        description={recipe?.recipeId?.description}
+        ogImage={recipe?.recipeId?.originalVersion?.selectedImage || recipe?.recipeId?.image[0]?.image}
+        url={window?.location?.href || ""}
       />
       <RecipeDetails
-        recipeData={getARecipeLoading ? ({} as RecipeDetailsType) : detailsARecipe}
+        recipeData={detailsARecipe}
         nutritionData={recipeBasedNutrition ? JSON.parse(recipeBasedNutrition) : []}
         nutritionState={nutritionState}
         setNutritionState={setNutritionState}

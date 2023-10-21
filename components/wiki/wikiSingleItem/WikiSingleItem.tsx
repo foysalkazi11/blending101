@@ -152,7 +152,12 @@ function WikiSingleItem() {
 
   return (
     <>
-      <Meta title={data?.wikiTitle} description={data?.wikiDescription} ogImage={data?.wikiCoverImages?.[0]} />
+      <Meta
+        title={data?.wikiTitle}
+        description={data?.wikiDescription}
+        ogImage={data?.wikiCoverImages?.[0]}
+        url={window?.location?.href || ""}
+      />
       <WikiCommentsTray showTagByDefaut={false} showPanle={"right"} />
       <div className={styles.singleWikiItemContainer}>
         <div className={styles.left}>
