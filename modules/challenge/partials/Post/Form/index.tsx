@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, useImperativeHandle, useEffect, useMemo } from "react";
+import React, { forwardRef, useState, useImperativeHandle, useEffect, useMemo, useRef } from "react";
 import { useQuery } from "@apollo/client";
 import { FormProvider } from "react-hook-form";
 import { faBasketShopping, faNotebook } from "@fortawesome/pro-regular-svg-icons";
@@ -32,6 +32,7 @@ const PostForm = forwardRef((props: any, ref) => {
   const { startDate, endDate, elementRef } = props;
   const { images, setImages, postImages: uploadImages } = useImage([]);
 
+  const isConsumedSet = useRef(false);
   const [serving, setServing] = useState(1);
   const [volume, setVolume] = useState(0);
   const [consumed, setConsumed] = useState(0);
@@ -85,6 +86,19 @@ const PostForm = forwardRef((props: any, ref) => {
     setVolume(Math.round(VACCUM_VALUE * volume));
   }, [ingredients]);
 
+  /**
+   * Initial volume value and the consumed value would be same
+   * Later consumed value can be changed
+   * This effect will set for only one time only
+   */
+  useEffect(() => {
+    if (isConsumedSet.current) return;
+    if (consumed === 0) {
+      setConsumed(volume);
+      isConsumedSet.current = true;
+    }
+  }, [consumed, volume]);
+
   const showNutrientInfo = (ingredient) => {
     dispatch(
       setShowPanel({
@@ -111,7 +125,7 @@ const PostForm = forwardRef((props: any, ref) => {
         recipeBlendCategory: data.category,
         note: data.note,
         servings: serving,
-        servingSize: 16,
+        consumedSize: consumed,
         ingredients: ingredients.map((ing) => ({
           ingredientId: ing?.ingredientId?._id,
           originalIngredientName: ing?.ingredientId?.ingredientName,
@@ -167,7 +181,7 @@ const PostForm = forwardRef((props: any, ref) => {
               <Upload multiple imageState={[images, setImages]} />
             </div>
           </div>
-          <Summary ingredients={ingredients} />
+          <Summary volume={volume} consumed={consumed} ingredients={ingredients} />
         </div>
         <div className={styles.wrapper}>
           <div className="row mt-30">

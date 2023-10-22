@@ -26,6 +26,7 @@ import useChallenge from "@/challenge/hooks/useChallenge";
 import { UserRecipe } from "@/recipe/recipe.types";
 
 import styles from "@pages/challenge/challenge.module.scss";
+import useStaticData from "@/app/hooks/utils/useStaticData";
 
 const ChallengePage = () => {
   const upload = useRef<any>();
@@ -80,6 +81,8 @@ const ChallengePage = () => {
     );
 
   const canUpload = !viewOnly && challenge?.challengeInfo?.daysRemaining > 0;
+
+  // useStaticData("blendType", [1, 2]);
 
   return (
     <Fragment>
