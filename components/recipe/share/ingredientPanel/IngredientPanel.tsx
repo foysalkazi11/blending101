@@ -5,6 +5,8 @@ import FilterbottomComponent from "../../../sidetray/filter/ingredients/Ingredie
 import PanelHeader from "../panelHeader/PanelHeader";
 import styles from "./IngredientPanel.module.scss";
 import StickyBox from "react-sticky-box";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBasketShopping, faBucket } from "@fortawesome/pro-light-svg-icons";
 
 interface IngredientPanelPorps {
   handleIngredientClick?: (ingredient: any, present: boolean) => void;
@@ -32,10 +34,12 @@ const IngredientPanel = ({
       },
     },
   );
-
+  //"/icons/basket.svg"
   return (
     <StickyBox offsetBottom={20}>
-      {showTopHeader && <PanelHeader icon="/icons/basket.svg" title="Ingredients" />}
+      {showTopHeader && (
+        <PanelHeader icon={<FontAwesomeIcon icon={faBasketShopping} size="xl" />} title="Ingredients" />
+      )}
 
       <div className={styles.ingrdeintpanelContainer}>
         <FilterbottomComponent

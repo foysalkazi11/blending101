@@ -36,6 +36,7 @@ import { ImageWithFallback } from "../../imageWithFallback";
 import { useRecipeToGrocery } from "@/recipe/hooks";
 import useAddRecipeToMyPlan from "@/plan/hooks/my-plan/useAddRecipe";
 import CalendarTray from "theme/calendar/calendarTray.component";
+import useToGetARecipe from "customHooks/useToGetARecipe";
 
 interface dataCardInterface {
   title: string;
@@ -162,6 +163,16 @@ export default function DatacardComponent({
   const [showCalendar, setShowCalendar] = useState("");
   const headingRef = useRef(null);
   const [isTruncatedHeading, setIsTruncatedHeading] = useState(false);
+  const { handleToGetARecipe } = useToGetARecipe();
+
+  // handle click recipe title
+
+  const handlerToClickRecipeTitle = () => {
+    if (router.asPath.toString().includes("recipe_details")) {
+      handleToGetARecipe(recipeId, user?.id);
+    }
+    router.push(`/recipe/recipe_details/${recipeId}/${user?.id}/${token ? "?token=" + token : ""} `);
+  };
 
   // View Permission
   const hasViewPermission = useCallback(
@@ -299,7 +310,7 @@ export default function DatacardComponent({
               onClick={(e) => {
                 if (hasInteractionPermission("title")) {
                   e?.stopPropagation();
-                  router.push(`/recipe/recipe_details/${recipeId}/${token ? "?token=" + token : ""} `);
+                  handlerToClickRecipeTitle();
                 }
               }}
             >

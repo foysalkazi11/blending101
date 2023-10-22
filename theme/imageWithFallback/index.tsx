@@ -55,7 +55,7 @@ export const NextImageWithFallback: React.FC<ExtendedImageProps> = ({
       style={{
         objectFit: "contain",
         maxWidth: "100%",
-        height: "auto",
+        maxHeight: "100%",
         ...style,
       }}
       {...props}

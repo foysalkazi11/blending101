@@ -34,7 +34,7 @@ import useToAcceptRecipeShare from "../../../../customHooks/notification/useToAc
 import Tooltip from "../../../../theme/toolTip/CustomToolTip";
 import isEmptyObj from "../../../../helperFunc/object/isEmptyObj";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/pro-light-svg-icons";
+import { faInfoCircle, faUser } from "@fortawesome/pro-light-svg-icons";
 import { useUser } from "../../../../context/AuthProvider";
 import { ImageWithFallback } from "../../../../theme/imageWithFallback";
 import useExtension, { useRecipeSource } from "@/app/hooks/utils/useExtension";
@@ -218,6 +218,7 @@ const Center = ({
           function: () => router?.push("/recipe/recipe_discovery"),
           text: "Back",
         }}
+        icon={<FontAwesomeIcon icon={faInfoCircle} size="xl" />}
       />
 
       <div className={`${styles.contentBox} ${token && "disabled"}`}>
