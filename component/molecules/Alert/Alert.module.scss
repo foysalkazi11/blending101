@@ -1,0 +1,64 @@
+@import "variables";
+
+.alert {
+  width: 50rem;
+  min-height: 18rem;
+  border-radius: 29px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 3rem;
+  box-shadow: $card-shadow;
+  h3 {
+    text-align: left;
+    font-size: 2.4rem;
+    line-height: 3.2rem;
+  }
+  p {
+    font-size: 1.4rem;
+    color: #999;
+    margin-top: 1rem;
+  }
+}
+
+.buttonGroup {
+  margin: 20px auto 0;
+  display: flex;
+  align-items: center;
+}
+
+.submitBtn {
+  border-radius: 23px;
+  color: #fff !important;
+  font-size: 12px;
+  font-weight: 500;
+  min-width: 95px;
+  height: 37px;
+  line-height: 37px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 0;
+  cursor: pointer;
+  background: $primaryColor;
+  box-shadow: 5px 5px 15px #fe5d1f38;
+  margin-right: 2rem;
+}
+
+.cancelBtn {
+  min-width: 95px;
+  height: 37px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 500;
+  color: $primaryColor;
+  cursor: pointer;
+  &:hover {
+    background: transparent;
+    box-shadow: 5px 5px 15px #fe5d1f38;
+    border-radius: 23px;
+  }
+}

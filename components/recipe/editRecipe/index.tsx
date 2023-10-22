@@ -24,6 +24,8 @@ import VersionTray from "../../sidetray/versionTray/VersionTray";
 import { setQuantity } from "redux/edit_recipe/quantity";
 import { useToArrangeIngredient } from "../share/useToArrangeIngredient";
 import useDimensions from "customHooks/useDimensions";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faInfoCircle } from "@fortawesome/pro-light-svg-icons";
 
 interface editRecipe {
   detailsARecipe?: RecipeDetailsType;
@@ -176,6 +178,7 @@ const EditRecipePage = ({
             pageComeFrom="edit"
             recipeVersionLength={versionsCount}
             loading={recipeEditOrVersionEditLoading}
+            icon={<FontAwesomeIcon icon={faInfoCircle} size="xl" />}
           />
           <div ref={dimensionRef}>
             <Center_Elements

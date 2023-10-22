@@ -5,6 +5,8 @@ import dummyData from "../dummyData";
 import { WikiListType } from "type/wikiListType";
 import { RecipeDetailsLeftSide } from "theme/skeletons/skeletonRecipeDetails";
 import SlickSlider from "theme/carousel/SlickSlider";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTelescope } from "@fortawesome/pro-light-svg-icons";
 
 interface Props {
   type?: string;
@@ -33,8 +35,8 @@ const RelatedWikiItem = ({
     <div className="sticky_top" style={{ width: "100%" }}>
       <PanelHeader
         icon={
-          "/images/telescope.svg"
-          // <FontAwesomeIcon icon={faChartColumn} fontSize="24" />
+          // "/images/telescope.svg"
+          <FontAwesomeIcon icon={faTelescope} size="xl" />
         }
         title={`Related ${type}`}
       />

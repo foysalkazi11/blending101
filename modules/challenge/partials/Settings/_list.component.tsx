@@ -20,18 +20,24 @@ import styles from "./index.module.scss";
 import { Challenge } from "@/app/types/challenge.types";
 import useChallengeActivate from "@/challenge/hooks/settings/useActivate";
 import useChallengeDelete from "@/challenge/hooks/settings/useDelete";
+import Alert from "component/molecules/Alert/Alert.component";
+
+const DEFAULT_CHALLENGE = { title: "", id: "" };
 
 interface ChallengeListProps {
   currentChallenge: string;
   challenges: Challenge[];
   editFormHandler: (challenge: Challenge) => void;
 }
+
 const ChallengeList = (props: ChallengeListProps) => {
   const { currentChallenge, challenges, editFormHandler } = props;
   const router = useRouter();
   const [show, setShow] = useState(false);
+  const [deleteAlert, setDeleteAlert] = useState(false);
+
   const [activeId, setActiveId] = useState("");
-  const [challengeInfo, setChallengeInfo] = useState<any>({});
+  const [challengeInfo, setChallengeInfo] = useState(DEFAULT_CHALLENGE);
 
   const dispatch = useAppDispatch();
   const userId = useUser().id;
@@ -92,6 +98,10 @@ const ChallengeList = (props: ChallengeListProps) => {
       },
       state: deleteState,
       success: `Deleted Challenge Sucessfully`,
+      onSuccess: () => {
+        setChallengeInfo(DEFAULT_CHALLENGE);
+        setDeleteAlert(false);
+      },
     });
   };
 
@@ -110,6 +120,26 @@ const ChallengeList = (props: ChallengeListProps) => {
           handleCancel={resetModal}
           handleInvitation={handleInvitation}
           loading={inviteChallengeLoading}
+        />
+        <Alert
+          show={deleteAlert}
+          setShow={setDeleteAlert}
+          message={`Delete "${challengeInfo.title}"`}
+          description="This will permanently delete this challenge. You cannot undo this action"
+          actions={[
+            {
+              title: "Delete",
+              handler: () => {
+                deleteHandler(challengeInfo.id);
+              },
+            },
+            {
+              title: "Cancel",
+              handler: () => {
+                setDeleteAlert(false);
+              },
+            },
+          ]}
         />
         <div className="row mb-10 mt-10">
           <div className="col-1" />
@@ -191,7 +221,13 @@ const ChallengeList = (props: ChallengeListProps) => {
                     size="small"
                     disabled={isChallengeActive === ""}
                     className={`${styles.challenge__action__trash} ml-10`}
-                    onClick={() => deleteHandler(challenge._id)}
+                    onClick={() => {
+                      setDeleteAlert(true);
+                      setChallengeInfo({
+                        id: challenge._id,
+                        title: challenge.challengeName,
+                      });
+                    }}
                   />
                 </Tooltip>
               </div>
