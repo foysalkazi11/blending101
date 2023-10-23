@@ -18,17 +18,19 @@ const Layout: React.FC<LayoutProps> = (props) => {
   const mainRef = useRef(null);
   if (!title) return <Fragment>{children}</Fragment>;
   return (
-    <div className={styles.body}>
+    <>
       <Meta />
-      {sidebar && <Sidebar />}
-      <NotificationTray showTagByDefaut={false} showPanle={"right"} />
-      <main className={styles.main} ref={mainRef}>
-        <Header title={title} icon={icon} mainRef={mainRef} />
-        <div className={styles.content}>{children}</div>
-        <Footer />
-      </main>
-      {/* <Navbar /> */}
-    </div>
+      <div className={styles.body}>
+        {sidebar && <Sidebar />}
+        <NotificationTray showTagByDefaut={false} showPanle={"right"} />
+        <main className={styles.main} ref={mainRef}>
+          <Header title={title} icon={icon} mainRef={mainRef} />
+          <div className={styles.content}>{children}</div>
+          <Footer />
+        </main>
+        {/* <Navbar /> */}
+      </div>
+    </>
   );
 };
 
