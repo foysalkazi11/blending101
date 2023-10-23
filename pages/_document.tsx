@@ -1,5 +1,7 @@
 /* eslint-disable @next/next/no-document-import-in-page */
 import Document, { DocumentContext, Html, Head, Main, NextScript } from "next/document";
+import Meta from "theme/meta";
+import { DefaultSeo } from "next-seo";
 
 class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
@@ -21,6 +23,40 @@ class MyDocument extends Document {
           <meta name="msapplication-config" content="/icons/favicons/browserconfig.xml" />
           <meta name="theme-color" content="#ffffff" />
         </Head>
+        <DefaultSeo
+          title="Blending101 app"
+          description="Blending101 app description "
+          canonical="https://app.blending101.com/"
+          openGraph={{
+            url: "https://app.blending101.com/",
+            title: "Blending101 app",
+            description: "Blending101 app description",
+            images: [
+              {
+                url: "/logo.png",
+                width: 800,
+                height: 600,
+                alt: "Og Image Alt",
+                type: "image/jpeg",
+              },
+              {
+                url: "/logo.png",
+                width: 900,
+                height: 800,
+                alt: "Og Image Alt Second",
+                type: "image/jpeg",
+              },
+              { url: "/logo.png" },
+              { url: "/logo.png" },
+            ],
+            siteName: "Blending101",
+          }}
+          twitter={{
+            handle: "@handle",
+            site: "@site",
+            cardType: "summary_large_image",
+          }}
+        />
         <body>
           <Main />
           <NextScript />
