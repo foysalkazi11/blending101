@@ -24,13 +24,13 @@ class MyDocument extends Document {
           <meta name="theme-color" content="#ffffff" />
         </Head>
         <DefaultSeo
-          title="Blending101"
-          description="Blending101 description"
+          title="Blending101 app"
+          description="Blending101 app description "
           canonical="https://app.blending101.com/"
           openGraph={{
             url: "https://app.blending101.com/",
-            title: "Blending101",
-            description: "Blending101 description",
+            title: "Blending101 app",
+            description: "Blending101 app description",
             images: [
               {
                 url: "/logo.png",
