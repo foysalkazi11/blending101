@@ -1,7 +1,5 @@
 /* eslint-disable @next/next/no-document-import-in-page */
 import Document, { DocumentContext, Html, Head, Main, NextScript } from "next/document";
-import Meta from "theme/meta";
-import { DefaultSeo } from "next-seo";
 
 class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
@@ -22,41 +20,29 @@ class MyDocument extends Document {
           <meta name="msapplication-TileColor" content="#da532c" />
           <meta name="msapplication-config" content="/icons/favicons/browserconfig.xml" />
           <meta name="theme-color" content="#ffffff" />
+
+          <meta name="description" content={"Blending101 app description"} />
+
+          {/* Open Graph tags */}
+          <meta property="og:url" content={"https://app.blending101.com/"} key="ogurl" />
+          <meta property="og:type" content="website" key="ogtype" />
+          <meta property="og:site_name" content={"blending101"} key="ogsitename" />
+          <meta property="og:title" content={"Blending101 app"} key="ogtitle" />
+          <meta property="og:description" content={"Blending101 app description"} key="ogdesc" />
+          <meta property="og:image" content={"/logo.png"} key="ogimage" />
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="630" />
+
+          {/* Twitter Card tags */}
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta property="twitter:domain" content="app.blending101.com" />
+          <meta property="twitter:url" content={"https://app.blending101.com/"} />
+          <meta property="twitter:domain" content="garimadisposal.in" />
+          <meta name="twitter:title" content={"Blending101 app"} />
+          <meta name="twitter:description" content={"Blending101 app description"} />
+          <meta name="twitter:image" content={"/logo.png"} />
         </Head>
-        <DefaultSeo
-          title="Blending101 app"
-          description="Blending101 app description "
-          canonical="https://app.blending101.com/"
-          openGraph={{
-            url: "https://app.blending101.com/",
-            title: "Blending101 app",
-            description: "Blending101 app description",
-            images: [
-              {
-                url: "/logo.png",
-                width: 800,
-                height: 600,
-                alt: "Og Image Alt",
-                type: "image/jpeg",
-              },
-              {
-                url: "/logo.png",
-                width: 900,
-                height: 800,
-                alt: "Og Image Alt Second",
-                type: "image/jpeg",
-              },
-              { url: "/logo.png" },
-              { url: "/logo.png" },
-            ],
-            siteName: "Blending101",
-          }}
-          twitter={{
-            handle: "@handle",
-            site: "@site",
-            cardType: "summary_large_image",
-          }}
-        />
+
         <body>
           <Main />
           <NextScript />
