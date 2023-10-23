@@ -1,11 +1,7 @@
-import React, { useEffect } from "react";
-import { FaFacebookF, FaPinterestP, FaTwitter } from "react-icons/fa";
-import { MdClose, MdMail } from "react-icons/md";
-import { FacebookShareButton, PinterestShareButton, TwitterShareButton, EmailShareButton } from "react-share";
+import React from "react";
 
 import CustomModal from "../../../theme/modal/customModal";
 import styles from "./Confirm.module.scss";
-import { useAppSelector } from "../../../redux/hooks";
 
 interface ShareProps {
   show: boolean;

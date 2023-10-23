@@ -4,7 +4,14 @@ import { GET_INGREDIENTS_RXFACT } from "@/app/graphql/Ingredients";
 
 import styles from "./_summary.module.scss";
 
-const Summary = ({ ingredients }) => {
+interface SummaryProps {
+  volume: number;
+  consumed: number;
+  ingredients: any[];
+}
+
+const Summary = (props: SummaryProps) => {
+  const { ingredients, consumed, volume } = props;
   const [getIngredientsFact, { data }] = useLazyQuery(GET_INGREDIENTS_RXFACT);
 
   useEffect(() => {
@@ -20,12 +27,17 @@ const Summary = ({ ingredients }) => {
 
   const { netCarbs, glycemicLoad, calories } = useMemo(() => {
     const fact = data?.getIngredientsFact;
-    return {
-      netCarbs: fact?.giGl?.netCarbs.toFixed(1) || 0,
-      glycemicLoad: fact?.giGl?.totalGL.toFixed(1) || 0,
-      calories: fact?.nutrients?.find((nutrient) => nutrient.name === "Calorie")?.value.toFixed(1) || 0,
+    console.log(consumed, volume);
+    const getValue = (value) => {
+      return consumed ? ((value * consumed) / volume).toFixed(1) : 0;
     };
-  }, [data]);
+
+    return {
+      netCarbs: getValue(fact?.giGl?.netCarbs),
+      glycemicLoad: getValue(fact?.giGl?.totalGL),
+      calories: getValue(fact?.nutrients?.find((nutrient) => nutrient.name === "Calorie")?.value),
+    };
+  }, [consumed, data, volume]);
 
   return (
     <div className={styles.summary__wrapper}>
