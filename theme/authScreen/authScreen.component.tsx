@@ -3,10 +3,10 @@ import styles from "./authScreen.module.scss";
 import LoginScreen from "./screens/loginScreen/Login.component";
 import SignupScreen from "./screens/signupScreen/SignupScreen.component";
 import ForgotPassword from "./screens/forgotPassword/ForgotPassword.component";
-import Footer from "./authComponents/socialTray/footer/footer.component";
 import Reset_password from "./screens/resetPassword/resetPassword.component";
 import ErrorPage from "../../components/pages/404Page";
 import HeadTagInfo from "../headTagInfo";
+import Footer from "../../layouts/_footer";
 
 interface authScreen {
   type: "login" | "signup" | "password_reset" | "forget_password" | "";
@@ -32,10 +32,7 @@ const AuthScreen = ({ type = "" }: authScreen) => {
     return (
       <HeadTagWrapper type={type}>
         <div className={styles.mainScreen}>
-          <div
-            className={styles.mainDiv + " " + styles.mainDivSignup}
-            style={{}}
-          >
+          <div className={styles.mainDiv + " " + styles.mainDivSignup} style={{}}>
             <SignupScreen />
           </div>
           <Footer />
