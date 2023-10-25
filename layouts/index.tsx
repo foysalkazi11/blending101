@@ -10,11 +10,12 @@ interface LayoutProps {
   sidebar?: boolean;
   title?: string;
   icon?: string | React.ReactElement;
-  header?: React.ReactNode;
+  header?: boolean;
+  footer?: boolean;
 }
 
 const Layout: React.FC<LayoutProps> = (props) => {
-  const { title, icon, sidebar, header, children } = props;
+  const { title, icon, sidebar, header, footer, children } = props;
   const mainRef = useRef(null);
   if (!title) return <Fragment>{children}</Fragment>;
   return (
@@ -70,9 +71,10 @@ const Layout: React.FC<LayoutProps> = (props) => {
         {sidebar && <Sidebar />}
         <NotificationTray showTagByDefaut={false} showPanle={"right"} />
         <main className={styles.main} ref={mainRef}>
-          <Header title={title} icon={icon} mainRef={mainRef} />
+          {header && <Header title={title} icon={icon} mainRef={mainRef} />}
+
           <div className={styles.content}>{children}</div>
-          <Footer />
+          {footer && <Footer />}
         </main>
         {/* <Navbar /> */}
       </div>
@@ -82,6 +84,8 @@ const Layout: React.FC<LayoutProps> = (props) => {
 
 Layout.defaultProps = {
   sidebar: true,
+  header: true,
+  footer: true,
 };
 
 export default Layout;

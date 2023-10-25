@@ -16,7 +16,9 @@ const Footer = () => {
         </div>
         <li className={styles.mainDiv__footer__ul__li}>
           <div className={styles.mainDiv__footer__ul__li__icon}>
-            <Image src={"/images/logo.png"} alt="" layout="fill" objectFit="contain" />
+            <Link href={"/"}>
+              <Image src={"/images/logo.png"} alt="" layout="fill" objectFit="contain" />
+            </Link>
           </div>
         </li>
         <div className={styles.mainDiv__footer__ul__div__right}>
