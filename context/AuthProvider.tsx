@@ -125,7 +125,7 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
     routes.auth.verification,
     "/forget_password",
     "/privacy_policy",
-    "terms_and_conditions",
+    "/terms_and_conditions",
   ].includes(router.pathname);
 
   useEffect(() => {

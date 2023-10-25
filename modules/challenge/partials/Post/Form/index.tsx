@@ -25,6 +25,7 @@ import useEditChallengePost from "@/challenge/hooks/posts/useEdit";
 import useChallengeForm from "@/challenge/hooks/posts/useForm";
 
 import styles from "./index.module.scss";
+import { Debounce } from "helpers/Utilities";
 
 const VACCUM_VALUE = 0.033814;
 
@@ -114,7 +115,7 @@ const PostForm = forwardRef((props: any, ref) => {
     );
   };
 
-  const handleSubmit = async (data) => {
+  const handleSubmit = Debounce(async (data) => {
     const images = await uploadImages();
     const post: any = {
       memberId: userId,
@@ -152,7 +153,7 @@ const PostForm = forwardRef((props: any, ref) => {
         setImages([]);
       },
     });
-  };
+  });
 
   return (
     <div className={styles.mainContainer}>
