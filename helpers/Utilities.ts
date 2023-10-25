@@ -1,4 +1,4 @@
-export const Debounce = (func) => {
+export const Debounce = (func, delay = 500) => {
   let timer;
   return function (...args) {
     const context = this;
@@ -6,6 +6,16 @@ export const Debounce = (func) => {
     timer = setTimeout(() => {
       timer = null;
       func.apply(context, args);
-    }, 500);
+    }, delay);
   };
 };
+
+function debounce(func, delay) {
+  let timer;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func.apply(this, args);
+    }, delay);
+  };
+}

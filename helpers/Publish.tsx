@@ -2,6 +2,7 @@ import { ApolloCache, FetchResult } from "@apollo/client";
 import error from "next/error";
 import React from "react";
 import { ToastContent, ToastOptions, toast } from "react-toastify";
+import { Debounce } from "./Utilities";
 
 export type OnUpdate = (
   cache: ApolloCache<any>,
@@ -103,4 +104,5 @@ const Publish = async (properties: IProperties) => {
   }
 };
 
-export default Publish;
+// export default Publish;
+export default Debounce(Publish, 1000);
