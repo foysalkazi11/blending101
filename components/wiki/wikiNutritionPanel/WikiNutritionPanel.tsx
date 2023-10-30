@@ -3,12 +3,12 @@ import { faMagnifyingGlass } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
 import GET_ALL_BLEND_NUTRIENTS_CATEGORIES from "../../../gqlLib/nutrition/query/getAllBlendNutrientCategory";
-import GET_ALL_BLEND_NUTRIENTS from "../../../gqlLib/nutrition/query/getAllBlendNutrients";
 import CheckIcon from "../../../theme/checkIcon/CheckIcon";
 import DropDown from "../../../theme/dropDown/DropDown.component";
 import InputComponent from "../../../theme/input/input.component";
 import NutritionListSkeleton from "../../../theme/skeletons/nutritionListSkeleton/NutritionListSkeleton";
 import s from "./WikiNutritionPanel.module.scss";
+import GET_ALL_BLEND_NUTRIENTS_FOR_WIKI from "gqlLib/nutrition/query/getAllBlendNutrientsForWiki";
 
 interface List {
   nutrientName: string;
@@ -38,7 +38,11 @@ const WikiNutritionPanel = ({
   const [searchInput, setSearchInput] = useState("");
   const [nutrientList, setNutrientList] = useState<List[]>([]);
   const isMounted = useRef(false);
-  const { data: nutrientData, loading: nutrientLoading, error: nutrientError } = useQuery(GET_ALL_BLEND_NUTRIENTS);
+  const {
+    data: nutrientDataForWiki,
+    loading: nutrientLoadingForWiki,
+    error: nutrientError,
+  } = useQuery(GET_ALL_BLEND_NUTRIENTS_FOR_WIKI);
   const {
     data: nutrientCategoryData,
     loading: nutrientCategoryLoading,
@@ -51,25 +55,25 @@ const WikiNutritionPanel = ({
         name: item?.categoryName,
         value: item?._id,
       }));
-      setNutrientCategory(data);
+      setNutrientCategory([{ name: "All", value: "all" }, ...data]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nutrientCategoryData?.getAllBlendNutrientCategories, nutrientCategoryLoading]);
 
   useEffect(() => {
-    if (!nutrientLoading && nutrientData?.getAllBlendNutrients) {
-      setNutrientList(nutrientData?.getAllBlendNutrients);
+    if (!nutrientLoadingForWiki && nutrientDataForWiki?.getAllBlendNutrientsForWiki) {
+      setNutrientList(nutrientDataForWiki?.getAllBlendNutrientsForWiki);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nutrientData?.getAllBlendNutrients, nutrientLoading]);
+  }, [nutrientDataForWiki?.getAllBlendNutrientsForWiki, nutrientLoadingForWiki]);
 
   useEffect(() => {
     if (isMounted.current) {
       if (searchInput === "") {
-        setNutrientList(nutrientData?.getAllBlendNutrients);
+        setNutrientList(nutrientDataForWiki?.getAllBlendNutrientsForWiki);
       } else {
-        const filter = nutrientData?.getAllBlendNutrients?.filter((item: List) =>
+        const filter = nutrientDataForWiki?.getAllBlendNutrientsForWiki?.filter((item: List) =>
           item?.nutrientName?.toLowerCase()?.includes(searchInput?.toLowerCase()),
         );
         setNutrientList(filter);
@@ -81,10 +85,10 @@ const WikiNutritionPanel = ({
 
   const UpdateNutritionCategory = (selectedNutrientCategory) => {
     setSelectedNutrientCategory(selectedNutrientCategory);
-    if (!selectedNutrientCategory) {
-      setNutrientList(nutrientData?.getAllBlendNutrients);
+    if (!selectedNutrientCategory || selectedNutrientCategory === "all") {
+      setNutrientList(nutrientDataForWiki?.getAllBlendNutrientsForWiki);
     } else {
-      const filter = nutrientData?.getAllBlendNutrients?.filter(
+      const filter = nutrientDataForWiki?.getAllBlendNutrientsForWiki?.filter(
         (item: List) => item?.category?._id === selectedNutrientCategory,
       );
       setNutrientList(filter);
@@ -145,7 +149,7 @@ const WikiNutritionPanel = ({
         />
       </div>
       <div className={`${s.nutrientListWarper} y-scroll`} style={{ maxHeight: `${scrollAreaMaxHeight}px` }}>
-        {nutrientLoading ? (
+        {nutrientLoadingForWiki ? (
           <NutritionListSkeleton />
         ) : (
           nutrientList?.map((item, index) => {

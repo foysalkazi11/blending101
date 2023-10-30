@@ -1,11 +1,8 @@
-import { faChartColumn } from "@fortawesome/pro-light-svg-icons";
-import Image from "next/image";
 import React from "react";
-import Icon from "../../../../component/atoms/Icon/Icon.component";
 import styles from "./PanelHeader.module.scss";
 
 interface PanelHeaderProps {
-  icon?: string | React.ReactNode;
+  icon?: string | React.ReactChild;
   title?: string;
   rightSide?: React.ReactNode | null;
   panelHeaderVariant?: "headerSolid" | "headerBorderBottom";
@@ -29,9 +26,7 @@ const PanelHeader = ({
         className={`${styles[panelHeaderVariant]} ${activeHeader ? styles.activeTab : ""}`}
         onClick={() => handleClick(index)}
       >
-        <div className={styles.icon}>
-          {typeof icon === "string" ? <Icon fontName={faChartColumn} size="2.4rem" /> : icon}
-        </div>
+        <div className={styles.icon}>{typeof icon === "string" ? <img src={icon} alt="icon" /> : icon}</div>
 
         <h3 className={styles.title}>{title}</h3>
       </div>

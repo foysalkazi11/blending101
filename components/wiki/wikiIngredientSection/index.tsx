@@ -1,9 +1,7 @@
 import React from "react";
 import FilterBottomComponent from "../../sidetray/filter/ingredients/Ingredients.component";
 import { useQuery } from "@apollo/client";
-import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS from "../../../gqlLib/ingredient/query/filterIngredientByCategroyAndClass";
-import WikiThemeContainer from "../wikiTheme/wikiThemContainer";
-import generateDummyArray from "../../../helperFunc/array/generateDummyArray";
+import FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS_FOR_WIKI from "gqlLib/ingredient/query/filterIngredientByCategoryAndClassForWiki";
 
 interface Props {
   checkActive: (id: string) => boolean;
@@ -13,13 +11,13 @@ interface Props {
 }
 
 const WikiIngredientSection = ({ checkActive, handleItemClick = () => {}, scrollAreaMaxHeight, toggle = 0 }: Props) => {
-  const { data: ingredientCategoryData, loading: ingredientCategoryLoading } = useQuery(
-    FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS,
+  const { data: ingredientCategoryDataForWiki, loading: ingredientCategoryLoadingForWiki } = useQuery(
+    FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS_FOR_WIKI,
     {
       variables: {
         data: {
           ingredientCategory: "All",
-          IngredientClass: 1,
+          IngredientClass: 0,
         },
       },
     },
@@ -31,8 +29,8 @@ const WikiIngredientSection = ({ checkActive, handleItemClick = () => {}, scroll
         checkActiveIngredient={checkActive}
         handleIngredientClick={handleItemClick}
         scrollAreaMaxHeight={scrollAreaMaxHeight}
-        ingredientCategoryData={ingredientCategoryData?.filterIngredientByCategoryAndClass}
-        ingredientCategoryLoading={ingredientCategoryLoading}
+        ingredientCategoryData={ingredientCategoryDataForWiki?.filterIngredientByCategoryAndClassForWiki}
+        ingredientCategoryLoading={ingredientCategoryLoadingForWiki}
         toggleMenuType="borderBottomSecondary"
         showHeader={false}
       />
