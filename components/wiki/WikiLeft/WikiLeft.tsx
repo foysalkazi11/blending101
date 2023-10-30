@@ -1,7 +1,7 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import s from "./WikiLeft.module.scss";
 import WikiTypes from "../wikiTypes/WikiTypes";
-import { SelectedWikiType, SelectedWikiTypeProps } from "..";
+import { SelectedWikiTypeProps } from "..";
 import { Portion, WikiType as Type, WikiType } from "../../../type/wikiListType";
 import WikiIngredientSection from "../wikiIngredientSection";
 import { useRouter } from "next/router";
@@ -9,15 +9,14 @@ import WikiNutrientSection from "../wikiNutrientSection";
 import WikiHealthSection from "../wikiHealthSection";
 import PanelHeader from "../../recipe/share/panelHeader/PanelHeader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleInfo } from "@fortawesome/pro-light-svg-icons";
 import useWindowSize from "../../utility/useWindowSize";
 import ToggleMenu from "../../../theme/toggleMenu/ToggleMenu";
 import { faFerrisWheel, faList } from "@fortawesome/pro-light-svg-icons";
 import WikiThemeContainer from "../wikiTheme/wikiThemContainer";
-import generateDummyArray from "helperFunc/array/generateDummyArray";
 import { useUser } from "context/AuthProvider";
 import GET_WIKI_THEME from "gqlLib/wiki/query/getWikiTheme";
 import { useQuery } from "@apollo/client";
+import { faBooks } from "@fortawesome/pro-thin-svg-icons";
 interface Props {
   currentWikiType?: WikiType;
   currentWikiId?: string;
@@ -254,9 +253,7 @@ const WikiLeft = ({
 
   return (
     <div className="sticky_top">
-      {!showWikiTypeHeader && (
-        <PanelHeader title="Wiki Type" icon={<FontAwesomeIcon icon={faCircleInfo} fontSize={24} />} />
-      )}
+      {!showWikiTypeHeader && <PanelHeader title="Wiki Type" icon={<FontAwesomeIcon icon={faBooks} fontSize={24} />} />}
 
       <div className={s.wikiLeftContainer}>
         <div id="toggleTabContainer">

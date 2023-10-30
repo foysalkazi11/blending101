@@ -2,9 +2,14 @@ import React from "react";
 import WikiHome from "../../components/wiki";
 import Layout from "../../layouts";
 import { useRouter } from "next/router";
+import ClientOnly from "components/ClientOnly";
 
 const WikiPage = () => {
-  return <WikiHome />;
+  return (
+    <ClientOnly>
+      <WikiHome />;
+    </ClientOnly>
+  );
 };
 
 export default WikiPage;
