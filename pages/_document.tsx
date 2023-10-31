@@ -25,23 +25,23 @@ class MyDocument extends Document {
           <meta name="description" content="Blending101 app description" />
 
           {/* Open Graph tags */}
-          <meta property="og:url" content={"https://app.blending101.com/"} key="ogurl" />
+          <meta property="og:url" content="https://app.blending101.com/" key="ogurl" />
           <meta property="og:type" content="website" key="ogtype" />
-          <meta property="og:site_name" content={"blending101"} key="ogsitename" />
-          <meta property="og:title" content={"Blending101 app"} key="ogtitle" />
-          <meta property="og:description" content={"Blending101 app description"} key="ogdesc" />
-          <meta property="og:image" content={"/logo_small.svg"} key="ogimage" />
+          <meta property="og:site_name" content="blending101" key="ogsitename" />
+          <meta property="og:title" content="Blending101 app" key="ogtitle" />
+          <meta property="og:description" content="Blending101 app description" key="ogdesc" />
+          <meta property="og:image" content="/logo_small.svg" key="ogimage" />
           <meta property="og:image:width" content="1200" />
           <meta property="og:image:height" content="630" />
 
           {/* Twitter Card tags */}
           <meta name="twitter:card" content="summary_large_image" />
           <meta property="twitter:domain" content="app.blending101.com" />
-          <meta property="twitter:url" content={"https://app.blending101.com/"} />
+          <meta property="twitter:url" content="https://app.blending101.com/" />
           <meta property="twitter:domain" content="garimadisposal.in" />
-          <meta name="twitter:title" content={"Blending101 app"} />
-          <meta name="twitter:description" content={"Blending101 app description"} />
-          <meta name="twitter:image" content={"/logo_small.svg"} />
+          <meta name="twitter:title" content="Blending101 app" />
+          <meta name="twitter:description" content="Blending101 app description" />
+          <meta name="twitter:image" content="/logo_small.svg" />
         </Head>
 
         <body>
