@@ -49,9 +49,9 @@ export default function Filtertray({ showPanle, showTagByDefaut }: Props) {
   const handleToggle = (no: number) => {
     handleUpdateActiveFilterTag(
       no === 0 ? "visual" : "tags",
-      activeFilterTag.filterCriteria,
-      activeFilterTag.activeTab,
-      activeFilterTag.childTab,
+      activeFilterTag?.filterCriteria,
+      activeFilterTag?.activeTab,
+      activeFilterTag?.childTab,
       "",
     );
   };
@@ -101,7 +101,7 @@ export default function Filtertray({ showPanle, showTagByDefaut }: Props) {
     >
       <ToggleMenu
         setToggle={handleToggle}
-        toggle={activeFilterTag.activeSection === "visual" ? 0 : 1}
+        toggle={activeFilterTag?.activeSection === "visual" ? 0 : 1}
         toggleMenuList={[
           <div key={"key0"} className="flex ai-center">
             <FaEye className={styles.tag} />
@@ -115,7 +115,7 @@ export default function Filtertray({ showPanle, showTagByDefaut }: Props) {
         variant={"containSecondary"}
       />
 
-      {activeFilterTag.activeSection === "visual" ? (
+      {activeFilterTag?.activeSection === "visual" ? (
         <VisualSection
           checkActiveItem={checkActiveItem}
           handleBlendAndIngredientUpdate={handleBlendAndIngredientUpdate}
@@ -125,7 +125,7 @@ export default function Filtertray({ showPanle, showTagByDefaut }: Props) {
           ingredientCategoryLoading={ingredientCategoryLoading}
         />
       ) : null}
-      {activeFilterTag.activeSection === "tags" ? (
+      {activeFilterTag?.activeSection === "tags" ? (
         <TagSection
           checkActiveItem={checkActiveItem}
           blendCategoryData={blendCategoryData?.getAllCategories}

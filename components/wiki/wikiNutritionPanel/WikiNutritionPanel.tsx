@@ -137,17 +137,20 @@ const WikiNutritionPanel = ({
           border="borderSecondary"
         />
       </div>
-      <div className={s.dropdown}>
-        <InputComponent
-          border="borderSecondary"
-          style={{ padding: "10px", fontSize: "12px", borderRadius: "10px" }}
-          inputWithIcon={true}
-          icon={<FontAwesomeIcon icon={faMagnifyingGlass} fontSize="16" />}
-          placeholder="Search Nutrition"
-          value={searchInput}
-          onChange={(e) => setSearchInput(e?.target?.value)}
-        />
-      </div>
+      {(!selectedNutrientCategory || selectedNutrientCategory === "all") && (
+        <div className={s.dropdown}>
+          <InputComponent
+            border="borderSecondary"
+            // style={{ padding: "10px", fontSize: "12px", borderRadius: "10px" }}
+            inputWithIcon={true}
+            icon={<FontAwesomeIcon icon={faMagnifyingGlass} />}
+            placeholder="Search Nutrition"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e?.target?.value)}
+          />
+        </div>
+      )}
+
       <div className={`${s.nutrientListWarper} y-scroll`} style={{ maxHeight: `${scrollAreaMaxHeight}px` }}>
         {nutrientLoadingForWiki ? (
           <NutritionListSkeleton />
