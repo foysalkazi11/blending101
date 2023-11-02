@@ -12,6 +12,12 @@ const routes = Object.freeze({
     myPlan: "/planner/plan",
     details: "",
   },
+  spaces: {
+    discovery: "/spaces",
+    joined: "/spaces/joined",
+    feeds: "/spaces/feeds",
+    details: "/spaces/space/id/page",
+  },
 });
 
 export default routes;

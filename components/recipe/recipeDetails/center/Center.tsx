@@ -218,7 +218,7 @@ const Center = ({
           function: () => router?.push("/recipe/recipe_discovery"),
           text: "Back",
         }}
-        icon={<FontAwesomeIcon icon={faInfoCircle} size="xl" />}
+        icon={"/icons/fak-jar.svg"}
       />
 
       <div className={`${styles.contentBox} ${token && "disabled"}`}>

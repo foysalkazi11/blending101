@@ -179,7 +179,9 @@ export const EDIT_CHALLENGE_POST = gql`
 
 export const DELETE_CHALLENGE_POST = gql`
   mutation DeleteChallengePost($postId: String!, $challengeId: String!) {
-    deleteAChallengePost(postId: $postId, docId: $challengeId)
+    deleteAChallengePost(postId: $postId, docId: $challengeId) {
+      docId
+    }
   }
 `;
 

@@ -119,7 +119,14 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
     [dispatch, getUser, router],
   );
 
-  const isPublicRoute = ["/login", "/signup", routes.auth.verification, "/forget_password"].includes(router.pathname);
+  const isPublicRoute = [
+    "/login",
+    "/signup",
+    routes.auth.verification,
+    "/forget_password",
+    "/privacy_policy",
+    "/terms_and_conditions",
+  ].includes(router.pathname);
 
   useEffect(() => {
     // Skipping auth checking if the URL is public

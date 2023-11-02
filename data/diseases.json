@@ -1,0 +1,512 @@
+[
+  {
+    "Categories": "Cardiovascular Diseases",
+    "Diseases/Conditions": "Angina",
+    "": ""
+  },
+  {
+    "Categories": "Cardiovascular Diseases",
+    "Diseases/Conditions": "Arrhythmias",
+    "": ""
+  },
+  {
+    "Categories": "Cardiovascular Diseases",
+    "Diseases/Conditions": "Atherosclerosis",
+    "": ""
+  },
+  {
+    "Categories": "Cardiovascular Diseases",
+    "Diseases/Conditions": "Heart Attack",
+    "": ""
+  },
+  {
+    "Categories": "Cardiovascular Diseases",
+    "Diseases/Conditions": "Heart Failure",
+    "": ""
+  },
+  {
+    "Categories": "Cardiovascular Diseases",
+    "Diseases/Conditions": "Hypertension (High Blood Pressure)",
+    "": ""
+  },
+  {
+    "Categories": "Cardiovascular Diseases",
+    "Diseases/Conditions": "Stroke (History of)",
+    "": ""
+  },
+  {
+    "Categories": "Digestive Disorders",
+    "Diseases/Conditions": "Acid Reflux (GERD)",
+    "": ""
+  },
+  {
+    "Categories": "Digestive Disorders",
+    "Diseases/Conditions": "Celiac Disease",
+    "": ""
+  },
+  {
+    "Categories": "Digestive Disorders",
+    "Diseases/Conditions": "Chronic Bronchitis",
+    "": ""
+  },
+  {
+    "Categories": "Digestive Disorders",
+    "Diseases/Conditions": "Constipation",
+    "": ""
+  },
+  {
+    "Categories": "Digestive Disorders",
+    "Diseases/Conditions": "Crohn's Disease",
+    "": ""
+  },
+  {
+    "Categories": "Digestive Disorders",
+    "Diseases/Conditions": "Diverticulitis",
+    "": ""
+  },
+  {
+    "Categories": "Digestive Disorders",
+    "Diseases/Conditions": "Gastroenteritis",
+    "": ""
+  },
+  {
+    "Categories": "Digestive Disorders",
+    "Diseases/Conditions": "Irritable Bowel Syndrome (IBS)",
+    "": ""
+  },
+  {
+    "Categories": "Digestive Disorders",
+    "Diseases/Conditions": "Peptic Ulcer",
+    "": ""
+  },
+  {
+    "Categories": "Digestive Disorders",
+    "Diseases/Conditions": "Ulcerative Colitis",
+    "": ""
+  },
+  {
+    "Categories": "Neurological Disorders",
+    "Diseases/Conditions": "Alzheimer's Disease",
+    "": ""
+  },
+  {
+    "Categories": "Neurological Disorders",
+    "Diseases/Conditions": "Amyotrophic Lateral Sclerosis (ALS)",
+    "": ""
+  },
+  {
+    "Categories": "Neurological Disorders",
+    "Diseases/Conditions": "Dementia",
+    "": ""
+  },
+  {
+    "Categories": "Neurological Disorders",
+    "Diseases/Conditions": "Epilepsy",
+    "": ""
+  },
+  {
+    "Categories": "Neurological Disorders",
+    "Diseases/Conditions": "Migraine",
+    "": ""
+  },
+  {
+    "Categories": "Neurological Disorders",
+    "Diseases/Conditions": "Multiple Sclerosis (MS)",
+    "": ""
+  },
+  {
+    "Categories": "Neurological Disorders",
+    "Diseases/Conditions": "Narcolepsy",
+    "": ""
+  },
+  {
+    "Categories": "Neurological Disorders",
+    "Diseases/Conditions": "Parkinson's Disease",
+    "": ""
+  },
+  {
+    "Categories": "Neurological Disorders",
+    "Diseases/Conditions": "Tinnitus",
+    "": ""
+  },
+  {
+    "Categories": "Respiratory Diseases",
+    "Diseases/Conditions": "Asthma",
+    "": ""
+  },
+  {
+    "Categories": "Respiratory Diseases",
+    "Diseases/Conditions": "Chronic Obstructive Pulmonary Disease",
+    "": "(COPD)"
+  },
+  {
+    "Categories": "Respiratory Diseases",
+    "Diseases/Conditions": "Pneumonia",
+    "": ""
+  },
+  {
+    "Categories": "Infectious Diseases",
+    "Diseases/Conditions": "Chickenpox",
+    "": ""
+  },
+  {
+    "Categories": "Infectious Diseases",
+    "Diseases/Conditions": "Hepatitis (A, B, C)",
+    "": ""
+  },
+  {
+    "Categories": "Infectious Diseases",
+    "Diseases/Conditions": "HIV/AIDS",
+    "": ""
+  },
+  {
+    "Categories": "Infectious Diseases",
+    "Diseases/Conditions": "Human Papillomavirus (HPV)",
+    "": ""
+  },
+  {
+    "Categories": "Infectious Diseases",
+    "Diseases/Conditions": "Lyme Disease",
+    "": ""
+  },
+  {
+    "Categories": "Infectious Diseases",
+    "Diseases/Conditions": "Measles",
+    "": ""
+  },
+  {
+    "Categories": "Infectious Diseases",
+    "Diseases/Conditions": "Mononucleosis",
+    "": ""
+  },
+  {
+    "Categories": "Infectious Diseases",
+    "Diseases/Conditions": "Mumps",
+    "": ""
+  },
+  {
+    "Categories": "Infectious Diseases",
+    "Diseases/Conditions": "Polio",
+    "": ""
+  },
+  {
+    "Categories": "Infectious Diseases",
+    "Diseases/Conditions": "Rubella",
+    "": ""
+  },
+  {
+    "Categories": "Infectious Diseases",
+    "Diseases/Conditions": "Shingles (Herpes Zoster)",
+    "": ""
+  },
+  {
+    "Categories": "Infectious Diseases",
+    "Diseases/Conditions": "Tuberculosis (TB)",
+    "": ""
+  },
+  {
+    "Categories": "Infectious Diseases",
+    "Diseases/Conditions": "Whooping Cough (Pertussis)",
+    "": ""
+  },
+  {
+    "Categories": "Cancers",
+    "Diseases/Conditions": "Bone Tumors",
+    "": ""
+  },
+  {
+    "Categories": "Cancers",
+    "Diseases/Conditions": "Cervical Cancer",
+    "": ""
+  },
+  {
+    "Categories": "Cancers",
+    "Diseases/Conditions": "Colorectal Cancer",
+    "": ""
+  },
+  {
+    "Categories": "Cancers",
+    "Diseases/Conditions": "Leukemia",
+    "": ""
+  },
+  {
+    "Categories": "Cancers",
+    "Diseases/Conditions": "Malignant Melanoma",
+    "": ""
+  },
+  {
+    "Categories": "Cancers",
+    "Diseases/Conditions": "Multiple Myeloma",
+    "": ""
+  },
+  {
+    "Categories": "Cancers",
+    "Diseases/Conditions": "Ovarian Cancer",
+    "": ""
+  },
+  {
+    "Categories": "Cancers",
+    "Diseases/Conditions": "Prostate Cancer",
+    "": ""
+  },
+  {
+    "Categories": "Inflammatory & Autoimmune",
+    "Diseases/Conditions": "Arthritis",
+    "": ""
+  },
+  {
+    "Categories": "Inflammatory & Autoimmune",
+    "Diseases/Conditions": "Inflammatory Bowel Disease (IBD)",
+    "": ""
+  },
+  {
+    "Categories": "Inflammatory & Autoimmune",
+    "Diseases/Conditions": "Lupus",
+    "": ""
+  },
+  {
+    "Categories": "Inflammatory & Autoimmune",
+    "Diseases/Conditions": "Rheumatoid Arthritis",
+    "": ""
+  },
+  {
+    "Categories": "Inflammatory & Autoimmune",
+    "Diseases/Conditions": "Sarcoidosis",
+    "": ""
+  },
+  {
+    "Categories": "Inflammatory & Autoimmune",
+    "Diseases/Conditions": "Systemic Lupus Erythematosus (SLE)",
+    "": ""
+  },
+  {
+    "Categories": "Hormonal & Metabolic",
+    "Diseases/Conditions": "Addison's Disease",
+    "": ""
+  },
+  {
+    "Categories": "Hormonal & Metabolic",
+    "Diseases/Conditions": "Diabetes (Type 1 and 2)",
+    "": ""
+  },
+  {
+    "Categories": "Hormonal & Metabolic",
+    "Diseases/Conditions": "Hashimoto's Thyroiditis",
+    "": ""
+  },
+  {
+    "Categories": "Hormonal & Metabolic",
+    "Diseases/Conditions": "Hyperthyroidism",
+    "": ""
+  },
+  {
+    "Categories": "Hormonal & Metabolic",
+    "Diseases/Conditions": "Hypothyroidism",
+    "": ""
+  },
+  {
+    "Categories": "Hormonal & Metabolic",
+    "Diseases/Conditions": "Polycystic Ovary Syndrome (PCOS)",
+    "": ""
+  },
+  {
+    "Categories": "Skin Conditions",
+    "Diseases/Conditions": "Atopic Dermatitis (Eczema)",
+    "": ""
+  },
+  {
+    "Categories": "Skin Conditions",
+    "Diseases/Conditions": "Psoriasis",
+    "": ""
+  },
+  {
+    "Categories": "Skin Conditions",
+    "Diseases/Conditions": "Rosacea",
+    "": ""
+  },
+  {
+    "Categories": "Skin Conditions",
+    "Diseases/Conditions": "Vitiligo",
+    "": ""
+  },
+  {
+    "Categories": "Musculoskeletal Disorders",
+    "Diseases/Conditions": "Duchenne Muscular Dystrophy",
+    "": ""
+  },
+  {
+    "Categories": "Musculoskeletal Disorders",
+    "Diseases/Conditions": "Fibromyalgia",
+    "": ""
+  },
+  {
+    "Categories": "Musculoskeletal Disorders",
+    "Diseases/Conditions": "Gout",
+    "": ""
+  },
+  {
+    "Categories": "Musculoskeletal Disorders",
+    "Diseases/Conditions": "Muscular Dystrophy",
+    "": ""
+  },
+  {
+    "Categories": "Musculoskeletal Disorders",
+    "Diseases/Conditions": "Osteoarthritis",
+    "": ""
+  },
+  {
+    "Categories": "Musculoskeletal Disorders",
+    "Diseases/Conditions": "Osteoporosis",
+    "": ""
+  },
+  {
+    "Categories": "Musculoskeletal Disorders",
+    "Diseases/Conditions": "Paget's Disease of the Bone",
+    "": ""
+  },
+  {
+    "Categories": "Musculoskeletal Disorders",
+    "Diseases/Conditions": "Rheumatic Fever",
+    "": ""
+  },
+  {
+    "Categories": "Musculoskeletal Disorders",
+    "Diseases/Conditions": "Scleroderma",
+    "": ""
+  },
+  {
+    "Categories": "Musculoskeletal Disorders",
+    "Diseases/Conditions": "Spinal Muscular Atrophy",
+    "": ""
+  },
+  {
+    "Categories": "Mental & Behavioral",
+    "Diseases/Conditions": "Anxiety Disorders",
+    "": ""
+  },
+  {
+    "Categories": "Mental & Behavioral",
+    "Diseases/Conditions": "Autism Spectrum Disorder",
+    "": ""
+  },
+  {
+    "Categories": "Mental & Behavioral",
+    "Diseases/Conditions": "Bipolar Disorder",
+    "": ""
+  },
+  {
+    "Categories": "Mental & Behavioral",
+    "Diseases/Conditions": "Depression",
+    "": ""
+  },
+  {
+    "Categories": "Mental & Behavioral",
+    "Diseases/Conditions": "Schizophrenia",
+    "": ""
+  },
+  {
+    "Categories": "Eye & Ear Conditions",
+    "Diseases/Conditions": "Cataracts",
+    "": ""
+  },
+  {
+    "Categories": "Eye & Ear Conditions",
+    "Diseases/Conditions": "Glaucoma",
+    "": ""
+  },
+  {
+    "Categories": "Eye & Ear Conditions",
+    "Diseases/Conditions": "Macular Degeneration",
+    "": ""
+  },
+  {
+    "Categories": "Eye & Ear Conditions",
+    "Diseases/Conditions": "Ear Infections (Chronic)",
+    "": ""
+  },
+  {
+    "Categories": "Reproductive & Urinary",
+    "Diseases/Conditions": "Endometriosis",
+    "": ""
+  },
+  {
+    "Categories": "Reproductive & Urinary",
+    "Diseases/Conditions": "Erectile Dysfunction",
+    "": ""
+  },
+  {
+    "Categories": "Reproductive & Urinary",
+    "Diseases/Conditions": "Pelvic Inflammatory Disease (PID)",
+    "": ""
+  },
+  {
+    "Categories": "Reproductive & Urinary",
+    "Diseases/Conditions": "Urinary Tract Infections (Chronic)",
+    "": ""
+  },
+  {
+    "Categories": "Reproductive & Urinary",
+    "Diseases/Conditions": "Uterine Fibroids",
+    "": ""
+  },
+  {
+    "Categories": "Other Conditions",
+    "Diseases/Conditions": "Allergies",
+    "": ""
+  },
+  {
+    "Categories": "Other Conditions",
+    "Diseases/Conditions": "Bell's Palsy",
+    "": ""
+  },
+  {
+    "Categories": "Other Conditions",
+    "Diseases/Conditions": "Chronic Fatigue Syndrome",
+    "": ""
+  },
+  {
+    "Categories": "Other Conditions",
+    "Diseases/Conditions": "Chronic Kidney Disease",
+    "": ""
+  },
+  {
+    "Categories": "Other Conditions",
+    "Diseases/Conditions": "Cirrhosis",
+    "": ""
+  },
+  {
+    "Categories": "Other Conditions",
+    "Diseases/Conditions": "Deep Vein Thrombosis (DVT)",
+    "": ""
+  },
+  {
+    "Categories": "Other Conditions",
+    "Diseases/Conditions": "Gallstones",
+    "": ""
+  },
+  {
+    "Categories": "Other Conditions",
+    "Diseases/Conditions": "Gingivitis",
+    "": ""
+  },
+  {
+    "Categories": "Other Conditions",
+    "Diseases/Conditions": "Hemochromatosis",
+    "": ""
+  },
+  {
+    "Categories": "Other Conditions",
+    "Diseases/Conditions": "Hemophilia",
+    "": ""
+  },
+  {
+    "Categories": "Other Conditions",
+    "Diseases/Conditions": "Sickle Cell Anemia",
+    "": ""
+  },
+  {
+    "Categories": "Other Conditions",
+    "Diseases/Conditions": "Sleep Apnea",
+    "": ""
+  }
+]

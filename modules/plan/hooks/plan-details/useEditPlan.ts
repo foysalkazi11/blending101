@@ -51,7 +51,7 @@ const useEditPlan = (planlist: PlanItem[]) => {
             query: GET_PLAN_DETAILS,
             variables: { planId, token: "", memberId: id },
           };
-          const { getAPlan } = cache.readQuery<GetAPlan>(Query) || { getAPlan: null };
+          const { getAPlan } = cache.readQuery(Query) || { getAPlan: null };
 
           const newGetAPlan: GetAPlan = {
             getAPlan: {
