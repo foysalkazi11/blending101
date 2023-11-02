@@ -33,7 +33,7 @@ interface NutritionPanelInterface {
 const panelHeaders = [
   {
     title: "Rx Facts",
-    icon: faChartColumn,
+    icon: "/icons/chart-bar-light-green.svg",
   },
   {
     title: "My Facts",
@@ -64,7 +64,15 @@ const NutritionPanel = (props: NutritionPanelInterface) => {
                 activeHeader={index === toggle}
                 index={index}
                 handleClick={handleHeaderClick}
-                icon={variant === "panel" ? "" : <FontAwesomeIcon icon={header.icon} fontSize="24" />}
+                icon={
+                  variant === "panel" ? (
+                    ""
+                  ) : typeof header.icon === "string" ? (
+                    header.icon
+                  ) : (
+                    <FontAwesomeIcon icon={header.icon} fontSize="24" />
+                  )
+                }
                 title={header?.title}
                 panelHeaderVariant="headerBorderBottom"
               />
