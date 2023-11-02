@@ -50,12 +50,12 @@ const WikiCard = ({
   // click wiki item title
   const handleClickTitle = async (id: string, portions: Portion[], type: string) => {
     if (type === "Nutrient") {
-      router?.push(`/wiki/details/${type}/${id}`);
+      router?.push(`/wiki/${type}/${id}`);
     } else {
       const measurementWeight = portions?.find((items) => items?.default)?.meausermentWeight;
 
       if (measurementWeight) {
-        router?.push(`/wiki/details/${type}/${id}/${measurementWeight}`);
+        router?.push(`/wiki/${type}/${id}/${measurementWeight}`);
       }
     }
   };

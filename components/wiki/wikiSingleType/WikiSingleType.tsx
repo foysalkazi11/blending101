@@ -12,7 +12,7 @@ import { WikiListType, WikiType } from "../../../type/wikiListType";
 import notification from "../../utility/reactToastifyNotification";
 import WikiCard from "../wikiCard/WikiCard";
 import styles from "./WikiSingleType.module.scss";
-import { SelectedWikiType, SelectedWikiTypeProps, WikiListTypeWithTotal } from "..";
+import { SelectedWikiType, SelectedWikiTypeProps, WikiListTypeWithTotal, WikiTypeSectionDetails } from "..";
 import ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST from "../../../gqlLib/wiki/mutation/addOrRemoveToWikiCompareList";
 import { setDbUser } from "../../../redux/slices/userSlice";
 import useLocalStorage from "../../../customHooks/useLocalStorage";
@@ -24,19 +24,20 @@ import ErrorPage from "components/pages/404Page";
 import useIntersectionObserver from "customHooks/useIntersectionObserver";
 import { useIsMounted } from "customHooks/useIsMounted";
 import { updateWikiCompareCount } from "redux/slices/wikiSlice";
+import { useRouter } from "next/router";
 
 const rootMargin = "100px";
 
 interface Props {
   // type?: WikiType;
+  // setType?: Dispatch<SetStateAction<WikiType>>;
   // selectedWikiItem?: SelectedWikiType;
   // setSelectedWikiItem?: Dispatch<SetStateAction<SelectedWikiType>>;
-  // setType?: Dispatch<SetStateAction<WikiType>>;
 
   wikiList?: WikiListType[];
   setWikiList?: React.Dispatch<React.SetStateAction<WikiListTypeWithTotal>>;
   loading?: boolean;
-  handleCloseFilterOrSearchResult?: (wikiType?: WikiType, changeTab?: boolean) => void;
+  handleCloseFilterOrSearchResult?: (value: WikiTypeSectionDetails) => void;
   title?: string;
   hasMore?: boolean;
   nextPage?: () => void;
@@ -56,6 +57,7 @@ const WikiSingleType = ({
   nextPage = () => {},
 }: Props) => {
   //  const [wikiList, setWikiList] = useState<WikiListType[]>([]);
+  const router = useRouter();
   const [page, setPage] = useState(1);
   const [limit] = useState(12);
   const [pageLength, setPageLength] = useState(12);
@@ -66,10 +68,10 @@ const WikiSingleType = ({
   const [wikiCompareList, setWikiCompareList] = useLocalStorage<WikiCompareList[]>("wikiCompareList", []);
 
   const [getIngredientList, { loading: ingredientListLoading }] = useLazyQuery(GET_INGREDIENT_WIKI_LIST, {
-    fetchPolicy: "cache-and-network",
+    // fetchPolicy: "cache-and-network",
   });
   const [getNutrientList, { loading: nutrientListLoading }] = useLazyQuery(GET_NUTRIENT_WIKI_LIST, {
-    fetchPolicy: "cache-and-network",
+    // fetchPolicy: "cache-and-network",
   });
   const [addOrRemoveToWikiCompareList] = useMutation(ADD_OR_REMOVE_TO_WIKI_COMPARE_LIST);
   const observer = useRef(null);
@@ -207,7 +209,10 @@ const WikiSingleType = ({
             defaultBg="secondary"
             hover="bgSecondary"
             style={{ width: "28px", height: "28px" }}
-            handleClick={() => handleCloseFilterOrSearchResult()}
+            handleClick={() => {
+              router?.push(`/wiki`);
+              // handleCloseFilterOrSearchResult({ wikiTypeSection: "theme", isSelectedTheme: false });
+            }}
           >
             <FontAwesomeIcon icon={faXmark} />
           </IconWarper>

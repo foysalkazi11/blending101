@@ -8,29 +8,25 @@ interface Props {
   checkActive: (id: string) => boolean;
   handleItemClick: (item: WikiType, isExist: boolean, extraInfo?: any) => void;
   scrollAreaMaxHeight?: number;
-  toggle?: number;
 }
 
-const WikiNutrientSection = ({ checkActive, handleItemClick = () => {}, scrollAreaMaxHeight, toggle = 0 }: Props) => {
+const WikiNutrientSection = ({ checkActive, handleItemClick = () => {}, scrollAreaMaxHeight }: Props) => {
   return (
     <>
-      {toggle === 0 && (
-        <WikiNutritionPanel
-          checkActiveNutrition={checkActive}
-          handleNutritionClick={handleItemClick}
-          showHeader={false}
-          scrollAreaMaxHeight={scrollAreaMaxHeight}
-        />
-      )}
-      {toggle === 1 && (
-        <WikiThemeContainer
+      <WikiNutritionPanel
+        checkActiveNutrition={checkActive}
+        handleNutritionClick={handleItemClick}
+        showHeader={false}
+        scrollAreaMaxHeight={scrollAreaMaxHeight}
+      />
+
+      {/* <WikiThemeContainer
           data={generateDummyArray(10, {
             title: "Apple",
             image: "/images/img1.png",
           })}
           scrollAreaMaxHeight={scrollAreaMaxHeight + 110}
-        />
-      )}
+        /> */}
     </>
   );
 };
