@@ -17,7 +17,6 @@ import PanelHeader from "./PanelHeader";
 import styles from "./PanelHeader.module.scss";
 import { useAppSelector } from "../../../../redux/hooks";
 import HeaderTextBtn from "./HeaderTextBtn";
-
 interface PanelHeaderCenterProps {
   editOrSavebtnText?: string;
   editOrSavebtnFunc?: any;
@@ -30,7 +29,7 @@ interface PanelHeaderCenterProps {
     loading?: boolean;
   };
 
-  icon?: string | React.ReactNode;
+  icon?: string | React.ReactChild;
   title?: string;
 }
 

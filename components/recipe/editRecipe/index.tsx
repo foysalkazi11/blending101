@@ -178,7 +178,7 @@ const EditRecipePage = ({
             pageComeFrom="edit"
             recipeVersionLength={versionsCount}
             loading={recipeEditOrVersionEditLoading}
-            icon={<FontAwesomeIcon icon={faInfoCircle} size="xl" />}
+            icon={"/icons/fak-jar.svg"}
           />
           <div ref={dimensionRef}>
             <Center_Elements

@@ -80,7 +80,7 @@ export default function FilterBottomComponent({
       } else {
         setSearchIngredientData(ingredientCategoryData);
       }
-      handleIngredientClick("Ingredient", false, { category: dpd });
+      // handleIngredientClick("Ingredient", false, { category: dpd });
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -30,13 +30,7 @@ import { Fragment, ReactElement, ReactNode } from "react";
 config.autoAddCss = false;
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
-  const getLayout =
-    Component.useLayout ||
-    ((page: ReactNode) => (
-      <Layout header={Component.useHeader} {...Component.meta}>
-        {page}
-      </Layout>
-    ));
+  const getLayout = Component.useLayout || ((page: ReactNode) => <Layout {...Component.meta}>{page}</Layout>);
 
   const handleSubmitError = (error: any) => {
     console.log(error);

@@ -7,7 +7,7 @@ import SkeletonBlendType from "../../../../theme/skeletons/skeletonBlendType/Ske
 import useWindowSize from "../../../utility/useWindowSize";
 import { FilterCriteriaValue } from "../../../../type/filterType";
 import { NextImageWithFallback } from "../../../../theme/imageWithFallback";
-import { faMagnifyingGlass } from "@fortawesome/pro-light-svg-icons";
+import { faMagnifyingGlass } from "@fortawesome/pro-regular-svg-icons";
 
 interface Props {
   searchInput?: string;
@@ -45,7 +45,7 @@ const IngredientPictureSection = ({
         <InputComponent
           border="borderSecondary"
           inputWithIcon={true}
-          icon={<FontAwesomeIcon icon={faMagnifyingGlass} size="sm" />}
+          icon={<FontAwesomeIcon icon={faMagnifyingGlass} />}
           placeholder="Search ingredient"
           value={searchInput}
           onChange={(e) => setSearchInput(e?.target?.value)}
