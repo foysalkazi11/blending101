@@ -147,6 +147,7 @@ summary {
 
 a {
   text-decoration: none;
+  color: inherit;
 }
 
 sup {
@@ -154,4 +155,12 @@ sup {
   position: relative;
   top: -5px;
   color: black;
+}
+
+button {
+  border: none;
+  background-color: transparent;
+  &:focus {
+    outline: none;
+  }
 }

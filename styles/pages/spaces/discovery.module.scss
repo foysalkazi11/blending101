@@ -1,0 +1,87 @@
+@import "./components/button";
+
+$offsetX: 30rem;
+
+.hero {
+  background-image: url("/background/space-cover.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 26rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &__box {
+    height: 17rem;
+    width: 50%;
+    background: #ffffff 0% 0% no-repeat padding-box;
+    border-radius: 29px;
+    opacity: 0.76;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    h2 {
+      font-size: 45px;
+      color: #fd5109;
+      font-weight: 400;
+      margin-bottom: 1rem;
+    }
+    p {
+      font-size: 45px;
+      color: #fd5109;
+      font-weight: 200;
+    }
+  }
+}
+
+.headline {
+  color: #303030;
+  font-size: 1.8rem;
+  font-weight: 500;
+  padding: 1.5rem 0.5rem;
+  width: 60%;
+  border-bottom: 1px solid #ddd;
+  position: relative;
+  margin-bottom: 3rem;
+  &::before {
+    content: "";
+    position: absolute;
+    bottom: -2.5px;
+    left: 0;
+    height: 4px;
+    width: 20rem;
+    border-radius: 5px;
+    background-color: #28c397;
+  }
+}
+
+.wrapper {
+  margin-left: $offsetX;
+  display: flex;
+  &__data {
+    margin: 5rem 0rem;
+  }
+  &__meetings {
+    margin-left: 8rem;
+    width: 35%;
+    max-height: 80rem;
+    background-color: white;
+  }
+}
+
+.menu {
+  margin-bottom: 3rem;
+  @include flex(between);
+  &__filter {
+    @include flex(c);
+  }
+  &__button {
+    @include button;
+  }
+  &__search {
+    @include search;
+    margin-left: 2rem;
+  }
+}

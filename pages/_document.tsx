@@ -17,6 +17,8 @@ class MyDocument extends Document {
           <link rel="manifest" href="/icons/favicons/site.webmanifest" />
           <link rel="mask-icon" href="/icons/favicons/safari-pinned-tab.svg" color="#5bbad5" />
           <link rel="shortcut icon" href="/icons/favicons/favicon.ico" />
+          {/* <link href="https://fonts.cdnfonts.com/css/segoe-ui-4" rel="stylesheet" /> */}
+
           <meta name="msapplication-TileColor" content="#da532c" />
           <meta name="msapplication-config" content="/icons/favicons/browserconfig.xml" />
           <meta name="theme-color" content="#ffffff" />

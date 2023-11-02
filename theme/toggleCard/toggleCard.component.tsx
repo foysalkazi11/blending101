@@ -44,23 +44,20 @@ const ToggleCard = ({
   const router = useRouter();
   const activeToggleBorderStyle = {
     borderBottom: `${activeTogglerHeight} solid ${activeBorderColor}`,
-    marginBottom: `-${activeTogglerHeight}`,
+    // marginBottom: `-${activeTogglerHeight}`,
     color: "#837f7f",
   };
   const nonActiveToggleBorderStyle = {
     borderBottom: `${nonActiveTogglerHeight} solid ${nonActiveBorderColor}`,
     paddingBottom: `${activeTogglerHeight}`,
-    marginBottom: `${activeTogglerHeight}`,
+    // marginBottom: `${activeTogglerHeight}`,
   };
 
   if (!leftToggleHeading && !rightToggleHeading) return null;
   return (
     <div className={styles.mainContainer}>
       <div className={styles.mainContainer__card}>
-        <div
-          className={styles.mainContainer__card__toggler}
-          style={{ ...togglerStyle, ...nonActiveToggleBorderStyle }}
-        >
+        <div className={styles.mainContainer__card__toggler} style={{ ...togglerStyle, ...nonActiveToggleBorderStyle }}>
           <div
             className={styles.mainContainer__card__toggler__left}
             style={{
@@ -70,8 +67,7 @@ const ToggleCard = ({
             }}
             onClick={() => {
               if (noRoute) setTogglerFunc && setTogglerFunc(true);
-              else
-                router.push("/coach/challenge", undefined, { shallow: true });
+              else router.push("/coach/challenge", undefined, { shallow: true });
             }}
           >
             {leftToggleHeading}
