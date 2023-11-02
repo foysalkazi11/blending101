@@ -428,6 +428,9 @@ $tooltip-arrow-size: 6px;
   box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;
   margin-bottom: 20px;
   height: 100%;
+  &:last-child {
+    margin-bottom: 0px;
+  }
 }
 
 .readMoreBox {

@@ -56,11 +56,11 @@ const AccordComponent = ({
     link: undefined | null | string = undefined,
   ) => {
     if (!disabled) {
-      router?.push(`/wiki/details/Nutrient/${id}`);
+      router?.push(`/wiki/Nutrient/${id}`);
     } else if (disabled && link) {
       const splitted = link?.split("Nutrient");
       const second = splitted[1];
-      router?.push(`/wiki/details/Nutrient/${second}`);
+      router?.push(`/wiki/Nutrient/${second}`);
     }
   };
 
@@ -222,11 +222,11 @@ export default AccordComponent;
 //     link: undefined | null | string = undefined,
 //   ) => {
 //     if (!disabled) {
-//       router?.push(`/wiki/details/Nutrient/${id}`);
+//       router?.push(`/wiki/Nutrient/${id}`);
 //     } else if (disabled && link) {
 //       const splitted = link?.split("Nutrient");
 //       const second = splitted[1];
-//       router?.push(`/wiki/details/Nutrient/${second}`);
+//       router?.push(`/wiki/Nutrient/${second}`);
 //     }
 //   };
 

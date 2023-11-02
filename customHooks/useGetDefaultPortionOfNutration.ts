@@ -22,7 +22,7 @@ const useGetDefaultPortionOfnutration = (id: string) => {
       if (!loading && !error) {
         dispatch(setLoading(false));
         const meausermentWeight = data?.getDefaultPortion;
-        router?.push(`/wiki/details/Ingredient/${id}/${meausermentWeight}`);
+        router?.push(`/wiki/Ingredient/${id}/${meausermentWeight}`);
       }
     } catch (error) {
       dispatch(setLoading(false));

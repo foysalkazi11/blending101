@@ -7,10 +7,9 @@ interface Props {
   checkActive: (id: string) => boolean;
   handleItemClick: (item: any, isExist: boolean, extraInfo?: any) => void;
   scrollAreaMaxHeight?: number;
-  toggle?: number;
 }
 
-const WikiIngredientSection = ({ checkActive, handleItemClick = () => {}, scrollAreaMaxHeight, toggle = 0 }: Props) => {
+const WikiIngredientSection = ({ checkActive, handleItemClick = () => {}, scrollAreaMaxHeight }: Props) => {
   const { data: ingredientCategoryDataForWiki, loading: ingredientCategoryLoadingForWiki } = useQuery(
     FILTER_INGREDIENT_BY_CATEGROY_AND_CLASS_FOR_WIKI,
     {
