@@ -1,6 +1,6 @@
 import { faBooks } from "@fortawesome/pro-thin-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { Fragment, useCallback, useEffect, useState } from "react";
+import React, { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import useLocalStorage from "../../customHooks/useLocalStorage";
 import { WikiListType, WikiType } from "../../type/wikiListType";
 import TrayTag from "../sidetray/TrayTag";
@@ -161,7 +161,7 @@ const WikiHome = () => {
   };
 
   useEffect(() => {
-    if (isMounted) {
+    if (isMounted()) {
       if (
         wikiTypeSectionDetails?.wikiTypeSection === "list" &&
         wikiTypeSectionDetails?.wikiType &&
@@ -185,12 +185,14 @@ const WikiHome = () => {
   // }, []);
 
   useEffect(() => {
-    if (isMounted) {
+    if (isMounted()) {
       if (deBoundValue) {
         router?.push(`/wiki?search=${deBoundValue}`);
-      } else {
-        router?.push(`/wiki`);
       }
+
+      // else {
+      //   router?.push(`/wiki`);
+      // }
       // if (deBoundValue) {
       //   handleWikiFilterFunc({ searchTerm: deBoundValue, wikiType: "", category: "", selectedItems: [] });
       // }
