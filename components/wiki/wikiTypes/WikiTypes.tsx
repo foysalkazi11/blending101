@@ -46,7 +46,7 @@ const WikiTypes: React.FC<Props> = ({ type, setType, showHeader = true }: Props)
       <div className={s.imageBox}>
         {typeList?.map((item) => (
           <div key={item.title}>
-            <div className={s.singleImg} onClick={() => changeWikiType(item.title)}>
+            <div className={s.singleImg} onClick={() => setType(item?.title)}>
               {Array.isArray(type) ? (
                 // If type is an array, check if the clicked title is in the array
                 type.includes(item.title) ? (

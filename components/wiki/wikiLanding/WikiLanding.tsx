@@ -7,15 +7,16 @@ import { WikiListType } from "../../../type/wikiListType";
 import notification from "../../utility/reactToastifyNotification";
 import { WikiType } from "../../../type/wikiListType";
 import WikiLandingContent from "./WikiLandingContent";
-import { SelectedWikiType } from "..";
+import { SelectedWikiType, WikiTypeSectionDetails } from "..";
 import PanelHeader from "../../recipe/share/panelHeader/PanelHeader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo } from "@fortawesome/pro-light-svg-icons";
 import styles from "./WikiLanding.module.scss";
 import { useUser } from "../../../context/AuthProvider";
+import { useRouter } from "next/router";
 
 interface Props {
-  setType?: (wikiType?: WikiType, changeTab?: boolean) => void;
+  setType?: (value: WikiTypeSectionDetails) => void;
   setSelectedWikiItem?: Dispatch<SetStateAction<SelectedWikiType>>;
 }
 
@@ -25,6 +26,7 @@ interface NormalizeWikiList {
 }
 
 const WikiLanding = ({ setType = () => {}, setSelectedWikiItem = () => {} }: Props) => {
+  const router = useRouter();
   const user = useUser();
   const [getIngredientList, { loading: ingredientListLoading, data: ingredientList, error: ingredientListError }] =
     useLazyQuery(GET_INGREDIENT_WIKI_LIST, {
@@ -84,7 +86,12 @@ const WikiLanding = ({ setType = () => {}, setSelectedWikiItem = () => {} }: Pro
 
   const handleSetType = (type: WikiType) => {
     // setSelectedWikiItem((wikiItem) => ({ ...wikiItem, [type]: "" }));
-    setType(type, true);
+    // setType(type, true);
+    router?.push(`/wiki/${type}`);
+    // setType({
+    //   wikiTypeSection: "list",
+    //   wikiType: type,
+    // });
   };
 
   const ingredientWikiList = ingredientList?.getIngredientWikiList2?.wikiList;

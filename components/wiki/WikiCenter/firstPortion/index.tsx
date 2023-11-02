@@ -10,10 +10,7 @@ import IngredientBookmarkList from "./IngredientBookmarkList";
 import ReadMore from "../../../../theme/readMore";
 import ImageSlider from "./ImageSlider";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import {
-  setIsOpenWikiCommentsTray,
-  setWikiCommentsCurrentIngredient,
-} from "../../../../redux/slices/wikiSlice";
+import { setIsOpenWikiCommentsTray, setWikiCommentsCurrentIngredient } from "../../../../redux/slices/wikiSlice";
 
 const FirstPortion = ({
   author = "Author",
@@ -46,8 +43,7 @@ const FirstPortion = ({
   imagesWithinBlock?: CoverImageType[];
 }) => {
   const [activeVariant, setActiveVariant] = useState<number>(0);
-  const { isOpenWikiCommentsTray, wikiCommentsTrayCurrentWikiEntity } =
-    useAppSelector((state) => state?.wiki);
+  const { isOpenWikiCommentsTray, wikiCommentsTrayCurrentWikiEntity } = useAppSelector((state) => state?.wiki);
   const dispatch = useAppDispatch();
 
   const openWikiCommentsTray = (id: string) => {
@@ -79,7 +75,7 @@ const FirstPortion = ({
 
   return (
     <>
-      <TopHeader title={type} backAddress="/wiki" />
+      <TopHeader title={type} backAddress={`/wiki/${type}`} />
 
       <div className={styles.card}>
         <div className={styles.blendingRecipeHeading}>
@@ -94,23 +90,12 @@ const FirstPortion = ({
           setExpandAllCollapse={setExpandAllCollapse}
           handleToOpenCommentTray={openWikiCommentsTray}
         />
-        <ImageSlider
-          imagesWithinBlock={imagesWithinBlock}
-          setExpandAllCollapse={setExpandAllCollapse}
-        />
+        <ImageSlider imagesWithinBlock={imagesWithinBlock} setExpandAllCollapse={setExpandAllCollapse} />
 
         {type === "Ingredient" && (
           <div className={styles.ingredientInfoContainer}>
-            <IngredientInfo
-              borderRight={true}
-              text="Glycemic Index"
-              amount={Math?.round(giGl?.totalGi)}
-            />
-            <IngredientInfo
-              borderRight={true}
-              text="Glycemic Load"
-              amount={Math?.round(giGl?.totalGL)}
-            />
+            <IngredientInfo borderRight={true} text="Glycemic Index" amount={Math?.round(giGl?.totalGi)} />
+            <IngredientInfo borderRight={true} text="Glycemic Load" amount={Math?.round(giGl?.totalGL)} />
             <IngredientInfo amount={240} text="Nutri Score" />
           </div>
         )}

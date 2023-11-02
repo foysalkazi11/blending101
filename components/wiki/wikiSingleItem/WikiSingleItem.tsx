@@ -160,7 +160,7 @@ function WikiSingleItem() {
       />
       <WikiCommentsTray showTagByDefaut={false} showPanle={"right"} />
       <div className={styles.singleWikiItemContainer}>
-        <div className={styles.left}>
+        {/* <div className={styles.left}>
           <RelatedWikiItem
             type={type}
             wikiList={data?.relatedWikis?.wikiList}
@@ -168,7 +168,7 @@ function WikiSingleItem() {
             loading={ingredientsData?.loading || nutritionData?.loading}
             viewItems={width > 1280 ? "list" : "slider"}
           />
-        </div>
+        </div> */}
 
         <div className={styles.center}>
           {ingredientsData?.loading || nutritionData?.loading ? (
