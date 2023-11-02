@@ -1,24 +1,3 @@
-@mixin minBreakpoint($size) {
-  @media screen and (min-width: $size) {
-    @content;
-  }
-}
-
-@mixin maxBreakpoint($size) {
-  @media screen and (max-width: $size) {
-    @content;
-  }
-}
-
-@mixin buttonReset() {
-  outline: 0;
-  border: 0;
-  background: none;
-  padding: 0;
-  cursor: pointer;
-  appearance: none;
-}
-
 /*
     Breakpoint argument choices
     - Extra Small (xsm): =< 360px = =<22.5em
@@ -65,4 +44,37 @@
       @content;
     }
   }
+}
+
+/* FLEX UTILS */
+@mixin flex($type) {
+  display: flex;
+  align-items: center;
+  @if $type == between {
+    justify-content: space-between;
+  } @else {
+    justify-content: center;
+  }
+}
+
+// Needs to remove later
+@mixin minBreakpoint($size) {
+  @media screen and (min-width: $size) {
+    @content;
+  }
+}
+
+@mixin maxBreakpoint($size) {
+  @media screen and (max-width: $size) {
+    @content;
+  }
+}
+
+@mixin buttonReset() {
+  outline: 0;
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  appearance: none;
 }

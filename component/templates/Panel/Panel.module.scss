@@ -1,0 +1,81 @@
+@import "../../styles/partials/variables";
+
+$sideTrayWidth: 0px;
+
+.left {
+  .image {
+    right: 20px;
+    &:hover {
+      right: 5px;
+    }
+  }
+  .button {
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+  }
+}
+
+.right {
+  .image {
+    left: -25px;
+    &:hover {
+      left: -40px;
+    }
+  }
+  .button {
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+  }
+}
+
+.tray {
+  position: relative;
+  z-index: 999;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  background-color: #fff;
+  height: 100vh;
+  transition: all 1.5s ease-in-out;
+}
+
+.image {
+  position: absolute;
+  top: 9rem;
+  cursor: pointer;
+  transition: all;
+  transition-duration: 0.2s;
+  img {
+    width: 50px;
+  }
+}
+
+.button {
+  position: absolute;
+  cursor: pointer;
+  transition: all 0.3s;
+  z-index: 99 !important;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top-right-radius: 7px;
+  border-bottom-right-radius: 7px;
+  border: 1px solid $primaryColor;
+  color: $primaryColor;
+  background-color: $white;
+  &:hover {
+    color: $white;
+    background-color: $primaryColor;
+  }
+}
+
+.overlay {
+  position: absolute;
+  z-index: 100;
+  background-color: white;
+  height: 100%;
+  width: 100%;
+  margin-top: 5rem;
+  transform-origin: left;
+  transition: transform 1.5s ease-in-out;
+}

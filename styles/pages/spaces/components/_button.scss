@@ -1,0 +1,37 @@
+@import "variables";
+@import "mixins";
+
+@mixin button {
+  border: none;
+  background-color: transparent;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 100;
+  cursor: pointer;
+  border: 1px solid #dddddd;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-family: inherit;
+  @include flex(c);
+  > svg {
+    margin-right: 5px;
+    color: $primaryColor;
+  }
+  &:hover {
+    border: 1px solid $primaryColor;
+  }
+}
+
+@mixin search {
+  border: 1px solid #dddddd;
+  padding: 7px;
+  border-radius: 50%;
+  background-color: transparent;
+  cursor: pointer;
+  > svg {
+    color: $primaryColor;
+  }
+  &:hover {
+    border: 1px solid $primaryColor;
+  }
+}

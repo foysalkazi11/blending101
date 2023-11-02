@@ -1,0 +1,65 @@
+@import "variables";
+@import "mixins";
+
+.meetups {
+  background-color: white;
+  min-height: calc(100vh - 124px);
+  &__header {
+    @include flex(between);
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #dfdfdf;
+    > h2 {
+      color: #656565;
+      font-size: 2.1rem;
+    }
+  }
+  &__actions {
+    > button {
+      border: 1px solid #707070;
+      border-radius: 50%;
+      padding: 8px;
+      &:not(:last-child) {
+        margin-right: 1rem;
+      }
+      > svg {
+        color: #707070;
+      }
+    }
+  }
+  &__content {
+    padding: 0 2rem;
+  }
+  &__items {
+    padding: 0 6rem;
+  }
+}
+
+.meetup {
+  padding: 2rem 0;
+  border-bottom: 1px solid #d1cece;
+  > h3 {
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: $primaryColor;
+    margin-bottom: 1rem;
+  }
+  > p {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+  }
+  > span {
+    font-size: 1.4rem;
+  }
+  > button {
+    @include flex(C);
+    margin-top: 1rem;
+    font-size: 1.4rem;
+    border: 1px solid $primaryColor;
+    padding: 7px 15px;
+    color: $primaryColor;
+    border-radius: 5px;
+    > svg {
+      margin-left: 10px;
+    }
+  }
+}

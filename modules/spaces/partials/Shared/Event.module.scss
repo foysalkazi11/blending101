@@ -1,0 +1,46 @@
+.event {
+  background-color: white;
+  border-radius: 5px;
+  overflow: hidden;
+  img {
+    height: 165px;
+    width: 100%;
+    object-fit: cover;
+  }
+  &__hero {
+    position: relative;
+  }
+  &__content {
+    padding: 3rem 1.5rem;
+    color: #191818;
+    span {
+      font-size: 1.3rem;
+    }
+    h5 {
+      font-weight: 500;
+      font-size: 1.6rem;
+      margin-top: 0.8rem;
+    }
+  }
+}
+
+.action {
+  &__join {
+    background: rgba(253, 82, 9, 0.7) 0% 0% no-repeat padding-box;
+    border-radius: 17px;
+    border: none;
+    padding: 0.75rem 2rem;
+    color: #ffffff;
+    font-size: 15px;
+    display: block;
+    margin: auto;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -20px);
+  }
+  &__share {
+    position: absolute;
+    right: 10px;
+    bottom: -14px;
+  }
+}

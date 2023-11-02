@@ -17,6 +17,8 @@ class MyDocument extends Document {
           <link rel="manifest" href="/icons/favicons/site.webmanifest" />
           <link rel="mask-icon" href="/icons/favicons/safari-pinned-tab.svg" color="#5bbad5" />
           <link rel="shortcut icon" href="/icons/favicons/favicon.ico" />
+          {/* <link href="https://fonts.cdnfonts.com/css/segoe-ui-4" rel="stylesheet" /> */}
+
           <meta name="msapplication-TileColor" content="#da532c" />
           <meta name="msapplication-config" content="/icons/favicons/browserconfig.xml" />
           <meta name="theme-color" content="#ffffff" />
@@ -25,14 +27,6 @@ class MyDocument extends Document {
           <meta name="description" content="Blending101 app description" />
 
           {/* Open Graph tags */}
-          <meta property="og:url" content={"https://app.blending101.com/"} key="ogurl" />
-          <meta property="og:type" content="website" key="ogtype" />
-          <meta property="og:site_name" content={"blending101"} key="ogsitename" />
-          <meta property="og:title" content={"Blending101 app"} key="ogtitle" />
-          <meta property="og:description" content={"Blending101 app description"} key="ogdesc" />
-          <meta property="og:image" content={"/logo_small.svg"} key="ogimage" />
-          <meta property="og:image:width" content="1200" />
-          <meta property="og:image:height" content="630" />
 
           {/* Twitter Card tags */}
           <meta name="twitter:card" content="summary_large_image" />

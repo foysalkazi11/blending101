@@ -22,12 +22,7 @@ export default function TrayWrapper({
   closeTray = () => {},
   openTray = false,
   panelTag: panleTag = (hover: boolean) => (
-    <img
-      src={
-        hover ? "/icons/left__drawer__orange.svg" : "/icons/left__drawer.svg"
-      }
-      alt="Icon"
-    />
+    <img src={hover ? "/icons/left__drawer__orange.svg" : "/icons/left__drawer.svg"} alt="Icon" />
   ),
   isolated = false,
 }: leftTrayInterface) {
@@ -48,11 +43,7 @@ export default function TrayWrapper({
           <div
             className={`${styles.image}`}
             onClick={closeTray}
-            style={
-              showPanle === "left"
-                ? { right: hover ? "5px" : "20px" }
-                : { left: hover ? "-40px" : "-25px" }
-            }
+            style={showPanle === "left" ? { right: hover ? "5px" : "20px" } : { left: hover ? "-40px" : "-25px" }}
           >
             {!openTray && !showTagByDefaut ? null : panleTag(hover)}
           </div>

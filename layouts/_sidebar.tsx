@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import styles from "./_sidebar.module.scss";
 import Tooltip from "../theme/toolTip/CustomToolTip";
+import routes from "routes";
 
 function Sidebar(props) {
   const router = useRouter();
@@ -49,14 +50,7 @@ function Sidebar(props) {
 
 export default Sidebar;
 
-export type PageName =
-  | "Home"
-  | "Blends"
-  | "Plans"
-  | "Challenges"
-  | "Wiki"
-  | "Blogs"
-  | "Shop";
+export type PageName = "Home" | "Blends" | "Plans" | "Challenges" | "Wiki" | "Blogs" | "Shop" | "Space";
 
 export const PAGES: {
   logo: string;
@@ -82,4 +76,5 @@ export const PAGES: {
   { logo: "/icons/books.svg", link: "/wiki", content: "Wiki" },
   { logo: "/icons/book_light.svg", link: "/blog", content: "Blogs" },
   { logo: "/icons/store.svg", link: "/shop", content: "Shop" },
+  { logo: "/icons/store.svg", link: routes.spaces.discovery, content: "Space" },
 ];

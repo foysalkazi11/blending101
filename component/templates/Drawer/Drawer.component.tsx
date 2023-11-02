@@ -1,65 +1,57 @@
-/* eslint-disable @next/next/no-img-element */
-import React, { ReactNode } from "react";
+import React from "react";
 import useHover from "../../../components/utility/useHover";
+import { IconDefinition } from "@fortawesome/pro-thin-svg-icons";
+import Icon from "component/atoms/Icon/Icon.component";
+
 import styles from "./Drawer.module.scss";
+import { faGrid2 } from "@fortawesome/pro-regular-svg-icons";
 
 const panelWidth = "320px";
 
-interface leftTrayInterface {
-  children: ReactNode;
-  showTagByDefaut?: boolean;
-  showPanle?: "left" | "right";
-  openTray?: boolean;
-  closeTray?: () => void;
-  panleTag?: (hover: boolean) => ReactNode;
-  isolated?: boolean;
+interface DrawerProps {
+  open?: boolean;
+  onOpen?: () => void;
+  onClose?: () => void;
+  /** Direction from which the drawer should open */
+  direction?: "left" | "right";
+  /** To make the drawer button visible always */
+  always?: boolean;
+  /** Font-Awesome icon or image */
+  icon?: string | IconDefinition;
 }
 
-export default function Drawer({
-  children,
-  showTagByDefaut = true,
-  showPanle = "left",
-  closeTray = () => {},
-  openTray = false,
-  panleTag = (hover: boolean) => (
-    <img
-      src={
-        hover ? "/icons/left__drawer__orange.svg" : "/icons/left__drawer.svg"
-      }
-      alt="Icon"
-    />
-  ),
-  isolated = false,
-}: leftTrayInterface) {
-  const [hoevrRef, hover] = useHover();
+const Drawer: React.FC<DrawerProps> = (props) => {
+  const { children, open, onOpen, onClose, always, direction, icon } = props;
 
   return (
-    <div className={`${isolated ? styles[showPanle] : ""}`}>
+    <div className={styles[direction]}>
       <div
-        className={`${styles.tray} `}
-        ref={hoevrRef}
+        className={styles.tray}
         style={
-          showPanle === "left"
-            ? { left: openTray ? "0px" : `-${panelWidth}` }
-            : { right: openTray ? "0px" : `-${panelWidth}` }
+          direction === "left" ? { left: open ? "0px" : `-${panelWidth}` } : { right: open ? "0px" : `-${panelWidth}` }
         }
       >
         <div className={styles.tray__inner}>
-          <div
-            className={`${styles.image}`}
-            onClick={closeTray}
-            style={
-              showPanle === "left"
-                ? { right: hover ? "5px" : "20px" }
-                : { left: hover ? "-40px" : "-25px" }
-            }
-          >
-            {!openTray && !showTagByDefaut ? null : panleTag(hover)}
+          <div className={styles.image} onClick={onClose}>
+            {!open && !always ? null : (
+              <div className={`${styles.button} ${styles[`${direction}Radius`]}`} onClick={onOpen}>
+                {typeof icon === "string" ? <img src={icon} alt="icon" /> : <Icon fontName={icon} size={20} />}
+              </div>
+            )}
           </div>
-
           {children}
         </div>
       </div>
     </div>
   );
-}
+};
+
+Drawer.defaultProps = {
+  open: false,
+  onClose: () => {},
+  direction: "left",
+  always: true,
+  icon: faGrid2,
+};
+
+export default Drawer;

@@ -84,7 +84,7 @@ $sideTrayWidth: 320px;
   cursor: pointer;
   transition: all;
   transition-duration: 0.2s;
-  z-index: -99 !important;
+  z-index: 99 !important;
 
   img {
     width: 50px;
