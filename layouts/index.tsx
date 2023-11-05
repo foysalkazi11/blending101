@@ -5,6 +5,7 @@ import Sidebar from "./_sidebar";
 import NotificationTray from "../components/sidetray/notificationTray";
 import styles from "./index.module.scss";
 import { DefaultSeo } from "next-seo";
+import Meta from "theme/meta";
 
 interface LayoutProps {
   sidebar?: boolean;
@@ -20,20 +21,20 @@ const Layout: React.FC<LayoutProps> = (props) => {
   if (!title) return <Fragment>{children}</Fragment>;
   return (
     <>
-      <DefaultSeo
-        // additionalLinkTags={[
-        //   { rel: "apple-touch-icon", sizes: "180x180", href: "/icons/favicons/apple-touch-icon.png" },
-        //   { rel: "apple-touch-icon", sizes: "32x32", href: "/icons/favicons/favicon-32x32.png" },
-        //   { rel: "apple-touch-icon", sizes: "16x16", href: "/icons/favicons/favicon-16x16.png" },
-        //   { rel: "manifest", href: "/icons/favicons/site.webmanifest" },
-        //   { rel: "mask-icon", href: "/icons/favicons/safari-pinned-tab.svg", color: "#5bbad5" },
-        //   { rel: "shortcut icon", href: "/icons/favicons/favicon.ico" },
-        // ]}
-        // additionalMetaTags={[
-        //   { name: "msapplication-TileColor", content: "#da532c" },
-        //   { name: "msapplication-config", content: "/icons/favicons/browserconfig.xml" },
-        //   { name: "theme-color", content: "#ffffff" },
-        // ]}
+      {/* <DefaultSeo
+        additionalLinkTags={[
+          { rel: "apple-touch-icon", sizes: "180x180", href: "/icons/favicons/apple-touch-icon.png" },
+          { rel: "apple-touch-icon", sizes: "32x32", href: "/icons/favicons/favicon-32x32.png" },
+          { rel: "apple-touch-icon", sizes: "16x16", href: "/icons/favicons/favicon-16x16.png" },
+          { rel: "manifest", href: "/icons/favicons/site.webmanifest" },
+          { rel: "mask-icon", href: "/icons/favicons/safari-pinned-tab.svg", color: "#5bbad5" },
+          { rel: "shortcut icon", href: "/icons/favicons/favicon.ico" },
+        ]}
+        additionalMetaTags={[
+          { name: "msapplication-TileColor", content: "#da532c" },
+          { name: "msapplication-config", content: "/icons/favicons/browserconfig.xml" },
+          { name: "theme-color", content: "#ffffff" },
+        ]}
         title="Blending101 app"
         description="Blending101 app description"
         canonical="https://app.blending101.com/"
@@ -66,7 +67,8 @@ const Layout: React.FC<LayoutProps> = (props) => {
           site: "@site",
           cardType: "summary_large_image",
         }}
-      />
+      /> */}
+      <Meta />
       <div className={styles.body}>
         {sidebar && <Sidebar />}
         <NotificationTray showTagByDefaut={false} showPanle={"right"} />

@@ -33,8 +33,8 @@ class MyDocument extends Document {
           <meta property="og:title" content="Blending101 app" key="ogtitle" />
           <meta property="og:description" content="Blending101 app description" key="ogdesc" />
           <meta property="og:image" content="/logo_small.svg" key="ogimage" />
-          <meta property="og:image:width" content="1200" />
-          <meta property="og:image:height" content="630" />
+          {/* <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="630" /> */}
 
           {/* Twitter Card tags */}
           <meta name="twitter:card" content="summary_large_image" />
